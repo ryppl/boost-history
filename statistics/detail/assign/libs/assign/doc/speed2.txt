@@ -1,8 +1,8 @@
 Output from speed2.cpp
-2.4 GHz Intel Core 2 Duo - Mac OS Leopard 10.6 - x86_64 - Release mode - gcc 4.2
-
 Each arg is a vec of max size  : 100
 Number of repeated function calls : 100000000
+
+2.4 GHz Intel Core 2 Duo - Mac OS Leopard 10.6 - x86_64 - Release mode - gcc 4.2
 
 cref_list_of(1) => 0.13 s
 
@@ -39,3 +39,85 @@ cref_list_of(90) => 25.62 s
 cref_list_of_csv(90) => 44.08 s
 
 cref_list_of<>(90) => 6.97 s
+
+Warning for both compilers tested under Win7-32 below:
+1- a virtual machine was used so absolute time are overestimated. Relative times
+between different functions, may be somewhat more reliable. 
+2- list_of was excluded as it would take too much time. 
+
+Win7-32 V6.1.7100       Dev-C++ 5.0 beta 9.2 - Mingw/GCC 3.4.2  
+
+cref_list_of(1) => 1.18 s
+
+cref_list_of_csv(1) => 1.91 s
+
+cref_list_of<>(1) => 0.37 s
+
+
+cref_list_of(3) => 2.73 s
+
+cref_list_of_csv(3) => 4.09 s
+
+cref_list_of<>(3) => 1.02 s
+
+
+cref_list_of(10) => 7.04 s
+
+cref_list_of_csv(10) => 11.80 s
+
+cref_list_of<>(10) => 3.79 s
+
+
+cref_list_of(30) => 20.07 s
+
+cref_list_of_csv(30) => 44.59 s
+
+cref_list_of<>(30) => 9.47 s
+
+
+cref_list_of(90) => 57.47 s
+
+cref_list_of_csv(90) => 152.51 s
+
+cref_list_of<>(90) => 76.80 s
+
+
+Win7-32 V6.1.7100 - Visual Studio 2010 - Release mode -
+
+Warning : The slow performance of cref_list_of vs cref_list_of<> with this 
+compilers, was confirmed separately under a fully Windows OS (not a VM).
+
+cref_list_of(1) => 0.72 s
+
+cref_list_of_csv(1) => 0.00 s
+
+cref_list_of<>(1) => 0.00 s
+
+
+cref_list_of(3) => 1.34 s
+
+cref_list_of_csv(3) => 0.00 s
+
+cref_list_of<>(3) => 0.04 s
+
+
+cref_list_of(10) => 3.83 s
+
+cref_list_of_csv(10) => 0.00 s
+
+cref_list_of<>(10) => 0.04 s
+
+
+cref_list_of(30) => 10.72 s
+
+cref_list_of_csv(30) => 9.86 s
+
+cref_list_of<>(30) => 0.05 s
+
+
+cref_list_of(90) => 34.39 s
+
+cref_list_of_csv(90) => 29.93 s
+
+cref_list_of<>(90) => 0.07 s
+

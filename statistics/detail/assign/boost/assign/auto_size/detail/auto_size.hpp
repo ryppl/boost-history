@@ -51,7 +51,7 @@ namespace auto_size{
             
     template<typename L,typename T,int N,template<typename> class Ref,
     	typename P>
-    struct expr;
+    class expr;
 
     // ---- Policy meta classes --- //
 

@@ -2,11 +2,9 @@ The following files:
         /libs/assign/example/ref_list_of.cpp
         /libs/assign/test/speed2.cpp
 
-compiled and executed for :
+compiled and executed fine for :
 
 Platform                Compiler                                Boost version   Date Tested
 Mac OS X 10.6           gcc 4.2                                 boost_1_41_0    March 1st, 2010  
 Win7-32 V6.1.7100       Dev-C++ 5.0 beta 9.2 - Mingw/GCC 3.4.2  boost_1_41_0    March 1st, 2010
-
-Pending:
 Win7-32 V6.1.7100       Visual Studio 2010                      boost_1_41_0    March 1st, 2010
