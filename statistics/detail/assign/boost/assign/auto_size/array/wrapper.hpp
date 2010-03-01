@@ -28,7 +28,7 @@ namespace auto_size{
                 
         public:
 
-		array_wrapper(){}		
+        array_wrapper(){}		
 		
         ref_array_& ref_array_impl(){ 
             return this->ref_array;
