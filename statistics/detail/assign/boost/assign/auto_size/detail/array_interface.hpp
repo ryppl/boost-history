@@ -24,9 +24,6 @@ namespace auto_size{
         typedef boost::array<typename Ref<T>::type,N> type;
     };
 
-    // Exposes the boost::array interface. The actual array is implemented in a
-    // derived class, D
-    //
 	// Requirements:
     // D must implement:
     // 	const ref_array_& ref_array_impl()const
@@ -123,7 +120,6 @@ namespace auto_size{
         }
 
         void assign(const T& val,false_ /*copy semantics*/){ 
-        	// Force copy semantics. Suggested by M.P.G on Feb 28th, 2010.
            	return this->ref_array().assign(val);
         }
 		

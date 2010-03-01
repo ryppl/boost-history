@@ -17,7 +17,7 @@ namespace assign{
 namespace detail{
 namespace auto_size{
  
- 	// This is needed for csv support.
+ 	// See csv.hpp
     template<typename T,int N,template<typename> class Ref>
     class array_wrapper 
     	: public array_interface<T,N,Ref,array_wrapper<T,N,Ref> >

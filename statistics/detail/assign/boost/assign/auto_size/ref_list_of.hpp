@@ -11,10 +11,12 @@
 #include <boost/assign/auto_size/detail/auto_size.hpp>
 #include <boost/assign/auto_size/detail/array_wrapper.hpp>
 
-// Creates a collection of references exposing the boost::array interface and 
-// convertible to a range that is constructible from a pair of iterators. It can
-// be used either as the rhs or lhs of an assignment such as:
+// Creates a collection of references whose functionality is that of assign::
+// auto_size::detail::array_interface. It can be used either as the rhs or lhs 
+// of an assignment such as:
 // 	boost::fill(ref_list_of(a)(b)(c),0)
+//
+// The interface 
 
 namespace boost{
 namespace assign{

@@ -10,9 +10,8 @@
 #define BOOST_ASSIGN_AUTO_SIZE_REF_LIST_OF_CSV_ER_2010_HPP
 
 // Usage:
+// ref_list_of_csv(a,b,c);
 // cref_list_of_csv(a,b,c);
-//
-// See ref_rebind_list_of.hpp
 
 #define BOOST_ASSIGN_CSV_ref boost::assign::detail::auto_size::ref_copy
 #include <boost/assign/auto_size/detail/csv.hpp>

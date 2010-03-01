@@ -32,9 +32,7 @@ namespace auto_size{
 
 namespace policy{
 
-  	// Used as a base of auto_size::expr, exposes the boost::array functionality
-    // and a conversion operator suitable for data-structures that are 
-    // constructible from a pair of iterators.  
+  	// Policy for auto_size::expr that exposes an array interface
    template<typename T,int N,template<typename> class Ref,typename D>
    	class array 
     	: public array_interface<T,N,Ref,array<T,N,Ref,D> >

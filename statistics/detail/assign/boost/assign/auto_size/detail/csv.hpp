@@ -28,8 +28,7 @@
 // BOOST_ASSIGN_CSV(fun) creates for i=2,...,n the following overloads:
 // 	fun_csv(a1,..,.ai) 
 // 	cfun_csv(a1,..,.ai) 
-// which return the same result as calling fun(a1)...(ai).wrapper(), and 
-// cfun(a1)...(ai).wrapper(), of type w<T,i> and w<const T,i>, respectively.
+// which return instances of w<T,i> and w<const T,i>, respectively.
 
 #ifndef BOOST_ASSIGN_CSV_SIZE
 #define BOOST_ASSIGN_CSV_SIZE 20
