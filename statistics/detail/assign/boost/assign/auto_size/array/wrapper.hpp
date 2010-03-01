@@ -24,7 +24,6 @@ namespace auto_size{
     {
 
         typedef typename auto_size::ref_array<T,N,Ref>::type ref_array_;
-        typedef boost::shared_ptr<ref_array_> smart_ptr_;
                 
         public:
 
@@ -42,6 +41,8 @@ namespace auto_size{
         void initialize(const E& coll)const{
         	write_to_array(this->ref_array,coll);
         }
+
+		mutable ref_array_ ref_array;
         
     };
 
