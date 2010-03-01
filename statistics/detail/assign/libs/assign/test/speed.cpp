@@ -429,4 +429,4 @@ void test_speed(std::ostream& os)
     }       
 	os << "<- " << std::endl;
     
-};
+}

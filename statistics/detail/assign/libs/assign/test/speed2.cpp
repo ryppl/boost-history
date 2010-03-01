@@ -394,4 +394,4 @@ void test_speed2(std::ostream& os)
 
 
     os << "<- " << std::endl;
-};
+}

@@ -33,7 +33,7 @@ namespace auto_size{
     	: public array_interface<T,N,Ref,array_policy<T,N,Ref,D> >
     {
 
-        typedef typename ref_array<T,N,Ref>::type ref_array_;
+        typedef typename auto_size::ref_array<T,N,Ref>::type ref_array_;
                 
         void alloc_if()const{
             if(!this->ptr){

@@ -86,4 +86,4 @@ void example_ref_list_of(std::ostream& os)
 
     os << "<- " << std::endl;
     
-};
+}

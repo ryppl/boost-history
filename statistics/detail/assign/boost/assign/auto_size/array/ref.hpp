@@ -17,7 +17,8 @@ namespace auto_size{
                    
     template<typename T,int N,template<typename> class Ref>
     struct ref_array{
-        typedef boost::array<typename Ref<T>::type,N> type;
+    	typedef typename Ref<T>::type ref_;
+        typedef boost::array<ref_,N> type;
     };
 
 }// auto_size  

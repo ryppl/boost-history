@@ -24,7 +24,7 @@ namespace auto_size{
     	: public array_interface<T,N,Ref,array_wrapper<T,N,Ref> >
     {
 
-        typedef typename ref_array<T,N,Ref>::type ref_array_;
+        typedef typename auto_size::ref_array<T,N,Ref>::type ref_array_;
         typedef boost::shared_ptr<ref_array_> smart_ptr_;
                 
         public:
