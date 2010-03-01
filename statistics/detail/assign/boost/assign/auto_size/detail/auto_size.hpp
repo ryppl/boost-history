@@ -8,7 +8,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_AUTO_SIZE_DETAIL_AUTO_SIZE_ER_2010_HPP
 #define BOOST_ASSIGN_AUTO_SIZE_DETAIL_AUTO_SIZE_ER_2010_HPP
-#include <iostream> // TODO remove
 #include <boost/mpl/void.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/bool.hpp>
