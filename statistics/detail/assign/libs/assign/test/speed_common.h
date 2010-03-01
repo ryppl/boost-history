@@ -8,8 +8,8 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef LIBS_ASSIGN_TEST_SPEED_COMMON_ER_2010_H
-#define LIBS_ASSIGN_TEST_SPEED_COMMON_ER_2010_H
+#ifndef LIBS_ASSIGN_TEST_SPEED_COMMON_MPG_2010_H
+#define LIBS_ASSIGN_TEST_SPEED_COMMON_MPG_2010_H
 #include <vector>
 #include <string>
 

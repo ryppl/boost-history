@@ -68,7 +68,7 @@ namespace mpg
         }
 
         template<class Proc>
-        double time_it_impl(Proc proc, int N=1) // returns time in microseconds
+        double time_it_impl(Proc proc, int N) // returns time in microseconds
         {   
             std::clock_t const start = std::clock();
             for(int i = 0; i < N; ++i)
@@ -80,7 +80,7 @@ namespace mpg
         }        
         
         template<class Proc, class Result>
-        double time_it_impl(Proc proc, Result & result, int N=1) // returns time in microseconds
+        double time_it_impl(Proc proc, Result & result, int N) // returns time in microseconds
         {   
             std::clock_t const start = std::clock();
             for(int i = 0; i < N; ++i)
