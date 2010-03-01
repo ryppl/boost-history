@@ -1,16 +1,16 @@
 //////////////////////////////////////////////////////////////////////////////
-// assign::detail::policy::array.hpp                                        //
+// assign::detail::array::policy.hpp                                        //
 //                                                                          //
 //  (C) Copyright 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_AUTO_SIZE_DETAIL_POLICY_ARRAY_ER_2010_HPP
-#define BOOST_ASSIGN_AUTO_SIZE_DETAIL_POLICY_ARRAY_ER_2010_HPP
+#ifndef BOOST_ASSIGN_AUTO_SIZE_DETAIL_ARRAY_POLICY_ER_2010_HPP
+#define BOOST_ASSIGN_AUTO_SIZE_DETAIL_ARRAY_POLICY_ER_2010_HPP
 #include <boost/shared_ptr.hpp>
-#include <boost/assign/auto_size/detail/array_interface.hpp>
-#include <boost/assign/auto_size/detail/array_wrapper.hpp>
+#include <boost/assign/auto_size/array/interface.hpp>
+#include <boost/assign/auto_size/array/wrapper.hpp>
 
 namespace boost{
 namespace assign{
@@ -30,12 +30,10 @@ namespace auto_size{
     void write_to_array(A& a,const expr<E,T,N,Ref,P>& e);
                   
 
-namespace policy{
-
-  	// Policy for auto_size::expr that exposes an array interface
+   // Policy for auto_size::expr that exposes an array interface
    template<typename T,int N,template<typename> class Ref,typename D>
-   	class array 
-    	: public array_interface<T,N,Ref,array<T,N,Ref,D> >
+   	class array_policy 
+    	: public array_interface<T,N,Ref,array_policy<T,N,Ref,D> >
     {
 
         typedef typename ref_array<T,N,Ref>::type ref_array_;
@@ -71,7 +69,6 @@ namespace policy{
 
     };
 
-}// policy
 }// auto_size  
 }// detail      
 }// assign

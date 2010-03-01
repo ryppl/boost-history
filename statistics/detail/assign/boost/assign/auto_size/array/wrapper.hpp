@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// assign::detail::array_wrapper.hpp                                        //
+// assign::detail::array::wrapper.hpp                                       //
 //                                                                          //
 //  (C) Copyright 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -9,7 +9,7 @@
 #ifndef BOOST_ASSIGN_AUTO_SIZE_DETAIL_ARRAY_WRAPPER_ER_2010_HPP
 #define BOOST_ASSIGN_AUTO_SIZE_DETAIL_ARRAY_WRAPPER_ER_2010_HPP
 #include <boost/shared_ptr.hpp>
-#include <boost/assign/auto_size/detail/array_interface.hpp>
+#include <boost/assign/auto_size/array/interface.hpp>
 #include <boost/assign/auto_size/detail/auto_size.hpp>
 
 namespace boost{
@@ -17,7 +17,7 @@ namespace assign{
 namespace detail{
 namespace auto_size{
  
- 	// See csv.hpp
+    // Used by csv.hpp
     template<typename T,int N,template<typename> class Ref>
     class array_wrapper 
     	: public array_interface<T,N,Ref,array_wrapper<T,N,Ref> >
