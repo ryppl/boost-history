@@ -4,41 +4,30 @@ Number of repeated function calls : 100000000
 
 2.4 GHz Intel Core 2 Duo - Mac OS Leopard 10.6 - x86_64 - Release mode - gcc 4.2
 
-cref_list_of(1) => 0.13 s
+cref_list_of(1)         =>   0.15 s
+cref_list_of_csv(1)     =>   0.33 s
+cref_list_of<>(1)       =>   0.00 s
+list_of(1)              => 131.03 s
 
-cref_list_of_csv(1) => 0.25 s
+cref_list_of(3)         =>   0.54 s
+cref_list_of_csv(3)     =>   1.45 s
+cref_list_of<>(3)       =>   0.37 s
+list_of(3)              => 342.12 s
 
-cref_list_of<>(1) => 0.00 s
+cref_list_of(10)        =>   2.01 s
+cref_list_of_csv(10)    =>   3.53 s
+cref_list_of<>(10)      =>   1.05 s
+list_of(10)             => 878.79 s
 
-list_of(1) => 130.01 s
+cref_list_of(30)        =>   7.15 s
+cref_list_of_csv(30)    =>   9.63 s
+cref_list_of<>(30)      =>   4.16 s
+list_of(30)             =>2475.13 s
 
-
-cref_list_of(3) => 0.56 s
-
-cref_list_of_csv(3) => 1.41 s
-
-cref_list_of<>(3) => 0.39 s
-
-
-cref_list_of(10) => 2.10 s
-
-cref_list_of_csv(10) => 4.62 s
-
-cref_list_of<>(10) => 1.07 s
-
-
-cref_list_of(30) => 7.31 s
-
-cref_list_of_csv(30) => 14.58 s
-
-cref_list_of<>(30) => 4.03 s
-
-
-cref_list_of(90) => 25.62 s
-
-cref_list_of_csv(90) => 44.08 s
-
-cref_list_of<>(90) => 6.97 s
+cref_list_of(90)        =>  25.68 s
+cref_list_of_csv(90)    =>  28.22 s
+cref_list_of<>(90)      =>   7.19 s
+list_of(90)             =>7284.27 s
 
 Warning : 
 For both compilers tested under Win7-32 below, a virtual machine was used so 

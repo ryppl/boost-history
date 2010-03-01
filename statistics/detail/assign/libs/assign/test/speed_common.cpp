@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 #include <iterator>
+#include <cstdlib>
 #include <boost/bind.hpp>
 #include <libs/assign/test/speed_common.h>
 
@@ -43,13 +44,13 @@ std::vector<int>
 rand_vec(int max_n)
 {
     std::vector<int> result(
-        (std::size_t)rand(1, max_n)
+        (std::size_t)mpg::rand(1, max_n)
     );
     std::generate(
         result.begin(), 
         result.end(), 
         boost::bind(
-            &rand, 
+            &mpg::rand, 
             0, 
             20
         )
@@ -102,6 +103,39 @@ namespace mpg
     {   
         return detail::time_it_impl(proc, result, 1);
     }    
+}   
+
+namespace mpg
+{
+    inline double rand_dbl()
+    {   
+        return double(::rand()) / RAND_MAX;
+    }
+    
+    inline double rand_dbl(double M, double N)
+    {   
+        return M + rand_dbl() * (N - M);
+    }
+    
+    // http://www.eternallyconfuzzled.com/arts/jsw_art_rand.aspx
+    inline int rand(int M, int N) // Range (M..N)
+    {   
+        return int(M + std::rand() * ( 1.0 / ( RAND_MAX + 1.0 )) * (N - M));
+    }
+    
+    inline char rand_letter()
+    {
+        return char(rand('a', 'z' + 1));
+    }
+
+    inline std::string rand_str(int len)
+    {
+        std::string result;
+        result.reserve(len);
+        for(int i = 0; i < len; ++i)
+            result.push_back(rand_letter());
+        return result;
+    }
 }   
 
 

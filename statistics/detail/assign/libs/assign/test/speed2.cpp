@@ -22,8 +22,9 @@ void test_speed2(std::ostream& os)
 {
 	os << "-> test_speed : " << std::endl;
     
-    const int m = 100;							// max size of vec
-    const int n = 100 * 1000 * 1000;			// number of loops
+    const int m = 100;					// max size of vec
+    const int n = 100 * 1000 * 1000;	// number of loops
+    const int f = 1000;					// factor for list_of (else too slow)
 
 	os << "Each arg is a vec of max size  : " << m <<  std::endl;
 	os << "Number of repeated function calls : " << n <<  std::endl;
@@ -120,8 +121,7 @@ void test_speed2(std::ostream& os)
         a88 = rand_vec(m), 
         a89 = rand_vec(m);
 
-	typedef boost::progress_timer timer_;
-        
+	typedef boost::timer timer_;
     {
         int const N = 1;
         os << "cref_list_of(" << N << ") => ";
@@ -134,6 +134,7 @@ void test_speed2(std::ostream& os)
                 if(sz != N)
                     os << "ERROR\n";
             }
+            os << timer.elapsed() << " s" << std::endl;;
         }
         os << "cref_list_of_csv(" << N << ") => ";
         {
@@ -145,6 +146,7 @@ void test_speed2(std::ostream& os)
                 if(sz != N)
                     os << "ERROR\n";
             }
+            os << timer.elapsed() << " s" << std::endl;;
         }
         os << "cref_list_of<>(" << N << ") => ";
         {
@@ -156,18 +158,19 @@ void test_speed2(std::ostream& os)
                 if(sz != N)
                     os << "ERROR\n";
             }
+            os << timer.elapsed() << " s" << std::endl;;
         }
-		// For N > 1, list_of is too slow to be included in this test.
         os << "list_of(" << N << ") => ";
         {
  			timer_ timer;
-            for(int i = 0; i < n; ++i)
+            for(int i = 0; i < n/f; ++i)
             {
                 BOOST_AUTO(rng, boost::assign::list_of(a00));
                 int sz = (int)rng.size();
                 if(sz != N)
                     os << "ERROR\n";
             }
+            os << timer.elapsed() * f << " s" << std::endl;;
         }
     }
     {
@@ -182,6 +185,7 @@ void test_speed2(std::ostream& os)
                 if(sz != N)
                     os << "ERROR\n";
             }
+            os << timer.elapsed() << " s" << std::endl;;
         }
         os << "cref_list_of_csv(" << N << ") => ";
         {
@@ -193,6 +197,7 @@ void test_speed2(std::ostream& os)
                 if(sz != N)
                     os << "ERROR\n";
             }
+            os << timer.elapsed() << " s" << std::endl;;
         }
         os << "cref_list_of<>(" << N << ") => ";
         {
@@ -204,6 +209,19 @@ void test_speed2(std::ostream& os)
                 if(sz != N)
                     os << "ERROR\n";
             }
+            os << timer.elapsed() << " s" << std::endl;;
+        }
+        os << "list_of(" << N << ") => ";
+        {
+ 			timer_ timer;
+            for(int i = 0; i < n/f; ++i)
+            {
+                BOOST_AUTO(rng, boost::assign::list_of(a00)(a01)(a02));
+                int sz = (int)rng.size();
+                if(sz != N)
+                    os << "ERROR\n";
+            }
+            os << timer.elapsed() * f << " s" << std::endl;;
         }
     }
     
@@ -220,6 +238,7 @@ void test_speed2(std::ostream& os)
                 if(sz != N)
                     os << "ERROR\n";
             }
+            os << timer.elapsed() << " s" << std::endl;;
         }
         os << "cref_list_of_csv(" << N << ") => ";
         {
@@ -233,6 +252,7 @@ void test_speed2(std::ostream& os)
                 if(sz != N)
                     os << "ERROR\n";
             }
+            os << timer.elapsed() << " s" << std::endl;;
         }
         os << "cref_list_of<>(" << N << ") => ";
         {
@@ -246,6 +266,20 @@ void test_speed2(std::ostream& os)
                 if(sz != N)
                     os << "ERROR\n";
             }
+            os << timer.elapsed() << " s" << std::endl;;
+        }
+        os << "list_of(" << N << ") => ";
+        {
+ 			timer_ timer;
+            for(int i = 0; i < n/f; ++i)
+            {
+                BOOST_AUTO(rng, boost::assign::list_of(a00)(a01)(a02)(a03)(a04)
+                                                           (a05)(a06)(a07)(a08)(a09));
+                int sz = (int)rng.size();
+                if(sz != N)
+                    os << "ERROR\n";
+            }
+            os << timer.elapsed() * f << " s" << std::endl;;
         }
     }
     {
@@ -265,6 +299,7 @@ void test_speed2(std::ostream& os)
                 if(sz != N)
                     os << "ERROR\n";
             }
+            os << timer.elapsed() << " s" << std::endl;;
         }
         os << "cref_list_of_csv(" << N << ") => ";
         {
@@ -282,6 +317,7 @@ void test_speed2(std::ostream& os)
                 if(sz != N)
                     os << "ERROR\n";
             }
+            os << timer.elapsed() << " s" << std::endl;;
         }
         os << "cref_list_of<>(" << N << ") => ";
         {
@@ -299,9 +335,26 @@ void test_speed2(std::ostream& os)
                 if(sz != N)
                     os << "ERROR\n";
             }
+            os << timer.elapsed() << " s" << std::endl;;
+        }
+        os << "list_of(" << N << ") => ";
+        {
+ 			timer_ timer;
+            for(int i = 0; i < n/f; ++i)
+            {
+                BOOST_AUTO(rng, boost::assign::list_of(a00)(a01)(a02)(a03)(a04)
+                                                            (a05)(a06)(a07)(a08)(a09)
+                                                            (a10)(a11)(a12)(a13)(a14)
+                                                            (a15)(a16)(a17)(a18)(a19)
+                                                            (a20)(a21)(a22)(a23)(a24)
+                                                            (a25)(a26)(a27)(a28)(a29));
+                int sz = (int)rng.size();
+                if(sz != N)
+                    os << "ERROR\n";
+            }
+            os << timer.elapsed() * f << " s" << std::endl;;
         }
     }	
-
     {
         int const N = 90;
         os << "cref_list_of(" << N << ") => ";
@@ -331,6 +384,7 @@ void test_speed2(std::ostream& os)
                 if(sz != N)
                     os << "ERROR\n";
             }
+            os << timer.elapsed() << " s" << std::endl;;
         }
         os << "cref_list_of_csv(" << N << ") => ";
         {
@@ -360,6 +414,7 @@ void test_speed2(std::ostream& os)
                 if(sz != N)
                     os << "ERROR\n";
             }
+            os << timer.elapsed() << " s" << std::endl;;
         }
         os << "cref_list_of<>(" << N << ") => ";
         {
@@ -389,6 +444,36 @@ void test_speed2(std::ostream& os)
                 if(sz != N)
                     os << "ERROR\n";
             }
+            os << timer.elapsed() << " s" << std::endl;;
+        }
+        os << "list_of(" << N << ") => ";
+        {
+ 			timer_ timer;
+            for(int i = 0; i < n/f; ++i)
+            {
+                BOOST_AUTO(rng, boost::assign::list_of(a00)(a01)(a02)(a03)(a04)
+                                                            (a05)(a06)(a07)(a08)(a09)
+                                                            (a10)(a11)(a12)(a13)(a14)
+                                                            (a15)(a16)(a17)(a18)(a19)
+                                                            (a20)(a21)(a22)(a23)(a24)
+                                                            (a25)(a26)(a27)(a28)(a29)
+                                                            (a30)(a31)(a32)(a33)(a34)
+                                                            (a35)(a36)(a37)(a38)(a39)
+                                                            (a40)(a41)(a42)(a43)(a44)
+                                                            (a45)(a46)(a47)(a48)(a49)
+                                                            (a50)(a51)(a52)(a53)(a54)
+                                                            (a55)(a56)(a57)(a58)(a59)
+                                                            (a60)(a61)(a62)(a63)(a64)
+                                                            (a65)(a66)(a67)(a68)(a69)
+                                                            (a70)(a71)(a72)(a73)(a74)
+                                                            (a75)(a76)(a77)(a78)(a79)
+                                                            (a80)(a81)(a82)(a83)(a84)
+                                                            (a85)(a86)(a87)(a88)(a89));
+                int sz = (int)rng.size();
+                if(sz != N)
+                    os << "ERROR\n";
+            }
+            os << timer.elapsed() * f << " s" << std::endl;;
         }
     }	
 

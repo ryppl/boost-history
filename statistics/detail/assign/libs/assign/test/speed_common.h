@@ -14,7 +14,7 @@
 #include <string>
 
 double uniform_deviate ( int seed );
-int rand(int M, int N);
+//int rand(int M, int N);
 char rand_letter();
 std::string rand_str(int len);
 std::vector<int> rand_vec(int);
@@ -37,6 +37,18 @@ namespace mpg
     
     template<class Proc, class Result>
     double time_it(Proc proc, Result & result);
+
+    double rand_dbl();
+        
+    double rand_dbl(double M, double N);
+    
+    // http://www.eternallyconfuzzled.com/arts/jsw_art_rand.aspx
+    int rand(int M, int N);
+    
+    char rand_letter();
+
+    std::string rand_str(int len);
+
 }   
 
 
