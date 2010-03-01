@@ -50,11 +50,11 @@ namespace auto_size{
             
     typedef boost::mpl::void_ top_;
             
-    // ---- Policy meta classes --- //
-
     template<typename L,typename T,int N,template<typename> class Ref,
     	typename P>
     struct expr;
+
+    // ---- Policy meta classes --- //
 
     struct default_policy;
 
