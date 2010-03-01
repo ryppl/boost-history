@@ -10,6 +10,7 @@
 #define BOOST_ASSIGN_AUTO_SIZE_DETAIL_ARRAY_WRAPPER_ER_2010_HPP
 #include <boost/shared_ptr.hpp>
 #include <boost/assign/auto_size/array/interface.hpp>
+#include <boost/assign/auto_size/array/ref.hpp>
 #include <boost/assign/auto_size/detail/auto_size.hpp>
 
 namespace boost{
