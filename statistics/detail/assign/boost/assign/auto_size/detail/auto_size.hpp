@@ -58,12 +58,12 @@ namespace auto_size{
 
     struct default_policy;
 
-	struct default_policy{
+    struct default_policy{
         template<typename E,typename T,int N,template<typename> class Ref>
         struct apply{
-			typedef expr<E,T,N,Ref,default_policy> expr_;        	
-    		typedef array_policy<T,N,Ref,expr_> type;
-    	};
+            typedef expr<E,T,N,Ref,default_policy> expr_;        	
+            typedef array_policy<T,N,Ref,expr_> type;
+        };
     };
 
     struct no_policy{
