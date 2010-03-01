@@ -69,7 +69,7 @@ namespace auto_size{
     struct no_policy{
         template<typename E,typename T,int N,template<typename> class Ref>
         struct apply{
-    		typedef boost::mpl::empty_base type;
+            typedef boost::mpl::empty_base type;
     	};
     };
 
