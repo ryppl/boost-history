@@ -84,8 +84,9 @@ cref_list_of<>(90) => 76.80 s
 
 Win7-32 V6.1.7100 - Visual Studio 2010 - Release mode -
 
-Warning : The slow performance of cref_list_of vs cref_list_of<> with this 
-particular compiler, was confirmed separately under a fully Windows OS.
+Warning : The greater time of cref_list_of vs cref_list_of<> with this 
+particular compiler, was confirmed separately under a fully Windows OS, albeit
+not as drastic (x30, on average).
 
 cref_list_of(1) => 0.72 s
 
