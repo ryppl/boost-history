@@ -43,10 +43,10 @@
 #define BOOST_ASSIGN_CSV_ITER_UNQUAL(F,T,U,N)								\
 namespace boost{															\
 namespace assign{															\
-	template<typename T>													\
+    template<typename T>													\
     boost::assign::detail::auto_size::array_wrapper<                        \
-    	U,N,BOOST_ASSIGN_CSV_ref											\
-	>																		\
+        U,N,BOOST_ASSIGN_CSV_ref											\
+    >																		\
 	F(BOOST_PP_ENUM_PARAMS(N, U& _))										\
 	{																		\
 		typedef boost::assign::detail::auto_size::array_wrapper<            \
