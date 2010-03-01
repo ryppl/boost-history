@@ -40,27 +40,27 @@
 
 #define BOOST_ASSIGN_CSV_ARG(z,n,arg) (BOOST_PP_CAT(arg,n))
 
-#define BOOST_ASSIGN_CSV_ITER_UNQUAL(F,T,U,N)								\
-namespace boost{															\
-namespace assign{															\
-    template<typename T>													\
+#define BOOST_ASSIGN_CSV_ITER_UNQUAL(F,T,U,N)                               \
+namespace boost{                                                            \
+namespace assign{                                                           \
+    template<typename T>                                                    \
     boost::assign::detail::auto_size::array_wrapper<                        \
-        U,N,BOOST_ASSIGN_CSV_ref											\
-    >																		\
-	F(BOOST_PP_ENUM_PARAMS(N, U& _))										\
-	{																		\
-		typedef boost::assign::detail::auto_size::array_wrapper<            \
-    		U,N,BOOST_ASSIGN_CSV_ref> wrapper_;								\
-		wrapper_ wrapper;													\
-		wrapper.initialize(													\
-			boost::assign::detail::auto_size::make_first_expr_no_policy<	\
-				BOOST_ASSIGN_CSV_ref										\
-			> BOOST_PP_REPEAT(N,BOOST_ASSIGN_CSV_ARG,_)						\
-		);																	\
-		return wrapper;														\
-    }																		\
-}																			\
-}																			\
+        U,N,BOOST_ASSIGN_CSV_ref                                            \
+    >                                                                       \
+    F(BOOST_PP_ENUM_PARAMS(N, U& _))                                        \
+    {                                                                       \
+        typedef boost::assign::detail::auto_size::array_wrapper<            \
+            U,N,BOOST_ASSIGN_CSV_ref> wrapper_;                             \
+        wrapper_ wrapper;                                                   \
+        wrapper.initialize(                                                 \
+            boost::assign::detail::auto_size::make_first_expr_no_policy<    \
+                BOOST_ASSIGN_CSV_ref                                        \
+            > BOOST_PP_REPEAT(N,BOOST_ASSIGN_CSV_ARG,_)                     \
+        );                                                                  \
+        return wrapper;                                                     \
+    }                                                                       \
+}                                                                           \
+}                                                                           \
 /**/
 
 #define BOOST_ASSIGN_CSV_ITER(F,N)											\
