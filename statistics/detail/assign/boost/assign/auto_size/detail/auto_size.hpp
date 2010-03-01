@@ -21,7 +21,7 @@
 
 // Creates a collection of references by deducing the number of arguments
 // at compile time. The functionality is controlled by parameter Ref which
-// specifies a reference_wrapper and P, an abitrary policy, usually intended
+// specifies a reference_wrapper, and P, an abitrary policy, usually intended
 // to expose a container interface.
 //
 // Note:
