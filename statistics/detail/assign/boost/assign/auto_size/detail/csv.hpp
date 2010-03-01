@@ -64,21 +64,21 @@ namespace assign{                                                           \
 /**/
 
 #define BOOST_ASSIGN_CSV_ITER(F,N)                                          \
-	BOOST_ASSIGN_CSV_ITER_UNQUAL(F,T,T,N)                                   \
-	BOOST_ASSIGN_CSV_ITER_UNQUAL(BOOST_PP_CAT(c,F),T,const T,N)             \
+    BOOST_ASSIGN_CSV_ITER_UNQUAL(F,T,T,N)                                   \
+    BOOST_ASSIGN_CSV_ITER_UNQUAL(BOOST_PP_CAT(c,F),T,const T,N)             \
 /**/
 
 // overloads begin at n = 1
 #define BOOST_ASSIGN_CSV_SHIFTED_ITER(z,n,F)                                \
-	BOOST_ASSIGN_CSV_ITER(F,BOOST_PP_ADD(n,1))                              \
+    BOOST_ASSIGN_CSV_ITER(F,BOOST_PP_ADD(n,1))                              \
 /**/
 
 #define BOOST_ASSIGN_CSV_REPEAT(fun,N)                                      \
-	BOOST_PP_REPEAT(N,BOOST_ASSIGN_CSV_SHIFTED_ITER,fun)                    \
+    BOOST_PP_REPEAT(N,BOOST_ASSIGN_CSV_SHIFTED_ITER,fun)                    \
 /**/
 
 #define BOOST_ASSIGN_CSV(fun)                                               \
-	BOOST_ASSIGN_CSV_REPEAT(fun,BOOST_ASSIGN_CSV_SIZE)                      \
+    BOOST_ASSIGN_CSV_REPEAT(fun,BOOST_ASSIGN_CSV_SIZE)                      \
 /**/
 
 #endif
