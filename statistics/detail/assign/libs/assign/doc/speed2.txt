@@ -42,7 +42,7 @@ cref_list_of<>(90) => 6.97 s
 
 Warning for both compilers tested under Win7-32 below:
 1- a virtual machine was used so absolute time are overestimated. Relative times
-between different functions, may be somewhat more reliable. 
+between different functions, however, may be somewhat more reliable. 
 2- list_of was excluded as it would take too much time. 
 
 Win7-32 V6.1.7100       Dev-C++ 5.0 beta 9.2 - Mingw/GCC 3.4.2  
@@ -85,7 +85,7 @@ cref_list_of<>(90) => 76.80 s
 Win7-32 V6.1.7100 - Visual Studio 2010 - Release mode -
 
 Warning : The slow performance of cref_list_of vs cref_list_of<> with this 
-compilers, was confirmed separately under a fully Windows OS (not a VM).
+particular compiler, was confirmed separately under a fully Windows OS.
 
 cref_list_of(1) => 0.72 s
 
