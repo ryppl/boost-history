@@ -25,7 +25,7 @@
 // array_wrapper<U,N,BOOST_ASSIGN_CSV_ref>. 
 //
 // Usage:
-// BOOST_ASSIGN_CSV(fun) creates for i=2,...,n the following overloads:
+// BOOST_ASSIGN_CSV(fun) creates for i=1,...,n the following overloads:
 // 	fun_csv(a1,..,.ai) 
 // 	cfun_csv(a1,..,.ai) 
 // which return instances of w<T,i> and w<const T,i>, respectively.

@@ -10,8 +10,6 @@
 #include <vector>
 #include <algorithm>
 #include <boost/typeof/typeof.hpp>
-//#include <boost/assign/auto_size/ref_rebind_list_of.hpp>
-//#include <boost/assign/auto_size/ref_list_of.hpp>
 #include <boost/assign/auto_size/ref_list_of_csv.hpp>
 #include <boost/assign/auto_size/ref_rebind_list_of_csv.hpp>
 #include <boost/assign/auto_size/array/wrapper.hpp>
@@ -21,20 +19,20 @@
 
 void example_ref_list_of(std::ostream& os)
 {
-	os << "-> example_ref_listof : ";
-	using namespace boost::assign;
+    os << "-> example_ref_listof : ";
+    using namespace boost::assign;
     
-  	typedef std::vector<int> ints_;
+    typedef std::vector<int> ints_;
     typedef boost::array<int,3> array_;
-	array_ array;
+    array_ array;
 
-	// Since operator= calls begin() and end(), no need to test these separately
+    // Since operator= calls begin() and end(), no need to test these separately
 
+    ints_ ints;
     {    
         // cref_list_of_csv
 
     	int a=1, b=2, c=3;
-    	ints_ ints;
     
         {
     		ints.clear();
@@ -63,7 +61,6 @@ void example_ref_list_of(std::ostream& os)
         // ref_rebind_list_of_csv
         {
             int a=1, b=2, c=3;
-            ints_ ints;
             ints.clear();
             BOOST_AUTO(tmp,cref_rebind_list_of_csv(a,b,c));
             {
