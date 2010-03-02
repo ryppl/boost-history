@@ -31,6 +31,8 @@
 // with M.P.G
 //
 // Revision history:
+// March 1, 2010 : Factored the interface into a policy. Csv improved by 
+// returning array::wrapper, not array::policy, to avoid a pointer.
 // Feb 27, 2010 : Support for comma separated arguments (See csv.hpp)
 // Feb 25, 2010 : Complemented the boost::array interface
 // Feb 21, 2010 : Made member variables mutable and added constness to member 
