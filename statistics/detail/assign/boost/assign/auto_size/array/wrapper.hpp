@@ -17,7 +17,7 @@ namespace assign{
 namespace detail{
 namespace auto_size{
  
-    // Used by csv.hpp
+    // Used by csv.hpp 
     template<typename T,int N,template<typename> class Ref>
     class array_wrapper 
     	: public array_interface<T,N,Ref,array_wrapper<T,N,Ref> >
@@ -42,7 +42,7 @@ namespace auto_size{
         	write_to_array(this->ref_array,coll);
         }
 
-		mutable ref_array_ ref_array;
+        mutable ref_array_ ref_array;
         
     };
 
