@@ -25,35 +25,41 @@ int main(int argc, char* argv[])
 
   path p (argv[1]);   // p reads clearer than argv[1] in the following code
 
-  cout << p << ": ";  // utilize the path narrow stream inserter
-
-  if (exists(p))    // does p actually exist?
+  try
   {
-    if (is_regular_file(p))        // is p a regular file?
-      cout << file_size(p) << '\n';
-
-    else if (is_directory(p))      // is p a directory?
+    if (exists(p))    // does p actually exist?
     {
-      cout << "is a directory containing:\n";
+      if (is_regular_file(p))        // is p a regular file?
+        cout << p << " size is " << file_size(p) << '\n';
 
-      typedef vector<path> vec;             // store paths,
-      vec v;                                // so we can sort them later
-
-      copy(directory_iterator(p), directory_iterator(), back_inserter(v));
-
-      sort(v.begin(), v.end());             // sort, since directory iteration
-                                            // is not ordered on some file systems
-
-      for (vec::const_iterator it(v.begin()), it_end(v.end()); it != it_end; ++it)
+      else if (is_directory(p))      // is p a directory?
       {
-        cout << "   " << *it << '\n';
+        cout << p << " is a directory containing:\n";
+
+        typedef vector<path> vec;             // store paths,
+        vec v;                                // so we can sort them later
+
+        copy(directory_iterator(p), directory_iterator(), back_inserter(v));
+
+        sort(v.begin(), v.end());             // sort, since directory iteration
+                                              // is not ordered on some file systems
+
+        for (vec::const_iterator it(v.begin()), it_end(v.end()); it != it_end; ++it)
+        {
+          cout << "   " << *it << '\n';
+        }
       }
+      else
+        cout << p << " exists, but is neither a regular file nor a directory\n";
     }
     else
-      cout << "exists, but is neither a regular file nor a directory\n";
+      cout << p << " does not exist\n";
   }
-  else
-    cout << "does not exist\n";
+
+  catch (const filesystem_error& ex)
+  {
+    cout << ex.what() << '\n';
+  }
 
   return 0;
 }

@@ -41,9 +41,11 @@
       <a href="#Preliminaries">Preliminaries</a><br>
       <a href="#Reporting-size">Reporting the size of a file - (tut1.cpp)</a><br>
       <a href="#Using-status-queries">Using status queries to determine file existence and type - (tut2.cpp)</a><br>
-      <a href="#Directory-iteration">Directory iteration - (tut3.cpp)</a><br>
+      <a href="#Directory-iteration">Directory iteration plus catching 
+      exceptions - (tut3.cpp)</a><br>
       <a href="#Using-path-decomposition">Using path decomposition, plus sorting results - (tut4.cpp)</a><br>
-      <a href="#Class-path-Constructors">Class path: Constructors - (tut5.cpp)</a><br>
+      <a href="#Class-path-Constructors">Class path: Constructors, including 
+      Unicode - (tut5.cpp)</a><br>
       <a href="#Class-path-formats">Class path: Generic format vs. Native format</a><br>
       <a href="#Class path-iterators-etc">Class path: Iterators, observers, composition, decomposition, and query - (path_info.cpp)</a><br>
       <a href="#Error-reporting">Error reporting</a><br>
@@ -142,7 +144,7 @@ int main(int argc, char* argv[])
     std::cout &lt;&lt; &quot;Usage: tut1 path\n&quot;;
     return 1;
   }
-  std::cout &lt;&lt; argv[1] &lt;&lt; &quot;: &quot; &lt;&lt; file_size(argv[1]) &lt;&lt; '\n';
+  std::cout &lt;&lt; argv[1] &lt;&lt; &quot; &quot; &lt;&lt; file_size(argv[1]) &lt;&lt; '\n';
   return 0;
 }</pre>
     </blockquote>
@@ -174,16 +176,16 @@ results look like on two different operating systems:</p>
     <tr>
       <td width="50%" style="font-size: 10pt" valign="top">
       <pre>$ ./tut1 tut1.cpp
-tut1.cpp: 570</pre>
+tut1.cpp 569</pre>
       <pre>$ ls -l tut1.cpp
--rwxrwxrwx 1 root root 570 2010-02-01 07:31 tut1.cpp</pre>
+-rwxrwxrwx 1 root root 569 2010-02-01 07:31 tut1.cpp</pre>
       </td>
       <td style="font-size: 10pt" valign="top">
       <pre>&gt;tut1 tut1.cpp
-tut1.cpp: 593
+tut1.cpp 592
 &gt;dir tut1.cpp
 ...
-01/30/2010 10:47 AM 593 tut1.cpp
+01/30/2010 10:47 AM 592 tut1.cpp
 ...</pre>
       </td>
     </tr>
@@ -270,21 +272,19 @@ files and with different kinds of files:</p>
 {
   <a href="reference.html#class-path">path</a> p (argv[1]);   // p reads clearer than argv[1] in the following code
 
-  cout &lt;&lt; p &lt;&lt; &quot;: &quot;;  // utilize the <a href="reference.html#path-inserter-extractor">path narrow stream inserter</a>
-
   if (<a href="reference.html#exists-path">exists</a>(p))    // does p actually exist?
   {
     if (<a href="reference.html#is_regular_file-path">is_regular_file</a>(p))        // is p a regular file?   
-      cout &lt;&lt; <a href="reference.html#file_size">file_size</a>(p) &lt;&lt; '\n';
+      cout &lt;&lt; p &lt;&lt; &quot; size is &quot; &lt;&lt; <a href="reference.html#file_size">file_size</a>(p) &lt;&lt; '\n';
 
     else if (<a href="reference.html#is_directory-path">is_directory</a>(p))      // is p a directory?
-      cout &lt;&lt; &quot;is a directory\n&quot;;
+      cout &lt;&lt; p &lt;&lt; &quot;is a directory\n&quot;;
 
     else
-      cout &lt;&lt; &quot;exists, but is neither a regular file nor a directory\n&quot;;
+      cout &lt;&lt; p &lt;&lt; &quot;exists, but is neither a regular file nor a directory\n&quot;;
   }
   else
-    cout &lt;&lt; &quot;does not exist\n&quot;;
+    cout &lt;&lt; p &lt;&lt; &quot;does not exist\n&quot;;
 
   return 0;
 }</pre>
@@ -303,30 +303,65 @@ files and with different kinds of files:</p>
     <tr>
       <td width="50%" style="font-size: 10pt" valign="top">
       <pre>$ ./tut2 tut2.cpp
-tut2.cpp: 1037
+tut2 size is cpp 1037
 $ ./tut2 foo
-foo: does not exist
+foo does not exist
 $ ./tut2 .
-.: is a directory</pre>
+. is a directory</pre>
       </td>
       <td style="font-size: 10pt" valign="top">
       <pre>&gt;tut2 tut2.cpp
-tut2.cpp: 1079
+tut2.cpp size is 1079
 
 &gt;tut2 foo
-foo: does not exist
+foo does not exist
 
 &gt;tut2 .
-.: is a directory</pre>
+. is a directory</pre>
       </td>
     </tr>
   </table>
 
-<p>Although tut2 works OK, the output is less than 
-satisfactory for a directory since we'd typically like to see the directory's contents. Move 
-on to <code>tut3.cpp</code> to see how to iterate over directories.</p>
+<p>Although tut2 works OK in these tests, the output is less than satisfactory 
+for a directory. We'd typically like to see a list of the directory's contents. In <code>tut3.cpp</code> 
+we will see how to iterate over directories.</p>
 
-<h2><a name="Directory-iteration">Directory iteration</a> - (<a href="../example/tut3.cpp">tut3.cpp</a>)</h2>
+<p>But first, let's try one more test:</p>
+
+  <table align="center" border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
+    <tr>
+      <td align="center" width="50%" style="font-size: 10pt"><i><b>Ubuntu Linux </b></i></td>
+      <td align="center" style="font-size: 10pt"><i><b>Microsoft Windows</b></i></td>
+    </tr>
+    <tr>
+      <td width="50%" style="font-size: 10pt" valign="top">
+      <pre>$ ls /home/jane/foo
+ls: cannot access /home/jane/foo: Permission denied
+$ ./tut2 /home/jane/foo
+terminate called after throwing an instance of 'boost::exception_detail::
+clone_impl&lt;boost::exception_detail::error_info_injector&lt;boost::
+filesystem::filesystem_error&gt; &gt;'
+   what(): boost::filesystem::status: Permission denied:
+     &quot;/home/jane/foo&quot;
+Aborted</pre>
+      </td>
+      <td style="font-size: 10pt" valign="top">
+      <pre>&gt;dir e:\
+The device is not ready.
+&gt;tut2 e:\</pre>
+      <p><b><i>An exception is thrown; the exact form of the response depends on 
+      Windows system options.</i></b></td>
+    </tr>
+  </table>
+
+<p>On the Linux system, the test was being run from an account that did not have 
+permission to access <code>/home/jane/foo</code>. On the Windows system, <code>
+e:</code> was a Compact Disc reader/writer that was not ready. End users 
+shouldn't have to interpret cryptic exceptions reports, so as we move on to <code>tut3.cpp</code> 
+we will increase the robustness of the code, too.</p>
+
+<h2><a name="Directory-iteration">Directory iteration</a> plus catching 
+exceptions - (<a href="../example/tut3.cpp">tut3.cpp</a>)</h2>
 
 <p>Boost.Filesystem's <code><a href="reference.html#directory_iterator">
 directory_iterator</a></code> class is just what we need here. It follows the 
@@ -341,6 +376,11 @@ information.&nbsp; A <code>
 directory_entry</code> object 
 can be used directly, but can also be passed to <code>path</code> arguments in function calls.</p>
 
+<p>The other need is increased robustness in the face of the many kinds of 
+errors that can affect file system operations. We could do that at the level of 
+each call to a Boost.Filesystem function (see <a href="#Error-reporting">Error 
+reporting</a>), but it is easier to supply an overall try/catch block.</p>
+
 <table align="center" border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
   <tr>
     <td style="font-size: 10pt">
@@ -350,28 +390,34 @@ can be used directly, but can also be passed to <code>path</code> arguments in f
 {
   <a href="reference.html#class-path">path</a> p (argv[1]);   // p reads clearer than argv[1] in the following code
 
-  cout &lt;&lt; p &lt;&lt; &quot;: &quot;;  // utilize the <a href="reference.html#path-inserter-extractor">path narrow stream inserter</a>
-
-  if (<a href="reference.html#exists-path">exists</a>(p))    // does p actually exist?
+  try
   {
-    if (<a href="reference.html#is_regular_file-path">is_regular_file</a>(p))        // is p a regular file?   
-      cout &lt;&lt; <a href="reference.html#file_size">file_size</a>(p) &lt;&lt; '\n';
-
-    else if (<a href="reference.html#is_directory-path">is_directory</a>(p))      // is p a directory?
+    if (<a href="reference.html#exists-path">exists</a>(p))    // does p actually exist?
     {
-      cout &lt;&lt; &quot;is a directory containing:\n&quot;;
+      if (<a href="reference.html#is_regular_file-path">is_regular_file</a>(p))        // is p a regular file?   
+        cout &lt;&lt; p &lt;&lt; &quot; size is &quot; &lt;&lt; <a href="reference.html#file_size">file_size</a>(p) &lt;&lt; '\n';
 
-      copy(directory_iterator(p), directory_iterator(), // directory_iterator::value_type
-        ostream_iterator&lt;directory_entry&gt;(cout, &quot;\n&quot;)); // is directory_entry, which is
-                                                        // converted to a path by the
-                                                        // path stream inserter
+      else if (<a href="reference.html#is_directory-path">is_directory</a>(p))      // is p a directory?
+      {
+        cout &lt;&lt; p &lt;&lt; &quot; is a directory containing:\n&quot;;
+
+        copy(directory_iterator(p), directory_iterator(), // directory_iterator::value_type
+          ostream_iterator&lt;directory_entry&gt;(cout, &quot;\n&quot;)); // is directory_entry, which is
+                                                          // converted to a path by the
+                                                          // path stream inserter
+      }
+
+      else
+        cout &lt;&lt; p &lt;&lt; &quot; exists, but is neither a regular file nor a directory\n&quot;;
     }
-
     else
-      cout &lt;&lt; &quot;exists, but is neither a regular file nor a directory\n&quot;;
+      cout &lt;&lt; p &lt;&lt; &quot; does not exist\n&quot;;
   }
-  else
-    cout &lt;&lt; &quot;does not exist\n&quot;;
+
+  catch (const filesystem_error&amp; ex)
+  {
+    cout &lt;&lt; ex.what() &lt;&lt; '\n';
+  }
 
   return 0;
 }</pre>
@@ -381,7 +427,8 @@ can be used directly, but can also be passed to <code>path</code> arguments in f
 </table>
 
 <p>Give <code>tut3</code> a try, passing it a path to a directory as a command line argument. 
-Here is a run on a checkout of the Boost Subversion trunk:</p>
+Here is a run on a checkout of the Boost Subversion trunk, followed by a repeat 
+of the test cases that caused exceptions on Linux and Windows:</p>
 
   <table align="center" border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#D7EEFF" width="90%">
     <tr>
@@ -391,7 +438,7 @@ Here is a run on a checkout of the Boost Subversion trunk:</p>
     <tr>
       <td width="50%" style="font-size: 10pt" valign="top">
       <pre>$ ./tut3 ~/boost/trunk
-/home/beman/boost/trunk: is a directory containing:
+/home/beman/boost/trunk is a directory containing:
   /home/beman/boost/trunk/tools
   /home/beman/boost/trunk/boost-build.jam
   /home/beman/boost/trunk/dist
@@ -417,7 +464,7 @@ Here is a run on a checkout of the Boost Subversion trunk:</p>
       </td>
       <td style="font-size: 10pt" valign="top">
       <pre>&gt;tut3 c:\boost\trunk
-c:\boost\trunk: is a directory containing:
+c:\boost\trunk is a directory containing:
    c:\boost\trunk\.svn
    c:\boost\trunk\boost
    c:\boost\trunk\boost-build.jam
@@ -439,7 +486,10 @@ c:\boost\trunk: is a directory containing:
    c:\boost\trunk\rst.css
    c:\boost\trunk\status
    c:\boost\trunk\tools
-   c:\boost\trunk\wiki</pre>
+   c:\boost\trunk\wiki
+
+&gt;tut3 e:\
+boost::filesystem::status: The device is not ready: &quot;e:\&quot;</pre>
       </td>
     </tr>
   </table>
@@ -469,36 +519,42 @@ c:\boost\trunk: is a directory containing:
 {
   <a href="reference.html#class-path">path</a> p (argv[1]);   // p reads clearer than argv[1] in the following code
 
-  cout &lt;&lt; p &lt;&lt; &quot;: &quot;;  // utilize the <a href="reference.html#path-inserter-extractor">path narrow stream inserter</a>
-
-  if (<a href="reference.html#exists-path">exists</a>(p))    // does p actually exist?
+  try
   {
-    if (<a href="reference.html#is_regular_file-path">is_regular_file</a>(p))        // is p a regular file?   
-      cout &lt;&lt; <a href="reference.html#file_size">file_size</a>(p) &lt;&lt; '\n';
-
-    else if (<a href="reference.html#is_directory-path">is_directory</a>(p))      // is p a directory?
+    if (<a href="reference.html#exists-path">exists</a>(p))    // does p actually exist?
     {
-      cout &lt;&lt; &quot;is a directory containing:\n&quot;;
+      if (<a href="reference.html#is_regular_file-path">is_regular_file</a>(p))        // is p a regular file?   
+        cout &lt;&lt; p &lt;&lt; &quot; size is &quot; &lt;&lt; <a href="reference.html#file_size">file_size</a>(p) &lt;&lt; '\n';
 
-      typedef vector&lt;path&gt; vec;             // store paths,
-      vec v;                                // so we can sort them later
-
-      copy(directory_iterator(p), directory_iterator(), back_inserter(v));
-
-      sort(v.begin(), v.end());             // sort, since directory iteration
-                                            // is not ordered on some file systems
-
-      for (vec::const_iterator it (v.begin()); it != v.end(); ++it)
+      else if (<a href="reference.html#is_directory-path">is_directory</a>(p))      // is p a directory?
       {
-        cout &lt;&lt; &quot;   &quot; &lt;&lt; *it &lt;&lt; '\n';
-      }
-    }
+        cout &lt;&lt; p &lt;&lt; &quot; is a directory containing:\n&quot;;
 
+        typedef vector&lt;path&gt; vec;             // store paths,
+        vec v;                                // so we can sort them later
+
+        copy(directory_iterator(p), directory_iterator(), back_inserter(v));
+
+        sort(v.begin(), v.end());             // sort, since directory iteration
+                                              // is not ordered on some file systems
+  
+        for (vec::const_iterator it (v.begin()); it != v.end(); ++it)
+        {
+          cout &lt;&lt; &quot;   &quot; &lt;&lt; *it &lt;&lt; '\n';
+        }
+      }
+
+      else
+        cout &lt;&lt; p &lt;&lt; &quot; exists, but is neither a regular file nor a directory\n&quot;;
+    }
     else
-      cout &lt;&lt; &quot;exists, but is neither a regular file nor a directory\n&quot;;
+      cout &lt;&lt; p &lt;&lt; &quot; does not exist\n&quot;;
   }
-  else
-    cout &lt;&lt; &quot;does not exist\n&quot;;
+
+  catch (const filesystem_error&amp; ex)
+  {
+    cout &lt;&lt; ex.what() &lt;&lt; '\n';
+  }
 
   return 0;
 }</pre>
@@ -539,7 +595,7 @@ v.push_back(fn);                   // push into vector for later sorting</pre>
     <tr>
       <td width="50%" style="font-size: 10pt">
       <pre>$ ./tut4 ~/boost/trunk
-/home/beman/boost/trunk: is a directory containing:
+/home/beman/boost/trunk is a directory containing:
   .svn
   CMakeLists.txt
   INSTALL
@@ -564,7 +620,7 @@ v.push_back(fn);                   // push into vector for later sorting</pre>
       </td>
       <td style="font-size: 10pt">
       <pre>C:\v3d&gt;tut4 c:\boost\trunk
-c:\boost\trunk: is a directory containing:
+c:\boost\trunk is a directory containing:
   .svn
   CMakeLists.txt
   INSTALL
@@ -598,7 +654,8 @@ c:\boost\trunk: is a directory containing:
 
 <hr>
 
-<h2>&nbsp;<a name="Class-path-Constructors">Class path: Constructors</a> - (<a href="../example/tut5.cpp">tut5.cpp</a>)</h2>
+<h2>&nbsp;<a name="Class-path-Constructors">Class path: Constructors</a>, 
+including Unicode - (<a href="../example/tut5.cpp">tut5.cpp</a>)</h2>
 
 <p>Traditional C interfaces pass paths as <code>const char*</code> arguments. 
 C++ interfaces may add <code>const std::string&amp;</code> overloads, but adding 
@@ -1092,7 +1149,7 @@ It has a
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->22 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40543" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->02 March 2010<!--webbot bot="Timestamp" endspan i-checksum="27224" --></p>
 
 </body>
 

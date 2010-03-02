@@ -18,6 +18,6 @@ int main(int argc, char* argv[])
     std::cout << "Usage: tut1 path\n";
     return 1;
   }
-  std::cout << argv[1] << ": " << file_size(argv[1]) << '\n';
+  std::cout << argv[1] << " " << file_size(argv[1]) << '\n';
   return 0;
 }

@@ -952,8 +952,11 @@ with the first <i>filename</i> after <i>root-path</i>. Otherwise, <code>path()</
 <pre>path <a name="path-filename">filename</a>() const;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>empty() ? path() : *--end()</code></p>
-  <p>[<i>Example:</i> <code>std::cout &lt;&lt; path(&quot;/foo/bar.txt&quot;).filename();</code> 
-  outputs &quot;<code>bar.txt</code>&quot; (without the quotes). <i>--end example</i>]</p>
+  <p>[<i>Example:</i></p>
+  <blockquote>
+    <pre><code>std::cout &lt;&lt; path(&quot;/foo/bar.txt&quot;).filename();</code> // outputs &quot;<code>bar.txt</code>&quot; (without the quotes)</pre>
+  </blockquote>
+  <p> <i>--end example</i>]</p>
 </blockquote>
 <pre>path <a name="path-stem">stem</a>(const path&amp; p) const;</pre>
 <blockquote>
@@ -963,8 +966,17 @@ with the first <i>filename</i> after <i>root-path</i>. Otherwise, <code>path()</
   ending at the last dot (the dot is not included). Otherwise, 
   returns <code>
   p.filename()</code>.</p>
-  <p>[<i>Example:</i> <code>std::cout &lt;&lt; path(&quot;/foo/bar.txt&quot;).stem();</code> 
-  outputs &quot;<code>bar</code>&quot; (without the quotes). <i>--end example</i>]</p>
+  <p>[<i>Example:</i></p>
+  <blockquote>
+    <pre><code>std::cout &lt;&lt; path(&quot;/foo/bar.txt&quot;).stem();</code> // outputs &quot;<code>bar</code>&quot; (without the quotes)</pre>
+    <pre>path p = &quot;foo.bar.baz.tar&quot;;
+for (; !p.extension().empty(); p = p.stem())
+  std::cout &lt;&lt; p.extension() &lt;&lt; '\n';
+  // outputs: .tar
+  //          .baz
+  //          .bar</pre>
+  </blockquote>
+  <p> <i>--end example</i>]</p>
 </blockquote>
 <pre>path <a name="path-extension">extension</a>(const path&amp; p) const;</pre>
 <blockquote>
@@ -973,16 +985,19 @@ with the first <i>filename</i> after <i>root-path</i>. Otherwise, <code>path()</
   the substring of <code>p.filename()</code> starting at the rightmost dot 
   and ending at the path's end. Otherwise, returns an empty <code>path</code> 
   object. </p>
-  <p>[<i>Example:</i> <code>std::cout &lt;&lt; path(&quot;/foo/bar.txt&quot;).extension();</code> 
-  outputs &quot;<code>.txt</code>&quot; (without the quotes). <i>--end example</i>]</p>
+  <p><i>Remarks:</i> Implementations are permitted but not required to define additional 
+  behavior for file systems which append additional elements to extensions, such 
+  as alternate data streams or partitioned dataset names.</p>
+  <p>[<i>Example:</i></p>
+  <blockquote>
+    <pre><code>std::cout &lt;&lt; path(&quot;/foo/bar.txt&quot;).extension(); //</code> outputs &quot;<code>.txt</code>&quot; (without the quotes)</pre>
+  </blockquote>
+  <p> <i>--end example</i>]</p>
   <p>[<i>Note:<b> </b></i>The dot is included in the return value so that 
   it is possible to distinguish between no extension and an empty extension. See
   <a href="http://permalink.gmane.org/gmane.comp.lib.boost.devel/199744">
   http://permalink.gmane.org/gmane.comp.lib.boost.devel/199744</a> for more 
   extensive rationale.&nbsp; <i>-- end note</i>]</p>
-  <p>Implementations are permitted but not required to define additional 
-  behavior for file systems which append additional elements to extensions, such 
-  as alternate data streams or partitioned dataset names.</p>
 </blockquote>
 <h3> <a name="path-query"> <code><font size="4">path</font></code> query</a></h3>
 <pre>bool <a name="path-empty">empty</a>() const;</pre>
@@ -3144,7 +3159,7 @@ multiple string types. His idea became the basis for the version 3 path design.<
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->22 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40543" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->23 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40545" --></p>
 
 </body>
 
