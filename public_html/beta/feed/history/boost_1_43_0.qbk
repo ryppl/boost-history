@@ -1,4 +1,4 @@
-[article Version 1.xx.x
+[article Version 1.43.0
     [quickbook 1.4]
     [source-mode c++]
     [purpose New Libraries: Updated Libraries: ]
@@ -9,7 +9,7 @@
 [include ext.qbk]
 
 [/ TODO: Check download link on release.]
-[download http://sourceforge.net/projects/boost/files/boost/1.xx.x/]
+[download http://sourceforge.net/projects/boost/files/boost/1.43.0/]
 
 [/
     When adding libraries:
@@ -44,6 +44,17 @@
 * /TODO/
 
 [endsect]
+
+[section Build System]
+
+* When cross-compiling to GNU targets, static libraries are properly created.
+  Previously, using such libraries resulted in [^Archive has no index] error.
+* The naming of DLL and import libraries with gcc compiler on Windows, both
+  mingw and cygwin, now matches default conventions of those environments.
+  Previously, the naming scheme was the same as for other Windows compilers.
+  
+[endsect]
+
 
 [section Compilers Tested]
 
