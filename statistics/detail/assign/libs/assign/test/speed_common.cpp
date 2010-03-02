@@ -17,7 +17,8 @@
 #include <boost/bind.hpp>
 #include <libs/assign/test/speed_common.h>
 
-// This file was provided by M.P.G 
+// http://code.google.com/p/truffle/source/browse/trunk/include/mpg/TimeIt.h
+// http://code.google.com/p/truffle/source/browse/trunk/include/mpg/Random.h 
 
 // http://www.eternallyconfuzzled.com/arts/jsw_art_rand.aspx
 inline double uniform_deviate ( int seed )
