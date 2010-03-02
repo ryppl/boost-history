@@ -35,7 +35,6 @@ namespace boost
  	 	}// transform_iterator
 	}// detail
 
-	// Warning : dont use it yet.
 	// Deduces the function pointer passed as second argument
 	template <class Return, class Iterator>
   	typename detail::transform_iterator::deduce_sig_fp<
