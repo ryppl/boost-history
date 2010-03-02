@@ -39,7 +39,7 @@ namespace auto_size{
         
         template<typename E>
         void initialize(const E& coll)const{
-        	write_to_array(this->ref_array,coll);
+            write_to_array(this->ref_array,coll);
         }
 
         mutable ref_array_ ref_array;
