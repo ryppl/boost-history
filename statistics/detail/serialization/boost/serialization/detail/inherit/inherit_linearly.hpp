@@ -12,6 +12,9 @@
 #include <boost/mpl/empty_base.hpp>
 #include <boost/mpl/reverse_fold.hpp>
 #include <boost/mpl/placeholders.hpp>
+#include <boost/mpl/aux_/na_fwd.hpp>
+#include <boost/mpl/vector.hpp>
+#include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/serialization/base_object.hpp>
 
 #include <boost/concept/assert.hpp>
@@ -21,19 +24,18 @@ namespace boost{
 namespace serialization{
 namespace detail{
 
-    // Merges serializable classes together into one that is also serializable. 
-    // In addition to a default constructor, one that takes an argument pack
-    // forwards the latter to each of its components.
+    // This serializable class is the result of merging an mpl sequence, S, of 
+    // serializable class types. It has
+    // - A contructor that takes an argument pack, and
+    // - Writes a comma separated list of its components to an output stream,
+	// provided each of its components has the corresponding interface.
     //
-    // Requirements :
-    // S is a sequence of non-empy-base serializable class types, optionally 
-    // with an argument pack constructor, and operator<< as needed.
-    //
-    // Usage : let arg denote an argument pack and T one element of S
-    // inherit_linearly<S> obj(args);
-    // static_cast<const S&>(obj);
-    // oa << obj;
-    // ia >> obj;
+    // Let arg denote an argument pack and T one element of S
+    // Construction :	inherit_linearly<S> obj(args);
+    // Access:			static_cast<const T&>(obj);
+    // Saving:			oa << obj;
+    // Loading:			ia >> obj;
+    // Description:		os << obj
     //
     // See Boost.Parameter regarding argument pack.
     // See sandbox/statistics/data for a small application
@@ -44,10 +46,13 @@ namespace detail{
     struct inherit_linearly : boost::mpl::reverse_fold<
     	S,R,inherit2<boost::mpl::_2,boost::mpl::_1>
     >::type{
-		typedef typename boost::mpl::reverse_fold<
+
+		typedef S components;
+        
+        typedef typename boost::mpl::reverse_fold<
         	S,R,inherit2<boost::mpl::_2,boost::mpl::_1>
     	>::type super_;
-        
+
         inherit_linearly(){}
             
         template<typename Args>

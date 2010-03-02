@@ -65,6 +65,47 @@ namespace boost{ namespace serialization{
         split_free(ar, t, file_version);
     }
 
+	// n = 4
+
+    template<class Archive,
+    typename K1,typename K2,typename K3,typename K4,
+    typename D1,typename D2,typename D3,typename D4
+    >
+    void serialize(
+        Archive & ar,
+        boost::fusion::map<
+            boost::fusion::pair<K1,D1>, 
+            boost::fusion::pair<K2,D2>, 
+            boost::fusion::pair<K3,D3>,
+            boost::fusion::pair<K4,D4>
+        >& t,
+        const unsigned int file_version
+    )
+    {
+        split_free(ar, t, file_version);
+    }
+    
+	// n = 5
+    
+    template<class Archive,
+    typename K1,typename K2,typename K3,typename K4,typename K5,
+    typename D1,typename D2,typename D3,typename D4,typename D5
+    >
+    void serialize(
+        Archive & ar,
+        boost::fusion::map<
+            boost::fusion::pair<K1,D1>, 
+            boost::fusion::pair<K2,D2>, 
+            boost::fusion::pair<K3,D3>,
+            boost::fusion::pair<K4,D4>,
+            boost::fusion::pair<K5,D5>
+        >& t,
+        const unsigned int file_version
+    )
+    {
+        split_free(ar, t, file_version);
+    }
+
 }}
 
 #endif

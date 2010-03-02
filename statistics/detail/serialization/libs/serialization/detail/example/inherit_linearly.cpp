@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <fstream>
 #include <string>
-#include <boost/serialization/detail/inherit/inherit_linearly.hpp>
+#include <boost/serialization/detail/inherit/include.hpp>
 #include <boost/serialization/detail/inherit/detail/test_wrapper.hpp>
 #include <boost/serialization/string.hpp>
 #include <boost/mpl/vector.hpp>
@@ -65,8 +65,8 @@ void example_inherit_linearly(std::ostream& os){
 	typedef ser::test_wrapper<data2_> wrap2_;
 	typedef ser::test_wrapper<data3_> wrap3_;
 	typedef ser::test_wrapper<data4_> wrap4_;
-	typedef boost::mpl::vector<wrap1_,wrap2_,wrap3_,wrap4_> types_;
-	typedef ser::inherit_linearly<types_> inlin_;
+	typedef ser::meta_inherit_linearly<
+    	wrap1_, wrap2_, wrap3_, wrap4_>::type inlin_;
 
 	data1_ v1 = -1;
     data2_ v2 = true;

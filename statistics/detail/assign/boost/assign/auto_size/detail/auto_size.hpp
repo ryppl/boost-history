@@ -20,7 +20,7 @@
 
 // Creates a collection of references by deducing the number of arguments
 // at compile time. The functionality is controlled by parameter Ref which
-// specifies a reference_wrapper, and P, an abitrary policy, usually intended
+// specifies a reference wrapper, and P, an abitrary policy, usually intended
 // to expose a container interface.
 //
 // Note:
@@ -32,13 +32,13 @@
 //
 // Revision history:
 // March 1, 2010 : Factored the interface into a policy. Csv improved by 
-// returning array::wrapper, not array::policy, to avoid a pointer.
+// returning array_wrapper, not array_policy, to avoid a pointer.
 // Feb 27, 2010 : Support for comma separated arguments (See csv.hpp)
 // Feb 25, 2010 : Complemented the boost::array interface
 // Feb 21, 2010 : Made member variables mutable and added constness to member 
 // functions where appropriate.
 // Feb 9, 2010 : 
-// 	- Added a template parameter for the reference_wrapper
+// 	- Added a template parameter for the reference wrapper
 // 	- The temporary array in the conversion operator is now assigned by calling 
 // 	begin() and end() rather than write_to_array() to ensure consistency of 
 //  side effect. 
@@ -51,8 +51,8 @@ namespace auto_size{
             
     typedef boost::mpl::void_ top_;
             
-    template<typename L,typename T,int N,template<typename> class Ref,
-    	typename P>
+    template<
+    	typename L,typename T,int N,template<typename> class Ref,typename P>
     class expr;
 
     // ---- Policy meta classes --- //
@@ -76,16 +76,15 @@ namespace auto_size{
 
     // ---- Collection builder ---- //
             
-    template<typename E,typename T,int N,template<typename> class Ref,
-    	typename P>
+    template<
+    	typename E,typename T,int N,template<typename> class Ref,typename P>
     struct next{
         typedef expr<E,T,N,Ref,P> expr_;
         typedef expr<expr_,T,N+1,Ref,P> type;
     };
 
     template<
-    	typename E,typename T,int N,template<typename> class Ref,typename P
-    >
+    	typename E,typename T,int N,template<typename> class Ref,typename P>
     class expr : public P::template apply<E,T,N,Ref>::type{
         typedef boost::mpl::int_<1> int_1_;
         typedef boost::mpl::int_<N> int_n_;
