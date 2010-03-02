@@ -1,5 +1,5 @@
 Output from speed2.cpp
-Each arg is a vec of max size  : 100
+Each arg is a vec of ints of max size  : 100
 Number of repeated function calls : 100000000
 
 Machine : Macbook - 2.4 GHz Intel Core 2 Duo 
@@ -30,10 +30,7 @@ cref_list_of_csv(90)    =>     28.22 s
 cref_list_of<>(90)      =>      7.19 s
 list_of(90)             =>   7284.27 s
 
-Warning : 
-For both compilers tested under Win7-32 below, a virtual machine was used so 
-absolute times are probably overestimated. Relative times between different 
-functions, however, may be somewhat more reliable. 
+Note : For both compilers below, a virtual machine for Windows was used. 
 
 Win7-32 V6.1.7100 - Dev-C++ 5.0 beta 9.2 - Mingw/GCC 3.4.2 - Best optim
 cref_list_of(1)         =>     0.80 s
