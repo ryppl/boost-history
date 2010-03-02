@@ -27,7 +27,8 @@ namespace auto_size{
     	template<typename> class Ref,typename P>
     void write_to_array(A& a,const expr<E,T,N,Ref,P>& e);
                   
-   // Policy for auto_size::expr that exposes an array interface
+   // Policy for the collection builder, auto_size::expr<>, that exposes an 
+   // array interface
    template<typename T,int N,template<typename> class Ref,typename D>
    class array_policy 
     	: public array_interface<T,N,Ref,array_policy<T,N,Ref,D> >
