@@ -26,7 +26,8 @@ void example_ref_list_of(std::ostream& os)
     typedef boost::array<int,3> array_;
     array_ array;
 
-    // Since operator= calls begin() and end(), no need to test these separately
+    // Since the conversion operator calls begin() and end(), no need to test 
+    // these separately
 
     ints_ ints;
     {    
