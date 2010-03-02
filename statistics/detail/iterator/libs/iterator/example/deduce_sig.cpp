@@ -92,11 +92,16 @@ void example_deduce_sig(std::ostream& os){
     );
 	os << std::endl;
 
-	typedef boost::range_iterator<const vec_>::type c_it_;
-
-    make_transform_iterator2<bool>(
-        boost::const_begin(vec),	// will not compile with begin(vec);	
-        is_zero
+    std::copy(
+		make_transform_iterator2<bool>(
+    		boost::const_begin(vec),		
+			is_zero
+    	),
+		make_transform_iterator2<bool>(
+    		boost::const_end(vec),		
+			is_zero
+    	),
+		std::ostream_iterator<val_>(os," ")
     );
 
 }
