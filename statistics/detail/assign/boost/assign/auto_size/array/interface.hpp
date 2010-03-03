@@ -23,10 +23,10 @@ namespace auto_size{
     // Used as a base class of D, adds the array interface and a conversion 
     // operator to any data-structure constructible from a pair of iterators.
     //
-    // Requirements: let d an instances of D
+    // Requirements: let d1 and d2 instances of D and const D, respectively
     // Valid expression			Result
-    // d.ref_array_impl()		const ref_array_&
-    // d.ref_array_impl()		ref_array&
+    // d1.ref_array_impl()		ref_array&
+    // d2.ref_array_impl()		const ref_array_&
     template<typename T,int N,template<typename> class Ref,typename D>
     struct array_interface{
         typedef typename Ref<T>::type ref_;
