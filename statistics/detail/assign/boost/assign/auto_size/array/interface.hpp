@@ -109,25 +109,25 @@ namespace auto_size{
         }
 
         private:
-		typedef boost::mpl::bool_<false> false_;
-		typedef boost::mpl::bool_<true> true_;
+        typedef boost::mpl::bool_<false> false_;
+        typedef boost::mpl::bool_<true> true_;
 
         void assign(const T& val,true_ /*copy semantics*/){ 
-        	// Force copy semantics. Suggested by M.P.G on Feb 28th, 2010.
-           	ref_array_& ra = this->ref_array();
-           	std::fill(ra.begin(), ra.end(), val);
+            // Force copy semantics. Suggested by M.P.G on Feb 28th, 2010.
+            ref_array_& ra = this->ref_array();
+            std::fill(ra.begin(), ra.end(), val);
         }
 
         void assign(const T& val,false_ /*copy semantics*/){ 
-           	return this->ref_array().assign(val);
+            return this->ref_array().assign(val);
         }
 		
         ref_array_& ref_array(){ 
-			return static_cast<D&>(*this).ref_array_impl();
+            return static_cast<D&>(*this).ref_array_impl();
         }
 
         const ref_array_& ref_array()const{ 
-			return static_cast<const D&>(*this).ref_array_impl();
+            return static_cast<const D&>(*this).ref_array_impl();
         }
 
     };
