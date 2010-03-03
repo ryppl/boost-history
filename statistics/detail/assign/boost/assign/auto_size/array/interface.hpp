@@ -84,7 +84,7 @@ namespace auto_size{
         
         void swap(ref_array_& other){ return (this->ref_array()).swap(other); }
         void assign(const T& val){ 
-        	typedef has_copy_semantics<ref_> pred_;
+            typedef has_copy_semantics<ref_> pred_;
             return this->assign(val,pred_());
         }
 
@@ -121,7 +121,7 @@ namespace auto_size{
         void assign(const T& val,false_ /*copy semantics*/){ 
             return this->ref_array().assign(val);
         }
-		
+        
         ref_array_& ref_array(){ 
             return static_cast<D&>(*this).ref_array_impl();
         }

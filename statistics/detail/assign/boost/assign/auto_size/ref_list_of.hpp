@@ -15,7 +15,6 @@
 // of an assignment such as:
 // 	boost::fill(ref_list_of(a)(b)(c),0)
 
-
 namespace boost{
 namespace assign{
 
