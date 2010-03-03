@@ -15,7 +15,7 @@
 #include <boost/mpl/empty_base.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/assign/list_of.hpp> // needed for assign_reference
-#include <boost/assign/auto_size/detail/assign_refence_copy.hpp>
+#include <boost/assign/auto_size/detail/assign_reference_copy.hpp>
 #include <boost/assign/auto_size/array/policy.hpp>
 
 // Creates a collection of references by deducing the number of arguments
