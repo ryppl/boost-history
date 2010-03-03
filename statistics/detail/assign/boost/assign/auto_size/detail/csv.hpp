@@ -21,8 +21,7 @@
 // are overloaded on the number of arguments.
 //
 // Let n = BOOST_ASSIGN_CSV_SIZE and a1,...,an, objects of type T, Ref an alias 
-// for BOOST_ASSIGN_CSV_ref, and w<U,N> and alias for
-// array_wrapper<U,N,BOOST_ASSIGN_CSV_ref>. 
+// for BOOST_ASSIGN_CSV_ref, and w<U,N> and alias for array_wrapper<U,N,Ref>. 
 //
 // Usage:
 // BOOST_ASSIGN_CSV(fun) creates for i=1,...,n the following overloads:
