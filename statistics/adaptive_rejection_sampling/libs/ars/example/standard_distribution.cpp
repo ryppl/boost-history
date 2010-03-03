@@ -26,11 +26,13 @@ void example_standard_distribution(std::ostream& out){
 
     typedef double value_;
 
-    const unsigned n1 = 1e1;    // # loops
-    const unsigned n2 = 1e1;   // # subsamples on first loop  
-    const unsigned n3 = 1e0;   // size of subsample 
-    const unsigned n4 = 2e0;   // At each loop, n2 *= n4
+    const unsigned n1 = 5e0;    // # loops
+    const unsigned n2 = 1e1;   	// # subsamples on first loop  
+    const unsigned n3 = 1e0;   	// size of subsample 
+    const unsigned n4 = 1e1;   	// At each loop, n2 *= n4
     const unsigned max_n_reject = 10;
+
+	ars::test::standard_distribution::header(out);
 
     // The initial values are chosen to test the robustness of the
     // implementation, within the range allowed by the algorithm.
@@ -38,7 +40,8 @@ void example_standard_distribution(std::ostream& out){
         value_ shape = 3.0;
         value_ scale = 1.0;
         value_ mode = (shape - 1.0) * scale; //2
-        ars::test::gamma_distribution<value_>(
+        typedef ars::test::gamma_distribution test_;
+        test_::call(
             shape,          
             scale,          
             mode + 100.0,   //init0
@@ -50,7 +53,7 @@ void example_standard_distribution(std::ostream& out){
             max_n_reject,        
             out
         ); 
-        ars::test::gamma_distribution<value_>(
+        test_::call(
             shape,      //shape
             scale,      //scale
             mode + 0.01,//init0
@@ -67,7 +70,8 @@ void example_standard_distribution(std::ostream& out){
     {   // Domain = (-inf,inf)
         value_ mu = 0.0;
         value_ sigma = 2.0;
-        ars::test::normal_distribution<value_>(
+        typedef ars::test::normal_distribution test_;
+        test_::call(
             mu,
             sigma,
             mu -100.0, //-100.0, //init0
@@ -80,7 +84,7 @@ void example_standard_distribution(std::ostream& out){
             out
         );
         
-        ars::test::normal_distribution<value_>(
+        test_::call(
             mu,
             sigma,
             mu - 0.01,   //init0
@@ -93,7 +97,7 @@ void example_standard_distribution(std::ostream& out){
             out
         );
         
-        ars::test::normal_distribution<value_>(
+        test_::call(
             mu,
             sigma,
             -0.01,      //init0

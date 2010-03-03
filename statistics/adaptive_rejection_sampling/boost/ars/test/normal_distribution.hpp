@@ -19,52 +19,54 @@ namespace detail{
 namespace ars{
 namespace test{
 
-// Same as standard_distribution but for a specific distribution
-template<typename T>
-void normal_distribution(
-    T mu,
-    T sigma,
-    T init_0, //must be < mu
-    T init_1, //must be > mu
-    unsigned n1,    // 1e2
-    unsigned n2,    // 10
-    unsigned n3,    // 1
-    unsigned n4,    // 10
-    unsigned n_max_reject,
-    std::ostream& out
-)
-{
+struct normal_distribution{
 
-    using namespace boost;
-    using namespace math;
-    using namespace assign;
-    typedef double                                          value_t;
-    typedef ars::constant<value_t>                          const_;
-    typedef math::normal_distribution<value_t>              mdist_t;
-    typedef boost::mt19937                                  urng_t;
+    // Samples from normal distribution using adaptive rejection sampling and 
+    // outputs convergence statistics
+	template<typename T>
+	static void call(
+    	T mu,
+    	T sigma,
+    	T init_0, //must be < mu
+    	T init_1, //must be > mu
+    	unsigned n1,    // 1e2
+    	unsigned n2,    // 10
+    	unsigned n3,    // 1
+    	unsigned n4,    // 10
+    	unsigned n_max_reject,
+    	std::ostream& out
+	)
+	{
 
-    const value_t inf_ = const_::inf_;
+    	using namespace boost;
+    	using namespace math;
+    	using namespace assign;
+    	typedef double                                          value_t;
+    	typedef ars::constant<value_t>                          const_;
+    	typedef math::normal_distribution<value_t>              mdist_t;
+    	typedef boost::mt19937                                  urng_t;
+	
+    	const value_t inf_ = const_::inf_;
 
-    format f("N(0,%1%) : "); f%sigma;
-    out << f.str();
-    mdist_t mdist(mu,sigma);
-    urng_t urng;
+    	mdist_t mdist(mu,sigma);
+    	urng_t urng;
 
-    standard_distribution(
-        mdist,
-        inf_,
-        inf_,
-        init_0,
-        init_1,
-        urng,
-        n1,    
-        n2,    
-        n3,    
-        n4,   
-        n_max_reject,
-        out
-    );
-}
+    	ars::test::standard_distribution::call(
+        	mdist,
+        	inf_,
+        	inf_,
+        	init_0,
+        	init_1,
+        	urng,
+        	n1,    
+        	n2,    
+        	n3,    
+        	n4,   
+        	n_max_reject,
+        	out
+    	);
+    }
+};
 
 }//test
 }// ars

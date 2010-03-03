@@ -19,10 +19,6 @@ sampler (Gilks, 1992).
 A tool for testing is provided for standard distributions, which makes use of 
 their known cdf to produce kolmogorov-smirnov statistics.
 
-[ Bugs ]
-
-Since Jan 20, convergence fails in the test.
-
 [ Compiler ]
 
 Tested Jan 20, 2010
@@ -41,10 +37,10 @@ boost_1_41_0
 /sandbox/statistics/random
 
 [ History ]
-
+March 3rd, 2010 Fixed an apparent slow convergence in the output from 
+    standard_distribution.cpp which was in fact due to a formatting defect.
 Jan 20  2010 : small changes to test functions to adapt to the new 
 	non_parametric::kolmogorov_smirnov functionality.
-
 Jan 8 	2010 : in proposal_sampler, found and fixed bug
 		//T t = max_element(
         //    begin(datas_),back_iter,
@@ -104,58 +100,3 @@ http://www.maths.leeds.ac.uk/~wally.gilks/adaptive.rejection/web_page/Welcome.ht
 ars1d.h, started 22 April 2008 by tss
 www.cs.cmu.edu/~tss/README_ars1d.txt
 
-[Output]
-
-Here's the output from main.cpp :
-
-[Session started at 2009-07-24 20:48:28 -0400.]
--> example_search_reflection
-N(0,2)x_0 = 100, x_1 = 100.01, , n = 14, p_0 : (-63.83,-509.284,15.9575), p_1 : (100.01,-1250.25,-25.0025)
-x_0 = -100.01, x_1 = -100, , n = 14, p_0 : (-100.01,-1250.25,25.0025), p_1 : (63.83,-509.284,-15.9575)
-x_0 = -0.02, x_1 = -0.01, , n = 2, p_0 : (-0.02,-5e-05,0.005), p_1 : (0.02,-5e-05,-0.005)
-<-
--> example_standard_distribution 
-Gamma(3,1) : ars initialized every 1 with init_0 = 102 and init_1 = 102.01
-(Kolmogorov-statistic, # rejections per draw): 
-((10,0.16757),2.1)
-((100,0.0580157),2.46)
-((1000,0.0309302),2.318)
-((10000,0.00768814),2.3112)
-((100000,0.0021249),2.32135)
-((1000000,0.000751711),2.32073)
-
-Gamma(3,1) : ars initialized every 1 with init_0 = 2.01 and init_1 = 2.02
-(Kolmogorov-statistic, # rejections per draw): 
-((10,0.379978),2.3)
-((100,0.0560606),1.71)
-((1000,0.018001),1.683)
-((10000,0.00552136),1.6643)
-((100000,0.00235738),1.65932)
-((1000000,0.000615244),1.65827)
-
-N(0,2) : ars initialized every 1 with init_0 = -100 and init_1 = 0.01
-(Kolmogorov-statistic, # rejections per draw): 
-((10,0.153306),4.8)
-((100,0.0478689),4.29)
-((1000,0.0237086),4.679)
-((10000,0.00603333),4.6361)
-((100000,0.00306973),4.65347)
-((1000000,0.000669519),4.65573)
-
-N(0,2) : ars initialized every 1 with init_0 = -0.01 and init_1 = 100
-(Kolmogorov-statistic, # rejections per draw): 
-((10,0.275829),5.4)
-((100,0.0408603),4.57)
-((1000,0.0170958),4.683)
-((10000,0.00669968),4.6581)
-((100000,0.0023244),4.65068)
-((1000000,0.000614343),4.65194)
-
-N(0,2) : ars initialized every 1 with init_0 = -0.01 and init_1 = 0.01
-(Kolmogorov-statistic, # rejections per draw): 
-((10,0.173027),5.7)
-((100,0.104005),5.99)
-((1000,0.0356427),5.933)
-((10000,0.00754988),6.0014)
-((100000,0.00280912),5.98497)
-((1000000,0.0013802),5.99028)

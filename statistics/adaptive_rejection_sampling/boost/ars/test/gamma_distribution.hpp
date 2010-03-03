@@ -19,52 +19,54 @@ namespace detail{
 namespace ars{
 namespace test{
 
-// Same as standard_distribution but for a specific distribution
-template<typename T>
-void gamma_distribution(
-    T shape,  // must be > 1
-    T scale,
-    T init_0, // must be >0 and < init_1
-    T init_1, // must be > mode = (m-1) * theta
-    unsigned n1,    // 1e2
-    unsigned n2,    // 10
-    unsigned n3,    // 1
-    unsigned n4,    // 10
-    unsigned n_max_reject,
-    std::ostream& out
-)
-{
+struct gamma_distribution{
 
-    using namespace boost;
-    using namespace math;
-    using namespace assign;
-    typedef double                                          val_;
-    typedef ars::constant<val_>                             const_;
-    typedef math::gamma_distribution<val_>                  mdist_t;
-    typedef boost::mt19937                                  urng_;
+    // Samples from gamma distribution using adaptive rejection sampling and 
+    // outputs convergence statistics
+    template<typename T>
+	static void call(
+    	T shape,  // must be > 1
+    	T scale,
+    	T init_0, // must be >0 and < init_1
+    	T init_1, // must be > mode = (m-1) * theta
+    	unsigned n1,    // 1e2
+    	unsigned n2,    // 10
+    	unsigned n3,    // 1
+    	unsigned n4,    // 10
+    	unsigned n_max_reject,
+    	std::ostream& out
+	)
+	{
 
-    format f("Gamma(%1%,%2%) : "); f%shape%scale;
-    out << f.str();
-    mdist_t mdist(shape,scale);
-    urng_ urng;
+    	using namespace boost;
+    	using namespace math;
+    	using namespace assign;
+    	typedef double                                          val_;
+    	typedef ars::constant<val_>                             const_;
+    	typedef math::gamma_distribution<val_>                  mdist_t;
+    	typedef boost::mt19937                                  urng_;
 
-    const val_ inf_ = const_::inf_;
+    	mdist_t mdist(shape,scale);
+    	urng_ urng;
 
-    ars::test::standard_distribution(
-        mdist,
-        static_cast<val_>(0),   // x_min
-        inf_,                   // x_max
-        init_0,                 
-        init_1, 
-        urng,   
-        n1,    
-        n2,    
-        n3,    
-        n4,    
-        n_max_reject,
-        out
-    );
-}
+    	const val_ inf_ = const_::inf_;
+
+    	ars::test::standard_distribution::call(
+        	mdist,
+        	static_cast<val_>(0),   // x_min
+        	inf_,                   // x_max
+        	init_0,                 
+        	init_1, 
+        	urng,   
+        	n1,    
+        	n2,    
+        	n3,    
+        	n4,    
+        	n_max_reject,
+        	out
+    	);
+	}
+};
 
 }//test
 }// ars
