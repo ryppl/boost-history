@@ -1,4 +1,4 @@
-// Copyright (C) 2005-2006 The Trustees of Indiana University.
+// Copyright (C) 2005-2010 The Trustees of Indiana University.
 
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -8,93 +8,102 @@
 //           Douglas Gregor
 //           Andrew Lumsdaine
 
-// Two bit per color property map
+// One bit per color property map (gray and black are the same, green is not
+// supported)
 
-#ifndef BOOST_TWO_BIT_COLOR_MAP_HPP
-#define BOOST_TWO_BIT_COLOR_MAP_HPP
+#ifndef BOOST_ONE_BIT_COLOR_MAP_HPP
+#define BOOST_ONE_BIT_COLOR_MAP_HPP
 
 #include <boost/property_map/property_map.hpp>
 #include <boost/graph/properties.hpp>
 #include <boost/shared_array.hpp>
+#include <boost/config.hpp>
 #include <algorithm>
+#include <limits>
 
 namespace boost {
 
-enum two_bit_color_type { 
-  two_bit_white = 0, 
-  two_bit_gray  = 1, 
-  two_bit_green = 2, 
-  two_bit_black = 3 
+enum one_bit_color_type { 
+  one_bit_white     = 0, 
+  one_bit_not_white  = 1
 };
 
 template <>
-struct color_traits<two_bit_color_type>
+struct color_traits<one_bit_color_type>
 {
-  static two_bit_color_type white() { return two_bit_white; }
-  static two_bit_color_type gray()  { return two_bit_gray; }
-  static two_bit_color_type green() { return two_bit_green; }
-  static two_bit_color_type black() { return two_bit_black; }
+  static one_bit_color_type white() { return one_bit_white; }
+  static one_bit_color_type gray()  { return one_bit_not_white; }
+  static one_bit_color_type black() { return one_bit_not_white; }
 };
 
 
 template<typename IndexMap = identity_property_map>
-struct two_bit_color_map 
+struct one_bit_color_map 
 {
+  BOOST_STATIC_CONSTANT(int, bits_per_char = std::numeric_limits<unsigned char>::digits);
+  BOOST_STATIC_ASSERT(std::numeric_limits<unsigned char>::radix == 2);
+#if (__GNUC__ == 3 && __GNUC__ == 4) || (__GNUC__ == 4 && __GNUC_MINOR__ == 0)
+  // A version of this test in two_bit_color_map fails on GCC 3.4 and 4.0
+  // according to Ralf W. Grosse-Kunstleve
+  BOOST_STATIC_ASSERT(bits_per_char > 0);
+#endif
   std::size_t n;
   IndexMap index;
   shared_array<unsigned char> data;
 
   typedef typename property_traits<IndexMap>::key_type key_type;
-  typedef two_bit_color_type value_type;
+  typedef one_bit_color_type value_type;
   typedef void reference;
   typedef read_write_property_map_tag category;
 
-  explicit two_bit_color_map(std::size_t n, const IndexMap& index = IndexMap())
-    : n(n), index(index), data(new unsigned char[(n + 3) / 4])
+  explicit one_bit_color_map(std::size_t n, const IndexMap& index = IndexMap())
+    : n(n), index(index), data(new unsigned char[(n + bits_per_char - 1) / bits_per_char])
   {
     // Fill to white
-    std::fill(data.get(), data.get() + (n + 3) / 4, 0);
+    std::fill(data.get(), data.get() + (n + bits_per_char - 1) / bits_per_char, 0);
   }
 };
 
 template<typename IndexMap>
-inline two_bit_color_type
-get(const two_bit_color_map<IndexMap>& pm, 
-    typename two_bit_color_map<IndexMap>::key_type key) 
+inline one_bit_color_type
+get(const one_bit_color_map<IndexMap>& pm, 
+    typename one_bit_color_map<IndexMap>::key_type key) 
 {
+  BOOST_STATIC_CONSTANT(int, bits_per_char = one_bit_color_map<IndexMap>::bits_per_char);
   typename property_traits<IndexMap>::value_type i = get(pm.index, key);
   assert ((std::size_t)i < pm.n);
-  return two_bit_color_type((pm.data.get()[i / 4] >> ((i % 4) * 2)) & 3);
+  return one_bit_color_type((pm.data.get()[i / bits_per_char] >> (i % bits_per_char)) & 1);
 }
 
 template<typename IndexMap>
 inline void
-put(const two_bit_color_map<IndexMap>& pm, 
-    typename two_bit_color_map<IndexMap>::key_type key,
-    two_bit_color_type value)
+put(const one_bit_color_map<IndexMap>& pm, 
+    typename one_bit_color_map<IndexMap>::key_type key,
+    one_bit_color_type value)
 {
+  BOOST_STATIC_CONSTANT(int, bits_per_char = one_bit_color_map<IndexMap>::bits_per_char);
   typename property_traits<IndexMap>::value_type i = get(pm.index, key);
   assert ((std::size_t)i < pm.n);
-  assert (value >= 0 && value < 4);
-  std::size_t byte_num = i / 4;
-  std::size_t bit_position = ((i % 4) * 2);
+  assert (value >= 0 && value < 2);
+  std::size_t byte_num = i / bits_per_char;
+  std::size_t bit_position = (i % bits_per_char);
     pm.data.get()[byte_num] =
       (unsigned char)
-        ((pm.data.get()[byte_num] & ~(3 << bit_position))
+        ((pm.data.get()[byte_num] & ~(1 << bit_position))
          | (value << bit_position));
 }
 
 template<typename IndexMap>
-inline two_bit_color_map<IndexMap>
-make_two_bit_color_map(std::size_t n, const IndexMap& index_map)
+inline one_bit_color_map<IndexMap>
+make_one_bit_color_map(std::size_t n, const IndexMap& index_map)
 {
-  return two_bit_color_map<IndexMap>(n, index_map);
+  return one_bit_color_map<IndexMap>(n, index_map);
 }
 
 } // end namespace boost
 
-#endif // BOOST_TWO_BIT_COLOR_MAP_HPP
+#endif // BOOST_ONE_BIT_COLOR_MAP_HPP
 
 #ifdef BOOST_GRAPH_USE_MPI
-#  include <boost/graph/distributed/two_bit_color_map.hpp>
+#  include <boost/graph/distributed/one_bit_color_map.hpp>
 #endif
