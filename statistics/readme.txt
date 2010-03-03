@@ -9,7 +9,7 @@
 
 [ Contact ]
 
-I welcome feedback including bug reports at erwann.rogard@gmail.com
+er.ci.2020 at gmail.com
 
 [ Overview ]
 
