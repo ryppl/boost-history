@@ -42,7 +42,7 @@ namespace auto_size{
             write_to_array(this->ref_array,coll);
         }
 
-		private:
+        private:
         mutable ref_array_ ref_array;
         
     };

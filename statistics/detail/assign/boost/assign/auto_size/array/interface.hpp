@@ -23,7 +23,7 @@ namespace auto_size{
     // Used as a base class of D, adds the array interface and a conversion 
     // operator to any data-structure constructible from a pair of iterators.
     //
-    // Requirements: let d an instance of D
+    // Requirements: let d an instances of D
     // Valid expression			Result
     // d.ref_array_impl()		const ref_array_&
     // d.ref_array_impl()		ref_array&
