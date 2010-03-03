@@ -9,36 +9,18 @@
 =============================================================================*/
 
 #include <boost/spirit/include/qi_core.hpp>
-#include <boost/spirit/include/qi_eol.hpp>
-#include <boost/spirit/include/qi_eps.hpp>
 #include <boost/spirit/include/qi_attr.hpp>
-#include <boost/spirit/include/qi_attr_cast.hpp>
-#include <boost/spirit/include/qi_repeat.hpp>
+#include <boost/spirit/include/qi_eps.hpp>
+#include <boost/spirit/include/qi_eol.hpp>
 #include <boost/spirit/include/phoenix_core.hpp>
 #include <boost/spirit/include/phoenix_operator.hpp>
 #include <boost/spirit/include/phoenix_fusion.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
-#include "grammars.hpp"
-#include "block.hpp"
+#include "block_grammar.hpp"
 #include "template.hpp"
 #include "actions.hpp"
-#include "parse_utils.hpp"
 #include "code.hpp"
 #include "misc_rules.hpp"
-#include "rule_store.hpp"
-
-BOOST_FUSION_ADAPT_STRUCT(
-    quickbook::paragraph,
-    (std::string, content)
-)
-
-BOOST_FUSION_ADAPT_STRUCT(
-    quickbook::list_item,
-    (quickbook::file_position, position)
-    (std::string, indent)
-    (char, mark)
-    (std::string, content)
-)
 
 BOOST_FUSION_ADAPT_STRUCT(
     quickbook::title,
@@ -116,30 +98,8 @@ namespace quickbook
     namespace qi = boost::spirit::qi;
     namespace ph = boost::phoenix;
 
-    struct block_grammar::rules
+    void block_grammar::rules::init_block_markup()
     {
-        rules(quickbook::actions& actions_);
-
-        quickbook::actions& actions;
-        bool no_eols;
-        phrase_grammar common;
-        
-        rule_store store_;
-        qi::rule<iterator> start_;
-    };
-
-    block_grammar::block_grammar(quickbook::actions& actions_)
-        : block_grammar::base_type(start, "block")
-        , rules_pimpl(new rules(actions_))
-        , start(rules_pimpl->start_) {}
-
-    block_grammar::~block_grammar() {}
-
-    block_grammar::rules::rules(quickbook::actions& actions_)
-        : actions(actions_), no_eols(true), common(actions, no_eols)
-    {
-        qi::rule<iterator>& blocks = store_.create();
-        qi::rule<iterator>& block_markup = store_.create();
         qi::rule<iterator, quickbook::begin_section()>& begin_section = store_.create();
         qi::rule<iterator, quickbook::end_section()>& end_section = store_.create();
         qi::rule<iterator, quickbook::heading()>& heading = store_.create();
@@ -153,31 +113,12 @@ namespace quickbook
         qi::rule<iterator, quickbook::include()>& include = store_.create();
         qi::rule<iterator, quickbook::import()>& import = store_.create();
         qi::rule<iterator, quickbook::define_template()>& define_template = store_.create();
-        qi::rule<iterator, quickbook::code()>& code = store_.create();
-        qi::rule<iterator, quickbook::list()>& list = store_.create();
-        qi::rule<iterator, quickbook::hr()>& hr = store_.create();
-        qi::rule<iterator, quickbook::paragraph()>& paragraph = store_.create();
         qi::rule<iterator, quickbook::title()>& title_phrase = store_.create();
         qi::rule<iterator, std::string()>& inside_paragraph = store_.create();
         qi::rule<iterator, std::string()>& phrase_attr = store_.create();
         qi::rule<iterator>& phrase_end = store_.create();
         qi::rule<iterator, boost::optional<std::string>()>& element_id = store_.create();
         qi::rule<iterator>& error = store_.create();
-
-        start_ =
-            blocks >> blank
-            ;
-
-        blocks =
-           +(   block_markup
-            |   code                            [actions.process]
-            |   list                            [actions.process]
-            |   hr                              [actions.process]
-            |   comment >> *eol
-            |   paragraph                       [actions.process]
-            |   eol
-            )
-            ;
 
         block_markup =
                 '[' >> space
@@ -376,9 +317,9 @@ namespace quickbook
             >>  qi::attr(nothing())
             ;
 
-        qi::rule<iterator, std::string()>& template_id = store_.create();
         qi::rule<iterator, quickbook::template_value()>& template_body = store_.create();
         qi::rule<iterator>& template_body_recurse = store_.create();
+        qi::rule<iterator, std::string()>& template_id = store_.create();
 
         define_template =
                 "template"
@@ -407,89 +348,9 @@ namespace quickbook
             >>  &qi::lit(']')
             ;
 
-        // Blocks indicated by text layout (indentation, leading characters etc.)
-
-        qi::rule<iterator>& code_line = store_.create();
-
-        code =
-                position
-            >>  qi::raw[
-                    code_line
-                >>  *(*eol >> code_line)
-                ]
-            >>  +eol
-            >>  qi::attr(true)
-            ;
-
-        code_line =
-                qi::char_(" \t")
-            >>  *(qi::char_ - eol)
-            >>  eol
-            ;
-
-        qi::rule<iterator, quickbook::list_item()>& list_item = store_.create();
-        qi::rule<iterator, std::string()>& list_item_content = store_.create();
-
-        list =
-                &qi::char_("*#")
-            >>  +list_item
-            ;
-        
-        list_item =
-                position
-            >>  *qi::blank
-            >>  qi::char_("*#")
-            >>  qi::omit[*qi::blank]
-            >>  list_item_content
-            ;
-
-        list_item_content =
-            qi::eps[actions.phrase_push] >>
-           *(   common
-            |   (qi::char_ -
-                    (   qi::eol >> *qi::blank >> &(qi::char_('*') | '#')
-                    |   (eol >> eol)
-                    )
-                )                               [actions.process]
-            )
-            >> +eol
-            >> qi::eps[actions.phrase_pop]
-            ;
-
-        hr =
-            qi::omit[
-                "----"
-            >>  *(qi::char_ - eol)
-            >>  +eol
-            ] >> qi::attr(quickbook::hr())
-            ;
-
-        qi::rule<iterator, std::string()>& paragraph_content = store_.create();
-        qi::rule<iterator>& paragraph_end = store_.create();
-        qi::symbols<>& paragraph_end_markups = store_.create();
-
-        paragraph = paragraph_content >> qi::attr(nothing());
-
-        paragraph_content =
-                qi::eps                         [actions.phrase_push]
-            >> *(   common
-                |   (qi::char_ -                // Make sure we don't go past
-                        paragraph_end           // a single block.
-                    )                           [actions.process]
-                )
-            >>  qi::eps                         [actions.phrase_pop]
-            >> (&qi::lit('[') | +eol)
-            ;
-
-        paragraph_end =
-            '[' >> space >> paragraph_end_markups >> hard_space | eol >> eol
-            ;
-
-        paragraph_end_markups =
-            "section", "endsect", "h1", "h2", "h3", "h4", "h5", "h6",
-            "blurb", ":", "pre", "def", "table", "include", "xinclude",
-            "variablelist", "import", "template", "warning", "caution",
-            "important", "note", "tip", ":"
+        template_id
+            =   (qi::alpha | '_') >> *(qi::alnum | '_')
+            |   qi::repeat(1)[qi::punct - qi::char_("[]")]
             ;
 
         // Block contents
@@ -551,11 +412,6 @@ namespace quickbook
             ;
 
         element_id_part = +(qi::alnum | qi::char_('_'));
-
-        template_id
-            =   (qi::alpha | '_') >> *(qi::alnum | '_')
-            |   qi::repeat(1)[qi::punct - qi::char_("[]")]
-            ;
 
         error =
             qi::raw[qi::eps] [actions.error];
