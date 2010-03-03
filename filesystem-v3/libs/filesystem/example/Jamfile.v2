@@ -22,3 +22,4 @@ exe tut3 : tut3.cpp ;
 exe tut4 : tut4.cpp ;
 exe tut5 : tut5.cpp ;
 exe path_info : path_info.cpp ;    
+exe path_table : path_table.cpp ;    
