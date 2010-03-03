@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// assign::detail::csv.hpp                                                  //
+// assign::detail::auto_size::csv.hpp                                       //
 //                                                                          //
 //  (C) Copyright 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -26,8 +26,8 @@
 //
 // Usage:
 // BOOST_ASSIGN_CSV(fun) creates for i=1,...,n the following overloads:
-// 	fun_csv(a1,..,.ai) 
-// 	cfun_csv(a1,..,.ai) 
+// 	fun(a1,..,.ai) 
+// 	cfun(a1,..,.ai) 
 // which return instances of w<T,i> and w<const T,i>, respectively.
 
 #ifndef BOOST_ASSIGN_CSV_SIZE
