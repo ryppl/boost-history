@@ -14,7 +14,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 Example de_morgan.cpp demonstrates some tests of 
 <a href="http://en.wikipedia.org/wiki/De_Morgan%27s_laws">
 De Morgan's law</a> on interval_set.
-This law is selected, because we can show some interesting semantical 
+This law is selected, because we can show some interesting semantic 
 distinctions that reveal themselves in different instantiations of the law.
 
 We do not use De Morgan's laws in it's original form

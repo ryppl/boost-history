@@ -120,6 +120,192 @@ namespace boost{namespace itl
         size_t size()const { return value_size<Type>::apply(this->template getInputValue<operand_a>()); }
     };
 
+
+    template <typename Type, 
+          template<class>class Combiner = inplace_plus,
+          template<class>class Inverter = inplace_minus,
+          template<class>class Equality = itl::std_equal>
+    class InplaceNaiveInversion 
+        : public Law<InplaceNaiveInversion<Type,Combiner,Inverter,Equality>, 
+                     LOKI_TYPELIST_2(Type,Type), LOKI_TYPELIST_2(Type,Type)>
+    {
+        //(a + b) - b == a - b
+        //computed using inplace operators +=
+        //Input  = (a := inVal1, b := inVal2)
+        //Output = (lhs_result, rhs_result)
+
+    public:
+        std::string name()const { return "InplaceNaiveInversion"; }
+        std::string formula()const { return "(a + b) - b == a - b"; }
+
+        std::string typeString()const
+        {
+            return "NaiveInversion<"+type_to_string<Type>::apply()+","
+                                      +unary_template_to_string<Combiner>::apply()+","
+                                      +unary_template_to_string<Inverter>::apply()+","
+                                      +unary_template_to_string<Equality>::apply()
+                                      +">";
+        }
+
+    public:
+
+        bool holds()
+        {
+            Type lhs = this->template getInputValue<operand_a>();
+            Combiner<Type>()(lhs, this->template getInputValue<operand_b>());
+            Inverter<Type>()(lhs, this->template getInputValue<operand_b>());
+
+            Type rhs = this->template getInputValue<operand_a>();
+            Inverter<Type>()(rhs, this->template getInputValue<operand_b>());
+
+            this->template setOutputValue<lhs_result>(lhs);
+            this->template setOutputValue<rhs_result>(rhs);
+
+            return Equality<Type>()(lhs, rhs);
+        }
+
+        bool debug_holds()
+        { 
+            return holds();
+        }
+
+        size_t size()const { return value_size<Type>::apply(this->template getInputValue<operand_a>()); }
+    };
+
+
+    template <typename Type, 
+          template<class>class Combiner = inplace_plus,
+          template<class>class Inverter = inplace_minus,
+          template<class>class Equality = itl::std_equal>
+    class DisjointNaiveInversion 
+        : public Law<DisjointNaiveInversion<Type,Combiner,Inverter,Equality>, 
+                     LOKI_TYPELIST_2(Type,Type), LOKI_TYPELIST_2(Type,Type)>
+    {
+        // dom(a).is_disjoint(dom(b)) => (a + b) - b == a - b
+        //computed using inplace operators +=
+        //Input  = (a := inVal1, b := inVal2)
+        //Output = (lhs_result, rhs_result)
+
+    public:
+        std::string name()const { return "DisjointNaiveInversion"; }
+        std::string formula()const { return "a.is_disjoint(b) => (a + b) - b == a - b"; }
+
+        std::string typeString()const
+        {
+            return "DisjointNaiveInversion<"+type_to_string<Type>::apply()+","
+                                      +unary_template_to_string<Combiner>::apply()+","
+                                      +unary_template_to_string<Inverter>::apply()+","
+                                      +unary_template_to_string<Equality>::apply()
+                                      +">";
+        }
+
+    public:
+
+        bool holds()
+        {
+			// dom(a).is_disjoint(dom(b)) => (a + b) - b == a - b
+            Type value_a = this->template getInputValue<operand_a>();
+            Type value_b = this->template getInputValue<operand_b>();
+			typename Type::set_type dom_a; value_a.domain(dom_a);
+			typename Type::set_type dom_b; value_b.domain(dom_b);
+
+			if(is_disjoint(dom_a, dom_b))
+			{
+                Type lhs = value_a;
+				Combiner<Type>()(lhs, this->template getInputValue<operand_b>());
+				Inverter<Type>()(lhs, this->template getInputValue<operand_b>());
+
+				Type rhs = this->template getInputValue<operand_a>();
+				Inverter<Type>()(rhs, this->template getInputValue<operand_b>());
+
+				this->template setOutputValue<lhs_result>(lhs);
+				this->template setOutputValue<rhs_result>(rhs);
+
+				return Equality<Type>()(lhs, rhs);
+			}
+			else // a intersects b
+			{
+				this->template setOutputValue<lhs_result>(value_a);
+				this->template setOutputValue<rhs_result>(value_b);
+				return true;
+			}
+        }
+
+        bool debug_holds()
+        { 
+            return holds();
+        }
+
+        size_t size()const { return value_size<Type>::apply(this->template getInputValue<operand_a>()); }
+    };
+
+
+    template <typename Type, 
+          template<class>class Combiner = inplace_plus,
+          template<class>class Inverter = inplace_minus,
+          template<class>class Equality = itl::std_equal>
+    class JointInverseExistence 
+        : public Law<JointInverseExistence<Type,Combiner,Inverter,Equality>, 
+                     LOKI_TYPELIST_2(Type,Type), LOKI_TYPELIST_2(Type,Type)>
+    {
+        // a.contains(dom(b)) => (a + b) - b == (a - b) + a
+        //computed using inplace operators +=
+        //Input  = (a := inVal1, b := inVal2)
+        //Output = (lhs_result, rhs_result)
+
+    public:
+        std::string name()const { return "JointInverseExistence"; }
+        std::string formula()const { return "a.contains(dom(b)) => (a + b) - b == (a - b) + b"; }
+
+        std::string typeString()const
+        {
+            return "JointInverseExistence<"+type_to_string<Type>::apply()+","
+                                      +unary_template_to_string<Combiner>::apply()+","
+                                      +unary_template_to_string<Inverter>::apply()+","
+                                      +unary_template_to_string<Equality>::apply()
+                                      +">";
+        }
+
+    public:
+
+        bool holds()
+        {
+			// a.contains(dom(b)) => (a + b) - b == (a - b) + a
+            Type value_a = this->template getInputValue<operand_a>();
+            Type value_b = this->template getInputValue<operand_b>();
+			typename Type::set_type dom_b; value_b.domain(dom_b);
+
+			if(value_a.contains(dom_b))
+			{
+                Type lhs = value_a;
+				Combiner<Type>()(lhs, value_b);
+				Inverter<Type>()(lhs, value_b);
+
+                Type rhs = value_a;
+				Inverter<Type>()(rhs, value_b);
+				Combiner<Type>()(rhs, value_b);
+
+				this->template setOutputValue<lhs_result>(lhs);
+				this->template setOutputValue<rhs_result>(rhs);
+
+				return Equality<Type>()(lhs, rhs);
+			}
+			else // a intersects b
+			{
+				this->template setOutputValue<lhs_result>(value_a);
+				this->template setOutputValue<rhs_result>(value_b);
+				return true;
+			}
+        }
+
+        bool debug_holds()
+        { 
+            return holds();
+        }
+
+        size_t size()const { return value_size<Type>::apply(this->template getInputValue<operand_a>()); }
+    };
+
 }} // namespace itl boost
 
 #endif // BOOST_ITL_INVERSION_LAWS_HPP_JOFA_071124

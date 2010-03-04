@@ -64,7 +64,10 @@ void test_LawValidater()
     //>
     //TestLawT;
 
-    typedef Antisymmetry<itl::map<int,int>, std::less_equal, std_equal> TestLawT;
+    //typedef Antisymmetry<itl::map<int,int>, std::less_equal, std_equal> TestLawT;
+
+    typedef JointInverseExistence
+		<interval_map<int,int,partial_enricher>, itl::inplace_plus, itl::inplace_minus> TestLawT;
 
     LawValidater<TestLawT, RandomGentor> test_law;
 

@@ -295,7 +295,7 @@ the semantics of the *itl's* maps may be a different one, because
 of it's aggregating facilities, where the aggregating combiner
 operations are passed to combine the map's associated values.
 It turns out, that the aggregation on overlap principle
-induces semantical properties to itl maps in such a way,
+induces semantic properties to itl maps in such a way,
 that the set of equations that are valid will depend on
 the semantics of the type `CodomainT` of the map's associated
 values.
@@ -497,7 +497,7 @@ SymmetricDifference<C,== > : C a,b,c; (a + b) - (a * b) == (a - b) + (b - a)
 Reviewing the validity tables above shows, that the sets of valid laws for
 `itl Sets` and `itl Maps of Sets` that are /neutron absorbing/ are exactly the same.
 As expected, only for Maps of Sets that represent empty sets as associated values,
-called /neutron enrichers/, there are marginal semantical differences.
+called /neutron enrichers/, there are marginal semantic differences.
 
 [endsect][/ Collectors]
 

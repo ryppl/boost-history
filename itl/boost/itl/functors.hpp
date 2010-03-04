@@ -145,6 +145,24 @@ namespace boost{namespace itl
         { object &= operand; }
     };
 
+    template <> struct inplace_et<double>
+        : public neutron_based_inplace_combine<double>
+    {
+        typedef double type;
+
+        void operator()(type& object, type operand)const
+        { object += operand; }
+    };
+
+    template <> struct inplace_et<float>
+        : public neutron_based_inplace_combine<float>
+    {
+        typedef float type;
+
+        void operator()(type& object, type operand)const
+        { object += operand; }
+    };
+
     template<>
     inline std::string unary_template_to_string<inplace_et>::apply() { return "&="; }
 
@@ -157,6 +175,24 @@ namespace boost{namespace itl
         { object ^= operand; }
 
         static Type neutron() { return boost::itl::neutron<Type>::value(); }
+    };
+
+    template <> struct inplace_caret<double>
+        : public neutron_based_inplace_combine<double>
+    {
+        typedef double type;
+
+        void operator()(type& object, type operand)const
+        { object -= operand; }
+    };
+
+    template <> struct inplace_caret<float>
+        : public neutron_based_inplace_combine<float>
+    {
+        typedef float type;
+
+        void operator()(type& object, type operand)const
+        { object -= operand; }
     };
 
     template<>

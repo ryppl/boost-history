@@ -165,7 +165,7 @@ The sets of valid laws are different, which will be described in more detail
 in the sections on the
 [link boost_itl.semantics.sets semantics of itl Sets] and 
 [link boost_itl.semantics.maps Maps].
-These semantical differences are mainly based on the implementation
+These semantic differences are mainly based on the implementation
 of the pivotal member functions `add` and `subtract` for elements 
 and intervals that again serve for implementing 
 `operator +=` and `operator -=`.

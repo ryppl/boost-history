@@ -41,7 +41,7 @@ a /set union/ semantics is often attached `operators |=` and `|`.
           Find more on 
           [link boost_itl.concepts.addability__subtractability_and_aggregate_on_overlap ['addability of maps]]
           and related 
-          [link boost_itl.semantics.maps ['semantical issues]] 
+          [link boost_itl.semantics.maps ['semantic issues]] 
           following the links. 
         
           Examples, demonstrating Addition on interval containers are
