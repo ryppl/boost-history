@@ -11,10 +11,6 @@
 #include <vector>
 #include <algorithm>
 #include <functional>
-#include <boost/config.hpp>
-#ifndef BOOST_MSCV
-    #include <ext/algorithm>
-#endif
 #include <string>
 #include <iterator>
 #include <numeric>
@@ -767,17 +763,35 @@ void proposal_sampler<T,Cont,Alloc>::update_cum_sums(iter_t iter) const
     ++iter;
     BOOST_ASSERT(!(iter!=boost::end(datas_)));
 
-    BOOST_ASSERT(
-        is_sorted(
-            begin(datas_),
-            boost::end(datas_),
-            bind<bool>(
-                std::less<tang_t>(),
-                _1,
-                _2
-            )
-        )
-    );
+    {	
+    	// Replaces version below to accomodate MSVC
+		//http://stackoverflow.com/questions/262000/c-best-algorithm-to-check-if-a-vector-is-sorted    
+    	using namespace boost::lambda;
+    	BOOST_ASSERT(
+			std::adjacent_find(
+        		boost::begin(datas_),
+        		boost::end(datas_),
+                boost::lambda::bind(
+                	std::less<tang_t>(),
+            		_2, 
+                    _1
+                )
+    		) == boost::end(datas_)
+    	);
+    }
+
+	// Previously:
+    //BOOST_ASSERT(
+    //    is_sorted(
+    //        begin(datas_),
+    //        boost::end(datas_),
+    //        bind<bool>(
+    //            std::less<tang_t>(),
+    //            _1,
+    //            _2
+    //        )
+    //    )
+    //);
 }
 
 template<

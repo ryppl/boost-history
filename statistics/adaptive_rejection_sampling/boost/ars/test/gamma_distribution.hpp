@@ -39,7 +39,6 @@ struct gamma_distribution{
 	{
 
     	using namespace boost;
-    	using namespace math;
     	typedef double                                          val_;
     	typedef ars::constant<val_>                             const_;
     	typedef math::gamma_distribution<val_>                  mdist_t;

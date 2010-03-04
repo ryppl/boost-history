@@ -39,7 +39,6 @@ struct normal_distribution{
 	{
 
     	using namespace boost;
-    	using namespace math;
     	typedef double                                          value_t;
     	typedef ars::constant<value_t>                          const_;
     	typedef math::normal_distribution<value_t>              mdist_t;

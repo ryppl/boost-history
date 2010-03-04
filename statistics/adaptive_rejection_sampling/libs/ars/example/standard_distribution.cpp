@@ -18,8 +18,7 @@
 void example_standard_distribution(std::ostream& out){
     out << "-> example_standard_distribution " << std::endl;
 
-    using namespace boost;
-    using namespace statistics::detail;
+    using namespace boost::statistics::detail;
 
     // This example checks the convergence of ars for standard distributions
     // by verifying that the kolmogorov-smirnov statistic converges to zero
