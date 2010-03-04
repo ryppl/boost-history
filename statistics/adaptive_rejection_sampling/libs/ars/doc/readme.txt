@@ -19,15 +19,6 @@ sampler (Gilks, 1992).
 A tool for testing is provided for standard distributions, which makes use of 
 their known cdf to produce kolmogorov-smirnov statistics.
 
-[ Compiler ]
-
-Tested Jan 20, 2010
-Mac OS X 10.6        gcc 4.0                                    boost_1_41_0
-Note: gcc4.2 currently does not mix well with boost::format
-
-Tested Jan 8 2010
-Win7-32 V6.1.7100    Dev-C++ 5.0 beta 9.2 with Mingw/GCC 3.4.2 	boost_1_41_0
-
 [ Dependencies ]
 
 boost_1_41_0
@@ -36,11 +27,13 @@ boost_1_41_0
 /sandbox/statistics/distribution_toolkit
 /sandbox/statistics/random
 
+The last four dependencies are for /libs
+
 [ History ]
 March 3rd, 2010
     - Fixed an apparent slow convergence in the output from 
     standard_distribution.cpp which was in fact due to a formatting defect.
-    - Added MSVC workarounds in proposal_sampler.hpp 
+    - Added MSVC workarounds in proposal_sampler.hpp pertaining to is_sorted
 
 Jan 20  2010 : small changes to test functions to adapt to the new 
 	non_parametric::kolmogorov_smirnov functionality.
@@ -56,7 +49,7 @@ Sept    2009 : standard_distribution.hpp modified due to changes described in
 July    2009 : Previous package superseded by adaptive_rejection_sampling
 March   2009 : Conditionally_specified_distribution/adaptive_rejection_sampling 
 
-[Articles]
+[ Articles ]
 
 @article{citeulike:3015268,
 	abstract = {We propose a method for rejection sampling from any

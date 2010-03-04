@@ -25,10 +25,10 @@ void example_standard_distribution(std::ostream& out){
 
     typedef double value_;
 
-    const unsigned n1 = 5e0;    // # loops
-    const unsigned n2 = 1e1;   	// # subsamples on first loop  
-    const unsigned n3 = 1e0;   	// size of subsample 
-    const unsigned n4 = 1e1;   	// At each loop, n2 *= n4
+    const unsigned n1 = 5;    // # loops
+    const unsigned n2 = 10;   	// # subsamples on first loop  
+    const unsigned n3 = 1;   	// size of subsample 
+    const unsigned n4 = 10;   	// At each loop, n2 *= n4
     const unsigned max_n_reject = 10;
 
 	ars::test::standard_distribution::header(out);

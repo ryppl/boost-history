@@ -653,7 +653,7 @@ bool proposal_sampler<T,Cont,Alloc>::sample(U &urng,T& draw) const
         T lower;
         // lower is -inf outside (x[1],x[n])
         if(
-            ( (iter!=begin(datas_)) || (draw>(iter->x())))
+            ( (iter!=boost::begin(datas_)) || (draw>(iter->x())))
             && ( (iter!=boost::prior(boost::end(datas_))) || (draw<(iter->x())))
         ){
             if(draw<=(iter->x())){
@@ -702,7 +702,7 @@ void proposal_sampler<T,Cont,Alloc>::update_cum_sums(iter_t iter) const
     //bool is_begin = false;
     T area;
     tang_t a;
-    if(iter != begin(datas_)) {
+    if(iter != boost::begin(datas_)) {
         a = *boost::prior(iter);
         cum_sum_ = boost::prior(iter)->cum_sum_;
     }else{
@@ -722,7 +722,7 @@ void proposal_sampler<T,Cont,Alloc>::update_cum_sums(iter_t iter) const
         }
         if(area<const_::zero_){
             boost::format f("area[%1%] = %2% <0");
-            f%std::distance(begin(datas_),iter)%area;
+            f%std::distance(boost::begin(datas_),iter)%area;
             throw exception(method,f.str(),*this);
         }
         cum_sum_ += area;
@@ -737,7 +737,7 @@ void proposal_sampler<T,Cont,Alloc>::update_cum_sums(iter_t iter) const
         T area = area_segment_safeguarded(a,*iter,offset());
         if(area<const_::zero_){
             boost::format f("area[%1%] = %2% < 0");
-            f%std::distance(begin(datas_),iter)%area;
+            f%std::distance(boost::begin(datas_),iter)%area;
             throw exception(method,f.str(),*this);
         }
         cum_sum_ += area;
@@ -812,13 +812,13 @@ void proposal_sampler<T,Cont,Alloc>::insert(
         }
     }else{
         if(!math::isinf(x_max())){
-            if(!p.x()<x_max()){
+            if(!(p.x()<x_max())){
                 throw exception(method,"p>max",*this);
             }
         }
     }
 
-    if(iter!=begin(datas_)){
+    if(iter!=boost::begin(datas_)){
         if(!std::less<point_t>()(*boost::prior(iter),p)){
             throw exception(method,"p<prior",*this);
         }

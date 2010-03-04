@@ -42,7 +42,7 @@ namespace ars{
             ):super_t(this->str(a,b,c,d)){}
 
             private:
-            str_t str(
+            static str_t str(
                 const str_t& a,
                 const str_t& b,
                 const str_t& c
@@ -52,18 +52,18 @@ namespace ars{
                 return f.str();
             }
             template<typename T>
-            str_t str(
+            static str_t str(
                 const str_t& a,
                 const str_t& b,
                 const T& c
             ){
                 std::ostringstream os;
                 os << c;
-                return this->str(a, b, os.str());
+                return str(a, b, os.str());
             }
 
             template<typename T,typename U>
-            str_t str(
+            static str_t str(
                 const str_t& a,
                 const str_t& b,
                 const T& c,
@@ -71,7 +71,7 @@ namespace ars{
             ){
                 std::ostringstream os;
                 os << c << d;
-                return this->str(a, b, os.str());
+                return str(a, b, os.str());
             }
 
         };
