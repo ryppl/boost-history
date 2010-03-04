@@ -25,16 +25,15 @@
 #include <boost/mpl/empty.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 
+#include <boost/lambda/lambda.hpp>
+#include <boost/lambda/bind.hpp>
 #include <boost/bind.hpp>
 #include <boost/random.hpp>
 #include <boost/range.hpp>
 #include <boost/iterator/transform_iterator.hpp>
 #include <boost/function.hpp>
-//#include <boost/variant.hpp> // what for?
 #include <boost/format.hpp>
 
-//#include <boost/numeric/conversion/converter.hpp>
-//#include <boost/math/tools/precision.hpp>
 #include <boost/math/special_functions/fpclassify.hpp>
 #include <boost/math/special_functions/log1p.hpp>
 #include <boost/math/special_functions/sign.hpp>
@@ -175,7 +174,7 @@ proposal_sampler<T,Cont,Alloc>::description(std::ostream& out) const
 {
     typedef data<T> data_t;
     //TODO any other relevant info?
-    format f("x_min = %1%, t_min = %2%|");
+    boost::format f("x_min = %1%, t_min = %2%|");
     f%x_min()%t_min_;
     out << f.str();
     std::copy(
@@ -329,7 +328,7 @@ void proposal_sampler<T,Cont,Alloc>::initialize(T x_0,T x_1){
     static vec_t vec;
 
     if(!has_function_){
-        format f(method); f%x_0%x_1;
+        boost::format f(method); f%x_0%x_1;
         throw exception(
             f.str(),
             "no func",
@@ -381,7 +380,7 @@ void proposal_sampler<T,Cont,Alloc>::initialize(const R& initial_datas){
         ){
             throw exception(
                 method,
-                (format("!dy = %1%>0")%dy).str(),
+                (boost::format("!dy = %1%>0")%dy).str(),
                 *this
             );
         }
@@ -430,7 +429,7 @@ void proposal_sampler<T,Cont,Alloc>::initialize(const R& initial_datas){
         if(
             !(dy < const_::zero_)
         ){
-            format f("!dy = %1% <0"); f%dy;
+            boost::format f("!dy = %1% <0"); f%dy;
             throw exception(method,f.str(),*this);
         }
         back_ti = tang_t(const_::quiet_nan_,const_::quiet_nan_);
@@ -449,7 +448,7 @@ void proposal_sampler<T,Cont,Alloc>::initialize(const R& initial_datas){
         if(size_data()>max_data_count()){
             throw exception(
                 method,
-                (format("size_data() = > max_data_count() = %2%")
+                (boost::format("size_data() = > max_data_count() = %2%")
                     %size_data()%max_data_count()).str(),
                 *this
             );
@@ -577,7 +576,7 @@ proposal_sampler<T,Cont,Alloc>::inv_cum_sums_impl(
             if(a<const_::lmax_){
                 T sign = boost::math::sign(dy);
                 a = exp(a);
-                q = lz + log1p( sign * a ) / dy;
+                q = lz + boost::math::log1p( sign * a ) / dy;
             }else{
                 q = lz + a / dy;
             }
@@ -726,7 +725,7 @@ void proposal_sampler<T,Cont,Alloc>::update_cum_sums(iter_t iter) const
             area = area_segment_safeguarded(a,*iter,offset());
         }
         if(area<const_::zero_){
-            format f("area[%1%] = %2% <0");
+            boost::format f("area[%1%] = %2% <0");
             f%std::distance(begin(datas_),iter)%area;
             throw exception(method,f.str(),*this);
         }
@@ -741,7 +740,7 @@ void proposal_sampler<T,Cont,Alloc>::update_cum_sums(iter_t iter) const
     while(iter!=j){
         T area = area_segment_safeguarded(a,*iter,offset());
         if(area<const_::zero_){
-            format f("area[%1%] = %2% < 0");
+            boost::format f("area[%1%] = %2% < 0");
             f%std::distance(begin(datas_),iter)%area;
             throw exception(method,f.str(),*this);
         }
@@ -759,7 +758,7 @@ void proposal_sampler<T,Cont,Alloc>::update_cum_sums(iter_t iter) const
         area = area_segment_safeguarded(a,*iter,offset());
     }
     if(area<const_::zero_){
-        format f("area[n] = %1%<0");
+        boost::format f("area[n] = %1%<0");
         f%area;
         throw exception(method,f.str(),*this);
     }
@@ -852,7 +851,7 @@ void proposal_sampler<T,Cont,Alloc>::insert(
         }
     };
 
-    if(iter!=begin(datas_)){
+    if(iter!=boost::begin(datas_)){
         T t = local::impl(*boost::prior(iter),*iter,*this);
         m = (m<t)? t : m;
     }else{
@@ -877,24 +876,43 @@ void proposal_sampler<T,Cont,Alloc>::insert(
 
     if(max_tangent()<m){
         max_tangent_ = m;
-        iter = begin(datas_);
+        iter = boost::begin(datas_);
     }else{
-        if(iter!=begin(datas_)){
+        if(iter!=boost::begin(datas_)){
             iter = boost::prior(iter);
         }
     }
 
-    BOOST_ASSERT(
-        is_sorted(
-            begin(datas_),
-            boost::end(datas_),
-            bind<bool>(
-                std::less<point_t>(),
-                _1,
-                _2
-            )
-        )
-    );
+	
+    {	
+    	// Replaces version below to accomodate MSVC
+		//http://stackoverflow.com/questions/262000/c-best-algorithm-to-check-if-a-vector-is-sorted    
+    	using namespace boost::lambda;
+    	BOOST_ASSERT(
+			std::adjacent_find(
+        		boost::begin(datas_),
+        		boost::end(datas_),
+                boost::lambda::bind(
+                	std::less<point_t>(),
+            		_2, 
+                    _1
+                )
+    		) == boost::end(datas_)
+    	);
+    }
+
+	// Previously:
+    // BOOST_ASSERT(
+    //    is_sorted(
+    //        boost::begin(datas_),
+    //        boost::end(datas_),
+    //        boost::bind<bool>(
+    //            std::less<point_t>(),
+    //            _1,
+    //            _2
+    //        )
+    //    )
+    //);
 
 
     update_cum_sums(iter);

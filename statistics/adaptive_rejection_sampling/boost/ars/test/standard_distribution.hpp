@@ -15,12 +15,8 @@
 #include <vector>
 #include <algorithm>
 
-#include <boost/assert.hpp>
-#include <boost/assert.hpp>
-#include <boost/static_assert.hpp>
 #include <boost/format.hpp>
 #include <boost/range.hpp>
-#include <boost/numeric/conversion/converter.hpp>
 #include <boost/accumulators/accumulators.hpp>
 
 #include <boost/statistics/detail/distribution_common/meta/random/generator.hpp>
@@ -45,10 +41,10 @@ namespace test{
 struct standard_distribution{
 
 	static void header(std::ostream& os){
-    	os << "(a,b,c)" << std::endl;
+    	os << "This test outputs a sequence {(a,b,c)} where" << std::endl;
     	os 	<< "a : sample size" << std::endl
      		<< "b : kolmogorov-smirnov statistic" << std::endl
-     		<< "c : number of rejections" << std::endl;
+     		<< "c : avg number of rejections" << std::endl;
     }
 
 	// Samples from distribution D using adaptive rejection sampling and outputs
@@ -72,8 +68,6 @@ struct standard_distribution{
     	// The ars is re-initialized after each n3 sample.
     	// n3 * n4 is the total size of the sample over which a KS is computed
 
-    	using namespace boost;
-    	using namespace math;
     	namespace dist = boost::statistics::detail::distribution;
     	namespace ks = boost::statistics::detail::kolmogorov_smirnov;
     	typedef std::string                                     str_;
@@ -96,7 +90,7 @@ struct standard_distribution{
     	{
     		static const str_ str 
         		= "Initialized every %1% draw(s) with x1 = %2% and x2 = %3%";
-        	format f(str);
+        	boost::format f(str);
         	f%n3%init_0%init_1;
         	os << f.str() << std::endl;
         	os << description(mdist) << std::endl;
@@ -121,7 +115,7 @@ struct standard_distribution{
                         	(vg_ars.distribution()).distribution()
                     	).n_reject();
                 	}catch(std::exception& e){
-                    	format f("at i1 = %1%, i2 = %2% : %3%"); 
+                    	boost::format f("at i1 = %1%, i2 = %2% : %3%"); 
                     	f % i1 % i2 % e.what();
                     	throw std::runtime_error(f.str());
                 	}

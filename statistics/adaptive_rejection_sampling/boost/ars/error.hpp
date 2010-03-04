@@ -47,7 +47,7 @@ namespace ars{
                 const str_t& b,
                 const str_t& c
             ){
-                format f("Call : %1%, error: %2%, state : %3%");
+                boost::format f("Call : %1%, error: %2%, state : %3%");
                 f % a % b % c;
                 return f.str();
             }

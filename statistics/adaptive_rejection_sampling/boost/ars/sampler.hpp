@@ -52,7 +52,7 @@ class sampler : public PropS{
                 return draw;
             }
         }
-        format f(method); f%n_max_reject();
+        boost::format f(method); f%n_max_reject();
         throw exception(method,f.str(),*this);
     }
     typename super_t::size_type n_max_reject()const{ return n_max_reject_; }

@@ -29,7 +29,7 @@ void example_search_reflection(std::ostream& out){
             const point_t& p_0,
             const point_t& p_1
         ){
-            format f("x_0 = %1%, x_1 = %2%, ");
+            boost::format f("x_0 = %1%, x_1 = %2%, ");
             f % x_0 % x_1;
             o << f.str();
             o << ", n = " << n << ", p_0 : " << p_0 << ", p_1 : " << p_1;
@@ -50,7 +50,7 @@ void example_search_reflection(std::ostream& out){
         const value_t mu = 0.0;
         const value_t sigma = 2.0;
         mdist_t mdist(mu,sigma);
-        out << (format("N(%1%,%2%)")%mu%sigma);
+        out << (boost::format("N(%1%,%2%)")%mu%sigma);
 
         {
             x_0 = 100.0;

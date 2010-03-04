@@ -59,7 +59,7 @@ search_reflection(
         (!(ok_0 && ok_1))
     ){
         if(n>n_max){
-            format f(function);
+            boost::format f(function);
             f % x_min % x_max;
             throw ars::exception(f.str(),"n>n_max",p_0,p_1);
         }
@@ -67,7 +67,7 @@ search_reflection(
         if(!ok_0){
             T delta = (new_x_1-new_x_0);
             if(delta < const_::eps_ ){
-                format f(function);
+                boost::format f(function);
                 f % x_min % x_max;
                 throw ars::exception(
                     f.str(),
@@ -83,7 +83,7 @@ search_reflection(
         if(!ok_1){
             T delta = (new_x_1-new_x_0);
             if( delta < const_::eps_){
-                format f(function);
+                boost::format f(function);
                 f % x_min % x_max;
                 throw ars::exception(
                     f.str(),

@@ -38,7 +38,7 @@ template<typename T> unsigned parameter<T>::max_data_count = 20;
 template<typename T>
 T parameter<T>::max_log = constant<T>::lmax_/static_cast<T>(max_data_count);
 template<typename T> std::size_t parameter<T>::reserve = 5;
-template<typename T> unsigned parameter<T>::n_max_reject = 1e2;
+template<typename T> unsigned parameter<T>::n_max_reject = 100;
 
 }// ars
 }// detail

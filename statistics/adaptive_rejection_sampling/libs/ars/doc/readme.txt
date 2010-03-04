@@ -40,7 +40,7 @@ boost_1_41_0
 March 3rd, 2010
     - Fixed an apparent slow convergence in the output from 
     standard_distribution.cpp which was in fact due to a formatting defect.
-    - Added MSVC workaround in proposal_sampler.hpp bec ext/algorithm not found
+    - Added MSVC workarounds in proposal_sampler.hpp 
 
 Jan 20  2010 : small changes to test functions to adapt to the new 
 	non_parametric::kolmogorov_smirnov functionality.
