@@ -20,26 +20,17 @@
 #include <boost/static_assert.hpp>
 #include <boost/format.hpp>
 #include <boost/range.hpp>
-#include <boost/lambda/lambda.hpp>
-#include <boost/lambda/bind.hpp>
 #include <boost/numeric/conversion/converter.hpp>
-#include <boost/iterator/counting_iterator.hpp>
-#include <boost/assign/std/vector.hpp>
-
-#include <boost/fusion/include/make_map.hpp>
-#include <boost/fusion/include/at_key.hpp>
+#include <boost/accumulators/accumulators.hpp>
 
 #include <boost/statistics/detail/distribution_common/meta/random/generator.hpp>
 #include <boost/statistics/detail/distribution_common/meta/value.hpp>
-#include <boost/accumulators/accumulators.hpp>
 #include <boost/statistics/detail/non_parametric/kolmogorov_smirnov/statistic.hpp>
 
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/variate_generator.hpp>
-//#include <boost/random/normal_distribution.hpp>
 #include <boost/random/ref_distribution.hpp>
 
-//#include <boost/ars/functional/standard_distribution.hpp>
 #include <boost/ars/function/adaptor.hpp>
 #include <boost/ars/constant.hpp>
 #include <boost/ars/proposal_sampler.hpp>
@@ -83,12 +74,11 @@ struct standard_distribution{
 
     	using namespace boost;
     	using namespace math;
-    	using namespace assign;
     	namespace dist = boost::statistics::detail::distribution;
     	namespace ks = boost::statistics::detail::kolmogorov_smirnov;
     	typedef std::string                                     str_;
     	typedef std::runtime_error                              err_;
-    	typedef typename dist::meta::value<D>::type 			val_;
+        typedef typename D::value_type							val_;
     	typedef std::vector<val_>                               vals_;
 
     	typedef ars::function::adaptor<D>                       fun_t;

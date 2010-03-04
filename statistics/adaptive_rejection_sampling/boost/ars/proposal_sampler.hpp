@@ -9,11 +9,12 @@
 #define BOOST_STATISTICS_DETAIL_ARS_PROPOSAL_SAMPLER_HPP_ER_2009
 #include <cmath>
 #include <vector>
-#include <iostream> //TODO needed?
 #include <algorithm>
 #include <functional>
-#include <ext/algorithm>
-//#include <typeinfo>
+#include <boost/config.hpp>
+#ifndef BOOST_MSCV
+    #include <ext/algorithm>
+#endif
 #include <string>
 #include <iterator>
 #include <numeric>
@@ -25,7 +26,6 @@
 #include <boost/type_traits/is_base_of.hpp>
 
 #include <boost/bind.hpp>
-//#include <boost/lambda/lambda.hpp> //what for?
 #include <boost/random.hpp>
 #include <boost/range.hpp>
 #include <boost/iterator/transform_iterator.hpp>
@@ -52,8 +52,8 @@ namespace statistics{
 namespace detail{
 namespace ars{
 
-// The job of this class is to maintain an approximation to the cumulative 
-// density of interest and generate draws from it
+// This class maintains an approximation to the cumulative density of interest 
+// and generate draws from it
 //
 // Requirements:
 // Cont holds the data and is required to be bi-directional and is to be used
@@ -77,15 +77,15 @@ class proposal_sampler{
     typedef data<T>                                             data_t;
     typedef Alloc<data_t>                                       alloc_t;
     typedef Cont<data_t,alloc_t>                                datas_t;
-    typedef typename range_difference<datas_t>::type            diff_t;
-    typedef typename range_iterator<datas_t>::type              iter_t;
-    typedef uniform_real<T>                                     runif_t;
+    typedef typename boost::range_difference<datas_t>::type     diff_t;
+    typedef typename boost::range_iterator<datas_t>::type       iter_t;
+    typedef boost::uniform_real<T>                              runif_t;
 
     public:
     typedef typename ars::function::signature<T>::type          signature;
     typedef boost::function<signature>                          delegate_type;
 
-    typedef typename range_size<datas_t>::type                  size_type;
+    typedef typename boost::range_size<datas_t>::type           size_type;
     typedef T                                                   result_type;
     typedef typename runif_t::input_type                        input_type;
 
@@ -95,7 +95,7 @@ class proposal_sampler{
 
     // x_min must be constant<T>::inf_ if unbounded. Likewise x_max
     // fun's syntax is fun(x,y,dy) writes to x and dy
-    void set_function(T x_min,T x_min,const delegate_type& fun);
+    void set_function(T x_min,T x_max,const delegate_type& fun);
     template<typename R> //Range
     void initialize(const R& initial_data);
     void initialize(T x_0,T x_1);
@@ -179,8 +179,8 @@ proposal_sampler<T,Cont,Alloc>::description(std::ostream& out) const
     f%x_min()%t_min_;
     out << f.str();
     std::copy(
-        begin(datas()),
-        end(datas()),
+        boost::begin(datas()),
+        boost::end(datas()),
         std::ostream_iterator<data_t>(out, "|")
     );
     out << ", mt = " << max_tangent() << ",  offset = " << offset();
@@ -283,7 +283,7 @@ template<
 >
 void proposal_sampler<T,Cont,Alloc>::set_max_log(T v){
     max_log_ = v;
-    update_cum_sums(begin(datas_)); //TODO anything else?
+    update_cum_sums(boost::begin(datas_)); //TODO anything else?
 }
 
 template<
@@ -301,8 +301,8 @@ void proposal_sampler<T,Cont,Alloc>::set_function(
     x_min_ = x_min;
     x_max_ = x_max;
     // removing this-> would create a name conflict
-    if(!math::isinf( this->x_min() )){
-        if(!math::isinf( this->x_max() )){
+    if(!boost::math::isinf( this->x_min() )){
+        if(!boost::math::isinf( this->x_max() )){
             if(!( this->x_min() < this->x_max() )){
                 throw exception(
                     method,
@@ -373,7 +373,7 @@ void proposal_sampler<T,Cont,Alloc>::initialize(const R& initial_datas){
     if(
         math::isinf(x_min())
     ){
-        T dy = begin(initial_datas)->dy();
+        T dy = boost::begin(initial_datas)->dy();
         if(!
             (
                 dy > const_::zero_
@@ -387,7 +387,7 @@ void proposal_sampler<T,Cont,Alloc>::initialize(const R& initial_datas){
         }
         t_min_ = const_::quiet_nan_;
     }else{
-        t_min_ = tangent(*begin(initial_datas),x_min());
+        t_min_ = tangent(*boost::begin(initial_datas),x_min());
         max_tangent_ = t_min_;
     }
 
@@ -396,18 +396,18 @@ void proposal_sampler<T,Cont,Alloc>::initialize(const R& initial_datas){
     // At i,j = n-1, *i = *j
     // for i,j = n-2,...,0, *i = tangent_intersection(*j,*j+1)
     std::adjacent_difference(
-        make_reverse_iterator(end(initial_datas)),
-        make_reverse_iterator(begin(initial_datas)),
-        make_reverse_iterator(end(datas_)),
+        make_reverse_iterator(boost::end(initial_datas)),
+        make_reverse_iterator(boost::begin(initial_datas)),
+        make_reverse_iterator(boost::end(datas_)),
         update_tangent_intersection<T>()
     );
 
-    iter_t back_iter = prior(end(datas_));
+    iter_t back_iter = boost::prior(boost::end(datas_));
     {
 
     	// Bug prior to 01/08/2010 :
 		//T t = max_element(
-        //    begin(datas_),back_iter,
+        //    boost::begin(datas_),back_iter,
         //    bind<const T&>( &tang_t::t, _1 )
         //)->t();
 
@@ -425,7 +425,7 @@ void proposal_sampler<T,Cont,Alloc>::initialize(const R& initial_datas){
     const point_t& back_p = static_cast<const point_t&>(*back_iter);
     tang_t& back_ti = static_cast<tang_t&>(*back_iter);
 
-    if(math::isinf(x_max())){
+    if(boost::math::isinf(x_max())){
         T dy = back_iter->dy();
         if(
             !(dy < const_::zero_)
@@ -445,7 +445,7 @@ void proposal_sampler<T,Cont,Alloc>::initialize(const R& initial_datas){
     // Hupper hull > function, the RHS of which is integrable. If the LHS
     // is not integrable in some segment, a midpoint (or reflection point)
     // is added.
-    while( math::isinf( cum_sum() ) ) {
+    while( boost::math::isinf( cum_sum() ) ) {
         if(size_data()>max_data_count()){
             throw exception(
                 method,
@@ -457,19 +457,19 @@ void proposal_sampler<T,Cont,Alloc>::initialize(const R& initial_datas){
         typedef boost::function<const T&(const data_t&)> fun2_t;
 
         iter_t iter = std::find_if(
-            begin( datas_ ),
-            end( datas_ ),
+            boost::begin( datas_ ),
+            boost::end( datas_ ),
             pred_isinf()
         );
 
         T new_x;
-        if(next(iter)!=end(datas_)){
+        if(boost::next(iter)!=boost::end(datas_)){
             new_x = iter->z();
         }else{
             T x_0, x_1;
             x_1 = iter->x();
-            if(math::isinf(x_max())){
-                x_0 = prior(iter)->x();
+            if(boost::math::isinf(x_max())){
+                x_0 = boost::prior(iter)->x();
                 //reflection
                 new_x = x_1 + (x_1-x_0); //TODO what if = inf?
             }else{
@@ -531,25 +531,25 @@ proposal_sampler<T,Cont,Alloc>::inv_cum_sums_impl(
     value.cum_sum_ = u;
     iter_t iter =
         std::lower_bound(
-            begin(datas_),
-            end(datas_),
+            boost::begin(datas_),
+            boost::end(datas_),
             value
         );
 
     //TODO delete ->
-    BOOST_ASSERT(iter!=end(datas_));
+    BOOST_ASSERT(iter!=boost::end(datas_));
     BOOST_ASSERT(iter->cum_sum_>u);
-    if(iter!=begin(datas_)){
-        BOOST_ASSERT(prior(iter)->cum_sum_<u);
+    if(iter!=boost::begin(datas_)){
+        BOOST_ASSERT(boost::prior(iter)->cum_sum_<u);
     }
     // <-
     bool skip = false;
     T lz, lt, x, y, dy, du;
     dump(*iter,x,y,dy);
-    if( iter != begin(datas_) ){
-        du = u - prior(iter)->cum_sum_;
-        lz = prior(iter)->z();
-        lt = prior(iter)->t();
+    if( iter != boost::begin(datas_) ){
+        du = u - boost::prior(iter)->cum_sum_;
+        lz = boost::prior(iter)->z();
+        lt = boost::prior(iter)->t();
     }else{
         if(math::isinf(x_min())){
             // with y[i] <- y[i] - offset
@@ -586,11 +586,11 @@ proposal_sampler<T,Cont,Alloc>::inv_cum_sums_impl(
 
     //TODO create a local enum
 
-    if(math::isnan(q)){
+    if(boost::math::isnan(q)){
         throw exception(method,"isnan(q)",*this);
     }
-    if(iter!=begin(datas_)){
-        if(q<prior(iter)->z()){
+    if(iter!=boost::begin(datas_)){
+        if(q<boost::prior(iter)->z()){
             throw exception(method,"q<prior z",*this);
         }
     }else{
@@ -601,14 +601,14 @@ proposal_sampler<T,Cont,Alloc>::inv_cum_sums_impl(
         }
     }
     if(
-        ( iter!=end(datas_))
+        ( iter!=boost::end(datas_))
     ){
         if(q>iter->z()){
             throw exception(method,"q>z",*this);
         }
     }else{
         if(q>iter->z()){
-            if( !math::isinf(x_max()) ){
+            if( !boost::math::isinf(x_max()) ){
                 throw exception(method,"q>z",*this);
             }
         }
@@ -631,7 +631,7 @@ bool proposal_sampler<T,Cont,Alloc>::sample(U &urng,T& draw) const
     if(do_update_){
         insert(
             pending_p_,
-            next(
+            boost::next(
                 boost::begin(datas_),
                 pending_d_
             )
@@ -659,12 +659,12 @@ bool proposal_sampler<T,Cont,Alloc>::sample(U &urng,T& draw) const
         // lower is -inf outside (x[1],x[n])
         if(
             ( (iter!=begin(datas_)) || (draw>(iter->x())))
-            && ( (iter!=prior(end(datas_))) || (draw<(iter->x())))
+            && ( (iter!=boost::prior(boost::end(datas_))) || (draw<(iter->x())))
         ){
             if(draw<=(iter->x())){
-                lower = linearly_interpolate(*prior(iter),*iter,draw);
+                lower = linearly_interpolate(*boost::prior(iter),*iter,draw);
             }else{
-                lower = linearly_interpolate(*iter,*next(iter),draw);
+                lower = linearly_interpolate(*iter,*boost::next(iter),draw);
             }
             accept = ( log_u2 <= (lower-upper) );
         }else{
@@ -708,12 +708,12 @@ void proposal_sampler<T,Cont,Alloc>::update_cum_sums(iter_t iter) const
     T area;
     tang_t a;
     if(iter != begin(datas_)) {
-        a = *prior(iter);
+        a = *boost::prior(iter);
         cum_sum_ = boost::prior(iter)->cum_sum_;
     }else{
         cum_sum_ = const_::zero_;
         if(
-            math::isinf(x_min())
+            boost::math::isinf(x_min())
         ){
             T dy = iter->dy();
             if(dy<const_::lmin_){
@@ -736,7 +736,7 @@ void proposal_sampler<T,Cont,Alloc>::update_cum_sums(iter_t iter) const
         ++iter;
     }
 
-    iter_t j = prior(end(datas_));
+    iter_t j = boost::prior(boost::end(datas_));
     // TODO adjacent_difference?
     while(iter!=j){
         T area = area_segment_safeguarded(a,*iter,offset());
@@ -766,12 +766,12 @@ void proposal_sampler<T,Cont,Alloc>::update_cum_sums(iter_t iter) const
     cum_sum_ += area;
     iter->cum_sum_ = cum_sum_;
     ++iter;
-    BOOST_ASSERT(!(iter!=end(datas_)));
+    BOOST_ASSERT(!(iter!=boost::end(datas_)));
 
     BOOST_ASSERT(
         is_sorted(
             begin(datas_),
-            end(datas_),
+            boost::end(datas_),
             bind<bool>(
                 std::less<tang_t>(),
                 _1,
@@ -793,7 +793,7 @@ void proposal_sampler<T,Cont,Alloc>::insert(
 {
     static const char* method = "ars::proposal_sampler::insert";
 
-    if(iter!=end(datas_)){
+    if(iter!=boost::end(datas_)){
         if(!std::less<point_t>()(p,*iter)){
             throw exception(method,"p>next",*this);
         }
@@ -806,7 +806,7 @@ void proposal_sampler<T,Cont,Alloc>::insert(
     }
 
     if(iter!=begin(datas_)){
-        if(!std::less<point_t>()(*prior(iter),p)){
+        if(!std::less<point_t>()(*boost::prior(iter),p)){
             throw exception(method,"p<prior",*this);
         }
     }else{
@@ -853,20 +853,20 @@ void proposal_sampler<T,Cont,Alloc>::insert(
     };
 
     if(iter!=begin(datas_)){
-        T t = local::impl(*prior(iter),*iter,*this);
+        T t = local::impl(*boost::prior(iter),*iter,*this);
         m = (m<t)? t : m;
     }else{
-        if(!math::isinf(x_min())){
+        if(!boost::math::isinf(x_min())){
             t_min_ = tangent(*iter,x_min());
         }
     }
-    if(next(iter)!=end(datas_)){
-        T t = local::impl(*iter,*next(iter),*this);
+    if(boost::next(iter)!=boost::end(datas_)){
+        T t = local::impl(*iter,*boost::next(iter),*this);
         m = (m<t)? t : m;
     }else{
         const point_t& p = (*iter);
         tang_t& ti = (*iter);
-        if(math::isinf(x_max())){
+        if(boost::math::isinf(x_max())){
             ti = tang_t(const_::quiet_nan_, const_::quiet_nan_);
         }else{
             ti = tang_t(x_max(),tangent(p,x_max()));
@@ -880,14 +880,14 @@ void proposal_sampler<T,Cont,Alloc>::insert(
         iter = begin(datas_);
     }else{
         if(iter!=begin(datas_)){
-            iter = prior(iter);
+            iter = boost::prior(iter);
         }
     }
 
     BOOST_ASSERT(
         is_sorted(
             begin(datas_),
-            end(datas_),
+            boost::end(datas_),
             bind<bool>(
                 std::less<point_t>(),
                 _1,

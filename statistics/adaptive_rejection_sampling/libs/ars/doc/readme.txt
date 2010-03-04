@@ -37,8 +37,11 @@ boost_1_41_0
 /sandbox/statistics/random
 
 [ History ]
-March 3rd, 2010 Fixed an apparent slow convergence in the output from 
+March 3rd, 2010
+    - Fixed an apparent slow convergence in the output from 
     standard_distribution.cpp which was in fact due to a formatting defect.
+    - Added MSVC workaround in proposal_sampler.hpp bec ext/algorithm not found
+
 Jan 20  2010 : small changes to test functions to adapt to the new 
 	non_parametric::kolmogorov_smirnov functionality.
 Jan 8 	2010 : in proposal_sampler, found and fixed bug

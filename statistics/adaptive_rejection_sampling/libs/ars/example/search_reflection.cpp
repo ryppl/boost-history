@@ -6,6 +6,7 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
 #include <boost/format.hpp>
+#include <boost/math/distributions/normal.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/normal/include.hpp>
 #include <boost/ars/search_reflection.hpp>
 #include <boost/ars/constant.hpp>
