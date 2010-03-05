@@ -22,8 +22,8 @@ namespace auto_size{
     }
  
  	// tag::static_array designates a data-structure that has the functonality 
-    // of array_interface<> and is allocated at construction. It is therefore 
-    // suitable as the result of functions that have the csv form :
+    // of array_interface<> and is allocated at construction. It is recommended
+    // as the result of functions that have the csv form :
     //  fun(a,b,c)
     // Unlike lazy_array, it is not a suitable policy for auto_size::expr<>. 
     // This is desirable as otherwise the result from fun(a,b,c) would be 

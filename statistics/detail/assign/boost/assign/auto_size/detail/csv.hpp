@@ -14,7 +14,7 @@
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/assign/auto_size/detail/expr.hpp>
-#include <boost/assign/auto_size/array/wrapper.hpp>
+#include <boost/assign/auto_size/array/static.hpp>
 
 // Whereas adjacent unary function calls is the usual way to create a collec-
 // tion in Boost.Assign, this macro provides, as an alternative, functions that 
@@ -31,7 +31,6 @@
 // 	cfun<P>(a1,..,.ai)              r<const T,i,P>
 // 	fun(a1,..,.ai)                  r<T,i,P0>
 // 	cfun(a1,..,.ai)                 r<const T,i,P0>
-// which return instances of w<T,i> and w<const T,i>, respectively.
 
 #ifndef BOOST_ASSIGN_CSV_SIZE
 #define BOOST_ASSIGN_CSV_SIZE 20
