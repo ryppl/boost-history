@@ -298,31 +298,26 @@ This is controlled by the BOOST_ALL_DYN_LINK or BOOST_FILESYSTEM_DYN_LINK
 macros. See the <a href="http://www.boost.org/development/separate_compilation.html">Separate 
 Compilation</a> page for a description of the techniques used.</p>
 <h3>Note for <a name="Cgywin">Cygwin</a> users</h3>
-<p>The library's implementation code automatically detects the current platform, 
-and compiles the POSIX or Windows implementation code accordingly. Automatic 
+<p> <a href="http://www.cygwin.com/">Cygwin</a> version 1.7 or later is 
+required. The current platform (POSIX emulation via Cygwin, or Windows via MinGW) 
+is detected automatically. Automatic 
 platform detection during object library compilation can be overridden by 
-defining either BOOST_POSIX_API or BOOST_WINDOWS_API macros. With the exception of the Cygwin 
-environment, there is usually no reason to define these macros, as the 
+defining either BOOST_POSIX_API or BOOST_WINDOWS_API macros. There is usually no reason to define these macros, as the 
 software development kits supplied with most compilers only support a single 
 platform.</p>
-<p>The <a href="http://www.cygwin.com/">Cygwin</a> package of tools supports 
-traditional Windows usage, but also provides an emulation layer and other tools 
-which can be used to make Windows act as Linux (and thus POSIX), and provide the 
-Linux look-and-feel. GCC is usually the compiler of choice in this environment, 
-as it can be installed via the Cygwin install process. Other compilers can also 
-use the Cygwin emulation of POSIX, at least in theory.</p>
-<p>Those wishing to use the Cygwin POSIX emulation layer should define the 
-BOOST_POSIX_API macro when compiling bother user programs and the 
-Boost.Filesystem's object-library.</p>
 
 <h2><a name="Change-history">Version history</a></h2>
 
 <h3>Version 3</h3>
 
-<p>Boost 1.??.0 - ???, 2010 - Internationalization via single class <code>path</code>.</p>
+<p>Boost 1.??.0 - ???, 2010 - Internationalization via single class <code>path</code>. 
+More uniform error handling.</p>
 
-<p>Peter Dimov suggested use of a single path class rather than a basic_path 
+<p>Peter Dimov suggested use of a single path class rather than a <code>basic_path</code> 
 class template. That idea was the basis for the Version 3 redesign.</p>
+
+<p>Thanks for comments from Robert Stewart, Zach Laine, Peter Dimov, Gregory 
+Peele, Scott McMurray, John Bytheway, Jeff Flinn, Jeffery Bosboom.</p>
 
 <h3>Version 2</h3>
 
@@ -448,7 +443,7 @@ version 1.31.0.&nbsp;</p>
 
 <hr>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->18 February, 2010<!--webbot bot="Timestamp" endspan i-checksum="40538" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->03 March, 2010<!--webbot bot="Timestamp" endspan i-checksum="28754" --></p>
 
 <p>&copy; Copyright Beman Dawes, 2002-2005</p>
 <p> Use, modification, and distribution are subject to the Boost Software 

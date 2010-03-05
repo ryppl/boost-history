@@ -7,7 +7,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 <title>Filesystem Reference
 </title>
-<link rel="stylesheet" type="text/css" href="minimal.css">
+<style type="text/css">
+  ins  {background-color:#A0FFA0}
+  del  {background-color:#FFA0A0}
+  body { font-family: sans-serif;}
+
+</style>
 </head>
 
 <body>
@@ -2604,488 +2609,472 @@ implementations yield different results. The top value is the
 <i>POSIX</i> result and the bottom value is the <i>Windows</i> result. <br>
 &nbsp;<table border="1" cellspacing="0" cellpadding="5" width="1066">
 <p>
-<tr><td width="112"><b>Constructor<br>argument</b></td>
-<td width="160"><b>Elements found<br>by iteration</b></td>
-<td width="112"><b><code>string()</code></b></td>
-<td width="112"><code><b>file_<br>string()</b></td>
-<td width="72"><b><code>root_<br>path()<br>.string()</code></b></td>
-<td width="48"><b><code>root_<br>name()</code></b></td>
-<td width="88"><b><code>root_<br>directory()</code></b></td>
-<td width="96"><b><code>relative_<br>path()<br>.string()</code></b></td>
-<td width="72"><b><code>parent_<br>path()<br>.string()</code></b></td>
-<td width="72"><b><code>filename()</code></b></td>
+<tr><td><b>Constructor<br>argument</b></td>
+<td><b>Iteration<br>over<br>Elements</b></td>
+<td><b><code>string()</code></b></td>
+<td><b><code>generic_<br>string()</code></b></td>
+<td><b><code>root_<br>path()</code></b></td>
+<td><b><code>root_<br>name()</code></b></td>
+<td><b><code>root_<br>directory()</code></b></td>
+<td><b><code>relative_<br>path()</code></b></td>
+<td><b><code>parent_<br>path(</code></b></td>
+<td><b><code>filename()</code></b></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;&quot;</code></td>
-<td width="160"><code>&quot;&quot;</code></td>
-<td width="112"><code>&quot;&quot;</code></td>
-<td width="112"><code>&quot;&quot;</code></td>
-<td width="72"><code>&quot;&quot;</code></td>
-<td width="48"><code>&quot;&quot;</code></td>
-<td width="88"><code>&quot;&quot;</code></td>
-<td width="96"><code>&quot;&quot;</code></td>
-<td width="72"><code>&quot;&quot;</code></td>
-<td width="72"><code>&quot;&quot;</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;.&quot;</code></td>
-<td width="160"><code>&quot;.&quot;</code></td>
-<td width="112"><code>&quot;.&quot;</code></td>
-<td width="112"><code>&quot;.&quot;</code></td>
-<td width="72"><code>&quot;&quot;</code></td>
-<td width="48"><code>&quot;&quot;</code></td>
-<td width="88"><code>&quot;&quot;</code></td>
-<td width="96"><code>&quot;.&quot;</code></td>
-<td width="72"><code>&quot;&quot;</code></td>
-<td width="72"><code>&quot;.&quot;</code></td>
+<td><code>.</code></td>
+<td><code>.</code></td>
+<td><code>.</code></td>
+<td><code>.</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>.</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>.</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;..&quot;</code></td>
-<td width="160"><code>&quot;..&quot;</code></td>
-<td width="112"><code>&quot;..&quot;</code></td>
-<td width="112"><code>&quot;..&quot;</code></td>
-<td width="72"><code>&quot;&quot;</code></td>
-<td width="48"><code>&quot;&quot;</code></td>
-<td width="88"><code>&quot;&quot;</code></td>
-<td width="96"><code>&quot;..&quot;</code></td>
-<td width="72"><code>&quot;&quot;</code></td>
-<td width="72"><code>&quot;..&quot;</code></td>
+<td><code>..</code></td>
+<td><code>..</code></td>
+<td><code>..</code></td>
+<td><code>..</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>..</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>..</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;foo&quot;</code></td>
-<td width="160"><code>&quot;foo&quot;</code></td>
-<td width="112"><code>&quot;foo&quot;</code></td>
-<td width="112"><code>&quot;foo&quot;</code></td>
-<td width="72"><code>&quot;&quot;</code></td>
-<td width="48"><code>&quot;&quot;</code></td>
-<td width="88"><code>&quot;&quot;</code></td>
-<td width="96"><code>&quot;foo&quot;</code></td>
-<td width="72"><code>&quot;&quot;</code></td>
-<td width="72"><code>&quot;foo&quot;</code></td>
+<td><code>foo</code></td>
+<td><code>foo</code></td>
+<td><code>foo</code></td>
+<td><code>foo</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>foo</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>foo</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;/&quot;</code></td>
-<td width="160"><code>&quot;/&quot;</code></td>
-<td width="112"><code>&quot;/&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;/&quot;<br>&quot;\&quot;</code></td>
-<td width="72"><code>&quot;/&quot;</code></td>
-<td width="48"><code>&quot;&quot;</code></td>
-<td width="88"><code>&quot;/&quot;</code></td>
-<td width="96"><code>&quot;&quot;</code></td>
-<td width="72"><code>&quot;&quot;</code></td>
-<td width="72"><code>&quot;/&quot;</code></td>
+<td><code>/</code></td>
+<td><code>/</code></td>
+<td><code>/</code></td>
+<td><code>/</code></td>
+<td><code>/</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>/</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>/</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;/foo&quot;</code></td>
-<td width="160"><code>&quot;/&quot;,&quot;foo&quot;</code></td>
-<td width="112"><code>&quot;/foo&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;/foo&quot;<br>&quot;\foo&quot;</code></td>
-<td width="72"><code>&quot;/&quot;</code></td>
-<td width="48"><code>&quot;&quot;</code></td>
-<td width="88"><code>&quot;/&quot;</code></td>
-<td width="96"><code>&quot;foo&quot;</code></td>
-<td width="72"><code>&quot;/&quot;</code></td>
-<td width="72"><code>&quot;foo&quot;</code></td>
+<td><code>/foo</code></td>
+<td><code>/,foo</code></td>
+<td><code>/foo</code></td>
+<td><code>/foo</code></td>
+<td><code>/</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>/</code></td>
+<td><code>foo</code></td>
+<td><code>/</code></td>
+<td><code>foo</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;foo/&quot;</code></td>
-<td width="160"><code>&quot;foo&quot;,&quot;.&quot;</code></td>
-<td width="112"><code>&quot;foo/&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;foo/&quot;<br>&quot;foo\&quot;</code></td>
-<td width="72"><code>&quot;&quot;</code></td>
-<td width="48"><code>&quot;&quot;</code></td>
-<td width="88"><code>&quot;&quot;</code></td>
-<td width="96"><code>&quot;foo/&quot;</code></td>
-<td width="72"><code>&quot;foo&quot;</code></td>
-<td width="72"><code>&quot;.&quot;</code></td>
+<td><code>foo/</code></td>
+<td><code>foo,.</code></td>
+<td><code>foo/</code></td>
+<td><code>foo/</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>foo/</code></td>
+<td><code>foo</code></td>
+<td><code>.</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;/foo/&quot;</code></td>
-<td width="160"><code>&quot;/&quot;,&quot;foo&quot;,&quot;.&quot;</code></td>
-<td width="112"><code>&quot;/foo/&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;/foo/&quot;<br>&quot;\foo\&quot;</code></td>
-<td width="72"><code>&quot;/&quot;</code></td>
-<td width="48"><code>&quot;&quot;</code></td>
-<td width="88"><code>&quot;/&quot;</code></td>
-<td width="96"><code>&quot;foo/&quot;</code></td>
-<td width="72"><code>&quot;/foo&quot;</code></td>
-<td width="72"><code>&quot;.&quot;</code></td>
+<td><code>/foo/</code></td>
+<td><code>/,foo,.</code></td>
+<td><code>/foo/</code></td>
+<td><code>/foo/</code></td>
+<td><code>/</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>/</code></td>
+<td><code>foo/</code></td>
+<td><code>/foo</code></td>
+<td><code>.</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;foo/bar&quot;</code></td>
-<td width="160"><code>&quot;foo&quot;,&quot;bar&quot;</code></td>
-<td width="112"><code>&quot;foo/bar&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;foo/bar&quot;<br>&quot;foo\bar&quot;</code></td>
-<td width="72"><code>&quot;&quot;</code></td>
-<td width="48"><code>&quot;&quot;</code></td>
-<td width="88"><code>&quot;&quot;</code></td>
-<td width="96"><code>&quot;foo/bar&quot;</code></td>
-<td width="72"><code>&quot;foo&quot;</code></td>
-<td width="72"><code>&quot;bar&quot;</code></td>
+<td><code>foo/bar</code></td>
+<td><code>foo,bar</code></td>
+<td><code>foo/bar</code></td>
+<td><code>foo/bar</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>foo/bar</code></td>
+<td><code>foo</code></td>
+<td><code>bar</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;/foo/bar&quot;</code></td>
-<td width="160"><code>&quot;/&quot;,&quot;foo&quot;,&quot;bar&quot;</code></td>
-<td width="112"><code>&quot;/foo/bar&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;/foo/bar&quot;<br>&quot;\foo\bar&quot;</code></td>
-<td width="72"><code>&quot;/&quot;</code></td>
-<td width="48"><code>&quot;&quot;</code></td>
-<td width="88"><code>&quot;/&quot;</code></td>
-<td width="96"><code>&quot;foo/bar&quot;</code></td>
-<td width="72"><code>&quot;/foo&quot;</code></td>
-<td width="72"><code>&quot;bar&quot;</code></td>
+<td><code>/foo/bar</code></td>
+<td><code>/,foo,bar</code></td>
+<td><code>/foo/bar</code></td>
+<td><code>/foo/bar</code></td>
+<td><code>/</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>/</code></td>
+<td><code>foo/bar</code></td>
+<td><code>/foo</code></td>
+<td><code>bar</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;///foo///&quot;</code></td>
-<td width="160"><code>&quot;/&quot;,&quot;foo&quot;,&quot;.&quot;</code></td>
-<td width="112"><code>&quot;///foo///&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;///foo///&quot;<br>&quot;\foo\\\&quot;</code></td>
-<td width="72"><code>&quot;/&quot;</code></td>
-<td width="48"><code>&quot;&quot;</code></td>
-<td width="88"><code>&quot;/&quot;</code></td>
-<td width="96"><code>&quot;foo///&quot;</code></td>
-<td width="72"><code>&quot;///foo&quot;</code></td>
-<td width="72"><code>&quot;.&quot;</code></td>
+<td><code>///foo///</code></td>
+<td><code>/,foo,.</code></td>
+<td><code>///foo///</code></td>
+<td><code>///foo///</code></td>
+<td><code>/</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>/</code></td>
+<td><code>foo///</code></td>
+<td><code>///foo</code></td>
+<td><code>.</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;///foo///bar&quot;</code></td>
-<td width="160"><code>&quot;/&quot;,&quot;foo&quot;,&quot;bar&quot;</code></td>
-<td width="112"><code>&quot;///foo///bar&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;///foo///bar&quot;<br>&quot;\foo\\\bar&quot;</code></td>
-<td width="72"><code>&quot;/&quot;</code></td>
-<td width="48"><code>&quot;&quot;</code></td>
-<td width="88"><code>&quot;/&quot;</code></td>
-<td width="96"><code>&quot;foo///bar&quot;</code></td>
-<td width="72"><code>&quot;///foo&quot;</code></td>
-<td width="72"><code>&quot;bar&quot;</code></td>
+<td><code>///foo///bar</code></td>
+<td><code>/,foo,bar</code></td>
+<td><code>///foo///bar</code></td>
+<td><code>///foo///bar</code></td>
+<td><code>/</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>/</code></td>
+<td><code>foo///bar</code></td>
+<td><code>///foo</code></td>
+<td><code>bar</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;/.&quot;</code></td>
-<td width="160"><code>&quot;/&quot;,&quot;.&quot;</code></td>
-<td width="112"><code>&quot;/.&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;/.&quot;<br>&quot;\.&quot;</code></td>
-<td width="72"><code>&quot;/&quot;</code></td>
-<td width="48"><code>&quot;&quot;</code></td>
-<td width="88"><code>&quot;/&quot;</code></td>
-<td width="96"><code>&quot;.&quot;</code></td>
-<td width="72"><code>&quot;/&quot;</code></td>
-<td width="72"><code>&quot;.&quot;</code></td>
+<td><code>/.</code></td>
+<td><code>/,.</code></td>
+<td><code>/.</code></td>
+<td><code>/.</code></td>
+<td><code>/</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>/</code></td>
+<td><code>.</code></td>
+<td><code>/</code></td>
+<td><code>.</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;./&quot;</code></td>
-<td width="160"><code>&quot;.&quot;,&quot;.&quot;</code></td>
-<td width="112"><code>&quot;./&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;./&quot;<br>&quot;.\&quot;</code></td>
-<td width="72"><code>&quot;&quot;</code></td>
-<td width="48"><code>&quot;&quot;</code></td>
-<td width="88"><code>&quot;&quot;</code></td>
-<td width="96"><code>&quot;./&quot;</code></td>
-<td width="72"><code>&quot;.&quot;</code></td>
-<td width="72"><code>&quot;.&quot;</code></td>
+<td><code>./</code></td>
+<td><code>.,.</code></td>
+<td><code>./</code></td>
+<td><code>./</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>./</code></td>
+<td><code>.</code></td>
+<td><code>.</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;/..&quot;</code></td>
-<td width="160"><code>&quot;/&quot;,&quot;..&quot;</code></td>
-<td width="112"><code>&quot;/..&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;/..&quot;<br>&quot;\..&quot;</code></td>
-<td width="72"><code>&quot;/&quot;</code></td>
-<td width="48"><code>&quot;&quot;</code></td>
-<td width="88"><code>&quot;/&quot;</code></td>
-<td width="96"><code>&quot;..&quot;</code></td>
-<td width="72"><code>&quot;/&quot;</code></td>
-<td width="72"><code>&quot;..&quot;</code></td>
+<td><code>/..</code></td>
+<td><code>/,..</code></td>
+<td><code>/..</code></td>
+<td><code>/..</code></td>
+<td><code>/</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>/</code></td>
+<td><code>..</code></td>
+<td><code>/</code></td>
+<td><code>..</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;../&quot;</code></td>
-<td width="160"><code>&quot;..&quot;,&quot;.&quot;</code></td>
-<td width="112"><code>&quot;../&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;../&quot;<br>&quot;..\&quot;</code></td>
-<td width="72"><code>&quot;&quot;</code></td>
-<td width="48"><code>&quot;&quot;</code></td>
-<td width="88"><code>&quot;&quot;</code></td>
-<td width="96"><code>&quot;../&quot;</code></td>
-<td width="72"><code>&quot;..&quot;</code></td>
-<td width="72"><code>&quot;.&quot;</code></td>
+<td><code>../</code></td>
+<td><code>..,.</code></td>
+<td><code>../</code></td>
+<td><code>../</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>../</code></td>
+<td><code>..</code></td>
+<td><code>.</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;foo/.&quot;</code></td>
-<td width="160"><code>&quot;foo&quot;,&quot;.&quot;</code></td>
-<td width="112"><code>&quot;foo/.&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;foo/.&quot;<br>&quot;foo\.&quot;</code></td>
-<td width="72"><code>&quot;&quot;</code></td>
-<td width="48"><code>&quot;&quot;</code></td>
-<td width="88"><code>&quot;&quot;</code></td>
-<td width="96"><code>&quot;foo/.&quot;</code></td>
-<td width="72"><code>&quot;foo&quot;</code></td>
-<td width="72"><code>&quot;.&quot;</code></td>
+<td><code>foo/.</code></td>
+<td><code>foo,.</code></td>
+<td><code>foo/.</code></td>
+<td><code>foo/.</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>foo/.</code></td>
+<td><code>foo</code></td>
+<td><code>.</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;foo/..&quot;</code></td>
-<td width="160"><code>&quot;foo&quot;,&quot;..&quot;</code></td>
-<td width="112"><code>&quot;foo/..&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;foo/..&quot;<br>&quot;foo\..&quot;</code></td>
-<td width="72"><code>&quot;&quot;</code></td>
-<td width="48"><code>&quot;&quot;</code></td>
-<td width="88"><code>&quot;&quot;</code></td>
-<td width="96"><code>&quot;foo/..&quot;</code></td>
-<td width="72"><code>&quot;foo&quot;</code></td>
-<td width="72"><code>&quot;..&quot;</code></td>
+<td><code>foo/..</code></td>
+<td><code>foo,..</code></td>
+<td><code>foo/..</code></td>
+<td><code>foo/..</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>foo/..</code></td>
+<td><code>foo</code></td>
+<td><code>..</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;foo/./&quot;</code></td>
-<td width="160"><code>&quot;foo&quot;,&quot;.&quot;,&quot;.&quot;</code></td>
-<td width="112"><code>&quot;foo/./&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;foo/./&quot;<br>&quot;foo\.\&quot;</code></td>
-<td width="72"><code>&quot;&quot;</code></td>
-<td width="48"><code>&quot;&quot;</code></td>
-<td width="88"><code>&quot;&quot;</code></td>
-<td width="96"><code>&quot;foo/./&quot;</code></td>
-<td width="72"><code>&quot;foo/.&quot;</code></td>
-<td width="72"><code>&quot;.&quot;</code></td>
+<td><code>foo/./</code></td>
+<td><code>foo,.,.</code></td>
+<td><code>foo/./</code></td>
+<td><code>foo/./</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>foo/./</code></td>
+<td><code>foo/.</code></td>
+<td><code>.</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;foo/./bar&quot;</code></td>
-<td width="160"><code>&quot;foo&quot;,&quot;.&quot;,&quot;bar&quot;</code></td>
-<td width="112"><code>&quot;foo/./bar&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;foo/./bar&quot;<br>&quot;foo\.\bar&quot;</code></td>
-<td width="72"><code>&quot;&quot;</code></td>
-<td width="48"><code>&quot;&quot;</code></td>
-<td width="88"><code>&quot;&quot;</code></td>
-<td width="96"><code>&quot;foo/./bar&quot;</code></td>
-<td width="72"><code>&quot;foo/.&quot;</code></td>
-<td width="72"><code>&quot;bar&quot;</code></td>
+<td><code>foo/./bar</code></td>
+<td><code>foo,.,bar</code></td>
+<td><code>foo/./bar</code></td>
+<td><code>foo/./bar</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>foo/./bar</code></td>
+<td><code>foo/.</code></td>
+<td><code>bar</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;foo/..&quot;</code></td>
-<td width="160"><code>&quot;foo&quot;,&quot;..&quot;</code></td>
-<td width="112"><code>&quot;foo/..&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;foo/..&quot;<br>&quot;foo\..&quot;</code></td>
-<td width="72"><code>&quot;&quot;</code></td>
-<td width="48"><code>&quot;&quot;</code></td>
-<td width="88"><code>&quot;&quot;</code></td>
-<td width="96"><code>&quot;foo/..&quot;</code></td>
-<td width="72"><code>&quot;foo&quot;</code></td>
-<td width="72"><code>&quot;..&quot;</code></td>
+<td><code>foo/..</code></td>
+<td><code>foo,..</code></td>
+<td><code>foo/..</code></td>
+<td><code>foo/..</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>foo/..</code></td>
+<td><code>foo</code></td>
+<td><code>..</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;foo/../&quot;</code></td>
-<td width="160"><code>&quot;foo&quot;,&quot;..&quot;,&quot;.&quot;</code></td>
-<td width="112"><code>&quot;foo/../&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;foo/../&quot;<br>&quot;foo\..\&quot;</code></td>
-<td width="72"><code>&quot;&quot;</code></td>
-<td width="48"><code>&quot;&quot;</code></td>
-<td width="88"><code>&quot;&quot;</code></td>
-<td width="96"><code>&quot;foo/../&quot;</code></td>
-<td width="72"><code>&quot;foo/..&quot;</code></td>
-<td width="72"><code>&quot;.&quot;</code></td>
+<td><code>foo/../</code></td>
+<td><code>foo,..,.</code></td>
+<td><code>foo/../</code></td>
+<td><code>foo/../</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>foo/../</code></td>
+<td><code>foo/..</code></td>
+<td><code>.</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;foo/../bar&quot;</code></td>
-<td width="160"><code>&quot;foo&quot;,&quot;..&quot;,&quot;bar&quot;</code></td>
-<td width="112"><code>&quot;foo/../bar&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;foo/../bar&quot;<br>&quot;foo\..\bar&quot;</code></td>
-<td width="72"><code>&quot;&quot;</code></td>
-<td width="48"><code>&quot;&quot;</code></td>
-<td width="88"><code>&quot;&quot;</code></td>
-<td width="96"><code>&quot;foo/../bar&quot;</code></td>
-<td width="72"><code>&quot;foo/..&quot;</code></td>
-<td width="72"><code>&quot;bar&quot;</code></td>
+<td><code>foo/../bar</code></td>
+<td><code>foo,..,bar</code></td>
+<td><code>foo/../bar</code></td>
+<td><code>foo/../bar</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>foo/../bar</code></td>
+<td><code>foo/..</code></td>
+<td><code>bar</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;c:&quot;</code></td>
-<td width="160"><code>&quot;c:&quot;</code></td>
-<td width="112"><code>&quot;c:&quot;</code></td>
-<td width="112"><code>&quot;c:&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;&quot;<br>&quot;c:&quot;</code></td>
-<td bgcolor="#99FF66" style="border-left-style: solid; border-left-width: 1; border-right-style: solid; border-right-width: 1; border-top-style: solid; border-top-width: 1" width="48"><code>
-&quot;&quot;<br>&quot;c:&quot;</code></td>
-<td width="88"><code>&quot;&quot;</code></td>
-<td bgcolor="#99FF66" width="96"><code>&quot;c:&quot;<br>&quot;&quot;</code></td>
-<td width="72"><code>&quot;&quot;</code></td>
-<td width="72"><code>&quot;c:&quot;</code></td>
+<td><code>c:</code></td>
+<td><code>c:</code></td>
+<td><code>c:</code></td>
+<td><code>c:</code></td>
+<td><code>c:</code></td>
+<td><code>c:</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>c:</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;c:/&quot;</code></td>
-<td bgcolor="#99FF66" width="160"><code>&quot;c:&quot;,&quot;.&quot;<br>&quot;c:&quot;,&quot;/&quot;</code></td>
-<td width="112"><code>&quot;c:/&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code><span style="background-color: #99FF66">
-&quot;c:/&quot;<br>&quot;c:\&quot;</span></code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;&quot;<br>&quot;c:/&quot;</code></td>
-<td bgcolor="#99FF66" style="border-left-style: solid; border-left-width: 1; border-right-style: solid; border-right-width: 1" width="48"><code>
-&quot;&quot;<br>&quot;c:&quot;</code></td>
-<td bgcolor="#99FF66" width="88"><code>&quot;&quot;<br>&quot;/&quot;</code></td>
-<td bgcolor="#99FF66" width="96"><code>&quot;c:/&quot;<br>&quot;&quot;</code></td>
-<td width="72"><code>&quot;c:&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;.&quot;<br>&quot;/&quot;</code></td>
+<td><code>c:/</code></td>
+<td><code>c:,/</code></td>
+<td><code>c:/</code></td>
+<td><code>c:/</code></td>
+<td><code>c:/</code></td>
+<td><code>c:</code></td>
+<td><code>/</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>c:</code></td>
+<td><code>/</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;c:foo&quot;</code></td>
-<td bgcolor="#99FF66" width="160"><code>&quot;c:foo&quot;<br>&quot;c:&quot;,&quot;foo&quot;</code></td>
-<td width="112"><code>&quot;c:foo&quot;</code></td>
-<td width="112"><code>&quot;c:foo&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;&quot;<br>&quot;c:&quot;</code></td>
-<td bgcolor="#99FF66" style="border-left-style: solid; border-left-width: 1; border-right-style: solid; border-right-width: 1" width="48"><code>
-&quot;&quot;<br>&quot;c:&quot;</code></td>
-<td width="88"><code>&quot;&quot;</code></td>
-<td bgcolor="#99FF66" width="96"><code>&quot;c:foo&quot;<br>&quot;foo&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;&quot;<br>&quot;c:&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;c:foo&quot;<br>&quot;foo&quot;</code></td>
+<td><code>c:foo</code></td>
+<td><code>c:,foo</code></td>
+<td><code>c:foo</code></td>
+<td><code>c:foo</code></td>
+<td><code>c:</code></td>
+<td><code>c:</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>foo</code></td>
+<td><code>c:</code></td>
+<td><code>foo</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;c:/foo&quot;</code></td>
-<td bgcolor="#99FF66" width="160"><code>&quot;c:&quot;,&quot;foo&quot;<br>&quot;c:&quot;,&quot;/&quot;,&quot;foo&quot;</code></td>
-<td width="112"><code>&quot;c:/foo&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;c:/foo&quot;<br>&quot;c:\foo&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;&quot;<br>&quot;c:/&quot;</code></td>
-<td bgcolor="#99FF66" style="border-left-style: solid; border-left-width: 1; border-right-style: solid; border-right-width: 1" width="48"><code>
-&quot;&quot;<br>&quot;c:&quot;</code></td>
-<td bgcolor="#99FF66" width="88"><code>&quot;&quot;<br>&quot;/&quot;</code></td>
-<td bgcolor="#99FF66" width="96"><code>&quot;c:/foo&quot;<br>&quot;foo&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;c:&quot;<br>&quot;c:/&quot;</code></td>
-<td width="72"><code>&quot;foo&quot;</code></td>
+<td><code>c:/foo</code></td>
+<td><code>c:,/,foo</code></td>
+<td><code>c:/foo</code></td>
+<td><code>c:/foo</code></td>
+<td><code>c:/</code></td>
+<td><code>c:</code></td>
+<td><code>/</code></td>
+<td><code>foo</code></td>
+<td><code>c:/</code></td>
+<td><code>foo</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;c:foo/&quot;</code></td>
-<td bgcolor="#99FF66" width="160"><code>&quot;c:foo&quot;,&quot;.&quot;<br>&quot;c:&quot;,&quot;foo&quot;,&quot;.&quot;</code></td>
-<td width="112"><code>&quot;c:foo/&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;c:foo/&quot;<br>&quot;c:foo\&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;&quot;<br>&quot;c:&quot;</code></td>
-<td bgcolor="#99FF66" style="border-left-style: solid; border-left-width: 1; border-right-style: solid; border-right-width: 1" width="48"><code>
-&quot;&quot;<br>&quot;c:&quot;</code></td>
-<td width="88"><code>&quot;&quot;</code></td>
-<td bgcolor="#99FF66" width="96"><code>&quot;c:foo/&quot;<br>&quot;foo/&quot;</code></td>
-<td width="72"><code>&quot;c:foo&quot;</code></td>
-<td width="72"><code>&quot;.&quot;</code></td>
+<td><code>c:foo/</code></td>
+<td><code>c:,foo,.</code></td>
+<td><code>c:foo/</code></td>
+<td><code>c:foo/</code></td>
+<td><code>c:</code></td>
+<td><code>c:</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>foo/</code></td>
+<td><code>c:foo</code></td>
+<td><code>.</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;c:/foo/&quot;</code></td>
-<td bgcolor="#99FF66" width="160"><code>&quot;c:&quot;,&quot;foo&quot;,&quot;.&quot;<br>&quot;c:&quot;,&quot;/&quot;,&quot;foo&quot;,&quot;.&quot;</code></td>
-<td width="112"><code>&quot;c:/foo/&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;c:/foo/&quot;<br>&quot;c:\foo\&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;&quot;<br>&quot;c:/&quot;</code></td>
-<td bgcolor="#99FF66" style="border-left-style: solid; border-left-width: 1; border-right-style: solid; border-right-width: 1" width="48"><code>
-&quot;&quot;<br>&quot;c:&quot;</code></td>
-<td bgcolor="#99FF66" width="88"><code>&quot;&quot;<br>&quot;/&quot;</code></td>
-<td bgcolor="#99FF66" width="96"><code>&quot;c:/foo/&quot;<br>&quot;foo/&quot;</code></td>
-<td width="72"><code>&quot;c:/foo&quot;</code></td>
-<td width="72"><code>&quot;.&quot;</code></td>
+<td><code>c:/foo/</code></td>
+<td><code>c:,/,foo,.</code></td>
+<td><code>c:/foo/</code></td>
+<td><code>c:/foo/</code></td>
+<td><code>c:/</code></td>
+<td><code>c:</code></td>
+<td><code>/</code></td>
+<td><code>foo/</code></td>
+<td><code>c:/foo</code></td>
+<td><code>.</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;c:/foo/bar&quot;</code></td>
-<td bgcolor="#99FF66" width="160"><code>&quot;c:&quot;,&quot;foo&quot;,&quot;bar&quot;<br>&quot;c:&quot;,&quot;/&quot;,&quot;foo&quot;,&quot;bar&quot;</code></td>
-<td width="112"><code>&quot;c:/foo/bar&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;c:/foo/bar&quot;<br>&quot;c:\foo\bar&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;&quot;<br>&quot;c:/&quot;</code></td>
-<td bgcolor="#99FF66" style="border-left-style: solid; border-left-width: 1; border-right-style: solid; border-right-width: 1" width="48"><code>
-&quot;&quot;<br>&quot;c:&quot;</code></td>
-<td bgcolor="#99FF66" width="88"><code>&quot;&quot;<br>&quot;/&quot;</code></td>
-<td bgcolor="#99FF66" width="96"><code>&quot;c:/foo/bar&quot;<br>&quot;foo/bar&quot;</code></td>
-<td width="72"><code>&quot;c:/foo&quot;</code></td>
-<td width="72"><code>&quot;bar&quot;</code></td>
+<td><code>c:/foo/bar</code></td>
+<td><code>c:,/,foo,bar</code></td>
+<td><code>c:/foo/bar</code></td>
+<td><code>c:/foo/bar</code></td>
+<td><code>c:/</code></td>
+<td><code>c:</code></td>
+<td><code>/</code></td>
+<td><code>foo/bar</code></td>
+<td><code>c:/foo</code></td>
+<td><code>bar</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;prn:&quot;</code></td>
-<td width="160"><code>&quot;prn:&quot;</code></td>
-<td width="112"><code>&quot;prn:&quot;</code></td>
-<td width="112"><code>&quot;prn:&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;&quot;<br>&quot;prn:&quot;</code></td>
-<td bgcolor="#99FF66" style="border-left-style: solid; border-left-width: 1; border-right-style: solid; border-right-width: 1" width="48"><code>
-&quot;&quot;<br>&quot;prn:&quot;</code></td>
-<td width="88"><code>&quot;&quot;</code></td>
-<td bgcolor="#99FF66" width="96"><code>&quot;prn:&quot;<br>&quot;&quot;</code></td>
-<td width="72"><code>&quot;&quot;</code></td>
-<td width="72"><code>&quot;prn:&quot;</code></td>
+<td><code>prn:</code></td>
+<td><code>prn:</code></td>
+<td><code>prn:</code></td>
+<td><code>prn:</code></td>
+<td><code>prn:</code></td>
+<td><code>prn:</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>prn:</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;c:\&quot;</code></td>
-<td bgcolor="#99FF66" width="160"><code>&quot;c:\&quot;<br>&quot;c:&quot;,&quot;/&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;c:\&quot;<br>&quot;c:/&quot;</code></td>
-<td width="112"><code>&quot;c:\&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;&quot;<br>&quot;c:/&quot;</code></td>
-<td bgcolor="#99FF66" style="border-left-style: solid; border-left-width: 1; border-right-style: solid; border-right-width: 1" width="48"><code>
-&quot;&quot;<br>&quot;c:&quot;</code></td>
-<td bgcolor="#99FF66" width="88"><code>&quot;&quot;<br>&quot;/&quot;</code></td>
-<td bgcolor="#99FF66" width="96"><code>&quot;c:\&quot;<br>&quot;&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;&quot;<br>&quot;c:&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;c:\&quot;<br>&quot;/&quot;</code></td>
+<td><code>c:\</code></td>
+<td><code>c:,/</code></td>
+<td><code>c:\</code></td>
+<td><code>c:/</code></td>
+<td><code>c:\</code></td>
+<td><code>c:</code></td>
+<td><code>\</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>c:</code></td>
+<td><code>\</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;c:foo&quot;</code></td>
-<td bgcolor="#99FF66" width="160"><code>&quot;c:foo&quot;<br>&quot;c:&quot;,&quot;foo&quot;</code></td>
-<td width="112"><code>&quot;c:foo&quot;</code></td>
-<td width="112"><code>&quot;c:foo&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;&quot;<br>&quot;c:&quot;</code></td>
-<td bgcolor="#99FF66" style="border-left-style: solid; border-left-width: 1; border-right-style: solid; border-right-width: 1" width="48"><code>
-&quot;&quot;<br>&quot;c:&quot;</code></td>
-<td width="88"><code>&quot;&quot;</code></td>
-<td bgcolor="#99FF66" width="96"><code>&quot;c:foo&quot;<br>&quot;foo&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;&quot;<br>&quot;c:&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;c:foo&quot;<br>&quot;foo&quot;</code></td>
+<td><code>c:foo</code></td>
+<td><code>c:,foo</code></td>
+<td><code>c:foo</code></td>
+<td><code>c:foo</code></td>
+<td><code>c:</code></td>
+<td><code>c:</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>foo</code></td>
+<td><code>c:</code></td>
+<td><code>foo</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;c:\foo&quot;</code></td>
-<td bgcolor="#99FF66" width="160"><code>&quot;c:\foo&quot;<br>&quot;c:&quot;,&quot;/&quot;,&quot;foo&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;c:\foo&quot;<br>&quot;c:/foo&quot;</code></td>
-<td width="112"><code>&quot;c:\foo&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;&quot;<br>&quot;c:/&quot;</code></td>
-<td bgcolor="#99FF66" style="border-left-style: solid; border-left-width: 1; border-right-style: solid; border-right-width: 1" width="48"><code>
-&quot;&quot;<br>&quot;c:&quot;</code></td>
-<td bgcolor="#99FF66" width="88"><code>&quot;&quot;<br>&quot;/&quot;</code></td>
-<td bgcolor="#99FF66" width="96"><code>&quot;c:\foo&quot;<br>&quot;foo&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;&quot;<br>&quot;c:/&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;c:\foo&quot;<br>&quot;foo&quot;</code></td>
+<td><code>c:\foo</code></td>
+<td><code>c:,/,foo</code></td>
+<td><code>c:\foo</code></td>
+<td><code>c:/foo</code></td>
+<td><code>c:\</code></td>
+<td><code>c:</code></td>
+<td><code>\</code></td>
+<td><code>foo</code></td>
+<td><code>c:\</code></td>
+<td><code>foo</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;c:foo\&quot;</code></td>
-<td bgcolor="#99FF66" width="160"><code>&quot;c:foo\&quot;<br>&quot;c:&quot;,&quot;foo&quot;,&quot;.&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;c:foo\&quot;<br>&quot;c:foo/&quot;</code></td>
-<td width="112"><code>&quot;c:foo\&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;&quot;<br>&quot;c:&quot;</code></td>
-<td bgcolor="#99FF66" style="border-left-style: solid; border-left-width: 1; border-right-style: solid; border-right-width: 1" width="48"><code>
-&quot;&quot;<br>&quot;c:&quot;</code></td>
-<td width="88"><code>&quot;&quot;</code></td>
-<td bgcolor="#99FF66" width="96"><code>&quot;c:foo\&quot;<br>&quot;foo/&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;&quot;<br>&quot;c:foo&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;c:foo\&quot;<br>&quot;.&quot;</code></td>
+<td><code>c:foo\</code></td>
+<td><code>c:,foo,.</code></td>
+<td><code>c:foo\</code></td>
+<td><code>c:foo/</code></td>
+<td><code>c:</code></td>
+<td><code>c:</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>foo\</code></td>
+<td><code>c:foo</code></td>
+<td><code>.</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;c:\foo\&quot;</code></td>
-<td bgcolor="#99FF66" width="160"><code>&quot;c:\foo\&quot;<br>&quot;c:&quot;,&quot;/&quot;,&quot;foo&quot;,&quot;.&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;c:\foo\&quot;<br>&quot;c:/foo/&quot;</code></td>
-<td width="112"><code>&quot;c:\foo\&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;&quot;<br>&quot;c:/&quot;</code></td>
-<td bgcolor="#99FF66" style="border-left-style: solid; border-left-width: 1; border-right-style: solid; border-right-width: 1" width="48"><code>
-&quot;&quot;<br>&quot;c:&quot;</code></td>
-<td bgcolor="#99FF66" width="88"><code>&quot;&quot;<br>&quot;/&quot;</code></td>
-<td bgcolor="#99FF66" width="96"><code>&quot;c:\foo\&quot;<br>&quot;foo/&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;&quot;<br>&quot;c:/foo&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;c:\foo\&quot;<br>&quot;.&quot;</code></td>
+<td><code>c:\foo\</code></td>
+<td><code>c:,/,foo,.</code></td>
+<td><code>c:\foo\</code></td>
+<td><code>c:/foo/</code></td>
+<td><code>c:\</code></td>
+<td><code>c:</code></td>
+<td><code>\</code></td>
+<td><code>foo\</code></td>
+<td><code>c:\foo</code></td>
+<td><code>.</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;c:\foo/&quot;</code></td>
-<td bgcolor="#99FF66" width="160"><code>&quot;c:\foo&quot;,&quot;.&quot;<br>&quot;c:&quot;,&quot;/&quot;,&quot;foo&quot;,&quot;.&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;c:\foo/&quot;<br>&quot;c:/foo/&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;c:\foo/&quot;<br>&quot;c:\foo\&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;&quot;<br>&quot;c:/&quot;</code></td>
-<td bgcolor="#99FF66" style="border-left-style: solid; border-left-width: 1; border-right-style: solid; border-right-width: 1" width="48"><code>
-&quot;&quot;<br>&quot;c:&quot;</code></td>
-<td bgcolor="#99FF66" width="88"><code>&quot;&quot;<br>&quot;/&quot;</code></td>
-<td bgcolor="#99FF66" width="96"><code>&quot;c:\foo/&quot;<br>&quot;foo/&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;c:\foo&quot;<br>&quot;c:/foo&quot;</code></td>
-<td width="72"><code>&quot;.&quot;</code></td>
+<td><code>c:\foo/</code></td>
+<td><code>c:,/,foo,.</code></td>
+<td><code>c:\foo/</code></td>
+<td><code>c:/foo/</code></td>
+<td><code>c:\</code></td>
+<td><code>c:</code></td>
+<td><code>\</code></td>
+<td><code>foo/</code></td>
+<td><code>c:\foo</code></td>
+<td><code>.</code></td>
 </tr>
 <tr>
-<td width="112"><code>&quot;c:/foo\bar&quot;</code></td>
-<td bgcolor="#99FF66" width="160"><code>&quot;c:&quot;,&quot;foo\bar&quot;<br>&quot;c:&quot;,&quot;/&quot;,&quot;foo&quot;,&quot;bar&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;c:/foo\bar&quot;<br>&quot;c:/foo/bar&quot;</code></td>
-<td bgcolor="#99FF66" width="112"><code>&quot;c:/foo\bar&quot;<br>&quot;c:\foo\bar&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;&quot;<br>&quot;c:/&quot;</code></td>
-<td bgcolor="#99FF66" style="border-left-style: solid; border-left-width: 1; border-right-style: solid; border-right-width: 1; border-bottom-style: solid; border-bottom-width: 1" width="48"><code>
-&quot;&quot;<br>&quot;c:&quot;</code></td>
-<td bgcolor="#99FF66" width="88"><code>&quot;&quot;<br>&quot;/&quot;</code></td>
-<td bgcolor="#99FF66" width="96"><code>&quot;c:/foo\bar&quot;<br>&quot;foo/bar&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;c:&quot;<br>&quot;c:/foo&quot;</code></td>
-<td bgcolor="#99FF66" width="72"><code>&quot;foo\bar&quot;<br>&quot;bar&quot;</code></td>
+<td><code>c:/foo\bar</code></td>
+<td><code>c:,/,foo,bar</code></td>
+<td><code>c:/foo\bar</code></td>
+<td><code>c:/foo/bar</code></td>
+<td><code>c:/</code></td>
+<td><code>c:</code></td>
+<td><code>/</code></td>
+<td><code>foo\bar</code></td>
+<td><code>c:/foo</code></td>
+<td><code>bar</code></td>
 </tr>
 </table>
 <h2><a name="Suggestions-for-fstream">Suggestions for <code>&lt;fstream&gt;</code></a> 
@@ -3159,7 +3148,7 @@ multiple string types. His idea became the basis for the version 3 path design.<
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->23 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40545" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->03 March 2010<!--webbot bot="Timestamp" endspan i-checksum="27226" --></p>
 
 </body>
 

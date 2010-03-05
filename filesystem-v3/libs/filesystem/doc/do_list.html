@@ -16,12 +16,10 @@
 <body>
 
 <h1>Boost Filesystem Do List<br>
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->22 February 2010<!--webbot bot="Timestamp" endspan i-checksum="40543" --></h1>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->03 March 2010<!--webbot bot="Timestamp" endspan i-checksum="27226" --></h1>
 
 <h2>Beta 1 comments</h2>
 <ul>
-  <li>Add ack for commenters.<br>
-&nbsp;</li>
   <li dir="ltr">
 
 <p dir="ltr">Zach Laine:</li>
@@ -38,22 +36,6 @@ portable_directory_name(): ... &amp;&amp; (name is &quot;.&quot; or &quot;..&quo
 Should portable_name() be &quot;... &amp;&amp; (name is &quot;.&quot; or &quot;..&quot;, or contains no
 periods) &amp;&amp; (first character not a hyphen)&quot;? &nbsp;Maybe I'm missing
 something?</pre>
-</blockquote>
-<ul>
-  <li dir="ltr">
-  <p dir="ltr">Zach Laine:</li>
-</ul>
-<blockquote>
-  <pre>Also, in the tut3.cpp tutorial code, there's no mention of the dangers
-of using &quot;*it&quot; inside the directory_iterator loop. &nbsp;IIRC, in previous
-Filesystem revisions, this would throw if you did not have adequate
-permissions to see the file to which &quot;it&quot; refers. &nbsp;Has this changed?
-If not, I think that you should either wrap the body of the loop in a
-try-catch block, or use one of the non-throwing function overloads,
-and indicate to the user what the exception safety concerns are. &nbsp;I
-think the tutorial code should exhibit enough robustness that the user
-can just cut-and-paste to get the basic code needed to use the
-library.</pre>
 </blockquote>
 <ul>
   <li dir="ltr">
@@ -95,8 +77,7 @@ to return paths with fewer elements.]</pre>
 </blockquote>
 <h2 dir="ltr">Docs</h2>
 <ul>
-  <li>Reorganize files</li>
-  <li>Create Jamfile for examples</li>
+  <li>Reorganize files - delete examples that no longer apply.</li>
   <li>Should minimal.css be changed to used relative font sizes? See
   <a href="http://www.w3schools.com/CSS/pr_font_font-size.asp/">http://www.w3schools.com/CSS/pr_font_font-size.asp\</a></li>
   <li>Document behavior of path::replace_extension has change WRT argument w/o a 

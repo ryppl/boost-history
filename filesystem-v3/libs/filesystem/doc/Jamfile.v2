@@ -1,6 +1,6 @@
 # Boost Filesystem Library Example Jamfile
  
-# (C) Copyright Vladimir Prus 2003
+# Copyright Beman Dawes 2010
 
 # Distributed under the Boost Software License, Version 1.0.
 # See www.boost.org/LICENSE_1_0.txt
@@ -15,10 +15,5 @@ project
       <link>static
     ;
     
-exe tut0 : tut0.cpp ;
-exe tut1 : tut1.cpp ;
-exe tut2 : tut2.cpp ;
-exe tut3 : tut3.cpp ;
-exe tut4 : tut4.cpp ;
-exe tut5 : tut5.cpp ;
-exe path_info : path_info.cpp ;    
+exe path_table : path_table.cpp ;    
+install path_table-copy : path_table : <location>. ;
