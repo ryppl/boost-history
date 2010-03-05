@@ -68,28 +68,31 @@ typename Range::const_iterator max_element( const Range& r )
 void check_static_list_of_auto_size()
 {
     using namespace boost::assign;
+	{    
+    	BOOST_CHECK( cref_list_of( 1 )( 2 )( 3 )( 4 ).size() == 4 );
     
-    BOOST_CHECK( cref_list_of( 1 )( 2 )( 3 )( 4 ).size() == 4 );
-    
-    int a=1,b=5,c=3,d=4,e=2,f=9,g=0,h=7;
+    	int a=1,b=5,c=3,d=4,e=2,f=9,g=0,h=7;
 
-    int& max = *max_element( ref_list_of(a)(b)(c)(d)(e)(f)(g)(h) );
-    BOOST_CHECK_EQUAL( max, f );
-    max = 8;
-    BOOST_CHECK_EQUAL( f, 8 );
-    const int& const_max = *max_element( cref_list_of(a)(b)(c)(d)(e)(f)(g)(h) );
-    BOOST_CHECK_EQUAL( max, const_max );
+    	int& max = *max_element( ref_list_of(a)(b)(c)(d)(e)(f)(g)(h) );
+    	BOOST_CHECK_EQUAL( max, f );
+    	max = 8;
+    	BOOST_CHECK_EQUAL( f, 8 );
+    	const int& const_max = *max_element( 
+        	cref_list_of(a)(b)(c)(d)(e)(f)(g)(h) 
+        );
+    	BOOST_CHECK_EQUAL( max, const_max );
 
-    print( ref_list_of(a)(b)(c)(d)(e)(f)(g)(h) );
-    print( cref_list_of(a)(b)(c)(d)(e)(f)(g)(h) );
+    	print( ref_list_of(a)(b)(c)(d)(e)(f)(g)(h) );
+    	print( cref_list_of(a)(b)(c)(d)(e)(f)(g)(h) );
 
-    boost::array<int,4> array = cref_list_of(1)(2)(3)(4);
+    	boost::array<int,4> array = cref_list_of(1)(2)(3)(4);
 
-    BOOST_CHECK_EQUAL( array[0], 1 );
-    BOOST_CHECK_EQUAL( array[3], 4 );
-    //
-    //print( cref_list_of( "foo" )( "bar" )( "foobar" ) );
-    //
+    	BOOST_CHECK_EQUAL( array[0], 1 );
+    	BOOST_CHECK_EQUAL( array[3], 4 );
+    	//
+    	//print( cref_list_of( "foo" )( "bar" )( "foobar" ) );
+    	//
+    }
 }
 
 #include <boost/test/unit_test.hpp>

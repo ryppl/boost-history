@@ -10,13 +10,39 @@
 #define BOOST_ASSIGN_AUTO_SIZE_DETAIL_ARRAY_POLICY_ER_2010_HPP
 #include <boost/shared_ptr.hpp>
 #include <boost/assign/auto_size/array/interface.hpp>
-#include <boost/assign/auto_size/array/wrapper.hpp>
 #include <boost/assign/auto_size/array/ref.hpp>
+#include <boost/assign/auto_size/detail/policy.hpp>
 
 namespace boost{
 namespace assign{
 namespace detail{
 namespace auto_size{
+
+	// tag::lazy_array designates a policy for auto_size::expr<>, that has the 
+    // functionality of array_interface<>, and postones allocation until it is 
+    // necessary. It is therefore suitable as the result of statements such as:
+    //  fun(a)(b)(c);
+
+	namespace tag{
+    	struct lazy_array{};
+    }
+
+   	template<typename T,int N,template<typename> class Ref,typename D>
+   	class lazy_array; 
+
+    template<typename E> struct expr_size;
+    template<typename E> struct expr_elem;
+
+    template<>
+    struct policy<tag::lazy_array>
+    {
+        template<typename E,template<typename> class Ref>
+        struct apply{
+        	typedef typename expr_size<E>::type size_;
+            typedef typename expr_elem<E>::type elem_;
+            typedef lazy_array<elem_,size_::value,Ref,E> type;
+        };
+	};        
  
     template<
     	typename E,typename T,int N,template<typename> class Ref,typename P
@@ -30,8 +56,8 @@ namespace auto_size{
    // Policy for the collection builder, auto_size::expr<>, that exposes an 
    // array interface
    template<typename T,int N,template<typename> class Ref,typename D>
-   class array_policy 
-    	: public array_interface<T,N,Ref,array_policy<T,N,Ref,D> >
+   class lazy_array 
+    	: public array_interface<T,N,Ref,lazy_array<T,N,Ref,D> >
     {
 
         typedef typename auto_size::ref_array<T,N,Ref>::type ref_array_;

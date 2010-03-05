@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_AUTO_SIZE_REF_REBIND_LIST_OF_ER_2010_HPP
 #define BOOST_ASSIGN_AUTO_SIZE_REF_REBIND_LIST_OF_ER_2010_HPP
-#include <boost/assign/auto_size/detail/auto_size.hpp>
+#include <boost/assign/auto_size/detail/expr.hpp>
 
 // Creates a collection of references whose functionality is that of 
 // auto_size::array_interface<>. Rebind semantics apply if the collection 
@@ -18,6 +18,22 @@
 
 namespace boost{
 namespace assign{
+
+	// specified policy : 
+
+    template<typename P,typename T>
+    typename detail::auto_size::first_rebind<const T,P>::type
+    cref_rebind_list_of(const T& t){
+        return detail::auto_size::first_rebind<const T,P>::call(t);
+    }
+
+    template<typename P,typename T>
+    typename detail::auto_size::first_rebind<T,P>::type
+    ref_rebind_list_of(const T& t){
+        return detail::auto_size::first_rebind<T,P>::call(t);
+    }
+
+	// default policy : 
 
     template<typename T>
     typename detail::auto_size::first_rebind<const T>::type

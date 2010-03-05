@@ -10,11 +10,12 @@
 #include <vector>
 #include <algorithm>
 #include <boost/typeof/typeof.hpp>
+#include <boost/assign/auto_size/ref_list_of.hpp> // temporary
 #include <boost/assign/auto_size/ref_list_of_csv.hpp>
 #include <boost/assign/auto_size/ref_rebind_list_of_csv.hpp>
-#include <boost/assign/auto_size/array/wrapper.hpp>
 
 #include <boost/assign/list_of.hpp>
+#include <boost/range/algorithm/max_element.hpp>
 #include <libs/assign/example/ref_list_of.h>
 
 void example_ref_list_of(std::ostream& os)
@@ -38,11 +39,17 @@ void example_ref_list_of(std::ostream& os)
         {
     		ints.clear();
             ints = cref_list_of_csv(a,b,3);     
+			std::copy(
+            	boost::begin(ints),
+                boost::end(ints),
+                std::ostream_iterator<int>(os," ")
+            );
             BOOST_ASSERT(ints[0] == a);    
             BOOST_ASSERT(ints[1] == b);    
             BOOST_ASSERT(ints[2] == c);    
             
         }
+/*
         {
             array.assign(-1);
             array = cref_list_of_csv(a,b,3);
@@ -57,11 +64,28 @@ void example_ref_list_of(std::ostream& os)
             BOOST_ASSERT(b == 0);    
             BOOST_ASSERT(c == 0);    
         }
+*/
     }
+/*
     {
         // ref_rebind_list_of_csv
         {
-            int a=1, b=2, c=3;
+            int a=1, b=2, c=3; 
+            
+            {
+            	int d = 4;
+            
+            	BOOST_AUTO(
+                	max, 
+            		*boost::max_element(
+            			ref_rebind_list_of_csv(a,b,c)
+            		)
+                );
+                max = d;
+                d = 5;
+                BOOST_ASSERT(max == 5);
+            }
+            
             ints.clear();
             BOOST_AUTO(tmp,cref_rebind_list_of_csv(a,b,c));
             {
@@ -81,6 +105,7 @@ void example_ref_list_of(std::ostream& os)
             }
         }
     }
+*/
 
     os << "<- " << std::endl;
     

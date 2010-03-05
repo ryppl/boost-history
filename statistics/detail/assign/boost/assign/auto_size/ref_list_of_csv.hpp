@@ -12,6 +12,8 @@
 // Usage:
 // ref_list_of_csv(a,b,c);
 // cref_list_of_csv(a,b,c);
+// ref_list_of_csv<P>(a,b,c);
+// cref_list_of_csv<P>(a,b,c);
 
 #define BOOST_ASSIGN_CSV_ref boost::assign::detail::auto_size::ref_copy
 #include <boost/assign/auto_size/detail/csv.hpp>

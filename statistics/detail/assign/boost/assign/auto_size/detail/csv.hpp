@@ -13,7 +13,7 @@
 #include <boost/preprocessor/repetition/enum.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
-#include <boost/assign/auto_size/detail/auto_size.hpp>
+#include <boost/assign/auto_size/detail/expr.hpp>
 #include <boost/assign/auto_size/array/wrapper.hpp>
 
 // Whereas adjacent unary function calls is the usual way to create a collec-
@@ -21,12 +21,16 @@
 // are overloaded on the number of arguments.
 //
 // Let n = BOOST_ASSIGN_CSV_SIZE and a1,...,an, objects of type T, Ref an alias 
-// for BOOST_ASSIGN_CSV_ref, and w<U,N> an alias for array_wrapper<U,N,Ref>. 
+// for BOOST_ASSIGN_CSV_ref, P0 = BOOST_ASSIGN_CSV_DEF_POLICY and r<U,N,P> an
+// alias for result_of::expr<U,N,Ref,P>::type
 //
 // Usage:
 // BOOST_ASSIGN_CSV(fun) creates for i=1,...,n the following overloads:
-// 	fun(a1,..,.ai) 
-// 	cfun(a1,..,.ai) 
+// Call                             Result
+// 	fun<P>(a1,..,.ai) 				r<T,i,P>
+// 	cfun<P>(a1,..,.ai)              r<const T,i,P>
+// 	fun(a1,..,.ai)                  r<T,i,P0>
+// 	cfun(a1,..,.ai)                 r<const T,i,P0>
 // which return instances of w<T,i> and w<const T,i>, respectively.
 
 #ifndef BOOST_ASSIGN_CSV_SIZE
@@ -36,27 +40,41 @@
 #ifndef BOOST_ASSIGN_CSV_ref
 #error
 #endif
+#define BOOST_ASSIGN_CSV_DEF_POLICY                                         \
+    boost::assign::detail::auto_size::tag::static_array                     \
+/**/
+#define BOOST_ASSIGN_CSV_RESULT(U,N,P)                                      \
+    typename boost::assign::detail::auto_size::policy<P>::template          \
+        apply<U,N,BOOST_ASSIGN_CSV_ref>::type                               \
+/**/
+#define BOOST_ASSIGN_CSV_RESULT_DEF_POLICY(U,N)                             \
+    BOOST_ASSIGN_CSV_RESULT(U,N,BOOST_ASSIGN_CSV_DEF_POLICY)                \
+/**/
 
 #define BOOST_ASSIGN_CSV_ARG(z,n,arg) (BOOST_PP_CAT(arg,n))
+#define BOOST_ASSIGN_CSV_TPL(arg)                                           \
+     BOOST_PP_CAT(<,                                                        \
+    	BOOST_PP_CAT(arg,>))                                                \
+/**/
 
 #define BOOST_ASSIGN_CSV_ITER_UNQUAL(F,T,U,N)                               \
 namespace boost{                                                            \
 namespace assign{                                                           \
-    template<typename T>                                                    \
-    boost::assign::detail::auto_size::array_wrapper<                        \
-        U,N,BOOST_ASSIGN_CSV_ref                                            \
-    >                                                                       \
+    template<typename P,typename T>                                         \
+	BOOST_ASSIGN_CSV_RESULT(U,N,P)                                          \
     F(BOOST_PP_ENUM_PARAMS(N, U& _))                                        \
     {                                                                       \
-        typedef boost::assign::detail::auto_size::array_wrapper<            \
-            U,N,BOOST_ASSIGN_CSV_ref> wrapper_;                             \
-        wrapper_ wrapper;                                                   \
-        wrapper.initialize(                                                 \
-            boost::assign::detail::auto_size::make_first_expr_no_policy<    \
+        return boost::assign::detail::auto_size::make_first_expr_no_policy< \
                 BOOST_ASSIGN_CSV_ref,T                                      \
-            > BOOST_PP_REPEAT(N,BOOST_ASSIGN_CSV_ARG,_)                     \
-        );                                                                  \
-        return wrapper;                                                     \
+            > BOOST_PP_REPEAT(N,BOOST_ASSIGN_CSV_ARG,_);                    \
+    }                                                                       \
+    template<typename T>                                                    \
+	BOOST_ASSIGN_CSV_RESULT_DEF_POLICY(U,N)                                 \
+    F(BOOST_PP_ENUM_PARAMS(N, U& _))                                        \
+    {                                                                       \
+        return boost::assign::detail::auto_size::make_first_expr_no_policy< \
+                BOOST_ASSIGN_CSV_ref,T                                      \
+            > BOOST_PP_REPEAT(N,BOOST_ASSIGN_CSV_ARG,_);                    \
     }                                                                       \
 }                                                                           \
 }                                                                           \

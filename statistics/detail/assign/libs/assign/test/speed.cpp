@@ -183,7 +183,6 @@ void test_speed(std::ostream& os)
             }
         }
     }
-    
     {
         N = 30;
         assert(N < max_N);
@@ -317,7 +316,7 @@ void test_speed(std::ostream& os)
             }
         }
     }  
-    
+/*
     {
         N = 160;
         assert(N < max_N);
@@ -427,6 +426,7 @@ void test_speed(std::ostream& os)
             }
         }
     }       
+*/
 	os << "<- " << std::endl;
     
 }
