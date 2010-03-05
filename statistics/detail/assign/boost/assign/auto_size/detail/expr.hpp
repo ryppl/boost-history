@@ -79,13 +79,35 @@ namespace auto_size{
         typedef typename next<expr>::type result_type;
 
         expr(const E& p,T& t):previous(p),ref(t){} 
-        result_type operator()(T& t)const{ return result_type(*this,t); }
-
         template<typename E1>
         expr(const E1& that)
             :super_(that)
             ,previous(that.previous)
             ,ref(that.ref){}
+
+        result_type operator()(T& t)const{ return result_type(*this,t); }
+
+        template< class ForwardIterator >
+        expr& range( ForwardIterator first, 
+                                    ForwardIterator last )
+        {
+            for( ; first != last; ++first )
+                (*this)( *first );
+            return *this;
+        }
+
+        template< class ForwardRange >
+        expr& range( ForwardRange& r )
+        {
+            return this->range( boost::begin(r), boost::end(r) );
+        }
+
+        template< class ForwardRange >
+        expr& range( const ForwardRange& r )
+        {
+            return this->range( boost::begin(r), boost::end(r) );
+        }
+
 
 
         mutable previous_ previous;

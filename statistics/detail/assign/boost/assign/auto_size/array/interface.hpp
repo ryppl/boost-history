@@ -32,6 +32,9 @@ namespace auto_size{
         typedef typename Ref<T>::type ref_;
         typedef typename ref_array<T,N,Ref>::type ref_array_;
 
+
+		// ---- boost::array ---- //
+
         typedef ref_ value_type;
         typedef typename 
         	boost::range_iterator<ref_array_>::type iterator;
@@ -87,6 +90,8 @@ namespace auto_size{
             typedef has_copy_semantics<ref_> pred_;
             return this->assign(val,pred_());
         }
+
+		// ---- Conversion ---- //
 
         template<typename T1>
         operator boost::array<T1,N>()const{
