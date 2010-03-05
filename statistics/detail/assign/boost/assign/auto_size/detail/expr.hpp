@@ -24,7 +24,7 @@
 
 // Creates a collection of references by deducing the number of arguments
 // at compile time. The functionality is controlled by parameter Ref which
-// specifies a reference wrapper, and P, an abitrary policy, usually intended
+// specifies a reference wrapper, and P, an arbitrary policy, usually intended
 // to expose a container interface.
 //
 // Note:
@@ -94,6 +94,9 @@ namespace auto_size{
     };
 
     // ---- write_to_array ---- //
+	
+	// Nshift is provided in case some library extension may need it but curr-
+    // ently it defaults to 0.
 
     template<int Nshift,typename A,typename E,typename T,int N,
     	template<typename> class Ref,typename P>
