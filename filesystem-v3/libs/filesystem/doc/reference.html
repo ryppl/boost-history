@@ -7,12 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 <title>Filesystem Reference
 </title>
-<style type="text/css">
-  ins  {background-color:#A0FFA0}
-  del  {background-color:#FFA0A0}
-  body { font-family: sans-serif;}
-
-</style>
+<link rel="stylesheet" type="text/css" href="minimal.css">
 </head>
 
 <body>
@@ -923,7 +918,9 @@ It never occurs for Windows, because backslashes must be converted to slashes.
 decomposition</a></h3>
 <p><span style="background-color: #E0E0E0"><i>See the
 <a href="#Path-decomposition-table">Path decomposition table</a> for examples 
-for values returned by decomposition functions.</i></span></p>
+for values returned by decomposition functions. The
+<a href="tutorial.html#Using-path-decomposition">Tutorial</a> may also be 
+helpful.</i></span></p>
 <pre>path <a name="path-root_name">root_name</a>() const;</pre>
 <blockquote>
 <p><i>Returns:</i> <i>root-name,</i> if <code>pathname</code> includes <i>
@@ -1080,9 +1077,6 @@ path</code>.</p>
   <p><i>Returns:</i> The end iterator.</p>
 </blockquote>
 <h3> <a name="path-deprecated-functions"><code><font size="4"> path</font></code> deprecated functions</a></h3>
-<p> <i> <span style="background-color: #FFFF00">index.htm 
-also has a section (see macros) partially duplicating this material. Change to 
-reference this.</span></i></p>
 <p> Several member functions from previous versions of <code>class path</code> 
 have been deprecated, either because they have been renamed or because the 
 functionality is no longer desirable or has become obsolete.</p>
@@ -1105,8 +1099,6 @@ const std::string  native_directory_string() const   { return native_string(); }
 const string_type  external_file_string() const      { return native(); }
 const string_type  external_directory_string() const { return native(); }</pre>
 </blockquote>
-<p>Functions no longer available:</p>
-<p><span style="background-color: #FFFF00">TBS</span></p>
 <h3> <a name="path-non-member-functions"> <code><font size="4">path</font></code>
 <span style="background-color: #FFFFFF">non-member functions</span></a></h3>
 <pre><span style="background-color: #FFFFFF">void swap( path&amp; lhs, path&amp; rhs )</span></pre>
@@ -1624,8 +1616,7 @@ returned. </p>
 iterator.</p>
 <blockquote>
 <p><i><span style="background-color: #E0E0E0">The above wording is based on the 
-Standard Library's istream_iterator wording. Commentary was shortened and 
-moved into a note.</span></i></p>
+Standard Library's istream_iterator wording.</span></i></p>
 </blockquote>
 <p>The result of calling the <code>path()</code> member of the <code>
 directory_entry</code> object obtained by dereferencing a <code>
@@ -2135,19 +2126,16 @@ bool <a name="is_empty2">is_empty</a></a>(const path&amp; p, system::error_code&
   </blockquote>
 <pre><code>bool <a name="is_regular_file3">is_regular_file</a>(const path&amp; p, system::error_code&amp; ec);</code></pre>
 <blockquote>
-  <p><i>Effects:</i> Sets <code>ec</code> as if by <code>status(p, ec)</code>.
-  <span style="background-color: #FFFF00">[</span><i><span style="background-color: #FFFF00">Note:</span></i><span style="background-color: #FFFF00">
-  </span>
-      <code><span style="background-color: #FFFF00">status_error</span></code><span style="background-color: #FFFF00">,
-  </span>
-      <code><span style="background-color: #FFFF00">file_not_found</span></code><span style="background-color: #FFFF00"> 
-  and </span>
-      <code><span style="background-color: #FFFF00">type_unknown</span></code><span style="background-color: #FFFF00"> 
-  cases set </span><code><span style="background-color: #FFFF00">ec</span></code><span style="background-color: #FFFF00"> 
-  to error values. To distinguish between cases, call the </span><code>
-  <span style="background-color: #FFFF00">status</span></code><span style="background-color: #FFFF00"> 
-  function directly. </span><i><span style="background-color: #FFFF00">-- end 
-  note</span></i><span style="background-color: #FFFF00">] </span></p>
+  <p><i>Effects:</i> Sets <code>ec</code> as if by <code>status(p, ec)</code>. [<i>Note:</i>
+      <code>status_error</code>,
+      <code>file_not_found</code> 
+  and
+      <code>type_unknown</code> 
+  cases set <code>ec</code> 
+  to error values. To distinguish between cases, call the <code>
+  status</code> 
+  function directly. <i>-- end 
+  note</i>] </p>
   <p><i>Returns:</i> <code>is_regular_file(status(p, ec))</code>.</p>
   <p><i>Throws:</i> Nothing.</p>
 </blockquote>
@@ -2325,10 +2313,6 @@ thrown.<i> -- end note</i>] </p>
     of the file
     <code>p</code> resolves to, as if by<i> POSIX </i> <code>
   <a href="http://www.opengroup.org/onlinepubs/000095399/functions/stat.html">stat()</a></code>.</p>
-      <p>[<i>Note:</i> If a symbolic link is encountered during pathname 
-      resolution, 
-      pathname resolution continues using the contents of the symbolic link. <i>-- 
-    end note</i>]</p>
       If, during attribute determination, the underlying file system API reports 
     an error, sets <code>ec</code> to indicate the specific error reported. 
     Otherwise, <code>ec.clear()</code>.<blockquote>
@@ -2410,6 +2394,9 @@ directory_iterator(p)</code>would succeed.
     </ul>
     </blockquote>
 <p><i>Throws:</i> Nothing.</p>
+      <p><i>Remarks:</i> If a symbolic link is encountered during pathname 
+      resolution, 
+      pathname resolution continues using the contents of the symbolic link.</p>
 </blockquote>
 <pre><span style="background-color: #FFFFFF">bool <a name="status_known">status_known</a>(file_status s);</span></pre>
 <blockquote>
@@ -2417,8 +2404,8 @@ directory_iterator(p)</code>would succeed.
   <code>s.type() != status_error</code></span></p>
   <p><i>Throws:</i> Nothing.</p>
 </blockquote>
-<pre><span style="background-color: #FFFF00">file_status</span><span style="background-color: #FFFF00"> </span><a name="symlink_status"><span style="background-color: #FFFF00">symlink_status</span></a><span style="background-color: #FFFF00">(const</span><span style="background-color: #FFFF00"> path&amp; p);
-</span><span style="background-color: #FFFF00">file_status</span><span style="background-color: #FFFF00"> </span><a name="symlink_status2"><span style="background-color: #FFFF00">symlink_status</span></a><span style="background-color: #FFFF00">(const</span><span style="background-color: #FFFF00"> path&amp; p, </span><span style="background-color: #FFFF00">system::error_code</span><span style="background-color: #FFFF00">&amp; </span><span style="background-color: #FFFF00">ec</span><span style="background-color: #FFFF00">);</span></pre>
+<pre>file_status <a name="symlink_status">symlink_status</a>(const path&amp; p);
+file_status <a name="symlink_status2">symlink_status</a>(const path&amp; p, system::error_code&amp; ec);</pre>
 <blockquote>
   <p><i>Effects:</i>&nbsp; Same as <a href="#status">status()</a>, above, 
   except that the attributes 
@@ -2428,14 +2415,12 @@ directory_iterator(p)</code>would succeed.
     lstat()</a></code>.</p>
 </blockquote>
 <blockquote>
-      <blockquote>
-      <p>[<i>Note:</i> Pathname resolution terminates if <code>p</code> names a symbolic link. <i>-- 
-    end note</i>]</p>
-      </blockquote>
-      <p><i>Returns:</i> Same as <a href="#status">status()</a>, above,<span style="background-color: #FFFF00"> 
-      except ....</span></p>
-<p><i>Throws:</i> <code>filesystem_error</code>; overload with <code>error_code&amp;</code> throws 
-nothing.</p>
+      <p><i>Returns:</i> Same as <a href="#status">status()</a>, above, except 
+      that if the attributes indicate a symbolic link, as if by <i>POSIX</i>
+      <a class="external" href="http://www.opengroup.org/onlinepubs/000095399/basedefs/sys/stat.h.html">
+      S_ISLNK()</a>, return <code>file_status(symlink_file)</code>.</p>
+<p><i>Throws:</i> Nothing.</p>
+      <p><i>Remarks:</i> Pathname resolution terminates if <code>p</code> names a symbolic link.</p>
 </blockquote>
 <pre>path <a name="system_complete">system_complete</a>(const path&amp; p);
 path <a name="system_complete2">system_complete</a>(const path&amp; p, system::error_code&amp; ec);</pre>
@@ -2485,64 +2470,6 @@ path unique_path(const path&amp; model, system::error_code&amp; ec);</pre>
   provided by the operating system. [<i>Note</i>: Such generators may block 
   until sufficient entropy develops. <i>--end note</i>]</p>
 </blockquote>
-<h4><a name="Convenience-functions">Convenience functions</a></h4>
-<table border="1" cellpadding="5" cellspacing="1" style="border-collapse: collapse" bordercolor="#111111">
-  <tr>
-    <td>
-    <h4><span style="background-color: #FFFF00">Deprecated convenience functions</span></h4>
-    <p><span style="background-color: #FFFF00">The following functions have been replaced by
-    </span> <code><span style="background-color: #FFFF00">path</span></code><span style="background-color: #FFFF00"> 
-    member functions </span> <code><span style="background-color: #FFFF00">extension()</span></code><span style="background-color: #FFFF00">,
-    </span> <code><span style="background-color: #FFFF00">stem()</span></code><span style="background-color: #FFFF00">, and
-    </span> <code>
-    <span style="background-color: #FFFF00">replace_extension()</span></code><span style="background-color: #FFFF00">.</span></p>
-<pre><span style="background-color: #FFFF00">typename </span><span style="background-color: #FFFF00">Path::string_type</span><span style="background-color: #FFFF00"> </span><span style="background-color: #FFFF00">extension(const</span><span style="background-color: #FFFF00"> path&amp; p);</span></pre>
-<blockquote>
-  <p><i><span style="background-color: #FFFF00">Returns:</span></i><span style="background-color: #FFFF00"> if
-  </span> <code><span style="background-color: #FFFF00">p.filename()</span></code><span style="background-color: #FFFF00"> contains a
-  </span> <i><span style="background-color: #FFFF00">dot</span></i><span style="background-color: #FFFF00">, returns 
-  the </span><span style="background-color: #FFFF00">substring</span><span style="background-color: #FFFF00"> of
-  </span> <code><span style="background-color: #FFFF00">p.filename()</span></code><span style="background-color: #FFFF00"> starting at the rightmost
-  </span> <i><span style="background-color: #FFFF00">dot</span></i><span style="background-color: #FFFF00"> 
-  and ending at the string's end. Otherwise, returns an empty string. </span> </p>
-  <p><span style="background-color: #FFFF00">[</span><i><span style="background-color: #FFFF00">Note:</span><b><span style="background-color: #FFFF00">
-  </span> </b></i><span style="background-color: #FFFF00">The </span> <i>
-  <span style="background-color: #FFFF00">dot</span></i><span style="background-color: #FFFF00"> is included in the return value so that 
-  it is possible to distinguish between no extension and an empty extension.
-  </span> </p>
-  <p><span style="background-color: #FFFF00">Implementations are permitted but not required to define additional 
-  behavior for file systems which append additional elements to extensions, such 
-  as alternate data stream or partitioned dataset names. </span> <i>
-  <span style="background-color: #FFFF00">-- end note</span></i><span style="background-color: #FFFF00">]</span></p>
-</blockquote>
-<pre><span style="background-color: #FFFF00">typename </span><span style="background-color: #FFFF00">Path::string_type</span><span style="background-color: #FFFF00"> </span><span style="background-color: #FFFF00">basename(const</span><span style="background-color: #FFFF00"> path&amp; p);</span></pre>
-<blockquote>
-  <p><i><span style="background-color: #FFFF00">Returns:</span></i><span style="background-color: #FFFF00"> if
-  </span> <code><span style="background-color: #FFFF00">p.filename()</span></code><span style="background-color: #FFFF00"> contains a
-  </span> <i><span style="background-color: #FFFF00">dot</span></i><span style="background-color: #FFFF00">, returns 
-  the </span><span style="background-color: #FFFF00">substring</span><span style="background-color: #FFFF00"> of
-  </span> <code><span style="background-color: #FFFF00">p.filename()</span></code><span style="background-color: #FFFF00"> starting at its beginning and 
-  ending at the last </span> <i><span style="background-color: #FFFF00">dot</span></i><span style="background-color: #FFFF00"> (the
-  </span> <i><span style="background-color: #FFFF00">dot</span></i><span style="background-color: #FFFF00"> is not included). Otherwise, 
-  returns </span> <code>
-  <span style="background-color: #FFFF00">p.filename()</span></code><span style="background-color: #FFFF00">.</span></p>
-</blockquote>
-<pre><span style="background-color: #FFFF00">template &lt;class Path&gt;
-  Path </span><span style="background-color: #FFFF00">change_extension(const</span><span style="background-color: #FFFF00"> path&amp; p, const typename </span><span style="background-color: #FFFF00">Path::string_type</span><span style="background-color: #FFFF00"> &amp; </span><span style="background-color: #FFFF00">new_extension</span><span style="background-color: #FFFF00">);</span></pre>
-<blockquote>
-  <p><i><span style="background-color: #FFFF00">Postcondition:</span></i><span style="background-color: #FFFF00">
-  </span> <code><span style="background-color: #FFFF00">basename(<i>return_value</i>) == basename(p) &amp;&amp; 
-  extension(<i>return_value</i>) == new_extension</span></code><span style="background-color: #FFFF00">
-  </span> </p>
-  <p><span style="background-color: #FFFF00">[</span><i><span style="background-color: #FFFF00">Note:</span></i><span style="background-color: #FFFF00"> It follows from the semantics of
-  </span> <code><span style="background-color: #FFFF00">extension()</span></code><span style="background-color: #FFFF00"> 
-  that </span> <code><span style="background-color: #FFFF00">new_extension</span></code><span style="background-color: #FFFF00"> should include
-  </span> <i><span style="background-color: #FFFF00">dot</span></i><span style="background-color: #FFFF00"> to achieve 
-  reasonable results. </span> <i><span style="background-color: #FFFF00">-- end note</span></i><span style="background-color: #FFFF00">]</span></p>
-</blockquote>
-    </td>
-  </tr>
-</table>
 <h3><a name="File-streams">File streams</a> -
 <a href="../../../boost/filesystem/fstream.hpp">&lt;boost/filesystem/fstream.hpp&gt;</a></h3>
 <p>Replacements are provided for the file stream classes from the C++ standard 
@@ -2607,17 +2534,17 @@ semantics.</p>
 <p>Shaded entries indicate cases where <i>POSIX</i> and <i>Windows</i> 
 implementations yield different results. The top value is the
 <i>POSIX</i> result and the bottom value is the <i>Windows</i> result. <br>
-&nbsp;<table border="1" cellspacing="0" cellpadding="5" width="1066">
+&nbsp;<table border="1" cellspacing="0" cellpadding="5">
 <p>
-<tr><td><b>Constructor<br>argument</b></td>
-<td><b>Iteration<br>over<br>Elements</b></td>
+<tr><td><b><font size="2">Constructor<br>argument</font></b></td>
+<td><b><font size="2">Iteration<br>over<br>Elements</font></b></td>
 <td><b><code>string()</code></b></td>
 <td><b><code>generic_<br>string()</code></b></td>
 <td><b><code>root_<br>path()</code></b></td>
 <td><b><code>root_<br>name()</code></b></td>
 <td><b><code>root_<br>directory()</code></b></td>
 <td><b><code>relative_<br>path()</code></b></td>
-<td><b><code>parent_<br>path(</code></b></td>
+<td><b><code>parent_<br>path()</code></b></td>
 <td><b><code>filename()</code></b></td>
 </tr>
 <tr>
@@ -2739,6 +2666,30 @@ implementations yield different results. The top value is the
 <td><code>foo/bar</code></td>
 <td><code>/foo</code></td>
 <td><code>bar</code></td>
+</tr>
+<tr>
+<td><code>//net</code></td>
+<td><code>//net</code></td>
+<td><code>//net</code></td>
+<td><code>//net</code></td>
+<td><code>//net</code></td>
+<td><code>//net</code></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><font size="-1"><i>empty</i></font></td>
+<td><code>//net</code></td>
+</tr>
+<tr>
+<td><code>//net/foo</code></td>
+<td><code>//net,/,foo</code></td>
+<td><code>//net/foo</code></td>
+<td><code>//net/foo</code></td>
+<td><code>//net/</code></td>
+<td><code>//net</code></td>
+<td><code>/</code></td>
+<td><code>foo</code></td>
+<td><code>//net/</code></td>
+<td><code>foo</code></td>
 </tr>
 <tr>
 <td><code>///foo///</code></td>
@@ -2901,82 +2852,82 @@ implementations yield different results. The top value is the
 <td><code>c:</code></td>
 <td><code>c:</code></td>
 <td><code>c:</code></td>
-<td><code>c:</code></td>
-<td><code>c:</code></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:</code></span></td>
 <td><font size="-1"><i>empty</i></font></td>
-<td><font size="-1"><i>empty</i></font></td>
+<td><span style="background-color: #CCFFCC"><code>c:</code><br><font size="-1"><i>empty</i></font></span></td>
 <td><font size="-1"><i>empty</i></font></td>
 <td><code>c:</code></td>
 </tr>
 <tr>
 <td><code>c:/</code></td>
-<td><code>c:,/</code></td>
+<td><span style="background-color: #CCFFCC"><code>c:,.</code><br><code>c:,/</code></span></td>
 <td><code>c:/</code></td>
 <td><code>c:/</code></td>
-<td><code>c:/</code></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:/</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>/</code></span></td>
+<td><span style="background-color: #CCFFCC"><code>c:/</code><br><font size="-1"><i>empty</i></font></span></td>
 <td><code>c:</code></td>
-<td><code>/</code></td>
-<td><font size="-1"><i>empty</i></font></td>
-<td><code>c:</code></td>
-<td><code>/</code></td>
+<td><span style="background-color: #CCFFCC"><code>.</code><br><code>/</code></span></td>
 </tr>
 <tr>
 <td><code>c:foo</code></td>
-<td><code>c:,foo</code></td>
+<td><span style="background-color: #CCFFCC"><code>c:foo</code><br><code>c:,foo</code></span></td>
 <td><code>c:foo</code></td>
 <td><code>c:foo</code></td>
-<td><code>c:</code></td>
-<td><code>c:</code></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:</code></span></td>
 <td><font size="-1"><i>empty</i></font></td>
-<td><code>foo</code></td>
-<td><code>c:</code></td>
-<td><code>foo</code></td>
+<td><span style="background-color: #CCFFCC"><code>c:foo</code><br><code>foo</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:</code></span></td>
+<td><span style="background-color: #CCFFCC"><code>c:foo</code><br><code>foo</code></span></td>
 </tr>
 <tr>
 <td><code>c:/foo</code></td>
-<td><code>c:,/,foo</code></td>
+<td><span style="background-color: #CCFFCC"><code>c:,foo</code><br><code>c:,/,foo</code></span></td>
 <td><code>c:/foo</code></td>
 <td><code>c:/foo</code></td>
-<td><code>c:/</code></td>
-<td><code>c:</code></td>
-<td><code>/</code></td>
-<td><code>foo</code></td>
-<td><code>c:/</code></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:/</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>/</code></span></td>
+<td><span style="background-color: #CCFFCC"><code>c:/foo</code><br><code>foo</code></span></td>
+<td><span style="background-color: #CCFFCC"><code>c:</code><br><code>c:/</code></span></td>
 <td><code>foo</code></td>
 </tr>
 <tr>
 <td><code>c:foo/</code></td>
-<td><code>c:,foo,.</code></td>
+<td><span style="background-color: #CCFFCC"><code>c:foo,.</code><br><code>c:,foo,.</code></span></td>
 <td><code>c:foo/</code></td>
 <td><code>c:foo/</code></td>
-<td><code>c:</code></td>
-<td><code>c:</code></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:</code></span></td>
 <td><font size="-1"><i>empty</i></font></td>
-<td><code>foo/</code></td>
+<td><span style="background-color: #CCFFCC"><code>c:foo/</code><br><code>foo/</code></span></td>
 <td><code>c:foo</code></td>
 <td><code>.</code></td>
 </tr>
 <tr>
 <td><code>c:/foo/</code></td>
-<td><code>c:,/,foo,.</code></td>
+<td><span style="background-color: #CCFFCC"><code>c:,foo,.</code><br><code>c:,/,foo,.</code></span></td>
 <td><code>c:/foo/</code></td>
 <td><code>c:/foo/</code></td>
-<td><code>c:/</code></td>
-<td><code>c:</code></td>
-<td><code>/</code></td>
-<td><code>foo/</code></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:/</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>/</code></span></td>
+<td><span style="background-color: #CCFFCC"><code>c:/foo/</code><br><code>foo/</code></span></td>
 <td><code>c:/foo</code></td>
 <td><code>.</code></td>
 </tr>
 <tr>
 <td><code>c:/foo/bar</code></td>
-<td><code>c:,/,foo,bar</code></td>
+<td><span style="background-color: #CCFFCC"><code>c:,foo,bar</code><br><code>c:,/,foo,bar</code></span></td>
 <td><code>c:/foo/bar</code></td>
 <td><code>c:/foo/bar</code></td>
-<td><code>c:/</code></td>
-<td><code>c:</code></td>
-<td><code>/</code></td>
-<td><code>foo/bar</code></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:/</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>/</code></span></td>
+<td><span style="background-color: #CCFFCC"><code>c:/foo/bar</code><br><code>foo/bar</code></span></td>
 <td><code>c:/foo</code></td>
 <td><code>bar</code></td>
 </tr>
@@ -2985,126 +2936,100 @@ implementations yield different results. The top value is the
 <td><code>prn:</code></td>
 <td><code>prn:</code></td>
 <td><code>prn:</code></td>
-<td><code>prn:</code></td>
-<td><code>prn:</code></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>prn:</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>prn:</code></span></td>
 <td><font size="-1"><i>empty</i></font></td>
-<td><font size="-1"><i>empty</i></font></td>
+<td><span style="background-color: #CCFFCC"><code>prn:</code><br><font size="-1"><i>empty</i></font></span></td>
 <td><font size="-1"><i>empty</i></font></td>
 <td><code>prn:</code></td>
 </tr>
 <tr>
 <td><code>c:\</code></td>
-<td><code>c:,/</code></td>
+<td><span style="background-color: #CCFFCC"><code>c:\</code><br><code>c:,/</code></span></td>
 <td><code>c:\</code></td>
-<td><code>c:/</code></td>
-<td><code>c:\</code></td>
-<td><code>c:</code></td>
-<td><code>\</code></td>
-<td><font size="-1"><i>empty</i></font></td>
-<td><code>c:</code></td>
-<td><code>\</code></td>
+<td><span style="background-color: #CCFFCC"><code>c:\</code><br><code>c:/</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:\</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>\</code></span></td>
+<td><span style="background-color: #CCFFCC"><code>c:\</code><br><font size="-1"><i>empty</i></font></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:</code></span></td>
+<td><span style="background-color: #CCFFCC"><code>c:\</code><br><code>\</code></span></td>
 </tr>
 <tr>
 <td><code>c:foo</code></td>
-<td><code>c:,foo</code></td>
+<td><span style="background-color: #CCFFCC"><code>c:foo</code><br><code>c:,foo</code></span></td>
 <td><code>c:foo</code></td>
 <td><code>c:foo</code></td>
-<td><code>c:</code></td>
-<td><code>c:</code></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:</code></span></td>
 <td><font size="-1"><i>empty</i></font></td>
-<td><code>foo</code></td>
-<td><code>c:</code></td>
-<td><code>foo</code></td>
+<td><span style="background-color: #CCFFCC"><code>c:foo</code><br><code>foo</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:</code></span></td>
+<td><span style="background-color: #CCFFCC"><code>c:foo</code><br><code>foo</code></span></td>
 </tr>
 <tr>
 <td><code>c:\foo</code></td>
-<td><code>c:,/,foo</code></td>
+<td><span style="background-color: #CCFFCC"><code>c:\foo</code><br><code>c:,/,foo</code></span></td>
 <td><code>c:\foo</code></td>
-<td><code>c:/foo</code></td>
-<td><code>c:\</code></td>
-<td><code>c:</code></td>
-<td><code>\</code></td>
-<td><code>foo</code></td>
-<td><code>c:\</code></td>
-<td><code>foo</code></td>
+<td><span style="background-color: #CCFFCC"><code>c:\foo</code><br><code>c:/foo</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:\</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>\</code></span></td>
+<td><span style="background-color: #CCFFCC"><code>c:\foo</code><br><code>foo</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:\</code></span></td>
+<td><span style="background-color: #CCFFCC"><code>c:\foo</code><br><code>foo</code></span></td>
 </tr>
 <tr>
 <td><code>c:foo\</code></td>
-<td><code>c:,foo,.</code></td>
+<td><span style="background-color: #CCFFCC"><code>c:foo\</code><br><code>c:,foo,.</code></span></td>
 <td><code>c:foo\</code></td>
-<td><code>c:foo/</code></td>
-<td><code>c:</code></td>
-<td><code>c:</code></td>
+<td><span style="background-color: #CCFFCC"><code>c:foo\</code><br><code>c:foo/</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:</code></span></td>
 <td><font size="-1"><i>empty</i></font></td>
-<td><code>foo\</code></td>
-<td><code>c:foo</code></td>
-<td><code>.</code></td>
+<td><span style="background-color: #CCFFCC"><code>c:foo\</code><br><code>foo\</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:foo</code></span></td>
+<td><span style="background-color: #CCFFCC"><code>c:foo\</code><br><code>.</code></span></td>
 </tr>
 <tr>
 <td><code>c:\foo\</code></td>
-<td><code>c:,/,foo,.</code></td>
+<td><span style="background-color: #CCFFCC"><code>c:\foo\</code><br><code>c:,/,foo,.</code></span></td>
 <td><code>c:\foo\</code></td>
-<td><code>c:/foo/</code></td>
-<td><code>c:\</code></td>
-<td><code>c:</code></td>
-<td><code>\</code></td>
-<td><code>foo\</code></td>
-<td><code>c:\foo</code></td>
-<td><code>.</code></td>
+<td><span style="background-color: #CCFFCC"><code>c:\foo\</code><br><code>c:/foo/</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:\</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>\</code></span></td>
+<td><span style="background-color: #CCFFCC"><code>c:\foo\</code><br><code>foo\</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:\foo</code></span></td>
+<td><span style="background-color: #CCFFCC"><code>c:\foo\</code><br><code>.</code></span></td>
 </tr>
 <tr>
 <td><code>c:\foo/</code></td>
-<td><code>c:,/,foo,.</code></td>
+<td><span style="background-color: #CCFFCC"><code>c:\foo,.</code><br><code>c:,/,foo,.</code></span></td>
 <td><code>c:\foo/</code></td>
-<td><code>c:/foo/</code></td>
-<td><code>c:\</code></td>
-<td><code>c:</code></td>
-<td><code>\</code></td>
-<td><code>foo/</code></td>
+<td><span style="background-color: #CCFFCC"><code>c:\foo/</code><br><code>c:/foo/</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:\</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>\</code></span></td>
+<td><span style="background-color: #CCFFCC"><code>c:\foo/</code><br><code>foo/</code></span></td>
 <td><code>c:\foo</code></td>
 <td><code>.</code></td>
 </tr>
 <tr>
 <td><code>c:/foo\bar</code></td>
-<td><code>c:,/,foo,bar</code></td>
+<td><span style="background-color: #CCFFCC"><code>c:,foo\bar</code><br><code>c:,/,foo,bar</code></span></td>
 <td><code>c:/foo\bar</code></td>
-<td><code>c:/foo/bar</code></td>
-<td><code>c:/</code></td>
-<td><code>c:</code></td>
-<td><code>/</code></td>
-<td><code>foo\bar</code></td>
-<td><code>c:/foo</code></td>
-<td><code>bar</code></td>
+<td><span style="background-color: #CCFFCC"><code>c:/foo\bar</code><br><code>c:/foo/bar</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:/</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>c:</code></span></td>
+<td><span style="background-color: #CCFFCC"><font size="-1"><i>empty</i></font><br><code>/</code></span></td>
+<td><span style="background-color: #CCFFCC"><code>c:/foo\bar</code><br><code>foo\bar</code></span></td>
+<td><span style="background-color: #CCFFCC"><code>c:</code><br><code>c:/foo</code></span></td>
+<td><span style="background-color: #CCFFCC"><code>foo\bar</code><br><code>bar</code></span></td>
 </tr>
 </table>
-<h2><a name="Suggestions-for-fstream">Suggestions for <code>&lt;fstream&gt;</code></a> 
-implementations</h2>
-<p><span style="background-color: #FFFFFF">The change in semantics to functions 
-taking <code>const char*</code> arguments can break existing code, but only on 
-operating systems where implementations don't implicitly accept native format pathnames or 
-operating systems that allow slashes in filenames. Thus on <i>POSIX</i>, 
-<i>Windows,</i> and <i>OpenVMS</i>, for example, there is no problem if the 
-implementation follows encouraged behavior.</span></p>
-<p><span style="background-color: #FFFFFF">For most of the Filesystem Library, 
-there is no existing code, so the issue preserving existing code that uses 
-slashes in filenames doesn't arise. New code simply must use path 
-constructors with <code>path_format_t</code> arguments of <code>native</code>. 
-To preserve existing fstream code that uses slashes in filenames, an 
-implementation may wish to provide a mechanism such as a macro to control 
-selection of the old behavior.</span></p>
-<p><span style="background-color: #FFFFFF">Implementations are already required 
-by the TR front-matter to provide a mechanism such as a macro to control 
-selection of the old behavior (useful to guarantee protection of existing code) 
-or new behavior (useful in new code, and code being ported from other systems) 
-for headers. Because use of the rest of the Filesystem Library is independent of 
-use of the <code>&lt;fstream&gt;</code> additions, affected implementations are 
-encouraged to allow disabling the <code>&lt;fstream&gt;</code> additions separately 
-from other TR features.</span></p>
-<p><span style="background-color: #FFFFFF">An rejected alternative was to supply 
-new fstream classes in namespace <code>filesystem</code>, inheriting from the current 
-classes, overriding the constructors and opens taking pathname arguments, and 
-providing the additional overloads. In Lillehammer LWG members indicated lack of 
-support for this alternative, feeling that costs outweigh benefits.</span></p>
+<table border="1" cellspacing="0" cellpadding="5" width="1066">
+</table>
 <h2><a name="Acknowledgements">Acknowledgements</a></h2>
 <p>This Filesystem Library is dedicated to my wife, Sonda, who provided the 
 support necessary to see both a trial implementation and the proposal itself 
@@ -3144,11 +3069,11 @@ multiple string types. His idea became the basis for the version 3 path design.<
   </tr>
 </table>
 <hr>
-<p>ï¿½ Copyright Beman Dawes, 2002, 2006, 2007, 2009</p>
+<p>© Copyright Beman Dawes, 2002, 2006, 2007, 2009, 2010</p>
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->03 March 2010<!--webbot bot="Timestamp" endspan i-checksum="27226" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->05 March 2010<!--webbot bot="Timestamp" endspan i-checksum="27230" --></p>
 
 </body>
 

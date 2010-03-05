@@ -20,7 +20,11 @@ using std::cout;
 namespace
 {
   std::ifstream infile;
+  std::ofstream posix_outfile;
+  std::ifstream posix_infile;
   std::ofstream outfile;
+
+  bool posix;
 
   const string empty_string;
 
@@ -83,7 +87,7 @@ namespace
 
   struct c7 : public column_base
   {
-    string heading() const { return string("<code>parent_<br>path(</code>"); }
+    string heading() const { return string("<code>parent_<br>path()</code>"); }
     string cell_value( const path & p ) const { return p.parent_path().string(); }
   } o7;
 
@@ -99,11 +103,29 @@ namespace
 
   void do_cell( const string & test_case, int i )
   {
-    string value = column[i]->cell_value(path(test_case));
-    if (value.empty())
-      outfile << "<td><font size=\"-1\"><i>empty</i></font></td>\n";
+    string temp = column[i]->cell_value(path(test_case));
+    string value;
+    outfile << "<td>";
+    if (temp.empty())
+      value = "<font size=\"-1\"><i>empty</i></font>";
     else
-      outfile << "<td><code>" << value << "</code></td>\n";
+     value = string("<code>") + temp + "</code>";
+
+    if (posix)
+      posix_outfile << value << '\n';
+    else
+    {
+      std::getline(posix_infile, temp);
+      if (value != temp) // POSIX and Windows differ
+      {
+        value.insert(0, "<br>");
+        value.insert(0, temp);
+        value.insert(0, "<span style=\"background-color: #CCFFCC\">");
+        value += "</span>";
+      }
+      outfile << value;
+    }
+    outfile << "</td>\n";
   }
 
 //  do_row  ------------------------------------------------------------------//
@@ -154,6 +176,8 @@ namespace
     string test_case;
     while ( std::getline( infile, test_case ) )
     {
+      if (!test_case.empty() && *--test_case.end() == '\r')
+        test_case.erase(test_case.size()-1);
       if (test_case.empty() || test_case[0] != '#')
         do_row( test_case );
     }
@@ -170,24 +194,49 @@ namespace
 
 int cpp_main( int argc, char * argv[] ) // note name!
 {
-  if ( argc != 3 )
+  if ( argc != 5 )
   {
     std::cerr <<
-      "Usage: path_table input-file output-file\n"
+      "Usage: path_table \"POSIX\"|\"Windows\" input-file posix-file output-file\n"
+      "Run on POSIX first, then on Windows\n"
+      "  \"POSIX\" causes POSIX results to be save in posix-file;\n"
+      "  \"Windows\" causes POSIX results read from posix-file\n"
       "  input-file contains the paths to appear in the table.\n"
+      "  posix-file will be used for POSIX results\n"
       "  output-file will contain the generated HTML.\n"
       ;
     return 1;
   }
 
-  infile.open( argv[1] );
+  infile.open( argv[2] );
   if ( !infile )
   {
-    std::cerr << "Could not open input file: " << argv[1] << std::endl;
+    std::cerr << "Could not open input file: " << argv[2] << std::endl;
     return 1;
   }
 
-  outfile.open( argv[2] );
+  if (string(argv[1]) == "POSIX")
+  {
+    posix = true;
+    posix_outfile.open( argv[3] );
+    if ( !posix_outfile )
+    {
+      std::cerr << "Could not open POSIX output file: " << argv[3] << std::endl;
+      return 1;
+    }
+  }
+  else
+  {
+    posix = false;
+    posix_infile.open( argv[3] );
+    if ( !posix_infile )
+    {
+      std::cerr << "Could not open POSIX input file: " << argv[3] << std::endl;
+      return 1;
+    }
+  }
+
+  outfile.open( argv[4] );
   if ( !outfile )
   {
     std::cerr << "Could not open output file: " << argv[2] << std::endl;
