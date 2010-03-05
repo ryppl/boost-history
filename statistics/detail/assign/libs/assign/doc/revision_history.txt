@@ -1,0 +1,17 @@
+// Revision history:
+//
+// March 4, 2010 : Created function template overloads that allow to specify a
+// policy.
+// March 1, 2010 : Factored interface into a policy. Csv functions now return an
+// array-like structure;  the collection is only used to build them which is 
+// much more efficient.
+// Feb 27, 2010 : Support for comma separated arguments (See csv.hpp)
+// Feb 25, 2010 : Added array-like functionality.
+// Feb 21, 2010 : Made member variables mutable and added constness to member 
+// functions where appropriate.
+// Feb 9, 2010 : 
+// 	- Added a template parameter for the reference wrapper
+// 	- The temporary array in the conversion operator is now assigned by calling 
+// 	begin() and end() rather than write_to_array() to ensure consistency of 
+//  side effect. 
+// Feb 5, 2010 : First version. rebind semantics.
