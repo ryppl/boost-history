@@ -60,7 +60,7 @@
 namespace boost{                                                            \
 namespace assign{                                                           \
     template<typename P,typename T>                                         \
-	BOOST_ASSIGN_CSV_RESULT(U,N,P)                                          \
+    BOOST_ASSIGN_CSV_RESULT(U,N,P)                                          \
     F(BOOST_PP_ENUM_PARAMS(N, U& _))                                        \
     {                                                                       \
         return boost::assign::detail::auto_size::make_first_expr_no_policy< \
@@ -68,7 +68,7 @@ namespace assign{                                                           \
             > BOOST_PP_REPEAT(N,BOOST_ASSIGN_CSV_ARG,_);                    \
     }                                                                       \
     template<typename T>                                                    \
-	BOOST_ASSIGN_CSV_RESULT_DEF_POLICY(U,N)                                 \
+    BOOST_ASSIGN_CSV_RESULT_DEF_POLICY(U,N)                                 \
     F(BOOST_PP_ENUM_PARAMS(N, U& _))                                        \
     {                                                                       \
         return boost::assign::detail::auto_size::make_first_expr_no_policy< \
