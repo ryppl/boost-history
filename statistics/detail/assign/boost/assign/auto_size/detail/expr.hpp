@@ -93,7 +93,6 @@ namespace auto_size{
 
         // expr( T& r ); // (!= static_generic_list<>)
 
-		expr(){}
         expr(const E& p,T& t):previous(p),ref(t){} 
         // Needed by csv.hpp :
         template<typename E1,typename P1>
