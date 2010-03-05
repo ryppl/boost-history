@@ -113,12 +113,23 @@ namespace auto_size{
 
         // TODO csv here.
 
+
+//		template<typename K,typename ForwardIterator>
+//        typename result_of::expr<T,N+K,Ref,P>::type
+//        range(ForwardIterator b,ForwardIterator e){
+//			BOOST_ASSERT(std::distance(b,e)>=K);
+//        	return next_impl<K>(b);
+//        }
+
+//		template<typename Range>
+//        range(const Range& r)
+
         mutable previous_ previous;
         mutable ref_ ref;
 
-
         // private: // temporarily commented out
                 
+        // BUG K>1
         template<int K,typename ForwardIterator>
         typename result_of::expr<T,N+K,Ref,P>::type
         next_impl(ForwardIterator first)const{
@@ -130,8 +141,6 @@ namespace auto_size{
         typename result_of::expr<T,N+K,Ref,P>::type
         next_impl(boost::mpl::int_<K>,ForwardIterator first)const{
             result_type res = (*this)(*first);
-            describe(std::cout,res); // debugging only : fine!
-            std::cout << std::endl; // debugging only : fine!
             typedef boost::mpl::int_<K-1> k_;
             return res.next_impl(k_(),boost::next(first));	
         }
@@ -139,6 +148,9 @@ namespace auto_size{
         template<typename ForwardIterator>
 		const expr&
         next_impl(boost::mpl::int_<0>,ForwardIterator end)const{
+        	std::cout << "debugging only : ";
+            describe(std::cout,*this); 
+            std::cout << std::endl;
             return (*this);	
         }
 
