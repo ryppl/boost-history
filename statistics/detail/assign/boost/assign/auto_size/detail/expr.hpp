@@ -123,7 +123,7 @@ namespace auto_size{
         
         template<int K,typename ForwardIterator>
         typename result_of::expr<T,N+K,Ref,P>::type
-		next_impl(ForwardIterator first)const{
+        next_impl(ForwardIterator first)const{
             typedef boost::mpl::int_<K> k_;
             return this->next_impl(k_(),first);	
         }
@@ -131,7 +131,7 @@ namespace auto_size{
         // TODO BUG K>1 runtime error
         template<int K,typename ForwardIterator>
         typename result_of::expr<T,N+K,Ref,P>::type
-		next_impl(boost::mpl::int_<K>,ForwardIterator first)const{
+        next_impl(boost::mpl::int_<K>,ForwardIterator first)const{
             // I thought the shared_ptr would solve the runtime error but not
             typedef boost::shared_ptr<result_type> shared_;
             shared_ shared = shared_(new result_type(*this,*first));            
