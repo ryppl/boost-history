@@ -140,8 +140,8 @@ namespace auto_size{
 
         template<typename ForwardIterator>
         const expr&
-		next_impl(boost::mpl::int_<0>,ForwardIterator end)const{
-        	return (*this);	
+        next_impl(boost::mpl::int_<0>,ForwardIterator end)const{
+            return (*this);	
         }
 
     };
