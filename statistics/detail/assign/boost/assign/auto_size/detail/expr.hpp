@@ -119,8 +119,6 @@ namespace auto_size{
 
         // private: // temporarily commented out
                 
-		typedef boost::shared_ptr<result_type> shared_;
-
         template<int K,typename ForwardIterator>
         typename result_of::expr<T,N+K,Ref,P>::type
         next_impl(ForwardIterator first)const{

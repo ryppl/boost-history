@@ -46,8 +46,9 @@ void example_ref_list_of(std::ostream& os)
             BOOST_ASSERT(ints[2] == c);    
 
 			// BUG for K > 1
+            typedef boost::mpl::int_<3> K_;
     		BOOST_AUTO(tmp,cref_list_of(a)(b)(3)
-            	.next_impl<3>(boost::begin(ints))
+            	.next_impl<K_::value>(boost::begin(ints))
             );
 
             BOOST_ASSERT(tmp[0] == a);    
