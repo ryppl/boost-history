@@ -38,7 +38,7 @@ void example_ref_list_of(std::ostream& os)
     
         {
     		ints.clear();
-            ints = cref_list_of_csv(a,b,3);     
+            ints = cref_list_of_csv(a,b,3);
 			std::copy(
             	boost::begin(ints),
                 boost::end(ints),

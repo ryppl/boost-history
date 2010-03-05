@@ -26,8 +26,8 @@ namespace auto_size{
     // as the result of functions that have the csv form :
     //  fun(a,b,c)
     // Unlike lazy_array, it is not a suitable policy for auto_size::expr<>. 
-    // This is desirable as otherwise the result from fun(a,b,c) would be 
-    // costlier to compute (this has already been tested).
+    // This is desirable as otherwise the result from fun(a,b,c) would be much
+    // costlier to construct (this has already been tested).
 
     template<typename T,int N,template<typename> class Ref>
     class static_array; 
