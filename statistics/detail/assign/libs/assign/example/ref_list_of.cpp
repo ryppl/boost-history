@@ -38,15 +38,18 @@ void example_ref_list_of(std::ostream& os)
     
         {
     		ints.clear();
-            ints = cref_list_of_csv(a,b,3);
-			std::copy(
-            	boost::begin(ints),
-                boost::end(ints),
-                std::ostream_iterator<int>(os," ")
-            );
+
+            ints = cref_list_of(a)(b)(3);
+            BOOST_ASSERT(boost::size(ints) == 3);
             BOOST_ASSERT(ints[0] == a);    
             BOOST_ASSERT(ints[1] == b);    
             BOOST_ASSERT(ints[2] == c);    
+
+    		BOOST_AUTO(tmp,cref_list_of(a)(b)(3)
+            	.range<1>(boost::begin(ints))
+            );
+
+			describe(os,tmp);
             
         }
 /*

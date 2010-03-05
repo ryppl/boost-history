@@ -8,11 +8,15 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_AUTO_SIZE_DETAIL_EXPR_ER_2010_HPP
 #define BOOST_ASSIGN_AUTO_SIZE_DETAIL_EXPR_ER_2010_HPP
+#include <iostream> // temp
+#include <ostream> // temp
+#include <boost/shared_ptr.hpp>
 #include <boost/mpl/void.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/equal_to.hpp>
 #include <boost/mpl/empty_base.hpp>
+#include <boost/next_prior.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/assign/list_of.hpp> // needed for assign_reference
 #include <boost/assign/auto_size/detail/assign_reference_copy.hpp>
@@ -28,9 +32,11 @@
 // to expose a container interface.
 //
 // Note:
-// In most situations, a reference wrapper that has copy rather than rebind 
+// - In most situations, a reference wrapper that has copy rather than rebind 
 // semantics for operator= is preferable. 
-//    
+// - The older counterpart to this class is assign::static_generic_list<>. Any
+// difference between the two interfaces is marked by (!= static_generic_list<>)
+//
 // Acknowledgement: The idea of this class was developed in collaboration 
 // with M.P.G
 
@@ -57,6 +63,13 @@ namespace auto_size{
     	typedef T type;
     };
 
+    namespace result_of{
+    
+    	template<typename T,int N,template<typename> class Ref,typename P>
+    	struct expr;
+
+    }
+
     // ---- Collection builder ---- //
 
     template<
@@ -78,48 +91,77 @@ namespace auto_size{
         typedef typename boost::mpl::if_<is_1st_,E,const E&>::type previous_;
         typedef typename next<expr>::type result_type;
 
+        // expr( T& r ); // (!= static_generic_list<>)
+
+		expr(){}
         expr(const E& p,T& t):previous(p),ref(t){} 
-        template<typename E1>
-        expr(const E1& that)
+        // Needed by csv.hpp :
+        template<typename E1,typename P1>
+        expr(const expr<E1,T,N,Ref,P1>& that)
             :super_(that)
             ,previous(that.previous)
             ,ref(that.ref){}
 
         result_type operator()(T& t)const{ return result_type(*this,t); }
 
-        template< class ForwardIterator >
-        expr& range( ForwardIterator first, 
-                                    ForwardIterator last )
-        {
-            for( ; first != last; ++first )
-                (*this)( *first );
-            return *this;
-        }
-
-        template< class ForwardRange >
-        expr& range( ForwardRange& r )
-        {
-            return this->range( boost::begin(r), boost::end(r) );
-        }
-
-        template< class ForwardRange >
-        expr& range( const ForwardRange& r )
-        {
-            return this->range( boost::begin(r), boost::end(r) );
-        }
-
-
+		// TODO csv here.
 
         mutable previous_ previous;
         mutable ref_ ref;
+
+		// TODO range(ForwardIterator,ForwarIterator)
+        // Problem : internally calls range<K>(first). but K must be known
+        // at compile time. Maybe some type erasure.
+
+		// private: // temporarily commented out
                 
+        template<int K, class ForwardIterator >
+        typename result_of::expr<T,N+K,Ref,P>::type 
+        range( ForwardIterator first)const
+        {
+			return this->next_impl<K>(first);
+        }
+        
+        template<int K,typename ForwardIterator>
+        typename result_of::expr<T,N+K,Ref,P>::type
+		next_impl(ForwardIterator first)const{
+        	typedef boost::mpl::int_<K> k_;
+        	return this->next_impl(k_(),first);	
+        }
+
+		// TODO BUG K>1 runtime error
+        template<int K,typename ForwardIterator>
+        typename result_of::expr<T,N+K,Ref,P>::type
+		next_impl(boost::mpl::int_<K>,ForwardIterator first)const{
+        	// I thought the shared_ptr would solve the runtime error but not
+        	typedef boost::shared_ptr<result_type> shared_;
+			shared_ shared = shared_(new result_type(*this,*first));            
+        	return (*shared).next_impl<K-1>(boost::next(first));	
+        }
+
+        template<typename ForwardIterator>
+        const expr&
+		next_impl(boost::mpl::int_<0>,ForwardIterator end)const{
+        	return (*this);	
+        }
+
     };
+
+    // ---- description ---- //
+    
+    template<typename E,typename T,template<typename> class Ref,typename P>
+	void describe(std::ostream& os,const expr<E,T,1,Ref,P>& e){
+    	os << e.ref;
+    }
+    template<typename E,typename T,int N,template<typename> class Ref,typename P>
+	void describe(std::ostream& os,const expr<E,T,N,Ref,P>& e){
+    	describe(os,e.previous);
+    	os << ',' << e.ref;
+    }
 
     // ---- write_to_array ---- //
 	
-	// Nshift is provided in case some library extension may need it but curr-
-    // ently it defaults to 0.
-
+	// Nshift is provided in case some library extension may need it
     template<int Nshift,typename A,typename E,typename T,int N,
     	template<typename> class Ref,typename P>
     void write_to_array(A& a,const expr<E,T,N,Ref,P>& e,false_ /*exit*/){
