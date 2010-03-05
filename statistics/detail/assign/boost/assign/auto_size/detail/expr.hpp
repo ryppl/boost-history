@@ -112,7 +112,7 @@ namespace auto_size{
         // Problem : internally calls range<K>(first). but K must be known
         // at compile time. Maybe some type erasure.
 
-		// private: // temporarily commented out
+        // private: // temporarily commented out
                 
         template<int K, class ForwardIterator >
         typename result_of::expr<T,N+K,Ref,P>::type 
@@ -124,11 +124,11 @@ namespace auto_size{
         template<int K,typename ForwardIterator>
         typename result_of::expr<T,N+K,Ref,P>::type
 		next_impl(ForwardIterator first)const{
-        	typedef boost::mpl::int_<K> k_;
-        	return this->next_impl(k_(),first);	
+            typedef boost::mpl::int_<K> k_;
+            return this->next_impl(k_(),first);	
         }
 
-		// TODO BUG K>1 runtime error
+        // TODO BUG K>1 runtime error
         template<int K,typename ForwardIterator>
         typename result_of::expr<T,N+K,Ref,P>::type
 		next_impl(boost::mpl::int_<K>,ForwardIterator first)const{
