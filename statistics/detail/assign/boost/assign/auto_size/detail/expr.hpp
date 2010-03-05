@@ -81,11 +81,11 @@ namespace auto_size{
         expr(const E& p,T& t):previous(p),ref(t){} 
         result_type operator()(T& t)const{ return result_type(*this,t); }
 
-		template<typename E1>
-		expr(const E1& that)
-        	:super_(that),
-            previous(that.previous),
-            ref(that.ref){}
+        template<typename E1>
+        expr(const E1& that)
+            :super_(that)
+            ,previous(that.previous)
+            ,ref(that.ref){}
 
 
         mutable previous_ previous;
@@ -182,7 +182,7 @@ namespace auto_size{
     	template<typename T,int N,typename P = default_policy>
     	struct rebind : result_of::expr<T,N,ref_rebind,P>{};	
 
-	}
+    }
             
 }// auto_size  
 }// detail      
