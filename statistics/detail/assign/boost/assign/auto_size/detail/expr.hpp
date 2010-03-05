@@ -39,13 +39,13 @@ namespace assign{
 namespace detail{
 namespace auto_size{
                         
-	// ----fwd declare ---- //
+    // ----fwd declare ---- //
 
     template<
     	typename E,typename T,int N,template<typename> class Ref,typename P>
     class expr;
 
-	// ---- Traits --- //
+    // ---- Traits --- //
     
     template<typename E,typename T,int N,template<typename>class Ref,typename P>
     struct expr_size<expr<E,T,N,Ref,P> >
@@ -81,7 +81,6 @@ namespace auto_size{
         expr(const E& p,T& t):previous(p),ref(t){} 
         result_type operator()(T& t)const{ return result_type(*this,t); }
 
-		// TODO maybe dangerous, narrow genus
 		template<typename E1>
 		expr(const E1& that)
         	:super_(that),

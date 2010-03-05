@@ -20,7 +20,7 @@ namespace auto_size{
     template<typename E>
     struct expr_size{};
 
-	template<>
+    template<>
     struct expr_size<top_> : boost::mpl::int_<0>{};
     
 }// auto_size

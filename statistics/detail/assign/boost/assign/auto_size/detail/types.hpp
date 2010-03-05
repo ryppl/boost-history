@@ -16,8 +16,8 @@ namespace assign{
 namespace detail{
 namespace auto_size{
 
-	namespace tag{
-    	struct no_policy;
+    namespace tag{
+        struct no_policy;
         struct lazy_array;
     }
 
