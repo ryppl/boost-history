@@ -67,9 +67,9 @@ namespace auto_size{
         typedef typename Ref<T>::type ref_;
         typedef typename policy<P>::template apply<expr,Ref>::type super_;
 
-		template<typename E1>
+        template<typename E1>
         struct next{
-        	typedef expr<E1,T,N+1,Ref,P> type;
+            typedef expr<E1,T,N+1,Ref,P> type;
         };
 
         public:       
