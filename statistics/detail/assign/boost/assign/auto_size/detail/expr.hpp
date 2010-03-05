@@ -103,12 +103,12 @@ namespace auto_size{
 
         result_type operator()(T& t)const{ return result_type(*this,t); }
 
-		// TODO csv here.
+        // TODO csv here.
 
         mutable previous_ previous;
         mutable ref_ ref;
 
-		// TODO range(ForwardIterator,ForwarIterator)
+        // TODO range(ForwardIterator,ForwarIterator)
         // Problem : internally calls range<K>(first). but K must be known
         // at compile time. Maybe some type erasure.
 
