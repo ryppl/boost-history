@@ -35,7 +35,8 @@ namespace boost { namespace fusion
     inline typename result_of::remove<BOOST_FUSION_R_ELSE_CLREF(Seq), T>::type
     remove(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
-        return remove_if<is_same<mpl::_1, T> >(BOOST_FUSION_FORWARD(Seq,seq));
+        return fusion::remove_if<is_same<mpl::_1, T> >(
+                        BOOST_FUSION_FORWARD(Seq,seq));
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
@@ -44,7 +45,7 @@ namespace boost { namespace fusion
             result_of::remove<,Seq,&, T>)
     remove_if(Seq& seq)
     {
-        return remove_if<is_same<mpl::_1, T> >(seq);
+        return fusion::remove_if<is_same<mpl::_1, T> >(seq);
     }
 #endif
 }}

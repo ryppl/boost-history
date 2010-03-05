@@ -61,8 +61,7 @@ namespace boost { namespace fusion
 #define BOOST_FUSION_REVERSE_VIEW_CTOR(MODIFIER,_)\
         template<typename OtherSeq>\
         reverse_view(reverse_view<OtherSeq> MODIFIER view)\
-          : seq(BOOST_FUSION_FORWARD(\
-                reverse_view<OtherSeq> MODIFIER,view).seq)\
+          : seq(static_cast<reverse_view<OtherSeq> MODIFIER>(view).seq)\
         {}
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_REVERSE_VIEW_CTOR,_)

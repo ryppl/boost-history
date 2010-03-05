@@ -1,6 +1,6 @@
 /*=============================================================================
     Copyright (c) 2006-2007 Tobias Schwinger
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
   
     Use modification and distribution are subject to the Boost Software 
     License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,7 +12,7 @@
 
 #include <boost/config.hpp>
 
-#if defined(BOOST_NO_DECLTYPE) || defined(BOOST_NO_VARIADIC_TEMPLATES) || defined(BOOST_NO_RVALUE_REFERENCES) || !defined(BOOST_FUSION_CPP0X_NO_DEPRECEATED) //|| 1
+#if defined(BOOST_NO_VARIADIC_TEMPLATES) || defined(BOOST_NO_RVALUE_REFERENCES) || !defined(BOOST_FUSION_CPP0X_NO_DEPRECEATED)
 #   include <boost/fusion/container/vector/limits.hpp>
 
 #   ifndef BOOST_FUSION_UNFUSED_MAX_ARITY

@@ -58,7 +58,7 @@ namespace boost { namespace fusion
         >::type
     count_if(BOOST_FUSION_R_ELSE_CLREF(Seq) seq, BOOST_FUSION_RREF_ELSE_OBJ(F) f)
     {
-        return fold(BOOST_FUSION_FORWARD(Seq,seq),
+        return fusion::fold(BOOST_FUSION_FORWARD(Seq,seq),
             0,
             detail::count_if_helper<BOOST_FUSION_RREF_ELSE_OBJ(F)>(f));
     }
@@ -68,7 +68,7 @@ namespace boost { namespace fusion
     inline typename result_of::count_if<Seq&,F>::type
     count_if(Seq& seq, F f)
     {
-        return fold(seq,
+        return fusion::fold(seq,
             0,
             detail::count_if_helper<F>(f));
     }

@@ -70,7 +70,8 @@ void result_type_tests()
     using boost::is_same;
 
     typedef fusion::unfused< test_func<> > t;
-    BOOST_TEST(( is_same< boost::result_of< t () >::type, long >::value ));
+    //TODO
+    BOOST_TEST(( is_same< t::result<t ()>::type, long >::value ));
     BOOST_TEST(( is_same< boost::result_of< t (int) >::type, long >::value ));
 }
 

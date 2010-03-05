@@ -1,6 +1,6 @@
 /*=============================================================================
     Copyright (c) 2007 Tobias Schwinger
-  
+
     Use modification and distribution are subject to the Boost Software 
     License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
     http://www.boost.org/LICENSE_1_0.txt).
@@ -11,7 +11,7 @@
 
 #include <boost/preprocessor/cat.hpp>
 
-#define BOOST_FUSION_FUNC_NAME BOOST_PP_CAT(make_,BOOST_FUSION_CLASS_TPL_NAME)
+#define BOOST_FUSION_FUNC_NAME BOOST_PP_CAT(make_,BOOST_FUSION_FUSED_CLASS_NAME)
 
 namespace boost { namespace fusion
 {
@@ -21,7 +21,7 @@ namespace boost { namespace fusion
         struct BOOST_FUSION_FUNC_NAME
         {
             typedef
-                BOOST_FUSION_CLASS_TPL_NAME<
+                BOOST_FUSION_FUSED_CLASS_NAME<
                     typename traits::deduce<F>::type
                 >
             type;
@@ -39,5 +39,5 @@ namespace boost { namespace fusion
     }
 }}
 
-#undef BOOST_FUSION_CLASS_TPL_NAME
+#undef BOOST_FUSION_FUSED_CLASS_NAME
 

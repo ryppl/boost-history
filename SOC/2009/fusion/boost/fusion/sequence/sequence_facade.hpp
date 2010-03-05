@@ -45,7 +45,6 @@ namespace boost { namespace fusion
     struct sequence_facade
       : sequence_base<Derived>
     {
-        //TODO!!!
         typedef fusion_sequence_tag tag;
         typedef sequence_facade_tag fusion_tag;
         typedef Derived derived_type;

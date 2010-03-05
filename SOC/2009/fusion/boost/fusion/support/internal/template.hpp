@@ -30,7 +30,7 @@
 #   define DUMMY1(_)
 #   define DUMMY2(_,__)
 
-    //cschmidt: for clarity’s sake no linebreaks
+    //cschmidt: for clarity’s sake no linebreaks and no BOOST_FUSION_-prefix . TODO!!!
 #   define VARIADIC_TEMPLATE(N)                 template<BOOST_PP_ENUM_PARAMS(N, typename T)>
 #   define VARIADIC_TEMPLATE_WITH_DEFAULT(N)    template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(N, typename T, void_)>
 #   define EXPAND_TEMPLATE_ARGUMENTS(N)         BOOST_PP_ENUM_PARAMS(N, T)

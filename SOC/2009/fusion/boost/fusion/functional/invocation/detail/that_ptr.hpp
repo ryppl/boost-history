@@ -1,6 +1,7 @@
 /*=============================================================================
     Copyright (c) 2006-2007 Tobias Schwinger
-  
+    Copyright (c) 2009 Christopher Schmidt
+
     Use modification and distribution are subject to the Boost Software 
     License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
     http://www.boost.org/LICENSE_1_0.txt).
@@ -14,7 +15,6 @@
 
 #include <boost/mpl/bool.hpp>
 #include <boost/type_traits/config.hpp>
-#include <boost/type_traits/add_const.hpp>
 #include <boost/type_traits/add_volatile.hpp>
 #include <boost/get_pointer.hpp>
 #include <boost/utility/addressof.hpp>

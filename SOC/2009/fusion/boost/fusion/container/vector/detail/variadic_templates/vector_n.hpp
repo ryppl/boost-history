@@ -91,6 +91,6 @@ namespace boost { namespace fusion
     };
 }}
 
-    #undef N
+    #undef BOOST_FUSION_N
 #endif
 

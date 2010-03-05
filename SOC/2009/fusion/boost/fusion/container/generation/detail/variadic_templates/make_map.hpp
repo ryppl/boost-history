@@ -69,7 +69,6 @@ namespace boost { namespace fusion
         };
     }
 
-    //TODO cschmidt: ?!
     template <typename... Keys, typename... Types>
     inline typename
         result_of::make_map<Keys...,BOOST_FUSION_R_ELSE_CLREF(Types)...>::type

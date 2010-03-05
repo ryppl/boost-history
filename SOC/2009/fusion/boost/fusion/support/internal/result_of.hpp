@@ -1,5 +1,5 @@
 /*=============================================================================
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -10,24 +10,26 @@
 
 #include <boost/config.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
-
-#if defined(BOOST_NO_DECLTYPE) || !defined(BOOST_NO_VARIADIC_TEMPLATES)
-#   include <boost/mpl/bool.hpp>
-#endif
-#ifdef BOOST_NO_DECLTYPE
-#   include <boost/mpl/has_xxx.hpp>
-#   include <boost/mpl/eval_if.hpp>
-#   include <boost/mpl/identity.hpp>
-#endif
-#ifndef BOOST_NO_VARIADIC_TEMPLATES
-#   include <boost/mpl/identity.hpp>
-#endif
+#include <boost/mpl/has_xxx.hpp>
+#include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/identity.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/or.hpp>
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
+#   include <boost/mpl/at.hpp>
+#   include <boost/mpl/front.hpp>
+#endif
 #include <boost/type_traits/is_pointer.hpp>
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/type_traits/is_function.hpp>
 #include <boost/type_traits/is_member_function_pointer.hpp>
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
+#   include <boost/function_types/components.hpp>
+#   include <boost/function_types/result_type.hpp>
+#   include <boost/function_types/is_function.hpp>
+#   include <boost/function_types/is_member_function_pointer.hpp>
+#   include <boost/utility/enable_if.hpp>
+#endif
 #include <boost/utility/result_of.hpp>
 
 namespace boost { namespace fusion { namespace detail
@@ -77,7 +79,12 @@ namespace boost { namespace fusion { namespace detail
         typedef typename F::result_type type;
     };
 
-    template<typename F>
+    template<
+        typename F
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
+      , typename Enable=void
+#endif
+    >
     struct preevaluate_impl
     {
         typedef typename has_result_type<F>::type is_preevaluable;
@@ -90,7 +97,12 @@ namespace boost { namespace fusion { namespace detail
         type;
     };
 #else
-    template<typename F>
+    template<
+        typename F
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
+      , typename Enable=void
+#endif
+    >
     struct preevaluate_impl
     {
         typedef mpl::false_ is_preevaluable;
@@ -98,8 +110,31 @@ namespace boost { namespace fusion { namespace detail
     };
 #endif
 
-    //cschmidt: a pp implementation won't be worth the effort
-#ifndef BOOST_NO_VARIADIC_TEMPLATES
+    //TODO Tests!
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
+    template<typename F>
+    struct preevaluate_impl<
+        F
+      , typename enable_if<function_types::is_function<F> >::type
+    >
+    {
+        typedef mpl::true_ is_preevaluable;
+        typedef typename function_types::result_type<F>::type type;
+    };
+
+    template<typename F>
+    struct preevaluate_impl<
+        F
+      , typename enable_if<function_types::is_member_function_pointer<F> >::type
+    >
+    {
+        typedef typename function_types::components<F>::type components;
+
+        typedef mpl::true_ is_preevaluable;
+        typedef typename mpl::front<components>::type type;
+        typedef typename mpl::at_c<components,1>::type class_type;
+    };
+#else
     template<typename Result,typename... Args>
     struct preevaluate_impl<Result (Args...)>
     {
@@ -147,9 +182,6 @@ namespace boost { namespace fusion { namespace detail
     template<typename F>
     struct preevaluate
     {
-#if defined(BOOST_NO_VARIADIC_TEMPLATES) && !defined(BOOST_NO_DECLTYPE)
-        typedef mpl::false_ is_preevaluable;
-#else
         typedef
             preevaluate_impl<
                 typename remove_pointer<typename identity<F>::type>::type
@@ -157,7 +189,6 @@ namespace boost { namespace fusion { namespace detail
         gen;
         typedef typename gen::type type;
         typedef typename gen::is_preevaluable is_preevaluable;
-#endif
     };
 
     //cschmidt: boost::result_of does not like ref-qualified

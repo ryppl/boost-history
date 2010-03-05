@@ -228,7 +228,7 @@ void test_sequence_n(Sequence & seq, mpl::int_<0>)
 
     // Pointer to data member
 
-    //TODO!!!
+    //TODO
     //BOOST_TEST(that.data == (fusion::invoke(& members::data, fusion::join(sv_obj_ctx,seq)) = that.data));
     BOOST_TEST(that.data == (fusion::invoke(& members::data, fusion::join(sv_ref_ctx,seq)) = that.data));
     BOOST_TEST(that.data == (fusion::invoke(& members::data, fusion::join(sv_ptr_ctx,seq)) = that.data));
@@ -238,7 +238,7 @@ void test_sequence_n(Sequence & seq, mpl::int_<0>)
     BOOST_TEST(that.data == fusion::invoke(& members::data, fusion::join(sv_ptr_c_ctx,seq)));
     BOOST_TEST(that.data == fusion::invoke(& members::data, fusion::join(sv_spt_c_ctx,seq)));
 
-    //TODO!!!
+    //TODO
     //BOOST_TEST(that.data == (fusion::invoke(& members::data, fusion::join(sv_obj_d_ctx,seq)) = that.data));
     BOOST_TEST(that.data == (fusion::invoke(& members::data, fusion::join(sv_ref_d_ctx,seq)) = that.data));
     BOOST_TEST(that.data == (fusion::invoke(& members::data, fusion::join(sv_ptr_d_ctx,seq)) = that.data));

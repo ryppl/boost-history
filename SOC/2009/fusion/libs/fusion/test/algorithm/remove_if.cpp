@@ -67,9 +67,9 @@ main()
 
     {
         typedef vector<Y, char, long, X, bool> mpl_vec;
-        BOOST_TEST((remove_if<not_<is_class<_> > >(mpl_vec())
+        BOOST_TEST((fusion::remove_if<not_<is_class<_> > >(mpl_vec())
             == vector<Y, X>()));
-        BOOST_TEST((remove_if<is_class<_> >(mpl_vec())
+        BOOST_TEST((fusion::remove_if<is_class<_> >(mpl_vec())
             == vector<char, long, bool>()));
     }
 

@@ -162,9 +162,9 @@ namespace boost { namespace fusion
     }
 
 #   define BOOST_PP_FILENAME_1\
-        <boost/fusion/view/nview/detail/pp/as_nview.hpp>
+        <boost/fusion/view/nview/detail/pp/as_nview_n.hpp>
 #   define BOOST_PP_ITERATION_LIMITS (0, FUSION_MAX_VECTOR_SIZE)
-    #include BOOST_PP_ITERATE()
+#   include BOOST_PP_ITERATE()
 #endif
 }}
 

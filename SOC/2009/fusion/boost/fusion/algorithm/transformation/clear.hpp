@@ -24,7 +24,7 @@ namespace boost { namespace fusion
 {
     namespace result_of
     {
-        //TODO doc!!!
+        //TODO empty sequence!!!
         template <typename Seq>
         struct clear
 #ifdef BOOST_NO_VARIADIC_TEMPLATES

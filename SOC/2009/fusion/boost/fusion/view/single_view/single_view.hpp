@@ -190,8 +190,6 @@ namespace boost { namespace fusion
         return typename result_of::make_single_view<T&>::type(val);
     }
 #endif
-
-    //TODO random access
 }}
 
 #endif
