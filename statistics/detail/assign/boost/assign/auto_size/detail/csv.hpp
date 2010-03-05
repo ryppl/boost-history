@@ -27,10 +27,10 @@
 // Usage:
 // BOOST_ASSIGN_CSV(fun) creates for i=1,...,n the following overloads:
 // Call                             Result
-// 	fun<P>(a1,..,.ai) 				r<T,i,P>
-// 	cfun<P>(a1,..,.ai)              r<const T,i,P>
-// 	fun(a1,..,.ai)                  r<T,i,P0>
-// 	cfun(a1,..,.ai)                 r<const T,i,P0>
+//  fun<P>(a1,..,.ai)               r<T,i,P>
+//  cfun<P>(a1,..,.ai)              r<const T,i,P>
+//  fun(a1,..,.ai)                  r<T,i,P0>
+//  cfun(a1,..,.ai)                 r<const T,i,P0>
 
 #ifndef BOOST_ASSIGN_CSV_SIZE
 #define BOOST_ASSIGN_CSV_SIZE 20
