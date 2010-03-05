@@ -130,8 +130,8 @@ namespace auto_size{
         typename result_of::expr<T,N+K,Ref,P>::type
         next_impl(boost::mpl::int_<K>,ForwardIterator first)const{
             result_type res = (*this)(*first);
-            describe(std::cout,res); // debugging only : fine
-            std::cout << std::endl; // debugging only : fine
+            describe(std::cout,res); // debugging only : fine!
+            std::cout << std::endl; // debugging only : fine!
             typedef boost::mpl::int_<K-1> k_;
             return res.next_impl(k_(),boost::next(first));	
         }
