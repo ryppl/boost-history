@@ -34,8 +34,7 @@
 // Note:
 // - In most situations, a reference wrapper that has copy rather than rebind 
 // semantics for operator= is preferable. 
-// - The older counterpart to this class is assign::static_generic_list<>. Any
-// difference between the two interfaces is marked by (!= static_generic_list<>)
+// - The older counterpart to this class is assign::static_generic_list<>. 
 //
 // Acknowledgement: The idea of this class was developed in collaboration 
 // with M.P.G
@@ -50,6 +49,15 @@ namespace auto_size{
     template<
     	typename E,typename T,int N,template<typename> class Ref,typename P>
     class expr;
+
+	// ---- describe ---- //
+    
+	void describe(std::ostream& os,const top_& e){}
+    template<typename E,typename T,int N,template<typename> class Ref,typename P>
+	void describe(std::ostream& os,const expr<E,T,N,Ref,P>& e){
+    	describe(os,e.previous);
+    	os << ',' << e.ref;
+    }
 
     // ---- Traits --- //
     
@@ -108,19 +116,11 @@ namespace auto_size{
         mutable previous_ previous;
         mutable ref_ ref;
 
-        // TODO range(ForwardIterator,ForwarIterator)
-        // Problem : internally calls range<K>(first). but K must be known
-        // at compile time. Maybe some type erasure.
 
         // private: // temporarily commented out
                 
-        template<int K, class ForwardIterator >
-        typename result_of::expr<T,N+K,Ref,P>::type 
-        range( ForwardIterator first)const
-        {
-            return this->next_impl<K>(first);
-        }
-        
+		typedef boost::shared_ptr<result_type> shared_;
+
         template<int K,typename ForwardIterator>
         typename result_of::expr<T,N+K,Ref,P>::type
         next_impl(ForwardIterator first)const{
@@ -128,35 +128,23 @@ namespace auto_size{
             return this->next_impl(k_(),first);	
         }
 
-        // TODO BUG K>1 runtime error
         template<int K,typename ForwardIterator>
         typename result_of::expr<T,N+K,Ref,P>::type
         next_impl(boost::mpl::int_<K>,ForwardIterator first)const{
-            // I thought the shared_ptr would solve the runtime error but not
-            typedef boost::shared_ptr<result_type> shared_;
-            shared_ shared = shared_(new result_type(*this,*first));            
-            return (*shared).next_impl<K-1>(boost::next(first));	
+            result_type res = (*this)(*first);
+            describe(std::cout,res); // debugging only : fine
+            std::cout << std::endl; // debugging only : fine
+            typedef boost::mpl::int_<K-1> k_;
+            return res.next_impl(k_(),boost::next(first));	
         }
 
         template<typename ForwardIterator>
-        const expr&
+		const expr&
         next_impl(boost::mpl::int_<0>,ForwardIterator end)const{
             return (*this);	
         }
 
     };
-
-    // ---- description ---- //
-    
-    template<typename E,typename T,template<typename> class Ref,typename P>
-	void describe(std::ostream& os,const expr<E,T,1,Ref,P>& e){
-    	os << e.ref;
-    }
-    template<typename E,typename T,int N,template<typename> class Ref,typename P>
-	void describe(std::ostream& os,const expr<E,T,N,Ref,P>& e){
-    	describe(os,e.previous);
-    	os << ',' << e.ref;
-    }
 
     // ---- write_to_array ---- //
 	

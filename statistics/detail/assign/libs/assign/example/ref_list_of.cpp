@@ -47,10 +47,13 @@ void example_ref_list_of(std::ostream& os)
 
 			// BUG for K > 1
     		BOOST_AUTO(tmp,cref_list_of(a)(b)(3)
-            	.range<2>(boost::begin(ints))
+            	.next_impl<3>(boost::begin(ints))
             );
 
-			describe(os,tmp);
+            BOOST_ASSERT(tmp[0] == a);    
+            BOOST_ASSERT(tmp[1] == b);    
+            BOOST_ASSERT(tmp[2] == c);    
+//			describe(os,tmp);
             
         }
 /*
