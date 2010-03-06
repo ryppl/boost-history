@@ -15,9 +15,9 @@ namespace assign{
 namespace detail{
 namespace auto_size{
                    
-    template<typename T,int N,template<typename> class Ref>
+    template<typename T,int N,template<typename> class R>
     struct ref_array{
-    	typedef typename Ref<T>::type ref_;
+    	typedef typename R<T>::type ref_;
         typedef boost::array<ref_,N> type;
     };
 

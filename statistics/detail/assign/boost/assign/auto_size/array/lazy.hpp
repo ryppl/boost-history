@@ -27,7 +27,7 @@ namespace auto_size{
     	struct lazy_array{};
     }
 
-   	template<typename T,int N,template<typename> class Ref,typename D>
+   	template<typename T,int N,template<typename> class R,typename D>
    	class lazy_array; 
 
     template<typename E> struct expr_size;
@@ -36,29 +36,30 @@ namespace auto_size{
     template<>
     struct policy<tag::lazy_array>
     {
-        template<typename E,template<typename> class Ref>
+        template<typename E,template<typename> class R>
         struct apply{
         	typedef typename expr_size<E>::type size_;
             typedef typename expr_elem<E>::type elem_;
-            typedef lazy_array<elem_,size_::value,Ref,E> type;
+            typedef lazy_array<elem_,size_::value,R,E> type;
         };
 	};        
  
-    template<
-    	typename E,typename T,int N,template<typename> class Ref,typename P
-    >
+ 	// --> perhaps not needed
+    template<typename E,typename T,int N,
+        template<typename> class R,typename P,bool F>
     class expr;         
 
     template<typename A,typename E,typename T,int N,
-    	template<typename> class Ref,typename P>
-    void write_to_array(A& a,const expr<E,T,N,Ref,P>& e);
+    	template<typename> class R,typename P,bool F>
+    void write_to_array(A& a,const expr<E,T,N,R,P,F>& e);
+	// <-
                   
-   template<typename T,int N,template<typename> class Ref,typename D>
+   template<typename T,int N,template<typename> class R,typename D>
    class lazy_array 
-    	: public array_interface<T,N,Ref,lazy_array<T,N,Ref,D> >
+    	: public array_interface<T,N,R,lazy_array<T,N,R,D> >
     {
 
-        typedef typename auto_size::ref_array<T,N,Ref>::type ref_array_;
+        typedef typename auto_size::ref_array<T,N,R>::type ref_array_;
                 
         void alloc_if()const{
             if(!this->ptr){

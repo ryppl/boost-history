@@ -27,10 +27,10 @@ namespace auto_size{
     // Valid expression			Result
     // d1.ref_array_impl()		ref_array&
     // d2.ref_array_impl()		const ref_array_&
-    template<typename T,int N,template<typename> class Ref,typename D>
+    template<typename T,int N,template<typename> class R,typename D>
     struct array_interface{
-        typedef typename Ref<T>::type ref_;
-        typedef typename ref_array<T,N,Ref>::type ref_array_;
+        typedef typename R<T>::type ref_;
+        typedef typename ref_array<T,N,R>::type ref_array_;
 
 
 		// ---- boost::array ---- //

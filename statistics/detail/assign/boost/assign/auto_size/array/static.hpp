@@ -29,25 +29,25 @@ namespace auto_size{
     // This is desirable as otherwise the result from fun(a,b,c) would be much
     // costlier to construct (this has already been tested).
 
-    template<typename T,int N,template<typename> class Ref>
+    template<typename T,int N,template<typename> class R>
     class static_array; 
 
     template<>
     struct policy<tag::static_array>
     {
-        template<typename T,int N,template<typename> class Ref>
+        template<typename T,int N,template<typename> class R>
         struct apply{
-            typedef static_array<T,N,Ref> type;
+            typedef static_array<T,N,R> type;
         };
 	};        
  
 
-    template<typename T,int N,template<typename> class Ref>
+    template<typename T,int N,template<typename> class R>
     class static_array 
-    	: public array_interface<T,N,Ref,static_array<T,N,Ref> >
+    	: public array_interface<T,N,R,static_array<T,N,R> >
     {
 
-        typedef typename auto_size::ref_array<T,N,Ref>::type ref_array_;
+        typedef typename auto_size::ref_array<T,N,R>::type ref_array_;
                 
         public:
 

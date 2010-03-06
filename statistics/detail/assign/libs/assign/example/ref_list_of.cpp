@@ -38,36 +38,32 @@ void example_ref_list_of(std::ostream& os)
     	int a=1, b=2, c=3;
 
 		{
-			// debugging cref_list_of().range()
-			// BUG for K > 1
         	ints_ ints(3);
             ints[0] =  a; ints[1] = b; ints[2] = c;
-            typedef tag::no_policy tag;
             typedef boost::mpl::int_<3> K_;
     		BOOST_AUTO(tmp,
-            	next_impl<K_::value>(
-                	cref_list_of<tag>(a)(b)(3)
-            		,boost::begin(ints)
-                )
+                cref_list_of(a)(b)(c)
+                    .range<3>(
+                        ints
+                    )
             );
-			describe(os,tmp);
 
-            //BOOST_ASSERT(tmp[0] == a);    
-            //BOOST_ASSERT(tmp[1] == b);    
-            //BOOST_ASSERT(tmp[2] == c);    
+            BOOST_ASSERT(tmp[0] == a);    
+            BOOST_ASSERT(tmp[1] == b);    
+            BOOST_ASSERT(tmp[2] == c);    
 
 		}
-/*
         {
     		ints.clear();
 
-            ints = cref_list_of(a)(b)(3);
+            ints = cref_list_of_csv(a,b,3);
             BOOST_ASSERT(boost::size(ints) == 3);
             BOOST_ASSERT(ints[0] == a);    
             BOOST_ASSERT(ints[1] == b);    
             BOOST_ASSERT(ints[2] == c);    
             
         }
+/*
         {
             array.assign(-1);
             array = cref_list_of_csv(a,b,3);
