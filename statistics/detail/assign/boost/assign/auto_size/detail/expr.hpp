@@ -55,7 +55,7 @@ namespace auto_size{
     // N : size of the collection
     // R : reference wrapper around an element
     // P : policy
-    // F : use reference to link to the previous collection (fast) 
+    // F : use reference to link to the previous collection 
 
     template<typename E,typename T,int N,
         template<typename> class R,typename P,bool F>
@@ -127,10 +127,10 @@ namespace auto_size{
         };
     }
 
-	template<int K,typename E,typename I>
-	typename result_of::insert_range<K,E,I>::type
-	insert_range(const E& e,I i){
-    	typedef result_of::insert_range<K,E,I> result_;
+    template<int K,typename E,typename I>
+    typename result_of::insert_range<K,E,I>::type
+    insert_range(const E& e,I i){
+        typedef result_of::insert_range<K,E,I> result_;
         return result_::call(e,i);
     }
 
