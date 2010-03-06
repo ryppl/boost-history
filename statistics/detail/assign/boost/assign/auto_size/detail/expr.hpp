@@ -185,24 +185,24 @@ namespace auto_size{
         result_type operator()(T& t)const{ return result_type(*this,t); }
         alt_result_type alt(T& t)const{ return alt_result_type(*this,t); }
         
-		template<int K,typename I>
+        template<int K,typename I>
         typename result_of_range<K,I>::type
         range(I b,I e)const{
-			BOOST_ASSERT(std::distance(b,e)>=K);
+            BOOST_ASSERT(std::distance(b,e)>=K);
             typedef result_of_range<K,I> result_; 
-        	return result_::call(*this,b);
+            return result_::call(*this,b);
         }
 
-		template<int K,typename Range>
+        template<int K,typename Range>
         typename result_of_range2<K,Range>::type
         range(Range& r)const{    	
             return this->range<K>(
-            	boost::begin(r),
+                boost::begin(r),
                 boost::end(r)
             );
 		}
 
-		template<int K,typename Range>
+        template<int K,typename Range>
         typename result_of_range2<K,const Range>::type
         range(const Range& r)const{    	
             return this->range<K>(
