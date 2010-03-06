@@ -53,6 +53,7 @@ void example_ref_list_of(std::ostream& os)
             BOOST_ASSERT(tmp[5] == array[2]);    
 
 		}
+
         {
     		ints.clear();
 
