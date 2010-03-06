@@ -36,7 +36,7 @@ void example_ref_list_of(std::ostream& os)
     	int a=1, b=2, c=3;
 
 		{
-            array[0] =  a; array[1] = b; array[2] = c;
+            array.assign(-1);
             typedef boost::mpl::int_<3> K_;
     		BOOST_AUTO(tmp,
                 cref_list_of(a)(b)(c)
