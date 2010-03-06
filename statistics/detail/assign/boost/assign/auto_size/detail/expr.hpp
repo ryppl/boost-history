@@ -102,7 +102,7 @@ namespace auto_size{
 
     namespace result_of{
         template<int K,typename E,typename I>
-	    struct insert_range
+        struct insert_range
         {
     	    typedef E curr_;
             typedef typename E::alt_result_type result_;
