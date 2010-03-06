@@ -20,6 +20,7 @@
 #   include <boost/fusion/support/internal/ref.hpp>
 #   include <boost/fusion/support/internal/sequence_assign.hpp>
 #   include <boost/fusion/support/internal/template.hpp>
+#   include <boost/fusion/support/internal/is_explicitly_convertible.hpp>
 
 #   include <boost/preprocessor/cat.hpp>
 #   include <boost/preprocessor/dec.hpp>
@@ -34,7 +35,6 @@
 #   ifdef BOOST_FUSION_PREFER_MPL
 #       include <boost/mpl/at.hpp>
 #   endif
-#   include <boost/type_traits/is_convertible.hpp>
 #   include <boost/type_traits/add_const.hpp>
 #   include <boost/utility/enable_if.hpp>
 
@@ -143,7 +143,10 @@ namespace boost { namespace fusion
         explicit
         vector1(BOOST_FUSION_R_ELSE_LREF(Seq) seq,
                 typename disable_if<
-                    is_convertible<BOOST_FUSION_R_ELSE_LREF(Seq), T0>
+                    detail::is_explicitly_convertible<
+                        BOOST_FUSION_R_ELSE_LREF(Seq)
+                      , T0
+                    >
                 >::type* =0)
           : m0(fusion::front(seq))
         {

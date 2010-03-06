@@ -8,7 +8,7 @@
 
 #define FUSION_SEQUENCE vector
 #define FUSION_TRAVERSAL_TAG random_access_traversal_tag
-#include "./iterator.hpp"
+#include "iterator.hpp"
 
 int
 main()

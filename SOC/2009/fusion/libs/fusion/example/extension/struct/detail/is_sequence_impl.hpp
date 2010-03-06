@@ -5,28 +5,25 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(BOOST_FUSION_IS_VIEW_IMPL_200604227_2150)
-#define BOOST_FUSION_IS_VIEW_IMPL_200604227_2150
+
+#ifndef EXTENSION_STRUCT_DETAIL_IS_SEQUENCE_IMPL_HPP
+#define EXTENSION_STRUCT_DETAIL_IS_SEQUENCE_IMPL_HPP
 
 #include <boost/mpl/bool.hpp>
 
-namespace example
+namespace boost { namespace fusion { namespace extension
 {
-  struct example_sequence_tag;
-}
-
-namespace boost { namespace fusion 
-{
-  namespace extension
-  {
     template<typename Tag>
-    struct is_view_impl;
+    struct is_sequence_impl;
 
     template<>
-    struct is_view_impl<example::example_sequence_tag>
-      : boost::mpl::false_
-    {};
-  }
-}}
+    struct is_sequence_impl<example::example_sequence_tag>
+    {
+        template<typename T>
+        struct apply
+          : mpl::true_
+        {};
+    };
+}}}
 
 #endif

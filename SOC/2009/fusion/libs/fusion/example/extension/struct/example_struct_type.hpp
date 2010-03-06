@@ -5,8 +5,9 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(BOOST_FUSION_EXAMPLE_STRUCT_TYPE)
-#define BOOST_FUSION_EXAMPLE_STRUCT_TYPE
+
+#ifndef EXTENSION_STRUCT_EXAMPLE_STRUCT_TYPE_HPP
+#define EXTENSION_STRUCT_EXAMPLE_STRUCT_TYPE_HPP
 
 #include <string>
 
@@ -16,10 +17,9 @@ namespace example
     {
         std::string name;
         int age;
-        example_struct(
-            const std::string& n,
-            int a)
-            : name(n), age(a)
+
+        example_struct(std::string const& name,int age)
+          : name(name), age(age)
         {}
     };
 }

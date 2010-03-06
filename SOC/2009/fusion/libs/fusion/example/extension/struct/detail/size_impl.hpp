@@ -5,25 +5,24 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(BOOST_FUSION_TAG_OF_20060222_2052)
-#define BOOST_FUSION_TAG_OF_20060222_2052
 
-#include <boost/fusion/support/tag_of_fwd.hpp>
-#include "./example_struct_type.hpp"
+#ifndef EXTENSION_STRUCT_DETAIL_SIZE_IMPL_HPP
+#define EXTENSION_STRUCT_DETAIL_SIZE_IMPL_HPP
 
-namespace example
+#include <boost/mpl/int.hpp>
+
+namespace boost { namespace fusion { namespace extension
 {
-    struct example_sequence_tag;
-}
+    template<typename Tag>
+    struct size_impl;
 
-namespace boost { namespace fusion { 
-
-namespace traits {
-        
     template<>
-    struct tag_of<example::example_struct>
+    struct size_impl<example::example_sequence_tag>
     {
-        typedef example::example_sequence_tag type;
+        template<typename SeqRef>
+        struct apply
+          : mpl::int_<2>
+        {};
     };
 }}}
 

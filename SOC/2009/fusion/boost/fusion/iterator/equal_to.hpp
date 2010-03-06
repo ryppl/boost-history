@@ -55,11 +55,10 @@ namespace boost { namespace fusion
 #ifndef BOOST_NO_CONSTEXPR
         constexpr
 #endif
-        typename
-            enable_if<
-                mpl::and_<traits::is_iterator<It1>, traits::is_iterator<It2> >
-              , bool
-            >::type
+        typename enable_if<
+            mpl::and_<traits::is_iterator<It1>, traits::is_iterator<It2> >
+          , bool
+        >::type
         operator==(It1 const&, It2 const&)
         {
             return result_of::equal_to<It1 const&, It1 const&>::value;
@@ -70,17 +69,16 @@ namespace boost { namespace fusion
 #ifndef BOOST_NO_CONSTEXPR
         constexpr
 #endif
-        typename
-            enable_if<
-                mpl::and_<
-                    traits::is_iterator<It1>
-                  , traits::is_iterator<It2>
-                >
-              , bool
-            >::type
-        operator!=(It1 const&, It1 const&)
+        typename enable_if<
+            mpl::and_<
+                traits::is_iterator<It1>
+              , traits::is_iterator<It2>
+            >
+          , bool
+        >::type
+        operator!=(It1 const&, It2 const&)
         {
-            return !result_of::equal_to<It1 const&, It1 const&>::value;
+            return !result_of::equal_to<It1 const&, It2 const&>::value;
         }
     }
 

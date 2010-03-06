@@ -9,7 +9,7 @@
 #define FUSION_SEQUENCE list
 #define FUSION_NO_PRIOR
 #define FUSION_TRAVERSAL_TAG forward_traversal_tag
-#include "./iterator.hpp"
+#include "iterator.hpp"
 
 int
 main()

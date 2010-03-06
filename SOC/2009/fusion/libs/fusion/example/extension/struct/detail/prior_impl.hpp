@@ -5,16 +5,12 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(BOOST_FUSION_PRIOR_IMPL_20060222_1944)
-#define BOOST_FUSION_PRIOR_IMPL_20060222_1944
 
-namespace example
-{
-    struct example_struct_iterator_tag;
+#ifndef EXTENSION_STRUCT_DETAIL_PRIOR_IMPL_HPP
+#define EXTENSION_STRUCT_DETAIL_PRIOR_IMPL_HPP
 
-    template<typename Struct, int Pos>
-    struct example_struct_iterator;
-}
+#include "advance_impl.hpp"
+#include <boost/mpl/int.hpp>
 
 namespace boost { namespace fusion {
 
@@ -26,19 +22,11 @@ namespace boost { namespace fusion {
         template<>
         struct prior_impl<example::example_struct_iterator_tag>
         {
-            template<typename Iterator>
+            template<typename ItRef>
             struct apply
-            {
-                typedef typename Iterator::struct_type struct_type;
-                typedef typename Iterator::index index;
-                typedef example::example_struct_iterator<struct_type, index::value - 1> type;
-
-                static type
-                call(Iterator const& i)
-                {
-                    return type(i.struct_);
-                }
-            };
+              : advance_impl<example::example_struct_iterator_tag>::
+                    apply<ItRef, mpl::int_<-1> >
+            {};
         };
     }
 }}

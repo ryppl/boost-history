@@ -8,7 +8,7 @@
 #include <boost/config.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
-
+#include <boost/ref.hpp>
 #if defined(BOOST_NO_VARIADIC_TEMPLATES) || defined(BOOST_NO_RVALUE_REFERENCES)
 #   include <boost/fusion/functional/invocation/detail/pp/invoke_impl.hpp>
 #else
@@ -22,11 +22,7 @@ namespace boost { namespace fusion
         template<typename F, typename Seq>
         struct BOOST_FUSION_INVOKE_NAME
           : detail::BOOST_FUSION_INVOKE_NAME<
-#ifdef BOOST_NO_RVALUE_REFERENCES
-                typename traits::deduce<F>::type
-#else
-                typename traits::deduce_ref<F>::type
-#endif
+                typename unwrap_reference<F>::type
               , typename detail::add_lref<Seq>::type
             >
         {

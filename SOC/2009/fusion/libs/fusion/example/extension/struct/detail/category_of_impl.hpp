@@ -5,36 +5,25 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(BOOST_FUSION_BEGIN_IMPL_20060222_2042)
-#define BOOST_FUSION_BEGIN_IMPL_20060222_2042
 
-#include "../example_struct_iterator.hpp"
+#ifndef EXTENSION_STRUCT_DETAIL_CATEGORY_OF_IMPL_HPP
+#define EXTENSION_STRUCT_DETAIL_CATEGORY_OF_IMPL_HPP
 
-namespace example
-{
-    struct example_sequence_tag;
-}
+#include <boost/fusion/support/category_of.hpp>
 
 namespace boost { namespace fusion {
-    
+
     namespace extension
     {
-        template<typename Tag>
-        struct begin_impl;
-
         template<>
-        struct begin_impl<example::example_sequence_tag>
+        struct category_of_impl<example::example_sequence_tag>
         {
-            template<typename Sequence>
+            template<typename SeqRef>
             struct apply
             {
-                typedef example::example_struct_iterator<Sequence, 0> type;
-
-                static type
-                call(Sequence& seq)
-                {
-                    return type(seq);
-                }
+                struct type
+                  : random_access_traversal_tag, associative_tag
+                {};
             };
         };
     }

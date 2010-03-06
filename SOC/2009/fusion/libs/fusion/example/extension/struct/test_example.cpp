@@ -5,14 +5,14 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#include "./example_struct.hpp"
-#include "./example_struct_type.hpp"
+
+#include "example_struct.hpp"
+#include "example_struct_type.hpp"
 #include <boost/detail/lightweight_test.hpp>
 
-#include <boost/fusion/sequence/intrinsic.hpp>
-#include <boost/fusion/support/is_sequence.hpp>
-#include <boost/fusion/support/category_of.hpp>
+#include <boost/fusion/sequence.hpp>
 #include <boost/fusion/iterator.hpp>
+#include <boost/fusion/support.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/assert.hpp>
 
@@ -26,6 +26,7 @@ int main()
     BOOST_MPL_ASSERT((traits::is_sequence<example::example_struct>));
 
     BOOST_TEST(deref(begin(bert)) == "bert");
+    BOOST_TEST(deref_data(begin(bert)) == "bert");
     BOOST_TEST(*next(begin(bert)) == 99);
     BOOST_TEST(*prior(end(bert)) == 99);
     BOOST_TEST(*advance_c<1>(begin(bert)) == 99);
@@ -36,6 +37,10 @@ int main()
     typedef result_of::next<first>::type second;
     BOOST_MPL_ASSERT((boost::is_same<result_of::value_of<first>::type, std::string>));
     BOOST_MPL_ASSERT((boost::is_same<result_of::value_of<second>::type, int>));
+    BOOST_MPL_ASSERT((boost::is_same<result_of::value_of_data<first>::type, std::string>));
+    BOOST_MPL_ASSERT((boost::is_same<result_of::value_of_data<second>::type, int>));
+    BOOST_MPL_ASSERT((boost::is_same<result_of::key_of<first>::type, fields::name>));
+    BOOST_MPL_ASSERT((boost::is_same<result_of::key_of<second>::type, fields::age>));
 
     BOOST_TEST(begin(bert) != end(bert));
     BOOST_TEST(advance_c<2>(begin(bert)) == end(const_cast<const example::example_struct&>(bert)));

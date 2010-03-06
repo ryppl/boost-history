@@ -18,13 +18,13 @@
 #include <boost/fusion/support/deduce.hpp>
 #include <boost/fusion/support/internal/workaround.hpp>
 #include <boost/fusion/support/internal/sequence_assign.hpp>
+#include <boost/fusion/support/internal/is_explicitly_convertible.hpp>
 
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/int.hpp>
 #ifdef BOOST_NO_RVALUE_REFERENCES
 #   include <boost/call_traits.hpp>
 #endif
-#include <boost/type_traits/is_convertible.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <boost/fusion/view/single_view/detail/single_view_fwd.hpp>
@@ -81,7 +81,10 @@ namespace boost { namespace fusion
         explicit
         single_view(Arg&& val
           , typename enable_if<
-                is_convertible<BOOST_FUSION_R_ELSE_CLREF(Arg),value_type>
+                detail::is_explicitly_convertible<
+                    BOOST_FUSION_R_ELSE_CLREF(Arg)
+                  , value_type
+                >
             >::type* =0)
           : val(std::forward<Arg>(val))
         {}
@@ -90,7 +93,10 @@ namespace boost { namespace fusion
         template<typename Arg>
         single_view(BOOST_FUSION_R_ELSE_CLREF(Arg) arg
           , typename enable_if<
-                is_convertible<BOOST_FUSION_R_ELSE_CLREF(Arg),value_type>
+                detail::is_explicitly_convertible<
+                    BOOST_FUSION_R_ELSE_CLREF(Arg)
+                  , value_type
+                >
             >::type* =0)
           : val(BOOST_FUSION_FORWARD(Arg,arg))
         {}
@@ -109,7 +115,10 @@ namespace boost { namespace fusion
         single_view(
             BOOST_FUSION_R_ELSE_CLREF(Seq) seq
           , typename disable_if<
-                is_convertible<BOOST_FUSION_R_ELSE_CLREF(Seq), value_type>
+                detail::is_explicitly_convertible<
+                    BOOST_FUSION_R_ELSE_CLREF(Seq)
+                  , value_type
+                >
             >::type* =0)
           : val(fusion::front(BOOST_FUSION_FORWARD(Seq,seq)))
         {

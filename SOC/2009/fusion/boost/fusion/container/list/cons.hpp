@@ -15,6 +15,7 @@
 #include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/iterator/deref.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
+#include <boost/fusion/support/internal/is_explicitly_convertible.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/assign_tags.hpp>
 #include <boost/fusion/support/internal/sequence_assign.hpp>
@@ -26,7 +27,6 @@
 #ifdef BOOST_NO_RVALUE_REFERENCES
 #   include <boost/call_traits.hpp>
 #endif
-#include <boost/type_traits/is_convertible.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <boost/fusion/container/list/detail/cons_fwd.hpp>
@@ -183,7 +183,10 @@ namespace boost { namespace fusion
         cons(
             BOOST_FUSION_R_ELSE_CLREF(Seq) seq,
             typename disable_if<
-                is_convertible<BOOST_FUSION_R_ELSE_CLREF(Seq), car_type>
+                detail::is_explicitly_convertible<
+                    BOOST_FUSION_R_ELSE_CLREF(Seq)
+                  , car_type
+                >
             >::type* =0)
           : car(fusion::front(BOOST_FUSION_FORWARD(Seq,seq)))
           , cdr(detail::assign_by_deref(),

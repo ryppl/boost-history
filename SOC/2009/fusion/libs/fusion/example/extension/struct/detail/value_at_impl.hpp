@@ -5,17 +5,9 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(BOOST_FUSION_HAS_KEY_IMPL_20060223_2156)
-#define BOOST_FUSION_HAS_KEY_IMPL_20060223_2156
 
-#include <boost/type_traits/is_same.hpp>
-#include <boost/mpl/or.hpp>
-
-namespace fields
-{
-    struct name;
-    struct age;
-}
+#ifndef EXTENSION_STRUCT_DETAIL_VALUE_AT_IMPL_HPP
+#define EXTENSION_STRUCT_DETAIL_VALUE_AT_IMPL_HPP
 
 namespace example
 {
@@ -27,17 +19,25 @@ namespace boost { namespace fusion {
     namespace extension
     {
         template<typename Tag>
-        struct has_key_impl;
+        struct value_at_impl;
 
         template<>
-        struct has_key_impl<example::example_sequence_tag>
+        struct value_at_impl<example::example_sequence_tag>
         {
-            template<typename Sequence, typename Key>
-            struct apply
-                : mpl::or_<
-                is_same<Key, fields::name>,
-                is_same<Key, fields::age> >
-            {};
+            template<typename Sequence, typename N>
+            struct apply;
+
+            template<typename Sequence>
+            struct apply<Sequence, mpl::int_<0> >
+            {
+                typedef std::string type;
+            };
+
+            template<typename Sequence>
+            struct apply<Sequence, mpl::int_<1> >
+            {
+                typedef int type;
+            };
         };
     }
 }}

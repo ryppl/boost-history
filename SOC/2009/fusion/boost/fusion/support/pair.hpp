@@ -1,7 +1,7 @@
 /*=============================================================================
     Copyright (c) 2005 Joel de Guzman
     Copyright (c) 2006 Tobias Schwinger
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -10,18 +10,18 @@
 #ifndef BOOST_FUSION_SUPPORT_PAIR_HPP
 #define BOOST_FUSION_SUPPORT_PAIR_HPP
 
-#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/deduce.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
+#ifndef BOOST_NO_RVALUE_REFERENCES
+#   include <boost/fusion/support/internal/is_explicitly_convertible.hpp>
+#endif
 
 #include <boost/preprocessor/empty.hpp>
-#if defined(BOOST_NO_VARIADIC_TEMPLATES) && defined(BOOST_NO_RVALUE_REFERENCES)
+#ifdef BOOST_NO_RVALUE_REFERENCES
 #   include <boost/call_traits.hpp>
 #else
 #   include <boost/utility/enable_if.hpp>
-#   include <boost/type_traits/is_convertible.hpp>
 #endif
-
-//TODO is_convertible -> is_explicitly_convertible
 
 namespace boost { namespace fusion
 {
@@ -54,16 +54,19 @@ namespace boost { namespace fusion
         {}
 #   else
         template<typename Arg>
-        pair(Arg&& arg);
+        pair(Arg&& arg,
+            typename enable_if<
+                detail::is_explicitly_convertible<Arg&&,second_type>
+            >::type* =0);
           : second(std::forward<Arg>(arg))
         {}
 #   endif
 #else
         template<typename Arg>
-        pair(BOOST_FUSION_R_ELSE_CLREF(Arg) arg
-          /*, typename enable_if<
-                is_convertible<BOOST_FUSION_R_ELSE_CLREF(Arg),second_type>
-            >::type* =0*/)
+        pair(BOOST_FUSION_R_ELSE_CLREF(Arg) arg,
+            typename enable_if<
+                detail::is_explicitly_convertible<Arg&&,second_type>
+            >::type* =0)
           : second(BOOST_FUSION_FORWARD(Arg,arg))
         {}
 

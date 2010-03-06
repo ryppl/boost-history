@@ -13,13 +13,14 @@
 #include <boost/fusion/iterator/advance_c.hpp>
 #include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/iterator/deref.hpp>
+#include <boost/fusion/support/sequence_base.hpp>
 #ifdef BOOST_FUSION_PREFER_MPL
 #   include <boost/fusion/support/internal/variadic_templates/variadic_arguments_to_vector.hpp>
 #endif
 #include <boost/fusion/support/internal/sequence_assign.hpp>
 #include <boost/fusion/support/internal/assign_tags.hpp>
-#include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
+#include <boost/fusion/support/internal/is_explicitly_convertible.hpp>
 
 #ifndef BOOST_FUSION_TAGGED_VECTOR
 #   include <boost/preprocessor/inc.hpp>
@@ -35,7 +36,6 @@
 #ifdef BOOST_NO_RVALUE_REFERENCES
 #   include <boost/call_traits.hpp>
 #endif
-#include <boost/type_traits/is_convertible.hpp>
 #include <boost/type_traits/add_const.hpp>
 #include <boost/utility/enable_if.hpp>
 
@@ -48,11 +48,11 @@ namespace boost { namespace fusion
     namespace detail
     {
         template<typename From, typename... Elements>
-        struct is_convertible_to_head;
+        struct is_explicitly_convertible_to_head;
 
         template<typename From, typename Head, typename... Rest>
-        struct is_convertible_to_head<From, Head, Rest...>
-          : is_convertible<From, Head>
+        struct is_explicitly_convertible_to_head<From, Head, Rest...>
+          : is_explicitly_convertible<From, Head>
         {};
 
 #ifdef BOOST_FUSION_TAGGED_VECTOR
@@ -446,7 +446,7 @@ namespace boost { namespace fusion
             typename disable_if<
                 mpl::and_<
                     mpl::bool_<sizeof...(Elements)==1>
-                  , detail::is_convertible_to_head<
+                  , detail::is_explicitly_convertible_to_head<
                         BOOST_FUSION_R_ELSE_CLREF(Seq)
                       , Elements...
                     >
