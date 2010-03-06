@@ -8,7 +8,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_AUTO_SIZE_DETAIL_EXPR_ER_2010_HPP
 #define BOOST_ASSIGN_AUTO_SIZE_DETAIL_EXPR_ER_2010_HPP
-#include <iostream> // temp
 #include <ostream>
 #include <boost/mpl/void.hpp>
 #include <boost/mpl/if.hpp>

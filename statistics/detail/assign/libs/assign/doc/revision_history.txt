@@ -1,7 +1,8 @@
 // Revision history:
 //
-// March 4, 2010 : Created function template overloads that allow to specify a
-// policy.
+// March 6, 2010 : Added support for range insertion
+// March 4, 2010 : Created function template overloads to ref_list_of() etc. 
+// that allow to specify a policy.
 // March 1, 2010 : Factored interface into a policy. Csv functions now return an
 // array-like structure;  the collection is only used to build them which is 
 // much more efficient.
