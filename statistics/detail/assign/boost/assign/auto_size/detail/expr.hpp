@@ -50,23 +50,21 @@ namespace auto_size{
 
     // expr<> keeps a reference to a new element and links to the previous 
     // collection.
-	// E : previous collection 
+    // E : previous collection 
     // T : element 
     // N : size of the collection
     // R : reference wrapper around an element
     // P : policy
     // F : use reference to link to the previous collection (fast) 
 
-    template<
-    	typename E,typename T,int N,
-            template<typename> class R,typename P,bool F>
+    template<typename E,typename T,int N,
+        template<typename> class R,typename P,bool F>
     class expr;
 
 	// ---- describe ---- //
     
-    template<
-        typename E,typename T,
-            template<typename> class R,typename P,typename F,bool F>
+    template<typename E,typename T,
+        template<typename> class R,typename P,typename F,bool F>
 	void describe(std::ostream& os,const expr<E,T,1,R,P,F>& e){
     	os << e.ref;
     }
@@ -94,8 +92,8 @@ namespace auto_size{
 
     namespace result_of{
     
-    	template<typename T,int N,
-            template<typename> class R,typename P>
+        // Assumes F is set to default
+        template<typename T,int N,template<typename> class R,typename P>
     	struct expr;
 
     }
@@ -103,7 +101,7 @@ namespace auto_size{
 	// ---- insert_range ---- //
 
 	namespace result_of{
-	    template<int K,typename E,typename I>
+        template<int K,typename E,typename I>
 	    struct insert_range
         {
     	    typedef E curr_;
@@ -119,12 +117,12 @@ namespace auto_size{
     	
         };
 
-	    template<typename E,typename I>
-	    struct insert_range<0,E,I>
+        template<typename E,typename I>
+        struct insert_range<0,E,I>
         {
-		    typedef E type;        
+            typedef E type;        
             static type call(const E& e,I i){
-			    return e;
+                return e;
             }
         };
     }
@@ -304,7 +302,6 @@ TODO
     // ---- result_of ---- //
 	
     namespace result_of{
-        // Warning : the last template arg to expr<> is the default    
     	template<typename T,int N,
         	template<typename> class R,typename P>
     	struct expr{
