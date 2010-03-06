@@ -48,13 +48,14 @@ namespace auto_size{
                         
     // ---- fwd declare ---- //
 
-    // expr<> can be thought of as a linked list
-	// E : previous linked list 
+    // expr<> keeps a reference to a new element and links to the previous 
+    // collection.
+	// E : previous collection 
     // T : element 
-    // N : size of the linked linked list
+    // N : size of the collection
     // R : reference wrapper around an element
     // P : policy
-    // F : use references for linking (fast) 
+    // F : use reference to link to the previous collection (fast) 
 
     template<
     	typename E,typename T,int N,
@@ -181,9 +182,7 @@ namespace auto_size{
         explicit expr(const expr<E1,T,N,R,P1,F1>& that)
             :super_(that)
             ,previous(that.previous)
-            ,ref(that.ref){
-            	std::cout << "copy" << std::endl;
-            }
+            ,ref(that.ref){}
 
         result_type operator()(T& t)const{ return result_type(*this,t); }
         alt_result_type alt(T& t)const{ return alt_result_type(*this,t); }
@@ -233,7 +232,7 @@ TODO
 
     // ---- write_to_array ---- //
 	
-	// Nshift is not needed now, but some library extension may one day
+	// Some library extension may one day need Nshift, not at present
     template<int Nshift,typename A,typename E,typename T,int N,
     	template<typename> class R,typename P,bool F>
     void write_to_array(A& a,const expr<E,T,N,R,P,F>& e,false_ /*exit*/){
@@ -305,7 +304,7 @@ TODO
     // ---- result_of ---- //
 	
     namespace result_of{
-        // Warning : the last template arg to expr is the default    
+        // Warning : the last template arg to expr<> is the default    
     	template<typename T,int N,
         	template<typename> class R,typename P>
     	struct expr{
