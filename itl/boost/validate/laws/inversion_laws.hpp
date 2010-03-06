@@ -203,32 +203,32 @@ namespace boost{namespace itl
 
         bool holds()
         {
-			// dom(a).is_disjoint(dom(b)) => (a + b) - b == a - b
+            // dom(a).is_disjoint(dom(b)) => (a + b) - b == a - b
             Type value_a = this->template getInputValue<operand_a>();
             Type value_b = this->template getInputValue<operand_b>();
-			typename Type::set_type dom_a; value_a.domain(dom_a);
-			typename Type::set_type dom_b; value_b.domain(dom_b);
+            typename Type::set_type dom_a; value_a.domain(dom_a);
+            typename Type::set_type dom_b; value_b.domain(dom_b);
 
-			if(is_disjoint(dom_a, dom_b))
-			{
+            if(is_disjoint(dom_a, dom_b))
+            {
                 Type lhs = value_a;
-				Combiner<Type>()(lhs, this->template getInputValue<operand_b>());
-				Inverter<Type>()(lhs, this->template getInputValue<operand_b>());
+                Combiner<Type>()(lhs, this->template getInputValue<operand_b>());
+                Inverter<Type>()(lhs, this->template getInputValue<operand_b>());
 
-				Type rhs = this->template getInputValue<operand_a>();
-				Inverter<Type>()(rhs, this->template getInputValue<operand_b>());
+                Type rhs = this->template getInputValue<operand_a>();
+                Inverter<Type>()(rhs, this->template getInputValue<operand_b>());
 
-				this->template setOutputValue<lhs_result>(lhs);
-				this->template setOutputValue<rhs_result>(rhs);
+                this->template setOutputValue<lhs_result>(lhs);
+                this->template setOutputValue<rhs_result>(rhs);
 
-				return Equality<Type>()(lhs, rhs);
-			}
-			else // a intersects b
-			{
-				this->template setOutputValue<lhs_result>(value_a);
-				this->template setOutputValue<rhs_result>(value_b);
-				return true;
-			}
+                return Equality<Type>()(lhs, rhs);
+            }
+            else // a intersects b
+            {
+                this->template setOutputValue<lhs_result>(value_a);
+                this->template setOutputValue<rhs_result>(value_b);
+                return true;
+            }
         }
 
         bool debug_holds()
@@ -270,32 +270,32 @@ namespace boost{namespace itl
 
         bool holds()
         {
-			// a.contains(dom(b)) => (a + b) - b == (a - b) + a
+            // a.contains(dom(b)) => (a + b) - b == (a - b) + a
             Type value_a = this->template getInputValue<operand_a>();
             Type value_b = this->template getInputValue<operand_b>();
-			typename Type::set_type dom_b; value_b.domain(dom_b);
+            typename Type::set_type dom_b; value_b.domain(dom_b);
 
-			if(value_a.contains(dom_b))
-			{
+            if(value_a.contains(dom_b))
+            {
                 Type lhs = value_a;
-				Combiner<Type>()(lhs, value_b);
-				Inverter<Type>()(lhs, value_b);
+                Combiner<Type>()(lhs, value_b);
+                Inverter<Type>()(lhs, value_b);
 
                 Type rhs = value_a;
-				Inverter<Type>()(rhs, value_b);
-				Combiner<Type>()(rhs, value_b);
+                Inverter<Type>()(rhs, value_b);
+                Combiner<Type>()(rhs, value_b);
 
-				this->template setOutputValue<lhs_result>(lhs);
-				this->template setOutputValue<rhs_result>(rhs);
+                this->template setOutputValue<lhs_result>(lhs);
+                this->template setOutputValue<rhs_result>(rhs);
 
-				return Equality<Type>()(lhs, rhs);
-			}
-			else // a intersects b
-			{
-				this->template setOutputValue<lhs_result>(value_a);
-				this->template setOutputValue<rhs_result>(value_b);
-				return true;
-			}
+                return Equality<Type>()(lhs, rhs);
+            }
+            else // a intersects b
+            {
+                this->template setOutputValue<lhs_result>(value_a);
+                this->template setOutputValue<rhs_result>(value_b);
+                return true;
+            }
         }
 
         bool debug_holds()
