@@ -22,6 +22,7 @@
 #include <boost/range.hpp>
 #include <boost/assign/list_of.hpp> // needed for assign_reference
 #include <boost/assign/auto_size/detail/has_static_size.hpp>
+#include <boost/assign/auto_size/detail/static_size.hpp>
 #include <boost/assign/auto_size/detail/assign_reference_copy.hpp>
 #include <boost/assign/auto_size/detail/policy.hpp>
 #include <boost/assign/auto_size/detail/types.hpp>
@@ -168,7 +169,8 @@ namespace auto_size{
 
         template<typename Range>
         struct result_of_range3 : result_of_range2<
-            boost::remove_const<Range>::type::static_size, Range>{};
+            auto_size::static_size<
+                typename boost::remove_const<Range>::type>::value, Range>{};
 
         public:       
 
@@ -220,7 +222,7 @@ namespace auto_size{
             result_of_range3<Range>
         >::type
         range(Range& r){ 
-            return this->range<Range::static_size>(r); 
+            return this->range<auto_size::static_size<Range>::value>(r); 
         }
 
         template<typename Range>
@@ -229,7 +231,7 @@ namespace auto_size{
             result_of_range3<const Range>
         >::type
         range(const Range& r){
-            return this->range<Range::static_size>(r); 
+            return this->range<auto_size::static_size<Range>::value>(r); 
         }
 
         mutable previous_ previous;

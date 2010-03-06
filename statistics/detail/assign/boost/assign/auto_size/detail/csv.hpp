@@ -18,7 +18,8 @@
 
 // Whereas adjacent unary function calls is the usual way to create a collec-
 // tion in Boost.Assign, this macro provides, as an alternative, functions that 
-// are overloaded on the number of arguments.
+// are overloaded on the number of arguments. The result, by default, is a 
+// static array; in particular, it cannot be grown further. 
 //
 // Let n = BOOST_ASSIGN_CSV_SIZE and a1,...,an, objects of type T, Ref an alias 
 // for BOOST_ASSIGN_CSV_ref, P0 = BOOST_ASSIGN_CSV_DEF_POLICY and r<U,N,P> an
