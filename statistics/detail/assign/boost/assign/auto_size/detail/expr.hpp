@@ -178,8 +178,6 @@ namespace auto_size{
         typedef typename next<expr>::type result_type;
         typedef typename alt_next<expr>::type alt_result_type;
 
-        // expr( T& r ); 
-
         explicit expr(const E& p,T& t):previous(p),ref(t){} 
         // Needed by csv.hpp :
         template<typename E1,typename P1,bool F1>
