@@ -53,7 +53,8 @@ namespace auto_size{
 	// ---- describe ---- //
     
 	void describe(std::ostream& os,const top_& e){}
-    template<typename E,typename T,int N,template<typename> class Ref,typename P>
+    template<
+        typename E,typename T,int N,template<typename> class Ref,typename P>
 	void describe(std::ostream& os,const expr<E,T,N,Ref,P>& e){
     	describe(os,e.previous);
     	os << ',' << e.ref;
@@ -78,6 +79,43 @@ namespace auto_size{
 
     }
 
+	// ---- next ---- //
+
+    // BUG K>1
+    template<int K,typename E,typename T,int N,
+    	template<typename>class Ref,typename P,typename ForwardIterator>
+    typename result_of::expr<T,N+K,Ref,P>::type
+    next_impl(const expr<E,T,N,Ref,P>& e, ForwardIterator first)
+    {
+        typedef boost::mpl::int_<K> k_;
+        return next_impl(k_(),e,first);	
+    }
+
+    template<int K,typename E,typename T,int N,
+    	template<typename>class Ref,typename P,typename ForwardIterator>
+    typename result_of::expr<T,N+K,Ref,P>::type
+    next_impl(boost::mpl::int_<K>,const expr<E,T,N,Ref,P>& e,
+        ForwardIterator first)
+    {
+        typedef typename result_of::expr<T,N+1,Ref,P>::type next_;
+        next_ n = e(*first);
+        typedef boost::mpl::int_<K-1> k_;
+        return next_impl(k_(),n,boost::next(first));	
+    }
+
+    template<typename E,typename T,int N,
+    	template<typename>class Ref,typename P,typename ForwardIterator>
+    const typename result_of::expr<T,N,Ref,P>::type&
+    next_impl(boost::mpl::int_<0>,const expr<E,T,N,Ref,P>& e,
+        ForwardIterator first)
+    {
+        std::cout << "debugging only : ";
+        describe(std::cout,e); 
+        std::cout << std::endl; 
+        return e;	
+    }
+
+
     // ---- Collection builder ---- //
 
     template<
@@ -99,7 +137,7 @@ namespace auto_size{
         typedef typename boost::mpl::if_<is_1st_,E,const E&>::type previous_;
         typedef typename next<expr>::type result_type;
 
-        // expr( T& r ); // (!= static_generic_list<>)
+        // expr( T& r ); 
 
         expr(const E& p,T& t):previous(p),ref(t){} 
         // Needed by csv.hpp :
@@ -113,7 +151,6 @@ namespace auto_size{
 
         // TODO csv here.
 
-
 //		template<typename K,typename ForwardIterator>
 //        typename result_of::expr<T,N+K,Ref,P>::type
 //        range(ForwardIterator b,ForwardIterator e){
@@ -122,37 +159,16 @@ namespace auto_size{
 //        }
 
 //		template<typename Range>
-//        range(const Range& r)
+//      range(const Range& r)	// enable if static_size only
+//
+//		template<int K,typename Range>
+//      range(const Range& r)   // valid for dynamic size 	
 
         mutable previous_ previous;
         mutable ref_ ref;
 
-        // private: // temporarily commented out
-                
-        // BUG K>1
-        template<int K,typename ForwardIterator>
-        typename result_of::expr<T,N+K,Ref,P>::type
-        next_impl(ForwardIterator first)const{
-            typedef boost::mpl::int_<K> k_;
-            return this->next_impl(k_(),first);	
-        }
-
-        template<int K,typename ForwardIterator>
-        typename result_of::expr<T,N+K,Ref,P>::type
-        next_impl(boost::mpl::int_<K>,ForwardIterator first)const{
-            result_type res = (*this)(*first);
-            typedef boost::mpl::int_<K-1> k_;
-            return res.next_impl(k_(),boost::next(first));	
-        }
-
-        template<typename ForwardIterator>
-		const expr&
-        next_impl(boost::mpl::int_<0>,ForwardIterator end)const{
-        	std::cout << "debugging only : ";
-            describe(std::cout,*this); 
-            std::cout << std::endl;
-            return (*this);	
-        }
+        private:
+        expr();
 
     };
 

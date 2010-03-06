@@ -10,6 +10,7 @@
 #include <vector>
 #include <algorithm>
 #include <boost/typeof/typeof.hpp>
+#include <boost/assign/auto_size/detail/has_static_size.hpp> // temporary
 #include <boost/assign/auto_size/ref_list_of.hpp> // temporary
 #include <boost/assign/auto_size/ref_list_of_csv.hpp>
 #include <boost/assign/auto_size/ref_rebind_list_of_csv.hpp>
@@ -22,7 +23,7 @@ void example_ref_list_of(std::ostream& os)
 {
     os << "-> example_ref_listof : ";
     using namespace boost::assign;
-    
+    using namespace boost::assign::detail::auto_size;
     typedef std::vector<int> ints_;
     typedef boost::array<int,3> array_;
     array_ array;
@@ -35,7 +36,28 @@ void example_ref_list_of(std::ostream& os)
         // cref_list_of_csv
 
     	int a=1, b=2, c=3;
-    
+
+		{
+			// debugging cref_list_of().range()
+			// BUG for K > 1
+        	ints_ ints(3);
+            ints[0] =  a; ints[1] = b; ints[2] = c;
+            typedef tag::no_policy tag;
+            typedef boost::mpl::int_<3> K_;
+    		BOOST_AUTO(tmp,
+            	next_impl<K_::value>(
+                	cref_list_of<tag>(a)(b)(3)
+            		,boost::begin(ints)
+                )
+            );
+			describe(os,tmp);
+
+            //BOOST_ASSERT(tmp[0] == a);    
+            //BOOST_ASSERT(tmp[1] == b);    
+            //BOOST_ASSERT(tmp[2] == c);    
+
+		}
+/*
         {
     		ints.clear();
 
@@ -44,20 +66,8 @@ void example_ref_list_of(std::ostream& os)
             BOOST_ASSERT(ints[0] == a);    
             BOOST_ASSERT(ints[1] == b);    
             BOOST_ASSERT(ints[2] == c);    
-
-			// BUG for K > 1
-            typedef boost::mpl::int_<3> K_;
-    		BOOST_AUTO(tmp,cref_list_of(a)(b)(3)
-            	.next_impl<K_::value>(boost::begin(ints))
-            );
-
-            BOOST_ASSERT(tmp[0] == a);    
-            BOOST_ASSERT(tmp[1] == b);    
-            BOOST_ASSERT(tmp[2] == c);    
-//			describe(os,tmp);
             
         }
-/*
         {
             array.assign(-1);
             array = cref_list_of_csv(a,b,3);

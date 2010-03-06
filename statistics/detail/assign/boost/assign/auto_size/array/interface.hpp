@@ -45,6 +45,8 @@ namespace auto_size{
         typedef typename boost::range_difference<
             ref_array_>::type difference_type;
                 
+		BOOST_STATIC_CONSTANT(int, static_size = N);
+                
         iterator begin()
         {
             return boost::begin(this->ref_array());
