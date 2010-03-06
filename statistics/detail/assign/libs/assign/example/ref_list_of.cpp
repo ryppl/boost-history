@@ -33,8 +33,6 @@ void example_ref_list_of(std::ostream& os)
 
     ints_ ints;
     {    
-        // cref_list_of_csv
-
     	int a=1, b=2, c=3;
 
 		{
@@ -43,8 +41,8 @@ void example_ref_list_of(std::ostream& os)
             typedef boost::mpl::int_<3> K_;
     		BOOST_AUTO(tmp,
                 cref_list_of(a)(b)(c)
-                    .range<3>(
-                        ints
+                    .range(
+                        array
                     )
             );
 

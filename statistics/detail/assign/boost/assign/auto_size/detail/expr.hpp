@@ -19,8 +19,10 @@
 #include <boost/iterator/iterator_concepts.hpp>
 #include <boost/next_prior.hpp>
 #include <boost/type_traits.hpp>
+#include <boost/utility/enable_if.hpp>
 #include <boost/range.hpp>
 #include <boost/assign/list_of.hpp> // needed for assign_reference
+#include <boost/assign/auto_size/detail/has_static_size.hpp>
 #include <boost/assign/auto_size/detail/assign_reference_copy.hpp>
 #include <boost/assign/auto_size/detail/policy.hpp>
 #include <boost/assign/auto_size/detail/types.hpp>
@@ -165,6 +167,10 @@ namespace auto_size{
         struct result_of_range2 : result_of_range<
             K, typename boost::range_iterator<Range>::type>{};
 
+		template<typename Range>
+        struct result_of_range3 : result_of_range2<
+            boost::remove_const<Range>::type::static_size, Range>{};
+
         public:       
 
         typedef typename boost::mpl::equal_to<int_n_,int_1_>::type is_first_;
@@ -211,14 +217,19 @@ namespace auto_size{
             );
         }
 
-/*
-TODO
-		//template<typename Range>
-        //range(Range& r)	// enable if has_static_size
+		template<typename Range>
+        typename boost::lazy_enable_if_c<
+            has_static_size<Range>::value,
+            result_of_range3<Range>
+        >::type
+        range(Range& r){ return this->range<Range::static_size>(r); }
 
-		//template<typename Range>
-        //range(const Range& r)	// enable if has_static_size
-*/
+		template<typename Range>
+        typename boost::lazy_enable_if_c<
+            has_static_size<Range>::value,
+            result_of_range3<const Range>
+        >::type
+        range(const Range& r){ return this->range<Range::static_size>(r); }
 
         mutable previous_ previous;
         mutable ref_ ref;
@@ -230,7 +241,7 @@ TODO
 
     // ---- write_to_array ---- //
 	
-	// Some library extension may one day need Nshift, not at present
+    // Some library extension may one day need Nshift, but not at present
     template<int Nshift,typename A,typename E,typename T,int N,
     	template<typename> class R,typename P,bool F>
     void write_to_array(A& a,const expr<E,T,N,R,P,F>& e,false_ /*exit*/){
