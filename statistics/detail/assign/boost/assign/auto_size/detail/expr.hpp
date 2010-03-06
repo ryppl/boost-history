@@ -200,7 +200,7 @@ namespace auto_size{
                 boost::begin(r),
                 boost::end(r)
             );
-		}
+        }
 
         template<int K,typename Range>
         typename result_of_range2<K,const Range>::type
