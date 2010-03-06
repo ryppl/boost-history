@@ -408,4 +408,16 @@ void interval_subtract_4_bicremental_types()
     BOOST_CHECK_EQUAL( diff_2, I4_7D );
 }
 
+template <class T> 
+void interval_inner_complement_4_bicremental_types()
+{
+    test_inner_complement(interval<T>(), interval<T>());
+    test_inner_complement(interval<T>(), I_D(6,9));
+    test_inner_complement(C_D(2,4), interval<T>());
+    test_inner_complement(I_I(2,5), C_I(3,9));
+    test_inner_complement(I_I(2,4), I_D(6,9));
+    test_inner_complement(I_D(7,9), C_I(0,3));
+}
+
+
 #endif // __test_itl_interval_hpp_JOFA_081006__

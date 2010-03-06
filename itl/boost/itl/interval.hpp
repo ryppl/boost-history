@@ -272,8 +272,6 @@ public:
         set_upb(upb_min(sectant));
         return *this;
     }
-
-
     
     //==========================================================================
     //= Representation
@@ -490,6 +488,19 @@ struct continuous_interval
                          : x.upper() - x.lower();
     }
 
+    static typename IntervalT::difference_type 
+        distance(const IntervalT& x1, const IntervalT& x2)
+    {
+        if(x1.empty() || x2.empty())
+            return itl::neutron<typename IntervalT::difference_type>::value();
+        else if(IntervalT::domain_less(x1.upper(), x2.lower()))
+            return x2.lower() - x1.upper();
+        else if(IntervalT::domain_less(x2.upper(), x1.lower()))
+            return x1.lower() - x2.upper();
+        else
+            return itl::neutron<typename IntervalT::difference_type>::value();
+    }
+
     static bool unaligned_lwb_equal(const IntervalT&, const IntervalT&)
     { return false; }
 
@@ -516,6 +527,19 @@ struct discrete_interval
     {
         return x.empty() ? itl::neutron<typename IntervalT::difference_type>::value() 
                          : static_cast<typename IntervalT::difference_type>(succ(x.last() - x.first())); 
+    }
+
+    static typename IntervalT::difference_type 
+        distance(const IntervalT& x1, const IntervalT& x2)
+    {
+        if(x1.empty() || x2.empty())
+            return itl::neutron<typename IntervalT::difference_type>::value();
+        else if(IntervalT::domain_less(x1.last(), x2.first()))
+            return static_cast<typename IntervalT::difference_type>(pred(x2.first() - x1.last()));
+        else if(IntervalT::domain_less(x2.last(), x1.first()))
+            return static_cast<typename IntervalT::difference_type>(pred(x1.first() - x2.last()));
+        else
+            return itl::neutron<typename IntervalT::difference_type>::value();
     }
 
     static bool unaligned_lwb_equal(const IntervalT& x1, const IntervalT& x2)
@@ -1023,9 +1047,9 @@ left_over = left - right_minuend; //on the right side.
 [a  b)       : left_over
 \endcode
 */
-template <class DomainT, ITL_COMPARE Compare>
-inline interval<DomainT,Compare> right_subtract(interval<DomainT,Compare>  left, 
-                                   const interval<DomainT,Compare>& right_minuend)
+template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval>
+inline Interval<DomainT,Compare> right_subtract(Interval<DomainT,Compare>  left, 
+                                          const Interval<DomainT,Compare>& right_minuend)
 {
     return left.right_subtract(right_minuend);
 }
@@ -1039,9 +1063,9 @@ right_over = right - left_minuend; //on the left.
      [c  d) : right_over
 \endcode
 */
-template <class DomainT, ITL_COMPARE Compare>
-inline interval<DomainT,Compare> left_subtract(interval<DomainT,Compare>  right, 
-                                         const interval<DomainT,Compare>& left_minuend)
+template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval>
+inline Interval<DomainT,Compare> left_subtract(Interval<DomainT,Compare>  right, 
+                                         const Interval<DomainT,Compare>& left_minuend)
 {
     return right.left_subtract(left_minuend);
 }
@@ -1051,9 +1075,9 @@ inline interval<DomainT,Compare> left_subtract(interval<DomainT,Compare>  right,
 //==============================================================================
 
 /** Returns the intersection of \c left and \c right interval. */
-template <class DomainT, ITL_COMPARE Compare>
-inline itl::interval<DomainT,Compare> operator & (itl::interval<DomainT,Compare>  left, 
-                                            const itl::interval<DomainT,Compare>& right)
+template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval>
+inline Interval<DomainT,Compare> operator & (Interval<DomainT,Compare>  left, 
+                                       const Interval<DomainT,Compare>& right)
 {
     return left &= right;
 }
@@ -1073,6 +1097,58 @@ inline bool is_disjoint(const itl::interval<DomainT,Compare>& left,
 {
     return left.is_disjoint(right);
 }
+
+//==============================================================================
+//= Complement
+//==============================================================================
+
+template <class DomainT, ITL_COMPARE Compare, 
+          template<class,ITL_COMPARE>class Interval>
+Interval<DomainT,Compare> inner_complement(const Interval<DomainT,Compare>& left,
+                                           const Interval<DomainT,Compare>& right)
+{
+    if(left.exclusive_less(right))
+        return hull(left, right).left_subtract(left).right_subtract(right);
+    else if(right.exclusive_less(left))
+        return hull(right, left).left_subtract(right).right_subtract(left);
+    else
+        return neutron<Interval<DomainT,Compare> >::value();
+}
+
+//==============================================================================
+//= Distance
+//==============================================================================
+
+template <class DomainT, ITL_COMPARE Compare, 
+          template<class,ITL_COMPARE>class Interval>
+inline typename Interval<DomainT,Compare>::difference_type 
+   distance(const Interval<DomainT,Compare>& left,
+            const Interval<DomainT,Compare>& right)
+{
+    using namespace boost::mpl;
+    return if_<
+                bool_<is_continuous<DomainT>::value>,
+                continuous_interval<interval<DomainT,Compare> >,
+                discrete_interval<interval<DomainT,Compare> >
+              >
+              ::type::distance(left, right);
+}
+
+template <class DomainT, ITL_COMPARE Compare, 
+          template<class,ITL_COMPARE>class Interval>
+inline typename Interval<DomainT,Compare>::difference_type 
+    length(const Interval<DomainT,Compare>& inter_val)
+{
+    using namespace boost::mpl;
+    return if_<
+                bool_<is_continuous<DomainT>::value>,
+                continuous_interval<interval<DomainT,Compare> >,
+                discrete_interval<interval<DomainT,Compare> >
+              >
+              ::type::length(inter_val);
+}
+
+
 
 //==============================================================================
 //= Representation

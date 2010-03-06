@@ -21,6 +21,7 @@ using namespace boost;
 using namespace unit_test;
 using namespace boost::itl;
 
+#include "../test_itl_interval_shared.hpp"
 #include "../test_itl_interval.hpp"
 
 BOOST_AUTO_TEST_CASE
@@ -70,3 +71,8 @@ BOOST_AUTO_TEST_CASE
 BOOST_AUTO_TEST_CASE
 (fastest_itl_interval_subtract_4_bicremental_types)
 {            interval_subtract_4_bicremental_types<bicremental_type_5>(); }
+
+BOOST_AUTO_TEST_CASE
+(fastest_itl_interval_inner_complement_4_bicremental_types)
+{            interval_inner_complement_4_bicremental_types<bicremental_type_6>(); }
+

@@ -62,8 +62,6 @@ BOOST_AUTO_TEST_CASE(reverse_iter)
 
 BOOST_AUTO_TEST_CASE(casual)
 {
-	interval_map<int, float> map_1;
-	interval_map<int, float> map_2;
-	map_1 & map_2;
+    ;
 }
 
