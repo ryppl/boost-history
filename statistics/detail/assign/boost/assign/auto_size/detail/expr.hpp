@@ -226,13 +226,13 @@ namespace auto_size{
             return this->range<Range::static_size>(r); 
         }
 
-		template<typename Range>
+        template<typename Range>
         typename boost::lazy_enable_if_c<
             has_static_size<Range>::value,
             result_of_range3<const Range>
         >::type
         range(const Range& r){
-        	 return this->range<Range::static_size>(r); 
+            return this->range<Range::static_size>(r); 
         }
 
         mutable previous_ previous;
