@@ -209,7 +209,7 @@ namespace auto_size{
             	boost::begin(r),
                 boost::end(r)
             );
-		}
+        }
 
 /*
 TODO
