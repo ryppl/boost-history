@@ -100,7 +100,7 @@ namespace auto_size{
 
 	// ---- insert_range ---- //
 
-	namespace result_of{
+    namespace result_of{
         template<int K,typename E,typename I>
 	    struct insert_range
         {
@@ -112,7 +112,7 @@ namespace auto_size{
             static type call(const E& e,I i){
                 BOOST_CONCEPT_ASSERT(
                     (boost_concepts::ForwardTraversalConcept<I>));
-        	    return iter_::call(e.alt(*i),boost::next(i));
+                return iter_::call(e.alt(*i),boost::next(i));
             }
     	
         };
