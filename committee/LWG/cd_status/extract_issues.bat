@@ -1,16 +1,16 @@
 @echo off
-echo Extract issues from issues list
+rem Extract issues from issues list
 
 if {%1}=={} goto usage
 if {%2}=={} goto usage
 
-copy /y %1 temp1
-chg temp1 "</h3>\r\n" "</h3>"
+copy /y %1 temp1 >nul
+chg temp1 "</h3>\r\n" "</h3>" >nul
 grep "<h3><a" temp1 >temp2
 grep "#%2" temp2 >temp3
-chg temp3 "\q></a>" "\r\n"
+chg temp3 "\q></a>" "\r\n" >nul
 grep "<h3><a" temp3 >temp4
-chg temp4 "<h3><a name=\q" ""
+chg temp4 "<h3><a name=\q" "" >nul
 type temp4
 
 goto done
