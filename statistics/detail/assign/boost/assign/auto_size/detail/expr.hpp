@@ -98,7 +98,7 @@ namespace auto_size{
 
     }
 
-	// ---- insert_range ---- //
+    // ---- insert_range ---- //
 
     namespace result_of{
         template<int K,typename E,typename I>
