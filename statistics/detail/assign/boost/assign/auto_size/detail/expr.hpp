@@ -157,17 +157,17 @@ namespace auto_size{
             typedef expr<E1,T,N+1,R,P,false> type;
         };
 
-		typedef typename boost::mpl::if_c<F,const E&,E>::type storage_;
+        typedef typename boost::mpl::if_c<F,const E&,E>::type storage_;
 
-		template<int K,typename I>
+        template<int K,typename I>
         struct result_of_range 
             : auto_size::result_of::insert_range<K,expr,I>{};
 
-		template<int K,typename Range>
+        template<int K,typename Range>
         struct result_of_range2 : result_of_range<
             K, typename boost::range_iterator<Range>::type>{};
 
-		template<typename Range>
+        template<typename Range>
         struct result_of_range3 : result_of_range2<
             boost::remove_const<Range>::type::static_size, Range>{};
 
