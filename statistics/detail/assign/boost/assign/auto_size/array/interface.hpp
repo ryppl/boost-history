@@ -33,7 +33,7 @@ namespace auto_size{
         typedef typename ref_array<T,N,R>::type ref_array_;
 
 
-		// ---- boost::array ---- //
+        // ---- boost::array ---- //
 
         typedef ref_ value_type;
         typedef typename 
