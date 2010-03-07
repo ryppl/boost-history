@@ -19,8 +19,8 @@ namespace auto_size{
 
         typedef typename T::size_type size_type;
         
-		BOOST_STATIC_CONSTANT(
-        	size_type, 
+        BOOST_STATIC_CONSTANT(
+            size_type, 
             value = T::static_size
         );
    };
