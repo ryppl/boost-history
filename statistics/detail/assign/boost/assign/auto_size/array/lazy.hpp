@@ -23,7 +23,7 @@ namespace auto_size{
     // necessary. It is therefore suitable as the result of statements such as:
     //  fun(a)(b)(c);
 
-	namespace tag{
+    namespace tag{
     	struct lazy_array{};
     }
 
