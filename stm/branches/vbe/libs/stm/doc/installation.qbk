@@ -11,9 +11,9 @@
 [section:install Installing STM]
 [/======================================]
 
-__Boost_STM__ is currently in an alpha release stage. This means our STM library is downloadable, but is undergoing some fundamental changes. Furthermore, our alpha release of TBoost.STM may exhibit some stability issues. While our internal tests have shown TBoost.STM to be fairly stable, your usage may vary.
+__Boost_STM__ is currently in an alpha release stage. This means our STM library is downloadable, but is undergoing some fundamental changes. Furthermore, our alpha release of __Boost_STM__ may exhibit some stability issues. While our internal tests have shown __Boost_STM__ to be fairly stable, your usage may vary.
 
-__Boost_STM_s__ current alpha download is mainly intended for other researchers who are curious about TBoost.STM's implementation and transactional memory. While we encourage non-TM experts to download the library and explore writing parallel code within its framework, we want such users know the system is in its early stages. As such, your usage of TBoost.STM may reveal some weaknesses or stability issues. Until we are into a fully released version, these issues are to be expected. However, please let us know if you encounter any problems using our library and we will do our best to resolve such issues immediately.
+__Boost_STM_s__ current alpha download is mainly intended for other researchers who are curious about __Boost_STM_s__ implementation and transactional memory. While we encourage non-TM experts to download the library and explore writing parallel code within its framework, we want such users know the system is in its early stages. As such, your usage of __Boost_STM__ may reveal some weaknesses or stability issues. Until we are into a fully released version, these issues are to be expected. However, please let us know if you encounter any problems using our library and we will do our best to resolve such issues immediately.
 
 Thank you for considering __Boost_STM__ and we hope you enjoy exploring transactional memory!
 
@@ -28,7 +28,7 @@ You can get the last stable release of from the [@http://eces.colorado.edu/~gott
 [/Boost.STM by downloading [^stm.zip] from the
 [@http://www.boost-consulting.com/vault/index.php?directory=Concurrent%20Programming Boost Vault]]
 
-You can also access the latest (unstable?) state from the [@https://svn.boost.org/svn/boost/sandbox/stm Boost Sandbox].
+You can also access the latest (unstable?) state from the [@https://svn.boost.org/svn/boost/sandbox/stm/branches/vbe Boost Sandbox].
 
 
 [/=================================]
@@ -49,7 +49,7 @@ The POSIX threads (pthreads) library is needed to use __Boost_STM__. Pthreads is
 [@http://sourceware.org/pthreads-win32/ POSIX threads (pthreads) for Windows]
 
 
-In order to be more portable __Boost_STM__ is migrating to Boost. You should use either Boost version 1.39.x or the version in SVN trunk (even if Boost version 1.35.x should works also). In particular, __Boost_STM__ will depends on:
+In order to be more portable __Boost_STM__ is migrating to Boost. You should use either Boost version 1.39.x or the version in SVN trunk (even if Boost version 1.35.x should works also). In particular, __Boost_STM__ depends on:
 
 [variablelist
 [
@@ -66,7 +66,7 @@ In order to be more portable __Boost_STM__ is migrating to Boost. You should use
 ]
 ]
 
-In addition __Boost_STM__ will uses the following libraries on the Boost Sandbox
+In addition __Boost_STM__ uses the following libraries on the Boost Sandbox
 
 [variablelist
 [

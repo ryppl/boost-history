@@ -64,7 +64,7 @@
           memory!
         </p>
 <a name="toward_boost_stm.users_guide.getting_started.install.getting_boost_stm"></a><h5>
-<a name="id4814721"></a>
+<a name="id4814747"></a>
           <a href="getting_started.html#toward_boost_stm.users_guide.getting_started.install.getting_boost_stm">Getting
           Boost.STM</a>
         </h5>
@@ -77,11 +77,11 @@
           page</a>.
         </p>
 <p>
-          You can also access the latest (unstable?) state from the <a href="https://svn.boost.org/svn/boost/sandbox/stm" target="_top">Boost
+          You can also access the latest (unstable?) state from the <a href="https://svn.boost.org/svn/boost/sandbox/stm/branches/vbe" target="_top">Boost
           Sandbox</a>.
         </p>
 <a name="toward_boost_stm.users_guide.getting_started.install.building_boost_stm"></a><h5>
-<a name="id4814773"></a>
+<a name="id4814800"></a>
           <a href="getting_started.html#toward_boost_stm.users_guide.getting_started.install.building_boost_stm">Building
           Boost.STM</a>
         </h5>
@@ -93,7 +93,7 @@
 <span class="identifier">bjam</span>
 </pre>
 <a name="toward_boost_stm.users_guide.getting_started.install.requirements"></a><h5>
-<a name="id4814835"></a>
+<a name="id4814862"></a>
           <a href="getting_started.html#toward_boost_stm.users_guide.getting_started.install.requirements">Requirements</a>
         </h5>
 <p>
@@ -106,8 +106,7 @@
 <p>
           In order to be more portable TBoost.STM is migrating to Boost. You should
           use either Boost version 1.39.x or the version in SVN trunk (even if Boost
-          version 1.35.x should works also). In particular, TBoost.STM will depends
-          on:
+          version 1.35.x should works also). In particular, TBoost.STM depends on:
         </p>
 <div class="variablelist">
 <p class="title"><b></b></p>
@@ -129,7 +128,7 @@
 </dl>
 </div>
 <p>
-          In addition TBoost.STM will uses the following libraries on the Boost Sandbox
+          In addition TBoost.STM uses the following libraries on the Boost Sandbox
         </p>
 <div class="variablelist">
 <p class="title"><b></b></p>
@@ -164,7 +163,7 @@
 </dl>
 </div>
 <a name="toward_boost_stm.users_guide.getting_started.install.exceptions_safety"></a><h5>
-<a name="id4815100"></a>
+<a name="id4815127"></a>
           <a href="getting_started.html#toward_boost_stm.users_guide.getting_started.install.exceptions_safety">Exceptions
           safety</a>
         </h5>
@@ -173,7 +172,7 @@
           of exception safety as long as the underlying parameters provide it.
         </p>
 <a name="toward_boost_stm.users_guide.getting_started.install.thread_safety"></a><h5>
-<a name="id4815127"></a>
+<a name="id4815153"></a>
           <a href="getting_started.html#toward_boost_stm.users_guide.getting_started.install.thread_safety">Thread
           safety</a>
         </h5>
@@ -181,7 +180,7 @@
           All functions in the library are thread-unsafe except when noted explicitly.
         </p>
 <a name="toward_boost_stm.users_guide.getting_started.install.tested_compilers"></a><h5>
-<a name="id4815152"></a>
+<a name="id4815178"></a>
           <a href="getting_started.html#toward_boost_stm.users_guide.getting_started.install.tested_compilers">Tested
           compilers</a>
         </h5>
@@ -218,27 +217,25 @@
           The below example gives a basic introduction into TBoost.STM's transactional
           framework and demonstrates TBoost.STM's ACI conformance.
         </p>
-<pre class="programlisting"><span class="identifier">tx_obj</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">counter</span><span class="special">;</span>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="identifier">Boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">tx</span><span class="special">::</span><span class="identifier">object</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">counter</span><span class="special">(</span><span class="number">0</span><span class="special">);</span>
 
 <span class="keyword">int</span> <span class="identifier">increment</span><span class="special">()</span> <span class="special">{</span>
-    <span class="keyword">int</span> <span class="identifier">val</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
-    <span class="identifier">use_atomic</span><span class="special">(</span><span class="identifier">_</span><span class="special">)</span> <span class="special">{</span>
-        <span class="special">(*</span><span class="identifier">counter</span><span class="special">)++;</span>
-        <span class="identifier">val</span> <span class="special">=</span> <span class="special">*</span><span class="identifier">counter</span><span class="special">;</span>
-    <span class="special">}</span>
-    <span class="keyword">return</span> <span class="identifier">val</span><span class="special">;</span>
+    <span class="identifier">BOOST_STM_TRANSACTION</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">counter</span><span class="special">++;</span>
+    <span class="special">}</span> <span class="identifier">BOOST_STM_TRANSACTION</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
 <p>
-          In the above example, (A) both the write on counter and the read operations
-          function atomically or neither operations are performed. In addition, (C)
-          the transaction begins and ends in legal memory states, meaning global
-          int is guaranteed to be read correctly, preventing thread data races from
-          causing inconsistent results. Lastly, (I) the intermediate state of the
-          incremented global int is isolated until the transaction commits. These
-          three attributes fulfill TBoost.STM's conformance to the ACI principles.
-          The above example also gives a basic introduction into TBoost.STM's transactional
-          framework.
+          In the above example, (A) both the write on <code class="computeroutput"><span class="identifier">counter</span></code>
+          and the read operations function atomically or neither operations are performed.
+          In addition, (C) the transaction begins and ends in legal memory states,
+          meaning <code class="computeroutput"><span class="identifier">counter</span></code> is guaranteed
+          to be read correctly, preventing thread data races from causing inconsistent
+          results. Lastly, (I) the intermediate state of the incremented <code class="computeroutput"><span class="identifier">counter</span></code> is isolated until the transaction
+          commits. These three attributes fulfill TBoost.STM's conformance to the
+          ACI principles. The above example also gives a basic introduction into
+          TBoost.STM's transactional framework.
         </p>
 </div>
 </div>

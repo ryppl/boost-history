@@ -29,29 +29,22 @@ There are two kind of transactional objets:
 * Mixins
 * Wrappers
 
-[section Mixins Transactional Objects]
+[section Transactional Objects]
 
-Mixing transactional objects can be deep or shallow copied. 
-
-Both schemas can be used by the same smart pointers.
-
-[section Deep Copy]
+[include reference/deep_transaction_object.qbk]
+[include reference/shallow_transaction_object.qbk]
 [include reference/transaction_object.qbk]
-[include reference/transaction_object_ptr.qbk]
+[include reference/smart_pointers.qbk]
+[endsect]
+
+[section Built-in Transactional Objects]
+[include reference/tx/proxy_cache.qbk]
+[include reference/tx/object.qbk]
 [include reference/tx/numeric.qbk]
 [include reference/tx/pointer.qbk]
 [endsect]
 
-[section Shallow Copy]
-[include reference/shallow_transaction_object.qbk]
-[endsect]
-
-[section Smart pointers]
-[include reference/smart_pointers.qbk]
-[endsect]
-
-[endsect]
-
+[/
 [section Warppers Transactional Objects]
 
 [include reference/transactional_object.qbk]
@@ -66,6 +59,16 @@ Both schemas can be used by the same smart pointers.
 [section Smart pointers]
 [include reference/non_tx/smart_ptr.qbk]
 [endsect]
+[endsect]
+]
+
+[section Transaction Specific Memory Managers]
+[endsect]
+
+[section User Memory Managers]
+[endsect]
+
+[section Synchronization]
 [endsect]
 
 [section Contention Managers]

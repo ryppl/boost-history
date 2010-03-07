@@ -1,0 +1,61 @@
+[/
+  (C) Copyright 2009 Justin E. Gottchlich. 
+  (C) Copyright 2009 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+
+[/==========================================================================================]
+[section:tx_proxy_cache_hpp Header `<boost/stm/tx/proxy_cache.hpp>`]
+[/==========================================================================================]
+
+    namespace boost { namespace stm { namespace tx {
+
+        template <typename Final, typename T, typename Base=base_transaction_object>
+        class proxy_cache;
+        template <typename F, typename T, typename B>
+        struct has_shallow_copy_semantics<tx::proxy_cache<F,T,B> >;
+
+    }}}
+
+[section Template Class `tx::proxy_cache<>`]
+
+    template <typename Final, typename T, typename Base=base_transaction_object>
+    class proxy_cache : public transaction_object< Final, Base > {
+    protected:
+        T val_;
+    public:
+        typedef proxy_cache<Final, T, Base> this_type;
+        typedef Final final_type;
+        typedef T value_type;
+        proxy_cache();
+        proxy_cache(proxy_cache const& r);
+        template<typename F, typename U>
+        proxy_cache(proxy_cache<F,U> const& r);
+        proxy_cache(T v);
+        template <typename U>
+        proxy_cache(U v);
+
+        proxy_cache& operator=(proxy_cache const& rhs);
+        template<typename F, typename U>
+        proxy_cache& operator=(proxy_cache<F,U> const& rhs);
+           
+        operator T() const;
+        operator T&();
+        T* address_of();
+
+        T& ref();
+        T value() const;
+        
+        proxy_cache(proxy_cache const& rhs, stm::shallow_t);
+        proxy_cache& shallow_assign(proxy_cache const& rhs);
+    };
+
+[endsect]
+
+
+
+[endsect]
+

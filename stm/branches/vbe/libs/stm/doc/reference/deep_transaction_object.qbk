@@ -1,0 +1,74 @@
+[/
+  (C) Copyright 2009 Justin E. Gottchlich.
+  (C) Copyright 2009 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+
+[/==========================================================================================]
+[section:deep_transaction_object_hpp Header `<boost/stm/deep_transaction_object.hpp>`]
+[/==========================================================================================]
+
+    namespace boost { namespace stm {
+        template <class Final, typename Base=base_transaction_object>
+        class deep_transaction_object;
+        template <class Final, typename Base1, typename Base2>
+        class deep_transaction_object2;
+    }}
+
+[section Template Class `deep_transaction_object<>`]
+
+To further simplify the usage of __Boost_STM__, an intermediate template class was built which is meant to sit between the `base_transaction_object` and the user-defined transaction objects. The purpose of this intermediate class is to reduce the code overhead needed for user-defined transaction objects. To do this, the curiously recurring template pattern developed by James Coplien was used.
+
+With the templatized `deep_transaction_object`, client-side transaction objects need only to derive from it and pass their class type as its template parameter. At compile-time the deep_transaction_object generates the necessary code to override all the virtual functions and efine the static function `make_ache()` and implement operator `new` and operator `delete` using __Boost_STM_s__ memory manager for all user-defined types derived from it.
+
+    template <class Final, typename Base>
+    class deep_transaction_object : public base_transaction_object {
+    public:
+        static  Final* make_cache(Final const* rhs, transaction& t);
+        base_transaction_object* make_cache(transaction& t) const;
+        void delete_cache();
+        void copy_cache(base_transaction_object const *rhs);
+    };
+
+[section Static Member Function `make_cache(Final const& rhs)`]
+
+        virtual base_transaction_object* make_cache(transaction* t) const;
+
+The `make_cache()` creates a new `Final` instace using the copy constructor cloning `rhs`.
+
+[endsect]
+
+[section Member Function `make_cache()`]
+
+        virtual base_transaction_object* make_cache(transaction* t) const;
+
+The `make_cache()` creates a new `Final` instace using the copy constructor cloning `this`.
+
+[endsect]
+
+
+[section Member function `copy_cache()`]
+
+       virtual void copy_cache(base_transaction_object const * const rhs);
+
+The `copy_cache()` assigns an incomplete smart cast of `rhs` to `this` instance using the copy-assignement operator.
+
+[endsect]
+
+[section Virtual function `delete_cache()`]
+
+        virtual void delete_cache();
+
+The `delete_cache()` deletes this instace using the `delete` operator.
+
+[endsect]
+[endsect]
+
+[endsect]
+
+
+
+

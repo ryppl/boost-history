@@ -12,57 +12,89 @@
 [/==========================================================================================]
 
     namespace boost { namespace stm {
+        struct shallow_t;
+        const shallow_t shallow;
+
+        template <class T>
+        struct has_shallow_copy_semantics : boost::mpl::false_
+        {};
+
         template <class Derived, typename Base=base_transaction_object>
         class shallow_transaction_object; 
+        template <class Derived, typename Base1, typename Base2>
+        class shallow_transaction_object2; 
     }}
+
+[section Class `shallow_t`]
+
+        struct shallow_t {};
+
+Shallow type tag to make a difference between the standard copy constructor and the shallow copy constructor.
+
+[endsect]
+
+[section Constant `shallow`]
+        const shallow_t shallow = {};
+
+[endsect]
+
+[section Template Class `has_shallow_copy_semantics<>`]
+
+Has shallow copy semantic traits. By default it is false. The user need to specialize this class if STM should take advantage of the shallow copy semantics.
+
+[endsect]
 
 [section Template Class `shallow_transaction_object<>`]
 
-To further simplify the usage of __Boost_STM__, an intermediate template class was built which is meant to sit between the base_transaction_object and the user-defined transaction objects. The purpose of this intermediate class is to reduce the code overhead needed for user-defined transaction objects. To do this, the curiously recurring template pattern developed by James Coplien was used.
+To further simplify the usage of __Boost_STM__, an intermediate template class was built which is meant to sit between the `base_transaction_object` and the user-defined transaction objects. The purpose of this intermediate class is to reduce the code overhead needed for user-defined transaction objects. To do this, the curiously recurring template pattern developed by James Coplien was used.
 
-With the templatized `shallow_transaction_object`, client-side transaction objects need only to derive from it and pass their class type as its template parameter. At compile-time the transaction_object generates the necessary code to override copy_state() and implement operator new and operator delete using __Boost_STM_s__ memory manager for all user-defined types derived from it.
+With the templatized `deep_transaction_object`, client-side transaction objects need only to derive from it and pass their class type as its template parameter. At compile-time the deep_transaction_object generates the necessary code to override all the virtual functions and efine the static function `make_cache()` and implement operator `new` and operator `delete` using __Boost_STM_s__ memory manager for all user-defined types derived from it.
+
 
     template <class Derived, typename Base=base_transaction_object>
     class shallow_transaction_object : public base_transaction_object {
     public:
-
-        virtual base_transaction_object* clone(transaction* t) const;
-        virtual void cache_deallocate();
-
-        virtual void copy_state(base_transaction_object const * const rhs);
-        virtual void move_state(base_transaction_object * rhs);
+        static  Final* make_cache(Final const* rhs, transaction& t);
+        base_transaction_object* make_cache(transaction& t) const;
+        void delete_cache();
+        void copy_cache(base_transaction_object const *rhs);
     };
 
-[section Virtual function `clone()`]
+[section Static Member Function `make_cache(Final const& rhs)`]
 
-        virtual base_transaction_object* clone(transaction* t) const;
+        virtual base_transaction_object* make_cache(transaction* t) const;
 
-The clone() method calls to the free function cache_new_copy which allocates enough memory for the new object and then do a memcpy by default.
+The `make_cache()` creates a new `Final` instace using the shallow copy constructor cloning `rhs`.
+The `make_cache()` method calls to the free function `cache_allocate` which allocates enough memory for the new object and then do a shallow copy.
+
+[endsect]
+
+[section Virtual function `make_cache()`]
+
+        virtual base_transaction_object* make_cache(transaction* t) const;
+
+The `make_cache()` creates a new `Final` instace using the shallow copy constructor cloning `this`.
+The `make_cache()` method calls to the free function `cache_allocate` which allocates enough memory for the new object and then do a shallow copy.
 
 [endsect]
 
 
-[section Virtual function `copy_state()`]
+[section Virtual function `copy_cache()`]
 
-       virtual void copy_state(base_transaction_object const * const rhs);
+       virtual void copy_cache(base_transaction_object const * const rhs);
 
-The copy_state() method call to the free function cache_copy which do a memcpy by default.
-
-[endsect]
-
-[section Virtual function `move_state()`]
-
-       virtual void move_state(base_transaction_object * rhs);
-
-The move_state() method call to the free function cache_copy which do a memcpy by default.
+The `copy_cache()` method do a shallow assignement from an incomplete smart cast of `rhs` to the final instance associated to `this`.
 
 [endsect]
 
-[section Virtual function `cache_deallocate()`]
 
-        virtual void cache_deallocate();
+[section Virtual function `delete_cache()`]
 
-The cache_deallocate() method call to the free function cache_deallocate which do a memcpy by default.
+        virtual void delete_cache();
+
+The `delete_cache()` method deallowates this instance using the free function `cache_deallocate`.
+
+Note that the object is not destructed, as the cache instance is not see as a real instance.
 
 [endsect]
 [endsect]

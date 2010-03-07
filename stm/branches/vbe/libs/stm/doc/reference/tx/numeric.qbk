@@ -14,6 +14,8 @@
     namespace boost { namespace stm { namespace tx {
 
         template <typename T> class numeric;
+        template <typename T>
+        struct has_shallow_copy_semantics<tx::numeric<T> >;
 
         typedef numeric<bool> boolean;
         typedef numeric<char> char_t;
@@ -33,21 +35,15 @@
 [section Template Class `tx::numeric<>`]
 
     template <typename T>
-    class numeric : public transaction_object< numeric<T> >
-    {
-    protected:
-        T val_;
+    class numeric : public proxy_cache< numeric<T>, T > {
     public:
         numeric();
-        template<class U> numeric(numeric<U> const& u);
-        template <typename U> numeric(U v);
-        
-        operator T() const;
-        operator T&();
-
-        T& ref();
-        T value();
-
+        template<class U>
+        numeric(numeric<U> const& r);
+        template <typename U>
+        numeric(U v);
+        numeric(numeric const& rhs, stm::shallow_t);
+        numeric& shallow_assign(numeric const& rhs);
     };
 
 [endsect]

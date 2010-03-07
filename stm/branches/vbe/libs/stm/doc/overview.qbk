@@ -24,18 +24,18 @@ __Boost_STM__ is a C++ lock-based software transactional memory (STM) library. O
 
 [*__Boost_STM__] provides:
 
-* Optimistic concurrency
-* ACI transactions
+* *Optimistic* concurrency
+* *ACI* transactions
     * Atomic: all operations execute or none do
     * Consistent: only legal memory states
     * Isolated: other txes cannot see until committed
-* Language-like atomic transaction macro blocks
+* *Language-like* atomic transaction macro blocks
 * Closed, flattened composable transactions
-* Direct and deferred updating run-time policies
-* Validation and invalidation conflict detection policies
-* Lock-aware transactions
-* Programmable contention management, enabling programmers to specify forward progress mechanisms
-* Isolated and irrevocable transactions for transactions that must commit (i.e., I/O transactions)
+* *Direct* and *deferred updating* run-time policies
+* *Validation* and *invalidation* conflict detection policies
+* *Lock-aware* transactions
+* *Programmable contention management*, enabling programmers to specify forward progress mechanisms
+* Isolated and *irrevocable* transactions for transactions that must commit (i.e., I/O transactions)
 
 
 [/====================================]

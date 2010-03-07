@@ -14,41 +14,40 @@
     namespace boost { namespace stm { namespace tx {
 
         template <typename T> class pointer;
-        template <typename C, typename R> class pointer_to_member;
+        template <typename T>
+        struct has_shallow_copy_semantics<tx::pointer<T> >;
 
     }}}
 
 [section Template Class `tx::pointer<>`]
 
     template <typename T>
-    class pointer : public transaction_object< pointer<T> >
-    {
-    protected:
-        T* val_;
+    class pointer : public proxy_cache< pointer<T>, T* > {
     public:
         pointer();
-        template<class U> pointer(pointer<U> const& r);
+        pointer(pointer const& r);
+        template<class U>
+        pointer(pointer<U> const& r);
 
-        template <typename U> pointer(U* v);
+        template<class U, class V, class B>
+        pointer(proxy_cache<U, V*, B> const& rhs);
+
         pointer(T* v);
-        ~pointer() {}
+        template <typename U>
+        pointer(U* v);
 
-        operator T*() const;
-        operator T*&();
+        template<class U, class V, class B>
+        pointer& operator=(proxy_cache<U, V*, B> const& rhs);
 
-        T*& get();
-        T const * get() const;
+        T* operator->() const;
+        T& operator*() const;
 
-        T const * operator->() const;
-        T const & operator*() const;
+        pointer(pointer const& rhs, stm::shallow_t);
+        // shallow assignment
+        pointer& shallow_assign(pointer const& rhs);
 
-        T * operator->();
-        T & operator*();
     };
 
-[endsect]
-
-[section Template Class `tx::pointer_to_member<>`]
 [endsect]
 
 

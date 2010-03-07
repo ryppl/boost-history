@@ -10,11 +10,11 @@
 
 [heading Transactional Memory]
 
-Transactional memory is a modern type of concurrency control that uses transactions as its synchronization mechanism. A transaction is a finite sequence of operations that are executed in an atomic, isolated and consistent manner. The atomicity, isolation and consistency (ACI) of transaction's are derived from the ACID principle in the database community. TM does not exhibit the D (durability) of ACID because unlike database transactions, TM transactions are not saved to permanent storage (e.g., hard drives).
+Transactional memory(TM) is a modern type of concurrency control that uses transactions as its synchronization mechanism. A transaction is a finite sequence of operations that are executed in an *atomic*, *isolated* and *consistent* manner. The atomicity, isolation and consistency (*ACI*) of transaction's are derived from the ACID principle in the database community. TM does not exhibit the D (durability) of ACID because unlike database transactions, TM transactions are not saved to permanent storage (e.g., hard drives).
 
 Transactions are executed speculatively (optimistically) and are checked for consistency at various points in the transaction's lifetime. Programmers specify the starting and ending points of a transaction. All of the operations between those points make up the transaction's execution body. Transactions are commonly represented using the atomic structure shown in the figure below.
 
-    1   atomic
+    1   transaction
     2   {
     3       ++x;
     4       --y;
@@ -38,7 +38,7 @@ For these reasons, transactions are considered an important synchronization mech
 
 [heading Simplicity]
 
-Synchronization problems, such as deadlocks, livelocks and priority inversion are common in software systems using mutual exclusion. TM avoids many of these problems by providing a synchronization mechanism that does not expose any of its implementation details to the programmer. The only interfaces the programmer needs to use for TM is as follows:
+Synchronization problems, such as deadlocks, livelocks and priority inversion are common in software systems using mutual exclusion. TM avoids many of these problems by providing a synchronization mechanism that does not expose any of its implementation details to the programmer. The only low level interfaces the programmer needs to use for TM are:
 
 * begin_tx() - the signaled start of the transaction.
 * read(loc) - reads the specified memory location, storing its location in the transaction's read set and returning its current value.
@@ -50,17 +50,17 @@ The above interfaces allow the programmer to create a transaction (using begin_t
 All TM implementations use some combination of the above interfaces. TMs implemented within compilers tend to implicitly annotate transactional read() and write() operations, whereas those implemented within software libraries tend to require the programmer explicitly state which operations are transactional reads and writes. An example of a transaction using the above interfaces alongside an actual STM library implementation is shown in Figure 3.
 
     1   // TM interfaces            // __Boost_STM__
-    2   do {                        atomic(t)
+    2   do {                        BOOST_STM_TRANSACTION
     3       begin_tx();             {
-    4       write(x, read(x)+1);        ++t.write(x);
-    5       write(y, read(y)-1);        --t.write(y);
-    6   } while (end_tx());         } before_retry {}
+    4       write(x, read(x)+1);        ++x;
+    5       write(y, read(y)-1);        --y;
+    6   } while (end_tx());         } BOOST_STM_END_TRANSACTION
 
     Figure 3. Transaction Using (1) Explicit TM Interfaces and (2) __Boost_STM__.
 
 Figure 3 implements the same transaction as shown in Figure 2, except all transactional memory accesses, including the transaction's retry behavior (e.g., its loop), are demonstrated from a simple TM interface perspective and an actual library implementation (__Boost_STM__). While most TM systems handle some portion of these interface calls implicitly, as is shown in the __Boost_STM__ transaction, it is important to note that even when all operations are made visible to the end programmer, transactions are still devoid of many concurrency problems, such as data races and deadlocks (explained below), that plague other types of concurrency control.
 
-For example, as long as the programmer properly annotates the access to the shared variables x and y as shown in Figure 3, it is impossible for race conditions or deadlocks to occur. Furthermore, the programmer does not need any program-specific knowledge to use shared data; he or she simply uses the TM interfaces supplied by the system and the resulting behavior is guaranteed to be consistent. This is explained in greater detail in Section 3.1.
+For example, as long as the programmer properly annotates the access to the shared variables x and y as shown in Figure 3, it is impossible for race conditions or deadlocks to occur. Furthermore, the programmer does not need any program-specific knowledge to use shared data; he or she simply uses the TM interfaces supplied by the system and the resulting behavior is guaranteed to be consistent. This is explained in greater detail in Section ???3.1.
 
 Other types of concurrency control, such as mutual exclusion, cannot achieve the same interface simplicity, because part of their implementation is associated with, or exposed through, their interface. To demonstrate this, consider the fine-grained locking example of Figure 1 as shown below.
 
@@ -234,11 +234,11 @@ If the above code uses reentrant locks, it will achieve the programmer's intende
 
 An external atomic grouping of operations is impossible using embedded mutual exclusion without exposing the implementation details because the heart of mutual exclusion is based on named variables which the programmer specifies to guard their critical sections. Because these variables are named, they cannot be abstracted away and any programmer wishing to reuse the mutually exclusive code must be able to access and extend the implementation details.
 
-    1   void inc(int v) { atomic { g += v; } }
+    1   void inc(int v) { transaction { g += v; } }
     2
-    3   void mult(int v) { atomic { g *= v; } }
+    3   void mult(int v) { transaction { g *= v; } }
     4
-    5   int get() { atomic { return g; } }
+    5   int get() { transaction { return g; } }
 
     Figure 9. TM of Increment, Multiply and Get of Shared Variable.
 
@@ -262,14 +262,14 @@ As before, the programmer's goal is to implement a combination of inc() and mult
 
 Even with transactions, this approach fails because the transactions within inc() and mult() begin and end inside their respective functions. However, to make the above operations atomic, the programmer need only make the following modification shown in Figure 10.
 
-    1   atomic { // atomic {
-    2       inc(a); // atomic { g += a; }
-    3       mult(-b); // atomic { g *= -b; }
-    4   } // }
+    1   transaction {       // transaction {
+    2       inc(a);         //   transaction { g += a; }
+    3       mult(-b);       //   transaction { g *= -b; }
+    4   }                   // }
 
     Figure 10. Modularity: Transaction of Increment and Multiply.
 
-In effect, the TM system subsumes the transactions that are nested inside of the inc() and mult() operations. 6 The left side of Figure 10 shows the actual code of the transaction, while the right side shows the child transactions that are subsumed by the parent transaction.
+In effect, the TM system subsumes the transactions that are nested inside of the inc() and mult() operations. The left side of Figure 10 shows the actual code of the transaction, while the right side shows the child transactions that are subsumed by the parent transaction.
 
 Because transactions are isolated and atomic, the resulting state of g, from operations inc() and mult(), is invisible to outside observers until the transaction is committed. As such, outside threads cannot view any intermediate state constructed by partial transaction execution. The result of such isolated behavior is the guaranteed consistent concurrent execution of interleaved accesses to shared memory from in-flight transactions. This is demonstrated in Figure 11; let g=0 and assume deferred update is the active updating policy, as explained in Section 4.2.
 

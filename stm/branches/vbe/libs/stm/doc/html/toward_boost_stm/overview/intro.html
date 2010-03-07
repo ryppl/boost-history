@@ -27,18 +27,19 @@
 <a name="toward_boost_stm.overview.intro"></a><a href="intro.html" title=" Introduction"> Introduction</a>
 </h3></div></div></div>
 <a name="toward_boost_stm.overview.intro.transactional_memory"></a><h4>
-<a name="id4765111"></a>
+<a name="id4765159"></a>
         <a href="intro.html#toward_boost_stm.overview.intro.transactional_memory">Transactional
         Memory</a>
       </h4>
 <p>
-        Transactional memory is a modern type of concurrency control that uses transactions
-        as its synchronization mechanism. A transaction is a finite sequence of operations
-        that are executed in an atomic, isolated and consistent manner. The atomicity,
-        isolation and consistency (ACI) of transaction's are derived from the ACID
-        principle in the database community. TM does not exhibit the D (durability)
-        of ACID because unlike database transactions, TM transactions are not saved
-        to permanent storage (e.g., hard drives).
+        Transactional memory(TM) is a modern type of concurrency control that uses
+        transactions as its synchronization mechanism. A transaction is a finite
+        sequence of operations that are executed in an <span class="bold"><strong>atomic</strong></span>,
+        <span class="bold"><strong>isolated</strong></span> and <span class="bold"><strong>consistent</strong></span>
+        manner. The atomicity, isolation and consistency (<span class="bold"><strong>ACI</strong></span>)
+        of transaction's are derived from the ACID principle in the database community.
+        TM does not exhibit the D (durability) of ACID because unlike database transactions,
+        TM transactions are not saved to permanent storage (e.g., hard drives).
       </p>
 <p>
         Transactions are executed speculatively (optimistically) and are checked
@@ -47,7 +48,7 @@
         between those points make up the transaction's execution body. Transactions
         are commonly represented using the atomic structure shown in the figure below.
       </p>
-<pre class="programlisting"><span class="number">1</span>   <span class="identifier">atomic</span>
+<pre class="programlisting"><span class="number">1</span>   <span class="identifier">transaction</span>
 <span class="number">2</span>   <span class="special">{</span>
 <span class="number">3</span>       <span class="special">++</span><span class="identifier">x</span><span class="special">;</span>
 <span class="number">4</span>       <span class="special">--</span><span class="identifier">y</span><span class="special">;</span>
@@ -108,15 +109,15 @@
         (2) scalability and (3) modularity.
       </p>
 <a name="toward_boost_stm.overview.intro.simplicity"></a><h4>
-<a name="id4765653"></a>
+<a name="id4765469"></a>
         <a href="intro.html#toward_boost_stm.overview.intro.simplicity">Simplicity</a>
       </h4>
 <p>
         Synchronization problems, such as deadlocks, livelocks and priority inversion
         are common in software systems using mutual exclusion. TM avoids many of
         these problems by providing a synchronization mechanism that does not expose
-        any of its implementation details to the programmer. The only interfaces
-        the programmer needs to use for TM is as follows:
+        any of its implementation details to the programmer. The only low level interfaces
+        the programmer needs to use for TM are:
       </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
@@ -151,11 +152,11 @@
         alongside an actual STM library implementation is shown in Figure 3.
       </p>
 <pre class="programlisting"><span class="number">1</span>   <span class="comment">// TM interfaces            // __Boost_STM__
-</span><span class="number">2</span>   <span class="keyword">do</span> <span class="special">{</span>                        <span class="identifier">atomic</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span>
+</span><span class="number">2</span>   <span class="keyword">do</span> <span class="special">{</span>                        <span class="identifier">BOOST_STM_TRANSACTION</span>
 <span class="number">3</span>       <span class="identifier">begin_tx</span><span class="special">();</span>             <span class="special">{</span>
-<span class="number">4</span>       <span class="identifier">write</span><span class="special">(</span><span class="identifier">x</span><span class="special">,</span> <span class="identifier">read</span><span class="special">(</span><span class="identifier">x</span><span class="special">)+</span><span class="number">1</span><span class="special">);</span>        <span class="special">++</span><span class="identifier">t</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="identifier">x</span><span class="special">);</span>
-<span class="number">5</span>       <span class="identifier">write</span><span class="special">(</span><span class="identifier">y</span><span class="special">,</span> <span class="identifier">read</span><span class="special">(</span><span class="identifier">y</span><span class="special">)-</span><span class="number">1</span><span class="special">);</span>        <span class="special">--</span><span class="identifier">t</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="identifier">y</span><span class="special">);</span>
-<span class="number">6</span>   <span class="special">}</span> <span class="keyword">while</span> <span class="special">(</span><span class="identifier">end_tx</span><span class="special">());</span>         <span class="special">}</span> <span class="identifier">before_retry</span> <span class="special">{}</span>
+<span class="number">4</span>       <span class="identifier">write</span><span class="special">(</span><span class="identifier">x</span><span class="special">,</span> <span class="identifier">read</span><span class="special">(</span><span class="identifier">x</span><span class="special">)+</span><span class="number">1</span><span class="special">);</span>        <span class="special">++</span><span class="identifier">x</span><span class="special">;</span>
+<span class="number">5</span>       <span class="identifier">write</span><span class="special">(</span><span class="identifier">y</span><span class="special">,</span> <span class="identifier">read</span><span class="special">(</span><span class="identifier">y</span><span class="special">)-</span><span class="number">1</span><span class="special">);</span>        <span class="special">--</span><span class="identifier">y</span><span class="special">;</span>
+<span class="number">6</span>   <span class="special">}</span> <span class="keyword">while</span> <span class="special">(</span><span class="identifier">end_tx</span><span class="special">());</span>         <span class="special">}</span> <span class="identifier">BOOST_STM_END_TRANSACTION</span>
 
 <span class="identifier">Figure</span> <span class="number">3.</span> <span class="identifier">Transaction</span> <span class="identifier">Using</span> <span class="special">(</span><span class="number">1</span><span class="special">)</span> <span class="identifier">Explicit</span> <span class="identifier">TM</span> <span class="identifier">Interfaces</span> <span class="keyword">and</span> <span class="special">(</span><span class="number">2</span><span class="special">)</span> TBoost.STM<span class="special">.</span>
 </pre>
@@ -176,7 +177,7 @@
         conditions or deadlocks to occur. Furthermore, the programmer does not need
         any program-specific knowledge to use shared data; he or she simply uses
         the TM interfaces supplied by the system and the resulting behavior is guaranteed
-        to be consistent. This is explained in greater detail in Section 3.1.
+        to be consistent. This is explained in greater detail in Section ???3.1.
       </p>
 <p>
         Other types of concurrency control, such as mutual exclusion, cannot achieve
@@ -212,7 +213,7 @@
 <span class="number">7</span>   <span class="identifier">unlock</span><span class="special">(</span><span class="identifier">mutexX</span><span class="special">);</span>
 </pre>
 <a name="toward_boost_stm.overview.intro.understanding_concurrency_hazards"></a><h4>
-<a name="id4758679"></a>
+<a name="id4758701"></a>
         <a href="intro.html#toward_boost_stm.overview.intro.understanding_concurrency_hazards">Understanding
         Concurrency Hazards</a>
       </h4>
@@ -270,7 +271,7 @@
         modules can range from difficult to impossible.
       </p>
 <a name="toward_boost_stm.overview.intro.testing__race_conditions_and_interleavings"></a><h4>
-<a name="id4758793"></a>
+<a name="id4758814"></a>
         <a href="intro.html#toward_boost_stm.overview.intro.testing__race_conditions_and_interleavings">Testing:
         Race Conditions and Interleavings</a>
       </h4>
@@ -346,7 +347,7 @@
         all serial orders.
       </p>
 <a name="toward_boost_stm.overview.intro.development__mutual_exclusion_and_tm"></a><h4>
-<a name="id4759159"></a>
+<a name="id4759176"></a>
         <a href="intro.html#toward_boost_stm.overview.intro.development__mutual_exclusion_and_tm">Development:
         Mutual Exclusion and TM</a>
       </h4>
@@ -372,7 +373,7 @@
         performance, as is commonly found in fine-grained mutual exclusion implementations.
       </p>
 <a name="toward_boost_stm.overview.intro.scalability"></a><h4>
-<a name="id4759212"></a>
+<a name="id4759229"></a>
         <a href="intro.html#toward_boost_stm.overview.intro.scalability">Scalability</a>
       </h4>
 <p>
@@ -384,7 +385,7 @@
         by a concurrency control type while executing concurrently.
       </p>
 <a name="toward_boost_stm.overview.intro.pessimistic_and_optimistic_critical_sections"></a><h4>
-<a name="id4759236"></a>
+<a name="id4759262"></a>
         <a href="intro.html#toward_boost_stm.overview.intro.pessimistic_and_optimistic_critical_sections">Pessimistic
         and Optimistic Critical Sections</a>
       </h4>
@@ -397,7 +398,7 @@
         use optimistic critical sections.
       </p>
 <a name="toward_boost_stm.overview.intro.truly_optimistic_critical_sections"></a><h4>
-<a name="id4759268"></a>
+<a name="id4759286"></a>
         <a href="intro.html#toward_boost_stm.overview.intro.truly_optimistic_critical_sections">Truly
         Optimistic Critical Sections</a>
       </h4>
@@ -454,7 +455,7 @@
         addresses, both g1=0,g2=0 and g1=1,g2=1 are legal states.
       </p>
 <a name="toward_boost_stm.overview.intro.direct_and_deferred_update"></a><h4>
-<a name="id4759763"></a>
+<a name="id4759781"></a>
         <a href="intro.html#toward_boost_stm.overview.intro.direct_and_deferred_update">Direct
         and Deferred Update</a>
       </h4>
@@ -503,7 +504,7 @@
         update without special effort.
       </p>
 <a name="toward_boost_stm.overview.intro.scalability__mutual_exclusion_and_transactional_memory"></a><h4>
-<a name="id4759852"></a>
+<a name="id4759870"></a>
         <a href="intro.html#toward_boost_stm.overview.intro.scalability__mutual_exclusion_and_transactional_memory">Scalability:
         Mutual Exclusion and Transactional Memory</a>
       </h4>
@@ -584,7 +585,7 @@
         mathematical limitations in mutual exclusion's performance scalability.
       </p>
 <a name="toward_boost_stm.overview.intro.modularity"></a><h4>
-<a name="id4813029"></a>
+<a name="id4813054"></a>
         <a href="intro.html#toward_boost_stm.overview.intro.modularity">Modularity</a>
       </h4>
 <p>
@@ -605,7 +606,7 @@
         do not support software modularity are, in short, impractical.
       </p>
 <a name="toward_boost_stm.overview.intro.mutual_exclusion_and_software_modularity"></a><h4>
-<a name="id4813073"></a>
+<a name="id4813104"></a>
         <a href="intro.html#toward_boost_stm.overview.intro.mutual_exclusion_and_software_modularity">Mutual
         Exclusion and Software Modularity</a>
       </h4>
@@ -681,16 +682,16 @@
         cannot be abstracted away and any programmer wishing to reuse the mutually
         exclusive code must be able to access and extend the implementation details.
       </p>
-<pre class="programlisting"><span class="number">1</span>   <span class="keyword">void</span> <span class="identifier">inc</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">v</span><span class="special">)</span> <span class="special">{</span> <span class="identifier">atomic</span> <span class="special">{</span> <span class="identifier">g</span> <span class="special">+=</span> <span class="identifier">v</span><span class="special">;</span> <span class="special">}</span> <span class="special">}</span>
+<pre class="programlisting"><span class="number">1</span>   <span class="keyword">void</span> <span class="identifier">inc</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">v</span><span class="special">)</span> <span class="special">{</span> <span class="identifier">transaction</span> <span class="special">{</span> <span class="identifier">g</span> <span class="special">+=</span> <span class="identifier">v</span><span class="special">;</span> <span class="special">}</span> <span class="special">}</span>
 <span class="number">2</span>
-<span class="number">3</span>   <span class="keyword">void</span> <span class="identifier">mult</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">v</span><span class="special">)</span> <span class="special">{</span> <span class="identifier">atomic</span> <span class="special">{</span> <span class="identifier">g</span> <span class="special">*=</span> <span class="identifier">v</span><span class="special">;</span> <span class="special">}</span> <span class="special">}</span>
+<span class="number">3</span>   <span class="keyword">void</span> <span class="identifier">mult</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">v</span><span class="special">)</span> <span class="special">{</span> <span class="identifier">transaction</span> <span class="special">{</span> <span class="identifier">g</span> <span class="special">*=</span> <span class="identifier">v</span><span class="special">;</span> <span class="special">}</span> <span class="special">}</span>
 <span class="number">4</span>
-<span class="number">5</span>   <span class="keyword">int</span> <span class="identifier">get</span><span class="special">()</span> <span class="special">{</span> <span class="identifier">atomic</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">g</span><span class="special">;</span> <span class="special">}</span> <span class="special">}</span>
+<span class="number">5</span>   <span class="keyword">int</span> <span class="identifier">get</span><span class="special">()</span> <span class="special">{</span> <span class="identifier">transaction</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">g</span><span class="special">;</span> <span class="special">}</span> <span class="special">}</span>
 
 <span class="identifier">Figure</span> <span class="number">9.</span> <span class="identifier">TM</span> <span class="identifier">of</span> <span class="identifier">Increment</span><span class="special">,</span> <span class="identifier">Multiply</span> <span class="keyword">and</span> <span class="identifier">Get</span> <span class="identifier">of</span> <span class="identifier">Shared</span> <span class="identifier">Variable</span><span class="special">.</span>
 </pre>
 <a name="toward_boost_stm.overview.intro.summary_of_mutual_exclusion_modularity"></a><h4>
-<a name="id4814086"></a>
+<a name="id4814118"></a>
         <a href="intro.html#toward_boost_stm.overview.intro.summary_of_mutual_exclusion_modularity">Summary
         of Mutual Exclusion Modularity</a>
       </h4>
@@ -703,7 +704,7 @@
         not support software modularity.
       </p>
 <a name="toward_boost_stm.overview.intro.transactional_memory_and_software_modularity"></a><h4>
-<a name="id4814127"></a>
+<a name="id4814158"></a>
         <a href="intro.html#toward_boost_stm.overview.intro.transactional_memory_and_software_modularity">Transactional
         Memory and Software Modularity</a>
       </h4>
@@ -721,7 +722,7 @@
         conflict detection times, updating policies, and contention management schemes.
       </p>
 <a name="toward_boost_stm.overview.intro.achieving_tm_software_modularity"></a><h4>
-<a name="id4814167"></a>
+<a name="id4814199"></a>
         <a href="intro.html#toward_boost_stm.overview.intro.achieving_tm_software_modularity">Achieving
         TM Software Modularity</a>
       </h4>
@@ -749,16 +750,16 @@
         to make the above operations atomic, the programmer need only make the following
         modification shown in Figure 10.
       </p>
-<pre class="programlisting"><span class="number">1</span>   <span class="identifier">atomic</span> <span class="special">{</span> <span class="comment">// atomic {
-</span><span class="number">2</span>       <span class="identifier">inc</span><span class="special">(</span><span class="identifier">a</span><span class="special">);</span> <span class="comment">// atomic { g += a; }
-</span><span class="number">3</span>       <span class="identifier">mult</span><span class="special">(-</span><span class="identifier">b</span><span class="special">);</span> <span class="comment">// atomic { g *= -b; }
-</span><span class="number">4</span>   <span class="special">}</span> <span class="comment">// }
+<pre class="programlisting"><span class="number">1</span>   <span class="identifier">transaction</span> <span class="special">{</span>       <span class="comment">// transaction {
+</span><span class="number">2</span>       <span class="identifier">inc</span><span class="special">(</span><span class="identifier">a</span><span class="special">);</span>         <span class="comment">//   transaction { g += a; }
+</span><span class="number">3</span>       <span class="identifier">mult</span><span class="special">(-</span><span class="identifier">b</span><span class="special">);</span>       <span class="comment">//   transaction { g *= -b; }
+</span><span class="number">4</span>   <span class="special">}</span>                   <span class="comment">// }
 </span>
 <span class="identifier">Figure</span> <span class="number">10.</span> <span class="identifier">Modularity</span><span class="special">:</span> <span class="identifier">Transaction</span> <span class="identifier">of</span> <span class="identifier">Increment</span> <span class="keyword">and</span> <span class="identifier">Multiply</span><span class="special">.</span>
 </pre>
 <p>
         In effect, the TM system subsumes the transactions that are nested inside
-        of the inc() and mult() operations. 6 The left side of Figure 10 shows the
+        of the inc() and mult() operations. The left side of Figure 10 shows the
         actual code of the transaction, while the right side shows the child transactions
         that are subsumed by the parent transaction.
       </p>
@@ -799,7 +800,7 @@
         level of software modularity.
       </p>
 <a name="toward_boost_stm.overview.intro.summary_of_transactional_memory_modularity"></a><h4>
-<a name="id4814528"></a>
+<a name="id4814560"></a>
         <a href="intro.html#toward_boost_stm.overview.intro.summary_of_transactional_memory_modularity">Summary
         of Transactional Memory Modularity</a>
       </h4>
@@ -813,7 +814,7 @@
         or subsumed into a larger transaction.
       </p>
 <a name="toward_boost_stm.overview.intro.c___library_language_like_solution"></a><h4>
-<a name="id4814561"></a>
+<a name="id4814594"></a>
         <a href="intro.html#toward_boost_stm.overview.intro.c___library_language_like_solution">C++
         library language-like solution</a>
       </h4>

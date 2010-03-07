@@ -25,36 +25,37 @@ In this example, we build a linked list insert transactional operation using __B
     tx_ptr<linked_list<int> > llist;
     ...
     for (int i = 0; i < 100; ++i) {
-        use_atomic(_) {
+        BOOST_STM_TRANSACTION {
             llist->insert(i);
-        }
+        } BOOST_STM_TRANSACTION;
     }
 
 After inspecting the above client invoked insert code it is apparent that the code itself shows no deep signs of being transactional. The two exceptions are the declaration of the list using a tx_ptr smart pointer and the fact that the insertion of the 100 elements is atomic. This is our desired behavior. As far as the client side programmer is concerned, there is no additional code needed to perform a transactional linked list insert over a non-transactional linked list insert. Obviously, this simplistic behavior eases the introduction of TM solutions into algorithms of new and legacy systems.
 
 [heading Linked list declaration]
 
-A clasical linked list use a list node chained following the memer next_. On a transactional context we nedd to state that the pointer to the next node is a transactional one. This is reached using the smart pointer tx_ptr<>
+A clasical linked list use a list node chained following the member next_. On a transactional context we nedd to state that the pointer to the next node is a transactional one. This is reached using the smart pointer tx::pointer<>
 
     template <typename T>
     struct list_node {
-        tx_ptr<list_node<T> > next_;
+        tx::object<T> value_;
+        tx::pointer<list_node<T> > next_;
     }
 
     template <typename T>
     class linked_list {
     // ...
     private:
-        tx_ptr<list_node<T> > head_;
+        tx::pointer<list_node<T> > head_;
+        tx::uint_t size_;
     };
 
 [heading Insert retry transaction]
 
     void insert(T const &val) {
-        for (boost::stm::transaction _; !_.committed() && _.restart(); _.no_throw_end())
-            try {
+        BOOST_STM_TRANSACTION {
                 // ... see below
-            } catch (aborted_transaction_exception&) {}
+        } BOOST_STM_END_TRANSACTION;
     }
 
 The exposed insert code performs two key operations: (1) it retries the transaction until it succeeds (commits) and (2) it catches aborted transaction exceptions. The retry code is perhaps the largest visible section of code overhead for the transactional linked list insert operation. While there are other C++ mechanisms to retry transactions, like gotos or macro-based approaches, we believe a simple loop is currently the best solution for TM retry behavior in C++. Others before us have implemented differing solutions that have smaller code footprints, but violate large-scale design concerns, break compositionality potential and hide or impose large language penalties. As such, we currently accept the loop overhead as a small inconvenience and avoid breaking language semantics.
@@ -62,6 +63,21 @@ The exposed insert code performs two key operations: (1) it retries the transact
 The aborted_transaction_exception allows __Boost_STM__ to be exception neutral while also gaining performance benefits of early notification of doomed transactions. The above example demonstrates this behavior in practice with its absorption of aborted transactions and only aborted transactions.
 
 [heading Insert specific]
+
+            list_node<T> * prev = head_;
+            list_node<T> * curr = prev->next_;
+            while (curr!=0) {
+                if (curr->value_ == val) return;
+                else if (curr->value_ > val) break;
+                prev = curr;
+                curr = curr->next_;
+            }
+            if (curr==0 || (curr->value_ > val)) {
+                prev->next_=BOOST_STM_NEW(list_node<T>(val, curr));
+                ++size_;
+            }
+
+with smart pointers
 
             upgrd_ptr<list_node<T> > prev(_, head_);
             upgrd_ptr<list_node<T> > curr(_, head_->next_);
@@ -133,40 +149,41 @@ In the following example, the first section shows client code invoking the move 
 
 Client Invoked Inserts / Moves.
 
-    tx_ptr<linked_list<int> > llist;
+    linked_list<int> llist;
     ...
-    atomic(_) {
+    BOOST_STM_TRANSACTION {
         for (int i = 0; i < 100; ++i) {
-            llist->insert(i);
+            llist.insert(i);
         }
         for (int j = 0; j < 100; ++j) {
-            llist->move(j, -j);
+            llist.move(j, -j);
         }
-    }
+    } BOOST_STM_END_TRANSACTION;
 
 The client invoked inserts and moves are fairly straight forward. The insert operations are performed first then the original items are moved to a new location by inverting their value. Again, from a client programming perspective, there is no hint that this code is transactional, which is our intended goal.
 
 Remove
 
     void remove(const T& val) {
-        use_atomic(_) {
+        BOOST_STM_TRANSACTION {
             // find the node whose val matches the request
-            upgrd_ptr<list_node<T> > prev(_,head_);
-            upgrd_ptr<list_node<T> > curr(_,prev->next_);
+            list_node<T> * prev=head_;
+            list_node<T> * curr=prev->next_;
             while (curr) {
                 // if we find the node, disconnect it and end the search
                 if (curr->value_ == val) {
-                    make_wr_ptr(_, prev)->next_=curr->next_;
-                    delete_ptr(_,curr);
+                    prev->next_=curr->next_;
+                    // delete curr...
+                    BOOST_STM_DELETE_PTR(curr);
+                    --size_;
                     break;
                 } else if (curr->value_ > val) {
-                    // this means the search failed
                     break;
                 }
                 prev = curr;
                 curr = prev->next_;
             }
-        }
+        } BOOST_STM_END_TRANSACTION;
     }
 
 As was the case with the insert(), the above remove() method is almost identical to how a normal linked list remove operation would be implemented, with the exception of the atomic guard and a few __Boost_STM__ API calls. Again, this is ideal, as it leads to intuitive transactional programming, requiring only a minor learning curve for the algorithms developer.
@@ -174,10 +191,10 @@ As was the case with the insert(), the above remove() method is almost identical
 Composed External Move
 
     void move(T const &v1, T const &v2) {
-        use_atomic {
+        BOOST_STM_TRANSACTION {
             remove(v1);
             insert(v2);
-        }
+        } BOOST_STM_END_TRANSACTION;
     }
 
 The move() implementation do not requires any overhead required in non-transactional implementations, other than using the atomic guard. The remainder of the code is preserved.
@@ -355,7 +372,7 @@ The explicit approach do not let us detect overlaping transactional objets until
 
 With the declarative approach, we can use 
 
-If STM do not allows embeeded transactional objects, we force the user to use constant pointers to trasactional objects
+If STM do not allows embedded transactional objects, we force the user to use constant pointers to trasactional objects
 
     class C : public transaction_object<C> {...};
 
@@ -481,7 +498,7 @@ Let declare a pointer to `B`
 
 [section Polymorphic]
 
-How the user can defien a transactional class `D` inheriting from a transactional class `B`
+How the user can define a transactional class `D` inheriting from a transactional class `B`
 
 [heading Using the mixin transaction_object<>]
 

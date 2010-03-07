@@ -81,16 +81,16 @@
           calls.
         </p>
 <a name="toward_boost_stm.users_guide.tutorial.a_simple_transaction.client_invoked_inserts"></a><h5>
-<a name="id4815470"></a>
+<a name="id4815527"></a>
           <a href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_simple_transaction.client_invoked_inserts">Client
           Invoked Inserts</a>
         </h5>
 <pre class="programlisting"><span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">linked_list</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">llist</span><span class="special">;</span>
 <span class="special">...</span>
 <span class="keyword">for</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="number">100</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
-    <span class="identifier">use_atomic</span><span class="special">(</span><span class="identifier">_</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">BOOST_STM_TRANSACTION</span> <span class="special">{</span>
         <span class="identifier">llist</span><span class="special">-&gt;</span><span class="identifier">insert</span><span class="special">(</span><span class="identifier">i</span><span class="special">);</span>
-    <span class="special">}</span>
+    <span class="special">}</span> <span class="identifier">BOOST_STM_TRANSACTION</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
 <p>
@@ -104,37 +104,38 @@
           of TM solutions into algorithms of new and legacy systems.
         </p>
 <a name="toward_boost_stm.users_guide.tutorial.a_simple_transaction.linked_list_declaration"></a><h5>
-<a name="id4815701"></a>
+<a name="id4815743"></a>
           <a href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_simple_transaction.linked_list_declaration">Linked
           list declaration</a>
         </h5>
 <p>
-          A clasical linked list use a list node chained following the memer next_.
+          A clasical linked list use a list node chained following the member next_.
           On a transactional context we nedd to state that the pointer to the next
-          node is a transactional one. This is reached using the smart pointer tx_ptr&lt;&gt;
+          node is a transactional one. This is reached using the smart pointer tx::pointer&lt;&gt;
         </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">list_node</span> <span class="special">{</span>
-    <span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">next_</span><span class="special">;</span>
+    <span class="identifier">tx</span><span class="special">::</span><span class="identifier">object</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">value_</span><span class="special">;</span>
+    <span class="identifier">tx</span><span class="special">::</span><span class="identifier">pointer</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">next_</span><span class="special">;</span>
 <span class="special">}</span>
 
 <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="keyword">class</span> <span class="identifier">linked_list</span> <span class="special">{</span>
 <span class="comment">// ...
 </span><span class="keyword">private</span><span class="special">:</span>
-    <span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">head_</span><span class="special">;</span>
+    <span class="identifier">tx</span><span class="special">::</span><span class="identifier">pointer</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">head_</span><span class="special">;</span>
+    <span class="identifier">tx</span><span class="special">::</span><span class="identifier">uint_t</span> <span class="identifier">size_</span><span class="special">;</span>
 <span class="special">};</span>
 </pre>
 <a name="toward_boost_stm.users_guide.tutorial.a_simple_transaction.insert_retry_transaction"></a><h5>
-<a name="id4815923"></a>
+<a name="id4816039"></a>
           <a href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_simple_transaction.insert_retry_transaction">Insert
           retry transaction</a>
         </h5>
 <pre class="programlisting"><span class="keyword">void</span> <span class="identifier">insert</span><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">val</span><span class="special">)</span> <span class="special">{</span>
-    <span class="keyword">for</span> <span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">transaction</span> <span class="identifier">_</span><span class="special">;</span> <span class="special">!</span><span class="identifier">_</span><span class="special">.</span><span class="identifier">committed</span><span class="special">()</span> <span class="special">&amp;&amp;</span> <span class="identifier">_</span><span class="special">.</span><span class="identifier">restart</span><span class="special">();</span> <span class="identifier">_</span><span class="special">.</span><span class="identifier">no_throw_end</span><span class="special">())</span>
-        <span class="keyword">try</span> <span class="special">{</span>
+    <span class="identifier">BOOST_STM_TRANSACTION</span> <span class="special">{</span>
             <span class="comment">// ... see below
-</span>        <span class="special">}</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">aborted_transaction_exception</span><span class="special">&amp;)</span> <span class="special">{}</span>
+</span>    <span class="special">}</span> <span class="identifier">BOOST_STM_END_TRANSACTION</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
 <p>
@@ -157,10 +158,26 @@
           with its absorption of aborted transactions and only aborted transactions.
         </p>
 <a name="toward_boost_stm.users_guide.tutorial.a_simple_transaction.insert_specific"></a><h5>
-<a name="id4816172"></a>
+<a name="id4816171"></a>
           <a href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_simple_transaction.insert_specific">Insert
           specific</a>
         </h5>
+<pre class="programlisting"><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">*</span> <span class="identifier">prev</span> <span class="special">=</span> <span class="identifier">head_</span><span class="special">;</span>
+<span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">*</span> <span class="identifier">curr</span> <span class="special">=</span> <span class="identifier">prev</span><span class="special">-&gt;</span><span class="identifier">next_</span><span class="special">;</span>
+<span class="keyword">while</span> <span class="special">(</span><span class="identifier">curr</span><span class="special">!=</span><span class="number">0</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">curr</span><span class="special">-&gt;</span><span class="identifier">value_</span> <span class="special">==</span> <span class="identifier">val</span><span class="special">)</span> <span class="keyword">return</span><span class="special">;</span>
+    <span class="keyword">else</span> <span class="keyword">if</span> <span class="special">(</span><span class="identifier">curr</span><span class="special">-&gt;</span><span class="identifier">value_</span> <span class="special">&gt;</span> <span class="identifier">val</span><span class="special">)</span> <span class="keyword">break</span><span class="special">;</span>
+    <span class="identifier">prev</span> <span class="special">=</span> <span class="identifier">curr</span><span class="special">;</span>
+    <span class="identifier">curr</span> <span class="special">=</span> <span class="identifier">curr</span><span class="special">-&gt;</span><span class="identifier">next_</span><span class="special">;</span>
+<span class="special">}</span>
+<span class="keyword">if</span> <span class="special">(</span><span class="identifier">curr</span><span class="special">==</span><span class="number">0</span> <span class="special">||</span> <span class="special">(</span><span class="identifier">curr</span><span class="special">-&gt;</span><span class="identifier">value_</span> <span class="special">&gt;</span> <span class="identifier">val</span><span class="special">))</span> <span class="special">{</span>
+    <span class="identifier">prev</span><span class="special">-&gt;</span><span class="identifier">next_</span><span class="special">=</span><span class="identifier">BOOST_STM_NEW</span><span class="special">(</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="identifier">val</span><span class="special">,</span> <span class="identifier">curr</span><span class="special">));</span>
+    <span class="special">++</span><span class="identifier">size_</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          with smart pointers
+        </p>
 <pre class="programlisting"><span class="identifier">upgrd_ptr</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">prev</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span> <span class="identifier">head_</span><span class="special">);</span>
 <span class="identifier">upgrd_ptr</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">curr</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span> <span class="identifier">head_</span><span class="special">-&gt;</span><span class="identifier">next_</span><span class="special">);</span>
 <span class="keyword">while</span> <span class="special">(</span><span class="identifier">curr</span><span class="special">)</span> <span class="special">{</span>
@@ -269,16 +286,16 @@
 <p>
           Client Invoked Inserts / Moves.
         </p>
-<pre class="programlisting"><span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">linked_list</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">llist</span><span class="special">;</span>
+<pre class="programlisting"><span class="identifier">linked_list</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">llist</span><span class="special">;</span>
 <span class="special">...</span>
-<span class="identifier">atomic</span><span class="special">(</span><span class="identifier">_</span><span class="special">)</span> <span class="special">{</span>
+<span class="identifier">BOOST_STM_TRANSACTION</span> <span class="special">{</span>
     <span class="keyword">for</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="number">100</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
-        <span class="identifier">llist</span><span class="special">-&gt;</span><span class="identifier">insert</span><span class="special">(</span><span class="identifier">i</span><span class="special">);</span>
+        <span class="identifier">llist</span><span class="special">.</span><span class="identifier">insert</span><span class="special">(</span><span class="identifier">i</span><span class="special">);</span>
     <span class="special">}</span>
     <span class="keyword">for</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">j</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">j</span> <span class="special">&lt;</span> <span class="number">100</span><span class="special">;</span> <span class="special">++</span><span class="identifier">j</span><span class="special">)</span> <span class="special">{</span>
-        <span class="identifier">llist</span><span class="special">-&gt;</span><span class="identifier">move</span><span class="special">(</span><span class="identifier">j</span><span class="special">,</span> <span class="special">-</span><span class="identifier">j</span><span class="special">);</span>
+        <span class="identifier">llist</span><span class="special">.</span><span class="identifier">move</span><span class="special">(</span><span class="identifier">j</span><span class="special">,</span> <span class="special">-</span><span class="identifier">j</span><span class="special">);</span>
     <span class="special">}</span>
-<span class="special">}</span>
+<span class="special">}</span> <span class="identifier">BOOST_STM_END_TRANSACTION</span><span class="special">;</span>
 </pre>
 <p>
           The client invoked inserts and moves are fairly straight forward. The insert
@@ -291,24 +308,25 @@
           Remove
         </p>
 <pre class="programlisting"><span class="keyword">void</span> <span class="identifier">remove</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">val</span><span class="special">)</span> <span class="special">{</span>
-    <span class="identifier">use_atomic</span><span class="special">(</span><span class="identifier">_</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">BOOST_STM_TRANSACTION</span> <span class="special">{</span>
         <span class="comment">// find the node whose val matches the request
-</span>        <span class="identifier">upgrd_ptr</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">prev</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span><span class="identifier">head_</span><span class="special">);</span>
-        <span class="identifier">upgrd_ptr</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">curr</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span><span class="identifier">prev</span><span class="special">-&gt;</span><span class="identifier">next_</span><span class="special">);</span>
+</span>        <span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">*</span> <span class="identifier">prev</span><span class="special">=</span><span class="identifier">head_</span><span class="special">;</span>
+        <span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">*</span> <span class="identifier">curr</span><span class="special">=</span><span class="identifier">prev</span><span class="special">-&gt;</span><span class="identifier">next_</span><span class="special">;</span>
         <span class="keyword">while</span> <span class="special">(</span><span class="identifier">curr</span><span class="special">)</span> <span class="special">{</span>
             <span class="comment">// if we find the node, disconnect it and end the search
 </span>            <span class="keyword">if</span> <span class="special">(</span><span class="identifier">curr</span><span class="special">-&gt;</span><span class="identifier">value_</span> <span class="special">==</span> <span class="identifier">val</span><span class="special">)</span> <span class="special">{</span>
-                <span class="identifier">make_wr_ptr</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span> <span class="identifier">prev</span><span class="special">)-&gt;</span><span class="identifier">next_</span><span class="special">=</span><span class="identifier">curr</span><span class="special">-&gt;</span><span class="identifier">next_</span><span class="special">;</span>
-                <span class="identifier">delete_ptr</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span><span class="identifier">curr</span><span class="special">);</span>
+                <span class="identifier">prev</span><span class="special">-&gt;</span><span class="identifier">next_</span><span class="special">=</span><span class="identifier">curr</span><span class="special">-&gt;</span><span class="identifier">next_</span><span class="special">;</span>
+                <span class="comment">// delete curr...
+</span>                <span class="identifier">BOOST_STM_DELETE_PTR</span><span class="special">(</span><span class="identifier">curr</span><span class="special">);</span>
+                <span class="special">--</span><span class="identifier">size_</span><span class="special">;</span>
                 <span class="keyword">break</span><span class="special">;</span>
             <span class="special">}</span> <span class="keyword">else</span> <span class="keyword">if</span> <span class="special">(</span><span class="identifier">curr</span><span class="special">-&gt;</span><span class="identifier">value_</span> <span class="special">&gt;</span> <span class="identifier">val</span><span class="special">)</span> <span class="special">{</span>
-                <span class="comment">// this means the search failed
-</span>                <span class="keyword">break</span><span class="special">;</span>
+                <span class="keyword">break</span><span class="special">;</span>
             <span class="special">}</span>
             <span class="identifier">prev</span> <span class="special">=</span> <span class="identifier">curr</span><span class="special">;</span>
             <span class="identifier">curr</span> <span class="special">=</span> <span class="identifier">prev</span><span class="special">-&gt;</span><span class="identifier">next_</span><span class="special">;</span>
         <span class="special">}</span>
-    <span class="special">}</span>
+    <span class="special">}</span> <span class="identifier">BOOST_STM_END_TRANSACTION</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
 <p>
@@ -322,10 +340,10 @@
           Composed External Move
         </p>
 <pre class="programlisting"><span class="keyword">void</span> <span class="identifier">move</span><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">v1</span><span class="special">,</span> <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">v2</span><span class="special">)</span> <span class="special">{</span>
-    <span class="identifier">use_atomic</span> <span class="special">{</span>
+    <span class="identifier">BOOST_STM_TRANSACTION</span> <span class="special">{</span>
         <span class="identifier">remove</span><span class="special">(</span><span class="identifier">v1</span><span class="special">);</span>
         <span class="identifier">insert</span><span class="special">(</span><span class="identifier">v2</span><span class="special">);</span>
-    <span class="special">}</span>
+    <span class="special">}</span> <span class="identifier">BOOST_STM_END_TRANSACTION</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
 <p>
@@ -562,7 +580,7 @@
 <span class="special">}</span>
 </pre>
 <a name="toward_boost_stm.users_guide.tutorial.a_dynamically_prioritized__composed_transaction.priority_inversion_allowed"></a><h5>
-<a name="id4820854"></a>
+<a name="id4821217"></a>
           <a href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_dynamically_prioritized__composed_transaction.priority_inversion_allowed">Priority
           Inversion Allowed</a>
         </h5>
@@ -589,7 +607,7 @@
           for their specific needs.
         </p>
 <a name="toward_boost_stm.users_guide.tutorial.a_dynamically_prioritized__composed_transaction.the_future_of_parallel_programming"></a><h5>
-<a name="id4820956"></a>
+<a name="id4821319"></a>
           <a href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_dynamically_prioritized__composed_transaction.the_future_of_parallel_programming">The
           Future of Parallel Programming</a>
         </h5>
@@ -735,7 +753,7 @@
           With the declarative approach, we can use
         </p>
 <p>
-          If STM do not allows embeeded transactional objects, we force the user
+          If STM do not allows embedded transactional objects, we force the user
           to use constant pointers to trasactional objects
         </p>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">C</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">transaction_object</span><span class="special">&lt;</span><span class="identifier">C</span><span class="special">&gt;</span> <span class="special">{...};</span>
@@ -778,7 +796,7 @@
         values from a function</a>
 </h4></div></div></div>
 <a name="toward_boost_stm.users_guide.tutorial.returning_values_from_a_function.returning_from_outside_the_transaction_context"></a><h5>
-<a name="id4822561"></a>
+<a name="id4822924"></a>
           <a href="tutorial.html#toward_boost_stm.users_guide.tutorial.returning_values_from_a_function.returning_from_outside_the_transaction_context">Returning
           from outside the transaction context</a>
         </h5>
@@ -795,7 +813,7 @@
 <span class="special">}</span>
 </pre>
 <a name="toward_boost_stm.users_guide.tutorial.returning_values_from_a_function.returning_from_inside"></a><h5>
-<a name="id4822737"></a>
+<a name="id4823100"></a>
           <a href="tutorial.html#toward_boost_stm.users_guide.tutorial.returning_values_from_a_function.returning_from_inside">Returning
           from inside</a>
         </h5>
@@ -834,7 +852,7 @@
           care of modifications of the pointer itself.
         </p>
 <a name="toward_boost_stm.users_guide.tutorial.pointer_to_transactional_objects.using_the_mixin_transaction_object_lt__gt_"></a><h5>
-<a name="id4823140"></a>
+<a name="id4823503"></a>
           <a href="tutorial.html#toward_boost_stm.users_guide.tutorial.pointer_to_transactional_objects.using_the_mixin_transaction_object_lt__gt_">Using
           the mixin transaction_object&lt;&gt;</a>
         </h5>
@@ -898,11 +916,11 @@
 <a name="toward_boost_stm.users_guide.tutorial.polymorphic"></a><a href="tutorial.html#toward_boost_stm.users_guide.tutorial.polymorphic" title="Polymorphic">Polymorphic</a>
 </h4></div></div></div>
 <p>
-          How the user can defien a transactional class <code class="computeroutput"><span class="identifier">D</span></code>
+          How the user can define a transactional class <code class="computeroutput"><span class="identifier">D</span></code>
           inheriting from a transactional class <code class="computeroutput"><span class="identifier">B</span></code>
         </p>
 <a name="toward_boost_stm.users_guide.tutorial.polymorphic.using_the_mixin_transaction_object_lt__gt_"></a><h5>
-<a name="id4824279"></a>
+<a name="id4824642"></a>
           <a href="tutorial.html#toward_boost_stm.users_guide.tutorial.polymorphic.using_the_mixin_transaction_object_lt__gt_">Using
           the mixin transaction_object&lt;&gt;</a>
         </h5>
@@ -936,7 +954,7 @@
 <span class="special">*</span><span class="identifier">ptr_b</span> <span class="special">=</span> <span class="identifier">BOOST_STM_NEW</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span> <span class="identifier">D</span><span class="special">());</span>
 </pre>
 <a name="toward_boost_stm.users_guide.tutorial.polymorphic.using_the_wrapper_transactional_object_lt__gt_"></a><h5>
-<a name="id4824643"></a>
+<a name="id4825006"></a>
           <a href="tutorial.html#toward_boost_stm.users_guide.tutorial.polymorphic.using_the_wrapper_transactional_object_lt__gt_">Using
           the wrapper transactional_object&lt;&gt;</a>
         </h5>

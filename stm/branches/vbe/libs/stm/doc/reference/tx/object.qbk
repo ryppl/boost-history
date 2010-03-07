@@ -1,0 +1,46 @@
+[/
+  (C) Copyright 2009 Justin E. Gottchlich. 
+  (C) Copyright 2009 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+
+[/==========================================================================================]
+[section:tx_object_hpp Header `<boost/stm/tx/pointer.hpp>`]
+[/==========================================================================================]
+
+    namespace boost { namespace stm { namespace tx {
+
+        template <typename T>
+        class object;
+        template <typename T>
+        struct has_shallow_copy_semantics<tx::object<T> >;
+
+    }}}
+
+[section Template Class `tx::object<>`]
+
+    template <typename T>
+    class object : public proxy_cache< object<T>, T > {
+    public:      
+        object();
+        template<typename U>
+        object(object<U> const& r);
+        object(object const& r);
+        template <typename U>
+        object(U v);
+        object(T v);
+        object(object const& rhs, stm::shallow_t);
+        object& shallow_assign(object const& rhs);
+    };
+
+[endsect]
+
+[section Template Class `tx::pointer_to_member<>`]
+[endsect]
+
+
+[endsect]
+

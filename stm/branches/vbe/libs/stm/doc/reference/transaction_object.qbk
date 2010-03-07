@@ -12,56 +12,63 @@
 [/==========================================================================================]
 
     namespace boost { namespace stm {
-        template <class Derived> class transaction_object;
+        template <class B> struct virtually;
+        template <class Final, class Base=base_transaction_object> 
+        class transaction_object;
+        template <class Final, class Base1, class Base2> 
+        class transaction_object2;
+        
         template <typename T> class native_trans;
     }}
 
+[section Template Class `virtually<>`]
+
+Virtualy inherits from its template parameter.
+
+        struct virtually : virtual B {
+            // forward constructors
+        };
+        
+[endsect]
+
 [section Template Class `transaction_object<>`]
 
-To further simplify the usage of __Boost_STM__, an intermediate template class was built which is meant to sit between the base_transaction_object and the user-defined transaction objects. The purpose of this intermediate class is to reduce the code overhead needed for user-defined transaction objects. To do this, the curiously recurring template pattern developed by James Coplien was used.
+To further simplify the usage of __Boost_STM__, an intermediate template class was built which is meant to sit between the deep_transaction_object or shallow_transaction_object, depending on whether the filanl class has shallow copy semantics, and the user-defined transaction objects. 
 
-With the templatized transaction_object, client-side transaction objects need only to derive from it and pass their class type as its template parameter. At compile-time the transaction_object generates the necessary code to override copy_state() and implement operator new and operator delete using __Boost_STM_s__ memory manager for all user-defined types derived from it.
+    namespace detail {
+        template <class Final, class Base, bool hasShallowCopySemantics>
+        class transaction_object_aux;
 
-    template <class Derived>
-    class transaction_object : public base_transaction_object {
-    public:
+        template <class F, class B>
+        class transaction_object_aux<F, B, true>
+            : public shallow_transaction_object<F, B> {};
+        template <class F, class B>
+        class transaction_object_aux<F, B, false>
+            : public deep_transaction_object<F, B> {};
 
-        virtual base_transaction_object* clone(transaction* t) const;
-        virtual void copy_state(base_transaction_object const * const rhs);
-        virtual void move_state(base_transaction_object * rhs);
-    };
+        template <class Final, class Base1,class Base2, bool hasShallowCopySemantics>
+        class transaction_object2_aux;
 
-[section Virtual function `clone()`]
+        template <class F, class B1, class B2>
+        class transaction_object2_aux<F, B1, B2, true>
+            : public shallow_transaction_object2<F, B1, B2> {};
+        template <class F, class B1, class B2>
+        class transaction_object2_aux<F, B1, B2, false>
+            : public deep_transaction_object2<F, B1, B2> {};
+    }
 
-        virtual base_transaction_object* clone(transaction* t) const;
+    template <class Final, class Base>
+    class transaction_object 
+        : public detail::transaction_object_aux<Final, Base, has_shallow_copy_semantics<Final>::value
+        >
+    {};
 
-The clone() creates a new Derived instace using the copy constructor.
+    template <class Final, class Base1, class Base2>
+    class transaction_object2 
+        : public detail::transaction_object2_aux<Final, Base1, Base2, has_shallow_copy_semantics<Final>::value
+        >
+    {};
 
-[endsect]
-
-
-[section Virtual function `copy_state()`]
-
-       virtual void copy_state(base_transaction_object const * const rhs);
-
-The copy_state() assigns the rhs to this instace using the copy-assignement operator.
-
-[endsect]
-
-[section Virtual function `move_state()`]
-
-       virtual void move_state(base_transaction_object * rhs);
-
-
-[endsect]
-
-[section Virtual function `cache_deallocate()`]
-
-        virtual void cache_deallocate();
-
-The cache_deallocate() delete this instace using the delete operator.
-
-[endsect]
 [endsect]
 
 
