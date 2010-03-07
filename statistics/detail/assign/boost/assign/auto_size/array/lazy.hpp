@@ -44,7 +44,6 @@ namespace auto_size{
         };
    };        
  
- 	// --> perhaps not needed
     template<typename E,typename T,int N,
         template<typename> class R,typename P,bool F>
     class expr;         
@@ -52,7 +51,6 @@ namespace auto_size{
     template<typename A,typename E,typename T,int N,
     	template<typename> class R,typename P,bool F>
     void write_to_array(A& a,const expr<E,T,N,R,P,F>& e);
-	// <-
                   
    template<typename T,int N,template<typename> class R,typename D>
    class lazy_array 
