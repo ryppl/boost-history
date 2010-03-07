@@ -45,7 +45,7 @@ namespace auto_size{
         typedef typename boost::range_difference<
             ref_array_>::type difference_type;
                 
-		BOOST_STATIC_CONSTANT(int, static_size = N);
+        BOOST_STATIC_CONSTANT(int, static_size = N);
                 
         iterator begin()
         {
@@ -93,7 +93,7 @@ namespace auto_size{
             return this->assign(val,pred_());
         }
 
-		// ---- Conversion ---- //
+        // ---- Conversion ---- //
 
         template<typename T1>
         operator boost::array<T1,N>()const{
