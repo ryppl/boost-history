@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// assign::ref_list_of_csv.hpp                                              //
+// assign::ref_csv.hpp                                                      //
 //                                                                          //
 //  (C) Copyright 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -10,14 +10,14 @@
 #define BOOST_ASSIGN_AUTO_SIZE_REF_LIST_OF_CSV_ER_2010_HPP
 
 // Usage:
-// ref_list_of_csv(a,b,c);
-// cref_list_of_csv(a,b,c);
-// ref_list_of_csv<P>(a,b,c);
-// cref_list_of_csv<P>(a,b,c);
+// ref_csv(a,b,c);
+// cref_csv(a,b,c);
+// ref_csv<P>(a,b,c);
+// cref_csv<P>(a,b,c);
 
 #define BOOST_ASSIGN_CSV_ref boost::assign::detail::auto_size::ref_copy
 #include <boost/assign/auto_size/detail/csv.hpp>
-BOOST_ASSIGN_CSV(ref_list_of_csv)
+BOOST_ASSIGN_CSV(ref_csv)
 #undef BOOST_ASSIGN_CSV_ref
 
 #endif

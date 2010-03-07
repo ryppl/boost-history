@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// assign::ref_rebind_csv.hpp                                       //
+// assign::ref_rebind_csv.hpp                                               //
 //                                                                          //
 //  (C) Copyright 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
