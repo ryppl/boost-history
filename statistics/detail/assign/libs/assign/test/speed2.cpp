@@ -12,7 +12,7 @@
 #include <boost/assign/auto_size/ref_list_of.hpp>
 
 #define BOOST_ASSIGN_CSV_SIZE 90
-#include <boost/assign/auto_size/ref_list_of_csv.hpp>
+#include <boost/assign/auto_size/ref_csv.hpp>
 #undef BOOST_ASSIGN_CSV_SIZE
 
 #include <libs/assign/test/speed_common.h>
@@ -136,12 +136,12 @@ void test_speed2(std::ostream& os)
             }
             os << timer.elapsed() << " s" << std::endl;;
         }
-        os << "cref_list_of_csv(" << N << ") => ";
+        os << "cref_csv(" << N << ") => ";
         {
             timer_ timer;
             for(int i = 0; i < n; ++i)
             {
-                BOOST_AUTO(rng, boost::assign::cref_list_of_csv(a00));
+                BOOST_AUTO(rng, boost::assign::cref_csv(a00));
                 int sz = (int)rng.size();
                 if(sz != N)
                     os << "ERROR\n";
@@ -187,12 +187,12 @@ void test_speed2(std::ostream& os)
             }
             os << timer.elapsed() << " s" << std::endl;;
         }
-        os << "cref_list_of_csv(" << N << ") => ";
+        os << "cref_csv(" << N << ") => ";
         {
  			timer_ timer;
             for(int i = 0; i < n; ++i)
             {
-                BOOST_AUTO(rng, boost::assign::cref_list_of_csv(a00,a01,a02));
+                BOOST_AUTO(rng, boost::assign::cref_csv(a00,a01,a02));
                 int sz = (int)rng.size();
                 if(sz != N)
                     os << "ERROR\n";
@@ -240,12 +240,12 @@ void test_speed2(std::ostream& os)
             }
             os << timer.elapsed() << " s" << std::endl;;
         }
-        os << "cref_list_of_csv(" << N << ") => ";
+        os << "cref_csv(" << N << ") => ";
         {
  			timer_ timer;
             for(int idx = 0; idx < n; ++idx)
             {
-                BOOST_AUTO(rng, boost::assign::cref_list_of_csv(
+                BOOST_AUTO(rng, boost::assign::cref_csv(
                 											a00,a01,a02,a03,a04
                                                            	,a05,a06,a07,a08,a09));
                 int sz = (int)rng.size();
@@ -301,12 +301,12 @@ void test_speed2(std::ostream& os)
             }
             os << timer.elapsed() << " s" << std::endl;;
         }
-        os << "cref_list_of_csv(" << N << ") => ";
+        os << "cref_csv(" << N << ") => ";
         {
  			timer_ timer;
             for(int idx = 0; idx < n; ++idx)
             {
-                BOOST_AUTO(rng, boost::assign::cref_list_of_csv(
+                BOOST_AUTO(rng, boost::assign::cref_csv(
                 											a00,a01,a02,a03,a04
                                                             ,a05,a06,a07,a08,a09
                                                             ,a10,a11,a12,a13,a14
@@ -386,12 +386,12 @@ void test_speed2(std::ostream& os)
             }
             os << timer.elapsed() << " s" << std::endl;;
         }
-        os << "cref_list_of_csv(" << N << ") => ";
+        os << "cref_csv(" << N << ") => ";
         {
  			timer_ timer;
             for(int idx = 0; idx < n; ++idx)
             {
-                BOOST_AUTO(rng, boost::assign::cref_list_of_csv(
+                BOOST_AUTO(rng, boost::assign::cref_csv(
                 											a00,a01,a02,a03,a04
                                                             ,a05,a06,a07,a08,a09
                                                             ,a10,a11,a12,a13,a14

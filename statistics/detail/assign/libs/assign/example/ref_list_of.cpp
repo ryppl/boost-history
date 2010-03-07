@@ -12,8 +12,8 @@
 #include <boost/typeof/typeof.hpp>
 #include <boost/assign/auto_size/detail/has_static_size.hpp> // temporary
 #include <boost/assign/auto_size/ref_list_of.hpp> // temporary
-#include <boost/assign/auto_size/ref_list_of_csv.hpp>
-#include <boost/assign/auto_size/ref_rebind_list_of_csv.hpp>
+#include <boost/assign/auto_size/ref_csv.hpp>
+#include <boost/assign/auto_size/ref_rebind_csv.hpp>
 
 #include <boost/assign/list_of.hpp>
 #include <boost/range/algorithm/max_element.hpp>
@@ -54,7 +54,7 @@ void example_ref_list_of(std::ostream& os)
         {
     		ints.clear();
 
-            ints = cref_list_of_csv(a,b,3);
+            ints = cref_csv(a,b,3);
             BOOST_ASSERT(boost::size(ints) == 3);
             BOOST_ASSERT(ints[0] == a);    
             BOOST_ASSERT(ints[1] == b);    
@@ -63,13 +63,13 @@ void example_ref_list_of(std::ostream& os)
         }
         {
             array.assign(-1);
-            array = cref_list_of_csv(a,b,3);
+            array = cref_csv(a,b,3);
             BOOST_ASSERT(array[0] == a);    
             BOOST_ASSERT(array[1] == b);    
             BOOST_ASSERT(array[2] == c);    
         }
         {
-            BOOST_AUTO(tmp,ref_list_of_csv(a,b,c));
+            BOOST_AUTO(tmp,ref_csv(a,b,c));
             tmp.assign(0);
             BOOST_ASSERT(a == 0);    
             BOOST_ASSERT(b == 0);    
@@ -77,7 +77,7 @@ void example_ref_list_of(std::ostream& os)
         }
     }
     {
-        // ref_rebind_list_of_csv
+        // ref_rebind_csv
         {
             int a=1, b=2, c=3; 
             
@@ -87,7 +87,7 @@ void example_ref_list_of(std::ostream& os)
             	BOOST_AUTO(
                 	max, 
             		*boost::max_element(
-            			ref_rebind_list_of_csv(a,b,c)
+            			ref_rebind_csv(a,b,c)
             		)
                 );
                 max = d;
@@ -96,7 +96,7 @@ void example_ref_list_of(std::ostream& os)
             }
             
             ints.clear();
-            BOOST_AUTO(tmp,cref_rebind_list_of_csv(a,b,c));
+            BOOST_AUTO(tmp,cref_rebind_csv(a,b,c));
             {
                 ints = tmp; 
                 BOOST_ASSERT(ints[0] == a);    

@@ -6,27 +6,27 @@ Machine : Macbook - 2.4 GHz Intel Core 2 Duo
 
 Mac OS Leopard 10.6 - x86_64 - Release mode - gcc 4.2
 cref_list_of(1)         =>      0.15 s
-cref_list_of_csv(1)     =>      0.33 s
+cref_csv(1)     =>      0.33 s
 cref_list_of<>(1)       =>      0.00 s
 list_of(1)              =>    131.03 s
 
 cref_list_of(3)         =>      0.54 s
-cref_list_of_csv(3)     =>      1.45 s
+cref_csv(3)     =>      1.45 s
 cref_list_of<>(3)       =>      0.37 s
 list_of(3)              =>    342.12 s
 
 cref_list_of(10)        =>      2.01 s
-cref_list_of_csv(10)    =>      3.53 s
+cref_csv(10)    =>      3.53 s
 cref_list_of<>(10)      =>      1.05 s
 list_of(10)             =>    878.79 s
 
 cref_list_of(30)        =>      7.15 s
-cref_list_of_csv(30)    =>      9.63 s
+cref_csv(30)    =>      9.63 s
 cref_list_of<>(30)      =>      4.16 s
 list_of(30)             =>   2475.13 s
 
 cref_list_of(90)        =>     25.68 s
-cref_list_of_csv(90)    =>     28.22 s
+cref_csv(90)    =>     28.22 s
 cref_list_of<>(90)      =>      7.19 s
 list_of(90)             =>   7284.27 s
 
@@ -34,53 +34,53 @@ Note : For both compilers below, a virtual machine for Windows was used.
 
 Win7-32 V6.1.7100 - Dev-C++ 5.0 beta 9.2 - Mingw/GCC 3.4.2 - Best optim
 cref_list_of(1)         =>     0.80 s
-cref_list_of_csv(1)     =>     1.97 s
+cref_csv(1)     =>     1.97 s
 cref_list_of<>(1)       =>     0.42 s
 list_of(1)              =>   371.00 s
 
 cref_list_of(3)         =>     2.21 s
-cref_list_of_csv(3)     =>     4.25 s
+cref_csv(3)     =>     4.25 s
 cref_list_of<>(3)       =>     0.99 s
 list_of(3)              =>   852.00 s
 
 cref_list_of(10)        =>     6.51 s
-cref_list_of_csv(10)    =>    11.90 s
+cref_csv(10)    =>    11.90 s
 cref_list_of<>(10)      =>     3.92 s
 list_of(10)             =>   931.79 s
 
 cref_list_of(30)        =>    19.53 s
-cref_list_of_csv(30)    =>    46.90 s
+cref_csv(30)    =>    46.90 s
 cref_list_of<>(30)      =>    10.63 s
 list_of(30)             =>  2504.00 s
 
 cref_list_of(90)        =>    58.01 s
-cref_list_of_csv(90)    =>   161.99 s
+cref_csv(90)    =>   161.99 s
 cref_list_of<>(90)      =>    34.38 s
 list_of(90)             =>  8372.00 s
 
 Win7-32 V6.1.7100 - Visual Studio 2010 - Release mode
 cref_list_of(1)         =>     0.59 s
-cref_list_of_csv(1)     =>     0.04 s
+cref_csv(1)     =>     0.04 s
 cref_list_of<>(1)       =>     0.00 s
 list_of(1)              =>  2964.00 s
 
 cref_list_of(3)         =>     1.27 s
-cref_list_of_csv(3)     =>     0.05 s
+cref_csv(3)     =>     0.05 s
 cref_list_of<>(3)       =>     0.21 s
 list_of(3)              =>  5158.00 s
 
 cref_list_of(10)        =>     3.80 s
-cref_list_of_csv(10)    =>     0.04 s
+cref_csv(10)    =>     0.04 s
 cref_list_of<>(10)      =>     0.50 s
 list_of(10)             => 16914.79 s
 
 cref_list_of(30)        =>    11.28 s
-cref_list_of_csv(30)    =>     9.41 s
+cref_csv(30)    =>     9.41 s
 cref_list_of<>(30)      =>     1.45 s
 list_of(30)             => 57972.00 s
 
 cref_list_of(90)        =>    33.97 s
-cref_list_of_csv(90)    =>    31.40 s
+cref_csv(90)    =>    31.40 s
 cref_list_of<>(90)      =>     4.16 s
 list_of(90)             =>242709.00 s
 
