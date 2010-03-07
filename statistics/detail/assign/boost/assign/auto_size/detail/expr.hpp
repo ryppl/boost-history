@@ -319,8 +319,8 @@ namespace auto_size{
     	template<typename T,int N,
         	template<typename> class R,typename P>
     	struct expr{
-        	typedef typename result_of::expr<T,N-1,R,P>::type previous;
-    		typedef auto_size::expr<previous,T,N,R,P> type;
+            typedef typename result_of::expr<T,N-1,R,P>::type previous;
+            typedef auto_size::expr<previous,T,N,R,P> type;
     	};
 
     	template<typename T,template<typename> class R,typename P>
