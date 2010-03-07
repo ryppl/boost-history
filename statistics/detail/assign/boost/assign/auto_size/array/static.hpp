@@ -17,8 +17,8 @@ namespace assign{
 namespace detail{
 namespace auto_size{
  
-	namespace tag{
-    	struct static_array{};
+    namespace tag{
+        struct static_array{};
     }
  
  	// tag::static_array designates a data-structure that has the functonality 
