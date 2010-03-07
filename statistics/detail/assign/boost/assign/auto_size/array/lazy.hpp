@@ -18,7 +18,7 @@ namespace assign{
 namespace detail{
 namespace auto_size{
 
-	// tag::lazy_array designates a policy for auto_size::expr<>, that has the 
+    // tag::lazy_array designates a policy for auto_size::expr<>, that has the 
     // functionality of array_interface<>, and postones allocation until it is 
     // necessary. It is therefore suitable as the result of statements such as:
     //  fun(a)(b)(c);
