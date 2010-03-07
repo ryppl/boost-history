@@ -360,6 +360,23 @@ bool test_twice_e() {
 
     return true;
 }
+bool test_output() {
+    std::stringstream strstr;
+    BOOST_STM_E_TRANSACTION {
+        strstr << counter;
+    } BOOST_STM_E_END_TRANSACTION;
+
+    return (strstr.str()=="0");
+}
+bool test_input() {
+    std::stringstream strstr("2\n");
+    BOOST_STM_E_TRANSACTION {
+        strstr >> counter;
+        BOOST_STM_E_RETURN(2==counter) ;
+    } BOOST_STM_E_END_TRANSACTION;
+
+    return false;
+}
 
 int test_all() {
     int fails=0;
@@ -383,6 +400,8 @@ int test_all() {
     fails += !test_nested_e();
     fails += !test_le();
     fails += !test_const(counter);
+    fails += !test_output();
+    fails += !test_input();
 
     fails += !test_par();
 
