@@ -39,10 +39,7 @@ void example_ref_list_of(std::ostream& os)
             array.assign(-1);
             typedef boost::mpl::int_<3> K_;
     		BOOST_AUTO(tmp,
-                cref_list_of(a)(b)(c)
-                    .range(
-                        array
-                    )
+                cref_list_of(a)(b)(c).range(array)
             );
 
             BOOST_ASSERT(tmp[0] == a);    
