@@ -2335,45 +2335,6 @@ template <typename M>
 inline void unlock(M& m, latm::mutex_type& lock) {transaction::unlock(m, lock);}
 
 
-#if defined(BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER)
-template <class T> T* cache_allocate(transaction& t) {
-    #if defined(BOOST_STM_CACHE_USE_MEMORY_MANAGER) && defined (USE_STM_MEMORY_MANAGER)
-    T* res=  reinterpret_cast<T*>(base_memory_manager::retrieve_mem(sizeof(T)));
-    if (res==0) throw std::bad_alloc();
-    return res;
-    #elif defined(BOOST_STM_CACHE_USE_MALLOC)
-    T* res= reinterpret_cast<T*>(malloc(sizeof(T)));
-    if (res==0) throw std::bad_alloc();
-    return res;
-    //return  reinterpret_cast<T*>(::new char[sizeof(T)]);
-    #elif defined(BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER)
-    T* res=   reinterpret_cast<T*>(t.context_.mstorage_.allocate<T>());
-    if (res==0) throw std::bad_alloc();
-    return res;
-    #else
-    return 0;
-    #error "BOOST_STM_CACHE_USE_MEMORY_MANAGER, BOOST_STM_CACHE_USE_MALLOC or BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER must be defined"
-    #endif
-}
-#endif
-
-#if defined(BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER)
-
-template <class T>
-inline void cache_deallocate(T* ptr) {
-    if (ptr) {
-    #if defined(BOOST_STM_CACHE_USE_MEMORY_MANAGER) && defined (USE_STM_MEMORY_MANAGER)
-        base_memory_manager::return_mem(ptr,sizeof(T));
-    #elif defined(BOOST_STM_CACHE_USE_MALLOC)
-        free(ptr);
-        //delete [] ptr;
-    #elif defined(BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER)
-    #else
-    #error "BOOST_STM_CACHE_USE_MEMORY_MANAGER, BOOST_STM_CACHE_USE_MALLOC or BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER must be defined"
-    #endif
-        }
-}
-#endif
 
 inline void cache_release(base_transaction_object* ptr) {
     if (ptr==0) return ;
@@ -2419,6 +2380,7 @@ void delete_ptr(transaction& t, T *in) {
 } // stm  namespace
 } // boost namespace
 
+#include <boost/stm/tx_memory_manager.hpp>
 #include <boost/stm/detail/transaction_impl.hpp>
 #include <boost/stm/detail/latm_general_impl.hpp>
 

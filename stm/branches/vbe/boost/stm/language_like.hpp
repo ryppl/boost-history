@@ -233,13 +233,11 @@ struct dummy_exception{};
 {                                                                               \
     boost::stm::detail::control_flow __boost_stm_ctrl_;                    \
     for(boost::stm::transaction __boost_stm_txn_;;) {                                                                        \
-        \
         try{                                                                    \
             boost::stm::detail::commit_on_destruction __boost_stm_destr_ (__boost_stm_txn_); \
             try{                                                            \
                 do {                                                           \
                     __boost_stm_ctrl_=boost::stm::detail::break_;      \
-                        if(false);else
 
                         // user code here
 
@@ -252,19 +250,23 @@ struct dummy_exception{};
                 __boost_stm_destr_.release();                              \
                 throw;                                                          \
             } catch(...) {                                                      \
+            if(true) {\
                 if (__boost_stm_txn_.forced_to_abort()) {\
                     __boost_stm_destr_.release();                              \
                 } else {\
                     __boost_stm_destr_.commit();\
                 }\
+            } else {\
+                __boost_stm_destr_.release();\
+            }\
                 throw;                                                          \
             }                                                                   \
             break;                                                                  \
         } catch (boost::stm::aborted_tx &) {                                        \
             if (__boost_stm_txn_.is_nested()) throw;                                              \
             do {                                                                    \
-                __boost_stm_ctrl_=boost::stm::detail::break_;                  \
-                try {throw;}catch (boost::stm::aborted_tx &)
+                __boost_stm_ctrl_=boost::stm::detail::break_;                  
+
 
 
 #define BOOST_STM_E_END_RETRY                                                       \
@@ -273,7 +275,7 @@ struct dummy_exception{};
             } while ((__boost_stm_ctrl_=boost::stm::detail::continue_),false);     \
         }                                                                               \
         BOOST_ASSERT(__boost_stm_ctrl_ == boost::stm::detail::none);           \
-        if (true) __boost_stm_txn_.restart();                                                               \
+        __boost_stm_txn_.restart();                                                               \
     }                                                       \
     BOOST_ASSERT(__boost_stm_ctrl_ == boost::stm::detail::none);           \
 } void()
@@ -284,7 +286,7 @@ struct dummy_exception{};
             } while ((__boost_stm_ctrl_=boost::stm::detail::continue_),false);     \
         }                                                                       \
         if (__boost_stm_ctrl_ != boost::stm::detail::none) break;              \
-        if (true) __boost_stm_txn_.restart();                                                               \
+        __boost_stm_txn_.restart();                                                               \
     }                                               \
     if (__boost_stm_ctrl_==boost::stm::detail::continue_) continue;                          \
     if (__boost_stm_ctrl_==boost::stm::detail::break_) break;                           \
@@ -525,10 +527,10 @@ struct dummy_exception{};
 // deletes the allocated object on transaction TX
 //---------------------------------------------------------------------------
 
-#define BOOST_STM_TX_DELETE_ARRAY(TX, PTR) \
-    (TX).delete_array(PTR)
+#define BOOST_STM_TX_DELETE_ARRAY(TX, PTR, SIZE) \
+    (TX).delete_array(PTR, SIZE)
 
-#define BOOST_STM_E_DELETE_ARRAY(PTR) BOOST_STM_TX_DELETE_ARRAY(__boost_stm_txn_, PTR)
+#define BOOST_STM_E_DELETE_ARRAY(PTR, SIZE) BOOST_STM_TX_DELETE_ARRAY(__boost_stm_txn_, PTR, SIZE)
 
 //---------------------------------------------------------------------------
 // deletes the allocated object on transaction TX
@@ -544,10 +546,10 @@ struct dummy_exception{};
 // deletes the allocated object on transaction TX
 //---------------------------------------------------------------------------
 
-#define BOOST_STM_DELETE_ARRAY(PTR) \
+#define BOOST_STM_DELETE_ARRAY(PTR, SIZE) \
     if (boost::stm::current_transaction()!=0)  \
         BOOST_STM_TX_DELETE_ARRAY(*boost::stm::current_transaction(), \
-            PTR) \
+            PTR, SIZE) \
     else delete [] PTR
 
 
