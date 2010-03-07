@@ -42,7 +42,7 @@ namespace auto_size{
             typedef typename expr_elem<E>::type elem_;
             typedef lazy_array<elem_,size_::value,R,E> type;
         };
-	};        
+   };        
  
  	// --> perhaps not needed
     template<typename E,typename T,int N,
