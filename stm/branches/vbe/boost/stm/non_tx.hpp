@@ -14,7 +14,7 @@
 #ifndef BOOST_STM_NON_TX__HPP
 #define BOOST_STM_NON_TX__HPP
 
-#include <boost/stm/non_tx/mixin.hpp>
+#include <boost/stm/non_tx/reference.hpp>
 #include <boost/stm/non_tx/object.hpp>
 #include <boost/stm/non_tx/numeric.hpp>
 #include <boost/stm/non_tx/pointer.hpp>

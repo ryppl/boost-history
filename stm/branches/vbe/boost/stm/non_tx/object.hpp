@@ -15,7 +15,7 @@
 #define BOOST_STM_NON_TX_OBJECT__HPP
 
 //-----------------------------------------------------------------------------
-#include <boost/stm/non_tx/mixin.hpp>
+#include <boost/stm/non_tx/reference.hpp>
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
@@ -29,9 +29,9 @@ namespace boost { namespace stm { namespace non_tx {
 //-----------------------------------------------------------------------------
 
 template <typename T>
-struct object : mixin< object<T>, T> {
+struct object : reference< object<T>, T> {
 public:
-    typedef mixin< object<T>, T > base_type;
+    typedef reference< object<T>, T > base_type;
     //-----------------------------------------------------------------------------
     object() : base_type() {}
 

@@ -74,21 +74,15 @@ public:
         ::new (p) Final(*rhs);
         return p;
     }
-    virtual base_transaction_object* make_cache(transaction& t) const {
-        return make_cache(final(), t);
-    }
 #else
     static Final* make_cache(Final const* rhs, transaction& ) {
         Final* tmp = new Final(*rhs);
         return tmp;
     }
-    virtual base_transaction_object* make_cache(transaction& t) const {
-        //~ Final* tmp = new Final(*boost::safe_polymorphic_downcast<Final const*>(this));
-        //~ Final* tmp = new Final(*boost::safe_polymorphic_downcast_2<Final const*, Base const>(this));
-        Final* tmp = new Final(*final());
-        return tmp;
-    }
 #endif
+    virtual base_transaction_object* make_cache(transaction& t) const {
+        return make_cache(final(), t);
+    }
 
    //--------------------------------------------------------------------------
 #if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
@@ -106,54 +100,20 @@ public:
    virtual void copy_cache(base_transaction_object const & rhs)
    {
        *final() =
-       *boost::safe_polymorphic_downcast_2<Final const *, Base const>(&rhs);
+       *boost::incomplete_smart_cast_2<Final const *, Base const>(&rhs);
    }
 
 #if BUILD_MOVE_SEMANTICS
    virtual void move_state(base_transaction_object * rhs)
    {
       *final() = draco_move
-         (*(boost::safe_polymorphic_downcast_2<Final*, Base>(rhs)));
+         (*(boost::incomplete_smart_cast_2<Final*, Base>(rhs)));
    }
 #endif
 
 };
 
-#if 0
 
-#if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
-template <class Final, typename Base>
-Final*
-deep_transaction_object<Final,Base>::
-make_cache(Final const* rhs, transaction& t) {
-        Final* p = cache_allocate<Final>(t);
-        ::new (p) Final(*rhs);
-        return p;
-    }
-template <class Final, typename Base>
-base_transaction_object*
-deep_transaction_object<Final,Base>::
-make_cache(transaction& t) const {
-        Final const* f=boost::safe_polymorphic_downcast_2<Final const*, Base const>(this);
-        return make_cache(f, t);
-    }
-#else
-template <class Final, typename Base>
-Final*
-deep_transaction_object<Final,Base>::
-make_cache(Final const* rhs, transaction& ) {
-        Final* tmp = new Final(*rhs);
-        return tmp;
-    }
-template <class Final, typename Base>
-base_transaction_object*
-deep_transaction_object<Final,Base>::
-make_cache(transaction& t) const {
-        Final* tmp = new Final(*boost::safe_polymorphic_downcast_2<Final const*, Base const>(this));
-        return tmp;
-    }
-#endif
-#endif
 
 
 
@@ -171,20 +131,20 @@ public:
 #if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
     static  Final* make_cache(Final const& rhs, transaction& t) {
         Final* p = cache_allocate<Final>(t);
-        ::new (p) Final(*boost::safe_polymorphic_downcast_3<Final const*, Base1 const, Base2 const>(&rhs));
+        ::new (p) Final(*boost::incomplete_smart_cast_3<Final const*, Base1 const, Base2 const>(&rhs));
         return p;
     };
     virtual base_transaction_object* make_cache(transaction& t) const {
-        Final const& f=*boost::safe_polymorphic_downcast_3<Final const*, Base1 const, Base2 const>(this);
+        Final const& f=*boost::incomplete_smart_cast_3<Final const*, Base1 const, Base2 const>(this);
         return make_cache(f, t);
     }
 #else
     static Final* make_cache(Final const& rhs, transaction& ) {
-        Final* tmp = new Final(*boost::safe_polymorphic_downcast_3<Final const*, Base1 const, Base2 const>(&rhs));
+        Final* tmp = new Final(*boost::incomplete_smart_cast_3<Final const*, Base1 const, Base2 const>(&rhs));
         return tmp;
     };
     virtual base_transaction_object* make_cache(transaction& t) const {
-        Final* tmp = new Final(*boost::safe_polymorphic_downcast_3<Final const*, Base1 const, Base2 const>(this));
+        Final* tmp = new Final(*boost::incomplete_smart_cast_3<Final const*, Base1 const, Base2 const>(this));
         return tmp;
     }
 #endif
@@ -192,7 +152,7 @@ public:
    //--------------------------------------------------------------------------
 #if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
     virtual void delete_cache() {
-        boost::safe_polymorphic_downcast_3<Final*, Base1, Base2>(this)->~Final();
+        boost::incomplete_smart_cast_3<Final*, Base1, Base2>(this)->~Final();
         boost::stm::cache_deallocate(this);
     }
 #else
@@ -204,14 +164,14 @@ public:
    //--------------------------------------------------------------------------
    virtual void copy_cache(base_transaction_object const & rhs)
    {
-       *boost::safe_polymorphic_downcast_3<Final *, Base1, Base2>(this) = *boost::safe_polymorphic_downcast_3<Final const *, Base1 const, Base2 const>(&rhs);
+       *boost::incomplete_smart_cast_3<Final *, Base1, Base2>(this) = *boost::incomplete_smart_cast_3<Final const *, Base1 const, Base2 const>(&rhs);
    }
 
 #if BUILD_MOVE_SEMANTICS
    virtual void move_state(base_transaction_object * rhs)
    {
-      *boost::safe_polymorphic_downcast_3<Final *, Base1, Base2>(this) = draco_move
-         (*(boost::safe_polymorphic_downcast_3<Final*, Base1, Base2>(rhs)));
+      *boost::incomplete_smart_cast_3<Final *, Base1, Base2>(this) = draco_move
+         (*(boost::incomplete_smart_cast_3<Final*, Base1, Base2>(rhs)));
    }
 #endif
 

@@ -15,7 +15,7 @@
 #define BOOST_STM_TX_POINTER__HPP
 
 //-----------------------------------------------------------------------------
-#include <boost/stm/tx/mixin.hpp>
+#include <boost/stm/tx/proxy_cache.hpp>
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
@@ -28,9 +28,9 @@ namespace boost { namespace stm { namespace tx {
 // Note: the sizeof(pointer<T>)>>>>=sizeof(T*)
 //-----------------------------------------------------------------------------
 template <typename T>
-class pointer : public mixin< pointer<T>, T* >
+class pointer : public proxy_cache< pointer<T>, T* >
 {
-    typedef mixin< pointer<T>, T* > base_type;
+    typedef proxy_cache< pointer<T>, T* > base_type;
 
 public:
     //-----------------------------------------------------------------------------
@@ -40,14 +40,14 @@ public:
     pointer(pointer<U> const& r) : base_type(r) {}
 
     template<class U, class V, class B>
-    pointer(mixin<U, V*, B> const& rhs) : base_type(rhs.value()) {}
+    pointer(proxy_cache<U, V*, B> const& rhs) : base_type(rhs.value()) {}
 
     pointer(T* v) : base_type(v) {}
     template <typename U>
     pointer(U* v) : base_type(v) {}
 
     template<class U, class V, class B>
-    pointer& operator=(mixin<U, V*, B> const& rhs) {
+    pointer& operator=(proxy_cache<U, V*, B> const& rhs) {
         this->val_=rhs.value();
     };
 
@@ -93,9 +93,9 @@ pointer<T> address_of(object<T>& obj) {
 }
 
 template <typename C, typename R>
-class pointer_to_member : public mixin< pointer_to_member<C,R>, R C::*>
+class pointer_to_member : public proxy_cache< pointer_to_member<C,R>, R C::*>
 {
-    typedef mixin< pointer_to_member<C,R>, R C::*> base_type;
+    typedef proxy_cache< pointer_to_member<C,R>, R C::*> base_type;
 public:
     //-----------------------------------------------------------------------------
     pointer_to_member() : base_type(static_cast<R C::*>(0)) {}
@@ -106,34 +106,6 @@ public:
     pointer_to_member(S D::* v) : base_type(v) {}
     //pointer_to_member(R C::* v) : base_type(v) {}
 };
-
-#if 0
-
-// two transactional pointers are equal if they point to the same cache on the current transaction.
-template <typename T, typename U>
-inline bool operator==(const pointer<T>& lhs, const pointer<U>& rhs) {
-    return lhs.ref()==rhs.ref();
-}
-
-template <typename T, typename U>
-inline bool operator==(const T& lhs, const pointer<U>& rhs) {
-    return lhs==rhs.ref();
-}
-
-template <typename T, typename U>
-inline bool operator==(const pointer<T>& lhs, const U& rhs) {
-    return lhs.ref()==rhs;
-}
-
-template <typename T, typename U>
-inline bool operator!=(const pointer<T>& lhs, const pointer<U>& rhs) {
-    return lhs.ref()!=rhs.ref();
-}
-
-template<class T> inline void swap(pointer<T> & a, pointer<T> & b) {
-    a.swap(b);
-}
-#endif
 
 }}}
 #endif

@@ -15,7 +15,7 @@
 #define BOOST_STM_TX_NUMERIC__HPP
 
 //-----------------------------------------------------------------------------
-#include <boost/stm/tx/mixin.hpp>
+#include <boost/stm/tx/proxy_cache.hpp>
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
@@ -29,9 +29,9 @@ namespace boost { namespace stm { namespace tx {
 //-----------------------------------------------------------------------------
 
 template <typename T>
-class numeric : public mixin< numeric<T>, T >
+class numeric : public proxy_cache< numeric<T>, T >
 {
-    typedef mixin< numeric<T> ,T > base_type;
+    typedef proxy_cache< numeric<T> ,T > base_type;
 public:
     //-----------------------------------------------------------------------------
     numeric() : base_type(0) {}

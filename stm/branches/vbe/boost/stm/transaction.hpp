@@ -51,7 +51,7 @@
 #include <boost/stm/detail/transactions_stack.hpp>
 #include <boost/stm/detail/vector_map.hpp>
 #include <boost/stm/detail/vector_set.hpp>
-#include <boost/stm/safe_downcast.hpp>
+#include <boost/stm/incomplete_smart_cast.hpp>
 
 //-----------------------------------------------------------------------------
 namespace boost { namespace stm {
@@ -433,7 +433,7 @@ public:
       {
          if (i->second == &in)
          {
-            return *boost::safe_polymorphic_downcast<T*>(i->first);
+            return *boost::smart_cast<T*>(i->first);
          }
       }
 
@@ -460,7 +460,7 @@ public:
       {
          if (i->second == ptr)
          {
-            return boost::safe_polymorphic_downcast<T*>(i->first);
+            return boost::smart_cast<T*>(i->first);
          }
       }
 
@@ -517,7 +517,7 @@ public:
       {
          WriteContainer::iterator i = writeList().find(const_cast<T*>(&in));
          if (i == writeList().end()) return 0;
-         else return boost::safe_polymorphic_downcast<T*>(i->second);
+         else return boost::smart_cast<T*>(i->second);
       }
    }
    template <typename T>
@@ -532,7 +532,7 @@ public:
       {
          WriteContainer::iterator i = writeList().find(const_cast<T*>(ptr));
          if (i == writeList().end()) return 0;
-         else return boost::safe_polymorphic_downcast<T*>(i->second);
+         else return boost::smart_cast<T*>(i->second);
       }
    }
 
@@ -997,7 +997,7 @@ private:
             //unlock_tx();
 
             ++reads_;
-            return *boost::safe_polymorphic_downcast<T*>(readMem->second);
+            return *boost::smart_cast<T*>(readMem->second);
          }
 
          // already have locked us above - in both if / else
@@ -1284,7 +1284,7 @@ private:
       // possible to have already written to memory being read now
       //----------------------------------------------------------------
       if (i == writeList().end()) return insert_and_return_read_memory(in);
-      else return *boost::safe_polymorphic_downcast<T*>(i->second);
+      else return *boost::smart_cast<T*>(i->second);
    }
 
 public:
@@ -1357,10 +1357,10 @@ private:
          base_transaction_object* returnValue = detail::make_cache_aux<Poly>::apply(in, *this);
          returnValue->transaction_thread(threadId_);
          writeList().insert(tx_pair(&in, returnValue));
-         return *boost::safe_polymorphic_downcast<T*>(returnValue);
+         return *boost::smart_cast<T*>(returnValue);
       }
       else {
-          return *boost::safe_polymorphic_downcast<T*>(i->second);
+          return *boost::smart_cast<T*>(i->second);
       }
    }
 

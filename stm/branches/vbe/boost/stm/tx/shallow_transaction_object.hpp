@@ -87,13 +87,13 @@ public:
    //--------------------------------------------------------------------------
    virtual void copy_cache(base_transaction_object const &rhs)
    {
-       final()->shallow_assign(*boost::safe_polymorphic_downcast_2<Final const *, Base const>(&rhs));
+       final()->shallow_assign(*boost::incomplete_smart_cast_2<Final const *, Base const>(&rhs));
    }
 
 #if BUILD_MOVE_SEMANTICS
    virtual void move_state(base_transaction_object * rhs)
    {
-      *final() = draco_move(*(boost::safe_polymorphic_downcast_2<Final*, Base>(rhs)));
+      *final() = draco_move(*(boost::incomplete_smart_cast_2<Final*, Base>(rhs)));
    }
 #endif
 
@@ -130,13 +130,13 @@ public:
    //--------------------------------------------------------------------------
    virtual void copy_cache(base_transaction_object const &rhs)
    {
-        final()->shallow_assign(*boost::safe_polymorphic_downcast_3<Final const *, Base1 const , Base2 const>(&rhs));
+        final()->shallow_assign(*boost::incomplete_smart_cast_3<Final const *, Base1 const , Base2 const>(&rhs));
    }
 
 #if BUILD_MOVE_SEMANTICS
    virtual void move_state(base_transaction_object * rhs)
    {
-      *final() = draco_move(*(boost::safe_polymorphic_downcast_3<Final*, Base1, Base2>(rhs)));
+      *final() = draco_move(*(boost::incomplete_smart_cast_3<Final*, Base1, Base2>(rhs)));
    }
 #endif
 

@@ -15,7 +15,7 @@
 #define BOOST_STM_TX_OBJECT__HPP
 
 //-----------------------------------------------------------------------------
-#include <boost/stm/tx/mixin.hpp>
+#include <boost/stm/tx/proxy_cache.hpp>
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
@@ -28,10 +28,10 @@ namespace boost { namespace stm { namespace tx {
 // Note: the sizeof(object<T>)>>>>=sizeof(T)
 //-----------------------------------------------------------------------------
 template <typename T>
-class object : public mixin< object<T>, T >
+class object : public proxy_cache< object<T>, T >
 {
 public:
-    typedef mixin< object<T>, T > base_type;
+    typedef proxy_cache< object<T>, T > base_type;
     //-----------------------------------------------------------------------------
     object() : base_type() {}
     template<typename U>

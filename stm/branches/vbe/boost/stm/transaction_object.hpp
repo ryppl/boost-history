@@ -27,7 +27,7 @@
 #include <boost/stm/datatypes.hpp>
 #include <boost/stm/memory_managers/memory_manager.hpp>
 #include <boost/stm/tx/deep_transaction_object.hpp>
-#include <boost/stm/tx/trivial_transaction_object.hpp>
+//#include <boost/stm/tx/trivial_transaction_object.hpp>
 #include <boost/stm/tx/shallow_transaction_object.hpp>
 
 //-----------------------------------------------------------------------------
@@ -42,51 +42,52 @@ struct virtually : virtual B {
 
 namespace detail {
 template <class Final, class Base,
-   bool hasShallowCopySemantics,
-   bool hasTrivialCopySemantics>
+   bool hasShallowCopySemantics
+//, bool hasTrivialCopySemantics
+>
 class transaction_object_aux;
 
+//~ template <class F, class B>
+//~ class transaction_object_aux<F, B, true, true>:
+    //~ public trivial_transaction_object<F, B> {};
 template <class F, class B>
-class transaction_object_aux<F, B, true, true>:
-    public trivial_transaction_object<F, B> {};
-template <class F, class B>
-class transaction_object_aux<F, B, true, false>:
+class transaction_object_aux<F, B, true>:
     public shallow_transaction_object<F, B> {};
+//~ template <class F, class B>
+//~ class transaction_object_aux<F, B, false, true>:
+    //~ public trivial_transaction_object<F, B> {};
 template <class F, class B>
-class transaction_object_aux<F, B, false, true>:
-    public trivial_transaction_object<F, B> {};
-template <class F, class B>
-class transaction_object_aux<F, B, false, false>:
+class transaction_object_aux<F, B, false>:
     public deep_transaction_object<F, B> {};
 
 template <class Final, class Base1,class Base2,
-   bool hasShallowCopySemantics,
-   bool hasTrivialCopySemantics>
+   bool hasShallowCopySemantics
+//~ , bool hasTrivialCopySemantics
+>
 class transaction_object2_aux;
 
+//~ template <class F, class B1, class B2>
+//~ class transaction_object2_aux<F, B1, B2, true, true>:
+    //~ public trivial_transaction_object2<F, B1, B2> {};
 template <class F, class B1, class B2>
-class transaction_object2_aux<F, B1, B2, true, true>:
-    public trivial_transaction_object2<F, B1, B2> {};
-template <class F, class B1, class B2>
-class transaction_object2_aux<F, B1, B2, true, false>:
+class transaction_object2_aux<F, B1, B2, true>:
     public shallow_transaction_object2<F, B1, B2> {};
+//~ template <class F, class B1, class B2>
+//~ class transaction_object2_aux<F, B1, B2, false, true>:
+    //~ public trivial_transaction_object2<F, B1,B2> {};
 template <class F, class B1, class B2>
-class transaction_object2_aux<F, B1, B2, false, true>:
-    public trivial_transaction_object2<F, B1,B2> {};
-template <class F, class B1, class B2>
-class transaction_object2_aux<F, B1, B2, false, false>:
+class transaction_object2_aux<F, B1, B2, false>:
     public deep_transaction_object2<F, B1, B2> {};
 
 }
-#if 1
 
 template <
     class Final,
     class Base=base_transaction_object
 >
 class transaction_object : public detail::transaction_object_aux<Final, Base,
-    has_shallow_copy_semantics<Final>::value,
-    has_trivial_copy_semantics<Final>::value
+    has_shallow_copy_semantics<Final>::value
+//~ , has_trivial_copy_semantics<Final>::value
     >
 {};
 
@@ -96,83 +97,11 @@ template <
     class Base2
 >
 class transaction_object2 : public detail::transaction_object2_aux<Final, Base1, Base2,
-    has_shallow_copy_semantics<Final>::value,
-    has_trivial_copy_semantics<Final>::value
+    has_shallow_copy_semantics<Final>::value
+//~ ,   has_trivial_copy_semantics<Final>::value
     >
 {};
 
-    #else
-//-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
-// transaction object mixin
-// Provides the definition of the virtual functions
-//      make_cache: use copy constructor
-//      copy_cache: use assignement
-//      move_state and
-//      delete_cache: use delete
-// Defines in addition the functions new and delete when USE_STM_MEMORY_MANAGER is defined
-
-// The parameter Base=base_transaction_object allows to mic transaction_object and polymorphism
-// class B : transaction_object<B> {}
-// class D : transaction_object<D, B> {}
-// the single issue is the forward constructors from transaction_object<D, B> to B
-//-----------------------------------------------------------------------------
-template <class Final, typename Base=base_transaction_object>
-class transaction_object : public
-#ifdef USE_STM_MEMORY_MANAGER
-    memory_manager<Final, Base>
-#else
-    Base
-#endif{
-public:
-    typedef transaction_object<Final, Base> this_type;
-
-    //--------------------------------------------------------------------------
-#if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
-    virtual base_transaction_object* make_cache(transaction* t) const {
-        Final* p = cache_allocate<Final>(t);
-        if (p==0) {
-            throw std::bad_alloc();
-        }
-        ::new (p) Final(*static_cast<Final const*>(this));
-        return p;
-    }
-#else
-    virtual base_transaction_object* make_cache(transaction*/*t*/) const {
-        Final* tmp = new Final(*static_cast<Final const*>(this));
-        return tmp;
-    }
-#endif
-
-   //--------------------------------------------------------------------------
-#if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
-    virtual void delete_cache() {
-        static_cast<Final*>(this)->~Final();
-        boost::stm::cache_deallocate(this);
-    }
-#else
-    virtual void delete_cache() {
-        delete this;
-    }
-#endif
-
-   //--------------------------------------------------------------------------
-   virtual void copy_cache(base_transaction_object const & rhs)
-   {
-       *static_cast<Final *>(this) = *static_cast<Final const *>(&rhs);
-   }
-
-#if BUILD_MOVE_SEMANTICS
-   virtual void move_state(base_transaction_object * rhs)
-   {
-      static_cast<Final &>(*this) = draco_move
-         (*(static_cast<Final*>(rhs)));
-   }
-#endif
-
-};
-#endif
 template <typename T> class native_trans :
 public transaction_object< native_trans<T> >
 {

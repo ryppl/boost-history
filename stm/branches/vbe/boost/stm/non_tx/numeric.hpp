@@ -15,7 +15,7 @@
 #define BOOST_STM_NON_TX_NUMERIC__HPP
 
 //-----------------------------------------------------------------------------
-#include <boost/stm/non_tx/mixin.hpp>
+#include <boost/stm/non_tx/reference.hpp>
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
@@ -29,9 +29,9 @@ namespace boost { namespace stm { namespace non_tx {
 //-----------------------------------------------------------------------------
 
 template <typename T>
-class numeric : public mixin< numeric<T>, T >
+class numeric : public reference< numeric<T>, T >
 {
-    typedef mixin< numeric<T> ,T > base_type;
+    typedef reference< numeric<T> ,T > base_type;
 public:
     //-----------------------------------------------------------------------------
     numeric() : base_type(0) {}

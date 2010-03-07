@@ -21,7 +21,7 @@
 //#include <boost/stm/tx/trivial_transaction_object.hpp>
 //#include <boost/stm/tx/shallow_transaction_object.hpp>
 #include <boost/stm/tx_ptr.hpp>
-#include <boost/stm/tx/mixin.hpp>
+#include <boost/stm/tx/proxy_cache.hpp>
 #include <boost/stm/tx/object.hpp>
 #include <boost/stm/tx/numeric.hpp>
 #include <boost/stm/tx/pointer.hpp>
