@@ -25,8 +25,8 @@ namespace auto_size{
     //
     // Requirements: let d1 and d2 instances of D and const D, respectively
     // Valid expression			Result
-    // d1.ref_array_impl()		ref_array&
-    // d2.ref_array_impl()		const ref_array_&
+    // d1.ref_array_impl()		array_interface::ref_array_&
+    // d2.ref_array_impl()		array_interface::const ref_array_&
     template<typename T,int N,template<typename> class R,typename D>
     struct array_interface{
         typedef typename R<T>::type ref_;
