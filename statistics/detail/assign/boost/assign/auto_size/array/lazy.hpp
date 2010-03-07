@@ -38,7 +38,7 @@ namespace auto_size{
     {
         template<typename E,template<typename> class R>
         struct apply{
-        	typedef typename expr_size<E>::type size_;
+            typedef typename expr_size<E>::type size_;
             typedef typename expr_elem<E>::type elem_;
             typedef lazy_array<elem_,size_::value,R,E> type;
         };
