@@ -27,8 +27,8 @@ namespace auto_size{
     	struct lazy_array{};
     }
 
-   	template<typename T,int N,template<typename> class R,typename D>
-   	class lazy_array; 
+    template<typename T,int N,template<typename> class R,typename D>
+    class lazy_array; 
 
     template<typename E> struct expr_size;
     template<typename E> struct expr_elem;
