@@ -39,7 +39,7 @@ namespace auto_size{
         struct apply{
             typedef static_array<T,N,R> type;
         };
-	};        
+    };        
  
 
     template<typename T,int N,template<typename> class R>
