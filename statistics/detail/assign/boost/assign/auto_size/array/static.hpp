@@ -53,7 +53,7 @@ namespace auto_size{
 
         static_array(){}	
 
-		template<typename E>
+        template<typename E>
         static_array(const E& coll){
             write_to_array(this->ref_array,coll);
         }	
