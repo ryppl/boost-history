@@ -21,7 +21,7 @@ namespace auto_size{
         struct static_array{};
     }
  
- 	// tag::static_array designates a data-structure that has the functonality 
+    // tag::static_array designates a data-structure that has the functonality 
     // of array_interface<> and is allocated at construction. It is recommended
     // as the result of functions that have the csv form :
     //  fun(a,b,c)
