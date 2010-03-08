@@ -7,7 +7,6 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #include <boost/detail/workaround.hpp>
-#include <libs/assign/test/ref_list_of.h>
 #include <vector>
 #include <set>
 #include <list>
@@ -21,7 +20,6 @@
 //#include <boost/range/chain.hpp>//Uncomment when in release
 #include <boost/assign/auto_size/ref_list_of.hpp>
 #include <boost/assign/auto_size/ref_rebind_list_of.hpp>
-#include <libs/assign/test/ref_list_of.h>
 
 template< class Range >
 void print( const Range& r )
@@ -57,7 +55,6 @@ typename Range::const_iterator max_element( const Range& r )
 {
     return std::max_element( r.begin(), r.end() );
 }
-
 
 template<typename C>
 void check_converter(C& elems,bool sorted = false){

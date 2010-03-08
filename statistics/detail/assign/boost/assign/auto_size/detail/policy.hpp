@@ -24,6 +24,10 @@ namespace auto_size{
     	typedef Tag tag;
     };
 
+    template<typename Tag>
+	struct csv_policy{
+    	typedef Tag tag;
+    };
 
     template<>
 	struct policy<tag::no_policy>{
@@ -33,6 +37,9 @@ namespace auto_size{
     	};
     };
 
+    template<>
+	struct csv_policy<tag::no_policy> 
+        : policy<tag::no_policy>{};
     
 }// auto_size
 }// detail

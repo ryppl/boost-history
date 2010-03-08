@@ -12,20 +12,12 @@
 #include <boost/assign/auto_size/array/interface.hpp>
 #include <boost/assign/auto_size/array/ref.hpp>
 #include <boost/assign/auto_size/detail/policy.hpp>
+#include <boost/assign/auto_size/array/tag.hpp>
 
 namespace boost{
 namespace assign{
 namespace detail{
 namespace auto_size{
-
-    // tag::lazy_array designates a policy for auto_size::expr<>, that has the 
-    // functionality of array_interface<>, and postones allocation until it is 
-    // necessary. It is therefore suitable as the result of statements such as:
-    //  fun(a)(b)(c);
-
-    namespace tag{
-    	struct lazy_array{};
-    }
 
     template<typename T,int N,template<typename> class R,typename D>
     class lazy_array; 
@@ -34,7 +26,7 @@ namespace auto_size{
     template<typename E> struct expr_elem;
 
     template<>
-    struct policy<tag::lazy_array>
+    struct policy<tag::array>
     {
         template<typename E,template<typename> class R>
         struct apply{
@@ -52,6 +44,9 @@ namespace auto_size{
     	template<typename> class R,typename P,bool F>
     void write_to_array(A& a,const expr<E,T,N,R,P,F>& e);
                   
+    // lazy_array is a suitable policy for auto_size::expr<>, that has the 
+    // functionality of array_interface<>, and postones allocation until it is 
+    // necessary.
    template<typename T,int N,template<typename> class R,typename D>
    class lazy_array 
     	: public array_interface<T,N,R,lazy_array<T,N,R,D> >

@@ -11,29 +11,23 @@
 #include <boost/assign/auto_size/array/interface.hpp>
 #include <boost/assign/auto_size/array/ref.hpp>
 #include <boost/assign/auto_size/detail/expr.hpp> // needed for write_to_array
+#include <boost/assign/auto_size/array/tag.hpp>
 
 namespace boost{
 namespace assign{
 namespace detail{
 namespace auto_size{
  
-    namespace tag{
-        struct static_array{};
-    }
  
-    // tag::static_array designates a data-structure that has the functonality 
-    // of array_interface<> and is allocated at construction. It is recommended
-    // as the result of functions that have the csv form :
-    //  fun(a,b,c)
-    // Unlike lazy_array, it is not a suitable policy for auto_size::expr<>. 
-    // This is desirable as otherwise the result from fun(a,b,c) would be much
-    // costlier to construct (this has already been tested).
-
+    // static_array has the functionality of of array_interface<> and is 
+    // allocated at construction. It is suitable as the result from a csv
+    // function.
+    
     template<typename T,int N,template<typename> class R>
     class static_array; 
 
     template<>
-    struct policy<tag::static_array>
+    struct csv_policy<tag::array>
     {
         template<typename T,int N,template<typename> class R>
         struct apply{

@@ -10,6 +10,7 @@
 #define BOOST_ASSIGN_DETAIL_AUTO_SIZE_TYPES_ER_2010_HPP
 #include <boost/mpl/void.hpp>
 #include <boost/mpl/bool.hpp>
+#include <boost/assign/auto_size/array/tag.hpp>
 
 namespace boost{
 namespace assign{
@@ -18,11 +19,10 @@ namespace auto_size{
 
     namespace tag{
         struct no_policy;
-        struct lazy_array;
     }
 
     typedef boost::mpl::void_ top_;
-    typedef tag::lazy_array default_policy;
+    typedef tag::array default_policy;
     typedef tag::no_policy no_policy;
     typedef boost::mpl::bool_<false> false_;
     typedef boost::mpl::bool_<true> true_;

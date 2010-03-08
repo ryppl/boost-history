@@ -18,8 +18,7 @@
 
 // Whereas adjacent unary function calls is the usual way to create a collec-
 // tion in Boost.Assign, this macro provides, as an alternative, functions that 
-// are overloaded on the number of arguments. The result, by default, is a 
-// static array; in particular, it cannot be grown further. 
+// are overloaded on the number of arguments. 
 //
 // Let n = BOOST_ASSIGN_CSV_SIZE and a1,...,an, objects of type T, Ref an alias 
 // for BOOST_ASSIGN_CSV_ref, P0 = BOOST_ASSIGN_CSV_DEF_POLICY and r<U,N,P> an
@@ -32,6 +31,11 @@
 //  cfun<P>(a1,..,.ai)              r<const T,i,P>
 //  fun(a1,..,.ai)                  r<T,i,P0>
 //  cfun(a1,..,.ai)                 r<const T,i,P0>
+//
+// Note : for performance, it is critical that the collection builder,
+// auto_size::expr<> be used only during construction of the result, not as 
+// part of the result itself. In designing a custom policy, look first at how 
+// the default hanldes this.
 
 #ifndef BOOST_ASSIGN_CSV_SIZE
 #define BOOST_ASSIGN_CSV_SIZE 20
@@ -41,7 +45,7 @@
 #error
 #endif
 #define BOOST_ASSIGN_CSV_DEF_POLICY                                         \
-    boost::assign::detail::auto_size::tag::static_array                     \
+    boost::assign::detail::auto_size::tag::array                            \
 /**/
 #define BOOST_ASSIGN_CSV_RESULT(U,N,P)                                      \
     typename boost::assign::detail::auto_size::policy<P>::template          \
