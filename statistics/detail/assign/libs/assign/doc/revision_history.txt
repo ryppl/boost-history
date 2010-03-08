@@ -1,5 +1,9 @@
 // Revision history:
 //
+// March 8, 2010 :  Made array_interface derive from assign_detail::convert for 
+// greater conformity with the rest of the library.
+// March 7, 2010 : Added assign_reference_rebind whose op= and swap have rebind
+// semantics.
 // March 6, 2010 : Added support for range insertion
 // March 4, 2010 : Created function template overloads to ref_list_of() etc. 
 // that allow to specify a policy.

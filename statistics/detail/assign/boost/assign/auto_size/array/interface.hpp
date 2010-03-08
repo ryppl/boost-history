@@ -14,27 +14,17 @@
 #include <boost/range.hpp>
 #include <boost/assign/auto_size/detail/has_copy_semantics.hpp>
 #include <boost/assign/auto_size/array/ref.hpp>
+#include <boost/assign/list_of.hpp> // for assign_detail::converter
 
 namespace boost{
 namespace assign{
 namespace detail{
 namespace auto_size{
-                   
-    // Used as a base class of D, adds the array interface and a conversion 
-    // operator to any data-structure constructible from a pair of iterators.
-    //
-    // Requirements: let d1 and d2 instances of D and const D, respectively
-    // Valid expression			Result
-    // d1.ref_array_impl()		array_interface::ref_array_&
-    // d2.ref_array_impl()		array_interface::const ref_array_&
-    template<typename T,int N,template<typename> class R,typename D>
-    struct array_interface{
+
+	template<typename T,int N,template<typename> class R>
+    struct array_interface_traits{
         typedef typename R<T>::type ref_;
         typedef typename ref_array<T,N,R>::type ref_array_;
-
-
-        // ---- boost::array ---- //
-
         typedef ref_ value_type;
         typedef typename 
         	boost::range_iterator<ref_array_>::type iterator;
@@ -44,40 +34,46 @@ namespace auto_size{
         	boost::range_size<ref_array_>::type size_type;
         typedef typename boost::range_difference<
             ref_array_>::type difference_type;
-                
-        BOOST_STATIC_CONSTANT(int, static_size = N);
-                
-        iterator begin()
-        {
-            return boost::begin(this->ref_array());
-        }
-        iterator end() 
-        {
-            return boost::end(this->ref_array());
-        }
-
-        const_iterator begin()const
-        {
-            return boost::begin(this->ref_array());
-        }
-        const_iterator end()const 
-        {
-            return boost::end(this->ref_array());
-        }
-
-        size_type size() const
-        {
-            return ref_array_::size();
-        }
-        bool empty() const
-        {
-            return !(this->size());
-        }
-                
         typedef typename ref_array_::reference reference;
         typedef typename 
         	ref_array_::const_reference const_reference;
 
+    };
+                   
+    // Used as a base class of D, adds the array and conversion interface
+    //
+    // Requirements: let d1 and d2 instances of D and const D, respectively
+    // Valid expression			Result
+    // d1.ref_array_impl()		array_interface::ref_array_&
+    // d2.ref_array_impl()		array_interface::const ref_array_&
+    template<typename T,std::size_t N,template<typename> class R,typename D>
+    class array_interface : public assign_detail::converter<
+    	array_interface<T,N,R,D>,
+        typename array_interface_traits<T,N,R>::const_iterator
+    >{
+        typedef array_interface_traits<T,N,R> traits;
+        typedef typename traits::ref_ ref_;
+        typedef typename traits::ref_array_ ref_array_;
+
+        public:
+        typedef ref_ value_type;
+        typedef typename traits::iterator iterator;
+        typedef typename traits::const_iterator const_iterator;
+        typedef typename traits::size_type size_type;
+        typedef typename traits::difference_type difference_type;
+        typedef typename traits::reference reference;
+        typedef typename traits::const_reference const_reference;
+                
+        BOOST_STATIC_CONSTANT(size_type, static_size = N);
+                                            
+        iterator begin() { return boost::begin(this->ref_array()); }
+        iterator end() { return boost::end(this->ref_array()); }
+
+        const_iterator begin()const { return boost::begin(this->ref_array()); }
+        const_iterator end()const { return boost::end(this->ref_array()); }
+        size_type size() const{ return this->ref_array().size(); }
+        bool empty() const{ return this->ref_array().empty(); }
+                
         reference operator[](size_type i){ return (this->ref_array())[i]; }
         const_reference operator[](size_type i)const{ 
              return (this->array())[i]; }
@@ -87,32 +83,19 @@ namespace auto_size{
         reference back(){ return (this->ref_array()).back(); }
         const_reference back() const{ return (this->ref_array()).back(); }
         
-        void swap(ref_array_& other){ return (this->ref_array()).swap(other); }
+        void swap(array_interface& other){ 
+            (this->ref_array()).swap(other.ref_array()); 
+        }
         void assign(const T& val){ 
             typedef has_copy_semantics<ref_> pred_;
             return this->assign(val,pred_());
         }
 
-        // ---- Conversion ---- //
-
-        template<typename T1>
-        operator boost::array<T1,N>()const{
-            boost::array<T1,N> ar;
-            std::copy(	
-            	boost::begin(this->ref_array()),
-            	boost::end(this->ref_array()),
-                boost::begin(ar)
-            );
-            return ar;
-        }
-
-        template<typename C>
-        operator C ()const
+        template< class Container >
+        operator Container() const
         {
-            return C(
-            	boost::begin(this->ref_array()),
-                boost::end(this->ref_array())
-            );
+            return 
+            	this-> BOOST_NESTED_TEMPLATE convert_to_container<Container>();
         }
 
         private:
@@ -126,7 +109,7 @@ namespace auto_size{
         }
 
         void assign(const T& val,false_ /*copy semantics*/){ 
-            return this->ref_array().assign(val);
+            this->ref_array().assign(val);
         }
         
         ref_array_& ref_array(){ 
@@ -138,6 +121,7 @@ namespace auto_size{
         }
 
     };
+
 
 }// auto_size  
 }// detail      

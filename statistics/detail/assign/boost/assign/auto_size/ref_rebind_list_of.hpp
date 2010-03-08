@@ -10,11 +10,7 @@
 #define BOOST_ASSIGN_AUTO_SIZE_REF_REBIND_LIST_OF_ER_2010_HPP
 #include <boost/assign/auto_size/detail/expr.hpp>
 
-// Creates a collection of references whose functionality is that of 
-// auto_size::array_interface<>. Rebind semantics apply if the collection 
-// is the lhs of an assignment:
-// 	cref_rebind_list_of(a)(b)(c).assign(d)
-// Unless this specific feature is needed, ref_list_of() is preferable.
+// Returns a collection builder with rebind semantics
 
 namespace boost{
 namespace assign{

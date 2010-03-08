@@ -20,6 +20,7 @@ namespace detail{
     template<typename T> struct has_copy_semantics{};
     
     template< class T > struct assign_reference_copy;
+    template< class T > struct assign_reference_rebind;
     
     template<typename T>
     struct has_copy_semantics<
@@ -30,6 +31,11 @@ namespace detail{
     struct has_copy_semantics<
     	assign_reference_copy<T> 
     > : boost::mpl::bool_<true>{};
+
+    template<typename T>
+    struct has_copy_semantics<
+    	assign_reference_rebind<T> 
+    > : boost::mpl::bool_<false>{};
     
 }// detail
 }// assign

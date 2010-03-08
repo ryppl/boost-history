@@ -20,10 +20,10 @@
 #include <boost/type_traits.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/range.hpp>
-#include <boost/assign/list_of.hpp> // needed for assign_reference
 #include <boost/assign/auto_size/detail/has_static_size.hpp>
 #include <boost/assign/auto_size/detail/static_size.hpp>
 #include <boost/assign/auto_size/detail/assign_reference_copy.hpp>
+#include <boost/assign/auto_size/detail/assign_reference_rebind.hpp>
 #include <boost/assign/auto_size/detail/policy.hpp>
 #include <boost/assign/auto_size/detail/types.hpp>
 #include <boost/assign/auto_size/detail/expr_size.hpp>
@@ -42,6 +42,12 @@
 //
 // Acknowledgement: The idea of this class was developed in collaboration 
 // with M.P.G
+//
+// To comply AMAP with the rest of the Boost.Assign framework, has method 
+// range<int>() whose size must be specified explicitly. However, this defeats 
+// the purpose of the 'auto_size' framework and incurrs a performance penalty, 
+// so it is recommended to use a range concatenation tool such as boost::chain 
+// in Boost.Range_ex.
 
 namespace boost{
 namespace assign{
@@ -281,7 +287,7 @@ namespace auto_size{
 
     template<typename T>
     struct ref_rebind{
-        typedef boost::assign_detail::assign_reference<T> type;
+        typedef boost::assign::detail::assign_reference_rebind<T> type;
     };
 
     // ---- first expr ---- //

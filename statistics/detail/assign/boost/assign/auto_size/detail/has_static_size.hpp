@@ -9,28 +9,30 @@
 #ifndef BOOST_ASSIGN_DETAIL_AUTO_SIZE_HAS_STATIC_SIZE_ER_2010_HPP
 #define BOOST_ASSIGN_DETAIL_AUTO_SIZE_HAS_STATIC_SIZE_ER_2010_HPP
 #include <boost/mpl/bool.hpp>
+#include <boost/type_traits/detail/yes_no_type.hpp>
 
 namespace boost{
 namespace assign{
 namespace detail{
 namespace auto_size{
 
-	// TODO 
     template<typename T>
     struct has_static_size{
-/*
-       typedef typename T::size_type size_type;
-       typedef char yes;
-       typedef char (&no)[2];
-       typedef const size_type* sig;
-//       typedef size_type (const T::*sig)();
+        typedef typename T::size_type size_type;
+        typedef typename type_traits::yes_type yes;
+        typedef typename type_traits::no_type no;
+        typedef const size_type* sig1;
+        typedef const size_type sig2; // for boost::array<>
 
-       template<typename U,sig>
-       struct sfinae { };
+        template<typename U,sig1>
+        struct sfinae1 { };
 
-       template<typename U> static yes test(sfinae<U, &U::static_size> *);
-       //template<typename U> static yes test(sfinae<U,&U::size> *);
-       template<typename U> static no test(...);
+        template<typename U,sig2>
+        struct sfinae2 { };
+
+        //template<typename U> static yes test(sfinae1<U, &U::static_size> *);
+        template<typename U> static yes test(sfinae2<U, U::static_size> *);
+        template<typename U> static no test(...);
 
 		BOOST_STATIC_CONSTANT(
         	bool, 
@@ -38,23 +40,7 @@ namespace auto_size{
         );
         
         typedef boost::mpl::bool_<value> type;
-*/
    };
-}
-}
-}
-
-	template<typename T,std::size_t N>
-    struct array;
-
-namespace assign{
-namespace detail{
-namespace auto_size{
-
-    // temporary fix
-    template<typename T,std::size_t N>
-    struct has_static_size<boost::array<T,N> > : boost::mpl::bool_<true>{};
-
 
 }// auto_size
 }// detail

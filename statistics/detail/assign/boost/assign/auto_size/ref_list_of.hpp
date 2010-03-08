@@ -10,10 +10,7 @@
 #define BOOST_ASSIGN_AUTO_SIZE_REF_LIST_OF_ER_2010_HPP
 #include <boost/assign/auto_size/detail/expr.hpp>
 
-// Creates a collection of references whose functionality is that of 
-// auto_size::array_interface<>. It can be used either as the rhs or lhs 
-// of an assignment such as:
-// 	boost::fill(ref_list_of(a)(b)(c),0)
+// Returns a collection builder  
 
 namespace boost{
 namespace assign{

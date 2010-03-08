@@ -57,6 +57,29 @@ namespace detail{
         T* ref_;
 
     };
+
+	// Added by ER March 7, 2010
+    template< class T >
+    inline bool operator<( const assign_reference_copy<T>& l, 
+                           const assign_reference_copy<T>& r )
+    {
+        return l.get_ref() < r.get_ref();
+    }
+
+    template< class T >
+    inline bool operator>( const assign_reference_copy<T>& l,
+                           const assign_reference_copy<T>& r )
+    {
+        return l.get_ref() > r.get_ref();
+    }
+
+    template< class T >
+    inline void swap( assign_reference_copy<T>& l, 
+                      assign_reference_copy<T>& r )
+    {
+        l.swap( r );
+    }
+
     
 }// detail
 }// assign
