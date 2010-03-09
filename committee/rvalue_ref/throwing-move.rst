@@ -7,15 +7,16 @@
 :organization: `BoostPro Computing`_
 :date: 2009-11-09
 
-:Number: N2983=09-0173
+:Number: D3050=10-0040
+:Revises: N2983=09-0173 
 
 .. _`BoostPro Computing`: http://www.boostpro.com
 
 .. build HTML with:
 
    rst2html.py --footnote-references=superscript \
-     --stylesheet-path=./rst.css --embed-stylesheet N2983-throwing-move.rst \
-     N2983.html
+     --stylesheet-path=./rst.css --embed-stylesheet throwing-move.rst \
+     N3050.html
 
 .. contents:: index
 
@@ -292,6 +293,24 @@ where used properly, ought to be a well-known “caution area” that is
 reasonably easily migrated.  However, we don't think this change would
 be appropriate for C++0x at this late date, so we're not proposing it.
 
+Revision History
+****************
+
+* N3050 (post-Pittsburgh mailing):
+ 
+  * Added cross-reference in [expr]p8 to refer to the noexcept operator as having an unevaluated operand.
+
+  * Clarified that the noexcept operator's result is an rvalue.
+
+  * Clarified that the noexcept operator will return false when its operand contains a subexpression that is a typeid of an *lvalue* expression of polymorphic type. Note: this wording assumes that the funny lvalues paper (N3030) will be accepted. If it is not, both the description of typeid and the description of noexcept will need to be updated to cope with rvalues that were actually rvalue references to objects.
+
+  * Clarified that noexcept (expression) is value-dependent if the expression is value-dependent.
+
+  * Clarified that the grammar term exception-specification: throw (type-id-list[opt])  has been removed.
+
+* N2983 (post-Santa Cruz mailing): Initial numbered revision
+
+
 Proposed Changes to Standard Wording
 ************************************
 
@@ -321,6 +340,13 @@ Add the new ``noexcept`` keyword to Table 3 - Keywords.
 Modify paragraph 3 as follows:
 
   3 An allocation function that fails to allocate storage can invoke the currently installed new-handler function (18.6.2.3), if any. [ *Note*: A program-supplied allocation function can obtain the address of the currently installed new_handler using the ``std::set_new_handler`` function (18.6.2.4). -- *end note* ] If an allocation function declared with :del:`an empty` :ins:`a non-throwing` *exception-specification* (15.4), :del:`throw(),` fails to allocate storage, it shall return a null pointer. Any other allocation function that fails to allocate storage shall indicate failure only by throwing an exception of a type that would match a handler (15.3) of type ``std::bad_alloc`` (18.6.2.1).
+
+5 Expressions [expr]
+====================
+
+Modify the first sentence in paragraph 8 as follows:
+
+  8 In some contexts, unevaluated operands appear (5.2.8, 5.3.3, :ins:`5.3.7 [expr.unary.noexcept],` 7.1.6.2).
 
 5.3 Unary expressions [expr.unary]
 ==================================
@@ -363,9 +389,9 @@ Modify paragraph 13 as follows:
     :raw-html:`<span class="ins"><i>noexcept-expression</i></span>`
       :raw-html:`<span class="ins">noexcept ( <i>expression</i> )</span>`
 
-  2 :raw-html:`<span class="ins">The result of the <code>noexcept</code> operator is a constant of type <code>bool</code>.</span>`
+  2 :raw-html:`<span class="ins">The result of the <code>noexcept</code> operator is a constant of type <code>bool</code> and is an rvalue.</span>`
 
-  3 :raw-html:`<span class="ins">The result of the <code>noexcept</code> operator is <code>false</code> if in an evaluated context the <i>expression</i> would contain</span>`
+  3 :raw-html:`<span class="ins">The result of the <code>noexcept</code> operator is <code>false</code> if in a potentially-evaluated context the <i>expression</i> would contain</span>`
 
   * :raw-html:`<span class="ins">a potentially evaluated call [<i>Footnote</i>: This includes implicit calls, e.g., the call to an allocation function in a <i>new-expression</i>. -- <i>end footnote</i>] to a function, member function, function pointer, or member function pointer that does not have a non-throwing <i>exception-specification</i> ([except.spec]),</span>`
 
@@ -373,7 +399,7 @@ Modify paragraph 13 as follows:
 
   * :raw-html:`<span class="ins">a potentially evaluated <code>dynamic_cast</code> expression <code>dynamic_cast&lt;T&gt;(v)</code>, where <code>T</code> is a reference type, that requires a run-time check ([expr.dynamic.cast]), or</span>`
 
-  * :raw-html:`<span class="ins">a potentially evaluated <code>typeid</code> expression ([expr.typeid]) applied to an expression whose type is a polymorphic class type ([class.virtual]).</span>`
+  * :raw-html:`<span class="ins">a potentially evaluated <code>typeid</code> expression ([expr.typeid]) applied to an lvalue expression whose type is a polymorphic class type ([class.virtual]).</span>`
 
   :ins:`Otherwise, the result is true.`
 
@@ -400,7 +426,7 @@ Add the following case to the list in paragraph 4:
 14.7.2.3 Value-dependent expressions [temp.dep.constexpr]
 =========================================================
 
-Modify paragraph 2 as follows:
+Modify paragraphs 2 and 3 as follows:
 
   2 Expressions of the following form are value-dependent if the *unary-expression* :raw-html:`<span class="ins">or <i>expression</i></span>` is type-dependent or the *type-id* is dependent:
 
@@ -410,6 +436,18 @@ Modify paragraph 2 as follows:
     sizeof ( *type-id* ) 
     alignof ( *type-id* )
     :raw-html:`<span class="ins">noexcept ( <i>expression</i> )</span>`
+
+  3 Expressions of the following form are value-dependent if either the *type-id* or *simple-type-specifier* is dependent or the *expression* or *cast-expression* is value-dependent:
+
+  .. parsed-literal::
+
+    *simple-type-specifier* ( *expression-list* :raw-html:`<sub>opt</sub>` ) 
+    static_cast < *type-id* > ( *expression* ) 
+    const_cast < *type-id* > ( *expression* )
+    reinterpret_cast < *type-id* > ( *expression* )
+    ( *type-id* ) *cast-expression*
+    :raw-html:`<span class="ins">noexcept ( <i>expression</i> )</span>`
+
 
 15.4 Exception specifications [except.spec]
 ===========================================
@@ -423,6 +461,7 @@ Change the following paragraphs as follows:
   .. parsed-literal::
 
     *exception-specification:*
+      :raw-html:`<span class="del">throw ( <i>type-id-list<sub>opt</sub></i> )</span>`
       :raw-html:`<span class="ins"><i>dynamic-exception-specification</i></span>`
       :raw-html:`<span class="ins"><i>noexcept-specification</i></span>`
 
