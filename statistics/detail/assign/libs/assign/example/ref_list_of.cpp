@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// example::ref_list_of.h                                                   //
+// example::ref_list_of.cpp                                                 //
 //                                                                          //
 //  (C) Copyright 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -110,15 +110,6 @@ void example_ref_list_of(std::ostream& os)
             const int& const_max = *max_element( 
                 cref_list_of(1)(5)(3)(d)(e)(f)(g)(h) );
             BOOST_ASSERT( max == const_max );
-        }
-        {
-            int a=a1, b=b1, c=c1, d=d1, e=e1, f=f1;
-            BOOST_AUTO(tmp1,ref_rebind_list_of(a)(b)(c));
-            BOOST_AUTO(tmp2,ref_rebind_list_of(d)(e)(f));
-            tmp1.swap(tmp2);
-            BOOST_ASSERT(tmp1[1]==e);
-            BOOST_ASSERT(tmp2[1]==b);
-            
         }
     }
     // ---- Copy semantics

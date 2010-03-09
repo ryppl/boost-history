@@ -25,7 +25,7 @@ namespace assign{
 
     template<typename P,typename T>
     typename detail::auto_size::first_rebind<T,P>::type
-    ref_rebind_list_of(const T& t){
+    ref_rebind_list_of(T& t){
         return detail::auto_size::first_rebind<T,P>::call(t);
     }
 

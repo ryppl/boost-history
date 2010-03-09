@@ -48,7 +48,7 @@
     boost::assign::detail::auto_size::tag::array                            \
 /**/
 #define BOOST_ASSIGN_CSV_RESULT(U,N,P)                                      \
-    typename boost::assign::detail::auto_size::policy<P>::template          \
+    typename boost::assign::detail::auto_size::csv_policy<P>::template      \
         apply<U,N,BOOST_ASSIGN_CSV_ref>::type                               \
 /**/
 #define BOOST_ASSIGN_CSV_RESULT_DEF_POLICY(U,N)                             \

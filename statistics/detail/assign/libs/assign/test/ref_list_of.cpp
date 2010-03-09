@@ -6,10 +6,7 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef LIBS_ASSIGN_TEST_REF_LIST_OF_ER_2010_HPP
-#define LIBS_ASSIGN_TEST_REF_LIST_OF_ER_2010_HPP
 #include <boost/detail/workaround.hpp>
-#include <libs/assign/test/ref_list_of.h>
 
 #if BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564))
 #  pragma warn -8091 // supress warning in Boost.Test
@@ -26,7 +23,7 @@
 #include <boost/typeof/typeof.hpp>
 #include <boost/array.hpp>
 #include <boost/range.hpp>
-//#include <boost/range/chain.hpp>//Uncomment when in release
+//#include <boost/range/chain.hpp>
 #include <boost/assign/auto_size/ref_list_of.hpp>
 #include <boost/assign/auto_size/ref_rebind_list_of.hpp>
 #include <boost/test/test_tools.hpp>
@@ -104,15 +101,6 @@ void check_ref_list_of()
             const int& const_max = *max_element( 
                 cref_list_of(1)(5)(3)(d)(e)(f)(g)(h) );
             BOOST_CHECK_EQUAL( max == const_max );
-        }
-        {
-            int a=a1, b=b1, c=c1, d=d1, e=e1, f=f1;
-            BOOST_AUTO(tmp1,ref_rebind_list_of(a)(b)(c));
-            BOOST_AUTO(tmp2,ref_rebind_list_of(d)(e)(f));
-            tmp1.swap(tmp2);
-            BOOST_CHECK_EQUAL(tmp1[1]==e);
-            BOOST_CHECK_EQUAL(tmp2[1]==b);
-            
         }
     }
     // ---- Copy semantics
@@ -207,7 +195,7 @@ void check_ref_list_of()
     	int a=a1, b=b1, c=c1;
 
         BOOST_CHECK_EQUAL(boost::size(cref_list_of(a)(b)(c).range(array))==7u);
-        // Uncomment when range_ex is in the release
+        // TODO:
         //BOOST_CHECK_EQUAL(
         //    boost::size(
         //	    boost::chain(
