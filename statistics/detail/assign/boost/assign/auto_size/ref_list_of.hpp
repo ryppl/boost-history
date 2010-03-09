@@ -15,7 +15,7 @@
 namespace boost{
 namespace assign{
 
-	// specified policy : 
+	// custom policy : 
 
     template<typename P,typename T>
     typename detail::auto_size::first_copy<const T,P>::type

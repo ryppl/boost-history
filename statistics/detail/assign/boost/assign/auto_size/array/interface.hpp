@@ -12,9 +12,10 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/array.hpp>
 #include <boost/range.hpp>
+#include <boost/assign/list_of.hpp> // for assign_detail::converter
 #include <boost/assign/auto_size/detail/has_copy_semantics.hpp>
 #include <boost/assign/auto_size/array/ref.hpp>
-#include <boost/assign/list_of.hpp> // for assign_detail::converter
+//#include <boost/assign/auto_size/array/chainable.hpp>
 
 namespace boost{
 namespace assign{
@@ -50,7 +51,9 @@ namespace auto_size{
     class array_interface : public assign_detail::converter<
     	array_interface<T,N,R,D>,
         typename array_interface_traits<T,N,R>::const_iterator
-    >{
+    >
+    //,public auto_size::chainable<array_interface<T,N,R,D> >
+    {
         typedef array_interface_traits<T,N,R> traits;
         typedef typename traits::ref_ ref_;
         typedef typename traits::ref_array_ ref_array_;

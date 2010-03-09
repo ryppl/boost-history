@@ -1,6 +1,8 @@
 // Revision history:
 //
-// March 8, 2010 :  Made array_interface derive from assign_detail::convert for 
+// March 8, 2010 : Added a policy dispatcher, csv_policy, to allow a common
+// policy tag for csv and non-csv functions.
+// March 8, 2010 : Made array_interface derive from assign_detail::convert for 
 // greater conformity with the rest of the library.
 // March 7, 2010 : Added assign_reference_rebind whose op= and swap have rebind
 // semantics.

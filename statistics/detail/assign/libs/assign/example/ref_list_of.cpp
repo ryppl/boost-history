@@ -17,7 +17,6 @@
 #include <boost/typeof/typeof.hpp>
 #include <boost/array.hpp>
 #include <boost/range.hpp>
-//#include <boost/range/chain.hpp>//Uncomment when in release
 #include <boost/assign/auto_size/ref_list_of.hpp>
 #include <boost/assign/auto_size/ref_rebind_list_of.hpp>
 
@@ -210,19 +209,14 @@ void example_ref_list_of(std::ostream& os)
     }
     // ---- Concatenate ranges
     {
-        boost::array<int,4> array; array.assign(-1);
+        boost::array<int,4> array; array.assign(d1);
     	int a=a1, b=b1, c=c1;
 
         BOOST_ASSERT(boost::size(cref_list_of(a)(b)(c).range(array))==7u);
-        // Uncomment when range_ex is in the release
-        //BOOST_ASSERT(
-        //    boost::size(
-        //	    boost::chain(
-        //            cref_list_of(a)(b)(c),
-        //            array
-        //        )
-        //    )== 7u
-        //);
+        
+        //BOOST_AUTO(tmp,boost::chain(cref_list_of(a)(b)(c),array));
+        //BOOST_ASSERT(boost::size(tmp)== 7u);
+        //*tmp.begin(); // Fails to compile
     }
     // ---- Range conversion
     {

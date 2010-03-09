@@ -20,6 +20,7 @@
 #include <boost/type_traits.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/range.hpp>
+//#include <boost/range/chain.hpp>
 #include <boost/assign/auto_size/detail/has_static_size.hpp>
 #include <boost/assign/auto_size/detail/static_size.hpp>
 #include <boost/assign/auto_size/detail/assign_reference_copy.hpp>
@@ -28,6 +29,7 @@
 #include <boost/assign/auto_size/detail/types.hpp>
 #include <boost/assign/auto_size/detail/expr_size.hpp>
 #include <boost/assign/auto_size/detail/expr_elem.hpp>
+//#include <boost/assign/auto_size/detail/result_of_chain.hpp>
 #include <boost/assign/auto_size/array/lazy.hpp>
 
 // Creates a collection of references by deducing the number of arguments
@@ -44,10 +46,9 @@
 // with M.P.G
 //
 // To comply AMAP with the rest of the Boost.Assign framework, has method 
-// range<int>() whose size must be specified explicitly. However, this defeats 
-// the purpose of the 'auto_size' framework and incurrs a performance penalty, 
-// so it is recommended to use a range concatenation tool such as boost::chain 
-// in Boost.Range_ex.
+// range<int>() but its size must be specified explicitly which defeats 
+// the purpose of this framework. A better approach using boost::chain is a work
+// in progress. 
 
 namespace boost{
 namespace assign{
