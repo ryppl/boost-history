@@ -774,8 +774,8 @@ Originally arguments were passed by value (and still is in
   </p>
 
   <p>
-  The above considerations motivate a reference in two parts, one for the <a href="#ref-functions">functions and operators</a>, 
-  whose usage is the primary interest of a client, and the <a href="#ref-impl">implementation</a> i.e. the proxy objects, 
+  The above considerations motivate a reference in two parts, one for the <a href="#ref-functions">functions</a> 
+  and <a href="#ref-functions">operators</a>, whose usage is the primary interest of a client, and the <a href="#ref-impl">implementation</a> i.e. the proxy objects, 
   which remain invisible to the client, but are important from a development standpoint.
   </p>
   
@@ -788,8 +788,8 @@ Originally arguments were passed by value (and still is in
   <p>In this framework, a collection of references from passed argument is first aggregated 
   into nested compile time expressions, the last of which is fitted, as needed, with iterators and 
   conversion operations. This is in contrast to other parts of this library, where the argument is either
-  directly inserted into its destination container or stored in a runtime-fashion. The functions in this framework 
-  <a href="#ref-ref_list_of"><code>ref_list_of()</code></a> and <a href="#ref-ref_csv"><code>ref_csv()</code></a>,
+  directly inserted into its destination container or stored in a runtime-fashion. The functions in this framework, 
+  <a href="#ref-ref_list_of"><code>ref_list_of()</code></a>, <a href="#ref-ref_csv"><code>ref_csv()</code></a> and their variants,
   operate under the same principle as those in the rest of this library and are therefore in the same namespace, <code>boost::assign</code>. 
   The implementation is in <code>boost::assign::detail::auto_size</code>.
   </p>
