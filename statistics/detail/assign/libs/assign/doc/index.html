@@ -786,13 +786,12 @@ Originally arguments were passed by value (and still is in
 
   <h3><a name="auto_size">Auto-size</a></h3>
 
-  <p>In this framework, a collection of references from passed argument is first aggregated 
-  into nested compile time expressions, the last of which is fitted, as needed, with iterators and 
-  conversion operations. This is in contrast to other parts of this library, where the argument is either
-  directly inserted into its destination container or stored in a runtime-fashion. The functions in this framework, 
-  <a href="#ref-ref_list_of"><code>ref_list_of()</code></a>, <a href="#ref-ref_csv"><code>ref_csv()</code></a> and their variants,
-  operate under the same principle as those in the rest of this library and are therefore in the same namespace, <code>boost::assign</code>. 
-  The implementation is in <code>boost::assign::detail::auto_size</code>.
+  <p>The functions <a href="#ref-ref_list_of"><code>ref_list_of()</code></a>, <a href="#ref-ref_csv"><code>ref_csv()</code></a> and their 
+  variants, operate under the same principle as those in the rest of this library and are therefore in the same namespace, <code>boost::assign</code>. 
+  Their proxy objects, however, are in <code>boost::assign::detail::auto_size</code>. In this framework, a collection of references from 
+  passed argument is first aggregated into nested compile time expressions, the last of which is fitted, as needed, with iterators and 
+  conversion operations. This is in contrast to other parts of this library, where a passed argument is either
+  directly inserted into its destination container or stored in a runtime-fashion. 
   </p>
 
   <h2>Reference for functions and operators <a name="ref-functions"> </h3>
@@ -933,7 +932,7 @@ be thrown by the proxy returned by <code>list_of()</code>
   and <code>boost::<a href="../../array/index.html">array</a>&lt;T,sz>.</code> Specifically, the 
   object returned by the two functions is <a href="#generic_list"><code>generic_list&lt;&gt;</code></a>.
   The third function can be used to construct an anonymous list of references. The corresponding proxy object is 
-  <a href="#ref-static_generic_list"><code>static_generic_list&lt;&gt;</code></a>. Note that in the <a href="#auto_size">auto-size</a>
+  <a href="#ref-static_generic_list"><code>static_generic_list&lt;&gt;</code></a>. In the <a href="#auto_size">auto-size</a>
   framework there are <a href="#ref-ref_list_of">overloads<a> for this function, that deduce the number of arguments at compile time.
   
   <h3><a name="ref-make_list_inserter">Function <code>make_list_inserter()</code></a></h3>
