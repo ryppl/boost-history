@@ -789,7 +789,7 @@ Originally arguments were passed by value (and still is in
   <p> This section is about proxy objects that are in <code>boost::assign::detail::auto_size</code>. The functions 
   that return them, however, <a href="#ref-ref_list_of"><code>ref_list_of()</code></a>, <a href="#ref-ref_csv"><code>ref_csv()</code></a> 
   and their variants, operate under the same principle as those in the rest of this library and are therefore in namespace <code>boost::assign</code>. 
-  In this framework, nested compile time expressions are formed from references to passed argument, and fitted, as needed, with iterators and 
+  In this framework, nested compile time <a href="#ref-expr">expressions</a> are formed from references to passed argument, and fitted, as needed, with iterators and 
   conversion operations. This is in contrast to other parts of this library, where a passed argument is either directly inserted into its destination
   container or stored in a runtime-fashion. 
   </p>
@@ -1605,8 +1605,8 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
    that will be chosen to have the desired interface, usually iterators and conversion operators. 
 </p>   
 <p>   
-   Naturally, this requires that the successive arguments be allocated on the stack. Consequently, this set up is 
-   ill-suited for the method <code>range()</code> whose argument size must be specified explictly (unless its argument has static size), 
+   The successive arguments must be allocated on the stack. Consequently, this set up is 
+   ill-suited for the method <code>range()</code> whose argument size must be specified explicitly (unless its argument has static size), 
    unlike the remainder of this library. A fully <a href="#auto_size">auto-size</a> framework could 
    be achieved, in the future, by having <code>auto_size::expr&lt;&gt;</code> expose a member function 
    <code>concat()</code>, that returns a proxy object whose task is to aggregate collections, 
