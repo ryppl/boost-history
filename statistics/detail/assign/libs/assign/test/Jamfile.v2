@@ -21,7 +21,6 @@ test-suite assign :
     [ assign-test list_of ]
     [ assign-test ptr_list_of ]
     [ assign-test static_list_of ]
-    [ assign-test ref_list_of ]
     [ assign-test tuple_list_of ]
     [ assign-test list_inserter ]
     [ assign-test ptr_list_inserter ]
@@ -29,7 +28,9 @@ test-suite assign :
     [ assign-test list_of_workaround ]
     [ assign-test email_example ]
     [ assign-test my_vector_example ]
-    [ assign-test multi_index_container ]      
+    [ assign-test multi_index_container ]  
+    [ assign-test ref_list_of ]
+    [ assign-test ref_csv ]
     ;
 
 

@@ -7,7 +7,8 @@
 int main (int argc, char * const argv[]) {
 
     boost::assign::detail::auto_size::check_ref_list_of<int>();
-    boost::assign::detail::auto_size::check_ref_csv<int>();
+    std::cout << "check_ref_list_of : ok" << std::endl;
+   // boost::assign::detail::auto_size::check_ref_csv<int>();
 
     return 0;
 
