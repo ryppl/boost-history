@@ -930,7 +930,7 @@ be thrown by the proxy returned by <code>list_of()</code>
     <p>  
   The first two functions are used to construct anonymous list which can be converted to any standard container
   and <code>boost::<a href="../../array/index.html">array</a>&lt;T,sz>.</code> Specifically, the 
-  object returned by the two functions is <a href="#generic_list"><code>generic_list&lt;&gt;</code></a>.
+  object returned by the two functions is <a href="#ref-generic_list"><code>generic_list&lt;&gt;</code></a>.
   The third function can be used to construct an anonymous list of references. The corresponding proxy object is 
   <a href="#ref-static_generic_list"><code>static_generic_list&lt;&gt;</code></a>. In the <a href="#auto_size">auto-size</a>
   framework there are <a href="#ref-ref_list_of">overloads<a> for this function, that deduce the number of arguments at compile time.
@@ -1600,15 +1600,15 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
 <p>
    This proxy object is the basis of the <a href="#auto_size">auto-size</a> framework. A call to the 
    unary operator returns an object that keeps a reference to the passed argument, and links to the 
-   current object, thereby forming a collection, whose final size is determined at compile time. 
+   current object, thereby forming a collection whose final size is determined at compile time. 
    The function <code>write_to_array()</code> passes the elements of the collection to any array, 
    that will be chosen to have the desired interface, usually iterators and conversion operators. 
 </p>   
 <p>   
-   The successive arguments must be allocated on the stack. Consequently, this set up is 
-   ill-suited for the method <code>range()</code> whose argument size must be specified explicitly (unless its argument has static size), 
-   unlike the remainder of this library. A fully <a href="#auto_size">auto-size</a> framework could 
-   be achieved, in the future, by having <code>auto_size::expr&lt;&gt;</code> expose a member function 
+   The successive arguments that are passed to the unary operator must be allocated on the stack. 
+   Consequently, this set up is ill-suited for the method <code>range()</code> whose argument size must 
+   be specified explicitly (unless its argument has static size), unlike the remainder of this library. 
+   A fully <a href="#auto_size">auto-size</a> framework could be achieved, in the future, by having <code>auto_size::expr&lt;&gt;</code> expose a member function 
    <code>concat()</code>, that returns a proxy object whose task is to aggregate collections, 
    similarly to <code>chain()</code> in <a href="http://boost-sandbox.sourceforge.net/libs/range_ex/doc/html/index.html">Boost.RangeEx</a>.
 
