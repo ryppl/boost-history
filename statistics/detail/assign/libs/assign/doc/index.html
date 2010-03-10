@@ -38,8 +38,8 @@
             <li>Function <a href="#map_list_of"><code>map_list_of()</code></a> 
             <li>Function <a href="#tuple_list_of"><code>tuple_list_of()</code></a>
             <li>Functions <a href="#repeat"><code>repeat()</code></a>, <a href="#repeat"><code>repeat_fun()</code></a> and <a href="#repeat"><code>range()</code> </a>
-            <li>Functions <a href="#ref_list_of"><code>ref_list_of()</code></a>, <a href="#ref_list_of"><code>cref_list_of()</code></a> and related functions   
-            <li>Functions <a href="#ref_csv"><code>ref_csv()</code></a>, <a href="#ref_csv"><code>cref_csv()</code></a> and related functions   
+            <li>Functions <a href="#ref_list_of"><code>ref_list_of()</code></a>, <a href="#ref_list_of"><code>cref_list_of()</code></a> and variants   
+            <li>Functions <a href="#ref_csv"><code>ref_csv()</code></a>, <a href="#ref_csv"><code>cref_csv()</code></a> and variants   
             <li>A <a href="#complicated">"complicated"</a> example    
             <li>Functions <a href="#ptr_push_back"><code>ptr_push_back()</code></a>, <a href="#ptr_push_back"><code>ptr_push_front()</code></a>, 
                                                    <a href="#ptr_push_back"><code>ptr_insert()</code></a> and <a href="#ptr_push_back"><code>ptr_map_insert()</code></a>
@@ -57,8 +57,8 @@
         <li><a href="#ref-function-headers">Headers</a> </li>
         <li>Functions <a href="#ref-list_of"><code>list_of()</code></a>, <a href="#ref-list_of"><code>map_list_of()</code></a> and <a href="#ref-list_of"><code>ref_list_of&lt;int&gt;()</code></a></li>
         <li>Function <a href="#ref-make_list_inserter"><code>make_list_inserter()</code></a></li>
-        <li>Functions <a href="#ref-ref_list_of"><code>ref_list_of()</code></a>, <a href="#ref-ref_list_of"><code>cref_list_of()</code></a>, and related functions</li>
-        <li>Functions <a href="#ref-ref_csv"><code>ref_csv()</code></a>, <a href="#ref-ref_csv"><code>cref_csv()</code></a>, and related functions</li>
+        <li>Functions <a href="#ref-ref_list_of"><code>ref_list_of()</code></a>, <a href="#ref-ref_list_of"><code>cref_list_of()</code></a>, and variants</li>
+        <li>Functions <a href="#ref-ref_csv"><code>ref_csv()</code></a>, <a href="#ref-ref_csv"><code>cref_csv()</code></a>, and variants</li>
         <li>Operator <a href="#ref-std"><code>+=</code></a> for standard containers</li>
         <li>Functions <a href="#ref-repeat_ref"><code>repeat()</code></a>, <a href="#ref-repeat_ref"><code>repeat_fun()</code></a> and 
                                                                       <a href="#ref-repeat_ref"><code>range()</code>
@@ -141,8 +141,8 @@ components are explained in these sections:
         <li>Function <a href="#map_list_of"><code>map_list_of()</code></a> 
         <li>Function <a href="#tuple_list_of"><code>tuple_list_of()</code></a>   
         <li>Functions <a href="#repeat"><code>repeat()</code>, <code>repeat_fun()</code> and <code>range()</code> </a>
-        <li>Functions <a href="#ref_list_of"><code>ref_list_of()</code></a>, <a href="#ref_list_of"><code>cref_list_of()</code></a>  and related functions  
-        <li>Functions <a href="#ref_csv"><code>ref_csv()</code></a>, <a href="#ref_csv"><code>cref_csv()</code></a> and related functions   
+        <li>Functions <a href="#ref_list_of"><code>ref_list_of()</code></a>, <a href="#ref_list_of"><code>cref_list_of()</code></a>  and variants  
+        <li>Functions <a href="#ref_csv"><code>ref_csv()</code></a>, <a href="#ref_csv"><code>cref_csv()</code></a> and variants   
         <li>A <a href="#complicated">"complicated"</a> example    
         <li>Functions <a href="#ptr_push_back"><code>ptr_push_back(), ptr_push_front()</code>, <code>ptr_insert()</code> and <code>ptr_map_insert()</code></a>
         <li>Function <a href="#ptr_list_of"><code>ptr_list_of()</code></a>         
@@ -472,7 +472,7 @@ The last example also introduces list of references. More about that below.
 
 </p>
 
-<h3>Functions <code>ref_list_of()</code>, <code>cref_list_of()</code> <a name="ref_list_of"> and related functions</h3>
+<h3>Functions <code>ref_list_of()</code>, <code>cref_list_of()</code> <a name="ref_list_of"> and variants</h3>
 
 When you need to create an anonymous range of values and speed is essential, 
 these two functions provide what you want. <blockquote>
@@ -518,7 +518,7 @@ that have rebind, rather than copy semantics, when the collection is used as the
 Their use is discouraged unless this specific feature is required. See the <a href="#ref-ref_list_of">reference</a>.
 </p>
 
-<h3>Functions <code>ref_csv()</code>, <code>cref_csv()</code> <a name="ref_csv"> and related functions</h3>
+<h3>Functions <code>ref_csv()</code>, <code>cref_csv()</code> <a name="ref_csv"> and variants</h3>
 
 The functions <a href="#ref_list_of"><code>ref_list_of()</code></a>, <a href="#ref_list_of"><code>cref_list_of()</code></a>, 
 their respective rebind analogs, and the custom policy overloads of these four, have counterparts that are identified by suffix 'csv' (comma separated values) 
@@ -803,8 +803,8 @@ Originally arguments were passed by value (and still is in
         <li><a href="#ref-function-headers">Headers</a> </li>
         <li>Functions <a href="#ref-list_of"><code>list_of()</code></a>, <a href="#ref-list_of"><code>map_list_of()</code></a> and <a href="#ref-list_of"><code>ref_list_of&lt;int&gt;()</code></a></li>
         <li>Function <a href="#ref-make_list_inserter"><code>make_list_inserter()</code></a></li>
-        <li>Functions <a href="#ref-ref_list_of"><code>ref_list_of()</code></a>, <a href="#ref-ref_list_of"><code>cref_list_of()</code></a>, and related functions</li>
-        <li>Functions <a href="#ref-ref_csv"><code>ref_csv()</code></a>, <a href="#ref-ref_csv"><code>cref_csv()</code></a>, and related functions</li>
+        <li>Functions <a href="#ref-ref_list_of"><code>ref_list_of()</code></a>, <a href="#ref-ref_list_of"><code>cref_list_of()</code></a>, and variants</li>
+        <li>Functions <a href="#ref-ref_csv"><code>ref_csv()</code></a>, <a href="#ref-ref_csv"><code>cref_csv()</code></a>, and variants</li>
         <li>Operator <a href="#ref-std"><code>+=</code></a> for standard containers</li>
         <li>Functions <a href="#ref-repeat_ref"><code>repeat()</code></a>, <a href="#ref-repeat_ref"><code>repeat_fun()</code></a> and 
                                                                       <a href="#ref-repeat_ref"><code>range()</code>
@@ -958,7 +958,7 @@ be thrown by the proxy returned by <code>list_of()</code>
 
 
   <h3>Functions <code>ref_list_of()</code>, 
-      <code>cref_list_of()</code> and related functions <a name=ref-ref_list_of> </h3>
+      <code>cref_list_of()</code> and variants <a name=ref-ref_list_of> </h3>
 
   <b>Template parameters</b>
 
@@ -988,7 +988,7 @@ above, except the fourth argument to <a href="#ref-expr"> <tt>expr&lt;&gt;</tt><
 </p>
 
   <h3>Functions <code>ref_csv()</code>, 
-      <code>cref_csv()</code> and related functions <a name=ref-ref_csv> </h3>
+      <code>cref_csv()</code> and variants <a name=ref-ref_csv> </h3>
 
   <b>Template parameters</b>
 
