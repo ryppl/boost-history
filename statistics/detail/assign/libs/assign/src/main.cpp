@@ -1,17 +1,13 @@
 #include <iostream>
-#include <libs/assign/example/ref_list_of.h>
-#include <libs/assign/example/ref_csv.h>
-#include <libs/assign/test/speed.h>
-//#include <libs/assign/test/speed2.h>
-//#include <libs/assign/test/ref_list_of.h>
+#define BOOST_ASSIGN_CHECK_EQUAL(a,b) BOOST_ASSERT(a==b)
+#include <boost/assign/auto_size/check/ref_list_of.hpp>
+#include <boost/assign/auto_size/check/ref_csv.hpp>
+#undef BOOST_ASSIGN_CHECK_EQUAL
 
 int main (int argc, char * const argv[]) {
 
-    example_ref_list_of(std::cout);
-    example_ref_csv(std::cout);
-    test_speed(std::cout);
-    //test_speed2(std::cout);
-    //check_ref_list_of();
+    boost::assign::detail::auto_size::check_ref_list_of<int>();
+    boost::assign::detail::auto_size::check_ref_csv<int>();
 
     return 0;
 

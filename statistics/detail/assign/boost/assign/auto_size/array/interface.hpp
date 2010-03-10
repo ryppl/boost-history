@@ -79,7 +79,7 @@ namespace auto_size{
                 
         reference operator[](size_type i){ return (this->ref_array())[i]; }
         const_reference operator[](size_type i)const{ 
-             return (this->array())[i]; }
+             return (this->ref_array())[i]; }
 			
         reference front(){ return (this->ref_array()).front(); }
         const_reference front() const{ return (this->ref_array()).front(); }
