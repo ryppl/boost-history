@@ -786,11 +786,11 @@ Originally arguments were passed by value (and still is in
 
   <h3><a name="auto_size">Auto-size</a></h3>
 
-  <p>The functions <a href="#ref-ref_list_of"><code>ref_list_of()</code></a>, <a href="#ref-ref_csv"><code>ref_csv()</code></a> and their 
-  variants, operate under the same principle as those in the rest of this library and are therefore in the same namespace, <code>boost::assign</code>. 
-  Their proxy objects, however, are in <code>boost::assign::detail::auto_size</code>. In this framework, a collection of references from 
-  passed argument is first aggregated into nested compile time expressions, the last of which is fitted, as needed, with iterators and 
-  conversion operations. This is in contrast to other parts of this library, where a passed argument is either
+  <p> This section is about proxy objects that are in <code>boost::assign::detail::auto_size</code>. The functions 
+  that return them, however, <a href="#ref-ref_list_of"><code>ref_list_of()</code></a>, <a href="#ref-ref_csv"><code>ref_csv()</code></a> 
+  and their variants, operate under the same principle as those in the rest of this library and are therefore in namespace, <code>boost::assign</code>. 
+  In this framework, a collection of references from passed argument is first aggregated into nested compile time expressions, the last of which is fitted, 
+  as needed, with iterators and  conversion operations. This is in contrast to other parts of this library, where a passed argument is either
   directly inserted into its destination container or stored in a runtime-fashion. 
   </p>
 
