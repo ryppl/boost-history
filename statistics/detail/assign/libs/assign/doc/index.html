@@ -1575,15 +1575,16 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
   </p>
 <p>
    Each call to the unary operator returns an object that keeps a reference to the new argument,
-   and links to the current object, thereby forming a collection. The function <code>write_to_array</code>
-   passes the elements of the collection to any array. 
+   and links to the current object, thereby forming a collection, whose final size is determined
+   at compile time. The function <code>write_to_array</code> passes the elements of the collection 
+   to any array. 
 </p>   
 <p>   
    Naturally, this requires that the arguments be allocated on the stack. Consequently, this set up is 
-   ill-suited for the method <code>range()</code> whose size, in this case, must be specified explictly.
-   It would be more sensible, in the future, to have <code>auto_size::expr&lt;&gt;</code> expose a member function 
-   <code>concat()</code>, that a proxy object that is independent from <code>auto_size::expr&lt;&gt;</code>, 
-   and whose task is to aggregate collections.
+   ill-suited for the method <code>range()</code> whose size, unlike the proxy objects that predate this one, 
+   must be specified explictly. A fully 'auto-size' framework could be achieved, in the future, by having 
+   <code>auto_size::expr&lt;&gt;</code> expose a member function <code>concat()</code>, that returns a 
+   proxy object whose task is to aggregate collections.
 
 </p>
   <h3><a name="ref-lazy_array">Proxy object <code>lazy_array&lt;&gt;</code></a></h3> 
