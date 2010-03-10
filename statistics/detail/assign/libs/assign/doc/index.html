@@ -785,8 +785,8 @@ Originally arguments were passed by value (and still is in
 
   <h3><a name="auto_size">Auto-size</a></h3>
 
-  <p>Under this framework, a collection of references from passed argument is first aggregated 
-  into nested compile time expressions, the last of which is 'dressed' as needed with iterator and 
+  <p>In this framework, a collection of references from passed argument is first aggregated 
+  into nested compile time expressions, the last of which is fitted, as needed, with iterators and 
   conversion operations. This is in contrast to other parts of this library, where the argument is either
   directly inserted into its destination container or stored in a runtime-fashion. The corresponding functions, however,
   such as <a href="#ref-ref_list_of"><code>ref_list_of()</code></a> or <a href="#ref-ref_csv"><code>ref_csv()</code></a>,
@@ -976,10 +976,10 @@ be thrown by the proxy returned by <code>list_of()</code>
   <blockquote>
   	<table cellpadding=5 border=1>
   	<tr><th class="head">Expression</th> <th class="head">Result type</th>
-  	<tr><td><tt>ref_list_of&lt;P&gt;(d1)</tt></td><td><a href="#ref-expr"> <tt>expr&lt;top_,T,1,ref_copy,P&gt;</tt></a></td></tr>
-  	<tr><td><tt>cref_list_of&lt;P&gt;(d2)</tt></td><td><a href="#ref-expr"> <tt>expr&lt;top_,const T,1,ref_copy,P&gt;</tt></a></td></tr>
-  	<tr><td><tt>ref_list_of(d1)</tt></td><td><a href="#ref-expr"> <tt>expr&lt;top_,T,1,ref_copy,default_policy&gt;</tt></a></td></tr>
-  	<tr><td><tt>cref_list_of(d2)</tt></td><td><a href="#ref-expr"> <tt>expr&lt;top_,const T,1,ref_copy,default_policy&gt;</tt></a></td></tr>
+  	<tr><td><tt>ref_list_of&lt;P&gt;(d1)</tt></td><td><a href="#ref-expr"> <tt>expr</tt></a><tt>&lt;top_,T,1,ref_copy,P&gt;</tt></td></tr>
+  	<tr><td><tt>cref_list_of&lt;P&gt;(d2)</tt></td><td><a href="#ref-expr"> <tt>expr</tt></a><tt>&lt;top_,const T,1,ref_copy,P&gt;</tt></td></tr>
+  	<tr><td><tt>ref_list_of(d1)</tt></td><td><a href="#ref-expr"> <tt>expr</tt></a><tt>&lt;top_,T,1,ref_copy,default_policy&gt;</tt></td></tr>
+  	<tr><td><tt>cref_list_of(d2)</tt></td><td><a href="#ref-expr"> <tt>expr</tt></a><tt>&lt;top_,const T,1,ref_copy,default_policy&gt;</tt></td></tr>
   	</table>
   </blockquote>
 <p>
@@ -1009,7 +1009,7 @@ above, except the fourth argument to <a href="#ref-expr"> <tt>expr&lt;&gt;</tt><
   	<table cellpadding=5 border=1>
   	<tr><th class="head">Expression</th> <th class="head">Description</th> <th>Alias</th>
   	<tr><td><tt>csv_policy&lt;P&gt;::apply&lt;U,N,R&gt;::type</tt></td><td>A proxy object</td><td><tt>Impl&lt;P,U,N,R&gt;</tt></td></tr>
-  	<tr><td><tt>csv_policy&lt;default_policy&gt;::apply&lt;U,N,R&gt;::type</tt></td><td><a href="#ref-static_array"> <tt>static_array&lt;T,N,R&gt;</tt></a></td><td><tt>Impl0&lt;U,N,R&gt;</tt></td></tr>
+  	<tr><td><tt>csv_policy&lt;default_policy&gt;::apply&lt;U,N,R&gt;::type</tt></td><td><a href="#ref-static_array"> <tt>static_array<tt></a><tt>&lt;T,N,R&gt;</tt></td><td><tt>Impl0&lt;U,N,R&gt;</tt></td></tr>
   	</table>
   </blockquote>
 
