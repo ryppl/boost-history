@@ -310,6 +310,8 @@ Revision History
 
   * Per library issue 1255, use ``declval`` rather than ``make`` in the description of the ``has_nothrow_move_constructor`` and ``has_nothrow_move_assign`` traits. Also, make ``declval`` ``noexcept``.
 
+  * Major clarification of the wording for the new type traits, updating those traits for the changes in N3000 and N3035.
+
 * N2983 (post-Santa Cruz mailing): Initial numbered revision
 
 
