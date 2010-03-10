@@ -1581,10 +1581,9 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
 <p>   
    Naturally, this requires that the arguments be allocated on the stack. Consequently, this set up is 
    ill-suited for the method <code>range()</code> whose size, in this case, must be specified explictly.
-   It would be more sensible, in the future, to separate the tools that create a collection from individual 
-   elements, from those that concatenate collections. It would still be possible, 
-   as a convenience, to have <code>auto_size::expr&lt;&gt;</code> expose a member function <code>concat()</code>, 
-   that would return a concatenator.
+   It would be more sensible, in the future, to have <code>auto_size::expr&lt;&gt;</code> expose a member function 
+   <code>concat()</code>, that a proxy object that is independent from <code>auto_size::expr&lt;&gt;</code>, 
+   and whose task is to aggregate collections.
 
 </p>
   <h3><a name="ref-lazy_array">Proxy object <code>lazy_array&lt;&gt;</code></a></h3> 
