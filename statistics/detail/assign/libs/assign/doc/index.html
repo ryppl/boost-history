@@ -46,6 +46,11 @@
             <li>Function <a href="#ptr_list_of"><code>ptr_list_of()</code></a>         
        </ul>           
     <li> <a href="#design" >Design</a> </li>
+      <ul>
+       <li><a href="#proxy-objects">Proxy objects</a></li>
+       <li><a href="#auto_size">Auto-size</a></li>
+      </ul>
+
     <li>          
         <a href="#ref-functions">Reference for functions and operators</a>
       <ul>
@@ -723,6 +728,8 @@ That is all; now you are ready to use this library.
 
   <hr> 
   <h2><a name="design">Design</a></h2>
+  <h3><a name="proxy-objects">Proxy objects</a></h3>
+
     <p>
   This section explains the way the library is implemented.
   A free-standing function (eg. <code>push_back()</code>
@@ -764,13 +771,27 @@ Originally arguments were passed by value (and still is in
 <code>tuple_list_of()</code>). One thing to remember is that references
   can be passed by using <code>boost::<a href="http://www.boost.org/doc/html/ref.html">ref</a></code>.
   </p>
+
+  <p>
+  The above considerations motivate a reference in two parts, one for the <a href="#ref-functions">functions and operators</a>, 
+  whose usage is the primary interest of a client, and the <a href="#ref-impl">implementation</a> i.e. the proxy objects, 
+  which remain invisible to the client, but are important from a development standpoint.
+  </p>
   
   <p>
-   Everything is put in namespace 
-  <code>boost::assign</code>. </p>
+   The functions, operators and their proxy objects are by defaut in namespace <code>boost::assign</code>. 
+  </p>
 
-According to the above design considerations, the reference is organized into two parts:
-<a href="#ref-functions">Functions and operators</a> and <a href="#ref-impl">Proxy objects</a>.
+  <h3><a name="auto_size">Auto-size</a></h3>
+
+  <p>Under this framework, a collection of references from passed argument is first aggregated 
+  into nested compile time expressions, the last of which is 'dressed' as needed with iterator and 
+  conversion operations. This is in contrast to other parts of this library, where the argument is either
+  directly inserted into its destination container or stored in a runtime-fashion. The corresponding functions, however,
+  such as <a href="ref-ref_list_of"><code>ref_list_of()</code></a> or <a href="ref-ref_csv"><code>ref_csv()</code></a>,
+  operate under the same principle as those in the rest of this library and are therefore also in <code>boost::assign</code>. The 
+  implementation is in <code>boost::assign::detail::auto_size</code>.
+  </p>
 
   <h2>Reference for functions and operators <a name="ref-functions"> </h3>
 
@@ -1941,7 +1962,11 @@ explicit
 support better initialization (see <a href="#initializer">[4]</a>).
   </p>
   
-  <p> The auto-size framework for building a collection of references whose size is deduced from the input was added in March 2010.</p>
+  <p> 
+  The <a href="#auto_size">auto-size framework</a> for building a collection of references whose size is deduced at compile time 
+  was added in 2010.
+  </p>
+  
   <p>
   Special thanks goes to 
   <ul>
@@ -1951,7 +1976,7 @@ support better initialization (see <a href="#initializer">[4]</a>).
   <li> Pavel Vozenilek for his countless suggestions, improvements and 
        portability fixes. 
   <li> Rene Rivera for Code Warrior portability.     
-  <li> Manuel Peinado Gallego for valuable discussions that led to the auto-size framework. 
+  <li> Manuel Peinado Gallego for valuable discussions related to the <a href="#auto_size">auto-size framework</a>. 
   In particular, he identified the need to distinguish between copy and rebind semantics.
        
        </ul>
