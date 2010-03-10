@@ -1574,9 +1574,9 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
   <b>Design</b> 
   </p>
 <p>
-   Each call to the unary operator returns an object that keeps a reference to the new argument,
+   A call to the unary operator returns an object that keeps a reference to the passed argument,
    and links to the current object, thereby forming a collection, whose final size is determined
-   at compile time. The function <code>write_to_array</code> passes the elements of the collection 
+   at compile time. The function <code>write_to_array()</code> passes the elements of the collection 
    to any array. 
 </p>   
 <p>   
