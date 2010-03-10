@@ -1581,10 +1581,12 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
 </p>   
 <p>   
    Naturally, this requires that the arguments be allocated on the stack. Consequently, this set up is 
-   ill-suited for the method <code>range()</code> whose size, unlike the proxy objects that predate this one, 
-   must be specified explictly. A fully 'auto-size' framework could be achieved, in the future, by having 
-   <code>auto_size::expr&lt;&gt;</code> expose a member function <code>concat()</code>, that returns a 
-   proxy object whose task is to aggregate collections.
+   ill-suited for the method <code>range()</code> whose size, unlike those of the proxy objects that 
+   predate this one throughout this library, must be specified explictly. A fully 'auto-size' framework 
+   could be achieved, in the future, by having <code>auto_size::expr&lt;&gt;</code> expose a member function 
+   <code>concat()</code>, that returns a proxy object whose task is to aggregate collections, similarly to
+   <code>join_view()</code> in <a href="http://www.boost.org/doc/libs/1_42_0/libs/fusion/doc/html/fusion/view/joint_view.html">Boost.Fusion</a> 
+   or <code>chain()</code> in <a href="http://boost-sandbox.sourceforge.net/libs/range_ex/doc/html/index.html">Boost.RangeEx</a>.
 
 </p>
   <h3><a name="ref-lazy_array">Proxy object <code>lazy_array&lt;&gt;</code></a></h3> 
