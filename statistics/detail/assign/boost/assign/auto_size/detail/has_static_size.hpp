@@ -34,7 +34,7 @@ namespace auto_size{
         template<typename U> static yes test(sfinae2<U, U::static_size> *);
         template<typename U> static no test(...);
 
-		BOOST_STATIC_CONSTANT(
+        BOOST_STATIC_CONSTANT(
         	bool, 
             value = sizeof( test<T>(0) ) == sizeof(yes)
         );
