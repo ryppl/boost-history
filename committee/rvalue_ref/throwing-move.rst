@@ -153,7 +153,7 @@ One possible implementation of ``std::move_if_noexcept`` might be::
 
   template <class T>
   typename conditional<
-      !nothrow_move_constructible<T>::value
+      !has_nothrow_move_constructor<T>::value
       && has_copy_constructor<T>::value,
       T const&,
       T&&
@@ -163,7 +163,7 @@ One possible implementation of ``std::move_if_noexcept`` might be::
       return std::move(x);
   }
 
-We propose that ``nothrow_move_constructible<T>`` be a conservative
+We propose that ``has_nothrow_move_constructor<T>`` be a conservative
 trait very much like ``has_nothrow_copy_constructor<T>`` from the
 current working draft; it would be identical to the proposed
 ``is_nothrow_constructible<T,T&&>`` from N2953_.  In other words, it
@@ -307,6 +307,8 @@ Revision History
   * Clarified that noexcept (expression) is value-dependent if the expression is value-dependent.
 
   * Clarified that the grammar term exception-specification: throw (type-id-list[opt])  has been removed.
+
+  * Per library issue 1255, use ``declval`` rather than ``make`` in the description of the ``has_nothrow_move_constructor`` and ``has_nothrow_move_assign`` traits. Also, make ``declval`` ``noexcept``.
 
 * N2983 (post-Santa Cruz mailing): Initial numbered revision
 
@@ -530,8 +532,11 @@ Change Header ``<utility>`` synopsis as follows:
   template <class T> T&& forward(typename identity<T>::type&&); 
   template <class T> typename remove_reference<T>::type&& move(T&&);
   :ins:`template <class T> typename conditional<
-    !nothrow_move_constructible<T>::value && has_copy_constructor<T>::value, 
+    !has_nothrow_move_constructor<T>::value && has_copy_constructor<T>::value, 
     T const&, T&&>::type move_if_noexcept(T& x);`
+  
+  // 20.3.4, declval
+  template <class T> typename add_rvalue_reference<T>::type declval() :ins:`noexcept` ; // as unevaluated operand
 
 20.3.2 forward/move helpers [forward]
 =====================================
@@ -541,71 +546,99 @@ Append the following:
   .. parsed-literal::
 
     :ins:`template <class T> typename conditional<
-      !nothrow_move_constructible<T>::value && has_copy_constructor<T>::value, 
+      !has_nothrow_move_constructor<T>::value && has_copy_constructor<T>::value, 
       T const&, T&&>::type move_if_noexcept(T& x);`
 
   :raw-html:`<span class="ins">10 <em>Returns:</em> <code>std::move(t)</code></span>`
+
+20.3.4 Function template declval [declval]
+==========================================
+
+Modify as follows:
+
+  1 The library provides the function template declval to simplify the definition of expressions which occur as unevaluated operands (5 [expr]). The template parameter ``T`` of ``declval`` may be an incomplete type.
+
+    .. parsed-literal::
+
+      template <class T> typename add_rvalue_reference<T>::type declval() :ins:`noexcept` ; // as unevaluated operand
+
+  2 *Remarks*:  If this function is used according to 3.2 [basic.def.odr], the program is ill-formed. [*Example*:
+
+    .. parsed-literal::
+
+      template<class To, class From>
+      decltype(static_cast<To>(declval<From>())) convert(From&&) :ins:`noexcept` ;
+
+  declares a function template convert, which only participates in overloading if the type From can be explicitly cast to type To. For another example see class template common_type (20.6.7 [meta.trans.other]). - *end example*]
 
 20.6.2 Header ``<type_traits>`` synopsis [meta.type.synop]
 ==========================================================
 
 .. parsed-literal::
 
+    template <class T, class... Args> struct is_constructible; 
+    template <class T, class... Args> struct is_nothrow_constructible; 
+    :ins:`template <class T> struct has_default_constructor;`
+    :ins:`template <class T> struct has_copy_constructor;`
+    :ins:`template <class T> struct has_copy_assign;`
+    :ins:`template <class T> struct has_move_constructor;`
+    :ins:`template <class T> struct has_move_assign;`
+    template <class T> struct has_trivial_default_constructor; 
+    template <class T> struct has_trivial_copy_constructor; 
+    template <class T> struct has_trivial_assign; 
+    template <class T> struct has_trivial_destructor; 
+    template <class T> struct has_nothrow_default_constructor; 
+    template <class T> struct has_nothrow_copy_constructor; 
+    :ins:`template <class T> struct has_nothrow_move_constructor;`
     template <class T> struct has_nothrow_assign;
-    :ins:`template <class T> struct has_move_constructor; 
-    template <class T> struct nothrow_move_constructible;
-
-    template <class T> struct has_move_assign; 
-    template <class T> struct nothrow_move_assignable;
-
-    template <class T> struct has_copy_constructor; 
-    template <class T> struct has_default_constructor; 
-    template <class T> struct has_copy_assign;`
-
+    :ins:`template <class T> struct has_nothrow_move_assign;`
     template <class T> struct has_virtual_destructor;
-
 
 
 20.6.4.3 Type properties [meta.unary.prop]
 ==========================================
 
-Add entries to table 43:
+Modify or add the following entries in table 43:
 
-+--------------------------------+-----------------------------------+-----------------------------------+
-| Template                       |Condition                          |Preconditions                      |
-+================================+===================================+===================================+
-| ``template <class T>           |``T`` has a move constructor       |``T`` shall be a complete type.    |
-| struct has_move_constructor;`` |(17.3.14).                         |                                   |
-+--------------------------------+-----------------------------------+-----------------------------------+
-| ``template <class T>           |``noexcept( T( make<T>() ) )``     |``T`` shall be a complete type.    |
-| struct                         |                                   |                                   |
-| nothrow_move_constructible;``  |                                   |                                   |
-|                                |                                   |                                   |
-|                                |                                   |                                   |
-+--------------------------------+-----------------------------------+-----------------------------------+
-| ``template <class T>           |``T`` has a move assignment        |``T`` shall be a complete type.    |
-| struct has_move_assign;``      |operator (17.3.13).                |                                   |
-+--------------------------------+-----------------------------------+-----------------------------------+
-| ``template <class T>           |``noexcept( *(T*)0 = make<T> )``   |``T`` shall be a complete type.    |
-| struct                         |                                   |                                   |
-| nothrow_move_assignable;``     |                                   |                                   |
-|                                |                                   |                                   |
-+--------------------------------+-----------------------------------+-----------------------------------+
-| ``template <class T>           |``T`` has a copy constructor       |``T`` shall be a complete type, an | 
-| struct has_copy_constructor;`` |(12.8).                            |array of unknown bound, or         |
-|                                |                                   |(possibly cv-qualified) ``void.``  |
-|                                |                                   |                                   |
-+--------------------------------+-----------------------------------+-----------------------------------+
-| ``template <class T>           |``T`` has a default constructor    |``T`` shall be a complete type, an |
-| struct                         |(12.1).                            |array of unknown bound, or         |
-| has_default_constructor;``     |                                   |(possibly cv-qualified) ``void.``  |
-|                                |                                   |                                   |
-+--------------------------------+-----------------------------------+-----------------------------------+
-| ``template <class T>           |``T`` has a copy assignment        |``T`` shall be a complete type, an |
-| struct has_copy_assign;``      |operator (12.8).                   |array of unknown bound, or         |
-|                                |                                   |(possibly cv-qualified) ``void``.  |
-|                                |                                   |                                   |
-+--------------------------------+-----------------------------------+-----------------------------------+
+.. list-table:: Table 43 -- Type property predicates
+  :header-rows: 1
+
+  * - Template
+    - Condition
+    - Preconditions
+  * - ``template <class T, class ...Args> struct is_nothrow_constructible;``
+    - ``is_constructible<T, Args...>::value`` is true and the expression :del:`*CE*, as defined below, is not known to throw any exceptions.` :raw-html:`<span class="ins"><code>noexcept(<i>CE</i>)</code> is true, where <i>CE</i> is defined below.</span>`
+    - ``T`` and all types in the parameter pack ``Args`` shall be complete types, (possibly cv-qualified) ``void``, or arrays of unknown bound.
+  * - :raw-html:`<span class="ins"><code>template &lt;class T&gt struct has_default_constructor;</code></span>`
+    - :raw-html:`<span class="ins"><code>is_constructible&lt;U&gt;::value</code> is true, where <code>U</code> is <code>remove_all_extents&lt;T&gt;::type.</span>`
+    - :raw-html:`<span class="ins"><code>T</code> shall be a complete type, (possibly cv-qualified) void, or an array of unknown bound.</span>`
+  * - :raw-html:`<span class="ins"><code>template &lt;class T&gt struct has_copy_constructor;</code></span>`
+    - :raw-html:`<span class="ins"><code>T</code> is <i>cv</i> <code>void</code> or <code>is_constructible&lt;U, const U&amp;&gt;::value</code> is true, where <code>U</code> is <code>remove_all_extents&lt;T&gt;::type.</span>`
+    - :raw-html:`<span class="ins"><code>T</code> shall be a complete type, (possibly cv-qualified) void, or an array of unknown bound.</span>`
+  * - :raw-html:`<span class="ins"><code>template &lt;class T&gt struct has_move_constructor;</code></span>`
+    - :raw-html:`<span class="ins"><code>T</code> is <i>cv</i> <code>void</code> or <code>is_constructible&lt;U, U&amp;&amp;&gt;::value</code> is true, where <code>U</code> is <code>remove_all_extents&lt;T&gt;::type.</span>`
+    - :raw-html:`<span class="ins"><code>T</code> shall be a complete type, (possibly cv-qualified) void, or an array of unknown bound.</span>`
+  * - :raw-html:`<span class="ins"><code>template &lt;class T&gt; struct has_copy_assign;</code></ins>`
+    - :raw-html:`<span class="ins"><code>T</code> is neither <code>const</code> nor a reference type, and <code>T</code> is a trivial type (3.9) or the expression <code>*(U*)0 = declval&lt;const U&amp;&gt;()</code> is well-formed, where <code>U</code> is <code>remove_all_extents&lt;T&gt;::type</code>.</span>`
+    - :raw-html:`<span class="ins"><code>T</code> shall be a complete type, (possibly cv-qualified) void, or an array of unknown bound.</span>`
+  * - :raw-html:`<span class="ins"><code>template &lt;class T&gt; struct has_move_assign;</code></ins>`
+    - :raw-html:`<span class="ins"><code>T</code> is neither <code>const</code> nor a reference type, and <code>T</code> is a trivial type (3.9) or the expression <code>*(U*)0 = declval&lt;U&gt;()</code> is well-formed, where <code>U</code> is <code>remove_all_extents&lt;T&gt;::type</code>.</span>`
+    - :raw-html:`<span class="ins"><code>T</code> shall be a complete type, (possibly cv-qualified) void, or an array of unknown bound.</span>`
+  * - ``template <class T> struct has_nothrow_default_constructor;``
+    - ``has_trivial_default_constructor<T>::value`` is ``true`` or :raw-html:`<span class="del"><code>T</code> is a class type with a default constructor that is known not to throw any exceptions or <code>T</code> is an array of such a class type</span><span class="ins"><code>is_nothrow_constructible&lt;U&gt;::value</code> is <code>true</code>, where <code>U</code> is <code>remove_all_extents&lt;T&gt;::type</code></span>`.
+    - :raw-html:`<span class="ins"><code>T</code> shall be a complete type, (possibly cv-qualified) void, or an array of unknown bound.</span>`
+  * - ``template <class T> struct has_nothrow_copy_constructor;``
+    - ``has_trivial_copy_constructor<T>::value`` is ``true`` or :raw-html:`<span class="del"><code>T</code> is a class type with a default constructor that is known not to throw any exceptions or <code>T</code> is an array of such a class type</span><span class="ins"><code>is_nothrow_constructible&lt;U, const U&amp;&gt;::value</code> is <code>true</code>, where <code>U</code> is <code>remove_all_extents&lt;T&gt;::type</code></span>`.
+    - :raw-html:`<span class="ins"><code>T</code> shall be a complete type, (possibly cv-qualified) void, or an array of unknown bound.</span>`
+  * - :raw-html:`<span class="ins"><code>template &lt;class T&gt struct has_nothrow_move_constructor;</code></span>`
+    - :raw-html:`<span class="ins"><code>has_trivial_move_constructor&lt;T&gt;::value</code> is <code>true</code> or <code>is_nothrow_constructible&lt;U, U&amp;&amp;&gt;::value</code> is <code>true</code>, where <code>U</code> is <code>remove_all_extents&lt;T&gt;::type</code>.</span>`
+    - :raw-html:`<span class="ins"><code>T</code> shall be a complete type, (possibly cv-qualified) void, or an array of unknown bound.</span>`
+  * - ``template <class T> struct has_nothrow_assign;``
+    - ``T`` is neither ``const`` nor a reference type, and ``has_trivial_assign<T>::value`` is ``true`` or :raw-html:`<span class="del"><code>T</code> is a class type whose copy assignment operators taking an lvalue of type <code>T</code> are all known not to throw any exceptions or T is an array of such a class type</span><span class="ins"><code>noexcept(*(U*)0 = declval&lt;const U&amp;&gt;())</code> is true, where <code>U</code> is <code>remove_all_extents&lt;T&gt;::type</code>.</span>`
+    - :raw-html:`<span class="ins"><code>T</code> shall be a complete type, (possibly cv-qualified) void, or an array of unknown bound.</span>`
+  * - :raw-html:`<span class="ins"><code>template &lt;class T&gt; struct has_nothrow_move_assign;</code></span>`
+    - :raw-html:`<span class="ins"><code>has_move_assign&lt;T&gt;::value</code> is true and <code>T</code> is a trivial type (3.9) or the expression <code>noexcept(*(U*)0 = declval&lt;U&gt;())</code> is true, where <code>U</code> is <code>remove_all_extents&lt;T&gt;::type</code>..</span>`
+    - :raw-html:`<span class="ins"><code>T</code> shall be a complete type, (possibly cv-qualified) void, or an array of unknown bound.</span>`
 
 23.3.2.3 deque modifiers [deque.modifiers]
 ==========================================
