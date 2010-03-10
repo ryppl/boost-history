@@ -32,10 +32,9 @@
 //  fun(a1,..,.ai)                  r<T,i,P0>
 //  cfun(a1,..,.ai)                 r<const T,i,P0>
 //
-// Note : for performance, it is critical that the collection builder,
-// auto_size::expr<> be used only during construction of the result, not as 
-// part of the result itself. In designing a custom policy, look first at how 
-// the default hanldes this.
+// Note : It is critical that the collection builder auto_size::expr<> be used 
+// only during construction of the result, not as part of the result itself. 
+// Keep this in mind in designing a custom policy.
 
 #ifndef BOOST_ASSIGN_CSV_SIZE
 #define BOOST_ASSIGN_CSV_SIZE 20

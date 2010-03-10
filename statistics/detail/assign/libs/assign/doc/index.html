@@ -1571,15 +1571,21 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
 <span class=special>} </span><span class=comment>// namespace 'boost'</span></pre></blockquote>
 
     <p>
-  <b>Issues</b> 
+  <b>Design</b> 
   </p>
 <p>
-   The purpose of the 'auto-size' the framework is to be able to deduce at compile time the number of arguments in the collection, 
-   which is correctly achieved for successive calls to the unary operator of <code>auto_size::expr&lt;&gt;</code>. That is not the case, however,
-   for the member function <code>range()</code> (unless the argument has a static size). While this function is nonetheless provided to attain AMAP 
-   conformity with the rest of the <a href="http://www.boost.org/doc/libs/1_42_0/libs/assign/index.html">Boost.Assign<a> library, it might be more flexible, 
-   in the future, to separate the tools that create collection from individual elements, from those that concatenate collections. It would still be possible, 
-   as a convenience, to have <code>auto_size::expr&lt;&gt;</code> expose a member function <code>concat()</code>, that forwards to the relevant tool.
+   Each call to the unary operator returns an object that keeps a reference to the new argument,
+   and links to the current object, thereby forming a collection. The function <code>write_to_array</code>
+   passes the elements of the collection to any array. 
+</p>   
+<p>   
+   Naturally, this requires that the arguments be allocated on the stack. Consequently, this set up is 
+   ill-suited for the method <code>range()</code> whose size, in this case, must be specified explictly.
+   It would be more sensible, in the future, to separate the tools that create a collection from individual 
+   elements, from those that concatenate collections. It would still be possible, 
+   as a convenience, to have <code>auto_size::expr&lt;&gt;</code> expose a member function <code>concat()</code>, 
+   that would return a concatenator.
+
 </p>
   <h3><a name="ref-lazy_array">Proxy object <code>lazy_array&lt;&gt;</code></a></h3> 
   <b>Header</b> <code>&lt;boost/assign/auto_size/array/lazy.hpp></code>
