@@ -499,29 +499,30 @@ You can only use lvalues with <code>ref_list_of()</code> while
 <code>cref_list_of()</code> accepts rvalues too, as exemplified by the first three arguments of the 
 corresponding function call in this example. 
 
-<p> The collection built from <code>ref_list_of()</code> and <code>cref_list_of()</code> has most of the functionality of <code>boost::array<></code>, and 
-the same conversion capabilities as the collection built from <code>list_of()</code>. However, the user can design his own 'policy' and call it with the overloaded functions
-<code>ref_list_of&lt;P&gt;()</code> and 
-<code>cref_list_of&lt;P&gt;()</code>, where <code>P</code> is an associated policy tag. See the <a href="#ref-ref_list_of">reference</a> for details
+<p> A collection built from <code>ref_list_of()</code> and <code>cref_list_of()</code> has most of the functionality of <code>boost::array<></code>, and 
+the same conversion capabilities as a collection built from <code>list_of()</code>. However, the user can customize his own functionality via a policy and 
+call it with the overloaded functions <code>ref_list_of&lt;P&gt;()</code> and <code>cref_list_of&lt;P&gt;()</code>, where <code>P</code> is an associated policy tag. 
+See the <a href="#ref-ref_list_of">reference</a> for details
 </p>
 
 <p>
 There are overloads which predate the above functions,
 <code>ref_list_of&lt;int&gt;()</code> and <code>cref_list_of&lt;int&gt;()</code>, whose integer template parameter specifies the maximum number of arguments. 
-The resulting collection builder exposes a similar interface to that above, save for the specifics of an array, and is not customizable via a policy.
+The resulting collection exposes a similar interface to that above, save for the specifics of an array, and is not customizable via a policy.
 See the <a href="#ref-list_of">reference</a> for details
 </p>
 
 <p>
-A variation on <code>ref_list_of()</code> and <code>cref_list_of()</code>, are <code>ref_rebind_list_of()</code> and <code>cref_rebind_list_of()</code>, respectively, that have rebind, 
-rather than copy semantics, when the collection is used as the left hand side of an assignement. These are discouraged unless this specific feature is required. See the <a href="#ref-ref_list_of">reference</a>.
+A variation on <code>ref_list_of()</code> and <code>cref_list_of()</code>, are <code>ref_rebind_list_of()</code> and <code>cref_rebind_list_of()</code>, respectively, 
+that have rebind, rather than copy semantics, when the collection is used as the left hand side of an assignement. These functions are less intuitive so their use is discouraged 
+unless this specific feature is required. See the <a href="#ref-ref_list_of">reference</a>.
 </p>
 
 <h3>Functions <code>ref_csv()</code>, <code>cref_csv()</code> <a name="ref_csv"> and related functions</h3>
 
 The functions <a href="#ref_list_of"><code>ref_list_of()</code></a>, <a href="#ref_list_of"><code>cref_list_of()</code></a>, 
-their respective rebind analogs, and the overloads of these four whose policy is specified by a template parameter, 
-have counterparts that are identified by suffix 'csv' (comma separated values) instead of 'list_of'. For example,
+their respective rebind analogs, and the custom policy overloads of these four, have counterparts that are identified by suffix 'csv' (comma separated values) 
+instead of 'list_of'. For example,
 <blockquote>
     <pre>
 <span class=preprocessor>#include </span><span class=special>&lt;</span><span class=identifier>boost</span><span class=special>/</span><span class=identifier>assign</span><span class=special>/</span><span class=identifier>auto_size</span><span class=special>/</span><span class=identifier>ref_csv</span><span class=special>.</span><span class=identifier>hpp</span><span class=special>&gt;</span>
@@ -788,9 +789,9 @@ Originally arguments were passed by value (and still is in
   into nested compile time expressions, the last of which is 'dressed' as needed with iterator and 
   conversion operations. This is in contrast to other parts of this library, where the argument is either
   directly inserted into its destination container or stored in a runtime-fashion. The corresponding functions, however,
-  such as <a href="ref-ref_list_of"><code>ref_list_of()</code></a> or <a href="ref-ref_csv"><code>ref_csv()</code></a>,
-  operate under the same principle as those in the rest of this library and are therefore also in <code>boost::assign</code>. The 
-  implementation is in <code>boost::assign::detail::auto_size</code>.
+  such as <a href="#ref-ref_list_of"><code>ref_list_of()</code></a> or <a href="#ref-ref_csv"><code>ref_csv()</code></a>,
+  operate under the same principle as those in the rest of this library and are therefore in the same namespace, <code>boost::assign</code>. 
+  The implementation is in <code>boost::assign::detail::auto_size</code>.
   </p>
 
   <h2>Reference for functions and operators <a name="ref-functions"> </h3>
@@ -1027,7 +1028,7 @@ above, except the fourth argument to <a href="#ref-expr"> <tt>expr&lt;&gt;</tt><
   </blockquote>
 <p>
 Usage for the related functions <code>ref_rebind_list_of()</code> and <code>cref_rebind_list_of()</code> are identical to those
-above, except <code>R=ref_rebind</code>.
+above, and their result type are modified by replacing <code>ref_copy</code> replaced by <code>ref_rebind</code>.
 </p>
 
 <p>
@@ -1272,7 +1273,7 @@ The maximum number of arguments to a csv function is <code>BOOST_ASSIGN_CSV_SIZE
   <blockquote>
   	<table cellpadding=5 border=1>
   	<tr><th class="head">Expression</th> <th class="head">Description</th>
-  	<tr><td><a href="#ref-converter"><tt>converter&lt&gt</tt><a></td> <td>Public base class</td></tr>
+  	<tr><td><a href="#ref-converter"><tt>converter&lt&gt</tt><a></td><td> Public base class of <a href="#ref-generic_list"><tt>generic_list&lt&gt</tt></a></td> </tr>
   	</table>
   </blockquote>
 
@@ -1353,7 +1354,7 @@ The maximum number of arguments to a csv function is <code>BOOST_ASSIGN_CSV_SIZE
   <blockquote>
   	<table cellpadding=5 border=1>
   	<tr><th class="head">Expression</th> <th class="head">Description</th>
-  	<tr><td><a href="#ref-converter"><tt>converter&lt&gt</tt><a></td><td> Public base class </td> </tr>
+  	<tr><td><a href="#ref-converter"><tt>converter&lt&gt</tt><a></td><td> Public base class of <a href="#ref-static_generic_list"><tt>static_generic_list&lt&gt</tt></a></td> </tr>
   	</table>
   </blockquote>
 
@@ -1473,8 +1474,20 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
   	<tr><th class="head">Parameter</th> <th class="head">Description</th>
   	<tr><td><tt>T</tt></td><td> Element </td> </tr>
   	<tr><td><tt>N</tt></td><td> Size </td> </tr>
-  	<tr><td><tt>R</tt></td><td> Reference wrapper around an element </td> </tr>
+  	<tr><td><tt>R</tt></td><td> A class template </td> </tr>
   	<tr><td><tt>D</tt></td><td> Derived </td> </tr>
+  	</table>
+  </blockquote>
+
+    <p>
+  <b>Associated types</b> 
+  </p>
+
+  <blockquote>
+  	<table cellpadding=5 border=1>
+  	<tr><th class="head">Expression</th> <th class="head">Description</th>
+  	<tr><td><tt>R&lt;T&gt;</tt></td><td> Reference wrapper </td> </tr>
+  	<tr><td><a href="#ref-converter"><tt>converter&lt&gt</tt></a></td><td> Public base class of <a href="#ref-array_interface"><tt>array_interface&lt&gt</tt></a></td> </tr>
   	</table>
   </blockquote>
 
@@ -1487,17 +1500,6 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
   	<tr><th class="head">Expression</th> <th class="head">Result</th>
   	<tr><td><tt>d1.ref_array_impl()</tt></td><td> array_interface::ref_array_& </td> </tr>
   	<tr><td><tt>d2.ref_array_impl()</tt></td><td> const array_interface::ref_array_& </td> </tr>
-  	</table>
-  </blockquote>
-
-    <p>
-  <b>Associated types</b> 
-  </p>
-
-  <blockquote>
-  	<table cellpadding=5 border=1>
-  	<tr><th class="head">Expression</th> <th class="head">Description</th>
-  	<tr><td><a href="#ref-converter"><tt>converter&lt&gt</tt><a></td><td> Public base class </td> </tr>
   	</table>
   </blockquote>
 
@@ -1517,7 +1519,7 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
   	<tr><td><tt>E</tt></td><td> Previous collection </td> </tr>
   	<tr><td><tt>T</tt></td><td> Element </td> </tr>
   	<tr><td><tt>N</tt></td><td> Size </td> </tr>
-  	<tr><td><tt>R</tt></td><td> Reference wrapper around an element </td> </tr>
+  	<tr><td><tt>R</tt></td><td> A class template </td> </tr>
   	<tr><td><tt>P</tt></td><td> Policy tag</td> </tr>
   	<tr><td><tt>F</tt></td><td> Use reference to link to the previous collection </td> </tr>
   	</table>
@@ -1530,7 +1532,8 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
   <blockquote>
   	<table cellpadding=5 border=1>
   	<tr><th class="head">Expression</th> <th class="head">Description</th>
-  	<tr><td><tt><code>policy&lt;P&gt;::apply&lt;expr,R&gt;::type</code></tt></td><td> Public base class </td> </tr>
+  	<tr><td><tt>R&lt;T&gt;</tt></td><td> Reference wrapper </td> </tr>
+  	<tr><td><tt><code>policy&lt;P&gt;::apply&lt;expr,R&gt;::type</code></tt></td><td> Public base class of <a href="#ref-expr">expr&lt;&gt;</a> </td> </tr>
   	</table>
   </blockquote>
 
@@ -1552,7 +1555,7 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
     class expr{
         <span class="keyword">public:</span>       
 
-        <span class="keyword">typedef</span> Implementation defined result_type;
+        <span class="keyword">typedef</span> Implementation-defined result_type;
         <span class="keyword">explicit</span> expr(<span class="keyword">const</span> E& p,T& t);
         <span class="keyword">template</span>&lt;<span class="keyword">typename</span> E1,<span class="keyword">typename</span> P1,<span class="keyword">bool</span> F1>
         <span class="keyword">explicit</span> expr(<span class="keyword">const</span> expr<E1,T,N,R,P1,F1>& that);
@@ -1560,23 +1563,23 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
         result_type <span class="keyword">operator</span>()(T& t)<span class="keyword">const</span>;
         
         <span class="keyword">template</span>&lt;<span class="keyword">int</span> K,<span class="keyword">typename</span> I>
-        Implementation defined
+        Implementation-defined
         range(I b,I e)<span class="keyword">const</span>;
 
         <span class="keyword">template</span>&lt;<span class="keyword">int</span> K,<span class="keyword">typename</span> Range>
-        Implementation defined
+        Implementation-defined
         range(Range& r)<span class="keyword">const</span>;
 
         <span class="keyword">template</span>&lt;<span class="keyword">int</span> K,<span class="keyword">typename</span> Range>
-        Implementation defined
+        Implementation-defined
         range(<span class="keyword">const</span> Range& r)<span class="keyword">const</span>;
 
         <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Range>
-        Implementation defined
+        Implementation-defined
         range(Range& r);
 
         <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Range>
-        Implementation defined
+        Implementation-defined
         range(<span class="keyword">const</span> Range& r);
 
     };  
@@ -1602,7 +1605,7 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
 </p>   
 <p>   
    Naturally, this requires that the successive arguments be allocated on the stack. Consequently, this set up is 
-   ill-suited for the method <code>range()</code> whose argument size, must be specified explictly, 
+   ill-suited for the method <code>range()</code> whose argument size must be specified explictly (unless its argument has static size), 
    unlike the remainder of this library. A fully <a href="#auto_size">auto-size</a> framework could 
    be achieved, in the future, by having <code>auto_size::expr&lt;&gt;</code> expose a member function 
    <code>concat()</code>, that returns a proxy object whose task is to aggregate collections, 
@@ -1621,7 +1624,7 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
   	<tr><th class="head">Parameter</th> <th class="head">Description</th>
   	<tr><td><tt>T</tt></td><td> Element </td> </tr>
   	<tr><td><tt>N</tt></td><td> Size </td> </tr>
-  	<tr><td><tt>R</tt></td><td> Reference wrapper around an element </td> </tr>
+  	<tr><td><tt>R</tt></td><td> A class template</td> </tr>
   	<tr><td><tt>D</tt></td><td> Derived </td> </tr>
   	</table>
   </blockquote>
@@ -1633,14 +1636,15 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
   <blockquote>
   	<table cellpadding=5 border=1>
   	<tr><th class="head">Expression</th> <th class="head">Description</th>
-  	<tr><td><a href="#ref-array_interface"><tt>array_interface&lt&gt</tt><a></td><td> Public base class </td> </tr>
+  	<tr><td><tt>R&lt;T&gt;</tt></td><td> Reference wrapper </td> </tr>
+  	<tr><td><a href="#ref-array_interface"><tt>array_interface&lt;&gt;</tt><a></td><td> Public base class of <a href="#ref-lazy_array"><tt>lazy_array&lt;&gt;</tt></td> </tr>
   	</table>
   </blockquote>
 
     <p>
   <b>Requirements</b> 
   </p>
-  Let <tt>d</tt> denote an instance of <tt>D</tt> and <tt>a</tt> an instance of <code>boost::array&lt;T,N&gt;</code>,
+  Let <tt>d</tt> denote an instance of <tt>D</tt> and <tt>a</tt> an instance of <code>boost::array&lt;R&lt;T&gt;,N&gt;</code>,
   <blockquote>
   	<table cellpadding=5 border=1>
   	<tr><th class="head">Expression</th> <th class="head">Effect</th>
@@ -1667,7 +1671,7 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
   	<tr><th class="head">Parameter</th> <th class="head">Description</th>
   	<tr><td><tt>T</tt></td><td> Element </td> </tr>
   	<tr><td><tt>N</tt></td><td> Size </td> </tr>
-  	<tr><td><tt>R</tt></td><td> Reference wrapper around an element </td> </tr>
+  	<tr><td><tt>R</tt></td><td> A class template </td> </tr>
   	</table>
   </blockquote>
 
@@ -1678,14 +1682,15 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
   <blockquote>
   	<table cellpadding=5 border=1>
   	<tr><th class="head">Expression</th> <th class="head">Description</th>
-  	<tr><td><a href="#ref-array_interface"><tt>array_interface&lt&gt</tt><a></td><td> Public base class </td> </tr>
+  	<tr><td><tt>R&lt;T&gt;</tt></td><td> Reference wrapper </td> </tr>
+  	<tr><td><a href="#ref-array_interface"><tt>array_interface&lt&gt</tt><a></td><td> Public base class of <a href="#ref-static_array"><tt>static_array&lt;&gt;</tt></a></td> </tr>
   	</table>
   </blockquote>
 
     <p>
   <b>Requirements</b> 
   </p>
-  Let <tt>e</tt> denote the argument passed to the constructor, and a an instance of <code>boost::array&lt;T,N&gt;</code>,
+  Let <tt>e</tt> denote the argument passed to the constructor, and a an instance of <code>boost::array&lt;R&lt;T&gt;,N&gt;</code>,
   <blockquote>
   	<table cellpadding=5 border=1>
   	<tr><th class="head">Expression</th> <th class="head">Effect</th>
