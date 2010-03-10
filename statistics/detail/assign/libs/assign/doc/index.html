@@ -1601,7 +1601,7 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
    A call to the unary operator returns an object that keeps a reference to the passed argument,
    and links to the current object, thereby forming a collection, whose final size is determined
    at compile time. The function <code>write_to_array()</code> passes the elements of the collection 
-   to any array. 
+   to any array, that will be chosen to have the desired interface, usually iterators and conversion operators. 
 </p>   
 <p>   
    Naturally, this requires that the successive arguments be allocated on the stack. Consequently, this set up is 
