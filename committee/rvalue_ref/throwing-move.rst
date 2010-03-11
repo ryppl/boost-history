@@ -1,11 +1,11 @@
-=====================================
- Allowing Move Constructors to Throw
-=====================================
+=============================================
+ Allowing Move Constructors to Throw (Rev. 1)
+=============================================
 
 :Author: David Abrahams, Rani Sharoni, Doug Gregor
 :Contact: dave@boostpro.com, rani_sharoni@hotmail.com, doug.gregor@gmail.com
 :organization: `BoostPro Computing`_
-:date: 2009-11-09
+:date: 2010-03-11
 
 :Number: D3050=10-0040
 :Revises: N2983=09-0173 
