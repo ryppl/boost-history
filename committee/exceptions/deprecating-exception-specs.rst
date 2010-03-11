@@ -16,6 +16,23 @@
 
 .. contents:: index
 
+.. role:: sub
+
+.. role:: ins
+
+.. role:: del
+
+.. role:: ed
+
+.. role:: insc(ins)
+   :class: ins code
+
+.. role:: delc(del)
+   :class: ins code
+
+.. role:: raw-html(raw)
+   :format: html
+
 Introduction
 ************
 
@@ -57,8 +74,8 @@ exception.
 With the introduction of ``noexcept``, programmers can now express the
 two kinds of exception guarantees that are useful in practice, without
 additional overhead. This paper therefore proposes to deprecate
-"dynamic" exception specifications, i.e., those based on
-``noexcept``.
+"dynamic" exception specifications, i.e., those that are written as 
+:raw-html:`<code>throw(</code><i>type-id-list<sub>opt</sub></i><code>)</code>`.
 
 Approach
 ********
@@ -66,7 +83,7 @@ Approach
 The general approach taken by this paper is to separate the wording
 required for dynamic exception specifications (those using ``throw``)
 into a new, deprecated section D.5, while maintaining the description
-of ``noexception`` and the general behavior of exception
+of ``noexcept`` and the general behavior of exception
 specifications in 15.4. The intent of the revised 15.4 (and core
 language in general) is to minimize the number of dependencies on
 the deprecated section D.5, and to mark each of those with a
@@ -120,23 +137,6 @@ changes to use ``noexcept``.
 
 Proposed Changes to Standard Wording
 ************************************
-
-.. role:: sub
-
-.. role:: ins
-
-.. role:: del
-
-.. role:: ed
-
-.. role:: insc(ins)
-   :class: ins code
-
-.. role:: delc(del)
-   :class: ins code
-
-.. role:: raw-html(raw)
-   :format: html
 
 The wording in this paper is based on the current working paper
 (N3035) as amended by N3050.
@@ -394,19 +394,19 @@ the working paper.
 
       struct A { 
         A();
-        A(const A&) throw();
+        A(const A&) :del:`throw()`:ins:`noexcept`;
         ~A() throw(X); 
       };
 
       struct B { 
-        B() throw(); 
-        B(const B&) throw(); 
+        B() :del:`throw()`:ins:`noexcept`; 
+        B(const B&) :del:`throw()`:ins:`noexcept`; 
         ~B() throw(Y);
       };
 
       struct D : public A, public B {
         // Implicit declaration of D::D(); 
-        // Implicit declaration of D::D(const D&) throw(); 
+        // Implicit declaration of D::D(const D&) :del:`throw()`:ins:`noexcept`; 
         // Implicit declaration of D::~D() throw(X,Y);
       };
 

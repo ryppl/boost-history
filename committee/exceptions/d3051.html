@@ -389,15 +389,15 @@ exception.</p>
 <p>With the introduction of <tt class="docutils literal"><span class="pre">noexcept</span></tt>, programmers can now express the
 two kinds of exception guarantees that are useful in practice, without
 additional overhead. This paper therefore proposes to deprecate
-&quot;dynamic&quot; exception specifications, i.e., those based on
-<tt class="docutils literal"><span class="pre">noexcept</span></tt>.</p>
+&quot;dynamic&quot; exception specifications, i.e., those that are written as
+<span class="raw-html"><code>throw(</code><i>type-id-list<sub>opt</sub></i><code>)</code></span>.</p>
 </div>
 <div class="section" id="approach">
 <h1><a class="toc-backref" href="#id7">Approach</a></h1>
 <p>The general approach taken by this paper is to separate the wording
 required for dynamic exception specifications (those using <tt class="docutils literal"><span class="pre">throw</span></tt>)
 into a new, deprecated section D.5, while maintaining the description
-of <tt class="docutils literal"><span class="pre">noexception</span></tt> and the general behavior of exception
+of <tt class="docutils literal"><span class="pre">noexcept</span></tt> and the general behavior of exception
 specifications in 15.4. The intent of the revised 15.4 (and core
 language in general) is to minimize the number of dependencies on
 the deprecated section D.5, and to mark each of those with a
@@ -686,19 +686,19 @@ operator, <span class="ins">then:</span></p>
 <pre class="literal-block">
 struct A {
   A();
-  A(const A&amp;) throw();
+  A(const A&amp;) <span class="del">throw()</span><span class="ins">noexcept</span>;
   ~A() throw(X);
 };
 
 struct B {
-  B() throw();
-  B(const B&amp;) throw();
+  B() <span class="del">throw()</span><span class="ins">noexcept</span>;
+  B(const B&amp;) <span class="del">throw()</span><span class="ins">noexcept</span>;
   ~B() throw(Y);
 };
 
 struct D : public A, public B {
   // Implicit declaration of D::D();
-  // Implicit declaration of D::D(const D&amp;) throw();
+  // Implicit declaration of D::D(const D&amp;) <span class="del">throw()</span><span class="ins">noexcept</span>;
   // Implicit declaration of D::~D() throw(X,Y);
 };
 </pre>
