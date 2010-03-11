@@ -338,7 +338,9 @@ rst2html.py - -footnote-references=superscript \
 <li><a class="reference internal" href="#exception-specifications-except-spec" id="id8">15.4 Exception specifications [except.spec]</a></li>
 <li><a class="reference internal" href="#special-functions-except-special" id="id9">15.5 Special functions [except.special]</a></li>
 <li><a class="reference internal" href="#the-std-unexpected-function-except-unexpected" id="id10">15.5.2 The <tt class="docutils literal"><span class="pre">std::unexpected()</span></tt> function [except.unexpected]</a></li>
-<li><a class="reference internal" href="#d-5-dynamic-exception-specifications-depr-except-spec-dynamic" id="id11"><span class="ins">D.5 Dynamic exception specifications [depr.except.spec.dynamic]</span></a></li>
+<li><a class="reference internal" href="#exception-handling-support-exception" id="id11">18.8 Exception handling [support.exception]</a></li>
+<li><a class="reference internal" href="#violating-exception-specifications-exception-unexpected" id="id12">18.8.2  Violating exception-specifications [exception.unexpected]</a></li>
+<li><a class="reference internal" href="#d-5-dynamic-exception-specifications-depr-except-spec-dynamic" id="id13"><span class="ins">D.5 Dynamic exception specifications [depr.except.spec.dynamic]</span></a></li>
 </ul>
 </li>
 </ul>
@@ -725,8 +727,49 @@ follows:</p>
 <p>4 Thus, <span class="del">an</span> <span class="ins">a</span> <span class="raw-html"><i><span class="ins">dynamic-</span>exception-specification</i> guarantees that only the listed exceptions will be thrown. If the <i><span class="ins">dynamic-</span>exception-specification</i> includes the type <code>std::bad_exception</code> then any exception not on the list may be replaced by <code>std::bad_exception</code> within the function <code>std::unexpected()</code>.</span></p>
 </blockquote>
 </div>
+<div class="section" id="exception-handling-support-exception">
+<h2><a class="toc-backref" href="#id11">18.8 Exception handling [support.exception]</a></h2>
+<p>Modify paragraph 1 as follows:</p>
+<blockquote>
+<p>1 The header <tt class="docutils literal"><span class="pre">&lt;exception&gt;</span></tt> defines several types and functions related to the handling of exceptions in a C++ program.</p>
+<p>Header <tt class="docutils literal"><span class="pre">&lt;exception&gt;</span></tt> synopsis</p>
+<pre class="literal-block">
+namespace std {
+  class exception;
+  <span class="del">class bad_exception;</span>
+  class nested_exception;
+
+  <span class="ins">// D.5.2, violating exception-specifications (deprecated):</span>
+  <span class="ins">class bad_exception;</span>
+  typedef void (*unexpected_handler)();
+  unexpected_handler set_unexpected(unexpected_handler f) throw();
+  void unexpected [[noreturn]] ();
+
+  typedef void (*terminate_handler)();
+  terminate_handler set_terminate(terminate_handler f) throw();
+  void terminate [[noreturn]] ();
+
+  bool uncaught_exception() throw();
+
+  typedef <em>unspecified</em> exception_ptr;
+
+  exception_ptr current_exception();
+  void rethrow_exception [[noreturn]] (exception_ptr p);
+  template&lt;class E&gt; exception_ptr copy_exception(E e);
+  template &lt;class T&gt; void throw_with_nested [[noreturn]] (T&amp;&amp; t);
+  template &lt;class E&gt; void rethrow_if_nested(const E&amp; e);
+}
+</pre>
+<p>SEE ALSO: 15.5 <span class="ins">, D.5.1 [depr.except.unexpected]</span>.</p>
+</blockquote>
+</div>
+<div class="section" id="violating-exception-specifications-exception-unexpected">
+<h2><a class="toc-backref" href="#id12">18.8.2  Violating exception-specifications [exception.unexpected]</a></h2>
+<p>This section should be moved to D.5 to become D.5.2
+[depr.exception.unexpected].</p>
+</div>
 <div class="section" id="d-5-dynamic-exception-specifications-depr-except-spec-dynamic">
-<h2><a class="toc-backref" href="#id11"><span class="ins">D.5 Dynamic exception specifications [depr.except.spec.dynamic]</span></a></h2>
+<h2><a class="toc-backref" href="#id13"><span class="ins">D.5 Dynamic exception specifications [depr.except.spec.dynamic]</span></a></h2>
 <p>Insert this new section. <span class="ins">Green underlined text</span> is used to
 indicate new wording, while normal text is used whenever text was
 moved from another section (15.4, 15.5).</p>

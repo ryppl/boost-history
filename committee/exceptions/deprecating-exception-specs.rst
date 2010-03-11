@@ -442,6 +442,54 @@ follows:
 
   4 Thus, :del:`an` :ins:`a` :raw-html:`<i><span class="ins">dynamic-</span>exception-specification</i> guarantees that only the listed exceptions will be thrown. If the <i><span class="ins">dynamic-</span>exception-specification</i> includes the type <code>std::bad_exception</code> then any exception not on the list may be replaced by <code>std::bad_exception</code> within the function <code>std::unexpected()</code>.`
 
+18.8 Exception handling [support.exception]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Modify paragraph 1 as follows:
+
+  1 The header ``<exception>`` defines several types and functions related to the handling of exceptions in a C++ program.
+
+  Header ``<exception>`` synopsis
+
+  .. parsed-literal::
+
+    namespace std { 
+      class exception; 
+      :del:`class bad_exception;`
+      class nested_exception;
+
+      :ins:`// D.5.2, violating exception-specifications (deprecated):`
+      :ins:`class bad_exception;`
+      typedef void (\*unexpected_handler)(); 
+      unexpected_handler set_unexpected(unexpected_handler f) throw(); 
+      void unexpected [[noreturn]] ();
+
+      typedef void (\*terminate_handler)(); 
+      terminate_handler set_terminate(terminate_handler f) throw(); 
+      void terminate [[noreturn]] ();
+
+      bool uncaught_exception() throw(); 
+
+      typedef *unspecified* exception_ptr;
+
+      exception_ptr current_exception(); 
+      void rethrow_exception [[noreturn]] (exception_ptr p); 
+      template<class E> exception_ptr copy_exception(E e);
+      template <class T> void throw_with_nested [[noreturn]] (T&& t); 
+      template <class E> void rethrow_if_nested(const E& e);
+    }
+
+  SEE ALSO: 15.5 :ins:`, D.5.1 [depr.except.unexpected]`.
+
+
+
+
+18.8.2	Violating exception-specifications [exception.unexpected]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This section should be moved to D.5 to become D.5.2
+[depr.exception.unexpected].
+
 :ins:`D.5 Dynamic exception specifications [depr.except.spec.dynamic]`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
