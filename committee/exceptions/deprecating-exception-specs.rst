@@ -412,8 +412,17 @@ they should appear after the following edits are applied.
 
   14 :ed:`[Moved to D.5p8]` :raw-html:`<span class="del">In a <i>dynamic-exception-specification</i>, a <i>type-id</i> followed by an ellipsis is a pack expansion (14.6.3).</span>`
 
-  15 :ed:`[FIXME: Figure out what to do with p15! It's unfortunate
-  that we're describing noexcept in terms of throw()]`
+  15 If a function with a *noexcept-specification* whose
+  *constant-expression* yields ``true`` throws an exception, the
+  behavior is undefined. :raw-html:`<span
+  class="ins">[<i>Note</i>:</span> A <i>noexcept-specification</i>
+  whose <i>constant-expression</i> yields <code>true</code> is in all
+  other respects equivalent to the <i><span
+  class="ins">dynamic-</span>exception-specification</i>
+  <code>throw()</code> <span class="ins">(D.5)</span>.<span
+  class="ins"> - <i>end note</i>]</span>` A *noexcept-specification*
+  whose *constant-expression* yields ``false`` is equivalent to omitting the
+  *exception-specification* altogether.
 
 :ins:`D.5 Dynamic exception specifications [depr.except.spec.dynamic]`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

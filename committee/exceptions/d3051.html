@@ -694,8 +694,17 @@ struct D : public A, public B {
 </blockquote>
 <p>Furthermore, if <tt class="docutils literal"><span class="pre">A::~A()</span></tt> or <tt class="docutils literal"><span class="pre">B::~B()</span></tt> were virtual, <tt class="docutils literal"><span class="pre">D::~D()</span></tt> would not be as restrictive as that of <tt class="docutils literal"><span class="pre">A::~A</span></tt>, and the program would be ill-formed since a function that overrides a virtual function from a base class shall have an exception-specification at least as restrictive as that in the base class. - <em>end example</em> ]</p>
 <p>14 <span class="ed">[Moved to D.5p8]</span> <span class="raw-html"><span class="del">In a <i>dynamic-exception-specification</i>, a <i>type-id</i> followed by an ellipsis is a pack expansion (14.6.3).</span></span></p>
-<p>15 <span class="ed">[FIXME: Figure out what to do with p15! It's unfortunate
-that we're describing noexcept in terms of throw()]</span></p>
+<p>15 If a function with a <em>noexcept-specification</em> whose
+<em>constant-expression</em> yields <tt class="docutils literal"><span class="pre">true</span></tt> throws an exception, the
+behavior is undefined. <span class="raw-html"><span
+class="ins">[<i>Note</i>:</span> A <i>noexcept-specification</i>
+whose <i>constant-expression</i> yields <code>true</code> is in all
+other respects equivalent to the <i><span
+class="ins">dynamic-</span>exception-specification</i>
+<code>throw()</code> <span class="ins">(D.5)</span>.<span
+class="ins"> - <i>end note</i>]</span></span> A <em>noexcept-specification</em>
+whose <em>constant-expression</em> yields <tt class="docutils literal"><span class="pre">false</span></tt> is equivalent to omitting the
+<em>exception-specification</em> altogether.</p>
 </blockquote>
 </div>
 <div class="section" id="d-5-dynamic-exception-specifications-depr-except-spec-dynamic">
