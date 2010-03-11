@@ -183,10 +183,12 @@ Modify the paragraphs in this section as follows. Note that every
 paragraph in this section is accounted for (even those that have not
 changed), to ease review. Editorial notes are :ed:`[Yellow]` and will
 describe, e.g., when specific paragraphs have been moved. The
-paragraphs are numbered as in the working paper, but are ordered as
-they should appear after the following edits are applied.
+paragraphs are numbered with old and new numbers (old/new), where the
+old numbers refer to the current working paper and the new numbers
+refer to the desired paragraph numbers after this paper is applied to
+the working paper.
 
-  1 A function declaration lists exceptions that its function might
+  :del:`1`/:ins:`1` A function declaration lists exceptions that its function might
   directly or indirectly throw by using an *exception-specification*
   as a suffix of its declarator. 
   :raw-html:`<span class="ins">A function is said to <i>allow</i> an
@@ -210,12 +212,12 @@ they should appear after the following edits are applied.
       ``noexcept (`` *constant-expression* ``)``
       ``noexcept``
 
-  In a *noexcept-specification*, the *constant-expression*, if supplied,
+  :ins:`2` In a *noexcept-specification*, the *constant-expression*, if supplied,
   shall be a constant expression ([expr.const]) that is contextually
   converted to ``bool`` ([conv] Clause 4). A *noexcept-specification*
   ``noexcept`` is equivalent to ``noexcept(true)``.
 
-  2 An *exception-specification* shall appear only on a function
+  :del:`2`/:ins:`3` An *exception-specification* shall appear only on a function
   declarator for a function type, pointer to function type, reference
   to function type, or pointer to member function type that is the
   top-level type of a declaration or definition, or on such a type
@@ -294,7 +296,7 @@ they should appear after the following edits are applied.
 
   :raw-html:`<span class="del">the call to <code>f</code> is well-formed even though when called, <code>f</code> might throw exception <code>Y</code> that <code>g</code> does not allow. - <i>end example</i> ]</span>`
 
-  11 A function with no *exception-specification*, or with an
+  :del:`11`/:ins:`4` A function with no *exception-specification*, or with an
   *exception-specification* of the form ``noexcept(``
   *constant-expression* ``)`` where the *constant-expression* yields
   ``false``, allows all exceptions. An *exception-specification* is
@@ -306,7 +308,7 @@ they should appear after the following edits are applied.
   non-throwing *exception-specification* does not allow any
   exceptions.
 
-  :ed:`[New paragraph]` :raw-html:`<span class="ins">Two
+  :ins:`5` :raw-html:`<span class="ins">Two
   <i>exception-specifications</i> are <i>compatible</i> if:</span>`
 
     * :raw-html:`<span class="ins">both are non-throwing (regardless of their form), </span>`
@@ -314,7 +316,7 @@ they should appear after the following edits are applied.
     * :raw-html:`<span class="ins">one <i>exception-specification</i> is of the form <code>noexcept(false)</code> and the other is of the form <code>throw(<i>type-id-list</i>)</code> (D.5), or</span>`
     * :raw-html:`<span class="ins">both are <i>dynamic-exception-specifications</i> (D.5) that have the same set of <i>type-id</i>s.</span>`
 
-  3 If any declaration of a function has an *exception-specification*,
+  :del:`3`/:ins:`6` If any declaration of a function has an *exception-specification*,
   all declarations, including the definition and an explicit
   specialization, of that function shall have an :raw-html:`<span
   class="ins">compatible</span> <i>exception-specification</i>
@@ -335,7 +337,7 @@ they should appear after the following edits are applied.
   different</span><span class="ins"><i>exception-specifications</i>
   are not compatible</span>` within a single translation unit.
 
-  4 If a virtual function has an *exception-specification*, all declarations, including the definition, of any function that overrides that virtual function in any derived class shall only allow exceptions that are allowed by the *exception-specification* of the base class virtual function. [ *Example*:
+  :del:`4`/:ins:`7` If a virtual function has an *exception-specification*, all declarations, including the definition, of any function that overrides that virtual function in any derived class shall only allow exceptions that are allowed by the *exception-specification* of the base class virtual function. [ *Example*:
 
     .. parsed-literal::
 
@@ -371,12 +373,12 @@ they should appear after the following edits are applied.
 
   - *end example* ]
 
-  5 In such an assignment or initialization, *exception-specifications* on return types and parameter types shall :del:`match exactly` :ins:`be compatible`. In other assignments or initializations, *exception-specifications* shall :del:`match exactly` :ins:`be compatible`.
+  :del:`5`/:ins:`8` In such an assignment or initialization, *exception-specifications* on return types and parameter types shall :del:`match exactly` :ins:`be compatible`. In other assignments or initializations, *exception-specifications* shall :del:`match exactly` :ins:`be compatible`.
 
-  12 An *exception-specification* is not considered part of a function's
+  :del:`12`/:ins:`9` An *exception-specification* is not considered part of a function's
   type.
 
-  13 An implicitly declared special member function (Clause 12)
+  :del:`13`/:ins:`10` An implicitly declared special member function (Clause 12)
   :del:`shall` :ins:`may` have an *exception-specification*. :del:`If`
   :ins:`Let` ``f`` :del:`is` :ins:`be` an implicitly declared default
   constructor, copy constructor, destructor, or copy assignment
@@ -410,9 +412,9 @@ they should appear after the following edits are applied.
 
   Furthermore, if ``A::~A()`` or ``B::~B()`` were virtual, ``D::~D()`` would not be as restrictive as that of ``A::~A``, and the program would be ill-formed since a function that overrides a virtual function from a base class shall have an exception-specification at least as restrictive as that in the base class. - *end example* ]
 
-  14 :ed:`[Moved to D.5p8]` :raw-html:`<span class="del">In a <i>dynamic-exception-specification</i>, a <i>type-id</i> followed by an ellipsis is a pack expansion (14.6.3).</span>`
+  :del:`14`/:ins:`11` :ed:`[Moved to D.5p8]` :raw-html:`<span class="del">In a <i>dynamic-exception-specification</i>, a <i>type-id</i> followed by an ellipsis is a pack expansion (14.6.3).</span>`
 
-  15 If a function with a *noexcept-specification* whose
+  :del:`15`/:ins:`12` If a function with a *noexcept-specification* whose
   *constant-expression* yields ``true`` throws an exception, the
   behavior is undefined. :raw-html:`<span
   class="ins">[<i>Note</i>:</span> A <i>noexcept-specification</i>

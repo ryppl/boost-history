@@ -482,10 +482,12 @@ class (12.5).</p>
 paragraph in this section is accounted for (even those that have not
 changed), to ease review. Editorial notes are <span class="ed">[Yellow]</span> and will
 describe, e.g., when specific paragraphs have been moved. The
-paragraphs are numbered as in the working paper, but are ordered as
-they should appear after the following edits are applied.</p>
+paragraphs are numbered with old and new numbers (old/new), where the
+old numbers refer to the current working paper and the new numbers
+refer to the desired paragraph numbers after this paper is applied to
+the working paper.</p>
 <blockquote>
-<p>1 A function declaration lists exceptions that its function might
+<p><span class="del">1</span>/<span class="ins">1</span> A function declaration lists exceptions that its function might
 directly or indirectly throw by using an <em>exception-specification</em>
 as a suffix of its declarator.
 <span class="raw-html"><span class="ins">A function is said to <i>allow</i> an
@@ -507,11 +509,11 @@ from the outermost block of that function out of the function.</span></span></p>
   <tt class="docutils literal"><span class="pre">noexcept</span> <span class="pre">(</span></tt> <em>constant-expression</em> <tt class="docutils literal"><span class="pre">)</span></tt>
   <tt class="docutils literal"><span class="pre">noexcept</span></tt>
 </pre>
-<p>In a <em>noexcept-specification</em>, the <em>constant-expression</em>, if supplied,
+<p><span class="ins">2</span> In a <em>noexcept-specification</em>, the <em>constant-expression</em>, if supplied,
 shall be a constant expression ([expr.const]) that is contextually
 converted to <tt class="docutils literal"><span class="pre">bool</span></tt> ([conv] Clause 4). A <em>noexcept-specification</em>
 <tt class="docutils literal"><span class="pre">noexcept</span></tt> is equivalent to <tt class="docutils literal"><span class="pre">noexcept(true)</span></tt>.</p>
-<p>2 An <em>exception-specification</em> shall appear only on a function
+<p><span class="del">2</span>/<span class="ins">3</span> An <em>exception-specification</em> shall appear only on a function
 declarator for a function type, pointer to function type, reference
 to function type, or pointer to member function type that is the
 top-level type of a declaration or definition, or on such a type
@@ -581,7 +583,7 @@ continue at the call of the function with this
 </pre>
 </blockquote>
 <p><span class="raw-html"><span class="del">the call to <code>f</code> is well-formed even though when called, <code>f</code> might throw exception <code>Y</code> that <code>g</code> does not allow. - <i>end example</i> ]</span></span></p>
-<p>11 A function with no <em>exception-specification</em>, or with an
+<p><span class="del">11</span>/<span class="ins">4</span> A function with no <em>exception-specification</em>, or with an
 <em>exception-specification</em> of the form <tt class="docutils literal"><span class="pre">noexcept(</span></tt>
 <em>constant-expression</em> <tt class="docutils literal"><span class="pre">)</span></tt> where the <em>constant-expression</em> yields
 <tt class="docutils literal"><span class="pre">false</span></tt>, allows all exceptions. An <em>exception-specification</em> is
@@ -592,7 +594,7 @@ non-throwing if it is of the form <span class="del">throw(),</span> <tt class="d
 . A function with a
 non-throwing <em>exception-specification</em> does not allow any
 exceptions.</p>
-<p><span class="ed">[New paragraph]</span> <span class="raw-html"><span class="ins">Two
+<p><span class="ins">5</span> <span class="raw-html"><span class="ins">Two
 <i>exception-specifications</i> are <i>compatible</i> if:</span></span></p>
 <blockquote>
 <ul class="simple">
@@ -602,7 +604,7 @@ exceptions.</p>
 <li><span class="raw-html"><span class="ins">both are <i>dynamic-exception-specifications</i> (D.5) that have the same set of <i>type-id</i>s.</span></span></li>
 </ul>
 </blockquote>
-<p>3 If any declaration of a function has an <em>exception-specification</em>,
+<p><span class="del">3</span>/<span class="ins">6</span> If any declaration of a function has an <em>exception-specification</em>,
 all declarations, including the definition and an explicit
 specialization, of that function shall have an <span class="raw-html"><span
 class="ins">compatible</span> <i>exception-specification</i>
@@ -622,7 +624,7 @@ of that function.
 A diagnostic is required only if the <span class="raw-html"><span class="del">sets of <i>type-id</i>s are
 different</span><span class="ins"><i>exception-specifications</i>
 are not compatible</span></span> within a single translation unit.</p>
-<p>4 If a virtual function has an <em>exception-specification</em>, all declarations, including the definition, of any function that overrides that virtual function in any derived class shall only allow exceptions that are allowed by the <em>exception-specification</em> of the base class virtual function. [ <em>Example</em>:</p>
+<p><span class="del">4</span>/<span class="ins">7</span> If a virtual function has an <em>exception-specification</em>, all declarations, including the definition, of any function that overrides that virtual function in any derived class shall only allow exceptions that are allowed by the <em>exception-specification</em> of the base class virtual function. [ <em>Example</em>:</p>
 <blockquote>
 <pre class="literal-block">
 struct B {
@@ -659,10 +661,10 @@ void f() {
 <ul class="simple">
 <li><em>end example</em> ]</li>
 </ul>
-<p>5 In such an assignment or initialization, <em>exception-specifications</em> on return types and parameter types shall <span class="del">match exactly</span> <span class="ins">be compatible</span>. In other assignments or initializations, <em>exception-specifications</em> shall <span class="del">match exactly</span> <span class="ins">be compatible</span>.</p>
-<p>12 An <em>exception-specification</em> is not considered part of a function's
+<p><span class="del">5</span>/<span class="ins">8</span> In such an assignment or initialization, <em>exception-specifications</em> on return types and parameter types shall <span class="del">match exactly</span> <span class="ins">be compatible</span>. In other assignments or initializations, <em>exception-specifications</em> shall <span class="del">match exactly</span> <span class="ins">be compatible</span>.</p>
+<p><span class="del">12</span>/<span class="ins">9</span> An <em>exception-specification</em> is not considered part of a function's
 type.</p>
-<p>13 An implicitly declared special member function (Clause 12)
+<p><span class="del">13</span>/<span class="ins">10</span> An implicitly declared special member function (Clause 12)
 <span class="del">shall</span> <span class="ins">may</span> have an <em>exception-specification</em>. <span class="del">If</span>
 <span class="ins">Let</span> <tt class="docutils literal"><span class="pre">f</span></tt> <span class="del">is</span> <span class="ins">be</span> an implicitly declared default
 constructor, copy constructor, destructor, or copy assignment
@@ -697,8 +699,8 @@ struct D : public A, public B {
 </pre>
 </blockquote>
 <p>Furthermore, if <tt class="docutils literal"><span class="pre">A::~A()</span></tt> or <tt class="docutils literal"><span class="pre">B::~B()</span></tt> were virtual, <tt class="docutils literal"><span class="pre">D::~D()</span></tt> would not be as restrictive as that of <tt class="docutils literal"><span class="pre">A::~A</span></tt>, and the program would be ill-formed since a function that overrides a virtual function from a base class shall have an exception-specification at least as restrictive as that in the base class. - <em>end example</em> ]</p>
-<p>14 <span class="ed">[Moved to D.5p8]</span> <span class="raw-html"><span class="del">In a <i>dynamic-exception-specification</i>, a <i>type-id</i> followed by an ellipsis is a pack expansion (14.6.3).</span></span></p>
-<p>15 If a function with a <em>noexcept-specification</em> whose
+<p><span class="del">14</span>/<span class="ins">11</span> <span class="ed">[Moved to D.5p8]</span> <span class="raw-html"><span class="del">In a <i>dynamic-exception-specification</i>, a <i>type-id</i> followed by an ellipsis is a pack expansion (14.6.3).</span></span></p>
+<p><span class="del">15</span>/<span class="ins">12</span> If a function with a <em>noexcept-specification</em> whose
 <em>constant-expression</em> yields <tt class="docutils literal"><span class="pre">true</span></tt> throws an exception, the
 behavior is undefined. <span class="raw-html"><span
 class="ins">[<i>Note</i>:</span> A <i>noexcept-specification</i>
