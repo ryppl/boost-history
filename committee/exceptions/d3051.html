@@ -332,10 +332,11 @@ rst2html.py - -footnote-references=superscript \
 <p class="topic-title first">index</p>
 <ul class="simple">
 <li><a class="reference internal" href="#introduction" id="id4">Introduction</a></li>
-<li><a class="reference internal" href="#proposed-changes-to-standard-wording" id="id5">Proposed Changes to Standard Wording</a><ul>
-<li><a class="reference internal" href="#dynamic-storage-duration-basic-stc-dynamic" id="id6">3.7.4 Dynamic storage duration [basic.stc.dynamic]</a></li>
-<li><a class="reference internal" href="#exception-specifications-except-spec" id="id7">15.4 Exception specifications [except.spec]</a></li>
-<li><a class="reference internal" href="#d-5-dynamic-exception-specifications-depr-except-spec-dynamic" id="id8"><span class="ins">D.5 Dynamic exception specifications [depr.except.spec.dynamic]</span></a></li>
+<li><a class="reference internal" href="#approach" id="id5">Approach</a></li>
+<li><a class="reference internal" href="#proposed-changes-to-standard-wording" id="id6">Proposed Changes to Standard Wording</a><ul>
+<li><a class="reference internal" href="#dynamic-storage-duration-basic-stc-dynamic" id="id7">3.7.4 Dynamic storage duration [basic.stc.dynamic]</a></li>
+<li><a class="reference internal" href="#exception-specifications-except-spec" id="id8">15.4 Exception specifications [except.spec]</a></li>
+<li><a class="reference internal" href="#d-5-dynamic-exception-specifications-depr-except-spec-dynamic" id="id9"><span class="ins">D.5 Dynamic exception specifications [depr.except.spec.dynamic]</span></a></li>
 </ul>
 </li>
 </ul>
@@ -382,12 +383,64 @@ additional overhead. This paper therefore proposes to deprecate
 &quot;dynamic&quot; exception specifications, i.e., those based on
 <tt class="docutils literal"><span class="pre">noexcept</span></tt>.</p>
 </div>
+<div class="section" id="approach">
+<h1><a class="toc-backref" href="#id5">Approach</a></h1>
+<p>The general approach taken by this paper is to separate the wording
+required for dynamic exception specifications (those using <tt class="docutils literal"><span class="pre">throw</span></tt>)
+into a new, deprecated section D.5, while maintaining the description
+of <tt class="docutils literal"><span class="pre">noexception</span></tt> and the general behavior of exception
+specifications in 15.4. The intent of the revised 15.4 (and core
+language in general) is to minimize the number of dependencies on
+the deprecated section D.5, and to mark each of those with a
+cross-reference.</p>
+<p>To aid in the transition from dynamic exception specifications to
+<tt class="docutils literal"><span class="pre">noexcept</span></tt>, the wording provides somewhat loose compatibility rules
+for redeclarations of functions that have exception
+specifications. Two rules stand out:</p>
+<blockquote>
+<p>1) All &quot;non-throwing&quot; forms of exception specifications
+(<tt class="docutils literal"><span class="pre">throw()</span></tt>, <tt class="docutils literal"><span class="pre">noexcept</span></tt>, <tt class="docutils literal"><span class="pre">noexcept(true)</span></tt>) are considered
+compatible, but the exception specification on the definition is
+what affects code generation:</p>
+<pre class="literal-block">
+// header ultramodern.h
+void f() noexcept;
+
+// source plodding.cpp
+#include &quot;ultramodern.h&quot;
+struct X { };
+void f() throw() { // okay, compatible with noexcept
+  throw X(); // calls std::unexpected()
+}
+</pre>
+<p>2) noexcept(false) is considered compatible with <tt class="docutils literal"><span class="pre">throw(</span></tt>
+<em>type-id-list</em> <tt class="docutils literal"><span class="pre">)</span></tt>:</p>
+<pre class="literal-block">
+// header ultramodern.h
+void g() noexcept(false);
+
+// source plodding.cpp
+#include &quot;ultramodern.h&quot;
+struct X { };
+void g() throw(X) { // okay, compatible with noexcept(false)
+  throw X(); // okay
+}
+</pre>
+</blockquote>
+<p>These compatibility rules allow a gradual migration from dynamic
+exception specifications to <tt class="docutils literal"><span class="pre">noexcept</span></tt>, since a declaration of a
+function can choose to use the new or old syntax independently in the
+declaration and in the definition. This is particularly important with
+the implicit declarations of <tt class="docutils literal"><span class="pre">operator</span> <span class="pre">new</span></tt>, <tt class="docutils literal"><span class="pre">operator</span> <span class="pre">new[]</span></tt>,
+<tt class="docutils literal"><span class="pre">operator</span> <span class="pre">delete</span></tt>, and <tt class="docutils literal"><span class="pre">operator</span> <span class="pre">delete[]</span></tt>, which this document
+changes to use <tt class="docutils literal"><span class="pre">noexcept</span></tt>.</p>
+</div>
 <div class="section" id="proposed-changes-to-standard-wording">
-<h1><a class="toc-backref" href="#id5">Proposed Changes to Standard Wording</a></h1>
+<h1><a class="toc-backref" href="#id6">Proposed Changes to Standard Wording</a></h1>
 <p>The wording in this paper is based on the current working paper
 (N3035) as amended by N3050.</p>
 <div class="section" id="dynamic-storage-duration-basic-stc-dynamic">
-<h2><a class="toc-backref" href="#id6">3.7.4 Dynamic storage duration [basic.stc.dynamic]</a></h2>
+<h2><a class="toc-backref" href="#id7">3.7.4 Dynamic storage duration [basic.stc.dynamic]</a></h2>
 <p>Modify paragraph 2 as follows:</p>
 <blockquote>
 <p>2 The library provides default definitions for the global allocation
@@ -399,8 +452,8 @@ provided in the library (17.6.3.6). The following allocation and
 deallocation functions (18.6) are implicitly declared in global
 scope in each translation unit of a program.</p>
 <pre class="literal-block">
-void* operator new(std::size_t) <span class="del">throw(std::bad_alloc)</span>;
-void* operator new[](std::size_t) <span class="del">throw(std::bad_alloc)</span>;
+void* operator new(std::size_t) <span class="del">throw(std::bad_alloc)</span> <span class="ins">noexcept(false)</span>;
+void* operator new[](std::size_t) <span class="del">throw(std::bad_alloc)</span> <span class="ins">noexcept(false)</span>;
 void operator delete(void*) <span class="del">throw()</span> <span class="ins">noexcept</span>;
 void operator delete[](void*) <span class="del">throw()</span> <span class="ins">noexcept</span>;
 </pre>
@@ -420,11 +473,13 @@ class (12.5).</p>
 </blockquote>
 </div>
 <div class="section" id="exception-specifications-except-spec">
-<h2><a class="toc-backref" href="#id7">15.4 Exception specifications [except.spec]</a></h2>
+<h2><a class="toc-backref" href="#id8">15.4 Exception specifications [except.spec]</a></h2>
 <p>Modify the paragraphs in this section as follows. Note that every
 paragraph in this section is accounted for (even those that have not
 changed), to ease review. Editorial notes are <span class="ed">[Yellow]</span> and will
-describe, e.g., when specific paragraphs have been moved.</p>
+describe, e.g., when specific paragraphs have been moved. The
+paragraphs are numbered as in the working paper, but are ordered as
+they should appear after the following edits are applied.</p>
 <blockquote>
 <p>1 A function declaration lists exceptions that its function might
 directly or indirectly throw by using an <em>exception-specification</em>
@@ -473,21 +528,6 @@ denote an incomplete type. A type denoted in an
 exception-specification shall not denote a pointer or reference to an
 incomplete type, other than void*, const void*, volatile void*, or
 const volatile void*.</span></p>
-<p>3 If any declaration of a function has an <em>exception-specification</em>,
-all declarations, including the definition and an explicit
-specialization, of that function shall have an
-<em>exception-specification</em> with the same set of <em>type-id</em> s.
-<span class="ed">[FIXME: Note about what it means to have the same set of type-ids?]</span>
-If any declaration of a pointer to function, reference to function, or
-pointer to member function has an <em>exception-specification</em>, all
-occurrences of that declaration shall have an
-<em>exception-specification</em> with the same set of <em>type-id</em> s. In an
-explicit instantiation an <em>exception-specification</em> may be specified,
-but is not required. If an <em>exception-specification</em> is specified in
-an explicit instantiation directive, it shall have the same set of
-<em>type-id</em> s as other declarations of that function. A diagnostic is
-required only if the sets of <em>type-id</em> s are different within a single
-translation unit.</p>
 <p>4 <span class="ed">[FIXME: Figure out what to do with p4!]</span></p>
 <p>5 <span class="ed">[FIXME: Figure out what to do with p5!]</span></p>
 <p>6 <span class="ed">[Moved to D.5p3]</span> <span class="raw-html"><span class="del">An
@@ -541,6 +581,36 @@ non-throwing if it is of the form <span class="del">throw(),</span> <tt class="d
 . A function with a
 non-throwing <em>exception-specification</em> does not allow any
 exceptions.</p>
+<p><span class="ed">[New paragraph]</span> <span class="raw-html"><span class="ins">Two
+<i>exception-specifications</i> are <i>compatible</i> if:</span></span></p>
+<blockquote>
+<ul class="simple">
+<li><span class="raw-html"><span class="ins">both are non-throwing (regardless of their form), </span></span></li>
+<li><span class="raw-html"><span class="ins">both have the form <code>noexcept(<i>constant-expression</i>)</code> and the <i>constant-expression</i>s are equivalent,</span></span></li>
+<li><span class="raw-html"><span class="ins">one <i>exception-specification</i> is of the form <code>noexcept(false)</code> and the other is of the form <code>throw(<i>type-id-list</i>)</code> (D.5), or</span></span></li>
+<li><span class="raw-html"><span class="ins">both are <i>dynamic-exception-specifications</i> (D.5) that have the same set of <i>type-id</i>s.</span></span></li>
+</ul>
+</blockquote>
+<p>3 If any declaration of a function has an <em>exception-specification</em>,
+all declarations, including the definition and an explicit
+specialization, of that function shall have an <span class="raw-html"><span
+class="ins">compatible</span> <i>exception-specification</i>
+<span class="del">with the same set of <i>type-id</i>s</span>.</span> If
+any declaration of a pointer to function, reference to function, or
+pointer to member function has an <em>exception-specification</em>, all
+occurrences of that declaration shall have an <span class="raw-html"><span
+class="ins">compatible</span> <i>exception-specification</i>
+<span class="del">with the same set of <i>type-id</i>s</span>.</span> In an
+explicit instantiation an <em>exception-specification</em> may be
+specified, but is not required. If an <em>exception-specification</em> is
+specified in an explicit instantiation directive, it shall
+<span class="raw-html"><span class="del">have the
+same set of <i>type-id</i>s as</span><span class="ins">be compatible
+to the <i>exception-specification</i>s of</span></span> other declarations
+of that function.
+A diagnostic is required only if the <span class="raw-html"><span class="del">sets of <i>type-id</i>s are
+different</span><span class="ins"><i>exception-specifications</i>
+are not compatible</span></span> within a single translation unit.</p>
 <p>12 An <em>exception-specification</em> is not considered part of a function's
 type.</p>
 <p>13 <span class="ed">[FIXME: Figure out what to do with p13!]</span></p>
@@ -550,7 +620,7 @@ that we're describing noexcept in terms of throw()]</span></p>
 </blockquote>
 </div>
 <div class="section" id="d-5-dynamic-exception-specifications-depr-except-spec-dynamic">
-<h2><a class="toc-backref" href="#id8"><span class="ins">D.5 Dynamic exception specifications [depr.except.spec.dynamic]</span></a></h2>
+<h2><a class="toc-backref" href="#id9"><span class="ins">D.5 Dynamic exception specifications [depr.except.spec.dynamic]</span></a></h2>
 <p>Insert this new section. <span class="ins">Green underlined text</span> is used to
 indicate new wording, while normal text is used whenever text was
 moved from another section (15.4, 15.5).</p>

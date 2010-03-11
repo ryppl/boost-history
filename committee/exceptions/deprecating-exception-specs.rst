@@ -60,6 +60,64 @@ additional overhead. This paper therefore proposes to deprecate
 "dynamic" exception specifications, i.e., those based on
 ``noexcept``.
 
+Approach
+********
+
+The general approach taken by this paper is to separate the wording
+required for dynamic exception specifications (those using ``throw``)
+into a new, deprecated section D.5, while maintaining the description
+of ``noexception`` and the general behavior of exception
+specifications in 15.4. The intent of the revised 15.4 (and core
+language in general) is to minimize the number of dependencies on
+the deprecated section D.5, and to mark each of those with a
+cross-reference.
+
+To aid in the transition from dynamic exception specifications to
+``noexcept``, the wording provides somewhat loose compatibility rules
+for redeclarations of functions that have exception
+specifications. Two rules stand out:
+
+  1) All "non-throwing" forms of exception specifications
+  (``throw()``, ``noexcept``, ``noexcept(true)``) are considered
+  compatible, but the exception specification on the definition is
+  what affects code generation:
+
+  .. parsed-literal::
+
+    // header ultramodern.h
+    void f() noexcept;
+    
+    // source plodding.cpp
+    #include "ultramodern.h"
+    struct X { };
+    void f() throw() { // okay, compatible with noexcept
+      throw X(); // calls std::unexpected()
+    }
+
+
+  2) noexcept(false) is considered compatible with ``throw(``
+  *type-id-list* ``)``:
+  
+  .. parsed-literal::
+
+    // header ultramodern.h
+    void g() noexcept(false);
+
+    // source plodding.cpp
+    #include "ultramodern.h"
+    struct X { };
+    void g() throw(X) { // okay, compatible with noexcept(false)
+      throw X(); // okay
+    }
+
+These compatibility rules allow a gradual migration from dynamic
+exception specifications to ``noexcept``, since a declaration of a
+function can choose to use the new or old syntax independently in the
+declaration and in the definition. This is particularly important with
+the implicit declarations of ``operator new``, ``operator new[]``,
+``operator delete``, and ``operator delete[]``, which this document
+changes to use ``noexcept``. 
+
 Proposed Changes to Standard Wording
 ************************************
 
@@ -99,8 +157,8 @@ Modify paragraph 2 as follows:
 
   .. parsed-literal::
 
-    void* operator new(std::size_t) :del:`throw(std::bad_alloc)`;
-    void* operator new[](std::size_t) :del:`throw(std::bad_alloc)`;
+    void* operator new(std::size_t) :del:`throw(std::bad_alloc)` :ins:`noexcept(false)`;
+    void* operator new[](std::size_t) :del:`throw(std::bad_alloc)` :ins:`noexcept(false)`;
     void operator delete(void*) :del:`throw()` :ins:`noexcept`;
     void operator delete[](void*) :del:`throw()` :ins:`noexcept`;
 
@@ -124,7 +182,9 @@ Modify paragraph 2 as follows:
 Modify the paragraphs in this section as follows. Note that every
 paragraph in this section is accounted for (even those that have not
 changed), to ease review. Editorial notes are :ed:`[Yellow]` and will
-describe, e.g., when specific paragraphs have been moved.
+describe, e.g., when specific paragraphs have been moved. The
+paragraphs are numbered as in the working paper, but are ordered as
+they should appear after the following edits are applied.
 
   1 A function declaration lists exceptions that its function might
   directly or indirectly throw by using an *exception-specification*
@@ -177,22 +237,6 @@ describe, e.g., when specific paragraphs have been moved.
   exception-specification shall not denote a pointer or reference to an
   incomplete type, other than void\*, const void\*, volatile void\*, or
   const volatile void\*.`
-
-  3 If any declaration of a function has an *exception-specification*,
-  all declarations, including the definition and an explicit
-  specialization, of that function shall have an
-  *exception-specification* with the same set of *type-id* s. 
-  :ed:`[FIXME: Note about what it means to have the same set of type-ids?]`
-  If any declaration of a pointer to function, reference to function, or
-  pointer to member function has an *exception-specification*, all
-  occurrences of that declaration shall have an
-  *exception-specification* with the same set of *type-id* s. In an
-  explicit instantiation an *exception-specification* may be specified,
-  but is not required. If an *exception-specification* is specified in
-  an explicit instantiation directive, it shall have the same set of
-  *type-id* s as other declarations of that function. A diagnostic is
-  required only if the sets of *type-id* s are different within a single
-  translation unit.
 
   4 :ed:`[FIXME: Figure out what to do with p4!]`
 
@@ -256,6 +300,35 @@ describe, e.g., when specific paragraphs have been moved.
   . A function with a
   non-throwing *exception-specification* does not allow any
   exceptions.
+
+  :ed:`[New paragraph]` :raw-html:`<span class="ins">Two
+  <i>exception-specifications</i> are <i>compatible</i> if:</span>`
+
+    * :raw-html:`<span class="ins">both are non-throwing (regardless of their form), </span>`
+    * :raw-html:`<span class="ins">both have the form <code>noexcept(<i>constant-expression</i>)</code> and the <i>constant-expression</i>s are equivalent,</span>`
+    * :raw-html:`<span class="ins">one <i>exception-specification</i> is of the form <code>noexcept(false)</code> and the other is of the form <code>throw(<i>type-id-list</i>)</code> (D.5), or</span>`
+    * :raw-html:`<span class="ins">both are <i>dynamic-exception-specifications</i> (D.5) that have the same set of <i>type-id</i>s.</span>`
+
+  3 If any declaration of a function has an *exception-specification*,
+  all declarations, including the definition and an explicit
+  specialization, of that function shall have an :raw-html:`<span
+  class="ins">compatible</span> <i>exception-specification</i>
+  <span class="del">with the same set of <i>type-id</i>s</span>.` If
+  any declaration of a pointer to function, reference to function, or
+  pointer to member function has an *exception-specification*, all
+  occurrences of that declaration shall have an :raw-html:`<span
+  class="ins">compatible</span> <i>exception-specification</i>
+  <span class="del">with the same set of <i>type-id</i>s</span>.` In an
+  explicit instantiation an *exception-specification* may be
+  specified, but is not required. If an *exception-specification* is
+  specified in an explicit instantiation directive, it shall 
+  :raw-html:`<span class="del">have the
+  same set of <i>type-id</i>s as</span><span class="ins">be compatible
+  to the <i>exception-specification</i>s of</span>` other declarations
+  of that function. 
+  A diagnostic is required only if the :raw-html:`<span class="del">sets of <i>type-id</i>s are
+  different</span><span class="ins"><i>exception-specifications</i>
+  are not compatible</span>` within a single translation unit.
 
   12 An *exception-specification* is not considered part of a function's
   type.
