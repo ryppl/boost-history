@@ -424,6 +424,24 @@ they should appear after the following edits are applied.
   whose *constant-expression* yields ``false`` is equivalent to omitting the
   *exception-specification* altogether.
 
+15.5 Special functions [except.special]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  1 The :raw-html:`function<span class="del">s</span> <code>std::terminate()</code> (15.5.1) <span class="del">and <code>std::unexpected()</code> (15.5.2) are</span><span class="ins">is</span>` used by the exception handling mechanism for coping with errors related to the exception handling mechanism itself. The function ``std::current_exception()`` (18.8.5) and the class ``std::nested_exception`` (18.8.6) can be used by a program to capture the currently handled exception.
+
+15.5.2 The ``std::unexpected()`` function [except.unexpected]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This section should be moved to D.5 to become D.5.1
+[depr.except.unexpected]. Then modify the following paragraphs as
+follows:
+
+  1 If a function with :del:`an` :ins:`a` :raw-html:`<i><span class="ins">dynamic-</span>exception-specification</i> throws an exception that is not listed in the <i><span class="ins">dynamic-</span>exception-specification</i>, the function <code>std::unexpected()</code> is called (18.8.2) immediately after completing the stack unwinding for the former function.`
+
+  3 The ``std::unexpected()`` function shall not return, but it can throw (or re-throw) an exception. If it throws a new exception which is allowed by the exception specification which previously was violated, then the search for another handler will continue at the call of the function whose exception specification was violated. If it throws or rethrows an exception that the *exception-specification* does not allow then the following happens: If the :raw-html:`<i><span class="ins">dynamic-</span>exception-specification</i> does not include the class <code>std::bad_exception</code> (18.8.2.1) then the function <code>std::terminate()</code> is called, otherwise the thrown exception is replaced by an implementation-defined object of the type <code>std::bad_exception</code> and the search for another handler will continue at the call of the function whose <i><span class="ins">dynamic-</span>exception-specification</i> was violated.`
+
+  4 Thus, :del:`an` :ins:`a` :raw-html:`<i><span class="ins">dynamic-</span>exception-specification</i> guarantees that only the listed exceptions will be thrown. If the <i><span class="ins">dynamic-</span>exception-specification</i> includes the type <code>std::bad_exception</code> then any exception not on the list may be replaced by <code>std::bad_exception</code> within the function <code>std::unexpected()</code>.`
+
 :ins:`D.5 Dynamic exception specifications [depr.except.spec.dynamic]`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

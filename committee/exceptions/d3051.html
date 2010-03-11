@@ -336,7 +336,9 @@ rst2html.py - -footnote-references=superscript \
 <li><a class="reference internal" href="#proposed-changes-to-standard-wording" id="id6">Proposed Changes to Standard Wording</a><ul>
 <li><a class="reference internal" href="#dynamic-storage-duration-basic-stc-dynamic" id="id7">3.7.4 Dynamic storage duration [basic.stc.dynamic]</a></li>
 <li><a class="reference internal" href="#exception-specifications-except-spec" id="id8">15.4 Exception specifications [except.spec]</a></li>
-<li><a class="reference internal" href="#d-5-dynamic-exception-specifications-depr-except-spec-dynamic" id="id9"><span class="ins">D.5 Dynamic exception specifications [depr.except.spec.dynamic]</span></a></li>
+<li><a class="reference internal" href="#special-functions-except-special" id="id9">15.5 Special functions [except.special]</a></li>
+<li><a class="reference internal" href="#the-std-unexpected-function-except-unexpected" id="id10">15.5.2 The <tt class="docutils literal"><span class="pre">std::unexpected()</span></tt> function [except.unexpected]</a></li>
+<li><a class="reference internal" href="#d-5-dynamic-exception-specifications-depr-except-spec-dynamic" id="id11"><span class="ins">D.5 Dynamic exception specifications [depr.except.spec.dynamic]</span></a></li>
 </ul>
 </li>
 </ul>
@@ -707,8 +709,24 @@ whose <em>constant-expression</em> yields <tt class="docutils literal"><span cla
 <em>exception-specification</em> altogether.</p>
 </blockquote>
 </div>
+<div class="section" id="special-functions-except-special">
+<h2><a class="toc-backref" href="#id9">15.5 Special functions [except.special]</a></h2>
+<blockquote>
+1 The <span class="raw-html">function<span class="del">s</span> <code>std::terminate()</code> (15.5.1) <span class="del">and <code>std::unexpected()</code> (15.5.2) are</span><span class="ins">is</span></span> used by the exception handling mechanism for coping with errors related to the exception handling mechanism itself. The function <tt class="docutils literal"><span class="pre">std::current_exception()</span></tt> (18.8.5) and the class <tt class="docutils literal"><span class="pre">std::nested_exception</span></tt> (18.8.6) can be used by a program to capture the currently handled exception.</blockquote>
+</div>
+<div class="section" id="the-std-unexpected-function-except-unexpected">
+<h2><a class="toc-backref" href="#id10">15.5.2 The <tt class="docutils literal"><span class="pre">std::unexpected()</span></tt> function [except.unexpected]</a></h2>
+<p>This section should be moved to D.5 to become D.5.1
+[depr.except.unexpected]. Then modify the following paragraphs as
+follows:</p>
+<blockquote>
+<p>1 If a function with <span class="del">an</span> <span class="ins">a</span> <span class="raw-html"><i><span class="ins">dynamic-</span>exception-specification</i> throws an exception that is not listed in the <i><span class="ins">dynamic-</span>exception-specification</i>, the function <code>std::unexpected()</code> is called (18.8.2) immediately after completing the stack unwinding for the former function.</span></p>
+<p>3 The <tt class="docutils literal"><span class="pre">std::unexpected()</span></tt> function shall not return, but it can throw (or re-throw) an exception. If it throws a new exception which is allowed by the exception specification which previously was violated, then the search for another handler will continue at the call of the function whose exception specification was violated. If it throws or rethrows an exception that the <em>exception-specification</em> does not allow then the following happens: If the <span class="raw-html"><i><span class="ins">dynamic-</span>exception-specification</i> does not include the class <code>std::bad_exception</code> (18.8.2.1) then the function <code>std::terminate()</code> is called, otherwise the thrown exception is replaced by an implementation-defined object of the type <code>std::bad_exception</code> and the search for another handler will continue at the call of the function whose <i><span class="ins">dynamic-</span>exception-specification</i> was violated.</span></p>
+<p>4 Thus, <span class="del">an</span> <span class="ins">a</span> <span class="raw-html"><i><span class="ins">dynamic-</span>exception-specification</i> guarantees that only the listed exceptions will be thrown. If the <i><span class="ins">dynamic-</span>exception-specification</i> includes the type <code>std::bad_exception</code> then any exception not on the list may be replaced by <code>std::bad_exception</code> within the function <code>std::unexpected()</code>.</span></p>
+</blockquote>
+</div>
 <div class="section" id="d-5-dynamic-exception-specifications-depr-except-spec-dynamic">
-<h2><a class="toc-backref" href="#id9"><span class="ins">D.5 Dynamic exception specifications [depr.except.spec.dynamic]</span></a></h2>
+<h2><a class="toc-backref" href="#id11"><span class="ins">D.5 Dynamic exception specifications [depr.except.spec.dynamic]</span></a></h2>
 <p>Insert this new section. <span class="ins">Green underlined text</span> is used to
 indicate new wording, while normal text is used whenever text was
 moved from another section (15.4, 15.5).</p>
