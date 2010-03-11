@@ -51,6 +51,11 @@ namespace detail{
 
     };
 
+	template<typename T>
+	void rebind(assign_reference_rebind<T>& a,T& r){
+    	a = r;
+    }
+
     template< class T >
     inline bool operator<( const assign_reference_rebind<T>& l, 
                            const assign_reference_rebind<T>& r )

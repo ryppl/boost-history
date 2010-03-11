@@ -58,6 +58,12 @@ namespace detail{
 
     };
 
+	// Added by ER March 10, 2010
+	template<typename T>
+	void rebind(assign_reference_copy<T>& a,T& r){
+    	a.rebind(r);
+    }
+
 	// Added by ER March 7, 2010
     template< class T >
     inline bool operator<( const assign_reference_copy<T>& l, 
