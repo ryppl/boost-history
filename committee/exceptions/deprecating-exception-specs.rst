@@ -1,0 +1,362 @@
+======================================
+ Deprecating Exception Specifications
+======================================
+
+:Author: Doug Gregor
+:Contact: doug.gregor@gmail.com
+:date: 2010-03-10
+
+:Number: D3051=10-0041
+
+.. build HTML with:
+
+   rst2html.py --footnote-references=superscript \
+     --stylesheet-path=./rst.css --embed-stylesheet throwing-move.rst \
+     N3051.html
+
+.. contents:: index
+
+Introduction
+************
+
+UK-136
+  Exception specifications have proven close to worthless in practice, while adding a measurable overhead to programs. The feature should be deprecated. The one exception to the rule is the empty throw specification which could serve a legitimate optimizing role if the requirement to call the runtime unexpected mechanism was relaxed in this case.
+
+As expressed in the national body comment above, exception
+specifications have not proven useful in practice. There are numerous
+discussions of the problems with exception specifications in C++ (see,
+e.g., [Sutter02]_, [Boost03]_), but the main issues are:
+
+* *Run-time checking*: C++ exception specifications are checked at runtime
+  rather than at compile time, so they offer no programmer guarantees
+  that all exceptions have been handled. The run-time failure mode
+  (calling ``std::unexpected()``) does not lend itself to recovery.
+* *Run-time overhead*: Run-time checking requires the compiler to
+  produce additional code that also hampers optimizations. 
+* *Unusable in generic code*: Within generic code, it is not generally
+  possible to know what types of exceptions may be thrown from
+  operations on template arguments, so a precise exception
+  specification cannot be written.
+
+In practice, only two forms of exception-throwing guarantees are
+useful: an operation might throw an exception (any exception) or an
+operation will never throw any exception. The former is expressed by
+omitting the exception-specification entirely, while the latter *can* be
+expressed as ``throw()`` but rarely is, due to performance
+considerations.
+
+[N3050]_ introduces a new kind of exception specification, ``noexcept``,
+the specifies that the function will not throw any exceptions. Unlike
+``throw()``, ``noexcept`` does not require the compiler to introduce
+code to check whether an exception is thrown. Rather, if a function
+specified as ``noexcept`` is exited via an exception, the result is
+undefined behavior, which permits compilers to optimize based on the
+knowledge that a ``noexcept`` function will not propagate an
+exception.
+
+With the introduction of ``noexcept``, programmers can now express the
+two kinds of exception guarantees that are useful in practice, without
+additional overhead. This paper therefore proposes to deprecate
+"dynamic" exception specifications, i.e., those based on
+``noexcept``.
+
+Proposed Changes to Standard Wording
+************************************
+
+.. role:: sub
+
+.. role:: ins
+
+.. role:: del
+
+.. role:: ed
+
+.. role:: insc(ins)
+   :class: ins code
+
+.. role:: delc(del)
+   :class: ins code
+
+.. role:: raw-html(raw)
+   :format: html
+
+The wording in this paper is based on the current working paper
+(N3035) as amended by N3050.
+
+3.7.4 Dynamic storage duration [basic.stc.dynamic]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Modify paragraph 2 as follows:
+
+  2 The library provides default definitions for the global allocation
+  and deallocation functions. Some global allocation and deallocation
+  functions are replaceable (18.6.1). A C++ program shall provide at
+  most one definition of a replaceable allocation or deallocation
+  function. Any such function definition replaces the default version
+  provided in the library (17.6.3.6). The following allocation and
+  deallocation functions (18.6) are implicitly declared in global
+  scope in each translation unit of a program.
+
+  .. parsed-literal::
+
+    void* operator new(std::size_t) :del:`throw(std::bad_alloc)`;
+    void* operator new[](std::size_t) :del:`throw(std::bad_alloc)`;
+    void operator delete(void*) :del:`throw()` :ins:`noexcept`;
+    void operator delete[](void*) :del:`throw()` :ins:`noexcept`;
+
+  These implicit declarations introduce only the function names
+  ``operator new``, ``operator new[]``, ``operator delete``, 
+  ``operator delete[]`` [*Note*: the implicit declarations do not
+  introduce the names ``std`` :del:`, std::bad_alloc,` and
+  ``std::size_t``, or any other names that the
+  library uses to declare these names. Thus, a *new-expression*,
+  *delete-expression* or function call that refers to one of these
+  functions without including the header ``<new>`` is
+  well-formed. However, referring to ``std`` :del:`, std::bad_alloc,` and
+  ``std::size_t`` is ill-formed unless the name has been declared by
+  including the appropriate header. -- *end note*] Allocation and/or
+  deallocation functions can also be declared and defined for any
+  class (12.5).
+
+15.4 Exception specifications [except.spec]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Modify the paragraphs in this section as follows. Note that every
+paragraph in this section is accounted for (even those that have not
+changed), to ease review. Editorial notes are :ed:`[Yellow]` and will
+describe, e.g., when specific paragraphs have been moved.
+
+  1 A function declaration lists exceptions that its function might
+  directly or indirectly throw by using an *exception-specification*
+  as a suffix of its declarator. 
+  :raw-html:`<span class="ins">A function is said to <i>allow</i> an
+  exception of type <code>E</code> if such an exception will propagate
+  from the outermost block of that function out of the function.</span>`
+
+  .. parsed-literal::
+
+    *exception-specification*:
+      *dynamic-exception-specification*
+      *noexcept-specification*
+
+    :ed:`[Moved to D.5p1]` :raw-html:`<span class="del"><i>dynamic-exception-specification</i>:</span>`
+      :raw-html:`<span class="del"><code>throw (</code> <i>type-id-list<sub>opt</sub></i> <code>)</code></span>`
+
+    :ed:`[Moved to D.5p1]` :raw-html:`<span class="del"><i>type-id-list</i>:</span>`
+      :raw-html:`<span class="del"><i>type-id</i> <code>...</code><sub><i>opt</i></sub></span>`
+      :raw-html:`<span class="del"><i>type-id-list</i> <code>,</code> <i>type-id</i> <code>...</code><sub><i>opt</i></sub></span>`
+
+    *noexcept-specification*:
+      ``noexcept (`` *constant-expression* ``)``
+      ``noexcept``
+
+  In a *noexcept-specification*, the *constant-expression*, if supplied,
+  shall be a constant expression ([expr.const]) that is contextually
+  converted to ``bool`` ([conv] Clause 4). A *noexcept-specification*
+  ``noexcept`` is equivalent to ``noexcept(true)``.
+
+  2 An *exception-specification* shall appear only on a function
+  declarator for a function type, pointer to function type, reference
+  to function type, or pointer to member function type that is the
+  top-level type of a declaration or definition, or on such a type
+  appearing as a parameter or return type in a function declarator. An
+  *exception-specification* shall not appear in a typedef declaration
+  or *alias-declaration*. [ *Example* :
+
+  .. parsed-literal::
+
+    void f() :del:`throw(int)`:ins:`noexcept`;              // OK
+    void (\*fp)() :del:`throw (int)`:ins:`noexcept`;        // OK
+    void g(void pfa() :del:`throw(int))`:ins:`noexcept`;    // OK
+    typedef int (\*pf)() :del:`throw(int)`:ins:`noexcept`;  // ill-formed
+
+  - *end example* ] 
+
+  :ed:`[Moved to D.5p2]` :del:`A type denoted in an exception-specification shall not
+  denote an incomplete type. A type denoted in an
+  exception-specification shall not denote a pointer or reference to an
+  incomplete type, other than void\*, const void\*, volatile void\*, or
+  const volatile void\*.`
+
+  3 If any declaration of a function has an *exception-specification*,
+  all declarations, including the definition and an explicit
+  specialization, of that function shall have an
+  *exception-specification* with the same set of *type-id* s. 
+  :ed:`[FIXME: Note about what it means to have the same set of type-ids?]`
+  If any declaration of a pointer to function, reference to function, or
+  pointer to member function has an *exception-specification*, all
+  occurrences of that declaration shall have an
+  *exception-specification* with the same set of *type-id* s. In an
+  explicit instantiation an *exception-specification* may be specified,
+  but is not required. If an *exception-specification* is specified in
+  an explicit instantiation directive, it shall have the same set of
+  *type-id* s as other declarations of that function. A diagnostic is
+  required only if the sets of *type-id* s are different within a single
+  translation unit.
+
+  4 :ed:`[FIXME: Figure out what to do with p4!]`
+
+  5 :ed:`[FIXME: Figure out what to do with p5!]`
+
+  6 :ed:`[Moved to D.5p3]` :raw-html:`<span class="del">An
+  <i>exception-specification</i> can include the same type more than
+  once and can include classes that are related by inheritance, even
+  though doing so is redundant. [ <i>Note</i>: An
+  <i>exception-specification</i> can also include the class
+  <code>std::bad_exception</code> (18.8.2.1). - <i>end note</i>
+  ]</span>`
+
+  7 :ed:`[Moved to D.5p4]` :raw-html:`<span class="del">A function is
+  said to <i>allow</i> an exception of type <code>E</code> if its
+  <i>dynamic-exception-specification</i> contains a type
+  <code>T</code> for which a handler of type <code>T</code> would be a
+  match (15.3) for an exception of type <code>E</code>.</span>`
+
+  8 :ed:`[Moved to D.5p5]` :raw-html:`<span class="del">Whenever an
+  exception is thrown and the search for a handler (15.3) encounters
+  the outermost block of a function with an <i>exception-specification</i>,
+  the function <code>std::unexpected()</code> is called (15.5.2) if
+  the <i>exception-specification</i> does not allow the exception. [
+  <i>Example</i>:</span>`
+
+  .. parsed-literal::
+
+    :del:`class X { };`
+    :del:`class Y { };`
+    :del:`class Z: public X { };`
+    :del:`class W { };`
+
+    :del:`void f() throw (X, Y) {`
+      :del:`int n = 0;`
+      :del:`if (n) throw X(); // OK`
+      :del:`if (n) throw Z(); // also OK`
+      :del:`throw W();        // will call std::unexpected()`
+    :del:`}`
+
+  :raw-html:`<span class="del">-- <i>end example</i></span>]`
+
+  9 :ed:`[Moved to D.5p6]` :raw-html:`<span class="del">The function
+  <code>std::unexpected()</code> may throw an exception that will
+  satisfy the <i>dynamic-exception-specification</i> for which it
+  was invoked, and in this case the search for another handler will
+  continue at the call of the function with this
+  <i>dynamic-exception-specification</i> (see 15.5.2), or it may call
+  <code>std::terminate()</code>.</span>`
+
+  10 :ed:`[FIXME: Figure out what to do with p10!]`
+
+  11 A function with no *exception-specification*, or with an
+  *exception-specification* of the form ``noexcept(``
+  *constant-expression* ``)`` where the *constant-expression* yields
+  ``false``, allows all exceptions. An *exception-specification* is
+  non-throwing if it is of the form :del:`throw(),` ``noexcept``,
+  :del:`or` ``noexcept(`` *constant-expression* ``)`` where the
+  *constant-expression* yields ``true``
+  :raw-html:`<span class="ins">, or <code>throw()</code> (D.5)</span>`
+  . A function with a
+  non-throwing *exception-specification* does not allow any
+  exceptions.
+
+  12 An *exception-specification* is not considered part of a function's
+  type.
+
+  13 :ed:`[FIXME: Figure out what to do with p13!]`
+  
+  14 :ed:`[Moved to D.5p7]` :raw-html:`<span class="del">In a <i>dynamic-exception-specification</i>, a <i>type-id</i> followed by an ellipsis is a pack expansion (14.6.3).</span>`
+
+  15 :ed:`[FIXME: Figure out what to do with p15! It's unfortunate
+  that we're describing noexcept in terms of throw()]`
+
+:ins:`D.5 Dynamic exception specifications [depr.except.spec.dynamic]`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Insert this new section. :ins:`Green underlined text` is used to
+indicate new wording, while normal text is used whenever text was
+moved from another section (15.4, 15.5).
+
+  1 :ins:`A dynamic exception specification lists exceptions that its function
+  might directly or indirectly throw.`
+
+  .. parsed-literal::
+
+    :ed:`[Moved from 15.4p1]` :raw-html:`<span class="ins"><i>dynamic-exception-specification</i>:</span>`
+      :raw-html:`<span class="ins"><code>throw (</code> <i>type-id-list<sub>opt</sub></i> <code>)</code></span>`
+
+    :ed:`[Moved from 15.4p1]` :raw-html:`<span class="ins"><i>type-id-list</i>:</span>`
+      :raw-html:`<span class="ins"><i>type-id</i> <code>...</code><sub><i>opt</i></sub></span>`
+      :raw-html:`<span class="ins"><i>type-id-list</i> <code>,</code> <i>type-id</i> <code>...</code><sub><i>opt</i></sub></span>`
+
+  2 :ed:`[Moved from 15.4p2]` :raw-html:`A type denoted in a
+  <i><span class="ins">dynamic-</span>exception-specification</i> shall not denote an
+  incomplete type. A type denoted in a
+  <i><span class="ins">dynamic-</span>exception-specification</i> shall not denote a pointer or
+  reference to an incomplete type, other than <code>void*</code>,
+  <code>const void*</code>, <code>volatile void*</code>, or
+  <code>const volatile void*</code>.`
+
+  3 :ed:`[Moved from 15.4p6]` :raw-html:`A
+  <i><span class="ins">dynamic-</span>exception-specification</i> can include the same type more than
+  once and can include classes that are related by inheritance, even
+  though doing so is redundant. [ <i>Note</i>: A
+  <i><span class="ins">dynamic-</span>exception-specification</i> can also include the class
+  <code>std::bad_exception</code> (18.8.2.1). - <i>end note</i>
+  ]`
+
+  4 :ed:`[Moved from 15.4p7]` :raw-html:`A function <span class="del">is
+  said to <i>allow</i></span><span class="ins">allows</span> an exception of type <code>E</code> if its
+  <i>dynamic-exception-specification</i> contains a type
+  <code>T</code> for which a handler of type <code>T</code> would be a
+  match (15.3) for an exception of type <code>E</code>.`
+
+  5 :ed:`[Moved from 15.4p8]` :raw-html:`Whenever an
+  exception is thrown and the search for a handler (15.3) encounters
+  the outermost block of a function with a<span class="del">n</span>
+  <i><span class="ins">dynamic-</span>exception-specification</i>, the function
+  <code>std::unexpected()</code> is called (15.5.2) if the
+  <i><span class="ins">dynamic-</span>exception-specification</i> does not allow the exception. [
+  <i>Example</i>:`
+
+  .. parsed-literal::
+
+    class X { };
+    class Y { };
+    class Z: public X { };
+    class W { };
+
+    void f() throw (X, Y) {
+      int n = 0;
+      if (n) throw X(); // OK
+      if (n) throw Z(); // also OK
+      throw W();        // will call std::unexpected()
+    }
+
+  :raw-html:`-- <i>end example</i>]`
+
+  6 :ed:`[Moved from 15.4p9]` :raw-html:`The function
+  <code>std::unexpected()</code> may throw an exception that will
+  satisfy the <i><span class="ins">dynamic-</span>exception-specification</i> for which it
+  was invoked, and in this case the search for another handler will
+  continue at the call of the function with this
+  <i><span class="ins">dynamic-</span>exception-specification</i> (see 15.5.2), or it may call
+  <code>std::terminate()</code>.`
+
+  7 :ed:`[Moved from 15.4p14]` :raw-html:`In a <i>dynamic-exception-specification</i>, a <i>type-id</i> followed by an ellipsis is a pack expansion (14.6.3).`
+
+
+
+
+------
+
+Other notes:
+
+
+  15.4p8 needs to refer to dynamic-exception-specification!
+  15.4p9 needs the same.
+
+------
+
+.. [Sutter02] A Pragmatic Look at Exception Specifications. http://www.gotw.ca/publications/mill22.htm
+
+.. [Boost03] http://www.boost.org/development/requirements.html#Exception-specification
+
+.. [N3050] D. Abrahams, R. Sharoni, and D. Gregor. *Allowing Move Constructors to Throw*. Document number N3050=10-0040, ISO C++ Committee Post-Pittsburgh Mailing, March, 2010.

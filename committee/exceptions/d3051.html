@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.6: http://docutils.sourceforge.net/" />
+<title>Deprecating Exception Specifications</title>
+<meta name="author" content="Doug Gregor" />
+<meta name="date" content="2010-03-10" />
+<style type="text/css">
+
+/*
+:Author: David Goodger
+:Contact: goodger@python.org
+:Date: $Date: 2006-05-21 16:44:42 -0400 (Sun, 21 May 2006) $
+:Revision: $Revision: 4564 $
+:Copyright: This stylesheet has been placed in the public domain.
+
+Default cascading style sheet for the HTML output of Docutils.
+
+See http://docutils.sf.net/docs/howto/html-stylesheets.html for how to
+customize this style sheet.
+*/
+
+/* used to remove borders from tables and images */
+.borderless, table.borderless td, table.borderless th {
+  border: 0 }
+
+table.borderless td, table.borderless th {
+  /* Override padding for "table.docutils td" with "! important".
+     The right padding separates the table cells. */
+  padding: 0 0.5em 0 0 ! important }
+
+.first {
+  /* Override more specific margin styles with "! important". */
+  margin-top: 0 ! important }
+
+.last, .with-subtitle {
+  margin-bottom: 0 ! important }
+
+.hidden {
+  display: none }
+
+a.toc-backref {
+  text-decoration: none ;
+  color: black }
+
+blockquote.epigraph {
+  margin: 2em 5em ; }
+
+dl.docutils dd {
+  /* margin-bottom: 0.5em */
+  margin: 0 0 0 22px; }
+
+/* Uncomment (and remove this text!) to get bold-faced definition list terms*/
+dl.docutils dt {
+  font-weight: bold; 
+  margin: 2em 0 0 22px;
+  line-height: 1.8em;
+   }
+
+
+div.abstract {
+  margin: 2em 5em }
+
+div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
+
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+
+/* Uncomment (and remove this text!) to get reduced vertical space in
+   compound paragraphs.
+div.compound .compound-first, div.compound .compound-middle {
+  margin-bottom: 0.5em }
+
+div.compound .compound-last, div.compound .compound-middle {
+  margin-top: 0.5em }
+*/
+
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
+
+div.figure {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+div.footer, div.header {
+  clear: both;
+  font-size: smaller }
+
+div.line-block {
+  display: block ;
+  margin-top: 1em ;
+  margin-bottom: 1em;
+  margin-left: 22px; }
+
+div.line-block div.line-block {
+  margin-top: 0 ;
+  margin-bottom: 0 ;
+  /* margin-left: 1.5em; */
+  margin-left: 22px; }
+
+div.sidebar {
+  margin-left: 1em ;
+  border: medium outset ;
+  padding: 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+div.system-messages {
+  margin: 5em }
+
+div.system-messages h1 {
+  color: red }
+
+div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+div.topic {
+  margin: 2em }
+
+h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
+h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
+  margin-top: 0.4em }
+
+h1.title {
+  text-align: center }
+
+h2.subtitle {
+  text-align: center }
+
+hr.docutils {
+  width: 75% }
+
+img.align-left {
+  clear: left }
+
+img.align-right {
+  clear: right }
+
+ol.simple, ul.simple {
+  margin-bottom: 1em }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.attribution {
+  text-align: right ;
+  margin-left: 50% }
+
+p.caption {
+  font-style: italic }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.label {
+  white-space: nowrap }
+
+p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
+
+p.sidebar-title {
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
+
+p.sidebar-subtitle {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font-family: serif ;
+  font-size: 100% }
+
+pre.literal-block, pre.doctest-block {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+span.interpreted {
+  font-family: sans-serif }
+
+span.option {
+  white-space: nowrap }
+
+span.pre {
+  white-space: pre }
+
+span.problematic {
+  color: red }
+
+span.section-subtitle {
+  /* font-size relative to parent (h1..h6 element) */
+  font-size: 80% }
+
+table.citation {
+  border-left: solid 1px gray;
+  margin-left: 1px }
+
+table.docinfo {
+  margin: 2em 4em }
+
+table.docutils {
+  /*margin-top: 0.5em ;
+  margin-bottom: 0.5em;*/
+  margin: 0 0 0 22px; }
+
+table.footnote {
+  border-left: solid 1px black;
+  margin-left: 1px }
+
+table.docutils td, table.docutils th,
+table.docinfo td, table.docinfo th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+table.docutils th.field-name, table.docinfo th.docinfo-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap ;
+  padding-left: 0 }
+
+h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
+h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
+  font-size: 100% }
+
+ul.auto-toc {
+  list-style-type: none }
+
+.ins {background-color:#A0FFA0;text-decoration:underline}
+.del {background-color:#FFA0A0;text-decoration:line-through}
+.ed {background-color:#FFFF00}
+
+.grammar { padding: 0 }
+
+.sub {
+	position: relative;
+	bottom: -0.5em;
+	font-size: 0.8em;
+}
+
+</style>
+</head>
+<body>
+<div class="document" id="deprecating-exception-specifications">
+<h1 class="title">Deprecating Exception Specifications</h1>
+<table class="docinfo" frame="void" rules="none">
+<col class="docinfo-name" />
+<col class="docinfo-content" />
+<tbody valign="top">
+<tr><th class="docinfo-name">Author:</th>
+<td>Doug Gregor</td></tr>
+<tr><th class="docinfo-name">Contact:</th>
+<td><a class="first last reference external" href="mailto:doug.gregor&#64;gmail.com">doug.gregor&#64;gmail.com</a></td></tr>
+<tr><th class="docinfo-name">Date:</th>
+<td>2010-03-10</td></tr>
+<tr class="field"><th class="docinfo-name">Number:</th><td class="field-body">D3051=10-0041</td>
+</tr>
+</tbody>
+</table>
+<!-- build HTML with:
+
+rst2html.py - -footnote-references=superscript \
+  - -stylesheet-path=./rst.css - -embed-stylesheet throwing-move.rst \
+  N3051.html -->
+<div class="contents topic" id="index">
+<p class="topic-title first">index</p>
+<ul class="simple">
+<li><a class="reference internal" href="#introduction" id="id4">Introduction</a></li>
+<li><a class="reference internal" href="#proposed-changes-to-standard-wording" id="id5">Proposed Changes to Standard Wording</a><ul>
+<li><a class="reference internal" href="#dynamic-storage-duration-basic-stc-dynamic" id="id6">3.7.4 Dynamic storage duration [basic.stc.dynamic]</a></li>
+<li><a class="reference internal" href="#exception-specifications-except-spec" id="id7">15.4 Exception specifications [except.spec]</a></li>
+<li><a class="reference internal" href="#d-5-dynamic-exception-specifications-depr-except-spec-dynamic" id="id8"><span class="ins">D.5 Dynamic exception specifications [depr.except.spec.dynamic]</span></a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="introduction">
+<h1><a class="toc-backref" href="#id4">Introduction</a></h1>
+<dl class="docutils">
+<dt>UK-136</dt>
+<dd>Exception specifications have proven close to worthless in practice, while adding a measurable overhead to programs. The feature should be deprecated. The one exception to the rule is the empty throw specification which could serve a legitimate optimizing role if the requirement to call the runtime unexpected mechanism was relaxed in this case.</dd>
+</dl>
+<p>As expressed in the national body comment above, exception
+specifications have not proven useful in practice. There are numerous
+discussions of the problems with exception specifications in C++ (see,
+e.g., <a class="citation-reference" href="#sutter02" id="id1">[Sutter02]</a>, <a class="citation-reference" href="#boost03" id="id2">[Boost03]</a>), but the main issues are:</p>
+<ul class="simple">
+<li><em>Run-time checking</em>: C++ exception specifications are checked at runtime
+rather than at compile time, so they offer no programmer guarantees
+that all exceptions have been handled. The run-time failure mode
+(calling <tt class="docutils literal"><span class="pre">std::unexpected()</span></tt>) does not lend itself to recovery.</li>
+<li><em>Run-time overhead</em>: Run-time checking requires the compiler to
+produce additional code that also hampers optimizations.</li>
+<li><em>Unusable in generic code</em>: Within generic code, it is not generally
+possible to know what types of exceptions may be thrown from
+operations on template arguments, so a precise exception
+specification cannot be written.</li>
+</ul>
+<p>In practice, only two forms of exception-throwing guarantees are
+useful: an operation might throw an exception (any exception) or an
+operation will never throw any exception. The former is expressed by
+omitting the exception-specification entirely, while the latter <em>can</em> be
+expressed as <tt class="docutils literal"><span class="pre">throw()</span></tt> but rarely is, due to performance
+considerations.</p>
+<p><a class="citation-reference" href="#n3050" id="id3">[N3050]</a> introduces a new kind of exception specification, <tt class="docutils literal"><span class="pre">noexcept</span></tt>,
+the specifies that the function will not throw any exceptions. Unlike
+<tt class="docutils literal"><span class="pre">throw()</span></tt>, <tt class="docutils literal"><span class="pre">noexcept</span></tt> does not require the compiler to introduce
+code to check whether an exception is thrown. Rather, if a function
+specified as <tt class="docutils literal"><span class="pre">noexcept</span></tt> is exited via an exception, the result is
+undefined behavior, which permits compilers to optimize based on the
+knowledge that a <tt class="docutils literal"><span class="pre">noexcept</span></tt> function will not propagate an
+exception.</p>
+<p>With the introduction of <tt class="docutils literal"><span class="pre">noexcept</span></tt>, programmers can now express the
+two kinds of exception guarantees that are useful in practice, without
+additional overhead. This paper therefore proposes to deprecate
+&quot;dynamic&quot; exception specifications, i.e., those based on
+<tt class="docutils literal"><span class="pre">noexcept</span></tt>.</p>
+</div>
+<div class="section" id="proposed-changes-to-standard-wording">
+<h1><a class="toc-backref" href="#id5">Proposed Changes to Standard Wording</a></h1>
+<p>The wording in this paper is based on the current working paper
+(N3035) as amended by N3050.</p>
+<div class="section" id="dynamic-storage-duration-basic-stc-dynamic">
+<h2><a class="toc-backref" href="#id6">3.7.4 Dynamic storage duration [basic.stc.dynamic]</a></h2>
+<p>Modify paragraph 2 as follows:</p>
+<blockquote>
+<p>2 The library provides default definitions for the global allocation
+and deallocation functions. Some global allocation and deallocation
+functions are replaceable (18.6.1). A C++ program shall provide at
+most one definition of a replaceable allocation or deallocation
+function. Any such function definition replaces the default version
+provided in the library (17.6.3.6). The following allocation and
+deallocation functions (18.6) are implicitly declared in global
+scope in each translation unit of a program.</p>
+<pre class="literal-block">
+void* operator new(std::size_t) <span class="del">throw(std::bad_alloc)</span>;
+void* operator new[](std::size_t) <span class="del">throw(std::bad_alloc)</span>;
+void operator delete(void*) <span class="del">throw()</span> <span class="ins">noexcept</span>;
+void operator delete[](void*) <span class="del">throw()</span> <span class="ins">noexcept</span>;
+</pre>
+<p>These implicit declarations introduce only the function names
+<tt class="docutils literal"><span class="pre">operator</span> <span class="pre">new</span></tt>, <tt class="docutils literal"><span class="pre">operator</span> <span class="pre">new[]</span></tt>, <tt class="docutils literal"><span class="pre">operator</span> <span class="pre">delete</span></tt>,
+<tt class="docutils literal"><span class="pre">operator</span> <span class="pre">delete[]</span></tt> [<em>Note</em>: the implicit declarations do not
+introduce the names <tt class="docutils literal"><span class="pre">std</span></tt> <span class="del">, std::bad_alloc,</span> and
+<tt class="docutils literal"><span class="pre">std::size_t</span></tt>, or any other names that the
+library uses to declare these names. Thus, a <em>new-expression</em>,
+<em>delete-expression</em> or function call that refers to one of these
+functions without including the header <tt class="docutils literal"><span class="pre">&lt;new&gt;</span></tt> is
+well-formed. However, referring to <tt class="docutils literal"><span class="pre">std</span></tt> <span class="del">, std::bad_alloc,</span> and
+<tt class="docutils literal"><span class="pre">std::size_t</span></tt> is ill-formed unless the name has been declared by
+including the appropriate header. -- <em>end note</em>] Allocation and/or
+deallocation functions can also be declared and defined for any
+class (12.5).</p>
+</blockquote>
+</div>
+<div class="section" id="exception-specifications-except-spec">
+<h2><a class="toc-backref" href="#id7">15.4 Exception specifications [except.spec]</a></h2>
+<p>Modify the paragraphs in this section as follows. Note that every
+paragraph in this section is accounted for (even those that have not
+changed), to ease review. Editorial notes are <span class="ed">[Yellow]</span> and will
+describe, e.g., when specific paragraphs have been moved.</p>
+<blockquote>
+<p>1 A function declaration lists exceptions that its function might
+directly or indirectly throw by using an <em>exception-specification</em>
+as a suffix of its declarator.
+<span class="raw-html"><span class="ins">A function is said to <i>allow</i> an
+exception of type <code>E</code> if such an exception will propagate
+from the outermost block of that function out of the function.</span></span></p>
+<pre class="literal-block">
+<em>exception-specification</em>:
+  <em>dynamic-exception-specification</em>
+  <em>noexcept-specification</em>
+
+<span class="ed">[Moved to D.5p1]</span> <span class="raw-html"><span class="del"><i>dynamic-exception-specification</i>:</span></span>
+  <span class="raw-html"><span class="del"><code>throw (</code> <i>type-id-list<sub>opt</sub></i> <code>)</code></span></span>
+
+<span class="ed">[Moved to D.5p1]</span> <span class="raw-html"><span class="del"><i>type-id-list</i>:</span></span>
+  <span class="raw-html"><span class="del"><i>type-id</i> <code>...</code><sub><i>opt</i></sub></span></span>
+  <span class="raw-html"><span class="del"><i>type-id-list</i> <code>,</code> <i>type-id</i> <code>...</code><sub><i>opt</i></sub></span></span>
+
+<em>noexcept-specification</em>:
+  <tt class="docutils literal"><span class="pre">noexcept</span> <span class="pre">(</span></tt> <em>constant-expression</em> <tt class="docutils literal"><span class="pre">)</span></tt>
+  <tt class="docutils literal"><span class="pre">noexcept</span></tt>
+</pre>
+<p>In a <em>noexcept-specification</em>, the <em>constant-expression</em>, if supplied,
+shall be a constant expression ([expr.const]) that is contextually
+converted to <tt class="docutils literal"><span class="pre">bool</span></tt> ([conv] Clause 4). A <em>noexcept-specification</em>
+<tt class="docutils literal"><span class="pre">noexcept</span></tt> is equivalent to <tt class="docutils literal"><span class="pre">noexcept(true)</span></tt>.</p>
+<p>2 An <em>exception-specification</em> shall appear only on a function
+declarator for a function type, pointer to function type, reference
+to function type, or pointer to member function type that is the
+top-level type of a declaration or definition, or on such a type
+appearing as a parameter or return type in a function declarator. An
+<em>exception-specification</em> shall not appear in a typedef declaration
+or <em>alias-declaration</em>. [ <em>Example</em> :</p>
+<pre class="literal-block">
+void f() <span class="del">throw(int)</span><span class="ins">noexcept</span>;              // OK
+void (*fp)() <span class="del">throw (int)</span><span class="ins">noexcept</span>;        // OK
+void g(void pfa() <span class="del">throw(int))</span><span class="ins">noexcept</span>;    // OK
+typedef int (*pf)() <span class="del">throw(int)</span><span class="ins">noexcept</span>;  // ill-formed
+</pre>
+<ul class="simple">
+<li><em>end example</em> ]</li>
+</ul>
+<p><span class="ed">[Moved to D.5p2]</span> <span class="del">A type denoted in an exception-specification shall not
+denote an incomplete type. A type denoted in an
+exception-specification shall not denote a pointer or reference to an
+incomplete type, other than void*, const void*, volatile void*, or
+const volatile void*.</span></p>
+<p>3 If any declaration of a function has an <em>exception-specification</em>,
+all declarations, including the definition and an explicit
+specialization, of that function shall have an
+<em>exception-specification</em> with the same set of <em>type-id</em> s.
+<span class="ed">[FIXME: Note about what it means to have the same set of type-ids?]</span>
+If any declaration of a pointer to function, reference to function, or
+pointer to member function has an <em>exception-specification</em>, all
+occurrences of that declaration shall have an
+<em>exception-specification</em> with the same set of <em>type-id</em> s. In an
+explicit instantiation an <em>exception-specification</em> may be specified,
+but is not required. If an <em>exception-specification</em> is specified in
+an explicit instantiation directive, it shall have the same set of
+<em>type-id</em> s as other declarations of that function. A diagnostic is
+required only if the sets of <em>type-id</em> s are different within a single
+translation unit.</p>
+<p>4 <span class="ed">[FIXME: Figure out what to do with p4!]</span></p>
+<p>5 <span class="ed">[FIXME: Figure out what to do with p5!]</span></p>
+<p>6 <span class="ed">[Moved to D.5p3]</span> <span class="raw-html"><span class="del">An
+<i>exception-specification</i> can include the same type more than
+once and can include classes that are related by inheritance, even
+though doing so is redundant. [ <i>Note</i>: An
+<i>exception-specification</i> can also include the class
+<code>std::bad_exception</code> (18.8.2.1). - <i>end note</i>
+]</span></span></p>
+<p>7 <span class="ed">[Moved to D.5p4]</span> <span class="raw-html"><span class="del">A function is
+said to <i>allow</i> an exception of type <code>E</code> if its
+<i>dynamic-exception-specification</i> contains a type
+<code>T</code> for which a handler of type <code>T</code> would be a
+match (15.3) for an exception of type <code>E</code>.</span></span></p>
+<p>8 <span class="ed">[Moved to D.5p5]</span> <span class="raw-html"><span class="del">Whenever an
+exception is thrown and the search for a handler (15.3) encounters
+the outermost block of a function with an <i>exception-specification</i>,
+the function <code>std::unexpected()</code> is called (15.5.2) if
+the <i>exception-specification</i> does not allow the exception. [
+<i>Example</i>:</span></span></p>
+<pre class="literal-block">
+<span class="del">class X { };</span>
+<span class="del">class Y { };</span>
+<span class="del">class Z: public X { };</span>
+<span class="del">class W { };</span>
+
+<span class="del">void f() throw (X, Y) {</span>
+  <span class="del">int n = 0;</span>
+  <span class="del">if (n) throw X(); // OK</span>
+  <span class="del">if (n) throw Z(); // also OK</span>
+  <span class="del">throw W();        // will call std::unexpected()</span>
+<span class="del">}</span>
+</pre>
+<p><span class="raw-html"><span class="del">-- <i>end example</i></span>]</span></p>
+<p>9 <span class="ed">[Moved to D.5p6]</span> <span class="raw-html"><span class="del">The function
+<code>std::unexpected()</code> may throw an exception that will
+satisfy the <i>dynamic-exception-specification</i> for which it
+was invoked, and in this case the search for another handler will
+continue at the call of the function with this
+<i>dynamic-exception-specification</i> (see 15.5.2), or it may call
+<code>std::terminate()</code>.</span></span></p>
+<p>10 <span class="ed">[FIXME: Figure out what to do with p10!]</span></p>
+<p>11 A function with no <em>exception-specification</em>, or with an
+<em>exception-specification</em> of the form <tt class="docutils literal"><span class="pre">noexcept(</span></tt>
+<em>constant-expression</em> <tt class="docutils literal"><span class="pre">)</span></tt> where the <em>constant-expression</em> yields
+<tt class="docutils literal"><span class="pre">false</span></tt>, allows all exceptions. An <em>exception-specification</em> is
+non-throwing if it is of the form <span class="del">throw(),</span> <tt class="docutils literal"><span class="pre">noexcept</span></tt>,
+<span class="del">or</span> <tt class="docutils literal"><span class="pre">noexcept(</span></tt> <em>constant-expression</em> <tt class="docutils literal"><span class="pre">)</span></tt> where the
+<em>constant-expression</em> yields <tt class="docutils literal"><span class="pre">true</span></tt>
+<span class="raw-html"><span class="ins">, or <code>throw()</code> (D.5)</span></span>
+. A function with a
+non-throwing <em>exception-specification</em> does not allow any
+exceptions.</p>
+<p>12 An <em>exception-specification</em> is not considered part of a function's
+type.</p>
+<p>13 <span class="ed">[FIXME: Figure out what to do with p13!]</span></p>
+<p>14 <span class="ed">[Moved to D.5p7]</span> <span class="raw-html"><span class="del">In a <i>dynamic-exception-specification</i>, a <i>type-id</i> followed by an ellipsis is a pack expansion (14.6.3).</span></span></p>
+<p>15 <span class="ed">[FIXME: Figure out what to do with p15! It's unfortunate
+that we're describing noexcept in terms of throw()]</span></p>
+</blockquote>
+</div>
+<div class="section" id="d-5-dynamic-exception-specifications-depr-except-spec-dynamic">
+<h2><a class="toc-backref" href="#id8"><span class="ins">D.5 Dynamic exception specifications [depr.except.spec.dynamic]</span></a></h2>
+<p>Insert this new section. <span class="ins">Green underlined text</span> is used to
+indicate new wording, while normal text is used whenever text was
+moved from another section (15.4, 15.5).</p>
+<blockquote>
+<p>1 <span class="ins">A dynamic exception specification lists exceptions that its function
+might directly or indirectly throw.</span></p>
+<pre class="literal-block">
+<span class="ed">[Moved from 15.4p1]</span> <span class="raw-html"><span class="ins"><i>dynamic-exception-specification</i>:</span></span>
+  <span class="raw-html"><span class="ins"><code>throw (</code> <i>type-id-list<sub>opt</sub></i> <code>)</code></span></span>
+
+<span class="ed">[Moved from 15.4p1]</span> <span class="raw-html"><span class="ins"><i>type-id-list</i>:</span></span>
+  <span class="raw-html"><span class="ins"><i>type-id</i> <code>...</code><sub><i>opt</i></sub></span></span>
+  <span class="raw-html"><span class="ins"><i>type-id-list</i> <code>,</code> <i>type-id</i> <code>...</code><sub><i>opt</i></sub></span></span>
+</pre>
+<p>2 <span class="ed">[Moved from 15.4p2]</span> <span class="raw-html">A type denoted in a
+<i><span class="ins">dynamic-</span>exception-specification</i> shall not denote an
+incomplete type. A type denoted in a
+<i><span class="ins">dynamic-</span>exception-specification</i> shall not denote a pointer or
+reference to an incomplete type, other than <code>void*</code>,
+<code>const void*</code>, <code>volatile void*</code>, or
+<code>const volatile void*</code>.</span></p>
+<p>3 <span class="ed">[Moved from 15.4p6]</span> <span class="raw-html">A
+<i><span class="ins">dynamic-</span>exception-specification</i> can include the same type more than
+once and can include classes that are related by inheritance, even
+though doing so is redundant. [ <i>Note</i>: A
+<i><span class="ins">dynamic-</span>exception-specification</i> can also include the class
+<code>std::bad_exception</code> (18.8.2.1). - <i>end note</i>
+]</span></p>
+<p>4 <span class="ed">[Moved from 15.4p7]</span> <span class="raw-html">A function <span class="del">is
+said to <i>allow</i></span><span class="ins">allows</span> an exception of type <code>E</code> if its
+<i>dynamic-exception-specification</i> contains a type
+<code>T</code> for which a handler of type <code>T</code> would be a
+match (15.3) for an exception of type <code>E</code>.</span></p>
+<p>5 <span class="ed">[Moved from 15.4p8]</span> <span class="raw-html">Whenever an
+exception is thrown and the search for a handler (15.3) encounters
+the outermost block of a function with a<span class="del">n</span>
+<i><span class="ins">dynamic-</span>exception-specification</i>, the function
+<code>std::unexpected()</code> is called (15.5.2) if the
+<i><span class="ins">dynamic-</span>exception-specification</i> does not allow the exception. [
+<i>Example</i>:</span></p>
+<pre class="literal-block">
+class X { };
+class Y { };
+class Z: public X { };
+class W { };
+
+void f() throw (X, Y) {
+  int n = 0;
+  if (n) throw X(); // OK
+  if (n) throw Z(); // also OK
+  throw W();        // will call std::unexpected()
+}
+</pre>
+<p><span class="raw-html">-- <i>end example</i>]</span></p>
+<p>6 <span class="ed">[Moved from 15.4p9]</span> <span class="raw-html">The function
+<code>std::unexpected()</code> may throw an exception that will
+satisfy the <i><span class="ins">dynamic-</span>exception-specification</i> for which it
+was invoked, and in this case the search for another handler will
+continue at the call of the function with this
+<i><span class="ins">dynamic-</span>exception-specification</i> (see 15.5.2), or it may call
+<code>std::terminate()</code>.</span></p>
+<p>7 <span class="ed">[Moved from 15.4p14]</span> <span class="raw-html">In a <i>dynamic-exception-specification</i>, a <i>type-id</i> followed by an ellipsis is a pack expansion (14.6.3).</span></p>
+</blockquote>
+<hr class="docutils" />
+<p>Other notes:</p>
+<blockquote>
+15.4p8 needs to refer to dynamic-exception-specification!
+15.4p9 needs the same.</blockquote>
+<hr class="docutils" />
+<table class="docutils citation" frame="void" id="sutter02" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[Sutter02]</a></td><td>A Pragmatic Look at Exception Specifications. <a class="reference external" href="http://www.gotw.ca/publications/mill22.htm">http://www.gotw.ca/publications/mill22.htm</a></td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="boost03" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[Boost03]</a></td><td><a class="reference external" href="http://www.boost.org/development/requirements.html#Exception-specification">http://www.boost.org/development/requirements.html#Exception-specification</a></td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="n3050" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[N3050]</a></td><td><ol class="first last upperalpha simple" start="4">
+<li>Abrahams, R. Sharoni, and D. Gregor. <em>Allowing Move Constructors to Throw</em>. Document number N3050=10-0040, ISO C++ Committee Post-Pittsburgh Mailing, March, 2010.</li>
+</ol>
+</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</body>
+</html>

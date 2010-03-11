@@ -1,3 +1,6 @@
+noexcept.html: noexcept.rst
+	rst2html.py --stylesheet=exported-concept-maps.css --embed-stylesheet noexcept.rst noexcept.html
+
 all: exported-concept-maps.html taxonomy-of-concepts-and-maps.html explicit-refinement.html
 
 exported-concept-maps.html: exported-concept-maps.rst exported-concept-maps.css

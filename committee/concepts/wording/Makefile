@@ -2,7 +2,10 @@
 
 PDFLATEX = pdflatex
 
-basic: wording.pdf
+basic: deleted-special-member-funcs.pdf
+
+deleted-special-member-funcs.pdf: deleted-special-member-funcs.tex
+	@$(PDFLATEX) deleted-special-member-funcs.tex
 
 wording.pdf: wording.tex macros.tex
 	@$(PDFLATEX) wording.tex
