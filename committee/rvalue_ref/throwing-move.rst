@@ -620,7 +620,7 @@ Modify or add the following entries in table 43:
     - :raw-html:`<span class="ins"><code>is_constructible&lt;U, const U&amp;&gt;::value</code> is true, where <code>U</code> is <code>remove_all_extents&lt;T&gt;::type.</span>`
     - :raw-html:`<span class="ins"><code>T</code> shall be a complete type, (possibly cv-qualified) void, or an array of unknown bound.</span>`
   * - :raw-html:`<span class="ins"><code>template &lt;class T&gt struct has_move_constructor;</code></span>`
-    - :raw-html:`<span class="ins"><code>T</code> is <i>cv</i> <code>void</code> or <code>is_constructible&lt;U, U&amp;&amp;&gt;::value</code> is true, where <code>U</code> is <code>remove_all_extents&lt;T&gt;::type.</span>`
+    - :raw-html:`<span class="ins"><code>is_constructible&lt;U, U&amp;&amp;&gt;::value</code> is true, where <code>U</code> is <code>remove_all_extents&lt;T&gt;::type.</span>`
     - :raw-html:`<span class="ins"><code>T</code> shall be a complete type, (possibly cv-qualified) void, or an array of unknown bound.</span>`
   * - :raw-html:`<span class="ins"><code>template &lt;class T&gt; struct has_copy_assign;</code></ins>`
     - :raw-html:`<span class="ins"><code>T</code> is neither <code>const</code> nor a reference type, and <code>T</code> is a trivial type (3.9) or the expression <code>*(U*)0 = declval&lt;const U&amp;&gt;()</code> is well-formed when treated as an unevaluated operand (Clause 5), where <code>U</code> is <code>remove_all_extents&lt;T&gt;::type</code>.</span>`
