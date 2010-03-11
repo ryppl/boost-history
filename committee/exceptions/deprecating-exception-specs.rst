@@ -511,16 +511,6 @@ moved from another section (15.4, 15.5).
   8 :ed:`[Moved from 15.4p14]` :raw-html:`In a <i>dynamic-exception-specification</i>, a <i>type-id</i> followed by an ellipsis is a pack expansion (14.6.3).`
 
 
-
-
-------
-
-Other notes:
-
-
-  15.4p8 needs to refer to dynamic-exception-specification!
-  15.4p9 needs the same.
-
 ------
 
 .. [Sutter02] A Pragmatic Look at Exception Specifications. http://www.gotw.ca/publications/mill22.htm
