@@ -13,7 +13,7 @@
 #include <boost/array.hpp>
 #include <boost/range.hpp>
 #include <boost/assign/list_of.hpp> // for assign_detail::converter
-#include <boost/assign/auto_size/detail/has_copy_semantics.hpp>
+#include <boost/assign/auto_size/reference_wrapper/has_copy_semantics.hpp>
 #include <boost/assign/auto_size/array/ref.hpp>
 //#include <boost/assign/auto_size/array/chainable.hpp>
 
