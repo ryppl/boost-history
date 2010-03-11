@@ -331,22 +331,27 @@ rst2html.py - -footnote-references=superscript \
 <div class="contents topic" id="index">
 <p class="topic-title first">index</p>
 <ul class="simple">
-<li><a class="reference internal" href="#introduction" id="id4">Introduction</a></li>
-<li><a class="reference internal" href="#approach" id="id5">Approach</a></li>
-<li><a class="reference internal" href="#proposed-changes-to-standard-wording" id="id6">Proposed Changes to Standard Wording</a><ul>
-<li><a class="reference internal" href="#dynamic-storage-duration-basic-stc-dynamic" id="id7">3.7.4 Dynamic storage duration [basic.stc.dynamic]</a></li>
-<li><a class="reference internal" href="#exception-specifications-except-spec" id="id8">15.4 Exception specifications [except.spec]</a></li>
-<li><a class="reference internal" href="#special-functions-except-special" id="id9">15.5 Special functions [except.special]</a></li>
-<li><a class="reference internal" href="#the-std-unexpected-function-except-unexpected" id="id10">15.5.2 The <tt class="docutils literal"><span class="pre">std::unexpected()</span></tt> function [except.unexpected]</a></li>
-<li><a class="reference internal" href="#exception-handling-support-exception" id="id11">18.8 Exception handling [support.exception]</a></li>
-<li><a class="reference internal" href="#violating-exception-specifications-exception-unexpected" id="id12">18.8.2  Violating exception-specifications [exception.unexpected]</a></li>
-<li><a class="reference internal" href="#d-5-dynamic-exception-specifications-depr-except-spec-dynamic" id="id13"><span class="ins">D.5 Dynamic exception specifications [depr.except.spec.dynamic]</span></a></li>
+<li><a class="reference internal" href="#introduction" id="id6">Introduction</a></li>
+<li><a class="reference internal" href="#approach" id="id7">Approach</a></li>
+<li><a class="reference internal" href="#proposed-changes-to-standard-wording" id="id8">Proposed Changes to Standard Wording</a><ul>
+<li><a class="reference internal" href="#dynamic-storage-duration-basic-stc-dynamic" id="id9">3.7.4 Dynamic storage duration [basic.stc.dynamic]</a></li>
+<li><a class="reference internal" href="#exception-specifications-except-spec" id="id10">15.4 Exception specifications [except.spec]</a></li>
+<li><a class="reference internal" href="#special-functions-except-special" id="id11">15.5 Special functions [except.special]</a></li>
+<li><a class="reference internal" href="#the-std-unexpected-function-except-unexpected" id="id12">15.5.2 The <tt class="docutils literal"><span class="pre">std::unexpected()</span></tt> function [except.unexpected]</a></li>
+<li><a class="reference internal" href="#restrictions-on-exception-handling-res-on-exception-handling" id="id13">17.6.4.11 Restrictions on exception handling [res.on.exception.handling]</a></li>
+<li><a class="reference internal" href="#dynamic-memory-management-support-dynamic" id="id14">18.6 Dynamic memory management [support.dynamic]</a></li>
+<li><a class="reference internal" href="#single-object-forms-new-delete-single" id="id15">18.6.1.1 Single-object forms [new.delete.single]</a></li>
+<li><a class="reference internal" href="#array-forms-new-delete-array" id="id16">18.6.1.2 Array forms [new.delete.array]</a></li>
+<li><a class="reference internal" href="#placement-forms-new-delete-placement" id="id17">18.6.1.3 Placement forms [new.delete.placement]</a></li>
+<li><a class="reference internal" href="#exception-handling-support-exception" id="id18">18.8 Exception handling [support.exception]</a></li>
+<li><a class="reference internal" href="#violating-exception-specifications-exception-unexpected" id="id19">18.8.2  Violating exception-specifications [exception.unexpected]</a></li>
+<li><a class="reference internal" href="#d-5-dynamic-exception-specifications-depr-except-spec-dynamic" id="id20"><span class="ins">D.5 Dynamic exception specifications [depr.except.spec.dynamic]</span></a></li>
 </ul>
 </li>
 </ul>
 </div>
 <div class="section" id="introduction">
-<h1><a class="toc-backref" href="#id4">Introduction</a></h1>
+<h1><a class="toc-backref" href="#id6">Introduction</a></h1>
 <dl class="docutils">
 <dt>UK-136</dt>
 <dd>Exception specifications have proven close to worthless in practice, while adding a measurable overhead to programs. The feature should be deprecated. The one exception to the rule is the empty throw specification which could serve a legitimate optimizing role if the requirement to call the runtime unexpected mechanism was relaxed in this case.</dd>
@@ -388,7 +393,7 @@ additional overhead. This paper therefore proposes to deprecate
 <tt class="docutils literal"><span class="pre">noexcept</span></tt>.</p>
 </div>
 <div class="section" id="approach">
-<h1><a class="toc-backref" href="#id5">Approach</a></h1>
+<h1><a class="toc-backref" href="#id7">Approach</a></h1>
 <p>The general approach taken by this paper is to separate the wording
 required for dynamic exception specifications (those using <tt class="docutils literal"><span class="pre">throw</span></tt>)
 into a new, deprecated section D.5, while maintaining the description
@@ -440,11 +445,11 @@ the implicit declarations of <tt class="docutils literal"><span class="pre">oper
 changes to use <tt class="docutils literal"><span class="pre">noexcept</span></tt>.</p>
 </div>
 <div class="section" id="proposed-changes-to-standard-wording">
-<h1><a class="toc-backref" href="#id6">Proposed Changes to Standard Wording</a></h1>
+<h1><a class="toc-backref" href="#id8">Proposed Changes to Standard Wording</a></h1>
 <p>The wording in this paper is based on the current working paper
 (N3035) as amended by N3050.</p>
 <div class="section" id="dynamic-storage-duration-basic-stc-dynamic">
-<h2><a class="toc-backref" href="#id7">3.7.4 Dynamic storage duration [basic.stc.dynamic]</a></h2>
+<h2><a class="toc-backref" href="#id9">3.7.4 Dynamic storage duration [basic.stc.dynamic]</a></h2>
 <p>Modify paragraph 2 as follows:</p>
 <blockquote>
 <p>2 The library provides default definitions for the global allocation
@@ -477,7 +482,7 @@ class (12.5).</p>
 </blockquote>
 </div>
 <div class="section" id="exception-specifications-except-spec">
-<h2><a class="toc-backref" href="#id8">15.4 Exception specifications [except.spec]</a></h2>
+<h2><a class="toc-backref" href="#id10">15.4 Exception specifications [except.spec]</a></h2>
 <p>Modify the paragraphs in this section as follows. Note that every
 paragraph in this section is accounted for (even those that have not
 changed), to ease review. Editorial notes are <span class="ed">[Yellow]</span> and will
@@ -714,12 +719,12 @@ whose <em>constant-expression</em> yields <tt class="docutils literal"><span cla
 </blockquote>
 </div>
 <div class="section" id="special-functions-except-special">
-<h2><a class="toc-backref" href="#id9">15.5 Special functions [except.special]</a></h2>
+<h2><a class="toc-backref" href="#id11">15.5 Special functions [except.special]</a></h2>
 <blockquote>
 1 The <span class="raw-html">function<span class="del">s</span> <code>std::terminate()</code> (15.5.1) <span class="del">and <code>std::unexpected()</code> (15.5.2) are</span><span class="ins">is</span></span> used by the exception handling mechanism for coping with errors related to the exception handling mechanism itself. The function <tt class="docutils literal"><span class="pre">std::current_exception()</span></tt> (18.8.5) and the class <tt class="docutils literal"><span class="pre">std::nested_exception</span></tt> (18.8.6) can be used by a program to capture the currently handled exception.</blockquote>
 </div>
 <div class="section" id="the-std-unexpected-function-except-unexpected">
-<h2><a class="toc-backref" href="#id10">15.5.2 The <tt class="docutils literal"><span class="pre">std::unexpected()</span></tt> function [except.unexpected]</a></h2>
+<h2><a class="toc-backref" href="#id12">15.5.2 The <tt class="docutils literal"><span class="pre">std::unexpected()</span></tt> function [except.unexpected]</a></h2>
 <p>Move this section to D.5 to become D.5.1
 [depr.except.unexpected]. Then modify the following paragraphs as
 follows:</p>
@@ -729,8 +734,57 @@ follows:</p>
 <p>4 Thus, <span class="del">an</span> <span class="ins">a</span> <span class="raw-html"><i><span class="ins">dynamic-</span>exception-specification</i> guarantees that only the listed exceptions will be thrown. If the <i><span class="ins">dynamic-</span>exception-specification</i> includes the type <code>std::bad_exception</code> then any exception not on the list may be replaced by <code>std::bad_exception</code> within the function <code>std::unexpected()</code>.</span></p>
 </blockquote>
 </div>
+<div class="section" id="restrictions-on-exception-handling-res-on-exception-handling">
+<h2><a class="toc-backref" href="#id13">17.6.4.11 Restrictions on exception handling [res.on.exception.handling]</a></h2>
+<p>Modify the paragaphs shown as follows:</p>
+<blockquote>
+<p>1 Any of the functions defined in the C++ standard library can
+report a failure by throwing an exception of a type described in its
+<strong>Throws</strong>: paragraph or its <em>exception-specification</em> (15.4). An
+implementation may strengthen the <em>exception-specification</em> for a
+non-virtual function by removing listed exceptions <span class="raw-html"><span
+class="ins">or replacing an empty <i>dynamic-exception-specification</i> (D.5 [depr.except.spec.dynamic]) <code>throw()</code> with a compatible <code>noexcept</code> specification (15.4)</span></span>.</p>
+<p>3 Functions from the C standard library shall not throw exceptions<a class="footnote-reference" href="#id5" id="id4"><sup>191</sup></a> except when such a function calls a program-supplied function that throws an exception.</p>
+</blockquote>
+<table class="docutils footnote" frame="void" id="id5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[191]</a></td><td>That is, the C library functions can all be treated as if they have a <span class="del">throw()</span> <span class="ins">non-throwing</span> <em>exception-specification</em>. This allows implementations to make performance optimizations based on the absence of exceptions at runtime.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="dynamic-memory-management-support-dynamic">
+<h2><a class="toc-backref" href="#id14">18.6 Dynamic memory management [support.dynamic]</a></h2>
+<p>Modify the header <tt class="docutils literal"><span class="pre">&lt;new&gt;</span></tt> synopsis as follows.</p>
+<pre class="literal-block">
+void* operator new(std::size_t size) <span class="del">throw(std::bad_alloc)</span><span class="ins">noexcept(false)</span>;
+void* operator new(std::size_t size, const std::nothrow_t&amp;) <span class="del">throw()`</span><span class="ins">noexcept</span>;
+void operator delete(void* ptr) <span class="del">throw()`</span><span class="ins">noexcept</span>;
+void operator delete(void* ptr, const std::nothrow_t&amp;) <span class="del">throw()`</span><span class="ins">noexcept</span>;
+void* operator new[](std::size_t size) <span class="del">throw(std::bad_alloc)`</span><span class="ins">noexcept(false)</span>;
+void* operator new[](std::size_t size, const std::nothrow_t&amp;) <span class="del">throw()`</span><span class="ins">noexcept</span>;
+void operator delete[](void* ptr) <span class="del">throw()`</span><span class="ins">noexcept</span>;
+void operator delete[](void* ptr, const std::nothrow_t&amp;) <span class="del">throw()`</span><span class="ins">noexcept</span>;
+void* operator new (std::size_t size, void* ptr) <span class="del">throw()`</span><span class="ins">noexcept</span>;
+void* operator new[](std::size_t size, void* ptr) <span class="del">throw()`</span><span class="ins">noexcept</span>;
+void operator delete (void* ptr, void*) <span class="del">throw()`</span><span class="ins">noexcept</span>;
+void operator delete[](void* ptr, void*) <span class="del">throw()`</span><span class="ins">noexcept</span>;
+</pre>
+</div>
+<div class="section" id="single-object-forms-new-delete-single">
+<h2><a class="toc-backref" href="#id15">18.6.1.1 Single-object forms [new.delete.single]</a></h2>
+<p>Update the signatures of <tt class="docutils literal"><span class="pre">operator</span> <span class="pre">new</span></tt> and <tt class="docutils literal"><span class="pre">operator</span> <span class="pre">delete</span></tt> in this section to reflect the changes to the synopsis.</p>
+</div>
+<div class="section" id="array-forms-new-delete-array">
+<h2><a class="toc-backref" href="#id16">18.6.1.2 Array forms [new.delete.array]</a></h2>
+<p>Update the signatures of <tt class="docutils literal"><span class="pre">operator</span> <span class="pre">new[]</span></tt> and <tt class="docutils literal"><span class="pre">operator</span> <span class="pre">delete[]</span></tt> in this section to reflect the changes to the synopsis.</p>
+</div>
+<div class="section" id="placement-forms-new-delete-placement">
+<h2><a class="toc-backref" href="#id17">18.6.1.3 Placement forms [new.delete.placement]</a></h2>
+<p>Update the signatures of <tt class="docutils literal"><span class="pre">operator</span> <span class="pre">new</span></tt>, <tt class="docutils literal"><span class="pre">operator</span> <span class="pre">delete</span></tt>, <tt class="docutils literal"><span class="pre">operator</span> <span class="pre">new[]</span></tt>, and <tt class="docutils literal"><span class="pre">operator</span> <span class="pre">delete[]</span></tt> in this section to reflect the changes to the synopsis.</p>
+</div>
 <div class="section" id="exception-handling-support-exception">
-<h2><a class="toc-backref" href="#id11">18.8 Exception handling [support.exception]</a></h2>
+<h2><a class="toc-backref" href="#id18">18.8 Exception handling [support.exception]</a></h2>
 <p>Modify paragraph 1 as follows:</p>
 <blockquote>
 <p>1 The header <tt class="docutils literal"><span class="pre">&lt;exception&gt;</span></tt> defines several types and functions related to the handling of exceptions in a C++ program.</p>
@@ -766,12 +820,12 @@ namespace std {
 </blockquote>
 </div>
 <div class="section" id="violating-exception-specifications-exception-unexpected">
-<h2><a class="toc-backref" href="#id12">18.8.2  Violating exception-specifications [exception.unexpected]</a></h2>
+<h2><a class="toc-backref" href="#id19">18.8.2  Violating exception-specifications [exception.unexpected]</a></h2>
 <p>Move this section to D.5 to become D.5.2
 [depr.exception.unexpected].</p>
 </div>
 <div class="section" id="d-5-dynamic-exception-specifications-depr-except-spec-dynamic">
-<h2><a class="toc-backref" href="#id13"><span class="ins">D.5 Dynamic exception specifications [depr.except.spec.dynamic]</span></a></h2>
+<h2><a class="toc-backref" href="#id20"><span class="ins">D.5 Dynamic exception specifications [depr.except.spec.dynamic]</span></a></h2>
 <p>Insert this new section. <span class="ins">Green underlined text</span> is used to
 indicate new wording, while normal text is used whenever text was
 moved from another section (15.4, 15.5).</p>

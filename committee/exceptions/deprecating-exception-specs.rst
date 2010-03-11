@@ -444,6 +444,57 @@ follows:
 
   4 Thus, :del:`an` :ins:`a` :raw-html:`<i><span class="ins">dynamic-</span>exception-specification</i> guarantees that only the listed exceptions will be thrown. If the <i><span class="ins">dynamic-</span>exception-specification</i> includes the type <code>std::bad_exception</code> then any exception not on the list may be replaced by <code>std::bad_exception</code> within the function <code>std::unexpected()</code>.`
 
+17.6.4.11 Restrictions on exception handling [res.on.exception.handling]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Modify the paragaphs shown as follows:
+
+  1 Any of the functions defined in the C++ standard library can
+  report a failure by throwing an exception of a type described in its
+  **Throws**: paragraph or its *exception-specification* (15.4). An
+  implementation may strengthen the *exception-specification* for a
+  non-virtual function by removing listed exceptions :raw-html:`<span
+  class="ins">or replacing an empty <i>dynamic-exception-specification</i> (D.5 [depr.except.spec.dynamic]) <code>throw()</code> with a compatible <code>noexcept</code> specification (15.4)</span>`.
+
+  3 Functions from the C standard library shall not throw exceptions [191]_ except when such a function calls a program-supplied function that throws an exception.
+
+.. [191] That is, the C library functions can all be treated as if they have a :del:`throw()` :ins:`non-throwing` *exception-specification*. This allows implementations to make performance optimizations based on the absence of exceptions at runtime.
+
+18.6 Dynamic memory management [support.dynamic]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Modify the header ``<new>`` synopsis as follows.
+
+.. parsed-literal::
+
+  void* operator new(std::size_t size) :del:`throw(std::bad_alloc)`:ins:`noexcept(false)`;
+  void* operator new(std::size_t size, const std::nothrow_t&) :del:`throw()``:ins:`noexcept`; 
+  void operator delete(void* ptr) :del:`throw()``:ins:`noexcept`; 
+  void operator delete(void* ptr, const std::nothrow_t&) :del:`throw()``:ins:`noexcept`; 
+  void* operator new[](std::size_t size) :del:`throw(std::bad_alloc)``:ins:`noexcept(false)`; 
+  void* operator new[](std::size_t size, const std::nothrow_t&) :del:`throw()``:ins:`noexcept`; 
+  void operator delete[](void* ptr) :del:`throw()``:ins:`noexcept`; 
+  void operator delete[](void* ptr, const std::nothrow_t&) :del:`throw()``:ins:`noexcept`;
+  void* operator new (std::size_t size, void* ptr) :del:`throw()``:ins:`noexcept`; 
+  void* operator new[](std::size_t size, void* ptr) :del:`throw()``:ins:`noexcept`; 
+  void operator delete (void* ptr, void*) :del:`throw()``:ins:`noexcept`;
+  void operator delete[](void* ptr, void*) :del:`throw()``:ins:`noexcept`;
+
+18.6.1.1 Single-object forms [new.delete.single]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Update the signatures of ``operator new`` and ``operator delete`` in this section to reflect the changes to the synopsis.
+
+18.6.1.2 Array forms [new.delete.array]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Update the signatures of ``operator new[]`` and ``operator delete[]`` in this section to reflect the changes to the synopsis.
+
+18.6.1.3 Placement forms [new.delete.placement]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Update the signatures of ``operator new``, ``operator delete``, ``operator new[]``, and ``operator delete[]`` in this section to reflect the changes to the synopsis.
+
 18.8 Exception handling [support.exception]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
