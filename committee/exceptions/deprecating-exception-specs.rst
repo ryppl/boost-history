@@ -432,7 +432,7 @@ they should appear after the following edits are applied.
 15.5.2 The ``std::unexpected()`` function [except.unexpected]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This section should be moved to D.5 to become D.5.1
+Move this section to D.5 to become D.5.1
 [depr.except.unexpected]. Then modify the following paragraphs as
 follows:
 
@@ -487,7 +487,7 @@ Modify paragraph 1 as follows:
 18.8.2	Violating exception-specifications [exception.unexpected]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This section should be moved to D.5 to become D.5.2
+Move this section to D.5 to become D.5.2
 [depr.exception.unexpected].
 
 :ins:`D.5 Dynamic exception specifications [depr.except.spec.dynamic]`
