@@ -287,7 +287,16 @@ they should appear after the following edits are applied.
   <i>dynamic-exception-specification</i> (see 15.5.2), or it may call
   <code>std::terminate()</code>.</span>`
 
-  10 :ed:`[FIXME: Figure out what to do with p10!]`
+  10 :ed:`[Moved to D.5p7]` :raw-html:`<span class="del">An implementation shall not reject an expression merely because when executed it throws or might throw an exception that the containing function does not allow. [ <i>Example</i>:</span>`
+
+    .. parsed-literal::
+
+      :del:`extern void f() throw(X, Y);`
+      :del:`void g() throw(X) {`
+        :del:`f(); // OK`
+      :del:`}`
+
+  :raw-html:`<span class="del">the call to <code>f</code> is well-formed even though when called, <code>f</code> might throw exception <code>Y</code> that <code>g</code> does not allow. - <i>end example</i> ]</span>`
 
   11 A function with no *exception-specification*, or with an
   *exception-specification* of the form ``noexcept(``
@@ -335,7 +344,7 @@ they should appear after the following edits are applied.
 
   13 :ed:`[FIXME: Figure out what to do with p13!]`
   
-  14 :ed:`[Moved to D.5p7]` :raw-html:`<span class="del">In a <i>dynamic-exception-specification</i>, a <i>type-id</i> followed by an ellipsis is a pack expansion (14.6.3).</span>`
+  14 :ed:`[Moved to D.5p8]` :raw-html:`<span class="del">In a <i>dynamic-exception-specification</i>, a <i>type-id</i> followed by an ellipsis is a pack expansion (14.6.3).</span>`
 
   15 :ed:`[FIXME: Figure out what to do with p15! It's unfortunate
   that we're describing noexcept in terms of throw()]`
@@ -413,7 +422,18 @@ moved from another section (15.4, 15.5).
   <i><span class="ins">dynamic-</span>exception-specification</i> (see 15.5.2), or it may call
   <code>std::terminate()</code>.`
 
-  7 :ed:`[Moved from 15.4p14]` :raw-html:`In a <i>dynamic-exception-specification</i>, a <i>type-id</i> followed by an ellipsis is a pack expansion (14.6.3).`
+  7 :ed:`[Moved from 15.4p10]` :raw-html:`An implementation shall not reject an expression merely because when executed it throws or might throw an exception that the containing function <span class="ins">whose <i>exception-specification</i> is a <i>dynamic-exception-specification</i></span> does not allow. [<i>Example</i>:`
+
+    .. parsed-literal::
+
+      extern void f() throw(X, Y);
+      void g() throw(X) {
+        f(); // OK
+      }
+
+  :raw-html:`the call to <code>f</code> is well-formed even though when called, <code>f</code> might throw exception <code>Y</code> that <code>g</code> does not allow. - <i>end example</i>]`
+
+  8 :ed:`[Moved from 15.4p14]` :raw-html:`In a <i>dynamic-exception-specification</i>, a <i>type-id</i> followed by an ellipsis is a pack expansion (14.6.3).`
 
 
 

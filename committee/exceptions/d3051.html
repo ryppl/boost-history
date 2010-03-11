@@ -569,7 +569,16 @@ was invoked, and in this case the search for another handler will
 continue at the call of the function with this
 <i>dynamic-exception-specification</i> (see 15.5.2), or it may call
 <code>std::terminate()</code>.</span></span></p>
-<p>10 <span class="ed">[FIXME: Figure out what to do with p10!]</span></p>
+<p>10 <span class="ed">[Moved to D.5p7]</span> <span class="raw-html"><span class="del">An implementation shall not reject an expression merely because when executed it throws or might throw an exception that the containing function does not allow. [ <i>Example</i>:</span></span></p>
+<blockquote>
+<pre class="literal-block">
+<span class="del">extern void f() throw(X, Y);</span>
+<span class="del">void g() throw(X) {</span>
+  <span class="del">f(); // OK</span>
+<span class="del">}</span>
+</pre>
+</blockquote>
+<p><span class="raw-html"><span class="del">the call to <code>f</code> is well-formed even though when called, <code>f</code> might throw exception <code>Y</code> that <code>g</code> does not allow. - <i>end example</i> ]</span></span></p>
 <p>11 A function with no <em>exception-specification</em>, or with an
 <em>exception-specification</em> of the form <tt class="docutils literal"><span class="pre">noexcept(</span></tt>
 <em>constant-expression</em> <tt class="docutils literal"><span class="pre">)</span></tt> where the <em>constant-expression</em> yields
@@ -614,7 +623,7 @@ are not compatible</span></span> within a single translation unit.</p>
 <p>12 An <em>exception-specification</em> is not considered part of a function's
 type.</p>
 <p>13 <span class="ed">[FIXME: Figure out what to do with p13!]</span></p>
-<p>14 <span class="ed">[Moved to D.5p7]</span> <span class="raw-html"><span class="del">In a <i>dynamic-exception-specification</i>, a <i>type-id</i> followed by an ellipsis is a pack expansion (14.6.3).</span></span></p>
+<p>14 <span class="ed">[Moved to D.5p8]</span> <span class="raw-html"><span class="del">In a <i>dynamic-exception-specification</i>, a <i>type-id</i> followed by an ellipsis is a pack expansion (14.6.3).</span></span></p>
 <p>15 <span class="ed">[FIXME: Figure out what to do with p15! It's unfortunate
 that we're describing noexcept in terms of throw()]</span></p>
 </blockquote>
@@ -682,7 +691,17 @@ was invoked, and in this case the search for another handler will
 continue at the call of the function with this
 <i><span class="ins">dynamic-</span>exception-specification</i> (see 15.5.2), or it may call
 <code>std::terminate()</code>.</span></p>
-<p>7 <span class="ed">[Moved from 15.4p14]</span> <span class="raw-html">In a <i>dynamic-exception-specification</i>, a <i>type-id</i> followed by an ellipsis is a pack expansion (14.6.3).</span></p>
+<p>7 <span class="ed">[Moved from 15.4p10]</span> <span class="raw-html">An implementation shall not reject an expression merely because when executed it throws or might throw an exception that the containing function <span class="ins">whose <i>exception-specification</i> is a <i>dynamic-exception-specification</i></span> does not allow. [<i>Example</i>:</span></p>
+<blockquote>
+<pre class="literal-block">
+extern void f() throw(X, Y);
+void g() throw(X) {
+  f(); // OK
+}
+</pre>
+</blockquote>
+<p><span class="raw-html">the call to <code>f</code> is well-formed even though when called, <code>f</code> might throw exception <code>Y</code> that <code>g</code> does not allow. - <i>end example</i>]</span></p>
+<p>8 <span class="ed">[Moved from 15.4p14]</span> <span class="raw-html">In a <i>dynamic-exception-specification</i>, a <i>type-id</i> followed by an ellipsis is a pack expansion (14.6.3).</span></p>
 </blockquote>
 <hr class="docutils" />
 <p>Other notes:</p>
