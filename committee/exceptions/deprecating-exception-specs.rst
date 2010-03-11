@@ -238,10 +238,6 @@ they should appear after the following edits are applied.
   incomplete type, other than void\*, const void\*, volatile void\*, or
   const volatile void\*.`
 
-  4 :ed:`[FIXME: Figure out what to do with p4!]`
-
-  5 :ed:`[FIXME: Figure out what to do with p5!]`
-
   6 :ed:`[Moved to D.5p3]` :raw-html:`<span class="del">An
   <i>exception-specification</i> can include the same type more than
   once and can include classes that are related by inheritance, even
@@ -339,11 +335,81 @@ they should appear after the following edits are applied.
   different</span><span class="ins"><i>exception-specifications</i>
   are not compatible</span>` within a single translation unit.
 
+  4 If a virtual function has an *exception-specification*, all declarations, including the definition, of any function that overrides that virtual function in any derived class shall only allow exceptions that are allowed by the *exception-specification* of the base class virtual function. [ *Example*:
+
+    .. parsed-literal::
+
+      struct B { 
+        virtual void f() throw (int, double);
+        virtual void g();
+        :ins:`virtual void h() noexcept;`
+        :ins:`virtual void i() noexcept(false);`
+      };
+      
+      struct D: B { 
+        void f();                 // ill-formed
+        void g() throw (int);     // OK
+        :ins:`void h() noexcept(false); // ill-formed`
+        :ins:`void i() noexcept;        // OK`
+      };
+
+  The declaration of ``D::f`` is ill-formed because it allows all exceptions, whereas ``B::f`` allows only ``int`` and`` double``. :raw-html:`<span class="ins">Similarly, the declaration of <code>D::h</code> is ill-formed because it allows all exceptions, whereas <code>B::h</code> does not allow any exceptions.</span>` - *end example*] A similar restriction applies to assignment to and initialization of pointers to functions, pointers to member functions, and references to functions: the target entity shall allow at least the exceptions allowed by the source value in the assignment or initialization. [ *Example*:
+
+    .. parsed-literal::
+
+      class A { /\*...\*/ }; 
+      void (\*pf1)();    // no exception specification 
+      void (\*pf2)() throw(A);
+      :ins:`void (\*pf3)() noexcept;`
+      void f() { 
+        pf1 = pf2;  // OK: pf1 is less restrictive 
+        :ins:`pf1 = pf3;  // OK: pf1 is less restrictive`
+        pf2 = pf1;  // error: pf2 is more restrictive
+        :ins:`pf3 = pf1;  // error: pf3 is more restrictive`
+        :ins:`pf3 = pf2;  // error: pf3 is more restrictive`
+      }
+
+  - *end example* ]
+
+  5 In such an assignment or initialization, *exception-specifications* on return types and parameter types shall :del:`match exactly` :ins:`be compatible`. In other assignments or initializations, *exception-specifications* shall :del:`match exactly` :ins:`be compatible`.
+
   12 An *exception-specification* is not considered part of a function's
   type.
 
-  13 :ed:`[FIXME: Figure out what to do with p13!]`
-  
+  13 An implicitly declared special member function (Clause 12)
+  :del:`shall` :ins:`may` have an *exception-specification*. :del:`If`
+  :ins:`Let` ``f`` :del:`is` :ins:`be` an implicitly declared default
+  constructor, copy constructor, destructor, or copy assignment
+  operator, :ins:`then:`
+
+    * ``f`` shall allow all exceptions if any function it directly invokes allows all exceptions :ins:`,`
+    * ``f`` shall :del:`allow no exceptions` :raw-html:`<span class="ins">have the implicit <i>exception-specification</i> <code>noexcept</code></span>` if every function it directly invokes allows no exceptions :ins:`, otherwise`
+    * its implicit *exception-specification* :raw-html:`<span class="ins">is a <i>dynamic-exception-specification</i> (D.5) that </span>` specifies the *type-id* ``T`` if and only if ``T`` is allowed by the *exception-specification* of a function directly invoked by ``f``'s implicit definition.
+
+  [ *Example*:
+
+    .. parsed-literal::
+
+      struct A { 
+        A();
+        A(const A&) throw();
+        ~A() throw(X); 
+      };
+
+      struct B { 
+        B() throw(); 
+        B(const B&) throw(); 
+        ~B() throw(Y);
+      };
+
+      struct D : public A, public B {
+        // Implicit declaration of D::D(); 
+        // Implicit declaration of D::D(const D&) throw(); 
+        // Implicit declaration of D::~D() throw(X,Y);
+      };
+
+  Furthermore, if ``A::~A()`` or ``B::~B()`` were virtual, ``D::~D()`` would not be as restrictive as that of ``A::~A``, and the program would be ill-formed since a function that overrides a virtual function from a base class shall have an exception-specification at least as restrictive as that in the base class. - *end example* ]
+
   14 :ed:`[Moved to D.5p8]` :raw-html:`<span class="del">In a <i>dynamic-exception-specification</i>, a <i>type-id</i> followed by an ellipsis is a pack expansion (14.6.3).</span>`
 
   15 :ed:`[FIXME: Figure out what to do with p15! It's unfortunate

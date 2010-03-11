@@ -528,8 +528,6 @@ denote an incomplete type. A type denoted in an
 exception-specification shall not denote a pointer or reference to an
 incomplete type, other than void*, const void*, volatile void*, or
 const volatile void*.</span></p>
-<p>4 <span class="ed">[FIXME: Figure out what to do with p4!]</span></p>
-<p>5 <span class="ed">[FIXME: Figure out what to do with p5!]</span></p>
 <p>6 <span class="ed">[Moved to D.5p3]</span> <span class="raw-html"><span class="del">An
 <i>exception-specification</i> can include the same type more than
 once and can include classes that are related by inheritance, even
@@ -620,9 +618,81 @@ of that function.
 A diagnostic is required only if the <span class="raw-html"><span class="del">sets of <i>type-id</i>s are
 different</span><span class="ins"><i>exception-specifications</i>
 are not compatible</span></span> within a single translation unit.</p>
+<p>4 If a virtual function has an <em>exception-specification</em>, all declarations, including the definition, of any function that overrides that virtual function in any derived class shall only allow exceptions that are allowed by the <em>exception-specification</em> of the base class virtual function. [ <em>Example</em>:</p>
+<blockquote>
+<pre class="literal-block">
+struct B {
+  virtual void f() throw (int, double);
+  virtual void g();
+  <span class="ins">virtual void h() noexcept;</span>
+  <span class="ins">virtual void i() noexcept(false);</span>
+};
+
+struct D: B {
+  void f();                 // ill-formed
+  void g() throw (int);     // OK
+  <span class="ins">void h() noexcept(false); // ill-formed</span>
+  <span class="ins">void i() noexcept;        // OK</span>
+};
+</pre>
+</blockquote>
+<p>The declaration of <tt class="docutils literal"><span class="pre">D::f</span></tt> is ill-formed because it allows all exceptions, whereas <tt class="docutils literal"><span class="pre">B::f</span></tt> allows only <tt class="docutils literal"><span class="pre">int</span></tt> and`` double``. <span class="raw-html"><span class="ins">Similarly, the declaration of <code>D::h</code> is ill-formed because it allows all exceptions, whereas <code>B::h</code> does not allow any exceptions.</span></span> - <em>end example</em>] A similar restriction applies to assignment to and initialization of pointers to functions, pointers to member functions, and references to functions: the target entity shall allow at least the exceptions allowed by the source value in the assignment or initialization. [ <em>Example</em>:</p>
+<blockquote>
+<pre class="literal-block">
+class A { /*...*/ };
+void (*pf1)();    // no exception specification
+void (*pf2)() throw(A);
+<span class="ins">void (*pf3)() noexcept;</span>
+void f() {
+  pf1 = pf2;  // OK: pf1 is less restrictive
+  <span class="ins">pf1 = pf3;  // OK: pf1 is less restrictive</span>
+  pf2 = pf1;  // error: pf2 is more restrictive
+  <span class="ins">pf3 = pf1;  // error: pf3 is more restrictive</span>
+  <span class="ins">pf3 = pf2;  // error: pf3 is more restrictive</span>
+}
+</pre>
+</blockquote>
+<ul class="simple">
+<li><em>end example</em> ]</li>
+</ul>
+<p>5 In such an assignment or initialization, <em>exception-specifications</em> on return types and parameter types shall <span class="del">match exactly</span> <span class="ins">be compatible</span>. In other assignments or initializations, <em>exception-specifications</em> shall <span class="del">match exactly</span> <span class="ins">be compatible</span>.</p>
 <p>12 An <em>exception-specification</em> is not considered part of a function's
 type.</p>
-<p>13 <span class="ed">[FIXME: Figure out what to do with p13!]</span></p>
+<p>13 An implicitly declared special member function (Clause 12)
+<span class="del">shall</span> <span class="ins">may</span> have an <em>exception-specification</em>. <span class="del">If</span>
+<span class="ins">Let</span> <tt class="docutils literal"><span class="pre">f</span></tt> <span class="del">is</span> <span class="ins">be</span> an implicitly declared default
+constructor, copy constructor, destructor, or copy assignment
+operator, <span class="ins">then:</span></p>
+<blockquote>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">f</span></tt> shall allow all exceptions if any function it directly invokes allows all exceptions <span class="ins">,</span></li>
+<li><tt class="docutils literal"><span class="pre">f</span></tt> shall <span class="del">allow no exceptions</span> <span class="raw-html"><span class="ins">have the implicit <i>exception-specification</i> <code>noexcept</code></span></span> if every function it directly invokes allows no exceptions <span class="ins">, otherwise</span></li>
+<li>its implicit <em>exception-specification</em> <span class="raw-html"><span class="ins">is a <i>dynamic-exception-specification</i> (D.5) that </span></span> specifies the <em>type-id</em> <tt class="docutils literal"><span class="pre">T</span></tt> if and only if <tt class="docutils literal"><span class="pre">T</span></tt> is allowed by the <em>exception-specification</em> of a function directly invoked by <tt class="docutils literal"><span class="pre">f</span></tt>'s implicit definition.</li>
+</ul>
+</blockquote>
+<p>[ <em>Example</em>:</p>
+<blockquote>
+<pre class="literal-block">
+struct A {
+  A();
+  A(const A&amp;) throw();
+  ~A() throw(X);
+};
+
+struct B {
+  B() throw();
+  B(const B&amp;) throw();
+  ~B() throw(Y);
+};
+
+struct D : public A, public B {
+  // Implicit declaration of D::D();
+  // Implicit declaration of D::D(const D&amp;) throw();
+  // Implicit declaration of D::~D() throw(X,Y);
+};
+</pre>
+</blockquote>
+<p>Furthermore, if <tt class="docutils literal"><span class="pre">A::~A()</span></tt> or <tt class="docutils literal"><span class="pre">B::~B()</span></tt> were virtual, <tt class="docutils literal"><span class="pre">D::~D()</span></tt> would not be as restrictive as that of <tt class="docutils literal"><span class="pre">A::~A</span></tt>, and the program would be ill-formed since a function that overrides a virtual function from a base class shall have an exception-specification at least as restrictive as that in the base class. - <em>end example</em> ]</p>
 <p>14 <span class="ed">[Moved to D.5p8]</span> <span class="raw-html"><span class="del">In a <i>dynamic-exception-specification</i>, a <i>type-id</i> followed by an ellipsis is a pack expansion (14.6.3).</span></span></p>
 <p>15 <span class="ed">[FIXME: Figure out what to do with p15! It's unfortunate
 that we're describing noexcept in terms of throw()]</span></p>
