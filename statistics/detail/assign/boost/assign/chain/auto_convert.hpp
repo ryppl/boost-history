@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// assign::detail::chain_auto_convert.hpp                                        //
+// assign::detail::chain_auto_convert.hpp                                   //
 //                                                                          //
 //  (C) Copyright 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -13,6 +13,8 @@
 #include <boost/range/chain.hpp>
 #include <boost/assign/chain/pair_traits.hpp>
 #include <boost/assign/chain/converter.hpp>
+
+// See note in auto_size::expr for rationable behind this class
 
 namespace boost{
 namespace assign{

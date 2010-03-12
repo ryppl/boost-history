@@ -17,6 +17,7 @@
 
 void example_chain(std::ostream& os)
 {
+
     using namespace boost::assign;
     using namespace boost::assign::detail;
 	os << "-> test_chain: " << std::endl;
