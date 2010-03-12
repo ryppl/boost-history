@@ -55,9 +55,136 @@ public:
         ref()=rhs.value();
         return *this;
     }
+    template<typename F, typename U>
+    proxy_cache& operator+=(proxy_cache<F,U> const& rhs) {
+        ref()+=rhs.value();
+        return *this;
+    }
+    template<typename U>
+    proxy_cache& operator+=(U const& rhs) {
+        ref()+=rhs;
+        return *this;
+    }
        
+    template<typename F, typename U>
+    proxy_cache& operator-=(proxy_cache<F,U> const& rhs) {
+        ref()-=rhs.value();
+        return *this;
+    }
+    template<typename U>
+    proxy_cache& operator-=(U const& rhs) {
+        ref()-=rhs;
+        return *this;
+    }
+
+    template<typename F, typename U>
+    proxy_cache& operator*=(proxy_cache<F,U> const& rhs) {
+        ref()*=rhs.value();
+        return *this;
+    }
+    template<typename U>
+    proxy_cache& operator*=(U const& rhs) {
+        ref()*=rhs;
+        return *this;
+    }
+
+    template<typename F, typename U>
+    proxy_cache& operator/=(proxy_cache<F,U> const& rhs) {
+        ref()/=rhs.value();
+        return *this;
+    }
+    template<typename U>
+    proxy_cache& operator/=(U const& rhs) {
+        ref()/=rhs;
+        return *this;
+    }
+
+    template<typename F, typename U>
+    proxy_cache& operator%=(proxy_cache<F,U> const& rhs) {
+        ref()%=rhs.value();
+        return *this;
+    }
+    template<typename U>
+    proxy_cache& operator%=(U const& rhs) {
+        ref()%=rhs;
+        return *this;
+    }
+
+    template<typename F, typename U>
+    proxy_cache& operator^=(proxy_cache<F,U> const& rhs) {
+        ref()^=rhs.value();
+        return *this;
+    }
+    template<typename U>
+    proxy_cache& operator^=(U const& rhs) {
+        ref()^=rhs;
+        return *this;
+    }
+
+    template<typename F, typename U>
+    proxy_cache& operator&=(proxy_cache<F,U> const& rhs) {
+        ref()&=rhs.value();
+        return *this;
+    }
+    template<typename U>
+    proxy_cache& operator&=(U const& rhs) {
+        ref()&=rhs;
+        return *this;
+    }
+
+    template<typename F, typename U>
+    proxy_cache& operator|=(proxy_cache<F,U> const& rhs) {
+        ref()|=rhs.value();
+        return *this;
+    }
+    template<typename U>
+    proxy_cache& operator|=(U const& rhs) {
+        ref()|=rhs;
+        return *this;
+    }
+
+    template<typename F, typename U>
+    proxy_cache& operator>>=(proxy_cache<F,U> const& rhs) {
+        ref()>>=rhs.value();
+        return *this;
+    }
+    template<typename U>
+    proxy_cache& operator>>=(U const& rhs) {
+        ref()>>=rhs;
+        return *this;
+    }
+
+    template<typename F, typename U>
+    proxy_cache& operator<<=(proxy_cache<F,U> const& rhs) {
+        ref()<<=rhs.value();
+        return *this;
+    }
+    template<typename U>
+    proxy_cache& operator<<=(U const& rhs) {
+        ref()<<=rhs;
+        return *this;
+    }
+
+
+    proxy_cache& operator++() {
+        ++ref();
+        return *this;
+    }
+
+    T operator++(int) {
+        return ref()++;
+    }
+
+    proxy_cache& operator--() {
+        --ref();
+        return *this;
+    }
+    T operator--(int) {
+        return ref()--;
+    }
+    
     operator T() const { return value(); }
-    operator T&() { return ref(); }
+    //operator T&() { return ref(); }
 
     //-----------------------------------------------------------------------------
     // accessors
@@ -102,18 +229,24 @@ public:
     // TODO add case has_shallow_copy_semansics<T> is true
 };
 
-//~ template <typename OSTREAM, typename F, typename T, typename B>
-//~ OSTREAM& operator<<(OSTREAM& os, proxy_cache<F, T, B> const& r) {
-    //~ os << r.value();
-    //~ return os;
-//~ }
-//~ template <typename ISTREAM, typename F, typename T, typename B>
-//~ ISTREAM& operator>>(ISTREAM& is, proxy_cache<F, T, B> & r) {
-    //~ T v;
-    //~ is >> v;
-    //~ r=v;
-    //~ return is;
-//~ }
+template <typename Final, typename T, typename Base>
+typename proxy_cache<Final,Base>::value_type& 
+ref(proxy_cache<Final,Base>& r) {
+    return r.ref();
+}
+
+template <typename OSTREAM, typename F, typename T, typename B>
+OSTREAM& operator<<(OSTREAM& os, proxy_cache<F, T, B> const& r) {
+    os << r.value();
+    return os;
+}
+template <typename ISTREAM, typename F, typename T, typename B>
+ISTREAM& operator>>(ISTREAM& is, proxy_cache<F, T, B> & r) {
+    T v;
+    is >> v;
+    r=v;
+    return is;
+}
 
 
 }
