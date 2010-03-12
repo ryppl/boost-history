@@ -183,7 +183,7 @@ propose to add a new kind of exception-specification, spelled:
 
 The only impact of such an exception-specification is this: if a
 function decorated with ``noexcept(true)`` throws an exception, the
-behavior is undefined. [#no-diagnostic]_ That effect is sufficient to
+the implementation is required to call ``std::terminate()`` but it is implementation-defined whether the stack is unwound. [#no-diagnostic]_ That effect is sufficient to
 allow these *xxx*\ ``_nothrow_``\ *xxx* traits to report ``true`` for
 any operation decorated with ``noexcept(true)``.  Class maintainers could
 label their move constructors ``noexcept(true)`` to indicate non-throwing
@@ -298,6 +298,8 @@ Revision History
 
 * N3050 (post-Pittsburgh mailing):
  
+  * If an exception escapes a ``noexcept`` function, the implementation is required to call ``std::terminate()``. In prior drafts, the behavior was undefined if an exception escapes a ``noexcept`` function.
+
   * Added cross-reference in [expr]p8 to refer to the noexcept operator as having an unevaluated operand.
 
   * Clarified that the noexcept operator's result is an rvalue.
@@ -323,6 +325,8 @@ Proposed Changes to Standard Wording
 .. role:: ins
 
 .. role:: del
+
+.. role:: ed
 
 .. role:: insc(ins)
    :class: ins code
@@ -452,7 +456,6 @@ Modify paragraphs 2 and 3 as follows:
     ( *type-id* ) *cast-expression*
     :raw-html:`<span class="ins">noexcept ( <i>expression</i> )</span>`
 
-
 15.4 Exception specifications [except.spec]
 ===========================================
 
@@ -490,21 +493,40 @@ Change the following paragraphs as follows:
 
   .. comment :raw-html:`<span class="ins">, if its <i>noexcept-specification</i> is <code>noexcept(false)</code>, or if the function has no <i>exception-specification</i>`.
 
+  8 Whenever an exception is thrown and the search for a handler (15.3) encounters the outermost block of a function with an *exception-specification* :ins:`that does not allow the exception, then:`
+
+    * :raw-html:`<span class="ins">if the <i>exception-specification</i> is a <i>dynamic-exception-specification</i>, </span>` the function ``std::unexpected()`` is called (15.5.2) :ins:`,`
+
+    * :raw-html:`<span class="ins">otherwise, the function <code>std::terminate()</code> is called (15.5.1)</span>`.
+
+  :del:`, if the exception- specification does not allow the exception.`
+
   11 A function with no *exception-specification* :raw-html:`<span class="ins">, or with an <i>exception-specification</i> of the form <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> yields <code>false</code>,</span>` allows all exceptions. :raw-html:`<span class="ins">An <i>exception-specification</i> is <i>non-throwing</i> if it is of the form <code>throw()</code>, <code>noexcept</code>, or <code>noexcept(<i>constant-expression</i>)</code> where the <i>constant-expression</i> yields <code>true</code>.</span>` A function with :del:`an empty` :ins:`a non-throwing` *exception-specification* :raw-html:`<span class="del">, <code>throw()</code>,</span>` does not allow any exceptions.
 
   14 In :raw-html:`a<span class="del">n</span> <i><span class="ins">dynamic-</span>exception-specification</i>,` a *type-id* followed by an ellipsis is a pack expansion (14.6.3).
 
-Add the following new paragraph:
+.. comment:
 
-    :raw-html:`<span class="ins">15 If a function with a
+    Add the following new paragraph:
+
+    :raw-html:`<span class="ins">15 Except for differences in run-time
+    behaviour when the search for an exception handler exits a
+    function with a non-throwing <i>exception-specification</i> (15.3), a
     <i>noexcept-specification</i> whose <i>constant-expression</i>
-    yields <code>true</code> throws an exception, the behavior is
-    undefined.  A <i>noexcept-specification</i> whose
-    <i>constant-expression</i> yields <code>true</code> is in all
-    other respects equivalent to the <i>exception-specification</i>
-    <code>throw()</code>.  A <i>noexcept-specification</i> whose
-    <i>constant-expression</i> yields <code>false</code> is equivalent
-    to omitting the <i>exception-specification</i> altogether.</span>`
+    yields <code>true</code> is equivalent to the
+    <i>dynamic-exception-specification</i> <code>throw()</code>.  A
+    <i>noexcept-specification</i> whose <i>constant-expression</i>
+    yields <code>false</code> is equivalent to omitting the
+    <i>exception-specification</i> altogether.</span>`
+
+15.5.1 The ``std::terminate()`` function [except.terminate]
+===========================================================
+
+Add the following bullet to paragraph 1 after the 2nd bullet:
+
+  * :raw-html:`<span class="ins">when the search for a handler (15.3) encounters the outermost block of a function with a <i>noexcept-specification</i> that does not allow the exception (15.4), or</span>`
+
+  2 In such cases, ``std::terminate()`` is called (18.8.3). In the situation where no matching handler is found, it is implementation-defined whether or not the stack is unwound before ``std::terminate()`` is called. :raw-html:`<span class="ins">In the situation where the search for a handler (15.3) encounters the outermost block of a function with a <i>noexcept-specification</i> that does not allow the exception (15.4), it is implementation-defined whether or not the stack is unwound before <code>std::terminate()</code> is called.</span>` In all other situations, the stack shall not be unwound before ``std::terminate()`` is called. An implementation is not permitted to finish stack unwinding prematurely based on a determination that the unwind process will eventually cause a call to ``std::terminate()``.
 
 .. comment
 
@@ -582,13 +604,13 @@ Modify as follows:
     template <class T, class... Args> struct is_nothrow_constructible; 
     :ins:`template <class T> struct has_default_constructor;`
     :ins:`template <class T> struct has_copy_constructor;`
-    :ins:`template <class T> struct has_assign;`
+    :ins:`template <class T> struct has_copy_assign;`
     :ins:`template <class T> struct has_move_constructor;`
     :ins:`template <class T> struct has_move_assign;`
     template <class T> struct has_trivial_default_constructor; 
     template <class T> struct has_trivial_copy_constructor; 
     :ins:`template <class T> struct has_trivial_move_constructor;`
-    template <class T> struct has_trivial_assign; 
+    template <class T> struct :raw-html:`<code>has_trivial_<span class="ins">copy_</span>assign</code>`; 
     :ins:`template <class T> struct has_trivial_move_assign;`
     template <class T> struct has_trivial_destructor; 
     template <class T> struct has_nothrow_default_constructor; 
@@ -622,17 +644,17 @@ Modify or add the following entries in table 43:
   * - :raw-html:`<span class="ins"><code>template &lt;class T&gt struct has_move_constructor;</code></span>`
     - :raw-html:`<span class="ins"><code>is_constructible&lt;U, U&amp;&amp;&gt;::value</code> is true, where <code>U</code> is <code>remove_all_extents&lt;T&gt;::type.</span>`
     - :raw-html:`<span class="ins"><code>T</code> shall be a complete type, (possibly cv-qualified) void, or an array of unknown bound.</span>`
-  * - :raw-html:`<span class="ins"><code>template &lt;class T&gt; struct has_assign;</code></ins>`
+  * - :raw-html:`<span class="ins"><code>template &lt;class T&gt; struct has_copy_assign;</code></ins>`
     - :raw-html:`<span class="ins"><code>T</code> is neither <code>const</code> nor a reference type, and <code>T</code> is a trivial type (3.9) or the expression <code>*(U*)0 = declval&lt;const U&amp;&gt;()</code> is well-formed when treated as an unevaluated operand (Clause 5), where <code>U</code> is <code>remove_all_extents&lt;T&gt;::type</code>.</span>`
     - :raw-html:`<span class="ins"><code>T</code> shall be a complete type, (possibly cv-qualified) void, or an array of unknown bound.</span>`
   * - :raw-html:`<span class="ins"><code>template &lt;class T&gt; struct has_move_assign;</code></ins>`
     - :raw-html:`<span class="ins"><code>T</code> is neither <code>const</code> nor a reference type, and <code>T</code> is a trivial type (3.9) or the expression <code>*(U*)0 = declval&lt;U&gt;()</code> is well-formed when treated as an unevaluated operand (Clause 5), where <code>U</code> is <code>remove_all_extents&lt;T&gt;::type</code>.</span>`
     - :raw-html:`<span class="ins"><code>T</code> shall be a complete type, (possibly cv-qualified) void, or an array of unknown bound.</span>`
   * - :raw-html:`<span class="ins"><code>template &lt;class T&gt; struct has_trivial_move_constructor;</code></ins>`
-    - :raw-html:`<span class="ins"><code>T</code> is a trivial type (3.9).</span>`
+    - :raw-html:`<span class="ins"><code>T</code> is a trivial type (3.9) or a reference type.</span>` :ed:`N3053 has similar wording for this trait. If both papers are accepted, use N3053's wording.`
     - :raw-html:`<span class="ins"><code>T</code> shall be a complete type, (possibly cv-qualified) void, or an array of unknown bound.</span>`
   * - :raw-html:`<span class="ins"><code>template &lt;class T&gt; struct has_trivial_move_assign;</code></ins>`
-    - :raw-html:`<span class="ins"><code>T</code> is neither <code>const</code> nor a reference type, and <code>T</code> is a trivial type (3.9).</span>`
+    - :raw-html:`<span class="ins"><code>T</code> is neither <code>const</code> nor a reference type, and <code>T</code> is a trivial type (3.9).</span>` :ed:`N3053 has similar wording for this trait. If both papers are accepted, use N3053's wording.`
     - :raw-html:`<span class="ins"><code>T</code> shall be a complete type, (possibly cv-qualified) void, or an array of unknown bound.</span>`
   * - ``template <class T> struct has_nothrow_default_constructor;``
     - ``has_trivial_default_constructor<T>::value`` is ``true`` or :raw-html:`<span class="del"><code>T</code> is a class type with a default constructor that is known not to throw any exceptions or <code>T</code> is an array of such a class type</span><span class="ins"><code>is_nothrow_constructible&lt;U&gt;::value</code> is <code>true</code>, where <code>U</code> is <code>remove_all_extents&lt;T&gt;::type</code></span>`.
@@ -641,13 +663,13 @@ Modify or add the following entries in table 43:
     - ``has_trivial_copy_constructor<T>::value`` is ``true`` or :raw-html:`<span class="del"><code>T</code> is a class type with a default constructor that is known not to throw any exceptions or <code>T</code> is an array of such a class type</span><span class="ins"><code>is_nothrow_constructible&lt;U, const U&amp;&gt;::value</code> is <code>true</code>, where <code>U</code> is <code>remove_all_extents&lt;T&gt;::type</code></span>`.
     - :raw-html:`<span class="ins"><code>T</code> shall be a complete type, (possibly cv-qualified) void, or an array of unknown bound.</span>`
   * - :raw-html:`<span class="ins"><code>template &lt;class T&gt struct has_nothrow_move_constructor;</code></span>`
-    - :raw-html:`<span class="ins"><code>has_trivial_move_constructor&lt;T&gt;::value</code> is <code>true</code> or <code>is_nothrow_constructible&lt;U, U&amp;&amp;&gt;::value</code> is <code>true</code>, where <code>U</code> is <code>remove_all_extents&lt;T&gt;::type</code>.</span>`
+    - :raw-html:`<span class="ins"><code>has_trivial_move_constructor&lt;T&gt;::value</code> is <code>true</code> or <code>is_nothrow_constructible&lt;U, U&amp;&amp;&gt;::value</code> is <code>true</code>, where <code>U</code> is <code>remove_all_extents&lt;T&gt;::type</code>.</span>` :ed:`This new trait has an identical specification in N3053.`
     - :raw-html:`<span class="ins"><code>T</code> shall be a complete type, (possibly cv-qualified) void, or an array of unknown bound.</span>`
-  * - ``template <class T> struct has_nothrow_assign;``
-    - ``T`` is neither ``const`` nor a reference type, and ``has_trivial_assign<T>::value`` is ``true`` or :raw-html:`<span class="del"><code>T</code> is a class type whose copy assignment operators taking an lvalue of type <code>T</code> are all known not to throw any exceptions or T is an array of such a class type</span><span class="ins"><code>has_assign&lt;T&gt;::value</code> is true and <code>noexcept(*(U*)0 = declval&lt;const U&amp;&gt;())</code> is true, where <code>U</code> is <code>remove_all_extents&lt;T&gt;::type</code>.</span>`
+  * - ``template <class T> struct`` :raw-html:`<code>has_nothrow_<span class="ins">copy_</span>assign;</code>`
+    - :raw-html:`<span class="del"><code>T</code> is neither <code>const</code> nor a reference type, and </span>` ``has_trivial_copy_assign<T>::value`` is ``true`` or :raw-html:`<span class="del"><code>T</code> is a class type whose copy assignment operators taking an lvalue of type <code>T</code> are all known not to throw any exceptions or T is an array of such a class type</span><span class="ins">the expression <code>noexcept(*(U*)0 = declval&lt;const U&amp;&gt;())</code> is well-formed and true, where <code>U</code> is <code>remove_all_extents&lt;T&gt;::type</code>.</span>`
     - :raw-html:`<span class="ins"><code>T</code> shall be a complete type, (possibly cv-qualified) void, or an array of unknown bound.</span>`
   * - :raw-html:`<span class="ins"><code>template &lt;class T&gt; struct has_nothrow_move_assign;</code></span>`
-    - :raw-html:`<span class="ins"><code>has_trivial_move_assign&lt;T&gt;::value</code> is true and <code>T</code> is a trivial type (3.9) or <code>has_move_assign&lt;T&gt;::value</code> is true and the expression <code>noexcept(*(U*)0 = declval&lt;U&gt;())</code> is true, where <code>U</code> is <code>remove_all_extents&lt;T&gt;::type</code>..</span>`
+    - :raw-html:`<span class="ins"><code>has_trivial_move_assign&lt;T&gt;::value</code> is true and <code>T</code> is a trivial type (3.9) or the expression <code>noexcept(*(U*)0 = declval&lt;U&gt;())</code> is well-formed and true, where <code>U</code> is <code>remove_all_extents&lt;T&gt;::type</code>..</span>`
     - :raw-html:`<span class="ins"><code>T</code> shall be a complete type, (possibly cv-qualified) void, or an array of unknown bound.</span>`
 
 23.3.2.3 deque modifiers [deque.modifiers]
