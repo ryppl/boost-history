@@ -23,8 +23,8 @@
 //#include <boost/range/chain.hpp>
 #include <boost/assign/auto_size/array/has_static_size.hpp>
 #include <boost/assign/auto_size/array/static_size.hpp>
-#include <boost/assign/auto_size/reference_wrapper/assign_reference_copy.hpp>
-#include <boost/assign/auto_size/reference_wrapper/assign_reference_rebind.hpp>
+#include <boost/assign/auto_size/reference_wrapper/copy.hpp>
+#include <boost/assign/auto_size/reference_wrapper/rebind.hpp>
 #include <boost/assign/auto_size/detail/policy.hpp>
 #include <boost/assign/auto_size/detail/types.hpp>
 #include <boost/assign/auto_size/detail/expr_size.hpp>
