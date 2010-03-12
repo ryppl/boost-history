@@ -1,8 +1,8 @@
 <?xml  version="1.0"?>
 
-<document date="2009-11-04"
-  rev="3"
-  docno="PL22.16 09/0199 = WG21 N3009"
+<document date="2010-03-12"
+  rev="5"
+  docno="PL22.16/10-xxxx = WG21 Nyyyy"
 >
 
 <comment nb="FR" num="1" uknum="" type="ge" owner="CWG" issue="" disp="rejected" date="" extdoc="">
@@ -124,7 +124,7 @@ appear.
 </rationale>
 </comment>
 
-<comment nb="FR" num="3" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="FR" num="3" uknum="" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 1 [intro.scope]
 </section>
@@ -141,7 +141,7 @@ appear.
 </rationale>
 </comment>
 
-<comment nb="US" num="4" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="4" uknum="" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 1.1
 </section>
@@ -181,7 +181,7 @@ This list is highlights, not all differences. Okay as is.
 </rationale>
 </comment>
 
-<comment nb="FR" num="4" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="FR" num="4" uknum="" type="ed" owner="editor" issue="" disp="rejected" date="" extdoc="">
 <section>
 1.2 [intro.refs]
 </section>
@@ -194,6 +194,7 @@ This list is highlights, not all differences. Okay as is.
 </description>
 <suggestion></suggestion>
 <rationale>
+We are unaware of this document.
 </rationale>
 </comment>
 
@@ -219,7 +220,7 @@ This list is highlights, not all differences. Okay as is.
 </rationale>
 </comment>
 
-<comment nb="UK" num="3" uknum="217" type="Ed" owner="CWG" issue="783" disp="" date="" extdoc="">
+<comment nb="UK" num="3" uknum="217" type="Ed" owner="CWG" issue="783" disp="rejected" date="" extdoc="">
 <section>
 1.3.1
 </section>
@@ -246,6 +247,8 @@ This list is highlights, not all differences. Okay as is.
         parens are not used?
 </suggestion>
 <rationale>
+An issue has been opened for consideration in a future revision of the
+Standard.
 </rationale>
 </comment>
 
@@ -308,7 +311,7 @@ a quality-of-implementation issue and beyond the scope of the Standard.
 </rationale>
 </comment>
 
-<comment nb="FR" num="6" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="FR" num="6" uknum="" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 1.3.6
         [defns.
@@ -392,7 +395,7 @@ extensions: issue a diagnostic and then do the extension.
 </rationale>
 </comment>
 
-<comment nb="UK" num="5" uknum="1" type="Ge" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="5" uknum="1" type="Ge" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 1.5
 </section>
@@ -410,7 +413,7 @@ extensions: issue a diagnostic and then do the extension.
 </rationale>
 </comment>
 
-<comment nb="UK" num="6" uknum="2" type="Ge" owner="CWG" issue="784" disp="" date="" extdoc="">
+<comment nb="UK" num="6" uknum="2" type="Ge" owner="CWG" issue="784" disp="rejected" date="" extdoc="">
 <section>
 1.5
 </section>
@@ -426,6 +429,8 @@ extensions: issue a diagnostic and then do the extension.
         documentation. See n2733(08-0243) for a starting point
 </suggestion>
 <rationale>
+An issue has been opened for consideration in a future revision of the
+Standard.
 </rationale>
 </comment>
 
@@ -756,7 +761,8 @@ The undefined behavior with respect to creation of universal character
 names is intended to facilitate a variety of implementation techniques
 for supporting extended characters by making it impossible in a well-defined
 program to determine which technique was actually used.  There was no
-consensus to change that approach at this time.
+consensus to change that approach at this time.  The remaining issues have
+been addressed.
 </rationale>
 </comment>
 
@@ -818,7 +824,7 @@ consensus to change that approach at this time.
 </rationale>
 </comment>
 
-<comment nb="UK" num="11" uknum="135" type="Te" owner="CWG" issue="789" disp="" date="" extdoc="">
+<comment nb="UK" num="11" uknum="135" type="Te" owner="CWG" issue="789" disp="modified" date="" extdoc="">
 <section>
 2.3
 </section>
@@ -836,10 +842,13 @@ consensus to change that approach at this time.
         appendix D.
 </suggestion>
 <rationale>
+Trigraphs are in active use in some user communities, so we have decided
+not to deprecate them. The resolution adopted prevents recognition of
+trigraphs appearing inside raw strings.
 </rationale>
 </comment>
 
-<comment nb="UK" num="12" uknum="137" type="Te" owner="CWG" issue="787" disp="" date="" extdoc="">
+<comment nb="UK" num="12" uknum="137" type="Te" owner="CWG" issue="787" disp="modified" date="" extdoc="">
 <section>
 2.4, 2.8
 </section>
@@ -861,6 +870,12 @@ consensus to change that approach at this time.
         defined semantics.
 </suggestion>
 <rationale>
+The undefined behavior with respect to creation of universal character
+names is intended to facilitate a variety of implementation techniques
+for supporting extended characters by making it impossible in a well-defined
+program to determine which technique was actually used.  There was no
+consensus to change that approach at this time.  The remaining issues have
+been addressed.
 </rationale>
 </comment>
 
@@ -1465,7 +1480,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="23" uknum="277" type="Ed" owner="CWG" issue="758" disp="" date="" extdoc="">
+<comment nb="UK" num="23" uknum="277" type="Ed" owner="CWG" issue="758" disp="rejected" date="" extdoc="">
 <section>
 3.1
 </section>
@@ -1481,6 +1496,8 @@ All concepts-related text has been removed from the draft.
         declaration.
 </suggestion>
 <rationale>
+An issue has been opened for consideration in a future revision of the
+Standard.
 </rationale>
 </comment>
 
@@ -2591,7 +2608,7 @@ rendering the issue moot.
 </rationale>
 </comment>
 
-<comment nb="UK" num="42" uknum="226" type="Te" owner="CWG" issue="797" disp="" date="" extdoc="">
+<comment nb="UK" num="42" uknum="226" type="Te" owner="CWG" issue="797" disp="accepted" date="" extdoc="">
 <section>
 5.1.1
 </section>
@@ -2829,7 +2846,7 @@ Removed the paragraph; grammar changes make it moot.
 </rationale>
 </comment>
 
-<comment nb="UK" num="53" uknum="233" type="Te" owner="CWG" issue="798" disp="" date="" extdoc="">
+<comment nb="UK" num="53" uknum="233" type="Te" owner="CWG" issue="798" disp="rejected" date="" extdoc="">
 <section>
 5.2.1
 </section>
@@ -2850,6 +2867,8 @@ Removed the paragraph; grammar changes make it moot.
         conflict with the later definiton of these semantics.
 </suggestion>
 <rationale>
+An issue has been opened for consideration in a future revision of the
+Standard.
 </rationale>
 </comment>
 
@@ -3842,7 +3861,7 @@ scope.
 </rationale>
 </comment>
 
-<comment nb="UK" num="83" uknum="372" type="Te" owner="CWG" issue="808" disp="" date="" extdoc="">
+<comment nb="UK" num="83" uknum="372" type="Te" owner="CWG" issue="808" disp="accepted" date="" extdoc="">
 <section>
 7.1
 </section>
@@ -4604,7 +4623,7 @@ of different entities with the same name.
 </rationale>
 </comment>
 
-<comment nb="UK" num="101" uknum="388" type="Te" owner="CWG" issue="813" disp="" date="" extdoc="">
+<comment nb="UK" num="101" uknum="388" type="Te" owner="CWG" issue="813" disp="rejected" date="" extdoc="">
 <section>
 7.3.3
 </section>
@@ -4626,6 +4645,8 @@ of different entities with the same name.
         they refer to a type.
 </suggestion>
 <rationale>
+An issue has been opened for consideration in a future revision of the
+Standard.
 </rationale>
 </comment>
 
@@ -4647,7 +4668,7 @@ p15
 </rationale>
 </comment>
 
-<comment nb="FR" num="25" uknum="" type="te" owner="CWG" issue="" disp="rejected" date="" extdoc="">
+<comment nb="FR" num="25" uknum="" type="te" owner="CWG" issue="" disp="modified" date="" extdoc="">
 <section>
 7.3.3
 [The using
@@ -4669,9 +4690,7 @@ Para 21
         feature presumably designed to support sound programming.
 </suggestion>
 <rationale>
-The complexity is considered necessary to allow concepts and concept
-maps to be members of different namespaces, as illustrated in the
-example.
+All concepts-related features have been removed from the draft.
 </rationale>
 </comment>
 
@@ -4699,7 +4718,7 @@ Changed the example slightly to make it clearer.
 </rationale>
 </comment>
 
-<comment nb="US" num="40" uknum="" type="te" owner="CWG" issue="814" disp="" date="" extdoc="">
+<comment nb="US" num="40" uknum="" type="te" owner="CWG" issue="814" disp="accepted" date="" extdoc="">
 <section>
 7.6
 </section>
@@ -5097,7 +5116,7 @@ There was no consensus to make a change.
 </rationale>
 </comment>
 
-<comment nb="US" num="45" uknum="" type="te" owner="CWG" issue="818" disp="" date="" extdoc="">
+<comment nb="US" num="45" uknum="" type="te" owner="CWG" issue="818" disp="accepted" date="" extdoc="">
 <section>
 8.3.5
 </section>
@@ -5266,7 +5285,7 @@ p2
 </rationale>
 </comment>
 
-<comment nb="US" num="49" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="49" uknum="" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 8.5.4
 </section>
@@ -5286,7 +5305,7 @@ p2
 </rationale>
 </comment>
 
-<comment nb="UK" num="112" uknum="440" type="Ge" owner="editor" issue="" disp="rejected" date="" extdoc="">
+<comment nb="UK" num="112" uknum="440" type="Ge" owner="editor" issue="" disp="modified" date="" extdoc="">
 <section>
 9
 </section>
@@ -5304,8 +5323,7 @@ p2
         14.9.4
 </suggestion>
 <rationale>
-This seems excessive. If people want to know about concepts they
-should read about concepts.
+All concepts-related features have been removed from the draft.
 </rationale>
 </comment>
 
@@ -5421,7 +5439,7 @@ initialization]
 </rationale>
 </comment>
 
-<comment nb="UK" num="114" uknum="167" type="Te" owner="CWG" issue="" disp="rejected" date="" extdoc="">
+<comment nb="UK" num="114" uknum="167" type="Te" owner="CWG" issue="" disp="modified" date="" extdoc="">
 <section>
 12.6.2
 </section>
@@ -5452,7 +5470,10 @@ initialization]
         [Example:...
 </suggestion>
 <rationale>
-There was no consensus for making this changes.
+There was no consensus for making the change as described. The concerns are
+addressed for members (but not for base classes) by using the "="
+form of the <I>brace-or-equal-initializer</I> on a member declaration
+instead of a <I>mem-initializer</I>.
 </rationale>
 </comment>
 
@@ -5522,6 +5543,7 @@ There was no consensus for making this changes.
         a concept map.
 </suggestion>
 <rationale>
+All concepts-related features have been removed from the draft.
 </rationale>
 </comment>
 
@@ -7443,7 +7465,7 @@ avoid proliferation of types.
 </rationale>
 </comment>
 
-<comment nb="UK" num="148" uknum="247" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="148" uknum="247" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 17.2
 </section>
@@ -7708,7 +7730,7 @@ Footnote 152
 </rationale>
 </comment>
 
-<comment nb="UK" num="160" uknum="89" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="160" uknum="89" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 17.5.2.4
 </section>
@@ -8311,7 +8333,7 @@ Footnote 188
 </rationale>
 </comment>
 
-<comment nb="UK" num="184" uknum="144" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="184" uknum="144" type="Ed" owner="editor" issue="" disp="rejected" date="" extdoc="">
 <section>
 18 -&gt; 30
 </section>
@@ -8330,6 +8352,7 @@ Footnote 188
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
 <rationale>
+typedef is still a valid concept.
 </rationale>
 </comment>
 
@@ -9086,7 +9109,7 @@ the scope of the standard.
 </rationale>
 </comment>
 
-<comment nb="UK" num="198" uknum="126" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="198" uknum="126" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 20
 </section>
@@ -9442,7 +9465,7 @@ Paper N2843 proposes an extension to the [[align]] attribute that further dimini
 </rationale>
 </comment>
 
-<comment nb="US" num="69" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="69" uknum="" type="ed" owner="editor" issue="" disp="modified" date="" extdoc="">
 <section>
 20.5
 </section>
@@ -9459,6 +9482,9 @@ Paper N2843 proposes an extension to the [[align]] attribute that further dimini
 <notes>Editorial (effective duplicate of <a href="#UK198">UK 198</a>).
 Forward to project editor.</notes>
 <rationale>
+The library part of the standard is organized by headers. These two are
+in different headers, so can't be brought together. However, they're
+closer now.
 </rationale>
 </comment>
 
@@ -14000,7 +14026,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="285" uknum="27" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="285" uknum="27" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 24.5.1
 </section>
@@ -14022,7 +14048,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="286" uknum="28" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="286" uknum="28" type="Ed" owner="editor" issue="" disp="rejected" date="" extdoc="">
 <section>
 24.5.1
 </section>
@@ -14044,6 +14070,8 @@ All concepts-related text has been removed from the draft.
 <notes>[Being reviewed by Editor]
 </notes>
 <rationale>
+The standard isn't written for casual readers. The copy constructor
+must be provided; the assignment operator is implicitly generated.
 </rationale>
 </comment>
 
@@ -14075,7 +14103,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="288" uknum="29" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="288" uknum="29" type="Ed" owner="editor" issue="" disp="rejected" date="" extdoc="">
 <section>
 24.5.1.1
 </section>
@@ -14094,10 +14122,11 @@ All concepts-related text has been removed from the draft.
 <notes>[Being reviewed by Editor]
 </notes>
 <rationale>
+There are many places like this. There's no point in changing just one.
 </rationale>
 </comment>
 
-<comment nb="UK" num="289" uknum="30" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="289" uknum="30" type="Ed" owner="editor" issue="" disp="rejected" date="" extdoc="">
 <section>
 24.5.1.2
 </section>
@@ -14122,6 +14151,9 @@ All concepts-related text has been removed from the draft.
 <notes>[Being reviewed by Editor]
 </notes>
 <rationale>
+The opening paragraphs give an overview; the Returns: clause for
+operator== gives the technical requirement. Mixing these two together
+would be more confusing.
 </rationale>
 </comment>
 
@@ -14190,7 +14222,7 @@ consensus for change.
 </rationale>
 </comment>
 
-<comment nb="UK" num="292" uknum="163" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="292" uknum="163" type="Ed" owner="editor" issue="" disp="rejected" date="" extdoc="">
 <section>
 24.5.3
 </section>
@@ -14209,10 +14241,11 @@ consensus for change.
 <notes>[Being reviewed by Editor]
 </notes>
 <rationale>
+Ad hoc replacements make things more confusing.
 </rationale>
 </comment>
 
-<comment nb="UK" num="293" uknum="164" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="293" uknum="164" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 24.5.3
 </section>
@@ -15921,7 +15954,7 @@ See wiki for further comments.
 </rationale>Solved by N2992. 
 </comment>
 
-<comment nb="US" num="89" uknum="" type="te" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="89" uknum="" type="te" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 29.3.1
 </section>
@@ -16090,7 +16123,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="321" uknum="172" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="321" uknum="172" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 30
 </section>
@@ -16626,7 +16659,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="332" uknum="194" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="332" uknum="194" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 30.5.4
 </section>
@@ -17168,7 +17201,7 @@ outside the scope of the Standard.
 </rationale>
 </comment>
 
-<comment nb="FR" num="39" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="FR" num="39" uknum="" type="ed" owner="editor" issue="" disp="rejected" date="" extdoc="">
 <section>
 Index
 </section>
@@ -17186,6 +17219,7 @@ Index
 <suggestion></suggestion>
 <notes>  Pass to the editor.</notes>
 <rationale>
+Index work is ongoing.
 </rationale>
 </comment>
 
