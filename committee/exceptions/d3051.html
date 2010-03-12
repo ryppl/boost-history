@@ -331,27 +331,17 @@ rst2html.py - -footnote-references=superscript \
 <div class="contents topic" id="index">
 <p class="topic-title first">index</p>
 <ul class="simple">
-<li><a class="reference internal" href="#introduction" id="id6">Introduction</a></li>
-<li><a class="reference internal" href="#approach" id="id7">Approach</a></li>
-<li><a class="reference internal" href="#proposed-changes-to-standard-wording" id="id8">Proposed Changes to Standard Wording</a><ul>
-<li><a class="reference internal" href="#dynamic-storage-duration-basic-stc-dynamic" id="id9">3.7.4 Dynamic storage duration [basic.stc.dynamic]</a></li>
-<li><a class="reference internal" href="#exception-specifications-except-spec" id="id10">15.4 Exception specifications [except.spec]</a></li>
-<li><a class="reference internal" href="#special-functions-except-special" id="id11">15.5 Special functions [except.special]</a></li>
-<li><a class="reference internal" href="#the-std-unexpected-function-except-unexpected" id="id12">15.5.2 The <tt class="docutils literal"><span class="pre">std::unexpected()</span></tt> function [except.unexpected]</a></li>
-<li><a class="reference internal" href="#restrictions-on-exception-handling-res-on-exception-handling" id="id13">17.6.4.11 Restrictions on exception handling [res.on.exception.handling]</a></li>
-<li><a class="reference internal" href="#dynamic-memory-management-support-dynamic" id="id14">18.6 Dynamic memory management [support.dynamic]</a></li>
-<li><a class="reference internal" href="#single-object-forms-new-delete-single" id="id15">18.6.1.1 Single-object forms [new.delete.single]</a></li>
-<li><a class="reference internal" href="#array-forms-new-delete-array" id="id16">18.6.1.2 Array forms [new.delete.array]</a></li>
-<li><a class="reference internal" href="#placement-forms-new-delete-placement" id="id17">18.6.1.3 Placement forms [new.delete.placement]</a></li>
-<li><a class="reference internal" href="#exception-handling-support-exception" id="id18">18.8 Exception handling [support.exception]</a></li>
-<li><a class="reference internal" href="#violating-exception-specifications-exception-unexpected" id="id19">18.8.2  Violating exception-specifications [exception.unexpected]</a></li>
-<li><a class="reference internal" href="#d-5-dynamic-exception-specifications-depr-except-spec-dynamic" id="id20"><span class="ins">D.5 Dynamic exception specifications [depr.except.spec.dynamic]</span></a></li>
+<li><a class="reference internal" href="#introduction" id="id4">Introduction</a></li>
+<li><a class="reference internal" href="#approach" id="id5">Approach</a></li>
+<li><a class="reference internal" href="#proposed-changes-to-standard-wording" id="id6">Proposed Changes to Standard Wording</a><ul>
+<li><a class="reference internal" href="#exception-specifications-except-spec" id="id7">15.4 Exception specifications [except.spec]</a></li>
+<li><a class="reference internal" href="#d-5-dynamic-exception-specifications-depr-except-spec" id="id8"><span class="ins">D.5 Dynamic exception specifications [depr.except.spec]</span></a></li>
 </ul>
 </li>
 </ul>
 </div>
 <div class="section" id="introduction">
-<h1><a class="toc-backref" href="#id6">Introduction</a></h1>
+<h1><a class="toc-backref" href="#id4">Introduction</a></h1>
 <dl class="docutils">
 <dt>UK-136</dt>
 <dd>Exception specifications have proven close to worthless in practice, while adding a measurable overhead to programs. The feature should be deprecated. The one exception to the rule is the empty throw specification which could serve a legitimate optimizing role if the requirement to call the runtime unexpected mechanism was relaxed in this case.</dd>
@@ -383,9 +373,7 @@ the specifies that the function will not throw any exceptions. Unlike
 <tt class="docutils literal"><span class="pre">throw()</span></tt>, <tt class="docutils literal"><span class="pre">noexcept</span></tt> does not require the compiler to introduce
 code to check whether an exception is thrown. Rather, if a function
 specified as <tt class="docutils literal"><span class="pre">noexcept</span></tt> is exited via an exception, the result is
-undefined behavior, which permits compilers to optimize based on the
-knowledge that a <tt class="docutils literal"><span class="pre">noexcept</span></tt> function will not propagate an
-exception.</p>
+a call to <tt class="docutils literal"><span class="pre">std::terminate()</span></tt>.</p>
 <p>With the introduction of <tt class="docutils literal"><span class="pre">noexcept</span></tt>, programmers can now express the
 two kinds of exception guarantees that are useful in practice, without
 additional overhead. This paper therefore proposes to deprecate
@@ -393,15 +381,7 @@ additional overhead. This paper therefore proposes to deprecate
 <span class="raw-html"><code>throw(</code><i>type-id-list<sub>opt</sub></i><code>)</code></span>.</p>
 </div>
 <div class="section" id="approach">
-<h1><a class="toc-backref" href="#id7">Approach</a></h1>
-<p>The general approach taken by this paper is to separate the wording
-required for dynamic exception specifications (those using <tt class="docutils literal"><span class="pre">throw</span></tt>)
-into a new, deprecated section D.5, while maintaining the description
-of <tt class="docutils literal"><span class="pre">noexcept</span></tt> and the general behavior of exception
-specifications in 15.4. The intent of the revised 15.4 (and core
-language in general) is to minimize the number of dependencies on
-the deprecated section D.5, and to mark each of those with a
-cross-reference.</p>
+<h1><a class="toc-backref" href="#id5">Approach</a></h1>
 <p>To aid in the transition from dynamic exception specifications to
 <tt class="docutils literal"><span class="pre">noexcept</span></tt>, the wording provides somewhat loose compatibility rules
 for redeclarations of functions that have exception
@@ -439,184 +419,25 @@ void g() throw(X) { // okay, compatible with noexcept(false)
 <p>These compatibility rules allow a gradual migration from dynamic
 exception specifications to <tt class="docutils literal"><span class="pre">noexcept</span></tt>, since a declaration of a
 function can choose to use the new or old syntax independently in the
-declaration and in the definition. This is particularly important with
-the implicit declarations of <tt class="docutils literal"><span class="pre">operator</span> <span class="pre">new</span></tt>, <tt class="docutils literal"><span class="pre">operator</span> <span class="pre">new[]</span></tt>,
-<tt class="docutils literal"><span class="pre">operator</span> <span class="pre">delete</span></tt>, and <tt class="docutils literal"><span class="pre">operator</span> <span class="pre">delete[]</span></tt>, which this document
-changes to use <tt class="docutils literal"><span class="pre">noexcept</span></tt>.</p>
+declaration and in the definition.</p>
 </div>
 <div class="section" id="proposed-changes-to-standard-wording">
-<h1><a class="toc-backref" href="#id8">Proposed Changes to Standard Wording</a></h1>
+<h1><a class="toc-backref" href="#id6">Proposed Changes to Standard Wording</a></h1>
 <p>The wording in this paper is based on the current working paper
 (N3035) as amended by N3050.</p>
-<div class="section" id="dynamic-storage-duration-basic-stc-dynamic">
-<h2><a class="toc-backref" href="#id9">3.7.4 Dynamic storage duration [basic.stc.dynamic]</a></h2>
-<p>Modify paragraph 2 as follows:</p>
-<blockquote>
-<p>2 The library provides default definitions for the global allocation
-and deallocation functions. Some global allocation and deallocation
-functions are replaceable (18.6.1). A C++ program shall provide at
-most one definition of a replaceable allocation or deallocation
-function. Any such function definition replaces the default version
-provided in the library (17.6.3.6). The following allocation and
-deallocation functions (18.6) are implicitly declared in global
-scope in each translation unit of a program.</p>
-<pre class="literal-block">
-void* operator new(std::size_t) <span class="del">throw(std::bad_alloc)</span> <span class="ins">noexcept(false)</span>;
-void* operator new[](std::size_t) <span class="del">throw(std::bad_alloc)</span> <span class="ins">noexcept(false)</span>;
-void operator delete(void*) <span class="del">throw()</span> <span class="ins">noexcept</span>;
-void operator delete[](void*) <span class="del">throw()</span> <span class="ins">noexcept</span>;
-</pre>
-<p>These implicit declarations introduce only the function names
-<tt class="docutils literal"><span class="pre">operator</span> <span class="pre">new</span></tt>, <tt class="docutils literal"><span class="pre">operator</span> <span class="pre">new[]</span></tt>, <tt class="docutils literal"><span class="pre">operator</span> <span class="pre">delete</span></tt>,
-<tt class="docutils literal"><span class="pre">operator</span> <span class="pre">delete[]</span></tt> [<em>Note</em>: the implicit declarations do not
-introduce the names <tt class="docutils literal"><span class="pre">std</span></tt> <span class="del">, std::bad_alloc,</span> and
-<tt class="docutils literal"><span class="pre">std::size_t</span></tt>, or any other names that the
-library uses to declare these names. Thus, a <em>new-expression</em>,
-<em>delete-expression</em> or function call that refers to one of these
-functions without including the header <tt class="docutils literal"><span class="pre">&lt;new&gt;</span></tt> is
-well-formed. However, referring to <tt class="docutils literal"><span class="pre">std</span></tt> <span class="del">, std::bad_alloc,</span> and
-<tt class="docutils literal"><span class="pre">std::size_t</span></tt> is ill-formed unless the name has been declared by
-including the appropriate header. -- <em>end note</em>] Allocation and/or
-deallocation functions can also be declared and defined for any
-class (12.5).</p>
-</blockquote>
-</div>
 <div class="section" id="exception-specifications-except-spec">
-<h2><a class="toc-backref" href="#id10">15.4 Exception specifications [except.spec]</a></h2>
-<p>Modify the paragraphs in this section as follows. Note that every
-paragraph in this section is accounted for (even those that have not
-changed), to ease review. Editorial notes are <span class="ed">[Yellow]</span> and will
-describe, e.g., when specific paragraphs have been moved. The
-paragraphs are numbered with old and new numbers (old/new), where the
-old numbers refer to the current working paper and the new numbers
-refer to the desired paragraph numbers after this paper is applied to
-the working paper.</p>
+<h2><a class="toc-backref" href="#id7">15.4 Exception specifications [except.spec]</a></h2>
+<p>Modify the paragraphs in this section as follows.</p>
 <blockquote>
-<p><span class="del">1</span>/<span class="ins">1</span> A function declaration lists exceptions that its function might
-directly or indirectly throw by using an <em>exception-specification</em>
-as a suffix of its declarator.
-<span class="raw-html"><span class="ins">A function is said to <i>allow</i> an
-exception of type <code>E</code> if such an exception will propagate
-from the outermost block of that function out of the function.</span></span></p>
-<pre class="literal-block">
-<em>exception-specification</em>:
-  <em>dynamic-exception-specification</em>
-  <em>noexcept-specification</em>
-
-<span class="ed">[Moved to D.5p1]</span> <span class="raw-html"><span class="del"><i>dynamic-exception-specification</i>:</span></span>
-  <span class="raw-html"><span class="del"><code>throw (</code> <i>type-id-list<sub>opt</sub></i> <code>)</code></span></span>
-
-<span class="ed">[Moved to D.5p1]</span> <span class="raw-html"><span class="del"><i>type-id-list</i>:</span></span>
-  <span class="raw-html"><span class="del"><i>type-id</i> <code>...</code><sub><i>opt</i></sub></span></span>
-  <span class="raw-html"><span class="del"><i>type-id-list</i> <code>,</code> <i>type-id</i> <code>...</code><sub><i>opt</i></sub></span></span>
-
-<em>noexcept-specification</em>:
-  <tt class="docutils literal"><span class="pre">noexcept</span> <span class="pre">(</span></tt> <em>constant-expression</em> <tt class="docutils literal"><span class="pre">)</span></tt>
-  <tt class="docutils literal"><span class="pre">noexcept</span></tt>
-</pre>
-<p><span class="ins">2</span> In a <em>noexcept-specification</em>, the <em>constant-expression</em>, if supplied,
-shall be a constant expression ([expr.const]) that is contextually
-converted to <tt class="docutils literal"><span class="pre">bool</span></tt> ([conv] Clause 4). A <em>noexcept-specification</em>
-<tt class="docutils literal"><span class="pre">noexcept</span></tt> is equivalent to <tt class="docutils literal"><span class="pre">noexcept(true)</span></tt>.</p>
-<p><span class="del">2</span>/<span class="ins">3</span> An <em>exception-specification</em> shall appear only on a function
-declarator for a function type, pointer to function type, reference
-to function type, or pointer to member function type that is the
-top-level type of a declaration or definition, or on such a type
-appearing as a parameter or return type in a function declarator. An
-<em>exception-specification</em> shall not appear in a typedef declaration
-or <em>alias-declaration</em>. [ <em>Example</em> :</p>
-<pre class="literal-block">
-void f() <span class="del">throw(int)</span><span class="ins">noexcept</span>;              // OK
-void (*fp)() <span class="del">throw (int)</span><span class="ins">noexcept</span>;        // OK
-void g(void pfa() <span class="del">throw(int))</span><span class="ins">noexcept</span>;    // OK
-typedef int (*pf)() <span class="del">throw(int)</span><span class="ins">noexcept</span>;  // ill-formed
-</pre>
-<ul class="simple">
-<li><em>end example</em> ]</li>
-</ul>
-<p><span class="ed">[Moved to D.5p2]</span> <span class="del">A type denoted in an exception-specification shall not
-denote an incomplete type. A type denoted in an
-exception-specification shall not denote a pointer or reference to an
-incomplete type, other than void*, const void*, volatile void*, or
-const volatile void*.</span></p>
-<p>6 <span class="ed">[Moved to D.5p3]</span> <span class="raw-html"><span class="del">An
-<i>exception-specification</i> can include the same type more than
-once and can include classes that are related by inheritance, even
-though doing so is redundant. [ <i>Note</i>: An
-<i>exception-specification</i> can also include the class
-<code>std::bad_exception</code> (18.8.2.1). - <i>end note</i>
-]</span></span></p>
-<p>7 <span class="ed">[Moved to D.5p4]</span> <span class="raw-html"><span class="del">A function is
-said to <i>allow</i> an exception of type <code>E</code> if its
-<i>dynamic-exception-specification</i> contains a type
-<code>T</code> for which a handler of type <code>T</code> would be a
-match (15.3) for an exception of type <code>E</code>.</span></span></p>
-<p>8 <span class="ed">[Moved to D.5p5]</span> <span class="raw-html"><span class="del">Whenever an
-exception is thrown and the search for a handler (15.3) encounters
-the outermost block of a function with an <i>exception-specification</i>,
-the function <code>std::unexpected()</code> is called (15.5.2) if
-the <i>exception-specification</i> does not allow the exception. [
-<i>Example</i>:</span></span></p>
-<pre class="literal-block">
-<span class="del">class X { };</span>
-<span class="del">class Y { };</span>
-<span class="del">class Z: public X { };</span>
-<span class="del">class W { };</span>
-
-<span class="del">void f() throw (X, Y) {</span>
-  <span class="del">int n = 0;</span>
-  <span class="del">if (n) throw X(); // OK</span>
-  <span class="del">if (n) throw Z(); // also OK</span>
-  <span class="del">throw W();        // will call std::unexpected()</span>
-<span class="del">}</span>
-</pre>
-<p><span class="raw-html"><span class="del">-- <i>end example</i></span>]</span></p>
-<p>9 <span class="ed">[Moved to D.5p6]</span> <span class="raw-html"><span class="del">The function
-<code>std::unexpected()</code> may throw an exception that will
-satisfy the <i>dynamic-exception-specification</i> for which it
-was invoked, and in this case the search for another handler will
-continue at the call of the function with this
-<i>dynamic-exception-specification</i> (see 15.5.2), or it may call
-<code>std::terminate()</code>.</span></span></p>
-<p>10 <span class="ed">[Moved to D.5p7]</span> <span class="raw-html"><span class="del">An implementation shall not reject an expression merely because when executed it throws or might throw an exception that the containing function does not allow. [ <i>Example</i>:</span></span></p>
-<blockquote>
-<pre class="literal-block">
-<span class="del">extern void f() throw(X, Y);</span>
-<span class="del">void g() throw(X) {</span>
-  <span class="del">f(); // OK</span>
-<span class="del">}</span>
-</pre>
-</blockquote>
-<p><span class="raw-html"><span class="del">the call to <code>f</code> is well-formed even though when called, <code>f</code> might throw exception <code>Y</code> that <code>g</code> does not allow. - <i>end example</i> ]</span></span></p>
-<p><span class="del">11</span>/<span class="ins">4</span> A function with no <em>exception-specification</em>, or with an
-<em>exception-specification</em> of the form <tt class="docutils literal"><span class="pre">noexcept(</span></tt>
-<em>constant-expression</em> <tt class="docutils literal"><span class="pre">)</span></tt> where the <em>constant-expression</em> yields
-<tt class="docutils literal"><span class="pre">false</span></tt>, allows all exceptions. An <em>exception-specification</em> is
-non-throwing if it is of the form <span class="del">throw(),</span> <tt class="docutils literal"><span class="pre">noexcept</span></tt>,
-<span class="del">or</span> <tt class="docutils literal"><span class="pre">noexcept(</span></tt> <em>constant-expression</em> <tt class="docutils literal"><span class="pre">)</span></tt> where the
-<em>constant-expression</em> yields <tt class="docutils literal"><span class="pre">true</span></tt>
-<span class="raw-html"><span class="ins">, or <code>throw()</code> (D.5)</span></span>
-. A function with a
-non-throwing <em>exception-specification</em> does not allow any
-exceptions.</p>
-<p><span class="ins">5</span> <span class="raw-html"><span class="ins">Two
-<i>exception-specifications</i> are <i>compatible</i> if:</span></span></p>
-<blockquote>
-<ul class="simple">
-<li><span class="raw-html"><span class="ins">both are non-throwing (regardless of their form), </span></span></li>
-<li><span class="raw-html"><span class="ins">both have the form <code>noexcept(<i>constant-expression</i>)</code> and the <i>constant-expression</i>s are equivalent,</span></span></li>
-<li><span class="raw-html"><span class="ins">one <i>exception-specification</i> is of the form <code>noexcept(false)</code> and the other is of the form <code>throw(<i>type-id-list</i>)</code> (D.5), or</span></span></li>
-<li><span class="raw-html"><span class="ins">both are <i>dynamic-exception-specifications</i> (D.5) that have the same set of <i>type-id</i>s.</span></span></li>
-</ul>
-</blockquote>
-<p><span class="del">3</span>/<span class="ins">6</span> If any declaration of a function has an <em>exception-specification</em>,
+<p>3 If any declaration of a function has an <em>exception-specification</em>
+<span class="raw-html"><span class="ins">that is not a <i>noexcept-specification</i> allowing all exceptions</span></span>,
 all declarations, including the definition and an explicit
-specialization, of that function shall have an <span class="raw-html"><span
+specialization, of that function shall have <span class="raw-html">a<span class="del">n</span> <span
 class="ins">compatible</span> <i>exception-specification</i>
 <span class="del">with the same set of <i>type-id</i>s</span>.</span> If
 any declaration of a pointer to function, reference to function, or
-pointer to member function has an <em>exception-specification</em>, all
-occurrences of that declaration shall have an <span class="raw-html"><span
+pointer to member function has an <em>exception-specification</em>,
+all occurrences of that declaration shall have <span class="raw-html">a<span class="del">n</span> <span
 class="ins">compatible</span> <i>exception-specification</i>
 <span class="del">with the same set of <i>type-id</i>s</span>.</span> In an
 explicit instantiation an <em>exception-specification</em> may be
@@ -624,281 +445,29 @@ specified, but is not required. If an <em>exception-specification</em> is
 specified in an explicit instantiation directive, it shall
 <span class="raw-html"><span class="del">have the
 same set of <i>type-id</i>s as</span><span class="ins">be compatible
-to the <i>exception-specification</i>s of</span></span> other declarations
+with the <i>exception-specification</i>s of</span></span> other declarations
 of that function.
 A diagnostic is required only if the <span class="raw-html"><span class="del">sets of <i>type-id</i>s are
 different</span><span class="ins"><i>exception-specifications</i>
 are not compatible</span></span> within a single translation unit.</p>
-<p><span class="del">4</span>/<span class="ins">7</span> If a virtual function has an <em>exception-specification</em>, all declarations, including the definition, of any function that overrides that virtual function in any derived class shall only allow exceptions that are allowed by the <em>exception-specification</em> of the base class virtual function. [ <em>Example</em>:</p>
-<blockquote>
-<pre class="literal-block">
-struct B {
-  virtual void f() throw (int, double);
-  virtual void g();
-  <span class="ins">virtual void h() noexcept;</span>
-  <span class="ins">virtual void i() noexcept(false);</span>
-};
-
-struct D: B {
-  void f();                 // ill-formed
-  void g() throw (int);     // OK
-  <span class="ins">void h() noexcept(false); // ill-formed</span>
-  <span class="ins">void i() noexcept;        // OK</span>
-};
-</pre>
-</blockquote>
-<p>The declaration of <tt class="docutils literal"><span class="pre">D::f</span></tt> is ill-formed because it allows all exceptions, whereas <tt class="docutils literal"><span class="pre">B::f</span></tt> allows only <tt class="docutils literal"><span class="pre">int</span></tt> and`` double``. <span class="raw-html"><span class="ins">Similarly, the declaration of <code>D::h</code> is ill-formed because it allows all exceptions, whereas <code>B::h</code> does not allow any exceptions.</span></span> - <em>end example</em>] A similar restriction applies to assignment to and initialization of pointers to functions, pointers to member functions, and references to functions: the target entity shall allow at least the exceptions allowed by the source value in the assignment or initialization. [ <em>Example</em>:</p>
-<blockquote>
-<pre class="literal-block">
-class A { /*...*/ };
-void (*pf1)();    // no exception specification
-void (*pf2)() throw(A);
-<span class="ins">void (*pf3)() noexcept;</span>
-void f() {
-  pf1 = pf2;  // OK: pf1 is less restrictive
-  <span class="ins">pf1 = pf3;  // OK: pf1 is less restrictive</span>
-  pf2 = pf1;  // error: pf2 is more restrictive
-  <span class="ins">pf3 = pf1;  // error: pf3 is more restrictive</span>
-  <span class="ins">pf3 = pf2;  // error: pf3 is more restrictive</span>
-}
-</pre>
-</blockquote>
-<ul class="simple">
-<li><em>end example</em> ]</li>
-</ul>
-<p><span class="del">5</span>/<span class="ins">8</span> In such an assignment or initialization, <em>exception-specifications</em> on return types and parameter types shall <span class="del">match exactly</span> <span class="ins">be compatible</span>. In other assignments or initializations, <em>exception-specifications</em> shall <span class="del">match exactly</span> <span class="ins">be compatible</span>.</p>
-<p><span class="del">12</span>/<span class="ins">9</span> An <em>exception-specification</em> is not considered part of a function's
-type.</p>
-<p><span class="del">13</span>/<span class="ins">10</span> An implicitly declared special member function (Clause 12)
-<span class="del">shall</span> <span class="ins">may</span> have an <em>exception-specification</em>. <span class="del">If</span>
-<span class="ins">Let</span> <tt class="docutils literal"><span class="pre">f</span></tt> <span class="del">is</span> <span class="ins">be</span> an implicitly declared default
-constructor, copy constructor, destructor, or copy assignment
-operator, <span class="ins">then:</span></p>
+<p><span class="ed">[Insert a new paragraph before paragraph 5]</span> <span class="raw-html"><span class="ins">Two
+<i>exception-specifications</i> are <i>compatible</i> if:</span></span></p>
 <blockquote>
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">f</span></tt> shall allow all exceptions if any function it directly invokes allows all exceptions <span class="ins">,</span></li>
-<li><tt class="docutils literal"><span class="pre">f</span></tt> shall <span class="del">allow no exceptions</span> <span class="raw-html"><span class="ins">have the implicit <i>exception-specification</i> <code>noexcept</code></span></span> if every function it directly invokes allows no exceptions <span class="ins">, otherwise</span></li>
-<li>its implicit <em>exception-specification</em> <span class="raw-html"><span class="ins">is a <i>dynamic-exception-specification</i> (D.5) that </span></span> specifies the <em>type-id</em> <tt class="docutils literal"><span class="pre">T</span></tt> if and only if <tt class="docutils literal"><span class="pre">T</span></tt> is allowed by the <em>exception-specification</em> of a function directly invoked by <tt class="docutils literal"><span class="pre">f</span></tt>'s implicit definition.</li>
+<li><span class="raw-html"><span class="ins">both are non-throwing (regardless of their form), </span></span></li>
+<li><span class="raw-html"><span class="ins">both have the form <code>noexcept(<i>constant-expression</i>)</code> and the <i>constant-expression</i>s are equivalent,</span></span></li>
+<li><span class="raw-html"><span class="ins">one <i>exception-specification</i> is a <i>noexcept-specification</i> allowing all exceptions and the other is of the form <code>throw(<i>type-id-list</i>)</code>, or</span></span></li>
+<li><span class="raw-html"><span class="ins">both are <i>dynamic-exception-specifications</i> that have the same set of <i>type-id</i>s.</span></span></li>
 </ul>
 </blockquote>
-<p>[ <em>Example</em>:</p>
-<blockquote>
-<pre class="literal-block">
-struct A {
-  A();
-  A(const A&amp;) <span class="del">throw()</span><span class="ins">noexcept</span>;
-  ~A() throw(X);
-};
-
-struct B {
-  B() <span class="del">throw()</span><span class="ins">noexcept</span>;
-  B(const B&amp;) <span class="del">throw()</span><span class="ins">noexcept</span>;
-  ~B() throw(Y);
-};
-
-struct D : public A, public B {
-  // Implicit declaration of D::D();
-  // Implicit declaration of D::D(const D&amp;) <span class="del">throw()</span><span class="ins">noexcept</span>;
-  // Implicit declaration of D::~D() throw(X,Y);
-};
-</pre>
-</blockquote>
-<p>Furthermore, if <tt class="docutils literal"><span class="pre">A::~A()</span></tt> or <tt class="docutils literal"><span class="pre">B::~B()</span></tt> were virtual, <tt class="docutils literal"><span class="pre">D::~D()</span></tt> would not be as restrictive as that of <tt class="docutils literal"><span class="pre">A::~A</span></tt>, and the program would be ill-formed since a function that overrides a virtual function from a base class shall have an exception-specification at least as restrictive as that in the base class. - <em>end example</em> ]</p>
-<p><span class="del">14</span>/<span class="ins">11</span> <span class="ed">[Moved to D.5p8]</span> <span class="raw-html"><span class="del">In a <i>dynamic-exception-specification</i>, a <i>type-id</i> followed by an ellipsis is a pack expansion (14.6.3).</span></span></p>
-<p><span class="del">15</span>/<span class="ins">12</span> If a function with a <em>noexcept-specification</em> whose
-<em>constant-expression</em> yields <tt class="docutils literal"><span class="pre">true</span></tt> throws an exception, the
-behavior is undefined. <span class="raw-html"><span
-class="ins">[<i>Note</i>:</span> A <i>noexcept-specification</i>
-whose <i>constant-expression</i> yields <code>true</code> is in all
-other respects equivalent to the <i><span
-class="ins">dynamic-</span>exception-specification</i>
-<code>throw()</code> <span class="ins">(D.5)</span>.<span
-class="ins"> - <i>end note</i>]</span></span> A <em>noexcept-specification</em>
-whose <em>constant-expression</em> yields <tt class="docutils literal"><span class="pre">false</span></tt> is equivalent to omitting the
-<em>exception-specification</em> altogether.</p>
+<p>5 In such an assignment or initialization, <em>exception-specifications</em> on return types and parameter types shall <span class="del">match exactly</span> <span class="ins">be compatible</span>. In other assignments or initializations, <em>exception-specifications</em> shall <span class="del">match exactly</span> <span class="ins">be compatible</span>.</p>
+<p><span class="ed">[Insert a new paragraph at the end of 15.4]</span> <span class="raw-html"><span class="ins">[ <i>Note</i>: The use of <i>dynamic-exception-specification</i>s is deprecated (see annex D). - <i>end note</i> ]</span></span></p>
 </blockquote>
 </div>
-<div class="section" id="special-functions-except-special">
-<h2><a class="toc-backref" href="#id11">15.5 Special functions [except.special]</a></h2>
+<div class="section" id="d-5-dynamic-exception-specifications-depr-except-spec">
+<h2><a class="toc-backref" href="#id8"><span class="ins">D.5 Dynamic exception specifications [depr.except.spec]</span></a></h2>
 <blockquote>
-1 The <span class="raw-html">function<span class="del">s</span> <code>std::terminate()</code> (15.5.1) <span class="del">and <code>std::unexpected()</code> (15.5.2) are</span><span class="ins">is</span></span> used by the exception handling mechanism for coping with errors related to the exception handling mechanism itself. The function <tt class="docutils literal"><span class="pre">std::current_exception()</span></tt> (18.8.5) and the class <tt class="docutils literal"><span class="pre">std::nested_exception</span></tt> (18.8.6) can be used by a program to capture the currently handled exception.</blockquote>
-</div>
-<div class="section" id="the-std-unexpected-function-except-unexpected">
-<h2><a class="toc-backref" href="#id12">15.5.2 The <tt class="docutils literal"><span class="pre">std::unexpected()</span></tt> function [except.unexpected]</a></h2>
-<p>Move this section to D.5 to become D.5.1
-[depr.except.unexpected]. Then modify the following paragraphs as
-follows:</p>
-<blockquote>
-<p>1 If a function with <span class="del">an</span> <span class="ins">a</span> <span class="raw-html"><i><span class="ins">dynamic-</span>exception-specification</i> throws an exception that is not listed in the <i><span class="ins">dynamic-</span>exception-specification</i>, the function <code>std::unexpected()</code> is called (18.8.2) immediately after completing the stack unwinding for the former function.</span></p>
-<p>3 The <tt class="docutils literal"><span class="pre">std::unexpected()</span></tt> function shall not return, but it can throw (or re-throw) an exception. If it throws a new exception which is allowed by the exception specification which previously was violated, then the search for another handler will continue at the call of the function whose exception specification was violated. If it throws or rethrows an exception that the <em>exception-specification</em> does not allow then the following happens: If the <span class="raw-html"><i><span class="ins">dynamic-</span>exception-specification</i> does not include the class <code>std::bad_exception</code> (18.8.2.1) then the function <code>std::terminate()</code> is called, otherwise the thrown exception is replaced by an implementation-defined object of the type <code>std::bad_exception</code> and the search for another handler will continue at the call of the function whose <i><span class="ins">dynamic-</span>exception-specification</i> was violated.</span></p>
-<p>4 Thus, <span class="del">an</span> <span class="ins">a</span> <span class="raw-html"><i><span class="ins">dynamic-</span>exception-specification</i> guarantees that only the listed exceptions will be thrown. If the <i><span class="ins">dynamic-</span>exception-specification</i> includes the type <code>std::bad_exception</code> then any exception not on the list may be replaced by <code>std::bad_exception</code> within the function <code>std::unexpected()</code>.</span></p>
-</blockquote>
-</div>
-<div class="section" id="restrictions-on-exception-handling-res-on-exception-handling">
-<h2><a class="toc-backref" href="#id13">17.6.4.11 Restrictions on exception handling [res.on.exception.handling]</a></h2>
-<p>Modify the paragaphs shown as follows:</p>
-<blockquote>
-<p>1 Any of the functions defined in the C++ standard library can
-report a failure by throwing an exception of a type described in its
-<strong>Throws</strong>: paragraph or its <em>exception-specification</em> (15.4). An
-implementation may strengthen the <em>exception-specification</em> for a
-non-virtual function by removing listed exceptions <span class="raw-html"><span
-class="ins">or replacing an empty <i>dynamic-exception-specification</i> (D.5 [depr.except.spec.dynamic]) <code>throw()</code> with a compatible <code>noexcept</code> specification (15.4)</span></span>.</p>
-<p>3 Functions from the C standard library shall not throw exceptions<a class="footnote-reference" href="#id5" id="id4"><sup>191</sup></a> except when such a function calls a program-supplied function that throws an exception.</p>
-</blockquote>
-<table class="docutils footnote" frame="void" id="id5" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id4">[191]</a></td><td>That is, the C library functions can all be treated as if they have a <span class="del">throw()</span> <span class="ins">non-throwing</span> <em>exception-specification</em>. This allows implementations to make performance optimizations based on the absence of exceptions at runtime.</td></tr>
-</tbody>
-</table>
-</div>
-<div class="section" id="dynamic-memory-management-support-dynamic">
-<h2><a class="toc-backref" href="#id14">18.6 Dynamic memory management [support.dynamic]</a></h2>
-<p>Modify the header <tt class="docutils literal"><span class="pre">&lt;new&gt;</span></tt> synopsis as follows.</p>
-<pre class="literal-block">
-void* operator new(std::size_t size) <span class="del">throw(std::bad_alloc)</span><span class="ins">noexcept(false)</span>;
-void* operator new(std::size_t size, const std::nothrow_t&amp;) <span class="del">throw()`</span><span class="ins">noexcept</span>;
-void operator delete(void* ptr) <span class="del">throw()`</span><span class="ins">noexcept</span>;
-void operator delete(void* ptr, const std::nothrow_t&amp;) <span class="del">throw()`</span><span class="ins">noexcept</span>;
-void* operator new[](std::size_t size) <span class="del">throw(std::bad_alloc)`</span><span class="ins">noexcept(false)</span>;
-void* operator new[](std::size_t size, const std::nothrow_t&amp;) <span class="del">throw()`</span><span class="ins">noexcept</span>;
-void operator delete[](void* ptr) <span class="del">throw()`</span><span class="ins">noexcept</span>;
-void operator delete[](void* ptr, const std::nothrow_t&amp;) <span class="del">throw()`</span><span class="ins">noexcept</span>;
-void* operator new (std::size_t size, void* ptr) <span class="del">throw()`</span><span class="ins">noexcept</span>;
-void* operator new[](std::size_t size, void* ptr) <span class="del">throw()`</span><span class="ins">noexcept</span>;
-void operator delete (void* ptr, void*) <span class="del">throw()`</span><span class="ins">noexcept</span>;
-void operator delete[](void* ptr, void*) <span class="del">throw()`</span><span class="ins">noexcept</span>;
-</pre>
-</div>
-<div class="section" id="single-object-forms-new-delete-single">
-<h2><a class="toc-backref" href="#id15">18.6.1.1 Single-object forms [new.delete.single]</a></h2>
-<p>Update the signatures of <tt class="docutils literal"><span class="pre">operator</span> <span class="pre">new</span></tt> and <tt class="docutils literal"><span class="pre">operator</span> <span class="pre">delete</span></tt> in this section to reflect the changes to the synopsis.</p>
-</div>
-<div class="section" id="array-forms-new-delete-array">
-<h2><a class="toc-backref" href="#id16">18.6.1.2 Array forms [new.delete.array]</a></h2>
-<p>Update the signatures of <tt class="docutils literal"><span class="pre">operator</span> <span class="pre">new[]</span></tt> and <tt class="docutils literal"><span class="pre">operator</span> <span class="pre">delete[]</span></tt> in this section to reflect the changes to the synopsis.</p>
-</div>
-<div class="section" id="placement-forms-new-delete-placement">
-<h2><a class="toc-backref" href="#id17">18.6.1.3 Placement forms [new.delete.placement]</a></h2>
-<p>Update the signatures of <tt class="docutils literal"><span class="pre">operator</span> <span class="pre">new</span></tt>, <tt class="docutils literal"><span class="pre">operator</span> <span class="pre">delete</span></tt>, <tt class="docutils literal"><span class="pre">operator</span> <span class="pre">new[]</span></tt>, and <tt class="docutils literal"><span class="pre">operator</span> <span class="pre">delete[]</span></tt> in this section to reflect the changes to the synopsis.</p>
-</div>
-<div class="section" id="exception-handling-support-exception">
-<h2><a class="toc-backref" href="#id18">18.8 Exception handling [support.exception]</a></h2>
-<p>Modify paragraph 1 as follows:</p>
-<blockquote>
-<p>1 The header <tt class="docutils literal"><span class="pre">&lt;exception&gt;</span></tt> defines several types and functions related to the handling of exceptions in a C++ program.</p>
-<p>Header <tt class="docutils literal"><span class="pre">&lt;exception&gt;</span></tt> synopsis</p>
-<pre class="literal-block">
-namespace std {
-  class exception;
-  <span class="del">class bad_exception;</span>
-  class nested_exception;
-
-  <span class="ins">// D.5.2, violating exception-specifications (deprecated):</span>
-  <span class="ins">class bad_exception;</span>
-  typedef void (*unexpected_handler)();
-  unexpected_handler set_unexpected(unexpected_handler f) throw();
-  void unexpected [[noreturn]] ();
-
-  typedef void (*terminate_handler)();
-  terminate_handler set_terminate(terminate_handler f) throw();
-  void terminate [[noreturn]] ();
-
-  bool uncaught_exception() throw();
-
-  typedef <em>unspecified</em> exception_ptr;
-
-  exception_ptr current_exception();
-  void rethrow_exception [[noreturn]] (exception_ptr p);
-  template&lt;class E&gt; exception_ptr copy_exception(E e);
-  template &lt;class T&gt; void throw_with_nested [[noreturn]] (T&amp;&amp; t);
-  template &lt;class E&gt; void rethrow_if_nested(const E&amp; e);
-}
-</pre>
-<p>SEE ALSO: 15.5 <span class="ins">, D.5.1 [depr.except.unexpected]</span>.</p>
-</blockquote>
-</div>
-<div class="section" id="violating-exception-specifications-exception-unexpected">
-<h2><a class="toc-backref" href="#id19">18.8.2  Violating exception-specifications [exception.unexpected]</a></h2>
-<p>Move this section to D.5 to become D.5.2
-[depr.exception.unexpected].</p>
-</div>
-<div class="section" id="d-5-dynamic-exception-specifications-depr-except-spec-dynamic">
-<h2><a class="toc-backref" href="#id20"><span class="ins">D.5 Dynamic exception specifications [depr.except.spec.dynamic]</span></a></h2>
-<p>Insert this new section. <span class="ins">Green underlined text</span> is used to
-indicate new wording, while normal text is used whenever text was
-moved from another section (15.4, 15.5).</p>
-<blockquote>
-<p>1 <span class="ins">A dynamic exception specification lists exceptions that its function
-might directly or indirectly throw.</span></p>
-<pre class="literal-block">
-<span class="ed">[Moved from 15.4p1]</span> <span class="raw-html"><span class="ins"><i>dynamic-exception-specification</i>:</span></span>
-  <span class="raw-html"><span class="ins"><code>throw (</code> <i>type-id-list<sub>opt</sub></i> <code>)</code></span></span>
-
-<span class="ed">[Moved from 15.4p1]</span> <span class="raw-html"><span class="ins"><i>type-id-list</i>:</span></span>
-  <span class="raw-html"><span class="ins"><i>type-id</i> <code>...</code><sub><i>opt</i></sub></span></span>
-  <span class="raw-html"><span class="ins"><i>type-id-list</i> <code>,</code> <i>type-id</i> <code>...</code><sub><i>opt</i></sub></span></span>
-</pre>
-<p>2 <span class="ed">[Moved from 15.4p2]</span> <span class="raw-html">A type denoted in a
-<i><span class="ins">dynamic-</span>exception-specification</i> shall not denote an
-incomplete type. A type denoted in a
-<i><span class="ins">dynamic-</span>exception-specification</i> shall not denote a pointer or
-reference to an incomplete type, other than <code>void*</code>,
-<code>const void*</code>, <code>volatile void*</code>, or
-<code>const volatile void*</code>.</span></p>
-<p>3 <span class="ed">[Moved from 15.4p6]</span> <span class="raw-html">A
-<i><span class="ins">dynamic-</span>exception-specification</i> can include the same type more than
-once and can include classes that are related by inheritance, even
-though doing so is redundant. [ <i>Note</i>: A
-<i><span class="ins">dynamic-</span>exception-specification</i> can also include the class
-<code>std::bad_exception</code> (18.8.2.1). - <i>end note</i>
-]</span></p>
-<p>4 <span class="ed">[Moved from 15.4p7]</span> <span class="raw-html">A function <span class="del">is
-said to <i>allow</i></span><span class="ins">allows</span> an exception of type <code>E</code> if its
-<i>dynamic-exception-specification</i> contains a type
-<code>T</code> for which a handler of type <code>T</code> would be a
-match (15.3) for an exception of type <code>E</code>.</span></p>
-<p>5 <span class="ed">[Moved from 15.4p8]</span> <span class="raw-html">Whenever an
-exception is thrown and the search for a handler (15.3) encounters
-the outermost block of a function with a<span class="del">n</span>
-<i><span class="ins">dynamic-</span>exception-specification</i>, the function
-<code>std::unexpected()</code> is called (15.5.2) if the
-<i><span class="ins">dynamic-</span>exception-specification</i> does not allow the exception. [
-<i>Example</i>:</span></p>
-<pre class="literal-block">
-class X { };
-class Y { };
-class Z: public X { };
-class W { };
-
-void f() throw (X, Y) {
-  int n = 0;
-  if (n) throw X(); // OK
-  if (n) throw Z(); // also OK
-  throw W();        // will call std::unexpected()
-}
-</pre>
-<p><span class="raw-html">-- <i>end example</i>]</span></p>
-<p>6 <span class="ed">[Moved from 15.4p9]</span> <span class="raw-html">The function
-<code>std::unexpected()</code> may throw an exception that will
-satisfy the <i><span class="ins">dynamic-</span>exception-specification</i> for which it
-was invoked, and in this case the search for another handler will
-continue at the call of the function with this
-<i><span class="ins">dynamic-</span>exception-specification</i> (see 15.5.2), or it may call
-<code>std::terminate()</code>.</span></p>
-<p>7 <span class="ed">[Moved from 15.4p10]</span> <span class="raw-html">An implementation shall not reject an expression merely because when executed it throws or might throw an exception that the containing function <span class="ins">whose <i>exception-specification</i> is a <i>dynamic-exception-specification</i></span> does not allow. [<i>Example</i>:</span></p>
-<blockquote>
-<pre class="literal-block">
-extern void f() throw(X, Y);
-void g() throw(X) {
-  f(); // OK
-}
-</pre>
-</blockquote>
-<p><span class="raw-html">the call to <code>f</code> is well-formed even though when called, <code>f</code> might throw exception <code>Y</code> that <code>g</code> does not allow. - <i>end example</i>]</span></p>
-<p>8 <span class="ed">[Moved from 15.4p14]</span> <span class="raw-html">In a <i>dynamic-exception-specification</i>, a <i>type-id</i> followed by an ellipsis is a pack expansion (14.6.3).</span></p>
-</blockquote>
+<span class="ins">1</span> <span class="raw-html"><span class="ins">The use of <i>dynamic-exception-specification</i>s is deprecated.</span></span></blockquote>
 <hr class="docutils" />
 <table class="docutils citation" frame="void" id="sutter02" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
