@@ -64,7 +64,6 @@
         <li>Functions <a href="#ref-repeat_ref"><code>repeat()</code></a>, <a href="#ref-repeat_ref"><code>repeat_fun()</code></a> and 
                                                                       <a href="#ref-repeat_ref"><code>range()</code>
                                                                       </a></li>
-        <li>Functions <a href="#ref-chain_auto_convert"><code>chain_auto_convert()</code></a></li>
         <li><a href="#ref-limit">Customizing</a> argument list sizes </li>
      </ul>
     <li>          
@@ -75,6 +74,7 @@
         <li> Proxy object <a href="#ref-list_inserter"><code>list_inserter&lt;&gt;</code></a></li>
         <li> Proxy object <a href="#ref-static_generic_list"><code>static_generic_list&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-array_interface"><code>array_interface&lt;&gt;</code></a> </li>
+        <li> Proxy object <a href="#ref-chainable"><code>chainable&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-expr"><code>expr&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-lazy_array"><code>lazy_array&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-static_array"><code>static_array&lt;&gt;</code></a> </li>
@@ -1150,6 +1150,7 @@ The maximum number of arguments to a csv function is <code>BOOST_ASSIGN_CSV_SIZE
         <li> Proxy object <a href="#ref-list_inserter"><code>list_inserter&lt;&gt;</code></a></li>
         <li> Proxy object <a href="#ref-static_generic_list"><code>static_generic_list&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-array_interface"><code>array_interface&lt;&gt;</code></a> </li>
+        <li> Proxy object <a href="#ref-chainable"><code>chainable&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-expr"><code>expr&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-lazy_array"><code>lazy_array&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-static_array"><code>static_array&lt;&gt;</code></a> </li>
@@ -1510,6 +1511,7 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
   	<table cellpadding=5 border=1>
   	<tr><th class="head">Expression</th> <th class="head">Description</th>
   	<tr><td><tt>R&lt;T&gt;</tt></td><td> Reference wrapper </td> </tr>
+  	<tr><td><a href="#ref-chainable"><tt>chainable&lt&gt</tt></a></td><td> Public base class of <a href="#ref-array_interface"><tt>array_interface&lt&gt</tt></a></td> </tr>
   	<tr><td><a href="#ref-converter"><tt>converter&lt&gt</tt></a></td><td> Public base class of <a href="#ref-array_interface"><tt>array_interface&lt&gt</tt></a></td> </tr>
   	</table>
   </blockquote>
@@ -1526,7 +1528,37 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
   	</table>
   </blockquote>
 
+  <h3><a name="ref-chainable">Proxy object <code>chainable&lt;&gt;</code></a></h3> 
 
+    <p>
+  <b>Template parameters</b> 
+  </p>
+
+  <blockquote>
+  	<table cellpadding=5 border=1>
+  	<tr><th class="head">Parameter</th> <th class="head">Description</th>
+  	<tr><td><tt>D</tt></td><td> Derived </td> </tr>
+  	</table>
+  </blockquote>
+
+    <p>
+  <b>Associated types</b> 
+  </p>
+
+  To be defined.
+
+    <p>
+  <b>Requirements</b> 
+  </p>
+
+  To be defined.
+   
+    <p>
+  <b>Synopsis</b> 
+  </p>
+
+  To be defined.
+   
   <h3><a name="ref-expr">Proxy object <code>expr&lt;&gt;</code></a></h3> 
     <p>
   <b>Header</b> <code>&lt;boost/assign/auto_size/detail/expr.hpp></code>
@@ -1631,11 +1663,8 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
    The successive arguments that are passed to the unary operator must be allocated on the stack. 
    Consequently, this set up is ill-suited for the method <code>range()</code> whose argument size must 
    be specified explicitly (unless its argument has static size), unlike the remainder of this library. 
-   A fully <a href="#auto_size">auto-size</a> framework could be achieved, by having <code>auto_size::expr&lt;&gt;</code> expose a member function 
-   <code>concat()</code>, that returns a proxy object whose task is to aggregate collections, 
-   similarly to <code>chain()</code> in <a href="http://boost-sandbox.sourceforge.net/libs/range_ex/doc/html/index.html">Boost.RangeEx</a>.
-   Such a project is being developed in directory <code>assign&#47;chain</code>.
-
+   For a similar interface, it is recommended to choose a policy, such as <a href="#ref-array_interface">array_interface</a>, that 
+   interoperates with the function <a href="#chain_auto_convert"><code>chain_auto_convert()</code></a>.
 </p>
   <h3><a name="ref-lazy_array">Proxy object <code>lazy_array&lt;&gt;</code></a></h3> 
   <b>Header</b> <code>&lt;boost/assign/auto_size/array/lazy.hpp></code>

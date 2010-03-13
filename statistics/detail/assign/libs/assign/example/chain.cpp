@@ -21,7 +21,6 @@ void example_chain(std::ostream& os)
 
     boost::assign::detail::chain_mpl_check::compound();
  
-
     using namespace boost::assign;
     using namespace boost::assign::detail;
 	os << "-> test_chain: " << std::endl;

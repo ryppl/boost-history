@@ -12,7 +12,7 @@ int main (int argc, char * const argv[]) {
     //boost::assign::detail::auto_size::check_ref_csv<int>();
     //std::cout << "check_ref_csv : ok" << std::endl;
 
-    //example_chain(std::cout);
+    example_chain(std::cout);
 
     return 0;
 
