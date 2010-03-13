@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// assign::chain_auto_convert.hpp                                   //
+// assign::chain_auto_convert.hpp                                           //
 //                                                                          //
 //  (C) Copyright 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -39,10 +39,7 @@ namespace chain_auto_convert{
 		static new_range1_& new_range1;
 		static new_range2_& new_range2;
         typedef BOOST_TYPEOF_TPL(
-        	boost::chain(
-        		new_range1,
-            	new_range2
-        	)
+            boost::chain(new_range1,new_range2)
         ) type;
 
         // MSVC:
