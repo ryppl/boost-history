@@ -30,7 +30,7 @@ namespace auto_size{
     //   a,b,c,d,e,f,g,h);
 
     // TODO const C1.
-	template<typename C,typename C1,typename T>
+    template<typename C,typename C1,typename T>
     void check_chain(C& coll,C1& coll1,
         T& a, T& b, T& c, T& d, T& e, T& f, T& g, T& h
     )

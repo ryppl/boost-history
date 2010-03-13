@@ -20,7 +20,7 @@ namespace assign{
 namespace detail{
 namespace auto_size{
 
-	template<typename C,typename C1,typename T>
+    template<typename C,typename C1,typename T>
     void check_lifo(C& elems,const C1& coll,
         const T& a,const T& b,const T& c,const T& d,const T& e,const T& f,
         const T& g,const T& h

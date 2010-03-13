@@ -57,12 +57,12 @@ void check_ref_list_of()
                 cref_list_of(1)(5)(3)(d)(e)(f)(g)(h) );
             BOOST_ASSIGN_CHECK_EQUAL( max , const_max );
     }
-	{   
+    {   
         check_iterator(
         	cref_list_of(a1)(b1)(c1)(d1)(e1)(f1)(g1)(h1),
             a1,b1,c1,d1,e1,f1,g1,h1);
     }
-	{   
+    {   
         check_array(
             cref_list_of(a1)(b1)(c1)(d1)(e1)(f1)(g1)(h1),
             a1,b1,c1,d1,e1,f1,g1,h1);
@@ -133,7 +133,6 @@ void check_ref_list_of()
            ref_list_of(a1)(b1)(c1)(d1)(e1)(f1)(g1)(h1),
            a1,b1,c1,d1,e1,f1,g1,h1);
     }
-
     {	
         val_ a, b, c, d, e, f, g, h;
         BOOST_AUTO(tmp1,ref_list_of(a)(b)(c)(d));

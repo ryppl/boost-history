@@ -51,8 +51,8 @@ namespace detail{
 
     };
 
-	template<typename T>
-	void rebind(assign_reference_rebind<T>& a,T& r){
+    template<typename T>
+    void rebind(assign_reference_rebind<T>& a,T& r){
     	a = r;
     }
 

@@ -20,7 +20,7 @@ namespace assign{
 namespace detail{
 namespace auto_size{
 
-	template<typename C1,typename T>
+    template<typename C1,typename T>
     void check_adapter(std::queue<T>& elems,const C1& coll,
         const T& a,const T& b,const T& c,const T& d,const T& e,const T& f,
         const T& g,const T& h
@@ -29,7 +29,7 @@ namespace auto_size{
         check_fifo(elems,coll,a,b,c,d,e,f,g,h);
     }
 
-	template<typename C1,typename T>
+    template<typename C1,typename T>
     void check_adapter(std::stack<T>& elems,const C1& coll,
         const T& a,const T& b,const T& c,const T& d,const T& e,const T& f,
         const T& g,const T& h

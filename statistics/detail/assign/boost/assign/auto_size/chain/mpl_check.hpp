@@ -61,6 +61,7 @@ namespace chain_mpl_check{
         : assert_cond<boost::is_same<T,U>,is>{};
 
 namespace convert_wrapper{
+
     template<typename T>
     struct helper : reference_traits::convert_wrapper<T> {};
 
@@ -68,7 +69,6 @@ namespace convert_wrapper{
     struct assert_eq 
         : chain_mpl_check::assert_eq<typename helper<T>::type,U,is>
     {};
-
 
 }
 namespace pair_traits{

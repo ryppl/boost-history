@@ -62,9 +62,9 @@ namespace ref_wrapper_traits{
         template<>
         template<typename T>
         struct convertible_to<tag::default_>::apply<T> 
-                : boost::add_reference<
-                    typename ref_wrapper_traits::value_of<T>::type
-                > 
+            : boost::add_reference<
+                typename ref_wrapper_traits::value_of<T>::type
+            > 
             {};
     }
 

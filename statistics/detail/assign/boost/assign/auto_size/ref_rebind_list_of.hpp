@@ -15,7 +15,7 @@
 namespace boost{
 namespace assign{
 
-	// custom policy : 
+    // custom policy : 
 
     template<typename P,typename T>
     typename detail::auto_size::first_rebind<const T,P>::type
@@ -29,7 +29,7 @@ namespace assign{
         return detail::auto_size::first_rebind<T,P>::call(t);
     }
 
-	// default policy : 
+    // default policy : 
 
     template<typename T>
     typename detail::auto_size::first_rebind<const T>::type
