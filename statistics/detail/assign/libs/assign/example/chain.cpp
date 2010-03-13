@@ -11,9 +11,9 @@
 #include <boost/next_prior.hpp>
 #include <boost/range/algorithm/copy.hpp>
 #include <boost/assign/auto_size/ref_list_of.hpp>
-#include <boost/assign/chain/add_const.hpp>
+#include <boost/assign/auto_size/chain/add_const.hpp>
 #include <boost/assign/auto_size/chain_auto_convert.hpp>
-#include <boost/assign/chain/mpl_check.hpp>
+#include <boost/assign/auto_size/chain/mpl_check.hpp>
 #include <libs/assign/example/chain.h>
 
 void example_chain(std::ostream& os)
