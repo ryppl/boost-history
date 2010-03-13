@@ -21,10 +21,8 @@
 //
 // Requirements : if either of r1 or r1 contains reference wrappers (W) pointing 
 // to some type T, 
-//     is_ref_wrapper<W>::type                         boolean constant
-//     ref_wrapper_traits::meta::value_of<W>::type     class
-// Bugs:
-// const ranges cause BAD_EXC_ACCESS
+//     is_ref_wrapper<W>::value                        true
+//     ref_wrapper_traits::meta::value_of<W>::type     T
 
 namespace boost{
 namespace assign{

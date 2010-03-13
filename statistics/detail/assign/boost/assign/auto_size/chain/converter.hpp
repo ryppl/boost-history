@@ -32,8 +32,8 @@ struct converter{
     template<typename U>
     T operator()(U& arg)const{ return arg; }
 
-    //template<typename U>
-    //T operator()(const U& arg)const{ return arg; }
+    template<typename U>
+    T operator()(const U& arg)const{ return arg; }
 
 };
 

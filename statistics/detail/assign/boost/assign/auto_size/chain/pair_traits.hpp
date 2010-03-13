@@ -19,10 +19,8 @@
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/assign/auto_size/chain/reference_traits.hpp>
 
-// These traits maps T and U, each of which may identify a reference wrapper, 
-// to V such that 
-//     V v1 = t; V v2 = u;
-// is a valid expression. U and T may be references or reference wrappers
+// Maps (T,U) to a type that both are convertible to. In particular, T and U
+// may be reference wrappers.
 
 namespace boost{
 namespace assign{

@@ -13,7 +13,8 @@
 #include <boost/assign/auto_size/chain/converter.hpp>
 #include <boost/assign/auto_size/chain/is_reference_wrapper.hpp>
 
-// Maps (R1,R2) to a reference that is convertible to by each elem of either. 
+// Maps (R1,R2) to a type convertible to by either of the dereference type of
+// either of the input ranges. 
 
 namespace boost{
 namespace assign{

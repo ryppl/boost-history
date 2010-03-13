@@ -44,10 +44,9 @@
 // Acknowledgement: The idea of this class was developed in collaboration 
 // with M.P.G
 //
-// To comply AMAP with the rest of the Boost.Assign framework, has method 
-// range<int>() but its size must be specified explicitly which defeats 
-// the purpose of this framework. A better approach using boost::chain is a work
-// in progress. 
+// range<int>() is provided to achieve conformity with the rest of Boost.Assign
+// but it is in fact ill suited here. The policy P, however, will usually
+// interoperate with chain_auto_convert which serves a similar purpose.
 
 namespace boost{
 namespace assign{
