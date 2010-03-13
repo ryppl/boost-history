@@ -102,13 +102,13 @@ struct Teller {
         for(int i=10; i>0;--i)
         {
             try {
-                BOOST_STM_OUTER_TRANSACTION(_) {
+                BOOST_STM_E_TRANSACTION {
                     int amount=random() % 1000;
                     int acc1=random() % bank_->accounts.size();
                     int acc2=random() % bank_->accounts.size();
                     bank_->accounts[acc1]->Withdraw(amount);
                     bank_->accounts[acc2]->Deposit(amount+1);
-                } BOOST_STM_RETRY
+                } BOOST_STM_E_END_TRANSACTION;
             }
             CATCH_AND_PRINT_ALL
         }
@@ -290,7 +290,7 @@ void term_hd() {
 }
 int main() {
     try {
-    std::terminate_handler x = std::set_terminate(term_hd);
+    std::set_terminate(term_hd);
     transaction::enable_dynamic_priority_assignment();
     transaction::do_deferred_updating();
     transaction::initialize();

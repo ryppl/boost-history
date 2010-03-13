@@ -111,18 +111,18 @@ public:
     // remove a node if its value == val
     void remove(const T& val)
     {
-        BOOST_STM_TRANSACTION(_) {
+        BOOST_STM_E_TRANSACTION {
             // find the node whose val matches the request
-            read_ptr<list_node<T> > prev(_, head_);
-            read_ptr<list_node<T> > curr(_, prev->next_);
+            read_ptr<list_node<T> > prev(BOOST_STM_CURRENT, head_);
+            read_ptr<list_node<T> > curr(BOOST_STM_CURRENT, prev->next_);
             while (curr) {
                 // if we find the node, disconnect it and end the search
                 if (curr->value_ == val) {
                     make_write_ptr<static_poly>(prev)->next_=curr->next_;
                     // delete curr...
-                    BOOST_STM_TX_DELETE_PTR(_,curr);
+                    BOOST_STM_E_DELETE_PTR(curr);
                     //--size_;
-                    --(make_write_ptr<static_poly>(_, this)->size_);
+                    --(make_write_ptr<static_poly>(BOOST_STM_CURRENT, this)->size_);
                     //write_ptr<list<T> > that(_, this);
                     //++(that->size_);
                     break;
@@ -133,7 +133,7 @@ public:
                 prev = curr;
                 curr = prev->next_;
             }
-        }  BOOST_STM_RETRY
+        }  BOOST_STM_E_END_TRANSACTION;
     }
 
 };
@@ -194,9 +194,9 @@ void insert2_th() {
 
 void remove2() {
     //thread_initializer thi;
-    BOOST_STM_TRANSACTION(_) {
+    BOOST_STM_E_TRANSACTION {
         l.remove(2);
-    } BOOST_STM_RETRY
+    } BOOST_STM_E_END_TRANSACTION;
 }
 
 void insert3_th() {
@@ -279,7 +279,7 @@ void term_hd() {
 }
 int main() {
     try {
-    std::terminate_handler x = std::set_terminate(term_hd);
+    std::set_terminate(term_hd);
     transaction::enable_dynamic_priority_assignment();
     transaction::do_deferred_updating();
     transaction::initialize();

@@ -120,14 +120,16 @@ public:
 
     void insert(const T& val) {
         BOOST_STM_E_TRANSACTION {
+            {boost::lock_guard<boost::mutex> lk(log_mutex);
+            std::cout << &BOOST_STM_CURRENT << " " << BOOST_STM_CURRENT.parent() << " " << boost::this_thread::get_id() << " $$$$$INFO insert " << __FILE__ << "[" << __LINE__ << "]" << std::endl;
+            }
             list_node<T> * prev = head_;
             list_node<T> * curr = prev->next_;
             while (curr!=0) {
-                if (curr->value_ == val) {
-        std::cout << __FILE__ << "["<<__LINE__<<"] return" << std::endl;\
-                    BOOST_STM_E_RETURN_NOTHING;
-                }
-                //~ if (curr->value_ == val) return;
+                //~ if (curr->value_ == val) {
+                    //~ BOOST_STM_E_RETURN_NOTHING;
+                //~ }
+                if (curr->value_ == val) return;
                 else if (curr->value_ > val) break;
                 prev = curr;
                 curr = curr->next_;
@@ -155,7 +157,10 @@ public:
     // remove a node if its value == val
     void remove(const T& val)
     {
-        BOOST_STM_TRANSACTION(_) {
+        BOOST_STM_E_TRANSACTION {
+            {boost::lock_guard<boost::mutex> lk(log_mutex);
+            std::cout << &BOOST_STM_CURRENT << " " << BOOST_STM_CURRENT.parent() << " " << boost::this_thread::get_id() << " $$$$$INFO remove " << __FILE__ << "[" << __LINE__ << "]" << std::endl;
+            }
             // find the node whose val matches the request
             list_node<T> * prev=head_;
             list_node<T> * curr=prev->next_;
@@ -164,7 +169,7 @@ public:
                 if (curr->value_ == val) {
                     prev->next_=curr->next_;
                     // delete curr...
-                    BOOST_STM_TX_DELETE_PTR(_,curr);
+                    BOOST_STM_E_DELETE_PTR(curr);
                     --size_;
                     break;
                 } else if (curr->value_ > val) {
@@ -174,7 +179,7 @@ public:
                 prev = curr;
                 curr = prev->next_;
             }
-        }  BOOST_STM_RETRY
+        }  BOOST_STM_E_END_TRANSACTION;
     }
 
 };
@@ -218,6 +223,10 @@ void insert1_th() {
     thread_initializer thi;
     try {
         BOOST_STM_E_TRANSACTION {
+            {boost::lock_guard<boost::mutex> lk(log_mutex);
+            std::cout << &BOOST_STM_CURRENT << " " << BOOST_STM_CURRENT.parent() << " " << boost::this_thread::get_id() << " $$$$$INFO insert1_th " << __FILE__ << "[" << __LINE__ << "]" << std::endl;
+            }
+
             l.insert(1);
         }  BOOST_STM_E_END_TRANSACTION;
     } 
@@ -228,6 +237,9 @@ void insert2_th() {
     try {
     //~ BOOST_STM_OUTER_TRANSACTION(_) {
         BOOST_STM_E_TRANSACTION {
+            {boost::lock_guard<boost::mutex> lk(log_mutex);
+            std::cout << &BOOST_STM_CURRENT << " " << BOOST_STM_CURRENT.parent() << " " << boost::this_thread::get_id() << " $$$$$INFO insert2_th " << __FILE__ << "[" << __LINE__ << "]" << std::endl;
+            }
             l.insert(2);
         } BOOST_STM_E_END_TRANSACTION;
     //~ } BOOST_STM_RETRY
@@ -237,18 +249,26 @@ void insert2_th() {
 void insert3_th() {
     thread_initializer thi;
     try {
-    BOOST_STM_OUTER_TRANSACTION(_) {
+    //~ BOOST_STM_OUTER_TRANSACTION(_) {
+    BOOST_STM_E_TRANSACTION {
+            {boost::lock_guard<boost::mutex> lk(log_mutex);
+            std::cout << &BOOST_STM_CURRENT << " " << BOOST_STM_CURRENT.parent() << " " << boost::this_thread::get_id() << " $$$$$INFO insert3_th " << __FILE__ << "[" << __LINE__ << "]" << std::endl;
+            }
         l.insert(3);
-    } BOOST_STM_RETRY
+    } BOOST_STM_E_END_TRANSACTION;
+    //~ } BOOST_STM_RETRY
     } 
     CATCH_AND_PRINT_ALL
 }
 
 bool remove(int val) {
     //thread_initializer thi;
-    BOOST_STM_TRANSACTION(_) {
+    BOOST_STM_E_TRANSACTION {
+            {boost::lock_guard<boost::mutex> lk(log_mutex);
+            std::cout << &BOOST_STM_CURRENT << " " << BOOST_STM_CURRENT.parent() << " " << boost::this_thread::get_id() << " $$$$$INFO remove " << __FILE__ << "[" << __LINE__ << "]" << std::endl;
+            }
         l.remove(val);
-    } BOOST_STM_RETRY
+    } BOOST_STM_E_END_TRANSACTION;
     return true;
 }
 
@@ -335,7 +355,7 @@ void term_hd() {
 }
 int main() {
     try {
-    std::terminate_handler x = std::set_terminate(term_hd);
+    std::set_terminate(term_hd);
     transaction::enable_dynamic_priority_assignment();
     transaction::do_deferred_updating();
     transaction::initialize();
