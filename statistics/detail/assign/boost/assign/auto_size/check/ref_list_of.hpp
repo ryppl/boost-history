@@ -136,13 +136,14 @@ void check_ref_list_of()
     {	
         val_ a, b, c, d, e, f, g, h;
         BOOST_AUTO(tmp1,ref_list_of(a)(b)(c)(d));
-        BOOST_AUTO(tmp2,cref_list_of(e)(f)(g)(h)); // For now (rvalue otherwise)
+        // BOOST_AUTO(tmp2,cref_list_of(e)(f)(g)(h)); // For now (rvalue otherwise)
         check_chain(
            tmp1,
-           tmp2,
+           cref_list_of(e)(f)(g)(h),
            a,b,c,d,e,f,g,h);
     }
 
+    // TODO comparison operators
 
 }
 

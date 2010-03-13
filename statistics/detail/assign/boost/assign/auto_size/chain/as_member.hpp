@@ -8,21 +8,10 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_AUTO_SIZE_DETAIL_ARRAY_CHAINABLE_ER_2010_HPP
 #define BOOST_ASSIGN_AUTO_SIZE_DETAIL_ARRAY_CHAINABLE_ER_2010_HPP
+#include <boost/assign/auto_size/chain/auto_convert.hpp>
 
 namespace boost{
 namespace assign{
-
-namespace result_of{
-namespace chain_auto_convert{
-    template<typename R1,typename R2>
-    struct convert_wrapper;  
-}// chain_auto_convert
-}// result_of
-
-template<typename R1,typename R2> 
-typename result_of::chain_auto_convert::convert_wrapper<R1,R2>::type
-chain_auto_convert_convert_wrapper(R1& r1,R2& r2);
-
 namespace detail{
 
     // D is a derived type
@@ -36,16 +25,16 @@ namespace detail{
         template<typename R>
         typename result_of_chain_auto_convert<D,R>::type
         chain_auto_convert(R& r){ 
-            return assign::chain_auto_convert_convert_wrapper(
+            return assign::chain_auto_convert(
                 static_cast<D&>(*this),
                 r
             ); 
         }
 
         template<typename R>
-        typename result_of_chain_auto_convert<const D,R>::type
-        chain_auto_convert(R& r)const{ 
-            return assign::chain_auto_convert_convert_wrapper(
+        typename result_of_chain_auto_convert<const D,const R>::type
+        chain_auto_convert(const R& r)const{ 
+            return assign::chain_auto_convert(
                 static_cast<const D&>(*this),
                 r
             ); 

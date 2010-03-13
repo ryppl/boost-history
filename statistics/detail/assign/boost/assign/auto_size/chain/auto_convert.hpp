@@ -77,32 +77,32 @@ namespace chain_auto_convert{
     template<typename Conv,typename R1,typename R2> 
     typename result_of::chain_auto_convert::generic<Conv,R1,R2>::type
     chain_auto_convert(R1& r1, R2& r2){
-        typedef result_of::chain_auto_convert::generic<Conv,R1,R2> g_;
-        return g_::call(r1,r2);
+        typedef result_of::chain_auto_convert::generic<Conv,R1,R2> caller_;
+        return caller_::call(r1,r2);
     }
 
-    // ignore_wrapper
-    template<typename R1,typename R2> 
-    typename result_of::chain_auto_convert::ignore_wrapper<R1,R2>::type
-    chain_auto_convert_ignore_wrapper(R1& r1,R2& r2){
-        typedef result_of::chain_auto_convert::ignore_wrapper<R1,R2> g_;
-        return g_::call(r1,r2);
+    template<typename Conv,typename R1,typename R2> 
+    typename result_of::chain_auto_convert::generic<Conv,
+        const R1,const R2>::type
+    chain_auto_convert(const R1& r1, const R2& r2){
+        return chain_auto_convert<Conv,const R1,const R2>(r1,r2);
     }
 
-    // convert_wrapper
-    template<typename R1,typename R2> 
-    typename result_of::chain_auto_convert::convert_wrapper<R1,R2>::type
-    chain_auto_convert_convert_wrapper(R1& r1,R2& r2){
-        typedef result_of::chain_auto_convert::convert_wrapper<R1,R2> g_;
-        return g_::call(r1,r2);
-    }
-
-    // default
+    // default uses convert_wrapper
     template<typename R1,typename R2> 
     typename result_of::chain_auto_convert::convert_wrapper<R1,R2>::type
     chain_auto_convert(R1& r1,R2& r2){
-        typedef result_of::chain_auto_convert::convert_wrapper<R1,R2> g_;
-        return g_::call(r1,r2);
+        typedef result_of::chain_auto_convert::convert_wrapper<R1,R2> caller_;
+        return caller_::call(r1,r2);
+    }
+
+    template<typename R1,typename R2> 
+    typename result_of::chain_auto_convert::convert_wrapper<
+        const R1,const R2>::type
+    chain_auto_convert(const R1& r1,const R2& r2){
+        typedef result_of::chain_auto_convert::convert_wrapper<
+            const R1,const R2> caller_;
+        return caller_::call(r1,r2);
     }
 
 }// assign

@@ -32,8 +32,8 @@ struct converter{
     template<typename U>
     T operator()(U& arg)const{ return arg; }
 
-    template<typename U>
-    T operator()(const U& arg)const{ return arg; }
+    //template<typename U>
+    //T operator()(const U& arg)const{ return arg; }
 
 };
 
@@ -50,8 +50,7 @@ namespace result_of{
         
         static void internal_check(){
             BOOST_MPL_ASSERT((boost::is_convertible<U,T>));
-            typedef boost::transform_range<adaptor_,Rng> new_range_;
-            typedef typename boost::range_reference<new_range_>::type new_ref_;
+            typedef typename boost::range_reference<type>::type new_ref_;
             BOOST_MPL_ASSERT((boost::is_same<new_ref_,T>));
         }
         static type call(Rng& r){
@@ -62,8 +61,6 @@ namespace result_of{
     
 }
 
-    // Takes care of const Rng, I think.
-
     template<typename T,typename Rng>
     typename detail::result_of::convert_range<T,Rng>::type 
     convert_range( Rng& r)
@@ -71,11 +68,26 @@ namespace result_of{
         typedef detail::result_of::convert_range<T,Rng> caller_;
         return caller_::call( r );   
     }
+
+    template<typename T,typename Rng>
+    typename detail::result_of::convert_range<T,const Rng>::type 
+    convert_range( const Rng& r)
+    {    
+        return convert_range<T,const Rng>(r);
+    }
     
     template<typename T,typename Rng>
     inline typename detail::result_of
     	::convert_range<T,Rng>::type 
     operator|( Rng& r, const detail::functional::converter<T>& f )
+    {
+        return convert_range<T>(r);   
+    }
+
+    template<typename T,typename Rng>
+    inline typename detail::result_of
+    	::convert_range<T,const Rng>::type 
+    operator|( const Rng& r, const detail::functional::converter<T>& f )
     {
         return convert_range<T>(r);   
     }
