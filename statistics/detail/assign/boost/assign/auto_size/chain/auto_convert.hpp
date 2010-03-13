@@ -64,8 +64,8 @@ namespace chain_auto_convert{
         {};
 
     template<typename R1,typename R2>
-    struct convert_wrapper  
-        : chain_auto_convert::generic<detail::pair_traits::meta::convert_wrapper,R1,R2>
+    struct apply_conversion  
+        : chain_auto_convert::generic<detail::pair_traits::meta::apply_conversion,R1,R2>
         {};
 
 }// chain_auto_convert
@@ -86,19 +86,19 @@ namespace chain_auto_convert{
         return chain_auto_convert<Conv,const R1,const R2>(r1,r2);
     }
 
-    // default uses convert_wrapper
+    // default uses apply_conversion
     template<typename R1,typename R2> 
-    typename result_of::chain_auto_convert::convert_wrapper<R1,R2>::type
+    typename result_of::chain_auto_convert::apply_conversion<R1,R2>::type
     chain_auto_convert(R1& r1,R2& r2){
-        typedef result_of::chain_auto_convert::convert_wrapper<R1,R2> caller_;
+        typedef result_of::chain_auto_convert::apply_conversion<R1,R2> caller_;
         return caller_::call(r1,r2);
     }
 
     template<typename R1,typename R2> 
-    typename result_of::chain_auto_convert::convert_wrapper<
+    typename result_of::chain_auto_convert::apply_conversion<
         const R1,const R2>::type
     chain_auto_convert(const R1& r1,const R2& r2){
-        typedef result_of::chain_auto_convert::convert_wrapper<
+        typedef result_of::chain_auto_convert::apply_conversion<
             const R1,const R2> caller_;
         return caller_::call(r1,r2);
     }

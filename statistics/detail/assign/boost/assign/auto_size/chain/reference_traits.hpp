@@ -14,12 +14,16 @@
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/or.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/remove_const.hpp>
 #include <boost/type_traits/remove_reference.hpp>
-#include <boost/assign/auto_size/chain/is_reference_wrapper.hpp>
-#include <boost/assign/auto_size/chain/reference_wrapper_traits.hpp>
+//#include <boost/assign/auto_size/chain/is_reference_wrapper.hpp>
+//#include <boost/assign/auto_size/chain/reference_wrapper_traits.hpp>
 
-// Map T, a reference or a reference_wrapper, to a convertible type.
+#include <boost/assign/auto_size/chain/conversion_traits.hpp>
+
+// Let T = U or U&, and U = V or const V. Maps T to a convertible type using the
+// information provided by the conversion traits
 
 namespace boost{
 namespace assign{
@@ -52,13 +56,13 @@ namespace reference_traits{
     };
 
     template<typename T>
-    struct convert_wrapper{
+    struct convert_to{
         typedef typename reference_traits::remove_cref<T>::type value_;
-        typedef typename detail::is_ref_wrapper<value_>::type is_rw_;
-        typedef typename boost::mpl::eval_if_c<     
-            is_rw_::value,
-            ref_wrapper_traits::convertible_to<value_>,
-            boost::mpl::identity<T>    
+        typedef typename conversion_traits::convert_to<value_>::type to_;
+        typedef typename boost::mpl::if_c<     
+            boost::is_same<to_,value_>::value,
+            T,
+            to_    
         >::type type;
     };
 

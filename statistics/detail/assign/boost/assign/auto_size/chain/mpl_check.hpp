@@ -22,29 +22,28 @@ namespace assign{
 namespace detail{
 
 namespace chain_mpl_check{
-    template<typename T> struct dummy_wrapper;
-}
-
-template<typename T>
-struct is_ref_wrapper<
-    chain_mpl_check::dummy_wrapper<T> 
-    > : boost::mpl::bool_<true>{};
-
-namespace ref_wrapper_traits{
-    template<typename T>
-    struct tag_of<chain_mpl_check::dummy_wrapper<T> >{ 
-        typedef tag::default_ type; 
-    };
-}// ref_wrapper_traits
-
-namespace chain_mpl_check{
-
     template<typename T>
     struct dummy_wrapper{ 
         operator T& ()const{ return *this->ref; }
         private:
         T* ref;
     };
+}// chain_mpl_check
+namespace conversion_traits{
+
+    template<typename T> 
+    struct tag_of< chain_mpl_check::dummy_wrapper<T> > 
+        : tag::reference_to_inner_value{};
+
+}// conversion_traits
+namespace inner_value_traits{
+
+    template<typename T> 
+    struct tag_of< chain_mpl_check::dummy_wrapper<T> > 
+        : tag::nested_parameter{};
+
+}// inner_value_traits
+namespace chain_mpl_check{
 
     template<typename T,bool is = true>
     struct assert_cond{
@@ -60,10 +59,10 @@ namespace chain_mpl_check{
     struct assert_eq  
         : assert_cond<boost::is_same<T,U>,is>{};
 
-namespace convert_wrapper{
+namespace apply_conversion{
 
     template<typename T>
-    struct helper : reference_traits::convert_wrapper<T> {};
+    struct helper : reference_traits::convert_to<T> {};
 
     template<typename T,typename U,bool is = true>
     struct assert_eq 
@@ -72,11 +71,11 @@ namespace convert_wrapper{
 
 }
 namespace pair_traits{
-namespace convert_wrapper{
+namespace apply_conversion{
 
     template<typename T,typename U>
     struct helper : 
-        detail::pair_traits::meta::convert_wrapper::template apply<T,U> {};
+        detail::pair_traits::meta::apply_conversion::template apply<T,U> {};
 
     template<typename T,typename U,typename V,bool is = true>
     struct assert_eq 
@@ -94,7 +93,7 @@ namespace convert_wrapper{
 namespace pair_range_traits{
 
     template<typename R1,typename R2>
-    struct helper : detail::pair_range_traits::convert_wrapper<R1,R2>{};
+    struct helper : detail::pair_range_traits::apply_conversion<R1,R2>{};
     
     template<typename R1,typename R2,typename T>
     struct assert_eq : chain_mpl_check::assert_eq<
@@ -145,113 +144,113 @@ void compound()
     typedef const awcv_  cawcv_;
     typedef const acwcv_ cacwcv_;
     
-    convert_wrapper::assert_eq< v_,    v_   >();
-    convert_wrapper::assert_eq< cv_,   cv_  >();
-    convert_wrapper::assert_eq< r_,    r_   >();
-    convert_wrapper::assert_eq< cr_,   cr_  >();
+    apply_conversion::assert_eq< v_,    v_   >();
+    apply_conversion::assert_eq< cv_,   cv_  >();
+    apply_conversion::assert_eq< r_,    r_   >();
+    apply_conversion::assert_eq< cr_,   cr_  >();
 
-    convert_wrapper::assert_eq< wv_,   r_   >();
-    convert_wrapper::assert_eq< wcv_,  cr_  >();
+    apply_conversion::assert_eq< wv_,   r_   >();
+    apply_conversion::assert_eq< wcv_,  cr_  >();
 
-    convert_wrapper::assert_eq< cwv_,  r_   >();
-    convert_wrapper::assert_eq< cwcv_, cr_  >();
+    apply_conversion::assert_eq< cwv_,  r_   >();
+    apply_conversion::assert_eq< cwcv_, cr_  >();
 
-    convert_wrapper::assert_eq< rwv_,  r_   >();
-    convert_wrapper::assert_eq< rwcv_, cr_  >();
+    apply_conversion::assert_eq< rwv_,  r_   >();
+    apply_conversion::assert_eq< rwcv_, cr_  >();
 
-    convert_wrapper::assert_eq< crwv_,  r_  >();
-    convert_wrapper::assert_eq< crwcv_, cr_ >();
+    apply_conversion::assert_eq< crwv_,  r_  >();
+    apply_conversion::assert_eq< crwcv_, cr_ >();
   
     namespace pt = pair_traits;
-    pt::convert_wrapper::assert_eq< v_,     v_,     v_  >();
-    pt::convert_wrapper::assert_eq< v_,     cv_,    cv_ >();
-    pt::convert_wrapper::assert_eq< v_,     r_,     v_  >();
-    pt::convert_wrapper::assert_eq< v_,     cr_,    cv_ >();
-    pt::convert_wrapper::assert_eq< v_,     wv_,    v_  >();
-    pt::convert_wrapper::assert_eq< v_,     wcv_,   cv_ >();
-    pt::convert_wrapper::assert_eq< v_,     cwv_,   v_  >();
-    pt::convert_wrapper::assert_eq< v_,     cwcv_,  cv_ >();
-    pt::convert_wrapper::assert_eq< v_,     rwv_,   v_  >();
-    pt::convert_wrapper::assert_eq< v_,     rwcv_,  cv_ >();
-    pt::convert_wrapper::assert_eq< v_,     crwv_,  v_  >();
-    pt::convert_wrapper::assert_eq< v_,     crwcv_, cv_ >();
+    pt::apply_conversion::assert_eq< v_,     v_,     v_  >();
+    pt::apply_conversion::assert_eq< v_,     cv_,    cv_ >();
+    pt::apply_conversion::assert_eq< v_,     r_,     v_  >();
+    pt::apply_conversion::assert_eq< v_,     cr_,    cv_ >();
+    pt::apply_conversion::assert_eq< v_,     wv_,    v_  >();
+    pt::apply_conversion::assert_eq< v_,     wcv_,   cv_ >();
+    pt::apply_conversion::assert_eq< v_,     cwv_,   v_  >();
+    pt::apply_conversion::assert_eq< v_,     cwcv_,  cv_ >();
+    pt::apply_conversion::assert_eq< v_,     rwv_,   v_  >();
+    pt::apply_conversion::assert_eq< v_,     rwcv_,  cv_ >();
+    pt::apply_conversion::assert_eq< v_,     crwv_,  v_  >();
+    pt::apply_conversion::assert_eq< v_,     crwcv_, cv_ >();
 
-    pt::convert_wrapper::assert_eq< cv_,    cv_,    cv_ >();
-    pt::convert_wrapper::assert_eq< cv_,    r_,     cv_ >();
-    pt::convert_wrapper::assert_eq< cv_,    cr_,    cv_ >();
-    pt::convert_wrapper::assert_eq< cv_,    wv_,    cv_ >();
-    pt::convert_wrapper::assert_eq< cv_,    wcv_,   cv_ >();
-    pt::convert_wrapper::assert_eq< cv_,    cwv_,   cv_ >();
-    pt::convert_wrapper::assert_eq< cv_,    cwcv_,  cv_ >();
-    pt::convert_wrapper::assert_eq< cv_,    rwv_,   cv_ >();
-    pt::convert_wrapper::assert_eq< cv_,    rwcv_,  cv_ >();
-    pt::convert_wrapper::assert_eq< cv_,    crwv_,  cv_ >();
-    pt::convert_wrapper::assert_eq< cv_,    crwcv_, cv_ >();
+    pt::apply_conversion::assert_eq< cv_,    cv_,    cv_ >();
+    pt::apply_conversion::assert_eq< cv_,    r_,     cv_ >();
+    pt::apply_conversion::assert_eq< cv_,    cr_,    cv_ >();
+    pt::apply_conversion::assert_eq< cv_,    wv_,    cv_ >();
+    pt::apply_conversion::assert_eq< cv_,    wcv_,   cv_ >();
+    pt::apply_conversion::assert_eq< cv_,    cwv_,   cv_ >();
+    pt::apply_conversion::assert_eq< cv_,    cwcv_,  cv_ >();
+    pt::apply_conversion::assert_eq< cv_,    rwv_,   cv_ >();
+    pt::apply_conversion::assert_eq< cv_,    rwcv_,  cv_ >();
+    pt::apply_conversion::assert_eq< cv_,    crwv_,  cv_ >();
+    pt::apply_conversion::assert_eq< cv_,    crwcv_, cv_ >();
 
-    pt::convert_wrapper::assert_eq< r_,     r_,     r_  >();
-    pt::convert_wrapper::assert_eq< r_,     cr_,    cr_ >();
-    pt::convert_wrapper::assert_eq< r_,     wv_,    r_  >();
-    pt::convert_wrapper::assert_eq< r_,     wcv_,   cr_ >();
-    pt::convert_wrapper::assert_eq< r_,     cwv_,   r_  >();
-    pt::convert_wrapper::assert_eq< r_,     cwcv_,  cr_ >();
-    pt::convert_wrapper::assert_eq< r_,     rwv_,   r_  >();
-    pt::convert_wrapper::assert_eq< r_,     rwcv_,  cr_ >();
-    pt::convert_wrapper::assert_eq< r_,     crwv_,  r_  >();
-    pt::convert_wrapper::assert_eq< r_,     crwcv_, cr_ >();
+    pt::apply_conversion::assert_eq< r_,     r_,     r_  >();
+    pt::apply_conversion::assert_eq< r_,     cr_,    cr_ >();
+    pt::apply_conversion::assert_eq< r_,     wv_,    r_  >();
+    pt::apply_conversion::assert_eq< r_,     wcv_,   cr_ >();
+    pt::apply_conversion::assert_eq< r_,     cwv_,   r_  >();
+    pt::apply_conversion::assert_eq< r_,     cwcv_,  cr_ >();
+    pt::apply_conversion::assert_eq< r_,     rwv_,   r_  >();
+    pt::apply_conversion::assert_eq< r_,     rwcv_,  cr_ >();
+    pt::apply_conversion::assert_eq< r_,     crwv_,  r_  >();
+    pt::apply_conversion::assert_eq< r_,     crwcv_, cr_ >();
 
-    pt::convert_wrapper::assert_eq< cr_,    cr_,    cr_ >();
-    pt::convert_wrapper::assert_eq< cr_,    wv_,    cr_ >();
-    pt::convert_wrapper::assert_eq< cr_,    wcv_,   cr_ >();
-    pt::convert_wrapper::assert_eq< cr_,    cwv_,   cr_ >();
-    pt::convert_wrapper::assert_eq< cr_,    cwcv_,  cr_ >();
-    pt::convert_wrapper::assert_eq< cr_,    rwv_,   cr_ >();
-    pt::convert_wrapper::assert_eq< cr_,    rwcv_,  cr_ >();
-    pt::convert_wrapper::assert_eq< cr_,    crwv_,  cr_ >();
-    pt::convert_wrapper::assert_eq< cr_,    crwcv_, cr_ >();
+    pt::apply_conversion::assert_eq< cr_,    cr_,    cr_ >();
+    pt::apply_conversion::assert_eq< cr_,    wv_,    cr_ >();
+    pt::apply_conversion::assert_eq< cr_,    wcv_,   cr_ >();
+    pt::apply_conversion::assert_eq< cr_,    cwv_,   cr_ >();
+    pt::apply_conversion::assert_eq< cr_,    cwcv_,  cr_ >();
+    pt::apply_conversion::assert_eq< cr_,    rwv_,   cr_ >();
+    pt::apply_conversion::assert_eq< cr_,    rwcv_,  cr_ >();
+    pt::apply_conversion::assert_eq< cr_,    crwv_,  cr_ >();
+    pt::apply_conversion::assert_eq< cr_,    crwcv_, cr_ >();
 
-    pt::convert_wrapper::assert_eq< wv_,    wv_,    r_  >();
-    pt::convert_wrapper::assert_eq< wv_,    wcv_,   cr_ >();
-    pt::convert_wrapper::assert_eq< wv_,    cwv_,   r_  >();
-    pt::convert_wrapper::assert_eq< wv_,    cwcv_,  cr_ >();
-    pt::convert_wrapper::assert_eq< wv_,    rwv_,   r_  >();
-    pt::convert_wrapper::assert_eq< wv_,    rwcv_,  cr_ >();
-    pt::convert_wrapper::assert_eq< wv_,    crwv_,  r_  >();
-    pt::convert_wrapper::assert_eq< wv_,    crwcv_, cr_ >();
+    pt::apply_conversion::assert_eq< wv_,    wv_,    r_  >();
+    pt::apply_conversion::assert_eq< wv_,    wcv_,   cr_ >();
+    pt::apply_conversion::assert_eq< wv_,    cwv_,   r_  >();
+    pt::apply_conversion::assert_eq< wv_,    cwcv_,  cr_ >();
+    pt::apply_conversion::assert_eq< wv_,    rwv_,   r_  >();
+    pt::apply_conversion::assert_eq< wv_,    rwcv_,  cr_ >();
+    pt::apply_conversion::assert_eq< wv_,    crwv_,  r_  >();
+    pt::apply_conversion::assert_eq< wv_,    crwcv_, cr_ >();
 
-    pt::convert_wrapper::assert_eq< wcv_,   wcv_,   cr_ >();
-    pt::convert_wrapper::assert_eq< wcv_,   cwv_,   cr_ >();
-    pt::convert_wrapper::assert_eq< wcv_,   cwcv_,  cr_ >();
-    pt::convert_wrapper::assert_eq< wcv_,   rwv_,   cr_ >();
-    pt::convert_wrapper::assert_eq< wcv_,   rwcv_,  cr_ >();
-    pt::convert_wrapper::assert_eq< wcv_,   crwv_,  cr_ >();
-    pt::convert_wrapper::assert_eq< wcv_,   crwcv_, cr_ >();
+    pt::apply_conversion::assert_eq< wcv_,   wcv_,   cr_ >();
+    pt::apply_conversion::assert_eq< wcv_,   cwv_,   cr_ >();
+    pt::apply_conversion::assert_eq< wcv_,   cwcv_,  cr_ >();
+    pt::apply_conversion::assert_eq< wcv_,   rwv_,   cr_ >();
+    pt::apply_conversion::assert_eq< wcv_,   rwcv_,  cr_ >();
+    pt::apply_conversion::assert_eq< wcv_,   crwv_,  cr_ >();
+    pt::apply_conversion::assert_eq< wcv_,   crwcv_, cr_ >();
 
-    pt::convert_wrapper::assert_eq< cwv_,   cwv_,   r_  >();
-    pt::convert_wrapper::assert_eq< cwv_,   cwcv_,  cr_ >();
-    pt::convert_wrapper::assert_eq< cwv_,   rwv_,   r_  >();
-    pt::convert_wrapper::assert_eq< cwv_,   rwcv_,  cr_ >();
-    pt::convert_wrapper::assert_eq< cwv_,   crwv_,  r_  >();
-    pt::convert_wrapper::assert_eq< cwv_,   crwcv_, cr_ >();
+    pt::apply_conversion::assert_eq< cwv_,   cwv_,   r_  >();
+    pt::apply_conversion::assert_eq< cwv_,   cwcv_,  cr_ >();
+    pt::apply_conversion::assert_eq< cwv_,   rwv_,   r_  >();
+    pt::apply_conversion::assert_eq< cwv_,   rwcv_,  cr_ >();
+    pt::apply_conversion::assert_eq< cwv_,   crwv_,  r_  >();
+    pt::apply_conversion::assert_eq< cwv_,   crwcv_, cr_ >();
 
-    pt::convert_wrapper::assert_eq< cwcv_,  cwcv_,  cr_ >();
-    pt::convert_wrapper::assert_eq< cwcv_,  rwv_,   cr_ >();
-    pt::convert_wrapper::assert_eq< cwcv_,  rwcv_,  cr_ >();
-    pt::convert_wrapper::assert_eq< cwcv_,  crwv_,  cr_ >();
-    pt::convert_wrapper::assert_eq< cwcv_,  crwcv_, cr_ >();
+    pt::apply_conversion::assert_eq< cwcv_,  cwcv_,  cr_ >();
+    pt::apply_conversion::assert_eq< cwcv_,  rwv_,   cr_ >();
+    pt::apply_conversion::assert_eq< cwcv_,  rwcv_,  cr_ >();
+    pt::apply_conversion::assert_eq< cwcv_,  crwv_,  cr_ >();
+    pt::apply_conversion::assert_eq< cwcv_,  crwcv_, cr_ >();
 
-    pt::convert_wrapper::assert_eq< rwv_,   rwv_,   r_  >();
-    pt::convert_wrapper::assert_eq< rwv_,   rwcv_,  cr_ >();
-    pt::convert_wrapper::assert_eq< rwv_,   crwv_,  r_  >();
-    pt::convert_wrapper::assert_eq< rwv_,   crwcv_, cr_ >();
+    pt::apply_conversion::assert_eq< rwv_,   rwv_,   r_  >();
+    pt::apply_conversion::assert_eq< rwv_,   rwcv_,  cr_ >();
+    pt::apply_conversion::assert_eq< rwv_,   crwv_,  r_  >();
+    pt::apply_conversion::assert_eq< rwv_,   crwcv_, cr_ >();
 
-    pt::convert_wrapper::assert_eq< rwcv_,  rwcv_,  cr_ >();
-    pt::convert_wrapper::assert_eq< rwcv_,  crwv_,  cr_ >();
-    pt::convert_wrapper::assert_eq< rwcv_,  crwcv_, cr_ >();
+    pt::apply_conversion::assert_eq< rwcv_,  rwcv_,  cr_ >();
+    pt::apply_conversion::assert_eq< rwcv_,  crwv_,  cr_ >();
+    pt::apply_conversion::assert_eq< rwcv_,  crwcv_, cr_ >();
 
-    pt::convert_wrapper::assert_eq< crwv_,  crwv_,  r_  >();
-    pt::convert_wrapper::assert_eq< crwv_,  crwcv_, cr_ >();
+    pt::apply_conversion::assert_eq< crwv_,  crwv_,  r_  >();
+    pt::apply_conversion::assert_eq< crwv_,  crwcv_, cr_ >();
 
-    pt::convert_wrapper::assert_eq< crwv_,  crwcv_, cr_ >();
+    pt::apply_conversion::assert_eq< crwv_,  crwcv_, cr_ >();
 
     namespace prt = pair_range_traits;
     prt::assert_checks<awv_,awv_>();

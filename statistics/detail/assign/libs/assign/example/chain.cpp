@@ -19,7 +19,7 @@
 void example_chain(std::ostream& os)
 {
 
-    boost::assign::detail::chain_mpl_check::compound();
+    //boost::assign::detail::chain_mpl_check::compound();
  
     using namespace boost::assign;
     using namespace boost::assign::detail;
@@ -31,9 +31,10 @@ void example_chain(std::ostream& os)
     ar_ ar; ar.assign( -1 );
 	BOOST_AUTO(tmp1,ref_list_of(a)(b)(c)(d)); 
 	BOOST_AUTO(tmp2,cref_list_of(e)(f)(g)(h)); 
-    
+        
     os << *boost::begin(ref_list_of(e)(f)(g)(h).chain_auto_convert(cref_list_of(e)(f)(g)(h))) << std::endl;
-        //detail::add_const(tmp1).chain_auto_convert(tmp2)); 
+
+    //    //detail::add_const(tmp1).chain_auto_convert(tmp2)); 
 /*        
     os << *boost::next(boost::begin(tmp3),0) << std::endl;// EXC_BAD_ACCESS if add_const 
     os << *boost::next(boost::begin(tmp3),1) << std::endl;

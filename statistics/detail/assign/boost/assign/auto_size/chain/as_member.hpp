@@ -20,7 +20,7 @@ namespace detail{
 
         template<typename D1,typename R>
         struct result_of_chain_auto_convert 
-            : assign::result_of::chain_auto_convert::convert_wrapper<D1,R>{}; 
+            : assign::result_of::chain_auto_convert::apply_conversion<D1,R>{}; 
 
         template<typename R>
         typename result_of_chain_auto_convert<D,R>::type

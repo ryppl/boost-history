@@ -17,6 +17,7 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/remove_const.hpp>
 #include <boost/type_traits/remove_reference.hpp>
+#include <boost/assign/auto_size/chain/conversion_traits.hpp>
 #include <boost/assign/auto_size/chain/reference_traits.hpp>
 
 // Maps (T,U) to a type that both are convertible to. In particular, T and U
@@ -90,9 +91,9 @@ namespace pair_traits{
     };
     
     template<typename T,typename U>
-    struct convert_wrapper : pair_traits::ignore_wrapper<
-        typename reference_traits::convert_wrapper<T>::type,
-        typename reference_traits::convert_wrapper<U>::type
+    struct apply_conversion : pair_traits::ignore_wrapper<
+        typename reference_traits::convert_to<T>::type,
+        typename reference_traits::convert_to<U>::type
     >{};
 
     namespace meta{
@@ -103,7 +104,7 @@ namespace pair_traits{
             struct apply : M<T,U>{};    
         };
         struct ignore_wrapper : meta::helper<pair_traits::ignore_wrapper>{};
-        struct convert_wrapper : meta::helper<pair_traits::convert_wrapper>{};
+        struct apply_conversion : meta::helper<pair_traits::apply_conversion>{};
     }
 
 }// pair_traits

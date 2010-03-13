@@ -44,7 +44,7 @@ namespace pair_range_traits{
             typedef typename boost::remove_const<c_>::type val_;
             typedef detail::is_ref_wrapper<val_> is_wrapper;
             
-            // Expected : (!is_wrapper::value), if Conv = convert_wrapper,
+            // Expected : (!is_wrapper::value), if Conv = apply_conversion,
             // usually,  but not necessarilly, for ex if a ref-wrapper point to 
             // another ref-wrapper.
         };
@@ -57,8 +57,8 @@ namespace pair_range_traits{
      {};
 
     template<typename R1,typename R2>
-    struct convert_wrapper 
-     : pair_range_traits::generic<pair_traits::meta::convert_wrapper,R1,R2>
+    struct apply_conversion 
+     : pair_range_traits::generic<pair_traits::meta::apply_conversion,R1,R2>
      {};
 
 }// pair_range_traits
