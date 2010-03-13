@@ -24,11 +24,10 @@ typename result_of::chain_auto_convert::convert_wrapper<R1,R2>::type
 chain_auto_convert_convert_wrapper(R1& r1,R2& r2);
 
 namespace detail{
-namespace auto_size{
 
     // D is a derived type
 	template<typename D>
-	struct chainable{
+	struct chain_as_member{
 
         template<typename D1,typename R>
         struct result_of_chain_auto_convert 
@@ -54,7 +53,6 @@ namespace auto_size{
 
 	};
     
-}// auto_size
 }// detail
 }// assign
 }// boost
