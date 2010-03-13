@@ -494,7 +494,7 @@ however, achieves a similar goal. Continuing the <a href="#repeat">example</code
 <span class=special>}</span></pre>
 </blockquote>
 
-As of March 2010 this functionality is experimental, so caution is advised in using it. See the <a href="#ref-chain_auto_convert">reference</a>.
+The reference is <a href="#ref-chain_auto_convert">here</a>.
 
 <h3>Functions <code>ref_list_of()</code>, <code>cref_list_of()</code> <a name="ref_list_of"> and variants</h3>
 
@@ -1152,7 +1152,7 @@ The maximum number of arguments to a csv function is <code>BOOST_ASSIGN_CSV_SIZE
   <p> This function joins two ranges into one whose dereferenced type is one that is convertible
   to from those of the two input ranges. In particular, either range may contain reference wrappers 
   if they meet certain traits requirement. This function serves as a sustitute for <a href="#ref-repeat"><code>range()</code></a>
-  within the <a href="#auto_size">auto-size</a> framework. This function is still experimental as of March 2010. </p>
+  within the <a href="#auto_size">auto-size</a> framework. 
   
   <p> <b>Template parameters</b> </p>
 
@@ -1705,8 +1705,9 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
 <p>   
    The successive arguments that are passed to the unary operator must be allocated on the stack. 
    Consequently, this set up is ill-suited for the method <a href="#ref-repeat"><code>range()</code></a> whose argument size must 
-   be specified explicitly (unless its argument has static size), unlike the remainder of this library. As long as the policy
-   exposes iterators, however, it is interoperable with the function <a href="#ref-chain_auto_convert"><code>chain_auto_convert()</code></a> which serves a similar purpose.
+   be specified explicitly, unlike the remainder of this library. As long as the policy
+   exposes iterators, however, it is interoperable with the function <a href="#ref-chain_auto_convert"><code>chain_auto_convert()</code></a> which 
+   serves a similar purpose.
 </p>
   <h3><a name="ref-lazy_array">Proxy object <code>lazy_array&lt;&gt;</code></a></h3> 
   <b>Header</b> <code>&lt;boost/assign/auto_size/array/lazy.hpp></code>
