@@ -6664,7 +6664,7 @@ bullet is about destructors of stack objects during stack unwinding.
 </rationale>
 </comment>
 
-<comment nb="FR" num="2" uknum="" type="ge" owner="LWG" issue="1156" disp="" date="" extdoc="">
+<comment nb="FR" num="2" uknum="" type="ge" owner="LWG" issue="1156" disp="rejected" date="" extdoc="">
 <section>
 General
 Comment
@@ -6681,7 +6681,7 @@ Library
 </suggestion>
 <notes>Also see UK156. Originally sent to the project editor, who rejected the part of the paper
 in question as needing more work. </notes>
-<rationale>
+<rationale>NB did not sufficiently describe how to resolve their comment, and therefore we cannot make a change for the FCD. If a resolution were provided in the future, we would be happy to apply it.
 </rationale>
 </comment>
 
@@ -6746,7 +6746,7 @@ in question as needing more work. </notes>
 </rationale>
 </comment>
 
-<comment nb="US" num="63" uknum="" type="te" owner="LWG" issue="1151" disp="" date="" extdoc="">
+<comment nb="US" num="63" uknum="" type="te" owner="LWG" issue="1151" disp="modified" date="" extdoc="">
 <section>
 17-30
 </section>
@@ -6768,7 +6768,7 @@ in question as needing more work. </notes>
 <notes>17 SG: should go to threads group; misclassified in document
 <BR/><BR/>
     Concurrency SG: Create an issue. Hans will look into it.</notes>
-<rationale>
+<rationale>Resolved by N3069
 </rationale>
 </comment>
 
@@ -7513,7 +7513,7 @@ culprits.
 </rationale>
 </comment>
 
-<comment nb="UK" num="150" uknum="199" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="150" uknum="199" type="Ed" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 17.3
 </section>
@@ -7542,9 +7542,8 @@ culprits.
         definition of singular iterator to an iterator value with a
         singular state.
 </suggestion>
-<notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<notes></notes>
+<rationale>The requirements tables for move enabled operations have been tightened up without introducing this term (singular state).</rationale>
 </comment>
 
 <comment nb="UK" num="151" uknum="77" type="Ed" owner="editor" issue="" disp="modified" date="" extdoc="">
@@ -7854,7 +7853,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="165" uknum="92" type="Te" owner="LWG" issue="1156" disp="" date="" extdoc="">
+<comment nb="UK" num="165" uknum="92" type="Te" owner="LWG" issue="1156" disp="rejected" date="" extdoc="">
 <section>
 17.5.3.2.2,
 17.5.3.2.3
@@ -7872,7 +7871,7 @@ All concepts-related text has been removed from the draft.
         described in N2235
 </suggestion>
 <notes>Robert Klarer to review</notes>
-<rationale>
+<rationale>NB did not sufficiently describe how to resolve their comment, and therefore we cannot make a change for the FCD. If a resolution were provided in the future, we would be happy to apply it. 
 </rationale>
 </comment>
 
@@ -8019,7 +8018,7 @@ members
 </rationale>
 </comment>
 
-<comment nb="UK" num="172" uknum="99" type="Te" owner="LWG" issue="1264" disp="" date="" extdoc="">
+<comment nb="UK" num="172" uknum="99" type="Te" owner="LWG" issue="1264" disp="modified" date="" extdoc="">
 <section>
 17.6.2.4
 </section>
@@ -8122,7 +8121,7 @@ wording to include &lt;type_traits&gt; into freestanding implementations.
 </rationale>
 </comment>
 
-<comment nb="UK" num="175" uknum="101" type="Te" owner="LWG" issue="1157" disp="" date="" extdoc="">
+<comment nb="UK" num="175" uknum="101" type="Te" owner="LWG" issue="1157" disp="modified" date="" extdoc="">
 <section>
 17.6.4.2.1
 </section>
@@ -8554,7 +8553,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="DE" num="18" uknum="" type="te" owner="LWG" issue="1097,1098 " disp="" date="" extdoc="">
+<comment nb="DE" num="18" uknum="" type="te" owner="LWG" issue="1097,1098 " disp="modified" date="" extdoc="">
 <section>
 18.4
 </section>
@@ -8614,7 +8613,7 @@ Footnote 221
 </rationale>
 </comment>
 
-<comment nb="UK" num="187" uknum="266" type="Te" owner="LWG" issue="1144" disp="" date="" extdoc="">
+<comment nb="UK" num="187" uknum="266" type="Te" owner="LWG" issue="1144" disp="modified" date="" extdoc="">
 <section>
 18.4
 </section>
@@ -8905,7 +8904,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="JP" num="31" uknum="" type="te" owner="LWG" issue="1008" disp="" date="" extdoc="">
+<comment nb="JP" num="31" uknum="" type="te" owner="LWG" issue="1008" disp="rejected" date="" extdoc="">
 <section>
 18.7.6
 </section>
@@ -8921,7 +8920,7 @@ All concepts-related text has been removed from the draft.
         a sample program which rethrows exception.
 </suggestion>
 <notes>Alisdair will incorporate this in the JP29 paper.</notes>
-<rationale>
+<rationale>nested_exception is intended to be inherited from by exception classes that are to be thrown during the handling of another exception, i.e. when translating from one exception type to another. nested_exception allows the originally thrown exception to be easily retained in that scenario. 
 </rationale>
 </comment>
 
@@ -9669,7 +9668,7 @@ Table 51, last row, column 3
 </rationale>
 </comment>
 
-<comment nb="JP" num="38" uknum="" type="te" owner="LWG" issue="817" disp="" date="" extdoc="">
+<comment nb="JP" num="38" uknum="" type="te" owner="LWG" issue="817" disp="modified" date="" extdoc="">
 <section>
 20.6.12.1.3
 </section>
@@ -9969,7 +9968,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="208" uknum="338" type="Te" owner="LWG" issue="978" disp="accepted" date="" extdoc="">
+<comment nb="UK" num="208" uknum="338" type="Te" owner="LWG" issue="978" disp="modified" date="" extdoc="">
 <section>
 20.6.17
 </section>
@@ -10108,7 +10107,7 @@ Section reference should be 20.6.12 instead of 20.7.12.
 </rationale>
 </comment>
 
-<comment nb="US" num="72" uknum="" type="te" owner="LWG" issue="817" disp="" date="" extdoc="">
+<comment nb="US" num="72" uknum="" type="te" owner="LWG" issue="817" disp="modified" date="" extdoc="">
 <section>
 20.7.12
 </section>
@@ -10132,7 +10131,7 @@ Section reference should be 20.6.12.1.3 instead of 20.7.12.
 </rationale>
 </comment>
 
-<comment nb="DE" num="21" uknum="" type="te" owner="LWG" issue="817" disp="accepted" date="" extdoc="">
+<comment nb="DE" num="21" uknum="" type="te" owner="LWG" issue="817" disp="modified" date="" extdoc="">
 <section>
 20.7.12.1.3
 </section>
@@ -10521,7 +10520,7 @@ in disguise, with all the associated problems. Not a good idea.
 </rationale>
 </comment>
 
-<comment nb="US" num="79" uknum="" type="te" owner="LWG" issue="932" disp="accepted" date="" extdoc="">
+<comment nb="US" num="79" uknum="" type="te" owner="LWG" issue="932" disp="modified" date="" extdoc="">
 <section>
 20.8.12.2.1
 </section>
@@ -10552,7 +10551,7 @@ Requires</em> clause. Note that unique_ptr [unique.ptr] needs concepts.
 </rationale>
 </comment>
 
-<comment nb="JP" num="44" uknum="" type="te" owner="LWG" issue="1030" disp="accepted" date="" extdoc="">
+<comment nb="JP" num="44" uknum="" type="te" owner="LWG" issue="1030" disp="modified" date="" extdoc="">
 <section>
 20.8.13.6
 </section>
@@ -11554,7 +11553,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="218" uknum="228" type="Te" owner="LWG" issue="1170" disp="" date="" extdoc="">
+<comment nb="UK" num="218" uknum="228" type="Te" owner="LWG" issue="1170" disp="modified" date="" extdoc="">
 <section>
 21.3.1
 </section>
@@ -12145,7 +12144,7 @@ Table 79
 </rationale>
 </comment>
 
-<comment nb="UK" num="222" uknum="295" type="Te" owner="LWG" issue="1034" disp="" date="" extdoc="">
+<comment nb="UK" num="222" uknum="295" type="Te" owner="LWG" issue="1034" disp="modified" date="" extdoc="">
 <section>
 23
 </section>
@@ -13391,7 +13390,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="265" uknum="68" type="Te" owner="LWG" issue="1079" disp="" date="" extdoc="">
+<comment nb="UK" num="265" uknum="68" type="Te" owner="LWG" issue="1079" disp="modified" date="" extdoc="">
 <section>
 24.1.6
 </section>
@@ -13640,7 +13639,7 @@ supplying range-based algorithms.
 </rationale>
 </comment>
 
-<comment nb="UK" num="270" uknum="17" type="Te" owner="LWG" issue="940" disp="" date="" extdoc="">
+<comment nb="UK" num="270" uknum="17" type="Te" owner="LWG" issue="940" disp="modified" date="" extdoc="">
 <section>
 24.3
 </section>
@@ -13659,11 +13658,11 @@ supplying range-based algorithms.
 </suggestion>
 <notes>Howard will open an issue.
 </notes>
-<rationale>
+<rationale>Solved by N3066
 </rationale>
 </comment>
 
-<comment nb="UK" num="271" uknum="145" type="Te" owner="LWG" issue="1011" disp="" date="" extdoc="">
+<comment nb="UK" num="271" uknum="145" type="Te" owner="LWG" issue="1011" disp="modified" date="" extdoc="">
 <section>
 24.3
 </section>
@@ -13902,7 +13901,7 @@ Without concepts we can no longer restrict this member in a trivial way.</ration
 </rationale>
 </comment>
 
-<comment nb="UK" num="281" uknum="23" type="Te" owner="LWG" issue="1052" disp="" date="" extdoc="">
+<comment nb="UK" num="281" uknum="23" type="Te" owner="LWG" issue="1052" disp="rejected" date="" extdoc="">
 <section>
 24.4.1.2.5
 </section>
@@ -13922,7 +13921,7 @@ Without concepts we can no longer restrict this member in a trivial way.</ration
 <notes>study group formed to come up with a suggested 
 resolution.
 </notes>
-<rationale>
+<rationale>There is no consensus for making this change.
 </rationale>
 </comment>
 
@@ -14622,7 +14621,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="FR" num="35" uknum="" type="te" owner="LWG" issue="1154" disp="" date="" extdoc="">
+<comment nb="FR" num="35" uknum="" type="te" owner="LWG" issue="1154" disp="rejected" date="" extdoc="">
 <section>
 26.3
         [Complex
@@ -14639,7 +14638,7 @@ numbers]
 <suggestion></suggestion>
 <notes>
 </notes>
-<rationale>
+<rationale>There is no consensus for making this change. 
 </rationale>
 </comment>
 
@@ -14794,7 +14793,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="JP" num="65" uknum="" type="te" owner="LWG" issue="1094" disp="" date="" extdoc="">
+<comment nb="JP" num="65" uknum="" type="te" owner="LWG" issue="1094" disp="modified" date="" extdoc="">
 <section>
 27.4.4
 </section>
@@ -14816,7 +14815,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="JP" num="66" uknum="" type="te" owner="LWG" issue="1094" disp="" date="" extdoc="">
+<comment nb="JP" num="66" uknum="" type="te" owner="LWG" issue="1094" disp="modified" date="" extdoc="">
 <section>
 27.4.4.3
 </section>
@@ -15476,7 +15475,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="314" uknum="343" type="Te" owner="LWG" issue="Doc" disp="" date="" extdoc="">
+<comment nb="UK" num="314" uknum="343" type="Te" owner="LWG" issue="1263" disp="rejected" date="" extdoc="">
 <section>
 28.4
 </section>
@@ -15498,7 +15497,7 @@ All concepts-related text has been removed from the draft.
 </suggestion>
 <notes>deferred to discussion of N2831.
 </notes>
-<rationale>
+<rationale>We have in general reverted to the single swap signature taking lvalue references, which could be seen as the alternative solution to UK 314, bringing consistency to the standard. 
 </rationale>
 </comment>
 
@@ -16045,7 +16044,7 @@ explicitly consider the process shared issue.
 </rationale>
 </comment>
 
-<comment nb="JP" num="76" uknum="" type="ed" owner="LWG" issue="1089" disp="" date="" extdoc="">
+<comment nb="JP" num="76" uknum="" type="ed" owner="LWG" issue="1089" disp="modified" date="" extdoc="">
 <section>
 30
 </section>
@@ -16233,7 +16232,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="322" uknum="168" type="Te" owner="LWG" issue="1158" disp="" date="" extdoc="">
+<comment nb="UK" num="322" uknum="168" type="Te" owner="LWG" issue="1158" disp="modified" date="" extdoc="">
 <section>
 30.1.4
 </section>
@@ -16257,7 +16256,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="323" uknum="171" type="Te" owner="LWG" issue="929" disp="accepted" date="" extdoc="">
+<comment nb="UK" num="323" uknum="171" type="Te" owner="LWG" issue="929" disp="modified" date="" extdoc="">
 <section>
 30.2.1
 </section>
@@ -16287,7 +16286,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="324" uknum="169" type="Te" owner="LWG" issue="889" disp="rejected" date="" extdoc="">
+<comment nb="UK" num="324" uknum="169" type="Te" owner="LWG" issue="1182" disp="modified" date="" extdoc="">
 <section>
 30.2.1.1
 </section>
@@ -16308,7 +16307,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="JP" num="77" uknum="" type="te" owner="LWG" issue="1139" disp="" date="" extdoc="">
+<comment nb="JP" num="77" uknum="" type="te" owner="LWG" issue="1139" disp="modified" date="" extdoc="">
 <section>
 30.2.1.2
 </section>
@@ -16451,7 +16450,7 @@ N2802 Alternative 2 was accepted at the Summit meeting.
 </rationale>
 </comment>
 
-<comment nb="UK" num="327" uknum="179" type="Te" owner="LWG" issue="1159" disp="" date="" extdoc="">
+<comment nb="UK" num="327" uknum="179" type="Te" owner="LWG" issue="1159" disp="modified" date="" extdoc="">
 <section>
 30.3.3.2.2
 </section>
@@ -16488,7 +16487,7 @@ N2802 Alternative 2 was accepted at the Summit meeting.
 </rationale>
 </comment>
 
-<comment nb="UK" num="328" uknum="182" type="Te" owner="LWG" issue="1159" disp="" date="" extdoc="">
+<comment nb="UK" num="328" uknum="182" type="Te" owner="LWG" issue="1159" disp="modified" date="" extdoc="">
 <section>
 30.3.3.2.2
 </section>
