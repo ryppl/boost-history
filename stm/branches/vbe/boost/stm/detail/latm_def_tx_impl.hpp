@@ -56,11 +56,11 @@ inline bool transaction::def_do_core_tx_conflicting_lock_pthread_lock_mutex
     std::list<transaction *> txList;
     std::set<thread_id_t> txThreadId;
 
-    for (InflightTxes::iterator i = transactionsInFlight_.begin();
-      i != transactionsInFlight_.end(); ++i)
+    for (in_flight_trans_cont::iterator i = in_flight_transactions().begin();
+      i != in_flight_transactions().end(); ++i)
     {
         BOOST_ASSERT(*i!=0);
-        (*i)->assert_tx_type();
+        //~ (*i)->assert_tx_type();
         transaction *t = *i;
 
         // if this tx is part of this thread, skip it (it's an LiT)

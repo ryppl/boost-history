@@ -110,7 +110,11 @@ public:
    typedef std::map<thread_id_t, TxType*> ThreadTxTypeContainer;
 
    typedef std::set<transaction*> TContainer;
-   typedef std::set<transaction*> InflightTxes;
+#ifdef BOOST_USE_INFLIGH_TRANSACTION_PTR_SET   
+   typedef std::set<transaction**> in_flight_trans_cont;
+#else   
+   typedef std::set<transaction*> in_flight_trans_cont;
+#endif   
 
    typedef std::multimap<clock_t, MemoryContainerList > DeletionBuffer;
 
@@ -140,9 +144,6 @@ public:
     #endif
 
    typedef std::set<transaction*> LockedTransactionContainer;
-
-   typedef InflightTxes in_flight_transaction_container;
-   typedef in_flight_transaction_container in_flight_trans_cont;
 
     #ifdef USE_SINGLE_THREAD_CONTEXT_MAP
     struct tx_context
@@ -258,14 +259,14 @@ public:
 
    static bool do_early_conflict_detection()
    {
-      if (!transactionsInFlight_.empty()) return false;
+      if (!in_flight_transactions().empty()) return false;
       if (deferred_updating()) return false;
       else return !(directLateWriteReadConflict_ = false);
    }
 
    static bool do_late_conflict_detection()
    {
-      if (!transactionsInFlight_.empty()) return false;
+      if (!in_flight_transactions().empty()) return false;
       else return directLateWriteReadConflict_ = true;
    }
 
@@ -294,7 +295,7 @@ public:
    //--------------------------------------------------------------------------
    static bool do_direct_updating()
    {
-      if (!transactionsInFlight_.empty()) return false;
+      if (!in_flight_transactions().empty()) return false;
       else direct_updating_ref() = true;
       return true;
    }
@@ -304,7 +305,7 @@ public:
    //--------------------------------------------------------------------------
    static bool do_deferred_updating()
    {
-      if (!transactionsInFlight_.empty()) return false;
+      if (!in_flight_transactions().empty()) return false;
       else direct_updating_ref() = false;
       return true;
    }
@@ -387,7 +388,7 @@ public:
 
    bool is_nested() const
    {
-       return nested_;
+       return parent_!=0;
       //~ synchro::lock_guard<Mutex> lock_m(*inflight_lock());
       //~ return other_in_flight_same_thread_transactions();
    }
@@ -864,12 +865,12 @@ public:
 #ifdef PERFORMING_COMPOSITION
 #ifndef USING_SHARED_FORCED_TO_ABORT
       // now set all txes of this threadid that are in-flight to force to abort
-      for (InflightTxes::iterator j = transactionsInFlight_.begin();
-      j != transactionsInFlight_.end(); ++j)
+      for (in_flight_trans_cont::iterator j = in_flight_transactions().begin();
+      j != in_flight_transactions().end(); ++j)
       {
         BOOST_ASSERT(*j!=0);
           
-        (*j)->assert_tx_type();
+        //~ (*j)->assert_tx_type();
          transaction *t = *j;
 
          // if this is a parent or child tx, it must abort too
@@ -895,7 +896,8 @@ public:
       }
    }
 
-   inline static InflightTxes const & in_flight_transactions() { return transactionsInFlight_; }
+   inline static in_flight_trans_cont & in_flight_transactions() { return transactionsInFlight_; }
+   //~ inline static in_flight_trans_cont const & in_flight_transactions() const { return transactionsInFlight_; }
 
    inline void make_irrevocable();
    inline void make_isolated();
@@ -1740,7 +1742,7 @@ private:
    //static latm::mutex_thread_id_set_map latmLockedLocksAndThreadIdsMap_;
    //static latm::mutex_thread_id_map latmLockedLocksOfThreadMap_;
    //static LatmType eLatmType_;
-   static InflightTxes transactionsInFlight_;
+   static in_flight_trans_cont transactionsInFlight_;
 
    static Mutex deletionBufferMutex_;
    static Mutex transactionMutex_;
@@ -1810,14 +1812,25 @@ private:
    //--------------------------------------------------------------------------
    thread_id_t threadId_;
 
-   synchro::unique_lock<Mutex> auto_general_lock_;
-
    //--------------------------------------------------------------------------
    // ******** WARNING ******** MOVING threadId_ WILL BREAK TRANSACTION.
    // threadId_ MUST ALWAYS THE FIRST MEMBER OF THIS CLASS. THE MEMBER
    // INITIALIZATION IS ORDER DEPENDENT UPON threadId_!!
    // ******** WARNING ******** MOVING threadId_ WILL BREAK TRANSACTION
    //--------------------------------------------------------------------------
+
+#ifndef BOOST_STM_USE_STACK
+    transaction* parent_;
+    public:
+    void set_parent(transaction* tx) {parent_=tx;};
+    transaction* parent() {return parent_;};
+    private:
+#else
+    bool nested_;   
+#endif   
+
+    synchro::unique_lock<Mutex> auto_general_lock_;
+
 
 #ifdef USE_SINGLE_THREAD_CONTEXT_MAP
 ////////////////////////////////////////
@@ -2309,7 +2322,6 @@ private:
    transaction_state state_; // 2bits
    std::size_t reads_;
    mutable clock_t startTime_;
-   bool nested_;
 
    inline transaction_state const & state() const { return state_; }
 
@@ -2377,8 +2389,23 @@ void delete_ptr(transaction& t, T *in) {
 #define before_retry catch (boost::stm::aborted_tx &)
 #define end_atom catch (boost::stm::aborted_tx &) {}
 
+namespace detail {
+
+#ifndef BOOST_STM_USE_STACK
+    void transactions_stack::push(transaction* ptr) {
+        ptr->set_parent(inner_);
+        inner_ = ptr;
+        ++count_;
+    }
+    void transactions_stack::pop() {
+        inner_ = inner_->parent();
+        --count_;
+    }
+#endif    
+}
 } // stm  namespace
 } // boost namespace
+
 
 #include <boost/stm/tx_memory_manager.hpp>
 #include <boost/stm/detail/transaction_impl.hpp>

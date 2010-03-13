@@ -486,11 +486,11 @@ inline boost::stm::transaction* boost::stm::transaction::get_inflight_tx_of_same
 {
    synchro::lock_guard_if<Mutex> lock_l(*general_lock(), !hasTxInFlightMutex);
 
-   for (InflightTxes::iterator i = transactionsInFlight_.begin();
-      i != transactionsInFlight_.end(); ++i)
+   for (in_flight_trans_cont::iterator i = in_flight_transactions().begin();
+      i != in_flight_transactions().end(); ++i)
    {
         BOOST_ASSERT(*i!=0); 
-        (*i)->assert_tx_type();
+        //~ (*i)->assert_tx_type();
       transaction *t = *i;
 
       //--------------------------------------------------------------------

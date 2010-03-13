@@ -62,11 +62,11 @@ inline bool transaction::def_do_core_full_pthread_lock_mutex
         synchro::lock_guard<Mutex> lk_i(*inflight_lock());
 
         std::list<transaction*> txList;
-        for (InflightTxes::iterator i = transactionsInFlight_.begin();
-                i != transactionsInFlight_.end(); ++i)
+        for (in_flight_trans_cont::iterator i = in_flight_transactions().begin();
+                i != in_flight_transactions().end(); ++i)
         {
             BOOST_ASSERT(*i!=0);
-            (*i)->assert_tx_type();
+            //~ (*i)->assert_tx_type();
             transaction *t = *i;
 
             if (!t->irrevocable() &&

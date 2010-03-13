@@ -25,6 +25,7 @@ namespace detail {
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 struct transactions_stack {
+#ifdef BOOST_STM_USE_STACK
     typedef std::stack<transaction*> cont_type;
     cont_type stack_;
     transactions_stack() {
@@ -35,7 +36,22 @@ struct transactions_stack {
     void pop() {stack_.pop();}
     std::size_t size() {return stack_.size();}
     transaction* top() {return stack_.top();}
+#else
+    transaction* inner_;
+    std::size_t count_;
+    transactions_stack() : inner_(0), count_(0) 
+    {
+        // the stack at least one element (0) so we can always call to top, i.e. current transaction is 0
+    }
+    inline void push(transaction* ptr);
+    inline void pop();
+    std::size_t size() {return count_;}
+    transaction* top() {return inner_;}
+#endif    
 };
+
+
+
 
 }
 

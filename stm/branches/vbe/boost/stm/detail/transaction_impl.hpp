@@ -44,14 +44,14 @@ namespace boost { namespace stm {
 //--------------------------------------------------------------------------
 inline bool transaction::isolatedTxInFlight()
 {
-    BOOST_STM_INFO<<std::endl;
-    assert_tx_type();
     //~ BOOST_STM_INFO<<std::endl;
-   for (InflightTxes::iterator i = transactionsInFlight_.begin();
-      i != transactionsInFlight_.end(); ++i)
+    //~ assert_tx_type();
+    //~ BOOST_STM_INFO<<std::endl;
+   for (in_flight_trans_cont::iterator i = in_flight_transactions().begin();
+      i != in_flight_transactions().end(); ++i)
    {
         BOOST_ASSERT(*i!=0);
-        (*i)->assert_tx_type();
+        //~ (*i)->assert_tx_type();
 
     //~ BOOST_STM_INFO<<std::endl;
       // if this is our threadId, skip it
@@ -73,11 +73,11 @@ inline bool transaction::isolatedTxInFlight()
 //--------------------------------------------------------------------------
 inline bool transaction::irrevocableTxInFlight()
 {
-   for (InflightTxes::iterator i = transactionsInFlight_.begin();
-      i != transactionsInFlight_.end(); ++i)
+   for (in_flight_trans_cont::iterator i = in_flight_transactions().begin();
+      i != in_flight_transactions().end(); ++i)
    {
         BOOST_ASSERT(*i!=0);
-        (*i)->assert_tx_type();
+        //~ (*i)->assert_tx_type();
       // if this is our threadId, skip it
       if ((*i)->threadId_ == this->threadId_) continue;
 
@@ -95,11 +95,11 @@ inline bool transaction::irrevocableTxInFlight()
 //--------------------------------------------------------------------------
 inline bool transaction::abortAllInFlightTxs()
 {
-   for (InflightTxes::iterator i = transactionsInFlight_.begin();
-      i != transactionsInFlight_.end(); ++i)
+   for (in_flight_trans_cont::iterator i = in_flight_transactions().begin();
+      i != in_flight_transactions().end(); ++i)
    {
         BOOST_ASSERT(*i!=0);
-        (*i)->assert_tx_type();
+        //~ (*i)->assert_tx_type();
       // if this is our threadId, skip it
       if ((*i)->threadId_ == this->threadId_) continue;
 
@@ -116,11 +116,11 @@ inline bool transaction::abortAllInFlightTxs()
 //--------------------------------------------------------------------------
 inline bool transaction::canAbortAllInFlightTxs()
 {
-   for (InflightTxes::iterator i = transactionsInFlight_.begin();
-      i != transactionsInFlight_.end(); ++i)
+   for (in_flight_trans_cont::iterator i = in_flight_transactions().begin();
+      i != in_flight_transactions().end(); ++i)
    {
         BOOST_ASSERT(*i!=0);
-        (*i)->assert_tx_type();
+        //~ (*i)->assert_tx_type();
       // if this is our threadId, skip it
       if ((*i)->threadId_ == this->threadId_) continue;
 
@@ -197,7 +197,7 @@ inline void transaction::make_isolated()
 //--------------------------------------------------------------------------
 inline bool transaction::irrevocable() const
 {
-   BOOST_STM_INFO << "tx_type="<<tx_type()<<"@"<<const_cast<transaction*>(this)->tx_type_ptr()<<std::endl;
+   //~ BOOST_STM_INFO << "tx_type="<<tx_type()<<"@"<<const_cast<transaction*>(this)->tx_type_ptr()<<std::endl;
    switch (tx_type())
    {
    case eNormalTx: return false;
@@ -214,7 +214,7 @@ inline bool transaction::irrevocable() const
 //--------------------------------------------------------------------------
 inline bool transaction::isolated() const
 {
-   BOOST_STM_INFO << "tx_type="<<tx_type()<<"@"<< const_cast<transaction*>(this)->tx_type_ptr()<<std::endl;
+   //~ BOOST_STM_INFO << "tx_type="<<tx_type()<<"@"<< const_cast<transaction*>(this)->tx_type_ptr()<<std::endl;
    switch (tx_type())
    {
    case eNormalTx: return false;
@@ -229,7 +229,7 @@ inline bool transaction::isolated() const
 
 inline void transaction::assert_tx_type() const
 {
-   BOOST_STM_INFO << "tx_type="<<tx_type()<<"@"<<const_cast<transaction*>(this)->tx_type_ptr()<<std::endl;
+   //~ BOOST_STM_INFO << "tx_type="<<tx_type()<<"@"<<const_cast<transaction*>(this)->tx_type_ptr()<<std::endl;
    switch (tx_type())
    {
    case eNormalTx: return ;
@@ -428,6 +428,11 @@ inline void transaction::unlock_all_mutexes()
 inline transaction::transaction() :
    threadId_(this_thread::get_id()),
    //transactionMutexLocker_(),
+#ifndef BOOST_STM_USE_STACK
+   parent_(current_transaction()),
+#else   
+   nested_((current_transaction()!=0));
+#endif   
    auto_general_lock_(*general_lock()),
 
 #if USE_SINGLE_THREAD_CONTEXT_MAP
@@ -526,7 +531,9 @@ inline transaction::transaction() :
    reads_(0),
    startTime_(time(0))
 {
-    nested_=(current_transaction()!=0);
+#ifdef BOOST_STM_USE_STACK
+   nested_=(current_transaction()!=0);
+#endif    
    auto_general_lock_.unlock();
    if (direct_updating()) doIntervalDeletions();
 #if PERFORMING_LATM
@@ -599,8 +606,8 @@ inline std::string transaction::outputBlockedThreadsAndLockedLocks()
 //--------------------------------------------------------------------------
 inline bool transaction::restart()
 {
-    BOOST_STM_INFO<<std::endl;
-    assert_tx_type();
+    //~ BOOST_STM_INFO<<std::endl;
+    //~ assert_tx_type();
     //~ BOOST_STM_INFO<<std::endl;
    if (e_in_flight == state_) lock_and_abort();
     //~ BOOST_STM_INFO<<std::endl;
@@ -653,8 +660,8 @@ inline bool transaction::restart()
 #endif
 #endif
 
-    BOOST_STM_INFO<<std::endl;
-    assert_tx_type();
+    //~ BOOST_STM_INFO<<std::endl;
+    //~ assert_tx_type();
     //~ BOOST_STM_INFO<<std::endl;
    put_tx_inflight();
     //~ BOOST_STM_INFO<<std::endl;
@@ -720,8 +727,8 @@ inline bool transaction::can_go_inflight()
 //--------------------------------------------------------------------------
 inline void transaction::put_tx_inflight()
 {
-    BOOST_STM_INFO<<std::endl;
-    assert_tx_type();
+    //~ BOOST_STM_INFO<<std::endl;
+    //~ assert_tx_type();
     //~ BOOST_STM_INFO<<std::endl;
 #if PERFORMING_LATM
    while (true)
@@ -738,7 +745,7 @@ inline void transaction::put_tx_inflight()
       if (b1 && b2)
       {
     //~ BOOST_STM_INFO<<std::endl;
-         transactionsInFlight_.insert(this);
+         in_flight_transactions().insert(this);
          state_ = e_in_flight;
          break;
       }
@@ -750,12 +757,12 @@ inline void transaction::put_tx_inflight()
 #else
    synchro::lock_guard<Mutex> lock_i(*inflight_lock());
     //~ BOOST_STM_INFO<<std::endl;
-   transactionsInFlight_.insert(this);
+   in_flight_transactions().insert(this);
     //~ BOOST_STM_INFO<<std::endl;
    state_ = e_in_flight;
 #endif
-    BOOST_STM_INFO<<std::endl;
-    assert_tx_type();
+    //~ BOOST_STM_INFO<<std::endl;
+    //~ assert_tx_type();
     //~ BOOST_STM_INFO<<std::endl;
 }
 
@@ -763,35 +770,35 @@ inline void transaction::put_tx_inflight()
 //--------------------------------------------------------------------------
 inline transaction::~transaction()
 {
-   BOOST_STM_INFO<<std::endl;
-    assert_tx_type();
-   BOOST_STM_INFO<<std::endl;
+   //~ BOOST_STM_INFO<<std::endl;
+    //~ assert_tx_type();
+   //~ BOOST_STM_INFO<<std::endl;
    // if we're not an inflight transaction - bail
    if (state_ != e_in_flight)
    {
-   BOOST_STM_INFO<<std::endl;
+   //~ BOOST_STM_INFO<<std::endl;
       //if (hasLock()) unlock_tx();
       return;
    }
 
-   BOOST_STM_INFO<<std::endl;
+   //~ BOOST_STM_INFO<<std::endl;
     //if (!hasLock())
     {
        synchro::lock_guard<Mutex> lock(*mutex());
-   BOOST_STM_INFO<<std::endl;
+   //~ BOOST_STM_INFO<<std::endl;
         abort();
-   BOOST_STM_INFO<<std::endl;
+   //~ BOOST_STM_INFO<<std::endl;
     }
-   BOOST_STM_INFO<<std::endl;
+   //~ BOOST_STM_INFO<<std::endl;
     transactions().pop();
-   BOOST_STM_INFO<<std::endl;
+   //~ BOOST_STM_INFO<<std::endl;
 
     // BUG not removed from the list because the test is inversed
     //~ if (alreadyRemovedFromInFlight)
 
     //~ synchro::lock(*inflight_lock());
     // if I'm the last transaction of this thread, reset abort to false
-    //~ transactionsInFlight_.erase(this);
+    //~ in_flight_transactions().erase(this);
 
 
 }
@@ -910,7 +917,7 @@ inline void transaction::invalidating_direct_end_transaction()
 
    synchro::lock(*inflight_lock());// TBR
     //synchro::lock_guard<Mutex> lk_i(*inflight_lock());
-   transactionsInFlight_.erase(this);
+   in_flight_transactions().erase(this);
 
    if (other_in_flight_same_thread_transactions())
    {
@@ -965,7 +972,7 @@ inline void transaction::invalidating_deferred_end_transaction()
         {
         synchro::unique_lock<Mutex> lk_i(*inflight_lock());
 
-        transactionsInFlight_.erase(this);
+        in_flight_transactions().erase(this);
 
 #if PERFORMING_COMPOSITION
         if (other_in_flight_same_thread_transactions())
@@ -997,9 +1004,9 @@ inline void transaction::invalidating_deferred_end_transaction()
 
 
    //--------------------------------------------------------------------------
-   // as much as I'd like to transactionsInFlight_.erase() here, we have
+   // as much as I'd like to in_flight_transactions().erase() here, we have
    // to do it inside of abort() because the contention managers must abort
-   // the txs and therefore must do a transactionsInFlight_.erase(this)
+   // the txs and therefore must do a in_flight_transactions().erase(this)
    // anyway. so we actually lose performance by doing it here and then
    // doing it again inside abort()
    //--------------------------------------------------------------------------
@@ -1035,7 +1042,7 @@ inline void transaction::invalidating_deferred_end_transaction()
        // BUG
       if (other_in_flight_same_thread_transactions())
       {
-         transactionsInFlight_.erase(this);
+         in_flight_transactions().erase(this);
          state_ = e_hand_off;
          unlock_all_mutexes();//TBR
          synchro::unlock(*general_lock());//TBR
@@ -1103,7 +1110,7 @@ inline void transaction::validating_direct_end_transaction()
    lock_all_mutexes_but_this(threadId_);
 
    synchro::lock(*inflight_lock());
-   transactionsInFlight_.erase(this);
+   in_flight_transactions().erase(this);
 
    if (other_in_flight_same_thread_transactions())
    {
@@ -1155,9 +1162,9 @@ inline void transaction::validating_deferred_end_transaction()
    clock_t ms = clock();
 
    //--------------------------------------------------------------------------
-   // as much as I'd like to transactionsInFlight_.erase() here, we have
+   // as much as I'd like to in_flight_transactions().erase() here, we have
    // to do it inside of abort() because the contention managers must abort
-   // the txs and therefore must do a transactionsInFlight_.erase(this)
+   // the txs and therefore must do a in_flight_transactions().erase(this)
    // anyway. so we actually lose performance by doing it here and then
    // doing it again inside abort()
    //--------------------------------------------------------------------------
@@ -1180,7 +1187,7 @@ inline void transaction::validating_deferred_end_transaction()
       if (is_only_reading())
       {
          synchro::lock(*inflight_lock());
-         transactionsInFlight_.erase(this);
+         in_flight_transactions().erase(this);
 
          if (other_in_flight_same_thread_transactions())
          {
@@ -1224,7 +1231,7 @@ inline void transaction::validating_deferred_end_transaction()
       lock_all_mutexes_but_this(threadId_);
 
       synchro::lock(*inflight_lock());
-      transactionsInFlight_.erase(this);
+      in_flight_transactions().erase(this);
 
       if (other_in_flight_same_thread_transactions())
       {
@@ -1261,17 +1268,17 @@ inline void transaction::forceOtherInFlightTransactionsWritingThisWriteMemoryToA
 #ifndef ALWAYS_ALLOW_ABORT
    std::list<transaction*> aborted;
 #endif
-   InflightTxes::iterator next;
+   in_flight_trans_cont::iterator next;
 
    // iterate through all our written memory
    for (WriteContainer::iterator i = writeList().begin(); writeList().end() != i; ++i)
    {
       // iterate through all the in flight transactions
-      for (InflightTxes::iterator j = transactionsInFlight_.begin();
-      j != transactionsInFlight_.end();)
+      for (in_flight_trans_cont::iterator j = in_flight_transactions().begin();
+      j != in_flight_transactions().end();)
       {
         BOOST_ASSERT(*j!=0);
-        (*j)->assert_tx_type();
+        //~ (*j)->assert_tx_type();
          transaction *t = *j;
 
          // if we're already aborting for this transaction, skip it
@@ -1298,7 +1305,7 @@ inline void transaction::forceOtherInFlightTransactionsWritingThisWriteMemoryToA
 
             next = j;
             ++next;
-            transactionsInFlight_.erase(j);
+            in_flight_transactions().erase(j);
             j = next;
 
 #else
@@ -1330,7 +1337,7 @@ inline void transaction::forceOtherInFlightTransactionsWritingThisWriteMemoryToA
    {
         BOOST_ASSERT(k!=0);
       (*k)->force_to_abort();
-      transactionsInFlight_.erase(*k);
+      in_flight_transactions().erase(*k);
    }
 #endif
 }
@@ -1371,7 +1378,7 @@ inline void transaction::direct_abort
       {
          synchro::lock(*inflight_lock());
          // if I'm the last transaction of this thread, reset abort to false
-         transactionsInFlight_.erase(this);
+         in_flight_transactions().erase(this);
       }
 
 #ifdef USING_SHARED_FORCED_TO_ABORT
@@ -1422,7 +1429,7 @@ inline void transaction::deferred_abort
    {
       synchro::lock(*inflight_lock());
       // if I'm the last transaction of this thread, reset abort to false
-      transactionsInFlight_.erase(this);
+      in_flight_transactions().erase(this);
 
 #ifdef USING_SHARED_FORCED_TO_ABORT
       if (!other_in_flight_same_thread_transactions())
@@ -1455,7 +1462,7 @@ inline void transaction::invalidating_direct_commit()
 
       bookkeeping_.inc_commits();
 
-      if (!transactionsInFlight_.empty())
+      if (!in_flight_transactions().empty())
       {
          forceOtherInFlightTransactionsReadingThisWriteMemoryToAbort();
       }
@@ -1545,7 +1552,7 @@ inline void transaction::invalidating_deferred_commit()
       //-----------------------------------------------------------------------
       // commit() already has the transactionsInFlightMutex
 
-      if (transactionsInFlight_.size() > 1)
+      if (in_flight_transactions().size() > 1)
       {
          static int stalling_ = 0;
 
@@ -1581,7 +1588,7 @@ inline void transaction::invalidating_deferred_commit()
                synchro::lock(*inflight_lock());
 
                // if our stalling on tx is gone, continue
-               if (transactionsInFlight_.end() == transactionsInFlight_.find(stallingOn))
+               if (in_flight_transactions().end() == in_flight_transactions().find(stallingOn))
                {
                   --stalling_;
                   wait = stalling_ * stalls_ < global_clock();
@@ -1611,10 +1618,10 @@ inline void transaction::invalidating_deferred_commit()
       }
 
       //BUG
-      //~ transactionsInFlight_.erase(this);
+      //~ in_flight_transactions().erase(this);
       //~ synchro::unlock(*inflight_lock());
       synchro::unlock(*inflight_lock());
-      transactionsInFlight_.erase(this);
+      in_flight_transactions().erase(this);
       synchro::unlock(*general_lock());
 
       deferredCommitWriteState();
@@ -1708,7 +1715,7 @@ inline void transaction::validating_direct_commit()
 
       bookkeeping_.inc_commits();
 
-      if (!transactionsInFlight_.empty())
+      if (!in_flight_transactions().empty())
       {
          forceOtherInFlightTransactionsReadingThisWriteMemoryToAbort();
       }
@@ -1954,11 +1961,11 @@ inline clock_t transaction::earliest_start_time_of_inflight_txes()
 
    clock_t secs = 0xffffffff;
 
-   for (InflightTxes::iterator j = transactionsInFlight_.begin();
-   j != transactionsInFlight_.end(); ++j)
+   for (in_flight_trans_cont::iterator j = in_flight_transactions().begin();
+   j != in_flight_transactions().end(); ++j)
    {
         BOOST_ASSERT(*j!=0);
-        (*j)->assert_tx_type();
+        //~ (*j)->assert_tx_type();
       transaction *t = *j;
       //-----------------------------------------------------------------------
       // since this is called while direct_writes are occurring, the transaction
@@ -2154,11 +2161,11 @@ inline void transaction::verifyWrittenMemoryIsValidWithGlobalMemory()
 inline bool transaction::otherInFlightTransactionsWritingThisMemory(base_transaction_object *obj)
 {
    // iterate through all the in flight transactions
-   for (InflightTxes::iterator j = transactionsInFlight_.begin();
-   j != transactionsInFlight_.end(); ++j)
+   for (in_flight_trans_cont::iterator j = in_flight_transactions().begin();
+   j != in_flight_transactions().end(); ++j)
    {
         BOOST_ASSERT(*j!=0);
-        (*j)->assert_tx_type();
+        //~ (*j)->assert_tx_type();
       transaction *t = *j;
       //-----------------------------------------------------------------------
       // since this is called while direct_writes are occurring, the transaction
@@ -2212,11 +2219,11 @@ inline bool transaction::forceOtherInFlightTransactionsAccessingThisWriteMemoryT
 #endif
 
    // iterate through all the in flight transactions
-   for (InflightTxes::iterator j = transactionsInFlight_.begin();
-   j != transactionsInFlight_.end(); ++j)
+   for (in_flight_trans_cont::iterator j = in_flight_transactions().begin();
+   j != in_flight_transactions().end(); ++j)
    {
         BOOST_ASSERT(*j!=0);
-        (*j)->assert_tx_type();
+        //~ (*j)->assert_tx_type();
       transaction *t = *j;
       // if we're already aborting for this transaction, skip it
       if (t->forced_to_abort()) continue;
@@ -2337,11 +2344,11 @@ inline void transaction::forceOtherInFlightTransactionsReadingThisWriteMemoryToA
    std::list<transaction*> aborted;
 
    // iterate through all the in flight transactions
-   for (InflightTxes::iterator j = transactionsInFlight_.begin();
-   j != transactionsInFlight_.end(); ++j)
+   for (in_flight_trans_cont::iterator j = in_flight_transactions().begin();
+   j != in_flight_transactions().end(); ++j)
    {
         BOOST_ASSERT(*j!=0);
-        (*j)->assert_tx_type();
+        //~ (*j)->assert_tx_type();
       transaction *t = *j;
       // if we're already aborting for this transaction, skip it
 #ifndef DISABLE_READ_SETS
@@ -2410,11 +2417,11 @@ inline void transaction::forceOtherInFlightTransactionsReadingThisWriteMemoryToA
 //-----------------------------------------------------------------------------
 inline bool transaction::other_in_flight_same_thread_transactions() const throw()
 {
-   for (InflightTxes::iterator i = transactionsInFlight_.begin();
-      i != transactionsInFlight_.end(); ++i)
+   for (in_flight_trans_cont::iterator i = in_flight_transactions().begin();
+      i != in_flight_transactions().end(); ++i)
    {
         BOOST_ASSERT(*i!=0);
-        (*i)->assert_tx_type();
+        //~ (*i)->assert_tx_type();
       if (*i == this) continue;
       if (*i == 0) continue;
       // if this is not our threadId or this thread is not composable, skip it
@@ -2428,10 +2435,10 @@ inline bool transaction::other_in_flight_same_thread_transactions() const throw(
 inline bool transaction::otherInFlightTransactionsOfSameThreadNotIncludingThis(transaction const * const rhs)
 {
    //////////////////////////////////////////////////////////////////////
-   for (InflightTxes::iterator i = transactionsInFlight_.begin(); i != transactionsInFlight_.end(); ++i)
+   for (in_flight_trans_cont::iterator i = in_flight_transactions().begin(); i != in_flight_transactions().end(); ++i)
    {
         BOOST_ASSERT(*i!=0);
-        (*i)->assert_tx_type();
+        //~ (*i)->assert_tx_type();
       if (*i == rhs) continue;
       // if this is not our threadId or this thread is not composable, skip it
       if ((*i)->threadId_ != this->threadId_) continue;
