@@ -12,10 +12,10 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/array.hpp>
 #include <boost/type_traits.hpp>
-#include <boost/assign/chain/reference_wrapper_traits.hpp>
-#include <boost/assign/chain/reference_traits.hpp>
-#include <boost/assign/chain/pair_traits.hpp>
-#include <boost/assign/chain/pair_range_traits.hpp>
+#include <boost/assign/auto_size/chain/reference_wrapper_traits.hpp>
+#include <boost/assign/auto_size/chain/reference_traits.hpp>
+#include <boost/assign/auto_size/chain/pair_traits.hpp>
+#include <boost/assign/auto_size/chain/pair_range_traits.hpp>
 
 namespace boost{
 namespace assign{

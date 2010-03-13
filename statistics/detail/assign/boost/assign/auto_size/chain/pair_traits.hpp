@@ -17,7 +17,7 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/remove_const.hpp>
 #include <boost/type_traits/remove_reference.hpp>
-#include <boost/assign/chain/reference_traits.hpp>
+#include <boost/assign/auto_size/chain/reference_traits.hpp>
 
 // These traits maps T and U, each of which may identify a reference wrapper, 
 // to V such that 

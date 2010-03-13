@@ -16,8 +16,8 @@
 #include <boost/mpl/or.hpp>
 #include <boost/type_traits/remove_const.hpp>
 #include <boost/type_traits/remove_reference.hpp>
-#include <boost/assign/chain/is_reference_wrapper.hpp>
-#include <boost/assign/chain/reference_wrapper_traits.hpp>
+#include <boost/assign/auto_size/chain/is_reference_wrapper.hpp>
+#include <boost/assign/auto_size/chain/reference_wrapper_traits.hpp>
 
 // Map T, a reference or a reference_wrapper, to a convertible type.
 

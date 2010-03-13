@@ -9,9 +9,9 @@
 #ifndef BOOST_ASSIGN_DETAIL_PAIR_RANGE_TRAITS_ER_2010_HPP
 #define BOOST_ASSIGN_DETAIL_PAIR_RANGE_TRAITS_ER_2010_HPP
 #include <boost/range.hpp>
-#include <boost/assign/chain/pair_traits.hpp>
-#include <boost/assign/chain/converter.hpp>
-#include <boost/assign/chain/is_reference_wrapper.hpp>
+#include <boost/assign/auto_size/chain/pair_traits.hpp>
+#include <boost/assign/auto_size/chain/converter.hpp>
+#include <boost/assign/auto_size/chain/is_reference_wrapper.hpp>
 
 // Maps (R1,R2) to a reference that is convertible to by each elem of either. 
 

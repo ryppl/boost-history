@@ -11,8 +11,8 @@
 #include <boost/typeof/typeof.hpp>
 #include <boost/range.hpp>
 #include <boost/range/chain.hpp>
-#include <boost/assign/chain/pair_range_traits.hpp>
-#include <boost/assign/chain/converter.hpp>
+#include <boost/assign/auto_size/chain/pair_range_traits.hpp>
+#include <boost/assign/auto_size/chain/converter.hpp>
 
 // Usage:
 //    chain_auto_convert(r1,r2)

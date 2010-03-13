@@ -10,7 +10,7 @@
 #define BOOST_ASSIGN_DETAIL_AUTO_SIZE_CHECK_CHAIN_ER_2010_HPP
 #include <boost/array.hpp>
 #include <boost/typeof/typeof.hpp>
-#include <boost/assign/chain/auto_convert.hpp>
+#include <boost/assign/auto_size/chain/auto_convert.hpp>
 #include <boost/assign/auto_size/check/iterator.hpp>
 #include <boost/assign/auto_size/check/copy_iterator.hpp>
 #include <boost/assign/auto_size/reference_wrapper/chain_traits.hpp> // MUST be included
