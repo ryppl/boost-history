@@ -36,8 +36,8 @@ namespace chain_auto_convert{
         typedef detail::pair_range_traits::generic<Conv,R1,R2> super_;
         typedef typename super_::new_range1_ new_range1_;
         typedef typename super_::new_range2_ new_range2_;
-		static new_range1_& new_range1;
-		static new_range2_& new_range2;
+        static new_range1_& new_range1;
+        static new_range2_& new_range2;
         typedef BOOST_TYPEOF_TPL(
             boost::chain(new_range1,new_range2)
         ) type;
