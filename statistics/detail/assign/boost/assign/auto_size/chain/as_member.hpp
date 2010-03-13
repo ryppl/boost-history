@@ -33,9 +33,9 @@ namespace detail{
         struct result_of_chain_auto_convert 
             : assign::result_of::chain_auto_convert::convert_wrapper<D1,R>{}; 
 
-            template<typename R>
-            typename result_of_chain_auto_convert<D,R>::type
-            chain_auto_convert(R& r){ 
+        template<typename R>
+        typename result_of_chain_auto_convert<D,R>::type
+        chain_auto_convert(R& r){ 
             return assign::chain_auto_convert_convert_wrapper(
                 static_cast<D&>(*this),
                 r
