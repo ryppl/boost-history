@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// assign::detail::array::chainable.hpp                                     //
+// assign::detail::chain_as_member.hpp                                      //
 //                                                                          //
 //  (C) Copyright 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -26,32 +26,32 @@ chain_auto_convert_convert_wrapper(R1& r1,R2& r2);
 namespace detail{
 
     // D is a derived type
-	template<typename D>
-	struct chain_as_member{
+    template<typename D>
+    struct chain_as_member{
 
         template<typename D1,typename R>
         struct result_of_chain_auto_convert 
             : assign::result_of::chain_auto_convert::convert_wrapper<D1,R>{}; 
 
-		template<typename R>
-        typename result_of_chain_auto_convert<D,R>::type
-		chain_auto_convert(R& r){ 
+            template<typename R>
+            typename result_of_chain_auto_convert<D,R>::type
+            chain_auto_convert(R& r){ 
             return assign::chain_auto_convert_convert_wrapper(
                 static_cast<D&>(*this),
                 r
             ); 
         }
 
-		template<typename R>
+        template<typename R>
         typename result_of_chain_auto_convert<const D,R>::type
-		chain_auto_convert(R& r)const{ 
+        chain_auto_convert(R& r)const{ 
             return assign::chain_auto_convert_convert_wrapper(
                 static_cast<const D&>(*this),
                 r
             ); 
         }
 
-	};
+    };
     
 }// detail
 }// assign
