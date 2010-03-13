@@ -1,13 +1,13 @@
 //////////////////////////////////////////////////////////////////////////////
-// assign::detail::pair_auto_convert.hpp                                    //
+// assign::detail::pair_traits.hpp                                          //
 //                                                                          //
 //  (C) Copyright 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_DETAIL_PAIR_AUTO_CONVERT_ER_2010_HPP
-#define BOOST_ASSIGN_DETAIL_PAIR_AUTO_CONVERT_ER_2010_HPP
+#ifndef BOOST_ASSIGN_DETAIL_PAIR_TRAITS_ER_2010_HPP
+#define BOOST_ASSIGN_DETAIL_PAIR_TRAITS_ER_2010_HPP
 #include <utility>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/assert.hpp>
@@ -19,14 +19,25 @@
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/assign/chain/reference_traits.hpp>
 
-// The purpose of these traits is, given T and U, to find V such that 
-// V v1 = t; V v2 = u;
+// These traits maps T and U, each of which may identify a reference wrapper, 
+// to V such that 
+//     V v1 = t; V v2 = u;
 // is a valid expression. U and T may be references or reference wrappers
 
 namespace boost{
 namespace assign{
 namespace detail{
 namespace pair_traits{
+
+    template<typename D>
+    struct add_check_symmetry{
+        static void check_symmetry()
+        {
+            typedef typename D::type type;
+            typedef typename D::symmetric::type sym_type;
+            BOOST_MPL_ASSERT((boost::is_same<type,sym_type>));
+        }
+    };
 
     template<typename T,typename U>
     struct use_const : boost::mpl::or_<
@@ -41,7 +52,7 @@ namespace pair_traits{
     >{};
     
     template<typename T,typename U>
-    struct filter_ref_const{
+    struct filter_ref_const : add_check_symmetry< filter_ref_const<T,U> >{
         typedef typename pair_traits::use_reference<T,U>::type use_ref_;
         typedef typename pair_traits::use_const<T,U>::type use_const_;
         template<typename F,typename S>
@@ -56,10 +67,12 @@ namespace pair_traits{
         typedef typename local<T>::type first_;
         typedef typename local<U>::type second_;
         typedef pair<first_,second_> type;
+        
+        struct symmetric : filter_ref_const<U,T>{}; 
     };
 
     template<typename T,typename U>
-    struct ignore_wrapper
+    struct ignore_wrapper : add_check_symmetry< ignore_wrapper<T,U> >
     {
         typedef typename pair_traits::filter_ref_const<T,U>::type traits_;
         typedef typename traits_::first_type first_;
@@ -68,14 +81,20 @@ namespace pair_traits{
             typename boost::is_convertible<first_,second_>::type use_second_;
         typedef typename 
             boost::mpl::if_c<use_second_::value,second_,first_>::type type;
-        BOOST_MPL_ASSERT((boost::is_convertible<first_,type>));
-        BOOST_MPL_ASSERT((boost::is_convertible<second_,type>));
+            
+        struct symmetric : ignore_wrapper<U,T>{};
+        static void internal_check(){
+          typedef add_check_symmetry< ignore_wrapper<T,U> > super_;
+          super_::check_symmetry();
+          BOOST_MPL_ASSERT((boost::is_convertible<first_,type>));
+          BOOST_MPL_ASSERT((boost::is_convertible<second_,type>));
+        }
     };
     
     template<typename T,typename U>
-    struct filter_wrapper : pair_traits::ignore_wrapper<
-        typename reference_traits::filter_wrapper<T>::type,
-        typename reference_traits::filter_wrapper<U>::type
+    struct convert_wrapper : pair_traits::ignore_wrapper<
+        typename reference_traits::convert_wrapper<T>::type,
+        typename reference_traits::convert_wrapper<U>::type
     >{};
 
     namespace meta{
@@ -86,7 +105,7 @@ namespace pair_traits{
             struct apply : M<T,U>{};    
         };
         struct ignore_wrapper : meta::helper<pair_traits::ignore_wrapper>{};
-        struct filter_wrapper : meta::helper<pair_traits::filter_wrapper>{};
+        struct convert_wrapper : meta::helper<pair_traits::convert_wrapper>{};
     }
 
 }// pair_traits

@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_DETAIL_AUTO_SIZE_CHAIN_ADD_CONST_ER_2010_HPP
 #define BOOST_ASSIGN_DETAIL_AUTO_SIZE_CHAIN_ADD_CONST_ER_2010_HPP
-#include <boost/type_traits.hpp>
+#include <boost/type_traits/add_const.hpp>
 
 namespace boost{
 namespace assign{

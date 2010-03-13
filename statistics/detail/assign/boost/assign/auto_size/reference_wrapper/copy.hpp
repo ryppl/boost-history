@@ -30,27 +30,27 @@ namespace detail{
 
         void operator=( const T& r )
         {
-            *ref_ = r;
+            *this->ref_ = r;
         }
 
         operator T&() const
         {
-            return *ref_;
+            return *this->ref_;
         }
 
         void swap( assign_reference_copy& r )
         {
-            std::swap( *ref_, *r.ref_ );
+            std::swap( *this->ref_, *r.ref_ );
         }
 
         T& get_ref() const
         {
-            return *ref_;
+            return *this->ref_;
         }
 
         void rebind( T & r )
     	{
-            ref_ = &r;
+            this->ref_ = &r;
     	}
         
     private:

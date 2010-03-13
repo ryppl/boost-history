@@ -26,24 +26,24 @@ namespace detail{
 
         void operator=( T& r )
         {
-            ref_ = &r;
+            this->ref_ = &r;
         }
 
         operator T&() const
         {
-            return *ref_;
+            return *this->ref_;
         }
 
         void swap( assign_reference_rebind& r )
         {
             T* tmp = this->ref_;
-            ref_ = r.ref_;
+            this->ref_ = r.ref_;
             r.ref_ = tmp;
         }
 
         T& get_ref() const
         {
-            return *ref_;
+            return *this->ref_;
         }
         
     private:

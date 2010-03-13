@@ -11,7 +11,11 @@
 #include <boost/mpl/assert.hpp>
 #include <boost/range.hpp>
 #include <boost/range/adaptor/transformed.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_convertible.hpp>
+
+// Usage:
+//   convert_range<T>(r)
 
 namespace boost{
 namespace assign{
@@ -41,21 +45,24 @@ namespace result_of{
         typename U = typename boost::range_reference<Rng>::type>
     struct convert_range
     {
-        
-        BOOST_MPL_ASSERT((
-            boost::is_convertible<U,T>
-        ));
 		typedef functional::converter<T> adaptor_;
         typedef boost::transform_range<adaptor_,Rng> type;
+        
+        static void internal_check(){
+            BOOST_MPL_ASSERT((boost::is_convertible<U,T>));
+            typedef boost::transform_range<adaptor_,Rng> new_range_;
+            typedef typename boost::range_reference<new_range_>::type new_ref_;
+            BOOST_MPL_ASSERT((boost::is_same<new_ref_,T>));
+        }
         static type call(Rng& r){
+            internal_check();
         	return type(adaptor_(),r);
         }
     };
     
 }
 
-    // This seems to take care of const Rng. Overloads with const Rng have
-    // compile deficiencies. TODO verify this.
+    // Takes care of const Rng, I think.
 
     template<typename T,typename Rng>
     typename detail::result_of::convert_range<T,Rng>::type 

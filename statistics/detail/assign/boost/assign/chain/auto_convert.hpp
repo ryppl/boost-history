@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// assign::detail::chain_auto_convert.hpp                                   //
+// assign::chain_auto_convert.hpp                                   //
 //                                                                          //
 //  (C) Copyright 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -11,59 +11,66 @@
 #include <boost/typeof/typeof.hpp>
 #include <boost/range.hpp>
 #include <boost/range/chain.hpp>
-#include <boost/assign/chain/pair_traits.hpp>
+#include <boost/assign/chain/pair_range_traits.hpp>
 #include <boost/assign/chain/converter.hpp>
 
-// See note in auto_size::expr for rationable behind this class
+// Usage:
+//    chain_auto_convert(r1,r2)
+// returns a range that is formed by joining r1 and r2 whose reference is
+// convertible from either of those of r1 and r2. 
+//
+// Requirements : if either of r1 or r1 contains reference wrappers (W) pointing 
+// to some type T, 
+//     is_ref_wrapper<W>::type                         boolean constant
+//     ref_wrapper_traits::meta::value_of<W>::type     class
+// Bugs:
+// const ranges cause BAD_EXC_ACCESS
 
 namespace boost{
 namespace assign{
-namespace detail{
 namespace result_of{
 namespace chain_auto_convert{
     
     template<typename Conv,typename R1,typename R2>
-    struct generic{
-        typedef typename boost::range_reference<R1>::type r1_;
-        typedef typename boost::range_reference<R2>::type r2_;
-        typedef typename Conv::template apply<r1_,r2_>::type to_;
-        typedef result_of::convert_range<to_,R1> caller1_;
-        typedef result_of::convert_range<to_,R2> caller2_;
-        typedef typename caller1_::type conv_r1_;
-        typedef typename caller2_::type conv_r2_;
-		static conv_r1_& conv_r1;
-		static conv_r2_& conv_r2;
+    struct generic : detail::pair_range_traits::generic<Conv,R1,R2>{
+        typedef detail::pair_range_traits::generic<Conv,R1,R2> super_;
+        typedef typename super_::new_range1_ new_range1_;
+        typedef typename super_::new_range2_ new_range2_;
+		static new_range1_& new_range1;
+		static new_range2_& new_range2;
         typedef BOOST_TYPEOF_TPL(
         	boost::chain(
-        		conv_r1,
-            	conv_r2
+        		new_range1,
+            	new_range2
         	)
         ) type;
 
         // MSVC:
         //typedef BOOST_TYPEOF_NESTED_TYPEDEF_TPL(
         //    nested,
-        //    boost::chain(conv1,conv22)
+        //    boost::chain(conv_r1,conv_r2)
         //);
         //typedef typename nested::type type;
 
-        typedef detail::functional::converter<to_> converter_;
         static type call(R1& r1, R2& r2){
-            conv_r1_ conv_r1 = caller1_::call(r1);
-            conv_r2_ conv_r2 = caller2_::call(r2);
-            return boost::chain(conv_r1,conv_r2);
-            // boost::chain(caller1_::call(r1),caller2_::call(r2)); // Not!
+            super_::internal_check();
+            typedef typename super_::caller1_ caller1_;
+            typedef typename super_::caller2_ caller2_;
+            new_range1_ nr1 = caller1_::call(r1);
+            new_range2_ nr2 = caller2_::call(r2);
+            return boost::chain(nr1,nr2);
+            //boost::chain(caller1_::call(r1),caller2_::call(r2)); // Not!
         }
     };
 
     template<typename R1,typename R2>
     struct ignore_wrapper  
-        : chain_auto_convert::generic<pair_traits::meta::ignore_wrapper,R1,R2>
+        : chain_auto_convert::generic<detail::pair_traits::meta::ignore_wrapper,R1,R2>
         {};
 
     template<typename R1,typename R2>
-    struct filter_wrapper  
-        : chain_auto_convert::generic<pair_traits::meta::filter_wrapper,R1,R2>
+    struct convert_wrapper  
+        : chain_auto_convert::generic<detail::pair_traits::meta::convert_wrapper,R1,R2>
         {};
 
 }// chain_auto_convert
@@ -85,23 +92,22 @@ namespace chain_auto_convert{
         return g_::call(r1,r2);
     }
 
-    // filter_wrapper
+    // convert_wrapper
     template<typename R1,typename R2> 
-    typename result_of::chain_auto_convert::filter_wrapper<R1,R2>::type
-    chain_auto_convert_filter_wrapper(R1& r1,R2& r2){
-        typedef result_of::chain_auto_convert::filter_wrapper<R1,R2> g_;
+    typename result_of::chain_auto_convert::convert_wrapper<R1,R2>::type
+    chain_auto_convert_convert_wrapper(R1& r1,R2& r2){
+        typedef result_of::chain_auto_convert::convert_wrapper<R1,R2> g_;
         return g_::call(r1,r2);
     }
 
     // default
     template<typename R1,typename R2> 
-    typename result_of::chain_auto_convert::filter_wrapper<R1,R2>::type
+    typename result_of::chain_auto_convert::convert_wrapper<R1,R2>::type
     chain_auto_convert(R1& r1,R2& r2){
-        typedef result_of::chain_auto_convert::filter_wrapper<R1,R2> g_;
+        typedef result_of::chain_auto_convert::convert_wrapper<R1,R2> g_;
         return g_::call(r1,r2);
     }
 
-}// detail
 }// assign
 }// boost
 

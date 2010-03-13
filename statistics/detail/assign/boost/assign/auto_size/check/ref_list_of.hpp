@@ -26,6 +26,7 @@
 #include <boost/assign/auto_size/check/iterator.hpp>
 #include <boost/assign/auto_size/check/lifo.hpp>
 #include <boost/assign/auto_size/check/rebind_array.hpp>
+#include <boost/assign/auto_size/check/chain.hpp>
 
 // Until range_ex avail.
 #include <boost/assign/auto_size/check/max_element.hpp>
@@ -132,6 +133,17 @@ void check_ref_list_of()
            ref_list_of(a1)(b1)(c1)(d1)(e1)(f1)(g1)(h1),
            a1,b1,c1,d1,e1,f1,g1,h1);
     }
+
+    {	
+        val_ a, b, c, d, e, f, g, h;
+        BOOST_AUTO(tmp1,ref_list_of(a)(b)(c)(d));
+        BOOST_AUTO(tmp2,cref_list_of(e)(f)(g)(h)); // For now (rvalue otherwise)
+        check_chain(
+           tmp1,
+           tmp2,
+           a,b,c,d,e,f,g,h);
+    }
+
 
 }
 

@@ -30,20 +30,23 @@ namespace ref_wrapper_traits{
         ::template apply<T>{};
 
     namespace meta{
+        // specialize on Tag
         template<typename Tag>
         struct value_of{
-            // define template<typename T> struct apply;
+            //  template<typename T> struct apply;
         };
 
-        template<typename T> struct default_value_of{};
-        template<typename T,template<typename> class W> 
-        struct default_value_of<W<T> >{ typedef T type; };
+        namespace impl{
+           template<typename T> struct value_of{};
+           template<typename T,template<typename> class W> 
+           struct value_of<W<T> >{ typedef T type; };
+        }
         
         template<>
         struct value_of<ref_wrapper_traits::tag::default_>
         { 
             template<typename T>
-            struct apply :  default_value_of<T>{};
+            struct apply :  impl::value_of<T>{};
         };
     }
 

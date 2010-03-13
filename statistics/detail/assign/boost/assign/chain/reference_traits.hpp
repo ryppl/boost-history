@@ -19,7 +19,7 @@
 #include <boost/assign/chain/is_reference_wrapper.hpp>
 #include <boost/assign/chain/reference_wrapper_traits.hpp>
 
-// Maps U to a convertible type where U can be a reference_wrapper or a ref.
+// Map T, a reference or a reference_wrapper, to a convertible type.
 
 namespace boost{
 namespace assign{
@@ -52,7 +52,7 @@ namespace reference_traits{
     };
 
     template<typename T>
-    struct filter_wrapper{
+    struct convert_wrapper{
         typedef typename reference_traits::remove_cref<T>::type value_;
         typedef typename detail::is_ref_wrapper<value_>::type is_rw_;
         typedef typename boost::mpl::eval_if_c<     
@@ -62,72 +62,6 @@ namespace reference_traits{
         >::type type;
     };
 
-namespace pair{
-
-    template<typename T,typename U>
-    struct use_const : boost::mpl::or_<
-        typename reference_traits::is_const<T>::type,
-        typename reference_traits::is_const<U>::type
-    >{};
-        
-    template<typename T,typename U>
-    struct use_reference : boost::mpl::and_<
-        typename boost::is_reference<T>::type,
-        typename boost::is_reference<U>::type
-    >{};
-    
-    template<typename T,typename U>
-    struct filter_ref_const{
-        typedef typename pair::use_reference<T,U>::type use_ref_;
-        typedef typename pair::use_const<T,U>::type use_const_;
-        template<typename V>
-        struct local 
-           : reference_traits::filter_ref_const<
-               use_ref_::value,use_const_::value,V>{}; 
-        typedef typename local<T>::type first_;
-        typedef typename local<U>::type second_;
-        typedef std::pair<first_,second_> type;
-    };
-}// pair
-namespace convertible_to{
-
-    template<typename T,typename U>
-    struct ignore_wrapper
-    {
-        typedef typename pair::filter_ref_const<T,U>::type pair_;
-        typedef typename pair_::first first_;
-        typedef typename pair_::second second_;
-        typedef typename boost::is_convertible<
-             first_, // from
-             second_ // to
-        >::type use_second_;
-        typedef typename boost::mpl::if_c<
-            use_second_::value,
-            second_,
-            first_
-        >::type type;
-        BOOST_MPL_ASSERT((boost::is_convertible<first_,type>));
-        BOOST_MPL_ASSERT((boost::is_convertible<second_,type>));
-    };
-
-    template<typename T,typename U>
-    struct filter_wrapper : convertible_to::ignore_wrapper<
-        typename reference_traits::filter_wrapper<T>::type,
-        typename reference_traits::filter_wrapper<U>::type
-    >{};
-
-    namespace meta{
-
-        template<template<typename,typename> class M>
-        struct helper{
-            template<typename T,typename U>
-            struct apply : boost::mpl::identity< M<T,U> >{};    
-        };
-        struct ignore_wrapper : meta::helper<convertible_to::ignore_wrapper>{};
-        struct filter_wrapper : meta::helper<convertible_to::filter_wrapper>{};
-    }
-
-}// convertible_to
 }// reference_traits
 }// detail
 }// assign
