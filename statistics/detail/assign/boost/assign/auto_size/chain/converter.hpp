@@ -56,7 +56,7 @@ namespace result_of{
         }
         static type call(Rng& r){
             internal_check();
-        	return type(adaptor_(),r);
+            return type(adaptor_(),r);
         }
     };
     
