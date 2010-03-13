@@ -1,6 +1,6 @@
 // Revision history:
 //
-// March 11, 2010 : Added assign/chain. See comments in detail/expr for rationale
+// March 11, 2010 : Added assign/chain. 
 // March 8, 2010 : Added a policy dispatcher, csv_policy, to allow a common
 // policy tag for csv and non-csv functions.
 // March 8, 2010 : Made array_interface derive from assign_detail::convert for 
