@@ -15,6 +15,8 @@
 #define BOOST_STM_TRANSACTIONS_STACK__HPP
 
 #include <stack>
+#include <boost/stm/detail/config.hpp>
+
 namespace boost { namespace stm {
 
 //-----------------------------------------------------------------------------
