@@ -29,10 +29,10 @@ struct converter{
 
     typedef T result_type;
 
-	template<typename U>
+    template<typename U>
     T operator()(U& arg)const{ return arg; }
 
-	template<typename U>
+    template<typename U>
     T operator()(const U& arg)const{ return arg; }
 
 };
@@ -45,7 +45,7 @@ namespace result_of{
         typename U = typename boost::range_reference<Rng>::type>
     struct convert_range
     {
-		typedef functional::converter<T> adaptor_;
+        typedef functional::converter<T> adaptor_;
         typedef boost::transform_range<adaptor_,Rng> type;
         
         static void internal_check(){
