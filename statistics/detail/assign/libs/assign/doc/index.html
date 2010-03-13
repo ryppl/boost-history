@@ -38,7 +38,7 @@
             <li>Function <a href="#map_list_of"><code>map_list_of()</code></a> 
             <li>Function <a href="#tuple_list_of"><code>tuple_list_of()</code></a>
             <li>Functions <a href="#repeat"><code>repeat()</code></a>, <a href="#repeat"><code>repeat_fun()</code></a> and <a href="#repeat"><code>range()</code> </a>
-            <li>Functions <a href="#chain_auto_convert"><code>chain_auto_convert()</code> </a>
+            <li>Function <a href="#chain_auto_convert"><code>chain_auto_convert()</code> </a>
             <li>Functions <a href="#ref_list_of"><code>ref_list_of()</code></a>, <a href="#ref_list_of"><code>cref_list_of()</code></a> and variants   
             <li>Functions <a href="#ref_csv"><code>ref_csv()</code></a>, <a href="#ref_csv"><code>cref_csv()</code></a> and variants   
             <li>A <a href="#complicated">"complicated"</a> example    
@@ -61,10 +61,11 @@
         <li>Functions <a href="#ref-ref_list_of"><code>ref_list_of()</code></a>, <a href="#ref-ref_list_of"><code>cref_list_of()</code></a>, and variants</li>
         <li>Functions <a href="#ref-ref_csv"><code>ref_csv()</code></a>, <a href="#ref-ref_csv"><code>cref_csv()</code></a>, and variants</li>
         <li>Operator <a href="#ref-std"><code>+=</code></a> for standard containers</li>
-        <li>Functions <a href="#ref-repeat_ref"><code>repeat()</code></a>, <a href="#ref-repeat_ref"><code>repeat_fun()</code></a> and 
-                                                                      <a href="#ref-repeat_ref"><code>range()</code>
+        <li>Functions <a href="#ref-repeat"><code>repeat()</code></a>, <a href="#ref-repeat"><code>repeat_fun()</code></a> and 
+                                                                      <a href="#ref-repeat"><code>range()</code>
                                                                       </a></li>
-        <li><a href="#ref-limit">Customizing</a> argument list sizes </li>
+         <li>Function <a href="#ref-chain_auto_convert"><code>chain_auto_convert()</code></a></li>
+       <li><a href="#ref-limit">Customizing</a> argument list sizes </li>
      </ul>
     <li>          
         <a href="#ref-impl">Reference for the implementation</a>
@@ -74,7 +75,7 @@
         <li> Proxy object <a href="#ref-list_inserter"><code>list_inserter&lt;&gt;</code></a></li>
         <li> Proxy object <a href="#ref-static_generic_list"><code>static_generic_list&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-array_interface"><code>array_interface&lt;&gt;</code></a> </li>
-        <li> Proxy object <a href="#ref-chainable"><code>chainable&lt;&gt;</code></a> </li>
+        <li> Proxy object <a href="#ref-chain_as_member"><code>chain_as_member&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-expr"><code>expr&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-lazy_array"><code>lazy_array&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-static_array"><code>static_array&lt;&gt;</code></a> </li>
@@ -493,7 +494,7 @@ however, achieves a similar goal. Continuing the <a href="#repeat">example</code
 <span class=special>}</span></pre>
 </blockquote>
 
-As of March 2010 this functionality is experimental, so caution is advised in using it.
+As of March 2010 this functionality is experimental, so caution is advised in using it. See the <a href="#ref-chain_auto_convert">reference</a>.
 
 <h3>Functions <code>ref_list_of()</code>, <code>cref_list_of()</code> <a name="ref_list_of"> and variants</h3>
 
@@ -829,9 +830,10 @@ Originally arguments were passed by value (and still is in
         <li>Functions <a href="#ref-ref_list_of"><code>ref_list_of()</code></a>, <a href="#ref-ref_list_of"><code>cref_list_of()</code></a>, and variants</li>
         <li>Functions <a href="#ref-ref_csv"><code>ref_csv()</code></a>, <a href="#ref-ref_csv"><code>cref_csv()</code></a>, and variants</li>
         <li>Operator <a href="#ref-std"><code>+=</code></a> for standard containers</li>
-        <li>Functions <a href="#ref-repeat_ref"><code>repeat()</code></a>, <a href="#ref-repeat_ref"><code>repeat_fun()</code></a> and 
-                                                                      <a href="#ref-repeat_ref"><code>range()</code>
+        <li>Functions <a href="#ref-repeat"><code>repeat()</code></a>, <a href="#ref-repeat"><code>repeat_fun()</code></a> and 
+                                                                      <a href="#ref-repeat"><code>range()</code>
                                                                       </a></li>
+        <li>Function <a href="#ref-chain_auto_convert"><code>chain_auto_convert()</code></a></li>
         <li><a href="#ref-limit">Customizing</a> argument list sizes </li>
      </ul>
 
@@ -1114,7 +1116,7 @@ The maximum number of arguments to a csv function is <code>BOOST_ASSIGN_CSV_SIZE
     necessary to allow for types convertible to <code>V</code>.   
 
   <h3>Functions <code>repeat()</code>, 
-     <code>repeat_fun()</code> and <code>range()</code> <a name="ref-repeat_ref"> </h3>
+     <code>repeat_fun()</code> and <code>range()</code> <a name="ref-repeat"> </h3>
   <p>
             These first two function exist both as free-standing functions and as member functions of the object returned by 
       <code>list_of()</code> and of <code>list_inserter</code>. 
@@ -1139,6 +1141,42 @@ The maximum number of arguments to a csv function is <code>BOOST_ASSIGN_CSV_SIZE
   </blockquote>
   </p>
 
+
+  <h3>Function <code>chain_auto_convert()</code> <a name="ref-chain_auto_convert"> </h3>
+  
+  <p> This function joins two ranges into one whose dereferenced type is one that is convertible
+  to from those of the two input ranges. In particular, either range may contain reference wrappers 
+  if they meet certain traits requirement. This function serves as a sustitute for <a href="#ref-repeat"><code>range()</code></a>
+  within the <a href="#auto_size">auto-size</a> framework. This function is still experimental as of March 2010. </p>
+
+    <p>
+  <b>Header</b> <code>&lt;boost/assign/auto_size/chain/auto_convert.hpp></code>
+  </p>
+  
+  <p> <b>Template parameters</b> </p>
+
+  <blockquote>
+  	<table cellpadding=5 border=1>
+  	<tr><th class="head">Parameter</th> <th class="head">Description</th>
+  	<tr><td><tt>R1</tt></td><td>First argument</td></tr>
+  	<tr><td><tt>R2</tt></td><td>Second argument</td></tr>
+  	</table>
+  </blockquote>
+
+  <b>Associated types</b>
+
+  <p>To be defined </p>
+
+  <b>Usage</b>
+  <p>Let <code>r1</code> and <code>r2</code> be instances of <code>R1</code> and <code>R2</code> </p>
+
+  <blockquote>
+  	<table cellpadding=5 border=1>
+  	<tr><th class="head">Expression</th> <th class="head">Result</th>
+  	<tr><td><tt>chain_auto_convert(r1,r2)</tt></td><td>A range joining <code>r1</code> and <code>r2</code> </td></tr>
+  	</table>
+  </blockquote>
+
   <h2>Reference for the implementation <a name="ref-impl"> </h2>
   Proxy objects are those that are returned by <a name="ref-functions">functions<a>, which are
   invisible to their caller, and take care of the implementation.
@@ -1150,7 +1188,7 @@ The maximum number of arguments to a csv function is <code>BOOST_ASSIGN_CSV_SIZE
         <li> Proxy object <a href="#ref-list_inserter"><code>list_inserter&lt;&gt;</code></a></li>
         <li> Proxy object <a href="#ref-static_generic_list"><code>static_generic_list&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-array_interface"><code>array_interface&lt;&gt;</code></a> </li>
-        <li> Proxy object <a href="#ref-chainable"><code>chainable&lt;&gt;</code></a> </li>
+        <li> Proxy object <a href="#ref-chain_as_member"><code>chain_as_member&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-expr"><code>expr&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-lazy_array"><code>lazy_array&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-static_array"><code>static_array&lt;&gt;</code></a> </li>
@@ -1511,7 +1549,7 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
   	<table cellpadding=5 border=1>
   	<tr><th class="head">Expression</th> <th class="head">Description</th>
   	<tr><td><tt>R&lt;T&gt;</tt></td><td> Reference wrapper </td> </tr>
-  	<tr><td><a href="#ref-chainable"><tt>chainable&lt&gt</tt></a></td><td> Public base class of <a href="#ref-array_interface"><tt>array_interface&lt&gt</tt></a></td> </tr>
+  	<tr><td><a href="#ref-chain_as_member"><tt>chain_as_member&lt&gt</tt></a></td><td> Public base class of <a href="#ref-array_interface"><tt>array_interface&lt&gt</tt></a></td> </tr>
   	<tr><td><a href="#ref-converter"><tt>converter&lt&gt</tt></a></td><td> Public base class of <a href="#ref-array_interface"><tt>array_interface&lt&gt</tt></a></td> </tr>
   	</table>
   </blockquote>
@@ -1528,7 +1566,11 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
   	</table>
   </blockquote>
 
-  <h3><a name="ref-chainable">Proxy object <code>chainable&lt;&gt;</code></a></h3> 
+  <h3><a name="ref-chain_as_member">Proxy object <code>chain_as_member&lt;&gt;</code></a></h3> 
+
+    <p>
+  <b>Header</b> <code>&lt;boost/assign/auto_size/chain/as_member.hpp></code>
+  </p>
 
     <p>
   <b>Template parameters</b> 
@@ -1656,15 +1698,16 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
    This proxy object is the basis of the <a href="#auto_size">auto-size</a> framework. A call to the 
    unary operator returns an object that keeps a reference to the passed argument, and links to the 
    current object, thereby forming a collection whose final size is determined at compile time. 
-   The function <code>write_to_array()</code> passes the elements of the collection to any array, 
+   The function <code>write_to_array()</code> is typically used to pass the elements of the collection to the policy, 
    that will be chosen to have the desired interface, usually iterators and conversion operators. 
 </p>   
 <p>   
    The successive arguments that are passed to the unary operator must be allocated on the stack. 
-   Consequently, this set up is ill-suited for the method <code>range()</code> whose argument size must 
+   Consequently, this set up is ill-suited for the method <a href="#ref-repeat"><code>range()</code></a> whose argument size must 
    be specified explicitly (unless its argument has static size), unlike the remainder of this library. 
-   For a similar interface, it is recommended to choose a policy, such as <a href="#ref-array_interface">array_interface</a>, that 
-   interoperates with the function <a href="#chain_auto_convert"><code>chain_auto_convert()</code></a>.
+   To overcome this limitation it is recommended to choose a policy, 
+   such as <a href="#ref-array_interface">array_interface</a>, that 
+   interoperates with the function <a href="#ref-chain_auto_convert"><code>chain_auto_convert()</code></a>.
 </p>
   <h3><a name="ref-lazy_array">Proxy object <code>lazy_array&lt;&gt;</code></a></h3> 
   <b>Header</b> <code>&lt;boost/assign/auto_size/array/lazy.hpp></code>

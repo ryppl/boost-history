@@ -15,7 +15,7 @@
 #include <boost/assign/list_of.hpp> // for assign_detail::converter
 #include <boost/assign/auto_size/reference_wrapper/has_copy_semantics.hpp>
 #include <boost/assign/auto_size/array/ref.hpp>
-#include <boost/assign/auto_size/array/chainable.hpp>
+#include <boost/assign/auto_size/chain/as_member.hpp>
 
 namespace boost{
 namespace assign{
@@ -52,7 +52,7 @@ namespace auto_size{
     	array_interface<T,N,R,D>,
         typename array_interface_traits<T,N,R>::const_iterator
     >
-    ,public auto_size::chainable<array_interface<T,N,R,D> >
+    ,public detail::chain_as_member<array_interface<T,N,R,D> >
     {
         typedef array_interface_traits<T,N,R> traits;
         typedef typename traits::ref_ ref_;
