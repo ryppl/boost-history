@@ -26,6 +26,7 @@
 #include <boost/assign/auto_size/check/iterator.hpp>
 #include <boost/assign/auto_size/check/lifo.hpp>
 #include <boost/assign/auto_size/check/rebind_array.hpp>
+#include <boost/assign/auto_size/chain/mpl_check.hpp>
 #include <boost/assign/auto_size/check/chain.hpp>
 
 // Until range_ex avail.
@@ -47,7 +48,7 @@ void check_ref_list_of()
             g1 = 0, h1 = 7;
 
     {
-        // ---- Examples in the documentation
+        // ---- Example in the documentation
         val_ a=a1, b=b1, c=c1, d=d1, e=e1, f=f1, g=g1, h=h1;
             val_& max = *max_element( ref_list_of(a)(b)(c)(d)(e)(f)(g)(h) );
             BOOST_ASSIGN_CHECK_EQUAL( max , f );
@@ -133,13 +134,14 @@ void check_ref_list_of()
            ref_list_of(a1)(b1)(c1)(d1)(e1)(f1)(g1)(h1),
            a1,b1,c1,d1,e1,f1,g1,h1);
     }
+    boost::assign::detail::chain_mpl_check::compound();
     {	
         val_ a, b, c, d, e, f, g, h;
         BOOST_AUTO(tmp1,ref_list_of(a)(b)(c)(d));
-        //check_chain(
-        //   tmp1,
-        //   cref_list_of(e)(f)(g)(h),
-        //   a,b,c,d,e,f,g,h);
+        check_chain(
+           tmp1,
+           cref_list_of(e)(f)(g)(h),
+           a,b,c,d,e,f,g,h);
     }
 
     // TODO comparison operators

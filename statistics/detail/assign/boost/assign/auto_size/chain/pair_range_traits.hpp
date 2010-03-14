@@ -11,7 +11,6 @@
 #include <boost/range.hpp>
 #include <boost/assign/auto_size/chain/pair_traits.hpp>
 #include <boost/assign/auto_size/chain/converter.hpp>
-#include <boost/assign/auto_size/chain/is_reference_wrapper.hpp>
 
 // Maps (R1,R2) to a type convertible to by either of the dereference type of
 // either of the input ranges. 
@@ -22,12 +21,15 @@ namespace detail{
 namespace pair_range_traits{
 
     template<typename Conv,typename R1,typename R2>
-    struct generic{
+    class generic{
         typedef typename boost::range_reference<R1>::type ref1_;
         typedef typename boost::range_reference<R2>::type ref2_;
-        typedef typename 
-            Conv::template apply<ref1_,ref2_>::type convertible_to_;
+        
+        template<typename X1,typename X2>
+        struct helper : Conv::template apply<X1,X2>{};
 
+        public:
+        typedef typename helper<ref1_,ref2_>::type convertible_to_;
         typedef detail::result_of::convert_range<convertible_to_,R1> caller1_;
         typedef detail::result_of::convert_range<convertible_to_,R2> caller2_;
         
@@ -38,16 +40,6 @@ namespace pair_range_traits{
             caller1_::internal_check();
             caller1_::internal_check();
         }
-
-        struct convertible_to_traits{
-            typedef typename boost::remove_reference<convertible_to_>::type c_;
-            typedef typename boost::remove_const<c_>::type val_;
-            typedef detail::is_ref_wrapper<val_> is_wrapper;
-            
-            // Expected : (!is_wrapper::value), if Conv = apply_conversion,
-            // usually,  but not necessarilly, for ex if a ref-wrapper point to 
-            // another ref-wrapper.
-        };
         
     };
 

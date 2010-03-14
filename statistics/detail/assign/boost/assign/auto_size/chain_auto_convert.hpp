@@ -10,6 +10,7 @@
 #define BOOST_ASSIGN_AUTO_CHAIN_AUTO_CONVERT_ER_2010_HPP
 
 #include <boost/assign/auto_size/chain/auto_convert.hpp> 
+#include <boost/assign/auto_size/chain/generalized_auto_convert.hpp> 
 #include <boost/assign/auto_size/reference_wrapper/conversion_traits.hpp> 
 
 #endif

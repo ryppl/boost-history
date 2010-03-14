@@ -11,9 +11,8 @@
 #include <boost/next_prior.hpp>
 #include <boost/range/algorithm/copy.hpp>
 #include <boost/assign/auto_size/ref_list_of.hpp>
-#include <boost/assign/auto_size/chain/add_const.hpp>
 #include <boost/assign/auto_size/chain_auto_convert.hpp>
-#include <boost/assign/auto_size/chain/mpl_check.hpp>
+#include <boost/assign/auto_size/chain/mpg.hpp>
 #include <libs/assign/example/chain.h>
 
 void example_chain(std::ostream& os)
@@ -23,28 +22,67 @@ void example_chain(std::ostream& os)
  
     using namespace boost::assign;
     using namespace boost::assign::detail;
-	os << "-> test_chain: " << std::endl;
+	os << "-> example_chain: " << std::endl;
     typedef int val_;
-	val_ a = 1, b = 2, c = 3, d = 4, e = 5, f = 6, g = 7, h = 8, i = 9 ;
+	const val_ a = 1, b = 2, c = 3, d = 4, e = 5, f = 6, g = 7, h = 8, i = 9 ;
     typedef boost::array<val_,3> ar_;
     typedef std::vector<val_> vec_;
-    ar_ ar; ar.assign( -1 );
+    ar_ ar1; ar1.assign( -1 );
+    ar_ ar2; ar2.assign( 0 );
+    ar_ ar3; ar3.assign( 1 );
+    ar_ ar4; ar4.assign( 2 );
 	BOOST_AUTO(tmp1,ref_list_of(a)(b)(c)(d)); 
 	BOOST_AUTO(tmp2,cref_list_of(e)(f)(g)(h)); 
-        
-    os << *boost::begin(ref_list_of(e)(f)(g)(h).chain_auto_convert(cref_list_of(e)(f)(g)(h))) << std::endl;
+       
+    const int shift = 0;
 
-    //    //detail::add_const(tmp1).chain_auto_convert(tmp2)); 
-/*        
-    os << *boost::next(boost::begin(tmp3),0) << std::endl;// EXC_BAD_ACCESS if add_const 
-    os << *boost::next(boost::begin(tmp3),1) << std::endl;
-    os << *boost::next(boost::begin(tmp3),2) << std::endl;
-    os << *boost::next(boost::begin(tmp3),3) << std::endl;
-    os << *boost::next(boost::begin(tmp3),4) << std::endl;
-    os << *boost::next(boost::begin(tmp3),5) << std::endl;
-    os << *boost::next(boost::begin(tmp3),6) << std::endl;
-    os << *boost::next(boost::begin(tmp3),7) << std::endl;
-*/    
+    // os << boost::mpg::chain(tmp1)(ar2);
+
+    boost::copy(
+         chain_auto_convert(
+            ref_list_of(a)(b)(c)(d),
+            chain_auto_convert(
+               cref_list_of(e)(f)(g)(h),
+               ar1
+            )
+        ),
+        std::ostream_iterator<val_>(os," ")
+    ); 
+    os << "nested - rvalues : OK" << std::endl;
+
+    boost::copy(
+         chain_auto_convert(
+            tmp1,
+            chain_auto_convert(
+               tmp2,
+               ar1
+            )
+        ),
+        std::ostream_iterator<val_>(os," ")
+    ); 
+    os << "nested - lvalues : OK" << std::endl;
+
+    //boost::copy(
+    //    chain_auto_convert(
+    //        ref_list_of(a)(b)(c)(d)
+    //        ,cref_list_of(e)(f)(g)(h)
+    //        ,ar1
+    //    ),
+    //    std::ostream_iterator<val_>(os," ")
+    //); // EXC_BAD_ACCESS
+    os << "flattened - rvalues : EXC_BAD_ACCESS" << std::endl;
+    
+    boost::copy(
+        chain_auto_convert(
+            tmp1
+            ,tmp2
+            ,ar1
+        ),
+        std::ostream_iterator<val_>(os," ")
+    );
+    os << "flattened - lvalues : OK" << std::endl;
+
+
 	os << "<- " << std::endl;
     
 }

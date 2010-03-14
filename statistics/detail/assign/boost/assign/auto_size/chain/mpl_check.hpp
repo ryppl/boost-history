@@ -106,10 +106,6 @@ namespace pair_range_traits{
     {
         typedef pair_range_traits::helper<R1,R2> helper_;
         helper_::internal_check();
-        typedef typename helper_::convertible_to_traits traits_;
-        BOOST_MPL_ASSERT_NOT((
-           traits_::is_wrapper
-        ));
     }
 
 

@@ -17,8 +17,6 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/remove_const.hpp>
 #include <boost/type_traits/remove_reference.hpp>
-//#include <boost/assign/auto_size/chain/is_reference_wrapper.hpp>
-//#include <boost/assign/auto_size/chain/reference_wrapper_traits.hpp>
 
 #include <boost/assign/auto_size/chain/conversion_traits.hpp>
 
