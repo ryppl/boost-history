@@ -7,12 +7,10 @@
 #include <vector>
 #include <boost/array.hpp>
 #include <boost/typeof/typeof.hpp>
-#include <boost/range/chain.hpp>
 #include <boost/next_prior.hpp>
 #include <boost/range/algorithm/copy.hpp>
 #include <boost/assign/auto_size/ref_list_of.hpp>
 #include <boost/assign/auto_size/chain_auto_convert.hpp>
-#include <boost/assign/auto_size/chain/mpg.hpp>
 #include <libs/assign/example/chain.h>
 
 void example_chain(std::ostream& os)
@@ -36,8 +34,6 @@ void example_chain(std::ostream& os)
        
     const int shift = 0;
 
-    // os << boost::mpg::chain(tmp1)(ar2);
-
     boost::copy(
          chain_auto_convert(
             ref_list_of(a)(b)(c)(d),
@@ -48,7 +44,7 @@ void example_chain(std::ostream& os)
         ),
         std::ostream_iterator<val_>(os," ")
     ); 
-    os << "nested - rvalues : OK" << std::endl;
+    os << "chain(x,chain(y,z)) - rvalues : OK" << std::endl;
 
     boost::copy(
          chain_auto_convert(
@@ -60,7 +56,7 @@ void example_chain(std::ostream& os)
         ),
         std::ostream_iterator<val_>(os," ")
     ); 
-    os << "nested - lvalues : OK" << std::endl;
+    os << "chain(x,chain(y,z)) - lvalues : OK" << std::endl;
 
     //boost::copy(
     //    chain_auto_convert(
@@ -70,7 +66,7 @@ void example_chain(std::ostream& os)
     //    ),
     //    std::ostream_iterator<val_>(os," ")
     //); // EXC_BAD_ACCESS
-    os << "flattened - rvalues : EXC_BAD_ACCESS" << std::endl;
+    os << " chain(x,y,z)- rvalues : EXC_BAD_ACCESS" << std::endl;
     
     boost::copy(
         chain_auto_convert(
@@ -80,7 +76,7 @@ void example_chain(std::ostream& os)
         ),
         std::ostream_iterator<val_>(os," ")
     );
-    os << "flattened - lvalues : OK" << std::endl;
+    os << "chain(x,y,z) - lvalues : Some faulty values" << std::endl;
 
 
 	os << "<- " << std::endl;
