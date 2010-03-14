@@ -10,7 +10,7 @@
 
 #include <boost/fusion/iterator/prior.hpp>
 #include <boost/fusion/iterator/value_of.hpp>
-#include <boost/fusion/sequence/intrinsic/end.hpp>
+#include <boost/fusion/sequence/intrinsic/back.hpp>
 
 namespace boost { namespace mpl
 {

@@ -8,6 +8,7 @@
 #ifndef BOOST_FUSION_MPL_BEGIN_HPP
 #define BOOST_FUSION_MPL_BEGIN_HPP
 
+#include <boost/fusion/container/vector/convert.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/mpl/fusion_iterator.hpp>
 
@@ -23,7 +24,11 @@ namespace boost { namespace mpl
         struct apply
         {
             typedef
-                fusion_iterator<typename fusion::result_of::begin<Seq>::type>
+                fusion_iterator<
+                    typename fusion::result_of::begin<
+                        typename fusion::result_of::as_vector<Seq>::type
+                    >::type
+                >
             type;
         };
     };
