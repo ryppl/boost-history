@@ -19,6 +19,8 @@
 
 namespace boost { namespace synchro {
 
+    struct force_lock_t
+    {};
     struct defer_lock_t
     {};
     struct try_to_lock_t
@@ -26,6 +28,7 @@ namespace boost { namespace synchro {
     struct adopt_lock_t
     {};
 
+    const force_lock_t force_lock={};
     const defer_lock_t defer_lock={};
     const try_to_lock_t try_to_lock={};
     const adopt_lock_t adopt_lock={};

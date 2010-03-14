@@ -44,6 +44,16 @@ namespace synchro {
             lock();
         }
 
+        unique_lock(Mutex& m_,bool b):
+            m(&m_),is_locked(false)
+        {
+            if (b) lock();
+        }
+        unique_lock(Mutex& m_,force_lock_t):
+            m(&m_),is_locked(false)
+        {
+            lock();
+        }
         unique_lock(Mutex& m_,adopt_lock_t):
             m(&m_),is_locked(true)
         {}
