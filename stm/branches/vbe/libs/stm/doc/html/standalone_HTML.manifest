@@ -11,7 +11,11 @@ toward_boost_stm/reference/stm_hpp.html
 toward_boost_stm/reference/core.html
 toward_boost_stm/reference/transactional_objects.html
 toward_boost_stm/reference/built_in_transactional_objects.html
+toward_boost_stm/reference/transaction_specific_memory_managers.html
+toward_boost_stm/reference/user_memory_managers.html
+toward_boost_stm/reference/synchronization.html
 toward_boost_stm/reference/contention_managers.html
+toward_boost_stm/reference/utilities.html
 toward_boost_stm/examples.html
 toward_boost_stm/appendices.html
 toward_boost_stm/appendices/changes.html

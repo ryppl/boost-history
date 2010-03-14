@@ -10,92 +10,321 @@
 [section:language_like_hpp Header `<boost/stm/language_like.hpp>`]
 [/==========================================================================================]
 
-The complexity behind the `atomic` macro is needed to guarantee two fundamental goals.
+[section Transaction related]
 
-* First, transactions must start and end correctly. 
-* Second, transactions must change their retry behavior based on whether they are a child or parent transaction to ensure proper closed nesting, flattened transaction behavior is performed.
+The complexity behind the `BOOST_STM_TRANSACTION`/`BOOST_STM_END_TRANSACTION` macros is needed to guarantee the following fundamental goals:
 
-The `atomic` preprocessor behaves as follows. When the transactional for loop is entered, a transaction automatic object is constructed which initializes the transaction and puts it in-flight. The for loop conditional ensures the following conditions:
+* First, transactions must start and end correctly.
+* Second, transactions must change their retry behavior based on whether they are a nested or root transaction to ensure proper closed nesting, flattened transaction behavior is performed.
+* `return`/`goto` statements can be used and must commit the transaction before leaving the transaction block
+* `break`/`continue` statements can be used and are associated to a user loop and commit the transaction before leaving the transaction block.
+* commit or abort on user exceptions before re-throwing.
+
+The following pseudo code shows the general schema:
+
+    1   >>> frame transaction_block =
+    2       keyword<transaction> statement_sequence<BODY>
+    3       [ keyword<retry> statement_sequence<RETRY> ]
+    4   >>> var in_loop = ...
+    5   >>> var exception_commits = ...
+    6   >>> transaformation
+    7   {
+    8       control_flow __ctrl;
+    9       for(boost::stm::transaction __txn_;;) {                                                                        \
+    10          try{
+    11              boost::stm::detail::commit_on_destruction __destr(__txn); \
+    12              try{
+    13                  do {
+    14                      __ctrl=break_;
+    15                      <BODY>
+    16                      __ctrl=none;
+    17                      break;
+    18                  } while ((__ctrl=continue_),false);
+    19              } catch (boost::stm::aborted_tx &) {
+    20                  __destr.release();
+    21                  throw;
+    22              } catch(...) {
+    23  >>> if exception_commits
+    24                  if (__txn_.forced_to_abort()) {
+    25                      __destr_.release();
+    26                  } else {
+    27                      __destr_.commit();
+    28                  }
+    29  >>> else                
+    30                  __destr_.release();
+    31  >>> endif
+    32                  throw;
+    33              }
+    34              break;
+    35          } catch (boost::stm::aborted_tx &) {
+    36              if (__txn_.is_nested()) throw;
+    37              do {
+    38                  __ctrl=break_;
+    39                  <RETRY>
+    40                  __ctrl=none;
+    41                  break;
+    42              } while ((__ctrl=continue_),false);
+    43          }
+    44  >>> if in_loop
+    45          if (__ctrl != none) break;              \
+    46  >>> else
+    47          BOOST_ASSERT(__ctrl == none);           \
+    48  >>> endif
+    49         __txn.restart();                                                               \
+    50      }
+    51  >>> if in_loop
+    52      if (__ctrl==continue_) continue;
+    53      else if (__ctrl==break_) break;
+    54  >>> endif
+    55  }
+    56  >>> end_frame
+
+
+The `BOOST_STM_TRANSACTION`/`BOOST_STM_END_TRANSACTION` preprocessor behaves as follows. When the transactional for loop is entered, a transaction automatic object is constructed which initializes the transaction and puts it in-flight. The for loop conditional ensures the following conditions:
 
 # the transaction is uncommitted,
 # the transaction has the opportunity to throw an exception if necessary, and
 # the transaction is in-flight.
 
-Once a transaction commits, the check on (1) `!T.committed()` ensures the transaction is not executed again. If the transaction has been aborted but is a child transaction, the transaction must be restarted at the parent level. The call to (2) `T.check_throw_before_restart()` allows an aborted child transaction to throw an exception upward (before it is restarted) so the entire transaction can be restarted from the parent. The `check_throw_before_restart()` API checks the current run-time state of the thread to determine if another transaction is active above it. This behavior allows transactions to be used at any nesting level while dynamically ensuring the correct retry behavior. Finally, the call to `restart_if_not_inflight()` ensures the transaction is correctly restarted after each subsequent abort.
+On a inner block a commit on destruction variable is created, which will commit the transaction if not released.
+Once a transaction commits, the transaction is not executed again. If the transaction has been aborted but is a nested transaction, the transaction must be restarted at the parent level. This is done by throwing an exception upward so the entire transaction can be restarted from the parent. This behavior allows transactions to be used at any nesting level while dynamically ensuring the correct retry behavior. Finally, the call to `restart` ensures the transaction is correctly restarted after each subsequent abort.
 
-Once all of the transactional operations within the for loop are executed, a call to no_throw_end() is made which ends the transaction. The `no_throw_end()` terminates the transaction by either committing or aborting it. Note, however, that `no_throw_end()` does not throw an exception if the transaction is aborted, whereas the prior __Boost_STM_s__ API end() does. This non-throwing behavior deviates from the prior __Boost_STM__ implementation of automatic objects when end() was invoked within the try / catch body. Furthermore, due to `no_throw_end()` not throwing an exception if the transaction is aborted, some cases may arise where `catch_before_retry` or `before_retry` operations are not invoked when a transaction is aborted. This is a current limitation of the system and is overcome by inserting a manual end() operation as the last operation in the atomic block. The explicit end() ensures any operations within the before_retry block are executed if the transaction is aborted.
+Once all of the transactional operations within the for loop are executed, the commit on destruction destructor is called which commit the transaction. This terminates the transaction by either committing or aborting it.
 
+[section Macro `BOOST_STM_TRANSACTION`]
 
+Use `BOOST_STM_TRANSACTION` for optimistic critical section. Supports single-depth and multiple-depth (nested) transactions. Performs automatic retry for root transaction, throws exception when T is a child transaction. This automatic switch enables correctly behaved nested and non-nested transactions
 
-    #define atomic(T)
-    #define try_atomic(T)
-    #define use_atomic(T)
-    #define catch_before_retry(E)
-    #define before_retry
-    #define end_atom
+    #define BOOST_STM_TRANSACTION(T) ...
 
+Usage
 
-[section Macro `atomic`]
-
-Use atomic transaction T for optimistic critical section. Supports single-depth and multiple-depth (nested) transactions. Performs automatic retry when T is a parent transaction, throws exception when T is a child transaction. This automatic switch enables correctly behaved nested and non-nested transactions
-
-    #define atomic(T) \
-        for (transaction T; \
-            !T.committed() && T.check_throw_before_restart() && T.restart_if_not_inflight(); \
-            T.no_throw_end())
-        try
-
+        BOOST_STM_TRANSACTION
+            <sentence sequence excluding break/continue>
+        BOOST_STM_END_TRANSACTION
+    |
+        BOOST_STM_TRANSACTION
+            <sentence sequence excluding break/continue>
+        BOOST_STM_RETRY
+            <sentence sequence>
+        BOOST_STM_END_RETRY
 
 
 [endsect]
 
-[section Macro `try_atomic`]
+[section Macro `BOOST_STM_RETRY`]
 
-    #define try_atomic(T) \
-        for (transaction T; \
-            !T.committed() && T.restart(); \
-            T.no_throw_end())
-        try
+    #define BOOST_STM_RETRY ...
+
+Opens a retry block.
+
+Usage
+
+    BOOST_STM_TRANSACTION
+        <sentence sequence>
+    BOOST_STM_RETRY
+        <sentence sequence>
+    BOOST_STM_END_RETRY
+
+[endsect]
+[section Macro `BOOST_STM_END_RETRY`]
+
+    #define BOOST_STM_END_RETRY catch (aborted_tx &)
+
+Usage
+
+    BOOST_STM_TRANSACTION
+        <sentence sequence>
+    BOOST_STM_RETRY
+        <sentence sequence>
+    BOOST_STM_END_RETRY
+
+[endsect]
+[section Macro `BOOST_STM_END_TRANSACTION`]
+
+    #define BOOST_STM_END_TRANSACTION ...
+
+Equivalent to
+
+    BOOST_STM_RETRY {}
+    BOOST_STM_END_RETRY
+
+Usage
+
+    BOOST_STM_TRANSACTION
+        <sentence sequence>
+    BOOST_STM_END_TRANSACTION
 
 [endsect]
 
-[section Macro `use_atomic`]
+[section Macro `BOOST_STM_TRANSACTION_IN_LOOP`]
 
-    #define use_atomic(T) \
-        for (transaction T; \
-            !T.committed() && T.restart(); \
-            T.end())
+Use `BOOST_STM_TRANSACTION_IN_LOOP` for optimistic critical section. Works as `BOOST_STM_TRANSACTION` and in addition supporte `break`/`continue` statements.
 
+    #define BOOST_STM_TRANSACTION_IN_LOOP(T) ...
 
+Currently equivalent to
 
-[endsect]
-[section Macro `catch_before_retry`]
+    BOOST_STM_TRANSACTION
 
-    #define catch_before_retry(E) catch (aborted_tx &E)
+Usage
+        user loop {
+            BOOST_STM_TRANSACTION_IN_LOOP
+                <sentence sequence including break/continue>
+            BOOST_STM_END_TRANSACTION_IN_LOOP
+        }
+    |
+        BOOST_STM_TRANSACTION_IN_LOOP
+            <sentence sequence>
+        BOOST_STM_RETRY
+            <sentence sequence>
+        BOOST_STM_END_RETRY_IN_LOOP
 
-Catches exception when transaction is aborted. This, before_retry, or end_atom must follow an atomic block. Once all operations within the catch_before_retry block are executed, control is returned to the local atomic where the transaction is retried (if it is the parent) or the atomic block is exited by exception (if it is a child).
-
-To be used pairwise with `try_atomic` or `atomic`.
-
-[endsect]
-[section Macro `before_retry`]
-
-    #define before_retry catch (aborted_tx &)
-
-Same as catch_before_retry(E) except the exception is discarded.
-
-To be used pairwise with `try_atomic` or `atomic`.
 
 [endsect]
-[section Macro `end_atom`]
 
-    #define end_atom catch (aborted_tx &) {}
+[section Macro `BOOST_STM_END_RETRY_IN_LOOP`]
 
-Same as before_retry except the exception is discarded and {} are automated.
+    #define BOOST_STM_END_RETRY_IN_LOOP ...
 
-To be used pairwise with `try_atomic` or `atomic`.
+Usage
+
+    BOOST_STM_TRANSACTION_IN_LOOP
+        <sentence sequence>
+    BOOST_STM_RETRY
+        <sentence sequence>
+    BOOST_STM_END_RETRY_IN_LOOP
 
 [endsect]
+[section Macro `BOOST_STM_END_TRANSACTION_IN_LOOP`]
+
+    #define BOOST_STM_END_TRANSACTION_IN_LOOP ...
+
+Equivalent to
+
+    BOOST_STM_RETRY {}
+    BOOST_STM_END_RETRY_IN_LOOP
+
+
+Usage
+
+    BOOST_STM_TRANSACTION_IN_LOOP
+        <sentence sequence>
+    BOOST_STM_END_TRANSACTION_IN_LOOP
+
+[endsect]
+
+[section Macro `BOOST_STM_CURRENT`]
+
+    #define BOOST_STM_CURRENT ...
+
+Reference to the current transaction on a `BOOST_STM_TRANSACTION`/`BOOST_STM_END_TRANSACTION` or `BOOST_STM_RETRY`/`BOOST_STM_END_RETRY` block
+
+Usage
+
+    BOOST_STM_TRANSACTION
+        BOOST_STM_CURRENT.
+    BOOST_STM_END_TRANSACTION
+
+[endsect]
+
+[section Macro `BOOST_STM_COMMIT`]
+
+    #define BOOST_STM_COMMIT ...
+
+Abort the current transaction on a `BOOST_STM_TRANSACTION`/`BOOST_STM_END_TRANSACTION` block
+
+Usage
+
+    BOOST_STM_TRANSACTION
+        BOOST_STM_COMMIT();
+    BOOST_STM_END_TRANSACTION
+
+[endsect]
+
+[section Macro `BOOST_STM_ABORT`]
+
+    #define BOOST_STM_ABORT ...
+
+Abort the current transaction on a `BOOST_STM_TRANSACTION`/`BOOST_STM_END_TRANSACTION` block
+
+Usage
+
+    BOOST_STM_TRANSACTION
+        BOOST_STM_ABORT();
+    BOOST_STM_END_TRANSACTION
+
+[endsect]
+[endsect]
+
+[section Memory management related]
+
+[section Macro `BOOST_STM_NEW_PTR`]
+
+    #define BOOST_STM_NEW_PTR(T_ARGS) ...
+
+Creates a new instance using the `new` operator and notifies the STM system of this new creation. 
+
+Usage
+
+    BOOST_STM_TRANSACTION
+        ...
+        prev->next_=BOOST_STM_NEW(list_node<T>(val, curr));
+        ...
+    BOOST_STM_END_TRANSACTION
+
+[endsect]
+
+[section Macro `BOOST_STM_DELETE_PTR`]
+
+    #define BOOST_STM_DELETE_PTR(PTR) ...
+
+Deletes the instance using the `delete` operator and nnotifies the STM system of this deletion. 
+
+Usage
+
+    BOOST_STM_TRANSACTION
+        ...
+        prev->next_=BOOST_STM_NEW(list_node<T>(val, curr));
+        ...
+    BOOST_STM_END_TRANSACTION
+
+[endsect]
+
+[section Macro `BOOST_STM_NEW_ARRAY`]
+
+    #define BOOST_STM_NEW_ARRAY(SIZE, T) ...
+
+Creates a new array using the `new []` operator and notifies the STM system of this new allocation. 
+
+Usage
+
+    BOOST_STM_TRANSACTION
+        ...
+        prev->next_=BOOST_STM_NEW(size, list_node<T>(val, curr));
+        ...
+    BOOST_STM_END_TRANSACTION
+
+[endsect]
+
+[section Macro `BOOST_STM_DELETE_ARRAY`]
+
+    #define BOOST_STM_DELETE_ARRAY(PTR, SIZE) ...
+
+Deletes the array instance using the `delete[]` operator and nnotifies the STM system of this deletion. 
+
+Usage
+
+    BOOST_STM_TRANSACTION
+        ...
+        prev->next_=BOOST_STM_NEW(list_node<T>(val, curr));
+        ...
+    BOOST_STM_END_TRANSACTION
+
+[endsect]
+
+[endsect]
+
 [endsect]
 
 

@@ -8,8 +8,6 @@
 
 [section Reference]
 
-This section presents the interface of __Boost_STM__.
-
 [include reference/stm.qbk]
 
 [section Core]
@@ -24,10 +22,6 @@ This section presents the interface of __Boost_STM__.
 [include reference/transaction_bookkeeping.qbk]
 [endsect]
 
-There are two kind of transactional objets:
-
-* Mixins
-* Wrappers
 
 [section Transactional Objects]
 
@@ -52,7 +46,9 @@ There are two kind of transactional objets:
 [include reference/tx/smart_ptr.qbk]
 [endsect]
 [endsect]
+]
 
+[/
 [section Non Transactional Objects]
 [include reference/non_tx/numeric.qbk]
 [include reference/non_tx/pointer.qbk]
@@ -63,18 +59,29 @@ There are two kind of transactional objets:
 ]
 
 [section Transaction Specific Memory Managers]
+[/include reference/tx_memory_managers.qbk]
+[/include reference/tx_memory_managers/shared_memory_manager.qbk]
+[/include reference/tx_memory_managers/malloc_memory_manager.qbk]
+[/include reference/tx_memory_managers/tss_memory_manager.qbk]
+[/include reference/tx_memory_managers/tx_memory_manager.qbk]
 [endsect]
 
 [section User Memory Managers]
+[/include reference/memory_managers.qbk]
+[/include reference/memory_managers/basic_memory_manager.qbk]
 [endsect]
 
 [section Synchronization]
+[include reference/sync.qbk]
+[include reference/sync/mutex.qbk]
+[include reference/sync/unique_lock.qbk]
+[include reference/sync/synchronized.qbk]
 [endsect]
 
 [section Contention Managers]
 [include reference/contention_managers/concept.qbk]
 
-__TBoost_STM__ allows the user to choose between static and dynamic polimorphic contention manager.
+__Boost_STM__ allows the user to choose between static and dynamic polimorphic contention manager.
 
 [include reference/contention_manager.qbk]
 
@@ -86,6 +93,10 @@ __TBoost_STM__ allows the user to choose between static and dynamic polimorphic 
 [/include reference/contention_managers/NoExceptionOnAbortNoticeOnReadWrites.qbk]
 [/include reference/contention_managers/ExceptAndBackOffOnAbortNotice.qbk]
 [endsect]
+[endsect]
+
+[section Utilities]
+[/include reference/utilities/incomplete_smart_cast.qbk]
 [endsect]
 
 [endsect]

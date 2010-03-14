@@ -77,18 +77,10 @@
 <dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp">
         Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">language_like</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__atomic_">Macro
-          <code class="computeroutput"><span class="identifier">atomic</span></code></a></span></dt>
-<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__try_atomic_">Macro
-          <code class="computeroutput"><span class="identifier">try_atomic</span></code></a></span></dt>
-<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__use_atomic_">Macro
-          <code class="computeroutput"><span class="identifier">use_atomic</span></code></a></span></dt>
-<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__catch_before_retry_">Macro
-          <code class="computeroutput"><span class="identifier">catch_before_retry</span></code></a></span></dt>
-<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__before_retry_">Macro
-          <code class="computeroutput"><span class="identifier">before_retry</span></code></a></span></dt>
-<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__end_atom_">Macro
-          <code class="computeroutput"><span class="identifier">end_atom</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.transaction_related">Transaction
+          related</a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.memory_management_related">Memory
+          management related</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.transaction_hpp"> Header
         <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">transaction</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
@@ -697,185 +689,478 @@
         Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">language_like</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
 </h4></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__atomic_">Macro
-          <code class="computeroutput"><span class="identifier">atomic</span></code></a></span></dt>
-<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__try_atomic_">Macro
-          <code class="computeroutput"><span class="identifier">try_atomic</span></code></a></span></dt>
-<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__use_atomic_">Macro
-          <code class="computeroutput"><span class="identifier">use_atomic</span></code></a></span></dt>
-<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__catch_before_retry_">Macro
-          <code class="computeroutput"><span class="identifier">catch_before_retry</span></code></a></span></dt>
-<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__before_retry_">Macro
-          <code class="computeroutput"><span class="identifier">before_retry</span></code></a></span></dt>
-<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__end_atom_">Macro
-          <code class="computeroutput"><span class="identifier">end_atom</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.transaction_related">Transaction
+          related</a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.memory_management_related">Memory
+          management related</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.core.language_like_hpp.transaction_related"></a><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.transaction_related" title="Transaction
+          related">Transaction
+          related</a>
+</h5></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_transaction_">Macro
+            <code class="computeroutput"><span class="identifier">BOOST_STM_TRANSACTION</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_retry_">Macro
+            <code class="computeroutput"><span class="identifier">BOOST_STM_RETRY</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_end_retry_">Macro
+            <code class="computeroutput"><span class="identifier">BOOST_STM_END_RETRY</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_end_transaction_">Macro
+            <code class="computeroutput"><span class="identifier">BOOST_STM_END_TRANSACTION</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_transaction_in_loop_">Macro
+            <code class="computeroutput"><span class="identifier">BOOST_STM_TRANSACTION_IN_LOOP</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_end_retry_in_loop_">Macro
+            <code class="computeroutput"><span class="identifier">BOOST_STM_END_RETRY_IN_LOOP</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_end_transaction_in_loop_">Macro
+            <code class="computeroutput"><span class="identifier">BOOST_STM_END_TRANSACTION_IN_LOOP</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_current_">Macro
+            <code class="computeroutput"><span class="identifier">BOOST_STM_CURRENT</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_commit_">Macro
+            <code class="computeroutput"><span class="identifier">BOOST_STM_COMMIT</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_abort_">Macro
+            <code class="computeroutput"><span class="identifier">BOOST_STM_ABORT</span></code></a></span></dt>
 </dl></div>
 <p>
-          The complexity behind the <code class="computeroutput"><span class="identifier">atomic</span></code>
-          macro is needed to guarantee two fundamental goals.
-        </p>
+            The complexity behind the <code class="computeroutput"><span class="identifier">BOOST_STM_TRANSACTION</span></code>/<code class="computeroutput"><span class="identifier">BOOST_STM_END_TRANSACTION</span></code> macros is
+            needed to guarantee the following fundamental goals:
+          </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-            First, transactions must start and end correctly.
-          </li>
+              First, transactions must start and end correctly.
+            </li>
 <li>
-            Second, transactions must change their retry behavior based on whether
-            they are a child or parent transaction to ensure proper closed nesting,
-            flattened transaction behavior is performed.
-          </li>
+              Second, transactions must change their retry behavior based on whether
+              they are a nested or root transaction to ensure proper closed nesting,
+              flattened transaction behavior is performed.
+            </li>
+<li>
+<code class="computeroutput"><span class="keyword">return</span></code><span class="emphasis"><em>`goto`
+              statements can be used and must commit the transaction before leaving
+              the transaction block * `break`</em></span><code class="computeroutput"><span class="keyword">continue</span></code>
+              statements can be used and are associated to a user loop and commit
+              the transaction before leaving the transaction block.
+            </li>
+<li>
+              commit or abort on user exceptions before re-throwing.
+            </li>
 </ul></div>
 <p>
-          The <code class="computeroutput"><span class="identifier">atomic</span></code> preprocessor
-          behaves as follows. When the transactional for loop is entered, a transaction
-          automatic object is constructed which initializes the transaction and puts
-          it in-flight. The for loop conditional ensures the following conditions:
-        </p>
+            The following pseudo code shows the general schema:
+          </p>
+<pre class="programlisting"><span class="number">1</span>   <span class="special">&gt;&gt;&gt;</span> <span class="identifier">frame</span> <span class="identifier">transaction_block</span> <span class="special">=</span>
+<span class="number">2</span>       <span class="identifier">keyword</span><span class="special">&lt;</span><span class="identifier">transaction</span><span class="special">&gt;</span> <span class="identifier">statement_sequence</span><span class="special">&lt;</span><span class="identifier">BODY</span><span class="special">&gt;</span>
+<span class="number">3</span>       <span class="special">[</span> <span class="identifier">keyword</span><span class="special">&lt;</span><span class="identifier">retry</span><span class="special">&gt;</span> <span class="identifier">statement_sequence</span><span class="special">&lt;</span><span class="identifier">RETRY</span><span class="special">&gt;</span> <span class="special">]</span>
+<span class="number">4</span>   <span class="special">&gt;&gt;&gt;</span> <span class="identifier">var</span> <span class="identifier">in_loop</span> <span class="special">=</span> <span class="special">...</span>
+<span class="number">5</span>   <span class="special">&gt;&gt;&gt;</span> <span class="identifier">var</span> <span class="identifier">exception_commits</span> <span class="special">=</span> <span class="special">...</span>
+<span class="number">6</span>   <span class="special">&gt;&gt;&gt;</span> <span class="identifier">transaformation</span>
+<span class="number">7</span>   <span class="special">{</span>
+<span class="number">8</span>       <span class="identifier">control_flow</span> <span class="identifier">__ctrl</span><span class="special">;</span>
+<span class="number">9</span>       <span class="keyword">for</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">transaction</span> <span class="identifier">__txn_</span><span class="special">;;)</span> <span class="special">{</span>                                                                        <span class="special">\</span>
+<span class="number">10</span>          <span class="keyword">try</span><span class="special">{</span>
+<span class="number">11</span>              <span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">commit_on_destruction</span> <span class="identifier">__destr</span><span class="special">(</span><span class="identifier">__txn</span><span class="special">);</span> <span class="special">\</span>
+<span class="number">12</span>              <span class="keyword">try</span><span class="special">{</span>
+<span class="number">13</span>                  <span class="keyword">do</span> <span class="special">{</span>
+<span class="number">14</span>                      <span class="identifier">__ctrl</span><span class="special">=</span><span class="identifier">break_</span><span class="special">;</span>
+<span class="number">15</span>                      <span class="special">&lt;</span><span class="identifier">BODY</span><span class="special">&gt;</span>
+<span class="number">16</span>                      <span class="identifier">__ctrl</span><span class="special">=</span><span class="identifier">none</span><span class="special">;</span>
+<span class="number">17</span>                      <span class="keyword">break</span><span class="special">;</span>
+<span class="number">18</span>                  <span class="special">}</span> <span class="keyword">while</span> <span class="special">((</span><span class="identifier">__ctrl</span><span class="special">=</span><span class="identifier">continue_</span><span class="special">),</span><span class="keyword">false</span><span class="special">);</span>
+<span class="number">19</span>              <span class="special">}</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">aborted_tx</span> <span class="special">&amp;)</span> <span class="special">{</span>
+<span class="number">20</span>                  <span class="identifier">__destr</span><span class="special">.</span><span class="identifier">release</span><span class="special">();</span>
+<span class="number">21</span>                  <span class="keyword">throw</span><span class="special">;</span>
+<span class="number">22</span>              <span class="special">}</span> <span class="keyword">catch</span><span class="special">(...)</span> <span class="special">{</span>
+<span class="number">23</span>  <span class="special">&gt;&gt;&gt;</span> <span class="keyword">if</span> <span class="identifier">exception_commits</span>
+<span class="number">24</span>                  <span class="keyword">if</span> <span class="special">(</span><span class="identifier">__txn_</span><span class="special">.</span><span class="identifier">forced_to_abort</span><span class="special">())</span> <span class="special">{</span>
+<span class="number">25</span>                      <span class="identifier">__destr_</span><span class="special">.</span><span class="identifier">release</span><span class="special">();</span>
+<span class="number">26</span>                  <span class="special">}</span> <span class="keyword">else</span> <span class="special">{</span>
+<span class="number">27</span>                      <span class="identifier">__destr_</span><span class="special">.</span><span class="identifier">commit</span><span class="special">();</span>
+<span class="number">28</span>                  <span class="special">}</span>
+<span class="number">29</span>  <span class="special">&gt;&gt;&gt;</span> <span class="keyword">else</span>                
+<span class="number">30</span>                  <span class="identifier">__destr_</span><span class="special">.</span><span class="identifier">release</span><span class="special">();</span>
+<span class="number">31</span>  <span class="special">&gt;&gt;&gt;</span> <span class="identifier">endif</span>
+<span class="number">32</span>                  <span class="keyword">throw</span><span class="special">;</span>
+<span class="number">33</span>              <span class="special">}</span>
+<span class="number">34</span>              <span class="keyword">break</span><span class="special">;</span>
+<span class="number">35</span>          <span class="special">}</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">aborted_tx</span> <span class="special">&amp;)</span> <span class="special">{</span>
+<span class="number">36</span>              <span class="keyword">if</span> <span class="special">(</span><span class="identifier">__txn_</span><span class="special">.</span><span class="identifier">is_nested</span><span class="special">())</span> <span class="keyword">throw</span><span class="special">;</span>
+<span class="number">37</span>              <span class="keyword">do</span> <span class="special">{</span>
+<span class="number">38</span>                  <span class="identifier">__ctrl</span><span class="special">=</span><span class="identifier">break_</span><span class="special">;</span>
+<span class="number">39</span>                  <span class="special">&lt;</span><span class="identifier">RETRY</span><span class="special">&gt;</span>
+<span class="number">40</span>                  <span class="identifier">__ctrl</span><span class="special">=</span><span class="identifier">none</span><span class="special">;</span>
+<span class="number">41</span>                  <span class="keyword">break</span><span class="special">;</span>
+<span class="number">42</span>              <span class="special">}</span> <span class="keyword">while</span> <span class="special">((</span><span class="identifier">__ctrl</span><span class="special">=</span><span class="identifier">continue_</span><span class="special">),</span><span class="keyword">false</span><span class="special">);</span>
+<span class="number">43</span>          <span class="special">}</span>
+<span class="number">44</span>  <span class="special">&gt;&gt;&gt;</span> <span class="keyword">if</span> <span class="identifier">in_loop</span>
+<span class="number">45</span>          <span class="keyword">if</span> <span class="special">(</span><span class="identifier">__ctrl</span> <span class="special">!=</span> <span class="identifier">none</span><span class="special">)</span> <span class="keyword">break</span><span class="special">;</span>              <span class="special">\</span>
+<span class="number">46</span>  <span class="special">&gt;&gt;&gt;</span> <span class="keyword">else</span>
+<span class="number">47</span>          <span class="identifier">BOOST_ASSERT</span><span class="special">(</span><span class="identifier">__ctrl</span> <span class="special">==</span> <span class="identifier">none</span><span class="special">);</span>           <span class="special">\</span>
+<span class="number">48</span>  <span class="special">&gt;&gt;&gt;</span> <span class="identifier">endif</span>
+<span class="number">49</span>         <span class="identifier">__txn</span><span class="special">.</span><span class="identifier">restart</span><span class="special">();</span>                                                               <span class="special">\</span>
+<span class="number">50</span>      <span class="special">}</span>
+<span class="number">51</span>  <span class="special">&gt;&gt;&gt;</span> <span class="keyword">if</span> <span class="identifier">in_loop</span>
+<span class="number">52</span>      <span class="keyword">if</span> <span class="special">(</span><span class="identifier">__ctrl</span><span class="special">==</span><span class="identifier">continue_</span><span class="special">)</span> <span class="keyword">continue</span><span class="special">;</span>
+<span class="number">53</span>      <span class="keyword">else</span> <span class="keyword">if</span> <span class="special">(</span><span class="identifier">__ctrl</span><span class="special">==</span><span class="identifier">break_</span><span class="special">)</span> <span class="keyword">break</span><span class="special">;</span>
+<span class="number">54</span>  <span class="special">&gt;&gt;&gt;</span> <span class="identifier">endif</span>
+<span class="number">55</span>  <span class="special">}</span>
+<span class="number">56</span>  <span class="special">&gt;&gt;&gt;</span> <span class="identifier">end_frame</span>
+</pre>
+<p>
+            The <code class="computeroutput"><span class="identifier">BOOST_STM_TRANSACTION</span></code>/<code class="computeroutput"><span class="identifier">BOOST_STM_END_TRANSACTION</span></code> preprocessor
+            behaves as follows. When the transactional for loop is entered, a transaction
+            automatic object is constructed which initializes the transaction and
+            puts it in-flight. The for loop conditional ensures the following conditions:
+          </p>
 <div class="orderedlist"><ol type="1">
 <li>
-            the transaction is uncommitted,
-          </li>
+              the transaction is uncommitted,
+            </li>
 <li>
-            the transaction has the opportunity to throw an exception if necessary,
-            and
-          </li>
+              the transaction has the opportunity to throw an exception if necessary,
+              and
+            </li>
 <li>
-            the transaction is in-flight.
-          </li>
+              the transaction is in-flight.
+            </li>
 </ol></div>
 <p>
-          Once a transaction commits, the check on (1) <code class="computeroutput"><span class="special">!</span><span class="identifier">T</span><span class="special">.</span><span class="identifier">committed</span><span class="special">()</span></code> ensures the transaction is not executed
-          again. If the transaction has been aborted but is a child transaction,
-          the transaction must be restarted at the parent level. The call to (2)
-          <code class="computeroutput"><span class="identifier">T</span><span class="special">.</span><span class="identifier">check_throw_before_restart</span><span class="special">()</span></code>
-          allows an aborted child transaction to throw an exception upward (before
-          it is restarted) so the entire transaction can be restarted from the parent.
-          The <code class="computeroutput"><span class="identifier">check_throw_before_restart</span><span class="special">()</span></code> API checks the current run-time state
-          of the thread to determine if another transaction is active above it. This
-          behavior allows transactions to be used at any nesting level while dynamically
-          ensuring the correct retry behavior. Finally, the call to <code class="computeroutput"><span class="identifier">restart_if_not_inflight</span><span class="special">()</span></code>
-          ensures the transaction is correctly restarted after each subsequent abort.
-        </p>
-<p>
-          Once all of the transactional operations within the for loop are executed,
-          a call to no_throw_end() is made which ends the transaction. The <code class="computeroutput"><span class="identifier">no_throw_end</span><span class="special">()</span></code>
-          terminates the transaction by either committing or aborting it. Note, however,
-          that <code class="computeroutput"><span class="identifier">no_throw_end</span><span class="special">()</span></code>
-          does not throw an exception if the transaction is aborted, whereas the
-          prior TBoost.STM's API end() does. This non-throwing behavior deviates
-          from the prior TBoost.STM implementation of automatic objects when end()
-          was invoked within the try / catch body. Furthermore, due to <code class="computeroutput"><span class="identifier">no_throw_end</span><span class="special">()</span></code>
-          not throwing an exception if the transaction is aborted, some cases may
-          arise where <code class="computeroutput"><span class="identifier">catch_before_retry</span></code>
-          or <code class="computeroutput"><span class="identifier">before_retry</span></code> operations
-          are not invoked when a transaction is aborted. This is a current limitation
-          of the system and is overcome by inserting a manual end() operation as
-          the last operation in the atomic block. The explicit end() ensures any
-          operations within the before_retry block are executed if the transaction
-          is aborted.
-        </p>
-<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">atomic</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span>
-<span class="preprocessor">#define</span> <span class="identifier">try_atomic</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span>
-<span class="preprocessor">#define</span> <span class="identifier">use_atomic</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span>
-<span class="preprocessor">#define</span> <span class="identifier">catch_before_retry</span><span class="special">(</span><span class="identifier">E</span><span class="special">)</span>
-<span class="preprocessor">#define</span> <span class="identifier">before_retry</span>
-<span class="preprocessor">#define</span> <span class="identifier">end_atom</span>
-</pre>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h5 class="title">
-<a name="toward_boost_stm.reference.core.language_like_hpp.macro__atomic_"></a><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__atomic_" title="Macro
-          atomic">Macro
-          <code class="computeroutput"><span class="identifier">atomic</span></code></a>
-</h5></div></div></div>
-<p>
-            Use atomic transaction T for optimistic critical section. Supports single-depth
-            and multiple-depth (nested) transactions. Performs automatic retry when
-            T is a parent transaction, throws exception when T is a child transaction.
-            This automatic switch enables correctly behaved nested and non-nested
-            transactions
+            On a inner block a commit on destruction variable is created, which will
+            commit the transaction if not released. Once a transaction commits, the
+            transaction is not executed again. If the transaction has been aborted
+            but is a nested transaction, the transaction must be restarted at the
+            parent level. This is done by throwing an exception upward so the entire
+            transaction can be restarted from the parent. This behavior allows transactions
+            to be used at any nesting level while dynamically ensuring the correct
+            retry behavior. Finally, the call to <code class="computeroutput"><span class="identifier">restart</span></code>
+            ensures the transaction is correctly restarted after each subsequent
+            abort.
           </p>
-<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">atomic</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span> <span class="special">\</span>
-    <span class="keyword">for</span> <span class="special">(</span><span class="identifier">transaction</span> <span class="identifier">T</span><span class="special">;</span> <span class="special">\</span>
-        <span class="special">!</span><span class="identifier">T</span><span class="special">.</span><span class="identifier">committed</span><span class="special">()</span> <span class="special">&amp;&amp;</span> <span class="identifier">T</span><span class="special">.</span><span class="identifier">check_throw_before_restart</span><span class="special">()</span> <span class="special">&amp;&amp;</span> <span class="identifier">T</span><span class="special">.</span><span class="identifier">restart_if_not_inflight</span><span class="special">();</span> <span class="special">\</span>
-        <span class="identifier">T</span><span class="special">.</span><span class="identifier">no_throw_end</span><span class="special">())</span>
-    <span class="keyword">try</span>
+<p>
+            Once all of the transactional operations within the for loop are executed,
+            the commit on destruction destructor is called which commit the transaction.
+            This terminates the transaction by either committing or aborting it.
+          </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_transaction_"></a><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_transaction_" title="Macro
+            BOOST_STM_TRANSACTION">Macro
+            <code class="computeroutput"><span class="identifier">BOOST_STM_TRANSACTION</span></code></a>
+</h6></div></div></div>
+<p>
+              Use <code class="computeroutput"><span class="identifier">BOOST_STM_TRANSACTION</span></code>
+              for optimistic critical section. Supports single-depth and multiple-depth
+              (nested) transactions. Performs automatic retry for root transaction,
+              throws exception when T is a child transaction. This automatic switch
+              enables correctly behaved nested and non-nested transactions
+            </p>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_STM_TRANSACTION</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span> <span class="special">...</span>
+</pre>
+<p>
+              Usage
+            </p>
+<pre class="programlisting">    <span class="identifier">BOOST_STM_TRANSACTION</span>
+        <span class="special">&lt;</span><span class="identifier">sentence</span> <span class="identifier">sequence</span> <span class="identifier">excluding</span> <span class="keyword">break</span><span class="special">/</span><span class="keyword">continue</span><span class="special">&gt;</span>
+    <span class="identifier">BOOST_STM_END_TRANSACTION</span>
+<span class="special">|</span>
+    <span class="identifier">BOOST_STM_TRANSACTION</span>
+        <span class="special">&lt;</span><span class="identifier">sentence</span> <span class="identifier">sequence</span> <span class="identifier">excluding</span> <span class="keyword">break</span><span class="special">/</span><span class="keyword">continue</span><span class="special">&gt;</span>
+    <span class="identifier">BOOST_STM_RETRY</span>
+        <span class="special">&lt;</span><span class="identifier">sentence</span> <span class="identifier">sequence</span><span class="special">&gt;</span>
+    <span class="identifier">BOOST_STM_END_RETRY</span>
 </pre>
 </div>
 <div class="section" lang="en">
-<div class="titlepage"><div><div><h5 class="title">
-<a name="toward_boost_stm.reference.core.language_like_hpp.macro__try_atomic_"></a><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__try_atomic_" title="Macro
-          try_atomic">Macro
-          <code class="computeroutput"><span class="identifier">try_atomic</span></code></a>
-</h5></div></div></div>
-<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">try_atomic</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span> <span class="special">\</span>
-    <span class="keyword">for</span> <span class="special">(</span><span class="identifier">transaction</span> <span class="identifier">T</span><span class="special">;</span> <span class="special">\</span>
-        <span class="special">!</span><span class="identifier">T</span><span class="special">.</span><span class="identifier">committed</span><span class="special">()</span> <span class="special">&amp;&amp;</span> <span class="identifier">T</span><span class="special">.</span><span class="identifier">restart</span><span class="special">();</span> <span class="special">\</span>
-        <span class="identifier">T</span><span class="special">.</span><span class="identifier">no_throw_end</span><span class="special">())</span>
-    <span class="keyword">try</span>
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_retry_"></a><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_retry_" title="Macro
+            BOOST_STM_RETRY">Macro
+            <code class="computeroutput"><span class="identifier">BOOST_STM_RETRY</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_STM_RETRY</span> <span class="special">...</span>
+</pre>
+<p>
+              Opens a retry block.
+            </p>
+<p>
+              Usage
+            </p>
+<pre class="programlisting"><span class="identifier">BOOST_STM_TRANSACTION</span>
+    <span class="special">&lt;</span><span class="identifier">sentence</span> <span class="identifier">sequence</span><span class="special">&gt;</span>
+<span class="identifier">BOOST_STM_RETRY</span>
+    <span class="special">&lt;</span><span class="identifier">sentence</span> <span class="identifier">sequence</span><span class="special">&gt;</span>
+<span class="identifier">BOOST_STM_END_RETRY</span>
 </pre>
 </div>
 <div class="section" lang="en">
-<div class="titlepage"><div><div><h5 class="title">
-<a name="toward_boost_stm.reference.core.language_like_hpp.macro__use_atomic_"></a><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__use_atomic_" title="Macro
-          use_atomic">Macro
-          <code class="computeroutput"><span class="identifier">use_atomic</span></code></a>
-</h5></div></div></div>
-<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">use_atomic</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span> <span class="special">\</span>
-    <span class="keyword">for</span> <span class="special">(</span><span class="identifier">transaction</span> <span class="identifier">T</span><span class="special">;</span> <span class="special">\</span>
-        <span class="special">!</span><span class="identifier">T</span><span class="special">.</span><span class="identifier">committed</span><span class="special">()</span> <span class="special">&amp;&amp;</span> <span class="identifier">T</span><span class="special">.</span><span class="identifier">restart</span><span class="special">();</span> <span class="special">\</span>
-        <span class="identifier">T</span><span class="special">.</span><span class="identifier">end</span><span class="special">())</span>
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_end_retry_"></a><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_end_retry_" title="Macro
+            BOOST_STM_END_RETRY">Macro
+            <code class="computeroutput"><span class="identifier">BOOST_STM_END_RETRY</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_STM_END_RETRY</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">aborted_tx</span> <span class="special">&amp;)</span>
+</pre>
+<p>
+              Usage
+            </p>
+<pre class="programlisting"><span class="identifier">BOOST_STM_TRANSACTION</span>
+    <span class="special">&lt;</span><span class="identifier">sentence</span> <span class="identifier">sequence</span><span class="special">&gt;</span>
+<span class="identifier">BOOST_STM_RETRY</span>
+    <span class="special">&lt;</span><span class="identifier">sentence</span> <span class="identifier">sequence</span><span class="special">&gt;</span>
+<span class="identifier">BOOST_STM_END_RETRY</span>
 </pre>
 </div>
 <div class="section" lang="en">
-<div class="titlepage"><div><div><h5 class="title">
-<a name="toward_boost_stm.reference.core.language_like_hpp.macro__catch_before_retry_"></a><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__catch_before_retry_" title="Macro
-          catch_before_retry">Macro
-          <code class="computeroutput"><span class="identifier">catch_before_retry</span></code></a>
-</h5></div></div></div>
-<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">catch_before_retry</span><span class="special">(</span><span class="identifier">E</span><span class="special">)</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">aborted_tx</span> <span class="special">&amp;</span><span class="identifier">E</span><span class="special">)</span>
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_end_transaction_"></a><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_end_transaction_" title="Macro
+            BOOST_STM_END_TRANSACTION">Macro
+            <code class="computeroutput"><span class="identifier">BOOST_STM_END_TRANSACTION</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_STM_END_TRANSACTION</span> <span class="special">...</span>
 </pre>
 <p>
-            Catches exception when transaction is aborted. This, before_retry, or
-            end_atom must follow an atomic block. Once all operations within the
-            catch_before_retry block are executed, control is returned to the local
-            atomic where the transaction is retried (if it is the parent) or the
-            atomic block is exited by exception (if it is a child).
-          </p>
+              Equivalent to
+            </p>
+<pre class="programlisting"><span class="identifier">BOOST_STM_RETRY</span> <span class="special">{}</span>
+<span class="identifier">BOOST_STM_END_RETRY</span>
+</pre>
 <p>
-            To be used pairwise with <code class="computeroutput"><span class="identifier">try_atomic</span></code>
-            or <code class="computeroutput"><span class="identifier">atomic</span></code>.
-          </p>
+              Usage
+            </p>
+<pre class="programlisting"><span class="identifier">BOOST_STM_TRANSACTION</span>
+    <span class="special">&lt;</span><span class="identifier">sentence</span> <span class="identifier">sequence</span><span class="special">&gt;</span>
+<span class="identifier">BOOST_STM_END_TRANSACTION</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_transaction_in_loop_"></a><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_transaction_in_loop_" title="Macro
+            BOOST_STM_TRANSACTION_IN_LOOP">Macro
+            <code class="computeroutput"><span class="identifier">BOOST_STM_TRANSACTION_IN_LOOP</span></code></a>
+</h6></div></div></div>
+<p>
+              Use <code class="computeroutput"><span class="identifier">BOOST_STM_TRANSACTION_IN_LOOP</span></code>
+              for optimistic critical section. Works as <code class="computeroutput"><span class="identifier">BOOST_STM_TRANSACTION</span></code>
+              and in addition supporte <code class="computeroutput"><span class="keyword">break</span></code>/<code class="computeroutput"><span class="keyword">continue</span></code> statements.
+            </p>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_STM_TRANSACTION_IN_LOOP</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span> <span class="special">...</span>
+</pre>
+<p>
+              Currently equivalent to
+            </p>
+<pre class="programlisting"><span class="identifier">BOOST_STM_TRANSACTION</span>
+</pre>
+<p>
+              Usage user loop { BOOST_STM_TRANSACTION_IN_LOOP &lt;sentence sequence
+              including break/continue&gt; BOOST_STM_END_TRANSACTION_IN_LOOP } |
+              BOOST_STM_TRANSACTION_IN_LOOP &lt;sentence sequence&gt; BOOST_STM_RETRY
+              &lt;sentence sequence&gt; BOOST_STM_END_RETRY_IN_LOOP
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_end_retry_in_loop_"></a><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_end_retry_in_loop_" title="Macro
+            BOOST_STM_END_RETRY_IN_LOOP">Macro
+            <code class="computeroutput"><span class="identifier">BOOST_STM_END_RETRY_IN_LOOP</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_STM_END_RETRY_IN_LOOP</span> <span class="special">...</span>
+</pre>
+<p>
+              Usage
+            </p>
+<pre class="programlisting"><span class="identifier">BOOST_STM_TRANSACTION_IN_LOOP</span>
+    <span class="special">&lt;</span><span class="identifier">sentence</span> <span class="identifier">sequence</span><span class="special">&gt;</span>
+<span class="identifier">BOOST_STM_RETRY</span>
+    <span class="special">&lt;</span><span class="identifier">sentence</span> <span class="identifier">sequence</span><span class="special">&gt;</span>
+<span class="identifier">BOOST_STM_END_RETRY_IN_LOOP</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_end_transaction_in_loop_"></a><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_end_transaction_in_loop_" title="Macro
+            BOOST_STM_END_TRANSACTION_IN_LOOP">Macro
+            <code class="computeroutput"><span class="identifier">BOOST_STM_END_TRANSACTION_IN_LOOP</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_STM_END_TRANSACTION_IN_LOOP</span> <span class="special">...</span>
+</pre>
+<p>
+              Equivalent to
+            </p>
+<pre class="programlisting"><span class="identifier">BOOST_STM_RETRY</span> <span class="special">{}</span>
+<span class="identifier">BOOST_STM_END_RETRY_IN_LOOP</span>
+</pre>
+<p>
+              Usage
+            </p>
+<pre class="programlisting"><span class="identifier">BOOST_STM_TRANSACTION_IN_LOOP</span>
+    <span class="special">&lt;</span><span class="identifier">sentence</span> <span class="identifier">sequence</span><span class="special">&gt;</span>
+<span class="identifier">BOOST_STM_END_TRANSACTION_IN_LOOP</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_current_"></a><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_current_" title="Macro
+            BOOST_STM_CURRENT">Macro
+            <code class="computeroutput"><span class="identifier">BOOST_STM_CURRENT</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_STM_CURRENT</span> <span class="special">...</span>
+</pre>
+<p>
+              Reference to the current transaction on a <code class="computeroutput"><span class="identifier">BOOST_STM_TRANSACTION</span></code><span class="emphasis"><em>`BOOST_STM_END_TRANSACTION`
+              or `BOOST_STM_RETRY`</em></span><code class="computeroutput"><span class="identifier">BOOST_STM_END_RETRY</span></code>
+              block
+            </p>
+<p>
+              Usage
+            </p>
+<pre class="programlisting"><span class="identifier">BOOST_STM_TRANSACTION</span>
+    <span class="identifier">BOOST_STM_CURRENT</span><span class="special">.</span>
+<span class="identifier">BOOST_STM_END_TRANSACTION</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_commit_"></a><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_commit_" title="Macro
+            BOOST_STM_COMMIT">Macro
+            <code class="computeroutput"><span class="identifier">BOOST_STM_COMMIT</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_STM_COMMIT</span> <span class="special">...</span>
+</pre>
+<p>
+              Abort the current transaction on a <code class="computeroutput"><span class="identifier">BOOST_STM_TRANSACTION</span></code>/<code class="computeroutput"><span class="identifier">BOOST_STM_END_TRANSACTION</span></code> block
+            </p>
+<p>
+              Usage
+            </p>
+<pre class="programlisting"><span class="identifier">BOOST_STM_TRANSACTION</span>
+    <span class="identifier">BOOST_STM_COMMIT</span><span class="special">();</span>
+<span class="identifier">BOOST_STM_END_TRANSACTION</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_abort_"></a><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.transaction_related.macro__boost_stm_abort_" title="Macro
+            BOOST_STM_ABORT">Macro
+            <code class="computeroutput"><span class="identifier">BOOST_STM_ABORT</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_STM_ABORT</span> <span class="special">...</span>
+</pre>
+<p>
+              Abort the current transaction on a <code class="computeroutput"><span class="identifier">BOOST_STM_TRANSACTION</span></code>/<code class="computeroutput"><span class="identifier">BOOST_STM_END_TRANSACTION</span></code> block
+            </p>
+<p>
+              Usage
+            </p>
+<pre class="programlisting"><span class="identifier">BOOST_STM_TRANSACTION</span>
+    <span class="identifier">BOOST_STM_ABORT</span><span class="special">();</span>
+<span class="identifier">BOOST_STM_END_TRANSACTION</span>
+</pre>
+</div>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="toward_boost_stm.reference.core.language_like_hpp.macro__before_retry_"></a><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__before_retry_" title="Macro
-          before_retry">Macro
-          <code class="computeroutput"><span class="identifier">before_retry</span></code></a>
+<a name="toward_boost_stm.reference.core.language_like_hpp.memory_management_related"></a><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.memory_management_related" title="Memory
+          management related">Memory
+          management related</a>
 </h5></div></div></div>
-<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">before_retry</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">aborted_tx</span> <span class="special">&amp;)</span>
+<div class="toc"><dl>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.memory_management_related.macro__boost_stm_new_ptr_">Macro
+            <code class="computeroutput"><span class="identifier">BOOST_STM_NEW_PTR</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.memory_management_related.macro__boost_stm_delete_ptr_">Macro
+            <code class="computeroutput"><span class="identifier">BOOST_STM_DELETE_PTR</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.memory_management_related.macro__boost_stm_new_array_">Macro
+            <code class="computeroutput"><span class="identifier">BOOST_STM_NEW_ARRAY</span></code></a></span></dt>
+<dt><span class="section"><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.memory_management_related.macro__boost_stm_delete_array_">Macro
+            <code class="computeroutput"><span class="identifier">BOOST_STM_DELETE_ARRAY</span></code></a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.language_like_hpp.memory_management_related.macro__boost_stm_new_ptr_"></a><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.memory_management_related.macro__boost_stm_new_ptr_" title="Macro
+            BOOST_STM_NEW_PTR">Macro
+            <code class="computeroutput"><span class="identifier">BOOST_STM_NEW_PTR</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_STM_NEW_PTR</span><span class="special">(</span><span class="identifier">T_ARGS</span><span class="special">)</span> <span class="special">...</span>
 </pre>
 <p>
-            Same as catch_before_retry(E) except the exception is discarded.
-          </p>
+              Creates a new instance using the <code class="computeroutput"><span class="keyword">new</span></code>
+              operator and notifies the STM system of this new creation.
+            </p>
 <p>
-            To be used pairwise with <code class="computeroutput"><span class="identifier">try_atomic</span></code>
-            or <code class="computeroutput"><span class="identifier">atomic</span></code>.
-          </p>
+              Usage
+            </p>
+<pre class="programlisting"><span class="identifier">BOOST_STM_TRANSACTION</span>
+    <span class="special">...</span>
+    <span class="identifier">prev</span><span class="special">-&gt;</span><span class="identifier">next_</span><span class="special">=</span><span class="identifier">BOOST_STM_NEW</span><span class="special">(</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="identifier">val</span><span class="special">,</span> <span class="identifier">curr</span><span class="special">));</span>
+    <span class="special">...</span>
+<span class="identifier">BOOST_STM_END_TRANSACTION</span>
+</pre>
 </div>
 <div class="section" lang="en">
-<div class="titlepage"><div><div><h5 class="title">
-<a name="toward_boost_stm.reference.core.language_like_hpp.macro__end_atom_"></a><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.macro__end_atom_" title="Macro
-          end_atom">Macro
-          <code class="computeroutput"><span class="identifier">end_atom</span></code></a>
-</h5></div></div></div>
-<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">end_atom</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">aborted_tx</span> <span class="special">&amp;)</span> <span class="special">{}</span>
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.language_like_hpp.memory_management_related.macro__boost_stm_delete_ptr_"></a><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.memory_management_related.macro__boost_stm_delete_ptr_" title="Macro
+            BOOST_STM_DELETE_PTR">Macro
+            <code class="computeroutput"><span class="identifier">BOOST_STM_DELETE_PTR</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_STM_DELETE_PTR</span><span class="special">(</span><span class="identifier">PTR</span><span class="special">)</span> <span class="special">...</span>
 </pre>
 <p>
-            Same as before_retry except the exception is discarded and {} are automated.
-          </p>
+              Deletes the instance using the <code class="computeroutput"><span class="keyword">delete</span></code>
+              operator and nnotifies the STM system of this deletion.
+            </p>
 <p>
-            To be used pairwise with <code class="computeroutput"><span class="identifier">try_atomic</span></code>
-            or <code class="computeroutput"><span class="identifier">atomic</span></code>.
-          </p>
+              Usage
+            </p>
+<pre class="programlisting"><span class="identifier">BOOST_STM_TRANSACTION</span>
+    <span class="special">...</span>
+    <span class="identifier">prev</span><span class="special">-&gt;</span><span class="identifier">next_</span><span class="special">=</span><span class="identifier">BOOST_STM_NEW</span><span class="special">(</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="identifier">val</span><span class="special">,</span> <span class="identifier">curr</span><span class="special">));</span>
+    <span class="special">...</span>
+<span class="identifier">BOOST_STM_END_TRANSACTION</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.language_like_hpp.memory_management_related.macro__boost_stm_new_array_"></a><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.memory_management_related.macro__boost_stm_new_array_" title="Macro
+            BOOST_STM_NEW_ARRAY">Macro
+            <code class="computeroutput"><span class="identifier">BOOST_STM_NEW_ARRAY</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_STM_NEW_ARRAY</span><span class="special">(</span><span class="identifier">SIZE</span><span class="special">,</span> <span class="identifier">T</span><span class="special">)</span> <span class="special">...</span>
+</pre>
+<p>
+              Creates a new array using the <code class="computeroutput"><span class="keyword">new</span>
+              <span class="special">[]</span></code> operator and notifies the
+              STM system of this new allocation.
+            </p>
+<p>
+              Usage
+            </p>
+<pre class="programlisting"><span class="identifier">BOOST_STM_TRANSACTION</span>
+    <span class="special">...</span>
+    <span class="identifier">prev</span><span class="special">-&gt;</span><span class="identifier">next_</span><span class="special">=</span><span class="identifier">BOOST_STM_NEW</span><span class="special">(</span><span class="identifier">size</span><span class="special">,</span> <span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="identifier">val</span><span class="special">,</span> <span class="identifier">curr</span><span class="special">));</span>
+    <span class="special">...</span>
+<span class="identifier">BOOST_STM_END_TRANSACTION</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.reference.core.language_like_hpp.memory_management_related.macro__boost_stm_delete_array_"></a><a href="core.html#toward_boost_stm.reference.core.language_like_hpp.memory_management_related.macro__boost_stm_delete_array_" title="Macro
+            BOOST_STM_DELETE_ARRAY">Macro
+            <code class="computeroutput"><span class="identifier">BOOST_STM_DELETE_ARRAY</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_STM_DELETE_ARRAY</span><span class="special">(</span><span class="identifier">PTR</span><span class="special">,</span> <span class="identifier">SIZE</span><span class="special">)</span> <span class="special">...</span>
+</pre>
+<p>
+              Deletes the array instance using the <code class="computeroutput"><span class="keyword">delete</span><span class="special">[]</span></code> operator and nnotifies the STM system
+              of this deletion.
+            </p>
+<p>
+              Usage
+            </p>
+<pre class="programlisting"><span class="identifier">BOOST_STM_TRANSACTION</span>
+    <span class="special">...</span>
+    <span class="identifier">prev</span><span class="special">-&gt;</span><span class="identifier">next_</span><span class="special">=</span><span class="identifier">BOOST_STM_NEW</span><span class="special">(</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="identifier">val</span><span class="special">,</span> <span class="identifier">curr</span><span class="special">));</span>
+    <span class="special">...</span>
+<span class="identifier">BOOST_STM_END_TRANSACTION</span>
+</pre>
+</div>
 </div>
 </div>
 <div class="section" lang="en">
