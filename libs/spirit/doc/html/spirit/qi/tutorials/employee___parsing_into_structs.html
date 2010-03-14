@@ -1,10 +1,10 @@
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Employee - Parsing into structs</title>
 <link rel="stylesheet" href="../../../../../../../doc/html/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.75.0">
-<link rel="home" href="../../../index.html" title="Spirit 2.1">
+<link rel="home" href="../../../index.html" title="Spirit 2.3">
 <link rel="up" href="../tutorials.html" title="Tutorials">
 <link rel="prev" href="roman_numerals.html" title="Roman Numerals">
 <link rel="next" href="mini_xml___asts_.html" title="Mini XML - ASTs!">
@@ -29,11 +29,11 @@
 </h4></div></div></div>
 <p>
           It's a common question in the <a href="http://www.nabble.com/The-Spirit-Parser-Library-f3430.html" target="_top">Spirit
-          General List</a>: how do I parse and place the results into a C++ struct?
+          General List</a>: How do I parse and place the results into a C++ struct?
           Of course, at this point, you already know various ways to do it, using
           semantic actions. There are many ways to skin a cat. Spirit2, being fully
           attributed, makes it even easier. The next example demonstrates some features
-          of Spirit2 that makes this easy. In the process, you'll learn about:
+          of Spirit2 that make this easy. In the process, you'll learn about:
         </p>
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
@@ -70,9 +70,9 @@
 <p>
         </p>
 <p>
-          Then, we need to tell <a href="http://spirit.sourceforge.net/dl_more/fusion_v2/libs/fusion/doc/html/index.html" target="_top">Fusion</a>
-          about our employee struct to make it a first- class fusion citizen. If
-          you don't know fusion yet, it is a <a href="http://www.boost.org/" target="_top">Boost</a>
+          Then, we need to tell <a href="../../../../../../../libs/fusion/doc/html/index.html" target="_top">Boost.Fusion</a>
+          about our employee struct to make it a first-class fusion citizen that
+          the grammar can utilize. If you don't know fusion yet, it is a <a href="http://www.boost.org/" target="_top">Boost</a>
           library for working with heterogenous collections of data, commonly referred
           to as tuples. Spirit uses fusion extensively as part of its infrastructure.
         </p>
@@ -179,7 +179,7 @@
           has a <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code> attribute.
         </p>
 <a name="spirit.qi.tutorials.employee___parsing_into_structs.lexeme"></a><h6>
-<a name="id1061908"></a>
+<a name="id620598"></a>
           <a class="link" href="employee___parsing_into_structs.html#spirit.qi.tutorials.employee___parsing_into_structs.lexeme">Lexeme</a>
         </h6>
 <pre class="programlisting"><span class="identifier">lexeme</span><span class="special">[</span><span class="char">'"'</span> <span class="special">&gt;&gt;</span> <span class="special">+(</span><span class="identifier">char_</span> <span class="special">-</span> <span class="char">'"'</span><span class="special">)</span> <span class="special">&gt;&gt;</span> <span class="char">'"'</span><span class="special">];</span>
@@ -196,7 +196,7 @@
           a double quote.
         </p>
 <a name="spirit.qi.tutorials.employee___parsing_into_structs.difference"></a><h6>
-<a name="id1062021"></a>
+<a name="id620711"></a>
           <a class="link" href="employee___parsing_into_structs.html#spirit.qi.tutorials.employee___parsing_into_structs.difference">Difference</a>
         </h6>
 <p>
@@ -205,7 +205,7 @@
 <pre class="programlisting"><span class="identifier">a</span> <span class="special">-</span> <span class="identifier">b</span>
 </pre>
 <p>
-          parses <code class="computeroutput"><span class="identifier">a</span></code> but not <code class="computeroutput"><span class="identifier">b</span></code>. Its attribute is just <code class="computeroutput"><span class="identifier">A</span></code>, the attribute of <code class="computeroutput"><span class="identifier">a</span></code>.
+          parses <code class="computeroutput"><span class="identifier">a</span></code> but not <code class="computeroutput"><span class="identifier">b</span></code>. Its attribute is just <code class="computeroutput"><span class="identifier">A</span></code>; the attribute of <code class="computeroutput"><span class="identifier">a</span></code>.
           <code class="computeroutput"><span class="identifier">b</span></code>'s attribute is ignored.
           Hence, the attribute of:
         </p>
@@ -215,16 +215,18 @@
           is just <code class="computeroutput"><span class="keyword">char</span></code>.
         </p>
 <a name="spirit.qi.tutorials.employee___parsing_into_structs.plus"></a><h6>
-<a name="id1062129"></a>
+<a name="id620819"></a>
           <a class="link" href="employee___parsing_into_structs.html#spirit.qi.tutorials.employee___parsing_into_structs.plus">Plus</a>
         </h6>
 <pre class="programlisting"><span class="special">+</span><span class="identifier">a</span>
 </pre>
 <p>
-          is the close kin of the kleene star we got so used to in our tutorial.
-          Like it's kin, the kleene star, its attribute is a <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;</span></code> where <code class="computeroutput"><span class="identifier">A</span></code>
-          is the attribute of <code class="computeroutput"><span class="identifier">a</span></code>.
-          So, putting all these together, the attribute of
+          is similar to Kleene star. Rather than match everything, <code class="computeroutput"><span class="special">+</span><span class="identifier">a</span></code> matches
+          one or more. Like it's related function, the Kleene star, its attribute
+          is a <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;</span></code>
+          where <code class="computeroutput"><span class="identifier">A</span></code> is the attribute
+          of <code class="computeroutput"><span class="identifier">a</span></code>. So, putting all these
+          together, the attribute of
         </p>
 <pre class="programlisting"><span class="special">+(</span><span class="identifier">char_</span> <span class="special">-</span> <span class="char">'"'</span><span class="special">)</span>
 </pre>
@@ -234,7 +236,7 @@
 <pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;</span>
 </pre>
 <a name="spirit.qi.tutorials.employee___parsing_into_structs.sequence_attribute"></a><h6>
-<a name="id1062255"></a>
+<a name="id620955"></a>
           <a class="link" href="employee___parsing_into_structs.html#spirit.qi.tutorials.employee___parsing_into_structs.sequence_attribute">Sequence
           Attribute</a>
         </h6>
@@ -270,12 +272,12 @@
 </tr>
 <tr><td align="left" valign="top"><p>
             If you don't know what I am talking about, see: <a href="http://tinyurl.com/6xun4j" target="_top">Fusion
-            Vector</a>. It might be a good idea to have a look into <a href="http://spirit.sourceforge.net/dl_more/fusion_v2/libs/fusion/doc/html/index.html" target="_top">Fusion</a>
+            Vector</a>. It might be a good idea to have a look into <a href="../../../../../../../libs/fusion/doc/html/index.html" target="_top">Boost.Fusion</a>
             at this point. You'll definitely see more of it in the coming pages.
           </p></td></tr>
 </table></div>
 <a name="spirit.qi.tutorials.employee___parsing_into_structs.attribute_collapsing"></a><h6>
-<a name="id1062477"></a>
+<a name="id621177"></a>
           <a class="link" href="employee___parsing_into_structs.html#spirit.qi.tutorials.employee___parsing_into_structs.attribute_collapsing">Attribute
           Collapsing</a>
         </h6>
@@ -285,7 +287,7 @@
         </p>
 <p>
           Nodes without attributes are disregarded. In a sequence, like above, all
-          nodes with no attributes are filtered out of the <code class="computeroutput"><span class="identifier">fusion</span><span class="special">:</span><span class="identifier">vector</span></code>.
+          nodes with no attributes are filtered out of the <code class="computeroutput"><span class="identifier">fusion</span><span class="special">::</span><span class="identifier">vector</span></code>.
           So, since <code class="computeroutput"><span class="char">'"'</span></code> has no attribute,
           and <code class="computeroutput"><span class="special">+(</span><span class="identifier">char_</span>
           <span class="special">-</span> <span class="char">'"'</span><span class="special">)</span></code> has a <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;</span></code> attribute, the whole expression's attribute
@@ -294,10 +296,10 @@
 <pre class="programlisting"><span class="identifier">fusion</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;</span> <span class="special">&gt;</span>
 </pre>
 <p>
-          But wait, there's one more collapsing rule: If after the attribute is a
-          single element <code class="computeroutput"><span class="identifier">fusion</span><span class="special">::</span><span class="identifier">vector</span></code>, The element is stripped naked
-          from its container. So, to make a long story short, the attribute of the
-          expression:
+          But wait, there's one more collapsing rule: If the attribute is followed
+          by a single element <code class="computeroutput"><span class="identifier">fusion</span><span class="special">::</span><span class="identifier">vector</span></code>,
+          The element is stripped naked from its container. To make a long story
+          short, the attribute of the expression:
         </p>
 <pre class="programlisting"><span class="char">'"'</span> <span class="special">&gt;&gt;</span> <span class="special">+(</span><span class="identifier">char_</span> <span class="special">-</span> <span class="char">'"'</span><span class="special">)</span> <span class="special">&gt;&gt;</span> <span class="char">'"'</span>
 </pre>
@@ -307,7 +309,7 @@
 <pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;</span>
 </pre>
 <a name="spirit.qi.tutorials.employee___parsing_into_structs.auto_rules"></a><h6>
-<a name="id1062716"></a>
+<a name="id621416"></a>
           <a class="link" href="employee___parsing_into_structs.html#spirit.qi.tutorials.employee___parsing_into_structs.auto_rules">Auto
           Rules</a>
         </h6>
@@ -317,9 +319,9 @@
 <pre class="programlisting"><span class="identifier">r</span> <span class="special">=</span> <span class="identifier">p</span><span class="special">[</span><span class="identifier">_val</span> <span class="special">=</span> <span class="identifier">_1</span><span class="special">];</span>
 </pre>
 <p>
-          If you have a rule definition like above where the attribute of the RHS
-          (right hand side) of the rule is compatibe with the attribute of the LHS
-          (left hand side), then you can rewrite it as:
+          If you have a rule definition such as the above, where the attribute of
+          the RHS (right hand side) of the rule is compatibe with the attribute of
+          the LHS (left hand side), then you can rewrite it as:
         </p>
 <pre class="programlisting"><span class="identifier">r</span> <span class="special">%=</span> <span class="identifier">p</span><span class="special">;</span>
 </pre>
@@ -336,7 +338,7 @@
 <p>
           is a simplified version of:
         </p>
-<pre class="programlisting"><span class="identifier">quoted_string</span> <span class="special">=</span> <span class="identifier">lexeme</span><span class="special">[</span><span class="char">'"'</span> <span class="special">&gt;&gt;</span> <span class="special">+(</span><span class="identifier">char_</span> <span class="special">-</span> <span class="char">'"'</span><span class="special">)</span> <span class="special">&gt;&gt;</span> <span class="char">'"'</span><span class="special">][</span><span class="identifier">val_</span> <span class="special">=</span> <span class="identifier">_1</span><span class="special">];</span>
+<pre class="programlisting"><span class="identifier">quoted_string</span> <span class="special">=</span> <span class="identifier">lexeme</span><span class="special">[</span><span class="char">'"'</span> <span class="special">&gt;&gt;</span> <span class="special">+(</span><span class="identifier">char_</span> <span class="special">-</span> <span class="char">'"'</span><span class="special">)</span> <span class="special">&gt;&gt;</span> <span class="char">'"'</span><span class="special">][</span><span class="identifier">_val</span> <span class="special">=</span> <span class="identifier">_1</span><span class="special">];</span>
 </pre>
 <p>
           The attribute of the <code class="computeroutput"><span class="identifier">quoted_string</span></code>
@@ -344,8 +346,20 @@
           with the attribute of the RHS: <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;</span></code>. The RHS extracts the parsed attribute
           directly into the rule's attribute, in-situ.
         </p>
+<div class="note" title="Note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            <code class="computeroutput"><span class="identifier">r</span> <span class="special">%=</span>
+            <span class="identifier">p</span></code> and <code class="computeroutput"><span class="identifier">r</span>
+            <span class="special">=</span> <span class="identifier">p</span></code>
+            are equivalent if there are no semantic actions associated with <code class="computeroutput"><span class="identifier">p</span></code>.
+          </p></td></tr>
+</table></div>
 <a name="spirit.qi.tutorials.employee___parsing_into_structs.finally"></a><h6>
-<a name="id1063035"></a>
+<a name="id621783"></a>
           <a class="link" href="employee___parsing_into_structs.html#spirit.qi.tutorials.employee___parsing_into_structs.finally">Finally</a>
         </h6>
 <p>
@@ -372,6 +386,7 @@
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem"><code class="computeroutput"><span class="identifier">lit</span><span class="special">(</span><span class="string">"employee"</span><span class="special">)</span></code></li>
 <li class="listitem"><code class="computeroutput"><span class="char">'{'</span></code></li>
+<li class="listitem"><code class="computeroutput"><span class="char">','</span></code></li>
 <li class="listitem"><code class="computeroutput"><span class="char">'}'</span></code></li>
 </ul></div>
 <div class="note" title="Note"><table border="0" summary="Note">
@@ -420,8 +435,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2001-2009 Joel
-      de Guzman, Hartmut Kaiser<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2001-2010 Joel de Guzman, Hartmut Kaiser<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
