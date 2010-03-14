@@ -26,11 +26,11 @@ namespace generalized_chain{
 
     namespace impl{
     
+    
+        // There shouldn't be a need to add const, it's taken care of by
+        // Binary?
         template<typename Binary,typename R1,typename R2>
-        struct caller : Binary::template apply<
-            typename boost::add_const<R1>::type,
-            typename boost::add_const<R2>::type
-        >{};
+        struct caller : Binary::template apply<R1,R2>{};
     
         template<typename F,typename L>
         struct exit_cond;
@@ -43,7 +43,11 @@ namespace generalized_chain{
             typedef typename boost::mpl::next<F>::type next_it_;
             typedef typename impl::generic<Binary,next_it_,L> next_;
             typedef typename next_::type arg2_;
-            typedef generalized_chain::impl::caller<Binary,arg1_,arg2_> caller_;
+            typedef generalized_chain::impl::caller<
+                Binary,
+                typename boost::add_const<arg1_>::type,
+                typename boost::add_const<arg2_>::type
+            > caller_;
             typedef typename caller_::type type;
 
             BOOST_STATIC_CONSTANT(int,iteration =  next_::iteration + 1);

@@ -45,8 +45,7 @@
 // with M.P.G
 //
 // range<int>() is provided to achieve conformity with the rest of Boost.Assign
-// but it is in fact ill suited here. The policy P, however, will usually
-// interoperate with chain_auto_convert which serves a similar purpose.
+// but it is in fact ill suited here. 
 
 namespace boost{
 namespace assign{

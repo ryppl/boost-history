@@ -17,9 +17,9 @@
 #include <iostream> // TODO remove
 
 // Usage:
-//    chain_auto_convert(r1,r2)
-// returns a range that is formed by joining r1 and r2 whose reference is
-// convertible from either of those of r1 and r2. 
+//    boost::copy(r1,boost::begin(chain_auto_convert(r1,r2)));
+//
+// Note that this assignement cannot work with boost::chain(r1,r2) 
 //
 // Requirements : if either of r1 or r1 contains reference wrappers (W) pointing 
 // to some type T, 

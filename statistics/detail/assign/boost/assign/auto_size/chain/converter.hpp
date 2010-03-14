@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// assign::detail::converter.hpp                                            //
+// assign::detail::convert.hpp                                            //
 //                                                                          //
 //  (C) Copyright 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -20,12 +20,12 @@
 namespace boost{
 namespace assign{
 namespace detail{
-namespace functional{
+namespace adaptor{
 
 template<typename T>
-struct converter{
+struct convert{
 
-    converter(){}
+    convert(){}
 
     typedef T result_type;
 
@@ -37,7 +37,7 @@ struct converter{
 
 };
 
-}// functional
+}// adaptor
 
 namespace result_of{
 	
@@ -45,7 +45,7 @@ namespace result_of{
         typename U = typename boost::range_reference<Rng>::type>
     struct convert_range
     {
-        typedef functional::converter<T> adaptor_;
+        typedef adaptor::convert<T> adaptor_;
         typedef boost::transform_range<adaptor_,Rng> type;
         
         static void internal_check(){
@@ -79,7 +79,7 @@ namespace result_of{
     template<typename T,typename Rng>
     inline typename detail::result_of
     	::convert_range<T,Rng>::type 
-    operator|( Rng& r, const detail::functional::converter<T>& f )
+    operator|( Rng& r, const detail::adaptor::convert<T>& f )
     {
         return convert_range<T>(r);   
     }
@@ -87,7 +87,7 @@ namespace result_of{
     template<typename T,typename Rng>
     inline typename detail::result_of
     	::convert_range<T,const Rng>::type 
-    operator|( const Rng& r, const detail::functional::converter<T>& f )
+    operator|( const Rng& r, const detail::adaptor::convert<T>& f )
     {
         return convert_range<T>(r);   
     }

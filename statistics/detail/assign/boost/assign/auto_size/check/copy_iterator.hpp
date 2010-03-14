@@ -10,6 +10,7 @@
 #define BOOST_ASSIGN_DETAIL_AUTO_SIZE_CHECK_COPY_ITERATOR_ER_2010_HPP
 #include <algorithm>
 #include <boost/range.hpp>
+#include <boost/array.hpp>
 
 #ifndef BOOST_ASSIGN_CHECK_EQUAL
 #error

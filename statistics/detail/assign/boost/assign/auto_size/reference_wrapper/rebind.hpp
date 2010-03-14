@@ -24,7 +24,7 @@ namespace detail{
         assign_reference_rebind( T& r ) : ref_(&r)
         { }
 
-        void operator=( T& r )
+        void operator=( T& r ) // should it return itself?
         {
             this->ref_ = &r;
         }
