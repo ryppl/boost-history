@@ -41,7 +41,7 @@ struct transactions_stack {
 #else
     transaction* inner_;
     std::size_t count_;
-    transactions_stack() : inner_(0), count_(0) 
+    transactions_stack() : inner_(0), count_(0)
     {
         // the stack at least one element (0) so we can always call to top, i.e. current transaction is 0
     }
@@ -49,7 +49,7 @@ struct transactions_stack {
     inline void pop();
     std::size_t size() {return count_;}
     transaction* top() {return inner_;}
-#endif    
+#endif
 };
 
 

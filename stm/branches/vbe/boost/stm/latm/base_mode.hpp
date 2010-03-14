@@ -36,7 +36,8 @@ public:
 
     void clear_tm_conflicting_locks()
     {
-        synchro::lock_guard<Mutex> lock_l(latmMutex_);
+        BOOST_STM_CALL_CONTEXT_DCL_INST(0);
+        synchro::lock_guard<Mutex> lock_l(latmMutex_  BOOST_STM_CALL_CONTEXT("latm_lock"));
         tmConflictingLocks_.clear();
     }
 

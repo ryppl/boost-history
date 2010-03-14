@@ -52,14 +52,15 @@ namespace boost { namespace stm {
 inline bool transaction::def_do_core_full_pthread_lock_mutex
 (latm::mutex_type* mutex, int lockWaitTime, int lockAborted)
 {
+    BOOST_STM_CALL_CONTEXT_DCL_INST(0);
     //--------------------------------------------------------------------------
     // if the lock-aware tm lock set is empty, lock the in-flight trans mutex
     // so we can abort all the in-flight transactions
     //--------------------------------------------------------------------------
     if (latm::instance().latmLockedLocks_.empty())
     {
-        synchro::lock_guard<Mutex> lk_g(*general_lock());
-        synchro::lock_guard<Mutex> lk_i(*inflight_lock());
+        synchro::lock_guard<Mutex> lk_g(*general_lock()  BOOST_STM_CALL_CONTEXT("general_lock"));
+        synchro::lock_guard<Mutex> lk_i(*inflight_lock()  BOOST_STM_CALL_CONTEXT("inflight_lock"));
 
         std::list<transaction*> txList;
         for (in_flight_trans_cont::iterator i = in_flight_transactions().begin();
@@ -68,6 +69,7 @@ inline bool transaction::def_do_core_full_pthread_lock_mutex
             BOOST_ASSERT(*i!=0);
             //~ (*i)->assert_tx_type();
             transaction *t = *i;
+            BOOST_STM_TRANSACTION_INVARIANT_VAR(t);
 
             if (!t->irrevocable() &&
                 cm_allow_lock_to_abort_tx(lockWaitTime, lockAborted, false, *t))
@@ -83,7 +85,7 @@ inline bool transaction::def_do_core_full_pthread_lock_mutex
         for (std::list<transaction*>::iterator it = txList.begin(); txList.end() != it; ++it)
         {
             BOOST_ASSERT(*it!=0);
-            
+
             (*it)->force_to_abort();
         }
     }
@@ -96,11 +98,13 @@ inline bool transaction::def_do_core_full_pthread_lock_mutex
 //----------------------------------------------------------------------------
 // only allow one thread to execute any of these methods at a time
 //----------------------------------------------------------------------------
-template <typename M> 
+template <typename M>
 inline void transaction::def_full_lock(M& m, latm::mutex_type& mutex)
 {
+    BOOST_STM_CALL_CONTEXT_DCL_INST(0);
     if (transaction* t = get_inflight_tx_of_same_thread(false))
     {
+        BOOST_STM_TRANSACTION_INVARIANT_VAR(t);
         t->make_isolated();
 
         bool hadLock = t->is_currently_locked_lock(&mutex);
@@ -109,12 +113,12 @@ inline void transaction::def_full_lock(M& m, latm::mutex_type& mutex)
 
         t->commit_deferred_update_tx();
         {
-        synchro::lock_guard<Mutex> lk_l(*latm_lock());
+        synchro::lock_guard<Mutex> lk_l(*latm_lock()  BOOST_STM_CALL_CONTEXT("latm_lock"));
         latm::instance().latmLockedLocksOfThreadMap_[&mutex] = this_thread::get_id();
         }
 
         if (hadLock) return;
-        else synchro::lock(m);
+        else synchro::lock(m BOOST_STM_CALL_CONTEXT("glatm_lock"));
         return;
     }
 
@@ -122,8 +126,8 @@ inline void transaction::def_full_lock(M& m, latm::mutex_type& mutex)
     for (;;)
     {
         {
-        synchro::unique_lock<M> lk(m);
-        synchro::lock_guard<Mutex> lk_l(latm::instance().latmMutex_);
+        synchro::unique_lock<M> lk(m  BOOST_STM_CALL_CONTEXT("glatm_lock"));
+        synchro::lock_guard<Mutex> lk_l(latm::instance().latmMutex_  BOOST_STM_CALL_CONTEXT("latm_lock"));
         //--------------------------------------------------------------------
         // if we are able to do the core lock work, break
         //--------------------------------------------------------------------
@@ -149,11 +153,13 @@ inline void transaction::def_full_lock(M& m, latm::mutex_type& mutex)
 //----------------------------------------------------------------------------
 // only allow one thread to execute any of these methods at a time
 //----------------------------------------------------------------------------
-template <typename M> 
+template <typename M>
 inline bool transaction::def_full_try_lock(M& m, latm::mutex_type& mutex)
 {
+    BOOST_STM_CALL_CONTEXT_DCL_INST(0);
     if (transaction* t = get_inflight_tx_of_same_thread(false))
     {
+        BOOST_STM_TRANSACTION_INVARIANT_VAR(t);
         t->make_isolated();
 
         bool hadLock = t->is_currently_locked_lock(&mutex);
@@ -162,7 +168,7 @@ inline bool transaction::def_full_try_lock(M& m, latm::mutex_type& mutex)
 
         t->commit_deferred_update_tx();
         {
-        synchro::lock_guard<Mutex> lk_l(*latm_lock());
+        synchro::lock_guard<Mutex> lk_l(*latm_lock()  BOOST_STM_CALL_CONTEXT("latm_lock"));
         latm::instance().latmLockedLocksOfThreadMap_[&mutex] = this_thread::get_id();
         }
 
@@ -170,10 +176,10 @@ inline bool transaction::def_full_try_lock(M& m, latm::mutex_type& mutex)
         else return synchro::try_lock(m);
     }
 
-    synchro::unique_lock<M> lk(m, synchro::try_to_lock);
+    synchro::unique_lock<M> lk(m, synchro::try_to_lock  BOOST_STM_CALL_CONTEXT("glatm_lock"));
     if (!lk) return false;
 
-    synchro::lock_guard<Mutex> lk_l(latm::instance().latmMutex_);
+    synchro::lock_guard<Mutex> lk_l(latm::instance().latmMutex_  BOOST_STM_CALL_CONTEXT("latm_lock"));
 
     //-----------------------------------------------------------------------
     // if !core done, since trylock, we cannot stall & retry - just exit
@@ -193,15 +199,17 @@ inline bool transaction::def_full_try_lock(M& m, latm::mutex_type& mutex)
 //----------------------------------------------------------------------------
 // only allow one thread to execute any of these methods at a time
 //----------------------------------------------------------------------------
-template <typename M> 
+template <typename M>
 inline void transaction::def_full_unlock(M& m, latm::mutex_type& mutex)
 {
+    BOOST_STM_CALL_CONTEXT_DCL_INST(0);
     bool hasLock = true;
     {
-    synchro::lock_guard<Mutex> lk_l(latm::instance().latmMutex_);
+    synchro::lock_guard<Mutex> lk_l(latm::instance().latmMutex_  BOOST_STM_CALL_CONTEXT("latm_lock"));
 
     if (transaction* t = get_inflight_tx_of_same_thread(false))
     {
+        BOOST_STM_TRANSACTION_INVARIANT_VAR(t);
         if (!t->is_on_obtained_locks_list(&mutex))
         {
             // this is illegal, it means the transaction is unlocking a lock
@@ -216,12 +224,12 @@ inline void transaction::def_full_unlock(M& m, latm::mutex_type& mutex)
 
     latm::instance().latmLockedLocks_.erase(&mutex);
 
-    if (latm::instance().latmLockedLocks_.empty()) synchro::unlock(*inflight_lock());
+    if (latm::instance().latmLockedLocks_.empty()) synchro::unlock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
 
     latm::instance().latmLockedLocksOfThreadMap_.erase(&mutex);
     }
 
-    if (hasLock) synchro::unlock(m);
+    if (hasLock) synchro::unlock(m BOOST_STM_CALL_CONTEXT("glatm_lock"));
     return;
 }
 

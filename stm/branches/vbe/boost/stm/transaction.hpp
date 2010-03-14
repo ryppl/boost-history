@@ -25,6 +25,8 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <boost/synchro/call_context.hpp>
+
 //-----------------------------------------------------------------------------
 #include <boost/stm/trace.hpp>
 #include <boost/synchro/tss.hpp>
@@ -53,8 +55,64 @@
 #include <boost/stm/detail/vector_set.hpp>
 #include <boost/stm/incomplete_smart_cast.hpp>
 
-//-----------------------------------------------------------------------------
+
 namespace boost { namespace stm {
+
+#ifdef BOOST_STM_USE_INVARIANT
+template <typename T>
+struct scoped_check_invariant {
+    T const& that_;
+    const char* file;
+    std::size_t line;
+    const char* fct;
+    scoped_check_invariant(T const& ref, const char* f, std::size_t l, const char* function) : that_(ref), file(f), line(l), fct(function) {
+        if (!that_.invariant()) {
+            boost::lock_guard<boost::mutex> lk(log_mutex);
+            std::cout << &that_ << " " << that_.parent() << " " << std::hex << this_thread::get_id() << std::dec << " $$$$$ERROR on constructor " << file << "[" << line << "] " << fct << std::endl;
+            assert(false);
+        } else {
+            boost::lock_guard<boost::mutex> lk(log_mutex);
+            std::cout << &that_ << " " << that_.parent() << " " << std::hex << this_thread::get_id() << std::dec << " $$$$$INFO on constructor " << file << "[" << line << "] " << fct << std::endl;
+        }
+    }
+    ~scoped_check_invariant() {
+        if (!that_.invariant()) {
+            boost::lock_guard<boost::mutex> lk(log_mutex);
+            std::cout << &that_ << " " << that_.parent() << " " << std::hex << this_thread::get_id() << std::dec << " %%%%%ERROR on destructor "<< file << "[" << line << "] " << fct << std::endl;
+            assert(false);
+        } else {
+            boost::lock_guard<boost::mutex> lk(log_mutex);
+            std::cout << &that_ << " " << that_.parent() << " " << std::hex << this_thread::get_id() << std::dec<< " %%%%%%INFO on destructor "<< file << "[" << line << "] " << fct<< std::endl;
+        }
+    }
+};
+
+#define BOOST_STM_SCOPED_INVARIANT_TYPE_VAR(TYPE, VAR) BOOST_STM_CALL_CONTEXT_DCL_INST(VAR); scoped_check_invariant<TYPE> __invariant(*VAR, __FILE__, __LINE__, BOOST_CURRENT_FUNCTION)
+#define BOOST_STM_SCOPED_INVARIANT_TYPE(TYPE) BOOST_STM_SCOPED_INVARIANT_TYPE_VAR(TYPE, this)
+#define BOOST_STM_TRANSACTION_INVARIANT_VAR(VAR) BOOST_STM_SCOPED_INVARIANT_TYPE_VAR(boost::stm::transaction, VAR)
+#define BOOST_STM_TRANSACTION_INVARIANT BOOST_STM_SCOPED_INVARIANT_TYPE(boost::stm::transaction)
+#define BOOST_STM_ASSERT_VAR_INIT(VAR,VALUE) VAR(VALUE), BOOST_JOIN(assert_,VAR)(VAR)
+#define BOOST_STM_ASSERT_VAR_DCL(TYPE,VAR) TYPE VAR; TYPE BOOST_JOIN(assert_,VAR)
+#else
+#define BOOST_STM_TRANSACTION_INVARIANT_VAR(VAR) ((void)0)
+#define BOOST_STM_TRANSACTION_INVARIANT ((void)0)
+#define BOOST_STM_ASSERT_VAR_INIT(VAR,VALUE) VAR(VALUE)
+#define BOOST_STM_ASSERT_VAR_DCL(TYPE,VAR) TYPE VAR
+#endif
+
+
+#define BOOST_STM_RET_IF_FALSE(EXPR) \
+    if (EXPR);else {\
+        boost::lock_guard<boost::mutex> lk(log_mutex); \
+        std::cout << this << " " << this->parent() << " " << std::hex << this_thread::get_id() << std::dec << " ****ERROR " << __FILE__ << "[" << __LINE__ << "]" << std::endl;\
+        return false;\
+    }
+
+//        BOOST_STM_ERROR << #EXPR << std::endl;
+
+
+
+//-----------------------------------------------------------------------------
 
 namespace detail {
     template <int> struct dummy { dummy(int) {} };
@@ -110,11 +168,11 @@ public:
    typedef std::map<thread_id_t, TxType*> ThreadTxTypeContainer;
 
    typedef std::set<transaction*> TContainer;
-#ifdef BOOST_USE_INFLIGH_TRANSACTION_PTR_SET   
+#ifdef BOOST_USE_INFLIGH_TRANSACTION_PTR_SET
    typedef std::set<transaction**> in_flight_trans_cont;
-#else   
+#else
    typedef std::set<transaction*> in_flight_trans_cont;
-#endif   
+#endif
 
    typedef std::multimap<clock_t, MemoryContainerList > DeletionBuffer;
 
@@ -388,13 +446,18 @@ public:
 
    bool is_nested() const
    {
+#ifdef BOOST_STM_USE_STACK
+       return nested_;
+#else
        return parent_!=0;
+#endif
       //~ synchro::lock_guard<Mutex> lock_m(*inflight_lock());
       //~ return other_in_flight_same_thread_transactions();
    }
 
    bool check_throw_before_restart() const
    {
+        BOOST_STM_TRANSACTION_INVARIANT;
       // if this transaction is in-flight or it committed, just ignore it
       if (in_flight() || committed()) return true;
 
@@ -404,7 +467,7 @@ public:
       // an exception here because restarting the transactions will cause it to
       // infinitely fail
       //-----------------------------------------------------------------------
-      synchro::lock_guard<Mutex> lock_m(*inflight_lock());
+      synchro::lock_guard<Mutex> lock_m(*inflight_lock()  BOOST_STM_CALL_CONTEXT("inflight_lock"));
       if (other_in_flight_same_thread_transactions())
       {
          throw aborted_transaction_exception("closed nesting throws");
@@ -422,7 +485,8 @@ public:
    template <typename T>
    T& find_original(T& in)
    {
-      //-----------------------------------------------------------------------
+        BOOST_STM_TRANSACTION_INVARIANT;
+       //-----------------------------------------------------------------------
       // if transactionThread_ is not invalid it means this is the original, so
       // we can return it. Otherwise, we need to search for the original in
       // our write set
@@ -558,7 +622,8 @@ public:
    template <typename T>
    inline T const & read(T const & in)
    {
-      if (direct_updating())
+BOOST_STM_TRANSACTION_INVARIANT;
+       if (direct_updating())
       {
 #if PERFORMING_VALIDATION
          throw not_implemented("direct updating not implemented for validation yet");
@@ -582,7 +647,8 @@ public:
    template <typename T>
    inline T& write(T& in)
    {
-      return write_poly<static_poly>(in);
+BOOST_STM_TRANSACTION_INVARIANT;
+       return write_poly<static_poly>(in);
    }
 
    template <typename T> T* write_ptr_dyn(T* in)
@@ -593,6 +659,7 @@ public:
    template <typename T>
    inline T& write_dyn(T& in)
    {
+BOOST_STM_TRANSACTION_INVARIANT;
       return write_poly<dyn_poly>(in);
    }
 
@@ -606,6 +673,7 @@ public:
    template <typename Poly, typename T>
    inline T& write_poly(T& in)
    {
+BOOST_STM_TRANSACTION_INVARIANT;
       if (direct_updating())
       {
 #if PERFORMING_VALIDATION
@@ -624,6 +692,7 @@ public:
    template <typename T>
    inline void delete_memory(T const&in)
    {
+BOOST_STM_TRANSACTION_INVARIANT;
       if (direct_updating())
       {
 #if PERFORMING_VALIDATION
@@ -641,12 +710,14 @@ public:
    //--------------------------------------------------------------------------
    template <typename T>
    inline void delete_tx_ptr(T *in) {
+BOOST_STM_TRANSACTION_INVARIANT;
        delete_memory(*in);
    }
 
    //--------------------------------------------------------------------------
    template <typename T>
    inline void delete_non_tx_ptr(T *in) {
+BOOST_STM_TRANSACTION_INVARIANT;
       if (direct_updating())
       {
 #if PERFORMING_VALIDATION
@@ -666,12 +737,14 @@ public:
    inline
    typename boost::enable_if<is_base_of<base_transaction_object, T>, void>::type
    delete_ptr(T *in, detail::dummy<0> = 0) {
+BOOST_STM_TRANSACTION_INVARIANT;
        delete_tx_ptr(in);
    }
    template <typename T>
    inline
    typename boost::disable_if<is_base_of<base_transaction_object, T>, void>::type
    delete_ptr(T *in, detail::dummy<1> = 0) {
+BOOST_STM_TRANSACTION_INVARIANT;
        delete_non_tx_ptr(in);
    }
    #endif
@@ -679,6 +752,7 @@ public:
    //--------------------------------------------------------------------------
    template <typename T>
    inline void delete_tx_array(T *in, std::size_t size) {
+BOOST_STM_TRANSACTION_INVARIANT;
       if (direct_updating())
       {
 #if PERFORMING_VALIDATION
@@ -695,6 +769,7 @@ public:
    //--------------------------------------------------------------------------
    template <typename T>
    inline void delete_non_tx_array(T *in, std::size_t size) {
+BOOST_STM_TRANSACTION_INVARIANT;
       if (direct_updating())
       {
 #if PERFORMING_VALIDATION
@@ -732,9 +807,10 @@ public:
 
    //--------------------------------------------------------------------------
     void throw_if_forced_to_abort_on_new() {
+BOOST_STM_TRANSACTION_INVARIANT;
         if (forced_to_abort()) {
             if (!direct_updating()) {
-                deferred_abort(true);
+                deferred_abort(false);
                 throw aborted_tx("");
             }
 #ifndef DELAY_INVALIDATION_DOOMED_TXS_UNTIL_COMMIT
@@ -747,6 +823,7 @@ public:
    template <typename T>
    T* as_new_tx(T *newNode)
    {
+BOOST_STM_TRANSACTION_INVARIANT;
       newNode->transaction_thread(threadId_);
       newNode->new_memory(1);
       newMemoryList().push_back(detail::make(newNode));
@@ -758,6 +835,7 @@ public:
    template <typename T>
    T* as_new_non_tx(T *newNode)
    {
+BOOST_STM_TRANSACTION_INVARIANT;
       newMemoryList().push_back(detail::make_non_tx(newNode));
 
       return newNode;
@@ -782,6 +860,7 @@ public:
    template <typename T>
    T* as_new_tx_array(T *newNode, std::size_t size)
    {
+BOOST_STM_TRANSACTION_INVARIANT;
       newMemoryList().push_back(detail::make_array(newNode, size));
 
       return newNode;
@@ -791,6 +870,7 @@ public:
    template <typename T>
    T* as_new_non_tx_array(T *newNode, std::size_t size)
    {
+BOOST_STM_TRANSACTION_INVARIANT;
       newMemoryList().push_back(detail::make_array(newNode, size));
 
       return newNode;
@@ -815,6 +895,7 @@ public:
    template <typename T>
    T* new_shared_memory(T*/*ptr*/)
    {
+BOOST_STM_TRANSACTION_INVARIANT;
       throw_if_forced_to_abort_on_new();
       make_irrevocable();
       return as_new(new T());
@@ -824,6 +905,7 @@ public:
    template <typename T>
    T* new_memory(T*/*ptr*/)
    {
+BOOST_STM_TRANSACTION_INVARIANT;
       throw_if_forced_to_abort_on_new();
       return as_new(new T());
    }
@@ -832,6 +914,7 @@ public:
    template <typename T>
    T* new_memory_copy(T const &rhs)
    {
+BOOST_STM_TRANSACTION_INVARIANT;
       throw_if_forced_to_abort_on_new();
       return as_new(new T(rhs));
    }
@@ -842,6 +925,7 @@ public:
 
    inline bool restart_if_not_inflight()
    {
+BOOST_STM_TRANSACTION_INVARIANT;
       if (in_flight()) return true;
       else return restart();
    }
@@ -850,6 +934,7 @@ public:
     void commit() { end(); }
     void commit(std::nothrow_t)
     {
+BOOST_STM_TRANSACTION_INVARIANT;
         try { end(); }
         catch (...) {}
     }
@@ -857,7 +942,8 @@ public:
 
    void force_to_abort()
    {
-      // can't abort irrevocable transactions
+    BOOST_STM_TRANSACTION_INVARIANT;
+       // can't abort irrevocable transactions
       if (irrevocable()) return;
 
       *forced_to_abort_ptr() = true;
@@ -869,8 +955,8 @@ public:
       j != in_flight_transactions().end(); ++j)
       {
         BOOST_ASSERT(*j!=0);
-          
-        //~ (*j)->assert_tx_type();
+
+        BOOST_ASSERT((*j)->invariant());
          transaction *t = *j;
 
          // if this is a parent or child tx, it must abort too
@@ -879,7 +965,10 @@ public:
 #endif
 #endif
    }
-   inline void unforce_to_abort() { *forced_to_abort_ptr() = false; }
+    inline void unforce_to_abort() {
+BOOST_STM_TRANSACTION_INVARIANT;
+       *forced_to_abort_ptr() = false;
+    }
 
    //--------------------------------------------------------------------------
    void lock_and_abort();
@@ -887,9 +976,13 @@ public:
    inline std::size_t writeListSize() const { return write_list()->size(); }
 
    inline priority_t const &priority() const { return priority_; }
-   inline void set_priority(priority_t const &rhs) const { priority_ = rhs; }
+   inline void set_priority(priority_t const &rhs) const {
+BOOST_STM_TRANSACTION_INVARIANT;
+       priority_ = rhs;
+    }
    inline void raise_priority()
    {
+BOOST_STM_TRANSACTION_INVARIANT;
       if (priority_ < priority_t(-1))
       {
          ++priority_;
@@ -903,7 +996,6 @@ public:
    inline void make_isolated();
    inline bool irrevocable() const;
    inline bool isolated() const;
-   inline void assert_tx_type() const;
 
    inline thread_id_t const & thread_id() const { return threadId_; }
 
@@ -940,6 +1032,7 @@ private:
    template <typename T>
    T const & direct_read(T const & in)
    {
+        BOOST_STM_TRANSACTION_INVARIANT;
       if (in.transaction_thread() == threadId_) return in;
 
       if (forced_to_abort())
@@ -972,14 +1065,14 @@ private:
          // object from the thread that is changing it
          //--------------------------------------------------------------------
          //lock(&transactionMutex_);
-         synchro::lock_guard<Mutex> guard_transactionMutex(transactionMutex_);
+         synchro::lock_guard<Mutex> guard_transactionMutex(transactionMutex_  BOOST_STM_CALL_CONTEXT("transactionMutex_"));
          //lock_tx();
-         synchro::lock_guard<Mutex> lock(*mutex());
+         synchro::lock_guard<Mutex> lock(*mutex()  BOOST_STM_CALL_CONTEXT("mutex"));
 
 
          if (in.transaction_thread() != invalid_thread_id())
          {
-            synchro::lock_guard<Mutex> guard(mutex(in.transaction_thread()));
+            synchro::lock_guard<Mutex> guard(mutex(in.transaction_thread())  BOOST_STM_CALL_CONTEXT("mutex")); // THREAD_INSTANCE
             //Mutex& m=mutex(in.transaction_thread());
             //stm::lock(m);
 
@@ -1025,7 +1118,7 @@ private:
             cm_abort_on_write(*this, (base_transaction_object&)(in));
          }
 
-         synchro::lock_guard<Mutex> lock(*mutex());
+         synchro::lock_guard<Mutex> lock(*mutex()  BOOST_STM_CALL_CONTEXT("mutex"));
          //lock_tx();
          // already have locked us above - in both if / else
 #ifndef DISABLE_READ_SETS
@@ -1044,6 +1137,7 @@ private:
    template <typename T, typename Poly>
    T& direct_write(T& in)
    {
+        BOOST_STM_TRANSACTION_INVARIANT;
       // if this is our memory (new or mod global) just return
       if (in.transaction_thread() == threadId_) return in;
 
@@ -1058,7 +1152,7 @@ private:
       // memory - since we need to ensure other threads don't try to
       // manipulate this at the same time we are going to
       //-----------------------------------------------------------------------
-      synchro::lock_guard<Mutex> lock_m(transactionMutex_);
+      synchro::lock_guard<Mutex> lock_m(transactionMutex_  BOOST_STM_CALL_CONTEXT("transactionMutex_"));
 
       // we currently don't allow write stealing in direct update. if another
       // tx beat us to the memory, we abort
@@ -1079,6 +1173,7 @@ private:
    template <typename T>
    void direct_delete_memory(T const&in)
    {
+BOOST_STM_TRANSACTION_INVARIANT;
       if (in.transaction_thread() == threadId_)
       {
          deletedMemoryList().push_back(detail::make(in));
@@ -1090,7 +1185,7 @@ private:
       // and see if anyone else is writing to it. if not, we add the item to
       // our write list and our deletedList
       //-----------------------------------------------------------------------
-      synchro::unique_lock<Mutex> lock_m(transactionMutex_);
+      synchro::unique_lock<Mutex> lock_m(transactionMutex_  BOOST_STM_CALL_CONTEXT("transactionMutex_"));
 
       if (in.transaction_thread() != invalid_thread_id())
       {
@@ -1112,6 +1207,7 @@ private:
    template <typename T>
    void direct_delete_non_tx_ptr(T *in)
    {
+BOOST_STM_TRANSACTION_INVARIANT;
       //if (in.transaction_thread() == threadId_)
       //{
       //   deletedMemoryList().push_back(detail::make(in));
@@ -1123,7 +1219,7 @@ private:
       // and see if anyone else is writing to it. if not, we add the item to
       // our write list and our deletedList
       //-----------------------------------------------------------------------
-      synchro::unique_lock<Mutex> lock_m(transactionMutex_);
+      synchro::unique_lock<Mutex> lock_m(transactionMutex_  BOOST_STM_CALL_CONTEXT("transactionMutex_"));
 
       //if (in.transaction_thread() != invalid_thread_id())
       //{
@@ -1211,6 +1307,7 @@ private:
    template <typename T>
    void direct_delete_tx_array(T *in, std::size_t size)
    {
+BOOST_STM_TRANSACTION_INVARIANT;
         bool all_in_this_thread = true;
         for (int i=size-1; i>=0; --i) {
             if (in[i].transaction_thread() != threadId_) {
@@ -1228,7 +1325,7 @@ private:
         // and see if anyone else is writing to it. if not, we add the item to
         // our write list and our deletedList
         //-----------------------------------------------------------------------
-        synchro::unique_lock<Mutex> lock_m(transactionMutex_);
+        synchro::unique_lock<Mutex> lock_m(transactionMutex_  BOOST_STM_CALL_CONTEXT("transactionMutex_"));
 
         bool all_invalid = true;
         for (int i=size-1; i>=0; --i) {
@@ -1264,7 +1361,7 @@ private:
    {
       if (forced_to_abort())
       {
-         deferred_abort(true);
+         deferred_abort(false);
          throw aborted_tx("");
       }
 
@@ -1294,6 +1391,7 @@ public:
    template <typename T>
    T& insert_and_return_read_memory(T& in)
    {
+BOOST_STM_TRANSACTION_INVARIANT;
 #ifndef DISABLE_READ_SETS
       //~ ReadContainer::iterator i = readList().find
          //~ (static_cast<base_transaction_object*>(&in));
@@ -1305,7 +1403,7 @@ public:
 #else
       if (bloom().exists((std::size_t)&in)) return in;
 #endif
-      synchro::lock_guard<Mutex> lock(*mutex());
+      synchro::lock_guard<Mutex> lock(*mutex()  BOOST_STM_CALL_CONTEXT("mutex"));
       //lock_tx();
 #ifndef DISABLE_READ_SETS
 #if PERFORMING_VALIDATION
@@ -1326,9 +1424,10 @@ private:
    template <typename T, typename Poly>
    T& deferred_write(T& in)
    {
+BOOST_STM_TRANSACTION_INVARIANT;
       if (forced_to_abort())
       {
-         deferred_abort(true);
+         deferred_abort(false);
          throw aborted_tx("");
       }
       //----------------------------------------------------------------
@@ -1346,7 +1445,7 @@ private:
       if (i == writeList().end())
       {
          // get the lock before we make a copy of this object
-         synchro::unique_lock<Mutex> lock(*mutex());
+         synchro::unique_lock<Mutex> lock(*mutex()  BOOST_STM_CALL_CONTEXT("mutex"));
 #if USE_BLOOM_FILTER
          bloom().insert((std::size_t)&in);
          lock.unlock();
@@ -1370,9 +1469,10 @@ private:
    template <typename T>
    void deferred_delete_memory(T const&in)
    {
+BOOST_STM_TRANSACTION_INVARIANT;
       if (forced_to_abort())
       {
-         deferred_abort(true);
+         deferred_abort(false);
          throw aborted_tx("");
       }
       //-----------------------------------------------------------------------
@@ -1382,7 +1482,7 @@ private:
       if (in.transaction_thread() != invalid_thread_id())
       {
          {
-         synchro::lock_guard<Mutex> lock(*mutex());
+         synchro::lock_guard<Mutex> lock(*mutex() BOOST_STM_CALL_CONTEXT("mutex"));
          bloom().insert((std::size_t)&in);
          }
          writeList().insert(tx_pair(const_cast<T*>(&in), 0));
@@ -1395,7 +1495,7 @@ private:
       else
       {
          {
-         synchro::lock_guard<Mutex> lock(*mutex());
+         synchro::lock_guard<Mutex> lock(*mutex() BOOST_STM_CALL_CONTEXT("mutex"));
          bloom().insert((std::size_t)&in);
          }
          // check the ENTIRE write container for this piece of memory in the
@@ -1419,7 +1519,7 @@ private:
    {
       if (forced_to_abort())
       {
-         deferred_abort(true);
+         deferred_abort(false);
          throw aborted_tx("");
       }
       //-----------------------------------------------------------------------
@@ -1491,9 +1591,10 @@ private:
    template <typename T>
    void deferred_delete_tx_array(T *in, std::size_t size)
    {
+BOOST_STM_TRANSACTION_INVARIANT;
       if (forced_to_abort())
       {
-         deferred_abort(true);
+         deferred_abort(false);
          throw aborted_tx("");
       }
       //-----------------------------------------------------------------------
@@ -1509,7 +1610,7 @@ private:
         }
         if (all_valid) {
             {
-                synchro::lock_guard<Mutex> lock(*mutex());
+                synchro::lock_guard<Mutex> lock(*mutex() BOOST_STM_CALL_CONTEXT("mutex"));
                 for (int i=size-1; i>=0; --i) {
                     bloom().insert((std::size_t)(&in[i]));
                 }
@@ -1526,7 +1627,7 @@ private:
         else
         {
             {
-                synchro::lock_guard<Mutex> lock(*mutex());
+                synchro::lock_guard<Mutex> lock(*mutex() BOOST_STM_CALL_CONTEXT("mutex"));
                 for (int i=size-1; i>=0; --i) {
                     bloom().insert((std::size_t)(&in[i]));
                 }
@@ -1618,10 +1719,13 @@ private:
 
    void directAbortTransactionDeletedMemory() throw();
    void deferredAbortTransactionDeletedMemory() throw() {
+BOOST_STM_TRANSACTION_INVARIANT;
 #ifdef BOOST_STM_ALLOWS_DELETERS
         for (MemoryContainerList::iterator i = deletedMemoryList().begin();
             i != deletedMemoryList().end(); ++i)
         {
+            BOOST_STM_TRANSACTION_INVARIANT;
+            BOOST_ASSERT(*i);
             delete *i;
         }
 #endif
@@ -1643,7 +1747,7 @@ private:
 
 #ifndef DISABLE_READ_SETS
    void directAbortReadList() { readList().clear(); }
-   void deferredAbortReadList() throw() { readList().clear(); }
+   void deferredAbortReadList() throw() { BOOST_STM_TRANSACTION_INVARIANT; readList().clear(); }
 #endif
 
    void validating_direct_end_transaction();
@@ -1819,15 +1923,7 @@ private:
    // ******** WARNING ******** MOVING threadId_ WILL BREAK TRANSACTION
    //--------------------------------------------------------------------------
 
-#ifndef BOOST_STM_USE_STACK
-    transaction* parent_;
-    public:
-    void set_parent(transaction* tx) {parent_=tx;};
-    transaction* parent() {return parent_;};
-    private:
-#else
-    bool nested_;   
-#endif   
+    //~ transaction_tss_storage & transaction_tss_storage_ref_;
 
     synchro::unique_lock<Mutex> auto_general_lock_;
 
@@ -1837,10 +1933,11 @@ private:
 #ifndef BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP
 ////////////////////////////////////////
 //public:
-    tx_context &context_;
+    BOOST_STM_ASSERT_VAR_DCL(tx_context &, context_);
 //private:
 #ifdef BOOST_STM_TX_CONTAINS_REFERENCES_TO_TSS_FIELDS
-    mutable WriteContainer *write_list_ref_;
+    //~ mutable WriteContainer * const write_list_ref_;
+    BOOST_STM_ASSERT_VAR_DCL(WriteContainer * const, write_list_ref_);
     inline WriteContainer *write_list() {
         return write_list_ref_;
     }
@@ -1848,9 +1945,11 @@ private:
         return write_list_ref_;
     }
 
-    mutable bloom_filter *bloomRef_;
+    //~ mutable bloom_filter * const bloomRef_;
+    bloom_filter * const bloomRef_;
 #if PERFORMING_WRITE_BLOOM
-    mutable bloom_filter *wbloomRef_;
+    //~ mutable bloom_filter * const wbloomRef_;
+    bloom_filter * const wbloomRef_;
     //mutable bit_vector &sm_wbv_;
 #endif
 
@@ -1859,13 +1958,13 @@ private:
     inline bloom_filter& wbloom() { return *wbloomRef_; }
     //bit_vector& sm_wbv() { return sm_wbv_; }
 #endif
-    MemoryContainerList *newMemoryListRef_;
+    MemoryContainerList * const newMemoryListRef_;
     inline MemoryContainerList& newMemoryList() { return *newMemoryListRef_; }
 
-    MemoryContainerList *deletedMemoryListRef_;
+    MemoryContainerList * const deletedMemoryListRef_;
     inline MemoryContainerList& deletedMemoryList() { return *deletedMemoryListRef_; }
 
-    TxType *txTypeRef_;
+    BOOST_STM_ASSERT_VAR_DCL(TxType * const, txTypeRef_);
     inline TxType const tx_type() const { return *txTypeRef_; }
     inline void tx_type(TxType const &rhs) { *txTypeRef_ = rhs; }
     inline TxType*  tx_type_ptr() { return txTypeRef_; }
@@ -1891,7 +1990,7 @@ private:
 
 #ifdef USING_SHARED_FORCED_TO_ABORT
 #ifdef BOOST_STM_TX_CONTAINS_REFERENCES_TO_TSS_FIELDS
-    int *forcedToAbortRef_;
+    int * const forcedToAbortRef_;
 public:
     inline int const forced_to_abort() const { return *forcedToAbortRef_; }
 private:
@@ -1903,7 +2002,7 @@ private:
     inline int* forced_to_abort_ptr() { return &context_.abort; }
 #endif
 #else
-   int forcedToAbortRef_;
+   int  const forcedToAbortRef_;
 public:
     inline int const forced_to_abort() const { return forcedToAbortRef_; }
 private:
@@ -1911,7 +2010,7 @@ private:
 #endif
 
     static ThreadMutexContainer threadMutexes_;
-    Mutex *mutexRef_;
+    Mutex * const mutexRef_;
     inline Mutex * mutex() { return mutexRef_; }
     inline static Mutex& mutex(thread_id_t id) {
         ThreadMutexContainer::iterator i = threadMutexes_.find(id);
@@ -1920,7 +2019,7 @@ private:
 
    static ThreadBoolContainer threadBlockedLists_;
 #if PERFORMING_LATM
-   int &blockedRef_;
+   int & blockedRef_;
    inline void block() { blockedRef_ = true; }
    inline void unblock() { blockedRef_ = false; }
    inline int const blocked() const { return blockedRef_; }
@@ -1934,7 +2033,7 @@ private:
     static latm::thread_id_mutex_set_map threadCurrentlyLockedLocks_;
 
 #if USING_TRANSACTION_SPECIFIC_LATM
-    latm::mutex_set &conflictingMutexRef_;
+    latm::mutex_set & conflictingMutexRef_;
     inline latm::mutex_set& get_tx_conflicting_locks() { return conflictingMutexRef_; }
     inline latm::mutex_set& get_tx_conflicting_locks(thread_id_t id) {
        return *threadConflictingMutexes_.find(threadId_)->second;
@@ -1964,7 +2063,7 @@ private:
    }
 #endif
 
-    latm::mutex_set &obtainedLocksRef_;
+    latm::mutex_set & obtainedLocksRef_;
     inline latm::mutex_set &obtainedLocksRef() {return obtainedLocksRef_;}
     inline static latm::mutex_set &obtainedLocksRef(thread_id_t id) {return *threadObtainedLocks_.find(id)->second;}
 
@@ -1993,7 +2092,7 @@ private:
         }
    }
 
-   latm::mutex_set &currentlyLockedLocksRef_;
+    BOOST_STM_ASSERT_VAR_DCL(latm::mutex_set &, currentlyLockedLocksRef_);
    inline latm::mutex_set &currentlyLockedLocksRef() {return currentlyLockedLocksRef_;}
    inline static latm::mutex_set &currentlyLockedLocksRef(thread_id_t id) {return *threadCurrentlyLockedLocks_.find(id)->second;}
 #endif
@@ -2002,10 +2101,11 @@ private:
 ////////////////////////////////////////
 #else //BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP
 ////////////////////////////////////////
-    tss_context &context_;
+    tss_context & context_;
 
 #ifdef BOOST_STM_TX_CONTAINS_REFERENCES_TO_TSS_FIELDS
-    mutable WriteContainer *write_list_ref_;
+    //~ mutable WriteContainer * const write_list_ref_;
+    BOOST_STM_ASSERT_VAR_DCL(WriteContainer * const, write_list_ref_);
     inline WriteContainer *write_list() {
         return write_list_ref_;
     }
@@ -2013,9 +2113,11 @@ private:
         return write_list_ref_;
     }
 
-    mutable bloom_filter *bloomRef_;
+    //~ mutable bloom_filter * const bloomRef_;
+    bloom_filter * const bloomRef_;
 #if PERFORMING_WRITE_BLOOM
-    mutable bloom_filter *wbloomRef_;
+    //~ mutable bloom_filter * const wbloomRef_;
+    bloom_filter * const wbloomRef_;
     //mutable bit_vector &sm_wbv_;
 #endif
 
@@ -2024,13 +2126,13 @@ private:
     inline bloom_filter& wbloom() { return *wbloomRef_; }
     //bit_vector& sm_wbv() { return sm_wbv_; }
 #endif
-    MemoryContainerList *newMemoryListRef_;
+    MemoryContainerList * const newMemoryListRef_;
     inline MemoryContainerList& newMemoryList() { return *newMemoryListRef_; }
 
-    MemoryContainerList *deletedMemoryListRef_;
+    MemoryContainerList * const deletedMemoryListRef_;
     inline MemoryContainerList& deletedMemoryList() { return *deletedMemoryListRef_; }
 
-    TxType *txTypeRef_;
+    BOOST_STM_ASSERT_VAR_DCL(TxType * const, txTypeRef_);
     inline TxType const tx_type() const { return *txTypeRef_; }
     inline void tx_type(TxType const &rhs) { *txTypeRef_ = rhs; }
     inline TxType*  tx_type_ptr() { return txTypeRef_; }
@@ -2056,7 +2158,7 @@ private:
 
 #ifdef USING_SHARED_FORCED_TO_ABORT
 #ifdef BOOST_STM_TX_CONTAINS_REFERENCES_TO_TSS_FIELDS
-   int *forcedToAbortRef_;
+   int * const forcedToAbortRef_;
 public:
     inline int const forced_to_abort() const { return *forcedToAbortRef_; }
 private:
@@ -2170,7 +2272,8 @@ private:
 #else   // USE_SINGLE_THREAD_CONTEXT_MAP
 ////////////////////////////////////////
 
-   mutable WriteContainer *write_list_ref_;
+   //~ mutable WriteContainer * const write_list_ref_;
+    BOOST_STM_ASSERT_VAR_DCL(WriteContainer * const, write_list_ref_);
    inline WriteContainer *write_list() {
        return write_list_ref_;
     }
@@ -2178,11 +2281,14 @@ private:
        return write_list_ref_;
     }
 #ifndef DISABLE_READ_SETS
-   mutable ReadContainer &readListRef_;
+   //~ mutable ReadContainer & readListRef_;
+   ReadContainer & readListRef_;
 #endif
-   mutable bloom_filter *bloomRef_;
+   //~ mutable bloom_filter * const bloomRef_;
+   bloom_filter * const bloomRef_;
 #if PERFORMING_WRITE_BLOOM
-   mutable bloom_filter *wbloomRef_;
+   //~ mutable bloom_filter * const wbloomRef_;
+   bloom_filter * const wbloomRef_;
    //mutable bit_vector &sm_wbv_;
 #endif
 
@@ -2191,19 +2297,19 @@ private:
    inline bloom_filter& wbloom() { return *wbloomRef_; }
    //bit_vector& sm_wbv() { return sm_wbv_; }
 #endif
-   MemoryContainerList *newMemoryListRef_;
+   MemoryContainerList * const newMemoryListRef_;
    inline MemoryContainerList& newMemoryList() { return *newMemoryListRef_; }
 
-   MemoryContainerList *deletedMemoryListRef_;
+   MemoryContainerList * const deletedMemoryListRef_;
    inline MemoryContainerList& deletedMemoryList() { return *deletedMemoryListRef_; }
 
-   TxType *txTypeRef_;
+    BOOST_STM_ASSERT_VAR_DCL(TxType * const, txTypeRef_);
    inline TxType const tx_type() const { return *txTypeRef_; }
    inline void tx_type(TxType const &rhs) { *txTypeRef_ = rhs; }
    inline TxType*  tx_type_ptr() { return txTypeRef_; }
 
 #ifdef USING_SHARED_FORCED_TO_ABORT
-   int *forcedToAbortRef_;
+   int * const forcedToAbortRef_;
 public:
     inline int const forced_to_abort() const { return *forcedToAbortRef_; }
 private:
@@ -2217,7 +2323,7 @@ private:
 #endif
 
     static ThreadMutexContainer threadMutexes_;
-    Mutex *mutexRef_;
+    Mutex * const mutexRef_;
     inline Mutex * mutex() { return mutexRef_; }
     inline static Mutex& mutex(thread_id_t id) {
         ThreadMutexContainer::iterator i = threadMutexes_.find(id);
@@ -2226,7 +2332,7 @@ private:
 
    static ThreadBoolContainer threadBlockedLists_;
 #if PERFORMING_LATM
-   int &blockedRef_;
+   int & blockedRef_;
    inline void block() { blockedRef_ = true; }
    inline void unblock() { blockedRef_ = false; }
    inline int const blocked() const { return blockedRef_; }
@@ -2240,7 +2346,7 @@ private:
     static latm::thread_id_mutex_set_map threadCurrentlyLockedLocks_;
 
 #if USING_TRANSACTION_SPECIFIC_LATM
-    latm::mutex_set &conflictingMutexRef_;
+    latm::mutex_set & conflictingMutexRef_;
     inline latm::mutex_set& get_tx_conflicting_locks() { return conflictingMutexRef_; }
     inline latm::mutex_set& get_tx_conflicting_locks(thread_id_t id) {
        return *threadConflictingMutexes_.find(threadId_)->second;
@@ -2270,7 +2376,7 @@ private:
    }
 #endif
 
-    latm::mutex_set &obtainedLocksRef_;
+    latm::mutex_set & obtainedLocksRef_;
     inline latm::mutex_set &obtainedLocksRef() {return obtainedLocksRef_;}
     inline static latm::mutex_set &obtainedLocksRef(thread_id_t id) {return *threadObtainedLocks_.find(id)->second;}
 
@@ -2301,7 +2407,7 @@ private:
 
 
 
-   latm::mutex_set &currentlyLockedLocksRef_;
+    BOOST_STM_ASSERT_VAR_DCL(latm::mutex_set &, currentlyLockedLocksRef_);
    inline latm::mutex_set &currentlyLockedLocksRef() {return currentlyLockedLocksRef_;}
    inline static latm::mutex_set &currentlyLockedLocksRef(thread_id_t id) {return *threadCurrentlyLockedLocks_.find(id)->second;}
 #endif
@@ -2312,9 +2418,9 @@ private:
 
 
     static synchro::implicit_thread_specific_ptr<transaction_tss_storage> transaction_tss_storage_;
-    transaction_tss_storage & transaction_tss_storage_ref_;
    public:
-    inline TransactionsStack& transactions() {return transaction_tss_storage_ref_.transactions_;}
+    //~ inline TransactionsStack& transactions() {return transaction_tss_storage_ref_.transactions_;}
+    inline static TransactionsStack& transactions() {return transaction_tss_storage_->transactions_;}
 
    // transaction specific data
    //int hasMutex_; // bool - 1 bit
@@ -2323,6 +2429,51 @@ private:
    std::size_t reads_;
    mutable clock_t startTime_;
 
+#ifndef BOOST_STM_USE_STACK
+    BOOST_STM_ASSERT_VAR_DCL(transaction* const, parent_);
+    public:
+    transaction* parent() const {return parent_;};
+    private:
+#else
+    BOOST_STM_ASSERT_VAR_DCL(bool const, nested_);
+#endif
+    unsigned int assert_end_flag_;
+    public:
+#ifdef BOOST_STM_USE_INVARIANT
+   bool invariant() const {
+#ifdef USE_SINGLE_THREAD_CONTEXT_MAP
+////////////////////////////////////////
+#ifndef BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP
+        BOOST_STM_RET_IF_FALSE(&context_==&assert_context_);
+
+#ifdef BOOST_STM_TX_CONTAINS_REFERENCES_TO_TSS_FIELDS
+        BOOST_STM_RET_IF_FALSE(write_list_ref_==assert_write_list_ref_);
+#else // BOOST_STM_TX_CONTAINS_REFERENCES_TO_TSS_FIELDS
+#endif
+
+#else // BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP
+#endif
+#else // USE_SINGLE_THREAD_CONTEXT_MAP
+#endif
+
+#if PERFORMING_LATM
+        BOOST_STM_RET_IF_FALSE(&currentlyLockedLocksRef_==&assert_currentlyLockedLocksRef_);
+#endif
+
+        BOOST_STM_RET_IF_FALSE(txTypeRef_==assert_txTypeRef_);
+
+#ifndef BOOST_STM_USE_STACK
+        BOOST_STM_RET_IF_FALSE(parent_==assert_parent_);
+        BOOST_STM_RET_IF_FALSE(parent_!=this);
+#else
+        BOOST_STM_RET_IF_FALSE(nested_==assert_nested_);
+#endif
+        BOOST_STM_RET_IF_FALSE(assert_end_flag_==0xffffffff);
+
+        return true;
+   }
+#endif
+   private:
    inline transaction_state const & state() const { return state_; }
 
    inline WriteContainer& writeList() {
@@ -2333,11 +2484,11 @@ private:
     #endif
 
 public:
-    inline static transaction* current_transaction() {return transaction_tss_storage_->transactions_.top();}
+    inline static transaction* current() {return transaction_tss_storage_->transactions_.top();}
 
 };
 
-inline transaction* current_transaction() {return transaction::current_transaction();}
+inline transaction* current_transaction() {return transaction::current();}
 
 template <typename M>
 inline void lock(M& m, latm::mutex_type& lock) {transaction::lock(m, lock);}
@@ -2393,7 +2544,7 @@ namespace detail {
 
 #ifndef BOOST_STM_USE_STACK
     void transactions_stack::push(transaction* ptr) {
-        ptr->set_parent(inner_);
+        //ptr->set_parent(inner_);
         inner_ = ptr;
         ++count_;
     }
@@ -2401,7 +2552,7 @@ namespace detail {
         inner_ = inner_->parent();
         --count_;
     }
-#endif    
+#endif
 }
 } // stm  namespace
 } // boost namespace

@@ -44,14 +44,13 @@ namespace boost { namespace stm {
 //--------------------------------------------------------------------------
 inline bool transaction::isolatedTxInFlight()
 {
-    //~ BOOST_STM_INFO<<std::endl;
-    //~ assert_tx_type();
+BOOST_STM_TRANSACTION_INVARIANT;
     //~ BOOST_STM_INFO<<std::endl;
    for (in_flight_trans_cont::iterator i = in_flight_transactions().begin();
       i != in_flight_transactions().end(); ++i)
    {
         BOOST_ASSERT(*i!=0);
-        //~ (*i)->assert_tx_type();
+        BOOST_STM_TRANSACTION_INVARIANT_VAR(*i);
 
     //~ BOOST_STM_INFO<<std::endl;
       // if this is our threadId, skip it
@@ -73,11 +72,12 @@ inline bool transaction::isolatedTxInFlight()
 //--------------------------------------------------------------------------
 inline bool transaction::irrevocableTxInFlight()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    for (in_flight_trans_cont::iterator i = in_flight_transactions().begin();
       i != in_flight_transactions().end(); ++i)
    {
         BOOST_ASSERT(*i!=0);
-        //~ (*i)->assert_tx_type();
+        BOOST_STM_TRANSACTION_INVARIANT_VAR(*i);
       // if this is our threadId, skip it
       if ((*i)->threadId_ == this->threadId_) continue;
 
@@ -95,11 +95,12 @@ inline bool transaction::irrevocableTxInFlight()
 //--------------------------------------------------------------------------
 inline bool transaction::abortAllInFlightTxs()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    for (in_flight_trans_cont::iterator i = in_flight_transactions().begin();
       i != in_flight_transactions().end(); ++i)
    {
         BOOST_ASSERT(*i!=0);
-        //~ (*i)->assert_tx_type();
+        BOOST_STM_TRANSACTION_INVARIANT_VAR(*i);
       // if this is our threadId, skip it
       if ((*i)->threadId_ == this->threadId_) continue;
 
@@ -116,11 +117,12 @@ inline bool transaction::abortAllInFlightTxs()
 //--------------------------------------------------------------------------
 inline bool transaction::canAbortAllInFlightTxs()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    for (in_flight_trans_cont::iterator i = in_flight_transactions().begin();
       i != in_flight_transactions().end(); ++i)
    {
         BOOST_ASSERT(*i!=0);
-        //~ (*i)->assert_tx_type();
+        BOOST_STM_TRANSACTION_INVARIANT_VAR(*i);
       // if this is our threadId, skip it
       if ((*i)->threadId_ == this->threadId_) continue;
 
@@ -134,6 +136,7 @@ inline bool transaction::canAbortAllInFlightTxs()
 //--------------------------------------------------------------------------
 inline void transaction::make_irrevocable()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    if (irrevocable()) return;
    //-----------------------------------------------------------------------
    // in order to make a tx irrevocable, no other irrevocable txs can be
@@ -142,7 +145,7 @@ inline void transaction::make_irrevocable()
    while (true)
    {
       {
-      synchro::lock_guard<Mutex> lock_m(*inflight_lock());
+      synchro::lock_guard<Mutex> lock_m(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
 
       if (!irrevocableTxInFlight())
       {
@@ -160,6 +163,7 @@ inline void transaction::make_irrevocable()
 //--------------------------------------------------------------------------
 inline void transaction::make_isolated()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    if (isolated()) return;
 
    //using namespace std;
@@ -177,8 +181,8 @@ inline void transaction::make_isolated()
       }
 
       {
-      synchro::lock_guard<Mutex> lock_g(*general_lock());
-      synchro::lock_guard<Mutex> lock_i(*inflight_lock());
+      synchro::lock_guard<Mutex> lock_g(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
+      synchro::lock_guard<Mutex> lock_i(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
 
       if (!irrevocableTxInFlight() && canAbortAllInFlightTxs())
       {
@@ -197,6 +201,7 @@ inline void transaction::make_isolated()
 //--------------------------------------------------------------------------
 inline bool transaction::irrevocable() const
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    //~ BOOST_STM_INFO << "tx_type="<<tx_type()<<"@"<<const_cast<transaction*>(this)->tx_type_ptr()<<std::endl;
    switch (tx_type())
    {
@@ -206,7 +211,7 @@ inline bool transaction::irrevocable() const
    default:
             BOOST_STM_ERROR << "tx_type="<<tx_type()<<"@"<<const_cast<transaction*>(this)->tx_type_ptr()<<std::endl;
         BOOST_ASSERT(false&&"tx type not found");
-        return false; 
+        return false;
    }
 }
 
@@ -214,6 +219,7 @@ inline bool transaction::irrevocable() const
 //--------------------------------------------------------------------------
 inline bool transaction::isolated() const
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    //~ BOOST_STM_INFO << "tx_type="<<tx_type()<<"@"<< const_cast<transaction*>(this)->tx_type_ptr()<<std::endl;
    switch (tx_type())
    {
@@ -223,20 +229,7 @@ inline bool transaction::isolated() const
    default:
             BOOST_STM_ERROR << "tx_type="<<tx_type()<<"@"<<const_cast<transaction*>(this)->tx_type_ptr()<<std::endl;
         BOOST_ASSERT(false&&"tx type not found");
-        return false; 
-   }
-}
-
-inline void transaction::assert_tx_type() const
-{
-   //~ BOOST_STM_INFO << "tx_type="<<tx_type()<<"@"<<const_cast<transaction*>(this)->tx_type_ptr()<<std::endl;
-   switch (tx_type())
-   {
-   case eNormalTx: return ;
-   case eIrrevocableTx: return ;
-   case eIrrevocableAndIsolatedTx: return ;
-   default:
-            BOOST_STM_ERROR << "tx_type="<<tx_type()<<"@"<<const_cast<transaction*>(this)->tx_type_ptr()<<std::endl;
+        return false;
    }
 }
 
@@ -249,6 +242,7 @@ inline void transaction::assert_tx_type() const
 //-----------------------------------------------------------------------------
 inline void transaction::commit_deferred_update_tx()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    // ensure this method is isolated
    if (!this->irrevocable()) throw invalid_operation("cannot commit deferred tx: not isolated");
 
@@ -263,8 +257,8 @@ inline void transaction::commit_deferred_update_tx()
    }
    #endif
 
-   synchro::lock_guard<Mutex> lock_g(*general_lock());
-   synchro::lock_guard<Mutex> lock_m(*mutex());
+   synchro::lock_guard<Mutex> lock_g(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
+   synchro::lock_guard<Mutex> lock_m(*mutex() BOOST_STM_CALL_CONTEXT("mutex"));
 
    //--------------------------------------------------------------------------
    // this is a very important and subtle optimization. if the transaction is
@@ -277,7 +271,7 @@ inline void transaction::commit_deferred_update_tx()
    }
    else
    {
-      synchro::lock_guard<Mutex> lock_i(*inflight_lock());
+      synchro::lock_guard<Mutex> lock_i(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
 
       //-----------------------------------------------------------------------
       // commit writes, clear new and deletes
@@ -300,6 +294,7 @@ inline void transaction::commit_deferred_update_tx()
 //-----------------------------------------------------------------------------
 inline void transaction::lock_tx()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    while (!synchro::try_lock(*mutex()))
    {
       SLEEP(1);
@@ -312,7 +307,8 @@ inline void transaction::lock_tx()
 //-----------------------------------------------------------------------------
 inline void transaction::unlock_tx()
 {
-   synchro::unlock(*mutex());
+BOOST_STM_TRANSACTION_INVARIANT;
+   synchro::unlock(*mutex() BOOST_STM_CALL_CONTEXT("mutex"));
    //hasMutex_ = 0;
 }
 
@@ -320,14 +316,15 @@ inline void transaction::unlock_tx()
 //--------------------------------------------------------------------------
 inline void transaction::lock_all_mutexes_but_this(thread_id_t threadId)
 {
+    BOOST_STM_CALL_CONTEXT_DCL_INST(0);
 #ifdef BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP
     for (tss_context_map_type::iterator i = tss_context_map_.begin();
       i != tss_context_map_.end(); ++i)
    {
         BOOST_ASSERT(i->secondi!=0);
-       
+
       if (i->first == threadId) continue;
-      synchro::lock(i->second->mutex_);
+      synchro::lock(i->second->mutex_ BOOST_STM_CALL_CONTEXT("mutex")); // INSTANCE
    }
 #else
     for (ThreadMutexContainer::iterator i = threadMutexes_.begin();
@@ -335,8 +332,8 @@ inline void transaction::lock_all_mutexes_but_this(thread_id_t threadId)
    {
       if (i->first == threadId) continue;
         BOOST_ASSERT(i->second!=0);
-          
-      synchro::lock(*(i->second));
+
+      synchro::lock(*(i->second) BOOST_STM_CALL_CONTEXT("mutex"));
    }
 #endif
 }
@@ -344,12 +341,13 @@ inline void transaction::lock_all_mutexes_but_this(thread_id_t threadId)
 //--------------------------------------------------------------------------
 inline void transaction::unlock_all_mutexes_but_this(thread_id_t threadId)
 {
+    BOOST_STM_CALL_CONTEXT_DCL_INST(0);
 #ifdef BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP
     for (tss_context_map_type::iterator i = tss_context_map_.begin();
       i != tss_context_map_.end(); ++i)
    {
       if (i->first == threadId) continue;
-      synchro::unlock(i->second->mutex_);
+      synchro::unlock(i->second->mutex_ BOOST_STM_CALL_CONTEXT("mutex"));
    }
 #else
    for (ThreadMutexContainer::iterator i = threadMutexes_.begin();
@@ -358,8 +356,8 @@ inline void transaction::unlock_all_mutexes_but_this(thread_id_t threadId)
       if (i->first == threadId) continue;
 
         BOOST_ASSERT(i->second!=0);
-      
-      synchro::unlock(*(i->second));
+
+      synchro::unlock(*(i->second) BOOST_STM_CALL_CONTEXT("mutex"));
    }
 #endif
 }
@@ -368,21 +366,22 @@ inline void transaction::unlock_all_mutexes_but_this(thread_id_t threadId)
 //--------------------------------------------------------------------------
 inline void transaction::lock_all_mutexes()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
 #ifdef BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP
     for (tss_context_map_type::iterator i = tss_context_map_.begin();
       i != tss_context_map_.end(); ++i)
    {
         BOOST_ASSERT(i->second!=0);
-       
-      synchro::lock(i->second->mutex_);
+
+      synchro::lock(i->second->mutex_ BOOST_STM_CALL_CONTEXT("mutex"));
    }
 #else
    for (ThreadMutexContainer::iterator i = threadMutexes_.begin();
       i != threadMutexes_.end(); ++i)
    {
         BOOST_ASSERT(i->second!=0);
-       
-      synchro::lock(*(i->second));
+
+      synchro::lock(*(i->second) BOOST_STM_CALL_CONTEXT("mutex"));
    }
 #endif
    //hasMutex_ = 1;
@@ -396,19 +395,20 @@ inline void transaction::lock_all_mutexes()
 //-----------------------------------------------------------------------------
 inline void transaction::unlock_all_mutexes()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
 #ifdef BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP
     for (tss_context_map_type::iterator i = tss_context_map_.begin();
       i != tss_context_map_.end(); ++i)
    {
         BOOST_ASSERT(i->second!=0);
-      synchro::unlock(i->second->mutex_);
+      synchro::unlock(i->second->mutex_ BOOST_STM_CALL_CONTEXT("mutex"));
    }
 #else
    for (ThreadMutexContainer::iterator i = threadMutexes_.begin();
       i != threadMutexes_.end(); ++i)
    {
         BOOST_ASSERT(i->second!=0);
-      synchro::unlock(*(i->second));
+      synchro::unlock(*(i->second) BOOST_STM_CALL_CONTEXT("mutex"));
    }
 #endif
    //hasMutex_ = 0;
@@ -427,39 +427,36 @@ inline void transaction::unlock_all_mutexes()
 //--------------------------------------------------------------------------
 inline transaction::transaction() :
    threadId_(this_thread::get_id()),
-   //transactionMutexLocker_(),
-#ifndef BOOST_STM_USE_STACK
-   parent_(current_transaction()),
-#else   
-   nested_((current_transaction()!=0));
-#endif   
+    //~ transaction_tss_storage_ref_(*transaction_tss_storage_),
+
+
    auto_general_lock_(*general_lock()),
 
 #if USE_SINGLE_THREAD_CONTEXT_MAP
 ////////////////////////////////////////
 // BUG possible core dump if find doesn't suceed
-   context_(*tss_context_map_.find(threadId_)->second),
+   BOOST_STM_ASSERT_VAR_INIT(context_,*tss_context_map_.find(threadId_)->second),
 
 #ifdef BOOST_STM_TX_CONTAINS_REFERENCES_TO_TSS_FIELDS
 #ifndef BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP
-   write_list_ref_(&context_.writeMem),
+   BOOST_STM_ASSERT_VAR_INIT(write_list_ref_,&context_.writeMem),
    bloomRef_(&context_.bloom),
    wbloomRef_(&context_.wbloom),
    newMemoryListRef_(&context_.newMem),
    deletedMemoryListRef_(&context_.delMem),
-   txTypeRef_(&context_.txType),
+   BOOST_STM_ASSERT_VAR_INIT(txTypeRef_,&context_.txType),
 #ifdef USING_SHARED_FORCED_TO_ABORT
    forcedToAbortRef_(&context_.abort),
 #else
    forcedToAbortRef_(false),
 #endif
 #else
-   write_list_ref_(&context_.tx_.writeMem),
+   BOOST_STM_ASSERT_VAR_INIT(write_list_ref_,&context_.tx_.writeMem),
    bloomRef_(&context_.tx_.bloom),
    wbloomRef_(&context_.tx_.wbloom),
    newMemoryListRef_(&context_.tx_.newMem),
    deletedMemoryListRef_(&context_.tx_.delMem),
-   txTypeRef_(&context_.tx_.txType),
+   BOOST_STM_ASSERT_VAR_INIT(txTypeRef_,&context_.tx_.txType),
 #ifdef USING_SHARED_FORCED_TO_ABORT
    forcedToAbortRef_(&context_.tx_.abort),
 #else
@@ -482,7 +479,7 @@ inline transaction::transaction() :
 // BUG possible core dump if find doesn't suceed
    obtainedLocksRef_(*threadObtainedLocks_.find(threadId_)->second),
 // BUG possible core dump if find doesn't suceed
-   currentlyLockedLocksRef_(*threadCurrentlyLockedLocks_.find(threadId_)->second),
+   BOOST_STM_ASSERT_VAR_INIT(currentlyLockedLocksRef_,*threadCurrentlyLockedLocks_.find(threadId_)->second),
 #endif
 #endif
 ////////////////////////////////////////
@@ -492,7 +489,7 @@ inline transaction::transaction() :
 // BUG possible core dump if find doesn't suceed
    readListRef_(*threadReadLists_.find(threadId_)->second),
 #endif
-   write_list_ref_(threadWriteLists_.find(threadId_)->second),
+   BOOST_STM_ASSERT_VAR_INIT(write_list_ref_,threadWriteLists_.find(threadId_)->second),
    bloomRef_(threadBloomFilterLists_.find(threadId_)->second),
 #if PERFORMING_WRITE_BLOOM
    wbloomRef_(threadWBloomFilterLists_.find(threadId_)->second),
@@ -500,7 +497,7 @@ inline transaction::transaction() :
 #endif
    newMemoryListRef_(threadNewMemoryLists_.find(threadId_)->second),
    deletedMemoryListRef_(threadDeletedMemoryLists_.find(threadId_)->second),
-   txTypeRef_(threadTxTypeLists_.find(threadId_)->second),
+   BOOST_STM_ASSERT_VAR_INIT(txTypeRef_,threadTxTypeLists_.find(threadId_)->second),
 #ifdef USING_SHARED_FORCED_TO_ABORT
    forcedToAbortRef_(threadForcedToAbortLists_.find(threadId_)->second),
 #else
@@ -520,21 +517,28 @@ inline transaction::transaction() :
 #endif
 // BUG possible core dump if find doesn't suceed
    obtainedLocksRef_(*threadObtainedLocks_.find(threadId_)->second),
-   currentlyLockedLocksRef_(*threadCurrentlyLockedLocks_.find(threadId_)->second),
+   BOOST_STM_ASSERT_VAR_INIT(currentlyLockedLocksRef_,*threadCurrentlyLockedLocks_.find(threadId_)->second),
 #endif
 ////////////////////////////////////////
 #endif
-    transaction_tss_storage_ref_(*transaction_tss_storage_),
    //hasMutex_(0),
    priority_(0),
    state_(e_no_state),
    reads_(0),
-   startTime_(time(0))
+   startTime_(time(0)),
+#ifndef BOOST_STM_USE_STACK
+   BOOST_STM_ASSERT_VAR_INIT(parent_,stm::current_transaction()),
+#else
+   //~ nested_((stm::current_transaction()!=0));
+   BOOST_STM_ASSERT_VAR_INIT(nested_,(transaction_tss_storage_->transactions_.top()!=0)),
+#endif
+    assert_end_flag_(0xffffffff)
 {
-#ifdef BOOST_STM_USE_STACK
-   nested_=(current_transaction()!=0);
-#endif    
    auto_general_lock_.unlock();
+    {
+        boost::lock_guard<boost::mutex> lk(log_mutex);
+        std::cout << this << " " << this->parent() << " " << this_thread::get_id() << " ****INFO transaction" << __FILE__ << "[" << __LINE__ << "]" << BOOST_CURRENT_FUNCTION << std::endl;
+    }
    if (direct_updating()) doIntervalDeletions();
 #if PERFORMING_LATM
    while (blocked()) { SLEEP(10) ; }
@@ -548,6 +552,7 @@ inline transaction::transaction() :
 //--------------------------------------------------------------------------
 inline void transaction::begin()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    if (e_in_flight == state_) return;
 
 #if PERFORMING_LATM
@@ -561,6 +566,7 @@ inline void transaction::begin()
 //--------------------------------------------------------------------------
 inline std::string transaction::outputBlockedThreadsAndLockedLocks()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    using namespace std;
 
    ostringstream o;
@@ -606,8 +612,7 @@ inline std::string transaction::outputBlockedThreadsAndLockedLocks()
 //--------------------------------------------------------------------------
 inline bool transaction::restart()
 {
-    //~ BOOST_STM_INFO<<std::endl;
-    //~ assert_tx_type();
+BOOST_STM_TRANSACTION_INVARIANT;
     //~ BOOST_STM_INFO<<std::endl;
    if (e_in_flight == state_) lock_and_abort();
     //~ BOOST_STM_INFO<<std::endl;
@@ -624,8 +629,8 @@ inline bool transaction::restart()
 #ifdef LOGGING_BLOCKS
       if (++iterations > 100)
       {
-         synchro::lock_guard<Mutex> autolock_l(*latm_lock());
-         synchro::lock_guard<Mutex> autolock_g(*general_lock());
+         synchro::lock_guard<Mutex> autolock_l(*latm_lock() BOOST_STM_CALL_CONTEXT("latm_lock"));
+         synchro::lock_guard<Mutex> autolock_g(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
          //unblock_threads_if_locks_are_empty();
          logFile_ << outputBlockedThreadsAndLockedLocks().c_str();
          SLEEP(10000);
@@ -644,7 +649,8 @@ inline bool transaction::restart()
 #if PERFORMING_COMPOSITION
 #ifdef USING_SHARED_FORCED_TO_ABORT
    {
-   synchro::lock_guard<Mutex> lock_i(*inflight_lock());
+   synchro::lock_guard<Mutex> lock_i(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
+BOOST_STM_TRANSACTION_INVARIANT;
     //~ BOOST_STM_INFO<<std::endl;
    if (!otherInFlightTransactionsOfSameThreadNotIncludingThis(this))
    {
@@ -660,10 +666,11 @@ inline bool transaction::restart()
 #endif
 #endif
 
-    //~ BOOST_STM_INFO<<std::endl;
-    //~ assert_tx_type();
+   {BOOST_STM_TRANSACTION_INVARIANT;
+
     //~ BOOST_STM_INFO<<std::endl;
    put_tx_inflight();
+   }
     //~ BOOST_STM_INFO<<std::endl;
 
 #if 0
@@ -684,6 +691,7 @@ inline bool transaction::restart()
 //--------------------------------------------------------------------------
 inline bool transaction::can_go_inflight()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    // if we're doing full lock protection, allow transactions
    // to start only if no locks are obtained or the only lock that
    // is obtained is on this_thread::get_id()
@@ -727,15 +735,14 @@ inline bool transaction::can_go_inflight()
 //--------------------------------------------------------------------------
 inline void transaction::put_tx_inflight()
 {
-    //~ BOOST_STM_INFO<<std::endl;
-    //~ assert_tx_type();
+BOOST_STM_TRANSACTION_INVARIANT;
     //~ BOOST_STM_INFO<<std::endl;
 #if PERFORMING_LATM
    while (true)
    {
     //~ BOOST_STM_INFO<<std::endl;
       {
-      synchro::lock_guard<Mutex> lock_i(*inflight_lock());
+      synchro::lock_guard<Mutex> lock_i(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
     //~ BOOST_STM_INFO<<std::endl;
 
           bool b1=latm::instance().can_go_inflight();
@@ -745,6 +752,8 @@ inline void transaction::put_tx_inflight()
       if (b1 && b2)
       {
     //~ BOOST_STM_INFO<<std::endl;
+BOOST_STM_TRANSACTION_INVARIANT;
+
          in_flight_transactions().insert(this);
          state_ = e_in_flight;
          break;
@@ -755,14 +764,15 @@ inline void transaction::put_tx_inflight()
       SLEEP(10);
    }
 #else
-   synchro::lock_guard<Mutex> lock_i(*inflight_lock());
+   synchro::lock_guard<Mutex> lock_i(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
     //~ BOOST_STM_INFO<<std::endl;
+   {BOOST_STM_TRANSACTION_INVARIANT;
+
    in_flight_transactions().insert(this);
+   }
     //~ BOOST_STM_INFO<<std::endl;
    state_ = e_in_flight;
 #endif
-    //~ BOOST_STM_INFO<<std::endl;
-    //~ assert_tx_type();
     //~ BOOST_STM_INFO<<std::endl;
 }
 
@@ -770,21 +780,25 @@ inline void transaction::put_tx_inflight()
 //--------------------------------------------------------------------------
 inline transaction::~transaction()
 {
-   //~ BOOST_STM_INFO<<std::endl;
-    //~ assert_tx_type();
-   //~ BOOST_STM_INFO<<std::endl;
+    BOOST_STM_CALL_CONTEXT_DCL_INST(this);
+    {
+        boost::lock_guard<boost::mutex> lk(log_mutex);
+        std::cout << this << " " << this->parent() << " " << this_thread::get_id() << " ****INFO ~transaction" << __FILE__ << "[" << __LINE__ << "]" << BOOST_CURRENT_FUNCTION << std::endl;
+    }
+    //~ BOOST_STM_INFO<<std::endl;
    // if we're not an inflight transaction - bail
    if (state_ != e_in_flight)
    {
    //~ BOOST_STM_INFO<<std::endl;
       //if (hasLock()) unlock_tx();
+      transactions().pop();
       return;
    }
 
    //~ BOOST_STM_INFO<<std::endl;
     //if (!hasLock())
     {
-       synchro::lock_guard<Mutex> lock(*mutex());
+       synchro::lock_guard<Mutex> lock(*mutex() BOOST_STM_CALL_CONTEXT("mutex"));
    //~ BOOST_STM_INFO<<std::endl;
         abort();
    //~ BOOST_STM_INFO<<std::endl;
@@ -807,6 +821,7 @@ inline transaction::~transaction()
 //--------------------------------------------------------------------------
 inline void transaction::no_throw_end()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    try { end(); }
    catch (...) {}
 }
@@ -815,11 +830,13 @@ inline void transaction::no_throw_end()
 //--------------------------------------------------------------------------
 inline void transaction::end()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
     // in case this is called multiple times
    if (!in_flight()) return;
 
    if (direct_updating())
    {
+BOOST_STM_TRANSACTION_INVARIANT;
 #if PERFORMING_VALIDATION
       validating_direct_end_transaction();
 #else
@@ -828,6 +845,7 @@ inline void transaction::end()
    }
    else
    {
+BOOST_STM_TRANSACTION_INVARIANT;
 #if PERFORMING_VALIDATION
       validating_deferred_end_transaction();
 #else
@@ -849,15 +867,16 @@ inline void transaction::end()
 //-----------------------------------------------------------------------------
 inline void transaction::lock_and_abort()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    if (direct_updating())
    {
-      synchro::lock_guard_if<Mutex> lock_g(*general_lock(), isWriting());
-      synchro::lock_guard<Mutex> lock_m(*mutex());
+      synchro::lock_guard_if<Mutex> lock_g(*general_lock(), isWriting() BOOST_STM_CALL_CONTEXT("general_lock"));
+      synchro::lock_guard<Mutex> lock_m(*mutex() BOOST_STM_CALL_CONTEXT("mutex"));
       direct_abort();
    }
    else
    {
-      synchro::lock_guard<Mutex> lock_m(*mutex());
+      synchro::lock_guard<Mutex> lock_m(*mutex() BOOST_STM_CALL_CONTEXT("mutex"));
       deferred_abort();
    }
 }
@@ -867,6 +886,7 @@ inline void transaction::lock_and_abort()
 //-----------------------------------------------------------------------------
 inline void transaction::invalidating_direct_end_transaction()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    //--------------------------------------------------------------------------
    // this is an optimization to check forced to abort before obtaining the
    // transaction mutex, so if we do need to abort we do it now
@@ -878,10 +898,10 @@ inline void transaction::invalidating_direct_end_transaction()
       ("aborting committing transaction due to contention manager priority inversion");
    }
 
-   synchro::lock(*general_lock());
+   synchro::lock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
     //synchro::unique_lock<Mutex> lk_g(*general_lock());
    //lock_tx();
-   synchro::lock(*mutex());
+   synchro::lock(*mutex() BOOST_STM_CALL_CONTEXT("mutex"));
     //synchro::lock_guard<Mutex> lk_m(*mutex());
     // direct_abort_if_not_commited_and_not_handoff(this);
 
@@ -899,15 +919,15 @@ inline void transaction::invalidating_direct_end_transaction()
       // so unlock it so we can reduce contention
       //-----------------------------------------------------------------------
       bool wasWriting = isWriting() ? true : false;
-      if (!wasWriting) synchro::unlock(*general_lock()); // TBR
+      if (!wasWriting) synchro::unlock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock")); // TBR
       //if (!wasWriting) lk_g.unlock();
       direct_abort(); // TBR
-      synchro::unlock(*mutex()); // TBR
+      synchro::unlock(*mutex() BOOST_STM_CALL_CONTEXT("mutex")); // TBR
 
       //-----------------------------------------------------------------------
       // if this tx was writing, unlock the transaction mutex now
       //-----------------------------------------------------------------------
-      if (wasWriting) synchro::unlock(*general_lock());// TBR
+      if (wasWriting) synchro::unlock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));// TBR
       throw aborted_transaction_exception
       ("aborting committing transaction due to contention manager priority inversion");
    }
@@ -915,16 +935,19 @@ inline void transaction::invalidating_direct_end_transaction()
    lock_all_mutexes_but_this(threadId_);// TBR
    // all_mutexes_but_this all_but_this(this, threadId_);
 
-   synchro::lock(*inflight_lock());// TBR
+   synchro::lock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));// TBR
     //synchro::lock_guard<Mutex> lk_i(*inflight_lock());
+   {BOOST_STM_TRANSACTION_INVARIANT;
+        boost::lock_guard<boost::mutex> lk(log_mutex);
+        std::cout << this << " " << this->parent() << " " << this_thread::get_id() << " ****INFO erase" << __FILE__ << "[" << __LINE__ << "]" << BOOST_CURRENT_FUNCTION << std::endl;
    in_flight_transactions().erase(this);
-
+   }
    if (other_in_flight_same_thread_transactions())
    {
       state_ = e_hand_off;
       unlock_all_mutexes();// TBR
-      synchro::unlock(*general_lock());// TBR
-      synchro::unlock(*inflight_lock());// TBR
+      synchro::unlock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));// TBR
+      synchro::unlock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));// TBR
       bookkeeping_.inc_handoffs();
    }
    else
@@ -935,8 +958,8 @@ inline void transaction::invalidating_direct_end_transaction()
       if (e_committed == state_)
       {
          unlock_all_mutexes();
-         synchro::unlock(*general_lock());
-         synchro::unlock(*inflight_lock());
+         synchro::unlock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
+         synchro::unlock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
       } else {
           BOOST_STM_ERROR<<std::endl;
           std::cout << "invalidating_direct_end_transaction e_committed != state_" << std::endl;
@@ -949,6 +972,7 @@ inline void transaction::invalidating_direct_end_transaction()
 //-----------------------------------------------------------------------------
 inline void transaction::invalidating_deferred_end_transaction()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    //--------------------------------------------------------------------------
    // this is an optimization to check forced to abort before obtaining the
    // transaction mutex, so if we do need to abort we do it now
@@ -956,7 +980,9 @@ inline void transaction::invalidating_deferred_end_transaction()
 #ifndef DELAY_INVALIDATION_DOOMED_TXS_UNTIL_COMMIT
    if (forced_to_abort())
    {
-      deferred_abort(true);
+BOOST_STM_TRANSACTION_INVARIANT;
+       // BUG inversion
+      deferred_abort();
       throw aborted_transaction_exception
       ("aborting committing transaction due to contention manager priority inversion");
    }
@@ -970,8 +996,12 @@ inline void transaction::invalidating_deferred_end_transaction()
    if (is_only_reading())
    {
         {
-        synchro::unique_lock<Mutex> lk_i(*inflight_lock());
+        synchro::unique_lock<Mutex> lk_i(*inflight_lock()  BOOST_STM_CALL_CONTEXT("inflight_lock"));
 
+        BOOST_STM_TRANSACTION_INVARIANT;
+        {boost::lock_guard<boost::mutex> lk(log_mutex);
+        std::cout << this << " " << this->parent() << " " << this_thread::get_id() << " ****INFO erase" << __FILE__ << "[" << __LINE__ << "]" << BOOST_CURRENT_FUNCTION << std::endl;
+        }
         in_flight_transactions().erase(this);
 
 #if PERFORMING_COMPOSITION
@@ -999,7 +1029,7 @@ inline void transaction::invalidating_deferred_end_transaction()
     }
 
     //while (!synchro::try_lock(*general_lock())) {}
-    synchro::lock(*general_lock());
+    synchro::lock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
     //synchro::unique_lock<Mutex> lk_g(*general_lock());
 
 
@@ -1012,9 +1042,9 @@ inline void transaction::invalidating_deferred_end_transaction()
    //--------------------------------------------------------------------------
    if (forced_to_abort())
    {
-      synchro::unlock(*general_lock()); //TBR
+      synchro::unlock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock")); //TBR
        //lk.g.unlock();
-      deferred_abort(true);
+      deferred_abort();
       throw aborted_transaction_exception
       ("aborting committing transaction due to contention manager priority inversion");
    }
@@ -1035,18 +1065,22 @@ inline void transaction::invalidating_deferred_end_transaction()
       //-----------------------------------------------------------------------
       lock_all_mutexes(); //TBR
        //all_mutexes lk_all(this);
-      synchro::lock(*inflight_lock());
+      synchro::lock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
         //synchro::unique_lock<Mutex> lk_i(*inflight_lock());
 
 #if PERFORMING_COMPOSITION
        // BUG
       if (other_in_flight_same_thread_transactions())
       {
+        BOOST_STM_TRANSACTION_INVARIANT;
+        {boost::lock_guard<boost::mutex> lk(log_mutex);
+        std::cout << this << " " << this->parent() << " " << this_thread::get_id() << " ****INFO erase" << __FILE__ << "[" << __LINE__ << "]" << BOOST_CURRENT_FUNCTION << std::endl;
+        }
          in_flight_transactions().erase(this);
          state_ = e_hand_off;
          unlock_all_mutexes();//TBR
-         synchro::unlock(*general_lock());//TBR
-         synchro::unlock(*inflight_lock());//TBR
+         synchro::unlock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));//TBR
+         synchro::unlock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));//TBR
          bookkeeping_.inc_handoffs();
       }
       else
@@ -1066,8 +1100,9 @@ inline void transaction::invalidating_deferred_end_transaction()
 //-----------------------------------------------------------------------------
 inline void transaction::validating_direct_end_transaction()
 {
-   synchro::lock(*general_lock());
-   synchro::lock(*mutex());
+BOOST_STM_TRANSACTION_INVARIANT;
+   synchro::lock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
+   synchro::lock(*mutex() BOOST_STM_CALL_CONTEXT("mutex"));
 
    //--------------------------------------------------------------------------
    // can only be called after above transactionMutex_ is called
@@ -1076,8 +1111,8 @@ inline void transaction::validating_direct_end_transaction()
    {
       abort();
       //bookkeeping_.inc_abort_perm_denied(threadId_);
-      synchro::unlock(*mutex());
-      synchro::unlock(*general_lock());
+      synchro::unlock(*mutex() BOOST_STM_CALL_CONTEXT("mutex"));
+      synchro::unlock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
       throw aborted_transaction_exception
       ("aborting commit due to CM priority");
    }
@@ -1096,28 +1131,33 @@ inline void transaction::validating_direct_end_transaction()
       // so unlock it so we can reduce contention
       //-----------------------------------------------------------------------
       bool wasWriting = isWriting() ? true : false;
-      if (!wasWriting) synchro::unlock(*general_lock());
+      if (!wasWriting) synchro::unlock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
       direct_abort();
-      synchro::unlock(*general_lock());
+      synchro::unlock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
       //-----------------------------------------------------------------------
       // if this tx was writing, unlock the transaction mutex now
       //-----------------------------------------------------------------------
-      if (wasWriting) synchro::unlock(*general_lock());
+      if (wasWriting) synchro::unlock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
       throw aborted_transaction_exception
       ("aborting committing transaction due to contention manager priority inversion");
    }
 
    lock_all_mutexes_but_this(threadId_);
 
-   synchro::lock(*inflight_lock());
+   synchro::lock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
+        {BOOST_STM_TRANSACTION_INVARIANT;
+        {boost::lock_guard<boost::mutex> lk(log_mutex);
+        std::cout << this << " " << this->parent() << " " << this_thread::get_id() << " ****INFO erase" << __FILE__ << "[" << __LINE__ << "]" << BOOST_CURRENT_FUNCTION << std::endl;
+        }
    in_flight_transactions().erase(this);
+        }
 
    if (other_in_flight_same_thread_transactions())
    {
       state_ = e_hand_off;
       unlock_all_mutexes();
-      synchro::unlock(*general_lock());
-      synchro::unlock(*inflight_lock());
+      synchro::unlock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
+      synchro::unlock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
       bookkeeping_.inc_handoffs();
    }
    else
@@ -1128,8 +1168,8 @@ inline void transaction::validating_direct_end_transaction()
       if (e_committed == state_)
       {
          unlock_all_mutexes();
-         synchro::unlock(*general_lock());
-         synchro::unlock(*inflight_lock());
+         synchro::unlock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
+         synchro::unlock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
       }
    }
 }
@@ -1139,9 +1179,10 @@ inline void transaction::validating_direct_end_transaction()
 //-----------------------------------------------------------------------------
 inline void transaction::validating_deferred_end_transaction()
 {
-   synchro::lock(*general_lock());
-   synchro::lock(*inflight_lock());
-   synchro::lock(*mutex());
+BOOST_STM_TRANSACTION_INVARIANT;
+   synchro::lock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
+   synchro::lock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
+   synchro::lock(*mutex() BOOST_STM_CALL_CONTEXT("mutex"));
 
    //--------------------------------------------------------------------------
    // can only be called after above transactionMutex_ is called
@@ -1149,15 +1190,15 @@ inline void transaction::validating_deferred_end_transaction()
    if (cm_abort_before_commit(*this))
    {
       //bookkeeping_.inc_abort_perm_denied(threadId_);
-      synchro::unlock(*inflight_lock());
-      synchro::unlock(*general_lock());
-      synchro::unlock(*mutex());
+      synchro::unlock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
+      synchro::unlock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
+      synchro::unlock(*mutex() BOOST_STM_CALL_CONTEXT("mutex"));
       throw aborted_transaction_exception
       ("aborting commit due to CM priority");
    }
 
    // unlock this - we only needed it to check abort_before_commit()
-   synchro::unlock(*inflight_lock());
+   synchro::unlock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
 
    clock_t ms = clock();
 
@@ -1170,9 +1211,9 @@ inline void transaction::validating_deferred_end_transaction()
    //--------------------------------------------------------------------------
    if (forced_to_abort())
    {
-      synchro::unlock(*general_lock());
+      synchro::unlock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
       deferred_abort();
-      synchro::unlock(*mutex());
+      synchro::unlock(*mutex() BOOST_STM_CALL_CONTEXT("mutex"));
       throw aborted_transaction_exception
       ("aborting committing transaction due to contention manager priority inversion");
    }
@@ -1186,7 +1227,9 @@ inline void transaction::validating_deferred_end_transaction()
       //--------------------------------------------------------------------------
       if (is_only_reading())
       {
-         synchro::lock(*inflight_lock());
+        {boost::lock_guard<boost::mutex> lk(log_mutex);
+        std::cout << this << " " << this->parent() << " " << this_thread::get_id() << " ****INFO erase" << __FILE__ << "[" << __LINE__ << "]" << BOOST_CURRENT_FUNCTION << std::endl;
+        }
          in_flight_transactions().erase(this);
 
          if (other_in_flight_same_thread_transactions())
@@ -1204,15 +1247,15 @@ inline void transaction::validating_deferred_end_transaction()
             state_ = e_committed;
          }
 
-         synchro::unlock(*general_lock());
-         synchro::unlock(*inflight_lock());
+         synchro::unlock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
+         synchro::unlock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
 
          bookkeeping_.inc_commits();
 #ifndef DISABLE_READ_SETS
          bookkeeping_.pushBackSizeOfReadSetWhenCommitting(readList().size());
 #endif
          bookkeeping_.inc_commit_time_ms(clock() - ms);
-         synchro::unlock(*mutex());
+         synchro::unlock(*mutex() BOOST_STM_CALL_CONTEXT("mutex"));
       }
 
       //-----------------------------------------------------------------------
@@ -1230,15 +1273,20 @@ inline void transaction::validating_deferred_end_transaction()
       //-----------------------------------------------------------------------
       lock_all_mutexes_but_this(threadId_);
 
-      synchro::lock(*inflight_lock());
-      in_flight_transactions().erase(this);
+      synchro::lock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
+      {BOOST_STM_TRANSACTION_INVARIANT;
 
+        {boost::lock_guard<boost::mutex> lk(log_mutex);
+        std::cout << this << " " << this->parent() << " " << this_thread::get_id() << " ****INFO erase" << __FILE__ << "[" << __LINE__ << "]" << BOOST_CURRENT_FUNCTION << std::endl;
+        }
+      in_flight_transactions().erase(this);
+      }
       if (other_in_flight_same_thread_transactions())
       {
          state_ = e_hand_off;
          unlock_all_mutexes();
-         synchro::unlock(*general_lock());
-         synchro::unlock(*inflight_lock());
+         synchro::unlock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
+         synchro::unlock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
          bookkeeping_.inc_handoffs();
       }
       else
@@ -1252,9 +1300,9 @@ inline void transaction::validating_deferred_end_transaction()
          if (e_committed == state_)
          {
             //unlock_tx();
-            synchro::unlock(*mutex());
-            synchro::unlock(*general_lock());
-            synchro::unlock(*inflight_lock());
+            synchro::unlock(*mutex() BOOST_STM_CALL_CONTEXT("mutex"));
+            synchro::unlock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
+            synchro::unlock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
          }
       }
    }
@@ -1265,6 +1313,7 @@ inline void transaction::validating_deferred_end_transaction()
 ////////////////////////////////////////////////////////////////////////////
 inline void transaction::forceOtherInFlightTransactionsWritingThisWriteMemoryToAbort()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
 #ifndef ALWAYS_ALLOW_ABORT
    std::list<transaction*> aborted;
 #endif
@@ -1278,7 +1327,7 @@ inline void transaction::forceOtherInFlightTransactionsWritingThisWriteMemoryToA
       j != in_flight_transactions().end();)
       {
         BOOST_ASSERT(*j!=0);
-        //~ (*j)->assert_tx_type();
+        BOOST_STM_TRANSACTION_INVARIANT_VAR(*j);
          transaction *t = *j;
 
          // if we're already aborting for this transaction, skip it
@@ -1305,7 +1354,13 @@ inline void transaction::forceOtherInFlightTransactionsWritingThisWriteMemoryToA
 
             next = j;
             ++next;
+            {BOOST_STM_TRANSACTION_INVARIANT;
+
+        {boost::lock_guard<boost::mutex> lk(log_mutex);
+        std::cout << j<< " " << j->parent() << " " << this_thread::get_id() << " ****INFO erase" << __FILE__ << "[" << __LINE__ << "]" << BOOST_CURRENT_FUNCTION << std::endl;
+        }
             in_flight_transactions().erase(j);
+            }
             j = next;
 
 #else
@@ -1337,6 +1392,11 @@ inline void transaction::forceOtherInFlightTransactionsWritingThisWriteMemoryToA
    {
         BOOST_ASSERT(k!=0);
       (*k)->force_to_abort();
+    BOOST_STM_TRANSACTION_INVARIANT;
+
+        {boost::lock_guard<boost::mutex> lk(log_mutex);
+        std::cout << *k<< " " << (*k)->parent() << " " << this_thread::get_id() << " ****INFO erase" << __FILE__ << "[" << __LINE__ << "]" << BOOST_CURRENT_FUNCTION << std::endl;
+        }
       in_flight_transactions().erase(*k);
    }
 #endif
@@ -1353,6 +1413,7 @@ inline void transaction::forceOtherInFlightTransactionsWritingThisWriteMemoryToA
 inline void transaction::direct_abort
    (bool const &alreadyRemovedFromInFlight) throw()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
 
 #if LOGGING_COMMITS_AND_ABORTS
    bookkeeping_.pushBackSizeOfReadSetWhenAborting(readList().size());
@@ -1376,8 +1437,13 @@ inline void transaction::direct_abort
 #endif
       if (!alreadyRemovedFromInFlight)
       {
-         synchro::lock(*inflight_lock());
+         synchro::lock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
          // if I'm the last transaction of this thread, reset abort to false
+                  BOOST_STM_TRANSACTION_INVARIANT;
+
+        {boost::lock_guard<boost::mutex> lk(log_mutex);
+        std::cout << this << " " << this->parent() << " " << this_thread::get_id() << " ****INFO erase" << __FILE__ << "[" << __LINE__ << "]" << BOOST_CURRENT_FUNCTION << std::endl;
+        }
          in_flight_transactions().erase(this);
       }
 
@@ -1391,7 +1457,7 @@ inline void transaction::direct_abort
 #endif
       if (!alreadyRemovedFromInFlight)
       {
-         synchro::unlock(*inflight_lock());
+         synchro::unlock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
       }
    }
    catch (...)
@@ -1405,6 +1471,7 @@ inline void transaction::direct_abort
 inline void transaction::deferred_abort
    (bool const &alreadyRemovedFromInFlight) throw()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
 #if LOGGING_COMMITS_AND_ABORTS
    bookkeeping_.pushBackSizeOfReadSetWhenAborting(readList().size());
    bookkeeping_.pushBackSizeOfWriteSetWhenAborting(writeList().size());
@@ -1412,13 +1479,17 @@ inline void transaction::deferred_abort
 
    state_ = e_aborted;
 
-   deferredAbortWriteList();
+{BOOST_STM_TRANSACTION_INVARIANT;   deferredAbortWriteList();}
 #ifndef DISABLE_READ_SETS
-   deferredAbortReadList();
+{BOOST_STM_TRANSACTION_INVARIANT;   deferredAbortReadList();}
 #endif
 
+{BOOST_STM_TRANSACTION_INVARIANT;
    deferredAbortTransactionDeletedMemory();
+}
+{BOOST_STM_TRANSACTION_INVARIANT;
    deferredAbortTransactionNewMemory();
+}
 
    bloom().clear();
 #if PERFORMING_WRITE_BLOOM
@@ -1426,9 +1497,12 @@ inline void transaction::deferred_abort
 #endif
 
    if (!alreadyRemovedFromInFlight)
-   {
-      synchro::lock(*inflight_lock());
+   {BOOST_STM_TRANSACTION_INVARIANT;
+      synchro::lock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
       // if I'm the last transaction of this thread, reset abort to false
+        {boost::lock_guard<boost::mutex> lk(log_mutex);
+        std::cout << this << " " << this->parent() << " " << this_thread::get_id() << " ****INFO erase" << __FILE__ << "[" << __LINE__ << "]" << BOOST_CURRENT_FUNCTION << std::endl;
+        }
       in_flight_transactions().erase(this);
 
 #ifdef USING_SHARED_FORCED_TO_ABORT
@@ -1440,7 +1514,7 @@ inline void transaction::deferred_abort
       unforce_to_abort();
 #endif
 
-      synchro::unlock(*inflight_lock());
+      synchro::unlock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
    }
    else {
        unforce_to_abort();
@@ -1450,6 +1524,7 @@ inline void transaction::deferred_abort
 ////////////////////////////////////////////////////////////////////////////
 inline void transaction::invalidating_direct_commit()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    //--------------------------------------------------------------------------
    // transactionMutex must be obtained before calling commit
    //--------------------------------------------------------------------------
@@ -1490,11 +1565,11 @@ inline void transaction::invalidating_direct_commit()
    catch (aborted_transaction_exception&)
    {
       unlock_all_mutexes_but_this(threadId_);
-      synchro::unlock(*general_lock());
-      synchro::unlock(*inflight_lock());
+      synchro::unlock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
+      synchro::unlock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
 
       direct_abort();
-      synchro::unlock(*mutex());
+      synchro::unlock(*mutex() BOOST_STM_CALL_CONTEXT("mutex"));
 
       throw;
    }
@@ -1504,11 +1579,11 @@ inline void transaction::invalidating_direct_commit()
    catch (...)
    {
       unlock_all_mutexes_but_this(threadId_);
-      synchro::unlock(*general_lock());
-      synchro::unlock(*inflight_lock());
+      synchro::unlock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
+      synchro::unlock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
 
       direct_abort();
-      synchro::unlock(*mutex());
+      synchro::unlock(*mutex() BOOST_STM_CALL_CONTEXT("mutex"));
 
       throw;
    }
@@ -1517,6 +1592,7 @@ inline void transaction::invalidating_direct_commit()
 ////////////////////////////////////////////////////////////////////////////
 inline void transaction::invalidating_deferred_commit()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    //--------------------------------------------------------------------------
    // transactionMutex must be obtained before calling commit
    //--------------------------------------------------------------------------
@@ -1566,8 +1642,8 @@ inline void transaction::invalidating_deferred_commit()
             ++stalling_;
             clock_t local_clock = global_clock();
 
-            synchro::unlock(*inflight_lock());
-            synchro::unlock(*general_lock());
+            synchro::unlock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
+            synchro::unlock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
             unlock_all_mutexes();
 
             for (;;)
@@ -1584,8 +1660,8 @@ inline void transaction::invalidating_deferred_commit()
                   throw aborted_transaction_exception_no_unlocks();
                }
 
-               synchro::lock(*general_lock());
-               synchro::lock(*inflight_lock());
+               synchro::lock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
+               synchro::lock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
 
                // if our stalling on tx is gone, continue
                if (in_flight_transactions().end() == in_flight_transactions().find(stallingOn))
@@ -1597,8 +1673,8 @@ inline void transaction::invalidating_deferred_commit()
                   break;
                }
 
-               synchro::unlock(*general_lock());
-               synchro::unlock(*inflight_lock());
+               synchro::unlock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
+               synchro::unlock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
             }
 
             lock_all_mutexes();
@@ -1620,9 +1696,12 @@ inline void transaction::invalidating_deferred_commit()
       //BUG
       //~ in_flight_transactions().erase(this);
       //~ synchro::unlock(*inflight_lock());
-      synchro::unlock(*inflight_lock());
+        {boost::lock_guard<boost::mutex> lk(log_mutex);
+        std::cout << this << " " << this->parent() << " " << this_thread::get_id() << " ****INFO erase" << __FILE__ << "[" << __LINE__ << "]" << BOOST_CURRENT_FUNCTION << std::endl;
+        }
       in_flight_transactions().erase(this);
-      synchro::unlock(*general_lock());
+      synchro::unlock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
+      synchro::unlock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
 
       deferredCommitWriteState();
 
@@ -1669,10 +1748,10 @@ inline void transaction::invalidating_deferred_commit()
    catch (aborted_transaction_exception&)
    {
       unlock_all_mutexes_but_this(threadId_);
-      synchro::unlock(*general_lock());
-      synchro::unlock(*inflight_lock());
+      synchro::unlock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
+      synchro::unlock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
       deferred_abort();
-      synchro::unlock(*mutex());
+      synchro::unlock(*mutex() BOOST_STM_CALL_CONTEXT("mutex"));
 
       throw;
    }
@@ -1682,10 +1761,10 @@ inline void transaction::invalidating_deferred_commit()
    catch (...)
    {
       unlock_all_mutexes_but_this(threadId_);
-      synchro::unlock(*general_lock());
-      synchro::unlock(*inflight_lock());
+      synchro::unlock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
+      synchro::unlock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
       deferred_abort();
-      synchro::unlock(*mutex());
+      synchro::unlock(*mutex() BOOST_STM_CALL_CONTEXT("mutex"));
 
       throw;
    }
@@ -1696,6 +1775,7 @@ inline void transaction::invalidating_deferred_commit()
 ////////////////////////////////////////////////////////////////////////////
 inline void transaction::validating_direct_commit()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    throw not_implemented("not implemented yet: validating_direct_commit";
 
 
@@ -1755,11 +1835,11 @@ std::allocator<__pthread_mutex_t**> >::clear (this=0x0)
    catch (aborted_transaction_exception&)
    {
       unlock_all_mutexes_but_this(threadId_);
-      synchro::unlock(*general_lock());
-      synchro::unlock(*inflight_lock());
+      synchro::unlock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
+      synchro::unlock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
 
       direct_abort();
-      synchro::unlock(*mutex());
+      synchro::unlock(*mutex() BOOST_STM_CALL_CONTEXT("mutex"));
 
       throw;
    }
@@ -1769,11 +1849,11 @@ std::allocator<__pthread_mutex_t**> >::clear (this=0x0)
    catch (...)
    {
       unlock_all_mutexes_but_this(threadId_);
-      synchro::unlock(*general_lock());
-      synchro::unlock(*inflight_lock());
+      synchro::unlock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
+      synchro::unlock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
 
       direct_abort();
-      synchro::unlock(*mutex());
+      synchro::unlock(*mutex() BOOST_STM_CALL_CONTEXT("mutex"));
 
       throw;
    }
@@ -1784,6 +1864,7 @@ std::allocator<__pthread_mutex_t**> >::clear (this=0x0)
 ////////////////////////////////////////////////////////////////////////////
 inline void transaction::validating_deferred_commit()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    //--------------------------------------------------------------------------
    // transactionMutex must be obtained before calling commit
    //--------------------------------------------------------------------------
@@ -1864,10 +1945,10 @@ inline void transaction::validating_deferred_commit()
    catch (aborted_transaction_exception&)
    {
       unlock_all_mutexes_but_this(threadId_);
-      synchro::unlock(*general_lock());
-      synchro::unlock(*inflight_lock());
+      synchro::unlock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
+      synchro::unlock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
       deferred_abort();
-      synchro::unlock(*mutex());
+      synchro::unlock(*mutex() BOOST_STM_CALL_CONTEXT("mutex"));
 
       throw;
    }
@@ -1877,10 +1958,10 @@ inline void transaction::validating_deferred_commit()
    catch (...)
    {
       unlock_all_mutexes_but_this(threadId_);
-      synchro::unlock(*general_lock());
-      synchro::unlock(*inflight_lock());
+      synchro::unlock(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
+      synchro::unlock(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
       deferred_abort();
-      synchro::unlock(*mutex());
+      synchro::unlock(*mutex() BOOST_STM_CALL_CONTEXT("mutex"));
 
       throw;
    }
@@ -1890,9 +1971,10 @@ inline void transaction::validating_deferred_commit()
 ////////////////////////////////////////////////////////////////////////////
 inline void transaction::unlockAllLockedThreads(LockedTransactionContainer &l)
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    for (LockedTransactionContainer::iterator i = l.begin(); i != l.end(); ++i) {
         BOOST_ASSERT(*i!=0);
-       
+
        (*i)->unlock_tx();
    }
 }
@@ -1900,6 +1982,7 @@ inline void transaction::unlockAllLockedThreads(LockedTransactionContainer &l)
 ////////////////////////////////////////////////////////////////////////////
 inline void transaction::directAbortWriteList()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    //--------------------------------------------------------------------------
    // copy the newObject into the oldObject, updating the real data back to
    // what it was before we changed it
@@ -1934,6 +2017,7 @@ inline void transaction::directAbortWriteList()
 ////////////////////////////////////////////////////////////////////////////
 inline void transaction::directAbortTransactionDeletedMemory() throw()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    for (MemoryContainerList::iterator j = deletedMemoryList().begin();
    j != deletedMemoryList().end(); ++j)
    {
@@ -1946,18 +2030,22 @@ inline void transaction::directAbortTransactionDeletedMemory() throw()
 ////////////////////////////////////////////////////////////////////////////
 inline void transaction::deferredAbortWriteList() throw()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    for (WriteContainer::iterator i = writeList().begin(); writeList().end() != i; ++i)
    {
-      cache_release(i->second); // delete all the temporary memory
+      //BUGdelete
+       cache_release(i->second); // delete all the temporary memory
    }
 
+   //BUGdelete
    writeList().clear();
 }
 
 //----------------------------------------------------------------------------
 inline clock_t transaction::earliest_start_time_of_inflight_txes()
 {
-   synchro::lock_guard<Mutex> a(*inflight_lock());
+BOOST_STM_TRANSACTION_INVARIANT;
+   synchro::lock_guard<Mutex> a(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
 
    clock_t secs = 0xffffffff;
 
@@ -1965,7 +2053,7 @@ inline clock_t transaction::earliest_start_time_of_inflight_txes()
    j != in_flight_transactions().end(); ++j)
    {
         BOOST_ASSERT(*j!=0);
-        //~ (*j)->assert_tx_type();
+        BOOST_STM_TRANSACTION_INVARIANT_VAR(*j);
       transaction *t = *j;
       //-----------------------------------------------------------------------
       // since this is called while direct_writes are occurring, the transaction
@@ -1980,11 +2068,12 @@ inline clock_t transaction::earliest_start_time_of_inflight_txes()
 //----------------------------------------------------------------------------
 inline void transaction::doIntervalDeletions()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    using namespace boost::stm;
 
    clock_t earliestInFlightTx = earliest_start_time_of_inflight_txes();
 
-   synchro::lock_guard<Mutex> a(deletionBufferMutex_);
+   synchro::lock_guard<Mutex> a(deletionBufferMutex_ BOOST_STM_CALL_CONTEXT("deletionBufferMutex_"));
 
    for (DeletionBuffer::iterator i = deletionBuffer_.begin(); i != deletionBuffer_.end();)
    {
@@ -2008,11 +2097,12 @@ inline void transaction::doIntervalDeletions()
 //----------------------------------------------------------------------------
 inline void transaction::directCommitTransactionDeletedMemory() throw()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    using namespace boost::stm;
 
    if (!deletedMemoryList().empty())
    {
-      synchro::lock_guard<Mutex> a(deletionBufferMutex_);
+      synchro::lock_guard<Mutex> a(deletionBufferMutex_ BOOST_STM_CALL_CONTEXT("deletionBufferMutex_"));
       deletionBuffer_.insert( std::pair<clock_t, MemoryContainerList>
          (time(0), deletedMemoryList()) );
       deletedMemoryList().clear();
@@ -2022,6 +2112,7 @@ inline void transaction::directCommitTransactionDeletedMemory() throw()
 //----------------------------------------------------------------------------
 inline void transaction::deferredCommitTransactionDeletedMemory() throw()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    for (MemoryContainerList::iterator i = deletedMemoryList().begin();
       i != deletedMemoryList().end(); ++i)
    {
@@ -2035,20 +2126,26 @@ inline void transaction::deferredCommitTransactionDeletedMemory() throw()
 ////////////////////////////////////////////////////////////////////////////
 inline void transaction::deferredAbortTransactionNewMemory() throw()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    for (MemoryContainerList::iterator i = newMemoryList().begin(); i != newMemoryList().end(); ++i)
    {
-      detail::release(*i);
+       BOOST_ASSERT(*i);
+       //BUGdelete
+       detail::release(*i);
       //delete *i;
    }
 
+   //BUGdelete
    newMemoryList().clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////
 inline void transaction::deferredCommitTransactionNewMemory()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    for (MemoryContainerList::iterator i = newMemoryList().begin(); i != newMemoryList().end(); ++i)
    {
+       BOOST_ASSERT(*i);
       detail::reset(*i);
    }
 
@@ -2058,6 +2155,7 @@ inline void transaction::deferredCommitTransactionNewMemory()
 ////////////////////////////////////////////////////////////////////////////
 inline void transaction::directCommitWriteState()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    // direct commit for writes just deletes the backup and changes global memory
    // so its no longer flagged as being transactional
    for (WriteContainer::iterator i = writeList().begin(); writeList().end() != i; ++i)
@@ -2088,6 +2186,7 @@ inline void transaction::directCommitWriteState()
 ////////////////////////////////////////////////////////////////////////////
 inline void transaction::deferredCommitWriteState()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    // copy the newObject into the oldObject, updating the real data
    for (WriteContainer::iterator i = writeList().begin(); writeList().end() != i; ++i)
    {
@@ -2104,7 +2203,7 @@ inline void transaction::deferredCommitWriteState()
       }
 
         BOOST_ASSERT(i->first!=0);
-      
+
       if (using_move_semantics()) i->first->move_state(i->second);
       else i->first->copy_cache(*i->second);
 
@@ -2124,11 +2223,12 @@ inline void transaction::deferredCommitWriteState()
 //----------------------------------------------------------------------------
 inline void transaction::verifyReadMemoryIsValidWithGlobalMemory()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    // copy the newObject into the oldObject, updating the real data
    for (ReadContainer::iterator i = readList().begin(); readList().end() != i; ++i)
    {
         BOOST_ASSERT(i->first!=0);
-       
+
       if (i->first->version_ != i->second)
       {
          bookkeeping_.inc_read_aborts();
@@ -2141,11 +2241,12 @@ inline void transaction::verifyReadMemoryIsValidWithGlobalMemory()
 //----------------------------------------------------------------------------
 inline void transaction::verifyWrittenMemoryIsValidWithGlobalMemory()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    // copy the newObject into the oldObject, updating the real data
    for (WriteContainer::iterator i = writeList().begin(); writeList().end() != i; ++i)
    {
         BOOST_ASSERT(i->first!=0);
-       
+
       if (0 == i->second) continue;
       if (i->first->version_ != i->second->version_)
       {
@@ -2160,12 +2261,13 @@ inline void transaction::verifyWrittenMemoryIsValidWithGlobalMemory()
 ////////////////////////////////////////////////////////////////////////////
 inline bool transaction::otherInFlightTransactionsWritingThisMemory(base_transaction_object *obj)
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    // iterate through all the in flight transactions
    for (in_flight_trans_cont::iterator j = in_flight_transactions().begin();
    j != in_flight_transactions().end(); ++j)
    {
         BOOST_ASSERT(*j!=0);
-        //~ (*j)->assert_tx_type();
+        BOOST_STM_TRANSACTION_INVARIANT_VAR(*j);
       transaction *t = *j;
       //-----------------------------------------------------------------------
       // since this is called while direct_writes are occurring, the transaction
@@ -2188,6 +2290,7 @@ inline bool transaction::otherInFlightTransactionsWritingThisMemory(base_transac
 inline bool transaction::forceOtherInFlightTransactionsAccessingThisWriteMemoryToAbort
       (bool allow_stall, transaction* &stallingOn)
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    static std::list<transaction*> aborted;
    //static bool initialized = false;
 
@@ -2223,7 +2326,7 @@ inline bool transaction::forceOtherInFlightTransactionsAccessingThisWriteMemoryT
    j != in_flight_transactions().end(); ++j)
    {
         BOOST_ASSERT(*j!=0);
-        //~ (*j)->assert_tx_type();
+        BOOST_STM_TRANSACTION_INVARIANT_VAR(*j);
       transaction *t = *j;
       // if we're already aborting for this transaction, skip it
       if (t->forced_to_abort()) continue;
@@ -2321,7 +2424,7 @@ inline bool transaction::forceOtherInFlightTransactionsAccessingThisWriteMemoryT
               k != aborted.end(); ++k)
          {
         BOOST_ASSERT(*k!=0);
-             
+
             (*k)->force_to_abort();
          }
 
@@ -2341,6 +2444,7 @@ inline bool transaction::forceOtherInFlightTransactionsAccessingThisWriteMemoryT
 ////////////////////////////////////////////////////////////////////////////
 inline void transaction::forceOtherInFlightTransactionsReadingThisWriteMemoryToAbort()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    std::list<transaction*> aborted;
 
    // iterate through all the in flight transactions
@@ -2348,7 +2452,7 @@ inline void transaction::forceOtherInFlightTransactionsReadingThisWriteMemoryToA
    j != in_flight_transactions().end(); ++j)
    {
         BOOST_ASSERT(*j!=0);
-        //~ (*j)->assert_tx_type();
+        BOOST_STM_TRANSACTION_INVARIANT_VAR(*j);
       transaction *t = *j;
       // if we're already aborting for this transaction, skip it
 #ifndef DISABLE_READ_SETS
@@ -2399,7 +2503,7 @@ inline void transaction::forceOtherInFlightTransactionsReadingThisWriteMemoryToA
    for (std::list<transaction*>::iterator k = aborted.begin(); k != aborted.end(); ++k)
    {
         BOOST_ASSERT(*k!=0);
-       
+
       (*k)->force_to_abort();
       //bookkeeping_.inc_abort_perm_denied((*k)->threadId_);
    }
@@ -2417,11 +2521,12 @@ inline void transaction::forceOtherInFlightTransactionsReadingThisWriteMemoryToA
 //-----------------------------------------------------------------------------
 inline bool transaction::other_in_flight_same_thread_transactions() const throw()
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    for (in_flight_trans_cont::iterator i = in_flight_transactions().begin();
       i != in_flight_transactions().end(); ++i)
    {
         BOOST_ASSERT(*i!=0);
-        //~ (*i)->assert_tx_type();
+        BOOST_STM_TRANSACTION_INVARIANT_VAR(*i);
       if (*i == this) continue;
       if (*i == 0) continue;
       // if this is not our threadId or this thread is not composable, skip it
@@ -2434,11 +2539,12 @@ inline bool transaction::other_in_flight_same_thread_transactions() const throw(
 
 inline bool transaction::otherInFlightTransactionsOfSameThreadNotIncludingThis(transaction const * const rhs)
 {
+BOOST_STM_TRANSACTION_INVARIANT;
    //////////////////////////////////////////////////////////////////////
    for (in_flight_trans_cont::iterator i = in_flight_transactions().begin(); i != in_flight_transactions().end(); ++i)
    {
         BOOST_ASSERT(*i!=0);
-        //~ (*i)->assert_tx_type();
+        BOOST_STM_TRANSACTION_INVARIANT_VAR(*i);
       if (*i == rhs) continue;
       // if this is not our threadId or this thread is not composable, skip it
       if ((*i)->threadId_ != this->threadId_) continue;

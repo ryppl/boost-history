@@ -65,7 +65,7 @@ public:
         ref()+=rhs;
         return *this;
     }
-       
+
     template<typename F, typename U>
     proxy_cache& operator-=(proxy_cache<F,U> const& rhs) {
         ref()-=rhs.value();
@@ -171,18 +171,20 @@ public:
         return *this;
     }
 
-    T operator++(int) {
-        return ref()++;
+    proxy_cache operator++(int) {
+        ref()++;
+        return *this;
     }
 
     proxy_cache& operator--() {
         --ref();
         return *this;
     }
-    T operator--(int) {
-        return ref()--;
+    proxy_cache  operator--(int) {
+        ref()--;
+        return *this;
     }
-    
+
     operator T() const { return value(); }
     //operator T&() { return ref(); }
 
@@ -230,9 +232,27 @@ public:
 };
 
 template <typename Final, typename T, typename Base>
-typename proxy_cache<Final,Base>::value_type& 
-ref(proxy_cache<Final,Base>& r) {
+typename proxy_cache<Final,T,Base>::value_type&
+write(proxy_cache<Final,T,Base>& r) {
     return r.ref();
+}
+
+template <typename Final, typename T, typename Base>
+typename proxy_cache<Final,T,Base>::value_type*
+write(proxy_cache<Final,T,Base>* r) {
+    return &r->ref();
+}
+
+template <typename Final, typename T, typename Base>
+typename proxy_cache<Final,T,Base>::value_type
+read(proxy_cache<Final,T,Base> const& r) {
+    return r.value();
+}
+
+template <typename Final, typename T, typename Base>
+typename proxy_cache<Final,T,Base>::value_type*
+read(proxy_cache<Final,T,Base> const* r) {
+    return r->value();
 }
 
 template <typename OSTREAM, typename F, typename T, typename B>
@@ -255,7 +275,7 @@ template <typename F, typename T, typename B>
 struct has_shallow_copy_semantics<tx::proxy_cache<F,T,B> > : boost::mpl::true_
 {};
 
-    
+
 }}
 #endif //BOOST_STM_TX_PROXY_CACHE__HPP
 

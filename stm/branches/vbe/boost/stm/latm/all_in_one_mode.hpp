@@ -39,6 +39,7 @@ public:
             return "tx_protect";
         default:
             BOOST_ASSERT(false&& "invalid LATM type");
+            return "";
         }
     }
     void do_full_lock_protection_i() {
@@ -110,9 +111,10 @@ public:
     }
     void tm_lock_conflict(latm::mutex_type* inLock)
     {
+        BOOST_STM_CALL_CONTEXT_DCL_INST(0);
         if (!this->doing_tm_lock_protection()) return;
 
-        synchro::lock_guard<Mutex> lock_l(latmMutex_);
+        synchro::lock_guard<Mutex> lock_l(latmMutex_  BOOST_STM_CALL_CONTEXT("latm_lock"));
 
        //-------------------------------------------------------------------------
        // insert can throw an exception

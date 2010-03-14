@@ -48,10 +48,12 @@ namespace boost { namespace stm {
 //----------------------------------------------------------------------------
 inline void boost::stm::transaction::wait_until_all_locks_are_released()
 {
+    BOOST_STM_CALL_CONTEXT_DCL_INST(0);
+
     while (true)
     {
         {
-        synchro::lock_guard<Mutex> lk(*latm_lock());
+        synchro::lock_guard<Mutex> lk(*latm_lock() BOOST_STM_CALL_CONTEXT("latm_lock"));
         if (latm::instance().latmLockedLocks_.empty()) {
             return;
         }
@@ -65,10 +67,12 @@ inline void boost::stm::transaction::wait_until_all_locks_are_released()
 
 inline void boost::stm::transaction::wait_until_all_locks_are_released_and_set(latm::mutex_type* mutex)
 {
+    BOOST_STM_CALL_CONTEXT_DCL_INST(0);
+
     while (true)
     {
         {
-        synchro::lock_guard<Mutex> lk(*latm_lock());
+        synchro::lock_guard<Mutex> lk(*latm_lock() BOOST_STM_CALL_CONTEXT("latm_lock"));
         if (latm::instance().latmLockedLocks_.empty()) {
             latm::instance().latmLockedLocksOfThreadMap_[mutex] = this_thread::get_id();
             return;
@@ -163,7 +167,7 @@ inline bool boost::stm::transaction::mutex_is_on_obtained_tx_list(latm::mutex_ty
    tss_context_map_.end() != iter; ++iter)
    {
         BOOST_ASSERT(iter->second!=0);
-       
+
       if (iter->second->obtainedLocks_.find(mutex) != iter->second->obtainedLocks_.end())
       {
          return true;
@@ -242,7 +246,7 @@ inline void boost::stm::transaction::tm_lock_conflict(MP* inLock)
 #else
    if (!latm::instance().doing_tm_lock_protection()) return;
 
-   synchro::lock_guard<Mutex> lock_l(latmMutex_);
+   synchro::lock_guard<Mutex> lock_l(latmMutex_ BOOST_STM_CALL_CONTEXT("latm_lock"));
 
    //-------------------------------------------------------------------------
    // insert can throw an exception
@@ -257,7 +261,7 @@ inline void boost::stm::transaction::tm_lock_conflict(MP* inLock)
 //----------------------------------------------------------------------------
 inline void boost::stm::transaction::clear_tm_conflicting_locks()
 {
-   synchro::lock_guard<Mutex> lock_l(latmMutex_);
+   synchro::lock_guard<Mutex> lock_l(latmMutex_ BOOST_STM_CALL_CONTEXT("latm_lock"));
    tmConflictingLocks_.clear();
 }
 
@@ -288,12 +292,14 @@ inline void boost::stm::transaction::must_be_in_conflicting_lock_set(latm::mutex
 template <typename MP>
 inline void boost::stm::transaction::add_tx_conflicting_lock(MP* inLock)
 {
+    BOOST_STM_CALL_CONTEXT_DCL_INST(0);
+
    if (!latm::instance().doing_tx_lock_protection()) return;
 
    {
-      synchro::lock_guard<Mutex> autolock_l(*latm_lock());
-      synchro::lock_guard<Mutex> autolock_g(*general_lock());
-      synchro::lock_guard<Mutex> autolock_i(*inflight_lock());
+      synchro::lock_guard<Mutex> autolock_l(*latm_lock() BOOST_STM_CALL_CONTEXT("latm_lock"));
+      synchro::lock_guard<Mutex> autolock_g(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
+      synchro::lock_guard<Mutex> autolock_i(*inflight_lock() BOOST_STM_CALL_CONTEXT("inflight_lock"));
 
       if (get_tx_conflicting_locks().find(&inLock->the_poly_lock()) != get_tx_conflicting_locks().end()) return;
       get_tx_conflicting_locks().insert(&inLock->the_poly_lock());
@@ -314,7 +320,8 @@ inline void boost::stm::transaction::add_tx_conflicting_lock(MP* inLock)
 //----------------------------------------------------------------------------
 inline void boost::stm::transaction::clear_tx_conflicting_locks()
 {
-   synchro::lock_guard<Mutex> lock_l(*general_lock());
+    BOOST_STM_CALL_CONTEXT_DCL_INST(0);
+   synchro::lock_guard<Mutex> lock_l(*general_lock() BOOST_STM_CALL_CONTEXT("general_lock"));
    get_tx_conflicting_locks().clear();
 }
 
@@ -325,7 +332,7 @@ inline void boost::stm::transaction::clear_tx_conflicting_locks()
 // the client chose
 //
 //----------------------------------------------------------------------------
-template <typename M> 
+template <typename M>
 inline void boost::stm::transaction::lock(M& m, latm::mutex_type& mutex)
 {
    //using namespace boost::stm;
@@ -349,7 +356,7 @@ inline void boost::stm::transaction::lock(M& m, latm::mutex_type& mutex)
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
 
-template <typename M> 
+template <typename M>
 inline bool boost::stm::transaction::try_lock(M& m, latm::mutex_type& mutex)
 {
    //using namespace boost::stm;
@@ -372,7 +379,7 @@ inline bool boost::stm::transaction::try_lock(M& m, latm::mutex_type& mutex)
 
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
-template <typename M> 
+template <typename M>
 inline void boost::stm::transaction::unlock(M& m, latm::mutex_type& mutex)
 {
    //using namespace boost::stm;
@@ -439,7 +446,7 @@ inline void boost::stm::transaction::see_if_tx_must_block_due_to_tx_latm()
          this_thread::get_id() != l->second)
       {
          latm::mutex_thread_id_set_map::iterator locksAndThreadsIter = latm::instance().latmLockedLocksAndThreadIdsMap_.find(*k);
-         
+
          if (locksAndThreadsIter == latm::instance().latmLockedLocksAndThreadIdsMap_.end())
          {
             ThreadIdSet s;
@@ -484,12 +491,13 @@ thread_id_occurance_in_locked_locks_map(thread_id_t threadId)
 inline boost::stm::transaction* boost::stm::transaction::get_inflight_tx_of_same_thread
 (bool hasTxInFlightMutex)
 {
-   synchro::lock_guard_if<Mutex> lock_l(*general_lock(), !hasTxInFlightMutex);
+    BOOST_STM_CALL_CONTEXT_DCL_INST(0);
+   synchro::lock_guard_if<Mutex> lock_l(*general_lock(), !hasTxInFlightMutex BOOST_STM_CALL_CONTEXT("general_lock"));
 
    for (in_flight_trans_cont::iterator i = in_flight_transactions().begin();
       i != in_flight_transactions().end(); ++i)
    {
-        BOOST_ASSERT(*i!=0); 
+        BOOST_ASSERT(*i!=0);
         //~ (*i)->assert_tx_type();
       transaction *t = *i;
 

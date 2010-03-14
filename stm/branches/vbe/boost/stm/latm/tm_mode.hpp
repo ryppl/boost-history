@@ -26,7 +26,7 @@ template <typename Base=static_mode>
 class tm_mode : public base_mode<Base>  {
 public:
     ~tm_mode() {}
-    
+
     latm_type const protection() { return eTmConflictingLockLatmProtection; }
     std::string const protection_str() {
         return "tm_protect";
@@ -73,7 +73,8 @@ public:
     }
     void tm_lock_conflict(latm::mutex_type* inLock)
     {
-        synchro::lock_guard<Mutex> lock_l(this->latmMutex_);
+        BOOST_STM_CALL_CONTEXT_DCL_INST(0);
+        synchro::lock_guard<Mutex> lock_l(this->latmMutex_  BOOST_STM_CALL_CONTEXT("latm_lock"));
 
        //-------------------------------------------------------------------------
        // insert can throw an exception
