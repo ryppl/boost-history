@@ -18,49 +18,70 @@
 namespace boost{
 namespace assign{
 
-// This adaptor adds a range conversion operation to that of 
+// Adds range conversion (needed for assignment in the presence of reference
+// wrappers) and support for lvalue to the range adaptor here : 
 // http://gist.github.com/287791
 // developed by MPG.
 
+
+
 namespace adaptor{
+
 
 template<typename R1,
     typename Conv = detail::pair_traits::meta::apply_conversion>
-class chain_convert_l 
+class chain_convert 
     : public boost::sub_range<R1>
 {
 
     typedef sub_range<R1> super_;
 
+    template<typename R,bool add_const>
+    struct qual : boost::mpl::if_c<add_const,
+         typename boost::add_const<R>::type,
+         R
+    >{};
+
+    template<typename X1,typename X2>
+    struct result_impl_generic{
+        typedef typename result_of::chain_convert_impl<Conv,X1,X2>::type 
+            facade_;
+        typedef chain_convert<facade_,Conv> type;
+    };
+
     public:
 
-    template<typename R2>
-    struct result_impl_l{
-        typedef typename result_of::chain_convert_impl<Conv,super_,R2>::type facade_;
-        typedef chain_convert_l<facade_,Conv> type;
-    };
+    // This is more helpful than result<F(R&)> so keep it public.
+    template<typename R2,bool add_const>
+    struct result_impl : result_impl_generic<
+       typename qual<D,add_const>::type,
+       typename qual<R2,add_const>::type,
+    >{};
 
-    template<typename R2>
-    struct result_impl_r{
-        typedef typename result_of::chain_convert_impl<Conv,const super_,const R2>::type facade_;
-        typedef chain_convert_l<facade_,Conv> type;
-    };
+    template<typename S>
+    struct result{};
+    
+    template<typename F,typename R2> 
+    struct result<F(R2&)> : result_impl<R2,false>{};
 
-    chain_convert_l(const R1 & r) : super_(r),copy(r){ }
+    template<typename F,typename R2> 
+    struct result<F(const R2&)> : result_impl<R2,true>{};
+
+    chain_convert(const R1 & r) : super_(r),copy(r){ }
     
     template<typename R2>
-    typename result_impl_l<R2>::type
+    typename result_impl<R2,false>::type
     operator()(R2 & r2)const
     {
-        typedef typename result_impl_l<R2>::type result_;
+        typedef typename result_impl<R2,false>::type result_;
         return result_(chain_convert_impl<Conv>(this->copy,r2));
     }
 
     template<typename R2>
-    typename result_impl_r<R2>::type
+    typename result_impl<R2,true>::type
     operator()(const R2 & r2)const
     {
-        typedef typename result_impl_r<R2>::type result_;
+        typedef typename result_impl<R2,true>::type result_;
         return result_(chain_convert_impl<Conv>(this->copy,r2));
     }
     
@@ -70,19 +91,20 @@ class chain_convert_l
 
 }// adaptor
 
+
 template<typename Conv,typename R>
-adaptor::chain_convert_l<Conv,R> 
+adaptor::chain_convert<Conv,R> 
 chain_convert(R & r)
 {
-    typedef adaptor::chain_convert_l<Conv,R> result_;
+    typedef adaptor::chain_convert<Conv,R> result_;
     return  result_(r);
 }
 
 template<typename Conv,typename R>
-adaptor::chain_convert_l<Conv,const R> 
+adaptor::chain_convert<Conv,const R> 
 chain_convert(const R & r)
 {
-    typedef adaptor::chain_convert_l<Conv,const R> result_;
+    typedef adaptor::chain_convert<Conv,const R> result_;
     return  result_(r);
 }
 
@@ -106,18 +128,18 @@ operator|(const R1 & r1, const adaptor::chain_convert<R2,Conv> & adaptor)
 // default
 
 template<typename R>
-adaptor::chain_convert_l<R> 
+adaptor::chain_convert<R> 
 chain_convert(R & r)
 {
-    typedef adaptor::chain_convert_l<R> result_;
+    typedef adaptor::chain_convert<R> result_;
     return  result_(r);
 }
 
 template<typename R>
-adaptor::chain_convert_l<const R> 
+adaptor::chain_convert<const R> 
 chain_convert(const R & r)
 {
-    typedef adaptor::chain_convert_l<const R> result_;
+    typedef adaptor::chain_convert<const R> result_;
     return  result_(r);
 }
 

@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_AUTO_SIZE_DETAIL_ARRAY_CHAINABLE_ER_2010_HPP
 #define BOOST_ASSIGN_AUTO_SIZE_DETAIL_ARRAY_CHAINABLE_ER_2010_HPP
-#include <boost/assign/auto_size/chain/auto_convert.hpp>
+#include <boost/assign/auto_size/chain/chain_convert.hpp>
 
 namespace boost{
 namespace assign{
@@ -16,25 +16,38 @@ namespace detail{
 
     // D is a derived type
     template<typename D>
-    struct chain_as_member{
+    class chain_as_member{
 
-        template<typename D1,typename R>
-        struct result_of_chain_auto_convert 
-            : assign::result_of::chain_auto_convert::apply_conversion<D1,R>{}; 
+       template<bool add_const>
+       struct adaptor : 
+         adaptor::chain_convert<typename boost::add_const<D>::type>
 
-        template<typename R>
-        typename result_of_chain_auto_convert<D,R>::type
-        chain_auto_convert(R& r){ 
-            return assign::chain_auto_convert(
+
+
+       public:
+
+       template<typename R1>
+       chain_convert(R1& r1)
+
+       static D& dummy;
+
+       typedef BOOST_TYPEOF_TPL( dummy.chain,new_range2) ) type;
+
+
+       private:
+
+       adaptor::chain_convert<D>
+       chain_convert_adaptor(){ 
+            return assign::chain_convert(
                 static_cast<D&>(*this),
                 r
             ); 
         }
 
         template<typename R>
-        typename result_of_chain_auto_convert<const D,const R>::type
-        chain_auto_convert(const R& r)const{ 
-            return assign::chain_auto_convert(
+        typename result_of_chain_convert<const D>::type
+        chain_convert_adaptor()const{ 
+            return assign::chain_convert(
                 static_cast<const D&>(*this),
                 r
             ); 
