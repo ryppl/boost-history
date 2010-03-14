@@ -9,6 +9,7 @@
 #ifndef BOOST_ASSIGN_DETAIL_CHAIN_CONVERT_ER_2010_HPP
 #define BOOST_ASSIGN_DETAIL_CHAIN_CONVERT_ER_2010_HPP
 #include <boost/mpl/if.hpp>
+#include <boost/mpl/not.hpp>
 #include <boost/range.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits.hpp>
@@ -23,16 +24,16 @@ namespace assign{
 // http://gist.github.com/287791
 // developed by MPG.
 
-
-
 namespace adaptor{
-
 
 template<typename R1,
     typename Conv = detail::pair_traits::meta::apply_conversion>
 class chain_convert 
     : public boost::sub_range<R1>
 {
+
+    // typedef typename boost::is_const<R1>::type r1_is_const_;
+    // typedef typename boost::mpl::not_<r1_is_const_>::type allow_lvalue_;
 
     typedef sub_range<R1> super_;
 
@@ -54,8 +55,8 @@ class chain_convert
     // This is more helpful than result<F(R&)> so keep it public.
     template<typename R2,bool add_const>
     struct result_impl : result_impl_generic<
-       typename qual<D,add_const>::type,
-       typename qual<R2,add_const>::type,
+       typename qual<super_,add_const>::type,
+       typename qual<R2,add_const>::type
     >{};
 
     template<typename S>
@@ -94,7 +95,7 @@ class chain_convert
 
 template<typename Conv,typename R>
 adaptor::chain_convert<Conv,R> 
-chain_convert(R & r)
+chain_convert_l(R & r)
 {
     typedef adaptor::chain_convert<Conv,R> result_;
     return  result_(r);
@@ -102,7 +103,7 @@ chain_convert(R & r)
 
 template<typename Conv,typename R>
 adaptor::chain_convert<Conv,const R> 
-chain_convert(const R & r)
+chain_convert_r(const R & r)
 {
     typedef adaptor::chain_convert<Conv,const R> result_;
     return  result_(r);
@@ -129,7 +130,7 @@ operator|(const R1 & r1, const adaptor::chain_convert<R2,Conv> & adaptor)
 
 template<typename R>
 adaptor::chain_convert<R> 
-chain_convert(R & r)
+chain_convert_l(R & r)
 {
     typedef adaptor::chain_convert<R> result_;
     return  result_(r);
@@ -137,27 +138,27 @@ chain_convert(R & r)
 
 template<typename R>
 adaptor::chain_convert<const R> 
-chain_convert(const R & r)
+chain_convert_r(const R & r) // force const
 {
     typedef adaptor::chain_convert<const R> result_;
     return  result_(r);
 }
 
-/*
+
 template<typename R1, typename R2>
-typename result_of::chain_convert<R2>::template apply<R1>::type
+typename adaptor::chain_convert<R2>::template result_impl<R1,false>::type
 operator|(R1 & r1, const adaptor::chain_convert<R2>& adaptor)
 {
     return adaptor(r1);
 }
 
 template<typename R1, typename R2>
-typename result_of::chain_convert<R2>::template apply<const R1>::type
-operator|(const R1 & r1, const adaptor::chain_convert<R2> & adaptor)
+typename adaptor::chain_convert<const R2>::template result_impl<R1,true>::type
+operator|(R1 & r1, const adaptor::chain_convert<const R2>& adaptor)
 {
     return adaptor(r1);
 }
-*/
+
 
 }// assign
 }// boost

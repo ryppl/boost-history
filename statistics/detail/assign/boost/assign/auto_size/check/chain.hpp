@@ -45,11 +45,11 @@ namespace auto_size{
         ar[1] = f;
         ar[2] = g;
         ar[3] = h;
-//        BOOST_AUTO(tmp1,coll.chain_convert(ar));
-//        BOOST_AUTO(tmp2,coll.chain_convert(coll1));
-//        check_iterator(tmp1,a,b,c,d,e,f,g,h);
-//        check_iterator(tmp2,a,b,c,d,e,f,g,h);
-//        check_copy_iterator(tmp1,a,b,c,d,e,f,g,h);
+        BOOST_AUTO(tmp1,chain_convert_l(coll)(ar));
+        BOOST_AUTO(tmp2,chain_convert_r(coll)(coll1));
+        check_iterator(tmp1,a,b,c,d,e,f,g,h);
+        check_iterator(tmp2,a,b,c,d,e,f,g,h);
+        check_copy_iterator(tmp1,a,b,c,d,e,f,g,h);
     }
 
 }// auto_size

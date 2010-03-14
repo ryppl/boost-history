@@ -36,24 +36,28 @@ void example_chain(std::ostream& os)
 
 
     boost::copy(
-        chain_convert(tmp2)(ar4),
+        chain_convert_r(tmp2)(ar4),
         std::ostream_iterator<val_>(os," ")
     ); os << " --- becomes ---> ";
 
     boost::copy(
-        chain_convert(tmp1)(ar2),
-        boost::begin(chain_convert(tmp2)(ar4))
+        chain_convert_r(tmp1)(ar2),
+        boost::begin(chain_convert_l(tmp2)(ar4))
     ); 
 
     boost::copy(
-        chain_convert(tmp2)(ar4),
+        chain_convert_r(tmp2)(ar4),
         std::ostream_iterator<val_>(os," ")
     ); os << " --- that should equal ---> ";
 
     boost::copy(
-        chain_convert(ref_list_of(a)(b)(c)(d))(ar2),
+        chain_convert_r(ref_list_of(a)(b)(c)(d))(ar2),
         std::ostream_iterator<val_>(os," ")
-    );
+    ); os << " ---, half segments interverted ---> ";
+    boost::copy(
+        chain_convert_r(ref_list_of(a)(b)(c)(d))(ar2),
+        std::ostream_iterator<val_>(os," ")
+    ); // this is a case where without _r, there would be compile error
 
 
    // Why chain_convert is required :

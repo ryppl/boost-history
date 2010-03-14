@@ -52,7 +52,7 @@ namespace auto_size{
     	array_interface<T,N,R,D>,
         typename array_interface_traits<T,N,R>::const_iterator
     >
-    ,public detail::chain_as_member<array_interface<T,N,R,D> >
+    //,public detail::chain_as_member<array_interface<T,N,R,D> >
     {
         typedef array_interface_traits<T,N,R> traits;
         typedef typename traits::ref_ ref_;
