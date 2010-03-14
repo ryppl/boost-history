@@ -19,7 +19,9 @@
 
 using namespace std;
 //using namespace boost::stm;
-namespace boost { namespace stm {
+namespace boost { 
+boost::mutex log_mutex;
+namespace stm {
 namespace non_tx {
     std::map<void*, base_transaction_object*> detail::cache_map::map_;
 #ifndef BOOST_STM_USE_BOOST_MUTEX
@@ -34,7 +36,7 @@ synchro::implicit_thread_specific_ptr<transaction::transaction_tss_storage> tran
 ///////////////////////////////////////////////////////////////////////////////
 // Static initialization
 ///////////////////////////////////////////////////////////////////////////////
-transaction::InflightTxes transaction::transactionsInFlight_;
+transaction::in_flight_trans_cont transaction::transactionsInFlight_;
 //latm::mutex_set transaction::latmLockedLocks_;
 //latm::mutex_thread_id_set_map transaction::latmLockedLocksAndThreadIdsMap_;
 //latm::mutex_thread_id_map transaction::latmLockedLocksOfThreadMap_;
@@ -483,7 +485,7 @@ void transaction::terminate_thread()
 #ifndef MAP_THREAD_MUTEX_CONTAINER
    {
    // realign all in-flight transactions so they are accessing the correct mutex
-   for (InflightTxes::iterator i = transactionsInFlight_.begin();
+   for (in_flight_trans_cont::iterator i = transactionsInFlight_.begin();
       i != transactionsInFlight_.end(); ++i)
    {
       transaction* t = *i;
@@ -526,7 +528,7 @@ void transaction::terminate_thread()
 #ifndef MAP_THREAD_BOOL_CONTAINER
    {
    // realign all in-flight transactions so they are accessing the correct mutex
-   for (InflightTxes::iterator i = transactionsInFlight_.begin();
+   for (in_flight_trans_cont::iterator i = transactionsInFlight_.begin();
       i != transactionsInFlight_.end(); ++i)
    {
       transaction* t = *i;

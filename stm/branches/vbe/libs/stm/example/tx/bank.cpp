@@ -122,10 +122,10 @@ bool volatile Teller::exit=false;
 
 void create_db(tx::pointer<Bank> b, int nr_of_accounts){
     for(int c=0;c<nr_of_accounts;++c) {
-        BOOST_STM_OUTER_TRANSACTION(_) {
-            tx::pointer<BankAccount> acc(BOOST_STM_TX_NEW_PTR(_, BankAccount(c)));
+        BOOST_STM_E_TRANSACTION {
+            tx::pointer<BankAccount> acc(BOOST_STM_E_NEW_PTR(BankAccount(c)));
             b->accounts.push_back(acc);
-        } BOOST_STM_RETRY
+        } BOOST_STM_E_END_TRANSACTION;
     }
 }
 
@@ -138,7 +138,7 @@ void account_withdraw_thr() {
     BOOST_STM_E_TRANSACTION {
         a->Withdraw(10);
     } BOOST_STM_E_END_TRANSACTION;
-    } 
+    }
     CATCH_AND_PRINT_ALL
 }
 void account_withdraw() {
@@ -155,7 +155,7 @@ void account_deposit_thr() {
         a->Deposit(10);
     } BOOST_STM_E_END_TRANSACTION;
     //~ } BOOST_STM_RETRY
-    } 
+    }
     CATCH_AND_PRINT_ALL
 }
 void account_deposit() {
@@ -306,7 +306,7 @@ int main() {
     res+=test_bank_2();
 
     return res;
-    } 
+    }
     CATCH_AND_PRINT_ALL
 
 }

@@ -144,13 +144,10 @@ test::list<int> l;
 test::list_node<int> n;
 
 void create() {
-    BOOST_STM_TRANSACTION(_) {
+    BOOST_STM_E_TRANSACTION {
         cout << __LINE__ << " create" << endl;
         cout << " create size " << l.size() << endl;
-    } BOOST_STM_RETRY
-    catch (...) {
-                std::cout << "*** ERROR: "<< __FILE__ << "["<<__LINE__<<"] catch" << std::endl;
-    }
+    } BOOST_STM_E_END_TRANSACTION;
 }
 bool check_size(std::size_t val) {
     BOOST_STM_E_TRANSACTION {
@@ -179,7 +176,7 @@ void insert1_th() {
         BOOST_STM_E_TRANSACTION {
             l.insert(1);
         }  BOOST_STM_E_END_TRANSACTION;
-    } 
+    }
     CATCH_AND_PRINT_ALL
 }
 void insert2_th() {
@@ -188,7 +185,7 @@ void insert2_th() {
         BOOST_STM_E_TRANSACTION {
             l.insert(2);
         } BOOST_STM_E_END_TRANSACTION;
-    } 
+    }
     CATCH_AND_PRINT_ALL
 }
 
@@ -205,7 +202,7 @@ void insert3_th() {
         BOOST_STM_E_TRANSACTION {
             l.insert(3);
         } BOOST_STM_E_END_TRANSACTION;
-    } 
+    }
     CATCH_AND_PRINT_ALL
 }
 bool n1() {
@@ -250,7 +247,7 @@ int test_all() {
     fails= fails || !n2();
     fails= fails || !n3();
     fails= fails || !check_size(0);
-    //~ //fails= fails || !insert1();
+    //fails= fails || !insert1();
     thread  th1(insert1_th);
     thread  th2(insert2_th);
     thread  th3(insert2_th);
@@ -286,7 +283,7 @@ int main() {
     thread_initializer thi;
 
     return test_all();
-    } 
+    }
     CATCH_AND_PRINT_ALL
 
 }

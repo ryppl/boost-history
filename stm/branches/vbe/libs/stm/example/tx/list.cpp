@@ -100,23 +100,6 @@ public:
     //--------------------------------------------------------------------------
     // find the location to insert the node. if the value already exists, fail
     //--------------------------------------------------------------------------
-    void insert_e(const T& val) {
-        BOOST_STM_TRANSACTION(_) {
-            list_node<T> * prev = head_;
-            list_node<T> * curr = prev->next_;
-            while (curr!=0) {
-                if (curr->value_ == val) BOOST_STM_TX_RETURN_NOTHING(_);
-                //~ if (curr->value_ == val) return;
-                else if (curr->value_ > val) BOOST_STM_BREAK(_);
-                prev = curr;
-                curr = curr->next_;
-            }
-            if (curr==0 || (curr->value_ > val)) {
-                prev->next_=BOOST_STM_TX_NEW_PTR(_,list_node<T>(val, curr));
-                ++size_;
-            }
-        } BOOST_STM_RETRY
-   }
 
     void insert(const T& val) {
         BOOST_STM_E_TRANSACTION {
@@ -190,13 +173,10 @@ test::list<int> l;
 test::list_node<int> n;
 
 void create() {
-    BOOST_STM_OUTER_TRANSACTION(_) {
+    BOOST_STM_E_TRANSACTION {
         cerr << __LINE__ << " create" << endl;
         cerr << " create size " << l.size() << endl;
-    } BOOST_STM_RETRY
-    catch (...) {
-                std::cout << "*** ERROR: "<< __FILE__ << "["<<__LINE__<<"] catch" << std::endl;
-    }
+    } BOOST_STM_E_END_TRANSACTION;
 }
 bool check_size(std::size_t val) {
     BOOST_STM_E_TRANSACTION {
@@ -214,9 +194,9 @@ bool check_lookup(int val) {
 
 bool insert(int val) {
     //thread_initializer thi;
-    BOOST_STM_TRANSACTION(_) {
+    BOOST_STM_E_TRANSACTION {
         l.insert(val);
-    }  BOOST_STM_RETRY
+    }  BOOST_STM_E_END_TRANSACTION;
     return check_size(1);
 }
 void insert1_th() {
@@ -229,7 +209,7 @@ void insert1_th() {
 
             l.insert(1);
         }  BOOST_STM_E_END_TRANSACTION;
-    } 
+    }
     CATCH_AND_PRINT_ALL
 }
 void insert2_th() {
@@ -243,7 +223,7 @@ void insert2_th() {
             l.insert(2);
         } BOOST_STM_E_END_TRANSACTION;
     //~ } BOOST_STM_RETRY
-    } 
+    }
     CATCH_AND_PRINT_ALL
 }
 void insert3_th() {
@@ -257,7 +237,7 @@ void insert3_th() {
         l.insert(3);
     } BOOST_STM_E_END_TRANSACTION;
     //~ } BOOST_STM_RETRY
-    } 
+    }
     CATCH_AND_PRINT_ALL
 }
 
@@ -363,7 +343,7 @@ int main() {
 
 
     return test_all();
-    } 
+    }
     CATCH_AND_PRINT_ALL
 
 }
