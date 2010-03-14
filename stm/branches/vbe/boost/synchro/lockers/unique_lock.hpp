@@ -21,6 +21,8 @@
 #include <boost/synchro/exceptions.hpp>
 #include <boost/synchro/lockable.hpp>
 //-----------------------------------------------------------------------------
+#include <boost/synchro/call_context.hpp>
+
 
 namespace boost {
 namespace synchro {
@@ -31,48 +33,59 @@ namespace synchro {
     private:
         Mutex* m;
         bool is_locked;
+        BOOST_STM_CALL_CONTEXT_2_DCL();
+    
         unique_lock(unique_lock&);
         unique_lock& operator=(unique_lock&);
     public:
-        unique_lock():
+        unique_lock( BOOST_STM_CALL_CONTEXT_2_PARAMS1() ):
             m(0),is_locked(false)
+            BOOST_STM_CALL_CONTEXT_2_INIT()
         {}
 
-        explicit unique_lock(Mutex& m_):
+        explicit unique_lock(Mutex& m_ BOOST_STM_CALL_CONTEXT_2_PARAMS()):
             m(&m_),is_locked(false)
+            BOOST_STM_CALL_CONTEXT_2_INIT()
         {
             lock();
         }
 
-        unique_lock(Mutex& m_,bool b):
+        unique_lock(Mutex& m_,bool b  BOOST_STM_CALL_CONTEXT_2_PARAMS()):
             m(&m_),is_locked(false)
+            BOOST_STM_CALL_CONTEXT_2_INIT()
         {
             if (b) lock();
         }
-        unique_lock(Mutex& m_,force_lock_t):
+        unique_lock(Mutex& m_,force_lock_t  BOOST_STM_CALL_CONTEXT_2_PARAMS()):
             m(&m_),is_locked(false)
+            BOOST_STM_CALL_CONTEXT_2_INIT()
         {
             lock();
         }
-        unique_lock(Mutex& m_,adopt_lock_t):
+        unique_lock(Mutex& m_,adopt_lock_t  BOOST_STM_CALL_CONTEXT_2_PARAMS()):
             m(&m_),is_locked(true)
+            BOOST_STM_CALL_CONTEXT_2_INIT()
         {}
-        unique_lock(Mutex& m_,defer_lock_t):
+        unique_lock(Mutex& m_,defer_lock_t  BOOST_STM_CALL_CONTEXT_2_PARAMS()):
             m(&m_),is_locked(false)
+            BOOST_STM_CALL_CONTEXT_2_INIT()
         {}
-        unique_lock(Mutex& m_,try_to_lock_t):
+        unique_lock(Mutex& m_,try_to_lock_t  BOOST_STM_CALL_CONTEXT_2_PARAMS()):
             m(&m_),is_locked(false)
+            BOOST_STM_CALL_CONTEXT_2_INIT()            
         {
             try_lock();
         }
         template<typename TimeDuration>
-        unique_lock(Mutex& m_,TimeDuration const& target_time):
+        unique_lock(Mutex& m_,TimeDuration const& target_time  BOOST_STM_CALL_CONTEXT_2_PARAMS()):
             m(&m_),is_locked(false)
+            BOOST_STM_CALL_CONTEXT_2_INIT()
         {
             lock_for(target_time);
         }
-        unique_lock(Mutex& m_,system_time const& target_time):
+        unique_lock(Mutex& m_,system_time const& target_time  BOOST_STM_CALL_CONTEXT_2_PARAMS()):
             m(&m_),is_locked(false)
+            BOOST_STM_CALL_CONTEXT_2_INIT()
         {
             lock_until(target_time);
         }
@@ -137,6 +150,10 @@ namespace synchro {
         {
             std::swap(m,other.m);
             std::swap(is_locked,other.is_locked);
+#ifdef BOOST_STM_USES_CALL_CONTEXT
+            std::swap(cctx_,other.cctx_);
+            std::swap(name_,other.name_);
+#endif            
         }
 
 #endif
@@ -153,7 +170,7 @@ namespace synchro {
             {
                 throw lock_error();
             }
-            synchro::lock(*m);
+            synchro::lock(*m  BOOST_STM_CALL_CONTEXT_2_ACT_CTX());
             is_locked=true;
         }
         bool try_lock()
@@ -162,19 +179,19 @@ namespace synchro {
             {
                 throw lock_error();
             }
-            is_locked=synchro::try_lock(*m);
+            is_locked=synchro::try_lock(*m  BOOST_STM_CALL_CONTEXT_2_ACT_CTX());
             return is_locked;
         }
         template<typename TimeDuration>
         bool lock_for(TimeDuration const& relative_time)
         {
-            is_locked=synchro::lock_for(*m, relative_time);
+            is_locked=synchro::lock_for(*m, relative_time  BOOST_STM_CALL_CONTEXT_2_ACT_CTX());
             return is_locked;
         }
 
         bool lock_until(system_time const& absolute_time)
         {
-            is_locked=synchro::lock_until(*m, absolute_time);
+            is_locked=synchro::lock_until(*m, absolute_time  BOOST_STM_CALL_CONTEXT_2_ACT_CTX());
             return is_locked;
         }
         void unlock()
@@ -183,7 +200,7 @@ namespace synchro {
             {
                 throw lock_error();
             }
-            synchro::unlock(*m);
+            synchro::unlock(*m  BOOST_STM_CALL_CONTEXT_2_ACT_CTX());
             is_locked=false;
         }
 

@@ -20,6 +20,7 @@
 #include <boost/synchro/lockable/lock.hpp>
 #include <boost/synchro/lockable/unlock.hpp>
 //-----------------------------------------------------------------------------
+#include <boost/synchro/call_context.hpp>
 
 namespace boost {
 namespace synchro {
@@ -31,7 +32,7 @@ namespace synchro {
         explicit static_lock_guard(static_lock_guard&);
         static_lock_guard& operator=(static_lock_guard&);
     public:
-        static_lock_guard()
+        static_lock_guard() 
         {
             lock(m);
         }
@@ -46,20 +47,23 @@ namespace synchro {
     class lock_guard {
     private:
         Mutex& m;
+        BOOST_STM_CALL_CONTEXT_2_DCL();
 
         explicit lock_guard(lock_guard&);
         lock_guard& operator=(lock_guard&);
     public:
-        explicit lock_guard(Mutex& m_)
+        explicit lock_guard(Mutex& m_ BOOST_STM_CALL_CONTEXT_2_PARAMS())
             : m(m_)
+            BOOST_STM_CALL_CONTEXT_2_INIT()
         {
-            lock(m);
+            lock(m BOOST_STM_CALL_CONTEXT_2_ACT_CTX());
         }
-        lock_guard(Mutex& m_, bool cnd, adopt_lock_t)
+        lock_guard(Mutex& m_, bool cnd, adopt_lock_t BOOST_STM_CALL_CONTEXT_2_PARAMS())
             : m(m_)
+            BOOST_STM_CALL_CONTEXT_2_INIT()
         {}
         ~lock_guard() {
-            unlock(m);
+            unlock(m BOOST_STM_CALL_CONTEXT_2_ACT_CTX());
         }
     };
 
@@ -89,22 +93,25 @@ namespace synchro {
     private:
         Mutex& m;
         bool cnd_;
+        BOOST_STM_CALL_CONTEXT_2_DCL();
 
         explicit lock_guard_if(lock_guard_if&);
         lock_guard_if& operator=(lock_guard_if&);
     public:
-        lock_guard_if(Mutex& m_, bool cnd)
+        lock_guard_if(Mutex& m_, bool cnd  BOOST_STM_CALL_CONTEXT_2_PARAMS())
             : m(m_)
             , cnd_(cnd)
+            BOOST_STM_CALL_CONTEXT_2_INIT()
         {
-            if (cnd_) lock(m);
+            if (cnd_) lock(m  BOOST_STM_CALL_CONTEXT_2_ACT_CTX());
         }
-        lock_guard_if(Mutex& m_, bool cnd, adopt_lock_t)
+        lock_guard_if(Mutex& m_, bool cnd, adopt_lock_t  BOOST_STM_CALL_CONTEXT_2_PARAMS())
             : m(m_)
             , cnd_(cnd)
+            BOOST_STM_CALL_CONTEXT_2_INIT()
         {}
         ~lock_guard_if() {
-            if (cnd_) unlock(m);
+            if (cnd_) unlock(m  BOOST_STM_CALL_CONTEXT_2_ACT_CTX());
         }
     };
 

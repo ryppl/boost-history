@@ -21,7 +21,7 @@
 namespace boost { namespace synchro {
 
     template< typename Lockable>
-    inline bool lock_until(Lockable& lockable, system_time const& target_time) {
+    inline bool lock_until(Lockable& lockable, system_time const& target_time BOOST_STM_CALL_CONTEXT_2_PARAMS()) {
         return lockable.lock_until(target_time);
     }
 

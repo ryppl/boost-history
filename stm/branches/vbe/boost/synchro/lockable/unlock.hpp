@@ -15,6 +15,7 @@
 #define BOOST_SYNCHO_LOCKABLE_UNLOCK_HPP
 
 #include <assert.h>
+#include <boost/synchro/call_context.hpp>
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -22,7 +23,7 @@
 namespace boost { namespace synchro {
 
     template< typename Lockable >
-    inline void unlock(Lockable& lockable) {
+    inline void unlock(Lockable& lockable BOOST_STM_CALL_CONTEXT_2_PARAMS()) {
         try {
         lockable.unlock();
         } catch (...) {

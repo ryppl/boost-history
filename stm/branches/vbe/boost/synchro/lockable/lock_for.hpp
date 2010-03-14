@@ -22,8 +22,8 @@
 namespace boost { namespace synchro {
 
     template <typename Lockable, typename TimeDuration >
-    bool lock_for(Lockable& lockable, const TimeDuration& rel_time) {
-        return lock_until(&lockable, get_system_time()+rel_time);
+    bool lock_for(Lockable& lockable, const TimeDuration& rel_time BOOST_STM_CALL_CONTEXT_2_PARAMS()) {
+        return lock_until(&lockable, get_system_time()+rel_time BOOST_STM_CALL_CONTEXT_2_ACT_PARAMS());
     }
 
 }}
