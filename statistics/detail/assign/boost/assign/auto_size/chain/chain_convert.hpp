@@ -73,7 +73,7 @@ class chain_converter
     operator()(R2 & r2)const
     {
         typedef typename result_impl<R2,false>::type result_;
-        this->copy = (*this); // guarantees synchronized
+        this->copy = (*this); // is it legit ?
         return result_(chain_convert_impl<Conv>(this->copy,r2));
     }
 
@@ -82,7 +82,7 @@ class chain_converter
     operator()(const R2 & r2)const
     {
         typedef typename result_impl<R2,true>::type result_;
-        this->copy = (*this); // guarantees synchronized
+        this->copy = (*this); // is it legit?
         return result_(chain_convert_impl<Conv>(this->copy,r2));
     }
     
