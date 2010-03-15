@@ -1148,10 +1148,8 @@ The maximum number of arguments to a csv function is <code>BOOST_ASSIGN_CSV_SIZE
 
   <h3>Function <code>chain_convert_l()</code> and <code>chain_convert_r() <a name="ref-chain_convert"> </h3>
   
-  <p> These function joins collection together into one whose dereferenced type is one that is convertible
-  to from those of the two input ranges. In particular, either range may contain reference wrappers 
-  if they meet certain traits requirement. This function serves as a sustitute for <a href="#ref-repeat"><code>range()</code></a>
-  within the <a href="#auto_size">auto-size</a> framework. 
+  <p> This function serves as a sustitute for <a href="#ref-repeat"><code>range()</code></a>
+  within the <a href="#auto_size">auto-size</a> framework.
   
   <p> <b>Template parameters</b> </p>
 
@@ -1710,8 +1708,10 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
 
   <h3><a name="ref-adaptor_chain_convert">Proxy objects <code>adaptor_chain_convert_l&lt;&gt;</code> and <code>adaptor_chain_convert_r&lt;&gt;</code> </a> </h3>
    
-  To be defined.
-
+  Successive calls to this proxy object joins together collections into one whose dereferenced type is one that is convertible
+  to from those of the two input ranges. In particular, either range may contain reference wrappers if they meet certain traits requirement.
+  
+  
   <h3><a name="ref-lazy_array">Proxy object <code>lazy_array&lt;&gt;</code></a></h3> 
   <b>Header</b> <code>&lt;boost/assign/auto_size/array/lazy.hpp></code>
 
