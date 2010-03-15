@@ -75,7 +75,7 @@
         <li> Proxy object <a href="#ref-list_inserter"><code>list_inserter&lt;&gt;</code></a></li>
         <li> Proxy object <a href="#ref-static_generic_list"><code>static_generic_list&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-array_interface"><code>array_interface&lt;&gt;</code></a> </li>
-        <li> Proxy object <a href="#ref-adaptor_chain_convert"><code>adaptor::chain_convert&lt;&gt;</code></a> </li>
+        <li> Proxy object <a href="#ref-adaptor::chain_convert"><code>adaptor::chain_convert&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-expr"><code>expr&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-lazy_array"><code>lazy_array&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-static_array"><code>static_array&lt;&gt;</code></a> </li>
@@ -1170,8 +1170,8 @@ The maximum number of arguments to a csv function is <code>BOOST_ASSIGN_CSV_SIZE
   <blockquote>
   	<table cellpadding=5 border=1>
   	<tr><th class="head">Expression</th> <th class="head">Result</th>
-  	<tr><td><tt>chain_convert_l(r)</tt></td><td> <a href="#ref-adaptor_chain_convert"><code>adaptor_chain_convert_l&lt;R&gt;</code></a>  </td></tr>
-  	<tr><td><tt>chain_convert_r(r)</tt></td><td> <a href="#ref-adaptor_chain_convert"><code>adaptor_chain_convert_r&lt;R&gt;</code></a>  </td></tr>
+  	<tr><td><tt>chain_convert_l(r)</tt></td><td> <a href="#ref-adaptor::chain_convert"><code>adaptor::chain_convert_l&lt;R&gt;</code></a>  </td></tr>
+  	<tr><td><tt>chain_convert_r(r)</tt></td><td> <a href="#ref-adaptor::chain_convert"><code>adaptor::chain_convert_r&lt;R&gt;</code></a>  </td></tr>
   	</table>
   </blockquote>
 
@@ -1189,7 +1189,7 @@ The maximum number of arguments to a csv function is <code>BOOST_ASSIGN_CSV_SIZE
         <li> Proxy object <a href="#ref-expr"><code>expr&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-lazy_array"><code>lazy_array&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-static_array"><code>static_array&lt;&gt;</code></a> </li>
-        <li> Proxy objects <a href="#ref-adaptor_chain_convert"><code>adaptor::chain_convert_l&lt;&gt;</code></a> and <a href="#ref-adaptor_chain_convert"><code>adaptor::chain_convert_r&lt;&gt;</code></a></li>
+        <li> Proxy objects <a href="#ref-adaptor::chain_convert"><code>adaptor::chain_convert_l&lt;&gt;</code></a> and <a href="#ref-adaptor::chain_convert"><code>adaptor::chain_convert_r&lt;&gt;</code></a></li>
      </ul>
 
   <h3>Proxy object <code>converter<></code><a name=ref-converter> </h3>
@@ -1759,7 +1759,7 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
   	</table>
   </blockquote>
 
-  <h3><a name="ref-adaptor_chain_convert">Proxy objects <code>adaptor_chain_convert_l&lt;&gt;</code> and <code>adaptor_chain_convert_r&lt;&gt;</code> </a> </h3>
+  <h3><a name="ref-adaptor::chain_convert">Proxy objects <code>adaptor::chain_convert_l&lt;&gt;</code> and <code>adaptor::chain_convert_r&lt;&gt;</code> </a> </h3>
    
   Successive calls to this proxy object joins together collections into one whose dereferenced type is one that is convertible
   to from those of the input ranges. In particular, either range may contain reference wrappers if they meet certain traits requirement.
