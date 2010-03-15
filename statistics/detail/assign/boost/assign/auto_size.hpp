@@ -9,7 +9,6 @@
 #ifndef BOOST_ASSIGN_AUTO_SIZE_ER_2010_HPP
 #define BOOST_ASSIGN_AUTO_SIZE_ER_2010_HPP
 
-#include <boost/assign/auto_size/chain_convert.hpp> 
 #include <boost/assign/auto_size/ref_list_of.hpp> 
 #include <boost/assign/auto_size/ref_rebind_list_of.hpp> 
 #include <boost/assign/auto_size/ref_csv.hpp> 

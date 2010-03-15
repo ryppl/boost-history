@@ -1,5 +1,6 @@
 Add -R /boost/assign/auto_size
 Add /boost/auto_size.hpp
+Add /boost/chain_convert.hpp
 Add /libs/assign/test/ref_list_of.cpp
 Add /libs/assign/test/ref_csv.cpp
 Replace /libs/assign/test/Jamfile.v2
