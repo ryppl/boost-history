@@ -12,7 +12,7 @@
 #include <boost/ref.hpp>
 #include <boost/assign/auto_size/ref_list_of.hpp>
 #include <boost/assign/auto_size/reference_wrapper/conversion_traits.hpp>
-#include <boost/assign/auto_size/chain/converter.hpp>
+#include <boost/assign/auto_size/chain/convert_range.hpp>
 #include <boost/assign/auto_size/chain/chain_convert.hpp>
 #include <libs/assign/example/chain.h>
 

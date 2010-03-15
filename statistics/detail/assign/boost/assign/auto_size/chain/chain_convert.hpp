@@ -73,8 +73,9 @@ class chain_converter
     operator()(R2 & r2)const
     {
         typedef typename result_impl<R2,false>::type result_;
-        this->copy = (*this); // is it legit ?
+        this->copy = (*this); 
         return result_(chain_convert_impl<Conv>(this->copy,r2));
+        // is it legit ?
     }
 
     template<typename R2>
@@ -82,8 +83,9 @@ class chain_converter
     operator()(const R2 & r2)const
     {
         typedef typename result_impl<R2,true>::type result_;
-        this->copy = (*this); // is it legit?
+        this->copy = (*this); 
         return result_(chain_convert_impl<Conv>(this->copy,r2));
+        // is it legit ?
     }
     
     private:

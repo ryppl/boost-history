@@ -10,7 +10,7 @@
 #define BOOST_ASSIGN_DETAIL_PAIR_RANGE_TRAITS_ER_2010_HPP
 #include <boost/range.hpp>
 #include <boost/assign/auto_size/chain/pair_traits.hpp>
-#include <boost/assign/auto_size/chain/converter.hpp>
+#include <boost/assign/auto_size/chain/convert_range.hpp>
 
 // Maps (R1,R2) to a type convertible to by either of the dereference type of
 // either of the input ranges. 
