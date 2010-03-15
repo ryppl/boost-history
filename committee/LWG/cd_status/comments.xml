@@ -6772,7 +6772,7 @@ in question as needing more work. </notes>
 </rationale>
 </comment>
 
-<comment nb="DE" num="2" uknum="" type="te" owner="LWG" issue="1153" disp="" date="" extdoc="">
+<comment nb="DE" num="2" uknum="" type="te" owner="LWG" issue="1153" disp="rejected" date="" extdoc="">
 <section>
 17 through 30
 </section>
@@ -6793,7 +6793,7 @@ in question as needing more work. </notes>
         initializer-list constructor.
 </suggestion>
 <notes>Robert Klarer to address this one</notes>
-<rationale>
+<rationale>We don't see a specific problem right now. Will reopen this issue of examples of breakage are pointed out to us.
 </rationale>
 </comment>
 
@@ -7513,7 +7513,7 @@ culprits.
 </rationale>
 </comment>
 
-<comment nb="UK" num="150" uknum="199" type="Ed" owner="LWG" issue="" disp="rejected" date="" extdoc="">
+<comment nb="UK" num="150" uknum="199" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 17.3
 </section>
