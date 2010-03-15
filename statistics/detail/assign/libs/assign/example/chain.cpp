@@ -31,31 +31,32 @@ void example_chain(std::ostream& os)
     ar_ ar2; ar2.assign( 0 );
     ar_ ar3; ar3.assign( 1 );
     ar_ ar4; ar4.assign( 2 );
+    ar_ ar5; ar5.assign( 3 );
 	BOOST_AUTO(tmp1,ref_list_of(a)(b)(c)(d)); 
 	BOOST_AUTO(tmp2,ref_list_of(e)(f)(g)(h)); 
 
-
     boost::copy(
-        chain_convert_r(tmp2)(ar4),
+        chain_convert_r(tmp2)(ar4)(ar5),
         std::ostream_iterator<val_>(os," ")
-    ); os << " --- becomes ---> ";
+    ); os << " --- becomes ---> " << std::endl;
 
     boost::copy(
-        chain_convert_r(tmp1)(ar2),
-        boost::begin(chain_convert_l(tmp2)(ar4))
+        chain_convert_r(tmp1)(ar2)(ar3),
+        boost::begin(chain_convert_l(tmp2)(ar4)(ar5))
     ); 
 
     boost::copy(
-        chain_convert_r(tmp2)(ar4),
+        chain_convert_r(tmp2)(ar4)(ar5),
         std::ostream_iterator<val_>(os," ")
-    ); os << " --- that should equal ---> ";
+    ); os << " --- that should equal ---> "<< std::endl;
 
     boost::copy(
-        chain_convert_r(ref_list_of(a)(b)(c)(d))(ar2),
+        chain_convert_r(ref_list_of(a)(b)(c)(d))(ar2)(ar3),
         std::ostream_iterator<val_>(os," ")
-    ); os << " ---, half segments interverted ---> ";
+    ); os << " ---, tier segments in reverse order ---> " << std::endl;
+
     boost::copy(
-        chain_convert_r(ref_list_of(a)(b)(c)(d))(ar2),
+        chain_convert_r(ar3)(ar2)(ref_list_of(a)(b)(c)(d)),
         std::ostream_iterator<val_>(os," ")
     ); // this is a case where without _r, there would be compile error
 

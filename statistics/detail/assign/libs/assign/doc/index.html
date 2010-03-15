@@ -38,7 +38,7 @@
             <li>Function <a href="#map_list_of"><code>map_list_of()</code></a> 
             <li>Function <a href="#tuple_list_of"><code>tuple_list_of()</code></a>
             <li>Functions <a href="#repeat"><code>repeat()</code></a>, <a href="#repeat"><code>repeat_fun()</code></a> and <a href="#repeat"><code>range()</code> </a>
-            <li>Function <a href="#chain_auto_convert"><code>chain_auto_convert()</code> </a>
+            <li>Function <a href="#chain_convert"><code>chain_convert()</code> </a>
             <li>Functions <a href="#ref_list_of"><code>ref_list_of()</code></a>, <a href="#ref_list_of"><code>cref_list_of()</code></a> and variants   
             <li>Functions <a href="#ref_csv"><code>ref_csv()</code></a>, <a href="#ref_csv"><code>cref_csv()</code></a> and variants   
             <li>A <a href="#complicated">"complicated"</a> example    
@@ -64,7 +64,7 @@
         <li>Functions <a href="#ref-repeat"><code>repeat()</code></a>, <a href="#ref-repeat"><code>repeat_fun()</code></a> and 
                                                                       <a href="#ref-repeat"><code>range()</code>
                                                                       </a></li>
-         <li>Function <a href="#ref-chain_auto_convert"><code>chain_auto_convert()</code></a></li>
+         <li>Function <a href="#ref-chain_convert"><code>chain_convert()</code></a></li>
        <li><a href="#ref-limit">Customizing</a> argument list sizes </li>
      </ul>
     <li>          
@@ -475,25 +475,25 @@ The last example also introduces list of references. More about that below.
 
 </p>
 
-<h3>Function <code>chain_auto_convert()</code> <a name="chain_auto_convert"></h3>
+<h3>Function <code>chain_convert()</code> <a name="chain_convert"></h3>
 
 While the function <a href="#repeat"><code>range()</code></a> works in combination with functions
 such as <a href="#list_of"><code>list_of()</code></a>, it is not compatible with  
 <a href="#ref_csv"><code>ref_csv()</code></a>, <a href="#ref_list"><code>ref_list_of()</code></a> and their variants, 
-which are part of a different <a href="#auto_size">framework</a>. The function <code>chain_auto_convert()</code>, 
+which are part of a different <a href="#auto_size">framework</a>. The function <code>chain_convert()</code>, 
 however, achieves a similar goal. Continuing the <a href="#repeat">example</code></a> above,
 
 
-<blockquote><pre><span class=preprocessor>#include</span> <span class=special>&lt;</span><span class=identifier>boost</span><span class=special>/</span><span class=identifier>assign</span><span class=special>/</span><span class=identifier>auto_size</span><span class=special>/</span><span class=identifier>chain_auto_convert</span><span class=special>.</span><span class=identifier>hpp</span><span class=special>&gt;</span> 
+<blockquote><pre><span class=preprocessor>#include</span> <span class=special>&lt;</span><span class=identifier>boost</span><span class=special>/</span><span class=identifier>assign</span><span class=special>/</span><span class=identifier>auto_size</span><span class=special>/</span><span class=identifier>chain_convert</span><span class=special>.</span><span class=identifier>hpp</span><span class=special>&gt;</span> 
 <span class=preprocessor>#include</span> <span class=special>&lt;</span><span class=identifier>boost</span><span class=special>/</span><span class=identifier>assign</span><span class=special>/</span><span class=identifier>auto_size</span><span class=special>/</span><span class=identifier>ref_list_of</span><span class=special>.</span><span class=identifier>hpp</span><span class=special>&gt;</span>
  
 <span class=special>{</span>
-    <span class=identifier>BOOST_ASSERT</span><span class=special>( </span><span class=identifier>chain_auto_convert</span><span class=special>(</span> 
-      </span><span class=identifier>ref_list_of</span>(</span><span class=identifier>x</span><span class=special>).</span><span class=identifier>chain_auto_convert</span><span class=special>(</span><span class=identifier>v2</span><span class=special>)</span><span class=special> , </span><span class=identifier>ref_list_of</span>(</span><span class=identifier>y</span><span class=special>)</span> <span class=special>)</span><span class=special>.</span><span class=identifier>size</span><span class=special>(</span><span class=special>)</span><span class=special> == </span><span class=number>10u</span><span class=special> )</span><span class=special>;</span>
+    <span class=identifier>BOOST_ASSERT</span><span class=special>( 
+       </span><span class=identifier>chain_convert_r</span><span class=special>( </span></span><span class=identifier>ref_list_of</span>( </span><span class=identifier>x</span><span class=special> )</span><span class=special> )</span><span class=special>( </span><span class=identifier>v2</span><span class=special> )( </span><span class=identifier>ref_list_of</span>(</span><span class=identifier>y</span><span class=special>)</span> <span class=special>)</span><span class=special>.</span><span class=identifier>size</span><span class=special>(</span><span class=special>)</span><span class=special> == </span><span class=number>10u</span><span class=special> )</span><span class=special>;</span>
 <span class=special>}</span></pre>
 </blockquote>
 
-The reference is <a href="#ref-chain_auto_convert">here</a>.
+Notice the suffix 'r' which tells the functions that the arguments should be treated as rvalues. The reference is <a href="#ref-chain_convert">here</a>.
 
 <h3>Functions <code>ref_list_of()</code>, <code>cref_list_of()</code> <a name="ref_list_of"> and variants</h3>
 
@@ -832,7 +832,7 @@ Originally arguments were passed by value (and still is in
         <li>Functions <a href="#ref-repeat"><code>repeat()</code></a>, <a href="#ref-repeat"><code>repeat_fun()</code></a> and 
                                                                       <a href="#ref-repeat"><code>range()</code>
                                                                       </a></li>
-        <li>Function <a href="#ref-chain_auto_convert"><code>chain_auto_convert()</code></a></li>
+        <li>Function <a href="#ref-chain_convert"><code>chain_convert()</code></a></li>
         <li><a href="#ref-limit">Customizing</a> argument list sizes </li>
      </ul>
 
@@ -850,7 +850,7 @@ Originally arguments were passed by value (and still is in
 
      <tr>
          <td> &lt;boost/assign/auto_size/chain/auto_convert.hpp>               </td>
-         <td>     <a href="#chain_auto_convert"><code>chain_auto_convert()</code> </a> 
+         <td>     <a href="#chain_convert"><code>chain_convert()</code> </a> 
 
      <tr>
          <td> &lt;boost/assign/auto_size/ref_csv.hpp>               </td>
@@ -1146,7 +1146,7 @@ The maximum number of arguments to a csv function is <code>BOOST_ASSIGN_CSV_SIZE
   </p>
 
 
-  <h3>Function <code>chain_auto_convert()</code> <a name="ref-chain_auto_convert"> </h3>
+  <h3>Function <code>chain_convert_l()</code> and <code>chain_convert_r() <a name="ref-chain_convert"> </h3>
   
   <p> This function joins two ranges into one whose dereferenced type is one that is convertible
   to from those of the two input ranges. In particular, either range may contain reference wrappers 
@@ -1158,8 +1158,7 @@ The maximum number of arguments to a csv function is <code>BOOST_ASSIGN_CSV_SIZE
   <blockquote>
   	<table cellpadding=5 border=1>
   	<tr><th class="head">Parameter</th> <th class="head">Description</th>
-  	<tr><td><tt>R1</tt></td><td>First argument</td></tr>
-  	<tr><td><tt>R2</tt></td><td>Second argument</td></tr>
+  	<tr><td><tt>R</tt></td><td>Range</td></tr>
   	</table>
   </blockquote>
 
@@ -1168,12 +1167,13 @@ The maximum number of arguments to a csv function is <code>BOOST_ASSIGN_CSV_SIZE
   <p>To be defined </p>
 
   <b>Usage</b>
-  <p>Let <code>r1</code> and <code>r2</code> be instances of <code>R1</code> and <code>R2</code> </p>
+  <p>Let <code>r</code> instance of <code>R</code>
 
   <blockquote>
   	<table cellpadding=5 border=1>
   	<tr><th class="head">Expression</th> <th class="head">Result</th>
-  	<tr><td><tt>chain_auto_convert(r1,r2)</tt></td><td>A range joining <code>r1</code> and <code>r2</code> </td></tr>
+  	<tr><td><tt>chain_convert_l(r)</tt></td><td> <a href="#ref-adaptor_chain_convert"><code>adaptor_chain_convert_l&lt;R&gt;</code></a>  </td></tr>
+  	<tr><td><tt>chain_convert_r(r)</tt></td><td> <a href="#ref-adaptor_chain_convert"><code>adaptor_chain_convert_r&lt;R&gt;</code></a>  </td></tr>
   	</table>
   </blockquote>
 
@@ -1549,7 +1549,6 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
   	<table cellpadding=5 border=1>
   	<tr><th class="head">Expression</th> <th class="head">Description</th>
   	<tr><td><tt>R&lt;T&gt;</tt></td><td> Reference wrapper </td> </tr>
-  	<tr><td><a href="#ref-chain_as_member"><tt>chain_as_member&lt&gt</tt></a></td><td> Public base class of <a href="#ref-array_interface"><tt>array_interface&lt&gt</tt></a></td> </tr>
   	<tr><td><a href="#ref-converter"><tt>converter&lt&gt</tt></a></td><td> Public base class of <a href="#ref-array_interface"><tt>array_interface&lt&gt</tt></a></td> </tr>
   	</table>
   </blockquote>
@@ -1705,9 +1704,14 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
    The successive arguments that are passed to the unary operator must be allocated on the stack. 
    Consequently, this set up is ill-suited for the method <a href="#ref-repeat"><code>range()</code></a> whose argument size must 
    be specified explicitly, unlike the remainder of this library. As long as the policy
-   exposes iterators, however, it is interoperable with the function <a href="#ref-chain_auto_convert"><code>chain_auto_convert()</code></a> which 
-   serves a similar purpose.
+   exposes iterators, however, it is interoperable with the function <a href="#ref-chain_convert"><code>chain_convert_l()</code></a> 
+   and <a href="#ref-chain_convert"><code>chain_convert_r()</code></a>, which serve a similar purpose.
 </p>
+
+  <h3><a name="ref-adaptor_chain_convert">Proxy objects <code>adaptor_chain_convert_l&lt;&gt;</code> and <code>adaptor_chain_convert_r&lt;&gt;</code> </a> </h3>
+   
+  To be defined.
+
   <h3><a name="ref-lazy_array">Proxy object <code>lazy_array&lt;&gt;</code></a></h3> 
   <b>Header</b> <code>&lt;boost/assign/auto_size/array/lazy.hpp></code>
 
