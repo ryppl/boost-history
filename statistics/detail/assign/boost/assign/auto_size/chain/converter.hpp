@@ -17,6 +17,9 @@
 // Usage:
 //   convert_range<T>(r)
 
+// There must be a better way to convert than 'transform'. An iterator adaptor
+// that alters the reference type should suffice.
+
 namespace boost{
 namespace assign{
 namespace detail{
@@ -47,7 +50,29 @@ namespace result_of{
     {
         typedef adaptor::convert<T> adaptor_;
         typedef boost::transform_range<adaptor_,Rng> type;
-        
+
+/*
+template<typename I,typename T>
+class iterator_converter : boost::iterator_adaptor<
+    iterator_converter<I,T>, 
+    I, 
+    use_default,
+    typename boost::remove_reference<T>::type, 
+    T, 
+    use_default
+>{
+    typedef boost::iterator_adaptor<
+        iterator_converter<I,T>, 
+        I, 
+        use_default,
+        typename boost::remove_reference<T>::type, 
+       T, 
+       use_default
+    > super_;
+    
+    iterator_converter(const I& base):super_(base){}
+}; 
+*/
         static void internal_check(){
             BOOST_MPL_ASSERT((boost::is_convertible<U,T>));
             typedef typename boost::range_reference<type>::type new_ref_;

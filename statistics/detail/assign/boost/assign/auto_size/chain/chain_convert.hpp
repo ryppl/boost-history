@@ -65,13 +65,14 @@ class chain_convert
     template<typename F,typename R2> 
     struct result<F(const R2&)> : result_impl<R2,true>{};
 
-    chain_convert(const R1 & r) : super_(r),copy(r){ }
+    chain_convert(const R1 & r) : super_(r){}
     
     template<typename R2>
     typename result_impl<R2,false>::type
     operator()(R2 & r2)const
     {
         typedef typename result_impl<R2,false>::type result_;
+        this->copy = (*this); // guarantees synchronized
         return result_(chain_convert_impl<Conv>(this->copy,r2));
     }
 
@@ -80,11 +81,12 @@ class chain_convert
     operator()(const R2 & r2)const
     {
         typedef typename result_impl<R2,true>::type result_;
+        this->copy = (*this); // guarantees synchronized
         return result_(chain_convert_impl<Conv>(this->copy,r2));
     }
     
     private:
-    mutable boost::sub_range<R1> copy;
+    mutable super_ copy;
 };
 
 }// adaptor
