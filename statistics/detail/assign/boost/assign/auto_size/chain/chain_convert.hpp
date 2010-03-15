@@ -32,9 +32,6 @@ class chain_convert
     : public boost::sub_range<R1>
 {
 
-    // typedef typename boost::is_const<R1>::type r1_is_const_;
-    // typedef typename boost::mpl::not_<r1_is_const_>::type allow_lvalue_;
-
     typedef sub_range<R1> super_;
 
     template<typename R,bool add_const>
