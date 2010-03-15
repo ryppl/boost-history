@@ -19,11 +19,11 @@ namespace detail{
 
 template<typename I,typename T>
 struct iterator_converter : boost::iterator_adaptor<
-    detail::iterator_converter<I,T> 		    // Derived
-    ,I                         					// Base
-    ,typename boost::remove_reference<T>::type 	// Value
+    detail::iterator_converter<I,T>             // Derived
+    ,I                                          // Base
+    ,typename boost::remove_reference<T>::type  // Value
     ,use_default                                // CategoryOrTraversal
-    ,T 											// Reference
+    ,T                                          // Reference
     ,use_default                                // Difference
 >{
 
