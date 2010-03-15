@@ -1,7 +1,7 @@
 <?xml  version="1.0"?>
 
-<document date="2010-03-12"
-  rev="5"
+<document date="2010-03-15"
+  rev="6"
   docno="PL22.16/10-xxxx = WG21 Nyyyy"
 >
 
@@ -276,7 +276,7 @@ a quality-of-implementation issue and beyond the scope of the Standard.
 </rationale>
 </comment>
 
-<comment nb="FR" num="5" uknum="" type="te" owner="CWG" issue="690" disp="accepted" date="" extdoc="">
+<comment nb="FR" num="5" uknum="" type="te" owner="CWG" issue="690" disp="accepted" date="2010-03-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3055.pdf">
 <section>
 1.3.4
         [defns.
@@ -293,7 +293,7 @@ a quality-of-implementation issue and beyond the scope of the Standard.
 </rationale>
 </comment>
 
-<comment nb="US" num="5" uknum="" type="te" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="5" uknum="" type="te" owner="editor" issue="" disp="accepted" date="" extdoc="">
 <section>
 1.3.5
 </section>
@@ -731,7 +731,7 @@ location&#8221; given in paragraph 3.
 </rationale>
 </comment>
 
-<comment nb="UK" num="9" uknum="133" type="Te" owner="CWG" issue="787" disp="modified" date="" extdoc="">
+<comment nb="UK" num="9" uknum="133" type="Te" owner="CWG" issue="787" disp="modified" date="2010-03-13" extdoc="">
 <section>
 2.1
 </section>
@@ -789,7 +789,7 @@ been addressed.
 </rationale>
 </comment>
 
-<comment nb="FR" num="10" uknum="" type="te" owner="CWG" issue="788" disp="accepted" date="" extdoc="">
+<comment nb="FR" num="10" uknum="" type="te" owner="CWG" issue="788" disp="accepted" date="2010-03-13" extdoc="">
 <section>
 2.1 [lex.phases]/5
         and
@@ -824,7 +824,7 @@ been addressed.
 </rationale>
 </comment>
 
-<comment nb="UK" num="11" uknum="135" type="Te" owner="CWG" issue="789" disp="modified" date="" extdoc="">
+<comment nb="UK" num="11" uknum="135" type="Te" owner="CWG" issue="789" disp="modified" date="2010-03-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3077.html">
 <section>
 2.3
 </section>
@@ -848,7 +848,7 @@ trigraphs appearing inside raw strings.
 </rationale>
 </comment>
 
-<comment nb="UK" num="12" uknum="137" type="Te" owner="CWG" issue="787" disp="modified" date="" extdoc="">
+<comment nb="UK" num="12" uknum="137" type="Te" owner="CWG" issue="787" disp="modified" date="2010-03-13" extdoc="">
 <section>
 2.4, 2.8
 </section>
@@ -1460,7 +1460,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="22" uknum="362" type="Te" owner="CWG" issue="633" disp="accepted" date="" extdoc="">
+<comment nb="UK" num="22" uknum="362" type="Te" owner="CWG" issue="633" disp="accepted" date="2010-03-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2993.html">
 <section>
 3
 </section>
@@ -1554,7 +1554,7 @@ is "used" as described in 3.2.
 </rationale>
 </comment>
 
-<comment nb="UK" num="26" uknum="363" type="Te" owner="CWG" issue="570" disp="accepted" date="" extdoc="">
+<comment nb="UK" num="26" uknum="363" type="Te" owner="CWG" issue="570" disp="accepted" date="2010-03-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2993.html">
 <section>
 3.2
 </section>
@@ -1908,7 +1908,7 @@ The parenthesized phrase is in the nature of a clarification, so
 </rationale>
 </comment>
 
-<comment nb="US" num="26" uknum="" type="te" owner="CWG" issue="793" disp="accepted" date="" extdoc="">
+<comment nb="US" num="26" uknum="" type="te" owner="CWG" issue="793" disp="accepted" date="2010-03-13" extdoc="">
 <section>
 3.8
 </section>
@@ -2210,7 +2210,7 @@ There was no consensus for this change.
 </rationale>
 </comment>
 
-<comment nb="JP" num="8" uknum="" type="te" owner="CWG" issue="743" disp="accepted" date="" extdoc="">
+<comment nb="JP" num="8" uknum="" type="te" owner="CWG" issue="743" disp="accepted" date="2010-03-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/N3049.pdf">
 <section>
 5.1
 </section>
@@ -2608,7 +2608,7 @@ rendering the issue moot.
 </rationale>
 </comment>
 
-<comment nb="UK" num="42" uknum="226" type="Te" owner="CWG" issue="797" disp="accepted" date="" extdoc="">
+<comment nb="UK" num="42" uknum="226" type="Te" owner="CWG" issue="797" disp="accepted" date="2010-03-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3052.html">
 <section>
 5.1.1
 </section>
@@ -3861,7 +3861,7 @@ scope.
 </rationale>
 </comment>
 
-<comment nb="UK" num="83" uknum="372" type="Te" owner="CWG" issue="808" disp="accepted" date="" extdoc="">
+<comment nb="UK" num="83" uknum="372" type="Te" owner="CWG" issue="808" disp="accepted" date="2010-03-13" extdoc="">
 <section>
 7.1
 </section>
@@ -3977,7 +3977,7 @@ in the standardization process.
 </rationale>
 </comment>
 
-<comment nb="UK" num="87" uknum="405" type="Te" owner="CWG" issue="810" disp="accepted" date="" extdoc="">
+<comment nb="UK" num="87" uknum="405" type="Te" owner="CWG" issue="810" disp="accepted" date="2010-03-13" extdoc="">
 <section>
 7.1.1
 </section>
@@ -4149,7 +4149,7 @@ proposal.
 </rationale>
 </comment>
 
-<comment nb="UK" num="89" uknum="377" type="Te" owner="CWG" issue="811" disp="accepted" date="" extdoc="">
+<comment nb="UK" num="89" uknum="377" type="Te" owner="CWG" issue="811" disp="accepted" date="2010-03-13" extdoc="">
 <section>
 7.1.6.1
 </section>
@@ -4547,7 +4547,7 @@ an incomplete type.
 </rationale>
 </comment>
 
-<comment nb="JP" num="14" uknum="" type="te" owner="CWG" issue="812" disp="accepted" date="" extdoc="">
+<comment nb="JP" num="14" uknum="" type="te" owner="CWG" issue="812" disp="accepted" date="2010-03-13" extdoc="">
 <section>
 7.3.1
 </section>
@@ -4718,7 +4718,7 @@ Changed the example slightly to make it clearer.
 </rationale>
 </comment>
 
-<comment nb="US" num="40" uknum="" type="te" owner="CWG" issue="814" disp="accepted" date="" extdoc="">
+<comment nb="US" num="40" uknum="" type="te" owner="CWG" issue="814" disp="modified" date="2020-03-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3050.html">
 <section>
 7.6
 </section>
@@ -4738,6 +4738,7 @@ Changed the example slightly to make it clearer.
         Add the attribute.
 </suggestion>
 <rationale>
+The <TT>noexcept</TT> keyword was added insstead of an attribute.
 </rationale>
 </comment>
 
@@ -4987,7 +4988,7 @@ was appropriate there.
 </rationale>
 </comment>
 
-<comment nb="US" num="42" uknum="" type="te" owner="CWG" issue="817" disp="accepted" date="" extdoc="">
+<comment nb="US" num="42" uknum="" type="te" owner="CWG" issue="817" disp="accepted" date="2010-03-13" extdoc="">
 <section>
 7.6.4
 </section>
@@ -5116,7 +5117,7 @@ There was no consensus to make a change.
 </rationale>
 </comment>
 
-<comment nb="US" num="45" uknum="" type="te" owner="CWG" issue="818" disp="accepted" date="" extdoc="">
+<comment nb="US" num="45" uknum="" type="te" owner="CWG" issue="818" disp="accepted" date="2010-03-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3079.html">
 <section>
 8.3.5
 </section>
@@ -5494,7 +5495,7 @@ instead of a <I>mem-initializer</I>.
 </rationale>
 </comment>
 
-<comment nb="UK" num="115" uknum="432" type="Ge" owner="CWG" issue="820" disp="accepted" date="" extdoc="">
+<comment nb="UK" num="115" uknum="432" type="Ge" owner="CWG" issue="820" disp="modified" date="2010-03-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3065.html">
 <section>
 14
 </section>
@@ -5521,6 +5522,8 @@ instead of a <I>mem-initializer</I>.
         support compile-time optimization.
 </suggestion>
 <rationale>
+The Committee decided to remove the feature altogether instead of
+deprecating it.
 </rationale>
 </comment>
 
@@ -5658,7 +5661,7 @@ All concepts-related features have been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="FR" num="29" uknum="" type="te" owner="CWG" issue="823" disp="modified" date="" extdoc="">
+<comment nb="FR" num="29" uknum="" type="te" owner="CWG" issue="823" disp="modified" date="2010-03-13" extdoc="">
 <section>
 14.3
 [Template
@@ -6334,7 +6337,7 @@ All concepts-related features have been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="130" uknum="32" type="Te" owner="CWG" issue="828" disp="accepted" date="" extdoc="">
+<comment nb="UK" num="130" uknum="32" type="Te" owner="CWG" issue="828" disp="accepted" date="2010-03-13" extdoc="">
 <section>
 15.1
 </section>
@@ -6469,7 +6472,7 @@ function whose <I>exception-specification</I> has been violated.
 </rationale>
 </comment>
 
-<comment nb="UK" num="136" uknum="40" type="Ge" owner="CWG" issue="830" disp="" date="" extdoc="">
+<comment nb="UK" num="136" uknum="40" type="Ge" owner="CWG" issue="830" disp="accepted" date="2010-03-13" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2010/n3051.html">
 <section>
 15.4
 </section>
