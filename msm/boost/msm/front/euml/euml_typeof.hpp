@@ -26,7 +26,7 @@ BOOST_TYPEOF_REGISTER_TYPE(std::string)
 BOOST_TYPEOF_REGISTER_TEMPLATE(::boost::mpl::size_t, (unsigned int))
 
 BOOST_TYPEOF_REGISTER_TYPE(::boost::msm::front::default_base_state)
-BOOST_TYPEOF_REGISTER_TEMPLATE(boost::msm::front::inherit_attributes, 1)
+BOOST_TYPEOF_REGISTER_TEMPLATE(boost::msm::front::detail::inherit_attributes, 1)
 
 BOOST_TYPEOF_REGISTER_TEMPLATE(boost::msm::front::euml::func_state, 6)
 BOOST_TYPEOF_REGISTER_TEMPLATE(boost::msm::front::euml::entry_func_state, (int)(typename)(typename)(typename)(typename)(typename)(typename))
@@ -45,7 +45,7 @@ BOOST_TYPEOF_REGISTER_TEMPLATE(boost::msm::front::euml::State_Attribute_, (typen
 BOOST_TYPEOF_REGISTER_TEMPLATE(boost::msm::front::euml::State_Machine_, (int))
 BOOST_TYPEOF_REGISTER_TYPE(boost::msm::front::none)
 BOOST_TYPEOF_REGISTER_TEMPLATE(boost::msm::front::Row, 5)
-BOOST_TYPEOF_REGISTER_TEMPLATE(boost::msm::front::ActionSequence, 1)
+BOOST_TYPEOF_REGISTER_TEMPLATE(boost::msm::front::ActionSequence_, 1)
 
 BOOST_TYPEOF_REGISTER_TYPE(boost::msm::front::euml::NoAction)
 BOOST_TYPEOF_REGISTER_TEMPLATE(boost::msm::front::euml::And_, 2)

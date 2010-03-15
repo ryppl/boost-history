@@ -42,7 +42,7 @@ template<class EntryFunctor=NoAction,
          class Flags = ::boost::mpl::vector0<>,
          class Defer = ::boost::mpl::vector0<>,
          class BASE = ::boost::msm::front::default_base_state>
-struct func_state :  public ::boost::msm::front::state_base<BASE,Attributes>, 
+struct func_state :  public ::boost::msm::front::detail::state_base<BASE,Attributes>, 
                      euml_state<func_state<EntryFunctor,ExitFunctor,Attributes,Flags,Defer,BASE> >
 {
     // grammar testing
@@ -74,7 +74,7 @@ template<int ZoneIndex=-1,
          class Flags = ::boost::mpl::vector0<>,
          class Defer = ::boost::mpl::vector0<>,
          class BASE = default_base_state>
-struct entry_func_state :  public ::boost::msm::front::state_base<BASE,Attributes>, 
+struct entry_func_state :  public ::boost::msm::front::detail::state_base<BASE,Attributes>, 
                            euml_state<entry_func_state<ZoneIndex,EntryFunctor,ExitFunctor,Attributes,Flags,Defer,BASE> >
 {
     // grammar testing
@@ -110,7 +110,7 @@ template<int ZoneIndex=-1,
          class Flags = ::boost::mpl::vector0<>,
          class Defer = ::boost::mpl::vector0<>,
          class BASE = default_base_state>
-struct explicit_entry_func_state :  public ::boost::msm::front::state_base<BASE,Attributes>, 
+struct explicit_entry_func_state :  public ::boost::msm::front::detail::state_base<BASE,Attributes>, 
                                     public ::boost::msm::front::explicit_entry<ZoneIndex>,
                                     euml_state<explicit_entry_func_state<
                                         ZoneIndex,EntryFunctor,ExitFunctor,Attributes,Flags,Defer,BASE> >
@@ -144,7 +144,7 @@ template<class Event,
          class Flags = ::boost::mpl::vector0<>,
          class Defer = ::boost::mpl::vector0<>,
          class BASE = default_base_state>
-struct exit_func_state :   public ::boost::msm::front::state_base<BASE,Attributes>, 
+struct exit_func_state :   public ::boost::msm::front::detail::state_base<BASE,Attributes>, 
                            euml_state<exit_func_state<Event,EntryFunctor,ExitFunctor,Attributes,Flags,Defer,BASE> >
 {
     // grammar testing
@@ -180,17 +180,17 @@ struct BuildActionSequence
    : proto::or_<
         proto::when <
                     BuildActions,
-                    ActionSequence<make_vector_one_row<BuildActions(proto::_)>()>()
+                    ActionSequence_<make_vector_one_row<BuildActions(proto::_)>()>()
         >,
         proto::when <
                     proto::comma<BuildActions,BuildActions >,
-                    ActionSequence<boost::mpl::push_back<
+                    ActionSequence_<boost::mpl::push_back<
                         make_vector_one_row<BuildActions(proto::_left)>(),
 						BuildActions(proto::_right)>()>()                
 		>,
         proto::when <
                     proto::comma<BuildActionSequence,BuildActions >,
-                    ActionSequence<boost::mpl::push_back<
+                    ActionSequence_<boost::mpl::push_back<
                         get_sequence<BuildActionSequence(proto::_left) >(),
 						BuildActions(proto::_right) >() >()                
 		>
@@ -777,7 +777,7 @@ template<class STT,
          class NoTransitionFunctor = NoAction,
          class OnExceptionFunctor = NoAction,
          class BASE = ::boost::msm::front::default_base_state>
-struct func_state_machine :  public ::boost::msm::front::state_base<BASE,Attributes>, 
+struct func_state_machine :  public ::boost::msm::front::detail::state_base<BASE,Attributes>, 
                              euml_state<func_state_machine<STT,Init,EntryFunctor,ExitFunctor,Attributes,Flags,
                                                         Defer,NoTransitionFunctor,OnExceptionFunctor,BASE> >
 {
@@ -1054,10 +1054,10 @@ build_sm(STT ,Init , Expr1 const& ,Expr2 const& ,Attr const& , Configure const&,
 
 template <class Expr>
 inline
-inherit_attributes<typename boost::result_of<BuildAttributes(Expr)>::type>
+::boost::msm::front::detail::inherit_attributes<typename boost::result_of<BuildAttributes(Expr)>::type>
 build_attributes (Expr const&)
 {
-    return inherit_attributes<typename boost::result_of<BuildAttributes(Expr)>::type> ();
+    return ::boost::msm::front::detail::inherit_attributes<typename boost::result_of<BuildAttributes(Expr)>::type> ();
 }
 
 template <class Expr1,class Expr2,class Attr,class Configure,class BASE>

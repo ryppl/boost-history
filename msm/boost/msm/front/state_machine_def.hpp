@@ -15,14 +15,14 @@
 
 #include <boost/msm/row_tags.hpp>
 #include <boost/msm/front/states.hpp>
-#include <boost/msm/front/automatic_event.hpp>
+#include <boost/msm/front/completion_event.hpp>
 #include <boost/msm/front/common_states.hpp>
 
 namespace boost { namespace msm { namespace front
 {
 
 template<class Derived,class BaseState = default_base_state>
-struct state_machine_def :  public state_base<BaseState>
+struct state_machine_def :  public boost::msm::front::detail::state_base<BaseState>
 {
 	// tags
 	// default: no flag

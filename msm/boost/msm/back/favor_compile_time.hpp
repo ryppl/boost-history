@@ -219,7 +219,7 @@ struct dispatch_table < Fsm, Stt, Event, ::boost::msm::back::favor_compile_time>
     template <class EventType>
     struct default_init_cell<EventType,
                              typename ::boost::enable_if<
-                                typename is_automatic_event<EventType>::type>::type>
+                                typename is_completion_event<EventType>::type>::type>
     {
 	    default_init_cell(dispatch_table* self_,chain_row* tofill_entries_)
 		    : self(self_),tofill_entries(tofill_entries_)

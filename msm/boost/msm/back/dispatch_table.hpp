@@ -183,7 +183,7 @@ struct dispatch_table
     template <class EventType>
     struct default_init_cell<EventType,
                              typename ::boost::enable_if<
-                                typename is_automatic_event<EventType>::type>::type>
+                                typename is_completion_event<EventType>::type>::type>
     {
 	    default_init_cell(dispatch_table* self_,cell* tofill_entries_)
 		    : self(self_),tofill_entries(tofill_entries_)

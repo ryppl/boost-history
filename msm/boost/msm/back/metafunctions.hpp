@@ -51,7 +51,7 @@ BOOST_MPL_HAS_XXX_TRAIT_DEF(composite_tag)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(not_real_row_tag)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(event_blocking_flag)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(explicit_entry_state)
-BOOST_MPL_HAS_XXX_TRAIT_DEF(automatic_event)
+BOOST_MPL_HAS_XXX_TRAIT_DEF(completion_event)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(no_exception_thrown)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(no_message_queue)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(activate_deferred_events)
@@ -436,10 +436,10 @@ struct has_fsm_deferred_events
 
 // returns a mpl::bool_<true> if State has any delayed event
 template <class Event>
-struct is_automatic_event  
+struct is_completion_event  
 {
     typedef typename ::boost::mpl::if_<
-        has_automatic_event<Event>,
+        has_completion_event<Event>,
         ::boost::mpl::bool_<true>,
         ::boost::mpl::bool_<false> >::type type;
 };
@@ -451,10 +451,10 @@ struct has_fsm_eventless_transition
     typedef typename generate_event_set<Stt>::type event_list;
 
     typedef ::boost::mpl::bool_< ::boost::mpl::count_if<
-        event_list,is_automatic_event< ::boost::mpl::placeholders::_1 > >::value != 0> type;
+        event_list,is_completion_event< ::boost::mpl::placeholders::_1 > >::value != 0> type;
 };
 template <class Derived>
-struct find_automatic_events 
+struct find_completion_events 
 {
     typedef typename create_stt<Derived>::type Stt;
     typedef typename generate_event_set<Stt>::type event_list;
@@ -462,7 +462,7 @@ struct find_automatic_events
     typedef typename ::boost::mpl::fold<
         event_list, ::boost::mpl::set<>,
 	    ::boost::mpl::if_<
-			     is_automatic_event< ::boost::mpl::placeholders::_2>,
+			     is_completion_event< ::boost::mpl::placeholders::_2>,
 			     ::boost::mpl::insert< ::boost::mpl::placeholders::_1, ::boost::mpl::placeholders::_2 >, 
 			     ::boost::mpl::placeholders::_1 >
     >::type type;

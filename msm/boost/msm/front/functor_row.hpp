@@ -18,7 +18,7 @@
 
 #include <boost/msm/row_tags.hpp>
 #include <boost/msm/common.hpp>
-#include <boost/msm/front/automatic_event.hpp>
+#include <boost/msm/front/completion_event.hpp>
 
 #include BOOST_TYPEOF_INCREMENT_REGISTRATION_GROUP()
 
@@ -238,7 +238,7 @@ namespace boost { namespace msm { namespace front
     struct not_euml_tag{};
 
     template <class Sequence>
-    struct ActionSequence
+    struct ActionSequence_
     {
         typedef Sequence sequence;
         template <class Event,class FSM,class STATE >

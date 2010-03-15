@@ -44,7 +44,7 @@ struct SMPtr
 // provides the typedefs and interface. Concrete states derive from it.
 // template argument: pointer-to-fsm policy
 template<class BASE = default_base_state,class SMPtrPolicy = no_sm_ptr>
-struct state :  public state_base<BASE>, SMPtrPolicy
+struct state :  public boost::msm::front::detail::state_base<BASE>, SMPtrPolicy
 {
     // tags
     // default: no flag
@@ -56,7 +56,7 @@ struct state :  public state_base<BASE>, SMPtrPolicy
 // terminate state simply defines the TerminateFlag flag
 // template argument: pointer-to-fsm policy
 template<class BASE = default_base_state,class SMPtrPolicy = no_sm_ptr>
-struct terminate_state : public state_base<BASE>, SMPtrPolicy
+struct terminate_state : public boost::msm::front::detail::state_base<BASE>, SMPtrPolicy
 {
     // tags
     typedef ::boost::mpl::vector<boost::msm::TerminateFlag>      flag_list;
@@ -68,7 +68,7 @@ struct terminate_state : public state_base<BASE>, SMPtrPolicy
 // template argument: event which ends the interrupt
 // template argument: pointer-to-fsm policy
 template <class EndInterruptEvent,class BASE = default_base_state,class SMPtrPolicy = no_sm_ptr>
-struct interrupt_state : public state_base<BASE>, SMPtrPolicy
+struct interrupt_state : public boost::msm::front::detail::state_base<BASE>, SMPtrPolicy
 {
     // tags
     typedef ::boost::mpl::vector<boost::msm::InterruptedFlag,
@@ -94,7 +94,7 @@ struct explicit_entry
 // template argument: pointer-to-fsm policy
 template<int ZoneIndex=-1,class BASE = default_base_state,class SMPtrPolicy = no_sm_ptr>
 struct entry_pseudo_state
-    :  public state_base<BASE>,SMPtrPolicy
+    :  public boost::msm::front::detail::state_base<BASE>,SMPtrPolicy
 {
     // tags
     typedef int                          pseudo_entry;
@@ -110,7 +110,7 @@ struct entry_pseudo_state
 // template argument: event to forward
 // template argument: pointer-to-fsm policy
 template<class Event,class BASE = default_base_state,class SMPtrPolicy = no_sm_ptr>
-struct exit_pseudo_state : public state_base<BASE> , SMPtrPolicy
+struct exit_pseudo_state : public boost::msm::front::detail::state_base<BASE> , SMPtrPolicy
 {
     typedef Event       event;
     typedef BASE        Base;

@@ -934,7 +934,7 @@ private:
             (call_init<InitEvent>(InitEvent(),this));
         // give a chance to handle an anonymous (eventless) transition
         handle_eventless_transitions_helper<library_sm> eventless_helper(this,true);
-        eventless_helper.process_automatic_event();
+        eventless_helper.process_completion_event();
 
     }
 
@@ -978,7 +978,7 @@ private:
             // event can be handled, processing
             // handle with lowest priority event-less transitions
             handle_eventless_transitions_helper<library_sm> eventless_helper(this,(handled!=HANDLED_FALSE));
-            eventless_helper.process_automatic_event();
+            eventless_helper.process_completion_event();
 
             return ret_handled;
         }       
@@ -1315,7 +1315,7 @@ private:
     struct handle_eventless_transitions_helper
     {
         handle_eventless_transitions_helper(library_sm* , bool ){}
-        void process_automatic_event(){}
+        void process_completion_event(){}
     };
     // otherwise 
     template <class StateType>
@@ -1323,16 +1323,16 @@ private:
         <StateType, typename enable_if< typename ::boost::msm::back::has_fsm_eventless_transition<StateType>::type >::type>
     {
         handle_eventless_transitions_helper(library_sm* self_, bool handled_):self(self_),handled(handled_){}
-        void process_automatic_event()
+        void process_completion_event()
         {
             typedef typename ::boost::mpl::deref<
                 typename ::boost::mpl::begin<
-                    typename find_automatic_events<StateType>::type
+                    typename find_completion_events<StateType>::type
                         >::type
-            >::type first_automatic_event;
+            >::type first_completion_event;
             if (handled)
             {
-                self->process_event(first_automatic_event() );
+                self->process_event(first_completion_event() );
             }
         }
  
@@ -1417,8 +1417,8 @@ private:
         // generate an error on every active state 
         // for state machine states contained in other state machines, do not handle
         // but let the containing sm handle the error
-        // automatic events do not produce an error
-        if (!handled && !is_contained() && !is_automatic_event<Event>::type::value)
+        // completion events do not produce an error
+        if (!handled && !is_contained() && !is_completion_event<Event>::type::value)
         {
             for (int i=0; i<nr_regions::value;++i)
             {	
@@ -2002,8 +2002,8 @@ BOOST_PP_REPEAT(BOOST_PP_ADD(BOOST_MSM_VISITOR_ARG_SIZE,1), MSM_VISITOR_ARGS_EXE
         return HANDLED_DEFERRED;
     }
 
-    // called for automatic events. Default address set in the dispatch_table at init
-    // prevents no-transition detection for automatic events
+    // called for completion events. Default address set in the dispatch_table at init
+    // prevents no-transition detection for completion events
     template <class Event>
     static HandledEnum default_eventless_transition(library_sm& fsm, int, int , Event const& e)
     {
