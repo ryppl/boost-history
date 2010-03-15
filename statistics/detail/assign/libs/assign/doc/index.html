@@ -475,13 +475,14 @@ The last example also introduces list of references. More about that below.
 
 </p>
 
-<h3>Functions <code>chain_convert_l()</code> and <code>chain_convert_r()</code><a name="chain_convert"></h3>
+<h3><a name="chain_convert">Functions <code>chain_convert_l()</code> and <code>chain_convert_r()</code></a></h3>
 
 While the function <a href="#repeat"><code>range()</code></a> works in combination with functions
 such as <a href="#list_of"><code>list_of()</code></a>, it is not compatible with  
 <a href="#ref_csv"><code>ref_csv()</code></a>, <a href="#ref_list"><code>ref_list_of()</code></a> and their variants, 
 which are part of a different <a href="#auto_size">framework</a>. The functions <code>chain_convert_l()</code>, 
-and <code>chain_convert_r()</code> achieve a similar goal and have the same interface as <a href="#list_of"><code>list_of()</code></a>. Continuing the <a href="#repeat">example</code></a> above,
+and <code>chain_convert_r()</code> achieve a similar goal and have the same interface as <a href="#list_of"><code>list_of()</code></a>,
+(an idea originating from <a href="http://gist.github.com/287791">M.P.G</a>). Continuing the <a href="#repeat">example</code></a> above,
 
 
 <blockquote><pre><span class=preprocessor>#include</span> <span class=special>&lt;</span><span class=identifier>boost</span><span class=special>/</span><span class=identifier>assign</span><span class=special>/</span><span class=identifier>auto_size</span><span class=special>/</span><span class=identifier>chain_convert</span><span class=special>.</span><span class=identifier>hpp</span><span class=special>&gt;</span> 

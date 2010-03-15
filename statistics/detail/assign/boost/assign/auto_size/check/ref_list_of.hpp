@@ -148,6 +148,7 @@ void check_ref_list_of()
 
 }
 
+// TODO see how the checks can be aggregated with the unit_test
 
 }// auto_size
 }// detail

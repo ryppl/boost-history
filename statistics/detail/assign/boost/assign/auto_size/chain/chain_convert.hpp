@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// assign::detail::chain_convert_impl.hpp                                   //
+// assign::detail::chain_convert.hpp                                        //
 //                                                                          //
 //  (C) Copyright 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -26,9 +26,10 @@ namespace assign{
 
 namespace adaptor{
 
-template<typename R1,
-    typename Conv = detail::pair_traits::meta::apply_conversion>
-class chain_convert 
+namespace impl{
+
+template<typename R1,typename Conv>
+class chain_converter 
     : public boost::sub_range<R1>
 {
 
@@ -44,7 +45,7 @@ class chain_convert
     struct result_impl_generic{
         typedef typename result_of::chain_convert_impl<Conv,X1,X2>::type 
             facade_;
-        typedef chain_convert<facade_,Conv> type;
+        typedef impl::chain_converter<facade_,Conv> type;
     };
 
     public:
@@ -65,7 +66,7 @@ class chain_convert
     template<typename F,typename R2> 
     struct result<F(const R2&)> : result_impl<R2,true>{};
 
-    chain_convert(const R1 & r) : super_(r){}
+    chain_converter(const R1 & r) : super_(r){}
     
     template<typename R2>
     typename result_impl<R2,false>::type
@@ -88,76 +89,56 @@ class chain_convert
     private:
     mutable super_ copy;
 };
-
+}// impl
 }// adaptor
 
+namespace result_of{
+    template<typename R,
+        typename Conv = detail::pair_traits::meta::apply_conversion>
+    struct chain_convert_l{
+        typedef adaptor::impl::chain_converter<R,Conv> type;   
+    };
+    template<typename R,
+        typename Conv = detail::pair_traits::meta::apply_conversion>
+    struct chain_convert_r{
+        typedef adaptor::impl::chain_converter<const R,Conv> type;  
+    };
+    
+}// result_of
 
 template<typename Conv,typename R>
-adaptor::chain_convert<Conv,R> 
+typename result_of::chain_convert_l<R,Conv>::type 
 chain_convert_l(R & r)
 {
-    typedef adaptor::chain_convert<Conv,R> result_;
+    typedef typename result_of::chain_convert_l<R,Conv>::type result_;
     return  result_(r);
 }
 
 template<typename Conv,typename R>
-adaptor::chain_convert<Conv,const R> 
+typename result_of::chain_convert_r<R,Conv>::type 
 chain_convert_r(const R & r)
 {
-    typedef adaptor::chain_convert<Conv,const R> result_;
+    typedef typename result_of::chain_convert_r<R,Conv>::type result_;
     return  result_(r);
 }
-
-/*
-
-template<typename Conv,typename R1, typename R2>
-typename result_of::chain_convert<R2,Conv>::template apply<R1>::type
-operator|(R1 & r1, const adaptor::chain_convert<R2,Conv> & adaptor)
-{
-    return adaptor(r1);
-}
-
-template<typename Conv,typename R1, typename R2>
-typename result_of::chain_convert<R2,Conv>::template apply<const R1>::type
-operator|(const R1 & r1, const adaptor::chain_convert<R2,Conv> & adaptor)
-{
-    return adaptor(r1);
-}
-*/
 
 // default
 
 template<typename R>
-adaptor::chain_convert<R> 
+typename result_of::chain_convert_l<R>::type 
 chain_convert_l(R & r)
 {
-    typedef adaptor::chain_convert<R> result_;
+    typedef typename result_of::chain_convert_l<R>::type result_;
     return  result_(r);
 }
 
 template<typename R>
-adaptor::chain_convert<const R> 
-chain_convert_r(const R & r) // force const
+typename result_of::chain_convert_r<R>::type 
+chain_convert_r(const R & r) 
 {
-    typedef adaptor::chain_convert<const R> result_;
+    typedef typename result_of::chain_convert_r<R>::type result_;
     return  result_(r);
 }
-
-
-template<typename R1, typename R2>
-typename adaptor::chain_convert<R2>::template result_impl<R1,false>::type
-operator|(R1 & r1, const adaptor::chain_convert<R2>& adaptor)
-{
-    return adaptor(r1);
-}
-
-template<typename R1, typename R2>
-typename adaptor::chain_convert<const R2>::template result_impl<R1,true>::type
-operator|(R1 & r1, const adaptor::chain_convert<const R2>& adaptor)
-{
-    return adaptor(r1);
-}
-
 
 }// assign
 }// boost

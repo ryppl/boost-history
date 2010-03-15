@@ -12,6 +12,7 @@
 #include <boost/ref.hpp>
 #include <boost/assign/auto_size/ref_list_of.hpp>
 #include <boost/assign/auto_size/reference_wrapper/conversion_traits.hpp>
+#include <boost/assign/auto_size/chain/converter.hpp>
 #include <boost/assign/auto_size/chain/chain_convert.hpp>
 #include <libs/assign/example/chain.h>
 
@@ -19,6 +20,8 @@ void example_chain(std::ostream& os)
 {
 
     //boost::assign::detail::chain_mpl_check::compound();
+ 
+     
  
     using namespace boost::assign;
     using namespace boost::assign::detail;
@@ -34,7 +37,7 @@ void example_chain(std::ostream& os)
     ar_ ar5; ar5.assign( 3 );
 	BOOST_AUTO(tmp1,ref_list_of(a)(b)(c)(d)); 
 	BOOST_AUTO(tmp2,ref_list_of(e)(f)(g)(h)); 
-
+    
     boost::copy(
         chain_convert_r(tmp2)(ar4)(ar5),
         std::ostream_iterator<val_>(os," ")
@@ -53,7 +56,7 @@ void example_chain(std::ostream& os)
     boost::copy(
         chain_convert_r(ref_list_of(a)(b)(c)(d))(ar2)(ar3),
         std::ostream_iterator<val_>(os," ")
-    ); os << " ---, tier segments in reverse order ---> " << std::endl;
+    ); os << " --- tier segments in reverse order ---> " << std::endl;
 
     boost::copy(
         chain_convert_r(ar3)(ar2)(ref_list_of(a)(b)(c)(d)),
