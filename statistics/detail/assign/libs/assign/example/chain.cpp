@@ -35,11 +35,8 @@ void example_chain(std::ostream& os)
     ar_ ar4; ar4.assign( 2 );
     ar_ ar5; ar5.assign( 3 );
 	BOOST_AUTO(tmp1,ref_list_of(a)(b)(c)(d)); 
-	BOOST_AUTO(tmp2,cref_list_of(e)(f)(g)(h)); 
-	BOOST_AUTO(tmp3,ref_csv(a,b,c,d)); 
-	BOOST_AUTO(tmp4,ref_csv(e,f,g,h)); 
+	BOOST_AUTO(tmp2,ref_list_of(e)(f)(g)(h)); 
     
-/*    
     boost::copy(
         chain_convert_r(tmp2)(ar4)(ar5),
         std::ostream_iterator<val_>(os," ")
@@ -65,7 +62,6 @@ void example_chain(std::ostream& os)
         std::ostream_iterator<val_>(os," ")
     ); // this is a case where without _r, there would be compile error
 
-*/
    // Why chain_convert is required :
    //invalid initialization of reference of type 'boost::assign::detail::assign_reference_copy<example_chain::val_>&' 
    // from expression of type 'int'
