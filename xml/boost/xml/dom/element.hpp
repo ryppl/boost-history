@@ -19,7 +19,7 @@ template <typename S>
 class element : public node<S>
 {
   friend class document<S>;
-  friend node_ptr<element<S> > detail::ptr_factory<>(xmlNode *);
+  friend node_ptr<element<S> > detail::ptr_factory<element<S> >(xmlNode *);
 public:
   typedef detail::node_iterator<node<S> > child_iterator;
   typedef detail::node_iterator<node<S> const> const_child_iterator;
