@@ -12,8 +12,8 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/array.hpp>
 #include <boost/range.hpp>
-#include <boost/assign/auto_size/array/comparison.hpp>
-#include <boost/assign/list_of.hpp> // for assign_detail::converter
+//#include <boost/assign/list_of.hpp> // for assign_detail::converter
+#include <boost/assign/auto_size/array/converter.hpp> 
 #include <boost/assign/auto_size/reference_wrapper/has_copy_semantics.hpp>
 #include <boost/assign/auto_size/array/ref.hpp>
 
@@ -48,10 +48,16 @@ namespace auto_size{
     // d1.ref_array_impl()		array_interface::ref_array_&
     // d2.ref_array_impl()		array_interface::const ref_array_&
     template<typename T,std::size_t N,template<typename> class R,typename D>
-    class array_interface : public assign_detail::converter<
-    	array_interface<T,N,R,D>,
-        typename array_interface_traits<T,N,R>::const_iterator
-    >
+    class array_interface 
+      : public 
+        auto_size::converter< 
+            array_interface<T,N,R,D>,
+            typename array_interface_traits<T,N,R>::const_iterator 
+        > 
+//        assign_detail::converter<
+//    	    array_interface<T,N,R,D>,
+//            typename array_interface_traits<T,N,R>::const_iterator
+//        >
     {
         typedef array_interface_traits<T,N,R> traits;
         typedef typename traits::ref_ ref_;

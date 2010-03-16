@@ -1,5 +1,7 @@
 // Revision history:
 //
+// March 16, 2010 : Added a crtp CT allowing comparison operators to work 
+// between one derived class and either another or a non-derived.  
 // March 14, 2010 : Made the chain interface similar to list_of as per MPG idea.
 // March 11, 2010 : Added range conversion and a chain_convert function. 
 // March 8, 2010 : Added a policy dispatcher, csv_policy, to allow a common
