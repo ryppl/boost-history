@@ -16,18 +16,13 @@ namespace assign{
 namespace detail{
 namespace auto_size{
 
-    // Forwards to assign_detail::conveter<> for all but operators, allowing
-    //    Op (converter<> ,converter<>)
-    // in addition to the existing feature 
-    //    Op( converter<> , Range)
-    // etc.
     template< typename T, typename I >
     class converter 
-       : protected boost::assign_detail::converter<converter<T,I>,I>
+       : boost::assign_detail::converter<converter<T,I>,I>
        ,public range_comparison_op::base_of< converter<T,I> >::type
     {
        typedef boost::assign_detail::converter<converter<T,I>,I> impl_;
-    
+    protected:
        impl_& impl(){ return (*this); }
        const impl_& impl()const{ return (*this); }
     
