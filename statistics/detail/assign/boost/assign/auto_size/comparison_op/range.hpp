@@ -18,13 +18,13 @@ namespace assign{
 namespace detail{
 namespace range_comparison_op{
 
-    // Let D1, D2 and R model Range, and for D in {D1,D2}, D derives from
-    //    base_of<D>::type
-    // then defines for Op in {==,!=,<,>,<=,>=}, 
-    //    Op(D1&,D2&)
-    //    Op(D1&,R&)
-    //    Op(R, D2&)
-    // etc.    
+    // Let G={ D : D derives from base_of<D>::type }  
+    // Let L and R model Range. For either of (L xor R) in G or (L and R) in G, 
+    // Expression      Returns
+    //   l == r        ::boost::iterator_range_detail::equal( l, r )
+    //   l < r         ::boost::iterator_range_detail::less_than( l, r );
+    // The remaining operators, !=, >,<=,>= are defined using their
+    // relationships to the two fundamental ones.
     struct fundamental_policy{
     
         template<typename L,typename R>

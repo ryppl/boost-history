@@ -29,17 +29,17 @@ namespace comparison_op{
             return !(P::equal(l,r));
         }
         template<typename L,typename R>
-        static bool less_or_equal(const L& l,const R& r){
+        static bool less_equal(const L& l,const R& r){
             return (P::less(l,r)) || (P::equal(l,r));
         }
 
         template<typename L,typename R>
         static bool greater(const L& l,const R& r){
-            return !(less_or_equal(l,r));
+            return !(less_equal(l,r));
         }
 
         template<typename L,typename R>
-        static bool greater_or_equal(const L& l,const R& r){
+        static bool greater_equal(const L& l,const R& r){
             return !(P::less(l,r));
         }
 

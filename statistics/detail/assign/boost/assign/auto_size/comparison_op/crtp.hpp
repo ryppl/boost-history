@@ -25,15 +25,15 @@ namespace comparison_op{
 // Source:
 // http://groups.google.com/group/comp.lang.c++.moderated/browse_thread/thread/389d8fe278ef0b13#
 
-    // If D inherits from crtp<D,P>, its comparison operators will forward to
-    //    P::equal(l,r)
-    //    P::less(l,r)
-    //    P::greater(l,r)
-    //    P::not_equal(l,r)
-    //    P::less_equal(l,r)
-    //    P::greater_equal(l,r)
-    // where l and r are two objects of types L and R, such that either L or R,
-    // or both, derive from crtp<>.
+    // Let G(P)={ D : D derives from crtp<D,P> }  
+    // For either of (L xor R) in G(P) or (L and R) in G(P), 
+    // Expression                         Returns
+    //   operator == (const L&,const R&)  P::equal(l,r)
+    //   operator != (const L&,const R&)  P::not_equal(l,r)
+    //   operator < (const L&,const R&)   P::less(l,r)
+    //   operator > (const L&,const R&)   P::greater(l,r)
+    //   operator <= (const L&,const R&)  P::less_equal(l,r)
+    //   operator >= (const L&,const R&)  P::greater_equal(l,r)
     template<typename D,typename P> 
     struct crtp{
         crtp(){}
@@ -79,7 +79,7 @@ namespace traits{
     >{};
 
     template<typename T>
-    struct is_base_of : boost::mpl::eval_if< // left-to-right evaluation
+    struct is_base_of : boost::mpl::eval_if< 
         traits::has_traits<T>,
         traits::is_base_of_impl<T>,
         boost::mpl::identity< boost::mpl::bool_<false> >
@@ -128,17 +128,17 @@ namespace forward{
         }
     };
     
-    struct less_or_equal_to{
+    struct less_equal{
         template<typename P,typename L,typename R>
         static bool call(const L& l,const R& r){
-            return (P::less_or_equal_to(l,r));
+            return (P::less_equal(l,r));
         }
     };
 
-    struct greater_or_equal_to{
+    struct greater_equal{
         template<typename P,typename L,typename R>
         static bool call(const L& l,const R& r){
-            return (P::greater_or_equal_to(l,r));
+            return (P::greater_equal(l,r));
         }
     };
 
@@ -186,11 +186,11 @@ namespace forward{
 /**/    
 
 BOOST_ASSIGN_DETAIL_COMPARISON_OP( == , comparison_op::forward::equal )
-//BOOST_ASSIGN_DETAIL_COMPARISON_OP( != , comparison_op::forward::not_equal )
-//BOOST_ASSIGN_DETAIL_COMPARISON_OP( <  , comparison_op::forward::less )
-//BOOST_ASSIGN_DETAIL_COMPARISON_OP( >  , comparison_op::forward::greater )
-//BOOST_ASSIGN_DETAIL_COMPARISON_OP( <= , comparison_op::forward::less_or_equal )
-//BOOST_ASSIGN_DETAIL_COMPARISON_OP( >= , comparison_op::forward::greater_or_equal )
+BOOST_ASSIGN_DETAIL_COMPARISON_OP( != , comparison_op::forward::not_equal )
+BOOST_ASSIGN_DETAIL_COMPARISON_OP( <  , comparison_op::forward::less )
+BOOST_ASSIGN_DETAIL_COMPARISON_OP( >  , comparison_op::forward::greater )
+BOOST_ASSIGN_DETAIL_COMPARISON_OP( <= , comparison_op::forward::less_equal )
+//BOOST_ASSIGN_DETAIL_COMPARISON_OP( >= , comparison_op::forward::greater_equal )
 
 }// comparison_op
 }// detail
