@@ -79,6 +79,12 @@ protected:
   using accessor::impl;
   T &impl() { return this->impl_;}
   T const impl() const { return this->impl_;}
+  T release() 
+  {
+    T tmp = impl_; 
+    impl_ = 0; 
+    return tmp;
+  }
 private:
   T impl_;
 };

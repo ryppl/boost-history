@@ -11,6 +11,16 @@ namespace xml
 namespace dom
 {
 
+namespace detail
+{
+template<typename S>
+struct node_set_ref
+{
+  explicit node_set_ref(xmlNodeSet *p): ptr(p) {}
+  xmlNodeSet *ptr;
+};
+}
+
 template <typename S>
 class node_set : public detail::wrapper<xmlNodeSet*>
 {
@@ -18,8 +28,11 @@ class node_set : public detail::wrapper<xmlNodeSet*>
 public:
   class iterator;
 
-  ~node_set() { xmlXPathFreeNodeSet(this->impl());}
-
+  node_set(node_set &s) : detail::wrapper<xmlNodeSet*>(s.release()) {}
+  node_set(detail::node_set_ref<S> ref) : detail::wrapper<xmlNodeSet*>(ref.ptr) {}
+  ~node_set() { if (this->impl()) xmlXPathFreeNodeSet(this->impl());}
+  operator detail::node_set_ref<S>() throw() { return detail::node_set_ref<S>(this->release());}
+  
   size_t size() const { return this->impl() ? this->impl()->nodeNr : 0;}
   node_ptr<node<S> > operator[] (size_t i) 
   {
