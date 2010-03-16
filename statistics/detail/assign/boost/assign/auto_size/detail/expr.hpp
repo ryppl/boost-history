@@ -28,7 +28,6 @@
 #include <boost/assign/auto_size/detail/types.hpp>
 #include <boost/assign/auto_size/detail/expr_size.hpp>
 #include <boost/assign/auto_size/detail/expr_elem.hpp>
-//#include <boost/assign/auto_size/detail/result_of_chain.hpp>
 #include <boost/assign/auto_size/array/lazy.hpp>
 
 // Creates a collection of references by deducing the number of arguments
