@@ -21,7 +21,7 @@ template <typename S> void process_xinclude(document<S> &);
 template <typename S>
 class document : public detail::wrapper<xmlDoc*>
 {
-  friend std::auto_ptr<document<S> > detail::factory<>(xmlDoc *);
+  friend std::auto_ptr<document<S> > detail::factory<S>(xmlDoc *);
   friend void process_xinclude<>(document<S> &);
 public:
   document(std::string const &version = "1.0")
