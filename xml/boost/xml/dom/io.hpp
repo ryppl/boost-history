@@ -14,13 +14,13 @@ namespace dom
 {
 namespace detail
 {
-int stream_write_callback(void *context, const char *buffer, int len)
+inline int stream_write_callback(void *context, const char *buffer, int len)
 {
   std::streambuf *sb = reinterpret_cast<std::streambuf *>(context);
   int written = sb->sputn(buffer, len);
   return written;
 }
-int stream_close_callback(void *context) { return 0;}
+inline int stream_close_callback(void *context) { return 0;}
 }
 
 template <typename S>
