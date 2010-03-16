@@ -36,8 +36,6 @@ namespace comparison_op{
     //   operator >= (const L&,const R&)  P::greater_equal(l,r)
     template<typename D,typename P> 
     struct crtp{
-        crtp(){}
-        
         struct comparison_op_traits{
             typedef P policy_;
             typedef D derived_;
@@ -81,7 +79,7 @@ namespace traits{
     template<typename T>
     struct is_base_of : boost::mpl::eval_if< 
         traits::has_traits<T>,
-        traits::is_base_of_impl<T>,
+        traits::is_base_of_impl<T>, // safety check
         boost::mpl::identity< boost::mpl::bool_<false> >
     >{};
 
