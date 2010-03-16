@@ -24,8 +24,8 @@ public:
   typedef detail::node_iterator<node<S> > child_iterator;
   typedef detail::node_iterator<node<S> const> const_child_iterator;
 
-  typedef detail::node_iterator<attribute<S> > attribute_iterator;
-  typedef detail::node_iterator<attribute<S> const> const_attribute_iterator;
+  typedef detail::node_iterator<dom::attribute<S> > attribute_iterator;
+  typedef detail::node_iterator<dom::attribute<S> const> const_attribute_iterator;
 
   //. Return the attribute for the given name, if it exists.
   node_ptr<dom::attribute<S> const> attribute(S const &name) const;
@@ -114,7 +114,7 @@ protected:
 };
 
 template <typename S>
-inline node_ptr<attribute<S> const> element<S>::attribute(S const &name) const
+inline node_ptr<dom::attribute<S> const> element<S>::attribute(S const &name) const
 {
   xmlChar *n = converter<S>::in(name);
   for(xmlAttr *attr = this->impl()->properties; attr; attr = attr->next)
@@ -126,7 +126,7 @@ inline node_ptr<attribute<S> const> element<S>::attribute(S const &name) const
 }
 
 template <typename S>
-inline node_ptr<attribute<S> > element<S>::attribute(S const &name)
+inline node_ptr<dom::attribute<S> > element<S>::attribute(S const &name)
 {
   xmlChar *n = converter<S>::in(name);
   for(xmlAttr *attr = this->impl()->properties; attr; attr = attr->next)
@@ -275,7 +275,7 @@ inline node_ptr<node<S> > element<S>::insert(child_iterator i,
 }
 
 template <typename S>
-inline void element<S>::remove(element<S>::child_iterator i)
+inline void element<S>::remove(typename element<S>::child_iterator i)
 {
   if (i != end_children())
   {
