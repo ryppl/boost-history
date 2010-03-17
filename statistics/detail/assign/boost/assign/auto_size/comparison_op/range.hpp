@@ -23,7 +23,7 @@ namespace range_comparison_op{
     // Expression      Returns
     //   l == r        ::boost::iterator_range_detail::equal( l, r )
     //   l < r         ::boost::iterator_range_detail::less_than( l, r );
-    // The remaining operators, !=, >,<=,>= are defined using their
+    // The remaining operators, !=, >,<=,>= are defined using their 
     // relationships to the two fundamental ones.
     struct fundamental_policy{
     

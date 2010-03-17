@@ -16,6 +16,16 @@ namespace boost{
 namespace assign{
 namespace detail{
 
+// A type T is mapped to a convertible type U in two steps:
+// 1) Tag = tag_of<T>
+// 2) U = meta::convert_to<Tag>::apply<T>
+// This approach is useful to group types that share the same  conversion rule. 
+// This file defines two groups:
+//          Tag                             U                   
+//  - 'itself' (the default)                T
+//  - 'reference_to_inner_value'    inner_value<T>&
+// but the use can also define his/her own as needed.
+
 namespace conversion_traits{
 
     namespace tag{ 

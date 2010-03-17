@@ -20,8 +20,9 @@
 #include <boost/assign/auto_size/chain/conversion_traits.hpp>
 #include <boost/assign/auto_size/chain/reference_traits.hpp>
 
-// Maps (T,U) to a type that both are convertible to. In particular, T and U
-// may be reference wrappers.
+// Maps (T,U) to (convert_to<T>::type, convert_to<U>::type) and the latter
+// to type that is convertible to by both.
+
 
 namespace boost{
 namespace assign{

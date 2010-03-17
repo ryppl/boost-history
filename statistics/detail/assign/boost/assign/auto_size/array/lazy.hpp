@@ -44,9 +44,12 @@ namespace auto_size{
     	template<typename> class R,typename P,bool F>
     void write_to_array(A& a,const expr<E,T,N,R,P,F>& e);
                   
-    // lazy_array is a suitable policy for auto_size::expr<>, that has the 
-    // functionality of array_interface<>, and postones allocation until it is 
-    // necessary.
+   // Postones allocation until it is necessary.
+   // D must interoperate with write_to_array.
+   //
+   // D is typically the result of nested compile time expressions each contain-
+   // ing a reference. Only the last of these expression needs to expose an 
+   // friendly interface, hence 'lazy_array'.
    template<typename T,int N,template<typename> class R,typename D>
    class lazy_array 
     	: public array_interface<T,N,R,lazy_array<T,N,R,D> >

@@ -17,6 +17,8 @@ namespace boost{
 namespace assign{
 namespace detail{
 
+// Maps an iterator I ot J such that *J = T(*I).
+
 template<typename I,typename T>
 struct iterator_converter : boost::iterator_adaptor<
     detail::iterator_converter<I,T>             // Derived

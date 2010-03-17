@@ -24,6 +24,12 @@ namespace assign{
 // http://gist.github.com/287791
 // developed by MPG.
 
+// Usage:
+// Let r1, r2, r3 denote lvalue ranges:
+//    chain_convert_l(r1)(r2)(r3)
+// If either of the 3 is an rvalue,
+//    chain_convert_r(r1)(r2)(r3)
+
 namespace adaptor{
 
 namespace impl{

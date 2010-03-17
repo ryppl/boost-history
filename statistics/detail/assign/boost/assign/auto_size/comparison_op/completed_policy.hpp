@@ -22,6 +22,7 @@ namespace comparison_op{
     //     Q::greater(l,r)
     //     Q::less_equal(l,r)
     //     Q::greater_equal(l,r)
+    // using their logical relationships.
     template<typename P>
     struct completed_policy : P{
         template<typename L,typename R>

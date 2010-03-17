@@ -20,8 +20,8 @@
 
 #include <boost/assign/auto_size/chain/conversion_traits.hpp>
 
-// Let T = U or U&, and U = V or const V. Maps T to a convertible type using the
-// information provided by the conversion traits
+// Maps U = T& (or possibly U=T) to a type that is convertible to based on the
+// conversion traits.
 
 namespace boost{
 namespace assign{

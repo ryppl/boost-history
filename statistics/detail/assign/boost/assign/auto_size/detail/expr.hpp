@@ -44,7 +44,8 @@
 // with M.P.G
 //
 // range<int>() is provided to achieve conformity with the rest of Boost.Assign
-// but it is in fact ill suited here. 
+// but it is in fact ill suited here. See chain_convert_l() and 
+// chain_convert_r() as an alternative.
 
 namespace boost{
 namespace assign{

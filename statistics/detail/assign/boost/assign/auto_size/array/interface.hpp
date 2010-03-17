@@ -54,10 +54,6 @@ namespace auto_size{
             array_interface<T,N,R,D>,
             typename array_interface_traits<T,N,R>::const_iterator 
         > 
-//        assign_detail::converter<
-//    	    array_interface<T,N,R,D>,
-//            typename array_interface_traits<T,N,R>::const_iterator
-//        >
     {
         typedef array_interface_traits<T,N,R> traits;
         typedef typename traits::ref_ ref_;
