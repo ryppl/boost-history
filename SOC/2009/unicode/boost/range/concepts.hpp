@@ -202,11 +202,14 @@ namespace boost {
             ignore_unused_variable_warning(ci1);
             ignore_unused_variable_warning(ci2);
         }
+       
+       
+        SinglePassRangeConcept();
 
-       // Rationale:
-       // The type of m_range is T& rather than T because it allows
-       // T to be an abstract class.
-       T& m_range;
+        // Rationale:
+        // The type of m_range is T& rather than T because it allows
+        // T to be an abstract class.
+        T& m_range;
     };
 
     //! Check if a type T models the ForwardRange range concept.

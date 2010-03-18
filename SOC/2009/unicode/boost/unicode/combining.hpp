@@ -49,16 +49,16 @@ namespace detail
     void not_stream_safe(Iterator begin, Iterator end)
     {
 #ifndef BOOST_NO_STD_LOCALE
-	    std::stringstream ss;
-	    ss << "Invalid Unicode stream-safe combining character sequence " << std::showbase << std::hex;
-	    for(Iterator it = begin; it != end; ++it)
-		    ss << *it << " ";
-	    ss << "encountered while trying to decompose UTF-32 sequence";
-	    std::out_of_range e(ss.str());
+        std::stringstream ss;
+        ss << "Invalid Unicode stream-safe combining character sequence " << std::showbase << std::hex;
+        for(Iterator it = begin; it != end; ++it)
+            ss << *it << " ";
+        ss << "encountered while trying to decompose UTF-32 sequence";
+        std::out_of_range e(ss.str());
 #else
-	    std::out_of_range e("Invalid Unicode stream-safe combining character sequence encountered while trying to decompose UTF-32 sequence");
+        std::out_of_range e("Invalid Unicode stream-safe combining character sequence encountered while trying to decompose UTF-32 sequence");
 #endif
-	    boost::throw_exception(e);
+        boost::throw_exception(e);
     }
     
     template<typename Iterator, typename OutputIterator>
@@ -139,7 +139,7 @@ private:
     template<typename Range, typename Out>
     std::pair<typename range_iterator<const Range>::type, Out> combine_sort_impl(const Range& range, Out out)
     {
-        return std::make_pair(end(range), combine_sort_impl(begin(range), end(range), out));
+        return std::make_pair(boost::end(range), combine_sort_impl(boost::begin(range), boost::end(range), out));
     }
 
     template<typename In, typename Out>

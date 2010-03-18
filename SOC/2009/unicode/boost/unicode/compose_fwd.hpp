@@ -80,7 +80,7 @@ private:
     template<typename Range, typename Out>
     std::pair<typename range_iterator<const Range>::type, Out> decompose_impl(const Range& range, Out out)
     {
-        return std::make_pair(end(range), decompose_impl(begin(range), end(range), out));
+        return std::make_pair(boost::end(range), decompose_impl(boost::begin(range), boost::end(range), out));
     }
     
     template<typename In, typename Out>
@@ -191,7 +191,7 @@ private:
         iterator_range<const char32*> dec = ucd::get_decomposition(ch);
         if(!empty(dec) && ((1 << ucd::get_decomposition_type(ch)) & mask))
         {
-            for(const char32* p = begin(dec); p != end(dec); ++p)
+            for(const char32* p = boost::begin(dec); p != boost::end(dec); ++p)
                 out = decompose_rec(*p, out);
             return out;
         }

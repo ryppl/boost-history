@@ -28,12 +28,6 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/utility/common_type.hpp>
 
-#include <boost/preprocessor/repetition/enum_params.hpp>
-#include <boost/preprocessor/repetition/enum_binary_params.hpp>
-#include <boost/preprocessor/repetition/repeat.hpp>
-#include <boost/preprocessor/repetition/repeat_from_to.hpp>
-
-
 namespace boost
 {
     
@@ -251,13 +245,13 @@ join_iterator<Tuple> make_join_end_iterator(const Tuple& tuple);
  * a single concatenated range. */
 template<typename Tuple>
 struct join_iterator
-	: iterator_facade<
-		join_iterator<Tuple>,
+    : iterator_facade<
+        join_iterator<Tuple>,
         typename detail::deduce_value_type<typename fusion::result_of::as_vector<Tuple>::type>::type,
-		std::bidirectional_iterator_tag,
+        std::bidirectional_iterator_tag,
         typename detail::deduce_reference<typename fusion::result_of::as_vector<Tuple>::type>::type,
         typename detail::deduce_difference_type<typename fusion::result_of::as_vector<Tuple>::type>::type
-	>
+    >
 {
     join_iterator() {} // singular
     
@@ -271,32 +265,32 @@ private:
     }
     
     friend join_iterator<Tuple> make_join_end_iterator<Tuple>(const Tuple& tuple);
-	friend class boost::iterator_core_access;
+    friend class boost::iterator_core_access;
     typedef typename fusion::result_of::as_vector<Tuple>::type FusionTuple;
     typedef typename detail::deduce_reference<FusionTuple>::type Reference;
 
-	Reference dereference() const
-	{
-		return apply_visitor(
+    Reference dereference() const
+    {
+        return apply_visitor(
             detail::dereference_visitor<Reference>(),
             v
         );
-	}
-	
-	void increment()
-	{
+    }
+    
+    void increment()
+    {
         v = apply_visitor(detail::increment_visitor<FusionTuple, Variant>(t), v);
-	}
-	
-	void decrement()
-	{
+    }
+    
+    void decrement()
+    {
         v = apply_visitor(detail::decrement_visitor<FusionTuple, Variant>(t), v);
-	}
-	
-	bool equal(const join_iterator& other) const
-	{
-		return apply_visitor(detail::equal_visitor(), v, other.v);
-	}
+    }
+    
+    bool equal(const join_iterator& other) const
+    {
+        return apply_visitor(detail::equal_visitor(), v, other.v);
+    }
     
     FusionTuple t;
     typedef typename make_variant_over<
@@ -338,83 +332,57 @@ iterator_range<
     );
 }
 
-struct range_transformer
+namespace detail
 {
-    template<typename>
-    struct result {};
-    
-    template<typename F, typename R>
-    struct result<F(R&)>
+    struct range_tuple_transformer
     {
-        typedef iterator_range<
-            typename range_iterator<R>::type
-        > type;
+        template<typename>
+        struct result {};
+        
+        template<typename F, typename R>
+        struct result<F(R&)>
+        {
+            typedef iterator_range<
+                typename range_iterator<R>::type
+            > type;
+        };
+        
+        template<typename Range>
+        typename result<range_tuple_transformer(Range&)>::type
+        operator()(Range& r) const
+        {
+            return make_iterator_range(r);
+        }
     };
     
-    template<typename Range>
-    typename result<range_transformer(Range&)>::type
-    operator()(Range& r) const
+    struct fused_make_range_tuple
     {
-        return make_iterator_range(r);
-    }
-};
-
-struct fused_make_range_tuple
-{
-    template<typename>
-    struct result
-    {
-    };
+        template<typename>
+        struct result
+        {
+        };
+        
+        template<typename F, typename Seq>
+        struct result<F(Seq&)>
+        {
+            typedef iterator_range< join_iterator<
+                typename fusion::result_of::transform<
+                    Seq const,
+                    range_tuple_transformer
+            >::type > > type;
+        };
     
-    template<typename F, typename Seq>
-    struct result<F(Seq&)>
-    {
-        typedef iterator_range< join_iterator< typename fusion::result_of::as_vector<
-            typename fusion::result_of::transform<
-                Seq const,
-                range_transformer
-            >::type
-        >::type > > type;
+        template<class Seq>
+        typename result<fused_make_range_tuple(Seq&)>::type operator()(Seq const & s) const
+        {
+            return joined(fusion::transform(s, range_tuple_transformer()));
+        }
     };
+}
 
-    template<class Seq>
-    typename result<fused_make_range_tuple(Seq&)>::type operator()(Seq const & s) const
-    {
-        return joined(fusion::as_vector(fusion::transform(s, range_transformer())));
-    }
-};
-
-/*forward_adapter<
-    fusion::unfused<fused_make_range_tuple>
-> joined_n;*/
-
-#if 1
-#ifdef BOOST_UNICODE_DOXYGEN_INVOKED
-template<typename... T>
-iterator_range<
-    join_iterator< tuple<T...> >
-> joined_n(const T&... n);
-#else
-#define BOOST_ITERATOR_JOIN_DEF(z, n, data) \
-template<BOOST_PP_ENUM_PARAMS(n, typename T)> \
-iterator_range< \
-    join_iterator< tuple<BOOST_PP_REPEAT(n, BOOST_ITERATOR_JOIN_DEF_A, ~)> > \
-> joined_n(BOOST_PP_ENUM_BINARY_PARAMS(n, const T, & t)) \
-{ \
-    return joined(make_tuple( \
-        BOOST_PP_REPEAT(n, BOOST_ITERATOR_JOIN_DEF_B, ~) \
-    )); \
-} \
-    /**/
-#define BOOST_ITERATOR_JOIN_DEF_A(z, n, data) \
-        BOOST_PP_COMMA_IF(n) iterator_range<typename range_iterator<const BOOST_PP_CAT(T, n)>::type> \
-    /**/
-#define BOOST_ITERATOR_JOIN_DEF_B(z, n, data) \
-        BOOST_PP_COMMA_IF(n) make_iterator_range(BOOST_PP_CAT(t, n)) \
-    /**/
-BOOST_PP_REPEAT_FROM_TO(1, 5, BOOST_ITERATOR_JOIN_DEF, ~)
-#endif
-#endif
+forward_adapter<
+    fusion::unfused<detail::fused_make_range_tuple>
+> joined_n;
 
 } // namespace boost
 
