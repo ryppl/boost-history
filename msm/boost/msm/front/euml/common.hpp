@@ -55,6 +55,22 @@
 
 #include <boost/fusion/container/vector.hpp>
 #include <boost/fusion/include/at_c.hpp>
+#include <boost/fusion/include/make_map.hpp>
+#include <boost/fusion/include/pair.hpp>
+#include <boost/fusion/include/as_vector.hpp>
+#include <boost/fusion/include/pair.hpp>
+#include <boost/type_traits/remove_reference.hpp>
+
+#include <boost/preprocessor/repetition/enum_params.hpp>
+#include <boost/preprocessor/arithmetic/sub.hpp>
+#include <boost/preprocessor/punctuation/comma_if.hpp>
+#include <boost/preprocessor/control/expr_if.hpp> 
+#include <boost/preprocessor/punctuation/comma.hpp>
+#include <boost/preprocessor/arithmetic/add.hpp>
+#include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/comparison/less.hpp>
+#include <boost/preprocessor/arithmetic/dec.hpp>
+#include <boost/preprocessor/repetition/repeat_from_to.hpp>
 
 #include <boost/msm/front/functor_row.hpp>
 
@@ -2142,6 +2158,58 @@ Defer_Helper const defer_;
 
 #define RESULT_TYPE2_GET_SIZE_TYPE_REMOVE_REF_PARAM1 typename get_size_type<typename ::boost::remove_reference<typename get_result_type2<Param1,Event,FSM,STATE>::type>::type>::type
 #define RESULT_TYPE_GET_SIZE_TYPE_REMOVE_REF_PARAM1 typename get_size_type<typename ::boost::remove_reference<typename get_result_type<Param1,EVT,FSM,SourceState,TargetState>::type>::type>::type 
+
+#define BOOST_EUML_EVENT(instance_name)                                         \
+    struct instance_name ## _impl;                                              \
+    struct instance_name ## _helper :  euml_event<instance_name ## _impl>{};    \
+    instance_name ## _helper instance_name;
+
+#define MSM_EUML_EVENT_INSTANCE_HELPER_EXECUTE1(z, n, unused) ARG ## n arg ## n
+#define MSM_EUML_EVENT_INSTANCE_HELPER_EXECUTE2(z, n, unused) arg ## n
+#define MSM_EUML_EVENT_INSTANCE_HELPER_ATTRIBUTE_MAP_ENTRY(z, n, unused)                        \
+    typename boost::fusion::result_of::first<                                                   \
+            ::boost::remove_reference<                                                          \
+            boost::fusion::result_of::at_c<attribute_vec,## n>::type>::type>::type              \
+
+#define MSM_EUML_EVENT_INSTANCE_HELPER_ATTRIBUTE_MAP(z, n, mytuple)                             \
+    template <BOOST_PP_ENUM_PARAMS(n, class ARG)>                                               \
+    BOOST_PP_TUPLE_ELEM(2, 0, mytuple) ## _impl(BOOST_PP_ENUM(n, MSM_EUML_EVENT_INSTANCE_HELPER_EXECUTE1, ~ )):      \
+    BOOST_PP_TUPLE_ELEM(2, 1, mytuple)(                                                         \
+        boost::fusion::make_map<                                                                \
+            BOOST_PP_ENUM(n, MSM_EUML_EVENT_INSTANCE_HELPER_ATTRIBUTE_MAP_ENTRY, ~ )            \
+        >                                                                                       \
+        (BOOST_PP_ENUM(n, MSM_EUML_EVENT_INSTANCE_HELPER_EXECUTE2, ~ )) ){}                                                                             
+
+#define MSM_EUML_EVENT_INSTANCE_HELPER_OPERATOR_DECL(z, n, operator_code)                       \
+    template <BOOST_PP_ENUM_PARAMS(n, class ARG)>                                               \
+    operator_code(BOOST_PP_ENUM(n, MSM_EUML_EVENT_INSTANCE_HELPER_EXECUTE1, ~ ));
+
+#define MSM_EUML_EVENT_INSTANCE_HELPER_OPERATOR_IMPL(z, n, instance)                            \
+    template <BOOST_PP_ENUM_PARAMS(n, class ARG)>                                               \
+    instance ## _impl instance ## _helper::operator()                                           \
+        (BOOST_PP_ENUM(n, MSM_EUML_EVENT_INSTANCE_HELPER_EXECUTE1, ~ )){                        \
+        return instance ## _impl (BOOST_PP_ENUM(n, MSM_EUML_EVENT_INSTANCE_HELPER_EXECUTE2, ~ ));}
+
+#define MSM_EUML_EVENT_WITH_ATTRIBUTES(instance_name, attributes_name)                          \
+    struct instance_name ## _impl;                                                              \
+    struct instance_name ## _helper :  euml_event<instance_name ## _impl>                       \
+    {                                                                                           \
+        BOOST_PP_REPEAT_FROM_TO(1,BOOST_PP_ADD(FUSION_MAX_MAP_SIZE ,1),                         \
+            MSM_EUML_EVENT_INSTANCE_HELPER_OPERATOR_DECL, instance_name ## _impl operator())    \
+    };                                                                                          \
+    instance_name ## _helper instance_name;                                                     \
+    struct instance_name ## _impl : instance_name ## _helper ,attributes_name                   \
+    {                                                                                           \
+        typedef attributes_name::attributes_type attribute_map;                                 \
+        typedef ::boost::fusion::result_of::as_vector<attribute_map>::type attribute_vec;       \
+        BOOST_PP_REPEAT_FROM_TO(1,BOOST_PP_ADD(FUSION_MAX_MAP_SIZE ,1),                         \
+        MSM_EUML_EVENT_INSTANCE_HELPER_ATTRIBUTE_MAP, (instance_name,attributes_name))          \
+    };                                                                                          \
+    BOOST_PP_REPEAT_FROM_TO(1,BOOST_PP_ADD(FUSION_MAX_MAP_SIZE ,1),                             \
+    MSM_EUML_EVENT_INSTANCE_HELPER_OPERATOR_IMPL, instance_name)
+
+
+
 
 }}}} // boost::msm::front::euml
 

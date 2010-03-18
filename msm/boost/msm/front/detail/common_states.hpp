@@ -24,6 +24,8 @@ namespace boost { namespace msm { namespace front {namespace detail
 template <class Attributes= ::boost::fusion::map<> >
 struct inherit_attributes
 {
+    inherit_attributes():m_attributes(){}
+    inherit_attributes(Attributes const& the_attributes):m_attributes(the_attributes){}
 	// on the fly attribute creation capability
 	typedef Attributes		attributes_type;
     template <class Index>
