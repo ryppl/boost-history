@@ -125,7 +125,7 @@ struct combine_sorter
             Out
         > p = combine_sort_impl(
             make_reversed_range(
-                *prior(
+                *boost::prior(
                     make_consumer_iterator(begin, end, end, combiner())
                 )
             ),
