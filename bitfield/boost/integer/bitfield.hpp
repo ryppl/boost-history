@@ -326,6 +326,22 @@ namespace boost { namespace integer {
         typedef bitfield<const STORAGE_TYPE, F, L, VALUE_TYPE> value;
     };
 
+    template <typename OSTREAM, typename ST, std::size_t F, std::size_t L
+        , typename VT
+        , typename RT>
+    OSTREAM& operator<<(OSTREAM& os, bitfield<ST, F, L, VT, RT> const& r) {
+        os << r.value();
+        return os;
+    }
+    template <typename ISTREAM, typename ST, std::size_t F, std::size_t L
+        , typename VT
+        , typename RT>
+    ISTREAM& operator>>(ISTREAM& is, bitfield<ST, F, L, VT, RT> & r) {
+        VT v;
+        is>> v;
+        r.set(v);
+        return is;
+    }
 }}
 #endif
 

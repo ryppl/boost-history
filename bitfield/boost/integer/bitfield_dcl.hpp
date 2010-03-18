@@ -17,8 +17,8 @@
 #define BOOST_BITFIELD_DCL(STORAGE_TYPE, STORAGE_VAR, VALUE_TYPE, FIELD, F, L) \
    typedef boost::integer::bitfield_traits<STORAGE_TYPE,F,L,VALUE_TYPE>   FIELD##_type; \
    FIELD##_type::reference FIELD() { return FIELD##_type::reference(STORAGE_VAR); } \
-   FIELD##_type::value::value_type FIELD() const { return FIELD##_type::value(word).get(); } \
+   FIELD##_type::value::value_type FIELD() const { return FIELD##_type::value(STORAGE_VAR).get(); } \
    void set_##FIELD(VALUE_TYPE& val) { FIELD##_type::reference(STORAGE_VAR).set(val); } \
-   FIELD##_type::value::value_type get_##FIELD() const { return FIELD##_type::value(word).get(); }
+   FIELD##_type::value::value_type get_##FIELD() const { return FIELD##_type::value(STORAGE_VAR).get(); }
 
 #endif
