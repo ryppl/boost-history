@@ -70,23 +70,23 @@ cat_limits(cv1 Range1 ref1 range1, cv2 Range2 ref2 range2) \
 \
 \
         typename range_iterator<cv1 Range1>::type \
-        new_end = combiner().rtl(begin(decoded1), end(decoded1)).base(); \
+        new_end = combiner().rtl(boost::begin(decoded1), boost::end(decoded1)).base(); \
 \
         typename range_iterator<cv2 Range2>::type \
-        new_begin = combiner().ltr(begin(decoded2), end(decoded2)).base(); \
+        new_begin = combiner().ltr(boost::begin(decoded2), boost::end(decoded2)).base(); \
 \
         return make_tuple( \
-            make_iterator_range(begin(range1), new_end), \
-            make_iterator_range(new_end, end(range1)), \
-            make_iterator_range(begin(range2), new_begin), \
-            make_iterator_range(new_begin, end(range2)) \
+            make_iterator_range(boost::begin(range1), new_end), \
+            make_iterator_range(new_end, boost::end(range1)), \
+            make_iterator_range(boost::begin(range2), new_begin), \
+            make_iterator_range(new_begin, boost::end(range2)) \
         ); \
     } \
 \
     return make_tuple( \
         range1, \
-        make_iterator_range(end(range1), end(range1)), \
-        make_iterator_range(end(range2), end(range2)), \
+        make_iterator_range(boost::end(range1), boost::end(range1)), \
+        make_iterator_range(boost::end(range2), boost::end(range2)), \
         range2 \
     ); \
 }

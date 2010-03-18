@@ -28,11 +28,16 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/utility/common_type.hpp>
 
+/* This file defines an iterator adapter to make a tuple of ranges appear
+ * as a single concatenated range */
+
 namespace boost
 {
     
 namespace detail
 {
+    /* Each iterator of the tuple must have a unique type to identify it
+     * in a variant, so it is wrapped */
     template<typename T, int N>
     struct wrapper : iterator_facade<
         wrapper<T, N>,
@@ -93,6 +98,10 @@ namespace detail
     {
         return wrapper<T, N>(t);
     }
+    
+    /* We need to deduce what is the best type to hold any value out of
+     * the potentially slightly heterogeneous types in the tuple, and
+     * do that for value_type, reference and difference_type. */
     
     template<typename RangeSequence>
     struct deduce_value_type : common_type_seq<
@@ -170,9 +179,9 @@ namespace detail
             Variant
         >::type operator()(T& t) const
         {
-            if(++t == make_wrapper<T::index>(end(fusion::get<T::index>(tuple))))
+            if(++t == make_wrapper<T::index>(boost::end(fusion::get<T::index>(tuple))))
                 return make_wrapper<T::index+1>(
-                    begin(
+                    boost::begin(
                         fusion::get<T::index+1>(tuple)
                     )
                 );
@@ -204,10 +213,10 @@ namespace detail
         >::type
         operator()(T& t) const
         {
-            if(t == make_wrapper<T::index>(begin(fusion::get<T::index>(tuple))))
+            if(t == make_wrapper<T::index>(boost::begin(fusion::get<T::index>(tuple))))
                 return make_wrapper<T::index-1>(
-                    prior(
-                        end(
+                    boost::prior(
+                        boost::end(
                             fusion::get<T::index-1>(tuple)
                         )
                     )
@@ -255,12 +264,12 @@ struct join_iterator
 {
     join_iterator() {} // singular
     
-    join_iterator(const Tuple& t_) : t(t_), v(detail::make_wrapper<0>(begin(fusion::get<0>(t))))
+    join_iterator(const Tuple& t_) : t(t_), v(detail::make_wrapper<0>(boost::begin(fusion::get<0>(t))))
     {
     }
     
 private:
-    join_iterator(const Tuple& t_, bool) : t(t_), v(detail::make_wrapper<mpl::size<FusionTuple>::value-1>(end(fusion::get<mpl::size<FusionTuple>::value-1>(t))))
+    join_iterator(const Tuple& t_, bool) : t(t_), v(detail::make_wrapper<mpl::size<FusionTuple>::value-1>(boost::end(fusion::get<mpl::size<FusionTuple>::value-1>(t))))
     {
     }
     
@@ -332,6 +341,7 @@ iterator_range<
     );
 }
 
+/* We convert ranges to iterator_range to avoid copying containers */
 namespace detail
 {
     struct range_tuple_transformer
@@ -380,9 +390,17 @@ namespace detail
     };
 }
 
+/* Perfect forwarding with fusion::unfused + forward_adapter */
+#ifndef BOOST_UNICODE_DOXYGEN_INVOKED
 forward_adapter<
     fusion::unfused<detail::fused_make_range_tuple>
 > joined_n;
+#else
+template<typename... T>
+join_iterator<
+    fusion::vector< sub_range<T>... >
+> joined_n(T&&... ranges);
+#endif
 
 } // namespace boost
 
