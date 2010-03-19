@@ -15,32 +15,22 @@
 #error
 #endif
 
-namespace boost{
-namespace assign{
-namespace detail{
-namespace auto_size{
-
-    template<typename C,typename C1,typename T>
-    void check_fifo(C& elems,const C1& coll,
-        const T& a,const T& b,const T& c,const T& d,const T& e,const T& f,
-        const T& g,const T& h
-    )
-    {   
-        elems = coll.to_adapter();
-        BOOST_ASSIGN_CHECK_EQUAL(elems.front() , a); elems.pop(); 
-        BOOST_ASSIGN_CHECK_EQUAL(elems.front() , b); elems.pop(); 
-        BOOST_ASSIGN_CHECK_EQUAL(elems.front() , c); elems.pop(); 
-        BOOST_ASSIGN_CHECK_EQUAL(elems.front() , d); elems.pop(); 
-        BOOST_ASSIGN_CHECK_EQUAL(elems.front() , e); elems.pop(); 
-        BOOST_ASSIGN_CHECK_EQUAL(elems.front() , f); elems.pop(); 
-        BOOST_ASSIGN_CHECK_EQUAL(elems.front() , g); elems.pop(); 
-        BOOST_ASSIGN_CHECK_EQUAL(elems.front() , h); elems.pop(); 
-        BOOST_ASSIGN_CHECK_EQUAL(elems.empty() , true);  
-    }
-
-}// auto_size
-}// detail
-}// assign
-}// boost
+#define BOOST_ASSIGN_AS_CHECK_adapter_fifo(C)                                  \
+{                                                                              \
+    typedef T val_;                                                            \
+    using namespace check_constants;                                           \
+                                                                               \
+    C elems = BOOST_ASSIGN_AS_CHECK_cref8(a,b,c,d,e,f,g,h).to_adapter();       \
+    BOOST_ASSIGN_CHECK_EQUAL(elems.front() , a); elems.pop();                  \
+    BOOST_ASSIGN_CHECK_EQUAL(elems.front() , b); elems.pop();                  \
+    BOOST_ASSIGN_CHECK_EQUAL(elems.front() , c); elems.pop();                  \
+    BOOST_ASSIGN_CHECK_EQUAL(elems.front() , d); elems.pop();                  \
+    BOOST_ASSIGN_CHECK_EQUAL(elems.front() , e); elems.pop();                  \
+    BOOST_ASSIGN_CHECK_EQUAL(elems.front() , f); elems.pop();                  \
+    BOOST_ASSIGN_CHECK_EQUAL(elems.front() , g); elems.pop();                  \
+    BOOST_ASSIGN_CHECK_EQUAL(elems.front() , h); elems.pop();                  \
+    BOOST_ASSIGN_CHECK_EQUAL(elems.empty() , true);                            \
+}                                                                              \
+/**/
 
 #endif

@@ -1,19 +1,22 @@
 //////////////////////////////////////////////////////////////////////////////
-// assign::detail::array::policy.hpp                                        //
+// assign::detail::array::lazy.hpp                                          //
 //                                                                          //
 //  (C) Copyright 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_AUTO_SIZE_DETAIL_ARRAY_POLICY_ER_2010_HPP
-#define BOOST_ASSIGN_AUTO_SIZE_DETAIL_ARRAY_POLICY_ER_2010_HPP
+#ifndef BOOST_ASSIGN_AUTO_SIZE_DETAIL_ARRAY_LAZY_ER_2010_HPP
+#define BOOST_ASSIGN_AUTO_SIZE_DETAIL_ARRAY_LAZY_ER_2010_HPP
 #include <boost/shared_ptr.hpp>
 #include <boost/assign/auto_size/array/interface.hpp>
 #include <boost/assign/auto_size/array/ref.hpp>
 #include <boost/assign/auto_size/detail/policy.hpp>
 #include <boost/assign/auto_size/array/tag.hpp>
 
+// Declarations for write_to_array and the class that derives from lazy_array
+// must precede inclusion of this class.
+ 
 namespace boost{
 namespace assign{
 namespace detail{
@@ -35,15 +38,7 @@ namespace auto_size{
             typedef lazy_array<elem_,size_::value,R,E> type;
         };
    };        
- 
-    template<typename E,typename T,int N,
-        template<typename> class R,typename P,bool F>
-    class expr;         
-
-    template<typename A,typename E,typename T,int N,
-    	template<typename> class R,typename P,bool F>
-    void write_to_array(A& a,const expr<E,T,N,R,P,F>& e);
-                  
+                   
    // Postones allocation until it is necessary.
    // D must interoperate with write_to_array.
    //
@@ -54,7 +49,6 @@ namespace auto_size{
    class lazy_array 
     	: public array_interface<T,N,R,lazy_array<T,N,R,D> >
     {
-
         typedef typename auto_size::ref_array<T,N,R>::type ref_array_;
                 
         void alloc_if()const{
@@ -65,10 +59,12 @@ namespace auto_size{
 
         void alloc()const{ 
             this->ptr = smart_ptr_(new ref_array_);
-            write_to_array(*this->ptr,static_cast<const D&>(*this));		
+            write_to_array<0>(*this->ptr,static_cast<const D&>(*this));	
         }
 		
         public:
+
+        void force_alloc(){ this->alloc(); } // TODO remove
 
         ref_array_& ref_array_impl(){ 
             this->alloc_if();
@@ -81,6 +77,7 @@ namespace auto_size{
         }
         
         private:
+        
         typedef boost::shared_ptr<ref_array_> smart_ptr_;
         mutable smart_ptr_ ptr;
 

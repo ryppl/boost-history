@@ -188,7 +188,7 @@ BOOST_ASSIGN_DETAIL_COMPARISON_OP( != , comparison_op::forward::not_equal )
 BOOST_ASSIGN_DETAIL_COMPARISON_OP( <  , comparison_op::forward::less )
 BOOST_ASSIGN_DETAIL_COMPARISON_OP( >  , comparison_op::forward::greater )
 BOOST_ASSIGN_DETAIL_COMPARISON_OP( <= , comparison_op::forward::less_equal )
-//BOOST_ASSIGN_DETAIL_COMPARISON_OP( >= , comparison_op::forward::greater_equal )
+BOOST_ASSIGN_DETAIL_COMPARISON_OP( >= , comparison_op::forward::greater_equal )
 
 }// comparison_op
 }// detail

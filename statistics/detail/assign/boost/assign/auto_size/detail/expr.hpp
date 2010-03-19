@@ -14,6 +14,7 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/equal_to.hpp>
 #include <boost/mpl/empty_base.hpp>
+#include <boost/mpl/identity.hpp>
 #include <boost/concept_check.hpp>
 #include <boost/iterator/iterator_concepts.hpp>
 #include <boost/next_prior.hpp>
@@ -28,7 +29,10 @@
 #include <boost/assign/auto_size/detail/types.hpp>
 #include <boost/assign/auto_size/detail/expr_size.hpp>
 #include <boost/assign/auto_size/detail/expr_elem.hpp>
+#include <boost/assign/auto_size/detail/fwd_expr.hpp>
 #include <boost/assign/auto_size/array/lazy.hpp>
+
+#include <iostream> // tmp
 
 // Creates a collection of references by deducing the number of arguments
 // at compile time. The functionality is controlled by parameter R which
@@ -63,21 +67,17 @@ namespace auto_size{
     // P : policy
     // F : use reference to link to the previous collection 
 
-    template<typename E,typename T,int N,
-        template<typename> class R,typename P,bool F>
-    class expr;
-
     // ---- describe ---- //
     
     template<typename E,typename T,
-        template<typename> class R,typename P,typename F,bool F>
-	void describe(std::ostream& os,const expr<E,T,1,R,P,F>& e){
+        template<typename> class R,typename P>
+	void describe(std::ostream& os,const expr<E,T,1,R,P>& e){
     	os << e.ref;
     }
 
     template<typename E,typename T,int N,
-        	template<typename> class R,typename P,bool F>
-	void describe(std::ostream& os,const expr<E,T,N,R,P,F>& e){
+        template<typename> class R,typename P>
+	void describe(std::ostream& os,const expr<E,T,N,R,P>& e){
     	describe(os,e.previous);
     	os << ',' << e.ref;
     }
@@ -85,25 +85,189 @@ namespace auto_size{
     // ---- Traits ---- //
     
     template<typename E,typename T,int N,
-        template<typename>class R,typename P,bool F>
-    struct expr_size<expr<E,T,N,R,P,F> >
+        template<typename>class R,typename P>
+    struct expr_size<expr<E,T,N,R,P> >
      	: boost::mpl::int_<N>{};
 
     template<typename E,typename T,int N,
-        template<typename>class R,typename P,bool F>
-    struct expr_elem<expr<E,T,N,R,P,F> >
+        template<typename>class R,typename P>
+    struct expr_elem<expr<E,T,N,R,P> >
     {
     	typedef T type;
     };
 
-    namespace result_of{
-    
-        // Assumes F is set to default
-        template<typename T,int N,template<typename> class R,typename P>
-    	struct expr;
+    // ---- Collection builder ---- //
 
+    template<typename E,typename T,int N,
+        template<typename> class R,typename P>
+    class expr : public policy<P>::template apply<expr<E,T,N,R,P>,R>::type{
+        typedef boost::mpl::int_<1> int_1_;
+        typedef boost::mpl::int_<N> int_n_;
+        typedef typename R<T>::type ref_;
+        typedef typename policy<P>::template apply<expr,R>::type super_;
+
+        template<typename E1>
+        struct next{
+            typedef expr<E1,T,N+1,R,P> type;
+        };
+
+        public:       
+
+        typedef detail::assign_reference_copy<const E> ref_to_previous_;
+        typedef typename boost::mpl::equal_to<int_n_,int_1_>::type is_first_;
+        typedef typename boost::mpl::if_<
+            is_first_,E,ref_to_previous_>::type previous_;
+        typedef typename next<expr>::type result_type;
+
+        explicit expr(const E& p,T& t):previous(p),ref(t){} 
+        // Needed by csv.hpp :
+        template<typename E1,typename P1>
+        explicit expr(const expr<E1,T,N,R,P1>& that)
+            :super_(that)
+            ,previous(that.previous)            
+            ,ref(that.ref){}
+
+        result_type operator()(T& t)const{ return result_type(*this,t); }
+        
+        //private:
+        //template<int Nshift,typename A,typename E1,int N1>
+        //friend void write_to_array(A& a,const expr<E1,T,N1,R,P>& e,false_);
+
+        //template<int Nshift,typename A,typename E1,int N1>
+        //friend void write_to_array(A& a,const expr<E1,T,N1,R,P>& e,true_);
+                
+        //template<int Nshift,typename A,typename E1,int N1>
+        //friend void write_to_array(A& a,const expr<E1,T,N1,R,P>& e);
+
+        mutable previous_ previous;
+        mutable ref_ ref;
+
+//        expr();
+
+    };
+
+    // ---- write_to_array ---- //
+	
+    template<int Nshift,typename A,typename E,typename T,int N,
+    	template<typename> class R,typename P>
+    void write_to_array(A& a,const expr<E,T,N,R,P>& e,false_ /*exit*/){
+        a[Nshift+N-1] = e.ref;
+        write_to_array<Nshift>(a,e.previous.get_ref());
+    }
+            
+    template<int Nshift,typename A,typename E,typename T,int N,
+    	template<typename> class R,typename P>
+    void write_to_array(A& a,const expr<E,T,N,R,P>& e,true_ /*exit*/){
+        a[Nshift+N-1] = e.ref;
     }
 
+    template<int Nshift,typename A,typename E,typename T,int N,
+    	template<typename> class R,typename P>
+    void write_to_array(A& a,const expr<E,T,N,R,P>& e){
+        typedef expr<E,T,N,R,P> expr_;
+        typedef typename expr_::is_first_ exit_;
+        write_to_array<Nshift>(a,e,exit_());
+    }
+
+    // ---- ref wrappers ---- //
+
+    template<typename T>
+    struct ref_copy{
+        typedef boost::assign::detail::assign_reference_copy<T> type;
+    };
+
+    template<typename T>
+    struct ref_rebind{
+        typedef boost::assign::detail::assign_reference_rebind<T> type;
+    };
+
+    // ---- first expr ---- //
+
+    template<typename T,template<typename> class R,typename P>
+    struct first_expr{
+        typedef detail::auto_size::expr<detail::auto_size::top_,T,1,R,P> type;   
+        static type call(T& a){ return type(top_(),a); }
+    };
+
+    template<typename T,template<typename> class R>
+    struct first_expr_no_policy : first_expr<T,R,no_policy>{};
+
+    template<template<typename> class R,typename T>
+    typename first_expr_no_policy<T,R>::type 
+    make_first_expr_no_policy(T& a){
+    	return first_expr_no_policy<T,R>::call(a);
+    }
+
+    template<template<typename> class R,typename T>
+    typename first_expr_no_policy<const T,R>::type 
+    make_first_expr_no_policy(const T& a){
+    	return first_expr_no_policy<const T,R>::call(a);
+    }
+
+    template<typename T,typename P = default_policy>
+    struct first_copy : first_expr<T,ref_copy,P>{};
+
+    template<typename T,typename P = default_policy>
+    struct first_rebind : first_expr<T,ref_rebind,P>{};
+
+    // ---- n_th_expr ---- //
+
+namespace meta{	
+namespace impl{
+    template<int N>
+    struct n_th_expr{
+    
+    	template<typename T,template<typename> class R,typename P>
+        struct apply
+        {
+            typedef impl::n_th_expr<N-1> meta_;
+            typedef typename meta_::template apply<T,R,P> apply_;
+            typedef typename apply_::type::result_type type;
+    	};
+        
+    };
+    template<>
+    struct n_th_expr<1>{
+    
+    	template<typename T,template<typename> class R,typename P>
+        struct apply : first_expr<T,R,P>{};
+        
+    };
+    
+}//impl
+
+    template<typename T,template<typename> class R,typename P = default_policy>    
+    struct n_th_expr{
+    
+    	template<int N>
+        struct apply : impl::n_th_expr<N>::template apply<T,R,P>
+        {};
+        
+    };
+
+    template<typename T,typename P = default_policy>
+    struct n_th_expr_copy : meta::n_th_expr<T,ref_copy,P>{};
+
+    template<typename T,typename P = default_policy>
+    struct n_th_expr_rebind : meta::n_th_expr<T,ref_rebind,P>{};
+
+}// meta
+
+    template<typename T,template<typename> class R,int N, 
+        typename P = default_policy>
+    struct n_th_expr 
+        : meta::n_th_expr<T,R,P>::template apply<N>{};
+
+    template<typename T,int N, typename P = default_policy>
+    struct n_th_expr_copy 
+        : meta::n_th_expr_copy<T,P>::template apply<N>{};
+
+    template<typename T,int N, typename P = default_policy>
+    struct n_th_expr_rebind 
+        : meta::n_th_expr_rebind<T,P>::template apply<N>{};
+
+// Older stuff to be phased out
+/* 
     // ---- insert_range ---- //
 
     namespace result_of{
@@ -140,26 +304,6 @@ namespace auto_size{
         return result_::call(e,i);
     }
 
-    // ---- Collection builder ---- //
-
-    template<typename E,typename T,int N,
-        template<typename> class R,typename P,bool F = true>
-    class expr : public policy<P>::template apply<expr<E,T,N,R,P,F>,R>::type{
-        typedef boost::mpl::int_<1> int_1_;
-        typedef boost::mpl::int_<N> int_n_;
-        typedef typename R<T>::type ref_;
-        typedef typename policy<P>::template apply<expr,R>::type super_;
-
-        template<typename E1>
-        struct next{
-            typedef expr<E1,T,N+1,R,P,true> type;
-        };
-
-        template<typename E1>
-        struct alt_next{
-            // necessary for insert_range
-            typedef expr<E1,T,N+1,R,P,false> type;
-        };
 
         typedef typename boost::mpl::if_c<F,const E&,E>::type storage_;
 
@@ -175,12 +319,13 @@ namespace auto_size{
         struct result_of_range3 : result_of_range2<
             auto_size::static_size<
                 typename boost::remove_const<Range>::type>::value, Range>{};
-
         public:       
 
-        typedef typename boost::mpl::equal_to<int_n_,int_1_>::type is_first_;
         typedef typename boost::mpl::if_<is_first_,E,storage_>::type previous_;
+        typedef typename boost::mpl::equal_to<int_n_,int_1_>::type is_first_;
+        typedef typename boost::mpl::if_<is_first_,E,ref_to_previous_>::type previous_;
         typedef typename next<expr>::type result_type;
+
         typedef typename alt_next<expr>::type alt_result_type;
 
         explicit expr(const E& p,T& t):previous(p),ref(t){} 
@@ -188,10 +333,12 @@ namespace auto_size{
         template<typename E1,typename P1,bool F1>
         explicit expr(const expr<E1,T,N,R,P1,F1>& that)
             :super_(that)
-            ,previous(that.previous)
+            ,previous(that.previous)            
             ,ref(that.ref){}
 
         result_type operator()(T& t)const{ return result_type(*this,t); }
+        
+        // ---- range() ----
         alt_result_type alt(T& t)const{ return alt_result_type(*this,t); }
         
         template<int K,typename I>
@@ -237,107 +384,8 @@ namespace auto_size{
         range(const Range& r){
             return this->range<auto_size::static_size<Range>::value>(r); 
         }
+*/
 
-        mutable previous_ previous;
-        mutable ref_ ref;
-
-        private:
-        expr();
-
-    };
-
-    // ---- write_to_array ---- //
-	
-    // Some library extension may one day need Nshift, but not at present
-    template<int Nshift,typename A,typename E,typename T,int N,
-    	template<typename> class R,typename P,bool F>
-    void write_to_array(A& a,const expr<E,T,N,R,P,F>& e,false_ /*exit*/){
-        a[Nshift+N-1] = e.ref;
-        write_to_array(a,e.previous);
-    }
-            
-    template<int Nshift,typename A,typename E,typename T,int N,
-    	template<typename> class R,typename P,bool F>
-    void write_to_array(A& a,const expr<E,T,N,R,P,F>& e,true_ /*exit*/){
-        a[Nshift+N-1] = e.ref;
-    }
-
-    template<int Nshift,typename A,typename E,typename T,int N,
-    	template<typename> class R,typename P,bool F>
-    void write_to_array(A& a,const expr<E,T,N,R,P,F>& e){
-        typedef expr<E,T,N,R,P,F> expr_;
-        typedef typename expr_::is_first_ exit_;
-        write_to_array<Nshift>(a,e,exit_());
-    }
-
-    template<typename A,typename E,typename T,int N,
-    	template<typename> class R,typename P,bool F>
-    void write_to_array(A& a,const expr<E,T,N,R,P,F>& e){
-		return write_to_array<0>(a,e);
-	}
-
-    // ---- ref wrappers ---- //
-
-    template<typename T>
-    struct ref_copy{
-        typedef boost::assign::detail::assign_reference_copy<T> type;
-    };
-
-    template<typename T>
-    struct ref_rebind{
-        typedef boost::assign::detail::assign_reference_rebind<T> type;
-    };
-
-    // ---- first expr ---- //
-
-    template<typename T,template<typename> class R,typename P>
-    struct first_expr{
-        typedef detail::auto_size::expr<detail::auto_size::top_,T,1,R,P> type;   
-        static type call(T& a){ return type(top_(),a); }
-    };
-
-    template<typename T,template<typename> class R>
-    struct first_expr_no_policy : first_expr<T,R,no_policy>{};
-
-    template<template<typename> class R,typename T>
-    typename first_expr_no_policy<T,R>::type 
-    make_first_expr_no_policy(T& a){
-    	return first_expr_no_policy<T,R>::call(a);
-    }
-
-    template<template<typename> class R,typename T>
-    typename first_expr_no_policy<const T,R>::type 
-    make_first_expr_no_policy(const T& a){
-    	return first_expr_no_policy<const T,R>::call(a);
-    }
-
-    template<typename T,typename P = default_policy>
-    struct first_copy : first_expr<T,ref_copy,P>{};
-
-    template<typename T,typename P = default_policy>
-    struct first_rebind : first_expr<T,ref_rebind,P>{};
-
-    // ---- result_of ---- //
-	
-    namespace result_of{
-    	template<typename T,int N,
-        	template<typename> class R,typename P>
-    	struct expr{
-            typedef typename result_of::expr<T,N-1,R,P>::type previous;
-            typedef auto_size::expr<previous,T,N,R,P> type;
-    	};
-
-    	template<typename T,template<typename> class R,typename P>
-    	struct expr<T,1,R,P> : first_expr<T,R,P>{};
-
-    	template<typename T,int N,typename P = default_policy>
-    	struct copy : result_of::expr<T,N,ref_copy,P>{};	
-
-    	template<typename T,int N,typename P = default_policy>
-    	struct rebind : result_of::expr<T,N,ref_rebind,P>{};	
-
-    }
-            
 }// auto_size  
 }// detail      
 }// assign

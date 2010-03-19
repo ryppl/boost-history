@@ -13,7 +13,7 @@
 #include <boost/assign/auto_size/chain/convert_range.hpp>
 
 // Maps (R1,R2) to a type convertible to by either of the dereference type of
-// either of the input ranges. 
+// of the input ranges. 
 
 namespace boost{
 namespace assign{

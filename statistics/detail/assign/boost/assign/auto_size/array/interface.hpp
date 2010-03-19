@@ -12,7 +12,6 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/array.hpp>
 #include <boost/range.hpp>
-//#include <boost/assign/list_of.hpp> // for assign_detail::converter
 #include <boost/assign/auto_size/array/converter.hpp> 
 #include <boost/assign/auto_size/reference_wrapper/has_copy_semantics.hpp>
 #include <boost/assign/auto_size/array/ref.hpp>
@@ -103,6 +102,7 @@ namespace auto_size{
         }
 
         private:
+                
         typedef boost::mpl::bool_<false> false_;
         typedef boost::mpl::bool_<true> true_;
 

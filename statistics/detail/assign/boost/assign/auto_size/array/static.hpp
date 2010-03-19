@@ -1,17 +1,19 @@
 //////////////////////////////////////////////////////////////////////////////
-// assign::detail::array::wrapper.hpp                                       //
+// assign::detail::array::static.hpp                                        //
 //                                                                          //
 //  (C) Copyright 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_AUTO_SIZE_DETAIL_ARRAY_WRAPPER_ER_2010_HPP
-#define BOOST_ASSIGN_AUTO_SIZE_DETAIL_ARRAY_WRAPPER_ER_2010_HPP
+#ifndef BOOST_ASSIGN_AUTO_SIZE_DETAIL_ARRAY_STATIC_ER_2010_HPP
+#define BOOST_ASSIGN_AUTO_SIZE_DETAIL_ARRAY_STATIC_ER_2010_HPP
 #include <boost/assign/auto_size/array/interface.hpp>
 #include <boost/assign/auto_size/array/ref.hpp>
-#include <boost/assign/auto_size/detail/expr.hpp> // needed for write_to_array
 #include <boost/assign/auto_size/array/tag.hpp>
+
+// Declarations for write_to_array and the class that derives from static_array
+// must precede inclusion of this class.
 
 namespace boost{
 namespace assign{
@@ -49,7 +51,7 @@ namespace auto_size{
 
         template<typename E>
         static_array(const E& coll){
-            write_to_array(this->ref_array,coll);
+            write_to_array<0>(this->ref_array,coll);
         }	
         
         ref_array_& ref_array_impl(){ 

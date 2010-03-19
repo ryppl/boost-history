@@ -22,7 +22,7 @@
 //
 // Let n = BOOST_ASSIGN_CSV_SIZE and a1,...,an, objects of type T, Ref an alias 
 // for BOOST_ASSIGN_CSV_ref, P0 = BOOST_ASSIGN_CSV_DEF_POLICY and r<U,N,P> an
-// alias for result_of::expr<U,N,Ref,P>::type
+// alias for BOOST_ASSIGN_CSV_RESULT(U,N,P) 
 //
 // Usage:
 // BOOST_ASSIGN_CSV(fun) creates for i=1,...,n the following overloads:

@@ -8,6 +8,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_AUTO_SIZE_DETAIL_ARRAY_CONVERTER_ER_2010_HPP
 #define BOOST_ASSIGN_AUTO_SIZE_DETAIL_ARRAY_CONVERTER_ER_2010_HPP
+#include <boost/typeof/typeof.hpp>
 #include <boost/assign/list_of.hpp> // for assign_detail::converter
 #include <boost/assign/auto_size/comparison_op/range.hpp>
 
@@ -18,10 +19,10 @@ namespace auto_size{
 
     template< typename T, typename I >
     class converter 
-       : boost::assign_detail::converter<converter<T,I>,I>
-       ,public range_comparison_op::base_of< converter<T,I> >::type
+       : protected boost::assign_detail::converter<T,I> 
+       , public range_comparison_op::base_of< T >::type
     {
-       typedef boost::assign_detail::converter<converter<T,I>,I> impl_;
+       typedef boost::assign_detail::converter<T,I> impl_;
     protected:
        impl_& impl(){ return (*this); }
        const impl_& impl()const{ return (*this); }
@@ -43,31 +44,40 @@ namespace auto_size{
         template< class Container >
         Container convert_to_container() const
         {
-            return this->impl().convert_to_container();
+            return this->impl().convert_to_container<Container>();
         }
         
         template< class Container >
         Container to_container( Container& c ) const
         {
-            return this->impl().to_container();
+            return this->impl().to_container(c);
         }
 
-        // // adaptor_converter is private.
-        //adapter_converter to_adapter() const
-        //{
-        //    return this->impl().to_adapter();
-        //}
+        struct result_of_to_adapter{
+            static const impl_ impl;
+            
+            typedef BOOST_TYPEOF_TPL( impl.to_adapter() ) type;
+        
+            // needed bec impl_::adapter_converter is private
+
+        };
+
+        typename result_of_to_adapter::type
+        to_adapter() const
+        {
+            return this->impl().to_adapter();
+        }
 
         template< class Adapter >
         Adapter to_adapter( Adapter& a ) const
         {
-            return this->impl().to_adapter();
+            return this->impl().to_adapter(a);
         }
 
         template< class Array >
         Array to_array( Array& a ) const
         {
-            return this->impl().to_array();
+            return this->impl().to_array(a);
         }
 
     };

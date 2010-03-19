@@ -21,7 +21,7 @@
 #include <boost/assign/auto_size/chain/reference_traits.hpp>
 
 // Maps (T,U) to (convert_to<T>::type, convert_to<U>::type) and the latter
-// to type that is convertible to by both.
+// to a type that is convertible to by both.
 
 
 namespace boost{

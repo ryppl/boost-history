@@ -15,8 +15,8 @@ namespace detail{
 namespace inner_value_traits{
 
 // A type T is mapped to a an 'inner_value', U, in two steps:
-// 1) Tag = tag_of<T>
-// 2) U = meta::inner_value<Tag>::apply<T>::type
+//     1) Tag = tag_of<T>
+//     2) U = meta::inner_value<Tag>::apply<T>::type
 // This approach is useful to define a group (Tag) of types that shares the same
 // property. This file defines one group
 //          Tag               T            U       
