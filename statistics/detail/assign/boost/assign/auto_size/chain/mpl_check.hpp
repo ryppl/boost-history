@@ -110,6 +110,7 @@ namespace pair_range_traits{
 
 }// pair_range_traits
 
+template<typename T> // to allow .hpp
 void compound()
 {  
         

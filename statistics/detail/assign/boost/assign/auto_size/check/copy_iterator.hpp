@@ -8,41 +8,19 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_DETAIL_AUTO_SIZE_CHECK_COPY_ITERATOR_ER_2010_HPP
 #define BOOST_ASSIGN_DETAIL_AUTO_SIZE_CHECK_COPY_ITERATOR_ER_2010_HPP
-#include <algorithm>
+#include <boost/typeof/typeof.hpp>
 #include <boost/range.hpp>
 #include <boost/range/algorithm/copy.hpp>
-#include <boost/array.hpp>
 #include <boost/assign/auto_size/check/constants.hpp>
-
-#ifndef BOOST_ASSIGN_CHECK_EQUAL
-#error
-#endif
-
-#define BOOST_ASSIGN_AS_CHECK_copy_iterator_f(arg1,arg2)                       \
-{                                                                              \
-    boost::copy(arg1,boost::begin(arg2));                                      \
-    BOOST_ASSIGN_CHECK_EQUAL(a , a1);                                          \
-    BOOST_ASSIGN_CHECK_EQUAL(b , b1);                                          \
-    BOOST_ASSIGN_CHECK_EQUAL(c , c1);                                          \
-    BOOST_ASSIGN_CHECK_EQUAL(d , d1);                                          \
-    BOOST_ASSIGN_CHECK_EQUAL(e , e1);                                          \
-    BOOST_ASSIGN_CHECK_EQUAL(f , f1);                                          \
-    BOOST_ASSIGN_CHECK_EQUAL(g , g1);                                          \
-    BOOST_ASSIGN_CHECK_EQUAL(h , h1);                                          \
-}                                                                              \
-/**/
 
 #define BOOST_ASSIGN_AS_CHECK_copy_iterator                                    \
 {                                                                              \
     typedef T val_;                                                            \
     using namespace check_constants;                                           \
-    boost::array<val_,8> ar;                                                   \
-    ar[0] = a; ar[1] = b; ar[2] = c;                                           \
-    ar[3] = d; ar[4] = e; ar[5] = f;                                           \
-    ar[6] = g; ar[7] = h;                                                      \
     val_ a1, b1, c1, d1, e1, f1, g1, h1;                                       \
     BOOST_AUTO(tmp,BOOST_ASSIGN_AS_CHECK_ref8(a1,b1,c1,d1,e1,f1,g1,h1));       \
-    BOOST_ASSIGN_AS_CHECK_copy_iterator_f(ar,tmp)                              \
+    boost::copy(array(), boost::begin(tmp));                                   \
+    check_values_impl(a1,b1,c1,d1,e1,f1,g1,h1);                                \
 }                                                                              \
 /**/
 

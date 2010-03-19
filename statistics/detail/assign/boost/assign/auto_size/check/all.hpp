@@ -8,6 +8,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_DETAIL_AUTO_SIZE_CHECK_ALL_ER_2010_HPP
 #define BOOST_ASSIGN_DETAIL_AUTO_SIZE_CHECK_ALL_ER_2010_HPP
+#include <boost/preprocessor/cat.hpp>
 #include <vector>
 #include <set>
 #include <list>
@@ -15,7 +16,7 @@
 #include <queue>
 #include <boost/array.hpp>
 
-#include <boost/assign/auto_size/chain/mpl_check.hpp>
+#include <boost/assign/auto_size/check/constants.hpp>
 
 #include <boost/assign/auto_size/check/array.hpp>
 #include <boost/assign/auto_size/check/chain.hpp>
@@ -52,18 +53,15 @@ void fun(){                                                                    \
     BOOST_ASSIGN_AS_CHECK_adapter_lifo(std::stack<T>)                          \
     BOOST_ASSIGN_AS_CHECK_adapter_fifo(std::queue<T>)                          \
     BOOST_ASSIGN_AS_CHECK_comparison_op                                        \
-    chain_mpl_check::compound();                                               \
     BOOST_ASSIGN_AS_CHECK_example2                                             \
     BOOST_ASSIGN_AS_CHECK_chain                                                \
 }                                                                              \
-void fun(){ fun<int>(); }                                                      \
+void BOOST_PP_CAT(fun,_int)(){ fun<int>(); }                                   \
 }                                                                              \
 }                                                                              \
 }                                                                              \
 }                                                                              \
 /**/
-
-
 
 #endif
 

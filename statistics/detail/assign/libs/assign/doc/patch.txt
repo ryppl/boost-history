@@ -1,3 +1,5 @@
+Boost.RangeEx must be in the release.
+
 Add -R /boost/assign/auto_size
 Add /boost/auto_size.hpp
 Add /boost/chain_convert.hpp

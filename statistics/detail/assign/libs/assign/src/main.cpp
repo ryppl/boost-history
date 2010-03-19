@@ -9,9 +9,9 @@ int main (int argc, char * const argv[]) {
 
      using namespace boost::assign::detail::auto_size;
 
-     check_ref_list_of<int>();
+     check_ref_list_of_int();
      std::cout << "check_ref_list_of : ok" << std::endl;
-     check_ref_csv<int>();
+     check_ref_csv_int();
      std::cout << "check_csv : ok" << std::endl;
 
     example_chain(std::cout);
