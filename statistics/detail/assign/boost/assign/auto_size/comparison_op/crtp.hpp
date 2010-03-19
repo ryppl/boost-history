@@ -162,7 +162,7 @@ namespace forward{
     operator SYMB(const L& l,const R& r){                                     \
         typedef typename traits::policy_of<R>::type policy_;                  \
         typedef typename traits::derived_of<R>::type derived_;                \
-        return OP::call<policy_>(r,static_cast<const derived_&> (r));         \
+        return OP::call<policy_>(l,static_cast<const derived_&> (r));         \
     }                                                                         \
                                                                               \
     template<typename L,typename R>                                           \

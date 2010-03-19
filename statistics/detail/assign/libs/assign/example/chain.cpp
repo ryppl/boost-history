@@ -37,14 +37,21 @@ void example_chain(std::ostream& os)
 	BOOST_AUTO(tmp1,ref_list_of(a)(b)(c)(d)); 
 	BOOST_AUTO(tmp2,ref_list_of(e)(f)(g)(h)); 
 
+    BOOST_ASSERT(tmp1 != tmp2);
+    BOOST_ASSERT(tmp1 != ar1);
+    BOOST_ASSERT(ar1  != tmp1);
+
+/*
     boost::copy(
         chain_convert_r(tmp2)(ar4)(ar5),
         std::ostream_iterator<val_>(os," ")
     ); os << " --- becomes ---> " << std::endl;
 
+    BOOST_AUTO(tmp,chain_convert_l(tmp2)(ar4)(ar5));
+
     boost::copy(
         chain_convert_r(tmp1)(ar2)(ar3),
-        boost::begin(chain_convert_l(tmp2)(ar4)(ar5))
+        boost::begin(tmp)
     ); 
 
     boost::copy(
@@ -71,7 +78,7 @@ void example_chain(std::ostream& os)
    //         boost::chain(tmp2,ar4)
    //     )
    //);
-
+*/
 	os << "<- " << std::endl;
     
 }

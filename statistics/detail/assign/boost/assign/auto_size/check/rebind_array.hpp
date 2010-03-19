@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// assign::detail::auto_size::rebind_array.hpp                              //
+// assign::detail::auto_size::check_rebind_array.hpp                        //
 //                                                                          //
 //  (C) Copyright 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //

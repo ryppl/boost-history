@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// assign::detail::auto_size::check_adapter.hpp                             //
+// assign::detail::auto_size::check_chain.hpp                               //
 //                                                                          //
 //  (C) Copyright 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -24,16 +24,28 @@
 {                                                                              \
     typedef T val_;                                                            \
     using namespace check_constants;                                           \
-    BOOST_AUTO(tmp1,BOOST_ASSIGN_AS_CHECK_ref3(a,b,c));                        \
-    BOOST_AUTO(tmp2,BOOST_ASSIGN_AS_CHECK_ref3(d,e,f));                        \
-    BOOST_AUTO(tmp3,BOOST_ASSIGN_AS_CHECK_ref2(g,h));                          \
+    val_ a1 = a, b1 = b, c1 = c,                                               \
+         d1 = d, e1 = e, f1 = f,                                               \
+         g1 = g, h1 = h;                                                       \
     typedef boost::array<T,2> ar2_;                                            \
     typedef boost::array<T,3> ar3_;                                            \
     ar3_ ar1, ar2;                                                             \
     ar2_ ar3;                                                                  \
-    ar1[0] = a; ar1[1] = b; ar1[2] = c;                                        \
-    ar2[0] = d; ar2[1] = e; ar2[2] = f;                                        \
-    ar3[0] = g; ar3[1] = h;                                                    \
+    ar1[0] = a1; ar1[1] = b1; ar1[2] = c1;                                     \
+    ar2[0] = d1; ar2[1] = e1; ar2[2] = f1;                                     \
+    ar3[0] = g1; ar3[1] = h1;                                                  \
+    boost::array<val_,8> ar;                                                   \
+    ar[0] = a;                                                                 \
+    ar[1] = b;                                                                 \
+    ar[2] = c;                                                                 \
+    ar[3] = d;                                                                 \
+    ar[4] = e;                                                                 \
+    ar[5] = f;                                                                 \
+    ar[6] = g;                                                                 \
+    ar[7] = h;                                                                 \
+    BOOST_AUTO(tmp1,BOOST_ASSIGN_AS_CHECK_ref3(a1,b1,c1));                     \
+    BOOST_AUTO(tmp2,BOOST_ASSIGN_AS_CHECK_ref3(d1,e1,f1));                     \
+    BOOST_AUTO(tmp3,BOOST_ASSIGN_AS_CHECK_ref2(g1,h1));                        \
     BOOST_ASSIGN_AS_CHECK_iterator_f(chain_convert_r(ar1)(ar2)(ar3))           \
     BOOST_ASSIGN_AS_CHECK_iterator_f(chain_convert_r(ar1)(ar2)(tmp3))          \
     BOOST_ASSIGN_AS_CHECK_iterator_f(chain_convert_r(ar1)(tmp2)(ar3))          \
@@ -42,11 +54,15 @@
     BOOST_ASSIGN_AS_CHECK_iterator_f(chain_convert_r(tmp1)(ar2)(tmp3))         \
     BOOST_ASSIGN_AS_CHECK_iterator_f(chain_convert_r(tmp1)(tmp2)(ar3))         \
     BOOST_ASSIGN_AS_CHECK_iterator_f(chain_convert_r(tmp1)(tmp2)(tmp3))        \
+    BOOST_ASSIGN_AS_CHECK_copy_iterator_f(ar,chain_convert_l(ar1)(ar2)(ar3))   \
+    BOOST_ASSIGN_AS_CHECK_copy_iterator_f(ar,chain_convert_l(ar1)(ar2)(tmp3))  \
+    BOOST_ASSIGN_AS_CHECK_copy_iterator_f(ar,chain_convert_l(ar1)(tmp2)(ar3))  \
+    BOOST_ASSIGN_AS_CHECK_copy_iterator_f(ar,chain_convert_l(ar1)(tmp2)(tmp3)) \
+    BOOST_ASSIGN_AS_CHECK_copy_iterator_f(ar,chain_convert_l(tmp1)(ar2)(ar3))  \
+    BOOST_ASSIGN_AS_CHECK_copy_iterator_f(ar,chain_convert_l(tmp1)(ar2)(tmp3)) \
+    BOOST_ASSIGN_AS_CHECK_copy_iterator_f(ar,chain_convert_l(tmp1)(tmp2)(ar3)) \
+    BOOST_ASSIGN_AS_CHECK_copy_iterator_f(ar,chain_convert_l(tmp1)(tmp2)(tmp3))\
 }                                                                              \
 /**/
-
-//    BOOST_ASSIGN_AS_CHECK_copy_iterator_f(chain_convert_l(ar1)(ar2)(ar3))      \
-//    check_copy_iterator(tmp1,a,b,c,d,e,f,g,h);                                 \
-
 
 #endif

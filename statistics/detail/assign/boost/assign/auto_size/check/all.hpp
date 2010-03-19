@@ -13,14 +13,13 @@
 #include <list>
 #include <stack>
 #include <queue>
-#include <boost/preprocessor/cat.hpp>
 #include <boost/array.hpp>
-#include <boost/range/algorithm/max_element.hpp>
 
 #include <boost/assign/auto_size/chain/mpl_check.hpp>
 
 #include <boost/assign/auto_size/check/array.hpp>
 #include <boost/assign/auto_size/check/chain.hpp>
+#include <boost/assign/auto_size/check/comparison_op.hpp>
 #include <boost/assign/auto_size/check/converter.hpp>
 #include <boost/assign/auto_size/check/copy_array.hpp>
 #include <boost/assign/auto_size/check/copy_iterator.hpp>
@@ -29,6 +28,7 @@
 #include <boost/assign/auto_size/check/iterator.hpp>
 #include <boost/assign/auto_size/check/lifo.hpp>
 #include <boost/assign/auto_size/check/rebind_array.hpp>
+#include <boost/assign/auto_size/check/example2.hpp>
 
 #define BOOST_ASSIGN_AS_CHECK_all(fun)                                         \
 namespace boost{                                                               \
@@ -51,7 +51,9 @@ void fun(){                                                                    \
     BOOST_ASSIGN_AS_CHECK_converter_sorted(std::set<T>)                        \
     BOOST_ASSIGN_AS_CHECK_adapter_lifo(std::stack<T>)                          \
     BOOST_ASSIGN_AS_CHECK_adapter_fifo(std::queue<T>)                          \
+    BOOST_ASSIGN_AS_CHECK_comparison_op                                        \
     chain_mpl_check::compound();                                               \
+    BOOST_ASSIGN_AS_CHECK_example2                                             \
     BOOST_ASSIGN_AS_CHECK_chain                                                \
 }                                                                              \
 void fun(){ fun<int>(); }                                                      \
@@ -60,6 +62,7 @@ void fun(){ fun<int>(); }                                                      \
 }                                                                              \
 }                                                                              \
 /**/
+
 
 
 #endif
