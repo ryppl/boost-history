@@ -52,6 +52,8 @@ BOOST_ASSIGN_AS_CHECK_all(check_ref_list_of)
 #undef BOOST_ASSIGN_AS_CHECK_cref7
 #undef BOOST_ASSIGN_AS_CHECK_cref8
 
+#undef BOOST_ASSIGN_AS_CHECK_ref_rebind3
+
 #endif
 
 
