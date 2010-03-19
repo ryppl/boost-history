@@ -17,19 +17,18 @@
 #include <boost/array.hpp>
 #include <boost/range/algorithm/max_element.hpp>
 
-//#include <boost/assign/auto_size/chain/mpl_check.hpp>
+#include <boost/assign/auto_size/chain/mpl_check.hpp>
 
 #include <boost/assign/auto_size/check/array.hpp>
-//#include <boost/assign/auto_size/check/chain.hpp>
+#include <boost/assign/auto_size/check/chain.hpp>
 #include <boost/assign/auto_size/check/converter.hpp>
 #include <boost/assign/auto_size/check/copy_array.hpp>
 #include <boost/assign/auto_size/check/copy_iterator.hpp>
-//#include <boost/assign/auto_size/check/example1.hpp>
+#include <boost/assign/auto_size/check/example1.hpp>
 #include <boost/assign/auto_size/check/fifo.hpp>
 #include <boost/assign/auto_size/check/iterator.hpp>
 #include <boost/assign/auto_size/check/lifo.hpp>
 #include <boost/assign/auto_size/check/rebind_array.hpp>
-//#include <boost/assign/auto_size/check/ref_list_of_caller.hpp>
 
 #define BOOST_ASSIGN_AS_CHECK_all(fun)                                         \
 namespace boost{                                                               \
@@ -39,6 +38,7 @@ namespace auto_size{                                                           \
                                                                                \
 template<typename T>                                                           \
 void fun(){                                                                    \
+    BOOST_ASSIGN_AS_CHECK_example1                                             \
     BOOST_ASSIGN_AS_CHECK_iterator                                             \
     BOOST_ASSIGN_AS_CHECK_array                                                \
     BOOST_ASSIGN_AS_CHECK_copy_iterator                                        \
@@ -51,6 +51,8 @@ void fun(){                                                                    \
     BOOST_ASSIGN_AS_CHECK_converter_sorted(std::set<T>)                        \
     BOOST_ASSIGN_AS_CHECK_adapter_lifo(std::stack<T>)                          \
     BOOST_ASSIGN_AS_CHECK_adapter_fifo(std::queue<T>)                          \
+    chain_mpl_check::compound();                                               \
+    BOOST_ASSIGN_AS_CHECK_chain                                                \
 }                                                                              \
 void fun(){ fun<int>(); }                                                      \
 }                                                                              \
@@ -58,21 +60,6 @@ void fun(){ fun<int>(); }                                                      \
 }                                                                              \
 }                                                                              \
 /**/
-
-/*
-    boost::assign::detail::chain_mpl_check::compound();
-    {	
-        val_ a, b, c, d, e, f, g, h;
-        BOOST_AUTO(tmp1,ref_list_of(a)(b)(c)(d));
-        check_chain(
-           tmp1,
-           cref_list_of(e)(f)(g)(h),
-           a,b,c,d,e,f,g,h);
-    }
-    // TODO comparison operators
-}
-
-*/
 
 
 #endif

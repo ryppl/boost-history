@@ -17,7 +17,7 @@
 #error
 #endif
 
-#define BOOST_ASSIGN_AS_CHECK_copy_iterator                                    \
+#define BOOST_ASSIGN_AS_CHECK_copy_iterator_f(arg)                             \
 {                                                                              \
     typedef T val_;                                                            \
     using namespace check_constants;                                           \
@@ -31,7 +31,7 @@
     ar[6] = g;                                                                 \
     ar[7] = h;                                                                 \
     val_ a1, b1, c1, d1, e1, f1, g1, h1;                                       \
-    BOOST_AUTO(tmp,BOOST_ASSIGN_AS_CHECK_ref8(a1,b1,c1,d1,e1,f1,g1,h1));       \
+    BOOST_AUTO(tmp,arg);                                                       \
     std::copy(boost::begin(ar),boost::end(ar),boost::begin(tmp));              \
     BOOST_ASSIGN_CHECK_EQUAL(a , a1);                                          \
     BOOST_ASSIGN_CHECK_EQUAL(b , b1);                                          \
@@ -42,6 +42,10 @@
     BOOST_ASSIGN_CHECK_EQUAL(g , g1);                                          \
     BOOST_ASSIGN_CHECK_EQUAL(h , h1);                                          \
 }                                                                              \
+/**/
+
+#define BOOST_ASSIGN_AS_CHECK_copy_iterator                                    \
+BOOST_ASSIGN_AS_CHECK_copy_iterator_f(BOOST_ASSIGN_AS_CHECK_ref8(a1,b1,c1,d1,e1,f1,g1,h1))\
 /**/
 
 #endif

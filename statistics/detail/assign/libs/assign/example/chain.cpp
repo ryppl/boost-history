@@ -11,12 +11,9 @@
 #include <boost/range/algorithm/copy.hpp>
 #include <boost/assign/auto_size/ref_list_of.hpp>
 #include <boost/assign/auto_size/detail/expr.hpp>
-//#include <boost/assign/auto_size/reference_wrapper/conversion_traits.hpp>
-//#include <boost/assign/auto_size/chain/convert_range.hpp>
+#include <boost/assign/auto_size/reference_wrapper/conversion_traits.hpp>
 #include <boost/assign/auto_size/chain/chain_convert.hpp>
 //#include <boost/assign/auto_size/comparison_op/crtp.hpp>
-
-//#include <boost/assign/auto_size/check/ref_list_of_caller.hpp> // tmp
 
 #include <libs/assign/example/chain.h>
 
@@ -40,7 +37,6 @@ void example_chain(std::ostream& os)
 	BOOST_AUTO(tmp1,ref_list_of(a)(b)(c)(d)); 
 	BOOST_AUTO(tmp2,ref_list_of(e)(f)(g)(h)); 
 
-/*
     boost::copy(
         chain_convert_r(tmp2)(ar4)(ar5),
         std::ostream_iterator<val_>(os," ")
@@ -75,7 +71,7 @@ void example_chain(std::ostream& os)
    //         boost::chain(tmp2,ar4)
    //     )
    //);
-*/
+
 	os << "<- " << std::endl;
     
 }
