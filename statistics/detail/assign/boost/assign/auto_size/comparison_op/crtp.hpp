@@ -56,8 +56,6 @@ namespace traits{
 
     template<typename T>
     struct has_traits{
-        typedef typename type_traits::yes_type yes;
-        typedef typename type_traits::no_type no;
 
         template<typename U> 
         static type_traits::yes_type test(typename U::comparison_op_traits*);
