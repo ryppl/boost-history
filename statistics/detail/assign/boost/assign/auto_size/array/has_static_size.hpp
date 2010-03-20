@@ -19,8 +19,6 @@ namespace auto_size{
     template<typename T>
     struct has_static_size{
         typedef typename T::size_type size_type;
-        typedef typename type_traits::yes_type yes;
-        typedef typename type_traits::no_type no;
         typedef const size_type* sig1;
         typedef const size_type sig2; // for boost::array<>
 
@@ -30,13 +28,16 @@ namespace auto_size{
         template<typename U,sig2>
         struct sfinae2 { };
 
-        //template<typename U> static yes test(sfinae1<U, &U::static_size> *);
-        template<typename U> static yes test(sfinae2<U, U::static_size> *);
-        template<typename U> static no test(...);
+        //template<typename U> static 
+        //type_traits::yes_type test(sfinae1<U, &U::static_size> *);
+        template<typename U> 
+        static type_traits::yes_type test(sfinae2<U, U::static_size> *);
+        template<typename U> 
+        static type_traits::no_type test(...);
 
         BOOST_STATIC_CONSTANT(
         	bool, 
-            value = sizeof( test<T>(0) ) == sizeof(yes)
+            value = sizeof( test<T>(0) ) == sizeof(type_traits::yes_type)
         );
         
         typedef boost::mpl::bool_<value> type;
