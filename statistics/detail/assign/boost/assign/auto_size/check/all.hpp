@@ -39,11 +39,21 @@ namespace auto_size{                                                           \
                                                                                \
 template<typename T>                                                           \
 void fun(){                                                                    \
+    BOOST_ASSIGN_AS_CHECK_copy_array                                           \
+}                                                                              \
+void BOOST_PP_CAT(fun,_int)(){ fun<int>(); }                                   \
+}                                                                              \
+}                                                                              \
+}                                                                              \
+}                                                                              \
+/**/
+
+/*
     BOOST_ASSIGN_AS_CHECK_example1                                             \
     BOOST_ASSIGN_AS_CHECK_iterator                                             \
     BOOST_ASSIGN_AS_CHECK_array                                                \
     BOOST_ASSIGN_AS_CHECK_copy_iterator                                        \
-    BOOST_ASSIGN_AS_CHECK_copy_array                                           \
+
     BOOST_ASSIGN_AS_CHECK_rebind_array                                         \
     BOOST_ASSIGN_AS_CHECK_converter(std::list<T>)                              \
     BOOST_ASSIGN_AS_CHECK_converter(std::vector<T>)                            \
@@ -55,13 +65,7 @@ void fun(){                                                                    \
     BOOST_ASSIGN_AS_CHECK_comparison_op                                        \
     BOOST_ASSIGN_AS_CHECK_example2                                             \
     BOOST_ASSIGN_AS_CHECK_chain                                                \
-}                                                                              \
-void BOOST_PP_CAT(fun,_int)(){ fun<int>(); }                                   \
-}                                                                              \
-}                                                                              \
-}                                                                              \
-}                                                                              \
-/**/
+*/
 
 #endif
 

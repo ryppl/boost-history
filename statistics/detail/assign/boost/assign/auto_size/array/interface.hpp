@@ -10,6 +10,7 @@
 #define BOOST_ASSIGN_AUTO_SIZE_DETAIL_ARRAY_INTERFACE_ER_2010_HPP
 #include <algorithm>
 #include <boost/mpl/bool.hpp>
+#include <boost/mpl/int.hpp>
 #include <boost/array.hpp>
 #include <boost/range.hpp>
 #include <boost/assign/auto_size/array/converter.hpp> 
@@ -87,8 +88,13 @@ namespace auto_size{
         const_reference back() const{ return (this->ref_array()).back(); }
         
         void swap(array_interface& other){ 
-            (this->ref_array()).swap(other.ref_array()); 
+            // Before March 19th :
+            //(this->ref_array()).swap(other.ref_array()); 
+            // does not swap anything under Mingw, hence the change below:
+            typedef boost::mpl::int_<N> int_n_;
+            this->swap_impl(other,int_n_());
         }
+
         void assign(const T& val){ 
             typedef has_copy_semantics<ref_> pred_;
             return this->assign(val,pred_());
@@ -102,10 +108,21 @@ namespace auto_size{
         }
 
         private:
-                
         typedef boost::mpl::bool_<false> false_;
         typedef boost::mpl::bool_<true> true_;
 
+        void swap_impl(array_interface& other,boost::mpl::int_<0>){}
+
+        template<int N1>
+        void swap_impl(array_interface& other,boost::mpl::int_<N1>){
+            reference lhs = (*this)[N1-1];
+            reference rhs = (other)[N1-1];
+            lhs.swap(rhs); //TODO should be able to call swap(lhs,rhs)
+            typedef boost::mpl::int_<N1-1> next_int_;
+            this->swap_impl(other,next_int_());
+        }
+
+        
         void assign(const T& val,true_ /*copy semantics*/){ 
             // Force copy semantics. Suggested by M.P.G on Feb 28th, 2010.
             ref_array_& ra = this->ref_array();

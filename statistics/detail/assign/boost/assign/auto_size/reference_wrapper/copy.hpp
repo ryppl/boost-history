@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_DETAIL_ASSIGN_REFERENCE_COPY_MPG_2010_HPP
 #define BOOST_ASSIGN_DETAIL_ASSIGN_REFERENCE_COPY_MPG_2010_HPP
-
+#include <iostream> // tmp
 namespace boost{
 namespace assign{
 namespace detail{
@@ -40,6 +40,7 @@ namespace detail{
 
         void swap( assign_reference_copy& r )
         {
+            std::cout << "copy::swap" << std::endl;
             std::swap( *this->ref_, *r.ref_ );
         }
 
