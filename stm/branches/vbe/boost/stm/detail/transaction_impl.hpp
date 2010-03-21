@@ -535,10 +535,10 @@ inline transaction::transaction() :
     assert_end_flag_(0xffffffff)
 {
    auto_general_lock_.unlock();
-    {
-        boost::lock_guard<boost::mutex> lk(log_mutex);
-        std::cout << this << " " << this->parent() << " " << this_thread::get_id() << " ****INFO transaction" << __FILE__ << "[" << __LINE__ << "]" << BOOST_CURRENT_FUNCTION << std::endl;
-    }
+    //~ {
+        //~ boost::lock_guard<boost::mutex> lk(log_mutex);
+        //~ std::cout << this << " " << this->parent() << " " << this_thread::get_id() << " ****INFO transaction" << __FILE__ << "[" << __LINE__ << "]" << BOOST_CURRENT_FUNCTION << std::endl;
+    //~ }
    if (direct_updating()) doIntervalDeletions();
 #if PERFORMING_LATM
    while (blocked()) { SLEEP(10) ; }
@@ -781,10 +781,10 @@ BOOST_STM_TRANSACTION_INVARIANT;
 inline transaction::~transaction()
 {
     BOOST_STM_CALL_CONTEXT_DCL_INST(this);
-    {
-        boost::lock_guard<boost::mutex> lk(log_mutex);
-        std::cout << this << " " << this->parent() << " " << this_thread::get_id() << " ****INFO ~transaction" << __FILE__ << "[" << __LINE__ << "]" << BOOST_CURRENT_FUNCTION << std::endl;
-    }
+    //~ {
+        //~ boost::lock_guard<boost::mutex> lk(log_mutex);
+        //~ std::cout << this << " " << this->parent() << " " << this_thread::get_id() << " ****INFO ~transaction" << __FILE__ << "[" << __LINE__ << "]" << BOOST_CURRENT_FUNCTION << std::endl;
+    //~ }
     //~ BOOST_STM_INFO<<std::endl;
    // if we're not an inflight transaction - bail
    if (state_ != e_in_flight)
@@ -999,9 +999,9 @@ BOOST_STM_TRANSACTION_INVARIANT;
         synchro::unique_lock<Mutex> lk_i(*inflight_lock()  BOOST_STM_CALL_CONTEXT("inflight_lock"));
 
         BOOST_STM_TRANSACTION_INVARIANT;
-        {boost::lock_guard<boost::mutex> lk(log_mutex);
-        std::cout << this << " " << this->parent() << " " << this_thread::get_id() << " ****INFO erase" << __FILE__ << "[" << __LINE__ << "]" << BOOST_CURRENT_FUNCTION << std::endl;
-        }
+        //~ {boost::lock_guard<boost::mutex> lk(log_mutex);
+        //~ std::cout << this << " " << this->parent() << " " << this_thread::get_id() << " ****INFO erase" << __FILE__ << "[" << __LINE__ << "]" << BOOST_CURRENT_FUNCTION << std::endl;
+        //~ }
         in_flight_transactions().erase(this);
 
 #if PERFORMING_COMPOSITION
