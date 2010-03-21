@@ -10,6 +10,7 @@
 #include <boost/noncopyable.hpp>
 #include <boost/transact/exception.hpp>
 #include <boost/assert.hpp>
+#include <iostream>
 
 namespace boost{
 namespace transact{
@@ -115,6 +116,8 @@ public:
 			TxMgr::unbind_transaction();
 		}
 	}
+
+    void restart(){}
 
 	/// \cond
 private:

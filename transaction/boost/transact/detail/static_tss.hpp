@@ -24,7 +24,7 @@ private:
 	static_thread_specific_ptr();
 public:
 
-#if defined(__GNUG__)
+#if ((__GNUC__== 3) && (__GNUC_MINOR__ > 4) || __GNUC__>= 4)
 	static void reset(T *p=0){ ptr=p; }
 	static T *get(){ return ptr; }
 private:

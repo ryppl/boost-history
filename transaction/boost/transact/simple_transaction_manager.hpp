@@ -11,6 +11,8 @@
 #include <boost/utility/in_place_factory.hpp>
 #include <boost/optional/optional.hpp>
 #include <boost/transact/exception.hpp>
+#include <boost/noncopyable.hpp>
+#include <boost/transact/detail/static_tss.hpp>
 
 namespace boost{
 namespace transact{
@@ -31,7 +33,12 @@ private:
 		class transaction_construct_t{
 			explicit transaction_construct_t(transaction *parent)
 				: parent(parent){}
-			friend class simple_transaction_manager;
+#ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
+            template <class R, bool Th> friend class simple_transaction_manager;
+            friend class transaction;
+#else    
+        public:  // Should be private
+#endif
 			transaction *parent;
 		};
 
@@ -48,7 +55,11 @@ private:
 				}
 			}
 		private:
-			friend class simple_transaction_manager;
+#ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
+			template <class R, bool Th> friend class simple_transaction_manager;
+#else    
+        public:  // Should be private
+#endif
 			optional<typename Resource::transaction> rtx;
 			transaction * const parent;
 		};

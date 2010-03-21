@@ -90,7 +90,7 @@ struct isolation_exception : transact::exception{
 		detail::isolation_unwind_visitor<TxMgr,typename mpl::begin<typename TxMgr::resource_types>::type> visit;
 		visit(*this);
 	}
-	virtual ~isolation_exception(){}
+	virtual ~isolation_exception()throw (){}
 protected:
 	isolation_exception(){}
 };
