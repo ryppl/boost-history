@@ -31,8 +31,9 @@ namespace non_tx {
 #endif
 }
 
+#ifndef BOOST_USES_STATIC_TSS
 synchro::implicit_thread_specific_ptr<transaction::transaction_tss_storage> transaction::transaction_tss_storage_;
-
+#endif
 ///////////////////////////////////////////////////////////////////////////////
 // Static initialization
 ///////////////////////////////////////////////////////////////////////////////
@@ -182,6 +183,9 @@ void transaction::initialize()
 ///////////////////////////////////////////////////////////////////////////////
 void transaction::initialize_thread()
 {
+#ifdef BOOST_USES_STATIC_TSS
+    transaction_tss_storage_type::reset(new transaction_tss_storage());
+#endif    
    synchro::lock_guard<Mutex> lock(*general_lock());
 
    //--------------------------------------------------------------------------

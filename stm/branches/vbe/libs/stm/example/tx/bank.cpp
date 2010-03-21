@@ -103,9 +103,9 @@ struct Teller {
         {
             try {
                 BOOST_STM_E_TRANSACTION {
-                    int amount=random() % 1000;
-                    int acc1=random() % bank_->accounts.size();
-                    int acc2=random() % bank_->accounts.size();
+                    int amount=rand() % 1000;
+                    int acc1=rand() % bank_->accounts.size();
+                    int acc2=rand() % bank_->accounts.size();
                     bank_->accounts[acc1]->Withdraw(amount);
                     bank_->accounts[acc2]->Deposit(amount+1);
                 } BOOST_STM_E_END_TRANSACTION;
