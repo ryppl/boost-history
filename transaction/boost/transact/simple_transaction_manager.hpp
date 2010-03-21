@@ -33,12 +33,8 @@ private:
 		class transaction_construct_t{
 			explicit transaction_construct_t(transaction *parent)
 				: parent(parent){}
-#ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-            template <class R, bool Th> friend class simple_transaction_manager;
-            friend class transaction;
-#else    
-        public:  // Should be private
-#endif
+			template <class R, bool Th> friend class simple_transaction_manager;
+			friend class transaction;
 			transaction *parent;
 		};
 
@@ -55,11 +51,7 @@ private:
 				}
 			}
 		private:
-#ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
 			template <class R, bool Th> friend class simple_transaction_manager;
-#else    
-        public:  // Should be private
-#endif
 			optional<typename Resource::transaction> rtx;
 			transaction * const parent;
 		};

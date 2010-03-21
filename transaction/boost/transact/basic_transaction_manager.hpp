@@ -156,6 +156,7 @@ private:
 		class transaction_construct_t{
 			explicit transaction_construct_t(transaction *parent)
 				: parent(parent){}
+			template<class R,bool Th,bool TTh,class L> 
 			friend class basic_transaction_manager;
 			transaction *parent;
 		};
@@ -166,6 +167,7 @@ private:
 				mpl::for_each<resource_tags>(beginner(*this));
 			}
 		private:
+			template<class R,bool Th,bool TTh,class L> 
 			friend class basic_transaction_manager;
 	
 			template<class Resource>
