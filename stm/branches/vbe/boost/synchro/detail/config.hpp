@@ -18,7 +18,7 @@
 #include <boost/config.hpp>
 #include <boost/thread/detail/platform.hpp>
 
-#define BOOST_STM_USES_CALL_CONTEXT 1
+//#define BOOST_STM_USES_CALL_CONTEXT 1
 
 //-----------------------------------------------------------------------------
 

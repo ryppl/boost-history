@@ -16,7 +16,15 @@
 
 //-----------------------------------------------------------------------------
 #include <boost/thread/thread_time.hpp>
+
+#include <boost/thread/detail/platform.hpp>
+#if defined(BOOST_THREAD_PLATFORM_WIN32)
+#elif defined(BOOST_THREAD_PLATFORM_PTHREAD)
 #include <boost/thread/pthread/timespec.hpp>
+#else
+#error "Boost threads unavailable on this platform"
+#endif
+
 //-----------------------------------------------------------------------------
 
 namespace boost { namespace synchro {
@@ -27,11 +35,17 @@ namespace boost { namespace synchro {
         return boost::get_system_time();
     }
     
+#include <boost/thread/detail/platform.hpp>
+#if defined(BOOST_THREAD_PLATFORM_WIN32)
+#elif defined(BOOST_THREAD_PLATFORM_PTHREAD)
     namespace detail {
         inline struct timespec const get_timespec(system_time& t) {
             return boost::detail::get_timespec(t);
         }
     }
+#else
+#error "Boost threads unavailable on this platform"
+#endif
 
 }}
 #endif // BOOST_SYNCHO_TRY_LOCK_HPP
