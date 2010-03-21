@@ -10,13 +10,10 @@
 
 [note [* This is not an official boost library]
 
-The /Interval Template Library/ is currently submitted 
-for a formal review on the boost developer's list.
-
-[* The review will start on February 18, 2010 and will end on February 27, 2010.]
-
-Depending on the review's result the library might or 
-might not become a boost library. 
+The /Interval Template Library/ underwent 
+a formal review on the boost developer's list
+from February 18, 2010 to March 08, 2010.
+Results are pending.
 
 The name ['*Interval Template Library (ITL)*] is provisional
 an will probably be changed, if the library is accepted into
