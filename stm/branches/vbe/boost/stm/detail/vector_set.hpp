@@ -51,9 +51,9 @@ public:
 
    //-----------------------------------------------------------------------
    //-----------------------------------------------------------------------
-   typename vector_set<T>::iterator find(T const &t)
+   iterator find(T const &t)
    {
-      for (typename vector_set<T>::iterator i = elements_.begin(); i != elements_.end(); ++i)
+      for (iterator i = elements_.begin(); i != elements_.end(); ++i)
       {
          if (t == i) return i;
       }
@@ -63,9 +63,9 @@ public:
 
    //-----------------------------------------------------------------------
    //-----------------------------------------------------------------------
-   typename vector_set<T>::iterator insert(first_t const &rhs)
+   iterator insert(first_t const &rhs)
    {
-      for (typename vector_set<T>::iterator i = elements_.begin(); i != elements_.end(); ++i)
+      for (iterator i = elements_.begin(); i != elements_.end(); ++i)
       {
          if (rhs == *i)
          {
@@ -74,14 +74,14 @@ public:
       }
 
       elements_.push_back(rhs);
-      return (typename vector_set<T>::iterator)&elements_[elements_.size()-1];
+      return (iterator)&elements_[elements_.size()-1];
    }
 
    //-----------------------------------------------------------------------
    //-----------------------------------------------------------------------
-   void erase(vector_set<T>::first_t const &rhs)
+   void erase(first_t const &rhs)
    {
-      for (typename vector_set<T>::iterator i = elements_.begin(); i != elements_.end(); ++i)
+      for (iterator i = elements_.begin(); i != elements_.end(); ++i)
       {
          if (rhs == *i)
          {
@@ -92,7 +92,7 @@ public:
 
    //-----------------------------------------------------------------------
    //-----------------------------------------------------------------------
-   void push_back(vector_set<T>::first_t const &rhs)
+   void push_back(first_t const &rhs)
    {
       elements_.push_back(rhs);
    }

@@ -22,6 +22,7 @@
 #include <iostream>
 #include <boost/assert.hpp>
 #include <exception>
+
 //---------------------------------------------------------------------------
 // helper function to implement macros
 namespace boost { namespace stm { namespace detail {
@@ -557,13 +558,7 @@ struct dummy_exception{};
     catch (int ex) { \
                 std::cout << "*** ERROR: "<< __FILE__ << "["<<__LINE__<<"] catch "<<ex << std::endl;\
     }\
-    catch (int& ex) { \
-                std::cout << "*** ERROR: "<< __FILE__ << "["<<__LINE__<<"] catch "<<ex << std::endl;\
-    }\
     catch (const char* ex) {\
-                std::cout << "*** ERROR: "<< __FILE__ << "["<<__LINE__<<"] catch "<<ex << std::endl;\
-    }\
-    catch (const char*& ex) {\
                 std::cout << "*** ERROR: "<< __FILE__ << "["<<__LINE__<<"] catch "<<ex << std::endl;\
     }\
     catch (std::string& ex) {\
@@ -589,6 +584,14 @@ struct dummy_exception{};
     }\
     catch (...) {\
         std::cout << "*** ERROR: " <<__FILE__ << "["<<__LINE__<<"] catch UNKNOWN " << std::endl;\
+    }\
+
+#define dd\
+    catch (const char*& ex) {\
+                std::cout << "*** ERROR: "<< __FILE__ << "["<<__LINE__<<"] catch "<<ex << std::endl;\
+    }\
+    catch (int& ex) { \
+                std::cout << "*** ERROR: "<< __FILE__ << "["<<__LINE__<<"] catch "<<ex << std::endl;\
     }\
 
 ///////////////////////////////////////////////////////////////////////////////

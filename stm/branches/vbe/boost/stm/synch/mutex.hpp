@@ -54,6 +54,7 @@ protected:
     mutable Poly<lockable_type, Base>   dyn_lock_;
 };
 
+#if !defined(BOOST_STM_USE_BOOST_MUTEX) || !defined(BOOST_STM_T_USE_BOOST_MUTEX)
 template <typename Base, template <class, class> class Poly >
 class exclusive_lock_adapter<pthread_mutex_t, Base, Poly>
 {
@@ -79,7 +80,7 @@ protected:
     mutable lockable_type               st_lock_;
     mutable Poly<lockable_type, Base>   dyn_lock_;
 };
-
+#endif
 #if 0
 #if BOOST_STM_LATM_GENERIC    
 

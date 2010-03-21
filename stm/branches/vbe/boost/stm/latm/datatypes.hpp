@@ -22,7 +22,9 @@
 
 #include <boost/synchro/poly/lock.hpp>
 #else
-#include <pthread.h>
+//~ #include <pthread.h>
+#include <boost/thread.hpp>
+
 #endif
 
 namespace boost { namespace stm { namespace latm {

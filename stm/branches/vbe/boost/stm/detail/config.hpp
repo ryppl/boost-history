@@ -48,7 +48,7 @@
 //      OTHER: each TSS data has its specific TSS
 
 #define USE_SINGLE_THREAD_CONTEXT_MAP 1
-//~ #define BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP 1
+//#define BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP 1
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -153,13 +153,26 @@
 #define BOOST_STM_USE_BOOST 1
 
 #ifdef BOOST_STM_USE_BOOST
+// Don't work yet
 //~ #define BOOST_STM_BLOOM_FILTER_USE_DYNAMIC_BITSET 1
-//~ #define BOOST_STM_USE_BOOST_SLEEP 1
-//~ #define BOOST_STM_USE_BOOST_THREAD_ID 1
-//~ #define BOOST_STM_USE_BOOST_MUTEX 1
-//~ #define BOOST_STM_T_USE_BOOST_MUTEX 1
+#define BOOST_STM_USE_BOOST_SLEEP 1
+#define BOOST_STM_USE_BOOST_THREAD_ID 1
 #endif
 
+#include <boost/thread/detail/platform.hpp>
+
+#if defined(BOOST_THREAD_PLATFORM_WIN32)
+#define BOOST_STM_USE_BOOST_MUTEX 1
+#define BOOST_STM_T_USE_BOOST_MUTEX 1
+#define BOOST_USES_STATIC_TSS 1
+#elif defined(BOOST_THREAD_PLATFORM_PTHREAD)
+#define BOOST_STM_USE_BOOST_MUTEX 1
+#define BOOST_STM_T_USE_BOOST_MUTEX 1
+// Don't work yet
+//~ #define BOOST_USES_STATIC_TSS 1
+#else
+#error "Boost threads unavailable on this platform"
+#endif
 ///////////////////////////////////////////////////////////////////////////////
 // COMPILERS DEPENDENT
 ///////////////////////////////////////////////////////////////////////////////

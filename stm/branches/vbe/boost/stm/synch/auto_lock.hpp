@@ -15,7 +15,9 @@
 #define BOOST_STM_SYNC_AUTO_LOCK_H
 
 //---------------------------------------------------------------------------
-#include <pthread.h>
+//~ #include <pthread.h>
+#include <boost/thread.hpp>
+
 #include <stdexcept>
 //---------------------------------------------------------------------------
 #include <string>

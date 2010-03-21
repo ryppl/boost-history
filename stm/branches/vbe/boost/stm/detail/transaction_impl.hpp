@@ -321,7 +321,7 @@ inline void transaction::lock_all_mutexes_but_this(thread_id_t threadId)
     for (tss_context_map_type::iterator i = tss_context_map_.begin();
       i != tss_context_map_.end(); ++i)
    {
-        BOOST_ASSERT(i->secondi!=0);
+        BOOST_ASSERT(i->second!=0);
 
       if (i->first == threadId) continue;
       synchro::lock(i->second->mutex_ BOOST_STM_CALL_CONTEXT("mutex")); // INSTANCE

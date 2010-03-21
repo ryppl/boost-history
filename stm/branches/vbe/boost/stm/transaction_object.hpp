@@ -15,7 +15,9 @@
 #define BOOST_STM_TRANSACTION_OBJECT__HPP
 
 //-----------------------------------------------------------------------------
-#include <pthread.h>
+//~ #include <pthread.h>
+#include <boost/thread.hpp>
+
 //-----------------------------------------------------------------------------
 #include <list>
 #include <new>

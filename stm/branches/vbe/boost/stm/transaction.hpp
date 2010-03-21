@@ -16,7 +16,9 @@
 
 //-----------------------------------------------------------------------------
 #include <assert.h>
-#include <pthread.h>
+//~ #include <pthread.h>
+#include <boost/thread.hpp>
+
 //-----------------------------------------------------------------------------
 #include <iostream>
 #include <list>
@@ -29,7 +31,11 @@
 
 //-----------------------------------------------------------------------------
 #include <boost/stm/trace.hpp>
+#ifdef BOOST_USES_STATIC_TSS
+#include <boost/synchro/static_tss.hpp>
+#else
 #include <boost/synchro/tss.hpp>
+#endif
 //-----------------------------------------------------------------------------
 #include <boost/stm/detail/config.hpp>
 //-----------------------------------------------------------------------------
@@ -244,7 +250,9 @@ public:
             #endif
         }
         inline ~tss_context() {
-           pthread_mutex_destroy(&mutex_);
+            #ifndef BOOST_STM_USE_BOOST_MUTEX
+            pthread_mutex_destroy(&mutex_);
+            #endif
         }
 
         tx_context tx_;
@@ -893,7 +901,7 @@ BOOST_STM_TRANSACTION_INVARIANT;
     #endif
    //--------------------------------------------------------------------------
    template <typename T>
-   T* new_shared_memory(T*/*ptr*/)
+   T* new_shared_memory(T*)
    {
 BOOST_STM_TRANSACTION_INVARIANT;
       throw_if_forced_to_abort_on_new();
@@ -903,7 +911,7 @@ BOOST_STM_TRANSACTION_INVARIANT;
 
    //--------------------------------------------------------------------------
    template <typename T>
-   T* new_memory(T*/*ptr*/)
+   T* new_memory(T*)
    {
 BOOST_STM_TRANSACTION_INVARIANT;
       throw_if_forced_to_abort_on_new();
@@ -2416,11 +2424,18 @@ private:
 ////////////////////////////////////////
 #endif
 
-
+#ifdef BOOST_USES_STATIC_TSS
+   struct xxx{};
+    //~ static synchro::static_thread_specific_ptr<transaction_tss_storage,xxx> transaction_tss_storage_;
+    typedef synchro::static_thread_specific_ptr<transaction_tss_storage,xxx> transaction_tss_storage_type;
+    inline static TransactionsStack& transactions() {return transaction_tss_storage_type::get()->transactions_;}
+   public:
+#else
     static synchro::implicit_thread_specific_ptr<transaction_tss_storage> transaction_tss_storage_;
    public:
     //~ inline TransactionsStack& transactions() {return transaction_tss_storage_ref_.transactions_;}
     inline static TransactionsStack& transactions() {return transaction_tss_storage_->transactions_;}
+#endif   
 
    // transaction specific data
    //int hasMutex_; // bool - 1 bit
@@ -2484,8 +2499,11 @@ private:
     #endif
 
 public:
+#ifdef BOOST_USES_STATIC_TSS
+    inline static transaction* current() {return transaction_tss_storage_type::get()->transactions_.top();}
+#else
     inline static transaction* current() {return transaction_tss_storage_->transactions_.top();}
-
+#endif
 };
 
 inline transaction* current_transaction() {return transaction::current();}

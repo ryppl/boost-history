@@ -53,7 +53,7 @@ public:
 
    //-----------------------------------------------------------------------
    //-----------------------------------------------------------------------
-   typename vector_map<T,U>::iterator find(first_t const &t)
+   iterator find(first_t const &t)
    {
       for (typename vector_map<T,U>::iterator i = pairs_.begin(); i != pairs_.end(); ++i)
       {
@@ -65,11 +65,12 @@ public:
 
    //-----------------------------------------------------------------------
    //-----------------------------------------------------------------------
-   typename vector_map<T,U>::iterator insert(cont_pair const &wp)
+   iterator insert(cont_pair const &wp)
    {
       T const &f = wp.first;
-
-      for (typename vector_map<T,U>::iterator i = pairs_.begin(); i != pairs_.end(); ++i)
+        
+       iterator  prev;
+      for (iterator i = pairs_.begin(); i != pairs_.end(); ++i)
       {
          if (f == i->first)
          {
@@ -79,7 +80,9 @@ public:
       }
 
       pairs_.push_back(wp);
-      return (typename vector_map<T,U>::iterator)&pairs_[pairs_.size()-1];
+      return  pairs_.begin() + (pairs_.size()-1);
+      //~ return (typename vector_map<T,U>::iterator)&pairs_[pairs_.size()-1];
+      
    }
 
    //-----------------------------------------------------------------------

@@ -18,7 +18,9 @@
 #include <vector>
 #include <map>
 #include <cstddef>
-#include <pthread.h>
+//~ #include <pthread.h>
+#include <boost/thread.hpp>
+
 #include <boost/stm/datatypes.hpp>
 
 namespace boost { namespace stm {
