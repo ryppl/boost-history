@@ -19,26 +19,14 @@ namespace auto_size{
 
     template< typename T, typename I >
     class converter 
-       : protected boost::assign_detail::converter<T,I> 
+       : protected boost::assign_detail::converter<auto_size::converter<T,I>,I> 
        , public range_comparison_op::base_of< T >::type
     {
-       typedef boost::assign_detail::converter<T,I> impl_;
-    //protected:
-       impl_& impl(){ return (*this); }
-       const impl_& impl()const{ return (*this); }
-/*
-        iterator begin() const 
-        {
-            return this->impl().begin();
-        }
+        typedef auto_size::converter<T,I> this_;
+        typedef boost::assign_detail::converter<this_,I> impl_;
 
-        iterator end() const
-        {
-            return this->impl().end();
-        }
+        friend class boost::assign_detail::converter<this_,I>;
 
-
-*/    
     public: 
         typedef typename impl_::iterator iterator;
         typedef typename impl_::const_iterator const_iterator;
