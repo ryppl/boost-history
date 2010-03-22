@@ -15,32 +15,22 @@ namespace assign{
 namespace detail{
 namespace auto_size{
 
-    namespace tag{
-        struct no_policy{};
+    namespace tag{ struct no_policy{}; }
+    namespace impl{
+        struct no_policy{
+            template<typename E,template<typename> class  Ref>
+            struct apply{
+                typedef boost::mpl::empty_base type;
+    	    };
+        };
     }
 	
-    template<typename Tag>
-	struct policy{
-    	typedef Tag tag;
-    };
+    template<typename Tag> struct policy{ typedef Tag tag; };
+    template<> struct policy<tag::no_policy> : impl::no_policy{};
 
-    template<typename Tag>
-	struct csv_policy{
-    	typedef Tag tag;
-    };
+    template<typename Tag> struct csv_policy{ typedef Tag tag; };
+    template<> struct csv_policy<tag::no_policy> : impl::no_policy{};
 
-    template<>
-	struct policy<tag::no_policy>{
-        template<typename E,template<typename> class  Ref>
-        struct apply{
-            typedef boost::mpl::empty_base type;
-    	};
-    };
-
-    template<>
-	struct csv_policy<tag::no_policy> 
-        : policy<tag::no_policy>{};
-    
 }// auto_size
 }// detail
 }// assign

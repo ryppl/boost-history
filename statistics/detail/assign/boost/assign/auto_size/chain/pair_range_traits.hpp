@@ -30,8 +30,8 @@ namespace pair_range_traits{
 
         public:
         typedef typename helper<ref1_,ref2_>::type convertible_to_;
-        typedef detail::result_of::convert_range<convertible_to_,R1> caller1_;
-        typedef detail::result_of::convert_range<convertible_to_,R2> caller2_;
+        typedef detail::result_of::convert_range<R1,convertible_to_> caller1_;
+        typedef detail::result_of::convert_range<R2,convertible_to_> caller2_;
         
         typedef typename caller1_::type new_range1_;
         typedef typename caller2_::type new_range2_;

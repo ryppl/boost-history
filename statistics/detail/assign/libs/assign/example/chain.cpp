@@ -5,6 +5,7 @@
 #include <ostream>
 #include <iterator>
 #include <vector>
+#include <boost/concept/assert.hpp>
 #include <boost/array.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <boost/next_prior.hpp>
@@ -12,7 +13,7 @@
 #include <boost/assign/auto_size/ref_list_of.hpp>
 #include <boost/assign/auto_size/detail/expr.hpp>
 #include <boost/assign/auto_size/reference_wrapper/conversion_traits.hpp>
-#include <boost/assign/auto_size/chain/chain_convert.hpp>
+//#include <boost/assign/auto_size/chain/chain.hpp>
 //#include <boost/assign/auto_size/comparison_op/crtp.hpp>
 
 #include <libs/assign/example/chain.h>
@@ -34,42 +35,37 @@ void example_chain(std::ostream& os)
     ar_ ar3; ar3.assign( 1 );
     ar_ ar4; ar4.assign( 2 );
     ar_ ar5; ar5.assign( 3 );
-	BOOST_AUTO(tmp1,ref_list_of(a)(b)(c)(d)); 
+    typedef detail::auto_size::n_th_expr_copy<val_,4>::type res4_;
+	res4_ tmp1 = ref_list_of(a)(b)(c)(d); 
 	BOOST_AUTO(tmp2,ref_list_of(e)(f)(g)(h)); 
-
-    BOOST_ASSERT(tmp1 != tmp2);
-    BOOST_ASSERT(tmp1 != ar1);
-    BOOST_ASSERT(ar1  != tmp1);
 
 /*
     boost::copy(
-        chain_convert_r(tmp2)(ar4)(ar5),
+        chain_r(tmp2)(ar4)(ar5),
         std::ostream_iterator<val_>(os," ")
     ); os << " --- becomes ---> " << std::endl;
 
-    BOOST_AUTO(tmp,chain_convert_l(tmp2)(ar4)(ar5));
-
     boost::copy(
-        chain_convert_r(tmp1)(ar2)(ar3),
+        chain_r(tmp1)(ar2)(ar3),
         boost::begin(tmp)
     ); 
 
     boost::copy(
-        chain_convert_r(tmp2)(ar4)(ar5),
+        chain_r(tmp2)(ar4)(ar5),
         std::ostream_iterator<val_>(os," ")
     ); os << " --- that should equal ---> "<< std::endl;
 
     boost::copy(
-        chain_convert_r(ref_list_of(a)(b)(c)(d))(ar2)(ar3),
+        chain_r(ref_list_of(a)(b)(c)(d))(ar2)(ar3),
         std::ostream_iterator<val_>(os," ")
     ); os << " --- tier segments in reverse order ---> " << std::endl;
 
     boost::copy(
-        chain_convert_r(ar3)(ar2)(ref_list_of(a)(b)(c)(d)),
+        chain_r(ar3)(ar2)(ref_list_of(a)(b)(c)(d)),
         std::ostream_iterator<val_>(os," ")
     ); // this is a case where without _r, there would be compile error
 
-   // Why chain_convert is required :
+   // Why chain is required :
    //invalid initialization of reference of type 'boost::assign::detail::assign_reference_copy<example_chain::val_>&' 
    // from expression of type 'int'
    //boost::copy(

@@ -117,7 +117,7 @@ namespace auto_size{
         void swap_impl(array_interface& other,boost::mpl::int_<N1>){
             reference lhs = (*this)[N1-1];
             reference rhs = (other)[N1-1];
-            lhs.swap(rhs); //TODO should be able to call swap(lhs,rhs)
+            lhs.swap(rhs); 
             typedef boost::mpl::int_<N1-1> next_int_;
             this->swap_impl(other,next_int_());
         }

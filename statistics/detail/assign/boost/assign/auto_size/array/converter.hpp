@@ -23,14 +23,10 @@ namespace auto_size{
        , public range_comparison_op::base_of< T >::type
     {
        typedef boost::assign_detail::converter<T,I> impl_;
-    protected:
+    //protected:
        impl_& impl(){ return (*this); }
        const impl_& impl()const{ return (*this); }
-    
-    public: 
-        typedef typename impl_::iterator iterator;
-        typedef typename impl_::const_iterator const_iterator;
-        
+/*
         iterator begin() const 
         {
             return this->impl().begin();
@@ -40,7 +36,13 @@ namespace auto_size{
         {
             return this->impl().end();
         }
-        
+
+
+*/    
+    public: 
+        typedef typename impl_::iterator iterator;
+        typedef typename impl_::const_iterator const_iterator;
+                
         template< class Container >
         Container convert_to_container() const
         {
