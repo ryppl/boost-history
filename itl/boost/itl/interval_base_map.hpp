@@ -56,7 +56,7 @@ template
     class Traits = itl::partial_absorber,
     ITL_COMPARE Compare  = ITL_COMPARE_INSTANCE(std::less, DomainT),
     ITL_COMBINE Combine  = ITL_COMBINE_INSTANCE(itl::inplace_plus, CodomainT),
-    ITL_SECTION Section  = ITL_SECTION_INSTANCE(itl::inplace_et, CodomainT), 
+    ITL_SECTION Section  = ITL_SECTION_INSTANCE(itl::inter_section, CodomainT), 
     template<class,ITL_COMPARE>class Interval = itl::interval,
     ITL_ALLOC   Alloc    = std::allocator
 >
@@ -408,7 +408,8 @@ public:
     /** Subtraction of an interval value pair from the map. */
     SubType& subtract(const segment_type& interval_value_pair)
     {
-        if(Traits::is_total && has_inverse<codomain_type>::value)
+        using namespace type_traits;
+        if(ice_and<Traits::is_total, has_inverse<codomain_type>::value>::value)
             that()->template add_<inverse_codomain_combine>(interval_value_pair); 
         else 
             that()->template subtract_<inverse_codomain_combine>(interval_value_pair); 

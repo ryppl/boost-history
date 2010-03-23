@@ -103,30 +103,30 @@ namespace boost{namespace itl
             //-----------------------------------------------------------------
             case RootType::itl_map: {
                 switch(neutronizerChoice) {
-                case NeutronHandlerType::partial_absorber: return new unsigned_quantifier_validater<itl::map<double,nat,partial_absorber> >;
-                case NeutronHandlerType::partial_enricher: return new unsigned_quantifier_validater<itl::map<double,nat,partial_enricher> >;
-                case NeutronHandlerType::total_absorber:   return new unsigned_quantifier_validater<itl::map<int,nat,total_absorber  > >;
-                case NeutronHandlerType::total_enricher:   return new unsigned_quantifier_validater<itl::map<int,nat,total_enricher  > >;
+                case NeutronHandlerType::partial_absorber: return new unsigned_quantifier_validater<itl::map<double,double,partial_absorber> >;
+                case NeutronHandlerType::partial_enricher: return new unsigned_quantifier_validater<itl::map<double,nat,   partial_enricher> >;
+                case NeutronHandlerType::total_absorber:   return new unsigned_quantifier_validater<itl::map<int,   double,total_absorber  > >;
+                case NeutronHandlerType::total_enricher:   return new unsigned_quantifier_validater<itl::map<int,   nat,   total_enricher  > >;
                 default: return choiceError(ITL_LOCATION("\nRootType::itl_map: neutronizerChoice:\n"), neutronizerChoice, _neutronizerChoice);
                 }//switch neutronizerChoice
             }//case itl_map 
             //-----------------------------------------------------------------
             case RootType::interval_map: {
                 switch(neutronizerChoice) {
-                case NeutronHandlerType::partial_absorber: return new unsigned_quantifier_validater<interval_map<int,nat,partial_absorber> >;
-                case NeutronHandlerType::partial_enricher: return new unsigned_quantifier_validater<interval_map<int,nat,partial_enricher> >;
-                case NeutronHandlerType::total_absorber:   return new unsigned_quantifier_validater<interval_map<double,nat,total_absorber  > >;
-                case NeutronHandlerType::total_enricher:   return new unsigned_quantifier_validater<interval_map<double,nat,total_enricher  > >;
+                case NeutronHandlerType::partial_absorber: return new unsigned_quantifier_validater<interval_map<int,   nat,   partial_absorber> >;
+                case NeutronHandlerType::partial_enricher: return new unsigned_quantifier_validater<interval_map<int,   double,partial_enricher> >;
+                case NeutronHandlerType::total_absorber:   return new unsigned_quantifier_validater<interval_map<double,nat,   total_absorber  > >;
+                case NeutronHandlerType::total_enricher:   return new unsigned_quantifier_validater<interval_map<double,double,total_enricher  > >;
                 default: return choiceError(ITL_LOCATION("\nRootType::interval_map: neutronizerChoice:\n"), neutronizerChoice, _neutronizerChoice);
                 }//switch neutronizerChoice
             }//case interval_map 
             //-----------------------------------------------------------------
             case RootType::split_interval_map: {
                 switch(neutronizerChoice) {
-                case NeutronHandlerType::partial_absorber: return new unsigned_quantifier_validater<split_interval_map<int,   nat,partial_absorber> >;
-                case NeutronHandlerType::partial_enricher: return new unsigned_quantifier_validater<split_interval_map<double,nat,partial_enricher> >;
-                case NeutronHandlerType::total_absorber:   return new unsigned_quantifier_validater<split_interval_map<int,   nat,total_absorber  > >;
-                case NeutronHandlerType::total_enricher:   return new unsigned_quantifier_validater<split_interval_map<double,nat,total_enricher  > >;
+                case NeutronHandlerType::partial_absorber: return new unsigned_quantifier_validater<split_interval_map<int,   nat,   partial_absorber> >;
+                case NeutronHandlerType::partial_enricher: return new unsigned_quantifier_validater<split_interval_map<double,nat,   partial_enricher> >;
+                case NeutronHandlerType::total_absorber:   return new unsigned_quantifier_validater<split_interval_map<int,   double,total_absorber  > >;
+                case NeutronHandlerType::total_enricher:   return new unsigned_quantifier_validater<split_interval_map<double,double,total_enricher  > >;
                 default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: neutronizerChoice:\n"), neutronizerChoice, _neutronizerChoice);
                 }//switch neutronizerChoice
             }//case split_interval_map 

@@ -9,6 +9,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #define BOOST_ITL_TYPE_TRAITS_HAS_INVERSE_HPP_JOFA_090205
 
 #include <boost/type_traits/is_signed.hpp>
+#include <boost/type_traits/is_floating_point.hpp>
 
 namespace boost{ namespace itl
 {
@@ -16,7 +17,9 @@ namespace boost{ namespace itl
     template <class Type> struct has_inverse
     { 
         typedef has_inverse<Type> type;
-        BOOST_STATIC_CONSTANT(bool, value = (is_signed<Type>::value)); 
+        BOOST_STATIC_CONSTANT(bool, 
+            value = (type_traits::ice_or<is_signed<Type>::value, 
+                                         is_floating_point<Type>::value>::value)); 
     };
 
 }} // namespace boost itl

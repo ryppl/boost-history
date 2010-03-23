@@ -25,6 +25,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/detail/design_config.hpp>
 #include <boost/itl/type_traits/neutron.hpp>
 #include <boost/itl/type_traits/unon.hpp>
+#include <boost/itl/type_traits/infinity.hpp>
 #include <boost/itl/type_traits/is_continuous.hpp>
 #include <boost/itl/type_traits/difference.hpp>
 #include <boost/itl/type_traits/size.hpp>
@@ -478,7 +479,7 @@ struct continuous_interval
         else if(x.is(itl::closed_bounded) && IntervalT::domain_equal(x.lower(), x.upper()))
             return itl::unon<SizeT>::value();
         else 
-            return std::numeric_limits<SizeT>::infinity();
+            return infinity<SizeT>::value();
     }
 
     static typename IntervalT::difference_type 

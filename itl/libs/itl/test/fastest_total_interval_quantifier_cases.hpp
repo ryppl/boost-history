@@ -25,12 +25,21 @@ BOOST_AUTO_TEST_CASE
 
 BOOST_AUTO_TEST_CASE
 (fastest_itl_total_quantifier_map_check_abelian_monoid_et_4_bicremental_types)
-{                  quantifier_map_check_abelian_monoid_et_4_bicremental_types<bicremental_type_4, int, total_absorber, INTERVAL_MAP>();}
+{                  quantifier_map_check_abelian_monoid_et_4_bicremental_types<bicremental_type_4, float, total_absorber, INTERVAL_MAP>();}
 
 // (0-x) + x = 0 | total absorber
 BOOST_AUTO_TEST_CASE
-(fastest_itl_total_quantifier_map_check_abelian_group_plus_4_bicremental_types)
+(fastest_itl_total_quantifier_map_check_abelian_group_plus_4_bicremental_domain_and_discrete_codomain)
 {                  quantifier_map_check_abelian_group_plus_4_bicremental_types<bicremental_type_5, int, total_absorber, INTERVAL_MAP>();}
+
+BOOST_AUTO_TEST_CASE
+(fastest_itl_total_quantifier_map_check_abelian_group_plus_4_bicremental_domain_and_continuous_codomain_1)
+{                  quantifier_map_check_abelian_group_plus_4_bicremental_types<bicremental_type_5, double, total_absorber, INTERVAL_MAP>();}
+
+BOOST_AUTO_TEST_CASE
+(fastest_itl_total_quantifier_map_check_abelian_group_plus_4_bicremental_domain_and_continuous_codomain_2)
+{                  quantifier_map_check_abelian_group_plus_4_bicremental_types<bicremental_type_5, boost::rational<int>, total_absorber, INTERVAL_MAP>();}
+
 //------------------------------------------------------------------------------
 // total_enricher
 //------------------------------------------------------------------------------
@@ -48,12 +57,20 @@ BOOST_AUTO_TEST_CASE
 
 BOOST_AUTO_TEST_CASE
 (fastest_itl_total_enricher_quantifier_map_check_abelian_monoid_et_4_bicremental_types)
-{                           quantifier_map_check_abelian_monoid_et_4_bicremental_types<bicremental_type_1, int, total_enricher, INTERVAL_MAP>();}
+{                           quantifier_map_check_abelian_monoid_et_4_bicremental_types<bicremental_type_1, double, total_enricher, INTERVAL_MAP>();}
 
 // (0-x) + x =p= 0 | total absorber
 BOOST_AUTO_TEST_CASE
-(fastest_itl_total_enricher_quantifier_map_check_abelian_group_plus_prot_inv_4_bicremental_types)
+(fastest_itl_total_enricher_quantifier_map_check_abelian_group_plus_prot_inv_4_bicremental_domain_discrete_codomain)
 {                           quantifier_map_check_abelian_group_plus_prot_inv_4_bicremental_types<bicremental_type_2, int, total_enricher, INTERVAL_MAP>();}
+
+BOOST_AUTO_TEST_CASE
+(fastest_itl_total_enricher_quantifier_map_check_abelian_group_plus_prot_inv_4_bicremental_domain_continuous_codomain_1)
+{                           quantifier_map_check_abelian_group_plus_prot_inv_4_bicremental_types<bicremental_type_3, float, total_enricher, INTERVAL_MAP>();}
+
+BOOST_AUTO_TEST_CASE
+(fastest_itl_total_enricher_quantifier_map_check_abelian_group_plus_prot_inv_4_bicremental_domain_continuous_codomain_2)
+{                           quantifier_map_check_abelian_group_plus_prot_inv_4_bicremental_types<bicremental_type_4, boost::rational<int>, total_enricher, INTERVAL_MAP>();}
 
 
 //            absorber      enricher

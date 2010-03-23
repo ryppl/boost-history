@@ -17,7 +17,7 @@ template <class T, class U, class Trt,
                    class Traits = Trt,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
                    ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
-                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_et, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inter_section, U),
                    template<class,ITL_COMPARE>class Interval = interval,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap
@@ -44,7 +44,7 @@ template <class T, class U, class Trt,
                    class Traits = Trt,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
                    ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
-                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_et, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inter_section, U),
                    template<class,ITL_COMPARE>class Interval = interval,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap
@@ -74,7 +74,7 @@ template <class T, class U, class Trt,
                    class Traits = Trt,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
                    ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
-                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_et, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inter_section, U),
                    template<class,ITL_COMPARE>class Interval = interval,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap
@@ -101,7 +101,7 @@ template <class T, class U, class Trt,
                    class Traits = Trt,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
                    ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
-                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_et, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inter_section, U),
                    template<class,ITL_COMPARE>class Interval = interval,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap
@@ -131,7 +131,7 @@ template <class T, class U, class Trt,
                    class Traits = Trt,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
                    ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
-                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_et, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inter_section, U),
                    template<class,ITL_COMPARE>class Interval = interval,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap
@@ -160,7 +160,7 @@ template <class T, class U, class Trt,
                    class Traits = Trt,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
                    ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
-                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_et, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inter_section, U),
                    template<class,ITL_COMPARE>class Interval = interval,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap
@@ -193,7 +193,7 @@ template <class T, class U, class Trt,
                    class Traits = Trt,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
                    ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
-                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_et, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inter_section, U),
                    template<class,ITL_COMPARE>class Interval = interval,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap
@@ -215,20 +215,23 @@ void quantifier_map_check_abelian_group_plus_4_bicremental_types()
 }
 
 //------------------------------------------------------------------------------
-// (0 - x) + x =p= 0  |  
+// (0 - x) + x =p= 0 
 //------------------------------------------------------------------------------
 template <class T, class U, class Trt,
           template<class T, class U,
                    class Traits = Trt,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
                    ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
-                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_et, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inter_section, U),
                    template<class,ITL_COMPARE>class Interval = interval,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap
           >
 void quantifier_map_check_abelian_group_plus_prot_inv_4_bicremental_types()
 {
+    // check abelian group wrt. + and inverability wrt. protonic equality =p= :
+    // (1) (IntervalMapT, +) is an abelian group and
+    // (2) The inverability law: (0 - x) + x =p= 0 holds.
     typedef IntervalMap<T,U,Trt> IntervalMapT;
 
     IntervalMapT map_a, map_b, map_c;

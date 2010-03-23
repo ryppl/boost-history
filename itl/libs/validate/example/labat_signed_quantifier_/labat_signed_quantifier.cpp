@@ -26,6 +26,7 @@ void test_signed_quantifier_driver()
     ">> terminate by typing <CTRL>C\n"
     ">> ------------------------------------------------------ <<\n";
     GentorProfileSgl::it()->set_std_profile(16,1);
+    GentorProfileSgl::it()->set_range_double(-1.0, 1.0);
     GentorProfileSgl::it()->report_profile();
     validater.validate();
 };

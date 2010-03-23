@@ -27,6 +27,7 @@ itl_rational provides adapter code for boost::rational.
 #endif
 
 #include <boost/itl/type_traits/is_continuous.hpp>
+#include <boost/itl/type_traits/has_inverse.hpp>
 
 namespace boost{namespace itl
 {
@@ -36,6 +37,14 @@ namespace boost{namespace itl
         typedef is_continuous<boost::rational<Integral> > type;
         BOOST_STATIC_CONSTANT(bool, value = true);
     };
+
+    template<class Integral> 
+    struct has_inverse<boost::rational<Integral> >
+    {
+        typedef has_inverse<boost::rational<Integral> > type;
+        BOOST_STATIC_CONSTANT(bool, value = (is_signed<Integral>::value));
+    };
+
 }} // namespace itl boost
 
 

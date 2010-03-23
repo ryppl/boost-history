@@ -30,7 +30,7 @@ typename IntervalContainerT::size_type continuous_cardinality(const IntervalCont
     ITL_const_FORALL(typename IntervalContainerT, it, object)
     {
         interval_size = continuous_interval<interval_type>::cardinality(IntervalContainerT::key_value(it));
-        if(interval_size == std::numeric_limits<size_type>::infinity())
+        if(interval_size == infinity<size_type>::value())
             return interval_size;
         else
             size += interval_size;

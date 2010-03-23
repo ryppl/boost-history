@@ -59,9 +59,23 @@ BOOST_AUTO_TEST_CASE(reverse_iter)
     cout << map_a << endl;
 }
 
+#include <limits>
+#include <complex>
 
 BOOST_AUTO_TEST_CASE(casual)
 {
-    ;
+    cout << "--- limits ---\n";
+    cout << "max<char>    = " << (std::numeric_limits<char>::max)() << endl;
+    cout << "max<char>    = " << static_cast<int>((std::numeric_limits<char>::max)()) << endl;
+    cout << "-----------------------------------\n";
+    cout << "digits<char>    = " << std::numeric_limits<char>::digits << endl;
+    cout << "digits<short>   = " << std::numeric_limits<short>::digits << endl;
+    cout << "digits<float>   = " << std::numeric_limits<float>::digits << endl;
+    cout << "digits<double>  = " << std::numeric_limits<double>::digits << endl;
+    cout << "digits<complex<double>> = " << std::numeric_limits<std::complex<double> >::digits << endl;
+    cout << "digits<string>  = " << std::numeric_limits<std::string>::digits << endl;
+
+
+    BOOST_CHECK_EQUAL(0 != itl::infinity<int>::value(), true);
 }
 

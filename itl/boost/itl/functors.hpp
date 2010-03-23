@@ -10,8 +10,10 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 
 #include <functional>
 #include <boost/type_traits.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/itl/type_traits/neutron.hpp>
 #include <boost/itl/type_traits/unon.hpp>
+#include <boost/itl/type_traits/is_set.hpp>
 
 namespace boost{namespace itl
 {
@@ -33,6 +35,7 @@ namespace boost{namespace itl
     template <typename Type> struct inplace_identity 
         : public neutron_based_inplace_combine<Type>
     {
+        typedef inplace_identity<Type> type;
         void operator()(Type& object, const Type& operand)const{}
     };
 
@@ -44,6 +47,8 @@ namespace boost{namespace itl
     template <typename Type> struct inplace_erasure 
         : public neutron_based_inplace_combine<Type>
     {
+        typedef inplace_erasure<Type> type;
+
         void operator()(Type& object, const Type& operand)const
         { 
             if(object == operand)
@@ -59,7 +64,7 @@ namespace boost{namespace itl
     template <typename Type> struct inplace_plus 
         : public neutron_based_inplace_combine<Type>
     {
-        typedef Type type;
+        typedef inplace_plus<Type> type;
 
         void operator()(Type& object, const Type& operand)const
         { object += operand; }
@@ -74,7 +79,8 @@ namespace boost{namespace itl
     template <typename Type> struct inplace_minus 
         : public neutron_based_inplace_combine<Type>
     {
-        typedef Type type;
+        typedef inplace_minus<Type> type;
+
         void operator()(Type& object, const Type& operand)const
         { object -= operand; }
     };
@@ -86,7 +92,7 @@ namespace boost{namespace itl
     template <typename Type> struct inplace_bit_add
         : public neutron_based_inplace_combine<Type>
     {
-        typedef Type type;
+        typedef inplace_bit_add<Type> type;
 
         void operator()(Type& object, const Type& operand)const
         { object |= operand; }
@@ -101,7 +107,8 @@ namespace boost{namespace itl
     template <typename Type> struct inplace_bit_subtract
         : public neutron_based_inplace_combine<Type>
     {
-        typedef Type type;
+        typedef inplace_bit_subtract<Type> type;
+
         void operator()(Type& object, const Type& operand)const
         { object &= ~operand; }
 
@@ -115,7 +122,7 @@ namespace boost{namespace itl
     template <typename Type> struct inplace_bit_and
         : public neutron_based_inplace_combine<Type>
     {
-        typedef Type type;
+        typedef inplace_bit_and<Type> type;
 
         void operator()(Type& object, const Type& operand)const
         { object &= operand; }
@@ -128,7 +135,8 @@ namespace boost{namespace itl
     template <typename Type> struct inplace_bit_xor
         : public neutron_based_inplace_combine<Type>
     {
-        typedef Type type;
+        typedef inplace_bit_xor<Type> type;
+
         void operator()(Type& object, const Type& operand)const
         { object ^= operand; }
 
@@ -139,28 +147,10 @@ namespace boost{namespace itl
     template <typename Type> struct inplace_et
         : public neutron_based_inplace_combine<Type>
     {
-        typedef Type type;
+        typedef inplace_et<Type> type;
 
         void operator()(Type& object, const Type& operand)const
         { object &= operand; }
-    };
-
-    template <> struct inplace_et<double>
-        : public neutron_based_inplace_combine<double>
-    {
-        typedef double type;
-
-        void operator()(type& object, type operand)const
-        { object += operand; }
-    };
-
-    template <> struct inplace_et<float>
-        : public neutron_based_inplace_combine<float>
-    {
-        typedef float type;
-
-        void operator()(type& object, type operand)const
-        { object += operand; }
     };
 
     template<>
@@ -170,29 +160,12 @@ namespace boost{namespace itl
     template <typename Type> struct inplace_caret
         : public neutron_based_inplace_combine<Type>
     {
-        typedef Type type;
+        typedef inplace_caret<Type> type;
+
         void operator()(Type& object, const Type& operand)const
         { object ^= operand; }
 
         static Type neutron() { return boost::itl::neutron<Type>::value(); }
-    };
-
-    template <> struct inplace_caret<double>
-        : public neutron_based_inplace_combine<double>
-    {
-        typedef double type;
-
-        void operator()(type& object, type operand)const
-        { object -= operand; }
-    };
-
-    template <> struct inplace_caret<float>
-        : public neutron_based_inplace_combine<float>
-    {
-        typedef float type;
-
-        void operator()(type& object, type operand)const
-        { object -= operand; }
     };
 
     template<>
@@ -202,6 +175,8 @@ namespace boost{namespace itl
     template <typename Type> struct inplace_insert
         : public neutron_based_inplace_combine<Type>
     {
+        typedef inplace_insert<Type> type;
+
         void operator()(Type& object, const Type& operand)const
         { insert(object,operand); }
 
@@ -215,6 +190,8 @@ namespace boost{namespace itl
     template <typename Type> struct inplace_erase
         : public neutron_based_inplace_combine<Type>
     {
+        typedef inplace_erase<Type> type;
+
         void operator()(Type& object, const Type& operand)const
         { erase(object,operand); }
 
@@ -228,6 +205,8 @@ namespace boost{namespace itl
     template <typename Type> struct inplace_star
         : public neutron_based_inplace_combine<Type>
     {
+        typedef inplace_star<Type> type;
+
         void operator()(Type& object, const Type& operand)const
         { object *= operand; }
 
@@ -241,6 +220,8 @@ namespace boost{namespace itl
     template <typename Type> struct inplace_slash
         : public neutron_based_inplace_combine<Type>
     {
+        typedef inplace_slash<Type> type;
+
         void operator()(Type& object, const Type& operand)const
         { object /= operand; }
 
@@ -254,6 +235,8 @@ namespace boost{namespace itl
     template <typename Type> struct inplace_max
         : public neutron_based_inplace_combine<Type>
     {
+        typedef inplace_max<Type> type;
+
         void operator()(Type& object, const Type& operand)const
         {
             if(object < operand)
@@ -270,6 +253,8 @@ namespace boost{namespace itl
     template <typename Type> struct inplace_min
         : public neutron_based_inplace_combine<Type>
     {
+        typedef inplace_min<Type> type;
+
         void operator()(Type& object, const Type& operand)const
         {
             if(object > operand)
@@ -281,6 +266,25 @@ namespace boost{namespace itl
 
     template<>
     inline std::string unary_template_to_string<inplace_min>::apply() { return "min="; }
+
+    //--------------------------------------------------------------------------
+    // Inter_section functor
+    //--------------------------------------------------------------------------
+    template<class Type> struct inter_section
+        : public neutron_based_inplace_combine<Type>
+    {
+        typedef typename boost::mpl::
+            if_<is_set<Type>,
+                itl::inplace_et<Type>, 
+                itl::inplace_plus<Type> 
+               >::type
+            type;
+
+        void operator()(Type& object, const Type& operand)const
+        { 
+            type()(object, operand);
+        }
+    };
 
     //--------------------------------------------------------------------------
     // Inverse functor
@@ -334,6 +338,27 @@ namespace boost{namespace itl
     template<class Type> 
     struct inverse<itl::inplace_min<Type> >
     { typedef itl::inplace_max<Type> type; };
+
+
+    //--------------------------------------------------------------------------
+    // Inverse inter_section functor
+    //--------------------------------------------------------------------------
+    template<class Type> 
+    struct inverse<itl::inter_section<Type> >
+        : public neutron_based_inplace_combine<Type>
+    {
+        typedef typename boost::mpl::
+            if_<is_set<Type>,
+                itl::inplace_caret<Type>, 
+                itl::inplace_minus<Type> 
+               >::type
+            type;
+
+        void operator()(Type& object, const Type& operand)const
+        { 
+            type()(object, operand);
+        }
+    };
 
 
     //--------------------------------------------------------------------------
@@ -439,7 +464,6 @@ namespace boost{namespace itl
             return base_type::inversion(value);
         } 
     };
-
 
 }} // namespace itl boost
 

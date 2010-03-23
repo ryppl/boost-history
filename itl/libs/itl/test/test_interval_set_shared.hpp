@@ -292,8 +292,8 @@ void interval_set_distinct_4_bicremental_continuous_types()
     is_123_5 = is_1_3_5;
     is_123_5 += interval<T>::open(v1,v3);
 
-    BOOST_CHECK_EQUAL( is_123_5.cardinality(),      std::numeric_limits<size_T>::infinity() );
-    BOOST_CHECK_EQUAL( is_123_5.size(),             std::numeric_limits<size_T>::infinity() );
+    BOOST_CHECK_EQUAL( is_123_5.cardinality(),      itl::infinity<size_T>::value() );
+    BOOST_CHECK_EQUAL( is_123_5.size(),             itl::infinity<size_T>::value() );
     BOOST_CHECK_EQUAL( is_123_5.length(),           d2 );
 }
 
