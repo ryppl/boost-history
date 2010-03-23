@@ -13,9 +13,11 @@
 #include <boost/mpl/int.hpp>
 #include <boost/array.hpp>
 #include <boost/range.hpp>
-#include <boost/assign/auto_size/array/converter.hpp> 
+#include <boost/assign/list_of.hpp> 
+#include <boost/assign/auto_size/comparison_op/range.hpp>
 #include <boost/assign/auto_size/reference_wrapper/has_copy_semantics.hpp>
 #include <boost/assign/auto_size/array/ref.hpp>
+//#include <boost/assign/auto_size/array/converter.hpp>
 
 namespace boost{
 namespace assign{
@@ -41,26 +43,27 @@ namespace auto_size{
 
     };
                    
-    // Warning : do not yet use comparison operatators between array_interfaces.
-
     // Used as a base class of D, adds the array and conversion interface
     //
     // Requirements: let d1 and d2 instances of D and const D, respectively
     // Valid expression			Result
     // d1.ref_array_impl()		array_interface::ref_array_&
     // d2.ref_array_impl()		array_interface::const ref_array_&
+    //
+    // All non comparison ops are forwarded to converter<>. Comparison ops
+    // are taken care of by range_comparison_op::base_of<>::type. 
     template<typename T,std::size_t N,template<typename> class R,typename D>
     class array_interface 
-      : public 
+      :  
         assign_detail::converter<
             array_interface<T,N,R,D>,
             typename array_interface_traits<T,N,R>::const_iterator
-        >
-        //auto_size::converter< 
-        //    array_interface<T,N,R,D>,
-        //    typename array_interface_traits<T,N,R>::const_iterator 
-        //> 
+        >, 
+        public range_comparison_op::base_of< 
+            array_interface<T,N,R,D>
+          >::type
     {
+    
         typedef array_interface_traits<T,N,R> traits;
         typedef typename traits::ref_ ref_;
         typedef typename traits::ref_array_ ref_array_;
@@ -94,10 +97,8 @@ namespace auto_size{
         const_reference back() const{ return (this->ref_array()).back(); }
         
         void swap(array_interface& other){ 
-            // Before March 19th :
-            //(this->ref_array()).swap(other.ref_array()); 
-            // does not swap anything under Mingw, hence the change below:
             typedef boost::mpl::int_<N> int_n_;
+            // TODO swap(this->ref_array(),other.ref_array());
             this->swap_impl(other,int_n_());
         }
 
@@ -106,11 +107,64 @@ namespace auto_size{
             return this->assign(val,pred_());
         }
 
+        // converter
+        protected:
+        typedef assign_detail::converter<
+            array_interface<T,N,R,D>,
+            typename array_interface_traits<T,N,R>::const_iterator
+        > converter_;
+
+        friend class assign_detail::converter<
+            array_interface<T,N,R,D>,
+            typename array_interface_traits<T,N,R>::const_iterator
+        >;
+
+        public:
+
         template< class Container >
         operator Container() const
         {
             return 
             	this-> BOOST_NESTED_TEMPLATE convert_to_container<Container>();
+        }
+
+        template< class Container >
+        Container convert_to_container() const
+        {
+            return converter_::template convert_to_container<Container>();
+        }
+        
+        template< class Container >
+        Container to_container( Container& c ) const
+        {
+            return converter_::to_container(c);
+        }
+
+        struct result_of_to_adapter{
+            static const converter_ impl;
+            
+            typedef BOOST_TYPEOF_TPL( impl.to_adapter() ) type;
+        
+            // needed bec converter_::adapter_converter is private
+
+        };
+
+        typename result_of_to_adapter::type
+        to_adapter() const
+        {
+            return converter_::to_adapter();
+        }
+
+        template< class Adapter >
+        Adapter to_adapter( Adapter& a ) const
+        {
+            return converter_::to_adapter(a);
+        }
+
+        template< class Array >
+        Array to_array( Array& a ) const
+        {
+            return converter_::to_array(a);
         }
 
         private:

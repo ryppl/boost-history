@@ -9,43 +9,37 @@
 #ifndef BOOST_ASSIGN_AUTO_SIZE_DETAIL_ARRAY_CONVERTER_ER_2010_HPP
 #define BOOST_ASSIGN_AUTO_SIZE_DETAIL_ARRAY_CONVERTER_ER_2010_HPP
 #include <boost/typeof/typeof.hpp>
-#include <boost/assign/list_of.hpp> // for assign_detail::converter
-#include <boost/assign/auto_size/comparison_op/range.hpp>
 
 namespace boost{
 namespace assign{
 namespace detail{
 namespace auto_size{
 
-    // This has yet to be figured out (how to forward to a crtp class).
     template< typename T, typename I >
     class converter 
-       : protected boost::assign_detail::converter<auto_size::converter<T,I>,I> 
-       , public range_comparison_op::base_of< T >::type
     {
-        typedef auto_size::converter<T,I> this_;
-        typedef boost::assign_detail::converter<this_,I> impl_;
 
-        friend class boost::assign_detail::converter<this_,I>;
+//        friend class boost::assign_detail::converter<this_,I>;
 
     public: 
-        typedef typename impl_::iterator iterator;
-        typedef typename impl_::const_iterator const_iterator;
+        typedef typename I iterator;
+        typedef typename I const_iterator;
                 
         template< class Container >
         Container convert_to_container() const
         {
-            return this->impl().convert_to_container<Container>();
+            return static_cast<
+                const T&>(*this).convert_to_container<Container>();
         }
         
         template< class Container >
         Container to_container( Container& c ) const
         {
-            return this->impl().to_container(c);
+            return static_cast<const T&>(*this).to_container(c);
         }
 
         struct result_of_to_adapter{
-            static const impl_ impl;
+            static const D impl;
             
             typedef BOOST_TYPEOF_TPL( impl.to_adapter() ) type;
         
@@ -56,23 +50,22 @@ namespace auto_size{
         typename result_of_to_adapter::type
         to_adapter() const
         {
-            return this->impl().to_adapter();
+            return static_cast<const T&>(*this).to_adapter();
         }
 
         template< class Adapter >
         Adapter to_adapter( Adapter& a ) const
         {
-            return this->impl().to_adapter(a);
+            return static_cast<const T&>(*this).to_adapter(a);
         }
 
         template< class Array >
         Array to_array( Array& a ) const
         {
-            return this->impl().to_array(a);
+            return static_cast<const T&>(*this).to_array(a);
         }
 
     };
-
 
 }// auto_size  
 }// detail      
