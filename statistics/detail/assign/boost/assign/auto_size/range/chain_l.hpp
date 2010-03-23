@@ -30,8 +30,7 @@ namespace assign{
 namespace detail{
 namespace chain_l_impl{
 
-    template<typename E,typename R1,int N>
-	class expr;
+    template<typename E,typename R1,int N> class expr;
 
     template<typename E,typename R2>
     struct next_expr{
