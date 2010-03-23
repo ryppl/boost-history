@@ -19,11 +19,11 @@ namespace detail{
 // A type T is mapped to a convertible type U in two steps:
 //     1) Tag = tag_of<T>::type
 //     2) U = meta::convert_to<Tag>::apply<T>::type
-// This file defines two groups:
+// 
+// Groups defined in this file: 
 //          Tag                         U                   
-//  - itself (the default)              T
-//  - reference_to_inner_value    inner_value<T>&
-// but the use can also define his/her own as needed.
+//   itself (the default)               T
+//   reference_to_inner_value     inner_value<T>::type&
 
 namespace conversion_traits{
 

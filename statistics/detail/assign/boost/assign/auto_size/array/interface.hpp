@@ -41,6 +41,8 @@ namespace auto_size{
 
     };
                    
+    // Warning : do not yet use comparison operatators between array_interfaces.
+
     // Used as a base class of D, adds the array and conversion interface
     //
     // Requirements: let d1 and d2 instances of D and const D, respectively
@@ -50,10 +52,14 @@ namespace auto_size{
     template<typename T,std::size_t N,template<typename> class R,typename D>
     class array_interface 
       : public 
-        auto_size::converter< 
+        assign_detail::converter<
             array_interface<T,N,R,D>,
-            typename array_interface_traits<T,N,R>::const_iterator 
-        > 
+            typename array_interface_traits<T,N,R>::const_iterator
+        >
+        //auto_size::converter< 
+        //    array_interface<T,N,R,D>,
+        //    typename array_interface_traits<T,N,R>::const_iterator 
+        //> 
     {
         typedef array_interface_traits<T,N,R> traits;
         typedef typename traits::ref_ ref_;

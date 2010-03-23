@@ -14,24 +14,21 @@
 #include <boost/mpl/void.hpp>
 #include <boost/range.hpp>
 #include <boost/range/chain.hpp>
+#include <boost/assign/auto_size/range/result_of_chain.hpp>
 
 // This is based on
 // http://gist.github.com/287791
 // developed by MPG, but allows lvalues.
 
+// Usage : Let r1, r2 and r3 denote ranges,
+//     boost::copy( from, boost::begin( chain_l(r1)(r2)(r3) ) );
+// Note: if either of r, r2 or r3 is a range of reference wrappers, then all 
+// three also have to. 
+
 namespace boost{
 namespace assign{
 namespace detail{
-namespace range{
-
-namespace result_of{
-    template<typename R1,typename R2>
-    struct chain_l{
-        static R1 r1;
-        static R2 r2;
-        typedef BOOST_TYPEOF_TPL( boost::chain(r1,r2) ) type;
-    };
-}
+namespace chain_l_impl{
 
     template<typename E,typename R1,int N>
 	class expr;
@@ -42,7 +39,7 @@ namespace result_of{
     };
     
     template<typename E,typename R1,int N>
-    struct super_of_expr : result_of::chain_l<E,R1>{};
+    struct super_of_expr : detail::result_of::chain<typename E::super_,R1>{};
 
     template<typename E,typename R1>
     struct super_of_expr<E,R1,1>{
@@ -67,6 +64,9 @@ namespace result_of{
         
         typedef typename super_of_expr<E,R1,N>::type super_;
     
+        super_& super(){ return (*this); }
+        const super_& super()const{ return (*this); }
+    
         explicit expr(super_ s):super_(s){}
         explicit expr(E& p,super_ s):previous(p),super_(s){}
 
@@ -78,7 +78,7 @@ namespace result_of{
             return res_(
                 *this,
                 super_(
-                    boost::chain(*this,r2)
+                    boost::chain(this->super(),r2)
                 )
             );
         }
@@ -93,18 +93,17 @@ namespace result_of{
         typedef expr<top_,R1,1> type; 
         typedef typename type::super_ super_;
         static type call(R1& r1){
-             return type(super_(r1));
+            return type(super_(r1));
         }
     };
     
-    
-}// range
+}// chain_l_impl
 }// detail
 
     template<typename R1>
-    typename detail::range::first_expr<R1>::type    
+    typename detail::chain_l_impl::first_expr<R1>::type    
     chain_l(R1& r1){
-        typedef detail::range::first_expr<R1> caller_;
+        typedef detail::chain_l_impl::first_expr<R1> caller_;
         return caller_::call(r1);
     }
 

@@ -11,11 +11,10 @@
 #include <boost/array.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <boost/range/algorithm/copy.hpp>
-#include <boost/assign/auto_size/chain/chain.hpp>
+#include <boost/assign/auto_size/range/chain_convert_l.hpp>
 #include <boost/assign/auto_size/check/iterator.hpp>
 #include <boost/assign/auto_size/check/constants.hpp>
 #include <boost/assign/auto_size/check/copy_iterator.hpp>
-#include <boost/assign/auto_size/reference_wrapper/conversion_traits.hpp> // MUST be included
 
 #ifndef BOOST_ASSIGN_CHECK_EQUAL
 #error

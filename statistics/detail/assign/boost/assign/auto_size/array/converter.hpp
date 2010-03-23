@@ -17,6 +17,7 @@ namespace assign{
 namespace detail{
 namespace auto_size{
 
+    // This has yet to be figured out (how to forward to a crtp class).
     template< typename T, typename I >
     class converter 
        : protected boost::assign_detail::converter<auto_size::converter<T,I>,I> 

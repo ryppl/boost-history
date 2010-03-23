@@ -1,5 +1,9 @@
 // Revision history:
 //
+// March 21, 2010 : Temporarily disable comparison_op until technical fix. 
+// March 21, 2010 : Removed /chain. Added /traits and /range. Implem of 
+// chain_convert_l now much safer by keeping reference to previous changes and 
+// the current range (similar to ref_list_of).
 // March 19, 2010 : Finished /check
 // March 18, 2010 : Commented out range() from auto_size::expr<>
 // March 16, 2010 : Added a /comparison_op to allow comparison between proxy
