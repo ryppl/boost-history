@@ -322,7 +322,7 @@ struct BuildGuardsCases::case_<proto::tag::terminal>
 	: proto::or_<
         proto::when <
 						proto::terminal<action_tag>,
-						proto::_
+						get_action_name<proto::_ >()
 					>,
         proto::when<
                         proto::terminal<state_tag>,

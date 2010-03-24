@@ -471,7 +471,7 @@ struct BuildActionsCases::case_<proto::tag::terminal>
     : proto::or_<
         proto::when<
             proto::terminal<action_tag>,
-            proto::_
+            get_action_name<proto::_ >()
                 >,
         proto::when<
             proto::terminal<state_tag>,
@@ -496,10 +496,11 @@ struct BuildActions
 {};
 
 // attributes building
+//TODO not euml_action?
 #define BOOST_MSM_EUML_DECLARE_ATTRIBUTE(attr_type,attr_name)                                           \
 struct attr_name ## _                                                                                   \
     : proto::extends< proto::terminal<msm::front::action_tag>::type, attr_name ## _, sm_domain>         \
-    {                                                                                                   \
+    {typedef  attr_name ## _ action_name;                                                       \
         typedef ::boost::fusion::pair<attr_name ## _,attr_type> attribute_type;                         \
     };                                                                                                  \
 attr_name ## _ const attr_name;
