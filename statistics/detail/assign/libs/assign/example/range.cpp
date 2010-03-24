@@ -38,11 +38,6 @@ void example_range(std::ostream& os)
     BOOST_AUTO(tmp2,ref_list_of(c)(d));
     BOOST_AUTO(tmp3,ref_list_of(e)(f));
 
-    boost::copy(
-        chain_convert_l(ar1)(ar2),
-        std::ostream_iterator<int>(os," ")
-    );
-
     os << " chain_l(tmp1)(tmp2)(tmp3) = (";
     boost::copy(
         chain_convert_l(tmp1)(ar5)(tmp3),
