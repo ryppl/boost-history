@@ -11,7 +11,7 @@
 #include <boost/range/algorithm/copy.hpp>
 #include <boost/assign/auto_size/ref_list_of.hpp>
 #include <boost/assign/auto_size/range/chain.hpp>
-#include <boost/assign/auto_size/range/chain_convert_l.hpp>
+#include <boost/assign/auto_size/range/chain_convert.hpp>
 #include <boost/assign/auto_size/range/convert_range.hpp>
 
 #include <libs/assign/example/range.h>

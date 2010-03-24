@@ -10,6 +10,6 @@
 #define BOOST_ASSIGN_CHAIN_CONVERT_ER_2010_HPP
 
 #include <boost/assign/auto_size/range/chain.hpp> 
-#include <boost/assign/auto_size/range/chain_convert_l.hpp> 
+#include <boost/assign/auto_size/range/chain_convert.hpp> 
 
 #endif
