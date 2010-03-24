@@ -27,6 +27,8 @@
 // This function does not have the restriction of chain_l that none or all
 // of r1, r2, r3 must be reference wrappers.
 
+// TODO follow the model of chain_impl to allow rvalues.
+
 namespace boost{
 namespace assign{
 namespace detail{
