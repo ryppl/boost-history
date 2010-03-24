@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="../../../../doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
 <link rel="start" href="index.html" title="Chapter&#160;1.&#160;Boost.Tokenmap">
-<link rel="next" href="tokenmap/quick_tutorial.html" title="Quick tutorial">
+<link rel="next" href="tokenmap/background.html" title="Background">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -17,7 +17,7 @@
 <td align="center"><a href="../../../../more/index.htm">More</a></td>
 </tr></table>
 <hr>
-<div class="spirit-nav"><a accesskey="n" href="tokenmap/quick_tutorial.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a></div>
+<div class="spirit-nav"><a accesskey="n" href="tokenmap/background.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a></div>
 <div class="chapter" lang="en">
 <div class="titlepage"><div>
 <div><h2 class="title">
@@ -27,7 +27,7 @@
 </h3></div></div>
 <div><p class="copyright">Copyright &#169; 2009 Slawomir Lisznianski</p></div>
 <div><div class="legalnotice">
-<a name="id499870"></a><p>
+<a name="id531067"></a><p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
@@ -37,12 +37,15 @@
 <p><b>Table of Contents</b></p>
 <dl>
 <dt><span class="section"><a href="index.html#tokenmap.description">Description</a></span></dt>
+<dt><span class="section"><a href="tokenmap/background.html"> Background</a></span></dt>
+<dd><dl><dt><span class="section"><a href="tokenmap/background.html#tokenmap.background.analysis_of_simple_strategy"> Analysis
+      of the simple strategy</a></span></dt></dl></dd>
 <dt><span class="section"><a href="tokenmap/quick_tutorial.html">Quick tutorial</a></span></dt>
 <dt><span class="section"><a href="tokenmap/reference.html">Reference</a></span></dt>
 <dt><span class="section"><a href="tokenmap/performance_.html">Performance </a></span></dt>
 <dt><span class="section"><a href="tokenmap/examples_.html">Examples </a></span></dt>
 <dt><span class="section"><a href="tokenmap/rationale_.html">Rationale </a></span></dt>
-<dt><span class="section"><a href="tokenmap/acknowledgements_.html">Acknowledgements </a></span></dt>
+<dt><span class="section"><a href="tokenmap/acknowledgements.html">Acknowledgements</a></span></dt>
 </dl>
 </div>
 <div class="section" lang="en">
@@ -51,25 +54,50 @@
 </h2></div></div></div>
 <p>
       A <code class="computeroutput"><span class="identifier">tokenmap</span></code> is a data structure
-      that uniquely maps pseudo-random generated keys with elements of the collection.
+      that uniquely maps pseudo-random integer keys to values.
     </p>
 <p>
-      Boost.Tokenmap is a (perfect) hash container library for C++. An important
-      distinction between <code class="computeroutput"><span class="identifier">tokenmap</span></code>
-      and other dictionary-like containers, such as std::map or <a href="../../libs/unordered/doc/html/unordered.html" target="_top"><span class="bold"><strong>Boost.Unordered</strong></span></a>, is that <code class="computeroutput"><span class="identifier">tokenmap</span></code>
-      generates keys internally (referred to as "tokens") rather than relying
-      on user to provide them. Specifically, when a new element is inserted into
-      the <code class="computeroutput"><span class="identifier">tokenmap</span></code>, an apparently
-      random key is returned back to the caller which uniquely maps to the stored
-      element. The returned key can later be used in a very efficient lookup.
+      Unlike other dictionary-like containers such as <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span></code> or
+      <a href="../../libs/unordered/doc/html/unordered.html" target="_top"><span class="bold"><strong>Boost.Unordered</strong></span></a>,
+      a <code class="computeroutput"><span class="identifier">tokenmap</span></code> generates the keys
+      (also called &#8220;<span class="quote">tokens</span>&#8221;) for values by an internal, pseudo-random
+      algorithm rather than relying on the user to provide them; that is, when a
+      new value is inserted into a <code class="computeroutput"><span class="identifier">tokenmap</span></code>,
+      the <code class="computeroutput"><span class="identifier">tokenmap</span></code> generates a key
+      for the value in some unspecified way and returns this key to the caller. Returned
+      keys, which uniquely map to values, can later be used to retrieve the corresponding
+      value in a very efficient lookup.
+    </p>
+<p>
+      <code class="literal">tokenmap</code>s have the following properties:
+    </p>
+<div class="orderedlist"><ol type="1">
+<li>
+        No two tokens map to the same value (<code class="computeroutput"><span class="identifier">tokenmap</span></code>
+        differs from <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">multimap</span></code> in this respect)
+      </li>
+<li>
+        The returned tokens are <span class="emphasis"><em>stable</em></span> (a token will always
+        map to the corresponding value regardless of how the <code class="computeroutput"><span class="identifier">tokenmap</span></code>
+        was modified since the token was generated)
+      </li>
+<li>
+        Lookups are much faster - sometimes 30 times faster - than <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span></code>
+        lookups
+      </li>
+</ol></div>
+<p>
+      The second property, also called the <span class="emphasis"><em>perfect hashing property</em></span>,
+      requires special support from the container, as described on the <a class="link" href="tokenmap/background.html" title="Background">Background</a>
+      page.
     </p>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: March 01, 2010 at 17:22:50 GMT</small></p></td>
+<td align="left"><p><small>Last revised: March 24, 2010 at 01:03:37 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>
-<div class="spirit-nav"><a accesskey="n" href="tokenmap/quick_tutorial.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a></div>
+<div class="spirit-nav"><a accesskey="n" href="tokenmap/background.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a></div>
 </body>
 </html>

@@ -1,7 +1,8 @@
 index.html
+tokenmap/background.html
 tokenmap/quick_tutorial.html
 tokenmap/reference.html
 tokenmap/performance_.html
 tokenmap/examples_.html
 tokenmap/rationale_.html
-tokenmap/acknowledgements_.html
+tokenmap/acknowledgements.html
