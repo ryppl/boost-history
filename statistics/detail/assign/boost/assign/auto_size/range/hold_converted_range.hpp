@@ -19,7 +19,7 @@ namespace detail{
 
 namespace converted_range{
 
-    template<typename Rng,typename V,typename R> // bool is_first
+    template<typename Rng,typename V,typename R>
     class holder{
         typedef typename 
             detail::result_of::convert_range<Rng,V,R>::type storage_;

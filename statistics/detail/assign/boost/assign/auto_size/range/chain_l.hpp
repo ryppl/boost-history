@@ -22,7 +22,7 @@
 // http://gist.github.com/287791
 // developed by MPG, but allows lvalues.
 
-// Usage : Let r1, r2 and r3 denote lvalue-ranges,
+// Usage : Let r1, r2 and r3 denote lvalues of ranges,
 //     boost::copy( from, boost::begin( chain_l(r1)(r2)(r3) ) );
 // Note: if either of r, r2 or r3 is a range of reference wrappers, then all 
 // three also have to. 
