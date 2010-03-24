@@ -9,7 +9,7 @@
 #ifndef BOOST_ASSIGN_DETAIL_REFERENCE_WRAPPER_CONVERSION_TRAITS_ER_2010_HPP
 #define BOOST_ASSIGN_DETAIL_REFERENCE_WRAPPER_CONVERSION_TRAITS_ER_2010_HPP
 #include <boost/assign/auto_size/reference_wrapper/inner_value_traits.hpp>
-#include <boost/assign/auto_size/chain/conversion_traits.hpp>
+#include <boost/assign/auto_size/traits/conversion_traits.hpp>
 
 namespace boost{
 namespace assign{

@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_DETAIL_REFERENCE_WRAPPER_INNER_VALUE_TRAITS_ER_2010_HPP
 #define BOOST_ASSIGN_DETAIL_REFERENCE_WRAPPER_INNER_VALUE_TRAITS_ER_2010_HPP
-#include <boost/assign/auto_size/chain/inner_value_traits.hpp>
+#include <boost/assign/auto_size/traits/inner_value_traits.hpp>
 
 namespace boost{
 namespace assign{
