@@ -19,7 +19,6 @@
 #include <boost/assign/auto_size/check/constants.hpp>
 
 #include <boost/assign/auto_size/check/array.hpp>
-//#include <boost/assign/auto_size/check/chain.hpp>
 #include <boost/assign/auto_size/check/comparison_op.hpp>
 #include <boost/assign/auto_size/check/converter.hpp>
 #include <boost/assign/auto_size/check/copy_array.hpp>
@@ -30,6 +29,8 @@
 #include <boost/assign/auto_size/check/lifo.hpp>
 #include <boost/assign/auto_size/check/rebind_array.hpp>
 #include <boost/assign/auto_size/check/example2.hpp>
+#include <boost/assign/auto_size/check/chain_convert_r.hpp>
+#include <boost/assign/auto_size/check/chain_convert_l.hpp>
 
 #define BOOST_ASSIGN_AS_CHECK_all(fun)                                         \
 namespace boost{                                                               \
@@ -45,14 +46,17 @@ void fun(){                                                                    \
     BOOST_ASSIGN_AS_CHECK_copy_iterator                                        \
     BOOST_ASSIGN_AS_CHECK_copy_array                                           \
     BOOST_ASSIGN_AS_CHECK_rebind_array                                         \
+    BOOST_ASSIGN_AS_CHECK_comparison_op                                        \
     BOOST_ASSIGN_AS_CHECK_converter(std::list<T>)                              \
     BOOST_ASSIGN_AS_CHECK_converter(std::vector<T>)                            \
+    BOOST_ASSIGN_AS_CHECK_adapter_lifo(std::stack<T>)                          \
+    BOOST_ASSIGN_AS_CHECK_adapter_fifo(std::queue<T>)                          \
     typedef boost::array<T,8> ar8_;                                            \
     BOOST_ASSIGN_AS_CHECK_converter(ar8_)                                      \
     BOOST_ASSIGN_AS_CHECK_converter_sorted(std::set<T>)                        \
-    BOOST_ASSIGN_AS_CHECK_adapter_lifo(std::stack<T>)                          \
-    BOOST_ASSIGN_AS_CHECK_adapter_fifo(std::queue<T>)                          \
-    BOOST_ASSIGN_AS_CHECK_comparison_op                                        \
+    BOOST_ASSIGN_AS_CHECK_chain_convert_r                                      \
+    BOOST_ASSIGN_AS_CHECK_chain_convert_l                                      \
+    BOOST_ASSIGN_AS_CHECK_example2                                             \
 }                                                                              \
 void BOOST_PP_CAT(fun,_int)(){ fun<int>(); }                                   \
 }                                                                              \
@@ -61,10 +65,4 @@ void BOOST_PP_CAT(fun,_int)(){ fun<int>(); }                                   \
 }                                                                              \
 /**/
 
-/*
-    BOOST_ASSIGN_AS_CHECK_chain                                                \
-    BOOST_ASSIGN_AS_CHECK_example2                                             \
-*/
 #endif
-
-

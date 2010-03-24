@@ -10,7 +10,7 @@
 #include <boost/next_prior.hpp>
 #include <boost/range/algorithm/copy.hpp>
 #include <boost/assign/auto_size/ref_list_of.hpp>
-#include <boost/assign/auto_size/range/chain_l.hpp>
+#include <boost/assign/auto_size/range/chain.hpp>
 #include <boost/assign/auto_size/range/chain_convert_l.hpp>
 #include <boost/assign/auto_size/range/convert_range.hpp>
 
@@ -33,11 +33,15 @@ void example_range(std::ostream& os)
     ar_ ar5; ar5.assign( 3 );
     ar_ ar6; ar6.assign( 6 );
 
+    typedef boost::array<detail::assign_reference_copy<val_>,1> ref_array_;
+
 {   
+
     BOOST_AUTO(tmp1,ref_list_of(a)(b));
     BOOST_AUTO(tmp2,ref_list_of(c)(d));
     BOOST_AUTO(tmp3,ref_list_of(e)(f));
 
+/*
     os << " chain_l(tmp1)(tmp2)(tmp3) = (";
     boost::copy(
         chain_convert_l(tmp1)(ar5)(tmp3),
@@ -57,6 +61,7 @@ void example_range(std::ostream& os)
         chain_convert_l(ar1)(ar2)(ar3),
         std::ostream_iterator<val_>(os," ")
     ); os << ')' << std::endl;
+*/
 }
 	os << "<- " << std::endl;
     

@@ -98,9 +98,11 @@ namespace auto_size{
         const_reference back() const{ return (this->ref_array()).back(); }
         
         void swap(array_interface& other){ 
-            //typedef boost::mpl::int_<N> int_n_;
-            //this->swap_impl(other,int_n_());
-            std::swap(this->ref_array(),other.ref_array());
+            typedef boost::mpl::int_<N> int_n_;
+            this->swap_impl(other,int_n_());
+            // Previously :
+            //    std::swap(this->ref_array(),other.ref_array());
+            // did not pass check_copy_array.
         }
 
         void assign(const T& val){ 
@@ -165,16 +167,16 @@ namespace auto_size{
         typedef boost::mpl::bool_<false> false_;
         typedef boost::mpl::bool_<true> true_;
 
-        //void swap_impl(array_interface& other,boost::mpl::int_<0>){}
+        void swap_impl(array_interface& other,boost::mpl::int_<0>){}
 
-        //template<int N1>
-        //void swap_impl(array_interface& other,boost::mpl::int_<N1>){
-        //    reference lhs = (*this)[N1-1];
-        //    reference rhs = (other)[N1-1];
-        //    lhs.swap(rhs); 
-        //    typedef boost::mpl::int_<N1-1> next_int_;
-        //    this->swap_impl(other,next_int_());
-        //}
+        template<int N1>
+        void swap_impl(array_interface& other,boost::mpl::int_<N1>){
+            reference lhs = (*this)[N1-1];
+            reference rhs = (other)[N1-1];
+            lhs.swap(rhs); 
+            typedef boost::mpl::int_<N1-1> next_int_;
+            this->swap_impl(other,next_int_());
+        }
         
         void assign(const T& val,true_ /*copy semantics*/){ 
             // Force copy semantics. Suggested by M.P.G on Feb 28th, 2010.

@@ -23,7 +23,7 @@
 // developed by MPG, but allows lvalues.
 
 // Usage : Let r1, r2 and r3 denote lvalues of ranges,
-//     boost::copy( from, boost::begin( chain_l(r1)(r2)(r3) ) );
+//     boost::copy( input, boost::begin( chain_l(r1)(r2)(r3) ) );
 // Note: if either of r, r2 or r3 is a range of reference wrappers, then all 
 // three also have to. 
 
@@ -72,7 +72,8 @@ namespace chain_impl{
         protected:
         typedef expr<E,R1,is_first,add_const> this_;
 
-        typedef typename sel_hold_previous<E,is_first,add_const>::type hold_previous_;         
+        typedef typename sel_hold_previous<E,is_first,add_const>::type 
+            hold_previous_;         
 
         typedef typename sel_const<E,add_const>::type sel_e_;
         typedef typename sel_const<R1,add_const>::type sel_r1_;
@@ -84,29 +85,30 @@ namespace chain_impl{
 
         typedef typename 
             chain_impl::facade_of_expr<E,R1,is_first,add_const>::type facade_;
-        
-        template<typename R2>
-        struct result_impl : chain_impl::next_expr<this_,R2,add_const>{};
                     
         facade_& facade(){ return (*this); }
         const facade_& facade()const{ return (*this); }
     
+        // lvalue constructors
         explicit expr(R1& r1):facade_(r1){}
         explicit expr(E& p, R1& r1)
             :hold_previous_(p),
             facade_(boost::chain(this->previous.facade(),r1))
             { } 
+
+        // rvalue constructors
         explicit expr(const R1& r1):facade_(r1){}
         explicit expr(const E& p, const R1& r1)
             :facade_(boost::chain(p.facade(),r1))
             { } 
 
-        BOOST_STATIC_CONSTANT(int,use_lvalue = !add_const);
-        BOOST_STATIC_CONSTANT(int,use_rvalue = add_const);
+        // unary operators
+        template<typename R2>
+        struct result_impl : chain_impl::next_expr<this_,R2,add_const>{};
 
         template<typename R2>
         typename result_impl<R2>::type 
-        operator()(R2& r2,typename enable<R2,use_lvalue>::type* = 0)
+        operator()(R2& r2,typename enable<R2,!add_const>::type* = 0)
         {
             typedef typename result_impl<R2>::type res_;
             return res_(*this,r2);
@@ -114,7 +116,7 @@ namespace chain_impl{
 
         template<typename R2>
         typename result_impl<R2>::type 
-        operator()(const R2& r2,typename enable<R2,use_rvalue>::type* = 0)const
+        operator()(const R2& r2,typename enable<R2,add_const>::type* = 0)const
         {
             typedef typename result_impl<R2>::type res_;
             return res_(*this,r2);
@@ -122,7 +124,7 @@ namespace chain_impl{
 
     };
 
-    template<typename R1,bool add_const = false>
+    template<typename R1,bool add_const>
     struct first_expr{ 
         typedef boost::mpl::void_ top_;
         typedef chain_impl::expr<top_,R1,true,add_const> type; 

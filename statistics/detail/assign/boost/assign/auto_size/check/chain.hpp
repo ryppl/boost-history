@@ -39,7 +39,7 @@
     BOOST_AUTO(tmp1,BOOST_ASSIGN_AS_CHECK_ref3(a1,b1,c1));                     \
     BOOST_AUTO(tmp2,BOOST_ASSIGN_AS_CHECK_ref3(d1,e1,f1));                     \
     BOOST_AUTO(tmp3,BOOST_ASSIGN_AS_CHECK_ref2(g1,h1));                        \
-    boost::copy(chain_r(ar1)(ar2)(ar3),std::ostream_iterator<T>(std::cout," ")); \
+    boost::copy(chain_convert_r(ar1)(ar2)(ar3),std::ostream_iterator<T>(std::cout," ")); \
     check_iterator_impl( boost::begin( chain_r(ar1)(ar2)(ar3) ) );             \
 }                                                                              \
 /**/

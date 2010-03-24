@@ -15,18 +15,16 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/assign/auto_size/range/iterator_converter.hpp>
-#include <boost/assign/auto_size/traits/reference_traits.hpp>
 
 // Usage:
-//   convert_range<T>(r)
-// changes U = range_reference<R>::type to T.
-//   convert_range(r)
-// changes U to reference_traits::convert_to<U>::type
+//   convert_range<V,R>(r)
+//   convert_range<V,use_default>(r)
 
 namespace boost{
 namespace assign{
 namespace detail{
 
+// Warning : see the warning of converted_iterator_reference
 template<typename Rng,typename V>
 struct convert_range_reference 
  : detail::converted_iterator_reference<
@@ -55,7 +53,7 @@ namespace result_of{
 }// result_of
 }// detail
 
-    // convert_range
+    // lvalue
 
     template<typename V,typename R,typename Rng>
     typename detail::result_of::convert_range<Rng,V,R>::type 
@@ -67,20 +65,22 @@ namespace result_of{
     }
 
     template<typename V,typename R,typename Rng>
-    typename detail::result_of::convert_range<const Rng,V,R>::type 
-    convert_range( const Rng& r,
-        typename boost::disable_if<boost::is_same<R,use_default> >::type* = 0)
-    {    
-        typedef detail::result_of::convert_range<const Rng,V,R> caller_;
-        return caller_::call( r );   
-    }
-
-    template<typename V,typename R,typename Rng>
     typename detail::result_of::convert_range<Rng,V>::type 
     convert_range( Rng& r,
         typename boost::enable_if<boost::is_same<R,use_default> >::type* = 0)
     {    
         typedef detail::result_of::convert_range<Rng,V> caller_;
+        return caller_::call( r );   
+    }
+
+    // rvalue
+
+    template<typename V,typename R,typename Rng>
+    typename detail::result_of::convert_range<const Rng,V,R>::type 
+    convert_range( const Rng& r,
+        typename boost::disable_if<boost::is_same<R,use_default> >::type* = 0)
+    {    
+        typedef detail::result_of::convert_range<const Rng,V,R> caller_;
         return caller_::call( r );   
     }
 

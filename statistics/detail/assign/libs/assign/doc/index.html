@@ -38,7 +38,7 @@
             <li>Function <a href="#map_list_of"><code>map_list_of()</code></a> 
             <li>Function <a href="#tuple_list_of"><code>tuple_list_of()</code></a>
             <li>Functions <a href="#repeat"><code>repeat()</code></a>, <a href="#repeat"><code>repeat_fun()</code></a> and <a href="#repeat"><code>range()</code> </a>
-            <li>Function <a href="#chain_convert"><code>chain_convert()</code> </a>
+            <li>Functions <a href="#chain_convert"><code>chain_convert_l()</code></a> and  <a href="#chain_convert"><code>chain_convert_r()</code></a>
             <li>Functions <a href="#ref_list_of"><code>ref_list_of()</code></a>, <a href="#ref_list_of"><code>cref_list_of()</code></a> and variants   
             <li>Functions <a href="#ref_csv"><code>ref_csv()</code></a>, <a href="#ref_csv"><code>cref_csv()</code></a> and variants   
             <li>A <a href="#complicated">"complicated"</a> example    
@@ -64,7 +64,7 @@
         <li>Functions <a href="#ref-repeat"><code>repeat()</code></a>, <a href="#ref-repeat"><code>repeat_fun()</code></a> and 
                                                                       <a href="#ref-repeat"><code>range()</code>
                                                                       </a></li>
-         <li>Function <a href="#ref-chain_convert"><code>chain_convert()</code></a></li>
+         <li>Functions <a href="#ref-chain_convert"><code>chain_convert_l()</code> and <code>chain_convert_r()</code></a></li>
        <li><a href="#ref-limit">Customizing</a> argument list sizes </li>
      </ul>
     <li>          
@@ -75,7 +75,7 @@
         <li> Proxy object <a href="#ref-list_inserter"><code>list_inserter&lt;&gt;</code></a></li>
         <li> Proxy object <a href="#ref-static_generic_list"><code>static_generic_list&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-array_interface"><code>array_interface&lt;&gt;</code></a> </li>
-        <li> Proxy object <a href="#ref-adaptor::chain_convert"><code>adaptor::chain_convert&lt;&gt;</code></a> </li>
+        <li> Proxy object <a href="#ref-chain_convert_impl"><code>chain_convert_impl::expr&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-expr"><code>expr&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-lazy_array"><code>lazy_array&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-static_array"><code>static_array&lt;&gt;</code></a> </li>
@@ -145,7 +145,7 @@ components are explained in these sections:
             <li>Function <a href="#map_list_of"><code>map_list_of()</code></a> 
             <li>Function <a href="#tuple_list_of"><code>tuple_list_of()</code></a>
             <li>Functions <a href="#repeat"><code>repeat()</code></a>, <a href="#repeat"><code>repeat_fun()</code></a> and <a href="#repeat"><code>range()</code> </a>
-            <li>Function <a href="#chain_convert"><code>chain_convert()</code> </a>
+            <li>Functions <a href="#chain_convert"><code>chain_convert_l()</code> and <code>chain_convert_r()</code> </a>
             <li>Functions <a href="#ref_list_of"><code>ref_list_of()</code></a>, <a href="#ref_list_of"><code>cref_list_of()</code></a> and variants   
             <li>Functions <a href="#ref_csv"><code>ref_csv()</code></a>, <a href="#ref_csv"><code>cref_csv()</code></a> and variants   
             <li>A <a href="#complicated">"complicated"</a> example    
@@ -477,7 +477,7 @@ The last example also introduces list of references. More about that below.
 
 </p>
 
-<h3><a name="chain_convert">Functions <code>chain_convert_l()</code> and <code>chain_convert_r()</code></a></h3>
+<h3>Functions <code>chain_convert_l()</code> and <code>chain_convert_r()</code><a name="chain_convert"></h3>
 
 While the function <a href="#repeat"><code>range()</code></a> works in combination with functions
 such as <a href="#list_of"><code>list_of()</code></a>, it is not compatible with  
@@ -496,9 +496,9 @@ and <code>chain_convert_r()</code> achieve a similar goal and have the same inte
 <span class=special>}</span></pre>
 </blockquote>
 
-Notice the suffix 'r' which tells the functions that the arguments should be treated as rvalues. The reference is <a href="#ref-chain_convert">here</a>.
+Notice the suffix 'r' which tells the function that the arguments should be treated as rvalues. The reference is <a href="#ref-chain_convert_impl">here</a>.
 
-<h3>Functions <code>ref_list_of()</code>, <code>cref_list_of()</code> <a name="ref_list_of"> and variants</h3>
+<h3>Functions <code>ref_list_of()</code>, <code>cref_list_of()</code> and variants<a name="ref_list_of"></h3>
 
 When you need to create an anonymous range of values and speed is essential, 
 these two functions provide what you want. <blockquote>
@@ -835,7 +835,7 @@ Originally arguments were passed by value (and still is in
         <li>Functions <a href="#ref-repeat"><code>repeat()</code></a>, <a href="#ref-repeat"><code>repeat_fun()</code></a> and 
                                                                       <a href="#ref-repeat"><code>range()</code>
                                                                       </a></li>
-        <li>Function <a href="#ref-chain_convert"><code>chain_convert()</code></a></li>
+        <li>Functions <a href="#ref-chain_convert"><code>chain_convert_l()</code></a> and <a href="#ref-chain_convert"><code>chain_convert_r()</code></a></li>
         <li><a href="#ref-limit">Customizing</a> argument list sizes </li>
      </ul>
 
@@ -1149,7 +1149,7 @@ The maximum number of arguments to a csv function is <code>BOOST_ASSIGN_CSV_SIZE
   </p>
 
 
-  <h3> <a name="ref-chain_convert"> Function <code>chain_convert_l()</code> and <code>chain_convert_r()</a> </h3>
+  <h3> Functions <code>chain_convert_l()</code> and <code>chain_convert_r()<a name="ref-chain_convert"> </h3>
   
   <p> This function serves as a sustitute for <a href="#ref-repeat"><code>range()</code></a>
   within the <a href="#auto_size">auto-size</a> framework.
@@ -1159,22 +1159,35 @@ The maximum number of arguments to a csv function is <code>BOOST_ASSIGN_CSV_SIZE
   <blockquote>
   	<table cellpadding=5 border=1>
   	<tr><th class="head">Parameter</th> <th class="head">Description</th>
-  	<tr><td><tt>R</tt></td><td>Range</td></tr>
+  	<tr><td><tt>L</tt></td><td>Implementation defined</td></tr>
+  	<tr><td><tt>E</tt></td><td>Implementation defined</td></tr>
+  	<tr><td><tt>V</tt></td><td>A value type</td></tr>
+  	<tr><td><tt>R</tt></td><td>A reference type</td></tr>
+  	<tr><td><tt>Rng</tt></td><td>A range type</td></tr>
+  	<tr><td><tt>add_const</tt></td><td>A boolean value</td></tr>
   	</table>
   </blockquote>
 
   <b>Associated types</b>
 
+  <blockquote>
+  	<table cellpadding=5 border=1>
+  	<tr><th class="head">Expression</th> <th class="head">Description<th class="head">Alias</th>
+  	<tr><td><tt>chain_convert_impl::expr&lt;L,E,true,V,R,add_const&gt;</tt></td><td><a href="#ref-chain_convert_impl">Implementation</a></td><td>Impl&lt;&gt;</td></tr>
+  	</table>
+  </blockquote>
+
   <p>To be defined </p>
 
   <b>Usage</b>
-  <p>Let <code>r</code> instance of <code>R</code>
+  <p>Let <code>r</code> instance of <code>Rng</code>
 
   <blockquote>
   	<table cellpadding=5 border=1>
   	<tr><th class="head">Expression</th> <th class="head">Result</th>
-  	<tr><td><tt>chain_convert_l(r)</tt></td><td> <a href="#ref-adaptor::chain_convert"><code>adaptor::chain_convert_l&lt;R&gt;</code></a>  </td></tr>
-  	<tr><td><tt>chain_convert_r(r)</tt></td><td> <a href="#ref-adaptor::chain_convert"><code>adaptor::chain_convert_r&lt;R&gt;</code></a>  </td></tr>
+  	<tr><td><tt>chain_convert_l&lt;V,R&gt;(r)</tt></td><td> <a href="#ref-chain_convert_impl"><code>Impl&lt;&gt;</code></a>  </td></tr>
+  	<tr><td><tt>chain_convert_l&lt;V,use_default&gt;(r)</tt></td><td> <a href="#ref-chain_convert_impl"><code>Impl&lt;&gt;</code></a>  </td></tr>
+  	<tr><td><tt>chain_convert_l(r)</tt></td><td> <a href="#ref-chain_convert_impl"><code>Impl&lt;&gt;</code></a>  </td></tr>
   	</table>
   </blockquote>
 
@@ -1192,7 +1205,7 @@ The maximum number of arguments to a csv function is <code>BOOST_ASSIGN_CSV_SIZE
         <li> Proxy object <a href="#ref-expr"><code>expr&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-lazy_array"><code>lazy_array&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-static_array"><code>static_array&lt;&gt;</code></a> </li>
-        <li> Proxy objects <a href="#ref-adaptor::chain_convert"><code>adaptor::chain_convert_l&lt;&gt;</code></a> and <a href="#ref-adaptor::chain_convert"><code>adaptor::chain_convert_r&lt;&gt;</code></a></li>
+        <li> Proxy objects <a href="#ref-chain_convert_impl"><code>chain_convert_impl::expr&lt;&gt;</code></a></li>
      </ul>
 
   <h3>Proxy object <code>converter<></code><a name=ref-converter> </h3>
@@ -1421,7 +1434,7 @@ The maximum number of arguments to a csv function is <code>BOOST_ASSIGN_CSV_SIZE
   	</table>
   </blockquote>
 
-  <h3><a name="ref-list_inserter">Proxy object <code>list_inserter&lt;&gt;</code></a></h3> 
+  <h3>Proxy object <code>list_inserter&lt;&gt;</code><a name="ref-list_inserter"></h3> 
 <p>
   
   This class is responsible for inserting elements into containers and 
@@ -1524,7 +1537,7 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
   chain argument list together in a very space-efficient manner.
   </p>
 
-  <h4><a name="ref-array_interface">Proxy object <code>array_interface&lt;&gt;</code></a></h4> 
+  <h4>Proxy object <code>array_interface&lt;&gt;</code><a name="ref-array_interface"></h4> 
   <p>Exposes most of the <code>boost::array&lt;&gt;</code> interface.</p>
   <b>Header</b> <code>&lt;boost/assign/auto_size/array/interface.hpp></code>
 
@@ -1676,7 +1689,7 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
 </p>
   
   
-  <h3><a name="ref-lazy_array">Proxy object <code>lazy_array&lt;&gt;</code></a></h3> 
+  <h3>Proxy object <code>lazy_array&lt;&gt;</code><a name="ref-lazy_array"></h3> 
   <b>Header</b> <code>&lt;boost/assign/auto_size/array/lazy.hpp></code>
 
     <p>
@@ -1724,7 +1737,7 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
  </p>
 
 
-  <h4><a name="ref-static_array">Proxy object <code>static_array&lt;&gt;</code></a></h4> 
+  <h4>Proxy object <code>static_array&lt;&gt;</code><a name="ref-static_array"></h4> 
   <b>Header</b> <code>&lt;boost/assign/auto_size/array/static.hpp></code>
     <p>
   <b>Template parameters</b> 
@@ -1762,7 +1775,7 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
   	</table>
   </blockquote>
 
-  <h3><a name="ref-adaptor::chain_convert">Proxy objects <code>adaptor::chain_convert_l&lt;&gt;</code> and <code>adaptor::chain_convert_r&lt;&gt;</code> </a> </h3>
+  <h3>Proxy object <code>chain_convert_impl::expr&lt;&gt;</code><a name="ref-chain_convert_impl"> </h3>
    
   Successive calls to this proxy object joins together collections into one whose dereferenced type is one that is convertible
   to from those of the input ranges. In particular, either range may contain reference wrappers if they meet certain traits requirement.

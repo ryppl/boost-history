@@ -21,6 +21,9 @@ namespace boost{
 namespace assign{
 namespace detail{
 
+// Warning :
+// If range_value<I>::type is const but V isn't, the convertible type is
+// a value, not reference. If a reference is desired, V must also be const.
 template<typename I,typename V>
 struct converted_iterator_reference{
 
@@ -28,14 +31,9 @@ struct converted_iterator_reference{
     typedef typename boost::remove_reference<f_ref_>::type f_val_;
     typedef V t_val_;
     typedef typename boost::add_reference<V>::type t_ref_;
-    typedef typename boost::is_convertible<f_val_,t_val_> necessary_;
     typedef typename boost::is_convertible<f_ref_,t_ref_>::type use_ref_;
     typedef typename boost::mpl::if_<use_ref_,t_ref_,t_val_>::type type;
-   
-    static void internal_check(){
-       BOOST_MPL_ASSERT((necessary_));
-    }
-    
+       
 };
 
 template<typename I, typename V,
@@ -58,7 +56,11 @@ struct converted_iterator : boost::iterator_adaptor<
     > super_;
     
     converted_iterator(){}
-    converted_iterator(const I& base):super_(base){
+    converted_iterator(const I& base):super_(base)
+    {
+        typedef typename boost::iterator_reference<I>::type i_ref_;
+        typedef typename boost::is_convertible<i_ref_,R>::type necessary_;
+        BOOST_MPL_ASSERT((necessary_));
     }
 }; 
 } //detail

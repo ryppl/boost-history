@@ -56,7 +56,7 @@ namespace assign{
 namespace detail{
 namespace auto_size{
                         
-    // ---- fwd declare ---- //
+    // ---- template parameters ---- //
 
     // expr<> keeps a reference to a new element and links to the previous 
     // collection.
@@ -129,20 +129,11 @@ namespace auto_size{
 
         result_type operator()(T& t)const{ return result_type(*this,t); }
         
-        //private:
-        //template<int Nshift,typename A,typename E1,int N1>
-        //friend void write_to_array(A& a,const expr<E1,T,N1,R,P>& e,false_);
-
-        //template<int Nshift,typename A,typename E1,int N1>
-        //friend void write_to_array(A& a,const expr<E1,T,N1,R,P>& e,true_);
-                
-        //template<int Nshift,typename A,typename E1,int N1>
-        //friend void write_to_array(A& a,const expr<E1,T,N1,R,P>& e);
-
         mutable previous_ previous;
         mutable ref_ ref;
 
-//        expr();
+        private:
+        expr();
 
     };
 

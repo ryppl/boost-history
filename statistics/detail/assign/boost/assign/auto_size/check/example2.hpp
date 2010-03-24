@@ -11,7 +11,7 @@
 #include <vector>
 #include <iterator>
 #include <boost/range/algorithm/copy.hpp>
-#include <boost/assign/auto_size/chain_convert.hpp>
+#include <boost/assign/auto_size/range/chain_convert_l.hpp>
 
 #define BOOST_ASSIGN_AS_CHECK_example2                                         \
 {                                                                              \
