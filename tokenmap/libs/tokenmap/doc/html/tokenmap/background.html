@@ -1,0 +1,248 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Background</title>
+<link rel="stylesheet" href="../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Chapter&#160;1.&#160;Boost.Tokenmap">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.Tokenmap">
+<link rel="prev" href="../index.html" title="Chapter&#160;1.&#160;Boost.Tokenmap">
+<link rel="next" href="quick_tutorial.html" title="Quick tutorial">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="quick_tutorial.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="tokenmap.background"></a><a class="link" href="background.html" title="Background"> Background</a>
+</h2></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="background.html#tokenmap.background.analysis_of_simple_strategy"> Analysis
+      of the simple strategy</a></span></dt></dl></div>
+<div class="blockquote"><blockquote class="blockquote">
+<p>
+        </p>
+<p>
+          <span class="emphasis"><em>This section was contributed by Daniel Trebbien.</em></span>
+        </p>
+<p>
+      </p>
+</blockquote></div>
+<p>
+      The main design goal of <code class="computeroutput"><span class="identifier">tokenmap</span></code>
+      was to make an associative container that uses random keys and which has extremely
+      fast lookup operations (i.e. given a key, the operation to find the associated
+      value should be as fast as possible). Array accesses are known to be among
+      the fastest operations performable on today's computing equipment, so the question
+      in developing <code class="computeroutput"><span class="identifier">tokenmap</span></code> was
+      whether it would be possible to use a dynamic array as the backing storage
+      and still implement a dictionary-like container that allows random keys.
+    </p>
+<p>
+      There are many conceivable mapping strategies (the way that tokens are mapped
+      to indices in the array), but it's not always obvious which particular strategy
+      yields an associative container with all of the following properties:
+    </p>
+<div class="orderedlist"><ol type="1">
+<li>
+        The container can grow in size to accommodate more elements.
+      </li>
+<li>
+        Tokens will always map to their corresponding values regardless of the container's
+        growth.
+      </li>
+<li>
+        The tokens are random.
+      </li>
+</ol></div>
+<p>
+      One simple strategy is to take a token <code class="computeroutput"><span class="identifier">t</span></code>
+      (an unsigned integer) and return the value <code class="computeroutput"><span class="identifier">store</span><span class="special">[</span><span class="identifier">t</span> <span class="special">%</span>
+      <span class="identifier">store_length</span><span class="special">]</span></code>
+      where <code class="computeroutput"><span class="identifier">store</span></code> is the name of
+      the dynamic array and <code class="computeroutput"><span class="identifier">store_length</span></code>
+      is its length. Interestingly enough, this strategy <span class="emphasis"><em>does</em></span>
+      allow the implementation of an associative container with those properties,
+      and this is the strategy that is used by <code class="computeroutput"><span class="identifier">tokenmap</span></code>.
+    </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="tokenmap.background.analysis_of_simple_strategy"></a><a class="link" href="background.html#tokenmap.background.analysis_of_simple_strategy" title="Analysis of the simple strategy"> Analysis
+      of the simple strategy</a>
+</h3></div></div></div>
+<p>
+        One immediate consequence of using this simple strategy is that a user cannot
+        provide her own tokens; they must be generated by the container. This is
+        because the user might try to use tokens that, modulo the store length at
+        the time of insert, are the same. For example, if the store length is 12,
+        then a container that is based on the simple strategy cannot allow tokens
+        <code class="computeroutput"><span class="number">0x3af8cf08</span></code> and <code class="computeroutput"><span class="number">0xc0d9a414</span></code> to map to different values because
+        modulo 12, these numbers are both 8. Some applications require the ability
+        to specify the token, so containers based on this simple strategy are not
+        suitable for these applications. However, there are other applications where
+        you just want to generate handles or IDs of resources that will always map
+        to the resources. For these, the particular values of the handles or IDs
+        are irrelevant (they just need to uniquely map to the resources), so a container
+        that generates the tokens (the particular values of handles or IDs) is perfectly
+        acceptable.
+      </p>
+<p>
+        A container that is based on the described above strategy must implement
+        a rehashing algorithm which is used whenever the container is expanded to
+        accommodate more elements. An algorithm that works well with our strategy
+        is:
+      </p>
+<div class="orderedlist"><ol type="1">
+<li>
+          Create a new store <code class="computeroutput"><span class="identifier">new_store</span></code>
+          of length <code class="computeroutput"><span class="identifier">new_store_length</span></code>.
+        </li>
+<li>
+          For each token <code class="computeroutput"><span class="identifier">t</span></code> in the
+          container, place the associated value at <code class="computeroutput"><span class="identifier">new_store</span><span class="special">[</span><span class="identifier">t</span> <span class="special">%</span>
+          <span class="identifier">new_store_length</span><span class="special">]</span></code>.
+        </li>
+<li>
+          Delete the old store and use <code class="computeroutput"><span class="identifier">new_store</span></code>
+          as the store.
+        </li>
+</ol></div>
+<p>
+        If we say that the initial store length is <span class="emphasis"><em>s</em></span><sub>0</sub> and subsequent
+        store lengths are <span class="emphasis"><em>s</em></span><sub>1</sub>, <span class="emphasis"><em>s</em></span><sub>2</sub>, ..., <span class="emphasis"><em>s</em></span><sub><span class="emphasis"><em>k</em></span></sub>,
+        then careful choices of the sequence {<span class="emphasis"><em>s</em></span><sub><span class="emphasis"><em>k</em></span></sub>} allow the container
+        to have the property that tokens always map to their corresponding values
+        regardless of the number of re-hashes that have occurred since they were
+        generated (the perfect hashing property).
+      </p>
+<p>
+        Some choices of the sequence {<span class="emphasis"><em>s</em></span><sub><span class="emphasis"><em>k</em></span></sub>} will not work. For
+        example, suppose <span class="emphasis"><em>s</em></span><sub>0</sub> were 2 and <span class="emphasis"><em>s</em></span><sub>1</sub> were
+        3. Then, tokens <code class="computeroutput"><span class="number">0x25b786ef</span></code> and
+        <code class="computeroutput"><span class="number">0x0010b86c</span></code> can be generated while
+        the store length is 2 (because modulo 2, they are 1 and 0, respectively),
+        but once the store length becomes 3, they hash to the same location (they
+        are both 2 modulo 3).
+      </p>
+<p>
+        In the following sections, it will be proven that whenever <code class="computeroutput"><span class="identifier">new_store_length</span></code> is a multiple of the old
+        <code class="computeroutput"><span class="identifier">store_length</span></code>, then the perfect
+        hashing property is preserved.
+      </p>
+<a name="tokenmap.background.analysis_of_simple_strategy.modular_arithmetic_notation"></a><h5>
+<a name="id540246"></a>
+        <a class="link" href="background.html#tokenmap.background.analysis_of_simple_strategy.modular_arithmetic_notation">Modular
+        arithmetic notation</a>
+      </h5>
+<p>
+        We denote the set of integers {..., -4, -3, -2, -1, 0, 1, 2, 3, ...} as
+        <span class="bold"><strong><span class="emphasis"><em>Z</em></span></strong></span> and the set of sets
+        of integers that are congruent modulo <span class="emphasis"><em>s</em></span> as <span class="bold"><strong><span class="emphasis"><em>Z</em></span></strong></span><sub><span class="emphasis"><em>s</em></span></sub>. The elements of <span class="bold"><strong><span class="emphasis"><em>Z</em></span></strong></span><sub><span class="emphasis"><em>s</em></span></sub> are denoted by so-called <span class="emphasis"><em>class
+        notation</em></span>: [<span class="emphasis"><em>x</em></span>]<sub><span class="emphasis"><em>s</em></span></sub> is the set of integers that
+        have the same remainder as <span class="emphasis"><em>x</em></span> when divided by <span class="emphasis"><em>s</em></span>;
+        in other words, for <span class="emphasis"><em>x</em></span> an integer, [<span class="emphasis"><em>x</em></span>]<sub><span class="emphasis"><em>s</em></span></sub> is
+        the set of all integers that are congruent modulo <span class="emphasis"><em>s</em></span>.
+      </p>
+<a name="tokenmap.background.analysis_of_simple_strategy.proposition_1__perfect_hashing_is_preserved_with_multiples_of_the_old_store_length"></a><h5>
+<a name="id540329"></a>
+        <a class="link" href="background.html#tokenmap.background.analysis_of_simple_strategy.proposition_1__perfect_hashing_is_preserved_with_multiples_of_the_old_store_length">Proposition
+        1: Perfect hashing is preserved with multiples of the old store length</a>
+      </h5>
+<p>
+        In order for the token-generating strategy to remain perfect after a single
+        rehash, the crucial property of store lengths <span class="emphasis"><em>s</em></span><sub><span class="emphasis"><em>k</em></span></sub> and
+        <span class="emphasis"><em>s</em></span><sub><span class="emphasis"><em>k</em></span>+1</sub> is:
+      </p>
+<div class="blockquote"><blockquote class="blockquote">
+<p>
+          </p>
+<p>
+            <span class="inlinemediaobject"><img src="../images/latex1.png" alt="latex1"></span>
+            <sup>[<a name="id540381" href="#ftn.id540381" class="footnote">1</a>]</sup>
+          </p>
+<p>
+        </p>
+</blockquote></div>
+<p>
+        One choice of <span class="emphasis"><em>s</em></span><sub><span class="emphasis"><em>k</em></span>+1</sub> that always works is when <span class="emphasis"><em>s</em></span><sub><span class="emphasis"><em>k</em></span>+1</sub> is
+        a multiple of <span class="emphasis"><em>s</em></span><sub><span class="emphasis"><em>k</em></span></sub>; when <span class="emphasis"><em>s</em></span><sub><span class="emphasis"><em>k</em></span>+1</sub> = <span class="emphasis"><em>c</em></span>&#183;<span class="emphasis"><em>s</em></span><sub><span class="emphasis"><em>k</em></span></sub>,
+        then it is always true that:
+      </p>
+<div class="blockquote"><blockquote class="blockquote">
+<p>
+          </p>
+<p>
+            <span class="inlinemediaobject"><img src="../images/latex2.png" alt="latex2"></span>
+          </p>
+<p>
+        </p>
+</blockquote></div>
+<p>
+        <span class="bold"><strong>Proof</strong></span>
+      </p>
+<p>
+        The statement is proved by way of the logically-equivalent <a href="http://en.wikipedia.org/wiki/Contrapositive" target="_top">contrapositive</a>:
+      </p>
+<div class="blockquote"><blockquote class="blockquote">
+<p>
+          </p>
+<p>
+            <span class="inlinemediaobject"><img src="../images/latex3.png" alt="latex3"></span>
+          </p>
+<p>
+        </p>
+</blockquote></div>
+<p>
+        If [<span class="emphasis"><em>x</em></span>]<sub><span class="emphasis"><em>c</em></span>&#183;<span class="emphasis"><em>s</em></span><sub><span class="emphasis"><em>k</em></span></sub></sub> equals [<span class="emphasis"><em>y</em></span>]<sub><span class="emphasis"><em>c</em></span>&#183;<span class="emphasis"><em>s</em></span><sub><span class="emphasis"><em>k</em></span></sub></sub> then <span class="emphasis"><em>c</em></span>&#183;<span class="emphasis"><em>s</em></span><sub><span class="emphasis"><em>k</em></span></sub> divides
+        (<span class="emphasis"><em>x</em></span> - <span class="emphasis"><em>y</em></span>) by definition. This implies
+        that <span class="emphasis"><em>s</em></span><sub><span class="emphasis"><em>k</em></span></sub> divides (<span class="emphasis"><em>x</em></span> - <span class="emphasis"><em>y</em></span>),
+        so [<span class="emphasis"><em>x</em></span>]<sub><span class="emphasis"><em>s</em></span><sub><span class="emphasis"><em>k</em></span></sub></sub> equals [<span class="emphasis"><em>y</em></span>]<sub><span class="emphasis"><em>s</em></span><sub><span class="emphasis"><em>k</em></span></sub></sub>. &#8718;
+      </p>
+<a name="tokenmap.background.analysis_of_simple_strategy.__emphasis_s__emphasis_____quickbook_escape_prefix____subscript__emphasis_k__emphasis___subscript_____quickbook_escape_postfix_____that_preserves_perfect_hashing_after_arbitrary_rehashes"></a><h5>
+<a name="id540602"></a>
+        <a class="link" href="background.html#tokenmap.background.analysis_of_simple_strategy.__emphasis_s__emphasis_____quickbook_escape_prefix____subscript__emphasis_k__emphasis___subscript_____quickbook_escape_postfix_____that_preserves_perfect_hashing_after_arbitrary_rehashes">{<span class="emphasis"><em>s</em></span><sub><span class="emphasis"><em>k</em></span></sub>}
+        that preserves perfect hashing after arbitrary rehashes</a>
+      </h5>
+<p>
+        From Proposition 1, we know that to preserve the perfect property after a
+        single rehash, one choice of <span class="emphasis"><em>s</em></span><sub><span class="emphasis"><em>k</em></span>+1</sub> that always works is to
+        make <span class="emphasis"><em>s</em></span><sub><span class="emphasis"><em>k</em></span>+1</sub> a multiple of <span class="emphasis"><em>s</em></span><sub><span class="emphasis"><em>k</em></span></sub>. Therefore,
+        to preserve the perfect hashing property after arbitrary rehashes, we can
+        pick <span class="emphasis"><em>s</em></span><sub><span class="emphasis"><em>k</em></span>+1</sub> = <span class="emphasis"><em>c</em></span><sub><span class="emphasis"><em>k</em></span></sub>&#183;<span class="emphasis"><em>s</em></span><sub><span class="emphasis"><em>k</em></span></sub> for
+        any sequence of natural numbers {<span class="emphasis"><em>c</em></span><sub><span class="emphasis"><em>k</em></span></sub>}. To make things
+        simple, however, <code class="computeroutput"><span class="identifier">tokenmap</span></code>
+        uses 2 for every <span class="emphasis"><em>c</em></span><sub><span class="emphasis"><em>k</em></span></sub>. Thus <span class="emphasis"><em>s</em></span><sub><span class="emphasis"><em>k</em></span></sub> = 2<sup><span class="emphasis"><em>k</em></span></sup>&#183;<span class="emphasis"><em>s</em></span><sub>0</sub>.
+      </p>
+</div>
+<div class="footnotes">
+<br><hr width="100" align="left">
+<div class="footnote"><p><sup>[<a name="ftn.id540381" href="#id540381" class="para">1</a>] </sup>
+                Read: If <span class="emphasis"><em>x</em></span> and <span class="emphasis"><em>y</em></span> are incongruent
+                modulo <span class="emphasis"><em>s</em></span><sub><span class="emphasis"><em>k</em></span></sub>, then they are incongruent modulo
+                <span class="emphasis"><em>s</em></span><sub><span class="emphasis"><em>k</em></span>+1</sub>.
+              </p></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009 Slawomir Lisznianski<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="quick_tutorial.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
