@@ -13,14 +13,16 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/void.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include <boost/range.hpp>
 #include <boost/range/chain.hpp>
 #include <boost/assign/auto_size/range/convert_range.hpp>
 #include <boost/assign/auto_size/traits/reference_traits.hpp>
 #include <boost/assign/auto_size/reference_wrapper/conversion_traits.hpp>
 #include <boost/assign/auto_size/range/result_of_chain.hpp>
+#include <boost/assign/auto_size/range/hold_previous.hpp>
+#include <boost/assign/auto_size/range/hold_converted_range.hpp>
+#include <boost/assign/auto_size/range/chain_l.hpp>
 
-// Usage : Let r1, r2 and r3 denote ranges.
+// Usage : Let r1, r2 and r3 denote lvalue-ranges.
 //     boost::copy( from, boost::begin( chain_convert_l(r1)(r2)(r3) ) );
 // This function does not have the restriction of chain_l that none or all
 // of r1, r2, r3 must be reference wrappers.
@@ -30,93 +32,98 @@ namespace assign{
 namespace detail{
 namespace chain_convert_l_impl{
 
-    template<typename E,typename Rng1,int N,typename V,typename R> class expr;
+//    template<typename E,typename Rng1,bool is_first,typename V,typename R> class expr;
 
-    template<typename E,typename Rng2>
-    struct next_expr{
-        typedef typename E::conversion_value val_;
-        typedef typename E::conversion_reference ref_;
-        typedef expr<E,Rng2,E::static_size+1,val_,ref_> type;
-    };
+    template<typename L,typename E,typename Rng1,
+        bool is_first,typename V,typename R> class expr;
 
-    template<typename E,typename Rng1,int N,typename V,typename R>
-    struct super_of_expr : result_of::chain<
-        typename E::super_,
-        typename result_of::convert_range<Rng1,V,R>::type
-    >{}; 
+    // This is the implementation of
+    // expr<L,E,Rng1,is_first,V,R> for any valid E
+    template<typename E,typename Rng1,bool is_first,typename V,typename R>
+    struct impl_of_expr
+    {
+        typedef typename 
+            detail::result_of::convert_range<Rng1,V,R>::type conv_r1_;
+        typedef typename E::template result_impl<conv_r1_>::type type;
+    }; 
 
     template<typename E,typename Rng1,typename V,typename R>
-    struct super_of_expr<E,Rng1,1,V,R>{
-        typedef typename result_of::convert_range<Rng1,V,R>::type type;
+    struct impl_of_expr<E,Rng1,true,V,R>
+    {
+        typedef typename result_of::convert_range<Rng1,V,R>::type conv_r1_;
+        typedef typename chain_impl::first_expr<conv_r1_,false>::type type;
+    };
+
+    template<typename E,typename Rng1,bool is_first,typename V,typename R>
+    struct facade_of_expr
+    {
+        typedef typename impl_of_expr<E,Rng1,is_first,V,R>::type impl_;
+        typedef typename impl_::facade_ type;
+    };
+
+    // This is the result of expr<L,E,...>::operator(Rng2&)
+    template<typename L,typename E,typename Rng2>
+    struct next_expr{
+        typedef typename L::conversion_value val_;
+        typedef typename L::conversion_reference ref_;
+        typedef expr<L,E,Rng2,false,val_,ref_> type;
     };
 
     typedef boost::mpl::void_ top_;
-    
-    template<typename E,typename Rng1,int N,typename V,typename R>
-	class expr : public super_of_expr<E,Rng1,N,V,R>::type{
-        typedef boost::mpl::int_<1> int_1_;
-        typedef boost::mpl::int_<N> int_n_;
-        typedef typename boost::mpl::equal_to<int_1_,int_n_>::type is_first_;
-        typedef typename boost::mpl::if_<is_first_,E,E&>::type previous_; 
 
-        typedef expr<E,Rng1,N,V,R> this_;
-        typedef typename 
-            result_of::convert_range<Rng1,V,R>::type converted_r1_impl_;
+    template<typename L,typename E,typename Rng1,
+        bool is_first,typename V,typename R>
+	class expr : 
+        converted_range::list<L,Rng1,is_first,V,R>,
+        public impl_of_expr<E,Rng1,is_first,V,R>::type
+    {
+        typedef expr<L,E,Rng1,is_first,V,R> this_;
 
         public:
 
-        typedef typename super_of_expr<E,Rng1,N,V,R>::type super_;
-        typedef typename boost::mpl::if_<
-             is_first_,top_,converted_r1_impl_>::type converted_r1_;
-        
+        // types
         typedef V conversion_value;
         typedef R conversion_reference;
+        typedef typename impl_of_expr<E,Rng1,is_first,V,R>::type impl_;
         
+        // bases
+        typedef converted_range::list<L,Rng1,is_first,V,R> list_;
+        typedef typename facade_of_expr<E,Rng1,is_first,V,R>::type facade_;
+                
+        // constructors
+        explicit expr(Rng1& r1)
+            :list_(r1),
+            impl_(this->converted_range)
+        {}
+        explicit expr(L& l,E& e,Rng1& r1)
+            :list_(l,r1),
+            impl_(e,this->converted_range)
+        {}
+                
+        // unary operators
         template<typename Rng2>
-        struct result_impl : next_expr<this_,Rng2>{};
-        
-        BOOST_STATIC_CONSTANT(int,static_size = N);
-        
-        super_& super(){ return (*this); }
-        const super_& super()const{ return (*this); }
-            
-        explicit expr(super_ s):super_(s){}
-        explicit expr(E& p, Rng1& r1)
-            :previous(p),
-            converted_r1(convert_range<V,R>(r1))
-            {
-                // Do not put in the intialization list bec. super may be
-                // intialized first whereas last is required.
-                this->super() = boost::chain(
-                    this->previous.super(),
-                    this->converted_r1
-                );
-            }
+        struct result_impl 
+            : chain_convert_l_impl::next_expr<list_,impl_,Rng2>{};
 
-        template<typename Rng2>
-        typename result_impl<Rng2>::type 
-        operator()(Rng2& r2){
+        template<typename Rng2> // Warning : overrides base.
+        typename result_impl<Rng2>::type
+        operator()(Rng2& r2)
+        {
             typedef typename result_impl<Rng2>::type res_;
-            return res_( *this, r2 );
+            return res_(
+                static_cast<list_&>(*this),
+                static_cast<impl_&>(*this),
+                r2
+            );            
         }
-     
-        mutable previous_ previous;
-        mutable converted_r1_ converted_r1;
+
     };
 
-    
     template<typename Rng1,typename V,
         typename R = typename detail::convert_range_reference<Rng1,V>::type>
     struct first_expr{ 
-        typedef expr<top_,Rng1,1,V,R> type; 
-        typedef typename type::super_ super_;
-        static type call(Rng1& r1){
-            return type(
-                super_(
-                    convert_range<V,R>(r1)
-                )
-            );
-        }
+        typedef expr<top_,top_,Rng1,1,V,R> type; 
+        static type call(Rng1& r1){ return type(r1); }
     };
 
     template<typename Rng1>
@@ -125,6 +132,7 @@ namespace chain_convert_l_impl{
         typedef typename reference_traits::convert_to<from_>::type to_;
         typedef typename boost::remove_reference<to_>::type type;
     };
+
 
 }// chain_convert_l_impl
 }// detail

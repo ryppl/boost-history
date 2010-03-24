@@ -14,7 +14,6 @@ int main (int argc, char * const argv[]) {
      //check_ref_csv_int();
      //std::cout << "check_csv : ok" << std::endl;
 
-//     example_chain(std::cout);
      example_range(std::cout);
 
     return 0;

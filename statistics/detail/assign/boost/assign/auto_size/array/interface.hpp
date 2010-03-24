@@ -13,11 +13,11 @@
 #include <boost/mpl/int.hpp>
 #include <boost/array.hpp>
 #include <boost/range.hpp>
-#include <boost/assign/list_of.hpp> 
+#include <boost/typeof/typeof.hpp>
+#include <boost/assign/list_of.hpp> // converter<>
 #include <boost/assign/auto_size/comparison_op/range.hpp>
-#include <boost/assign/auto_size/reference_wrapper/has_copy_semantics.hpp>
+#include <boost/assign/auto_size/reference_wrapper/has_copy_semantics.hpp> //needed?
 #include <boost/assign/auto_size/array/ref.hpp>
-//#include <boost/assign/auto_size/array/converter.hpp>
 
 namespace boost{
 namespace assign{
@@ -67,6 +67,7 @@ namespace auto_size{
         typedef array_interface_traits<T,N,R> traits;
         typedef typename traits::ref_ ref_;
         typedef typename traits::ref_array_ ref_array_;
+        typedef array_interface<T,N,R,D> this_;
 
         public:
         typedef ref_ value_type;
@@ -109,15 +110,8 @@ namespace auto_size{
 
         // converter
         protected:
-        typedef assign_detail::converter<
-            array_interface<T,N,R,D>,
-            typename array_interface_traits<T,N,R>::const_iterator
-        > converter_;
-
-        friend class assign_detail::converter<
-            array_interface<T,N,R,D>,
-            typename array_interface_traits<T,N,R>::const_iterator
-        >;
+        typedef assign_detail::converter<this_,const_iterator> converter_;
+        friend class assign_detail::converter<this_,const_iterator>;
 
         public:
 

@@ -11,6 +11,7 @@
 #include <boost/array.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <boost/range/algorithm/copy.hpp>
+#include <boost/assign/auto_size/range/chain_r.hpp>
 #include <boost/assign/auto_size/range/chain_convert_l.hpp>
 #include <boost/assign/auto_size/check/iterator.hpp>
 #include <boost/assign/auto_size/check/constants.hpp>

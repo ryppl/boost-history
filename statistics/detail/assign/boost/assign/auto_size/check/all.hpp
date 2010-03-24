@@ -20,7 +20,7 @@
 
 #include <boost/assign/auto_size/check/array.hpp>
 //#include <boost/assign/auto_size/check/chain.hpp>
-//#include <boost/assign/auto_size/check/comparison_op.hpp>
+#include <boost/assign/auto_size/check/comparison_op.hpp>
 #include <boost/assign/auto_size/check/converter.hpp>
 #include <boost/assign/auto_size/check/copy_array.hpp>
 #include <boost/assign/auto_size/check/copy_iterator.hpp>
@@ -52,6 +52,7 @@ void fun(){                                                                    \
     BOOST_ASSIGN_AS_CHECK_converter_sorted(std::set<T>)                        \
     BOOST_ASSIGN_AS_CHECK_adapter_lifo(std::stack<T>)                          \
     BOOST_ASSIGN_AS_CHECK_adapter_fifo(std::queue<T>)                          \
+    BOOST_ASSIGN_AS_CHECK_comparison_op                                        \
 }                                                                              \
 void BOOST_PP_CAT(fun,_int)(){ fun<int>(); }                                   \
 }                                                                              \
@@ -61,7 +62,6 @@ void BOOST_PP_CAT(fun,_int)(){ fun<int>(); }                                   \
 /**/
 
 /*
-    BOOST_ASSIGN_AS_CHECK_comparison_op                                        \
     BOOST_ASSIGN_AS_CHECK_chain                                                \
     BOOST_ASSIGN_AS_CHECK_example2                                             \
 */
