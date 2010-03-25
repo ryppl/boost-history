@@ -11,13 +11,16 @@ March 25th/OSX:
 /trunk/libs/assign/test$ sudo bjam toolset=darwin debug
 **passed** ../../../bin.v2/libs/assign/test/ref_list_of.test/darwin-4.2.1/debug/ref_list_of.test
 **passed** ../../../bin.v2/libs/assign/test/ref_csv.test/darwin-4.2.1/debug/ref_csv.test
+/trunk/libs/assign/test$ sudo bjam toolset=darwin release
+**passed** ../../../bin.v2/libs/assign/test/ref_list_of.test/darwin-4.2.1/release/ref_list_of.test
+**passed** ../../../bin.v2/libs/assign/test/ref_csv.test/darwin-4.2.1/release/ref_csv.test
 
 March 25th/Ubuntu/GCC 4.4
 /trunk/libs/assign/test$ sudo bjam toolset=gcc debug
 **passed** ../../../bin.v2/libs/assign/test/ref_list_of.test/gcc-4.4.1/debug/ref_list_of.test
 **passed** ../../../bin.v2/libs/assign/test/ref_csv.test/gcc-4.4.1/debug/ref_csv.test
 
-March 25th/Win7/GCC3.4
+March 25th/Win7/GCC 3.4
                                              Assertion      Count    Failed
      check_ref_list_of_iterator<int>;        Passed         1
      check_ref_list_of_example1<int>         Passed         2
