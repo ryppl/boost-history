@@ -16,6 +16,7 @@ namespace assign{
 namespace detail{
 
 namespace result_of{
+
     template<typename R1,typename R2>
     struct chain{
         static R1 r1;
@@ -33,6 +34,7 @@ namespace result_of{
          typedef BOOST_TYPEOF_TPL( boost::chain(r1,r2) ) type;
         #endif
     };
+
 }
 
 }// detail
