@@ -607,6 +607,11 @@ struct is_no_message_queue
     >::type type;
 };
 
+template <class StateType>
+struct get_initial_event 
+{
+    typedef typename StateType::initial_event type;
+};
 // helper to find out if a SM has an active exit state and is therefore waiting for exiting
 template <class StateType,class OwnerFct,class FSM>
 inline

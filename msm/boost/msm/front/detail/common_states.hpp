@@ -15,8 +15,7 @@
 
 #include <boost/mpl/vector.hpp>
 #include <boost/fusion/container/map.hpp>
-#include <boost/fusion/include/at_c.hpp>
-
+#include <boost/fusion/include/at_key.hpp>
 #include <boost/type_traits/add_const.hpp>
 
 namespace boost { namespace msm { namespace front {namespace detail
@@ -55,7 +54,7 @@ private:
 };
 
 // the interface for all states. Defines entry and exit functions. Overwrite to implement for any state needing it.
-template<class USERBASE,class Attributes= ::boost::fusion::vector<> >
+template<class USERBASE,class Attributes= ::boost::fusion::map<> >
 struct state_base : public inherit_attributes<Attributes>, USERBASE
 {
     typedef USERBASE		user_state_base;

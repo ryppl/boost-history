@@ -11,6 +11,7 @@
 #ifndef BOOST_MSM_BACK_STATEMACHINE_H
 #define BOOST_MSM_BACK_STATEMACHINE_H
 
+#include <exception>
 #include <vector>
 #include <queue>
 #include <functional>
@@ -56,6 +57,7 @@ BOOST_MPL_HAS_XXX_TRAIT_DEF(accept_sig)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(no_automatic_create)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(non_forwarding_flag)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(direct_entry)
+BOOST_MPL_HAS_XXX_TRAIT_DEF(initial_event)
 
 #ifndef BOOST_MSM_CONSTRUCTOR_ARG_SIZE
 #define BOOST_MSM_CONSTRUCTOR_ARG_SIZE 5 // default max number of arguments for constructors
@@ -192,6 +194,14 @@ private:
     typedef typename Derived::BaseAllStates     BaseState;
     typedef Derived                             ConcreteSM;
 
+    // if the front-end fsm provides an initial_event typedef, replace InitEvent by this one
+    typedef typename ::boost::mpl::eval_if< 
+        typename has_initial_event<Derived>::type,
+        get_initial_event<Derived>,
+        ::boost::mpl::identity<InitEvent>
+    >::type fsm_initial_event;
+
+
     template <class ExitPoint>
     struct exit_pt : public ExitPoint
     {
@@ -204,6 +214,7 @@ private:
             ExitPoint::event        Event;
         typedef ::boost::function<execute_return (Event const&)>
                                     forwarding_function;
+
         // forward event to the higher-level FSM
         template <class ForwardEvent>
         void forward_event(ForwardEvent const& incomingEvent)
@@ -929,9 +940,9 @@ private:
     void start()
     {
         // call on_entry on this SM
-        (static_cast<Derived*>(this))->on_entry(InitEvent(),*this);
+        (static_cast<Derived*>(this))->on_entry(fsm_initial_event(),*this);
         ::boost::mpl::for_each<initial_states, boost::msm::wrap<mpl::placeholders::_1> >
-            (call_init<InitEvent>(InitEvent(),this));
+            (call_init<fsm_initial_event>(fsm_initial_event(),this));
         // give a chance to handle an anonymous (eventless) transition
         handle_eventless_transitions_helper<library_sm> eventless_helper(this,true);
         eventless_helper.process_completion_event();
