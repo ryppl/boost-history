@@ -11,6 +11,7 @@
 #ifndef BOOST_MSM_FRONT_STATEMACHINE_DEF_H
 #define BOOST_MSM_FRONT_STATEMACHINE_DEF_H
 
+#include <exception>
 #include <boost/assert.hpp>
 #include <boost/mpl/vector.hpp>
 
