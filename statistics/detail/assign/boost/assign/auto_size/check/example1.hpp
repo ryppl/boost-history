@@ -8,6 +8,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_ASSIGN_DETAIL_AUTO_SIZE_CHECK_EXAMPLE1_ER_2010_HPP
 #define BOOST_ASSIGN_DETAIL_AUTO_SIZE_CHECK_EXAMPLE1_ER_2010_HPP
+#include <iostream>
 #include <boost/range/algorithm/max_element.hpp>
 
 #define BOOST_ASSIGN_AS_CHECK_example1                                         \
@@ -30,5 +31,3 @@
 /**/
 
 #endif
-
-

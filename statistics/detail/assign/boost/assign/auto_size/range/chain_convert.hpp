@@ -119,10 +119,10 @@ namespace chain_convert_impl{
 
         // rvalue constructors
         explicit expr(const Rng1& r1)
-            :impl_(convert_range<V,R>(r1))
+            :impl_(convert_range<V,R,Rng1>(r1))
         {}
         explicit expr(const E& e,const Rng1& r1)
-            :impl_(e,convert_range<V,R>(r1))
+            :impl_(e,convert_range<V,R,Rng1>(r1))
         {}
                 
         // unary operators

@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// assign::detail::auto_size::check_all.hpp                                 //
+// assign::detail::auto_size::check::all.hpp                                //
 //                                                                          //
 //  (C) Copyright 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -17,52 +17,67 @@
 #include <boost/array.hpp>
 
 #include <boost/assign/auto_size/check/constants.hpp>
-
+#include <boost/assign/auto_size/check/example1.hpp>
+#include <boost/assign/auto_size/check/iterator.hpp>
 #include <boost/assign/auto_size/check/array.hpp>
+#include <boost/assign/auto_size/check/copy_iterator.hpp>
+#include <boost/assign/auto_size/check/copy_array.hpp>
+#include <boost/assign/auto_size/check/rebind_array.hpp>
 #include <boost/assign/auto_size/check/comparison_op.hpp>
 #include <boost/assign/auto_size/check/converter.hpp>
-#include <boost/assign/auto_size/check/copy_array.hpp>
-#include <boost/assign/auto_size/check/copy_iterator.hpp>
-#include <boost/assign/auto_size/check/example1.hpp>
 #include <boost/assign/auto_size/check/fifo.hpp>
-#include <boost/assign/auto_size/check/iterator.hpp>
 #include <boost/assign/auto_size/check/lifo.hpp>
-#include <boost/assign/auto_size/check/rebind_array.hpp>
-#include <boost/assign/auto_size/check/example2.hpp>
 #include <boost/assign/auto_size/check/chain_convert_r.hpp>
 #include <boost/assign/auto_size/check/chain_convert_l.hpp>
+#include <boost/assign/auto_size/check/example2.hpp>
 
-#define BOOST_ASSIGN_AS_CHECK_all(fun)                                         \
+#define BOOST_ASSIGN_AS_CHECK_fun_tpl(suffix)                                  \
+    template<typename T> void \
+    BOOST_PP_CAT(check_,BOOST_PP_CAT(BOOST_ASSIGN_AS_CHECK_infix,BOOST_PP_CAT(_,suffix))) \
+/**/
+
 namespace boost{                                                               \
 namespace assign{                                                              \
 namespace detail{                                                              \
 namespace auto_size{                                                           \
-                                                                               \
-template<typename T>                                                           \
-void fun(){                                                                    \
-    BOOST_ASSIGN_AS_CHECK_example1                                             \
-    BOOST_ASSIGN_AS_CHECK_iterator                                             \
-    BOOST_ASSIGN_AS_CHECK_array                                                \
-    BOOST_ASSIGN_AS_CHECK_copy_iterator                                        \
-    BOOST_ASSIGN_AS_CHECK_copy_array                                           \
-    BOOST_ASSIGN_AS_CHECK_rebind_array                                         \
-    BOOST_ASSIGN_AS_CHECK_comparison_op                                        \
-    BOOST_ASSIGN_AS_CHECK_converter(std::list<T>)                              \
-    BOOST_ASSIGN_AS_CHECK_converter(std::vector<T>)                            \
-    BOOST_ASSIGN_AS_CHECK_adapter_lifo(std::stack<T>)                          \
-    BOOST_ASSIGN_AS_CHECK_adapter_fifo(std::queue<T>)                          \
-    typedef boost::array<T,8> ar8_;                                            \
-    BOOST_ASSIGN_AS_CHECK_converter(ar8_)                                      \
+ BOOST_ASSIGN_AS_CHECK_fun_tpl(example1)()                                     \
+     BOOST_ASSIGN_AS_CHECK_example1                                            \
+ BOOST_ASSIGN_AS_CHECK_fun_tpl(iterator)()                                     \
+     BOOST_ASSIGN_AS_CHECK_iterator                                            \
+ BOOST_ASSIGN_AS_CHECK_fun_tpl(array)()                                        \
+     BOOST_ASSIGN_AS_CHECK_array                                               \
+ BOOST_ASSIGN_AS_CHECK_fun_tpl(copy_iterator)()                                \
+     BOOST_ASSIGN_AS_CHECK_copy_iterator                                       \
+ BOOST_ASSIGN_AS_CHECK_fun_tpl(copy_array)()                                   \
+     BOOST_ASSIGN_AS_CHECK_copy_array                                          \
+ BOOST_ASSIGN_AS_CHECK_fun_tpl(rebind_array)()                                 \
+     BOOST_ASSIGN_AS_CHECK_rebind_array                                        \
+ BOOST_ASSIGN_AS_CHECK_fun_tpl(comparison_op)()                                \
+     BOOST_ASSIGN_AS_CHECK_comparison_op                                       \
+ BOOST_ASSIGN_AS_CHECK_fun_tpl(converter_list)()                               \
+     BOOST_ASSIGN_AS_CHECK_converter(std::list<T>)                             \
+ BOOST_ASSIGN_AS_CHECK_fun_tpl(converter_vector)()                             \
+     BOOST_ASSIGN_AS_CHECK_converter(std::vector<T>)                           \
+ BOOST_ASSIGN_AS_CHECK_fun_tpl(converter_array)()                              \
+     BOOST_ASSIGN_AS_CHECK_converter_array                                     \
+ BOOST_ASSIGN_AS_CHECK_fun_tpl(converter_set)()                                \
     BOOST_ASSIGN_AS_CHECK_converter_sorted(std::set<T>)                        \
+ BOOST_ASSIGN_AS_CHECK_fun_tpl(adapter_stack)()                                \
+    BOOST_ASSIGN_AS_CHECK_adapter_lifo(std::stack<T>)                          \
+ BOOST_ASSIGN_AS_CHECK_fun_tpl(adapter_queue)()                                \
+    BOOST_ASSIGN_AS_CHECK_adapter_fifo(std::queue<T>)                          \
+ BOOST_ASSIGN_AS_CHECK_fun_tpl(chain_convert_r)()                              \
     BOOST_ASSIGN_AS_CHECK_chain_convert_r                                      \
+ BOOST_ASSIGN_AS_CHECK_fun_tpl(chain_convert_l)()                              \
     BOOST_ASSIGN_AS_CHECK_chain_convert_l                                      \
+ BOOST_ASSIGN_AS_CHECK_fun_tpl(example2)()                                     \
     BOOST_ASSIGN_AS_CHECK_example2                                             \
-}                                                                              \
-void BOOST_PP_CAT(fun,_int)(){ fun<int>(); }                                   \
 }                                                                              \
 }                                                                              \
 }                                                                              \
 }                                                                              \
 /**/
+
+#undef BOOST_ASSIGN_AS_CHECK_fun_tpl
 
 #endif

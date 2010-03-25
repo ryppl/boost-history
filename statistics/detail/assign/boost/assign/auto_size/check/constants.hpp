@@ -29,7 +29,8 @@ namespace check_constants{
     const int h = 7;    // 6
 
     // array    
-    boost::array<int,8> array(){                                              
+    boost::array<int,8> array()
+    {                                              
         typedef boost::array<int,8> ar_;
         ar_ ar;
         ar[0] = a; ar[1] = b; ar[2] = c;                                           

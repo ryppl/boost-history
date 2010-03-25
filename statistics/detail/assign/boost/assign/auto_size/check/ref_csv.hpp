@@ -10,7 +10,6 @@
 #define BOOST_ASSIGN_DETAIL_AUTO_SIZE_CHECK_REF_CSV_ER_2010_HPP
 #include <boost/assign/auto_size/ref_csv.hpp>
 #include <boost/assign/auto_size/ref_rebind_csv.hpp>
-#include <boost/assign/auto_size/check/all.hpp>
 
 #define BOOST_ASSIGN_AS_CHECK_ref1(a)  ref_csv(a)
 #define BOOST_ASSIGN_AS_CHECK_ref2(a,b)  ref_csv(a,b)
@@ -32,7 +31,9 @@
 
 #define BOOST_ASSIGN_AS_CHECK_ref_rebind3(a,b,c)  ref_rebind_csv(a,b,c)
 
-BOOST_ASSIGN_AS_CHECK_all(check_ref_csv)
+#define BOOST_ASSIGN_AS_CHECK_infix ref_csv
+
+#include <boost/assign/auto_size/check/all.hpp>
 
 #undef BOOST_ASSIGN_AS_CHECK_ref1
 #undef BOOST_ASSIGN_AS_CHECK_ref2
@@ -53,6 +54,8 @@ BOOST_ASSIGN_AS_CHECK_all(check_ref_csv)
 #undef BOOST_ASSIGN_AS_CHECK_cref8
 
 #undef BOOST_ASSIGN_AS_CHECK_ref_rebind3
+
+#undef BOOST_ASSIGN_AS_CHECK_infix
 
 #endif
 

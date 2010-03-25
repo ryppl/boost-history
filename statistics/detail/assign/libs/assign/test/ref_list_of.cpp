@@ -11,18 +11,11 @@
 #define BOOST_ASSIGN_CHECK_EQUAL(a,b) BOOST_CHECK_EQUAL(a,b)
 #include <boost/assign/auto_size/check/ref_list_of.hpp>
 #include <boost/test/unit_test.hpp>
-using boost::unit_test::test_suite;
 
-test_suite* init_unit_test_suite( int argc, char* argv[] )
-{
-    test_suite* test = BOOST_TEST_SUITE( "List Test Suite" );
-    using namespace boost::assign::detail::auto_size;
-    test->add( BOOST_TEST_CASE( &check_ref_list_of_int ) );
-
-    return test;
-}
-
+#include <boost/assign/auto_size/check/unit_testing.hpp>
+#define BOOST_ASSIGN_AS_CHECK_infix ref_list_of
+   BOOST_ASSIGN_AS_CHECK_TEST_SUITE
+#undef BOOST_ASSIGN_AS_CHECK_infix
 
 #undef BOOST_ASSIGN_CHECK_EQUAL
-
 

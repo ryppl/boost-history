@@ -93,37 +93,41 @@ namespace result_of{
         return caller_::call( r );   
     }
 
-/*
-   // operator|
+namespace adaptor{
+    template<typename V,typename R> struct convert_range{};
+}
+
+    // operator| 
+    // Warning : not tested.
        
-    template<typename T,typename Rng>
-    inline typename detail::result_of::convert_range<Rng,T>::type 
-    operator|( Rng& r, const detail::adaptor::convert_range<T>& f )
+    template<typename V,typename R,typename Rng>
+    inline typename detail::result_of::convert_range<Rng,V,R>::type 
+    operator|( Rng& r, const adaptor::convert_range<V,R>& a )
     {
-        return convert_range<T>(r);   
+        return convert_range<V,R,Rng>(r);   
     }
 
-    template<typename T,typename Rng>
-    inline typename detail::result_of::convert_range<const Rng,T>::type 
-    operator|( const Rng& r, const detail::adaptor::convert_range<T>& f )
+    template<typename V,typename Rng>
+    inline typename detail::result_of::convert_range<Rng,V>::type 
+    operator|( Rng& r, const adaptor::convert_range<V,use_default>& a )
     {
-        return convert_range<T>(r);   
+        return convert_range<V,use_default,Rng>(r);   
     }
 
-    template<typename Rng>
-    inline typename detail::result_of::convert_range<Rng>::type 
-    operator|( Rng& r, const detail::adaptor::convert_range<>& f )
+    template<typename V,typename R,typename Rng>
+    inline typename detail::result_of::convert_range<const Rng,V,R>::type 
+    operator|( const Rng& r, const adaptor::convert_range<V,R>& a )
     {
-        return convert_range(r);   
+        return convert_range<V,R,Rng>(r);   
     }
 
-    template<typename Rng>
-    inline typename detail::result_of::convert_range<const Rng>::type 
-    operator|( const Rng& r, const detail::adaptor::convert_range<>& f )
+    template<typename V,typename Rng>
+    inline typename detail::result_of::convert_range<const Rng,V>::type 
+    operator|( const Rng& r, const adaptor::convert_range<V,use_default>& a )
     {
-        return convert_range(r);   
+        return convert_range<V,use_default,Rng>(r);   
     }
-*/
+
 }// assign
 }// boost
 

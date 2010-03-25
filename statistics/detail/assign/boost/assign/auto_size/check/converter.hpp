@@ -38,4 +38,12 @@
     check_iterator_sorted_impl(boost::begin(elems));                           \
 }                                                                              \
 /**/
+
+#define BOOST_ASSIGN_AS_CHECK_converter_array                                  \
+{                                                                              \
+    typedef boost::array<T,8> ar8_;                                            \
+    BOOST_ASSIGN_AS_CHECK_converter(ar8_)                                      \
+}                                                                              \
+/**/
+
 #endif
