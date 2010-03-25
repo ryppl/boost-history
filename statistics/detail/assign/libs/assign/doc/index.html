@@ -1561,7 +1561,8 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
   	<table cellpadding=5 border=1>
   	<tr><th class="head">Expression</th> <th class="head">Description</th>
   	<tr><td><tt>R&lt;T&gt;</tt></td><td> Reference wrapper </td> </tr>
-  	<tr><td><a href="#ref-converter"><tt>converter&lt&gt</tt></a></td><td> Public base class of <a href="#ref-array_interface"><tt>array_interface&lt&gt</tt></a></td> </tr>
+  	<tr><td><a href="#ref-converter"><tt>converter&lt&gt</tt></a></td><td> Private base class of <a href="#ref-array_interface"><tt>array_interface&lt&gt</tt></a></td> </tr>
+  	<tr><td><tt>range_comparison_op::base_of&lt&gt::type</tt></td><td> Public base class of <a href="#ref-array_interface"><tt>array_interface&lt&gt</tt></a></td> </tr>
   	</table>
   </blockquote>
 
@@ -1595,7 +1596,6 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
   	<tr><td><tt>N</tt></td><td> Size </td> </tr>
   	<tr><td><tt>R</tt></td><td> A class template </td> </tr>
   	<tr><td><tt>P</tt></td><td> Policy tag</td> </tr>
-  	<tr><td><tt>F</tt></td><td> Use reference to link to the previous collection </td> </tr>
   	</table>
   </blockquote>
 
@@ -1636,26 +1636,6 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
 
         result_type <span class="keyword">operator</span>()(T& t)<span class="keyword">const</span>;
         
-        <span class="keyword">template</span>&lt;<span class="keyword">int</span> K,<span class="keyword">typename</span> I>
-        Implementation-defined
-        range(I b,I e)<span class="keyword">const</span>;
-
-        <span class="keyword">template</span>&lt;<span class="keyword">int</span> K,<span class="keyword">typename</span> Range>
-        Implementation-defined
-        range(Range& r)<span class="keyword">const</span>;
-
-        <span class="keyword">template</span>&lt;<span class="keyword">int</span> K,<span class="keyword">typename</span> Range>
-        Implementation-defined
-        range(<span class="keyword">const</span> Range& r)<span class="keyword">const</span>;
-
-        <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Range>
-        Implementation-defined
-        range(Range& r);
-
-        <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Range>
-        Implementation-defined
-        range(<span class="keyword">const</span> Range& r);
-
     };  
 
     <span class="keyword">template</span>&lt;<span class="keyword">typename</span> A,<span class="keyword">typename</span> E,<span class="keyword">typename</span> T,<span class="keyword">int</span> N,
