@@ -20,7 +20,18 @@ namespace result_of{
     struct chain{
         static R1 r1;
         static R2 r2;
-        typedef BOOST_TYPEOF_TPL( boost::chain(r1,r2) ) type;
+
+        #ifdef BOOST_MSVC
+        typedef BOOST_TYPEOF_NESTED_TYPEDEF_TPL(
+            nested,
+            boost::chain(r1,r2)
+        );
+        typedef typename nested::type type;
+        #endif
+
+        #ifndef BOOST_MSVC
+         typedef BOOST_TYPEOF_TPL( boost::chain(r1,r2) ) type;
+        #endif
     };
 }
 
