@@ -1,6 +1,7 @@
 // Revision history:
 //
-// March 21, 2010 : Temporarily disable comparison_op until technical fix. 
+// March 24, 2010 : Rename chain basic_chain. chain uses basic chain as
+// interface but passes to it a converted to range.
 // March 21, 2010 : Removed /chain. Added /traits and /range. Implem of 
 // chain_l now much safer by keeping reference to previous changes and 
 // the current range (similar to ref_list_of).
