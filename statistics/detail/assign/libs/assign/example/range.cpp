@@ -10,7 +10,7 @@
 #include <boost/next_prior.hpp>
 #include <boost/range/algorithm/copy.hpp>
 #include <boost/assign/auto_size/ref_list_of.hpp>
-#include <boost/assign/auto_size/range/chain.hpp>
+#include <boost/assign/auto_size/range/basic_chain.hpp>
 #include <boost/assign/auto_size/range/chain_convert.hpp>
 #include <boost/assign/auto_size/range/convert_range.hpp>
 

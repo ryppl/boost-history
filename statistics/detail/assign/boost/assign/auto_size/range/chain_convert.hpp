@@ -22,7 +22,7 @@
 #include <boost/assign/auto_size/range/result_of_chain.hpp>
 #include <boost/assign/auto_size/range/hold_previous.hpp>
 #include <boost/assign/auto_size/range/hold_converted_range.hpp>
-#include <boost/assign/auto_size/range/chain.hpp>
+#include <boost/assign/auto_size/range/basic_chain.hpp>
 
 #include <boost/mpl/assert.hpp> // tmp
 #include <boost/type_traits/is_reference.hpp> // tmp
