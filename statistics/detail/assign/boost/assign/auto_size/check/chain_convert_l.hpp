@@ -41,28 +41,28 @@
     BOOST_AUTO(tmp1,BOOST_ASSIGN_AS_CHECK_ref3(a1,b1,c1));                     \
     BOOST_AUTO(tmp2,BOOST_ASSIGN_AS_CHECK_ref3(d1,e1,f1));                     \
     BOOST_AUTO(tmp3,BOOST_ASSIGN_AS_CHECK_ref2(g1,h1));                        \
-    boost::copy(ar, boost::begin(chain_convert_l(ar1)(ar2)(ar3)));             \
+    boost::copy(ar, boost::begin(chain_l(ar1)(ar2)(ar3)));             \
     check_values_impl(                                                         \
         ar1[0],ar1[1],ar1[2],ar2[0],ar2[1],ar2[2],ar3[0],ar3[1]);              \
-    boost::copy(ar, boost::begin(chain_convert_l(ar1)(ar2)(tmp3)));            \
+    boost::copy(ar, boost::begin(chain_l(ar1)(ar2)(tmp3)));            \
     check_values_impl(                                                         \
         ar1[0],ar1[1],ar1[2],ar2[0],ar2[1],ar2[2],  g1  ,  h1  );              \
-    boost::copy(ar, boost::begin(chain_convert_l(ar1)(tmp2)(ar3)));            \
+    boost::copy(ar, boost::begin(chain_l(ar1)(tmp2)(ar3)));            \
     check_values_impl(                                                         \
         ar1[0],ar1[1],ar1[2],  d1  ,  e1  ,  f1  ,ar3[0],ar3[1]);              \
-    boost::copy(ar, boost::begin(chain_convert_l(ar1)(tmp2)(tmp3)));           \
+    boost::copy(ar, boost::begin(chain_l(ar1)(tmp2)(tmp3)));           \
     check_values_impl(                                                         \
         ar1[0],ar1[1],ar1[2],  d1  ,  e1  ,  f1  ,  g1  ,  h1  );              \
-    boost::copy(ar, boost::begin(chain_convert_l(tmp1)(ar2)(ar3)));            \
+    boost::copy(ar, boost::begin(chain_l(tmp1)(ar2)(ar3)));            \
     check_values_impl(                                                         \
         a1  ,  b1  ,  c1  ,ar2[0],ar2[1],ar2[2],ar3[0],ar3[1]);                \
-    boost::copy(ar, boost::begin(chain_convert_l(tmp1)(ar2)(tmp3)));           \
+    boost::copy(ar, boost::begin(chain_l(tmp1)(ar2)(tmp3)));           \
     check_values_impl(                                                         \
         a1  ,  b1  ,  c1  ,ar2[0],ar2[1],ar2[2],  g1  ,  h1  );                \
-    boost::copy(ar, boost::begin(chain_convert_l(tmp1)(tmp2)(ar3)));           \
+    boost::copy(ar, boost::begin(chain_l(tmp1)(tmp2)(ar3)));           \
     check_values_impl(                                                         \
         a1  ,  b1  ,  c1  ,  d1  ,  e1  ,  f1  ,ar3[0],ar3[1]);                \
-    boost::copy(ar, boost::begin(chain_convert_l(tmp1)(tmp2)(tmp3)));          \
+    boost::copy(ar, boost::begin(chain_l(tmp1)(tmp2)(tmp3)));          \
     check_values_impl(                                                         \
         a1  ,  b1  ,  c1  ,  d1  ,  e1  ,  f1  ,  g1  ,  h1  );                \
 }                                                                              \

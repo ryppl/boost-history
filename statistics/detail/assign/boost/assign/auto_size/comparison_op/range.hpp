@@ -22,7 +22,7 @@ namespace range_comparison_op{
     // Let L and R model Range. For either of (L xor R) in G or (L and R) in G, 
     // Expression      Returns
     //   l == r        ::boost::iterator_range_detail::equal( l, r )
-    //   l < r         ::boost::iterator_range_detail::less_than( l, r );
+    //   l < r         ::boost::iterator_range_detail::less_than( l, r )
     // The remaining operators, !=, >,<=,>= are defined using their 
     // relationships to the two fundamental ones.
     struct fundamental_policy{

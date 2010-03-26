@@ -16,7 +16,6 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/range/chain.hpp>
 #include <boost/assign/auto_size/range/result_of_chain.hpp>
-#include <boost/assign/auto_size/range/hold_previous.hpp>
 
 // This is based on
 // http://gist.github.com/287791
@@ -28,7 +27,7 @@
 // three also have to. 
 
 namespace boost{
-namespace assign{
+namespace range{
 namespace detail{
 namespace chain_impl{
 
@@ -57,12 +56,26 @@ namespace chain_impl{
         typedef boost::sub_range<sel_r1_> type;
     };
                       
+    template<typename E,bool is_first>
+    class hold_previous{
+        typedef typename boost::mpl::if_c<is_first,E,E&>::type previous_; 
+        
+        public:
+        
+        hold_previous(){} 
+        hold_previous(E& p)
+            :previous(p){} 
+        
+        mutable previous_ previous;
+    };
+
     template<typename E,bool is_first,bool add_const>
     struct sel_hold_previous : boost::mpl::if_c<
         add_const,
         boost::mpl::empty_base,
-        detail::hold_previous<E,is_first>
+        hold_previous<E,is_first>
     >{};
+
                       
     template<typename E,typename R1,bool is_first,bool add_const>
 	class expr : 
@@ -121,7 +134,7 @@ namespace chain_impl{
             typedef typename result_impl<R2>::type res_;
             return res_(*this,r2);
         }
-
+        
     };
 
     template<typename R1,bool add_const>
@@ -150,7 +163,7 @@ namespace chain_impl{
         return caller_::call(r1);
     }
 
-}// assign
+}// range
 }// boost
 
 #endif

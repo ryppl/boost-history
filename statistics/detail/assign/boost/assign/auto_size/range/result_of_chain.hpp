@@ -12,7 +12,7 @@
 #include <boost/range/chain.hpp>
 
 namespace boost{
-namespace assign{
+namespace range{
 namespace detail{
 
 namespace result_of{
@@ -38,7 +38,7 @@ namespace result_of{
 }
 
 }// detail
-}// assign
+}// range
 }// boost
 
 #endif

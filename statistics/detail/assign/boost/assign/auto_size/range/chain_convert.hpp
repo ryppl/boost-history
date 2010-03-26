@@ -28,7 +28,7 @@
 #include <boost/type_traits/is_reference.hpp> // tmp
 
 // Usage : Let r1, r2 and r3 denote lvalue-ranges.
-//     boost::copy( input, boost::begin( chain_convert_l(r1)(r2)(r3) ) );
+//     boost::copy( input, boost::begin( chain_l(r1)(r2)(r3) ) );
 // This function does not have the restriction of chain_l that none or all
 // of r1, r2, r3 must be reference wrappers.
 
@@ -40,7 +40,7 @@ namespace chain_convert_impl{
     // ---- template parameters ---- //
 
     // L : converted_range::list<> or empty base if rvalue 
-    // E : chain_impl::expr<> 
+    // E : range::detail::chain_impl::expr<> 
     // Rng1 : a range to chain to 
     // is_first : indicator
     // V : a value conversion parameter
@@ -58,7 +58,7 @@ namespace chain_convert_impl{
         bool is_first,typename V,typename R,bool add_const>
     struct impl_of_expr
     {
-        typedef typename chain_impl::sel_const<Rng1,add_const>::type cr1_;
+        typedef typename range::detail::chain_impl::sel_const<Rng1,add_const>::type cr1_;
         typedef typename 
             detail::result_of::convert_range<cr1_,V,R>::type conv_r1_;
         typedef typename E::template result_impl<conv_r1_>::type type;
@@ -67,9 +67,9 @@ namespace chain_convert_impl{
     template<typename E,typename Rng1,typename V,typename R,bool add_const>
     struct impl_of_expr<E,Rng1,true,V,R,add_const>
     {
-        typedef typename chain_impl::sel_const<Rng1,add_const>::type cr1_;
+        typedef typename range::detail::chain_impl::sel_const<Rng1,add_const>::type cr1_;
         typedef typename result_of::convert_range<cr1_,V,R>::type conv_r1_;
-        typedef typename chain_impl::first_expr<conv_r1_,add_const>::type type;
+        typedef typename range::detail::chain_impl::first_expr<conv_r1_,add_const>::type type;
     };
 
     typedef boost::mpl::void_ top_;
@@ -100,8 +100,6 @@ namespace chain_convert_impl{
         typedef typename sel_list<L,Rng1,is_first,V,R,add_const>::type list_;
         typedef typename impl_of_expr<E,Rng1,
            is_first,V,R,add_const>::type impl_;
-
-        public:
                 
         // types
         typedef V conversion_value;
@@ -158,6 +156,16 @@ namespace chain_convert_impl{
             );            
         }
 
+        // conversion
+
+        // TODO implement all conversion capabilities
+
+        template< class Container >
+        operator Container() const
+        {
+            return Container(boost::begin(*this),boost::end(*this));
+        }
+
     };
 
     // ---- traits ---- //
@@ -165,7 +173,7 @@ namespace chain_convert_impl{
     template<typename Rng1,typename V,typename R, bool add_const>
     struct first_expr{ 
         typedef chain_convert_impl::expr<top_,top_,Rng1,1,V,R,add_const> type; 
-        typedef typename chain_impl::sel_const<Rng1,add_const>::type cr1_;
+        typedef typename range::detail::chain_impl::sel_const<Rng1,add_const>::type cr1_;
         static type call(cr1_& r1){ return type(r1); }
     };
 
@@ -187,7 +195,7 @@ namespace chain_convert_impl{
         typedef typename boost::range_reference<Rng1>::type from_;
         typedef typename reference_traits::convert_to<from_>::type ref_to_;
         typedef typename boost::remove_reference<ref_to_>::type to_;
-        typedef typename chain_impl::sel_const<to_,add_const>::type type;
+        typedef typename range::detail::chain_impl::sel_const<to_,add_const>::type type;
     };
 
 }// chain_convert_l_impl
@@ -197,7 +205,7 @@ namespace chain_convert_impl{
 
     template<typename V,typename R,typename Rng1>
     typename detail::chain_convert_impl::first_expr_l<Rng1,V,R>::type    
-    chain_convert_l(Rng1& r1,
+    chain_l(Rng1& r1,
         typename boost::disable_if<boost::is_same<R,use_default> >::type* = 0
     ){
         typedef detail::chain_convert_impl::first_expr_l<Rng1,V,R> caller_;
@@ -206,7 +214,7 @@ namespace chain_convert_impl{
 
     template<typename V,typename R,typename Rng1>
     typename detail::chain_convert_impl::first_expr_l<Rng1,V>::type    
-    chain_convert_l(Rng1& r1,
+    chain_l(Rng1& r1,
         typename boost::enable_if<boost::is_same<R,use_default> >::type* = 0
     ){
         typedef detail::chain_convert_impl::first_expr_l<Rng1,V> caller_;
@@ -218,7 +226,7 @@ namespace chain_convert_impl{
         Rng1,
         typename detail::chain_convert_impl::deduce_value<Rng1,false>::type
     >::type    
-    chain_convert_l(Rng1& r1)
+    chain_l(Rng1& r1)
     {
         typedef typename detail::chain_convert_impl::deduce_value<
             Rng1,false
@@ -231,7 +239,7 @@ namespace chain_convert_impl{
 
     template<typename V,typename R,typename Rng1>
     typename detail::chain_convert_impl::first_expr_r<Rng1,V,R>::type    
-    chain_convert_r(const Rng1& r1,
+    chain_r(const Rng1& r1,
         typename boost::disable_if<boost::is_same<R,use_default> >::type* = 0
     ){
         typedef detail::chain_convert_impl::first_expr_r<Rng1,V,R> caller_;
@@ -240,7 +248,7 @@ namespace chain_convert_impl{
 
     template<typename V,typename R,typename Rng1>
     typename detail::chain_convert_impl::first_expr_r<Rng1,V>::type    
-    chain_convert_r(const Rng1& r1,
+    chain_r(const Rng1& r1,
         typename boost::enable_if<boost::is_same<R,use_default> >::type* = 0
     ){
         typedef detail::chain_convert_impl::first_expr_r<Rng1,V> caller_;
@@ -253,7 +261,7 @@ namespace chain_convert_impl{
         typename detail::chain_convert_impl::deduce_value<
             const Rng1,true>::type
     >::type    
-    chain_convert_r(const Rng1& r1)
+    chain_r(const Rng1& r1)
     {
         typedef typename detail::chain_convert_impl::deduce_value<
             const Rng1,true
