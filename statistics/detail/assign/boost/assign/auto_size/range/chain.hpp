@@ -23,6 +23,7 @@
 #include <boost/assign/auto_size/range/hold_previous.hpp>
 #include <boost/assign/auto_size/range/hold_converted_range.hpp>
 #include <boost/assign/auto_size/range/basic_chain.hpp>
+#include <boost/assign/auto_size/range/converter.hpp>
 
 #include <boost/mpl/assert.hpp> // tmp
 #include <boost/type_traits/is_reference.hpp> // tmp
@@ -94,6 +95,9 @@ namespace chain_impl{
     {
         typedef expr<L,E,Rng1,is_first,V,R,add_const> this_;
 
+        template<typename R2,bool b>
+        struct enable : boost::enable_if_c<b>{};
+
         public:
         
         // bases
@@ -127,11 +131,7 @@ namespace chain_impl{
         template<typename Rng2>
         struct result_impl 
             { typedef expr<list_,impl_,Rng2,false,V,R,add_const> type; };
- 
-        template<typename R2,bool b>
-        struct enable : boost::enable_if_c<b>{};
- 
- 
+  
         template<typename Rng2> // Warning : overrides base.
         typename result_impl<Rng2>::type
         operator()(Rng2& r2,typename enable<Rng2,!add_const>::type* = 0)
@@ -156,18 +156,10 @@ namespace chain_impl{
             );            
         }
 
-        // conversion
-
-        // TODO implement all conversion capabilities. It might be better to
-        // put the code in assign_detail::converter into a macro and expand it
-        // here (valid also for array_interface).
+        // This macro solves compiler complaints that otherwise occurr if
+        // assign_detail::converter<> is a base
+        BOOST_ASSIGN_AS_CONVERTER
         
-        template< class Container >
-        operator Container() const
-        {
-            return Container(boost::begin(*this),boost::end(*this));
-        }
-
     };
 
     // ---- traits ---- //
