@@ -24,9 +24,9 @@ namespace detail{
         assign_reference_rebind( T& r ) : ref_(&r)
         { }
 
-        void operator=( T& r ) // should it return itself?
+        void operator=( T& r ) 
         {
-            this->ref_ = &r;
+            this->rebind(r);
         }
 
         operator T&() const
@@ -37,14 +37,20 @@ namespace detail{
         void swap( assign_reference_rebind& r )
         {
             T* tmp = this->ref_;
-            this->ref_ = r.ref_;
-            r.ref_ = tmp;
+            this->ref_ = r.ref_; // this->rebing(r.ref_)
+            r.ref_ = tmp; // r.rebind(tmp)
         }
 
         T& get_ref() const
         {
             return *this->ref_;
         }
+        
+        void rebind( T & r )
+    	{
+            this->ref_ = &r;
+    	}
+
         
     private:
         T* ref_;

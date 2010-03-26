@@ -142,14 +142,14 @@ namespace auto_size{
     template<int Nshift,typename A,typename E,typename T,int N,
     	template<typename> class R,typename P>
     void write_to_array(A& a,const expr<E,T,N,R,P>& e,false_ /*exit*/){
-        a[Nshift+N-1] = e.ref;
+        a[Nshift+N-1].rebind( e.ref.get_ref() ) ; 
         write_to_array<Nshift>(a,e.previous.get_ref());
     }
             
     template<int Nshift,typename A,typename E,typename T,int N,
     	template<typename> class R,typename P>
     void write_to_array(A& a,const expr<E,T,N,R,P>& e,true_ /*exit*/){
-        a[Nshift+N-1] = e.ref;
+        a[Nshift+N-1].rebind( e.ref.get_ref() ) ;
     }
 
     template<int Nshift,typename A,typename E,typename T,int N,
