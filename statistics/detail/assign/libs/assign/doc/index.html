@@ -1637,31 +1637,11 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
 
         <span class="keyword">typedef</span> Implementation-defined result_type;
         <span class="keyword">explicit</span> expr(<span class="keyword">const</span> E& p,T& t);
-        <span class="keyword">template</span>&lt;<span class="keyword">typename</span> E1,<span class="keyword">typename</span> P1,<span class="keyword">bool</span> F1>
-        <span class="keyword">explicit</span> expr(<span class="keyword">const</span> expr<E1,T,N,R,P1,F1>& that);
+        <span class="keyword">template</span>&lt;<span class="keyword">typename</span> E1,<span class="keyword">typename</span> P1 &gt;</span>
+        <span class="keyword">explicit</span> expr(<span class="keyword">const</span> expr&lt;E1,T,N,R,P1>&gt; that);
 
         result_type <span class="keyword">operator</span>()(T& t)<span class="keyword">const</span>;
         
-        <span class="keyword">template</span>&lt;<span class="keyword">int</span> K,<span class="keyword">typename</span> I>
-        Implementation-defined
-        range(I b,I e)<span class="keyword">const</span>;
-
-        <span class="keyword">template</span>&lt;<span class="keyword">int</span> K,<span class="keyword">typename</span> Range>
-        Implementation-defined
-        range(Range& r)<span class="keyword">const</span>;
-
-        <span class="keyword">template</span>&lt;<span class="keyword">int</span> K,<span class="keyword">typename</span> Range>
-        Implementation-defined
-        range(<span class="keyword">const</span> Range& r)<span class="keyword">const</span>;
-
-        <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Range>
-        Implementation-defined
-        range(Range& r);
-
-        <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Range>
-        Implementation-defined
-        range(<span class="keyword">const</span> Range& r);
-
     };  
 
     <span class="keyword">template</span>&lt;<span class="keyword">typename</span> A,<span class="keyword">typename</span> E,<span class="keyword">typename</span> T,<span class="keyword">int</span> N,
