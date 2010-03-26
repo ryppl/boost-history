@@ -1761,8 +1761,26 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
 
   <h3>Proxy object <code>chain_impl::expr&lt;&gt;</code><a name="ref-chain_impl"> </h3>
    
-  Successive calls to this proxy object joins together collections into one whose dereferenced type is one that is convertible
-  to from those of the input ranges. In particular, either range may contain reference wrappers if they meet certain traits requirement.
+  <b>Header</b> <code>&lt;boost/assign/auto_size/range/chain.hpp></code>
+
+    <p>
+  <b>Template parameters</b> 
+  </p>
+
+  <blockquote>
+  	<table cellpadding=5 border=1>
+  	<tr><th class="head">Parameter</th> <th class="head">Description</th>
+  	<tr><td><tt>L</tt></td><td> Implementation-defined </td> </tr>
+  	<tr><td><tt>E</tt></td><td> Implementation-defined </td> </tr>
+  	<tr><td><tt>Rng1</tt></td><td> A range to chain to </td> </tr>
+  	<tr><td><tt>is_first</tt></td><td> boolean constant </td> </tr>
+  	<tr><td><tt>V</tt></td><td> A value type </td> </tr>
+  	<tr><td><tt>R</tt></td><td> A reference type</td> </tr>
+  	<tr><td><tt>add_const</tt></td><td> boolean constant </td> </tr>
+  	</table>
+  </blockquote>
+
+  TODO
 
   <h2><a name="exceptions">Exceptions and exception-safety</a></h2>
   <p>
