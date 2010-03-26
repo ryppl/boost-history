@@ -14,10 +14,11 @@
 #include <boost/array.hpp>
 #include <boost/range.hpp>
 #include <boost/typeof/typeof.hpp>
-#include <boost/assign/list_of.hpp> // converter<>
+//#include <boost/assign/list_of.hpp> // converter<>
 #include <boost/assign/auto_size/comparison_op/range.hpp>
 #include <boost/assign/auto_size/reference_wrapper/has_copy_semantics.hpp> //needed?
 #include <boost/assign/auto_size/array/ref.hpp>
+#include <boost/assign/auto_size/range/converter.hpp>
 
 namespace boost{
 namespace assign{
@@ -55,10 +56,10 @@ namespace auto_size{
     template<typename T,std::size_t N,template<typename> class R,typename D>
     class array_interface 
       :  
-        assign_detail::converter<
-            array_interface<T,N,R,D>,
-            typename array_interface_traits<T,N,R>::const_iterator
-        >, 
+//        assign_detail::converter<
+//            array_interface<T,N,R,D>,
+//            typename array_interface_traits<T,N,R>::const_iterator
+//        >, 
         public range_comparison_op::base_of< 
             array_interface<T,N,R,D>
           >::type
@@ -121,9 +122,12 @@ namespace auto_size{
         operator Container() const
         {
             return 
-            	this-> BOOST_NESTED_TEMPLATE convert_to_container<Container>();
+            	this->convert_to_container<Container>();
         }
 
+        BOOST_ASSIGN_AS_CONVERTER
+
+/*
         template< class Container >
         Container convert_to_container() const
         {
@@ -162,7 +166,7 @@ namespace auto_size{
         {
             return converter_::to_array(a);
         }
-
+*/
         private:
         typedef boost::mpl::bool_<false> false_;
         typedef boost::mpl::bool_<true> true_;
