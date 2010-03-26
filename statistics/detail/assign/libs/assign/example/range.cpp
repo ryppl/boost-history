@@ -50,12 +50,12 @@ void example_range(std::ostream& os)
         v,
         std::ostream_iterator<val_>(os," "));
 
-/*
     os << " chain_l(tmp1)(tmp2)(tmp3) = (";
     boost::copy(
         chain_l(tmp1)(ar5)(tmp3),
         std::ostream_iterator<val_>(os," ")
     ); 
+/*
     os <<  ") becomes (";
     boost::copy(
         chain_l(ar1)(ar2)(ar3),

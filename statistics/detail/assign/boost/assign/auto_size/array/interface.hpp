@@ -118,16 +118,15 @@ namespace auto_size{
 
         public:
 
-        template< class Container >
-        operator Container() const
-        {
-            return 
-            	this->convert_to_container<Container>();
-        }
-
         BOOST_ASSIGN_AS_CONVERTER
 
 /*
+        template< class Container >                                            
+        operator Container() const                                             
+        {                                                                      
+            return                                                             
+            	this->convert_to_container<Container>();                       
+        }                                                                      
         template< class Container >
         Container convert_to_container() const
         {
