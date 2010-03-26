@@ -158,8 +158,10 @@ namespace chain_impl{
 
         // conversion
 
-        // TODO implement all conversion capabilities
-
+        // TODO implement all conversion capabilities. It might be better to
+        // put the code in assign_detail::converter into a macro and expand it
+        // here (valid also for array_interface).
+        
         template< class Container >
         operator Container() const
         {

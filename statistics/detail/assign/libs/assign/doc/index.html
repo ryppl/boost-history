@@ -74,6 +74,7 @@
         <li> Proxy object <a href="#ref-generic_list"><code>generic_list&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-list_inserter"><code>list_inserter&lt;&gt;</code></a></li>
         <li> Proxy object <a href="#ref-static_generic_list"><code>static_generic_list&lt;&gt;</code></a> </li>
+        <li> Proxy object <a href="#ref-comparison_op"><code>range_comparison_op::base_of&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-array_interface"><code>array_interface&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-chain_impl"><code>chain_impl::expr&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-expr"><code>expr&lt;&gt;</code></a> </li>
@@ -1060,7 +1061,7 @@ above, except the fourth argument to <a href="#ref-expr"> <tt>expr&lt;&gt;</tt><
   </blockquote>
 <p>
 Usage for the related functions <code>ref_rebind_list_of()</code> and <code>cref_rebind_list_of()</code> are identical to those
-above, and their result type are modified by replacing <code>ref_copy</code> replaced by <code>ref_rebind</code>.
+above, and their result type are modified by replacing <code>ref_copy</code> by <code>ref_rebind</code>.
 </p>
 
 <p>
@@ -1177,8 +1178,6 @@ The maximum number of arguments to a csv function is <code>BOOST_ASSIGN_CSV_SIZE
   	</table>
   </blockquote>
 
-  <p>To be defined </p>
-
   <b>Usage</b>
   <p>Let <code>r</code> instance of <code>Rng</code>
 
@@ -1201,6 +1200,7 @@ The maximum number of arguments to a csv function is <code>BOOST_ASSIGN_CSV_SIZE
         <li> Proxy object <a href="#ref-generic_list"><code>generic_list&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-list_inserter"><code>list_inserter&lt;&gt;</code></a></li>
         <li> Proxy object <a href="#ref-static_generic_list"><code>static_generic_list&lt;&gt;</code></a> </li>
+        <li> Proxy object <a href="#ref-comparison_op"><code>range_comparison_op::base_of&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-array_interface"><code>array_interface&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-expr"><code>expr&lt;&gt;</code></a> </li>
         <li> Proxy object <a href="#ref-lazy_array"><code>lazy_array&lt;&gt;</code></a> </li>
@@ -1536,6 +1536,9 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
   a reference to <code>list_inserter</code> is returned, we can
   chain argument list together in a very space-efficient manner.
   </p>
+  <h4>Proxy object <code>range_comparison_op::base_of&lt;&gt;</code><a name="ref-range_comparison_op"></h4> 
+
+  TODO
 
   <h4>Proxy object <code>array_interface&lt;&gt;</code><a name="ref-array_interface"></h4> 
   <p>Exposes most of the <code>boost::array&lt;&gt;</code> interface.</p>
@@ -1563,7 +1566,8 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
   	<table cellpadding=5 border=1>
   	<tr><th class="head">Expression</th> <th class="head">Description</th>
   	<tr><td><tt>R&lt;T&gt;</tt></td><td> Reference wrapper </td> </tr>
-  	<tr><td><a href="#ref-converter"><tt>converter&lt&gt</tt></a></td><td> Public base class of <a href="#ref-array_interface"><tt>array_interface&lt&gt</tt></a></td> </tr>
+  	<tr><td><a href="#ref-converter"><tt>converter&lt&gt</tt></a></td><td> Private base class of <a href="#ref-array_interface"><tt>array_interface&lt&gt</tt></a></td> </tr>
+  	<tr><td><a href="#ref-range_comparison_op"><tt>range_comparison_op::base_of&lt&gt</tt></a></td><td> Public base class of <a href="#ref-array_interface"><tt>array_interface&lt&gt</tt></a></td> </tr>
   	</table>
   </blockquote>
 
