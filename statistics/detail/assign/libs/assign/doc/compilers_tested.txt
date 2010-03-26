@@ -35,6 +35,6 @@ March 25th/Win7/GCC 3.4
      check_ref_list_of_converter_set<int>    Passed        10
      check_ref_list_of_adapter_stack<int>    Passed        11 
      check_ref_list_of_adapter_queue<int>    Passed        12
-     check_ref_list_of_chain_convert_r<int>  Failed        13         4
-     check_ref_list_of_chain_convert_l<int>  Failed        14         5
+     check_ref_list_of_chain_r<int>  Failed        13         4
+     check_ref_list_of_chain_l<int>  Failed        14         5
      check_ref_list_of_example2<int>         Passed        15

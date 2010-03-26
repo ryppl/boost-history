@@ -11,7 +11,7 @@
 #include <vector>
 #include <iterator>
 #include <boost/range/algorithm/copy.hpp>
-#include <boost/assign/auto_size/range/chain_convert.hpp>
+#include <boost/assign/auto_size/range/chain.hpp>
 
 #define BOOST_ASSIGN_AS_CHECK_example2                                         \
 {                                                                              \
@@ -19,14 +19,14 @@
     std::vector<int> v, v2;                                                    \
     v  = BOOST_ASSIGN_AS_CHECK_cref3(1,2,3);                                   \
     boost::copy(                                                               \
-        chain_convert_r(                                                       \
+        chain_r(                                                       \
             BOOST_ASSIGN_AS_CHECK_cref1(0)                                     \
         )( v )( v )( BOOST_ASSIGN_AS_CHECK_cref1(4) ),                         \
         std::back_inserter(v2)                                                 \
     );                                                                         \
     BOOST_ASSIGN_CHECK_EQUAL( v2.size() , 8u );                                \
    boost::copy(                                                                \
-       chain_convert_r(v2)(BOOST_ASSIGN_AS_CHECK_cref1(5)),                    \
+       chain_r(v2)(BOOST_ASSIGN_AS_CHECK_cref1(5)),                    \
        std::back_inserter(v)                                                   \
     );                                                                         \
     BOOST_ASSIGN_CHECK_EQUAL( v.size() , 12u );                                \
@@ -34,7 +34,7 @@
     int y = 1;                                                                 \
     BOOST_ASSIGN_CHECK_EQUAL(                                                  \
         boost::size(                                                           \
-            chain_convert_r(                                                   \
+            chain_r(                                                   \
                 BOOST_ASSIGN_AS_CHECK_cref1( x )                               \
             )( v2 )( BOOST_ASSIGN_AS_CHECK_cref1( y ) )                        \
         ),                                                                     \

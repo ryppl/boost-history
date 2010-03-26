@@ -27,8 +27,8 @@
 #include <boost/assign/auto_size/check/converter.hpp>
 #include <boost/assign/auto_size/check/fifo.hpp>
 #include <boost/assign/auto_size/check/lifo.hpp>
-#include <boost/assign/auto_size/check/chain_convert_r.hpp>
-#include <boost/assign/auto_size/check/chain_convert_l.hpp>
+#include <boost/assign/auto_size/check/chain_r.hpp>
+#include <boost/assign/auto_size/check/chain_l.hpp>
 #include <boost/assign/auto_size/check/example2.hpp>
 
 #define BOOST_ASSIGN_AS_CHECK_fun_tpl(suffix)                                  \
@@ -66,10 +66,10 @@ namespace auto_size{                                                           \
     BOOST_ASSIGN_AS_CHECK_adapter_lifo(std::stack<T>)                          \
  BOOST_ASSIGN_AS_CHECK_fun_tpl(adapter_queue)()                                \
     BOOST_ASSIGN_AS_CHECK_adapter_fifo(std::queue<T>)                          \
- BOOST_ASSIGN_AS_CHECK_fun_tpl(chain_convert_r)()                              \
-    BOOST_ASSIGN_AS_CHECK_chain_convert_r                                      \
- BOOST_ASSIGN_AS_CHECK_fun_tpl(chain_convert_l)()                              \
-    BOOST_ASSIGN_AS_CHECK_chain_convert_l                                      \
+ BOOST_ASSIGN_AS_CHECK_fun_tpl(chain_r)()                              \
+    BOOST_ASSIGN_AS_CHECK_chain_r                                      \
+ BOOST_ASSIGN_AS_CHECK_fun_tpl(chain_l)()                              \
+    BOOST_ASSIGN_AS_CHECK_chain_l                                      \
  BOOST_ASSIGN_AS_CHECK_fun_tpl(example2)()                                     \
     BOOST_ASSIGN_AS_CHECK_example2                                             \
 }                                                                              \

@@ -36,8 +36,8 @@ test_suite* init_unit_test_suite( int argc, char* argv[] )                     \
     BOOST_ASSIGN_AS_CHECK_add(converter_set)                                   \
     BOOST_ASSIGN_AS_CHECK_add(adapter_stack)                                   \
     BOOST_ASSIGN_AS_CHECK_add(adapter_queue)                                   \
-    BOOST_ASSIGN_AS_CHECK_add(chain_convert_r)                                 \
-    BOOST_ASSIGN_AS_CHECK_add(chain_convert_l)                                 \
+    BOOST_ASSIGN_AS_CHECK_add(chain_r)                                 \
+    BOOST_ASSIGN_AS_CHECK_add(chain_l)                                 \
     BOOST_ASSIGN_AS_CHECK_add(example2)                                        \
                                                                                \
     return test;                                                               \

@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// assign::detail::auto_size::check_chain_convert_l.hpp                     //
+// assign::detail::auto_size::check_chain_l.hpp                     //
 //                                                                          //
 //  (C) Copyright 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -11,7 +11,7 @@
 #include <boost/array.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <boost/range/algorithm/copy.hpp>
-#include <boost/assign/auto_size/range/chain_convert.hpp>
+#include <boost/assign/auto_size/range/chain.hpp>
 #include <boost/assign/auto_size/check/iterator.hpp>
 #include <boost/assign/auto_size/check/constants.hpp>
 #include <boost/assign/auto_size/check/copy_iterator.hpp>
@@ -20,7 +20,7 @@
 #error
 #endif
 
-#define BOOST_ASSIGN_AS_CHECK_chain_convert_l                                  \
+#define BOOST_ASSIGN_AS_CHECK_chain_l                                  \
 {                                                                              \
     typedef T val_;                                                            \
     using namespace check_constants;                                           \

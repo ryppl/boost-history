@@ -35,7 +35,7 @@
 namespace boost{
 namespace assign{
 namespace detail{
-namespace chain_convert_impl{
+namespace chain_impl{
 
     // ---- template parameters ---- //
 
@@ -172,14 +172,14 @@ namespace chain_convert_impl{
 
     template<typename Rng1,typename V,typename R, bool add_const>
     struct first_expr{ 
-        typedef chain_convert_impl::expr<top_,top_,Rng1,1,V,R,add_const> type; 
+        typedef chain_impl::expr<top_,top_,Rng1,1,V,R,add_const> type; 
         typedef typename basic_chain_impl::sel_const<Rng1,add_const>::type cr1_;
         static type call(cr1_& r1){ return type(r1); }
     };
 
     template<typename Rng1,typename V,
       typename R = typename detail::convert_range_reference<Rng1,V>::type>
-    struct first_expr_l : chain_convert_impl::first_expr<Rng1,V,R,false>{};
+    struct first_expr_l : chain_impl::first_expr<Rng1,V,R,false>{};
 
     // It's necessary to take add_const<V> or else non-rvalues may occur e.g.
     // Rng1 = array<ref_wrapper<int>,1> and V = int, then R = int*.
@@ -187,7 +187,7 @@ namespace chain_convert_impl{
       typename R = typename detail::convert_range_reference<const Rng1,
       typename boost::add_const<V>::type>::type>
     struct first_expr_r 
-        : chain_convert_impl::first_expr<
+        : chain_impl::first_expr<
             Rng1,typename boost::add_const<V>::type,R,true>{};
 
     template<typename Rng1,bool add_const>
@@ -198,75 +198,75 @@ namespace chain_convert_impl{
         typedef typename basic_chain_impl::sel_const<to_,add_const>::type type;
     };
 
-}// chain_convert_l_impl
+}// chain_l_impl
 }// detail
 
     // lvalue
 
     template<typename V,typename R,typename Rng1>
-    typename detail::chain_convert_impl::first_expr_l<Rng1,V,R>::type    
+    typename detail::chain_impl::first_expr_l<Rng1,V,R>::type    
     chain_l(Rng1& r1,
         typename boost::disable_if<boost::is_same<R,use_default> >::type* = 0
     ){
-        typedef detail::chain_convert_impl::first_expr_l<Rng1,V,R> caller_;
+        typedef detail::chain_impl::first_expr_l<Rng1,V,R> caller_;
         return caller_::call(r1);
     }
 
     template<typename V,typename R,typename Rng1>
-    typename detail::chain_convert_impl::first_expr_l<Rng1,V>::type    
+    typename detail::chain_impl::first_expr_l<Rng1,V>::type    
     chain_l(Rng1& r1,
         typename boost::enable_if<boost::is_same<R,use_default> >::type* = 0
     ){
-        typedef detail::chain_convert_impl::first_expr_l<Rng1,V> caller_;
+        typedef detail::chain_impl::first_expr_l<Rng1,V> caller_;
         return caller_::call(r1);
     }
 
     template<typename Rng1>
-    typename detail::chain_convert_impl::first_expr_l<
+    typename detail::chain_impl::first_expr_l<
         Rng1,
-        typename detail::chain_convert_impl::deduce_value<Rng1,false>::type
+        typename detail::chain_impl::deduce_value<Rng1,false>::type
     >::type    
     chain_l(Rng1& r1)
     {
-        typedef typename detail::chain_convert_impl::deduce_value<
+        typedef typename detail::chain_impl::deduce_value<
             Rng1,false
         >::type val_;
-        typedef detail::chain_convert_impl::first_expr_l<Rng1,val_> caller_;
+        typedef detail::chain_impl::first_expr_l<Rng1,val_> caller_;
         return caller_::call(r1);
     }
 
     // rvalue : Warning: if is_const<V> != true, R must be value, not a ref. 
 
     template<typename V,typename R,typename Rng1>
-    typename detail::chain_convert_impl::first_expr_r<Rng1,V,R>::type    
+    typename detail::chain_impl::first_expr_r<Rng1,V,R>::type    
     chain_r(const Rng1& r1,
         typename boost::disable_if<boost::is_same<R,use_default> >::type* = 0
     ){
-        typedef detail::chain_convert_impl::first_expr_r<Rng1,V,R> caller_;
+        typedef detail::chain_impl::first_expr_r<Rng1,V,R> caller_;
         return caller_::call(r1);
     }
 
     template<typename V,typename R,typename Rng1>
-    typename detail::chain_convert_impl::first_expr_r<Rng1,V>::type    
+    typename detail::chain_impl::first_expr_r<Rng1,V>::type    
     chain_r(const Rng1& r1,
         typename boost::enable_if<boost::is_same<R,use_default> >::type* = 0
     ){
-        typedef detail::chain_convert_impl::first_expr_r<Rng1,V> caller_;
+        typedef detail::chain_impl::first_expr_r<Rng1,V> caller_;
         return caller_::call(r1);
     }
 
     template<typename Rng1>
-    typename detail::chain_convert_impl::first_expr_r<
+    typename detail::chain_impl::first_expr_r<
         Rng1,
-        typename detail::chain_convert_impl::deduce_value<
+        typename detail::chain_impl::deduce_value<
             const Rng1,true>::type
     >::type    
     chain_r(const Rng1& r1)
     {
-        typedef typename detail::chain_convert_impl::deduce_value<
+        typedef typename detail::chain_impl::deduce_value<
             const Rng1,true
         >::type val_;
-        typedef detail::chain_convert_impl::first_expr_r<Rng1,val_> caller_;
+        typedef detail::chain_impl::first_expr_r<Rng1,val_> caller_;
         return caller_::call(r1);
     }
 

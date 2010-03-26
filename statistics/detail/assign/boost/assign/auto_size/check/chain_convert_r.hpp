@@ -11,7 +11,7 @@
 #include <boost/array.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <boost/range/algorithm/copy.hpp>
-#include <boost/assign/auto_size/range/chain_convert.hpp>
+#include <boost/assign/auto_size/range/chain.hpp>
 #include <boost/assign/auto_size/check/iterator.hpp>
 #include <boost/assign/auto_size/check/constants.hpp>
 #include <boost/assign/auto_size/check/copy_iterator.hpp>
@@ -20,7 +20,7 @@
 #error
 #endif
 
-#define BOOST_ASSIGN_AS_CHECK_chain_convert_r                                  \
+#define BOOST_ASSIGN_AS_CHECK_chain_r                                  \
 {                                                                              \
     typedef T val_;                                                            \
     using namespace check_constants;                                           \
@@ -37,14 +37,14 @@
     BOOST_AUTO(tmp1,BOOST_ASSIGN_AS_CHECK_ref3(a1,b1,c1));                     \
     BOOST_AUTO(tmp2,BOOST_ASSIGN_AS_CHECK_ref3(d1,e1,f1));                     \
     BOOST_AUTO(tmp3,BOOST_ASSIGN_AS_CHECK_ref2(g1,h1));                        \
-    check_iterator_impl( boost::begin( chain_convert_r(ar1)(ar2)(ar3) ) );     \
-    check_iterator_impl( boost::begin( chain_convert_r(ar1)(ar2)(tmp3) ) );    \
-    check_iterator_impl( boost::begin( chain_convert_r(ar1)(tmp2)(ar3) ) );    \
-    check_iterator_impl( boost::begin( chain_convert_r(ar1)(tmp2)(tmp3) ) );   \
-    check_iterator_impl( boost::begin( chain_convert_r(tmp1)(ar2)(ar3) ) );    \
-    check_iterator_impl( boost::begin( chain_convert_r(tmp1)(ar2)(tmp3) ) );   \
-    check_iterator_impl( boost::begin( chain_convert_r(tmp1)(tmp2)(ar3) ) );   \
-    check_iterator_impl( boost::begin( chain_convert_r(tmp1)(tmp2)(tmp3) ) );  \
+    check_iterator_impl( boost::begin( chain_r(ar1)(ar2)(ar3) ) );     \
+    check_iterator_impl( boost::begin( chain_r(ar1)(ar2)(tmp3) ) );    \
+    check_iterator_impl( boost::begin( chain_r(ar1)(tmp2)(ar3) ) );    \
+    check_iterator_impl( boost::begin( chain_r(ar1)(tmp2)(tmp3) ) );   \
+    check_iterator_impl( boost::begin( chain_r(tmp1)(ar2)(ar3) ) );    \
+    check_iterator_impl( boost::begin( chain_r(tmp1)(ar2)(tmp3) ) );   \
+    check_iterator_impl( boost::begin( chain_r(tmp1)(tmp2)(ar3) ) );   \
+    check_iterator_impl( boost::begin( chain_r(tmp1)(tmp2)(tmp3) ) );  \
 }                                                                              \
 /**/
 

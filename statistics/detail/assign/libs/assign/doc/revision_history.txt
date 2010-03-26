@@ -2,14 +2,14 @@
 //
 // March 21, 2010 : Temporarily disable comparison_op until technical fix. 
 // March 21, 2010 : Removed /chain. Added /traits and /range. Implem of 
-// chain_convert_l now much safer by keeping reference to previous changes and 
+// chain_l now much safer by keeping reference to previous changes and 
 // the current range (similar to ref_list_of).
 // March 19, 2010 : Finished /check
 // March 18, 2010 : Commented out range() from auto_size::expr<>
 // March 16, 2010 : Added a /comparison_op to allow comparison between proxy
 // objects as well as between a proxy object and a range.
 // March 14, 2010 : Made the chain interface similar to list_of as per MPG idea.
-// March 11, 2010 : Added range conversion and a chain_convert function. 
+// March 11, 2010 : Added range conversion and a chain function. 
 // March 8, 2010 : Added a policy dispatcher, csv_policy, to allow a common
 // policy tag for csv and non-csv functions.
 // March 8, 2010 : Made array_interface derive from assign_detail::convert for 
