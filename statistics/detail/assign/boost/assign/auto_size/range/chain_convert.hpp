@@ -40,7 +40,7 @@ namespace chain_convert_impl{
     // ---- template parameters ---- //
 
     // L : converted_range::list<> or empty base if rvalue 
-    // E : range::detail::chain_impl::expr<> 
+    // E : basic_chain_impl::expr<> 
     // Rng1 : a range to chain to 
     // is_first : indicator
     // V : a value conversion parameter
@@ -58,7 +58,7 @@ namespace chain_convert_impl{
         bool is_first,typename V,typename R,bool add_const>
     struct impl_of_expr
     {
-        typedef typename range::detail::chain_impl::sel_const<Rng1,add_const>::type cr1_;
+        typedef typename basic_chain_impl::sel_const<Rng1,add_const>::type cr1_;
         typedef typename 
             detail::result_of::convert_range<cr1_,V,R>::type conv_r1_;
         typedef typename E::template result_impl<conv_r1_>::type type;
@@ -67,9 +67,9 @@ namespace chain_convert_impl{
     template<typename E,typename Rng1,typename V,typename R,bool add_const>
     struct impl_of_expr<E,Rng1,true,V,R,add_const>
     {
-        typedef typename range::detail::chain_impl::sel_const<Rng1,add_const>::type cr1_;
+        typedef typename basic_chain_impl::sel_const<Rng1,add_const>::type cr1_;
         typedef typename result_of::convert_range<cr1_,V,R>::type conv_r1_;
-        typedef typename range::detail::chain_impl::first_expr<conv_r1_,add_const>::type type;
+        typedef typename basic_chain_impl::first_expr<conv_r1_,add_const>::type type;
     };
 
     typedef boost::mpl::void_ top_;
@@ -173,7 +173,7 @@ namespace chain_convert_impl{
     template<typename Rng1,typename V,typename R, bool add_const>
     struct first_expr{ 
         typedef chain_convert_impl::expr<top_,top_,Rng1,1,V,R,add_const> type; 
-        typedef typename range::detail::chain_impl::sel_const<Rng1,add_const>::type cr1_;
+        typedef typename basic_chain_impl::sel_const<Rng1,add_const>::type cr1_;
         static type call(cr1_& r1){ return type(r1); }
     };
 
@@ -195,7 +195,7 @@ namespace chain_convert_impl{
         typedef typename boost::range_reference<Rng1>::type from_;
         typedef typename reference_traits::convert_to<from_>::type ref_to_;
         typedef typename boost::remove_reference<ref_to_>::type to_;
-        typedef typename range::detail::chain_impl::sel_const<to_,add_const>::type type;
+        typedef typename basic_chain_impl::sel_const<to_,add_const>::type type;
     };
 
 }// chain_convert_l_impl
