@@ -1,13 +1,13 @@
 //////////////////////////////////////////////////////////////////////////////
-// assign::detail::auto_size::check_convert_r.hpp                           //
+// assign::detail::auto_size::check_chain_r.hpp                             //
 //                                                                          //
 //  (C) Copyright 2010 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_DETAIL_AUTO_SIZE_CHECK_CHAIN_CONVERT_R_ER_2010_HPP
-#define BOOST_ASSIGN_DETAIL_AUTO_SIZE_CHECK_CHAIN_CONVERT_R_ER_2010_HPP
+#ifndef BOOST_ASSIGN_DETAIL_AUTO_SIZE_CHECK_CHAIN_CONVERT_ER_2010_HPP
+#define BOOST_ASSIGN_DETAIL_AUTO_SIZE_CHECK_CHAIN_CONVERT_ER_2010_HPP
 #include <boost/array.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <boost/range/algorithm/copy.hpp>
