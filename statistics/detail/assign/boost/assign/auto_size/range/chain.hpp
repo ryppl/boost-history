@@ -29,7 +29,7 @@
 
 // Usage : Let r1, r2 and r3 denote lvalue-ranges.
 //     boost::copy( input, boost::begin( chain_l(r1)(r2)(r3) ) );
-// This function does not have the restriction of chain_l that none or all
+// This function does not have the restriction of basic_chain_l that none or all
 // of r1, r2, r3 must be reference wrappers.
 
 namespace boost{
