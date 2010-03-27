@@ -29,18 +29,20 @@ namespace inner_value_traits{
     template<typename T> struct tag_of : tag::nested_parameter{};
 
     namespace meta{ 
-        struct empty{ template<typename T> struct apply{}; };
     
-        template<typename Tag> struct inner_value_of{}; 
+        template<typename Tag> struct inner_value_of
+        {
+            template<typename T> struct apply{};
+        }; 
 
         template<> 
         struct inner_value_of<
             inner_value_traits::tag::nested_parameter
-        > : empty{};
+        >{ template<typename T> struct apply{}; };
 
         template<> 
         template<template<typename> class W,typename T>
-        struct inner_value_of<tag::nested_parameter>
+        struct inner_value_of<inner_value_traits::tag::nested_parameter>
             ::apply< W<T> >{ typedef T type; };
 
         // Specialize further as needed

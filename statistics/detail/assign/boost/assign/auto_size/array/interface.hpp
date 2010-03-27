@@ -34,8 +34,17 @@ namespace auto_size{
         	boost::range_iterator<ref_array_>::type iterator;
         typedef typename boost::range_iterator<
         	const ref_array_>::type const_iterator;
-        typedef typename 
-        	boost::range_size<ref_array_>::type size_type;
+        #ifndef BOOST_MSVC
+		    typedef typename 
+        	    boost::range_size<ref_array_>::type size_type;
+        #endif
+        #ifdef BOOST_MSVC 
+//c:\users\erwann\reposetories\boost\trunk\boost\range\size_type.hpp(66) : error C2872: 'detail' : ambiguous symbol
+//        could be 'boost::detail'  or 'boost::assign::detail'
+            typedef std::size_t size_type; 
+        #endif
+
+
         typedef typename boost::range_difference<
             ref_array_>::type difference_type;
         typedef typename ref_array_::reference reference;
