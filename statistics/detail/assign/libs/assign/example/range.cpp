@@ -36,6 +36,7 @@ void example_range(std::ostream& os)
     typedef boost::array<detail::assign_reference_copy<val_>,1> ref_array_;
 
 {   
+/*
 
     BOOST_AUTO(tmp1,ref_list_of(a)(b));
     BOOST_AUTO(tmp2,ref_list_of(c)(d));
@@ -55,7 +56,6 @@ void example_range(std::ostream& os)
         chain_l(tmp1)(ar5)(tmp3),
         std::ostream_iterator<val_>(os," ")
     ); 
-/*
     os <<  ") becomes (";
     boost::copy(
         chain_l(ar1)(ar2)(ar3),

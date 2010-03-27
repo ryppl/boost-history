@@ -42,7 +42,9 @@ namespace conversion_traits{
     namespace meta{ 
         template<typename T> struct identity : boost::mpl::identity<T>{};
     
-        template<typename Tag> struct convert_to{}; 
+        template<typename Tag> struct convert_to{
+            template<typename T> struct apply{};
+        }; 
 
         template<> 
         struct convert_to<conversion_traits::tag::itself>{

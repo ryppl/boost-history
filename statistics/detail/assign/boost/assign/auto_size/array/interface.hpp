@@ -127,7 +127,7 @@ namespace auto_size{
 
         public:
 
-        BOOST_ASSIGN_AS_CONVERTER
+        BOOST_ASSIGN_AS_CONVERTER(this_)
 
 /*
         template< class Container >                                            
