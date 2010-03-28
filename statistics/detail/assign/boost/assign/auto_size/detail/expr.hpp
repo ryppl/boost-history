@@ -65,7 +65,6 @@ namespace auto_size{
     // N : size of the collection
     // R : reference wrapper around an element
     // P : policy
-    // F : use reference to link to the previous collection 
 
     // ---- describe ---- //
     
