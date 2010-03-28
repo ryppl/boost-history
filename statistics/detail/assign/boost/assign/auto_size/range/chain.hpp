@@ -33,6 +33,8 @@
 // This function does not have the restriction of basic_chain_l that none or all
 // of r1, r2, r3 must be reference wrappers.
 
+// TODO operator| as in RangeEx
+
 namespace boost{
 namespace assign{
 namespace detail{

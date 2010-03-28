@@ -27,6 +27,8 @@
 // Note: r1, r2, r3 cannot be a mixture of ranges of values and ranges of 
 // reference wrappers, hence the prefix 'basic'. 
 
+// TODO operator| as in RangeEx
+
 namespace boost{
 namespace assign{
 namespace detail{
