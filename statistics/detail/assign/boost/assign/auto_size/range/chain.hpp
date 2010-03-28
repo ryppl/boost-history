@@ -90,7 +90,7 @@ namespace chain_impl{
     template<typename L,typename E,typename Rng1,
         bool is_first,typename V,typename R,bool add_const>
     class expr : 
-          sel_list<L,Rng1,is_first,V,R,add_const>::type,
+        sel_list<L,Rng1,is_first,V,R,add_const>::type,
         public impl_of_expr<E,Rng1,is_first,V,R,add_const>::type
     {
         typedef expr<L,E,Rng1,is_first,V,R,add_const> this_;
@@ -157,7 +157,7 @@ namespace chain_impl{
         }
 
         // This macro solves compiler complaints that otherwise occurr if
-        // assign_detail::converter<> is a base
+        // assign_detail::converter<> were a base
         BOOST_ASSIGN_AS_CONVERTER(this_)
         
     };

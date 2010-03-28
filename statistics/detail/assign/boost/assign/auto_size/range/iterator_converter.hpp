@@ -17,6 +17,10 @@
 #include <boost/iterator/iterator_categories.hpp>
 #include <boost/iterator/iterator_traits.hpp>
 
+// Usage:
+//     convert_iterator<V,R>(i)
+//     convert_iterator<V,use_default>(i)
+
 namespace boost{
 namespace assign{
 namespace detail{
