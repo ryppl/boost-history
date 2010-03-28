@@ -53,22 +53,22 @@ namespace detail{
 
 template<class TxMgr,class Iterator>
 struct isolation_unwind_visitor{
-	void operator()(isolation_exception const &iso){
-		typedef typename mpl::deref<Iterator>::type resource_type;
-		if(resource_isolation_exception<resource_type> const *viso=dynamic_cast<resource_isolation_exception<resource_type> const *>(&iso)){
-			viso->template unwind<TxMgr>();
-		}else{
-			isolation_unwind_visitor<TxMgr,typename mpl::next<Iterator>::type> visit;
-			visit(iso);
-		}
-	}
+    void operator()(isolation_exception const &iso){
+        typedef typename mpl::deref<Iterator>::type resource_type;
+        if(resource_isolation_exception<resource_type> const *viso=dynamic_cast<resource_isolation_exception<resource_type> const *>(&iso)){
+            viso->template unwind<TxMgr>();
+        }else{
+            isolation_unwind_visitor<TxMgr,typename mpl::next<Iterator>::type> visit;
+            visit(iso);
+        }
+    }
 };
 
 template<class TxMgr>
 struct isolation_unwind_visitor<TxMgr,typename mpl::end<typename TxMgr::resource_types>::type>{
-	void operator()(isolation_exception const &){
-		BOOST_ASSERT(false);
-	}
+    void operator()(isolation_exception const &){
+        BOOST_ASSERT(false);
+    }
 };
 
 }
@@ -78,15 +78,15 @@ struct isolation_unwind_visitor<TxMgr,typename mpl::end<typename TxMgr::resource
 ///\c isolation_exception is an abstract base class. The derived class
 ///\c resource_isolation_exception can be used to throw this exception.
 struct isolation_exception : transact::exception{
-	///Rethrows the exception if the active transaction is a nested transaction but the isolation exception was caused by a parent transaction of it.
-	template<class TxMgr>
-	void unwind() const{ //pseudo-virtual
-		detail::isolation_unwind_visitor<TxMgr,typename mpl::begin<typename TxMgr::resource_types>::type> visit;
-		visit(*this);
-	}
-	virtual ~isolation_exception()throw (){}
+    ///Rethrows the exception if the active transaction is a nested transaction but the isolation exception was caused by a parent transaction of it.
+    template<class TxMgr>
+    void unwind() const{ //pseudo-virtual
+        detail::isolation_unwind_visitor<TxMgr,typename mpl::begin<typename TxMgr::resource_types>::type> visit;
+        visit(*this);
+    }
+    virtual ~isolation_exception()throw (){}
 protected:
-	isolation_exception(){}
+    isolation_exception(){}
 };
 
 
@@ -96,23 +96,23 @@ protected:
 ///in order to catch isolation exceptions of all resource managers.
 template<class ResMgr>
 struct resource_isolation_exception : isolation_exception{
-	///\brief Constructs a resource_isolation_exception
-	///\param unwind_to A pointer to the transaction that ought to be active when
-	///unwind() returns. Must be a transaction on the nested transaction
-	///stack. If 0, unwind() rethrows the exception until all transactions
-	///including the root transaction are destroyed.
-	explicit resource_isolation_exception(typename ResMgr::transaction *unwind_to)
-		: to(unwind_to){}
-	///\brief Equivalent to <tt>isolation_exception::unwind<TxMgr>()</tt>
-	template<class TxMgr>
-	void unwind() const{ //pseudo-virtual
-		if(this->to){
-			typename ResMgr::transaction &tx=TxMgr::resource_transaction(TxMgr::active_transaction(),typename ResMgr::tag());
-			if(&tx != this->to) throw;
-		}else if(TxMgr::has_active_transaction()) throw;
-	}
+    ///\brief Constructs a resource_isolation_exception
+    ///\param unwind_to A pointer to the transaction that ought to be active when
+    ///unwind() returns. Must be a transaction on the nested transaction
+    ///stack. If 0, unwind() rethrows the exception until all transactions
+    ///including the root transaction are destroyed.
+    explicit resource_isolation_exception(typename ResMgr::transaction *unwind_to)
+        : to(unwind_to){}
+    ///\brief Equivalent to <tt>isolation_exception::unwind<TxMgr>()</tt>
+    template<class TxMgr>
+    void unwind() const{ //pseudo-virtual
+        if(this->to){
+            typename ResMgr::transaction &tx=TxMgr::resource_transaction(TxMgr::active_transaction(),typename ResMgr::tag());
+            if(&tx != this->to) throw;
+        }else if(TxMgr::has_active_transaction()) throw;
+    }
 private:
-	typename ResMgr::transaction *to;
+    typename ResMgr::transaction *to;
 };
 
 }

@@ -21,24 +21,24 @@ class static_thread_specific_ptr;
 template<class T,class Tag>
 class static_thread_specific_ptr<T,Tag,true> : noncopyable{
 private:
-	static_thread_specific_ptr();
+    static_thread_specific_ptr();
 public:
 
 #if ((__GNUC__== 3) && (__GNUC_MINOR__ > 4) || __GNUC__>= 4)
-	static void reset(T *p=0){ ptr=p; }
-	static T *get(){ return ptr; }
+    static void reset(T *p=0){ ptr=p; }
+    static T *get(){ return ptr; }
 private:
-	static __thread T *ptr;
+    static __thread T *ptr;
 };
 
 template<class T,class Tag>
 __thread T *static_thread_specific_ptr<T,Tag,true>::ptr(0);
 
 #elif defined(BOOST_MSVC)
-	static void reset(T *p=0){ ptr=p; }
-	static T *get(){ return ptr; }
+    static void reset(T *p=0){ ptr=p; }
+    static T *get(){ return ptr; }
 private:
-	static __declspec(thread) T *ptr;
+    static __declspec(thread) T *ptr;
 };
 
 template<class T,class Tag>
@@ -46,10 +46,10 @@ __declspec(thread) T *static_thread_specific_ptr<T,Tag,true>::ptr(0);
 
 
 #else
-	static void reset(T *p=0){ ptr.reset(p); }
-	static T *get(){ return ptr.get(); }
+    static void reset(T *p=0){ ptr.reset(p); }
+    static T *get(){ return ptr.get(); }
 private:
-	static thread_specific_ptr<T> ptr;
+    static thread_specific_ptr<T> ptr;
 };
 
 template<class T,class Tag>
@@ -60,12 +60,12 @@ thread_specific_ptr<T> static_thread_specific_ptr<T,Tag,true>::ptr(0); //null de
 template<class T,class Tag>
 class static_thread_specific_ptr<T,Tag,false> : noncopyable{
 private:
-	static_thread_specific_ptr();
+    static_thread_specific_ptr();
 public:
-	static void reset(T *p=0){ ptr=p; }
-	static T *get(){ return ptr; }
+    static void reset(T *p=0){ ptr=p; }
+    static T *get(){ return ptr; }
 private:
-	static T *ptr;
+    static T *ptr;
 };
 
 template<class T,class Tag>

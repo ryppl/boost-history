@@ -13,9 +13,9 @@ namespace transact{
 namespace detail{
 
 struct null_lockable{
-	void lock(){}
-	bool try_lock(){ return true; }
-	void unlock(){}
+    void lock(){}
+    bool try_lock(){ return true; }
+    void unlock(){}
 };
 
 }
@@ -34,35 +34,35 @@ namespace detail{
 
 class combined_mutex{
 public:
-	combined_mutex() : count(-1){
-		this->smutex.lock();
-	}
-	void lock(){
-		int old=this->count.fetch_add(1,boost::memory_order_acquire);
-		if(old >= 0){
-			try{
-				this->smutex.lock();
-			 }catch(...){
-				--this->count;
-				throw;
-			}
-		}
-	}
-	void unlock(){
-		int old=this->count.fetch_sub(1,boost::memory_order_release);
-		BOOST_ASSERT(old >= 0);
-		if(old > 0) this->smutex.unlock();
-	}
-	~combined_mutex(){
-		BOOST_ASSERT(this->count.load() == -1);
-		this->smutex.unlock();
-	}
+    combined_mutex() : count(-1){
+        this->smutex.lock();
+    }
+    void lock(){
+        int old=this->count.fetch_add(1,boost::memory_order_acquire);
+        if(old >= 0){
+            try{
+                this->smutex.lock();
+             }catch(...){
+                --this->count;
+                throw;
+            }
+        }
+    }
+    void unlock(){
+        int old=this->count.fetch_sub(1,boost::memory_order_release);
+        BOOST_ASSERT(old >= 0);
+        if(old > 0) this->smutex.unlock();
+    }
+    ~combined_mutex(){
+        BOOST_ASSERT(this->count.load() == -1);
+        this->smutex.unlock();
+    }
 private:
-	boost::mutex smutex;
-	boost::atomic<int> count;
+    boost::mutex smutex;
+    boost::atomic<int> count;
 };
 
-	
+    
 typedef combined_mutex mutex_type;
 
 
