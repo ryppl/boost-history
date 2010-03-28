@@ -7,7 +7,7 @@
 #ifndef BOOST_TRANSACT_EXCEPTION_HEADER_HPP
 #define BOOST_TRANSACT_EXCEPTION_HEADER_HPP
 
-#include <stdexcept>
+#include <exception>
 #include <boost/mpl/begin.hpp>
 #include <boost/mpl/end.hpp>
 #include <boost/mpl/next.hpp>
@@ -27,8 +27,9 @@ struct recovery_failure : transact::exception{};
 ///\brief Indicates that an internal operation reading from/writing to files failed.
 struct io_failure : transact::exception{};
 
-///\brief Indicates that this operation required an active transaction but there was no active transaction bound for this thread.
-struct no_active_transaction : transact::exception{};
+///\brief Indicates that this operation required a transaction but there was no transaction bound to this thread, or that the operation
+///required an active transaction but the transaction bound to this thread was inactive.
+struct no_transaction : transact::exception{};
 
 ///\brief Indicates an error with regard to connecting a resource to a transaction manager
 struct resource_error : transact::exception{};
@@ -78,13 +79,14 @@ struct isolation_unwind_visitor<TxMgr,typename mpl::end<typename TxMgr::resource
 ///\c isolation_exception is an abstract base class. The derived class
 ///\c resource_isolation_exception can be used to throw this exception.
 struct isolation_exception : transact::exception{
-    ///Rethrows the exception if the active transaction is a nested transaction but the isolation exception was caused by a parent transaction of it.
+    ///Rethrows the exception if the current transaction is a nested transaction but the isolation exception was caused by a parent transaction of it,
+    ///or if the isolation_exception was caused independently of a transaction.
+    ///\pre TxMgr::current_transaction() must be a rolled back transaction
     template<class TxMgr>
     void unwind() const{ //pseudo-virtual
         detail::isolation_unwind_visitor<TxMgr,typename mpl::begin<typename TxMgr::resource_types>::type> visit;
         visit(*this);
     }
-    virtual ~isolation_exception()throw (){}
 protected:
     isolation_exception(){}
 };
@@ -97,22 +99,26 @@ protected:
 template<class ResMgr>
 struct resource_isolation_exception : isolation_exception{
     ///\brief Constructs a resource_isolation_exception
-    ///\param unwind_to A pointer to the transaction that ought to be active when
-    ///unwind() returns. Must be a transaction on the nested transaction
-    ///stack. If 0, unwind() rethrows the exception until all transactions
-    ///including the root transaction are destroyed.
-    explicit resource_isolation_exception(typename ResMgr::transaction *unwind_to)
-        : to(unwind_to){}
+    resource_isolation_exception() : retry(0){}
+
+    ///\brief Constructs a resource_isolation_exception
+    ///\param retry The transaction that caused the isolation_exception and ought to be repeated.
+    ///Must be a transaction on the nested transaction stack.
+    explicit resource_isolation_exception(typename ResMgr::transaction &retry)
+        : retry(&retry){}
+
+    ///Throws: thread_resource_error. no_transaction if \c retry was not on the nested transaction stack or it was removed before unwind() was called.
     ///\brief Equivalent to <tt>isolation_exception::unwind<TxMgr>()</tt>
+    ///\pre TxMgr::current_transaction() must be a rolled back transaction
     template<class TxMgr>
     void unwind() const{ //pseudo-virtual
-        if(this->to){
-            typename ResMgr::transaction &tx=TxMgr::resource_transaction(TxMgr::active_transaction(),typename ResMgr::tag());
-            if(&tx != this->to) throw;
-        }else if(TxMgr::has_active_transaction()) throw;
+        if(this->retry){
+            typename ResMgr::transaction &currenttx=TxMgr::resource_transaction(TxMgr::current_transaction(),typename ResMgr::tag());
+            if(this->retry != &currenttx) throw;
+        }else throw;
     }
 private:
-    typename ResMgr::transaction *to;
+    typename ResMgr::transaction *retry;
 };
 
 }

@@ -25,15 +25,15 @@ template<class TxMgr>
 class basic_transaction : noncopyable{
 public:
     /// Binds the new transaction to this thread.
-    /// If there already is an active transaction, the new transaction will be a nested transaction
-    /// of the active transaction.
+    /// If there already is an current transaction, the new transaction will be a nested transaction
+    /// of the current transaction.
     ///
     /// Throws: \c no_transaction_manager, \c io_failure, \c thread_resource_error,
     /// resource-specific exceptions
     /// thrown by resource managers beginning local transactions.
     /// \brief Constructs a basic_transaction, beginning a new transaction scope
     explicit basic_transaction()
-        : parent(TxMgr::has_active_transaction() ? &TxMgr::active_transaction() : 0)
+        : parent(TxMgr::has_current_transaction() ? &TxMgr::current_transaction() : 0)
         , tx(TxMgr::begin_transaction())
         , done(false){
         TxMgr::bind_transaction(this->tx);
@@ -54,52 +54,29 @@ public:
 #endif
             }
         }
-        try{
-            this->pop();
-        }catch(...){
-#ifndef NDEBUG
-            std::cerr << "ignored exception" << std::endl;
-#endif
-        }
+        //bind_ and unbind_transaction can throw thread_resource_error.
+        //in the unlikely case it is actually thrown, it is not ignored, even though this is a destructor.
+        //if the current transaction cannot be bound correctly all following transactional operations are invalid.
+        //abort() is preferrable to that.
+        if(this->parent) TxMgr::bind_transaction(*this->parent);
+        else TxMgr::unbind_transaction();
     }
 
-    /// If this is a nested transaction, sets the active transaction to the parent transaction.
-    /// If this is a root transaction, resets the active transaction.
-    ///
     /// Throws: \c isolation_exception, \c io_failure, \c thread_resource_error,
     /// resource-specific exceptions thrown by resource managers committing local
     /// transactions.
     /// \brief Commits the transaction.
     void commit(){
         this->done=true;
-        try{
-            TxMgr::commit_transaction(this->tx);
-        }catch(...){
-            this->pop();
-            throw;
-        }
+        TxMgr::commit_transaction(this->tx);
     }
-    /// \cond
-    void commit_(){
-        this->commit();
-    }
-    /// \endcond
 
-    /// If this is a nested transaction, sets the active transaction to the parent transaction.
-    /// If this is a root transaction, resets the active transaction.
-    ///
     /// Throws: \c io_failure, \c thread_resource_error, resource-specific exceptions
     /// thrown by resource managers rolling back transactions.
     /// \brief Unwinds all changes made during this transaction.
     void rollback(){
         this->done=true;
-        try{
-            TxMgr::rollback_transaction(this->tx);
-        }catch(...){
-            this->pop();
-            throw;
-        }
-        this->pop();
+        TxMgr::rollback_transaction(this->tx);
     }
 
     /// Throws: thread_resource_error
@@ -111,21 +88,18 @@ public:
     /// Throws: thread_resource_error
     /// \brief If the current thread is bound to this transaction, unbinds it
     void unbind(){
-        if(TxMgr::has_active_transaction() &&
-            &TxMgr::active_transaction() == &this->tx){
+        if(TxMgr::has_current_transaction() &&
+            &TxMgr::current_transaction() == &this->tx){
             TxMgr::unbind_transaction();
         }
     }
 
-    void restart(){}
+    void restart(){
+        TxMgr::restart_transaction(this->tx);
+    }
 
     /// \cond
 private:
-    void pop(){
-        if(this->parent) TxMgr::bind_transaction(*this->parent);
-        else TxMgr::unbind_transaction();
-    }
-
     typename TxMgr::transaction *parent;
     typename TxMgr::transaction tx;
     bool done;
