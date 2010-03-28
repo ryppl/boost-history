@@ -2,7 +2,7 @@ Platform                Compiler                                Boost version   
 Mac OS X 10.6           gcc 4.2                                 boost_1_41_0    March 25th, 2010    15/15       warning: comparison between signed and unsigned integer expressions
 Ubuntu 9.10             gcc 4.4                                 boost_1_41_0    March 25th, 2010    15/15       warning: comparison between signed and unsigned integer expressions
 Win7-32 V6.1.7100       Mingw/GCC 3.4.2                         boost_1_41_0    March 25th, 2010    10/15       
-Win7-32 V6.1.7100       Visual Studio 2010                      boost_1_41_0    March 1st, 2010     NA
+Win7-32 V6.1.7100       MSVC 2008 Version - Express edition     boost_1_41_0    March 28th, 2010    12/15       The last 3 do not yet compile
 
 Check revision_history.txt to verify that these tests are up to date.
 See patch.txt for requirements.
@@ -35,6 +35,6 @@ March 25th/Win7/GCC 3.4
      check_ref_list_of_converter_set<int>    Passed        10
      check_ref_list_of_adapter_stack<int>    Passed        11 
      check_ref_list_of_adapter_queue<int>    Passed        12
-     check_ref_list_of_chain_r<int>  Failed        13         4
-     check_ref_list_of_chain_l<int>  Failed        14         5
+     check_ref_list_of_chain_r<int>          Failed        13         4
+     check_ref_list_of_chain_l<int>          Failed        14         5
      check_ref_list_of_example2<int>         Passed        15

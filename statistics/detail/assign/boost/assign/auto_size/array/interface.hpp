@@ -129,52 +129,6 @@ namespace auto_size{
 
         BOOST_ASSIGN_AS_CONVERTER(this_)
 
-/*
-        template< class Container >                                            
-        operator Container() const                                             
-        {                                                                      
-            return                                                             
-            	this->convert_to_container<Container>();                       
-        }                                                                      
-        template< class Container >
-        Container convert_to_container() const
-        {
-            return converter_::template convert_to_container<Container>();
-        }
-        
-        template< class Container >
-        Container to_container( Container& c ) const
-        {
-            return converter_::to_container(c);
-        }
-
-        struct result_of_to_adapter{
-            static const converter_ impl;
-            
-            typedef BOOST_TYPEOF_TPL( impl.to_adapter() ) type;
-        
-            // needed bec converter_::adapter_converter is private
-
-        };
-
-        typename result_of_to_adapter::type
-        to_adapter() const
-        {
-            return converter_::to_adapter();
-        }
-
-        template< class Adapter >
-        Adapter to_adapter( Adapter& a ) const
-        {
-            return converter_::to_adapter(a);
-        }
-
-        template< class Array >
-        Array to_array( Array& a ) const
-        {
-            return converter_::to_array(a);
-        }
-*/
         private:
         typedef boost::mpl::bool_<false> false_;
         typedef boost::mpl::bool_<true> true_;

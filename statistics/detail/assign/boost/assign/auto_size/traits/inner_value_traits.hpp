@@ -35,10 +35,12 @@ namespace inner_value_traits{
             template<typename T> struct apply{};
         }; 
 
+        #ifndef BOOST_MSCV
         template<> 
         struct inner_value_of<
             inner_value_traits::tag::nested_parameter
         >{ template<typename T> struct apply{}; };
+        #endif
 
         template<> 
         template<template<typename> class W,typename T>
