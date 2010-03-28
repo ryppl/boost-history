@@ -66,10 +66,10 @@ namespace auto_size{                                                           \
     BOOST_ASSIGN_AS_CHECK_adapter_lifo(std::stack<T>)                          \
  BOOST_ASSIGN_AS_CHECK_fun_tpl(adapter_queue)()                                \
     BOOST_ASSIGN_AS_CHECK_adapter_fifo(std::queue<T>)                          \
- BOOST_ASSIGN_AS_CHECK_fun_tpl(chain_r)()                              \
-    BOOST_ASSIGN_AS_CHECK_chain_r                                      \
- BOOST_ASSIGN_AS_CHECK_fun_tpl(chain_l)()                              \
-    BOOST_ASSIGN_AS_CHECK_chain_l                                      \
+ BOOST_ASSIGN_AS_CHECK_fun_tpl(chain_r)()                                      \
+    BOOST_ASSIGN_AS_CHECK_chain_r                                              \
+ BOOST_ASSIGN_AS_CHECK_fun_tpl(chain_l)()                                      \
+    BOOST_ASSIGN_AS_CHECK_chain_l                                              \
  BOOST_ASSIGN_AS_CHECK_fun_tpl(example2)()                                     \
     BOOST_ASSIGN_AS_CHECK_example2                                             \
 }                                                                              \

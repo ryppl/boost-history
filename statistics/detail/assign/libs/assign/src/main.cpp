@@ -12,7 +12,7 @@ int main (int argc, char * const argv[]) {
     void (*fp)();
     
     {
-        fp = check_ref_list_of_adapter_stack<int>;
+        fp = check_ref_list_of_chain_r<int>;
        (*fp)();
     }
     std::cout << "check_ref_list_of : ok" << std::endl;
