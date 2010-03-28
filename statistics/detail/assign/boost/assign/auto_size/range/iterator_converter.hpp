@@ -65,8 +65,6 @@ struct converted_iterator : boost::iterator_adaptor<
 }; 
 } //detail
 
-struct use_default;
-
 template<typename V,typename R,typename I>
 detail::converted_iterator<I,V,R>
 convert_iterator(
