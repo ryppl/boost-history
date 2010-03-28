@@ -18,7 +18,6 @@
 #include <boost/fusion/include/count_if.hpp>
 #include <boost/fusion/include/at.hpp>
 #include <boost/fusion/include/vector.hpp>
-#include <boost/fusion/include/is_sequence.hpp>
 #include <boost/utility/in_place_factory.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/mpl/vector.hpp>
@@ -26,7 +25,6 @@
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/at.hpp>
-#include <boost/mpl/is_sequence.hpp>
 #include <boost/mpl/map.hpp>
 #include <boost/mpl/range_c.hpp>
 #include <boost/mpl/for_each.hpp>
@@ -112,14 +110,8 @@ class basic_transaction_manager : noncopyable{
 	BOOST_STATIC_ASSERT(Threads || !TThreads);
 private:
 	struct detail{
-		typedef typename mpl::if_<
-			mpl::is_sequence<Resources>,
-			Resources,
-			mpl::vector1<Resources>
-		>::type resource_types;
-
 		typedef typename mpl::transform<
-			typename detail::resource_types,
+			Resources,
 			transact::detail::get_tag<mpl::_1>
 		>::type resource_tags;
 
@@ -128,7 +120,7 @@ private:
 			typedef mpl::pair<typename Resource::tag,Resource> type;
 		};
 		typedef typename mpl::fold<
-			resource_types,
+			Resources,
 			mpl::map0<>,
 			mpl::insert<mpl::_1,make_resource_pair<mpl::_2> >
 		>::type resource_types_by_tag;
@@ -146,7 +138,7 @@ private:
 		struct default_resource{
 			typedef typename mpl::deref<
 				typename mpl::find_if<
-					resource_types,
+					Resources,
 					mpl::contains<get_services<mpl::_1>,Service>
 				>::type
 			>::type::tag type;
@@ -156,7 +148,6 @@ private:
 		class transaction_construct_t{
 			explicit transaction_construct_t(transaction *parent)
 				: parent(parent){}
-			template<class R,bool Th,bool TTh,class L> 
 			friend class basic_transaction_manager;
 			transaction *parent;
 		};
@@ -167,7 +158,6 @@ private:
 				mpl::for_each<resource_tags>(beginner(*this));
 			}
 		private:
-			template<class R,bool Th,bool TTh,class L> 
 			friend class basic_transaction_manager;
 	
 			template<class Resource>
@@ -176,7 +166,7 @@ private:
 			};
 			typedef typename fusion::result_of::as_map<
 				typename mpl::transform<
-					resource_types,
+					Resources,
 					make_resource_transaction_pair<mpl::_1>
 				>::type
 			>::type resource_transactions_type;
@@ -187,7 +177,7 @@ private:
 			typedef typename mpl::if_c<
 				TThreads,
 				transact::detail::mutex_type,
-				transact::detail::null_mutex
+				transact::detail::null_lockable
 			>::type mutex_type;
 	
 			mutex_type mutex;
@@ -201,7 +191,7 @@ private:
 	/// \endcond
 public:
 	typedef typename detail::transaction transaction;
-	typedef typename detail::resource_types resource_types;
+	typedef Resources resource_types;
 	template<class ServiceTag>
 	struct default_resource{
 		typedef typename detail::template default_resource<ServiceTag>::type type;
@@ -434,7 +424,7 @@ private:
 		void prepare(Resource &res,typename Resource::transaction &rtx,mpl::false_){
 			//a resource that does not support two-phase-commit was used
 			//together with other persistent resources
-			throw unsupported_exception();
+			throw unsupported_operation();
 		}
 		transaction &tx;
 	};
@@ -460,7 +450,7 @@ private:
 	};
 	typedef typename fusion::result_of::as_map<
 		typename mpl::transform<
-			resource_types,
+			Resources,
 			make_resource_ptr_pair<mpl::_1>
 		>::type
 	>::type resources_type;

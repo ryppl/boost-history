@@ -33,7 +33,7 @@ private:
 		class transaction_construct_t{
 			explicit transaction_construct_t(transaction *parent)
 				: parent(parent){}
-			template <class R, bool Th> friend class simple_transaction_manager;
+			friend class simple_transaction_manager;
 			friend class transaction;
 			transaction *parent;
 		};
@@ -51,7 +51,7 @@ private:
 				}
 			}
 		private:
-			template <class R, bool Th> friend class simple_transaction_manager;
+			friend class simple_transaction_manager;
 			optional<typename Resource::transaction> rtx;
 			transaction * const parent;
 		};

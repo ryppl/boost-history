@@ -12,7 +12,7 @@ namespace boost{
 namespace transact{
 namespace detail{
 
-struct null_mutex{
+struct null_lockable{
 	void lock(){}
 	bool try_lock(){ return true; }
 	void unlock(){}
@@ -49,7 +49,7 @@ public:
 		}
 	}
 	void unlock(){
-		unsigned int old=this->count.fetch_sub(1,boost::memory_order_release);
+		int old=this->count.fetch_sub(1,boost::memory_order_release);
 		BOOST_ASSERT(old >= 0);
 		if(old > 0) this->smutex.unlock();
 	}

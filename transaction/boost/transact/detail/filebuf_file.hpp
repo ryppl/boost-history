@@ -12,8 +12,10 @@
 #include <boost/mpl/size_t.hpp>
 #include <boost/transact/exception.hpp>
 
+#ifdef BOOST_MSVC
 #pragma warning(push)
 #pragma warning(disable:4996)
+#endif
 
 namespace boost{
 namespace transact{
@@ -43,7 +45,7 @@ public:
 		if(this->buf.pubsync() != 0) throw io_failure();
 	}
 	void sync(){
-		throw unsupported_exception();
+		throw unsupported_operation();
 	}
 private:
 	std::filebuf buf;
@@ -87,6 +89,8 @@ private:
 }
 }
 
+#ifdef BOOST_MSVC
 #pragma warning(pop)
+#endif
 
 #endif

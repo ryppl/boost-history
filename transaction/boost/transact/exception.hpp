@@ -27,12 +27,6 @@ struct recovery_failure : transact::exception{};
 ///\brief Indicates that an internal operation reading from/writing to files failed.
 struct io_failure : transact::exception{};
 
-namespace detail{
-
-struct eof_exception : io_failure{};
-
-}
-
 ///\brief Indicates that this operation required an active transaction but there was no active transaction bound for this thread.
 struct no_active_transaction : transact::exception{};
 
@@ -43,7 +37,7 @@ struct resource_error : transact::exception{};
 struct no_transaction_manager : transact::exception{};
 
 ///\brief Indicates that this operation is not supported by this implementation
-struct unsupported_exception : transact::exception{};
+struct unsupported_operation : transact::exception{};
 
 struct isolation_exception;
 template<class ResMgr>
@@ -96,7 +90,7 @@ protected:
 };
 
 
-///´\brief Indicates that the operation conflicted with another transaction.
+///\brief Indicates that the operation conflicted with another transaction.
 ///
 ///The base class \c isolation_exception should be used to catch this exception,
 ///in order to catch isolation exceptions of all resource managers.

@@ -361,7 +361,7 @@ public:
 	olog_buffer(Log &log,Lockable &lockable)
 		: log(log), lockable(lockable){}
 	template<class T>
-	olog &operator<<(T const &t){
+	olog_buffer &operator<<(T const &t){
 		static std::size_t const size=sizeof(id_type) + sizeof(T);
 		BOOST_STATIC_ASSERT(size <= Size);
 		id_type const id=this->log.template id<T>();	

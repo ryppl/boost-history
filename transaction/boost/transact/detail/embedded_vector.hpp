@@ -217,7 +217,7 @@ private:
 		}catch(...){ ::operator delete(newdata); throw; }
 		this->end_=newbegin + this->size();
 		this->end_storage=newbegin + newcap;
-		::operator delete(this->begin_);
+		if(this->begin() != this->emb_data()) ::operator delete(this->begin_);
 		this->begin_=newbegin;
 	}
 	T *emb_data(){
