@@ -156,7 +156,7 @@ namespace chain_impl{
             );            
         }
 
-        // This macro solves compiler complaints that otherwise occurr if
+        // This macro solves compiler complaints that otherwise would occur if
         // assign_detail::converter<> were a base
         BOOST_ASSIGN_AS_CONVERTER(this_)
         
