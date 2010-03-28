@@ -74,7 +74,6 @@ int main (int argc, char * const argv[]) {
        (*fp)();
     }
     std::cout << "check_ref_list_of : ok" << std::endl;
-/*
     {   // 1
         fp = check_ref_csv_example1<int>;
        (*fp)();
@@ -136,7 +135,6 @@ int main (int argc, char * const argv[]) {
        (*fp)();
     }
     std::cout << "check_ref_csv : ok" << std::endl;
-*/
 
     return 0;
 

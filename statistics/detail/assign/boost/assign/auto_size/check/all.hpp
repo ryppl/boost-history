@@ -6,8 +6,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_DETAIL_AUTO_SIZE_CHECK_ALL_ER_2010_HPP
-#define BOOST_ASSIGN_DETAIL_AUTO_SIZE_CHECK_ALL_ER_2010_HPP
+//#ifndef BOOST_ASSIGN_DETAIL_AUTO_SIZE_CHECK_ALL_ER_2010_HPP
+//#define BOOST_ASSIGN_DETAIL_AUTO_SIZE_CHECK_ALL_ER_2010_HPP
 #include <boost/preprocessor/cat.hpp>
 #include <vector>
 #include <set>
@@ -80,4 +80,4 @@ namespace auto_size{                                                           \
 
 #undef BOOST_ASSIGN_AS_CHECK_fun_tpl
 
-#endif
+//#endif
