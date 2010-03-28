@@ -10,7 +10,11 @@
 #define BOOST_ASSIGN_AUTO_SIZE_REF_LIST_OF_ER_2010_HPP
 #include <boost/assign/auto_size/detail/expr.hpp>
 
-// Returns a collection builder  
+// Usage:
+//    ref_list_of(a)(b)(c)  
+//    ref_list_of<P>(a)(b)(c)  
+//    cref_list_of(a)(b)(c)  
+//    cref_list_of<P>(a)(b)(c)  
 
 namespace boost{
 namespace assign{
