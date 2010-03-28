@@ -1,8 +1,8 @@
-Platform                Compiler                                Boost version   Date Tested         Assertions  Comment
-Mac OS X 10.6           gcc 4.2                                 boost_1_41_0    March 25th, 2010    15/15       warning: comparison between signed and unsigned integer expressions
-Ubuntu 9.10             gcc 4.4                                 boost_1_41_0    March 25th, 2010    15/15       warning: comparison between signed and unsigned integer expressions
-Win7-32 V6.1.7100       Mingw/GCC 3.4.2                         boost_1_41_0    March 25th, 2010    10/15       
-Win7-32 V6.1.7100       MSVC 2008 Version - Express edition     boost_1_41_0    March 28th, 2010    12/15       The last 3 do not yet compile
+Platform                Compiler                                Boost version   Date Tested         Compiles    Assertions  Comment
+Mac OS X 10.6           gcc 4.2                                 boost_1_41_0    March 25th, 2010    15/15       15/15       warning: comparison between signed and unsigned integer expressions
+Ubuntu 9.10             gcc 4.4                                 boost_1_41_0    March 25th, 2010    15/15       15/15       warning: comparison between signed and unsigned integer expressions
+Win7-32 V6.1.7100       Mingw/GCC 3.4.2                         boost_1_41_0    March 25th, 2010    15/15       10/15       Reference wrappers seem to contain garbage.
+Win7-32 V6.1.7100       MSVC 2008 Version - Express edition     boost_1_41_0    March 28th, 2010    12/15       12/12
 
 Check revision_history.txt to verify that these tests are up to date.
 See patch.txt for requirements.
