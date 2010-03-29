@@ -6,8 +6,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ASSIGN_DETAIL_AUTO_SIZE_CHECK_CHAIN_CONVERT_ER_2010_HPP
-#define BOOST_ASSIGN_DETAIL_AUTO_SIZE_CHECK_CHAIN_CONVERT_ER_2010_HPP
+#ifndef BOOST_ASSIGN_DETAIL_AUTO_SIZE_CHECK_CHAIN_R_ER_2010_HPP
+#define BOOST_ASSIGN_DETAIL_AUTO_SIZE_CHECK_CHAIN_R_ER_2010_HPP
 #include <boost/array.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <boost/range/algorithm/copy.hpp>

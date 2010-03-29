@@ -122,7 +122,7 @@ int main (int argc, char * const argv[]) {
         fp = check_ref_csv_adapter_queue<int>;
        (*fp)();
     }
-	{   // 13
+    {   // 13
         fp = check_ref_csv_chain_r<int>;
        (*fp)();
     }
