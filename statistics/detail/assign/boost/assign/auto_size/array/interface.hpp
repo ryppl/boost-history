@@ -59,16 +59,9 @@ namespace auto_size{
     // Valid expression			Result
     // d1.ref_array_impl()		array_interface::ref_array_&
     // d2.ref_array_impl()		array_interface::const ref_array_&
-    //
-    // All non comparison ops are forwarded to converter<>. Comparison ops
-    // are taken care of by range_comparison_op::base_of<>::type. 
     template<typename T,std::size_t N,template<typename> class R,typename D>
     class array_interface 
       :  
-//        assign_detail::converter<
-//            array_interface<T,N,R,D>,
-//            typename array_interface_traits<T,N,R>::const_iterator
-//        >, 
         public range_comparison_op::base_of< 
             array_interface<T,N,R,D>
           >::type
@@ -120,10 +113,9 @@ namespace auto_size{
             return this->assign(val,pred_());
         }
 
-        // converter
         protected:
-        typedef assign_detail::converter<this_,const_iterator> converter_;
-        friend class assign_detail::converter<this_,const_iterator>;
+        //typedef assign_detail::converter<this_,const_iterator> converter_;
+        //friend class assign_detail::converter<this_,const_iterator>;
 
         public:
 

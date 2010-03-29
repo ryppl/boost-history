@@ -21,7 +21,7 @@
 {                                                                              \
     typedef T val_;                                                            \
                                                                                \
-	using namespace boost::assign;                                             \
+    using namespace boost::assign;                                             \
     using namespace check_constants;                                           \
     C elems = BOOST_ASSIGN_AS_CHECK_cref8(a,b,c,d,e,f,g,h);                    \
     check_iterator_impl(boost::begin(elems));                                  \
@@ -32,7 +32,7 @@
 {                                                                              \
     typedef T val_;                                                            \
                                                                                \
-	using namespace boost::assign;                                             \
+    using namespace boost::assign;                                             \
     using namespace check_constants;                                           \
     C elems = BOOST_ASSIGN_AS_CHECK_cref8(a,b,c,d,e,f,g,h);                    \
     check_iterator_sorted_impl(boost::begin(elems));                           \

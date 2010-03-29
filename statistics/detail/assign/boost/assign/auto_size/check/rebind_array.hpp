@@ -22,7 +22,7 @@
          d1 = d, e1 = e, f1 = f;                                               \
     BOOST_AUTO(tmp1,BOOST_ASSIGN_AS_CHECK_ref_rebind3(a1, b1, c1));            \
     BOOST_AUTO(tmp2,BOOST_ASSIGN_AS_CHECK_ref_rebind3(d1, e1, f1));            \
-	tmp1.swap(tmp2);                                                           \
+    tmp1.swap(tmp2);                                                           \
     BOOST_ASSIGN_CHECK_EQUAL( tmp1[0] , d );                                   \
     BOOST_ASSIGN_CHECK_EQUAL( tmp1[1] , e );                                   \
     BOOST_ASSIGN_CHECK_EQUAL( tmp1[2] , f );                                   \
