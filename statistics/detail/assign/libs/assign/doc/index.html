@@ -1664,13 +1664,6 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
    The function <code>write_to_array()</code> is typically used to pass the elements of the collection to the policy, 
    that will be chosen to have the desired interface, usually iterators and conversion operators. 
 </p>   
-<p>   
-   The successive arguments that are passed to the unary operator must be allocated on the stack. 
-   Consequently, this set up is ill-suited for the method <a href="#ref-repeat"><code>range()</code></a> whose argument size, here, must 
-   be specified explicitly, unlike in the remainder of this library. As long as the policy
-   exposes iterators, however, it is interoperable with the function <a href="#ref-chain"><code>chain_l()</code></a> 
-   and <a href="#ref-chain"><code>chain_r()</code></a>, which serve a similar purpose.
-</p>
   
   
   <h3>Proxy object <code>lazy_array&lt;&gt;</code><a name="ref-lazy_array"></h3> 
