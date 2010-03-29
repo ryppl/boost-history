@@ -1,6 +1,17 @@
+//          Copyright Stefan Strasser 2010.
+//      Copyright Vicente J. Botet Escriba 2010.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+
+
+#ifdef _MSC_VER
+#  pragma warning (disable : 4535) // calling _set_se_translator() requires /EHa
+#endif
+
 #include <boost/transact/simple_transaction_manager.hpp>
 #include <boost/mpl/empty_sequence.hpp>
-#include <boost/assert.hpp>
+#include <boost/test/minimal.hpp>
 
 using namespace boost;
 using namespace transact;
@@ -25,7 +36,6 @@ typedef simple_transaction_manager<my_rm> my_tm;
 
 int test(int contextnr){
     my_tm::transaction *txs[5];
-    int retried=-1;
     begin_transaction{
         txs[0]=&my_tm::current_transaction();
         begin_transaction{
@@ -53,13 +63,15 @@ int test(int contextnr){
     }retry{
         return 0;
     }end_retry;
+    return -1;
 }
 
 
-int main(){
+int test_main(int, char *[]){
     my_rm rm;
     my_tm::connect_resource(rm);
     for(int c=0;c<5;++c){
-        BOOST_ASSERT( test(c) == c );
+        BOOST_REQUIRE( test(c) == c );
     }
+    return 0;
 }

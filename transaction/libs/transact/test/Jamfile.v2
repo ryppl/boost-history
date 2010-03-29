@@ -1,0 +1,55 @@
+#
+# Boost.Transact
+# Build script for tests.
+#
+# Copyright (c) 2010 Vicente J. Botet Escriba]
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+# bring in rules for testing
+import testing ;
+
+if ! $(BOOST_ROOT)
+{
+    BOOST_ROOT = [ modules.peek : BOOST_ROOT ] ;
+}
+
+project
+    : requirements
+        #<library>/boost/test//boost_unit_test_framework/<link>static
+        #<library>../build//boost_transact/<link>static
+        
+        <library>/boost/thread//boost_thread/<link>static
+        
+        #<library>/boost/chrono//boost_chrono/<link>static
+        #<library>/boost/system//boost_system/<link>static
+        #<include>.
+        #<include>../../..
+        #<include>$BOOST_ROOT
+        #<threading>multi
+        #<variant>debug
+
+    ;
+
+#rule stm-run ( sources * )
+#{
+#    return
+#    [ run $(sources)  :  :  : <link>static ]
+##    [ run $(sources)  ../../../../libs/thread/build//boost_thread  :  :  :       : $(sources[1]:B)_lib ]
+#    ;
+#}
+
+    alias perf
+    :
+        [ run ../perf/nesting.cpp :  :  : <library>/boost/chrono//boost_chrono <library>/boost/system//boost_system/<link>static <link>static ]
+    ;
+
+    alias tm
+    :
+        [ run transaction_stack_unwind.cpp ]
+    ;
+
+
+    alias all
+        : tm perf
+    ;
