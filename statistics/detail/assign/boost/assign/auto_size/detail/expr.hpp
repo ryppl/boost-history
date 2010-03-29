@@ -32,8 +32,6 @@
 #include <boost/assign/auto_size/detail/fwd_expr.hpp>
 #include <boost/assign/auto_size/array/lazy.hpp>
 
-#include <iostream> // tmp
-
 // Creates a collection of references by deducing the number of arguments
 // at compile time. The functionality is controlled by parameter R which
 // specifies a reference wrapper, and P, an arbitrary policy, usually intended
