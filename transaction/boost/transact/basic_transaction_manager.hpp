@@ -8,42 +8,30 @@
 #define BOOST_TRANSACT_BASIC_TRANSACTION_MANAGER_HEADER_HPP
 
 #include <boost/thread/locks.hpp>
-#include <boost/thread/tss.hpp>
+#include <boost/utility/in_place_factory.hpp>
+#include <boost/static_assert.hpp>
+#include <boost/optional/optional.hpp>
+#include <boost/mpl/transform.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/mpl/at.hpp>
+#include <boost/mpl/map.hpp>
+#include <boost/mpl/for_each.hpp>
+#include <boost/mpl/empty_sequence.hpp>
+#include <boost/mpl/bool.hpp>
+#include <boost/mpl/deref.hpp>
+#include <boost/mpl/find_if.hpp>
+#include <boost/mpl/contains.hpp>
+#include <boost/mpl/insert.hpp>
+#include <boost/mpl/empty.hpp>
+#include <boost/fusion/include/mpl.hpp>
+#include <boost/fusion/include/at.hpp>
+#include <boost/fusion/include/pair.hpp>
+#include <boost/fusion/include/as_map.hpp>
+#include <boost/fusion/include/at_key.hpp>
 #include <boost/transact/detail/mutex.hpp>
 #include <boost/transact/exception.hpp>
 #include <boost/transact/detail/static_tss.hpp>
 #include <boost/transact/resource_manager.hpp>
-#include <boost/type_traits/add_pointer.hpp>
-#include <boost/fusion/include/mpl.hpp>
-#include <boost/fusion/include/as_vector.hpp>
-#include <boost/fusion/include/count_if.hpp>
-#include <boost/fusion/include/at.hpp>
-#include <boost/fusion/include/vector.hpp>
-#include <boost/utility/in_place_factory.hpp>
-#include <boost/static_assert.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/transform.hpp>
-#include <boost/mpl/size.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/mpl/at.hpp>
-#include <boost/mpl/map.hpp>
-#include <boost/mpl/range_c.hpp>
-#include <boost/mpl/for_each.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/mpl/empty_sequence.hpp>
-#include <boost/mpl/bool.hpp>
-#include <boost/mpl/deref.hpp>
-#include <boost/mpl/find.hpp>
-#include <boost/mpl/find_if.hpp>
-#include <boost/mpl/contains.hpp>
-#include <boost/mpl/distance.hpp>
-#include <boost/type_traits/is_same.hpp>
-#include <boost/optional/optional.hpp>
-#include <boost/fusion/include/pair.hpp>
-#include <boost/fusion/include/as_map.hpp>
-#include <boost/fusion/include/at_key.hpp>
-#include <boost/mpl/map.hpp>
-#include <boost/mpl/insert.hpp>
 
 
 namespace boost{
@@ -182,7 +170,7 @@ public:
         transaction * const parent;
 
         typedef typename mpl::if_c<
-            TThreads,
+            TThreads && !mpl::empty<Lazy>::value,
             transact::detail::mutex_type,
             transact::detail::null_lockable
         >::type mutex_type;
