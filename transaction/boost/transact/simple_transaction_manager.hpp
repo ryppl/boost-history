@@ -1,4 +1,5 @@
 //          Copyright Stefan Strasser 2010.
+//      Copyright Vicente J. Botet Escriba 2010.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -77,6 +78,8 @@ public:
         typedef typename Resource::tag type;
     };
 
+    typedef typename Resource::tag resource_tag_t;
+    
     /// \brief Constructs a simple_transaction_manager
     simple_transaction_manager(){}
 
@@ -87,17 +90,17 @@ public:
     }
 
     /// TODO doc, not part of the concept
-    static void disconnect_resource(typename Resource::tag tag=typename Resource::tag()){
+    static void disconnect_resource(resource_tag_t tag= resource_tag_t()){
         res=0;
     }
 
-    static Resource &resource(typename Resource::tag tag=typename Resource::tag()){
+    static Resource &resource(resource_tag_t tag= resource_tag_t()){
         if(res) return *res;
         else throw resource_error();
     }
 
     static typename Resource::transaction &
-    resource_transaction(transaction &tx,typename Resource::tag tag=typename Resource::tag()){
+    resource_transaction(transaction &tx,resource_tag_t tag= resource_tag_t()){
         if(tx.rtx) return *tx.rtx;
         else throw resource_error();
     }
