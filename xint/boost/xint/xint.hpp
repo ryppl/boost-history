@@ -28,8 +28,10 @@ A friendly and intuitive interface. An option for thread-safe operation.
 It has the Boost Software License, Version 1.0. at
 http://www.boost.org/LICENSE_1_0.txt
 
-Documentation is at https://svn.boost.org/svn/boost/sandbox/xint/libs/xint/doc/html/index/html
+Documentation in full as html is at 
+https://svn.boost.org/svn/boost/sandbox/xint/libs/xint/doc/html/index/html
 
+and a pdf version is also available.
 
 */
 //    Copyright 2010 by Chad Nelson
@@ -52,14 +54,14 @@ Documentation is at https://svn.boost.org/svn/boost/sandbox/xint/libs/xint/doc/h
 #include <boost/function.hpp>
 #include <boost/static_assert.hpp>
 
+//! \namespace xint namespace for all extended integer classes and functions.
 namespace xint
-{  //! xint namespace for all extended integer classes and functions.
-
+{  
 ////////////////////////////////////////////////////////////////////////////////
 // The boring-but-necessary preliminary stuff
 
 namespace detail
-{ //! xint implementation details, normal users should not need to use these.
+{ //!  \namespace xint::detail implementation details, normal users should not need to use these.
     typedef boost::uintmax_t doubledigit_t;
     typedef boost::uint_t<std::numeric_limits<doubledigit_t>::digits / 2>::fast
         digit_t;
@@ -89,21 +91,23 @@ class not_a_number;
 // The integer class
 
 class integer
-{  //! \brief the extended integer class.
+{  //! \brief The extended integer class.
+   //! \details 
     public:
-    integer();
-    integer(const integer& b);
-    template <typename T> integer(const T& n);
-    explicit integer(const std::string& str, size_t base=10);
+    integer(); //!< Constructs a default integer, value zero. (Can throw std::overflow_error if not enough memory to construct a new integer).
+    integer(const integer& b); //!< Copy constructs a integer from another integer.
+    //!< (Can throw std::overflow_error if not enough memory to construct a new integer).
+    template <typename T> integer(const T& n); 
+    explicit integer(const std::string& str, size_t base=10); //!< Copy constructs a integer from a digits string (decimal by default).
     explicit integer(const not_a_number&); //!< Constructs an extended integer with the NotANumber value;
     ~integer();
 
-    bool odd() const; //! \returns true if extended integer is odd.
-    bool even() const; //! \returns true if extended integer is even.
-    int  sign() const; //! \returns -1 if extended integer is < 0.
-    bool nan() const; //! \returns true if extended integer is Not-a-Number.
+    bool odd() const; //!< \returns true if extended integer is odd.
+    bool even() const; //!< \returns true if extended integer is even.
+    int  sign() const; //!< \returns -1 if extended integer is < 0.
+    bool nan() const; //!< \returns true if extended integer is Not-a-Number.
 
-    size_t hex_digits() const;
+    size_t hex_digits() const; //!< \returns the number of hex digits to show the integer.
 
     integer& operator=(const integer &c);
 
@@ -126,8 +130,8 @@ class integer
     integer& operator<<=(size_t shift);
     integer& operator>>=(size_t shift);
 
-    static const integer& zero();
-    static const integer& one();
+    static const integer& zero(); //!< Extended integer holding zero.
+    static const integer& one(); //!< Extended integer holding one.
 
     // These are used internally, they're probably not useful outside of the
     // library's functions.
@@ -149,10 +153,9 @@ class integer
     void _attach();
     void _detach();
 
-    static const integer *cZero; //!< Plain integer holding zero.
-    static const integer *cOne; //!< Plain integer holding one.
-
-    detail::data_t *data; //!< raw data representing an extended integer.
+    static const integer *cZero; 
+    static const integer *cOne; 
+    detail::data_t *data; //!< Raw data representing an extended integer.
 };
 
 ////////////////////////////////////////////////////////////////////////////////
