@@ -93,13 +93,13 @@ namespace impl{
            ).value; 
         }
 
-		template<typename Map>
+        template<typename Map>
         typename boost::range_iterator<const Map>::type
-		bound(
-        	const Map& map,
+        bound(
+            const Map& map,
             const sample_type& x
         )const{
-        	return map.upper_bound(x);
+            return map.upper_bound(x);
         }
 
         struct accumulator{
@@ -121,16 +121,16 @@ namespace impl{
 
 namespace tag
 {
-	template<bool Cum>
+    template<bool Cum>
     struct count: boost::accumulators::depends_on<
       	boost::statistics::detail
         	::empirical_distribution::tag::ordered_sample
     >
     {
         struct impl{
-        	template<typename T,typename W>
+            template<typename T,typename W>
             struct apply{
-            	typedef boost::statistics::detail::empirical_distribution
+                typedef boost::statistics::detail::empirical_distribution
                 	::impl::count<T,Cum> type;
             };
         };
@@ -138,12 +138,12 @@ namespace tag
 }
 namespace result_of{
 
-	template<bool Cum,typename AccSet>
+    template<bool Cum,typename AccSet>
     struct count{
     	typedef boost::statistics::detail
         	::empirical_distribution::tag::count<Cum> tag_;
-		 typedef typename 
-         	boost::accumulators::detail::template 
+        typedef typename 
+            boost::accumulators::detail::template 
             	extractor_result<AccSet,tag_>::type type; 
     };
 
@@ -152,8 +152,8 @@ namespace extract
 {
 
 	// Usage : count<Cum>(acc,x)
-  	template<bool Cum,typename AccSet,typename T>
-	typename boost::statistics::detail
+    template<bool Cum,typename AccSet,typename T>
+    typename boost::statistics::detail
     	::empirical_distribution::result_of::template count<Cum,AccSet>::type
   	count(AccSet const& acc,const T& x)
     {
