@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// accumulator::statistics::empirical_distribution::ordered_sample.hpp     	 //
+// accumulator::statistics::empirical_distribution::ordered_sample.hpp       //
 //                                                                           //
 //  Copyright 2010 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -27,13 +27,12 @@ namespace empirical_distribution{
 
 namespace impl{
 
-	// Associates sample values (type T) with their number of occurences in 
+    // Associates sample values (type T) with their number of occurences in 
     // the sample
-	template<typename T>
-	class ordered_sample 
-    		: public boost::accumulators::accumulator_base{
-		typedef std::less<T> comp_;
-		typedef std::size_t size_;
+    template<typename T>
+    class ordered_sample : public boost::accumulators::accumulator_base{
+        typedef std::less<T> comp_;
+        typedef std::size_t size_;
         typedef boost::accumulators::dont_care dont_care_;
         typedef std::map<T,size_,comp_> map_;
 
@@ -41,24 +40,24 @@ namespace impl{
 		
         // See accumulator_set for convention naming sample_type
         typedef T 		sample_type; 
-		typedef size_ 	size_type;	 
+        typedef size_ 	size_type;	 
 
-		// non-const because map::operator[](key) returns a non-const
-		typedef map_& result_type;
+        // non-const because map::operator[](key) returns a non-const
+        typedef map_& result_type;
 
-		ordered_sample(dont_care_){}
+        ordered_sample(dont_care_){}
 
-		template<typename Args>
-		void operator()(const Args& args){
+        template<typename Args>
+        void operator()(const Args& args){
         	++(this->freq[
             		static_cast<T>(
-            			args[boost::accumulators::sample]
-                	)
+                        args[boost::accumulators::sample]
+                    )
                 ]
             );
         }
 		
-		// Returns the entire distribution, represented by a map
+        // Returns the entire distribution, represented by a map
         result_type result(dont_care_)const{
         	return (this->freq); 
         }

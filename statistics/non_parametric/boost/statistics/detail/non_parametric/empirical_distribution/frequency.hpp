@@ -67,7 +67,7 @@ namespace impl{
             size_ n = boost::accumulators::extract_result<tag_n_>( acc );
             return static_cast<T1>(i)/static_cast<T1>(n);
         }
-	};
+    };
     
 }
 
@@ -95,12 +95,12 @@ namespace result_of{
     template<bool Cum,typename T1,typename AccSet>
     struct frequency{
 
-		typedef boost::statistics::detail
+        typedef boost::statistics::detail
         	::empirical_distribution::tag::frequency<Cum,T1> tag_;
-		typedef typename boost::accumulators
+        typedef typename boost::accumulators
         	::detail::template extractor_result<AccSet,tag_>::type type;
 
-	};
+    };
 }
 
 namespace extract
@@ -118,7 +118,7 @@ namespace extract
             acc,
             (boost::accumulators::sample = x)
         );
-  	}
+    }
 
 }
 
