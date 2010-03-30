@@ -35,34 +35,34 @@ namespace kolmogorov_smirnov{
 
 namespace impl{
 
-	// Computes the kolmogorov-statistic for a given reference distribution
-	//
+    // Computes the kolmogorov-statistic for a given reference distribution
+    //
     // Warning : See empirical_distribution::impl::count
 	template<typename T,typename T1>
 	class statistic : public boost::accumulators::accumulator_base{
     	
-		typedef std::size_t size_;
+        typedef std::size_t size_;
         typedef boost::accumulators::dont_care dont_care_;
 
         public:
 
-		statistic(dont_care_){};
+        statistic(dont_care_){};
 
-		typedef size_ size_type;
-		typedef T sample_type;
-		typedef T1 result_type;
+        typedef size_ size_type;
+        typedef T sample_type;
+        typedef T1 result_type;
 
         void operator()(dont_care_)const{}
 
         template<typename Args>
         result_type result(const Args& args) const
         {
-        	typedef T1 val_;
-			typedef boost::accumulators::tag::accumulator tag_acc_;        
-        	typedef boost::accumulators::tag::count tag_n_;
-			typedef boost::statistics::detail::empirical_distribution
+            typedef T1 val_;
+            typedef boost::accumulators::tag::accumulator tag_acc_;        
+            typedef boost::accumulators::tag::count tag_n_;
+            typedef boost::statistics::detail::empirical_distribution
             	::tag::ordered_sample tag_os_;
-			typedef boost::statistics::detail::kolmogorov_smirnov
+            typedef boost::statistics::detail::kolmogorov_smirnov
             	::tag::reference_distribution tag_dist_;
 
             typedef boost::parameter::binding<Args,tag_acc_> bind1_;
@@ -106,7 +106,7 @@ namespace impl{
 
 namespace tag
 {
-	template<typename T1 = double>
+    template<typename T1 = double>
     struct statistic
       : boost::accumulators::depends_on<
       	statistics::detail::empirical_distribution::tag::ordered_sample,
@@ -114,9 +114,9 @@ namespace tag
     >
     {
         struct impl{
-        	template<typename T,typename W>
+            template<typename T,typename W>
             struct apply{
-        		typedef boost::statistics::detail::kolmogorov_smirnov
+                typedef boost::statistics::detail::kolmogorov_smirnov
                 	::impl::statistic<T,T1> type;    	
             };
         };
@@ -130,7 +130,7 @@ namespace result_of{
     	typedef boost::statistics::detail
         	::kolmogorov_smirnov::tag::statistic<T1> tag_;
         typedef typename boost::accumulators::detail::extractor_result<
-        	AccSet,
+            AccSet,
             tag_
         >::type type;
     };
@@ -140,8 +140,8 @@ namespace result_of{
 namespace extract
 {
 
-	// Usage : statistic<T1>(acc,dist)
-  	template<typename T1,typename AccSet,typename D>
+    // Usage : statistic<T1>(acc,dist)
+    template<typename T1,typename AccSet,typename D>
     typename boost::statistics::detail::kolmogorov_smirnov
     	::result_of::template statistic<T1,AccSet>::type
   	statistic(AccSet const& acc,const D& dist)
