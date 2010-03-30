@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// accumulator::statistics::empirical_distribution::count.hpp     			 //
+// accumulator::statistics::empirical_distribution::count.hpp                //
 //                                                                           //
 //  Copyright 2010 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -35,62 +35,62 @@ namespace empirical_distribution{
 namespace impl{
 
 	
-	// Count of occurences matching (Cum = false) a given value or less or equal
+    // Count of occurences matching (Cum = false) a given value or less or equal
     // to that value (Cum = true). 
     // 
     // T can be an integer or a float
     template<typename T,bool Cum,typename Comp = std::less<T> >
 	class count : public boost::accumulators::accumulator_base{
-		typedef Comp comp_;
-		typedef std::size_t size_;
+        typedef Comp comp_;
+        typedef std::size_t size_;
         typedef boost::accumulators::dont_care dont_care_;
 
         public:
 
-		typedef size_ result_type;
+        typedef size_ result_type;
         typedef T sample_type;
 
-		count(dont_care_){}
+        count(dont_care_){}
 
-		void operator()(dont_care_){}
+        void operator()(dont_care_){}
 		
         template<typename Args>
         result_type result(const Args& args)const{
-        	sample_type key = args[boost::accumulators::sample];
-        	typedef typename boost::mpl::bool_<Cum> is_cum_;
+            sample_type key = args[boost::accumulators::sample];
+            typedef typename boost::mpl::bool_<Cum> is_cum_;
             typedef boost::statistics::detail
             	::empirical_distribution::tag::ordered_sample tag_;
-        	return this->result_impl(
-            	boost::accumulators::extract_result<tag_>(
-                	args[boost::accumulators::accumulator]
+            return this->result_impl(
+                boost::accumulators::extract_result<tag_>(
+                    args[boost::accumulators::accumulator]
                 ),
                 key,
                 is_cum_()
             ); 
         }
 
-		private:
+        private:
 		
         template<typename Map>
-		result_type result_impl(
-        	Map& map,
+        result_type result_impl(
+            Map& map,
             const sample_type& key,
             boost::mpl::bool_<false> cum
         )const{
-        	return (map[key]); 
+            return (map[key]); 
         }
 
         template<typename Map>
-		result_type result_impl(
-        	Map& map, 
+        result_type result_impl(
+            Map& map, 
             const sample_type& x,
             boost::mpl::bool_<true> cum
         )const{
-        	return std::for_each(
-            	boost::const_begin(map),
-				this->bound(map,x),
-            	accumulator()
-            ).value; 
+           return std::for_each(
+                boost::const_begin(map),
+                this->bound(map,x),
+                accumulator()
+           ).value; 
         }
 
 		template<typename Map>
@@ -102,11 +102,11 @@ namespace impl{
         	return map.upper_bound(x);
         }
 
-		struct accumulator{
-        	mutable size_ value;
+        struct accumulator{
+            mutable size_ value;
         	
             accumulator():value(0){}
-			accumulator(const accumulator& that)
+            accumulator(const accumulator& that)
             	:value(that.value){}
             
             template<typename Data>
@@ -115,7 +115,7 @@ namespace impl{
             }
         
         };
-	};
+    };
     
 }
 
