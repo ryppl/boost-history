@@ -151,7 +151,7 @@ namespace result_of{
 namespace extract
 {
 
-	// Usage : count<Cum>(acc,x)
+    // Usage : count<Cum>(acc,x)
     template<bool Cum,typename AccSet,typename T>
     typename boost::statistics::detail
     	::empirical_distribution::result_of::template count<Cum,AccSet>::type
