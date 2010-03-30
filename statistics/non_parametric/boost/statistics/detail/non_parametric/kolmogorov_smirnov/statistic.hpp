@@ -144,7 +144,7 @@ namespace extract
     template<typename T1,typename AccSet,typename D>
     typename boost::statistics::detail::kolmogorov_smirnov
     	::result_of::template statistic<T1,AccSet>::type
-  	statistic(AccSet const& acc,const D& dist)
+    statistic(AccSet const& acc,const D& dist)
     {
     	typedef boost::statistics::detail
         	::kolmogorov_smirnov::tag::statistic<T1> the_tag;
