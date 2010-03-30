@@ -25,6 +25,12 @@ Features you need. Modular arithmetic. Bit manipulation functions.
 Cryptographically-secure random and prime number generation.  
 A friendly and intuitive interface. An option for thread-safe operation.
 
+It has the Boost Software License, Version 1.0. at
+http://www.boost.org/LICENSE_1_0.txt
+
+Documentation is at https://svn.boost.org/svn/boost/sandbox/xint/libs/xint/doc/html/index/html
+
+
 */
 //    Copyright 2010 by Chad Nelson
 
