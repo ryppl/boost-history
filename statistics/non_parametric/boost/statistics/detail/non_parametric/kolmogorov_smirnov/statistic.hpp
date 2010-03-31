@@ -35,11 +35,19 @@ namespace kolmogorov_smirnov{
 
 namespace impl{
 
-    // Computes the kolmogorov-statistic for a given reference distribution
+    // Usage:
+    //     namespace ks = kolmogorov_smirnov;
+    //     using namespace math;
+    //     accumulator_set<T,stats<ks::statistic<T1> > acc;
+    //     acc = boost:for_each(samples,acc)
+    //     ks::extract::statistic<T1>(acc,normal_distribution<T1>(0,1));
+    //
+    // Computes the kolmogorov-statistic between the samples and the standard
+    // normal distribution
     //
     // Warning : See empirical_distribution::impl::count
-	template<typename T,typename T1>
-	class statistic : public boost::accumulators::accumulator_base{
+    template<typename T,typename T1>
+    class statistic : public boost::accumulators::accumulator_base{
     	
         typedef std::size_t size_;
         typedef boost::accumulators::dont_care dont_care_;

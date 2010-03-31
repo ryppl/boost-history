@@ -32,7 +32,7 @@ namespace kolmogorov_smirnov{
     //     check_convergence<> check;
     //     check(n_loops,n,n_factor,distribution,random_generator,os);
     // Generates random samples of size { k = n^p : p=1,...,n_loops} and for
-    // each computes the kolmogorov-smirnov statistics. The results are passed
+    // each computes the kolmogorov-smirnov statistic. The results are passed
     // to os.
     template<
     	typename T1 = double,
