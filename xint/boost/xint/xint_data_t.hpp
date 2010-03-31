@@ -32,13 +32,13 @@ namespace detail {
 struct data_t {
     struct QuickDigits {
         // We want at least enough QuickDigits to hold two ints.
-        static const int intbits=std::numeric_limits<unsigned int>::digits;
-        static const int suggested=(2*intbits/bits_per_digit);
-        static const int minimum=3;
-        static const int count=(suggested < minimum ? minimum : suggested);
+        static const size_t intbits=std::numeric_limits<unsigned int>::digits;
+        static const size_t suggested=(2*intbits/bits_per_digit);
+        static const size_t minimum=3;
+        static const size_t count=(suggested < minimum ? minimum : suggested);
     };
 
-    int mLength, mAllocated;
+    size_t mLength, mAllocated;
     digit_t *digits, mQuickDigits[QuickDigits::count];
 
     #if !defined(XINT_SECURE)
@@ -58,10 +58,10 @@ struct data_t {
 
     void attach() { ++mCopies; }
     bool detach() { return (--mCopies==0); }
-    void alloc(int digits, bool copydigits=false);
-    void realloc(int newdigits) { alloc(newdigits, true); }
+    void alloc(size_t digits, bool copydigits=false);
+    void realloc(size_t newdigits) { alloc(newdigits, true); }
     void skipLeadingZeros();
-    void copy(const data_t *c, int extraDigits=0);
+    void copy(const data_t *c, size_t extraDigits=0);
     void zero(digit_t *p, size_t count);
 
     void quickset(digit_t d1, digit_t d2=0, digit_t d3=0);
@@ -75,8 +75,8 @@ struct data_t {
     void subtract(const data_t& subtrahend);
 
     // These are also calculated in place, for maximum speed.
-    void shift_left(int byBits);
-    void shift_right(int byBits);
+    void shift_left(size_t byBits);
+    void shift_right(size_t byBits);
 };
 
 } // namespace detail

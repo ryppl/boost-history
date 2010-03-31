@@ -11,11 +11,18 @@
 \brief Simple demo of xint sending the fibonacci sequence to stream output.
 \details
 
-Fibonacci numbers are a sequence of numbers, starting with the numbers 0 and 1, where each successive number is the sum of the previous two. The first few Fibonacci numbers are:
+Fibonacci numbers are a sequence of numbers, starting with the numbers 0 and 1,
+where each successive number is the sum of the previous two.
+
+The first few Fibonacci numbers are:
 
     0 1 1 2 3 5 8 13 21 34 55 89 144...
 
-You might be curious what the first Fibonacci number is that's too big to calculate using the standard C++ unsigned long type. A brute-force method of calculating this would be problematic, since it might not be possible to tell when it overflows. But with the XInt library, it's child's play.
+You might be curious what the first Fibonacci number is that's too big to calculate
+using the standard C++ unsigned long type. 
+A brute-force method of calculating this would be problematic, 
+since it might not be possible to tell when it overflows.
+But with the XInt library, it's child's play.
 
 If you're not intimately familiar with the Fibonacci sequence,
 and how fast the numbers in it grow, the answer might shock you.
@@ -24,7 +31,7 @@ As you can see, using the XInt library is just like using the native integer typ
 -- except that an xint::integer won't overflow on you
 until you completely exhaust your system's memory. :-)
 
-**/
+*/
 #include <iostream>
 #include <limits>
 

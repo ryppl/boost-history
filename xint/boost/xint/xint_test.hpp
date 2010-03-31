@@ -23,7 +23,6 @@ bool testMultiply();
 bool testDivideMod();
 bool testConvert();
 bool testStreams();
-bool testRandom();
 bool testMontyMultiply();
 bool testMontyPowerMod();
 

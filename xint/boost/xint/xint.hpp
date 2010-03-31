@@ -1,44 +1,16 @@
 
-/*! \brief The Extended Integer (XInt) Library
-   \details
-    A fast, portable C++ library for multi-precision integer math.
+/*
+    The Extended Integer (XInt) Library
+    A fast, portable C++ library for multi-precision integer math
+    Copyright 2010 by Chad Nelson
+
+    Distributed under the Boost Software License, Version 1.0.
+    See accompanying file LICENSE_1_0.txt or copy at
+        http://www.boost.org/LICENSE_1_0.txt
 
     This is the main header file for the library, and the only one that
     programs using it should need to include.
-
-\mainpage  eXtended Integer library.
-
-A C++ library that lets your program handle much, much larger integer numbers
-than the built-in int, long, or even long long types,
-and handle them using the same syntax that C and C++ use for the standard integer types.
-
-Completely portable, written entirely in modern C++,
-with many different types of operating system, compiler, and hardware in mind.
-It will compile cleanly on many operating systems without any changes,
-automatically adapting to whatever native integer sizes are available.
-
-It's fast. Speed of execution takes a back seat to portability,
-so it doesn't include things like assembly-language modules
-to wring every last CPU cycle out of it -- but it's still pretty darn fast.
-
-Features you need. Modular arithmetic. Bit manipulation functions.
-Cryptographically-secure random and prime number generation.  
-A friendly and intuitive interface. An option for thread-safe operation.
-
-It has the Boost Software License, Version 1.0. at
-http://www.boost.org/LICENSE_1_0.txt
-
-Documentation in full as html is at 
-https://svn.boost.org/svn/boost/sandbox/xint/libs/xint/doc/html/index/html
-
-and a pdf version is also available.
-
 */
-//    Copyright 2010 by Chad Nelson
-
-//    Distributed under the Boost Software License, Version 1.0.
-//    See accompanying file LICENSE_1_0.txt or copy at
-//    http://www.boost.org/LICENSE_1_0.txt
 
 #ifndef BOOST_INCLUDED_XINT_H
 #define BOOST_INCLUDED_XINT_H
@@ -52,16 +24,17 @@ and a pdf version is also available.
 #include <boost/integer.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/function.hpp>
+#include <boost/type_traits.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/random/uniform_int.hpp>
+#include <boost/random/variate_generator.hpp>
 
-//! \namespace xint namespace for all extended integer classes and functions.
-namespace xint
-{  
+namespace xint {
+
 ////////////////////////////////////////////////////////////////////////////////
 // The boring-but-necessary preliminary stuff
 
-namespace detail
-{ //!  \namespace xint::detail implementation details, normal users should not need to use these.
+namespace detail {
     typedef boost::uintmax_t doubledigit_t;
     typedef boost::uint_t<std::numeric_limits<doubledigit_t>::digits / 2>::fast
         digit_t;
@@ -76,6 +49,26 @@ namespace detail
 
     struct data_t;
     struct token { };
+
+    struct base_random_generator {
+        typedef unsigned int result_type;
+    };
+
+    template <class T>
+    struct random_generator: public base_random_generator {
+        typedef boost::uniform_int<result_type> dist_t;
+        typedef boost::variate_generator<T&, dist_t> gen_t;
+        random_generator(T& g): gen(g,
+            dist_t((std::numeric_limits<result_type>::min)(),
+                (std::numeric_limits<result_type>::max)())) { }
+        unsigned int operator()() { return gen(); }
+        gen_t gen;
+    };
+
+    typedef boost::function<unsigned int ()> random_t;
+
+    void set_random_generator(random_t fn, base_random_generator *obj);
+    unsigned int get_random();
 } // namespace detail
 
 typedef std::auto_ptr<detail::token> token;
@@ -90,24 +83,28 @@ class not_a_number;
 ////////////////////////////////////////////////////////////////////////////////
 // The integer class
 
-class integer
-{  //! \brief The extended integer class.
-   //! \details 
+class integer {
     public:
-    integer(); //!< Constructs a default integer, value zero. (Can throw std::overflow_error if not enough memory to construct a new integer).
-    integer(const integer& b); //!< Copy constructs a integer from another integer.
-    //!< (Can throw std::overflow_error if not enough memory to construct a new integer).
-    template <typename T> integer(const T& n); 
-    explicit integer(const std::string& str, size_t base=10); //!< Copy constructs a integer from a digits string (decimal by default).
-    explicit integer(const not_a_number&); //!< Constructs an extended integer with the NotANumber value;
+    integer();
+    integer(const integer& b);
+
+    template <typename T> integer(const T& n,
+        typename boost::enable_if<boost::is_integral<T> >::type* = 0,
+        typename boost::enable_if<boost::is_signed<T> >::type* = 0);
+    template <typename T> integer(const T& n,
+        typename boost::enable_if<boost::is_integral<T> >::type* = 0,
+        typename boost::enable_if<boost::is_unsigned<T> >::type* = 0);
+
+    explicit integer(const std::string& str, size_t base=10);
+    explicit integer(const not_a_number&);
     ~integer();
 
-    bool odd() const; //!< \returns true if extended integer is odd.
-    bool even() const; //!< \returns true if extended integer is even.
-    int  sign() const; //!< \returns -1 if extended integer is < 0.
-    bool nan() const; //!< \returns true if extended integer is Not-a-Number.
+    bool odd() const;
+    bool even() const;
+    int  sign() const;
+    bool nan() const; // Tests for Not-a-Number
 
-    size_t hex_digits() const; //!< \returns the number of hex digits to show the integer.
+    size_t hex_digits() const;
 
     integer& operator=(const integer &c);
 
@@ -130,15 +127,12 @@ class integer
     integer& operator<<=(size_t shift);
     integer& operator>>=(size_t shift);
 
-    static const integer& zero(); //!< Extended integer holding zero.
-    static const integer& one(); //!< Extended integer holding one.
+    static const integer& zero();
+    static const integer& one();
 
     // These are used internally, they're probably not useful outside of the
     // library's functions.
-    detail::data_t *_get_data()
-    {  
-      return data; //! \returns raw data representing an extended integer.
-    }
+    detail::data_t *_get_data() { return data; }
     const detail::data_t *_get_data() const { return data; }
     detail::digit_t _get_digit(size_t index) const;
     size_t _get_length() const;
@@ -153,9 +147,32 @@ class integer
     void _attach();
     void _detach();
 
-    static const integer *cZero; 
-    static const integer *cOne; 
-    detail::data_t *data; //!< Raw data representing an extended integer.
+    static const integer *cZero, *cOne;
+
+    detail::data_t *data;
+};
+
+////////////////////////////////////////////////////////////////////////////////
+// The random generator convenience class
+
+class strong_random_generator {
+    public:
+    typedef unsigned int result_type;
+
+    strong_random_generator();
+    ~strong_random_generator();
+    result_type operator()();
+
+    static const bool has_fixed_range;
+    static const result_type min_value;
+    static const result_type max_value;
+    result_type min() const;
+    result_type max() const;
+    double entropy() const;
+
+    private:
+    struct impl_t;
+    impl_t *impl;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -232,14 +249,10 @@ integer invmod(const integer& n, const integer& modulus);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Random number functions
-bool seed_secure();
-void seed_fallback();
-void seed_manual(const std::string& value);
+
+template <typename T> void set_random_generator(T &gen);
 integer random_by_size(size_t sizeInBits, bool highBitOn=false, bool
     lowBitOn=false, bool canBeNegative=false);
-template <typename T> T random();
-template <typename T> T random(const T& lessThanThis);
-template <typename T> T random(const T& lowest, const T& highest);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Prime number functions
@@ -247,31 +260,27 @@ template <typename T> T random(const T& lowest, const T& highest);
 int is_prime(const integer& n, callback_t callback=no_callback);
 integer random_prime(size_t sizeInBits, callback_t callback=no_callback);
 
-} // namespace xint
-
 ////////////////////////////////////////////////////////////////////////////////
-// Global operators for the integer class
+// Operators for the integer class
 
-bool operator!(const xint::integer& n1);
-bool operator<(const xint::integer& n1, const xint::integer& n2);
-bool operator>(const xint::integer& n1, const xint::integer& n2);
-bool operator<=(const xint::integer& n1, const xint::integer& n2);
-bool operator>=(const xint::integer& n1, const xint::integer& n2);
-bool operator==(const xint::integer& n1, const xint::integer& n2);
-bool operator!=(const xint::integer& n1, const xint::integer& n2);
+bool operator!(const integer& n1);
+bool operator<(const integer& n1, const integer& n2);
+bool operator>(const integer& n1, const integer& n2);
+bool operator<=(const integer& n1, const integer& n2);
+bool operator>=(const integer& n1, const integer& n2);
+bool operator==(const integer& n1, const integer& n2);
+bool operator!=(const integer& n1, const integer& n2);
 
-const xint::integer& operator+(const xint::integer& a);
-xint::integer operator-(const xint::integer& a);
-xint::integer operator+(const xint::integer& n1, const xint::integer& n2);
-xint::integer operator-(const xint::integer& n1, const xint::integer& n2);
-xint::integer operator*(const xint::integer& n1, const xint::integer& n2);
-xint::integer operator/(const xint::integer& n1, const xint::integer& n2);
-xint::integer operator%(const xint::integer& n1, const xint::integer& n2);
-xint::integer operator&(const xint::integer& n1, const xint::integer& n2);
-xint::integer operator|(const xint::integer& n1, const xint::integer& n2);
-xint::integer operator^(const xint::integer& n1, const xint::integer& n2);
-
-namespace xint {
+const integer& operator+(const integer& a);
+integer operator-(const integer& a);
+integer operator+(const integer& n1, const integer& n2);
+integer operator-(const integer& n1, const integer& n2);
+integer operator*(const integer& n1, const integer& n2);
+integer operator/(const integer& n1, const integer& n2);
+integer operator%(const integer& n1, const integer& n2);
+integer operator&(const integer& n1, const integer& n2);
+integer operator|(const integer& n1, const integer& n2);
+integer operator^(const integer& n1, const integer& n2);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Exception classes
@@ -300,6 +309,12 @@ class divide_by_zero: public std::invalid_argument {
         invalid_argument(what) { }
 };
 
+class cannot_represent: public std::invalid_argument {
+    public:
+    cannot_represent(const std::string& what="cannot represent the requested "
+        "value"): invalid_argument(what) { }
+};
+
 class too_big: public std::range_error {
     public:
     too_big(const std::string& what="value out of range for requested "
@@ -312,31 +327,48 @@ class not_a_number: public std::runtime_error {
         runtime_error(what) { }
 };
 
+class no_strong_random: public std::runtime_error {
+    public:
+    no_strong_random(const std::string& what="system does not have a strong "
+        "random generator"): runtime_error(what) { }
+};
+
+class overflow_error: public std::overflow_error {
+    public:
+    overflow_error(const std::string& what="overflow error in XInt library"):
+        std::overflow_error(what) { }
+};
+
 ////////////////////////////////////////////////////////////////////////////////
 // Template function definitions
 
-template <typename T>
-integer::integer(const T& n) {
-    if (std::numeric_limits<T>::is_signed) {
-        if (n >= 0) {
-            if (static_cast<T>(n & detail::digit_mask) == n)
-                _init(detail::digit_t(n));
-            else _init(boost::uintmax_t(n));
-        } else if (n == (std::numeric_limits<T>::min)()) {
-            // Have to treat the minimum number carefully, because -n is not
-            // what you'd think it is.
-            _init(boost::uintmax_t(-(n+1)));
-            _set_negative(true);
-            --(*this);
-        } else {
-            _init(boost::uintmax_t(-n));
-            _set_negative(true);
-        }
-    } else {
+template <typename T> integer::integer(const T& n,
+    typename boost::enable_if<boost::is_integral<T> >::type*,
+    typename boost::enable_if<boost::is_signed<T> >::type*)
+{
+    if (n >= 0) {
         if (static_cast<T>(n & detail::digit_mask) == n)
             _init(detail::digit_t(n));
         else _init(boost::uintmax_t(n));
+    } else if (n == (std::numeric_limits<T>::min)()) {
+        // Have to treat the minimum number carefully, because -n is not
+        // what you'd think it is.
+        _init(boost::uintmax_t(-(n+1)));
+        _set_negative(true);
+        --(*this);
+    } else {
+        _init(boost::uintmax_t(-n));
+        _set_negative(true);
     }
+}
+
+template <typename T> integer::integer(const T& n,
+    typename boost::enable_if<boost::is_integral<T> >::type*,
+    typename boost::enable_if<boost::is_unsigned<T> >::type*)
+{
+    if (static_cast<T>(n & detail::digit_mask) == n)
+        _init(detail::digit_t(n));
+    else _init(boost::uintmax_t(n));
 }
 
 template <typename T>
@@ -347,8 +379,8 @@ T to(const integer& n) {
             throw too_big("value out of range for requested conversion");
 
     T rval=0;
-    int len=n._get_length();
-    for (int x=0; x<len; ++x)
+    size_t len=n._get_length();
+    for (size_t x=0; x<len; ++x)
         rval=static_cast<T>((rval * detail::digit_overflowbit)
             + n._get_digit(len-x-1));
     if (n.sign() < 0) rval *= -1;
@@ -356,26 +388,10 @@ T to(const integer& n) {
 }
 
 template <typename T>
-T random() {
-    return random((std::numeric_limits<T>::min)(),
-        (std::numeric_limits<T>::max)());
+void set_random_generator(T &gen) {
+    detail::random_generator<T> *obj=new detail::random_generator<T>(gen);
+    detail::set_random_generator(*obj, obj);
 }
-
-template <typename T>
-T random(const T& lessThanThis) {
-    return random(0, lessThanThis-1);
-}
-
-template <typename T>
-T random(const T& lowest, const T& highest) {
-    integer range(integer(highest)-lowest+1);
-    return to<T>(lowest+(random_by_size(std::numeric_limits<T>::digits+1)
-        % range));
-}
-
-// Customization for random integer within a range
-template <>
-integer random<integer>(const integer& lowest, const integer& highest);
 
 template <typename charT, typename traits>
 inline std::basic_ostream<charT,traits>& operator<<(std::basic_ostream<charT,
