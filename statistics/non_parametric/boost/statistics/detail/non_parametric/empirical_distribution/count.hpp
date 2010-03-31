@@ -32,12 +32,16 @@ namespace statistics{
 namespace detail{
 namespace empirical_distribution{
 
+    // Usage:
+    //     namespace ns = empirical_distribution;
+    //     accumulator_set<T,stats<ns::tag::count<Cum> > > acc;
+    //     acc = boost:for_each(samples,acc);
+    //     ns::extract::count<Cum>(acc,x);
+    // The result of the last statement is number of observations matching (less
+    //  than) x in the samples if Cum = false (true).
+
 namespace impl{
 
-	
-    // Count of occurences matching (Cum = false) a given value or less or equal
-    // to that value (Cum = true). 
-    // 
     // T can be an integer or a float
     template<typename T,bool Cum,typename Comp = std::less<T> >
 	class count : public boost::accumulators::accumulator_base{

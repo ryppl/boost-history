@@ -33,17 +33,16 @@ namespace statistics{
 namespace detail{
 namespace kolmogorov_smirnov{
 
-namespace impl{
-
     // Usage:
-    //     namespace ks = kolmogorov_smirnov;
-    //     using namespace math;
-    //     accumulator_set<T,stats<ks::statistic<T1> > acc;
-    //     acc = boost:for_each(samples,acc)
-    //     ks::extract::statistic<T1>(acc,normal_distribution<T1>(0,1));
+    //     namespace ns = kolmogorov_smirnov;
+    //     accumulator_set<T,stats<ns::tag::statistic<T1> > acc;
+    //     acc = boost:for_each(samples,acc);
+    //     ns::extract::statistic<T1>(acc,normal_distribution<T1>(0,1));
     // In this example, the kolmogorov-statistic between the samples and the 
     // standard normal distribution is computed.
-    //
+
+namespace impl{
+
     // Warning : See empirical_distribution::impl::count
     template<typename T,typename T1>
     class statistic : public boost::accumulators::accumulator_base{

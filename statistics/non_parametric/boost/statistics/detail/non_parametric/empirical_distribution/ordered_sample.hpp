@@ -25,10 +25,16 @@ namespace statistics{
 namespace detail{
 namespace empirical_distribution{
 
+    // Usage:
+    //     namespace ns = empirical_distribution;
+    //     accumulator_set<T,stats<ns::tag::ordered_sample> > acc;
+    //     acc = boost:for_each(samples,acc);
+    //     ns::extract::ordered_sample(acc);
+    // The result of the last statement is a sorted map associating each value 
+    // in the sample (of type T) with their number of occurences in the sample.
+
 namespace impl{
 
-    // Associates sample values (type T) with their number of occurences in 
-    // the sample
     template<typename T>
     class ordered_sample : public boost::accumulators::accumulator_base{
         typedef std::less<T> comp_;
@@ -59,10 +65,10 @@ namespace impl{
 		
         // Returns the entire distribution, represented by a map
         result_type result(dont_care_)const{
-        	return (this->freq); 
+            return (this->freq); 
         }
 
-		private:
+        private:
         mutable map_ freq;
 	};
     

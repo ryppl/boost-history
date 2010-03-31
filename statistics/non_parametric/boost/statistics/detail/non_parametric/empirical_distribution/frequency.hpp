@@ -30,6 +30,14 @@ namespace statistics{
 namespace detail{
 namespace empirical_distribution{
 
+    // Usage:
+    //     namespace ns = empirical_distribution;
+    //     accumulator_set<T,stats<ns::tag::count<Cum> > > acc;
+    //     acc = boost:for_each(samples,acc);
+    //     ns::extract::count<Cum>(acc,x);
+    // The result of the last statement is the % of observation matching (less 
+    // than) x in the samples if Cum = false (true).
+
 namespace impl{
 
     // Frequency as percentage of the sample size 
