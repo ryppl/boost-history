@@ -14,6 +14,10 @@
 #include "../xint.hpp"
 #include "../xint_data_t.hpp"
 
+#ifdef XINT_THREADSAFE
+    #define XINT_DISABLE_COPY_ON_WRITE
+#endif
+
 namespace xint {
 
 const integer *integer::cZero=0, *integer::cOne=0;
@@ -44,14 +48,14 @@ void integer::_init(detail::digit_t init) {
     try {
         data=new detail::data_t(init);
     } catch (std::bad_alloc&) {
-        throw std::overflow_error("Out of memory allocating xint::integer");
+        throw xint::overflow_error("Out of memory allocating xint::integer");
     }
     _attach();
 }
 
 void integer::_init(const integer &c) {
-    #ifdef XINT_THREADSAFE
-        data=(c.data ? new data_t(c.data) : 0);
+    #ifdef XINT_DISABLE_COPY_ON_WRITE
+        data=(c.data ? new detail::data_t(c.data) : 0);
     #else
         data=c.data;
     #endif
@@ -65,7 +69,7 @@ void integer::_init(boost::uintmax_t n) {
     try {
         data=new detail::data_t;
     } catch (std::bad_alloc&) {
-        throw std::overflow_error("Out of memory allocating xint::integer");
+        throw xint::overflow_error("Out of memory allocating xint::integer");
     }
     _attach();
 
@@ -94,7 +98,7 @@ void integer::_make_unique() {
             _attach();
         }
     } catch (std::bad_alloc&) {
-        throw std::overflow_error("Out of memory allocating xint::integer");
+        throw xint::overflow_error("Out of memory allocating xint::integer");
     }
 }
 
@@ -157,8 +161,8 @@ integer& integer::operator-=(const integer& subtrahend) {
 
 integer& integer::operator=(const integer &c) {
     _detach();
-    #ifdef XINT_THREADSAFE
-        data=(c.data ? new data_t(c.data) : 0);
+    #ifdef XINT_DISABLE_COPY_ON_WRITE
+        data=(c.data ? new detail::data_t(c.data) : 0);
     #else
         data=c.data;
     #endif

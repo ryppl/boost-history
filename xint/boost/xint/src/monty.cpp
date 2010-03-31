@@ -84,10 +84,10 @@ integer montgomeryMultiplyMod(const integer& a, const integer& b, const integer&
     // nPrime0 is nPrime mod B, or digit zero of nPrime
 
     const integer B(digit_overflowbit);
-    const int L(n._get_length()), L1(L-1);
+    const size_t L(n._get_length()), L1(L-1);
 
     integer t=a*b;
-    int i=0;
+    size_t i=0;
 
     do {
         digit_t mi=digit_t(doubledigit_t(t._get_digit(i))*nPrime0);
@@ -166,7 +166,7 @@ vxint_t precalculateOddPowersOfAa(const integer& a, const integer&
     integer aa=a*r%n, aSquared=a*a%n;
 
     vxint_t rval;
-    rval.reserve(ddPowerOfTwo(k));
+    rval.reserve(size_t(ddPowerOfTwo(k)));
     rval.push_back(integer::one());     // Anything to the zeroth power is one
     rval.push_back(aa);                 // Anything to the first power is itself
 
@@ -253,7 +253,7 @@ integer montgomeryPowerMod(const integer& a, const integer& e, const integer& n)
         } else {
             std::pair<int, int> tu=tuTable[i];
 
-            int s=k-tu.first;
+            size_t s=k-tu.first;
             while (s-- > 0) pp=montgomeryMultiplyMod(pp, pp, n, nPrime0);
 
             pp=montgomeryMultiplyMod(pp, oddPowersOfAa[tu.second], n, nPrime0);

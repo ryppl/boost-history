@@ -51,15 +51,15 @@ integer powmod(const integer& n, const integer& exponent, const integer&
     } else {
         integer p(abs(n));
 
-        int length=exponent._get_length(), lastBitCount=0;
+        size_t length=exponent._get_length(), lastBitCount=0;
         detail::digit_t ee(exponent._get_digit(length-1));
         while (ee != 0) { ee >>= 1; ++lastBitCount; }
 
-        for (int eIndex=0; eIndex < length; ++eIndex) {
+        for (size_t eIndex=0; eIndex < length; ++eIndex) {
             detail::digit_t e(exponent._get_digit(eIndex));
 
-            int bitCount(eIndex == length-1 ? lastBitCount :
-                detail::bits_per_digit);
+            int bitCount(int(eIndex == length-1 ? lastBitCount :
+                detail::bits_per_digit));
             while (bitCount-- > 0) {
                 if (e & 0x01) answer=mulmod(answer, p, modulus);
                 p=sqrmod(p, modulus);

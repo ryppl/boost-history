@@ -46,7 +46,7 @@ integer sqr(const integer& n) {
     std::vector<doubledigit_t> a(ndata->mLength*2+1, 0);
     doubledigit_t *adigit=&a[0];
 
-    int i, j;
+    size_t i, j;
     integer addend;
     data_t *addenddata=addend._get_data();
     addenddata->alloc(ndata->mLength*2+1);
@@ -86,15 +86,15 @@ integer sqr(const integer& n) {
 integer pow(const integer& n, const integer& exponent) {
     bool neg=(n.sign() < 0 && exponent.odd());
 
-    int length=exponent._get_length(), lastBitCount=0;
+    size_t length=exponent._get_length(), lastBitCount=0;
     digit_t ee(exponent._get_digit(length-1));
     while (ee != 0) { ee >>= 1; ++lastBitCount; }
 
     integer p(abs(n)), answer=integer::one();
-    for (int eIndex=0; eIndex < length; ++eIndex) {
+    for (size_t eIndex=0; eIndex < length; ++eIndex) {
         digit_t e(exponent._get_digit(eIndex));
 
-        int bitCount(eIndex == length-1 ? lastBitCount : bits_per_digit);
+        int bitCount(int(eIndex == length-1 ? lastBitCount : bits_per_digit));
         while (bitCount-- > 0) {
             if (e & 0x01) answer*=p;
             p=sqr(p);

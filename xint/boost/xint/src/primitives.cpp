@@ -33,58 +33,45 @@ integer negate(const integer& _n) {
 }
 
 integer add(const integer& n1, const integer& n2) {
-    if (n1.sign()==0) return n2;
-    if (n2.sign()==0) return n1;
-
-    bool swapped=false;
-    const data_t *n1data=n1._get_data(), *n2data=n2._get_data();
-    if (n1data->mLength < n2data->mLength) { swapped=true; std::swap(n1data, n2data); }
-
-    integer r;
-    data_t *rdata=r._get_data();
-    rdata->copy(n1data, 1);
-
-    if (n1.sign() != n2.sign()) {
-        int level=n2data->mLength;
-
-        integer _n2(swapped ? n1 : n2);
-        _n2._make_unique();
-        _n2._get_data()->invert();
-
-        rdata->add(_n2._get_data());
-
-        if (rdata->mLength > level) {
-            --rdata->digits[level];
-            rdata->skipLeadingZeros();
-        } else rdata->invert();
+    int sign1=n1.sign(), sign2=n2.sign();
+    if (sign1 != sign2) {
+        if (sign1==0) return n2;
+        else if (sign2==0) return n1;
+        else return subtract(n1, -n2);
     } else {
-        rdata->add(*n2data);
-    }
-    return r;
-}
+        const data_t *n1data=n1._get_data(), *n2data=n2._get_data();
+        if (n1data->mLength < n2data->mLength) std::swap(n1data, n2data);
 
-integer subtract(const integer& n1, const integer& n2) {
-    if ((n1.sign() < 0) != (n2.sign() < 0)) {
-        return add(n1, -n2);
-    } else if (n1.sign() < 0) {
-        return -subtract(-n1, -n2);
-    }
-
-    // Signs are both guaranteed positive now.
-
-    if (n1 < n2) {
-        return -subtract(n2, n1);
-    } else {
         integer r;
         data_t *rdata=r._get_data();
-        rdata->copy(n1._get_data());
-        rdata->subtract(*n2._get_data());
+        rdata->copy(n1data, 1);
+        rdata->add(*n2data);
         return r;
     }
 }
 
+integer subtract(const integer& n1, const integer& n2) {
+    int sign1=n1.sign(), sign2=n2.sign();
+    if (sign1 != sign2) {
+        if (sign1 == 0) return -n2;
+        else if (sign2 == 0) return n1;
+        else return add(n1, -n2);
+    } else {
+        bool invert=(sign1 == (n1 < n2 ? 1 : -1));
+        const data_t *n1data=n1._get_data(), *n2data=n2._get_data();
+        if (invert) std::swap(n1data, n2data);
+
+        integer r;
+        data_t *rdata=r._get_data();
+        rdata->copy(n1data);
+        rdata->subtract(*n2data);
+        return (invert ? -r : r);
+    }
+}
+
 integer multiply(const integer& n, const integer& by) {
-    if (n.sign()==0 || by.sign()==0) return integer::zero();
+    int nsign=n.sign(), bysign=by.sign();
+    if (nsign==0 || bysign==0) return integer::zero();
 
     const data_t *ndata=n._get_data(), *bydata=by._get_data();
     if (ndata == bydata) return sqr(n);
@@ -123,7 +110,7 @@ integer multiply(const integer& n, const integer& by) {
         }
     }
 
-    answer._set_negative(n.sign() != by.sign());
+    answer._set_negative(nsign != bysign);
     answer._get_data()->skipLeadingZeros();
     return answer;
 }
@@ -142,7 +129,7 @@ std::pair<integer, integer> divideBySingleDigit(const integer& d1, digit_t d2) {
     const doubledigit_t lomask(digit_mask);
     const doubledigit_t himask(doubledigit_t(digit_mask) << bits_per_digit);
 
-    int m = d1data->mLength - 1;
+    int m = int(d1data->mLength) - 1;
     const digit_t *d1p=d1data->digits+m;
     digit_t *qp=qdata->digits+m;
     for (int i = m; i >= 0; --i, --d1p, --qp) {
@@ -161,7 +148,7 @@ std::pair<integer, integer> divideBySingleDigit(const integer& d1, digit_t d2) {
 std::pair<integer, integer> subDivide(integer d1, integer d2) {
     const data_t *ndata=d1._get_data(), *bydata=d2._get_data();
     const digit_t *nDigits = ndata->digits, *byDigits = bydata->digits;
-    int nMSD = ndata->mLength-1, byMSD = bydata->mLength-1;
+    size_t nMSD = ndata->mLength-1, byMSD = bydata->mLength-1;
 
     // The normalization step
     digit_t d = static_cast<digit_t>(digit_overflowbit /
@@ -186,7 +173,7 @@ std::pair<integer, integer> subDivide(integer d1, integer d2) {
     // has the same number of digits as the divisor; if what remains is greater
     // than the divisor, then we start there, otherwise that one's zero and we
     // start on the next lower one.
-    int highestQuotientDigit=(nMSD - byMSD);
+    size_t highestQuotientDigit=(nMSD - byMSD);
     integer nTest(d1);
     nTest -= integer::one();
     nTest >>= (bits_per_digit * highestQuotientDigit);
@@ -196,7 +183,7 @@ std::pair<integer, integer> subDivide(integer d1, integer d2) {
     data_t *qdata=quotient._get_data();
     qdata->alloc(highestQuotientDigit + 1);
 
-    for (int j = highestQuotientDigit; j >= 0; --j) {
+    for (int j = int(highestQuotientDigit); j >= 0; --j) {
         doubledigit_t q = (nDigits[nMSD] > byDigits[byMSD] ?
             doubledigit_t(nDigits[nMSD]) / byDigits[byMSD] :
             ((doubledigit_t(nDigits[nMSD]) << bits_per_digit) +

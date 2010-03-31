@@ -45,7 +45,7 @@ data_t::data_t(data_t *c) {
                 digits=&mStorage[0];
             #endif
         } catch (std::bad_alloc&) {
-            throw std::overflow_error("Out of memory allocating xint::integer");
+            throw xint::overflow_error("Out of memory allocating xint::integer");
         }
     }
     memcpy(digits, c->digits, mLength*sizeof(digit_t));
@@ -82,7 +82,7 @@ void data_t::quickset(digit_t d1, digit_t d2, digit_t d3) {
     skipLeadingZeros();
 }
 
-void data_t::alloc(int newcount, bool copydigits) {
+void data_t::alloc(size_t newcount, bool copydigits) {
     if (digits==mQuickDigits && newcount<=QuickDigits::count) {
         if (!copydigits) zero(digits, QuickDigits::count);
         else zero(digits+mLength, (newcount-mLength));
@@ -112,7 +112,7 @@ void data_t::alloc(int newcount, bool copydigits) {
                 #endif
             } catch (std::bad_alloc&) {
                 digits=mQuickDigits; // Might allow for recovery in some cases
-                throw std::overflow_error("Out of memory allocating xint::integer");
+                throw xint::overflow_error("Out of memory allocating xint::integer");
             }
 
             memcpy(digits, mQuickDigits, mLength*sizeof(digit_t));
@@ -123,7 +123,7 @@ void data_t::alloc(int newcount, bool copydigits) {
                 try {
                     newDigits=new digit_t[newcount];
                 } catch (std::bad_alloc&) {
-                    throw std::overflow_error("Out of memory allocating xint::integer");
+                    throw xint::overflow_error("Out of memory allocating xint::integer");
                 }
 
                 if (copydigits) {
@@ -140,7 +140,7 @@ void data_t::alloc(int newcount, bool copydigits) {
                 try {
                     mStorage.resize(newcount);
                 } catch (std::bad_alloc&) {
-                    throw std::overflow_error("Out of memory allocating xint::integer");
+                    throw xint::overflow_error("Out of memory allocating xint::integer");
                 }
                 digits=&mStorage[0];
                 if (!copydigits) zero(digits, newcount);
@@ -150,7 +150,7 @@ void data_t::alloc(int newcount, bool copydigits) {
     }
 }
 
-void data_t::copy(const data_t *c, int extraDigits) {
+void data_t::copy(const data_t *c, size_t extraDigits) {
     alloc(c->mLength+extraDigits);
 
     mLength=c->mLength;
@@ -205,7 +205,7 @@ void data_t::add(const data_t& addend) {
 
     // Now add the digits, starting at the least-significant digit.
     digit_t carry=0;
-    int x=0;
+    size_t x=0;
     for (; x<addend.mLength; ++x) {
         doubledigit_t t=doubledigit_t(digits[x])+addend.digits[x]+carry;
         if (t>=digit_overflowbit) { carry=1; t-=digit_overflowbit; } else carry=0;
@@ -230,7 +230,8 @@ void data_t::subtract(const data_t& subtrahend) {
     // size of the longest operand, so we've already got enough room.
 
     // Now subtract the digits, starting at the least-significant one.
-    int borrow=0, x;
+    size_t x;
+    int borrow=0;
     doubledigit_t t;
     for (x=0; x<subtrahend.mLength; ++x) {
         t=(digits[x]+digit_overflowbit)-subtrahend.digits[x]-borrow;
@@ -248,12 +249,12 @@ void data_t::subtract(const data_t& subtrahend) {
     skipLeadingZeros();
 }
 
-void data_t::shift_left(int byBits) {
+void data_t::shift_left(size_t byBits) {
     assert(mCopies==1);
     assert(byBits>0);
 
-    int bytes=byBits / bits_per_digit, bits=byBits % bits_per_digit;
-    int oldLength=mLength;
+    size_t bytes=byBits / bits_per_digit, bits=byBits % bits_per_digit;
+    size_t oldLength=mLength;
 
     realloc(mLength+bytes+1);
 
@@ -276,11 +277,11 @@ void data_t::shift_left(int byBits) {
     skipLeadingZeros();
 }
 
-void data_t::shift_right(int byBits) {
+void data_t::shift_right(size_t byBits) {
     assert(mCopies==1);
     assert(byBits>0);
 
-    int bytes=byBits / bits_per_digit, bits=byBits % bits_per_digit,
+    size_t bytes=byBits / bits_per_digit, bits=byBits % bits_per_digit,
         bits2 = bits_per_digit - bits;
 
     if (bytes >= mLength) {

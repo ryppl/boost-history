@@ -17,8 +17,7 @@
 #include <vector>
 #include <sstream>
 #include <fstream>
-
-#include <boost/crc.hpp>
+#include <ctime>
 #include <boost/random/mersenne_twister.hpp>
 
 #ifdef XINT_THREADSAFE
@@ -40,10 +39,9 @@ using namespace detail;
 namespace {
 
 class generator_t {
-    typedef boost::mt19937 internal_generator_t;
-
     public:
-    typedef internal_generator_t::result_type result_type;
+    typedef base_random_generator::result_type result_type;
+    typedef boost::mt19937 default_random_t;
 
     #ifdef XINT_THREADSAFE
         generator_t() { mLock.lock(); init(); }
@@ -52,166 +50,152 @@ class generator_t {
         generator_t() { init(); }
     #endif
 
-    void seed_manual(const std::string& bytes);
-    bool seed_secure();
-    void seed_fallback();
-    result_type operator()();
+    result_type operator()() { return mGeneratorFn(); }
+
+    static void set_generator(random_t g, base_random_generator *p) {
+        mGeneratorObj.reset(p);
+        mGeneratorFn=g;
+    }
 
     private:
-    class SeedGenerator {
-        public:
-        SeedGenerator(const std::string& seedstring): mString(seedstring.substr(0,
-            cSeedMaximumBytes)), mNumber(0) { }
-        internal_generator_t::result_type operator()() {
-            std::ostringstream s1;
-            s1 << mNumber++ << mString;
-            std::string s2=s1.str();
-
-            boost::crc_32_type crc;
-            crc.process_bytes(s2.c_str(), s2.length());
-            return crc.checksum();
+    void init() {
+        if (!mGeneratorFn) {
+            typedef default_random_t T;
+            mDefaultGenerator.reset(new T(boost::uint32_t(time(0)+clock())));
+            random_generator<T> *obj=new random_generator<T>(*mDefaultGenerator);
+            set_generator(*obj, obj);
         }
+    }
 
-        #ifdef XINT_SECURE
-            static char zero(char) { return 0; }
-
-            ~SeedGenerator() {
-                mNumber=0;
-                std::transform(mString.begin(), mString.end(), mString.begin(),
-                    zero);
-            }
-        #endif
-
-        private:
-        static const size_t cSeedMaximumBytes=4096;
-
-        std::string mString;
-        int mNumber;
-    };
-
-    void init();
-
-    static internal_generator_t *mGen;
-    static bool mSeeded;
+    static random_t mGeneratorFn;
+    static std::auto_ptr<base_random_generator> mGeneratorObj;
+    static std::auto_ptr<default_random_t> mDefaultGenerator;
 
     #ifdef XINT_THREADSAFE
         static boost::mutex mLock;
     #endif
 };
 
-generator_t::internal_generator_t *generator_t::mGen=0;
-bool generator_t::mSeeded=false;
+std::auto_ptr<base_random_generator> generator_t::mGeneratorObj;
+std::auto_ptr<generator_t::default_random_t> generator_t::mDefaultGenerator;
+random_t generator_t::mGeneratorFn;
 
 #ifdef XINT_THREADSAFE
     boost::mutex generator_t::mLock;
 #endif
 
-void generator_t::seed_manual(const std::string& bytes) {
-    SeedGenerator gen(bytes);
-    mGen->seed(gen);
-    mSeeded=true;
-}
-
-bool generator_t::seed_secure() {
-    const int cBitsRequested=256,
-        cBytesRequested=cBitsRequested / std::numeric_limits<char>::digits;
-    bool success=false;
-
-    #ifdef _WIN32
-        // This should work under WinXP, Vista, and Win7. No guarantees about
-        // future compatibility, but I doubt that Microsoft will get rid of it
-        // (it's too useful), and I doubt that they'll change it now that it's
-        // well-known (it would break too many programs). We could also use the
-        // rand_s function in more recent versions of Visual C++, but that
-        // causes compatibility problems with older versions of Windows.
-        typedef BOOLEAN (WINAPI *RtlGenRandomFn)(PVOID, ULONG);
-        HMODULE dll=LoadLibrary(_T("Advapi32.dll"));
-        if (dll != 0) {
-            RtlGenRandomFn RtlGenRandom=RtlGenRandomFn(GetProcAddress(dll,
-                "SystemFunction036"));
-            if (RtlGenRandom != 0) {
-                std::vector<char> buffer(cBytesRequested, '\0');
-                if (RtlGenRandom(&buffer[0], cBytesRequested)) {
-                    char *c=&buffer[0];
-                    seed_manual(std::string(c, c+cBytesRequested));
-                    success=true;
-                }
-            }
-            FreeLibrary(dll);
-        }
-    #else
-        // This should be supported under most non-Windows systems. Note that
-        // we're using /dev/urandom, not /dev/random -- /dev/random is more
-        // secure, but it can be VERY slow.
-        std::ifstream rng("/dev/urandom");
-        if (rng) {
-            std::string rstr;
-            for (int i=0; i < cBytesRequested; ++i)
-                rstr.push_back(rng.get());
-            seed_manual(rstr);
-            success=true;
-        }
-    #endif
-
-    return success;
-}
-
-void generator_t::seed_fallback() {
-    // No cryptographically-secure device available. Fall back onto the
-    // system clock. It's not much, but it's portable, fast, and will
-    // provide at least a *little* entropy.
-    std::ostringstream out;
-    out << time(0) << clock();
-    seed_manual(out.str());
-}
-
-generator_t::result_type generator_t::operator()() {
-    if (!mSeeded)
-        if (!seed_secure())
-            seed_fallback();
-    return (*mGen)();
-}
-
-void generator_t::init() {
-    if (!mGen) mGen=new internal_generator_t();
-}
-
 } // namespace
 
-bool seed_secure() {
-    generator_t gen;
-    return gen.seed_secure();
+namespace detail {
+
+void set_random_generator(random_t fn, base_random_generator *obj) {
+    generator_t::set_generator(fn, obj);
 }
 
-void seed_fallback() {
+unsigned int get_random() {
     generator_t gen;
-    gen.seed_fallback();
+    return gen();
 }
 
-void seed_manual(const std::string& value) {
-    generator_t gen;
-    gen.seed_manual(value);
-}
+} // namespace detail
 
+////////////////////////////////////////////////////////////////////////////////
+// The secure random generator
+
+#ifdef _WIN32
+    struct strong_random_generator::impl_t {
+        typedef BOOLEAN (WINAPI *RtlGenRandomFn)(PVOID, ULONG);
+        typedef DWORD result_type;
+
+        impl_t(): dll(0), fn(0) {
+            // This should work under WinXP, Vista, and Win7. No guarantees about
+            // future compatibility, but I doubt that Microsoft will get rid of it
+            // (it's too useful), and I doubt that they'll change it now that it's
+            // well-known (it would break too many programs). We could also use the
+            // rand_s function in more recent versions of Visual C++, but that
+            // causes compatibility problems with older versions of Windows.
+            dll=LoadLibrary(_T("Advapi32.dll"));
+            if (dll != 0) fn=RtlGenRandomFn(GetProcAddress(dll, "SystemFunction036"));
+            if (fn == 0) {
+                destroy();
+                throw no_strong_random();
+            }
+        }
+
+        ~impl_t() { destroy(); }
+
+        result_type operator()() {
+            result_type r=0;
+            if (!fn(&r, sizeof(result_type)))
+                throw no_strong_random("RtlGenRandom failed");
+            return r;
+        }
+
+        void destroy() { if (dll) FreeLibrary(dll); }
+
+        HMODULE dll;
+        RtlGenRandomFn fn;
+    };
+
+    double strong_random_generator::entropy() const { return 32; }
+#else
+    struct strong_random_generator::impl_t {
+        typedef unsigned char result_type;
+
+        impl_t(): rng("/dev/urandom", std::ios::binary) {
+            // This should be supported under most non-Windows systems. Note
+            // that we're using /dev/urandom, not /dev/random -- /dev/random is
+            // more secure, but it can be VERY slow.
+            if (!rng) throw no_strong_random();
+        }
+
+        result_type operator()() {
+            int r=rng.get();
+            if (r==EOF) throw no_strong_random("/dev/urandom returned EOF");
+            return static_cast<result_type>(r);
+        }
+
+        std::ifstream rng;
+    };
+
+    double strong_random_generator::entropy() const { return 8; }
+#endif
+
+const bool strong_random_generator::has_fixed_range = true;
+const strong_random_generator::result_type strong_random_generator::min_value =
+    (std::numeric_limits<impl_t::result_type>::min)();
+const strong_random_generator::result_type strong_random_generator::max_value =
+    (std::numeric_limits<impl_t::result_type>::max)();
+strong_random_generator::strong_random_generator(): impl(new impl_t) { }
+strong_random_generator::~strong_random_generator() { delete impl; }
+strong_random_generator::result_type strong_random_generator::operator()() {
+    return (*impl)(); }
+strong_random_generator::result_type strong_random_generator::min
+    BOOST_PREVENT_MACRO_SUBSTITUTION () const { return min_value; }
+strong_random_generator::result_type strong_random_generator::max
+    BOOST_PREVENT_MACRO_SUBSTITUTION () const { return max_value; }
+
+////////////////////////////////////////////////////////////////////////////////
 // Returns a positive (unless told otherwise) integer between zero and
 // (1<<bits)-1, inclusive
-integer random_by_size(size_t bits, bool highBitOn, bool lowBitOn, bool canBeNegative) {
+integer random_by_size(size_t bits, bool highBitOn, bool lowBitOn, bool
+    canBeNegative)
+{
     if (bits<=0) return integer::zero();
 
     generator_t randomGenerator;
-
     const size_t cBitsPerIteration=std::numeric_limits<generator_t::result_type>::digits;
 
     // Grab a set of random bits, of at least the specified size
-    int iterations = (bits+cBitsPerIteration-1) / cBitsPerIteration;
+    size_t iterations = (bits+cBitsPerIteration-1) / cBitsPerIteration;
     std::vector<generator_t::result_type> v;
-    for (int i=0; i<iterations; ++i) v.push_back(randomGenerator());
+    for (size_t i=0; i<iterations; ++i) v.push_back(randomGenerator());
 
     const char *vptr=(const char *)&v[0], *vptr_end=vptr+(v.size() * sizeof(generator_t::result_type));
     integer p=from_binary(std::string(vptr, vptr_end));
 
     // Trim it to the proper length
-    int index=(bits/bits_per_digit);
+    size_t index=(bits/bits_per_digit);
     digit_t mask=(digit_t(1) << (bits % bits_per_digit))-1;
     if (mask==0) { mask=digit_mask; --index; }
     p._get_data()->digits[index] &= mask;
@@ -224,12 +208,6 @@ integer random_by_size(size_t bits, bool highBitOn, bool lowBitOn, bool canBeNeg
     if (canBeNegative) p._set_negative(randomGenerator() & 0x01);
 
     return p;
-}
-
-template <>
-integer random<integer>(const integer& lowest, const integer& highest) {
-    integer range(abs(highest-lowest+1));
-    return lowest+(random_by_size(log2(range)) % range);
 }
 
 } // namespace xint

@@ -87,7 +87,7 @@ int is_prime(const integer& n, callback_t callback) {
     // Run the number through the Miller-Rabin Probabilistic Test of Primality
     // a few times to see if it's actually (probably) prime.
     for (int count=0; count<5; ++count) {
-        int k=random<int>();
+        unsigned int k=detail::get_random();
         int isP=isProbablePrimeBaseB(n, abs(k), callback);
         if (isP <= 0) return isP;
     }

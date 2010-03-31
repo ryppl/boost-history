@@ -38,7 +38,7 @@ int compare(const integer &b1, const integer &b2, bool ignoresign) {
     if (b1data->mLength != b2data->mLength) {
         answer=((b1data->mLength < b2data->mLength) ? -1 : 1);
     } else {
-        for (int x = b1data->mLength - 1; x >= 0; --x) {
+        for (int x = int(b1data->mLength) - 1; x >= 0; --x) {
             if (b1data->digits[x] != b2data->digits[x]) {
                 answer=((b1data->digits[x] < b2data->digits[x]) ? -1 : 1);
                 break;
@@ -49,8 +49,6 @@ int compare(const integer &b1, const integer &b2, bool ignoresign) {
     return answer;
 }
 
-} // namespace xint
-
 bool operator!(const xint::integer &num1) { return num1.sign()==0; }
 bool operator==(const xint::integer &num1, const xint::integer &num2) { return xint::compare(num1, num2)==0; }
 bool operator!=(const xint::integer& num1, const xint::integer& num2) { return xint::compare(num1, num2)!=0; }
@@ -58,3 +56,5 @@ bool operator<(const xint::integer& num1, const xint::integer& num2) { return xi
 bool operator>(const xint::integer& num1, const xint::integer& num2) { return xint::compare(num1, num2)>0; }
 bool operator<=(const xint::integer& num1, const xint::integer& num2) { return xint::compare(num1, num2)<=0; }
 bool operator>=(const xint::integer& num1, const xint::integer& num2) { return xint::compare(num1, num2)>=0; }
+
+} // namespace xint

@@ -55,6 +55,11 @@ integer gcd(const integer& num1, const integer& num2) {
     num1._throw_if_nan();
     num2._throw_if_nan();
 
+    int sign1=num1.sign(), sign2=num2.sign();
+    if (sign1==0 && sign2==0) return integer::zero();
+    else if (sign1==0) return num2;
+    else if (sign2==0) return num1;
+
     integer n(abs(num1)), m(abs(num2));
 
     size_t k=0;
@@ -79,7 +84,10 @@ integer invmod(const integer& n, const integer& m) {
         else return integer(not_a_number());
     }
 
-    if (n.sign() < 0) {
+    int sign=n.sign();
+    if (sign==0) {
+        return integer(not_a_number());
+    } else if (n.sign() < 0) {
         integer _n(n);
         _n._set_negative(false);
 

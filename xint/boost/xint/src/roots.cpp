@@ -17,7 +17,12 @@
 namespace xint {
 
 integer sqrt(const integer& n) {
-    if (n.sign() <= 0) return integer::zero();
+    if (n.sign() < 0) {
+        if (exceptions_allowed()) throw cannot_represent("library cannot "
+            "represent imaginary values (tried to take sqrt of negative "
+            "number)");
+        else return integer(not_a_number());
+    } else if (n.sign() == 0) return integer::zero();
 
     // Initial guess is half the length of n, in bits
     integer guess;

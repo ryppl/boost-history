@@ -13,13 +13,17 @@
 
 #include "../xint.hpp"
 
-const xint::integer& operator+(const xint::integer& a) { return a; }
-xint::integer operator-(const xint::integer& a) { return xint::negate(a); }
-xint::integer operator+(const xint::integer& num1, const xint::integer& num2) { return xint::add(num1, num2); }
-xint::integer operator-(const xint::integer& num1, const xint::integer& num2) { return xint::subtract(num1, num2); }
-xint::integer operator*(const xint::integer& num1, const xint::integer& num2) { return xint::multiply(num1, num2); }
-xint::integer operator/(const xint::integer& num1, const xint::integer& num2) { return xint::divide(num1, num2); }
-xint::integer operator%(const xint::integer& num1, const xint::integer& num2) { return xint::mod(num1, num2); }
-xint::integer operator&(const xint::integer& n1, const xint::integer& n2) { return xint::bitwise_and(n1, n2); }
-xint::integer operator|(const xint::integer& n1, const xint::integer& n2) { return xint::bitwise_or(n1, n2); }
-xint::integer operator^(const xint::integer& n1, const xint::integer& n2) { return xint::bitwise_xor(n1, n2); }
+namespace xint {
+
+const integer& operator+(const integer& a) { return a; }
+integer operator-(const integer& a) { return negate(a); }
+integer operator+(const integer& num1, const integer& num2) { return add(num1, num2); }
+integer operator-(const integer& num1, const integer& num2) { return subtract(num1, num2); }
+integer operator*(const integer& num1, const integer& num2) { return multiply(num1, num2); }
+integer operator/(const integer& num1, const integer& num2) { return divide(num1, num2); }
+integer operator%(const integer& num1, const integer& num2) { return mod(num1, num2); }
+integer operator&(const integer& n1, const integer& n2) { return bitwise_and(n1, n2); }
+integer operator|(const integer& n1, const integer& n2) { return bitwise_or(n1, n2); }
+integer operator^(const integer& n1, const integer& n2) { return bitwise_xor(n1, n2); }
+
+} // namespace xint
