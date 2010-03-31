@@ -15,7 +15,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
 
   <!-- Add your title here ! -->
-  <title>Quickbook Doxygen Index Prototype Tue Mar 30 18:10:43 2010 xInt eXtended Integer Library </title>
+  <title>Quickbook Doxygen Index Prototype Wed Mar 31 15:44:54 2010 xInt eXtended Integer Library </title>
 
   <!-- Add your custom stylesheet here ! -->
   <link href="my_doxygen.css" rel="stylesheet" type="text/css"/>
@@ -51,6 +51,7 @@
   <div class="tabs">
     <ul>
       <li><a href="annotated.html"><span>Class&nbsp;List</span></a></li>
+      <li><a href="hierarchy.html"><span>Class&nbsp;Hierarchy</span></a></li>
       <li class="current"><a href="functions.html"><span>Class&nbsp;Members</span></a></li>
     </ul>
   </div>
@@ -59,6 +60,7 @@
       <li><a href="functions.html"><span>All</span></a></li>
       <li><a href="functions_func.html"><span>Functions</span></a></li>
       <li class="current"><a href="functions_vars.html"><span>Variables</span></a></li>
+      <li><a href="functions_type.html"><span>Typedefs</span></a></li>
     </ul>
   </div>
 </div>
@@ -68,7 +70,7 @@
 : <a class="el" href="classxint_1_1integer.html#a99deec6bc6eae551f358e4699075646a">xint::integer</a>
 </li>
 <li>count
-: <a class="el" href="structxint_1_1detail_1_1data__t_1_1_quick_digits.html#a4e25c9e14a1730c37e2c7383c46679ec">xint::detail::data_t::QuickDigits</a>
+: <a class="el" href="structxint_1_1detail_1_1data__t_1_1_quick_digits.html#ac691b42c4404e59ae07f89146e722736">xint::detail::data_t::QuickDigits</a>
 </li>
 <li>cZero
 : <a class="el" href="classxint_1_1integer.html#a4903bda4b989056ee0c980aba7d07e06">xint::integer</a>
@@ -79,23 +81,38 @@
 <li>digits
 : <a class="el" href="structxint_1_1detail_1_1data__t.html#a5c9382aec147090d7e7e2b5e972402a9">xint::detail::data_t</a>
 </li>
+<li>gen
+: <a class="el" href="structxint_1_1detail_1_1random__generator.html#a9a90a3050b2ff83d78ef8633deb5d42d">xint::detail::random_generator&lt; T &gt;</a>
+</li>
+<li>has_fixed_range
+: <a class="el" href="classxint_1_1strong__random__generator.html#a1a808cca9189eb64f420e4745ca5122d">xint::strong_random_generator</a>
+</li>
+<li>impl
+: <a class="el" href="classxint_1_1strong__random__generator.html#a9f055c0ff1a85a8c465099c596f368fa">xint::strong_random_generator</a>
+</li>
 <li>intbits
-: <a class="el" href="structxint_1_1detail_1_1data__t_1_1_quick_digits.html#a8c823c135d72766b46249e6585585859">xint::detail::data_t::QuickDigits</a>
+: <a class="el" href="structxint_1_1detail_1_1data__t_1_1_quick_digits.html#af5323a8fbfdfaa3cae371872ec865fc5">xint::detail::data_t::QuickDigits</a>
 </li>
 <li>mAllocated
-: <a class="el" href="structxint_1_1detail_1_1data__t.html#a100abfc5841043a6c1c5d5afa2d6cd94">xint::detail::data_t</a>
+: <a class="el" href="structxint_1_1detail_1_1data__t.html#a3390530db8333b535f65d3cc01ff5236">xint::detail::data_t</a>
+</li>
+<li>max_value
+: <a class="el" href="classxint_1_1strong__random__generator.html#aea47e4fbf8b0fe5914ade7ce2704a3c3">xint::strong_random_generator</a>
 </li>
 <li>mCopies
 : <a class="el" href="structxint_1_1detail_1_1data__t.html#a73bc854b5f9ced6576b97d2cff8f3a5d">xint::detail::data_t</a>
 </li>
+<li>min_value
+: <a class="el" href="classxint_1_1strong__random__generator.html#a4bea7dba7f086441548dfee576e54fce">xint::strong_random_generator</a>
+</li>
 <li>minimum
-: <a class="el" href="structxint_1_1detail_1_1data__t_1_1_quick_digits.html#a5ee62e707000ba18c444ae3aeec89d75">xint::detail::data_t::QuickDigits</a>
+: <a class="el" href="structxint_1_1detail_1_1data__t_1_1_quick_digits.html#aeb7c43d282f871305e76936664cee25f">xint::detail::data_t::QuickDigits</a>
 </li>
 <li>mIsNegative
 : <a class="el" href="structxint_1_1detail_1_1data__t.html#afb2d8673fc5d99d2ea006cd0aa32b744">xint::detail::data_t</a>
 </li>
 <li>mLength
-: <a class="el" href="structxint_1_1detail_1_1data__t.html#ac594577f74057c94ad70a3503068d286">xint::detail::data_t</a>
+: <a class="el" href="structxint_1_1detail_1_1data__t.html#a599933d272e3592b2d0985ca7f7c72e2">xint::detail::data_t</a>
 </li>
 <li>mQuickDigits
 : <a class="el" href="structxint_1_1detail_1_1data__t.html#a022f882ed0818612861b1a67881ae131">xint::detail::data_t</a>
@@ -103,8 +120,11 @@
 <li>mStorage
 : <a class="el" href="structxint_1_1detail_1_1data__t.html#a96c33fdc37dd3c774256f7ed20ce735c">xint::detail::data_t</a>
 </li>
+<li>rng
+: <a class="el" href="structxint_1_1strong__random__generator_1_1impl__t.html#a4863c36524d24aed3c9f7192e97b3d09">xint::strong_random_generator::impl_t</a>
+</li>
 <li>suggested
-: <a class="el" href="structxint_1_1detail_1_1data__t_1_1_quick_digits.html#a1d6ffbc11a8c4ab2617a391f843a8a5e">xint::detail::data_t::QuickDigits</a>
+: <a class="el" href="structxint_1_1detail_1_1data__t_1_1_quick_digits.html#a789eadb40cb8c034823ecb5fb6094092">xint::detail::data_t::QuickDigits</a>
 </li>
 </ul>
 </div>
@@ -126,7 +146,7 @@
       <!-- Change copyright to YOUR name (and affiliation, if any) below:  -->
      <p>Copyright © 2009 - 2010 Chad Nelson, Oak Circle Software, Inc</p>
       <!-- 2010 becomes the current year, for example 2010, so claims copyright for a range of years, 2009 - 2010. -->
-     <p>Doxygen Documentation generated by&nbsp;<a href="http://www.doxygen.org/index.html"> <img src="doxygen.png" alt="doxygen logo" align="middle" border="0"/> 1.6.3</a>, Revised at Tue Mar 30 18:10:43 2010</p>
+     <p>Doxygen Documentation generated by&nbsp;<a href="http://www.doxygen.org/index.html"> <img src="doxygen.png" alt="doxygen logo" align="middle" border="0"/> 1.6.3</a>, Revised at Wed Mar 31 15:44:54 2010</p>
   </address>
   </tr>
 </tbody>

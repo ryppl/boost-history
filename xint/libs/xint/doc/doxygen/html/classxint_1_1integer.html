@@ -15,7 +15,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
 
   <!-- Add your title here ! -->
-  <title>Quickbook Doxygen Index Prototype Tue Mar 30 18:10:43 2010 xInt eXtended Integer Library </title>
+  <title>Quickbook Doxygen Index Prototype Wed Mar 31 15:44:54 2010 xInt eXtended Integer Library </title>
 
   <!-- Add your custom stylesheet here ! -->
   <link href="my_doxygen.css" rel="stylesheet" type="text/css"/>
@@ -51,6 +51,7 @@
   <div class="tabs">
     <ul>
       <li><a href="annotated.html"><span>Class&nbsp;List</span></a></li>
+      <li><a href="hierarchy.html"><span>Class&nbsp;Hierarchy</span></a></li>
       <li><a href="functions.html"><span>Class&nbsp;Members</span></a></li>
     </ul>
   </div>
@@ -65,15 +66,13 @@
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td colspan="2"><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxint_1_1integer.html#ad32b3b13167c61e48aede083a3e1c7a8">integer</a> ()</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The extended integer class.  <a href="#ad32b3b13167c61e48aede083a3e1c7a8"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxint_1_1integer.html#aa123fb47accd778f87e2866c9d986bb7">integer</a> (const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;b)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">(Can throw std::overflow_error if not enough memory to construct a new integer).  <a href="#aa123fb47accd778f87e2866c9d986bb7"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classxint_1_1integer.html#a65df30415a5d2f91a72fb2c55d7cd33c">integer</a> (const T &amp;n)</td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classxint_1_1integer.html#a67db70248d9890990c257a1d069192e3">integer</a> (const T &amp;n, typename boost::enable_if&lt; boost::is_integral&lt; T &gt; &gt;::type *=0, typename boost::enable_if&lt; boost::is_signed&lt; T &gt; &gt;::type *=0)</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classxint_1_1integer.html#a0cad684bc9d7032497c7178edb91a5eb">integer</a> (const T &amp;n, typename boost::enable_if&lt; boost::is_integral&lt; T &gt; &gt;::type *=0, typename boost::enable_if&lt; boost::is_unsigned&lt; T &gt; &gt;::type *=0)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxint_1_1integer.html#a6dfc86dfc539cfda1062ef1bc24aa526">integer</a> (const std::string &amp;str, size_t base=10)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Copy constructs a integer from a digits string (decimal by default).  <a href="#a6dfc86dfc539cfda1062ef1bc24aa526"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxint_1_1integer.html#a1211c9298c3281815bc9b709439d031a">integer</a> (const <a class="el" href="classxint_1_1not__a__number.html">not_a_number</a> &amp;)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructs an extended integer with the NotANumber value;.  <a href="#a1211c9298c3281815bc9b709439d031a"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxint_1_1integer.html#a4f687cc90353b1c347448f1d94fa157e">~integer</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxint_1_1integer.html#af2d420708a02755a8851140928e50e23">odd</a> () const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxint_1_1integer.html#a2ffb63eee276c65d8ea8b365adeb1ee2">even</a> () const </td></tr>
@@ -106,9 +105,7 @@
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxint_1_1integer.html#ad5935c358b92f15064b1f910613f7a3e">_throw_if_nan</a> () const </td></tr>
 <tr><td colspan="2"><h2>Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxint_1_1integer.html#a64a0f99de7c33239237cb59d8464f3d2">zero</a> ()</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Extended integer holding zero.  <a href="#a64a0f99de7c33239237cb59d8464f3d2"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8">one</a> ()</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Extended integer holding one.  <a href="#a9237b21f4162146c7b5749b169c081b8"></a><br/></td></tr>
 <tr><td colspan="2"><h2>Private Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxint_1_1integer.html#aff4a9e0584c9f920a6cdfdc717bcda0d">_init</a> (<a class="el" href="namespacexint_1_1detail.html#a8843fb7e364832d8d5983de28bdbcf34">detail::digit_t</a> init=0)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxint_1_1integer.html#adaaff26c817fec0bef3cf903773e3f7b">_init</a> (const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;c)</td></tr>
@@ -117,14 +114,13 @@
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxint_1_1integer.html#a53752a9fd32dc65cb8085da60a44e6b4">_detach</a> ()</td></tr>
 <tr><td colspan="2"><h2>Private Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="structxint_1_1detail_1_1data__t.html">detail::data_t</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a></td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Raw data representing an extended integer.  <a href="#a83a10805b1c61ed4c7b7b525a9b6b450"></a><br/></td></tr>
 <tr><td colspan="2"><h2>Static Private Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="classxint_1_1integer.html">integer</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxint_1_1integer.html#a4903bda4b989056ee0c980aba7d07e06">cZero</a> = 0</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="classxint_1_1integer.html">integer</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxint_1_1integer.html#a99deec6bc6eae551f358e4699075646a">cOne</a> = 0</td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00093">93</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00086">86</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="ad32b3b13167c61e48aede083a3e1c7a8"></a><!-- doxytag: member="xint::integer::integer" ref="ad32b3b13167c61e48aede083a3e1c7a8" args="()" -->
 <div class="memitem">
@@ -141,14 +137,11 @@
 </div>
 <div class="memdoc">
 
-<p>The extended integer class. </p>
-<p>Constructs a default integer, value zero. (Can throw std::overflow_error if not enough memory to construct a new integer). </p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00026">26</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00022">22</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>References <a class="el" href="integer_8cpp_source.html#l00047">_init()</a>.</p>
 
-<p>References <a class="el" href="integer_8cpp_source.html#l00043">_init()</a>.</p>
-
-<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00205">one()</a>, and <a class="el" href="integer_8cpp_source.html#l00200">zero()</a>.</p>
+<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00209">one()</a>, and <a class="el" href="integer_8cpp_source.html#l00204">zero()</a>.</p>
 
 </div>
 </div>
@@ -168,16 +161,13 @@
 </div>
 <div class="memdoc">
 
-<p>(Can throw std::overflow_error if not enough memory to construct a new integer). </p>
-<p>Copy constructs a integer from another integer. </p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00030">30</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00026">26</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
-
-<p>References <a class="el" href="integer_8cpp_source.html#l00043">_init()</a>, <a class="el" href="xint_8hpp_source.html#l00158">data</a>, and <a class="el" href="integer_8cpp_source.html#l00122">nan()</a>.</p>
+<p>References <a class="el" href="integer_8cpp_source.html#l00047">_init()</a>, <a class="el" href="xint_8hpp_source.html#l00152">data</a>, and <a class="el" href="integer_8cpp_source.html#l00126">nan()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a65df30415a5d2f91a72fb2c55d7cd33c"></a><!-- doxytag: member="xint::integer::integer" ref="a65df30415a5d2f91a72fb2c55d7cd33c" args="(const T &amp;n)" -->
+<a class="anchor" id="a67db70248d9890990c257a1d069192e3"></a><!-- doxytag: member="xint::integer::integer" ref="a67db70248d9890990c257a1d069192e3" args="(const T &amp;n, typename boost::enable_if&lt; boost::is_integral&lt; T &gt; &gt;::type *=0, typename boost::enable_if&lt; boost::is_signed&lt; T &gt; &gt;::type *=0)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -187,17 +177,71 @@ template&lt;typename T &gt; </div>
           <td class="memname">xint::integer::integer </td>
           <td>(</td>
           <td class="paramtype">const T &amp;&nbsp;</td>
-          <td class="paramname"> <em>n</em></td>
-          <td>&nbsp;)&nbsp;</td>
-          <td><code> [inline]</code></td>
+          <td class="paramname"> <em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">typename boost::enable_if&lt; boost::is_integral&lt; T &gt; &gt;::type *&nbsp;</td>
+          <td class="paramname"> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">typename boost::enable_if&lt; boost::is_signed&lt; T &gt; &gt;::type *&nbsp;</td>
+          <td class="paramname"> = <code>0</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00319">319</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00345">345</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
 
-<p>References <a class="el" href="integer_8cpp_source.html#l00043">_init()</a>, <a class="el" href="integer_8cpp_source.html#l00101">_set_negative()</a>, and <a class="el" href="xint_8hpp_source.html#l00073">xint::detail::digit_mask</a>.</p>
+<p>References <a class="el" href="integer_8cpp_source.html#l00047">_init()</a>, <a class="el" href="integer_8cpp_source.html#l00105">_set_negative()</a>, and <a class="el" href="xint_8hpp_source.html#l00046">xint::detail::digit_mask</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a0cad684bc9d7032497c7178edb91a5eb"></a><!-- doxytag: member="xint::integer::integer" ref="a0cad684bc9d7032497c7178edb91a5eb" args="(const T &amp;n, typename boost::enable_if&lt; boost::is_integral&lt; T &gt; &gt;::type *=0, typename boost::enable_if&lt; boost::is_unsigned&lt; T &gt; &gt;::type *=0)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">xint::integer::integer </td>
+          <td>(</td>
+          <td class="paramtype">const T &amp;&nbsp;</td>
+          <td class="paramname"> <em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">typename boost::enable_if&lt; boost::is_integral&lt; T &gt; &gt;::type *&nbsp;</td>
+          <td class="paramname"> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">typename boost::enable_if&lt; boost::is_unsigned&lt; T &gt; &gt;::type *&nbsp;</td>
+          <td class="paramname"> = <code>0</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00365">365</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
+
+<p>References <a class="el" href="integer_8cpp_source.html#l00047">_init()</a>, and <a class="el" href="xint_8hpp_source.html#l00046">xint::detail::digit_mask</a>.</p>
 
 </div>
 </div>
@@ -226,11 +270,9 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Copy constructs a integer from a digits string (decimal by default). </p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00035">35</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00031">31</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
-
-<p>References <a class="el" href="integer_8cpp_source.html#l00043">_init()</a>, and <a class="el" href="namespacexint.html#ad9dcb2b835be5f8ee918979945911ac0">xint::from_string()</a>.</p>
+<p>References <a class="el" href="integer_8cpp_source.html#l00047">_init()</a>, and <a class="el" href="namespacexint.html#ad9dcb2b835be5f8ee918979945911ac0">xint::from_string()</a>.</p>
 
 </div>
 </div>
@@ -250,11 +292,9 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Constructs an extended integer with the NotANumber value;. </p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00039">39</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00035">35</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
-
-<p>References <a class="el" href="xint_8hpp_source.html#l00158">data</a>.</p>
+<p>References <a class="el" href="xint_8hpp_source.html#l00152">data</a>.</p>
 
 </div>
 </div>
@@ -273,9 +313,9 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00039">39</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00043">43</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>References <a class="el" href="integer_8cpp_source.html#l00084">_detach()</a>.</p>
+<p>References <a class="el" href="integer_8cpp_source.html#l00088">_detach()</a>.</p>
 
 </div>
 </div>
@@ -295,11 +335,11 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00080">80</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00084">84</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>References <a class="el" href="xint__data__t_8hpp_source.html#l00059">xint::detail::data_t::attach()</a>, and <a class="el" href="xint_8hpp_source.html#l00158">data</a>.</p>
+<p>References <a class="el" href="xint__data__t_8hpp_source.html#l00059">xint::detail::data_t::attach()</a>, and <a class="el" href="xint_8hpp_source.html#l00152">data</a>.</p>
 
-<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00043">_init()</a>, <a class="el" href="integer_8cpp_source.html#l00088">_make_unique()</a>, and <a class="el" href="integer_8cpp_source.html#l00158">operator=()</a>.</p>
+<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00047">_init()</a>, <a class="el" href="integer_8cpp_source.html#l00092">_make_unique()</a>, and <a class="el" href="integer_8cpp_source.html#l00162">operator=()</a>.</p>
 
 </div>
 </div>
@@ -318,11 +358,11 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00084">84</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00088">88</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>References <a class="el" href="xint_8hpp_source.html#l00158">data</a>, and <a class="el" href="xint__data__t_8hpp_source.html#l00060">xint::detail::data_t::detach()</a>.</p>
+<p>References <a class="el" href="xint_8hpp_source.html#l00152">data</a>, and <a class="el" href="xint__data__t_8hpp_source.html#l00060">xint::detail::data_t::detach()</a>.</p>
 
-<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00088">_make_unique()</a>, <a class="el" href="integer_8cpp_source.html#l00158">operator=()</a>, and <a class="el" href="integer_8cpp_source.html#l00039">~integer()</a>.</p>
+<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00092">_make_unique()</a>, <a class="el" href="integer_8cpp_source.html#l00162">operator=()</a>, and <a class="el" href="integer_8cpp_source.html#l00043">~integer()</a>.</p>
 
 </div>
 </div>
@@ -341,9 +381,9 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00142">142</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00136">136</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
 
-<p>References <a class="el" href="xint_8hpp_source.html#l00158">data</a>.</p>
+<p>References <a class="el" href="xint_8hpp_source.html#l00152">data</a>.</p>
 
 </div>
 </div>
@@ -362,12 +402,9 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p><dl class="return"><dt><b>Returns:</b></dt><dd>raw data representing an extended integer. </dd></dl>
-</p>
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00135">135</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
 
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00138">138</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
-
-<p>References <a class="el" href="xint_8hpp_source.html#l00158">data</a>.</p>
+<p>References <a class="el" href="xint_8hpp_source.html#l00152">data</a>.</p>
 
 </div>
 </div>
@@ -387,11 +424,11 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00210">210</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00214">214</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>References <a class="el" href="xint_8hpp_source.html#l00158">data</a>, and <a class="el" href="xint__data__t_8hpp_source.html#l00042">xint::detail::data_t::digits</a>.</p>
+<p>References <a class="el" href="xint_8hpp_source.html#l00152">data</a>, and <a class="el" href="xint__data__t_8hpp_source.html#l00042">xint::detail::data_t::digits</a>.</p>
 
-<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00110">even()</a>, <a class="el" href="integer_8cpp_source.html#l00105">odd()</a>, <a class="el" href="integer_8cpp_source.html#l00115">sign()</a>, and <a class="el" href="xint_8hpp_source.html#l00343">xint::to()</a>.</p>
+<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00114">even()</a>, <a class="el" href="integer_8cpp_source.html#l00109">odd()</a>, <a class="el" href="integer_8cpp_source.html#l00119">sign()</a>, and <a class="el" href="xint_8hpp_source.html#l00375">xint::to()</a>.</p>
 
 </div>
 </div>
@@ -410,11 +447,11 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00214">214</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00218">218</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>References <a class="el" href="xint_8hpp_source.html#l00158">data</a>, and <a class="el" href="xint__data__t_8hpp_source.html#l00041">xint::detail::data_t::mLength</a>.</p>
+<p>References <a class="el" href="xint_8hpp_source.html#l00152">data</a>, and <a class="el" href="xint__data__t_8hpp_source.html#l00041">xint::detail::data_t::mLength</a>.</p>
 
-<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00115">sign()</a>, and <a class="el" href="xint_8hpp_source.html#l00343">xint::to()</a>.</p>
+<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00119">sign()</a>, and <a class="el" href="xint_8hpp_source.html#l00375">xint::to()</a>.</p>
 
 </div>
 </div>
@@ -434,9 +471,9 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00061">61</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00065">65</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>References <a class="el" href="integer_8cpp_source.html#l00080">_attach()</a>, <a class="el" href="data__t_8cpp_source.html#l00085">xint::detail::data_t::alloc()</a>, <a class="el" href="xint_8hpp_source.html#l00069">xint::detail::bits_per_digit</a>, <a class="el" href="xint_8hpp_source.html#l00158">data</a>, <a class="el" href="xint_8hpp_source.html#l00073">xint::detail::digit_mask</a>, <a class="el" href="xint__data__t_8hpp_source.html#l00042">xint::detail::data_t::digits</a>, and <a class="el" href="data__t_8cpp_source.html#l00067">xint::detail::data_t::skipLeadingZeros()</a>.</p>
+<p>References <a class="el" href="integer_8cpp_source.html#l00084">_attach()</a>, <a class="el" href="data__t_8cpp_source.html#l00085">xint::detail::data_t::alloc()</a>, <a class="el" href="xint_8hpp_source.html#l00042">xint::detail::bits_per_digit</a>, <a class="el" href="xint_8hpp_source.html#l00152">data</a>, <a class="el" href="xint_8hpp_source.html#l00046">xint::detail::digit_mask</a>, <a class="el" href="xint__data__t_8hpp_source.html#l00042">xint::detail::data_t::digits</a>, and <a class="el" href="data__t_8cpp_source.html#l00067">xint::detail::data_t::skipLeadingZeros()</a>.</p>
 
 </div>
 </div>
@@ -456,9 +493,9 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00052">52</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00056">56</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>References <a class="el" href="integer_8cpp_source.html#l00080">_attach()</a>, and <a class="el" href="xint_8hpp_source.html#l00158">data</a>.</p>
+<p>References <a class="el" href="integer_8cpp_source.html#l00084">_attach()</a>, and <a class="el" href="xint_8hpp_source.html#l00152">data</a>.</p>
 
 </div>
 </div>
@@ -478,11 +515,11 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00043">43</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00047">47</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>References <a class="el" href="integer_8cpp_source.html#l00080">_attach()</a>, and <a class="el" href="xint_8hpp_source.html#l00158">data</a>.</p>
+<p>References <a class="el" href="integer_8cpp_source.html#l00084">_attach()</a>, and <a class="el" href="xint_8hpp_source.html#l00152">data</a>.</p>
 
-<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00022">integer()</a>.</p>
+<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00026">integer()</a>.</p>
 
 </div>
 </div>
@@ -501,11 +538,11 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00088">88</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00092">92</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>References <a class="el" href="integer_8cpp_source.html#l00080">_attach()</a>, <a class="el" href="integer_8cpp_source.html#l00084">_detach()</a>, <a class="el" href="xint_8hpp_source.html#l00158">data</a>, and <a class="el" href="xint__data__t_8hpp_source.html#l00048">xint::detail::data_t::mCopies</a>.</p>
+<p>References <a class="el" href="integer_8cpp_source.html#l00084">_attach()</a>, <a class="el" href="integer_8cpp_source.html#l00088">_detach()</a>, <a class="el" href="xint_8hpp_source.html#l00152">data</a>, and <a class="el" href="xint__data__t_8hpp_source.html#l00048">xint::detail::data_t::mCopies</a>.</p>
 
-<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00132">operator+=()</a>, <a class="el" href="integer_8cpp_source.html#l00146">operator-=()</a>, <a class="el" href="integer_8cpp_source.html#l00184">operator&lt;&lt;=()</a>, and <a class="el" href="integer_8cpp_source.html#l00192">operator&gt;&gt;=()</a>.</p>
+<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00136">operator+=()</a>, <a class="el" href="integer_8cpp_source.html#l00150">operator-=()</a>, <a class="el" href="integer_8cpp_source.html#l00188">operator&lt;&lt;=()</a>, and <a class="el" href="integer_8cpp_source.html#l00196">operator&gt;&gt;=()</a>.</p>
 
 </div>
 </div>
@@ -525,11 +562,11 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00101">101</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00105">105</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>References <a class="el" href="namespacexint.html#a7d9010c1d7edb88471977aecb0f91d26">xint::negate()</a>, and <a class="el" href="integer_8cpp_source.html#l00115">sign()</a>.</p>
+<p>References <a class="el" href="namespacexint.html#a7d9010c1d7edb88471977aecb0f91d26">xint::negate()</a>, and <a class="el" href="integer_8cpp_source.html#l00119">sign()</a>.</p>
 
-<p>Referenced by <a class="el" href="xint_8hpp_source.html#l00319">integer()</a>.</p>
+<p>Referenced by <a class="el" href="xint_8hpp_source.html#l00345">integer()</a>.</p>
 
 </div>
 </div>
@@ -548,11 +585,11 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00218">218</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00222">222</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>References <a class="el" href="integer_8cpp_source.html#l00122">nan()</a>.</p>
+<p>References <a class="el" href="integer_8cpp_source.html#l00126">nan()</a>.</p>
 
-<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00110">even()</a>, <a class="el" href="integer_8cpp_source.html#l00126">hex_digits()</a>, <a class="el" href="integer_8cpp_source.html#l00105">odd()</a>, <a class="el" href="integer_8cpp_source.html#l00115">sign()</a>, and <a class="el" href="xint_8hpp_source.html#l00343">xint::to()</a>.</p>
+<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00114">even()</a>, <a class="el" href="integer_8cpp_source.html#l00130">hex_digits()</a>, <a class="el" href="integer_8cpp_source.html#l00109">odd()</a>, <a class="el" href="integer_8cpp_source.html#l00119">sign()</a>, and <a class="el" href="xint_8hpp_source.html#l00375">xint::to()</a>.</p>
 
 </div>
 </div>
@@ -570,11 +607,10 @@ template&lt;typename T &gt; </div>
       </table>
 </div>
 <div class="memdoc">
-<dl class="return"><dt><b>Returns:</b></dt><dd>true if extended integer is even. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00110">110</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00114">114</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>References <a class="el" href="integer_8cpp_source.html#l00210">_get_digit()</a>, and <a class="el" href="integer_8cpp_source.html#l00218">_throw_if_nan()</a>.</p>
+<p>References <a class="el" href="integer_8cpp_source.html#l00214">_get_digit()</a>, and <a class="el" href="integer_8cpp_source.html#l00222">_throw_if_nan()</a>.</p>
 
 </div>
 </div>
@@ -592,11 +628,10 @@ template&lt;typename T &gt; </div>
       </table>
 </div>
 <div class="memdoc">
-<dl class="return"><dt><b>Returns:</b></dt><dd>the number of hex digits to show the integer. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00126">126</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00130">130</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>References <a class="el" href="integer_8cpp_source.html#l00218">_throw_if_nan()</a>, and <a class="el" href="namespacexint.html#aa074495871d366c760c5b0713f5ef048">xint::log2()</a>.</p>
+<p>References <a class="el" href="integer_8cpp_source.html#l00222">_throw_if_nan()</a>, and <a class="el" href="namespacexint.html#aa074495871d366c760c5b0713f5ef048">xint::log2()</a>.</p>
 
 </div>
 </div>
@@ -614,13 +649,12 @@ template&lt;typename T &gt; </div>
       </table>
 </div>
 <div class="memdoc">
-<dl class="return"><dt><b>Returns:</b></dt><dd>true if extended integer is Not-a-Number. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00122">122</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00126">126</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>References <a class="el" href="xint_8hpp_source.html#l00158">data</a>.</p>
+<p>References <a class="el" href="xint_8hpp_source.html#l00152">data</a>.</p>
 
-<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00218">_throw_if_nan()</a>, <a class="el" href="integer_8cpp_source.html#l00026">integer()</a>, and <a class="el" href="xint_8hpp_source.html#l00381">xint::operator&lt;&lt;()</a>.</p>
+<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00222">_throw_if_nan()</a>, <a class="el" href="integer_8cpp_source.html#l00030">integer()</a>, and <a class="el" href="xint_8hpp_source.html#l00397">xint::operator&lt;&lt;()</a>.</p>
 
 </div>
 </div>
@@ -638,11 +672,10 @@ template&lt;typename T &gt; </div>
       </table>
 </div>
 <div class="memdoc">
-<dl class="return"><dt><b>Returns:</b></dt><dd>true if extended integer is odd. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00105">105</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00109">109</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>References <a class="el" href="integer_8cpp_source.html#l00210">_get_digit()</a>, and <a class="el" href="integer_8cpp_source.html#l00218">_throw_if_nan()</a>.</p>
+<p>References <a class="el" href="integer_8cpp_source.html#l00214">_get_digit()</a>, and <a class="el" href="integer_8cpp_source.html#l00222">_throw_if_nan()</a>.</p>
 
 </div>
 </div>
@@ -661,13 +694,11 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Extended integer holding one. </p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00209">209</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00205">205</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>References <a class="el" href="xint_8hpp_source.html#l00150">cOne</a>, and <a class="el" href="integer_8cpp_source.html#l00026">integer()</a>.</p>
 
-<p>References <a class="el" href="xint_8hpp_source.html#l00157">cOne</a>, and <a class="el" href="integer_8cpp_source.html#l00022">integer()</a>.</p>
-
-<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00173">operator++()</a>, and <a class="el" href="integer_8cpp_source.html#l00174">operator--()</a>.</p>
+<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00177">operator++()</a>, and <a class="el" href="integer_8cpp_source.html#l00178">operator--()</a>.</p>
 
 </div>
 </div>
@@ -687,7 +718,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00171">171</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00175">175</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
 <p>References <a class="el" href="namespacexint.html#af7a1a866478f5c0a2bc4615785f17e1a">xint::mod()</a>.</p>
 
@@ -709,7 +740,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00180">180</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00184">184</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
 <p>References <a class="el" href="namespacexint.html#a06138585f07fe098e24718c46e3078e1">xint::bitwise_and()</a>.</p>
 
@@ -731,7 +762,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00169">169</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00173">173</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
 <p>References <a class="el" href="namespacexint.html#af3d7059ec08bf075cec5685deca55c5d">xint::multiply()</a>.</p>
 
@@ -753,9 +784,9 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00175">175</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00179">179</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>References <a class="el" href="integer_8cpp_source.html#l00205">one()</a>.</p>
+<p>References <a class="el" href="integer_8cpp_source.html#l00209">one()</a>.</p>
 
 </div>
 </div>
@@ -774,9 +805,9 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00173">173</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00177">177</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>References <a class="el" href="integer_8cpp_source.html#l00205">one()</a>.</p>
+<p>References <a class="el" href="integer_8cpp_source.html#l00209">one()</a>.</p>
 
 </div>
 </div>
@@ -796,9 +827,9 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00132">132</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00136">136</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>References <a class="el" href="integer_8cpp_source.html#l00088">_make_unique()</a>, <a class="el" href="namespacexint.html#a7cc636a05af16eba73014bf88273d163">xint::add()</a>, <a class="el" href="data__t_8cpp_source.html#l00198">xint::detail::data_t::add()</a>, <a class="el" href="xint_8hpp_source.html#l00158">data</a>, <a class="el" href="xint__data__t_8hpp_source.html#l00041">xint::detail::data_t::mLength</a>, and <a class="el" href="integer_8cpp_source.html#l00115">sign()</a>.</p>
+<p>References <a class="el" href="integer_8cpp_source.html#l00092">_make_unique()</a>, <a class="el" href="namespacexint.html#a7cc636a05af16eba73014bf88273d163">xint::add()</a>, <a class="el" href="data__t_8cpp_source.html#l00198">xint::detail::data_t::add()</a>, <a class="el" href="xint_8hpp_source.html#l00152">data</a>, <a class="el" href="xint__data__t_8hpp_source.html#l00041">xint::detail::data_t::mLength</a>, and <a class="el" href="integer_8cpp_source.html#l00119">sign()</a>.</p>
 
 </div>
 </div>
@@ -818,9 +849,9 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00176">176</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00180">180</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>References <a class="el" href="integer_8cpp_source.html#l00205">one()</a>.</p>
+<p>References <a class="el" href="integer_8cpp_source.html#l00209">one()</a>.</p>
 
 </div>
 </div>
@@ -839,9 +870,9 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00174">174</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00178">178</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>References <a class="el" href="integer_8cpp_source.html#l00205">one()</a>.</p>
+<p>References <a class="el" href="integer_8cpp_source.html#l00209">one()</a>.</p>
 
 </div>
 </div>
@@ -861,9 +892,9 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00146">146</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00150">150</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>References <a class="el" href="integer_8cpp_source.html#l00088">_make_unique()</a>, <a class="el" href="xint_8hpp_source.html#l00158">data</a>, <a class="el" href="integer_8cpp_source.html#l00115">sign()</a>, <a class="el" href="namespacexint.html#af196cd74cb23970032fddcce71957a80">xint::subtract()</a>, and <a class="el" href="data__t_8cpp_source.html#l00225">xint::detail::data_t::subtract()</a>.</p>
+<p>References <a class="el" href="integer_8cpp_source.html#l00092">_make_unique()</a>, <a class="el" href="xint_8hpp_source.html#l00152">data</a>, <a class="el" href="integer_8cpp_source.html#l00119">sign()</a>, <a class="el" href="namespacexint.html#af196cd74cb23970032fddcce71957a80">xint::subtract()</a>, and <a class="el" href="data__t_8cpp_source.html#l00225">xint::detail::data_t::subtract()</a>.</p>
 
 </div>
 </div>
@@ -883,7 +914,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00170">170</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00174">174</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
 <p>References <a class="el" href="namespacexint.html#abf3d47f1ef1fdf334097fab055886a44">xint::divide()</a>.</p>
 
@@ -905,7 +936,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00178">178</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00182">182</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
 <p>References <a class="el" href="namespacexint.html#abe0717f5f1bed3f2c108e654f92f168a">xint::shift_left()</a>.</p>
 
@@ -927,9 +958,9 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00184">184</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00188">188</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>References <a class="el" href="integer_8cpp_source.html#l00088">_make_unique()</a>, <a class="el" href="xint_8hpp_source.html#l00158">data</a>, and <a class="el" href="data__t_8cpp_source.html#l00251">xint::detail::data_t::shift_left()</a>.</p>
+<p>References <a class="el" href="integer_8cpp_source.html#l00092">_make_unique()</a>, <a class="el" href="xint_8hpp_source.html#l00152">data</a>, and <a class="el" href="data__t_8cpp_source.html#l00252">xint::detail::data_t::shift_left()</a>.</p>
 
 </div>
 </div>
@@ -949,9 +980,9 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00158">158</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00162">162</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>References <a class="el" href="integer_8cpp_source.html#l00080">_attach()</a>, <a class="el" href="integer_8cpp_source.html#l00084">_detach()</a>, and <a class="el" href="xint_8hpp_source.html#l00158">data</a>.</p>
+<p>References <a class="el" href="integer_8cpp_source.html#l00084">_attach()</a>, <a class="el" href="integer_8cpp_source.html#l00088">_detach()</a>, and <a class="el" href="xint_8hpp_source.html#l00152">data</a>.</p>
 
 </div>
 </div>
@@ -971,7 +1002,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00179">179</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00183">183</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
 <p>References <a class="el" href="namespacexint.html#a33005f5e57bca2418fae44952e28bbbf">xint::shift_right()</a>.</p>
 
@@ -993,9 +1024,9 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00192">192</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00196">196</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>References <a class="el" href="integer_8cpp_source.html#l00088">_make_unique()</a>, <a class="el" href="xint_8hpp_source.html#l00158">data</a>, and <a class="el" href="data__t_8cpp_source.html#l00279">xint::detail::data_t::shift_right()</a>.</p>
+<p>References <a class="el" href="integer_8cpp_source.html#l00092">_make_unique()</a>, <a class="el" href="xint_8hpp_source.html#l00152">data</a>, and <a class="el" href="data__t_8cpp_source.html#l00280">xint::detail::data_t::shift_right()</a>.</p>
 
 </div>
 </div>
@@ -1015,7 +1046,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00182">182</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00186">186</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
 <p>References <a class="el" href="namespacexint.html#a9ffe18a09f5dd354af7b967b032d3cbe">xint::bitwise_xor()</a>.</p>
 
@@ -1037,7 +1068,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00181">181</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00185">185</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
 <p>References <a class="el" href="namespacexint.html#a8cd0a0dbc779e5a75c9e2f8027474e9a">xint::bitwise_or()</a>.</p>
 
@@ -1057,13 +1088,12 @@ template&lt;typename T &gt; </div>
       </table>
 </div>
 <div class="memdoc">
-<dl class="return"><dt><b>Returns:</b></dt><dd>-1 if extended integer is &lt; 0. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00115">115</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00119">119</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>References <a class="el" href="integer_8cpp_source.html#l00210">_get_digit()</a>, <a class="el" href="integer_8cpp_source.html#l00214">_get_length()</a>, <a class="el" href="integer_8cpp_source.html#l00218">_throw_if_nan()</a>, <a class="el" href="xint_8hpp_source.html#l00158">data</a>, and <a class="el" href="xint__data__t_8hpp_source.html#l00049">xint::detail::data_t::mIsNegative</a>.</p>
+<p>References <a class="el" href="integer_8cpp_source.html#l00214">_get_digit()</a>, <a class="el" href="integer_8cpp_source.html#l00218">_get_length()</a>, <a class="el" href="integer_8cpp_source.html#l00222">_throw_if_nan()</a>, <a class="el" href="xint_8hpp_source.html#l00152">data</a>, and <a class="el" href="xint__data__t_8hpp_source.html#l00049">xint::detail::data_t::mIsNegative</a>.</p>
 
-<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00101">_set_negative()</a>, <a class="el" href="compare_8cpp_source.html#l00054">operator!()</a>, <a class="el" href="integer_8cpp_source.html#l00132">operator+=()</a>, <a class="el" href="integer_8cpp_source.html#l00146">operator-=()</a>, <a class="el" href="xint_8hpp_source.html#l00381">xint::operator&lt;&lt;()</a>, and <a class="el" href="xint_8hpp_source.html#l00343">xint::to()</a>.</p>
+<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00105">_set_negative()</a>, <a class="el" href="integer_8cpp_source.html#l00136">operator+=()</a>, <a class="el" href="integer_8cpp_source.html#l00150">operator-=()</a>, <a class="el" href="xint_8hpp_source.html#l00397">xint::operator&lt;&lt;()</a>, and <a class="el" href="xint_8hpp_source.html#l00375">xint::to()</a>.</p>
 
 </div>
 </div>
@@ -1082,11 +1112,9 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Extended integer holding zero. </p>
+<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00204">204</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
 
-<p>Definition at line <a class="el" href="integer_8cpp_source.html#l00200">200</a> of file <a class="el" href="integer_8cpp_source.html">integer.cpp</a>.</p>
-
-<p>References <a class="el" href="xint_8hpp_source.html#l00156">cZero</a>, and <a class="el" href="integer_8cpp_source.html#l00022">integer()</a>.</p>
+<p>References <a class="el" href="xint_8hpp_source.html#l00150">cZero</a>, and <a class="el" href="integer_8cpp_source.html#l00026">integer()</a>.</p>
 
 </div>
 </div>
@@ -1102,9 +1130,9 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00157">157</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00150">150</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00205">one()</a>.</p>
+<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00209">one()</a>.</p>
 
 </div>
 </div>
@@ -1119,9 +1147,9 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00156">156</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00150">150</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00200">zero()</a>.</p>
+<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00204">zero()</a>.</p>
 
 </div>
 </div>
@@ -1136,11 +1164,9 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Raw data representing an extended integer. </p>
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00152">152</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
 
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00158">158</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
-
-<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00080">_attach()</a>, <a class="el" href="integer_8cpp_source.html#l00084">_detach()</a>, <a class="el" href="xint_8hpp_source.html#l00138">_get_data()</a>, <a class="el" href="integer_8cpp_source.html#l00210">_get_digit()</a>, <a class="el" href="integer_8cpp_source.html#l00214">_get_length()</a>, <a class="el" href="integer_8cpp_source.html#l00043">_init()</a>, <a class="el" href="integer_8cpp_source.html#l00088">_make_unique()</a>, <a class="el" href="integer_8cpp_source.html#l00026">integer()</a>, <a class="el" href="integer_8cpp_source.html#l00122">nan()</a>, <a class="el" href="integer_8cpp_source.html#l00132">operator+=()</a>, <a class="el" href="integer_8cpp_source.html#l00146">operator-=()</a>, <a class="el" href="integer_8cpp_source.html#l00184">operator&lt;&lt;=()</a>, <a class="el" href="integer_8cpp_source.html#l00158">operator=()</a>, <a class="el" href="integer_8cpp_source.html#l00192">operator&gt;&gt;=()</a>, and <a class="el" href="integer_8cpp_source.html#l00115">sign()</a>.</p>
+<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00084">_attach()</a>, <a class="el" href="integer_8cpp_source.html#l00088">_detach()</a>, <a class="el" href="xint_8hpp_source.html#l00135">_get_data()</a>, <a class="el" href="integer_8cpp_source.html#l00214">_get_digit()</a>, <a class="el" href="integer_8cpp_source.html#l00218">_get_length()</a>, <a class="el" href="integer_8cpp_source.html#l00047">_init()</a>, <a class="el" href="integer_8cpp_source.html#l00092">_make_unique()</a>, <a class="el" href="integer_8cpp_source.html#l00030">integer()</a>, <a class="el" href="integer_8cpp_source.html#l00126">nan()</a>, <a class="el" href="integer_8cpp_source.html#l00136">operator+=()</a>, <a class="el" href="integer_8cpp_source.html#l00150">operator-=()</a>, <a class="el" href="integer_8cpp_source.html#l00188">operator&lt;&lt;=()</a>, <a class="el" href="integer_8cpp_source.html#l00162">operator=()</a>, <a class="el" href="integer_8cpp_source.html#l00196">operator&gt;&gt;=()</a>, and <a class="el" href="integer_8cpp_source.html#l00119">sign()</a>.</p>
 
 </div>
 </div>
@@ -1167,7 +1193,7 @@ template&lt;typename T &gt; </div>
       <!-- Change copyright to YOUR name (and affiliation, if any) below:  -->
      <p>Copyright © 2009 - 2010 Chad Nelson, Oak Circle Software, Inc</p>
       <!-- 2010 becomes the current year, for example 2010, so claims copyright for a range of years, 2009 - 2010. -->
-     <p>Doxygen Documentation generated by&nbsp;<a href="http://www.doxygen.org/index.html"> <img src="doxygen.png" alt="doxygen logo" align="middle" border="0"/> 1.6.3</a>, Revised at Tue Mar 30 18:10:43 2010</p>
+     <p>Doxygen Documentation generated by&nbsp;<a href="http://www.doxygen.org/index.html"> <img src="doxygen.png" alt="doxygen logo" align="middle" border="0"/> 1.6.3</a>, Revised at Wed Mar 31 15:44:54 2010</p>
   </address>
   </tr>
 </tbody>

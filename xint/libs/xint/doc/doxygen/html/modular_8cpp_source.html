@@ -15,7 +15,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
 
   <!-- Add your title here ! -->
-  <title>Quickbook Doxygen Index Prototype Tue Mar 30 18:10:43 2010 xInt eXtended Integer Library </title>
+  <title>Quickbook Doxygen Index Prototype Wed Mar 31 15:44:54 2010 xInt eXtended Integer Library </title>
 
   <!-- Add your custom stylesheet here ! -->
   <link href="my_doxygen.css" rel="stylesheet" type="text/css"/>
@@ -90,15 +90,15 @@
 <a name="l00034"></a>00034 integer <a class="code" href="namespacexint.html#a1f8b43b537ff9de1d5612ed228a8fbe1">powmod</a>(<span class="keyword">const</span> integer&amp; n, <span class="keyword">const</span> integer&amp; exponent, <span class="keyword">const</span> integer&amp;
 <a name="l00035"></a>00035     modulus, <span class="keywordtype">bool</span> noMontgomery)
 <a name="l00036"></a>00036 {
-<a name="l00037"></a>00037     <span class="keywordflow">if</span> (modulus &lt; <a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8" title="Extended integer holding one.">integer::one</a>()) {
+<a name="l00037"></a>00037     <span class="keywordflow">if</span> (modulus &lt; <a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8">integer::one</a>()) {
 <a name="l00038"></a>00038         <span class="keywordflow">if</span> (<a class="code" href="namespacexint.html#ac8be41374700d89400f5ecddf0f789e3">exceptions_allowed</a>()) <span class="keywordflow">throw</span> invalid_modulus();
 <a name="l00039"></a>00039         <span class="keywordflow">else</span> <span class="keywordflow">return</span> integer(not_a_number());
 <a name="l00040"></a>00040     }
-<a name="l00041"></a>00041     <span class="keywordflow">if</span> (exponent.sign()==0) <span class="keywordflow">return</span> <a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8" title="Extended integer holding one.">integer::one</a>();
+<a name="l00041"></a>00041     <span class="keywordflow">if</span> (exponent.sign()==0) <span class="keywordflow">return</span> <a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8">integer::one</a>();
 <a name="l00042"></a>00042 
 <a name="l00043"></a>00043     <span class="keywordtype">bool</span> neg=(n.sign() &lt; 0 &amp;&amp; exponent.odd());
 <a name="l00044"></a>00044 
-<a name="l00045"></a>00045     integer answer(<a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8" title="Extended integer holding one.">integer::one</a>());
+<a name="l00045"></a>00045     integer answer(<a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8">integer::one</a>());
 <a name="l00046"></a>00046 
 <a name="l00047"></a>00047     <span class="comment">// Montgomery&#39;s method is often noticeably faster, but only works if the</span>
 <a name="l00048"></a>00048     <span class="comment">// modulus is odd.</span>
@@ -107,15 +107,15 @@
 <a name="l00051"></a>00051     } <span class="keywordflow">else</span> {
 <a name="l00052"></a>00052         integer p(<a class="code" href="namespacexint.html#ac9e4ed282bafa93dbf608350df0127ba">abs</a>(n));
 <a name="l00053"></a>00053 
-<a name="l00054"></a>00054         <span class="keywordtype">int</span> length=exponent._get_length(), lastBitCount=0;
+<a name="l00054"></a>00054         <span class="keywordtype">size_t</span> length=exponent._get_length(), lastBitCount=0;
 <a name="l00055"></a>00055         <a class="code" href="namespacexint_1_1detail.html#a8843fb7e364832d8d5983de28bdbcf34">detail::digit_t</a> ee(exponent._get_digit(length-1));
 <a name="l00056"></a>00056         <span class="keywordflow">while</span> (ee != 0) { ee &gt;&gt;= 1; ++lastBitCount; }
 <a name="l00057"></a>00057 
-<a name="l00058"></a>00058         <span class="keywordflow">for</span> (<span class="keywordtype">int</span> eIndex=0; eIndex &lt; length; ++eIndex) {
+<a name="l00058"></a>00058         <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> eIndex=0; eIndex &lt; length; ++eIndex) {
 <a name="l00059"></a>00059             <a class="code" href="namespacexint_1_1detail.html#a8843fb7e364832d8d5983de28bdbcf34">detail::digit_t</a> e(exponent._get_digit(eIndex));
 <a name="l00060"></a>00060 
-<a name="l00061"></a>00061             <span class="keywordtype">int</span> bitCount(eIndex == length-1 ? lastBitCount :
-<a name="l00062"></a>00062                 <a class="code" href="namespacexint_1_1detail.html#a9bd9e8d55061238d63913020d2721518">detail::bits_per_digit</a>);
+<a name="l00061"></a>00061             <span class="keywordtype">int</span> bitCount(<span class="keywordtype">int</span>(eIndex == length-1 ? lastBitCount :
+<a name="l00062"></a>00062                 <a class="code" href="namespacexint_1_1detail.html#a9bd9e8d55061238d63913020d2721518">detail::bits_per_digit</a>));
 <a name="l00063"></a>00063             <span class="keywordflow">while</span> (bitCount-- &gt; 0) {
 <a name="l00064"></a>00064                 <span class="keywordflow">if</span> (e &amp; 0x01) answer=<a class="code" href="namespacexint.html#a67ad0747617ca6e780d6f67d60260450">mulmod</a>(answer, p, modulus);
 <a name="l00065"></a>00065                 p=<a class="code" href="namespacexint.html#a594bd29593aad9a1c047af22e91e749c">sqrmod</a>(p, modulus);
@@ -148,7 +148,7 @@
       <!-- Change copyright to YOUR name (and affiliation, if any) below:  -->
      <p>Copyright © 2009 - 2010 Chad Nelson, Oak Circle Software, Inc</p>
       <!-- 2010 becomes the current year, for example 2010, so claims copyright for a range of years, 2009 - 2010. -->
-     <p>Doxygen Documentation generated by&nbsp;<a href="http://www.doxygen.org/index.html"> <img src="doxygen.png" alt="doxygen logo" align="middle" border="0"/> 1.6.3</a>, Revised at Tue Mar 30 18:10:43 2010</p>
+     <p>Doxygen Documentation generated by&nbsp;<a href="http://www.doxygen.org/index.html"> <img src="doxygen.png" alt="doxygen logo" align="middle" border="0"/> 1.6.3</a>, Revised at Wed Mar 31 15:44:54 2010</p>
   </address>
   </tr>
 </tbody>

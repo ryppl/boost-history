@@ -15,7 +15,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
 
   <!-- Add your title here ! -->
-  <title>Quickbook Doxygen Index Prototype Tue Mar 30 18:10:43 2010 xInt eXtended Integer Library </title>
+  <title>Quickbook Doxygen Index Prototype Wed Mar 31 15:44:54 2010 xInt eXtended Integer Library </title>
 
   <!-- Add your custom stylesheet here ! -->
   <link href="my_doxygen.css" rel="stylesheet" type="text/css"/>
@@ -102,7 +102,7 @@
 <a name="l00046"></a>00046     std::vector&lt;doubledigit_t&gt; a(ndata-&gt;mLength*2+1, 0);
 <a name="l00047"></a>00047     <a class="code" href="namespacexint_1_1detail.html#aceb9b654c1c2daaf377b31bd4a089750">doubledigit_t</a> *adigit=&amp;a[0];
 <a name="l00048"></a>00048 
-<a name="l00049"></a>00049     <span class="keywordtype">int</span> i, j;
+<a name="l00049"></a>00049     <span class="keywordtype">size_t</span> i, j;
 <a name="l00050"></a>00050     integer addend;
 <a name="l00051"></a>00051     data_t *addenddata=addend._get_data();
 <a name="l00052"></a>00052     addenddata-&gt;alloc(ndata-&gt;mLength*2+1);
@@ -142,15 +142,15 @@
 <a name="l00086"></a>00086 integer <a class="code" href="namespacexint.html#aeee80b61e0cadc12f92752104e281b2c">pow</a>(<span class="keyword">const</span> integer&amp; n, <span class="keyword">const</span> integer&amp; exponent) {
 <a name="l00087"></a>00087     <span class="keywordtype">bool</span> neg=(n.sign() &lt; 0 &amp;&amp; exponent.odd());
 <a name="l00088"></a>00088 
-<a name="l00089"></a>00089     <span class="keywordtype">int</span> length=exponent.<a class="code" href="classxint_1_1integer.html#a5723a74b98da2d5ed9452a7ec10c0ca2">_get_length</a>(), lastBitCount=0;
+<a name="l00089"></a>00089     <span class="keywordtype">size_t</span> length=exponent.<a class="code" href="classxint_1_1integer.html#a5723a74b98da2d5ed9452a7ec10c0ca2">_get_length</a>(), lastBitCount=0;
 <a name="l00090"></a>00090     <a class="code" href="namespacexint_1_1detail.html#a8843fb7e364832d8d5983de28bdbcf34">digit_t</a> ee(exponent._get_digit(length-1));
 <a name="l00091"></a>00091     <span class="keywordflow">while</span> (ee != 0) { ee &gt;&gt;= 1; ++lastBitCount; }
 <a name="l00092"></a>00092 
-<a name="l00093"></a>00093     integer p(<a class="code" href="namespacexint.html#ac9e4ed282bafa93dbf608350df0127ba">abs</a>(n)), answer=<a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8" title="Extended integer holding one.">integer::one</a>();
-<a name="l00094"></a>00094     <span class="keywordflow">for</span> (<span class="keywordtype">int</span> eIndex=0; eIndex &lt; length; ++eIndex) {
+<a name="l00093"></a>00093     integer p(<a class="code" href="namespacexint.html#ac9e4ed282bafa93dbf608350df0127ba">abs</a>(n)), answer=<a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8">integer::one</a>();
+<a name="l00094"></a>00094     <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> eIndex=0; eIndex &lt; length; ++eIndex) {
 <a name="l00095"></a>00095         <a class="code" href="namespacexint_1_1detail.html#a8843fb7e364832d8d5983de28bdbcf34">digit_t</a> e(exponent._get_digit(eIndex));
 <a name="l00096"></a>00096 
-<a name="l00097"></a>00097         <span class="keywordtype">int</span> bitCount(eIndex == length-1 ? lastBitCount : <a class="code" href="namespacexint_1_1detail.html#a9bd9e8d55061238d63913020d2721518">bits_per_digit</a>);
+<a name="l00097"></a>00097         <span class="keywordtype">int</span> bitCount(<span class="keywordtype">int</span>(eIndex == length-1 ? lastBitCount : <a class="code" href="namespacexint_1_1detail.html#a9bd9e8d55061238d63913020d2721518">bits_per_digit</a>));
 <a name="l00098"></a>00098         <span class="keywordflow">while</span> (bitCount-- &gt; 0) {
 <a name="l00099"></a>00099             <span class="keywordflow">if</span> (e &amp; 0x01) answer*=p;
 <a name="l00100"></a>00100             p=<a class="code" href="namespacexint.html#a0aec423511839fd784b1654389dfcf5b">sqr</a>(p);
@@ -163,7 +163,7 @@
 <a name="l00107"></a>00107 }
 <a name="l00108"></a>00108 
 <a name="l00109"></a>00109 integer <a class="code" href="namespacexint.html#aba188df925c87a0f33a79328e31e1a50">factorial</a>(<span class="keywordtype">size_t</span> n) {
-<a name="l00110"></a>00110     integer r(<a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8" title="Extended integer holding one.">integer::one</a>());
+<a name="l00110"></a>00110     integer r(<a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8">integer::one</a>());
 <a name="l00111"></a>00111     <span class="keywordflow">if</span> (n == (std::numeric_limits&lt;size_t&gt;::max)()) {
 <a name="l00112"></a>00112         <span class="comment">// It&#39;s highly unlikely that the system will be able to calculate this,</span>
 <a name="l00113"></a>00113         <span class="comment">// or that anyone might want to, but someday it will be possible. This</span>
@@ -196,7 +196,7 @@
       <!-- Change copyright to YOUR name (and affiliation, if any) below:  -->
      <p>Copyright © 2009 - 2010 Chad Nelson, Oak Circle Software, Inc</p>
       <!-- 2010 becomes the current year, for example 2010, so claims copyright for a range of years, 2009 - 2010. -->
-     <p>Doxygen Documentation generated by&nbsp;<a href="http://www.doxygen.org/index.html"> <img src="doxygen.png" alt="doxygen logo" align="middle" border="0"/> 1.6.3</a>, Revised at Tue Mar 30 18:10:43 2010</p>
+     <p>Doxygen Documentation generated by&nbsp;<a href="http://www.doxygen.org/index.html"> <img src="doxygen.png" alt="doxygen logo" align="middle" border="0"/> 1.6.3</a>, Revised at Wed Mar 31 15:44:54 2010</p>
   </address>
   </tr>
 </tbody>

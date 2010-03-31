@@ -15,7 +15,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
 
   <!-- Add your title here ! -->
-  <title>Quickbook Doxygen Index Prototype Tue Mar 30 18:10:43 2010 xInt eXtended Integer Library </title>
+  <title>Quickbook Doxygen Index Prototype Wed Mar 31 15:44:54 2010 xInt eXtended Integer Library </title>
 
   <!-- Add your custom stylesheet here ! -->
   <link href="my_doxygen.css" rel="stylesheet" type="text/css"/>
@@ -88,7 +88,7 @@
 <a name="l00032"></a>00032 }
 <a name="l00033"></a>00033 
 <a name="l00034"></a>00034 integer <a class="code" href="namespacexint.html#aaf3b26669d4e61f6af5dcae42b20e08b">montgomeryR</a>(<span class="keyword">const</span> integer&amp; n) {
-<a name="l00035"></a>00035     <span class="keywordflow">return</span> <a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8" title="Extended integer holding one.">integer::one</a>() &lt;&lt; (<a class="code" href="namespacexint_1_1detail.html#a9bd9e8d55061238d63913020d2721518">bits_per_digit</a> * n._get_data()-&gt;mLength);
+<a name="l00035"></a>00035     <span class="keywordflow">return</span> <a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8">integer::one</a>() &lt;&lt; (<a class="code" href="namespacexint_1_1detail.html#a9bd9e8d55061238d63913020d2721518">bits_per_digit</a> * n._get_data()-&gt;mLength);
 <a name="l00036"></a>00036 }
 <a name="l00037"></a>00037 
 <a name="l00038"></a>00038 integer <a class="code" href="namespacexint.html#ab8e85cd5425fcec419c07155e2a91e13">toMontgomeryForm</a>(<span class="keyword">const</span> integer&amp; n, <span class="keyword">const</span> integer&amp; m) {
@@ -140,10 +140,10 @@
 <a name="l00084"></a>00084     <span class="comment">// nPrime0 is nPrime mod B, or digit zero of nPrime</span>
 <a name="l00085"></a>00085 
 <a name="l00086"></a>00086     <span class="keyword">const</span> integer B(<a class="code" href="namespacexint_1_1detail.html#a6746855fd8cde164294a46108d502e6a">digit_overflowbit</a>);
-<a name="l00087"></a>00087     <span class="keyword">const</span> <span class="keywordtype">int</span> L(n._get_length()), L1(L-1);
+<a name="l00087"></a>00087     <span class="keyword">const</span> <span class="keywordtype">size_t</span> L(n._get_length()), L1(L-1);
 <a name="l00088"></a>00088 
 <a name="l00089"></a>00089     integer t=a*b;
-<a name="l00090"></a>00090     <span class="keywordtype">int</span> i=0;
+<a name="l00090"></a>00090     <span class="keywordtype">size_t</span> i=0;
 <a name="l00091"></a>00091 
 <a name="l00092"></a>00092     <span class="keywordflow">do</span> {
 <a name="l00093"></a>00093         <a class="code" href="namespacexint_1_1detail.html#a8843fb7e364832d8d5983de28bdbcf34">digit_t</a> mi=<a class="code" href="namespacexint_1_1detail.html#a8843fb7e364832d8d5983de28bdbcf34">digit_t</a>(<a class="code" href="namespacexint_1_1detail.html#aceb9b654c1c2daaf377b31bd4a089750">doubledigit_t</a>(t._get_digit(i))*nPrime0);
@@ -222,13 +222,13 @@
 <a name="l00166"></a>00166     integer aa=a*r%n, aSquared=a*a%n;
 <a name="l00167"></a>00167 
 <a name="l00168"></a>00168     vxint_t rval;
-<a name="l00169"></a>00169     rval.reserve(<a class="code" href="monty_8cpp.html#a5e044fcc16f6eb5e891ef312f47209ac">ddPowerOfTwo</a>(k));
-<a name="l00170"></a>00170     rval.push_back(<a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8" title="Extended integer holding one.">integer::one</a>());     <span class="comment">// Anything to the zeroth power is one</span>
+<a name="l00169"></a>00169     rval.reserve(<span class="keywordtype">size_t</span>(<a class="code" href="monty_8cpp.html#a5e044fcc16f6eb5e891ef312f47209ac">ddPowerOfTwo</a>(k)));
+<a name="l00170"></a>00170     rval.push_back(<a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8">integer::one</a>());     <span class="comment">// Anything to the zeroth power is one</span>
 <a name="l00171"></a>00171     rval.push_back(aa);                 <span class="comment">// Anything to the first power is itself</span>
 <a name="l00172"></a>00172 
 <a name="l00173"></a>00173     <span class="keywordflow">for</span> (<a class="code" href="namespacexint_1_1detail.html#aceb9b654c1c2daaf377b31bd4a089750">doubledigit_t</a> i=3, ie=(<a class="code" href="monty_8cpp.html#a5e044fcc16f6eb5e891ef312f47209ac">ddPowerOfTwo</a>(k)); i&lt;ie; i+=2) {
 <a name="l00174"></a>00174         aa=aa*aSquared%n;
-<a name="l00175"></a>00175         rval.push_back(<a class="code" href="classxint_1_1integer.html#a64a0f99de7c33239237cb59d8464f3d2" title="Extended integer holding zero.">integer::zero</a>()); <span class="comment">// Even powers not needed or calculated</span>
+<a name="l00175"></a>00175         rval.push_back(<a class="code" href="classxint_1_1integer.html#a64a0f99de7c33239237cb59d8464f3d2">integer::zero</a>()); <span class="comment">// Even powers not needed or calculated</span>
 <a name="l00176"></a>00176         rval.push_back(aa);              <span class="comment">// Odd power</span>
 <a name="l00177"></a>00177     }
 <a name="l00178"></a>00178 
@@ -271,7 +271,7 @@
 <a name="l00215"></a>00215 
 <a name="l00216"></a>00216     <span class="keyword">const</span> TUTable &amp;tuTable(TUTable::get());
 <a name="l00217"></a>00217 
-<a name="l00218"></a>00218     <span class="keywordflow">if</span> (e.sign()==0) <span class="keywordflow">return</span> <a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8" title="Extended integer holding one.">integer::one</a>();
+<a name="l00218"></a>00218     <span class="keywordflow">if</span> (e.sign()==0) <span class="keywordflow">return</span> <a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8">integer::one</a>();
 <a name="l00219"></a>00219     <span class="keywordflow">if</span> (n.even()) {
 <a name="l00220"></a>00220         <span class="keywordflow">if</span> (<a class="code" href="namespacexint.html#ac8be41374700d89400f5ecddf0f789e3">exceptions_allowed</a>()) <span class="keywordflow">throw</span> invalid_modulus(<span class="stringliteral">&quot;montgomeryPowerMod &quot;</span>
 <a name="l00221"></a>00221             <span class="stringliteral">&quot;requires an odd modulus&quot;</span>);
@@ -309,7 +309,7 @@
 <a name="l00253"></a>00253         } <span class="keywordflow">else</span> {
 <a name="l00254"></a>00254             std::pair&lt;int, int&gt; tu=tuTable[i];
 <a name="l00255"></a>00255 
-<a name="l00256"></a>00256             <span class="keywordtype">int</span> s=k-tu.first;
+<a name="l00256"></a>00256             <span class="keywordtype">size_t</span> s=k-tu.first;
 <a name="l00257"></a>00257             <span class="keywordflow">while</span> (s-- &gt; 0) pp=<a class="code" href="namespacexint.html#a722769c7d01e06d9f82eae07a280160c">montgomeryMultiplyMod</a>(pp, pp, n, nPrime0);
 <a name="l00258"></a>00258 
 <a name="l00259"></a>00259             pp=<a class="code" href="namespacexint.html#a722769c7d01e06d9f82eae07a280160c">montgomeryMultiplyMod</a>(pp, oddPowersOfAa[tu.second], n, nPrime0);
@@ -318,7 +318,7 @@
 <a name="l00262"></a>00262         }
 <a name="l00263"></a>00263     }
 <a name="l00264"></a>00264 
-<a name="l00265"></a>00265     <span class="keywordflow">return</span> <a class="code" href="namespacexint.html#a722769c7d01e06d9f82eae07a280160c">montgomeryMultiplyMod</a>(pp, <a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8" title="Extended integer holding one.">integer::one</a>(), n, nPrime0);
+<a name="l00265"></a>00265     <span class="keywordflow">return</span> <a class="code" href="namespacexint.html#a722769c7d01e06d9f82eae07a280160c">montgomeryMultiplyMod</a>(pp, <a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8">integer::one</a>(), n, nPrime0);
 <a name="l00266"></a>00266 }
 <a name="l00267"></a>00267 
 <a name="l00268"></a>00268 } <span class="comment">// namespace xint</span>
@@ -341,7 +341,7 @@
       <!-- Change copyright to YOUR name (and affiliation, if any) below:  -->
      <p>Copyright © 2009 - 2010 Chad Nelson, Oak Circle Software, Inc</p>
       <!-- 2010 becomes the current year, for example 2010, so claims copyright for a range of years, 2009 - 2010. -->
-     <p>Doxygen Documentation generated by&nbsp;<a href="http://www.doxygen.org/index.html"> <img src="doxygen.png" alt="doxygen logo" align="middle" border="0"/> 1.6.3</a>, Revised at Tue Mar 30 18:10:43 2010</p>
+     <p>Doxygen Documentation generated by&nbsp;<a href="http://www.doxygen.org/index.html"> <img src="doxygen.png" alt="doxygen logo" align="middle" border="0"/> 1.6.3</a>, Revised at Wed Mar 31 15:44:54 2010</p>
   </address>
   </tr>
 </tbody>

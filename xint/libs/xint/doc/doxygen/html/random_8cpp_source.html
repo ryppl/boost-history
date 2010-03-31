@@ -15,7 +15,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
 
   <!-- Add your title here ! -->
-  <title>Quickbook Doxygen Index Prototype Tue Mar 30 18:10:43 2010 xInt eXtended Integer Library </title>
+  <title>Quickbook Doxygen Index Prototype Wed Mar 31 15:44:54 2010 xInt eXtended Integer Library </title>
 
   <!-- Add your custom stylesheet here ! -->
   <link href="my_doxygen.css" rel="stylesheet" type="text/css"/>
@@ -73,222 +73,198 @@
 <a name="l00017"></a>00017 <span class="preprocessor">#include &lt;vector&gt;</span>
 <a name="l00018"></a>00018 <span class="preprocessor">#include &lt;sstream&gt;</span>
 <a name="l00019"></a>00019 <span class="preprocessor">#include &lt;fstream&gt;</span>
-<a name="l00020"></a>00020 
-<a name="l00021"></a>00021 <span class="preprocessor">#include &lt;boost/crc.hpp&gt;</span>
-<a name="l00022"></a>00022 <span class="preprocessor">#include &lt;boost/random/mersenne_twister.hpp&gt;</span>
-<a name="l00023"></a>00023 
-<a name="l00024"></a>00024 <span class="preprocessor">#ifdef XINT_THREADSAFE</span>
-<a name="l00025"></a>00025 <span class="preprocessor"></span><span class="preprocessor">    #include &lt;boost/thread.hpp&gt;</span>
-<a name="l00026"></a>00026 <span class="preprocessor">#endif</span>
-<a name="l00027"></a>00027 <span class="preprocessor"></span>
-<a name="l00028"></a>00028 <span class="preprocessor">#ifdef _WIN32</span>
-<a name="l00029"></a>00029 <span class="preprocessor"></span><span class="preprocessor">    #define STRICT</span>
-<a name="l00030"></a>00030 <span class="preprocessor"></span><span class="preprocessor">    #define WIN32_LEAN_AND_MEAN</span>
-<a name="l00031"></a>00031 <span class="preprocessor"></span><span class="preprocessor">    #define NOMINMAX</span>
-<a name="l00032"></a>00032 <span class="preprocessor"></span><span class="preprocessor">    #include &lt;windows.h&gt;</span>
-<a name="l00033"></a>00033 <span class="preprocessor">    #include &lt;TCHAR.h&gt;</span>
-<a name="l00034"></a>00034 <span class="preprocessor">#endif</span>
-<a name="l00035"></a>00035 <span class="preprocessor"></span>
-<a name="l00036"></a>00036 <span class="keyword">namespace </span>xint {
-<a name="l00037"></a>00037 
-<a name="l00038"></a>00038 <span class="keyword">using namespace </span>detail;
-<a name="l00039"></a>00039 
-<a name="l00040"></a>00040 <span class="keyword">namespace </span>{
-<a name="l00041"></a>00041 
-<a name="l00042"></a>00042 <span class="keyword">class </span>generator_t {
-<a name="l00043"></a>00043     <span class="keyword">typedef</span> boost::mt19937 internal_generator_t;
-<a name="l00044"></a>00044 
-<a name="l00045"></a>00045     <span class="keyword">public</span>:
-<a name="l00046"></a>00046     <span class="keyword">typedef</span> internal_generator_t::result_type result_type;
-<a name="l00047"></a>00047 
-<a name="l00048"></a>00048 <span class="preprocessor">    #ifdef XINT_THREADSAFE</span>
-<a name="l00049"></a>00049 <span class="preprocessor"></span>        generator_t() { mLock.lock(); init(); }
-<a name="l00050"></a>00050         ~generator_t() { mLock.unlock(); }
-<a name="l00051"></a>00051 <span class="preprocessor">    #else</span>
-<a name="l00052"></a>00052 <span class="preprocessor"></span>        generator_t() { init(); }
-<a name="l00053"></a>00053 <span class="preprocessor">    #endif</span>
-<a name="l00054"></a>00054 <span class="preprocessor"></span>
-<a name="l00055"></a>00055     <span class="keywordtype">void</span> <a class="code" href="namespacexint.html#afeca589b50c2c8cb4bea98200ae51dbe">seed_manual</a>(<span class="keyword">const</span> std::string&amp; bytes);
-<a name="l00056"></a>00056     <span class="keywordtype">bool</span> <a class="code" href="namespacexint.html#ade2beef1aca9c4ebb119d16c2d068e70">seed_secure</a>();
-<a name="l00057"></a>00057     <span class="keywordtype">void</span> <a class="code" href="namespacexint.html#a16e22040e770d828903bb5d11ed6e046">seed_fallback</a>();
-<a name="l00058"></a>00058     result_type operator()();
+<a name="l00020"></a>00020 <span class="preprocessor">#include &lt;ctime&gt;</span>
+<a name="l00021"></a>00021 <span class="preprocessor">#include &lt;boost/random/mersenne_twister.hpp&gt;</span>
+<a name="l00022"></a>00022 
+<a name="l00023"></a>00023 <span class="preprocessor">#ifdef XINT_THREADSAFE</span>
+<a name="l00024"></a>00024 <span class="preprocessor"></span><span class="preprocessor">    #include &lt;boost/thread.hpp&gt;</span>
+<a name="l00025"></a>00025 <span class="preprocessor">#endif</span>
+<a name="l00026"></a>00026 <span class="preprocessor"></span>
+<a name="l00027"></a>00027 <span class="preprocessor">#ifdef _WIN32</span>
+<a name="l00028"></a>00028 <span class="preprocessor"></span><span class="preprocessor">    #define STRICT</span>
+<a name="l00029"></a>00029 <span class="preprocessor"></span><span class="preprocessor">    #define WIN32_LEAN_AND_MEAN</span>
+<a name="l00030"></a>00030 <span class="preprocessor"></span><span class="preprocessor">    #define NOMINMAX</span>
+<a name="l00031"></a>00031 <span class="preprocessor"></span><span class="preprocessor">    #include &lt;windows.h&gt;</span>
+<a name="l00032"></a>00032 <span class="preprocessor">    #include &lt;TCHAR.h&gt;</span>
+<a name="l00033"></a>00033 <span class="preprocessor">#endif</span>
+<a name="l00034"></a>00034 <span class="preprocessor"></span>
+<a name="l00035"></a>00035 <span class="keyword">namespace </span>xint {
+<a name="l00036"></a>00036 
+<a name="l00037"></a>00037 <span class="keyword">using namespace </span>detail;
+<a name="l00038"></a>00038 
+<a name="l00039"></a>00039 <span class="keyword">namespace </span>{
+<a name="l00040"></a>00040 
+<a name="l00041"></a>00041 <span class="keyword">class </span>generator_t {
+<a name="l00042"></a>00042     <span class="keyword">public</span>:
+<a name="l00043"></a>00043     <span class="keyword">typedef</span> <a class="code" href="structxint_1_1detail_1_1base__random__generator.html#a0556d7f290cd236303b3f1031611cb3e">base_random_generator::result_type</a> result_type;
+<a name="l00044"></a>00044     <span class="keyword">typedef</span> boost::mt19937 default_random_t;
+<a name="l00045"></a>00045 
+<a name="l00046"></a>00046 <span class="preprocessor">    #ifdef XINT_THREADSAFE</span>
+<a name="l00047"></a>00047 <span class="preprocessor"></span>        generator_t() { mLock.lock(); init(); }
+<a name="l00048"></a>00048         ~generator_t() { mLock.unlock(); }
+<a name="l00049"></a>00049 <span class="preprocessor">    #else</span>
+<a name="l00050"></a>00050 <span class="preprocessor"></span>        generator_t() { init(); }
+<a name="l00051"></a>00051 <span class="preprocessor">    #endif</span>
+<a name="l00052"></a>00052 <span class="preprocessor"></span>
+<a name="l00053"></a>00053     result_type operator()() { <span class="keywordflow">return</span> <a class="code" href="random_8cpp.html#ab29291663b453f8de2fecf35aa62e1d8">mGeneratorFn</a>(); }
+<a name="l00054"></a>00054 
+<a name="l00055"></a>00055     <span class="keyword">static</span> <span class="keywordtype">void</span> set_generator(<a class="code" href="namespacexint_1_1detail.html#a9c9dc00dbbe287492696635ed41dce44">random_t</a> g, base_random_generator *p) {
+<a name="l00056"></a>00056         <a class="code" href="random_8cpp.html#a5a10f5470776b1e8b6c0dd791a9baa6a">mGeneratorObj</a>.reset(p);
+<a name="l00057"></a>00057         <a class="code" href="random_8cpp.html#ab29291663b453f8de2fecf35aa62e1d8">mGeneratorFn</a>=g;
+<a name="l00058"></a>00058     }
 <a name="l00059"></a>00059 
 <a name="l00060"></a>00060     <span class="keyword">private</span>:
-<a name="l00061"></a>00061     <span class="keyword">class </span>SeedGenerator {
-<a name="l00062"></a>00062         <span class="keyword">public</span>:
-<a name="l00063"></a>00063         SeedGenerator(<span class="keyword">const</span> std::string&amp; seedstring): <a class="code" href="random_8cpp.html#a53e7e690c68e339c9e7b89593957137a">mString</a>(seedstring.substr(0,
-<a name="l00064"></a>00064             <a class="code" href="random_8cpp.html#a5223229006a12ebbbbdfb70c32f58844">cSeedMaximumBytes</a>)), <a class="code" href="random_8cpp.html#a7d6e1aeab9ee350c5d9b29ea31b02573">mNumber</a>(0) { }
-<a name="l00065"></a>00065         internal_generator_t::result_type operator()() {
-<a name="l00066"></a>00066             std::ostringstream s1;
-<a name="l00067"></a>00067             s1 &lt;&lt; <a class="code" href="random_8cpp.html#a7d6e1aeab9ee350c5d9b29ea31b02573">mNumber</a>++ &lt;&lt; <a class="code" href="random_8cpp.html#a53e7e690c68e339c9e7b89593957137a">mString</a>;
-<a name="l00068"></a>00068             std::string s2=s1.str();
+<a name="l00061"></a>00061     <span class="keywordtype">void</span> init() {
+<a name="l00062"></a>00062         <span class="keywordflow">if</span> (!<a class="code" href="random_8cpp.html#ab29291663b453f8de2fecf35aa62e1d8">mGeneratorFn</a>) {
+<a name="l00063"></a>00063             <span class="keyword">typedef</span> default_random_t T;
+<a name="l00064"></a>00064             <a class="code" href="random_8cpp.html#a238ff0f867d5c1cbee8f90025cf78d84">mDefaultGenerator</a>.reset(<span class="keyword">new</span> T(boost::uint32_t(time(0)+clock())));
+<a name="l00065"></a>00065             random_generator&lt;T&gt; *obj=<span class="keyword">new</span> random_generator&lt;T&gt;(*mDefaultGenerator);
+<a name="l00066"></a>00066             set_generator(*obj, obj);
+<a name="l00067"></a>00067         }
+<a name="l00068"></a>00068     }
 <a name="l00069"></a>00069 
-<a name="l00070"></a>00070             boost::crc_32_type crc;
-<a name="l00071"></a>00071             crc.process_bytes(s2.c_str(), s2.length());
-<a name="l00072"></a>00072             <span class="keywordflow">return</span> crc.checksum();
-<a name="l00073"></a>00073         }
-<a name="l00074"></a>00074 
-<a name="l00075"></a>00075 <span class="preprocessor">        #ifdef XINT_SECURE</span>
-<a name="l00076"></a>00076 <span class="preprocessor"></span>            <span class="keyword">static</span> <span class="keywordtype">char</span> zero(<span class="keywordtype">char</span>) { <span class="keywordflow">return</span> 0; }
-<a name="l00077"></a>00077 
-<a name="l00078"></a>00078             ~SeedGenerator() {
-<a name="l00079"></a>00079                 <a class="code" href="random_8cpp.html#a7d6e1aeab9ee350c5d9b29ea31b02573">mNumber</a>=0;
-<a name="l00080"></a>00080                 std::transform(mString.begin(), mString.end(), mString.begin(),
-<a name="l00081"></a>00081                     zero);
-<a name="l00082"></a>00082             }
-<a name="l00083"></a>00083 <span class="preprocessor">        #endif</span>
-<a name="l00084"></a>00084 <span class="preprocessor"></span>
-<a name="l00085"></a>00085         <span class="keyword">private</span>:
-<a name="l00086"></a><a class="code" href="random_8cpp.html#a5223229006a12ebbbbdfb70c32f58844">00086</a>         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> <a class="code" href="random_8cpp.html#a5223229006a12ebbbbdfb70c32f58844">cSeedMaximumBytes</a>=4096;
-<a name="l00087"></a>00087 
-<a name="l00088"></a><a class="code" href="random_8cpp.html#a53e7e690c68e339c9e7b89593957137a">00088</a>         std::string mString;
-<a name="l00089"></a><a class="code" href="random_8cpp.html#a7d6e1aeab9ee350c5d9b29ea31b02573">00089</a>         <span class="keywordtype">int</span> <a class="code" href="random_8cpp.html#a7d6e1aeab9ee350c5d9b29ea31b02573">mNumber</a>;
-<a name="l00090"></a>00090     };
-<a name="l00091"></a>00091 
-<a name="l00092"></a>00092     <span class="keywordtype">void</span> init();
-<a name="l00093"></a>00093 
-<a name="l00094"></a><a class="code" href="random_8cpp.html#ad94db68c58845e9483f2241232395966">00094</a>     <span class="keyword">static</span> internal_generator_t *<a class="code" href="random_8cpp.html#ad94db68c58845e9483f2241232395966">mGen</a>;
-<a name="l00095"></a><a class="code" href="random_8cpp.html#a7fadbfa933b8181768eb9e2a6cb5379f">00095</a>     <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="random_8cpp.html#a7fadbfa933b8181768eb9e2a6cb5379f">mSeeded</a>;
-<a name="l00096"></a>00096 
-<a name="l00097"></a>00097 <span class="preprocessor">    #ifdef XINT_THREADSAFE</span>
-<a name="l00098"></a>00098 <span class="preprocessor"></span>        <span class="keyword">static</span> boost::mutex mLock;
-<a name="l00099"></a>00099 <span class="preprocessor">    #endif</span>
-<a name="l00100"></a>00100 <span class="preprocessor"></span>};
+<a name="l00070"></a><a class="code" href="random_8cpp.html#ab29291663b453f8de2fecf35aa62e1d8">00070</a>     <span class="keyword">static</span> <a class="code" href="namespacexint_1_1detail.html#a9c9dc00dbbe287492696635ed41dce44">random_t</a> <a class="code" href="random_8cpp.html#ab29291663b453f8de2fecf35aa62e1d8">mGeneratorFn</a>;
+<a name="l00071"></a><a class="code" href="random_8cpp.html#a5a10f5470776b1e8b6c0dd791a9baa6a">00071</a>     <span class="keyword">static</span> std::auto_ptr&lt;base_random_generator&gt; <a class="code" href="random_8cpp.html#a5a10f5470776b1e8b6c0dd791a9baa6a">mGeneratorObj</a>;
+<a name="l00072"></a><a class="code" href="random_8cpp.html#a238ff0f867d5c1cbee8f90025cf78d84">00072</a>     <span class="keyword">static</span> std::auto_ptr&lt;default_random_t&gt; <a class="code" href="random_8cpp.html#a238ff0f867d5c1cbee8f90025cf78d84">mDefaultGenerator</a>;
+<a name="l00073"></a>00073 
+<a name="l00074"></a>00074 <span class="preprocessor">    #ifdef XINT_THREADSAFE</span>
+<a name="l00075"></a>00075 <span class="preprocessor"></span>        <span class="keyword">static</span> boost::mutex mLock;
+<a name="l00076"></a>00076 <span class="preprocessor">    #endif</span>
+<a name="l00077"></a>00077 <span class="preprocessor"></span>};
+<a name="l00078"></a>00078 
+<a name="l00079"></a>00079 std::auto_ptr&lt;base_random_generator&gt; <a class="code" href="random_8cpp.html#a5a10f5470776b1e8b6c0dd791a9baa6a">generator_t::mGeneratorObj</a>;
+<a name="l00080"></a>00080 std::auto_ptr&lt;generator_t::default_random_t&gt; <a class="code" href="random_8cpp.html#a238ff0f867d5c1cbee8f90025cf78d84">generator_t::mDefaultGenerator</a>;
+<a name="l00081"></a>00081 <a class="code" href="namespacexint_1_1detail.html#a9c9dc00dbbe287492696635ed41dce44">random_t</a> <a class="code" href="random_8cpp.html#ab29291663b453f8de2fecf35aa62e1d8">generator_t::mGeneratorFn</a>;
+<a name="l00082"></a>00082 
+<a name="l00083"></a>00083 <span class="preprocessor">#ifdef XINT_THREADSAFE</span>
+<a name="l00084"></a>00084 <span class="preprocessor"></span>    boost::mutex generator_t::mLock;
+<a name="l00085"></a>00085 <span class="preprocessor">#endif</span>
+<a name="l00086"></a>00086 <span class="preprocessor"></span>
+<a name="l00087"></a>00087 } <span class="comment">// namespace</span>
+<a name="l00088"></a>00088 
+<a name="l00089"></a>00089 <span class="keyword">namespace </span>detail {
+<a name="l00090"></a>00090 
+<a name="l00091"></a>00091 <span class="keywordtype">void</span> <a class="code" href="namespacexint_1_1detail.html#ada65da12642b63f663b50382068a607f">set_random_generator</a>(<a class="code" href="namespacexint_1_1detail.html#a9c9dc00dbbe287492696635ed41dce44">random_t</a> fn, base_random_generator *obj) {
+<a name="l00092"></a>00092     generator_t::set_generator(fn, obj);
+<a name="l00093"></a>00093 }
+<a name="l00094"></a>00094 
+<a name="l00095"></a>00095 <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="namespacexint_1_1detail.html#a1dfc1e90886c4897a4b112f491b89b62">get_random</a>() {
+<a name="l00096"></a>00096     generator_t gen;
+<a name="l00097"></a>00097     <span class="keywordflow">return</span> gen();
+<a name="l00098"></a>00098 }
+<a name="l00099"></a>00099 
+<a name="l00100"></a>00100 } <span class="comment">// namespace detail</span>
 <a name="l00101"></a>00101 
-<a name="l00102"></a>00102 generator_t::internal_generator_t *<a class="code" href="random_8cpp.html#ad94db68c58845e9483f2241232395966">generator_t::mGen</a>=0;
-<a name="l00103"></a>00103 <span class="keywordtype">bool</span> <a class="code" href="random_8cpp.html#a7fadbfa933b8181768eb9e2a6cb5379f">generator_t::mSeeded</a>=<span class="keyword">false</span>;
+<a name="l00103"></a>00103 <span class="comment">// The secure random generator</span>
 <a name="l00104"></a>00104 
-<a name="l00105"></a>00105 <span class="preprocessor">#ifdef XINT_THREADSAFE</span>
-<a name="l00106"></a>00106 <span class="preprocessor"></span>    boost::mutex generator_t::mLock;
-<a name="l00107"></a>00107 <span class="preprocessor">#endif</span>
-<a name="l00108"></a>00108 <span class="preprocessor"></span>
-<a name="l00109"></a>00109 <span class="keywordtype">void</span> <a class="code" href="namespacexint.html#afeca589b50c2c8cb4bea98200ae51dbe">generator_t::seed_manual</a>(<span class="keyword">const</span> std::string&amp; bytes) {
-<a name="l00110"></a>00110     SeedGenerator gen(bytes);
-<a name="l00111"></a>00111     <a class="code" href="random_8cpp.html#ad94db68c58845e9483f2241232395966">mGen</a>-&gt;seed(gen);
-<a name="l00112"></a>00112     <a class="code" href="random_8cpp.html#a7fadbfa933b8181768eb9e2a6cb5379f">mSeeded</a>=<span class="keyword">true</span>;
-<a name="l00113"></a>00113 }
-<a name="l00114"></a>00114 
-<a name="l00115"></a>00115 <span class="keywordtype">bool</span> <a class="code" href="namespacexint.html#ade2beef1aca9c4ebb119d16c2d068e70">generator_t::seed_secure</a>() {
-<a name="l00116"></a>00116     <span class="keyword">const</span> <span class="keywordtype">int</span> cBitsRequested=256,
-<a name="l00117"></a>00117         cBytesRequested=cBitsRequested / std::numeric_limits&lt;char&gt;::digits;
-<a name="l00118"></a>00118     <span class="keywordtype">bool</span> success=<span class="keyword">false</span>;
-<a name="l00119"></a>00119 
-<a name="l00120"></a>00120 <span class="preprocessor">    #ifdef _WIN32</span>
-<a name="l00121"></a>00121 <span class="preprocessor"></span>        <span class="comment">// This should work under WinXP, Vista, and Win7. No guarantees about</span>
-<a name="l00122"></a>00122         <span class="comment">// future compatibility, but I doubt that Microsoft will get rid of it</span>
-<a name="l00123"></a>00123         <span class="comment">// (it&#39;s too useful), and I doubt that they&#39;ll change it now that it&#39;s</span>
-<a name="l00124"></a>00124         <span class="comment">// well-known (it would break too many programs). We could also use the</span>
-<a name="l00125"></a>00125         <span class="comment">// rand_s function in more recent versions of Visual C++, but that</span>
-<a name="l00126"></a>00126         <span class="comment">// causes compatibility problems with older versions of Windows.</span>
-<a name="l00127"></a>00127         <span class="keyword">typedef</span> BOOLEAN (WINAPI *RtlGenRandomFn)(PVOID, ULONG);
-<a name="l00128"></a>00128         HMODULE dll=LoadLibrary(_T(<span class="stringliteral">&quot;Advapi32.dll&quot;</span>));
-<a name="l00129"></a>00129         <span class="keywordflow">if</span> (dll != 0) {
-<a name="l00130"></a>00130             RtlGenRandomFn RtlGenRandom=RtlGenRandomFn(GetProcAddress(dll,
-<a name="l00131"></a>00131                 <span class="stringliteral">&quot;SystemFunction036&quot;</span>));
-<a name="l00132"></a>00132             <span class="keywordflow">if</span> (RtlGenRandom != 0) {
-<a name="l00133"></a>00133                 std::vector&lt;char&gt; buffer(cBytesRequested, <span class="charliteral">&#39;\0&#39;</span>);
-<a name="l00134"></a>00134                 <span class="keywordflow">if</span> (RtlGenRandom(&amp;buffer[0], cBytesRequested)) {
-<a name="l00135"></a>00135                     <span class="keywordtype">char</span> *c=&amp;buffer[0];
-<a name="l00136"></a>00136                     <a class="code" href="namespacexint.html#afeca589b50c2c8cb4bea98200ae51dbe">seed_manual</a>(std::string(c, c+cBytesRequested));
-<a name="l00137"></a>00137                     success=<span class="keyword">true</span>;
-<a name="l00138"></a>00138                 }
-<a name="l00139"></a>00139             }
-<a name="l00140"></a>00140             FreeLibrary(dll);
-<a name="l00141"></a>00141         }
-<a name="l00142"></a>00142 <span class="preprocessor">    #else</span>
-<a name="l00143"></a>00143 <span class="preprocessor"></span>        <span class="comment">// This should be supported under most non-Windows systems. Note that</span>
-<a name="l00144"></a>00144         <span class="comment">// we&#39;re using /dev/urandom, not /dev/random -- /dev/random is more</span>
-<a name="l00145"></a>00145         <span class="comment">// secure, but it can be VERY slow.</span>
-<a name="l00146"></a>00146         std::ifstream rng(<span class="stringliteral">&quot;/dev/urandom&quot;</span>);
-<a name="l00147"></a>00147         <span class="keywordflow">if</span> (rng) {
-<a name="l00148"></a>00148             std::string rstr;
-<a name="l00149"></a>00149             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i &lt; cBytesRequested; ++i)
-<a name="l00150"></a>00150                 rstr.push_back(rng.get());
-<a name="l00151"></a>00151             <a class="code" href="namespacexint.html#afeca589b50c2c8cb4bea98200ae51dbe">seed_manual</a>(rstr);
-<a name="l00152"></a>00152             success=<span class="keyword">true</span>;
-<a name="l00153"></a>00153         }
-<a name="l00154"></a>00154 <span class="preprocessor">    #endif</span>
-<a name="l00155"></a>00155 <span class="preprocessor"></span>
-<a name="l00156"></a>00156     <span class="keywordflow">return</span> success;
-<a name="l00157"></a>00157 }
-<a name="l00158"></a>00158 
-<a name="l00159"></a>00159 <span class="keywordtype">void</span> <a class="code" href="namespacexint.html#a16e22040e770d828903bb5d11ed6e046">generator_t::seed_fallback</a>() {
-<a name="l00160"></a>00160     <span class="comment">// No cryptographically-secure device available. Fall back onto the</span>
-<a name="l00161"></a>00161     <span class="comment">// system clock. It&#39;s not much, but it&#39;s portable, fast, and will</span>
-<a name="l00162"></a>00162     <span class="comment">// provide at least a *little* entropy.</span>
-<a name="l00163"></a>00163     std::ostringstream out;
-<a name="l00164"></a>00164     out &lt;&lt; time(0) &lt;&lt; clock();
-<a name="l00165"></a>00165     <a class="code" href="namespacexint.html#afeca589b50c2c8cb4bea98200ae51dbe">seed_manual</a>(out.str());
-<a name="l00166"></a>00166 }
-<a name="l00167"></a>00167 
-<a name="l00168"></a>00168 generator_t::result_type generator_t::operator()() {
-<a name="l00169"></a>00169     <span class="keywordflow">if</span> (!<a class="code" href="random_8cpp.html#a7fadbfa933b8181768eb9e2a6cb5379f">mSeeded</a>)
-<a name="l00170"></a>00170         <span class="keywordflow">if</span> (!<a class="code" href="namespacexint.html#ade2beef1aca9c4ebb119d16c2d068e70">seed_secure</a>())
-<a name="l00171"></a>00171             <a class="code" href="namespacexint.html#a16e22040e770d828903bb5d11ed6e046">seed_fallback</a>();
-<a name="l00172"></a>00172     <span class="keywordflow">return</span> (*<a class="code" href="random_8cpp.html#ad94db68c58845e9483f2241232395966">mGen</a>)();
-<a name="l00173"></a>00173 }
-<a name="l00174"></a>00174 
-<a name="l00175"></a>00175 <span class="keywordtype">void</span> generator_t::init() {
-<a name="l00176"></a>00176     <span class="keywordflow">if</span> (!<a class="code" href="random_8cpp.html#ad94db68c58845e9483f2241232395966">mGen</a>) <a class="code" href="random_8cpp.html#ad94db68c58845e9483f2241232395966">mGen</a>=<span class="keyword">new</span> internal_generator_t();
-<a name="l00177"></a>00177 }
-<a name="l00178"></a>00178 
-<a name="l00179"></a>00179 } <span class="comment">// namespace</span>
-<a name="l00180"></a>00180 
-<a name="l00181"></a>00181 <span class="keywordtype">bool</span> <a class="code" href="namespacexint.html#ade2beef1aca9c4ebb119d16c2d068e70">seed_secure</a>() {
-<a name="l00182"></a>00182     generator_t gen;
-<a name="l00183"></a>00183     <span class="keywordflow">return</span> gen.seed_secure();
-<a name="l00184"></a>00184 }
+<a name="l00105"></a>00105 <span class="preprocessor">#ifdef _WIN32</span>
+<a name="l00106"></a>00106 <span class="preprocessor"></span>    <span class="keyword">struct </span>strong_random_generator::impl_t {
+<a name="l00107"></a>00107         <span class="keyword">typedef</span> BOOLEAN (WINAPI *RtlGenRandomFn)(PVOID, ULONG);
+<a name="l00108"></a>00108         <span class="keyword">typedef</span> DWORD <a class="code" href="structxint_1_1strong__random__generator_1_1impl__t.html#ad036a77b12a57bb1aeb1b2dfeb7786ed">result_type</a>;
+<a name="l00109"></a>00109 
+<a name="l00110"></a>00110         <a class="code" href="structxint_1_1strong__random__generator_1_1impl__t.html#a5ceb209ca0287aac772c87eff6167028">impl_t</a>(): dll(0), fn(0) {
+<a name="l00111"></a>00111             <span class="comment">// This should work under WinXP, Vista, and Win7. No guarantees about</span>
+<a name="l00112"></a>00112             <span class="comment">// future compatibility, but I doubt that Microsoft will get rid of it</span>
+<a name="l00113"></a>00113             <span class="comment">// (it&#39;s too useful), and I doubt that they&#39;ll change it now that it&#39;s</span>
+<a name="l00114"></a>00114             <span class="comment">// well-known (it would break too many programs). We could also use the</span>
+<a name="l00115"></a>00115             <span class="comment">// rand_s function in more recent versions of Visual C++, but that</span>
+<a name="l00116"></a>00116             <span class="comment">// causes compatibility problems with older versions of Windows.</span>
+<a name="l00117"></a>00117             dll=LoadLibrary(_T(<span class="stringliteral">&quot;Advapi32.dll&quot;</span>));
+<a name="l00118"></a>00118             <span class="keywordflow">if</span> (dll != 0) fn=RtlGenRandomFn(GetProcAddress(dll, <span class="stringliteral">&quot;SystemFunction036&quot;</span>));
+<a name="l00119"></a>00119             <span class="keywordflow">if</span> (fn == 0) {
+<a name="l00120"></a>00120                 destroy();
+<a name="l00121"></a>00121                 <span class="keywordflow">throw</span> no_strong_random();
+<a name="l00122"></a>00122             }
+<a name="l00123"></a>00123         }
+<a name="l00124"></a>00124 
+<a name="l00125"></a>00125         ~<a class="code" href="structxint_1_1strong__random__generator_1_1impl__t.html#a5ceb209ca0287aac772c87eff6167028">impl_t</a>() { destroy(); }
+<a name="l00126"></a>00126 
+<a name="l00127"></a>00127         <a class="code" href="structxint_1_1strong__random__generator_1_1impl__t.html#ad036a77b12a57bb1aeb1b2dfeb7786ed">result_type</a> <a class="code" href="structxint_1_1strong__random__generator_1_1impl__t.html#a52493fa7d5f0831d1c9605077da7cc8e">operator()</a>() {
+<a name="l00128"></a>00128             <a class="code" href="structxint_1_1strong__random__generator_1_1impl__t.html#ad036a77b12a57bb1aeb1b2dfeb7786ed">result_type</a> r=0;
+<a name="l00129"></a>00129             <span class="keywordflow">if</span> (!fn(&amp;r, <span class="keyword">sizeof</span>(<a class="code" href="structxint_1_1strong__random__generator_1_1impl__t.html#ad036a77b12a57bb1aeb1b2dfeb7786ed">result_type</a>)))
+<a name="l00130"></a>00130                 <span class="keywordflow">throw</span> no_strong_random(<span class="stringliteral">&quot;RtlGenRandom failed&quot;</span>);
+<a name="l00131"></a>00131             <span class="keywordflow">return</span> r;
+<a name="l00132"></a>00132         }
+<a name="l00133"></a>00133 
+<a name="l00134"></a>00134         <span class="keywordtype">void</span> destroy() { <span class="keywordflow">if</span> (dll) FreeLibrary(dll); }
+<a name="l00135"></a>00135 
+<a name="l00136"></a>00136         HMODULE dll;
+<a name="l00137"></a>00137         RtlGenRandomFn fn;
+<a name="l00138"></a>00138     };
+<a name="l00139"></a>00139 
+<a name="l00140"></a>00140     <span class="keywordtype">double</span> <a class="code" href="classxint_1_1strong__random__generator.html#a57ff17a9c2b36775acfedd53f5a0b30e">strong_random_generator::entropy</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> 32; }
+<a name="l00141"></a>00141 <span class="preprocessor">#else</span>
+<a name="l00142"></a><a class="code" href="structxint_1_1strong__random__generator_1_1impl__t.html">00142</a> <span class="preprocessor"></span>    <span class="keyword">struct </span><a class="code" href="structxint_1_1strong__random__generator_1_1impl__t.html">strong_random_generator::impl_t</a> {
+<a name="l00143"></a><a class="code" href="structxint_1_1strong__random__generator_1_1impl__t.html#ad036a77b12a57bb1aeb1b2dfeb7786ed">00143</a>         <span class="keyword">typedef</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> <a class="code" href="structxint_1_1strong__random__generator_1_1impl__t.html#ad036a77b12a57bb1aeb1b2dfeb7786ed">result_type</a>;
+<a name="l00144"></a>00144 
+<a name="l00145"></a><a class="code" href="structxint_1_1strong__random__generator_1_1impl__t.html#a5ceb209ca0287aac772c87eff6167028">00145</a>         <a class="code" href="structxint_1_1strong__random__generator_1_1impl__t.html#a5ceb209ca0287aac772c87eff6167028">impl_t</a>(): <a class="code" href="structxint_1_1strong__random__generator_1_1impl__t.html#a4863c36524d24aed3c9f7192e97b3d09">rng</a>(<span class="stringliteral">&quot;/dev/urandom&quot;</span>, std::ios::binary) {
+<a name="l00146"></a>00146             <span class="comment">// This should be supported under most non-Windows systems. Note</span>
+<a name="l00147"></a>00147             <span class="comment">// that we&#39;re using /dev/urandom, not /dev/random -- /dev/random is</span>
+<a name="l00148"></a>00148             <span class="comment">// more secure, but it can be VERY slow.</span>
+<a name="l00149"></a>00149             <span class="keywordflow">if</span> (!<a class="code" href="structxint_1_1strong__random__generator_1_1impl__t.html#a4863c36524d24aed3c9f7192e97b3d09">rng</a>) <span class="keywordflow">throw</span> <a class="code" href="classxint_1_1no__strong__random.html">no_strong_random</a>();
+<a name="l00150"></a>00150         }
+<a name="l00151"></a>00151 
+<a name="l00152"></a><a class="code" href="structxint_1_1strong__random__generator_1_1impl__t.html#a52493fa7d5f0831d1c9605077da7cc8e">00152</a>         <a class="code" href="structxint_1_1strong__random__generator_1_1impl__t.html#ad036a77b12a57bb1aeb1b2dfeb7786ed">result_type</a> <a class="code" href="structxint_1_1strong__random__generator_1_1impl__t.html#a52493fa7d5f0831d1c9605077da7cc8e">operator()</a>() {
+<a name="l00153"></a>00153             <span class="keywordtype">int</span> r=<a class="code" href="structxint_1_1strong__random__generator_1_1impl__t.html#a4863c36524d24aed3c9f7192e97b3d09">rng</a>.get();
+<a name="l00154"></a>00154             <span class="keywordflow">if</span> (r==EOF) <span class="keywordflow">throw</span> <a class="code" href="classxint_1_1no__strong__random.html">no_strong_random</a>(<span class="stringliteral">&quot;/dev/urandom returned EOF&quot;</span>);
+<a name="l00155"></a>00155             <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><a class="code" href="structxint_1_1strong__random__generator_1_1impl__t.html#ad036a77b12a57bb1aeb1b2dfeb7786ed">result_type</a><span class="keyword">&gt;</span>(r);
+<a name="l00156"></a>00156         }
+<a name="l00157"></a>00157 
+<a name="l00158"></a><a class="code" href="structxint_1_1strong__random__generator_1_1impl__t.html#a4863c36524d24aed3c9f7192e97b3d09">00158</a>         std::ifstream <a class="code" href="structxint_1_1strong__random__generator_1_1impl__t.html#a4863c36524d24aed3c9f7192e97b3d09">rng</a>;
+<a name="l00159"></a>00159     };
+<a name="l00160"></a>00160 
+<a name="l00161"></a><a class="code" href="classxint_1_1strong__random__generator.html#a57ff17a9c2b36775acfedd53f5a0b30e">00161</a>     <span class="keywordtype">double</span> <a class="code" href="classxint_1_1strong__random__generator.html#a57ff17a9c2b36775acfedd53f5a0b30e">strong_random_generator::entropy</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> 8; }
+<a name="l00162"></a>00162 <span class="preprocessor">#endif</span>
+<a name="l00163"></a>00163 <span class="preprocessor"></span>
+<a name="l00164"></a>00164 <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classxint_1_1strong__random__generator.html#a1a808cca9189eb64f420e4745ca5122d">strong_random_generator::has_fixed_range</a> = <span class="keyword">true</span>;
+<a name="l00165"></a>00165 <span class="keyword">const</span> <a class="code" href="classxint_1_1strong__random__generator.html#a470b586d0730deb716ffa3c13164e493">strong_random_generator::result_type</a> <a class="code" href="classxint_1_1strong__random__generator.html#a4bea7dba7f086441548dfee576e54fce">strong_random_generator::min_value</a> =
+<a name="l00166"></a>00166     (std::numeric_limits&lt;impl_t::result_type&gt;::min)();
+<a name="l00167"></a>00167 <span class="keyword">const</span> <a class="code" href="classxint_1_1strong__random__generator.html#a470b586d0730deb716ffa3c13164e493">strong_random_generator::result_type</a> <a class="code" href="classxint_1_1strong__random__generator.html#aea47e4fbf8b0fe5914ade7ce2704a3c3">strong_random_generator::max_value</a> =
+<a name="l00168"></a>00168     (std::numeric_limits&lt;impl_t::result_type&gt;::max)();
+<a name="l00169"></a><a class="code" href="classxint_1_1strong__random__generator.html#a8841d21b6614967e0520f55c3093871a">00169</a> <a class="code" href="classxint_1_1strong__random__generator.html#a8841d21b6614967e0520f55c3093871a">strong_random_generator::strong_random_generator</a>(): impl(new <a class="code" href="structxint_1_1strong__random__generator_1_1impl__t.html">impl_t</a>) { }
+<a name="l00170"></a><a class="code" href="classxint_1_1strong__random__generator.html#ac75f659c2adb7c822d49fe534b2d76a4">00170</a> <a class="code" href="classxint_1_1strong__random__generator.html#ac75f659c2adb7c822d49fe534b2d76a4">strong_random_generator::~strong_random_generator</a>() { <span class="keyword">delete</span> <a class="code" href="classxint_1_1strong__random__generator.html#a9f055c0ff1a85a8c465099c596f368fa">impl</a>; }
+<a name="l00171"></a><a class="code" href="classxint_1_1strong__random__generator.html#a2bbb1944511585f66e5daec4737bd4e7">00171</a> <a class="code" href="classxint_1_1strong__random__generator.html#a470b586d0730deb716ffa3c13164e493">strong_random_generator::result_type</a> <a class="code" href="classxint_1_1strong__random__generator.html#a2bbb1944511585f66e5daec4737bd4e7">strong_random_generator::operator()</a>() {
+<a name="l00172"></a>00172     <span class="keywordflow">return</span> (*<a class="code" href="classxint_1_1strong__random__generator.html#a9f055c0ff1a85a8c465099c596f368fa">impl</a>)(); }
+<a name="l00173"></a>00173 <a class="code" href="classxint_1_1strong__random__generator.html#a470b586d0730deb716ffa3c13164e493">strong_random_generator::result_type</a> <a class="code" href="classxint_1_1strong__random__generator.html#a5ec89070a7a7338c2b7318086efef701">strong_random_generator::min</a>
+<a name="l00174"></a>00174     <a class="code" href="namespacexint.html#a4c109bd4fe51e6cd67361200d952d9a4">BOOST_PREVENT_MACRO_SUBSTITUTION</a> ()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> min_value; }
+<a name="l00175"></a>00175 <a class="code" href="classxint_1_1strong__random__generator.html#a470b586d0730deb716ffa3c13164e493">strong_random_generator::result_type</a> <a class="code" href="classxint_1_1strong__random__generator.html#a1327ad0fe9d6f1f1c851456592b178db">strong_random_generator::max</a>
+<a name="l00176"></a><a class="code" href="namespacexint.html#a4c109bd4fe51e6cd67361200d952d9a4">00176</a>     <a class="code" href="namespacexint.html#a4c109bd4fe51e6cd67361200d952d9a4">BOOST_PREVENT_MACRO_SUBSTITUTION</a> ()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> max_value; }
+<a name="l00177"></a>00177 
+<a name="l00179"></a>00179 <span class="comment">// Returns a positive (unless told otherwise) integer between zero and</span>
+<a name="l00180"></a>00180 <span class="comment">// (1&lt;&lt;bits)-1, inclusive</span>
+<a name="l00181"></a>00181 integer <a class="code" href="namespacexint.html#a6e66ca63ee442c0296ce41280fdae739">random_by_size</a>(<span class="keywordtype">size_t</span> bits, <span class="keywordtype">bool</span> highBitOn, <span class="keywordtype">bool</span> lowBitOn, <span class="keywordtype">bool</span>
+<a name="l00182"></a>00182     canBeNegative)
+<a name="l00183"></a>00183 {
+<a name="l00184"></a>00184     <span class="keywordflow">if</span> (bits&lt;=0) <span class="keywordflow">return</span> <a class="code" href="classxint_1_1integer.html#a64a0f99de7c33239237cb59d8464f3d2">integer::zero</a>();
 <a name="l00185"></a>00185 
-<a name="l00186"></a>00186 <span class="keywordtype">void</span> <a class="code" href="namespacexint.html#a16e22040e770d828903bb5d11ed6e046">seed_fallback</a>() {
-<a name="l00187"></a>00187     generator_t gen;
-<a name="l00188"></a>00188     gen.seed_fallback();
-<a name="l00189"></a>00189 }
-<a name="l00190"></a>00190 
-<a name="l00191"></a>00191 <span class="keywordtype">void</span> <a class="code" href="namespacexint.html#afeca589b50c2c8cb4bea98200ae51dbe">seed_manual</a>(<span class="keyword">const</span> std::string&amp; value) {
-<a name="l00192"></a>00192     generator_t gen;
-<a name="l00193"></a>00193     gen.seed_manual(value);
-<a name="l00194"></a>00194 }
-<a name="l00195"></a>00195 
-<a name="l00196"></a>00196 <span class="comment">// Returns a positive (unless told otherwise) integer between zero and</span>
-<a name="l00197"></a>00197 <span class="comment">// (1&lt;&lt;bits)-1, inclusive</span>
-<a name="l00198"></a>00198 integer <a class="code" href="namespacexint.html#a6e66ca63ee442c0296ce41280fdae739">random_by_size</a>(<span class="keywordtype">size_t</span> bits, <span class="keywordtype">bool</span> highBitOn, <span class="keywordtype">bool</span> lowBitOn, <span class="keywordtype">bool</span> canBeNegative) {
-<a name="l00199"></a>00199     <span class="keywordflow">if</span> (bits&lt;=0) <span class="keywordflow">return</span> integer::zero();
-<a name="l00200"></a>00200 
-<a name="l00201"></a>00201     generator_t randomGenerator;
-<a name="l00202"></a>00202 
-<a name="l00203"></a>00203     <span class="keyword">const</span> <span class="keywordtype">size_t</span> cBitsPerIteration=std::numeric_limits&lt;generator_t::result_type&gt;::digits;
-<a name="l00204"></a>00204 
-<a name="l00205"></a>00205     <span class="comment">// Grab a set of random bits, of at least the specified size</span>
-<a name="l00206"></a>00206     <span class="keywordtype">int</span> iterations = (bits+cBitsPerIteration-1) / cBitsPerIteration;
-<a name="l00207"></a>00207     std::vector&lt;generator_t::result_type&gt; v;
-<a name="l00208"></a>00208     <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i&lt;iterations; ++i) v.push_back(randomGenerator());
+<a name="l00186"></a>00186     generator_t randomGenerator;
+<a name="l00187"></a>00187     <span class="keyword">const</span> <span class="keywordtype">size_t</span> cBitsPerIteration=std::numeric_limits&lt;generator_t::result_type&gt;::digits;
+<a name="l00188"></a>00188 
+<a name="l00189"></a>00189     <span class="comment">// Grab a set of random bits, of at least the specified size</span>
+<a name="l00190"></a>00190     <span class="keywordtype">size_t</span> iterations = (bits+cBitsPerIteration-1) / cBitsPerIteration;
+<a name="l00191"></a>00191     std::vector&lt;generator_t::result_type&gt; v;
+<a name="l00192"></a>00192     <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i=0; i&lt;iterations; ++i) v.push_back(randomGenerator());
+<a name="l00193"></a>00193 
+<a name="l00194"></a>00194     <span class="keyword">const</span> <span class="keywordtype">char</span> *vptr=(<span class="keyword">const</span> <span class="keywordtype">char</span> *)&amp;v[0], *vptr_end=vptr+(v.size() * <span class="keyword">sizeof</span>(generator_t::result_type));
+<a name="l00195"></a>00195     integer p=<a class="code" href="namespacexint.html#ac2ac2f74b45e4179560d845e6310be9a">from_binary</a>(std::string(vptr, vptr_end));
+<a name="l00196"></a>00196 
+<a name="l00197"></a>00197     <span class="comment">// Trim it to the proper length</span>
+<a name="l00198"></a>00198     <span class="keywordtype">size_t</span> index=(bits/<a class="code" href="namespacexint_1_1detail.html#a9bd9e8d55061238d63913020d2721518">bits_per_digit</a>);
+<a name="l00199"></a>00199     <a class="code" href="namespacexint_1_1detail.html#a8843fb7e364832d8d5983de28bdbcf34">digit_t</a> mask=(<a class="code" href="namespacexint_1_1detail.html#a8843fb7e364832d8d5983de28bdbcf34">digit_t</a>(1) &lt;&lt; (bits % <a class="code" href="namespacexint_1_1detail.html#a9bd9e8d55061238d63913020d2721518">bits_per_digit</a>))-1;
+<a name="l00200"></a>00200     <span class="keywordflow">if</span> (mask==0) { mask=<a class="code" href="namespacexint_1_1detail.html#a051753e1bf43dcc77eaa93b8d4e49197">digit_mask</a>; --index; }
+<a name="l00201"></a>00201     p._get_data()-&gt;digits[index] &amp;= mask;
+<a name="l00202"></a>00202     <span class="keywordflow">for</span> (<a class="code" href="namespacexint_1_1detail.html#a8843fb7e364832d8d5983de28bdbcf34">digit_t</a> *i=p._get_data()-&gt;digits+index+1,
+<a name="l00203"></a>00203         *ie=p._get_data()-&gt;digits+p._get_data()-&gt;mLength; i&lt;ie; ++i) *i=0;
+<a name="l00204"></a>00204     p._get_data()-&gt;skipLeadingZeros();
+<a name="l00205"></a>00205 
+<a name="l00206"></a>00206     <span class="keywordflow">if</span> (highBitOn) <a class="code" href="namespacexint.html#adf2652627e78682c17e120816987984a">setbit</a>(p, bits-1);
+<a name="l00207"></a>00207     <span class="keywordflow">if</span> (lowBitOn) <a class="code" href="namespacexint.html#adf2652627e78682c17e120816987984a">setbit</a>(p, 0);
+<a name="l00208"></a>00208     <span class="keywordflow">if</span> (canBeNegative) p._set_negative(randomGenerator() &amp; 0x01);
 <a name="l00209"></a>00209 
-<a name="l00210"></a>00210     <span class="keyword">const</span> <span class="keywordtype">char</span> *vptr=(<span class="keyword">const</span> <span class="keywordtype">char</span> *)&amp;v[0], *vptr_end=vptr+(v.size() * <span class="keyword">sizeof</span>(generator_t::result_type));
-<a name="l00211"></a>00211     integer p=<a class="code" href="namespacexint.html#ac2ac2f74b45e4179560d845e6310be9a">from_binary</a>(std::string(vptr, vptr_end));
+<a name="l00210"></a>00210     <span class="keywordflow">return</span> p;
+<a name="l00211"></a>00211 }
 <a name="l00212"></a>00212 
-<a name="l00213"></a>00213     <span class="comment">// Trim it to the proper length</span>
-<a name="l00214"></a>00214     <span class="keywordtype">int</span> index=(bits/<a class="code" href="namespacexint_1_1detail.html#a9bd9e8d55061238d63913020d2721518">bits_per_digit</a>);
-<a name="l00215"></a>00215     <a class="code" href="namespacexint_1_1detail.html#a8843fb7e364832d8d5983de28bdbcf34">digit_t</a> mask=(<a class="code" href="namespacexint_1_1detail.html#a8843fb7e364832d8d5983de28bdbcf34">digit_t</a>(1) &lt;&lt; (bits % <a class="code" href="namespacexint_1_1detail.html#a9bd9e8d55061238d63913020d2721518">bits_per_digit</a>))-1;
-<a name="l00216"></a>00216     <span class="keywordflow">if</span> (mask==0) { mask=<a class="code" href="namespacexint_1_1detail.html#a051753e1bf43dcc77eaa93b8d4e49197">digit_mask</a>; --index; }
-<a name="l00217"></a>00217     p._get_data()-&gt;digits[index] &amp;= mask;
-<a name="l00218"></a>00218     <span class="keywordflow">for</span> (<a class="code" href="namespacexint_1_1detail.html#a8843fb7e364832d8d5983de28bdbcf34">digit_t</a> *i=p._get_data()-&gt;digits+index+1,
-<a name="l00219"></a>00219         *ie=p._get_data()-&gt;digits+p._get_data()-&gt;mLength; i&lt;ie; ++i) *i=0;
-<a name="l00220"></a>00220     p._get_data()-&gt;skipLeadingZeros();
-<a name="l00221"></a>00221 
-<a name="l00222"></a>00222     <span class="keywordflow">if</span> (highBitOn) <a class="code" href="namespacexint.html#adf2652627e78682c17e120816987984a">setbit</a>(p, bits-1);
-<a name="l00223"></a>00223     <span class="keywordflow">if</span> (lowBitOn) <a class="code" href="namespacexint.html#adf2652627e78682c17e120816987984a">setbit</a>(p, 0);
-<a name="l00224"></a>00224     <span class="keywordflow">if</span> (canBeNegative) p._set_negative(randomGenerator() &amp; 0x01);
-<a name="l00225"></a>00225 
-<a name="l00226"></a>00226     <span class="keywordflow">return</span> p;
-<a name="l00227"></a>00227 }
-<a name="l00228"></a>00228 
-<a name="l00229"></a>00229 <span class="keyword">template</span> &lt;&gt;
-<a name="l00230"></a>00230 integer <a class="code" href="namespacexint.html#a989d063e3298649704c804efca714ac6">random&lt;integer&gt;</a>(<span class="keyword">const</span> integer&amp; lowest, <span class="keyword">const</span> integer&amp; highest) {
-<a name="l00231"></a>00231     integer range(<a class="code" href="namespacexint.html#ac9e4ed282bafa93dbf608350df0127ba">abs</a>(highest-lowest+1));
-<a name="l00232"></a>00232     <span class="keywordflow">return</span> lowest+(<a class="code" href="namespacexint.html#a6e66ca63ee442c0296ce41280fdae739">random_by_size</a>(<a class="code" href="namespacexint.html#aa074495871d366c760c5b0713f5ef048">log2</a>(range)) % range);
-<a name="l00233"></a>00233 }
-<a name="l00234"></a>00234 
-<a name="l00235"></a>00235 } <span class="comment">// namespace xint</span>
+<a name="l00213"></a>00213 } <span class="comment">// namespace xint</span>
 </pre></div></div>
 <!-- xint custom Doxygen footer my_doxygen_footer.html  -->-
 
@@ -308,7 +284,7 @@
       <!-- Change copyright to YOUR name (and affiliation, if any) below:  -->
      <p>Copyright © 2009 - 2010 Chad Nelson, Oak Circle Software, Inc</p>
       <!-- 2010 becomes the current year, for example 2010, so claims copyright for a range of years, 2009 - 2010. -->
-     <p>Doxygen Documentation generated by&nbsp;<a href="http://www.doxygen.org/index.html"> <img src="doxygen.png" alt="doxygen logo" align="middle" border="0"/> 1.6.3</a>, Revised at Tue Mar 30 18:10:43 2010</p>
+     <p>Doxygen Documentation generated by&nbsp;<a href="http://www.doxygen.org/index.html"> <img src="doxygen.png" alt="doxygen logo" align="middle" border="0"/> 1.6.3</a>, Revised at Wed Mar 31 15:44:54 2010</p>
   </address>
   </tr>
 </tbody>

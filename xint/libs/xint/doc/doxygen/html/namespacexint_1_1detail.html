@@ -15,7 +15,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
 
   <!-- Add your title here ! -->
-  <title>Quickbook Doxygen Index Prototype Tue Mar 30 18:10:43 2010 xInt eXtended Integer Library </title>
+  <title>Quickbook Doxygen Index Prototype Wed Mar 31 15:44:54 2010 xInt eXtended Integer Library </title>
 
   <!-- Add your custom stylesheet here ! -->
   <link href="my_doxygen.css" rel="stylesheet" type="text/css"/>
@@ -58,12 +58,11 @@
   </div>
 </div>
 <div class="contents">
-<h1>xint::detail Namespace Reference</h1>
-<p>implementation details, normal users should not need to use these.  
-<a href="#_details">More...</a></p>
-<table border="0" cellpadding="0" cellspacing="0">
+<h1>xint::detail Namespace Reference</h1><table border="0" cellpadding="0" cellspacing="0">
 <tr><td colspan="2"><h2>Classes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxint_1_1detail_1_1token.html">token</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxint_1_1detail_1_1base__random__generator.html">base_random_generator</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxint_1_1detail_1_1random__generator.html">random_generator</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxint_1_1detail_1_1data__t.html">data_t</a></td></tr>
 <tr><td colspan="2"><h2>Typedefs</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">typedef boost::uintmax_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint_1_1detail.html#aceb9b654c1c2daaf377b31bd4a089750">doubledigit_t</a></td></tr>
@@ -71,6 +70,11 @@
 &lt; std::numeric_limits<br class="typebreak"/>
 &lt; <a class="el" href="namespacexint_1_1detail.html#aceb9b654c1c2daaf377b31bd4a089750">doubledigit_t</a> &gt;::digits/2 &gt;<br class="typebreak"/>
 ::fast&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint_1_1detail.html#a8843fb7e364832d8d5983de28bdbcf34">digit_t</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">typedef boost::function<br class="typebreak"/>
+&lt; unsigned int()&gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint_1_1detail.html#a9c9dc00dbbe287492696635ed41dce44">random_t</a></td></tr>
+<tr><td colspan="2"><h2>Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint_1_1detail.html#ada65da12642b63f663b50382068a607f">set_random_generator</a> (<a class="el" href="namespacexint_1_1detail.html#a9c9dc00dbbe287492696635ed41dce44">random_t</a> fn, <a class="el" href="structxint_1_1detail_1_1base__random__generator.html">base_random_generator</a> *obj)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint_1_1detail.html#a1dfc1e90886c4897a4b112f491b89b62">get_random</a> ()</td></tr>
 <tr><td colspan="2"><h2>Variables</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">const size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint_1_1detail.html#a9bd9e8d55061238d63913020d2721518">bits_per_digit</a> = std::numeric_limits&lt;<a class="el" href="namespacexint_1_1detail.html#a8843fb7e364832d8d5983de28bdbcf34">digit_t</a>&gt;::digits</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespacexint_1_1detail.html#a8843fb7e364832d8d5983de28bdbcf34">digit_t</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint_1_1detail.html#a116bb5ce94c55f0eae3338d69fd5e8eb">digit_hibit</a> = (<a class="el" href="namespacexint_1_1detail.html#a8843fb7e364832d8d5983de28bdbcf34">digit_t</a>(1) &lt;&lt; (<a class="el" href="namespacexint_1_1detail.html#a9bd9e8d55061238d63913020d2721518">bits_per_digit</a>-1))</td></tr>
@@ -79,8 +83,6 @@
 <tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespacexint_1_1detail.html#a8843fb7e364832d8d5983de28bdbcf34">digit_t</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint_1_1detail.html#a051753e1bf43dcc77eaa93b8d4e49197">digit_mask</a> = <a class="el" href="namespacexint_1_1detail.html#a8843fb7e364832d8d5983de28bdbcf34">digit_t</a>(<a class="el" href="namespacexint_1_1detail.html#a6746855fd8cde164294a46108d502e6a">digit_overflowbit</a>-1)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">const std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint_1_1detail.html#aede27c67f3308e0805fc3093ffe6f4ce">nan_text</a></td></tr>
 </table>
-<hr/><a name="_details"></a><h2>Detailed Description</h2>
-<p>implementation details, normal users should not need to use these. </p>
 <hr/><h2>Typedef Documentation</h2>
 <a class="anchor" id="a8843fb7e364832d8d5983de28bdbcf34"></a><!-- doxytag: member="xint::detail::digit_t" ref="a8843fb7e364832d8d5983de28bdbcf34" args="" -->
 <div class="memitem">
@@ -93,7 +95,7 @@
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00067">67</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00040">40</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
 
 </div>
 </div>
@@ -108,7 +110,69 @@
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00065">65</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00038">38</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a9c9dc00dbbe287492696635ed41dce44"></a><!-- doxytag: member="xint::detail::random_t" ref="a9c9dc00dbbe287492696635ed41dce44" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef boost::function&lt;unsigned int ()&gt; <a class="el" href="namespacexint_1_1detail.html#a9c9dc00dbbe287492696635ed41dce44">xint::detail::random_t</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00068">68</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
+
+</div>
+</div>
+<hr/><h2>Function Documentation</h2>
+<a class="anchor" id="a1dfc1e90886c4897a4b112f491b89b62"></a><!-- doxytag: member="xint::detail::get_random" ref="a1dfc1e90886c4897a4b112f491b89b62" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int xint::detail::get_random </td>
+          <td>(</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ada65da12642b63f663b50382068a607f"></a><!-- doxytag: member="xint::detail::set_random_generator" ref="ada65da12642b63f663b50382068a607f" args="(random_t fn, base_random_generator *obj)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void xint::detail::set_random_generator </td>
+          <td>(</td>
+          <td class="paramtype">random_t&nbsp;</td>
+          <td class="paramname"> <em>fn</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">base_random_generator *&nbsp;</td>
+          <td class="paramname"> <em>obj</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Referenced by <a class="el" href="xint_8hpp_source.html#l00391">xint::set_random_generator()</a>.</p>
 
 </div>
 </div>
@@ -124,9 +188,9 @@
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00069">69</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00042">42</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00061">xint::integer::_init()</a>, <a class="el" href="data__t_8cpp_source.html#l00251">xint::detail::data_t::shift_left()</a>, and <a class="el" href="data__t_8cpp_source.html#l00279">xint::detail::data_t::shift_right()</a>.</p>
+<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00065">xint::integer::_init()</a>, <a class="el" href="data__t_8cpp_source.html#l00252">xint::detail::data_t::shift_left()</a>, and <a class="el" href="data__t_8cpp_source.html#l00280">xint::detail::data_t::shift_right()</a>.</p>
 
 </div>
 </div>
@@ -141,7 +205,7 @@
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00070">70</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00043">43</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
 
 </div>
 </div>
@@ -156,9 +220,9 @@
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00073">73</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00046">46</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00061">xint::integer::_init()</a>, and <a class="el" href="xint_8hpp_source.html#l00319">xint::integer::integer()</a>.</p>
+<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00065">xint::integer::_init()</a>, and <a class="el" href="xint_8hpp_source.html#l00345">xint::integer::integer()</a>.</p>
 
 </div>
 </div>
@@ -173,9 +237,9 @@
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00072">72</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00045">45</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="data__t_8cpp_source.html#l00198">xint::detail::data_t::add()</a>, <a class="el" href="data__t_8cpp_source.html#l00170">xint::detail::data_t::invert()</a>, <a class="el" href="data__t_8cpp_source.html#l00225">xint::detail::data_t::subtract()</a>, and <a class="el" href="xint_8hpp_source.html#l00343">xint::to()</a>.</p>
+<p>Referenced by <a class="el" href="data__t_8cpp_source.html#l00198">xint::detail::data_t::add()</a>, <a class="el" href="data__t_8cpp_source.html#l00170">xint::detail::data_t::invert()</a>, <a class="el" href="data__t_8cpp_source.html#l00225">xint::detail::data_t::subtract()</a>, and <a class="el" href="xint_8hpp_source.html#l00375">xint::to()</a>.</p>
 
 </div>
 </div>
@@ -190,7 +254,7 @@
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00071">71</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00044">44</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
 
 </div>
 </div>
@@ -205,7 +269,7 @@
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="xint_8hpp_source.html#l00381">xint::operator&lt;&lt;()</a>, and <a class="el" href="xint_8hpp_source.html#l00408">xint::operator&gt;&gt;()</a>.</p>
+<p>Referenced by <a class="el" href="xint_8hpp_source.html#l00397">xint::operator&lt;&lt;()</a>, and <a class="el" href="xint_8hpp_source.html#l00424">xint::operator&gt;&gt;()</a>.</p>
 
 </div>
 </div>
@@ -228,7 +292,7 @@
       <!-- Change copyright to YOUR name (and affiliation, if any) below:  -->
      <p>Copyright © 2009 - 2010 Chad Nelson, Oak Circle Software, Inc</p>
       <!-- 2010 becomes the current year, for example 2010, so claims copyright for a range of years, 2009 - 2010. -->
-     <p>Doxygen Documentation generated by&nbsp;<a href="http://www.doxygen.org/index.html"> <img src="doxygen.png" alt="doxygen logo" align="middle" border="0"/> 1.6.3</a>, Revised at Tue Mar 30 18:10:43 2010</p>
+     <p>Doxygen Documentation generated by&nbsp;<a href="http://www.doxygen.org/index.html"> <img src="doxygen.png" alt="doxygen logo" align="middle" border="0"/> 1.6.3</a>, Revised at Wed Mar 31 15:44:54 2010</p>
   </address>
   </tr>
 </tbody>

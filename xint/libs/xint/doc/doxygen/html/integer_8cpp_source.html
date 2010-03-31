@@ -15,7 +15,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
 
   <!-- Add your title here ! -->
-  <title>Quickbook Doxygen Index Prototype Tue Mar 30 18:10:43 2010 xInt eXtended Integer Library </title>
+  <title>Quickbook Doxygen Index Prototype Wed Mar 31 15:44:54 2010 xInt eXtended Integer Library </title>
 
   <!-- Add your custom stylesheet here ! -->
   <link href="my_doxygen.css" rel="stylesheet" type="text/css"/>
@@ -70,212 +70,216 @@
 <a name="l00014"></a>00014 <span class="preprocessor">#include &quot;../xint.hpp&quot;</span>
 <a name="l00015"></a>00015 <span class="preprocessor">#include &quot;../xint_data_t.hpp&quot;</span>
 <a name="l00016"></a>00016 
-<a name="l00017"></a>00017 <span class="keyword">namespace </span>xint {
-<a name="l00018"></a>00018 
-<a name="l00019"></a>00019 <span class="keyword">const</span> integer *<a class="code" href="classxint_1_1integer.html#a4903bda4b989056ee0c980aba7d07e06">integer::cZero</a>=0, *<a class="code" href="classxint_1_1integer.html#a99deec6bc6eae551f358e4699075646a">integer::cOne</a>=0;
-<a name="l00020"></a>00020 <span class="keyword">const</span> std::string <a class="code" href="namespacexint_1_1detail.html#aede27c67f3308e0805fc3093ffe6f4ce">detail::nan_text</a>(<span class="stringliteral">&quot;#NaN#&quot;</span>);
-<a name="l00021"></a>00021 
-<a name="l00022"></a><a class="code" href="classxint_1_1integer.html#ad32b3b13167c61e48aede083a3e1c7a8">00022</a> <a class="code" href="classxint_1_1integer.html#ad32b3b13167c61e48aede083a3e1c7a8" title="The extended integer class.">integer::integer</a>() {
-<a name="l00023"></a>00023     <a class="code" href="classxint_1_1integer.html#aff4a9e0584c9f920a6cdfdc717bcda0d">_init</a>();
-<a name="l00024"></a>00024 }
+<a name="l00017"></a>00017 <span class="preprocessor">#ifdef XINT_THREADSAFE</span>
+<a name="l00018"></a>00018 <span class="preprocessor"></span><span class="preprocessor">    #define XINT_DISABLE_COPY_ON_WRITE</span>
+<a name="l00019"></a>00019 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
+<a name="l00020"></a>00020 <span class="preprocessor"></span>
+<a name="l00021"></a>00021 <span class="keyword">namespace </span>xint {
+<a name="l00022"></a>00022 
+<a name="l00023"></a>00023 <span class="keyword">const</span> integer *<a class="code" href="classxint_1_1integer.html#a4903bda4b989056ee0c980aba7d07e06">integer::cZero</a>=0, *<a class="code" href="classxint_1_1integer.html#a99deec6bc6eae551f358e4699075646a">integer::cOne</a>=0;
+<a name="l00024"></a>00024 <span class="keyword">const</span> std::string <a class="code" href="namespacexint_1_1detail.html#aede27c67f3308e0805fc3093ffe6f4ce">detail::nan_text</a>(<span class="stringliteral">&quot;#NaN#&quot;</span>);
 <a name="l00025"></a>00025 
-<a name="l00026"></a><a class="code" href="classxint_1_1integer.html#aa123fb47accd778f87e2866c9d986bb7">00026</a> <a class="code" href="classxint_1_1integer.html#ad32b3b13167c61e48aede083a3e1c7a8" title="The extended integer class.">integer::integer</a>(<span class="keyword">const</span> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; b) {
-<a name="l00027"></a>00027     <span class="keywordflow">if</span> (b.<a class="code" href="classxint_1_1integer.html#aece07e741fa78e1329373ff10d44e264">nan</a>()) <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>=0;
-<a name="l00028"></a>00028     <span class="keywordflow">else</span> <a class="code" href="classxint_1_1integer.html#aff4a9e0584c9f920a6cdfdc717bcda0d">_init</a>(b);
-<a name="l00029"></a>00029 }
-<a name="l00030"></a>00030 
-<a name="l00031"></a><a class="code" href="classxint_1_1integer.html#a6dfc86dfc539cfda1062ef1bc24aa526">00031</a> <a class="code" href="classxint_1_1integer.html#ad32b3b13167c61e48aede083a3e1c7a8" title="The extended integer class.">integer::integer</a>(<span class="keyword">const</span> std::string&amp; str, <span class="keywordtype">size_t</span> base) {
-<a name="l00032"></a>00032     <a class="code" href="classxint_1_1integer.html#aff4a9e0584c9f920a6cdfdc717bcda0d">_init</a>(<a class="code" href="namespacexint.html#ad9dcb2b835be5f8ee918979945911ac0">from_string</a>(str, base));
+<a name="l00026"></a><a class="code" href="classxint_1_1integer.html#ad32b3b13167c61e48aede083a3e1c7a8">00026</a> <a class="code" href="classxint_1_1integer.html#ad32b3b13167c61e48aede083a3e1c7a8">integer::integer</a>() {
+<a name="l00027"></a>00027     <a class="code" href="classxint_1_1integer.html#aff4a9e0584c9f920a6cdfdc717bcda0d">_init</a>();
+<a name="l00028"></a>00028 }
+<a name="l00029"></a>00029 
+<a name="l00030"></a><a class="code" href="classxint_1_1integer.html#aa123fb47accd778f87e2866c9d986bb7">00030</a> <a class="code" href="classxint_1_1integer.html#ad32b3b13167c61e48aede083a3e1c7a8">integer::integer</a>(<span class="keyword">const</span> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; b) {
+<a name="l00031"></a>00031     <span class="keywordflow">if</span> (b.<a class="code" href="classxint_1_1integer.html#aece07e741fa78e1329373ff10d44e264">nan</a>()) <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>=0;
+<a name="l00032"></a>00032     <span class="keywordflow">else</span> <a class="code" href="classxint_1_1integer.html#aff4a9e0584c9f920a6cdfdc717bcda0d">_init</a>(b);
 <a name="l00033"></a>00033 }
 <a name="l00034"></a>00034 
-<a name="l00035"></a><a class="code" href="classxint_1_1integer.html#a1211c9298c3281815bc9b709439d031a">00035</a> <a class="code" href="classxint_1_1integer.html#ad32b3b13167c61e48aede083a3e1c7a8" title="The extended integer class.">integer::integer</a>(<span class="keyword">const</span> <a class="code" href="classxint_1_1not__a__number.html">not_a_number</a>&amp;) {
-<a name="l00036"></a>00036     <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>=0;
+<a name="l00035"></a><a class="code" href="classxint_1_1integer.html#a6dfc86dfc539cfda1062ef1bc24aa526">00035</a> <a class="code" href="classxint_1_1integer.html#ad32b3b13167c61e48aede083a3e1c7a8">integer::integer</a>(<span class="keyword">const</span> std::string&amp; str, <span class="keywordtype">size_t</span> base) {
+<a name="l00036"></a>00036     <a class="code" href="classxint_1_1integer.html#aff4a9e0584c9f920a6cdfdc717bcda0d">_init</a>(<a class="code" href="namespacexint.html#ad9dcb2b835be5f8ee918979945911ac0">from_string</a>(str, base));
 <a name="l00037"></a>00037 }
 <a name="l00038"></a>00038 
-<a name="l00039"></a><a class="code" href="classxint_1_1integer.html#a4f687cc90353b1c347448f1d94fa157e">00039</a> <a class="code" href="classxint_1_1integer.html#a4f687cc90353b1c347448f1d94fa157e">integer::~integer</a>() {
-<a name="l00040"></a>00040     <a class="code" href="classxint_1_1integer.html#a53752a9fd32dc65cb8085da60a44e6b4">_detach</a>();
+<a name="l00039"></a><a class="code" href="classxint_1_1integer.html#a1211c9298c3281815bc9b709439d031a">00039</a> <a class="code" href="classxint_1_1integer.html#ad32b3b13167c61e48aede083a3e1c7a8">integer::integer</a>(<span class="keyword">const</span> <a class="code" href="classxint_1_1not__a__number.html">not_a_number</a>&amp;) {
+<a name="l00040"></a>00040     <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>=0;
 <a name="l00041"></a>00041 }
 <a name="l00042"></a>00042 
-<a name="l00043"></a><a class="code" href="classxint_1_1integer.html#aff4a9e0584c9f920a6cdfdc717bcda0d">00043</a> <span class="keywordtype">void</span> <a class="code" href="classxint_1_1integer.html#aff4a9e0584c9f920a6cdfdc717bcda0d">integer::_init</a>(<a class="code" href="namespacexint_1_1detail.html#a8843fb7e364832d8d5983de28bdbcf34">detail::digit_t</a> init) {
-<a name="l00044"></a>00044     <span class="keywordflow">try</span> {
-<a name="l00045"></a>00045         <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>=<span class="keyword">new</span> <a class="code" href="structxint_1_1detail_1_1data__t.html">detail::data_t</a>(init);
-<a name="l00046"></a>00046     } <span class="keywordflow">catch</span> (std::bad_alloc&amp;) {
-<a name="l00047"></a>00047         <span class="keywordflow">throw</span> std::overflow_error(<span class="stringliteral">&quot;Out of memory allocating xint::integer&quot;</span>);
-<a name="l00048"></a>00048     }
-<a name="l00049"></a>00049     <a class="code" href="classxint_1_1integer.html#ab76e68e21fd5fd584d40ab09a6f7197d">_attach</a>();
-<a name="l00050"></a>00050 }
-<a name="l00051"></a>00051 
-<a name="l00052"></a><a class="code" href="classxint_1_1integer.html#adaaff26c817fec0bef3cf903773e3f7b">00052</a> <span class="keywordtype">void</span> <a class="code" href="classxint_1_1integer.html#aff4a9e0584c9f920a6cdfdc717bcda0d">integer::_init</a>(<span class="keyword">const</span> <a class="code" href="classxint_1_1integer.html">integer</a> &amp;c) {
-<a name="l00053"></a>00053 <span class="preprocessor">    #ifdef XINT_THREADSAFE</span>
-<a name="l00054"></a>00054 <span class="preprocessor"></span>        <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>=(c.<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a> ? <span class="keyword">new</span> <a class="code" href="structxint_1_1detail_1_1data__t.html">data_t</a>(c.<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>) : 0);
-<a name="l00055"></a>00055 <span class="preprocessor">    #else</span>
-<a name="l00056"></a>00056 <span class="preprocessor"></span>        <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>=c.<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>;
-<a name="l00057"></a>00057 <span class="preprocessor">    #endif</span>
-<a name="l00058"></a>00058 <span class="preprocessor"></span>    <a class="code" href="classxint_1_1integer.html#ab76e68e21fd5fd584d40ab09a6f7197d">_attach</a>();
-<a name="l00059"></a>00059 }
-<a name="l00060"></a>00060 
-<a name="l00061"></a><a class="code" href="classxint_1_1integer.html#aed205d80e7b1a495a2d67abde5c406e8">00061</a> <span class="keywordtype">void</span> <a class="code" href="classxint_1_1integer.html#aff4a9e0584c9f920a6cdfdc717bcda0d">integer::_init</a>(boost::uintmax_t n) {
-<a name="l00062"></a>00062     <span class="keyword">static</span> <span class="keywordtype">int</span> bits=std::numeric_limits&lt;boost::uintmax_t&gt;::digits;
-<a name="l00063"></a>00063     <span class="keyword">static</span> <span class="keywordtype">int</span> maxDigits=(bits+<a class="code" href="namespacexint_1_1detail.html#a9bd9e8d55061238d63913020d2721518">detail::bits_per_digit</a>-1)/<a class="code" href="namespacexint_1_1detail.html#a9bd9e8d55061238d63913020d2721518">detail::bits_per_digit</a>;
+<a name="l00043"></a><a class="code" href="classxint_1_1integer.html#a4f687cc90353b1c347448f1d94fa157e">00043</a> <a class="code" href="classxint_1_1integer.html#a4f687cc90353b1c347448f1d94fa157e">integer::~integer</a>() {
+<a name="l00044"></a>00044     <a class="code" href="classxint_1_1integer.html#a53752a9fd32dc65cb8085da60a44e6b4">_detach</a>();
+<a name="l00045"></a>00045 }
+<a name="l00046"></a>00046 
+<a name="l00047"></a><a class="code" href="classxint_1_1integer.html#aff4a9e0584c9f920a6cdfdc717bcda0d">00047</a> <span class="keywordtype">void</span> <a class="code" href="classxint_1_1integer.html#aff4a9e0584c9f920a6cdfdc717bcda0d">integer::_init</a>(<a class="code" href="namespacexint_1_1detail.html#a8843fb7e364832d8d5983de28bdbcf34">detail::digit_t</a> init) {
+<a name="l00048"></a>00048     <span class="keywordflow">try</span> {
+<a name="l00049"></a>00049         <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>=<span class="keyword">new</span> <a class="code" href="structxint_1_1detail_1_1data__t.html">detail::data_t</a>(init);
+<a name="l00050"></a>00050     } <span class="keywordflow">catch</span> (std::bad_alloc&amp;) {
+<a name="l00051"></a>00051         <span class="keywordflow">throw</span> <a class="code" href="classxint_1_1overflow__error.html">xint::overflow_error</a>(<span class="stringliteral">&quot;Out of memory allocating xint::integer&quot;</span>);
+<a name="l00052"></a>00052     }
+<a name="l00053"></a>00053     <a class="code" href="classxint_1_1integer.html#ab76e68e21fd5fd584d40ab09a6f7197d">_attach</a>();
+<a name="l00054"></a>00054 }
+<a name="l00055"></a>00055 
+<a name="l00056"></a><a class="code" href="classxint_1_1integer.html#adaaff26c817fec0bef3cf903773e3f7b">00056</a> <span class="keywordtype">void</span> <a class="code" href="classxint_1_1integer.html#aff4a9e0584c9f920a6cdfdc717bcda0d">integer::_init</a>(<span class="keyword">const</span> <a class="code" href="classxint_1_1integer.html">integer</a> &amp;c) {
+<a name="l00057"></a>00057 <span class="preprocessor">    #ifdef XINT_DISABLE_COPY_ON_WRITE</span>
+<a name="l00058"></a>00058 <span class="preprocessor"></span>        <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>=(c.<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a> ? <span class="keyword">new</span> <a class="code" href="structxint_1_1detail_1_1data__t.html">detail::data_t</a>(c.<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>) : 0);
+<a name="l00059"></a>00059 <span class="preprocessor">    #else</span>
+<a name="l00060"></a>00060 <span class="preprocessor"></span>        <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>=c.<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>;
+<a name="l00061"></a>00061 <span class="preprocessor">    #endif</span>
+<a name="l00062"></a>00062 <span class="preprocessor"></span>    <a class="code" href="classxint_1_1integer.html#ab76e68e21fd5fd584d40ab09a6f7197d">_attach</a>();
+<a name="l00063"></a>00063 }
 <a name="l00064"></a>00064 
-<a name="l00065"></a>00065     <span class="keywordflow">try</span> {
-<a name="l00066"></a>00066         <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>=<span class="keyword">new</span> <a class="code" href="structxint_1_1detail_1_1data__t.html">detail::data_t</a>;
-<a name="l00067"></a>00067     } <span class="keywordflow">catch</span> (std::bad_alloc&amp;) {
-<a name="l00068"></a>00068         <span class="keywordflow">throw</span> std::overflow_error(<span class="stringliteral">&quot;Out of memory allocating xint::integer&quot;</span>);
-<a name="l00069"></a>00069     }
-<a name="l00070"></a>00070     <a class="code" href="classxint_1_1integer.html#ab76e68e21fd5fd584d40ab09a6f7197d">_attach</a>();
-<a name="l00071"></a>00071 
-<a name="l00072"></a>00072     <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#a8b5fe67dc7c5808306707f2210ab5658">alloc</a>(maxDigits);
-<a name="l00073"></a>00073     <span class="keywordflow">for</span> (<span class="keywordtype">int</span> x=0; n != 0; ++x) {
-<a name="l00074"></a>00074         <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#a5c9382aec147090d7e7e2b5e972402a9">digits</a>[x]=<a class="code" href="namespacexint_1_1detail.html#a8843fb7e364832d8d5983de28bdbcf34">detail::digit_t</a>(n &amp; <a class="code" href="namespacexint_1_1detail.html#a051753e1bf43dcc77eaa93b8d4e49197">detail::digit_mask</a>);
-<a name="l00075"></a>00075         n &gt;&gt;= <a class="code" href="namespacexint_1_1detail.html#a9bd9e8d55061238d63913020d2721518">detail::bits_per_digit</a>;
-<a name="l00076"></a>00076     }
-<a name="l00077"></a>00077     <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#a6d45feedd311e26f7de06597fb0c6b81">skipLeadingZeros</a>();
-<a name="l00078"></a>00078 }
-<a name="l00079"></a>00079 
-<a name="l00080"></a><a class="code" href="classxint_1_1integer.html#ab76e68e21fd5fd584d40ab09a6f7197d">00080</a> <span class="keywordtype">void</span> <a class="code" href="classxint_1_1integer.html#ab76e68e21fd5fd584d40ab09a6f7197d">integer::_attach</a>() {
-<a name="l00081"></a>00081     <span class="keywordflow">if</span> (<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>) <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#a7230e725461510f321bb1c45251b62f3">attach</a>();
+<a name="l00065"></a><a class="code" href="classxint_1_1integer.html#aed205d80e7b1a495a2d67abde5c406e8">00065</a> <span class="keywordtype">void</span> <a class="code" href="classxint_1_1integer.html#aff4a9e0584c9f920a6cdfdc717bcda0d">integer::_init</a>(boost::uintmax_t n) {
+<a name="l00066"></a>00066     <span class="keyword">static</span> <span class="keywordtype">int</span> bits=std::numeric_limits&lt;boost::uintmax_t&gt;::digits;
+<a name="l00067"></a>00067     <span class="keyword">static</span> <span class="keywordtype">int</span> maxDigits=(bits+<a class="code" href="namespacexint_1_1detail.html#a9bd9e8d55061238d63913020d2721518">detail::bits_per_digit</a>-1)/<a class="code" href="namespacexint_1_1detail.html#a9bd9e8d55061238d63913020d2721518">detail::bits_per_digit</a>;
+<a name="l00068"></a>00068 
+<a name="l00069"></a>00069     <span class="keywordflow">try</span> {
+<a name="l00070"></a>00070         <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>=<span class="keyword">new</span> <a class="code" href="structxint_1_1detail_1_1data__t.html">detail::data_t</a>;
+<a name="l00071"></a>00071     } <span class="keywordflow">catch</span> (std::bad_alloc&amp;) {
+<a name="l00072"></a>00072         <span class="keywordflow">throw</span> <a class="code" href="classxint_1_1overflow__error.html">xint::overflow_error</a>(<span class="stringliteral">&quot;Out of memory allocating xint::integer&quot;</span>);
+<a name="l00073"></a>00073     }
+<a name="l00074"></a>00074     <a class="code" href="classxint_1_1integer.html#ab76e68e21fd5fd584d40ab09a6f7197d">_attach</a>();
+<a name="l00075"></a>00075 
+<a name="l00076"></a>00076     <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#a4fe3935e29883193166966c49cd73139">alloc</a>(maxDigits);
+<a name="l00077"></a>00077     <span class="keywordflow">for</span> (<span class="keywordtype">int</span> x=0; n != 0; ++x) {
+<a name="l00078"></a>00078         <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#a5c9382aec147090d7e7e2b5e972402a9">digits</a>[x]=<a class="code" href="namespacexint_1_1detail.html#a8843fb7e364832d8d5983de28bdbcf34">detail::digit_t</a>(n &amp; <a class="code" href="namespacexint_1_1detail.html#a051753e1bf43dcc77eaa93b8d4e49197">detail::digit_mask</a>);
+<a name="l00079"></a>00079         n &gt;&gt;= <a class="code" href="namespacexint_1_1detail.html#a9bd9e8d55061238d63913020d2721518">detail::bits_per_digit</a>;
+<a name="l00080"></a>00080     }
+<a name="l00081"></a>00081     <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#a6d45feedd311e26f7de06597fb0c6b81">skipLeadingZeros</a>();
 <a name="l00082"></a>00082 }
 <a name="l00083"></a>00083 
-<a name="l00084"></a><a class="code" href="classxint_1_1integer.html#a53752a9fd32dc65cb8085da60a44e6b4">00084</a> <span class="keywordtype">void</span> <a class="code" href="classxint_1_1integer.html#a53752a9fd32dc65cb8085da60a44e6b4">integer::_detach</a>() {
-<a name="l00085"></a>00085     <span class="keywordflow">if</span> (<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a> &amp;&amp; <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#afd5505e388c5bf8c9cf069df81a91818">detach</a>()) <span class="keyword">delete</span> <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>;
+<a name="l00084"></a><a class="code" href="classxint_1_1integer.html#ab76e68e21fd5fd584d40ab09a6f7197d">00084</a> <span class="keywordtype">void</span> <a class="code" href="classxint_1_1integer.html#ab76e68e21fd5fd584d40ab09a6f7197d">integer::_attach</a>() {
+<a name="l00085"></a>00085     <span class="keywordflow">if</span> (<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>) <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#a7230e725461510f321bb1c45251b62f3">attach</a>();
 <a name="l00086"></a>00086 }
 <a name="l00087"></a>00087 
-<a name="l00088"></a><a class="code" href="classxint_1_1integer.html#adc5c7b5bc30c0cfa30d62610e0bc0366">00088</a> <span class="keywordtype">void</span> <a class="code" href="classxint_1_1integer.html#adc5c7b5bc30c0cfa30d62610e0bc0366">integer::_make_unique</a>() {
-<a name="l00089"></a>00089     <span class="keywordflow">try</span> {
-<a name="l00090"></a>00090         <span class="keywordflow">if</span> (<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a> &amp;&amp; <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#a73bc854b5f9ced6576b97d2cff8f3a5d">mCopies</a> &gt; 1) {
-<a name="l00091"></a>00091             <a class="code" href="structxint_1_1detail_1_1data__t.html">detail::data_t</a> *newstore=<span class="keyword">new</span> <a class="code" href="structxint_1_1detail_1_1data__t.html">detail::data_t</a>(<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>);
-<a name="l00092"></a>00092             <a class="code" href="classxint_1_1integer.html#a53752a9fd32dc65cb8085da60a44e6b4">_detach</a>();
-<a name="l00093"></a>00093             <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>=newstore;
-<a name="l00094"></a>00094             <a class="code" href="classxint_1_1integer.html#ab76e68e21fd5fd584d40ab09a6f7197d">_attach</a>();
-<a name="l00095"></a>00095         }
-<a name="l00096"></a>00096     } <span class="keywordflow">catch</span> (std::bad_alloc&amp;) {
-<a name="l00097"></a>00097         <span class="keywordflow">throw</span> std::overflow_error(<span class="stringliteral">&quot;Out of memory allocating xint::integer&quot;</span>);
-<a name="l00098"></a>00098     }
-<a name="l00099"></a>00099 }
-<a name="l00100"></a>00100 
-<a name="l00101"></a><a class="code" href="classxint_1_1integer.html#ab2f4df250e1030c518180b7e832c5ebd">00101</a> <span class="keywordtype">void</span> <a class="code" href="classxint_1_1integer.html#ab2f4df250e1030c518180b7e832c5ebd">integer::_set_negative</a>(<span class="keywordtype">bool</span> negative) {
-<a name="l00102"></a>00102     <span class="keywordflow">if</span> (negative != (<a class="code" href="classxint_1_1integer.html#a5d84398ce89b376f695ccded2d20c8c2">sign</a>() &lt; 0)) *<span class="keyword">this</span>=<a class="code" href="namespacexint.html#a7d9010c1d7edb88471977aecb0f91d26">negate</a>(*<span class="keyword">this</span>);
+<a name="l00088"></a><a class="code" href="classxint_1_1integer.html#a53752a9fd32dc65cb8085da60a44e6b4">00088</a> <span class="keywordtype">void</span> <a class="code" href="classxint_1_1integer.html#a53752a9fd32dc65cb8085da60a44e6b4">integer::_detach</a>() {
+<a name="l00089"></a>00089     <span class="keywordflow">if</span> (<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a> &amp;&amp; <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#afd5505e388c5bf8c9cf069df81a91818">detach</a>()) <span class="keyword">delete</span> <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>;
+<a name="l00090"></a>00090 }
+<a name="l00091"></a>00091 
+<a name="l00092"></a><a class="code" href="classxint_1_1integer.html#adc5c7b5bc30c0cfa30d62610e0bc0366">00092</a> <span class="keywordtype">void</span> <a class="code" href="classxint_1_1integer.html#adc5c7b5bc30c0cfa30d62610e0bc0366">integer::_make_unique</a>() {
+<a name="l00093"></a>00093     <span class="keywordflow">try</span> {
+<a name="l00094"></a>00094         <span class="keywordflow">if</span> (<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a> &amp;&amp; <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#a73bc854b5f9ced6576b97d2cff8f3a5d">mCopies</a> &gt; 1) {
+<a name="l00095"></a>00095             <a class="code" href="structxint_1_1detail_1_1data__t.html">detail::data_t</a> *newstore=<span class="keyword">new</span> <a class="code" href="structxint_1_1detail_1_1data__t.html">detail::data_t</a>(<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>);
+<a name="l00096"></a>00096             <a class="code" href="classxint_1_1integer.html#a53752a9fd32dc65cb8085da60a44e6b4">_detach</a>();
+<a name="l00097"></a>00097             <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>=newstore;
+<a name="l00098"></a>00098             <a class="code" href="classxint_1_1integer.html#ab76e68e21fd5fd584d40ab09a6f7197d">_attach</a>();
+<a name="l00099"></a>00099         }
+<a name="l00100"></a>00100     } <span class="keywordflow">catch</span> (std::bad_alloc&amp;) {
+<a name="l00101"></a>00101         <span class="keywordflow">throw</span> <a class="code" href="classxint_1_1overflow__error.html">xint::overflow_error</a>(<span class="stringliteral">&quot;Out of memory allocating xint::integer&quot;</span>);
+<a name="l00102"></a>00102     }
 <a name="l00103"></a>00103 }
 <a name="l00104"></a>00104 
-<a name="l00105"></a><a class="code" href="classxint_1_1integer.html#af2d420708a02755a8851140928e50e23">00105</a> <span class="keywordtype">bool</span> <a class="code" href="classxint_1_1integer.html#af2d420708a02755a8851140928e50e23">integer::odd</a>()<span class="keyword"> const </span>{
-<a name="l00106"></a>00106     <a class="code" href="classxint_1_1integer.html#ad5935c358b92f15064b1f910613f7a3e">_throw_if_nan</a>();
-<a name="l00107"></a>00107     <span class="keywordflow">return</span> ((<a class="code" href="classxint_1_1integer.html#a81ab47d2f92ec66ac1586b61d7fd8b60">_get_digit</a>(0) &amp; 0x01)==1);
-<a name="l00108"></a>00108 }
-<a name="l00109"></a>00109 
-<a name="l00110"></a><a class="code" href="classxint_1_1integer.html#a2ffb63eee276c65d8ea8b365adeb1ee2">00110</a> <span class="keywordtype">bool</span> <a class="code" href="classxint_1_1integer.html#a2ffb63eee276c65d8ea8b365adeb1ee2">integer::even</a>()<span class="keyword"> const </span>{
-<a name="l00111"></a>00111     <a class="code" href="classxint_1_1integer.html#ad5935c358b92f15064b1f910613f7a3e">_throw_if_nan</a>();
-<a name="l00112"></a>00112     <span class="keywordflow">return</span> ((<a class="code" href="classxint_1_1integer.html#a81ab47d2f92ec66ac1586b61d7fd8b60">_get_digit</a>(0) &amp; 0x01)==0);
-<a name="l00113"></a>00113 }
-<a name="l00114"></a>00114 
-<a name="l00115"></a><a class="code" href="classxint_1_1integer.html#a5d84398ce89b376f695ccded2d20c8c2">00115</a> <span class="keywordtype">int</span> <a class="code" href="classxint_1_1integer.html#a5d84398ce89b376f695ccded2d20c8c2">integer::sign</a>()<span class="keyword"> const </span>{
-<a name="l00116"></a>00116     <a class="code" href="classxint_1_1integer.html#ad5935c358b92f15064b1f910613f7a3e">_throw_if_nan</a>();
-<a name="l00117"></a>00117     <span class="keywordflow">if</span> (<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#afb2d8673fc5d99d2ea006cd0aa32b744">mIsNegative</a>) <span class="keywordflow">return</span> -1;
-<a name="l00118"></a>00118     <span class="keywordflow">if</span> (<a class="code" href="classxint_1_1integer.html#a5723a74b98da2d5ed9452a7ec10c0ca2">_get_length</a>()==1 &amp;&amp; <a class="code" href="classxint_1_1integer.html#a81ab47d2f92ec66ac1586b61d7fd8b60">_get_digit</a>(0)==0) <span class="keywordflow">return</span> 0;
-<a name="l00119"></a>00119     <span class="keywordflow">return</span> 1;
-<a name="l00120"></a>00120 }
-<a name="l00121"></a>00121 
-<a name="l00122"></a><a class="code" href="classxint_1_1integer.html#aece07e741fa78e1329373ff10d44e264">00122</a> <span class="keywordtype">bool</span> <a class="code" href="classxint_1_1integer.html#aece07e741fa78e1329373ff10d44e264">integer::nan</a>()<span class="keyword"> const </span>{
-<a name="l00123"></a>00123     <span class="keywordflow">return</span> (<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>==0);
+<a name="l00105"></a><a class="code" href="classxint_1_1integer.html#ab2f4df250e1030c518180b7e832c5ebd">00105</a> <span class="keywordtype">void</span> <a class="code" href="classxint_1_1integer.html#ab2f4df250e1030c518180b7e832c5ebd">integer::_set_negative</a>(<span class="keywordtype">bool</span> negative) {
+<a name="l00106"></a>00106     <span class="keywordflow">if</span> (negative != (<a class="code" href="classxint_1_1integer.html#a5d84398ce89b376f695ccded2d20c8c2">sign</a>() &lt; 0)) *<span class="keyword">this</span>=<a class="code" href="namespacexint.html#a7d9010c1d7edb88471977aecb0f91d26">negate</a>(*<span class="keyword">this</span>);
+<a name="l00107"></a>00107 }
+<a name="l00108"></a>00108 
+<a name="l00109"></a><a class="code" href="classxint_1_1integer.html#af2d420708a02755a8851140928e50e23">00109</a> <span class="keywordtype">bool</span> <a class="code" href="classxint_1_1integer.html#af2d420708a02755a8851140928e50e23">integer::odd</a>()<span class="keyword"> const </span>{
+<a name="l00110"></a>00110     <a class="code" href="classxint_1_1integer.html#ad5935c358b92f15064b1f910613f7a3e">_throw_if_nan</a>();
+<a name="l00111"></a>00111     <span class="keywordflow">return</span> ((<a class="code" href="classxint_1_1integer.html#a81ab47d2f92ec66ac1586b61d7fd8b60">_get_digit</a>(0) &amp; 0x01)==1);
+<a name="l00112"></a>00112 }
+<a name="l00113"></a>00113 
+<a name="l00114"></a><a class="code" href="classxint_1_1integer.html#a2ffb63eee276c65d8ea8b365adeb1ee2">00114</a> <span class="keywordtype">bool</span> <a class="code" href="classxint_1_1integer.html#a2ffb63eee276c65d8ea8b365adeb1ee2">integer::even</a>()<span class="keyword"> const </span>{
+<a name="l00115"></a>00115     <a class="code" href="classxint_1_1integer.html#ad5935c358b92f15064b1f910613f7a3e">_throw_if_nan</a>();
+<a name="l00116"></a>00116     <span class="keywordflow">return</span> ((<a class="code" href="classxint_1_1integer.html#a81ab47d2f92ec66ac1586b61d7fd8b60">_get_digit</a>(0) &amp; 0x01)==0);
+<a name="l00117"></a>00117 }
+<a name="l00118"></a>00118 
+<a name="l00119"></a><a class="code" href="classxint_1_1integer.html#a5d84398ce89b376f695ccded2d20c8c2">00119</a> <span class="keywordtype">int</span> <a class="code" href="classxint_1_1integer.html#a5d84398ce89b376f695ccded2d20c8c2">integer::sign</a>()<span class="keyword"> const </span>{
+<a name="l00120"></a>00120     <a class="code" href="classxint_1_1integer.html#ad5935c358b92f15064b1f910613f7a3e">_throw_if_nan</a>();
+<a name="l00121"></a>00121     <span class="keywordflow">if</span> (<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#afb2d8673fc5d99d2ea006cd0aa32b744">mIsNegative</a>) <span class="keywordflow">return</span> -1;
+<a name="l00122"></a>00122     <span class="keywordflow">if</span> (<a class="code" href="classxint_1_1integer.html#a5723a74b98da2d5ed9452a7ec10c0ca2">_get_length</a>()==1 &amp;&amp; <a class="code" href="classxint_1_1integer.html#a81ab47d2f92ec66ac1586b61d7fd8b60">_get_digit</a>(0)==0) <span class="keywordflow">return</span> 0;
+<a name="l00123"></a>00123     <span class="keywordflow">return</span> 1;
 <a name="l00124"></a>00124 }
 <a name="l00125"></a>00125 
-<a name="l00126"></a><a class="code" href="classxint_1_1integer.html#a25f066e30e4548bc22e0e9d75b809955">00126</a> <span class="keywordtype">size_t</span> <a class="code" href="classxint_1_1integer.html#a25f066e30e4548bc22e0e9d75b809955">integer::hex_digits</a>()<span class="keyword"> const </span>{
-<a name="l00127"></a>00127     <a class="code" href="classxint_1_1integer.html#ad5935c358b92f15064b1f910613f7a3e">_throw_if_nan</a>();
-<a name="l00128"></a>00128     <span class="keywordtype">size_t</span> bits=<a class="code" href="namespacexint.html#aa074495871d366c760c5b0713f5ef048">log2</a>(*<span class="keyword">this</span>);
-<a name="l00129"></a>00129     <span class="keywordflow">return</span> (bits+3)/4; <span class="comment">// Four bits per hex digit, rounded up</span>
-<a name="l00130"></a>00130 }
-<a name="l00131"></a>00131 
-<a name="l00132"></a><a class="code" href="classxint_1_1integer.html#aa0259f75f66b97b68310cfed2c0ecc7b">00132</a> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#aa0259f75f66b97b68310cfed2c0ecc7b">integer::operator+=</a>(<span class="keyword">const</span> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; addend) {
-<a name="l00133"></a>00133     <span class="keywordflow">if</span> ((<a class="code" href="classxint_1_1integer.html#a5d84398ce89b376f695ccded2d20c8c2">sign</a>() &lt; 0) == (addend.<a class="code" href="classxint_1_1integer.html#a5d84398ce89b376f695ccded2d20c8c2">sign</a>() &lt; 0)
-<a name="l00134"></a>00134         &amp;&amp; <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#ac594577f74057c94ad70a3503068d286">mLength</a> &gt;= addend.<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#ac594577f74057c94ad70a3503068d286">mLength</a>)
-<a name="l00135"></a>00135     {
-<a name="l00136"></a>00136         <span class="comment">// Fast in-place add</span>
-<a name="l00137"></a>00137         <a class="code" href="classxint_1_1integer.html#adc5c7b5bc30c0cfa30d62610e0bc0366">_make_unique</a>();
-<a name="l00138"></a>00138         <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#a143e6814a7aa20a0d61ed616b9940b2e">add</a>(addend.<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>);
-<a name="l00139"></a>00139     } <span class="keywordflow">else</span> {
-<a name="l00140"></a>00140         <span class="comment">// This works for all cases</span>
-<a name="l00141"></a>00141         *<span class="keyword">this</span>=<a class="code" href="namespacexint.html#a7cc636a05af16eba73014bf88273d163">add</a>(*<span class="keyword">this</span>, addend);
-<a name="l00142"></a>00142     }
-<a name="l00143"></a>00143     <span class="keywordflow">return</span> *<span class="keyword">this</span>;
-<a name="l00144"></a>00144 }
-<a name="l00145"></a>00145 
-<a name="l00146"></a><a class="code" href="classxint_1_1integer.html#a2ce7f54adccb88836d1474fc67fa9a62">00146</a> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#a2ce7f54adccb88836d1474fc67fa9a62">integer::operator-=</a>(<span class="keyword">const</span> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; subtrahend) {
-<a name="l00147"></a>00147     <span class="keywordflow">if</span> (<a class="code" href="classxint_1_1integer.html#a5d84398ce89b376f695ccded2d20c8c2">sign</a>() &gt;= 0 &amp;&amp; subtrahend.<a class="code" href="classxint_1_1integer.html#a5d84398ce89b376f695ccded2d20c8c2">sign</a>() &gt;= 0 &amp;&amp; *<span class="keyword">this</span> &gt;= subtrahend) {
-<a name="l00148"></a>00148         <span class="comment">// Fast in-place subtract</span>
-<a name="l00149"></a>00149         <a class="code" href="classxint_1_1integer.html#adc5c7b5bc30c0cfa30d62610e0bc0366">_make_unique</a>();
-<a name="l00150"></a>00150         <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#a650d374b8d38b369273830bb9d939da4">subtract</a>(subtrahend.<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>);
-<a name="l00151"></a>00151     } <span class="keywordflow">else</span> {
-<a name="l00152"></a>00152         <span class="comment">// This works for all cases</span>
-<a name="l00153"></a>00153         *<span class="keyword">this</span>=<a class="code" href="namespacexint.html#af196cd74cb23970032fddcce71957a80">subtract</a>(*<span class="keyword">this</span>, subtrahend);
-<a name="l00154"></a>00154     }
-<a name="l00155"></a>00155     <span class="keywordflow">return</span> *<span class="keyword">this</span>;
-<a name="l00156"></a>00156 }
-<a name="l00157"></a>00157 
-<a name="l00158"></a><a class="code" href="classxint_1_1integer.html#abfa13a313f2782885bbbfa9a5f4a22c2">00158</a> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#abfa13a313f2782885bbbfa9a5f4a22c2">integer::operator=</a>(<span class="keyword">const</span> <a class="code" href="classxint_1_1integer.html">integer</a> &amp;c) {
-<a name="l00159"></a>00159     <a class="code" href="classxint_1_1integer.html#a53752a9fd32dc65cb8085da60a44e6b4">_detach</a>();
-<a name="l00160"></a>00160 <span class="preprocessor">    #ifdef XINT_THREADSAFE</span>
-<a name="l00161"></a>00161 <span class="preprocessor"></span>        <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>=(c.<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a> ? <span class="keyword">new</span> <a class="code" href="structxint_1_1detail_1_1data__t.html">data_t</a>(c.<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>) : 0);
-<a name="l00162"></a>00162 <span class="preprocessor">    #else</span>
-<a name="l00163"></a>00163 <span class="preprocessor"></span>        <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>=c.<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>;
-<a name="l00164"></a>00164 <span class="preprocessor">    #endif</span>
-<a name="l00165"></a>00165 <span class="preprocessor"></span>    <a class="code" href="classxint_1_1integer.html#ab76e68e21fd5fd584d40ab09a6f7197d">_attach</a>();
-<a name="l00166"></a>00166     <span class="keywordflow">return</span> *<span class="keyword">this</span>;
-<a name="l00167"></a>00167 }
-<a name="l00168"></a>00168 
-<a name="l00169"></a><a class="code" href="classxint_1_1integer.html#a531cdc9ce5667c4553fd1e4dac151b51">00169</a> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#a531cdc9ce5667c4553fd1e4dac151b51">integer::operator*=</a>(<span class="keyword">const</span> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; b) { *<span class="keyword">this</span>=<a class="code" href="namespacexint.html#af3d7059ec08bf075cec5685deca55c5d">multiply</a>(*<span class="keyword">this</span>, b); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
-<a name="l00170"></a><a class="code" href="classxint_1_1integer.html#a3366a33f7ca5ad3285515e260d0dce66">00170</a> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#a3366a33f7ca5ad3285515e260d0dce66">integer::operator/=</a>(<span class="keyword">const</span> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; b) { *<span class="keyword">this</span>=<a class="code" href="namespacexint.html#abf3d47f1ef1fdf334097fab055886a44">divide</a>(*<span class="keyword">this</span>, b); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
-<a name="l00171"></a><a class="code" href="classxint_1_1integer.html#abee8874a961c2bb15a288494e096f36b">00171</a> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#abee8874a961c2bb15a288494e096f36b">integer::operator%=</a>(<span class="keyword">const</span> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; b) { *<span class="keyword">this</span>=<a class="code" href="namespacexint.html#af7a1a866478f5c0a2bc4615785f17e1a">mod</a>(*<span class="keyword">this</span>, b); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
+<a name="l00126"></a><a class="code" href="classxint_1_1integer.html#aece07e741fa78e1329373ff10d44e264">00126</a> <span class="keywordtype">bool</span> <a class="code" href="classxint_1_1integer.html#aece07e741fa78e1329373ff10d44e264">integer::nan</a>()<span class="keyword"> const </span>{
+<a name="l00127"></a>00127     <span class="keywordflow">return</span> (<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>==0);
+<a name="l00128"></a>00128 }
+<a name="l00129"></a>00129 
+<a name="l00130"></a><a class="code" href="classxint_1_1integer.html#a25f066e30e4548bc22e0e9d75b809955">00130</a> <span class="keywordtype">size_t</span> <a class="code" href="classxint_1_1integer.html#a25f066e30e4548bc22e0e9d75b809955">integer::hex_digits</a>()<span class="keyword"> const </span>{
+<a name="l00131"></a>00131     <a class="code" href="classxint_1_1integer.html#ad5935c358b92f15064b1f910613f7a3e">_throw_if_nan</a>();
+<a name="l00132"></a>00132     <span class="keywordtype">size_t</span> bits=<a class="code" href="namespacexint.html#aa074495871d366c760c5b0713f5ef048">log2</a>(*<span class="keyword">this</span>);
+<a name="l00133"></a>00133     <span class="keywordflow">return</span> (bits+3)/4; <span class="comment">// Four bits per hex digit, rounded up</span>
+<a name="l00134"></a>00134 }
+<a name="l00135"></a>00135 
+<a name="l00136"></a><a class="code" href="classxint_1_1integer.html#aa0259f75f66b97b68310cfed2c0ecc7b">00136</a> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#aa0259f75f66b97b68310cfed2c0ecc7b">integer::operator+=</a>(<span class="keyword">const</span> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; addend) {
+<a name="l00137"></a>00137     <span class="keywordflow">if</span> ((<a class="code" href="classxint_1_1integer.html#a5d84398ce89b376f695ccded2d20c8c2">sign</a>() &lt; 0) == (addend.<a class="code" href="classxint_1_1integer.html#a5d84398ce89b376f695ccded2d20c8c2">sign</a>() &lt; 0)
+<a name="l00138"></a>00138         &amp;&amp; <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#a599933d272e3592b2d0985ca7f7c72e2">mLength</a> &gt;= addend.<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#a599933d272e3592b2d0985ca7f7c72e2">mLength</a>)
+<a name="l00139"></a>00139     {
+<a name="l00140"></a>00140         <span class="comment">// Fast in-place add</span>
+<a name="l00141"></a>00141         <a class="code" href="classxint_1_1integer.html#adc5c7b5bc30c0cfa30d62610e0bc0366">_make_unique</a>();
+<a name="l00142"></a>00142         <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#a143e6814a7aa20a0d61ed616b9940b2e">add</a>(addend.<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>);
+<a name="l00143"></a>00143     } <span class="keywordflow">else</span> {
+<a name="l00144"></a>00144         <span class="comment">// This works for all cases</span>
+<a name="l00145"></a>00145         *<span class="keyword">this</span>=<a class="code" href="namespacexint.html#a7cc636a05af16eba73014bf88273d163">add</a>(*<span class="keyword">this</span>, addend);
+<a name="l00146"></a>00146     }
+<a name="l00147"></a>00147     <span class="keywordflow">return</span> *<span class="keyword">this</span>;
+<a name="l00148"></a>00148 }
+<a name="l00149"></a>00149 
+<a name="l00150"></a><a class="code" href="classxint_1_1integer.html#a2ce7f54adccb88836d1474fc67fa9a62">00150</a> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#a2ce7f54adccb88836d1474fc67fa9a62">integer::operator-=</a>(<span class="keyword">const</span> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; subtrahend) {
+<a name="l00151"></a>00151     <span class="keywordflow">if</span> (<a class="code" href="classxint_1_1integer.html#a5d84398ce89b376f695ccded2d20c8c2">sign</a>() &gt;= 0 &amp;&amp; subtrahend.<a class="code" href="classxint_1_1integer.html#a5d84398ce89b376f695ccded2d20c8c2">sign</a>() &gt;= 0 &amp;&amp; *<span class="keyword">this</span> &gt;= subtrahend) {
+<a name="l00152"></a>00152         <span class="comment">// Fast in-place subtract</span>
+<a name="l00153"></a>00153         <a class="code" href="classxint_1_1integer.html#adc5c7b5bc30c0cfa30d62610e0bc0366">_make_unique</a>();
+<a name="l00154"></a>00154         <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#a650d374b8d38b369273830bb9d939da4">subtract</a>(subtrahend.<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>);
+<a name="l00155"></a>00155     } <span class="keywordflow">else</span> {
+<a name="l00156"></a>00156         <span class="comment">// This works for all cases</span>
+<a name="l00157"></a>00157         *<span class="keyword">this</span>=<a class="code" href="namespacexint.html#af196cd74cb23970032fddcce71957a80">subtract</a>(*<span class="keyword">this</span>, subtrahend);
+<a name="l00158"></a>00158     }
+<a name="l00159"></a>00159     <span class="keywordflow">return</span> *<span class="keyword">this</span>;
+<a name="l00160"></a>00160 }
+<a name="l00161"></a>00161 
+<a name="l00162"></a><a class="code" href="classxint_1_1integer.html#abfa13a313f2782885bbbfa9a5f4a22c2">00162</a> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#abfa13a313f2782885bbbfa9a5f4a22c2">integer::operator=</a>(<span class="keyword">const</span> <a class="code" href="classxint_1_1integer.html">integer</a> &amp;c) {
+<a name="l00163"></a>00163     <a class="code" href="classxint_1_1integer.html#a53752a9fd32dc65cb8085da60a44e6b4">_detach</a>();
+<a name="l00164"></a>00164 <span class="preprocessor">    #ifdef XINT_DISABLE_COPY_ON_WRITE</span>
+<a name="l00165"></a>00165 <span class="preprocessor"></span>        <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>=(c.<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a> ? <span class="keyword">new</span> <a class="code" href="structxint_1_1detail_1_1data__t.html">detail::data_t</a>(c.<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>) : 0);
+<a name="l00166"></a>00166 <span class="preprocessor">    #else</span>
+<a name="l00167"></a>00167 <span class="preprocessor"></span>        <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>=c.<a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>;
+<a name="l00168"></a>00168 <span class="preprocessor">    #endif</span>
+<a name="l00169"></a>00169 <span class="preprocessor"></span>    <a class="code" href="classxint_1_1integer.html#ab76e68e21fd5fd584d40ab09a6f7197d">_attach</a>();
+<a name="l00170"></a>00170     <span class="keywordflow">return</span> *<span class="keyword">this</span>;
+<a name="l00171"></a>00171 }
 <a name="l00172"></a>00172 
-<a name="l00173"></a><a class="code" href="classxint_1_1integer.html#a60cd241278892070d14a0d57e45c9264">00173</a> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#a60cd241278892070d14a0d57e45c9264">integer::operator++</a>() { *<span class="keyword">this</span> += <a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8" title="Extended integer holding one.">one</a>(); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
-<a name="l00174"></a><a class="code" href="classxint_1_1integer.html#a48452b868e2279e202039c9918f0dcf3">00174</a> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#a48452b868e2279e202039c9918f0dcf3">integer::operator--</a>() { *<span class="keyword">this</span> -= <a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8" title="Extended integer holding one.">one</a>(); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
-<a name="l00175"></a><a class="code" href="classxint_1_1integer.html#a79624fb580bdb2ba19fe13223c801c25">00175</a> <a class="code" href="classxint_1_1integer.html">integer</a>  <a class="code" href="classxint_1_1integer.html#a60cd241278892070d14a0d57e45c9264">integer::operator++</a>(<span class="keywordtype">int</span>) { <a class="code" href="classxint_1_1integer.html">integer</a> s=*<span class="keyword">this</span>; *<span class="keyword">this</span> += <a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8" title="Extended integer holding one.">one</a>(); <span class="keywordflow">return</span> s; }
-<a name="l00176"></a><a class="code" href="classxint_1_1integer.html#a40ff1ffeda1df544b8bcd907f76d93cd">00176</a> <a class="code" href="classxint_1_1integer.html">integer</a>  <a class="code" href="classxint_1_1integer.html#a48452b868e2279e202039c9918f0dcf3">integer::operator--</a>(<span class="keywordtype">int</span>) { <a class="code" href="classxint_1_1integer.html">integer</a> s=*<span class="keyword">this</span>; *<span class="keyword">this</span> -= <a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8" title="Extended integer holding one.">one</a>(); <span class="keywordflow">return</span> s; }
-<a name="l00177"></a>00177 
-<a name="l00178"></a><a class="code" href="classxint_1_1integer.html#a3733741d7e1c8ba1c1f490c8949a308f">00178</a> <a class="code" href="classxint_1_1integer.html">integer</a>  <a class="code" href="classxint_1_1integer.html#a3733741d7e1c8ba1c1f490c8949a308f">integer::operator&lt;&lt;</a>(<span class="keywordtype">size_t</span> <a class="code" href="namespacexint.html#a4f4dacd6f9398aaa500112731ab713ce">shift</a>)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="namespacexint.html#abe0717f5f1bed3f2c108e654f92f168a">shift_left</a>(*<span class="keyword">this</span>, shift); }
-<a name="l00179"></a><a class="code" href="classxint_1_1integer.html#a5cbc6986de4ca89b49162736f8750986">00179</a> <a class="code" href="classxint_1_1integer.html">integer</a>  <a class="code" href="classxint_1_1integer.html#a5cbc6986de4ca89b49162736f8750986">integer::operator&gt;&gt;</a>(<span class="keywordtype">size_t</span> <a class="code" href="namespacexint.html#a4f4dacd6f9398aaa500112731ab713ce">shift</a>)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="namespacexint.html#a33005f5e57bca2418fae44952e28bbbf">shift_right</a>(*<span class="keyword">this</span>, shift); }
-<a name="l00180"></a><a class="code" href="classxint_1_1integer.html#a0d4c730e3d45d3fa2895b706b202d860">00180</a> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#a0d4c730e3d45d3fa2895b706b202d860">integer::operator&amp;=</a>(<span class="keyword">const</span> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; n) { *<span class="keyword">this</span>=<a class="code" href="namespacexint.html#a06138585f07fe098e24718c46e3078e1">bitwise_and</a>(*<span class="keyword">this</span>, n); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
-<a name="l00181"></a><a class="code" href="classxint_1_1integer.html#a1af418341e64a317b4cc41fcddaa849f">00181</a> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#a1af418341e64a317b4cc41fcddaa849f">integer::operator|=</a>(<span class="keyword">const</span> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; n) { *<span class="keyword">this</span>=<a class="code" href="namespacexint.html#a8cd0a0dbc779e5a75c9e2f8027474e9a">bitwise_or</a>(*<span class="keyword">this</span>, n); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
-<a name="l00182"></a><a class="code" href="classxint_1_1integer.html#afc13b5ae9c6f28ef5e75777976aeb56d">00182</a> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#afc13b5ae9c6f28ef5e75777976aeb56d">integer::operator^=</a>(<span class="keyword">const</span> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; n) { *<span class="keyword">this</span>=<a class="code" href="namespacexint.html#a9ffe18a09f5dd354af7b967b032d3cbe">bitwise_xor</a>(*<span class="keyword">this</span>, n); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
-<a name="l00183"></a>00183 
-<a name="l00184"></a><a class="code" href="classxint_1_1integer.html#a14545146f86ed797e97758d8aea32ecd">00184</a> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#a14545146f86ed797e97758d8aea32ecd">integer::operator&lt;&lt;=</a>(<span class="keywordtype">size_t</span> <a class="code" href="namespacexint.html#a4f4dacd6f9398aaa500112731ab713ce">shift</a>) {
-<a name="l00185"></a>00185     <span class="keywordflow">if</span> (shift&gt;0) {
-<a name="l00186"></a>00186         <a class="code" href="classxint_1_1integer.html#adc5c7b5bc30c0cfa30d62610e0bc0366">_make_unique</a>();
-<a name="l00187"></a>00187         <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#a4375d95de49470025539a9b41429bcf6">shift_left</a>(shift);
-<a name="l00188"></a>00188     }
-<a name="l00189"></a>00189     <span class="keywordflow">return</span> *<span class="keyword">this</span>;
-<a name="l00190"></a>00190 }
-<a name="l00191"></a>00191 
-<a name="l00192"></a><a class="code" href="classxint_1_1integer.html#aa0151e58a97bc1801221907d68582ec2">00192</a> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#aa0151e58a97bc1801221907d68582ec2">integer::operator&gt;&gt;=</a>(<span class="keywordtype">size_t</span> <a class="code" href="namespacexint.html#a4f4dacd6f9398aaa500112731ab713ce">shift</a>) {
-<a name="l00193"></a>00193     <span class="keywordflow">if</span> (shift&gt;0) {
-<a name="l00194"></a>00194         <a class="code" href="classxint_1_1integer.html#adc5c7b5bc30c0cfa30d62610e0bc0366">_make_unique</a>();
-<a name="l00195"></a>00195         <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#aacee3802bd433c989d9fdc6a1731019d">shift_right</a>(shift);
-<a name="l00196"></a>00196     }
-<a name="l00197"></a>00197     <span class="keywordflow">return</span> *<span class="keyword">this</span>;
-<a name="l00198"></a>00198 }
-<a name="l00199"></a>00199 
-<a name="l00200"></a><a class="code" href="classxint_1_1integer.html#a64a0f99de7c33239237cb59d8464f3d2">00200</a> <span class="keyword">const</span> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#a64a0f99de7c33239237cb59d8464f3d2" title="Extended integer holding zero.">integer::zero</a>() {
-<a name="l00201"></a>00201     <span class="keywordflow">if</span> (<a class="code" href="classxint_1_1integer.html#a4903bda4b989056ee0c980aba7d07e06">cZero</a>==0) <a class="code" href="classxint_1_1integer.html#a4903bda4b989056ee0c980aba7d07e06">cZero</a>=<span class="keyword">new</span> <a class="code" href="classxint_1_1integer.html#ad32b3b13167c61e48aede083a3e1c7a8" title="The extended integer class.">integer</a>(0);
-<a name="l00202"></a>00202     <span class="keywordflow">return</span> *<a class="code" href="classxint_1_1integer.html#a4903bda4b989056ee0c980aba7d07e06">cZero</a>;
-<a name="l00203"></a>00203 }
-<a name="l00204"></a>00204 
-<a name="l00205"></a><a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8">00205</a> <span class="keyword">const</span> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8" title="Extended integer holding one.">integer::one</a>() {
-<a name="l00206"></a>00206     <span class="keywordflow">if</span> (<a class="code" href="classxint_1_1integer.html#a99deec6bc6eae551f358e4699075646a">cOne</a>==0) <a class="code" href="classxint_1_1integer.html#a99deec6bc6eae551f358e4699075646a">cOne</a>=<span class="keyword">new</span> <a class="code" href="classxint_1_1integer.html#ad32b3b13167c61e48aede083a3e1c7a8" title="The extended integer class.">integer</a>(1);
-<a name="l00207"></a>00207     <span class="keywordflow">return</span> *<a class="code" href="classxint_1_1integer.html#a99deec6bc6eae551f358e4699075646a">cOne</a>;
-<a name="l00208"></a>00208 }
-<a name="l00209"></a>00209 
-<a name="l00210"></a><a class="code" href="classxint_1_1integer.html#a81ab47d2f92ec66ac1586b61d7fd8b60">00210</a> <a class="code" href="namespacexint_1_1detail.html#a8843fb7e364832d8d5983de28bdbcf34">detail::digit_t</a> <a class="code" href="classxint_1_1integer.html#a81ab47d2f92ec66ac1586b61d7fd8b60">integer::_get_digit</a>(<span class="keywordtype">size_t</span> index)<span class="keyword"> const </span>{
-<a name="l00211"></a>00211     <span class="keywordflow">return</span> <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#a5c9382aec147090d7e7e2b5e972402a9">digits</a>[index];
+<a name="l00173"></a><a class="code" href="classxint_1_1integer.html#a531cdc9ce5667c4553fd1e4dac151b51">00173</a> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#a531cdc9ce5667c4553fd1e4dac151b51">integer::operator*=</a>(<span class="keyword">const</span> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; b) { *<span class="keyword">this</span>=<a class="code" href="namespacexint.html#af3d7059ec08bf075cec5685deca55c5d">multiply</a>(*<span class="keyword">this</span>, b); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
+<a name="l00174"></a><a class="code" href="classxint_1_1integer.html#a3366a33f7ca5ad3285515e260d0dce66">00174</a> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#a3366a33f7ca5ad3285515e260d0dce66">integer::operator/=</a>(<span class="keyword">const</span> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; b) { *<span class="keyword">this</span>=<a class="code" href="namespacexint.html#abf3d47f1ef1fdf334097fab055886a44">divide</a>(*<span class="keyword">this</span>, b); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
+<a name="l00175"></a><a class="code" href="classxint_1_1integer.html#abee8874a961c2bb15a288494e096f36b">00175</a> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#abee8874a961c2bb15a288494e096f36b">integer::operator%=</a>(<span class="keyword">const</span> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; b) { *<span class="keyword">this</span>=<a class="code" href="namespacexint.html#af7a1a866478f5c0a2bc4615785f17e1a">mod</a>(*<span class="keyword">this</span>, b); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
+<a name="l00176"></a>00176 
+<a name="l00177"></a><a class="code" href="classxint_1_1integer.html#a60cd241278892070d14a0d57e45c9264">00177</a> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#a60cd241278892070d14a0d57e45c9264">integer::operator++</a>() { *<span class="keyword">this</span> += <a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8">one</a>(); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
+<a name="l00178"></a><a class="code" href="classxint_1_1integer.html#a48452b868e2279e202039c9918f0dcf3">00178</a> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#a48452b868e2279e202039c9918f0dcf3">integer::operator--</a>() { *<span class="keyword">this</span> -= <a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8">one</a>(); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
+<a name="l00179"></a><a class="code" href="classxint_1_1integer.html#a79624fb580bdb2ba19fe13223c801c25">00179</a> <a class="code" href="classxint_1_1integer.html">integer</a>  <a class="code" href="classxint_1_1integer.html#a60cd241278892070d14a0d57e45c9264">integer::operator++</a>(<span class="keywordtype">int</span>) { <a class="code" href="classxint_1_1integer.html">integer</a> s=*<span class="keyword">this</span>; *<span class="keyword">this</span> += <a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8">one</a>(); <span class="keywordflow">return</span> s; }
+<a name="l00180"></a><a class="code" href="classxint_1_1integer.html#a40ff1ffeda1df544b8bcd907f76d93cd">00180</a> <a class="code" href="classxint_1_1integer.html">integer</a>  <a class="code" href="classxint_1_1integer.html#a48452b868e2279e202039c9918f0dcf3">integer::operator--</a>(<span class="keywordtype">int</span>) { <a class="code" href="classxint_1_1integer.html">integer</a> s=*<span class="keyword">this</span>; *<span class="keyword">this</span> -= <a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8">one</a>(); <span class="keywordflow">return</span> s; }
+<a name="l00181"></a>00181 
+<a name="l00182"></a><a class="code" href="classxint_1_1integer.html#a3733741d7e1c8ba1c1f490c8949a308f">00182</a> <a class="code" href="classxint_1_1integer.html">integer</a>  <a class="code" href="classxint_1_1integer.html#a3733741d7e1c8ba1c1f490c8949a308f">integer::operator&lt;&lt;</a>(<span class="keywordtype">size_t</span> <a class="code" href="namespacexint.html#a4f4dacd6f9398aaa500112731ab713ce">shift</a>)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="namespacexint.html#abe0717f5f1bed3f2c108e654f92f168a">shift_left</a>(*<span class="keyword">this</span>, shift); }
+<a name="l00183"></a><a class="code" href="classxint_1_1integer.html#a5cbc6986de4ca89b49162736f8750986">00183</a> <a class="code" href="classxint_1_1integer.html">integer</a>  <a class="code" href="classxint_1_1integer.html#a5cbc6986de4ca89b49162736f8750986">integer::operator&gt;&gt;</a>(<span class="keywordtype">size_t</span> <a class="code" href="namespacexint.html#a4f4dacd6f9398aaa500112731ab713ce">shift</a>)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="namespacexint.html#a33005f5e57bca2418fae44952e28bbbf">shift_right</a>(*<span class="keyword">this</span>, shift); }
+<a name="l00184"></a><a class="code" href="classxint_1_1integer.html#a0d4c730e3d45d3fa2895b706b202d860">00184</a> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#a0d4c730e3d45d3fa2895b706b202d860">integer::operator&amp;=</a>(<span class="keyword">const</span> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; n) { *<span class="keyword">this</span>=<a class="code" href="namespacexint.html#a06138585f07fe098e24718c46e3078e1">bitwise_and</a>(*<span class="keyword">this</span>, n); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
+<a name="l00185"></a><a class="code" href="classxint_1_1integer.html#a1af418341e64a317b4cc41fcddaa849f">00185</a> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#a1af418341e64a317b4cc41fcddaa849f">integer::operator|=</a>(<span class="keyword">const</span> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; n) { *<span class="keyword">this</span>=<a class="code" href="namespacexint.html#a8cd0a0dbc779e5a75c9e2f8027474e9a">bitwise_or</a>(*<span class="keyword">this</span>, n); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
+<a name="l00186"></a><a class="code" href="classxint_1_1integer.html#afc13b5ae9c6f28ef5e75777976aeb56d">00186</a> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#afc13b5ae9c6f28ef5e75777976aeb56d">integer::operator^=</a>(<span class="keyword">const</span> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; n) { *<span class="keyword">this</span>=<a class="code" href="namespacexint.html#a9ffe18a09f5dd354af7b967b032d3cbe">bitwise_xor</a>(*<span class="keyword">this</span>, n); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
+<a name="l00187"></a>00187 
+<a name="l00188"></a><a class="code" href="classxint_1_1integer.html#a14545146f86ed797e97758d8aea32ecd">00188</a> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#a14545146f86ed797e97758d8aea32ecd">integer::operator&lt;&lt;=</a>(<span class="keywordtype">size_t</span> <a class="code" href="namespacexint.html#a4f4dacd6f9398aaa500112731ab713ce">shift</a>) {
+<a name="l00189"></a>00189     <span class="keywordflow">if</span> (shift&gt;0) {
+<a name="l00190"></a>00190         <a class="code" href="classxint_1_1integer.html#adc5c7b5bc30c0cfa30d62610e0bc0366">_make_unique</a>();
+<a name="l00191"></a>00191         <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#a72785130c7c6490af874f450cf6e0086">shift_left</a>(shift);
+<a name="l00192"></a>00192     }
+<a name="l00193"></a>00193     <span class="keywordflow">return</span> *<span class="keyword">this</span>;
+<a name="l00194"></a>00194 }
+<a name="l00195"></a>00195 
+<a name="l00196"></a><a class="code" href="classxint_1_1integer.html#aa0151e58a97bc1801221907d68582ec2">00196</a> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#aa0151e58a97bc1801221907d68582ec2">integer::operator&gt;&gt;=</a>(<span class="keywordtype">size_t</span> <a class="code" href="namespacexint.html#a4f4dacd6f9398aaa500112731ab713ce">shift</a>) {
+<a name="l00197"></a>00197     <span class="keywordflow">if</span> (shift&gt;0) {
+<a name="l00198"></a>00198         <a class="code" href="classxint_1_1integer.html#adc5c7b5bc30c0cfa30d62610e0bc0366">_make_unique</a>();
+<a name="l00199"></a>00199         <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#a432ace7094bca306dcba254f862e2428">shift_right</a>(shift);
+<a name="l00200"></a>00200     }
+<a name="l00201"></a>00201     <span class="keywordflow">return</span> *<span class="keyword">this</span>;
+<a name="l00202"></a>00202 }
+<a name="l00203"></a>00203 
+<a name="l00204"></a><a class="code" href="classxint_1_1integer.html#a64a0f99de7c33239237cb59d8464f3d2">00204</a> <span class="keyword">const</span> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#a64a0f99de7c33239237cb59d8464f3d2">integer::zero</a>() {
+<a name="l00205"></a>00205     <span class="keywordflow">if</span> (<a class="code" href="classxint_1_1integer.html#a4903bda4b989056ee0c980aba7d07e06">cZero</a>==0) <a class="code" href="classxint_1_1integer.html#a4903bda4b989056ee0c980aba7d07e06">cZero</a>=<span class="keyword">new</span> <a class="code" href="classxint_1_1integer.html#ad32b3b13167c61e48aede083a3e1c7a8">integer</a>(0);
+<a name="l00206"></a>00206     <span class="keywordflow">return</span> *<a class="code" href="classxint_1_1integer.html#a4903bda4b989056ee0c980aba7d07e06">cZero</a>;
+<a name="l00207"></a>00207 }
+<a name="l00208"></a>00208 
+<a name="l00209"></a><a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8">00209</a> <span class="keyword">const</span> <a class="code" href="classxint_1_1integer.html">integer</a>&amp; <a class="code" href="classxint_1_1integer.html#a9237b21f4162146c7b5749b169c081b8">integer::one</a>() {
+<a name="l00210"></a>00210     <span class="keywordflow">if</span> (<a class="code" href="classxint_1_1integer.html#a99deec6bc6eae551f358e4699075646a">cOne</a>==0) <a class="code" href="classxint_1_1integer.html#a99deec6bc6eae551f358e4699075646a">cOne</a>=<span class="keyword">new</span> <a class="code" href="classxint_1_1integer.html#ad32b3b13167c61e48aede083a3e1c7a8">integer</a>(1);
+<a name="l00211"></a>00211     <span class="keywordflow">return</span> *<a class="code" href="classxint_1_1integer.html#a99deec6bc6eae551f358e4699075646a">cOne</a>;
 <a name="l00212"></a>00212 }
 <a name="l00213"></a>00213 
-<a name="l00214"></a><a class="code" href="classxint_1_1integer.html#a5723a74b98da2d5ed9452a7ec10c0ca2">00214</a> <span class="keywordtype">size_t</span> <a class="code" href="classxint_1_1integer.html#a5723a74b98da2d5ed9452a7ec10c0ca2">integer::_get_length</a>()<span class="keyword"> const </span>{
-<a name="l00215"></a>00215     <span class="keywordflow">return</span> <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450" title="Raw data representing an extended integer.">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#ac594577f74057c94ad70a3503068d286">mLength</a>;
+<a name="l00214"></a><a class="code" href="classxint_1_1integer.html#a81ab47d2f92ec66ac1586b61d7fd8b60">00214</a> <a class="code" href="namespacexint_1_1detail.html#a8843fb7e364832d8d5983de28bdbcf34">detail::digit_t</a> <a class="code" href="classxint_1_1integer.html#a81ab47d2f92ec66ac1586b61d7fd8b60">integer::_get_digit</a>(<span class="keywordtype">size_t</span> index)<span class="keyword"> const </span>{
+<a name="l00215"></a>00215     <span class="keywordflow">return</span> <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#a5c9382aec147090d7e7e2b5e972402a9">digits</a>[index];
 <a name="l00216"></a>00216 }
 <a name="l00217"></a>00217 
-<a name="l00218"></a><a class="code" href="classxint_1_1integer.html#ad5935c358b92f15064b1f910613f7a3e">00218</a> <span class="keywordtype">void</span> <a class="code" href="classxint_1_1integer.html#ad5935c358b92f15064b1f910613f7a3e">integer::_throw_if_nan</a>()<span class="keyword"> const </span>{
-<a name="l00219"></a>00219     <span class="keywordflow">if</span> (<a class="code" href="classxint_1_1integer.html#aece07e741fa78e1329373ff10d44e264">nan</a>()) <span class="keywordflow">throw</span> <a class="code" href="classxint_1_1not__a__number.html">not_a_number</a>();
+<a name="l00218"></a><a class="code" href="classxint_1_1integer.html#a5723a74b98da2d5ed9452a7ec10c0ca2">00218</a> <span class="keywordtype">size_t</span> <a class="code" href="classxint_1_1integer.html#a5723a74b98da2d5ed9452a7ec10c0ca2">integer::_get_length</a>()<span class="keyword"> const </span>{
+<a name="l00219"></a>00219     <span class="keywordflow">return</span> <a class="code" href="classxint_1_1integer.html#a83a10805b1c61ed4c7b7b525a9b6b450">data</a>-&gt;<a class="code" href="structxint_1_1detail_1_1data__t.html#a599933d272e3592b2d0985ca7f7c72e2">mLength</a>;
 <a name="l00220"></a>00220 }
 <a name="l00221"></a>00221 
-<a name="l00222"></a>00222 } <span class="comment">// namespace xint</span>
+<a name="l00222"></a><a class="code" href="classxint_1_1integer.html#ad5935c358b92f15064b1f910613f7a3e">00222</a> <span class="keywordtype">void</span> <a class="code" href="classxint_1_1integer.html#ad5935c358b92f15064b1f910613f7a3e">integer::_throw_if_nan</a>()<span class="keyword"> const </span>{
+<a name="l00223"></a>00223     <span class="keywordflow">if</span> (<a class="code" href="classxint_1_1integer.html#aece07e741fa78e1329373ff10d44e264">nan</a>()) <span class="keywordflow">throw</span> <a class="code" href="classxint_1_1not__a__number.html">not_a_number</a>();
+<a name="l00224"></a>00224 }
+<a name="l00225"></a>00225 
+<a name="l00226"></a>00226 } <span class="comment">// namespace xint</span>
 </pre></div></div>
 <!-- xint custom Doxygen footer my_doxygen_footer.html  -->-
 
@@ -295,7 +299,7 @@
       <!-- Change copyright to YOUR name (and affiliation, if any) below:  -->
      <p>Copyright © 2009 - 2010 Chad Nelson, Oak Circle Software, Inc</p>
       <!-- 2010 becomes the current year, for example 2010, so claims copyright for a range of years, 2009 - 2010. -->
-     <p>Doxygen Documentation generated by&nbsp;<a href="http://www.doxygen.org/index.html"> <img src="doxygen.png" alt="doxygen logo" align="middle" border="0"/> 1.6.3</a>, Revised at Tue Mar 30 18:10:43 2010</p>
+     <p>Doxygen Documentation generated by&nbsp;<a href="http://www.doxygen.org/index.html"> <img src="doxygen.png" alt="doxygen logo" align="middle" border="0"/> 1.6.3</a>, Revised at Wed Mar 31 15:44:54 2010</p>
   </address>
   </tr>
 </tbody>

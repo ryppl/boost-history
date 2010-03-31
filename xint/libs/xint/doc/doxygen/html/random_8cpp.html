@@ -15,7 +15,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
 
   <!-- Add your title here ! -->
-  <title>Quickbook Doxygen Index Prototype Tue Mar 30 18:10:43 2010 xInt eXtended Integer Library </title>
+  <title>Quickbook Doxygen Index Prototype Wed Mar 31 15:44:54 2010 xInt eXtended Integer Library </title>
 
   <!-- Add your custom stylesheet here ! -->
   <link href="my_doxygen.css" rel="stylesheet" type="text/css"/>
@@ -61,98 +61,66 @@
 <code>#include &lt;vector&gt;</code><br/>
 <code>#include &lt;sstream&gt;</code><br/>
 <code>#include &lt;fstream&gt;</code><br/>
-<code>#include &lt;boost/crc.hpp&gt;</code><br/>
+<code>#include &lt;ctime&gt;</code><br/>
 <code>#include &lt;boost/random/mersenne_twister.hpp&gt;</code><br/>
 
 <p><a href="random_8cpp_source.html">Go to the source code of this file.</a></p>
 <table border="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="2"><h2>Classes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxint_1_1strong__random__generator_1_1impl__t.html">xint::strong_random_generator::impl_t</a></td></tr>
 <tr><td colspan="2"><h2>Namespaces</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html">xint</a></td></tr>
-
-<p><tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><p>namespace for all extended integer classes and functions. </p>
-<br/></td></tr>
-</p>
+<tr><td class="memItemLeft" align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint_1_1detail.html">xint::detail</a></td></tr>
 <tr><td colspan="2"><h2>Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#ade2beef1aca9c4ebb119d16c2d068e70">xint::seed_secure</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#a16e22040e770d828903bb5d11ed6e046">xint::seed_fallback</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#afeca589b50c2c8cb4bea98200ae51dbe">xint::seed_manual</a> (const std::string &amp;value)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint_1_1detail.html#ada65da12642b63f663b50382068a607f">xint::detail::set_random_generator</a> (random_t fn, base_random_generator *obj)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint_1_1detail.html#a1dfc1e90886c4897a4b112f491b89b62">xint::detail::get_random</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">strong_random_generator::result_type <br class="typebreak"/>
+strong_random_generator::min&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#a4c109bd4fe51e6cd67361200d952d9a4">xint::BOOST_PREVENT_MACRO_SUBSTITUTION</a> () const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#a6e66ca63ee442c0296ce41280fdae739">xint::random_by_size</a> (size_t bits, bool highBitOn, bool lowBitOn, bool canBeNegative)</td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacexint.html#a989d063e3298649704c804efca714ac6">xint::random&lt; integer &gt;</a> (const integer &amp;lowest, const integer &amp;highest)</td></tr>
 </table>
 <hr/><h2>Variable Documentation</h2>
-<a class="anchor" id="a5223229006a12ebbbbdfb70c32f58844"></a><!-- doxytag: member="random.cpp::cSeedMaximumBytes" ref="a5223229006a12ebbbbdfb70c32f58844" args="" -->
+<a class="anchor" id="a238ff0f867d5c1cbee8f90025cf78d84"></a><!-- doxytag: member="random.cpp::mDefaultGenerator" ref="a238ff0f867d5c1cbee8f90025cf78d84" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const size_t <a class="el" href="random_8cpp.html#a5223229006a12ebbbbdfb70c32f58844">cSeedMaximumBytes</a> = 4096<code> [static]</code></td>
+          <td class="memname">std::auto_ptr&lt;default_random_t&gt; <a class="el" href="random_8cpp.html#a238ff0f867d5c1cbee8f90025cf78d84">mDefaultGenerator</a><code> [static]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="random_8cpp_source.html#l00086">86</a> of file <a class="el" href="random_8cpp_source.html">random.cpp</a>.</p>
+<p>Definition at line <a class="el" href="random_8cpp_source.html#l00072">72</a> of file <a class="el" href="random_8cpp_source.html">random.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ad94db68c58845e9483f2241232395966"></a><!-- doxytag: member="random.cpp::mGen" ref="ad94db68c58845e9483f2241232395966" args="" -->
+<a class="anchor" id="ab29291663b453f8de2fecf35aa62e1d8"></a><!-- doxytag: member="random.cpp::mGeneratorFn" ref="ab29291663b453f8de2fecf35aa62e1d8" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">internal_generator_t* <a class="el" href="random_8cpp.html#ad94db68c58845e9483f2241232395966">mGen</a><code> [static]</code></td>
+          <td class="memname">random_t <a class="el" href="random_8cpp.html#ab29291663b453f8de2fecf35aa62e1d8">mGeneratorFn</a><code> [static]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="random_8cpp_source.html#l00094">94</a> of file <a class="el" href="random_8cpp_source.html">random.cpp</a>.</p>
+<p>Definition at line <a class="el" href="random_8cpp_source.html#l00070">70</a> of file <a class="el" href="random_8cpp_source.html">random.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a7d6e1aeab9ee350c5d9b29ea31b02573"></a><!-- doxytag: member="random.cpp::mNumber" ref="a7d6e1aeab9ee350c5d9b29ea31b02573" args="" -->
+<a class="anchor" id="a5a10f5470776b1e8b6c0dd791a9baa6a"></a><!-- doxytag: member="random.cpp::mGeneratorObj" ref="a5a10f5470776b1e8b6c0dd791a9baa6a" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="random_8cpp.html#a7d6e1aeab9ee350c5d9b29ea31b02573">mNumber</a></td>
+          <td class="memname">std::auto_ptr&lt;base_random_generator&gt; <a class="el" href="random_8cpp.html#a5a10f5470776b1e8b6c0dd791a9baa6a">mGeneratorObj</a><code> [static]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="random_8cpp_source.html#l00089">89</a> of file <a class="el" href="random_8cpp_source.html">random.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a7fadbfa933b8181768eb9e2a6cb5379f"></a><!-- doxytag: member="random.cpp::mSeeded" ref="a7fadbfa933b8181768eb9e2a6cb5379f" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="random_8cpp.html#a7fadbfa933b8181768eb9e2a6cb5379f">mSeeded</a><code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="random_8cpp_source.html#l00095">95</a> of file <a class="el" href="random_8cpp_source.html">random.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a53e7e690c68e339c9e7b89593957137a"></a><!-- doxytag: member="random.cpp::mString" ref="a53e7e690c68e339c9e7b89593957137a" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string <a class="el" href="random_8cpp.html#a53e7e690c68e339c9e7b89593957137a">mString</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="random_8cpp_source.html#l00088">88</a> of file <a class="el" href="random_8cpp_source.html">random.cpp</a>.</p>
+<p>Definition at line <a class="el" href="random_8cpp_source.html#l00071">71</a> of file <a class="el" href="random_8cpp_source.html">random.cpp</a>.</p>
 
 </div>
 </div>
@@ -175,7 +143,7 @@
       <!-- Change copyright to YOUR name (and affiliation, if any) below:  -->
      <p>Copyright © 2009 - 2010 Chad Nelson, Oak Circle Software, Inc</p>
       <!-- 2010 becomes the current year, for example 2010, so claims copyright for a range of years, 2009 - 2010. -->
-     <p>Doxygen Documentation generated by&nbsp;<a href="http://www.doxygen.org/index.html"> <img src="doxygen.png" alt="doxygen logo" align="middle" border="0"/> 1.6.3</a>, Revised at Tue Mar 30 18:10:43 2010</p>
+     <p>Doxygen Documentation generated by&nbsp;<a href="http://www.doxygen.org/index.html"> <img src="doxygen.png" alt="doxygen logo" align="middle" border="0"/> 1.6.3</a>, Revised at Wed Mar 31 15:44:54 2010</p>
   </address>
   </tr>
 </tbody>

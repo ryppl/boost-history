@@ -15,7 +15,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
 
   <!-- Add your title here ! -->
-  <title>Quickbook Doxygen Index Prototype Tue Mar 30 18:10:43 2010 xInt eXtended Integer Library </title>
+  <title>Quickbook Doxygen Index Prototype Wed Mar 31 15:44:54 2010 xInt eXtended Integer Library </title>
 
   <!-- Add your custom stylesheet here ! -->
   <link href="my_doxygen.css" rel="stylesheet" type="text/css"/>
@@ -56,24 +56,21 @@
   </div>
 </div>
 <div class="contents">
-<h1>xint Namespace Reference</h1>
-<p>namespace for all extended integer classes and functions.  
-<a href="#_details">More...</a></p>
-<table border="0" cellpadding="0" cellspacing="0">
+<h1>xint Namespace Reference</h1><table border="0" cellpadding="0" cellspacing="0">
 <tr><td colspan="2"><h2>Namespaces</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint_1_1detail.html">detail</a></td></tr>
-
-<p><tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><p>implementation details, normal users should not need to use these. </p>
-<br/></td></tr>
-</p>
 <tr><td colspan="2"><h2>Classes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxint_1_1integer.html">integer</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxint_1_1strong__random__generator.html">strong_random_generator</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxint_1_1invalid__base.html">invalid_base</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxint_1_1invalid__digit.html">invalid_digit</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxint_1_1invalid__modulus.html">invalid_modulus</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxint_1_1divide__by__zero.html">divide_by_zero</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxint_1_1cannot__represent.html">cannot_represent</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxint_1_1too__big.html">too_big</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxint_1_1not__a__number.html">not_a_number</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxint_1_1no__strong__random.html">no_strong_random</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxint_1_1overflow__error.html">overflow_error</a></td></tr>
 <tr><td colspan="2"><h2>Typedefs</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">typedef std::auto_ptr<br class="typebreak"/>
 &lt; <a class="el" href="structxint_1_1detail_1_1token.html">detail::token</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#ad63045584f06221eb6a7581ad3091582">token</a></td></tr>
@@ -91,6 +88,13 @@
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classxint_1_1integer.html">integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#abe0717f5f1bed3f2c108e654f92f168a">shift_left</a> (const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;_n, size_t byBits)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classxint_1_1integer.html">integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#a33005f5e57bca2418fae44952e28bbbf">shift_right</a> (const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;_n, size_t byBits)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#aff82dd47fae4297b96282371abf4db06">compare</a> (const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;b1, const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;b2, bool ignoresign)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#a675c4fe6ddda6db915450d054ed640ba">operator!</a> (const <a class="el" href="classxint_1_1integer.html">xint::integer</a> &amp;num1)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#ad32051708c2a2baafa0340e19e90217b">operator==</a> (const <a class="el" href="classxint_1_1integer.html">xint::integer</a> &amp;num1, const <a class="el" href="classxint_1_1integer.html">xint::integer</a> &amp;num2)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#aefda934d0ffacd0f44fcbbdfee19a139">operator!=</a> (const <a class="el" href="classxint_1_1integer.html">xint::integer</a> &amp;num1, const <a class="el" href="classxint_1_1integer.html">xint::integer</a> &amp;num2)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#a4f4a4771bf443e6724abbd18173ecc86">operator&lt;</a> (const <a class="el" href="classxint_1_1integer.html">xint::integer</a> &amp;num1, const <a class="el" href="classxint_1_1integer.html">xint::integer</a> &amp;num2)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#a1229d1f1efbdf3ffeac8b2964ca66093">operator&gt;</a> (const <a class="el" href="classxint_1_1integer.html">xint::integer</a> &amp;num1, const <a class="el" href="classxint_1_1integer.html">xint::integer</a> &amp;num2)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#ab9d5f34c4d4bed1c86380d4f72edcd9b">operator&lt;=</a> (const <a class="el" href="classxint_1_1integer.html">xint::integer</a> &amp;num1, const <a class="el" href="classxint_1_1integer.html">xint::integer</a> &amp;num2)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#a766324a6f216f3b49a3e9aa885e9531c">operator&gt;=</a> (const <a class="el" href="classxint_1_1integer.html">xint::integer</a> &amp;num1, const <a class="el" href="classxint_1_1integer.html">xint::integer</a> &amp;num2)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#a600fbf8ebbaa7253dd96817a404001fd">to_string</a> (const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;n, size_t base, bool upperCase)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classxint_1_1integer.html">integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#ad9dcb2b835be5f8ee918979945911ac0">from_string</a> (const std::string &amp;str, size_t base)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classxint_1_1integer.html">integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#ac2ac2f74b45e4179560d845e6310be9a">from_binary</a> (const std::string &amp;str)</td></tr>
@@ -114,6 +118,16 @@
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classxint_1_1integer.html">integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#a93ed16c5350b34ca22108e48b51918a5">fromMontgomeryForm</a> (const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;n, const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;m)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classxint_1_1integer.html">integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#a722769c7d01e06d9f82eae07a280160c">montgomeryMultiplyMod</a> (const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;a, const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;b, const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;n, digit_t nPrime0)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classxint_1_1integer.html">integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#a7d7e8604c467bc007820c60e1bc21626">montgomeryPowerMod</a> (const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;a, const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;e, const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;n)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#a586fb0eb69100ec74be94008ac26670d">operator+</a> (const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;a)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classxint_1_1integer.html">integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#a8a510361ed458133ebfa5fd95f8d9c27">operator-</a> (const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;a)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classxint_1_1integer.html">integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#a211ff80bb081c08674272cfcae736a93">operator+</a> (const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;num1, const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;num2)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classxint_1_1integer.html">integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#a1e09422b575c6d29ea5c0d627b79c28e">operator-</a> (const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;num1, const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;num2)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classxint_1_1integer.html">integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#aea36ad9037f109576d4f95ec72b5c825">operator*</a> (const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;num1, const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;num2)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classxint_1_1integer.html">integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#a701217f7824c3e935fca25147da23807">operator/</a> (const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;num1, const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;num2)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classxint_1_1integer.html">integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#ae0505757986a9c7133552552471aae24">operator%</a> (const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;num1, const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;num2)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classxint_1_1integer.html">integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#a742550f1c62ac8c2bde8e1ceab2a466c">operator&amp;</a> (const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;n1, const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;n2)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classxint_1_1integer.html">integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#afa8f2a0ac996ad45efc73b2aa056cae2">operator|</a> (const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;n1, const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;n2)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classxint_1_1integer.html">integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#a81722cd257bc950ba7c56a202492544f">operator^</a> (const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;n1, const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;n2)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classxint_1_1integer.html">integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#aea1ae2a423d401fa02d3f0621078fbf0">pow2</a> (size_t exponent)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classxint_1_1integer.html">integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#a0aec423511839fd784b1654389dfcf5b">sqr</a> (const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;n)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classxint_1_1integer.html">integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#aeee80b61e0cadc12f92752104e281b2c">pow</a> (const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;n, const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;exponent)</td></tr>
@@ -127,21 +141,14 @@
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classxint_1_1integer.html">integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#af3d7059ec08bf075cec5685deca55c5d">multiply</a> (const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;n, const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;by)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classxint_1_1integer.html">integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#abf3d47f1ef1fdf334097fab055886a44">divide</a> (const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;dividend, const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;divisor)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">std::pair&lt; <a class="el" href="classxint_1_1integer.html">integer</a>, <a class="el" href="classxint_1_1integer.html">integer</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#a23d0a0bb05cec1917d96d6aaceeb875d">divide_r</a> (const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;d1, const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;d2)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#ade2beef1aca9c4ebb119d16c2d068e70">seed_secure</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#a16e22040e770d828903bb5d11ed6e046">seed_fallback</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#afeca589b50c2c8cb4bea98200ae51dbe">seed_manual</a> (const std::string &amp;value)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classxint_1_1strong__random__generator.html#a470b586d0730deb716ffa3c13164e493">strong_random_generator::result_type</a> <br class="typebreak"/>
+strong_random_generator::min&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#a4c109bd4fe51e6cd67361200d952d9a4">BOOST_PREVENT_MACRO_SUBSTITUTION</a> () const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classxint_1_1integer.html">integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#a6e66ca63ee442c0296ce41280fdae739">random_by_size</a> (size_t bits, bool highBitOn, bool lowBitOn, bool canBeNegative)</td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classxint_1_1integer.html">integer</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacexint.html#a989d063e3298649704c804efca714ac6">random&lt; integer &gt;</a> (const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;lowest, const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;highest)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classxint_1_1integer.html">integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#a74891726f8af86736169dd43b929ad0a">sqrt</a> (const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;n)</td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">T&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacexint.html#a21bd738b96eec205eedc7a9960e9a6e5">to</a> (const <a class="el" href="classxint_1_1integer.html">integer</a> &amp;n)</td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">T&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacexint.html#a5e29caa361379cbda58d21cd569b0513">random</a> ()</td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">T&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacexint.html#ae04e871bc550a858d66901f64d42b17f">random</a> (const T &amp;lessThanThis)</td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">T&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacexint.html#a342a8b817f74234c393fd9ed32f13f5f">random</a> (const T &amp;lowest, const T &amp;highest)</td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacexint.html#ab2d0fe2cf11b25d26c1b86280cb4dc99">set_random_generator</a> (T &amp;gen)</td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;typename charT , typename traits &gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">std::basic_ostream&lt; charT, <br class="typebreak"/>
 traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacexint.html#aa5b0dc228caee6523766326cf40297cd">operator&lt;&lt;</a> (std::basic_ostream&lt; charT, traits &gt; &amp;out, const <a class="el" href="classxint_1_1integer.html">xint::integer</a> &amp;n)</td></tr>
@@ -155,15 +162,12 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 <tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#a4ed78ff75865ae44a00d3709dd88c3a1">testDivideMod</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#ae4ef5f20964fa995df7828f27bd7adbe">testConvert</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#ae3305f62ca9be58fbc11dbd4c703f38b">testStreams</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#aa1dbeb0c1ad12e8a8de7efb6c47e455f">testRandom</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#ac40068d64f8c4d9002a0687935888c42">testMontyMultiply</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#a9cce0401174b9ae173671b0800c5f457">testMontyPowerMod</a> ()</td></tr>
 <tr><td colspan="2"><h2>Variables</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespacexint.html#ac8a660c33746c536469d347307b8da7a">callback_t</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#a44496f258b36237d4cea35558a71017a">no_callback</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">const size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacexint.html#a7a5434a5f5fb1db19f0de18014c4fc41">autobase</a> = (std::numeric_limits&lt;size_t&gt;::max)()</td></tr>
 </table>
-<hr/><a name="_details"></a><h2>Detailed Description</h2>
-<p>namespace for all extended integer classes and functions. </p>
 <hr/><h2>Typedef Documentation</h2>
 <a class="anchor" id="ac8a660c33746c536469d347307b8da7a"></a><!-- doxytag: member="xint::callback_t" ref="ac8a660c33746c536469d347307b8da7a" args="" -->
 <div class="memitem">
@@ -176,7 +180,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00083">83</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00076">76</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
 
 </div>
 </div>
@@ -191,7 +195,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00081">81</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00074">74</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
 
 </div>
 </div>
@@ -212,7 +216,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="xint_8hpp_source.html#l00381">operator&lt;&lt;()</a>.</p>
+<p>Referenced by <a class="el" href="xint_8hpp_source.html#l00397">operator&lt;&lt;()</a>.</p>
 
 </div>
 </div>
@@ -241,7 +245,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="operators_8cpp_source.html#l00018">operator+()</a>, and <a class="el" href="integer_8cpp_source.html#l00132">xint::integer::operator+=()</a>.</p>
+<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00136">xint::integer::operator+=()</a>.</p>
 
 </div>
 </div>
@@ -260,7 +264,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="xint_8hpp_source.html#l00408">operator&gt;&gt;()</a>.</p>
+<p>Referenced by <a class="el" href="xint_8hpp_source.html#l00424">operator&gt;&gt;()</a>.</p>
 
 </div>
 </div>
@@ -289,7 +293,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="operators_8cpp_source.html#l00023">operator&amp;()</a>, and <a class="el" href="integer_8cpp_source.html#l00180">xint::integer::operator&amp;=()</a>.</p>
+<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00184">xint::integer::operator&amp;=()</a>.</p>
 
 </div>
 </div>
@@ -318,7 +322,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="operators_8cpp_source.html#l00024">operator|()</a>, and <a class="el" href="integer_8cpp_source.html#l00181">xint::integer::operator|=()</a>.</p>
+<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00185">xint::integer::operator|=()</a>.</p>
 
 </div>
 </div>
@@ -347,7 +351,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="operators_8cpp_source.html#l00025">operator^()</a>, and <a class="el" href="integer_8cpp_source.html#l00182">xint::integer::operator^=()</a>.</p>
+<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00186">xint::integer::operator^=()</a>.</p>
 
 </div>
 </div>
@@ -365,6 +369,25 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
       </table>
 </div>
 <div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a4c109bd4fe51e6cd67361200d952d9a4"></a><!-- doxytag: member="xint::BOOST_PREVENT_MACRO_SUBSTITUTION" ref="a4c109bd4fe51e6cd67361200d952d9a4" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classxint_1_1strong__random__generator.html#a470b586d0730deb716ffa3c13164e493">strong_random_generator::result_type</a> strong_random_generator::max xint::BOOST_PREVENT_MACRO_SUBSTITUTION </td>
+          <td>(</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="random_8cpp_source.html#l00176">176</a> of file <a class="el" href="random_8cpp_source.html">random.cpp</a>.</p>
 
 </div>
 </div>
@@ -426,8 +449,6 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="compare_8cpp_source.html#l00056">operator!=()</a>, <a class="el" href="compare_8cpp_source.html#l00057">operator&lt;()</a>, <a class="el" href="compare_8cpp_source.html#l00059">operator&lt;=()</a>, <a class="el" href="compare_8cpp_source.html#l00055">operator==()</a>, <a class="el" href="compare_8cpp_source.html#l00058">operator&gt;()</a>, and <a class="el" href="compare_8cpp_source.html#l00060">operator&gt;=()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="abf3d47f1ef1fdf334097fab055886a44"></a><!-- doxytag: member="xint::divide" ref="abf3d47f1ef1fdf334097fab055886a44" args="(const integer &amp;dividend, const integer &amp;divisor)" -->
@@ -455,7 +476,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="operators_8cpp_source.html#l00021">operator/()</a>, and <a class="el" href="integer_8cpp_source.html#l00170">xint::integer::operator/=()</a>.</p>
+<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00174">xint::integer::operator/=()</a>.</p>
 
 </div>
 </div>
@@ -564,7 +585,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00031">xint::integer::integer()</a>, and <a class="el" href="xint_8hpp_source.html#l00408">operator&gt;&gt;()</a>.</p>
+<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00035">xint::integer::integer()</a>, and <a class="el" href="xint_8hpp_source.html#l00424">operator&gt;&gt;()</a>.</p>
 
 </div>
 </div>
@@ -791,7 +812,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00126">xint::integer::hex_digits()</a>.</p>
+<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00130">xint::integer::hex_digits()</a>.</p>
 
 </div>
 </div>
@@ -847,7 +868,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="operators_8cpp_source.html#l00022">operator%()</a>, and <a class="el" href="integer_8cpp_source.html#l00171">xint::integer::operator%=()</a>.</p>
+<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00175">xint::integer::operator%=()</a>.</p>
 
 </div>
 </div>
@@ -999,7 +1020,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="operators_8cpp_source.html#l00020">operator*()</a>, and <a class="el" href="integer_8cpp_source.html#l00169">xint::integer::operator*=()</a>.</p>
+<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00173">xint::integer::operator*=()</a>.</p>
 
 </div>
 </div>
@@ -1019,7 +1040,277 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00101">xint::integer::_set_negative()</a>, and <a class="el" href="operators_8cpp_source.html#l00017">operator-()</a>.</p>
+<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00105">xint::integer::_set_negative()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a675c4fe6ddda6db915450d054ed640ba"></a><!-- doxytag: member="xint::operator!" ref="a675c4fe6ddda6db915450d054ed640ba" args="(const xint::integer &amp;num1)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool xint::operator! </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classxint_1_1integer.html">xint::integer</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>num1</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aefda934d0ffacd0f44fcbbdfee19a139"></a><!-- doxytag: member="xint::operator!=" ref="aefda934d0ffacd0f44fcbbdfee19a139" args="(const xint::integer &amp;num1, const xint::integer &amp;num2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool xint::operator!= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classxint_1_1integer.html">xint::integer</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>num1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classxint_1_1integer.html">xint::integer</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>num2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ae0505757986a9c7133552552471aae24"></a><!-- doxytag: member="xint::operator%" ref="ae0505757986a9c7133552552471aae24" args="(const integer &amp;num1, const integer &amp;num2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classxint_1_1integer.html">integer</a> xint::operator% </td>
+          <td>(</td>
+          <td class="paramtype">const integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>num1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>num2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a742550f1c62ac8c2bde8e1ceab2a466c"></a><!-- doxytag: member="xint::operator&amp;" ref="a742550f1c62ac8c2bde8e1ceab2a466c" args="(const integer &amp;n1, const integer &amp;n2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classxint_1_1integer.html">integer</a> xint::operator&amp; </td>
+          <td>(</td>
+          <td class="paramtype">const integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aea36ad9037f109576d4f95ec72b5c825"></a><!-- doxytag: member="xint::operator*" ref="aea36ad9037f109576d4f95ec72b5c825" args="(const integer &amp;num1, const integer &amp;num2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classxint_1_1integer.html">integer</a> xint::operator* </td>
+          <td>(</td>
+          <td class="paramtype">const integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>num1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>num2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a211ff80bb081c08674272cfcae736a93"></a><!-- doxytag: member="xint::operator+" ref="a211ff80bb081c08674272cfcae736a93" args="(const integer &amp;num1, const integer &amp;num2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classxint_1_1integer.html">integer</a> xint::operator+ </td>
+          <td>(</td>
+          <td class="paramtype">const integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>num1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>num2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a586fb0eb69100ec74be94008ac26670d"></a><!-- doxytag: member="xint::operator+" ref="a586fb0eb69100ec74be94008ac26670d" args="(const integer &amp;a)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classxint_1_1integer.html">integer</a> &amp; xint::operator+ </td>
+          <td>(</td>
+          <td class="paramtype">const integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>a</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a1e09422b575c6d29ea5c0d627b79c28e"></a><!-- doxytag: member="xint::operator&#45;" ref="a1e09422b575c6d29ea5c0d627b79c28e" args="(const integer &amp;num1, const integer &amp;num2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classxint_1_1integer.html">integer</a> xint::operator- </td>
+          <td>(</td>
+          <td class="paramtype">const integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>num1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>num2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a8a510361ed458133ebfa5fd95f8d9c27"></a><!-- doxytag: member="xint::operator&#45;" ref="a8a510361ed458133ebfa5fd95f8d9c27" args="(const integer &amp;a)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classxint_1_1integer.html">integer</a> xint::operator- </td>
+          <td>(</td>
+          <td class="paramtype">const integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>a</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a701217f7824c3e935fca25147da23807"></a><!-- doxytag: member="xint::operator/" ref="a701217f7824c3e935fca25147da23807" args="(const integer &amp;num1, const integer &amp;num2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classxint_1_1integer.html">integer</a> xint::operator/ </td>
+          <td>(</td>
+          <td class="paramtype">const integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>num1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>num2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a4f4a4771bf443e6724abbd18173ecc86"></a><!-- doxytag: member="xint::operator&lt;" ref="a4f4a4771bf443e6724abbd18173ecc86" args="(const xint::integer &amp;num1, const xint::integer &amp;num2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool xint::operator&lt; </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classxint_1_1integer.html">xint::integer</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>num1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classxint_1_1integer.html">xint::integer</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>num2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
 
 </div>
 </div>
@@ -1050,9 +1341,117 @@ template&lt;typename charT , typename traits &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00381">381</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00397">397</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
 
-<p>References <a class="el" href="namespacexint.html#ac9e4ed282bafa93dbf608350df0127ba">abs()</a>, <a class="el" href="integer_8cpp_source.html#l00122">xint::integer::nan()</a>, <a class="el" href="namespacexint_1_1detail.html#aede27c67f3308e0805fc3093ffe6f4ce">xint::detail::nan_text</a>, <a class="el" href="integer_8cpp_source.html#l00115">xint::integer::sign()</a>, and <a class="el" href="namespacexint.html#a600fbf8ebbaa7253dd96817a404001fd">to_string()</a>.</p>
+<p>References <a class="el" href="namespacexint.html#ac9e4ed282bafa93dbf608350df0127ba">abs()</a>, <a class="el" href="integer_8cpp_source.html#l00126">xint::integer::nan()</a>, <a class="el" href="namespacexint_1_1detail.html#aede27c67f3308e0805fc3093ffe6f4ce">xint::detail::nan_text</a>, <a class="el" href="integer_8cpp_source.html#l00119">xint::integer::sign()</a>, and <a class="el" href="namespacexint.html#a600fbf8ebbaa7253dd96817a404001fd">to_string()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab9d5f34c4d4bed1c86380d4f72edcd9b"></a><!-- doxytag: member="xint::operator&lt;=" ref="ab9d5f34c4d4bed1c86380d4f72edcd9b" args="(const xint::integer &amp;num1, const xint::integer &amp;num2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool xint::operator&lt;= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classxint_1_1integer.html">xint::integer</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>num1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classxint_1_1integer.html">xint::integer</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>num2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ad32051708c2a2baafa0340e19e90217b"></a><!-- doxytag: member="xint::operator==" ref="ad32051708c2a2baafa0340e19e90217b" args="(const xint::integer &amp;num1, const xint::integer &amp;num2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool xint::operator== </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classxint_1_1integer.html">xint::integer</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>num1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classxint_1_1integer.html">xint::integer</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>num2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a1229d1f1efbdf3ffeac8b2964ca66093"></a><!-- doxytag: member="xint::operator&gt;" ref="a1229d1f1efbdf3ffeac8b2964ca66093" args="(const xint::integer &amp;num1, const xint::integer &amp;num2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool xint::operator&gt; </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classxint_1_1integer.html">xint::integer</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>num1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classxint_1_1integer.html">xint::integer</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>num2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a766324a6f216f3b49a3e9aa885e9531c"></a><!-- doxytag: member="xint::operator&gt;=" ref="a766324a6f216f3b49a3e9aa885e9531c" args="(const xint::integer &amp;num1, const xint::integer &amp;num2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool xint::operator&gt;= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classxint_1_1integer.html">xint::integer</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>num1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classxint_1_1integer.html">xint::integer</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>num2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
 
 </div>
 </div>
@@ -1083,9 +1482,63 @@ template&lt;typename charT , typename traits &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00408">408</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00424">424</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
 
-<p>References <a class="el" href="namespacexint.html#a4b5a1a791ba11bb8f158a3b56bd9723e">allow_exceptions()</a>, <a class="el" href="xint_8hpp_source.html#l00086">autobase</a>, <a class="el" href="namespacexint.html#ad9dcb2b835be5f8ee918979945911ac0">from_string()</a>, and <a class="el" href="namespacexint_1_1detail.html#aede27c67f3308e0805fc3093ffe6f4ce">xint::detail::nan_text</a>.</p>
+<p>References <a class="el" href="namespacexint.html#a4b5a1a791ba11bb8f158a3b56bd9723e">allow_exceptions()</a>, <a class="el" href="xint_8hpp_source.html#l00079">autobase</a>, <a class="el" href="namespacexint.html#ad9dcb2b835be5f8ee918979945911ac0">from_string()</a>, and <a class="el" href="namespacexint_1_1detail.html#aede27c67f3308e0805fc3093ffe6f4ce">xint::detail::nan_text</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a81722cd257bc950ba7c56a202492544f"></a><!-- doxytag: member="xint::operator^" ref="a81722cd257bc950ba7c56a202492544f" args="(const integer &amp;n1, const integer &amp;n2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classxint_1_1integer.html">integer</a> xint::operator^ </td>
+          <td>(</td>
+          <td class="paramtype">const integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="afa8f2a0ac996ad45efc73b2aa056cae2"></a><!-- doxytag: member="xint::operator|" ref="afa8f2a0ac996ad45efc73b2aa056cae2" args="(const integer &amp;n1, const integer &amp;n2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classxint_1_1integer.html">integer</a> xint::operator| </td>
+          <td>(</td>
+          <td class="paramtype">const integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
 
 </div>
 </div>
@@ -1207,115 +1660,6 @@ template&lt;typename charT , typename traits &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a342a8b817f74234c393fd9ed32f13f5f"></a><!-- doxytag: member="xint::random" ref="a342a8b817f74234c393fd9ed32f13f5f" args="(const T &amp;lowest, const T &amp;highest)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">T xint::random </td>
-          <td>(</td>
-          <td class="paramtype">const T &amp;&nbsp;</td>
-          <td class="paramname"> <em>lowest</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const T &amp;&nbsp;</td>
-          <td class="paramname"> <em>highest</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00370">370</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
-
-<p>References <a class="el" href="namespacexint.html#a6e66ca63ee442c0296ce41280fdae739">random_by_size()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ae04e871bc550a858d66901f64d42b17f"></a><!-- doxytag: member="xint::random" ref="ae04e871bc550a858d66901f64d42b17f" args="(const T &amp;lessThanThis)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">T xint::random </td>
-          <td>(</td>
-          <td class="paramtype">const T &amp;&nbsp;</td>
-          <td class="paramname"> <em>lessThanThis</em></td>
-          <td>&nbsp;)&nbsp;</td>
-          <td><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00365">365</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
-
-<p>References <a class="el" href="xint_8hpp_source.html#l00359">random()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a5e29caa361379cbda58d21cd569b0513"></a><!-- doxytag: member="xint::random" ref="a5e29caa361379cbda58d21cd569b0513" args="()" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">T xint::random </td>
-          <td>(</td>
-          <td class="paramname"></td>
-          <td>&nbsp;)&nbsp;</td>
-          <td><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00359">359</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
-
-<p>Referenced by <a class="el" href="xint_8hpp_source.html#l00365">random()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a989d063e3298649704c804efca714ac6"></a><!-- doxytag: member="xint::random&lt; integer &gt;" ref="a989d063e3298649704c804efca714ac6" args="(const integer &amp;lowest, const integer &amp;highest)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classxint_1_1integer.html">integer</a> xint::random&lt; <a class="el" href="classxint_1_1integer.html">integer</a> &gt; </td>
-          <td>(</td>
-          <td class="paramtype">const integer &amp;&nbsp;</td>
-          <td class="paramname"> <em>lowest</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const integer &amp;&nbsp;</td>
-          <td class="paramname"> <em>highest</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
 <a class="anchor" id="a6e66ca63ee442c0296ce41280fdae739"></a><!-- doxytag: member="xint::random_by_size" ref="a6e66ca63ee442c0296ce41280fdae739" args="(size_t bits, bool highBitOn, bool lowBitOn, bool canBeNegative)" -->
 <div class="memitem">
 <div class="memproto">
@@ -1353,8 +1697,6 @@ template&lt;&gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="xint_8hpp_source.html#l00370">random()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="af148d73dc33718f9d893dac821ab699e"></a><!-- doxytag: member="xint::random_prime" ref="af148d73dc33718f9d893dac821ab699e" args="(size_t sizeInBits, callback_t callback)" -->
@@ -1384,55 +1726,27 @@ template&lt;&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a16e22040e770d828903bb5d11ed6e046"></a><!-- doxytag: member="xint::seed_fallback" ref="a16e22040e770d828903bb5d11ed6e046" args="()" -->
+<a class="anchor" id="ab2d0fe2cf11b25d26c1b86280cb4dc99"></a><!-- doxytag: member="xint::set_random_generator" ref="ab2d0fe2cf11b25d26c1b86280cb4dc99" args="(T &amp;gen)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void xint::seed_fallback </td>
+          <td class="memname">void xint::set_random_generator </td>
           <td>(</td>
-          <td class="paramname"></td>
+          <td class="paramtype">T &amp;&nbsp;</td>
+          <td class="paramname"> <em>gen</em></td>
           <td>&nbsp;)&nbsp;</td>
-          <td></td>
+          <td><code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-</div>
-</div>
-<a class="anchor" id="afeca589b50c2c8cb4bea98200ae51dbe"></a><!-- doxytag: member="xint::seed_manual" ref="afeca589b50c2c8cb4bea98200ae51dbe" args="(const std::string &amp;value)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void xint::seed_manual </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;&nbsp;</td>
-          <td class="paramname"> <em>value</em></td>
-          <td>&nbsp;)&nbsp;</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00391">391</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
 
-</div>
-</div>
-<a class="anchor" id="ade2beef1aca9c4ebb119d16c2d068e70"></a><!-- doxytag: member="xint::seed_secure" ref="ade2beef1aca9c4ebb119d16c2d068e70" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool xint::seed_secure </td>
-          <td>(</td>
-          <td class="paramname"></td>
-          <td>&nbsp;)&nbsp;</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
+<p>References <a class="el" href="namespacexint_1_1detail.html#ada65da12642b63f663b50382068a607f">xint::detail::set_random_generator()</a>.</p>
 
 </div>
 </div>
@@ -1515,7 +1829,7 @@ template&lt;&gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00178">xint::integer::operator&lt;&lt;()</a>.</p>
+<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00182">xint::integer::operator&lt;&lt;()</a>.</p>
 
 </div>
 </div>
@@ -1544,7 +1858,7 @@ template&lt;&gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00179">xint::integer::operator&gt;&gt;()</a>.</p>
+<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00183">xint::integer::operator&gt;&gt;()</a>.</p>
 
 </div>
 </div>
@@ -1636,7 +1950,7 @@ template&lt;&gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="operators_8cpp_source.html#l00019">operator-()</a>, and <a class="el" href="integer_8cpp_source.html#l00146">xint::integer::operator-=()</a>.</p>
+<p>Referenced by <a class="el" href="integer_8cpp_source.html#l00150">xint::integer::operator-=()</a>.</p>
 
 </div>
 </div>
@@ -1776,23 +2090,6 @@ template&lt;&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="aa1dbeb0c1ad12e8a8de7efb6c47e455f"></a><!-- doxytag: member="xint::testRandom" ref="aa1dbeb0c1ad12e8a8de7efb6c47e455f" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool xint::testRandom </td>
-          <td>(</td>
-          <td class="paramname"></td>
-          <td>&nbsp;)&nbsp;</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
 <a class="anchor" id="ae3305f62ca9be58fbc11dbd4c703f38b"></a><!-- doxytag: member="xint::testStreams" ref="ae3305f62ca9be58fbc11dbd4c703f38b" args="()" -->
 <div class="memitem">
 <div class="memproto">
@@ -1828,9 +2125,9 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00343">343</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00375">375</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
 
-<p>References <a class="el" href="integer_8cpp_source.html#l00210">xint::integer::_get_digit()</a>, <a class="el" href="integer_8cpp_source.html#l00214">xint::integer::_get_length()</a>, <a class="el" href="integer_8cpp_source.html#l00218">xint::integer::_throw_if_nan()</a>, <a class="el" href="xint_8hpp_source.html#l00072">xint::detail::digit_overflowbit</a>, and <a class="el" href="integer_8cpp_source.html#l00115">xint::integer::sign()</a>.</p>
+<p>References <a class="el" href="integer_8cpp_source.html#l00214">xint::integer::_get_digit()</a>, <a class="el" href="integer_8cpp_source.html#l00218">xint::integer::_get_length()</a>, <a class="el" href="integer_8cpp_source.html#l00222">xint::integer::_throw_if_nan()</a>, <a class="el" href="xint_8hpp_source.html#l00045">xint::detail::digit_overflowbit</a>, and <a class="el" href="integer_8cpp_source.html#l00119">xint::integer::sign()</a>.</p>
 
 </div>
 </div>
@@ -1883,7 +2180,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="xint_8hpp_source.html#l00381">operator&lt;&lt;()</a>.</p>
+<p>Referenced by <a class="el" href="xint_8hpp_source.html#l00397">operator&lt;&lt;()</a>.</p>
 
 </div>
 </div>
@@ -1926,9 +2223,9 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00086">86</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00079">79</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="xint_8hpp_source.html#l00408">operator&gt;&gt;()</a>.</p>
+<p>Referenced by <a class="el" href="xint_8hpp_source.html#l00424">operator&gt;&gt;()</a>.</p>
 
 </div>
 </div>
@@ -1943,7 +2240,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00084">84</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00077">77</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
 
 </div>
 </div>
@@ -1966,7 +2263,7 @@ template&lt;typename T &gt; </div>
       <!-- Change copyright to YOUR name (and affiliation, if any) below:  -->
      <p>Copyright © 2009 - 2010 Chad Nelson, Oak Circle Software, Inc</p>
       <!-- 2010 becomes the current year, for example 2010, so claims copyright for a range of years, 2009 - 2010. -->
-     <p>Doxygen Documentation generated by&nbsp;<a href="http://www.doxygen.org/index.html"> <img src="doxygen.png" alt="doxygen logo" align="middle" border="0"/> 1.6.3</a>, Revised at Tue Mar 30 18:10:43 2010</p>
+     <p>Doxygen Documentation generated by&nbsp;<a href="http://www.doxygen.org/index.html"> <img src="doxygen.png" alt="doxygen logo" align="middle" border="0"/> 1.6.3</a>, Revised at Wed Mar 31 15:44:54 2010</p>
   </address>
   </tr>
 </tbody>
