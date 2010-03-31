@@ -38,7 +38,7 @@ namespace kolmogorov_smirnov{
     	typename T1 = double,
     	typename MoreFeatures = boost::accumulators::stats<>
     >
-	struct check_convergence{
+    struct check_convergence{
     
     	typedef T1 value_type;
         typedef kolmogorov_smirnov::tag::statistic<value_type> tag_;
@@ -63,7 +63,7 @@ namespace kolmogorov_smirnov{
             	sample_type,
                 typename mpl_features::type
             > acc_;
-		};
+        };
     
         template<typename N1,typename N2,typename N3,typename D,typename G>
         typename traits<D,G>::acc_
@@ -85,7 +85,7 @@ namespace kolmogorov_smirnov{
                 default_fun<D>(),
                 os
             );
-		}
+        }
 
         template<
             typename Args,
@@ -119,7 +119,7 @@ namespace kolmogorov_smirnov{
             for(int i1 = 0; i1<n_loops; i1++){
                 for(int i2 = 0; i2< n; i2++){
                     sample_type x = gen();
-        			acc(x);
+                    acc(x);
                 } // grows sample by n
 				
                 fun(acc,dist,out);                
