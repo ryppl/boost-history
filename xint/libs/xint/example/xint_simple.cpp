@@ -15,13 +15,13 @@ Tests a few operators for output to a std:: stream.
 
 #include <boost/xint/xint.hpp>
 
-//#include <iostream>
-//using std::cout;
-//using std::endl;
-//#include <iomanip>
-//using std::setprecision;
-//using std::setw;
-//#include <limits>
+#include <iostream>
+using std::cout;
+using std::endl;
+#include <iomanip>
+using std::setprecision;
+using std::setw;
+#include <limits>
 
 int main()
 {    
@@ -29,16 +29,16 @@ int main()
   //using namespace boost::xint
 
   //using namespace xint;
-  //using xint::integer;
+  using xint::integer;
 
 //[xint_simple_snippet_1
 
   xint::integer a;
-  //integer b = 3;
+  integer b = 3;
 
-  //integer c = a + b;
+  integer c = a + b;
 
-  //cout << a << ", b = " << b << ", a + b = " << a + b << endl;
+  cout << a << ", b = " << b << ", a + b = " << c << endl;
 
 //] [xint_simple_snippet_1]
       return 0;
