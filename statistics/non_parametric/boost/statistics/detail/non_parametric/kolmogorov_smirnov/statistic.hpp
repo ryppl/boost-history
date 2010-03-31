@@ -41,9 +41,8 @@ namespace impl{
     //     accumulator_set<T,stats<ks::statistic<T1> > acc;
     //     acc = boost:for_each(samples,acc)
     //     ks::extract::statistic<T1>(acc,normal_distribution<T1>(0,1));
-    //
-    // Computes the kolmogorov-statistic between the samples and the standard
-    // normal distribution
+    // In this example, the kolmogorov-statistic between the samples and the 
+    // standard normal distribution is computed.
     //
     // Warning : See empirical_distribution::impl::count
     template<typename T,typename T1>
