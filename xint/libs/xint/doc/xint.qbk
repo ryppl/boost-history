@@ -1,0 +1,166 @@
+[article Extened Integer library..
+    [quickbook 1.5]
+    [id xint]
+    [copyright 2010 Chad Nelson]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+    [authors [Nelson, Chad]]
+    [source-mode c++]
+    [purpose xInt - and extended integer library.]
+]
+
+[/ Images]
+[/ $images is a reference to the folder where images are held.]
+
+[/ Links - by (most common) convention, prefixed with double underscore so not confused with other names.]
+[def __alert      [$alert.png]] [/ Examples of your own images (in doc/html/images/ .]
+[def __tip        [$tip.png]]
+[def :-)          [$smiley.png]]
+
+[/ Some links to external sources.]
+[def __boost [@http://www.boost.org/ Boost]]
+[def __boostroot [@boost: Boost root]]
+[/Note the custom url schema for linkiing to files within the Boost distribution.]
+[/Note too that it can't be used for images.]
+[def __boostlicense [@http://www.boost.org/LICENSE_1_0.txt Boost License]]
+[def __boostlicense [@boost:/LICENSE_1_0.txt Boost License]]
+
+[def __boostbook [@http://www.boost.org/doc/html/boostbook.html BoostBook]]
+[def __boostbook_docs [@http://www.boost.org/doc/libs/1_41_0/doc/html/boostbook.html BoostBook documentation]]
+
+[def __quickbook  [@http://www.boost.org/doc/tools/quickbook/index.html Quickbook]]
+[def __quickbook_syntax [@http://www.boost.org/doc/libs/1_41_0/doc/html/quickbook/ref.html Quickbook Syntax Compendium]]
+[def __docbook [@http://www.docbook.org/ DocBook]]
+[def __doxygen [@http://www.doxygen.org/ Doxygen]]
+[def __pdf [@http://www.adobe.com/products/acrobat/adobepdf.html PDF]]
+
+[/ Examples of links to classes in own files.]
+
+[def __todo [link quick_auto_dox_index.todo TODO]]
+
+[important This is NOT yet an official Boost library.]
+[/ Also be MUCH better to have separate Boost logo showing status as under development.]
+
+[note Comments and suggestions (even bugs!) to Chad Nelson]
+
+A printer-friendly PDF version of this manual is also available.
+
+[section:intro Introduction]
+[/ It is a good idea to give *all* sections an id - which must follow section: with *no* space(s).]
+[/ Perhaps also useful to use this text for the Doxygen standalone documentation.]
+
+xint is a C++ library that lets your program handle much, much larger integer numbers
+than the built-in int, long, or even long long types,
+and handle them using the same syntax that C and C++ use for the standard integer types.
+
+# Portable. It's written entirely in modern C++, with many different types of operating system,
+compiler, and hardware in mind.
+It will compile cleanly on many operating systems without any changes,
+automatically adapting to whatever native integer sizes are available.
+
+# Fast. Speed of execution takes a back seat to portability,
+so it doesn't include things like assembly-language modules
+to wring every last CPU cycle out of it -- but it's still pretty darn fast.
+
+# Features you need. Modular arithmetic.  Bit manipulation functions.
+Cryptographically-secure random and prime number generation.
+A friendly and intuitive interface. An option for thread-safe operation.
+
+# Most of the time, all you need to do is add #include <boost/xint.hpp>
+at the top of your source code file, and declare your variable as type xint::integer.
+Then just use it the way you'd use any integer.
+If you need something more advanced, take a look in the reference section
+and you just might find it.
+
+[endsect] [/section:intro Introduction]
+
+[section Rationales]
+
+[h6 Why did you do X in the interface?]
+
+The interface is based on a paper by M.J. Kronenburg
+presented to the C++ Standards Committee in early 2004,
+[@http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2005/n1744.pdf N1692]
+
+and the "standardese" for it in
+[@http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2005/n1744.pdf N1744],
+Michiel Salters / Nederlands Normalisatie Instituut..
+
+[h6Then why didn't you follow those exactly?]
+
+The XInt library was designed before I knew about them. I adapted it to them later.
+
+There are only a few notable places where XInt differs from them:
+
+* It does not provide separate mathematical primitive functions for long long,
+as suggested in the second paper.
+This is partly because long long is not yet in the C++ standard,
+but mosty because I don't see a need for it.
+The conversion constructors are efficient enough for smaller values
+that there wouldn't be any noticeable benefit from it.
+* It does not, at present, implement a multiplication scheme with better performance
+than the "basecase" mentioned in section 3.4 of the first paper,
+primarily because I haven't had the time to research all of them yet.
+I suspect that most people using the library will usually be using numbers
+below the threshold where the more exotic algorithms are faster.
+
+[h6 Why use copy-on-write?]
+I've heard that causes problems with multi-threaded code.
+
+It's the best way I found to return large integers from functions efficiently.
+Some of these numbers can get huge, and move semantics aren't yet in the current standard.
+(Maybe that will change once they are.) It is also more CPU- and memory-efficient.
+
+It does cause problems when you try to use the library from multiple threads at the same time.
+To deal with that, the library can be compiled in a thread-safe mode,
+which ensures that every integer gets its own unique storage, among other things.
+You still have to ensure that only one thread accesses a particular integer at a time.
+
+[h6 Why are you using a roll-your-own system instead of boost::shared_ptr for the copy-on-write stuff?]
+
+Because it's a lot faster.
+I tried boost::shared_ptr, and under Linux with GCC 4.4.1 on the same computer,
+running my test suite went from 1.6 seconds to 3.4 seconds.
+The home-grown shared pointer design may not be quite as easy to work with in
+an exception-safe manner, but that's completely internal to the integer class,
+so only developers working on the library, rather than with it, have to deal with that.
+I'll accept that trade-off.
+
+[h6 Why have a Not-a-Number value?]
+
+Because it's the cleanest way I could find to return answers that don't represent valid integers.
+I tried using Boost.Optional for those,
+but it made the documentation harder to understand for someone
+who wasn't already familiar with Boost.Optional, as well as adding to the dependencies.
+I like Boost.Optional and use it quite often in my own code,
+but I expect a lot more people will want to use this library than will have any interest
+in learning Boost.Optional.
+
+[endsect] [/section Rationales]
+
+
+[section Revision history]
+
+Revision History
+
+This is the third incarnation of my large-integer library.
+The first was written as a research tool in 1995 and was never released.
+A second, improved version was used in some of my commercial Windows software.
+This third one shares only the spirit of the first two;
+it was designed and written from scratch
+using all the lessons I learned from writing the first two,
+as well as all the mathematical knowledge I could gather from various books and the Internet.
+
+This revision history refers only to this incarnation.
+
+0.90 beta, 2010-03-26 First version uploaded to the Boost File Vault for review.
+
+0.09 beta 2, 2010-03-30 Moved to sandbox and quickbook and Doxygen documentation produced.
+[endsect]
+[/include todo.qbk] [/section Revision history]
+
+[/include acknowledgements.qbk]  [/ Who deserves credit for what.]
+[/references references.qbk] [/ references to academic papers, patents, prior art...]
