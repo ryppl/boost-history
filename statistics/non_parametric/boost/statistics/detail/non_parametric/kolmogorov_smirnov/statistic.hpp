@@ -155,7 +155,7 @@ namespace extract
                 	::keyword::reference_distribution = dist
             )
         );
-  	}
+    }
 
 }
 

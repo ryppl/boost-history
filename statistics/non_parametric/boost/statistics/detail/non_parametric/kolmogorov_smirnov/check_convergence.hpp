@@ -28,9 +28,13 @@ namespace statistics{
 namespace detail{
 namespace kolmogorov_smirnov{
 
-	// Generates kolmogorov-smirnov statistics for each of a sequence of 
-    // sample sizes, given a random generator and a reference distribution
-	template<
+    // Usage:
+    //     check_convergence<> check;
+    //     check(n_loops,n,n_factor,distribution,random_generator,os);
+    // Generates random samples of size { k = n^p : p=1,...,n_loops} and for
+    // each computes the kolmogorov-smirnov statistics. The results are passed
+    // to os.
+    template<
     	typename T1 = double,
     	typename MoreFeatures = boost::accumulators::stats<>
     >
@@ -49,32 +53,29 @@ namespace kolmogorov_smirnov{
     
     	check_convergence(){}
 
-		template<typename D,typename G>
+        template<typename D,typename G>
         struct traits{
-			typedef typename D::value_type val_;
+            typedef typename D::value_type val_;
             typedef typename G::distribution_type random_;
-    		typedef typename random_::result_type sample_type; 
+            typedef typename random_::result_type sample_type; 
 
-			typedef boost::accumulators::accumulator_set<
+            typedef boost::accumulators::accumulator_set<
             	sample_type,
                 typename mpl_features::type
-    		> acc_;
+            > acc_;
 		};
     
-    	// Generates n_loops times (n,s) with n = sample size and s
-        // is a statistic that should converge to zero as n->inf if gen() is 
-        // an iid sample from dist.
         template<typename N1,typename N2,typename N3,typename D,typename G>
         typename traits<D,G>::acc_
-		operator()(
-        	N1 n_loops,
+        operator()(
+            N1 n_loops,
             N2 n, 			// n *= n_factor at each loop
             N3 n_factor, 
             const D& dist,	
             G& gen,
             std::ostream& os
         )const{
-			return (*this)(
+            return (*this)(
             	boost::mpl::void_(),
             	n_loops, 
                 n, 
@@ -86,8 +87,8 @@ namespace kolmogorov_smirnov{
             );
 		}
 
-		template<
-        	typename Args,
+        template<
+            typename Args,
             typename N1,
             typename N2,
             typename N3,
@@ -97,9 +98,9 @@ namespace kolmogorov_smirnov{
             typename Out
         >
         typename traits<D,G>::acc_
-		operator()(
-        	const Args& args,
-        	N1 n_loops,
+        operator()(
+            const Args& args,
+            N1 n_loops,
             N2 n, // n *= n_factor at each loop
             N3 n_factor, 
             const D& dist,
@@ -107,7 +108,7 @@ namespace kolmogorov_smirnov{
             const F& fun,
             Out& out
         )const{
-			typedef traits<D,G> traits_;
+            typedef traits<D,G> traits_;
             typedef typename traits_::val_ val_;
             typedef typename traits_::random_ random_;
             typedef typename traits_::sample_type sample_type;
@@ -115,34 +116,34 @@ namespace kolmogorov_smirnov{
             
             acc_ acc(args);
         
-    		for(int i1 = 0; i1<n_loops; i1++){
-    			for(int i2 = 0; i2< n; i2++){
-                	sample_type x = gen();
+            for(int i1 = 0; i1<n_loops; i1++){
+                for(int i2 = 0; i2< n; i2++){
+                    sample_type x = gen();
         			acc(x);
-        		} // grows sample by n
+                } // grows sample by n
 				
-				fun(acc,dist,out);                
+                fun(acc,dist,out);                
                 n *= n_factor;
             }
             
             return acc;
-		}
+        }
 
         template<typename D>
     	struct default_fun{
-			default_fun(){}
+            default_fun(){}
 		
-			template<typename AccSet>
-			void operator()(const AccSet& acc,const D& d,std::ostream& os)const{
+            template<typename AccSet>
+            void operator()(const AccSet& acc,const D& d,std::ostream& os)const{
             	value_type ks 
                 	= kolmogorov_smirnov::extract::statistic<value_type>(acc,d);
-				os 
-    				<< '('
-        			<< boost::accumulators::extract::count(acc) 
+                os 
+                    << '('
+                    << boost::accumulators::extract::count(acc) 
                     << ','
-        			<< ks 
-					<< ')'
-        			<< std::endl;	    
+                    << ks 
+                    << ')'
+                    << std::endl;	    
             }
     	};
     
