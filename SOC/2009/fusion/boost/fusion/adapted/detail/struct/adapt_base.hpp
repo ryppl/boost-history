@@ -92,18 +92,18 @@
     {                                                                           \
         typedef BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 0, ATTRIBUTE) type;   \
                                                                                 \
-        template<typename Seq>                                                  \
+        template<typename SeqRef>                                               \
         struct apply                                                            \
         {                                                                       \
             typedef typename                                                    \
                 detail::forward_as<                                             \
-                    Seq                                                         \
+                    SeqRef                                                      \
                   , BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 0, ATTRIBUTE)     \
                 >::type                                                         \
             type;                                                               \
                                                                                 \
             static type                                                         \
-            call(Seq seq)                                                       \
+            call(SeqRef seq)                                                    \
             {                                                                   \
                 return seq.PREFIX                                               \
                     BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 1, ATTRIBUTE);    \

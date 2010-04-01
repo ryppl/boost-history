@@ -12,6 +12,7 @@
 
 #include <boost/fusion/support/deduce.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/constexpr.hpp>
 #ifndef BOOST_NO_RVALUE_REFERENCES
 #   include <boost/fusion/support/internal/is_explicitly_convertible.hpp>
 #endif
@@ -43,6 +44,7 @@ namespace boost { namespace fusion
 
 #undef BOOST_FUSION_PAIR_CTOR
 
+        BOOST_FUSION_CONSTEXPR
         pair()
           : second()
         {}

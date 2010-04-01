@@ -9,11 +9,10 @@
 #ifndef BOOST_FUSION_ITERATOR_EQUAL_TO_HPP
 #define BOOST_FUSION_ITERATOR_EQUAL_TO_HPP
 
-#include <boost/config.hpp>
 #include <boost/fusion/support/tag_of.hpp>
 #include <boost/fusion/support/is_iterator.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
-
+#include <boost/fusion/support/internal/constexpr.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/utility/enable_if.hpp>
 
@@ -51,10 +50,7 @@ namespace boost { namespace fusion
     namespace iterator_operators
     {
         template <typename It1, typename It2>
-        inline
-#ifndef BOOST_NO_CONSTEXPR
-        constexpr
-#endif
+        inline BOOST_FUSION_CONSTEXPR
         typename enable_if<
             mpl::and_<traits::is_iterator<It1>, traits::is_iterator<It2> >
           , bool
@@ -65,10 +61,7 @@ namespace boost { namespace fusion
         }
 
         template <typename It1, typename It2>
-        inline
-#ifndef BOOST_NO_CONSTEXPR
-        constexpr
-#endif
+        inline BOOST_FUSION_CONSTEXPR
         typename enable_if<
             mpl::and_<
                 traits::is_iterator<It1>

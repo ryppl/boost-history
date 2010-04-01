@@ -1,7 +1,7 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2007 Dan Marsden
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -15,6 +15,7 @@
 #include <boost/fusion/iterator/equal_to.hpp>
 #include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/iterator/deref.hpp>
+#include <boost/fusion/support/internal/constexpr.hpp>
 
 #include <boost/mpl/bool.hpp>
 
@@ -117,10 +118,7 @@ namespace boost { namespace fusion { namespace detail
     struct unrolled_all<0>
     {
         template <typename It0, typename F>
-        static
-#ifndef BOOST_NO_CONSTEXPR
-        constexpr
-#endif
+        static BOOST_FUSION_CONSTEXPR
         bool
         call(It0 const& it0, BOOST_FUSION_RREF_ELSE_OBJ(F) f)
         {

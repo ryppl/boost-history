@@ -9,10 +9,10 @@
 #ifndef BOOST_FUSION_SEQUENCE_COMPARISON_DETAIL_EQUAL_TO_HPP
 #define BOOST_FUSION_SEQUENCE_COMPARISON_DETAIL_EQUAL_TO_HPP
 
-#include <boost/config.hpp>
 #include <boost/fusion/iterator/deref.hpp>
 #include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/iterator/equal_to.hpp>
+#include <boost/fusion/support/internal/constexpr.hpp>
 
 #include <boost/mpl/bool.hpp>
 
@@ -25,10 +25,7 @@ namespace boost { namespace fusion { namespace detail
         typedef typename result_of::end<Seq2Ref>::type end2_type;
 
         template <typename It1, typename It2>
-        static
-#ifndef BOOST_NO_CONSTEXPR
-        constexpr
-#endif
+        static BOOST_FUSION_CONSTEXPR
         bool
         call(It1 const&, It2 const&, mpl::true_)
         {
@@ -57,10 +54,7 @@ namespace boost { namespace fusion { namespace detail
     struct sequence_equal_to<Seq1Ref, Seq2Ref, false>
     {
         template <typename It1, typename It2>
-        static
-#ifndef BOOST_NO_CONSTEXPR
-        constexpr
-#endif
+        static BOOST_FUSION_CONSTEXPR
         bool
         call(It1 const&, It2 const&)
         {
