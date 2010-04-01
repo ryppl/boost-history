@@ -194,8 +194,8 @@ bool ItvSetTesterT<ItvSetTV>::testJoinIndependence(int nTries)
 
     if(!correct) {
         std::cout << "JoinIndependence violated ---------------------------" << std::endl;
-        std::cout << "y     :" << min_y.as_string().c_str() << std::endl;
-        std::cout << "y_join:" << min_y_join.as_string().c_str() << std::endl;
+        std::cout << "y     :" << min_y << std::endl;
+        std::cout << "y_join:" << min_y_join << std::endl;
     }
 
     return correct;
@@ -247,9 +247,9 @@ bool ItvSetTesterT<ItvSetTV>::testInsertAndJoinIndependence(int nTries)
 
     if(!correct) {
         std::cout << "InsertAndJoinIndependence violated ---------------------------" << std::endl;
-        std::cout << "y      :" << min_y.as_string().c_str() << std::endl;
-        std::cout << "y_perm :" << min_y_perm.as_string().c_str() << std::endl;
-        std::cout << "y_pjoin:" << min_y_permJoin.as_string().c_str() << std::endl;
+        std::cout << "y      :" << min_y << std::endl;
+        std::cout << "y_perm :" << min_y_perm << std::endl;
+        std::cout << "y_pjoin:" << min_y_permJoin << std::endl;
     }
 
     return correct;
@@ -332,24 +332,26 @@ bool ItvSetTesterT<ItvSetTV>::testInsertReversibility(int nTries, char* errFile)
 
     if(!correct) {
         std::cout << "InsertReversibility: x + y - join(perm(y)) == x - y  violated --------" << std::endl;
-        std::cout << "x       :" << min_x.as_string().c_str() << std::endl;
-        std::cout << "y       :" << min_y.as_string().c_str() << std::endl;
-        std::cout << "y_perm  :" << min_y_perm.as_string().c_str() << std::endl;
-        std::cout << "y_pJnt  :" << min_y_permJoin.as_string().c_str() << std::endl;
-        std::cout << "x+y     :" << min_x_plus_y.as_string().c_str() << std::endl;
-        std::cout << "lhs     :" << min_lhs.as_string().c_str() << std::endl;
-        std::cout << "rhs     :" << min_rhs.as_string().c_str() << std::endl;
+        std::cout << "x       :" << min_x << std::endl;
+        std::cout << "y       :" << min_y << std::endl;
+        std::cout << "y_perm  :" << min_y_perm << std::endl;
+        std::cout << "y_pJnt  :" << min_y_permJoin << std::endl;
+        std::cout << "x+y     :" << min_x_plus_y << std::endl;
+        std::cout << "lhs     :" << min_lhs << std::endl;
+        std::cout << "rhs     :" << min_rhs << std::endl;
         
         FILE* fp;
         fp = fopen(errFile,"w");
         //fopen_s(&fp,errFile,"w");
-        fprintf(fp, "x: %s\n",      min_x.as_string().c_str());
-        fprintf(fp, "y: %s\n",      min_y.as_string().c_str());
-        fprintf(fp, "y_perm: %s\n", min_y_perm.as_string().c_str());
-        fprintf(fp, "y_pJnt: %s\n", min_y_permJoin.as_string().c_str());
-        fprintf(fp, "x+y: %s\n",    min_x_plus_y.as_string().c_str());
-        fprintf(fp, "lhs: %s\n",    min_lhs.as_string().c_str());
-        fprintf(fp, "rhs: %s\n",    min_rhs.as_string().c_str());
+        fprintf(fp, "x: %s\n",      to_string<ItvSetTV>::apply(min_x).c_str());
+        /*JODO
+        fprintf(fp, "y: %s\n",      to_string<ItvSetTV>::apply(min_y).c_str());
+        fprintf(fp, "y_perm: %s\n", to_string<ItvSetTV>::apply(min_y_perm).c_str());
+        fprintf(fp, "y_pJnt: %s\n", to_string<ItvSetTV>::apply(min_y_permJoin).c_str());
+        fprintf(fp, "x+y: %s\n",    to_string<ItvSetTV>::apply(min_x_plus_y).c_str());
+        fprintf(fp, "lhs: %s\n",    to_string<ItvSetTV>::apply(min_lhs).c_str());
+        fprintf(fp, "rhs: %s\n",    to_string<ItvSetTV>::apply(min_rhs).c_str());
+        */
         
         // min_lhs.isEqual(min_rhs);
         // debugInsertReversibility1(min_x, min_y, min_y_perm);
@@ -440,21 +442,21 @@ bool ItvSetTesterT<ItvSetTV>::testInsertReversibility1(int nTries, char* errFile
 
     if(!correct) {
         std::cout << "InsertReversibility1: x + y - join(perm(y)) == x =: x2  violated --------" << std::endl;
-        std::cout << "x       :" << min_x.as_string().c_str() << std::endl;
-        std::cout << "y       :" << min_y.as_string().c_str() << std::endl;
-        std::cout << "y_perm  :" << min_y_perm.as_string().c_str() << std::endl;
-        std::cout << "y_pJnt  :" << min_y_permJoin.as_string().c_str() << std::endl;
-        std::cout << "x+y     :" << min_x_plus_y.as_string().c_str() << std::endl;
-        std::cout << "x2      :" << min_x2.as_string().c_str() << std::endl;
+        std::cout << "x       :" << min_x << std::endl;
+        std::cout << "y       :" << min_y << std::endl;
+        std::cout << "y_perm  :" << min_y_perm << std::endl;
+        std::cout << "y_pJnt  :" << min_y_permJoin << std::endl;
+        std::cout << "x+y     :" << min_x_plus_y << std::endl;
+        std::cout << "x2      :" << min_x2 << std::endl;
 
         FILE* fp;
         fp = fopen(errFile,"w");
-        fprintf(fp, "x: %s\n",      min_x.as_string().c_str());
-        fprintf(fp, "y: %s\n",      min_y.as_string().c_str());
-        fprintf(fp, "y_perm: %s\n", min_y_perm.as_string().c_str());
-        fprintf(fp, "y_pJnt: %s\n", min_y_permJoin.as_string().c_str());
-        fprintf(fp, "x+y: %s\n",    min_x_plus_y.as_string().c_str());
-        fprintf(fp, "x2: %s\n",     min_x2.as_string().c_str());
+        fprintf(fp, "x: %s\n",      to_string<ItvSetTV>::apply(min_x).c_str());
+        fprintf(fp, "y: %s\n",      to_string<ItvSetTV>::apply(min_y).c_str());
+        fprintf(fp, "y_perm: %s\n", to_string<ItvSetTV>::apply(min_y_perm).c_str());
+        fprintf(fp, "y_pJnt: %s\n", to_string<ItvSetTV>::apply(min_y_permJoin).c_str());
+        fprintf(fp, "x+y: %s\n",    to_string<ItvSetTV>::apply(min_x_plus_y).c_str());
+        fprintf(fp, "x2: %s\n",     to_string<ItvSetTV>::apply(min_x2).c_str());
 
         min_x.isEqual(min_x2);
         debugInsertReversibility1(min_x, min_y, min_y_perm);
@@ -578,29 +580,14 @@ bool ItvSetTesterT<ItvSetTV>::testSymmetricDifference(int nTries, char* errFile)
 
     if(!correct) {
         std::cout << "SymmetricDifference: (x + y) - (x * y) == (x - y) + (y - x)  violated --------" << std::endl;
-        std::cout << "x       :" << min_x.as_string().c_str() << std::endl;
-        std::cout << "y       :" << min_y.as_string().c_str() << std::endl;
-        /*
-        std::cout << "y_perm  :" << min_y_perm.as_string().c_str() << std::endl;
-        std::cout << "y_pJnt  :" << min_y_permJoin.as_string().c_str() << std::endl;
-        std::cout << "x+y     :" << min_x_plus_y.as_string().c_str() << std::endl;
-        std::cout << "x2      :" << min_x2.as_string().c_str() << std::endl;
-        */
+        std::cout << "x       :" << min_x << std::endl;
+        std::cout << "y       :" << min_y << std::endl;
 
         FILE* fp;
         fp = fopen(errFile,"w");
         //fopen_s(&fp,errFile,"w");
-        fprintf(fp, "x: %s\n",      min_x.as_string().c_str());
-        fprintf(fp, "y: %s\n",      min_y.as_string().c_str());
-        /*
-        fprintf(fp, "y_perm: %s\n", min_y_perm.as_string().c_str());
-        fprintf(fp, "y_pJnt: %s\n", min_y_permJoin.as_string().c_str());
-        fprintf(fp, "x+y: %s\n",    min_x_plus_y.as_string().c_str());
-        fprintf(fp, "x2: %s\n",     min_x2.as_string().c_str());
-
-        min_x.isEqual(min_x2);
-        debugInsertReversibility1(min_x, min_y, min_y_perm);
-        */
+        fprintf(fp, "x: %s\n",      to_string<ItvSetTV>::apply(min_x).c_str());
+        fprintf(fp, "y: %s\n",      to_string<ItvSetTV>::apply(min_y).c_str());
     }
     else
     {

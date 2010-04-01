@@ -79,30 +79,30 @@ namespace boost{namespace itl
             Type a_plus_b = this->template getInputValue<operand_a>();
             Addition<Type>()(a_plus_b, this->template getInputValue<operand_b>());
 
-            std::cout << "a_plus_b=" << a_plus_b.as_string() << std::endl;
+            std::cout << "a_plus_b=" << a_plus_b << std::endl;
 
             Type a_sec_b = this->template getInputValue<operand_a>();
             Intersection<Type>()(a_sec_b, this->template getInputValue<operand_b>());
 
-            std::cout << "a_sec_b=" << a_sec_b.as_string() << std::endl;
+            std::cout << "a_sec_b=" << a_sec_b << std::endl;
 
             Type lhs = a_plus_b;
             Subtraction<Type>()(lhs, a_sec_b);
 
-            std::cout << "lhs=" << lhs.as_string() << std::endl;
+            std::cout << "lhs=" << lhs << std::endl;
 
             // --- right hand side -----------------------
             Type a_minus_b = this->template getInputValue<operand_a>();
             Subtraction<Type>()(a_minus_b, this->template getInputValue<operand_b>());
-            std::cout << "a_minus_b=" << a_minus_b.as_string() << std::endl;
+            std::cout << "a_minus_b=" << a_minus_b << std::endl;
 
             Type b_minus_a = this->template getInputValue<operand_b>();
             Subtraction<Type>()(b_minus_a, this->template getInputValue<operand_a>());
-            std::cout << "b_minus_a=" << b_minus_a.as_string() << std::endl;
+            std::cout << "b_minus_a=" << b_minus_a << std::endl;
 
             Type rhs = a_minus_b;
             Addition<Type>()(rhs, b_minus_a);
-            std::cout << "rhs=" << rhs.as_string() << std::endl;
+            std::cout << "rhs=" << rhs << std::endl;
 
             this->template setOutputValue<lhs_result>(lhs);
             this->template setOutputValue<rhs_result>(rhs);
@@ -169,20 +169,20 @@ namespace boost{namespace itl
             // --- left hand side ------------------------
             Type lhs = this->template getInputValue<operand_a>();
             lhs ^= this->template getInputValue<operand_b>();
-            std::cout << "lhs=" << lhs.as_string() << std::endl;
+            std::cout << "lhs=" << lhs << std::endl;
 
             // --- right hand side -----------------------
             Type a_minus_b = this->template getInputValue<operand_a>();
             a_minus_b -= this->template getInputValue<operand_b>();
-            std::cout << "a_minus_b=" << a_minus_b.as_string() << std::endl;
+            std::cout << "a_minus_b=" << a_minus_b << std::endl;
 
             Type b_minus_a = this->template getInputValue<operand_b>();
             b_minus_a -= this->template getInputValue<operand_a>();
-            std::cout << "b_minus_a=" << b_minus_a.as_string() << std::endl;
+            std::cout << "b_minus_a=" << b_minus_a << std::endl;
 
             Type rhs = a_minus_b;
             rhs += b_minus_a;
-            std::cout << "rhs=" << rhs.as_string() << std::endl;
+            std::cout << "rhs=" << rhs << std::endl;
 
             this->template setOutputValue<lhs_result>(lhs);
             this->template setOutputValue<rhs_result>(rhs);

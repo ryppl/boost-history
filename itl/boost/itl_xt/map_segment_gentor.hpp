@@ -19,14 +19,14 @@ Copyright (c) 2009-2009: Joachim Faulhaber
 namespace boost{namespace itl
 {
 
-template <class DomainT, class CodomainT> 
-class map_segment_gentor: public RandomGentorAT<std::pair<itl::interval<DomainT>, CodomainT> >
+template <class DomainT, class CodomainT, class IntervalT = itl::interval<DomainT> > 
+class map_segment_gentor: public RandomGentorAT<std::pair<IntervalT, CodomainT> >
 {
 public:
     typedef DomainT   domain_type;
     typedef CodomainT codomain_type;
-    typedef itl::interval<DomainT> interval_type;
-    typedef std::pair<itl::interval<DomainT>, CodomainT> segment_type;
+    typedef IntervalT interval_type;
+    typedef std::pair<IntervalT, CodomainT> segment_type;
 
 public:
     map_segment_gentor(): _codomain_gentor(NULL){}
@@ -50,14 +50,14 @@ public:
     }
 
 private:
-    ItvGentorT<domain_type>        _interval_gentor;
-    RandomGentorAT<codomain_type>* _codomain_gentor;
-    itl::interval<codomain_type>   _covalue_range;
+    ItvGentorT<domain_type,IntervalT> _interval_gentor;
+    RandomGentorAT<codomain_type>*    _codomain_gentor;
+    itl::interval<codomain_type>      _covalue_range;
 };
 
 
-template <class DomainT, class CodomainT>
-void map_segment_gentor<DomainT,CodomainT>::some(segment_type& value)
+template <class DomainT, class CodomainT, class IntervalT>
+void map_segment_gentor<DomainT,CodomainT,IntervalT>::some(segment_type& value)
 {
     interval_type inter_val;
     codomain_type co_val;

@@ -196,6 +196,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath="..\..\..\..\boost\validate\driver\itl_set_driver.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\boost\validate\law.h"
 				>
 			</File>

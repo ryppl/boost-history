@@ -60,13 +60,13 @@ public:
 
     int proceed(LeftIterT& left, RightIterT& right)
     {
-        if(LeftT::key_value(left).upper_less(RightT::key_value(right)))
+        if(upper_less(LeftT::key_value(left), RightT::key_value(right)))
         {
             _prior_left = left;
             ++left;
             return nextleft;
         }
-        else if(RightT::key_value(right).upper_less(LeftT::key_value(left)))
+        else if(upper_less(RightT::key_value(right), LeftT::key_value(left)))
         {
             _prior_right = right;
             ++right;
@@ -96,14 +96,14 @@ public:
         }
 
         // The starting intervals have to begin equally
-        if(LeftT::key_value(left).lower_less(RightT::key_value(right)))
+        if(lower_less(LeftT::key_value(left), RightT::key_value(right)))
         {   // left: same A... = sameA...
             // right:same  B.. = sameB...
             _result = less;
             return stop;
         }
 
-        if(LeftT::key_value(right).lower_less(RightT::key_value(left)))
+        if(lower_less(LeftT::key_value(right), RightT::key_value(left)))
         {   // left: same  B.. = sameB...
             // right:same A... = sameA...
             _result = greater;

@@ -133,14 +133,14 @@ public:
 
     int proceed(LeftIterT& left, RightIterT& right)
     {
-        if(LeftT::key_value(left).upper_less(RightT::key_value(right)))
+        if(upper_less(LeftT::key_value(left), RightT::key_value(right)))
         {   // left  ..)  
             // right .....)
             _prior_left = left;
             ++left;
             return nextleft;
         }
-        else if(RightT::key_value(right).upper_less(LeftT::key_value(left)))
+        else if(upper_less(RightT::key_value(right), LeftT::key_value(left)))
         {   // left  .....)
             // right ..)
             _prior_right = right;
@@ -172,7 +172,7 @@ public:
             restrict_result(superset);
             return stop;
         }
-        else if(LeftT::key_value(left).exclusive_less(RightT::key_value(right)))
+        else if(exclusive_less(LeftT::key_value(left), RightT::key_value(right)))
         {   // left: [..) . . .[---)      left could be superset
             // right:           [..)....  if [---) exists
             restrict_result(superset);
@@ -193,7 +193,7 @@ public:
                 }
             }
         }
-        else if(RightT::key_value(right).exclusive_less(LeftT::key_value(left)))
+        else if(exclusive_less(RightT::key_value(right), LeftT::key_value(left)))
         {   // left:             [..  left could be subset
             // right:....) . . .[---) if [---) exists 
             restrict_result(subset);
@@ -221,13 +221,13 @@ public:
                 return stop;
 
         // examine left borders only. Right borders are checked in proceed
-        if(LeftT::key_value(left).lower_less(RightT::key_value(right)))
+        if(lower_less(LeftT::key_value(left), RightT::key_value(right)))
         {   // left: ....[...     left could be superset
             // right:....   [..
             if(unrelated == restrict_result(superset))
                 return stop;
         }
-        else if(RightT::key_value(right).lower_less(LeftT::key_value(left)))
+        else if(lower_less(RightT::key_value(right), LeftT::key_value(left)))
         {   // left: ....   [..   left can be subset
             // right:....[...
             if(unrelated == restrict_result(subset))
@@ -249,10 +249,10 @@ public:
             restrict_result(subset);
             return stop;            
         }
-        else if(!LeftT::key_value(_prior_left).touches(LeftT::key_value(left)))
+        else if(!touches(LeftT::key_value(_prior_left), LeftT::key_value(left)))
         {   // left: ..)   [..
             // right:.........)
-            if(RightT::key_value(right).lower_less(LeftT::key_value(left)))
+            if(lower_less(RightT::key_value(right), LeftT::key_value(left)))
             {   //   ..)   [..   left could be subset
                 //   ..........)
                 if(unrelated == restrict_result(subset))
@@ -260,14 +260,14 @@ public:
             }
             //else   ..)   [...
             //          [..
-            if(_compare_codomain && !LeftT::key_value(left).is_disjoint(RightT::key_value(right)) )
+            if(_compare_codomain && intersects(LeftT::key_value(left),RightT::key_value(right)) )
                 if(unrelated == restrict_result(co_compare(left,right)))
                     return stop;
         }
         else
         {   // left: ..)[..  left could be subset
             // right:.......)
-            if(_compare_codomain && !LeftT::key_value(left).is_disjoint(RightT::key_value(right)) )
+            if(_compare_codomain && intersects(LeftT::key_value(left), RightT::key_value(right)) )
                 if(unrelated == restrict_result(co_compare(left,right)))
                     return stop;
         }
@@ -284,10 +284,10 @@ public:
             restrict_result(superset);
             return stop;            
         }
-        else if(!RightT::key_value(_prior_right).touches(RightT::key_value(right)))
+        else if(!touches(RightT::key_value(_prior_right), RightT::key_value(right)))
         {   // left: .........)
             // right:..)   [..
-            if(LeftT::key_value(left).lower_less(RightT::key_value(right)))
+            if(lower_less(LeftT::key_value(left), RightT::key_value(right)))
             {   //       [....)  left could be superset
                 //   ..)   [..
                 if(unrelated == restrict_result(superset))
@@ -295,13 +295,13 @@ public:
             }
             //else       [....)
             //   ..)   [..
-            if(_compare_codomain && !LeftT::key_value(left).is_disjoint(RightT::key_value(right)) )
+            if(_compare_codomain && intersects(LeftT::key_value(left), RightT::key_value(right)) )
                 if(unrelated == restrict_result(co_compare(left,right)))
                     return stop;
         }
         else
         {
-            if(_compare_codomain && !LeftT::key_value(left).is_disjoint(RightT::key_value(right)) )
+            if(_compare_codomain && intersects(LeftT::key_value(left), RightT::key_value(right)) )
                 if(unrelated == restrict_result(co_compare(left,right)))
                     return stop;
         }

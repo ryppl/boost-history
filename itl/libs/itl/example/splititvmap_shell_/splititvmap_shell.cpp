@@ -73,8 +73,8 @@ void mapTestShell()
                         itv = typename MapTV::interval_type(lwb,upb);
                     m1 += make_pair(itv,val);
 
-                    cout << "+" << itv.as_string().c_str()<<" "<<val<< " =" << endl;
-                    cout << "{" << m1.as_string() << "}" << endl;
+                    cout << "+" << itv << " " << val << " =" << endl;
+                    cout << "{" << m1 << "}" << endl;
 
                 }
                 break;
@@ -86,15 +86,15 @@ void mapTestShell()
                         itv = typename MapTV::interval_type(lwb,upb);
                     m1 -= make_pair(itv,val);
 
-                    cout << "-" << itv.as_string().c_str()<<" "<<val<< " =" << endl;
-                    cout << "{" << m1.as_string() << "}" << endl;
+                    cout << "-" << itv << " " << val << " =" << endl;
+                    cout << "{" << m1 << "}" << endl;
 
                 }
                 break;
             case 'j':
                 {
                     m1.join();
-                    cout << "{" << m1.as_string() << "}" << endl;
+                    cout << "{" << m1 << "}" << endl;
                 }
                 break;
             case 's':

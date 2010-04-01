@@ -38,6 +38,7 @@ using namespace boost;
 using namespace unit_test;
 using namespace boost::itl;
 
+/*CL after Proto
 BOOST_AUTO_TEST_CASE(reverse_iter)
 {
     interval_map<int,int> map_a;
@@ -62,7 +63,7 @@ BOOST_AUTO_TEST_CASE(reverse_iter)
 #include <limits>
 #include <complex>
 
-BOOST_AUTO_TEST_CASE(casual)
+BOOST_AUTO_TEST_CASE(digits_to_check_numerics) //JODO Proto: properties of infinity.
 {
     cout << "--- limits ---\n";
     cout << "max<char>    = " << (std::numeric_limits<char>::max)() << endl;
@@ -77,5 +78,15 @@ BOOST_AUTO_TEST_CASE(casual)
 
 
     BOOST_CHECK_EQUAL(0 != itl::infinity<int>::value(), true);
+}
+*/
+
+#include <boost/itl/rightopen_interval.hpp>
+#include <boost/itl/type_traits/is_asymmetric_interval.hpp>
+
+BOOST_AUTO_TEST_CASE(casual)
+{
+    BOOST_CHECK_EQUAL(is_interval<rightopen_interval<int> >::value, true);
+    BOOST_CHECK_EQUAL(is_asymmetric_interval<rightopen_interval<int> >::value, true);
 }
 

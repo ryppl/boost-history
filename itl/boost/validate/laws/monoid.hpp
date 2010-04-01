@@ -272,23 +272,23 @@ namespace boost{namespace itl
         {
             std::cout << typeString() << std::endl;
             std::cout << formula() << std::endl;
-            std::cout << "a: " << this->template getInputValue<operand_a>().as_string() << std::endl;
-            std::cout << "b: " << this->template getInputValue<operand_b>().as_string() << std::endl;
-            std::cout << "c: " << this->template getInputValue<operand_c>().as_string() << std::endl;
+            std::cout << "a: " << this->template getInputValue<operand_a>() << std::endl;
+            std::cout << "b: " << this->template getInputValue<operand_b>() << std::endl;
+            std::cout << "c: " << this->template getInputValue<operand_c>() << std::endl;
 
             Type lsum = this->template getInputValue<operand_a>();
             Accumulator<Type>()(lsum, this->template getInputValue<operand_b>());
-            std::cout << "a o b: " << lsum.as_string() << std::endl;
+            std::cout << "a o b: " << lsum << std::endl;
 
             Accumulator<Type>()(lsum, this->template getInputValue<operand_c>());
-            std::cout << "(a o b) o c: " << lsum.as_string() << std::endl;
+            std::cout << "(a o b) o c: " << lsum << std::endl;
 
             Type rsum = this->template getInputValue<operand_a>();
             Type b_plus_c = this->template getInputValue<operand_b>();
             Accumulator<Type>()(b_plus_c, this->template getInputValue<operand_c>());
-            std::cout << "b o c: " << b_plus_c.as_string() << std::endl;
+            std::cout << "b o c: " << b_plus_c << std::endl;
             Accumulator<Type>()(rsum, b_plus_c);
-            std::cout << "a o (b o c): " << rsum.as_string() << std::endl;
+            std::cout << "a o (b o c): " << rsum << std::endl;
 
             this->template setOutputValue<lhs_sum>(lsum);
             this->template setOutputValue<rhs_sum>(rsum);
@@ -355,16 +355,16 @@ namespace boost{namespace itl
         { 
             std::cout << typeString() << std::endl;
             std::cout << formula() << std::endl;
-            std::cout << "a: " << this->template getInputValue<operand_a>().as_string() << std::endl;
-            std::cout << "b: " << this->template getInputValue<operand_b>().as_string() << std::endl;
+            std::cout << "a: " << this->template getInputValue<operand_a>() << std::endl;
+            std::cout << "b: " << this->template getInputValue<operand_b>() << std::endl;
 
             Type lsum = this->template getInputValue<operand_a>();
             lsum += this->template getInputValue<operand_b>();
-            std::cout << "a o b: " << lsum.as_string() << std::endl;
+            std::cout << "a o b: " << lsum << std::endl;
 
             Type rsum = this->template getInputValue<operand_b>();
             rsum += this->template getInputValue<operand_a>();
-            std::cout << "b o a: " << rsum.as_string() << std::endl;
+            std::cout << "b o a: " << rsum << std::endl;
 
             this->template setOutputValue<lhs_sum>(lsum);
             this->template setOutputValue<rhs_sum>(rsum);

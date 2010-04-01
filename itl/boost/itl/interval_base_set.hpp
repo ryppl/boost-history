@@ -13,6 +13,8 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/detail/interval_set_algo.hpp>
 #include <boost/itl/set.hpp>
 #include <boost/itl/interval.hpp>
+#include <boost/itl/rightopen_interval.hpp> //JODO inclusion and customization of interval types
+#include <boost/itl/continuous_interval.hpp> //JODO inclusion and customization of interval types
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/element_iterator.hpp>
 
@@ -29,7 +31,7 @@ template
     typename             SubType,
     typename             DomainT, 
     ITL_COMPARE Compare  = ITL_COMPARE_INSTANCE(std::less, DomainT),
-    template<class, ITL_COMPARE>class Interval = itl::interval,
+    template<class, ITL_COMPARE>class Interval = ITL_INTERVAL_DEFAULT,
     ITL_ALLOC   Alloc    = std::allocator
 > 
 class interval_base_set
@@ -84,10 +86,10 @@ public:
     /// Comparison functor for domain values
     typedef ITL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
     /// Comparison functor for intervals
-    typedef exclusive_less<interval_type> interval_compare;
+    typedef exclusive_less_than<interval_type> interval_compare;
 
     /// Comparison functor for keys
-    typedef exclusive_less<interval_type> key_compare;
+    typedef exclusive_less_than<interval_type> key_compare;
 
     //--------------------------------------------------------------------------
     //- Associated types: Implementation and stl related
@@ -173,7 +175,7 @@ public:
     /** Does the container contain the interval \c sub_interval ? */
     bool contains(const segment_type& sub_interval)const
     { 
-        if(sub_interval.empty()) 
+        if(itl::is_empty(sub_interval)) 
             return true;
 
         std::pair<const_iterator, const_iterator> exterior = equal_range(sub_interval);
@@ -450,8 +452,10 @@ public:
     //==========================================================================
     
     /** Interval container's string representation */
+    /*CL ::as_string
     const std::string as_string()const
     { std::string res(""); const_FOR_IMPL(it_) res += (*it_).as_string(); return res; }
+    */
 
     
     //==========================================================================
@@ -463,7 +467,7 @@ public:
 
     template<typename IteratorT>
     static codomain_type codomain_value(IteratorT value_)
-    { return (*value_).empty()? codomain_type() : (*value_).lower(); }
+    { return itl::is_empty(*value_)? codomain_type() : (*value_).lower(); }
 
     template<typename LeftIterT, typename RightIterT>
     static bool key_less(LeftIterT lhs_, RightIterT rhs_) 
@@ -537,7 +541,7 @@ template<class SubType,
 void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::add_intersection(interval_base_set& section, const segment_type& inter_val)const
 {
     // any intersection with the empty intervall is empty
-    if(inter_val.empty()) 
+    if(itl::is_empty(inter_val)) 
         return;
 
     const_iterator first_ = _set.lower_bound(inter_val);
@@ -547,7 +551,7 @@ void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::add_intersection
     for(const_iterator it_=first_; it_ != end_; it_++) 
     {
         interval_type common_interval = (*it_) & inter_val;
-        if(!common_interval.empty())
+        if(!itl::is_empty(common_interval))
             prior_ = section.gap_insert(prior_, common_interval);
     }
 }
@@ -613,9 +617,9 @@ SubType& interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
         add(left_over);                //That which is not shall be added
 
         //...      d) : span
-        //... c)      : (*it_); span.left_subtract(*it_);
+        //... c)      : covered
         //     [c  d) : span'
-        span.left_subtract(covered);
+        span = left_subtract(span, covered);
     }
 
     //If span is not empty here, it_ is not in the set so it_ shall be added
@@ -670,24 +674,22 @@ interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::join()
         return *this;
 
     iterator next_=it_; next_++;
-    //if(next_==_set.end()) 
-    //    return *this;
 
     while(next_ != _set.end())
     {
-        if( (*it_).touches(*next_) )
+        if( touches(*it_, *next_) )
         {
             iterator fst_mem = it_;  // hold the first member
             
             // Go on while touching members are found
             it_++; next_++;
             while(     next_ != _set.end()
-                    && (*it_).touches(*next_) )
+                    && touches(*it_, *next_) )
             { it_++; next_++; }
 
             // finally we arrive at the end of a sequence of joinable intervals
             // and it points to the last member of that sequence
-            const_cast<interval_type&>(*it_).extend(*fst_mem);
+            const_cast<interval_type&>(*it_) = hull(*it_, *fst_mem);
             _set.erase(fst_mem, it_);
 
             it_++; next_=it_; 

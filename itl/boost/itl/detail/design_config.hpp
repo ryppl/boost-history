@@ -41,12 +41,12 @@ by setting defines in this file.
 #   define ITL_COMPARE template<class>class
 #   define ITL_COMPARE_DOMAIN(itl_compare, domain_type) itl_compare<domain_type> 
 #   define ITL_COMPARE_INSTANCE(compare_instance, domain_type) compare_instance
-#   define ITL_EXCLUSIVE_LESS(interval_type) exclusive_less
+#   define ITL_EXCLUSIVE_LESS(interval_type) exclusive_less_than
 #else//ITL_USE_COMPARE_TEMPLATE_TYPE
 #   define ITL_COMPARE class
 #   define ITL_COMPARE_DOMAIN(itl_compare, domain_type) itl_compare 
 #   define ITL_COMPARE_INSTANCE(compare_instance, domain_type) compare_instance<domain_type> 
-#   define ITL_EXCLUSIVE_LESS(interval_type) exclusive_less<interval_type>
+#   define ITL_EXCLUSIVE_LESS(interval_type) exclusive_less_than<interval_type>
 #endif
 
 //------------------------------------------------------------------------------
@@ -72,6 +72,11 @@ by setting defines in this file.
 #   define ITL_SECTION_CODOMAIN(itl_intersect, codomain_type) itl_intersect 
 #   define ITL_SECTION_INSTANCE(section_instance,codomain_type) section_instance<codomain_type>
 #endif
+
+//------------------------------------------------------------------------------
+//#define ITL_INTERVAL_DEFAULT itl::rightopen_interval
+#define ITL_INTERVAL_DEFAULT itl::interval
+//#define ITL_INTERVAL_DEFAULT itl::continuous_interval
 
 //------------------------------------------------------------------------------
 #define ITL_ALLOC    template<class>class

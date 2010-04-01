@@ -23,6 +23,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/mpl/assert.hpp> 
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/design_config.hpp>
+#include <boost/itl/detail/base_interval.hpp>
 #include <boost/itl/type_traits/neutron.hpp>
 #include <boost/itl/type_traits/unon.hpp>
 #include <boost/itl/type_traits/infinity.hpp>
@@ -31,11 +32,15 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/type_traits/size.hpp>
 #include <boost/itl/type_traits/value_size.hpp>
 #include <boost/itl/type_traits/to_string.hpp>
+#include <boost/itl/type_traits/is_universal_interval.hpp>
+#include <boost/itl/interval_bounds.hpp>
+#include <boost/itl/interval_functions.hpp>
 
 
 namespace boost{namespace itl
 {
 
+/*CL
 /// Constants for intervalbounds
 enum BoundTypes {
     /// Both open: <tt>(x,y)</tt>
@@ -47,12 +52,13 @@ enum BoundTypes {
     /// Both closed: <tt>[x,y]</tt>
     closed_bounded           = 3
 } ;
+*/
 
 typedef unsigned char bound_type;
 
 /** \brief A class template for intervals */
 template <class DomainT, ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT)>
-class interval
+class interval : public base_interval<DomainT,Compare>
 {
 public:
     //==========================================================================
@@ -269,6 +275,11 @@ public:
     /** Intersection with the interval  <tt>x2</tt>; assign result to <tt>isec</tt> */
     interval& operator &= (const interval& sectant)
     {
+        if(empty())
+            return *this;
+        if(sectant.empty())
+            { clear(); return *this; }
+
         set_lwb(lwb_max(sectant));
         set_upb(upb_min(sectant));
         return *this;
@@ -364,20 +375,21 @@ interval.as(open_bounded).is(open_bounded)
     /** Last element of \c *this is equal to the last element of \c x2 */
     bool upper_equal(const interval& x2)const;
 
-public:
-    typedef typename boost::call_traits<DomainT>::param_type DomainP;
-
-    /** Less compare of interval elements. */
-    inline static bool domain_less(DomainP left, DomainP right)       
-    {return domain_compare()(left, right) ;}
-
-    /** Less or equal compare of interval elements. */
-    inline static bool domain_less_equal(DomainP left, DomainP right) 
-    {return !domain_compare()(right, left );}
-
-    /** Equality compare of interval elements. */
-    inline static bool domain_equal(DomainP left, DomainP right)
-    {return !domain_compare()(left, right) && !domain_compare()(right, left);}
+//CL 
+//public:
+//    typedef typename boost::call_traits<DomainT>::param_type DomainP;
+//
+//    /** Less compare of interval elements. */
+//    inline static bool domain_less(DomainP left, DomainP right)       
+//    {return domain_compare()(left, right) ;}
+//
+//    /** Less or equal compare of interval elements. */
+//    inline static bool domain_less_equal(DomainP left, DomainP right) 
+//    {return !domain_compare()(right, left );}
+//
+//    /** Equality compare of interval elements. */
+//    inline static bool domain_equal(DomainP left, DomainP right)
+//    {return !domain_compare()(left, right) && !domain_compare()(right, left);}
 
 private:
     typedef std::pair<DomainT, bound_type> BoundT;
@@ -469,7 +481,7 @@ inline bool interval<DomainT,Compare>::empty()const
 }
 
 template<class IntervalT> 
-struct continuous_interval
+struct continuous_interval_
 {
     static typename IntervalT::size_type cardinality(const IntervalT& x) 
     {
@@ -513,7 +525,7 @@ struct continuous_interval
 };
 
 template<class IntervalT> 
-struct discrete_interval
+struct discrete_interval_
 {
     typedef typename IntervalT::domain_type domain_type;
 
@@ -692,8 +704,8 @@ inline bool interval<DomainT,Compare>::lower_equal(const interval& x2)const
     return 
         if_<
             bool_<is_continuous<DomainT>::value>, 
-            continuous_interval<interval<DomainT,Compare> >, 
-            discrete_interval<interval<DomainT,Compare> > 
+            continuous_interval_<interval<DomainT,Compare> >, 
+            discrete_interval_<interval<DomainT,Compare> > 
            >
            ::type::unaligned_lwb_equal(*this, x2);
 }
@@ -710,8 +722,8 @@ inline bool interval<DomainT,Compare>::upper_equal(const interval& x2)const
     return 
         if_<
             bool_<is_continuous<DomainT>::value>, 
-            continuous_interval<interval<DomainT,Compare> >, 
-            discrete_interval<interval<DomainT,Compare> > 
+            continuous_interval_<interval<DomainT,Compare> >, 
+            discrete_interval_<interval<DomainT,Compare> > 
            >
            ::type::unaligned_upb_equal(*this, x2);
 }
@@ -780,8 +792,8 @@ inline bool interval<DomainT,Compare>::touches(const interval& x2)const
     return 
         if_<
             bool_<is_continuous<DomainT>::value>, 
-            continuous_interval<interval<DomainT,Compare> >, 
-            discrete_interval<interval<DomainT,Compare> > 
+            continuous_interval_<interval<DomainT,Compare> >, 
+            discrete_interval_<interval<DomainT,Compare> > 
            >
            ::type::has_equal_border_touch(*this, x2);
 }
@@ -948,8 +960,8 @@ inline typename itl::size<DomainT>::type interval<DomainT,Compare>::cardinality(
     using namespace boost::mpl;
     return if_<
                 bool_<is_continuous<DomainT>::value>,
-                continuous_interval<interval<DomainT,Compare> >,
-                discrete_interval<interval<DomainT,Compare> >
+                continuous_interval_<interval<DomainT,Compare> >,
+                discrete_interval_<interval<DomainT,Compare> >
               >
               ::type::cardinality(*this);
 }
@@ -960,8 +972,8 @@ inline typename interval<DomainT,Compare>::difference_type interval<DomainT,Comp
     using namespace boost::mpl;
     return if_<
                 bool_<is_continuous<DomainT>::value>,
-                continuous_interval<interval<DomainT,Compare> >,
-                discrete_interval<interval<DomainT,Compare> >
+                continuous_interval_<interval<DomainT,Compare> >,
+                discrete_interval_<interval<DomainT,Compare> >
               >
               ::type::length(*this);
 }
@@ -1015,11 +1027,11 @@ inline bool operator >= (const interval<DomainT,Compare>& lhs, const interval<Do
 
 
 /// Comparison functor on intervals implementing an overlap free less 
-template <class IntervalType>
-struct exclusive_less {
+template <class IntervalT>
+struct exclusive_less_than {
     /** Operator <tt>operator()</tt> implements a strict weak ordering on intervals. */
-    bool operator()(const IntervalType& x1, const IntervalType& x2)const
-    { return x1.exclusive_less(x2); }
+    bool operator()(const IntervalT& left, const IntervalT& right)const
+    { return exclusive_less(left, right); }
 };
 
 
@@ -1028,12 +1040,12 @@ struct exclusive_less {
 //==============================================================================
 
 /** \c hull returns the smallest interval containing \c left and \c right. */
-template <class DomainT, ITL_COMPARE Compare>
-inline interval<DomainT,Compare> hull(interval<DomainT,Compare>  left, 
-                                const interval<DomainT,Compare>& right)
-{
-    return left.extend(right);
-}
+//CL template <class DomainT, ITL_COMPARE Compare>
+//inline interval<DomainT,Compare> hull(interval<DomainT,Compare>  left, 
+//                                const interval<DomainT,Compare>& right)
+//{
+//    return left.extend(right);
+//}
 
 //==============================================================================
 //= Subtraction
@@ -1048,12 +1060,12 @@ left_over = left - right_minuend; //on the right side.
 [a  b)       : left_over
 \endcode
 */
-template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval>
-inline Interval<DomainT,Compare> right_subtract(Interval<DomainT,Compare>  left, 
-                                          const Interval<DomainT,Compare>& right_minuend)
-{
-    return left.right_subtract(right_minuend);
-}
+//CL template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval>
+//inline Interval<DomainT,Compare> right_subtract(Interval<DomainT,Compare>  left, 
+//                                          const Interval<DomainT,Compare>& right_minuend)
+//{
+//    return left.right_subtract(right_minuend);
+//}
 
 /** subtract \c left_minuend from the \c right interval on it's left side. 
     Return the difference: The part of \c right right of \c left_minuend.
@@ -1064,24 +1076,24 @@ right_over = right - left_minuend; //on the left.
      [c  d) : right_over
 \endcode
 */
-template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval>
-inline Interval<DomainT,Compare> left_subtract(Interval<DomainT,Compare>  right, 
-                                         const Interval<DomainT,Compare>& left_minuend)
-{
-    return right.left_subtract(left_minuend);
-}
+//CL template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval>
+//inline Interval<DomainT,Compare> left_subtract(Interval<DomainT,Compare>  right, 
+//                                         const Interval<DomainT,Compare>& left_minuend)
+//{
+//    return right.left_subtract(left_minuend);
+//}
 
 //==============================================================================
 //= Intersection
 //==============================================================================
 
 /** Returns the intersection of \c left and \c right interval. */
-template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval>
-inline Interval<DomainT,Compare> operator & (Interval<DomainT,Compare>  left, 
-                                       const Interval<DomainT,Compare>& right)
-{
-    return left &= right;
-}
+//CL template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval>
+//inline Interval<DomainT,Compare> operator & (Interval<DomainT,Compare>  left, 
+//                                       const Interval<DomainT,Compare>& right)
+//{
+//    return left &= right;
+//}
 
 /** Returns true if the intersection of \c left and \c right is not empty. */
 template <class DomainT, ITL_COMPARE Compare>
@@ -1129,8 +1141,8 @@ inline typename Interval<DomainT,Compare>::difference_type
     using namespace boost::mpl;
     return if_<
                 bool_<is_continuous<DomainT>::value>,
-                continuous_interval<interval<DomainT,Compare> >,
-                discrete_interval<interval<DomainT,Compare> >
+                continuous_interval_<interval<DomainT,Compare> >,
+                discrete_interval_<interval<DomainT,Compare> >
               >
               ::type::distance(left, right);
 }
@@ -1143,8 +1155,8 @@ inline typename Interval<DomainT,Compare>::difference_type
     using namespace boost::mpl;
     return if_<
                 bool_<is_continuous<DomainT>::value>,
-                continuous_interval<interval<DomainT,Compare> >,
-                discrete_interval<interval<DomainT,Compare> >
+                continuous_interval_<interval<DomainT,Compare> >,
+                discrete_interval_<interval<DomainT,Compare> >
               >
               ::type::length(inter_val);
 }
@@ -1156,7 +1168,7 @@ inline typename Interval<DomainT,Compare>::difference_type
 //==============================================================================
 
 template<class CharType, class CharTraits, class DomainT, ITL_COMPARE Compare>
-std::basic_ostream<CharType, CharTraits> &operator<<
+std::basic_ostream<CharType, CharTraits>& operator <<
   (std::basic_ostream<CharType, CharTraits> &stream, interval<DomainT,Compare> const& x)
 {
     if(x.empty())
@@ -1173,6 +1185,20 @@ std::basic_ostream<CharType, CharTraits> &operator<<
 //==============================================================================
 //= Type traits
 //==============================================================================
+template <class DomainT, ITL_COMPARE Compare> 
+struct is_interval<itl::interval<DomainT,Compare> >
+{
+    typedef is_interval<itl::interval<DomainT,Compare> > type;
+    BOOST_STATIC_CONSTANT(bool, value = true);
+};
+
+template <class DomainT, ITL_COMPARE Compare> 
+struct is_universal_interval<itl::interval<DomainT,Compare> >
+{
+    typedef is_universal_interval<itl::interval<DomainT,Compare> > type;
+    BOOST_STATIC_CONSTANT(bool, value = true);
+};
+
 template <class DomainT, ITL_COMPARE Compare>
 struct type_to_string<itl::interval<DomainT,Compare> >
 {

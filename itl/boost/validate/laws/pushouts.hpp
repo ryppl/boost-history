@@ -90,8 +90,8 @@ namespace boost{namespace itl
         {
             std::cout << typeString() << std::endl;
             std::cout << formula() << std::endl;
-            std::cout << "a: " << this->template getInputValue<operand_a>().as_string() << std::endl;
-            std::cout << "b: " << this->template getInputValue<operand_b>().as_string() << std::endl;
+            std::cout << "a: " << this->template getInputValue<operand_a>() << std::endl;
+            std::cout << "b: " << this->template getInputValue<operand_b>() << std::endl;
 
             // f(a o b) == f(a) o f(b)
             // --- left hand side ------------------------
@@ -99,25 +99,25 @@ namespace boost{namespace itl
             SourceT a_o_b = this->template getInputValue<operand_a>();
             // a_o_b o=  this->template getInputValue<operand_b>();
             OperatorT<SourceT>()(a_o_b, this->template getInputValue<operand_b>());
-            std::cout << "a o b:" << a_o_b.as_string() << std::endl;
+            std::cout << "a o b:" << a_o_b << std::endl;
 
             TargetT lhs;
             FunctionT<TargetT,SourceT>()(lhs, a_o_b);
-            std::cout << "f(a o b):" << lhs.as_string() << std::endl;
+            std::cout << "f(a o b):" << lhs << std::endl;
 
             // --- right hand side -----------------------
             // rhs := atomize(a) * atomize(b)
             SourceT value_a = this->template getInputValue<operand_a>();
             TargetT atomic_a;
             FunctionT<TargetT,SourceT>()(atomic_a, value_a);
-            std::cout << "f(a):" << atomic_a.as_string() << std::endl;
+            std::cout << "f(a):" << atomic_a << std::endl;
             SourceT value_b = this->template getInputValue<operand_b>();
             TargetT atomic_b;
             FunctionT<TargetT,SourceT>()(atomic_b, value_b);
-            std::cout << "f(b):" << atomic_b.as_string() << std::endl;
+            std::cout << "f(b):" << atomic_b << std::endl;
             TargetT rhs = atomic_a;
             OperatorT<TargetT>()(rhs, atomic_b);
-            std::cout << "f(a) o f(b):" << rhs.as_string() << std::endl;
+            std::cout << "f(a) o f(b):" << rhs << std::endl;
 
             this->template setOutputValue<lhs_result>(lhs);
             this->template setOutputValue<rhs_result>(rhs);

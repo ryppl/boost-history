@@ -224,6 +224,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\boost\validate\driver\set_copy_conformity_driver.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\boost\validate\laws\set_laws.h"
 				>
 			</File>

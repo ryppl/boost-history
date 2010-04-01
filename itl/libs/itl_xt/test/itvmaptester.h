@@ -155,8 +155,8 @@ bool ItvMapTesterT<ItvMapTV>::testJoinIndependence(int nTries)
 
     if(!correct) {
         std::cout << "JoinIndependence violated ---------------------------" << std::endl;
-        std::cout << "y     :" << min_y.as_string().c_str() << std::endl;
-        std::cout << "y_join:" << min_y_join.as_string().c_str() << std::endl;
+        std::cout << "y     :" << min_y << std::endl;
+        std::cout << "y_join:" << min_y_join << std::endl;
     }
 
     return correct;
@@ -209,9 +209,9 @@ bool ItvMapTesterT<ItvMapTV>::testInsertAndJoinIndependence(int nTries)
 
     if(!correct) {
         std::cout << "InsertAndJoinIndependence violated ---------------------------" << std::endl;
-        std::cout << "y      :" << min_y.as_string().c_str() << std::endl;
-        std::cout << "y_perm :" << min_y_perm.as_string().c_str() << std::endl;
-        std::cout << "y_pjoin:" << min_y_permJoin.as_string().c_str() << std::endl;
+        std::cout << "y      :" << min_y << std::endl;
+        std::cout << "y_perm :" << min_y_perm << std::endl;
+        std::cout << "y_pjoin:" << min_y_permJoin << std::endl;
     }
 
     return correct;
@@ -290,21 +290,21 @@ bool ItvMapTesterT<ItvMapTV>::testInsertReversibility1(int nTries, char* errFile
 
     if(!correct) {
         std::cout << "InsertReversibility1: x + y - join(perm(y)) == x =: x2  violated --------" << std::endl;
-        std::cout << "x       :" << min_x.as_string().c_str() << std::endl;
-        std::cout << "y       :" << min_y.as_string().c_str() << std::endl;
-        std::cout << "y_perm  :" << min_y_perm.as_string().c_str() << std::endl;
-        std::cout << "y_pJnt  :" << min_y_permJoin.as_string().c_str() << std::endl;
-        std::cout << "x+y     :" << min_x_plus_y.as_string().c_str() << std::endl;
-        std::cout << "x2      :" << min_x2.as_string().c_str() << std::endl;
+        std::cout << "x       :" << min_x << std::endl;
+        std::cout << "y       :" << min_y << std::endl;
+        std::cout << "y_perm  :" << min_y_perm << std::endl;
+        std::cout << "y_pJnt  :" << min_y_permJoin << std::endl;
+        std::cout << "x+y     :" << min_x_plus_y << std::endl;
+        std::cout << "x2      :" << min_x2 << std::endl;
 
         FILE* fp;
         fp = fopen(errFile,"w");
-        fprintf(fp, "x: %s\n",      min_x.as_string().c_str());
-        fprintf(fp, "y: %s\n",      min_y.as_string().c_str());
-        fprintf(fp, "y_perm: %s\n", min_y_perm.as_string().c_str());
-        fprintf(fp, "y_pJnt: %s\n", min_y_permJoin.as_string().c_str());
-        fprintf(fp, "x+y: %s\n",    min_x_plus_y.as_string().c_str());
-        fprintf(fp, "x2: %s\n",     min_x2.as_string().c_str());
+        fprintf(fp, "x: %s\n",      to_string<ItvMapTV>::apply(min_x).c_str());
+        fprintf(fp, "y: %s\n",      to_string<ItvMapTV>::apply(min_y).c_str());
+        fprintf(fp, "y_perm: %s\n", to_string<ItvMapTV>::apply(min_y_perm).c_str());
+        fprintf(fp, "y_pJnt: %s\n", to_string<ItvMapTV>::apply(min_y_permJoin).c_str());
+        fprintf(fp, "x+y: %s\n",    to_string<ItvMapTV>::apply(min_x_plus_y).c_str());
+        fprintf(fp, "x2: %s\n",     to_string<ItvMapTV>::apply(min_x2).c_str());
 
         min_x.isEqual(min_x2);
         debugInsertReversibility1(min_x, min_y, min_y_perm);
@@ -405,22 +405,21 @@ bool ItvMapTesterT<ItvMapTV>::testInsertReversibility2(int nTries, char* errFile
 
     if(!correct) {
         std::cout << "InsertReversibility2: (x + join(perm(y)) - y).join() == x =: x2  violated --------" << std::endl;
-        std::cout << "x       :" << min_x.as_string().c_str() << std::endl;
-        std::cout << "y       :" << min_y.as_string().c_str() << std::endl;
-        std::cout << "y_perm  :" << min_y_perm.as_string().c_str() << std::endl;
-        std::cout << "y_pJnt  :" << min_y_permJoin.as_string().c_str() << std::endl;
-        std::cout << "x+y_pJnt:" << min_x_plus_y_pj.as_string().c_str() << std::endl;
-        std::cout << "x2      :" << min_x2.as_string().c_str() << std::endl;
-
+        std::cout << "x       :" << min_x << std::endl;
+        std::cout << "y       :" << min_y << std::endl;
+        std::cout << "y_perm  :" << min_y_perm << std::endl;
+        std::cout << "y_pJnt  :" << min_y_permJoin << std::endl;
+        std::cout << "x+y_pJnt:" << min_x_plus_y_pj << std::endl;
+        std::cout << "x2      :" << min_x2 << std::endl;
 
         FILE* fp;
         fp = fopen(errFile,"w");
-        fprintf(fp, "x: %s\n",      min_x.as_string().c_str());
-        fprintf(fp, "y: %s\n",      min_y.as_string().c_str());
-        fprintf(fp, "y_perm: %s\n", min_y_perm.as_string().c_str());
-        fprintf(fp, "y_pJnt: %s\n", min_y_permJoin.as_string().c_str());
-        fprintf(fp, "x+y: %s\n",    min_x_plus_y_pj.as_string().c_str());
-        fprintf(fp, "x2: %s\n",     min_x2.as_string().c_str());
+        fprintf(fp, "x: %s\n",      to_string<ItvMapTV>::apply(min_x).c_str());
+        fprintf(fp, "y: %s\n",      to_string<ItvMapTV>::apply(min_y).c_str());
+        fprintf(fp, "y_perm: %s\n", to_string<ItvMapTV>::apply(min_y_perm).c_str());
+        fprintf(fp, "y_pJnt: %s\n", to_string<ItvMapTV>::apply(min_y_permJoin).c_str());
+        fprintf(fp, "x+y: %s\n",    to_string<ItvMapTV>::apply(min_x_plus_y_pj).c_str());
+        fprintf(fp, "x2: %s\n",     to_string<ItvMapTV>::apply(min_x2).c_str());
 
         debugInsertReversibility2(min_x, min_y, min_y_perm);
     }
@@ -525,14 +524,13 @@ bool ItvMapTesterT<ItvMapTV>::testErasureAsIntersectionComputability(int nTries,
 
     if(!correct) {
         std::cout << "ErasureAsIntersectionComputability: x -~ y == x * (dom(x)-y) violated --------" << std::endl;
-        std::cout << "x       :" << min_x.as_string().c_str() << std::endl;
-        std::cout << "y       :" << min_y.as_string().c_str() << std::endl;
-
+        std::cout << "x       :" << min_x << std::endl;
+        std::cout << "y       :" << min_y << std::endl;
 
         FILE* fp;
         fp = fopen(errFile,"w");
-        fprintf(fp, "x: %s\n",      min_x.as_string().c_str());
-        fprintf(fp, "y: %s\n",      min_y.as_string().c_str());
+        fprintf(fp, "x: %s\n",      to_string<ItvMapTV>::apply(min_x).c_str());
+        fprintf(fp, "y: %s\n",      to_string<interval_set_type>::apply(min_y).c_str());
 
         //debugInsertReversibility2(min_x, min_y, min_y_perm);
     }

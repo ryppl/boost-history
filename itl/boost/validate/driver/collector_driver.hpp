@@ -112,7 +112,7 @@ namespace boost{namespace itl
             //-----------------------------------------------------------------
             case RootType::interval_map: {
                 switch(neutronizerChoice) {
-                case NeutronHandlerType::partial_absorber: return new collector_validater<interval_map<int,itl::set<int> > >;
+                case NeutronHandlerType::partial_absorber: return new collector_validater<interval_map<double,itl::set<int> > >;
                 case NeutronHandlerType::partial_enricher: return new collector_validater<interval_map<int,itl::set<int>,partial_enricher> >;
                 //case NeutronHandlerType::total_absorber : return new collector_validater<interval_map<int,itl::set<int>,total_absorber > >;
                 default: return choiceError(ITL_LOCATION("\nRootType::interval_map: neutronizerChoice:\n"), neutronizerChoice, _neutronizerChoice);
@@ -122,7 +122,7 @@ namespace boost{namespace itl
             case RootType::split_interval_map: {
                 switch(neutronizerChoice) {
                 case NeutronHandlerType::partial_absorber: return new collector_validater<split_interval_map<int,itl::set<int> > >;
-                case NeutronHandlerType::partial_enricher: return new collector_validater<split_interval_map<int,itl::set<int>,partial_enricher> >;
+                case NeutronHandlerType::partial_enricher: return new collector_validater<split_interval_map<double,itl::set<int>,partial_enricher> >;
                 //case NeutronHandlerType::total_absorber : return new collector_validater<split_interval_map<int,itl::set<int>,total_absorber > >;
                 default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: neutronizerChoice:\n"), neutronizerChoice, _neutronizerChoice);
                 }//switch neutronizerChoice

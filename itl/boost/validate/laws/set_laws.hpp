@@ -76,32 +76,32 @@ namespace boost{namespace itl
         bool debug_holds()
         {
             // a + (b * c) == (a + b) * (a + c)
-            std::cout << "a:" << this->template getInputValue<operand_a>().as_string() << std::endl;
-            std::cout << "b:" << this->template getInputValue<operand_b>().as_string() << std::endl;
-            std::cout << "c:" << this->template getInputValue<operand_c>().as_string() << std::endl;
+            std::cout << "a:" << this->template getInputValue<operand_a>() << std::endl;
+            std::cout << "b:" << this->template getInputValue<operand_b>() << std::endl;
+            std::cout << "c:" << this->template getInputValue<operand_c>() << std::endl;
             // --- left hand side ------------------------
             Type b_star_c = this->template getInputValue<operand_b>();
             Operator2<Type>()(b_star_c, this->template getInputValue<operand_c>());
-            std::cout << "b*c:" << b_star_c.as_string() << std::endl;
+            std::cout << "b*c:" << b_star_c << std::endl;
 
             // lhs := a + (b * c)
             Type lhs = this->template getInputValue<operand_a>();
             Operator1<Type>()(lhs, b_star_c);
-            std::cout << "l=a+(b*c):" << lhs.as_string() << std::endl;
+            std::cout << "l=a+(b*c):" << lhs << std::endl;
 
             // --- right hand side -----------------------
             Type a_plus_b = this->template getInputValue<operand_a>();
             Operator1<Type>()(a_plus_b, this->template getInputValue<operand_b>());
-            std::cout << "a+b:" << a_plus_b.as_string() << std::endl;
+            std::cout << "a+b:" << a_plus_b << std::endl;
 
             Type a_plus_c = this->template getInputValue<operand_a>();
             Operator1<Type>()(a_plus_c, this->template getInputValue<operand_c>());
-            std::cout << "a+c:" << a_plus_c.as_string() << std::endl;
+            std::cout << "a+c:" << a_plus_c << std::endl;
 
             // rhs := (a + b) * (a + c)
             Type rhs = a_plus_b;
             Operator2<Type>()(rhs, a_plus_c);
-            std::cout << "r=(a+b)*(a+c):" << rhs.as_string() << std::endl;
+            std::cout << "r=(a+b)*(a+c):" << rhs << std::endl;
 
             this->template setOutputValue<lhs_result>(lhs);
             this->template setOutputValue<rhs_result>(rhs);
@@ -292,30 +292,30 @@ namespace boost{namespace itl
         bool debug_holds()
         {
             // (a + b) - c == (a - c) + (b - c)
-            std::cout << "a:" << this->template getInputValue<operand_a>().as_string() << std::endl;
-            std::cout << "b:" << this->template getInputValue<operand_b>().as_string() << std::endl;
-            std::cout << "c:" << this->template getInputValue<operand_c>().as_string() << std::endl;
+            std::cout << "a:" << this->template getInputValue<operand_a>() << std::endl;
+            std::cout << "b:" << this->template getInputValue<operand_b>() << std::endl;
+            std::cout << "c:" << this->template getInputValue<operand_c>() << std::endl;
             // --- left hand side ------------------------
             // lhs := (a + b) - c
             Type lhs = this->template getInputValue<operand_a>();
             Operator1<Type>()(lhs, this->template getInputValue<operand_b>());
-            std::cout << "a+b:" << lhs.as_string() << std::endl;
+            std::cout << "a+b:" << lhs << std::endl;
             Operator2<Type>()(lhs, this->template getInputValue<operand_c>());
-            std::cout << "l=(a+b)-c:" << lhs.as_string() << std::endl;
+            std::cout << "l=(a+b)-c:" << lhs << std::endl;
 
             // --- right hand side -----------------------
             Type a_minus_c = this->template getInputValue<operand_a>();
             Operator2<Type>()(a_minus_c, this->template getInputValue<operand_c>());
-            std::cout << "a-c:" << a_minus_c.as_string() << std::endl;
+            std::cout << "a-c:" << a_minus_c << std::endl;
 
             Type b_minus_c = this->template getInputValue<operand_b>();
             Operator2<Type>()(b_minus_c, this->template getInputValue<operand_c>());
-            std::cout << "b-c:" << b_minus_c.as_string() << std::endl;
+            std::cout << "b-c:" << b_minus_c << std::endl;
 
             // rhs := (a - c) + (b - c)
             Type rhs = a_minus_c;
             Operator1<Type>()(rhs, b_minus_c);
-            std::cout << "r=(a-c)+(b-c):" << b_minus_c.as_string() << std::endl;
+            std::cout << "r=(a-c)+(b-c):" << b_minus_c << std::endl;
 
             this->template setOutputValue<lhs_result>(lhs);
             this->template setOutputValue<rhs_result>(rhs);

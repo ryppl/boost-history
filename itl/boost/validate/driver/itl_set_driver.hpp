@@ -30,10 +30,10 @@ namespace boost{namespace itl
             setValid(true);
             _rootChoice.setSize(RootType::Types_size);
             _rootChoice.setMaxWeights(100);
-            _rootChoice[RootType::itl_set]               = 25;
-            _rootChoice[RootType::interval_set]          = 25;
-            _rootChoice[RootType::separate_interval_set] = 25;
-            _rootChoice[RootType::split_interval_set]    = 25;
+            _rootChoice[RootType::itl_set]               = 0; //JODO REV = 25
+            _rootChoice[RootType::interval_set]          = 33;
+            _rootChoice[RootType::separate_interval_set] = 33;
+            _rootChoice[RootType::split_interval_set]    = 34;
             _rootChoice[RootType::itl_map]               = 0;
             _rootChoice[RootType::interval_map]          = 0;
             _rootChoice[RootType::split_interval_map]    = 0;
@@ -93,6 +93,9 @@ namespace boost{namespace itl
 
         algebra_validater* chooseValidater()
         {
+            typedef int    intT;
+            typedef double doubleT;
+
             int rootChoice         = _rootChoice.some();
             int domainChoice       = _domainChoice.some();
             //int codomainChoice     = _codomainChoice.some();
@@ -100,34 +103,35 @@ namespace boost{namespace itl
 
             switch(rootChoice)
             {
-            case RootType::itl_set: {
-                    switch(domainChoice) {
-                    case DomainType::Int:    return new itl_set_validater<itl::set<int> >; 
-                    case DomainType::Double: return new itl_set_validater<itl::set<double> >; 
-                    default: return choiceError(ITL_LOCATION("\nRootType::itl_set: domainChoice:\n"), 
-                                                domainChoice, _domainChoice);
-                    }
-                }
+            //JODO REV
+            //case RootType::itl_set: {
+            //        switch(domainChoice) {
+            //        case DomainType::Int:    return new itl_set_validater<itl::set<int> >; 
+            //        case DomainType::Double: return new itl_set_validater<itl::set<double> >; 
+            //        default: return choiceError(ITL_LOCATION("\nRootType::itl_set: domainChoice:\n"), 
+            //                                    domainChoice, _domainChoice);
+            //        }
+            //    }
             case RootType::interval_set: {
                     switch(domainChoice) {
-                    case DomainType::Int:    return new itl_set_validater<interval_set<int> >;
-                    case DomainType::Double: return new itl_set_validater<interval_set<double> >;
+                    case DomainType::Int:    return new itl_set_validater<interval_set<intT> >;
+                    case DomainType::Double: return new itl_set_validater<interval_set<doubleT> >;
                     default: return choiceError(ITL_LOCATION("\nRootType::interval_set: domainChoice:\n"), 
                                                 domainChoice, _domainChoice);
                     }
                 }
             case RootType::separate_interval_set: {
                     switch(domainChoice) {
-                    case DomainType::Int:    return new itl_set_validater<separate_interval_set<int> >;
-                    case DomainType::Double: return new itl_set_validater<separate_interval_set<double> >;
+                    case DomainType::Int:    return new itl_set_validater<separate_interval_set<intT> >;
+                    case DomainType::Double: return new itl_set_validater<separate_interval_set<doubleT> >;
                     default: return choiceError(ITL_LOCATION("\nRootType::separate_interval_set: domainChoice:\n"), 
                                                 domainChoice, _domainChoice);
                     }
                  }
             case RootType::split_interval_set: {
                     switch(domainChoice) {
-                    case DomainType::Int:    return new itl_set_validater<split_interval_set<int> >;
-                    case DomainType::Double: return new itl_set_validater<split_interval_set<double> >;
+                    case DomainType::Int:    return new itl_set_validater<split_interval_set<intT> >;
+                    case DomainType::Double: return new itl_set_validater<split_interval_set<doubleT> >;
                     default: return choiceError(ITL_LOCATION("\nRootType::split_interval_set: domainChoice:\n"), 
                                                 domainChoice, _domainChoice);
                     }

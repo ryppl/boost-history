@@ -40,7 +40,7 @@ void interval_container_basics()
     joinedTimes.insert(next_morning);  //touching
     joinedTimes.insert(next_evening);  //disjoint
 
-    cout << "Joined times  :" << joinedTimes.as_string() << endl;
+    cout << "Joined times  :" << joinedTimes << endl;
 
     // A separate interval set of type separate_interval_set joins intervals that that 
     // overlap but it preserves interval borders that just touch each other. You may 
@@ -51,7 +51,7 @@ void interval_container_basics()
     separateTimes.insert(next_morning);  //touching
     separateTimes.insert(next_evening);  //disjoint
 
-    cout << "Separate times:" << separateTimes.as_string() << endl;
+    cout << "Separate times:" << separateTimes << endl;
 
     // A split interval set of type split_interval_set preserves all interval
     // borders. On insertion of overlapping intervals the intervals in the
@@ -62,7 +62,7 @@ void interval_container_basics()
     splitTimes += next_morning;  //touching
     splitTimes += next_evening;  //disjoint
 
-    cout << "Split times   :\n" << splitTimes.as_string() << endl;
+    cout << "Split times   :\n" << splitTimes << endl;
 
     // A split interval map splits up inserted intervals on overlap and aggregates the
     // associated quantities via the operator +=

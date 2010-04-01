@@ -57,7 +57,7 @@ template
     ITL_COMPARE Compare  = ITL_COMPARE_INSTANCE(std::less, DomainT),
     ITL_COMBINE Combine  = ITL_COMBINE_INSTANCE(itl::inplace_plus, CodomainT),
     ITL_SECTION Section  = ITL_SECTION_INSTANCE(itl::inter_section, CodomainT), 
-    template<class,ITL_COMPARE>class Interval = itl::interval,
+    template<class,ITL_COMPARE>class Interval = ITL_INTERVAL_DEFAULT,
     ITL_ALLOC   Alloc    = std::allocator
 >
 class interval_base_map
@@ -127,10 +127,10 @@ public:
     typedef typename inverse<codomain_intersect>::type inverse_codomain_intersect;
 
     /// Comparison functor for intervals which are keys as well
-    typedef exclusive_less<interval_type> interval_compare;
+    typedef exclusive_less_than<interval_type> interval_compare;
 
     /// Comparison functor for keys
-    typedef exclusive_less<interval_type> key_compare;
+    typedef exclusive_less_than<interval_type> key_compare;
 
     //--------------------------------------------------------------------------
     //- Associated types: Implementation and stl related
@@ -237,7 +237,7 @@ public:
     /** Does the map contain the interval \c sub_interval ? */
     bool contains(const interval_type& sub_interval)const
     {
-        if(Traits::is_total || sub_interval.empty()) 
+        if(Traits::is_total || itl::is_empty(sub_interval)) 
             return true;
 
         std::pair<const_iterator, const_iterator> exterior = equal_range(sub_interval);
@@ -622,7 +622,7 @@ public:
 
         type intersection;
         add_intersection(intersection, interval_value_pair);
-        return !intersection.empty(); 
+        return !itl::is_empty(intersection); 
     }
 
 
@@ -693,7 +693,7 @@ public:
     //==========================================================================
     
     /** Object as string */
-    std::string as_string()const;
+    //CL std::string as_string()const;
 
 
     //==========================================================================
@@ -872,7 +872,7 @@ bool interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
                ::segment_type& sub_segment)const
 {
     interval_type sub_interval = sub_segment.first;
-    if(sub_interval.empty()) 
+    if(itl::is_empty(sub_interval)) 
         return true;
 
     std::pair<const_iterator, const_iterator> exterior = equal_range(sub_interval);
@@ -1000,7 +1000,7 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
     else
     {
         interval_type sectant_interval = sectant.first;
-        if(sectant_interval.empty()) 
+        if(itl::is_empty(sectant_interval)) 
             return;
 
         const_iterator first_ = _map.lower_bound(sectant_interval);
@@ -1013,7 +1013,7 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
             for(it_=first_; it_ != end_; it_++) 
             {
                 interval_type common_interval = it_->first & sectant_interval; 
-                if(!common_interval.empty())
+                if(!itl::is_empty(common_interval))
                 {
                     section.that()->add(value_type(common_interval, it_->second));
                     section.that()->template _add<codomain_intersect>(value_type(common_interval, sectant.second)); 
@@ -1023,7 +1023,7 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
             for(it_=first_; it_ != end_; it_++) 
             {
                 interval_type common_interval = it_->first & sectant_interval; 
-                if(!common_interval.empty())
+                if(!itl::is_empty(common_interval))
                 {
                     section.that()->add(value_type(common_interval, it_->second) );
                     section.that()->template _add<codomain_combine>(value_type(common_interval, sectant.second));
@@ -1044,7 +1044,7 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
                     const typename interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
                     ::interval_type& sectant_interval)const
 {
-    if(sectant_interval.empty()) 
+    if(itl::is_empty(sectant_interval)) 
         return;
 
     typename ImplMapT::const_iterator first_ = _map.lower_bound(sectant_interval);
@@ -1054,7 +1054,7 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
     for(typename ImplMapT::const_iterator it_=first_; it_ != end_; it_++) 
     {
         interval_type common_interval = it_->first & sectant_interval; 
-        if(!common_interval.empty())
+        if(!itl::is_empty(common_interval))
             prior_ = section.that()->gap_insert<codomain_combine>(prior_, common_interval, it_->second );
     }
 }
@@ -1115,7 +1115,7 @@ SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Sect
 
         //That which is common ...
         common_interval = span & covered;
-        if(!common_interval.empty())
+        if(!itl::is_empty(common_interval))
         {
             // ... shall be subtracted
             eraser.add(common_interval);
@@ -1134,9 +1134,9 @@ SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Sect
         // Because this is a collision free addition I don't have to distinguish codomain_types.
 
         //...      d) : span
-        //... c)      : (*it_); span.left_subtract(*it_);
+        //... c)      : covered
         //     [c  d) : span'
-        span.left_subtract(covered);
+        span = left_subtract(span, covered);
     }
 
     //If span is not empty here, it is not in the set so it shall be added
@@ -1224,7 +1224,7 @@ interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Inter
 
     while(next_ != _map.end())
     {
-        if(    it_->first.touches(next_->first)
+        if(    touches(it_->first, next_->first)
             && it_->second == next_->second      )
         {
             iterator fst_mem = it_;  // hold the first member
@@ -1232,13 +1232,13 @@ interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Inter
             // Go on while touching members are found
             it_++; next_++;
             while(     next_ != _map.end()
-                    && it_->first.touches(next_->first)
+                    && touches(it_->first, next_->first)
                     && it_->second == next_->second     )
             { it_++; next_++; }
 
             // finally we arrive at the end of a sequence of joinable intervals
             // and it points to the last member of that sequence            
-            const_cast<interval_type&>(it_->first).extend(fst_mem->first);
+            const_cast<interval_type&>(it_->first) = hull(it_->first, fst_mem->first);
             _map.erase(fst_mem, it_);
 
             it_++; next_=it_; 
@@ -1250,7 +1250,7 @@ interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Inter
     return *this;
 }
 
-
+/*CL ::as_string
 template 
 <
     class SubType,
@@ -1269,7 +1269,7 @@ std::string interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,S
     }
     return res; 
 }
-
+*/
 
 template 
 <
@@ -1306,7 +1306,7 @@ template
 inline SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::erase(const interval_type& minuend)
 {
-    if(minuend.empty()) 
+    if(itl::is_empty(minuend)) 
         return *that();
 
     iterator first_ = _map.lower_bound(minuend);
@@ -1322,14 +1322,14 @@ inline SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combi
     interval_type right_resid =  left_subtract(last_ ->first, minuend);
 
     if(first_ == last_ )
-        if(!left_resid.empty())
+        if(!itl::is_empty(left_resid))
         {
-            const_cast<interval_type&>(first_->first).right_subtract(minuend);
-            if(!right_resid.empty())
+            const_cast<interval_type&>(first_->first) = left_resid;
+            if(!itl::is_empty(right_resid))
                 this->_map.insert(first_, value_type(right_resid, first_->second));
         }
-        else if(!right_resid.empty())
-            const_cast<interval_type&>(first_->first).left_subtract(minuend);
+        else if(!itl::is_empty(right_resid))
+            const_cast<interval_type&>(first_->first) = left_subtract(first_->first, minuend);
         else
             this->_map.erase(first_);
     else
@@ -1337,15 +1337,15 @@ inline SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combi
         // [left_resid   fst)   . . . .    [lst  right_resid)
         iterator second_= first_; ++second_;
 
-        iterator start_ = left_resid.empty()? first_: second_;
-        iterator stop_  = right_resid.empty()? end_  : last_ ;
+        iterator start_ = itl::is_empty(left_resid)? first_: second_;
+        iterator stop_  = itl::is_empty(right_resid)? end_  : last_ ;
         this->_map.erase(start_, stop_); //erase [start_, stop_)
 
-        if(!left_resid.empty())
-            const_cast<interval_type&>(first_->first).right_subtract(minuend);
+        if(!itl::is_empty(left_resid))
+            const_cast<interval_type&>(first_->first) = left_resid;
 
-        if(!right_resid.empty())
-            const_cast<interval_type&>(last_ ->first).left_subtract(minuend);
+        if(!itl::is_empty(right_resid))
+            const_cast<interval_type&>(last_ ->first) = right_resid;
     }
     return *that();
 }

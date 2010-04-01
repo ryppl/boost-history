@@ -71,7 +71,7 @@ void test_LawValidater()
     //LawValidater<TestLawT, RandomGentor> test_law;
 
     typedef InplaceSymmetricDifference
-        <interval_map<int,double,total_absorber> > TestLawT;
+        <interval_set<int> > TestLawT;
     LawValidater<TestLawT, RandomGentor> test_law;
 
     //-----------------------------------------------------------------------------

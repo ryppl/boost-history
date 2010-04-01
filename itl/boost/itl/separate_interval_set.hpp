@@ -20,7 +20,7 @@ template
 <
     typename                         DomainT, 
     ITL_COMPARE                      Compare  = ITL_COMPARE_INSTANCE(std::less, DomainT),
-    template<class,ITL_COMPARE>class Interval = itl::interval,
+    template<class,ITL_COMPARE>class Interval = ITL_INTERVAL_DEFAULT,
     ITL_ALLOC                        Alloc    = std::allocator
 > 
 class separate_interval_set: 
@@ -51,10 +51,10 @@ public:
     /// Comparison functor for domain values
     typedef ITL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
     /// Comparison functor for intervals
-    typedef exclusive_less<interval_type> interval_compare;
+    typedef exclusive_less_than<interval_type> interval_compare;
 
     /// Comparison functor for keys
-    typedef exclusive_less<interval_type> key_compare;
+    typedef exclusive_less_than<interval_type> key_compare;
 
     /// The allocator type of the set
     typedef Alloc<interval_type> allocator_type;
@@ -146,7 +146,7 @@ private:
 template<class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
 inline void separate_interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& addend)
 {
-    if(addend.empty()) return;
+    if(itl::is_empty(addend)) return;
 
     std::pair<iterator,bool> insertion = this->_set.insert(addend);
 
@@ -160,15 +160,13 @@ inline void separate_interval_set<DomainT,Compare,Interval,Alloc>::add_(const va
         //BOOST_ASSERT(end_ == this->_map.upper_bound(inter_val));
         iterator second_= first_; ++second_;
 
-        interval_type leftResid  = right_subtract(*first_, addend);
-        interval_type rightResid =  left_subtract(*last_ , addend);
+        //JODO code replication here: search hull(hull
+        interval_type left_resid  = right_subtract(*first_, addend);
+        interval_type right_resid =  left_subtract(*last_ , addend);
 
-        this->_set.erase(second_, end_  );
+        this->_set.erase(second_, end_);
 
-        interval_type extended = addend;
-        extended.extend(leftResid).extend(rightResid);
-
-        const_cast<value_type&>(*first_) = extended;
+        const_cast<value_type&>(*first_) = hull(hull(left_resid, addend), right_resid);
     }
 }
 
@@ -176,7 +174,7 @@ template<class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class In
 typename separate_interval_set<DomainT,Compare,Interval,Alloc>::iterator 
     separate_interval_set<DomainT,Compare,Interval,Alloc>::add_(iterator prior_, const value_type& addend)
 {
-    if(addend.empty()) 
+    if(itl::is_empty(addend)) 
         return prior_;
 
     iterator insertion = this->_set.insert(prior_, addend);
@@ -192,15 +190,13 @@ typename separate_interval_set<DomainT,Compare,Interval,Alloc>::iterator
 
         iterator second_= first_; ++second_;
 
-        interval_type leftResid  = right_subtract(*first_, addend);
-        interval_type rightResid =  left_subtract(*last_ , addend);
+        //JODO code replication here: search hull(hull
+        interval_type left_resid  = right_subtract(*first_, addend);
+        interval_type right_resid =  left_subtract(*last_ , addend);
 
         this->_set.erase(second_, end_);
 
-        interval_type extended = addend;
-        extended.extend(leftResid).extend(rightResid);
-
-        const_cast<value_type&>(*first_) = extended;
+        const_cast<value_type&>(*first_) = hull(hull(left_resid, addend), right_resid);
         return first_;
     }
 }
@@ -209,7 +205,7 @@ typename separate_interval_set<DomainT,Compare,Interval,Alloc>::iterator
 template<class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
 inline void separate_interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const value_type& minuend)
 {
-    if(minuend.empty()) return;
+    if(itl::is_empty(minuend)) return;
     iterator first_ = this->_set.lower_bound(minuend);
     if(first_==this->_set.end()) return;
     iterator end_   = this->_set.upper_bound(minuend);
@@ -223,10 +219,10 @@ inline void separate_interval_set<DomainT,Compare,Interval,Alloc>::subtract_(con
 
     this->_set.erase(first_, end_  );
 
-    if(!leftResid.empty())
+    if(!itl::is_empty(leftResid))
         this->_set.insert(leftResid);
 
-    if(!rightResid.empty())
+    if(!itl::is_empty(rightResid))
         this->_set.insert(rightResid);
 }
 

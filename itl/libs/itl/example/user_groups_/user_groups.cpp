@@ -121,7 +121,7 @@ void user_groups()
         // Who is member of group med_users within the time interval 'when' ?
         MemberSetT who = (*med_++).second;
         cout << "[" << when.first() << " - " << when.last() << "]"
-             << ": " << who.as_string() << endl;
+             << ": " << who << endl;
     }
 
     MembershipT::iterator admin_ = admin_users.begin();
@@ -132,7 +132,7 @@ void user_groups()
         // Who is member of group admin_users within the time interval 'when' ?
         MemberSetT who = (*admin_++).second;
         cout << "[" << when.first() << " - " << when.last() << "]"
-             << ": " << who.as_string() << endl;
+             << ": " << who << endl;
     }
 
     MembershipT::iterator all_ = all_users.begin();
@@ -143,7 +143,7 @@ void user_groups()
         // Who is member of group med_users OR admin_users ?
         MemberSetT who = (*all_++).second;
         cout << "[" << when.first() << " - " << when.last() << "]"
-             << ": " << who.as_string() << endl;
+             << ": " << who << endl;
     }
 
     MembershipT::iterator super_ = super_users.begin();
@@ -154,7 +154,7 @@ void user_groups()
         // Who is member of group med_users AND admin_users ?
         MemberSetT who = (*super_++).second;
         cout << "[" << when.first() << " - " << when.last() << "]"
-             << ": " << who.as_string() << endl;
+             << ": " << who << endl;
     }
 
 }

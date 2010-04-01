@@ -32,7 +32,7 @@ template
     ITL_COMPARE Compare  = ITL_COMPARE_INSTANCE(std::less, DomainT),
     ITL_COMBINE Combine  = ITL_COMBINE_INSTANCE(itl::inplace_plus, CodomainT),
     ITL_SECTION Section  = ITL_SECTION_INSTANCE(itl::inter_section, CodomainT), 
-    template<class,ITL_COMPARE>class Interval = itl::interval,
+    template<class,ITL_COMPARE>class Interval = ITL_INTERVAL_DEFAULT,
     ITL_ALLOC   Alloc    = std::allocator
 >
 class split_interval_map:
@@ -170,7 +170,7 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
     ::add_(const value_type& addend)
 {
     interval_type inter_val = addend.first;
-    if(inter_val.empty()) 
+    if(itl::is_empty(inter_val)) 
         return;
 
     const CodomainT& co_val = addend.second;
@@ -203,7 +203,7 @@ inline typename split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Sect
     ::add_(iterator prior_, const value_type& addend)
 {
     interval_type inter_val = addend.first;
-    if(inter_val.empty()) 
+    if(itl::is_empty(inter_val)) 
         return prior_;
 
     const CodomainT& co_val = addend.second;
@@ -244,11 +244,11 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
     // only for the first there can be a left_resid: a part of *first_ left of inter_val
     interval_type left_resid = right_subtract(first_->first, inter_val);
 
-    if(!left_resid.empty())
+    if(!itl::is_empty(left_resid))
     {   //            [------------ . . .
         // [left_resid---first_ --- . . .
         iterator prior_ = this->prior(first_);
-        const_cast<interval_type&>(first_->first).left_subtract(left_resid);
+        const_cast<interval_type&>(first_->first) = left_subtract(first_->first, left_resid);
         //NOTE: Only splitting
         iterator insertion_ = this->_map.insert(prior_, value_type(left_resid, first_->second));
     }
@@ -270,7 +270,7 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
         cur_interval = it_->first ;
         add_segment<Combiner>(x_rest, co_val, it_);
         // shrink interval
-        x_rest.left_subtract(cur_interval);
+        x_rest = left_subtract(x_rest, cur_interval);
     }
 }
 
@@ -281,7 +281,7 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
     ::add_segment(const interval_type& inter_val, const CodomainT& co_val, iterator& it_)
 {
     interval_type lead_gap = right_subtract(inter_val, it_->first);
-    if(!lead_gap.empty())
+    if(!itl::is_empty(lead_gap))
         //           [lead_gap--- . . .
         // [prior_)           [-- it_ ...
         this->template gap_insert<Combiner>(prior(it_), lead_gap, co_val);
@@ -306,14 +306,14 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
     interval_type cur_itv = (*it_).first ;
 
     interval_type lead_gap = right_subtract(inter_val, cur_itv);
-    if(!lead_gap.empty())
+    if(!itl::is_empty(lead_gap))
         //          [lead_gap--- . . .
         // [prior_)          [-- it_ ...
         this->template gap_insert<Combiner>(prior_, lead_gap, co_val);
     
 
     interval_type end_gap = left_subtract(inter_val, cur_itv);
-    if(!end_gap.empty())
+    if(!itl::is_empty(end_gap))
     {
         // [---------------end_gap)
         //      [-- it_ --)
@@ -332,7 +332,7 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
         // only for the last there can be a right_resid: a part of *it_ right of addend
         interval_type right_resid = left_subtract(cur_itv, inter_val);
 
-        if(right_resid.empty())
+        if(itl::is_empty(right_resid))
         {
             // [---------------)
             //      [-- it_ ---)
@@ -348,7 +348,7 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
         {
             // [--------------)
             //      [-- it_ --right_resid)
-            const_cast<interval_type&>(it_->first).right_subtract(right_resid);
+            const_cast<interval_type&>(it_->first) = right_subtract(it_->first, right_resid);
 
             //NOTE: This is NOT an insertion that has to take care for correct application of
             // the Combiner functor. It only reestablished that state after splitting the
@@ -378,7 +378,7 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
 {
     interval_type inter_val = minuend.first;
 
-    if(inter_val.empty()) 
+    if(itl::is_empty(inter_val)) 
         return;
 
     const CodomainT& co_val = minuend.second;
@@ -406,12 +406,12 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
 {
     interval_type left_resid = right_subtract(it_->first, inter_val);
 
-    if(!left_resid.empty())
+    if(!itl::is_empty(left_resid))
     {
         iterator prior_ = it_;
         if(prior_ != this->_map.begin())
             --prior_;
-        const_cast<interval_type&>(it_->first).left_subtract(left_resid);
+        const_cast<interval_type&>(it_->first) = left_subtract(it_->first, left_resid);
         this->_map.insert(prior_, value_type(left_resid, it_->second));
     }
 }
@@ -439,7 +439,7 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
 {
     interval_type right_resid = left_subtract(it_->first, inter_val);
 
-    if(right_resid.empty())
+    if(itl::is_empty(right_resid))
     {
         CodomainT& cur_val = it_->second ;
         Combiner()(cur_val, co_val);
@@ -449,7 +449,7 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
     else
     {   // . . . ---)
         // . . . ---right_resid) : split it_
-        const_cast<interval_type&>(it_->first).right_subtract(right_resid);
+        const_cast<interval_type&>(it_->first) = right_subtract(it_->first, right_resid);
         iterator next_ = this->_map.insert(it_, value_type(right_resid, it_->second));
         Combiner()(it_->second, co_val);
         if(Traits::absorbs_neutrons && it_->second==Combiner::neutron())
@@ -467,7 +467,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interva
     ::insert_(const value_type& addend)
 {
     interval_type inter_val = addend.first;
-    if(inter_val.empty()) 
+    if(itl::is_empty(inter_val)) 
         return;
 
     const CodomainT& co_val = addend.second;
@@ -494,7 +494,7 @@ inline typename split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Sect
     ::insert_(iterator prior_, const value_type& addend)
 {
     interval_type inter_val = addend.first;
-    if(inter_val.empty()) 
+    if(itl::is_empty(inter_val)) 
         return prior_;
 
     const CodomainT& co_val = addend.second;
@@ -535,18 +535,18 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
         cur_itv = it_->first ;            
         left_gap = right_subtract(rest_interval, cur_itv);
 
-        if(!left_gap.empty())
+        if(!itl::is_empty(left_gap))
             inserted_ = this->_map.insert(prior_, value_type(left_gap, co_val));
 
         // shrink interval
-        rest_interval.left_subtract(cur_itv);
+        rest_interval = left_subtract(rest_interval, cur_itv);
         prior_ = it_;
         ++it_;
     }
 
     //insert_rear(rest_interval, co_val, last_):
     interval_type end_gap = left_subtract(rest_interval, last_interval);
-    if(!end_gap.empty())
+    if(!itl::is_empty(end_gap))
         it_ = this->_map.insert(prior_, value_type(end_gap, co_val));
     else
         it_ = prior_;
@@ -562,7 +562,7 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
     ::erase_(const value_type& minuend)
 {
     interval_type inter_val = minuend.first;
-    if(inter_val.empty()) 
+    if(itl::is_empty(inter_val)) 
         return;
 
     const CodomainT& co_val = minuend.second;
@@ -587,13 +587,13 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
         if(first_->second == co_val)
         {
             interval_type left_resid = right_subtract(first_->first, inter_val);
-            if(!left_resid.empty())
+            if(!itl::is_empty(left_resid))
             {
                 const_cast<interval_type&>(first_->first) = left_resid;
-                if(!right_resid.empty())
+                if(!itl::is_empty(right_resid))
                     this->_map.insert(first_, value_type(right_resid, co_val));
             }
-            else if(!right_resid.empty())
+            else if(!itl::is_empty(right_resid))
                 const_cast<interval_type&>(first_->first) = right_resid;
             else
                 this->_map.erase(first_);
@@ -605,7 +605,7 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
         if(first_->second == co_val)
         {
             interval_type left_resid = right_subtract(first_->first, inter_val);
-            if(left_resid.empty())
+            if(itl::is_empty(left_resid))
                 this->_map.erase(first_);
             else
                 const_cast<interval_type&>(first_->first) = left_resid;
@@ -631,7 +631,7 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
     if(it_->second == co_val)
     {
         interval_type right_resid = left_subtract(it_->first, inter_val);
-        if(right_resid.empty())
+        if(itl::is_empty(right_resid))
             this->_map.erase(it_);
         else
             const_cast<interval_type&>(it_->first) = right_resid;
