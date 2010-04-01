@@ -1,16 +1,46 @@
-
-/*
-    The Extended Integer (XInt) Library
-    A fast, portable C++ library for multi-precision integer math
-    Copyright 2010 by Chad Nelson
-
-    Distributed under the Boost Software License, Version 1.0.
-    See accompanying file LICENSE_1_0.txt or copy at
-        http://www.boost.org/LICENSE_1_0.txt
+/*! \brief The Extended Integer (XInt) Library
+   \details
+    A fast, portable C++ library for multi-precision integer math.
 
     This is the main header file for the library, and the only one that
     programs using it should need to include.
+
+\mainpage  eXtended Integer library.
+
+A C++ library that lets your program handle much, much larger integer numbers
+than the built-in int, long, or even long long types,
+and handle them using the same syntax that
+C and C++ use for the standard integer types.
+
+The maximum size of the integer is limited by the memory available to store it,
+in practice millions of hexadecimal digits, so effectively infinite.
+
+Completely portable, written entirely in modern C++,
+with many different types of operating system, compiler, and hardware in mind.
+It will compile cleanly on many operating systems without any changes,
+automatically adapting to whatever native integer sizes are available.
+
+It's fast. Speed of execution takes a back seat to portability,
+so it doesn't include things like assembly-language modules
+to wring every last CPU cycle out of it -- but it's still pretty darn fast.
+
+Features you need. Modular arithmetic. Bit manipulation functions.
+Cryptographically-secure random and prime number generation.  
+A friendly and intuitive interface. An option for thread-safe operation.
+
+It has the Boost Software License, Version 1.0. at
+http://www.boost.org/LICENSE_1_0.txt
+
+Documentation in full as html is at 
+https://svn.boost.org/svn/boost/sandbox/xint/libs/xint/doc/html/index/html
+
+and a pdf version is also available.
 */
+//    Copyright 2010 by Chad Nelson
+
+//    Distributed under the Boost Software License, Version 1.0.
+//    See accompanying file LICENSE_1_0.txt or copy at
+//    http://www.boost.org/LICENSE_1_0.txt
 
 #ifndef BOOST_INCLUDED_XINT_H
 #define BOOST_INCLUDED_XINT_H
