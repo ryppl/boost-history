@@ -81,7 +81,7 @@ std::basic_ostream<CharType, CharTraits>& operator <<
   (std::basic_ostream<CharType, CharTraits> &stream, 
    continuous_interval<DomainT,Compare> const& object)
 {
-	if(itl::is_empty(object))
+    if(itl::is_empty(object))
         return stream << "[)";
     else
         return stream << "[" << object.lower() << "," << object.upper()<< ")";

@@ -17,13 +17,13 @@ template <class Type> struct is_asymmetric_interval
 { 
     typedef is_asymmetric_interval<Type> type;
     BOOST_STATIC_CONSTANT(bool,
-			value = (type_traits::ice_and
-			        <
-						is_interval<Type>::value
-					,	has_static_bounds<Type>::value
-					,	has_asymmetric_bounds<Type>::value
-					>::value)
-				);
+            value = (type_traits::ice_and
+                    <
+                        is_interval<Type>::value
+                    ,    has_static_bounds<Type>::value
+                    ,    has_asymmetric_bounds<Type>::value
+                    >::value)
+                );
 };
 
 }} // namespace boost itl

@@ -20,9 +20,9 @@ template <class SubType, class DomainT,
 class asymmetric_interval : public base_interval<DomainT,Compare>
 {
 public:
-	typedef base_interval<DomainT,Compare>          base_type;
-	typedef asymmetric_interval<SubType,DomainT,Compare> type;
-	typedef SubType                                  sub_type;
+    typedef base_interval<DomainT,Compare>          base_type;
+    typedef asymmetric_interval<SubType,DomainT,Compare> type;
+    typedef SubType                                  sub_type;
 
 public:
     //==========================================================================
@@ -33,7 +33,7 @@ public:
     {
         BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
         BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
-		BOOST_STATIC_ASSERT((!itl::is_continuous<DomainT>::value));
+        BOOST_STATIC_ASSERT((!itl::is_continuous<DomainT>::value));
     }
 
     //NOTE: Compiler generated copy constructor is used
@@ -44,7 +44,7 @@ public:
     {
         BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
         BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
-		BOOST_STATIC_ASSERT((!itl::is_continuous<DomainT>::value));
+        BOOST_STATIC_ASSERT((!itl::is_continuous<DomainT>::value));
     }
 
     /** Interval from <tt>low</tt> to <tt>up</tt> with bounds <tt>bounds</tt> */
@@ -53,7 +53,7 @@ public:
     {
         BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
         BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
-		BOOST_STATIC_ASSERT((!itl::is_continuous<DomainT>::value));
+        BOOST_STATIC_ASSERT((!itl::is_continuous<DomainT>::value));
     }
 
     domain_type lower()const{ return _lwb; }
@@ -70,7 +70,7 @@ public:
     bool touches(const asymmetric_interval& x2)const
     { return domain_equal(_upb, succ(x2._lwb)); }
 
-	bool is_disjoint(const asymmetric_interval& x2)const //JODO ex
+    bool is_disjoint(const asymmetric_interval& x2)const //JODO ex
     { return exclusive_less(x2) || x2.exclusive_less(*this); }
 
     sub_type& extend(const sub_type& x2) //JODO ex
@@ -87,15 +87,15 @@ public:
         } 
     }
 
-	/** subtract \c left_minuend from the \c *this interval on it's left side. 
-		*this becomes the difference: The part of \c *this right of \c left_minuend.
-	\code
-	right_over = *this - left_minuend; //on the left.
-	...        d] : right
-	...c]         : left_minuend
-		 [c+1  d] : right_over = *this
-	\endcode
-	*/
+    /** subtract \c left_minuend from the \c *this interval on it's left side. 
+        *this becomes the difference: The part of \c *this right of \c left_minuend.
+    \code
+    right_over = *this - left_minuend; //on the left.
+    ...        d] : right
+    ...c]         : left_minuend
+         [c+1  d] : right_over = *this
+    \endcode
+    */
     sub_type& left_subtract(const sub_type& left_minuend)
     {
         if(!left_minuend.exclusive_less(*this))
@@ -104,15 +104,15 @@ public:
     }
 
 
-	/** subtract \c right_minuend from the \c *this interval on it's right side. 
-		*this becomes the difference: The part of \c *this right of \c right_minuend.
-	\code
-	left_over = *this - right_minuend; //on the right side.
-	[a         ...  : left
-		    [b ...  : right_minuend
-	[a  b-1]        : left_over = *this
-	\endcode
-	*/
+    /** subtract \c right_minuend from the \c *this interval on it's right side. 
+        *this becomes the difference: The part of \c *this right of \c right_minuend.
+    \code
+    left_over = *this - right_minuend; //on the right side.
+    [a         ...  : left
+            [b ...  : right_minuend
+    [a  b-1]        : left_over = *this
+    \endcode
+    */
     sub_type& right_subtract(const sub_type& right_minuend)
     {
         if(!exclusive_less(right_minuend))
@@ -120,11 +120,11 @@ public:
         return *that(); 
     }
 
-	/*JODO
-	[a           c]
-	        [b           d]
-	[a  b-1][b   c][c+1  d]
-	*/
+    /*JODO
+    [a           c]
+            [b           d]
+    [a  b-1][b   c][c+1  d]
+    */
     sub_type& operator &= (const sub_type& sectant)
     {
         _lwb = (std::max)(_lwb, sectant._lwb);
@@ -160,8 +160,8 @@ public:
 
     bool lower_equal(const sub_type& x2)const{ return _lwb==x2._lwb; }
     bool upper_equal(const sub_type& x2)const{ return _upb==x2._upb; }
-	bool lower_less (const sub_type& x2)const{ return domain_less(_lwb, x2._lwb); }
-	bool upper_less (const sub_type& x2)const{ return domain_less(_upb, x2._upb); }
+    bool lower_less (const sub_type& x2)const{ return domain_less(_lwb, x2._lwb); }
+    bool upper_less (const sub_type& x2)const{ return domain_less(_upb, x2._upb); }
 
 
 protected:

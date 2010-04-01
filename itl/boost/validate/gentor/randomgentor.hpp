@@ -352,7 +352,7 @@ namespace boost{namespace itl
         {
             gentor.setRangeOfSampleSize(GentorProfileSgl::it()->range_ContainerSize());
             map_segment_gentor<double,int,ITL_INTERVAL_DEFAULT<double> >* segment_gentor  
-				= new map_segment_gentor<double,int,ITL_INTERVAL_DEFAULT<double> >;
+                = new map_segment_gentor<double,int,ITL_INTERVAL_DEFAULT<double> >;
             NumberGentorT<int>* int_gentor = new NumberGentorT<int>;
             int_gentor->setRange(GentorProfileSgl::it()->range_int());
             segment_gentor->setCodomainGentor(int_gentor);
@@ -370,7 +370,7 @@ namespace boost{namespace itl
         {
             gentor.setRangeOfSampleSize(GentorProfileSgl::it()->range_ContainerSize());
             ItvGentorT<NumericT, ITL_INTERVAL_DEFAULT<NumericT> >* itvGentor  
-				= new ItvGentorT<NumericT, ITL_INTERVAL_DEFAULT<NumericT> >;
+                = new ItvGentorT<NumericT, ITL_INTERVAL_DEFAULT<NumericT> >;
             itvGentor->setRange(GentorProfileSgl_numeric_range<NumericT>::get());
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
             gentor.setDomainGentor(itvGentor);
@@ -413,7 +413,7 @@ namespace boost{namespace itl
         {
             gentor.setRangeOfSampleSize(GentorProfileSgl::it()->range_ContainerSize());
             map_segment_gentor<int,int,ITL_INTERVAL_DEFAULT<int> >* segment_gentor  
-				= new map_segment_gentor<int,int,ITL_INTERVAL_DEFAULT<int> >;
+                = new map_segment_gentor<int,int,ITL_INTERVAL_DEFAULT<int> >;
             NumberGentorT<int>* int_gentor = new NumberGentorT<int>;
             int_gentor->setRange(GentorProfileSgl::it()->range_int());
             segment_gentor->setCodomainGentor(int_gentor);
@@ -451,7 +451,7 @@ namespace boost{namespace itl
         }
     };
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     template <> 
     struct Calibrater<interval_set<int>, RandomGentor>
     {
@@ -459,7 +459,7 @@ namespace boost{namespace itl
         {
             gentor.setRangeOfSampleSize(GentorProfileSgl::it()->range_ContainerSize());
             ItvGentorT<int, ITL_INTERVAL_DEFAULT<int> >* itvGentor 
-				= new ItvGentorT<int, ITL_INTERVAL_DEFAULT<int> >;
+                = new ItvGentorT<int, ITL_INTERVAL_DEFAULT<int> >;
             interval<int> valRange = GentorProfileSgl::it()->range_interval_int();
             itvGentor->setValueRange(valRange.lower(), valRange.upper());
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
@@ -474,7 +474,7 @@ namespace boost{namespace itl
         {
             gentor.setRangeOfSampleSize(GentorProfileSgl::it()->range_ContainerSize());
             ItvGentorT<double, ITL_INTERVAL_DEFAULT<double> >* itvGentor 
-				= new ItvGentorT<double, ITL_INTERVAL_DEFAULT<double> >;
+                = new ItvGentorT<double, ITL_INTERVAL_DEFAULT<double> >;
             interval<double> valRange = GentorProfileSgl::it()->range_interval_double();
             itvGentor->setValueRange(valRange.lower(), valRange.upper());
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
@@ -489,7 +489,7 @@ namespace boost{namespace itl
         {
             gentor.setRangeOfSampleSize(GentorProfileSgl::it()->range_ContainerSize());
             ItvGentorT<int, ITL_INTERVAL_DEFAULT<int> >* itvGentor 
-				= new ItvGentorT<int, ITL_INTERVAL_DEFAULT<int> >;
+                = new ItvGentorT<int, ITL_INTERVAL_DEFAULT<int> >;
             interval<int> valRange = GentorProfileSgl::it()->range_interval_int();
             itvGentor->setValueRange(valRange.lower(), valRange.upper());
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
@@ -507,7 +507,7 @@ namespace boost{namespace itl
             // If it is a container: (Create and) Pass the generator(s) for their contents
             // NumberGentorT<int> intGentor;
             ItvGentorT<double, ITL_INTERVAL_DEFAULT<double> >* itvGentor 
-				= new ItvGentorT<double, ITL_INTERVAL_DEFAULT<double> >;
+                = new ItvGentorT<double, ITL_INTERVAL_DEFAULT<double> >;
             interval<double> valRange = GentorProfileSgl::it()->range_interval_double();
             itvGentor->setValueRange(valRange.lower(), valRange.upper());
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
@@ -526,7 +526,7 @@ namespace boost{namespace itl
             // If it is a container: (Create and) Pass the generator(s) for their contents
             // NumberGentorT<int> intGentor;
             ItvGentorT<int, ITL_INTERVAL_DEFAULT<int> >* itvGentor 
-				= new ItvGentorT<int, ITL_INTERVAL_DEFAULT<int> >;
+                = new ItvGentorT<int, ITL_INTERVAL_DEFAULT<int> >;
             interval<int> valRange = GentorProfileSgl::it()->range_interval_int();
             itvGentor->setValueRange(valRange.lower(), valRange.upper());
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
@@ -544,7 +544,7 @@ namespace boost{namespace itl
             // If it is a container: (Create and) Pass the generator(s) for their contents
             // NumberGentorT<int> intGentor;
             ItvGentorT<double, ITL_INTERVAL_DEFAULT<double> >* itvGentor 
-				= new ItvGentorT<double, ITL_INTERVAL_DEFAULT<double> >;
+                = new ItvGentorT<double, ITL_INTERVAL_DEFAULT<double> >;
             interval<double> valRange = GentorProfileSgl::it()->range_interval_double();
             itvGentor->setValueRange(valRange.lower(), valRange.upper());
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
@@ -587,7 +587,7 @@ namespace boost{namespace itl
         {
             gentor.setRangeOfSampleSize(GentorProfileSgl::it()->range_ContainerSize());
             ItvGentorT<int, ITL_INTERVAL_DEFAULT<int> >* itvGentor 
-				= new ItvGentorT<int, ITL_INTERVAL_DEFAULT<int> >;
+                = new ItvGentorT<int, ITL_INTERVAL_DEFAULT<int> >;
             interval<int> valRange = GentorProfileSgl::it()->range_interval_int();
             itvGentor->setValueRange(valRange.lower(), valRange.upper());
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
@@ -678,7 +678,7 @@ namespace boost{namespace itl
             // NumberGentorT<int> intGentor;
             //CL ItvGentorT<NumericDomainT>* itvGentor = new ItvGentorT<NumericDomainT>;
             ItvGentorT<NumericDomainT, ITL_INTERVAL_DEFAULT<NumericDomainT> >* itvGentor 
-				= new ItvGentorT<NumericDomainT, ITL_INTERVAL_DEFAULT<NumericDomainT> >;
+                = new ItvGentorT<NumericDomainT, ITL_INTERVAL_DEFAULT<NumericDomainT> >;
             interval<NumericDomainT> valRange = GentorProfileSgl_numeric_range<NumericDomainT>::get();
             itvGentor->setValueRange(valRange.lower(), valRange.upper());
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
@@ -706,7 +706,7 @@ namespace boost{namespace itl
             // If it is a container: (Create and) Pass the generator(s) for their contents
             // NumberGentorT<int> intGentor;
             ItvGentorT<NumericDomainT, ITL_INTERVAL_DEFAULT<NumericDomainT> >* itvGentor 
-				= new ItvGentorT<NumericDomainT, ITL_INTERVAL_DEFAULT<NumericDomainT> >;
+                = new ItvGentorT<NumericDomainT, ITL_INTERVAL_DEFAULT<NumericDomainT> >;
             interval<NumericDomainT> valRange = GentorProfileSgl_numeric_range<NumericDomainT>::get();
             itvGentor->setValueRange(valRange.lower(), valRange.upper());
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
@@ -732,7 +732,7 @@ namespace boost{namespace itl
             // If it is a container: (Create and) Pass the generator(s) for their contents
             // NumberGentorT<int> intGentor;
             ItvGentorT<NumericDomainT, ITL_INTERVAL_DEFAULT<NumericDomainT> >* itvGentor 
-				= new ItvGentorT<NumericDomainT, ITL_INTERVAL_DEFAULT<NumericDomainT> >;
+                = new ItvGentorT<NumericDomainT, ITL_INTERVAL_DEFAULT<NumericDomainT> >;
             interval<NumericDomainT> valRange = GentorProfileSgl_numeric_range<NumericDomainT>::get();
             itvGentor->setValueRange(valRange.lower(), valRange.upper());
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
@@ -761,7 +761,7 @@ namespace boost{namespace itl
             // If it is a container: (Create and) Pass the generator(s) for their contents
             // NumberGentorT<int> intGentor;
             ItvGentorT<NumericDomainT, ITL_INTERVAL_DEFAULT<NumericDomainT> >* itvGentor 
-				= new ItvGentorT<NumericDomainT, ITL_INTERVAL_DEFAULT<NumericDomainT> >;
+                = new ItvGentorT<NumericDomainT, ITL_INTERVAL_DEFAULT<NumericDomainT> >;
             interval<NumericDomainT> valRange = GentorProfileSgl_numeric_range<NumericDomainT>::get();
             itvGentor->setValueRange(valRange.lower(), valRange.upper());
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
@@ -788,7 +788,7 @@ namespace boost{namespace itl
             // If it is a container: (Create and) Pass the generator(s) for their contents
             // NumberGentorT<int> intGentor;
             ItvGentorT<NumericDomainT, ITL_INTERVAL_DEFAULT<NumericDomainT> >* itvGentor 
-				= new ItvGentorT<NumericDomainT, ITL_INTERVAL_DEFAULT<NumericDomainT> >;
+                = new ItvGentorT<NumericDomainT, ITL_INTERVAL_DEFAULT<NumericDomainT> >;
             interval<NumericDomainT> valRange = GentorProfileSgl_numeric_range<NumericDomainT>::get();
             itvGentor->setValueRange(valRange.lower(), valRange.upper());
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
@@ -814,7 +814,7 @@ namespace boost{namespace itl
             // If it is a container: (Create and) Pass the generator(s) for their contents
             // NumberGentorT<int> intGentor;
             ItvGentorT<NumericDomainT, ITL_INTERVAL_DEFAULT<NumericDomainT> >* itvGentor 
-				= new ItvGentorT<NumericDomainT, ITL_INTERVAL_DEFAULT<NumericDomainT> >;
+                = new ItvGentorT<NumericDomainT, ITL_INTERVAL_DEFAULT<NumericDomainT> >;
             interval<NumericDomainT> valRange = GentorProfileSgl_numeric_range<NumericDomainT>::get();
             itvGentor->setValueRange(valRange.lower(), valRange.upper());
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
@@ -838,7 +838,7 @@ namespace boost{namespace itl
             // If it is a container: (Create and) Pass the generator(s) for their contents
             // NumberGentorT<int> intGentor;
             ItvGentorT<NumericDomainT, ITL_INTERVAL_DEFAULT<NumericDomainT> >* itvGentor 
-				= new ItvGentorT<NumericDomainT, ITL_INTERVAL_DEFAULT<NumericDomainT> >;
+                = new ItvGentorT<NumericDomainT, ITL_INTERVAL_DEFAULT<NumericDomainT> >;
             interval<NumericDomainT> valRange = GentorProfileSgl_numeric_range<NumericDomainT>::get();
             itvGentor->setValueRange(valRange.lower(), valRange.upper());
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());

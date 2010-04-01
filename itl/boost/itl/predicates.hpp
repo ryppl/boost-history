@@ -35,7 +35,7 @@ namespace boost{namespace itl
         bool(Type::* m_pred)()const;
     } ;
 
-	//JODO this clashes with function template itl::empty(IntervalT)
+    //JODO this clashes with function template itl::empty(IntervalT)
     //template <class Type>
     //class empty: public property<Type>
     //{

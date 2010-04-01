@@ -42,13 +42,13 @@ namespace boost{ namespace itl
     template <class Type> struct is_continuous
     {
         typedef is_continuous<Type> type;
-		BOOST_STATIC_CONSTANT(bool, value = false);
-			//JODO Meta Fortsetzung des Praedikats auf interval<Type> etc.
-			//  so nicht, vielleicht anders? Meta lambda?
-			//value = (mpl::and_<has_domain<Type>::value, 
-			//			       is_continuous<typename Type::domain_type>
-			//		          >::value
-			//		 ));
+        BOOST_STATIC_CONSTANT(bool, value = false);
+            //JODO Meta Fortsetzung des Praedikats auf interval<Type> etc.
+            //  so nicht, vielleicht anders? Meta lambda?
+            //value = (mpl::and_<has_domain<Type>::value, 
+            //                   is_continuous<typename Type::domain_type>
+            //                  >::value
+            //         ));
     };
 
 }} // namespace boost itl
