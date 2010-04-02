@@ -46,6 +46,14 @@ struct convert_to_internal_row
     typedef Internal<typename TEMP_ROW::Evt,
                      typename TEMP_ROW::Action,typename TEMP_ROW::Guard> type;
 };
+// explicit + fork + entry point + exit point grammar
+struct BuildEntry
+    : proto::when<
+                    proto::function<proto::terminal<proto::_>,proto::terminal<state_tag>,proto::terminal<state_tag> >,
+                    get_fct<proto::_child_c<0>,proto::_child_c<1>,proto::_child_c<2> >()
+        >
+{};
+
 // row grammar
 struct BuildNextStates
    : proto::or_<
@@ -53,17 +61,21 @@ struct BuildNextStates
                     proto::terminal<state_tag>,
                     proto::_
         >,
-        proto::when <
-                    proto::comma<proto::terminal<state_tag>,proto::terminal<state_tag> >,
+        proto::when<
+                      BuildEntry,
+                      BuildEntry
+        >,
+        proto::when<
+                    proto::comma<BuildEntry,BuildEntry >,
                     ::boost::mpl::push_back<
-                        make_vector_one_row<proto::_left>(),
-                        proto::_right>()
-		>,
+                        make_vector_one_row<BuildEntry(proto::_left)>(),
+                        BuildEntry(proto::_right)>()
+        >,
         proto::when <
-                    proto::comma<BuildNextStates,proto::terminal<state_tag> >,
+                    proto::comma<BuildNextStates,BuildEntry >,
                     ::boost::mpl::push_back<
                                 BuildNextStates(proto::_left),
-						        proto::_right >()                
+						        BuildEntry(proto::_right) >()                
 		>
    >
 {};
@@ -99,10 +111,23 @@ struct BuildEventPlusGuard
         >
 {};
 
+struct BuildSourceState
+   : proto::or_<
+        proto::when<
+                    proto::terminal<state_tag>,
+                    proto::_
+        >,
+        proto::when<
+                    BuildEntry,
+                    BuildEntry
+        >
+   >
+{};
+
 struct BuildSourcePlusGuard
     : proto::when<
-            proto::subscript<proto::terminal<state_tag>,BuildGuards >,
-            TempRow<proto::_left,none,none,none,BuildGuards(proto::_right)>()
+            proto::subscript<BuildSourceState,BuildGuards >,
+            TempRow<BuildSourceState(proto::_left),none,none,none,BuildGuards(proto::_right)>()
         >
 {};
 
@@ -135,17 +160,17 @@ struct BuildSource
     : proto::or_<
         // after == if just state without event or guard/action
          proto::when<
-                proto::terminal<state_tag>,
-                TempRow<proto::_,none,none>() >
+                BuildSourceState,
+                TempRow<BuildSourceState(proto::_),none,none>() >
         // == source / action
        , proto::when<
-                proto::divides<proto::terminal<state_tag>,BuildActionSequence >,
-                TempRow<proto::_left,none,none,
+                proto::divides<BuildSourceState,BuildActionSequence >,
+                TempRow<BuildSourceState(proto::_left),none,none,
 					    BuildActionSequence(proto::_right) >() >
         // == source [ guard ]
        , proto::when<
-                proto::subscript<proto::terminal<state_tag>,BuildGuards >,
-                TempRow<proto::_left,none,none,none,BuildGuards(proto::_right)>() >
+                proto::subscript<BuildSourceState,BuildGuards >,
+                TempRow<BuildSourceState(proto::_left),none,none,none,BuildGuards(proto::_right)>() >
         // == source [ guard ] / action 
        , proto::when<
                 proto::divides<BuildSourcePlusGuard,
