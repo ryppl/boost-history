@@ -1932,7 +1932,6 @@ BOOST_PP_REPEAT(BOOST_PP_ADD(BOOST_MSM_VISITOR_ARG_SIZE,1), MSM_VISITOR_ARGS_EXE
              void operator()( ::boost::msm::wrap<StateType> const& )
              {
                  int state_id = get_state_id<stt,StateType>::value;
-                 int index = StateType::zone_index;
                  BOOST_STATIC_ASSERT(StateType::zone_index >= 0);
                  BOOST_STATIC_ASSERT(StateType::zone_index <= nr_regions::value);
                  helper_self->m_states[StateType::zone_index] = state_id;
