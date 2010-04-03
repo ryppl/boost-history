@@ -6,8 +6,8 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_GEOMETRY_ALGORITHMS_SECTIONALIZE_HPP
-#define BOOST_GEOMETRY_ALGORITHMS_SECTIONALIZE_HPP
+#ifndef BOOST_GEOMETRY_ALGORITHMS_DETAIL_SECTIONS_SECTIONALIZE_HPP
+#define BOOST_GEOMETRY_ALGORITHMS_DETAIL_SECTIONS_SECTIONALIZE_HPP
 
 #include <cstddef>
 #include <vector>
@@ -61,7 +61,9 @@ struct section
 {
     typedef Box box_type;
 
-    int id;
+    // unique ID used in get_turns to mark section-pairs already handled.
+    int id; 
+
     int directions[DimensionCount];
     int ring_index;
     int multi_index;
@@ -109,7 +111,7 @@ struct sections : std::vector<section<Box, DimensionCount> >
 
 
 #ifndef DOXYGEN_NO_DETAIL
-namespace detail { namespace sectionalize 
+namespace detail { namespace sectionalize
 {
 
 template <typename Segment, std::size_t Dimension, std::size_t DimensionCount>
@@ -263,16 +265,12 @@ struct sectionalize_part
     typedef typename boost::range_iterator<Range const>::type iterator_type;
 
     static inline void apply(Sections& sections, section_type& section,
-                std::size_t& index, int& ndi, 
-                Range const& range, 
+                int& index, int& ndi,
+                Range const& range,
                 int ring_index = -1, int multi_index = -1)
     {
-
-        std::size_t const n = boost::size(range);
-        if (n <= index + 1)
+        if (boost::size(range) <= index)
         {
-            // Zero points, or only one point
-            // -> no section can be generated
             return;
         }
 
@@ -393,7 +391,7 @@ struct sectionalize_range
             return;
         }
 
-        std::size_t index = 0;
+        int index = 0;
         int ndi = 0; // non duplicate index
 
         typedef typename boost::range_value<Sections>::type section_type;
@@ -403,7 +401,7 @@ struct sectionalize_range
             <
                 Range, Point, Sections,
                 DimensionCount, MaxCount
-            >::apply(sections, section, index, ndi, 
+            >::apply(sections, section, index, ndi,
                         range, ring_index, multi_index);
 
         // Add last section if applicable
@@ -491,6 +489,20 @@ struct sectionalize_box
             >::apply(points, sections);
     }
 };
+
+template <typename Sections>
+inline void set_section_unique_ids(Sections& sections)
+{
+    // Set ID's. 
+    int index = 0;
+    for (typename boost::range_iterator<Sections>::type it = boost::begin(sections);
+        it != boost::end(sections);
+        ++it)
+    {
+        it->id = index++;
+    }
+}
+
 
 }} // namespace detail::sectionalize
 #endif // DOXYGEN_NO_DETAIL
@@ -601,7 +613,7 @@ struct sectionalize<polygon_tag, Polygon, Sections, DimensionCount, MaxCount>
 template<typename Geometry, typename Sections>
 inline void sectionalize(Geometry const& geometry, Sections& sections)
 {
-    concept::check<const Geometry>();
+    concept::check<Geometry const>();
 
     // A maximum of 10 segments per section seems to give the fastest results
     static const std::size_t max_segments_per_section = 10;
@@ -616,17 +628,11 @@ inline void sectionalize(Geometry const& geometry, Sections& sections)
 
     sections.clear();
     sectionalizer_type::apply(geometry, sections);
-    int index = 0;
-    for (typename boost::range_iterator<Sections>::type it = boost::begin(sections);
-        it != boost::end(sections);
-        ++it)
-    {
-        it->id = index++;
-    }
+    detail::sectionalize::set_section_unique_ids(sections);
 }
 
 
 }} // namespace boost::geometry
 
 
-#endif // BOOST_GEOMETRY_ALGORITHMS_SECTIONALIZE_HPP
+#endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_SECTIONS_SECTIONALIZE_HPP
