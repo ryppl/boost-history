@@ -72,7 +72,8 @@ BOOST_AUTO_TEST_CASE
 (fastest_itl_interval_subtract_4_bicremental_types)
 {            interval_subtract_4_bicremental_types<bicremental_type_5>(); }
 
+/*JODO
 BOOST_AUTO_TEST_CASE
 (fastest_itl_interval_inner_complement_4_bicremental_types)
 {            interval_inner_complement_4_bicremental_types<bicremental_type_6>(); }
-
+*/

@@ -21,7 +21,7 @@ template
 <
     typename             DomainT, 
     ITL_COMPARE Compare  = ITL_COMPARE_INSTANCE(std::less, DomainT),
-    template<class,ITL_COMPARE>class Interval = ITL_INTERVAL_DEFAULT,
+    ITL_INTERVAL(ITL_COMPARE) Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, DomainT, Compare),
     ITL_ALLOC   Alloc    = std::allocator
 > 
 class split_interval_set: 
@@ -43,7 +43,7 @@ public:
     /// The element type of the set
     typedef DomainT   element_type;
     /// The interval type of the set
-    typedef Interval<DomainT,Compare> interval_type;
+    typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare) interval_type;
     /// The segment type of the set
     typedef interval_type   segment_type;
 
@@ -144,7 +144,7 @@ private:
 } ;
 
 
-template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+template <typename DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 inline void split_interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& addend)
 {
     if(itl::is_empty(addend)) return;
@@ -167,7 +167,7 @@ inline void split_interval_set<DomainT,Compare,Interval,Alloc>::add_(const value
 }
 
 
-template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+template <typename DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 inline typename split_interval_set<DomainT,Compare,Interval,Alloc>::iterator
     split_interval_set<DomainT,Compare,Interval,Alloc>::add_(iterator prior_, const value_type& addend)
 {
@@ -197,7 +197,7 @@ inline typename split_interval_set<DomainT,Compare,Interval,Alloc>::iterator
 }
 
 
-template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+template <typename DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 inline void split_interval_set<DomainT,Compare,Interval,Alloc>
     ::add_front(const interval_type& inter_val, iterator& first_)
 {
@@ -223,7 +223,7 @@ inline void split_interval_set<DomainT,Compare,Interval,Alloc>
 }
 
 
-template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+template <typename DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 inline void split_interval_set<DomainT,Compare,Interval,Alloc>
     ::add_main(interval_type& x_rest, iterator& it_, const iterator& last_)
 {
@@ -238,7 +238,7 @@ inline void split_interval_set<DomainT,Compare,Interval,Alloc>
 }
 
 
-template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+template <typename DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 inline void split_interval_set<DomainT,Compare,Interval,Alloc>
     ::add_segment(const interval_type& inter_val, iterator& it_)
 {
@@ -254,7 +254,7 @@ inline void split_interval_set<DomainT,Compare,Interval,Alloc>
 }
 
 
-template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+template <typename DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 inline void split_interval_set<DomainT,Compare,Interval,Alloc>
     ::add_rear(const interval_type& inter_val, iterator& it_)
 {
@@ -288,7 +288,7 @@ inline void split_interval_set<DomainT,Compare,Interval,Alloc>
 }
 
 
-template<class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+template<class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 inline void split_interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const value_type& minuend)
 {
     if(itl::is_empty(minuend)) return;
@@ -321,7 +321,7 @@ inline void split_interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const 
     NOTE: This is not inline with the mathematical view.
     We have a distinction between 'element equality' and 'lexicographical 
     equality'.    */
-template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+template <typename DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 inline bool operator == (const split_interval_set<DomainT,Compare,Interval,Alloc>& lhs,
                          const split_interval_set<DomainT,Compare,Interval,Alloc>& rhs)
 {
@@ -331,21 +331,21 @@ inline bool operator == (const split_interval_set<DomainT,Compare,Interval,Alloc
 //-----------------------------------------------------------------------------
 // type traits
 //-----------------------------------------------------------------------------
-template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+template <class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 struct is_set<itl::split_interval_set<DomainT,Compare,Interval,Alloc> >
 { 
     typedef is_set<itl::split_interval_set<DomainT,Compare,Interval,Alloc> > type;
     BOOST_STATIC_CONSTANT(bool, value = true); 
 };
 
-template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+template <class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 struct is_interval_container<itl::split_interval_set<DomainT,Compare,Interval,Alloc> >
 { 
     typedef is_interval_container<itl::split_interval_set<DomainT,Compare,Interval,Alloc> > type;
     BOOST_STATIC_CONSTANT(bool, value = true); 
 };
 
-template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+template <class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 struct is_interval_splitter<itl::split_interval_set<DomainT,Compare,Interval,Alloc> >
 { 
     typedef is_interval_splitter<itl::split_interval_set<DomainT,Compare,Interval,Alloc> > type;
@@ -355,7 +355,7 @@ struct is_interval_splitter<itl::split_interval_set<DomainT,Compare,Interval,All
 //-----------------------------------------------------------------------------
 // type representation
 //-----------------------------------------------------------------------------
-template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+template <class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 struct type_to_string<itl::split_interval_set<DomainT,Compare,Interval,Alloc> >
 {
     static std::string apply()

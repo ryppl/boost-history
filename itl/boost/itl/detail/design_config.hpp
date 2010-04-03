@@ -28,10 +28,12 @@ by setting defines in this file.
 #define ITL_USE_COMPARE_TEMPLATE_TEMPLATE
 #define ITL_USE_COMBINE_TEMPLATE_TEMPLATE
 #define ITL_USE_SECTION_TEMPLATE_TEMPLATE
+//#define ITL_USE_INTERVAL_TEMPLATE_TEMPLATE
 
 //#define ITL_USE_COMPARE_TEMPLATE_TYPE
 //#define ITL_USE_COMBINE_TEMPLATE_TYPE
 //#define ITL_USE_SECTION_TEMPLATE_TYPE
+#define ITL_USE_INTERVAL_TEMPLATE_TYPE
 
 //------------------------------------------------------------------------------
 // template parameter Compare can not be a template type parameter as long as
@@ -73,9 +75,25 @@ by setting defines in this file.
 #   define ITL_SECTION_INSTANCE(section_instance,codomain_type) section_instance<codomain_type>
 #endif
 
+
+//------------------------------------------------------------------------------
+// template parameter Interval could be a template type parameter.
+#ifdef ITL_USE_INTERVAL_TEMPLATE_TEMPLATE
+#   define ITL_INTERVAL(itl_compare) template<class,itl_compare>class
+#   define ITL_INTERVAL2(itl_compare) template<class DomT2,itl_compare>class
+#   define ITL_INTERVAL_TYPE(itl_interval, domain_type, itl_compare) itl_interval<domain_type,itl_compare> 
+#   define ITL_INTERVAL_INSTANCE(interval_instance,domain_type,itl_compare) interval_instance
+#else//ITL_USE_SECTION_TEMPLATE_TYPE
+#   define ITL_INTERVAL(itl_compare) class
+#   define ITL_INTERVAL2(itl_compare) class
+#   define ITL_INTERVAL_TYPE(itl_interval, domain_type, itl_compare) itl_interval  
+#   define ITL_INTERVAL_INSTANCE(interval_instance,domain_type,itl_compare) interval_instance<domain_type,itl_compare>
+#endif
+
+
 //------------------------------------------------------------------------------
 //#define ITL_INTERVAL_DEFAULT itl::rightopen_interval
-#define ITL_INTERVAL_DEFAULT itl::interval
+#define ITL_INTERVAL_DEFAULT boost::itl::interval
 //#define ITL_INTERVAL_DEFAULT itl::continuous_interval
 
 //------------------------------------------------------------------------------

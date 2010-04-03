@@ -28,8 +28,8 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/type_traits/unon.hpp>
 #include <boost/itl/type_traits/infinity.hpp>
 #include <boost/itl/type_traits/is_continuous.hpp>
-#include <boost/itl/type_traits/difference.hpp>
-#include <boost/itl/type_traits/size.hpp>
+#include <boost/itl/type_traits/difference_type_of.hpp>
+#include <boost/itl/type_traits/size_type_of.hpp>
 #include <boost/itl/type_traits/value_size.hpp>
 #include <boost/itl/type_traits/to_string.hpp>
 #include <boost/itl/type_traits/is_universal_interval.hpp>
@@ -92,10 +92,10 @@ public:
     typedef domain_compare key_compare;
 
     /// The difference type of an interval which is sometimes different form the domain_type
-    typedef typename itl::difference<DomainT>::type difference_type;
+    typedef typename itl::difference_type_of<DomainT>::type difference_type;
 
     /// The size type of an interval which is mostly std::size_t
-    typedef typename itl::size<DomainT>::type size_type;
+    typedef typename itl::size_type_of<DomainT>::type size_type;
 
 public:
     //==========================================================================
@@ -955,7 +955,7 @@ inline DomainT interval<DomainT,Compare>::last()const
 // typename interval<DomainT,Compare>::size_type
 
 template <class DomainT, ITL_COMPARE Compare>
-inline typename itl::size<DomainT>::type interval<DomainT,Compare>::cardinality()const
+inline typename itl::size_type_of<DomainT>::type interval<DomainT,Compare>::cardinality()const
 {
     using namespace boost::mpl;
     return if_<
@@ -1060,9 +1060,9 @@ left_over = left - right_minuend; //on the right side.
 [a  b)       : left_over
 \endcode
 */
-//CL template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval>
-//inline Interval<DomainT,Compare> right_subtract(Interval<DomainT,Compare>  left, 
-//                                          const Interval<DomainT,Compare>& right_minuend)
+//CL template <class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval>
+//inline ITL_INTERVAL_TYPE(Interval,DomainT,Compare) right_subtract(ITL_INTERVAL_TYPE(Interval,DomainT,Compare)  left, 
+//                                          const ITL_INTERVAL_TYPE(Interval,DomainT,Compare)& right_minuend)
 //{
 //    return left.right_subtract(right_minuend);
 //}
@@ -1076,9 +1076,9 @@ right_over = right - left_minuend; //on the left.
      [c  d) : right_over
 \endcode
 */
-//CL template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval>
-//inline Interval<DomainT,Compare> left_subtract(Interval<DomainT,Compare>  right, 
-//                                         const Interval<DomainT,Compare>& left_minuend)
+//CL template <class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval>
+//inline ITL_INTERVAL_TYPE(Interval,DomainT,Compare) left_subtract(ITL_INTERVAL_TYPE(Interval,DomainT,Compare)  right, 
+//                                         const ITL_INTERVAL_TYPE(Interval,DomainT,Compare)& left_minuend)
 //{
 //    return right.left_subtract(left_minuend);
 //}
@@ -1088,9 +1088,9 @@ right_over = right - left_minuend; //on the left.
 //==============================================================================
 
 /** Returns the intersection of \c left and \c right interval. */
-//CL template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval>
-//inline Interval<DomainT,Compare> operator & (Interval<DomainT,Compare>  left, 
-//                                       const Interval<DomainT,Compare>& right)
+//CL template <class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval>
+//inline ITL_INTERVAL_TYPE(Interval,DomainT,Compare) operator & (ITL_INTERVAL_TYPE(Interval,DomainT,Compare)  left, 
+//                                       const ITL_INTERVAL_TYPE(Interval,DomainT,Compare)& right)
 //{
 //    return left &= right;
 //}
@@ -1116,16 +1116,17 @@ inline bool is_disjoint(const itl::interval<DomainT,Compare>& left,
 //==============================================================================
 
 template <class DomainT, ITL_COMPARE Compare, 
-          template<class,ITL_COMPARE>class Interval>
-Interval<DomainT,Compare> inner_complement(const Interval<DomainT,Compare>& left,
-                                           const Interval<DomainT,Compare>& right)
+          ITL_INTERVAL(ITL_COMPARE)  Interval>
+ITL_INTERVAL_TYPE(Interval,DomainT,Compare) 
+    inner_complement(const ITL_INTERVAL_TYPE(Interval,DomainT,Compare)& left,
+                     const ITL_INTERVAL_TYPE(Interval,DomainT,Compare)& right)
 {
     if(left.exclusive_less(right))
         return hull(left, right).left_subtract(left).right_subtract(right);
     else if(right.exclusive_less(left))
         return hull(right, left).left_subtract(right).right_subtract(left);
     else
-        return neutron<Interval<DomainT,Compare> >::value();
+        return neutron<ITL_INTERVAL_TYPE(Interval,DomainT,Compare) >::value();
 }
 
 //==============================================================================
@@ -1133,10 +1134,10 @@ Interval<DomainT,Compare> inner_complement(const Interval<DomainT,Compare>& left
 //==============================================================================
 
 template <class DomainT, ITL_COMPARE Compare, 
-          template<class,ITL_COMPARE>class Interval>
-inline typename Interval<DomainT,Compare>::difference_type 
-   distance(const Interval<DomainT,Compare>& left,
-            const Interval<DomainT,Compare>& right)
+          ITL_INTERVAL(ITL_COMPARE)  Interval>
+inline typename ITL_INTERVAL_TYPE(Interval,DomainT,Compare)::difference_type 
+   distance(const ITL_INTERVAL_TYPE(Interval,DomainT,Compare)& left,
+            const ITL_INTERVAL_TYPE(Interval,DomainT,Compare)& right)
 {
     using namespace boost::mpl;
     return if_<
@@ -1148,9 +1149,9 @@ inline typename Interval<DomainT,Compare>::difference_type
 }
 
 template <class DomainT, ITL_COMPARE Compare, 
-          template<class,ITL_COMPARE>class Interval>
-inline typename Interval<DomainT,Compare>::difference_type 
-    length(const Interval<DomainT,Compare>& inter_val)
+          ITL_INTERVAL(ITL_COMPARE)  Interval>
+inline typename ITL_INTERVAL_TYPE(Interval,DomainT,Compare)::difference_type 
+    length(const ITL_INTERVAL_TYPE(Interval,DomainT,Compare)& inter_val)
 {
     using namespace boost::mpl;
     return if_<

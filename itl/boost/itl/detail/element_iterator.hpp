@@ -73,28 +73,56 @@ struct is_reverse<itl::element_iterator<BaseIteratorT> >
 template<class SegmentT>
 struct elemental;
 
-template<class DomainT, ITL_COMPARE Compare, template<class, ITL_COMPARE>class Interval>
-struct elemental<Interval<DomainT,Compare> >
-{
-    typedef Interval<DomainT,Compare> segment_type;
-    typedef segment_type              interval_type;
-    typedef DomainT                   type;
-    typedef DomainT                   domain_type;
-    typedef DomainT                   codomain_type;
-    typedef DomainT                   transit_type;
-};
+#ifdef ITL_USE_INTERVAL_TEMPLATE_TEMPLATE
 
-template< class DomainT, class CodomainT, 
-          ITL_COMPARE Compare, template<class, ITL_COMPARE>class Interval >
-struct elemental<std::pair<Interval<DomainT,Compare>const, CodomainT> >
-{
-    typedef std::pair<Interval<DomainT,Compare>, CodomainT> segment_type;
-    typedef Interval<DomainT,Compare>                       interval_type;
-    typedef std::pair<DomainT, CodomainT>                   type;
-    typedef DomainT                                         domain_type;
-    typedef CodomainT                                       codomain_type;
-    typedef mapped_reference<DomainT, CodomainT>            transit_type;
-};
+	template<class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval>
+	struct elemental<ITL_INTERVAL_TYPE(Interval,DomainT,Compare) >
+	{
+		typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare) segment_type;
+		typedef segment_type              interval_type;
+		typedef DomainT                   type;
+		typedef DomainT                   domain_type;
+		typedef DomainT                   codomain_type;
+		typedef DomainT                   transit_type;
+	};
+
+	template< class DomainT, class CodomainT, 
+			  ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval >
+	struct elemental<std::pair<ITL_INTERVAL_TYPE(Interval,DomainT,Compare)const, CodomainT> >
+	{
+		typedef std::pair<ITL_INTERVAL_TYPE(Interval,DomainT,Compare), CodomainT> segment_type;
+		typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare)                       interval_type;
+		typedef std::pair<DomainT, CodomainT>                   type;
+		typedef DomainT                                         domain_type;
+		typedef CodomainT                                       codomain_type;
+		typedef mapped_reference<DomainT, CodomainT>            transit_type;
+	};
+
+#else //ITL_USE_INTERVAL_TEMPLATE_TYPE
+
+	template<ITL_INTERVAL(ITL_COMPARE) Interval>
+	struct elemental
+	{
+		typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare) segment_type;
+		typedef segment_type                        interval_type;
+		typedef typename interval_type::domain_type domain_type;
+		typedef domain_type                         type;
+		typedef domain_type                         codomain_type;
+		typedef domain_type                         transit_type;
+	};
+
+	template< class CodomainT, ITL_INTERVAL(ITL_COMPARE) Interval >
+	struct elemental<std::pair<ITL_INTERVAL_TYPE(Interval,DomainT,Compare)const, CodomainT> >
+	{
+		typedef std::pair<ITL_INTERVAL_TYPE(Interval,DomainT,Compare), CodomainT> segment_type;
+		typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare)                       interval_type;
+		typedef typename interval_type::domain_type             domain_type;
+		typedef CodomainT                                       codomain_type;
+		typedef std::pair<domain_type, codomain_type>           type;
+		typedef mapped_reference<domain_type, codomain_type>    transit_type;
+	};
+
+#endif //ITL_USE_INTERVAL_TEMPLATE_TEMPLATE
 
 
 //------------------------------------------------------------------------------
@@ -103,11 +131,13 @@ struct elemental<std::pair<Interval<DomainT,Compare>const, CodomainT> >
 template<class SegmentIteratorT, class SegmentT>
 struct segment_adapter;
 
-template<class SegmentIteratorT, class DomainT, ITL_COMPARE Compare, template<class, ITL_COMPARE>class Interval>
-struct segment_adapter<SegmentIteratorT, Interval<DomainT,Compare> >
+#ifdef ITL_USE_INTERVAL_TEMPLATE_TEMPLATE
+
+template<class SegmentIteratorT, class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval>
+struct segment_adapter<SegmentIteratorT, ITL_INTERVAL_TYPE(Interval,DomainT,Compare) >
 {
     typedef segment_adapter                         type;
-    typedef Interval<DomainT,Compare>               segment_type;
+    typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare) segment_type;
     typedef segment_type                            interval_type;
     typedef typename interval_type::difference_type domain_difference_type;
     typedef DomainT                                 domain_type;
@@ -129,11 +159,11 @@ struct segment_adapter<SegmentIteratorT, Interval<DomainT,Compare> >
 };
 
 template < class SegmentIteratorT, class DomainT, class CodomainT, 
-           ITL_COMPARE Compare, template<class, ITL_COMPARE>class Interval >
-struct segment_adapter<SegmentIteratorT, std::pair<Interval<DomainT,Compare>const, CodomainT> >
+           ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval >
+struct segment_adapter<SegmentIteratorT, std::pair<ITL_INTERVAL_TYPE(Interval,DomainT,Compare)const, CodomainT> >
 {
     typedef segment_adapter                         type;
-    typedef Interval<DomainT,Compare>               interval_type;
+    typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare)               interval_type;
     typedef typename interval_type::difference_type domain_difference_type;
     typedef DomainT                                 domain_type;
     typedef std::pair<DomainT, CodomainT>           element_type;
@@ -153,6 +183,58 @@ struct segment_adapter<SegmentIteratorT, std::pair<Interval<DomainT,Compare>cons
     }
 };
 
+#else // ITL_USE_INTERVAL_TEMPLATE_TYPE
+
+template<class SegmentIteratorT, ITL_INTERVAL(ITL_COMPARE) Interval>
+struct segment_adapter //CL <SegmentIteratorT, ITL_INTERVAL_TYPE(Interval,DomainT,Compare) >
+{
+    typedef segment_adapter                         type;
+    typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare) segment_type;
+    typedef segment_type                            interval_type;
+    typedef typename interval_type::difference_type domain_difference_type;
+    typedef typename interval_type::domain_type     domain_type;
+    typedef domain_type                             codomain_type;
+    typedef domain_type                             element_type;
+    typedef domain_type&                            transit_type;
+
+    static domain_type     first (const SegmentIteratorT& leaper){ return leaper->first(); } 
+    static domain_type     last  (const SegmentIteratorT& leaper){ return leaper->last();  } 
+    static domain_difference_type length(const SegmentIteratorT& leaper){ return leaper->length();}
+
+    static transit_type transient_element(domain_type& inter_pos, const SegmentIteratorT& leaper, 
+                                          const domain_difference_type& sneaker)
+    { 
+        inter_pos = is_reverse<SegmentIteratorT>::value ? leaper->last()  - sneaker
+                                                        : leaper->first() + sneaker;
+        return inter_pos; 
+    }
+};
+
+template < class SegmentIteratorT, class CodomainT, ITL_INTERVAL(ITL_COMPARE) Interval >
+struct segment_adapter<SegmentIteratorT, std::pair<ITL_INTERVAL_TYPE(Interval,DomainT,Compare)const, CodomainT> >
+{
+    typedef segment_adapter                             type;
+    typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare) interval_type;
+    typedef typename interval_type::domain_type         domain_type;
+    typedef typename interval_type::difference_type     domain_difference_type;
+    typedef CodomainT                                   codomain_type;
+    typedef std::pair<domain_type, codomain_type>       element_type;
+    typedef mapped_reference<domain_type, CodomainT>    transit_type;    
+
+    static domain_type     first (const SegmentIteratorT& leaper){ return leaper->first.first(); } 
+    static domain_type     last  (const SegmentIteratorT& leaper){ return leaper->first.last();  } 
+    static domain_difference_type length(const SegmentIteratorT& leaper){ return leaper->first.length();}
+
+    static transit_type transient_element(domain_type& inter_pos, const SegmentIteratorT& leaper,
+                                          const domain_difference_type& sneaker)
+    {
+        inter_pos = is_reverse<SegmentIteratorT>::value ? leaper->first.last()  - sneaker
+                                                        : leaper->first.first() + sneaker;
+        return transit_type(inter_pos, leaper->second); 
+    }
+};
+
+#endif // ITL_USE_INTERVAL_TEMPLATE_TEMPLATE
 
 template <class SegmentIteratorT>
 class element_iterator

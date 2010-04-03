@@ -81,12 +81,20 @@ BOOST_AUTO_TEST_CASE(digits_to_check_numerics) //JODO Proto: properties of infin
 }
 */
 
-#include <boost/itl/rightopen_interval.hpp>
-#include <boost/itl/type_traits/is_asymmetric_interval.hpp>
+#include <boost/itl/continuous_interval.hpp>
+#include <boost/itl/type_traits/is_continuous_interval.hpp>
+
+
+BOOST_AUTO_TEST_CASE(interval_type_traits)
+{
+    BOOST_CHECK_EQUAL(is_interval<continuous_interval<int> >::value, true);
+    BOOST_CHECK_EQUAL(is_continuous_interval<continuous_interval<int> >::value, false);
+    BOOST_CHECK_EQUAL(is_continuous_interval<continuous_interval<double> >::value, true);
+}
 
 BOOST_AUTO_TEST_CASE(casual)
 {
-    BOOST_CHECK_EQUAL(is_interval<rightopen_interval<int> >::value, true);
-    BOOST_CHECK_EQUAL(is_asymmetric_interval<rightopen_interval<int> >::value, true);
+	continuous_interval<double> conterval;
+	BOOST_CHECK_EQUAL(itl::is_empty(conterval), true);
 }
 

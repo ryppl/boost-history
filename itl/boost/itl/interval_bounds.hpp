@@ -8,7 +8,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #ifndef BOOST_ITL_INTERVAL_BOUNDS_HPP_JOFA_100330
 #define BOOST_ITL_INTERVAL_BOUNDS_HPP_JOFA_100330
 
-#include <boost/itl/detail/base_interval.hpp>
+#include <boost/utility/enable_if.hpp>
+#include <boost/itl/type_traits/has_dynamic_bounds.hpp>
 
 namespace boost{namespace itl
 {
@@ -30,19 +31,23 @@ typedef unsigned char bound_type;
 class interval_bounds
 {
 public:
+	interval_bounds():_bits(){}
     explicit interval_bounds(bound_type bounds): _bits(bounds){}
     interval_bounds left ()const { return interval_bounds(_bits & 1); }
     interval_bounds right()const { return interval_bounds(_bits & 2); }
     interval_bounds both ()const { return interval_bounds(_bits & 3); }
-    
+
+	bound_type bits()const{ return _bits; }
+
+	static interval_bounds open()      { return interval_bounds(0); } //JODO URG LITERALS
+	static interval_bounds left_open() { return interval_bounds(1); }
+	static interval_bounds right_open(){ return interval_bounds(2); }
+	static interval_bounds closed()    { return interval_bounds(3); }
+
 public:
     bound_type _bits;
 };
 
-inline interval_bounds open_()      { return interval_bounds(open_bounded);  }
-inline interval_bounds left_open_() { return interval_bounds(left_open);     }
-inline interval_bounds right_open_(){ return interval_bounds(right_open);    }
-inline interval_bounds closed_()    { return interval_bounds(closed_bounded);}
 
 inline interval_bounds left(interval_bounds x1)
 { return interval_bounds(x1._bits & 1); }
@@ -91,7 +96,44 @@ inline interval_bounds left_subtract_bounds(interval_bounds x1, interval_bounds 
 inline interval_bounds right_subtract_bounds(interval_bounds x1, interval_bounds x2)
 { return left(x1) | ~(left(x2) >> 1); }
 
+inline bool is_complementary(interval_bounds x1)
+{ return x1 == interval_bounds::right_open() || x1 == interval_bounds::left_open(); }
 
+template<class IntervalT>
+inline typename 
+boost::enable_if<has_dynamic_bounds<IntervalT>, interval_bounds>::type
+outer_bounds(const IntervalT& x1, const IntervalT& x2)
+{ return outer_bounds(x1.bounds(), x2.bounds()); }
+
+template<class IntervalT>
+inline typename 
+boost::enable_if<has_dynamic_bounds<IntervalT>, interval_bounds>::type
+inner_bounds(const IntervalT& x1, const IntervalT& x2)
+{ return inner_bounds(x1.bounds(), x2.bounds()); }
+
+template<class IntervalT>
+inline typename 
+boost::enable_if<has_dynamic_bounds<IntervalT>, interval_bounds>::type
+left_bounds(const IntervalT& x1, const IntervalT& x2)
+{ return left_bounds(x1.bounds(), x2.bounds()); }
+
+template<class IntervalT>
+inline typename 
+boost::enable_if<has_dynamic_bounds<IntervalT>, interval_bounds>::type
+right_bounds(const IntervalT& x1, const IntervalT& x2)
+{ return right_bounds(x1.bounds(), x2.bounds()); }
+
+template<class IntervalT>
+inline typename 
+boost::enable_if<has_dynamic_bounds<IntervalT>, interval_bounds>::type
+left_subtract_bounds(const IntervalT& x1, const IntervalT& x2)
+{ return left_subtract_bounds(x1.bounds(), x2.bounds()); }
+
+template<class IntervalT>
+inline typename 
+boost::enable_if<has_dynamic_bounds<IntervalT>, interval_bounds>::type
+right_subtract_bounds(const IntervalT& x1, const IntervalT& x2)
+{ return right_subtract_bounds(x1.bounds(), x2.bounds()); }
 
 
 }} // namespace itl boost

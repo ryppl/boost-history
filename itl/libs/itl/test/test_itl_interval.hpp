@@ -13,8 +13,8 @@ void interval_ctor_4_ordered_types()
 {
     // An empty interval is defined as the closed interval [1,0]
     BOOST_CHECK_EQUAL(interval<T>().empty(), true);
-    BOOST_CHECK_EQUAL(interval<T>().cardinality(), itl::neutron<typename itl::size<T>::type>::value());
-    BOOST_CHECK_EQUAL(interval<T>().size(), itl::neutron<typename itl::size<T>::type>::value());
+    BOOST_CHECK_EQUAL(interval<T>().cardinality(), itl::neutron<typename itl::size_type_of<T>::type>::value());
+    BOOST_CHECK_EQUAL(interval<T>().size(), itl::neutron<typename itl::size_type_of<T>::type>::value());
     BOOST_CHECK_EQUAL(interval<T>().lower(), itl::unon<T>::value());
     BOOST_CHECK_EQUAL(interval<T>().upper(), itl::neutron<T>::value());
 
@@ -29,7 +29,7 @@ void interval_ctor_4_bicremental_types()
     BOOST_CHECK_EQUAL( T(), pred(succ(T())));
     BOOST_CHECK_EQUAL( itl::neutron<T>::value(), pred(succ(itl::neutron<T>::value()))       );
     BOOST_CHECK_EQUAL( itl::unon<T>::value(),    succ(itl::neutron<T>::value())             );
-    BOOST_CHECK_EQUAL( interval<T>().length(),   itl::neutron<typename difference<T>::type>::value() );
+    BOOST_CHECK_EQUAL( interval<T>().length(),   itl::neutron<typename difference_type_of<T>::type>::value() );
 
     T v4 = make<T>(4);
     itl::interval<T> I4_4I(v4);
@@ -106,7 +106,7 @@ void interval_ctor_4_integral_types()
     BOOST_CHECK_EQUAL(interval<T>(0,0).length(), itl::unon<typename interval<T>::difference_type>::value());
 }
 
-void interval_ctor_specific()
+void interval_ctor_specific()//JODO 
 {
     BOOST_CHECK_EQUAL(interval<double>().length(), 0.0);
     BOOST_CHECK_EQUAL(interval<double>(5.0,5.0).cardinality(), 1);
@@ -408,16 +408,17 @@ void interval_subtract_4_bicremental_types()
     BOOST_CHECK_EQUAL( diff_2, I4_7D );
 }
 
+/*JODO
 template <class T> 
 void interval_inner_complement_4_bicremental_types()
 {
-    test_inner_complement(interval<T>(), interval<T>());
+	test_inner_complement(interval<T>(), interval<T>());
     test_inner_complement(interval<T>(), I_D(6,9));
     test_inner_complement(C_D(2,4), interval<T>());
     test_inner_complement(I_I(2,5), C_I(3,9));
     test_inner_complement(I_I(2,4), I_D(6,9));
     test_inner_complement(I_D(7,9), C_I(0,3));
 }
-
+*/
 
 #endif // __test_itl_interval_hpp_JOFA_081006__

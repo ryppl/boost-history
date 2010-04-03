@@ -32,8 +32,8 @@ w.r.t. addition (neutron()).
 #endif
 
 #include <boost/itl/type_traits/neutron.hpp>
-#include <boost/itl/type_traits/difference.hpp>
-#include <boost/itl/type_traits/size.hpp>
+#include <boost/itl/type_traits/difference_type_of.hpp>
+#include <boost/itl/type_traits/size_type_of.hpp>
 
 namespace boost{namespace itl
 {
@@ -44,11 +44,11 @@ namespace boost{namespace itl
     }
 
     template<> 
-    struct difference<boost::posix_time::ptime> 
+    struct difference_type_of<boost::posix_time::ptime> 
     { typedef boost::posix_time::time_duration type; };  
 
     template<> 
-    struct size<boost::posix_time::ptime> 
+    struct size_type_of<boost::posix_time::ptime> 
     { typedef boost::posix_time::time_duration type; };  
 
     // ------------------------------------------------------------------------

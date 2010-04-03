@@ -8,6 +8,8 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #ifndef BOOST_ITL_CONTINUOUS_INTERVAL_HPP_JOFA_100327
 #define BOOST_ITL_CONTINUOUS_INTERVAL_HPP_JOFA_100327
 
+#include <boost/itl/type_traits/is_continuous.hpp>
+#include <boost/itl/type_traits/is_continuous_interval.hpp>
 #include <boost/itl/detail/base_interval.hpp>
 #include <boost/itl/interval_bounds.hpp>
 #include <boost/itl/interval_functions.hpp>
@@ -31,35 +33,39 @@ public:
     //==========================================================================
     /** Default constructor; yields an empty interval <tt>[0,0)</tt>. */
     continuous_interval()
+		: _lwb(neutron<DomainT>::value()), _upb(neutron<DomainT>::value())
+		, _bounds(interval_bounds::right_open())
     {
         BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
         BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
-        BOOST_STATIC_ASSERT((itl::is_continuous<DomainT>::value));
+        //JODO URG BOOST_STATIC_ASSERT((itl::is_continuous<DomainT>::value)); 
+		//JODO we must assert this via appropriate defaults for template parameters
     }
 
     //NOTE: Compiler generated copy constructor is used
 
     /** Constructor for a closed singleton interval <tt>[val,val]</tt> */
     explicit continuous_interval(const DomainT& val)
-        : _lwb(val), _upb(val), _bounds(itl::closed_bounded)
+        : _lwb(val), _upb(val), _bounds(interval_bounds::closed())
     {
         BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
         BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
-        BOOST_STATIC_ASSERT((itl::is_continuous<DomainT>::value));
+        //JODO BOOST_STATIC_ASSERT((itl::is_continuous<DomainT>::value));
     }
 
     /** Interval from <tt>low</tt> to <tt>up</tt> with bounds <tt>bounds</tt> */
     continuous_interval(const DomainT& low, const DomainT& up, 
-                        itl::bound_type bounds = itl::closed_bounded)
+                        interval_bounds bounds = interval_bounds::right_open())
         : _lwb(low), _upb(up), _bounds(bounds)
     {
         BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
         BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
+        //JODO BOOST_STATIC_ASSERT((itl::is_continuous<DomainT>::value));
     }
 
-    domain_type lower()const { return _lwb; }
-    domain_type upper()const { return _upb; }
-    bound_type  bounds()const{ return _bounds; }
+    domain_type     lower()const { return _lwb; }
+    domain_type     upper()const { return _upb; }
+    interval_bounds bounds()const{ return _bounds; }
 
     domain_type first()const{ return _lwb; }
 
@@ -70,9 +76,9 @@ public:
     }
 
 private:
-    domain_type _lwb;
-    domain_type _upb;
-    bound_type  _bounds;
+    domain_type     _lwb;
+    domain_type     _upb;
+    interval_bounds _bounds;
 };
 
 
@@ -99,21 +105,18 @@ struct is_interval<continuous_interval<DomainT,Compare> >
 };
 
 template <class DomainT, ITL_COMPARE Compare> 
+struct is_continuous_interval<continuous_interval<DomainT,Compare> >
+{
+    typedef is_continuous_interval<continuous_interval<DomainT,Compare> > type;
+	BOOST_STATIC_CONSTANT(bool, value = is_continuous<DomainT>::value);
+};
+
+template <class DomainT, ITL_COMPARE Compare> 
 struct has_dynamic_bounds<continuous_interval<DomainT,Compare> >
 {
     typedef has_dynamic_bounds<continuous_interval<DomainT,Compare> > type;
     BOOST_STATIC_CONSTANT(bool, value = true);
 };
-
-
-/*CL JODO has_domain needed?
-template <class DomainT, ITL_COMPARE Compare> 
-struct has_domain<continuous_interval<DomainT,Compare> >
-{
-    typedef has_domain<continuous_interval<DomainT,Compare> > type;
-    BOOST_STATIC_CONSTANT(bool, value = true);
-};
-*/
 
 template <class DomainT, ITL_COMPARE Compare>
 struct type_to_string<itl::continuous_interval<DomainT,Compare> >

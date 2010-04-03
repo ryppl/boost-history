@@ -50,9 +50,12 @@ construct(const typename IntervalT::domain_type& low,
           const typename IntervalT::domain_type& up,
           itl::bound_type bounds)
 {
-    return IntervalT(low, up, bounds);
+    return IntervalT(low, up, interval_bounds(bounds));
 }
 
+//==============================================================================
+//= Containedness
+//==============================================================================
 //- is_empty -------------------------------------------------------------------
 /** Is the interval empty? */
 template<class IntervalT>
@@ -80,24 +83,47 @@ template<class IntervalT>
 typename boost::enable_if<is_continuous_interval<IntervalT>, bool>::type
 is_empty(const IntervalT& object)
 { 
-    if(is_closed(object))
+	if(object.bounds() == interval_bounds::closed())
         return IntervalT::domain_less(object.lower(), object.upper());
     else
         return IntervalT::domain_less_equal(object.lower(), object.upper());
 }
 
+//- contains -------------------------------------------------------------------
+template<class IntervalT>
+typename boost::enable_if<is_interval<IntervalT>, bool>::type
+contains(const IntervalT& super, const IntervalT& sub)
+{ 
+	return lower_less_equal(super,sub) && upper_less_equal(sub,super);
+}
+
+template<class IntervalT>
+typename boost::enable_if<is_interval<IntervalT>, bool>::type
+contains(const IntervalT& super, const typename IntervalT::domain_type& element)
+{ 
+	return contains(super,IntervalT(element));
+}
+
+//- within ---------------------------------------------------------------------
+template<class IntervalT>
+typename boost::enable_if<is_interval<IntervalT>, bool>::type
+within(const IntervalT& sub, const IntervalT& super)
+{ 
+	return contains(super,sub);
+}
+
+
+
 //==============================================================================
-//= Selection
+//= Properties
 //==============================================================================
 
-/*JODO
 template<class IntervalT>
-typename boost::enable_if<!is_continuous<typename IntervalT::domain_type>, 
-                          typename IntervalT::domain_type>::type
-first(const IntervalT& object)
-{ 
+typename boost::enable_if<is_continuous_interval<IntervalT>, bool>::type
+is_closed(const IntervalT& object)
+{
+	is_closed(object.bounds());
 }
-*/
 
 //==============================================================================
 //= Equivalences and Orderings
@@ -131,7 +157,7 @@ template<class IntervalT>
 typename boost::enable_if<is_continuous_interval<IntervalT>, bool>::type
 exclusive_less(const IntervalT& left, const IntervalT& right)
 { 
-    if(inner_bounds(left,right).is_closed())
+	if(inner_bounds(left,right) == interval_bounds::closed())
         return IntervalT::domain_less(left.lower(), right.upper());
     else
         return IntervalT::domain_less_equal(left.lower(), right.upper());
@@ -163,7 +189,7 @@ template<class IntervalT>
 typename boost::enable_if<is_continuous_interval<IntervalT>, bool>::type
 lower_less(const IntervalT& left, const IntervalT& right)
 {
-    if(left_bounds(left,right).is_right_open())  //'[(' == 10
+	if(left_bounds(left,right) == interval_bounds::right_open())  //'[(' == 10
         return IntervalT::domain_less_equal(left.lower(), right.lower());
     else 
         return IntervalT::domain_less(left.lower(), right.lower());
@@ -196,7 +222,7 @@ template<class IntervalT>
 typename boost::enable_if<is_continuous_interval<IntervalT>, bool>::type
 upper_less(const IntervalT& left, const IntervalT& right)
 {
-    if(right_bounds(left,right).is_left_open())
+	if(right_bounds(left,right) == interval_bounds::left_open())
         return IntervalT::domain_less_equal(left.upper(), right.upper());
     else
         return IntervalT::domain_less(left.upper(), right.upper());
@@ -265,7 +291,7 @@ template<class IntervalT>
 typename boost::enable_if<is_continuous_interval<IntervalT>, bool>::type
 lower_equal(const IntervalT& left, const IntervalT& right)
 {
-    return (left_bound(left)==left_bound(right))
+    return (left.bounds().left()==right.bounds().left())
         && IntervalT::domain_equal(left.lower(), right.lower());
 }
 
@@ -296,8 +322,23 @@ template<class IntervalT>
 typename boost::enable_if<is_continuous_interval<IntervalT>, bool>::type
 upper_equal(const IntervalT& left, const IntervalT& right)
 {
-    return (right_bound(left)==right_bound(right))
+    return (left.bounds().right()==right.bounds().right())
         && IntervalT::domain_equal(left.upper(), right.upper());
+}
+
+//------------------------------------------------------------------------------
+template<class IntervalT>
+typename boost::enable_if<is_interval<IntervalT>, bool>::type
+lower_less_equal(const IntervalT& left, const IntervalT& right)
+{
+    return lower_less(left,right) || lower_equal(left,right);
+}
+
+template<class IntervalT>
+typename boost::enable_if<is_interval<IntervalT>, bool>::type
+upper_less_equal(const IntervalT& left, const IntervalT& right)
+{
+    return upper_less(left,right) || upper_equal(left,right);
 }
 
 
@@ -350,11 +391,38 @@ template<class IntervalT>
 typename boost::enable_if<is_continuous_interval<IntervalT>, bool>::type
 touches(const IntervalT& left, const IntervalT& right)
 {
-    return inner_bounds(left,right).are_complementary() 
+    return is_complementary(inner_bounds(left,right))
         && IntervalT::domain_equal(left.upper(), right.lower());
 }
 
 
+//==============================================================================
+//= Size
+//==============================================================================
+//- cardinality ----------------------------------------------------------------
+template<class IntervalT>
+typename boost::enable_if<is_continuous_interval<IntervalT>, 
+    typename IntervalT::size_type>::type
+cardinality(IntervalT object)
+{
+    typedef typename IntervalT::size_type SizeT;
+    if(itl::is_empty(object))
+        return itl::neutron<SizeT>::value();
+	else if(   object.bounds() == interval_bounds::closed() 
+			&& IntervalT::domain_equal(object.lower(), object.upper()))
+        return itl::unon<SizeT>::value();
+    else 
+        return infinity<SizeT>::value();
+}
+
+//- size -----------------------------------------------------------------------
+template<class IntervalT>
+typename boost::enable_if<is_continuous_interval<IntervalT>, 
+    typename IntervalT::size_type>::type
+size(IntervalT object) //JODO conficting with metafunction size<T>::type -> sizetype<T>::type
+{
+	return cardinality(object);
+}
 
 //==============================================================================
 //= Addition
@@ -395,11 +463,11 @@ hull(IntervalT left, const IntervalT& right)
     else if(itl::is_empty(left))
         return right;
 
-    return  construct
+    return  construct<IntervalT>
             (
                 lower_min(left, right), 
                 upper_max(left, right), 
-                outer_bounds(left, right)
+                outer_bounds(left, right).bits()
             );
 }
 
@@ -440,8 +508,8 @@ left_subtract(IntervalT right, const IntervalT& left_minuend)
     //JODO
     if(exclusive_less(left_minuend, right))
         return right; 
-    return construct(left_minuend.upper(), right.upper(), 
-                     left_subtract_bounds(right, left_minuend));
+    return construct<IntervalT>(left_minuend.upper(), right.upper(), 
+                                left_subtract_bounds(right, left_minuend).bits());
 }
 
 
@@ -479,8 +547,8 @@ right_subtract(IntervalT left, const IntervalT& right_minuend)
     //JODO s.o.
     if(exclusive_less(left, right_minuend))
         return left; 
-    return construct(left.lower(), right_minuend.lower(),
-                     right_subtract_bounds(left, right)  );
+    return construct<IntervalT>(left.lower(), right_minuend.lower(),
+                                right_subtract_bounds(left,right_minuend).bits());
 }
 
 //==============================================================================
@@ -540,6 +608,8 @@ disjoint(const IntervalT& left, const IntervalT& right)
 }
 
 //------------------------------------------------------------------------------
+
+
 
 }} // namespace itl boost
 

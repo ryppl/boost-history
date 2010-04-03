@@ -31,7 +31,7 @@ template
     typename             SubType,
     typename             DomainT, 
     ITL_COMPARE Compare  = ITL_COMPARE_INSTANCE(std::less, DomainT),
-    template<class, ITL_COMPARE>class Interval = ITL_INTERVAL_DEFAULT,
+    ITL_INTERVAL(ITL_COMPARE) Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, DomainT, Compare),
     ITL_ALLOC   Alloc    = std::allocator
 > 
 class interval_base_set
@@ -66,7 +66,7 @@ public:
     typedef DomainT   element_type;
 
     /// The interval type of the set
-    typedef Interval<DomainT,Compare> interval_type;
+    typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare) interval_type;
     /// The segment type of the set
     typedef interval_type   segment_type;
 
@@ -198,7 +198,7 @@ public:
     template
     <
         template<class DomT, ITL_COMPARE Comp, 
-                 template<class DomT2,ITL_COMPARE>class Interv, ITL_ALLOC Allc>
+                 ITL_INTERVAL2(ITL_COMPARE) Interv, ITL_ALLOC Allc>
         class IntervalSet
     >
     bool contains(const IntervalSet<DomainT,Compare,Interval,Alloc>& sub)const 
@@ -208,7 +208,7 @@ public:
     template
     <
         template<class DomT, ITL_COMPARE Comp, 
-                 template<class DomT2,ITL_COMPARE>class Interv, ITL_ALLOC Allc>
+                 ITL_INTERVAL2(ITL_COMPARE) Interv, ITL_ALLOC Allc>
         class IntervalSet
     >
     bool contained_in(const IntervalSet<DomainT,Compare,Interval,Alloc>& super)const
@@ -350,7 +350,7 @@ public:
     template
     <
         template<class DomT, ITL_COMPARE Comp, 
-                 template<class DomT2,ITL_COMPARE>class Interv, ITL_ALLOC Allc>
+                 ITL_INTERVAL2(ITL_COMPARE) Interv, ITL_ALLOC Allc>
         class IntervalSet
     >
     void add_intersection
@@ -506,7 +506,7 @@ protected:
 template
 <
     class SubType, class DomainT, 
-    ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
+    ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
 >
 typename interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::size_type 
 interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::cardinality()const
@@ -523,7 +523,7 @@ interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::cardinality()const
 template
 <
     class SubType, class DomainT, 
-    ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
+    ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
 >
 typename 
     interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::difference_type 
@@ -537,7 +537,7 @@ interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::length()const
 
 
 template<class SubType,
-         class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+         class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::add_intersection(interval_base_set& section, const segment_type& inter_val)const
 {
     // any intersection with the empty intervall is empty
@@ -558,11 +558,11 @@ void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::add_intersection
 
 
 template<class SubType, 
-         class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+         class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
     template
     <
         template<class DomT, ITL_COMPARE Comp,
-                 template<class DomT2,ITL_COMPARE>class Interv, ITL_ALLOC Allc>
+                 ITL_INTERVAL2(ITL_COMPARE) Interv, ITL_ALLOC Allc>
         class IntervalSet
     >
 void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
@@ -593,7 +593,7 @@ void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
 //==============================================================================
 
 template<class SubType,
-         class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+         class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 SubType& interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
     ::flip(const segment_type& inter_val)
 {
@@ -631,7 +631,7 @@ SubType& interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
 template
 <
     class SubType, 
-    class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
+    class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
 >
     template<class SubType2>
 SubType& interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
@@ -665,7 +665,7 @@ SubType& interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
 
 
 template<class SubType,
-         class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+         class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& 
 interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::join()
 {
@@ -704,7 +704,7 @@ interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::join()
 
 
 template<class SubType,
-         class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+         class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::uniform_bounds(itl::bound_type bounded)
 {
     // I can do this only, because I am sure that the contents and the
@@ -717,7 +717,7 @@ void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::uniform_bounds(i
 //= Equivalences and Orderings
 //==============================================================================
 template<class SubType,
-         class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+         class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 inline bool operator == (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& lhs,
                          const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& rhs)
 {
@@ -725,44 +725,44 @@ inline bool operator == (const interval_base_set<SubType,DomainT,Compare,Interva
 }
 
 template<class SubType,
-         class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+         class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 inline bool operator != (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& lhs,
                          const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& rhs)
 { return !(lhs == rhs); }
 
 
 template<class SubType,
-         class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+         class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 inline bool operator < (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& lhs,
                         const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& rhs)
 {
     return std::lexicographical_compare(
         lhs.begin(), lhs.end(), rhs.begin(), rhs.end(), 
-        Compare<Interval<DomainT,Compare> >()//NOTE DESIGN TTP: Why Compare needs to be ttp
+        Compare<ITL_INTERVAL_TYPE(Interval,DomainT,Compare) >()//NOTE DESIGN TTP: Why Compare needs to be ttp
         );
 }
 
 template<class SubType,
-         class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+         class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 inline bool operator > (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& lhs,
                         const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& rhs)
 { return rhs < lhs; }
 
 template<class SubType,
-         class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+         class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 inline bool operator <= (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& lhs,
                          const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& rhs)
 { return !(lhs > rhs); }
 
 template<class SubType,
-         class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+         class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 inline bool operator >= (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& lhs,
                          const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& rhs)
 { return !(lhs < rhs); }
 
 template<class CharType, class CharTraits, 
     class SubType, class DomainT, 
-    ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+    ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 std::basic_ostream<CharType, CharTraits>& operator <<
   (std::basic_ostream<CharType, CharTraits>& stream, 
    const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& object)
@@ -779,7 +779,7 @@ std::basic_ostream<CharType, CharTraits>& operator <<
 // type traits
 //-----------------------------------------------------------------------------
 template<class SubType,
-         class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+         class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 struct is_set<itl::interval_base_set<SubType,DomainT,Compare,Interval,Alloc> >
 { 
     typedef is_set<itl::interval_base_set<SubType,DomainT,Compare,Interval,Alloc> > type;
@@ -787,7 +787,7 @@ struct is_set<itl::interval_base_set<SubType,DomainT,Compare,Interval,Alloc> >
 };
 
 template<class SubType,
-         class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+         class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc>
 struct is_interval_container<itl::interval_base_set<SubType,DomainT,Compare,Interval,Alloc> >
 { 
     typedef is_interval_container<itl::interval_base_set<SubType,DomainT,Compare,Interval,Alloc> > type;

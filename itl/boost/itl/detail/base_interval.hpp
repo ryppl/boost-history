@@ -12,8 +12,8 @@ Copyright (c) 2007-2010: Joachim Faulhaber
 #include <boost/call_traits.hpp> 
 #include <boost/concept_check.hpp> 
 #include <boost/itl/detail/design_config.hpp>
-#include <boost/itl/type_traits/difference.hpp>
-#include <boost/itl/type_traits/size.hpp>
+#include <boost/itl/type_traits/difference_type_of.hpp>
+#include <boost/itl/type_traits/size_type_of.hpp>
 
 namespace boost{namespace itl
 {
@@ -52,10 +52,10 @@ struct base_interval
     typedef domain_compare key_compare;
 
     /// The difference type of an interval which is sometimes different form the domain_type
-    typedef typename itl::difference<DomainT>::type difference_type;
+    typedef typename itl::difference_type_of<DomainT>::type difference_type;
 
     /// The size type of an interval which is mostly std::size_t
-    typedef typename itl::size<DomainT>::type size_type;
+    typedef typename itl::size_type_of<DomainT>::type size_type;
 
     typedef typename boost::call_traits<DomainT>::param_type DomainP;
 

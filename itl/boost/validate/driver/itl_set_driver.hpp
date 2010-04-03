@@ -93,7 +93,7 @@ namespace boost{namespace itl
 
         algebra_validater* chooseValidater()
         {
-            typedef int    intT;
+            typedef double intT; //JODO REV
             typedef double doubleT;
 
             int rootChoice         = _rootChoice.some();

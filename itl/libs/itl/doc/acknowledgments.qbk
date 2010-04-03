@@ -33,7 +33,7 @@ portability problems with CodeWarrior 9.4. Many thanks for that.
 I am grateful to Hartmut Kaiser for managing the formal review of 
 this library and to all the reviewers and participants
 in the related discussions, including Jeff Flinn, Luke Simonson, 
-Phil Endecott, Eric M. Jonas, Peter Wuttke, Robert Stuard,
+Phil Endecott, Eric M. Jonas, Peter Wuttke, Robert Stewart,
 Barend Gehrels, Vicente Botet, Thomas Klimpel, Paul A. Bristow,
 Jerry Jeremiah, John Reid, Steven Watanabe, Brian Wood, Markus Werle 
 and Michael Caisse. 

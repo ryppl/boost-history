@@ -11,7 +11,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-                    template<class,ITL_COMPARE>class Interval = interval,
+                    ITL_INTERVAL(ITL_COMPARE)  Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, T, Compare),
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
@@ -142,7 +142,7 @@ void interval_set_fundamentals_4_ordered_types()
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-                    template<class,ITL_COMPARE>class Interval = interval,
+                    ITL_INTERVAL(ITL_COMPARE)  Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, T, Compare),
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
@@ -193,7 +193,7 @@ void interval_set_ctor_4_bicremental_types()
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-                    template<class,ITL_COMPARE>class Interval = interval,
+                    ITL_INTERVAL(ITL_COMPARE)  Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, T, Compare),
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
@@ -234,7 +234,7 @@ void interval_set_add_sub_4_bicremental_types()
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-                    template<class,ITL_COMPARE>class Interval = interval,
+                    ITL_INTERVAL(ITL_COMPARE)  Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, T, Compare),
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
@@ -261,7 +261,7 @@ void interval_set_distinct_4_bicremental_types()
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-                    template<class,ITL_COMPARE>class Interval = interval,
+                    ITL_INTERVAL(ITL_COMPARE)  Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, T, Compare),
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
@@ -300,7 +300,7 @@ void interval_set_distinct_4_bicremental_continuous_types()
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-                    template<class,ITL_COMPARE>class Interval = interval,
+                    ITL_INTERVAL(ITL_COMPARE)  Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, T, Compare),
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
@@ -345,7 +345,7 @@ void interval_set_isolate_4_bicremental_continuous_types()
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-                    template<class,ITL_COMPARE>class Interval = interval,
+                    ITL_INTERVAL(ITL_COMPARE)  Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, T, Compare),
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
@@ -390,7 +390,7 @@ void interval_set_element_compare_4_bicremental_types()
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-                    template<class,ITL_COMPARE>class Interval = interval,
+                    ITL_INTERVAL(ITL_COMPARE)  Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, T, Compare),
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
@@ -429,7 +429,7 @@ void interval_set_contains_4_bicremental_types()
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-                    template<class,ITL_COMPARE>class Interval = interval,
+                    ITL_INTERVAL(ITL_COMPARE)  Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, T, Compare),
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
@@ -473,7 +473,7 @@ void interval_set_operators_4_bicremental_types()
 // Test for nontrivial intersection of interval sets with intervals and values
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-                    template<class,ITL_COMPARE>class Interval = interval,
+                    ITL_INTERVAL(ITL_COMPARE)  Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, T, Compare),
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
@@ -546,7 +546,7 @@ void interval_set_base_intersect_4_bicremental_types()
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-                    template<class,ITL_COMPARE>class Interval = interval,
+                    ITL_INTERVAL(ITL_COMPARE)  Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, T, Compare),
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
@@ -585,7 +585,7 @@ void interval_set_flip_4_bicremental_types()
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-                    template<class,ITL_COMPARE>class Interval = interval,
+                    ITL_INTERVAL(ITL_COMPARE)  Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, T, Compare),
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
@@ -607,7 +607,7 @@ void interval_set_infix_plus_overload_4_bicremental_types()
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-                    template<class,ITL_COMPARE>class Interval = interval,
+                    ITL_INTERVAL(ITL_COMPARE)  Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, T, Compare),
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
@@ -630,7 +630,7 @@ void interval_set_infix_pipe_overload_4_bicremental_types()
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-                    template<class,ITL_COMPARE>class Interval = interval,
+                    ITL_INTERVAL(ITL_COMPARE)  Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, T, Compare),
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
@@ -652,7 +652,7 @@ void interval_set_infix_minus_overload_4_bicremental_types()
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-                    template<class,ITL_COMPARE>class Interval = interval,
+                    ITL_INTERVAL(ITL_COMPARE)  Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, T, Compare),
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
@@ -675,7 +675,7 @@ void interval_set_infix_et_overload_4_bicremental_types()
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-                    template<class,ITL_COMPARE>class Interval = interval,
+                    ITL_INTERVAL(ITL_COMPARE)  Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, T, Compare),
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
@@ -698,7 +698,7 @@ void interval_set_infix_caret_overload_4_bicremental_types()
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-                    template<class,ITL_COMPARE>class Interval = interval,
+                    ITL_INTERVAL(ITL_COMPARE)  Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, T, Compare),
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
@@ -721,7 +721,7 @@ void interval_set_find_4_bicremental_types()
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-                    template<class,ITL_COMPARE>class Interval = interval,
+                    ITL_INTERVAL(ITL_COMPARE)  Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, T, Compare),
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>

@@ -40,7 +40,7 @@ template
     typename    DomainT = nat64, 
     typename    BitSetT = bits64, 
     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT),
-    template<class, ITL_COMPARE>class Interval = boost::itl::interval,
+    ITL_INTERVAL(ITL_COMPARE) Interval = ITL_INTERVAL_INSTANCE(ITL_INTERVAL_DEFAULT, DomainT, Compare),
     ITL_ALLOC   Alloc   = std::allocator
 > 
 class large_bitset
@@ -59,11 +59,11 @@ class large_bitset
     , boost::andable2      < large_bitset<DomainT,BitSetT,Compare,Interval,Alloc>, DomainT
     , boost::xorable2      < large_bitset<DomainT,BitSetT,Compare,Interval,Alloc>, DomainT
 
-    , boost::addable2      < large_bitset<DomainT,BitSetT,Compare,Interval,Alloc>, Interval<DomainT,Compare>
-    , boost::orable2       < large_bitset<DomainT,BitSetT,Compare,Interval,Alloc>, Interval<DomainT,Compare>
-    , boost::subtractable2 < large_bitset<DomainT,BitSetT,Compare,Interval,Alloc>, Interval<DomainT,Compare>
-    , boost::andable2      < large_bitset<DomainT,BitSetT,Compare,Interval,Alloc>, Interval<DomainT,Compare>
-    , boost::xorable2      < large_bitset<DomainT,BitSetT,Compare,Interval,Alloc>, Interval<DomainT,Compare>
+    , boost::addable2      < large_bitset<DomainT,BitSetT,Compare,Interval,Alloc>, ITL_INTERVAL_TYPE(Interval,DomainT,Compare)
+    , boost::orable2       < large_bitset<DomainT,BitSetT,Compare,Interval,Alloc>, ITL_INTERVAL_TYPE(Interval,DomainT,Compare)
+    , boost::subtractable2 < large_bitset<DomainT,BitSetT,Compare,Interval,Alloc>, ITL_INTERVAL_TYPE(Interval,DomainT,Compare)
+    , boost::andable2      < large_bitset<DomainT,BitSetT,Compare,Interval,Alloc>, ITL_INTERVAL_TYPE(Interval,DomainT,Compare)
+    , boost::xorable2      < large_bitset<DomainT,BitSetT,Compare,Interval,Alloc>, ITL_INTERVAL_TYPE(Interval,DomainT,Compare)
       > > > > > > > > > > > > > > > > >
     //^ & - | + ^ & - | + ^ & - | + < == 
     //segment   element   container

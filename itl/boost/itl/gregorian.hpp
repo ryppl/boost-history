@@ -25,8 +25,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #endif
 
 #include <boost/itl/type_traits/neutron.hpp>
-#include <boost/itl/type_traits/difference.hpp>
-#include <boost/itl/type_traits/size.hpp>
+#include <boost/itl/type_traits/difference_type_of.hpp>
+#include <boost/itl/type_traits/size_type_of.hpp>
 
 namespace boost{namespace itl
 {
@@ -47,11 +47,11 @@ namespace boost{namespace itl
     };
 
     template<> 
-    struct difference<boost::gregorian::date> 
+    struct difference_type_of<boost::gregorian::date> 
     { typedef boost::gregorian::date_duration type; };  
 
     template<> 
-    struct size<boost::gregorian::date> 
+    struct size_type_of<boost::gregorian::date> 
     { typedef boost::gregorian::date_duration type; };  
 
 
