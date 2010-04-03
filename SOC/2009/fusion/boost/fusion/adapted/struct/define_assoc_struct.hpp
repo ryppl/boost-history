@@ -18,20 +18,20 @@
         TEMPLATE_PARAMS_SEQ,                                                    \
         (0)NAMESPACE_SEQ,                                                       \
         NAME,                                                                   \
-        BOOST_PP_CAT(BOOST_FUSION_ADAPT_STRUCT_FILLER_0 ATTRIBUTES,_END),       \
+        BOOST_PP_CAT(BOOST_FUSION_ADAPT_ASSOC_STRUCT_FILLER_0 ATTRIBUTES,_END), \
         3)                                                                      \
                                                                                 \
     BOOST_FUSION_ADAPT_ASSOC_TPL_STRUCT(                                        \
         TEMPLATE_PARAMS_SEQ,                                                    \
         (BOOST_FUSION_ADAPT_STRUCT_NAMESPACE_DECLARATION((0)NAMESPACE_SEQ) NAME)\
-        TEMPLATE_PARAMS_SEQ,                                                    \
+            TEMPLATE_PARAMS_SEQ,                                                \
         ATTRIBUTES)
 
-#define BOOST_FUSION_DEFINE_ASSOC_STRUCT(NAMESPACE_SEQ,NAME,ATTRIBUTES)         \
+#define BOOST_FUSION_DEFINE_ASSOC_STRUCT(NAMESPACE_SEQ, NAME, ATTRIBUTES)       \
     BOOST_FUSION_DEFINE_STRUCT_IMPL(                                            \
         (0)NAMESPACE_SEQ,                                                       \
         NAME,                                                                   \
-        BOOST_PP_CAT(BOOST_FUSION_ADAPT_STRUCT_FILLER_0 ATTRIBUTES,_END),       \
+        BOOST_PP_CAT(BOOST_FUSION_ADAPT_ASSOC_STRUCT_FILLER_0 ATTRIBUTES,_END), \
         3)                                                                      \
                                                                                 \
     BOOST_FUSION_ADAPT_ASSOC_STRUCT(                                            \

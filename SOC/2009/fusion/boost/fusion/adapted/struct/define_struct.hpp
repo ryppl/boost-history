@@ -23,11 +23,11 @@
                                                                                 \
     BOOST_FUSION_ADAPT_TPL_STRUCT(                                              \
         TEMPLATE_PARAMS_SEQ,                                                    \
-        (BOOST_FUSION_ADAPT_STRUCT_NAMESPACE_DECLARATION((0)NAMESPACE_SEQ)NAME) \
-        TEMPLATE_PARAMS_SEQ,                                                    \
+        (BOOST_FUSION_ADAPT_STRUCT_NAMESPACE_DECLARATION((0)NAMESPACE_SEQ) NAME)\
+            TEMPLATE_PARAMS_SEQ,                                                \
         ATTRIBUTES)
 
-#define BOOST_FUSION_DEFINE_STRUCT(NAMESPACE_SEQ,NAME,ATTRIBUTES)               \
+#define BOOST_FUSION_DEFINE_STRUCT(NAMESPACE_SEQ, NAME, ATTRIBUTES)             \
     BOOST_FUSION_DEFINE_STRUCT_IMPL(                                            \
         (0)NAMESPACE_SEQ,                                                       \
         NAME,                                                                   \
@@ -35,7 +35,7 @@
         2)                                                                      \
                                                                                 \
     BOOST_FUSION_ADAPT_STRUCT(                                                  \
-        BOOST_FUSION_ADAPT_STRUCT_NAMESPACE_DECLARATION((0)NAMESPACE_SEQ)NAME,  \
+        BOOST_FUSION_ADAPT_STRUCT_NAMESPACE_DECLARATION((0)NAMESPACE_SEQ) NAME, \
         ATTRIBUTES)
 
 #endif

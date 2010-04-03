@@ -45,9 +45,9 @@
     R, DATA, I, ATTRIBUTE)                                                      \
                                                                                 \
     BOOST_PP_COMMA_IF(I)                                                        \
-    BOOST_PP_TUPLE_ELEM(BOOST_PP_TUPLE_ELEM(3,2,DATA),1,ATTRIBUTE)(             \
-        static_cast<self_type BOOST_PP_TUPLE_ELEM(3,0,DATA)>(other_self).       \
-            BOOST_PP_TUPLE_ELEM(BOOST_PP_TUPLE_ELEM(3,2,DATA),1,ATTRIBUTE))
+    BOOST_PP_TUPLE_ELEM(BOOST_PP_TUPLE_ELEM(2,1,DATA),1,ATTRIBUTE)(             \
+        static_cast<self_type BOOST_PP_TUPLE_ELEM(2,0,DATA)>(other_self).       \
+            BOOST_PP_TUPLE_ELEM(BOOST_PP_TUPLE_ELEM(2,1,DATA),1,ATTRIBUTE))
 
 #define BOOST_FUSION_DEFINE_STRUCT_COPY_MOVE_CTOR(MODIFIER,DATA)                \
     BOOST_PP_TUPLE_ELEM(3,0,DATA)(self_type MODIFIER other_self)                \
@@ -56,7 +56,6 @@
             BOOST_FUSION_DEFINE_STRUCT_COPY_MOVE_CTOR_FILLER_I,                 \
             (                                                                   \
                 MODIFIER,                                                       \
-                BOOST_PP_SEQ_SIZE(BOOST_PP_TUPLE_ELEM(3,1,DATA)),               \
                 BOOST_PP_TUPLE_ELEM(3,2,DATA)                                   \
             ),                                                                  \
             BOOST_PP_TUPLE_ELEM(3,1,DATA))                                      \
@@ -144,10 +143,10 @@
     , typename boost::disable_if<                                               \
         boost::fusion::detail::is_explicitly_convertible<                       \
             BOOST_FUSION_R_ELSE_CLREF(Seq)                                      \
-          , BOOST_FUSION_R_ELSE_CLREF(BOOST_PP_TUPLE_ELEM(                      \
+          , BOOST_PP_TUPLE_ELEM(                                                \
                 ATTRIBUTE_TUPEL_SIZE,                                           \
                 0,                                                              \
-                BOOST_PP_SEQ_HEAD(ATTRIBUTES_SEQ)))                             \
+                BOOST_PP_SEQ_HEAD(ATTRIBUTES_SEQ))                              \
         >                                                                       \
     >::type* =0
 

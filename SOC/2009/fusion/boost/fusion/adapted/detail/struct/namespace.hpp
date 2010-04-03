@@ -42,7 +42,7 @@
     BOOST_PP_IF(                                                                \
         BOOST_PP_DEC(BOOST_PP_SEQ_SIZE(NAMESPACE_SEQ)),                         \
         BOOST_PP_SEQ_FOR_EACH_R,                                                \
-        BOOST_FUSION_ADAPT_STRUCT_PROXY_DUMMY4)(                                \
+        BOOST_PP_TUPLE_EAT(4))(                                                 \
             1,                                                                  \
             BOOST_FUSION_ADAPT_STRUCT_NAMESPACE_DECLARATION_I,                  \
             _,                                                                  \
