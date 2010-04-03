@@ -32,7 +32,7 @@ It has the Boost Software License, Version 1.0. at
 http://www.boost.org/LICENSE_1_0.txt
 
 Documentation in full as html is at 
-https://svn.boost.org/svn/boost/sandbox/xint/libs/xint/doc/html/index/html
+https://svn.boost.org/svn/boost/sandbox/xint/libs/xint/doc/html/index.html
 
 and a pdf version is also available.
 */
