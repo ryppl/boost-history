@@ -114,9 +114,12 @@ class not_a_number;
 // The integer class
 
 class integer {
+ //! \class integer \brief The extended integer class.
+ //! \details TODO more info on the integer class???
     public:
-    integer();
-    integer(const integer& b);
+    integer(); //!< Constructs a default integer, value zero.
+    integer(const integer& b);  //!< Copy constructs a integer from another integer.
+	//!< (Can throw std::overflow_error if not enough memory to construct a new integer).
 
     template <typename T> integer(const T& n,
         typename boost::enable_if<boost::is_integral<T> >::type* = 0,
@@ -125,16 +128,16 @@ class integer {
         typename boost::enable_if<boost::is_integral<T> >::type* = 0,
         typename boost::enable_if<boost::is_unsigned<T> >::type* = 0);
 
-    explicit integer(const std::string& str, size_t base=10);
-    explicit integer(const not_a_number&);
+    explicit integer(const std::string& str, size_t base=10); //!< Constructs an integer from a std::string of decimal digits.
+    explicit integer(const not_a_number&); //!< Constructs an integer with value NaN.
     ~integer();
 
-    bool odd() const;
-    bool even() const;
-    int  sign() const;
-    bool nan() const; // Tests for Not-a-Number
+    bool odd() const; //!< \returns true if extended integer is odd.
+    bool even() const; //!< \returns true if extended integer is even.
+    int  sign() const; //!< \returns -1 if extended integer is < 0.
+    bool nan() const;  //!< \returns true if extended integer is Not-a-Number.
 
-    size_t hex_digits() const;
+    size_t hex_digits() const; //!< \returns the number of hex digits to show the integer.
 
     integer& operator=(const integer &c);
 
