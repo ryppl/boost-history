@@ -1,0 +1,39 @@
+# Copyright 2010 by Chad Nelson
+# Distributed under the Boost Software License, Version 1.0.
+# See accompanying file LICENSE_1_0.txt or copy at
+#   http://www.boost.org/LICENSE_1_0.txt.
+
+project boost/xint
+    : source-location ../src
+    :
+    ;
+
+SOURCES =
+    integer.cpp
+    bit_manipulations.cpp
+    compare.cpp
+    convert.cpp
+    data_t.cpp
+    exception_blocker.cpp
+    gcd.cpp
+    misc.cpp
+    modular.cpp
+    monty.cpp
+    operators.cpp
+    powers.cpp
+    primes.cpp
+    primitives.cpp
+    random.cpp
+    roots.cpp
+    ;
+
+lib boost_xint
+    : ../src/$(SOURCES)
+    :
+        <include>../
+        <link>static:<define>BOOST_XINT_STATIC_LINK=1
+	    <link>shared:<define>BOOST_XINT_DYN_LINK=1
+    ;
+
+boost-install boost_xint ;
+
