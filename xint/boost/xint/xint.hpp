@@ -82,22 +82,22 @@ namespace detail {
 
     struct base_random_generator {
         typedef unsigned int result_type;
+        virtual result_type operator()()=0;
     };
 
     template <class T>
     struct random_generator: public base_random_generator {
         typedef boost::uniform_int<result_type> dist_t;
         typedef boost::variate_generator<T&, dist_t> gen_t;
-        random_generator(T& g): gen(g,
+        random_generator(T *g): genobj(g), gen(*g,
             dist_t((std::numeric_limits<result_type>::min)(),
                 (std::numeric_limits<result_type>::max)())) { }
-        unsigned int operator()() { return gen(); }
+        result_type operator()() { return gen(); }
+        std::auto_ptr<T> genobj;
         gen_t gen;
     };
 
-    typedef boost::function<unsigned int ()> random_t;
-
-    void set_random_generator(random_t fn, base_random_generator *obj);
+    void set_random_generator(base_random_generator *obj);
     unsigned int get_random();
 } // namespace detail
 
@@ -168,6 +168,7 @@ class integer {
     detail::data_t *_get_data() { return data; }
     const detail::data_t *_get_data() const { return data; }
     detail::digit_t _get_digit(size_t index) const;
+    detail::digit_t _get_digit(size_t index, bool) const;
     size_t _get_length() const;
     void _set_negative(bool negative);
     void _make_unique();
@@ -179,8 +180,6 @@ class integer {
     void _init(boost::uintmax_t n);
     void _attach();
     void _detach();
-
-    static const integer *cZero, *cOne;
 
     detail::data_t *data;
 };
@@ -283,7 +282,7 @@ integer invmod(const integer& n, const integer& modulus);
 ////////////////////////////////////////////////////////////////////////////////
 // Random number functions
 
-template <typename T> void set_random_generator(T &gen);
+template <typename T> void set_random_generator(T *gen);
 integer random_by_size(size_t sizeInBits, bool highBitOn=false, bool
     lowBitOn=false, bool canBeNegative=false);
 
@@ -421,9 +420,9 @@ T to(const integer& n) {
 }
 
 template <typename T>
-void set_random_generator(T &gen) {
+void set_random_generator(T *gen) {
     detail::random_generator<T> *obj=new detail::random_generator<T>(gen);
-    detail::set_random_generator(*obj, obj);
+    detail::set_random_generator(obj);
 }
 
 template <typename charT, typename traits>
