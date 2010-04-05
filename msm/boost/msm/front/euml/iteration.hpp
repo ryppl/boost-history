@@ -18,8 +18,8 @@
 namespace boost { namespace msm { namespace front { namespace euml
 {
 
-MSM_EUML_FUNCTION(ForEach_ , std::for_each , for_each_ , RESULT_TYPE_PARAM3 , RESULT_TYPE2_PARAM3 )
-MSM_EUML_FUNCTION(Accumulate_ , std::accumulate , accumulate_ , RESULT_TYPE_PARAM3 , RESULT_TYPE2_PARAM3 )
+BOOST_MSM_EUML_FUNCTION(ForEach_ , std::for_each , for_each_ , RESULT_TYPE_PARAM3 , RESULT_TYPE2_PARAM3 )
+BOOST_MSM_EUML_FUNCTION(Accumulate_ , std::accumulate , accumulate_ , RESULT_TYPE_PARAM3 , RESULT_TYPE2_PARAM3 )
 
 }}}}
 

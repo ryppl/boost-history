@@ -1621,7 +1621,7 @@ struct Exit_Pt_Helper : proto::extends< proto::terminal<exit_pt_tag>::type, Exit
 Exit_Pt_Helper const exit_pt_;
 
 #ifdef BOOST_MSVC
-#define MSM_EUML_FUNCTION(functor,function,function_name,result_trans,result_state)                     \
+#define BOOST_MSM_EUML_FUNCTION(functor,function,function_name,result_trans,result_state)               \
     template <class Param1=void , class Param2=void , class Param3=void , class Param4=void,            \
     class Param5=void,class Param6=void,class Enable=void >                                             \
     struct functor : euml_action<functor<Param1,Param2,Param3,Param4,Param5,Param6,Enable> > {};        \
@@ -1790,7 +1790,7 @@ Exit_Pt_Helper const exit_pt_;
         struct In {typedef functor <Arg1,Arg2,Arg3,Arg4,Arg5,Arg6> type;}; };                           \
         functor ## Helper const function_name ;
 
-#define MSM_EUML_METHOD(functor,function,function_name,result_trans,result_state)                     \
+#define BOOST_MSM_EUML_METHOD(functor,function,function_name,result_trans,result_state)                 \
     template <class Param1=void , class Param2=void , class Param3=void , class Param4=void,            \
     class Param5=void,class Param6=void,class Enable=void >                                             \
     struct functor : euml_action<functor<Param1,Param2,Param3,Param4,Param5,Param6,Enable> > {};        \
@@ -1942,7 +1942,7 @@ Exit_Pt_Helper const exit_pt_;
 
 #else
 
-#define MSM_EUML_FUNCTION(functor,function,function_name,result_trans,result_state)                     \
+#define BOOST_MSM_EUML_FUNCTION(functor,function,function_name,result_trans,result_state)               \
     template <class Param1=void , class Param2=void , class Param3=void , class Param4=void,            \
     class Param5=void,class Enable=void >                                                               \
     struct functor : euml_action<functor<Param1,Param2,Param3,Param4,Param5,Enable> > {};               \
@@ -2069,7 +2069,7 @@ Exit_Pt_Helper const exit_pt_;
         struct In {typedef functor <Arg1,Arg2,Arg3,Arg4,Arg5> type;}; };                           		\
         functor ## Helper const function_name ;
 
-#define MSM_EUML_METHOD(functor,function,function_name,result_trans,result_state)                     \
+#define BOOST_MSM_EUML_METHOD(functor,function,function_name,result_trans,result_state)                 \
     template <class Param1=void , class Param2=void , class Param3=void , class Param4=void,            \
     class Param5=void,class Enable=void >                                                               \
     struct functor : euml_action<functor<Param1,Param2,Param3,Param4,Param5,Enable> > {};               \
