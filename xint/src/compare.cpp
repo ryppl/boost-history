@@ -8,15 +8,30 @@
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
 
-    This file contains the definition for the compare function, and the
-    comparison operators that use it.
+    See http://www.boost.org/libs/xint for library home page.
 */
 
-#include "../xint.hpp"
-#include "../xint_data_t.hpp"
+/*! \file
+    \brief Contains the the compare function and comparison operators.
+*/
+
+#include "../boost/xint/xint.hpp"
+#include "../boost/xint/xint_data_t.hpp"
 
 namespace xint {
 
+/*! \brief Compare two integer objects.
+
+\param[in] b1, b2 The integers to compare.
+\param[in] ignoresign If \c true, the absolute values of b1 and b2 are compared,
+instead of their signed values. Used internally.
+
+\returns A negative number if \c b1 < \c b2; zero if \c b1 == \c b2, or a
+positive number if \c b1 > \c b2.
+
+This is the function behind all of the comparison operators. It might sometimes
+be useful directly as well.
+*/
 int compare(const integer &b1, const integer &b2, bool ignoresign) {
     b1._throw_if_nan();
     b2._throw_if_nan();

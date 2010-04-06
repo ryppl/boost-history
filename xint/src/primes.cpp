@@ -8,10 +8,14 @@
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
 
-    This file contains the definitions for functions related to prime numbers.
+    See http://www.boost.org/libs/xint for library home page.
 */
 
-#include "../xint.hpp"
+/*! \file
+    \brief Contains the definitions for functions related to prime numbers.
+*/
+
+#include "../boost/xint/xint.hpp"
 
 #include <vector>
 
@@ -73,9 +77,33 @@ int isProbablePrimeBaseB(const integer& n, const integer &b, callback_t
 
 } // namespace
 
+/*! \brief Tests an integer for primality.
+
+\param[in] n The number to test.
+\param[in] callback An optional function that will be called regularly during
+the operation. If it returns \c false, the function will immediately return.
+
+\returns 1 if \c n seems to be prime, 0 if it isn't, or -1 if the provided
+callback function cancelled the operation.
+
+\exception std::invalid_argument if \c n is less than 2.
+
+\note If exceptions are blocked, it will return -1 instead of throwing an
+exception.
+
+\remarks
+This function uses the Rabin-Miller probabilistic primality test. There is an
+infinitesimally small chance that it will think that a composite number is
+actually prime, but that is so small that it can be ignored for most practical
+purposes. If even that chance is too much, you can run this function over the
+number several times, it will use different random "witness" numbers each time.
+
+\see \ref primes
+*/
 int is_prime(const integer& n, callback_t callback) {
     if (n < 2) {
-        if (exceptions_allowed()) throw std::invalid_argument("xint::is_prime cannot test numbers below 2");
+        if (exceptions_allowed()) throw std::invalid_argument("xint::is_prime "
+            "cannot test numbers below 2");
         else return -1;
     }
 
@@ -94,16 +122,45 @@ int is_prime(const integer& n, callback_t callback) {
     return 1; // Appears to be prime!
 }
 
-integer random_prime(size_t sizeInBits, callback_t callback) {
-    // Call the callback for the first time
-    if (callback && !callback()) return integer(not_a_number());
+/*! \brief Generate a randomly-generated prime number of a particular bit-size.
 
-    integer pe=pow2(sizeInBits+1);
+\param[in] size_in_bits The number of bits that you want the returned value to
+have.
+\param[in] callback An optional function that will be called regularly during
+the operation. If it returns \c false, the function will immediately return.
+
+\returns A randomly-generated prime integer with the specified number of bits,
+or zero if the provided callback function cancelled the operation.
+
+\exception std::invalid_argument if \c size_in_bits is less than two.
+
+\note This function uses xint::is_prime. See the description of it for details
+of its limitations.
+
+\par
+It also uses the library's currently-set random number generator. See the \link
+random Random Number Functions page\endlink for details on its limitations and
+requirements, and how to get cryptographically-secure random numbers.
+
+\see \ref primes
+*/
+integer random_prime(size_t size_in_bits, callback_t callback) {
+    if (size_in_bits < 2) {
+        if (exceptions_allowed()) throw std::invalid_argument(
+            "xint::random_prime cannot create prime numbers smaller than two "
+            "bits");
+        else return integer(not_a_number());
+    }
+
+    // Call the callback for the first time
+    if (callback && !callback()) return integer::zero();
+
+    integer pe=pow2(size_in_bits+1);
     while (1) {
-        integer p(random_by_size(sizeInBits, true, true));
+        integer p(random_by_size(size_in_bits, true, true));
         while (p < pe) {
             int r=is_prime(p, callback);
-            if (r < 0) return integer(not_a_number());
+            if (r < 0) return integer::zero();
             if (r == 1) return p;
             p+=2;
         }

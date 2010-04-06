@@ -8,30 +8,52 @@
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
 
-    This file contains the definitions for math primitives.
+    See http://www.boost.org/libs/xint for library home page.
 */
 
-#include "../xint.hpp"
-#include "../xint_data_t.hpp"
+/*! \file
+    \brief Contains the definitions for math primitives.
+*/
+
+#include "../boost/xint/xint.hpp"
+#include "../boost/xint/xint_data_t.hpp"
 #include <cassert>
 
 namespace xint {
 
 using namespace detail;
 
+/*! \brief Returns the absolute value of an integer.
+
+\param[in] n The integer to operate on.
+
+\returns If \c n is zero or positive, returns \c n. Otherwise returns \c -n.
+*/
 integer abs(const integer& n) {
     return (n < 0 ? -n : n);
 }
 
-integer negate(const integer& _n) {
-    _n._throw_if_nan();
+/*! \brief Return the additive inverse of an integer.
 
-    integer n(_n);
-    n._make_unique();
-    n._get_data()->negate();
-    return n;
+\param[in] n The integer to operate on.
+
+\returns \c -n.
+*/
+integer negate(const integer& n) {
+    n._throw_if_nan();
+
+    integer nn(n);
+    nn._make_unique();
+    nn._get_data()->negate();
+    return nn;
 }
 
+/*! \brief Calculate the sum of two integers.
+
+\param[in] n1, n2 The integers to add.
+
+\returns The sum of the parameters.
+*/
 integer add(const integer& n1, const integer& n2) {
     int sign1=n1.sign(), sign2=n2.sign();
     if (sign1 != sign2) {
@@ -50,6 +72,12 @@ integer add(const integer& n1, const integer& n2) {
     }
 }
 
+/*! \brief Calculate the difference between two integers.
+
+\param[in] n1, n2 The integers to operate on.
+
+\returns The difference between the parameters.
+*/
 integer subtract(const integer& n1, const integer& n2) {
     int sign1=n1.sign(), sign2=n2.sign();
     if (sign1 != sign2) {
@@ -69,6 +97,16 @@ integer subtract(const integer& n1, const integer& n2) {
     }
 }
 
+/*! \brief Calculate the product of two integers.
+
+\param[in] n, by The integers to operate on.
+
+\returns The product of the parameters.
+
+\remarks
+Automatically uses the more-efficient squaring algorithm if it can trivially
+detect that the two parameters are copies of the same number.
+*/
 integer multiply(const integer& n, const integer& by) {
     int nsign=n.sign(), bysign=by.sign();
     if (nsign==0 || bysign==0) return integer::zero();
@@ -146,88 +184,95 @@ std::pair<integer, integer> divideBySingleDigit(const integer& d1, digit_t d2) {
 }
 
 std::pair<integer, integer> subDivide(integer d1, integer d2) {
-    const data_t *ndata=d1._get_data(), *bydata=d2._get_data();
-    const digit_t *nDigits = ndata->digits, *byDigits = bydata->digits;
-    size_t nMSD = ndata->mLength-1, byMSD = bydata->mLength-1;
+    const digit_t *byDigits = d2._get_data()->digits;
 
     // The normalization step
     digit_t d = static_cast<digit_t>(digit_overflowbit /
-        (doubledigit_t(byDigits[byMSD])+1));
+        (doubledigit_t(byDigits[d2._get_length()-1])+1));
     if (d > 1) {
         d1 *= d;
         d2 *= d;
 
-        // Gotta reset these
-        ndata = d1._get_data();
-        bydata = d2._get_data();
-        nDigits = ndata->digits;
-        byDigits = bydata->digits;
-        nMSD = ndata->mLength-1;
-        byMSD = bydata->mLength-1;
-
+        // Gotta reset this
+        byDigits = d2._get_data()->digits;
     }
-    assert(byDigits[byMSD] >= digit_overflowbit / 2);
+    assert(d2._get_digit(d2._get_length()-1) >= digit_overflowbit / 2);
 
-    // We have to figure out which digit is going to be the first one. We'll do
-    // that by cutting the least-significant digits of the dividend until it
-    // has the same number of digits as the divisor; if what remains is greater
-    // than the divisor, then we start there, otherwise that one's zero and we
-    // start on the next lower one.
-    size_t highestQuotientDigit=(nMSD - byMSD);
-    integer nTest(d1);
-    nTest -= integer::one();
-    nTest >>= (bits_per_digit * highestQuotientDigit);
-    if (nTest < d2) --highestQuotientDigit;
-
-    integer quotient, w;
+    integer quotient, r(d1);
     data_t *qdata=quotient._get_data();
-    qdata->alloc(highestQuotientDigit + 1);
 
-    for (int j = int(highestQuotientDigit); j >= 0; --j) {
-        doubledigit_t q = (nDigits[nMSD] > byDigits[byMSD] ?
-            doubledigit_t(nDigits[nMSD]) / byDigits[byMSD] :
-            ((doubledigit_t(nDigits[nMSD]) << bits_per_digit) +
-            nDigits[nMSD-1]) / byDigits[byMSD]);
+    size_t n=d2._get_length(), m=d1._get_length() - n;
+    size_t i=m+n, j=m;
+    qdata->alloc(j+1);
 
-        digit_t loopcount=0;
+    r._make_unique();
+    do {
+        doubledigit_t ri=(doubledigit_t(r._get_digit(i, true))
+            << bits_per_digit) + r._get_digit(i-1, true);
+        doubledigit_t q=(std::min<doubledigit_t>)(ri / byDigits[n-1], digit_mask);
+
         while (1) {
-            w=(d2 * q);
-            w <<= (bits_per_digit * j);
-
-            w = d1 - w;
-            if (w.sign() < 0) {
-                --q;
-
-                // Our estimate should only be off by a maximum of two, so this
-                // while loop should only run twice each time, at most.
-                assert(++loopcount <= 2);
-            } else break;
+            // We need three digits here, a doubledigit_t won't suffice.
+            doubledigit_t r2a=ri - (q * byDigits[n-1]);
+            integer r2=(integer(r2a) << bits_per_digit) + r._get_digit(i-2);
+            if (byDigits[n-2] * q <= r2) break;
+            --q;
         }
 
-        qdata->digits[j] = static_cast<digit_t>(q);
-        if (w < d2) break;
+        integer bq=d2*q;
+        if (r < bq) { --q; bq -= d2; }
 
-        d1 = w;
-        ndata=d1._get_data();
-        nDigits = ndata->digits;
-        nMSD = ndata->mLength-1;
-    }
+        integer rtemp((r >> (bits_per_digit * (i-n))) - bq);
+        data_t *rdata=r._get_data();
+
+        digit_t *rdigits=rdata->digits;
+
+        for (size_t x=0; x<=n && i-n+x < rdata->mLength; ++x)
+            rdigits[i-n+x]=rtemp._get_digit(x, true);
+        rdata->skipLeadingZeros();
+
+        qdata->digits[j--]=digit_t(q);
+    } while (--i >= n);
+
+    qdata->skipLeadingZeros();
 
     if (d > 1) {
         // Denormalization step. This requires a division by a single digit_t.
-        integer remainder=divideBySingleDigit(w, d).first;
+        integer remainder=divideBySingleDigit(r, d).first;
         return std::make_pair(quotient, remainder);
     } else {
-        return std::make_pair(quotient, w);
+        return std::make_pair(quotient, r);
     }
 }
 
 } // namespace
 
+/*! \brief Calculate how many \c dividends would fit into \c divisor.
+
+\param[in] dividend, divisor The integers to operate on.
+
+\returns The integer value of \c dividend divided by \c divisor.
+
+\exception xint::divide_by_zero if \c divisor is zero.
+*/
 integer divide(const integer& dividend, const integer& divisor) {
     return divide_r(dividend, divisor).first;
 }
 
+/*! \brief Calculate how many \c dividends would fit into \c divisor, with the
+           remainder.
+
+\param[in] d1 The dividend.
+\param[in] d2 The divisor.
+
+\returns An \c std::pair containing the quotient and remainder of \c d1 divided
+by \c d2.
+
+\exception xint::divide_by_zero if \c d2 is zero.
+
+\note If exceptions are blocked, it will return an std::pair with two
+Not-a-Number values instead of throwing.
+*/
 std::pair<integer, integer> divide_r(const integer& d1, const
     integer& d2)
 {

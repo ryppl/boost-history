@@ -1,0 +1,7 @@
+/*! \page r_default_necessary Okay, then why not make the developer provide one?
+
+Ease-of-use, and the fact that for many developers, there's little need for
+cryptographically-secure random numbers. This way, those that need them can take
+a few simple steps to get them, and those that don't can just use the library
+as-is.
+*/

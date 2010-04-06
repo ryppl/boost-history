@@ -8,7 +8,11 @@
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
 
-    This header file declares the library's self-testing functions.
+    See http://www.boost.org/libs/xint for library home page.
+*/
+
+/*! \file
+    \brief Declares the library's self-testing functions.
 */
 
 #ifndef BOOST_INCLUDED_XINT_TEST_H
@@ -16,7 +20,8 @@
 
 namespace xint {
 
-bool testAll();
+//! \name Self-Testing Functions
+//!@{
 bool testBitManipulations();
 bool testAddSubtract();
 bool testMultiply();
@@ -25,6 +30,7 @@ bool testConvert();
 bool testStreams();
 bool testMontyMultiply();
 bool testMontyPowerMod();
+//!@}
 
 } // namespace xint
 

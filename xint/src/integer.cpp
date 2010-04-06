@@ -8,11 +8,15 @@
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
 
-    This file contains the definitions for the integer member functions.
+    See http://www.boost.org/libs/xint for library home page.
 */
 
-#include "../xint.hpp"
-#include "../xint_data_t.hpp"
+/*! \file
+    \brief Contains the definitions for the xint::integer member functions.
+*/
+
+#include "../boost/xint/xint.hpp"
+#include "../boost/xint/xint_data_t.hpp"
 
 #ifdef XINT_THREADSAFE
     #define XINT_DISABLE_COPY_ON_WRITE
@@ -20,23 +24,70 @@
 
 namespace xint {
 
-const integer *integer::cZero=0, *integer::cOne=0;
+namespace {
+	std::auto_ptr<integer> cZero, cOne;
+}
+
 const std::string detail::nan_text("#NaN#");
 
+//! \brief Creates a new integer with an initial value of zero.
 integer::integer() {
     _init();
 }
 
+/*! \brief Creates a copy of an existing integer.
+
+\param[in] b An existing integer. If passed a Not-a-Number, it will create
+another Not-a-Number.
+
+\note
+This library can use a \link cow copy-on-write technique\endlink, making copying
+(even of large numbers) a very inexpensive operation.
+
+\overload
+*/
 integer::integer(const integer& b) {
-    if (b.nan()) data=0;
+    if (b.is_nan()) data=0;
     else _init(b);
 }
 
+/*! \brief Create an integer from a string representation.
+
+\param[in] str A string representation of a number.
+\param[in] base The base of the number, or xint::autobase.
+
+\exception xint::invalid_base if the base parameter is not between 2 and 36
+(inclusive) or the constant xint::autobase.
+\exception xint::invalid_digit if the string contains any digit that cannot be
+part of a number in the specified base, or if there are no valid digits.
+
+\remarks
+This will convert a string representation of a number into an integer. See the
+description of the xint::from_string function for details on its behavior.
+
+\par
+This is the most common way to initialize values that are too large to fit into
+a native integral type.
+
+\overload
+*/
 integer::integer(const std::string& str, size_t base) {
     _init(from_string(str, base));
 }
 
-integer::integer(const not_a_number&) {
+/*! \brief Creates an integer with the value of Not-a-Number.
+
+\param[in] n An xint::not_a_number object (normally used as an exception class).
+
+\remarks
+This is the official way to create an integer with the Not-a-Number value, if
+you ever wish to use that value for your own purposes.
+
+\see \ref nan
+
+\overload
+*/
+integer::integer(const not_a_number& n) {
     data=0;
 }
 
@@ -106,16 +157,29 @@ void integer::_set_negative(bool negative) {
     if (negative != (sign() < 0)) *this=negate(*this);
 }
 
+/*! \brief Tests the lowest bit of \c *this to determine oddness.
+
+\returns \c true if \c *this is odd, otherwise \c false.
+*/
 bool integer::odd() const {
     _throw_if_nan();
     return ((_get_digit(0) & 0x01)==1);
 }
 
+/*! \brief Tests the lowest bit of \c *this to determine evenness.
+
+\returns \c true if \c *this is even, otherwise \c false.
+*/
 bool integer::even() const {
     _throw_if_nan();
     return ((_get_digit(0) & 0x01)==0);
 }
 
+/*! \brief Tests the sign of \c *this.
+
+\returns -1 if \c *this is negative, 0 if it's zero, or 1 if it's greater than
+zero.
+*/
 int integer::sign() const {
     _throw_if_nan();
     if (data->mIsNegative) return -1;
@@ -123,10 +187,21 @@ int integer::sign() const {
     return 1;
 }
 
-bool integer::nan() const {
+/*! \brief Tests \c *this for Not-a-Number.
+
+\returns \c true if \c *this is Not-a-Number, otherwise \c false.
+
+\see \ref nan
+*/
+bool integer::is_nan() const {
     return (data==0);
 }
 
+/*! \brief Tells you roughly how large an integer is.
+
+\returns The number of hexadecimal digits that would be required to encode \c
+*this.
+*/
 size_t integer::hex_digits() const {
     _throw_if_nan();
     size_t bits=log2(*this);
@@ -202,16 +277,21 @@ integer& integer::operator>>=(size_t shift) {
 }
 
 const integer& integer::zero() {
-    if (cZero==0) cZero=new integer(0);
+    if (cZero.get()==0) cZero.reset(new integer(0));
     return *cZero;
 }
 
 const integer& integer::one() {
-    if (cOne==0) cOne=new integer(1);
+    if (cOne.get()==0) cOne.reset(new integer(1));
     return *cOne;
 }
 
 detail::digit_t integer::_get_digit(size_t index) const {
+    return data->digits[index];
+}
+
+detail::digit_t integer::_get_digit(size_t index, bool) const {
+    if (index >= data->mLength) return 0;
     return data->digits[index];
 }
 
@@ -220,7 +300,7 @@ size_t integer::_get_length() const {
 }
 
 void integer::_throw_if_nan() const {
-    if (nan()) throw not_a_number();
+    if (is_nan()) throw not_a_number();
 }
 
 } // namespace xint

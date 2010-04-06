@@ -8,10 +8,16 @@
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
 
-    This file contains the Greatest Common Denominator function.
+    See http://www.boost.org/libs/xint for library home page.
 */
 
-#include "../xint.hpp"
+/*! \file
+    \brief Greatest Common Denominator and Least Common Multple.
+
+    Also holds the definition for xint::invmod, since it uses the GCD algorithm.
+*/
+
+#include "../boost/xint/xint.hpp"
 
 namespace xint {
 
@@ -51,6 +57,13 @@ struct gcd_core {
 
 } // namespace
 
+/*! \brief Calculate the Greatest Common Denominator of two integers.
+
+\param[in] num1, num2 The integers to operate on.
+
+\returns The greatest common denominator of the two integers, which will always
+be a positive number.
+*/
 integer gcd(const integer& num1, const integer& num2) {
     num1._throw_if_nan();
     num2._throw_if_nan();
@@ -71,17 +84,38 @@ integer gcd(const integer& num1, const integer& num2) {
     return integer::one() << k;
 }
 
+/*! \brief Calculate the Least Common Multiple of two integers.
+
+\param[in] num1, num2 The integers to operate on.
+
+\returns The least common multiple of the two integers. If either integer is
+zero, then the return value will be zero, by convention; in all other cases, the
+return value will be a positive number.
+*/
 integer lcm(const integer& num1, const integer& num2) {
     if (num1.sign() == 0 || num2.sign() == 0) return integer::zero();
     return abs(num1 * num2) / gcd(num1, num2);
 }
 
+/*! \brief Get the modular inverse of a number in a modulus, if there is one.
+
+\param[in] n The number to retrieve the inverse of.
+\param[in] m The modulus to use.
+
+\returns The modular inverse of \c n in \c m. If \c n has no modular inverse in
+\c m, returns zero.
+
+\exception xint::invalid_modulus if the modulus is less than one.
+
+\note If exceptions are blocked, it returns zero instead of throwing an
+exception.
+*/
 integer invmod(const integer& n, const integer& m) {
     // Calculates the modular inverse of n mod m, or (n^(-1)) mod m
     // Defined as b, where n*b corresponds to 1 (mod m)
     if (m < integer::one()) {
         if (exceptions_allowed()) throw invalid_modulus();
-        else return integer(not_a_number());
+        else return integer::zero();
     }
 
     int sign=n.sign();
@@ -92,17 +126,17 @@ integer invmod(const integer& n, const integer& m) {
         _n._set_negative(false);
 
         integer nn=invmod(_n, m);
-        if (nn.nan()) return nn;
+        if (nn.is_nan()) return nn;
 
         nn._set_negative(true);
         return nn + m;
     }
 
-    if (n.even() && m.even()) return integer(not_a_number()); // GCD(x,y)!=1, no inverse possible.
+    if (n.even() && m.even()) return integer::zero(); // GCD(x,y)!=1, no inverse possible.
 
     gcd_core core(n, m);
 
-    if (core.u3 != integer::one()) return integer(not_a_number()); // GCD(x,y)!=1, no inverse possible.
+    if (core.u3 != integer::one()) return integer::zero(); // GCD(x,y)!=1, no inverse possible.
     return core.u1;
 }
 

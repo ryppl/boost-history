@@ -1,0 +1,6 @@
+/*! \page r_nan Why have a Not-a-Number value?
+
+Because it's the cleanest way I could find to return answers that don't
+represent a valid \c integer, which is necessary for the exception-blocking
+mechanism.
+*/

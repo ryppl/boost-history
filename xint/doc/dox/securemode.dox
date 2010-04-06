@@ -1,0 +1,12 @@
+/*! \page securemode Secure Mode
+
+For high-security applications, this library has a Secure Mode compile-time
+option. In Secure Mode, all memory is zeroed before being released.
+
+To enable it, define the preprocessor symbol \c XINT_SECURE when compiling the
+library. You don't need to define it when using the library, only when compiling
+it.
+
+To see whether your copy was compiled with secure-mode enabled, use the
+xint::opt_secure_mode function.
+*/

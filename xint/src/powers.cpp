@@ -8,12 +8,15 @@
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
 
-    This file contains the definitions for functions related to powers of a
-    number.
+    See http://www.boost.org/libs/xint for library home page.
 */
 
-#include "../xint.hpp"
-#include "../xint_data_t.hpp"
+/*! \file
+    \brief Contains the definitions for functions related to powers of a number.
+*/
+
+#include "../boost/xint/xint.hpp"
+#include "../boost/xint/xint_data_t.hpp"
 
 #include <vector>
 
@@ -33,12 +36,31 @@ namespace {
 
 } // namespace
 
-integer pow2(size_t exponent) {
+/*! \brief Calculate the value of 2<sup>e</sup>
+
+\param[in] e The exponent to operate on.
+
+\returns 2 to the power of \c e.
+
+\remarks
+This is a convenience function, to help with self-documenting code.
+*/
+integer pow2(size_t e) {
     integer r;
-    setbit(r, exponent);
+    setbit(r, e);
     return r;
 }
 
+/*! \brief Calculate the value of n<sup>2</sup>
+
+\param[in] n The integer to operate on.
+
+\returns \c n times \c n.
+
+This function uses a faster algorithm than the standard multiplication one.
+
+\todo Rewrite this to eliminate the inefficient addOverflow.
+*/
 integer sqr(const integer& n) {
     n._throw_if_nan();
 
@@ -83,22 +105,28 @@ integer sqr(const integer& n) {
     return answer;
 }
 
-integer pow(const integer& n, const integer& exponent) {
-    bool neg=(n.sign() < 0 && exponent.odd());
+/*! \brief Calculate the value of n<sup>e</sup>
 
-    size_t length=exponent._get_length(), lastBitCount=0;
-    digit_t ee(exponent._get_digit(length-1));
+\param[in] n, e The integers to operate on.
+
+\returns \c n to the power of \c e.
+*/
+integer pow(const integer& n, const integer& e) {
+    bool neg=(n.sign() < 0 && e.odd());
+
+    size_t length=e._get_length(), lastBitCount=0;
+    digit_t ee(e._get_digit(length-1));
     while (ee != 0) { ee >>= 1; ++lastBitCount; }
 
     integer p(abs(n)), answer=integer::one();
     for (size_t eIndex=0; eIndex < length; ++eIndex) {
-        digit_t e(exponent._get_digit(eIndex));
+        digit_t eee(e._get_digit(eIndex));
 
         int bitCount(int(eIndex == length-1 ? lastBitCount : bits_per_digit));
         while (bitCount-- > 0) {
-            if (e & 0x01) answer*=p;
+            if (eee & 0x01) answer*=p;
             p=sqr(p);
-            e >>= 1;
+            eee >>= 1;
         }
     }
 
@@ -106,6 +134,17 @@ integer pow(const integer& n, const integer& exponent) {
     return answer;
 }
 
+/*! \brief Calculate the value of \c n!
+
+\param[in] n The value to operate on.
+
+\returns \c n factorial, defined as <code>1*2*3*...*n</code>
+
+\warning
+Factorials get ridiculously huge, even with fairly small values of \c n. This
+function, when used with a large parameter, is the easiest way to exhaust the
+system's memory.
+*/
 integer factorial(size_t n) {
     integer r(integer::one());
     if (n == (std::numeric_limits<size_t>::max)()) {

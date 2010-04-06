@@ -1,0 +1,13 @@
+/*! \page r_cow Why use copy-on-write? I've heard that causes problems with multi-threaded code.
+
+It's the best way I found to return large \c integer objects from functions
+efficiently. Some of these numbers can get huge, and move semantics aren't yet
+in the current standard. (Once they are, I'll consider removing the
+copy-on-write stuff.) It is also more CPU- and memory-efficient.
+
+It \e does cause problems when you try to use the library from multiple threads
+at the same time. To deal with that, the library can be compiled in a \link
+threadsafe thread-safe mode\endlink, which ensures that every \c integer gets
+its own unique storage, among other things. You still have to ensure that only
+one thread accesses a particular \c integer at a time.
+*/

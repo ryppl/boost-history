@@ -1,0 +1,9 @@
+/*! \page r_interface Why did you do \e X in the interface?
+
+The interface is based on a paper by M.J. Kronenburg presented to the C++
+Standards Committee in early 2004, n1692, and the "standardese" for it in n1744
+by Michiel Salters / Nederlands Normalisatie Instituut.
+
+\see n1692: http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2004/n1692.pdf
+\see n1744: http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1744.pdf
+*/

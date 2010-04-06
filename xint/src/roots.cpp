@@ -8,14 +8,27 @@
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
 
-    This file contains the definitions for functions related to roots of a
-    number.
+    See http://www.boost.org/libs/xint for library home page.
 */
 
-#include "../xint.hpp"
+/*! \file
+    \brief Contains the definitions for functions related to roots of a number.
+*/
+
+#include "../boost/xint/xint.hpp"
 
 namespace xint {
 
+/*! \brief Calculate the square root of \c an integer.
+
+\param[in] n The value to operate on.
+
+\returns The largest integer that, when squared, is less than or equal to \c n.
+If \c n is not a perfect square, then this value will not be the exact square
+root.
+
+\exception xint::cannot_represent if \c n is negative.
+*/
 integer sqrt(const integer& n) {
     if (n.sign() < 0) {
         if (exceptions_allowed()) throw cannot_represent("library cannot "

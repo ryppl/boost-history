@@ -1,0 +1,19 @@
+/*! \page rationale Rationales
+
+\section sinterface Interface
+- \subpage r_interface
+- \subpage r_interface_design_only
+
+\section scow Copy-on-Write
+- \subpage r_cow
+- \subpage r_shared_ptr
+
+\section snan Not-a-Number
+- \subpage r_nan
+- \subpage r_negzero
+
+\section srandom Random generator
+- \subpage r_random
+- \subpage r_insecure_default
+- \subpage r_default_necessary
+*/

@@ -1,0 +1,26 @@
+/*! \page nan The Not-a-Number Value
+
+Sometimes it's useful for a variable to have a value that doesn't represent any
+proper value, to indicate that it hasn't been specified or that there was an
+error in a calculation. For that purpose, the \c xint::integer class provides
+Not-a-Number.
+
+To create a Not-a-Number, use the integer constructor that exists solely for
+that purpose. No other library function will return a Not-a-Number except under
+the following circumstances:
+
+- If a function that returns a non-reference integer tries to throw a blockable
+exception, but exceptions are blocked.
+- If the string-to-integer functions are asked to convert the string \c
+"#NaN#".
+
+The only things you can do with a Not-a-Number are:
+
+- Test for it, using the member function integer::is_nan.
+- Convert it to a string, or write it to a stream. The result will be the string
+\c "#NaN#".
+- Make a copy of it.
+
+If you attempt to do anything else with it, you will get the non-blockable
+\c xint::not_a_number exception.
+*/

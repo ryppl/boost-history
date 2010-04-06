@@ -8,12 +8,20 @@
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
 
-    This file contains the definitions for functions based on the Montgomery
-    reduction. Used for an extra-fast powerMod.
+    See http://www.boost.org/libs/xint for library home page.
 */
 
-#include "../xint.hpp"
-#include "../xint_data_t.hpp"
+/*! \file
+    \brief Internally used functions.
+
+    This file contains the definitions for functions based on the Montgomery
+    Reduction, used internally for an extra-fast xint::powmod.
+*/
+
+#include "../boost/xint/xint.hpp"
+#include "../boost/xint/xint_data_t.hpp"
+
+#include <boost/scoped_array.hpp>
 
 #include <vector>
 
@@ -21,6 +29,7 @@ namespace xint {
 
 using namespace detail;
 
+//! Returns the low digit of the inverse of a number. Used internally.
 digit_t inverse0(const integer& n) {
     // Using the Dussé and Kalisk simplification
     doubledigit_t x = 2, y = 1;
@@ -31,17 +40,22 @@ digit_t inverse0(const integer& n) {
     return digit_t(x - y);
 }
 
+/*! \brief Returns the most efficient R value for a number and the library's
+           internal representation. Used internally.
+*/
 integer montgomeryR(const integer& n) {
     return integer::one() << (bits_per_digit * n._get_data()->mLength);
 }
 
+//! Returns the Montgomery form of a number. Used for testing.
 integer toMontgomeryForm(const integer& n, const integer& m) {
     return (n * montgomeryR(m) % m);
 }
 
+//! Returns the integer from the Montgomery form of a number. Used for testing.
 integer fromMontgomeryForm(const integer& n, const integer& m) {
     integer inv=invmod(montgomeryR(m), m);
-    if (inv.nan()) {
+    if (inv.is_nan()) {
         if (exceptions_allowed()) throw invalid_modulus("modulus has no inverse");
         else return integer(not_a_number());
     }
@@ -72,8 +86,11 @@ integer fromMontgomeryForm(const integer& n, const integer& m) {
 //    return A;
 //}
 
-integer montgomeryMultiplyMod(const integer& a, const integer& b, const integer& n,
-    digit_t nPrime0)
+/*! \brief Returns the Montgomery equivalent of <code>mulmod(a, b, n)</code>.
+           Used internally.
+*/
+integer montgomeryMultiplyMod(const integer& a, const integer& b, const integer&
+    n, digit_t nPrime0)
 {
     // Using the Dussé and Kalisk simplification
     // Unstated parameter B is a power of two representing the number of values
@@ -123,7 +140,7 @@ class TUTable {
 
     static const TUTable& get() {
         // Construct a singleton instance on demand
-        if (mPtr==0) mPtr=new TUTable;
+        if (mPtr.get()==0) mPtr.reset(new TUTable);
         return *mPtr;
     }
 
@@ -134,7 +151,6 @@ class TUTable {
         int i=1;
         while (p!=pe) *p++=calculateValues(i++);
     }
-    ~TUTable() { delete[] mTable; }
 
     std::pair<int, int> calculateValues(int x) {
         int r=0;
@@ -145,12 +161,12 @@ class TUTable {
         }
     }
 
-    static TUTable *mPtr;
+    static std::auto_ptr<TUTable> mPtr;
 
-    value_t *mTable;
+    boost::scoped_array<value_t> mTable;
 };
 
-TUTable *TUTable::mPtr=0;
+std::auto_ptr<TUTable> TUTable::mPtr;
 
 int mostEfficientK(const integer& e) {
     doubledigit_t k=cMaxK, kTarget=log2(e)-1;
@@ -208,6 +224,9 @@ vkbitdigit_t splitIntoKBitDigits(const integer& e, size_t k) {
 
 } // namespace
 
+/*! \brief Returns the Montgomery equivalent of <code>powmod(a, b, n)</code>.
+           Used internally.
+*/
 integer montgomeryPowerMod(const integer& a, const integer& e, const integer& n)
 {
     // 0 <= a < n, n is odd

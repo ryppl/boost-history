@@ -1,0 +1,14 @@
+/*! \page r_negzero Since you've got Not-a-Number, what about negative zero, and positive and negative infinity, like IEEE floating-point numbers?
+
+Because they're irrelevant to an arbitrary-sized integer library.
+
+The mathematical concept of zero has no sign. It's neither positive nor
+negative (or if you prefer, it's both). The concept of a signed zero is used in
+floating-point numbers to represent a value that's so small that it can't be
+distinguished from zero, but which may not be an actual zero. Such a non-zero
+number does have a sign. But mathematically, a negative zero is simply zero.
+
+The concept of infinity (in either direction) comes up very rarely in an integer
+library. Since infinity is a concept, not a countable value, it's simply
+represented by the Not-a-Number value in the few places that it might be needed.
+*/

@@ -1,0 +1,12 @@
+/*! \page cow Copying and Argument-Passing
+
+By default, the xint::integer class uses copy-on-write, which means that if you
+copy an integer, the copy and the original share the same storage. They are only
+assigned separate storage when one of them is changed. This mechanism makes
+copying an integer (explicitly, by returning it, or by using it as a
+non-reference parameter to a function) very fast, regardless of its size.
+
+(Unfortunately, this makes thread-safe operation impossible. If you need to use
+the library from multiple threads, you can disable this behavior by compiling it
+with \link threadsafe the thread-safe option\endlink.
+*/

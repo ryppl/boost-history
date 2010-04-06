@@ -8,18 +8,23 @@
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
 
-    This file contains the conversion functions. Note that the to<T> function is
-    not here, because it's a template function and must be defined in a header
-    file.
-
-    TODO: the to_string function could be made more efficient by using only
-    doubledigit_t-sized pieces of the integer at a time, and dividing the whole
-    thing by the total of the divisions done to get the digits. Same with the
-    from_string function.
+    See http://www.boost.org/libs/xint for library home page.
 */
 
-#include "../xint.hpp"
-#include "../xint_data_t.hpp"
+/*! \file
+    \brief Contains the conversion functions.
+
+    Note that the xint::to<T> function is not here, because it's a template
+    function and must be defined in a header file.
+
+    \todo the xint::to_string function could be made more efficient by using
+    only doubledigit_t-sized pieces of the integer at a time, and dividing the
+    whole thing by the total of the divisions done to get the digits. Same with
+    the xint::from_string function.
+*/
+
+#include "../boost/xint/xint.hpp"
+#include "../boost/xint/xint_data_t.hpp"
 
 #include <vector>
 #include <algorithm>
@@ -39,8 +44,29 @@ char nToChar(int n, bool upperCase) {
 
 } // namespace
 
-std::string to_string(const integer& n, size_t base, bool upperCase) {
-    if (n.nan()) return detail::nan_text;
+/*! \brief Creates a string representation of the specified integer.
+
+\param[in] n The integer to convert.
+\param[in] base The base, between 2 and 36 inclusive, to convert it to. Defaults
+to base 10.
+\param[in] uppercase Whether to make alphabetic characters (for bases greater
+than ten) uppercase or not. Defaults to \c false.
+
+\returns The string value of \c n. If \c n is Not-a-Number, returns the string
+\c \#NaN#.
+
+\exception xint::invalid_base if base is less than two or greater than 36.
+
+\note If exceptions are blocked, it returns an empty string instead of throwing
+an exception.
+
+\remarks
+This is the function that's called when you ask the library to write an integer
+to a stream, but it's more flexible because you can specify any base between 2
+and 36. (Streams only allow base-8, base-10, or base-16.)
+*/
+std::string to_string(const integer& n, size_t base, bool uppercase) {
+    if (n.is_nan()) return detail::nan_text;
     if (base<2 || base>36) {
         if (exceptions_allowed()) throw invalid_base();
         else return std::string();
@@ -66,7 +92,7 @@ std::string to_string(const integer& n, size_t base, bool upperCase) {
 
         do {
             while (digitShift >= 0) {
-                out << nToChar((*d >> digitShift) & mask, upperCase);
+                out << nToChar((*d >> digitShift) & mask, uppercase);
                 digitShift -= bitsPerDigit;
             }
 
@@ -83,7 +109,7 @@ std::string to_string(const integer& n, size_t base, bool upperCase) {
         integer r;
         while (a.first.sign()!=0) {
             a=divide_r(a.first, shift);
-            out << nToChar(a.second._get_digit(0), upperCase);
+            out << nToChar(a.second._get_digit(0), uppercase);
         }
 
         if (n.sign() < 0) out << '-';
@@ -94,6 +120,32 @@ std::string to_string(const integer& n, size_t base, bool upperCase) {
     }
 }
 
+/*! \brief Converts a string into an integer.
+
+\param[in] str The string to convert.
+\param[in] base the base that the string representation of the number is in.
+This can be any number between 2 and 36 (inclusive). It can also be the constant
+xint::autobase, in which case the function will follow the standard C/C++ rules
+for interpreting a numeric constant: any number with a zero as the first digit
+is assumed to be base-8; any number with a leading zero-x or zero-X (such as
+0x1f) is base-16, and anything else is base-10.
+
+\returns An integer with the numeric value of the string in base \c base. If the
+string is \c \#NaN#, then it will return \link nan Not-a-Number\endlink.
+
+\exception xint::overflow_error if there is not enough free memory to create the
+integer.
+\exception xint::invalid_base if the base parameter is not between 2 and 36
+(inclusive) or the constant xint::autobase.
+\exception xint::invalid_digit if the string contains any digit that cannot be
+part of a number in the specified base, or if there are no valid digits.
+
+\remarks
+This is the function that's called when reading an integer from a stream, or
+when contructing one from a string.
+
+\see integer::integer(const std::string& str, size_t base)
+*/
 integer from_string(const std::string& str, size_t base) {
     if (str==detail::nan_text) return integer(not_a_number());
 
@@ -147,6 +199,15 @@ integer from_string(const std::string& str, size_t base) {
     return r;
 }
 
+/*! \brief Converts a binary representation of a number into an integer.
+
+\param[in] str An \c std::string containing the bytes to convert, lowest byte
+first.
+
+\returns An integer representing the bytes.
+
+\see xint::to_binary
+*/
 integer from_binary(const std::string& str) {
     const size_t bytesPerDigit=sizeof(digit_t);
     const size_t bitsPerByte=std::numeric_limits<unsigned char>::digits;
@@ -167,6 +228,22 @@ integer from_binary(const std::string& str) {
     return r;
 }
 
+/*! \brief Creates a binary representation of an integer, lowest byte first.
+
+\param[in] n The integer to convert.
+
+\returns A string containing the binary representation.
+
+\note
+This function only stores the absolute value of \c n; if you need the sign, you
+must store it separately.
+
+\remarks
+A binary representation is sometimes used for persistent storage or
+transmission, as it is more space-efficient than a string representation.
+
+\see xint::from_binary
+*/
 std::string to_binary(const integer& n) {
     n._throw_if_nan();
 

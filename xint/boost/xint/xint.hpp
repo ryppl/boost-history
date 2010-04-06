@@ -1,46 +1,22 @@
-/*! \brief The Extended Integer (XInt) Library
-   \details
-    A fast, portable C++ library for multi-precision integer math.
 
-    This is the main header file for the library, and the only one that
-    programs using it should need to include.
+/*
+    The Extended Integer (XInt) Library
+    A fast, portable C++ library for multi-precision integer math
+    Copyright 2010 by Chad Nelson
 
-\mainpage  eXtended Integer library.
+    Distributed under the Boost Software License, Version 1.0.
+    See accompanying file LICENSE_1_0.txt or copy at
+        http://www.boost.org/LICENSE_1_0.txt
 
-A C++ library that lets your program handle much, much larger integer numbers
-than the built-in int, long, or even long long types,
-and handle them using the same syntax that
-C and C++ use for the standard integer types.
-
-The maximum size of the integer is limited by the memory available to store it,
-in practice millions of hexadecimal digits, so effectively infinite.
-
-Completely portable, written entirely in modern C++,
-with many different types of operating system, compiler, and hardware in mind.
-It will compile cleanly on many operating systems without any changes,
-automatically adapting to whatever native integer sizes are available.
-
-It's fast. Speed of execution takes a back seat to portability,
-so it doesn't include things like assembly-language modules
-to wring every last CPU cycle out of it -- but it's still pretty darn fast.
-
-Features you need. Modular arithmetic. Bit manipulation functions.
-Cryptographically-secure random and prime number generation.  
-A friendly and intuitive interface. An option for thread-safe operation.
-
-It has the Boost Software License, Version 1.0. at
-http://www.boost.org/LICENSE_1_0.txt
-
-Documentation in full as html is at 
-https://svn.boost.org/svn/boost/sandbox/xint/libs/xint/doc/html/index.html
-
-and a pdf version is also available.
+    See http://www.boost.org/libs/xint for library home page.
 */
-//    Copyright 2010 by Chad Nelson
 
-//    Distributed under the Boost Software License, Version 1.0.
-//    See accompanying file LICENSE_1_0.txt or copy at
-//    http://www.boost.org/LICENSE_1_0.txt
+/*! \file
+    \brief The main header file for the XInt library.
+
+    This is the only header that programs using the library should need to
+    include.
+*/
 
 #ifndef BOOST_INCLUDED_XINT_H
 #define BOOST_INCLUDED_XINT_H
@@ -59,32 +35,53 @@ and a pdf version is also available.
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/variate_generator.hpp>
 
+//! \brief All of the functions in the XInt library are within this namespace.
 namespace xint {
 
 ////////////////////////////////////////////////////////////////////////////////
 // The boring-but-necessary preliminary stuff
 
+//! \brief The items within this namespace are meant for internal use only.
 namespace detail {
+    /*!
+        This is the type used for calculations. It should be the largest
+        built-in integral type the system can offer, for maximum processing
+        efficiency.
+    */
     typedef boost::uintmax_t doubledigit_t;
+
+    /*!
+        This is the type used to store information about the %integer. It must
+        contain at least half the number of bits that a doubledigit_t can hold,
+        and is most memory-efficient when it's exactly that.
+    */
     typedef boost::uint_t<std::numeric_limits<doubledigit_t>::digits / 2>::fast
         digit_t;
 
+    //! \name Some constants used by the library.
+    //!@{
     const size_t        bits_per_digit    = std::numeric_limits<digit_t>::digits;
     const digit_t       digit_hibit       = (digit_t(1) << (bits_per_digit-1));
     const doubledigit_t doubledigit_hibit = (doubledigit_t(1) << (bits_per_digit*2-1));
     const doubledigit_t digit_overflowbit = (doubledigit_t(1) << bits_per_digit);
     const digit_t       digit_mask        = digit_t(digit_overflowbit-1);
+    //!@}
 
+    //! Holds the text representation of the Not-a-Number value.
     const extern std::string nan_text;
 
     struct data_t;
+
+    //! An empty struct, used in xint::token
     struct token { };
 
+    //! The base class for random_generator.
     struct base_random_generator {
         typedef unsigned int result_type;
         virtual result_type operator()()=0;
     };
 
+    //! Support class for the random generator code.
     template <class T>
     struct random_generator: public base_random_generator {
         typedef boost::uniform_int<result_type> dist_t;
@@ -97,15 +94,32 @@ namespace detail {
         gen_t gen;
     };
 
+    //! Support function \see xint::set_random_generator
     void set_random_generator(base_random_generator *obj);
+
+    /*!
+        \return An unsigned int from the current random generator.
+        \see xint::set_random_generator
+    */
     unsigned int get_random();
 } // namespace detail
 
+//! Used for the exception-blocker.
 typedef std::auto_ptr<detail::token> token;
 
+//! A callback function takes no parameters and returns a bool.
+//! @see xint::is_prime
+//! @see xint::random_prime
 typedef boost::function<bool ()> callback_t;
+
+//! An empty callback_t, used as a default parameter for some functions.
+//! @see xint::is_prime
+//! @see xint::random_prime
 const callback_t no_callback;
 
+//! A value that can be used for the 'base' parameter of the string-to-integer functions
+//! @see xint::integer::integer(const std::string& str, size_t base)
+//! @see xint::from_string
 const size_t autobase=(std::numeric_limits<size_t>::max)();
 
 class not_a_number;
@@ -113,32 +127,43 @@ class not_a_number;
 ////////////////////////////////////////////////////////////////////////////////
 // The integer class
 
-class integer {
- //! \class integer \brief The extended integer class.
- //! \details TODO more info on the integer class???
-    public:
-    integer(); //!< Constructs a default integer, value zero.
-    integer(const integer& b);  //!< Copy constructs a integer from another integer.
-	//!< (Can throw std::overflow_error if not enough memory to construct a new integer).
+/*! \brief The extended %integer class.
 
+    This class implements the main \c integer type.
+
+    There are only a few member functions; most of the functionality is
+    implemented using standalone functions.
+
+    Functions that start with an underscore (such as \c _make_unique) are
+    intended for internal use only. They may change arbitrarily in future
+    versions.
+*/
+class integer {
+    public:
+
+    //! \name Constructors & Destructors
+    //!@{
+    integer();
+    integer(const integer& b);
     template <typename T> integer(const T& n,
         typename boost::enable_if<boost::is_integral<T> >::type* = 0,
         typename boost::enable_if<boost::is_signed<T> >::type* = 0);
     template <typename T> integer(const T& n,
         typename boost::enable_if<boost::is_integral<T> >::type* = 0,
         typename boost::enable_if<boost::is_unsigned<T> >::type* = 0);
-
-    explicit integer(const std::string& str, size_t base=10); //!< Constructs an integer from a std::string of decimal digits.
-    explicit integer(const not_a_number&); //!< Constructs an integer with value NaN.
+    explicit integer(const std::string& str, size_t base=10);
+    explicit integer(const not_a_number&);
     ~integer();
+    //!@}
 
-    bool odd() const; //!< \returns true if extended integer is odd.
-    bool even() const; //!< \returns true if extended integer is even.
-    int  sign() const; //!< \returns -1 if extended integer is < 0.
-    bool nan() const;  //!< \returns true if extended integer is Not-a-Number.
+    /*! \name Mathematical and Bitwise Operators
+        \brief These operate exactly like their counterparts for the built-in
+               %integer types.
 
-    size_t hex_digits() const; //!< \returns the number of hex digits to show the integer.
-
+        Note that there is no \c operator~. Since the integer type doesn't have
+        a fixed maximum size, there is no logical way to implement it.
+    */
+    //@{
     integer& operator=(const integer &c);
 
     integer& operator+=(const integer& b);
@@ -147,10 +172,10 @@ class integer {
     integer& operator/=(const integer& b);
     integer& operator%=(const integer& b);
 
-    integer& operator++();
-    integer& operator--();
-    integer  operator++(int);
-    integer  operator--(int);
+    integer& operator++(); //!< \details Preincrement operator
+    integer& operator--(); //!< \details Predecrement operator
+    integer  operator++(int); //!< \details Postincrement operator -- not recommended, inefficient
+    integer  operator--(int); //!< \details Postdecrement operator -- not recommended, inefficient
 
     integer& operator&=(const integer& n);
     integer& operator|=(const integer& n);
@@ -159,25 +184,49 @@ class integer {
     integer  operator>>(size_t shift) const;
     integer& operator<<=(size_t shift);
     integer& operator>>=(size_t shift);
+    //@}
 
+    /*! \name Preconstructed integers
+
+        These return preconstructed integers with the values named by the
+        functions. They are used internally, so that the most common values
+        don't have to be constructed each time they're needed, but they are
+        available to your own code as well.
+    */
+    //@{
     static const integer& zero();
     static const integer& one();
+    //@}
 
-    // These are used internally, they're probably not useful outside of the
-    // library's functions.
+    //! \name Miscellaneous Functions
+    //!@{
+    bool odd() const;
+    bool even() const;
+    int  sign() const;
+    bool is_nan() const;  //!< \returns true if integer is Not-a-Number.
+
+    size_t hex_digits() const; //!< \returns the number of hex digits to show the integer.
+    //!@}
+
+    /*! \name Internal Functions
+        \brief These functions allow access to the internals of the %integer.
+               They are intended for internal use only.
+    */
+    //@{
     detail::data_t *_get_data() { return data; }
     const detail::data_t *_get_data() const { return data; }
     detail::digit_t _get_digit(size_t index) const;
-    detail::digit_t _get_digit(size_t index, bool) const;
+    detail::digit_t _get_digit(size_t index, bool) const; //!< \overload
     size_t _get_length() const;
     void _set_negative(bool negative);
     void _make_unique();
     void _throw_if_nan() const;
+    //@}
 
     private: ///////////////////////////////////////////////////////////////////
     void _init(detail::digit_t init=0);
-    void _init(const integer &c);
-    void _init(boost::uintmax_t n);
+    void _init(const integer &c); //!< \overload
+    void _init(boost::uintmax_t n); //!< \overload
     void _attach();
     void _detach();
 
@@ -185,8 +234,14 @@ class integer {
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-// The random generator convenience class
 
+/*! \brief A convenience class for cryptographically-secure random numbers.
+
+    Used with xint::set_random_generator to set the XInt library to use the
+    system-supplied secure random number generator.
+
+    \see \ref random
+*/
 class strong_random_generator {
     public:
     typedef unsigned int result_type;
@@ -208,25 +263,22 @@ class strong_random_generator {
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-// Exception-blocking and -allowing functions
 
+/*! \name Exception-blocking and -allowing functions
+
+    See the \ref exceptions "exception-blocking page" for details on these
+    functions and how to use them.
+*/
+//!@{
 bool exceptions_allowed();
 token block_exceptions();
 token allow_exceptions();
+//!@}
 
 ////////////////////////////////////////////////////////////////////////////////
-// Miscellaneous functions
 
-bool opt_secure_mode();
-bool opt_thread_safe();
-int compare(const integer &n1, const integer &n2, bool ignoresign=false);
-size_t log2(const integer& n);
-integer gcd(const integer& num1, const integer& num2);
-integer lcm(const integer& num1, const integer& num2);
-
-////////////////////////////////////////////////////////////////////////////////
-// Mathematical primitives
-
+//! \name Mathematical primitives
+//!@{
 integer abs(const integer& n);
 integer negate(const integer& n);
 integer add(const integer& n, const integer& addend);
@@ -235,28 +287,34 @@ integer multiply(const integer& n, const integer& multiplicand);
 integer divide(const integer& dividend, const integer& divisor);
 std::pair<integer, integer> divide_r(const integer& dividend, const integer&
     divisor);
+//!@}
 
 ////////////////////////////////////////////////////////////////////////////////
-// Powers and roots
 
+//! \name Powers and roots
+//!@{
 integer sqr(const integer& n);
 integer pow(const integer& n, const integer& exponent);
 integer pow2(size_t exponent);
 integer factorial(size_t n);
 integer sqrt(const integer& n);
+//!@}
 
 ////////////////////////////////////////////////////////////////////////////////
-// Conversion functions
 
+//! \name Conversion functions
+//!@{
 template <typename T> T to(const integer& n);
 std::string to_string(const integer& n, size_t base=10, bool upperCase=false);
 integer from_string(const std::string& str, size_t base=10);
 std::string to_binary(const integer& n);
 integer from_binary(const std::string& s);
+//!@}
 
 ////////////////////////////////////////////////////////////////////////////////
-// Bit-manipulation functions
 
+//! \name Bit-manipulation functions
+//!@{
 bool getbit(const integer& n, size_t bit);
 void setbit(integer& n, size_t bit);
 void clearbit(integer& n, size_t bit);
@@ -268,33 +326,48 @@ integer bitwise_xor(const integer& n1, const integer& n2);
 integer shift(const integer& n, int byBits);
 integer shift_left(const integer& n, size_t byBits);
 integer shift_right(const integer& n, size_t byBits);
+//!@}
 
 ////////////////////////////////////////////////////////////////////////////////
-// Modular math functions
 
+/*! \name Modular math functions
+
+A common reason to use a large-integer library is to implement public-key
+encryption, and the algorithms for such encryption often use modular math.
+*/
+//!@{
 integer mod(const integer& n, const integer& modBy);
 integer mulmod(const integer& n, const integer& by, const integer& modulus);
 integer sqrmod(const integer& n, const integer& modulus);
 integer powmod(const integer& n, const integer& exponent, const integer&
     modulus, bool noMontgomery=false);
 integer invmod(const integer& n, const integer& modulus);
+//!@}
 
 ////////////////////////////////////////////////////////////////////////////////
-// Random number functions
 
+//! \name Random number functions
+//!@{
 template <typename T> void set_random_generator(T *gen);
 integer random_by_size(size_t sizeInBits, bool highBitOn=false, bool
     lowBitOn=false, bool canBeNegative=false);
+//!@}
 
 ////////////////////////////////////////////////////////////////////////////////
-// Prime number functions
 
+//! \name Prime number functions
+//!@{
 int is_prime(const integer& n, callback_t callback=no_callback);
 integer random_prime(size_t sizeInBits, callback_t callback=no_callback);
+//!@}
 
 ////////////////////////////////////////////////////////////////////////////////
-// Operators for the integer class
 
+/*! \name Operators
+
+    These act exactly the same as for the built-in %integer types.
+*/
+//!@{
 bool operator!(const integer& n1);
 bool operator<(const integer& n1, const integer& n2);
 bool operator>(const integer& n1, const integer& n2);
@@ -313,66 +386,156 @@ integer operator%(const integer& n1, const integer& n2);
 integer operator&(const integer& n1, const integer& n2);
 integer operator|(const integer& n1, const integer& n2);
 integer operator^(const integer& n1, const integer& n2);
+//!@}
+
+////////////////////////////////////////////////////////////////////////////////
+
+//! \name Miscellaneous functions
+//!@{
+bool opt_secure_mode();
+bool opt_thread_safe();
+int compare(const integer &n1, const integer &n2, bool ignoresign=false);
+size_t log2(const integer& n);
+integer gcd(const integer& num1, const integer& num2);
+integer lcm(const integer& num1, const integer& num2);
+//!@}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Exception classes
 
+//! \name Exception classes
+//!@{
+/*! \brief Exception class
+
+    Derived from \c std::invalid_argument.
+*/
 class invalid_base: public std::invalid_argument {
     public:
     invalid_base(const std::string& what="invalid base"): invalid_argument(what)
         { }
 };
 
+/*! \brief Exception class
+
+    Derived from \c std::range_error.
+*/
 class invalid_digit: public std::range_error {
     public:
     invalid_digit(const std::string& what="invalid digit"): range_error(what)
         { }
 };
 
+/*! \brief Exception class
+
+    Derived from \c std::invalid_argument.
+*/
 class invalid_modulus: public std::invalid_argument {
     public:
     invalid_modulus(const std::string& what="invalid modulus"):
         invalid_argument(what) { }
 };
 
+/*! \brief Exception class
+
+    Derived from \c std::invalid_argument.
+*/
 class divide_by_zero: public std::invalid_argument {
     public:
     divide_by_zero(const std::string& what="divide by zero error"):
         invalid_argument(what) { }
 };
 
+/*! \brief Exception class
+
+    Derived from \c std::invalid_argument.
+*/
 class cannot_represent: public std::invalid_argument {
     public:
-    cannot_represent(const std::string& what="cannot represent the requested "
-        "value"): invalid_argument(what) { }
+    cannot_represent(const std::string& what=
+        "cannot represent the requested value"): invalid_argument(what) { }
 };
 
+/*! \brief Exception class
+
+    Derived from \c std::range_error.
+*/
 class too_big: public std::range_error {
     public:
-    too_big(const std::string& what="value out of range for requested "
-        "conversion"): range_error(what) { }
+    too_big(const std::string& what=
+        "value out of range for requested conversion"): range_error(what) { }
 };
 
+/*! \brief Exception class
+
+    Derived from \c std::runtime_error.
+
+    \note Cannot (presently) be blocked.
+
+    \remarks
+    Most library functions will throw an xint::not_a_number exception if you try
+    to use a \link nan Not-a-Number value \endlink in them.
+
+    \par
+    An object of type xint::not_a_number can also be fed to an integer
+    constructor to deliberately produce a Not-a-Number value.
+
+    \par
+    See this page for details on Not-a-Number.
+*/
 class not_a_number: public std::runtime_error {
     public:
     not_a_number(const std::string& what="attempted to use a Not-a-Number"):
         runtime_error(what) { }
 };
 
+/*! \brief Exception class
+
+    Derived from \c std::runtime_error.
+
+    \note Cannot be blocked.
+*/
 class no_strong_random: public std::runtime_error {
     public:
-    no_strong_random(const std::string& what="system does not have a strong "
-        "random generator"): runtime_error(what) { }
+    no_strong_random(const std::string& what=
+        "system does not have a strong random generator"):
+        runtime_error(what) { }
 };
 
+/*! \brief Exception class
+
+    Derived from \c std::overflow_error.
+
+    \note Cannot (presently) be blocked.
+
+    \remarks
+    Thrown by the xint::strong_random_generator class's constructor, if the
+    system does not provide a cryptographically-secure random generator. Also
+    thrown if the generator fails when asked to provide a random value, though
+    this should be vanishingly rare.
+*/
 class overflow_error: public std::overflow_error {
     public:
-    overflow_error(const std::string& what="overflow error in XInt library"):
+    overflow_error(const std::string& what=
+        "overflow error: can't obtain enough memory to represent the requested number"):
         std::overflow_error(what) { }
 };
+//!@}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Template function definitions
+
+/*!
+    Constructs a new integer object with the value of the built-in signed
+    %integer passed to it.
+
+    \param[in] n A number of type \c T.
+    \tparam T The type of \c n.
+
+    You can ignore the \c enable_if parameters, they are there only to tell the
+    compiler what types it applies to.
+
+    \overload
+*/
 
 template <typename T> integer::integer(const T& n,
     typename boost::enable_if<boost::is_integral<T> >::type*,
@@ -394,6 +557,19 @@ template <typename T> integer::integer(const T& n,
     }
 }
 
+/*!
+    Constructs a new integer object with the value of the built-in unsigned
+    %integer passed to it.
+
+    \param[in] n A number of type \c T.
+    \tparam T The type of \c n.
+
+    You can ignore the \c enable_if parameters, they are there only to tell the
+    compiler what types it applies to.
+
+    \overload
+*/
+
 template <typename T> integer::integer(const T& n,
     typename boost::enable_if<boost::is_integral<T> >::type*,
     typename boost::enable_if<boost::is_unsigned<T> >::type*)
@@ -403,6 +579,16 @@ template <typename T> integer::integer(const T& n,
     else _init(boost::uintmax_t(n));
 }
 
+/*! \brief Efficiently converts from an xint::integer to a built-in %integer
+           type.
+
+\param[in] n The integer to convert.
+\tparam T The type to convert it to.
+
+\returns The numeric value of \c n, converted to the specified type.
+
+\exception xint::too_big if \c n would not fit into the specified type.
+*/
 template <typename T>
 T to(const integer& n) {
     n._throw_if_nan();
@@ -419,17 +605,32 @@ T to(const integer& n) {
     return rval;
 }
 
+/*! \brief Change the random generator that the library uses.
+
+\param[in] gen A pointer to the new generator to use.
+
+\warning The generator must be a heap-allocated pointer (one created with
+<code>new</code>), which the XInt library assumes ownership of. Don't pass in a
+stack-created item, don't try to delete the item that you passed in, and don't
+attempt to use it separately after passing it to this function, or the behavior
+is undefined.
+
+\remarks
+See the \link random Random Number page\endlink for an example of how to use it.
+*/
 template <typename T>
 void set_random_generator(T *gen) {
     detail::random_generator<T> *obj=new detail::random_generator<T>(gen);
     detail::set_random_generator(obj);
 }
 
+//! \name Stream input/output functions
+//!@{
 template <typename charT, typename traits>
 inline std::basic_ostream<charT,traits>& operator<<(std::basic_ostream<charT,
     traits>& out, const xint::integer& n)
 {
-    if (n.nan()) {
+    if (n.is_nan()) {
         out << detail::nan_text;
     } else {
         int base=((out.flags() & std::ios::hex) ? 16
@@ -522,6 +723,7 @@ inline std::basic_istream<charT,traits>& operator>>(std::basic_istream<charT,
 
     return in;
 }
+//!@}
 
 } // namespace xint
 

@@ -8,15 +8,14 @@
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
 
+    See http://www.boost.org/libs/xint for library home page.
+*/
+
+/*! \file
+    \brief Internal details of an xint::integer.
+
     This file contains the declaration for the xint data structure. It should
     only be used by the library itself.
-
-    The data for an integer is stored in a separate struct so it can be shared
-    between different copies of an identical number.
-
-    The digits are stored low-digit-first.
-
-    Define XINT_SECURE to zero all memory before releasing it.
 */
 
 #ifndef BOOST_INCLUDED_XINT_DATA_T_H
@@ -29,17 +28,29 @@
 namespace xint {
 namespace detail {
 
+/*! \brief Holds the internal details of an xint::integer.
+
+    The data for an integer is stored in a separate struct so it can be shared
+    between different copies of an identical number.
+*/
 struct data_t {
+    /*! \brief Holds information determining how many quick-digits to use.
+
+        Smaller numbers are represented in a small array of digits that are part
+        of the #data_t structure itself, so that no additional memory allocation
+        is needed for them. The contents of this structure determine how many of
+        them the library uses.
+    */
     struct QuickDigits {
-        // We want at least enough QuickDigits to hold two ints.
         static const size_t intbits=std::numeric_limits<unsigned int>::digits;
-        static const size_t suggested=(2*intbits/bits_per_digit);
-        static const size_t minimum=3;
+        static const size_t suggested=(2*intbits/bits_per_digit); //!< We want at least enough QuickDigits to hold two standard int types.
+        static const size_t minimum=3; //!< The library's code is written to depend on this value, don't change it.
         static const size_t count=(suggested < minimum ? minimum : suggested);
     };
 
     size_t mLength, mAllocated;
-    digit_t *digits, mQuickDigits[QuickDigits::count];
+    digit_t *digits; //!< \note The digits are stored lowest-digit-first.
+    digit_t mQuickDigits[QuickDigits::count];
 
     #if !defined(XINT_SECURE)
         std::vector<digit_t> mStorage;
