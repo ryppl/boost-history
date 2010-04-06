@@ -17,6 +17,7 @@
 
 #include "../boost/xint/xint.hpp"
 
+namespace boost {
 namespace xint {
 
 /*! \brief Calculate the square root of \c an integer.
@@ -52,3 +53,4 @@ integer sqrt(const integer& n) {
 }
 
 } // namespace xint
+} // namespace boost

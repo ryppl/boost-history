@@ -18,6 +18,7 @@
 #ifndef BOOST_INCLUDED_XINT_TEST_H
 #define BOOST_INCLUDED_XINT_TEST_H
 
+namespace boost {
 namespace xint {
 
 //! \name Self-Testing Functions
@@ -33,5 +34,6 @@ bool testMontyPowerMod();
 //!@}
 
 } // namespace xint
+} // namespace boost
 
 #endif // BOOST_INCLUDED_XINT_TEST_H

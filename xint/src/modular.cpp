@@ -21,6 +21,7 @@
 #include "../boost/xint/xint.hpp"
 #include "../boost/xint/xint_monty.hpp"
 
+namespace boost {
 namespace xint {
 
 /*! \brief Get the remainder after dividing a number by another.
@@ -131,3 +132,4 @@ integer powmod(const integer& n, const integer& e, const integer& m, bool
 }
 
 } // namespace xint
+} // namespace boost

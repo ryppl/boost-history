@@ -24,6 +24,7 @@
 
 using std::endl;
 
+namespace boost {
 namespace xint {
 
 BOOST_AUTO_TEST_CASE(testConvert) {
@@ -96,3 +97,4 @@ BOOST_AUTO_TEST_CASE(testConvert) {
 }
 
 } // namespace xint
+} // namespace boost

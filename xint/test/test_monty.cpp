@@ -21,6 +21,7 @@
 #include <iomanip>
 #include <boost/random/mersenne_twister.hpp>
 
+namespace boost {
 namespace xint {
 
 using std::endl;
@@ -133,3 +134,4 @@ BOOST_AUTO_TEST_CASE(testMontyPowerMod) {
 }
 
 } // namespace xint
+} // namespace boost

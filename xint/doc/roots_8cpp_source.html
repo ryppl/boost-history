@@ -39,33 +39,35 @@
 <a name="l00013"></a>00013 
 <a name="l00018"></a>00018 <span class="preprocessor">#include &quot;../boost/xint/xint.hpp&quot;</span>
 <a name="l00019"></a>00019 
-<a name="l00020"></a>00020 <span class="keyword">namespace </span>xint {
-<a name="l00021"></a>00021 
-<a name="l00032"></a>00032 integer <a class="code" href="namespacexint.html#a74891726f8af86736169dd43b929ad0a" title="Calculate the square root of an integer.">sqrt</a>(<span class="keyword">const</span> integer&amp; n) {
-<a name="l00033"></a>00033     <span class="keywordflow">if</span> (n.sign() &lt; 0) {
-<a name="l00034"></a>00034         <span class="keywordflow">if</span> (<a class="code" href="namespacexint.html#ac8be41374700d89400f5ecddf0f789e3" title="Query whether exceptions are currently allowed or blocked.">exceptions_allowed</a>()) <span class="keywordflow">throw</span> cannot_represent(<span class="stringliteral">&quot;library cannot &quot;</span>
-<a name="l00035"></a>00035             <span class="stringliteral">&quot;represent imaginary values (tried to take sqrt of negative &quot;</span>
-<a name="l00036"></a>00036             <span class="stringliteral">&quot;number)&quot;</span>);
-<a name="l00037"></a>00037         <span class="keywordflow">else</span> <span class="keywordflow">return</span> integer(not_a_number());
-<a name="l00038"></a>00038     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (n.sign() == 0) <span class="keywordflow">return</span> <a class="code" href="classxint_1_1integer.html#a64a0f99de7c33239237cb59d8464f3d2">integer::zero</a>();
-<a name="l00039"></a>00039 
-<a name="l00040"></a>00040     <span class="comment">// Initial guess is half the length of n, in bits</span>
-<a name="l00041"></a>00041     integer guess;
-<a name="l00042"></a>00042     <a class="code" href="namespacexint.html#adf2652627e78682c17e120816987984a" title="Sets a specific bit in an integer to one.">setbit</a>(guess, <a class="code" href="namespacexint.html#aa074495871d366c760c5b0713f5ef048" title="Get the log2 value of an integer.">log2</a>(n)/2);
-<a name="l00043"></a>00043 
-<a name="l00044"></a>00044     <span class="comment">// Now refine it until we&apos;re as close as integers can get</span>
-<a name="l00045"></a>00045     <span class="keywordflow">while</span> (1) {
-<a name="l00046"></a>00046         integer guess2=(guess + (n/guess)) &gt;&gt; 1;
-<a name="l00047"></a>00047         <span class="keywordflow">if</span> (guess == guess2) <span class="keywordflow">break</span>;
-<a name="l00048"></a>00048         guess=guess2;
-<a name="l00049"></a>00049     }
-<a name="l00050"></a>00050 
-<a name="l00051"></a>00051     <span class="keywordflow">return</span> guess;
-<a name="l00052"></a>00052 }
-<a name="l00053"></a>00053 
-<a name="l00054"></a>00054 } <span class="comment">// namespace xint</span>
+<a name="l00020"></a>00020 <span class="keyword">namespace </span>boost {
+<a name="l00021"></a>00021 <span class="keyword">namespace </span>xint {
+<a name="l00022"></a>00022 
+<a name="l00033"></a>00033 integer <a class="code" href="namespaceboost_1_1xint.html#afdf79cc57e434b9c7f4cb3b6bd68dbd6" title="Calculate the square root of an integer.">sqrt</a>(<span class="keyword">const</span> integer&amp; n) {
+<a name="l00034"></a>00034     <span class="keywordflow">if</span> (n.sign() &lt; 0) {
+<a name="l00035"></a>00035         <span class="keywordflow">if</span> (<a class="code" href="namespaceboost_1_1xint.html#a389e96a85ba1c76ef5bfcf836b7e4e8a" title="Query whether exceptions are currently allowed or blocked.">exceptions_allowed</a>()) <span class="keywordflow">throw</span> cannot_represent(<span class="stringliteral">&quot;library cannot &quot;</span>
+<a name="l00036"></a>00036             <span class="stringliteral">&quot;represent imaginary values (tried to take sqrt of negative &quot;</span>
+<a name="l00037"></a>00037             <span class="stringliteral">&quot;number)&quot;</span>);
+<a name="l00038"></a>00038         <span class="keywordflow">else</span> <span class="keywordflow">return</span> integer(not_a_number());
+<a name="l00039"></a>00039     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (n.sign() == 0) <span class="keywordflow">return</span> <a class="code" href="classboost_1_1xint_1_1integer.html#a5c08ebe10f3f6333328b35193edd53d0">integer::zero</a>();
+<a name="l00040"></a>00040 
+<a name="l00041"></a>00041     <span class="comment">// Initial guess is half the length of n, in bits</span>
+<a name="l00042"></a>00042     integer guess;
+<a name="l00043"></a>00043     <a class="code" href="namespaceboost_1_1xint.html#a6278915cf51b0d448a9db40031226182" title="Sets a specific bit in an integer to one.">setbit</a>(guess, <a class="code" href="namespaceboost_1_1xint.html#a0cd277cd7a80cda764f889781f0140cd" title="Get the log2 value of an integer.">log2</a>(n)/2);
+<a name="l00044"></a>00044 
+<a name="l00045"></a>00045     <span class="comment">// Now refine it until we&apos;re as close as integers can get</span>
+<a name="l00046"></a>00046     <span class="keywordflow">while</span> (1) {
+<a name="l00047"></a>00047         integer guess2=(guess + (n/guess)) &gt;&gt; 1;
+<a name="l00048"></a>00048         <span class="keywordflow">if</span> (guess == guess2) <span class="keywordflow">break</span>;
+<a name="l00049"></a>00049         guess=guess2;
+<a name="l00050"></a>00050     }
+<a name="l00051"></a>00051 
+<a name="l00052"></a>00052     <span class="keywordflow">return</span> guess;
+<a name="l00053"></a>00053 }
+<a name="l00054"></a>00054 
+<a name="l00055"></a>00055 } <span class="comment">// namespace xint</span>
+<a name="l00056"></a>00056 } <span class="comment">// namespace boost</span>
 </pre></div></div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Tue Apr 6 01:22:08 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Tue Apr 6 10:52:51 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

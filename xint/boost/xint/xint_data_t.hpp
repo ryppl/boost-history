@@ -25,6 +25,7 @@
     #include <vector>
 #endif
 
+namespace boost {
 namespace xint {
 namespace detail {
 
@@ -92,5 +93,6 @@ struct data_t {
 
 } // namespace detail
 } // namespace xint
+} // namespace boost
 
 #endif // BOOST_INCLUDED_XINT_DATA_T_H

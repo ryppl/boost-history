@@ -22,6 +22,7 @@
 #include <boost/tuple/tuple.hpp>
 #include <boost/random.hpp>
 
+namespace boost {
 namespace xint {
 
 using std::endl;
@@ -91,3 +92,4 @@ BOOST_AUTO_TEST_CASE(testDivide) {
 }
 
 } // namespace xint
+} // namespace boost

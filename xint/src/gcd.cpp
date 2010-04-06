@@ -19,6 +19,7 @@
 
 #include "../boost/xint/xint.hpp"
 
+namespace boost {
 namespace xint {
 
 namespace {
@@ -141,3 +142,4 @@ integer invmod(const integer& n, const integer& m) {
 }
 
 } // namespace xint
+} // namespace boost

@@ -20,6 +20,7 @@
 #include <iomanip>
 #include <sstream>
 
+namespace boost {
 namespace xint {
 
 namespace {
@@ -171,4 +172,39 @@ BOOST_AUTO_TEST_CASE(testStreams) {
     }
 }
 
+// The following is copyright Paul A. Bristow 2010
+
+//! Compare stream output with expected.
+#define BOOST_XINT_TEST_OUTPUT(v, expected) \
+{                                           \
+    std::ostringstream ss;                  \
+    ss FORMATTERS << v;                     \
+    BOOST_CHECK_EQUAL(ss.str(), expected);  \
+}
+
+BOOST_AUTO_TEST_CASE(test_formatting_none)
+{  // No formatting
+#define FORMATTERS
+  xint::integer my_int2(2);
+  BOOST_XINT_TEST_OUTPUT(my_int2, "2");
+#undef FORMATTERS
+}
+
+BOOST_AUTO_TEST_CASE(test_formatting_showpos_negative)
+{  // Formatting
+#define FORMATTERS << std::showpos
+  xint::integer my_int2(-2);
+  BOOST_XINT_TEST_OUTPUT(my_int2, "-2");
+#undef FORMATTERS
+}
+
+BOOST_AUTO_TEST_CASE(test_formatting_showpos_positive)
+{  // Formatting
+#define FORMATTERS << std::showpos
+  xint::integer my_int2(2);
+  BOOST_XINT_TEST_OUTPUT(my_int2, "+2");
+#undef FORMATTERS
+}
+
 } // namespace xint
+} // namespace boost

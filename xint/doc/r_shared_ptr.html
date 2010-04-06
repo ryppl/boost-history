@@ -26,7 +26,7 @@
 
 <h1><a class="anchor" id="r_shared_ptr">Why are you using a roll-your-own system instead of <code>boost::shared_ptr</code> for the copy-on-write stuff? </a></h1><p>Because it's a lot faster. I tried <code>boost::shared_ptr</code>, and under Linux with GCC 4.4.1 on the same computer, running my test suite went from 1.6 seconds to 3.4 seconds. The home-grown shared pointer design may not be quite as easy to work with in an exception-safe manner, but that's completely internal to the <code>integer</code> class, so only developers working <em>on</em> the library, rather than <em>with</em> it, have to deal with that. I'll accept that trade-off. </p>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Tue Apr 6 01:22:08 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Tue Apr 6 10:52:51 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

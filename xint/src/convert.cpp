@@ -30,6 +30,7 @@
 #include <algorithm>
 #include <sstream>
 
+namespace boost {
 namespace xint {
 
 using namespace detail;
@@ -267,3 +268,4 @@ std::string to_binary(const integer& n) {
 }
 
 } // namespace xint
+} // namespace boost

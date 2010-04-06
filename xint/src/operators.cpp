@@ -17,6 +17,7 @@
 
 #include "../boost/xint/xint.hpp"
 
+namespace boost {
 namespace xint {
 
 const integer& operator+(const integer& a) { return a; }
@@ -31,3 +32,4 @@ integer operator|(const integer& n1, const integer& n2) { return bitwise_or(n1, 
 integer operator^(const integer& n1, const integer& n2) { return bitwise_xor(n1, n2); }
 
 } // namespace xint
+} // namespace boost

@@ -18,6 +18,7 @@
 
 #include <iostream>
 
+namespace boost {
 namespace xint {
 
 using std::endl;
@@ -89,3 +90,4 @@ BOOST_AUTO_TEST_CASE(testAddSubtract) {
 }
 
 } // namespace xint
+} // namespace boost

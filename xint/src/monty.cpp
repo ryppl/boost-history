@@ -25,6 +25,7 @@
 
 #include <vector>
 
+namespace boost {
 namespace xint {
 
 using namespace detail;
@@ -285,3 +286,4 @@ integer montgomeryPowerMod(const integer& a, const integer& e, const integer& n)
 }
 
 } // namespace xint
+} // namespace boost

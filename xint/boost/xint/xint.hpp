@@ -35,6 +35,7 @@
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/variate_generator.hpp>
 
+namespace boost {
 //! \brief All of the functions in the XInt library are within this namespace.
 namespace xint {
 
@@ -638,8 +639,11 @@ inline std::basic_ostream<charT,traits>& operator<<(std::basic_ostream<charT,
             : 10);
         bool upperCase=(out.flags() & std::ios::uppercase ? true : false);
 
+        int nsign=n.sign();
+        if ((out.flags() & std::ios::showpos) && nsign >= 0) out << "+";
+
         if (out.flags() & std::ios::showbase) {
-            if (n.sign() < 0) out << "-";
+            if (nsign < 0) out << "-";
 
             if (base==16 && upperCase) out << "0X";
             else if (base==16) out << "0x";
@@ -726,5 +730,6 @@ inline std::basic_istream<charT,traits>& operator>>(std::basic_istream<charT,
 //!@}
 
 } // namespace xint
+} // namespace boost
 
 #endif // BOOST_INCLUDED_XINT_H

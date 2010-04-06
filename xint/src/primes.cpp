@@ -19,6 +19,7 @@
 
 #include <vector>
 
+namespace boost {
 namespace xint {
 
 namespace {
@@ -168,3 +169,4 @@ integer random_prime(size_t size_in_bits, callback_t callback) {
 }
 
 } // namespace xint
+} // namespace boost

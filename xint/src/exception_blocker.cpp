@@ -22,6 +22,7 @@
     #include <boost/thread.hpp>
 #endif
 
+namespace boost {
 namespace xint {
 namespace {
 
@@ -106,4 +107,4 @@ token allow_exceptions() {
 }
 
 } // namespace xint
-
+} // namespace boost

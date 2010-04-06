@@ -24,11 +24,11 @@
 <div class="contents">
 
 
-<h1><a class="anchor" id="random">The XInt Random Number System </a></h1><p>The library includes a random number system to support the <a class="el" href="namespacexint.html#afc8ba5f62561b4d2b42e32dde1a10ef3" title="Generate a randomly-generated prime number of a particular bit-size.">xint::random_prime</a> function. The default random number generator is <em>not</em> cryptographically secure (see <a class="el" href="rationale.html">the rationale page</a> for details). However, the system can easily be configured to use a cryptographically-secure generator.</p>
-<p>The XInt library provides a convenience class, <a class="el" href="classxint_1_1strong__random__generator.html" title="A convenience class for cryptographically-secure random numbers.">xint::strong_random_generator</a>, for both Windows and UNIX-derived systems. It will throw an exception of type <a class="el" href="classxint_1_1no__strong__random.html" title="Exception class.">xint::no_strong_random</a> if you try to instantiate it on a system that does not have a strong random number generator.</p>
+<h1><a class="anchor" id="random">The XInt Random Number System </a></h1><p>The library includes a random number system to support the xint::random_prime function. The default random number generator is <em>not</em> cryptographically secure (see <a class="el" href="rationale.html">the rationale page</a> for details). However, the system can easily be configured to use a cryptographically-secure generator.</p>
+<p>The XInt library provides a convenience class, xint::strong_random_generator, for both Windows and UNIX-derived systems. It will throw an exception of type xint::no_strong_random if you try to instantiate it on a system that does not have a strong random number generator.</p>
 <p>See the code at the top of <a class="el" href="primes.html">the Prime Numbers page</a> for an example of how to use it. </p>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Tue Apr 6 01:22:08 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Tue Apr 6 10:52:51 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

@@ -18,6 +18,7 @@
 #include "../boost/xint/xint.hpp"
 #include "../boost/xint/xint_data_t.hpp"
 
+namespace boost {
 namespace xint {
 
 /*! \brief Compare two integer objects.
@@ -73,3 +74,4 @@ bool operator<=(const xint::integer& num1, const xint::integer& num2) { return x
 bool operator>=(const xint::integer& num1, const xint::integer& num2) { return xint::compare(num1, num2)>=0; }
 
 } // namespace xint
+} // namespace boost

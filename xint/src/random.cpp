@@ -34,6 +34,7 @@
     #include <boost/thread.hpp>
 #endif
 
+namespace boost {
 namespace xint {
 
 using namespace detail;
@@ -232,3 +233,4 @@ integer random_by_size(size_t bits, bool high_bit_on, bool low_bit_on, bool
 }
 
 } // namespace xint
+} // namespace boost

@@ -19,6 +19,7 @@
 #include <iostream>
 #include <iomanip>
 
+namespace boost {
 namespace xint {
 
 using std::hex;
@@ -109,3 +110,4 @@ BOOST_AUTO_TEST_CASE(testBitManipulations) {
 }
 
 } // namespace xint
+} // namespace boost

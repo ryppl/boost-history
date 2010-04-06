@@ -43,55 +43,56 @@
 <a name="l00022"></a>00022 <span class="preprocessor"></span><span class="preprocessor">    #include &lt;boost/thread.hpp&gt;</span>
 <a name="l00023"></a>00023 <span class="preprocessor">#endif</span>
 <a name="l00024"></a>00024 <span class="preprocessor"></span>
-<a name="l00025"></a>00025 <span class="keyword">namespace </span>xint {
-<a name="l00026"></a>00026 <span class="keyword">namespace </span>{
-<a name="l00027"></a>00027 
-<a name="l00028"></a>00028 <span class="preprocessor">#ifdef XINT_THREADSAFE</span>
-<a name="l00029"></a>00029 <span class="preprocessor"></span>    boost::thread_specific_ptr&lt;bool&gt; allowed;
-<a name="l00030"></a>00030 <span class="preprocessor">#else</span>
-<a name="l00031"></a>00031 <span class="preprocessor"></span>    <span class="keywordtype">bool</span> allowed=<span class="keyword">true</span>;
-<a name="l00032"></a>00032 <span class="preprocessor">#endif</span>
-<a name="l00033"></a>00033 <span class="preprocessor"></span>
-<a name="l00034"></a>00034 <span class="keyword">struct </span>EBlockerToken: <span class="keyword">public</span> detail::<a class="code" href="namespacexint.html#ad63045584f06221eb6a7581ad3091582" title="Used for the exception-blocker.">token</a> {
-<a name="l00035"></a>00035 <span class="preprocessor">    #ifdef XINT_THREADSAFE</span>
-<a name="l00036"></a>00036 <span class="preprocessor"></span>        EBlockerToken(<span class="keywordtype">bool</span> newAllowState) {
-<a name="l00037"></a>00037             <span class="keywordflow">if</span> (allowed.get()==0) allowed.reset(<span class="keyword">new</span> <span class="keywordtype">bool</span>(<span class="keyword">true</span>));
-<a name="l00038"></a>00038             <a class="code" href="exception__blocker_8cpp.html#a50f7131c1e1f52ac26fb604e489b0dbe">mOldState</a>=*allowed;
-<a name="l00039"></a>00039             *allowed=newAllowState;
-<a name="l00040"></a>00040         }
-<a name="l00041"></a>00041         ~EBlockerToken() { *allowed=<a class="code" href="exception__blocker_8cpp.html#a50f7131c1e1f52ac26fb604e489b0dbe">mOldState</a>; }
-<a name="l00042"></a>00042 <span class="preprocessor">    #else</span>
-<a name="l00043"></a>00043 <span class="preprocessor"></span>        EBlockerToken(<span class="keywordtype">bool</span> newAllowState): <a class="code" href="exception__blocker_8cpp.html#a50f7131c1e1f52ac26fb604e489b0dbe">mOldState</a>(allowed) {
-<a name="l00044"></a>00044             allowed=newAllowState; }
-<a name="l00045"></a>00045         ~EBlockerToken() { allowed=<a class="code" href="exception__blocker_8cpp.html#a50f7131c1e1f52ac26fb604e489b0dbe">mOldState</a>; }
-<a name="l00046"></a>00046 <span class="preprocessor">    #endif</span>
-<a name="l00047"></a>00047 <span class="preprocessor"></span>
-<a name="l00048"></a><a class="code" href="exception__blocker_8cpp.html#a50f7131c1e1f52ac26fb604e489b0dbe">00048</a>     <span class="keywordtype">bool</span> <a class="code" href="exception__blocker_8cpp.html#a50f7131c1e1f52ac26fb604e489b0dbe">mOldState</a>;
-<a name="l00049"></a>00049 };
-<a name="l00050"></a>00050 
-<a name="l00051"></a>00051 } <span class="comment">// namespace</span>
-<a name="l00052"></a>00052 
-<a name="l00063"></a>00063 <span class="keywordtype">bool</span> <a class="code" href="namespacexint.html#ac8be41374700d89400f5ecddf0f789e3" title="Query whether exceptions are currently allowed or blocked.">exceptions_allowed</a>() {
-<a name="l00064"></a>00064 <span class="preprocessor">    #ifdef XINT_THREADSAFE</span>
-<a name="l00065"></a>00065 <span class="preprocessor"></span>        <span class="comment">// Defaults to true</span>
-<a name="l00066"></a>00066         <span class="keywordflow">return</span> (allowed.get()==0 || *allowed==<span class="keyword">true</span>);
-<a name="l00067"></a>00067 <span class="preprocessor">    #else</span>
-<a name="l00068"></a>00068 <span class="preprocessor"></span>        <span class="keywordflow">return</span> allowed;
-<a name="l00069"></a>00069 <span class="preprocessor">    #endif</span>
-<a name="l00070"></a>00070 <span class="preprocessor"></span>}
-<a name="l00071"></a>00071 
-<a name="l00084"></a>00084 <a class="code" href="namespacexint.html#ad63045584f06221eb6a7581ad3091582" title="Used for the exception-blocker.">token</a> <a class="code" href="namespacexint.html#ae7e3f6afc701f6e8873a407bb418d04c" title="Temporarily prevent the library from throwing blockable exceptions.">block_exceptions</a>() {
-<a name="l00085"></a>00085     <span class="keywordflow">return</span> <a class="code" href="namespacexint.html#ad63045584f06221eb6a7581ad3091582" title="Used for the exception-blocker.">token</a>(<span class="keyword">new</span> EBlockerToken(<span class="keyword">false</span>));
-<a name="l00086"></a>00086 }
-<a name="l00087"></a>00087 
-<a name="l00104"></a>00104 <a class="code" href="namespacexint.html#ad63045584f06221eb6a7581ad3091582" title="Used for the exception-blocker.">token</a> <a class="code" href="namespacexint.html#a4b5a1a791ba11bb8f158a3b56bd9723e" title="Temprarily counteract an xint::block_exceptions token to allow all exceptions.">allow_exceptions</a>() {
-<a name="l00105"></a>00105     <span class="keywordflow">return</span> <a class="code" href="namespacexint.html#ad63045584f06221eb6a7581ad3091582" title="Used for the exception-blocker.">token</a>(<span class="keyword">new</span> EBlockerToken(<span class="keyword">true</span>));
-<a name="l00106"></a>00106 }
-<a name="l00107"></a>00107 
-<a name="l00108"></a>00108 } <span class="comment">// namespace xint</span>
-<a name="l00109"></a>00109 
+<a name="l00025"></a>00025 <span class="keyword">namespace </span>boost {
+<a name="l00026"></a>00026 <span class="keyword">namespace </span>xint {
+<a name="l00027"></a>00027 <span class="keyword">namespace </span>{
+<a name="l00028"></a>00028 
+<a name="l00029"></a>00029 <span class="preprocessor">#ifdef XINT_THREADSAFE</span>
+<a name="l00030"></a>00030 <span class="preprocessor"></span>    boost::thread_specific_ptr&lt;bool&gt; allowed;
+<a name="l00031"></a>00031 <span class="preprocessor">#else</span>
+<a name="l00032"></a>00032 <span class="preprocessor"></span>    <span class="keywordtype">bool</span> allowed=<span class="keyword">true</span>;
+<a name="l00033"></a>00033 <span class="preprocessor">#endif</span>
+<a name="l00034"></a>00034 <span class="preprocessor"></span>
+<a name="l00035"></a>00035 <span class="keyword">struct </span>EBlockerToken: <span class="keyword">public</span> detail::<a class="code" href="namespaceboost_1_1xint.html#a8554e5ef0fa7ba2da83c8f01a9bb1128" title="Used for the exception-blocker.">token</a> {
+<a name="l00036"></a>00036 <span class="preprocessor">    #ifdef XINT_THREADSAFE</span>
+<a name="l00037"></a>00037 <span class="preprocessor"></span>        EBlockerToken(<span class="keywordtype">bool</span> newAllowState) {
+<a name="l00038"></a>00038             <span class="keywordflow">if</span> (allowed.get()==0) allowed.reset(<span class="keyword">new</span> <span class="keywordtype">bool</span>(<span class="keyword">true</span>));
+<a name="l00039"></a>00039             <a class="code" href="exception__blocker_8cpp.html#a50f7131c1e1f52ac26fb604e489b0dbe">mOldState</a>=*allowed;
+<a name="l00040"></a>00040             *allowed=newAllowState;
+<a name="l00041"></a>00041         }
+<a name="l00042"></a>00042         ~EBlockerToken() { *allowed=<a class="code" href="exception__blocker_8cpp.html#a50f7131c1e1f52ac26fb604e489b0dbe">mOldState</a>; }
+<a name="l00043"></a>00043 <span class="preprocessor">    #else</span>
+<a name="l00044"></a>00044 <span class="preprocessor"></span>        EBlockerToken(<span class="keywordtype">bool</span> newAllowState): <a class="code" href="exception__blocker_8cpp.html#a50f7131c1e1f52ac26fb604e489b0dbe">mOldState</a>(allowed) {
+<a name="l00045"></a>00045             allowed=newAllowState; }
+<a name="l00046"></a>00046         ~EBlockerToken() { allowed=<a class="code" href="exception__blocker_8cpp.html#a50f7131c1e1f52ac26fb604e489b0dbe">mOldState</a>; }
+<a name="l00047"></a>00047 <span class="preprocessor">    #endif</span>
+<a name="l00048"></a>00048 <span class="preprocessor"></span>
+<a name="l00049"></a><a class="code" href="exception__blocker_8cpp.html#a50f7131c1e1f52ac26fb604e489b0dbe">00049</a>     <span class="keywordtype">bool</span> <a class="code" href="exception__blocker_8cpp.html#a50f7131c1e1f52ac26fb604e489b0dbe">mOldState</a>;
+<a name="l00050"></a>00050 };
+<a name="l00051"></a>00051 
+<a name="l00052"></a>00052 } <span class="comment">// namespace</span>
+<a name="l00053"></a>00053 
+<a name="l00064"></a>00064 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a389e96a85ba1c76ef5bfcf836b7e4e8a" title="Query whether exceptions are currently allowed or blocked.">exceptions_allowed</a>() {
+<a name="l00065"></a>00065 <span class="preprocessor">    #ifdef XINT_THREADSAFE</span>
+<a name="l00066"></a>00066 <span class="preprocessor"></span>        <span class="comment">// Defaults to true</span>
+<a name="l00067"></a>00067         <span class="keywordflow">return</span> (allowed.get()==0 || *allowed==<span class="keyword">true</span>);
+<a name="l00068"></a>00068 <span class="preprocessor">    #else</span>
+<a name="l00069"></a>00069 <span class="preprocessor"></span>        <span class="keywordflow">return</span> allowed;
+<a name="l00070"></a>00070 <span class="preprocessor">    #endif</span>
+<a name="l00071"></a>00071 <span class="preprocessor"></span>}
+<a name="l00072"></a>00072 
+<a name="l00085"></a>00085 <a class="code" href="namespaceboost_1_1xint.html#a8554e5ef0fa7ba2da83c8f01a9bb1128" title="Used for the exception-blocker.">token</a> <a class="code" href="namespaceboost_1_1xint.html#a23aac788de86c99b403a691954e016ad" title="Temporarily prevent the library from throwing blockable exceptions.">block_exceptions</a>() {
+<a name="l00086"></a>00086     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a8554e5ef0fa7ba2da83c8f01a9bb1128" title="Used for the exception-blocker.">token</a>(<span class="keyword">new</span> EBlockerToken(<span class="keyword">false</span>));
+<a name="l00087"></a>00087 }
+<a name="l00088"></a>00088 
+<a name="l00105"></a>00105 <a class="code" href="namespaceboost_1_1xint.html#a8554e5ef0fa7ba2da83c8f01a9bb1128" title="Used for the exception-blocker.">token</a> <a class="code" href="namespaceboost_1_1xint.html#a6353146e15d8912324f5fa820674a75f" title="Temprarily counteract an xint::block_exceptions token to allow all exceptions.">allow_exceptions</a>() {
+<a name="l00106"></a>00106     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a8554e5ef0fa7ba2da83c8f01a9bb1128" title="Used for the exception-blocker.">token</a>(<span class="keyword">new</span> EBlockerToken(<span class="keyword">true</span>));
+<a name="l00107"></a>00107 }
+<a name="l00108"></a>00108 
+<a name="l00109"></a>00109 } <span class="comment">// namespace xint</span>
+<a name="l00110"></a>00110 } <span class="comment">// namespace boost</span>
 </pre></div></div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Tue Apr 6 01:22:07 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Tue Apr 6 10:52:51 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

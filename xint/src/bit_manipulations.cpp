@@ -18,6 +18,7 @@
 #include "../boost/xint/xint.hpp"
 #include "../boost/xint/xint_data_t.hpp"
 
+namespace boost {
 namespace xint {
 
 using namespace detail;
@@ -251,4 +252,5 @@ integer shift_right(const integer& n, size_t byBits) {
     return nn;
 }
 
-} // namespace detail
+} // namespace xint
+} // namespace boost

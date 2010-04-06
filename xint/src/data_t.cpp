@@ -20,6 +20,7 @@
 
 #include <cassert>
 
+namespace boost {
 namespace xint {
 namespace detail {
 
@@ -320,3 +321,4 @@ void data_t::shift_right(size_t byBits) {
 
 } // namespace detail
 } // namespace xint
+} // namespace boost

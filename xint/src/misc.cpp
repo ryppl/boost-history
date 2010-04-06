@@ -17,6 +17,7 @@
 
 #include "../boost/xint/xint.hpp"
 
+namespace boost {
 namespace xint {
 
 /*! \brief Tells whether the library was compiled with \link securemode Secure
@@ -73,3 +74,4 @@ size_t log2(const integer& n) {
 }
 
 } // namespace xint
+} // namespace boost

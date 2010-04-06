@@ -22,6 +22,7 @@
     #define XINT_DISABLE_COPY_ON_WRITE
 #endif
 
+namespace boost {
 namespace xint {
 
 namespace {
@@ -304,3 +305,4 @@ void integer::_throw_if_nan() const {
 }
 
 } // namespace xint
+} // namespace boost

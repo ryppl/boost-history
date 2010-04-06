@@ -19,6 +19,7 @@
 #include "../boost/xint/xint_data_t.hpp"
 #include <cassert>
 
+namespace boost {
 namespace xint {
 
 using namespace detail;
@@ -313,3 +314,4 @@ std::pair<integer, integer> divide_r(const integer& d1, const
 }
 
 } // namespace xint
+} // namespace boost

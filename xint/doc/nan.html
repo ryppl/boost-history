@@ -24,7 +24,7 @@
 <div class="contents">
 
 
-<h1><a class="anchor" id="nan">The Not-a-Number Value </a></h1><p>Sometimes it's useful for a variable to have a value that doesn't represent any proper value, to indicate that it hasn't been specified or that there was an error in a calculation. For that purpose, the <code><a class="el" href="classxint_1_1integer.html" title="The extended integer class.">xint::integer</a></code> class provides Not-a-Number.</p>
+<h1><a class="anchor" id="nan">The Not-a-Number Value </a></h1><p>Sometimes it's useful for a variable to have a value that doesn't represent any proper value, to indicate that it hasn't been specified or that there was an error in a calculation. For that purpose, the <code>xint::integer</code> class provides Not-a-Number.</p>
 <p>To create a Not-a-Number, use the integer constructor that exists solely for that purpose. No other library function will return a Not-a-Number except under the following circumstances:</p>
 <ul>
 <li>If a function that returns a non-reference integer tries to throw a blockable exception, but exceptions are blocked.</li>
@@ -36,9 +36,9 @@
 <li>Convert it to a string, or write it to a stream. The result will be the string <code>"#NaN#"</code>.</li>
 <li>Make a copy of it.</li>
 </ul>
-<p>If you attempt to do anything else with it, you will get the non-blockable <code><a class="el" href="classxint_1_1not__a__number.html" title="Exception class.">xint::not_a_number</a></code> exception. </p>
+<p>If you attempt to do anything else with it, you will get the non-blockable <code>xint::not_a_number</code> exception. </p>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Tue Apr 6 01:22:08 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Tue Apr 6 10:52:51 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

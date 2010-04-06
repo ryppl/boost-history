@@ -20,6 +20,7 @@
 
 #include <vector>
 
+namespace boost {
 namespace xint {
 
 using namespace detail;
@@ -160,3 +161,4 @@ integer factorial(size_t n) {
 }
 
 } // namespace xint
+} // namespace boost

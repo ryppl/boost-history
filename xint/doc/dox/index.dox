@@ -45,7 +45,7 @@ That's the best part. If you've installed or compiled the Boost library already,
 all you need to do is add <code>\#include \<boost/xint/xint.hpp\></code> at the
 top of your source code file, and declare your variable as type \c
 boost::xint::integer. Then just use it the way you'd use any integer. If you
-need something more advanced, take a look in \link xint the reference
+need something more advanced, take a look in \link boost::xint the reference
 section\endlink and you just might find it.
 
 More information on how to use it can be found on the pages listed below.
