@@ -35,10 +35,10 @@
 #endif
 #ifdef BOOST_HAS_LONG_LONG
 #define BOOST_POLYGON_USE_LONG_LONG
-//typedef boost::long_long_type polygon_long_long_type;
-//typedef boost::ulong_long_type polygon_ulong_long_type;
-typedef long long polygon_long_long_type;
-typedef unsigned long long polygon_ulong_long_type;
+typedef boost::long_long_type polygon_long_long_type;
+typedef boost::ulong_long_type polygon_ulong_long_type;
+//typedef long long polygon_long_long_type;
+//typedef unsigned long long polygon_ulong_long_type;
 #endif
 #include <boost/mpl/size_t.hpp>
 #include <boost/mpl/protect.hpp>
@@ -148,7 +148,7 @@ namespace boost { namespace polygon{
   template <typename T>
   T convert_high_precision_type(const typename high_precision_type<T>::type& v) {
     return T(v);
-  };
+  }
 
   template <>
   struct coordinate_traits<int> {
