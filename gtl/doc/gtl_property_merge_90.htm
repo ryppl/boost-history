@@ -15,9 +15,8 @@
     <div style="margin: 5px;">
         <h3 class="navbar">Contents</h3>
         <ul>
-            <li><a href="index.htm">Polygon Library Main Page</a></li>
-            <li><a href="gtl_design_overview.htm">Polygon 
-			Library Design Overview</a></li>
+            <li><a href="index.htm">Boost.Polygon Main Page</a></li>
+            <li><a href="gtl_design_overview.htm">Design Overview</a></li>
             <li><a href="gtl_isotropy.htm">Isotropy</a></li>
             <li><a href="gtl_coordinate_concept.htm">Coordinate Concept</a></li>
             <li><a href="gtl_interval_concept.htm">Interval Concept</a></li>
@@ -44,6 +43,7 @@
             <li><a href="GTL_boostcon2009.pdf">GTL Boostcon 2009 Paper</a></li>
              <li><a href="GTL_boostcon_draft03.htm">GTL Boostcon 2009 
 				Presentation</a></li>
+             <li><a href="analysis.htm">Performance Analysis</a></li>
         </ul>
     </div>
         <h3 class="navbar">Polygon Sponsor</h3>
@@ -93,7 +93,7 @@ Example code <a href="gtl_property_merge_usage.htm">property_merge_usage.cpp</a>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 const property_type&amp; property)</font></td>
 		<td>I<font face="Times New Roman">nsert a polygon set with an associated 
-		property.</font></td>
+		property.</font>&nbsp; Linear wrt vertices inserted.</td>
 	</tr>
 	<tr>
 		<td width="586">
@@ -103,7 +103,7 @@ void <b>insert</b>(const GeoObjT&amp; geoObj,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 const property_type&amp; property)</font></td>
 		<td>Insert a geometry object that is a refinement of polygon 90 set with 
-		an associated property.</td>
+		an associated property.&nbsp; Linear wrt vertices inserted.</td>
 	</tr>
 	<tr>
 		<td width="586">
@@ -112,7 +112,7 @@ template &lt;typename result_type&gt;<br>
 void <b>merge</b>(result_type&amp; result)</font></td>
 		<td>Accepts a container object that conforms to the expectations defined 
 		above.&nbsp; Performs property merge and populates the container 
-		object.</td>
+		object.&nbsp; O(n log n) runtime wrt. vertices + intersections.</td>
 	</tr>
 	</table>
 	<tr>

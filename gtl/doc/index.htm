@@ -15,9 +15,8 @@
     <div style="margin: 5px;">
         <h3 class="navbar">Contents</h3>
         <ul>
-            <li>Polygon Library Main Page</li>
-			<li><a href="gtl_design_overview.htm">Polygon 
-			Library Design Overview</a></li>
+            <li>Boost.Polygon Main Page</li>
+			<li><a href="gtl_design_overview.htm">Design Overview</a></li>
 			<li><a href="gtl_isotropy.htm">Isotropy</a></li>
             <li><a href="gtl_coordinate_concept.htm">Coordinate Concept</a></li>
             <li><a href="gtl_interval_concept.htm">Interval Concept</a></li>
@@ -45,6 +44,7 @@
             <li><a href="GTL_boostcon2009.pdf">GTL Boostcon 2009 Paper</a></li>
              <li><a href="GTL_boostcon_draft03.htm">GTL Boostcon 2009 
 				Presentation</a></li>
+             <li><a href="analysis.htm">Performance Analysis</a></li>
         </ul>
     </div>
         <h3 class="navbar">Polygon Sponsor</h3>
@@ -59,8 +59,8 @@
 
 <br>
 <p>
-</p><h1>THE BOOST POLYGON LIBRARY</h1> 
-<p>The boost polygon library provides algorithms focused on manipulating planar 
+</p><h1>THE BOOST.POLYGON LIBRARY</h1> 
+<p>The Boost.Polygon library provides algorithms focused on manipulating planar 
 polygon geometry data.&nbsp; Specific algorithms provided are the polygon set 
 operations (intersection, union, difference, disjoint-union) and related 
 algorithms such as polygon connectivity graph extraction, offsetting and map-overlay.&nbsp; 
@@ -69,23 +69,31 @@ in figure c.&nbsp;
 These so-called Boolean algorithms are of significant interest in GIS (Geospatial Information 
 Systems), VLSI CAD as well al other fields of CAD, and many more application 
 areas, and providing them is the primary focus of this library.&nbsp; The 
-polygon library is not intended to cover all of computational geometry in its 
-scope, and provides a set of capabilities for working with coordinates, points, 
-intervals and rectangles that are needed to support implementing and interacting 
-with polygon data structures and algorithms.&nbsp; Specifically, 3d and 
-non-Cartesian/non-planar geometry is outside of the scope of the polygon 
-library.</p><img border="0" src="images/hand.png" width="837" height="277"><p>
+Boost.Polygon library is not intended to cover all of computational 
+geometry in its scope, and provides a set of capabilities for working with 
+coordinates, points, intervals and rectangles that are needed to support 
+implementing and interacting with polygon data structures and algorithms.&nbsp; </p><img border="0" src="images/hand.png" width="837" height="277"><p>
+The coordinate data type is a template parameter of all data types and 
+algorithms provided by the library, and is expected to be integral.&nbsp; 
+Floating point coordinate data types are not supported by the algorithms 
+implemented in the library due to the fact that the achieving floating point 
+robustness implies a different set of algorithms and generally platform specific 
+assumptions about floating point representations.&nbsp;
 For additional detailed discussion of the library and its implementation 
 including benchmark comparisons with other open source alternatives please see 
 the <a href="GTL_boostcon2009.pdf">paper</a> and
 <a href="GTL_boostcon_draft03.htm">presentation</a> from
-<a href="http://www.boostcon.com/home">boostcon</a> 2009. </p>
+<a href="http://www.boostcon.com/home">boostcon</a> 2009 as well as a detailed
+<a href="analysis.htm">analysis</a> of the runtime complexity of 
+the library's core algorithms. </p>
 <p>The design philosophy behind the polygon library was to create an API for 
 invoking the library algorithms it provides on user geometry data types that is maximally 
 intuitive, minimally error-prone and easy to integrate into pre-existing 
 applications.&nbsp; C++-concepts based template meta-programming combined with 
 generic operator overloading meets these design goals without sacrificing the 
-runtime or memory efficiency of the underlying algorithms.&nbsp; This API makes 
+runtime or memory efficiency of the underlying algorithms.&nbsp; The API is 
+intended to demonstrate what could be achieved with ease by a C++-concepts based 
+library interface, but is implemented based on current language features.&nbsp; This API makes 
 the following code snippet that operates on non-library geometry types possible:</p>
 <p:colorscheme
  colors="#ffffff,#000000,#808080,#000000,#bbe0e3,#333399,#009999,#99cc00"/>
@@ -132,7 +140,7 @@ It is considerably more typing to describe this usage of the API than to code
 it, and the description is not much clearer than the code itself.&nbsp; 
 Functions are named for what they do, or are overloads of C++ operators that make it 
 easy to infer from reading the code what to expect from it.&nbsp; Operators are 
-contained in the namespace <font face="Courier New">boost::polgyon::operators</font> 
+contained in the namespace <font face="Courier New">boost::polygon::operators</font> 
 so that they can be used outside the <font face="Courier New">boost::polygon</font> 
 namespace without bringing in the entire <font face="Courier New">boost::polygon</font> 
 namespace.&nbsp; Following the 
@@ -176,6 +184,17 @@ performing these programming tasks.</p>
 </ul>
 
 
+<p>We would like to thank: Thomas Klimpel, Frank Mori Hess, Barend Gehrels, 
+Andreas Fabri, Jeffrey Hellrung, Tim Keitt, Markus Werle, Paul A. Bristow, 
+Robert Stewart, Mathias Gaunard, Michael Fawcett, Steven Watanabe, Joachim 
+Faulhaber, John Bytheway, Sebastian Redl, Mika Heiskanen, John Phillips, Kai 
+Benndorf, Hartmut Kaiser, Arash Partow, Maurizio Vitale, Brandon Kohn, David 
+Abrahams, Gordon Woodhull, Daniel James, John Maddock, Tom Brinkman, Bo Persson, 
+Mateusz Loskot, Christian Henning, Jean-Sebastien Stoezel, for providing 
+feedback and or formal review of the library as part of the boost submission 
+process and Fernando Cacciola for graciously serving as review manager.</p>
+
+
 <table class="docinfo" rules="none" frame="void" id="table1">
 	<colgroup>
 		<col class="docinfo-name"><col class="docinfo-content">
@@ -183,7 +202,7 @@ performing these programming tasks.</p>
 	<tbody vAlign="top">
 		<tr>
 			<th class="docinfo-name">Copyright:</th>
-			<td>Copyright © Intel Corporation 2008-2009.</td>
+			<td>Copyright © Intel Corporation 2008-2010.</td>
 		</tr>
 		<tr class="field">
 			<th class="docinfo-name">License:</th>

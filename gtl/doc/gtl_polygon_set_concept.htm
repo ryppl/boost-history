@@ -15,9 +15,8 @@
     <div style="margin: 5px;">
         <h3 class="navbar">Contents</h3>
         <ul>
-            <li><a href="index.htm">Polygon Library Main Page</a></li>
-            <li><a href="gtl_design_overview.htm">Polygon 
-			Library Design Overview</a></li>
+            <li><a href="index.htm">Boost.Polygon Main Page</a></li>
+            <li><a href="gtl_design_overview.htm">Design Overview</a></li>
             <li><a href="gtl_isotropy.htm">Isotropy</a></li>
             <li><a href="gtl_coordinate_concept.htm">Coordinate Concept</a></li>
             <li><a href="gtl_interval_concept.htm">Interval Concept</a></li>
@@ -44,6 +43,7 @@
             <li><a href="GTL_boostcon2009.pdf">GTL Boostcon 2009 Paper</a></li>
              <li><a href="GTL_boostcon_draft03.htm">GTL Boostcon 2009 
 				Presentation</a></li>
+             <li><a href="analysis.htm">Performance Analysis</a></li>
         </ul>
     </div>
         <h3 class="navbar">Polygon Sponsor</h3>
@@ -110,91 +110,108 @@ together.</p>
 		<td>Boolean OR operation (polygon set union).&nbsp; Accepts two objects 
 		that model polygon_set or one of its refinements.&nbsp; Returns an 
 		operator template that performs the operation on demand when chained or 
-		or nested in a library function call such as assign().</td>
+		or nested in a library function call such as assign().&nbsp; Expected n 
+		log n runtime, worst case quadratic runtime wrt. vertices + 
+		intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T1, typename 
 		T2&gt;<br>
 		polygon_set_view <b>operator</b>+(const T1&amp; l, const T2&amp; r)</font></td>
 		<td>Same as operator|.&nbsp; The plus sign is also used for OR 
-		operations in Boolean logic expressions.</td>
+		operations in Boolean logic expressions.&nbsp; Expected n log n runtime, 
+		worst case quadratic runtime wrt. vertices + intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T1, typename 
 		T2&gt;<br>
 		polygon_set_view <b>operator</b>&amp;(const T1&amp; l, const T2&amp; r)</font></td>
 		<td>Boolean AND operation (polygon set intersection).&nbsp; Accepts two 
-		objects that model polygon_set or one of its refinements.</td>
+		objects that model polygon_set or one of its refinements.&nbsp; Expected 
+		n log n runtime, worst case quadratic runtime wrt. vertices + 
+		intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T1, typename 
 		T2&gt;<br>
 		polygon_set_view <b>operator</b>*(const T1&amp; l, const T2&amp; r)</font></td>
 		<td>Same as operator&amp;.&nbsp; The multiplication symbol is also used for 
-		AND operations in Boolean logic expressions.</td>
+		AND operations in Boolean logic expressions.&nbsp; Expected n log n 
+		runtime, worst case quadratic runtime wrt. vertices + intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T1, typename 
 		T2&gt;<br>
 		polygon_set_view <b>operator</b>^(const T1&amp; l, const T2&amp; r)</font></td>
 		<td>Boolean XOR operation (polygon set disjoint-union).&nbsp; Accepts 
-		two objects that model polygon_set or one of its refinements.</td>
+		two objects that model polygon_set or one of its refinements.&nbsp; 
+		Expected n log n runtime, worst case quadratic runtime wrt. vertices + 
+		intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T1, typename 
 		T2&gt;<br>
 		polygon_set_view <b>operator</b>-(const T1&amp; l, const T2&amp; r)</font></td>
 		<td>Boolean SUBTRACT operation (polygon set difference).&nbsp; Accepts 
-		two objects that model polygon_set or one of its refinements.</td>
+		two objects that model polygon_set or one of its refinements.&nbsp; 
+		Expected n log n runtime, worst case quadratic runtime wrt. vertices + 
+		intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T1, typename 
 		T2&gt;<br>
 		T1&amp; <b>operator</b>|=(const T1&amp; l, const T2&amp; r)</font></td>
 		<td>Same as operator|, but with self assignment, left operand must model 
-		polygon_set and not one of it's refinements.</td>
+		polygon_set and not one of it's refinements.&nbsp; Expected n log n 
+		runtime, worst case quadratic runtime wrt. vertices + intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T1, typename 
 		T2&gt;<br>
 		T1&amp; <b>operator</b>+=(T1&amp; l, const T2&amp; r)</font></td>
 		<td>Same as operator+, but with self assignment, left operand must model 
-		polygon_set and not one of it's refinements.</td>
+		polygon_set and not one of it's refinements.&nbsp; Expected n log n 
+		runtime, worst case quadratic runtime wrt. vertices + intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T1, typename 
 		T2&gt;<br>
 		T1&amp; <b>operator</b>&amp;=(const T1&amp; l, const T2&amp; r)</font></td>
 		<td>Same as operator&amp;, but with self assignment, left operand must model 
-		polygon_set and not one of it's refinements.</td>
+		polygon_set and not one of it's refinements.&nbsp; Expected n log n 
+		runtime, worst case quadratic runtime wrt. vertices + intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T1, typename 
 		T2&gt;<br>
 		T1&amp; <b>operator</b>*=(T1&amp; l, const T2&amp; r)</font></td>
 		<td>Same as operator*, but with self assignment, left operand must model 
-		polygon_set and not one of it's refinements.</td>
+		polygon_set and not one of it's refinements.&nbsp; Expected n log n 
+		runtime, worst case quadratic runtime wrt. vertices + intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T1, typename 
 		T2&gt;<br>
 		T1&amp; <b>operator</b>^=(const T1&amp; l, const T2&amp; r)</font></td>
 		<td>Same as operator^, but with self assignment, left operand must model 
-		polygon_set and not one of it's refinements.</td>
+		polygon_set and not one of it's refinements.&nbsp; Expected n log n 
+		runtime, worst case quadratic runtime wrt. vertices + intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T1, typename 
 		T2&gt;<br>
 		T1&amp; <b>operator</b>-=(T1&amp; l, const T2&amp; r)</font></td>
 		<td>Same as operator-, but with self assignment, left operand must model 
-		polygon_set and not one of it's refinements.</td>
+		polygon_set and not one of it's refinements.&nbsp; Expected n log n 
+		runtime, worst case quadratic runtime wrt. vertices + intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T1&gt;<br>
 		T1 <b>operator</b>+(const T1&amp;, coordinate_type bloating)</font></td>
 		<td>Performs resize operation, inflating by bloating ammount.&nbsp; If 
 		negative the result is a shrink instead of bloat.&nbsp; Note: returns 
-		result by value.</td>
+		result by value.&nbsp; Expected n log n runtime, worst case quadratic 
+		runtime wrt. vertices + intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T1, typename 
@@ -202,7 +219,8 @@ together.</p>
 		T1 <b>operator</b>-(const T1&amp;, coordinate_type shrinking)</font></td>
 		<td>Performs resize operation, deflating by bloating ammount.&nbsp; If 
 		negative the result is a bloat instead of shrink.&nbsp; Note: returns 
-		result by value.</td>
+		result by value.&nbsp; Expected n log n runtime, worst case quadratic 
+		runtime wrt. vertices + intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T1, typename 
@@ -210,7 +228,8 @@ together.</p>
 		T1&amp; <b>operator</b>+=(const T1&amp;, coordinate_type bloating)</font></td>
 		<td>Performs resize operation, inflating by bloating ammount.&nbsp; If 
 		negative the result is a shrink instead of bloat.&nbsp; Returns 
-		reference to modified argument.</td>
+		reference to modified argument.&nbsp; Expected n log n runtime, worst 
+		case quadratic runtime wrt. vertices + intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T1, typename 
@@ -218,7 +237,8 @@ together.</p>
 		T1&amp; <b>operator</b>-=(const T1&amp;, coordinate_type shrinking)</font></td>
 		<td>Performs resize operation, deflating by bloating ammount.&nbsp; If 
 		negative the result is a bloat instead of shrink.&nbsp; Returns 
-		reference to modified argument.</td>
+		reference to modified argument.&nbsp; Expected n log n runtime, worst 
+		case quadratic runtime wrt. vertices + intersections.</td>
 	</tr>
 	</table>
 <h2>Functions</h2>
@@ -229,7 +249,8 @@ together.</p>
 		T1&amp; <b>assign</b>(T1&amp; lvalue, const T2&amp; rvalue)</font></td>
 		<td>Eliminates overlaps in geometry and copies from an object that 
 		models polygon_set or any of its refinements into an object that 
-		models polygon_set</td>
+		models polygon_set.&nbsp; Expected n log n runtime, worst case quadratic 
+		runtime wrt. vertices + intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T1, typename 
@@ -238,7 +259,8 @@ together.</p>
 		<td>Returns true if an object that models polygon_set or one of its 
 		refinements covers the exact same geometric regions as another object 
 		that models polygon_set or one of its refinements.&nbsp; For example: 
-		two of polygon objects.</td>
+		two of polygon objects.&nbsp; Expected n log n runtime, worst case 
+		quadratic runtime wrt. vertices + intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename 
@@ -250,7 +272,9 @@ together.</p>
 		Slices geometry of an object that models polygon_set or one of its 
 		refinements into non overlapping trapezoids along a vertical slicing 
 		orientation and appends them to the 
-		output, which must have a value type that models polygon or polygon_with_holes. </td>
+		output, which must have a value type that models polygon or polygon_with_holes.&nbsp; 
+		Expected n log n runtime, worst case quadratic runtime wrt. vertices + 
+		intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename 
@@ -262,7 +286,9 @@ together.</p>
 		Slices geometry of an object that models polygon_set or one of its 
 		refinements into non overlapping trapezoids along a the specified slicing 
 		orientation and appends them to the 
-		output, which must have a value type that models polygon or polygon_with_holes. </td>
+		output, which must have a value type that models polygon or polygon_with_holes.&nbsp; 
+		Expected n log n runtime, worst case quadratic runtime wrt. vertices + 
+		intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename 
@@ -275,7 +301,9 @@ together.</p>
 		polygon_set_type&gt;<br>
 		bool <b>empty</b>(const polygon_set_type&amp; polygon_set)</font></td>
 		<td>Checks whether the object is empty of geometry.&nbsp; Polygons that 
-		are completely covered by holes will result in empty returning true.</td>
+		are completely covered by holes will result in empty returning true.&nbsp; 
+		Expected n log n runtime, worst case quadratic runtime wrt. vertices + 
+		intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T, typename 
@@ -286,25 +314,30 @@ together.</p>
 		<td>Computes bounding box of an object that models polygon_set and 
 		stores it in an object that models rectangle.&nbsp; If the polygon set 
 		is empty returns false.&nbsp; If there are holes outside of shells they 
-		do not contribute to the extents of the polygon set.</td>
+		do not contribute to the extents of the polygon set.&nbsp; Expected n 
+		log n runtime, worst case quadratic runtime wrt. vertices + 
+		intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T&gt;<br>
 		area_type <b>area</b>(const T&amp; polygon_set)</font></td>
 		<td>Computes the area covered by geometry in an object that models 
-		polygon_set</td>
+		polygon_set.&nbsp; Expected n log n runtime, worst case quadratic 
+		runtime wrt. vertices + intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T&gt;<br>
 		T&amp; <b>bloat</b>(T&amp; polygon_set, unsigned_area_type bloating)</font></td>
 		<td>Same as getting all the polygons, bloating them and putting them 
-		back.</td>
+		back.&nbsp; Expected n log n runtime, worst case quadratic runtime wrt. 
+		vertices + intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T&gt;<br>
 		T&amp; <b>shrink</b>(T&amp; polygon_set, unsigned_area_type shrinking)</font></td>
 		<td>Same as getting all the polygons, shrinking them and overwriting 
-		the polygon set with the resulting regions.</td>
+		the polygon set with the resulting regions.&nbsp; Expected n log n 
+		runtime, worst case quadratic runtime wrt. vertices + intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T, typename 
@@ -318,24 +351,29 @@ together.</p>
 		by default, segmented circular arcs are inserted if corner_fill_arc is 
 		true.&nbsp; num_circle_segments specifies number of segments to 
 		introduce on a full circle when filling acute angle corners with 
-		circular arcs.</td>
+		circular arcs.&nbsp; Expected n log n runtime, worst case quadratic 
+		runtime wrt. vertices + intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T&gt;<br>
 T&amp; <b>scale_up</b>(T&amp; polygon_set, unsigned_area_type factor)</font></td>
-		<td>Scales geometry up by unsigned factor..</td>
+		<td>Scales geometry up by unsigned factor.&nbsp; Expected n log n 
+		runtime, worst case quadratic runtime wrt. vertices + intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T&gt;<br>
 T&amp; <b>scale_down</b>(T&amp; polygon_set, unsigned_area_type factor)</font></td>
-		<td>Scales geometry down by unsigned factor.&nbsp; </td>
+		<td>Scales geometry down by unsigned factor.&nbsp; Expected n log n 
+		runtime, worst case quadratic runtime wrt. vertices + intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T, typename transformation_type&gt;<br>
 T&amp; <b>transform</b>(T&amp; polygon_set,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; const 
 transformation_type&amp; transformation)</font></td>
-		<td>Applies transformation.transform() on all vertices.</td>
+		<td>Applies transformation.transform() on all vertices.&nbsp; Expected n 
+		log n runtime, worst case quadratic runtime wrt. vertices + 
+		intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T&gt;<br>
@@ -348,7 +386,8 @@ T&amp; <b>keep</b>(T&amp; polygon_set, <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; unsigned_area_type max_height)</font></td>
 		<td>Retains only regions that satisfy the min/max criteria in the 
 		argument list.&nbsp; Note: useful for visualization to cull too small 
-		polygons.</td>
+		polygons.&nbsp; Expected n log n runtime, worst case quadratic runtime 
+		wrt. vertices + intersections.</td>
 	</tr>
 	</table>
 	<h1>Polygon Set Data Object</h1>
@@ -422,13 +461,14 @@ polygon_set_data&amp; <b>operator=</b>(const geometry_object&amp; geo)</font></t
 <font face="Courier New">
 template &lt;typename iT&gt;<br>
 void <b>insert</b>(iT input_begin, iT input_end)</font></td>
-		<td>Insert objects of an iterator range.</td>
+		<td>Insert objects of an iterator range.&nbsp; Linear wrt vertices 
+		inserted.</td>
 	</tr>
 	<tr>
 		<td width="586">
 <font face="Courier New">
 void <b>insert</b>(const polygon_set_data&amp; polygon_set)</font></td>
-		<td>Insert a polygon set.</td>
+		<td>Insert a polygon set.&nbsp; Linear wrt vertices inserted.</td>
 	</tr>
 	<tr>
 		<td width="586">
@@ -437,7 +477,8 @@ template &lt;typename geometry_type&gt;<br>
 void <b>insert</b>(const geometry_type&amp; geometry_object, <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bool is_hole 
 = false)</font></td>
 		<td>Insert a geometry object, if is_hole is true then the inserted 
-		region is subtractive rather than additive.</td>
+		region is subtractive rather than additive.&nbsp; Linear wrt vertices 
+		inserted.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">
@@ -452,7 +493,9 @@ void <b>get</b>(output_container&amp; output) const</font></td>
 		to the number of edges plus 1.&nbsp; If required by the output data 
 		type, polygons will have holes fractured out to the outer boundary along 
 		the positive y direction and off grid intersections on the outer 
-		boundary introduced by this fracture will be truncated downward.</td>
+		boundary introduced by this fracture will be truncated downward.&nbsp; 
+		Expected n log n runtime, worst case quadratic runtime wrt. vertices + 
+		intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">
@@ -460,7 +503,8 @@ template &lt;typename output_container&gt;<br>
 void <b>get_trapezoids</b>(output_container&amp; output) const</font></td>
 		<td>Expects a standard container of polygon objects.&nbsp; Will scan 
 		and eliminate overlaps.&nbsp; Slices polygon set geometry to trapezoids 
-		vertically and appends them to the container.</td>
+		vertically and appends them to the container.&nbsp; Expected n log n 
+		runtime, worst case quadratic runtime wrt. vertices + intersections.</td>
 	</tr>
 	<tr>
 		<td width="586">
@@ -471,7 +515,9 @@ slicing_orientation) const </font>
 		</td>
 		<td>Expects a standard container of polygon objects.&nbsp; Will scan 
 		and eliminate overlaps.&nbsp; Slices polygon set geometry to trapezoids 
-		along the given orientation and appends them to the container.</td>
+		along the given orientation and appends them to the container.&nbsp; 
+		Expected n log n runtime, worst case quadratic runtime wrt. vertices + 
+		intersections.</td>
 	</tr>
 	<tr>
 		<td width="586">
@@ -480,7 +526,9 @@ bool <b>operator==</b>(const polygon_set_data&amp; p) const</font></td>
 		<td>Once scanned the data representation of geometry within a polygon 
 		set is in a mathematically canonical form.&nbsp; Comparison between two 
 		sets is therefore a linear time operation once they are in the scanned 
-		state. Will scan and eliminate overlaps in both polygon sets.&nbsp; </td>
+		state. Will scan and eliminate overlaps in both polygon sets.&nbsp; 
+		Expected n log n runtime, worst case quadratic runtime wrt. vertices + 
+		intersections.&nbsp; </td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">
@@ -498,11 +546,14 @@ bool <b>operator!=</b>(const polygon_set_data&amp; p) const</font></td>
 		</td>
 		<td>Check whether the polygon set contains no geometry.&nbsp; Will scan 
 		and eliminate overlaps because subtractive regions might make the 
-		polygon set empty.</td>
+		polygon set empty.&nbsp; Expected n log n runtime, worst case quadratic 
+		runtime wrt. vertices + intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">void <b>clean</b>() const</font></td>
-		<td>Scan and eliminate overlaps.</td>
+		<td>Scan and eliminate overlaps.&nbsp; Expected n log n runtime, worst 
+		case quadratic runtime wrt. vertices + intersections the first time, 
+		constant time subsequently.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">
@@ -518,7 +569,9 @@ template &lt;typename rectangle_type&gt;<br>
 bool <b>extents</b>(rectangle_type&amp; extents_rectangle) const</font></td>
 		<td>Given an object that models rectangle, scans and eliminates overlaps 
 		in the polygon set because subtractive regions may alter its extents 
-		then computes the bounding box and assigns it to extents_rectangle.</td>
+		then computes the bounding box and assigns it to extents_rectangle.&nbsp; 
+		Expected n log n runtime, worst case quadratic runtime wrt. vertices + 
+		intersections the first time, linear subsequently.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">
@@ -532,7 +585,9 @@ polygon_set_data&amp;<br>
 		true.&nbsp; num_circle_segments specifies number of segments to 
 		introduce on a full circle when filling acute angle corners with 
 		circular arcs.&nbsp; Specifying zero for num_circle_segments results in 
-		only a single segment being inserted at acute corners.</td>
+		only a single segment being inserted at acute corners.&nbsp; Expected n 
+		log n runtime, worst case quadratic runtime wrt. vertices + 
+		intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">
@@ -540,25 +595,32 @@ template &lt;typename transformation_type&gt;<br>
 polygon_set_data&amp; <br><b>transform</b>(const transformation_type&amp; transformation) </font>
 		</td>
 		<td>Applies transformation.transform() on vertices stored within the 
-		polygon set.</td>
+		polygon set.&nbsp; Expected n log n runtime, worst case quadratic 
+		runtime wrt. vertices + intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">
 polygon_set_data&amp; <b>scale_up</b>(unsigned_area_type factor)</font></td>
-		<td>Scales vertices stored within the polygon set up by factor.</td>
+		<td>Scales vertices stored within the polygon set up by factor.&nbsp; 
+		Expected n log n runtime, worst case quadratic runtime wrt. vertices + 
+		intersections.</td>
 	</tr>
 	<tr>
 		<td width="586">
 <font face="Courier New">polygon_set_data&amp; <b>scale_down</b>(unsigned_area_type 
 factor)</font>&nbsp;</td>
-		<td>Scales vertices stored within the polygon set down by factor.</td>
+		<td>Scales vertices stored within the polygon set down by factor.&nbsp; 
+		Expected n log n runtime, worst case quadratic runtime wrt. vertices + 
+		intersections.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">
 template &lt;typename scaling_type&gt;<br>
 polygon_set_data&amp;<br> <b>scale</b>(const scaling_type&amp; 
 		f)</font></td>
-		<td>Scales vertices stored within the polygon set by applying f.scale().</td>
+		<td>Scales vertices stored within the polygon set by applying f.scale().&nbsp; 
+		Expected n log n runtime, worst case quadratic runtime wrt. vertices + 
+		intersections.</td>
 	</tr>
 	</table>
 	<tr>

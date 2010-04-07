@@ -15,9 +15,8 @@
     <div style="margin: 5px;">
         <h3 class="navbar">Contents</h3>
         <ul>
-            <li><a href="index.htm">Polygon Library Main Page</a></li>
-            <li><a href="gtl_design_overview.htm">Polygon 
-			Library Design Overview</a></li>
+            <li><a href="index.htm">Boost.Polygon Main Page</a></li>
+            <li><a href="gtl_design_overview.htm">Design Overview</a></li>
             <li><a href="gtl_isotropy.htm">Isotropy</a></li>
 			<li>Coordinate Concept</li>
             <li><a href="gtl_interval_concept.htm">Interval Concept</a></li>
@@ -44,6 +43,7 @@
             <li><a href="GTL_boostcon2009.pdf">GTL Boostcon 2009 Paper</a></li>
              <li><a href="GTL_boostcon_draft03.htm">GTL Boostcon 2009 
 				Presentation</a></li>
+             <li><a href="analysis.htm">Performance Analysis</a></li>
         </ul>
     </div>
         <h3 class="navbar">Polygon Sponsor</h3>
@@ -107,7 +107,14 @@ This function returns the absolution value of the difference between the two
 coordinates.<p> 
 Note: older versions of the stl define a fully generic distance(T, T) function 
 for computing the difference between two iterators.&nbsp; We were forced to name 
-our distance function euclidean_distance to avoid name collision.<tr>
+our distance function euclidean_distance to avoid name collision.<p> 
+The
+<a href="http://www.mentor.com/products/esl/high_level_synthesis/ac_datatypes"> 
+Algorithmic C</a> ac_int&lt;128&gt; is an example of a user defined coordinate data 
+type that satisfies the coordinate concept.&nbsp; In general a data type should 
+define std::numeric_limits and be integer-like.&nbsp; Floating point coordinate 
+types are not supported by all the algorithms and generally not suitable for use 
+with the library at present.<tr>
 <td style="background-color: rgb(238, 238, 238);" nowrap="1" valign="top">
     &nbsp;</td>
 <td style="padding-left: 10px; padding-right: 10px; padding-bottom: 10px;" valign="top" width="100%">
