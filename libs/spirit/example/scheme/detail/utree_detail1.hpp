@@ -14,77 +14,15 @@
 # pragma warning(disable: 4244)
 #endif
 
+#include <boost/type_traits/alignment_of.hpp>
+
 namespace scheme { namespace detail
 {
     template <typename UTreeX, typename UTreeY>
     struct visit_impl;
     struct index_impl;
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Our utree can store these types. This enum tells us what type
-    // of data is stored in utree's discriminated union.
-    ///////////////////////////////////////////////////////////////////////////
-    struct utree_type
-    {
-        enum info
-        {
-            nil_type,
-            bool_type,
-            int_type,
-            double_type,
-            small_string_type,
-            heap_string_type,
-            list_type,
-            reference_type
-        };
-    };
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Our POD fast string. This implementation is very primitive and is not
-    // meant to be used stand-alone. This is the internal data representation
-    // of strings in our utree. This is deliberately a POD to allow it to be
-    // placed in a union. This POD fast string specifically utilizes
-    // (sizeof(double) * 2) - (2 * sizeof(char)). In a 32 bit system, this is
-    // 14 bytes. The two extra bytes are used by utree to store management info.
-    //
-    // It is a const string (i.e. immutable). It stores the characters directly
-    // if possible and only uses the heap if the string does not fit. Null
-    // characters are allowed, making it suitable to encode raw binary. The
-    // string length is encoded in the first byte if the string is placed in-situ,
-    // else, the length plus a pointer to the string in the heap are stored.
-    ///////////////////////////////////////////////////////////////////////////
-    struct fast_string // Keep this a POD!
-    {
-        static std::size_t const
-            buff_size = (sizeof(double)*2)/sizeof(char);
-
-        static std::size_t const
-            small_string_size = buff_size-(sizeof(char)*2);
-
-        struct heap_store
-        {
-            char* str;
-            std::size_t size;
-        };
-
-        union
-        {
-            char buff[buff_size];
-            heap_store heap;
-        };
-
-        utree_type::info get_type() const;
-        void set_type(utree_type::info t);
-        std::size_t size() const;
-        char const* str() const;
-
-        template <typename Iterator>
-        void construct(Iterator f, Iterator l);
-
-        void swap(fast_string& other);
-        void free();
-        void copy(fast_string const& other);
-    };
+    template <typename T>
+    struct get_impl;
 
     ///////////////////////////////////////////////////////////////////////////
     // Our POD double linked list. Straightforward implementation.
@@ -122,6 +60,63 @@ namespace scheme { namespace detail
         node* first;
         node* last;
         std::size_t size;
+    };
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Our POD fast string. This implementation is very primitive and is not
+    // meant to be used stand-alone. This is the internal data representation
+    // of strings in our utree. This is deliberately a POD to allow it to be
+    // placed in a union. This POD fast string specifically utilizes
+    // (sizeof(list) * alignment_of(list)) - (2 * sizeof(char)). In a 32 bit
+    // system, this is 14 bytes. The two extra bytes are used by utree to store
+    // management info.
+    //
+    // It is a const string (i.e. immutable). It stores the characters directly
+    // if possible and only uses the heap if the string does not fit. Null
+    // characters are allowed, making it suitable to encode raw binary. The
+    // string length is encoded in the first byte if the string is placed in-situ,
+    // else, the length plus a pointer to the string in the heap are stored.
+    ///////////////////////////////////////////////////////////////////////////
+    struct fast_string // Keep this a POD!
+    {
+        static std::size_t const
+            buff_size = (sizeof(list) + boost::alignment_of<list>::value)
+                / sizeof(char);
+
+        static std::size_t const
+            small_string_size = buff_size-sizeof(char);
+
+        static std::size_t const
+            max_string_len = small_string_size - 1;
+
+        struct heap_store
+        {
+            char* str;
+            std::size_t size;
+        };
+
+        union
+        {
+            char buff[buff_size];
+            heap_store heap;
+        };
+
+        int get_type() const;
+        void set_type(int t);
+        bool is_heap_allocated() const;
+
+        std::size_t size() const;
+        char const* str() const;
+
+        template <typename Iterator>
+        void construct(Iterator f, Iterator l);
+
+        void swap(fast_string& other);
+        void free();
+        void copy(fast_string const& other);
+
+        char& info();
+        char info() const;
     };
 }}
 
