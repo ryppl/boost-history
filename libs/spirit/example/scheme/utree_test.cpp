@@ -1,45 +1,55 @@
 #include "utree.hpp"
+#include "simple_print.hpp"
 #include <iostream>
 
 int main()
 {
     using scheme::utree;
     using scheme::ulist;
+    using ::detail::println;
 
     {
         // test the size
-        std::cout << sizeof(scheme::utree) << std::endl;
+        std::cout << "size of utree is: "
+            << sizeof(scheme::utree) << " bytes" << std::endl;
     }
 
     {
         utree val;
-        std::cout << val << std::endl;
+        println(val);
     }
 
     {
         utree val(true);
-        std::cout << val << std::endl;
+        println(val);
     }
 
     {
         utree val(123);
-        std::cout << val << std::endl;
+        println(val);
     }
 
     {
         utree val(123.456);
-        std::cout << val << std::endl;
+        println(val);
     }
 
     {
         utree val("Hello, World");
-        std::cout << val << std::endl;
+        println(val);
         utree val2;
         val2 = val;
-        std::cout << val2 << std::endl;
+        println(val2);
         utree val3("Hello, World. Chuckie is back!!!");
         val = val3;
-        std::cout << val << std::endl;
+        println(val);
+
+        utree val4("Apple");
+        utree val5("Apple");
+        BOOST_ASSERT(val4 == val5);
+
+        utree val6("ApplePie");
+        BOOST_ASSERT(val4 < val6);
     }
 
     {
@@ -50,32 +60,42 @@ int main()
         val2.push_back(123.456);
         val2.push_back("Mah Doggie");
         val.push_back(val2);
-        std::cout << val << std::endl;
-        std::cout << val.front() << std::endl;
+        println(val);
+        println(val.front());
 
         utree val3;
         val3.swap(val);
-        std::cout << val << std::endl;
+        println(val);
         val3.swap(val);
-        std::cout << val << std::endl;
+        println(val);
         val.push_back("Ba Ba Black Sheep");
-        std::cout << val << std::endl;
+        println(val);
         val.pop_front();
-        std::cout << val << std::endl;
+        println(val);
         utree::iterator i = val.begin();
         ++++i;
         val.insert(i, "Right in the middle");
         BOOST_ASSERT(val.size() == 4);
-        std::cout << val << std::endl;
+        println(val);
         val.pop_back();
-        std::cout << val << std::endl;
+        println(val);
         BOOST_ASSERT(val.size() == 3);
         val.erase(val.end());
-        std::cout << val << std::endl;
+        println(val);
         BOOST_ASSERT(val.size() == 2);
 
         val.insert(val.begin(), val2.begin(), val2.end());
-        std::cout << val << std::endl;
+        println(val);
+    }
+
+    {
+        utree val;
+        val.insert(val.end(), 123);
+        val.insert(val.end(), "Mia");
+        val.insert(val.end(), "Chuckie");
+        val.insert(val.end(), "Poly");
+        val.insert(val.end(), "Mochi");
+        println(val);
     }
 
     {

@@ -9,9 +9,6 @@
 
 #include <string>
 
-#define BOOST_SPIRIT_UNICODE // We'll use unicode (UTF8) all throughout
-
-#include <boost/config/warning_disable.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/spirit/include/qi.hpp>
 #include <boost/spirit/include/phoenix_core.hpp>
@@ -20,24 +17,35 @@
 #include <boost/spirit/include/phoenix_operator.hpp>
 #include <boost/regex/pending/unicode_iterator.hpp>
 
-namespace scheme
+#include "utree.hpp"
+
+namespace scheme { namespace input
 {
+    using boost::spirit::ascii::char_;
+    using boost::spirit::ascii::space;
     using boost::spirit::qi::grammar;
     using boost::spirit::qi::rule;
-    using boost::spirit::unicode::char_;
-    using boost::spirit::unicode::space;
     using boost::spirit::qi::eol;
     using boost::spirit::qi::_val;
     using boost::spirit::qi::_r1;
     using boost::spirit::qi::_1;
     using boost::spirit::qi::uint_parser;
+    using boost::spirit::qi::real_parser;
+    using boost::spirit::qi::strict_real_policies;
+    using boost::spirit::qi::char_set;
+    using boost::spirit::qi::int_;
+    using boost::spirit::qi::hex;
+    using boost::spirit::qi::oct;
+    using boost::spirit::qi::bool_;
+    using boost::spirit::qi::no_case;
+    using boost::spirit::qi::lexeme;
+    using boost::spirit::qi::lit;
     using boost::phoenix::function;
 
-    typedef boost::spirit::char_encoding::unicode unicode;
     typedef boost::uint32_t uchar; // a unicode code point
 
     template <typename Iterator>
-    struct white_space : grammar<Iterator, unicode>
+    struct white_space : grammar<Iterator>
     {
         white_space() : white_space::base_type(start)
         {
@@ -47,7 +55,7 @@ namespace scheme
                 ;
         }
 
-        rule<Iterator, unicode> start;
+        rule<Iterator> start;
     };
 
     namespace detail
@@ -88,31 +96,71 @@ namespace scheme
     }
 
     template <typename Iterator>
-    struct string : grammar<Iterator, unicode, std::string()>
+    struct string : grammar<Iterator, std::string()>
     {
         string() : string::base_type(start)
         {
-            uint_parser<uchar, 16> hex;
+            uint_parser<uchar, 16, 4, 4> hex4;
+            uint_parser<uchar, 16, 8, 8> hex8;
             function<detail::push_utf8> push_utf8;
             function<detail::push_esc> push_esc;
 
             str_esc
                 =  '\\'
-                >>  (   ('u' >> hex)                [push_utf8(_r1, _1)]
+                >>  (   ('u' >> hex4)               [push_utf8(_r1, _1)]
+                    |   ('U' >> hex8)               [push_utf8(_r1, _1)]
                     |   char_("btnfr\\\"'")         [push_esc(_r1, _1)]
                     )
                 ;
 
             start
                 = '"'
-                >> *(str_esc(_val) | (char_ - '"')  [push_utf8(_val, _1)])
+                >> *(str_esc(_val) | (~char_('"'))  [_val += _1])
                 >> '"'
                 ;
         }
 
-        rule<Iterator, unicode, void(std::string&)> str_esc;
-        rule<Iterator, unicode, std::string()> start;
+        rule<Iterator, void(std::string&)> str_esc;
+        rule<Iterator, std::string()> start;
     };
-}
+
+    template <typename Iterator>
+    struct sexpr : grammar<Iterator, white_space<Iterator>, utree()>
+    {
+        sexpr() : sexpr::base_type(start)
+        {
+            real_parser<double, strict_real_policies<double> > strict_double;
+            uint_parser<unsigned char, 16, 2, 2> hex2;
+
+            start   = atom | list;
+
+            list    = '(' >> *start >> ')';
+
+            atom    = number                            [_val = _1]
+                    | bool_                             [_val = _1]
+                    | string                            [_val = _1]
+                    | byte_str                          [_val = _1]
+                    | symbol                            [_val = _1]
+                    ;
+
+            char const* exclude = " ();\"\0-\31\127";
+            symbol  = lexeme[+(~char_(exclude))];
+
+            number  = strict_double                     [_val = _1]
+                    | lexeme[no_case["0x"] >> hex]      [_val = _1]
+                    | lexeme['0' >> oct]                [_val = _1]
+                    | int_                              [_val = _1]
+                    ;
+
+            byte_str = lexeme[no_case['b'] >> +hex2];
+        }
+
+        rule<Iterator, white_space<Iterator>, utree()> start, list;
+        rule<Iterator, utree()> atom, number;
+        rule<Iterator, utf8_symbol()> symbol;
+        rule<Iterator, binary_string()> byte_str;
+        scheme::input::string<Iterator> string;
+    };
+}}
 
 #endif
