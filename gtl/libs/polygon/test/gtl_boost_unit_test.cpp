@@ -5,12 +5,8 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
-#define BOOST_POLYGON_NO_DEPS
 #include <iostream>
-#define BOOST_VERY_LITTLE_SFINAE
-//#include <boost/polygon/polygon.hpp>
-#include "polygon.hpp"
-//#include "ac_int_override.hpp"
+#include <boost/polygon/polygon.hpp>
 namespace gtl = boost::polygon;
 using namespace boost::polygon::operators;
 #include <time.h>
@@ -776,8 +772,8 @@ bool testRectangle() {
   horizontal(rect, interval_data<int>(0, 10));
   vertical(rect, interval_data<int>(20, 30));
 #else
-  horizontal(rect, interval_data<long long>(0, 10));
-  vertical(rect, interval_data<long long>(20, 30));
+  horizontal(rect, interval_data<polygon_long_long_type>(0, 10));
+  vertical(rect, interval_data<polygon_long_long_type>(20, 30));
 #endif
   xl(rect2, 0);
   xh(rect2, 10);
@@ -790,9 +786,9 @@ bool testRectangle() {
   if(!equivalence(horizontal(rect), interval_data<int>(0, 10))) return false;
   if(!equivalence(vertical(rect2), interval_data<int>(20, 30))) return false;
 #else
-  set(rect, HORIZONTAL, interval_data<long long>(0, 10));
-  if(!equivalence(horizontal(rect), interval_data<long long>(0, 10))) return false;
-  if(!equivalence(vertical(rect2), interval_data<long long>(20, 30))) return false;
+  set(rect, HORIZONTAL, interval_data<polygon_long_long_type>(0, 10));
+  if(!equivalence(horizontal(rect), interval_data<polygon_long_long_type>(0, 10))) return false;
+  if(!equivalence(vertical(rect2), interval_data<polygon_long_long_type>(20, 30))) return false;
 #endif
   if(xl(rect) != 0) return false;
   if(xh(rect) != 10) return false;
@@ -803,7 +799,7 @@ bool testRectangle() {
 #ifdef BOOST_POLYGON_MSVC
   set_points(rect, point_data<int>(0, 20), point_data<int>(10, 30));
 #else
-  set_points(rect, point_data<int>(0, 20), point_data<long long>(10, 30));
+  set_points(rect, point_data<int>(0, 20), point_data<polygon_long_long_type>(10, 30));
 #endif
   if(xl(rect) != 0) return false;
   convolve(rect, rect2);
@@ -816,7 +812,7 @@ bool testRectangle() {
 #ifdef BOOST_POLYGON_MSVC
   convolve(rect, point_data<int>(100, 200));
 #else
-  convolve(rect, point_data<long long>(100, 200));
+  convolve(rect, point_data<polygon_long_long_type>(100, 200));
 #endif
   if(xh(rect) != 110) return false;
   deconvolve(rect, point_data<int>(100, 200));
@@ -2397,7 +2393,7 @@ int main() {
   std::cout << perimeter(p) << std::endl;
   if(winding(p) == LOW) std::cout << "LOW" << std::endl;
   if(winding(p) == HIGH) std::cout << "HIGH" << std::endl;
-  rectangle_data<long long> rd;
+  rectangle_data<polygon_long_long_type> rd;
   std::cout << extents(rd, p) << std::endl;
   std::cout << rd << std::endl;
 
@@ -2590,7 +2586,7 @@ int main() {
     ce.extract(graph);
     if(graph[0].size() == 1) std::cout << "connectivity extraction is alive\n";
 
-    //std::vector<rectangle_data<long long> > lobs;
+    //std::vector<rectangle_data<polygon_long_long_type> > lobs;
     //get_max_rectangles(lobs, psd);
     //if(lobs.size() == 1) std::cout << "max rectangles is alive\n";
 
@@ -3128,9 +3124,9 @@ int main() {
     std::cout << equivalence(ps1, ps2) << std::endl;
   }
   {
-    std::vector<rectangle_data<long long> > lobs, input;
-    input.push_back(rectangle_data<long long>(0, 0, 10, 10));
-    input.push_back(rectangle_data<long long>(10, 5, 15, 15));
+    std::vector<rectangle_data<polygon_long_long_type> > lobs, input;
+    input.push_back(rectangle_data<polygon_long_long_type>(0, 0, 10, 10));
+    input.push_back(rectangle_data<polygon_long_long_type>(10, 5, 15, 15));
     get_max_rectangles(lobs, input);
     if(lobs.size() == 3) std::cout << "max rectangles is correct\n";
   }
