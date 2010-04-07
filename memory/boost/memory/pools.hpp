@@ -204,17 +204,29 @@ public:
 	void* BOOST_MEMORY_CALL allocate(size_t cb)
 	{
 		typedef typename PolicyT::system_alloc_type sysalloc;
+
+		void* p;
+		
 		if (cb - 1 < (size_type)MAX_BYTES1)
-			return get_pool1(cb).allocate();
+			p = get_pool1(cb).allocate();
 		else if (cb - 1 < (size_type)MAX_BYTES2)
-			return get_pool2(cb).allocate();
+			p = get_pool2(cb).allocate();
 		else
-			return sysalloc::allocate(cb);
+			p = sysalloc::allocate(cb);
+
+#if defined(_DEBUG_POOLS)
+		printf("pools %p allocate: %p (bytes: %u)\n", this, p, cb);
+#endif
+		return p;
 	}
 
 	void BOOST_MEMORY_CALL deallocate(void* p, size_t cb)
 	{
 		typedef typename PolicyT::system_alloc_type sysalloc;
+
+#if defined(_DEBUG_POOLS)
+		printf("pools %p deallocate: %p (bytes: %u)\n", this, p, cb);
+#endif
 		if (cb - 1 < (size_type)MAX_BYTES1)
 			get_pool1(cb).deallocate(p);
 		else if (cb - 1 < (size_type)MAX_BYTES2)
