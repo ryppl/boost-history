@@ -1,14 +1,19 @@
 <html><head>
       <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-   <title>Compilers corner</title><link rel="stylesheet" href="boostbook.css" type="text/css"><meta name="generator" content="DocBook XSL-NS Stylesheets V1.75.2"><link rel="home" href="index.html" title="Meta State Machine (MSM) V2.10"><link rel="up" href="ch04.html" title="Chapter&nbsp;4.&nbsp; Performance / Compilers"><link rel="prev" href="ch04s04.html" title="Limitations"><link rel="next" href="ch05.html" title="Chapter&nbsp;5.&nbsp;Questions &amp; Answers"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center"> Compilers corner </th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch04s04.html">Prev</a>&nbsp;</td><th width="60%" align="center">Chapter&nbsp;4.&nbsp; Performance / Compilers</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch05.html">Next</a></td></tr></table><hr></div><div class="sect1" title="Compilers corner"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e4096"></a> Compilers corner </h2></div></div></div><p>Compilers are sometimes full of surprises and such strange errors happened in
+   <title>Compilers corner</title><link rel="stylesheet" href="boostbook.css" type="text/css"><meta name="generator" content="DocBook XSL-NS Stylesheets V1.75.2"><link rel="home" href="index.html" title="Meta State Machine (MSM) V2.10"><link rel="up" href="ch04.html" title="Chapter&nbsp;4.&nbsp; Performance / Compilers"><link rel="prev" href="ch04s04.html" title="Limitations"><link rel="next" href="ch05.html" title="Chapter&nbsp;5.&nbsp;Questions &amp; Answers"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center"> Compilers corner </th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch04s04.html">Prev</a>&nbsp;</td><th width="60%" align="center">Chapter&nbsp;4.&nbsp; Performance / Compilers</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch05.html">Next</a></td></tr></table><hr></div><div class="sect1" title="Compilers corner"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e3791"></a> Compilers corner </h2></div></div></div><p>Compilers are sometimes full of surprises and such strange errors happened in
                     the course of the development that I wanted to list the most fun for readers&#8217;
-                    entertainment.</p><p><span class="underline">VC8</span>: </p><p><code class="code">template &lt;class StateType&gt; </code></p><p><code class="code">typename ::boost::enable_if&lt; </code></p><p><code class="code">typename ::boost::mpl::and_&lt;</code></p><p><code class="code">typename ::boost::mpl::not_&lt;typename
-                        has_exit_pseudo_states&lt;StateType&gt;::type&gt;::type, </code></p><p><code class="code">typename ::boost::mpl::not_&lt;typename
-                        is_pseudo_exit&lt;StateType&gt;::type&gt;::type &gt;::type,BaseState*&gt;::type
-                    </code></p><p>I get the following error:</p><p>error C2770: invalid explicit template argument(s) for '`global
-                    namespace'::boost::enable_if&lt;is_pseudo_exit&lt;StateType&gt;::type,BaseState*&gt;::type
-                    boost::msm::state_machine&lt;Derived,HistoryPolicy,BaseState&gt;::add_state&lt;ContainingSM&gt;::new_state_helper(boost::msm::dummy&lt;__formal&gt;)
-                    const' </p><p>If I now remove the first &#8220;::&#8221; in ::boost::mpl , the compiler shuts up. So in
+                    entertainment.</p><p><span class="underline">VC8</span>: </p><pre class="programlisting">template &lt;class StateType&gt;
+typename ::boost::enable_if&lt;
+       typename ::boost::mpl::and_&lt;
+                typename ::boost::mpl::not_&lt;
+                    typename has_exit_pseudo_states&lt;StateType&gt;::type
+                &gt;::type,
+                typename ::boost::mpl::not_&lt;
+                    typename is_pseudo_exit&lt;StateType&gt;::type
+                &gt;::type 
+       &gt;::type,
+       BaseState*&gt;::type                   </pre><p>I get the following error:</p><p>error C2770: invalid explicit template argument(s) for '`global
+                    namespace'::boost::enable_if&lt;...&gt;::...' </p><p>If I now remove the first &#8220;::&#8221; in ::boost::mpl , the compiler shuts up. So in
                     this case, it is not possible to follow Boost&#8217;s guidelines.</p><p><span class="underline">VC9</span>:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>This one is my all times&#8217; favorite. Do you know why the exit
                                 pseudo states are referenced in the transition table with a
                                 &#8220;submachine::exit_pt&#8221; ? Because &#8220;exit&#8221; will crash the compiler.
