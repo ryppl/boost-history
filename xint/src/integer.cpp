@@ -24,72 +24,39 @@
 
 namespace boost {
 namespace xint {
+namespace core {
 
 namespace {
 	std::auto_ptr<integer> cZero, cOne;
 }
 
-const std::string detail::nan_text("#NaN#");
+////////////////////////////////////////////////////////////////////////////////
+// The core integer class
 
-//! \brief Creates a new integer with an initial value of zero.
 integer::integer() {
     _init();
 }
 
-/*! \brief Creates a copy of an existing integer.
-
-\param[in] b An existing integer. If passed a Not-a-Number, it will create
-another Not-a-Number.
-
-\note
-This library can use a \link cow copy-on-write technique\endlink, making copying
-(even of large numbers) a very inexpensive operation.
-
-\overload
-*/
 integer::integer(const integer& b) {
-    if (b.is_nan()) data=0;
-    else _init(b);
+    _init(b);
 }
 
-/*! \brief Create an integer from a string representation.
+integer::integer(const ::boost::xint::integer& b) {
+    if (b.is_nan()) throw xint::not_a_number();
 
-\param[in] str A string representation of a number.
-\param[in] base The base of the number, or xint::autobase.
+    // Have to const_cast here, because xint::integer and xint::core::integer
+    // aren't directly related. It's safe though.
+    detail::data_t *bdata(const_cast<detail::data_t*>(b._get_data()));
+    #ifdef XINT_DISABLE_COPY_ON_WRITE
+        data=new detail::data_t(bdata);
+    #else
+        data=bdata;
+    #endif
+    _attach();
+}
 
-\exception xint::invalid_base if the base parameter is not between 2 and 36
-(inclusive) or the constant xint::autobase.
-\exception xint::invalid_digit if the string contains any digit that cannot be
-part of a number in the specified base, or if there are no valid digits.
-
-\remarks
-This will convert a string representation of a number into an integer. See the
-description of the xint::from_string function for details on its behavior.
-
-\par
-This is the most common way to initialize values that are too large to fit into
-a native integral type.
-
-\overload
-*/
 integer::integer(const std::string& str, size_t base) {
     _init(from_string(str, base));
-}
-
-/*! \brief Creates an integer with the value of Not-a-Number.
-
-\param[in] n An xint::not_a_number object (normally used as an exception class).
-
-\remarks
-This is the official way to create an integer with the Not-a-Number value, if
-you ever wish to use that value for your own purposes.
-
-\see \ref nan
-
-\overload
-*/
-integer::integer(const not_a_number& n) {
-    data=0;
 }
 
 integer::~integer() {
@@ -107,7 +74,7 @@ void integer::_init(detail::digit_t init) {
 
 void integer::_init(const integer &c) {
     #ifdef XINT_DISABLE_COPY_ON_WRITE
-        data=(c.data ? new detail::data_t(c.data) : 0);
+        data=new detail::data_t(c.data);
     #else
         data=c.data;
     #endif
@@ -139,6 +106,7 @@ void integer::_attach() {
 
 void integer::_detach() {
     if (data && data->detach()) delete data;
+    data=0;
 }
 
 void integer::_make_unique() {
@@ -155,56 +123,27 @@ void integer::_make_unique() {
 }
 
 void integer::_set_negative(bool negative) {
-    if (negative != (sign() < 0)) *this=negate(*this);
+    if (data->mIsNegative != negative) {
+        _make_unique();
+        data->mIsNegative=negative;
+        data->skipLeadingZeros();
+    }
 }
 
-/*! \brief Tests the lowest bit of \c *this to determine oddness.
-
-\returns \c true if \c *this is odd, otherwise \c false.
-*/
 bool integer::odd() const {
-    _throw_if_nan();
     return ((_get_digit(0) & 0x01)==1);
 }
 
-/*! \brief Tests the lowest bit of \c *this to determine evenness.
-
-\returns \c true if \c *this is even, otherwise \c false.
-*/
 bool integer::even() const {
-    _throw_if_nan();
     return ((_get_digit(0) & 0x01)==0);
 }
 
-/*! \brief Tests the sign of \c *this.
-
-\returns -1 if \c *this is negative, 0 if it's zero, or 1 if it's greater than
-zero.
-*/
 int integer::sign() const {
-    _throw_if_nan();
-    if (data->mIsNegative) return -1;
     if (_get_length()==1 && _get_digit(0)==0) return 0;
-    return 1;
+    else return (data->mIsNegative ? -1 : 1);
 }
 
-/*! \brief Tests \c *this for Not-a-Number.
-
-\returns \c true if \c *this is Not-a-Number, otherwise \c false.
-
-\see \ref nan
-*/
-bool integer::is_nan() const {
-    return (data==0);
-}
-
-/*! \brief Tells you roughly how large an integer is.
-
-\returns The number of hexadecimal digits that would be required to encode \c
-*this.
-*/
 size_t integer::hex_digits() const {
-    _throw_if_nan();
     size_t bits=log2(*this);
     return (bits+3)/4; // Four bits per hex digit, rounded up
 }
@@ -238,7 +177,7 @@ integer& integer::operator-=(const integer& subtrahend) {
 integer& integer::operator=(const integer &c) {
     _detach();
     #ifdef XINT_DISABLE_COPY_ON_WRITE
-        data=(c.data ? new detail::data_t(c.data) : 0);
+        data=new detail::data_t(c.data);
     #else
         data=c.data;
     #endif
@@ -300,8 +239,342 @@ size_t integer::_get_length() const {
     return data->mLength;
 }
 
-void integer::_throw_if_nan() const {
-    if (is_nan()) throw not_a_number();
+} // namespace core
+
+////////////////////////////////////////////////////////////////////////////////
+// The non-core integer class
+
+namespace {
+	std::auto_ptr<integer> cZero, cOne, cNaN;
+}
+
+const std::string detail::nan_text("#NaN#");
+
+//! \brief Creates a new integer with an initial value of zero.
+integer::integer() {
+    _init();
+}
+
+/*! \brief Creates a copy of an existing integer.
+
+\param[in] b An existing integer. If passed a Not-a-Number, it will create
+another Not-a-Number.
+
+\note
+This library can use a \link cow copy-on-write technique\endlink, making
+copying (even of large numbers) a very inexpensive operation.
+
+\overload
+*/
+integer::integer(const integer& b) {
+    if (b.is_nan()) data=0;
+    else _init(b);
+}
+
+/*! \brief Creates an integer from a core::integer.
+
+\param[in] b An existing core::integer.
+
+\note
+This library can use a \link cow copy-on-write technique\endlink, making
+copying (even of large numbers) a very inexpensive operation.
+
+\overload
+*/
+integer::integer(const core::integer& b) {
+    // Have to const_cast here, because xint::integer and xint::core::integer
+    // aren't directly related. It's safe though.
+    detail::data_t *bdata(const_cast<detail::data_t*>(b._get_data()));
+    #ifdef XINT_DISABLE_COPY_ON_WRITE
+        data=new detail::data_t(bdata);
+    #else
+        data=bdata;
+    #endif
+    _attach();
+}
+
+/*! \brief Create an integer from a string representation.
+
+\param[in] str A string representation of a number.
+\param[in] base The base of the number, or xint::autobase.
+
+\exception xint::invalid_base if the base parameter is not between 2 and 36
+(inclusive) or the constant xint::autobase.
+\exception xint::invalid_digit if the string contains any digit that cannot be
+part of a number in the specified base, or if there are no valid digits.
+
+\remarks
+This will convert a string representation of a number into an integer. See the
+description of the xint::from_string function for details on its behavior.
+
+\par
+This is the most common way to initialize values that are too large to fit into
+a native integral type.
+
+\overload
+*/
+integer::integer(const std::string& str, size_t base) {
+    try {
+        data=0;
+        _init(from_string(str, base));
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        delete data;
+        data=0;
+    }
+}
+
+/*! \brief Tests the lowest bit of \c *this to determine oddness.
+
+\returns \c true if \c *this is odd, otherwise \c false.
+
+\note If exceptions are blocked, returns false instead of throwing.
+*/
+bool integer::odd() const {
+    if (is_nan()) {
+        if (exceptions_allowed()) throw not_a_number();
+        else return false;
+    }
+    return ((_get_digit(0) & 0x01)==1);
+}
+
+/*! \brief Tests the lowest bit of \c *this to determine evenness.
+
+\returns \c true if \c *this is even, otherwise \c false.
+
+\note If exceptions are blocked, returns false instead of throwing.
+*/
+bool integer::even() const {
+    if (is_nan()) {
+        if (exceptions_allowed()) throw not_a_number();
+        else return false;
+    }
+    return ((_get_digit(0) & 0x01)==0);
+}
+
+/*! \brief Tests the sign of \c *this.
+
+\returns -1 if \c *this is negative, 0 if it's zero, or 1 if it's greater than
+zero.
+
+\note If exceptions are blocked, returns zero instead of throwing.
+*/
+int integer::sign() const {
+    if (is_nan()) {
+        if (exceptions_allowed()) throw not_a_number();
+        else return 0;
+    }
+    if (_get_length()==1 && _get_digit(0)==0) return 0;
+    return (data->mIsNegative ? -1 : 1);
+}
+
+/*! \brief Tells you roughly how large an integer is.
+
+\returns The number of hexadecimal digits that would be required to encode \c
+*this.
+
+\note If exceptions are blocked, returns zero instead of throwing.
+*/
+size_t integer::hex_digits() const {
+    try {
+        return core::integer(*this).hex_digits();
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        else return 0;
+    }
+}
+
+/*! \brief Tests \c *this for Not-a-Number.
+
+\returns \c true if \c *this is Not-a-Number, otherwise \c false.
+
+\see \ref nan
+*/
+bool integer::is_nan() const {
+    return (data==0);
+}
+
+integer& integer::operator+=(const integer& addend) {
+    try {
+        *this=integer(core::integer(*this).operator+=(core::integer(addend)));
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        *this=integer::nan();
+    }
+    return *this;
+}
+
+integer& integer::operator-=(const integer& subtrahend) {
+    try {
+        *this=integer(core::integer(*this).operator-=(core::integer(subtrahend)));
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        *this=integer::nan();
+    }
+    return *this;
+}
+
+integer& integer::operator=(const integer &c) {
+    _detach();
+    try {
+        #ifdef XINT_DISABLE_COPY_ON_WRITE
+            data=(c.data ? new detail::data_t(c.data) : 0);
+        #else
+            data=c.data;
+        #endif
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        data=0;
+    }
+    _attach();
+    return *this;
+}
+
+integer& integer::operator*=(const integer& b) { *this=multiply(*this, b); return *this; }
+integer& integer::operator/=(const integer& b) { *this=divide(*this, b); return *this; }
+integer& integer::operator%=(const integer& b) { *this=mod(*this, b); return *this; }
+
+integer& integer::operator++() { *this += one(); return *this; }
+integer& integer::operator--() { *this -= one(); return *this; }
+integer  integer::operator++(int) { integer s=*this; *this += one(); return s; }
+integer  integer::operator--(int) { integer s=*this; *this -= one(); return s; }
+
+integer  integer::operator<<(size_t shift) const { return shift_left(*this, shift); }
+integer  integer::operator>>(size_t shift) const { return shift_right(*this, shift); }
+integer& integer::operator&=(const integer& n) { *this=bitwise_and(*this, n); return *this; }
+integer& integer::operator|=(const integer& n) { *this=bitwise_or(*this, n); return *this; }
+integer& integer::operator^=(const integer& n) { *this=bitwise_xor(*this, n); return *this; }
+
+integer& integer::operator<<=(size_t shift) {
+    try {
+        *this=integer(core::integer(*this).operator<<=(shift));
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        *this=integer::nan();
+    }
+    return *this;
+}
+
+integer& integer::operator>>=(size_t shift) {
+    try {
+        *this=integer(core::integer(*this).operator>>=(shift));
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        *this=integer::nan();
+    }
+    return *this;
+}
+
+const integer& integer::zero() {
+    if (cZero.get()==0) cZero.reset(new integer(core::integer::zero()));
+    return *cZero;
+}
+
+const integer& integer::one() {
+    if (cOne.get()==0) cOne.reset(new integer(core::integer::one()));
+    return *cOne;
+}
+
+const integer& integer::nan() {
+    if (cNaN.get()==0) {
+        integer *n=new integer();
+        n->_detach(); // Get rid of the data
+        n->data=0;
+        cNaN.reset(n);
+    }
+    return *cNaN;
+}
+
+detail::digit_t integer::_get_digit(size_t index) const {
+    return data->digits[index];
+}
+
+detail::digit_t integer::_get_digit(size_t index, bool) const {
+    if (index >= data->mLength) return 0;
+    return data->digits[index];
+}
+
+size_t integer::_get_length() const {
+    return data->mLength;
+}
+
+void integer::_init(detail::digit_t init) {
+    try {
+        data=new detail::data_t(init);
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        data=0;
+    }
+    _attach();
+}
+
+void integer::_init(const integer &c) {
+    try {
+        #ifdef XINT_DISABLE_COPY_ON_WRITE
+            data=(c.data ? new detail::data_t(c.data) : 0);
+        #else
+            data=c.data;
+        #endif
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        data=0;
+    }
+    _attach();
+}
+
+void integer::_init(boost::uintmax_t n) {
+    static int bits=std::numeric_limits<boost::uintmax_t>::digits;
+    static int maxDigits=(bits+detail::bits_per_digit-1)/detail::bits_per_digit;
+
+    data=0;
+    try {
+        data=new detail::data_t;
+        _attach();
+
+        data->alloc(maxDigits);
+        for (int x=0; n != 0; ++x) {
+            data->digits[x]=detail::digit_t(n & detail::digit_mask);
+            n >>= detail::bits_per_digit;
+        }
+        data->skipLeadingZeros();
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        delete data;
+        data=0;
+    }
+}
+
+void integer::_attach() {
+    if (data) data->attach();
+}
+
+void integer::_detach() {
+    if (data && data->detach()) delete data;
+    data=0;
+}
+
+void integer::_make_unique() {
+    if (data && data->mCopies > 1) {
+        detail::data_t *newstore=0;
+        try {
+            newstore=new detail::data_t(data);
+        } catch (std::exception&) {
+            if (exceptions_allowed()) throw;
+            newstore=0;
+        }
+
+        _detach();
+        data=newstore;
+        _attach();
+    }
+}
+
+void integer::_set_negative(bool negative) {
+    if (data->mIsNegative != negative) {
+        _make_unique();
+        data->mIsNegative=negative;
+        data->skipLeadingZeros();
+    }
 }
 
 } // namespace xint

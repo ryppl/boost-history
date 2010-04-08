@@ -24,37 +24,19 @@ namespace xint {
 
 using namespace detail;
 
-/*! \brief Returns the absolute value of an integer.
+namespace core {
 
-\param[in] n The integer to operate on.
-
-\returns If \c n is zero or positive, returns \c n. Otherwise returns \c -n.
-*/
 integer abs(const integer& n) {
-    return (n < 0 ? -n : n);
+    return (n.sign() < 0 ? -n : n);
 }
 
-/*! \brief Return the additive inverse of an integer.
-
-\param[in] n The integer to operate on.
-
-\returns \c -n.
-*/
 integer negate(const integer& n) {
-    n._throw_if_nan();
-
     integer nn(n);
     nn._make_unique();
     nn._get_data()->negate();
     return nn;
 }
 
-/*! \brief Calculate the sum of two integers.
-
-\param[in] n1, n2 The integers to add.
-
-\returns The sum of the parameters.
-*/
 integer add(const integer& n1, const integer& n2) {
     int sign1=n1.sign(), sign2=n2.sign();
     if (sign1 != sign2) {
@@ -73,12 +55,6 @@ integer add(const integer& n1, const integer& n2) {
     }
 }
 
-/*! \brief Calculate the difference between two integers.
-
-\param[in] n1, n2 The integers to operate on.
-
-\returns The difference between the parameters.
-*/
 integer subtract(const integer& n1, const integer& n2) {
     int sign1=n1.sign(), sign2=n2.sign();
     if (sign1 != sign2) {
@@ -98,16 +74,6 @@ integer subtract(const integer& n1, const integer& n2) {
     }
 }
 
-/*! \brief Calculate the product of two integers.
-
-\param[in] n, by The integers to operate on.
-
-\returns The product of the parameters.
-
-\remarks
-Automatically uses the more-efficient squaring algorithm if it can trivially
-detect that the two parameters are copies of the same number.
-*/
 integer multiply(const integer& n, const integer& by) {
     int nsign=n.sign(), bysign=by.sign();
     if (nsign==0 || bysign==0) return integer::zero();
@@ -248,40 +214,13 @@ std::pair<integer, integer> subDivide(integer d1, integer d2) {
 
 } // namespace
 
-/*! \brief Calculate how many \c dividends would fit into \c divisor.
-
-\param[in] dividend, divisor The integers to operate on.
-
-\returns The integer value of \c dividend divided by \c divisor.
-
-\exception xint::divide_by_zero if \c divisor is zero.
-*/
 integer divide(const integer& dividend, const integer& divisor) {
     return divide_r(dividend, divisor).first;
 }
 
-/*! \brief Calculate how many \c dividends would fit into \c divisor, with the
-           remainder.
-
-\param[in] d1 The dividend.
-\param[in] d2 The divisor.
-
-\returns An \c std::pair containing the quotient and remainder of \c d1 divided
-by \c d2.
-
-\exception xint::divide_by_zero if \c d2 is zero.
-
-\note If exceptions are blocked, it will return an std::pair with two
-Not-a-Number values instead of throwing.
-*/
-std::pair<integer, integer> divide_r(const integer& d1, const
-    integer& d2)
-{
+std::pair<integer, integer> divide_r(const integer& d1, const integer& d2) {
     int sign1=d1.sign(), sign2=d2.sign();
-    if (sign2==0) {
-        if (exceptions_allowed()) throw divide_by_zero();
-        else return std::make_pair(integer(not_a_number()), integer(not_a_number()));
-    }
+    if (sign2==0) throw divide_by_zero();
 
     int comp=compare(d1, d2, true);
     if (comp<0) {
@@ -310,6 +249,122 @@ std::pair<integer, integer> divide_r(const integer& d1, const
         return divideBySingleDigit(d1, d2._get_data()->digits[0]);
     } else {
         return subDivide(d1, d2);
+    }
+}
+
+} // namespace core
+
+/*! \brief Returns the absolute value of an integer.
+
+\param[in] n The integer to operate on.
+
+\returns If \c n is zero or positive, returns \c n. Otherwise returns \c -n.
+*/
+integer abs(const integer& n) {
+    try {
+        return integer(abs(core::integer(n)));
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        return integer::nan();
+    }
+}
+
+/*! \brief Return the additive inverse of an integer.
+
+\param[in] n The integer to operate on.
+
+\returns \c -n.
+*/
+integer negate(const integer& n) {
+    try {
+        return integer(negate(core::integer(n)));
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        return integer::nan();
+    }
+}
+
+/*! \brief Calculate the sum of two integers.
+
+\param[in] n1, n2 The integers to add.
+
+\returns The sum of the parameters.
+*/
+integer add(const integer& n1, const integer& n2) {
+    try {
+        return integer(add(core::integer(n1), core::integer(n2)));
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        return integer::nan();
+    }
+}
+
+/*! \brief Calculate the difference between two integers.
+
+\param[in] n1, n2 The integers to operate on.
+
+\returns The difference between the parameters.
+*/
+integer subtract(const integer& n1, const integer& n2) {
+    try {
+        return integer(subtract(core::integer(n1), core::integer(n2)));
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        return integer::nan();
+    }
+}
+
+/*! \brief Calculate the product of two integers.
+
+\param[in] n, by The integers to operate on.
+
+\returns The product of the parameters.
+
+\remarks
+Automatically uses the more-efficient squaring algorithm if it can trivially
+detect that the two parameters are copies of the same number.
+*/
+integer multiply(const integer& n, const integer& by) {
+    try {
+        return integer(multiply(core::integer(n), core::integer(by)));
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        return integer::nan();
+    }
+}
+
+/*! \brief Calculate how many \c dividends would fit into \c divisor.
+
+\param[in] dividend, divisor The integers to operate on.
+
+\returns The integer value of \c dividend divided by \c divisor.
+
+\exception xint::divide_by_zero if \c divisor is zero.
+*/
+integer divide(const integer& dividend, const integer& divisor) {
+    return divide_r(dividend, divisor).first;
+}
+
+/*! \brief Calculate how many \c dividends would fit into \c divisor, with the
+           remainder.
+
+\param[in] d1 The dividend.
+\param[in] d2 The divisor.
+
+\returns An \c std::pair containing the quotient and remainder of \c d1 divided
+by \c d2.
+
+\exception xint::divide_by_zero if \c d2 is zero.
+
+\note If exceptions are blocked, returns an std::pair with two Not-a-Number
+values instead of throwing.
+*/
+std::pair<integer, integer> divide_r(const integer& d1, const integer& d2) {
+    try {
+        return divide_r(core::integer(d1), core::integer(d2));
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        return std::make_pair(integer::nan(), integer::nan());
     }
 }
 

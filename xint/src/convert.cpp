@@ -45,33 +45,10 @@ char nToChar(int n, bool upperCase) {
 
 } // namespace
 
-/*! \brief Creates a string representation of the specified integer.
+namespace core {
 
-\param[in] n The integer to convert.
-\param[in] base The base, between 2 and 36 inclusive, to convert it to. Defaults
-to base 10.
-\param[in] uppercase Whether to make alphabetic characters (for bases greater
-than ten) uppercase or not. Defaults to \c false.
-
-\returns The string value of \c n. If \c n is Not-a-Number, returns the string
-\c \#NaN#.
-
-\exception xint::invalid_base if base is less than two or greater than 36.
-
-\note If exceptions are blocked, it returns an empty string instead of throwing
-an exception.
-
-\remarks
-This is the function that's called when you ask the library to write an integer
-to a stream, but it's more flexible because you can specify any base between 2
-and 36. (Streams only allow base-8, base-10, or base-16.)
-*/
 std::string to_string(const integer& n, size_t base, bool uppercase) {
-    if (n.is_nan()) return detail::nan_text;
-    if (base<2 || base>36) {
-        if (exceptions_allowed()) throw invalid_base();
-        else return std::string();
-    }
+    if (base<2 || base>36) throw invalid_base();
 
     if (n.sign()==0) return "0";
 
@@ -121,6 +98,118 @@ std::string to_string(const integer& n, size_t base, bool uppercase) {
     }
 }
 
+integer from_string(const std::string& str, size_t base) {
+    bool negate=false;
+    const char *c=str.c_str();
+    if (*c=='+') ++c;
+    else if (*c=='-') { negate=true; ++c; }
+
+    if (base==autobase) {
+        if (*c=='0') {
+            ++c;
+            if (*c=='x' || *c=='X') {
+                ++c;
+                base=16;
+            } else base=8;
+        } else base=10;
+    }
+
+    if (base<2 || base>36) throw invalid_base();
+    if (*c==0) throw invalid_digit("No valid digits");
+
+    const integer shift(base);
+
+    integer r;
+    while (*c) {
+        unsigned int digit;
+        if (*c>='0' && *c<='9') digit=*c-'0';
+        else if (*c>='A' && *c<='Z') digit=*c-'A'+10;
+        else if (*c>='a' && *c<='z') digit=*c-'a'+10;
+        else throw invalid_digit("encountered non-alphanumeric character in "
+            "string");
+
+        if (digit >= base) throw invalid_digit("encountered digit greater than "
+            "base allows");
+
+        r = (r * shift) + digit;
+        ++c;
+    }
+    r._set_negative(negate);
+    return r;
+}
+
+integer from_binary(const std::string& str) {
+    const size_t bytesPerDigit=sizeof(digit_t);
+    const size_t bitsPerByte=std::numeric_limits<unsigned char>::digits;
+
+    integer r;
+    detail::data_t *rdata=r._get_data();
+    rdata->alloc((str.length() + bytesPerDigit - 1)/bytesPerDigit);
+    digit_t *p=rdata->digits;
+
+    unsigned char *s=(unsigned char *)str.data(), *se=s+str.length();
+    while (s<se) {
+        digit_t d=0;
+        for (size_t i=0; i<bytesPerDigit && s<se; ++i)
+            d |= (digit_t(*s++) << (i * bitsPerByte));
+        *p++=d;
+    }
+    rdata->skipLeadingZeros();
+    return r;
+}
+
+std::string to_binary(const integer& n) {
+    const size_t bytesPerDigit=sizeof(digit_t);
+    const size_t bitsPerByte=std::numeric_limits<unsigned char>::digits;
+    std::vector<unsigned char> temp;
+    temp.reserve(n._get_length() * bytesPerDigit);
+
+    const detail::data_t *ndata=n._get_data();
+    const digit_t *p=ndata->digits, *pe=p+n._get_length();
+    while (p != pe) {
+        digit_t d(*p++);
+        for (size_t i=0; i<bytesPerDigit; ++i) {
+            temp.push_back((unsigned char)(d));
+            d >>= bitsPerByte;
+        }
+    }
+    while (!temp.empty() && temp.back()==0) temp.pop_back();
+    char *c=(char*)&temp[0];
+    return std::string(c, c+temp.size());
+}
+
+} // namespace core
+
+/*! \brief Creates a string representation of the specified integer.
+
+\param[in] n The integer to convert.
+\param[in] base The base, between 2 and 36 inclusive, to convert it to. Defaults
+to base 10.
+\param[in] uppercase Whether to make alphabetic characters (for bases greater
+than ten) uppercase or not. Defaults to \c false.
+
+\returns The string value of \c n. If \c n is Not-a-Number, returns the string
+\c \#NaN#.
+
+\exception xint::invalid_base if base is less than two or greater than 36.
+
+\note If exceptions are blocked, it returns an empty string instead of throwing
+an exception.
+
+\remarks
+This is the function that's called when you ask the library to write an integer
+to a stream, but it's more flexible because you can specify any base between 2
+and 36. (Streams only allow base-8, base-10, or base-16.)
+*/
+std::string to_string(const integer& n, size_t base, bool uppercase) {
+    try {
+        return to_string(core::integer(n), base, uppercase);
+    } catch (exception&) {
+        if (exceptions_allowed()) throw;
+        else return std::string();
+    }
+}
+
 /*! \brief Converts a string into an integer.
 
 \param[in] str The string to convert.
@@ -148,56 +237,13 @@ when contructing one from a string.
 \see integer::integer(const std::string& str, size_t base)
 */
 integer from_string(const std::string& str, size_t base) {
-    if (str==detail::nan_text) return integer(not_a_number());
-
-    bool negate=false;
-    const char *c=str.c_str();
-    if (*c=='+') ++c;
-    else if (*c=='-') { negate=true; ++c; }
-
-    if (base==autobase) {
-        if (*c=='0') {
-            ++c;
-            if (*c=='x' || *c=='X') {
-                ++c;
-                base=16;
-            } else base=8;
-        } else base=10;
+    try {
+        if (str==detail::nan_text) return integer::nan();
+        return integer(core::from_string(str, base));
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        else return integer::nan();
     }
-
-    if (base<2 || base>36) {
-        if (exceptions_allowed()) throw invalid_base();
-        else return integer(not_a_number());
-    }
-
-    if (*c==0) {
-        if (exceptions_allowed()) throw invalid_digit("No valid digits");
-        else return integer(not_a_number());
-    }
-
-    const integer shift(base);
-
-    integer r;
-    while (*c) {
-        unsigned int digit;
-        if (*c>='0' && *c<='9') digit=*c-'0';
-        else if (*c>='A' && *c<='Z') digit=*c-'A'+10;
-        else if (*c>='a' && *c<='z') digit=*c-'a'+10;
-        else {
-            if (exceptions_allowed()) throw invalid_digit("encountered non-alphanumeric character in string");
-            else return integer(not_a_number());
-        }
-
-        if (digit >= base) {
-            if (exceptions_allowed()) throw invalid_digit("encountered digit greater than base allows");
-            else return integer(not_a_number());
-        }
-
-        r = (r * shift) + digit;
-        ++c;
-    }
-    r._set_negative(negate);
-    return r;
 }
 
 /*! \brief Converts a binary representation of a number into an integer.
@@ -210,23 +256,12 @@ first.
 \see xint::to_binary
 */
 integer from_binary(const std::string& str) {
-    const size_t bytesPerDigit=sizeof(digit_t);
-    const size_t bitsPerByte=std::numeric_limits<unsigned char>::digits;
-
-    integer r;
-    detail::data_t *rdata=r._get_data();
-    rdata->alloc((str.length() + bytesPerDigit - 1)/bytesPerDigit);
-    digit_t *p=rdata->digits;
-
-    unsigned char *s=(unsigned char *)str.data(), *se=s+str.length();
-    while (s<se) {
-        digit_t d=0;
-        for (size_t i=0; i<bytesPerDigit && s<se; ++i)
-            d |= (digit_t(*s++) << (i * bitsPerByte));
-        *p++=d;
+    try {
+        return integer(core::from_binary(str));
+    } catch (exception&) {
+        if (exceptions_allowed()) throw;
+        else return integer::nan();
     }
-    rdata->skipLeadingZeros();
-    return r;
 }
 
 /*! \brief Creates a binary representation of an integer, lowest byte first.
@@ -239,6 +274,9 @@ integer from_binary(const std::string& str) {
 This function only stores the absolute value of \c n; if you need the sign, you
 must store it separately.
 
+\par If exceptions are blocked, returns an empty std::string instead of
+throwing.
+
 \remarks
 A binary representation is sometimes used for persistent storage or
 transmission, as it is more space-efficient than a string representation.
@@ -246,25 +284,12 @@ transmission, as it is more space-efficient than a string representation.
 \see xint::from_binary
 */
 std::string to_binary(const integer& n) {
-    n._throw_if_nan();
-
-    const size_t bytesPerDigit=sizeof(digit_t);
-    const size_t bitsPerByte=std::numeric_limits<unsigned char>::digits;
-    std::vector<unsigned char> temp;
-    temp.reserve(n._get_length() * bytesPerDigit);
-
-    const detail::data_t *ndata=n._get_data();
-    const digit_t *p=ndata->digits, *pe=p+n._get_length();
-    while (p != pe) {
-        digit_t d(*p++);
-        for (size_t i=0; i<bytesPerDigit; ++i) {
-            temp.push_back((unsigned char)(d));
-            d >>= bitsPerByte;
-        }
+    try {
+        return to_binary(core::integer(n));
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        else return std::string();
     }
-    while (!temp.empty() && temp.back()==0) temp.pop_back();
-    char *c=(char*)&temp[0];
-    return std::string(c, c+temp.size());
 }
 
 } // namespace xint

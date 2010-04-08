@@ -23,6 +23,7 @@
 
 namespace boost {
 namespace xint {
+namespace core {
 
 //! \name Montgomery Reduction functions
 //!@{
@@ -35,6 +36,7 @@ integer montgomeryMultiplyMod(const integer& x, const integer& y, const integer&
 integer montgomeryPowerMod(const integer& x, const integer& e, const integer& m);
 //!@}
 
+} // namespace core
 } // namespace xint
 } // namespace boost
 

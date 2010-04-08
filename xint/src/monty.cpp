@@ -27,6 +27,7 @@
 
 namespace boost {
 namespace xint {
+namespace core {
 
 using namespace detail;
 
@@ -56,10 +57,6 @@ integer toMontgomeryForm(const integer& n, const integer& m) {
 //! Returns the integer from the Montgomery form of a number. Used for testing.
 integer fromMontgomeryForm(const integer& n, const integer& m) {
     integer inv=invmod(montgomeryR(m), m);
-    if (inv.is_nan()) {
-        if (exceptions_allowed()) throw invalid_modulus("modulus has no inverse");
-        else return integer(not_a_number());
-    }
     return (n * inv % m);
 }
 
@@ -236,11 +233,8 @@ integer montgomeryPowerMod(const integer& a, const integer& e, const integer& n)
     const TUTable &tuTable(TUTable::get());
 
     if (e.sign()==0) return integer::one();
-    if (n.even()) {
-        if (exceptions_allowed()) throw invalid_modulus("montgomeryPowerMod "
-            "requires an odd modulus");
-        else return integer(not_a_number());
-    }
+    if (n.even()) throw invalid_modulus("montgomeryPowerMod requires an odd "
+        "modulus");
 
     // Precalculate some values
     const size_t k(mostEfficientK(e));
@@ -285,5 +279,6 @@ integer montgomeryPowerMod(const integer& a, const integer& e, const integer& n)
     return montgomeryMultiplyMod(pp, integer::one(), n, nPrime0);
 }
 
+} // namespace core
 } // namespace xint
 } // namespace boost

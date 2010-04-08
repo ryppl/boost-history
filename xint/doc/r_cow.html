@@ -27,7 +27,7 @@
 <h1><a class="anchor" id="r_cow">Why use copy-on-write? I've heard that causes problems with multi-threaded code. </a></h1><p>It's the best way I found to return large <code>integer</code> objects from functions efficiently. Some of these numbers can get huge, and move semantics aren't yet in the current standard. (Once they are, I'll consider removing the copy-on-write stuff.) It is also more CPU- and memory-efficient.</p>
 <p>It <em>does</em> cause problems when you try to use the library from multiple threads at the same time. To deal with that, the library can be compiled in a <a class="el" href="threadsafe.html">thread-safe mode</a>, which ensures that every <code>integer</code> gets its own unique storage, among other things. You still have to ensure that only one thread accesses a particular <code>integer</code> at a time. </p>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Tue Apr 6 10:52:51 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Wed Apr 7 03:40:44 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

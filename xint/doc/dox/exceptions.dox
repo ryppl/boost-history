@@ -40,7 +40,9 @@ xint::block_exceptions function. Here's an example (which can be found in the
 
 If you need to ensure that exceptions are allowed, in one of your own functions
 that might be called with them blocked, you can hold the xint::token object
-returned by xint::allow_exceptions. It works the same way.
+returned by xint::allow_exceptions. It works the same way. You can also use the
+functions in the \c xint::core namespace, which are immune to
+exception-blocking.
 
 xint::token objects should always be created on the stack, so that they are
 guaranteed to be destroyed in reverse order. If they are not, or if they are

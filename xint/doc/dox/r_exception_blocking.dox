@@ -1,0 +1,19 @@
+/*! \page r_exception_blocking Why have an exception-blocking system at all? Exceptions are standard C++!
+
+Yes, they are, but there are a number of people that dislike them intensely and
+won't use any library that forces its users to deal with them. But that is not
+the primary motivation for the exception-blocking mechanism.
+
+There are also times when exception-handling can get in the way of writing code
+that is easily understandable by other people. Any software developer
+understands calling a function and checking the return value to see if there was
+an error; it's a standard idiom in essentially any programming language, and
+it's even widely used in the C++ Standard Template Library
+(see std::string::find, for just one example).
+
+Writing code that is \e human-readable -- not just machine-readable -- is
+difficult, and there's little that anyone can do to change that. But this
+library's exception-blocking mechanism makes it easier to produce such code,
+with very little effort, by giving the developer a choice: exceptions, error
+codes, or both, whatever makes for the most readable and understandable code.
+*/

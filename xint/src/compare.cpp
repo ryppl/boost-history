@@ -17,26 +17,14 @@
 
 #include "../boost/xint/xint.hpp"
 #include "../boost/xint/xint_data_t.hpp"
+#include <functional>
 
 namespace boost {
 namespace xint {
 
-/*! \brief Compare two integer objects.
+namespace core {
 
-\param[in] b1, b2 The integers to compare.
-\param[in] ignoresign If \c true, the absolute values of b1 and b2 are compared,
-instead of their signed values. Used internally.
-
-\returns A negative number if \c b1 < \c b2; zero if \c b1 == \c b2, or a
-positive number if \c b1 > \c b2.
-
-This is the function behind all of the comparison operators. It might sometimes
-be useful directly as well.
-*/
 int compare(const integer &b1, const integer &b2, bool ignoresign) {
-    b1._throw_if_nan();
-    b2._throw_if_nan();
-
     if (!ignoresign) {
         int sign1=b1.sign(), sign2=b2.sign();
         if (sign1==0 && sign2==0) return 0;
@@ -65,13 +53,78 @@ int compare(const integer &b1, const integer &b2, bool ignoresign) {
     return answer;
 }
 
-bool operator!(const xint::integer &num1) { return num1.sign()==0; }
-bool operator==(const xint::integer &num1, const xint::integer &num2) { return xint::compare(num1, num2)==0; }
-bool operator!=(const xint::integer& num1, const xint::integer& num2) { return xint::compare(num1, num2)!=0; }
-bool operator<(const xint::integer& num1, const xint::integer& num2) { return xint::compare(num1, num2)<0; }
-bool operator>(const xint::integer& num1, const xint::integer& num2) { return xint::compare(num1, num2)>0; }
-bool operator<=(const xint::integer& num1, const xint::integer& num2) { return xint::compare(num1, num2)<=0; }
-bool operator>=(const xint::integer& num1, const xint::integer& num2) { return xint::compare(num1, num2)>=0; }
+bool operator!(const integer &num1) { return num1.sign()==0; }
+bool operator==(const integer &num1, const integer &num2) {
+    return compare(num1, num2)==0; }
+bool operator!=(const integer& num1, const integer& num2) {
+    return compare(num1, num2)!=0; }
+bool operator<(const integer& num1, const integer& num2) {
+    return compare(num1, num2)<0; }
+bool operator>(const integer& num1, const integer& num2) {
+    return compare(num1, num2)>0; }
+bool operator<=(const integer& num1, const integer& num2) {
+    return compare(num1, num2)<=0; }
+bool operator>=(const integer& num1, const integer& num2) {
+    return compare(num1, num2)>=0; }
+
+} // namespace core
+
+/*! \brief Compare two integer objects.
+
+\param[in] b1, b2 The integers to compare.
+\param[in] ignoresign If \c true, the absolute values of b1 and b2 are compared,
+instead of their signed values. Used internally.
+
+\returns A negative number if \c b1 < \c b2; zero if \c b1 == \c b2, or a
+positive number if \c b1 > \c b2.
+
+This is the function behind all of the comparison operators. It might sometimes
+be useful directly as well.
+
+\note If exceptions are blocked, returns 0 instead of throwing.
+*/
+int compare(const integer &b1, const integer &b2, bool ignoresign) {
+    try {
+        return compare(core::integer(b1), core::integer(b2));
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        else return 0;
+    }
+}
+
+namespace {
+template <typename T>
+bool cmp(const integer &num1, const integer &num2, const T& t) {
+    try {
+        return t(compare(core::integer(num1), core::integer(num2)), 0);
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        else return false;
+    }
+}
+} // namespace
+
+bool operator!(const integer &num1) {
+    try {
+        return operator!(core::integer(num1));
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        else return false;
+    }
+}
+
+bool operator==(const integer &num1, const integer &num2) {
+    return cmp(num1, num2, std::equal_to<int>()); }
+bool operator!=(const integer& num1, const integer& num2) {
+    return cmp(num1, num2, std::not_equal_to<int>()); }
+bool operator<(const integer& num1, const integer& num2) {
+    return cmp(num1, num2, std::less<int>()); }
+bool operator>(const integer& num1, const integer& num2) {
+    return cmp(num1, num2, std::greater<int>()); }
+bool operator<=(const integer& num1, const integer& num2) {
+    return cmp(num1, num2, std::less_equal<int>()); }
+bool operator>=(const integer& num1, const integer& num2) {
+    return cmp(num1, num2, std::greater_equal<int>()); }
 
 } // namespace xint
 } // namespace boost

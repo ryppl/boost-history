@@ -23,16 +23,9 @@ namespace xint {
 
 using namespace detail;
 
-/*! \brief Queries the value of a particular bit in an integer.
+namespace core {
 
-\param[in] n The integer to query.
-\param[in] bit The zero-based index of the bit you're asking about.
-
-\returns \c true if the specified bit is set (has a value of one), \c false if
-it is clear.
-*/
 bool getbit(const integer& n, size_t bit) {
-    n._throw_if_nan();
     size_t index=bit/bits_per_digit;
     if (index < n._get_length()) {
         digit_t mask=(digit_t(1) << (bit % bits_per_digit));
@@ -40,15 +33,7 @@ bool getbit(const integer& n, size_t bit) {
     } else return false;
 }
 
-/*! \brief Sets a specific bit in an integer to one.
-
-\param[in,out] n The integer to operate on.
-\param[in] bit The zero-based index of the bit to change.
-
-\returns Nothing.
-*/
 void setbit(integer& n, size_t bit) {
-    n._throw_if_nan();
     n._make_unique();
     detail::data_t *ndata=n._get_data();
 
@@ -60,15 +45,7 @@ void setbit(integer& n, size_t bit) {
     ndata->skipLeadingZeros();
 }
 
-/*! \brief Sets a specific bit in an integer to zero.
-
-\param[in,out] n The integer to operate on.
-\param[in] bit The zero-based index of the bit to change.
-
-\returns Nothing.
-*/
 void clearbit(integer& n, size_t bit) {
-    n._throw_if_nan();
     size_t index=bit/bits_per_digit;
     if (index < n._get_length()) {
         n._make_unique();
@@ -78,15 +55,6 @@ void clearbit(integer& n, size_t bit) {
     }
 }
 
-/*! \brief Obtains the index of the lowest bit in an integer with a value of one.
-
-\param[in] n The integer to query.
-\param[in] valueIfZero The value to return if \c n is zero (as there is no
-correct answer in that case).
-
-\returns The zero-based index of the lowest one-bit in the integer, or \c
-valueIfZero if the integer contains no set bits.
-*/
 size_t lowestbit(const integer& n, size_t valueIfZero) {
     if (n.sign()==0) return valueIfZero;
 
@@ -106,30 +74,12 @@ size_t lowestbit(const integer& n, size_t valueIfZero) {
     return r;
 }
 
-/*! \brief Obtains the index of the highest bit in an integer with a value of one.
-
-\param[in] n The integer to query.
-\param[in] valueIfZero The value to return if \c n is zero (as there is no
-correct answer in that case).
-
-\returns The zero-based index of the highest one-bit in the integer, or \c
-valueIfZero if the integer contains no set bits.
-*/
 size_t highestbit(const integer& n, size_t valueIfZero) {
     if (n.sign()==0) return valueIfZero;
     return static_cast<size_t>(log2(n)-1);
 }
 
-/*! \brief Combine two integers using a bitwise \c AND operation.
-
-\param[in] n1, n2 The integers to operate on.
-
-\returns An integer with all bits that are set in both parameters turned on.
-*/
 integer bitwise_and(const integer& n1, const integer& n2) {
-    n1._throw_if_nan();
-    n2._throw_if_nan();
-
     const detail::data_t *smaller=n1._get_data(), *larger=n2._get_data();
     if (smaller->mLength > larger->mLength) std::swap(smaller, larger);
 
@@ -146,16 +96,7 @@ integer bitwise_and(const integer& n1, const integer& n2) {
     return r;
 }
 
-/*! \brief Combine two integers using a bitwise \c OR operation.
-
-\param[in] n1, n2 The integers to operate on.
-
-\returns An integer with all bits that are set in either parameter turned on.
-*/
 integer bitwise_or(const integer& n1, const integer& n2) {
-    n1._throw_if_nan();
-    n2._throw_if_nan();
-
     const detail::data_t *smaller=n1._get_data(), *larger=n2._get_data();
     if (smaller->mLength > larger->mLength) std::swap(smaller, larger);
 
@@ -174,17 +115,7 @@ integer bitwise_or(const integer& n1, const integer& n2) {
     return r;
 }
 
-/*! \brief Combine two integers using a bitwise \c XOR operation.
-
-\param[in] n1, n2 The integers to operate on.
-
-\returns An integer with all bits that are set in either parameter, but not
-both, turned on.
-*/
 integer bitwise_xor(const integer& n1, const integer& n2) {
-    n1._throw_if_nan();
-    n2._throw_if_nan();
-
     const detail::data_t *smaller=n1._get_data(), *larger=n2._get_data();
     if (smaller->mLength > larger->mLength) std::swap(smaller, larger);
 
@@ -201,6 +132,170 @@ integer bitwise_xor(const integer& n1, const integer& n2) {
 
     rdata->skipLeadingZeros();
     return r;
+}
+
+integer shift(const integer& n, int byBits) {
+    if (byBits > 0) return shift_left(n, byBits);
+    else return shift_right(n, -byBits);
+}
+
+integer shift_left(const integer& n, size_t byBits) {
+    if (byBits==0) return n;
+
+    integer nn(n);
+    nn._make_unique();
+    nn._get_data()->shift_left(byBits);
+    return nn;
+}
+
+integer shift_right(const integer& n, size_t byBits) {
+    if (byBits==0) return n;
+
+    integer nn(n);
+    nn._make_unique();
+    nn._get_data()->shift_right(byBits);
+    return nn;
+}
+
+} // namespace core
+
+/*! \brief Queries the value of a particular bit in an integer.
+
+\param[in] n The integer to query.
+\param[in] bit The zero-based index of the bit you're asking about.
+
+\returns \c true if the specified bit is set (has a value of one), \c false if
+it is clear.
+
+\note If exceptions are blocked, returns false instead of throwing.
+*/
+bool getbit(const integer& n, size_t bit) {
+    try {
+        return getbit(core::integer(n), bit);
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        else return false;
+    }
+}
+
+/*! \brief Sets a specific bit in an integer to one.
+
+\param[in,out] n The integer to operate on.
+\param[in] bit The zero-based index of the bit to change.
+
+\returns Nothing.
+*/
+void setbit(integer& n, size_t bit) {
+    try {
+        core::integer nn(n);
+        setbit(nn, bit);
+        n=integer(nn);
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+    }
+}
+
+/*! \brief Sets a specific bit in an integer to zero.
+
+\param[in,out] n The integer to operate on.
+\param[in] bit The zero-based index of the bit to change.
+
+\returns Nothing.
+*/
+void clearbit(integer& n, size_t bit) {
+    try {
+        core::integer nn(n);
+        clearbit(nn, bit);
+        n=integer(nn);
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+    }
+}
+
+/*! \brief Obtains the index of the lowest bit in an integer with a value of one.
+
+\param[in] n The integer to query.
+\param[in] valueIfZero The value to return if \c n is zero (as there is no
+correct answer in that case).
+
+\returns The zero-based index of the lowest one-bit in the integer, or \c
+valueIfZero if the integer contains no set bits.
+
+\note If exceptions are blocked, returns zero instead of throwing.
+*/
+size_t lowestbit(const integer& n, size_t valueIfZero) {
+    try {
+        return lowestbit(core::integer(n), valueIfZero);
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        else return 0;
+    }
+}
+
+/*! \brief Obtains the index of the highest bit in an integer with a value of one.
+
+\param[in] n The integer to query.
+\param[in] valueIfZero The value to return if \c n is zero (as there is no
+correct answer in that case).
+
+\returns The zero-based index of the highest one-bit in the integer, or \c
+valueIfZero if the integer contains no set bits.
+
+\note If exceptions are blocked, returns zero instead of throwing.
+*/
+size_t highestbit(const integer& n, size_t valueIfZero) {
+    try {
+        return highestbit(core::integer(n), valueIfZero);
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        else return 0;
+    }
+}
+
+/*! \brief Combine two integers using a bitwise \c AND operation.
+
+\param[in] n1, n2 The integers to operate on.
+
+\returns An integer with all bits that are set in both parameters turned on.
+*/
+integer bitwise_and(const integer& n1, const integer& n2) {
+    try {
+        return integer(bitwise_and(core::integer(n1), core::integer(n2)));
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        else return integer::nan();
+    }
+}
+
+/*! \brief Combine two integers using a bitwise \c OR operation.
+
+\param[in] n1, n2 The integers to operate on.
+
+\returns An integer with all bits that are set in either parameter turned on.
+*/
+integer bitwise_or(const integer& n1, const integer& n2) {
+    try {
+        return integer(bitwise_or(core::integer(n1), core::integer(n2)));
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        else return integer::nan();
+    }
+}
+
+/*! \brief Combine two integers using a bitwise \c XOR operation.
+
+\param[in] n1, n2 The integers to operate on.
+
+\returns An integer with all bits that are set in either parameter, but not
+both, turned on.
+*/
+integer bitwise_xor(const integer& n1, const integer& n2) {
+    try {
+        return integer(bitwise_xor(core::integer(n1), core::integer(n2)));
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        else return integer::nan();
+    }
 }
 
 /*! \brief Bit-shift an integer, in either direction.
@@ -224,14 +319,12 @@ integer shift(const integer& n, int byBits) {
 \returns The bit-shifted integer.
 */
 integer shift_left(const integer& n, size_t byBits) {
-    n._throw_if_nan();
-
-    if (byBits==0) return n;
-
-    integer nn(n);
-    nn._make_unique();
-    nn._get_data()->shift_left(byBits);
-    return nn;
+    try {
+        return integer(shift_left(core::integer(n), byBits));
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        else return integer::nan();
+    }
 }
 
 /*! \brief Right-shift an integer by a specified number of bits.
@@ -242,14 +335,12 @@ integer shift_left(const integer& n, size_t byBits) {
 \returns The bit-shifted integer.
 */
 integer shift_right(const integer& n, size_t byBits) {
-    n._throw_if_nan();
-
-    if (byBits==0) return n;
-
-    integer nn(n);
-    nn._make_unique();
-    nn._get_data()->shift_right(byBits);
-    return nn;
+    try {
+        return integer(shift_right(core::integer(n), byBits));
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        else return integer::nan();
+    }
 }
 
 } // namespace xint

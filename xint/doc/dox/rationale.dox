@@ -3,13 +3,15 @@
 \section sinterface Interface
 - \subpage r_interface
 - \subpage r_interface_design_only
+- \subpage r_core
 
 \section scow Copy-on-Write
 - \subpage r_cow
 - \subpage r_shared_ptr
 
-\section snan Not-a-Number
+\section snan Not-a-Number and Exception Blocking
 - \subpage r_nan
+- \subpage r_exception_blocking
 - \subpage r_negzero
 
 \section srandom Random generator

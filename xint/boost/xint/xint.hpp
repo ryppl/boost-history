@@ -36,7 +36,7 @@
 #include <boost/random/variate_generator.hpp>
 
 namespace boost {
-//! \brief All of the functions in the XInt library are within this namespace.
+//! \brief All of the commonly-used functions are within this namespace.
 namespace xint {
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -123,7 +123,101 @@ const callback_t no_callback;
 //! @see xint::from_string
 const size_t autobase=(std::numeric_limits<size_t>::max)();
 
-class not_a_number;
+class integer;
+
+/*! \brief Contains the core integer type and core functions.
+
+The types and functions in the xint::core namespace operate exactly like those
+of the same names in the xint namespace, except that they ignore any
+exception-blocking and do not support the Not-a-Number value. If you attempt to
+assign a Not-a-Number to a core::integer, it will throw an xint::not_a_number
+exception.
+
+These functions are not documented separately; see the corresponding classes and
+functions in the xint::integer namespace for documentation on them.
+*/
+namespace core {
+
+//! \brief The core integer class.
+class integer {
+    public:
+
+    //! \name Constructors & Destructors
+    //!@{
+    integer();
+    integer(const integer& b);
+    explicit integer(const ::boost::xint::integer& b);
+    template <typename T> integer(const T& n,
+        typename boost::enable_if<boost::is_integral<T> >::type* = 0,
+        typename boost::enable_if<boost::is_signed<T> >::type* = 0);
+    template <typename T> integer(const T& n,
+        typename boost::enable_if<boost::is_integral<T> >::type* = 0,
+        typename boost::enable_if<boost::is_unsigned<T> >::type* = 0);
+    explicit integer(const std::string& str, size_t base=10);
+    ~integer();
+    //!@}
+
+    //! \name Mathematical and Bitwise Operators
+    //@{
+    integer& operator=(const integer &c);
+
+    integer& operator+=(const integer& b);
+    integer& operator-=(const integer& b);
+    integer& operator*=(const integer& b);
+    integer& operator/=(const integer& b);
+    integer& operator%=(const integer& b);
+
+    integer& operator++(); //!< \details Preincrement operator
+    integer& operator--(); //!< \details Predecrement operator
+    integer  operator++(int); //!< \details Postincrement operator -- not recommended, inefficient
+    integer  operator--(int); //!< \details Postdecrement operator -- not recommended, inefficient
+
+    integer& operator&=(const integer& n);
+    integer& operator|=(const integer& n);
+    integer& operator^=(const integer& n);
+    integer  operator<<(size_t shift) const;
+    integer  operator>>(size_t shift) const;
+    integer& operator<<=(size_t shift);
+    integer& operator>>=(size_t shift);
+    //@}
+
+    //! \name Preconstructed integers
+    //@{
+    static const integer& zero();
+    static const integer& one();
+    //@}
+
+    //! \name Miscellaneous Functions
+    //!@{
+    bool odd() const;
+    bool even() const;
+    int  sign() const;
+
+    size_t hex_digits() const;
+    //!@}
+
+    //! \name Internal Functions
+    //@{
+    detail::data_t *_get_data() { return data; }
+    const detail::data_t *_get_data() const { return data; }
+    detail::digit_t _get_digit(size_t index) const;
+    detail::digit_t _get_digit(size_t index, bool) const; //!< \overload
+    size_t _get_length() const;
+    void _set_negative(bool negative);
+    void _make_unique();
+    //@}
+
+    protected: /////////////////////////////////////////////////////////////////
+    void _init(detail::digit_t init=0);
+    void _init(const integer &c); //!< \overload
+    void _init(boost::uintmax_t n); //!< \overload
+    void _attach();
+    void _detach();
+
+    detail::data_t *data;
+};
+
+} // namespace core
 
 ////////////////////////////////////////////////////////////////////////////////
 // The integer class
@@ -146,6 +240,7 @@ class integer {
     //!@{
     integer();
     integer(const integer& b);
+    integer(const core::integer& b);
     template <typename T> integer(const T& n,
         typename boost::enable_if<boost::is_integral<T> >::type* = 0,
         typename boost::enable_if<boost::is_signed<T> >::type* = 0);
@@ -153,8 +248,6 @@ class integer {
         typename boost::enable_if<boost::is_integral<T> >::type* = 0,
         typename boost::enable_if<boost::is_unsigned<T> >::type* = 0);
     explicit integer(const std::string& str, size_t base=10);
-    explicit integer(const not_a_number&);
-    ~integer();
     //!@}
 
     /*! \name Mathematical and Bitwise Operators
@@ -187,6 +280,16 @@ class integer {
     integer& operator>>=(size_t shift);
     //@}
 
+    //! \name Miscellaneous Functions
+    //!@{
+    bool odd() const;
+    bool even() const;
+    int  sign() const;
+    bool is_nan() const;
+
+    size_t hex_digits() const;
+    //!@}
+
     /*! \name Preconstructed integers
 
         These return preconstructed integers with the values named by the
@@ -197,17 +300,8 @@ class integer {
     //@{
     static const integer& zero();
     static const integer& one();
+    static const integer& nan();
     //@}
-
-    //! \name Miscellaneous Functions
-    //!@{
-    bool odd() const;
-    bool even() const;
-    int  sign() const;
-    bool is_nan() const;  //!< \returns true if integer is Not-a-Number.
-
-    size_t hex_digits() const; //!< \returns the number of hex digits to show the integer.
-    //!@}
 
     /*! \name Internal Functions
         \brief These functions allow access to the internals of the %integer.
@@ -221,10 +315,9 @@ class integer {
     size_t _get_length() const;
     void _set_negative(bool negative);
     void _make_unique();
-    void _throw_if_nan() const;
     //@}
 
-    private: ///////////////////////////////////////////////////////////////////
+    private: /////////////////////////////////////////////////////////////////
     void _init(detail::digit_t init=0);
     void _init(const integer &c); //!< \overload
     void _init(boost::uintmax_t n); //!< \overload
@@ -288,6 +381,17 @@ integer multiply(const integer& n, const integer& multiplicand);
 integer divide(const integer& dividend, const integer& divisor);
 std::pair<integer, integer> divide_r(const integer& dividend, const integer&
     divisor);
+
+namespace core {
+integer abs(const integer& n);
+integer negate(const integer& n);
+integer add(const integer& n, const integer& addend);
+integer subtract(const integer& n, const integer& subtrahend);
+integer multiply(const integer& n, const integer& multiplicand);
+integer divide(const integer& dividend, const integer& divisor);
+std::pair<integer, integer> divide_r(const integer& dividend, const integer&
+    divisor);
+} // namespace core
 //!@}
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -299,6 +403,14 @@ integer pow(const integer& n, const integer& exponent);
 integer pow2(size_t exponent);
 integer factorial(size_t n);
 integer sqrt(const integer& n);
+
+namespace core {
+integer sqr(const integer& n);
+integer pow(const integer& n, const integer& exponent);
+integer pow2(size_t exponent);
+integer factorial(size_t n);
+integer sqrt(const integer& n);
+} // namespace core
 //!@}
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -310,6 +422,14 @@ std::string to_string(const integer& n, size_t base=10, bool upperCase=false);
 integer from_string(const std::string& str, size_t base=10);
 std::string to_binary(const integer& n);
 integer from_binary(const std::string& s);
+
+namespace core {
+template <typename T> T to(const integer& n);
+std::string to_string(const integer& n, size_t base=10, bool upperCase=false);
+integer from_string(const std::string& str, size_t base=10);
+std::string to_binary(const integer& n);
+integer from_binary(const std::string& s);
+} // namespace core
 //!@}
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -327,6 +447,20 @@ integer bitwise_xor(const integer& n1, const integer& n2);
 integer shift(const integer& n, int byBits);
 integer shift_left(const integer& n, size_t byBits);
 integer shift_right(const integer& n, size_t byBits);
+
+namespace core {
+bool getbit(const integer& n, size_t bit);
+void setbit(integer& n, size_t bit);
+void clearbit(integer& n, size_t bit);
+size_t lowestbit(const integer& n, size_t valueIfZero=0);
+size_t highestbit(const integer& n, size_t valueIfZero=0);
+integer bitwise_and(const integer& n1, const integer& n2);
+integer bitwise_or (const integer& n1, const integer& n2);
+integer bitwise_xor(const integer& n1, const integer& n2);
+integer shift(const integer& n, int byBits);
+integer shift_left(const integer& n, size_t byBits);
+integer shift_right(const integer& n, size_t byBits);
+} // namespace core
 //!@}
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -343,6 +477,15 @@ integer sqrmod(const integer& n, const integer& modulus);
 integer powmod(const integer& n, const integer& exponent, const integer&
     modulus, bool noMontgomery=false);
 integer invmod(const integer& n, const integer& modulus);
+
+namespace core {
+integer mod(const integer& n, const integer& modBy);
+integer mulmod(const integer& n, const integer& by, const integer& modulus);
+integer sqrmod(const integer& n, const integer& modulus);
+integer powmod(const integer& n, const integer& exponent, const integer&
+    modulus, bool noMontgomery=false);
+integer invmod(const integer& n, const integer& modulus);
+} // namespace core
 //!@}
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -352,6 +495,11 @@ integer invmod(const integer& n, const integer& modulus);
 template <typename T> void set_random_generator(T *gen);
 integer random_by_size(size_t sizeInBits, bool highBitOn=false, bool
     lowBitOn=false, bool canBeNegative=false);
+
+namespace core {
+integer random_by_size(size_t sizeInBits, bool highBitOn=false, bool
+    lowBitOn=false, bool canBeNegative=false);
+} // namespace core
 //!@}
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -360,6 +508,11 @@ integer random_by_size(size_t sizeInBits, bool highBitOn=false, bool
 //!@{
 int is_prime(const integer& n, callback_t callback=no_callback);
 integer random_prime(size_t sizeInBits, callback_t callback=no_callback);
+
+namespace core {
+int is_prime(const integer& n, callback_t callback=no_callback);
+integer random_prime(size_t sizeInBits, callback_t callback=no_callback);
+} // namespace core
 //!@}
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -387,6 +540,27 @@ integer operator%(const integer& n1, const integer& n2);
 integer operator&(const integer& n1, const integer& n2);
 integer operator|(const integer& n1, const integer& n2);
 integer operator^(const integer& n1, const integer& n2);
+
+namespace core {
+bool operator!(const integer& n1);
+bool operator<(const integer& n1, const integer& n2);
+bool operator>(const integer& n1, const integer& n2);
+bool operator<=(const integer& n1, const integer& n2);
+bool operator>=(const integer& n1, const integer& n2);
+bool operator==(const integer& n1, const integer& n2);
+bool operator!=(const integer& n1, const integer& n2);
+
+const integer& operator+(const integer& a);
+integer operator-(const integer& a);
+integer operator+(const integer& n1, const integer& n2);
+integer operator-(const integer& n1, const integer& n2);
+integer operator*(const integer& n1, const integer& n2);
+integer operator/(const integer& n1, const integer& n2);
+integer operator%(const integer& n1, const integer& n2);
+integer operator&(const integer& n1, const integer& n2);
+integer operator|(const integer& n1, const integer& n2);
+integer operator^(const integer& n1, const integer& n2);
+} // namespace core
 //!@}
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -395,10 +569,18 @@ integer operator^(const integer& n1, const integer& n2);
 //!@{
 bool opt_secure_mode();
 bool opt_thread_safe();
+
 int compare(const integer &n1, const integer &n2, bool ignoresign=false);
 size_t log2(const integer& n);
 integer gcd(const integer& num1, const integer& num2);
 integer lcm(const integer& num1, const integer& num2);
+
+namespace core {
+int compare(const integer &n1, const integer &n2, bool ignoresign=false);
+size_t log2(const integer& n);
+integer gcd(const integer& num1, const integer& num2);
+integer lcm(const integer& num1, const integer& num2);
+} // namespace core
 //!@}
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -470,15 +652,9 @@ class too_big: public std::range_error {
 
     Derived from \c std::runtime_error.
 
-    \note Cannot (presently) be blocked.
-
     \remarks
     Most library functions will throw an xint::not_a_number exception if you try
     to use a \link nan Not-a-Number value \endlink in them.
-
-    \par
-    An object of type xint::not_a_number can also be fed to an integer
-    constructor to deliberately produce a Not-a-Number value.
 
     \par
     See this page for details on Not-a-Number.
@@ -494,6 +670,12 @@ class not_a_number: public std::runtime_error {
     Derived from \c std::runtime_error.
 
     \note Cannot be blocked.
+
+    \remarks
+    Thrown by the xint::strong_random_generator class's constructor, if the
+    system does not provide a cryptographically-secure random generator. Also
+    thrown if the generator fails when asked to provide a random value, though
+    this should be vanishingly rare.
 */
 class no_strong_random: public std::runtime_error {
     public:
@@ -506,13 +688,8 @@ class no_strong_random: public std::runtime_error {
 
     Derived from \c std::overflow_error.
 
-    \note Cannot (presently) be blocked.
-
     \remarks
-    Thrown by the xint::strong_random_generator class's constructor, if the
-    system does not provide a cryptographically-secure random generator. Also
-    thrown if the generator fails when asked to provide a random value, though
-    this should be vanishingly rare.
+    Thrown when the library can't get enough memory to represent a number.
 */
 class overflow_error: public std::overflow_error {
     public:
@@ -525,19 +702,7 @@ class overflow_error: public std::overflow_error {
 ////////////////////////////////////////////////////////////////////////////////
 // Template function definitions
 
-/*!
-    Constructs a new integer object with the value of the built-in signed
-    %integer passed to it.
-
-    \param[in] n A number of type \c T.
-    \tparam T The type of \c n.
-
-    You can ignore the \c enable_if parameters, they are there only to tell the
-    compiler what types it applies to.
-
-    \overload
-*/
-
+namespace core {
 template <typename T> integer::integer(const T& n,
     typename boost::enable_if<boost::is_integral<T> >::type*,
     typename boost::enable_if<boost::is_signed<T> >::type*)
@@ -557,20 +722,9 @@ template <typename T> integer::integer(const T& n,
         _set_negative(true);
     }
 }
+} // namespace core
 
-/*!
-    Constructs a new integer object with the value of the built-in unsigned
-    %integer passed to it.
-
-    \param[in] n A number of type \c T.
-    \tparam T The type of \c n.
-
-    You can ignore the \c enable_if parameters, they are there only to tell the
-    compiler what types it applies to.
-
-    \overload
-*/
-
+namespace core {
 template <typename T> integer::integer(const T& n,
     typename boost::enable_if<boost::is_integral<T> >::type*,
     typename boost::enable_if<boost::is_unsigned<T> >::type*)
@@ -579,20 +733,63 @@ template <typename T> integer::integer(const T& n,
         _init(detail::digit_t(n));
     else _init(boost::uintmax_t(n));
 }
+} // namespace core
 
-/*! \brief Efficiently converts from an xint::integer to a built-in %integer
-           type.
+/*!
+    Constructs a new integer object with the value of the built-in signed
+    %integer passed to it.
 
-\param[in] n The integer to convert.
-\tparam T The type to convert it to.
+    \param[in] n A number of type \c T.
+    \tparam T The type of \c n.
 
-\returns The numeric value of \c n, converted to the specified type.
+    You can ignore the \c enable_if parameters, they are there only to tell
+    the compiler what types it applies to.
 
-\exception xint::too_big if \c n would not fit into the specified type.
+    \overload
 */
+template <typename T> integer::integer(const T& n,
+    typename boost::enable_if<boost::is_integral<T> >::type*,
+    typename boost::enable_if<boost::is_signed<T> >::type*)
+{
+    data=0;
+    try {
+        *this=integer(core::integer(n));
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        delete data;
+        data=0;
+    }
+}
+
+/*!
+    Constructs a new integer object with the value of the built-in unsigned
+    %integer passed to it.
+
+    \param[in] n A number of type \c T.
+    \tparam T The type of \c n.
+
+    You can ignore the \c enable_if parameters, they are there only to tell
+    the compiler what types it applies to.
+
+    \overload
+*/
+template <typename T> integer::integer(const T& n,
+    typename boost::enable_if<boost::is_integral<T> >::type*,
+    typename boost::enable_if<boost::is_unsigned<T> >::type*)
+{
+    data=0;
+    try {
+        *this=integer(core::integer(n));
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        delete data;
+        data=0;
+    }
+}
+
+namespace core {
 template <typename T>
 T to(const integer& n) {
-    n._throw_if_nan();
     if (n < (std::numeric_limits<T>::min)()
         || n > (std::numeric_limits<T>::max)())
             throw too_big("value out of range for requested conversion");
@@ -604,6 +801,29 @@ T to(const integer& n) {
             + n._get_digit(len-x-1));
     if (n.sign() < 0) rval *= -1;
     return rval;
+}
+} // namespace core
+
+/*! \brief Efficiently converts from an xint::integer to a built-in %integer
+           type.
+
+\param[in] n The integer to convert.
+\tparam T The type to convert it to.
+
+\returns The numeric value of \c n, converted to the specified type.
+
+\exception xint::too_big if \c n would not fit into the specified type.
+
+\note If exceptions are blocked, returns T(0) instead of throwing.
+*/
+template <typename T>
+T to(const integer& n) {
+    try {
+        return to<T>(core::integer(n));
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        else return 0;
+    }
 }
 
 /*! \brief Change the random generator that the library uses.
@@ -627,39 +847,38 @@ void set_random_generator(T *gen) {
 
 //! \name Stream input/output functions
 //!@{
+namespace core {
 template <typename charT, typename traits>
 inline std::basic_ostream<charT,traits>& operator<<(std::basic_ostream<charT,
-    traits>& out, const xint::integer& n)
+    traits>& out, const integer& n)
 {
-    if (n.is_nan()) {
-        out << detail::nan_text;
+    int base=((out.flags() & std::ios::hex) ? 16
+        : (out.flags() & std::ios::oct) ? 8
+        : 10);
+    bool upperCase=(out.flags() & std::ios::uppercase ? true : false);
+
+    int nsign=n.sign();
+    if ((out.flags() & std::ios::showpos) && nsign >= 0) out << "+";
+
+    if (out.flags() & std::ios::showbase) {
+        if (nsign < 0) out << "-";
+
+        if (base==16 && upperCase) out << "0X";
+        else if (base==16) out << "0x";
+        else if (base==8) out << "0";
+
+        out << to_string(abs(n), base, upperCase);
     } else {
-        int base=((out.flags() & std::ios::hex) ? 16
-            : (out.flags() & std::ios::oct) ? 8
-            : 10);
-        bool upperCase=(out.flags() & std::ios::uppercase ? true : false);
-
-        int nsign=n.sign();
-        if ((out.flags() & std::ios::showpos) && nsign >= 0) out << "+";
-
-        if (out.flags() & std::ios::showbase) {
-            if (nsign < 0) out << "-";
-
-            if (base==16 && upperCase) out << "0X";
-            else if (base==16) out << "0x";
-            else if (base==8) out << "0";
-
-            out << xint::to_string(abs(n), base, upperCase);
-        } else {
-            out << xint::to_string(n, base, upperCase);
-        }
+        out << to_string(n, base, upperCase);
     }
     return out;
 }
+} // namespace core
 
+namespace core {
 template <typename charT, typename traits>
 inline std::basic_istream<charT,traits>& operator>>(std::basic_istream<charT,
-    traits>& in, xint::integer& n)
+    traits>& in, integer& n)
 {
     int hex=(in.flags() & std::ios::hex) ? 1 : 0;
     int dec=(in.flags() & std::ios::dec) ? 1 : 0;
@@ -693,6 +912,50 @@ inline std::basic_istream<charT,traits>& operator>>(std::basic_istream<charT,
         } else base=10;
     }
 
+    while (in) {
+        int c=in.peek();
+        if ((base==8 && (c>='0' && c<='7')) ||
+            (base==10 && (c>='0' && c<='9')) ||
+            (base==16 && ((c>='0' && c<='9') || (c>='a' && c<='f') ||
+                (c>='A' && c<='F'))))
+        {
+            in.ignore();
+            s.push_back(char(c));
+        } else break;
+    }
+
+    token allow=allow_exceptions();
+    try {
+        integer testValue=from_string(s, base);
+        n=testValue;
+    } catch (std::exception&) {
+        // Catch invalid strings
+        in.setstate(std::ios::failbit);
+    }
+
+    return in;
+}
+} // namespace core
+//!@}
+
+//! \name Stream input/output functions
+//!@{
+template <typename charT, typename traits>
+inline std::basic_ostream<charT,traits>& operator<<(std::basic_ostream<charT,
+    traits>& out, const integer& n)
+{
+    if (n.is_nan()) {
+        out << detail::nan_text;
+        return out;
+    } else {
+        return core::operator<<(out, core::integer(n));
+    }
+}
+
+template <typename charT, typename traits>
+inline std::basic_istream<charT,traits>& operator>>(std::basic_istream<charT,
+    traits>& in, integer& n)
+{
     if (in.peek()=='#') {
         // Must be either #NaN# or an error
         char buffer[6];
@@ -700,29 +963,12 @@ inline std::basic_istream<charT,traits>& operator>>(std::basic_istream<charT,
         buffer[size]=0;
         std::string str(buffer);
 
-        if (str==detail::nan_text) n=integer(not_a_number());
+        if (str==detail::nan_text) n=integer::nan();
         else in.setstate(std::ios::failbit);
     } else {
-        while (in) {
-            int c=in.peek();
-            if ((base==8 && (c>='0' && c<='7')) ||
-                (base==10 && (c>='0' && c<='9')) ||
-                (base==16 && ((c>='0' && c<='9') || (c>='a' && c<='f') ||
-                    (c>='A' && c<='F'))))
-            {
-                in.ignore();
-                s.push_back(char(c));
-            } else break;
-        }
-
-        token allow=allow_exceptions();
-        try {
-            xint::integer testValue=xint::from_string(s, base);
-            n=testValue;
-        } catch (xint::invalid_digit&) {
-            // Catch invalid strings
-            in.setstate(std::ios::failbit);
-        }
+        core::integer nn;
+        core::operator>>(in, nn);
+        if (in) n=nn;
     }
 
     return in;

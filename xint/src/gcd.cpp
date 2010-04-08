@@ -21,7 +21,7 @@
 
 namespace boost {
 namespace xint {
-
+namespace core {
 namespace {
 
 struct gcd_core {
@@ -58,17 +58,7 @@ struct gcd_core {
 
 } // namespace
 
-/*! \brief Calculate the Greatest Common Denominator of two integers.
-
-\param[in] num1, num2 The integers to operate on.
-
-\returns The greatest common denominator of the two integers, which will always
-be a positive number.
-*/
 integer gcd(const integer& num1, const integer& num2) {
-    num1._throw_if_nan();
-    num2._throw_if_nan();
-
     int sign1=num1.sign(), sign2=num2.sign();
     if (sign1==0 && sign2==0) return integer::zero();
     else if (sign1==0) return num2;
@@ -85,6 +75,56 @@ integer gcd(const integer& num1, const integer& num2) {
     return integer::one() << k;
 }
 
+integer lcm(const integer& num1, const integer& num2) {
+    if (num1.sign() == 0 || num2.sign() == 0) return integer::zero();
+    return abs(num1 * num2) / gcd(num1, num2);
+}
+
+integer invmod(const integer& n, const integer& m) {
+    // Calculates the modular inverse of n mod m, or (n^(-1)) mod m
+    // Defined as b, where n*b corresponds to 1 (mod m)
+    if (m < integer::one()) throw invalid_modulus();
+
+    int sign=n.sign();
+    if (sign==0) {
+        return integer::zero();
+    } else if (n.sign() < 0) {
+        integer _n(n);
+        _n._set_negative(false);
+
+        integer nn=invmod(_n, m);
+        if (nn.sign()==0) return nn;
+
+        nn._set_negative(true);
+        return nn + m;
+    }
+
+    if (n.even() && m.even()) return integer::zero(); // GCD(x,y)!=1, no inverse possible.
+
+    gcd_core core(n, m);
+
+    if (core.u3 != integer::one()) return integer::zero(); // GCD(x,y)!=1, no inverse possible.
+    return core.u1;
+}
+
+} // namespace core
+
+/*! \brief Calculate the Greatest Common Denominator of two integers.
+
+\param[in] num1, num2 The integers to operate on.
+
+\returns The greatest common denominator of the two integers, which will always
+be a positive number.
+*/
+integer gcd(const integer& num1, const integer& num2) {
+    try {
+        return integer(gcd(core::integer(num1), core::integer(num2)));
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        else return integer::nan();
+    }
+}
+
 /*! \brief Calculate the Least Common Multiple of two integers.
 
 \param[in] num1, num2 The integers to operate on.
@@ -94,8 +134,12 @@ zero, then the return value will be zero, by convention; in all other cases, the
 return value will be a positive number.
 */
 integer lcm(const integer& num1, const integer& num2) {
-    if (num1.sign() == 0 || num2.sign() == 0) return integer::zero();
-    return abs(num1 * num2) / gcd(num1, num2);
+    try {
+        return integer(lcm(core::integer(num1), core::integer(num2)));
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        else return integer::nan();
+    }
 }
 
 /*! \brief Get the modular inverse of a number in a modulus, if there is one.
@@ -112,33 +156,12 @@ integer lcm(const integer& num1, const integer& num2) {
 exception.
 */
 integer invmod(const integer& n, const integer& m) {
-    // Calculates the modular inverse of n mod m, or (n^(-1)) mod m
-    // Defined as b, where n*b corresponds to 1 (mod m)
-    if (m < integer::one()) {
-        if (exceptions_allowed()) throw invalid_modulus();
-        else return integer::zero();
+    try {
+        return integer(invmod(core::integer(n), core::integer(m)));
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        else return integer::nan();
     }
-
-    int sign=n.sign();
-    if (sign==0) {
-        return integer(not_a_number());
-    } else if (n.sign() < 0) {
-        integer _n(n);
-        _n._set_negative(false);
-
-        integer nn=invmod(_n, m);
-        if (nn.is_nan()) return nn;
-
-        nn._set_negative(true);
-        return nn + m;
-    }
-
-    if (n.even() && m.even()) return integer::zero(); // GCD(x,y)!=1, no inverse possible.
-
-    gcd_core core(n, m);
-
-    if (core.u3 != integer::one()) return integer::zero(); // GCD(x,y)!=1, no inverse possible.
-    return core.u1;
 }
 
 } // namespace xint

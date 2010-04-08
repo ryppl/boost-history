@@ -5,12 +5,11 @@ proper value, to indicate that it hasn't been specified or that there was an
 error in a calculation. For that purpose, the \c xint::integer class provides
 Not-a-Number.
 
-To create a Not-a-Number, use the integer constructor that exists solely for
-that purpose. No other library function will return a Not-a-Number except under
-the following circumstances:
+To create a Not-a-Number, use the integer::nan function. No other library
+function will return a Not-a-Number except under the following circumstances:
 
-- If a function that returns a non-reference integer tries to throw a blockable
-exception, but exceptions are blocked.
+- If a function that returns an integer tries to throw a blockable exception,
+but exceptions are blocked.
 - If the string-to-integer functions are asked to convert the string \c
 "#NaN#".
 
@@ -21,6 +20,9 @@ The only things you can do with a Not-a-Number are:
 \c "#NaN#".
 - Make a copy of it.
 
-If you attempt to do anything else with it, you will get the non-blockable
-\c xint::not_a_number exception.
+If you attempt to do anything else with it, you will either get an \c
+xint::not_a_number exception, or if exceptions are blocked, a special value
+indicating failure (which will be another Not-a-Number, if the function you're
+calling returns an xint::integer).
 */
+

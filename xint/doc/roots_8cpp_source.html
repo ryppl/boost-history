@@ -42,32 +42,40 @@
 <a name="l00020"></a>00020 <span class="keyword">namespace </span>boost {
 <a name="l00021"></a>00021 <span class="keyword">namespace </span>xint {
 <a name="l00022"></a>00022 
-<a name="l00033"></a>00033 integer <a class="code" href="namespaceboost_1_1xint.html#afdf79cc57e434b9c7f4cb3b6bd68dbd6" title="Calculate the square root of an integer.">sqrt</a>(<span class="keyword">const</span> integer&amp; n) {
-<a name="l00034"></a>00034     <span class="keywordflow">if</span> (n.sign() &lt; 0) {
-<a name="l00035"></a>00035         <span class="keywordflow">if</span> (<a class="code" href="namespaceboost_1_1xint.html#a389e96a85ba1c76ef5bfcf836b7e4e8a" title="Query whether exceptions are currently allowed or blocked.">exceptions_allowed</a>()) <span class="keywordflow">throw</span> cannot_represent(<span class="stringliteral">&quot;library cannot &quot;</span>
-<a name="l00036"></a>00036             <span class="stringliteral">&quot;represent imaginary values (tried to take sqrt of negative &quot;</span>
-<a name="l00037"></a>00037             <span class="stringliteral">&quot;number)&quot;</span>);
-<a name="l00038"></a>00038         <span class="keywordflow">else</span> <span class="keywordflow">return</span> integer(not_a_number());
-<a name="l00039"></a>00039     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (n.sign() == 0) <span class="keywordflow">return</span> <a class="code" href="classboost_1_1xint_1_1integer.html#a5c08ebe10f3f6333328b35193edd53d0">integer::zero</a>();
-<a name="l00040"></a>00040 
-<a name="l00041"></a>00041     <span class="comment">// Initial guess is half the length of n, in bits</span>
-<a name="l00042"></a>00042     integer guess;
-<a name="l00043"></a>00043     <a class="code" href="namespaceboost_1_1xint.html#a6278915cf51b0d448a9db40031226182" title="Sets a specific bit in an integer to one.">setbit</a>(guess, <a class="code" href="namespaceboost_1_1xint.html#a0cd277cd7a80cda764f889781f0140cd" title="Get the log2 value of an integer.">log2</a>(n)/2);
-<a name="l00044"></a>00044 
-<a name="l00045"></a>00045     <span class="comment">// Now refine it until we&apos;re as close as integers can get</span>
-<a name="l00046"></a>00046     <span class="keywordflow">while</span> (1) {
-<a name="l00047"></a>00047         integer guess2=(guess + (n/guess)) &gt;&gt; 1;
-<a name="l00048"></a>00048         <span class="keywordflow">if</span> (guess == guess2) <span class="keywordflow">break</span>;
-<a name="l00049"></a>00049         guess=guess2;
-<a name="l00050"></a>00050     }
-<a name="l00051"></a>00051 
-<a name="l00052"></a>00052     <span class="keywordflow">return</span> guess;
-<a name="l00053"></a>00053 }
-<a name="l00054"></a>00054 
-<a name="l00055"></a>00055 } <span class="comment">// namespace xint</span>
-<a name="l00056"></a>00056 } <span class="comment">// namespace boost</span>
+<a name="l00023"></a>00023 <span class="keyword">namespace </span>core {
+<a name="l00024"></a>00024 integer <a class="code" href="namespaceboost_1_1xint_1_1core.html#a9ebf35bf53baa1eddf9a84dc719a5d15">sqrt</a>(<span class="keyword">const</span> integer&amp; n) {
+<a name="l00025"></a>00025     <span class="keywordflow">if</span> (n.sign() &lt; 0) <span class="keywordflow">throw</span> cannot_represent(<span class="stringliteral">&quot;library cannot represent &quot;</span>
+<a name="l00026"></a>00026         <span class="stringliteral">&quot;imaginary values (tried to take sqrt of negative number)&quot;</span>);
+<a name="l00027"></a>00027     <span class="keywordflow">if</span> (n.sign() == 0) <span class="keywordflow">return</span> <a class="code" href="classboost_1_1xint_1_1core_1_1integer.html#a5c4fdf4a0fd9cefd3f72b38413e32e9a">integer::zero</a>();
+<a name="l00028"></a>00028 
+<a name="l00029"></a>00029     <span class="comment">// Initial guess is half the length of n, in bits</span>
+<a name="l00030"></a>00030     integer guess;
+<a name="l00031"></a>00031     <a class="code" href="namespaceboost_1_1xint_1_1core.html#aae966bbb23d33801b34108f4490b0778">setbit</a>(guess, <a class="code" href="namespaceboost_1_1xint_1_1core.html#aa3924902931d74fe0a7d2c6daf9ab028">log2</a>(n)/2);
+<a name="l00032"></a>00032 
+<a name="l00033"></a>00033     <span class="comment">// Now refine it until we&apos;re as close as integers can get</span>
+<a name="l00034"></a>00034     <span class="keywordflow">while</span> (1) {
+<a name="l00035"></a>00035         integer guess2=(guess + (n/guess)) &gt;&gt; 1;
+<a name="l00036"></a>00036         <span class="keywordflow">if</span> (guess == guess2) <span class="keywordflow">break</span>;
+<a name="l00037"></a>00037         guess=guess2;
+<a name="l00038"></a>00038     }
+<a name="l00039"></a>00039 
+<a name="l00040"></a>00040     <span class="keywordflow">return</span> guess;
+<a name="l00041"></a>00041 }
+<a name="l00042"></a>00042 } <span class="comment">// namespace core</span>
+<a name="l00043"></a>00043 
+<a name="l00054"></a>00054 integer <a class="code" href="namespaceboost_1_1xint.html#afdf79cc57e434b9c7f4cb3b6bd68dbd6" title="Calculate the square root of an integer.">sqrt</a>(<span class="keyword">const</span> integer&amp; n) {
+<a name="l00055"></a>00055     <span class="keywordflow">try</span> {
+<a name="l00056"></a>00056         <span class="keywordflow">return</span> integer(<a class="code" href="namespaceboost_1_1xint.html#afdf79cc57e434b9c7f4cb3b6bd68dbd6" title="Calculate the square root of an integer.">sqrt</a>(core::integer(n)));
+<a name="l00057"></a>00057     } <span class="keywordflow">catch</span> (std::exception&amp;) {
+<a name="l00058"></a>00058         <span class="keywordflow">if</span> (<a class="code" href="namespaceboost_1_1xint.html#a389e96a85ba1c76ef5bfcf836b7e4e8a" title="Query whether exceptions are currently allowed or blocked.">exceptions_allowed</a>()) <span class="keywordflow">throw</span>;
+<a name="l00059"></a>00059         <span class="keywordflow">return</span> <a class="code" href="classboost_1_1xint_1_1integer.html#a379808d01a0e66ac61f309f211c4fb44">integer::nan</a>();
+<a name="l00060"></a>00060     }
+<a name="l00061"></a>00061 }
+<a name="l00062"></a>00062 
+<a name="l00063"></a>00063 } <span class="comment">// namespace xint</span>
+<a name="l00064"></a>00064 } <span class="comment">// namespace boost</span>
 </pre></div></div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Tue Apr 6 10:52:51 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Wed Apr 7 03:40:43 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

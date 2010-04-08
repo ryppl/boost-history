@@ -158,7 +158,7 @@ BOOST_AUTO_TEST_CASE(testStreams) {
         str.flags(defaultFlags);
         str.clear();
 
-        str << integer(not_a_number());
+        str << integer::nan();
         std::string temp=str.str();
 
         integer test;

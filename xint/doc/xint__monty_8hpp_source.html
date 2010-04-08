@@ -42,21 +42,23 @@
 <a name="l00023"></a>00023 <span class="preprocessor"></span>
 <a name="l00024"></a>00024 <span class="keyword">namespace </span>boost {
 <a name="l00025"></a>00025 <span class="keyword">namespace </span>xint {
-<a name="l00026"></a>00026 
-<a name="l00029"></a>00029 <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">detail::digit_t</a> <a class="code" href="namespaceboost_1_1xint.html#a50ceb8725ce5a326ef1e43a4d593efac" title="Returns the low digit of the inverse of a number. Used internally.">inverse0</a>(<span class="keyword">const</span> integer&amp; n);
-<a name="l00030"></a>00030 integer <a class="code" href="namespaceboost_1_1xint.html#a5a7360e7330dcc35838ba324c523b395" title="Returns the most efficient R value for a number and the library&amp;#39;s internal representation...">montgomeryR</a>(<span class="keyword">const</span> integer&amp; n);
-<a name="l00031"></a>00031 integer <a class="code" href="namespaceboost_1_1xint.html#a512ff2447d52a228c1c9f99fea8fd860" title="Returns the Montgomery form of a number. Used for testing.">toMontgomeryForm</a>(<span class="keyword">const</span> integer&amp; n, <span class="keyword">const</span> integer&amp; m);
-<a name="l00032"></a>00032 integer <a class="code" href="namespaceboost_1_1xint.html#a07914d9486e835d2dcea3268937296c4" title="Returns the integer from the Montgomery form of a number. Used for testing.">fromMontgomeryForm</a>(<span class="keyword">const</span> integer&amp; n, <span class="keyword">const</span> integer&amp; m);
-<a name="l00033"></a>00033 integer <a class="code" href="namespaceboost_1_1xint.html#ab62e3e69cbc7781a86fc9a0192ef5d37" title="Returns the Montgomery equivalent of mulmod(a, b, n). Used internally.">montgomeryMultiplyMod</a>(<span class="keyword">const</span> integer&amp; x, <span class="keyword">const</span> integer&amp; y, <span class="keyword">const</span> integer&amp;
-<a name="l00034"></a>00034     m, <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">detail::digit_t</a> nPrime0);
-<a name="l00035"></a>00035 integer <a class="code" href="namespaceboost_1_1xint.html#a9e0c8f5da23ce668a7b428256f6b8ed4" title="Returns the Montgomery equivalent of powmod(a, b, n). Used internally.">montgomeryPowerMod</a>(<span class="keyword">const</span> integer&amp; x, <span class="keyword">const</span> integer&amp; e, <span class="keyword">const</span> integer&amp; m);
-<a name="l00037"></a>00037 
-<a name="l00038"></a>00038 } <span class="comment">// namespace xint</span>
-<a name="l00039"></a>00039 } <span class="comment">// namespace boost</span>
-<a name="l00040"></a>00040 
-<a name="l00041"></a>00041 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_MONTY_H</span>
+<a name="l00026"></a>00026 <span class="keyword">namespace </span>core {
+<a name="l00027"></a>00027 
+<a name="l00030"></a>00030 <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">detail::digit_t</a> <a class="code" href="namespaceboost_1_1xint_1_1core.html#aa6942deffea28a32072479fe663acaa2" title="Returns the low digit of the inverse of a number. Used internally.">inverse0</a>(<span class="keyword">const</span> integer&amp; n);
+<a name="l00031"></a>00031 integer <a class="code" href="namespaceboost_1_1xint_1_1core.html#aff045b62b20e88d2e086dd64dcbba02e" title="Returns the most efficient R value for a number and the library&amp;#39;s internal representation...">montgomeryR</a>(<span class="keyword">const</span> integer&amp; n);
+<a name="l00032"></a>00032 integer <a class="code" href="namespaceboost_1_1xint_1_1core.html#a4a33279cf67c53f80a4e5935f0515d4d" title="Returns the Montgomery form of a number. Used for testing.">toMontgomeryForm</a>(<span class="keyword">const</span> integer&amp; n, <span class="keyword">const</span> integer&amp; m);
+<a name="l00033"></a>00033 integer <a class="code" href="namespaceboost_1_1xint_1_1core.html#a1d598caa371e7bffba98f78df726674e" title="Returns the integer from the Montgomery form of a number. Used for testing.">fromMontgomeryForm</a>(<span class="keyword">const</span> integer&amp; n, <span class="keyword">const</span> integer&amp; m);
+<a name="l00034"></a>00034 integer <a class="code" href="namespaceboost_1_1xint_1_1core.html#a902d87635063ba89629799b032e6a53d" title="Returns the Montgomery equivalent of mulmod(a, b, n). Used internally.">montgomeryMultiplyMod</a>(<span class="keyword">const</span> integer&amp; x, <span class="keyword">const</span> integer&amp; y, <span class="keyword">const</span> integer&amp;
+<a name="l00035"></a>00035     m, <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">detail::digit_t</a> nPrime0);
+<a name="l00036"></a>00036 integer <a class="code" href="namespaceboost_1_1xint_1_1core.html#a407dceba39038bf606814ea84ff4d964" title="Returns the Montgomery equivalent of powmod(a, b, n). Used internally.">montgomeryPowerMod</a>(<span class="keyword">const</span> integer&amp; x, <span class="keyword">const</span> integer&amp; e, <span class="keyword">const</span> integer&amp; m);
+<a name="l00038"></a>00038 
+<a name="l00039"></a>00039 } <span class="comment">// namespace core</span>
+<a name="l00040"></a>00040 } <span class="comment">// namespace xint</span>
+<a name="l00041"></a>00041 } <span class="comment">// namespace boost</span>
+<a name="l00042"></a>00042 
+<a name="l00043"></a>00043 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_MONTY_H</span>
 </pre></div></div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Tue Apr 6 10:52:51 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Wed Apr 7 03:40:43 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

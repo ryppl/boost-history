@@ -36,25 +36,30 @@
 <tr><td class="memItemLeft" align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost.html">boost</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html">boost::xint</a></td></tr>
 
-<p><tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><p>All of the functions in the XInt library are within this namespace. </p>
+<p><tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><p>All of the commonly-used functions are within this namespace. </p>
+<br/></td></tr>
+</p>
+<tr><td class="memItemLeft" align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1core.html">boost::xint::core</a></td></tr>
+
+<p><tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><p>Contains the <a class="el" href="namespaceboost_1_1xint_1_1core.html" title="Contains the core integer type and core functions.">core</a> <a class="el" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">integer</a> type and <a class="el" href="namespaceboost_1_1xint_1_1core.html" title="Contains the core integer type and core functions.">core</a> functions. </p>
 <br/></td></tr>
 </p>
 <tr><td colspan="2"><h2>Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Montgomery Reduction functions</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpef45384829a28a8031424a8c453ceaa0"></a> </p>
 <br/><br/></div></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">digit_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a50ceb8725ce5a326ef1e43a4d593efac">boost::xint::inverse0</a> (const integer &amp;n)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the low digit of the inverse of a number. Used internally.  <a href="#a50ceb8725ce5a326ef1e43a4d593efac"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a5a7360e7330dcc35838ba324c523b395">boost::xint::montgomeryR</a> (const integer &amp;n)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the most efficient R value for a number and the library's internal representation. Used internally.  <a href="#a5a7360e7330dcc35838ba324c523b395"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a512ff2447d52a228c1c9f99fea8fd860">boost::xint::toMontgomeryForm</a> (const integer &amp;n, const integer &amp;m)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the Montgomery form of a number. Used for testing.  <a href="#a512ff2447d52a228c1c9f99fea8fd860"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a07914d9486e835d2dcea3268937296c4">boost::xint::fromMontgomeryForm</a> (const integer &amp;n, const integer &amp;m)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the <a class="el" href="classboost_1_1xint_1_1integer.html" title="The extended integer class.">integer</a> from the Montgomery form of a number. Used for testing.  <a href="#a07914d9486e835d2dcea3268937296c4"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ab62e3e69cbc7781a86fc9a0192ef5d37">boost::xint::montgomeryMultiplyMod</a> (const integer &amp;a, const integer &amp;b, const integer &amp;n, digit_t nPrime0)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the Montgomery equivalent of <code>mulmod(a, b, n)</code>. Used internally.  <a href="#ab62e3e69cbc7781a86fc9a0192ef5d37"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a9e0c8f5da23ce668a7b428256f6b8ed4">boost::xint::montgomeryPowerMod</a> (const integer &amp;a, const integer &amp;e, const integer &amp;n)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the Montgomery equivalent of <code>powmod(a, b, n)</code>. Used internally.  <a href="#a9e0c8f5da23ce668a7b428256f6b8ed4"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">digit_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1core.html#aa6942deffea28a32072479fe663acaa2">boost::xint::core::inverse0</a> (const integer &amp;n)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the low digit of the inverse of a number. Used internally.  <a href="#aa6942deffea28a32072479fe663acaa2"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1core.html#aff045b62b20e88d2e086dd64dcbba02e">boost::xint::core::montgomeryR</a> (const integer &amp;n)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the most efficient R value for a number and the library's internal representation. Used internally.  <a href="#aff045b62b20e88d2e086dd64dcbba02e"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1core.html#a4a33279cf67c53f80a4e5935f0515d4d">boost::xint::core::toMontgomeryForm</a> (const integer &amp;n, const integer &amp;m)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the Montgomery form of a number. Used for testing.  <a href="#a4a33279cf67c53f80a4e5935f0515d4d"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1core.html#a1d598caa371e7bffba98f78df726674e">boost::xint::core::fromMontgomeryForm</a> (const integer &amp;n, const integer &amp;m)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the <a class="el" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">integer</a> from the Montgomery form of a number. Used for testing.  <a href="#a1d598caa371e7bffba98f78df726674e"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1core.html#a902d87635063ba89629799b032e6a53d">boost::xint::core::montgomeryMultiplyMod</a> (const integer &amp;a, const integer &amp;b, const integer &amp;n, digit_t nPrime0)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the Montgomery equivalent of <code>mulmod(a, b, n)</code>. Used internally.  <a href="#a902d87635063ba89629799b032e6a53d"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1core.html#a407dceba39038bf606814ea84ff4d964">boost::xint::core::montgomeryPowerMod</a> (const integer &amp;a, const integer &amp;e, const integer &amp;n)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the Montgomery equivalent of <code>powmod(a, b, n)</code>. Used internally.  <a href="#a407dceba39038bf606814ea84ff4d964"></a><br/></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>Internally-used functions. </p>
@@ -62,7 +67,7 @@
 
 <p>Definition in file <a class="el" href="xint__monty_8hpp_source.html">xint_monty.hpp</a>.</p>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Tue Apr 6 10:52:51 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Wed Apr 7 03:40:43 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

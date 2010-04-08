@@ -23,6 +23,7 @@
 
 namespace boost {
 namespace xint {
+namespace core {
 
 using std::endl;
 
@@ -133,5 +134,6 @@ BOOST_AUTO_TEST_CASE(testMontyPowerMod) {
     }
 }
 
+} // namespace core
 } // namespace xint
 } // namespace boost
