@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Method 3.2: Implement a Range Adaptor with arguments</title>
 <link rel="stylesheet" href="../../../../../../../../doc/html/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
 <link rel="home" href="../../../../index.html" title="Chapter&#160;1.&#160;Range 2.0">
 <link rel="up" href="../method_3.html" title="Method 3: provide range adaptor implementations">
 <link rel="prev" href="method_3_1.html" title="Method 3.1: Implement a Range Adaptor without arguments">
@@ -40,12 +40,12 @@
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">typedef</span> <span class="keyword">const</span> <span class="identifier">Value</span><span class="special">&amp;</span> <span class="identifier">result_type</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="keyword">const</span> <span class="identifier">Value</span><span class="special">&amp;</span> <span class="identifier">argument_type</span><span class="special">;</span>
-    
+
     <span class="identifier">replace_value</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">Value</span><span class="special">&amp;</span> <span class="identifier">from</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">Value</span><span class="special">&amp;</span> <span class="identifier">to</span><span class="special">)</span>
         <span class="special">:</span> <span class="identifier">m_from</span><span class="special">(</span><span class="identifier">from</span><span class="special">),</span> <span class="identifier">m_to</span><span class="special">(</span><span class="identifier">to</span><span class="special">)</span>
     <span class="special">{</span>
     <span class="special">}</span>
-    
+
     <span class="keyword">const</span> <span class="identifier">Value</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span> <span class="identifier">Value</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">)</span> <span class="keyword">const</span>
     <span class="special">{</span>
         <span class="keyword">return</span> <span class="special">(</span><span class="identifier">x</span> <span class="special">==</span> <span class="identifier">m_from</span><span class="special">)</span> <span class="special">?</span> <span class="identifier">m_to</span> <span class="special">:</span> <span class="identifier">x</span><span class="special">;</span>
@@ -68,7 +68,7 @@
     <span class="keyword">typedef</span> <span class="identifier">replace_value</span><span class="special">&lt;</span><span class="identifier">value_type</span><span class="special">&gt;</span> <span class="identifier">Fn</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">transform_iterator</span><span class="special">&lt;</span><span class="identifier">Fn</span><span class="special">,</span> <span class="identifier">iterator_base</span><span class="special">&gt;</span> <span class="identifier">replaced_iterator</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">iterator_range</span><span class="special">&lt;</span><span class="identifier">replaced_iterator</span><span class="special">&gt;</span> <span class="identifier">base_t</span><span class="special">;</span>
-    
+
 <span class="keyword">public</span><span class="special">:</span>
     <span class="identifier">replace_range</span><span class="special">(</span><span class="identifier">Range</span><span class="special">&amp;</span> <span class="identifier">rng</span><span class="special">,</span> <span class="identifier">value_type</span> <span class="identifier">from</span><span class="special">,</span> <span class="identifier">value_type</span> <span class="identifier">to</span><span class="special">)</span>
         <span class="special">:</span> <span class="identifier">base_t</span><span class="special">(</span><span class="identifier">replaced_iterator</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">begin</span><span class="special">(</span><span class="identifier">rng</span><span class="special">),</span> <span class="identifier">Fn</span><span class="special">(</span><span class="identifier">from</span><span class="special">,</span><span class="identifier">to</span><span class="special">)),</span>

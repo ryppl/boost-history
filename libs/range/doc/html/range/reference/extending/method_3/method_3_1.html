@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Method 3.1: Implement a Range Adaptor without arguments</title>
 <link rel="stylesheet" href="../../../../../../../../doc/html/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.75.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
 <link rel="home" href="../../../../index.html" title="Chapter&#160;1.&#160;Range 2.0">
 <link rel="up" href="../method_3.html" title="Method 3: provide range adaptor implementations">
 <link rel="prev" href="../method_3.html" title="Method 3: provide range adaptor implementations">
@@ -47,11 +47,11 @@
     <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">iterator_range</span><span class="special">&lt;</span>
         <span class="identifier">boost</span><span class="special">::</span><span class="identifier">reverse_iterator</span><span class="special">&lt;</span>
             <span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">range_iterator</span><span class="special">&lt;</span><span class="identifier">R</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">base</span><span class="special">;</span>
-            
+
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">reverse_iterator</span><span class="special">&lt;</span>
         <span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">range_iterator</span><span class="special">&lt;</span><span class="identifier">R</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="special">&gt;</span> <span class="identifier">iterator</span><span class="special">;</span>
-        
+
     <span class="identifier">reverse_range</span><span class="special">(</span><span class="identifier">R</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">)</span>
         <span class="special">:</span> <span class="identifier">base</span><span class="special">(</span><span class="identifier">iterator</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">end</span><span class="special">(</span><span class="identifier">r</span><span class="special">)),</span> <span class="identifier">iterator</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">begin</span><span class="special">(</span><span class="identifier">r</span><span class="special">)))</span>
     <span class="special">{</span> <span class="special">}</span>
@@ -68,17 +68,17 @@
 </li>
 <li class="listitem">
               Implement <code class="computeroutput"><span class="keyword">operator</span><span class="special">|</span></code><pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">BidirectionalRng</span> <span class="special">&gt;</span>
-<span class="keyword">inline</span> <span class="identifier">reverse_range</span><span class="special">&lt;</span><span class="identifier">BidirectionalRng</span><span class="special">&gt;</span> 
+<span class="keyword">inline</span> <span class="identifier">reverse_range</span><span class="special">&lt;</span><span class="identifier">BidirectionalRng</span><span class="special">&gt;</span>
 <span class="keyword">operator</span><span class="special">|(</span> <span class="identifier">BidirectionalRng</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">,</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">reverse_forwarder</span> <span class="special">)</span>
 <span class="special">{</span>
-	<span class="keyword">return</span> <span class="identifier">reverse_range</span><span class="special">&lt;</span><span class="identifier">BidirectionalRng</span><span class="special">&gt;(</span> <span class="identifier">r</span> <span class="special">);</span>   
+	<span class="keyword">return</span> <span class="identifier">reverse_range</span><span class="special">&lt;</span><span class="identifier">BidirectionalRng</span><span class="special">&gt;(</span> <span class="identifier">r</span> <span class="special">);</span>
 <span class="special">}</span>
 
 <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">BidirectionalRng</span> <span class="special">&gt;</span>
-<span class="keyword">inline</span> <span class="identifier">reverse_range</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="identifier">BidirectionalRng</span><span class="special">&gt;</span> 
+<span class="keyword">inline</span> <span class="identifier">reverse_range</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="identifier">BidirectionalRng</span><span class="special">&gt;</span>
 <span class="keyword">operator</span><span class="special">|(</span> <span class="keyword">const</span> <span class="identifier">BidirectionalRng</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">,</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">reverse_forwarder</span> <span class="special">)</span>
 <span class="special">{</span>
-	<span class="keyword">return</span> <span class="identifier">reverse_range</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="identifier">BidirectionalRng</span><span class="special">&gt;(</span> <span class="identifier">r</span> <span class="special">);</span>   
+	<span class="keyword">return</span> <span class="identifier">reverse_range</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="identifier">BidirectionalRng</span><span class="special">&gt;(</span> <span class="identifier">r</span> <span class="special">);</span>
 <span class="special">}</span>
 </pre>
 </li>
