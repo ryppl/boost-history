@@ -781,7 +781,7 @@
                         states:</para>
                     <para>struct Empty : public msm::front::state&lt;> {};</para>
                     <para>They can optionally provide entry and exit behaviors:</para>
-                    <programlisting>
+                    <programlisting language="C++">
 struct Empty : public msm::front::state&lt;> 
 {
     template &lt;class Event, class Fsm> 
@@ -1135,7 +1135,8 @@ g_row &lt; Empty , play , Playing , &amp;player_::condition2 ></programlisting>
                         be added). The reason is that it would conflict with policies which
                         submachines could define. Of course, if for example, Song1 were a state
                         machine itself, it could use the ShallowHistory policy itself thus creating
-                        Deep History for itself. </para>
+                        Deep History for itself. An <link xlink:href="examples/History.cpp"
+                            >example</link> is also provided.</para>
                 </sect2>
                 <sect2>
                     <title>Completion (anonymous) transitions</title>
@@ -1306,7 +1307,7 @@ g_row &lt; Empty , play , Playing , &amp;player_::condition2 ></programlisting>
                         with eUML, the same is also possible with any front-end.</para>
                 </sect2>
                 <sect2>
-                    <title>more row types</title>
+                    <title><command xml:id="basic-row2"/>more row types</title>
                     <para>It is also possible to write transitions using actions and guards not just
                         from the state machine but also from its contained states. In this case, one
                         must specify not just a method pointer but also the object on which to call
@@ -3833,8 +3834,8 @@ typename ::boost::enable_if&lt;
                                 Juraj Ivancic, Erik Nelson, Kenny Riddile.</para>
                         </listitem>
                         <listitem>
-                            <para>Thanks to Matt Calabrese, Juraj Ivancic and Joseph Wu for
-                                reporting bugs.</para>
+                            <para>Thanks to Matt Calabrese, Juraj Ivancic, Adam Merz and Joseph Wu
+                                for reporting bugs.</para>
                         </listitem>
                     </itemizedlist>
                 </para>
@@ -3879,6 +3880,10 @@ typename ::boost::enable_if&lt;
                         </listitem>
                         <listitem>
                             <para>increased dispatch and copy speed</para>
+                        </listitem>
+                        <listitem>
+                            <para><command xlink:href="#basic-row2">new row types</command> for the
+                                basic front-end</para>
                         </listitem>
                         <listitem>
                             <para>new eUML syntax, better attribute support, macros to ease
