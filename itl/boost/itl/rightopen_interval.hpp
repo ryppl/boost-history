@@ -61,7 +61,7 @@ public:
     domain_type first()const{ return _lwb; }
 
     DomainT last()const
-    {
+    {   //JODO first and last as global functions?
         BOOST_STATIC_ASSERT((!itl::is_continuous<DomainT>::value));
         return pred(_upb);
     }
@@ -107,15 +107,6 @@ struct has_asymmetric_bounds<rightopen_interval<DomainT,Compare> >
     typedef has_asymmetric_bounds<rightopen_interval<DomainT,Compare> > type;
     BOOST_STATIC_CONSTANT(bool, value = true);
 };
-
-/*CL?
-template <class DomainT, ITL_COMPARE Compare> 
-struct has_domain<rightopen_interval<DomainT,Compare> >
-{
-    typedef has_domain<rightopen_interval<DomainT,Compare> > type;
-    BOOST_STATIC_CONSTANT(bool, value = true);
-};
-*/
 
 template <class DomainT, ITL_COMPARE Compare>
 struct type_to_string<itl::rightopen_interval<DomainT,Compare> >

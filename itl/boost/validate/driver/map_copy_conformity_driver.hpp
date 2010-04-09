@@ -112,20 +112,20 @@ namespace boost{namespace itl
             //-----------------------------------------------------------------
             case RootType::interval_map: {
                 switch(neutronizerChoice) {
-                case NeutronHandlerType::partial_absorber: return new function_equality_validater<itl::list<std::pair<ITL_INTERVAL_DEFAULT<double>,int> >, interval_map<double,int,partial_absorber> >;
-                case NeutronHandlerType::partial_enricher: return new function_equality_validater<itl::list<std::pair<ITL_INTERVAL_DEFAULT<double>,int> >, interval_map<double,int,partial_enricher> >;
-                case NeutronHandlerType::total_absorber:   return new function_equality_validater<itl::list<std::pair<ITL_INTERVAL_DEFAULT<int>,   int> >, interval_map<int,   int,total_absorber  > >;
-                case NeutronHandlerType::total_enricher:   return new function_equality_validater<itl::list<std::pair<ITL_INTERVAL_DEFAULT<int>,   int> >, interval_map<int,   int,total_enricher  > >;
+                case NeutronHandlerType::partial_absorber: return new function_equality_validater<itl::list<std::pair<ITL_contin_INTERVAL_DEF<double,std::less>,int> >, interval_map<double,int,partial_absorber> >;
+                case NeutronHandlerType::partial_enricher: return new function_equality_validater<itl::list<std::pair<ITL_contin_INTERVAL_DEF<double,std::less>,int> >, interval_map<double,int,partial_enricher> >;
+                case NeutronHandlerType::total_absorber:   return new function_equality_validater<itl::list<std::pair<ITL_discrt_INTERVAL_DEF<int,std::less>,   int> >, interval_map<int,   int,total_absorber  > >;
+                case NeutronHandlerType::total_enricher:   return new function_equality_validater<itl::list<std::pair<ITL_discrt_INTERVAL_DEF<int,std::less>,   int> >, interval_map<int,   int,total_enricher  > >;
                 default: return choiceError(ITL_LOCATION("\nRootType::interval_map: neutronizerChoice:\n"), neutronizerChoice, _neutronizerChoice);
                 }//switch neutronizerChoice
             }//case interval_map 
             //-----------------------------------------------------------------
             case RootType::split_interval_map: {
                 switch(neutronizerChoice) {
-                case NeutronHandlerType::partial_absorber: return new function_equality_validater<itl::list<std::pair<ITL_INTERVAL_DEFAULT<double>,int> >, split_interval_map<double,int,partial_absorber> >;
-                case NeutronHandlerType::partial_enricher: return new function_equality_validater<itl::list<std::pair<ITL_INTERVAL_DEFAULT<int>,   int> >, split_interval_map<int,   int,partial_enricher> >;
-                case NeutronHandlerType::total_absorber:   return new function_equality_validater<itl::list<std::pair<ITL_INTERVAL_DEFAULT<double>,int> >, split_interval_map<double,int,total_absorber  > >;
-                case NeutronHandlerType::total_enricher:   return new function_equality_validater<itl::list<std::pair<ITL_INTERVAL_DEFAULT<int>,   int> >, split_interval_map<int,   int,total_enricher  > >;
+                case NeutronHandlerType::partial_absorber: return new function_equality_validater<itl::list<std::pair<ITL_contin_INTERVAL_DEF<double,std::less>,int> >, split_interval_map<double,int,partial_absorber> >;
+                case NeutronHandlerType::partial_enricher: return new function_equality_validater<itl::list<std::pair<ITL_discrt_INTERVAL_DEF<int,std::less>,   int> >, split_interval_map<int,   int,partial_enricher> >;
+                case NeutronHandlerType::total_absorber:   return new function_equality_validater<itl::list<std::pair<ITL_contin_INTERVAL_DEF<double,std::less>,int> >, split_interval_map<double,int,total_absorber  > >;
+                case NeutronHandlerType::total_enricher:   return new function_equality_validater<itl::list<std::pair<ITL_discrt_INTERVAL_DEF<int,std::less>,   int> >, split_interval_map<int,   int,total_enricher  > >;
                 default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: neutronizerChoice:\n"), neutronizerChoice, _neutronizerChoice);
                 }//switch neutronizerChoice
             }//case split_interval_map 

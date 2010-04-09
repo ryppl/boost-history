@@ -35,14 +35,6 @@ namespace boost{namespace itl
         bool(Type::* m_pred)()const;
     } ;
 
-    //JODO this clashes with function template itl::empty(IntervalT)
-    //template <class Type>
-    //class empty: public property<Type>
-    //{
-    //public:
-    //    bool operator() (const Type& x)const { return x.empty(); }
-    //} ;
-
     template <class Type>
     struct is_neutron: public property<Type>
     {

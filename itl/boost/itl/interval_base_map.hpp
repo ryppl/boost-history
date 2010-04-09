@@ -687,13 +687,6 @@ public:
     element_const_reverse_iterator elements_rbegin()const{ return element_const_reverse_iterator(this->rbegin()); }
     element_const_reverse_iterator elements_rend()  const{ return element_const_reverse_iterator(this->rend());   }
 
-    //==========================================================================
-    //= Representation
-    //==========================================================================
-    
-    /** Object as string */
-    //CL std::string as_string()const;
-
 
     //==========================================================================
     //= Morphisms
@@ -1249,26 +1242,6 @@ interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Inter
     return *this;
 }
 
-/*CL ::as_string
-template 
-<
-    class SubType,
-    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_INTERVAL(ITL_COMPARE)  Interval, ITL_ALLOC Alloc
->
-std::string interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::as_string()const
-{
-    std::string res(""); 
-    const_FOR_IMPLMAP(it_) {
-        std::string cur("("); 
-        cur += it_->first.as_string();
-        cur += ",";
-        cur += itl::to_string<CodomainT>::apply(it_->second);
-        cur += ")";
-        res += cur;
-    }
-    return res; 
-}
-*/
 
 template 
 <

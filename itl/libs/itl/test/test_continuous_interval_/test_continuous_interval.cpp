@@ -24,7 +24,6 @@ using namespace boost::itl;
 
 
 #include "../test_itl_interval_shared.hpp"
-//CL #include "../test_itl_interval.hpp"
 
 #define     ORDERED_TYPES             continuous_types
 #define BICREMENTAL_TYPES bicremental_continuous_types

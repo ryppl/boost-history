@@ -92,9 +92,105 @@ BOOST_AUTO_TEST_CASE(interval_type_traits)
     BOOST_CHECK_EQUAL(is_continuous_interval<continuous_interval<double> >::value, true);
 }
 
+/*JODO move to proper tests??
 BOOST_AUTO_TEST_CASE(casual)
 {
-	continuous_interval<double> conterval;
-	BOOST_CHECK_EQUAL(itl::is_empty(conterval), true);
+    cout << left_bracket(interval_bounds(closed_bounded)) << endl;
+    cout << left_bracket(interval_bounds(right_open)) << endl;
+    cout << left_bracket(interval_bounds(left_open)) << endl;
+    cout << left_bracket(interval_bounds(open_bounded)) << endl;
+
+    cout << right_bracket(interval_bounds(closed_bounded)) << endl;
+    cout << right_bracket(interval_bounds(right_open)) << endl;
+    cout << right_bracket(interval_bounds(left_open)) << endl;
+    cout << right_bracket(interval_bounds(open_bounded)) << endl;
+
+    //continuous_interval<double> a_1 = continuous_interval<double>(0.0, 3.0, interval_bounds::left_open());
+    continuous_interval<double> a_1 = continuous_interval<double>(-5.0, -2.3, interval_bounds::closed());
+    continuous_interval<double> b_1 = continuous_interval<double>(-2.6, 4.0, interval_bounds::closed());
+
+    split_interval_set<double> a, b, a_o_b, b_o_a;
+    a_o_b += a_1;
+    a_o_b += b_1;
+
+    b_o_a += b_1;
+    b_o_a += a_1;
+
+    cout << "a+b =" << a_o_b << endl;
+    cout << "b+a =" << b_o_a << endl;
+
+    cout << "-------------------------------------------------\n";
+    continuous_interval<double> c_1 = continuous_interval<double>(1.0, 3.0, interval_bounds::closed());
+    continuous_interval<double> b_2 = right_subtract(b_1, c_1);
+
+    cout << b_2 << endl;
+
+    cout << "-------------------------------------------------\n";
+    continuous_interval<double> L0T = continuous_interval<double>(0.0, 0.0, interval_bounds::closed());
+    continuous_interval<double> C0T = continuous_interval<double>(0.0, 0.0, interval_bounds::left_open());
+    continuous_interval<double> L0D = continuous_interval<double>(0.0, 0.0, interval_bounds::right_open());
+    continuous_interval<double> C0D = continuous_interval<double>(0.0, 0.0, interval_bounds::open());
+
+    BOOST_CHECK_EQUAL(itl::is_empty(L0T), false);
+    BOOST_CHECK_EQUAL(itl::is_empty(C0T), true);
+    BOOST_CHECK_EQUAL(itl::is_empty(L0D), true);
+    BOOST_CHECK_EQUAL(itl::is_empty(C0D), true);
+
+
+    continuous_interval<double> L0_1T = continuous_interval<double>(0.0, 1.0, interval_bounds::closed());
+    continuous_interval<double> L1_2T = continuous_interval<double>(1.0, 2.0, interval_bounds::closed());
+    BOOST_CHECK_EQUAL(itl::exclusive_less(L0_1T, L1_2T), false);
+    BOOST_CHECK_EQUAL(itl::inner_bounds(L0_1T, L1_2T) == interval_bounds::open(), true);
+
+    continuous_interval<double> L0_1D = continuous_interval<double>(0.0, 1.0, interval_bounds::right_open());
+    BOOST_CHECK_EQUAL(itl::exclusive_less(L0_1D, L1_2T), true);
+    BOOST_CHECK_EQUAL(itl::inner_bounds(L0_1D, L1_2T) == interval_bounds::right_open(), true);
+
+    continuous_interval<double> C1_2T = continuous_interval<double>(1.0, 2.0, interval_bounds::left_open());
+    BOOST_CHECK_EQUAL(itl::exclusive_less(L0_1T, C1_2T), true);
+    BOOST_CHECK_EQUAL(itl::inner_bounds(L0_1T, C1_2T) == interval_bounds::left_open(), true);
+
+    BOOST_CHECK_EQUAL(itl::exclusive_less(L0_1D, C1_2T), true);
+    BOOST_CHECK_EQUAL(itl::inner_bounds(L0_1D, C1_2T) == interval_bounds::closed(), true);
+
+    //BOOST_CHECK_EQUAL(itl::is_empty(conterval), true);
+}
+
+BOOST_AUTO_TEST_CASE(test_interval_bounds)
+{
+    continuous_interval<double> L0_1T = continuous_interval<double>(0.0, 1.0, interval_bounds::closed());
+    continuous_interval<double> L0_1D = continuous_interval<double>(0.0, 1.0, interval_bounds::right_open());
+
+    cout << "itl::right(L0_1T) = " <<  static_cast<int>(itl::right(L0_1T.bounds()).bits()) << endl;
+    cout << "itl::right(L0_1D) = " <<  static_cast<int>(itl::right(L0_1D.bounds()).bits()) << endl;
+
+    BOOST_CHECK_EQUAL(itl::right_bounds(L0_1D, L0_1T), interval_bounds::left_open());
+}
+
+BOOST_AUTO_TEST_CASE(casual)
+{
+    separate_interval_set<double> a, b;
+
+    continuous_interval<double> L0_1T = continuous_interval<double>(0.0, 1.0, interval_bounds::closed());
+    continuous_interval<double> L0_1D = continuous_interval<double>(0.0, 1.0, interval_bounds::right_open());
+
+    a += L0_1T;
+    a += L0_1D;
+    cout << a << endl;
+
+    b += L0_1D;
+    b += L0_1T;
+    cout << b << endl;
+
+    cout << "double has " 
+         << (numeric_limits<double>::has_infinity ? "inf: " : "NO inf: ") 
+         << numeric_limits<double>::infinity()
+         << endl;
+}
+*/
+
+
+BOOST_AUTO_TEST_CASE(casual)
+{
 }
 

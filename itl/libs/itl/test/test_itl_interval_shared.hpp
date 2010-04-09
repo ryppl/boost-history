@@ -8,7 +8,6 @@ Copyright (c) 2008-2010: Joachim Faulhaber
 #ifndef __test_itl_interval_shared_hpp_JOFA_100306__
 #define __test_itl_interval_shared_hpp_JOFA_100306__
 
-//CL #include <boost/itl/interval.hpp>
 #include <boost/itl/interval_set.hpp>
 
 
@@ -16,16 +15,16 @@ template <class T, ITL_COMPARE Compare,
           ITL_INTERVAL(ITL_COMPARE)  Interval>
 void interval_ctor_4_ordered_types()
 {
-	typedef Interval<T,Compare> IntervalT;
+    typedef Interval<T,Compare> IntervalT;
     // An empty interval is defined as the closed interval [1,0]
-	BOOST_CHECK_EQUAL(itl::is_empty(IntervalT()), true);
+    BOOST_CHECK_EQUAL(itl::is_empty(IntervalT()), true);
     BOOST_CHECK_EQUAL(cardinality(IntervalT()), itl::neutron<typename itl::size_type_of<T>::type>::value());
-	BOOST_CHECK_EQUAL(itl::size(IntervalT()), itl::neutron<typename itl::size_type_of<T>::type>::value());
+    BOOST_CHECK_EQUAL(itl::size(IntervalT()), itl::neutron<typename itl::size_type_of<T>::type>::value());
     BOOST_CHECK_EQUAL(IntervalT().lower(), itl::neutron<T>::value());
     BOOST_CHECK_EQUAL(IntervalT().upper(), itl::neutron<T>::value());
     BOOST_CHECK_EQUAL(IntervalT(), IntervalT());
     BOOST_CHECK_EQUAL(IntervalT(), IntervalT(itl::neutron<T>::value(), itl::neutron<T>::value()));
-	BOOST_CHECK_EQUAL(IntervalT(), IntervalT(itl::neutron<T>::value(), itl::neutron<T>::value(), interval_bounds::right_open()));
+    BOOST_CHECK_EQUAL(IntervalT(), IntervalT(itl::neutron<T>::value(), itl::neutron<T>::value(), interval_bounds::right_open()));
 }
 
 
@@ -33,7 +32,7 @@ template <class T, ITL_COMPARE Compare,
           ITL_INTERVAL(ITL_COMPARE)  Interval>
 void interval_ctor_4_bicremental_types()
 {
-	typedef Interval<T,Compare> IntervalT;
+    typedef Interval<T,Compare> IntervalT;
 
     BOOST_CHECK_EQUAL( T(), pred(succ(T())));
     BOOST_CHECK_EQUAL( itl::neutron<T>::value(), pred(succ(itl::neutron<T>::value()))       );
@@ -42,17 +41,17 @@ void interval_ctor_4_bicremental_types()
 
     T v4 = make<T>(4);
     IntervalT I4_4I(v4);
-	BOOST_CHECK_EQUAL( I4_4I.bounds() == interval_bounds::closed(),      true  );
+    BOOST_CHECK_EQUAL( I4_4I.bounds() == interval_bounds::closed(),      true  );
     BOOST_CHECK_EQUAL( I4_4I.bounds() == interval_bounds::left_open(),   false );
     BOOST_CHECK_EQUAL( I4_4I.bounds() == interval_bounds::left_open(),   false );
     BOOST_CHECK_EQUAL( I4_4I.bounds() == interval_bounds::right_open(),  false );
     BOOST_CHECK_EQUAL( I4_4I.bounds() == interval_bounds::open(),        false );
-	/*JODO
+    /*JODO
     BOOST_CHECK_EQUAL( I4_4I.is_left(closed_bounded),  true  );
     BOOST_CHECK_EQUAL( I4_4I.is_right(closed_bounded), true  );
     BOOST_CHECK_EQUAL( I4_4I.is_left(open_bounded),    false );
     BOOST_CHECK_EQUAL( I4_4I.is_right(open_bounded),   false );
-	*/
+    */
 
     BOOST_CHECK_EQUAL( I4_4I.lower(),             v4    );
     BOOST_CHECK_EQUAL( I4_4I.upper(),             v4    );
@@ -62,7 +61,7 @@ void interval_ctor_4_bicremental_types()
     BOOST_CHECK_EQUAL( within(I4_4I, I4_4I),      true  );
     BOOST_CHECK_EQUAL( I4_4I,                     I4_4I );
     BOOST_CHECK_EQUAL( cardinality(I4_4I),        unon<typename interval<T>::size_type>::value() );
-	BOOST_CHECK_EQUAL( itl::size(I4_4I),          unon<typename interval<T>::size_type>::value() );
+    BOOST_CHECK_EQUAL( itl::size(I4_4I),          unon<typename interval<T>::size_type>::value() );
 
     IntervalT j_4_4(I4_4I);
     BOOST_CHECK_EQUAL( I4_4I, j_4_4 );
@@ -70,7 +69,7 @@ void interval_ctor_4_bicremental_types()
     k_4_4 = j_4_4;
     BOOST_CHECK_EQUAL( I4_4I, k_4_4 );
 
-	/*
+    /*
     T v2 = make<T>(2);
     BOOST_CHECK_EQUAL( interval<T>::closed(v2, v4),    interval<T>(v2, v4) );
     BOOST_CHECK_EQUAL( interval<T>::closed(v2, v4),    interval<T>(v2, v4, closed_bounded) );
@@ -105,7 +104,7 @@ void interval_ctor_4_bicremental_types()
     BOOST_CHECK_EQUAL( interval<T>::open(v2, v4).bounds() == interval_bounds::open_bounded(),               true );
     BOOST_CHECK_EQUAL( interval<T>::open(v2, v4).is_left(open_bounded),        true );
     BOOST_CHECK_EQUAL( interval<T>::open(v2, v4).is_right(open_bounded),       true );    
-	*/
+    */
 }
 
 /*JODO

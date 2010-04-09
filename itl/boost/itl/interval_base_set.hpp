@@ -10,6 +10,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #define __interval_base_set_h_JOFA_990223__
 
 #include <limits>
+#include <boost/itl/type_traits/interval_type_of.hpp>
 #include <boost/itl/detail/interval_set_algo.hpp>
 #include <boost/itl/set.hpp>
 #include <boost/itl/interval.hpp>
@@ -445,17 +446,6 @@ public:
         domain datatypes.
     */
     void uniform_bounds(itl::bound_type bounded);
-
-
-    //==========================================================================
-    //= Representation
-    //==========================================================================
-    
-    /** Interval container's string representation */
-    /*CL ::as_string
-    const std::string as_string()const
-    { std::string res(""); const_FOR_IMPL(it_) res += (*it_).as_string(); return res; }
-    */
 
     
     //==========================================================================

@@ -75,52 +75,52 @@ struct elemental;
 
 #ifdef ITL_USE_INTERVAL_TEMPLATE_TEMPLATE
 
-	template<class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval>
-	struct elemental<ITL_INTERVAL_TYPE(Interval,DomainT,Compare) >
-	{
-		typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare) segment_type;
-		typedef segment_type              interval_type;
-		typedef DomainT                   type;
-		typedef DomainT                   domain_type;
-		typedef DomainT                   codomain_type;
-		typedef DomainT                   transit_type;
-	};
+    template<class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval>
+    struct elemental<ITL_INTERVAL_TYPE(Interval,DomainT,Compare) >
+    {
+        typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare) segment_type;
+        typedef segment_type              interval_type;
+        typedef DomainT                   type;
+        typedef DomainT                   domain_type;
+        typedef DomainT                   codomain_type;
+        typedef DomainT                   transit_type;
+    };
 
-	template< class DomainT, class CodomainT, 
-			  ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval >
-	struct elemental<std::pair<ITL_INTERVAL_TYPE(Interval,DomainT,Compare)const, CodomainT> >
-	{
-		typedef std::pair<ITL_INTERVAL_TYPE(Interval,DomainT,Compare), CodomainT> segment_type;
-		typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare)                       interval_type;
-		typedef std::pair<DomainT, CodomainT>                   type;
-		typedef DomainT                                         domain_type;
-		typedef CodomainT                                       codomain_type;
-		typedef mapped_reference<DomainT, CodomainT>            transit_type;
-	};
+    template< class DomainT, class CodomainT, 
+              ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE) Interval >
+    struct elemental<std::pair<ITL_INTERVAL_TYPE(Interval,DomainT,Compare)const, CodomainT> >
+    {
+        typedef std::pair<ITL_INTERVAL_TYPE(Interval,DomainT,Compare), CodomainT> segment_type;
+        typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare)                       interval_type;
+        typedef std::pair<DomainT, CodomainT>                   type;
+        typedef DomainT                                         domain_type;
+        typedef CodomainT                                       codomain_type;
+        typedef mapped_reference<DomainT, CodomainT>            transit_type;
+    };
 
 #else //ITL_USE_INTERVAL_TEMPLATE_TYPE
 
-	template<ITL_INTERVAL(ITL_COMPARE) Interval>
-	struct elemental
-	{
-		typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare) segment_type;
-		typedef segment_type                        interval_type;
-		typedef typename interval_type::domain_type domain_type;
-		typedef domain_type                         type;
-		typedef domain_type                         codomain_type;
-		typedef domain_type                         transit_type;
-	};
+    template<ITL_INTERVAL(ITL_COMPARE) Interval>
+    struct elemental
+    {
+        typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare) segment_type;
+        typedef segment_type                        interval_type;
+        typedef typename interval_type::domain_type domain_type;
+        typedef domain_type                         type;
+        typedef domain_type                         codomain_type;
+        typedef domain_type                         transit_type;
+    };
 
-	template< class CodomainT, ITL_INTERVAL(ITL_COMPARE) Interval >
-	struct elemental<std::pair<ITL_INTERVAL_TYPE(Interval,DomainT,Compare)const, CodomainT> >
-	{
-		typedef std::pair<ITL_INTERVAL_TYPE(Interval,DomainT,Compare), CodomainT> segment_type;
-		typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare)                       interval_type;
-		typedef typename interval_type::domain_type             domain_type;
-		typedef CodomainT                                       codomain_type;
-		typedef std::pair<domain_type, codomain_type>           type;
-		typedef mapped_reference<domain_type, codomain_type>    transit_type;
-	};
+    template< class CodomainT, ITL_INTERVAL(ITL_COMPARE) Interval >
+    struct elemental<std::pair<ITL_INTERVAL_TYPE(Interval,DomainT,Compare)const, CodomainT> >
+    {
+        typedef std::pair<ITL_INTERVAL_TYPE(Interval,DomainT,Compare), CodomainT> segment_type;
+        typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare)                       interval_type;
+        typedef typename interval_type::domain_type             domain_type;
+        typedef CodomainT                                       codomain_type;
+        typedef std::pair<domain_type, codomain_type>           type;
+        typedef mapped_reference<domain_type, codomain_type>    transit_type;
+    };
 
 #endif //ITL_USE_INTERVAL_TEMPLATE_TEMPLATE
 
@@ -186,7 +186,7 @@ struct segment_adapter<SegmentIteratorT, std::pair<ITL_INTERVAL_TYPE(Interval,Do
 #else // ITL_USE_INTERVAL_TEMPLATE_TYPE
 
 template<class SegmentIteratorT, ITL_INTERVAL(ITL_COMPARE) Interval>
-struct segment_adapter //CL <SegmentIteratorT, ITL_INTERVAL_TYPE(Interval,DomainT,Compare) >
+struct segment_adapter 
 {
     typedef segment_adapter                         type;
     typedef ITL_INTERVAL_TYPE(Interval,DomainT,Compare) segment_type;

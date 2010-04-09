@@ -40,20 +40,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 namespace boost{namespace itl
 {
 
-/*CL
-/// Constants for intervalbounds
-enum BoundTypes {
-    /// Both open: <tt>(x,y)</tt>
-    open_bounded             = 0, 
-    /// Left open right closed: <tt>(x,y]</tt>
-    left_open                = 1, 
-    /// Left closed right open: <tt>[x,y)</tt>
-    right_open               = 2,
-    /// Both closed: <tt>[x,y]</tt>
-    closed_bounded           = 3
-} ;
-*/
-
 typedef unsigned char bound_type;
 
 /** \brief A class template for intervals */
@@ -374,22 +360,6 @@ interval.as(open_bounded).is(open_bounded)
     bool lower_equal(const interval& x2)const;
     /** Last element of \c *this is equal to the last element of \c x2 */
     bool upper_equal(const interval& x2)const;
-
-//CL 
-//public:
-//    typedef typename boost::call_traits<DomainT>::param_type DomainP;
-//
-//    /** Less compare of interval elements. */
-//    inline static bool domain_less(DomainP left, DomainP right)       
-//    {return domain_compare()(left, right) ;}
-//
-//    /** Less or equal compare of interval elements. */
-//    inline static bool domain_less_equal(DomainP left, DomainP right) 
-//    {return !domain_compare()(right, left );}
-//
-//    /** Equality compare of interval elements. */
-//    inline static bool domain_equal(DomainP left, DomainP right)
-//    {return !domain_compare()(left, right) && !domain_compare()(right, left);}
 
 private:
     typedef std::pair<DomainT, bound_type> BoundT;
@@ -1033,67 +1003,6 @@ struct exclusive_less_than {
     bool operator()(const IntervalT& left, const IntervalT& right)const
     { return exclusive_less(left, right); }
 };
-
-
-//==============================================================================
-//= Addition
-//==============================================================================
-
-/** \c hull returns the smallest interval containing \c left and \c right. */
-//CL template <class DomainT, ITL_COMPARE Compare>
-//inline interval<DomainT,Compare> hull(interval<DomainT,Compare>  left, 
-//                                const interval<DomainT,Compare>& right)
-//{
-//    return left.extend(right);
-//}
-
-//==============================================================================
-//= Subtraction
-//==============================================================================
-
-/** subtract \c right_minuend from the \c left interval on it's right side. 
-    Return the difference: The part of \c left right of \c right_minuend.
-\code
-left_over = left - right_minuend; //on the right side.
-[a      ...  : left
-     [b ...  : right_minuend
-[a  b)       : left_over
-\endcode
-*/
-//CL template <class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval>
-//inline ITL_INTERVAL_TYPE(Interval,DomainT,Compare) right_subtract(ITL_INTERVAL_TYPE(Interval,DomainT,Compare)  left, 
-//                                          const ITL_INTERVAL_TYPE(Interval,DomainT,Compare)& right_minuend)
-//{
-//    return left.right_subtract(right_minuend);
-//}
-
-/** subtract \c left_minuend from the \c right interval on it's left side. 
-    Return the difference: The part of \c right right of \c left_minuend.
-\code
-right_over = right - left_minuend; //on the left.
-...      d) : right
-... c)      : left_minuend
-     [c  d) : right_over
-\endcode
-*/
-//CL template <class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval>
-//inline ITL_INTERVAL_TYPE(Interval,DomainT,Compare) left_subtract(ITL_INTERVAL_TYPE(Interval,DomainT,Compare)  right, 
-//                                         const ITL_INTERVAL_TYPE(Interval,DomainT,Compare)& left_minuend)
-//{
-//    return right.left_subtract(left_minuend);
-//}
-
-//==============================================================================
-//= Intersection
-//==============================================================================
-
-/** Returns the intersection of \c left and \c right interval. */
-//CL template <class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval>
-//inline ITL_INTERVAL_TYPE(Interval,DomainT,Compare) operator & (ITL_INTERVAL_TYPE(Interval,DomainT,Compare)  left, 
-//                                       const ITL_INTERVAL_TYPE(Interval,DomainT,Compare)& right)
-//{
-//    return left &= right;
-//}
 
 /** Returns true if the intersection of \c left and \c right is not empty. */
 template <class DomainT, ITL_COMPARE Compare>

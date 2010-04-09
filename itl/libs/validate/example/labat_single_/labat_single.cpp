@@ -70,12 +70,13 @@ void test_LawValidater()
     //    <interval_map<int,int,partial_enricher>, itl::inplace_plus, itl::inplace_minus> TestLawT;
     //LawValidater<TestLawT, RandomGentor> test_law;
 
-    typedef InplaceSymmetricDifference
-        <interval_set<int> > TestLawT;
+    typedef InplaceCommutativity
+        <separate_interval_set<double> > TestLawT;
     LawValidater<TestLawT, RandomGentor> test_law;
 
+    
     //-----------------------------------------------------------------------------
-    int test_count = 10000;
+    int test_count = 100000;
     ptime start, stop;
 
     GentorProfileSgl::it()->set_std_profile(8,1);
