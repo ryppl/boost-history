@@ -42,7 +42,6 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
 
-namespace mpl = boost::mpl;
 BOOST_MPL_HAS_XXX_TRAIT_DEF(explicit_creation)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(pseudo_entry)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(pseudo_exit)
