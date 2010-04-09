@@ -7,7 +7,7 @@
 namespace msm = boost::msm;
 namespace mpl = boost::mpl;
 
-namespace
+namespace  
 {
     // events
     struct play {};
@@ -17,13 +17,6 @@ namespace
     struct open_close {};
     struct NextSong {};
     struct PreviousSong {};
-    struct error_found {};
-    struct end_error {};
-
-    // Flags. Allow information about a property of the current state
-    struct PlayingPaused{};
-    struct CDLoaded {};
-    struct FirstSongPlaying {};
 
     // A "complicated" event type that carries some data.
     struct cd_detected
@@ -41,10 +34,7 @@ namespace
         // The list of FSM states
         struct Empty : public msm::front::state<> 
         {
-            // if the play event arrives in this state, defer it until a state handles it or
-            // rejects it
-            typedef mpl::vector<play> deferred_events;
-            // every (optional) entry/exit methods get the event passed.
+            // every (optional) entry/exit methods get the event passed
             template <class Event,class FSM>
             void on_entry(Event const&,FSM& ) {std::cout << "entering: Empty" << std::endl;}
             template <class Event,class FSM>
@@ -52,10 +42,6 @@ namespace
         };
         struct Open : public msm::front::state<> 
         {	 
-            // if the play event arrives in this state, defer it until a state handles it or
-            // rejects it
-            typedef mpl::vector<play> deferred_events;
-            typedef mpl::vector1<CDLoaded>		flag_list;
             template <class Event,class FSM>
             void on_entry(Event const&,FSM& ) {std::cout << "entering: Open" << std::endl;}
             template <class Event,class FSM>
@@ -65,29 +51,23 @@ namespace
         struct Stopped : public msm::front::state<> 
         {	 
             // when stopped, the CD is loaded
-            typedef mpl::vector1<CDLoaded>		flag_list;
             template <class Event,class FSM>
             void on_entry(Event const&,FSM& ) {std::cout << "entering: Stopped" << std::endl;}
             template <class Event,class FSM>
             void on_exit(Event const&,FSM& ) {std::cout << "leaving: Stopped" << std::endl;}
         };
 
-        // the player state machine contains a state which is himself a state machine
-        // as you see, no need to declare it anywhere so Playing can be developed separately
-        // by another team in another module. For simplicity I just declare it inside player
         struct Playing_ : public msm::front::state_machine_def<Playing_>
         {
             // when playing, the CD is loaded and we are in either pause or playing (duh)
-            typedef mpl::vector2<PlayingPaused,CDLoaded>		flag_list;
-
             template <class Event,class FSM>
             void on_entry(Event const&,FSM& ) {std::cout << "entering: Playing" << std::endl;}
             template <class Event,class FSM>
             void on_exit(Event const&,FSM& ) {std::cout << "leaving: Playing" << std::endl;}
+
             // The list of FSM states
             struct Song1 : public msm::front::state<>
             {
-                typedef mpl::vector1<FirstSongPlaying>		flag_list;
                 template <class Event,class FSM>
                 void on_entry(Event const&,FSM& ) {std::cout << "starting: First song" << std::endl;}
                 template <class Event,class FSM>
@@ -132,34 +112,26 @@ namespace
                 std::cout << "no transition from state " << state
                     << " on event " << typeid(e).name() << std::endl;
             }
+
         };
         // back-end
-        typedef msm::back::state_machine<Playing_> Playing;
+        // demonstrates Shallow History: if the state gets activated with end_pause
+        // then it will remember the last active state and reactivate it
+        // also possible: AlwaysHistory, the last active state will always be reactivated
+        // or NoHistory, always restart from the initial state
+        typedef msm::back::state_machine<Playing_,msm::back::ShallowHistory<mpl::vector<end_pause> > > Playing;
 
         // state not defining any entry or exit
         struct Paused : public msm::front::state<>
         {
-            typedef mpl::vector2<PlayingPaused,CDLoaded>		flag_list;
+            template <class Event,class FSM>
+            void on_entry(Event const&,FSM& ) {std::cout << "entering: Paused" << std::endl;}
+            template <class Event,class FSM>
+            void on_exit(Event const&,FSM& ) {std::cout << "leaving: Paused" << std::endl;}
         };
-        struct AllOk : public msm::front::state<>
-        {
-            template <class Event,class FSM>
-            void on_entry(Event const&,FSM& ) {std::cout << "starting: AllOk" << std::endl;}
-            template <class Event,class FSM>
-            void on_exit(Event const&,FSM& ) {std::cout << "finishing: AllOk" << std::endl;}
-        };
-        // this state is also made terminal so that all the events are blocked
-        struct ErrorMode :  //public msm::front::terminate_state<> // ErrorMode terminates the state machine
-            public msm::front::interrupt_state<end_error>   // ErroMode just interrupts. Will resume if
-                                                            // the event end_error is generated
-        {
-            template <class Event,class FSM>
-            void on_entry(Event const&,FSM& ) {std::cout << "starting: ErrorMode" << std::endl;}
-            template <class Event,class FSM>
-            void on_exit(Event const&,FSM& ) {std::cout << "finishing: ErrorMode" << std::endl;}
-        };
+
         // the initial state of the player SM. Must be defined
-        typedef mpl::vector<Empty,AllOk> initial_state;
+        typedef Empty initial_state;
 
         // transition actions
         void start_playback(play const&)       { std::cout << "player::start_playback\n"; }
@@ -171,11 +143,8 @@ namespace
         void resume_playback(end_pause const&)      { std::cout << "player::resume_playback\n"; }
         void stop_and_open(open_close const&)  { std::cout << "player::stop_and_open\n"; }
         void stopped_again(stop const&)	{std::cout << "player::stopped_again\n";}
-        void report_error(error_found const&) {std::cout << "player::report_error\n";}
-        void report_end_error(end_error const&) {std::cout << "player::report_end_error\n";}
-
         // guard conditions
- 
+
         typedef player_ p; // makes transition table cleaner
 
         // Transition table for player
@@ -197,10 +166,7 @@ namespace
             //    +---------+-------------+---------+---------------------+----------------------+
             a_row < Paused  , end_pause   , Playing , &p::resume_playback                        >,
             a_row < Paused  , stop        , Stopped , &p::stop_playback                          >,
-            a_row < Paused  , open_close  , Open    , &p::stop_and_open                          >,
-            //    +---------+-------------+---------+---------------------+----------------------+
-            a_row < AllOk   , error_found ,ErrorMode, &p::report_error                           >,
-            a_row <ErrorMode,end_error    ,AllOk    , &p::report_end_error                       >
+            a_row < Paused  , open_close  , Open    , &p::stop_and_open                          >
             //    +---------+-------------+---------+---------------------+----------------------+
         > {};
 
@@ -211,6 +177,7 @@ namespace
             std::cout << "no transition from state " << state
                 << " on event " << typeid(e).name() << std::endl;
         }
+
     };
     // Pick a back-end
     typedef msm::back::state_machine<player_> player;
@@ -218,70 +185,41 @@ namespace
     //
     // Testing utilities.
     //
-    static char const* const state_names[] = { "Stopped", "Open", "Empty", "Playing", "Paused","AllOk","ErrorMode" };
+    static char const* const state_names[] = { "Stopped", "Open", "Empty", "Playing", "Paused" };
 
     void pstate(player const& p)
     {
-        // we have now several active states, which we show
-        for (unsigned int i=0;i<player::nr_regions::value;++i)
-        {
-            std::cout << " -> " << state_names[p.current_state()[i]] << std::endl;
-        }
+        std::cout << " -> " << state_names[p.current_state()[0]] << std::endl;
     }
 
     void test()
     {
         player p;
+
         // needed to start the highest-level SM. This will call on_entry and mark the start of the SM
         p.start(); 
-        // test deferred event
-        // deferred in Empty and Open, will be handled only after event cd_detected
-        p.process_event(play());
-
-        // tests some flags
-        std::cout << "CDLoaded active:" << std::boolalpha << p.is_flag_active<CDLoaded>() << std::endl; //=> false (no CD yet)
         // go to Open, call on_exit on Empty, then action, then on_entry on Open
         p.process_event(open_close()); pstate(p);
         p.process_event(open_close()); pstate(p);
         p.process_event(cd_detected("louie, louie"));
+        p.process_event(play());
 
-        // at this point, Play is active (was deferred)
-        std::cout << "PlayingPaused active:" << std::boolalpha << p.is_flag_active<PlayingPaused>() << std::endl;//=> true
-        std::cout << "FirstSong active:" << std::boolalpha << p.is_flag_active<FirstSongPlaying>() << std::endl;//=> true
-
+        // at this point, Play is active 
         // make transition happen inside it. Player has no idea about this event but it's ok.
         p.process_event(NextSong());pstate(p); //2nd song active
         p.process_event(NextSong());pstate(p);//3rd song active
         p.process_event(PreviousSong());pstate(p);//2nd song active
-        std::cout << "FirstSong active:" << std::boolalpha << p.is_flag_active<FirstSongPlaying>() << std::endl;//=> false
 
-        std::cout << "PlayingPaused active:" << std::boolalpha << p.is_flag_active<PlayingPaused>() << std::endl;//=> true
         p.process_event(pause()); pstate(p);
-        std::cout << "PlayingPaused active:" << std::boolalpha << p.is_flag_active<PlayingPaused>() << std::endl;//=> true
         // go back to Playing
-        // as you see, it starts back from the original state
+        // as you see, remembers the original state as end_pause is an history trigger
         p.process_event(end_pause());  pstate(p);
         p.process_event(pause()); pstate(p);
         p.process_event(stop());  pstate(p);
-        std::cout << "PlayingPaused active:" << std::boolalpha << p.is_flag_active<PlayingPaused>() << std::endl;//=> false
-        std::cout << "CDLoaded active:" << std::boolalpha << p.is_flag_active<CDLoaded>() << std::endl;//=> true
-        // by default, the flags are OR'ed but you can also use AND. Then the flag must be present in 
-        // all of the active states
-        std::cout << "CDLoaded active with AND:" << std::boolalpha << p.is_flag_active<CDLoaded,player::Flag_AND>() << std::endl;//=> false
-
         // event leading to the same state
         p.process_event(stop());  pstate(p);
-
-        // event leading to a terminal/interrupt state
-        p.process_event(error_found());  pstate(p);
-        // try generating more events
-        std::cout << "Trying to generate another event" << std::endl; // will not work, fsm is terminated or interrupted
-        p.process_event(play());pstate(p);
-        std::cout << "Trying to end the error" << std::endl; // will work only if ErrorMode is interrupt state
-        p.process_event(end_error());pstate(p);
-        std::cout << "Trying to generate another event" << std::endl; // will work only if ErrorMode is interrupt state
-        p.process_event(play());pstate(p);
-
+        // play does not trigger shallow history => start back from 1st song
+        p.process_event(play());  pstate(p);
     }
 }
 

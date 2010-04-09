@@ -5,6 +5,7 @@
 #include <boost/msm/front/state_machine_def.hpp>
 
 namespace msm = boost::msm;
+namespace mpl = boost::mpl;
 
 namespace  // Concrete FSM implementation
 {

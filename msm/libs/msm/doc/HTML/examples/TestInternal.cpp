@@ -9,6 +9,7 @@
 #include <boost/msm/front/internal_row.hpp>
 
 namespace msm = boost::msm;
+namespace mpl = boost::mpl;
 using namespace msm::front;
 
 namespace

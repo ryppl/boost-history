@@ -11,6 +11,7 @@
 using namespace std;
 namespace msm = boost::msm;
 using namespace msm::front;
+namespace mpl = boost::mpl;
 // for And_ operator
 using namespace msm::front::euml;
 

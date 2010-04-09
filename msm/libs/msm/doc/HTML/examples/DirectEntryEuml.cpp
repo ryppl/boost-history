@@ -7,6 +7,7 @@
 using namespace std;
 using namespace boost::msm::front::euml;
 namespace msm = boost::msm;
+namespace mpl = boost::mpl;
 
 
 namespace  // Concrete FSM implementation

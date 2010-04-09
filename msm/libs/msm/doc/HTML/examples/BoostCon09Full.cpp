@@ -6,6 +6,7 @@
 #include <boost/msm/back/tools.hpp>
 
 namespace msm = boost::msm;
+namespace mpl = boost::mpl;
 
 namespace  // Concrete FSM implementation
 {

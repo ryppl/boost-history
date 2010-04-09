@@ -6,6 +6,7 @@
 #include <boost/msm/front/functor_row.hpp>
 
 namespace msm = boost::msm;
+namespace mpl = boost::mpl;
 using namespace boost::msm::front;
 
 namespace

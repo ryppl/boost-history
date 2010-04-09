@@ -8,6 +8,7 @@
 #include <boost/msm/front/euml/common.hpp>
 
 namespace msm = boost::msm;
+namespace mpl = boost::mpl;
 using namespace boost::msm::front;
 
 namespace

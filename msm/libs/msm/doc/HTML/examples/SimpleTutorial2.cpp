@@ -6,6 +6,7 @@
 #include <boost/msm/front/row2.hpp>
 
 namespace msm = boost::msm;
+namespace mpl = boost::mpl;
 using namespace msm::front;
 
 namespace
