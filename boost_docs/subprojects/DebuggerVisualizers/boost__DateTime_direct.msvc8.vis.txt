@@ -1,0 +1,106 @@
+;----------------------------------------
+; BOOST_VISUALIZER_START boost::date_time
+;
+; Copyright Bruno Durin 2010. Use, modification and distribution are subject
+; to the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt
+; or copy at http://www.boost.org/LICENSE_1_0.txt)
+;
+; @guid     2421DB60-44CC-11DF-9879-0800200C9A66
+; @platform msvc-8, msvc-9
+; @version  1.0
+; @author   Bruno Durin
+; @email    bruno dot durin at gmail dot com
+;
+; Usage
+; =====
+;
+; Unlike the other visualizer for date_time, this visualizer does not need a header
+; file to work. Note that the displayed time is in UTC.
+;
+
+;------------------------------------------------------------------------------
+;  boost::gregorian::date visualizer
+;------------------------------------------------------------------------------
+
+boost::gregorian::date{
+	preview
+	( 
+		#( 
+			100*((4*($c.days_+32044)+3)/146097)+((4*($c.days_+32044-((146097*((4*($c.days_+32044)+3)/146097))/4))+3)/1461)-4800+(((5*($c.days_+32044-((146097*((4*($c.days_+32044)+3)/146097))/4)-(1461*((4*($c.days_+32044-((146097*((4*($c.days_+32044)+3)/146097))/4))+3)/1461))/4)+2)/153)/10),
+			"-",
+			((5*($c.days_+32044-((146097*((4*($c.days_+32044)+3)/146097))/4)-(1461*((4*($c.days_+32044-((146097*((4*($c.days_+32044)+3)/146097))/4))+3)/1461))/4)+2)/153)+3-12*(((5*($c.days_+32044-((146097*((4*($c.days_+32044)+3)/146097))/4)-(1461*((4*($c.days_+32044-((146097*((4*($c.days_+32044)+3)/146097))/4))+3)/1461))/4)+2)/153)/10),
+			"-",
+			($c.days_+32044-((146097*((4*($c.days_+32044)+3)/146097))/4)-(1461*((4*($c.days_+32044-((146097*((4*($c.days_+32044)+3)/146097))/4))+3)/1461))/4)-((153*((5*($c.days_+32044-((146097*((4*($c.days_+32044)+3)/146097))/4)-(1461*((4*($c.days_+32044-((146097*((4*($c.days_+32044)+3)/146097))/4))+3)/1461))/4)+2)/153)+2)/5)+1
+		 )
+	)		
+}
+
+;------------------------------------------------------------------------------
+;  boost::gregorian::date_duration visualizer
+;------------------------------------------------------------------------------
+
+boost::gregorian::date_duration{
+	preview
+	( 
+		#( 
+			$c.days_.value_,
+			" days"
+		 )
+	)		
+}
+
+;------------------------------------------------------------------------------
+;  boost::posix_time::time_duration visualizer
+;  only works with microseconds resolution
+;------------------------------------------------------------------------------
+
+boost::posix_time::time_duration{
+	preview
+	( 
+		#( 
+			$c.ticks_.value_/86400000000,
+			"d ",
+			($c.ticks_.value_-86400000000*($c.ticks_.value_/86400000000))/3600000000,
+			"h ",
+			($c.ticks_.value_-86400000000*($c.ticks_.value_/86400000000)-3600000000*(($c.ticks_.value_-86400000000*($c.ticks_.value_/86400000000))/3600000000))/60000000,
+			"m ",
+			(($c.ticks_.value_-86400000000*($c.ticks_.value_/86400000000)-3600000000*(($c.ticks_.value_-86400000000*($c.ticks_.value_/86400000000))/3600000000))-60000000*(($c.ticks_.value_-86400000000*($c.ticks_.value_/86400000000) - 3600000000*(($c.ticks_.value_-86400000000*($c.ticks_.value_/86400000000))/3600000000))/60000000))/1000000,
+			"s ",
+			($c.ticks_.value_%1000000)/1000,
+			"ms ",
+			$c.ticks_.value_%1000,
+			"us"
+		 )
+	)		
+}
+
+;------------------------------------------------------------------------------
+;  boost::posix_time::ptime visualizer
+;  only works with microseconds resolution
+;------------------------------------------------------------------------------
+
+boost::posix_time::ptime{
+	preview
+	( 
+		#( 
+			100*((4*(($c.time_.time_count_.value_/86400000000)+32044)+3)/146097)+((4*(($c.time_.time_count_.value_/86400000000)+32044-((146097*((4*(($c.time_.time_count_.value_/86400000000)+32044)+3)/146097))/4))+3)/1461)-4800+(((5*(($c.time_.time_count_.value_/86400000000)+32044-((146097*((4*(($c.time_.time_count_.value_/86400000000)+32044)+3)/146097))/4)-(1461*((4*(($c.time_.time_count_.value_/86400000000)+32044-((146097*((4*(($c.time_.time_count_.value_/86400000000)+32044)+3)/146097))/4))+3)/1461))/4)+2)/153)/10),
+			"-",
+			((5*(($c.time_.time_count_.value_/86400000000)+32044-((146097*((4*(($c.time_.time_count_.value_/86400000000)+32044)+3)/146097))/4)-(1461*((4*(($c.time_.time_count_.value_/86400000000)+32044-((146097*((4*(($c.time_.time_count_.value_/86400000000)+32044)+3)/146097))/4))+3)/1461))/4)+2)/153)+3-12*(((5*(($c.time_.time_count_.value_/86400000000)+32044-((146097*((4*(($c.time_.time_count_.value_/86400000000)+32044)+3)/146097))/4)-(1461*((4*(($c.time_.time_count_.value_/86400000000)+32044-((146097*((4*(($c.time_.time_count_.value_/86400000000)+32044)+3)/146097))/4))+3)/1461))/4)+2)/153)/10),
+			"-",
+			(($c.time_.time_count_.value_/86400000000)+32044-((146097*((4*(($c.time_.time_count_.value_/86400000000)+32044)+3)/146097))/4)-(1461*((4*(($c.time_.time_count_.value_/86400000000)+32044-((146097*((4*(($c.time_.time_count_.value_/86400000000)+32044)+3)/146097))/4))+3)/1461))/4)-((153*((5*(($c.time_.time_count_.value_/86400000000)+32044-((146097*((4*(($c.time_.time_count_.value_/86400000000)+32044)+3)/146097))/4)-(1461*((4*(($c.time_.time_count_.value_/86400000000)+32044-((146097*((4*(($c.time_.time_count_.value_/86400000000)+32044)+3)/146097))/4))+3)/1461))/4)+2)/153)+2)/5)+1,
+			"  ",
+			($c.time_.time_count_.value_-86400000000*($c.time_.time_count_.value_/86400000000))/3600000000,
+			"h",
+			($c.time_.time_count_.value_-86400000000*($c.time_.time_count_.value_/86400000000)-3600000000*(($c.time_.time_count_.value_-86400000000*($c.time_.time_count_.value_/86400000000))/3600000000))/60000000,
+			"m",
+			(($c.time_.time_count_.value_-86400000000*($c.time_.time_count_.value_/86400000000)-3600000000*(($c.time_.time_count_.value_-86400000000*($c.time_.time_count_.value_/86400000000))/3600000000))-60000000*(($c.time_.time_count_.value_-86400000000*($c.time_.time_count_.value_/86400000000) - 3600000000*(($c.time_.time_count_.value_-86400000000*($c.time_.time_count_.value_/86400000000))/3600000000))/60000000))/1000000,
+			"s (",
+			$c.time_.time_count_.value_%1000000,
+			"us)"
+		 )
+	)		
+}
+
+;
+; BOOST_VISUALIZER_END boost::date_time
+;--------------------------------------

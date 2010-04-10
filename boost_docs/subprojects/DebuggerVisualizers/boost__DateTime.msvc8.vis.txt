@@ -7,7 +7,7 @@
 ;
 ; @guid     C7541090-203E-11DE-8C30-0800200C9A66
 ; @platform msvc-8, msvc-9
-; @version  1.0
+; @version  1.1
 ; @header   date_time_visualizer.hpp
 ; @author   Filip Konvièka
 ; @email    filip dot konvicka at logis dot cz
@@ -17,6 +17,7 @@
 ;
 ; Visualization must be enabled by including the header file date_time_visualizer.hpp in each translation unit.
 ; The visualization is not immediate, you must use the green 'Recalculate' icon.
+; If this is a problem, please consider using Bruno Durin's version (boost__DateTime_direct.msvc).
 ;
 
 ; Posix time
