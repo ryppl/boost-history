@@ -36,7 +36,7 @@
 #include <boost/random/variate_generator.hpp>
 
 namespace boost {
-//! \brief All of the commonly-used functions are within this namespace.
+//! \brief The common functions are within this namespace.
 namespace xint {
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -123,41 +123,77 @@ const callback_t no_callback;
 //! @see xint::from_string
 const size_t autobase=(std::numeric_limits<size_t>::max)();
 
+namespace blockable {
 class integer;
+} // namespace blockable
 
-/*! \brief Contains the core integer type and core functions.
+/*! \brief Contains the "pure" integer type, and functions to operate on it.
 
-The types and functions in the xint::core namespace operate exactly like those
-of the same names in the xint namespace, except that they ignore any
-exception-blocking and do not support the Not-a-Number value. If you attempt to
-assign a Not-a-Number to a core::integer, it will throw an xint::not_a_number
-exception.
-
-These functions are not documented separately; see the corresponding classes and
-functions in the xint::integer namespace for documentation on them.
+The types and functions in the xint::core namespace ignore exception-blocking
+and do not support the Not-a-Number value. If you attempt to assign a
+Not-a-Number to a core::integer, it will throw an xint::not_a_number exception.
 */
 namespace core {
 
-//! \brief The core integer class.
-class integer {
+//! \brief The base class for the integer classes.
+class base_integer {
+    public:
+    base_integer(): data(0) { }
+    ~base_integer();
+
+    //! \name Internal Functions
+    //@{
+    detail::data_t *_get_data() const { return data; }
+    detail::digit_t _get_digit(size_t index) const;
+    detail::digit_t _get_digit(size_t index, bool) const; //!< \overload
+    size_t _get_length() const;
+    bool _is_unique() const;
+    //@}
+
+    protected:
+    void _attach(detail::data_t *new_data);
+    void _attach(const base_integer& copy);
+
+    private:
+    detail::data_t *data;
+};
+
+/*! \brief The core %integer class.
+
+    This class implements the "pure" \c integer type, uncontaminated by things
+    like the Not-a-Number value.
+
+    There are only a few member functions; most of the functionality is
+    implemented using standalone functions.
+
+    Functions that start with an underscore (such as \c _make_unique) are
+    intended for internal use only. They may change arbitrarily in future
+    versions.
+*/
+class integer: public core::base_integer {
     public:
 
     //! \name Constructors & Destructors
     //!@{
     integer();
     integer(const integer& b);
-    explicit integer(const ::boost::xint::integer& b);
+    explicit integer(const blockable::integer& b);
+    explicit integer(const std::string& str, size_t base=10);
     template <typename T> integer(const T& n,
         typename boost::enable_if<boost::is_integral<T> >::type* = 0,
         typename boost::enable_if<boost::is_signed<T> >::type* = 0);
     template <typename T> integer(const T& n,
         typename boost::enable_if<boost::is_integral<T> >::type* = 0,
         typename boost::enable_if<boost::is_unsigned<T> >::type* = 0);
-    explicit integer(const std::string& str, size_t base=10);
-    ~integer();
     //!@}
 
-    //! \name Mathematical and Bitwise Operators
+    /*! \name Mathematical and Bitwise Operators
+        \brief These operate exactly like their counterparts for the built-in
+               %integer types.
+
+        Note that there is no \c operator~. Since the integer type doesn't have
+        a fixed maximum size, there is no logical way to implement it.
+    */
     //@{
     integer& operator=(const integer &c);
 
@@ -181,7 +217,12 @@ class integer {
     integer& operator>>=(size_t shift);
     //@}
 
-    //! \name Preconstructed integers
+    /*! \name Preconstructed integers
+
+        These return preconstructed integers with the values named by the
+        functions. They are used internally, so that the most common values
+        don't have to be constructed each time they're needed.
+    */
     //@{
     static const integer& zero();
     static const integer& one();
@@ -196,13 +237,11 @@ class integer {
     size_t hex_digits() const;
     //!@}
 
-    //! \name Internal Functions
+    /*! \name Internal Functions
+        \brief These functions allow access to the internals of the %integer.
+               They are intended for internal use only.
+    */
     //@{
-    detail::data_t *_get_data() { return data; }
-    const detail::data_t *_get_data() const { return data; }
-    detail::digit_t _get_digit(size_t index) const;
-    detail::digit_t _get_digit(size_t index, bool) const; //!< \overload
-    size_t _get_length() const;
     void _set_negative(bool negative);
     void _make_unique();
     //@}
@@ -211,20 +250,132 @@ class integer {
     void _init(detail::digit_t init=0);
     void _init(const integer &c); //!< \overload
     void _init(boost::uintmax_t n); //!< \overload
-    void _attach();
-    void _detach();
-
-    detail::data_t *data;
 };
+
+//! \name Mathematical primitives
+//!@{
+integer abs(const integer& n);
+integer negate(const integer& n);
+integer add(const integer& n, const integer& addend);
+integer subtract(const integer& n, const integer& subtrahend);
+integer multiply(const integer& n, const integer& multiplicand);
+integer divide(const integer& dividend, const integer& divisor);
+std::pair<integer, integer> divide_r(const integer& dividend, const integer&
+    divisor);
+//!@}
+
+//! \name Powers and roots
+//!@{
+integer sqr(const integer& n);
+integer pow(const integer& n, const integer& exponent);
+integer pow2(size_t exponent);
+integer factorial(size_t n);
+integer sqrt(const integer& n);
+//!@}
+
+//! \name Conversion functions
+//!@{
+template <typename T> T to(const integer& n);
+std::string to_string(const integer& n, size_t base=10, bool upperCase=false);
+integer from_string(const std::string& str, size_t base=10);
+std::string to_binary(const integer& n);
+integer from_binary(const std::string& s);
+//!@}
+
+//! \name Bit-manipulation functions
+//!@{
+bool getbit(const integer& n, size_t bit);
+void setbit(integer& n, size_t bit);
+void clearbit(integer& n, size_t bit);
+size_t lowestbit(const integer& n, size_t valueIfZero=0);
+size_t highestbit(const integer& n, size_t valueIfZero=0);
+integer bitwise_and(const integer& n1, const integer& n2);
+integer bitwise_or (const integer& n1, const integer& n2);
+integer bitwise_xor(const integer& n1, const integer& n2);
+integer shift(const integer& n, int byBits);
+integer shift_left(const integer& n, size_t byBits);
+integer shift_right(const integer& n, size_t byBits);
+//!@}
+
+/*! \name Modular math functions
+
+A common reason to use a large-integer library is to implement public-key
+encryption, and the algorithms for such encryption often use modular math.
+*/
+//!@{
+integer mod(const integer& n, const integer& modBy);
+integer mulmod(const integer& n, const integer& by, const integer& modulus);
+integer sqrmod(const integer& n, const integer& modulus);
+integer powmod(const integer& n, const integer& exponent, const integer&
+    modulus, bool noMontgomery=false);
+integer invmod(const integer& n, const integer& modulus);
+//!@}
+
+//! \name Random number functions
+//!@{
+integer random_by_size(size_t sizeInBits, bool highBitOn=false, bool
+    lowBitOn=false, bool canBeNegative=false);
+//!@}
+
+//! \name Prime number functions
+//!@{
+int is_prime(const integer& n, callback_t callback=no_callback);
+integer random_prime(size_t sizeInBits, callback_t callback=no_callback);
+//!@}
+
+/*! \name Operators
+
+    These act exactly the same as for the built-in %integer types.
+*/
+//!@{
+bool operator!(const integer& n1);
+bool operator<(const integer& n1, const integer& n2);
+bool operator>(const integer& n1, const integer& n2);
+bool operator<=(const integer& n1, const integer& n2);
+bool operator>=(const integer& n1, const integer& n2);
+bool operator==(const integer& n1, const integer& n2);
+bool operator!=(const integer& n1, const integer& n2);
+
+const integer& operator+(const integer& a);
+integer operator-(const integer& a);
+integer operator+(const integer& n1, const integer& n2);
+integer operator-(const integer& n1, const integer& n2);
+integer operator*(const integer& n1, const integer& n2);
+integer operator/(const integer& n1, const integer& n2);
+integer operator%(const integer& n1, const integer& n2);
+integer operator&(const integer& n1, const integer& n2);
+integer operator|(const integer& n1, const integer& n2);
+integer operator^(const integer& n1, const integer& n2);
+//!@}
+
+//! \name Miscellaneous functions
+//!@{
+int compare(const integer &n1, const integer &n2, bool ignoresign=false);
+size_t log2(const integer& n);
+integer gcd(const integer& num1, const integer& num2);
+integer lcm(const integer& num1, const integer& num2);
+//!@}
 
 } // namespace core
 
+/*! \brief Contains the blockable integer type, and functions to operate on it.
+
+The types and functions in the \c blockable namespace act just like the ones in
+the \c xint::core namespace, except that they honor exception-blocking and
+support a Not-a-Number value.
+
+\see exceptions
+\see nan
+*/
+namespace blockable {
+
 ////////////////////////////////////////////////////////////////////////////////
-// The integer class
+// The blockable integer class
 
-/*! \brief The extended %integer class.
+/*! \brief The blockable %integer class.
 
-    This class implements the main \c integer type.
+    Functions using this class can be exception-blocked. See \link exceptions
+    this page\endlink for details.
 
     There are only a few member functions; most of the functionality is
     implemented using standalone functions.
@@ -233,7 +384,7 @@ class integer {
     intended for internal use only. They may change arbitrarily in future
     versions.
 */
-class integer {
+class integer: public core::base_integer {
     public:
 
     //! \name Constructors & Destructors
@@ -241,13 +392,13 @@ class integer {
     integer();
     integer(const integer& b);
     integer(const core::integer& b);
+    explicit integer(const std::string& str, size_t base=10);
     template <typename T> integer(const T& n,
         typename boost::enable_if<boost::is_integral<T> >::type* = 0,
         typename boost::enable_if<boost::is_signed<T> >::type* = 0);
     template <typename T> integer(const T& n,
         typename boost::enable_if<boost::is_integral<T> >::type* = 0,
         typename boost::enable_if<boost::is_unsigned<T> >::type* = 0);
-    explicit integer(const std::string& str, size_t base=10);
     //!@}
 
     /*! \name Mathematical and Bitwise Operators
@@ -294,8 +445,7 @@ class integer {
 
         These return preconstructed integers with the values named by the
         functions. They are used internally, so that the most common values
-        don't have to be constructed each time they're needed, but they are
-        available to your own code as well.
+        don't have to be constructed each time they're needed.
     */
     //@{
     static const integer& zero();
@@ -308,11 +458,6 @@ class integer {
                They are intended for internal use only.
     */
     //@{
-    detail::data_t *_get_data() { return data; }
-    const detail::data_t *_get_data() const { return data; }
-    detail::digit_t _get_digit(size_t index) const;
-    detail::digit_t _get_digit(size_t index, bool) const; //!< \overload
-    size_t _get_length() const;
     void _set_negative(bool negative);
     void _make_unique();
     //@}
@@ -321,11 +466,129 @@ class integer {
     void _init(detail::digit_t init=0);
     void _init(const integer &c); //!< \overload
     void _init(boost::uintmax_t n); //!< \overload
-    void _attach();
-    void _detach();
-
-    detail::data_t *data;
 };
+
+//! \name Mathematical primitives
+//!@{
+integer abs(const integer& n);
+integer negate(const integer& n);
+integer add(const integer& n, const integer& addend);
+integer subtract(const integer& n, const integer& subtrahend);
+integer multiply(const integer& n, const integer& multiplicand);
+integer divide(const integer& dividend, const integer& divisor);
+std::pair<integer, integer> divide_r(const integer& dividend, const integer&
+    divisor);
+//!@}
+
+////////////////////////////////////////////////////////////////////////////////
+
+//! \name Powers and roots
+//!@{
+integer sqr(const integer& n);
+integer pow(const integer& n, const integer& exponent);
+integer pow2(size_t exponent);
+integer factorial(size_t n);
+integer sqrt(const integer& n);
+//!@}
+
+////////////////////////////////////////////////////////////////////////////////
+
+//! \name Conversion functions
+//!@{
+template <typename T> T to(const integer& n);
+std::string to_string(const integer& n, size_t base=10, bool upperCase=false);
+integer from_string(const std::string& str, size_t base=10);
+std::string to_binary(const integer& n);
+integer from_binary(const std::string& s);
+//!@}
+
+////////////////////////////////////////////////////////////////////////////////
+
+//! \name Bit-manipulation functions
+//!@{
+bool getbit(const integer& n, size_t bit);
+void setbit(integer& n, size_t bit);
+void clearbit(integer& n, size_t bit);
+size_t lowestbit(const integer& n, size_t valueIfZero=0);
+size_t highestbit(const integer& n, size_t valueIfZero=0);
+integer bitwise_and(const integer& n1, const integer& n2);
+integer bitwise_or (const integer& n1, const integer& n2);
+integer bitwise_xor(const integer& n1, const integer& n2);
+integer shift(const integer& n, int byBits);
+integer shift_left(const integer& n, size_t byBits);
+integer shift_right(const integer& n, size_t byBits);
+//!@}
+
+////////////////////////////////////////////////////////////////////////////////
+
+/*! \name Modular math functions
+
+A common reason to use a large-integer library is to implement public-key
+encryption, and the algorithms for such encryption often use modular math.
+*/
+//!@{
+integer mod(const integer& n, const integer& modBy);
+integer mulmod(const integer& n, const integer& by, const integer& modulus);
+integer sqrmod(const integer& n, const integer& modulus);
+integer powmod(const integer& n, const integer& exponent, const integer&
+    modulus, bool noMontgomery=false);
+integer invmod(const integer& n, const integer& modulus);
+//!@}
+
+////////////////////////////////////////////////////////////////////////////////
+
+//! \name Random number functions
+//!@{
+integer random_by_size(size_t sizeInBits, bool highBitOn=false, bool
+    lowBitOn=false, bool canBeNegative=false);
+//!@}
+
+////////////////////////////////////////////////////////////////////////////////
+
+//! \name Prime number functions
+//!@{
+int is_prime(const integer& n, callback_t callback=no_callback);
+integer random_prime(size_t sizeInBits, callback_t callback=no_callback);
+//!@}
+
+////////////////////////////////////////////////////////////////////////////////
+
+/*! \name Operators
+
+    These act exactly the same as for the built-in %integer types.
+*/
+//!@{
+bool operator!(const integer& n1);
+bool operator<(const integer& n1, const integer& n2);
+bool operator>(const integer& n1, const integer& n2);
+bool operator<=(const integer& n1, const integer& n2);
+bool operator>=(const integer& n1, const integer& n2);
+bool operator==(const integer& n1, const integer& n2);
+bool operator!=(const integer& n1, const integer& n2);
+
+const integer& operator+(const integer& a);
+integer operator-(const integer& a);
+integer operator+(const integer& n1, const integer& n2);
+integer operator-(const integer& n1, const integer& n2);
+integer operator*(const integer& n1, const integer& n2);
+integer operator/(const integer& n1, const integer& n2);
+integer operator%(const integer& n1, const integer& n2);
+integer operator&(const integer& n1, const integer& n2);
+integer operator|(const integer& n1, const integer& n2);
+integer operator^(const integer& n1, const integer& n2);
+//!@}
+
+////////////////////////////////////////////////////////////////////////////////
+
+//! \name Miscellaneous functions
+//!@{
+int compare(const integer &n1, const integer &n2, bool ignoresign=false);
+size_t log2(const integer& n);
+integer gcd(const integer& num1, const integer& num2);
+integer lcm(const integer& num1, const integer& num2);
+//!@}
+
+} // namespace blockable
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -369,218 +632,15 @@ token block_exceptions();
 token allow_exceptions();
 //!@}
 
-////////////////////////////////////////////////////////////////////////////////
-
-//! \name Mathematical primitives
-//!@{
-integer abs(const integer& n);
-integer negate(const integer& n);
-integer add(const integer& n, const integer& addend);
-integer subtract(const integer& n, const integer& subtrahend);
-integer multiply(const integer& n, const integer& multiplicand);
-integer divide(const integer& dividend, const integer& divisor);
-std::pair<integer, integer> divide_r(const integer& dividend, const integer&
-    divisor);
-
-namespace core {
-integer abs(const integer& n);
-integer negate(const integer& n);
-integer add(const integer& n, const integer& addend);
-integer subtract(const integer& n, const integer& subtrahend);
-integer multiply(const integer& n, const integer& multiplicand);
-integer divide(const integer& dividend, const integer& divisor);
-std::pair<integer, integer> divide_r(const integer& dividend, const integer&
-    divisor);
-} // namespace core
-//!@}
-
-////////////////////////////////////////////////////////////////////////////////
-
-//! \name Powers and roots
-//!@{
-integer sqr(const integer& n);
-integer pow(const integer& n, const integer& exponent);
-integer pow2(size_t exponent);
-integer factorial(size_t n);
-integer sqrt(const integer& n);
-
-namespace core {
-integer sqr(const integer& n);
-integer pow(const integer& n, const integer& exponent);
-integer pow2(size_t exponent);
-integer factorial(size_t n);
-integer sqrt(const integer& n);
-} // namespace core
-//!@}
-
-////////////////////////////////////////////////////////////////////////////////
-
-//! \name Conversion functions
-//!@{
-template <typename T> T to(const integer& n);
-std::string to_string(const integer& n, size_t base=10, bool upperCase=false);
-integer from_string(const std::string& str, size_t base=10);
-std::string to_binary(const integer& n);
-integer from_binary(const std::string& s);
-
-namespace core {
-template <typename T> T to(const integer& n);
-std::string to_string(const integer& n, size_t base=10, bool upperCase=false);
-integer from_string(const std::string& str, size_t base=10);
-std::string to_binary(const integer& n);
-integer from_binary(const std::string& s);
-} // namespace core
-//!@}
-
-////////////////////////////////////////////////////////////////////////////////
-
-//! \name Bit-manipulation functions
-//!@{
-bool getbit(const integer& n, size_t bit);
-void setbit(integer& n, size_t bit);
-void clearbit(integer& n, size_t bit);
-size_t lowestbit(const integer& n, size_t valueIfZero=0);
-size_t highestbit(const integer& n, size_t valueIfZero=0);
-integer bitwise_and(const integer& n1, const integer& n2);
-integer bitwise_or (const integer& n1, const integer& n2);
-integer bitwise_xor(const integer& n1, const integer& n2);
-integer shift(const integer& n, int byBits);
-integer shift_left(const integer& n, size_t byBits);
-integer shift_right(const integer& n, size_t byBits);
-
-namespace core {
-bool getbit(const integer& n, size_t bit);
-void setbit(integer& n, size_t bit);
-void clearbit(integer& n, size_t bit);
-size_t lowestbit(const integer& n, size_t valueIfZero=0);
-size_t highestbit(const integer& n, size_t valueIfZero=0);
-integer bitwise_and(const integer& n1, const integer& n2);
-integer bitwise_or (const integer& n1, const integer& n2);
-integer bitwise_xor(const integer& n1, const integer& n2);
-integer shift(const integer& n, int byBits);
-integer shift_left(const integer& n, size_t byBits);
-integer shift_right(const integer& n, size_t byBits);
-} // namespace core
-//!@}
-
-////////////////////////////////////////////////////////////////////////////////
-
-/*! \name Modular math functions
-
-A common reason to use a large-integer library is to implement public-key
-encryption, and the algorithms for such encryption often use modular math.
-*/
-//!@{
-integer mod(const integer& n, const integer& modBy);
-integer mulmod(const integer& n, const integer& by, const integer& modulus);
-integer sqrmod(const integer& n, const integer& modulus);
-integer powmod(const integer& n, const integer& exponent, const integer&
-    modulus, bool noMontgomery=false);
-integer invmod(const integer& n, const integer& modulus);
-
-namespace core {
-integer mod(const integer& n, const integer& modBy);
-integer mulmod(const integer& n, const integer& by, const integer& modulus);
-integer sqrmod(const integer& n, const integer& modulus);
-integer powmod(const integer& n, const integer& exponent, const integer&
-    modulus, bool noMontgomery=false);
-integer invmod(const integer& n, const integer& modulus);
-} // namespace core
-//!@}
-
-////////////////////////////////////////////////////////////////////////////////
-
 //! \name Random number functions
 //!@{
 template <typename T> void set_random_generator(T *gen);
-integer random_by_size(size_t sizeInBits, bool highBitOn=false, bool
-    lowBitOn=false, bool canBeNegative=false);
-
-namespace core {
-integer random_by_size(size_t sizeInBits, bool highBitOn=false, bool
-    lowBitOn=false, bool canBeNegative=false);
-} // namespace core
 //!@}
-
-////////////////////////////////////////////////////////////////////////////////
-
-//! \name Prime number functions
-//!@{
-int is_prime(const integer& n, callback_t callback=no_callback);
-integer random_prime(size_t sizeInBits, callback_t callback=no_callback);
-
-namespace core {
-int is_prime(const integer& n, callback_t callback=no_callback);
-integer random_prime(size_t sizeInBits, callback_t callback=no_callback);
-} // namespace core
-//!@}
-
-////////////////////////////////////////////////////////////////////////////////
-
-/*! \name Operators
-
-    These act exactly the same as for the built-in %integer types.
-*/
-//!@{
-bool operator!(const integer& n1);
-bool operator<(const integer& n1, const integer& n2);
-bool operator>(const integer& n1, const integer& n2);
-bool operator<=(const integer& n1, const integer& n2);
-bool operator>=(const integer& n1, const integer& n2);
-bool operator==(const integer& n1, const integer& n2);
-bool operator!=(const integer& n1, const integer& n2);
-
-const integer& operator+(const integer& a);
-integer operator-(const integer& a);
-integer operator+(const integer& n1, const integer& n2);
-integer operator-(const integer& n1, const integer& n2);
-integer operator*(const integer& n1, const integer& n2);
-integer operator/(const integer& n1, const integer& n2);
-integer operator%(const integer& n1, const integer& n2);
-integer operator&(const integer& n1, const integer& n2);
-integer operator|(const integer& n1, const integer& n2);
-integer operator^(const integer& n1, const integer& n2);
-
-namespace core {
-bool operator!(const integer& n1);
-bool operator<(const integer& n1, const integer& n2);
-bool operator>(const integer& n1, const integer& n2);
-bool operator<=(const integer& n1, const integer& n2);
-bool operator>=(const integer& n1, const integer& n2);
-bool operator==(const integer& n1, const integer& n2);
-bool operator!=(const integer& n1, const integer& n2);
-
-const integer& operator+(const integer& a);
-integer operator-(const integer& a);
-integer operator+(const integer& n1, const integer& n2);
-integer operator-(const integer& n1, const integer& n2);
-integer operator*(const integer& n1, const integer& n2);
-integer operator/(const integer& n1, const integer& n2);
-integer operator%(const integer& n1, const integer& n2);
-integer operator&(const integer& n1, const integer& n2);
-integer operator|(const integer& n1, const integer& n2);
-integer operator^(const integer& n1, const integer& n2);
-} // namespace core
-//!@}
-
-////////////////////////////////////////////////////////////////////////////////
 
 //! \name Miscellaneous functions
 //!@{
 bool opt_secure_mode();
 bool opt_thread_safe();
-
-int compare(const integer &n1, const integer &n2, bool ignoresign=false);
-size_t log2(const integer& n);
-integer gcd(const integer& num1, const integer& num2);
-integer lcm(const integer& num1, const integer& num2);
-
-namespace core {
-int compare(const integer &n1, const integer &n2, bool ignoresign=false);
-size_t log2(const integer& n);
-integer gcd(const integer& num1, const integer& num2);
-integer lcm(const integer& num1, const integer& num2);
-} // namespace core
 //!@}
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -702,130 +762,6 @@ class overflow_error: public std::overflow_error {
 ////////////////////////////////////////////////////////////////////////////////
 // Template function definitions
 
-namespace core {
-template <typename T> integer::integer(const T& n,
-    typename boost::enable_if<boost::is_integral<T> >::type*,
-    typename boost::enable_if<boost::is_signed<T> >::type*)
-{
-    if (n >= 0) {
-        if (static_cast<T>(n & detail::digit_mask) == n)
-            _init(detail::digit_t(n));
-        else _init(boost::uintmax_t(n));
-    } else if (n == (std::numeric_limits<T>::min)()) {
-        // Have to treat the minimum number carefully, because -n is not
-        // what you'd think it is.
-        _init(boost::uintmax_t(-(n+1)));
-        _set_negative(true);
-        --(*this);
-    } else {
-        _init(boost::uintmax_t(-n));
-        _set_negative(true);
-    }
-}
-} // namespace core
-
-namespace core {
-template <typename T> integer::integer(const T& n,
-    typename boost::enable_if<boost::is_integral<T> >::type*,
-    typename boost::enable_if<boost::is_unsigned<T> >::type*)
-{
-    if (static_cast<T>(n & detail::digit_mask) == n)
-        _init(detail::digit_t(n));
-    else _init(boost::uintmax_t(n));
-}
-} // namespace core
-
-/*!
-    Constructs a new integer object with the value of the built-in signed
-    %integer passed to it.
-
-    \param[in] n A number of type \c T.
-    \tparam T The type of \c n.
-
-    You can ignore the \c enable_if parameters, they are there only to tell
-    the compiler what types it applies to.
-
-    \overload
-*/
-template <typename T> integer::integer(const T& n,
-    typename boost::enable_if<boost::is_integral<T> >::type*,
-    typename boost::enable_if<boost::is_signed<T> >::type*)
-{
-    data=0;
-    try {
-        *this=integer(core::integer(n));
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        delete data;
-        data=0;
-    }
-}
-
-/*!
-    Constructs a new integer object with the value of the built-in unsigned
-    %integer passed to it.
-
-    \param[in] n A number of type \c T.
-    \tparam T The type of \c n.
-
-    You can ignore the \c enable_if parameters, they are there only to tell
-    the compiler what types it applies to.
-
-    \overload
-*/
-template <typename T> integer::integer(const T& n,
-    typename boost::enable_if<boost::is_integral<T> >::type*,
-    typename boost::enable_if<boost::is_unsigned<T> >::type*)
-{
-    data=0;
-    try {
-        *this=integer(core::integer(n));
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        delete data;
-        data=0;
-    }
-}
-
-namespace core {
-template <typename T>
-T to(const integer& n) {
-    if (n < (std::numeric_limits<T>::min)()
-        || n > (std::numeric_limits<T>::max)())
-            throw too_big("value out of range for requested conversion");
-
-    T rval=0;
-    size_t len=n._get_length();
-    for (size_t x=0; x<len; ++x)
-        rval=static_cast<T>((rval * detail::digit_overflowbit)
-            + n._get_digit(len-x-1));
-    if (n.sign() < 0) rval *= -1;
-    return rval;
-}
-} // namespace core
-
-/*! \brief Efficiently converts from an xint::integer to a built-in %integer
-           type.
-
-\param[in] n The integer to convert.
-\tparam T The type to convert it to.
-
-\returns The numeric value of \c n, converted to the specified type.
-
-\exception xint::too_big if \c n would not fit into the specified type.
-
-\note If exceptions are blocked, returns T(0) instead of throwing.
-*/
-template <typename T>
-T to(const integer& n) {
-    try {
-        return to<T>(core::integer(n));
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        else return 0;
-    }
-}
-
 /*! \brief Change the random generator that the library uses.
 
 \param[in] gen A pointer to the new generator to use.
@@ -845,9 +781,88 @@ void set_random_generator(T *gen) {
     detail::set_random_generator(obj);
 }
 
+namespace core {
+
+/*!
+    Constructs a new integer object with the value of the built-in signed
+    %integer passed to it.
+
+    \param[in] n A number of type \c T.
+    \tparam T The type of \c n.
+
+    You can ignore the \c enable_if parameters, they are there only to tell
+    the compiler what types it applies to.
+
+    \overload
+*/
+template <typename T> integer::integer(const T& n,
+    typename boost::enable_if<boost::is_integral<T> >::type*,
+    typename boost::enable_if<boost::is_signed<T> >::type*)
+{
+    if (n >= 0) {
+        if (static_cast<T>(n & detail::digit_mask) == n)
+            _init(detail::digit_t(n));
+        else _init(boost::uintmax_t(n));
+    } else if (n == (std::numeric_limits<T>::min)()) {
+        // Have to treat the minimum number carefully, because -n is not
+        // what you'd think it is.
+        _init(boost::uintmax_t(-(n+1)));
+        _set_negative(true);
+        --(*this);
+    } else {
+        _init(boost::uintmax_t(-n));
+        _set_negative(true);
+    }
+}
+
+/*!
+    Constructs a new integer object with the value of the built-in unsigned
+    %integer passed to it.
+
+    \param[in] n A number of type \c T.
+    \tparam T The type of \c n.
+
+    You can ignore the \c enable_if parameters, they are there only to tell
+    the compiler what types it applies to.
+
+    \overload
+*/
+template <typename T> integer::integer(const T& n,
+    typename boost::enable_if<boost::is_integral<T> >::type*,
+    typename boost::enable_if<boost::is_unsigned<T> >::type*)
+{
+    if (static_cast<T>(n & detail::digit_mask) == n)
+        _init(detail::digit_t(n));
+    else _init(boost::uintmax_t(n));
+}
+
+/*! \brief Efficiently converts from an xint::integer to a built-in %integer
+           type.
+
+\param[in] n The integer to convert.
+\tparam T The type to convert it to.
+
+\returns The numeric value of \c n, converted to the specified type.
+
+\exception xint::too_big if \c n would not fit into the specified type.
+*/
+template <typename T>
+T to(const integer& n) {
+    if (n < (std::numeric_limits<T>::min)()
+        || n > (std::numeric_limits<T>::max)())
+            throw too_big("value out of range for requested conversion");
+
+    T rval=0;
+    size_t len=n._get_length();
+    for (size_t x=0; x<len; ++x)
+        rval=static_cast<T>((rval * detail::digit_overflowbit)
+            + n._get_digit(len-x-1));
+    if (n.sign() < 0) rval *= -1;
+    return rval;
+}
+
 //! \name Stream input/output functions
 //!@{
-namespace core {
 template <typename charT, typename traits>
 inline std::basic_ostream<charT,traits>& operator<<(std::basic_ostream<charT,
     traits>& out, const integer& n)
@@ -873,9 +888,7 @@ inline std::basic_ostream<charT,traits>& operator<<(std::basic_ostream<charT,
     }
     return out;
 }
-} // namespace core
 
-namespace core {
 template <typename charT, typename traits>
 inline std::basic_istream<charT,traits>& operator>>(std::basic_istream<charT,
     traits>& in, integer& n)
@@ -935,8 +948,73 @@ inline std::basic_istream<charT,traits>& operator>>(std::basic_istream<charT,
 
     return in;
 }
-} // namespace core
 //!@}
+
+} // namespace core
+
+namespace blockable {
+
+/*!
+    Constructs a new integer object with the value of the built-in signed
+    %integer passed to it.
+
+    \param[in] n A number of type \c T.
+    \tparam T The type of \c n.
+
+    You can ignore the \c enable_if parameters, they are there only to tell
+    the compiler what types it applies to.
+
+    \overload
+*/
+template <typename T> integer::integer(const T& n,
+    typename boost::enable_if<boost::is_integral<T> >::type*,
+    typename boost::enable_if<boost::is_signed<T> >::type*)
+{
+    try {
+        *this=integer(core::integer(n));
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        _attach(0);
+    }
+}
+
+/*!
+    Constructs a new integer object with the value of the built-in unsigned
+    %integer passed to it.
+
+    \param[in] n A number of type \c T.
+    \tparam T The type of \c n.
+
+    You can ignore the \c enable_if parameters, they are there only to tell
+    the compiler what types it applies to.
+
+    \overload
+*/
+template <typename T> integer::integer(const T& n,
+    typename boost::enable_if<boost::is_integral<T> >::type*,
+    typename boost::enable_if<boost::is_unsigned<T> >::type*)
+{
+    try {
+        *this=integer(core::integer(n));
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        _attach(0);
+    }
+}
+
+/*! \copydoc core::to
+
+\note If exceptions are blocked, returns T(0) instead of throwing.
+*/
+template <typename T>
+T to(const integer& n) {
+    try {
+        return to<T>(core::integer(n));
+    } catch (std::exception&) {
+        if (exceptions_allowed()) throw;
+        else return 0;
+    }
+}
 
 //! \name Stream input/output functions
 //!@{
@@ -974,6 +1052,10 @@ inline std::basic_istream<charT,traits>& operator>>(std::basic_istream<charT,
     return in;
 }
 //!@}
+
+} // namespace blockable
+
+namespace test = core;
 
 } // namespace xint
 } // namespace boost

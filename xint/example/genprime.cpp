@@ -9,6 +9,7 @@ bool callback() {
 int main() {
     using namespace std;
     using namespace boost;
+    using namespace xint::core;
 
     const unsigned int bits=512;
 
@@ -20,7 +21,7 @@ int main() {
         // Generate the prime number, keeping the user informed of the
         // progress.
         cout << "Generating...";
-        xint::integer p=xint::random_prime(bits, callback);
+        integer p=random_prime(bits, callback);
 
         // Success!
         cout << "\nA random " << bits << "-bit prime is: " << p << endl;

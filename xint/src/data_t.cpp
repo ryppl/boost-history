@@ -60,6 +60,27 @@ data_t::data_t(data_t *c) {
     mIsNegative=c->mIsNegative;
 }
 
+//! \overload
+data_t::data_t(boost::uintmax_t n, bool) {
+    static int bits=std::numeric_limits<boost::uintmax_t>::digits;
+    static int maxDigits=(bits+detail::bits_per_digit-1)/detail::bits_per_digit;
+
+    mLength=1;
+    mAllocated=QuickDigits::count;
+    digits=mQuickDigits;
+    digits[0]=digits[1]=digits[2]=0;
+    mCopies=0;
+    mIsNegative=false;
+
+    alloc(maxDigits);
+    digit_t *i=digits;
+    while (n != 0) {
+        *i++=detail::digit_t(n & detail::digit_mask);
+        n >>= detail::bits_per_digit;
+    }
+    skipLeadingZeros();
+}
+
 #ifdef XINT_SECURE
 data_t::~data_t() {
     zero(mQuickDigits, QuickDigits::count);

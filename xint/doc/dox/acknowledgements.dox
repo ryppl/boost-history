@@ -2,8 +2,8 @@
 
 Several people have helped me improve the XInt library. Particular thanks go to
 Paul Bristow, for...
-- Pointing out the need for a specialization of \c std::numeric_limits for \c
-xint::integer;
+- Pointing out the need for a specialization of \c std::numeric_limits for the
+library-provided types;
 - Spending a great deal of time and effort to introduce me to the Boost.Test
 framework and Doxygen/QuickBook;
 - Providing test cases and documentation tweaks;
@@ -29,6 +29,7 @@ versus a floating-point one, among other things.
 - Peter Dimov, for suggesting a separate \c xint::overflow_error exception
 class.
 - "Fred," a.k.a. "Gottlob Frege", for information on infinities.
+- Joachim Faulhaber for a discussion of intervals and interval containers.
 
 And the other Boost development list members who joined the discussion:
 

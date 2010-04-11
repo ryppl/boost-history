@@ -15,4 +15,17 @@ This revision history refers only to this incarnation.
 \b 2010-03-30
 - Many improvements, primarily from feedback on the first Boost upload. Second
 version posted to the Boost File Vault.
+
+\b 2010-04-?? (updated through 10th)
+- Major refactoring, separating xint::integer into two classes, each with their
+own namespace (xint::core and xint::blockable), and their own functions.
+- Fixed problem with MSVC 9.
+- Major overhaul of the division function.
+- All test functions now use Boost.Test.
+- "Fixed" several small memory leaks. They weren't real leaks, but Boost.Test
+couldn't tell that.
+- All documentation moved to Doxygen format.
+- Moved xint namespace into boost namespace.
+- Fixed minor stream-output formatting problem (the code wasn't aware of the \c
+showpos stream option).
 */

@@ -79,6 +79,26 @@ int isProbablePrimeBaseB(const integer& n, const integer &b, callback_t
 
 } // namespace
 
+/*! \brief Tests an integer for primality.
+
+\param[in] n The number to test.
+\param[in] callback An optional function that will be called regularly during
+the operation. If it returns \c false, the function will immediately return.
+
+\returns 1 if \c n seems to be prime, 0 if it isn't, or -1 if the provided
+callback function cancelled the operation.
+
+\exception std::invalid_argument if \c n is less than 2.
+
+\remarks
+This function uses the Rabin-Miller probabilistic primality test. There is an
+infinitesimally small chance that it will think that a composite number is
+actually prime, but that is so small that it can be ignored for most practical
+purposes. If even that chance is too much, you can run this function over the
+number several times, it will use different random "witness" numbers each time.
+
+\see \ref primes
+*/
 int is_prime(const integer& n, callback_t callback) {
     if (n < 2) throw std::invalid_argument("xint::is_prime cannot test numbers "
         "below 2");
@@ -96,59 +116,6 @@ int is_prime(const integer& n, callback_t callback) {
         if (isP <= 0) return isP;
     }
     return 1; // Appears to be prime!
-}
-
-integer random_prime(size_t size_in_bits, callback_t callback) {
-    if (size_in_bits < 2) throw std::invalid_argument("cannot create prime "
-        "numbers smaller than two bits");
-
-    // Call the callback for the first time
-    if (callback && !callback()) return integer::zero();
-
-    integer pe=pow2(size_in_bits+1);
-    while (1) {
-        integer p(random_by_size(size_in_bits, true, true));
-        while (p < pe) {
-            int r=is_prime(p, callback);
-            if (r < 0) return integer::zero();
-            if (r == 1) return p;
-            p+=2;
-        }
-    }
-}
-
-} // namespace core
-
-
-/*! \brief Tests an integer for primality.
-
-\param[in] n The number to test.
-\param[in] callback An optional function that will be called regularly during
-the operation. If it returns \c false, the function will immediately return.
-
-\returns 1 if \c n seems to be prime, 0 if it isn't, or -1 if the provided
-callback function cancelled the operation.
-
-\exception std::invalid_argument if \c n is less than 2.
-
-\note If exceptions are blocked, returns -1 instead of throwing.
-
-\remarks
-This function uses the Rabin-Miller probabilistic primality test. There is an
-infinitesimally small chance that it will think that a composite number is
-actually prime, but that is so small that it can be ignored for most practical
-purposes. If even that chance is too much, you can run this function over the
-number several times, it will use different random "witness" numbers each time.
-
-\see \ref primes
-*/
-int is_prime(const integer& n, callback_t callback) {
-    try {
-        return is_prime(core::integer(n), callback);
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        else return -1;
-    }
 }
 
 /*! \brief Generate a randomly-generated prime number of a particular bit-size.
@@ -174,13 +141,24 @@ requirements, and how to get cryptographically-secure random numbers.
 \see \ref primes
 */
 integer random_prime(size_t size_in_bits, callback_t callback) {
-    try {
-        return integer(core::random_prime(size_in_bits, callback));
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        else return integer::nan();
+    if (size_in_bits < 2) throw std::invalid_argument("cannot create prime "
+        "numbers smaller than two bits");
+
+    // Call the callback for the first time
+    if (callback && !callback()) return integer::zero();
+
+    integer pe=pow2(size_in_bits+1);
+    while (1) {
+        integer p(random_by_size(size_in_bits, true, true));
+        while (p < pe) {
+            int r=is_prime(p, callback);
+            if (r < 0) return integer::zero();
+            if (r == 1) return p;
+            p+=2;
+        }
     }
 }
 
+} // namespace core
 } // namespace xint
 } // namespace boost

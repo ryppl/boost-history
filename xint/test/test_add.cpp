@@ -21,6 +21,8 @@
 namespace boost {
 namespace xint {
 
+using namespace test;
+
 using std::endl;
 using std::dec;
 using std::hex;

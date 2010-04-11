@@ -2,20 +2,21 @@
 
 Sometimes it's useful for a variable to have a value that doesn't represent any
 proper value, to indicate that it hasn't been specified or that there was an
-error in a calculation. For that purpose, the \c xint::integer class provides
-Not-a-Number.
+error in a calculation. For that purpose, the XInt library provides
+Not-a-Number (which can only be represented by the blockable::integer type).
 
-To create a Not-a-Number, use the integer::nan function. No other library
-function will return a Not-a-Number except under the following circumstances:
+To create a Not-a-Number, use the blockable::integer::nan function. No other
+library function will return a Not-a-Number except under the following
+circumstances:
 
-- If a function that returns an integer tries to throw a blockable exception,
-but exceptions are blocked.
-- If the string-to-integer functions are asked to convert the string \c
-"#NaN#".
+- If a function that returns a \c blockable::integer tries to throw an
+exception, but exceptions are blocked.
+- If the string-to-integer functions in the \c blockable namespace are asked to
+convert the string \c "#NaN#".
 
 The only things you can do with a Not-a-Number are:
 
-- Test for it, using the member function integer::is_nan.
+- Test for it, using the member function blockable::integer::is_nan.
 - Convert it to a string, or write it to a stream. The result will be the string
 \c "#NaN#".
 - Make a copy of it.
@@ -23,6 +24,6 @@ The only things you can do with a Not-a-Number are:
 If you attempt to do anything else with it, you will either get an \c
 xint::not_a_number exception, or if exceptions are blocked, a special value
 indicating failure (which will be another Not-a-Number, if the function you're
-calling returns an xint::integer).
+calling returns a <code>blockable::integer</code>).
 */
 

@@ -1,4 +1,4 @@
-/*! \page r_core What's with the \c core namespace?
+/*! \page r_core What's with the \c core and \c blockable namespaces?
 
 Several people on the Boost developers' mailing list expressed reservations
 about the exception-blocking mechanism and the Not-a-Number value. After a
@@ -11,19 +11,19 @@ on this one, such as the arbitrary-precision real type that I'm certain someone
 will build.
 
 I believe that the exception-blocking feature is useful, so I proposed a
-compromise: an alternate class mirroring the xint::integer class, but that would
-always contain a valid %integer value, and a set of functions to operate on it
-that were immune to exception-blocking. Those items now reside in the \c
-xint::core namespace.
+compromise: two \c integer classes, one that would always contain a valid
+%integer value and would be immune to exception-blocking, and one that would
+honor exception-blocking and could hold the Not-a-Number value. These now reside
+in the \c xint::core and \c xint::blockable namespaces.
 
 Functions in the \c core namespace will always throw an exception on any error,
 and will only call other functions within the \c core namespace. That ensures
-that the Not-a-Number value only needs to be checked for in the \c
-xint::core::integer constructor, all but eliminating any speed penalty from it.
-It also gives a base of functions that are immune to the exception-blocking
+that the Not-a-Number value only needs to be checked for in a single \c
+xint::core::integer constructor, and all but eliminates any speed penalty from
+it. It also gives a base of functions that are immune to the exception-blocking
 mechanism, which provides firm ground to build other libraries on.
 
-Every function in the \c xint namespace calls its \c core counterpart in a
+Every function in the \c blockable namespace calls its \c core counterpart in a
 try/catch construct, allowing it to intercept any exceptions and either pass
 them through (if exceptions are allowed) or take some alternate action, such as
 returning a Not-a-Number value. That preserves the exception-blocking feature as

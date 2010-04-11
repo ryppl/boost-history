@@ -27,6 +27,8 @@ using std::endl;
 namespace boost {
 namespace xint {
 
+using namespace test;
+
 BOOST_AUTO_TEST_CASE(testConvert) {
     // Come up with a sufficiently complex number to test with. It must be
     // greater than one digit's worth of data, and have at least one leading
@@ -85,7 +87,7 @@ BOOST_AUTO_TEST_CASE(testConvert) {
 
     {
         token t=block_exceptions();
-        BOOST_CHECK_NO_THROW(integer badConversion("abcdefg", 16));
+        BOOST_CHECK_NO_THROW(blockable::integer badConversion("abcdefg", 16));
     }
 
     {

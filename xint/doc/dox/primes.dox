@@ -4,12 +4,12 @@ A common reason to use a large-integer library is to implement public-key
 encryption, and the algorithms for such encryption often require large prime
 numbers.
 
-With larger bit-sizes, the xint::is_prime and xint::random_prime functions can
-take a very long time to run, so you can pass an optional callback function to
-them as well. The provided callback function (which takes no parameters and
-returns a <code>bool</code>) will be called regularly during this time, and if
-it returns \c false, the function will abort and return zero (for random_prime)
-or -1 (for is_prime) instead of a value.
+With larger bit-sizes, the \c is_prime and \c random_prime functions can take a
+very long time to run, so you can pass an optional callback function to them as
+well. The provided callback function (which takes no parameters and returns a
+<code>bool</code>) will be called regularly during this time, and if it returns
+\c false, the function will abort and return zero (for random_prime) or -1 (for
+is_prime) instead of a value.
 
 Here is an example of how to use the library functions to create a prime number
 of a specific length, using the system's strong random number generator:

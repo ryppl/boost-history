@@ -22,6 +22,8 @@
 namespace boost {
 namespace xint {
 
+using namespace test;
+
 using std::endl;
 
 namespace {
@@ -37,10 +39,10 @@ void _test(int section, int test, integer n, integer m) {
             out << "m     = " << to_string(m, 16) << endl;
             out << "r     = " << to_string(result, 16) << endl << endl;
 
-            out << "r / m = " << to_string(result-m, 16)
+            out << "r / m = " << to_string(result/m, 16)
                 << (result/m == n ? " (good)" : " (should be n, isn't)")
                 << endl;
-            out << "r / n = " << to_string(result-n, 16)
+            out << "r / n = " << to_string(result/n, 16)
                 << (result/n == m ? " (good)" : " (should be m, isn't)")
                 << endl;
             BOOST_ERROR(out.str());
@@ -52,11 +54,17 @@ void _test(int section, int test, integer n, integer m) {
 
 BOOST_AUTO_TEST_CASE(testMultiply) {
     {
+        // These caused a problem while trying to backport the new division
+        // algorithm into the version used elsewhere.
+        integer n=integer("-41e0348d52a1be49b7da339137639cde", 16);
+		integer m=integer("c3a1d54a63e80d5a8b851a01d244ea61", 16);
+        _test(0, 0, n, m);
+
         // 'm' contains a full digit of zeros, which caused problems with an
         // earlier implementation.
-        integer n("300493435053701420844513300446198902283");
-        integer m("-10530911911644352242410713382920651977");
-        _test(0, 0, n, m);
+        n=integer("300493435053701420844513300446198902283");
+        m=integer("-10530911911644352242410713382920651977");
+		_test(0, 1, n, m);
     }
 
     for (int i=0; i<10000; ++i) {

@@ -19,8 +19,18 @@
 
 namespace boost {
 namespace xint {
-
 namespace core {
+
+/*! \brief Calculate the square root of \c an integer.
+
+\param[in] n The value to operate on.
+
+\returns The largest integer that, when squared, is less than or equal to \c n.
+If \c n is not a perfect square, then this value will not be the exact square
+root.
+
+\exception xint::cannot_represent if \c n is negative.
+*/
 integer sqrt(const integer& n) {
     if (n.sign() < 0) throw cannot_represent("library cannot represent "
         "imaginary values (tried to take sqrt of negative number)");
@@ -39,26 +49,7 @@ integer sqrt(const integer& n) {
 
     return guess;
 }
+
 } // namespace core
-
-/*! \brief Calculate the square root of \c an integer.
-
-\param[in] n The value to operate on.
-
-\returns The largest integer that, when squared, is less than or equal to \c n.
-If \c n is not a perfect square, then this value will not be the exact square
-root.
-
-\exception xint::cannot_represent if \c n is negative.
-*/
-integer sqrt(const integer& n) {
-    try {
-        return integer(sqrt(core::integer(n)));
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        return integer::nan();
-    }
-}
-
 } // namespace xint
 } // namespace boost

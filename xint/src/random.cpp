@@ -99,6 +99,7 @@ unsigned int get_random() {
 // The secure random generator
 
 //! @cond
+
 #ifdef _WIN32
     struct strong_random_generator::impl_t {
         typedef BOOLEAN (WINAPI *RtlGenRandomFn)(PVOID, ULONG);
@@ -157,6 +158,7 @@ unsigned int get_random() {
 
     double strong_random_generator::entropy() const { return 8; }
 #endif
+
 //! @endcond
 
 const bool strong_random_generator::has_fixed_range = true;
@@ -181,6 +183,26 @@ strong_random_generator::result_type strong_random_generator::max
 // (1<<bits)-1, inclusive
 
 namespace core {
+/*! \brief Generates a random integer with specific attributes.
+
+\param[in] bits The maximum number of bits that you want the returned number to
+have.
+\param[in] high_bit_on If \c true, the returned number will have exactly the
+requested size. If \c false, the upper bits may be zero, resulting in a number
+that is slightly smaller than requested.
+\param[in] low_bit_on If \c true, the returned number will always be odd. If
+\c false, it has an equal chance of being odd or even.
+\param[in] can_be_negative If \c true, the returned value has an equal chance
+of being positive or negative. If \c false, it will always be positive.
+
+\returns A random integer with the requested attributes.
+
+\remarks
+This function uses the currently-defined random generator.
+
+\see \ref random
+\see xint::set_random_generator
+*/
 integer random_by_size(size_t bits, bool high_bit_on, bool low_bit_on, bool
     can_be_negative)
 {
@@ -213,38 +235,5 @@ integer random_by_size(size_t bits, bool high_bit_on, bool low_bit_on, bool
     return p;
 }
 } // namespace core
-
-/*! \brief Generates a random integer with specific attributes.
-
-\param[in] bits The maximum number of bits that you want the returned number to
-have.
-\param[in] high_bit_on If \c true, the returned number will have exactly the
-requested size. If \c false, the upper bits may be zero, resulting in a number
-that is slightly smaller than requested.
-\param[in] low_bit_on If \c true, the returned number will always be odd. If
-\c false, it has an equal chance of being odd or even.
-\param[in] can_be_negative If \c true, the returned value has an equal chance
-of being positive or negative. If \c false, it will always be positive.
-
-\returns A random integer with the requested attributes.
-
-\remarks
-This function uses the currently-defined random generator.
-
-\see \ref random
-\see xint::set_random_generator
-*/
-integer random_by_size(size_t bits, bool high_bit_on, bool low_bit_on, bool
-    can_be_negative)
-{
-    try {
-        return integer(core::random_by_size(bits, high_bit_on, low_bit_on,
-            can_be_negative));
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        return integer::nan();
-    }
-}
-
 } // namespace xint
 } // namespace boost

@@ -48,6 +48,19 @@ bool opt_thread_safe() {
 }
 
 namespace core {
+/*! \brief Get the log<sub>2</sub> value of an integer.
+
+\param[in] n The integer to operate on.
+
+\returns The %integer log<sub>2</sub> value of the integer.
+
+\remarks
+#pow2(log2(n)-1) will give you an integer with the highest set bit of \c n,
+assuming that \c n is non-zero.
+
+\par
+Similar to the #highestbit function.
+*/
 size_t log2(const integer& n) {
     size_t r=detail::bits_per_digit * n._get_length();
     detail::digit_t mask=detail::digit_hibit, d=n._get_digit(n._get_length()-1);
@@ -59,30 +72,5 @@ size_t log2(const integer& n) {
     return r;
 }
 } // namespace core
-
-/*! \brief Get the log<sub>2</sub> value of an integer.
-
-\param[in] n The integer to operate on.
-
-\returns The %integer log<sub>2</sub> value of the integer.
-
-\note If exceptions are blocked, returns 0 instead of throwing.
-
-\remarks
-xint::pow2(xint::log2(n)-1) will give you an integer with the highest set bit of
-\c n, assuming that \c n is non-zero.
-
-\par
-Similar to the xint::highestbit function.
-*/
-size_t log2(const integer& n) {
-    try {
-        return log2(core::integer(n));
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        else return 0;
-    }
-}
-
 } // namespace xint
 } // namespace boost

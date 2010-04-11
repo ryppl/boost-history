@@ -22,6 +22,8 @@
 namespace boost {
 namespace xint {
 
+using namespace test;
+
 using std::hex;
 
 BOOST_AUTO_TEST_CASE(testBitManipulations) {

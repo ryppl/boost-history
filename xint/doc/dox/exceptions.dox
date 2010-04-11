@@ -11,40 +11,37 @@ code.
 
 \section howitworks How it Works
 
-When exceptions are blocked, any function that would normally throw a blockable
-exception will return a special value indicating failure instead. For functions
-that return an xint::integer, this will be \link nan the Not-a-Number
-value\endlink; for other functions, the value will be noted in the
+When exceptions are blocked, any function from the \c xint::blockable namespace
+that would normally throw an exception will return a special value indicating
+failure instead. For functions that return an integer, this will be \ref nan
+"the Not-a-Number value"; for other functions, the value will be noted in the
 documentation.
-
-Note that, while most exceptions can be blocked, a few are unblockable, by
-design.
 
 \warning
 
-When exceptions are blocked, \e any function can return Not-a-Number under
-certain conditions, not just the ones listed as throwing exceptions. An
-insufficient-memory exception (xint::overflow_error), for instance, can happen
-nearly anywhere.
+When exceptions are blocked, \e any function in the \c xint::blockable namespace
+can return Not-a-Number under certain conditions, not just the ones listed as
+throwing exceptions directly. An insufficient-memory exception
+(<code>xint::overflow_error</code>), for instance, can happen nearly anywhere.
 
 \section howtouse How to Use the Functions
 
 By default, the library throws exceptions when it can't complete the task you've
 asked it to do, and there's no other logical way to indicate an error. But when
-it is more convenient, most of the exceptions that the library might throw can
-be blocked, by holding the xint::token object returned by the
-xint::block_exceptions function. Here's an example (which can be found in the
-\c examples subdirectory as exceptions.cpp):
+it is more convenient, most of those exceptions can be blocked, by holding the
+\c xint::token object returned by the \c xint::block_exceptions function, and
+using the \c blockable::integer type. Here's an example, which can be found in
+the \c examples subdirectory as exceptions.cpp:
 
 \include exceptions.cpp
 
 If you need to ensure that exceptions are allowed, in one of your own functions
-that might be called with them blocked, you can hold the xint::token object
-returned by xint::allow_exceptions. It works the same way. You can also use the
-functions in the \c xint::core namespace, which are immune to
+that might be called with them blocked, you can hold the \c xint::token object
+returned by \c xint::allow_exceptions. It works the same way. Alternatively, you
+can use the functions in the \c xint::core namespace, which are immune to
 exception-blocking.
 
-xint::token objects should always be created on the stack, so that they are
+\c xint::token objects should always be created on the stack, so that they are
 guaranteed to be destroyed in reverse order. If they are not, or if they are
 copied elsewhere, the results are undefined.
 */

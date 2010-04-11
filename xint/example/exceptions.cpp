@@ -5,7 +5,7 @@
 int main() {
     using namespace std;
     using namespace boost;
-    using xint::integer;
+    using namespace xint::blockable;
 
     integer n;
 

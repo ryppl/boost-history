@@ -31,224 +31,52 @@ namespace {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// The core integer class
+// The base_integer class
 
-integer::integer() {
-    _init();
-}
-
-integer::integer(const integer& b) {
-    _init(b);
-}
-
-integer::integer(const ::boost::xint::integer& b) {
-    if (b.is_nan()) throw xint::not_a_number();
-
-    // Have to const_cast here, because xint::integer and xint::core::integer
-    // aren't directly related. It's safe though.
-    detail::data_t *bdata(const_cast<detail::data_t*>(b._get_data()));
-    #ifdef XINT_DISABLE_COPY_ON_WRITE
-        data=new detail::data_t(bdata);
-    #else
-        data=bdata;
-    #endif
-    _attach();
-}
-
-integer::integer(const std::string& str, size_t base) {
-    _init(from_string(str, base));
-}
-
-integer::~integer() {
-    _detach();
-}
-
-void integer::_init(detail::digit_t init) {
-    try {
-        data=new detail::data_t(init);
-    } catch (std::bad_alloc&) {
-        throw xint::overflow_error("Out of memory allocating xint::integer");
-    }
-    _attach();
-}
-
-void integer::_init(const integer &c) {
-    #ifdef XINT_DISABLE_COPY_ON_WRITE
-        data=new detail::data_t(c.data);
-    #else
-        data=c.data;
-    #endif
-    _attach();
-}
-
-void integer::_init(boost::uintmax_t n) {
-    static int bits=std::numeric_limits<boost::uintmax_t>::digits;
-    static int maxDigits=(bits+detail::bits_per_digit-1)/detail::bits_per_digit;
-
-    try {
-        data=new detail::data_t;
-    } catch (std::bad_alloc&) {
-        throw xint::overflow_error("Out of memory allocating xint::integer");
-    }
-    _attach();
-
-    data->alloc(maxDigits);
-    for (int x=0; n != 0; ++x) {
-        data->digits[x]=detail::digit_t(n & detail::digit_mask);
-        n >>= detail::bits_per_digit;
-    }
-    data->skipLeadingZeros();
-}
-
-void integer::_attach() {
-    if (data) data->attach();
-}
-
-void integer::_detach() {
+base_integer::~base_integer() {
     if (data && data->detach()) delete data;
-    data=0;
 }
 
-void integer::_make_unique() {
-    try {
-        if (data && data->mCopies > 1) {
-            detail::data_t *newstore=new detail::data_t(data);
-            _detach();
-            data=newstore;
-            _attach();
-        }
-    } catch (std::bad_alloc&) {
-        throw xint::overflow_error("Out of memory allocating xint::integer");
-    }
-}
-
-void integer::_set_negative(bool negative) {
-    if (data->mIsNegative != negative) {
-        _make_unique();
-        data->mIsNegative=negative;
-        data->skipLeadingZeros();
-    }
-}
-
-bool integer::odd() const {
-    return ((_get_digit(0) & 0x01)==1);
-}
-
-bool integer::even() const {
-    return ((_get_digit(0) & 0x01)==0);
-}
-
-int integer::sign() const {
-    if (_get_length()==1 && _get_digit(0)==0) return 0;
-    else return (data->mIsNegative ? -1 : 1);
-}
-
-size_t integer::hex_digits() const {
-    size_t bits=log2(*this);
-    return (bits+3)/4; // Four bits per hex digit, rounded up
-}
-
-integer& integer::operator+=(const integer& addend) {
-    if ((sign() < 0) == (addend.sign() < 0)
-        && data->mLength >= addend.data->mLength)
-    {
-        // Fast in-place add
-        _make_unique();
-        data->add(addend.data);
-    } else {
-        // This works for all cases
-        *this=add(*this, addend);
-    }
-    return *this;
-}
-
-integer& integer::operator-=(const integer& subtrahend) {
-    if (sign() >= 0 && subtrahend.sign() >= 0 && *this >= subtrahend) {
-        // Fast in-place subtract
-        _make_unique();
-        data->subtract(subtrahend.data);
-    } else {
-        // This works for all cases
-        *this=subtract(*this, subtrahend);
-    }
-    return *this;
-}
-
-integer& integer::operator=(const integer &c) {
-    _detach();
-    #ifdef XINT_DISABLE_COPY_ON_WRITE
-        data=new detail::data_t(c.data);
-    #else
-        data=c.data;
-    #endif
-    _attach();
-    return *this;
-}
-
-integer& integer::operator*=(const integer& b) { *this=multiply(*this, b); return *this; }
-integer& integer::operator/=(const integer& b) { *this=divide(*this, b); return *this; }
-integer& integer::operator%=(const integer& b) { *this=mod(*this, b); return *this; }
-
-integer& integer::operator++() { *this += one(); return *this; }
-integer& integer::operator--() { *this -= one(); return *this; }
-integer  integer::operator++(int) { integer s=*this; *this += one(); return s; }
-integer  integer::operator--(int) { integer s=*this; *this -= one(); return s; }
-
-integer  integer::operator<<(size_t shift) const { return shift_left(*this, shift); }
-integer  integer::operator>>(size_t shift) const { return shift_right(*this, shift); }
-integer& integer::operator&=(const integer& n) { *this=bitwise_and(*this, n); return *this; }
-integer& integer::operator|=(const integer& n) { *this=bitwise_or(*this, n); return *this; }
-integer& integer::operator^=(const integer& n) { *this=bitwise_xor(*this, n); return *this; }
-
-integer& integer::operator<<=(size_t shift) {
-    if (shift>0) {
-        _make_unique();
-        data->shift_left(shift);
-    }
-    return *this;
-}
-
-integer& integer::operator>>=(size_t shift) {
-    if (shift>0) {
-        _make_unique();
-        data->shift_right(shift);
-    }
-    return *this;
-}
-
-const integer& integer::zero() {
-    if (cZero.get()==0) cZero.reset(new integer(0));
-    return *cZero;
-}
-
-const integer& integer::one() {
-    if (cOne.get()==0) cOne.reset(new integer(1));
-    return *cOne;
-}
-
-detail::digit_t integer::_get_digit(size_t index) const {
+detail::digit_t base_integer::_get_digit(size_t index) const {
     return data->digits[index];
 }
 
-detail::digit_t integer::_get_digit(size_t index, bool) const {
+detail::digit_t base_integer::_get_digit(size_t index, bool) const {
     if (index >= data->mLength) return 0;
     return data->digits[index];
 }
 
-size_t integer::_get_length() const {
+size_t base_integer::_get_length() const {
     return data->mLength;
 }
 
-} // namespace core
-
-////////////////////////////////////////////////////////////////////////////////
-// The non-core integer class
-
-namespace {
-	std::auto_ptr<integer> cZero, cOne, cNaN;
+void base_integer::_attach(detail::data_t *new_data) {
+    if (data && data->detach()) delete data;
+    #ifdef XINT_DISABLE_COPY_ON_WRITE
+        if (new_data==0 || new_data->mCopies==0) data=new_data;
+        else {
+            try {
+                data=new detail::data_t(new_data);
+            } catch (std::bad_alloc&) {
+                throw xint::overflow_error("Out of memory allocating xint::integer");
+            }
+        }
+    #else
+        data=new_data;
+    #endif
+    if (data) data->attach();
 }
 
-const std::string detail::nan_text("#NaN#");
+void base_integer::_attach(const base_integer& copy) {
+    _attach(copy.data);
+}
+
+bool base_integer::_is_unique() const {
+    return (!data || data->mCopies==1);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// The core integer class
 
 //! \brief Creates a new integer with an initial value of zero.
 integer::integer() {
@@ -267,13 +95,12 @@ copying (even of large numbers) a very inexpensive operation.
 \overload
 */
 integer::integer(const integer& b) {
-    if (b.is_nan()) data=0;
-    else _init(b);
+    _init(b);
 }
 
-/*! \brief Creates an integer from a core::integer.
+/*! \brief Creates an integer from a blockable::integer.
 
-\param[in] b An existing core::integer.
+\param[in] b An existing blockable::integer.
 
 \note
 This library can use a \link cow copy-on-write technique\endlink, making
@@ -281,16 +108,9 @@ copying (even of large numbers) a very inexpensive operation.
 
 \overload
 */
-integer::integer(const core::integer& b) {
-    // Have to const_cast here, because xint::integer and xint::core::integer
-    // aren't directly related. It's safe though.
-    detail::data_t *bdata(const_cast<detail::data_t*>(b._get_data()));
-    #ifdef XINT_DISABLE_COPY_ON_WRITE
-        data=new detail::data_t(bdata);
-    #else
-        data=bdata;
-    #endif
-    _attach();
+integer::integer(const blockable::integer& b) {
+    if (b.is_nan()) throw xint::not_a_number();
+    _attach(b);
 }
 
 /*! \brief Create an integer from a string representation.
@@ -314,41 +134,59 @@ a native integral type.
 \overload
 */
 integer::integer(const std::string& str, size_t base) {
+    _init(from_string(str, base));
+}
+
+void integer::_init(detail::digit_t init) {
     try {
-        data=0;
-        _init(from_string(str, base));
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        delete data;
-        data=0;
+        _attach(new detail::data_t(init));
+    } catch (std::bad_alloc&) {
+        throw xint::overflow_error("Out of memory allocating xint::integer");
+    }
+}
+
+void integer::_init(const integer &c) {
+    _attach(c);
+}
+
+void integer::_init(boost::uintmax_t n) {
+    try {
+        _attach(new detail::data_t(n, true));
+    } catch (std::bad_alloc&) {
+        throw xint::overflow_error("Out of memory allocating xint::integer");
+    }
+}
+
+void integer::_make_unique() {
+    try {
+        if (!_is_unique()) _attach(new detail::data_t(_get_data()));
+    } catch (std::bad_alloc&) {
+        throw xint::overflow_error("Out of memory allocating xint::integer");
+    }
+}
+
+void integer::_set_negative(bool negative) {
+    if (_get_data()->mIsNegative != negative) {
+        _make_unique();
+        detail::data_t *p=_get_data();
+        p->mIsNegative=negative;
+        p->skipLeadingZeros();
     }
 }
 
 /*! \brief Tests the lowest bit of \c *this to determine oddness.
 
 \returns \c true if \c *this is odd, otherwise \c false.
-
-\note If exceptions are blocked, returns false instead of throwing.
 */
 bool integer::odd() const {
-    if (is_nan()) {
-        if (exceptions_allowed()) throw not_a_number();
-        else return false;
-    }
     return ((_get_digit(0) & 0x01)==1);
 }
 
 /*! \brief Tests the lowest bit of \c *this to determine evenness.
 
 \returns \c true if \c *this is even, otherwise \c false.
-
-\note If exceptions are blocked, returns false instead of throwing.
 */
 bool integer::even() const {
-    if (is_nan()) {
-        if (exceptions_allowed()) throw not_a_number();
-        else return false;
-    }
     return ((_get_digit(0) & 0x01)==0);
 }
 
@@ -356,77 +194,50 @@ bool integer::even() const {
 
 \returns -1 if \c *this is negative, 0 if it's zero, or 1 if it's greater than
 zero.
-
-\note If exceptions are blocked, returns zero instead of throwing.
 */
 int integer::sign() const {
-    if (is_nan()) {
-        if (exceptions_allowed()) throw not_a_number();
-        else return 0;
-    }
     if (_get_length()==1 && _get_digit(0)==0) return 0;
-    return (data->mIsNegative ? -1 : 1);
+    else return (_get_data()->mIsNegative ? -1 : 1);
 }
 
 /*! \brief Tells you roughly how large an integer is.
 
 \returns The number of hexadecimal digits that would be required to encode \c
 *this.
-
-\note If exceptions are blocked, returns zero instead of throwing.
 */
 size_t integer::hex_digits() const {
-    try {
-        return core::integer(*this).hex_digits();
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        else return 0;
-    }
-}
-
-/*! \brief Tests \c *this for Not-a-Number.
-
-\returns \c true if \c *this is Not-a-Number, otherwise \c false.
-
-\see \ref nan
-*/
-bool integer::is_nan() const {
-    return (data==0);
+    size_t bits=log2(*this);
+    return (bits+3)/4; // Four bits per hex digit, rounded up
 }
 
 integer& integer::operator+=(const integer& addend) {
-    try {
-        *this=integer(core::integer(*this).operator+=(core::integer(addend)));
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        *this=integer::nan();
+    if ((sign() < 0) == (addend.sign() < 0)
+        && _get_length() >= addend._get_length())
+    {
+        // Fast in-place add
+        _make_unique();
+        _get_data()->add(addend._get_data());
+    } else {
+        // This works for all cases
+        *this=add(*this, addend);
     }
     return *this;
 }
 
 integer& integer::operator-=(const integer& subtrahend) {
-    try {
-        *this=integer(core::integer(*this).operator-=(core::integer(subtrahend)));
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        *this=integer::nan();
+    if (sign() >= 0 && subtrahend.sign() >= 0 && *this >= subtrahend) {
+        // Fast in-place subtract
+        _make_unique();
+        _get_data()->subtract(subtrahend._get_data());
+    } else {
+        // This works for all cases
+        *this=subtract(*this, subtrahend);
     }
     return *this;
 }
 
 integer& integer::operator=(const integer &c) {
-    _detach();
-    try {
-        #ifdef XINT_DISABLE_COPY_ON_WRITE
-            data=(c.data ? new detail::data_t(c.data) : 0);
-        #else
-            data=c.data;
-        #endif
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        data=0;
-    }
-    _attach();
+    _attach(c);
     return *this;
 }
 
@@ -446,136 +257,31 @@ integer& integer::operator|=(const integer& n) { *this=bitwise_or(*this, n); ret
 integer& integer::operator^=(const integer& n) { *this=bitwise_xor(*this, n); return *this; }
 
 integer& integer::operator<<=(size_t shift) {
-    try {
-        *this=integer(core::integer(*this).operator<<=(shift));
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        *this=integer::nan();
+    if (shift>0) {
+        _make_unique();
+        _get_data()->shift_left(shift);
     }
     return *this;
 }
 
 integer& integer::operator>>=(size_t shift) {
-    try {
-        *this=integer(core::integer(*this).operator>>=(shift));
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        *this=integer::nan();
+    if (shift>0) {
+        _make_unique();
+        _get_data()->shift_right(shift);
     }
     return *this;
 }
 
 const integer& integer::zero() {
-    if (cZero.get()==0) cZero.reset(new integer(core::integer::zero()));
+    if (cZero.get()==0) cZero.reset(new integer(0));
     return *cZero;
 }
 
 const integer& integer::one() {
-    if (cOne.get()==0) cOne.reset(new integer(core::integer::one()));
+    if (cOne.get()==0) cOne.reset(new integer(1));
     return *cOne;
 }
 
-const integer& integer::nan() {
-    if (cNaN.get()==0) {
-        integer *n=new integer();
-        n->_detach(); // Get rid of the data
-        n->data=0;
-        cNaN.reset(n);
-    }
-    return *cNaN;
-}
-
-detail::digit_t integer::_get_digit(size_t index) const {
-    return data->digits[index];
-}
-
-detail::digit_t integer::_get_digit(size_t index, bool) const {
-    if (index >= data->mLength) return 0;
-    return data->digits[index];
-}
-
-size_t integer::_get_length() const {
-    return data->mLength;
-}
-
-void integer::_init(detail::digit_t init) {
-    try {
-        data=new detail::data_t(init);
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        data=0;
-    }
-    _attach();
-}
-
-void integer::_init(const integer &c) {
-    try {
-        #ifdef XINT_DISABLE_COPY_ON_WRITE
-            data=(c.data ? new detail::data_t(c.data) : 0);
-        #else
-            data=c.data;
-        #endif
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        data=0;
-    }
-    _attach();
-}
-
-void integer::_init(boost::uintmax_t n) {
-    static int bits=std::numeric_limits<boost::uintmax_t>::digits;
-    static int maxDigits=(bits+detail::bits_per_digit-1)/detail::bits_per_digit;
-
-    data=0;
-    try {
-        data=new detail::data_t;
-        _attach();
-
-        data->alloc(maxDigits);
-        for (int x=0; n != 0; ++x) {
-            data->digits[x]=detail::digit_t(n & detail::digit_mask);
-            n >>= detail::bits_per_digit;
-        }
-        data->skipLeadingZeros();
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        delete data;
-        data=0;
-    }
-}
-
-void integer::_attach() {
-    if (data) data->attach();
-}
-
-void integer::_detach() {
-    if (data && data->detach()) delete data;
-    data=0;
-}
-
-void integer::_make_unique() {
-    if (data && data->mCopies > 1) {
-        detail::data_t *newstore=0;
-        try {
-            newstore=new detail::data_t(data);
-        } catch (std::exception&) {
-            if (exceptions_allowed()) throw;
-            newstore=0;
-        }
-
-        _detach();
-        data=newstore;
-        _attach();
-    }
-}
-
-void integer::_set_negative(bool negative) {
-    if (data->mIsNegative != negative) {
-        _make_unique();
-        data->mIsNegative=negative;
-        data->skipLeadingZeros();
-    }
-}
-
+} // namespace core
 } // namespace xint
 } // namespace boost

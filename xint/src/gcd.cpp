@@ -14,7 +14,7 @@
 /*! \file
     \brief Greatest Common Denominator and Least Common Multple.
 
-    Also holds the definition for xint::invmod, since it uses the GCD algorithm.
+    Also holds the definition for invmod, since it uses the GCD algorithm.
 */
 
 #include "../boost/xint/xint.hpp"
@@ -58,6 +58,13 @@ struct gcd_core {
 
 } // namespace
 
+/*! \brief Calculate the Greatest Common Denominator of two integers.
+
+\param[in] num1, num2 The integers to operate on.
+
+\returns The greatest common denominator of the two integers, which will always
+be a positive number.
+*/
 integer gcd(const integer& num1, const integer& num2) {
     int sign1=num1.sign(), sign2=num2.sign();
     if (sign1==0 && sign2==0) return integer::zero();
@@ -75,11 +82,29 @@ integer gcd(const integer& num1, const integer& num2) {
     return integer::one() << k;
 }
 
+/*! \brief Calculate the Least Common Multiple of two integers.
+
+\param[in] num1, num2 The integers to operate on.
+
+\returns The least common multiple of the two integers. If either integer is
+zero, then the return value will be zero, by convention; in all other cases, the
+return value will be a positive number.
+*/
 integer lcm(const integer& num1, const integer& num2) {
     if (num1.sign() == 0 || num2.sign() == 0) return integer::zero();
     return abs(num1 * num2) / gcd(num1, num2);
 }
 
+/*! \brief Get the modular inverse of a number in a modulus, if there is one.
+
+\param[in] n The number to retrieve the inverse of.
+\param[in] m The modulus to use.
+
+\returns The modular inverse of \c n in \c m. If \c n has no modular inverse in
+\c m, returns zero.
+
+\exception xint::invalid_modulus if the modulus is less than one.
+*/
 integer invmod(const integer& n, const integer& m) {
     // Calculates the modular inverse of n mod m, or (n^(-1)) mod m
     // Defined as b, where n*b corresponds to 1 (mod m)
@@ -108,61 +133,5 @@ integer invmod(const integer& n, const integer& m) {
 }
 
 } // namespace core
-
-/*! \brief Calculate the Greatest Common Denominator of two integers.
-
-\param[in] num1, num2 The integers to operate on.
-
-\returns The greatest common denominator of the two integers, which will always
-be a positive number.
-*/
-integer gcd(const integer& num1, const integer& num2) {
-    try {
-        return integer(gcd(core::integer(num1), core::integer(num2)));
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        else return integer::nan();
-    }
-}
-
-/*! \brief Calculate the Least Common Multiple of two integers.
-
-\param[in] num1, num2 The integers to operate on.
-
-\returns The least common multiple of the two integers. If either integer is
-zero, then the return value will be zero, by convention; in all other cases, the
-return value will be a positive number.
-*/
-integer lcm(const integer& num1, const integer& num2) {
-    try {
-        return integer(lcm(core::integer(num1), core::integer(num2)));
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        else return integer::nan();
-    }
-}
-
-/*! \brief Get the modular inverse of a number in a modulus, if there is one.
-
-\param[in] n The number to retrieve the inverse of.
-\param[in] m The modulus to use.
-
-\returns The modular inverse of \c n in \c m. If \c n has no modular inverse in
-\c m, returns zero.
-
-\exception xint::invalid_modulus if the modulus is less than one.
-
-\note If exceptions are blocked, it returns zero instead of throwing an
-exception.
-*/
-integer invmod(const integer& n, const integer& m) {
-    try {
-        return integer(invmod(core::integer(n), core::integer(m)));
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        else return integer::nan();
-    }
-}
-
 } // namespace xint
 } // namespace boost

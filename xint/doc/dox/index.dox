@@ -20,14 +20,15 @@ infinite.
 \li <b>Because it's completely portable.</b> It's written entirely in modern
 C++, with many different types of operating system, compiler, and hardware in
 mind. It will compile cleanly on many operating systems without any changes,
-automatically adapting to whatever native integer sizes are available.
+automatically adapting to the most efficient native integer sizes available.
 \li <b>Because it's fast.</b> Speed of execution takes a back seat to
 portability, so it doesn't include things like assembly-language modules to
 wring every last CPU cycle out of it -- but it's still pretty darn fast.
 \li <b>Because it has the features you need.</b> Modular arithmetic.
-Cryptographically-secure prime number generation. Bit manipulation functions. A
-friendly and intuitive interface. An option for thread-safe operation. Complete
-and carefully maintained documentation. What more could you want?
+Cryptographically-secure prime number generation. Bit manipulation functions.
+Exception- or error-code-based operation. A friendly and intuitive interface. An
+option for thread-safe operation. Complete and carefully maintained
+documentation. What more could you want?
 \li <b>Because it's open-source.</b> You can see exactly how it works. You can
 never be left high and dry because the company that made it goes out of
 business, or decides that it's not profitable to maintain it. If you find a bug
@@ -44,9 +45,9 @@ anti-commercial or anti-closed-source demands.
 That's the best part. If you've installed or compiled the Boost library already,
 all you need to do is add <code>\#include \<boost/xint/xint.hpp\></code> at the
 top of your source code file, and declare your variable as type \c
-boost::xint::integer. Then just use it the way you'd use any integer. If you
-need something more advanced, take a look in \link boost::xint the reference
-section\endlink and you just might find it.
+boost::xint::core::integer. Then just use it the way you'd use any integer. If
+you need something more advanced, take a look in \ref boost::xint
+"the reference section" and you just might find it.
 
 More information on how to use it can be found on the pages listed below.
 

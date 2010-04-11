@@ -23,6 +23,8 @@
 namespace boost {
 namespace xint {
 
+using namespace test;
+
 namespace {
 
 bool testStreamOut(std::string name, std::stringstream& str, const integer& n, std::string expected) {
@@ -158,10 +160,10 @@ BOOST_AUTO_TEST_CASE(testStreams) {
         str.flags(defaultFlags);
         str.clear();
 
-        str << integer::nan();
+        str << blockable::integer::nan();
         std::string temp=str.str();
 
-        integer test;
+        blockable::integer test;
         str.str(temp);
         str >> test;
         if (!test.is_nan()) BOOST_ERROR("testStream: isNaN test failed");

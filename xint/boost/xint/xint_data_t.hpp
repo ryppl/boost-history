@@ -63,6 +63,7 @@ struct data_t {
     public:
     data_t(digit_t initial1=0, digit_t initial2=0, digit_t initial3=0);
     data_t(data_t *c);
+    data_t(boost::uintmax_t n, bool);
 
     #if defined(XINT_SECURE)
         ~data_t();

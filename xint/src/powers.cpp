@@ -38,12 +38,31 @@ namespace {
 
 } // namespace
 
+/*! \brief Calculate the value of 2<sup>e</sup>
+
+\param[in] e The exponent to operate on.
+
+\returns 2 to the power of \c e.
+
+\remarks
+This is a convenience function, to help with self-documenting code.
+*/
 integer pow2(size_t e) {
     integer r;
     setbit(r, e);
     return r;
 }
 
+/*! \brief Calculate the value of n<sup>2</sup>
+
+\param[in] n The integer to operate on.
+
+\returns \c n times \c n.
+
+This function uses a faster algorithm than the standard multiplication one.
+
+\todo Rewrite this to eliminate the inefficient addOverflow.
+*/
 integer sqr(const integer& n) {
     const data_t *ndata=n._get_data();
     std::vector<doubledigit_t> a(ndata->mLength*2+1, 0);
@@ -86,6 +105,12 @@ integer sqr(const integer& n) {
     return answer;
 }
 
+/*! \brief Calculate the value of n<sup>e</sup>
+
+\param[in] n, e The integers to operate on.
+
+\returns \c n to the power of \c e.
+*/
 integer pow(const integer& n, const integer& e) {
     bool neg=(n.sign() < 0 && e.odd());
 
@@ -109,63 +134,6 @@ integer pow(const integer& n, const integer& e) {
     return answer;
 }
 
-integer factorial(size_t n) {
-    integer r(integer::one());
-    while (n > 1) { r *= n--; }
-    return r;
-}
-
-} // namespace core
-
-/*! \brief Calculate the value of 2<sup>e</sup>
-
-\param[in] e The exponent to operate on.
-
-\returns 2 to the power of \c e.
-
-\remarks
-This is a convenience function, to help with self-documenting code.
-*/
-integer pow2(size_t e) {
-    integer r;
-    setbit(r, e);
-    return r;
-}
-
-/*! \brief Calculate the value of n<sup>2</sup>
-
-\param[in] n The integer to operate on.
-
-\returns \c n times \c n.
-
-This function uses a faster algorithm than the standard multiplication one.
-
-\todo Rewrite this to eliminate the inefficient addOverflow.
-*/
-integer sqr(const integer& n) {
-    try {
-        return integer(sqr(core::integer(n)));
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        else return integer::nan();
-    }
-}
-
-/*! \brief Calculate the value of n<sup>e</sup>
-
-\param[in] n, e The integers to operate on.
-
-\returns \c n to the power of \c e.
-*/
-integer pow(const integer& n, const integer& e) {
-    try {
-        return integer(pow(core::integer(n), core::integer(e)));
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        else return integer::nan();
-    }
-}
-
 /*! \brief Calculate the value of \c n!
 
 \param[in] n The value to operate on.
@@ -178,13 +146,11 @@ function, when used with a large parameter, is the easiest way to exhaust the
 system's memory.
 */
 integer factorial(size_t n) {
-    try {
-        return integer(core::factorial(n));
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        else return integer::nan();
-    }
+    integer r(integer::one());
+    while (n > 1) { r *= n--; }
+    return r;
 }
 
+} // namespace core
 } // namespace xint
 } // namespace boost

@@ -10,8 +10,8 @@ required:
 - Boost.Random
 - Boost.TypeTraits
 - Boost.SmartPointers
-- Boost.Thread (but only if the library was compiled for \link threadsafe
-thread-safe operation\endlink)
+- Boost.Thread (but only if the library was compiled for \ref threadsafe
+"thread-safe operation")
 
 With the exception of Boost.Thread, all of these are header-only libraries,
 meaning that you don't need to worry about linking your program with them.

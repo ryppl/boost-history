@@ -25,20 +25,72 @@ namespace boost {
 namespace xint {
 namespace core {
 
+/*! \brief Get the remainder after dividing a number by another.
+
+\param[in] n The dividend.
+\param[in] m The divisor.
+
+\returns The result of \c n % \c m.
+*/
 integer mod(const integer& n, const integer& m) {
     integer r=divide_r(n, m).second;
     if (r.sign() < 0) r+=abs(m);
     return r;
 }
 
+/*! \brief Get the modular product of two integers.
+
+\param[in] n, by The integers to multiply.
+\param[in] m The modulus.
+
+\returns The result of \c n * \c by % \c m.
+
+\remarks
+This is purely a convenience function, to make it easier to write
+self-documenting code. It does not provide any additional efficiency over
+writing out the calculation.
+*/
 integer mulmod(const integer& n, const integer& by, const integer& m) {
     return mod(n * by, m);
 }
 
+/*! \brief Get the modular product of squaring an integer.
+
+\param[in] n The integer to square.
+\param[in] m The modulus.
+
+\returns The result of \c sqr(n) % \c m.
+
+\remarks
+This is purely a convenience function, to make it easier to write
+self-documenting code. It does not provide any additional efficiency over
+writing out the calculation.
+*/
 integer sqrmod(const integer& n, const integer& m) {
     return mod(sqr(n), m);
 }
 
+/*! \brief Get the result of \c n<sup>e</sup> % \c m, keeping the intermediate
+           results (relatively) small.
+
+\param[in] n The integer to exponentiate.
+\param[in] e The exponent.
+\param[in] m The modulus.
+\param[in] noMontgomery Used for testing, leave false for normal operation.
+
+\returns The result of \c pow(n, \c exponent) % \c modulus.
+
+\exception xint::invalid_modulus if the modulus is less than one.
+
+\remarks
+Because this function keeps the intermediate results small, it is far faster
+and uses far less memory than writing out the equivalent calculations.
+
+\par
+In addition, this function will use the Montgomery Reduction internally, if the
+modulus is an odd number (and if \c noMontgomery isn't set), which is almost
+always faster than the non-Montgomery method.
+*/
 integer powmod(const integer& n, const integer& e, const integer& m, bool
     noMontgomery)
 {
@@ -78,98 +130,5 @@ integer powmod(const integer& n, const integer& e, const integer& m, bool
 }
 
 } // namespace core
-
-/*! \brief Get the remainder after dividing a number by another.
-
-\param[in] n The dividend.
-\param[in] m The divisor.
-
-\returns The result of \c n % \c m.
-*/
-integer mod(const integer& n, const integer& m) {
-    try {
-        return integer(mod(core::integer(n), core::integer(m)));
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        return integer::nan();
-    }
-}
-
-/*! \brief Get the modular product of two integers.
-
-\param[in] n, by The integers to multiply.
-\param[in] m The modulus.
-
-\returns The result of \c n * \c by % \c m.
-
-\remarks
-This is purely a convenience function, to make it easier to write
-self-documenting code. It does not provide any additional efficiency over
-writing out the calculation.
-*/
-integer mulmod(const integer& n, const integer& by, const integer& m) {
-    try {
-        return integer(mod(core::integer(n) * core::integer(by),
-            core::integer(m)));
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        return integer::nan();
-    }
-}
-
-/*! \brief Get the modular product of squaring an integer.
-
-\param[in] n The integer to square.
-\param[in] m The modulus.
-
-\returns The result of \c sqr(n) % \c m.
-
-\remarks
-This is purely a convenience function, to make it easier to write
-self-documenting code. It does not provide any additional efficiency over
-writing out the calculation.
-*/
-integer sqrmod(const integer& n, const integer& m) {
-    try {
-        return integer(mod(sqr(core::integer(n)), core::integer(m)));
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        return integer::nan();
-    }
-}
-
-/*! \brief Get the result of \c n<sup>e</sup> % \c m, keeping the intermediate
-           results (relatively) small.
-
-\param[in] n The integer to exponentiate.
-\param[in] e The exponent.
-\param[in] m The modulus.
-\param[in] noMontgomery Used for testing, leave false for normal operation.
-
-\returns The result of \c pow(n, \c exponent) % \c modulus.
-
-\exception xint::invalid_modulus if the modulus is less than one.
-
-\remarks
-Because this function keeps the intermediate results small, it is far faster
-and uses far less memory than writing out the equivalent calculations.
-
-\par
-In addition, this function will use the Montgomery Reduction internally, if the
-modulus is an odd number (and if \c noMontgomery isn't set), which is almost
-always faster than the non-Montgomery method.
-*/
-integer powmod(const integer& n, const integer& e, const integer& m, bool
-    noMontgomery)
-{
-    try {
-        return integer(powmod(core::integer(n), core::integer(e),
-            core::integer(m), noMontgomery));
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        return integer::nan();
-    }
-}
-
 } // namespace xint
 } // namespace boost

@@ -2,7 +2,7 @@
 #include <boost/xint/xint.hpp>
 
 int main() {
-    using xint::integer;
+    using namespace xint::core;
     using std::cout;
     using std::endl;
 
