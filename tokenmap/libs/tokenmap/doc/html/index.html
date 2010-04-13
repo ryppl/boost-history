@@ -27,7 +27,7 @@
 </h3></div></div>
 <div><p class="copyright">Copyright &#169; 2009 Slawomir Lisznianski</p></div>
 <div><div class="legalnotice">
-<a name="id472187"></a><p>
+<a name="id501064"></a><p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
@@ -54,47 +54,41 @@
 </h2></div></div></div>
 <p>
       A <code class="computeroutput"><span class="identifier">tokenmap</span></code> is a data structure
-      that uniquely maps pseudo-random integer keys to values.
+      that uniquely maps internally generated integer keys to values.
     </p>
 <p>
-      Unlike other dictionary-like containers such as <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span></code> or
-      <a href="../../libs/unordered/doc/html/unordered.html" target="_top"><span class="bold"><strong>Boost.Unordered</strong></span></a>,
-      a <code class="computeroutput"><span class="identifier">tokenmap</span></code> generates the keys
-      (also called &#8220;<span class="quote">tokens</span>&#8221;) for values by an internal, pseudo-random
-      algorithm rather than relying on the user to provide them; that is, when a
-      new value is inserted into a <code class="computeroutput"><span class="identifier">tokenmap</span></code>,
-      the <code class="computeroutput"><span class="identifier">tokenmap</span></code> generates a key
-      for the value in some unspecified way and returns this key to the caller. Returned
-      keys, which uniquely map to values, can later be used to retrieve the corresponding
-      value in a very efficient lookup.
+      Unlike typical dictionary-like containers such as <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span></code> or
+      <code class="computeroutput"><span class="identifier">boost_unordered</span></code>, a <code class="computeroutput"><span class="identifier">tokenmap</span></code> generates keys internally (called
+      <code class="computeroutput"><span class="identifier">tokens</span></code>) for stored values.
+      The keys are pseudo-random in appearance yet have the property of allowing
+      the container a very efficient look-up, in the order of indexing within a C-array.
     </p>
 <p>
       <code class="literal">tokenmap</code>s have the following properties:
     </p>
 <div class="orderedlist"><ol type="1">
 <li>
-        No two tokens map to the same value (<code class="computeroutput"><span class="identifier">tokenmap</span></code>
-        differs from <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">multimap</span></code> in this respect)
+        No two tokens map to the same value; in essence, <code class="computeroutput"><span class="identifier">tokenmap</span></code>
+        is a perfect hash container.
       </li>
 <li>
         The returned tokens are <span class="emphasis"><em>stable</em></span> (a token will always
         map to the corresponding value regardless of how the <code class="computeroutput"><span class="identifier">tokenmap</span></code>
-        was modified since the token was generated)
+        was modified since the token was generated).
       </li>
 <li>
-        Lookups are much faster - sometimes 30 times faster - than <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span></code>
-        lookups
+        Lookups are extremely efficient - sometimes 30 times faster - compared to
+        <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span></code> find.
       </li>
 </ol></div>
 <p>
-      The second property, also called the <span class="emphasis"><em>perfect hashing property</em></span>,
-      requires special support from the container, as described on the <a class="link" href="tokenmap/background.html" title="Background">Background</a>
-      page.
+      The mechanism of how the first and second properties are implemented is described
+      in the <a class="link" href="tokenmap/background.html" title="Background">Background</a> section.
     </p>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: April 04, 2010 at 13:59:52 GMT</small></p></td>
+<td align="left"><p><small>Last revised: April 13, 2010 at 12:53:00 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>

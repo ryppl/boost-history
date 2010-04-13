@@ -99,17 +99,17 @@ Distributed under the Boost Software License, Version 1.0.
 
 [section Description]
 
-A `tokenmap` is a data structure that uniquely maps pseudo-random integer keys to values.
+A `tokenmap` is a data structure that uniquely maps internally generated integer keys to values.
 
-Unlike other dictionary-like containers such as `std::map` or _boost_unordered_, a `tokenmap` generates the keys (also called ["tokens]) for values by an internal, pseudo-random algorithm rather than relying on the user to provide them; that is, when a new value is inserted into a `tokenmap`, the `tokenmap` generates a key for the value in some unspecified way and returns this key to the caller. Returned keys, which uniquely map to values, can later be used to retrieve the corresponding value in a very efficient lookup.
+Unlike typical dictionary-like containers such as `std::map` or `boost_unordered`, a `tokenmap` generates keys internally (called `tokens`) for stored values. The keys are pseudo-random in appearance yet have the property of allowing the container a very efficient look-up, in the order of indexing within a C-array.
 
 [^tokenmap]s have the following properties:
 
-# No two tokens map to the same value (`tokenmap` differs from `std::multimap` in this respect)
-# The returned tokens are /stable/ (a token will always map to the corresponding value regardless of how the `tokenmap` was modified since the token was generated)
-# Lookups are much faster - sometimes 30 times faster - than `std::map` lookups
+# No two tokens map to the same value; in essence, `tokenmap` is a perfect hash container.
+# The returned tokens are /stable/ (a token will always map to the corresponding value regardless of how the `tokenmap` was modified since the token was generated).
+# Lookups are extremely efficient - sometimes 30 times faster - compared to `std::map` find.
 
-The second property, also called the /perfect hashing property/, requires special support from the container, as described on the [link tokenmap.background Background] page.
+The mechanism of how the first and second properties are implemented is described in the [link tokenmap.background Background] section.
 
 [endsect]
 
