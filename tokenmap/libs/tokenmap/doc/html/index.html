@@ -27,7 +27,7 @@
 </h3></div></div>
 <div><p class="copyright">Copyright &#169; 2009 Slawomir Lisznianski</p></div>
 <div><div class="legalnotice">
-<a name="id501064"></a><p>
+<a name="id554005"></a><p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
@@ -54,14 +54,15 @@
 </h2></div></div></div>
 <p>
       A <code class="computeroutput"><span class="identifier">tokenmap</span></code> is a data structure
-      that uniquely maps internally generated integer keys to values.
+      that uniquely maps integer keys (called <code class="computeroutput"><span class="identifier">tokens</span></code>)
+      with values.
     </p>
 <p>
       Unlike typical dictionary-like containers such as <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span></code> or
-      <code class="computeroutput"><span class="identifier">boost_unordered</span></code>, a <code class="computeroutput"><span class="identifier">tokenmap</span></code> generates keys internally (called
-      <code class="computeroutput"><span class="identifier">tokens</span></code>) for stored values.
-      The keys are pseudo-random in appearance yet have the property of allowing
-      the container a very efficient look-up, in the order of indexing within a C-array.
+      <code class="computeroutput"><span class="identifier">boost_unordered</span></code>, <code class="computeroutput"><span class="identifier">tokenmap</span></code> generates the keys internally for
+      stored values. The keys are pseudo-random in appearance yet have the property
+      of allowing the container a very efficient look-up, in the order of indexing
+      within a C-array.
     </p>
 <p>
       <code class="literal">tokenmap</code>s have the following properties:
@@ -88,7 +89,7 @@
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: April 13, 2010 at 12:53:00 GMT</small></p></td>
+<td align="left"><p><small>Last revised: April 13, 2010 at 12:55:44 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>

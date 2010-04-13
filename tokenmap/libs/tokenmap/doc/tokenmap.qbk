@@ -99,9 +99,9 @@ Distributed under the Boost Software License, Version 1.0.
 
 [section Description]
 
-A `tokenmap` is a data structure that uniquely maps internally generated integer keys to values.
+A `tokenmap` is a data structure that uniquely maps integer keys (called `tokens`) with values.
 
-Unlike typical dictionary-like containers such as `std::map` or `boost_unordered`, a `tokenmap` generates keys internally (called `tokens`) for stored values. The keys are pseudo-random in appearance yet have the property of allowing the container a very efficient look-up, in the order of indexing within a C-array.
+Unlike typical dictionary-like containers such as `std::map` or `boost_unordered`, `tokenmap` generates the keys internally for stored values. The keys are pseudo-random in appearance yet have the property of allowing the container a very efficient look-up, in the order of indexing within a C-array.
 
 [^tokenmap]s have the following properties:
 
