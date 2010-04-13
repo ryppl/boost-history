@@ -19,11 +19,6 @@
 
 
 #define BOOST_ASSIGN_AS_CONVERTER(R)                                           \
-    template< class Container >                                                \
-    operator Container() const                                                 \
-    {                                                                          \
-        return  this->convert_to_container<Container>();                       \
-    }                                                                          \
     template< class Container>                                                 \
     Container convert_to_container() const{                                    \
         return range_convert::convert_to_container<Container>(*this); }        \
@@ -41,6 +36,12 @@
                                                                                \
     template<class Array> Array to_array( Array& a) const{                     \
         return to_array(a,*this); }                                            \
+                                                                               \
+    template< class Container >                                                \
+    operator Container() const                                                 \
+    {                                                                          \
+        return  this->convert_to_container<Container>();                       \
+    }                                                                          \
 /**/
     
 namespace boost{

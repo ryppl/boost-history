@@ -35,6 +35,8 @@ void example_range(std::ostream& os)
 
     typedef boost::array<detail::assign_reference_copy<val_>,1> ref_array_;
 
+    ar1 = ref_list_of(a)(b);
+
 {   
 /*
 

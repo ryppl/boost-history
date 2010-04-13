@@ -82,12 +82,13 @@
         <li> Proxy object <a href="#ref-static_array"><code>static_array&lt;&gt;</code></a> </li>
      </ul>
     <li> <a href="#exceptions">Exceptions and exception-safety </a></li>
-    <li> <a href="#extensions">Extending the library</a>            
-    <li> <a href="#boost_libs">Supported libraries </a>        
-    <li> <a href="#examples">Examples</a></li> <ul></ul>
-    <li><a href="#portability">Portability</a></li>
-    <li><a href="#history">History and Acknowledgment</a>    
-    <li><a href="#ref">References</a></li>
+    <li> <a href="#extensions">Extending the library</a></li>            
+    <li> <a href="#boost_libs">Supported libraries </a></li>        
+    <li> <a href="#examples">Examples</a></li>
+    <li> <a href="#portability">Portability</a></li>
+    <li> <a href="#history">History and Acknowledgment</a></li>    
+    <li> <a href="#upgrading_from_1_42">Upgrading from Boost v. <span class=number>1</span><span class=special>.</span><span class=number>42</span></a></li>
+    <li> <a href="#ref">References</a></li>
   </ul>
   <hr>
 
@@ -98,8 +99,9 @@ practical uses of <code>operator,()</code></i>.  <!-- p.  247 --> <br><b>Bjarne
 Stroustrup</b>, The Design and Evolution of C++ </p> <p> The purpose of this 
 library is to make it easy to fill containers with data by overloading 
 <code>operator,()</code> and <code>operator()()</code>.  These two operators 
-make it possible to construct lists of values that are then copied into a 
-container: </p> <ul> <li> A comma-separated list: <p> 
+make it possible to construct lists of values with range and/or conversion capabilities: 
+</p> 
+<ul> <li> A comma-separated list: <p> 
        <!--  vector< int > v; v += 1,2,3,4,5,6,7,8,9; -->
  
 <pre><span 
@@ -123,6 +125,21 @@ class=special>,</span><span class=number>9</span><span class=special>;</span></p
 class=identifier>string</span><span class=special>,</span><span class=keyword>int</span><span class=special>> </span><span class=identifier>m</span><span class=special>; </span>
 <span class=identifier>insert</span><span class=special>( </span><span class=identifier>m </span><span class=special>)( </span><span class=string>&quot;Bar&quot;</span><span class=special>, </span><span class=number>1 </span><span class=special>)( </span><span class=string>&quot;Foo&quot;</span><span class=special>, </span><span class=number>2 </span><span class=special>);</span></pre> 
     </ul> 
+
+<ul> <li> A list of references (to temporaries, in this example): <p> 
+   <pre><span class=special>boost::array&lt;<span class=keyword>int</span><span class=special>,</span><span class=number>9</span>&gt; </span><span class=identifier>a</span> <span class=special>= </span><span class=identifier>cref_csv</span><span class=special>( </span><span 
+class=number>1</span><span
+class=special>,</span><span class=number>2</span><span 
+class=special>,</span><span class=number>3</span><span 
+class=special>,</span><span class=number>4</span><span 
+class=special>,</span><span class=number>5</span><span 
+class=special>,</span><span class=number>6</span><span 
+class=special>,</span><span class=number>7</span><span 
+class=special>,</span><span class=number>8</span><span 
+class=special>,</span><span class=number>9</span><span class=special> )</span></pre>
+</p> </ul>
+
+
 <p>
     These lists are particularly useful in
     learning, testing, and prototyping situations, but can also be handy otherwise. 
@@ -815,9 +832,8 @@ Originally arguments were passed by value (and still is in
   <p> This section is about proxy objects that are in <code>boost::assign::detail::auto_size</code>. The functions 
   that return them, however, <a href="#ref-ref_list_of"><code>ref_list_of()</code></a>, <a href="#ref-ref_csv"><code>ref_csv()</code></a> 
   and their variants, operate under the same principle as those in the rest of this library and are therefore in namespace <code>boost::assign</code>. 
-  In this framework, nested compile time <a href="#ref-expr">expressions</a> are formed from references to passed argument, and fitted, as needed, with iterators and 
-  conversion operations. This is in contrast to other parts of this library, where a passed argument is either directly inserted into its destination
-  container or stored in a runtime-fashion. 
+  Compile time <a href="#ref-expr">expressions</a> are formed from references to passed argument, which frees the user from the need to specify the 
+  size of the collection explicitly.  
   </p>
 
   <h2>Reference for functions and operators <a name="ref-functions"> </h3>
@@ -2042,10 +2058,6 @@ explicit
 support better initialization (see <a href="#initializer">[4]</a>).
   </p>
   
-  <p> 
-  The <a href="#auto_size">auto-size framework</a> for building a collection of references whose size is deduced at compile time 
-  was added in 2010.
-  </p>
   
   <p>
   Special thanks goes to 
@@ -2056,13 +2068,23 @@ support better initialization (see <a href="#initializer">[4]</a>).
   <li> Pavel Vozenilek for his countless suggestions, improvements and 
        portability fixes. 
   <li> Rene Rivera for Code Warrior portability.     
-  <li> Manuel Peinado Gallego for valuable discussions related to the <a href="#auto_size">auto-size framework</a>. 
-  In particular, he identified the need to distinguish between copy and rebind semantics and first developed and 
-  <a href="http://gist.github.com/287791">first proposed</a> a design that laid the foundation for 
-  <a href="#chain"> <code>chain_l</code></a>  and <a href="#chain> <code>chain_l</code> </a>.
+  <li> Manuel Peinado Gallego for identifying the need for <a href="#auto_size">auto-size framework</a>, 
+  his valuable advice in its development, and proposing
+  <a href="http://gist.github.com/287791">a design</a> that laid the foundation for 
+  <a href="#chain"> <code>chain_l</code></a>  and <a href="#chain"> <code>chain_l</code> </a>.
        
        </ul>
   </p>
+
+  <hr>
+  <h2><a name="upgrading_from_1_42">Upgrading from Boost v. <span class=number>1</span><span class=special>.</span><span class=number>42</span></a></h2>
+
+  <p> 
+  The <a href="#auto_size">auto-size framework</a> for building a collection of references whose size is deduced at compile time supersedes <a href="#ref-list_of"><code>ref_list_of&lt;int&gt;()</code></a>.
+  The latter will continue to be supported to ensure backward compatibility.
+  </p>
+
+
   <hr>
   <h2><a name="ref">References</a></h2>
   <p>

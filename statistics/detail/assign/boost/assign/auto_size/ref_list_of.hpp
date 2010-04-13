@@ -41,7 +41,6 @@ namespace assign{
         return detail::auto_size::first_copy<const T>::call(t);
     }
 
-
     template<typename T>
     typename detail::auto_size::first_copy<T>::type
     ref_list_of(T& t){
