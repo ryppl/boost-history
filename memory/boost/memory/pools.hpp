@@ -199,8 +199,20 @@ private:
 
 public:
 	//
-	// function allocate/deallocate
+	// function alloc_size/allocate/deallocate
 	//
+	size_t BOOST_MEMORY_CALL alloc_size(void* p, size_t cb)
+	{
+		typedef typename PolicyT::system_alloc_type sysalloc;
+		
+		if (cb - 1 < (size_type)MAX_BYTES1)
+			return get_pool1(cb).alloc_size();
+		else if (cb - 1 < (size_type)MAX_BYTES2)
+			return get_pool2(cb).alloc_size();
+		else
+			return sysalloc::alloc_size(p);
+	}
+
 	void* BOOST_MEMORY_CALL allocate(size_t cb)
 	{
 		typedef typename PolicyT::system_alloc_type sysalloc;
