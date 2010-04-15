@@ -53,6 +53,9 @@ namespace result_of{
 }// result_of
 }// detail
 
+    // Usage
+    //     convert_range<V>(rng);
+
     // lvalue
 
     template<typename V,typename R,typename Rng>

@@ -134,6 +134,7 @@ namespace chain_impl{
         struct result_impl 
             { typedef expr<list_,impl_,Rng2,false,V,R,add_const> type; };
   
+
         template<typename Rng2> // Warning : overrides base.
         typename result_impl<Rng2>::type
         operator()(Rng2& r2,typename enable<Rng2,!add_const>::type* = 0)
@@ -158,6 +159,7 @@ namespace chain_impl{
             );            
         }
 
+
         // This macro solves compiler complaints that otherwise would occur if
         // assign_detail::converter<> were a base
         BOOST_ASSIGN_AS_CONVERTER(this_)
@@ -173,10 +175,10 @@ namespace chain_impl{
         static type call(cr1_& r1){ return type(r1); }
     };
 
+/*
     template<typename Rng1,typename V,
       typename R = typename detail::convert_range_reference<Rng1,V>::type>
     struct first_expr_l : chain_impl::first_expr<Rng1,V,R,false>{};
-
     // It's necessary to take add_const<V> or else non-rvalues may occur e.g.
     // Rng1 = array<ref_wrapper<int>,1> and V = int, then R = int*.
     template<typename Rng1,typename V,
@@ -185,6 +187,7 @@ namespace chain_impl{
     struct first_expr_r 
         : chain_impl::first_expr<
             Rng1,typename boost::add_const<V>::type,R,true>{};
+*/
 
     template<typename Rng1,bool add_const>
     struct deduce_value{
@@ -194,9 +197,22 @@ namespace chain_impl{
         typedef typename basic_chain_impl::sel_const<to_,add_const>::type type;
     };
 
-}// chain_l_impl
+/*
+    template<typename Rng1>
+    struct deduce_first_expr_l : detail::chain_impl::first_expr_l<
+        Rng1, typename detail::chain_impl::deduce_value<Rng1,false>::type
+    >{};
+    template<typename Rng1>
+    struct deduce_first_expr_r : detail::chain_impl::first_expr_r<
+        Rng1, typename detail::chain_impl::deduce_value<
+        const Rng1,true>::type
+    >{};
+*/
+
+}// chain_impl
 }// detail
 
+/*
     // lvalue
 
     template<typename V,typename R,typename Rng1>
@@ -230,7 +246,6 @@ namespace chain_impl{
         typedef detail::chain_impl::first_expr_l<Rng1,val_> caller_;
         return caller_::call(r1);
     }
-
     // rvalue : Warning: if is_const<V> != true, R must be value, not a ref. 
 
     template<typename V,typename R,typename Rng1>
@@ -265,6 +280,9 @@ namespace chain_impl{
         typedef detail::chain_impl::first_expr_r<Rng1,val_> caller_;
         return caller_::call(r1);
     }
+
+*/
+
 
 }// assign
 }// boost

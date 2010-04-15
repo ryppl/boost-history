@@ -12,6 +12,8 @@
 #include <boost/assign/auto_size/ref_list_of.hpp>
 #include <boost/assign/auto_size/range/basic_chain.hpp>
 #include <boost/assign/auto_size/range/chain.hpp>
+#include <boost/assign/auto_size/range/chain_l.hpp>
+#include <boost/assign/auto_size/range/chain_r.hpp>
 #include <boost/assign/auto_size/range/convert_range.hpp>
 
 #include <libs/assign/example/range.h>
@@ -33,46 +35,47 @@ void example_range(std::ostream& os)
     ar_ ar5; ar5.assign( 3 );
     ar_ ar6; ar6.assign( 6 );
 
-    typedef boost::array<detail::assign_reference_copy<val_>,1> ref_array_;
+    typedef boost::assign::detail::auto_size::n_th_expr_copy<val_,2>::type inp_;
 
-    ar1 = ref_list_of(a)(b);
+    typedef detail::result_of::convert_range<ar_,val_>::type range_;
 
+    typedef boost::range_reference<range_>::type ref_;
+//    typedef boost::assign::detail::reference_traits::convert_to<ref_>::type to_;
+
+    BOOST_MPL_ASSERT(( boost::is_same<ref_,val_&> ));    
+    
 {   
-/*
 
-    BOOST_AUTO(tmp1,ref_list_of(a)(b));
-    BOOST_AUTO(tmp2,ref_list_of(c)(d));
-    BOOST_AUTO(tmp3,ref_list_of(e)(f));
+    BOOST_AUTO(tmp1, ref_list_of(a)(b) );
+    BOOST_AUTO(tmp2, ref_list_of(c)(d) );
+    BOOST_AUTO(tmp3, ref_list_of(e)(f) );
 
     typedef std::vector<val_> vec_;
 
-    tmp1.convert_to_container<std::vector<val_> >();
-
-    vec_ v = chain_r(tmp1)(tmp2)(tmp3).convert_to_container<vec_>();
+    os << " tmp1 && tmp2 && tmp3 = (";
     boost::copy(
-        v,
-        std::ostream_iterator<val_>(os," "));
-
-    os << " chain_l(tmp1)(tmp2)(tmp3) = (";
-    boost::copy(
-        chain_l(tmp1)(ar5)(tmp3),
+        tmp1 && tmp2 && tmp3,
         std::ostream_iterator<val_>(os," ")
     ); 
+
+    tmp1 && ar5 && ref_list_of(e)(f);
+
     os <<  ") becomes (";
     boost::copy(
-        chain_l(ar1)(ar2)(ar3),
-        boost::begin(chain_l(tmp1)(ar5)(tmp3))
+        ar1 && ar2 && ar3 ,
+        boost::begin( tmp1 && ar5 && tmp3 )
     );  
     boost::copy(
-        chain_l(tmp1)(ar5)(tmp3),
+        tmp1 && ar5 && tmp3,
         std::ostream_iterator<val_>(os," ")
     );
     os << ") should equal (";
     boost::copy(
-        chain_l(ar1)(ar2)(ar3),
+        ar1 && ar2 && ar3,
         std::ostream_iterator<val_>(os," ")
     ); os << ')' << std::endl;
-*/
+
+
 }
 	os << "<- " << std::endl;
     

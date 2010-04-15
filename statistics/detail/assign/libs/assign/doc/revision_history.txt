@@ -1,5 +1,6 @@
 // Revision history:
 //
+// April 15, 2010 chain_l(a)(b)(c) becomes a && b && c 
 // March 25, 2010 
 // in write_to_array, replaced 
 //        a[Nshift+N-1] = e.ref;
