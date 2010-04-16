@@ -82,13 +82,12 @@ __forceinline unsigned int log2(unsigned int val)
 // -------------------------------------------------------------------------
 // class pools
 
-class pools
+template <class PolicyT>
+class pools_alloc
 {
 private:
-	typedef NS_BOOST_MEMORY_POLICY::stdlib PolicyT;
-
-	pools(const pools&);
-	const pools& operator=(const pools&);
+	pools_alloc(const pools_alloc&);
+	const pools_alloc& operator=(const pools_alloc&);
 
 public:
 	typedef size_t size_type;
@@ -120,7 +119,7 @@ private:
 	pool_type m_poolAlloc;
 
 public:
-	pools()
+	pools_alloc()
 		: m_poolAlloc(sizeof(pool_type))
 	{
 		memset(m_pools, 0, sizeof(pool_type*)*NPOOL);
@@ -128,7 +127,7 @@ public:
 		const size_type index = (sizeof(pool_type) - 1) >> ALIGN_BITS1;
 		m_pools[index] = &m_poolAlloc;
 	}
-	~pools()
+	~pools_alloc()
 	{
 		for (size_type i = 0; i < NPOOL; ++i)
 		{
@@ -193,7 +192,7 @@ public:
 	//
 	size_t BOOST_MEMORY_CALL alloc_size(void* p, size_t cb)
 	{
-		typedef PolicyT::system_alloc_type sysalloc;
+		typedef typename PolicyT::system_alloc_type sysalloc;
 		
 		if (cb - 1 < (size_type)MAX_BYTES1)
 			return get_pool1(cb).alloc_size();
@@ -205,7 +204,7 @@ public:
 
 	void* BOOST_MEMORY_CALL allocate(size_t cb)
 	{
-		typedef PolicyT::system_alloc_type sysalloc;
+		typedef typename PolicyT::system_alloc_type sysalloc;
 
 		void* p;
 		
@@ -224,7 +223,7 @@ public:
 
 	void BOOST_MEMORY_CALL deallocate(void* p, size_t cb)
 	{
-		typedef PolicyT::system_alloc_type sysalloc;
+		typedef typename PolicyT::system_alloc_type sysalloc;
 
 #if defined(BOOST_MEMORY_DEBUG_POOLS)
 		printf("pools %p deallocate: %p (bytes: %u)\n", this, p, cb);
@@ -237,6 +236,8 @@ public:
 			sysalloc::deallocate(p, cb);
 	}
 };
+
+typedef pools_alloc<stdlib> pools;
 
 // -------------------------------------------------------------------------
 

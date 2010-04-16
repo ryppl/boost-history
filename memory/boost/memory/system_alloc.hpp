@@ -85,11 +85,7 @@ public:
 	typedef system_alloc system_alloc_type;
 };
 
-class stdlib : public sys
-{
-public:
-	typedef stdlib_alloc alloc_type;
-};
+typedef sys stdlib;
 
 NS_BOOST_MEMORY_POLICY_END
 
