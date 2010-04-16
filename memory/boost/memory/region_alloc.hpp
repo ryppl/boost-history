@@ -64,6 +64,7 @@ private:
 	char* m_end;
 	AllocT m_alloc;
 	DestroyNode* m_destroyChain;
+	BOOST_MEMORY_THREAD_CHECKER;
 
 private:
 	__forceinline MemBlock* BOOST_MEMORY_CALL chainHeader_() const
@@ -113,6 +114,7 @@ public:
 
 	void BOOST_MEMORY_CALL clear()
 	{
+		BOOST_MEMORY_CHECK_THREAD();
 		while (m_destroyChain)
 		{
 			DestroyNode* curr = m_destroyChain;
@@ -161,6 +163,7 @@ private:
 public:
 	__forceinline void* BOOST_MEMORY_CALL allocate(size_t cb)
 	{
+		BOOST_MEMORY_CHECK_THREAD();
 		if ((size_t)(m_end - m_begin) >= cb)
 		{
 			return m_end -= cb;
@@ -195,6 +198,7 @@ public:
 	{
 		DestroyNode* pNode = (DestroyNode*)p - 1;
 		BOOST_MEMORY_ASSERT(pNode->fnDestroy == fn);
+		BOOST_MEMORY_CHECK_THREAD();
 
 		pNode->pPrev = m_destroyChain;
 		m_destroyChain = pNode;
@@ -212,6 +216,8 @@ public:
 
 	void* BOOST_MEMORY_CALL reallocate(void* p, size_t oldSize, size_t newSize)
 	{
+		BOOST_MEMORY_CHECK_THREAD();
+
 		if (oldSize >= newSize)
 			return p;
 		void* p2 = allocate(newSize);

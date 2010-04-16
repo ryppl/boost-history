@@ -114,6 +114,61 @@
 #endif
 
 // =========================================================================
+// BOOST_MEMORY_THREAD_CHECKER
+
+#if defined(_WIN32) || defined(_WIN64)
+
+#ifndef _WINDOWS_
+#include <windows.h>
+#endif
+
+#else
+
+#ifndef _PTHREAD_H
+#include <pthread.h>
+#endif
+
+#endif
+
+NS_BOOST_MEMORY_BEGIN
+
+inline unsigned long BOOST_MEMORY_CALL getCurrentThreadId()
+{
+#if defined(_WIN32) || defined(_WIN64)
+	return GetCurrentThreadId();
+#else
+	return pthread_self();
+#endif
+}
+
+class thread_checker
+{
+private:
+	unsigned long m_threadId;
+
+public:
+	thread_checker()
+	{
+		m_threadId = getCurrentThreadId();
+	}
+
+	bool BOOST_MEMORY_CALL check() const
+	{
+		return m_threadId == getCurrentThreadId();
+	}
+};
+
+#if defined(_DEBUG)
+#define BOOST_MEMORY_THREAD_CHECKER		NS_BOOST_MEMORY::thread_checker boostmm_thread_checker
+#define BOOST_MEMORY_CHECK_THREAD()		BOOST_MEMORY_ASSERT(boostmm_thread_checker.check())
+#else
+#define BOOST_MEMORY_THREAD_CHECKER
+#define BOOST_MEMORY_CHECK_THREAD()		(void)0
+#endif
+
+NS_BOOST_MEMORY_END
+
+// =========================================================================
 // NEW, NEW_ARRAY, ALLOC, ALLOC_ARRAY
 
 #if !defined(_NEW_) && !defined(_NEW)

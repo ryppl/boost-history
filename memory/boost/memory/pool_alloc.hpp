@@ -70,6 +70,7 @@ protected:
 	size_type m_cbChunk;
 	size_type m_nChunkPerBlock;
 	alloc_type m_alloc;
+	BOOST_MEMORY_THREAD_CHECKER;
 
 private:
 	void BOOST_MEMORY_CALL init_(size_type cbElem)
@@ -111,6 +112,8 @@ public:
 
 	void BOOST_MEMORY_CALL clear()
 	{
+		BOOST_MEMORY_CHECK_THREAD();
+
 		MemBlock* nextBlk;
 		for (MemBlock* blk = m_blks; blk; blk = nextBlk)
 		{
@@ -145,6 +148,7 @@ private:
 public:
 	__forceinline void* BOOST_MEMORY_CALL allocate()
 	{
+		BOOST_MEMORY_CHECK_THREAD();
 		if (m_freelist)
 		{
 			FreeChunk* p = m_freelist;
@@ -165,6 +169,7 @@ public:
 	__forceinline void BOOST_MEMORY_CALL deallocate(void* const p)
 	{
 		BOOST_MEMORY_DBG_FILL(p, alloc_size());
+		BOOST_MEMORY_CHECK_THREAD();
 
 		((FreeChunk*)p)->pPrev = m_freelist;
 		m_freelist = (FreeChunk*)p;
@@ -172,8 +177,9 @@ public:
 
 	__forceinline void BOOST_MEMORY_CALL deallocate(void* const p, size_t cb)
 	{
-		BOOST_MEMORY_ASSERT(cb == alloc_size());
+		BOOST_MEMORY_ASSERT(cb <= alloc_size());
 		BOOST_MEMORY_DBG_FILL(p, alloc_size());
+		BOOST_MEMORY_CHECK_THREAD();
 
 		((FreeChunk*)p)->pPrev = m_freelist;
 		m_freelist = (FreeChunk*)p;
