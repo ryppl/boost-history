@@ -16,10 +16,6 @@
 #include "pool.hpp"
 #endif
 
-#ifndef BOOST_MEMORY_REGION_ALLOC_HPP
-#include "region_alloc.hpp"
-#endif
-
 NS_BOOST_MEMORY_BEGIN
 
 // -------------------------------------------------------------------------
@@ -84,20 +80,19 @@ __forceinline unsigned int log2(unsigned int val)
 } // namespace detail
 
 // -------------------------------------------------------------------------
-// class pools, scoped_pools
+// class pools
 
-template <class PolicyT, int m_fPreAlloc = BOOST_MEMORY_PREALLOC>
-class pools_alloc
+class pools
 {
 private:
-	pools_alloc(const pools_alloc&);
-	const pools_alloc& operator=(const pools_alloc&);
+	typedef NS_BOOST_MEMORY_POLICY::stdlib PolicyT;
+
+	pools(const pools&);
+	const pools& operator=(const pools&);
 
 public:
 	typedef size_t size_type;
 	typedef pool_alloc<PolicyT> pool_type;
-	typedef region_alloc<PolicyT, m_fPreAlloc> region_alloc_type;
-	typedef typename pool_type::alloc_type block_pool_type;
 
 private:
 	// 8, 16, 24, 32, 40, ..., 128
@@ -122,29 +117,24 @@ public:
 
 private:
 	pool_type* m_pools[NPOOL];
-	block_pool_type m_recycle;
-	region_alloc_type m_alloc;
+	pool_type m_poolAlloc;
 
 public:
-	pools_alloc()
+	pools()
+		: m_poolAlloc(sizeof(pool_type))
 	{
 		memset(m_pools, 0, sizeof(pool_type*)*NPOOL);
-	}
 
-	pools_alloc(block_pool_type recycle)
-		: m_recycle(recycle), m_alloc(recycle)
-	{
-		memset(m_pools, 0, sizeof(pool_type*)*NPOOL);
+		const size_type index = (sizeof(pool_type) - 1) >> ALIGN_BITS1;
+		m_pools[index] = &m_poolAlloc;
 	}
-
-	block_pool_type BOOST_MEMORY_CALL get_block_pool() const
+	~pools()
 	{
-		return m_recycle;
-	}
-
-	region_alloc_type& BOOST_MEMORY_CALL get_region_alloc()
-	{
-		return m_alloc;
+		for (size_type i = 0; i < NPOOL; ++i)
+		{
+			if (m_pools[i])
+				m_pools[i]->clear();
+		}
 	}
 
 	pool_type& BOOST_MEMORY_CALL get_pool(size_type cb)
@@ -173,7 +163,7 @@ private:
 		if (p == NULL)
 		{
 			const size_type cbElem = (1 << (index - (NPOOL1 - MIN_BITS2))) - PADDING2;
-			m_pools[index] = p = BOOST_MEMORY_NEW(m_alloc, pool_type)(m_recycle, cbElem);
+			m_pools[index] = p = BOOST_MEMORY_UNMANAGED_NEW(m_poolAlloc, pool_type)(cbElem);
 		}
 		return *p;
 	}
@@ -187,7 +177,7 @@ private:
 		if (p == NULL)
 		{
 			const size_type cbElem = (index + 1) << ALIGN_BITS1;
-			m_pools[index] = p = BOOST_MEMORY_NEW(m_alloc, pool_type)(m_recycle, cbElem);
+			m_pools[index] = p = BOOST_MEMORY_UNMANAGED_NEW(m_poolAlloc, pool_type)(cbElem);
 		}
 		return *p;
 	}
@@ -203,7 +193,7 @@ public:
 	//
 	size_t BOOST_MEMORY_CALL alloc_size(void* p, size_t cb)
 	{
-		typedef typename PolicyT::system_alloc_type sysalloc;
+		typedef PolicyT::system_alloc_type sysalloc;
 		
 		if (cb - 1 < (size_type)MAX_BYTES1)
 			return get_pool1(cb).alloc_size();
@@ -215,7 +205,7 @@ public:
 
 	void* BOOST_MEMORY_CALL allocate(size_t cb)
 	{
-		typedef typename PolicyT::system_alloc_type sysalloc;
+		typedef PolicyT::system_alloc_type sysalloc;
 
 		void* p;
 		
@@ -226,7 +216,7 @@ public:
 		else
 			p = sysalloc::allocate(cb);
 
-#if defined(_DEBUG_POOLS)
+#if defined(BOOST_MEMORY_DEBUG_POOLS)
 		printf("pools %p allocate: %p (bytes: %u)\n", this, p, cb);
 #endif
 		return p;
@@ -234,9 +224,9 @@ public:
 
 	void BOOST_MEMORY_CALL deallocate(void* p, size_t cb)
 	{
-		typedef typename PolicyT::system_alloc_type sysalloc;
+		typedef PolicyT::system_alloc_type sysalloc;
 
-#if defined(_DEBUG_POOLS)
+#if defined(BOOST_MEMORY_DEBUG_POOLS)
 		printf("pools %p deallocate: %p (bytes: %u)\n", this, p, cb);
 #endif
 		if (cb - 1 < (size_type)MAX_BYTES1)
@@ -247,9 +237,6 @@ public:
 			sysalloc::deallocate(p, cb);
 	}
 };
-
-typedef pools_alloc<NS_BOOST_MEMORY_POLICY::stdlib> pools;
-typedef pools_alloc<NS_BOOST_MEMORY_POLICY::scoped> scoped_pools;
 
 // -------------------------------------------------------------------------
 

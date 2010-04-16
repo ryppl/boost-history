@@ -43,7 +43,7 @@
 
 NS_BOOST_MEMORY_BEGIN
 
-typedef scoped_pools default_alloc;
+typedef pools default_alloc;
 
 NS_BOOST_MEMORY_END
 
@@ -255,7 +255,6 @@ namespace boost
 #define BOOST_ALLOC_ARRAY(alloc, Type, count)	BOOST_MEMORY_ALLOC_ARRAY(alloc, Type, count)
 
 // -------------------------------------------------------------------------
-// $Log: memory.hpp,v $
 
 #endif /* BOOST_MEMORY_HPP */
 
