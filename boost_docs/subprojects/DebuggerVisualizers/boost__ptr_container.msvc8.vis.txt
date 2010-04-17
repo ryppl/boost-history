@@ -7,7 +7,7 @@
 ;
 ; @guid     CDC4F187-4AE8-40f2-A1CA-4F5913BC2778
 ; @platform msvc-8, msvc-9
-; @version  1.0
+; @version  1.1
 ; @author   Bill Buklis
 ; @email    bill at pbjzone dot com
 ;
@@ -82,7 +82,7 @@ boost::ptr_vector<*,*>{
     ( 
         #( 
 			"[", 
-            $e.c_._Mylast - $e.c_._Myfirst , 
+            $e.c_._Mylast - $e.c_._Myfirst, 
             "](", 
             
             #array
@@ -172,15 +172,15 @@ boost::ptr_multimap<*,*,*>{
 boost::ptr_map_iterator<*,*,*>{
 	preview
 	( 
-		#( "(", $c.iter_._Ptr->_Myval.first, ",", ($T3*) $c.iter_._Ptr->_Myval.second, ")"
+		#( "(", $c.m_iterator._Ptr->_Myval.first, ",", ($T3) $c.m_iterator._Ptr->_Myval.second, ")"
 		)
 	)
 	children
 	(
 		#(
-			first: $c.iter_._Ptr->_Myval.first,
-			second: ($T3*) $c.iter_._Ptr->_Myval.second,
-			_ptr: $c.iter_
+			_ptr: $c.m_iterator._Ptr,
+			first: $c.m_iterator._Ptr->_Myval.first,
+			second: ($T3) $c.m_iterator._Ptr->_Myval.second
 		)
 	)
 }
