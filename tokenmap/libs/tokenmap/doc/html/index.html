@@ -27,7 +27,7 @@
 </h3></div></div>
 <div><p class="copyright">Copyright &#169; 2009 Slawomir Lisznianski</p></div>
 <div><div class="legalnotice">
-<a name="id554005"></a><p>
+<a name="id498675"></a><p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
@@ -59,10 +59,9 @@
     </p>
 <p>
       Unlike typical dictionary-like containers such as <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span></code> or
-      <code class="computeroutput"><span class="identifier">boost_unordered</span></code>, <code class="computeroutput"><span class="identifier">tokenmap</span></code> generates the keys internally for
-      stored values. The keys are pseudo-random in appearance yet have the property
-      of allowing the container a very efficient look-up, in the order of indexing
-      within a C-array.
+      <code class="computeroutput"><span class="identifier">boost_unordered</span></code>, <code class="computeroutput"><span class="identifier">tokenmap</span></code> generates the keys for stored values.
+      The keys are random in appearance yet have the property of allowing the container
+      to perform very efficient look-ups -- in the order of indexing within a C-array.
     </p>
 <p>
       <code class="literal">tokenmap</code>s have the following properties:
@@ -74,12 +73,14 @@
       </li>
 <li>
         The returned tokens are <span class="emphasis"><em>stable</em></span> (a token will always
-        map to the corresponding value regardless of how the <code class="computeroutput"><span class="identifier">tokenmap</span></code>
+        map to a corresponding value regardless of how the <code class="computeroutput"><span class="identifier">tokenmap</span></code>
         was modified since the token was generated).
       </li>
 <li>
-        Lookups are extremely efficient - sometimes 30 times faster - compared to
-        <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span></code> find.
+        Lookups are very efficient compared to <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span></code> find.
+        For example, when looking up a value in a 1,000,000-elements container,
+        <code class="computeroutput"><span class="identifier">tokenamp</span></code> outperforms std::map
+        by about 30 times.
       </li>
 </ol></div>
 <p>
@@ -89,7 +90,7 @@
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: April 13, 2010 at 12:55:44 GMT</small></p></td>
+<td align="left"><p><small>Last revised: April 17, 2010 at 02:23:16 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>

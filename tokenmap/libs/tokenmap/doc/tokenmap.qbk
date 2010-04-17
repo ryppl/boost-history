@@ -101,13 +101,13 @@ Distributed under the Boost Software License, Version 1.0.
 
 A `tokenmap` is a data structure that uniquely maps integer keys (called `tokens`) with values.
 
-Unlike typical dictionary-like containers such as `std::map` or `boost_unordered`, `tokenmap` generates the keys internally for stored values. The keys are pseudo-random in appearance yet have the property of allowing the container a very efficient look-up, in the order of indexing within a C-array.
+Unlike typical dictionary-like containers such as `std::map` or `boost_unordered`, `tokenmap` generates the keys for stored values. The keys are random in appearance yet have the property of allowing the container to perform very efficient look-ups -- in the order of indexing within a C-array.
 
 [^tokenmap]s have the following properties:
 
 # No two tokens map to the same value; in essence, `tokenmap` is a perfect hash container.
-# The returned tokens are /stable/ (a token will always map to the corresponding value regardless of how the `tokenmap` was modified since the token was generated).
-# Lookups are extremely efficient - sometimes 30 times faster - compared to `std::map` find.
+# The returned tokens are /stable/ (a token will always map to a corresponding value regardless of how the `tokenmap` was modified since the token was generated).
+# Lookups are very efficient compared to `std::map` find. For example, when looking up a value in a 1,000,000-elements container, `tokenamp` outperforms std::map by about 30 times.
 
 The mechanism of how the first and second properties are implemented is described in the [link tokenmap.background Background] section.
 
