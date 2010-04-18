@@ -37,75 +37,38 @@
 <a name="l00011"></a>00011 <span class="comment">    See http://www.boost.org/libs/xint for library home page.</span>
 <a name="l00012"></a>00012 <span class="comment">*/</span>
 <a name="l00013"></a>00013 
-<a name="l00021"></a>00021 <span class="preprocessor">#ifndef BOOST_INCLUDED_XINT_DATA_T_H</span>
-<a name="l00022"></a>00022 <span class="preprocessor"></span><span class="preprocessor">#define BOOST_INCLUDED_XINT_DATA_T_H</span>
-<a name="l00023"></a>00023 <span class="preprocessor"></span>
-<a name="l00024"></a>00024 <span class="preprocessor">#if !defined(XINT_SECURE)</span>
-<a name="l00025"></a>00025 <span class="preprocessor"></span><span class="preprocessor">    #include &lt;vector&gt;</span>
-<a name="l00026"></a>00026 <span class="preprocessor">#endif</span>
-<a name="l00027"></a>00027 <span class="preprocessor"></span>
-<a name="l00028"></a>00028 <span class="keyword">namespace </span>boost {
-<a name="l00029"></a>00029 <span class="keyword">namespace </span>xint {
-<a name="l00030"></a>00030 <span class="keyword">namespace </span>detail {
-<a name="l00031"></a>00031 
-<a name="l00037"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html">00037</a> <span class="keyword">struct </span><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html" title="Holds the internal details of an xint::integer.">data_t</a> {
-<a name="l00045"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t_1_1_quick_digits.html">00045</a>     <span class="keyword">struct </span><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t_1_1_quick_digits.html" title="Holds information determining how many quick-digits to use.">QuickDigits</a> {
-<a name="l00046"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t_1_1_quick_digits.html#adbe737b8debc83a5a1fc0f92e39c6aa7">00046</a>         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t_1_1_quick_digits.html#adbe737b8debc83a5a1fc0f92e39c6aa7">intbits</a>=std::numeric_limits&lt;unsigned int&gt;::digits;
-<a name="l00047"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t_1_1_quick_digits.html#aef1507c481b9f7d7326a7bee422906ae">00047</a>         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t_1_1_quick_digits.html#aef1507c481b9f7d7326a7bee422906ae" title="We want at least enough QuickDigits to hold two standard int types.">suggested</a>=(2*<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t_1_1_quick_digits.html#adbe737b8debc83a5a1fc0f92e39c6aa7">intbits</a>/<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a>); 
-<a name="l00048"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t_1_1_quick_digits.html#a8f2061e90bb9e89949f10f57accc1bbb">00048</a>         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t_1_1_quick_digits.html#a8f2061e90bb9e89949f10f57accc1bbb" title="The library&amp;#39;s code is written to depend on this value, don&amp;#39;t change it.">minimum</a>=3; 
-<a name="l00049"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t_1_1_quick_digits.html#ae820a83ad097f0cc70ba3f53ea00ab70">00049</a>         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t_1_1_quick_digits.html#ae820a83ad097f0cc70ba3f53ea00ab70">count</a>=(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t_1_1_quick_digits.html#aef1507c481b9f7d7326a7bee422906ae" title="We want at least enough QuickDigits to hold two standard int types.">suggested</a> &lt; <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t_1_1_quick_digits.html#a8f2061e90bb9e89949f10f57accc1bbb" title="The library&amp;#39;s code is written to depend on this value, don&amp;#39;t change it.">minimum</a> ? <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t_1_1_quick_digits.html#a8f2061e90bb9e89949f10f57accc1bbb" title="The library&amp;#39;s code is written to depend on this value, don&amp;#39;t change it.">minimum</a> : <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t_1_1_quick_digits.html#aef1507c481b9f7d7326a7bee422906ae" title="We want at least enough QuickDigits to hold two standard int types.">suggested</a>);
-<a name="l00050"></a>00050     };
+<a name="l00022"></a>00022 <span class="preprocessor">#ifndef BOOST_INCLUDED_XINT_DATA_T_H</span>
+<a name="l00023"></a>00023 <span class="preprocessor"></span><span class="preprocessor">#define BOOST_INCLUDED_XINT_DATA_T_H</span>
+<a name="l00024"></a>00024 <span class="preprocessor"></span>
+<a name="l00025"></a>00025 <span class="preprocessor">#if !defined(XINT_SECURE)</span>
+<a name="l00026"></a>00026 <span class="preprocessor"></span><span class="preprocessor">    #include &lt;vector&gt;</span>
+<a name="l00027"></a>00027 <span class="preprocessor">#endif</span>
+<a name="l00028"></a>00028 <span class="preprocessor"></span>
+<a name="l00029"></a>00029 <span class="keyword">namespace </span>boost {
+<a name="l00030"></a>00030 <span class="keyword">namespace </span>xint {
+<a name="l00031"></a>00031 <span class="keyword">namespace </span>detail {
+<a name="l00032"></a>00032 
+<a name="l00033"></a><a class="code" href="namespaceboost_1_1xint_1_1detail.html#afab2617e6ea96f6baaf3b6c08157adf6">00033</a> <span class="keyword">const</span> <span class="keywordtype">size_t</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#afab2617e6ea96f6baaf3b6c08157adf6">minimum_magnitude_digits</a>=1;
+<a name="l00034"></a>00034 
+<a name="l00040"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html">00040</a> <span class="keyword">struct </span><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html" title="Holds the magnitude digits of an integer.">data_t</a> {
+<a name="l00041"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#af6047dff158ec443f2f73d012710d4cd">00041</a>     <span class="keywordtype">size_t</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a75fbdec9c81fcd83302e479ed2cae3c0">copies</a>, <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a081b825b5fb98a03909fa3280e658c8c">length</a>, <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#af6047dff158ec443f2f73d012710d4cd">max_length</a>;
+<a name="l00042"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3bd03fa762c6ee4224682bacfe2138d0">00042</a>     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3bd03fa762c6ee4224682bacfe2138d0">magnitude</a>[<a class="code" href="namespaceboost_1_1xint_1_1detail.html#afab2617e6ea96f6baaf3b6c08157adf6">minimum_magnitude_digits</a>];
+<a name="l00043"></a>00043 };
+<a name="l00044"></a>00044 
+<a name="l00045"></a>00045 <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html" title="Holds the magnitude digits of an integer.">data_t</a> *<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a092b8b90955e65e858dfbdd1cc35b960">allocate</a>(<span class="keywordtype">size_t</span> max_digits, <span class="keywordtype">size_t</span> initial_length=
+<a name="l00046"></a>00046     (std::numeric_limits&lt;size_t&gt;::max)());
+<a name="l00047"></a>00047 <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html" title="Holds the magnitude digits of an integer.">data_t</a> *<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a1883fadafa2eeb3e70dfd9032f35bbdd">reallocate</a>(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html" title="Holds the magnitude digits of an integer.">data_t</a> *olddata, <span class="keywordtype">size_t</span> newsize);
+<a name="l00048"></a>00048 <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html" title="Holds the magnitude digits of an integer.">data_t</a> *<a class="code" href="namespaceboost_1_1xint_1_1detail.html#ae9e118dede42bef1f6e1dce0b3147193">duplicate</a>(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html" title="Holds the magnitude digits of an integer.">data_t</a> *olddata, <span class="keywordtype">size_t</span> extra=0);
+<a name="l00049"></a>00049 <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html" title="Holds the magnitude digits of an integer.">data_t</a> *<a class="code" href="namespaceboost_1_1xint_1_1detail.html#ae9e118dede42bef1f6e1dce0b3147193">duplicate</a>(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html" title="Holds the magnitude digits of an integer.">data_t</a> *olddata, <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html" title="Holds the magnitude digits of an integer.">data_t</a> *data_to_copy, <span class="keywordtype">size_t</span> extra=0);
+<a name="l00050"></a>00050 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a44089260e9472ac378d3e2ed739e7e08">deallocate</a>(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html" title="Holds the magnitude digits of an integer.">data_t</a> *data);
 <a name="l00051"></a>00051 
-<a name="l00052"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">00052</a>     <span class="keywordtype">size_t</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>, <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a02411914c8a9d59e3521b04367352ea5">mAllocated</a>;
-<a name="l00053"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">00053</a>     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>; 
-<a name="l00054"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#af91f399a0533e8cdf46ac021616e2500">00054</a>     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#af91f399a0533e8cdf46ac021616e2500">mQuickDigits</a>[<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t_1_1_quick_digits.html#ae820a83ad097f0cc70ba3f53ea00ab70">QuickDigits::count</a>];
+<a name="l00052"></a>00052 } <span class="comment">// namespace detail</span>
+<a name="l00053"></a>00053 } <span class="comment">// namespace xint</span>
+<a name="l00054"></a>00054 } <span class="comment">// namespace boost</span>
 <a name="l00055"></a>00055 
-<a name="l00056"></a>00056 <span class="preprocessor">    #if !defined(XINT_SECURE)</span>
-<a name="l00057"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a8867fdad2325f390790c1188e6f71219">00057</a> <span class="preprocessor"></span>        std::vector&lt;digit_t&gt; <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a8867fdad2325f390790c1188e6f71219">mStorage</a>;
-<a name="l00058"></a>00058 <span class="preprocessor">    #endif</span>
-<a name="l00059"></a>00059 <span class="preprocessor"></span>
-<a name="l00060"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a6ee92e12f6b7de91f7ad85fcd481bd74">00060</a>     <span class="keywordtype">int</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a6ee92e12f6b7de91f7ad85fcd481bd74">mCopies</a>;
-<a name="l00061"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#abd6528e0c4f7674b4421cc7f1e2aba09">00061</a>     <span class="keywordtype">bool</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#abd6528e0c4f7674b4421cc7f1e2aba09">mIsNegative</a>;
-<a name="l00062"></a>00062 
-<a name="l00063"></a>00063     <span class="keyword">public</span>:
-<a name="l00064"></a>00064     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a37dee31093efc13f9ad64171fd9c373a">data_t</a>(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> initial1=0, <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> initial2=0, <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> initial3=0);
-<a name="l00065"></a>00065     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a37dee31093efc13f9ad64171fd9c373a">data_t</a>(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html" title="Holds the internal details of an xint::integer.">data_t</a> *c);
-<a name="l00066"></a>00066     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a37dee31093efc13f9ad64171fd9c373a">data_t</a>(boost::uintmax_t n, <span class="keywordtype">bool</span>);
-<a name="l00067"></a>00067 
-<a name="l00068"></a>00068 <span class="preprocessor">    #if defined(XINT_SECURE)</span>
-<a name="l00069"></a>00069 <span class="preprocessor"></span>        ~<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html" title="Holds the internal details of an xint::integer.">data_t</a>();
-<a name="l00070"></a>00070 <span class="preprocessor">    #endif</span>
-<a name="l00071"></a>00071 <span class="preprocessor"></span>
-<a name="l00072"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#ae5e0fb03bd1a93e834bbbcbb11dcf845">00072</a>     <span class="keywordtype">void</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#ae5e0fb03bd1a93e834bbbcbb11dcf845">attach</a>() { ++<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a6ee92e12f6b7de91f7ad85fcd481bd74">mCopies</a>; }
-<a name="l00073"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#aca622bc945c157c65cf5042b70eabd83">00073</a>     <span class="keywordtype">bool</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#aca622bc945c157c65cf5042b70eabd83">detach</a>() { <span class="keywordflow">return</span> (--<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a6ee92e12f6b7de91f7ad85fcd481bd74">mCopies</a>==0); }
-<a name="l00074"></a>00074     <span class="keywordtype">void</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a05165b7f45dea3e2459739d856d78288">alloc</a>(<span class="keywordtype">size_t</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>, <span class="keywordtype">bool</span> copydigits=<span class="keyword">false</span>);
-<a name="l00075"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3bdd8e8ef7c5b8bc888b96725aac9dfe">00075</a>     <span class="keywordtype">void</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3bdd8e8ef7c5b8bc888b96725aac9dfe">realloc</a>(<span class="keywordtype">size_t</span> newdigits) { <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a05165b7f45dea3e2459739d856d78288">alloc</a>(newdigits, <span class="keyword">true</span>); }
-<a name="l00076"></a>00076     <span class="keywordtype">void</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a284e2618d908796987c624311a42625d">skipLeadingZeros</a>();
-<a name="l00077"></a>00077     <span class="keywordtype">void</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a8fd5f934c3ad8c1f9d38bb38ac89cfcd">copy</a>(<span class="keyword">const</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html" title="Holds the internal details of an xint::integer.">data_t</a> *c, <span class="keywordtype">size_t</span> extraDigits=0);
-<a name="l00078"></a>00078     <span class="keywordtype">void</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#abc03de358802a588b87fe666dd8f7c43">zero</a>(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *p, <span class="keywordtype">size_t</span> count);
-<a name="l00079"></a>00079 
-<a name="l00080"></a>00080     <span class="keywordtype">void</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a231dab01a05e0c7f64e9c592537ddb14">quickset</a>(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> d1, <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> d2=0, <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> d3=0);
-<a name="l00081"></a>00081 
-<a name="l00082"></a>00082     <span class="keywordtype">void</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#ad082d802e78dab68eb7409e09386e974">invert</a>();
-<a name="l00083"></a>00083     <span class="keywordtype">void</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a1207c8b514f44886ae98f6632b9726a1">negate</a>();
-<a name="l00084"></a>00084 
-<a name="l00085"></a>00085     <span class="comment">// These primitives ignore the signs of the parameters, and their results</span>
-<a name="l00086"></a>00086     <span class="comment">// are calculated in place.</span>
-<a name="l00087"></a>00087     <span class="keywordtype">void</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#ac723d73bc8845e6df77f3c439128b939">add</a>(<span class="keyword">const</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html" title="Holds the internal details of an xint::integer.">data_t</a>&amp; addend);
-<a name="l00088"></a>00088     <span class="keywordtype">void</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a138ee1d91bfa37d248c43ef66371e590">subtract</a>(<span class="keyword">const</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html" title="Holds the internal details of an xint::integer.">data_t</a>&amp; subtrahend);
-<a name="l00089"></a>00089 
-<a name="l00090"></a>00090     <span class="comment">// These are also calculated in place, for maximum speed.</span>
-<a name="l00091"></a>00091     <span class="keywordtype">void</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#aaa43f067c7f1a7772276cf9a57ab653c">shift_left</a>(<span class="keywordtype">size_t</span> byBits);
-<a name="l00092"></a>00092     <span class="keywordtype">void</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#ad28012e618ecab56b69ceac7585d1741">shift_right</a>(<span class="keywordtype">size_t</span> byBits);
-<a name="l00093"></a>00093 };
-<a name="l00094"></a>00094 
-<a name="l00095"></a>00095 } <span class="comment">// namespace detail</span>
-<a name="l00096"></a>00096 } <span class="comment">// namespace xint</span>
-<a name="l00097"></a>00097 } <span class="comment">// namespace boost</span>
-<a name="l00098"></a>00098 
-<a name="l00099"></a>00099 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_DATA_T_H</span>
+<a name="l00056"></a>00056 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_DATA_T_H</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Apr 11 10:16:59 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Wed Apr 14 22:09:18 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

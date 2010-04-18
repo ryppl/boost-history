@@ -16,14 +16,11 @@
 */
 
 #include "../boost/xint/xint.hpp"
-#include "../boost/xint/xint_data_t.hpp"
 
 namespace boost {
 namespace xint {
 
 using namespace detail;
-
-namespace core {
 
 /*! \brief Queries the value of a particular bit in an integer.
 
@@ -50,14 +47,13 @@ bool getbit(const integer& n, size_t bit) {
 */
 void setbit(integer& n, size_t bit) {
     n._make_unique();
-    detail::data_t *ndata=n._get_data();
 
     size_t index=bit/bits_per_digit;
-    if (index >= n._get_length()) ndata->realloc(index+1);
+    if (index >= n._get_length()) n._realloc(index+1);
 
     digit_t mask=(digit_t(1) << (bit % bits_per_digit));
-    ndata->digits[index] |= mask;
-    ndata->skipLeadingZeros();
+    n._get_digits()[index] |= mask;
+    n._cleanup();
 }
 
 /*! \brief Sets a specific bit in an integer to zero.
@@ -72,8 +68,8 @@ void clearbit(integer& n, size_t bit) {
     if (index < n._get_length()) {
         n._make_unique();
         digit_t mask=(digit_t(1) << (bit % bits_per_digit));
-        n._get_data()->digits[index] &= ~mask;
-        n._get_data()->skipLeadingZeros();
+        n._get_digits()[index] &= ~mask;
+        n._cleanup();
     }
 }
 
@@ -89,11 +85,10 @@ valueIfZero if the integer contains no set bits.
 size_t lowestbit(const integer& n, size_t valueIfZero) {
     if (n.sign()==0) return valueIfZero;
 
-    const detail::data_t *ndata=n._get_data();
-    const digit_t *p=ndata->digits, *pe=p+ndata->mLength;
+    const digit_t *p=n._get_digits(), *pe=p+n._get_length();
     while (p!=pe && *p==0) ++p;
 
-    size_t index=(p - ndata->digits);
+    size_t index=(p - n._get_digits());
     size_t r=(bits_per_digit * index);
     digit_t digit=*p;
 
@@ -126,19 +121,19 @@ size_t highestbit(const integer& n, size_t valueIfZero) {
 \returns An integer with all bits that are set in both parameters turned on.
 */
 integer bitwise_and(const integer& n1, const integer& n2) {
-    const detail::data_t *smaller=n1._get_data(), *larger=n2._get_data();
-    if (smaller->mLength > larger->mLength) std::swap(smaller, larger);
+    bool n1larger=(n1._get_length() > n2._get_length());
+    const integer& smaller(n1larger ? n2 : n1), larger(n1larger ? n1 : n2);
 
     integer r;
-    detail::data_t *rdata=r._get_data();
-    rdata->alloc(smaller->mLength);
+    r._realloc(smaller._get_length());
 
-    const digit_t *s1=smaller->digits, *s1e=s1+smaller->mLength, *s2=larger->digits;
-    digit_t *t=rdata->digits;
+    const digit_t *s1=smaller._get_digits(), *s1e=s1+smaller._get_length(),
+        *s2=larger._get_digits();
+    digit_t *t=r._get_digits();
 
     while (s1 < s1e) *t++ = *s1++ & *s2++;
 
-    rdata->skipLeadingZeros();
+    r._cleanup();
     return r;
 }
 
@@ -149,21 +144,20 @@ integer bitwise_and(const integer& n1, const integer& n2) {
 \returns An integer with all bits that are set in either parameter turned on.
 */
 integer bitwise_or(const integer& n1, const integer& n2) {
-    const detail::data_t *smaller=n1._get_data(), *larger=n2._get_data();
-    if (smaller->mLength > larger->mLength) std::swap(smaller, larger);
+    bool n1larger=(n1._get_length() > n2._get_length());
+    const integer& smaller(n1larger ? n2 : n1), larger(n1larger ? n1 : n2);
 
     integer r;
-    detail::data_t *rdata=r._get_data();
-    rdata->alloc(larger->mLength);
+    r._realloc(larger._get_length());
 
-    const digit_t *s1=smaller->digits, *s1e=s1+smaller->mLength;
-    const digit_t *s2=larger->digits, *s2e=s2+larger->mLength;
-    digit_t *t=rdata->digits;
+    const digit_t *s1=smaller._get_digits(), *s1e=s1+smaller._get_length();
+    const digit_t *s2=larger._get_digits(), *s2e=s2+larger._get_length();
+    digit_t *t=r._get_digits();
 
     while (s1<s1e) *t++ = *s1++ | *s2++;
     while (s2<s2e) *t++ = *s2++;
 
-    rdata->skipLeadingZeros();
+    r._cleanup();
     return r;
 }
 
@@ -175,21 +169,20 @@ integer bitwise_or(const integer& n1, const integer& n2) {
 both, turned on.
 */
 integer bitwise_xor(const integer& n1, const integer& n2) {
-    const detail::data_t *smaller=n1._get_data(), *larger=n2._get_data();
-    if (smaller->mLength > larger->mLength) std::swap(smaller, larger);
+    bool n1larger=(n1._get_length() > n2._get_length());
+    const integer& smaller(n1larger ? n2 : n1), larger(n1larger ? n1 : n2);
 
     integer r;
-    detail::data_t *rdata=r._get_data();
-    rdata->alloc(larger->mLength);
+    r._realloc(larger._get_length());
 
-    const digit_t *s1=smaller->digits, *s1e=s1+smaller->mLength;
-    const digit_t *s2=larger->digits, *s2e=s2+larger->mLength;
-    digit_t *t=rdata->digits;
+    const digit_t *s1=smaller._get_digits(), *s1e=s1+smaller._get_length();
+    const digit_t *s2=larger._get_digits(), *s2e=s2+larger._get_length();
+    digit_t *t=r._get_digits();
 
     while (s1<s1e) *t++ = *s1++ ^ *s2++;
     while (s2<s2e) *t++ = *s2++;
 
-    rdata->skipLeadingZeros();
+    r._cleanup();
     return r;
 }
 
@@ -218,7 +211,7 @@ integer shift_left(const integer& n, size_t byBits) {
 
     integer nn(n);
     nn._make_unique();
-    nn._get_data()->shift_left(byBits);
+    nn._shift_left(byBits);
     return nn;
 }
 
@@ -234,10 +227,9 @@ integer shift_right(const integer& n, size_t byBits) {
 
     integer nn(n);
     nn._make_unique();
-    nn._get_data()->shift_right(byBits);
+    nn._shift_right(byBits);
     return nn;
 }
 
-} // namespace core
 } // namespace xint
 } // namespace boost

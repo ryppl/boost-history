@@ -16,7 +16,6 @@
 */
 
 #include "../boost/xint/xint.hpp"
-#include "../boost/xint/xint_data_t.hpp"
 
 #include <vector>
 
@@ -25,7 +24,6 @@ namespace xint {
 
 using namespace detail;
 
-namespace core {
 namespace {
 
     bool addOverflow(doubledigit_t &n1, doubledigit_t n2) {
@@ -64,42 +62,43 @@ This function uses a faster algorithm than the standard multiplication one.
 \todo Rewrite this to eliminate the inefficient addOverflow.
 */
 integer sqr(const integer& n) {
-    const data_t *ndata=n._get_data();
-    std::vector<doubledigit_t> a(ndata->mLength*2+1, 0);
+    const digit_t *ndigits=n._get_digits();
+    size_t nlen=n._get_length();
+    std::vector<doubledigit_t> a(nlen*2+1, 0);
     doubledigit_t *adigit=&a[0];
 
     size_t i, j;
     integer addend;
-    data_t *addenddata=addend._get_data();
-    addenddata->alloc(ndata->mLength*2+1);
+    addend._realloc(nlen*2+1);
+    digit_t *adigits=addend._get_digits();
 
-    digit_t *ndigitip=ndata->digits;
-    for (i=0; i<ndata->mLength; ++i, ++ndigitip) {
+    const digit_t *ndigitip=ndigits;
+    for (i=0; i<nlen; ++i, ++ndigitip) {
         digit_t ndigiti=*ndigitip;
         doubledigit_t t=(doubledigit_t(ndigiti) * ndigiti);
-        if (addOverflow(adigit[2*i], t)) ++addenddata->digits[2*i+2];
+        if (addOverflow(adigit[2*i], t)) ++adigits[2*i+2];
 
-        for (j=i+1; j<ndata->mLength; ++j) {
-            doubledigit_t t=(doubledigit_t(ndata->digits[j]) * ndigiti);
-            if (t & doubledigit_hibit) ++addenddata->digits[i+j+2];
+        for (j=i+1; j<nlen; ++j) {
+            doubledigit_t t=(doubledigit_t(ndigits[j]) * ndigiti);
+            if (t & doubledigit_hibit) ++adigits[i+j+2];
             t<<=1;
-            if (addOverflow(adigit[i+j], t)) ++addenddata->digits[i+j+2];
+            if (addOverflow(adigit[i+j], t)) ++adigits[i+j+2];
         }
     }
 
     integer answer;
-    data_t *answerdata=answer._get_data();
-    answerdata->alloc(ndata->mLength*2+1);
+    answer._realloc(nlen*2+1);
 
     doubledigit_t carry=0;
-    for (i=0, j=ndata->mLength*2+1; i<j; ++i) {
-        if (addOverflow(carry, adigit[i])) ++addenddata->digits[i+2];
-        answerdata->digits[i]=digit_t(carry);
+    digit_t *ansdigits=answer._get_digits();
+    for (i=0, j=nlen*2+1; i<j; ++i) {
+        if (addOverflow(carry, adigit[i])) ++adigits[i+2];
+        ansdigits[i]=digit_t(carry);
         carry>>=bits_per_digit;
     }
 
-    answerdata->skipLeadingZeros();
-    addenddata->skipLeadingZeros();
+    answer._cleanup();
+    addend._cleanup();
     answer+=addend;
 
     return answer;
@@ -151,6 +150,5 @@ integer factorial(size_t n) {
     return r;
 }
 
-} // namespace core
 } // namespace xint
 } // namespace boost

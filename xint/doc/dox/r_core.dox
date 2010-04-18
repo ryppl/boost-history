@@ -1,31 +1,25 @@
-/*! \page r_core What's with the \c core and \c blockable namespaces?
+/*! \page r_core What's with the \c nothrow_integer type?
 
 Several people on the Boost developers' mailing list expressed reservations
-about the exception-blocking mechanism and the Not-a-Number value. After a
-spirited debate, two indisputable points emerged:
+about the exception-blocking mechanism in the original implementation, and the
+Not-a-Number value that it required. After a spirited debate, two indisputable
+points emerged:
 
 - The existence of a Not-a-Number value forced every function to check its
 parameters for it.
-- The exception blocking mechanism would cause problems with any library built
+- The exception-blocking mechanism would cause problems with any library built
 on this one, such as the arbitrary-precision real type that I'm certain someone
 will build.
 
-I believe that the exception-blocking feature is useful, so I proposed a
-compromise: two \c integer classes, one that would always contain a valid
-%integer value and would be immune to exception-blocking, and one that would
-honor exception-blocking and could hold the Not-a-Number value. These now reside
-in the \c xint::core and \c xint::blockable namespaces.
+To deal with this, I separated the \c xint::integer and \c xint::nothrow_integer
+types. \c xint::integer functions now always throw exceptions on errors, and
+always hold valid numbers; \c xint::nothrow_integer functions (as implied by the
+name) never throw exceptions, instead returning the Not-a-Number value (which
+only \c xint::nothrow_integer can hold).
 
-Functions in the \c core namespace will always throw an exception on any error,
-and will only call other functions within the \c core namespace. That ensures
-that the Not-a-Number value only needs to be checked for in a single \c
-xint::core::integer constructor, and all but eliminates any speed penalty from
-it. It also gives a base of functions that are immune to the exception-blocking
-mechanism, which provides firm ground to build other libraries on.
-
-Every function in the \c blockable namespace calls its \c core counterpart in a
-try/catch construct, allowing it to intercept any exceptions and either pass
-them through (if exceptions are allowed) or take some alternate action, such as
-returning a Not-a-Number value. That preserves the exception-blocking feature as
-well.
+This design ensures that the Not-a-Number value only needs to be checked for in
+a single place (the \c xint::integer conversion constructor), and ensures that
+any speed penalty from it is only incurred by people who choose to use the \c
+nothrow_integer type. It also preserves the no-exceptions behavior, which is
+useful under some circumstances.
 */

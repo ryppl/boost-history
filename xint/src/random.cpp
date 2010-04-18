@@ -22,13 +22,16 @@
     #include <windows.h>
 #endif
 
-#include "../boost/xint/xint.hpp"
-#include "../boost/xint/xint_data_t.hpp"
+#include "../boost/xint/integer.hpp"
+#include "../boost/xint/random.hpp"
+#include "../boost/xint/exceptions.hpp"
 #include <vector>
 #include <sstream>
 #include <fstream>
 #include <ctime>
+#include <memory> // for auto_ptr
 #include <boost/random/mersenne_twister.hpp>
+#include <boost/static_assert.hpp> //! \todo Move to random.cpp?
 
 #ifdef XINT_THREADSAFE
     #include <boost/thread.hpp>
@@ -116,7 +119,7 @@ unsigned int get_random() {
             if (dll != 0) fn=RtlGenRandomFn(GetProcAddress(dll, "SystemFunction036"));
             if (fn == 0) {
                 destroy();
-                throw no_strong_random();
+                throw exceptions::no_strong_random();
             }
         }
 
@@ -125,7 +128,7 @@ unsigned int get_random() {
         result_type operator()() {
             result_type r=0;
             if (!fn(&r, sizeof(result_type)))
-                throw no_strong_random("RtlGenRandom failed");
+                throw exceptions::no_strong_random("RtlGenRandom failed");
             return r;
         }
 
@@ -144,12 +147,13 @@ unsigned int get_random() {
             // This should be supported under most non-Windows systems. Note
             // that we're using /dev/urandom, not /dev/random -- /dev/random is
             // more secure, but it can be VERY slow.
-            if (!rng) throw no_strong_random();
+            if (!rng) throw exceptions::no_strong_random();
         }
 
         result_type operator()() {
             int r=rng.get();
-            if (r==EOF) throw no_strong_random("/dev/urandom returned EOF");
+            if (r==EOF) throw exceptions::no_strong_random("/dev/urandom "
+                "returned EOF");
             return static_cast<result_type>(r);
         }
 
@@ -182,7 +186,6 @@ strong_random_generator::result_type strong_random_generator::max
 // Returns a positive (unless told otherwise) integer between zero and
 // (1<<bits)-1, inclusive
 
-namespace core {
 /*! \brief Generates a random integer with specific attributes.
 
 \param[in] bits The maximum number of bits that you want the returned number to
@@ -223,10 +226,10 @@ integer random_by_size(size_t bits, bool high_bit_on, bool low_bit_on, bool
     size_t index=(bits/bits_per_digit);
     digit_t mask=(digit_t(1) << (bits % bits_per_digit))-1;
     if (mask==0) { mask=digit_mask; --index; }
-    p._get_data()->digits[index] &= mask;
-    for (digit_t *i=p._get_data()->digits+index+1,
-        *ie=p._get_data()->digits+p._get_data()->mLength; i<ie; ++i) *i=0;
-    p._get_data()->skipLeadingZeros();
+    p._get_digits()[index] &= mask;
+    for (digit_t *i=p._get_digits()+index+1,
+        *ie=p._get_digits()+p._get_length(); i<ie; ++i) *i=0;
+    p._cleanup();
 
     if (high_bit_on) setbit(p, bits-1);
     if (low_bit_on) setbit(p, 0);
@@ -234,6 +237,6 @@ integer random_by_size(size_t bits, bool high_bit_on, bool low_bit_on, bool
 
     return p;
 }
-} // namespace core
+
 } // namespace xint
 } // namespace boost

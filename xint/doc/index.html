@@ -35,13 +35,14 @@ Why would I use it?</a></h2>
 </ul>
 <h2><a class="anchor" id="how">
 How do I use it?</a></h2>
-<p>That's the best part. If you've installed or compiled the Boost library already, all you need to do is add <code>#include &lt;<a class="el" href="xint_8hpp.html" title="The main header file for the XInt library.">boost/xint/xint.hpp</a>&gt;</code> at the top of your source code file, and declare your variable as type <code><a class="el" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">boost::xint::core::integer</a></code>. Then just use it the way you'd use any integer. If you need something more advanced, take a look in <a class="el" href="namespaceboost_1_1xint.html">the reference section</a> and you just might find it.</p>
+<p>That's the best part. If you've installed or compiled the Boost library already, all you need to do is add <code>#include &lt;<a class="el" href="xint_8hpp.html" title="This is the include-everything header.">boost/xint/xint.hpp</a>&gt;</code> at the top of your source code file, throw in a <code>using</code> line to say which type you want to use, and declare your variable as type <a class="el" href="classboost_1_1xint_1_1integer.html" title="The core integer class.">boost::xint::integer</a>. Then just use it the way you'd use any integer. If you need something more advanced, take a look in <a class="el" href="namespaceboost_1_1xint.html">the reference section</a> and you just might find it.</p>
 <p>More information on how to use it can be found on the pages listed below.</p>
 <p>Detailed Usage Information:</p>
 <ul>
 <li><a class="el" href="nan.html">The Not-a-Number Value</a></li>
+<li><a class="el" href="zero.html">Zero and "Negative Zero"</a></li>
 <li><a class="el" href="primes.html">Generating Prime Numbers</a> (with example code)</li>
-<li><a class="el" href="exceptions.html">Exceptions and Exception-Blocking</a> (with example code)</li>
+<li><a class="el" href="exceptions.html">Exceptions and the <code>nothrow_integer</code> type.</a> (with example code)</li>
 <li><a class="el" href="random.html">The XInt Random Number System</a></li>
 </ul>
 <p>Compile-Time Options:</p>
@@ -63,7 +64,7 @@ How do I use it?</a></h2>
 <li><a class="el" href="ex__fibonacci.html">Fibonacci Numbers</a> </li>
 </ul>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Apr 11 10:16:59 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sat Apr 17 20:02:57 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

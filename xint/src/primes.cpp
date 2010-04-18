@@ -21,7 +21,6 @@
 
 namespace boost {
 namespace xint {
-namespace core {
 
 namespace {
 
@@ -88,7 +87,7 @@ the operation. If it returns \c false, the function will immediately return.
 \returns 1 if \c n seems to be prime, 0 if it isn't, or -1 if the provided
 callback function cancelled the operation.
 
-\exception std::invalid_argument if \c n is less than 2.
+\exception exceptions::invalid_argument if \c n is less than 2.
 
 \remarks
 This function uses the Rabin-Miller probabilistic primality test. There is an
@@ -100,8 +99,8 @@ number several times, it will use different random "witness" numbers each time.
 \see \ref primes
 */
 int is_prime(const integer& n, callback_t callback) {
-    if (n < 2) throw std::invalid_argument("xint::is_prime cannot test numbers "
-        "below 2");
+    if (n < 2) throw exceptions::invalid_argument("xint::is_prime cannot test "
+        "numbers below 2");
 
     // First we trial-divide it by the primes below 2000
     static const std::vector<int> cLowPrimes(sieveOfEratosthenes(2000));
@@ -112,7 +111,7 @@ int is_prime(const integer& n, callback_t callback) {
     // a few times to see if it's actually (probably) prime.
     for (int count=0; count<5; ++count) {
         unsigned int k=detail::get_random();
-        int isP=isProbablePrimeBaseB(n, abs(k), callback);
+        int isP=isProbablePrimeBaseB(n, k, callback);
         if (isP <= 0) return isP;
     }
     return 1; // Appears to be prime!
@@ -128,7 +127,7 @@ the operation. If it returns \c false, the function will immediately return.
 \returns A randomly-generated prime integer with the specified number of bits,
 or zero if the provided callback function cancelled the operation.
 
-\exception std::invalid_argument if \c size_in_bits is less than two.
+\exception exceptions::invalid_argument if \c size_in_bits is less than two.
 
 \note This function uses xint::is_prime. See the description of it for details
 of its limitations.
@@ -141,8 +140,8 @@ requirements, and how to get cryptographically-secure random numbers.
 \see \ref primes
 */
 integer random_prime(size_t size_in_bits, callback_t callback) {
-    if (size_in_bits < 2) throw std::invalid_argument("cannot create prime "
-        "numbers smaller than two bits");
+    if (size_in_bits < 2) throw exceptions::invalid_argument("cannot create "
+        "prime numbers smaller than two bits");
 
     // Call the callback for the first time
     if (callback && !callback()) return integer::zero();
@@ -159,6 +158,5 @@ integer random_prime(size_t size_in_bits, callback_t callback) {
     }
 }
 
-} // namespace core
 } // namespace xint
 } // namespace boost

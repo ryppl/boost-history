@@ -22,13 +22,13 @@
 namespace boost {
 namespace xint {
 
-using namespace test;
-
 using std::endl;
 
 namespace {
 
 void _test(int section, int test, integer n, integer m) {
+    //BOOST_MESSAGE("testMultiply " << section << ", " << test);
+
     integer result(m*n);
     if (m.sign()==0 || n.sign()==0) BOOST_CHECK_EQUAL(result, 0);
     else {

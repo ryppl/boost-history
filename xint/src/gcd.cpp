@@ -21,7 +21,6 @@
 
 namespace boost {
 namespace xint {
-namespace core {
 namespace {
 
 struct gcd_core {
@@ -103,12 +102,12 @@ integer lcm(const integer& num1, const integer& num2) {
 \returns The modular inverse of \c n in \c m. If \c n has no modular inverse in
 \c m, returns zero.
 
-\exception xint::invalid_modulus if the modulus is less than one.
+\exception exceptions::invalid_modulus if the modulus is less than one.
 */
 integer invmod(const integer& n, const integer& m) {
     // Calculates the modular inverse of n mod m, or (n^(-1)) mod m
     // Defined as b, where n*b corresponds to 1 (mod m)
-    if (m < integer::one()) throw invalid_modulus();
+    if (m < integer::one()) throw exceptions::invalid_modulus();
 
     int sign=n.sign();
     if (sign==0) {
@@ -132,6 +131,5 @@ integer invmod(const integer& n, const integer& m) {
     return core.u1;
 }
 
-} // namespace core
 } // namespace xint
 } // namespace boost

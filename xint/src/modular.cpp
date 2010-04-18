@@ -19,11 +19,10 @@
 */
 
 #include "../boost/xint/xint.hpp"
-#include "../boost/xint/xint_monty.hpp"
+#include "../boost/xint/monty.hpp"
 
 namespace boost {
 namespace xint {
-namespace core {
 
 /*! \brief Get the remainder after dividing a number by another.
 
@@ -80,7 +79,7 @@ integer sqrmod(const integer& n, const integer& m) {
 
 \returns The result of \c pow(n, \c exponent) % \c modulus.
 
-\exception xint::invalid_modulus if the modulus is less than one.
+\exception exceptions::invalid_modulus if the modulus is less than one.
 
 \remarks
 Because this function keeps the intermediate results small, it is far faster
@@ -94,7 +93,7 @@ always faster than the non-Montgomery method.
 integer powmod(const integer& n, const integer& e, const integer& m, bool
     noMontgomery)
 {
-    if (m < integer::one()) throw invalid_modulus();
+    if (m < integer::one()) throw exceptions::invalid_modulus();
     if (e.sign()==0) return integer::one();
 
     bool neg=(n.sign() < 0 && e.odd());
@@ -129,6 +128,5 @@ integer powmod(const integer& n, const integer& e, const integer& m, bool
     return answer;
 }
 
-} // namespace core
 } // namespace xint
 } // namespace boost

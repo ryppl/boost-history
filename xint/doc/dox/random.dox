@@ -7,8 +7,8 @@ easily be configured to use a cryptographically-secure generator.
 
 The XInt library provides a convenience class, \c xint::strong_random_generator,
 for both Windows and UNIX-derived systems. It will throw an exception of type
-\c xint::no_strong_random if you try to instantiate it on a system that does not
-have a strong random number generator.
+\c no_strong_random if you try to instantiate it on a system that does not have
+a strong random number generator.
 
 See the code at the top of \ref primes "the Prime Numbers page" for an example
 of how to use it.

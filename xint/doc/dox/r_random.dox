@@ -4,7 +4,7 @@ Boost.Random provides \c boost::random_device to tap into the operating system's
 strong random number generator, but at the time of this writing, the official
 released version only defines it for Linux and BSD systems. The current
 maintainer, Steven Watanabe, says that he has just added Windows compatibility
-to it, so the xint::strong_random_generator class will likely be reduced to
+to it, so the \c xint::strong_random_generator class will likely be reduced to
 a typedef for \c boost::random_device, or a thin shell around it, in the near
 future.
 */

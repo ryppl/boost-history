@@ -12,7 +12,7 @@
 */
 
 #include <boost/xint/xint.hpp>
-#include <boost/xint/xint_monty.hpp>
+#include <boost/xint/monty.hpp>
 
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
@@ -23,7 +23,6 @@
 
 namespace boost {
 namespace xint {
-namespace core {
 
 using std::endl;
 
@@ -134,6 +133,5 @@ BOOST_AUTO_TEST_CASE(testMontyPowerMod) {
     }
 }
 
-} // namespace core
 } // namespace xint
 } // namespace boost

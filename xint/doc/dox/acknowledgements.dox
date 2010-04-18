@@ -26,10 +26,11 @@ one else seemed to.
 - Jeffrey Lee Hellrung, Jr., for advice on implementing move-aware objects, and
 for an invigorating discussion on the differing needs of an integer library
 versus a floating-point one, among other things.
-- Peter Dimov, for suggesting a separate \c xint::overflow_error exception
-class.
+- Peter Dimov, for suggesting a separate \c overflow_error exception class.
 - "Fred," a.k.a. "Gottlob Frege", for information on infinities.
-- Joachim Faulhaber for a discussion of intervals and interval containers.
+- Joachim Faulhaber, for a discussion of intervals and interval containers.
+- Domagoj Saric, for suggesting a design that would allow for both
+variable-length and fixed-length integers.
 
 And the other Boost development list members who joined the discussion:
 

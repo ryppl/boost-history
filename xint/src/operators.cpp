@@ -19,7 +19,6 @@
 
 namespace boost {
 namespace xint {
-namespace core {
 const integer& operator+(const integer& a) { return a; }
 integer operator-(const integer& a) { return negate(a); }
 integer operator+(const integer& num1, const integer& num2) { return add(num1, num2); }
@@ -30,6 +29,5 @@ integer operator%(const integer& num1, const integer& num2) { return mod(num1, n
 integer operator&(const integer& n1, const integer& n2) { return bitwise_and(n1, n2); }
 integer operator|(const integer& n1, const integer& n2) { return bitwise_or(n1, n2); }
 integer operator^(const integer& n1, const integer& n2) { return bitwise_xor(n1, n2); }
-} // namespace core
 } // namespace xint
 } // namespace boost

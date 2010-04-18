@@ -38,329 +38,121 @@
 <a name="l00012"></a>00012 <span class="comment">*/</span>
 <a name="l00013"></a>00013 
 <a name="l00018"></a>00018 <span class="preprocessor">#include &quot;../boost/xint/xint.hpp&quot;</span>
-<a name="l00019"></a>00019 <span class="preprocessor">#include &quot;../boost/xint/xint_data_t.hpp&quot;</span>
-<a name="l00020"></a>00020 
-<a name="l00021"></a>00021 <span class="preprocessor">#include &lt;cassert&gt;</span>
-<a name="l00022"></a>00022 
-<a name="l00023"></a>00023 <span class="keyword">namespace </span>boost {
-<a name="l00024"></a>00024 <span class="keyword">namespace </span>xint {
-<a name="l00025"></a><a class="code" href="namespaceboost_1_1xint_1_1detail.html">00025</a> <span class="keyword">namespace </span>detail {
-<a name="l00026"></a>00026 
-<a name="l00027"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a37dee31093efc13f9ad64171fd9c373a">00027</a> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a37dee31093efc13f9ad64171fd9c373a">data_t::data_t</a>(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> initial1, <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> initial2, <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> initial3) {
-<a name="l00028"></a>00028     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>=1;
-<a name="l00029"></a>00029     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a02411914c8a9d59e3521b04367352ea5">mAllocated</a>=<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t_1_1_quick_digits.html#ae820a83ad097f0cc70ba3f53ea00ab70">QuickDigits::count</a>;
-<a name="l00030"></a>00030     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>=<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#af91f399a0533e8cdf46ac021616e2500">mQuickDigits</a>;
-<a name="l00031"></a>00031     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>[0]=initial1;
-<a name="l00032"></a>00032     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>[1]=initial2;
-<a name="l00033"></a>00033     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>[2]=initial3;
-<a name="l00034"></a>00034     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a6ee92e12f6b7de91f7ad85fcd481bd74">mCopies</a>=0;
-<a name="l00035"></a>00035     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#abd6528e0c4f7674b4421cc7f1e2aba09">mIsNegative</a>=<span class="keyword">false</span>;
-<a name="l00036"></a>00036 }
-<a name="l00037"></a>00037 
-<a name="l00039"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a91d6951498c6df25133e987c7d347c17">00039</a> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a37dee31093efc13f9ad64171fd9c373a">data_t::data_t</a>(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html" title="Holds the internal details of an xint::integer.">data_t</a> *c) {
-<a name="l00040"></a>00040     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>=c-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>;
-<a name="l00041"></a>00041     <span class="keywordflow">if</span> (c-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a> == c-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#af91f399a0533e8cdf46ac021616e2500">mQuickDigits</a>) {
-<a name="l00042"></a>00042         <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>=<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#af91f399a0533e8cdf46ac021616e2500">mQuickDigits</a>;
-<a name="l00043"></a>00043         <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a02411914c8a9d59e3521b04367352ea5">mAllocated</a>=<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t_1_1_quick_digits.html#ae820a83ad097f0cc70ba3f53ea00ab70">QuickDigits::count</a>;
-<a name="l00044"></a>00044     } <span class="keywordflow">else</span> {
-<a name="l00045"></a>00045         <span class="keywordflow">try</span> {
-<a name="l00046"></a>00046             <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a02411914c8a9d59e3521b04367352ea5">mAllocated</a>=<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>;
-<a name="l00047"></a>00047 <span class="preprocessor">            #ifdef XINT_SECURE</span>
-<a name="l00048"></a>00048 <span class="preprocessor"></span>                <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>=<span class="keyword">new</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>[<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a02411914c8a9d59e3521b04367352ea5">mAllocated</a>];
-<a name="l00049"></a>00049 <span class="preprocessor">            #else</span>
-<a name="l00050"></a>00050 <span class="preprocessor"></span>                <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a8867fdad2325f390790c1188e6f71219">mStorage</a>.resize(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a02411914c8a9d59e3521b04367352ea5">mAllocated</a>, 0);
-<a name="l00051"></a>00051                 <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>=&amp;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a8867fdad2325f390790c1188e6f71219">mStorage</a>[0];
-<a name="l00052"></a>00052 <span class="preprocessor">            #endif</span>
-<a name="l00053"></a>00053 <span class="preprocessor"></span>        } <span class="keywordflow">catch</span> (std::bad_alloc&amp;) {
-<a name="l00054"></a>00054             <span class="keywordflow">throw</span> <a class="code" href="classboost_1_1xint_1_1overflow__error.html" title="Exception class.">xint::overflow_error</a>(<span class="stringliteral">&quot;Out of memory allocating xint::integer&quot;</span>);
-<a name="l00055"></a>00055         }
-<a name="l00056"></a>00056     }
-<a name="l00057"></a>00057     memcpy(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>, c-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>, <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>*<span class="keyword">sizeof</span>(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>));
-<a name="l00058"></a>00058 
-<a name="l00059"></a>00059     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a6ee92e12f6b7de91f7ad85fcd481bd74">mCopies</a>=0;
-<a name="l00060"></a>00060     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#abd6528e0c4f7674b4421cc7f1e2aba09">mIsNegative</a>=c-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#abd6528e0c4f7674b4421cc7f1e2aba09">mIsNegative</a>;
-<a name="l00061"></a>00061 }
-<a name="l00062"></a>00062 
-<a name="l00064"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a84c1163a2b0a698a74125b4d21f99d12">00064</a> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a37dee31093efc13f9ad64171fd9c373a">data_t::data_t</a>(boost::uintmax_t n, <span class="keywordtype">bool</span>) {
-<a name="l00065"></a>00065     <span class="keyword">static</span> <span class="keywordtype">int</span> bits=std::numeric_limits&lt;boost::uintmax_t&gt;::digits;
-<a name="l00066"></a>00066     <span class="keyword">static</span> <span class="keywordtype">int</span> maxDigits=(bits+<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">detail::bits_per_digit</a>-1)/<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">detail::bits_per_digit</a>;
-<a name="l00067"></a>00067 
-<a name="l00068"></a>00068     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>=1;
-<a name="l00069"></a>00069     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a02411914c8a9d59e3521b04367352ea5">mAllocated</a>=<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t_1_1_quick_digits.html#ae820a83ad097f0cc70ba3f53ea00ab70">QuickDigits::count</a>;
-<a name="l00070"></a>00070     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>=<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#af91f399a0533e8cdf46ac021616e2500">mQuickDigits</a>;
-<a name="l00071"></a>00071     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>[0]=<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>[1]=<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>[2]=0;
-<a name="l00072"></a>00072     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a6ee92e12f6b7de91f7ad85fcd481bd74">mCopies</a>=0;
-<a name="l00073"></a>00073     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#abd6528e0c4f7674b4421cc7f1e2aba09">mIsNegative</a>=<span class="keyword">false</span>;
+<a name="l00019"></a>00019 
+<a name="l00020"></a>00020 <span class="preprocessor">#include &lt;cassert&gt;</span>
+<a name="l00021"></a>00021 
+<a name="l00022"></a>00022 <span class="keyword">namespace </span>boost {
+<a name="l00023"></a>00023 <span class="keyword">namespace </span>xint {
+<a name="l00024"></a>00024 <span class="keyword">namespace </span>detail {
+<a name="l00025"></a>00025 
+<a name="l00026"></a>00026 <span class="keyword">static</span> <span class="keywordtype">size_t</span> datasize=(<span class="keyword">sizeof</span>(data_t&lt;&gt;)+<span class="keyword">sizeof</span>(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>)-1) / <span class="keyword">sizeof</span>(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>);
+<a name="l00027"></a>00027 
+<a name="l00028"></a>00028 data_t&lt;&gt; *<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a092b8b90955e65e858dfbdd1cc35b960">allocate</a>(<span class="keywordtype">size_t</span> max_digits, <span class="keywordtype">size_t</span> initial_length) {
+<a name="l00029"></a>00029     <span class="keywordflow">if</span> (max_digits &lt; 1) max_digits = 1;
+<a name="l00030"></a>00030     <span class="keywordtype">size_t</span> count = max_digits - 1 + datasize;
+<a name="l00031"></a>00031 
+<a name="l00032"></a>00032     <span class="keywordflow">try</span> {
+<a name="l00033"></a>00033         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *storage(<span class="keyword">new</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>[count]);
+<a name="l00034"></a>00034         data_t&lt;&gt; *r=<span class="keyword">reinterpret_cast&lt;</span>data_t&lt;&gt;*<span class="keyword">&gt;</span>(storage);
+<a name="l00035"></a>00035         r-&gt;copies=0;
+<a name="l00036"></a>00036         r-&gt;length=(std::min)(initial_length, max_digits);
+<a name="l00037"></a>00037         r-&gt;max_length=max_digits;
+<a name="l00038"></a>00038 
+<a name="l00039"></a>00039         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *p = r-&gt;magnitude, *pe = p + r-&gt;length;
+<a name="l00040"></a>00040         <span class="keywordflow">while</span> (p!=pe) *p++=0;
+<a name="l00041"></a>00041         <span class="keywordflow">return</span> r;
+<a name="l00042"></a>00042     } <span class="keywordflow">catch</span> (std::bad_alloc&amp;) {
+<a name="l00043"></a>00043         <span class="keywordflow">throw</span> exceptions::overflow_error(<span class="stringliteral">&quot;Out of memory allocating integer&quot;</span>);
+<a name="l00044"></a>00044     }
+<a name="l00045"></a>00045 }
+<a name="l00046"></a>00046 
+<a name="l00047"></a>00047 data_t&lt;&gt; *<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a756b3b8912e24da52a5f1e54d49bbbbe">reallocate</a>(data_t&lt;&gt; *olddata, <span class="keywordtype">size_t</span> newsize) {
+<a name="l00048"></a>00048     <span class="keywordflow">if</span> (olddata==0) {
+<a name="l00049"></a>00049         data_t&lt;&gt; *newdata=<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a092b8b90955e65e858dfbdd1cc35b960">allocate</a>(newsize);
+<a name="l00050"></a>00050         newdata-&gt;copies=1;
+<a name="l00051"></a>00051         <span class="keywordflow">return</span> newdata;
+<a name="l00052"></a>00052     } <span class="keywordflow">if</span> (olddata-&gt;copies == 1 &amp;&amp; newsize &lt;= olddata-&gt;max_length) {
+<a name="l00053"></a>00053         <span class="comment">// We can re-use this data.</span>
+<a name="l00054"></a>00054         <span class="keywordflow">if</span> (olddata-&gt;length &lt; newsize) {
+<a name="l00055"></a>00055             <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *p=olddata-&gt;magnitude + olddata-&gt;length,
+<a name="l00056"></a>00056                 *pe=olddata-&gt;magnitude + newsize;
+<a name="l00057"></a>00057             <span class="keywordflow">while</span> (p!=pe) *p++=0;
+<a name="l00058"></a>00058         } <span class="keywordflow">else</span> {
+<a name="l00059"></a>00059             <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *p=olddata-&gt;magnitude + olddata-&gt;length,
+<a name="l00060"></a>00060                 *pe=olddata-&gt;magnitude + newsize;
+<a name="l00061"></a>00061             <span class="keywordflow">while</span> (p!=pe) *(--p)=0;
+<a name="l00062"></a>00062         }
+<a name="l00063"></a>00063         olddata-&gt;length = newsize;
+<a name="l00064"></a>00064         <span class="keywordflow">return</span> olddata;
+<a name="l00065"></a>00065     } <span class="keywordflow">else</span> {
+<a name="l00066"></a>00066         <span class="comment">// Have to allocate new data.</span>
+<a name="l00067"></a>00067         data_t&lt;&gt; *newdata=<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a092b8b90955e65e858dfbdd1cc35b960">allocate</a>(newsize, 0);
+<a name="l00068"></a>00068         newdata-&gt;copies=1;
+<a name="l00069"></a>00069         newdata-&gt;length=newsize;
+<a name="l00070"></a>00070         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *s=olddata-&gt;magnitude, *se=s+olddata-&gt;length,
+<a name="l00071"></a>00071             *t=newdata-&gt;magnitude, *te=t+newdata-&gt;length;
+<a name="l00072"></a>00072         <span class="keywordflow">while</span> (s!=se) *t++ = *s++;
+<a name="l00073"></a>00073         <span class="keywordflow">while</span> (t &lt; te) *t++ = 0;
 <a name="l00074"></a>00074 
-<a name="l00075"></a>00075     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a05165b7f45dea3e2459739d856d78288">alloc</a>(maxDigits);
-<a name="l00076"></a>00076     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *i=<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>;
-<a name="l00077"></a>00077     <span class="keywordflow">while</span> (n != 0) {
-<a name="l00078"></a>00078         *i++=<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">detail::digit_t</a>(n &amp; <a class="code" href="namespaceboost_1_1xint_1_1detail.html#aecc94d5cb515781b3a33ddf76884e8f5">detail::digit_mask</a>);
-<a name="l00079"></a>00079         n &gt;&gt;= <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">detail::bits_per_digit</a>;
-<a name="l00080"></a>00080     }
-<a name="l00081"></a>00081     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a284e2618d908796987c624311a42625d">skipLeadingZeros</a>();
-<a name="l00082"></a>00082 }
-<a name="l00083"></a>00083 
-<a name="l00084"></a>00084 <span class="preprocessor">#ifdef XINT_SECURE</span>
-<a name="l00085"></a>00085 <span class="preprocessor"></span>data_t::~data_t() {
-<a name="l00086"></a>00086     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#abc03de358802a588b87fe666dd8f7c43">zero</a>(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#af91f399a0533e8cdf46ac021616e2500">mQuickDigits</a>, <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t_1_1_quick_digits.html#ae820a83ad097f0cc70ba3f53ea00ab70">QuickDigits::count</a>);
-<a name="l00087"></a>00087     <span class="keywordflow">if</span> (<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a> != <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#af91f399a0533e8cdf46ac021616e2500">mQuickDigits</a>) {
-<a name="l00088"></a>00088         <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#abc03de358802a588b87fe666dd8f7c43">zero</a>(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>, <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a02411914c8a9d59e3521b04367352ea5">mAllocated</a>);
-<a name="l00089"></a>00089         <span class="keyword">delete</span>[] <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>;
-<a name="l00090"></a>00090     }
-<a name="l00091"></a>00091 }
-<a name="l00092"></a>00092 <span class="preprocessor">#endif</span>
-<a name="l00093"></a>00093 <span class="preprocessor"></span>
-<a name="l00098"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a284e2618d908796987c624311a42625d">00098</a> <span class="keywordtype">void</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a284e2618d908796987c624311a42625d">data_t::skipLeadingZeros</a>() {
-<a name="l00099"></a>00099     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *d=<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>+<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>-1;
-<a name="l00100"></a>00100     <span class="keywordflow">while</span> (d&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a> &amp;&amp; *d==0) --d;
-<a name="l00101"></a>00101     mLength=int((d-<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>)+1);
-<a name="l00102"></a>00102     <span class="keywordflow">if</span> (mLength==1 &amp;&amp; <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>[0]==0) <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#abd6528e0c4f7674b4421cc7f1e2aba09">mIsNegative</a>=<span class="keyword">false</span>; <span class="comment">// Zero isn&#39;t negative</span>
-<a name="l00103"></a>00103 }
-<a name="l00104"></a>00104 
-<a name="l00105"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a231dab01a05e0c7f64e9c592537ddb14">00105</a> <span class="keywordtype">void</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a231dab01a05e0c7f64e9c592537ddb14">data_t::quickset</a>(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> d1, <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> d2, <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> d3) {
-<a name="l00106"></a>00106     assert(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a6ee92e12f6b7de91f7ad85fcd481bd74">mCopies</a>==1);
-<a name="l00107"></a>00107 
-<a name="l00108"></a>00108     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>=3;
-<a name="l00109"></a>00109     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>[0]=d1;
-<a name="l00110"></a>00110     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>[1]=d2;
-<a name="l00111"></a>00111     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>[2]=d3;
-<a name="l00112"></a>00112     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#abd6528e0c4f7674b4421cc7f1e2aba09">mIsNegative</a>=<span class="keyword">false</span>;
-<a name="l00113"></a>00113     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a284e2618d908796987c624311a42625d">skipLeadingZeros</a>();
-<a name="l00114"></a>00114 }
-<a name="l00115"></a>00115 
-<a name="l00116"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a05165b7f45dea3e2459739d856d78288">00116</a> <span class="keywordtype">void</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a05165b7f45dea3e2459739d856d78288">data_t::alloc</a>(<span class="keywordtype">size_t</span> newcount, <span class="keywordtype">bool</span> copydigits) {
-<a name="l00117"></a>00117     <span class="keywordflow">if</span> (<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>==<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#af91f399a0533e8cdf46ac021616e2500">mQuickDigits</a> &amp;&amp; newcount&lt;=<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t_1_1_quick_digits.html#ae820a83ad097f0cc70ba3f53ea00ab70">QuickDigits::count</a>) {
-<a name="l00118"></a>00118         <span class="keywordflow">if</span> (!copydigits) <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#abc03de358802a588b87fe666dd8f7c43">zero</a>(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>, <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t_1_1_quick_digits.html#ae820a83ad097f0cc70ba3f53ea00ab70">QuickDigits::count</a>);
-<a name="l00119"></a>00119         <span class="keywordflow">else</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#abc03de358802a588b87fe666dd8f7c43">zero</a>(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>+<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>, (newcount-<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>));
-<a name="l00120"></a>00120         <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>=newcount;
-<a name="l00121"></a>00121     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (newcount &lt; <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a02411914c8a9d59e3521b04367352ea5">mAllocated</a>) {
-<a name="l00122"></a>00122         <span class="keywordflow">if</span> (copydigits) {
-<a name="l00123"></a>00123             <span class="keywordflow">if</span> (newcount&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>) <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#abc03de358802a588b87fe666dd8f7c43">zero</a>(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>+<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>, newcount-<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>);
-<a name="l00124"></a>00124             <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>=newcount;
-<a name="l00125"></a>00125         } <span class="keywordflow">else</span> {
-<a name="l00126"></a>00126             <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>=newcount;
-<a name="l00127"></a>00127             <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#abc03de358802a588b87fe666dd8f7c43">zero</a>(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>, <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>);
-<a name="l00128"></a>00128         }
-<a name="l00129"></a>00129     } <span class="keywordflow">else</span> {
-<a name="l00130"></a>00130 <span class="preprocessor">        #ifdef XINT_SECURE</span>
-<a name="l00131"></a>00131 <span class="preprocessor"></span>            <span class="keywordtype">int</span> e=newcount;
-<a name="l00132"></a>00132             newcount=1;
-<a name="l00133"></a>00133             <span class="keywordflow">while</span> (newcount &lt; e) newcount &lt;&lt;= 1;
-<a name="l00134"></a>00134 <span class="preprocessor">        #endif</span>
-<a name="l00135"></a>00135 <span class="preprocessor"></span>
-<a name="l00136"></a>00136         <span class="keywordflow">if</span> (<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>==<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#af91f399a0533e8cdf46ac021616e2500">mQuickDigits</a> &amp;&amp; copydigits) {
-<a name="l00137"></a>00137             <span class="keywordflow">try</span> {
-<a name="l00138"></a>00138 <span class="preprocessor">                #ifdef XINT_SECURE</span>
-<a name="l00139"></a>00139 <span class="preprocessor"></span>                    <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>=<span class="keyword">new</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>[newcount];
-<a name="l00140"></a>00140 <span class="preprocessor">                #else</span>
-<a name="l00141"></a>00141 <span class="preprocessor"></span>                    <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a8867fdad2325f390790c1188e6f71219">mStorage</a>.resize(newcount);
-<a name="l00142"></a>00142                     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>=&amp;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a8867fdad2325f390790c1188e6f71219">mStorage</a>[0];
-<a name="l00143"></a>00143 <span class="preprocessor">                #endif</span>
-<a name="l00144"></a>00144 <span class="preprocessor"></span>            } <span class="keywordflow">catch</span> (std::bad_alloc&amp;) {
-<a name="l00145"></a>00145                 <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>=<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#af91f399a0533e8cdf46ac021616e2500">mQuickDigits</a>; <span class="comment">// Might allow for recovery in some cases</span>
-<a name="l00146"></a>00146                 <span class="keywordflow">throw</span> <a class="code" href="classboost_1_1xint_1_1overflow__error.html" title="Exception class.">xint::overflow_error</a>(<span class="stringliteral">&quot;Out of memory allocating xint::integer&quot;</span>);
-<a name="l00147"></a>00147             }
-<a name="l00148"></a>00148 
-<a name="l00149"></a>00149             memcpy(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>, <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#af91f399a0533e8cdf46ac021616e2500">mQuickDigits</a>, <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>*<span class="keyword">sizeof</span>(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>));
-<a name="l00150"></a>00150             <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#abc03de358802a588b87fe666dd8f7c43">zero</a>(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>+<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>, newcount-<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>);
-<a name="l00151"></a>00151         } <span class="keywordflow">else</span> {
-<a name="l00152"></a>00152 <span class="preprocessor">            #ifdef XINT_SECURE</span>
-<a name="l00153"></a>00153 <span class="preprocessor"></span>                <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *newDigits=0;
-<a name="l00154"></a>00154                 <span class="keywordflow">try</span> {
-<a name="l00155"></a>00155                     newDigits=<span class="keyword">new</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>[newcount];
-<a name="l00156"></a>00156                 } <span class="keywordflow">catch</span> (std::bad_alloc&amp;) {
-<a name="l00157"></a>00157                     <span class="keywordflow">throw</span> <a class="code" href="classboost_1_1xint_1_1overflow__error.html" title="Exception class.">xint::overflow_error</a>(<span class="stringliteral">&quot;Out of memory allocating xint::integer&quot;</span>);
-<a name="l00158"></a>00158                 }
-<a name="l00159"></a>00159 
-<a name="l00160"></a>00160                 <span class="keywordflow">if</span> (copydigits) {
-<a name="l00161"></a>00161                     memcpy(newDigits, <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>, <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>*<span class="keyword">sizeof</span>(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>));
-<a name="l00162"></a>00162                     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#abc03de358802a588b87fe666dd8f7c43">zero</a>(newDigits+<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>, newcount-<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>);
-<a name="l00163"></a>00163                 } <span class="keywordflow">else</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#abc03de358802a588b87fe666dd8f7c43">zero</a>(newDigits, newcount);
-<a name="l00164"></a>00164 
-<a name="l00165"></a>00165                 <span class="keywordflow">if</span> (<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>!=<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#af91f399a0533e8cdf46ac021616e2500">mQuickDigits</a>) {
-<a name="l00166"></a>00166                     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#abc03de358802a588b87fe666dd8f7c43">zero</a>(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>, <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a02411914c8a9d59e3521b04367352ea5">mAllocated</a>);
-<a name="l00167"></a>00167                     <span class="keyword">delete</span>[] <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>;
-<a name="l00168"></a>00168                 }
-<a name="l00169"></a>00169                 <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>=newDigits;
-<a name="l00170"></a>00170 <span class="preprocessor">            #else</span>
-<a name="l00171"></a>00171 <span class="preprocessor"></span>                <span class="keywordflow">try</span> {
-<a name="l00172"></a>00172                     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a8867fdad2325f390790c1188e6f71219">mStorage</a>.resize(newcount);
-<a name="l00173"></a>00173                 } <span class="keywordflow">catch</span> (std::bad_alloc&amp;) {
-<a name="l00174"></a>00174                     <span class="keywordflow">throw</span> <a class="code" href="classboost_1_1xint_1_1overflow__error.html" title="Exception class.">xint::overflow_error</a>(<span class="stringliteral">&quot;Out of memory allocating xint::integer&quot;</span>);
-<a name="l00175"></a>00175                 }
-<a name="l00176"></a>00176                 <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>=&amp;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a8867fdad2325f390790c1188e6f71219">mStorage</a>[0];
-<a name="l00177"></a>00177                 <span class="keywordflow">if</span> (!copydigits) <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#abc03de358802a588b87fe666dd8f7c43">zero</a>(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>, newcount);
-<a name="l00178"></a>00178 <span class="preprocessor">            #endif</span>
-<a name="l00179"></a>00179 <span class="preprocessor"></span>        }
-<a name="l00180"></a>00180         <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>=<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a02411914c8a9d59e3521b04367352ea5">mAllocated</a>=newcount;
-<a name="l00181"></a>00181     }
-<a name="l00182"></a>00182 }
-<a name="l00183"></a>00183 
-<a name="l00184"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a8fd5f934c3ad8c1f9d38bb38ac89cfcd">00184</a> <span class="keywordtype">void</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a8fd5f934c3ad8c1f9d38bb38ac89cfcd">data_t::copy</a>(<span class="keyword">const</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html" title="Holds the internal details of an xint::integer.">data_t</a> *c, <span class="keywordtype">size_t</span> extraDigits) {
-<a name="l00185"></a>00185     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a05165b7f45dea3e2459739d856d78288">alloc</a>(c-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>+extraDigits);
-<a name="l00186"></a>00186 
-<a name="l00187"></a>00187     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>=c-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>;
-<a name="l00188"></a>00188     <span class="keywordflow">if</span> (c-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>==1) *<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a> = *c-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>;
-<a name="l00189"></a>00189     <span class="keywordflow">else</span> memcpy(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>, c-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>, <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>*<span class="keyword">sizeof</span>(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>));
-<a name="l00190"></a>00190 
-<a name="l00191"></a>00191     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#abd6528e0c4f7674b4421cc7f1e2aba09">mIsNegative</a>=c-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#abd6528e0c4f7674b4421cc7f1e2aba09">mIsNegative</a>;
-<a name="l00192"></a>00192 
-<a name="l00193"></a>00193     <span class="comment">// Deliberately doesn&#39;t call skipLeadingZeros().</span>
-<a name="l00194"></a>00194 }
-<a name="l00195"></a>00195 
-<a name="l00196"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#abc03de358802a588b87fe666dd8f7c43">00196</a> <span class="keywordtype">void</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#abc03de358802a588b87fe666dd8f7c43">data_t::zero</a>(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *p, <span class="keywordtype">size_t</span> count) {
-<a name="l00197"></a>00197     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *pe=p+count;
-<a name="l00198"></a>00198     <span class="keywordflow">while</span> (p&lt;pe) *p++=0;
-<a name="l00199"></a>00199 }
-<a name="l00200"></a>00200 
-<a name="l00201"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#ad082d802e78dab68eb7409e09386e974">00201</a> <span class="keywordtype">void</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#ad082d802e78dab68eb7409e09386e974">data_t::invert</a>() {
-<a name="l00202"></a>00202     assert(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a6ee92e12f6b7de91f7ad85fcd481bd74">mCopies</a>==1);
-<a name="l00203"></a>00203 
-<a name="l00204"></a>00204     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#abd6528e0c4f7674b4421cc7f1e2aba09">mIsNegative</a>=!<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#abd6528e0c4f7674b4421cc7f1e2aba09">mIsNegative</a>;
-<a name="l00205"></a>00205 
-<a name="l00206"></a>00206     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *d=<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>, *e=d+<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>;
-<a name="l00207"></a>00207     <span class="keywordflow">while</span> (d&lt;e) {
-<a name="l00208"></a>00208         *d=<span class="keyword">static_cast&lt;</span><a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a><span class="keyword">&gt;</span>(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#aa743d942f784ec3a77e85816628d14cc">digit_overflowbit</a> - 1 - *d);
-<a name="l00209"></a>00209         ++d;
-<a name="l00210"></a>00210     }
-<a name="l00211"></a>00211 
-<a name="l00212"></a>00212     d=<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>;
-<a name="l00213"></a>00213     <span class="keywordflow">while</span> (d&lt;e) {
-<a name="l00214"></a>00214         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a> w=(*d)+1;
-<a name="l00215"></a>00215         (*d++)=static_cast&lt;digit_t&gt;(w);
-<a name="l00216"></a>00216         <span class="keywordflow">if</span> (w&lt;<a class="code" href="namespaceboost_1_1xint_1_1detail.html#aa743d942f784ec3a77e85816628d14cc">digit_overflowbit</a>) <span class="keywordflow">break</span>;
-<a name="l00217"></a>00217     }
-<a name="l00218"></a>00218 
-<a name="l00219"></a>00219     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a284e2618d908796987c624311a42625d">skipLeadingZeros</a>();
-<a name="l00220"></a>00220 }
-<a name="l00221"></a>00221 
-<a name="l00222"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a1207c8b514f44886ae98f6632b9726a1">00222</a> <span class="keywordtype">void</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a1207c8b514f44886ae98f6632b9726a1">data_t::negate</a>() {
-<a name="l00223"></a>00223     assert(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a6ee92e12f6b7de91f7ad85fcd481bd74">mCopies</a>==1);
-<a name="l00224"></a>00224 
-<a name="l00225"></a>00225     <span class="comment">// If it&#39;s zero, don&#39;t change the sign</span>
-<a name="l00226"></a>00226     <span class="keywordflow">if</span> (<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>&gt;1 || <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>[0]!=0) <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#abd6528e0c4f7674b4421cc7f1e2aba09">mIsNegative</a>=!<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#abd6528e0c4f7674b4421cc7f1e2aba09">mIsNegative</a>;
-<a name="l00227"></a>00227 }
-<a name="l00228"></a>00228 
-<a name="l00229"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#ac723d73bc8845e6df77f3c439128b939">00229</a> <span class="keywordtype">void</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#ac723d73bc8845e6df77f3c439128b939">data_t::add</a>(<span class="keyword">const</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html" title="Holds the internal details of an xint::integer.">data_t</a>&amp; addend) {
-<a name="l00230"></a>00230     assert(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a6ee92e12f6b7de91f7ad85fcd481bd74">mCopies</a>==1);
-<a name="l00231"></a>00231     assert(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a> &gt;= addend.<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>);
-<a name="l00232"></a>00232 
-<a name="l00233"></a>00233     <span class="comment">// The answer to any addition problem contains, at most, one digit more</span>
-<a name="l00234"></a>00234     <span class="comment">// than the largest addend.</span>
-<a name="l00235"></a>00235     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3bdd8e8ef7c5b8bc888b96725aac9dfe">realloc</a>(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>+1);
-<a name="l00236"></a>00236 
-<a name="l00237"></a>00237     <span class="comment">// Now add the digits, starting at the least-significant digit.</span>
-<a name="l00238"></a>00238     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> carry=0;
-<a name="l00239"></a>00239     <span class="keywordtype">size_t</span> x=0;
-<a name="l00240"></a>00240     <span class="keywordflow">for</span> (; x&lt;addend.<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>; ++x) {
-<a name="l00241"></a>00241         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a> t=<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a>(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>[x])+addend.<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>[x]+carry;
-<a name="l00242"></a>00242         <span class="keywordflow">if</span> (t&gt;=<a class="code" href="namespaceboost_1_1xint_1_1detail.html#aa743d942f784ec3a77e85816628d14cc">digit_overflowbit</a>) { carry=1; t-=<a class="code" href="namespaceboost_1_1xint_1_1detail.html#aa743d942f784ec3a77e85816628d14cc">digit_overflowbit</a>; } <span class="keywordflow">else</span> carry=0;
-<a name="l00243"></a>00243         <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>[x]=<span class="keyword">static_cast&lt;</span><a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a><span class="keyword">&gt;</span>(t);
-<a name="l00244"></a>00244     }
-<a name="l00245"></a>00245 
-<a name="l00246"></a>00246     <span class="keywordflow">while</span> (carry) {
-<a name="l00247"></a>00247         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a> t=<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a>(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>[x])+1;
-<a name="l00248"></a>00248         <span class="keywordflow">if</span> (t&gt;=<a class="code" href="namespaceboost_1_1xint_1_1detail.html#aa743d942f784ec3a77e85816628d14cc">digit_overflowbit</a>) { carry=1; t-=<a class="code" href="namespaceboost_1_1xint_1_1detail.html#aa743d942f784ec3a77e85816628d14cc">digit_overflowbit</a>; } <span class="keywordflow">else</span> carry=0;
-<a name="l00249"></a>00249         <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>[x]=<span class="keyword">static_cast&lt;</span><a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a><span class="keyword">&gt;</span>(t);
-<a name="l00250"></a>00250         ++x;
-<a name="l00251"></a>00251     }
-<a name="l00252"></a>00252 
-<a name="l00253"></a>00253     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a284e2618d908796987c624311a42625d">skipLeadingZeros</a>();
-<a name="l00254"></a>00254 }
-<a name="l00255"></a>00255 
-<a name="l00256"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a138ee1d91bfa37d248c43ef66371e590">00256</a> <span class="keywordtype">void</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a138ee1d91bfa37d248c43ef66371e590">data_t::subtract</a>(<span class="keyword">const</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html" title="Holds the internal details of an xint::integer.">data_t</a>&amp; subtrahend) {
-<a name="l00257"></a>00257     assert(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a6ee92e12f6b7de91f7ad85fcd481bd74">mCopies</a>==1);
-<a name="l00258"></a>00258     assert(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a> &gt;= subtrahend.<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>);
-<a name="l00259"></a>00259 
-<a name="l00260"></a>00260     <span class="comment">// For subtraction, the answer will always be less than or equal to the</span>
-<a name="l00261"></a>00261     <span class="comment">// size of the longest operand, so we&#39;ve already got enough room.</span>
-<a name="l00262"></a>00262 
-<a name="l00263"></a>00263     <span class="comment">// Now subtract the digits, starting at the least-significant one.</span>
-<a name="l00264"></a>00264     <span class="keywordtype">size_t</span> x;
-<a name="l00265"></a>00265     <span class="keywordtype">int</span> borrow=0;
-<a name="l00266"></a>00266     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a> t;
-<a name="l00267"></a>00267     <span class="keywordflow">for</span> (x=0; x&lt;subtrahend.<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>; ++x) {
-<a name="l00268"></a>00268         t=(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>[x]+<a class="code" href="namespaceboost_1_1xint_1_1detail.html#aa743d942f784ec3a77e85816628d14cc">digit_overflowbit</a>)-subtrahend.<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>[x]-borrow;
-<a name="l00269"></a>00269         if (t&lt;<a class="code" href="namespaceboost_1_1xint_1_1detail.html#aa743d942f784ec3a77e85816628d14cc">digit_overflowbit</a>) borrow=1; <span class="keywordflow">else</span> { borrow=0; t-=<a class="code" href="namespaceboost_1_1xint_1_1detail.html#aa743d942f784ec3a77e85816628d14cc">digit_overflowbit</a>; }
-<a name="l00270"></a>00270         <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>[x]=<span class="keyword">static_cast&lt;</span><a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a><span class="keyword">&gt;</span>(t);
-<a name="l00271"></a>00271     }
-<a name="l00272"></a>00272 
-<a name="l00273"></a>00273     <span class="keywordflow">for</span> (; x&lt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a> &amp;&amp; borrow; ++x) {
-<a name="l00274"></a>00274         t=(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>[x]+<a class="code" href="namespaceboost_1_1xint_1_1detail.html#aa743d942f784ec3a77e85816628d14cc">digit_overflowbit</a>)-borrow;
-<a name="l00275"></a>00275         <span class="keywordflow">if</span> (t&lt;<a class="code" href="namespaceboost_1_1xint_1_1detail.html#aa743d942f784ec3a77e85816628d14cc">digit_overflowbit</a>) borrow=1; <span class="keywordflow">else</span> { borrow=0; t-=<a class="code" href="namespaceboost_1_1xint_1_1detail.html#aa743d942f784ec3a77e85816628d14cc">digit_overflowbit</a>; }
-<a name="l00276"></a>00276         <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>[x]=<span class="keyword">static_cast&lt;</span><a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a><span class="keyword">&gt;</span>(t);
-<a name="l00277"></a>00277     }
-<a name="l00278"></a>00278 
-<a name="l00279"></a>00279     <span class="keywordflow">if</span> (borrow) <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a1207c8b514f44886ae98f6632b9726a1">negate</a>();
-<a name="l00280"></a>00280     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a284e2618d908796987c624311a42625d">skipLeadingZeros</a>();
-<a name="l00281"></a>00281 }
-<a name="l00282"></a>00282 
-<a name="l00283"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#aaa43f067c7f1a7772276cf9a57ab653c">00283</a> <span class="keywordtype">void</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#aaa43f067c7f1a7772276cf9a57ab653c">data_t::shift_left</a>(<span class="keywordtype">size_t</span> byBits) {
-<a name="l00284"></a>00284     assert(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a6ee92e12f6b7de91f7ad85fcd481bd74">mCopies</a>==1);
-<a name="l00285"></a>00285     assert(byBits&gt;0);
-<a name="l00286"></a>00286 
-<a name="l00287"></a>00287     <span class="keywordtype">size_t</span> bytes=byBits / <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a>, bits=byBits % <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a>;
-<a name="l00288"></a>00288     <span class="keywordtype">size_t</span> oldLength=<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>;
-<a name="l00289"></a>00289 
-<a name="l00290"></a>00290     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3bdd8e8ef7c5b8bc888b96725aac9dfe">realloc</a>(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>+bytes+1);
-<a name="l00291"></a>00291 
-<a name="l00292"></a>00292     <span class="keywordflow">if</span> (bits != 0) {
-<a name="l00293"></a>00293         <span class="comment">// Handle both bits and bytes in one pass</span>
-<a name="l00294"></a>00294         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *s=<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>+oldLength-1, *t=s+bytes+1;
-<a name="l00295"></a>00295 
-<a name="l00296"></a>00296         *t-- = *s &gt;&gt; (<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a> - bits);
-<a name="l00297"></a>00297         <span class="keywordflow">while</span> (s &gt; <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>) {
-<a name="l00298"></a>00298             *t = (*s-- &lt;&lt; bits);
-<a name="l00299"></a>00299             *t-- |= (*s &gt;&gt; (<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a> - bits));
-<a name="l00300"></a>00300         }
-<a name="l00301"></a>00301         *t = (*s &lt;&lt; bits);
-<a name="l00302"></a>00302 
-<a name="l00303"></a>00303         <span class="keywordflow">if</span> (bytes != 0) memset(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>, 0, <span class="keyword">sizeof</span>(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>) * bytes);
-<a name="l00304"></a>00304     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (bytes != 0) {
-<a name="l00305"></a>00305         memmove(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>+bytes, <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>, <span class="keyword">sizeof</span>(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>) * oldLength);
-<a name="l00306"></a>00306         memset(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>, 0, <span class="keyword">sizeof</span>(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>) * bytes);
-<a name="l00307"></a>00307     }
-<a name="l00308"></a>00308     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a284e2618d908796987c624311a42625d">skipLeadingZeros</a>();
-<a name="l00309"></a>00309 }
-<a name="l00310"></a>00310 
-<a name="l00311"></a><a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#ad28012e618ecab56b69ceac7585d1741">00311</a> <span class="keywordtype">void</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#ad28012e618ecab56b69ceac7585d1741">data_t::shift_right</a>(<span class="keywordtype">size_t</span> byBits) {
-<a name="l00312"></a>00312     assert(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a6ee92e12f6b7de91f7ad85fcd481bd74">mCopies</a>==1);
-<a name="l00313"></a>00313     assert(byBits&gt;0);
-<a name="l00314"></a>00314 
-<a name="l00315"></a>00315     <span class="keywordtype">size_t</span> bytes=byBits / <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a>, bits=byBits % <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a>,
-<a name="l00316"></a>00316         bits2 = <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a> - bits;
-<a name="l00317"></a>00317 
-<a name="l00318"></a>00318     <span class="keywordflow">if</span> (bytes &gt;= <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>) {
-<a name="l00319"></a>00319         <span class="comment">// Right-shift it into oblivion.</span>
-<a name="l00320"></a>00320         <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>=1;
-<a name="l00321"></a>00321         *<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>=0;
-<a name="l00322"></a>00322     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (bits != 0) {
-<a name="l00323"></a>00323         <span class="comment">// Handle both bits and bytes in one pass</span>
-<a name="l00324"></a>00324         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *t=<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>, *s=<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>+bytes, *se=<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>+<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>-1;
-<a name="l00325"></a>00325         <span class="keywordflow">while</span> (s!=se) {
-<a name="l00326"></a>00326             *t = (*s++ &gt;&gt; bits);
-<a name="l00327"></a>00327             *t++ |= (*s &lt;&lt; bits2);
-<a name="l00328"></a>00328         }
-<a name="l00329"></a>00329         *t = (*s &gt;&gt; bits);
-<a name="l00330"></a>00330         <span class="keywordflow">if</span> (bytes != 0) {
-<a name="l00331"></a>00331             memset(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>+mLength-bytes, 0, <span class="keyword">sizeof</span>(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>) * bytes);
-<a name="l00332"></a>00332             mLength-=bytes;
-<a name="l00333"></a>00333         }
-<a name="l00334"></a>00334         <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a284e2618d908796987c624311a42625d">skipLeadingZeros</a>();
-<a name="l00335"></a>00335     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (bytes != 0) {
-<a name="l00336"></a>00336         memmove(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>, <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a> + bytes, <span class="keyword">sizeof</span>(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>) * (<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a> - bytes));
-<a name="l00337"></a>00337         memset(<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a> + <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a> - bytes, 0, <span class="keyword">sizeof</span>(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>) * bytes);
-<a name="l00338"></a>00338         <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>-=bytes;
-<a name="l00339"></a>00339         <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a284e2618d908796987c624311a42625d">skipLeadingZeros</a>();
-<a name="l00340"></a>00340     }
-<a name="l00341"></a>00341 }
-<a name="l00342"></a>00342 
-<a name="l00343"></a>00343 } <span class="comment">// namespace detail</span>
-<a name="l00344"></a>00344 } <span class="comment">// namespace xint</span>
-<a name="l00345"></a>00345 } <span class="comment">// namespace boost</span>
+<a name="l00075"></a>00075         <span class="keywordflow">if</span> (--olddata-&gt;copies == 0) <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a3465b5d474bf9db2df3567fe68e15d33">deallocate</a>(olddata);
+<a name="l00076"></a>00076         <span class="keywordflow">return</span> newdata;
+<a name="l00077"></a>00077     }
+<a name="l00078"></a>00078 }
+<a name="l00079"></a>00079 
+<a name="l00080"></a>00080 data_t&lt;&gt; *<a class="code" href="namespaceboost_1_1xint_1_1detail.html#ab5aa26edc4b7699f3ff5d18729732b71">duplicate</a>(data_t&lt;&gt; *olddata, <span class="keywordtype">size_t</span> extra) {
+<a name="l00081"></a>00081     data_t&lt;&gt; *r = <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a092b8b90955e65e858dfbdd1cc35b960">allocate</a>(olddata-&gt;length+extra, 0);
+<a name="l00082"></a>00082     r-&gt;length = olddata-&gt;length;
+<a name="l00083"></a>00083     r-&gt;copies=1;
+<a name="l00084"></a>00084 
+<a name="l00085"></a>00085     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *s = olddata-&gt;magnitude, *se = s + olddata-&gt;length,
+<a name="l00086"></a>00086         *t = r-&gt;magnitude, *te = t + olddata-&gt;length + extra;
+<a name="l00087"></a>00087     <span class="keywordflow">while</span> (s!=se) *t++ = *s++;
+<a name="l00088"></a>00088     <span class="keywordflow">while</span> (t &lt; te) *t++ = 0;
+<a name="l00089"></a>00089 
+<a name="l00090"></a>00090     <span class="keywordflow">if</span> (olddata &amp;&amp; --olddata-&gt;copies == 0) <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a3465b5d474bf9db2df3567fe68e15d33">deallocate</a>(olddata);
+<a name="l00091"></a>00091     <span class="keywordflow">return</span> r;
+<a name="l00092"></a>00092 }
+<a name="l00093"></a>00093 
+<a name="l00094"></a>00094 data_t&lt;&gt; *<a class="code" href="namespaceboost_1_1xint_1_1detail.html#ab5aa26edc4b7699f3ff5d18729732b71">duplicate</a>(data_t&lt;&gt; *olddata, data_t&lt;&gt; *data_to_copy, <span class="keywordtype">size_t</span> extra) {
+<a name="l00095"></a>00095     <span class="keywordflow">if</span> (!olddata || olddata-&gt;copies &gt; 1 || data_to_copy-&gt;length + extra &gt;
+<a name="l00096"></a>00096         olddata-&gt;max_length)
+<a name="l00097"></a>00097     {
+<a name="l00098"></a>00098         data_t&lt;&gt; *r = <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a092b8b90955e65e858dfbdd1cc35b960">allocate</a>(data_to_copy-&gt;length+extra, 0);
+<a name="l00099"></a>00099         r-&gt;length = data_to_copy-&gt;length + extra;
+<a name="l00100"></a>00100         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *s = data_to_copy-&gt;magnitude, *se = s + data_to_copy-&gt;length,
+<a name="l00101"></a>00101             *t = r-&gt;magnitude, *te = t + r-&gt;length;
+<a name="l00102"></a>00102         <span class="keywordflow">while</span> (s!=se) *t++ = *s++;
+<a name="l00103"></a>00103         <span class="keywordflow">while</span> (t &lt; te) *t++ = 0;
+<a name="l00104"></a>00104         r-&gt;copies=1;
+<a name="l00105"></a>00105         <span class="keywordflow">if</span> (olddata &amp;&amp; --olddata-&gt;copies == 0) <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a3465b5d474bf9db2df3567fe68e15d33">deallocate</a>(olddata);
+<a name="l00106"></a>00106         <span class="keywordflow">return</span> r;
+<a name="l00107"></a>00107     } <span class="keywordflow">else</span> {
+<a name="l00108"></a>00108         data_t&lt;&gt; *r = olddata;
+<a name="l00109"></a>00109         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *s = data_to_copy-&gt;magnitude, *se = s + data_to_copy-&gt;length,
+<a name="l00110"></a>00110             *t = r-&gt;magnitude, *te = t + r-&gt;length + extra;
+<a name="l00111"></a>00111         <span class="keywordflow">while</span> (s != se) *t++ = *s++;
+<a name="l00112"></a>00112         <span class="keywordflow">while</span> (t &lt; te) *t++ = 0;
+<a name="l00113"></a>00113         r-&gt;length = data_to_copy-&gt;length;
+<a name="l00114"></a>00114         <span class="keywordflow">return</span> r;
+<a name="l00115"></a>00115     }
+<a name="l00116"></a>00116 }
+<a name="l00117"></a>00117 
+<a name="l00118"></a>00118 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a3465b5d474bf9db2df3567fe68e15d33">deallocate</a>(data_t&lt;&gt; *data) {
+<a name="l00119"></a>00119     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *digits=<span class="keyword">reinterpret_cast&lt;</span><a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>*<span class="keyword">&gt;</span>(data);
+<a name="l00120"></a>00120 
+<a name="l00121"></a>00121 <span class="preprocessor">    #ifdef XINT_SECURE</span>
+<a name="l00122"></a>00122 <span class="preprocessor"></span>    <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *p = digits, *pe = p + data-&gt;max_length + datasize;
+<a name="l00123"></a>00123     <span class="keywordflow">while</span> (p != pe) *p++ = 0;
+<a name="l00124"></a>00124 <span class="preprocessor">    #endif</span>
+<a name="l00125"></a>00125 <span class="preprocessor"></span>
+<a name="l00126"></a>00126     <span class="keyword">delete</span>[] digits;
+<a name="l00127"></a>00127 }
+<a name="l00128"></a>00128 
+<a name="l00129"></a>00129 } <span class="comment">// namespace detail</span>
+<a name="l00130"></a>00130 } <span class="comment">// namespace xint</span>
+<a name="l00131"></a>00131 } <span class="comment">// namespace boost</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Apr 11 10:17:00 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sat Apr 17 20:02:57 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

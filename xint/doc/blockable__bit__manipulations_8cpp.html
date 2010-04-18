@@ -27,7 +27,7 @@
 </div>
 <div class="contents">
 <h1>blockable_bit_manipulations.cpp File Reference</h1>
-<p>Contains the bit-manipulation functions for blockable integers.  
+<p>Contains the bit-manipulation functions for <code>nothrow_integers</code>.  
 <a href="#_details">More...</a></p>
 
 <p><a href="blockable__bit__manipulations_8cpp_source.html">Go to the source code of this file.</a></p>
@@ -36,36 +36,31 @@
 <tr><td class="memItemLeft" align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost.html">boost</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html">boost::xint</a></td></tr>
 
-<p><tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><p>The common functions are within this namespace. </p>
-<br/></td></tr>
-</p>
-<tr><td class="memItemLeft" align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1blockable.html">boost::xint::blockable</a></td></tr>
-
-<p><tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><p>Contains the blockable integer type, and functions to operate on it. </p>
+<p><tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><p>All the types and functions of the library are within this namespace. </p>
 <br/></td></tr>
 </p>
 <tr><td colspan="2"><h2>Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Bit-manipulation functions</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpcc775c18f98f26f2b84ac7a2558636f2"></a> </p>
 </div></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1blockable.html#afc792f94cf335a3e3dbdf09caae2937d">boost::xint::blockable::getbit</a> (const integer &amp;n, size_t bit)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1blockable.html#ad121a71d8a161b9eaea24fcecf378393">boost::xint::blockable::setbit</a> (integer &amp;n, size_t bit)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1blockable.html#a1731eab251e1601451c3a7c6635c2194">boost::xint::blockable::clearbit</a> (integer &amp;n, size_t bit)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1blockable.html#a9e7a17fbb2cd20db9d1a3431ea6ecdf5">boost::xint::blockable::lowestbit</a> (const integer &amp;n, size_t valueIfZero)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1blockable.html#a3bf3a07f92c73e4fbd30452e057522f5">boost::xint::blockable::highestbit</a> (const integer &amp;n, size_t valueIfZero)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1blockable.html#a42ded343a54837d6f0ac84399227ac8e">boost::xint::blockable::bitwise_and</a> (const integer &amp;n1, const integer &amp;n2)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1blockable.html#a30e1dfd31902219bf24cc843c543469f">boost::xint::blockable::bitwise_or</a> (const integer &amp;n1, const integer &amp;n2)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1blockable.html#ad3c95f6466b3c77d940838331f9d0c3c">boost::xint::blockable::bitwise_xor</a> (const integer &amp;n1, const integer &amp;n2)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1blockable.html#ac096f3f80627f005fd7b4bc69af9f7dd">boost::xint::blockable::shift</a> (const integer &amp;n, int byBits)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1blockable.html#a3a09db2ff23e3bf43bb01ffe1137cee8">boost::xint::blockable::shift_left</a> (const integer &amp;n, size_t byBits)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1blockable.html#ad1ac8c13f6b642be791f59a95f58639b">boost::xint::blockable::shift_right</a> (const integer &amp;n, size_t byBits)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a125277404ae139bee70547f2d51d3e0e">boost::xint::getbit</a> (const nothrow_integer &amp;n, size_t bit)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ac76235b31dcadded8193443b78743948">boost::xint::setbit</a> (nothrow_integer &amp;n, size_t bit)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a6b82b4f0911b258e82b9c11b4413c8bf">boost::xint::clearbit</a> (nothrow_integer &amp;n, size_t bit)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a09477129544d4bdb08ddd63644683f5c">boost::xint::lowestbit</a> (const nothrow_integer &amp;n, size_t valueIfZero)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ab817edabf5a6709c753dc6c07186ea75">boost::xint::highestbit</a> (const nothrow_integer &amp;n, size_t valueIfZero)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">nothrow_integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#abd4c2a471ad1e603ce5ef032071dd2ef">boost::xint::bitwise_and</a> (const nothrow_integer &amp;n1, const nothrow_integer &amp;n2)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">nothrow_integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a1221efa42739f309024e1715adc58917">boost::xint::bitwise_or</a> (const nothrow_integer &amp;n1, const nothrow_integer &amp;n2)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">nothrow_integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ab4996f013ac222b53bea0b46ff95e1df">boost::xint::bitwise_xor</a> (const nothrow_integer &amp;n1, const nothrow_integer &amp;n2)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">nothrow_integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ad62ca08dc3d7600eee872dc5a95c338c">boost::xint::shift</a> (const nothrow_integer &amp;n, int byBits)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">nothrow_integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a4bc41e443d230352f7c099e60f4056f4">boost::xint::shift_left</a> (const nothrow_integer &amp;n, size_t byBits)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">nothrow_integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a295196e5fa8931578d27468cb5154f07">boost::xint::shift_right</a> (const nothrow_integer &amp;n, size_t byBits)</td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
-<p>Contains the bit-manipulation functions for blockable integers. </p>
+<p>Contains the bit-manipulation functions for <code>nothrow_integers</code>. </p>
 
 <p>Definition in file <a class="el" href="blockable__bit__manipulations_8cpp_source.html">blockable_bit_manipulations.cpp</a>.</p>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Apr 11 10:17:00 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sat Apr 17 01:53:01 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

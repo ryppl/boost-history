@@ -38,110 +38,108 @@
 <a name="l00012"></a>00012 <span class="comment">*/</span>
 <a name="l00013"></a>00013 
 <a name="l00018"></a>00018 <span class="preprocessor">#include &quot;../boost/xint/xint.hpp&quot;</span>
-<a name="l00019"></a>00019 <span class="preprocessor">#include &quot;../boost/xint/xint_data_t.hpp&quot;</span>
-<a name="l00020"></a>00020 
-<a name="l00021"></a>00021 <span class="preprocessor">#include &lt;vector&gt;</span>
-<a name="l00022"></a>00022 
-<a name="l00023"></a>00023 <span class="keyword">namespace </span>boost {
-<a name="l00024"></a>00024 <span class="keyword">namespace </span>xint {
-<a name="l00025"></a>00025 
-<a name="l00026"></a>00026 <span class="keyword">using namespace </span>detail;
-<a name="l00027"></a>00027 
-<a name="l00028"></a>00028 <span class="keyword">namespace </span>core {
-<a name="l00029"></a>00029 <span class="keyword">namespace </span>{
-<a name="l00030"></a>00030 
-<a name="l00031"></a>00031     <span class="keywordtype">bool</span> addOverflow(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a> &amp;n1, <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a> n2) {
-<a name="l00032"></a>00032         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a> t=(n1&gt;&gt;1)+(n2&gt;&gt;1);
-<a name="l00033"></a>00033         <span class="keywordflow">if</span> ((n1&amp;1) &amp;&amp; (n2&amp;1)) ++t;
-<a name="l00034"></a>00034         n1+=n2;
-<a name="l00035"></a>00035         <span class="keywordflow">if</span> (t &amp; <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a33ea157e34285642e6924bbffffc4367">doubledigit_hibit</a>) <span class="keywordflow">return</span> <span class="keyword">true</span>;
-<a name="l00036"></a>00036         <span class="keywordflow">return</span> <span class="keyword">false</span>;
-<a name="l00037"></a>00037     }
+<a name="l00019"></a>00019 
+<a name="l00020"></a>00020 <span class="preprocessor">#include &lt;vector&gt;</span>
+<a name="l00021"></a>00021 
+<a name="l00022"></a>00022 <span class="keyword">namespace </span>boost {
+<a name="l00023"></a>00023 <span class="keyword">namespace </span>xint {
+<a name="l00024"></a>00024 
+<a name="l00025"></a>00025 <span class="keyword">using namespace </span>detail;
+<a name="l00026"></a>00026 
+<a name="l00027"></a>00027 <span class="keyword">namespace </span>{
+<a name="l00028"></a>00028 
+<a name="l00029"></a>00029     <span class="keywordtype">bool</span> addOverflow(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a> &amp;n1, <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a> n2) {
+<a name="l00030"></a>00030         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a> t=(n1&gt;&gt;1)+(n2&gt;&gt;1);
+<a name="l00031"></a>00031         <span class="keywordflow">if</span> ((n1&amp;1) &amp;&amp; (n2&amp;1)) ++t;
+<a name="l00032"></a>00032         n1+=n2;
+<a name="l00033"></a>00033         <span class="keywordflow">if</span> (t &amp; <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a33ea157e34285642e6924bbffffc4367">doubledigit_hibit</a>) <span class="keywordflow">return</span> <span class="keyword">true</span>;
+<a name="l00034"></a>00034         <span class="keywordflow">return</span> <span class="keyword">false</span>;
+<a name="l00035"></a>00035     }
+<a name="l00036"></a>00036 
+<a name="l00037"></a>00037 } <span class="comment">// namespace</span>
 <a name="l00038"></a>00038 
-<a name="l00039"></a>00039 } <span class="comment">// namespace</span>
-<a name="l00040"></a>00040 
-<a name="l00050"></a>00050 integer <a class="code" href="namespaceboost_1_1xint_1_1core.html#a72afdedb16eff4404641511681e08116" title="Calculate the value of 2e">pow2</a>(<span class="keywordtype">size_t</span> e) {
-<a name="l00051"></a>00051     integer r;
-<a name="l00052"></a>00052     <a class="code" href="namespaceboost_1_1xint_1_1core.html#aae966bbb23d33801b34108f4490b0778" title="Sets a specific bit in an integer to one.">setbit</a>(r, e);
-<a name="l00053"></a>00053     <span class="keywordflow">return</span> r;
-<a name="l00054"></a>00054 }
-<a name="l00055"></a>00055 
-<a name="l00066"></a>00066 integer <a class="code" href="namespaceboost_1_1xint_1_1core.html#a9bd005ab3992dc51d6c95fdee987f2fe" title="Calculate the value of n2">sqr</a>(<span class="keyword">const</span> integer&amp; n) {
-<a name="l00067"></a>00067     <span class="keyword">const</span> data_t *ndata=n.<a class="code" href="classboost_1_1xint_1_1core_1_1base__integer.html#a28bd6c6ce95b271d6f75d82041515df2">_get_data</a>();
-<a name="l00068"></a>00068     std::vector&lt;doubledigit_t&gt; a(ndata-&gt;mLength*2+1, 0);
-<a name="l00069"></a>00069     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a> *adigit=&amp;a[0];
-<a name="l00070"></a>00070 
-<a name="l00071"></a>00071     <span class="keywordtype">size_t</span> i, j;
-<a name="l00072"></a>00072     integer addend;
-<a name="l00073"></a>00073     data_t *addenddata=addend._get_data();
-<a name="l00074"></a>00074     addenddata-&gt;alloc(ndata-&gt;mLength*2+1);
-<a name="l00075"></a>00075 
-<a name="l00076"></a>00076     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *ndigitip=ndata-&gt;digits;
-<a name="l00077"></a>00077     <span class="keywordflow">for</span> (i=0; i&lt;ndata-&gt;mLength; ++i, ++ndigitip) {
-<a name="l00078"></a>00078         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> ndigiti=*ndigitip;
-<a name="l00079"></a>00079         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a> t=(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a>(ndigiti) * ndigiti);
-<a name="l00080"></a>00080         <span class="keywordflow">if</span> (addOverflow(adigit[2*i], t)) ++addenddata-&gt;digits[2*i+2];
-<a name="l00081"></a>00081 
-<a name="l00082"></a>00082         for (j=i+1; j&lt;ndata-&gt;mLength; ++j) {
-<a name="l00083"></a>00083             <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a> t=(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a>(ndata-&gt;digits[j]) * ndigiti);
-<a name="l00084"></a>00084             <span class="keywordflow">if</span> (t &amp; <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a33ea157e34285642e6924bbffffc4367">doubledigit_hibit</a>) ++addenddata-&gt;digits[i+j+2];
-<a name="l00085"></a>00085             t&lt;&lt;=1;
-<a name="l00086"></a>00086             <span class="keywordflow">if</span> (addOverflow(adigit[i+j], t)) ++addenddata-&gt;digits[i+j+2];
-<a name="l00087"></a>00087         }
-<a name="l00088"></a>00088     }
-<a name="l00089"></a>00089 
-<a name="l00090"></a>00090     integer answer;
-<a name="l00091"></a>00091     data_t *answerdata=answer._get_data();
-<a name="l00092"></a>00092     answerdata-&gt;alloc(ndata-&gt;mLength*2+1);
-<a name="l00093"></a>00093 
-<a name="l00094"></a>00094     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a> carry=0;
-<a name="l00095"></a>00095     <span class="keywordflow">for</span> (i=0, j=ndata-&gt;mLength*2+1; i&lt;j; ++i) {
-<a name="l00096"></a>00096         <span class="keywordflow">if</span> (addOverflow(carry, adigit[i])) ++addenddata-&gt;digits[i+2];
-<a name="l00097"></a>00097         answerdata-&gt;digits[i]=<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>(carry);
-<a name="l00098"></a>00098         carry&gt;&gt;=<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a>;
-<a name="l00099"></a>00099     }
-<a name="l00100"></a>00100 
-<a name="l00101"></a>00101     answerdata-&gt;skipLeadingZeros();
-<a name="l00102"></a>00102     addenddata-&gt;skipLeadingZeros();
-<a name="l00103"></a>00103     answer+=addend;
-<a name="l00104"></a>00104 
-<a name="l00105"></a>00105     <span class="keywordflow">return</span> answer;
-<a name="l00106"></a>00106 }
-<a name="l00107"></a>00107 
-<a name="l00114"></a>00114 integer <a class="code" href="namespaceboost_1_1xint_1_1core.html#a4bf3bb563c2a9a3c1dd98f8975253a30" title="Calculate the value of ne">pow</a>(<span class="keyword">const</span> integer&amp; n, <span class="keyword">const</span> integer&amp; e) {
-<a name="l00115"></a>00115     <span class="keywordtype">bool</span> neg=(n.sign() &lt; 0 &amp;&amp; e.odd());
-<a name="l00116"></a>00116 
-<a name="l00117"></a>00117     <span class="keywordtype">size_t</span> length=e.<a class="code" href="classboost_1_1xint_1_1core_1_1base__integer.html#a9ed6fed4d931d2eb9b481ca02cc96bd7">_get_length</a>(), lastBitCount=0;
-<a name="l00118"></a>00118     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> ee(e._get_digit(length-1));
-<a name="l00119"></a>00119     <span class="keywordflow">while</span> (ee != 0) { ee &gt;&gt;= 1; ++lastBitCount; }
-<a name="l00120"></a>00120 
-<a name="l00121"></a>00121     integer p(<a class="code" href="namespaceboost_1_1xint_1_1core.html#ab1b84a6eb65676fdb85e71c1fe06e792" title="Returns the absolute value of an integer.">abs</a>(n)), answer=<a class="code" href="classboost_1_1xint_1_1core_1_1integer.html#afcf74b546cda2690025c75325365a0fe">integer::one</a>();
-<a name="l00122"></a>00122     <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> eIndex=0; eIndex &lt; length; ++eIndex) {
-<a name="l00123"></a>00123         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> eee(e._get_digit(eIndex));
-<a name="l00124"></a>00124 
-<a name="l00125"></a>00125         <span class="keywordtype">int</span> bitCount(<span class="keywordtype">int</span>(eIndex == length-1 ? lastBitCount : <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a>));
-<a name="l00126"></a>00126         <span class="keywordflow">while</span> (bitCount-- &gt; 0) {
-<a name="l00127"></a>00127             <span class="keywordflow">if</span> (eee &amp; 0x01) answer*=p;
-<a name="l00128"></a>00128             p=<a class="code" href="namespaceboost_1_1xint_1_1core.html#a9bd005ab3992dc51d6c95fdee987f2fe" title="Calculate the value of n2">sqr</a>(p);
-<a name="l00129"></a>00129             eee &gt;&gt;= 1;
-<a name="l00130"></a>00130         }
-<a name="l00131"></a>00131     }
-<a name="l00132"></a>00132 
-<a name="l00133"></a>00133     answer._set_negative(neg);
-<a name="l00134"></a>00134     <span class="keywordflow">return</span> answer;
-<a name="l00135"></a>00135 }
-<a name="l00136"></a>00136 
-<a name="l00148"></a>00148 integer <a class="code" href="namespaceboost_1_1xint_1_1core.html#ab82432c3d99638bb2f56304cf44a405a" title="Calculate the value of n! ">factorial</a>(<span class="keywordtype">size_t</span> n) {
-<a name="l00149"></a>00149     integer r(<a class="code" href="classboost_1_1xint_1_1core_1_1integer.html#afcf74b546cda2690025c75325365a0fe">integer::one</a>());
-<a name="l00150"></a>00150     <span class="keywordflow">while</span> (n &gt; 1) { r *= n--; }
-<a name="l00151"></a>00151     <span class="keywordflow">return</span> r;
-<a name="l00152"></a>00152 }
-<a name="l00153"></a>00153 
-<a name="l00154"></a>00154 } <span class="comment">// namespace core</span>
-<a name="l00155"></a>00155 } <span class="comment">// namespace xint</span>
-<a name="l00156"></a>00156 } <span class="comment">// namespace boost</span>
+<a name="l00048"></a>00048 integer <a class="code" href="namespaceboost_1_1xint.html#af710e4b39cfa66096c202f17d12cc7b7" title="Calculate the value of 2e">pow2</a>(<span class="keywordtype">size_t</span> e) {
+<a name="l00049"></a>00049     integer r;
+<a name="l00050"></a>00050     <a class="code" href="namespaceboost_1_1xint.html#a6278915cf51b0d448a9db40031226182" title="Sets a specific bit in an integer to one.">setbit</a>(r, e);
+<a name="l00051"></a>00051     <span class="keywordflow">return</span> r;
+<a name="l00052"></a>00052 }
+<a name="l00053"></a>00053 
+<a name="l00064"></a>00064 integer <a class="code" href="namespaceboost_1_1xint.html#a83ce32006b45117f9b3dc6c673fc9f01">sqr</a>(<span class="keyword">const</span> integer&amp; n) {
+<a name="l00065"></a>00065     <span class="keyword">const</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *ndigits=n._get_digits();
+<a name="l00066"></a>00066     <span class="keywordtype">size_t</span> nlen=n._get_length();
+<a name="l00067"></a>00067     std::vector&lt;doubledigit_t&gt; a(nlen*2+1, 0);
+<a name="l00068"></a>00068     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a> *adigit=&amp;a[0];
+<a name="l00069"></a>00069 
+<a name="l00070"></a>00070     <span class="keywordtype">size_t</span> i, j;
+<a name="l00071"></a>00071     integer addend;
+<a name="l00072"></a>00072     addend._realloc(nlen*2+1);
+<a name="l00073"></a>00073     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *adigits=addend._get_digits();
+<a name="l00074"></a>00074 
+<a name="l00075"></a>00075     <span class="keyword">const</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *ndigitip=ndigits;
+<a name="l00076"></a>00076     <span class="keywordflow">for</span> (i=0; i&lt;nlen; ++i, ++ndigitip) {
+<a name="l00077"></a>00077         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> ndigiti=*ndigitip;
+<a name="l00078"></a>00078         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a> t=(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a>(ndigiti) * ndigiti);
+<a name="l00079"></a>00079         <span class="keywordflow">if</span> (addOverflow(adigit[2*i], t)) ++adigits[2*i+2];
+<a name="l00080"></a>00080 
+<a name="l00081"></a>00081         <span class="keywordflow">for</span> (j=i+1; j&lt;nlen; ++j) {
+<a name="l00082"></a>00082             <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a> t=(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a>(ndigits[j]) * ndigiti);
+<a name="l00083"></a>00083             <span class="keywordflow">if</span> (t &amp; <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a33ea157e34285642e6924bbffffc4367">doubledigit_hibit</a>) ++adigits[i+j+2];
+<a name="l00084"></a>00084             t&lt;&lt;=1;
+<a name="l00085"></a>00085             <span class="keywordflow">if</span> (addOverflow(adigit[i+j], t)) ++adigits[i+j+2];
+<a name="l00086"></a>00086         }
+<a name="l00087"></a>00087     }
+<a name="l00088"></a>00088 
+<a name="l00089"></a>00089     integer answer;
+<a name="l00090"></a>00090     answer._realloc(nlen*2+1);
+<a name="l00091"></a>00091 
+<a name="l00092"></a>00092     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a> carry=0;
+<a name="l00093"></a>00093     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *ansdigits=answer._get_digits();
+<a name="l00094"></a>00094     <span class="keywordflow">for</span> (i=0, j=nlen*2+1; i&lt;j; ++i) {
+<a name="l00095"></a>00095         <span class="keywordflow">if</span> (addOverflow(carry, adigit[i])) ++adigits[i+2];
+<a name="l00096"></a>00096         ansdigits[i]=<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>(carry);
+<a name="l00097"></a>00097         carry&gt;&gt;=<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a>;
+<a name="l00098"></a>00098     }
+<a name="l00099"></a>00099 
+<a name="l00100"></a>00100     answer._cleanup();
+<a name="l00101"></a>00101     addend._cleanup();
+<a name="l00102"></a>00102     answer+=addend;
+<a name="l00103"></a>00103 
+<a name="l00104"></a>00104     <span class="keywordflow">return</span> answer;
+<a name="l00105"></a>00105 }
+<a name="l00106"></a>00106 
+<a name="l00113"></a>00113 integer <a class="code" href="namespaceboost_1_1xint.html#a7f73207284ff1f32b20fb8a6a7a82649">pow</a>(<span class="keyword">const</span> integer&amp; n, <span class="keyword">const</span> integer&amp; e) {
+<a name="l00114"></a>00114     <span class="keywordtype">bool</span> neg=(n.sign() &lt; 0 &amp;&amp; e.odd());
+<a name="l00115"></a>00115 
+<a name="l00116"></a>00116     <span class="keywordtype">size_t</span> length=e.<a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a7462afdf5589caa01bb1ed732f633469">_get_length</a>(), lastBitCount=0;
+<a name="l00117"></a>00117     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> ee(e._get_digit(length-1));
+<a name="l00118"></a>00118     <span class="keywordflow">while</span> (ee != 0) { ee &gt;&gt;= 1; ++lastBitCount; }
+<a name="l00119"></a>00119 
+<a name="l00120"></a>00120     integer p(<a class="code" href="namespaceboost_1_1xint.html#a0e114c276fc9affcc068dd5f0fbd9ff9">abs</a>(n)), answer=<a class="code" href="classboost_1_1xint_1_1integer.html#aa332681715634b73118ffe76090a75d3">integer::one</a>();
+<a name="l00121"></a>00121     <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> eIndex=0; eIndex &lt; length; ++eIndex) {
+<a name="l00122"></a>00122         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> eee(e._get_digit(eIndex));
+<a name="l00123"></a>00123 
+<a name="l00124"></a>00124         <span class="keywordtype">int</span> bitCount(<span class="keywordtype">int</span>(eIndex == length-1 ? lastBitCount : <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a>));
+<a name="l00125"></a>00125         <span class="keywordflow">while</span> (bitCount-- &gt; 0) {
+<a name="l00126"></a>00126             <span class="keywordflow">if</span> (eee &amp; 0x01) answer*=p;
+<a name="l00127"></a>00127             p=<a class="code" href="namespaceboost_1_1xint.html#a83ce32006b45117f9b3dc6c673fc9f01">sqr</a>(p);
+<a name="l00128"></a>00128             eee &gt;&gt;= 1;
+<a name="l00129"></a>00129         }
+<a name="l00130"></a>00130     }
+<a name="l00131"></a>00131 
+<a name="l00132"></a>00132     answer._set_negative(neg);
+<a name="l00133"></a>00133     <span class="keywordflow">return</span> answer;
+<a name="l00134"></a>00134 }
+<a name="l00135"></a>00135 
+<a name="l00147"></a>00147 integer <a class="code" href="namespaceboost_1_1xint.html#a942e346f6e6d069dc19c28e7e56634ab" title="Calculate the value of n! ">factorial</a>(<span class="keywordtype">size_t</span> n) {
+<a name="l00148"></a>00148     integer r(<a class="code" href="classboost_1_1xint_1_1integer.html#aa332681715634b73118ffe76090a75d3">integer::one</a>());
+<a name="l00149"></a>00149     <span class="keywordflow">while</span> (n &gt; 1) { r *= n--; }
+<a name="l00150"></a>00150     <span class="keywordflow">return</span> r;
+<a name="l00151"></a>00151 }
+<a name="l00152"></a>00152 
+<a name="l00153"></a>00153 } <span class="comment">// namespace xint</span>
+<a name="l00154"></a>00154 } <span class="comment">// namespace boost</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Apr 11 10:17:00 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sat Apr 17 20:02:58 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

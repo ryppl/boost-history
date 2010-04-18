@@ -24,7 +24,6 @@
 */
 
 #include "../boost/xint/xint.hpp"
-#include "../boost/xint/xint_data_t.hpp"
 
 #include <vector>
 #include <algorithm>
@@ -45,8 +44,6 @@ char nToChar(int n, bool upperCase) {
 
 } // namespace
 
-namespace core {
-
 /*! \brief Creates a string representation of the specified integer.
 
 \param[in] n The integer to convert.
@@ -55,10 +52,9 @@ to base 10.
 \param[in] uppercase Whether to make alphabetic characters (for bases greater
 than ten) uppercase or not. Defaults to \c false.
 
-\returns The string value of \c n. If \c n is Not-a-Number, returns the string
-\c \#NaN#.
+\returns The string value of \c n.
 
-\exception xint::invalid_base if base is less than two or greater than 36.
+\exception exceptions::invalid_base if base is less than two or greater than 36.
 
 \remarks
 This is the function that's called when you ask the library to write an integer
@@ -66,16 +62,16 @@ to a stream, but it's more flexible because you can specify any base between 2
 and 36. (Streams only allow base-8, base-10, or base-16.)
 */
 std::string to_string(const integer& n, size_t base, bool uppercase) {
-    if (base<2 || base>36) throw invalid_base();
+    if (base<2 || base>36) throw exceptions::invalid_base();
 
     if (n.sign()==0) return "0";
 
     std::ostringstream out;
     if (base==16) {
         // Special no-division version, primarily for debugging division
-        const data_t *ndata=n._get_data();
-        const digit_t *firstDigit=ndata->digits,
-            *lastDigit=firstDigit + ndata->mLength - 1;
+        //const data_t *ndata=n._get_data();
+        const digit_t *firstDigit=n._get_digits(),
+            *lastDigit=firstDigit + n._get_length() - 1;
 
         const int bitsPerDigit=4;
         const digit_t mask=(doubledigit_t(1) << bitsPerDigit)-1;
@@ -126,15 +122,14 @@ for interpreting a numeric constant: any number with a zero as the first digit
 is assumed to be base-8; any number with a leading zero-x or zero-X (such as
 0x1f) is base-16, and anything else is base-10.
 
-\returns An integer with the numeric value of the string in base \c base. If the
-string is \c \#NaN#, then it will return \link nan Not-a-Number\endlink.
+\returns An integer with the numeric value of the string in base \c base.
 
-\exception xint::overflow_error if there is not enough free memory to create the
-integer.
-\exception xint::invalid_base if the base parameter is not between 2 and 36
+\exception exceptions::overflow_error if there is not enough free memory to
+create the integer.
+\exception exceptions::invalid_base if the base parameter is not between 2 and 36
 (inclusive) or the constant xint::autobase.
-\exception xint::invalid_digit if the string contains any digit that cannot be
-part of a number in the specified base, or if there are no valid digits.
+\exception exceptions::invalid_digit if the string contains any digit that cannot
+be part of a number in the specified base, or if there are no valid digits.
 
 \remarks
 This is the function that's called when reading an integer from a stream, or
@@ -158,8 +153,8 @@ integer from_string(const std::string& str, size_t base) {
         } else base=10;
     }
 
-    if (base<2 || base>36) throw invalid_base();
-    if (*c==0) throw invalid_digit("No valid digits");
+    if (base<2 || base>36) throw exceptions::invalid_base();
+    if (*c==0) throw exceptions::invalid_digit("No valid digits");
 
     const integer shift(base);
 
@@ -169,11 +164,11 @@ integer from_string(const std::string& str, size_t base) {
         if (*c>='0' && *c<='9') digit=*c-'0';
         else if (*c>='A' && *c<='Z') digit=*c-'A'+10;
         else if (*c>='a' && *c<='z') digit=*c-'a'+10;
-        else throw invalid_digit("encountered non-alphanumeric character in "
-            "string");
+        else throw exceptions::invalid_digit("encountered non-alphanumeric "
+            "character in string");
 
-        if (digit >= base) throw invalid_digit("encountered digit greater than "
-            "base allows");
+        if (digit >= base) throw exceptions::invalid_digit("encountered digit "
+            "greater than base allows");
 
         r = (r * shift) + digit;
         ++c;
@@ -196,9 +191,8 @@ integer from_binary(const std::string& str) {
     const size_t bitsPerByte=std::numeric_limits<unsigned char>::digits;
 
     integer r;
-    detail::data_t *rdata=r._get_data();
-    rdata->alloc((str.length() + bytesPerDigit - 1)/bytesPerDigit);
-    digit_t *p=rdata->digits;
+    r._realloc((str.length() + bytesPerDigit - 1)/bytesPerDigit);
+    digit_t *p=r._get_digits();
 
     unsigned char *s=(unsigned char *)str.data(), *se=s+str.length();
     while (s<se) {
@@ -207,7 +201,7 @@ integer from_binary(const std::string& str) {
             d |= (digit_t(*s++) << (i * bitsPerByte));
         *p++=d;
     }
-    rdata->skipLeadingZeros();
+    r._cleanup();
     return r;
 }
 
@@ -221,9 +215,6 @@ integer from_binary(const std::string& str) {
 This function only stores the absolute value of \c n; if you need the sign, you
 must store it separately.
 
-\par If exceptions are blocked, returns an empty std::string instead of
-throwing.
-
 \remarks
 A binary representation is sometimes used for persistent storage or
 transmission, as it is more space-efficient than a string representation.
@@ -236,8 +227,7 @@ std::string to_binary(const integer& n) {
     std::vector<unsigned char> temp;
     temp.reserve(n._get_length() * bytesPerDigit);
 
-    const detail::data_t *ndata=n._get_data();
-    const digit_t *p=ndata->digits, *pe=p+n._get_length();
+    const digit_t *p=n._get_digits(), *pe=p+n._get_length();
     while (p != pe) {
         digit_t d(*p++);
         for (size_t i=0; i<bytesPerDigit; ++i) {
@@ -250,6 +240,5 @@ std::string to_binary(const integer& n) {
     return std::string(c, c+temp.size());
 }
 
-} // namespace core
 } // namespace xint
 } // namespace boost

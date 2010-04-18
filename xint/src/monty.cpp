@@ -19,7 +19,6 @@
 */
 
 #include "../boost/xint/xint.hpp"
-#include "../boost/xint/xint_data_t.hpp"
 
 #include <boost/scoped_array.hpp>
 
@@ -27,7 +26,6 @@
 
 namespace boost {
 namespace xint {
-namespace core {
 
 using namespace detail;
 
@@ -46,7 +44,7 @@ digit_t inverse0(const integer& n) {
            internal representation. Used internally.
 */
 integer montgomeryR(const integer& n) {
-    return integer::one() << (bits_per_digit * n._get_data()->mLength);
+    return integer::one() << (bits_per_digit * n._get_length());
 }
 
 //! Returns the Montgomery form of a number. Used for testing.
@@ -233,8 +231,8 @@ integer montgomeryPowerMod(const integer& a, const integer& e, const integer& n)
     const TUTable &tuTable(TUTable::get());
 
     if (e.sign()==0) return integer::one();
-    if (n.even()) throw invalid_modulus("montgomeryPowerMod requires an odd "
-        "modulus");
+    if (n.even()) throw exceptions::invalid_modulus("montgomeryPowerMod "
+        "requires an odd modulus");
 
     // Precalculate some values
     const size_t k(mostEfficientK(e));
@@ -279,6 +277,5 @@ integer montgomeryPowerMod(const integer& a, const integer& e, const integer& n)
     return montgomeryMultiplyMod(pp, integer::one(), n, nPrime0);
 }
 
-} // namespace core
 } // namespace xint
 } // namespace boost

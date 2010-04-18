@@ -41,56 +41,54 @@
 <a name="l00020"></a>00020 
 <a name="l00021"></a>00021 <span class="keyword">namespace </span>boost {
 <a name="l00022"></a>00022 <span class="keyword">namespace </span>xint {
-<a name="l00023"></a>00023 <span class="keyword">namespace </span>blockable {
-<a name="l00024"></a>00024 
-<a name="l00029"></a>00029 <span class="keywordtype">int</span> <a class="code" href="namespaceboost_1_1xint_1_1blockable.html#ad4d320afe012be4d62cca1ee985daa95">compare</a>(<span class="keyword">const</span> integer &amp;b1, <span class="keyword">const</span> integer &amp;b2, <span class="keywordtype">bool</span> ignoresign) {
-<a name="l00030"></a>00030     <span class="keywordflow">try</span> {
-<a name="l00031"></a>00031         <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint_1_1blockable.html#ad4d320afe012be4d62cca1ee985daa95">compare</a>(core::integer(b1), core::integer(b2));
-<a name="l00032"></a>00032     } <span class="keywordflow">catch</span> (std::exception&amp;) {
-<a name="l00033"></a>00033         <span class="keywordflow">if</span> (<a class="code" href="namespaceboost_1_1xint.html#a389e96a85ba1c76ef5bfcf836b7e4e8a" title="Query whether exceptions are currently allowed or blocked.">exceptions_allowed</a>()) <span class="keywordflow">throw</span>;
-<a name="l00034"></a>00034         <span class="keywordflow">else</span> <span class="keywordflow">return</span> 0;
-<a name="l00035"></a>00035     }
-<a name="l00036"></a>00036 }
-<a name="l00037"></a>00037 
-<a name="l00038"></a>00038 <span class="keyword">namespace </span>{
-<a name="l00039"></a>00039 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00040"></a>00040 <span class="keywordtype">bool</span> cmp(<span class="keyword">const</span> integer &amp;num1, <span class="keyword">const</span> integer &amp;num2, <span class="keyword">const</span> T&amp; t) {
-<a name="l00041"></a>00041     <span class="keywordflow">try</span> {
-<a name="l00042"></a>00042         <span class="keywordflow">return</span> t(<a class="code" href="namespaceboost_1_1xint_1_1blockable.html#ad4d320afe012be4d62cca1ee985daa95">compare</a>(core::integer(num1), core::integer(num2)), 0);
-<a name="l00043"></a>00043     } <span class="keywordflow">catch</span> (std::exception&amp;) {
-<a name="l00044"></a>00044         <span class="keywordflow">if</span> (<a class="code" href="namespaceboost_1_1xint.html#a389e96a85ba1c76ef5bfcf836b7e4e8a" title="Query whether exceptions are currently allowed or blocked.">exceptions_allowed</a>()) <span class="keywordflow">throw</span>;
-<a name="l00045"></a>00045         <span class="keywordflow">else</span> <span class="keywordflow">return</span> <span class="keyword">false</span>;
-<a name="l00046"></a>00046     }
-<a name="l00047"></a>00047 }
-<a name="l00048"></a>00048 } <span class="comment">// namespace</span>
-<a name="l00049"></a>00049 
-<a name="l00050"></a>00050 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint_1_1blockable.html#ad590f6564f7b4ba124835dce5a49b6e8">operator!</a>(<span class="keyword">const</span> integer &amp;num1) {
-<a name="l00051"></a>00051     <span class="keywordflow">try</span> {
-<a name="l00052"></a>00052         <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint_1_1blockable.html#ad590f6564f7b4ba124835dce5a49b6e8">operator!</a>(core::integer(num1));
-<a name="l00053"></a>00053     } <span class="keywordflow">catch</span> (std::exception&amp;) {
-<a name="l00054"></a>00054         <span class="keywordflow">if</span> (<a class="code" href="namespaceboost_1_1xint.html#a389e96a85ba1c76ef5bfcf836b7e4e8a" title="Query whether exceptions are currently allowed or blocked.">exceptions_allowed</a>()) <span class="keywordflow">throw</span>;
-<a name="l00055"></a>00055         <span class="keywordflow">else</span> <span class="keywordflow">return</span> <span class="keyword">false</span>;
-<a name="l00056"></a>00056     }
-<a name="l00057"></a>00057 }
-<a name="l00058"></a>00058 
-<a name="l00059"></a>00059 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint_1_1blockable.html#a30d62778d26a857f5b3ff6a56ebe6e6a">operator==</a>(<span class="keyword">const</span> integer &amp;num1, <span class="keyword">const</span> integer &amp;num2) {
-<a name="l00060"></a>00060     <span class="keywordflow">return</span> cmp(num1, num2, std::equal_to&lt;int&gt;()); }
-<a name="l00061"></a>00061 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint_1_1blockable.html#a51e46fd4112a2fcff16e11d977f92e63">operator!=</a>(<span class="keyword">const</span> integer&amp; num1, <span class="keyword">const</span> integer&amp; num2) {
-<a name="l00062"></a>00062     <span class="keywordflow">return</span> cmp(num1, num2, std::not_equal_to&lt;int&gt;()); }
-<a name="l00063"></a>00063 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint_1_1blockable.html#a03cbe2419b28b7d7bc86afe71158108e">operator&lt;</a>(<span class="keyword">const</span> integer&amp; num1, <span class="keyword">const</span> integer&amp; num2) {
-<a name="l00064"></a>00064     <span class="keywordflow">return</span> cmp(num1, num2, std::less&lt;int&gt;()); }
-<a name="l00065"></a>00065 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint_1_1blockable.html#ab3826f291c742f4b980d34cec652173c">operator&gt;</a>(<span class="keyword">const</span> integer&amp; num1, <span class="keyword">const</span> integer&amp; num2) {
-<a name="l00066"></a>00066     <span class="keywordflow">return</span> cmp(num1, num2, std::greater&lt;int&gt;()); }
-<a name="l00067"></a>00067 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint_1_1blockable.html#a2f826b80a2baf62af87d3335a260ee0d">operator&lt;=</a>(<span class="keyword">const</span> integer&amp; num1, <span class="keyword">const</span> integer&amp; num2) {
-<a name="l00068"></a>00068     <span class="keywordflow">return</span> cmp(num1, num2, std::less_equal&lt;int&gt;()); }
-<a name="l00069"></a>00069 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint_1_1blockable.html#afab66769cd37ad94e89559e55746a55b">operator&gt;=</a>(<span class="keyword">const</span> integer&amp; num1, <span class="keyword">const</span> integer&amp; num2) {
-<a name="l00070"></a>00070     <span class="keywordflow">return</span> cmp(num1, num2, std::greater_equal&lt;int&gt;()); }
-<a name="l00071"></a>00071 
-<a name="l00072"></a>00072 } <span class="comment">// namespace blockable</span>
-<a name="l00073"></a>00073 } <span class="comment">// namespace xint</span>
-<a name="l00074"></a>00074 } <span class="comment">// namespace boost</span>
+<a name="l00023"></a>00023 
+<a name="l00028"></a>00028 <span class="keywordtype">int</span> <a class="code" href="namespaceboost_1_1xint.html#a2745c08384519957ceaf26c3e421d485">compare</a>(<span class="keyword">const</span> nothrow_integer &amp;b1, <span class="keyword">const</span> nothrow_integer &amp;b2, <span class="keywordtype">bool</span> ignoresign) {
+<a name="l00029"></a>00029     <span class="keywordflow">try</span> {
+<a name="l00030"></a>00030         <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a2745c08384519957ceaf26c3e421d485">compare</a>(xint::integer(b1), xint::integer(b2));
+<a name="l00031"></a>00031     } <span class="keywordflow">catch</span> (std::exception&amp;) {
+<a name="l00032"></a>00032         <span class="keywordflow">if</span> (<a class="code" href="namespaceboost_1_1xint.html#a389e96a85ba1c76ef5bfcf836b7e4e8a" title="Query whether exceptions are currently allowed or blocked.">exceptions_allowed</a>()) <span class="keywordflow">throw</span>;
+<a name="l00033"></a>00033         <span class="keywordflow">else</span> <span class="keywordflow">return</span> 0;
+<a name="l00034"></a>00034     }
+<a name="l00035"></a>00035 }
+<a name="l00036"></a>00036 
+<a name="l00037"></a>00037 <span class="keyword">namespace </span>{
+<a name="l00038"></a>00038 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00039"></a>00039 <span class="keywordtype">bool</span> cmp(<span class="keyword">const</span> nothrow_integer &amp;num1, <span class="keyword">const</span> nothrow_integer &amp;num2, <span class="keyword">const</span> T&amp; t) {
+<a name="l00040"></a>00040     <span class="keywordflow">try</span> {
+<a name="l00041"></a>00041         <span class="keywordflow">return</span> t(<a class="code" href="namespaceboost_1_1xint.html#a2745c08384519957ceaf26c3e421d485">compare</a>(xint::integer(num1), xint::integer(num2)), 0);
+<a name="l00042"></a>00042     } <span class="keywordflow">catch</span> (std::exception&amp;) {
+<a name="l00043"></a>00043         <span class="keywordflow">if</span> (<a class="code" href="namespaceboost_1_1xint.html#a389e96a85ba1c76ef5bfcf836b7e4e8a" title="Query whether exceptions are currently allowed or blocked.">exceptions_allowed</a>()) <span class="keywordflow">throw</span>;
+<a name="l00044"></a>00044         <span class="keywordflow">else</span> <span class="keywordflow">return</span> <span class="keyword">false</span>;
+<a name="l00045"></a>00045     }
+<a name="l00046"></a>00046 }
+<a name="l00047"></a>00047 } <span class="comment">// namespace</span>
+<a name="l00048"></a>00048 
+<a name="l00049"></a>00049 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#ad1ffadda01cf8e0b230178a9325d96dc">operator!</a>(<span class="keyword">const</span> nothrow_integer &amp;num1) {
+<a name="l00050"></a>00050     <span class="keywordflow">try</span> {
+<a name="l00051"></a>00051         <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#ad1ffadda01cf8e0b230178a9325d96dc">operator!</a>(xint::integer(num1));
+<a name="l00052"></a>00052     } <span class="keywordflow">catch</span> (std::exception&amp;) {
+<a name="l00053"></a>00053         <span class="keywordflow">if</span> (<a class="code" href="namespaceboost_1_1xint.html#a389e96a85ba1c76ef5bfcf836b7e4e8a" title="Query whether exceptions are currently allowed or blocked.">exceptions_allowed</a>()) <span class="keywordflow">throw</span>;
+<a name="l00054"></a>00054         <span class="keywordflow">else</span> <span class="keywordflow">return</span> <span class="keyword">false</span>;
+<a name="l00055"></a>00055     }
+<a name="l00056"></a>00056 }
+<a name="l00057"></a>00057 
+<a name="l00058"></a>00058 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#accccaec2c2a8ccfadfc559adbb7ff6ed">operator==</a>(<span class="keyword">const</span> nothrow_integer &amp;num1, <span class="keyword">const</span> nothrow_integer &amp;num2) {
+<a name="l00059"></a>00059     <span class="keywordflow">return</span> cmp(num1, num2, std::equal_to&lt;int&gt;()); }
+<a name="l00060"></a>00060 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a43189615a1bfb4904c969efe846cefc6">operator!=</a>(<span class="keyword">const</span> nothrow_integer&amp; num1, <span class="keyword">const</span> nothrow_integer&amp; num2) {
+<a name="l00061"></a>00061     <span class="keywordflow">return</span> cmp(num1, num2, std::not_equal_to&lt;int&gt;()); }
+<a name="l00062"></a>00062 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#aab98cd20fa3761900de197363bac0fcb">operator&lt;</a>(<span class="keyword">const</span> nothrow_integer&amp; num1, <span class="keyword">const</span> nothrow_integer&amp; num2) {
+<a name="l00063"></a>00063     <span class="keywordflow">return</span> cmp(num1, num2, std::less&lt;int&gt;()); }
+<a name="l00064"></a>00064 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a002b54ae65c6c265d773e7b491bd90fb">operator&gt;</a>(<span class="keyword">const</span> nothrow_integer&amp; num1, <span class="keyword">const</span> nothrow_integer&amp; num2) {
+<a name="l00065"></a>00065     <span class="keywordflow">return</span> cmp(num1, num2, std::greater&lt;int&gt;()); }
+<a name="l00066"></a>00066 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a8a72cb95a5e25a310215eaa2cc93349f">operator&lt;=</a>(<span class="keyword">const</span> nothrow_integer&amp; num1, <span class="keyword">const</span> nothrow_integer&amp; num2) {
+<a name="l00067"></a>00067     <span class="keywordflow">return</span> cmp(num1, num2, std::less_equal&lt;int&gt;()); }
+<a name="l00068"></a>00068 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a2e213ecd798c6bc331460dff13b35173">operator&gt;=</a>(<span class="keyword">const</span> nothrow_integer&amp; num1, <span class="keyword">const</span> nothrow_integer&amp; num2) {
+<a name="l00069"></a>00069     <span class="keywordflow">return</span> cmp(num1, num2, std::greater_equal&lt;int&gt;()); }
+<a name="l00070"></a>00070 
+<a name="l00071"></a>00071 } <span class="comment">// namespace xint</span>
+<a name="l00072"></a>00072 } <span class="comment">// namespace boost</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Apr 11 10:17:00 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sat Apr 17 01:53:01 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

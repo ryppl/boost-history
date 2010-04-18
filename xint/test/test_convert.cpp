@@ -27,8 +27,6 @@ using std::endl;
 namespace boost {
 namespace xint {
 
-using namespace test;
-
 BOOST_AUTO_TEST_CASE(testConvert) {
     // Come up with a sufficiently complex number to test with. It must be
     // greater than one digit's worth of data, and have at least one leading
@@ -72,22 +70,19 @@ BOOST_AUTO_TEST_CASE(testConvert) {
         }
     }
 
-    BOOST_REQUIRE(exceptions_allowed());
-
     // Test base numbers that shouldn't be allowed
     const std::vector<int> testBases=boost::assign::list_of(-1)(0)(1)(37);
     for (std::vector<int>::const_iterator b=testBases.begin();
         b!=testBases.end(); ++b)
-            BOOST_CHECK_THROW(to_string(n, *b), invalid_base);
+            BOOST_CHECK_THROW(to_string(n, *b), exceptions::invalid_base);
 
-    boost::int32_t nSrc=1234567890;
+    boost::int32_t nSrc = 1234567890;
     n=nSrc;
-    boost::int32_t nTgt=to<boost::int32_t>(n);
+    boost::int32_t nTgt = to<boost::int32_t>(n);
     BOOST_CHECK_EQUAL(nTgt, nSrc);
 
     {
-        token t=block_exceptions();
-        BOOST_CHECK_NO_THROW(blockable::integer badConversion("abcdefg", 16));
+        BOOST_CHECK_NO_THROW(nothrow_integer badConversion("abcdefg", 16));
     }
 
     {

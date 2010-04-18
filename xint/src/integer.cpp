@@ -16,71 +16,18 @@
 */
 
 #include "../boost/xint/xint.hpp"
-#include "../boost/xint/xint_data_t.hpp"
-
-#ifdef XINT_THREADSAFE
-    #define XINT_DISABLE_COPY_ON_WRITE
-#endif
+#include <memory> // for auto_ptr
 
 namespace boost {
 namespace xint {
-namespace core {
 
 namespace {
 	std::auto_ptr<integer> cZero, cOne;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// The base_integer class
-
-base_integer::~base_integer() {
-    if (data && data->detach()) delete data;
-}
-
-detail::digit_t base_integer::_get_digit(size_t index) const {
-    return data->digits[index];
-}
-
-detail::digit_t base_integer::_get_digit(size_t index, bool) const {
-    if (index >= data->mLength) return 0;
-    return data->digits[index];
-}
-
-size_t base_integer::_get_length() const {
-    return data->mLength;
-}
-
-void base_integer::_attach(detail::data_t *new_data) {
-    if (data && data->detach()) delete data;
-    #ifdef XINT_DISABLE_COPY_ON_WRITE
-        if (new_data==0 || new_data->mCopies==0) data=new_data;
-        else {
-            try {
-                data=new detail::data_t(new_data);
-            } catch (std::bad_alloc&) {
-                throw xint::overflow_error("Out of memory allocating xint::integer");
-            }
-        }
-    #else
-        data=new_data;
-    #endif
-    if (data) data->attach();
-}
-
-void base_integer::_attach(const base_integer& copy) {
-    _attach(copy.data);
-}
-
-bool base_integer::_is_unique() const {
-    return (!data || data->mCopies==1);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// The core integer class
-
 //! \brief Creates a new integer with an initial value of zero.
 integer::integer() {
-    _init();
+    _attach_0();
 }
 
 /*! \brief Creates a copy of an existing integer.
@@ -89,27 +36,27 @@ integer::integer() {
 another Not-a-Number.
 
 \note
-This library can use a \link cow copy-on-write technique\endlink, making
-copying (even of large numbers) a very inexpensive operation.
+This library can use a \ref cow "copy-on-write technique", making copying (even
+of large numbers) a very inexpensive operation.
 
 \overload
 */
 integer::integer(const integer& b) {
-    _init(b);
+    _attach(b);
 }
 
-/*! \brief Creates an integer from a blockable::integer.
+/*! \brief Creates an integer from a nothrow_integer.
 
-\param[in] b An existing blockable::integer.
+\param[in] b An existing nothrow_integer.
 
 \note
-This library can use a \link cow copy-on-write technique\endlink, making
-copying (even of large numbers) a very inexpensive operation.
+This library can use a \ref cow "copy-on-write technique", making copying (even
+of large numbers) a very inexpensive operation.
 
 \overload
 */
-integer::integer(const blockable::integer& b) {
-    if (b.is_nan()) throw xint::not_a_number();
+integer::integer(const nothrow_integer& b) {
+    if (b.is_nan()) throw exceptions::not_a_number();
     _attach(b);
 }
 
@@ -118,14 +65,15 @@ integer::integer(const blockable::integer& b) {
 \param[in] str A string representation of a number.
 \param[in] base The base of the number, or xint::autobase.
 
-\exception xint::invalid_base if the base parameter is not between 2 and 36
+\exception exceptions::invalid_base if the base parameter is not between 2 and 36
 (inclusive) or the constant xint::autobase.
-\exception xint::invalid_digit if the string contains any digit that cannot be
-part of a number in the specified base, or if there are no valid digits.
+\exception exceptions::invalid_digit if the string contains any digit that cannot
+be part of a number in the specified base, or if there are no valid digits.
 
 \remarks
 This will convert a string representation of a number into an integer. See the
-description of the xint::from_string function for details on its behavior.
+description of the \ref xint::from_string "from_string" function for details on
+its behavior.
 
 \par
 This is the most common way to initialize values that are too large to fit into
@@ -134,44 +82,11 @@ a native integral type.
 \overload
 */
 integer::integer(const std::string& str, size_t base) {
-    _init(from_string(str, base));
-}
-
-void integer::_init(detail::digit_t init) {
-    try {
-        _attach(new detail::data_t(init));
-    } catch (std::bad_alloc&) {
-        throw xint::overflow_error("Out of memory allocating xint::integer");
-    }
-}
-
-void integer::_init(const integer &c) {
-    _attach(c);
-}
-
-void integer::_init(boost::uintmax_t n) {
-    try {
-        _attach(new detail::data_t(n, true));
-    } catch (std::bad_alloc&) {
-        throw xint::overflow_error("Out of memory allocating xint::integer");
-    }
+    _attach(from_string(str, base));
 }
 
 void integer::_make_unique() {
-    try {
-        if (!_is_unique()) _attach(new detail::data_t(_get_data()));
-    } catch (std::bad_alloc&) {
-        throw xint::overflow_error("Out of memory allocating xint::integer");
-    }
-}
-
-void integer::_set_negative(bool negative) {
-    if (_get_data()->mIsNegative != negative) {
-        _make_unique();
-        detail::data_t *p=_get_data();
-        p->mIsNegative=negative;
-        p->skipLeadingZeros();
-    }
+    _base_make_unique();
 }
 
 /*! \brief Tests the lowest bit of \c *this to determine oddness.
@@ -192,12 +107,16 @@ bool integer::even() const {
 
 /*! \brief Tests the sign of \c *this.
 
+\param[in] signed_zero If \c false (the default value), returns zero if \c *this
+is zero. If \c true, returns 1 or -1 on a zero \c *this as well. Primarily used
+to identify a \ref zero "negative zero".
+
 \returns -1 if \c *this is negative, 0 if it's zero, or 1 if it's greater than
 zero.
 */
-int integer::sign() const {
-    if (_get_length()==1 && _get_digit(0)==0) return 0;
-    else return (_get_data()->mIsNegative ? -1 : 1);
+int integer::sign(bool signed_zero) const {
+    if (!signed_zero && _is_zero()) return 0;
+    else return (_get_negative() ? -1 : 1);
 }
 
 /*! \brief Tells you roughly how large an integer is.
@@ -216,7 +135,7 @@ integer& integer::operator+=(const integer& addend) {
     {
         // Fast in-place add
         _make_unique();
-        _get_data()->add(addend._get_data());
+        _add(addend);
     } else {
         // This works for all cases
         *this=add(*this, addend);
@@ -228,7 +147,7 @@ integer& integer::operator-=(const integer& subtrahend) {
     if (sign() >= 0 && subtrahend.sign() >= 0 && *this >= subtrahend) {
         // Fast in-place subtract
         _make_unique();
-        _get_data()->subtract(subtrahend._get_data());
+        _subtract(subtrahend);
     } else {
         // This works for all cases
         *this=subtract(*this, subtrahend);
@@ -259,7 +178,7 @@ integer& integer::operator^=(const integer& n) { *this=bitwise_xor(*this, n); re
 integer& integer::operator<<=(size_t shift) {
     if (shift>0) {
         _make_unique();
-        _get_data()->shift_left(shift);
+        _shift_left(shift);
     }
     return *this;
 }
@@ -267,7 +186,7 @@ integer& integer::operator<<=(size_t shift) {
 integer& integer::operator>>=(size_t shift) {
     if (shift>0) {
         _make_unique();
-        _get_data()->shift_right(shift);
+        _shift_right(shift);
     }
     return *this;
 }
@@ -282,6 +201,5 @@ const integer& integer::one() {
     return *cOne;
 }
 
-} // namespace core
 } // namespace xint
 } // namespace boost

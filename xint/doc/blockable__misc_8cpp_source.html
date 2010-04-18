@@ -41,22 +41,20 @@
 <a name="l00020"></a>00020 
 <a name="l00021"></a>00021 <span class="keyword">namespace </span>boost {
 <a name="l00022"></a>00022 <span class="keyword">namespace </span>xint {
-<a name="l00023"></a>00023 <span class="keyword">namespace </span>blockable {
-<a name="l00024"></a>00024 
-<a name="l00029"></a>00029 <span class="keywordtype">size_t</span> <a class="code" href="namespaceboost_1_1xint_1_1blockable.html#ac761490fc23ecfb5017277529f2bf3a7">log2</a>(<span class="keyword">const</span> integer&amp; n) {
-<a name="l00030"></a>00030     <span class="keywordflow">try</span> {
-<a name="l00031"></a>00031         <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint_1_1blockable.html#ac761490fc23ecfb5017277529f2bf3a7">log2</a>(core::integer(n));
-<a name="l00032"></a>00032     } <span class="keywordflow">catch</span> (std::exception&amp;) {
-<a name="l00033"></a>00033         <span class="keywordflow">if</span> (<a class="code" href="namespaceboost_1_1xint.html#a389e96a85ba1c76ef5bfcf836b7e4e8a" title="Query whether exceptions are currently allowed or blocked.">exceptions_allowed</a>()) <span class="keywordflow">throw</span>;
-<a name="l00034"></a>00034         <span class="keywordflow">else</span> <span class="keywordflow">return</span> 0;
-<a name="l00035"></a>00035     }
-<a name="l00036"></a>00036 }
-<a name="l00037"></a>00037 
-<a name="l00038"></a>00038 } <span class="comment">// namespace blockable</span>
-<a name="l00039"></a>00039 } <span class="comment">// namespace xint</span>
-<a name="l00040"></a>00040 } <span class="comment">// namespace boost</span>
+<a name="l00023"></a>00023 
+<a name="l00028"></a>00028 <span class="keywordtype">size_t</span> <a class="code" href="namespaceboost_1_1xint.html#a206fbae1c02ec96cb274aae1ad611da7">log2</a>(<span class="keyword">const</span> nothrow_integer&amp; n) {
+<a name="l00029"></a>00029     <span class="keywordflow">try</span> {
+<a name="l00030"></a>00030         <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a206fbae1c02ec96cb274aae1ad611da7">log2</a>(xint::integer(n));
+<a name="l00031"></a>00031     } <span class="keywordflow">catch</span> (std::exception&amp;) {
+<a name="l00032"></a>00032         <span class="keywordflow">if</span> (<a class="code" href="namespaceboost_1_1xint.html#a389e96a85ba1c76ef5bfcf836b7e4e8a" title="Query whether exceptions are currently allowed or blocked.">exceptions_allowed</a>()) <span class="keywordflow">throw</span>;
+<a name="l00033"></a>00033         <span class="keywordflow">else</span> <span class="keywordflow">return</span> 0;
+<a name="l00034"></a>00034     }
+<a name="l00035"></a>00035 }
+<a name="l00036"></a>00036 
+<a name="l00037"></a>00037 } <span class="comment">// namespace xint</span>
+<a name="l00038"></a>00038 } <span class="comment">// namespace boost</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Apr 11 10:17:00 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sat Apr 17 01:53:01 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

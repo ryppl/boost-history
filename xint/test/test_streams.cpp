@@ -23,8 +23,6 @@
 namespace boost {
 namespace xint {
 
-using namespace test;
-
 namespace {
 
 bool testStreamOut(std::string name, std::stringstream& str, const integer& n, std::string expected) {
@@ -152,7 +150,8 @@ BOOST_AUTO_TEST_CASE(testStreams) {
         BOOST_CHECK_EQUAL(test, 123); // Shouldn't have touched it
         if (!!str) BOOST_ERROR("stream error signal wasn't set");
     } catch (std::exception& e) {
-        std::string err=std::string("testStreams: erroneous input stream exception '")+e.what()+"'";
+        std::string err=std::string("testStreams: erroneous input stream "
+            "exception '")+e.what()+"'";
         BOOST_ERROR(err);
     }
 
@@ -160,10 +159,10 @@ BOOST_AUTO_TEST_CASE(testStreams) {
         str.flags(defaultFlags);
         str.clear();
 
-        str << blockable::integer::nan();
+        str << nothrow_integer::nan();
         std::string temp=str.str();
 
-        blockable::integer test;
+        nothrow_integer test;
         str.str(temp);
         str >> test;
         if (!test.is_nan()) BOOST_ERROR("testStream: isNaN test failed");

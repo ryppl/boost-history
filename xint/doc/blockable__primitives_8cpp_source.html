@@ -41,71 +41,69 @@
 <a name="l00019"></a>00019 
 <a name="l00020"></a>00020 <span class="keyword">namespace </span>boost {
 <a name="l00021"></a>00021 <span class="keyword">namespace </span>xint {
-<a name="l00022"></a>00022 <span class="keyword">namespace </span>blockable {
-<a name="l00023"></a>00023 
-<a name="l00025"></a>00025 integer <a class="code" href="namespaceboost_1_1xint_1_1blockable.html#a60245c96acca4efe2301939acb7ca798">abs</a>(<span class="keyword">const</span> integer&amp; n) {
-<a name="l00026"></a>00026     <span class="keywordflow">try</span> {
-<a name="l00027"></a>00027         <span class="keywordflow">return</span> integer(<a class="code" href="namespaceboost_1_1xint_1_1blockable.html#a60245c96acca4efe2301939acb7ca798">abs</a>(core::integer(n)));
-<a name="l00028"></a>00028     } <span class="keywordflow">catch</span> (std::exception&amp;) {
-<a name="l00029"></a>00029         <span class="keywordflow">if</span> (<a class="code" href="namespaceboost_1_1xint.html#a389e96a85ba1c76ef5bfcf836b7e4e8a" title="Query whether exceptions are currently allowed or blocked.">exceptions_allowed</a>()) <span class="keywordflow">throw</span>;
-<a name="l00030"></a>00030         <span class="keywordflow">return</span> <a class="code" href="classboost_1_1xint_1_1blockable_1_1integer.html#ae52c1f42c887d0fffa40e38c97caedf1">integer::nan</a>();
-<a name="l00031"></a>00031     }
-<a name="l00032"></a>00032 }
-<a name="l00033"></a>00033 
-<a name="l00035"></a>00035 integer <a class="code" href="namespaceboost_1_1xint_1_1blockable.html#a99e18d64a42f9a24069cbbe91e1dd035">negate</a>(<span class="keyword">const</span> integer&amp; n) {
-<a name="l00036"></a>00036     <span class="keywordflow">try</span> {
-<a name="l00037"></a>00037         <span class="keywordflow">return</span> integer(<a class="code" href="namespaceboost_1_1xint_1_1blockable.html#a99e18d64a42f9a24069cbbe91e1dd035">negate</a>(core::integer(n)));
-<a name="l00038"></a>00038     } <span class="keywordflow">catch</span> (std::exception&amp;) {
-<a name="l00039"></a>00039         <span class="keywordflow">if</span> (<a class="code" href="namespaceboost_1_1xint.html#a389e96a85ba1c76ef5bfcf836b7e4e8a" title="Query whether exceptions are currently allowed or blocked.">exceptions_allowed</a>()) <span class="keywordflow">throw</span>;
-<a name="l00040"></a>00040         <span class="keywordflow">return</span> <a class="code" href="classboost_1_1xint_1_1blockable_1_1integer.html#ae52c1f42c887d0fffa40e38c97caedf1">integer::nan</a>();
-<a name="l00041"></a>00041     }
-<a name="l00042"></a>00042 }
-<a name="l00043"></a>00043 
-<a name="l00045"></a>00045 integer <a class="code" href="namespaceboost_1_1xint_1_1blockable.html#ada3b973466beb1c2b2e65718606c1cc8">add</a>(<span class="keyword">const</span> integer&amp; n1, <span class="keyword">const</span> integer&amp; n2) {
-<a name="l00046"></a>00046     <span class="keywordflow">try</span> {
-<a name="l00047"></a>00047         <span class="keywordflow">return</span> integer(<a class="code" href="namespaceboost_1_1xint_1_1blockable.html#ada3b973466beb1c2b2e65718606c1cc8">add</a>(core::integer(n1), core::integer(n2)));
-<a name="l00048"></a>00048     } <span class="keywordflow">catch</span> (std::exception&amp;) {
-<a name="l00049"></a>00049         <span class="keywordflow">if</span> (<a class="code" href="namespaceboost_1_1xint.html#a389e96a85ba1c76ef5bfcf836b7e4e8a" title="Query whether exceptions are currently allowed or blocked.">exceptions_allowed</a>()) <span class="keywordflow">throw</span>;
-<a name="l00050"></a>00050         <span class="keywordflow">return</span> <a class="code" href="classboost_1_1xint_1_1blockable_1_1integer.html#ae52c1f42c887d0fffa40e38c97caedf1">integer::nan</a>();
-<a name="l00051"></a>00051     }
-<a name="l00052"></a>00052 }
-<a name="l00053"></a>00053 
-<a name="l00055"></a>00055 integer <a class="code" href="namespaceboost_1_1xint_1_1blockable.html#a56cc023cafb9e92223c74dc780175bc2">subtract</a>(<span class="keyword">const</span> integer&amp; n1, <span class="keyword">const</span> integer&amp; n2) {
-<a name="l00056"></a>00056     <span class="keywordflow">try</span> {
-<a name="l00057"></a>00057         <span class="keywordflow">return</span> integer(<a class="code" href="namespaceboost_1_1xint_1_1blockable.html#a56cc023cafb9e92223c74dc780175bc2">subtract</a>(core::integer(n1), core::integer(n2)));
-<a name="l00058"></a>00058     } <span class="keywordflow">catch</span> (std::exception&amp;) {
-<a name="l00059"></a>00059         <span class="keywordflow">if</span> (<a class="code" href="namespaceboost_1_1xint.html#a389e96a85ba1c76ef5bfcf836b7e4e8a" title="Query whether exceptions are currently allowed or blocked.">exceptions_allowed</a>()) <span class="keywordflow">throw</span>;
-<a name="l00060"></a>00060         <span class="keywordflow">return</span> <a class="code" href="classboost_1_1xint_1_1blockable_1_1integer.html#ae52c1f42c887d0fffa40e38c97caedf1">integer::nan</a>();
-<a name="l00061"></a>00061     }
-<a name="l00062"></a>00062 }
-<a name="l00063"></a>00063 
-<a name="l00065"></a>00065 integer <a class="code" href="namespaceboost_1_1xint_1_1blockable.html#a9f79cef4aca96d97b00f7cde90d7eabd">multiply</a>(<span class="keyword">const</span> integer&amp; n, <span class="keyword">const</span> integer&amp; by) {
-<a name="l00066"></a>00066     <span class="keywordflow">try</span> {
-<a name="l00067"></a>00067         <span class="keywordflow">return</span> integer(<a class="code" href="namespaceboost_1_1xint_1_1blockable.html#a9f79cef4aca96d97b00f7cde90d7eabd">multiply</a>(core::integer(n), core::integer(by)));
-<a name="l00068"></a>00068     } <span class="keywordflow">catch</span> (std::exception&amp;) {
-<a name="l00069"></a>00069         <span class="keywordflow">if</span> (<a class="code" href="namespaceboost_1_1xint.html#a389e96a85ba1c76ef5bfcf836b7e4e8a" title="Query whether exceptions are currently allowed or blocked.">exceptions_allowed</a>()) <span class="keywordflow">throw</span>;
-<a name="l00070"></a>00070         <span class="keywordflow">return</span> <a class="code" href="classboost_1_1xint_1_1blockable_1_1integer.html#ae52c1f42c887d0fffa40e38c97caedf1">integer::nan</a>();
-<a name="l00071"></a>00071     }
-<a name="l00072"></a>00072 }
-<a name="l00073"></a>00073 
-<a name="l00075"></a>00075 integer <a class="code" href="namespaceboost_1_1xint_1_1blockable.html#a1a69ea437aacb48b0ce224a97eaf87f3">divide</a>(<span class="keyword">const</span> integer&amp; dividend, <span class="keyword">const</span> integer&amp; divisor) {
-<a name="l00076"></a>00076     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint_1_1blockable.html#a022fd3c44ddeb39a78ad3202c51ade8a">divide_r</a>(dividend, divisor).first;
-<a name="l00077"></a>00077 }
-<a name="l00078"></a>00078 
-<a name="l00084"></a>00084 std::pair&lt;integer, integer&gt; <a class="code" href="namespaceboost_1_1xint_1_1blockable.html#a022fd3c44ddeb39a78ad3202c51ade8a">divide_r</a>(<span class="keyword">const</span> integer&amp; d1, <span class="keyword">const</span> integer&amp; d2) {
-<a name="l00085"></a>00085     <span class="keywordflow">try</span> {
-<a name="l00086"></a>00086         <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint_1_1blockable.html#a022fd3c44ddeb39a78ad3202c51ade8a">divide_r</a>(core::integer(d1), core::integer(d2));
-<a name="l00087"></a>00087     } <span class="keywordflow">catch</span> (std::exception&amp;) {
-<a name="l00088"></a>00088         <span class="keywordflow">if</span> (<a class="code" href="namespaceboost_1_1xint.html#a389e96a85ba1c76ef5bfcf836b7e4e8a" title="Query whether exceptions are currently allowed or blocked.">exceptions_allowed</a>()) <span class="keywordflow">throw</span>;
-<a name="l00089"></a>00089         <span class="keywordflow">return</span> std::make_pair(<a class="code" href="classboost_1_1xint_1_1blockable_1_1integer.html#ae52c1f42c887d0fffa40e38c97caedf1">integer::nan</a>(), <a class="code" href="classboost_1_1xint_1_1blockable_1_1integer.html#ae52c1f42c887d0fffa40e38c97caedf1">integer::nan</a>());
-<a name="l00090"></a>00090     }
-<a name="l00091"></a>00091 }
-<a name="l00092"></a>00092 
-<a name="l00093"></a>00093 } <span class="comment">// namespace blockable</span>
-<a name="l00094"></a>00094 } <span class="comment">// namespace xint</span>
-<a name="l00095"></a>00095 } <span class="comment">// namespace boost</span>
+<a name="l00022"></a>00022 
+<a name="l00024"></a>00024 nothrow_integer <a class="code" href="namespaceboost_1_1xint.html#a0e114c276fc9affcc068dd5f0fbd9ff9">abs</a>(<span class="keyword">const</span> nothrow_integer&amp; n) {
+<a name="l00025"></a>00025     <span class="keywordflow">try</span> {
+<a name="l00026"></a>00026         <span class="keywordflow">return</span> nothrow_integer(<a class="code" href="namespaceboost_1_1xint.html#a0e114c276fc9affcc068dd5f0fbd9ff9">abs</a>(xint::integer(n)));
+<a name="l00027"></a>00027     } <span class="keywordflow">catch</span> (std::exception&amp;) {
+<a name="l00028"></a>00028         <span class="keywordflow">if</span> (<a class="code" href="namespaceboost_1_1xint.html#a389e96a85ba1c76ef5bfcf836b7e4e8a" title="Query whether exceptions are currently allowed or blocked.">exceptions_allowed</a>()) <span class="keywordflow">throw</span>;
+<a name="l00029"></a>00029         <span class="keywordflow">return</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a9a8d654139e4fb916f933d09c7238e10">nothrow_integer::nan</a>();
+<a name="l00030"></a>00030     }
+<a name="l00031"></a>00031 }
+<a name="l00032"></a>00032 
+<a name="l00034"></a>00034 nothrow_integer <a class="code" href="namespaceboost_1_1xint.html#aedc1654de47ce6d6635e5339b236f94d">negate</a>(<span class="keyword">const</span> nothrow_integer&amp; n) {
+<a name="l00035"></a>00035     <span class="keywordflow">try</span> {
+<a name="l00036"></a>00036         <span class="keywordflow">return</span> nothrow_integer(<a class="code" href="namespaceboost_1_1xint.html#aedc1654de47ce6d6635e5339b236f94d">negate</a>(xint::integer(n)));
+<a name="l00037"></a>00037     } <span class="keywordflow">catch</span> (std::exception&amp;) {
+<a name="l00038"></a>00038         <span class="keywordflow">if</span> (<a class="code" href="namespaceboost_1_1xint.html#a389e96a85ba1c76ef5bfcf836b7e4e8a" title="Query whether exceptions are currently allowed or blocked.">exceptions_allowed</a>()) <span class="keywordflow">throw</span>;
+<a name="l00039"></a>00039         <span class="keywordflow">return</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a9a8d654139e4fb916f933d09c7238e10">nothrow_integer::nan</a>();
+<a name="l00040"></a>00040     }
+<a name="l00041"></a>00041 }
+<a name="l00042"></a>00042 
+<a name="l00044"></a>00044 nothrow_integer <a class="code" href="namespaceboost_1_1xint.html#a7b7903cb879b60d0d5e3403b3c6a1cdd">add</a>(<span class="keyword">const</span> nothrow_integer&amp; n1, <span class="keyword">const</span> nothrow_integer&amp; n2) {
+<a name="l00045"></a>00045     <span class="keywordflow">try</span> {
+<a name="l00046"></a>00046         <span class="keywordflow">return</span> nothrow_integer(<a class="code" href="namespaceboost_1_1xint.html#a7b7903cb879b60d0d5e3403b3c6a1cdd">add</a>(xint::integer(n1), xint::integer(n2)));
+<a name="l00047"></a>00047     } <span class="keywordflow">catch</span> (std::exception&amp;) {
+<a name="l00048"></a>00048         <span class="keywordflow">if</span> (<a class="code" href="namespaceboost_1_1xint.html#a389e96a85ba1c76ef5bfcf836b7e4e8a" title="Query whether exceptions are currently allowed or blocked.">exceptions_allowed</a>()) <span class="keywordflow">throw</span>;
+<a name="l00049"></a>00049         <span class="keywordflow">return</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a9a8d654139e4fb916f933d09c7238e10">nothrow_integer::nan</a>();
+<a name="l00050"></a>00050     }
+<a name="l00051"></a>00051 }
+<a name="l00052"></a>00052 
+<a name="l00054"></a>00054 nothrow_integer <a class="code" href="namespaceboost_1_1xint.html#a385b3869d8dcceab2ffb68ff33c95062">subtract</a>(<span class="keyword">const</span> nothrow_integer&amp; n1, <span class="keyword">const</span> nothrow_integer&amp; n2) {
+<a name="l00055"></a>00055     <span class="keywordflow">try</span> {
+<a name="l00056"></a>00056         <span class="keywordflow">return</span> nothrow_integer(<a class="code" href="namespaceboost_1_1xint.html#a385b3869d8dcceab2ffb68ff33c95062">subtract</a>(xint::integer(n1), xint::integer(n2)));
+<a name="l00057"></a>00057     } <span class="keywordflow">catch</span> (std::exception&amp;) {
+<a name="l00058"></a>00058         <span class="keywordflow">if</span> (<a class="code" href="namespaceboost_1_1xint.html#a389e96a85ba1c76ef5bfcf836b7e4e8a" title="Query whether exceptions are currently allowed or blocked.">exceptions_allowed</a>()) <span class="keywordflow">throw</span>;
+<a name="l00059"></a>00059         <span class="keywordflow">return</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a9a8d654139e4fb916f933d09c7238e10">nothrow_integer::nan</a>();
+<a name="l00060"></a>00060     }
+<a name="l00061"></a>00061 }
+<a name="l00062"></a>00062 
+<a name="l00064"></a>00064 nothrow_integer <a class="code" href="namespaceboost_1_1xint.html#af844548a421cfc751133081b334dbe4b">multiply</a>(<span class="keyword">const</span> nothrow_integer&amp; n, <span class="keyword">const</span> nothrow_integer&amp; by) {
+<a name="l00065"></a>00065     <span class="keywordflow">try</span> {
+<a name="l00066"></a>00066         <span class="keywordflow">return</span> nothrow_integer(<a class="code" href="namespaceboost_1_1xint.html#af844548a421cfc751133081b334dbe4b">multiply</a>(xint::integer(n), xint::integer(by)));
+<a name="l00067"></a>00067     } <span class="keywordflow">catch</span> (std::exception&amp;) {
+<a name="l00068"></a>00068         <span class="keywordflow">if</span> (<a class="code" href="namespaceboost_1_1xint.html#a389e96a85ba1c76ef5bfcf836b7e4e8a" title="Query whether exceptions are currently allowed or blocked.">exceptions_allowed</a>()) <span class="keywordflow">throw</span>;
+<a name="l00069"></a>00069         <span class="keywordflow">return</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a9a8d654139e4fb916f933d09c7238e10">nothrow_integer::nan</a>();
+<a name="l00070"></a>00070     }
+<a name="l00071"></a>00071 }
+<a name="l00072"></a>00072 
+<a name="l00074"></a>00074 nothrow_integer <a class="code" href="namespaceboost_1_1xint.html#a5b884361c54aa64a1974879cb3464c9a">divide</a>(<span class="keyword">const</span> nothrow_integer&amp; dividend, <span class="keyword">const</span> nothrow_integer&amp; divisor) {
+<a name="l00075"></a>00075     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#aa7ba6c482e1526b25e6e946daf3a97ba">divide_r</a>(dividend, divisor).first;
+<a name="l00076"></a>00076 }
+<a name="l00077"></a>00077 
+<a name="l00083"></a>00083 std::pair&lt;nothrow_integer, nothrow_integer&gt; <a class="code" href="namespaceboost_1_1xint.html#aa7ba6c482e1526b25e6e946daf3a97ba">divide_r</a>(<span class="keyword">const</span> nothrow_integer&amp; d1, <span class="keyword">const</span> nothrow_integer&amp; d2) {
+<a name="l00084"></a>00084     <span class="keywordflow">try</span> {
+<a name="l00085"></a>00085         <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#aa7ba6c482e1526b25e6e946daf3a97ba">divide_r</a>(xint::integer(d1), xint::integer(d2));
+<a name="l00086"></a>00086     } <span class="keywordflow">catch</span> (std::exception&amp;) {
+<a name="l00087"></a>00087         <span class="keywordflow">if</span> (<a class="code" href="namespaceboost_1_1xint.html#a389e96a85ba1c76ef5bfcf836b7e4e8a" title="Query whether exceptions are currently allowed or blocked.">exceptions_allowed</a>()) <span class="keywordflow">throw</span>;
+<a name="l00088"></a>00088         <span class="keywordflow">return</span> std::make_pair(<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a9a8d654139e4fb916f933d09c7238e10">nothrow_integer::nan</a>(), <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a9a8d654139e4fb916f933d09c7238e10">nothrow_integer::nan</a>());
+<a name="l00089"></a>00089     }
+<a name="l00090"></a>00090 }
+<a name="l00091"></a>00091 
+<a name="l00092"></a>00092 } <span class="comment">// namespace xint</span>
+<a name="l00093"></a>00093 } <span class="comment">// namespace boost</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Apr 11 10:17:00 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sat Apr 17 01:53:01 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

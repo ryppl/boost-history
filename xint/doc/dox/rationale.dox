@@ -9,7 +9,7 @@
 - \subpage r_cow
 - \subpage r_shared_ptr
 
-\section snan Not-a-Number and Exception Blocking
+\section snan Not-a-Number and The nothrow_integer Type
 - \subpage r_nan
 - \subpage r_exception_blocking
 - \subpage r_negzero

@@ -25,8 +25,6 @@
 namespace boost {
 namespace xint {
 
-using namespace test;
-
 using std::endl;
 
 namespace {

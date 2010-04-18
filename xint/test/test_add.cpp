@@ -21,8 +21,6 @@
 namespace boost {
 namespace xint {
 
-using namespace test;
-
 using std::endl;
 using std::dec;
 using std::hex;
@@ -89,6 +87,18 @@ BOOST_AUTO_TEST_CASE(testAddSubtract) {
             m(random_by_size(detail::bits_per_digit*4, false, false, true));
         _test(4, i, n, m);
     }
+}
+
+BOOST_AUTO_TEST_CASE(testNegativeZero) {
+    integer n(5), m(5), a(n-m);
+    BOOST_CHECK_EQUAL(a, 0);
+    BOOST_CHECK_EQUAL(a.sign(), 0);
+    BOOST_CHECK_EQUAL(a.sign(true), 1);
+
+    a=-a;
+    BOOST_CHECK_EQUAL(a, 0);
+    BOOST_CHECK_EQUAL(a.sign(), 0);
+    BOOST_CHECK_EQUAL(a.sign(true), -1);
 }
 
 } // namespace xint

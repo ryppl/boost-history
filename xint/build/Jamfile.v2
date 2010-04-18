@@ -9,12 +9,27 @@ project boost/xint
     ;
 
 SOURCES =
+    base_integer.cpp
+    data_t.cpp
+
+    nothrow_integer.cpp
+    nothrow_bit_manipulations.cpp
+    nothrow_compare.cpp
+    nothrow_convert.cpp
+    nothrow_gcd.cpp
+    nothrow_misc.cpp
+    nothrow_modular.cpp
+    nothrow_operators.cpp
+    nothrow_powers.cpp
+    nothrow_primes.cpp
+    nothrow_primitives.cpp
+    nothrow_random.cpp
+    nothrow_roots.cpp
+
     integer.cpp
     bit_manipulations.cpp
     compare.cpp
     convert.cpp
-    data_t.cpp
-    exception_blocker.cpp
     gcd.cpp
     misc.cpp
     modular.cpp

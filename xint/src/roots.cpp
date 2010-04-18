@@ -19,7 +19,6 @@
 
 namespace boost {
 namespace xint {
-namespace core {
 
 /*! \brief Calculate the square root of \c an integer.
 
@@ -29,11 +28,11 @@ namespace core {
 If \c n is not a perfect square, then this value will not be the exact square
 root.
 
-\exception xint::cannot_represent if \c n is negative.
+\exception exceptions::cannot_represent if \c n is negative.
 */
 integer sqrt(const integer& n) {
-    if (n.sign() < 0) throw cannot_represent("library cannot represent "
-        "imaginary values (tried to take sqrt of negative number)");
+    if (n.sign() < 0) throw exceptions::cannot_represent("library cannot "
+        "represent imaginary values (tried to take sqrt of negative number)");
     if (n.sign() == 0) return integer::zero();
 
     // Initial guess is half the length of n, in bits
@@ -50,6 +49,5 @@ integer sqrt(const integer& n) {
     return guess;
 }
 
-} // namespace core
 } // namespace xint
 } // namespace boost

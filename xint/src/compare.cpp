@@ -16,13 +16,10 @@
 */
 
 #include "../boost/xint/xint.hpp"
-#include "../boost/xint/xint_data_t.hpp"
 #include <functional>
 
 namespace boost {
 namespace xint {
-
-namespace core {
 
 /*! \brief Compare two integer objects.
 
@@ -47,22 +44,18 @@ int compare(const integer &b1, const integer &b2, bool ignoresign) {
         if (sign1 < 0) return compare(-b2, -b1, ignoresign);
     }
 
-    const detail::data_t *b1data=b1._get_data();
-    const detail::data_t *b2data=b2._get_data();
-
-    int answer=0;
-    if (b1data->mLength != b2data->mLength) {
-        answer=((b1data->mLength < b2data->mLength) ? -1 : 1);
+    if (b1._get_length() != b2._get_length()) {
+        return ((b1._get_length() < b2._get_length()) ? -1 : 1);
     } else {
-        for (int x = int(b1data->mLength) - 1; x >= 0; --x) {
-            if (b1data->digits[x] != b2data->digits[x]) {
-                answer=((b1data->digits[x] < b2data->digits[x]) ? -1 : 1);
-                break;
-            }
-        }
+        size_t len=b1._get_length();
+        const detail::digit_t *b1d=b1._get_digits(), *b1i=b1d+len;
+        const detail::digit_t *b2d=b2._get_digits(), *b2i=b2d+len;
+        while (b1i > b1d)
+            if (*(--b1i) != *(--b2i))
+                return ((*b1i < *b2i) ? -1 : 1);
     }
 
-    return answer;
+    return 0;
 }
 
 bool operator!(const integer &num1) { return num1.sign()==0; }
@@ -79,6 +72,5 @@ bool operator<=(const integer& num1, const integer& num2) {
 bool operator>=(const integer& num1, const integer& num2) {
     return compare(num1, num2)>=0; }
 
-} // namespace core
 } // namespace xint
 } // namespace boost

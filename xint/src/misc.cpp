@@ -47,7 +47,6 @@ bool opt_thread_safe() {
     #endif
 }
 
-namespace core {
 /*! \brief Get the log<sub>2</sub> value of an integer.
 
 \param[in] n The integer to operate on.
@@ -71,6 +70,6 @@ size_t log2(const integer& n) {
     }
     return r;
 }
-} // namespace core
+
 } // namespace xint
 } // namespace boost

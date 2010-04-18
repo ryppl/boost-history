@@ -29,7 +29,7 @@
   </div>
 </div>
 <div class="contents">
-<h1>boost::xint::blockable::integer Class Reference</h1><!-- doxytag: class="boost::xint::blockable::integer" --><!-- doxytag: inherits="boost::xint::core::base_integer" -->
+<h1>boost::xint::blockable::integer Class Reference</h1><!-- doxytag: class="boost::xint::blockable::integer" --><!-- doxytag: inherits="boost::xint::detail::base_integer" -->
 <p>The blockable integer class.  
 <a href="#_details">More...</a></p>
 <div class="dynheader">
@@ -38,7 +38,7 @@ Inheritance diagram for boost::xint::blockable::integer:</div>
  <div class="center">
   <img src="classboost_1_1xint_1_1blockable_1_1integer.png" usemap="#boost::xint::blockable::integer_map" alt=""/>
   <map id="boost::xint::blockable::integer_map" name="boost::xint::blockable::integer_map">
-<area href="classboost_1_1xint_1_1core_1_1base__integer.html" alt="boost::xint::core::base_integer" shape="rect" coords="0,0,178,24"/>
+<area href="classboost_1_1xint_1_1detail_1_1base__integer.html" alt="boost::xint::detail::base_integer" shape="rect" coords="0,0,182,24"/>
 </map>
  </div>
 </div>
@@ -84,14 +84,13 @@ Inheritance diagram for boost::xint::blockable::integer:</div>
 </div></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1blockable_1_1integer.html#aeeb0effdaf500fabdabde386c6d71ecf">odd</a> () const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1blockable_1_1integer.html#aa4a34e862279bdcabcb10aa3f7015751">even</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1blockable_1_1integer.html#addba2da8dc24e5e137dc759b5ec3c211">sign</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1blockable_1_1integer.html#aa5be24d1eeb5b0b58f966e174cda1928">sign</a> (bool signed_zero=false) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1blockable_1_1integer.html#aa03f255fa20c9340c110a56a9b4e5123">is_nan</a> () const </td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tests <code>*this</code> for Not-a-Number.  <a href="#aa03f255fa20c9340c110a56a9b4e5123"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1blockable_1_1integer.html#ab59ab2bab8ee2620f82328e43d8f8493">hex_digits</a> () const </td></tr>
 <tr><td colspan="2"><div class="groupHeader">Internal Functions</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpae260ff3a3a80dad696f01482c30bb91"></a>These functions allow access to the internals of the integer. They are intended for internal use only. </p>
 </div></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1blockable_1_1integer.html#a7ebbf3b74b5c3307f550efa29180b7f6">_set_negative</a> (bool negative)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1blockable_1_1integer.html#a93aebe2dfcc921ae4959811399b1643e">_make_unique</a> ()</td></tr>
 <tr><td colspan="2"><h2>Static Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Preconstructed integers</div></td></tr>
@@ -107,7 +106,7 @@ Inheritance diagram for boost::xint::blockable::integer:</div>
 <p>There are only a few member functions; most of the functionality is implemented using standalone functions.</p>
 <p>Functions that start with an underscore (such as <code>_make_unique</code>) are intended for internal use only. They may change arbitrarily in future versions. </p>
 
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00387">387</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00400">400</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a9f1ddc3bb2f495ebad9dc666c51ed046"></a><!-- doxytag: member="boost::xint::blockable::integer::integer" ref="a9f1ddc3bb2f495ebad9dc666c51ed046" args="()" -->
 <div class="memitem">
@@ -183,7 +182,7 @@ Inheritance diagram for boost::xint::blockable::integer:</div>
 <dl class="note"><dt><b>Note:</b></dt><dd>This library can use a <a class="el" href="cow.html">copy-on-write technique</a>, making copying (even of large numbers) a very inexpensive operation.</dd></dl>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
-<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00056">56</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00060">60</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -220,16 +219,16 @@ Inheritance diagram for boost::xint::blockable::integer:</div>
 </dl>
 <dl><dt><b>Exceptions:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1invalid__base.html" title="Exception class.">xint::invalid_base</a></em>&nbsp;</td><td>if the base parameter is not between 2 and 36 (inclusive) or the constant <a class="el" href="namespaceboost_1_1xint.html#a086ec65a0273dccedca0fbfbddb03398">xint::autobase</a>. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1invalid__digit.html" title="Exception class.">xint::invalid_digit</a></em>&nbsp;</td><td>if the string contains any digit that cannot be part of a number in the specified base, or if there are no valid digits.</td></tr>
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1exception_1_1invalid__base.html">exception::invalid_base</a></em>&nbsp;</td><td>if the base parameter is not between 2 and 36 (inclusive) or the constant <a class="el" href="namespaceboost_1_1xint.html#a086ec65a0273dccedca0fbfbddb03398">xint::autobase</a>. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1exception_1_1invalid__digit.html">exception::invalid_digit</a></em>&nbsp;</td><td>if the string contains any digit that cannot be part of a number in the specified base, or if there are no valid digits.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="remark"><dt><b>Remarks:</b></dt><dd>This will convert a string representation of a number into an integer. See the description of the xint::from_string function for details on its behavior.</dd></dl>
+<dl class="remark"><dt><b>Remarks:</b></dt><dd>This will convert a string representation of a number into an integer. See the description of the <a class="el" href="namespaceboost_1_1xint_1_1core.html#adaa2e5c8f2ff92faee861a68bc7e4cca">from_string</a> function for details on its behavior.</dd></dl>
 <dl class="user"><dt><b></b></dt><dd>This is the most common way to initialize values that are too large to fit into a native integral type.</dd></dl>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts.  </p>
 
-<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00061">61</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00069">69</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -281,7 +280,7 @@ template&lt;typename T &gt; </div>
 <p>You can ignore the <code>enable_if</code> parameters, they are there only to tell the compiler what types it applies to.</p>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00969">969</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00973">973</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
 
 </div>
 </div>
@@ -333,7 +332,7 @@ template&lt;typename T &gt; </div>
 <p>You can ignore the <code>enable_if</code> parameters, they are there only to tell the compiler what types it applies to.</p>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00993">993</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00997">997</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
 
 </div>
 </div>
@@ -353,27 +352,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00237">237</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a7ebbf3b74b5c3307f550efa29180b7f6"></a><!-- doxytag: member="boost::xint::blockable::integer::_set_negative" ref="a7ebbf3b74b5c3307f550efa29180b7f6" args="(bool negative)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void boost::xint::blockable::integer::_set_negative </td>
-          <td>(</td>
-          <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>negative</em></td>
-          <td>&nbsp;)&nbsp;</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00248">248</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00221">221</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -395,7 +374,7 @@ template&lt;typename T &gt; </div>
 </p>
 <dl class="note"><dt><b>Note:</b></dt><dd>If exceptions are blocked, returns false instead of throwing. </dd></dl>
 
-<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00085">85</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00093">93</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -417,7 +396,7 @@ template&lt;typename T &gt; </div>
 </p>
 <dl class="note"><dt><b>Note:</b></dt><dd>If exceptions are blocked, returns zero instead of throwing. </dd></dl>
 
-<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00110">110</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00118">118</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -440,7 +419,7 @@ template&lt;typename T &gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd><code>true</code> if <code>*this</code> is Not-a-Number, otherwise <code>false</code>.</dd></dl>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="nan.html">The Not-a-Number Value</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00125">125</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00133">133</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -459,7 +438,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00204">204</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00212">212</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -481,7 +460,7 @@ template&lt;typename T &gt; </div>
 </p>
 <dl class="note"><dt><b>Note:</b></dt><dd>If exceptions are blocked, returns false instead of throwing. </dd></dl>
 
-<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00073">73</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00081">81</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -500,7 +479,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00199">199</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00207">207</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -520,7 +499,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00161">161</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00169">169</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -540,7 +519,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00170">170</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00178">178</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -560,7 +539,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00159">159</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00167">167</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -581,7 +560,7 @@ template&lt;typename T &gt; </div>
 <div class="memdoc">
 <p>Postincrement operator -- not recommended, inefficient </p>
 
-<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00165">165</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00173">173</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -601,7 +580,7 @@ template&lt;typename T &gt; </div>
 <div class="memdoc">
 <p>Preincrement operator </p>
 
-<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00163">163</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00171">171</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -621,7 +600,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00129">129</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00137">137</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -642,7 +621,7 @@ template&lt;typename T &gt; </div>
 <div class="memdoc">
 <p>Postdecrement operator -- not recommended, inefficient </p>
 
-<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00166">166</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00174">174</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -662,7 +641,7 @@ template&lt;typename T &gt; </div>
 <div class="memdoc">
 <p>Predecrement operator </p>
 
-<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00164">164</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00172">172</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -682,7 +661,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00139">139</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00147">147</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -702,7 +681,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00160">160</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00168">168</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -722,7 +701,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00168">168</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00176">176</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -742,7 +721,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00174">174</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00182">182</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -762,7 +741,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00149">149</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00157">157</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -782,7 +761,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00169">169</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00177">177</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -802,7 +781,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00184">184</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00192">192</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -822,7 +801,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00172">172</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00180">180</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -842,29 +821,36 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00171">171</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00179">179</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="addba2da8dc24e5e137dc759b5ec3c211"></a><!-- doxytag: member="boost::xint::blockable::integer::sign" ref="addba2da8dc24e5e137dc759b5ec3c211" args="() const " -->
+<a class="anchor" id="aa5be24d1eeb5b0b58f966e174cda1928"></a><!-- doxytag: member="boost::xint::blockable::integer::sign" ref="aa5be24d1eeb5b0b58f966e174cda1928" args="(bool signed_zero=false) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">int boost::xint::blockable::integer::sign </td>
           <td>(</td>
-          <td class="paramname"></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>signed_zero</em> = <code>false</code></td>
           <td>&nbsp;)&nbsp;</td>
           <td> const</td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Tests the sign of <code>*this</code>. <dl class="return"><dt><b>Returns:</b></dt><dd>-1 if <code>*this</code> is negative, 0 if it's zero, or 1 if it's greater than zero. </dd></dl>
+<p>Tests the sign of <code>*this</code>. <dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>signed_zero</em>&nbsp;</td><td>If <code>false</code> (the default value), returns zero if <code>*this</code> is zero. If <code>true</code>, returns 1 or -1 on a zero <code>*this</code> as well. Primarily used to identify a <a class="el" href="zero.html">negative zero</a>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>-1 if <code>*this</code> is negative, 0 if it's zero, or 1 if it's greater than zero. </dd></dl>
 </p>
 <dl class="note"><dt><b>Note:</b></dt><dd>If exceptions are blocked, returns zero instead of throwing. </dd></dl>
 
-<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00097">97</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00105">105</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -883,7 +869,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00194">194</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="blockable__integer_8cpp_source.html#l00202">202</a> of file <a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -892,7 +878,7 @@ template&lt;typename T &gt; </div>
 <li><a class="el" href="blockable__integer_8cpp_source.html">blockable_integer.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Apr 11 10:17:01 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Wed Apr 14 22:09:19 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

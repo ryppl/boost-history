@@ -33,8 +33,6 @@
 <a href="#_details">More...</a></p>
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td colspan="2"><h2>Classes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1core_1_1base__integer.html">base_integer</a></td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The base class for the integer classes.  <a href="classboost_1_1xint_1_1core_1_1base__integer.html#_details">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1core_1_1integer.html">integer</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The core integer class.  <a href="classboost_1_1xint_1_1core_1_1integer.html#_details">More...</a><br/></td></tr>
 <tr><td colspan="2"><h2>Functions</h2></td></tr>
@@ -190,7 +188,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>Contains the "pure" integer type, and functions to operate on it. </p>
-<p>The types and functions in the <a class="el" href="namespaceboost_1_1xint_1_1core.html" title="Contains the &quot;pure&quot; integer type, and functions to operate on it.">xint::core</a> namespace ignore exception-blocking and do not support the Not-a-Number value. If you attempt to assign a Not-a-Number to a <a class="el" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">core::integer</a>, it will throw an <a class="el" href="classboost_1_1xint_1_1not__a__number.html" title="Exception class.">xint::not_a_number</a> exception. </p>
+<p>The types and functions in the <a class="el" href="namespaceboost_1_1xint_1_1core.html" title="Contains the &quot;pure&quot; integer type, and functions to operate on it.">xint::core</a> namespace ignore exception-blocking and do not support the Not-a-Number value. If you attempt to assign a Not-a-Number to a <a class="el" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">core::integer</a>, it will throw a not_a_number exception. </p>
 <hr/><h2>Function Documentation</h2>
 <a class="anchor" id="ab1b84a6eb65676fdb85e71c1fe06e792"></a><!-- doxytag: member="boost::xint::core::abs" ref="ab1b84a6eb65676fdb85e71c1fe06e792" args="(const integer &amp;n)" -->
 <div class="memitem">
@@ -479,7 +477,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 <dl class="return"><dt><b>Returns:</b></dt><dd>The integer value of <code>dividend</code> divided by <code>divisor</code>.</dd></dl>
 <dl><dt><b>Exceptions:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1divide__by__zero.html" title="Exception class.">xint::divide_by_zero</a></em>&nbsp;</td><td>if <code>divisor</code> is zero. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1exception_1_1divide__by__zero.html">exception::divide_by_zero</a></em>&nbsp;</td><td>if <code>divisor</code> is zero. </td></tr>
   </table>
   </dd>
 </dl>
@@ -522,7 +520,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 <dl class="return"><dt><b>Returns:</b></dt><dd>An <code>std::pair</code> containing the quotient and remainder of <code>d1</code> divided by <code>d2</code>.</dd></dl>
 <dl><dt><b>Exceptions:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1divide__by__zero.html" title="Exception class.">xint::divide_by_zero</a></em>&nbsp;</td><td>if <code>d2</code> is zero. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1exception_1_1divide__by__zero.html">exception::divide_by_zero</a></em>&nbsp;</td><td>if <code>d2</code> is zero. </td></tr>
   </table>
   </dd>
 </dl>
@@ -618,12 +616,12 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>An integer with the numeric value of the string in base <code>base</code>. If the string is <code>#NaN#</code>, then it will return <a class="el" href="nan.html">Not-a-Number</a>.</dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>An integer with the numeric value of the string in base <code>base</code>.</dd></dl>
 <dl><dt><b>Exceptions:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1overflow__error.html" title="Exception class.">xint::overflow_error</a></em>&nbsp;</td><td>if there is not enough free memory to create the integer. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1invalid__base.html" title="Exception class.">xint::invalid_base</a></em>&nbsp;</td><td>if the base parameter is not between 2 and 36 (inclusive) or the constant <a class="el" href="namespaceboost_1_1xint.html#a086ec65a0273dccedca0fbfbddb03398">xint::autobase</a>. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1invalid__digit.html" title="Exception class.">xint::invalid_digit</a></em>&nbsp;</td><td>if the string contains any digit that cannot be part of a number in the specified base, or if there are no valid digits.</td></tr>
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1exception_1_1overflow__error.html">exception::overflow_error</a></em>&nbsp;</td><td>if there is not enough free memory to create the integer. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1exception_1_1invalid__base.html">exception::invalid_base</a></em>&nbsp;</td><td>if the base parameter is not between 2 and 36 (inclusive) or the constant <a class="el" href="namespaceboost_1_1xint.html#a086ec65a0273dccedca0fbfbddb03398">xint::autobase</a>. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1exception_1_1invalid__digit.html">exception::invalid_digit</a></em>&nbsp;</td><td>if the string contains any digit that cannot be part of a number in the specified base, or if there are no valid digits.</td></tr>
   </table>
   </dd>
 </dl>
@@ -827,7 +825,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 <dl class="return"><dt><b>Returns:</b></dt><dd>The modular inverse of <code>n</code> in <code>m</code>. If <code>n</code> has no modular inverse in <code>m</code>, returns zero.</dd></dl>
 <dl><dt><b>Exceptions:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1invalid__modulus.html" title="Exception class.">xint::invalid_modulus</a></em>&nbsp;</td><td>if the modulus is less than one. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1exception_1_1invalid__modulus.html">exception::invalid_modulus</a></em>&nbsp;</td><td>if the modulus is less than one. </td></tr>
   </table>
   </dd>
 </dl>
@@ -870,7 +868,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 <dl class="return"><dt><b>Returns:</b></dt><dd>1 if <code>n</code> seems to be prime, 0 if it isn't, or -1 if the provided callback function cancelled the operation.</dd></dl>
 <dl><dt><b>Exceptions:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>std::invalid_argument</em>&nbsp;</td><td>if <code>n</code> is less than 2.</td></tr>
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1exception_1_1invalid__argument.html">exception::invalid_argument</a></em>&nbsp;</td><td>if <code>n</code> is less than 2.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1519,7 +1517,7 @@ template&lt;typename charT , typename traits &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00867">867</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00871">871</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
 
 </div>
 </div>
@@ -1658,7 +1656,7 @@ template&lt;typename charT , typename traits &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00893">893</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00897">897</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
 
 </div>
 </div>
@@ -1830,7 +1828,7 @@ template&lt;typename charT , typename traits &gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The result of <code>pow</code>(n, <code>exponent</code>) % <code>modulus</code>.</dd></dl>
 <dl><dt><b>Exceptions:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1invalid__modulus.html" title="Exception class.">xint::invalid_modulus</a></em>&nbsp;</td><td>if the modulus is less than one.</td></tr>
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1exception_1_1invalid__modulus.html">exception::invalid_modulus</a></em>&nbsp;</td><td>if the modulus is less than one.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1930,7 +1928,7 @@ template&lt;typename charT , typename traits &gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>A randomly-generated prime integer with the specified number of bits, or zero if the provided callback function cancelled the operation.</dd></dl>
 <dl><dt><b>Exceptions:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>std::invalid_argument</em>&nbsp;</td><td>if <code>size_in_bits</code> is less than two.</td></tr>
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1exception_1_1invalid__argument.html">exception::invalid_argument</a></em>&nbsp;</td><td>if <code>size_in_bits</code> is less than two.</td></tr>
   </table>
   </dd>
 </dl>
@@ -2181,7 +2179,7 @@ template&lt;typename charT , typename traits &gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The largest integer that, when squared, is less than or equal to <code>n</code>. If <code>n</code> is not a perfect square, then this value will not be the exact square root.</dd></dl>
 <dl><dt><b>Exceptions:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1cannot__represent.html" title="Exception class.">xint::cannot_represent</a></em>&nbsp;</td><td>if <code>n</code> is negative. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1exception_1_1cannot__represent.html">exception::cannot_represent</a></em>&nbsp;</td><td>if <code>n</code> is negative. </td></tr>
   </table>
   </dd>
 </dl>
@@ -2258,12 +2256,12 @@ template&lt;typename T &gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The numeric value of <code>n</code>, converted to the specified type.</dd></dl>
 <dl><dt><b>Exceptions:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1too__big.html" title="Exception class.">xint::too_big</a></em>&nbsp;</td><td>if <code>n</code> would not fit into the specified type. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1exception_1_1too__big.html">exception::too_big</a></em>&nbsp;</td><td>if <code>n</code> would not fit into the specified type. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00850">850</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
+<p>Definition at line <a class="el" href="xint_8hpp_source.html#l00853">853</a> of file <a class="el" href="xint_8hpp_source.html">xint.hpp</a>.</p>
 
 </div>
 </div>
@@ -2338,10 +2336,10 @@ template&lt;typename T &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>The string value of <code>n</code>. If <code>n</code> is Not-a-Number, returns the string <code>#NaN#</code>.</dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The string value of <code>n</code>.</dd></dl>
 <dl><dt><b>Exceptions:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1invalid__base.html" title="Exception class.">xint::invalid_base</a></em>&nbsp;</td><td>if base is less than two or greater than 36.</td></tr>
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1exception_1_1invalid__base.html">exception::invalid_base</a></em>&nbsp;</td><td>if base is less than two or greater than 36.</td></tr>
   </table>
   </dd>
 </dl>
@@ -2379,7 +2377,7 @@ template&lt;typename T &gt; </div>
 </div>
 </div>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Apr 11 10:17:01 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Wed Apr 14 22:09:19 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

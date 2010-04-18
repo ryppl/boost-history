@@ -41,25 +41,23 @@
 <a name="l00020"></a>00020 
 <a name="l00021"></a>00021 <span class="keyword">namespace </span>boost {
 <a name="l00022"></a>00022 <span class="keyword">namespace </span>xint {
-<a name="l00023"></a>00023 <span class="keyword">namespace </span>blockable {
-<a name="l00024"></a>00024 
-<a name="l00026"></a>00026 integer <a class="code" href="namespaceboost_1_1xint_1_1blockable.html#a8d6e418a9b7172091f434b7657a02908">random_by_size</a>(<span class="keywordtype">size_t</span> bits, <span class="keywordtype">bool</span> high_bit_on, <span class="keywordtype">bool</span> low_bit_on, <span class="keywordtype">bool</span>
-<a name="l00027"></a>00027     can_be_negative)
-<a name="l00028"></a>00028 {
-<a name="l00029"></a>00029     <span class="keywordflow">try</span> {
-<a name="l00030"></a>00030         <span class="keywordflow">return</span> integer(<a class="code" href="namespaceboost_1_1xint_1_1core.html#ace96723bc59d89473ab9c750330d4451" title="Generates a random integer with specific attributes.">core::random_by_size</a>(bits, high_bit_on, low_bit_on,
-<a name="l00031"></a>00031             can_be_negative));
-<a name="l00032"></a>00032     } <span class="keywordflow">catch</span> (std::exception&amp;) {
-<a name="l00033"></a>00033         <span class="keywordflow">if</span> (<a class="code" href="namespaceboost_1_1xint.html#a389e96a85ba1c76ef5bfcf836b7e4e8a" title="Query whether exceptions are currently allowed or blocked.">exceptions_allowed</a>()) <span class="keywordflow">throw</span>;
-<a name="l00034"></a>00034         <span class="keywordflow">return</span> <a class="code" href="classboost_1_1xint_1_1blockable_1_1integer.html#ae52c1f42c887d0fffa40e38c97caedf1">integer::nan</a>();
-<a name="l00035"></a>00035     }
-<a name="l00036"></a>00036 }
-<a name="l00037"></a>00037 
-<a name="l00038"></a>00038 } <span class="comment">// namespace blockable</span>
-<a name="l00039"></a>00039 } <span class="comment">// namespace xint</span>
-<a name="l00040"></a>00040 } <span class="comment">// namespace boost</span>
+<a name="l00023"></a>00023 
+<a name="l00025"></a>00025 nothrow_integer <a class="code" href="namespaceboost_1_1xint.html#a1b55b4b192aa6abc491e3ed8c5ef2627">nothrow_random_by_size</a>(<span class="keywordtype">size_t</span> bits, <span class="keywordtype">bool</span> high_bit_on, <span class="keywordtype">bool</span>
+<a name="l00026"></a>00026     low_bit_on, <span class="keywordtype">bool</span> can_be_negative)
+<a name="l00027"></a>00027 {
+<a name="l00028"></a>00028     <span class="keywordflow">try</span> {
+<a name="l00029"></a>00029         <span class="keywordflow">return</span> nothrow_integer(<a class="code" href="namespaceboost_1_1xint.html#ac8d879e19a6608b21184236e00806be5" title="Generates a random integer with specific attributes.">xint::random_by_size</a>(bits, high_bit_on,
+<a name="l00030"></a>00030             low_bit_on, can_be_negative));
+<a name="l00031"></a>00031     } <span class="keywordflow">catch</span> (std::exception&amp;) {
+<a name="l00032"></a>00032         <span class="keywordflow">if</span> (<a class="code" href="namespaceboost_1_1xint.html#a389e96a85ba1c76ef5bfcf836b7e4e8a" title="Query whether exceptions are currently allowed or blocked.">exceptions_allowed</a>()) <span class="keywordflow">throw</span>;
+<a name="l00033"></a>00033         <span class="keywordflow">return</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a9a8d654139e4fb916f933d09c7238e10">nothrow_integer::nan</a>();
+<a name="l00034"></a>00034     }
+<a name="l00035"></a>00035 }
+<a name="l00036"></a>00036 
+<a name="l00037"></a>00037 } <span class="comment">// namespace xint</span>
+<a name="l00038"></a>00038 } <span class="comment">// namespace boost</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Apr 11 10:17:00 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sat Apr 17 01:53:01 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

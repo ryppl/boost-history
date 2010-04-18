@@ -38,152 +38,144 @@
 <a name="l00012"></a>00012 <span class="comment">*/</span>
 <a name="l00013"></a>00013 
 <a name="l00018"></a>00018 <span class="preprocessor">#include &quot;../boost/xint/xint.hpp&quot;</span>
-<a name="l00019"></a>00019 <span class="preprocessor">#include &quot;../boost/xint/xint_data_t.hpp&quot;</span>
-<a name="l00020"></a>00020 
-<a name="l00021"></a><a class="code" href="namespaceboost_1_1xint.html">00021</a> <span class="keyword">namespace </span>boost {
-<a name="l00022"></a>00022 <span class="keyword">namespace </span>xint {
-<a name="l00023"></a>00023 
-<a name="l00024"></a><a class="code" href="namespaceboost_1_1xint_1_1core.html">00024</a> <span class="keyword">using namespace </span>detail;
-<a name="l00025"></a>00025 
-<a name="l00026"></a>00026 <span class="keyword">namespace </span>core {
-<a name="l00027"></a>00027 
-<a name="l00036"></a>00036 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint_1_1core.html#a06f4b3f75bb5e648e865f20990f8154c" title="Queries the value of a particular bit in an integer.">getbit</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">integer</a>&amp; n, <span class="keywordtype">size_t</span> bit) {
-<a name="l00037"></a>00037     <span class="keywordtype">size_t</span> index=bit/<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a>;
-<a name="l00038"></a>00038     <span class="keywordflow">if</span> (index &lt; n.<a class="code" href="classboost_1_1xint_1_1core_1_1base__integer.html#a9ed6fed4d931d2eb9b481ca02cc96bd7">_get_length</a>()) {
-<a name="l00039"></a>00039         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> mask=(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>(1) &lt;&lt; (bit % <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a>));
-<a name="l00040"></a>00040         <span class="keywordflow">return</span> ((n.<a class="code" href="classboost_1_1xint_1_1core_1_1base__integer.html#ac932c6bae77d2bbc93bf3456909e30bb">_get_digit</a>(index) &amp; mask) != 0);
-<a name="l00041"></a>00041     } <span class="keywordflow">else</span> <span class="keywordflow">return</span> <span class="keyword">false</span>;
-<a name="l00042"></a>00042 }
-<a name="l00043"></a>00043 
-<a name="l00051"></a>00051 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint_1_1core.html#aae966bbb23d33801b34108f4490b0778" title="Sets a specific bit in an integer to one.">setbit</a>(<a class="code" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">integer</a>&amp; n, <span class="keywordtype">size_t</span> bit) {
-<a name="l00052"></a>00052     n.<a class="code" href="classboost_1_1xint_1_1core_1_1integer.html#a1f1b1c19c7c3ec22972124abdbd08cc1">_make_unique</a>();
-<a name="l00053"></a>00053     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html" title="Holds the internal details of an xint::integer.">detail::data_t</a> *ndata=n.<a class="code" href="classboost_1_1xint_1_1core_1_1base__integer.html#a28bd6c6ce95b271d6f75d82041515df2">_get_data</a>();
-<a name="l00054"></a>00054 
-<a name="l00055"></a>00055     <span class="keywordtype">size_t</span> index=bit/<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a>;
-<a name="l00056"></a>00056     <span class="keywordflow">if</span> (index &gt;= n.<a class="code" href="classboost_1_1xint_1_1core_1_1base__integer.html#a9ed6fed4d931d2eb9b481ca02cc96bd7">_get_length</a>()) ndata-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3bdd8e8ef7c5b8bc888b96725aac9dfe">realloc</a>(index+1);
-<a name="l00057"></a>00057 
-<a name="l00058"></a>00058     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> mask=(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>(1) &lt;&lt; (bit % <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a>));
-<a name="l00059"></a>00059     ndata-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>[index] |= mask;
-<a name="l00060"></a>00060     ndata-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a284e2618d908796987c624311a42625d">skipLeadingZeros</a>();
-<a name="l00061"></a>00061 }
-<a name="l00062"></a>00062 
-<a name="l00070"></a>00070 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint_1_1core.html#abd43d348da182e32e931743d1837f849" title="Sets a specific bit in an integer to zero.">clearbit</a>(<a class="code" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">integer</a>&amp; n, <span class="keywordtype">size_t</span> bit) {
-<a name="l00071"></a>00071     <span class="keywordtype">size_t</span> index=bit/<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a>;
-<a name="l00072"></a>00072     <span class="keywordflow">if</span> (index &lt; n.<a class="code" href="classboost_1_1xint_1_1core_1_1base__integer.html#a9ed6fed4d931d2eb9b481ca02cc96bd7">_get_length</a>()) {
-<a name="l00073"></a>00073         n.<a class="code" href="classboost_1_1xint_1_1core_1_1integer.html#a1f1b1c19c7c3ec22972124abdbd08cc1">_make_unique</a>();
-<a name="l00074"></a>00074         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> mask=(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>(1) &lt;&lt; (bit % <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a>));
-<a name="l00075"></a>00075         n.<a class="code" href="classboost_1_1xint_1_1core_1_1base__integer.html#a28bd6c6ce95b271d6f75d82041515df2">_get_data</a>()-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>[index] &amp;= ~mask;
-<a name="l00076"></a>00076         n.<a class="code" href="classboost_1_1xint_1_1core_1_1base__integer.html#a28bd6c6ce95b271d6f75d82041515df2">_get_data</a>()-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a284e2618d908796987c624311a42625d">skipLeadingZeros</a>();
-<a name="l00077"></a>00077     }
-<a name="l00078"></a>00078 }
-<a name="l00079"></a>00079 
-<a name="l00089"></a>00089 <span class="keywordtype">size_t</span> <a class="code" href="namespaceboost_1_1xint_1_1core.html#afbb649428a445bd8a6e7d9bcfab69707" title="Obtains the index of the lowest bit in an integer with a value of one.">lowestbit</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">integer</a>&amp; n, <span class="keywordtype">size_t</span> valueIfZero) {
-<a name="l00090"></a>00090     <span class="keywordflow">if</span> (n.<a class="code" href="classboost_1_1xint_1_1core_1_1integer.html#abbb37de330e3a50ac3df337e5c0eb1c9" title="Tests the sign of *this.">sign</a>()==0) <span class="keywordflow">return</span> valueIfZero;
-<a name="l00091"></a>00091 
-<a name="l00092"></a>00092     <span class="keyword">const</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html" title="Holds the internal details of an xint::integer.">detail::data_t</a> *ndata=n.<a class="code" href="classboost_1_1xint_1_1core_1_1base__integer.html#a28bd6c6ce95b271d6f75d82041515df2">_get_data</a>();
-<a name="l00093"></a>00093     <span class="keyword">const</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *p=ndata-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>, *pe=p+ndata-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>;
-<a name="l00094"></a>00094     <span class="keywordflow">while</span> (p!=pe &amp;&amp; *p==0) ++p;
-<a name="l00095"></a>00095 
-<a name="l00096"></a>00096     <span class="keywordtype">size_t</span> index=(p - ndata-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>);
-<a name="l00097"></a>00097     <span class="keywordtype">size_t</span> r=(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a> * index);
-<a name="l00098"></a>00098     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> digit=*p;
+<a name="l00019"></a>00019 
+<a name="l00020"></a>00020 <span class="keyword">namespace </span>boost {
+<a name="l00021"></a>00021 <span class="keyword">namespace </span>xint {
+<a name="l00022"></a>00022 
+<a name="l00023"></a>00023 <span class="keyword">using namespace </span>detail;
+<a name="l00024"></a>00024 
+<a name="l00033"></a>00033 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#ac00836bdc530b3eaf0a9b9f2e208273b" title="Queries the value of a particular bit in an integer.">getbit</a>(<span class="keyword">const</span> integer&amp; n, <span class="keywordtype">size_t</span> bit) {
+<a name="l00034"></a>00034     <span class="keywordtype">size_t</span> index=bit/<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a>;
+<a name="l00035"></a>00035     <span class="keywordflow">if</span> (index &lt; n._get_length()) {
+<a name="l00036"></a>00036         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> mask=(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>(1) &lt;&lt; (bit % <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a>));
+<a name="l00037"></a>00037         <span class="keywordflow">return</span> ((n._get_digit(index) &amp; mask) != 0);
+<a name="l00038"></a>00038     } <span class="keywordflow">else</span> <span class="keywordflow">return</span> <span class="keyword">false</span>;
+<a name="l00039"></a>00039 }
+<a name="l00040"></a>00040 
+<a name="l00048"></a>00048 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a6278915cf51b0d448a9db40031226182" title="Sets a specific bit in an integer to one.">setbit</a>(integer&amp; n, <span class="keywordtype">size_t</span> bit) {
+<a name="l00049"></a>00049     n._make_unique();
+<a name="l00050"></a>00050 
+<a name="l00051"></a>00051     <span class="keywordtype">size_t</span> index=bit/<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a>;
+<a name="l00052"></a>00052     <span class="keywordflow">if</span> (index &gt;= n._get_length()) n._realloc(index+1);
+<a name="l00053"></a>00053 
+<a name="l00054"></a>00054     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> mask=(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>(1) &lt;&lt; (bit % <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a>));
+<a name="l00055"></a>00055     n._get_digits()[index] |= mask;
+<a name="l00056"></a>00056     n._cleanup();
+<a name="l00057"></a>00057 }
+<a name="l00058"></a>00058 
+<a name="l00066"></a>00066 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a96d452df71ac6799a7041647b4b106df" title="Sets a specific bit in an integer to zero.">clearbit</a>(integer&amp; n, <span class="keywordtype">size_t</span> bit) {
+<a name="l00067"></a>00067     <span class="keywordtype">size_t</span> index=bit/<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a>;
+<a name="l00068"></a>00068     <span class="keywordflow">if</span> (index &lt; n._get_length()) {
+<a name="l00069"></a>00069         n._make_unique();
+<a name="l00070"></a>00070         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> mask=(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>(1) &lt;&lt; (bit % <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a>));
+<a name="l00071"></a>00071         n._get_digits()[index] &amp;= ~mask;
+<a name="l00072"></a>00072         n._cleanup();
+<a name="l00073"></a>00073     }
+<a name="l00074"></a>00074 }
+<a name="l00075"></a>00075 
+<a name="l00085"></a>00085 <span class="keywordtype">size_t</span> <a class="code" href="namespaceboost_1_1xint.html#a783e728f8221cd424d6f7f5d5f67ec40" title="Obtains the index of the lowest bit in an integer with a value of one.">lowestbit</a>(<span class="keyword">const</span> integer&amp; n, <span class="keywordtype">size_t</span> valueIfZero) {
+<a name="l00086"></a>00086     <span class="keywordflow">if</span> (n.sign()==0) <span class="keywordflow">return</span> valueIfZero;
+<a name="l00087"></a>00087 
+<a name="l00088"></a>00088     <span class="keyword">const</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *p=n._get_digits(), *pe=p+n._get_length();
+<a name="l00089"></a>00089     <span class="keywordflow">while</span> (p!=pe &amp;&amp; *p==0) ++p;
+<a name="l00090"></a>00090 
+<a name="l00091"></a>00091     <span class="keywordtype">size_t</span> index=(p - n._get_digits());
+<a name="l00092"></a>00092     <span class="keywordtype">size_t</span> r=(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a> * index);
+<a name="l00093"></a>00093     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> digit=*p;
+<a name="l00094"></a>00094 
+<a name="l00095"></a>00095     <span class="keywordflow">while</span> ((digit &amp; 0x01)==0) {
+<a name="l00096"></a>00096         digit&gt;&gt;=1;
+<a name="l00097"></a>00097         ++r;
+<a name="l00098"></a>00098     }
 <a name="l00099"></a>00099 
-<a name="l00100"></a>00100     <span class="keywordflow">while</span> ((digit &amp; 0x01)==0) {
-<a name="l00101"></a>00101         digit&gt;&gt;=1;
-<a name="l00102"></a>00102         ++r;
-<a name="l00103"></a>00103     }
-<a name="l00104"></a>00104 
-<a name="l00105"></a>00105     <span class="keywordflow">return</span> r;
-<a name="l00106"></a>00106 }
-<a name="l00107"></a>00107 
-<a name="l00117"></a>00117 <span class="keywordtype">size_t</span> <a class="code" href="namespaceboost_1_1xint_1_1core.html#a2a32641fadc89dc7385b2f1a0af862dc" title="Obtains the index of the highest bit in an integer with a value of one.">highestbit</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">integer</a>&amp; n, <span class="keywordtype">size_t</span> valueIfZero) {
-<a name="l00118"></a>00118     <span class="keywordflow">if</span> (n.<a class="code" href="classboost_1_1xint_1_1core_1_1integer.html#abbb37de330e3a50ac3df337e5c0eb1c9" title="Tests the sign of *this.">sign</a>()==0) <span class="keywordflow">return</span> valueIfZero;
-<a name="l00119"></a>00119     <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(<a class="code" href="namespaceboost_1_1xint_1_1core.html#aa3924902931d74fe0a7d2c6daf9ab028" title="Get the log2 value of an integer.">log2</a>(n)-1);
-<a name="l00120"></a>00120 }
-<a name="l00121"></a>00121 
-<a name="l00128"></a>00128 <a class="code" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">integer</a> <a class="code" href="namespaceboost_1_1xint_1_1core.html#aab6badbf5997e33714d0dbe54c16375f" title="Combine two integers using a bitwise AND operation.">bitwise_and</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">integer</a>&amp; n1, <span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">integer</a>&amp; n2) {
-<a name="l00129"></a>00129     <span class="keyword">const</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html" title="Holds the internal details of an xint::integer.">detail::data_t</a> *smaller=n1.<a class="code" href="classboost_1_1xint_1_1core_1_1base__integer.html#a28bd6c6ce95b271d6f75d82041515df2">_get_data</a>(), *larger=n2.<a class="code" href="classboost_1_1xint_1_1core_1_1base__integer.html#a28bd6c6ce95b271d6f75d82041515df2">_get_data</a>();
-<a name="l00130"></a>00130     <span class="keywordflow">if</span> (smaller-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a> &gt; larger-&gt;mLength) std::swap(smaller, larger);
-<a name="l00131"></a>00131 
-<a name="l00132"></a>00132     <a class="code" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">integer</a> r;
-<a name="l00133"></a>00133     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html" title="Holds the internal details of an xint::integer.">detail::data_t</a> *rdata=r.<a class="code" href="classboost_1_1xint_1_1core_1_1base__integer.html#a28bd6c6ce95b271d6f75d82041515df2">_get_data</a>();
-<a name="l00134"></a>00134     rdata-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a05165b7f45dea3e2459739d856d78288">alloc</a>(smaller-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>);
+<a name="l00100"></a>00100     <span class="keywordflow">return</span> r;
+<a name="l00101"></a>00101 }
+<a name="l00102"></a>00102 
+<a name="l00112"></a>00112 <span class="keywordtype">size_t</span> <a class="code" href="namespaceboost_1_1xint.html#aec002c076eff13d0382c5d2cd6de1d60" title="Obtains the index of the highest bit in an integer with a value of one.">highestbit</a>(<span class="keyword">const</span> integer&amp; n, <span class="keywordtype">size_t</span> valueIfZero) {
+<a name="l00113"></a>00113     <span class="keywordflow">if</span> (n.sign()==0) <span class="keywordflow">return</span> valueIfZero;
+<a name="l00114"></a>00114     <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(<a class="code" href="namespaceboost_1_1xint.html#a0cd277cd7a80cda764f889781f0140cd" title="Get the log2 value of an integer.">log2</a>(n)-1);
+<a name="l00115"></a>00115 }
+<a name="l00116"></a>00116 
+<a name="l00123"></a>00123 integer <a class="code" href="namespaceboost_1_1xint.html#ab828c0be1559b60537b959ef75092fb2" title="Combine two integers using a bitwise AND operation.">bitwise_and</a>(<span class="keyword">const</span> integer&amp; n1, <span class="keyword">const</span> integer&amp; n2) {
+<a name="l00124"></a>00124     <span class="keywordtype">bool</span> n1larger=(n1._get_length() &gt; n2._get_length());
+<a name="l00125"></a>00125     <span class="keyword">const</span> integer&amp; smaller(n1larger ? n2 : n1), larger(n1larger ? n1 : n2);
+<a name="l00126"></a>00126 
+<a name="l00127"></a>00127     integer r;
+<a name="l00128"></a>00128     r._realloc(smaller._get_length());
+<a name="l00129"></a>00129 
+<a name="l00130"></a>00130     <span class="keyword">const</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *s1=smaller._get_digits(), *s1e=s1+smaller._get_length(),
+<a name="l00131"></a>00131         *s2=larger._get_digits();
+<a name="l00132"></a>00132     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *t=r._get_digits();
+<a name="l00133"></a>00133 
+<a name="l00134"></a>00134     <span class="keywordflow">while</span> (s1 &lt; s1e) *t++ = *s1++ &amp; *s2++;
 <a name="l00135"></a>00135 
-<a name="l00136"></a>00136     <span class="keyword">const</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *s1=smaller-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>, *s1e=s1+smaller-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>, *s2=larger-&gt;digits;
-<a name="l00137"></a>00137     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *t=rdata-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>;
-<a name="l00138"></a>00138 
-<a name="l00139"></a>00139     <span class="keywordflow">while</span> (s1 &lt; s1e) *t++ = *s1++ &amp; *s2++;
-<a name="l00140"></a>00140 
-<a name="l00141"></a>00141     rdata-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a284e2618d908796987c624311a42625d">skipLeadingZeros</a>();
-<a name="l00142"></a>00142     <span class="keywordflow">return</span> r;
-<a name="l00143"></a>00143 }
-<a name="l00144"></a>00144 
-<a name="l00151"></a>00151 <a class="code" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">integer</a> <a class="code" href="namespaceboost_1_1xint_1_1core.html#a04384ebf492038c4ba83af9736412c9b" title="Combine two integers using a bitwise OR operation.">bitwise_or</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">integer</a>&amp; n1, <span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">integer</a>&amp; n2) {
-<a name="l00152"></a>00152     <span class="keyword">const</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html" title="Holds the internal details of an xint::integer.">detail::data_t</a> *smaller=n1.<a class="code" href="classboost_1_1xint_1_1core_1_1base__integer.html#a28bd6c6ce95b271d6f75d82041515df2">_get_data</a>(), *larger=n2.<a class="code" href="classboost_1_1xint_1_1core_1_1base__integer.html#a28bd6c6ce95b271d6f75d82041515df2">_get_data</a>();
-<a name="l00153"></a>00153     <span class="keywordflow">if</span> (smaller-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a> &gt; larger-&gt;mLength) std::swap(smaller, larger);
-<a name="l00154"></a>00154 
-<a name="l00155"></a>00155     <a class="code" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">integer</a> r;
-<a name="l00156"></a>00156     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html" title="Holds the internal details of an xint::integer.">detail::data_t</a> *rdata=r.<a class="code" href="classboost_1_1xint_1_1core_1_1base__integer.html#a28bd6c6ce95b271d6f75d82041515df2">_get_data</a>();
-<a name="l00157"></a>00157     rdata-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a05165b7f45dea3e2459739d856d78288">alloc</a>(larger-&gt;mLength);
-<a name="l00158"></a>00158 
-<a name="l00159"></a>00159     <span class="keyword">const</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *s1=smaller-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>, *s1e=s1+smaller-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>;
-<a name="l00160"></a>00160     <span class="keyword">const</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *s2=larger-&gt;digits, *s2e=s2+larger-&gt;mLength;
-<a name="l00161"></a>00161     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *t=rdata-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>;
-<a name="l00162"></a>00162 
-<a name="l00163"></a>00163     <span class="keywordflow">while</span> (s1&lt;s1e) *t++ = *s1++ | *s2++;
-<a name="l00164"></a>00164     <span class="keywordflow">while</span> (s2&lt;s2e) *t++ = *s2++;
-<a name="l00165"></a>00165 
-<a name="l00166"></a>00166     rdata-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a284e2618d908796987c624311a42625d">skipLeadingZeros</a>();
-<a name="l00167"></a>00167     <span class="keywordflow">return</span> r;
-<a name="l00168"></a>00168 }
-<a name="l00169"></a>00169 
-<a name="l00177"></a>00177 <a class="code" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">integer</a> <a class="code" href="namespaceboost_1_1xint_1_1core.html#a86446e5e38a977b68f041dfa4b82a385" title="Combine two integers using a bitwise XOR operation.">bitwise_xor</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">integer</a>&amp; n1, <span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">integer</a>&amp; n2) {
-<a name="l00178"></a>00178     <span class="keyword">const</span> <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html" title="Holds the internal details of an xint::integer.">detail::data_t</a> *smaller=n1.<a class="code" href="classboost_1_1xint_1_1core_1_1base__integer.html#a28bd6c6ce95b271d6f75d82041515df2">_get_data</a>(), *larger=n2.<a class="code" href="classboost_1_1xint_1_1core_1_1base__integer.html#a28bd6c6ce95b271d6f75d82041515df2">_get_data</a>();
-<a name="l00179"></a>00179     <span class="keywordflow">if</span> (smaller-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a> &gt; larger-&gt;mLength) std::swap(smaller, larger);
-<a name="l00180"></a>00180 
-<a name="l00181"></a>00181     <a class="code" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">integer</a> r;
-<a name="l00182"></a>00182     <a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html" title="Holds the internal details of an xint::integer.">detail::data_t</a> *rdata=r.<a class="code" href="classboost_1_1xint_1_1core_1_1base__integer.html#a28bd6c6ce95b271d6f75d82041515df2">_get_data</a>();
-<a name="l00183"></a>00183     rdata-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a05165b7f45dea3e2459739d856d78288">alloc</a>(larger-&gt;mLength);
+<a name="l00136"></a>00136     r._cleanup();
+<a name="l00137"></a>00137     <span class="keywordflow">return</span> r;
+<a name="l00138"></a>00138 }
+<a name="l00139"></a>00139 
+<a name="l00146"></a>00146 integer <a class="code" href="namespaceboost_1_1xint.html#ab38ce0764a4b6433e11e30efa2175fec" title="Combine two integers using a bitwise OR operation.">bitwise_or</a>(<span class="keyword">const</span> integer&amp; n1, <span class="keyword">const</span> integer&amp; n2) {
+<a name="l00147"></a>00147     <span class="keywordtype">bool</span> n1larger=(n1._get_length() &gt; n2._get_length());
+<a name="l00148"></a>00148     <span class="keyword">const</span> integer&amp; smaller(n1larger ? n2 : n1), larger(n1larger ? n1 : n2);
+<a name="l00149"></a>00149 
+<a name="l00150"></a>00150     integer r;
+<a name="l00151"></a>00151     r._realloc(larger._get_length());
+<a name="l00152"></a>00152 
+<a name="l00153"></a>00153     <span class="keyword">const</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *s1=smaller._get_digits(), *s1e=s1+smaller._get_length();
+<a name="l00154"></a>00154     <span class="keyword">const</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *s2=larger._get_digits(), *s2e=s2+larger._get_length();
+<a name="l00155"></a>00155     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *t=r._get_digits();
+<a name="l00156"></a>00156 
+<a name="l00157"></a>00157     <span class="keywordflow">while</span> (s1&lt;s1e) *t++ = *s1++ | *s2++;
+<a name="l00158"></a>00158     <span class="keywordflow">while</span> (s2&lt;s2e) *t++ = *s2++;
+<a name="l00159"></a>00159 
+<a name="l00160"></a>00160     r._cleanup();
+<a name="l00161"></a>00161     <span class="keywordflow">return</span> r;
+<a name="l00162"></a>00162 }
+<a name="l00163"></a>00163 
+<a name="l00171"></a>00171 integer <a class="code" href="namespaceboost_1_1xint.html#a6afd5af4550b698f6a7065f457fcb0a1" title="Combine two integers using a bitwise XOR operation.">bitwise_xor</a>(<span class="keyword">const</span> integer&amp; n1, <span class="keyword">const</span> integer&amp; n2) {
+<a name="l00172"></a>00172     <span class="keywordtype">bool</span> n1larger=(n1._get_length() &gt; n2._get_length());
+<a name="l00173"></a>00173     <span class="keyword">const</span> integer&amp; smaller(n1larger ? n2 : n1), larger(n1larger ? n1 : n2);
+<a name="l00174"></a>00174 
+<a name="l00175"></a>00175     integer r;
+<a name="l00176"></a>00176     r._realloc(larger._get_length());
+<a name="l00177"></a>00177 
+<a name="l00178"></a>00178     <span class="keyword">const</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *s1=smaller._get_digits(), *s1e=s1+smaller._get_length();
+<a name="l00179"></a>00179     <span class="keyword">const</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *s2=larger._get_digits(), *s2e=s2+larger._get_length();
+<a name="l00180"></a>00180     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *t=r._get_digits();
+<a name="l00181"></a>00181 
+<a name="l00182"></a>00182     <span class="keywordflow">while</span> (s1&lt;s1e) *t++ = *s1++ ^ *s2++;
+<a name="l00183"></a>00183     <span class="keywordflow">while</span> (s2&lt;s2e) *t++ = *s2++;
 <a name="l00184"></a>00184 
-<a name="l00185"></a>00185     <span class="keyword">const</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *s1=smaller-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>, *s1e=s1+smaller-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a3b494184a00a17108f8bb80d8f07a3a4">mLength</a>;
-<a name="l00186"></a>00186     <span class="keyword">const</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *s2=larger-&gt;digits, *s2e=s2+larger-&gt;mLength;
-<a name="l00187"></a>00187     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *t=rdata-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a0e65a16488bd7a9d0b1c2a42cc258da3">digits</a>;
+<a name="l00185"></a>00185     r._cleanup();
+<a name="l00186"></a>00186     <span class="keywordflow">return</span> r;
+<a name="l00187"></a>00187 }
 <a name="l00188"></a>00188 
-<a name="l00189"></a>00189     <span class="keywordflow">while</span> (s1&lt;s1e) *t++ = *s1++ ^ *s2++;
-<a name="l00190"></a>00190     <span class="keywordflow">while</span> (s2&lt;s2e) *t++ = *s2++;
-<a name="l00191"></a>00191 
-<a name="l00192"></a>00192     rdata-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#a284e2618d908796987c624311a42625d">skipLeadingZeros</a>();
-<a name="l00193"></a>00193     <span class="keywordflow">return</span> r;
-<a name="l00194"></a>00194 }
-<a name="l00195"></a>00195 
-<a name="l00204"></a>00204 <a class="code" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">integer</a> <a class="code" href="namespaceboost_1_1xint_1_1core.html#ab5d1310559b3ac9857e3475889b06b1a" title="Bit-shift an integer, in either direction.">shift</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">integer</a>&amp; n, <span class="keywordtype">int</span> byBits) {
-<a name="l00205"></a>00205     <span class="keywordflow">if</span> (byBits &gt; 0) <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint_1_1core.html#a51a385d6a7e71b555b152de0f40cd9fc" title="Left-shift an integer by a specified number of bits.">shift_left</a>(n, byBits);
-<a name="l00206"></a>00206     <span class="keywordflow">else</span> <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint_1_1core.html#ac456d45328b682c029af422923298253" title="Right-shift an integer by a specified number of bits.">shift_right</a>(n, -byBits);
-<a name="l00207"></a>00207 }
-<a name="l00208"></a>00208 
-<a name="l00216"></a>00216 <a class="code" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">integer</a> <a class="code" href="namespaceboost_1_1xint_1_1core.html#a51a385d6a7e71b555b152de0f40cd9fc" title="Left-shift an integer by a specified number of bits.">shift_left</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">integer</a>&amp; n, <span class="keywordtype">size_t</span> byBits) {
-<a name="l00217"></a>00217     <span class="keywordflow">if</span> (byBits==0) <span class="keywordflow">return</span> n;
-<a name="l00218"></a>00218 
-<a name="l00219"></a>00219     <a class="code" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">integer</a> nn(n);
-<a name="l00220"></a>00220     nn.<a class="code" href="classboost_1_1xint_1_1core_1_1integer.html#a1f1b1c19c7c3ec22972124abdbd08cc1">_make_unique</a>();
-<a name="l00221"></a>00221     nn.<a class="code" href="classboost_1_1xint_1_1core_1_1base__integer.html#a28bd6c6ce95b271d6f75d82041515df2">_get_data</a>()-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#aaa43f067c7f1a7772276cf9a57ab653c">shift_left</a>(byBits);
-<a name="l00222"></a>00222     <span class="keywordflow">return</span> nn;
-<a name="l00223"></a>00223 }
-<a name="l00224"></a>00224 
-<a name="l00232"></a>00232 <a class="code" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">integer</a> <a class="code" href="namespaceboost_1_1xint_1_1core.html#ac456d45328b682c029af422923298253" title="Right-shift an integer by a specified number of bits.">shift_right</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">integer</a>&amp; n, <span class="keywordtype">size_t</span> byBits) {
-<a name="l00233"></a>00233     <span class="keywordflow">if</span> (byBits==0) <span class="keywordflow">return</span> n;
-<a name="l00234"></a>00234 
-<a name="l00235"></a>00235     <a class="code" href="classboost_1_1xint_1_1core_1_1integer.html" title="The core integer class.">integer</a> nn(n);
-<a name="l00236"></a>00236     nn.<a class="code" href="classboost_1_1xint_1_1core_1_1integer.html#a1f1b1c19c7c3ec22972124abdbd08cc1">_make_unique</a>();
-<a name="l00237"></a>00237     nn.<a class="code" href="classboost_1_1xint_1_1core_1_1base__integer.html#a28bd6c6ce95b271d6f75d82041515df2">_get_data</a>()-&gt;<a class="code" href="structboost_1_1xint_1_1detail_1_1data__t.html#ad28012e618ecab56b69ceac7585d1741">shift_right</a>(byBits);
-<a name="l00238"></a>00238     <span class="keywordflow">return</span> nn;
-<a name="l00239"></a>00239 }
-<a name="l00240"></a>00240 
-<a name="l00241"></a>00241 } <span class="comment">// namespace core</span>
-<a name="l00242"></a>00242 } <span class="comment">// namespace xint</span>
-<a name="l00243"></a>00243 } <span class="comment">// namespace boost</span>
+<a name="l00197"></a>00197 integer <a class="code" href="namespaceboost_1_1xint.html#aaed048f3dc3a442152ebffa3f721d014" title="Bit-shift an integer, in either direction.">shift</a>(<span class="keyword">const</span> integer&amp; n, <span class="keywordtype">int</span> byBits) {
+<a name="l00198"></a>00198     <span class="keywordflow">if</span> (byBits &gt; 0) <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#ae22c3492ecf08370a9a972c8d6fb8e96" title="Left-shift an integer by a specified number of bits.">shift_left</a>(n, byBits);
+<a name="l00199"></a>00199     <span class="keywordflow">else</span> <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#aca7453fa9e276ebefacc9827b55f69d2" title="Right-shift an integer by a specified number of bits.">shift_right</a>(n, -byBits);
+<a name="l00200"></a>00200 }
+<a name="l00201"></a>00201 
+<a name="l00209"></a>00209 integer <a class="code" href="namespaceboost_1_1xint.html#ae22c3492ecf08370a9a972c8d6fb8e96" title="Left-shift an integer by a specified number of bits.">shift_left</a>(<span class="keyword">const</span> integer&amp; n, <span class="keywordtype">size_t</span> byBits) {
+<a name="l00210"></a>00210     <span class="keywordflow">if</span> (byBits==0) <span class="keywordflow">return</span> n;
+<a name="l00211"></a>00211 
+<a name="l00212"></a>00212     integer nn(n);
+<a name="l00213"></a>00213     nn._make_unique();
+<a name="l00214"></a>00214     nn._shift_left(byBits);
+<a name="l00215"></a>00215     <span class="keywordflow">return</span> nn;
+<a name="l00216"></a>00216 }
+<a name="l00217"></a>00217 
+<a name="l00225"></a>00225 integer <a class="code" href="namespaceboost_1_1xint.html#aca7453fa9e276ebefacc9827b55f69d2" title="Right-shift an integer by a specified number of bits.">shift_right</a>(<span class="keyword">const</span> integer&amp; n, <span class="keywordtype">size_t</span> byBits) {
+<a name="l00226"></a>00226     <span class="keywordflow">if</span> (byBits==0) <span class="keywordflow">return</span> n;
+<a name="l00227"></a>00227 
+<a name="l00228"></a>00228     integer nn(n);
+<a name="l00229"></a>00229     nn._make_unique();
+<a name="l00230"></a>00230     nn._shift_right(byBits);
+<a name="l00231"></a>00231     <span class="keywordflow">return</span> nn;
+<a name="l00232"></a>00232 }
+<a name="l00233"></a>00233 
+<a name="l00234"></a>00234 } <span class="comment">// namespace xint</span>
+<a name="l00235"></a>00235 } <span class="comment">// namespace boost</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Apr 11 10:17:00 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sat Apr 17 20:02:57 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

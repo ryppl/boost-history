@@ -7,16 +7,17 @@ bool callback() {
 }
 
 int main() {
-    using namespace std;
+    using std::cout;
+    using std::endl;
     using namespace boost;
-    using namespace xint::core;
+    using namespace xint;
 
     const unsigned int bits=512;
 
     try {
         // Use the system's strong random number generator, via the XInt-
         // provided convenience class.
-        xint::set_random_generator(new xint::strong_random_generator);
+        set_random_generator(new strong_random_generator);
 
         // Generate the prime number, keeping the user informed of the
         // progress.
@@ -25,7 +26,7 @@ int main() {
 
         // Success!
         cout << "\nA random " << bits << "-bit prime is: " << p << endl;
-    } catch (xint::no_strong_random& e) {
+    } catch (exceptions::no_strong_random& e) {
         // xint::strong_random_generator will throw this if the system doesn't
         // have a strong random number generator.
         cout << e.what() << endl;
