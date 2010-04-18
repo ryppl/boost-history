@@ -237,7 +237,7 @@ public:
 	}
 };
 
-typedef pools_alloc<stdlib> pools;
+typedef pools_alloc<NS_BOOST_MEMORY_POLICY::stdlib> pools;
 
 // -------------------------------------------------------------------------
 
