@@ -45,6 +45,10 @@ public:
 		BaseClass::clear();
 	}
 
+	__forceinline void* BOOST_MEMORY_CALL reallocate(void* p, size_t oldSize, size_t newSize) {
+		return BaseClass::reallocate(p, oldSize, newSize);
+	}
+
 	__forceinline void* BOOST_MEMORY_CALL allocate(size_t cb) {
 		return BaseClass::allocate(cb);
 	}
@@ -71,29 +75,25 @@ public:
 		return BaseClass::allocate(cb);
 	}
 
-	__forceinline void BOOST_MEMORY_CALL manage(void* p, int fnZero) {
+	__forceinline static void BOOST_MEMORY_CALL manage(void* p, int fnZero) {
 		// no action
 	}
 
-	void* BOOST_MEMORY_CALL reallocate(void* p, size_t oldSize, size_t newSize) {
-		return BaseClass::reallocate(p, oldSize, newSize);
-	}
-
-	void BOOST_MEMORY_CALL deallocate(void* p, size_t cb) {
+	__forceinline static void BOOST_MEMORY_CALL deallocate(void* p, size_t cb) {
 		// no action
 	}
 
-	void BOOST_MEMORY_CALL deallocate(void* p) {
+	__forceinline static void BOOST_MEMORY_CALL deallocate(void* p) {
 		// no action
 	}
 
 	template <class Type>
-	void BOOST_MEMORY_CALL destroy(Type* obj) {
+	__forceinline static void BOOST_MEMORY_CALL destroy(Type* obj) {
 		// no action
 	}
 
 	template <class Type>
-	void BOOST_MEMORY_CALL destroyArray(Type* array, size_t count) {
+	__forceinline static void BOOST_MEMORY_CALL destroyArray(Type* array, size_t count) {
 		// no action
 	}
 };
