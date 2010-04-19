@@ -127,13 +127,19 @@ public:
 		const size_type index = (sizeof(pool_type) - 1) >> ALIGN_BITS1;
 		m_pools[index] = &m_poolAlloc;
 	}
+
 	~pools_alloc()
 	{
+		const size_type index = (sizeof(pool_type) - 1) >> ALIGN_BITS1;
+		m_pools[index] = NULL;
+
 		for (size_type i = 0; i < NPOOL; ++i)
 		{
 			if (m_pools[i])
 				m_pools[i]->clear();
 		}
+
+		m_poolAlloc.clear();
 	}
 
 	pool_type& BOOST_MEMORY_CALL get_pool(size_type cb)
