@@ -17,16 +17,12 @@
 #endif
 
 #include <boost/config.hpp>
+#include <boost/iterator/iterator_facade.hpp>
 #include <utility>
 #include <vector>
-#include <algorithm>
-#include <limits>
 #include <stdexcept>
 #include <memory>
-#include <cmath>
 #include <stdint.h>
-
-/// \brief The namespace where all the boost libraries lives.
 
 namespace boost {
 
@@ -35,6 +31,68 @@ namespace boost {
 All the entities in the library are defined in this namespace.
 */
 namespace tokenmaps {
+
+/// \brief The node type stores an entry in the tokenmap container.
+/** 
+In addition to storing an element, the node type provides contextual
+information allowing us to link prev->next nodes required, for 
+example, during the iteration.
+*/
+template <typename value__, typename key__>
+struct node {
+  typedef node<value__, key__>               this_type;
+  typedef uint64_t                           hash_type;
+  typedef key__                              key_type;
+  typedef value__                            mapped_type;
+  typedef std::pair<key_type, mapped_type*>  value_type;
+
+  key_type next, prev;
+  value_type keyval;
+};
+
+template<typename node__>
+struct forward_traversal_policy {
+  static typename node__::key_type next(node__ * node) {
+    return node->next;
+  }
+};
+
+template<typename node__>
+struct backward_traversal_policy {
+  static typename node__::key_type next(node__ * node) {
+    return node->prev;
+  }
+};
+
+template <typename value__, typename key__>
+class tokenmap;
+
+template <typename node__, typename traversal_mode__>
+class node_iterator :
+  public boost::iterator_facade<node_iterator<node__, traversal_mode__>, 
+                                typename node__::value_type,
+                                boost::forward_traversal_tag>
+{
+  typedef node__                          node_type;
+  typedef typename node__::mapped_type    mapped_type;
+  typedef typename node__::value_type     value_type;
+  typedef typename node__::key_type       key_type;
+  typedef tokenmap<mapped_type, key_type> map_type;
+
+  map_type * map_;
+  node_type * cur_;
+
+  friend class boost::iterator_core_access;  
+
+public:
+  node_iterator(map_type * map, node_type * cur);
+
+  void increment();
+
+  bool equal(node_iterator const & other) const;
+
+  typename node__::value_type & dereference() const;
+};
 
 /// \brief The tokenmap class is the entry point to the library.
 /** 
@@ -50,29 +108,31 @@ template <typename value__, typename key__ = uint32_t>
 class tokenmap
 {
 public:
-  typedef uint64_t                           hash_type;
-  typedef key__                              key_type;
-  typedef value__                            mapped_type;
-  typedef std::pair<key_type, mapped_type*>  value_type;
+  typedef node<value__, key__>            node_type;
+  typedef typename node_type::hash_type   hash_type;
+  typedef typename node_type::key_type    key_type;
+  typedef typename node_type::mapped_type mapped_type;
+  typedef typename node_type::value_type  value_type;
 
-  /** Creates tokenmap with a capacity of at least specified value.
+  typedef node_iterator<node_type, forward_traversal_policy<node_type> >  iterator;
+  typedef node_iterator<node_type, backward_traversal_policy<node_type> > reverse_iterator;
 
-    @param capacity A hint on initial size of the container.
-    @param load_factor The average number of elements per bucket
-    @param seed A value passed to the pseudo-random number generator.
+  /** creates tokenmap with a capacity of at least specified value.
+
+    @param seed a value passed to the pseudo-random number generator.
   */
-  tokenmap(size_t capacity, float load_factor, hash_type seed);
+  explicit tokenmap(hash_type seed);
 
-  /** Erases all stored elements.
+  /** erases all stored elements.
   */
   ~tokenmap();
 
-  /** Adds element to the container by value.
+  /** adds element to the container by value.
     
-    @param value Value to be copied and stored in the tokenmap.
+    @param value value to be copied and stored in the tokenmap.
 
-    @returns A unique integral key identifying element's location
-             within the tokenmap.
+    @returns a pair of unique integral key, identifying element's location
+             within the tokenmap, and a pointer to the stored element.
   */
   value_type insert(mapped_type const & value);
 
@@ -87,9 +147,15 @@ public:
 
   /** Finds element identified by `key'.
     
+    @returns If found, iterator pointing at the element, otherwise end-iterator.
+  */
+  iterator find(key_type key) const;
+
+  /** Finds element identified by `key'.
+    
     @returns If found, pointer to the element, otherwise NULL.
   */
-  mapped_type * find(key_type key) const;
+  mapped_type * at(key_type key) const;
 
   /** Removes the element identified by `key' from the container
     and returns ownership of it.
@@ -110,14 +176,32 @@ public:
   */
   key_type size() const;
 
+  /** Informs if container stores at least one element.
+
+    @returns True if container is empty, false otherwise.
+  */
+  bool empty() const;
+
+  /** Iterators.
+  */
+  iterator begin();
+  iterator end();
+
+  reverse_iterator rbegin();
+  reverse_iterator rend();
+
 private:
-  typedef std::vector<value_type> storage_type;
+  friend class node_iterator<node_type, forward_traversal_policy<node_type> >;
+  friend class node_iterator<node_type, backward_traversal_policy<node_type> >;
+
+  typedef std::vector<node_type> storage_type;
 
   hash_type imperfect_hash(hash_type key) const;
-  std::pair<typename storage_type::iterator, key_type> find_free_slot();
+  key_type find_free_slot();
+  key_type generate_key(key_type ix);
+  void use_slot(node_type & slot, key_type key, mapped_type * vptr);
 
-  const float load_factor_;
-  key_type filled_, at_count_, prev_ix_;
+  key_type size_, free_head_, used_head_, used_tail_;
   hash_type seed_;
   storage_type store_;
 };
@@ -126,26 +210,15 @@ private:
 } // namespace boost
 
 template <typename value__, typename key__>
-inline boost::tokenmaps::tokenmap<value__, key__>::tokenmap(size_t capacity, float load_factor, hash_type seed) :
-  load_factor_(load_factor), filled_(0), at_count_(0), prev_ix_(0), seed_(seed)
-{
-  // set minimum capacity
-  capacity = std::max(size_t(8), capacity);
-
-  // We round up the capacity to optimize modulo computation later on.
-  //
-  double target_cap = (1 << key_type(ceil(log(capacity)/log(2))));
-  if (target_cap > std::numeric_limits<key_type>::max())
-    throw std::range_error("tokenmap: requested capacity (after rounding) exceeds maximum key length");
-  store_.resize(typename storage_type::size_type(target_cap));
-}
+inline boost::tokenmaps::tokenmap<value__, key__>::tokenmap(hash_type seed) :
+  size_(0), used_head_(0), used_tail_(0), seed_(seed)
+{ }
 
 template <typename value__, typename key__>
 inline boost::tokenmaps::tokenmap<value__, key__>::~tokenmap()
 {
-  for (typename storage_type::iterator it = store_.begin(); it != store_.end(); ++it) {
-    if (it->second != 0) 
-      delete (it->second); 
+  for (iterator it = begin(); it != end(); ++it) {
+    delete it->second; 
   }
 }
 
@@ -162,81 +235,111 @@ inline typename boost::tokenmaps::tokenmap<value__, key__>::value_type
   boost::tokenmaps::tokenmap<value__, key__>::insert(std::auto_ptr<typename boost::tokenmaps::tokenmap<value__, key__>::mapped_type> value)
 {
   // iterator position and index of free slot 
-  std::pair<typename storage_type::iterator, key_type> found = 
-    find_free_slot();
+  key_type free_slot_ix = find_free_slot();
+  node_type & slot = store_[free_slot_ix];
+  use_slot(slot, generate_key(free_slot_ix), value.release());
+  return slot.keyval;
+}
 
-  // are we full?
-  if (found.first == store_.end())
-  {
-    // create temp. storage to expand into
-    storage_type tstore_;
-
-    // check if the new capacity is within the key-type's range
-    double target_cap = store_.capacity() << 1;
-    if (target_cap > std::numeric_limits<key_type>::max())
-      throw std::range_error("tokenmap: capacity limit reached");
-
-    // resize to fill up the new capacity
-    tstore_.resize(store_.size() << 1);
-
-    // create mask from portion of the key used for indexing
-    key_type tixmask = tstore_.size() - 1;
-
-    // iterate over existing elements and copy each one.
-    for (typename storage_type::iterator cur = store_.begin(); cur != store_.end(); ++cur)
-      tstore_[tixmask & cur->first] = *cur;
-
-    // all copied, swap the containers
-    store_.swap(tstore_);
-
-    // call recursively, this time insertion will work
-    return insert(value);
+template <typename value__, typename key__>
+inline typename boost::tokenmaps::tokenmap<value__, key__>::iterator
+  boost::tokenmaps::tokenmap<value__, key__>::find(typename boost::tokenmaps::tokenmap<value__, key__>::key_type key) const
+{
+  node_type * node_p = 0;
+  if (size_ > 0) {
+    // create mask of portion of the key used for indexing
+    key_type ix = store_.size() - 1;
+    // mask out random portion of the key
+    ix &= key;
+    // fetch the stored element
+    node_p = &store_[ix];
+    if (node_p->keyval.first != key) {
+      node_p = 0;
+    }
   }
-  else // not filled up, used returned slot
-  {
-    value_type val(found.second, value.release());
-    *(found.first) = val;
-  }
-
-  return *(found.first);
+  return iterator(this, node_p);
 }
 
 template <typename value__, typename key__>
 inline typename boost::tokenmaps::tokenmap<value__, key__>::mapped_type *
-  boost::tokenmaps::tokenmap<value__, key__>::find(typename boost::tokenmaps::tokenmap<value__, key__>::key_type key) const
+  boost::tokenmaps::tokenmap<value__, key__>::at(typename boost::tokenmaps::tokenmap<value__, key__>::key_type key) const
 {
-  // create mask of portion of the key used for indexing
-  key_type ixmask = store_.capacity() - 1;
+  if (size_ > 0) {
+    key_type ix = store_.size() - 1;
+    ix &= key;
+    node_type const & node = store_[ix];
 
-  // mask out random portion of the key
-  key_type ix = key & ixmask;
-
-  // fetch the stored element
-  value_type res = store_[ix];
-
-  return (res.first == key) ? res.second : 0;
+    if (node.keyval.first == key) {
+      return node.keyval.second;
+    }
+  }
+  return 0;
 }
 
 template <typename value__, typename key__>
 inline std::auto_ptr<typename boost::tokenmaps::tokenmap<value__, key__>::mapped_type>
   boost::tokenmaps::tokenmap<value__, key__>::pop(typename boost::tokenmaps::tokenmap<value__, key__>::key_type key)
 {
+  std::auto_ptr<mapped_type> ptr;
+
   // create mask of portion of the key used for indexing
-  key_type ixmask = store_.capacity() - 1;
+  key_type ixmask = store_.size() - 1;
 
   // mask out random portion of the key
   key_type ix = key & ixmask;
 
   // fetch the stored element
-  value_type & res = store_[ix];
-  std::auto_ptr<mapped_type> ptr;
+  node_type & cur_node = store_[ix];
 
-  if (res.first == key)
+  if (cur_node.keyval.first == key)
   {
-    --filled_;
-    ptr.reset(res.second);
-    res = value_type();
+    ptr.reset(cur_node.keyval.second);
+
+    // Pop the slot from the used-slots list
+    if (used_head_ == key) {
+      used_head_ = cur_node.next;
+    }
+
+    if (used_tail_ == key) {
+      used_tail_ = cur_node.prev;
+    }
+
+    node_type & prev_node = store_[cur_node.prev & ixmask];
+    if (cur_node.next == key) { // last?
+      prev_node.next = cur_node.prev;
+    }
+    else {
+      prev_node.next = cur_node.next;
+    }
+
+    node_type & next_node = store_[cur_node.next & ixmask];
+    if (cur_node.prev == key) { // first?
+      next_node.prev = cur_node.next;
+    }
+    else {
+      next_node.prev = cur_node.prev;
+    }
+
+    // Push the slot onto free-slots list
+    if (size_ < store_.capacity()) {
+      cur_node.next = free_head_;
+    }
+    else {
+      cur_node.next = ix;
+    }
+    free_head_ = ix;
+
+#ifndef NDEBUG
+    // reset the node to ease debugging
+    cur_node.keyval.first = ix;
+    cur_node.keyval.second = 0;
+    cur_node.prev = 0;
+#endif
+
+    // update free-list and element-count
+    --size_;
   }
+
   return ptr;
 }
 
@@ -244,14 +347,61 @@ template <typename value__, typename key__>
 inline bool
   boost::tokenmaps::tokenmap<value__, key__>::exists(typename boost::tokenmaps::tokenmap<value__, key__>::key_type key) const
 {
-  return find(key) != 0;
+  return at(key) != 0;
 }
 
 template <typename value__, typename key__>
 inline typename boost::tokenmaps::tokenmap<value__, key__>::key_type
   boost::tokenmaps::tokenmap<value__, key__>::size() const
 {
-  return filled_;
+  return size_;
+}
+
+template <typename value__, typename key__>
+inline bool
+  boost::tokenmaps::tokenmap<value__, key__>::empty() const
+{
+  return size_ == 0;
+}
+
+template <typename value__, typename key__>
+inline typename boost::tokenmaps::tokenmap<value__, key__>::iterator
+  boost::tokenmaps::tokenmap<value__, key__>::begin()
+{
+  node_type * node_p = 0;
+  if (size_ > 0) {
+    key_type ix = store_.size() - 1;
+    ix &= used_head_;
+    node_p = &store_[ix];
+  }
+  return iterator(this, node_p);
+}
+
+template <typename value__, typename key__>
+inline typename boost::tokenmaps::tokenmap<value__, key__>::iterator
+  boost::tokenmaps::tokenmap<value__, key__>::end()
+{
+  return iterator(this, 0);
+}
+
+template <typename value__, typename key__>
+inline typename boost::tokenmaps::tokenmap<value__, key__>::reverse_iterator
+  boost::tokenmaps::tokenmap<value__, key__>::rbegin()
+{
+  node_type * node_p = 0;
+  if (size_ > 0) {
+    key_type ix = store_.size() - 1;
+    ix &= used_tail_;
+    node_p = &store_[ix];
+  }
+  return reverse_iterator(this, node_p);
+}
+
+template <typename value__, typename key__>
+inline typename boost::tokenmaps::tokenmap<value__, key__>::reverse_iterator
+  boost::tokenmaps::tokenmap<value__, key__>::rend()
+{
+  return reverse_iterator(this, 0);
 }
 
 template <typename value__, typename key__>
@@ -276,68 +426,158 @@ inline typename boost::tokenmaps::tokenmap<value__, key__>::hash_type
 }
 
 template <typename value__, typename key__>
-inline std::pair<
-  typename boost::tokenmaps::tokenmap<value__, key__>::storage_type::iterator, 
-  typename boost::tokenmaps::tokenmap<value__, key__>::key_type
-  >  
+inline typename boost::tokenmaps::tokenmap<value__, key__>::key_type
   boost::tokenmaps::tokenmap<value__, key__>::find_free_slot()
 {
-  // create mask of portion of the key used for indexing
-  key_type ixmask = store_.capacity() - 1;
+  // are we full?
+  if (!(size_ < store_.capacity())) {
 
-  // check if load factor exceeded 
-  if ((++at_count_ & (ixmask>>2)) == ixmask>>2)
-    if ((float(filled_)/store_.capacity()) >= load_factor_)
-      return std::pair<typename storage_type::iterator, key_type>(store_.end(), 0);
+    // Set the beginning of the free-nodes chain
+    free_head_ = 0;
 
-  // generate random key and mask out index portion
-  key_type hash = key_type(imperfect_hash(++seed_));
-  key_type rand = hash & ~ixmask; // variable part
+    if (store_.empty()) {
+      // First time around, we are zero-length
+      store_.resize(1);
+      node_type & cnode = store_[0];
+      cnode.prev = cnode.next = 0;
+    }
+    else {
+      // resize to fill up the new capacity
+      storage_type old_store;
+      store_.swap(old_store);
 
-  // first attempt: to avoid cache misses, we derive index position from 
-  // prev position
-  key_type ix = ++prev_ix_;
-  typename storage_type::iterator pos = store_.begin();
-  pos += ix;
+      store_.resize(old_store.size() << 1);
 
-  if (pos->first == 0) // if key == 0 then empty slot
-  {
-    ++filled_;
-    return std::pair<typename storage_type::iterator, key_type>(pos, rand|ix);
+      // link `free nodes'
+      for (key_type ix = 0; ix < store_.capacity(); ++ix) {
+        node_type & cnode = store_[ix];
+        cnode.prev = ix-1;
+        cnode.next = ix+1;
+      }
+
+      // Fix tails such that:
+      // -- first node's 'prev' points at self, and
+      // -- last node's 'next' points at self
+      // Later we use this property to designate one-past-last
+      // iterator position.
+      store_[0].prev = 0;
+      store_[store_.size()-1].next = store_.size()-1;
+
+      // create mask from portion of the key used for indexing
+      key_type tixmask = store_.size() - 1;
+
+      // don't count copied elements
+      size_ = 0;
+
+      // iterate over existing elements and copy each one.
+      for (typename storage_type::iterator cur = old_store.begin(); cur != old_store.end(); ++cur) {
+        key_type ix = tixmask & cur->keyval.first;
+        node_type & dst_node = store_[ix];
+
+        // if we're not the last or first node, we remove this node 
+        // from the free list by linking adjacent nodes
+        if (dst_node.next != ix) { // not last?
+          store_[dst_node.prev].next = dst_node.next;
+        }
+        else { // this was last node, turn prev-node into last
+          store_[dst_node.prev].next = dst_node.prev;
+        }
+
+        if (dst_node.prev != ix) { // not first?
+          store_[dst_node.next].prev = dst_node.prev;
+        }
+        else { // this was first node, turn next-node into first
+          store_[dst_node.next].prev = dst_node.next;
+        }
+
+        // adjacent nodes linked, ready to overwrite.
+        use_slot(dst_node, cur->keyval.first, cur->keyval.second);
+      }
+    }
+
+    // Room has been made so call recursively and return 
+    // a valid slot.
+    return find_free_slot();
   }
-  
-  // second attempt: this time we generate a random index pos.
-  //
-  pos = store_.begin();
-  ix = hash & ixmask;
-  pos += ix;
+  return free_head_;
+}
 
-  // store random pos in case we reach end and 
-  // have to start from beg, down below.
-  typename storage_type::iterator const rndpos = pos;
+template <typename value__, typename key__>
+inline typename boost::tokenmaps::tokenmap<value__, key__>::key_type
+  boost::tokenmaps::tokenmap<value__, key__>::generate_key(typename boost::tokenmaps::tokenmap<value__, key__>::key_type ix)
+{
+  // create mask of portion of the key used for indexing
+  key_type key = key_type(imperfect_hash(++seed_));
+  key &= ~(store_.size() - 1); // mask out index part
+  key |= ix; // fill in the index into masked out portion
+  return key;
+}
 
-  // scan until we reach end of container
-  //
-  for (; pos != store_.end(); ++pos, ++ix)
-    if (pos->first == 0) // if key == 0 then empty slot
-    {
-      ++filled_;
-      prev_ix_ = ix;
-      return std::pair<typename storage_type::iterator, key_type>(pos, rand|ix);
+template <typename value__, typename key__>
+inline void
+  boost::tokenmaps::tokenmap<value__, key__>::use_slot(typename boost::tokenmaps::tokenmap<value__, key__>::node_type & slot, 
+                                                       typename boost::tokenmaps::tokenmap<value__, key__>::key_type key, 
+                                                       typename boost::tokenmaps::tokenmap<value__, key__>::mapped_type * vptr)
+{
+  // create mask of portion of the key used for indexing
+  key_type ixmask = store_.size() - 1;
+  key_type ix = ixmask & key;
+  slot.keyval = value_type(key, vptr);
+
+  // Pop the slot from the free-slots list
+  if (free_head_ == ix) {
+    free_head_ = store_[free_head_].next;
+  }
+
+  // Push the slot onto the used-slots list
+  if (size_ == 0) {
+    slot.prev = slot.next = used_head_ = used_tail_ = key;
+  }
+  else {
+    store_[used_head_ & ixmask].prev = key;
+    slot.next = used_head_;
+    slot.prev = key;
+    used_head_ = key;
+  }
+
+  // update elements count
+  ++size_;
+}
+
+template <typename node__, typename traversal_mode__>
+inline 
+  boost::tokenmaps::node_iterator<node__, traversal_mode__>::node_iterator(map_type * map, node__* cur) :
+    map_(map), cur_(cur)
+{ }
+
+template <typename node__, typename traversal_mode__>
+inline void
+  boost::tokenmaps::node_iterator<node__, traversal_mode__>::increment()
+{ 
+  if (cur_) {
+    if (cur_->keyval.first == traversal_mode__::next(cur_)) {
+      cur_ = 0;
     }
-  
-  // last attempt: re-start search from beginning...
-  pos = store_.begin(); ix = 0;
-  for (; pos != rndpos; ++pos, ++ix)
-    if (pos->first == 0) // if key == 0 then empty slot
-    {
-      ++filled_;
-      prev_ix_ = ix;
-      return std::pair<typename storage_type::iterator, key_type>(pos, rand|ix);
+    else {
+      key_type ix = map_->store_.size() - 1;
+      ix &= traversal_mode__::next(cur_);
+      cur_ = &map_->store_[ix];
     }
+  }
+}
 
-  // give up, resize
-  return std::pair<typename storage_type::iterator, key_type>(store_.end(), 0);
+template <typename node__, typename traversal_mode__>
+inline bool
+  boost::tokenmaps::node_iterator<node__, traversal_mode__>::equal(boost::tokenmaps::node_iterator<node__, traversal_mode__> const & other) const
+{
+  return cur_ == other.cur_;
+}
+
+template <typename node__, typename traversal_mode__>
+inline typename node__::value_type &
+  boost::tokenmaps::node_iterator<node__, traversal_mode__>::dereference() const
+{
+  return cur_->keyval;
 }
 
 #endif // BOOST_TOKENMAP_TOKENMAP_HPP
