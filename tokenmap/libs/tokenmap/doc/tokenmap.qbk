@@ -179,11 +179,10 @@ Start by including the convenience header available in the boost directory:
     #include <boost/tokenmap.hpp>
 
 Next, we define a `tokenmap` for storing strings. The following code creates an empty `tokenmap` 
-container with initial capacity set to 10000, load factor set to 0.7 and current 
-time as seed for pseudo-number generator:
+container with current time as seed for pseudo-number generator:
 
     typedef boost::tokenmap<std::string, unsigned int> tokenmap_type;
-    tokenmap_type names( 10000, 0.7, time(NULL) );
+    tokenmap_type names( time(NULL) );
 
 To insert elements into the container we do:
 
@@ -229,14 +228,16 @@ Finally, we can remove the element:
 
       // Metadata
 
-      typedef uint64_t                           hash_type;
-      typedef key__                              key_type;
-      typedef value__                            mapped_type;
-      typedef std::pair<key_type, mapped_type*>  value_type;
+      typedef unspecifed-integral-type          hash_type;
+      typedef key__                             key_type;
+      typedef value__                           mapped_type;
+      typedef std::pair<key_type, mapped_type>  value_type;
+      typedef unspecified-node-iterator         iterator;
+      typedef unspecified-node-iterator         reverse_iterator;
 
       // Constructor 
 
-      tokenmap(size_t capacity, float load_factor, hash_type seed);
+      explicit tokenmap(hash_type seed);
 
       // Destructor 
 
@@ -252,11 +253,23 @@ Finally, we can remove the element:
 
       // Accessors
 
-      mapped_type * find(key_type key) const;
+      iterator find(key_type key) const;
+
+      mapped_type * at(key_type key) const;
+
+      bool exists(key_type key) const;
 
       bool exists(key_type key) const;
 
       key_type size() const;
+
+      // Iterators.
+
+      iterator begin();
+      iterator end();
+
+      reverse_iterator rbegin();
+      reverse_iterator rend();
     };
 
     } // namespace tokenmaps
@@ -268,7 +281,7 @@ Finally, we can remove the element:
 
 [heading Constructors, copy and assignment]
 
-      tokenmap(size_t capacity, float load_factor, hash_type seed);
+      explicit tokenmap(hash_type seed);
 
 * [*Effects:] Constructs an empty `tokenmap`.
 * [*Complexity:] Constant.
@@ -279,7 +292,7 @@ Finally, we can remove the element:
 
 (this section requires far more work)
 
-Below is a comparison of insertions and lookups, compiled with gcc 4.4.1: 
+Below is a comparison of insertions and lookups, compiled with gcc 4.4.1. Lookups were done with 1,000,000 elements in each container.
 
     typedef map<token, session*> map_type;
     typedef tokenmap<session, uint32_t> token_type;
