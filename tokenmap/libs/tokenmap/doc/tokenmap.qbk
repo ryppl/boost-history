@@ -342,5 +342,7 @@ to outlive the mapped-to-objects without the usual consequences of accessing sta
 
 [section Acknowledgements]
 
+Daniel James, Daniel Trebbien.
+
 [endsect]
 
