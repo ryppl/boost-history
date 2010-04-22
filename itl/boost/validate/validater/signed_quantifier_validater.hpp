@@ -94,29 +94,29 @@ public:
         {
         case inplacePlusAssociativity: 
             if(is_interval_splitter<Type>::value)
-                                        return new LawValidater<InplaceAssociativity<Type, inplace_plus, element_equal>, RandomGentor>;
-            else                        return new LawValidater<InplaceAssociativity<Type, inplace_plus, std_equal>, RandomGentor>;
-        case inplacePlusNeutrality:     return new LawValidater<InplaceNeutrality   <Type>,               RandomGentor>;
-        case inplacePlusCommutativity:  return new LawValidater<InplaceCommutativity<Type>,               RandomGentor>;
+                                        return new LawValidater<InplaceAssociativity<Type, inplace_plus, element_equal> >;
+            else                        return new LawValidater<InplaceAssociativity<Type, inplace_plus, std_equal> >;
+        case inplacePlusNeutrality:     return new LawValidater<InplaceNeutrality   <Type> >;
+        case inplacePlusCommutativity:  return new LawValidater<InplaceCommutativity<Type> >;
         case inplaceEtAssociativity:   
             if(absorbs_neutrons<Type>::value && is_total<Type>::value)
-                                        return new LawValidater<InplaceAssociativity<Type, inplace_et, element_equal>,   RandomGentor>;
-            else                        return new LawValidater<InplaceAssociativity<Type, inplace_et>,   RandomGentor>;
-        case inplaceEtCommutativity:    return new LawValidater<InplaceCommutativity<Type, inplace_et>,   RandomGentor>;
+                                        return new LawValidater<InplaceAssociativity<Type, inplace_et, element_equal> >;
+            else                        return new LawValidater<InplaceAssociativity<Type, inplace_et> >;
+        case inplaceEtCommutativity:    return new LawValidater<InplaceCommutativity<Type, inplace_et> >;
         case inplaceNaturalInversion:
             if(absorbs_neutrons<Type>::value)
-                                        return new LawValidater<InplaceNaturalInversion<Type, inplace_plus, std_equal>,      RandomGentor>;
-            else                        return new LawValidater<InplaceNaturalInversion<Type, inplace_plus, protonic_equal>, RandomGentor>;
-        case inplaceSymmetricDifference:return new LawValidater<InplaceSymmetricDifference<Type>,         RandomGentor>;
-        case inplaceFlip:               return new LawValidater<InplaceFlip<Type>,   RandomGentor>;
+                                        return new LawValidater<InplaceNaturalInversion<Type, inplace_plus, std_equal> >;
+            else                        return new LawValidater<InplaceNaturalInversion<Type, inplace_plus, protonic_equal> >;
+        case inplaceSymmetricDifference:return new LawValidater<InplaceSymmetricDifference<Type> >;
+        case inplaceFlip:               return new LawValidater<InplaceFlip<Type> >;
         case sectionAbsorbtion:            
             if(absorbs_neutrons<Type>::value)
-                                        return new LawValidater<SectionAbsorbtion<Type,std_equal>, RandomGentor>;
-            else                        return new LawValidater<SectionAbsorbtion<Type,protonic_equal>, RandomGentor>;
+                                        return new LawValidater<SectionAbsorbtion<Type,std_equal> >;
+            else                        return new LawValidater<SectionAbsorbtion<Type,protonic_equal> >;
         case inplaceInverseExistence:
             if(absorbs_neutrons<Type>::value)
-                                        return new LawValidater<InplaceInverseExistence<Type, inplace_plus, std_equal>,      RandomGentor>;
-            else                        return new LawValidater<InplaceInverseExistence<Type, inplace_plus, protonic_equal>, RandomGentor>;
+                                        return new LawValidater<InplaceInverseExistence<Type, inplace_plus, std_equal> >;
+            else                        return new LawValidater<InplaceInverseExistence<Type, inplace_plus, protonic_equal> >;
         default: return NULL;
         }
     }

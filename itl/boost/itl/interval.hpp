@@ -36,6 +36,52 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/interval_bounds.hpp>
 #include <boost/itl/interval_functions.hpp>
 
+//JODO For the migration from old to new itl::intervals activate this code:
+//
+//#ifdef ITL_NEW_INTERVAL_IMPL
+//
+//#include <boost/itl/type_traits/interval_type_of.hpp>
+//#include <boost/itl/discrete_interval.hpp>
+//#include <boost/itl/continuous_interval.hpp>
+//
+//namespace boost{namespace itl
+//{
+//
+//template <class DomainT, ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT)>
+//class interval 
+//{
+//public:
+//    typedef typename interval_type_of<DomainT,Compare>::type type;
+//
+//    /** Closed interval <tt>[low,up]</tt> */
+//    static type closed(const DomainT& low, const DomainT& up)
+//    { return type(low, up, interval_bounds::closed()); }
+//
+//    /** Rightopen interval <tt>[low,up)</tt> */
+//    static type rightopen(const DomainT& low, const DomainT& up)
+//    { return type(low, up, interval_bounds::right_open); }
+//
+//    /** Leftopen interval <tt>(low,up]</tt> */
+//    static type leftopen(const DomainT& low, const DomainT& up)
+//    { return type(low, up, interval_bounds::left_open); }
+//
+//    /** Open interval <tt>(low,up)</tt> */
+//    static type open(const DomainT& low, const DomainT& up)
+//    { return type(low, up, interval_bounds::open); }
+//
+//};
+//
+///// Comparison functor on intervals implementing an overlap free less 
+//template <class IntervalT>
+//struct exclusive_less_than {
+//    /** Operator <tt>operator()</tt> implements a strict weak ordering on intervals. */
+//    bool operator()(const IntervalT& left, const IntervalT& right)const
+//    { return exclusive_less(left, right); }
+//};
+//
+//}} // namespace itl boost
+//
+//#else //ITL_NEW_INTERVAL_IMPL
 
 namespace boost{namespace itl
 {
@@ -1124,8 +1170,9 @@ struct value_size<itl::interval<DomainT> >
     { return 2; }
 };
 
-
 }} // namespace itl boost
 
-#endif
+//JODO interval migration #endif // ITL_NEW_INTERVAL_IMPL
+
+#endif // BOOST_ITL_INTERVAL_HPP_JOFA_000626
 

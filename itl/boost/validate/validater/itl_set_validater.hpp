@@ -86,27 +86,27 @@ public:
     {
         switch(_lawChoice.some())
         {
-        case inplacePlusAssociativity:  return new LawValidater<InplaceAssociativity<Type, inplace_plus>, RandomGentor>;
-        case inplacePlusNeutrality:     return new LawValidater<InplaceNeutrality   <Type>,               RandomGentor>;
-        case inplacePlusCommutativity:  return new LawValidater<InplaceCommutativity<Type>,               RandomGentor>;
-        case inplaceEtAssociativity:    return new LawValidater<InplaceAssociativity<Type, inplace_et>,   RandomGentor>;
-        case inplaceEtCommutativity:    return new LawValidater<InplaceCommutativity<Type, inplace_et>,   RandomGentor>;
-        case inplaceSymmetricDifference:return new LawValidater<InplaceSymmetricDifference<Type>,         RandomGentor>;
-        case inplaceFlip:               return new LawValidater<InplaceFlip<Type>,   RandomGentor>;
+        case inplacePlusAssociativity:  return new LawValidater<InplaceAssociativity<Type, inplace_plus> >;
+        case inplacePlusNeutrality:     return new LawValidater<InplaceNeutrality   <Type> >;
+        case inplacePlusCommutativity:  return new LawValidater<InplaceCommutativity<Type> >;
+        case inplaceEtAssociativity:    return new LawValidater<InplaceAssociativity<Type, inplace_et> >;
+        case inplaceEtCommutativity:    return new LawValidater<InplaceCommutativity<Type, inplace_et> >;
+        case inplaceSymmetricDifference:return new LawValidater<InplaceSymmetricDifference<Type> >;
+        case inplaceFlip:               return new LawValidater<InplaceFlip<Type> >;
         case inplaceEtDistributivity:  
             if(itl::is_interval_splitter<Type>::value)
-                                        return new LawValidater<InplaceDistributivity<Type, inplace_et, inplace_plus, element_equal>, RandomGentor>;
-            else                        return new LawValidater<InplaceDistributivity<Type, inplace_et, inplace_plus, std_equal>, RandomGentor>;
+                                        return new LawValidater<InplaceDistributivity<Type, inplace_et, inplace_plus, element_equal> >;
+            else                        return new LawValidater<InplaceDistributivity<Type, inplace_et, inplace_plus, std_equal> >;
         case inplacePlusDashRightDistrib:
             if(itl::is_interval_splitter<Type>::value)
-                                        return new LawValidater<InplaceRightDistributivity<Type, inplace_plus, inplace_minus, element_equal>, RandomGentor>;
-            else                        return new LawValidater<InplaceRightDistributivity<Type, inplace_plus, inplace_minus, std_equal>, RandomGentor>;
-        case inplaceEtDashRightDistrib:    return new LawValidater<InplaceRightDistributivity<Type, inplace_et, inplace_minus>, RandomGentor>;
-        case inplacePlusDeMorgan:         return new LawValidater<InplaceDeMorgan<Type, inplace_plus, inplace_et, itl::std_equal>, RandomGentor>;
+                                        return new LawValidater<InplaceRightDistributivity<Type, inplace_plus, inplace_minus, element_equal> >;
+            else                        return new LawValidater<InplaceRightDistributivity<Type, inplace_plus, inplace_minus, std_equal> >;
+        case inplaceEtDashRightDistrib:    return new LawValidater<InplaceRightDistributivity<Type, inplace_et, inplace_minus> >;
+        case inplacePlusDeMorgan:         return new LawValidater<InplaceDeMorgan<Type, inplace_plus, inplace_et, itl::std_equal> >;
         case inplaceEtDeMorgan:        
             if(itl::is_interval_splitter<Type>::value || itl::is_interval_separator<Type>::value)
-                                        return new LawValidater<InplaceDeMorgan<Type, inplace_et, inplace_plus, itl::element_equal>, RandomGentor>;
-            else                        return new LawValidater<InplaceDeMorgan<Type, inplace_et, inplace_plus, itl::std_equal>, RandomGentor>;
+                                        return new LawValidater<InplaceDeMorgan<Type, inplace_et, inplace_plus, itl::element_equal> >;
+            else                        return new LawValidater<InplaceDeMorgan<Type, inplace_et, inplace_plus, itl::std_equal> >;
 
         default: return NULL;
         }

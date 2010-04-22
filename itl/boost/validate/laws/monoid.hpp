@@ -92,9 +92,9 @@ namespace boost{namespace itl
 
         bool holds()
         {
-            this->template setOutputValue<lhs_sum>(this->template getInputValue<operand_a>() + this->template getInputValue<operand_b>());
-            this->template setOutputValue<rhs_sum>(this->template getInputValue<operand_b>() + this->template getInputValue<operand_a>());
-            return this->template getOutputValue<lhs_sum>() == this->template getOutputValue<rhs_sum>();
+            this->template setOutputValue<lhs_result>(this->template getInputValue<operand_a>() + this->template getInputValue<operand_b>());
+            this->template setOutputValue<rhs_result>(this->template getInputValue<operand_b>() + this->template getInputValue<operand_a>());
+            return this->template getOutputValue<lhs_result>() == this->template getOutputValue<rhs_result>();
         }
 
         bool debug_holds(){ return holds(); }
@@ -140,9 +140,9 @@ namespace boost{namespace itl
 
         bool holds()
         {
-            this->template setOutputValue<lhs_sum>(this->template getInputValue<operand_a>() + this->template getInputValue<operand_b>());
-            this->template setOutputValue<rhs_sum>(this->template getInputValue<operand_b>() + this->template getInputValue<operand_a>());
-            return this->template getOutputValue<lhs_sum>() == this->template getOutputValue<rhs_sum>();
+            this->template setOutputValue<lhs_result>(this->template getInputValue<operand_a>() + this->template getInputValue<operand_b>());
+            this->template setOutputValue<rhs_result>(this->template getInputValue<operand_b>() + this->template getInputValue<operand_a>());
+            return this->template getOutputValue<lhs_result>() == this->template getOutputValue<rhs_result>();
         }
 
         bool debug_holds(){ return holds(); }
@@ -182,18 +182,6 @@ namespace boost{namespace itl
 
     public:
 
-        enum InputVarIndex  { operand_a, operand_b };
-        enum OutputVarIndex { lhs_result, rhs_result };
-
-        void setOperand_a(const Type& inVal) { this->template setInputValue<operand_a>(inVal); }
-
-        Type getLhsResult()const { return this->template getOutputValue<lhs_result>(); }
-
-        size_t size()const 
-        { 
-            return value_size<Type>::apply(this->template getInputValue<operand_a>());
-        }
-
         bool holds()
         {
             Type lhs = this->template getInputValue<operand_a>();
@@ -231,18 +219,6 @@ namespace boost{namespace itl
 
     public:
 
-        enum InputVarIndex  { operand_a, operand_b, operand_c };
-        enum OutputVarIndex { lhs_sum, rhs_sum };
-
-        void setOperand_a(const Type& inVal) { this->template setInputValue<operand_a>(inVal); }
-        void setOperand_b(const Type& inVal) { this->template setInputValue<operand_b>(inVal); }
-        void setOperand_c(const Type& inVal) { this->template setInputValue<operand_c>(inVal); }
-        void setOperands(const Type& inVal_a, const Type& inVal_b, const Type& inVal_c) 
-        { this->template setInputValue<operand_b>(inVal_a); this->template setInputValue<operand_b>(inVal_b); this->template setInputValue<operand_b>(inVal_c); }
-
-        Type getLhsSum()const { return this->template getOutputValue<lhs_sum>(); }
-        Type getRhsSum()const { return this->template getOutputValue<rhs_sum>(); }
-
         size_t size()const 
         { 
             return 
@@ -262,8 +238,8 @@ namespace boost{namespace itl
             Accumulator<Type>()(b_plus_c, this->template getInputValue<operand_c>());
             Accumulator<Type>()(rsum, b_plus_c);
 
-            this->template setOutputValue<lhs_sum>(lsum);
-            this->template setOutputValue<rhs_sum>(rsum);
+            this->template setOutputValue<lhs_result>(lsum);
+            this->template setOutputValue<rhs_result>(rsum);
 
             return Equality<Type>()(lsum, rsum);
         }
@@ -290,8 +266,8 @@ namespace boost{namespace itl
             Accumulator<Type>()(rsum, b_plus_c);
             std::cout << "a o (b o c): " << rsum << std::endl;
 
-            this->template setOutputValue<lhs_sum>(lsum);
-            this->template setOutputValue<rhs_sum>(rsum);
+            this->template setOutputValue<lhs_result>(lsum);
+            this->template setOutputValue<rhs_result>(rsum);
 
             return Equality<Type>()(lsum, rsum);
         }
@@ -321,21 +297,10 @@ namespace boost{namespace itl
 
     public:
 
-        enum InputVarIndex  { operand_a, operand_b };
-        enum OutputVarIndex { lhs_sum, rhs_sum };
-
-        void setOperand_a(const Type& inVal) { this->template setInputValue<operand_a>(inVal); }
-        void setOperand_b(const Type& inVal) { this->template setInputValue<operand_b>(inVal); }
-        void setOperands(const Type& inVal_a, const Type& inVal_b) 
-        { this->template setInputValue<operand_b>(inVal_a); this->template setInputValue<operand_b>(inVal_b); }
-
-        Type getLhsSum()const { return this->template getOutputValue<lhs_sum>(); }
-        Type getRhsSum()const { return this->template getOutputValue<rhs_sum>(); }
-
         size_t size()const 
         { 
             return value_size<Type>::apply(this->template getInputValue<operand_a>())+
-                value_size<Type>::apply(this->template getInputValue<operand_b>());
+                   value_size<Type>::apply(this->template getInputValue<operand_b>());
         }
 
         bool holds()
@@ -345,8 +310,8 @@ namespace boost{namespace itl
             Type rsum = this->template getInputValue<operand_b>();
             rsum += this->template getInputValue<operand_a>();
 
-            this->template setOutputValue<lhs_sum>(lsum);
-            this->template setOutputValue<rhs_sum>(rsum);
+            this->template setOutputValue<lhs_result>(lsum);
+            this->template setOutputValue<rhs_result>(rsum);
 
             return lsum == rsum;
         }
@@ -366,8 +331,8 @@ namespace boost{namespace itl
             rsum += this->template getInputValue<operand_a>();
             std::cout << "b o a: " << rsum << std::endl;
 
-            this->template setOutputValue<lhs_sum>(lsum);
-            this->template setOutputValue<rhs_sum>(rsum);
+            this->template setOutputValue<lhs_result>(lsum);
+            this->template setOutputValue<rhs_result>(rsum);
 
             return lsum == rsum;
         }

@@ -31,20 +31,30 @@ typedef unsigned char bound_type;
 class interval_bounds
 {
 public:
+	BOOST_STATIC_CONSTANT(bound_type, _open      = 0);
+	BOOST_STATIC_CONSTANT(bound_type, _leftopen  = 1);
+	BOOST_STATIC_CONSTANT(bound_type, _rightopen = 2);
+	BOOST_STATIC_CONSTANT(bound_type, _closed    = 3);
+
+	BOOST_STATIC_CONSTANT(bound_type, _right     = 1);
+	BOOST_STATIC_CONSTANT(bound_type, _left      = 2);
+	BOOST_STATIC_CONSTANT(bound_type, _all       = 3);
+
+public:
     interval_bounds():_bits(){}
     explicit interval_bounds(bound_type bounds): _bits(bounds){}
-    interval_bounds both ()const { return interval_bounds(_bits & 3); } //JODO literals 
-    interval_bounds left ()const { return interval_bounds(_bits & 2); }
-    interval_bounds right()const { return interval_bounds(_bits & 1); }
-    interval_bounds reverse_left ()const { return interval_bounds((~_bits>>1) & 1); }
-    interval_bounds reverse_right()const { return interval_bounds((~_bits<<1) & 2); }
+    interval_bounds all  ()const { return interval_bounds(_bits & _all  ); }
+    interval_bounds left ()const { return interval_bounds(_bits & _left ); }
+    interval_bounds right()const { return interval_bounds(_bits & _right); }
+    interval_bounds reverse_left ()const { return interval_bounds((~_bits>>1) & _right); }
+    interval_bounds reverse_right()const { return interval_bounds((~_bits<<1) & _left ); }
 
     bound_type bits()const{ return _bits; }
 
-    static interval_bounds open()      { return interval_bounds(0); } //JODO URG LITERALS
-    static interval_bounds left_open() { return interval_bounds(1); }
-    static interval_bounds right_open(){ return interval_bounds(2); }
-    static interval_bounds closed()    { return interval_bounds(3); }
+    static interval_bounds open()      { return interval_bounds(_open);     }
+    static interval_bounds left_open() { return interval_bounds(_leftopen); }
+    static interval_bounds right_open(){ return interval_bounds(_rightopen);}
+    static interval_bounds closed()    { return interval_bounds(_closed);   }
 
 public:
     bound_type _bits;
@@ -52,13 +62,13 @@ public:
 
 
 inline interval_bounds left(interval_bounds x1)
-{ return interval_bounds(x1._bits & 2); }
+{ return interval_bounds(x1._bits & interval_bounds::_left); }
 
 inline interval_bounds right(interval_bounds x1)
-{ return interval_bounds(x1._bits & 1); }
+{ return interval_bounds(x1._bits & interval_bounds::_right); }
 
 inline interval_bounds all(interval_bounds x1)
-{ return interval_bounds(x1._bits & 3); }
+{ return interval_bounds(x1._bits & interval_bounds::_all); }
 
 inline bool operator == (const interval_bounds x1, const interval_bounds x2)
 { return x1._bits == x2._bits; }

@@ -89,19 +89,19 @@ public:
     {
         switch(_lawChoice.some())
         {
-        case copy                    : return new LawValidater< UnaryAtomicEquivalence <Type, TargetT,      std_copy_back                     >, RandomGentor>;
-        case copy_backward           : return new LawValidater< UnaryAtomicEquivalence <Type, TargetT,      std_copy_backward_back            >, RandomGentor>;
-        case reverse_copy            : return new LawValidater< UnaryAtomicEquivalence <Type, TargetT,      std_reverse_copy_back             >, RandomGentor>;
-        case equal                   : return new LawValidater<BinaryAtomicEquivalence <Type, bool,         std_equals_back                   >, RandomGentor>;
-        case lexicographical_compare : return new LawValidater<BinaryAtomicEquivalence <Type, bool,         std_lexicographical_compare_back  >, RandomGentor>;
-        case includes                : return new LawValidater<BinaryAtomicEquivalence <Type, bool,         std_includes_back                 >, RandomGentor>;
-        case set_union               : return new LawValidater<BinaryAtomicEquivalence <Type, TargetT,      std_set_union_back                >, RandomGentor>;
-        case set_difference          : return new LawValidater<BinaryAtomicEquivalence <Type, TargetT,      std_set_difference_back           >, RandomGentor>;
-        case set_intersection        : return new LawValidater<BinaryAtomicEquivalence <Type, TargetT,      std_set_intersection_back         >, RandomGentor>;
-        case set_symmetric_difference: return new LawValidater<BinaryAtomicEquivalence <Type, TargetT,      std_set_symmetric_difference_back >, RandomGentor>;
-        case find                    : return new LawValidater< UnaryAtomicEquivalence2<Type, element_type, std_find_back                     >, RandomGentor>;
-        case lower_bound             : return new LawValidater< UnaryAtomicEquivalence2<Type, element_type, std_lower_bound_back              >, RandomGentor>;
-        case upper_bound             : return new LawValidater< UnaryAtomicEquivalence2<Type, element_type, std_upper_bound_back              >, RandomGentor>;
+        case copy                    : return new LawValidater< UnaryAtomicEquivalence <Type, TargetT,      std_copy_back                     > >;
+        case copy_backward           : return new LawValidater< UnaryAtomicEquivalence <Type, TargetT,      std_copy_backward_back            > >;
+        case reverse_copy            : return new LawValidater< UnaryAtomicEquivalence <Type, TargetT,      std_reverse_copy_back             > >;
+        case equal                   : return new LawValidater<BinaryAtomicEquivalence <Type, bool,         std_equals_back                   > >;
+        case lexicographical_compare : return new LawValidater<BinaryAtomicEquivalence <Type, bool,         std_lexicographical_compare_back  > >;
+        case includes                : return new LawValidater<BinaryAtomicEquivalence <Type, bool,         std_includes_back                 > >;
+        case set_union               : return new LawValidater<BinaryAtomicEquivalence <Type, TargetT,      std_set_union_back                > >;
+        case set_difference          : return new LawValidater<BinaryAtomicEquivalence <Type, TargetT,      std_set_difference_back           > >;
+        case set_intersection        : return new LawValidater<BinaryAtomicEquivalence <Type, TargetT,      std_set_intersection_back         > >;
+        case set_symmetric_difference: return new LawValidater<BinaryAtomicEquivalence <Type, TargetT,      std_set_symmetric_difference_back > >;
+        case find                    : return new LawValidater< UnaryAtomicEquivalence2<Type, element_type, std_find_back                     > >;
+        case lower_bound             : return new LawValidater< UnaryAtomicEquivalence2<Type, element_type, std_lower_bound_back              > >;
+        case upper_bound             : return new LawValidater< UnaryAtomicEquivalence2<Type, element_type, std_upper_bound_back              > >;
         default: return NULL;
         }
     }

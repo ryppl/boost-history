@@ -15,6 +15,8 @@ by setting defines in this file.
 #ifndef  BOOST_ITL_DESIGN_CONFIG_HPP_JOFA_090214
 #define  BOOST_ITL_DESIGN_CONFIG_HPP_JOFA_090214
 
+//#define ITL_NEW_INTERVAL_IMPL
+
 //------------------------------------------------------------------------------
 // Auxiliary macros for denoting template signatures.
 // Purpose:
@@ -24,10 +26,16 @@ by setting defines in this file.
 // (4) Being able to check template template parameter variants against
 //     template type parameter variants.
 
-#define ITL_USE_COMPARE_TEMPLATE_TEMPLATE
-#define ITL_USE_COMBINE_TEMPLATE_TEMPLATE
-#define ITL_USE_SECTION_TEMPLATE_TEMPLATE
-#define ITL_USE_INTERVAL_TEMPLATE_TEMPLATE
+#ifdef ITL_NEW_INTERVAL_IMPL
+#   define ITL_USE_COMPARE_TEMPLATE_TEMPLATE
+#   define ITL_USE_COMBINE_TEMPLATE_TEMPLATE
+#   define ITL_USE_SECTION_TEMPLATE_TEMPLATE
+#else
+#   define ITL_USE_COMPARE_TEMPLATE_TEMPLATE
+#   define ITL_USE_COMBINE_TEMPLATE_TEMPLATE
+#   define ITL_USE_SECTION_TEMPLATE_TEMPLATE
+#   define ITL_USE_INTERVAL_TEMPLATE_TEMPLATE
+#endif
 
 //#define ITL_USE_COMPARE_TEMPLATE_TYPE
 //#define ITL_USE_COMBINE_TEMPLATE_TYPE
@@ -82,7 +90,7 @@ by setting defines in this file.
 #   define ITL_INTERVAL2(itl_compare) template<class DomT2,itl_compare>class
 #   define ITL_INTERVAL_TYPE(itl_interval, domain_type, itl_compare) itl_interval<domain_type,itl_compare> 
 #   define ITL_INTERVAL_INSTANCE(interval_instance,domain_type,itl_compare) interval_instance
-#else//ITL_USE_SECTION_TEMPLATE_TYPE
+#else//ITL_USE_INTERVAL_TEMPLATE_TYPE
 #   define ITL_INTERVAL(itl_compare) class
 #   define ITL_INTERVAL2(itl_compare) class
 #   define ITL_INTERVAL_TYPE(itl_interval, domain_type, itl_compare) itl_interval  
@@ -91,17 +99,24 @@ by setting defines in this file.
 
 
 //------------------------------------------------------------------------------
-#define ITL_INTERVAL_DEFAULT boost::itl::interval
 //#define ITL_INTERVAL_DEFAULT itl::rightopen_interval
 //#define ITL_INTERVAL_DEFAULT itl::continuous_interval
-//#define ITL_INTERVAL_DEFAULT itl::interval_type_of
+
+#ifdef NEW_INTERVAL_IMPL
+#   define ITL_INTERVAL_DEFAULT itl::interval_type_of
+#else
+#   define ITL_INTERVAL_DEFAULT boost::itl::interval
+#endif
 
 //------------------------------------------------------------------------------
 //JODO find proper solution here
-#define ITL_discrt_INTERVAL_DEF itl::interval
-#define ITL_contin_INTERVAL_DEF itl::interval
-//#define ITL_discrt_INTERVAL_DEF itl::discrete_interval
-//#define ITL_contin_INTERVAL_DEF itl::continuous_interval
+#ifdef NEW_INTERVAL_IMPL
+#   define ITL_discrt_INTERVAL_DEF itl::discrete_interval
+#   define ITL_contin_INTERVAL_DEF itl::continuous_interval
+#else
+#   define ITL_discrt_INTERVAL_DEF itl::interval
+#   define ITL_contin_INTERVAL_DEF itl::interval
+#endif
 
 //------------------------------------------------------------------------------
 #define ITL_ALLOC    template<class>class

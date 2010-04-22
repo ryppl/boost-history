@@ -537,7 +537,7 @@ cardinality(IntervalT object)
 template<class IntervalT>
 typename boost::enable_if<is_continuous_interval<IntervalT>, 
     typename IntervalT::size_type>::type
-size(IntervalT object) //JODO conficting with metafunction size<T>::type -> sizetype<T>::type
+size(IntervalT object)
 {
     return cardinality(object);
 }

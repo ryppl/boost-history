@@ -91,19 +91,19 @@ public:
     {
         switch(_lawChoice.some())
         {
-        case copy                    : return new LawValidater< UnaryAtomicEquivalence <Type, TargetT,     std_copy                     >, RandomGentor>;
-        case copy_backward           : return new LawValidater< UnaryAtomicEquivalence <Type, TargetT,     std_copy_backward            >, RandomGentor>;
-        case reverse_copy            : return new LawValidater< UnaryAtomicEquivalence <Type, TargetT,     std_reverse_copy             >, RandomGentor>;
-        case equal                   : return new LawValidater<BinaryAtomicEquivalence <Type, bool,        std_equals                   >, RandomGentor>;
-        case lexicographical_compare : return new LawValidater<BinaryAtomicEquivalence <Type, bool,        std_lexicographical_compare  >, RandomGentor>;
-        case includes                : return new LawValidater<BinaryAtomicEquivalence <Type, bool,        std_includes                 >, RandomGentor>;
-        case set_union               : return new LawValidater<BinaryAtomicEquivalence <Type, TargetT,     std_set_union                >, RandomGentor>;
-        case set_difference          : return new LawValidater<BinaryAtomicEquivalence <Type, TargetT,     std_set_difference           >, RandomGentor>;
-        case set_intersection        : return new LawValidater<BinaryAtomicEquivalence <Type, TargetT,     std_set_intersection         >, RandomGentor>;
-        case set_symmetric_difference: return new LawValidater<BinaryAtomicEquivalence <Type, TargetT,     std_set_symmetric_difference >, RandomGentor>;
-        case find                    : return new LawValidater< UnaryAtomicEquivalence2<Type, element_type, std_find                    >, RandomGentor>;
-        case lower_bound             : return new LawValidater< UnaryAtomicEquivalence2<Type, element_type, std_lower_bound             >, RandomGentor>;
-        case upper_bound             : return new LawValidater< UnaryAtomicEquivalence2<Type, element_type, std_upper_bound             >, RandomGentor>;
+        case copy                    : return new LawValidater< UnaryAtomicEquivalence <Type, TargetT,     std_copy                     > >;
+        case copy_backward           : return new LawValidater< UnaryAtomicEquivalence <Type, TargetT,     std_copy_backward            > >;
+        case reverse_copy            : return new LawValidater< UnaryAtomicEquivalence <Type, TargetT,     std_reverse_copy             > >;
+        case equal                   : return new LawValidater<BinaryAtomicEquivalence <Type, bool,        std_equals                   > >;
+        case lexicographical_compare : return new LawValidater<BinaryAtomicEquivalence <Type, bool,        std_lexicographical_compare  > >;
+        case includes                : return new LawValidater<BinaryAtomicEquivalence <Type, bool,        std_includes                 > >;
+        case set_union               : return new LawValidater<BinaryAtomicEquivalence <Type, TargetT,     std_set_union                > >;
+        case set_difference          : return new LawValidater<BinaryAtomicEquivalence <Type, TargetT,     std_set_difference           > >;
+        case set_intersection        : return new LawValidater<BinaryAtomicEquivalence <Type, TargetT,     std_set_intersection         > >;
+        case set_symmetric_difference: return new LawValidater<BinaryAtomicEquivalence <Type, TargetT,     std_set_symmetric_difference > >;
+        case find                    : return new LawValidater< UnaryAtomicEquivalence2<Type, element_type, std_find                    > >;
+        case lower_bound             : return new LawValidater< UnaryAtomicEquivalence2<Type, element_type, std_lower_bound             > >;
+        case upper_bound             : return new LawValidater< UnaryAtomicEquivalence2<Type, element_type, std_upper_bound             > >;
         default: return NULL;
         }
     }

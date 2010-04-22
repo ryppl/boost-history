@@ -19,8 +19,6 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 namespace boost{namespace itl
 {
 
-typedef unsigned char bound_type; //JODO
-
 template <class DomainT, 
           ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT)>
 class continuous_interval : public base_interval<DomainT,Compare> 
@@ -41,8 +39,7 @@ public:
     {
         BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
         BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
-        //JODO URG BOOST_STATIC_ASSERT((itl::is_continuous<DomainT>::value)); 
-        //JODO we must assert this via appropriate defaults for template parameters
+        BOOST_STATIC_ASSERT((itl::is_continuous<DomainT>::value)); 
     }
 
     //NOTE: Compiler generated copy constructor is used
@@ -53,7 +50,7 @@ public:
     {
         BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
         BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
-        //JODO BOOST_STATIC_ASSERT((itl::is_continuous<DomainT>::value));
+        BOOST_STATIC_ASSERT((itl::is_continuous<DomainT>::value));
     }
 
     /** Interval from <tt>low</tt> to <tt>up</tt> with bounds <tt>bounds</tt> */
@@ -64,7 +61,7 @@ public:
     {
         BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
         BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
-        //JODO BOOST_STATIC_ASSERT((itl::is_continuous<DomainT>::value));
+        BOOST_STATIC_ASSERT((itl::is_continuous<DomainT>::value));
     }
 
     domain_type     lower()const { return _lwb; }

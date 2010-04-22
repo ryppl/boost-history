@@ -56,7 +56,7 @@ namespace boost{namespace itl
         for a given law \c LawT and a generator template, that
         produces a matching generator of input variables for the law.
     */
-    template <class LawT, template<typename>class GentorT>
+    template <class LawT, template<typename>class GentorT = RandomGentor>
     class LawValidater : public LawValidaterI
     {
     public:
@@ -65,7 +65,7 @@ namespace boost{namespace itl
         typedef typename LawT::input_tuple    input_tuple;  // The tuple type for input variables of the law
         typedef typename LawT::output_tuple   output_tuple; // The tuple type for input variables of the law
         
-        typedef typename Loki::TL::MapType<GentorT, input_types>::Result gentor_types;
+        typedef typename Loki::TL::MapUnaryTemplate<GentorT, input_types>::Result gentor_types;
         typedef typename Loki::tuple<gentor_types> input_gentor;
 
     public:

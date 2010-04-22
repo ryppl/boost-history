@@ -79,27 +79,27 @@ public:
     {
         switch(_lawChoice.some())
         {
-        case inplacePlusAssociativity:  return new LawValidater<InplaceAssociativity<Type, inplace_bit_add>, RandomGentor>;
-        case inplacePlusNeutrality:     return new LawValidater<InplaceNeutrality   <Type, inplace_bit_add>, RandomGentor>;
-        case inplacePlusCommutativity:  return new LawValidater<InplaceCommutativity<Type, inplace_bit_add>, RandomGentor>;
-        case inplaceEtAssociativity:    return new LawValidater<InplaceAssociativity<Type, inplace_bit_and>, RandomGentor>;
-        case inplaceEtCommutativity:    return new LawValidater<InplaceCommutativity<Type, inplace_bit_and>, RandomGentor>;
-        case inplaceSymmetricDifference:return new LawValidater<InplaceSymmetricDifference<Type, inplace_bit_add, inplace_bit_subtract, inplace_bit_and>, RandomGentor>;
-        case inplaceFlip:               return new LawValidater<InplaceFlip<Type>,   RandomGentor>;
+        case inplacePlusAssociativity:  return new LawValidater<InplaceAssociativity<Type, inplace_bit_add> >;
+        case inplacePlusNeutrality:     return new LawValidater<InplaceNeutrality   <Type, inplace_bit_add> >;
+        case inplacePlusCommutativity:  return new LawValidater<InplaceCommutativity<Type, inplace_bit_add> >;
+        case inplaceEtAssociativity:    return new LawValidater<InplaceAssociativity<Type, inplace_bit_and> >;
+        case inplaceEtCommutativity:    return new LawValidater<InplaceCommutativity<Type, inplace_bit_and> >;
+        case inplaceSymmetricDifference:return new LawValidater<InplaceSymmetricDifference<Type, inplace_bit_add, inplace_bit_subtract, inplace_bit_and> >;
+        case inplaceFlip:               return new LawValidater<InplaceFlip<Type> >;
         case inplaceEtDistributivity:  
             if(itl::is_interval_splitter<Type>::value && absorbs_neutrons<Type>::value && !is_total<Type>::value)
-                                        return new LawValidater<InplaceDistributivity<Type, inplace_bit_and, inplace_bit_add, element_equal>, RandomGentor>;
-            else                        return new LawValidater<InplaceDistributivity<Type, inplace_bit_and, inplace_bit_add, std_equal>, RandomGentor>;
+                                        return new LawValidater<InplaceDistributivity<Type, inplace_bit_and, inplace_bit_add, element_equal> >;
+            else                        return new LawValidater<InplaceDistributivity<Type, inplace_bit_and, inplace_bit_add, std_equal> >;
         case inplacePlusDashRightDistrib:
             if(itl::is_interval_splitter<Type>::value && absorbs_neutrons<Type>::value && !is_total<Type>::value)
-                                        return new LawValidater<InplaceRightDistributivity<Type, inplace_bit_add, inplace_bit_subtract, element_equal>, RandomGentor>;
-            else                        return new LawValidater<InplaceRightDistributivity<Type, inplace_bit_add, inplace_bit_subtract, std_equal>, RandomGentor>;
-        case inplaceEtDashRightDistrib: return new LawValidater<InplaceRightDistributivity<Type, inplace_bit_and, inplace_bit_subtract>, RandomGentor>;
-        case inplacePlusDeMorgan:       return new LawValidater<InplaceDeMorgan<Type, inplace_bit_add, inplace_bit_and, inplace_bit_subtract, itl::std_equal>, RandomGentor>;
+                                        return new LawValidater<InplaceRightDistributivity<Type, inplace_bit_add, inplace_bit_subtract, element_equal> >;
+            else                        return new LawValidater<InplaceRightDistributivity<Type, inplace_bit_add, inplace_bit_subtract, std_equal> >;
+        case inplaceEtDashRightDistrib: return new LawValidater<InplaceRightDistributivity<Type, inplace_bit_and, inplace_bit_subtract> >;
+        case inplacePlusDeMorgan:       return new LawValidater<InplaceDeMorgan<Type, inplace_bit_add, inplace_bit_and, inplace_bit_subtract, itl::std_equal> >;
         case inplaceEtDeMorgan:        
             if(itl::is_interval_splitter<Type>::value || itl::is_interval_separator<Type>::value)
-                                        return new LawValidater<InplaceDeMorgan<Type, inplace_bit_and, inplace_bit_add, inplace_bit_subtract, itl::element_equal>, RandomGentor>;
-            else                        return new LawValidater<InplaceDeMorgan<Type, inplace_bit_and, inplace_bit_add, inplace_bit_subtract, itl::std_equal>, RandomGentor>;
+                                        return new LawValidater<InplaceDeMorgan<Type, inplace_bit_and, inplace_bit_add, inplace_bit_subtract, itl::element_equal> >;
+            else                        return new LawValidater<InplaceDeMorgan<Type, inplace_bit_and, inplace_bit_add, inplace_bit_subtract, itl::std_equal> >;
 
         default: return NULL;
         }

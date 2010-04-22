@@ -93,23 +93,23 @@ namespace Loki
         };
 
         // --------------------------------------------------------------------
-        // JODO Extension for Typelist:
-        // class template MapType
-        // MapType(F, Typelist<T1,...,Tn>) = Typelist<F<T1>,...,F<Tn> >
+        // Extension for Typelist:
+        // template class MapUnaryTemplate
+        // MapUnaryTemplate(F, Typelist<T1,...,Tn>) = Typelist<F<T1>,...,F<Tn> >
         // --------------------------------------------------------------------
         template<template<typename TypeT>class UnaryTemplate, typename Typelist>
-        struct MapType;
+        struct MapUnaryTemplate;
 
         template<template<typename TypeT>class UnaryTemplate>
-        struct MapType<UnaryTemplate, NullType>
+        struct MapUnaryTemplate<UnaryTemplate, NullType>
         {
             typedef NullType Result;
         };
 
         template<template<typename TypeT>class UnaryTemplate, class Head, class Tail>
-        struct MapType<UnaryTemplate, Typelist<Head, Tail> >
+        struct MapUnaryTemplate<UnaryTemplate, Typelist<Head, Tail> >
         {
-            typedef Typelist<UnaryTemplate<Head>, typename MapType<UnaryTemplate, Tail>::Result> Result;
+            typedef Typelist<UnaryTemplate<Head>, typename MapUnaryTemplate<UnaryTemplate, Tail>::Result> Result;
         };
 
     }
