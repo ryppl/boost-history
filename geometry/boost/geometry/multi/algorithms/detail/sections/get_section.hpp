@@ -6,18 +6,17 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_GEOMETRY_MULTI_ALGORITHMS_GET_SECTION_HPP
-#define BOOST_GEOMETRY_MULTI_ALGORITHMS_GET_SECTION_HPP
+#ifndef BOOST_GEOMETRY_MULTI_ALGORITHMS_DETAIL_SECTIONS_GET_SECTION_HPP
+#define BOOST_GEOMETRY_MULTI_ALGORITHMS_DETAIL_SECTIONS_GET_SECTION_HPP
 
 
 #include <boost/assert.hpp>
 #include <boost/concept/requires.hpp>
-#include <boost/range/functions.hpp>
-#include <boost/range/metafunctions.hpp>
+#include <boost/range.hpp>
 
 #include <boost/geometry/multi/core/tags.hpp>
 
-#include <boost/geometry/algorithms/get_section.hpp>
+#include <boost/geometry/algorithms/detail/sections/get_section.hpp>
 
 
 namespace boost { namespace geometry
@@ -63,4 +62,4 @@ struct get_section<multi_polygon_tag, MultiPolygon, Section>
 }} // namespace boost::geometry
 
 
-#endif // BOOST_GEOMETRY_MULTI_ALGORITHMS_GET_SECTION_HPP
+#endif // BOOST_GEOMETRY_MULTI_ALGORITHMS_DETAIL_SECTIONS_GET_SECTION_HPP
