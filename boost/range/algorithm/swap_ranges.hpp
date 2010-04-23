@@ -22,7 +22,7 @@ namespace boost
 {
     namespace range_detail
     {
-        template<typename Iterator1, typename Iterator2>
+        template<class Iterator1, class Iterator2>
         void swap_ranges_impl(Iterator1 it1, Iterator1 last1,
                               Iterator2 it2, Iterator2 last2,
                               single_pass_traversal_tag,
@@ -36,7 +36,7 @@ namespace boost
             }
         }
 
-        template<typename Iterator1, typename Iterator2>
+        template<class Iterator1, class Iterator2>
         void swap_ranges_impl(Iterator1 it1, Iterator1 last1,
                               Iterator2 it2, Iterator2 last2,
                               random_access_traversal_tag,
@@ -47,35 +47,41 @@ namespace boost
             std::swap_ranges(it1, last1, it2);
         }
 
-        template<typename Iterator1, typename Iterator2>
+        template<class Iterator1, class Iterator2>
         void swap_ranges_impl(Iterator1 first1, Iterator1 last1,
                               Iterator2 first2, Iterator2 last2)
         {
             swap_ranges_impl(first1, last1, first2, last2,
-                typename iterator_traversal<Iterator1>::type(),
-                typename iterator_traversal<Iterator2>::type());
+                BOOST_DEDUCED_TYPENAME iterator_traversal<Iterator1>::type(),
+                BOOST_DEDUCED_TYPENAME iterator_traversal<Iterator2>::type());
         }
     } // namespace range_detail
 
-    /// \brief template function swap_ranges
-    ///
-    /// range-based version of the swap_ranges std algorithm
-    ///
-    /// \pre SinglePassRange1 is a model of the SinglePassRangeConcept
-    /// \pre SinglePassRange2 is a model of the SinglePassRangeConcept
-    template< typename SinglePassRange1, typename SinglePassRange2 >
-    inline SinglePassRange2&
-    swap_ranges(SinglePassRange1& range1, SinglePassRange2& range2)
+    namespace range
     {
-        BOOST_CONCEPT_ASSERT((SinglePassRangeConcept<SinglePassRange1>));
-        BOOST_CONCEPT_ASSERT((SinglePassRangeConcept<SinglePassRange2>));
 
-        boost::range_detail::swap_ranges_impl(
-            boost::begin(range1), boost::end(range1),
-            boost::begin(range2), boost::end(range2));
+/// \brief template function swap_ranges
+///
+/// range-based version of the swap_ranges std algorithm
+///
+/// \pre SinglePassRange1 is a model of the SinglePassRangeConcept
+/// \pre SinglePassRange2 is a model of the SinglePassRangeConcept
+template< class SinglePassRange1, class SinglePassRange2 >
+inline SinglePassRange2&
+swap_ranges(SinglePassRange1& range1, SinglePassRange2& range2)
+{
+    BOOST_RANGE_CONCEPT_ASSERT((SinglePassRangeConcept<SinglePassRange1>));
+    BOOST_RANGE_CONCEPT_ASSERT((SinglePassRangeConcept<SinglePassRange2>));
 
-        return range2;
-    }
+    boost::range_detail::swap_ranges_impl(
+        boost::begin(range1), boost::end(range1),
+        boost::begin(range2), boost::end(range2));
+
+    return range2;
 }
+
+    } // namespace range
+    using range::swap_ranges;
+} // namespace boost
 
 #endif // include guard

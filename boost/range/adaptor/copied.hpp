@@ -18,51 +18,41 @@
 
 namespace boost
 {
-	namespace range_detail
-	{
-		template< class T >
-		struct copy_holder 
-			: holder2<std::size_t> 
-		{
-			copy_holder( std::size_t t, std::size_t u ) 
-			    : holder2<std::size_t>(t,u)
-			{ }
-		};
+    namespace adaptors
+    {
+        struct copied
+        {
+            copied(std::size_t t_, std::size_t u_)
+                : t(t_), u(u_) {}
 
-		template< class CopyableRandomAccessRng, class Int >
-		inline CopyableRandomAccessRng 
-		operator|( const CopyableRandomAccessRng& r, const copy_holder<Int>& f )
-		{
-			iterator_range< 
-				BOOST_DEDUCED_TYPENAME range_iterator<const 
-				                               CopyableRandomAccessRng>::type >
-			temp( sliced_impl( r, f ) ); 
-			return CopyableRandomAccessRng( temp.begin(), temp.end() );
-		}
-		
-	} // 'range_detail'
+            std::size_t t;
+            std::size_t u;
+        };
 
-	namespace adaptors
-	{ 
-		namespace
-		{
-			const range_detail::forwarder2<range_detail::copy_holder> 
-  	           copied = range_detail::forwarder2<range_detail::copy_holder>();
-		}
-		
-		template<class CopyableRandomAccessRange>
-		inline CopyableRandomAccessRange
-		copy(const CopyableRandomAccessRange& rng, std::size_t t, std::size_t u)
-		{
-		    iterator_range<
-		        BOOST_DEDUCED_TYPENAME range_iterator<const
-		            CopyableRandomAccessRange>::type> temp(
-		                adaptors::slice(rng, t, u));
-		                
+        template< class CopyableRandomAccessRng >
+        inline CopyableRandomAccessRng
+        operator|( const CopyableRandomAccessRng& r, const copied& f )
+        {
+            iterator_range<
+                BOOST_DEDUCED_TYPENAME range_iterator<const
+                                               CopyableRandomAccessRng>::type >
+            temp( adaptors::slice( r, f.t, f.u ) );
+            return CopyableRandomAccessRng( temp.begin(), temp.end() );
+        }
+
+        template<class CopyableRandomAccessRange>
+        inline CopyableRandomAccessRange
+        copy(const CopyableRandomAccessRange& rng, std::size_t t, std::size_t u)
+        {
+            iterator_range<
+                BOOST_DEDUCED_TYPENAME range_iterator<const
+                    CopyableRandomAccessRange>::type> temp(
+                        adaptors::slice(rng, t, u));
+
             return CopyableRandomAccessRange( temp.begin(), temp.end() );
-		}
-	} // 'adaptors'
-	
+        }
+    } // 'adaptors'
+
 }
 
 #endif

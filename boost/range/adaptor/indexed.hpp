@@ -27,60 +27,72 @@
 
 namespace boost
 {
-	
-	namespace range_detail
-	{
-		template< class Iter >
-		class indexed_iterator
-			: public boost::iterator_adaptor< indexed_iterator<Iter>, Iter >
-		{
-		private:
-			typedef boost::iterator_adaptor< indexed_iterator<Iter>, Iter > 
-				  base;   
+    namespace adaptors
+    {
+        // This structure exists to carry the parameters from the '|' operator
+        // to the index adapter. The expression rng | indexed(1) instantiates
+        // this structure and passes it as the right-hand operand to the
+        // '|' operator.
+        struct indexed
+        {
+            explicit indexed(std::size_t x) : val(x) {}
+            std::size_t val;
+        };
+    }
 
-			typedef BOOST_DEDUCED_TYPENAME base::difference_type index_type;
+    namespace range_detail
+    {
+        template< class Iter >
+        class indexed_iterator
+            : public boost::iterator_adaptor< indexed_iterator<Iter>, Iter >
+        {
+        private:
+            typedef boost::iterator_adaptor< indexed_iterator<Iter>, Iter >
+                  base;
 
-			index_type index_;
-			
-		public:
-			explicit indexed_iterator( Iter i, index_type index )
-			: base(i), index_(index) 
-			{
-				BOOST_ASSERT( index_ >= 0 && "Indexed Iterator out of bounds" );
-			}
+            typedef BOOST_DEDUCED_TYPENAME base::difference_type index_type;
 
-			index_type index() const
-			{
-				return index_;
-			}
-            
-		 private:
-			friend class boost::iterator_core_access;
-			
-			void increment() 
-			{ 
-                ++index_;
-                ++(this->base_reference());
-			}
+            index_type m_index;
 
-
-			void decrement()
+        public:
+            explicit indexed_iterator( Iter i, index_type index )
+            : base(i), m_index(index)
             {
-                BOOST_ASSERT( index_ > 0 && "Indexed Iterator out of bounds" );
-                --index_;
+                BOOST_ASSERT( m_index >= 0 && "Indexed Iterator out of bounds" );
+            }
+
+            index_type index() const
+            {
+                return m_index;
+            }
+
+         private:
+            friend class boost::iterator_core_access;
+
+            void increment()
+            {
+                ++m_index;
+                ++(this->base_reference());
+            }
+
+
+            void decrement()
+            {
+                BOOST_ASSERT( m_index > 0 && "Indexed Iterator out of bounds" );
+                --m_index;
                 --(this->base_reference());
             }
 
-			void advance( index_type n )
+            void advance( index_type n )
             {
-                index_ += n;
-                BOOST_ASSERT( index_ >= 0 && "Indexed Iterator out of bounds" );
+                m_index += n;
+                BOOST_ASSERT( m_index >= 0 && "Indexed Iterator out of bounds" );
                 this->base_reference() += n;
             }
-		};
+        };
 
         template< class Rng >
-        struct indexed_range : 
+        struct indexed_range :
             iterator_range< indexed_iterator<BOOST_DEDUCED_TYPENAME range_iterator<Rng>::type> >
         {
         private:
@@ -90,80 +102,51 @@ namespace boost
                 base;
         public:
             template< class Index >
-            indexed_range( Index i, Rng& r ) 
+            indexed_range( Index i, Rng& r )
               : base( iter_type(boost::begin(r), i), iter_type(boost::end(r),i) )
             { }
         };
 
+    } // 'range_detail'
 
-        template< class T >
-        struct index_holder : holder<T>
+    // Make this available to users of this library. It will sometimes be
+    // required since it is the return type of operator '|' and
+    // index().
+    using range_detail::indexed_range;
+
+    namespace adaptors
+    {
+        template< class SinglePassRange >
+        inline indexed_range<SinglePassRange>
+        operator|( SinglePassRange& r,
+                   const indexed& f )
         {
-            index_holder( T r ) : holder<T>(r)
-            { }
-        };
-
-        struct index_forwarder
-        {
-            template< class T >
-            index_holder<T> operator()( T r ) const
-            {
-                return r;
-            }
-            
-            index_holder<int> operator()( int r = 0 ) const
-            {
-                return r;
-            }
-        };
-        
-		template< class SinglePassRange >
-		inline indexed_range<SinglePassRange> 
-		operator|( SinglePassRange& r, 
-				   const index_holder<typename range_difference<SinglePassRange>::type>& f )
-		{
-			return indexed_range<SinglePassRange>( f.val, r ); 
-		}
-	
-		template< class SinglePassRange >
-		inline indexed_range<const SinglePassRange> 
-		operator|( const SinglePassRange& r, 
-				   const index_holder<typename range_difference<SinglePassRange>::type>& f )
-		{
-			return indexed_range<const SinglePassRange>( f.val, r );   
-		}
-		
-	} // 'range_detail'
-
-	// Make this available to users of this library. It will sometimes be
-	// required since it is the return type of operator '|' and
-	// make_indexed_range().
-	using range_detail::indexed_range;
-
-	namespace adaptors
-	{ 
-		namespace
-		{
-			const range_detail::forwarder<range_detail::index_holder> 
-				   indexed = 
-				       range_detail::forwarder<range_detail::index_holder>();
-		}
-		
-		template<class SinglePassRange, class Index>
-		inline indexed_range<SinglePassRange>
-		index(SinglePassRange& rng, Index index)
-		{
-		    return indexed_range<SinglePassRange>(index, rng);
-	    }
-	    
-	    template<class SinglePassRange, class Index>
-	    inline indexed_range<const SinglePassRange>
-	    index(const SinglePassRange& rng, Index index)
-	    {
-	        return indexed_range<const SinglePassRange>(index, rng);
+            return indexed_range<SinglePassRange>( f.val, r );
         }
-	} // 'adaptors'
-	
+
+        template< class SinglePassRange >
+        inline indexed_range<const SinglePassRange>
+        operator|( const SinglePassRange& r,
+                   const indexed& f )
+        {
+            return indexed_range<const SinglePassRange>( f.val, r );
+        }
+
+        template<class SinglePassRange, class Index>
+        inline indexed_range<SinglePassRange>
+        index(SinglePassRange& rng, Index index_value)
+        {
+            return indexed_range<SinglePassRange>(index_value, rng);
+        }
+
+        template<class SinglePassRange, class Index>
+        inline indexed_range<const SinglePassRange>
+        index(const SinglePassRange& rng, Index index_value)
+        {
+            return indexed_range<const SinglePassRange>(index_value, rng);
+        }
+    } // 'adaptors'
+
 }
 
 #ifdef BOOST_MSVC
