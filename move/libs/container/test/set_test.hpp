@@ -124,8 +124,12 @@ int set_test ()
       IntType move_me(i);
       shmset->insert(boost::move(move_me));
       stdset->insert(i);
+      shmset->insert(IntType(i));
+      stdset->insert(i);
       IntType move_me2(i);
       shmmultiset->insert(boost::move(move_me2));
+      stdmultiset->insert(i);
+      shmmultiset->insert(IntType(i));
       stdmultiset->insert(i);
    }
 

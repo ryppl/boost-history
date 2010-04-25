@@ -18,14 +18,6 @@
 #include "map_test.hpp"
 #include "emplace_test.hpp"
 
-///////////////////////////////////////////////////////////////////
-//                                                               //
-//  This example repeats the same operations with std::set and   //
-//  shmem_set using the node allocator                           //
-//  and compares the values of both containers                   //
-//                                                               //
-///////////////////////////////////////////////////////////////////
-
 using namespace boost::container;
 
 //Alias standard types
@@ -46,11 +38,17 @@ typedef multiset<test::movable_int>                      MyMovableShmMultiSet;
 typedef map<test::movable_int, test::movable_int>        MyMovableShmMap;
 typedef multimap<test::movable_int, test::movable_int>   MyMovableShmMultiMap;
 typedef set<test::movable_and_copyable_int>              MyMoveCopyShmSet;
+typedef set<test::copyable_int>                          MyCopyShmSet;
 typedef multiset<test::movable_and_copyable_int>         MyMoveCopyShmMultiSet;
+typedef multiset<test::copyable_int>                     MyCopyShmMultiSet;
 typedef map<test::movable_and_copyable_int
            ,test::movable_and_copyable_int>              MyMoveCopyShmMap;
 typedef multimap<test::movable_and_copyable_int
                 ,test::movable_and_copyable_int>         MyMoveCopyShmMultiMap;
+typedef map<test::copyable_int
+           ,test::copyable_int>                          MyCopyShmMap;
+typedef multimap<test::copyable_int
+                ,test::copyable_int>                     MyCopyShmMultiMap;
 //Test recursive structures
 class recursive_set
 {
@@ -147,6 +145,26 @@ int main ()
       return 1;
    }
 
+   if(0 != test::set_test_copyable<MyMoveCopyShmSet
+                        ,MyStdSet
+                        ,MyMoveCopyShmMultiSet
+                        ,MyStdMultiSet>()){
+      return 1;
+   }
+
+   if(0 != test::set_test<MyCopyShmSet
+                        ,MyStdSet
+                        ,MyCopyShmMultiSet
+                        ,MyStdMultiSet>()){
+      return 1;
+   }
+
+   if(0 != test::set_test_copyable<MyCopyShmSet
+                        ,MyStdSet
+                        ,MyCopyShmMultiSet
+                        ,MyStdMultiSet>()){
+      return 1;
+   }
 
    if (0 != test::map_test<MyShmMap
                   ,MyStdMap
@@ -173,6 +191,27 @@ int main ()
    if (0 != test::map_test<MyMoveCopyShmMap
                   ,MyStdMap
                   ,MyMoveCopyShmMultiMap
+                  ,MyStdMultiMap>()){
+      return 1;
+   }
+
+   if (0 != test::map_test_copyable<MyMoveCopyShmMap
+                  ,MyStdMap
+                  ,MyMoveCopyShmMultiMap
+                  ,MyStdMultiMap>()){
+      return 1;
+   }
+
+   if (0 != test::map_test<MyCopyShmMap
+                  ,MyStdMap
+                  ,MyCopyShmMultiMap
+                  ,MyStdMultiMap>()){
+      return 1;
+   }
+
+   if (0 != test::map_test_copyable<MyCopyShmMap
+                  ,MyStdMap
+                  ,MyCopyShmMultiMap
                   ,MyStdMultiMap>()){
       return 1;
    }

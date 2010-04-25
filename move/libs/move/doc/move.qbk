@@ -1,14 +1,13 @@
 [/
- / Copyright (c) 2008-2009 Ion Gaztanaga
+ / Copyright (c) 2008-2010 Ion Gaztanaga
  /
  / Distributed under the Boost Software License, Version 1.0. (See accompanying
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  /]
-
 [library Boost.Move
-    [quickbook 1.3]
-    [authors [Gazta&ntilde;aga, Ion]]
-    [copyright 2008-2009 Ion Gazta&ntilde;aga]
+    [quickbook 1.5]
+    [authors [Gaztanaga, Ion]]
+    [copyright 2008-2010 Ion Gaztanaga]
     [id move]
     [dirname move]
     [purpose Move semantics]
@@ -21,8 +20,20 @@
 
 [warning This library is NOT an official Boost library]
 
+[note [*['For reviewers]] This library has two operating modes, depending on the macro
+ [macroref BOOST_MOVE_OPTIMIZED_EMULATION BOOST_MOVE_OPTIMIZED_EMULATION]. In the review, one of these
+ modes should be chosen as the desired move emulation node. 
+ See chapter [link move.two_emulation_modes Two emulation modes] for more details about
+ pros and cons of each operating mode]
+
+[note [*['For reviewers]] If you want to know how the emulation works behind the scenes
+ to propose improvements or corrections, please see chapter 
+ [link move.how_the_emulation_works How the emulation works] for more details]
+
 [important To be able to use containers of movable values you will need an special version
  of [*Boost.Container] bundled with this library]
+
+[note Tested compilers: MSVC-7.1, 8.0, 9.0, GCC 4.3-MinGW in C++03 and C++0x modes, Intel 10.1]
 
 [section:introduction Introduction]
 
@@ -173,6 +184,12 @@ Let's see how are applied to `clone_ptr`:
 
 [clone_ptr_def]
 
+[important [macroref BOOST_COPY_ASSIGN_REF BOOST_COPY_ASSIGN_REF(classname)] macro is *not* needed
+   if the *'Non-optimized' mode* is selected, the usual `const classname &`
+   overload would be fine. See [link move.two_emulation_modes Two emulation modes]
+   for more details about pros/cons of this emulation mode.
+]
+
 [endsect]
 
 [*Question]: What about types that don't own resources? (E.g. `std::complex`?) 
@@ -188,6 +205,12 @@ and move assignment can be easily coded using the `boost::move` function:
 
 [clone_ptr_base_derived]
 
+[important [macroref BOOST_COPY_ASSIGN_REF BOOST_COPY_ASSIGN_REF(classname)] macro is *not* needed
+   if the *'Non-optimized' mode* is selected, the usual `const classname &`
+   overaload would be fine. See [link move.two_emulation_modes Two emulation modes]
+   for more details about pros/cons of this emulation mode.
+]
+
 Each subobject will now be treated individually, calling move to bind to the subobject's move
 constructors and move assignment operators. `Member` has move operations coded (just like
 our earlier `clone_ptr` example) which will completely avoid the tremendously more expensive
@@ -197,8 +220,8 @@ copy operations:
 
 Note above that the argument x is treated as a lvalue reference. That's why it is necessary to
 say `move(x)` instead of just x when passing down to the base class. This is a key safety feature of move
-semantics designed to prevent accidently moving twice from some named variable. All moves occur
-explicitly.
+semantics designed to prevent accidently moving twice from some named variable. All moves from 
+lvalues occur explicitly.
 
 [endsect]
 
@@ -542,6 +565,295 @@ willing to use move iterators.
 
 [import ../example/doc_move_algorithms.cpp]
 [move_algorithms_example]
+
+[endsect]
+
+[section:emulation_limitations Emulation limitations]
+
+Like any emulation effort, the library has some limitations users should take in
+care to achieve portable and efficient code when using the library with C++03 conformant compilers:
+
+[section:emulation_limitations_base Initializing base classes]
+
+When initializing base classes in move constructors, users must
+cast the reference to a base class reference before moving it. Example:
+
+[c++]
+
+   //Portable and efficient
+   Derived(BOOST_RV_REF(Derived) x)             // Move ctor
+      : Base(boost::move(static_cast<Base&>(x))), 
+        mem_(boost::move(x.mem_)) { }
+
+
+If casting is not performed the emulation will not move construct
+the base class, because no conversion is available from `BOOST_RV_REF(Derived)` 
+to `BOOST_RV_REF(Base)`. Without the cast we might obtain a compilation
+error (for non-copyable types) or a less-efficient move constructor (for copyable types):
+
+[c++]
+
+   //If Derived is copyable, then Base is copy-constructed.
+   //If not, a compilation error is issued
+   Derived(BOOST_RV_REF(Derived) x)             // Move ctor
+      : Base(boost::move(x)),
+        mem_(boost::move(x.mem_)) { } 
+
+[endsect]
+
+[section:template_parameters Template parameters for perfect forwarding]
+
+The emulation can't deal with C++0x reference collapsing rules that allow perfect forwarding:
+
+[c++]
+   
+   //C++0x
+   template<class T>
+   void forward_function(T &&t)
+   {  inner_function(std::forward<T>(t); }
+
+   //Wrong C++03 emulation
+   template<class T>
+   void forward_function(BOOST_RV_REF<T> t)
+   {  inner_function(boost::forward<T>(t); }
+
+In C++03 emulation BOOST_RV_REF doesn't catch any const rlvalues. For more details on
+forwarding see [link move.construct_forwarding Constructor Forwarding] chapter.
+
+[endsect]
+
+[section:emulation_limitations_binding Binding of rvalue references to lvalues]
+
+The 
+[@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2004/n1690.html first rvalue reference]
+proposal allowed the binding of rvalue references to lvalues:
+
+[c++]
+
+   func(Type &&t);
+   //....
+   
+   Type t;  //Allowed
+   func(t)
+
+
+Later, as explained in
+[@http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2008/n2812.html ['Fixing a Safety Problem with Rvalue References]]
+this behaviour was considered dangerous and eliminated this binding so that rvalue references adhere to the
+principle of type-safe overloading: ['Every function must be type-safe in isolation, without regard to how it has been overloaded]
+
+[*Boost.Move] can't emulate this type-safe overaloading principle for C++03 compilers:
+
+[c++]
+
+   //Allowed by move emulation
+   movable m;
+   BOOST_RV_REF(movable) r = m;
+
+[endsect]
+
+[section:emulation_limitations_modes Further limitations depending on the emulation mode]
+
+As explained in the section [link move.two_emulation_modes Two emulation modes]
+the library has some more limitations depending on the emulation mode selected by the user.
+See that chapter for more details.
+
+[endsect]
+
+[endsect]
+
+[section:two_emulation_modes Two emulation modes]
+
+This review version of the library has two emulation modes that can be selected using 
+the macro [macroref BOOST_MOVE_OPTIMIZED_EMULATION BOOST_MOVE_OPTIMIZED_EMULATION] in
+the header [headerref boost/move/move.hpp move.hpp]. This selection has no
+effect on compilers supporting rvalue-references but it changes the behaviour of the
+move emulation used in C++03 compilers. During the review a mode and its limitations should be chosen
+because no perfect emulation has been found to date:
+
+[section:optimized_mode Optimized mode]
+
+If [macroref BOOST_MOVE_OPTIMIZED_EMULATION BOOST_MOVE_OPTIMIZED_EMULATION] is defined
+in [headerref boost/move/move.hpp move.hpp]
+the library correctly move assigns non-const rvalues of copyable and movable types:
+
+[c++]
+
+   class copyable_and_movable
+   {/**/};
+
+   copyable_and_movable produce(){ return copyable_and_movable(); }
+
+   int main(){
+      copyable_and_movable cm;
+      copyable_and_movable cm;
+      cm = copyable_and_movable(); //temporary object is MOVED, not COPIED
+      return 0;
+   }
+
+The downside is that in this emulation mode, the macro
+[macroref BOOST_COPYABLE_AND_MOVABLE BOOST_COPYABLE_AND_MOVABLE] needs to
+define a copy constructor for `copyable_and_movable` taking a non-const parameter:
+
+[c++]
+
+   //Generated by BOOST_COPYABLE_AND_MOVABLE
+   copyable_and_movable &operator=(copyable_and_movable&){/**/}
+
+Since the non-const overload of the copy constructor is generated, compiler-generated
+assignment operators for classes containing `copyable_and_movable`
+will get the non-const copy constructor overload, which will surely surprise users:
+
+[c++]
+
+   class holder
+   {
+      copyable_and_movable c;
+   };
+
+   void func(const holder& h)
+   {
+      holder copy_h(h); //<--- ERROR: can't convert 'const holder&' to 'holder&'
+      //Compiler-generated copy constructor is non-const:
+      // holder& operator(holder &)
+      //!!!
+   }
+
+This limitation forces the user to define a const version of the copy constructor,
+in all classes holding copyable and movable classes which might be suboptimal in some
+templated code or annoying in several cases.
+
+[endsect]
+
+
+[section:non_optimized_mode Non-optimized mode]
+
+If [macroref BOOST_MOVE_OPTIMIZED_EMULATION BOOST_MOVE_OPTIMIZED_EMULATION] is undefined
+in [headerref boost/move/move.hpp move.hpp] the non-optimized mode is activated
+and it avoids the copy-assignment issue for `holder`, and users don't even
+need to define the [macroref BOOST_COPY_ASSIGN_REF BOOST_COPY_ASSIGN_REF] overload for their
+classes. Users can use the usual copy-assignment or the compiler-generated one:
+
+[c++]
+
+   copyable_and_movable
+   {
+      //...
+      copyable_and_movable& operator= (const copyable_and_movable&);
+   };
+
+But this emulation mode does not optimize the non-const rvalue move assignment example:
+
+[c++]
+
+   int main(){
+      copyable_and_movable cm;
+      cm = copyable_and_movable(); //temporary object is COPIED
+      return 0;
+   }
+
+There is a workaround for this missing optimization with an explicit
+[funcref boost::forward forward] call:
+
+[c++]
+
+   int main(){
+      copyable_and_movable cm;
+      //Temporary object is MOVED
+      cm = ::boost::forward<copyable_and_movable>(copyable_and_movable()); 
+      return 0;
+   }
+
+[endsect]
+
+[endsect]
+
+[section:how_the_emulation_works How the emulation works]
+
+For movable classes [*Boost.Move] defines a class named `::boost::rv`:
+
+[c++]
+
+   template <class T>
+   class rv : public T
+   {
+      rv();
+      ~rv();
+      rv(rv const&);
+      void operator=(rv const&);
+   };
+
+which is convertible to the movable base class (usual C++ derived to base conversion). When users mark
+their classes as [macroref BOOST_MOVABLE_BUT_NOT_COPYABLE BOOST_MOVABLE_BUT_NOT_COPYABLE] or
+[macroref BOOST_COPYABLE_AND_MOVABLE BOOST_COPYABLE_AND_MOVABLE], these macros define conversion
+operators to references to `::boost::rv`:
+
+[c++]
+
+   #define BOOST_MOVABLE_BUT_NOT_COPYABLE(TYPE)\
+      public:\
+      operator ::BOOST_MOVE_NAMESPACE::rv<TYPE>&() \
+      {  return *reinterpret_cast< ::BOOST_MOVE_NAMESPACE::rv<TYPE>* >(this);  }\
+      operator const ::BOOST_MOVE_NAMESPACE::rv<TYPE>&() const \
+      {  return *reinterpret_cast<const ::BOOST_MOVE_NAMESPACE::rv<TYPE>* >(this);  }\
+      private:\
+      //More stuff...
+
+[macroref BOOST_MOVABLE_BUT_NOT_COPYABLE BOOST_MOVABLE_BUT_NOT_COPYABLE] also declares a
+private copy constructor and assignment. [macroref BOOST_COPYABLE_AND_MOVABLE BOOST_COPYABLE_AND_MOVABLE]
+defines a non-const copy constructor `TYPE &operator=(TYPE&)` that forwards to a const version:
+
+   #define BOOST_COPYABLE_AND_MOVABLE(TYPE)\
+      public:\
+      TYPE& operator=(TYPE &t)\
+      {  this->operator=(static_cast<const ::boost::rv<TYPE> &>(const_cast<const TYPE &>(t))); return *this;}\
+      //More stuff...
+
+When users define the [macroref BOOST_RV_REF BOOST_RV_REF] overload of a copy constructor/assignment, it is
+expanded to a `::boost::rv` reference overload:
+
+[c++]
+
+   #define BOOST_RV_REF(TYPE) ::boost::rv< TYPE >& \
+
+When users define the [macroref BOOST_COPY_ASSIGN_REF BOOST_COPY_ASSIGN_REF] overload,
+it is expanded to a const `::boost::rv` references overload (in the 'Optimized mode'):
+
+[c++]
+
+   #define BOOST_COPY_ASSIGN_REF(TYPE) const ::boost::rv< TYPE >&
+   
+Now when overload resolution is performed these are the bindings:
+
+* a) non-const rvalues (e.g.: temporaries), bind to `::boost::rv< TYPE >&`
+* b) const rvalue and lvalues, bind to `const ::boost::rv< TYPE >&`
+* c) non-const lvalues (e.g. non-const references) bind to `TYPE&`
+
+The library does not define the equivalent of
+[macroref BOOST_COPY_ASSIGN_REF BOOST_COPY_ASSIGN_REF] for copy construction (say, `BOOST_COPY_CTOR_REF`)
+because nearly all modern compilers implement RVO and this is much more efficient than any move emulation.
+[funcref boost::move move] just casts `TYPE &` into `::boost::rv<TYPE> &`.
+
+Here's an example that demostrates how different rlvalue objects bind to `::boost::rv` references in the
+presence of three overloads and the conversion operators:
+
+[import ../example/doc_how_works.cpp]
+[how_works_example]
+
+[important For 'Non-optimized' emulation mode no `const ::boost::rv<TYPE> &` overload is present
+since [macroref BOOST_COPY_ASSIGN_REF] expands to `const TYPE &`.
+]
+
+[endsect]
+
+
+[section:thanks_to Thanks and credits]
+
+Thanks to all that developed ideas for move emulation: the first emulation was based on Howard Hinnant
+emulation code for `unique_ptr`, David Abrahams suggested the use of `class rv` class,
+and Klaus Triendl discovered how to bind const rlvalues using `class rv`.
+
+Many thanks to all boosters that have tested and improved the library.
 
 [endsect]
 

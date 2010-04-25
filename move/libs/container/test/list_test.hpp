@@ -25,8 +25,55 @@ namespace boost{
 namespace container {
 namespace test{
 
+template<class V1, class V2>
+bool list_copyable_only(V1 *, V2 *, boost::container::containers_detail::false_type)
+{
+   return true;
+}
+
+//Function to check if both sets are equal
+template<class V1, class V2>
+bool list_copyable_only(V1 *shmlist, V2 *stdlist, boost::container::containers_detail::true_type)
+{
+   typedef typename V1::value_type IntType;
+   shmlist->insert(shmlist->end(), 50, IntType(1));
+   stdlist->insert(stdlist->end(), 50, 1);
+   if(!test::CheckEqualContainers(shmlist, stdlist)) return false;
+
+   {
+      IntType move_me(1);
+      shmlist->insert(shmlist->begin(), 50, boost::move(move_me));
+      stdlist->insert(stdlist->begin(), 50, 1);
+      if(!test::CheckEqualContainers(shmlist, stdlist)) return false;
+   }
+   {
+      IntType move_me(2);
+      shmlist->assign(shmlist->size()/2, boost::move(move_me));
+      stdlist->assign(stdlist->size()/2, 2);
+      if(!test::CheckEqualContainers(shmlist, stdlist)) return false;
+   }
+   {
+      IntType move_me(3);
+      shmlist->assign(shmlist->size()*3-1, boost::move(move_me));
+      stdlist->assign(stdlist->size()*3-1, 3);
+      if(!test::CheckEqualContainers(shmlist, stdlist)) return false;
+   }
+
+   {
+      IntType copy_me(3);
+      const IntType ccopy_me(3);
+      shmlist->push_front(copy_me);
+      stdlist->push_front(int(3));
+      shmlist->push_front(ccopy_me);
+      stdlist->push_front(int(3));
+      if(!test::CheckEqualContainers(shmlist, stdlist)) return false;
+   }
+
+   return true;
+}
+
 template<bool DoublyLinked>
-struct push_data_function
+struct list_push_data_function
 {
    template<class MyShmList, class MyStdList>
    static int execute(int max, MyShmList *shmlist, MyStdList *stdlist)
@@ -36,6 +83,8 @@ struct push_data_function
          IntType move_me(i);
          shmlist->push_back(boost::move(move_me));
          stdlist->push_back(i);
+         shmlist->push_front(IntType(i));
+         stdlist->push_front(int(i));
       }
       if(!CheckEqualContainers(shmlist, stdlist))
          return 1;
@@ -44,7 +93,7 @@ struct push_data_function
 };
 
 template<>
-struct push_data_function<false>
+struct list_push_data_function<false>
 {
    template<class MyShmList, class MyStdList>
    static int execute(int max, MyShmList *shmlist, MyStdList *stdlist)
@@ -54,6 +103,8 @@ struct push_data_function<false>
          IntType move_me(i);
          shmlist->push_front(boost::move(move_me));
          stdlist->push_front(i);
+         shmlist->push_front(IntType(i));
+         stdlist->push_front(int(i));
       }
       if(!CheckEqualContainers(shmlist, stdlist))
          return 1;
@@ -62,7 +113,7 @@ struct push_data_function<false>
 };
 
 template<bool DoublyLinked>
-struct pop_back_function
+struct list_pop_back_function
 {
    template<class MyStdList, class MyShmList>
    static int execute(MyShmList *shmlist, MyStdList *stdlist)
@@ -76,7 +127,7 @@ struct pop_back_function
 };
 
 template<>
-struct pop_back_function<false>
+struct list_pop_back_function<false>
 {
    template<class MyStdList, class MyShmList>
    static int execute(MyShmList *shmlist, MyStdList *stdlist)
@@ -93,7 +144,7 @@ int list_test (bool copied_allocators_equal = true)
    typedef std::list<int> MyStdList;
    typedef typename MyShmList::value_type IntType;
    const int max = 100;
-   typedef push_data_function<DoublyLinked> push_data_t;
+   typedef list_push_data_function<DoublyLinked> push_data_t;
 
    try{
       MyShmList *shmlist = new MyShmList;
@@ -107,7 +158,7 @@ int list_test (bool copied_allocators_equal = true)
       stdlist->erase(stdlist->begin()++);
       if(!CheckEqualContainers(shmlist, stdlist)) return 1;
 
-      if(pop_back_function<DoublyLinked>::execute(shmlist, stdlist)){
+      if(list_pop_back_function<DoublyLinked>::execute(shmlist, stdlist)){
          return 1;
       }
 
@@ -173,6 +224,14 @@ int list_test (bool copied_allocators_equal = true)
             return 1;
       }
 
+      for(int i = 0; i < max; ++i){
+         IntType new_int(i);
+         shmlist->insert(shmlist->end(), boost::move(new_int));
+         stdlist->insert(stdlist->end(), i);
+         if(!test::CheckEqualContainers(shmlist, stdlist)) return 1;
+      }
+      if(!test::CheckEqualContainers(shmlist, stdlist)) return 1;
+
       shmlist->resize(25);
       stdlist->resize(25);
       shmlist->resize(50);
@@ -227,6 +286,11 @@ int list_test (bool copied_allocators_equal = true)
             stdlist->merge(otherstdlist, std::greater<int>());
             if(!CheckEqualContainers(shmlist, stdlist))
                return 1;
+         }
+
+         if(!list_copyable_only(shmlist, stdlist
+                        ,containers_detail::bool_<!is_movable<IntType>::value>())){
+            return 1;
          }
       }
 

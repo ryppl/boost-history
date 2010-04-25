@@ -26,6 +26,7 @@
 #include <boost/container/detail/type_traits.hpp>
 #include <string>
 #include "emplace_test.hpp"
+#include "vector_test.hpp"
 
 
 using namespace boost::container;
@@ -37,14 +38,14 @@ template class boost::container::deque
 
 //Function to check if both sets are equal
 template<class V1, class V2>
-bool copyable_only(V1 *, V2 *, containers_detail::false_type)
+bool deque_copyable_only(V1 *, V2 *, containers_detail::false_type)
 {
    return true;
 }
 
 //Function to check if both sets are equal
 template<class V1, class V2>
-bool copyable_only(V1 *cntdeque, V2 *stddeque, containers_detail::true_type)
+bool deque_copyable_only(V1 *cntdeque, V2 *stddeque, containers_detail::true_type)
 {
    typedef typename V1::value_type IntType;
    std::size_t size = cntdeque->size();
@@ -210,7 +211,7 @@ bool do_test()
          if(!test::CheckEqualContainers(cntdeque, stddeque)) return false;
       }
 
-      if(!copyable_only(cntdeque, stddeque
+      if(!deque_copyable_only(cntdeque, stddeque
                      ,containers_detail::bool_<!boost::is_movable<IntType>::value>())){
          return false;
       }
@@ -266,8 +267,20 @@ int main ()
    if(!do_test<test::movable_int>())
       return 1;
 
-//   if(!do_test<int, test::allocator_v1>())
-//      return 1;
+   {
+      typedef deque<int> MyDeque;
+      typedef deque<test::movable_int> MyMoveDeque;
+      typedef deque<test::movable_and_copyable_int> MyCopyMoveDeque;
+      typedef deque<test::copyable_int> MyCopyDeque;
+      if(test::vector_test<MyDeque>())
+         return 1;
+      if(test::vector_test<MyMoveDeque>())
+         return 1;
+      if(test::vector_test<MyCopyMoveDeque>())
+         return 1;
+      if(test::vector_test<MyCopyDeque>())
+         return 1;
+   }
 
    const test::EmplaceOptions Options = (test::EmplaceOptions)(test::EMPLACE_BACK | test::EMPLACE_FRONT | test::EMPLACE_BEFORE);
 

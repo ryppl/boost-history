@@ -20,7 +20,8 @@ doxygen autodoc
         <doxygen:param>ENABLE_PREPROCESSING=YES
         <doxygen:param>EXPAND_ONLY_PREDEF=YES
         <doxygen:param>MACRO_EXPANSION=YES
-        <doxygen:param>"PREDEFINED=\"BOOST_CONTAINER_DOXYGEN_INVOKED\" \\
+        <doxygen:param>"PREDEFINED=\"insert_const_ref_type= const T&\" \\
+                                   \"BOOST_CONTAINER_DOXYGEN_INVOKED\" \\
                                    \"BOOST_ENABLE_MOVE_EMULATION(a)= \" \\
                                    \"BOOST_RV_REF(T)=T &&\" \\
                                    \"BOOST_COPY_ASSIGN_REF(T)=const T &\" \\

@@ -13,49 +13,49 @@
 #include <boost/move/move.hpp>
 #include <iostream>
 
-class non_movable_test
+class copyable_only_tester
 {
    public:
-   non_movable_test()
-   {  std::cout << "non_movable_test()" << std::endl;   }
+   copyable_only_tester()
+   {  std::cout << "copyable_only_tester()" << std::endl;   }
 
-   non_movable_test(const non_movable_test&)
-   {  std::cout << "non_movable_test(const non_movable_test&)" << std::endl;   }
+   copyable_only_tester(const copyable_only_tester&)
+   {  std::cout << "copyable_only_tester(const copyable_only_tester&)" << std::endl;   }
 
-   non_movable_test(int)
-   {  std::cout << "non_movable_test(int)" << std::endl;   }
+   copyable_only_tester(int)
+   {  std::cout << "copyable_only_tester(int)" << std::endl;   }
 
-   non_movable_test(int, double)
-   {  std::cout << "non_movable_test(int, double)" << std::endl;   }
+   copyable_only_tester(int, double)
+   {  std::cout << "copyable_only_tester(int, double)" << std::endl;   }
 };
 
-class movable_test
+class copyable_movable_tester
 {
    // move semantics
-   BOOST_COPYABLE_AND_MOVABLE(movable_test)
+   BOOST_COPYABLE_AND_MOVABLE(copyable_movable_tester)
    public:
 
-   movable_test()
-   {  std::cout << "movable_test()" << std::endl;   }
+   copyable_movable_tester()
+   {  std::cout << "copyable_movable_tester()" << std::endl;   }
 
-   movable_test(int)
-   {  std::cout << "movable_test(int)" << std::endl;   }
+   copyable_movable_tester(int)
+   {  std::cout << "copyable_movable_tester(int)" << std::endl;   }
 
-   movable_test(BOOST_RV_REF(movable_test))
-   {  std::cout << "movable_test(BOOST_RV_REF(movable_test))" << std::endl;   }
+   copyable_movable_tester(BOOST_RV_REF(copyable_movable_tester))
+   {  std::cout << "copyable_movable_tester(BOOST_RV_REF(copyable_movable_tester))" << std::endl;   }
 
-   movable_test(const movable_test &)
-   {  std::cout << "movable_test(const movable_test &)" << std::endl;   }
+   copyable_movable_tester(const copyable_movable_tester &)
+   {  std::cout << "copyable_movable_tester(const copyable_movable_tester &)" << std::endl;   }
 
-   movable_test(BOOST_RV_REF(movable_test), BOOST_RV_REF(movable_test))
-   {  std::cout << "movable_test(BOOST_RV_REF(movable_test), BOOST_RV_REF(movable_test))" << std::endl;   }
+   copyable_movable_tester(BOOST_RV_REF(copyable_movable_tester), BOOST_RV_REF(copyable_movable_tester))
+   {  std::cout << "copyable_movable_tester(BOOST_RV_REF(copyable_movable_tester), BOOST_RV_REF(copyable_movable_tester))" << std::endl;   }
 
-   movable_test &operator=(BOOST_RV_REF(movable_test))
-   {  std::cout << "movable_test & operator=(BOOST_RV_REF(movable_test))" << std::endl; 
+   copyable_movable_tester &operator=(BOOST_RV_REF(copyable_movable_tester))
+   {  std::cout << "copyable_movable_tester & operator=(BOOST_RV_REF(copyable_movable_tester))" << std::endl; 
       return *this;  }
 
-   movable_test &operator=(BOOST_COPY_ASSIGN_REF(movable_test))
-   {  std::cout << "movable_test & operator=(BOOST_COPY_ASSIGN_REF(movable_test))" << std::endl;
+   copyable_movable_tester &operator=(BOOST_COPY_ASSIGN_REF(copyable_movable_tester))
+   {  std::cout << "copyable_movable_tester & operator=(BOOST_COPY_ASSIGN_REF(copyable_movable_tester))" << std::endl;
       return *this;  }
 };
 
@@ -67,41 +67,39 @@ void function_construct(BOOST_FWD_REF(MaybeRv) x)
 //2 argument
 template<class MaybeMovable, class MaybeRv, class MaybeRv2>
 void function_construct(BOOST_FWD_REF(MaybeRv) x, BOOST_FWD_REF(MaybeRv2) x2)
-{
-   MaybeMovable m(boost::forward<MaybeRv>(x), boost::forward<MaybeRv2>(x2));
-}
+{  MaybeMovable m(boost::forward<MaybeRv>(x), boost::forward<MaybeRv2>(x2));  }
 
 int main()
 {
-   movable_test m;
+   copyable_movable_tester m;
    //move constructor
-   function_construct<movable_test>(boost::move(m));
+   function_construct<copyable_movable_tester>(boost::move(m));
    //copy constructor
-   function_construct<movable_test>(movable_test());
+   function_construct<copyable_movable_tester>(copyable_movable_tester());
    //two rvalue constructor
-   function_construct<movable_test>(boost::move(m), boost::move(m));
+   function_construct<copyable_movable_tester>(boost::move(m), boost::move(m));
 
-   non_movable_test nm;
-   //copy constructor (non_movable_test has no move ctor.)
-   function_construct<non_movable_test>(boost::move(nm));
+   copyable_only_tester nm;
+   //copy constructor (copyable_only_tester has no move ctor.)
+   function_construct<copyable_only_tester>(boost::move(nm));
    //copy constructor
-   function_construct<non_movable_test>(nm);
+   function_construct<copyable_only_tester>(nm);
    //int constructor
-   function_construct<non_movable_test>(int(0));
+   function_construct<copyable_only_tester>(int(0));
    //int, double constructor
-   function_construct<non_movable_test>(int(0), double(0.0));
+   function_construct<copyable_only_tester>(int(0), double(0.0));
 
    //Output is:
-   //movable_test()
-   //movable_test(BOOST_RV_REF(movable_test))
-   //movable_test()
-   //movable_test(const movable_test &)
-   //movable_test(BOOST_RV_REF(movable_test), BOOST_RV_REF(movable_test))
-   //non_movable_test()
-   //non_movable_test(const non_movable_test&)
-   //non_movable_test(const non_movable_test&)
-   //non_movable_test(int)
-   //non_movable_test(int, double)
+   //copyable_movable_tester()
+   //copyable_movable_tester(BOOST_RV_REF(copyable_movable_tester))
+   //copyable_movable_tester()
+   //copyable_movable_tester(const copyable_movable_tester &)
+   //copyable_movable_tester(BOOST_RV_REF(copyable_movable_tester), BOOST_RV_REF(copyable_movable_tester))
+   //copyable_only_tester()
+   //copyable_only_tester(const copyable_only_tester&)
+   //copyable_only_tester(const copyable_only_tester&)
+   //copyable_only_tester(int)
+   //copyable_only_tester(int, double)
    return 0;
 }
 //]

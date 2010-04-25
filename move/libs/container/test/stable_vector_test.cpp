@@ -34,11 +34,17 @@ class recursive_vector
    public:
    int id_;
    stable_vector<recursive_vector> vector_;
+   recursive_vector &operator=(const recursive_vector &o)
+   { vector_ = o.vector_;  return *this; }
 };
 
 void recursive_vector_test()//Test for recursive types
 {
-   stable_vector<recursive_vector> recursive_vector_vector;
+   stable_vector<recursive_vector> recursive, copy;
+   //Test to test both move emulations
+   if(!copy.size()){
+      copy = recursive;
+   }
 }
 
 int main()
@@ -55,6 +61,7 @@ int main()
    typedef stable_vector<int> MyVector;
    typedef stable_vector<test::movable_int> MyMoveVector;
    typedef stable_vector<test::movable_and_copyable_int> MyCopyMoveVector;
+   typedef stable_vector<test::copyable_int> MyCopyVector;
 
    if(test::vector_test<MyVector>())
       return 1;
@@ -63,6 +70,9 @@ int main()
       return 1;
 
    if(test::vector_test<MyCopyMoveVector>())
+      return 1;
+
+   if(test::vector_test<MyCopyVector>())
       return 1;
 
    const test::EmplaceOptions Options = (test::EmplaceOptions)(test::EMPLACE_BACK | test::EMPLACE_BEFORE);

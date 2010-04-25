@@ -44,9 +44,6 @@ movable move_return_function ()
 }
 
 
-#include <boost/move/move.hpp>
-#include "../example/movable.hpp"
-
 //Catch by value
 void function_value(movable)
 {}
@@ -91,10 +88,13 @@ void limitations_test()
 struct copyable
 {};
 
+movable create_movable()
+{  return movable(); }
 int main()
 {
    BOOST_STATIC_ASSERT((boost::has_nothrow_move<movable>::value == true));
    BOOST_STATIC_ASSERT((boost::has_nothrow_move<copyable>::value == false));
+
    {
       movable m;
       movable m2(boost::move(m));
@@ -130,5 +130,6 @@ int main()
       movable m3(move_return_function2());
 	}
    limitations_test();
+
    return 0;
 }

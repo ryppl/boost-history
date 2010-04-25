@@ -22,20 +22,26 @@ template class boost::container::list<test::movable_and_copyable_int,
    test::dummy_test_allocator<test::movable_and_copyable_int> >;
 typedef list<int> MyList;
 
-typedef list<volatile int> MyVolatileList;
 typedef list<test::movable_int> MyMoveList;
 typedef list<test::movable_and_copyable_int> MyCopyMoveList;
+typedef list<test::copyable_int> MyCopyList;
 
 class recursive_list
 {
 public:
    int id_;
    list<recursive_list> list_;
+   recursive_list &operator=(const recursive_list &o)
+   { list_ = o.list_;  return *this; }
 };
 
 void recursive_list_test()//Test for recursive types
 {
-   list<recursive_list> recursive_list_list;
+   list<recursive_list> recursive, copy;
+   //Test to test both move emulations
+   if(!copy.size()){
+      copy = recursive;
+   }
 }
 
 int main ()
@@ -52,13 +58,13 @@ int main ()
    if(test::list_test<MyList, true>())
       return 1;
 
-   if(test::list_test<MyVolatileList, true>())
-      return 1;
-
    if(test::list_test<MyMoveList, true>())
       return 1;
 
    if(test::list_test<MyCopyMoveList, true>())
+      return 1;
+
+   if(test::list_test<MyCopyList, true>())
       return 1;
 
    const test::EmplaceOptions Options = (test::EmplaceOptions)(test::EMPLACE_BACK | test::EMPLACE_FRONT | test::EMPLACE_BEFORE);

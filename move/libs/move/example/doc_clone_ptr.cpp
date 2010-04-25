@@ -71,7 +71,7 @@ class Derived : public Base
       return *this;
    }
 
-   Derived& operator=(BOOST_COPY_ASSIGN_REF(Derived) x)  // Move assign
+   Derived& operator=(BOOST_COPY_ASSIGN_REF(Derived) x)  // Copy assign
    {
       Base::operator=(static_cast<const Base&>(x));
       mem_  = x.mem_;
@@ -103,9 +103,9 @@ class clone_ptr
    clone_ptr& operator=(BOOST_COPY_ASSIGN_REF(clone_ptr) p) // Copy assignment
    {
       if (this != &p){
-         T *p = p.ptr ? p.ptr->clone() : 0;
+         T *tmp_p = p.ptr ? p.ptr->clone() : 0;
          delete ptr;
-         ptr = p;
+         ptr = tmp_p;
       }
       return *this;
    }
@@ -116,9 +116,11 @@ class clone_ptr
 
    clone_ptr& operator=(BOOST_RV_REF(clone_ptr) p) //Move assignment
    {
-      delete ptr;
-      ptr = p.ptr;
-      p.ptr = 0;
+      if (this != &p){
+         delete ptr;
+         ptr = p.ptr;
+         p.ptr = 0;
+      }
       return *this;
    }
 };

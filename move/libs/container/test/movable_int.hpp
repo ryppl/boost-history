@@ -140,6 +140,58 @@ std::basic_ostream<E, T> & operator<<
     return os;
 }
 
+class copyable_int
+{
+   public:
+   copyable_int()
+      :  m_int(0)
+   {}
+
+   explicit copyable_int(int a)
+      :  m_int(a)
+   {}
+
+   copyable_int(const copyable_int& mmi)
+      :  m_int(mmi.m_int)
+   {}
+   
+   copyable_int & operator= (int i)
+   {  this->m_int = i;  return *this;  }
+
+   bool operator ==(const copyable_int &mi) const
+   {  return this->m_int == mi.m_int;   }
+
+   bool operator !=(const copyable_int &mi) const
+   {  return this->m_int != mi.m_int;   }
+
+   bool operator <(const copyable_int &mi) const
+   {  return this->m_int < mi.m_int;   }
+
+   bool operator <=(const copyable_int &mi) const
+   {  return this->m_int <= mi.m_int;   }
+
+   bool operator >=(const copyable_int &mi) const
+   {  return this->m_int >= mi.m_int;   }
+
+   bool operator >(const copyable_int &mi) const
+   {  return this->m_int > mi.m_int;   }
+
+   int get_int() const
+   {  return m_int;  }
+
+   private:
+   int m_int;
+};
+
+template<class E, class T> 
+std::basic_ostream<E, T> & operator<< 
+   (std::basic_ostream<E, T> & os, copyable_int const & p)
+
+{
+    os << p.get_int();
+    return os;
+}
+
 }  //namespace test {
 }  //namespace container {
 }  //namespace boost {

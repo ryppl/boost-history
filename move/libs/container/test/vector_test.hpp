@@ -30,25 +30,25 @@ namespace container {
 namespace test{
 
 template<class V1, class V2>
-bool copyable_only(V1 *, V2 *, boost::container::containers_detail::false_type)
+bool vector_copyable_only(V1 *, V2 *, boost::container::containers_detail::false_type)
 {
    return true;
 }
 
 //Function to check if both sets are equal
 template<class V1, class V2>
-bool copyable_only(V1 *shmvector, V2 *stdvector, boost::container::containers_detail::true_type)
+bool vector_copyable_only(V1 *shmvector, V2 *stdvector, boost::container::containers_detail::true_type)
 {
    typedef typename V1::value_type IntType;
    std::size_t size = shmvector->size();
+   shmvector->insert(shmvector->end(), 50, IntType(1));
    stdvector->insert(stdvector->end(), 50, 1);
-   shmvector->insert(shmvector->end(), 50, 1);
    if(!test::CheckEqualContainers(shmvector, stdvector)) return false;
 
    {
       IntType move_me(1);
-      stdvector->insert(stdvector->begin()+size/2, 50, 1);
       shmvector->insert(shmvector->begin()+size/2, 50, boost::move(move_me));
+      stdvector->insert(stdvector->begin()+size/2, 50, 1);
       if(!test::CheckEqualContainers(shmvector, stdvector)) return false;
    }
    {
@@ -63,6 +63,17 @@ bool copyable_only(V1 *shmvector, V2 *stdvector, boost::container::containers_de
       stdvector->assign(stdvector->size()*3-1, 3);
       if(!test::CheckEqualContainers(shmvector, stdvector)) return false;
    }
+
+   {
+      IntType copy_me(3);
+      const IntType ccopy_me(3);
+      shmvector->push_back(copy_me);
+      stdvector->push_back(int(3));
+      shmvector->push_back(ccopy_me);
+      stdvector->push_back(int(3));
+      if(!test::CheckEqualContainers(shmvector, stdvector)) return false;
+   }
+
    return true;
 }
 
@@ -151,16 +162,19 @@ int vector_test()
             if(!test::CheckEqualContainers(shmvector, stdvector)) return 1;
          }
 
-         shmvector->reserve(shmvector->size()*2);
-         stdvector->reserve(stdvector->size()*2);
-         if(!test::CheckEqualContainers(shmvector, stdvector)) return 1;
+         //shmvector->reserve(shmvector->size()*2);
+         //stdvector->reserve(stdvector->size()*2);
+         //if(!test::CheckEqualContainers(shmvector, stdvector)) return 1;
 
          IntType push_back_this(1);
          shmvector->push_back(boost::move(push_back_this));
          stdvector->push_back(int(1));
+         shmvector->push_back(IntType(1));
+         stdvector->push_back(int(1));
+
          if(!test::CheckEqualContainers(shmvector, stdvector)) return 1;
 
-         if(!copyable_only(shmvector, stdvector
+         if(!vector_copyable_only(shmvector, stdvector
                         ,containers_detail::bool_<!is_movable<IntType>::value>())){
             return 1;
          }
@@ -173,6 +187,8 @@ int vector_test()
             IntType insert_this(i);
             shmvector->insert(shmvector->begin(), boost::move(insert_this));
             stdvector->insert(stdvector->begin(), i);
+            shmvector->insert(shmvector->begin(), IntType(i));
+            stdvector->insert(stdvector->begin(), int(i));
          }
          if(!test::CheckEqualContainers(shmvector, stdvector)) return 1;
 
