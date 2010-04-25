@@ -18,14 +18,14 @@
 #  pragma once
 #endif
 
-#include <boost/container/detail/config_begin.hpp>
-#include <boost/container/detail/workaround.hpp>
-#include <boost/move/move.hpp>
+#include "config_begin.hpp"
+#include INCLUDE_BOOST_CONTAINER_DETAIL_WORKAROUND_HPP
+#include INCLUDE_BOOST_CONTAINER_MOVE_HPP
 
 #ifdef BOOST_CONTAINERS_PERFECT_FORWARDING
-#include <boost/container/detail/variadic_templates_tools.hpp>
+#include INCLUDE_BOOST_CONTAINER_DETAIL_VARIADIC_TEMPLATES_TOOLS_HPP
 #else
-#include <boost/container/detail/preprocessor.hpp>
+#include INCLUDE_BOOST_CONTAINER_DETAIL_PREPROCESSOR_HPP
 #endif
 
 #include <iterator>
@@ -447,7 +447,7 @@ struct emplace_functor
 
    template<int ...IdxPack>
    void inplace_impl(T* ptr, const containers_detail::index_tuple<IdxPack...>&)
-   {  ::new(ptr) T(boost::forward<Args>(containers_detail::get<IdxPack>(args_))...); }
+   {  ::new(ptr) T(BOOST_CONTAINER_MOVE_NAMESPACE::forward<Args>(containers_detail::get<IdxPack>(args_))...); }
 
    containers_detail::tuple<Args&&...> args_;
 };
@@ -486,7 +486,7 @@ struct emplace_functor
 }  //namespace container { 
 }  //namespace boost {
 
-#include <boost/container/detail/config_end.hpp>
+#include INCLUDE_BOOST_CONTAINER_DETAIL_CONFIG_END_HPP
 
 #endif   //#ifndef BOOST_CONTAINERS_DETAIL_ITERATORS_HPP
 

@@ -156,7 +156,7 @@ class linear_slist_algorithms
    //! <b>Effects</b>: Returns the number of nodes in a linear list. If the linear list
    //!  is empty, returns 1.
    //! 
-   //! <b>Complexity</b>: Constant 
+   //! <b>Complexity</b>: Linear 
    //! 
    //! <b>Throws</b>: Nothing.
    static std::size_t count(const_node_ptr this_node) 

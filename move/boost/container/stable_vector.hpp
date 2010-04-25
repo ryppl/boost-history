@@ -22,18 +22,18 @@
 #  pragma once
 #endif
 
-#include <boost/container/detail/config_begin.hpp>
-#include <boost/container/detail/workaround.hpp>
-#include <boost/container/container_fwd.hpp>
+#include "detail/config_begin.hpp"
+#include INCLUDE_BOOST_CONTAINER_DETAIL_WORKAROUND_HPP
+#include INCLUDE_BOOST_CONTAINER_CONTAINER_FWD_HPP
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/type_traits/is_integral.hpp>
-#include <boost/container/detail/version_type.hpp>
-#include <boost/container/detail/multiallocation_chain.hpp>
-#include <boost/container/detail/utilities.hpp>
-#include <boost/container/detail/iterators.hpp>
-#include <boost/container/detail/algorithms.hpp>
+#include INCLUDE_BOOST_CONTAINER_DETAIL_VERSION_TYPE_HPP
+#include INCLUDE_BOOST_CONTAINER_DETAIL_MULTIALLOCATION_CHAIN_HPP
+#include INCLUDE_BOOST_CONTAINER_DETAIL_UTILITIES_HPP
+#include INCLUDE_BOOST_CONTAINER_DETAIL_ITERATORS_HPP
+#include INCLUDE_BOOST_CONTAINER_DETAIL_ALGORITHMS_HPP
 #include <boost/pointer_to_other.hpp>
 #include <boost/get_pointer.hpp>
 
@@ -46,7 +46,7 @@
 #define STABLE_VECTOR_USE_CONTAINERS_VECTOR
 
 #if defined (STABLE_VECTOR_USE_CONTAINERS_VECTOR)
-#include <boost/container/vector.hpp>
+#include INCLUDE_BOOST_CONTAINER_VECTOR_HPP
 #else
 #include <vector>
 #endif   //STABLE_VECTOR_USE_CONTAINERS_VECTOR
@@ -140,7 +140,7 @@ struct node_type
 
    template<class ...Args>
    node_type(Args &&...args)
-      : value(boost::forward<Args>(args)...)
+      : value(BOOST_CONTAINER_MOVE_NAMESPACE::forward<Args>(args)...)
    {}
 
    #else //BOOST_CONTAINERS_PERFECT_FORWARDING
@@ -166,13 +166,13 @@ struct node_type
    T value;
 };
 
-template<typename T, typename Value, typename Pointer>
+template<typename T, typename Reference, typename Pointer>
 class iterator
    : public std::iterator< std::random_access_iterator_tag
-                         , const typename std::iterator_traits<Pointer>::value_type
+                         , typename std::iterator_traits<Pointer>::value_type
                          , typename std::iterator_traits<Pointer>::difference_type
                          , Pointer
-                         , Value &>
+                         , Reference>
 {
 
    typedef typename boost::pointer_to_other
@@ -187,11 +187,11 @@ class iterator
 
    public:
    typedef std::random_access_iterator_tag   iterator_category;
-   typedef Value                             value_type;
+   typedef T                                 value_type;
    typedef typename std::iterator_traits
       <Pointer>::difference_type             difference_type;
    typedef Pointer                           pointer;
-   typedef Value &                           reference;
+   typedef Reference                         reference;
 
    iterator()
    {}
@@ -200,7 +200,7 @@ class iterator
       : pn(pn)
    {}
 
-   iterator(const iterator<T, T, typename boost::pointer_to_other<Pointer, T>::type >& x)
+   iterator(const iterator<T, T&, typename boost::pointer_to_other<Pointer, T>::type >& x)
       : pn(x.pn)
    {}
    
@@ -217,7 +217,7 @@ class iterator
       return void_ptr_ptr(static_cast<void_ptr*>(stable_vector_detail::get_pointer(p)));
    }
 
-   Value& dereference() const
+   reference dereference() const
    {  return pn->value; }
    bool equal(const iterator& x) const
    {  return pn==x.pn;  }
@@ -374,6 +374,9 @@ BOOST_JOIN(check_invariant_,__LINE__).touch();
 template<typename T, typename Allocator>
 class stable_vector
 {
+   ///@cond
+   typedef typename containers_detail::
+      move_const_ref_type<T>::type insert_const_ref_type;
    typedef typename Allocator::template
       rebind<void>::other::pointer                    void_ptr;
    typedef typename Allocator::template
@@ -428,8 +431,10 @@ class stable_vector
    {  get_al().deallocate_one(p);   }
 
    friend class stable_vector_detail::clear_on_destroy<stable_vector>;
-
+   ///@endcond
    public:
+
+
    // types:
 
    typedef typename Allocator::reference              reference;
@@ -437,9 +442,9 @@ class stable_vector
    typedef typename Allocator::pointer                pointer;
    typedef typename Allocator::const_pointer          const_pointer;
    typedef stable_vector_detail::iterator
-      <T,T, pointer>                                  iterator;
+      <T,T&, pointer>                                 iterator;
    typedef stable_vector_detail::iterator
-      <T,const T, const_pointer>                      const_iterator;
+      <T,const T&, const_pointer>                     const_iterator;
    typedef typename impl_type::size_type              size_type;
    typedef typename iterator::difference_type         difference_type;
    typedef T                                          value_type;
@@ -447,15 +452,16 @@ class stable_vector
    typedef std::reverse_iterator<iterator>            reverse_iterator;
    typedef std::reverse_iterator<const_iterator>      const_reverse_iterator;
 
+   ///@cond
    private:
-   BOOST_COPYABLE_AND_MOVABLE(stable_vector)
+   BOOST_MOVE_MACRO_COPYABLE_AND_MOVABLE(stable_vector)
    static const size_type ExtraPointers = 3;
    typedef typename stable_vector_detail::
       select_multiallocation_chain
       < node_allocator_type
       , alloc_version::value
       >::type                                         multiallocation_chain;
-
+   ///@endcond
    public:
 
    // construct/copy/destroy:
@@ -502,7 +508,7 @@ class stable_vector
       cod.release();
    }
 
-   stable_vector(BOOST_RV_REF(stable_vector) x) 
+   stable_vector(BOOST_MOVE_MACRO_RV_REF(stable_vector) x) 
       : internal_data(x.get_al()),impl(x.get_al())
    {  this->swap(x);   }
 
@@ -512,7 +518,7 @@ class stable_vector
       clear_pool();  
    }
 
-   stable_vector& operator=(BOOST_COPY_ASSIGN_REF(stable_vector) x)
+   stable_vector& operator=(BOOST_MOVE_MACRO_COPY_ASSIGN_REF(stable_vector) x)
    {
       STABLE_VECTOR_CHECK_INVARIANT;
       if (this != &x) {
@@ -521,7 +527,7 @@ class stable_vector
       return *this;
    }
 
-   stable_vector& operator=(BOOST_RV_REF(stable_vector) x)
+   stable_vector& operator=(BOOST_MOVE_MACRO_RV_REF(stable_vector) x)
    {
       if (&x != this){
          this->swap(x);
@@ -663,25 +669,38 @@ class stable_vector
 
    // modifiers:
 
-   void push_back(const T& t)
-   {  this->insert(end(), t);  }
+   void push_back(insert_const_ref_type x) 
+   {  return priv_push_back(x);  }
 
-   void push_back(BOOST_RV_REF(T) t) 
-   {  this->insert(end(), boost::move(t));  }
+   #if defined(BOOST_NO_RVALUE_REFERENCES) && !defined(BOOST_MOVE_DOXYGEN_INVOKED)
+   void push_back(T &x) { push_back(const_cast<const T &>(x)); }
+
+   template<class U>
+   void push_back(const U &u, typename containers_detail::enable_if_c<containers_detail::is_same<T, U>::value && !::BOOST_CONTAINER_MOVE_NAMESPACE::is_movable<U>::value >::type* =0)
+   { return priv_push_back(u); }
+   #endif
+
+   void push_back(BOOST_MOVE_MACRO_RV_REF(T) t) 
+   {  this->insert(end(), BOOST_CONTAINER_MOVE_NAMESPACE::move(t));  }
 
    void pop_back()
    {  this->erase(this->end()-1);   }
 
-   iterator insert(const_iterator position, const T& t)
-   {
-      typedef constant_iterator<value_type, difference_type> cvalue_iterator;
-      return this->insert_iter(position, cvalue_iterator(t, 1), cvalue_iterator(), std::forward_iterator_tag());
-   }
+   iterator insert(const_iterator position, insert_const_ref_type x) 
+   {  return this->priv_insert(position, x); }
 
-   iterator insert(const_iterator position, BOOST_RV_REF(T) x) 
+   #if defined(BOOST_NO_RVALUE_REFERENCES) && !defined(BOOST_MOVE_DOXYGEN_INVOKED)
+   iterator insert(const_iterator position, T &x) { return this->insert(position, const_cast<const T &>(x)); }
+
+   template<class U>
+   iterator insert(const_iterator position, const U &u, typename containers_detail::enable_if_c<containers_detail::is_same<T, U>::value && !::BOOST_CONTAINER_MOVE_NAMESPACE::is_movable<U>::value >::type* =0)
+   {  return this->priv_insert(position, u); }
+   #endif
+
+   iterator insert(const_iterator position, BOOST_MOVE_MACRO_RV_REF(T) x) 
    {
       typedef repeat_iterator<T, difference_type>           repeat_it;
-      typedef boost::move_iterator<repeat_it> repeat_move_it;
+      typedef BOOST_CONTAINER_MOVE_NAMESPACE::move_iterator<repeat_it> repeat_move_it;
       //Just call more general insert(pos, size, value) and return iterator
       size_type pos_n = position - cbegin();
       this->insert(position
@@ -717,7 +736,7 @@ class stable_vector
    {
       typedef emplace_functor<node_type_t, Args...>         EmplaceFunctor;
       typedef emplace_iterator<node_type_t, EmplaceFunctor> EmplaceIterator;
-      EmplaceFunctor ef(boost::forward<Args>(args)...);
+      EmplaceFunctor &&ef = EmplaceFunctor(BOOST_CONTAINER_MOVE_NAMESPACE::forward<Args>(args)...);
       this->insert(this->cend(), EmplaceIterator(ef), EmplaceIterator());
    }
 
@@ -737,7 +756,7 @@ class stable_vector
       size_type pos_n = position - cbegin();
       typedef emplace_functor<node_type_t, Args...>         EmplaceFunctor;
       typedef emplace_iterator<node_type_t, EmplaceFunctor> EmplaceIterator;
-      EmplaceFunctor ef(boost::forward<Args>(args)...);
+      EmplaceFunctor &&ef = EmplaceFunctor(BOOST_CONTAINER_MOVE_NAMESPACE::forward<Args>(args)...);
       this->insert(position, EmplaceIterator(ef), EmplaceIterator());
       return iterator(this->begin() + pos_n);
    }
@@ -816,6 +835,15 @@ class stable_vector
    /// @cond
    private:
 
+   iterator priv_insert(const_iterator position, const value_type &t)
+   {
+      typedef constant_iterator<value_type, difference_type> cvalue_iterator;
+      return this->insert_iter(position, cvalue_iterator(t, 1), cvalue_iterator(), std::forward_iterator_tag());
+   }
+
+   void priv_push_back(const value_type &t)
+   {  this->insert(end(), t);  }
+
    void clear_pool(allocator_v1)
    {
       if(!impl.empty() && impl.back()){
@@ -842,7 +870,7 @@ class stable_vector
          void_ptr &p2 = impl.back();
          multiallocation_chain holder;
          holder.incorporate_after(holder.before_begin(), p1, p2, internal_data.pool_size);
-         get_al().deallocate_individual(boost::move(holder));
+         get_al().deallocate_individual(BOOST_CONTAINER_MOVE_NAMESPACE::move(holder));
          p1 = p2 = 0;
          this->internal_data.pool_size = 0;
       }
@@ -872,7 +900,7 @@ class stable_vector
       void_ptr &p2 = impl.back();
       multiallocation_chain holder;
       holder.incorporate_after(holder.before_begin(), p1, p2, internal_data.pool_size);
-      BOOST_STATIC_ASSERT((boost::is_movable<multiallocation_chain>::value == true));
+      BOOST_STATIC_ASSERT((::BOOST_CONTAINER_MOVE_NAMESPACE::is_movable<multiallocation_chain>::value == true));
       multiallocation_chain m (get_al().allocate_individual(n));
       holder.splice_after(holder.before_begin(), m, m.before_begin(), m.last(), n);
       this->internal_data.pool_size += n;
@@ -1141,7 +1169,7 @@ class stable_vector
       }
       catch(...){
          get_al().deallocate_one(p);
-         get_al().deallocate_many(boost::move(mem));
+         get_al().deallocate_many(BOOST_CONTAINER_MOVE_NAMESPACE::move(mem));
          impl.erase(it+i, it+n);
          this->align_nodes(it+i,get_last_align());
          throw;
@@ -1177,9 +1205,9 @@ class stable_vector
    }
 
    template <class InputIterator>
-   void insert_iter(const_iterator position,InputIterator first,InputIterator last, boost::mpl::false_)
+   void insert_iter(const_iterator position, InputIterator first, InputIterator last, boost::mpl::false_)
    {
-      this->insert_not_iter(position,first,last);
+      this->insert_not_iter(position, first, last);
    }
 
    static void swap_impl(stable_vector& x,stable_vector& y)
@@ -1296,6 +1324,6 @@ void swap(stable_vector<T,Allocator>& x,stable_vector<T,Allocator>& y)
 
 }}
 
-#include <boost/container/detail/config_end.hpp>
+#include INCLUDE_BOOST_CONTAINER_DETAIL_CONFIG_END_HPP
 
 #endif   //BOOST_CONTAINER_STABLE_VECTOR_HPP

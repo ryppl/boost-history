@@ -47,21 +47,21 @@
 #  pragma once
 #endif
 
-#include <boost/container/detail/config_begin.hpp>
-#include <boost/container/detail/workaround.hpp>
+#include "detail/config_begin.hpp"
+#include INCLUDE_BOOST_CONTAINER_DETAIL_WORKAROUND_HPP
 
-#include <boost/container/container_fwd.hpp>
+#include INCLUDE_BOOST_CONTAINER_CONTAINER_FWD_HPP
 #include <utility>
 #include <functional>
 #include <memory>
 #include <stdexcept>
-#include <boost/container/detail/tree.hpp>
-#include <boost/container/detail/value_init.hpp>
+#include INCLUDE_BOOST_CONTAINER_DETAIL_TREE_HPP
+#include INCLUDE_BOOST_CONTAINER_DETAIL_VALUE_INIT_HPP
 #include <boost/type_traits/has_trivial_destructor.hpp>
-#include <boost/container/detail/mpl.hpp>
-#include <boost/container/detail/utilities.hpp>
-#include <boost/container/detail/pair.hpp>
-#include <boost/move/move.hpp>
+#include INCLUDE_BOOST_CONTAINER_DETAIL_MPL_HPP
+#include INCLUDE_BOOST_CONTAINER_DETAIL_UTILITIES_HPP
+#include INCLUDE_BOOST_CONTAINER_DETAIL_PAIR_HPP
+#include INCLUDE_BOOST_CONTAINER_MOVE_HPP
 
 #ifdef BOOST_CONTAINER_DOXYGEN_INVOKED
 namespace boost {
@@ -99,7 +99,7 @@ class map
 {
    /// @cond
    private:
-   BOOST_COPYABLE_AND_MOVABLE(map)
+   BOOST_MOVE_MACRO_COPYABLE_AND_MOVABLE(map)
    typedef containers_detail::rbtree<Key, 
                            std::pair<const Key, T>, 
                            containers_detail::select1st< std::pair<const Key, T> >, 
@@ -193,21 +193,21 @@ class map
    //! <b>Complexity</b>: Construct.
    //! 
    //! <b>Postcondition</b>: x is emptied.
-   map(BOOST_RV_REF(map) x) 
-      : m_tree(boost::move(x.m_tree))
+   map(BOOST_MOVE_MACRO_RV_REF(map) x) 
+      : m_tree(BOOST_CONTAINER_MOVE_NAMESPACE::move(x.m_tree))
    {}
 
    //! <b>Effects</b>: Makes *this a copy of x.
    //! 
    //! <b>Complexity</b>: Linear in x.size().
-   map& operator=(BOOST_COPY_ASSIGN_REF(map) x)
+   map& operator=(BOOST_MOVE_MACRO_COPY_ASSIGN_REF(map) x)
    {  m_tree = x.m_tree;   return *this;  }
 
    //! <b>Effects</b>: this->swap(x.get()).
    //! 
    //! <b>Complexity</b>: Constant.
-   map& operator=(BOOST_RV_REF(map) x)
-   {  m_tree = boost::move(x.m_tree);   return *this;  }
+   map& operator=(BOOST_MOVE_MACRO_RV_REF(map) x)
+   {  m_tree = BOOST_CONTAINER_MOVE_NAMESPACE::move(x.m_tree);   return *this;  }
 
    //! <b>Effects</b>: Returns the comparison object out
    //!   of which a was constructed.
@@ -341,27 +341,27 @@ class map
       // i->first is greater than or equivalent to k.
       if (i == end() || key_comp()(k, (*i).first)){
          containers_detail::value_init<T> v;
-         value_type val(k, boost::move(v.m_t));
-         i = insert(i, boost::move(val));
+         value_type val(k, BOOST_CONTAINER_MOVE_NAMESPACE::move(v.m_t));
+         i = insert(i, BOOST_CONTAINER_MOVE_NAMESPACE::move(val));
       }
       return (*i).second;
    }
 
    //! Effects: If there is no key equivalent to x in the map, inserts 
-   //! value_type(boost::move(x), T()) into the map (the key is move-constructed)
+   //! value_type(BOOST_CONTAINER_MOVE_NAMESPACE::move(x), T()) into the map (the key is move-constructed)
    //! 
    //! Returns: A reference to the mapped_type corresponding to x in *this.
    //! 
    //! Complexity: Logarithmic.
-   T& operator[](BOOST_RV_REF(key_type) mk) 
+   T& operator[](BOOST_MOVE_MACRO_RV_REF(key_type) mk) 
    {
       key_type &k = mk;
       //we can optimize this
       iterator i = lower_bound(k);
       // i->first is greater than or equivalent to k.
       if (i == end() || key_comp()(k, (*i).first)){
-         value_type val(boost::move(k), boost::move(T()));
-         i = insert(i, boost::move(val));
+         value_type val(BOOST_CONTAINER_MOVE_NAMESPACE::move(k), BOOST_CONTAINER_MOVE_NAMESPACE::move(T()));
+         i = insert(i, BOOST_CONTAINER_MOVE_NAMESPACE::move(val));
       }
       return (*i).second;
    }
@@ -429,8 +429,8 @@ class map
    //!   points to the element with key equivalent to the key of x.
    //!
    //! <b>Complexity</b>: Logarithmic.
-   std::pair<iterator,bool> insert(BOOST_RV_REF(nonconst_value_type) x) 
-   { return m_tree.insert_unique(boost::move(x)); }
+   std::pair<iterator,bool> insert(BOOST_MOVE_MACRO_RV_REF(nonconst_value_type) x) 
+   { return m_tree.insert_unique(BOOST_CONTAINER_MOVE_NAMESPACE::move(x)); }
 
    //! <b>Effects</b>: Inserts a new value_type move constructed from the pair if and
    //! only if there is no element in the container with key equivalent to the key of x.
@@ -440,8 +440,8 @@ class map
    //!   points to the element with key equivalent to the key of x.
    //!
    //! <b>Complexity</b>: Logarithmic.
-   std::pair<iterator,bool> insert(BOOST_RV_REF(nonconst_impl_value_type) x) 
-   { return m_tree.insert_unique(boost::move(x)); }
+   std::pair<iterator,bool> insert(BOOST_MOVE_MACRO_RV_REF(nonconst_impl_value_type) x) 
+   { return m_tree.insert_unique(BOOST_CONTAINER_MOVE_NAMESPACE::move(x)); }
 
    //! <b>Effects</b>: Move constructs a new value from x if and only if there is 
    //!   no element in the container with key equivalent to the key of x.
@@ -451,8 +451,8 @@ class map
    //!   points to the element with key equivalent to the key of x.
    //!
    //! <b>Complexity</b>: Logarithmic.
-   std::pair<iterator,bool> insert(BOOST_RV_REF(value_type) x) 
-   { return m_tree.insert_unique(boost::move(x)); }
+   std::pair<iterator,bool> insert(BOOST_MOVE_MACRO_RV_REF(value_type) x) 
+   { return m_tree.insert_unique(BOOST_CONTAINER_MOVE_NAMESPACE::move(x)); }
 
    //! <b>Effects</b>: Inserts a copy of x in the container if and only if there is 
    //!   no element in the container with key equivalent to the key of x.
@@ -475,8 +475,8 @@ class map
    //!
    //! <b>Complexity</b>: Logarithmic in general, but amortized constant if t
    //!   is inserted right before p.
-   iterator insert(iterator position, BOOST_RV_REF(nonconst_value_type) x)
-   { return m_tree.insert_unique(position, boost::move(x)); }
+   iterator insert(iterator position, BOOST_MOVE_MACRO_RV_REF(nonconst_value_type) x)
+   { return m_tree.insert_unique(position, BOOST_CONTAINER_MOVE_NAMESPACE::move(x)); }
 
    //! <b>Effects</b>: Move constructs a new value from x if and only if there is 
    //!   no element in the container with key equivalent to the key of x.
@@ -487,8 +487,8 @@ class map
    //!
    //! <b>Complexity</b>: Logarithmic in general, but amortized constant if t
    //!   is inserted right before p.
-   iterator insert(iterator position, BOOST_RV_REF(nonconst_impl_value_type) x)
-   { return m_tree.insert_unique(position, boost::move(x)); }
+   iterator insert(iterator position, BOOST_MOVE_MACRO_RV_REF(nonconst_impl_value_type) x)
+   { return m_tree.insert_unique(position, BOOST_CONTAINER_MOVE_NAMESPACE::move(x)); }
 
    //! <b>Effects</b>: Inserts a copy of x in the container.
    //!   p is a hint pointing to where the insert should start to search.
@@ -505,8 +505,8 @@ class map
    //! <b>Returns</b>: An iterator pointing to the element with key equivalent to the key of x.
    //!
    //! <b>Complexity</b>: Logarithmic.
-   iterator insert(iterator position, BOOST_RV_REF(value_type) x)
-   { return m_tree.insert_unique(position, boost::move(x)); }
+   iterator insert(iterator position, BOOST_MOVE_MACRO_RV_REF(value_type) x)
+   { return m_tree.insert_unique(position, BOOST_CONTAINER_MOVE_NAMESPACE::move(x)); }
 
    //! <b>Requires</b>: i, j are not iterators into *this.
    //!
@@ -532,7 +532,7 @@ class map
    //!   is inserted right before p.
    template <class... Args>
    iterator emplace(Args&&... args)
-   {  return m_tree.emplace_unique(boost::forward<Args>(args)...); }
+   {  return m_tree.emplace_unique(BOOST_CONTAINER_MOVE_NAMESPACE::forward<Args>(args)...); }
 
    //! <b>Effects</b>: Inserts an object of type T constructed with
    //!   std::forward<Args>(args)... in the container if and only if there is 
@@ -546,7 +546,7 @@ class map
    //!   is inserted right before p.
    template <class... Args>
    iterator emplace_hint(const_iterator hint, Args&&... args)
-   {  return m_tree.emplace_hint_unique(hint, boost::forward<Args>(args)...); }
+   {  return m_tree.emplace_hint_unique(hint, BOOST_CONTAINER_MOVE_NAMESPACE::forward<Args>(args)...); }
 
    #else //#ifdef BOOST_CONTAINERS_PERFECT_FORWARDING
 
@@ -721,7 +721,7 @@ inline bool operator<(const multimap<Key,T,Pred,Alloc>& x,
                       const multimap<Key,T,Pred,Alloc>& y);
 
 }  //namespace container {
-
+/*
 //!has_trivial_destructor_after_move<> == true_type
 //!specialization for optimizations
 template <class K, class T, class C, class A>
@@ -729,7 +729,7 @@ struct has_trivial_destructor_after_move<boost::container::map<K, T, C, A> >
 {
    static const bool value = has_trivial_destructor<A>::value && has_trivial_destructor<C>::value;
 };
-
+*/
 namespace container {
 
 /// @endcond
@@ -752,7 +752,7 @@ class multimap
 {
    /// @cond
    private:
-   BOOST_COPYABLE_AND_MOVABLE(multimap)
+   BOOST_MOVE_MACRO_COPYABLE_AND_MOVABLE(multimap)
    typedef containers_detail::rbtree<Key, 
                            std::pair<const Key, T>, 
                            containers_detail::select1st< std::pair<const Key, T> >, 
@@ -847,21 +847,21 @@ class multimap
    //! <b>Complexity</b>: Construct.
    //! 
    //! <b>Postcondition</b>: x is emptied.
-   multimap(BOOST_RV_REF(multimap) x) 
-      : m_tree(boost::move(x.m_tree))
+   multimap(BOOST_MOVE_MACRO_RV_REF(multimap) x) 
+      : m_tree(BOOST_CONTAINER_MOVE_NAMESPACE::move(x.m_tree))
    {}
 
    //! <b>Effects</b>: Makes *this a copy of x.
    //! 
    //! <b>Complexity</b>: Linear in x.size().
-   multimap& operator=(BOOST_COPY_ASSIGN_REF(multimap) x) 
+   multimap& operator=(BOOST_MOVE_MACRO_COPY_ASSIGN_REF(multimap) x) 
    {  m_tree = x.m_tree;   return *this;  }
 
    //! <b>Effects</b>: this->swap(x.get()).
    //! 
    //! <b>Complexity</b>: Constant.
-   multimap& operator=(BOOST_RV_REF(multimap) x) 
-   {  m_tree = boost::move(x.m_tree);   return *this;  }
+   multimap& operator=(BOOST_MOVE_MACRO_RV_REF(multimap) x) 
+   {  m_tree = BOOST_CONTAINER_MOVE_NAMESPACE::move(x.m_tree);   return *this;  }
 
    //! <b>Effects</b>: Returns the comparison object out
    //!   of which a was constructed.
@@ -1009,15 +1009,15 @@ class multimap
    //!   the iterator pointing to the newly inserted element. 
    //!
    //! <b>Complexity</b>: Logarithmic.
-   iterator insert(BOOST_RV_REF(nonconst_value_type) x) 
-   { return m_tree.insert_equal(boost::move(x)); }
+   iterator insert(BOOST_MOVE_MACRO_RV_REF(nonconst_value_type) x) 
+   { return m_tree.insert_equal(BOOST_CONTAINER_MOVE_NAMESPACE::move(x)); }
 
    //! <b>Effects</b>: Inserts a new value move-constructed from x and returns 
    //!   the iterator pointing to the newly inserted element. 
    //!
    //! <b>Complexity</b>: Logarithmic.
-   iterator insert(BOOST_RV_REF(nonconst_impl_value_type) x) 
-   { return m_tree.insert_equal(boost::move(x)); }
+   iterator insert(BOOST_MOVE_MACRO_RV_REF(nonconst_impl_value_type) x) 
+   { return m_tree.insert_equal(BOOST_CONTAINER_MOVE_NAMESPACE::move(x)); }
 
    //! <b>Effects</b>: Inserts a copy of x in the container.
    //!   p is a hint pointing to where the insert should start to search.
@@ -1049,8 +1049,8 @@ class multimap
    //!
    //! <b>Complexity</b>: Logarithmic in general, but amortized constant if t
    //!   is inserted right before p.
-   iterator insert(iterator position, BOOST_RV_REF(nonconst_value_type) x)
-   { return m_tree.insert_equal(position, boost::move(x)); }
+   iterator insert(iterator position, BOOST_MOVE_MACRO_RV_REF(nonconst_value_type) x)
+   { return m_tree.insert_equal(position, BOOST_CONTAINER_MOVE_NAMESPACE::move(x)); }
 
    //! <b>Effects</b>: Inserts a new value move constructed from x in the container.
    //!   p is a hint pointing to where the insert should start to search.
@@ -1060,8 +1060,8 @@ class multimap
    //!
    //! <b>Complexity</b>: Logarithmic in general, but amortized constant if t
    //!   is inserted right before p.
-   iterator insert(iterator position, BOOST_RV_REF(nonconst_impl_value_type) x)
-   { return m_tree.insert_equal(position, boost::move(x)); }
+   iterator insert(iterator position, BOOST_MOVE_MACRO_RV_REF(nonconst_impl_value_type) x)
+   { return m_tree.insert_equal(position, BOOST_CONTAINER_MOVE_NAMESPACE::move(x)); }
 
    //! <b>Requires</b>: i, j are not iterators into *this.
    //!
@@ -1085,7 +1085,7 @@ class multimap
    //!   is inserted right before p.
    template <class... Args>
    iterator emplace(Args&&... args)
-   {  return m_tree.emplace_equal(boost::forward<Args>(args)...); }
+   {  return m_tree.emplace_equal(BOOST_CONTAINER_MOVE_NAMESPACE::forward<Args>(args)...); }
 
    //! <b>Effects</b>: Inserts an object of type T constructed with
    //!   std::forward<Args>(args)... in the container.
@@ -1098,7 +1098,7 @@ class multimap
    //!   is inserted right before p.
    template <class... Args>
    iterator emplace_hint(const_iterator hint, Args&&... args)
-   {  return m_tree.emplace_hint_equal(hint, boost::forward<Args>(args)...); }
+   {  return m_tree.emplace_hint_equal(hint, BOOST_CONTAINER_MOVE_NAMESPACE::forward<Args>(args)...); }
 
    #else //#ifdef BOOST_CONTAINERS_PERFECT_FORWARDING
 
@@ -1265,7 +1265,7 @@ inline void swap(multimap<Key,T,Pred,Alloc>& x, multimap<Key,T,Pred,Alloc>& y)
 /// @cond
 
 }  //namespace container {
-
+/*
 //!has_trivial_destructor_after_move<> == true_type
 //!specialization for optimizations
 template <class K, class T, class C, class A>
@@ -1273,14 +1273,14 @@ struct has_trivial_destructor_after_move<boost::container::multimap<K, T, C, A> 
 {
    static const bool value = has_trivial_destructor<A>::value && has_trivial_destructor<C>::value;
 };
-
+*/
 namespace container {
 
 /// @endcond
 
 }}
 
-#include <boost/container/detail/config_end.hpp>
+#include INCLUDE_BOOST_CONTAINER_DETAIL_CONFIG_END_HPP
 
 #endif /* BOOST_CONTAINERS_MAP_HPP */
 

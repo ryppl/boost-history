@@ -15,9 +15,9 @@
 #  pragma once
 #endif
 
-#include <boost/container/detail/config_begin.hpp>
-#include <boost/container/detail/workaround.hpp>
-#include <boost/container/detail/type_traits.hpp>
+#include "config_begin.hpp"
+#include INCLUDE_BOOST_CONTAINER_DETAIL_WORKAROUND_HPP
+#include INCLUDE_BOOST_CONTAINER_DETAIL_TYPE_TRAITS_HPP
 #include <cstddef>   //std::size_t
 
 namespace boost {
@@ -148,6 +148,6 @@ struct build_number_seq<0, index_tuple<Indexes...> >
 
 }}}   //namespace boost { namespace container { namespace containers_detail {
 
-#include <boost/container/detail/config_end.hpp>
+#include INCLUDE_BOOST_CONTAINER_DETAIL_CONFIG_END_HPP
 
 #endif   //#ifndef BOOST_CONTAINERS_DETAIL_VARIADIC_TEMPLATES_TOOLS_HPP

@@ -14,6 +14,7 @@
 #define BOOST_INTRUSIVE_DERIVATION_VALUE_TRAITS_HPP
 
 #include <boost/intrusive/link_mode.hpp>
+#include <boost/pointer_cast.hpp>
 #include <iterator>
 
 namespace boost {
@@ -44,10 +45,16 @@ struct derivation_value_traits
    { return node_ptr(&value); }
 
    static pointer to_value_ptr(node_ptr n) 
-   {  return pointer(static_cast<T*>(detail::get_pointer(n))); }
+   {
+      using ::boost::static_pointer_cast;
+      return static_pointer_cast<value_type>(n));
+   }
 
    static const_pointer to_value_ptr(const_node_ptr n)
-   {  return const_pointer(static_cast<T*>(detail::get_pointer(n))); }
+   {
+      using ::boost::static_pointer_cast;
+      return static_pointer_cast<const value_type>(n));
+   }
 };
 
 } //namespace intrusive 

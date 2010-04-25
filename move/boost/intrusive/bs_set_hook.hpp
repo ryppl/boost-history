@@ -96,6 +96,7 @@ class bs_set_base_hook
 
 {
    #if defined(BOOST_INTRUSIVE_DOXYGEN_INVOKED)
+   public:
    //! <b>Effects</b>: If link_mode is \c auto_unlink or \c safe_link
    //!   initializes the node to an unlinked state.
    //! 
@@ -220,6 +221,7 @@ class bs_set_member_hook
       ::type
 {
    #if defined(BOOST_INTRUSIVE_DOXYGEN_INVOKED)
+   public:
    //! <b>Effects</b>: If link_mode is \c auto_unlink or \c safe_link
    //!   initializes the node to an unlinked state.
    //! 

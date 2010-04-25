@@ -93,6 +93,7 @@ class list_base_hook
       ::type
 {
    #if defined(BOOST_INTRUSIVE_DOXYGEN_INVOKED)
+   public:
    //! <b>Effects</b>: If link_mode is \c auto_unlink or \c safe_link
    //!   initializes the node to an unlinked state.
    //! 
@@ -214,6 +215,7 @@ class list_member_hook
       ::type
 {
    #if defined(BOOST_INTRUSIVE_DOXYGEN_INVOKED)
+   public:
    //! <b>Effects</b>: If link_mode is \c auto_unlink or \c safe_link
    //!   initializes the node to an unlinked state.
    //! 
