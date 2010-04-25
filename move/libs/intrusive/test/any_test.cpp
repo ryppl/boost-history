@@ -1,4 +1,3 @@
-/*
 /////////////////////////////////////////////////////////////////////////////
 //
 // (C) Copyright Olaf Krzikalla 2004-2006.
@@ -190,29 +189,3 @@ int main()
 }
 
 #include <boost/intrusive/detail/config_end.hpp>
-*/
-
-#include <boost/intrusive/detail/function_detector.hpp>
-
-#include <boost/static_assert.hpp>
-#include <cassert>
-
-class myclass
-{
-   public:
-   bool some_func(int);
-   static bool some_static_func(int);
-};
-
-BOOST_INTRUSIVE_CREATE_FUNCTION_DETECTOR(some_func)
-BOOST_INTRUSIVE_CREATE_FUNCTION_DETECTOR(some_static_func)
-BOOST_INTRUSIVE_CREATE_FUNCTION_DETECTOR(inexistent_func)
-
-int main()
-{
-   using namespace boost::intrusive::function_detector;
-   BOOST_STATIC_ASSERT(( NonStaticFunction == BOOST_INTRUSIVE_DETECT_FUNCTION(myclass, bool, some_func, (int)) ));
-   BOOST_STATIC_ASSERT(( StaticFunction == BOOST_INTRUSIVE_DETECT_FUNCTION(myclass, bool, some_static_func, (int)) ));
-   BOOST_STATIC_ASSERT(( NotFound == BOOST_INTRUSIVE_DETECT_FUNCTION(myclass, bool, inexistent_func, (int)) ));
-   return 0;
-}
