@@ -39,7 +39,7 @@
             <li>Function <a href="#map_list_of"><code>map_list_of()</code></a> 
             <li>Function <a href="#tuple_list_of"><code>tuple_list_of()</code></a>
             <li>Functions <a href="#repeat"><code>repeat()</code></a>, <a href="#repeat"><code>repeat_fun()</code></a> and <a href="#repeat"><code>range()</code> </a>
-            <li>Functions <a href="#chain"><code>chain_l()</code></a> and  <a href="#chain"><code>chain_r()</code></a>
+            <li>Function <a href="#chain"><code>operator &&</code></a>
             <li>Functions <a href="#ref_list_of"><code>ref_list_of()</code></a>, <a href="#ref_list_of"><code>cref_list_of()</code></a> and variants   
             <li>Functions <a href="#ref_csv"><code>ref_csv()</code></a>, <a href="#ref_csv"><code>cref_csv()</code></a> and variants   
             <li>A <a href="#complicated">"complicated"</a> example    
@@ -47,14 +47,8 @@
                                                    <a href="#ptr_push_back"><code>ptr_insert()</code></a> and <a href="#ptr_push_back"><code>ptr_map_insert()</code></a>
             <li>Function <a href="#ptr_list_of"><code>ptr_list_of()</code></a>         
        </ul>           
-    <li> <a href="#design" >Design</a> </li>
-      <ul>
-       <li><a href="#proxy-objects">Proxy objects</a></li>
-       <li><a href="#auto_size">Auto-size</a></li>
-      </ul>
-
     <li>          
-        <a href="#ref-functions">Reference for functions and operators</a>
+        <a href="#ref-functions">Functions and operators</a>
       <ul>
         <li><a href="#ref-function-headers">Headers</a> </li>
         <li>Functions <a href="#ref-list_of"><code>list_of()</code></a>, <a href="#ref-list_of"><code>map_list_of()</code></a> and <a href="#ref-list_of"><code>ref_list_of&lt;int&gt;()</code></a></li>
@@ -65,22 +59,30 @@
         <li>Functions <a href="#ref-repeat"><code>repeat()</code></a>, <a href="#ref-repeat"><code>repeat_fun()</code></a> and 
                                                                       <a href="#ref-repeat"><code>range()</code>
                                                                       </a></li>
-         <li>Functions <a href="#ref-chain"><code>chain_l()</code></a> and <a href="#ref-chain"><code>chain_r()</code></a></li>
+         <li>Operator <a href="#ref-chain"><code>&&</code></a></li>
        <li><a href="#ref-limit">Customizing</a> argument list sizes </li>
      </ul>
-    <li>          
-        <a href="#ref-impl">Reference for the implementation</a>
+    <li> <a href="#concepts" >Concepts</a> </li>
       <ul>
-        <li> Proxy object <a href="#ref-converter"><code>converter&lt;&gt;</code></a> </li>
-        <li> Proxy object <a href="#ref-generic_list"><code>generic_list&lt;&gt;</code></a> </li>
-        <li> Proxy object <a href="#ref-list_inserter"><code>list_inserter&lt;&gt;</code></a></li>
+        <li> Concept <a href="#concept-ano_list">         <code>AnonymousList</code>   </a> </li>
+        <li> Concept <a href="#concept-auto_size">        <code>AutoSize</code>        </a> </li>
+        <li> Concept <a href="#concept-converter">        <code>Converter</code>       </a> </li>
+        <li> Concept <a href="#concept-range_comparable"> <code>RangeComparable</code> </a> </li>
+        <li> Concept <a href="#concept-range_extensible"> <code>RangeExtensible</code> </a> </li>
+        <li> Concept <a href="#concept-ref_wrapper">      <code>RefWrapper</code>      </a> </li>
+        <li> Concept <a href="#concept-ref_array">        <code>RefArray</code>        </a> </li>
+        <li> Concept <a href="#concept-repeatable">       <code>Repeatable</code>      </a> </li>
+      </ul>
+
+    <li> <a href="#ref-impl">Proxy objects</a> </li>
+      <ul>
+        <li> Proxy object <a href="#ref-generic_list">       <code>generic_list&lt;&gt;</code></a> </li>
+        <li> Proxy object <a href="#ref-list_inserter">      <code>list_inserter&lt;&gt;</code></a></li>
         <li> Proxy object <a href="#ref-static_generic_list"><code>static_generic_list&lt;&gt;</code></a> </li>
-        <li> Proxy object <a href="#ref-range_comparison_op"><code>range_comparison_op::base_of&lt;&gt;</code></a> </li>
-        <li> Proxy object <a href="#ref-array_interface"><code>array_interface&lt;&gt;</code></a> </li>
-        <li> Proxy object <a href="#ref-chain_impl"><code>chain_impl::expr&lt;&gt;</code></a> </li>
-        <li> Proxy object <a href="#ref-expr"><code>expr&lt;&gt;</code></a> </li>
-        <li> Proxy object <a href="#ref-lazy_array"><code>lazy_array&lt;&gt;</code></a> </li>
-        <li> Proxy object <a href="#ref-static_array"><code>static_array&lt;&gt;</code></a> </li>
+        <li> Proxy object <a href="#ref-chain_impl_l">       <code>chain_impl_l&lt;&gt;</code></a> </li>
+        <li> Proxy object <a href="#ref-chain_impl_r">       <code>chain_impl_r&lt;&gt;</code></a> </li>
+        <li> Proxy object <a href="#ref-expr">               <code>expr&lt;&gt;</code></a> </li>
+        <li> Proxy object <a href="#ref-static_array">       <code>static_array&lt;&gt;</code></a> </li>
      </ul>
     <li> <a href="#exceptions">Exceptions and exception-safety </a></li>
     <li> <a href="#extensions">Extending the library</a></li>            
@@ -92,8 +94,6 @@
     <li> <a href="#ref">References</a></li>
   </ul>
   <hr>
-
- 
   
 <h2><a name="intro">Introduction</a></h2> <p> <i>There appear to be few 
 practical uses of <code>operator,()</code></i>.  <!-- p.  247 --> <br><b>Bjarne 
@@ -164,7 +164,7 @@ components are explained in these sections:
             <li>Function <a href="#map_list_of"><code>map_list_of()</code></a> 
             <li>Function <a href="#tuple_list_of"><code>tuple_list_of()</code></a>
             <li>Functions <a href="#repeat"><code>repeat()</code></a>, <a href="#repeat"><code>repeat_fun()</code></a> and <a href="#repeat"><code>range()</code> </a>
-            <li>Functions <a href="#chain"><code>chain_l()</code> and <code>chain_r()</code> </a>
+            <li>Function <a href="#chain"><code>operator&&</code></a>
             <li>Functions <a href="#ref_list_of"><code>ref_list_of()</code></a>, <a href="#ref_list_of"><code>cref_list_of()</code></a> and variants   
             <li>Functions <a href="#ref_csv"><code>ref_csv()</code></a>, <a href="#ref_csv"><code>cref_csv()</code></a> and variants   
             <li>A <a href="#complicated">"complicated"</a> example    
@@ -197,7 +197,6 @@ components are explained in these sections:
     consists of arbitrary expressions as long as the result of each  
 expression is convertible to the <code>value_type</code> of the container.
    </p> 
-   
    
    <h3>Function <code>operator()()</code> <a name="operator()"></h3>
    <p>
@@ -496,25 +495,23 @@ The last example also introduces list of references. More about that below.
 
 </p>
 
-<h3>Functions <code>chain_l()</code> and <code>chain_r()</code><a name="chain"></h3>
+<h3>Operator <code>&&</code><a name="chain"></h3>
 
 While the function <a href="#repeat"><code>range()</code></a> works in combination with functions
 such as <a href="#list_of"><code>list_of()</code></a>, it is not compatible with  
 <a href="#ref_csv"><code>ref_csv()</code></a>, <a href="#ref_list"><code>ref_list_of()</code></a> and their variants, 
-which are part of a different <a href="#auto_size">framework</a>. The functions <code>chain_l()</code>, 
-and <code>chain_r()</code> achieve a similar goal and have the same interface as <a href="#list_of"><code>list_of()</code></a>. Continuing the <a href="#repeat">example</code></a> above,
+which are part of a different <a href="#concept-auto_size">framework</a>. The function <code>operator&&</code>, 
+achieves a similar goal by chaining <a href="http://www.boost.org/doc/libs/1_42_0/libs/range/doc/range.html">ranges</a> at <a href="#concept-auto_size">compile time</a>, which is typically the faster option. 
+Continuing the <a href="#repeat">example</code></a> above,
 
 
 <blockquote><pre><span class=preprocessor>#include</span> <span class=special>&lt;</span><span class=identifier>boost</span><span class=special>/</span><span class=identifier>assign</span><span class=special>/</span><span class=identifier>auto_size</span><span class=special>/</span><span class=identifier>chain</span><span class=special>.</span><span class=identifier>hpp</span><span class=special>&gt;</span> 
 <span class=preprocessor>#include</span> <span class=special>&lt;</span><span class=identifier>boost</span><span class=special>/</span><span class=identifier>assign</span><span class=special>/</span><span class=identifier>auto_size</span><span class=special>/</span><span class=identifier>ref_list_of</span><span class=special>.</span><span class=identifier>hpp</span><span class=special>&gt;</span>
  
 <span class=special>{</span>
-    <span class=identifier>BOOST_ASSERT</span><span class=special>( 
-       </span><span class=identifier>chain_r</span><span class=special>( </span></span><span class=identifier>ref_list_of</span>( </span><span class=identifier>x</span><span class=special> )</span><span class=special> )</span><span class=special>( </span><span class=identifier>v2</span><span class=special> )( </span><span class=identifier>ref_list_of</span>(</span><span class=identifier>y</span><span class=special>)</span> <span class=special>)</span><span class=special>.</span><span class=identifier>size</span><span class=special>(</span><span class=special>)</span><span class=special> == </span><span class=number>10u</span><span class=special> )</span><span class=special>;</span>
+    <span class=identifier>BOOST_ASSERT</span><span class=special>(</span> <span class=special>(</span> <span class=identifier>cref_list_of</span>( </span><span class=identifier>x</span><span class=special> )</span><span class=special>&&</span><span class=identifier> v2</span><span class=special> && </span><span class=identifier>cref_list_of</span>(</span><span class=identifier> y </span><span class=special>)</span> <span class=special>)</span><span class=special>.</span><span class=identifier>size</span><span class=special>(</span><span class=special>)</span><span class=special> == </span><span class=number>10u</span><span class=special> )</span><span class=special>;</span>
 <span class=special>}</span></pre>
 </blockquote>
-
-Notice the suffix 'r' which tells the function that the arguments should be treated as rvalues. The reference is <a href="#ref-chain_impl">here</a>.
 
 <h3>Functions <code>ref_list_of()</code>, <code>cref_list_of()</code> and variants<a name="ref_list_of"></h3>
 
@@ -772,8 +769,8 @@ That is all; now you are ready to use this library.
  </p>
 
   <hr> 
+  
   <h2><a name="design">Design</a></h2>
-  <h3><a name="proxy-objects">Proxy objects</a></h3>
 
     <p>
   This section explains the way the library is implemented.
@@ -828,21 +825,11 @@ Originally arguments were passed by value (and still is in
    The functions, operators and their proxy objects are by defaut in namespace <code>boost::assign</code>. 
   </p>
 
-  <h3><a name="auto_size">Auto-size</a></h3>
-
-  <p> This section is about proxy objects that are in <code>boost::assign::detail::auto_size</code>. The functions 
-  that return them, however, <a href="#ref-ref_list_of"><code>ref_list_of()</code></a>, <a href="#ref-ref_csv"><code>ref_csv()</code></a> 
-  and their variants, operate under the same principle as those in the rest of this library and are therefore in namespace <code>boost::assign</code>. 
-  Compile time <a href="#ref-expr">expressions</a> are formed from references to passed argument, which frees the user from the need to specify the 
-  size of the collection explicitly.  
-  </p>
-
-  <h2>Reference for functions and operators <a name="ref-functions"> </h3>
+  <h2>Functions and operators <a name="ref-functions"> </h2>
 
   <h3>Contents</h3>
 
       <ul>
-          
         <li><a href="#ref-function-headers">Headers</a> </li>
         <li>Functions <a href="#ref-list_of"><code>list_of()</code></a>, <a href="#ref-list_of"><code>map_list_of()</code></a> and <a href="#ref-list_of"><code>ref_list_of&lt;int&gt;()</code></a></li>
         <li>Function <a href="#ref-make_list_inserter"><code>make_list_inserter()</code></a></li>
@@ -852,14 +839,13 @@ Originally arguments were passed by value (and still is in
         <li>Functions <a href="#ref-repeat"><code>repeat()</code></a>, <a href="#ref-repeat"><code>repeat_fun()</code></a> and 
                                                                       <a href="#ref-repeat"><code>range()</code>
                                                                       </a></li>
-        <li>Functions <a href="#ref-chain"><code>chain_l()</code></a> and <a href="#ref-chain"><code>chain_r()</code></a></li>
+        <li>Operator <a href="#ref-chain"><code>&&</code></a></li>
         <li><a href="#ref-limit">Customizing</a> argument list sizes </li>
      </ul>
 
   <h3>Headers <a name="ref-function-headers"></h3>      
   
-  <p>
-  Please notice <code>&lt;boost/assign/list_inserter.hpp></code> is included for each header that defines <code>operator+=()</code>.</p>
+  <p>Please notice <code>&lt;boost/assign/list_inserter.hpp></code> is included for each header that defines <code>operator+=()</code>.</p>
 
 <table cellpadding=5 border=1 > <tr>
          <th>  Header                      </th>
@@ -867,10 +853,13 @@ Originally arguments were passed by value (and still is in
      <tr>
          <td> &lt;boost/assign.hpp>               </td>
          <td>     everything except support for pointer containers  </td>
+     <tr>
+         <td> &lt;boost/assign/auto_size.hpp>               </td>
+         <td>     All functions return <a href="#concept-auto_size">auto-size</a> proxy objects.  </td>
 
      <tr>
-         <td> &lt;boost/assign/auto_size/range/chain.hpp>               </td>
-         <td>     <a href="#chain"><code>chain_l()</code> </a> and <a href="#chain"><code>chain_r()</code> </a>
+         <td> &lt;boost/assign/auto_size/range/chain_operator.hpp> </td>
+         <td> <a href="#chain"><code>operator&&</code></a>
 
      <tr>
          <td> &lt;boost/assign/auto_size/ref_csv.hpp>               </td>
@@ -888,20 +877,14 @@ Originally arguments were passed by value (and still is in
 <a href="#ref_list_of"><code>cref_rebind_list_of()</code></a>  </td>
      <tr>
          <td> &lt;boost/assign/list_of.hpp>       </td>
-         <td> <a href="#list_of"><code>list_of()</a>, <a 
-href="#map_list_of">map_list_of()</code></a>, 
-         <a href="#tuple_list_of">tuple_list_of()</code></a>,
-         <a href="#ref_list_of"><code>ref_list_of&lt;int&gt;()</code> </a> and
-<a href="#ref_list_of"><code>ref_list_of&lt;int&gt;()</code></a> 
-
+         <td> 
+         <a href="#list_of"><code>list_of()</a>, <a href="#map_list_of">map_list_of()</code></a>, 
+         <a href="#tuple_list_of">tuple_list_of()</code></a>, <a href="#ref_list_of"><code>ref_list_of&lt;int&gt;()</code> </a>
                   
          </td> <tr>
          <td> &lt;boost/assign/std.hpp>       </td>
-         <td> <a href="#operator+="><code>operator+=()</code></a> for all 
-standard
-containers (see below)</td> <tr> <td>  &lt;boost/assign/std/deque.hpp> </td>
-        <td>  <code>operator+=()</code> for 
-              <code>std::deque</code>, <code>&lt;deque></code> 
+         <td> <a href="#operator+="><code>operator+=()</code></a> for all standard containers (see below)</td> <tr> <td>  &lt;boost/assign/std/deque.hpp> </td>
+        <td>  <code>operator+=()</code> for <code>std::deque</code>, <code>&lt;deque></code> 
     <tr> 
         <td>  &lt;boost/assign/std/list.hpp> </td>
         <td>  <code>operator+=()</code> for 
@@ -974,24 +957,123 @@ be thrown by the proxy returned by <code>list_of()</code>
        </p>
 
 
-  <h3>Functions <code>list_of()</code>, 
-      <code>map_list_of()</code> and <code>ref_list_of&lt;int&gt;()</code> <a name=ref-list_of> </h3>
-    <p>  
-  The first two functions are used to construct anonymous list which can be converted to any standard container
-  and <code>boost::<a href="../../array/index.html">array</a>&lt;T,sz>.</code> Specifically, the 
-  object returned by the two functions is <a href="#ref-generic_list"><code>generic_list&lt;&gt;</code></a>.
-  The third function can be used to construct an anonymous list of references. The corresponding proxy object is 
-  <a href="#ref-static_generic_list"><code>static_generic_list&lt;&gt;</code></a>. In the <a href="#auto_size">auto-size</a>
-  framework there are <a href="#ref-ref_list_of">overloads<a> for this function, that deduce the number of arguments at compile time.
+  <h3><a name=ref-list_of>Function <code>list_of()</code></a></h3> 
+
+  <h4>Template parameters</h4>
+
+  <blockquote>
+  	<table cellpadding=5 border=1>
+  	<tr><td><tt>T</tt></td><td>Element</td></tr>
+  	</table>
+  </blockquote>
+
+  <h4>Usage</h4>
+
+  <p>Let <code>U</code> be either of <code>T</code> or <code>const T</code>, and <code>d</code> an instance thereof. </p>
+
+  <blockquote>
+  	<table cellpadding=5 border=1>
+  	<tr><th class="head">Expression</th> <th class="head">Result</th>
+  	<tr><td><tt>list_of( d )</tt></td>         <td><a href="#ref-generic_list"><code>generic_list</code></a><code>&lt;U&gt;</code></td></tr>
+  	</table>
+  </blockquote>
+
+  <h4>Synopsis</h4>
+  
+  <blockquote>  
+  <pre><span class=keyword>namespace </span><span class=identifier>boost  </span>
+<span class=special>{</span>
+<span class=keyword>namespace </span><span class=identifier>assign</span>
+<span class=special>{</span>
+                
+    <span class=keyword>template</span><span class=special>&lt; </span><span class=keyword>class </span><span class=identifier>T </span><span class=special>&gt;
+    </span><span class=identifier>Implementation</span><span class=special>-</span><span class=identifier>defined</span>   </span><span class=identifier>list_of</span><span class=special>(</span><span class=special>);
+
+    </span><span class=keyword>template</span><span class=special>&lt; </span><span class=keyword>class </span><span class=identifier>T </span><span class=special>&gt;
+    </span><span class=identifier>Implementation</span><span class=special>-</span><span class=identifier>defined</span>   </span><span class=identifier>list_of</span><span class=special>( </span><span class=identifier>T </span><span class=identifier>t </span><span class=special>);
+    
+    </span><span class=keyword>template</span><span class=special>&lt; </span><span class=keyword>class </span><span class=identifier>T</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>U</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>U2 </span><span class=special>&gt;
+    </span><span class=identifier>Implementation</span><span class=special>-</span><span class=identifier>defined</span>   </span><span class=identifier>list_of</span><span class=special>( </span><span class=identifier>U </span><span class=identifier>u</span><span class=special>, </span><span class=identifier>U2 </span><span class=identifier>u2 </span><span class=special>);
+    
+    </span><span class=keyword>template</span><span class=special>&lt; </span><span class=keyword>class </span><span class=identifier>T</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>U</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>U2</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>U3 </span><span class=special>&gt;
+    </span><span class=identifier>Implementation</span><span class=special>-</span><span class=identifier>defined</span>   </span><span class=identifier>list_of</span><span class=special>( </span><span class=identifier>U </span><span class=identifier>u</span><span class=special>, </span><span class=identifier>U2 </span><span class=identifier>u2</span><span class=special>, </span><span class=identifier>U3 </span><span class=identifier>u3 </span><span class=special>);
+
+    </span><span class=keyword>template</span><span class=special>&lt; </span><span class=keyword>class </span><span class=identifier>T</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>U</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>U2</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>U3</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>U4 </span><span class=special>&gt;
+    </span><span class=identifier>Implementation</span><span class=special>-</span><span class=identifier>defined</span>   </span><span class=identifier>list_of</span><span class=special>( </span><span class=identifier>U </span><span class=identifier>u</span><span class=special>, </span><span class=identifier>U2 </span><span class=identifier>u2</span><span class=special>, </span><span class=identifier>U3 </span><span class=identifier>u3</span><span class=special>, </span><span class=identifier>U4 </span><span class=identifier>u4 </span><span class=special>);
+  
+    </span><span class=keyword>template</span><span class=special>&lt; </span><span class=keyword>class </span><span class=identifier>T</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>U</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>U2</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>U3</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>U4</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>U5 </span><span class=special>&gt;
+    </span><span class=identifier>Implementation</span><span class=special>-</span><span class=identifier>defined</span>   </span><span class=identifier>list_of</span><span class=special>( </span><span class=identifier>U </span><span class=identifier>u</span><span class=special>, </span><span class=identifier>U2 </span><span class=identifier>u2</span><span class=special>, </span><span class=identifier>U3 </span><span class=identifier>u3</span><span class=special>, </span><span class=identifier>U4 </span><span class=identifier>u4</span><span class=special>, </span><span class=identifier>U5 </span><span class=identifier>u5 </span><span class=special>);
+
+    </span><span class=keyword>template</span><span class=special>&lt; </span><span class=keyword>class </span><span class=identifier>Key</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>T </span><span class=special>&gt;
+    </span><span class=identifier>Implementation</span><span class=special>-</span><span class=identifier>defined</span>   </span><span class=identifier>map_list_of</span><span class=special>( </span><span class=identifier>Key </span><span class=identifier>k</span><span class=special>, </span><span class=identifier>T </span><span class=identifier>t </span><span class=special>)
+    </span><span class=special>{
+        </span><span class=keyword>return </span><span class=identifier>list_of</span><span class=special>&lt; </span><span class=identifier>std</span><span class=special>::</span><span class=identifier>pair</span><span class=special>&lt;</span><span class=identifier>Key</span><span class=special>,</span><span class=identifier>T</span><span class=special>&gt; </span><span class=special>&gt;()( </span><span class=identifier>k</span><span class=special>, </span><span class=identifier>t </span><span class=special>);
+    </span><span class=special>}</span>
+
+<span class=special>} </span><span class=comment>// namespace 'assign'</span>
+<span class=special>} </span><span class=comment>// namespace 'boost'</span>  </pre></blockquote>
+
+
+  <h3><a name=ref-map_list_of>Function <code>map_list_of()</code></a></h3> 
+
+  <h4>Template parameters</h4>
+
+  <blockquote>
+  	<table cellpadding=5 border=1>
+  	<tr><th class="head">Parameter</th> <th class="head">Description</th>
+  	<tr><td><tt>K</tt></td><td>A key type</td></tr>
+  	<tr><td><tt>T</tt></td><td>A data type</td></tr>
+  	</table>
+  </blockquote>
+
+  <h4>Usage</h4>
+
+  <p>Let <code>k</code> and <code>d</code> denote instances of <code>const K</code> and <code>const T</code>, respectively. </p>
+
+  <blockquote>
+  	<table cellpadding=5 border=1>
+  	<tr><th class="head">Expression</th> <th class="head">Result</th>
+  	<tr><td><tt>map_list_of( k, d )</tt></td>  <td><a href="#ref-generic_list"><code>generic_list</code></a><code>&lt;std::pair&lt;const K, const T &gt; &gt;</code></td></tr>
+  	</table>
+  </blockquote>
+
+
+  <h3><a name=ref-ref_list_of_int>Function <code>ref_list_of&lt;int&gt;()</code></a></h3> 
+
+  <p> This function has been <a href="#upgrading_from_1_42">superseded</a>.</p>
+
+  <h4>Template parameters</h4>
+
+  <blockquote>
+  	<table cellpadding=5 border=1>
+  	<tr><th class="head">Parameter</th> <th class="head">Description</th>
+  	<tr><td><tt>N</tt></td><td>An integer</td></tr>
+  	<tr><td><tt>T</tt></td><td>Element</td></tr>
+  	</table>
+  </blockquote>
+
+  <b>Usage</b>
+
+  <p>Let <code>U</code> be either <code>T</code> or <code>const T</code> and <code>d</code> an object of type <code>U</code>. 
+
+  <blockquote>
+  	<table cellpadding=5 border=1>
+  	<tr><th class="head">Expression</th> <th class="head">Result</th>
+  	<tr><td><tt>ref_list_of&lt;int&gt;(d)</tt></td>   <td><a href="#ref-static_generic_list"><code>static_generic_list</code></a><code>&lt;U,&gt;</code></td></tr>
+  	</table>
+  </blockquote>
   
   <h3><a name="ref-make_list_inserter">Function <code>make_list_inserter()</code></a></h3>
+
   <p>
   A simple "constructor" function for <code>list_inserter</code>. A typical 
   use of this function is to call it with the result of 
 <code>boost::bind()</code>
   which in general returns some unreadable and weird class template.
   </p>
+
   <b>Synopsis</b>
+  
   <blockquote><pre>
 <span class=keyword>namespace </span><span class=identifier>boost </span>
 <span class=special>{</span>
@@ -1009,7 +1091,7 @@ be thrown by the proxy returned by <code>list_of()</code>
   <h3>Functions <code>ref_list_of()</code>, 
       <code>cref_list_of()</code> and variants <a name=ref-ref_list_of> </h3>
 
-  <b>Template parameters</b>
+  <h4>Template parameters</h4>
 
   <blockquote>
   	<table cellpadding=5 border=1>
@@ -1019,39 +1101,36 @@ be thrown by the proxy returned by <code>list_of()</code>
   	</table>
   </blockquote>
 
-  <b>Usage</b>
+  <h4>Usage</h4>
   <p>Let <code>d1</code> and <code>d2</code> denote objects of type <code>T</code> and <code>const T</code>, respectively.</p>
 
   <blockquote>
   	<table cellpadding=5 border=1>
-  	<tr><th class="head">Expression</th> <th class="head">Result type</th>
-  	<tr><td><tt>ref_list_of&lt;P&gt;(d1)</tt></td><td><a href="#ref-expr"> <tt>expr</tt></a><tt>&lt;top_,T,1,ref_copy,P&gt;</tt></td></tr>
-  	<tr><td><tt>cref_list_of&lt;P&gt;(d2)</tt></td><td><a href="#ref-expr"> <tt>expr</tt></a><tt>&lt;top_,const T,1,ref_copy,P&gt;</tt></td></tr>
-  	<tr><td><tt>ref_list_of(d1)</tt></td><td><a href="#ref-expr"> <tt>expr</tt></a><tt>&lt;top_,T,1,ref_copy,default_policy&gt;</tt></td></tr>
-  	<tr><td><tt>cref_list_of(d2)</tt></td><td><a href="#ref-expr"> <tt>expr</tt></a><tt>&lt;top_,const T,1,ref_copy,default_policy&gt;</tt></td></tr>
+  	<tr><th class="head">Expression</th> <th class="head">Result</th><th class="head">Description</th>
+  	<tr><td><tt>ref_list_of&lt;P&gt;( d1 ) </tt></td><td><a href="#ref-expr"> <tt>expr</a>&lt;_,T,1,<a href="#concept-ref_wrapper_assign">assign_reference_copy</a>,P&gt;</tt><tt></td></tr>
+  	<tr><td><tt>cref_list_of&lt;P&gt;( d2 )</tt></td><td><a href="#ref-expr"> <tt>expr</a>&lt;_,const T,1,<a href="#concept-ref_wrapper_assign">assign_reference_copy</a>,P&gt;</tt><tt></td></tr>
+  	<tr><td><tt>ref_list_of( d1 )          </tt></td><td><a href="#ref-expr"> <tt>expr</a>&lt;_,T,1,<a href="#concept-ref_wrapper_assign">assign_reference_copy</a>,use_default&gt;</tt><tt></td></tr>
+  	<tr><td><tt>cref_list_of( d2 )         </tt></td><td><a href="#ref-expr"> <tt>expr</a>&lt;_,const T,1,<a href="#concept-ref_wrapper_assign">assign_reference_copy</a>,use_default&gt;</tt><tt></td></tr>
   	</table>
   </blockquote>
-<p>
-Usage for the related functions <code>ref_rebind_list_of()</code> and <code>cref_rebind_list_of()</code> are identical to those
-above, except the fourth argument to <a href="#ref-expr"> <tt>expr&lt;&gt;</tt></a> is a reference wrapper with rebind semantics, <code>ref_rebind</code>.
-</p>
+  
+  <p>Usage for the related functions <code>ref_rebind_list_of()</code> and <code>cref_rebind_list_of()</code> are identical to those
+  above, except the fourth argument to <a href="#ref-expr"> <tt>expr&lt;&gt;</tt></a> is <a href="#concept-ref_wrapper_assign"><tt>assign_reference_copy</tt></a>. </p>
 
-  <h3>Functions <code>ref_csv()</code>, 
-      <code>cref_csv()</code> and variants <a name=ref-ref_csv> </h3>
+  <h3>Functions <code>ref_csv()</code>, <code>cref_csv()</code> and variants <a name=ref-ref_csv> </h3>
 
-  <b>Template parameters</b>
+  <h4>Template parameters</h4>
 
   <blockquote>
   	<table cellpadding=5 border=1>
   	<tr><th class="head">Parameter</th> <th class="head">Description</th>
   	<tr><td><tt>P</tt></td><td>A policy tag</td></tr>
   	<tr><td><tt>T</tt></td><td>Element</td></tr>
-  	<tr><td><tt>U</tt></td><td><tt>T</tt> or <tt>const T</tt></td></tr>
   	<tr><td><tt>N</tt></td><td>Size</td></tr>
-  	<tr><td><tt>R</tt></td><td>A Reference wrapper</td></tr>
   	</table>
   </blockquote>
 
+<!--
   <b>Associated types</b>
 
   <blockquote>
@@ -1061,28 +1140,27 @@ above, except the fourth argument to <a href="#ref-expr"> <tt>expr&lt;&gt;</tt><
   	<tr><td><tt>csv_policy&lt;default_policy&gt;::apply&lt;U,N,R&gt;::type</tt></td><td><a href="#ref-static_array"> <tt>static_array<tt></a><tt>&lt;T,N,R&gt;</tt></td><td><tt>Impl0&lt;U,N,R&gt;</tt></td></tr>
   	</table>
   </blockquote>
+-->
 
-  <b>Usage</b>
+  <h4>Usage</h4>
   <p>Let <code>ai</code> and <code>bi</code> denote the <tt>i</tt>-th element of size-<tt>N</tt> sequences of objects of type <code>T</code> and <code>const T</code>, 
   respectively</p>
 
   <blockquote>
   	<table cellpadding=5 border=1>
-  	<tr><th class="head">Expression</th> <th class="head">Result type</th>
-  	<tr><td><tt>ref_csv&lt;P&gt;(a1,...,aN)</tt></td><td><tt>Impl&lt;P,T,N,ref_copy&gt;</tt></td></tr>
-  	<tr><td><tt>cref_csv&lt;P&gt;(b1,...,bN)</tt></td><td><tt>Impl&lt;P,const T,N,ref_copy&gt;</tt></td></tr>
-  	<tr><td><tt>ref_csv(a1,...,aN)</tt></td><td><tt>Impl0&lt;T,N,ref_copy&gt;</tt></td></tr>
-  	<tr><td><tt>cref_csv(b1,...,bN)</tt></td><td><tt>Impl0&lt;const T,N,ref_copy&gt;</tt></td></tr>
+  	<tr><th class="head">Expression</th> <th class="head">Result</th>
+  	<tr><td><tt>ref_csv&lt;P&gt;(a1,...,aN)</tt></td><td>A custom implementation</td></tr>
+  	<tr><td><tt>cref_csv&lt;P&gt;(b1,...,bN)</tt></td><td>A custom implementation </td></tr>
+  	<tr><td><tt>ref_csv(a1,...,aN)</tt></td><td> <a href="#ref-static_array"> <tt>static_array<tt></a><tt>&lt;T,N,<a href="#concept-ref_wrapper_assign">assign_reference_copy</a>&gt;</tt> </td></tr>
+  	<tr><td><tt>cref_csv(b1,...,bN)</tt></td><td><a href="#ref-static_array"> <tt>static_array<tt></a><tt>&lt;const T,N,<a href="#concept-ref_wrapper_assign">assign_reference_copy</a>&gt;</tt></td> </tr>
   	</table>
   </blockquote>
 <p>
 Usage for the related functions <code>ref_rebind_list_of()</code> and <code>cref_rebind_list_of()</code> are identical to those
-above, and their result type are modified by replacing <code>ref_copy</code> by <code>ref_rebind</code>.
+above but with <a href="#concept-ref_wrapper_assign">rebind</a> rather than <a href="#concept-ref_wrapper_assign">copy</a> semantics.
 </p>
 
-<p>
-The maximum number of arguments to a csv function is <code>BOOST_ASSIGN_CSV_SIZE</code>. 
-</p>
+<p>The maximum number of arguments to a csv function is <code>BOOST_ASSIGN_CSV_SIZE</code>.</p>
   
   <h3><a name="ref-std">Operator <code>+=</code> for standard containers </a> </h3>
    <p> In the following three dots (...) will mean
@@ -1166,194 +1244,273 @@ The maximum number of arguments to a csv function is <code>BOOST_ASSIGN_CSV_SIZE
   </p>
 
 
-  <h3> Functions <code>chain_l()</code> and <code>chain_r()<a name="ref-chain"> </h3>
+  <h3> <a name="ref-chain">Operator <code>&&</code></a> </h3>
   
-  <p> This function serves as a sustitute for <a href="#ref-repeat"><code>range()</code></a>
-  within the <a href="#auto_size">auto-size</a> framework.
-  
-  <p> <b>Template parameters</b> </p>
+  <h4>Template parameters</h4>
 
   <blockquote>
   	<table cellpadding=5 border=1>
   	<tr><th class="head">Parameter</th> <th class="head">Description</th>
-  	<tr><td><tt>L</tt></td><td>Implementation defined</td></tr>
-  	<tr><td><tt>E</tt></td><td>Implementation defined</td></tr>
-  	<tr><td><tt>V</tt></td><td>A value type</td></tr>
-  	<tr><td><tt>R</tt></td><td>A reference type</td></tr>
-  	<tr><td><tt>Rng</tt></td><td>A range type</td></tr>
-  	<tr><td><tt>add_const</tt></td><td>A boolean value</td></tr>
+  	<tr><td><tt>R1</tt></td><td>Models <a href="http://www.boost.org/doc/libs/1_42_0/libs/range/doc/range.html"><tt>Range</tt></a></td></tr>
+  	<tr><td><tt>R2</tt></td><td>Models <a href="http://www.boost.org/doc/libs/1_42_0/libs/range/doc/range.html"><tt>Range</tt></a></td></tr>
   	</table>
   </blockquote>
 
-  <b>Associated types</b>
+  <h4>Requirements</h4>
+
+  There exists some type <tt>T</tt> such that for each of <tt>R = R1, R2</tt>,
 
   <blockquote>
   	<table cellpadding=5 border=1>
-  	<tr><th class="head">Expression</th> <th class="head">Description<th class="head">Alias</th>
-  	<tr><td><tt>chain_impl::expr&lt;L,E,true,V,R,add_const&gt;</tt></td><td><a href="#ref-chain_impl">Implementation</a></td><td>Impl&lt;&gt;</td></tr>
+  	<tr><th class="head">Parameter</th> <th class="head">Description</th>
+  	<tr><td><tt>boost::range_reference&lt;R&gt;::type</tt></td><td>Convertible to <tt>T</tt></td></tr>
   	</table>
   </blockquote>
 
-  <b>Usage</b>
-  <p>Let <code>r</code> instance of <code>Rng</code>
+In particular, elements modeling <a href="#concept-ref_wrapper"><tt>RefWrapper</tt></a><tt>(T)</tt> are allowed.
+
+  <h4>Usage</h4>
+  <p>Let <code>r1</code>, <code>r2</code>, denote instances of <code>R1</code>, and <code>const R2</code>.
+  Let <code>s1</code> and <code>s2</code> of type <code>R1</code>, and <code>R2</code>, respectively,
+  such that at least one of them is <code>const</code>.
 
   <blockquote>
   	<table cellpadding=5 border=1>
   	<tr><th class="head">Expression</th> <th class="head">Result</th>
-  	<tr><td><tt>chain_l&lt;V,R&gt;(r)</tt></td><td> <a href="#ref-chain_impl"><code>Impl&lt;&gt;</code></a>  </td></tr>
-  	<tr><td><tt>chain_l&lt;V,use_default&gt;(r)</tt></td><td> <a href="#ref-chain_impl"><code>Impl&lt;&gt;</code></a>  </td></tr>
-  	<tr><td><tt>chain_l(r)</tt></td><td> <a href="#ref-chain_impl"><code>Impl&lt;&gt;</code></a>  </td></tr>
+  	<tr><td><tt>r1 && r2</tt></td><td> <a href="#ref-chain_impl_l"><code>result_of::chain_l</code></a><code>&lt;R1,R2&gt;::type</code>  </td></tr>
+  	<tr><td><tt>s1 && s2</tt></td><td> <a href="#ref-chain_impl_l"><code>result_of::chain_r</code></a><code>&lt;R1,R2&gt;::type</code>  </td></tr>
   	</table>
   </blockquote>
+  
+  <h4> Fine control </h4>
 
-  <h2>Reference for the implementation <a name="ref-impl"> </h2>
-  Proxy objects are those that are returned by <a name="ref-functions">functions<a>, which are
-  invisible to their caller, and take care of the implementation.
+  Let <tt>T1</tt> and <tt>T2</tt> each be <tt>const</tt> or non-<tt>const</tt> without restriction. 
+  For finer control over the resulting proxy objects, one may call <tt>chain_l&lt;V,R&gt;(r1)(r2)</tt> or <tt>chain_l(r1)(r2)</tt>, where
+<tt>V</tt> is a value type, and <tt>R</tt> a reference type, and similarly <tt>chain_r&lt;V,R&gt;(t1)(t2)</tt> or 
+<tt>chain_r(t1)(t2)</tt>.
+
+  <h2>Concepts <a name="concepts"> </h2>
+
   <h3>Contents</h3>
 
       <ul>
-        <li> Proxy object <a href="#ref-converter"><code>converter&lt;&gt;</code></a> </li>
-        <li> Proxy object <a href="#ref-generic_list"><code>generic_list&lt;&gt;</code></a> </li>
-        <li> Proxy object <a href="#ref-list_inserter"><code>list_inserter&lt;&gt;</code></a></li>
-        <li> Proxy object <a href="#ref-static_generic_list"><code>static_generic_list&lt;&gt;</code></a> </li>
-        <li> Proxy object <a href="#ref-range_comparison_op"><code>range_comparison_op::base_of&lt;&gt;</code></a> </li>
-        <li> Proxy object <a href="#ref-array_interface"><code>array_interface&lt;&gt;</code></a> </li>
-        <li> Proxy object <a href="#ref-expr"><code>expr&lt;&gt;</code></a> </li>
-        <li> Proxy object <a href="#ref-lazy_array"><code>lazy_array&lt;&gt;</code></a> </li>
-        <li> Proxy object <a href="#ref-static_array"><code>static_array&lt;&gt;</code></a> </li>
-        <li> Proxy objects <a href="#ref-chain_impl"><code>chain_impl::expr&lt;&gt;</code></a></li>
+        <li> Concept <a href="#concept-ano_list">         <code>AnonymousList</code>   </a> </li>
+        <li> Concept <a href="#concept-auto_size">        <code>AutoSize</code>        </a> </li>
+        <li> Concept <a href="#concept-chainable">        <code>Chainable</code>       </a> </li>
+        <li> Concept <a href="#concept-converter">        <code>Converter</code>       </a> </li>
+        <li> Concept <a href="#concept-range_comparable"> <code>RangeComparable</code> </a> </li>
+        <li> Concept <a href="#concept-range_extensible"> <code>RangeExtensible</code> </a> </li>
+        <li> Concept <a href="#concept-ref_wrapper">      <code>RefWrapper</code>      </a> </li>
+        <li> Concept <a href="#concept-ref_array">        <code>RefArray</code>        </a> </li>
+        <li> Concept <a href="#concept-repeatable">       <code>Repeatable</code>      </a> </li>
      </ul>
 
-  <h3>Proxy object <code>converter<></code><a name=ref-converter> </h3>
-  <b>Header</b> <code>&lt;boost/assign/list_of.hpp></code>
-
-    <p>
-  <b>Template parameters</b> 
-  </p>
-
-  <blockquote>
-  	<table cellpadding=5 border=1>
-  	<tr><th class="head">Parameter</th> <th class="head">Description</th>
-  	<tr><td><tt>D</tt></td><td> A derived class </td> </tr>
-  	<tr><td><tt>I</tt></td><td> An iterator </td> </tr>
-  	</table>
-  </blockquote>
-
-<p>
-  In the tables below, let <code>d</code> and object of type <code>const D</code>. 
-</p>
-  <b>Requirements on the derived type</b>
-  <blockquote>
-  	<table cellpadding=5 border=1>
-  	<tr><th class="head">Expression</th> <th class="head">Return</th>
-  	<tr><td><tt><span class="pre">d.begin()</span></tt></td> <td>An iterator of type <tt><span class=identifier>I</span></tt></td></tr>
-  	<tr><td><tt><span class="pre">d.end()</span></tt></td><td>An iterator of type <tt><span class=identifier>I</span></tt></td> </tr>
-  	</table>
-  </blockquote>
-
-  <b>Requirements on the conversion operands</b>
-</p>
-  There are three concepts that allow for conversion which we call container, adapters, and arrays. Let <code>C</code>,
-  <code>A</code> and <code>R</code> denote models of the respective concepts,
-  and <code>c</code>, <code>a</code> and <code>r</code>, instances thereof. Let <code>b</code> and <code>e</code> denote the begin and end iterators of <code>d</code>,
-  and <tt>n</tt> their distance. Assume that the elements of each of these data-structures
-  are of type <code>X</code>, of which <code>x</code> is and instance, and <code>k</code> <i>any</i> index in the range <tt>&#91;<span class=number>0</span>,n)</tt>.
+  <h3>Concept <a name="concept-ano_list"><tt>AnonymousList</tt></a></h3>
   
-  Each of <code>c</code>, <code>a</code> and <code>r</code> must be copy constructible. In addition, 
+  <p>For now <tt>AnonymousList</tt> is still a loose concept (once an acceptable formalization is found,
+  this doc will be updated accordingly). Its distinguishing feature, however, is that it exposes 
+  public member functions to <i>internally</i> grow a list of a given type, <tt>T</tt>.</p>
+  
+  <p>How the internal list is accessible publically is not part of the concept. It needs to be
+  specified separately, such as <tt>AnonymousList</tt>+<a href="http://www.boost.org/doc/libs/1_42_0/libs/range/doc/range.html">Range</a></p>
+
+  <h3>Concept <a name="concept-auto_size"><tt>Auto-Size</tt></a></h3>
+
+  <p>For now <tt>Auto-Size</tt> list is still a loose concept (once an acceptable formalization is found,
+  this doc will be updated accordingly). Its distinguishing feature, is that it is a compile time expression 
+  that is formed from references to passed argument, which may be faster than runtime alternatives, and frees the user from the need to specify the size of 
+  the resulting collection.</p>
+    
+  <h3>Concept <a name="concept-chainable"><tt>Chainable</tt></a></h3>
+
+  <h4>Notation</h4>
+
+  Let <tt>c</tt> model <tt>Chainable</tt> for value type <tt>T</tt>, and <tt>r</tt> model 
+  <a href="http://www.boost.org/doc/libs/1_42_0/libs/range/doc/range.html">Range</a> each element of
+  which is convertible to <tt>T</tt>.
+
+  <h4>Refinement of</h4>
+
+  Models <a href="http://www.boost.org/doc/libs/1_42_0/libs/range/doc/range.html">Range</a>.
+
+  <h4>Requirements</h4>
+
   <blockquote>
   	<table cellpadding=5 border=1>
-  	<tr><th class="head">Expression</th> <th class="head">Effect</th>
-  	<tr><td><tt><span class="pre">C c(b,e);</span></tt></td> <td>Constructs an object of type <tt><span class=identifier>C</span></tt></td></tr>
-  	<tr><td><tt><span class="pre">a.push(x)</span></tt></td><td>Adds element <tt><span class=identifier>x</span></tt> to <tt><span class=identifier>a</span></tt></td> </tr>
-  	<tr><td><tt><span class="pre">r[k]=x</span></tt></td><td>Assigns value <tt><span class=identifier>x</span></tt> to the kth element of <tt><span class=identifier>r</span></tt> </tt></td> </tr>
+  	<tr><th class="head">Expression</th> <th class="head">Result</th>
+  	<tr><td><span class="pre"><tt>c && r</tt></span></td><td>Models <tt>Range</tt> and is equivalent to <tt>c</tt> and <tt>r</tt> concatenated</td> </tr>
+  	</table>
+  </blockquote>
+
+  <h3>Concept <a name="concept-ref_wrapper"><tt>RefWrapper</tt></a></h3>
+
+  <h4>Headers</h4>
+  </p> <code>&lt;boost/assign/list_of.hpp></code> <p>
+  </p> <code>&lt;boost/assign/auto_size/reference_wrapper/copy.hpp></code> <p>
+  </p> <code>&lt;boost/assign/auto_size/reference_wrapper/rebind.hpp></code> <p>
+
+  <h4>Notation</h4>
+
+  Let <tt>R</tt> model <tt>RefWrapper</tt> for value type <tt>T</tt>, and <tt>r</tt> an instance thereof. 
+  Let <tt>x</tt> denote an object of type <tt>T</tt>.
+
+  <h4>Requirements</h4>
+
+  <blockquote>
+  	<table cellpadding=5 border=1>
+  	<tr><th class="head">Expression</th> <th class="head">Result</th>
+  	<tr><td><span class="pre"><tt>r</tt></span></td><td>convertible to <tt>T&</tt></td> </tr>
+  	</table>
+  </blockquote>
+
+  <h4> <a name="concept-ref_wrapper_assign">Assignment semantics </a></h4>
+
+  <blockquote>
+  	<table cellpadding=5 border=1>
+  	<tr><th class="head">Concept</th><th class="head">Expression</th> <th class="head">Post-condition</th><th class="head">Model</th> </tr>
+  	<tr><td> <tt>Copy</tt>  </td><td><span class="pre"><tt>r = x; T& y = r; </tt></span></td><td><tt> x == y</tt></td> <td><code>assign_reference_copy</code></td></tr>
+  	<tr><td> <tt>Rebind</tt> </td><td><span class="pre"><tt>r = x; T& y = r; </tt></span></td><td><tt>&x == &y</tt></td> <td><code>assign_reference</code>, <code>assign_reference_rebind</code></td></tr>
+  	</table>
+  </blockquote>
+
+  <h3>Concept <a name="concept-converter"><tt>Converter</tt></a></h3>
+
+  <h4>Headers</h4>
+  </p> <code>&lt;boost/assign/list_of.hpp></code> <p>
+  </p> <code>&lt;boost/assign/auto_size/range/converter.hpp></code> <p>
+  
+  <h4>Refinement of</h4>
+
+  <p><a href="http://www.boost.org/doc/libs/1_42_0/libs/range/doc/range.html"><tt>Range</tt></a></p>
+
+  <h4>Notation</h4>
+  <p>Let <code>V1</code>, <code>V2</code> and <code>V3</code> denote three classes, each of whose interface captures a valid conversion operand for <tt>Converter</tt>,
+  that  we call <i>container</i>, <i>adapter</i>, and <i>indexable</i>. Let <code>v1</code>, <code>v2</code> and <code>v3</code>, instances thereof. Let <tt>C</tt> denote
+  a class that models <tt>Converter</tt>, and <tt>c</tt> and instance thereof. 
+  Let <code>b</code> and <code>e</code> denote the begin and end iterators of <tt>c</tt>, and <tt>n</tt> the distance between them. Assume that the elements of each 
+  of these data-structures are of type <code>X</code>, of which <code>x</code> is and instance, and <code>k</code> <i>any</i> index in the range 
+  <tt>&#91;<span class=number>0</span>,n)</tt>. 
+  </p>
+  
+  <h4>Conversion operands</h4>
+
+  Each of <code>v1</code>, <code>v2</code> and <code>v3</code> must be <a href="http://www.boost.org/doc/libs/1_42_0/doc/html/CopyConstructible.html">copy constructible</a>. 
+  In addition, 
+  <blockquote>
+  	<table cellpadding=5 border=1>
+  	<tr><th class="head">Concept</th><th class="head">Expression</th> <th class="head">Effect</th>
+  	<tr><td>Container</td><td><tt><span class="pre">V1 v1(b,e);</span></tt></td> <td>Constructs an object of type <tt><span class=identifier>V</span></tt></td></tr>
+  	<tr><td>Adapter</td><td><tt><span class="pre">v2.push(x)</span></tt></td><td>Adds element <tt><span class=identifier>x</span></tt> to <tt><span class=identifier>a</span></tt></td> </tr>
+  	<tr><td>Indexable</td><td><tt><span class="pre">v3[k] = x</span></tt></td><td>Assigns value <tt><span class=identifier>x</span></tt> to the kth element of <tt><span class=identifier>r</span></tt> </tt></td> </tr>
   	</table>
   </blockquote>
 </p>
 
-  <b>Synopsis</b>
-  <blockquote>  
+  <h4>Requirements</h4>
+  
+  For each of <tt>v</tt> in <tt><span class="pre">{v1,v3}</span></tt>, these are valid expressions whose effect is to assign/copy the content of the rhs to the lhs:
+  <blockquote>
+  	<table cellpadding=5 border=1>
+  	<tr><th class="head">Expression</th> 
+  	<tr><td><tt><span class="pre">v = c;</span></tt></td> </tr>
+  	<tr><td><tt><span class="pre">v = c.convert_to_container();</span></tt></td> </tr>
+  	<tr><td><tt><span class="pre">v2 = c.to_adapter()</span></tt></td> </tr>
+  	</table>
+  </blockquote>
 
-   <pre>
-<span class=keyword>namespace </span><span class=identifier>boost</span>
-<span class=special>{</span>
-<span class=keyword>namespace </span><span class=identifier>assign</span>
-<span class=special>{
+  <h4> Models </h4>
 
-    <span class=keyword>template</span>&lt; <span class=keyword>class</span> <span class=identifier>D</span>, <span class=keyword>class</span> <span class=identifier>I</span> &gt;
-    <span class=keyword>class</span> converter
-    {
-    <span class=keyword>public:</span> 
-        <span class=keyword>typedef</span> <span class=identifier>I</span> iterator;
-        <span class=keyword>typedef</span> <span class=identifier>I</span> const_iterator;
-        
-        iterator begin() <span class=keyword>const</span>;
+  A proxy-object models this concept by inheriting from <tt>converter&lt;&gt;</tt> or by expanding the macro 
+  <code>BOOST_ASSIGN_AS_CONVERTER</code> inside its definition.
 
-        iterator end() <span class=keyword>const</span>;
-        
-        <span class=keyword>template</span>&lt; <span class=keyword>class</span> Container >
-        Container convert_to_container();
-        
-        <span class=keyword>template</span>&lt; <span class=keyword>class</span> Container >
-        Container to_container( Container& c );
+  <h3><a name="concept-ref_array">Concept <code>RefArray</code><a></h3> 
 
-        adapter_converter to_adapter() <span class=keyword>const</span>
+  <h4>Header</h4> <code>&lt;boost/assign/auto_size/array/interface.hpp></code>
 
-        <span class=keyword>template</span>&lt; <span class=keyword>class</span> Adapter >
-        Adapter to_adapter( Adapter& a ) <span class=keyword>const</span>
+  <h4>Requirements</h4> 
 
-        <span class=keyword>template</span>&lt; <span class=keyword>class</span> Array >
-        Array to_array( Array& a ) <span class=keyword>const</span>;
-    };
+  A <tt>RefArray</tt> for value type <tt>T</tt> and size <tt>N</tt> exposes the interface of 
+  <a href="http://www.boost.org/doc/libs/release/libs/array/"><code>boost::array&lt;&gt;</code><a>, 
+  each element of which models <a href="#concept-ref_wrapper"><tt>RefWrapper</tt></a> for value type <tt>T</tt>.
 
-    <span class=keyword>template</span>&lt; <span class=keyword>class</span> D, <span class=keyword>class</span> <span class=identifier>I</span>, <span class=keyword>class</span> Range >
-    bool <span class=keyword>operator</span>==( <span class=keyword>const</span> <span class=identifier>converter<span>&lt;<span class=identifier>D<span>,<span class=identifier>I</span>&gt;&amp; l, <span class=keyword>const</span> Range& r );
+  <h4> Models </h4>
+ 
+  Any object of type <tt>D</tt> inheriting publicly from <code>range_comparison_op::base_of&lt;D&gt;</code>.
 
-    <span class=keyword>template</span>&lt; <span class=keyword>class</span> D, <span class=keyword>class</span> <span class=identifier>I</span>, <span class=keyword>class</span> Range >
-    bool <span class=keyword>operator</span>==( <span class=keyword>const</span> Range& l, <span class=keyword>const</span> <span class=identifier>converter<span>&lt;<span class=identifier>D<span>,<span class=identifier>I</span>&gt;&amp; r );
+  <h3><a name="concept-range_comparable">Concept <tt>RangeComparable</tt><a></h3> 
 
-    <span class=keyword>template</span>&lt; <span class=keyword>class</span> D, <span class=keyword>class</span> <span class=identifier>I</span>, <span class=keyword>class</span> Range >
-    bool <span class=keyword>operator</span>!=( <span class=keyword>const</span> <span class=identifier>converter<span>&lt;<span class=identifier>D<span>,<span class=identifier>I</span>&gt;&amp; l, <span class=keyword>const</span> Range& r );
-    
-    <span class=keyword>template</span>&lt; <span class=keyword>class</span> D, <span class=keyword>class</span> <span class=identifier>I</span>, <span class=keyword>class</span> Range >
-    bool <span class=keyword>operator</span>!=( <span class=keyword>const</span> Range& l, <span class=keyword>const</span> <span class=identifier>converter<span>&lt;<span class=identifier>D<span>,<span class=identifier>I</span>&gt;&amp; r );
+  <h4>Headers</h4> 
 
-    <span class=keyword>template</span>&lt; <span class=keyword>class</span> D, <span class=keyword>class</span> <span class=identifier>I</span>, <span class=keyword>class</span> Range >
-    bool <span class=keyword>operator</span><( <span class=keyword>const</span> <span class=identifier>converter<span>&lt;<span class=identifier>D<span>,<span class=identifier>I</span>&gt;&amp; l, <span class=keyword>const</span> Range& r );
+  </p> <code>&lt;boost/assign/list_of.hpp></code> <p>
 
-    <span class=keyword>template</span>&lt; <span class=keyword>class</span> D, <span class=keyword>class</span> <span class=identifier>I</span>, <span class=keyword>class</span> Range >
-    bool <span class=keyword>operator</span><( <span class=keyword>const</span> Range& l, <span class=keyword>const</span> <span class=identifier>converter<span>&lt;<span class=identifier>D<span>,<span class=identifier>I</span>&gt;&amp; r );
+  <h4>Notation</h4> 
 
-    <span class=keyword>template</span>&lt; <span class=keyword>class</span> D, <span class=keyword>class</span> <span class=identifier>I</span>, <span class=keyword>class</span> Range >
-    bool <span class=keyword>operator</span>>( <span class=keyword>const</span> <span class=identifier>converter<span>&lt;<span class=identifier>D<span>,<span class=identifier>I</span>&gt;&amp; l, <span class=keyword>const</span> Range& r );
+  Let <tt>r1</tt> denote an object modeling <tt>RangeComparable</tt> and <tt>r2</tt> modeling
+  <a href="http://www.boost.org/doc/libs/1_42_0/libs/range/doc/range.html"><tt>Range</tt></a>.
+  
+  <h4>Requirements</h4> 
+  
+  All comparison operators are defined for each pair involving <tt>r1</tt> and <tt>r2</tt>.
 
-    <span class=keyword>template</span>&lt; <span class=keyword>class</span> D, <span class=keyword>class</span> <span class=identifier>I</span>, <span class=keyword>class</span> Range >
-    bool <span class=keyword>operator</span>>( <span class=keyword>const</span> Range& l, <span class=keyword>const</span> <span class=identifier>converter<span>&lt;<span class=identifier>D<span>,<span class=identifier>I</span>&gt;&amp; r );
+  <h3><a name="concept-range_extensible">Concept <tt>RangeExtensible</tt><a></h3> 
 
-    <span class=keyword>template</span>&lt; <span class=keyword>class</span> D, <span class=keyword>class</span> <span class=identifier>I</span>, <span class=keyword>class</span> Range >
-    bool <span class=keyword>operator</span><=( <span class=keyword>const</span> <span class=identifier>converter<span>&lt;<span class=identifier>D<span>,<span class=identifier>I</span>&gt;&amp; l, <span class=keyword>const</span> Range& r );
+  An anonymous list may optionally be increased by passing a range to it, rather than an invidivual element.
 
-    <span class=keyword>template</span>&lt; <span class=keyword>class</span> D, <span class=keyword>class</span> <span class=identifier>I</span>, <span class=keyword>class</span> Range >
-    bool <span class=keyword>operator</span><=( <span class=keyword>const</span> Range& l, <span class=keyword>const</span> <span class=identifier>converter<span>&lt;<span class=identifier>D<span>,<span class=identifier>I</span>&gt;&amp; r );
-    
-    <span class=keyword>template</span>&lt; <span class=keyword>class</span> D, <span class=keyword>class</span> <span class=identifier>I</span>, <span class=keyword>class</span> Range >
-    bool <span class=keyword>operator</span>>=( <span class=keyword>const</span> <span class=identifier>converter<span>&lt;<span class=identifier>D<span>,<span class=identifier>I</span>&gt;&amp; l, <span class=keyword>const</span> Range& r );
+  <h4>Notation</h4> 
 
-    <span class=keyword>template</span>&lt; <span class=keyword>class</span> D, <span class=keyword>class</span> <span class=identifier>I</span>, <span class=keyword>class</span> Range >
-    bool <span class=keyword>operator</span>>=( <span class=keyword>const</span> Range& l, <span class=keyword>const</span> <span class=identifier>converter<span>&lt;<span class=identifier>D<span>,<span class=identifier>I</span>&gt;&amp; r );
+  Let  <tt>v</tt> denote <a href="http://www.boost.org/doc/libs/1_42_0/libs/range/doc/range.html"><tt>Range</tt></a>
+  and <tt>e</tt> an object modeling <tt>RangeExtensible</tt>.
 
-    <span class=keyword>template</span>&lt; <span class=keyword>class</span> D, <span class=keyword>class</span> <span class=identifier>I</span>, <span class=keyword>class</span> Elem, <span class=keyword>class</span> Draits >
-    std::basic_ostream<Elem,Traits>& 
-    <span class=keyword>operator</span><<( std::basic_ostream<Elem, Traits>& Os,
-                <span class=keyword>const</span> <span class=identifier>converter<span>&lt;<span class=identifier>D<span>,<span class=identifier>I</span>&gt;&amp; r );
-<span class=special>} </span><span class=comment>// namespace 'assign'</span>
-<span class=special>} </span><span class=comment>// namespace 'boost'</span></pre></blockquote>
+  <h4>Requirements</h4> 
+  
+    <blockquote>
+  	<table cellpadding=5 border=1>
+  	<tr><th class="head">Expression</th><th class="head">Result</th></tr> 
+  	<tr><td><tt><span class="pre">e.range( v );</span></tt></td><td>reference to <tt>e</tt></td> </tr>
+  	</table>
+    </blockquote>
+
+  <h3><a name="concept-repeatable">Concept <tt>Repeatable</tt><a></h3> 
+
+  <h4>Notation</h4> 
+
+  Let  <tt>T</tt> denote the value type with respect to which <tt>Repeatable</tt> is invoked, and
+  <tt>t</tt> an instance thereof. Let <tt>e</tt> an object modeling <tt>Repeatable</tt>. Let 
+  <tt>n</tt> denote an integer.
+
+  <h4>Requirements</h4> 
+  
+    <blockquote>
+  	<table cellpadding=5 border=1>
+  	<tr><th class="head">Expression</th><th class="head">Result</th></tr> 
+  	<tr><td><tt><span class="pre">e.repeat( n, t );</span></tt></td><td>reference to <tt>e</tt></td> </tr>
+  	</table>
+    </blockquote>
+  
+  <h2>Proxy objects <a name="ref-impl"> </h2>
+
+  Proxy objects are those that are returned by <a name="ref-functions">functions<a>, which are
+  invisible to their caller, and take care of the implementation.
+
+  <h3>Contents</h3>
+
+     <ul>
+        <li> Proxy object <a href="#ref-generic_list">        <code>generic_list&lt;&gt;</code>        </a> </li>
+        <li> Proxy object <a href="#ref-list_inserter">       <code>list_inserter&lt;&gt;</code>       </a> </li>
+        <li> Proxy object <a href="#ref-static_generic_list"> <code>static_generic_list&lt;&gt;</code> </a> </li>
+<!--        <li> Proxy object <a href="#ref-array_interface">     <code>array_interface&lt;&gt;</code>   </a> </li> -->
+        <li> Proxy object <a href="#ref-expr">                <code>expr&lt;&gt;</code>                </a> </li>
+<!--        <li> Proxy object <a href="#ref-lazy_array">          <code>lazy_array&lt;&gt;</code>          </a> </li> -->
+        <li> Proxy object <a href="#ref-static_array">        <code>static_array&lt;&gt;</code>        </a> </li>
+        <li> Proxy object <a href="#ref-chain_impl_l">         <code>chain_impl::expr_l&lt;&gt;</code>    </a> </li>
+        <li> Proxy object <a href="#ref-chain_impl_r">         <code>chain_impl::expr_r&lt;&gt;</code>    </a> </li>
+     </ul>
 
   <h3>Proxy object <code>generic_list&lt;&gt;</code><a name=ref-generic_list> </h3>
-  <p>
-  <b>Header</b> <code>&lt;boost/assign/list_of.hpp></code>
-  </p>
 
-  <b>Template parameters</b>
+  <h4>Header</h4> <code>&lt;boost/assign/list_of.hpp></code>
+
+  <h4>Template parameters</h4>
   <blockquote>
   	<table cellpadding=5 border=1>
   	<tr><th class="head">Parameter</th> <th class="head">Description</th>
@@ -1361,75 +1518,21 @@ The maximum number of arguments to a csv function is <code>BOOST_ASSIGN_CSV_SIZE
   	</table>
   </blockquote>
 
-  <b>Associated types</b>
-  <blockquote>
-  	<table cellpadding=5 border=1>
-  	<tr><th class="head">Expression</th> <th class="head">Description</th>
-  	<tr><td><a href="#ref-converter"><tt>converter&lt&gt</tt><a></td><td> Public base class of <a href="#ref-generic_list"><tt>generic_list&lt&gt</tt></a></td> </tr>
-  	</table>
-  </blockquote>
+  <h4> Model of </h4>
 
-  <b>Synopsis</b>
-  <blockquote>  
-  <pre><span class=keyword>namespace </span><span class=identifier>boost  </span>
-<span class=special>{</span>
-<span class=keyword>namespace </span><span class=identifier>assign</span>
-<span class=special>{
-    </span><span class=keyword>template</span><span class=special>&lt; </span><span class=keyword>class </span><span class=identifier>T </span><span class=special>&gt;
-    </span><span class=keyword>class </span><span class=identifier>Implementation</span><span class=special>-</span><span class=identifier>defined</span>
-    </span><span class=special>{
-    </span><span class=keyword>public</span><span class=special>:
-        </span><span class=identifier>const_iterator  </span><span class=identifier>begin</span><span class=special>() <span class=keyword>const</span>;
-        </span><span class=identifier>const_iterator  </span><span class=identifier>end</span><span class=special>() <span class=keyword>const</span>;
-        
-        </span><span class=keyword>template</span><span class=special>&lt; </span><span class=keyword>class </span><span class=identifier>U </span><span class=special>&gt;
-        </span><span class=identifier>Implementation</span><span class=special>-</span><span class=identifier>defined</span>&amp; </span><span class=keyword>operator</span><span class=special>,( </span><span class=identifier>U </span><span class=identifier>u </span><span class=special>);
-        
-        </span><span class=comment>// inserts default-constructed object
-        </span><span class=identifier>Implementation</span><span class=special>-</span><span class=identifier>defined</span>&amp; </span><span class=keyword>operator</span><span class=special>()();  
-
-        </span><span class=keyword>template</span><span class=special>&lt; </span><span class=keyword>class </span><span class=identifier>U </span><span class=special>&gt;
-        </span><span class=identifier>Implementation</span><span class=special>-</span><span class=identifier>defined</span>&amp; </span><span class=keyword>operator</span><span class=special>()( </span><span class=identifier>U </span><span class=identifier>u </span><span class=special>);
-        
-        </span><span class=keyword>template</span><span class=special>&lt; </span><span class=keyword>class </span><span class=identifier>U</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>U2 </span><span class=special>&gt;
-        </span><span class=identifier>Implementation</span><span class=special>-</span><span class=identifier>defined</span>&amp; </span><span class=keyword>operator</span><span class=special>()( </span><span class=identifier>U </span><span class=identifier>u</span><span class=special>, </span><span class=identifier>U2 </span><span class=identifier>u2 </span><span class=special>);
-
-        </span><span class=comment>//
-        // and similarly up to 5 arguments
-        //
-                
-    <span class=keyword>template</span><span class=special>&lt; </span><span class=keyword>class </span><span class=identifier>T </span><span class=special>&gt;
-    </span><span class=identifier>Implementation</span><span class=special>-</span><span class=identifier>defined</span>   </span><span class=identifier>list_of</span><span class=special>(</span><span class=special>);
-
-    </span><span class=keyword>template</span><span class=special>&lt; </span><span class=keyword>class </span><span class=identifier>T </span><span class=special>&gt;
-    </span><span class=identifier>Implementation</span><span class=special>-</span><span class=identifier>defined</span>   </span><span class=identifier>list_of</span><span class=special>( </span><span class=identifier>T </span><span class=identifier>t </span><span class=special>);
-    
-    </span><span class=keyword>template</span><span class=special>&lt; </span><span class=keyword>class </span><span class=identifier>T</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>U</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>U2 </span><span class=special>&gt;
-    </span><span class=identifier>Implementation</span><span class=special>-</span><span class=identifier>defined</span>   </span><span class=identifier>list_of</span><span class=special>( </span><span class=identifier>U </span><span class=identifier>u</span><span class=special>, </span><span class=identifier>U2 </span><span class=identifier>u2 </span><span class=special>);
-    
-    </span><span class=keyword>template</span><span class=special>&lt; </span><span class=keyword>class </span><span class=identifier>T</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>U</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>U2</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>U3 </span><span class=special>&gt;
-    </span><span class=identifier>Implementation</span><span class=special>-</span><span class=identifier>defined</span>   </span><span class=identifier>list_of</span><span class=special>( </span><span class=identifier>U </span><span class=identifier>u</span><span class=special>, </span><span class=identifier>U2 </span><span class=identifier>u2</span><span class=special>, </span><span class=identifier>U3 </span><span class=identifier>u3 </span><span class=special>);
-
-    </span><span class=keyword>template</span><span class=special>&lt; </span><span class=keyword>class </span><span class=identifier>T</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>U</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>U2</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>U3</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>U4 </span><span class=special>&gt;
-    </span><span class=identifier>Implementation</span><span class=special>-</span><span class=identifier>defined</span>   </span><span class=identifier>list_of</span><span class=special>( </span><span class=identifier>U </span><span class=identifier>u</span><span class=special>, </span><span class=identifier>U2 </span><span class=identifier>u2</span><span class=special>, </span><span class=identifier>U3 </span><span class=identifier>u3</span><span class=special>, </span><span class=identifier>U4 </span><span class=identifier>u4 </span><span class=special>);
-  
-    </span><span class=keyword>template</span><span class=special>&lt; </span><span class=keyword>class </span><span class=identifier>T</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>U</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>U2</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>U3</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>U4</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>U5 </span><span class=special>&gt;
-    </span><span class=identifier>Implementation</span><span class=special>-</span><span class=identifier>defined</span>   </span><span class=identifier>list_of</span><span class=special>( </span><span class=identifier>U </span><span class=identifier>u</span><span class=special>, </span><span class=identifier>U2 </span><span class=identifier>u2</span><span class=special>, </span><span class=identifier>U3 </span><span class=identifier>u3</span><span class=special>, </span><span class=identifier>U4 </span><span class=identifier>u4</span><span class=special>, </span><span class=identifier>U5 </span><span class=identifier>u5 </span><span class=special>);
-
-    </span><span class=keyword>template</span><span class=special>&lt; </span><span class=keyword>class </span><span class=identifier>Key</span><span class=special>, </span><span class=keyword>class </span><span class=identifier>T </span><span class=special>&gt;
-    </span><span class=identifier>Implementation</span><span class=special>-</span><span class=identifier>defined</span>   </span><span class=identifier>map_list_of</span><span class=special>( </span><span class=identifier>Key </span><span class=identifier>k</span><span class=special>, </span><span class=identifier>T </span><span class=identifier>t </span><span class=special>)
-    </span><span class=special>{
-        </span><span class=keyword>return </span><span class=identifier>list_of</span><span class=special>&lt; </span><span class=identifier>std</span><span class=special>::</span><span class=identifier>pair</span><span class=special>&lt;</span><span class=identifier>Key</span><span class=special>,</span><span class=identifier>T</span><span class=special>&gt; </span><span class=special>&gt;()( </span><span class=identifier>k</span><span class=special>, </span><span class=identifier>t </span><span class=special>);
-    </span><span class=special>}</span>
-<span class=special>} </span><span class=comment>// namespace 'assign'</span>
-<span class=special>} </span><span class=comment>// namespace 'boost'</span>  </pre></blockquote>
+  <p>
+  <a href="#concept-ano_list">         <tt>AnanymousList(T)    </tt></a>, 
+  <a href="#concept-converter">        <tt>Converter(T)        </tt></a>, 
+  <a href="#concept-range_comparable"> <tt>RangeComparable     </tt></a>, 
+  <a href="#concept-range_extensible"> <tt>RangeExtensible     </tt></a>,
+  <a href="#concept-repeatable">       <tt>Repeatable(T)       </tt></a>
+  </p>
 
   <h3>Proxy object <code>static_generic_list<></code><a name=ref-static_generic_list> </h3>
-  <b>Header</b> <code>&lt;boost/assign/list_of.hpp></code>
+  
+  <h4>Header</h4> <code>&lt;boost/assign/list_of.hpp></code>
 
-    <p>
-  <b>Template parameters</b> 
-  </p>
+  <h4>Template parameters</h4> 
 
   <blockquote>
   	<table cellpadding=5 border=1>
@@ -1439,30 +1542,23 @@ The maximum number of arguments to a csv function is <code>BOOST_ASSIGN_CSV_SIZE
   	</table>
   </blockquote>
 
-    <p>
-  <b>Associated types</b> 
-  </p>
+  <h4>Model of</h4>
 
-  <blockquote>
-  	<table cellpadding=5 border=1>
-  	<tr><th class="head">Expression</th> <th class="head">Description</th>
-  	<tr><td><a href="#ref-converter"><tt>converter&lt&gt</tt><a></td><td> Public base class of <a href="#ref-static_generic_list"><tt>static_generic_list&lt&gt</tt></a></td> </tr>
-  	</table>
-  </blockquote>
+  <p> 
+  <a href="#concept-ano_list">        <tt>AnonymousList</tt>      </a> for value type <a href="#concept-ref_wrapper_assign"><tt>assign_reference</tt></a><tt>&lt;T&gt;</tt>, 
+  <a href="#concept-converter">       <tt>Converter(T)</tt>       </a>, 
+  <a href="#concept-range_comparable"><tt>RangeComparable</tt>    </a>, 
+  <a href="#concept-range_extensible"><tt>RangeExtensible</tt>    </a> 
+  </p>
 
   <h3>Proxy object <code>list_inserter&lt;&gt;</code><a name="ref-list_inserter"></h3> 
-<p>
-  
-  This class is responsible for inserting elements into containers and 
-  it is the key to extending the library to support your favourite class.
-</p>
-<p>
-  <b>Header</b> <code>&lt;boost/assign/list_inserter.hpp></code>
-</p>
 
-    <p>
-  <b>Template parameters</b> 
-  </p>
+  <p>This class is responsible for inserting elements into containers and 
+  it is the key to extending the library to support your favourite class.</p>
+
+  <h4>Header</h4> <code>&lt;boost/assign/list_inserter.hpp></code>
+
+  <h4>Template parameters</h4> 
 
   <blockquote>
   	<table cellpadding=5 border=1>
@@ -1472,9 +1568,8 @@ The maximum number of arguments to a csv function is <code>BOOST_ASSIGN_CSV_SIZE
   	</table>
   </blockquote>
 
-    <p>
-  <b>Synopsis</b> 
-  </p>
+  <h4>Synopsis</h4> 
+
   <blockquote><pre>
 <span class=keyword>namespace </span><span class=identifier>boost</span>
 <span class=special>{</span>
@@ -1537,106 +1632,48 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
       
 <span class=special>} </span><span class=comment>// namespace 'assign'</span>
 <span class=special>} </span><span class=comment>// namespace 'boost'</span></pre></blockquote>
-  <p>
-  Notice how the arguments to <code>operator,()</code> and 
+  <p>Notice how the arguments to <code>operator,()</code> and 
   <code>operator()()</code> are passed differently to 
   <code>fun</code> depending of the type of <code>Argument</code>. 
   So if we only pass one template argument to <code>list_inserter,</code>
   we can forward "arbitrary" argument lists of functions. If we pass
   two template arguments to <code>list_inserter</code> we can 
-  construct types with "arbitrary" constructors.
-  </p> 
+  construct types with "arbitrary" constructors.</p> 
    
-  <p> 
-   And because
-  a reference to <code>list_inserter</code> is returned, we can
-  chain argument list together in a very space-efficient manner.
-  </p>
+  <p> And because a reference to <code>list_inserter</code> is returned, we can chain argument list together in a very space-efficient manner.</p>
   
-  <h4>Proxy object <code>range_comparison_op::base_of&lt;&gt;</code><a name="ref-range_comparison_op"></h4> 
-
-  TODO
-
-  <h4>Proxy object <code>array_interface&lt;&gt;</code><a name="ref-array_interface"></h4> 
-  <p>Exposes most of the <code>boost::array&lt;&gt;</code> interface.</p>
-  <b>Header</b> <code>&lt;boost/assign/auto_size/array/interface.hpp></code>
-
-    <p>
-  <b>Template parameters</b> 
-  </p>
-
-  <blockquote>
-  	<table cellpadding=5 border=1>
-  	<tr><th class="head">Parameter</th> <th class="head">Description</th>
-  	<tr><td><tt>T</tt></td><td> Element </td> </tr>
-  	<tr><td><tt>N</tt></td><td> Size </td> </tr>
-  	<tr><td><tt>R</tt></td><td> A class template </td> </tr>
-  	<tr><td><tt>D</tt></td><td> Derived </td> </tr>
-  	</table>
-  </blockquote>
-
-    <p>
-  <b>Associated types</b> 
-  </p>
-
-  <blockquote>
-  	<table cellpadding=5 border=1>
-  	<tr><th class="head">Expression</th> <th class="head">Description</th>
-  	<tr><td><tt>R&lt;T&gt;</tt></td><td> Reference wrapper </td> </tr>
-  	<tr><td><a href="#ref-converter"><tt>converter&lt&gt</tt></a></td><td> Private base class of <a href="#ref-array_interface"><tt>array_interface&lt&gt</tt></a></td> </tr>
-  	<tr><td><a href="#ref-range_comparison_op"><tt>range_comparison_op::base_of&lt&gt</tt></a></td><td> Public base class of <a href="#ref-array_interface"><tt>array_interface&lt&gt</tt></a></td> </tr>
-  	</table>
-  </blockquote>
-
-    <p>
-  <b>Requirements</b> 
-  </p>
-   Let <tt>d1</tt> and <tt>d2</tt> instances of <tt>D</tt> and <tt>const D</tt>, respectively,
-  <blockquote>
-  	<table cellpadding=5 border=1>
-  	<tr><th class="head">Expression</th> <th class="head">Result</th>
-  	<tr><td><tt>d1.ref_array_impl()</tt></td><td> array_interface::ref_array_& </td> </tr>
-  	<tr><td><tt>d2.ref_array_impl()</tt></td><td> const array_interface::ref_array_& </td> </tr>
-  	</table>
-  </blockquote>
-
-   
   <h3><a name="ref-expr">Proxy object <code>expr&lt;&gt;</code></a></h3> 
-    <p>
-  <b>Header</b> <code>&lt;boost/assign/auto_size/detail/expr.hpp></code>
-  </p>
 
-    <p>
-  <b>Template parameters</b> 
-  </p>
+  <h4>Header</h4> <code>&lt;boost/assign/auto_size/detail/expr.hpp></code>
+
+  <h4>Template parameters</h4> 
 
   <blockquote>
   	<table cellpadding=5 border=1>
-  	<tr><th class="head">Parameter</th> <th class="head">Description</th>
-  	<tr><td><tt>E</tt></td><td> Previous collection </td> </tr>
-  	<tr><td><tt>T</tt></td><td> Element </td> </tr>
-  	<tr><td><tt>N</tt></td><td> Size </td> </tr>
-  	<tr><td><tt>R</tt></td><td> A class template </td> </tr>
-  	<tr><td><tt>P</tt></td><td> Policy tag</td> </tr>
-  	<tr><td><tt>F</tt></td><td> Use reference to link to the previous collection </td> </tr>
+  	<tr><th class="head">Parameter</th> <th class="head">Description</th> <th class="head">Requirements</th></td>
+  	<tr><td><tt>E</tt></td><td> Previous collection </td> <td> Unspecified         </td></tr>
+  	<tr><td><tt>T</tt></td><td> Element             </td> <td> Unspecified         </td></tr>
+  	<tr><td><tt>N</tt></td><td> Size                </td> <td> Unspecified         </td></tr>
+  	<tr><td><tt>R</tt></td><td> A class template    </td> <td><tt>R&lt;T&gt;</tt> models <tt>RefWrapper</tt> for value type <tt>T</tt></td></tr>
+  	<tr><td><tt>P</tt></td><td> Policy tag          </td> <td> Unspecified </td> </tr>
   	</table>
   </blockquote>
 
-    <p>
-  <b>Associated types</b> 
-  </p>
+  <h4>Models</h4> 
+
+  <a href="#concept-auto_size"><tt>Auto-size&lt;T&gt;</tt></a>, 
+  <a href="#concept-ano_list"><tt>AnonymousList&lt;T&gt;</tt></a>. 
+
+  <h4>Specializations</h4> 
 
   <blockquote>
   	<table cellpadding=5 border=1>
   	<tr><th class="head">Expression</th> <th class="head">Description</th>
-  	<tr><td><tt>R&lt;T&gt;</tt></td><td> Reference wrapper </td> </tr>
-  	<tr><td><tt><code>policy&lt;P&gt;::apply&lt;expr,R&gt;::type</code></tt></td><td> Public base class of <a href="#ref-expr">expr&lt;&gt;</a> </td> </tr>
+  	<tr><td><tt>expr&lt;E,T,N,R,use_default&gt;</tt></td> <td>models <a href="#concept-ano_list"><tt>RefArray&lt;T&gt;</tt></a>, <a href="#concept-converter"><tt>Converter&lt;T&gt;</tt></a>, <a href="#concept-range_comparable"><tt>RangeComparable&lt;T&gt;</tt></a> </td> </tr>
   	</table>
   </blockquote>
 
-    <p>
-  <b>Synopsis</b> 
-  </p>
+  <h4>Synopsis</h4> 
   
   <blockquote><pre>
 <span class=keyword>namespace </span><span class=identifier>boost</span>
@@ -1648,14 +1685,14 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
 <span class=keyword>namespace </span><span class=identifier>auto_size</span>
 <span class=special>{
     <span class="keyword">template</span>&lt;<span class="keyword">typename</span> E,<span class="keyword">typename</span> T,<span class="keyword">int</span> N,
-        <span class="keyword">template&lt</span><span class="keyword">typename</span>> <span class="keyword">class</span> R,<span class="keyword">typename</span> P,<span class="keyword">bool</span> F = <span class="keyword">true</span>>
+        <span class="keyword">template&lt</span><span class="keyword">typename</span>> <span class="keyword">class</span> R,<span class="keyword">typename</span> P>
     class expr{
         <span class="keyword">public:</span>       
 
         <span class="keyword">typedef</span> Implementation-defined result_type;
         <span class="keyword">explicit</span> expr(<span class="keyword">const</span> E& p,T& t);
         <span class="keyword">template</span>&lt;<span class="keyword">typename</span> E1,<span class="keyword">typename</span> P1 &gt;</span>
-        <span class="keyword">explicit</span> expr(<span class="keyword">const</span> expr&lt;E1,T,N,R,P1>&gt; that);
+        <span class="keyword">explicit</span> expr(<span class="keyword">const</span> expr&lt;E1,T,N,R,P1&gt;& that);
 
         result_type <span class="keyword">operator</span>()(T& t)<span class="keyword">const</span>;
         
@@ -1671,24 +1708,22 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
 <span class=special>} </span><span class=comment>// namespace 'assign'</span>
 <span class=special>} </span><span class=comment>// namespace 'boost'</span></pre></blockquote>
 
-    <p>
-  <b>Design</b> 
-  </p>
+  <h4>Design</h4> 
+
 <p>
-   This proxy object is the basis of the <a href="#auto_size">auto-size</a> framework. A call to the 
-   unary operator returns an object that keeps a reference to the passed argument, and links to the 
+   A call to the unary operator returns an object that keeps a reference to the passed argument, and links to the 
    current object, thereby forming a collection whose final size is determined at compile time. 
    The function <code>write_to_array()</code> is typically used to pass the elements of the collection to the policy, 
-   that will be chosen to have the desired interface, usually iterators and conversion operators. 
+   that will be chosen to have the desired interface such as iterators and conversion operators. 
 </p>   
   
   
+<!--  
   <h3>Proxy object <code>lazy_array&lt;&gt;</code><a name="ref-lazy_array"></h3> 
-  <b>Header</b> <code>&lt;boost/assign/auto_size/array/lazy.hpp></code>
 
-    <p>
-  <b>Template parameters</b> 
-  </p>
+  <h4>Header</h4> <code>&lt;boost/assign/auto_size/array/lazy.hpp></code>
+
+  <h4>Template parameters</h4> 
 
   <blockquote>
   	<table cellpadding=5 border=1>
@@ -1700,9 +1735,7 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
   	</table>
   </blockquote>
 
-    <p>
-  <b>Associated types</b> 
-  </p>
+  <h4>Associated types</h4> 
 
   <blockquote>
   	<table cellpadding=5 border=1>
@@ -1712,9 +1745,8 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
   	</table>
   </blockquote>
 
-    <p>
-  <b>Requirements</b> 
-  </p>
+  <h4>Requirements</h4> 
+
   Let <tt>d</tt> denote an instance of <tt>D</tt> and <tt>a</tt> an instance of <code>boost::array&lt;R&lt;T&gt;,N&gt;</code>,
   <blockquote>
   	<table cellpadding=5 border=1>
@@ -1723,44 +1755,33 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
   	</table>
   </blockquote>
 
-    <p>
-  <b>Properties</b> 
-  </p>
+  <h4>Properties</h4> 
+
   <p>
    Postpones allocation of its data-members (from the derived class) until the interface is used.
  </p>
 
+-->
 
-  <h4>Proxy object <code>static_array&lt;&gt;</code><a name="ref-static_array"></h4> 
-  <b>Header</b> <code>&lt;boost/assign/auto_size/array/static.hpp></code>
-    <p>
-  <b>Template parameters</b> 
-  </p>
+  <h3>Proxy object <code>static_array&lt;&gt;</code><a name="ref-static_array"></h3> 
 
-  <blockquote>
-  	<table cellpadding=5 border=1>
-  	<tr><th class="head">Parameter</th> <th class="head">Description</th>
-  	<tr><td><tt>T</tt></td><td> Element </td> </tr>
-  	<tr><td><tt>N</tt></td><td> Size </td> </tr>
-  	<tr><td><tt>R</tt></td><td> A class template </td> </tr>
-  	</table>
-  </blockquote>
+  <h4>Header</h4> <code>&lt;boost/assign/auto_size/array/static.hpp></code>
 
-    <p>
-  <b>Associated types</b> 
-  </p>
+  <h4>Template parameters</h4> 
 
   <blockquote>
   	<table cellpadding=5 border=1>
-  	<tr><th class="head">Expression</th> <th class="head">Description</th>
-  	<tr><td><tt>R&lt;T&gt;</tt></td><td> Reference wrapper </td> </tr>
-  	<tr><td><a href="#ref-array_interface"><tt>array_interface&lt&gt</tt><a></td><td> Public base class of <a href="#ref-static_array"><tt>static_array&lt;&gt;</tt></a></td> </tr>
+  	<tr><th class="head">Parameter</th> <th class="head">Description</th> <th class="head">Requirements</th></tr>
+  	<tr><td><tt>T</tt>            </td> <td> Element                </td> <td> Unspecified</td> </tr>
+  	<tr><td><tt>N</tt>            </td> <td> Size                   </td> <td> Unspecified</td> </tr>
+  	<tr><td><tt>R</tt>            </td> <td> A class template       </td> <td> <tt>R&lt;T&gt;</tt> models <a href="#concept-ref_wrapper"> <tt>RefWrapper(T)</tt> </a></td> </tr>
   	</table>
   </blockquote>
 
-    <p>
-  <b>Requirements</b> 
-  </p>
+  <h4>Models</h4> 
+
+  <h4>Requirements</h4> 
+
   Let <tt>e</tt> denote the argument passed to the constructor, and a an instance of <code>boost::array&lt;R&lt;T&gt;,N&gt;</code>,
   <blockquote>
   	<table cellpadding=5 border=1>
@@ -1769,28 +1790,48 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
   	</table>
   </blockquote>
 
-  <h3>Proxy object <code>chain_impl::expr&lt;&gt;</code><a name="ref-chain_impl"> </h3>
+  <h3><a name="ref-chain_impl_l">Proxy object <code>chain_impl::expr_l&lt;&gt;</code></a> </h3>
    
-  <b>Header</b> <code>&lt;boost/assign/auto_size/range/chain.hpp></code>
+  <h4>Header</h4> <code>&lt;boost/assign/auto_size/range/chain_l.hpp></code>
 
-    <p>
-  <b>Template parameters</b> 
-  </p>
+  <h4>Template parameters</h4> 
 
   <blockquote>
   	<table cellpadding=5 border=1>
   	<tr><th class="head">Parameter</th> <th class="head">Description</th>
   	<tr><td><tt>L</tt></td><td> Implementation-defined </td> </tr>
   	<tr><td><tt>E</tt></td><td> Implementation-defined </td> </tr>
-  	<tr><td><tt>Rng1</tt></td><td> A range to chain to </td> </tr>
+  	<tr><td><tt>Rng1</tt></td><td> Models <a href="http://www.boost.org/doc/libs/1_42_0/libs/range/doc/range.html"><tt>Range</tt></a> </td> </tr>
   	<tr><td><tt>is_first</tt></td><td> boolean constant </td> </tr>
   	<tr><td><tt>V</tt></td><td> A value type </td> </tr>
   	<tr><td><tt>R</tt></td><td> A reference type</td> </tr>
-  	<tr><td><tt>add_const</tt></td><td> boolean constant </td> </tr>
   	</table>
   </blockquote>
 
-  TODO
+  <h4>Models</h4> 
+  
+  <a name="concept-chainable"><tt>Chainable(T)</tt></a>, <a name="concept-chainable"><tt>Converter(T)</tt></a>
+ 
+  <h3><a name="ref-chain_impl_r">Proxy object <code>chain_impl::expr_r&lt;&gt;</code></a> </h3>
+
+  <h4>Header</h4> <code>&lt;boost/assign/auto_size/range/chain_r.hpp></code>
+
+  <h4>Template parameters</h4> 
+
+  <blockquote>
+  	<table cellpadding=5 border=1>
+  	<tr><th class="head">Parameter</th> <th class="head">Description</th>
+  	<tr><td><tt>E</tt></td><td> Implementation-defined </td> </tr>
+  	<tr><td><tt>Rng1</tt></td><td> Models <a href="http://www.boost.org/doc/libs/1_42_0/libs/range/doc/range.html"><tt>Range</tt></a> </td> </tr>
+  	<tr><td><tt>is_first</tt></td><td> boolean constant </td> </tr>
+  	<tr><td><tt>V</tt></td><td> A value type </td> </tr>
+  	<tr><td><tt>R</tt></td><td> A reference type</td> </tr>
+  	</table>
+  </blockquote>
+
+  <h4>Models</h4> 
+
+  <a name="concept-chainable"><tt>Chainable(const T)</tt></a>, <a name="concept-chainable"><tt>Converter(const T)</tt></a>
 
   <h2><a name="exceptions">Exceptions and exception-safety</a></h2>
   <p>
@@ -1972,6 +2013,8 @@ where <code>call_push_back</code> is defined as
       <li> <a href="../test/std.cpp">std.cpp</a>      
       <li> <a href="../test/list_inserter.cpp">list_inserter.cpp</a>      
       <li> <a href="../test/list_of_workaround.cpp">list_of_work_around.cpp</a>      
+      <li> <a href="../test/ref_list_of.cpp">ref_list_of.cpp</a>      
+      <li> <a href="../test/ref_csv.cpp">ref_csv.cpp</a>      
 </ul> </p>
   
   
@@ -2069,10 +2112,10 @@ support better initialization (see <a href="#initializer">[4]</a>).
   <li> Pavel Vozenilek for his countless suggestions, improvements and 
        portability fixes. 
   <li> Rene Rivera for Code Warrior portability.     
-  <li> Manuel Peinado Gallego for identifying the need for an <a href="#auto_size">auto-size framework</a>, 
-  his valuable advice throughout its development, and proposing
-  <a href="http://gist.github.com/287791">a design</a> that laid the foundation for 
-  <a href="#chain"> <code>chain_l</code></a>  and <a href="#chain"> <code>chain_r</code> </a>.
+  <li> Manuel Peinado Gallego for identifying the need for an <a href="#concept-auto_size">auto-size framework</a>, 
+  his valuable advice throughout its development, and proposing a
+  <a href="http://gist.github.com/287791">design</a> that laid the foundation for 
+  <a href="#chain"> <code>chain_l</code></a>  and <a href="#chain"> chaining ranges</a>.
        
        </ul>
   </p>
@@ -2081,7 +2124,7 @@ support better initialization (see <a href="#initializer">[4]</a>).
   <h2><a name="upgrading_from_1_42">Upgrading from Boost v. <span class=number>1</span><span class=special>.</span><span class=number>42</span></a></h2>
 
   <p> 
-  The <a href="#auto_size">auto-size framework</a> for building a collection of references whose size is deduced at compile time supersedes <a href="#ref-list_of"><code>ref_list_of&lt;int&gt;()</code></a>.
+  The <a href="#concept-auto_size">auto-size framework</a> for building a collection of references whose size is deduced at compile time supersedes <a href="#ref-list_of"><code>ref_list_of&lt;int&gt;()</code></a>.
   The latter will continue to be supported to ensure backward compatibility.
   </p>
 

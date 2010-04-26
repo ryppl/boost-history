@@ -13,5 +13,6 @@
 #include <boost/assign/auto_size/ref_rebind_list_of.hpp> 
 #include <boost/assign/auto_size/ref_csv.hpp> 
 #include <boost/assign/auto_size/ref_rebind_csv.hpp> 
+#include <boost/assign/auto_size/range/chain.hpp> 
 
 #endif

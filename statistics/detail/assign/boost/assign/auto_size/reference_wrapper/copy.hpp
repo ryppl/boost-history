@@ -86,7 +86,6 @@ namespace detail{
         l.swap( r );
     }
 
-    
 }// detail
 }// assign
 }// boost
