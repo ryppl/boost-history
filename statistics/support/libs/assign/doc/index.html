@@ -858,10 +858,10 @@ Originally arguments were passed by value (and still is in
          <th>        Includes              </th> 
      <tr>
          <td> &lt;boost/assign.hpp>               </td>
-         <td>     everything except support for pointer containers  </td>
+         <td>     everything except support for pointer containers and functions returning <a href="#concept-auto_size">auto-size</a> proxy objects  </td>
      <tr>
          <td> &lt;boost/assign/auto_size.hpp>               </td>
-         <td>     All functions return <a href="#concept-auto_size">auto-size</a> proxy objects.  </td>
+         <td>     All functions returning <a href="#concept-auto_size">auto-size</a> proxy objects.  </td>
 
      <tr>
          <td> &lt;boost/assign/auto_size/range/chain_operator.hpp> </td>
@@ -1115,7 +1115,7 @@ be thrown by the proxy returned by <code>list_of()</code>
   </blockquote>
   
   <p>Usage for the related functions <code>ref_rebind_list_of()</code> and <code>cref_rebind_list_of()</code> are identical to those
-  above, except the fourth argument to <a href="#ref-expr"> <tt>expr&lt;&gt;</tt></a> is <a href="#concept-ref_wrapper_assign"><tt>assign_reference_copy</tt></a>. </p>
+  above, except the fourth argument to <a href="#ref-expr"> <tt>expr&lt;&gt;</tt></a> is <a href="#concept-ref_wrapper_assign"><tt>assign_reference_rebind</tt></a>. </p>
 
   <h3>Functions <code>ref_csv()</code>, <code>cref_csv()</code> and variants <a name=ref-ref_csv> </h3>
 
