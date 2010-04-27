@@ -57,13 +57,15 @@ void example_range(std::ostream& os)
         std::ostream_iterator<val_>(os," ")
     ); 
 
-    tmp1 && ar5 && ref_list_of(e)(f);
-
     os <<  ") becomes (";
     boost::copy(
         ar1 && ar2 && ar3 ,
         boost::begin( tmp1 && ar5 && tmp3 )
     );  
+
+    std::vector<int> v = std::vector<int>(3,1) && std::vector<int>(3,2) && std::vector<int>(3,3);
+
+
     boost::copy(
         tmp1 && ar5 && tmp3,
         std::ostream_iterator<val_>(os," ")
