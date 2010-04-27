@@ -51,7 +51,9 @@
         <a href="#ref-functions">Functions and operators</a>
       <ul>
         <li><a href="#ref-function-headers">Headers</a> </li>
-        <li>Functions <a href="#ref-list_of"><code>list_of()</code></a>, <a href="#ref-list_of"><code>map_list_of()</code></a> and <a href="#ref-list_of"><code>ref_list_of&lt;int&gt;()</code></a></li>
+        <li>Functions <a href="#ref-list_of"><code>list_of()</code></a></li>
+        <li>Functions <a href="#ref-map_list_of"><code>map_list_of()</code></a></li>
+        <li>Functions <a href="#ref-ref_list_of_int"><code>ref_list_of<code>&lt;int&gt;()</code></a></li>
         <li>Function <a href="#ref-make_list_inserter"><code>make_list_inserter()</code></a></li>
         <li>Functions <a href="#ref-ref_list_of"><code>ref_list_of()</code></a>, <a href="#ref-ref_list_of"><code>cref_list_of()</code></a>, and variants</li>
         <li>Functions <a href="#ref-ref_csv"><code>ref_csv()</code></a>, <a href="#ref-ref_csv"><code>cref_csv()</code></a>, and variants</li>
@@ -111,14 +113,13 @@ class=keyword>int</span><span class=special>></span><span
 class=identifier> v</span><span class=special>; </span>
 <span class=identifier>v </span><span class=special>+= </span><span 
 class=number>1</span><span
-class=special>,</span><span class=number>2</span><span 
+class=special>,</span><span class=number>5</span><span 
 class=special>,</span><span class=number>3</span><span 
 class=special>,</span><span class=number>4</span><span 
-class=special>,</span><span class=number>5</span><span 
-class=special>,</span><span class=number>6</span><span 
-class=special>,</span><span class=number>7</span><span 
-class=special>,</span><span class=number>8</span><span 
-class=special>,</span><span class=number>9</span><span class=special>;</span></pre></p>
+class=special>,</span><span class=number>2</span><span 
+class=special>,</span><span class=number>9</span><span 
+class=special>,</span><span class=number>0</span><span 
+class=special>,</span><span class=number>7</span><span class=special>;</span></pre></p>
        <li> A parenthesis-separated list: 
              <p>       
              <pre>
@@ -130,15 +131,27 @@ class=identifier>string</span><span class=special>,</span><span class=keyword>in
 <ul> <li> A list of references (to temporaries, in this example): <p> 
    <pre><span class=special>boost::array&lt;<span class=keyword>int</span><span class=special>,</span><span class=number>9</span>&gt; </span><span class=identifier>a</span> <span class=special>= </span><span class=identifier>cref_csv</span><span class=special>( </span><span 
 class=number>1</span><span
-class=special>,</span><span class=number>2</span><span 
+class=special>,</span><span class=number>5</span><span 
 class=special>,</span><span class=number>3</span><span 
 class=special>,</span><span class=number>4</span><span 
-class=special>,</span><span class=number>5</span><span 
-class=special>,</span><span class=number>6</span><span 
+class=special>,</span><span class=number>2</span><span 
+class=special>,</span><span class=number>9</span><span 
+class=special>,</span><span class=number>0</span><span 
 class=special>,</span><span class=number>7</span><span 
-class=special>,</span><span class=number>8</span><span 
-class=special>,</span><span class=number>9</span><span class=special> )</span></pre>
+class=special><span class=special> )</span></pre>
 </p> </ul>
+
+<ul> <li> Chained ranges: <p> 
+   <pre><span class=special>vector&lt;<span class=keyword>int</span>&gt; </span><span class=identifier>v</span> <span class=special>= </span><span class=identifier>vector&lt;<span class=keyword>int</span>&gt;</span><span class=special>( </span><span 
+class=number>3</span><span
+class=special>,</span><span class=number>1</span><span 
+<span class=special> )</span><span class=special> && </span><span class=identifier>vector&lt;<span class=keyword>int</span>&gt;</span><span class=special>( </span><span 
+class=number>3</span><spanclass=special>,</span><span class=number>2</span><span 
+<span class=special> )</span><span class=special> && </span><span class=identifier>vector&lt;<span class=keyword>int</span>&gt;</span><span class=special>( </span><span 
+class=number>3</span><span class=special>,</span><span class=number>3</span><span class=special> )</span><span>;</span>
+</pre>
+</p> </ul>
+
 
 
 <p>
@@ -830,15 +843,15 @@ Originally arguments were passed by value (and still is in
   <h3>Contents</h3>
 
       <ul>
-        <li><a href="#ref-function-headers">Headers</a> </li>
-        <li>Functions <a href="#ref-list_of"><code>list_of()</code></a>, <a href="#ref-list_of"><code>map_list_of()</code></a> and <a href="#ref-list_of"><code>ref_list_of&lt;int&gt;()</code></a></li>
+        <li><a href="#ref-function-headers">Headers</a></li>
+        <li>Functions <a href="#ref-list_of"><code>list_of()</code></a></li>
+        <li>Functions <a href="#ref-map_list_of"><code>map_list_of()</code></a></li>
+        <li>Functions <a href="#ref-ref_list_of_int"><code>ref_list_of<code>&lt;int&gt;()</code></a></li>
         <li>Function <a href="#ref-make_list_inserter"><code>make_list_inserter()</code></a></li>
         <li>Functions <a href="#ref-ref_list_of"><code>ref_list_of()</code></a>, <a href="#ref-ref_list_of"><code>cref_list_of()</code></a>, and variants</li>
         <li>Functions <a href="#ref-ref_csv"><code>ref_csv()</code></a>, <a href="#ref-ref_csv"><code>cref_csv()</code></a>, and variants</li>
         <li>Operator <a href="#ref-std"><code>+=</code></a> for standard containers</li>
-        <li>Functions <a href="#ref-repeat"><code>repeat()</code></a>, <a href="#ref-repeat"><code>repeat_fun()</code></a> and 
-                                                                      <a href="#ref-repeat"><code>range()</code>
-                                                                      </a></li>
+        <li>Functions <a href="#ref-repeat"><code>repeat()</code></a>, <a href="#ref-repeat"><code>repeat_fun()</code></a> and <a href="#ref-repeat"><code>range()</code></a></li>
         <li>Operator <a href="#ref-chain"><code>&&</code></a></li>
         <li><a href="#ref-limit">Customizing</a> argument list sizes </li>
      </ul>
