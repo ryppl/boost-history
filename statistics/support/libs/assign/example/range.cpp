@@ -34,15 +34,6 @@ void example_range(std::ostream& os)
     ar_ ar5; ar5.assign( 3 );
     ar_ ar6; ar6.assign( 6 );
 
-    typedef boost::assign::detail::auto_size::n_th_expr_copy<val_,2>::type inp_;
-
-    typedef detail::result_of::convert_range<ar_,val_>::type range_;
-
-    typedef boost::range_reference<range_>::type ref_;
-//    typedef boost::assign::detail::reference_traits::convert_to<ref_>::type to_;
-
-    BOOST_MPL_ASSERT(( boost::is_same<ref_,val_&> ));    
-    
 {   
 
     BOOST_AUTO(tmp1, ref_list_of(a)(b) );
@@ -62,10 +53,6 @@ void example_range(std::ostream& os)
         ar1 && ar2 && ar3 ,
         boost::begin( tmp1 && ar5 && tmp3 )
     );  
-
-    std::vector<int> v = std::vector<int>(3,1) && std::vector<int>(3,2) && std::vector<int>(3,3);
-
-
     boost::copy(
         tmp1 && ar5 && tmp3,
         std::ostream_iterator<val_>(os," ")
