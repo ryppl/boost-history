@@ -35,21 +35,19 @@ namespace boost { namespace fusion
     }
 
     template <typename Seq, typename T>
-    inline typename
-        result_of::push_front<
+    inline typename result_of::push_front<
+        BOOST_FUSION_R_ELSE_CLREF(Seq)
+      , BOOST_FUSION_R_ELSE_CLREF(T)
+    >::type
+    push_front(
+        BOOST_FUSION_R_ELSE_CLREF(Seq) seq,
+        BOOST_FUSION_R_ELSE_CLREF(T) x)
+    {
+        return typename result_of::push_front<
             BOOST_FUSION_R_ELSE_CLREF(Seq)
           , BOOST_FUSION_R_ELSE_CLREF(T)
-        >::type
-    push_front(
-            BOOST_FUSION_R_ELSE_CLREF(Seq) seq,
-            BOOST_FUSION_R_ELSE_CLREF(T) x)
-    {
-        return typename
-            result_of::push_front<
-                BOOST_FUSION_R_ELSE_CLREF(Seq)
-              , BOOST_FUSION_R_ELSE_CLREF(T)
-            >::type(fusion::make_single_view(BOOST_FUSION_FORWARD(T,x)),
-                    BOOST_FUSION_FORWARD(Seq,seq));
+        >::type(fusion::make_single_view(BOOST_FUSION_FORWARD(T,x)),
+            BOOST_FUSION_FORWARD(Seq,seq));
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES

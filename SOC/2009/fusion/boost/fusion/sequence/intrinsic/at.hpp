@@ -86,7 +86,8 @@ namespace boost { namespace fusion
     inline typename result_of::at<BOOST_FUSION_R_ELSE_CLREF(Seq), N>::type
     at(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
-        return result_of::at<BOOST_FUSION_R_ELSE_CLREF(Seq), N>::call(seq);
+        return result_of::at<BOOST_FUSION_R_ELSE_CLREF(Seq), N>::call(
+            BOOST_FUSION_FORWARD(Seq,seq));
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
@@ -104,7 +105,7 @@ namespace boost { namespace fusion
         result_of::at_c<BOOST_FUSION_R_ELSE_CLREF(Seq), N>::type
     at_c(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
-        return fusion::at<mpl::int_<N> >(seq);
+        return fusion::at<mpl::int_<N> >(BOOST_FUSION_FORWARD(Seq,seq));
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES

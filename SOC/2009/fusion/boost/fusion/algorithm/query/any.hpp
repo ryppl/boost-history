@@ -25,7 +25,7 @@ namespace boost { namespace fusion
             typedef bool result_type;
 
             any_helper(F f)
-              : f(f)
+              : f(static_cast<F>(f))
             {}
 
             template<typename E>
@@ -60,8 +60,9 @@ namespace boost { namespace fusion
     any(BOOST_FUSION_R_ELSE_CLREF(Seq) seq, BOOST_FUSION_RREF_ELSE_OBJ(F) f)
     {
         return !fusion::all(
-                BOOST_FUSION_FORWARD(Seq,seq),
-                detail::any_helper<BOOST_FUSION_RREF_ELSE_OBJ(F)>(f));
+            BOOST_FUSION_FORWARD(Seq,seq),
+            detail::any_helper<BOOST_FUSION_RREF_ELSE_OBJ(F)>(
+                BOOST_FUSION_FORWARD(F,f)));
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES

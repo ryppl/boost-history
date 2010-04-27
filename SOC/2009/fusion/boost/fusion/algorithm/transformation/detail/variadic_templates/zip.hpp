@@ -36,7 +36,7 @@ namespace boost { namespace fusion {
     {
         return typename
             result_of::zip<BOOST_FUSION_R_ELSE_CLREF(Seqs)...>::type(
-                    vector_tie(seqs...));
+                vector_tie(BOOST_FUSION_FORWARD(Seqs,seqs)...));
     }
 
 }}

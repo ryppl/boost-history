@@ -25,16 +25,14 @@ namespace boost { namespace fusion
     }
 
     template <typename... Types>
-    inline typename
-        result_of::BOOST_FUSION_FUNCTION_NAME<
-            BOOST_FUSION_R_ELSE_CLREF(Types)...
-        >::type
+    inline typename result_of::BOOST_FUSION_FUNCTION_NAME<
+        BOOST_FUSION_R_ELSE_CLREF(Types)...
+    >::type
     BOOST_FUSION_FUNCTION_NAME(BOOST_FUSION_R_ELSE_CLREF(Types)... types)
     {
-        return typename
-            result_of::BOOST_FUSION_FUNCTION_NAME<
-                BOOST_FUSION_R_ELSE_CLREF(Types)...
-            >::type(BOOST_FUSION_FORWARD(Types, types)...);
+        return typename result_of::BOOST_FUSION_FUNCTION_NAME<
+            BOOST_FUSION_R_ELSE_CLREF(Types)...
+        >::type(BOOST_FUSION_FORWARD(Types, types)...);
     }
 }}
 

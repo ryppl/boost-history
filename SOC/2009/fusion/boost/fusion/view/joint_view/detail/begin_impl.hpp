@@ -78,7 +78,7 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(Seq seq)
             {
-                return call(seq, equal_to());
+                return call(static_cast<Seq>(seq), equal_to());
             }
         };
     };

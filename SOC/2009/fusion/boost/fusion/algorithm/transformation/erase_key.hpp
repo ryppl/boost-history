@@ -49,19 +49,23 @@ namespace boost { namespace fusion
             static type
             call_impl(Seq seq,mpl::true_ /*is_forward*/)
             {
-                return fusion::erase(seq,fusion::find_key<Key>(seq));
+                return fusion::erase(
+                    static_cast<Seq>(seq),
+                    fusion::find_key<Key>(seq));
             }
 
             static type
             call_impl(Seq seq,mpl::false_ /*is_forward*/)
             {
-                return type(seq);
+                return type(static_cast<Seq>(seq));
             }
 
             static type
             call(Seq seq)
             {
-                return call_impl(seq,typename traits::is_forward<Seq>::type());
+                return call_impl(
+                    static_cast<Seq>(seq),
+                    typename traits::is_forward<Seq>::type());
             }
         };
     }
@@ -71,9 +75,9 @@ namespace boost { namespace fusion
         result_of::erase_key<BOOST_FUSION_R_ELSE_CLREF(Seq), Key>::type
     erase_key(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
-        return
-            result_of::erase_key<BOOST_FUSION_R_ELSE_CLREF(Seq), Key>::call(
-                seq);
+        return result_of::erase_key<
+            BOOST_FUSION_R_ELSE_CLREF(Seq), Key
+        >::call(BOOST_FUSION_FORWARD(Seq,seq));
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES

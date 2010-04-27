@@ -44,8 +44,8 @@ namespace boost { namespace fusion
       , BOOST_FUSION_R_ELSE_CLREF(NewValue)
     >::type
     replace_if(BOOST_FUSION_R_ELSE_CLREF(Seq) seq,
-            BOOST_FUSION_RREF_ELSE_OBJ(F) pred,
-            BOOST_FUSION_R_ELSE_CLREF(NewValue) new_value)
+        BOOST_FUSION_RREF_ELSE_OBJ(F) pred,
+        BOOST_FUSION_R_ELSE_CLREF(NewValue) new_value)
     {
         typedef
             result_of::replace_if<
@@ -55,10 +55,11 @@ namespace boost { namespace fusion
             >
         result;
 
-        return typename result::type(BOOST_FUSION_FORWARD(Seq,seq),
-                typename result::replacer(
-                    BOOST_FUSION_FORWARD(F,pred),
-                    BOOST_FUSION_FORWARD(NewValue,new_value)));
+        return typename result::type(
+            BOOST_FUSION_FORWARD(Seq,seq),
+            typename result::replacer(
+                BOOST_FUSION_FORWARD(F,pred),
+                BOOST_FUSION_FORWARD(NewValue,new_value)));
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
@@ -68,8 +69,9 @@ namespace boost { namespace fusion
     {
         typedef result_of::replace_if<Seq&, F, NewValue const&> result;
 
-        return typename result::type(seq,
-                typename result::replacer(pred,new_value));
+        return typename result::type(
+            seq,
+            typename result::replacer(pred,new_value));
     }
 #endif
 }}

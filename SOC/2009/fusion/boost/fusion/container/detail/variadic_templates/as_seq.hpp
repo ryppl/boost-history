@@ -5,11 +5,11 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
+#include <boost/fusion/support/category_of.hpp>
+
 //cschmidt: to avoid cyclic references - as some of the (here unneeded) mpl
 //sequence modification metafunctions might instantiate result_of::as_xxx - just
 //include the relevant /fusion/mpl/ headers.
-#include <boost/fusion/support/category_of.hpp>
-
 #include <boost/fusion/mpl/at.hpp>
 #include <boost/fusion/mpl/back.hpp>
 #include <boost/fusion/mpl/begin.hpp>
@@ -19,7 +19,6 @@
 #include <boost/fusion/mpl/size.hpp>
 
 #include <boost/fusion/support/internal/variadic_templates/variadic_quote.hpp>
-
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/fold.hpp>

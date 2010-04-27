@@ -40,8 +40,9 @@ struct test_func
     template <typename Sig>
     struct result;
 
+    //TODO
     template <class Self, class Seq> 
-    struct result< Self(Seq &) >
+    struct result< Self(BOOST_FUSION_R_ELSE_CLREF(Seq)) >
         : mpl::if_< mpl::and_< fusion::result_of::empty<Seq>, RemoveNullary >, 
                     boost::blank, mpl::identity<long> >::type
     { };

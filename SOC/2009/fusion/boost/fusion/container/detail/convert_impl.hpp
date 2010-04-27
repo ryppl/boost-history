@@ -60,7 +60,7 @@ namespace boost { namespace fusion
                 call(Seq seq)
                 {
                     return type(fusion::sequence_assign(
-                            BOOST_FUSION_FORWARD(Seq,seq)));
+                        BOOST_FUSION_FORWARD(Seq,seq)));
                 }
             };
         };
@@ -86,10 +86,9 @@ namespace boost { namespace fusion
         >::type
     BOOST_PP_CAT(as_,BOOST_FUSION_SEQ_NAME)(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
-        return
-            result_of::BOOST_PP_CAT(as_,BOOST_FUSION_SEQ_NAME)<
-                BOOST_FUSION_R_ELSE_CLREF(Seq)
-            >::call(seq);
+        return result_of::BOOST_PP_CAT(as_,BOOST_FUSION_SEQ_NAME)<
+            BOOST_FUSION_R_ELSE_CLREF(Seq)
+        >::call(BOOST_FUSION_FORWARD(Seq,seq));
     }
 
 }}

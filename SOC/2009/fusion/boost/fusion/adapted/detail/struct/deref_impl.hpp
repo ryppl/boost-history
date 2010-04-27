@@ -33,7 +33,7 @@ namespace boost { namespace fusion { namespace extension
            type
            call(It it)
            {
-               return impl::call(*it.seq);
+               return impl::call(static_cast<typename it::seq_type>(*it.seq));
            }
         };
     };

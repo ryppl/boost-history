@@ -32,9 +32,9 @@ namespace boost { namespace fusion
         result_of::filter_if<BOOST_FUSION_R_ELSE_CLREF(Seq), Pred>::type
     filter_if(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
-        return typename
-            result_of::filter_if<BOOST_FUSION_R_ELSE_CLREF(Seq), Pred>::type(
-                BOOST_FUSION_FORWARD(Seq,seq));
+        return typename result_of::filter_if<
+            BOOST_FUSION_R_ELSE_CLREF(Seq), Pred
+        >::type(BOOST_FUSION_FORWARD(Seq,seq));
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES

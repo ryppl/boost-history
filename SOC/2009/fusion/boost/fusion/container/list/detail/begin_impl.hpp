@@ -25,7 +25,7 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(Seq t)
             {
-                return type(t,0);
+                return type(static_cast<Seq>(t),0);
             }
         };
     };

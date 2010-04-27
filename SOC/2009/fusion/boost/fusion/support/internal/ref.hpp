@@ -174,11 +174,11 @@ namespace boost { namespace fusion { namespace detail
               , const_type
             >::type
 #endif
+#ifdef BOOST_NO_RVALUE_REFERENCES
+        &type;
+#else
         cv_type;
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
-        typedef cv_type& type;
-#else
         typedef typename
             mpl::eval_if<
                 //8.5.3p5...

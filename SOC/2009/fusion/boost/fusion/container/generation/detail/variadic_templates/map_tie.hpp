@@ -77,10 +77,10 @@ namespace boost { namespace fusion
         result_of::map_tie<Keys...,BOOST_FUSION_R_ELSE_CLREF(Types)...>::type
     map_tie(BOOST_FUSION_R_ELSE_CLREF(Types)... types)
     {
-        typedef typename
-            result_of::map_tie<Keys...,BOOST_FUSION_R_ELSE_CLREF(Types)...>::type
-        type;
-        return type(BOOST_FUSION_FORWARD(Types, types)...);
+        return typename result_of::map_tie<
+            Keys...
+          , BOOST_FUSION_R_ELSE_CLREF(Types)...
+        >::type(BOOST_FUSION_FORWARD(Types, types)...);
     }
 }}
 

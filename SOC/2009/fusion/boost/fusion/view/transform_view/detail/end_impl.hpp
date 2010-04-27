@@ -1,6 +1,6 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -24,6 +24,12 @@ namespace boost { namespace fusion { namespace extension
         struct apply
         {
             typedef typename detail::remove_reference<Seq>::type seq;
+            typedef typename
+                detail::forward_as<
+                    Seq
+                  , typename seq::transform_type
+                >::type
+            transform_type;
 
             typedef
                 transform_view_iterator<
@@ -33,10 +39,7 @@ namespace boost { namespace fusion { namespace extension
                           , typename seq::seq_type
                         >::type
                     >::type
-                  , typename detail::forward_as<
-                        Seq
-                      , typename seq::transform_type
-                    >::type
+                  , transform_type
                   , typename seq::is_associative
                 >
             type;
@@ -44,7 +47,9 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(Seq seq)
             {
-                return type(fusion::end(seq.seq.get()), seq.f);
+                return type(
+                    fusion::end(seq.seq.get()),
+                    static_cast<transform_type>(seq.f));
             }
         };
     };
@@ -57,6 +62,12 @@ namespace boost { namespace fusion { namespace extension
         struct apply
         {
             typedef typename detail::remove_reference<Seq>::type seq;
+            typedef typename
+                detail::forward_as<
+                    Seq
+                  , typename seq::transform_type
+                >::type
+            transform_type;
 
             typedef
                 transform_view_iterator2<
@@ -72,10 +83,7 @@ namespace boost { namespace fusion { namespace extension
                           , typename seq::seq2_type
                         >::type
                     >::type
-                  , typename detail::forward_as<
-                        Seq
-                      , typename seq::transform_type
-                    >::type
+                  , transform_type
                   , typename seq::is_associative
                 >
             type;
@@ -86,7 +94,7 @@ namespace boost { namespace fusion { namespace extension
                 return type(
                         fusion::end(seq.seq1.get())
                       , fusion::end(seq.seq2.get())
-                      , seq.f);
+                      , static_cast<transform_type>(seq.f));
             }
         };
     };

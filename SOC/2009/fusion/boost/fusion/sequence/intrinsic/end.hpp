@@ -47,7 +47,8 @@ namespace boost { namespace fusion
         result_of::end<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type const
     end(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
-        return result_of::end<BOOST_FUSION_R_ELSE_CLREF(Seq)>::call(seq);
+        return result_of::end<BOOST_FUSION_R_ELSE_CLREF(Seq)>::call(
+            BOOST_FUSION_FORWARD(Seq,seq));
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES

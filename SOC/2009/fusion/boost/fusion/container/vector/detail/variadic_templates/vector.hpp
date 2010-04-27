@@ -1,5 +1,5 @@
 /*=============================================================================
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -207,7 +207,8 @@ namespace boost { namespace fusion
 #   endif
 
 #   define BOOST_FUSION_UNROLLED_VECTOR_DIRECT_ASSIGN(Z,N,_)\
-        BOOST_PP_CAT(element,N)(BOOST_PP_CAT(_,N))
+        BOOST_PP_CAT(element,N)(\
+            BOOST_FUSION_FORWARD(BOOST_PP_CAT(OtherH,N),BOOST_PP_CAT(_,N)))
 
 #   ifdef BOOST_FUSION_PREFER_MPL
 #       define BOOST_FUSION_META_VALUE_AT(N)
@@ -216,7 +217,8 @@ namespace boost { namespace fusion
         typedef BOOST_PP_CAT(H,N) BOOST_PP_CAT(h,N);
 #   endif
 
-#   define BOOST_FUSION_UNROLLED_VECTOR_AT(Z,N,_)\
+#   if BOOST_NO_RVALUE_REFERENCES
+#       define BOOST_FUSION_UNROLLED_VECTOR_AT(Z,N,_)\
         BOOST_FUSION_META_VALUE_AT(N)\
         \
         typename add_lref<BOOST_PP_CAT(H,N)>::type\
@@ -234,6 +236,24 @@ namespace boost { namespace fusion
         }\
         \
         BOOST_PP_CAT(H,N) BOOST_PP_CAT(element,N);
+#   else
+#       define BOOST_FUSION_UNROLLED_VECTOR_AT(Z,N,_)\
+        BOOST_FUSION_META_VALUE_AT(N)\
+        \
+        BOOST_PP_CAT(H,N)&\
+        at_impl(mpl::int_<I+N>)\
+        {\
+            return BOOST_PP_CAT(element,N) ;\
+        }\
+        \
+        BOOST_PP_CAT(H,N) const&\
+        at_impl(mpl::int_<I+N>)const\
+        {\
+            return BOOST_PP_CAT(element,N) ;\
+        }\
+        \
+        BOOST_PP_CAT(H,N) BOOST_PP_CAT(element,N);
+#   endif
 
 #   define BOOST_FUSION_UNROLLED_VECTOR_IMPL(Z, N, MAX)\
         template<int I, BOOST_PP_ENUM_PARAMS(N, typename H)>\
@@ -266,8 +286,8 @@ namespace boost { namespace fusion
             assign(It0 const& it0)\
             {\
                 BOOST_PP_REPEAT(N,\
-                        BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DEREF_ASSIGN,\
-                        _)\
+                    BOOST_FUSION_UNROLLED_VECTOR_MEMBER_DEREF_ASSIGN,\
+                    _)\
             }\
             \
             BOOST_PP_REPEAT(N,BOOST_FUSION_UNROLLED_VECTOR_AT,_)\

@@ -75,11 +75,8 @@ namespace boost { namespace fusion
         >::type
     at_key(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
-        return
-            result_of::at_key<
-                BOOST_FUSION_R_ELSE_CLREF(Seq)
-              , Key
-            >::call(seq);
+        return result_of::at_key<BOOST_FUSION_R_ELSE_CLREF(Seq), Key>::call(
+            BOOST_FUSION_FORWARD(Seq,seq));
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES

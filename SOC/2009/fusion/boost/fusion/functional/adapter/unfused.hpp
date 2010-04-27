@@ -105,7 +105,7 @@ namespace boost { namespace fusion
         template<typename... Args>\
         typename boost::result_of<\
             typename detail::get_func_base<F>::type(\
-                BOOST_FUSION_R_ELSE_LREF(typename result_of::vector_tie<\
+                BOOST_FUSION_R_ELSE_CLREF(typename result_of::vector_tie<\
                     BOOST_FUSION_R_ELSE_LREF(Args)...\
                 >::type))\
         >::type\

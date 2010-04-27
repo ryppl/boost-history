@@ -26,7 +26,7 @@ namespace boost { namespace fusion { namespace detail
         static BOOST_FUSION_R_ELSE_CLREF(OtherT)
         get_init_type(BOOST_FUSION_R_ELSE_LREF(OtherT) other_t, mpl::true_)
         {
-            return other_t;
+            return BOOST_FUSION_FORWARD(OtherT,other_t);
         }
 
         template<typename OtherT>
@@ -107,7 +107,7 @@ namespace boost { namespace fusion { namespace detail
         type
         get(mpl::false_ /*is_view*/)const
         {
-            return *t;
+            return static_cast<type>(*t);
         }
 
         typedef typename remove_reference<T>::type non_ref_t;

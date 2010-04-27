@@ -29,11 +29,12 @@
         VARIADIC_TEMPLATE_A(BOOST_FUSION_N)\
         typename boost::result_of<\
             typename detail::get_func_base<F>::type(\
-                BOOST_FUSION_R_ELSE_LREF(\
+                BOOST_FUSION_R_ELSE_CLREF(\
                     BOOST_PP_IF(BOOST_FUSION_N, typename, BOOST_PP_EMPTY())\
                     result_of::vector_tie<\
                     EXPAND_TEMPLATE_ARGUMENTS_A_R_ELSE_LREF(BOOST_FUSION_N)\
-                >::type))\
+                    >::type)\
+                )\
         >::type\
         operator()(EXPAND_TEMPLATE_ARGUMENTS_PARAMETERS_A_R_ELSE_LREF(\
             BOOST_FUSION_N)) MODIFIER\

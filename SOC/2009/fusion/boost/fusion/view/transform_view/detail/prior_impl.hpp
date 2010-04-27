@@ -38,7 +38,9 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(It it)
             {
-                return type(fusion::prior(it.it), *it.f);
+                return type(
+                    fusion::prior(it.it),
+                    static_cast<typename it::transform_type>(*it.f));
             }
         };
     };
@@ -70,9 +72,10 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(It it)
             {
-                return type(fusion::prior(it.it1),
-                            fusion::prior(it.it2),
-                            it.f);
+                return type(
+                    fusion::prior(it.it1),
+                    fusion::prior(it.it2),
+                    static_cast<typename it::transform_type>(it.f));
             }
         };
     };

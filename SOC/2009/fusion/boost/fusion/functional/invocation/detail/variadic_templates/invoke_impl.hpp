@@ -95,11 +95,11 @@ namespace boost { namespace fusion { namespace detail
         BOOST_FUSION_STATIC_ASSERT(!sizeof...(Args));
 
         return (that_ptr<
-                    typename get_object_pointer_result_type<
-                        Instance&&
-                      , typename remove_reference<F>::type
-                    >::cv_class_type&
-                >::get(instance)->*f);
+            typename get_object_pointer_result_type<
+                Instance&&
+              , typename remove_reference<F>::type
+            >::cv_class_type&
+        >::get(instance)->*f);
     }
 #   endif
 #endif
@@ -148,7 +148,8 @@ namespace boost { namespace fusion { namespace detail
             typedef typename
                 detail::BOOST_PP_CAT(
                     BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_INVOKE_NAME),
-                    _impl)<
+                    _impl)
+                <
                     F
                   , typename result_of::deref<
                         typename result_of::prior<It1>::type
@@ -173,7 +174,8 @@ namespace boost { namespace fusion { namespace detail
             typedef typename
                 detail::BOOST_PP_CAT(
                     BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_INVOKE_NAME),
-                    _impl)<
+                    _impl)
+                <
                     F
                   , typename result_of::deref<
                         typename result_of::prior<It1>::type
@@ -195,7 +197,8 @@ namespace boost { namespace fusion { namespace detail
             typedef typename
                 detail::BOOST_PP_CAT(
                     BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_INVOKE_NAME),
-                    _impl)<
+                    _impl)
+                <
                     F
                   , typename result_of::deref<
                         typename result_of::prior<It1>::type
@@ -216,7 +219,8 @@ namespace boost { namespace fusion { namespace detail
             typedef typename
                 detail::BOOST_PP_CAT(
                     BOOST_PP_CAT(result_of_unrolled_,BOOST_FUSION_INVOKE_NAME),
-                    _impl)<
+                    _impl)
+                <
                     F
                   , Args...
                 >::type
@@ -245,7 +249,7 @@ namespace boost { namespace fusion { namespace detail
 
                 return call(
                     mpl::int_<NumElementsLeft-4>(),
-                    f,
+                    static_cast<F>(f),
                     it0,
                     fusion::deref(it0),
                     fusion::deref(it1),
@@ -362,7 +366,7 @@ namespace boost { namespace fusion { namespace detail
             {
                 return BOOST_PP_CAT(BOOST_FUSION_INVOKE_NAME,_call_impl)<
                     Result
-                >(std::forward<F>(f),std::forward<Args>(args)...);
+                >(static_cast<F>(f),std::forward<Args>(args)...);
             }
 
             template<int NumArgsLeft,typename Begin, typename... Args>
@@ -371,7 +375,7 @@ namespace boost { namespace fusion { namespace detail
             {
                 return call(
                         mpl::int_<NumArgsLeft-1>(),
-                        f,
+                        static_cast<F>(f),
                         begin,
                         fusion::deref(fusion::advance_c<NumArgsLeft-1>(begin)),
                         std::forward<Args>(args)...);
@@ -431,7 +435,7 @@ namespace boost { namespace fusion { namespace detail
                 F
               , type
            >::call(mpl::int_<result_of::size<SeqRef>::value>(),
-                   f,
+                   static_cast<F>(f),
                    fusion::begin(static_cast<SeqRef>(seq)));
         }
 
@@ -445,7 +449,7 @@ namespace boost { namespace fusion { namespace detail
                 F
               , type
             >::call(mpl::int_<result_of::size<SeqRef>::value>(),
-                    f,
+                    static_cast<F>(f),
                     fusion::end(static_cast<SeqRef>(seq)));
         }
 
@@ -453,7 +457,9 @@ namespace boost { namespace fusion { namespace detail
         call(F f, SeqRef seq)
         {
             return call_impl(
-                traits::is_bidirectional<SeqRef>(),f,seq);
+                traits::is_bidirectional<SeqRef>(),
+                static_cast<F>(f),
+                static_cast<SeqRef>(seq));
         }
     };
 }}}

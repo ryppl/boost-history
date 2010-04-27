@@ -28,7 +28,7 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(It it)
             {
-                return *it.val;
+                return static_cast<type>(*it.val);
             }
         };
     };

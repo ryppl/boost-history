@@ -25,19 +25,20 @@ namespace boost { namespace fusion { namespace extension
                 detail::remove_reference<It>::type::cons_type
             cons_type;
             typedef typename
-                detail::remove_reference<cons_type>::type::cdr_type
+                detail::forward_as<
+                    cons_type
+                  , typename detail::remove_reference<
+                        cons_type
+                    >::type::cdr_type
+                >::type
             cdr_type;
 
-            typedef
-                cons_iterator<
-                    typename detail::forward_as<cons_type, cdr_type>::type
-                >
-            type;
+            typedef cons_iterator<cdr_type> type;
 
             static type
             call(It it)
             {
-                return type(it.cons->cdr,0);
+                return type(static_cast<cdr_type>(it.cons->cdr),0);
             }
         };
     };

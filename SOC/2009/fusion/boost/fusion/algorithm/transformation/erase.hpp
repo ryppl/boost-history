@@ -138,12 +138,12 @@ namespace boost { namespace fusion
     erase(BOOST_FUSION_R_ELSE_CLREF(Seq) seq, Begin const& first)
     {
         return erase(
-                BOOST_FUSION_FORWARD(Seq,seq)
-              , first
-              , detail::compute_erase_last<
-                    BOOST_FUSION_R_ELSE_CLREF(Seq)
-                  , Begin const&
-                >::call(first));
+            BOOST_FUSION_FORWARD(Seq,seq),
+            first,
+            detail::compute_erase_last<
+                 BOOST_FUSION_R_ELSE_CLREF(Seq)
+               , Begin const&
+             >::call(first));
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
@@ -158,12 +158,12 @@ namespace boost { namespace fusion
 
         return result_type(
                 left_type(
-                    fusion::begin(BOOST_FUSION_FORWARD(Seq,seq))
+                    fusion::begin(seq)
                   , first
                 )
               , right_type(
                     last
-                  , fusion::end(BOOST_FUSION_FORWARD(Seq,seq))
+                  , fusion::end(seq)
                 ));
     }
 
@@ -172,9 +172,9 @@ namespace boost { namespace fusion
     erase(Seq& seq, Begin const& first)
     {
         return erase(
-                seq
-              , first
-              , detail::compute_erase_last<Seq&, Begin const&>::call(first));
+            seq,
+            first,
+            detail::compute_erase_last<Seq&, Begin const&>::call(first));
     }
 #endif
 }}

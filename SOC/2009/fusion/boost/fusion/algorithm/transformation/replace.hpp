@@ -27,8 +27,8 @@ namespace boost { namespace fusion
         {
             template <typename OtherOldValue>
             replace_helper(
-                    BOOST_FUSION_R_ELSE_CLREF(OtherOldValue) old_value
-                  , int)
+                BOOST_FUSION_R_ELSE_CLREF(OtherOldValue) old_value
+              , int)
               : old_value(BOOST_FUSION_FORWARD(OtherOldValue,old_value))
             {}
 

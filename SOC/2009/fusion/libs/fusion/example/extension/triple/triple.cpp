@@ -67,6 +67,11 @@ namespace demo
         {};
 #endif
 
+        template<typename It>
+        struct value_of<It const>
+          : value_of<It>
+        {};
+
         template<typename SeqRef_>
         struct value_of<triple_iterator<SeqRef_, 0> >
         {
@@ -89,11 +94,6 @@ namespace demo
         struct deref;
 
         template<typename ItRef>
-        struct deref<ItRef const>
-          : deref<ItRef>
-        {};
-
-        template<typename ItRef>
         struct deref<ItRef&>
           : deref<ItRef>
         {};
@@ -104,6 +104,11 @@ namespace demo
           : deref<ItRef>
         {};
 #endif
+
+        template<typename It>
+        struct deref<It const>
+          : deref<It>
+        {};
 
         template<typename SeqRef_>
         struct deref<triple_iterator<SeqRef_, 0> >
@@ -203,7 +208,7 @@ namespace demo
         >
     {
         typedef T0 t0_type;
-        typedef  T1 t1_type;
+        typedef T1 t1_type;
         typedef T2 t2_type;
 
         triple(T0 const& t0, T1 const& t1, T2 const& t2)

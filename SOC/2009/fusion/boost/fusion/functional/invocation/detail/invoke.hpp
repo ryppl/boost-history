@@ -14,6 +14,10 @@
 #else
 #   include <boost/fusion/functional/invocation/detail/variadic_templates/invoke_impl.hpp>
 #endif
+#ifndef BOOST_NO_RVALUE_REFERENCES
+#   include <boost/mpl/if.hpp>
+#   include <boost/type_traits/is_same.hpp>
+#endif
 
 namespace boost { namespace fusion
 {
@@ -31,27 +35,40 @@ namespace boost { namespace fusion
         };
     }
 
+#ifdef BOOST_NO_RVALUE_REFERENCES
     template <typename F, typename Seq>
-    inline typename result_of::BOOST_FUSION_INVOKE_NAME<
-        BOOST_FUSION_RREF_ELSE_OBJ(F)
-      , BOOST_FUSION_R_ELSE_CLREF(Seq)
-    >::type
-    BOOST_FUSION_INVOKE_NAME(
-        BOOST_FUSION_RREF_ELSE_OBJ(F) f,
-        BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
+    inline typename result_of::BOOST_FUSION_INVOKE_NAME<F, Seq const&>::type
+    BOOST_FUSION_INVOKE_NAME(F f, Seq const& seq)
     {
-        return result_of::BOOST_FUSION_INVOKE_NAME<
-            BOOST_FUSION_RREF_ELSE_OBJ(F)
-          , BOOST_FUSION_R_ELSE_CLREF(Seq)
-        >::call(f,seq);
+         return result_of::BOOST_FUSION_INVOKE_NAME<F, Seq const&>::call(f,seq);
     }
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
     template <typename F, typename Seq>
     inline typename result_of::BOOST_FUSION_INVOKE_NAME<F,Seq&>::type
     BOOST_FUSION_INVOKE_NAME(F f,Seq& seq)
     {
         return result_of::BOOST_FUSION_INVOKE_NAME<F,Seq&>::call(f,seq);
+    }
+#else
+    template <typename FQualified=void,typename F=void, typename Seq=void>
+    inline typename result_of::BOOST_FUSION_INVOKE_NAME<
+        typename mpl::if_<
+            is_same<FQualified, void>
+          , F&&
+          , FQualified
+        >::type
+      , Seq&&
+    >::type
+    BOOST_FUSION_INVOKE_NAME(F&& f, Seq&& seq)
+    {
+         return result_of::BOOST_FUSION_INVOKE_NAME<
+             typename mpl::if_<
+                 is_same<FQualified, void>
+               , F&&
+               , FQualified
+             >::type
+           , Seq&&
+         >::call(static_cast<F&&>(f),std::forward<Seq>(seq));
     }
 #endif
 }}

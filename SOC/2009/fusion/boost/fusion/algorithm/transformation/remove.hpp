@@ -36,13 +36,13 @@ namespace boost { namespace fusion
     remove(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
         return fusion::remove_if<is_same<mpl::_1, T> >(
-                        BOOST_FUSION_FORWARD(Seq,seq));
+            BOOST_FUSION_FORWARD(Seq,seq));
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template <typename T, typename Seq>
     inline BOOST_FUSION_EXPLICIT_TEMPLATE_NON_CONST_ARG_OVERLOAD(
-            result_of::remove<,Seq,&, T>)
+        result_of::remove<,Seq,&, T>)
     remove_if(Seq& seq)
     {
         return fusion::remove_if<is_same<mpl::_1, T> >(seq);

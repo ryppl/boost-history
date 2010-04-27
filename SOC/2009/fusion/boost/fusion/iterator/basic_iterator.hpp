@@ -15,7 +15,6 @@
 #include <boost/mpl/equal_to.hpp>
 #include <boost/mpl/minus.hpp>
 #include <boost/mpl/int.hpp>
-#include <boost/utility/addressof.hpp>
 #include <boost/type_traits/is_same.hpp>
 
 namespace boost { namespace fusion
@@ -46,6 +45,7 @@ namespace boost { namespace fusion
 
         typedef mpl::int_<I> index;
         typedef SeqRef seq_type;
+        typedef typename detail::remove_reference<SeqRef>::type* seq_ptr_type;
 
         template <typename It>
         struct value_of
@@ -82,7 +82,7 @@ namespace boost { namespace fusion
             static type
             call(It it)
             {
-                return type(*it.seq,0);
+                return type(it.seq);
             }
         };
 
@@ -125,8 +125,8 @@ namespace boost { namespace fusion
           : seq(it.seq)
         {}
 
-        basic_iterator(SeqRef seq, int)
-          : seq(addressof(seq))
+        basic_iterator(seq_ptr_type seq)
+          : seq(seq)
         {}
 
         template<typename OtherSeqRef>
@@ -137,7 +137,7 @@ namespace boost { namespace fusion
             return *this;
         }
 
-        typename detail::remove_reference<SeqRef>::type* seq;
+        seq_ptr_type seq;
     };
 }}
 

@@ -39,12 +39,10 @@ namespace boost { namespace fusion
         >::type
     all(BOOST_FUSION_R_ELSE_CLREF(Seq) seq, BOOST_FUSION_RREF_ELSE_OBJ(F) f)
     {
-        return
-            detail::unrolled_all<
-                result_of::size<BOOST_FUSION_R_ELSE_CLREF(Seq)>::value
-            >::call(
-                    fusion::begin(BOOST_FUSION_FORWARD(Seq,seq))
-                  , BOOST_FUSION_FORWARD(F,f));
+        return detail::unrolled_all<
+            result_of::size<BOOST_FUSION_R_ELSE_CLREF(Seq)>::value
+        >::call(fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)),
+            BOOST_FUSION_FORWARD(F,f));
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
@@ -52,10 +50,9 @@ namespace boost { namespace fusion
     inline typename result_of::all<Seq&, F>::type
     all(Seq& seq, F f)
     {
-        return
-            detail::unrolled_all<
-                result_of::size<Seq const&>::value
-            >::call(fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)), f);
+        return detail::unrolled_all<
+            result_of::size<Seq const&>::value
+        >::call(fusion::begin(seq), f);
     }
 #endif
 }}

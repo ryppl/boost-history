@@ -24,7 +24,11 @@ namespace boost { namespace fusion { namespace extension
             typedef
                 reverse_view_iterator<
                     typename result_of::end<
+#ifdef BOOST_FUSION_REVERSE_VIEW_USE_FORWARD_AS_GCC_HELPER
+                        typename detail::reverse_view_forward_as_gcc_helper<
+#else
                         typename detail::forward_as<
+#endif
                             Seq
                           , typename detail::remove_reference<
                                 Seq

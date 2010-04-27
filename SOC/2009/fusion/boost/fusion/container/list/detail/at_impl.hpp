@@ -26,8 +26,9 @@ namespace boost { namespace fusion { namespace extension
             typedef typename
                 detail::forward_as<
                     Seq
-                  , typename value_at_impl<cons_tag>::
-                        template apply<Seq, N>::type
+                  , typename value_at_impl<
+                        cons_tag
+                    >::template apply<Seq, N>::type
                 >::type
             type;
 
@@ -42,7 +43,7 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(Cons& cons, mpl::int_<0>)
             {
-                return cons.car;
+                return static_cast<type>(cons.car);
             }
 
             static type

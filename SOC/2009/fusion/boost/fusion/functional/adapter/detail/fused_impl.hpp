@@ -103,8 +103,8 @@ namespace boost { namespace fusion
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));\
             \
             return fusion::BOOST_PP_CAT(invoke,BOOST_FUSION_ADAPTER_POSTFIX)<F>(\
-                            f,\
-                            static_cast<Seq SEQ_MODIFIER>(seq));\
+                static_cast<F>(f),\
+                static_cast<Seq SEQ_MODIFIER>(seq));\
         }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES

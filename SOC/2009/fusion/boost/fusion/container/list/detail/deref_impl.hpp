@@ -23,18 +23,20 @@ namespace boost { namespace fusion { namespace extension
             typedef typename
                 detail::remove_reference<It>::type::cons_type
             cons_type;
-            typedef typename
-                detail::remove_reference<cons_type>::type::car_type
-            car_type;
 
             typedef typename
-                detail::forward_as<cons_type,car_type>::type
+                detail::forward_as<
+                    cons_type
+                  , typename detail::remove_reference<
+                        cons_type
+                    >::type::car_type
+                >::type
             type;
 
             static type
             call(It it)
             {
-                return it.cons->car;
+                return static_cast<type>(it.cons->car);
             }
         };
     };

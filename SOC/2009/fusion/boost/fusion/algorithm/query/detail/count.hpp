@@ -47,7 +47,7 @@ namespace boost { namespace fusion { namespace detail
     struct count_helper
     {
         count_helper(T1Ref x)
-          : x(x)
+          : x(static_cast<T1Ref>(x))
         {}
 
         template <typename T2>

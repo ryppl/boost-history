@@ -51,8 +51,10 @@ namespace boost { namespace fusion
         result_of::convert<Tag, BOOST_FUSION_R_ELSE_CLREF(Seq)>::type
     convert(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
-        return result_of::convert<Tag, BOOST_FUSION_R_ELSE_CLREF(Seq)>::
-            gen::call(seq);
+        return result_of::convert<
+            Tag
+          , BOOST_FUSION_R_ELSE_CLREF(Seq)
+        >::gen::call(BOOST_FUSION_FORWARD(Seq,seq));
     }
 }}
 

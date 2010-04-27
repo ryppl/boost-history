@@ -48,9 +48,9 @@ namespace boost { namespace fusion
             BOOST_FUSION_R_ELSE_CLREF(T) x)
     {
         return insert_range(
-                  BOOST_FUSION_FORWARD(Seq,seq)
-                , pos
-                , fusion::make_single_view(BOOST_FUSION_FORWARD(T,x)));
+            BOOST_FUSION_FORWARD(Seq,seq),
+            pos,
+            fusion::make_single_view(BOOST_FUSION_FORWARD(T,x)));
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES

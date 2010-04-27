@@ -24,7 +24,7 @@ namespace boost { namespace fusion
             typedef int result_type;
 
             count_if_helper(F f)
-              : f(f)
+              : f(static_cast<F>(f))
             {}
 
             template<typename E>
@@ -56,11 +56,13 @@ namespace boost { namespace fusion
             BOOST_FUSION_R_ELSE_CLREF(Seq)
           , BOOST_FUSION_RREF_ELSE_OBJ(F)
         >::type
-    count_if(BOOST_FUSION_R_ELSE_CLREF(Seq) seq, BOOST_FUSION_RREF_ELSE_OBJ(F) f)
+    count_if(BOOST_FUSION_R_ELSE_CLREF(Seq) seq,
+             BOOST_FUSION_RREF_ELSE_OBJ(F) f)
     {
         return fusion::fold(BOOST_FUSION_FORWARD(Seq,seq),
             0,
-            detail::count_if_helper<BOOST_FUSION_RREF_ELSE_OBJ(F)>(f));
+            detail::count_if_helper<BOOST_FUSION_RREF_ELSE_OBJ(F)>(
+                BOOST_FUSION_FORWARD(F,f)));
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES

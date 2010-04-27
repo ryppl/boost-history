@@ -18,22 +18,25 @@ namespace boost { namespace fusion
 {
     namespace detail
     {
-        template<typename Seq>
+        template<typename SeqRef>
         struct sequence_assign_type
         {
-            typedef Seq seq_type;
+            typedef SeqRef seq_type;
+            typedef typename
+                detail::remove_reference<SeqRef>::type*
+            seq_ptr_type;
 
-            sequence_assign_type(Seq seq)
+            sequence_assign_type(seq_ptr_type seq)
               : seq(seq)
             {}
 
-            Seq get()const
+            SeqRef get()const
             {
-                return seq;
+                return static_cast<SeqRef>(*seq);
             }
 
         private:
-            Seq seq;
+            seq_ptr_type seq;
         };
     }
 
@@ -43,7 +46,7 @@ namespace boost { namespace fusion
     {
         BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
 
-        return seq;
+        return &seq;
     }
 }}
 

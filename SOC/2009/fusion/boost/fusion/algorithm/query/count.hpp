@@ -30,16 +30,16 @@ namespace boost { namespace fusion
     }
 
     template <typename Seq, typename T>
-    inline typename
-        result_of::count<
-            BOOST_FUSION_R_ELSE_CLREF(Seq)
-          , BOOST_FUSION_R_ELSE_CLREF(T)
-        >::type
+    inline typename result_of::count<
+        BOOST_FUSION_R_ELSE_CLREF(Seq)
+      , BOOST_FUSION_R_ELSE_CLREF(T)
+    >::type
     count(BOOST_FUSION_R_ELSE_CLREF(Seq) seq, BOOST_FUSION_R_ELSE_CLREF(T) x)
     {
         return fusion::count_if(
-                BOOST_FUSION_FORWARD(Seq,seq),
-                detail::count_helper<BOOST_FUSION_R_ELSE_CLREF(T)>(x));
+            BOOST_FUSION_FORWARD(Seq,seq),
+            detail::count_helper<BOOST_FUSION_R_ELSE_CLREF(T)>(
+                BOOST_FUSION_FORWARD(T,x)));
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
