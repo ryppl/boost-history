@@ -1316,10 +1316,16 @@ In particular, elements modeling <a href="#concept-ref_wrapper"><tt>RefWrapper</
 
   <h3>Concept <a name="concept-auto_size"><tt>Auto-Size</tt></a></h3>
 
+  <h4>Description</h4>
+
   <p>For now <tt>Auto-Size</tt> list is still a loose concept (once an acceptable formalization is found,
   this doc will be updated accordingly). Its distinguishing feature, is that it is a compile time expression 
   that is formed from references to passed argument, which may be faster than runtime alternatives, and frees the user from the need to specify the size of 
   the resulting collection.</p>
+
+  <h4>Models</h4>
+
+  <a href="#ref-expr">expr&lt;&gt;</a>, <a href="#ref-chain_impl_l">chain_l&lt;&gt;</a>, and <a href="#ref-chain_impl_r">chain_r&lt;&gt;</a>.
     
   <h3>Concept <a name="concept-chainable"><tt>Chainable</tt></a></h3>
 
@@ -1810,7 +1816,7 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
 
   <h4>Models</h4> 
   
-  <a href="#concept-chainable"><tt>Chainable(T)</tt></a>, <a href="#concept-chainable"><tt>Converter(T)</tt></a>
+  <a href="#concept-auto_size"><tt>AutoSize</tt></a>, <a href="#concept-chainable"><tt>Chainable(T)</tt></a>, <a href="#concept-chainable"><tt>Converter(T)</tt></a>
  
   <h3><a name="ref-chain_impl_r">Proxy object <code>chain_impl::expr_r&lt;&gt;</code></a> </h3>
 
@@ -1831,7 +1837,7 @@ class=keyword>class </span><span class=identifier>C </span><span class=special>&
 
   <h4>Models</h4> 
 
-  <a href="#concept-chainable"><tt>Chainable(const T)</tt></a>, <a href="#concept-chainable"><tt>Converter(const T)</tt></a>
+  <a href="#concept-auto_size"><tt>AutoSize</tt></a>, <a href="#concept-chainable"><tt>Chainable(const T)</tt></a>, <a href="#concept-chainable"><tt>Converter(const T)</tt></a>
 
   <h2><a name="exceptions">Exceptions and exception-safety</a></h2>
   <p>
