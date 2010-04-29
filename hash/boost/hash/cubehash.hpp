@@ -96,13 +96,13 @@ struct cubehash {
                 typename policy_type::iv_generator,
                 cubehash_compressor<r, b, h>,
                 digest_from_state<digest<policy_type::digest_bits>,
-                                  bitstream_endian::little_byte_big_bit>,
+                                  stream_endian::little_octet_big_bit>,
                 cubehash_finalizer<r, b, h>
             > block_hash_type;
     template <unsigned value_bits>
     struct stream_hash {
         typedef stream_preprocessor<
-                    bitstream_endian::little_byte_big_bit,
+                    stream_endian::little_octet_big_bit,
                     value_bits,
                     0, // No length padding!
                     block_hash_type

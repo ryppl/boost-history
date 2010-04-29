@@ -9,7 +9,7 @@
 #ifndef BOOST_HASH_DETAIL_EXPLODER_HPP
 #define BOOST_HASH_DETAIL_EXPLODER_HPP
 
-#include <boost/hash/bitstream_endian.hpp>
+#include <boost/hash/stream_endian.hpp>
 #include <boost/hash/detail/unbounded_shift.hpp>
 #include <boost/static_assert.hpp>
 
@@ -27,7 +27,7 @@ struct exploder;
 
 template <int InputBits, int OutputBits,
           int k>
-struct exploder<bitstream_endian::big_byte_big_bit,
+struct exploder<stream_endian::big_octet_big_bit,
                 InputBits, OutputBits, k> {
     template <typename OutputValue, typename InputValue>
     static void step(OutputValue &z, InputValue x) {
@@ -37,13 +37,13 @@ struct exploder<bitstream_endian::big_byte_big_bit,
     template <typename OutputType, typename InputValue>
     static void explode1_array(OutputType &out, unsigned &i, InputValue x) {
         step(out[i++], x);
-        exploder<bitstream_endian::big_byte_big_bit,
+        exploder<stream_endian::big_octet_big_bit,
                 InputBits, OutputBits, k+OutputBits>
          ::explode1_array(out, i, x);
     }
 };
 template <int InputBits, int OutputBits>
-struct exploder<bitstream_endian::big_byte_big_bit,
+struct exploder<stream_endian::big_octet_big_bit,
                 InputBits, OutputBits, InputBits> {
     template <typename OutputType, typename IntputValue>
     static void explode1_array(OutputType &, unsigned &, IntputValue) {}
@@ -51,10 +51,10 @@ struct exploder<bitstream_endian::big_byte_big_bit,
 
 template <int InputBits, int OutputBits,
           int k>
-struct exploder<bitstream_endian::little_byte_big_bit,
+struct exploder<stream_endian::little_octet_big_bit,
                 InputBits, OutputBits, k> {
     // Mixed-endian pack explode can only handle bitwidths that are
-    // multiples or fractions of bytes
+    // multiples or fractions of octets
     BOOST_STATIC_ASSERT((InputBits % 8 == 0 || 8 % InputBits == 0) &&
                         (OutputBits % 8 == 0 || 8 % OutputBits == 0));
     template <typename OutputValue, typename InputValue>
@@ -71,13 +71,13 @@ struct exploder<bitstream_endian::little_byte_big_bit,
     template <typename OutputType, typename InputValue>
     static void explode1_array(OutputType &out, unsigned &i, InputValue x) {
         step(out[i++], x);
-        exploder<bitstream_endian::little_byte_big_bit,
+        exploder<stream_endian::little_octet_big_bit,
                 InputBits, OutputBits, k+OutputBits>
          ::explode1_array(out, i, x);
     }
 };
 template <int InputBits, int OutputBits>
-struct exploder<bitstream_endian::little_byte_big_bit,
+struct exploder<stream_endian::little_octet_big_bit,
                 InputBits, OutputBits, InputBits> {
     template <typename OutputType, typename IntputValue>
     static void explode1_array(OutputType &, unsigned &, IntputValue) {}
@@ -85,10 +85,10 @@ struct exploder<bitstream_endian::little_byte_big_bit,
 
 template <int InputBits, int OutputBits,
           int k>
-struct exploder<bitstream_endian::big_byte_little_bit,
+struct exploder<stream_endian::big_octet_little_bit,
                 InputBits, OutputBits, k> {
     // Mixed-endian pack explode can only handle bitwidths that are
-    // multiples or fractions of bytes
+    // multiples or fractions of octets
     BOOST_STATIC_ASSERT((InputBits % 8 == 0 || 8 % InputBits == 0) &&
                         (OutputBits % 8 == 0 || 8 % OutputBits == 0));
     template <typename OutputValue, typename InputValue>
@@ -105,13 +105,13 @@ struct exploder<bitstream_endian::big_byte_little_bit,
     template <typename OutputType, typename InputValue>
     static void explode1_array(OutputType &out, unsigned &i, InputValue x) {
         step(out[i++], x);
-        exploder<bitstream_endian::big_byte_little_bit,
+        exploder<stream_endian::big_octet_little_bit,
                 InputBits, OutputBits, k+OutputBits>
          ::explode1_array(out, i, x);
     }
 };
 template <int InputBits, int OutputBits>
-struct exploder<bitstream_endian::big_byte_little_bit,
+struct exploder<stream_endian::big_octet_little_bit,
                 InputBits, OutputBits, InputBits> {
     template <typename OutputType, typename IntputValue>
     static void explode1_array(OutputType &, unsigned &, IntputValue) {}
@@ -119,7 +119,7 @@ struct exploder<bitstream_endian::big_byte_little_bit,
 
 template <int InputBits, int OutputBits,
           int k>
-struct exploder<bitstream_endian::little_byte_little_bit,
+struct exploder<stream_endian::little_octet_little_bit,
                 InputBits, OutputBits, k> {
     template <typename OutputValue, typename InputValue>
     static void step(OutputValue &z, InputValue x) {
@@ -129,13 +129,13 @@ struct exploder<bitstream_endian::little_byte_little_bit,
     template <typename OutputType, typename InputValue>
     static void explode1_array(OutputType &out, unsigned &i, InputValue x) {
         step(out[i++], x);
-        exploder<bitstream_endian::little_byte_little_bit,
+        exploder<stream_endian::little_octet_little_bit,
                 InputBits, OutputBits, k+OutputBits>
          ::explode1_array(out, i, x);
     }
 };
 template <int InputBits, int OutputBits>
-struct exploder<bitstream_endian::little_byte_little_bit,
+struct exploder<stream_endian::little_octet_little_bit,
                 InputBits, OutputBits, InputBits> {
     template <typename OutputType, typename IntputValue>
     static void explode1_array(OutputType &, unsigned &, IntputValue) {}
@@ -143,7 +143,7 @@ struct exploder<bitstream_endian::little_byte_little_bit,
 
 template <int InputBits, int OutputBits,
           int k>
-struct exploder<bitstream_endian::platform,
+struct exploder<stream_endian::host_byte,
                 InputBits, OutputBits, k> {
     BOOST_STATIC_ASSERT(InputBits  % CHAR_BIT == 0);
     BOOST_STATIC_ASSERT(OutputBits % CHAR_BIT == 0);
@@ -154,13 +154,13 @@ struct exploder<bitstream_endian::platform,
     template <typename OutputType, typename InputValue>
     static void explode1_array(OutputType &out, unsigned &i, InputValue x) {
         step(out[i++], x);
-        exploder<bitstream_endian::platform,
+        exploder<stream_endian::host_byte,
                 InputBits, OutputBits, k+OutputBits>
          ::explode1_array(out, i, x);
     }
 };
 template <int InputBits, int OutputBits>
-struct exploder<bitstream_endian::platform,
+struct exploder<stream_endian::host_byte,
                 InputBits, OutputBits, InputBits> {
     template <typename OutputType, typename IntputValue>
     static void explode1_array(OutputType &, unsigned &, IntputValue) {}

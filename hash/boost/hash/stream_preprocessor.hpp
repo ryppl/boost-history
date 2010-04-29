@@ -47,11 +47,6 @@ class stream_preprocessor {
 
   private:
 
-    static unsigned const byte_bits = 8;
-//    typedef typename uint_t<byte_bits>::least byte_type;
-    BOOST_STATIC_ASSERT(value_bits  < byte_bits || value_bits % byte_bits == 0);
-    BOOST_STATIC_ASSERT(value_bits >= byte_bits || byte_bits % value_bits == 0);
-
     static unsigned const length_bits = length_bits_;
     // FIXME: do something more intelligent than capping at 64
     static unsigned const length_type_bits =

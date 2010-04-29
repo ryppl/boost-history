@@ -29,12 +29,12 @@ struct md4 {
                 davies_meyer_compressor<block_cypher_type,
                                         detail::state_adder>,
                 digest_from_state<digest<policy_type::digest_bits>,
-                                  bitstream_endian::little_byte_big_bit>
+                                  stream_endian::little_octet_big_bit>
             > block_hash_type;
     template <unsigned value_bits>
     struct stream_hash {
         typedef stream_preprocessor<
-                    bitstream_endian::little_byte_big_bit,
+                    stream_endian::little_octet_big_bit,
                     value_bits,
                     block_hash_type::word_bits * 2,
                     block_hash_type

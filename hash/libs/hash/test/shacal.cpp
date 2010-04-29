@@ -76,7 +76,7 @@ void test_shacal1_block_cypher() {
                 owcft,
                 boost::hash::digest_from_state<
                     boost::hash::digest<160>,
-                    boost::hash::bitstream_endian::big_byte_big_bit>
+                    boost::hash::stream_endian::big_octet_big_bit>
             > bht;
 
     {
@@ -162,7 +162,7 @@ void test_shacal256_block_cypher() {
                 owcft,
                 boost::hash::digest_from_state<
                     boost::hash::digest<256>,
-                    boost::hash::bitstream_endian::big_byte_big_bit>
+                    boost::hash::stream_endian::big_octet_big_bit>
             > bht;
 
     {
@@ -183,21 +183,21 @@ void test_sha1() {
     typedef merkle_damgard_block_hash<
                 detail::sha1_policy::iv_generator,
                 davies_meyer_compressor<block_cyphers::shacal1, state_adder>,
-                digest_from_state<digest<160>, bitstream_endian::big_byte_big_bit>
+                digest_from_state<digest<160>, stream_endian::big_octet_big_bit>
             > block_hash_type;
     typedef stream_preprocessor<
-                bitstream_endian::big_byte_big_bit,
+                stream_endian::big_octet_big_bit,
                 8,
                 block_hash_type::word_bits * 2,
                 block_hash_type
-            > sha1_byte_hash;
-    typedef sha1_byte_hash::digest_type digest_type;
+            > sha1_octet_hash;
+    typedef sha1_octet_hash::digest_type digest_type;
 
 #ifndef BOOST_HASH_SHOW_PROGRESS
 #ifndef QUICK
     {
     // perl -e 'for ($x = 1000000000; $x--;) {print "a";}' | sha1sum
-    sha1_byte_hash h;
+    sha1_octet_hash h;
     for (unsigned n = 1000000000; n--; ) h.update('a');
     digest_type d = h.end_message();
     printf("%s\n", d.cstring().data());
@@ -214,18 +214,18 @@ void test_sha512() {
     typedef merkle_damgard_block_hash<
                 detail::sha2_policy<SHA>::iv_generator,
                 davies_meyer_compressor<block_cyphers::shacal2<SHA>, state_adder>,
-                digest_from_state<digest<SHA>, bitstream_endian::big_byte_big_bit>
+                digest_from_state<digest<SHA>, stream_endian::big_octet_big_bit>
             > block_hash_type;
     typedef stream_preprocessor<
-                bitstream_endian::big_byte_big_bit,
+                stream_endian::big_octet_big_bit,
                 8,
                 block_hash_type::word_bits * 2,
                 block_hash_type
-            > sha512_byte_hash;
-    typedef sha512_byte_hash::digest_type digest_type;
+            > sha512_octet_hash;
+    typedef sha512_octet_hash::digest_type digest_type;
 
     {
-    sha512_byte_hash h;
+    sha512_octet_hash h;
     digest_type d = h.end_message();
     printf("%s\n", d.cstring().data());
     char const *ed = "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce"
@@ -234,7 +234,7 @@ void test_sha512() {
     }
 
     {
-    sha512_byte_hash h;
+    sha512_octet_hash h;
     h.update('a').update('b').update('c');
     digest_type d = h.end_message();
     printf("%s\n", d.cstring().data());
@@ -244,7 +244,7 @@ void test_sha512() {
     }
 
     {
-    sha512_byte_hash h;
+    sha512_octet_hash h;
     char const *m = "abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmn"
                     "hijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu";
     for (char const *p = m; *p; ++p) {
@@ -259,7 +259,7 @@ void test_sha512() {
 
 #ifndef BOOST_HASH_SHOW_PROGRESS
     {
-    sha512_byte_hash h;
+    sha512_octet_hash h;
     for (unsigned n = 1000000; n--; ) h.update('a');
     digest_type d = h.end_message();
     printf("%s\n", d.cstring().data());
@@ -271,7 +271,7 @@ void test_sha512() {
 #ifndef QUICK
     {
     // perl -e 'for ($x = 1000000000; $x--;) {print "a";}' | sha512sum
-    sha512_byte_hash h;
+    sha512_octet_hash h;
     for (unsigned n = 1000000000; n--; ) h.update('a');
     digest_type d = h.end_message();
     printf("%s\n", d.cstring().data());

@@ -26,7 +26,7 @@ void test_accumulator_md4() {
     // A single 1 bit after the (empty) message,
     // then pad with 0s,
     // then add the length, which is also 0.
-    // Remember that MD5 is little-byte, big-bit endian
+    // Remember that MD5 is little-octet, big-bit endian
     md4::block_hash_type::block_type m = {{0x00000080u}};
     a.update(m);
     md4::block_hash_type::digest_type s = a.end_message();
@@ -39,7 +39,7 @@ void test_accumulator_md4() {
     // echo -n "abc" | md4sum
     md4::block_hash_type::block_type m = {{}};
     m[ 0] = 0x80636261;
-    // little-byte, big-bit endian also means the size isn't in the last word
+    // little-octet, big-bit endian also means the size isn't in the last word
     m[14] = 0x00000018;
     a.update(m);
     md4::block_hash_type::digest_type s = a.end_message();
@@ -64,7 +64,7 @@ void test_accumulator_md5() {
     // A single 1 bit after the (empty) message,
     // then pad with 0s,
     // then add the length, which is also 0.
-    // Remember that MD5 is little-byte, big-bit endian
+    // Remember that MD5 is little-octet, big-bit endian
     md5::block_hash_type::block_type m = {{0x00000080u}};
     a.update(m);
     md5::block_hash_type::digest_type s = a.end_message();
@@ -77,7 +77,7 @@ void test_accumulator_md5() {
     // echo -n "abc" | md4sum
     md5::block_hash_type::block_type m = {{}};
     m[ 0] = 0x80636261;
-    // little-byte, big-bit endian also means the size isn't in the last word
+    // little-octet, big-bit endian also means the size isn't in the last word
     m[14] = 0x00000018;
     a.update(m);
     md5::block_hash_type::digest_type s = a.end_message();

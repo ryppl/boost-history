@@ -9,7 +9,7 @@
 template <typename digest_type, typename state_type>
 digest_type to_digest(state_type state) {
     return digest_type::template from_state<
-               boost::hash::bitstream_endian::little_byte_big_bit,
+               boost::hash::stream_endian::little_octet_big_bit,
                state_type::static_size*64,
                64
            >(state);

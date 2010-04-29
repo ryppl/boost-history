@@ -10,7 +10,7 @@
 #define BOOST_HASH_PACK_HPP
 
 #include <boost/assert.hpp>
-#include <boost/hash/bitstream_endian.hpp>
+#include <boost/hash/stream_endian.hpp>
 #include <boost/hash/detail/exploder.hpp>
 #include <boost/hash/detail/imploder.hpp>
 #include <boost/static_assert.hpp>
@@ -114,34 +114,34 @@ struct packer<Endianness,
 
 #ifdef BOOST_LITTLE_ENDIAN
 template <int InputBits, int OutputBits, bool Ex, bool Im>
-struct packer<bitstream_endian::little_byte_big_bit,
+struct packer<stream_endian::little_byte_big_bit,
               InputBits, OutputBits,
               Ex, Im, true, true>
- : packer<bitstream_endian::platform,
+ : packer<stream_endian::host_byte,
           InputBits, OutputBits,
           Ex, Im, true, true> {};
 template <int InputBits, int OutputBits, bool Ex, bool Im>
-struct packer<bitstream_endian::little_byte_little_bit,
+struct packer<stream_endian::little_byte_little_bit,
               InputBits, OutputBits,
               Ex, Im, true, true>
- : packer<bitstream_endian::platform,
+ : packer<stream_endian::host_byte,
           InputBits, OutputBits,
           Ex, Im, true, true> {};
 #endif
 
 #ifdef BOOST_BIG_ENDIAN
 template <int InputBits, int OutputBits, bool Ex, bool Im>
-struct packer<bitstream_endian::big_byte_big_bit,
+struct packer<stream_endian::big_byte_big_bit,
               InputBits, OutputBits,
               Ex, Im, true, true>
- : packer<bitstream_endian::platform,
+ : packer<stream_endian::host_byte,
           InputBits, OutputBits,
           Ex, Im, true, true> {};
 template <int InputBits, int OutputBits, bool Ex, bool Im>
-struct packer<bitstream_endian::big_byte_little_bit,
+struct packer<stream_endian::big_byte_little_bit,
               InputBits, OutputBits,
               Ex, Im, true, true>
- : packer<bitstream_endian::platform,
+ : packer<stream_endian::host_byte,
           InputBits, OutputBits,
           Ex, Im, true, true> {};
 #endif

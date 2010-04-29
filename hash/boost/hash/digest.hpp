@@ -19,19 +19,19 @@
 namespace boost {
 namespace hash {
 
-// Always stored internally as a sequence of bytes in display order.
+// Always stored internally as a sequence of octets in display order.
 // This allows digests from different algorithms to have the same type,
 // allowing them to be more easily stored and compared.
 template <unsigned digest_bits_>
 class digest {
   public:
-    static unsigned const byte_bits = 8;
-    typedef typename uint_t<byte_bits>::least byte_type;
+    static unsigned const octet_bits = 8;
+    typedef typename uint_t<octet_bits>::least octet_type;
 
     static unsigned const digest_bits = digest_bits_;
-    BOOST_STATIC_ASSERT(digest_bits % byte_bits == 0);
-    static unsigned const digest_bytes = digest_bits/byte_bits;
-    typedef array<byte_type, digest_bytes> data_type;
+    BOOST_STATIC_ASSERT(digest_bits % octet_bits == 0);
+    static unsigned const digest_octets = digest_bits/octet_bits;
+    typedef array<octet_type, digest_octets> data_type;
 
     static unsigned const cstring_size = digest_bits/4 + 1;
     typedef array<char, cstring_size> cstring_type;
@@ -44,8 +44,8 @@ class digest {
 
     template <typename oit_T>
     oit_T ascii(oit_T it) const {
-        for (unsigned j = 0; j < digest_bytes; ++j) {
-            byte_type b = data_[j];
+        for (unsigned j = 0; j < digest_octets; ++j) {
+            octet_type b = data_[j];
             *it++ = "0123456789abcdef"[(b >> 4) & 0xF];
             *it++ = "0123456789abcdef"[(b >> 0) & 0xF];
         }
@@ -70,10 +70,10 @@ class digest {
         BOOST_STATIC_ASSERT(state_words <= state_words);
         BOOST_STATIC_ASSERT(digest_bits % word_bits == 0);
 
-        array<byte_type, state_bits/byte_bits> d;
-        pack<endian, word_bits, byte_bits>(s, d);
+        array<octet_type, state_bits/octet_bits> d;
+        pack<endian, word_bits, octet_bits>(s, d);
         data_type td;
-        for (unsigned i = 0; i < digest_bytes; ++i) {
+        for (unsigned i = 0; i < digest_octets; ++i) {
             td[i] = d[i];
         }
         return digest(td);

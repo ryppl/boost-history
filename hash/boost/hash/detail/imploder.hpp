@@ -9,7 +9,7 @@
 #ifndef BOOST_HASH_DETAIL_IMPLODER_HPP
 #define BOOST_HASH_DETAIL_IMPLODER_HPP
 
-#include <boost/hash/bitstream_endian.hpp>
+#include <boost/hash/stream_endian.hpp>
 #include <boost/hash/detail/unbounded_shift.hpp>
 #include <boost/static_assert.hpp>
 
@@ -27,7 +27,7 @@ struct imploder;
 
 template <int InputBits, int OutputBits,
           int k>
-struct imploder<bitstream_endian::big_byte_big_bit,
+struct imploder<stream_endian::big_octet_big_bit,
                 InputBits, OutputBits, k> {
     template <typename InputValue, typename OutputValue>
     static void step(InputValue z, OutputValue &x) {
@@ -37,13 +37,13 @@ struct imploder<bitstream_endian::big_byte_big_bit,
     template <typename InputType, typename OutputValue>
     static void implode1_array(InputType const &in, unsigned &i, OutputValue &x) {
         step(in[i++], x);
-        imploder<bitstream_endian::big_byte_big_bit,
+        imploder<stream_endian::big_octet_big_bit,
                 InputBits, OutputBits, k+InputBits>
          ::implode1_array(in, i, x);
     }
 };
 template <int InputBits, int OutputBits>
-struct imploder<bitstream_endian::big_byte_big_bit,
+struct imploder<stream_endian::big_octet_big_bit,
                 InputBits, OutputBits, OutputBits> {
     template <typename InputType, typename OutputValue>
     static void implode1_array(InputType const &, unsigned &, OutputValue &) {}
@@ -51,10 +51,10 @@ struct imploder<bitstream_endian::big_byte_big_bit,
 
 template <int InputBits, int OutputBits,
           int k>
-struct imploder<bitstream_endian::little_byte_big_bit,
+struct imploder<stream_endian::little_octet_big_bit,
                 InputBits, OutputBits, k> {
     // Mixed-endian pack explode can only handle bitwidths that are
-    // multiples or fractions of bytes
+    // multiples or fractions of octets
     BOOST_STATIC_ASSERT((InputBits % 8 == 0 || 8 % InputBits == 0) &&
                         (OutputBits % 8 == 0 || 8 % OutputBits == 0));
     template <typename InputValue, typename OutputValue>
@@ -71,13 +71,13 @@ struct imploder<bitstream_endian::little_byte_big_bit,
     template <typename InputType, typename OutputValue>
     static void implode1_array(InputType const &in, unsigned &i, OutputValue &x) {
         step(in[i++], x);
-        imploder<bitstream_endian::little_byte_big_bit,
+        imploder<stream_endian::little_octet_big_bit,
                 InputBits, OutputBits, k+InputBits>
          ::implode1_array(in, i, x);
     }
 };
 template <int InputBits, int OutputBits>
-struct imploder<bitstream_endian::little_byte_big_bit,
+struct imploder<stream_endian::little_octet_big_bit,
                 InputBits, OutputBits, OutputBits> {
     template <typename InputType, typename OutputValue>
     static void implode1_array(InputType const &, unsigned &, OutputValue &) {}
@@ -85,10 +85,10 @@ struct imploder<bitstream_endian::little_byte_big_bit,
 
 template <int InputBits, int OutputBits,
           int k>
-struct imploder<bitstream_endian::big_byte_little_bit,
+struct imploder<stream_endian::big_octet_little_bit,
                 InputBits, OutputBits, k> {
     // Mixed-endian pack explode can only handle bitwidths that are
-    // multiples or fractions of bytes
+    // multiples or fractions of octets
     BOOST_STATIC_ASSERT((InputBits % 8 == 0 || 8 % InputBits == 0) &&
                         (OutputBits % 8 == 0 || 8 % OutputBits == 0));
     template <typename InputValue, typename OutputValue>
@@ -105,13 +105,13 @@ struct imploder<bitstream_endian::big_byte_little_bit,
     template <typename InputType, typename OutputValue>
     static void implode1_array(InputType const &in, unsigned &i, OutputValue &x) {
         step(in[i++], x);
-        imploder<bitstream_endian::big_byte_little_bit,
+        imploder<stream_endian::big_octet_little_bit,
                 InputBits, OutputBits, k+InputBits>
          ::implode1_array(in, i, x);
     }
 };
 template <int InputBits, int OutputBits>
-struct imploder<bitstream_endian::big_byte_little_bit,
+struct imploder<stream_endian::big_octet_little_bit,
                 InputBits, OutputBits, OutputBits> {
     template <typename InputType, typename OutputValue>
     static void implode1_array(InputType const &, unsigned &, OutputValue &) {}
@@ -119,7 +119,7 @@ struct imploder<bitstream_endian::big_byte_little_bit,
 
 template <int InputBits, int OutputBits,
           int k>
-struct imploder<bitstream_endian::little_byte_little_bit,
+struct imploder<stream_endian::little_octet_little_bit,
                 InputBits, OutputBits, k> {
     template <typename InputValue, typename OutputValue>
     static void step(InputValue z, OutputValue &x) {
@@ -129,13 +129,13 @@ struct imploder<bitstream_endian::little_byte_little_bit,
     template <typename InputType, typename OutputValue>
     static void implode1_array(InputType const &in, unsigned &i, OutputValue &x) {
         step(in[i++], x);
-        imploder<bitstream_endian::little_byte_little_bit,
+        imploder<stream_endian::little_octet_little_bit,
                 InputBits, OutputBits, k+InputBits>
          ::implode1_array(in, i, x);
     }
 };
 template <int InputBits, int OutputBits>
-struct imploder<bitstream_endian::little_byte_little_bit,
+struct imploder<stream_endian::little_octet_little_bit,
                 InputBits, OutputBits, OutputBits> {
     template <typename InputType, typename OutputValue>
     static void implode1_array(InputType const &, unsigned &, OutputValue &) {}
@@ -143,7 +143,7 @@ struct imploder<bitstream_endian::little_byte_little_bit,
 
 template <int InputBits, int OutputBits,
           int k>
-struct imploder<bitstream_endian::platform,
+struct imploder<stream_endian::host_byte,
                 InputBits, OutputBits, k> {
     BOOST_STATIC_ASSERT(InputBits  % CHAR_BIT == 0);
     BOOST_STATIC_ASSERT(OutputBits % CHAR_BIT == 0);
@@ -154,13 +154,13 @@ struct imploder<bitstream_endian::platform,
     template <typename InputType, typename OutputValue>
     static void implode1_array(InputType const &in, unsigned &i, OutputValue &x) {
         step(in[i++], x);
-        imploder<bitstream_endian::platform,
+        imploder<stream_endian::host_byte,
                 InputBits, OutputBits, k+InputBits>
          ::implode1_array(in, i, x);
     }
 };
 template <int InputBits, int OutputBits>
-struct imploder<bitstream_endian::platform,
+struct imploder<stream_endian::host_byte,
                 InputBits, OutputBits, OutputBits> {
     template <typename InputType, typename OutputValue>
     static void implode1_array(InputType const &, unsigned &, OutputValue &) {}
