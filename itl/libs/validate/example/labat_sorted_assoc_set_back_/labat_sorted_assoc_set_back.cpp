@@ -25,7 +25,14 @@ void test_sorted_associative_set_back_driver()
     ">> -------- Law based test automaton 'LaBatea' ---------- <<\n";
 
 #if(_MSC_VER >= 1400 && defined(_DEBUG) ) // 1500=MSVC-9.0 1400=MSVC-8.0; 1310=MSVC-7.1; 1300=MSVC-7.0; 
-    cout << msvc_stl_false_order_checking_for_reverse_iteration_message();
+    //JODO cout << msvc_stl_false_order_checking_for_reverse_iteration_message();
+    cout <<
+    ">> Output will be generated in a few seconds\n"
+    ">> terminate by typing <CTRL>C\n"
+    ">> ------------------------------------------------------ <<\n";
+    GentorProfileSgl::it()->set_std_profile(64,1);
+    GentorProfileSgl::it()->report_profile();
+    validater.validate();
 #else
     cout <<
     ">> Output will be generated in a few seconds\n"

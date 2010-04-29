@@ -13,7 +13,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl/detail/interval_morphism.hpp>
 #include <boost/validate/laws/induced_relation.hpp>
 #include <boost/validate/validater/law_validater.hpp>
-#include <boost/validate/validater/algebra_validater.hpp>
+#include <boost/validate/validater/concept_validater.hpp>
 
 namespace boost{namespace itl
 {
@@ -21,7 +21,7 @@ namespace boost{namespace itl
 
 
     template <typename Type>
-    class itl_induced_relations_validater : public algebra_validater
+    class itl_induced_relations_validater : public concept_validater
     {
     public:
         enum Laws 

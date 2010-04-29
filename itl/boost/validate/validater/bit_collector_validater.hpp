@@ -16,7 +16,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/laws/symmetric_difference.hpp>
 #include <boost/validate/laws/set_laws.hpp>
 #include <boost/validate/validater/law_validater.hpp>
-#include <boost/validate/validater/algebra_validater.hpp>
+#include <boost/validate/validater/concept_validater.hpp>
 
 namespace boost{namespace itl
 {
@@ -24,7 +24,7 @@ namespace boost{namespace itl
 typedef WeightedNumberGentor<int> ChoiceT;
 
 template <typename Type>
-class collector_validater : public algebra_validater
+class collector_validater : public concept_validater
 {
 public:
 

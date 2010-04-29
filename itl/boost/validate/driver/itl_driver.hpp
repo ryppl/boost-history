@@ -13,7 +13,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <iostream>
 #include <stdio.h>
 #include <time.h>
-#include <boost/validate/validater/algebra_validater.hpp>
+#include <boost/validate/validater/concept_validater.hpp>
 #include <boost/validate/utility.hpp>
 
 
@@ -75,7 +75,7 @@ namespace boost{namespace itl
         bool hasValidProfile()const { return _isValid; }
 
         virtual void setProfile() = 0;
-        virtual algebra_validater* chooseValidater() = 0;
+        virtual concept_validater* chooseValidater() = 0;
 
         void require_validation_count(int count){ _required_law_validation_count = count; }
         int  required_validation_count()const   { return _required_law_validation_count;  }
@@ -250,7 +250,7 @@ namespace boost{namespace itl
             _codomainChoice.setTypeNames(type_names);
         }
 
-        algebra_validater* choiceError(const std::string& location, int value, const ChoiceT& choice)
+        concept_validater* choiceError(const std::string& location, int value, const ChoiceT& choice)
         {
             reportTypeChoiceError(location, value, choice); 
             setValid(false);
@@ -279,7 +279,7 @@ namespace boost{namespace itl
         ChoiceT            _freeChoice;
 
     private:
-        algebra_validater* _validater;
+        concept_validater* _validater;
         ValidationCounterT _frequencies;
         ViolationCounterT  _violationsCount;
         ViolationMapT      _violations;

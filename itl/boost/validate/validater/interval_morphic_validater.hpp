@@ -19,14 +19,14 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/laws/order.hpp>
 #include <boost/validate/laws/pushouts.hpp>
 #include <boost/validate/validater/law_validater.hpp>
-#include <boost/validate/validater/algebra_validater.hpp>
+#include <boost/validate/validater/concept_validater.hpp>
 
 namespace boost{namespace itl
 {
     typedef WeightedNumberGentor<int> ChoiceT;
 
     template <typename Type>
-    class interval_morphic_validater : public algebra_validater
+    class interval_morphic_validater : public concept_validater
     {
     public:
         enum Laws 

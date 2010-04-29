@@ -192,5 +192,32 @@ BOOST_AUTO_TEST_CASE(casual)
 
 BOOST_AUTO_TEST_CASE(casual)
 {
+	typedef itl::set<int> TargetT;
+	TargetT left, right, target;
+	left.insert(1);
+	left.insert(3);
+	right.insert(2);
+	left.insert(3);
+
+	/*
+	std::set_union(left.rbegin(), left.rend(), right.rbegin(), right.rend(), 
+		           std::inserter(target,target.end()));
+   	std::set_difference(left.rbegin(), left.rend(), right.rbegin(), right.rend(), 
+		                std::inserter(target,target.end()));
+
+	std::set_intersection(left.rbegin(), left.rend(), right.rbegin(), right.rend(), 
+		                  std::inserter(target,target.end()));
+	std::set_symmetric_difference(left.rbegin(), left.rend(), right.rbegin(), right.rend(), 
+		                          std::inserter(target,target.end()));
+
+	bool incl = std::includes(left.rbegin(), left.rend(), right.rbegin(), right.rend(), std::greater<int>()); //!
+
+    */
+
+	//int found;
+	//TargetT::reverse_iterator it = std::find(left.rbegin(), left.rend(), found); //!
+
+	bool incl = std::includes(left.rbegin(), left.rend(), right.rbegin(), right.rend(), std::greater<int>());
+
 }
 

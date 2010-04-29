@@ -23,7 +23,7 @@ namespace boost{namespace itl
 
 
     template <typename Type>
-    class itl_order_validater : public algebra_validater
+    class itl_order_validater : public concept_validater
     {
     public:
         typedef strict_weak_order_validater<Type, std::less> LessValidaterT;

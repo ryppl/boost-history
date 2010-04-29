@@ -47,7 +47,7 @@ namespace boost{namespace itl
         }
 
 
-        algebra_validater* chooseValidater()
+        concept_validater* chooseValidater()
         {
             int freeChoice         = _freeChoice.some();
 

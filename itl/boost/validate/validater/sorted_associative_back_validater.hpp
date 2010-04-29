@@ -12,7 +12,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 
 #include <boost/validate/laws/atomic_equivalence.hpp>
 #include <boost/validate/validater/law_validater.hpp>
-#include <boost/validate/validater/algebra_validater.hpp>
+#include <boost/validate/validater/concept_validater.hpp>
 
 #include <boost/validate/std/algorithm/copy.hpp>
 #include <boost/validate/std/algorithm/set_algo.hpp>
@@ -25,7 +25,7 @@ namespace boost{namespace itl
 typedef WeightedNumberGentor<int> ChoiceT;
 
 template <typename Type, typename TargetT = itl::list<typename Type::value_type> >
-class sorted_associative_back_validater : public algebra_validater
+class sorted_associative_back_validater : public concept_validater
 {
 public:
     typedef typename Type::atomized_type     atomic_type;

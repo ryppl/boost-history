@@ -12,7 +12,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/itl/functors.hpp>
 #include <boost/validate/laws/function_equality.hpp>
 #include <boost/validate/validater/law_validater.hpp>
-#include <boost/validate/validater/algebra_validater.hpp>
+#include <boost/validate/validater/concept_validater.hpp>
 
 namespace boost{namespace itl
 {
@@ -20,7 +20,7 @@ namespace boost{namespace itl
 
 
     template <typename SourceT, typename TargetT>
-    class function_equality_validater : public algebra_validater
+    class function_equality_validater : public concept_validater
     {
     public:
         enum Laws 

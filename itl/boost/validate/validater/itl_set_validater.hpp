@@ -16,7 +16,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/laws/symmetric_difference.hpp>
 #include <boost/validate/laws/set_laws.hpp>
 #include <boost/validate/validater/law_validater.hpp>
-#include <boost/validate/validater/algebra_validater.hpp>
+#include <boost/validate/validater/concept_validater.hpp>
 
 #ifdef BOOST_MSVC 
 #pragma warning(push)
@@ -29,7 +29,7 @@ namespace boost{namespace itl
 typedef WeightedNumberGentor<int> ChoiceT;
 
 template <typename Type>
-class itl_set_validater : public algebra_validater
+class itl_set_validater : public concept_validater
 {
 public:
 
@@ -101,12 +101,12 @@ public:
             if(itl::is_interval_splitter<Type>::value)
                                         return new LawValidater<InplaceRightDistributivity<Type, inplace_plus, inplace_minus, element_equal> >;
             else                        return new LawValidater<InplaceRightDistributivity<Type, inplace_plus, inplace_minus, std_equal> >;
-        case inplaceEtDashRightDistrib:    return new LawValidater<InplaceRightDistributivity<Type, inplace_et, inplace_minus> >;
-        case inplacePlusDeMorgan:         return new LawValidater<InplaceDeMorgan<Type, inplace_plus, inplace_et, itl::std_equal> >;
+        case inplaceEtDashRightDistrib: return new LawValidater<InplaceRightDistributivity<Type, inplace_et, inplace_minus> >;
+        case inplacePlusDeMorgan:       return new LawValidater<InplaceDeMorgan<Type, inplace_plus, inplace_et, itl::std_equal> >;
         case inplaceEtDeMorgan:        
             if(itl::is_interval_splitter<Type>::value || itl::is_interval_separator<Type>::value)
-                                        return new LawValidater<InplaceDeMorgan<Type, inplace_et, inplace_plus, itl::element_equal> >;
-            else                        return new LawValidater<InplaceDeMorgan<Type, inplace_et, inplace_plus, itl::std_equal> >;
+				                        return new LawValidater<InplaceDeMorgan<Type, inplace_et, inplace_plus, inplace_minus, itl::element_equal> >;
+            else                        return new LawValidater<InplaceDeMorgan<Type, inplace_et, inplace_plus, inplace_minus, itl::std_equal> >;
 
         default: return NULL;
         }

@@ -16,14 +16,14 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl/functors.hpp>
 #include <boost/validate/laws/order.hpp>
 #include <boost/validate/validater/law_validater.hpp>
-#include <boost/validate/validater/algebra_validater.hpp>
+#include <boost/validate/validater/concept_validater.hpp>
 
 namespace boost{namespace itl
 {
     typedef WeightedNumberGentor<int> ChoiceT;
 
     template <typename Type, template<class>class Relation>
-    class strict_weak_order_validater : public algebra_validater
+    class strict_weak_order_validater : public concept_validater
     {
     public:
         enum Laws 
@@ -84,7 +84,7 @@ namespace boost{namespace itl
         ValidationCounterT _frequencies;
         ViolationCounterT  _violationsCount;
         ViolationMapT      _violations;
-    }; //class algebra_validater
+    }; //class concept_validater
 
 
 

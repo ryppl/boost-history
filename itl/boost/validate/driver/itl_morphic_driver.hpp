@@ -88,7 +88,7 @@ public:
 
     }
 
-    algebra_validater* chooseValidater()
+    concept_validater* chooseValidater()
     {
         int rootChoice         = _rootChoice.some();
         int domainChoice       = _domainChoice.some();

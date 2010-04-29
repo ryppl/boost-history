@@ -16,14 +16,14 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl/functors.hpp>
 #include <boost/validate/laws/order.hpp>
 #include <boost/validate/validater/law_validater.hpp>
-#include <boost/validate/validater/algebra_validater.hpp>
+#include <boost/validate/validater/concept_validater.hpp>
 
 namespace boost{namespace itl
 {
     typedef WeightedNumberGentor<int> ChoiceT;
 
     template <typename Type, template<class>class Relation, template<class>class Equality = itl::std_equal>
-    class partial_order_validater : public algebra_validater
+    class partial_order_validater : public concept_validater
     {
     public:
         enum Laws 

@@ -14,6 +14,12 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <set>
 #include <boost/validate/loki_xt/Tuple.h>
 
+
+#ifdef BOOST_MSVC 
+#pragma warning(push)
+#pragma warning(disable:4717) // ::size' : recursive on all control paths, function will cause runtime stack overflow
+#endif                        
+
 namespace boost{namespace itl
 {
 
@@ -125,6 +131,10 @@ namespace boost{namespace itl
     enum OutputVarIndex { lhs_result, rhs_result };
 
 }} // namespace itl boost
+
+#ifdef BOOST_MSVC
+#pragma warning(pop)
+#endif
 
 #endif //BOOST_ITL_LAW_HPP_JOFA_070411
 
