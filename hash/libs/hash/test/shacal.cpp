@@ -194,6 +194,7 @@ void test_sha1() {
     typedef sha1_byte_hash::digest_type digest_type;
 
 #ifndef BOOST_HASH_SHOW_PROGRESS
+#ifndef QUICK
     {
     // perl -e 'for ($x = 1000000000; $x--;) {print "a";}' | sha1sum
     sha1_byte_hash h;
@@ -203,6 +204,7 @@ void test_sha1() {
     char const *ed = "d0f3e4f2f31c665abbd8f518e848d5cb80ca78f7";
     assert(!strcmp(ed, d.cstring().data()));
     }
+#endif
 #endif
 }
 

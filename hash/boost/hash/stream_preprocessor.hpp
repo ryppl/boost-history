@@ -22,7 +22,7 @@ namespace hash {
 // This will do the usual Merkle-Damgård-style strengthening, padding with
 // a 1 bit, then 0 bits as needed, then, if requested, the length.
 //
-template <bitstream_endian::type endian,
+template <typename endian,
           unsigned value_bits_,
           unsigned length_bits_,
           typename block_hash_T>

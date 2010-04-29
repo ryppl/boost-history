@@ -60,7 +60,7 @@ class digest {
         return s;
     }
 
-    template <bitstream_endian::type endian,
+    template <typename endian,
               unsigned state_bits,
               unsigned word_bits,
               typename state_type>
@@ -83,7 +83,7 @@ class digest {
 };
 
 template <typename digest_type_,
-          bitstream_endian::type endian>
+          typename endian>
 struct digest_from_state {
     typedef digest_type_ digest_type;
     template <unsigned state_bits,

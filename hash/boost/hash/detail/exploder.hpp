@@ -13,11 +13,14 @@
 #include <boost/hash/detail/unbounded_shift.hpp>
 #include <boost/static_assert.hpp>
 
+#include <climits>
+#include <cstring>
+
 namespace boost {
 namespace hash {
 namespace detail {
 
-template <bitstream_endian::type Endianness,
+template <typename Endianness,
           int InputBits, int OutputBits,
           int k = 0>
 struct exploder;
@@ -133,6 +136,31 @@ struct exploder<bitstream_endian::little_byte_little_bit,
 };
 template <int InputBits, int OutputBits>
 struct exploder<bitstream_endian::little_byte_little_bit,
+                InputBits, OutputBits, InputBits> {
+    template <typename OutputType, typename IntputValue>
+    static void explode1_array(OutputType &, unsigned &, IntputValue) {}
+};
+
+template <int InputBits, int OutputBits,
+          int k>
+struct exploder<bitstream_endian::platform,
+                InputBits, OutputBits, k> {
+    BOOST_STATIC_ASSERT(InputBits  % CHAR_BIT == 0);
+    BOOST_STATIC_ASSERT(OutputBits % CHAR_BIT == 0);
+    template <typename OutputValue, typename InputValue>
+    static void step(OutputValue &z, InputValue x) {
+        std::memcpy(&z, (char*)&x + k/CHAR_BIT, OutputBits/CHAR_BIT);
+    }
+    template <typename OutputType, typename InputValue>
+    static void explode1_array(OutputType &out, unsigned &i, InputValue x) {
+        step(out[i++], x);
+        exploder<bitstream_endian::platform,
+                InputBits, OutputBits, k+OutputBits>
+         ::explode1_array(out, i, x);
+    }
+};
+template <int InputBits, int OutputBits>
+struct exploder<bitstream_endian::platform,
                 InputBits, OutputBits, InputBits> {
     template <typename OutputType, typename IntputValue>
     static void explode1_array(OutputType &, unsigned &, IntputValue) {}

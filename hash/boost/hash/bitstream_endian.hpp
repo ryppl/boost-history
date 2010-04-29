@@ -13,12 +13,11 @@ namespace boost {
 namespace hash {
 
 namespace bitstream_endian {
-    enum type {
-        big_byte_big_bit,
-        little_byte_big_bit,
-        big_byte_little_bit,
-        little_byte_little_bit,
-    };
+    struct big_byte_big_bit {};
+    struct little_byte_big_bit {};
+    struct big_byte_little_bit {};
+    struct little_byte_little_bit {};
+    struct platform {};
 }
 
 } // namespace hash

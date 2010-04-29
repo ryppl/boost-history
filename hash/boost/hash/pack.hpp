@@ -15,18 +15,26 @@
 #include <boost/hash/detail/imploder.hpp>
 #include <boost/static_assert.hpp>
 
+#ifndef BOOST_HASH_NO_OPTIMIZATION
+#include <boost/detail/endian.hpp>
+#endif
+
 namespace boost {
 namespace hash {
 
-template <bitstream_endian::type Endianness,
+template <typename Endianness,
           int InputBits, int OutputBits,
           bool Explode = (InputBits > OutputBits),
-          bool Implode = (InputBits < OutputBits)>
+          bool Implode = (InputBits < OutputBits),
+          bool BytesOnly = (InputBits % CHAR_BIT == 0 &&
+                            OutputBits % CHAR_BIT == 0),
+          bool Prefer = true>
 struct packer;
 
-template <bitstream_endian::type Endianness,
-          int Bits>
-struct packer<Endianness, Bits, Bits, false, false> {
+template <typename Endianness,
+          int Bits,
+          bool BytesOnly>
+struct packer<Endianness, Bits, Bits, false, false, BytesOnly, false> {
 
     template <typename OutputType, typename InputType>
     static OutputType pack_array(InputType const &in) {
@@ -41,11 +49,12 @@ struct packer<Endianness, Bits, Bits, false, false> {
 
 };
 
-template <bitstream_endian::type Endianness,
-          int InputBits, int OutputBits>
+template <typename Endianness,
+          int InputBits, int OutputBits,
+          bool BytesOnly>
 struct packer<Endianness,
               InputBits, OutputBits,
-              true, false> {
+              true, false, BytesOnly, false> {
 
     BOOST_STATIC_ASSERT(InputBits % OutputBits == 0);
 
@@ -65,11 +74,12 @@ struct packer<Endianness,
 
 };
 
-template <bitstream_endian::type Endianness,
-          int InputBits, int OutputBits>
+template <typename Endianness,
+          int InputBits, int OutputBits,
+          bool BytesOnly>
 struct packer<Endianness,
               InputBits, OutputBits,
-              false, true> {
+              false, true, BytesOnly, false> {
 
     BOOST_STATIC_ASSERT(OutputBits % InputBits == 0);
 
@@ -89,9 +99,56 @@ struct packer<Endianness,
 
 };
 
-// TODO: Add specializations to optimize the easy platform-endianness cases
+// Forward Prefer to !Prefer if nothing better matches
+template <typename Endianness,
+          int InputBits, int OutputBits,
+          bool Explode, bool Implode, bool BytesOnly>
+struct packer<Endianness,
+              InputBits, OutputBits,
+              Explode, Implode, BytesOnly, true>
+ : packer<Endianness,
+              InputBits, OutputBits,
+              Explode, Implode, BytesOnly, false> {};
 
-template <bitstream_endian::type Endianness,
+#ifndef BOOST_HASH_NO_OPTIMIZATION
+
+#ifdef BOOST_LITTLE_ENDIAN
+template <int InputBits, int OutputBits, bool Ex, bool Im>
+struct packer<bitstream_endian::little_byte_big_bit,
+              InputBits, OutputBits,
+              Ex, Im, true, true>
+ : packer<bitstream_endian::platform,
+          InputBits, OutputBits,
+          Ex, Im, true, true> {};
+template <int InputBits, int OutputBits, bool Ex, bool Im>
+struct packer<bitstream_endian::little_byte_little_bit,
+              InputBits, OutputBits,
+              Ex, Im, true, true>
+ : packer<bitstream_endian::platform,
+          InputBits, OutputBits,
+          Ex, Im, true, true> {};
+#endif
+
+#ifdef BOOST_BIG_ENDIAN
+template <int InputBits, int OutputBits, bool Ex, bool Im>
+struct packer<bitstream_endian::big_byte_big_bit,
+              InputBits, OutputBits,
+              Ex, Im, true, true>
+ : packer<bitstream_endian::platform,
+          InputBits, OutputBits,
+          Ex, Im, true, true> {};
+template <int InputBits, int OutputBits, bool Ex, bool Im>
+struct packer<bitstream_endian::big_byte_little_bit,
+              InputBits, OutputBits,
+              Ex, Im, true, true>
+ : packer<bitstream_endian::platform,
+          InputBits, OutputBits,
+          Ex, Im, true, true> {};
+#endif
+
+#endif
+
+template <typename Endianness,
           int InBits, int OutBits,
           typename T1, typename T2>
 void pack(T1 const &in, T2 &out) {

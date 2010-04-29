@@ -13,11 +13,14 @@
 #include <boost/hash/detail/unbounded_shift.hpp>
 #include <boost/static_assert.hpp>
 
+#include <climits>
+#include <cstring>
+
 namespace boost {
 namespace hash {
 namespace detail {
 
-template <bitstream_endian::type Endianness,
+template <typename Endianness,
           int InputBits, int OutputBits,
           int k = 0>
 struct imploder;
@@ -133,6 +136,31 @@ struct imploder<bitstream_endian::little_byte_little_bit,
 };
 template <int InputBits, int OutputBits>
 struct imploder<bitstream_endian::little_byte_little_bit,
+                InputBits, OutputBits, OutputBits> {
+    template <typename InputType, typename OutputValue>
+    static void implode1_array(InputType const &, unsigned &, OutputValue &) {}
+};
+
+template <int InputBits, int OutputBits,
+          int k>
+struct imploder<bitstream_endian::platform,
+                InputBits, OutputBits, k> {
+    BOOST_STATIC_ASSERT(InputBits  % CHAR_BIT == 0);
+    BOOST_STATIC_ASSERT(OutputBits % CHAR_BIT == 0);
+    template <typename InputValue, typename OutputValue>
+    static void step(InputValue z, OutputValue &x) {
+        std::memcpy((char*)&x + k/CHAR_BIT, &z, InputBits/CHAR_BIT);
+    }
+    template <typename InputType, typename OutputValue>
+    static void implode1_array(InputType const &in, unsigned &i, OutputValue &x) {
+        step(in[i++], x);
+        imploder<bitstream_endian::platform,
+                InputBits, OutputBits, k+InputBits>
+         ::implode1_array(in, i, x);
+    }
+};
+template <int InputBits, int OutputBits>
+struct imploder<bitstream_endian::platform,
                 InputBits, OutputBits, OutputBits> {
     template <typename InputType, typename OutputValue>
     static void implode1_array(InputType const &, unsigned &, OutputValue &) {}
