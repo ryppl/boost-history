@@ -14,7 +14,6 @@
 #define BOOST_FILESYSTEM_SOURCE 
 
 #include <boost/filesystem/operations.hpp>
-#include <boost/throw_exception.hpp>
 
 # ifdef BOOST_POSIX_API
 #   include <fcntl.h>
@@ -29,7 +28,7 @@ namespace {
 void fail(int err, boost::system::error_code* ec)
 {
   if (ec == 0)
-    boost::throw_exception( boost::system::system_error(err,
+    BOOST_FILESYSTEM_THROW( boost::system::system_error(err,
       boost::system::system_category,
       "boost::filesystem::unique_path"));
 

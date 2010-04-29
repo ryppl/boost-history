@@ -15,7 +15,7 @@
 //  are processed correctly.
 //
 //  For full functionality tests, including probes with many different argument
-//  values, see path_test.cpp and other test programs. 
+//  values, see path_test.cpp and other test programs.
 //
 //  ----------------------------------------------------------------------------------  //
 
@@ -49,7 +49,7 @@ using std::wstring;
 #if defined(_MSC_VER)
 # pragma warning(push) // Save warning settings.
 # pragma warning(disable : 4428) // Disable universal-character-name encountered in source warning.
-#endif 
+#endif
 
 namespace
 {
@@ -174,7 +174,7 @@ namespace
   path y;
 
   //  test_assignments  ----------------------------------------------------------------//
-                                                       
+
   void test_assignments()
   {
     std::cout << "testing assignments..." << std::endl;
@@ -323,7 +323,7 @@ namespace
     CHECK(p.generic_string<wstring>() == L"abc\\def/ghi");
     CHECK(p.generic_string<path::string_type>() == "abc\\def/ghi");
 
-# endif 
+# endif
   }
 
   //  test_relationals  ----------------------------------------------------------------//
@@ -475,13 +475,13 @@ namespace
 //    CHECK(path("").make_absolute("foo") == ""); // should assert
 
 #   ifdef BOOST_WINDOWS_PATH
-    CHECK(path("baa").make_absolute("c:/") == "c:/baa"); 
-    CHECK(path("/baa").make_absolute("c:/foo").string() == path("c:/baa").string()); 
+    CHECK(path("baa").make_absolute("c:/") == "c:/baa");
+    CHECK(path("/baa").make_absolute("c:/foo").string() == path("c:/baa").string());
     CHECK(path("baa/baz").make_absolute("c:/foo/bar").string()
       == path("c:/foo/bar\\baa/baz").string());
 #   else
-    CHECK(path("baa").make_absolute("/") == "/baa"); 
-    CHECK(path("/baa").make_absolute("/foo").string() == path("/baa").string()); 
+    CHECK(path("baa").make_absolute("/") == "/baa");
+    CHECK(path("/baa").make_absolute("/foo").string() == path("/baa").string());
     CHECK(path("baa/baz").make_absolute("/foo/bar").string()
       == path("/foo/bar/baa/baz").string());
 #   endif
@@ -642,7 +642,7 @@ namespace
   //  test_error_handling  -------------------------------------------------------------//
 
   class error_codecvt
-    : public std::codecvt< wchar_t, char, std::mbstate_t >  
+    : public std::codecvt< wchar_t, char, std::mbstate_t >
   {
   public:
     explicit error_codecvt()
@@ -652,30 +652,30 @@ namespace
     virtual bool do_always_noconv() const throw() { return false; }
     virtual int do_encoding() const throw() { return 0; }
 
-    virtual std::codecvt_base::result do_in(std::mbstate_t&, 
+    virtual std::codecvt_base::result do_in(std::mbstate_t&,
       const char*, const char*, const char*&,
       wchar_t*, wchar_t*, wchar_t*&) const
     {
-      static std::codecvt_base::result result = std::codecvt_base::noconv;
-      if (result == std::codecvt_base::partial) result = std::codecvt_base::error;
-      else if (result == std::codecvt_base::error) result = std::codecvt_base::noconv;
-      else if (result == std::codecvt_base::noconv) result = std::codecvt_base::partial;
-      return result;
+      static std::codecvt_base::result r = std::codecvt_base::noconv;
+      if (r == std::codecvt_base::partial) r = std::codecvt_base::error;
+      else if (r == std::codecvt_base::error) r = std::codecvt_base::noconv;
+      else r = std::codecvt_base::partial;
+      return r;
     }
 
     virtual std::codecvt_base::result do_out(std::mbstate_t &,
       const wchar_t*, const wchar_t*, const wchar_t*&,
       char*, char*, char*&) const
     {
-      static std::codecvt_base::result result = std::codecvt_base::noconv;
-      if (result == std::codecvt_base::partial) result = std::codecvt_base::error;
-      else if (result == std::codecvt_base::error) result = std::codecvt_base::noconv;
-      else if (result == std::codecvt_base::noconv) result = std::codecvt_base::partial;
-      return result;
+      static std::codecvt_base::result r = std::codecvt_base::noconv;
+      if (r == std::codecvt_base::partial) r = std::codecvt_base::error;
+      else if (r == std::codecvt_base::error) r = std::codecvt_base::noconv;
+      else r = std::codecvt_base::partial;
+      return r;
     }
 
     virtual std::codecvt_base::result do_unshift(std::mbstate_t&,
-        char*, char*, char* &) const  { return ok; } 
+        char*, char*, char* &) const  { return ok; }
     virtual int do_length(std::mbstate_t &,
       const char*, const char*, std::size_t) const  { return 0; }
     virtual int do_max_length() const throw () { return 0; }
@@ -700,6 +700,7 @@ namespace
 #   endif
 
     {
+      std::cout << "    testing std::codecvt_base::partial error..." << std::endl;
       bool exception_thrown (false);
       try { path(STRING_FOO_); }
       catch (const bs::system_error & ex)
@@ -708,10 +709,12 @@ namespace
         BOOST_TEST_EQ(ex.code(), bs::error_code(std::codecvt_base::partial,
           fs::codecvt_error_category()));
       }
+      catch (...) { std::cout << "***** unexpected exception type *****" << std::endl; }
       BOOST_TEST(exception_thrown);
     }
 
     {
+      std::cout << "    testing std::codecvt_base::error error..." << std::endl;
       bool exception_thrown (false);
       try { path(STRING_FOO_); }
       catch (const bs::system_error & ex)
@@ -720,10 +723,12 @@ namespace
         BOOST_TEST_EQ(ex.code(), bs::error_code(std::codecvt_base::error,
           fs::codecvt_error_category()));
       }
+      catch (...) { std::cout << "***** unexpected exception type *****" << std::endl; }
       BOOST_TEST(exception_thrown);
     }
 
     {
+      std::cout << "    testing std::codecvt_base::noconv error..." << std::endl;
       bool exception_thrown (false);
       try { path(STRING_FOO_); }
       catch (const bs::system_error & ex)
@@ -732,6 +737,7 @@ namespace
         BOOST_TEST_EQ(ex.code(), bs::error_code(std::codecvt_base::noconv,
           fs::codecvt_error_category()));
       }
+      catch (...) { std::cout << "***** unexpected exception type *****" << std::endl; }
       BOOST_TEST(exception_thrown);
     }
 

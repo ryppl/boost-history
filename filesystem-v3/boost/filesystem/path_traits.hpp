@@ -91,7 +91,7 @@ namespace path_traits {
     if (c.size())
     {
       std::basic_string<typename Container::value_type> s(c.begin(), c.end());
-      path_traits::convert(s.c_str(), s.c_str()+s.size(), to, cvt);
+      convert(s.c_str(), s.c_str()+s.size(), to, cvt);
     }
   }
 

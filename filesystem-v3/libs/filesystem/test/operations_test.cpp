@@ -13,13 +13,11 @@
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 
 #include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/convenience.hpp>
 #include <boost/cerrno.hpp>
 namespace fs = boost::filesystem;
 
 #include <boost/config.hpp>
 #include <boost/detail/lightweight_test.hpp>
-//#include <boost/concept_check.hpp>
 
 using boost::system::error_code;
 using boost::system::system_category;
@@ -34,6 +32,14 @@ using boost::system::system_error;
 
 #ifdef BOOST_WINDOWS_API
 # include <windows.h>
+#endif
+
+//  glibc++ doesn't have wchar_t overloads for file stream paths, so on Windows use
+//  path::string() to get a narrow character c_str()
+#if defined(BOOST_WINDOWS_API) && defined(__GLIBCXX__)
+# define BOOST_FILESYSTEM_C_STR string().c_str()
+#else
+# define BOOST_FILESYSTEM_C_STR c_str()
 #endif
 
 #define CHECK_EXCEPTION(Functor,Expect) throws_fs_error(Functor,Expect,__LINE__)
@@ -57,7 +63,7 @@ namespace
 
   void create_file(const fs::path & ph, const std::string & contents)
   {
-    std::ofstream f(ph.c_str());
+    std::ofstream f(ph.BOOST_FILESYSTEM_C_STR);
     if (!f)
       throw fs::filesystem_error("operations_test create_file",
       ph, error_code(errno, system_category));
@@ -66,7 +72,7 @@ namespace
 
   void verify_file(const fs::path & ph, const std::string & expected)
   {
-    std::ifstream f(ph.c_str());
+    std::ifstream f(ph.BOOST_FILESYSTEM_C_STR);
     if (!f)
       throw fs::filesystem_error("operations_test verify_file",
         ph, error_code(errno, system_category));
@@ -170,11 +176,11 @@ namespace
   void exception_tests()
   {
     std::cout << "exception_tests..." << std::endl;
+    bool exception_thrown;
 
-    //  catch runtime_error
+    //  catch runtime_error by value
 
     std::cout << "  catch runtime_error by value" << std::endl;
-    bool exception_thrown;
     exception_thrown = false;
     try
     {
@@ -193,7 +199,7 @@ namespace
     }
     BOOST_TEST(exception_thrown);
 
-    //  catch system_error
+    //  catch system_error by value
 
     std::cout << "  catch system_error by value" << std::endl;
     exception_thrown = false;
@@ -1171,7 +1177,7 @@ int main(int argc, char* argv[])
   std::cout << "BOOST_WINDOWS_API\n";
 #endif
 #ifdef BOOST_POSIX_PATH
-  std::cout << "BOOST_PATH_API\n";
+  std::cout << "BOOST_POSIX_PATH\n";
 #endif
 #ifdef BOOST_WINDOWS_PATH
   std::cout << "BOOST_WINDOWS_PATH\n";

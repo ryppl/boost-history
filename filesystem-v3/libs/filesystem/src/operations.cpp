@@ -38,7 +38,6 @@
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/scoped_array.hpp>
-#include <boost/throw_exception.hpp>
 #include <boost/detail/workaround.hpp>
 
 #ifdef BOOST_FILEYSTEM_INCLUDE_IOSTREAM
@@ -51,7 +50,6 @@ using boost::filesystem::filesystem_error;
 using boost::system::error_code;
 using boost::system::error_category;
 using boost::system::system_category;
-using boost::throw_exception;
 using std::string;
 using std::wstring;
 
@@ -78,6 +76,11 @@ using std::wstring;
 
 # else // BOOST_WINDOW_API
 
+#   if defined(__MINGW32__) && !defined(WINVER)
+      // Versions of MinGW that support Filesystem V3 support at least WINVER 0x501.
+      // See MinGW's windef.h
+#     define WINVER 0x501
+#   endif
 #   include <windows.h>
 #   include <winnt.h>
 #   if !defined(_WIN32_WINNT)
@@ -235,7 +238,7 @@ namespace
     else  
     { //  error
       if (ec == 0)
-        throw_exception(filesystem_error(message,
+        BOOST_FILESYSTEM_THROW(filesystem_error(message,
           error_code(BOOST_ERRNO, system_category)));
       else
         ec->assign(BOOST_ERRNO, system_category);
@@ -252,7 +255,7 @@ namespace
     else  
     { //  error
       if (ec == 0)
-        throw_exception(filesystem_error(message,
+        BOOST_FILESYSTEM_THROW(filesystem_error(message,
           p, error_code(BOOST_ERRNO, system_category)));
       else
         ec->assign(BOOST_ERRNO, system_category);
@@ -270,7 +273,7 @@ namespace
     else  
     { //  error
       if (ec == 0)
-        throw_exception(filesystem_error(message,
+        BOOST_FILESYSTEM_THROW(filesystem_error(message,
           p1, p2, error_code(BOOST_ERRNO, system_category)));
       else
         ec->assign(BOOST_ERRNO, system_category);
@@ -289,7 +292,7 @@ namespace
     else  
     { //  error
       if (ec == 0)
-        throw_exception(filesystem_error(message, p, result));
+        BOOST_FILESYSTEM_THROW(filesystem_error(message, p, result));
       else
         *ec = result;
     }
@@ -307,7 +310,7 @@ namespace
     else  
     { //  error
       if (ec == 0)
-        throw_exception(filesystem_error(message, p1, p2, result));
+        BOOST_FILESYSTEM_THROW(filesystem_error(message, p1, p2, result));
       else
         *ec = result;
     }
@@ -605,7 +608,7 @@ namespace detail
     else
     {
       if (ec == 0)
-        throw_exception(filesystem_error("boost::filesystem::copy",
+        BOOST_FILESYSTEM_THROW(filesystem_error("boost::filesystem::copy",
           from, to, error_code(BOOST_ERROR_NOT_SUPPORTED, system_category)));
       ec->assign(BOOST_ERROR_NOT_SUPPORTED, system_category);
     }
@@ -668,7 +671,7 @@ namespace detail
       if (!p.empty() && !is_directory(p))
       {
         if (ec == 0)
-        boost::throw_exception(filesystem_error(
+        BOOST_FILESYSTEM_THROW(filesystem_error(
             "boost::filesystem::create_directories", p,
             error_code(system::errc::file_exists, system::generic_category)));
         else ec->assign(system::errc::file_exists, system::generic_category);
@@ -703,7 +706,7 @@ namespace detail
 
     //  attempt to create directory failed && it doesn't already exist
     if (ec == 0)
-      throw_exception(filesystem_error("boost::filesystem::create_directory",
+      BOOST_FILESYSTEM_THROW(filesystem_error("boost::filesystem::create_directory",
         p, error_code(errval, system_category)));
     else
       ec->assign(errval, system_category);
@@ -1104,7 +1107,7 @@ namespace detail
       if ((result=::readlink(p.c_str(), buf.get(), path_max))== -1)
       {
         if (ec == 0)
-          throw_exception(filesystem_error("boost::filesystem::read_symlink",
+          BOOST_FILESYSTEM_THROW(filesystem_error("boost::filesystem::read_symlink",
             p, error_code(errno, system_category)));
         else ec->assign(errno, system_category);
         break;
@@ -1253,7 +1256,7 @@ namespace detail
       return file_status(type_unknown);
     }
     if (ec == 0)
-      throw_exception(filesystem_error("boost::filesystem::status",
+      BOOST_FILESYSTEM_THROW(filesystem_error("boost::filesystem::status",
         p, error_code(errval, system_category)));
     return file_status(status_error);
   }
@@ -1275,7 +1278,7 @@ namespace detail
         return fs::file_status(fs::file_not_found);
       }
       if (ec == 0)
-        throw_exception(filesystem_error("boost::filesystem::status",
+        BOOST_FILESYSTEM_THROW(filesystem_error("boost::filesystem::status",
           p, error_code(errno, system_category)));
       return fs::file_status(fs::status_error);
     }
@@ -1344,7 +1347,7 @@ namespace detail
         return fs::file_status(fs::file_not_found);
       }
       if (ec == 0)
-        throw_exception(filesystem_error("boost::filesystem::status",
+        BOOST_FILESYSTEM_THROW(filesystem_error("boost::filesystem::status",
           p, error_code(errno, system_category)));
       return fs::file_status(fs::status_error);
     }
@@ -1741,7 +1744,7 @@ namespace detail
       {
         it.m_imp.reset();
         if (ec == 0)
-          throw_exception(
+          BOOST_FILESYSTEM_THROW(
             filesystem_error("boost::filesystem::directory_iterator::operator++",
               it.m_imp->dir_entry.path().parent_path(),
               error_code(BOOST_ERRNO, system_category)));

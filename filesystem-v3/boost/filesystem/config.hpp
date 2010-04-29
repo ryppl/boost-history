@@ -31,6 +31,17 @@
 #   define BOOST_FILESYSTEM_DEPRECATED
 # endif
 
+//  throw an exception  ----------------------------------------------------------------//
+//
+//  Exceptions were originally thrown via boost::throw_exception().
+//  As throw_exception() became more complex, it caused catch failures in version tests
+//  with various versions of GCC. For all compilers, it also caused user error reporting
+//  to be harder to interpret, since the exception reported became much more complex.
+//  The immediate fix was to throw directly, wrapped in a macro to make any later change
+//  easier.
+
+#define BOOST_FILESYSTEM_THROW(EX) throw EX
+
 //  determine platform  ----------------------------------------------------------------//
 
 //  BOOST_POSIX_API or BOOST_WINDOWS_API specify which API to use

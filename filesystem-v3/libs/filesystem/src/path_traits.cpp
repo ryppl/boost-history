@@ -15,7 +15,6 @@
 #include <boost/filesystem/config.hpp>
 #include <boost/system/system_error.hpp>
 #include <boost/scoped_array.hpp>
-#include <boost/throw_exception.hpp>
 #include <locale>   // for codecvt_base::result
 #include <cstring>  // for strlen
 #include <cwchar>   // for wcslen
@@ -72,7 +71,7 @@ namespace {
            to, to_end, to_next)) != std::codecvt_base::ok)
     {
       //std::cout << " result is " << static_cast<int>(res) << std::endl;
-      boost::throw_exception(bs::system_error(res, fs::codecvt_error_category(),
+      BOOST_FILESYSTEM_THROW(bs::system_error(res, fs::codecvt_error_category(),
         "boost::filesystem::path codecvt to wstring"));
     }
     target.append(to, to_next); 
@@ -106,7 +105,7 @@ namespace {
            to, to_end, to_next)) != std::codecvt_base::ok)
     {
       //std::cout << " result is " << static_cast<int>(res) << std::endl;
-      boost::throw_exception(bs::system_error(res, fs::codecvt_error_category(),
+      BOOST_FILESYSTEM_THROW(bs::system_error(res, fs::codecvt_error_category(),
         "boost::filesystem::path codecvt to string"));
     }
     target.append(to, to_next); 

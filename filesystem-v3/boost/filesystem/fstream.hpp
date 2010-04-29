@@ -12,14 +12,21 @@
 #ifndef BOOST_FILESYSTEM_FSTREAM_HPP
 #define BOOST_FILESYSTEM_FSTREAM_HPP
 
-#include <boost/filesystem/operations.hpp> // for 8.3 hack (see below)
-#include <boost/utility/enable_if.hpp>
-#include <boost/detail/workaround.hpp>
+#include <boost/filesystem/path.hpp>
+#include <boost/config.hpp>
 
 #include <iosfwd>
 #include <fstream>
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
+
+//  glibc++ doesn't have wchar_t overloads for file stream paths, so on Windows use
+//  path::string() to get a narrow character c_str()
+#if defined(BOOST_WINDOWS_API) && defined(__GLIBCXX__)
+# define BOOST_FILESYSTEM_C_STR string().c_str()
+#else
+# define BOOST_FILESYSTEM_C_STR c_str()
+#endif
 
 namespace boost
 {
@@ -44,7 +51,7 @@ namespace filesystem
     basic_filebuf<charT,traits>*
       open(const path& p, std::ios_base::openmode mode) 
     {
-      return std::basic_filebuf<charT,traits>::open(p.c_str(), mode)
+      return std::basic_filebuf<charT,traits>::open(p.BOOST_FILESYSTEM_C_STR, mode)
         ? this : 0;
     }
   };
@@ -67,16 +74,16 @@ namespace filesystem
     // argument, to workaround VC++ 7.1 bug (ID VSWhidbey 38416)
 
     explicit basic_ifstream(const path& p)
-      : std::basic_ifstream<charT,traits>(p.c_str(), std::ios_base::in) {}
+      : std::basic_ifstream<charT,traits>(p.BOOST_FILESYSTEM_C_STR, std::ios_base::in) {}
 
     basic_ifstream(const path& p, std::ios_base::openmode mode)
-      : std::basic_ifstream<charT,traits>(p.c_str(), mode) {}
+      : std::basic_ifstream<charT,traits>(p.BOOST_FILESYSTEM_C_STR, mode) {}
 
     void open(const path& p)
-      { std::basic_ifstream<charT,traits>::open(p.c_str(), std::ios_base::in); }
+      { std::basic_ifstream<charT,traits>::open(p.BOOST_FILESYSTEM_C_STR, std::ios_base::in); }
 
     void open(const path& p, std::ios_base::openmode mode)
-      { std::basic_ifstream<charT,traits>::open(p.c_str(), mode); }
+      { std::basic_ifstream<charT,traits>::open(p.BOOST_FILESYSTEM_C_STR, mode); }
 
     virtual ~basic_ifstream() {}
   };
@@ -99,16 +106,16 @@ namespace filesystem
     // argument, to workaround VC++ 7.1 bug (ID VSWhidbey 38416)
 
     explicit basic_ofstream(const path& p)
-      : std::basic_ofstream<charT,traits>(p.c_str(), std::ios_base::out) {}
+      : std::basic_ofstream<charT,traits>(p.BOOST_FILESYSTEM_C_STR, std::ios_base::out) {}
 
     basic_ofstream(const path& p, std::ios_base::openmode mode)
-      : std::basic_ofstream<charT,traits>(p.c_str(), mode) {}
+      : std::basic_ofstream<charT,traits>(p.BOOST_FILESYSTEM_C_STR, mode) {}
 
     void open(const path& p)
-      { std::basic_ofstream<charT,traits>::open(p.c_str(), std::ios_base::out); }
+      { std::basic_ofstream<charT,traits>::open(p.BOOST_FILESYSTEM_C_STR, std::ios_base::out); }
 
     void open(const path& p, std::ios_base::openmode mode)
-      { std::basic_ofstream<charT,traits>::open(p.c_str(), mode); }
+      { std::basic_ofstream<charT,traits>::open(p.BOOST_FILESYSTEM_C_STR, mode); }
 
     virtual ~basic_ofstream() {}
   };
@@ -131,18 +138,18 @@ namespace filesystem
     // argument, to workaround VC++ 7.1 bug (ID VSWhidbey 38416)
 
     explicit basic_fstream(const path& p)
-      : std::basic_fstream<charT,traits>(p.c_str(),
+      : std::basic_fstream<charT,traits>(p.BOOST_FILESYSTEM_C_STR,
           std::ios_base::in | std::ios_base::out) {}
 
     basic_fstream(const path& p, std::ios_base::openmode mode)
-      : std::basic_fstream<charT,traits>(p.c_str(), mode) {}
+      : std::basic_fstream<charT,traits>(p.BOOST_FILESYSTEM_C_STR, mode) {}
 
     void open(const path& p)
-      { std::basic_fstream<charT,traits>::open(p.c_str(),
+      { std::basic_fstream<charT,traits>::open(p.BOOST_FILESYSTEM_C_STR,
           std::ios_base::in | std::ios_base::out); }
 
     void open(const path& p, std::ios_base::openmode mode)
-      { std::basic_fstream<charT,traits>::open(p.c_str(), mode); }
+      { std::basic_fstream<charT,traits>::open(p.BOOST_FILESYSTEM_C_STR, mode); }
 
     virtual ~basic_fstream() {}
 
