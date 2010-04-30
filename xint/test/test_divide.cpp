@@ -13,13 +13,13 @@
     thoroughly.
 */
 
-#include <boost/xint/xint.hpp>
+#include <boost/xint/integer.hpp>
+#include <boost/xint/random.hpp>
 
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
 
 #include <iostream>
-#include <boost/tuple/tuple.hpp>
 #include <boost/random.hpp>
 
 namespace boost {
@@ -29,9 +29,9 @@ using std::endl;
 
 namespace {
 
-void _test(int section, int test, integer n, integer m) {
-    integer answer, remainder;
-    boost::tie(answer, remainder)=divide_r(n, m);
+void _test(size_t section, size_t test, integer n, integer m) {
+    integer::divide_t a(divide_r(n, m));
+    integer answer(a.quotient), remainder(a.remainder);
 
     integer check=answer*m+remainder;
     if (check != n || abs(remainder) >= abs(m)) {
@@ -72,22 +72,16 @@ void _test(int section, int test, integer n, integer m) {
 BOOST_AUTO_TEST_CASE(testDivide) {
     set_random_generator(new boost::mt19937(42u));
 
-    for (int i=0; i<10000; ++i) {
-        integer n(random_by_size(detail::bits_per_digit*4, false, false, true)),
-            m(random_by_size(detail::bits_per_digit*4, false, false, true));
-        _test(1, i, n, m);
-    }
-
-    for (int i=0; i<1000; ++i) {
-        integer n(random_by_size(detail::bits_per_digit*4, false, false, true)),
-            m(random_by_size(detail::bits_per_digit*3, false, false, true));
-        _test(2, i, n, m);
-    }
-
-    for (int i=0; i<1000; ++i) {
-        integer n(random_by_size(detail::bits_per_digit*3, false, false, true)),
-            m(random_by_size(detail::bits_per_digit*4, false, false, true));
-        _test(3, i, n, m);
+    for (size_t nsize = detail::bits_per_digit * 3; nsize <
+        detail::bits_per_digit * 5; nsize += 4)
+    {
+        for (size_t msize = detail::bits_per_digit * 3; msize <
+            detail::bits_per_digit * 5; msize += 4)
+        {
+            integer n(random_by_size(nsize, false, false, true)),
+                m(random_by_size(msize, false, false, true));
+            _test(nsize, msize, n, m);
+        }
     }
 }
 

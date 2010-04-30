@@ -12,7 +12,6 @@
   <div class="tabs">
     <ul>
       <li class="current"><a href="index.html"><span>Main&nbsp;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
@@ -24,21 +23,23 @@
 What is it?</a></h2>
 <p>It's a C++ library that lets your program handle much, <em>much</em> larger integer numbers than the built-in <code>int</code>, <code>long</code>, or even <code>long long</code> types, and handle them using the same syntax that C and C++ use for the standard integer types.</p>
 <p>The maximum size of the integer is limited only by the memory available to store it. In practice that's millions of hexadecimal digits, so it's effectively infinite.</p>
+<dl class="warning"><dt><b>Warning:</b></dt><dd>This is not (yet) an official Boost library.</dd></dl>
 <h2><a class="anchor" id="why">
 Why would I use it?</a></h2>
 <ul>
 <li><b>Because it's completely portable.</b> It's written entirely in modern C++, with many different types of operating system, compiler, and hardware in mind. It will compile cleanly on many operating systems without any changes, automatically adapting to the most efficient native integer sizes available. </li>
 <li><b>Because it's fast.</b> Speed of execution takes a back seat to portability, so it doesn't include things like assembly-language modules to wring every last CPU cycle out of it -- but it's still pretty darn fast. </li>
-<li><b>Because it has the features you need.</b> Modular arithmetic. Cryptographically-secure prime number generation. Bit manipulation functions. Exception- or error-code-based operation. A friendly and intuitive interface. An option for thread-safe operation. Complete and carefully maintained documentation. What more could you want? </li>
+<li><b>Because it has the features you need.</b> Modular arithmetic. Fixed- or variable-length integer types. Cryptographically-secure prime number generation. Bit manipulation functions. Exception- or error-code-based operation. A friendly and intuitive interface. An option for thread-safe operation. Complete and carefully maintained documentation. What more could you want? </li>
 <li><b>Because it's open-source.</b> You can see exactly how it works. You can never be left high and dry because the company that made it goes out of business, or decides that it's not profitable to maintain it. If you find a bug that isn't fixed fast enough for you, you can fix it yourself, no waiting for someone else to get around to it. </li>
 <li><b>Because it's closed-source-friendly and commercial-friendly.</b> It's licensed under the Boost Software License 1.0 (which you can find at <a href="http://www.boost.org/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</a>), an OSI-approved open-source license that permits you to use it for pretty much anything you want, and doesn't make any anti-commercial or anti-closed-source demands.</li>
 </ul>
 <h2><a class="anchor" id="how">
 How do I use it?</a></h2>
-<p>That's the best part. If you've installed or compiled the Boost library already, all you need to do is add <code>#include &lt;<a class="el" href="xint_8hpp.html" title="This is the include-everything header.">boost/xint/xint.hpp</a>&gt;</code> at the top of your source code file, throw in a <code>using</code> line to say which type you want to use, and declare your variable as type <a class="el" href="classboost_1_1xint_1_1integer.html" title="The core integer class.">boost::xint::integer</a>. Then just use it the way you'd use any integer. If you need something more advanced, take a look in <a class="el" href="namespaceboost_1_1xint.html">the reference section</a> and you just might find it.</p>
+<p>That's the best part. If you've installed or compiled the Boost library already, all you need to do is add <code>#include &lt;<a class="el" href="xint_8hpp.html" title="This is the include-everything header.">boost/xint/xint.hpp</a>&gt;</code> at the top of your source code file and declare your variable as type <code><a class="el" href="classboost_1_1xint_1_1integer.html" title="The core integer class.">boost::xint::integer</a></code>. Then just use it the way you'd use any integer. If you need something more advanced, take a look in <a class="el" href="namespaceboost_1_1xint.html">the reference section</a> and you just might find it.</p>
 <p>More information on how to use it can be found on the pages listed below.</p>
 <p>Detailed Usage Information:</p>
 <ul>
+<li><a class="el" href="fixed__and__variable.html">The Different Integer Types</a></li>
 <li><a class="el" href="nan.html">The Not-a-Number Value</a></li>
 <li><a class="el" href="zero.html">Zero and "Negative Zero"</a></li>
 <li><a class="el" href="primes.html">Generating Prime Numbers</a> (with example code)</li>
@@ -53,6 +54,7 @@ How do I use it?</a></h2>
 <p>Library Information:</p>
 <ul>
 <li><a class="el" href="cow.html">Copying and Argument-Passing</a></li>
+<li><a class="el" href="complexity.html">A Note on Algorithmic Complexity</a></li>
 <li><a class="el" href="testing.html">The Self-Testing Program</a></li>
 <li><a class="el" href="dependencies.html">Dependencies</a></li>
 <li><a class="el" href="rationale.html">Rationales</a></li>
@@ -64,7 +66,7 @@ How do I use it?</a></h2>
 <li><a class="el" href="ex__fibonacci.html">Fibonacci Numbers</a> </li>
 </ul>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sat Apr 17 20:02:57 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Apr 30 00:24:24 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

@@ -14,6 +14,6 @@ using the library, only when compiling it.
 When the library is compiled with the thread-safe option, all programs that link
 to it must also link to the Boost.Thread library.
 
-To see whether your copy was compiled with thread-safe operation enabled, use
-the xint::opt_thread_safe function.
+To programatically check whether your copy was compiled with thread-safe
+operation enabled, use the xint::opt_thread_safe function.
 */

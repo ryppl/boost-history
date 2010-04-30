@@ -7,7 +7,7 @@ favorite commands (under Linux, I use "bjam release install").
 
 Notes:
 
-The code has been fully tested under Windows (MSVC 8 SP1) and Linux (GCC 4.4.1).
+The code has been fully tested under Windows (MSVC 8 SP1) and Linux (GCC 4.4.3).
 
 Auto-linking and Windows DLLs are not yet supported. The code will compile under
 Windows with no problem, but I haven't tried it through the bjam system there

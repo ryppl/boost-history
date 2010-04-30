@@ -15,13 +15,49 @@
     \brief Contains the the compare function and comparison operators.
 */
 
-#include "../boost/xint/xint.hpp"
+#include "../boost/xint/integer.hpp"
 #include <functional>
 
 namespace boost {
 namespace xint {
 
+namespace detail {
+int compare(const base_integer &b1, const base_integer &b2, bool ignoresign) {
+    bool invert_answer=false;
+    if (!ignoresign) {
+        if (b1._is_zero()) {
+            if (b2._is_zero()) return 0;
+            return (b2._get_negative() ? 1 : -1);
+        } else if (b2._is_zero()) {
+            return (b1._get_negative() ? -1 : 1);
+        } else {
+            if (b1._get_negative() != b2._get_negative())
+                return (b1._get_negative() ? -1 : 1);
+            if (b1._get_negative()) invert_answer=true;
+        }
+    }
+
+    int answer=0;
+    size_t len=b1._get_length(), len2=b2._get_length();
+    if (len != len2) {
+        answer=((len < len2) ? -1 : 1);
+    } else {
+        const detail::digit_t *b1d=b1._get_digits(), *b1i=b1d+len;
+        const detail::digit_t *b2d=b2._get_digits(), *b2i=b2d+len;
+        while (b1i > b1d)
+            if (*(--b1i) != *(--b2i)) {
+                answer = ((*b1i < *b2i) ? -1 : 1);
+                break;
+            }
+    }
+
+    return (invert_answer ? -answer : answer);
+}
+} // namespace detail
+
 /*! \brief Compare two integer objects.
+
+- Complexity: O(n) at worst
 
 \param[in] b1, b2 The integers to compare.
 \param[in] ignoresign If \c true, the absolute values of b1 and b2 are compared,
@@ -29,36 +65,11 @@ instead of their signed values. Used internally.
 
 \returns A negative number if \c b1 < \c b2; zero if \c b1 == \c b2, or a
 positive number if \c b1 > \c b2.
-
-This is the function behind all of the comparison operators. It might sometimes
-be useful directly as well.
 */
 int compare(const integer &b1, const integer &b2, bool ignoresign) {
-    if (!ignoresign) {
-        int sign1=b1.sign(), sign2=b2.sign();
-        if (sign1==0 && sign2==0) return 0;
-        if (sign1==0) return -sign2;
-        if (sign2==0) return sign1;
-
-        if (sign1 != sign2) return sign1;
-        if (sign1 < 0) return compare(-b2, -b1, ignoresign);
-    }
-
-    if (b1._get_length() != b2._get_length()) {
-        return ((b1._get_length() < b2._get_length()) ? -1 : 1);
-    } else {
-        size_t len=b1._get_length();
-        const detail::digit_t *b1d=b1._get_digits(), *b1i=b1d+len;
-        const detail::digit_t *b2d=b2._get_digits(), *b2i=b2d+len;
-        while (b1i > b1d)
-            if (*(--b1i) != *(--b2i))
-                return ((*b1i < *b2i) ? -1 : 1);
-    }
-
-    return 0;
+    return detail::compare(b1, b2, ignoresign);
 }
 
-bool operator!(const integer &num1) { return num1.sign()==0; }
 bool operator==(const integer &num1, const integer &num2) {
     return compare(num1, num2)==0; }
 bool operator!=(const integer& num1, const integer& num2) {
@@ -70,6 +81,37 @@ bool operator>(const integer& num1, const integer& num2) {
 bool operator<=(const integer& num1, const integer& num2) {
     return compare(num1, num2)<=0; }
 bool operator>=(const integer& num1, const integer& num2) {
+    return compare(num1, num2)>=0; }
+
+/*! \brief Compare two fixed_integer objects.
+
+- Complexity: O(n) at worst
+
+\param[in] b1, b2 The integers to compare. They can be the same size or
+different sizes.
+\param[in] ignoresign If \c true, the absolute values of b1 and b2 are compared,
+instead of their signed values. Used internally.
+
+\returns A negative number if \c b1 < \c b2; zero if \c b1 == \c b2, or a
+positive number if \c b1 > \c b2.
+*/
+int compare(const fixed_integer_any& b1, const fixed_integer_any& b2, bool
+    ignoresign)
+{
+    return detail::compare(b1, b2, ignoresign);
+}
+
+bool operator==(const fixed_integer_any &num1, const fixed_integer_any &num2) {
+    return compare(num1, num2)==0; }
+bool operator!=(const fixed_integer_any& num1, const fixed_integer_any& num2) {
+    return compare(num1, num2)!=0; }
+bool operator<(const fixed_integer_any& num1, const fixed_integer_any& num2) {
+    return compare(num1, num2)<0; }
+bool operator>(const fixed_integer_any& num1, const fixed_integer_any& num2) {
+    return compare(num1, num2)>0; }
+bool operator<=(const fixed_integer_any& num1, const fixed_integer_any& num2) {
+    return compare(num1, num2)<=0; }
+bool operator>=(const fixed_integer_any& num1, const fixed_integer_any& num2) {
     return compare(num1, num2)>=0; }
 
 } // namespace xint

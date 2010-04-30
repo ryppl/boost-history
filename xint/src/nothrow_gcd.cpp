@@ -16,7 +16,7 @@
            nothrow_integer type.
 */
 
-#include "../boost/xint/xint.hpp"
+#include "../boost/xint/nothrow_integer.hpp"
 
 namespace boost {
 namespace xint {
@@ -24,7 +24,9 @@ namespace xint {
 //! \copydoc xint::gcd(const integer&, const integer&)
 nothrow_integer gcd(const nothrow_integer& num1, const nothrow_integer& num2) {
     try {
-        return nothrow_integer(gcd(xint::integer(num1), xint::integer(num2)));
+        nothrow_integer r;
+        detail::gcd(r, num1, num2);
+        return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
         return nothrow_integer::nan();
     }
@@ -33,7 +35,9 @@ nothrow_integer gcd(const nothrow_integer& num1, const nothrow_integer& num2) {
 //! \copydoc xint::lcm(const integer&, const integer&)
 nothrow_integer lcm(const nothrow_integer& num1, const nothrow_integer& num2) {
     try {
-        return nothrow_integer(lcm(xint::integer(num1), xint::integer(num2)));
+        nothrow_integer r;
+        detail::lcm(r, num1, num2);
+        return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
         return nothrow_integer::nan();
     }

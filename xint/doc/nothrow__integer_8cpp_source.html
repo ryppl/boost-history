@@ -12,7 +12,6 @@
   <div class="tabs">
     <ul>
       <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
@@ -37,7 +36,7 @@
 <a name="l00011"></a>00011 <span class="comment">    See http://www.boost.org/libs/xint for library home page.</span>
 <a name="l00012"></a>00012 <span class="comment">*/</span>
 <a name="l00013"></a>00013 
-<a name="l00018"></a>00018 <span class="preprocessor">#include &quot;../boost/xint/xint.hpp&quot;</span>
+<a name="l00018"></a>00018 <span class="preprocessor">#include &quot;../boost/xint/nothrow_integer.hpp&quot;</span>
 <a name="l00019"></a>00019 <span class="preprocessor">#include &lt;memory&gt;</span> <span class="comment">// for auto_ptr</span>
 <a name="l00020"></a>00020 
 <a name="l00021"></a>00021 <span class="keyword">namespace </span>boost {
@@ -52,152 +51,171 @@
 <a name="l00031"></a>00031 }
 <a name="l00032"></a>00032 
 <a name="l00034"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#add8423c7b0d729fe93a8aabf49d333ae">00034</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#add8423c7b0d729fe93a8aabf49d333ae">nothrow_integer::nothrow_integer</a>() {
-<a name="l00035"></a>00035     <a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a4f2678c34cdf09e8df0c38ea91347fd7">_attach_0</a>();
+<a name="l00035"></a>00035     <a class="code" href="classboost_1_1xint_1_1detail_1_1base__variable__length__integer.html#ae670e3ba7921916f7a7394c4bb9b940b">_attach_0</a>();
 <a name="l00036"></a>00036 }
 <a name="l00037"></a>00037 
-<a name="l00039"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a9a9c9e622a764a004d256c18b7929081">00039</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#add8423c7b0d729fe93a8aabf49d333ae">nothrow_integer::nothrow_integer</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; b) {
-<a name="l00040"></a>00040     <span class="keywordflow">try</span> {
-<a name="l00041"></a>00041         <span class="keywordflow">if</span> (!b.<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a1dd4d6157a77e2e1e13d2915661dce7d" title="Tests *this for Not-a-Number.">is_nan</a>()) <a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a0ff9a2dc0d72f2c16caf68c6277cdab9">_attach</a>(b);
-<a name="l00042"></a>00042     } <span class="keywordflow">catch</span> (std::exception&amp;) {
-<a name="l00043"></a>00043         <span class="comment">// Do nothing, automatically sets to Not-a-Number</span>
-<a name="l00044"></a>00044     }
-<a name="l00045"></a>00045 }
-<a name="l00046"></a>00046 
-<a name="l00057"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a195e4062a0f980e1bc9df47f8645854a">00057</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#add8423c7b0d729fe93a8aabf49d333ae">nothrow_integer::nothrow_integer</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1integer.html" title="The core integer class.">integer</a>&amp; b) {
-<a name="l00058"></a>00058     <span class="keywordflow">try</span> {
-<a name="l00059"></a>00059         <a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a0ff9a2dc0d72f2c16caf68c6277cdab9">_attach</a>(b);
-<a name="l00060"></a>00060     } <span class="keywordflow">catch</span> (std::exception&amp;) {
-<a name="l00061"></a>00061         <span class="comment">// Do nothing, automatically sets to Not-a-Number</span>
-<a name="l00062"></a>00062     }
-<a name="l00063"></a>00063 }
-<a name="l00064"></a>00064 
-<a name="l00066"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a70c7b596f17102c6e292b8994dda76cc">00066</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#add8423c7b0d729fe93a8aabf49d333ae">nothrow_integer::nothrow_integer</a>(<span class="keyword">const</span> std::string&amp; str, <span class="keywordtype">size_t</span> base) {
-<a name="l00067"></a>00067     <span class="keywordflow">try</span> {
-<a name="l00068"></a>00068         <a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a0ff9a2dc0d72f2c16caf68c6277cdab9">_attach</a>(<a class="code" href="namespaceboost_1_1xint.html#af263105e57d48eff5fe14d4d03ca10e1" title="Converts a string into an integer.">from_string</a>(str, base));
-<a name="l00069"></a>00069     } <span class="keywordflow">catch</span> (std::exception&amp;) {
-<a name="l00070"></a>00070         <span class="comment">// Do nothing, automatically sets to Not-a-Number</span>
-<a name="l00071"></a>00071     }
-<a name="l00072"></a>00072 }
-<a name="l00073"></a>00073 
-<a name="l00078"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a39c446f247f63fbad9c4a205a1fbcc74">00078</a> <span class="keywordtype">bool</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a39c446f247f63fbad9c4a205a1fbcc74">nothrow_integer::odd</a>()<span class="keyword"> const </span>{
-<a name="l00079"></a>00079     <span class="keywordflow">if</span> (<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a1dd4d6157a77e2e1e13d2915661dce7d" title="Tests *this for Not-a-Number.">is_nan</a>()) <span class="keywordflow">return</span> <span class="keyword">false</span>;
-<a name="l00080"></a>00080     <span class="keywordflow">return</span> ((<a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#aad96a1fe27c2b1da6fe933acc444d98f">_get_digit</a>(0) &amp; 0x01)==1);
-<a name="l00081"></a>00081 }
-<a name="l00082"></a>00082 
-<a name="l00087"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a405c535527d1ff631c7338a6d329c51d">00087</a> <span class="keywordtype">bool</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a405c535527d1ff631c7338a6d329c51d">nothrow_integer::even</a>()<span class="keyword"> const </span>{
-<a name="l00088"></a>00088     <span class="keywordflow">if</span> (<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a1dd4d6157a77e2e1e13d2915661dce7d" title="Tests *this for Not-a-Number.">is_nan</a>()) <span class="keywordflow">return</span> <span class="keyword">false</span>;
-<a name="l00089"></a>00089     <span class="keywordflow">return</span> ((<a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#aad96a1fe27c2b1da6fe933acc444d98f">_get_digit</a>(0) &amp; 0x01)==0);
-<a name="l00090"></a>00090 }
-<a name="l00091"></a>00091 
-<a name="l00096"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a76bc6cf5315c6b7ee6083f28acfa7ddf">00096</a> <span class="keywordtype">int</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a76bc6cf5315c6b7ee6083f28acfa7ddf">nothrow_integer::sign</a>(<span class="keywordtype">bool</span> signed_zero)<span class="keyword"> const </span>{
-<a name="l00097"></a>00097     <span class="keywordflow">if</span> (<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a1dd4d6157a77e2e1e13d2915661dce7d" title="Tests *this for Not-a-Number.">is_nan</a>()) <span class="keywordflow">return</span> 0;
-<a name="l00098"></a>00098     <span class="keywordflow">if</span> (!signed_zero &amp;&amp; <a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a576bd802f9b2cb8450250839bc52b98c">_is_zero</a>()) <span class="keywordflow">return</span> 0;
-<a name="l00099"></a>00099     <span class="keywordflow">else</span> <span class="keywordflow">return</span> (<a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a2a6ba9a67a9167e9535d735dacbaace7">_get_negative</a>() ? -1 : 1);
-<a name="l00100"></a>00100 }
-<a name="l00101"></a>00101 
-<a name="l00106"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a06f1a0177446777e4e84dc0fc91d65b2">00106</a> <span class="keywordtype">size_t</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a06f1a0177446777e4e84dc0fc91d65b2">nothrow_integer::hex_digits</a>()<span class="keyword"> const </span>{
-<a name="l00107"></a>00107     <span class="keywordflow">try</span> {
-<a name="l00108"></a>00108         <span class="keywordflow">return</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#add8423c7b0d729fe93a8aabf49d333ae">xint::nothrow_integer</a>(*this).hex_digits();
-<a name="l00109"></a>00109     } <span class="keywordflow">catch</span> (std::exception&amp;) {
-<a name="l00110"></a>00110         <span class="keywordflow">return</span> 0;
-<a name="l00111"></a>00111     }
-<a name="l00112"></a>00112 }
-<a name="l00113"></a>00113 
-<a name="l00120"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a1dd4d6157a77e2e1e13d2915661dce7d">00120</a> <span class="keywordtype">bool</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a1dd4d6157a77e2e1e13d2915661dce7d" title="Tests *this for Not-a-Number.">nothrow_integer::is_nan</a>()<span class="keyword"> const </span>{
-<a name="l00121"></a>00121     <span class="keywordflow">return</span> <a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#afdaa612dd6669a12d349d6268f1ea3ff">_is_nan</a>();
-<a name="l00122"></a>00122 }
-<a name="l00123"></a>00123 
-<a name="l00124"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a80ef0930d8b99b324d01bb27efe709f9">00124</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a80ef0930d8b99b324d01bb27efe709f9">nothrow_integer::operator+=</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; addend) {
-<a name="l00125"></a>00125     <span class="keywordflow">try</span> {
-<a name="l00126"></a>00126         *<span class="keyword">this</span>=<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#add8423c7b0d729fe93a8aabf49d333ae">nothrow_integer</a>(<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">xint::nothrow_integer</a>(*this).operator+=(<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">xint::nothrow_integer</a>(addend)));
-<a name="l00127"></a>00127     } <span class="keywordflow">catch</span> (std::exception&amp;) {
-<a name="l00128"></a>00128         *<span class="keyword">this</span>=<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a9a8d654139e4fb916f933d09c7238e10">nothrow_integer::nan</a>();
-<a name="l00129"></a>00129     }
-<a name="l00130"></a>00130     <span class="keywordflow">return</span> *<span class="keyword">this</span>;
-<a name="l00131"></a>00131 }
-<a name="l00132"></a>00132 
-<a name="l00133"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#aee5d502fc0045ceaf4abee175c6d4f69">00133</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#aee5d502fc0045ceaf4abee175c6d4f69">nothrow_integer::operator-=</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; subtrahend) {
-<a name="l00134"></a>00134     <span class="keywordflow">try</span> {
-<a name="l00135"></a>00135         *<span class="keyword">this</span>=<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#add8423c7b0d729fe93a8aabf49d333ae">nothrow_integer</a>(<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">xint::nothrow_integer</a>(*this).operator-=(<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">xint::nothrow_integer</a>(subtrahend)));
-<a name="l00136"></a>00136     } <span class="keywordflow">catch</span> (std::exception&amp;) {
-<a name="l00137"></a>00137         *<span class="keyword">this</span>=<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a9a8d654139e4fb916f933d09c7238e10">nothrow_integer::nan</a>();
-<a name="l00138"></a>00138     }
-<a name="l00139"></a>00139     <span class="keywordflow">return</span> *<span class="keyword">this</span>;
-<a name="l00140"></a>00140 }
-<a name="l00141"></a>00141 
-<a name="l00142"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a8d0c877ae53afb89d00c021f10dce67a">00142</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a8d0c877ae53afb89d00c021f10dce67a">nothrow_integer::operator=</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a> &amp;c) {
-<a name="l00143"></a>00143     <span class="keywordflow">try</span> {
-<a name="l00144"></a>00144         <a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a0ff9a2dc0d72f2c16caf68c6277cdab9">_attach</a>(c);
-<a name="l00145"></a>00145     } <span class="keywordflow">catch</span> (std::exception&amp;) {
-<a name="l00146"></a>00146         <a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a0ff9a2dc0d72f2c16caf68c6277cdab9">_attach</a>(0);
-<a name="l00147"></a>00147     }
-<a name="l00148"></a>00148     <span class="keywordflow">return</span> *<span class="keyword">this</span>;
-<a name="l00149"></a>00149 }
-<a name="l00150"></a>00150 
-<a name="l00151"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a13e53eb7d7eaff28e52675aed5ee42f1">00151</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a13e53eb7d7eaff28e52675aed5ee42f1">nothrow_integer::operator*=</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; b) { *<span class="keyword">this</span>=<a class="code" href="namespaceboost_1_1xint.html#af844548a421cfc751133081b334dbe4b">multiply</a>(*<span class="keyword">this</span>, b); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
-<a name="l00152"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a04f5934d995a7ca8d0c6bf0d0b2cfdda">00152</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a04f5934d995a7ca8d0c6bf0d0b2cfdda">nothrow_integer::operator/=</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; b) { *<span class="keyword">this</span>=<a class="code" href="namespaceboost_1_1xint.html#a5b884361c54aa64a1974879cb3464c9a">divide</a>(*<span class="keyword">this</span>, b); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
-<a name="l00153"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a0193f6d340643c9d33517bc053f3d6c7">00153</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a0193f6d340643c9d33517bc053f3d6c7">nothrow_integer::operator%=</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; b) { *<span class="keyword">this</span>=<a class="code" href="namespaceboost_1_1xint.html#a9b8c31b64eb9700beea8b95edec31a73" title="Get the remainder after dividing a number by another.">mod</a>(*<span class="keyword">this</span>, b); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
-<a name="l00154"></a>00154 
-<a name="l00155"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#ab202967205b2a52063c2ac19647239bc">00155</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#ab202967205b2a52063c2ac19647239bc">nothrow_integer::operator++</a>() { *<span class="keyword">this</span> += <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a1487576980f14a9011d76dab4d7bcb50">one</a>(); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
-<a name="l00156"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a19758953082fe86fdc13e4bef45fc6b6">00156</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a19758953082fe86fdc13e4bef45fc6b6">nothrow_integer::operator--</a>() { *<span class="keyword">this</span> -= <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a1487576980f14a9011d76dab4d7bcb50">one</a>(); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
-<a name="l00157"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#adf0e88fe1177733ae70496aa1a53a14d">00157</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>  <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#ab202967205b2a52063c2ac19647239bc">nothrow_integer::operator++</a>(<span class="keywordtype">int</span>) { <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a> s=*<span class="keyword">this</span>; *<span class="keyword">this</span> += <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a1487576980f14a9011d76dab4d7bcb50">one</a>(); <span class="keywordflow">return</span> s; }
-<a name="l00158"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#added2905dcd5b61db7fc6672831fc4eb">00158</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>  <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a19758953082fe86fdc13e4bef45fc6b6">nothrow_integer::operator--</a>(<span class="keywordtype">int</span>) { <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a> s=*<span class="keyword">this</span>; *<span class="keyword">this</span> -= <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a1487576980f14a9011d76dab4d7bcb50">one</a>(); <span class="keywordflow">return</span> s; }
-<a name="l00159"></a>00159 
-<a name="l00160"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a616a917ad4877d96ed634dd502efecb8">00160</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>  <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a616a917ad4877d96ed634dd502efecb8">nothrow_integer::operator&lt;&lt;</a>(<span class="keywordtype">size_t</span> <a class="code" href="namespaceboost_1_1xint.html#aaed048f3dc3a442152ebffa3f721d014" title="Bit-shift an integer, in either direction.">shift</a>)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#ae22c3492ecf08370a9a972c8d6fb8e96" title="Left-shift an integer by a specified number of bits.">shift_left</a>(*<span class="keyword">this</span>, shift); }
-<a name="l00161"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a6eb932be75bcc68ca4fca3845c811f87">00161</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>  <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a6eb932be75bcc68ca4fca3845c811f87">nothrow_integer::operator&gt;&gt;</a>(<span class="keywordtype">size_t</span> <a class="code" href="namespaceboost_1_1xint.html#aaed048f3dc3a442152ebffa3f721d014" title="Bit-shift an integer, in either direction.">shift</a>)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#aca7453fa9e276ebefacc9827b55f69d2" title="Right-shift an integer by a specified number of bits.">shift_right</a>(*<span class="keyword">this</span>, shift); }
-<a name="l00162"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a6d644e1792f821acd8d4b9dfe9aa557e">00162</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a6d644e1792f821acd8d4b9dfe9aa557e">nothrow_integer::operator&amp;=</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; n) { *<span class="keyword">this</span>=<a class="code" href="namespaceboost_1_1xint.html#ab828c0be1559b60537b959ef75092fb2" title="Combine two integers using a bitwise AND operation.">bitwise_and</a>(*<span class="keyword">this</span>, n); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
-<a name="l00163"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a0d005b0e98ea4a078d6c471217c07a24">00163</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a0d005b0e98ea4a078d6c471217c07a24">nothrow_integer::operator|=</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; n) { *<span class="keyword">this</span>=<a class="code" href="namespaceboost_1_1xint.html#ab38ce0764a4b6433e11e30efa2175fec" title="Combine two integers using a bitwise OR operation.">bitwise_or</a>(*<span class="keyword">this</span>, n); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
-<a name="l00164"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#aab4b0f9c0ffeb93f68185a6ae4a98986">00164</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#aab4b0f9c0ffeb93f68185a6ae4a98986">nothrow_integer::operator^=</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; n) { *<span class="keyword">this</span>=<a class="code" href="namespaceboost_1_1xint.html#a6afd5af4550b698f6a7065f457fcb0a1" title="Combine two integers using a bitwise XOR operation.">bitwise_xor</a>(*<span class="keyword">this</span>, n); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
-<a name="l00165"></a>00165 
-<a name="l00166"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#aeddbf6a9232a10643c8bfb53576393ee">00166</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#aeddbf6a9232a10643c8bfb53576393ee">nothrow_integer::operator&lt;&lt;=</a>(<span class="keywordtype">size_t</span> <a class="code" href="namespaceboost_1_1xint.html#aaed048f3dc3a442152ebffa3f721d014" title="Bit-shift an integer, in either direction.">shift</a>) {
-<a name="l00167"></a>00167     <span class="keywordflow">try</span> {
-<a name="l00168"></a>00168         *<span class="keyword">this</span>=<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#add8423c7b0d729fe93a8aabf49d333ae">nothrow_integer</a>(<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">xint::nothrow_integer</a>(*this).operator&lt;&lt;=(shift));
-<a name="l00169"></a>00169     } <span class="keywordflow">catch</span> (std::exception&amp;) {
-<a name="l00170"></a>00170         *<span class="keyword">this</span>=<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a9a8d654139e4fb916f933d09c7238e10">nothrow_integer::nan</a>();
-<a name="l00171"></a>00171     }
-<a name="l00172"></a>00172     <span class="keywordflow">return</span> *<span class="keyword">this</span>;
-<a name="l00173"></a>00173 }
-<a name="l00174"></a>00174 
-<a name="l00175"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#aeb282d877481f9b21e1a9d1d1e6a1044">00175</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#aeb282d877481f9b21e1a9d1d1e6a1044">nothrow_integer::operator&gt;&gt;=</a>(<span class="keywordtype">size_t</span> <a class="code" href="namespaceboost_1_1xint.html#aaed048f3dc3a442152ebffa3f721d014" title="Bit-shift an integer, in either direction.">shift</a>) {
-<a name="l00176"></a>00176     <span class="keywordflow">try</span> {
-<a name="l00177"></a>00177         *<span class="keyword">this</span>=<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#add8423c7b0d729fe93a8aabf49d333ae">nothrow_integer</a>(<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">xint::nothrow_integer</a>(*this).operator&gt;&gt;=(shift));
-<a name="l00178"></a>00178     } <span class="keywordflow">catch</span> (std::exception&amp;) {
-<a name="l00179"></a>00179         *<span class="keyword">this</span>=<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a9a8d654139e4fb916f933d09c7238e10">nothrow_integer::nan</a>();
-<a name="l00180"></a>00180     }
-<a name="l00181"></a>00181     <span class="keywordflow">return</span> *<span class="keyword">this</span>;
-<a name="l00182"></a>00182 }
+<a name="l00049"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a9a9c9e622a764a004d256c18b7929081">00049</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#add8423c7b0d729fe93a8aabf49d333ae">nothrow_integer::nothrow_integer</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; b) {
+<a name="l00050"></a>00050     <span class="keywordflow">try</span> {
+<a name="l00051"></a>00051         <span class="keywordflow">if</span> (!b.<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a1dd4d6157a77e2e1e13d2915661dce7d" title="Tests *this for Not-a-Number.">is_nan</a>()) <a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a9ee6c6d706a8dc8cdd1a16b1e65a47e2">_attach</a>(b);
+<a name="l00052"></a>00052     } <span class="keywordflow">catch</span> (std::exception&amp;) {
+<a name="l00053"></a>00053         <span class="comment">// Do nothing, automatically sets to Not-a-Number</span>
+<a name="l00054"></a>00054     }
+<a name="l00055"></a>00055 }
+<a name="l00056"></a>00056 
+<a name="l00067"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a195e4062a0f980e1bc9df47f8645854a">00067</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#add8423c7b0d729fe93a8aabf49d333ae">nothrow_integer::nothrow_integer</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1integer.html" title="The core integer class.">integer</a>&amp; b) {
+<a name="l00068"></a>00068     <span class="keywordflow">try</span> {
+<a name="l00069"></a>00069         <a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a9ee6c6d706a8dc8cdd1a16b1e65a47e2">_attach</a>(b);
+<a name="l00070"></a>00070     } <span class="keywordflow">catch</span> (std::exception&amp;) {
+<a name="l00071"></a>00071         <span class="comment">// Do nothing, automatically sets to Not-a-Number</span>
+<a name="l00072"></a>00072     }
+<a name="l00073"></a>00073 }
+<a name="l00074"></a>00074 
+<a name="l00081"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#aa6314aa9f8ff03ce52152febc6444a58">00081</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#add8423c7b0d729fe93a8aabf49d333ae">nothrow_integer::nothrow_integer</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1fixed__integer__any.html" title="The base class for all fixed_integer types.">fixed_integer_any</a>&amp; b) {
+<a name="l00082"></a>00082     <span class="keywordflow">try</span> {
+<a name="l00083"></a>00083         <a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a9ee6c6d706a8dc8cdd1a16b1e65a47e2">_attach</a>(b);
+<a name="l00084"></a>00084     } <span class="keywordflow">catch</span> (std::exception&amp;) {
+<a name="l00085"></a>00085         <span class="comment">// Do nothing, automatically sets to Not-a-Number</span>
+<a name="l00086"></a>00086     }
+<a name="l00087"></a>00087 }
+<a name="l00088"></a>00088 
+<a name="l00090"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a70c7b596f17102c6e292b8994dda76cc">00090</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#add8423c7b0d729fe93a8aabf49d333ae">nothrow_integer::nothrow_integer</a>(<span class="keyword">const</span> std::string&amp; str, <span class="keywordtype">size_t</span> base) {
+<a name="l00091"></a>00091     <span class="keywordflow">try</span> {
+<a name="l00092"></a>00092         <a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a9ee6c6d706a8dc8cdd1a16b1e65a47e2">_attach</a>(<a class="code" href="namespaceboost_1_1xint.html#af263105e57d48eff5fe14d4d03ca10e1" title="Converts a string to an integer.">from_string</a>(str, base));
+<a name="l00093"></a>00093     } <span class="keywordflow">catch</span> (std::exception&amp;) {
+<a name="l00094"></a>00094         <span class="comment">// Do nothing, automatically sets to Not-a-Number</span>
+<a name="l00095"></a>00095     }
+<a name="l00096"></a>00096 }
+<a name="l00097"></a>00097 
+<a name="l00102"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a39c446f247f63fbad9c4a205a1fbcc74">00102</a> <span class="keywordtype">bool</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a39c446f247f63fbad9c4a205a1fbcc74">nothrow_integer::odd</a>()<span class="keyword"> const </span>{
+<a name="l00103"></a>00103     <span class="keywordflow">if</span> (<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a1dd4d6157a77e2e1e13d2915661dce7d" title="Tests *this for Not-a-Number.">is_nan</a>()) <span class="keywordflow">return</span> <span class="keyword">false</span>;
+<a name="l00104"></a>00104     <span class="keywordflow">return</span> ((<a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#aad96a1fe27c2b1da6fe933acc444d98f">_get_digit</a>(0) &amp; 0x01)==1);
+<a name="l00105"></a>00105 }
+<a name="l00106"></a>00106 
+<a name="l00111"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a405c535527d1ff631c7338a6d329c51d">00111</a> <span class="keywordtype">bool</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a405c535527d1ff631c7338a6d329c51d">nothrow_integer::even</a>()<span class="keyword"> const </span>{
+<a name="l00112"></a>00112     <span class="keywordflow">if</span> (<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a1dd4d6157a77e2e1e13d2915661dce7d" title="Tests *this for Not-a-Number.">is_nan</a>()) <span class="keywordflow">return</span> <span class="keyword">false</span>;
+<a name="l00113"></a>00113     <span class="keywordflow">return</span> ((<a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#aad96a1fe27c2b1da6fe933acc444d98f">_get_digit</a>(0) &amp; 0x01)==0);
+<a name="l00114"></a>00114 }
+<a name="l00115"></a>00115 
+<a name="l00120"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a76bc6cf5315c6b7ee6083f28acfa7ddf">00120</a> <span class="keywordtype">int</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a76bc6cf5315c6b7ee6083f28acfa7ddf">nothrow_integer::sign</a>(<span class="keywordtype">bool</span> signed_zero)<span class="keyword"> const </span>{
+<a name="l00121"></a>00121     <span class="keywordflow">if</span> (<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a1dd4d6157a77e2e1e13d2915661dce7d" title="Tests *this for Not-a-Number.">is_nan</a>()) <span class="keywordflow">return</span> 0;
+<a name="l00122"></a>00122     <span class="keywordflow">if</span> (!signed_zero &amp;&amp; <a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a576bd802f9b2cb8450250839bc52b98c">_is_zero</a>()) <span class="keywordflow">return</span> 0;
+<a name="l00123"></a>00123     <span class="keywordflow">else</span> <span class="keywordflow">return</span> (<a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a2a6ba9a67a9167e9535d735dacbaace7">_get_negative</a>() ? -1 : 1);
+<a name="l00124"></a>00124 }
+<a name="l00125"></a>00125 
+<a name="l00130"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a06f1a0177446777e4e84dc0fc91d65b2">00130</a> <span class="keywordtype">size_t</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a06f1a0177446777e4e84dc0fc91d65b2">nothrow_integer::hex_digits</a>()<span class="keyword"> const </span>{
+<a name="l00131"></a>00131     <span class="keywordflow">try</span> {
+<a name="l00132"></a>00132         <span class="keywordtype">size_t</span> bits=<a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a29f37fcd3e14cd2b271d990edc3dbb56">_log2</a>();
+<a name="l00133"></a>00133         <span class="keywordflow">return</span> (bits+3)/4; <span class="comment">// Four bits per hex digit, rounded up</span>
+<a name="l00134"></a>00134     } <span class="keywordflow">catch</span> (std::exception&amp;) {
+<a name="l00135"></a>00135         <span class="keywordflow">return</span> 0;
+<a name="l00136"></a>00136     }
+<a name="l00137"></a>00137 }
+<a name="l00138"></a>00138 
+<a name="l00145"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a1dd4d6157a77e2e1e13d2915661dce7d">00145</a> <span class="keywordtype">bool</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a1dd4d6157a77e2e1e13d2915661dce7d" title="Tests *this for Not-a-Number.">nothrow_integer::is_nan</a>()<span class="keyword"> const </span>{
+<a name="l00146"></a>00146     <span class="keywordflow">return</span> <a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#afdaa612dd6669a12d349d6268f1ea3ff">_is_nan</a>();
+<a name="l00147"></a>00147 }
+<a name="l00148"></a>00148 
+<a name="l00149"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a80ef0930d8b99b324d01bb27efe709f9">00149</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a80ef0930d8b99b324d01bb27efe709f9">nothrow_integer::operator+=</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; addend) {
+<a name="l00150"></a>00150     <span class="keywordflow">try</span> {
+<a name="l00151"></a>00151         <a class="code" href="namespaceboost_1_1xint.html#a7b7903cb879b60d0d5e3403b3c6a1cdd">detail::add</a>(*<span class="keyword">this</span>, *<span class="keyword">this</span>, addend);
+<a name="l00152"></a>00152     } <span class="keywordflow">catch</span> (std::exception&amp;) {
+<a name="l00153"></a>00153         *<span class="keyword">this</span>=<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a9a8d654139e4fb916f933d09c7238e10">nothrow_integer::nan</a>();
+<a name="l00154"></a>00154     }
+<a name="l00155"></a>00155     <span class="keywordflow">return</span> *<span class="keyword">this</span>;
+<a name="l00156"></a>00156 }
+<a name="l00157"></a>00157 
+<a name="l00158"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#aee5d502fc0045ceaf4abee175c6d4f69">00158</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#aee5d502fc0045ceaf4abee175c6d4f69">nothrow_integer::operator-=</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; subtrahend) {
+<a name="l00159"></a>00159     <span class="keywordflow">try</span> {
+<a name="l00160"></a>00160         <a class="code" href="namespaceboost_1_1xint.html#a385b3869d8dcceab2ffb68ff33c95062">detail::subtract</a>(*<span class="keyword">this</span>, *<span class="keyword">this</span>, subtrahend);
+<a name="l00161"></a>00161     } <span class="keywordflow">catch</span> (std::exception&amp;) {
+<a name="l00162"></a>00162         *<span class="keyword">this</span>=<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a9a8d654139e4fb916f933d09c7238e10">nothrow_integer::nan</a>();
+<a name="l00163"></a>00163     }
+<a name="l00164"></a>00164     <span class="keywordflow">return</span> *<span class="keyword">this</span>;
+<a name="l00165"></a>00165 }
+<a name="l00166"></a>00166 
+<a name="l00167"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a7d5c5c2598e74fc68ce5ab24b75bdc94">00167</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a7d5c5c2598e74fc68ce5ab24b75bdc94">nothrow_integer::operator=</a>(<a class="code" href="internals_8hpp.html#a8177a6a6c68ea042f7e644d8ef7128f9">BOOST_XINT_COPY_ASSIGN_REF</a>(
+<a name="l00168"></a>00168     <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>) c)
+<a name="l00169"></a>00169 {
+<a name="l00170"></a>00170     <span class="keywordflow">try</span> {
+<a name="l00171"></a>00171         <a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a9ee6c6d706a8dc8cdd1a16b1e65a47e2">_attach</a>(c);
+<a name="l00172"></a>00172     } <span class="keywordflow">catch</span> (std::exception&amp;) {
+<a name="l00173"></a>00173         <a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a9e58a5897a80b8017ff7da7f0abacb6b">_base_attach</a>(0);
+<a name="l00174"></a>00174     }
+<a name="l00175"></a>00175     <span class="keywordflow">return</span> *<span class="keyword">this</span>;
+<a name="l00176"></a>00176 }
+<a name="l00177"></a>00177 
+<a name="l00178"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a6089e2a54dca7cda0d81bb2056f811a6">00178</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>  <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a6089e2a54dca7cda0d81bb2056f811a6">nothrow_integer::operator-</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#aedc1654de47ce6d6635e5339b236f94d">negate</a>(*<span class="keyword">this</span>); }
+<a name="l00179"></a>00179 
+<a name="l00180"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a13e53eb7d7eaff28e52675aed5ee42f1">00180</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a13e53eb7d7eaff28e52675aed5ee42f1">nothrow_integer::operator*=</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; b) { <a class="code" href="namespaceboost_1_1xint.html#af844548a421cfc751133081b334dbe4b">detail::multiply</a>(*<span class="keyword">this</span>, *<span class="keyword">this</span>, b); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
+<a name="l00181"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a04f5934d995a7ca8d0c6bf0d0b2cfdda">00181</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a04f5934d995a7ca8d0c6bf0d0b2cfdda">nothrow_integer::operator/=</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; b) { <a class="code" href="namespaceboost_1_1xint.html#a5b884361c54aa64a1974879cb3464c9a">detail::divide</a>(*<span class="keyword">this</span>, *<span class="keyword">this</span>, b); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
+<a name="l00182"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a0193f6d340643c9d33517bc053f3d6c7">00182</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a0193f6d340643c9d33517bc053f3d6c7">nothrow_integer::operator%=</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; b) { <a class="code" href="namespaceboost_1_1xint.html#a9b8c31b64eb9700beea8b95edec31a73" title="Get the remainder after dividing a number by another.">detail::mod</a>(*<span class="keyword">this</span>, *<span class="keyword">this</span>, b); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
 <a name="l00183"></a>00183 
-<a name="l00184"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a2b3241400b0691fa5bd612358b48ccdd">00184</a> <span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a2b3241400b0691fa5bd612358b48ccdd">nothrow_integer::zero</a>() {
-<a name="l00185"></a>00185     <span class="keywordflow">if</span> (cZero.get()==0) cZero.reset(<span class="keyword">new</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>(<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a2b3241400b0691fa5bd612358b48ccdd">xint::nothrow_integer::zero</a>()));
-<a name="l00186"></a>00186     <span class="keywordflow">return</span> *cZero;
-<a name="l00187"></a>00187 }
+<a name="l00184"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#ab202967205b2a52063c2ac19647239bc">00184</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#ab202967205b2a52063c2ac19647239bc">nothrow_integer::operator++</a>() { <a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a685da8a208baf4f77502062d4cc0f062">_make_unique</a>(<span class="keyword">true</span>); <a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#ab47afee36e91b35b199b0ac3b6542ad2">_increment</a>(); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
+<a name="l00185"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a19758953082fe86fdc13e4bef45fc6b6">00185</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a19758953082fe86fdc13e4bef45fc6b6">nothrow_integer::operator--</a>() { <a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a685da8a208baf4f77502062d4cc0f062">_make_unique</a>(<span class="keyword">true</span>); <a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a91e4b721c42445501b136a13d7ce9d32">_decrement</a>(); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
+<a name="l00186"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#adf0e88fe1177733ae70496aa1a53a14d">00186</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>  <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#ab202967205b2a52063c2ac19647239bc">nothrow_integer::operator++</a>(<span class="keywordtype">int</span>) { <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a> s=*<span class="keyword">this</span>; <a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a685da8a208baf4f77502062d4cc0f062">_make_unique</a>(<span class="keyword">true</span>); <a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#ab47afee36e91b35b199b0ac3b6542ad2">_increment</a>(); <span class="keywordflow">return</span> <a class="code" href="internals_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(s); }
+<a name="l00187"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#added2905dcd5b61db7fc6672831fc4eb">00187</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>  <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a19758953082fe86fdc13e4bef45fc6b6">nothrow_integer::operator--</a>(<span class="keywordtype">int</span>) { <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a> s=*<span class="keyword">this</span>; <a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a685da8a208baf4f77502062d4cc0f062">_make_unique</a>(<span class="keyword">true</span>); <a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a91e4b721c42445501b136a13d7ce9d32">_decrement</a>(); <span class="keywordflow">return</span> <a class="code" href="internals_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(s); }
 <a name="l00188"></a>00188 
-<a name="l00189"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a1487576980f14a9011d76dab4d7bcb50">00189</a> <span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a1487576980f14a9011d76dab4d7bcb50">nothrow_integer::one</a>() {
-<a name="l00190"></a>00190     <span class="keywordflow">if</span> (cOne.get()==0) cOne.reset(<span class="keyword">new</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>(<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a1487576980f14a9011d76dab4d7bcb50">xint::nothrow_integer::one</a>()));
-<a name="l00191"></a>00191     <span class="keywordflow">return</span> *cOne;
-<a name="l00192"></a>00192 }
-<a name="l00193"></a>00193 
-<a name="l00194"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a9a8d654139e4fb916f933d09c7238e10">00194</a> <span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a9a8d654139e4fb916f933d09c7238e10">nothrow_integer::nan</a>() {
-<a name="l00195"></a>00195     <span class="keywordflow">if</span> (cNaN.get()==0) {
-<a name="l00196"></a>00196         <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a> *n=<span class="keyword">new</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#add8423c7b0d729fe93a8aabf49d333ae">nothrow_integer</a>();
-<a name="l00197"></a>00197         n-&gt;<a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a0ff9a2dc0d72f2c16caf68c6277cdab9">_attach</a>(0);
-<a name="l00198"></a>00198         cNaN.reset(n);
-<a name="l00199"></a>00199     }
-<a name="l00200"></a>00200     <span class="keywordflow">return</span> *cNaN;
-<a name="l00201"></a>00201 }
-<a name="l00202"></a>00202 
-<a name="l00203"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a3351e2aacd5477008fd96bdf0c72d0b8">00203</a> <span class="keywordtype">void</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a3351e2aacd5477008fd96bdf0c72d0b8">nothrow_integer::_make_unique</a>() {
-<a name="l00204"></a>00204     <span class="keywordflow">try</span> {
-<a name="l00205"></a>00205         <a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#abdfe224ab8dae4dbd4cfdd16e6c0612f">_base_make_unique</a>();
-<a name="l00206"></a>00206     } <span class="keywordflow">catch</span> (std::exception&amp;) {
-<a name="l00207"></a>00207         <a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a0ff9a2dc0d72f2c16caf68c6277cdab9">_attach</a>(0); <span class="comment">// Turns it into a Not-a-Number.</span>
-<a name="l00208"></a>00208     }
-<a name="l00209"></a>00209 }
-<a name="l00210"></a>00210 
-<a name="l00211"></a>00211 } <span class="comment">// namespace xint</span>
-<a name="l00212"></a>00212 } <span class="comment">// namespace boost</span>
+<a name="l00189"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a616a917ad4877d96ed634dd502efecb8">00189</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>  <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a616a917ad4877d96ed634dd502efecb8">nothrow_integer::operator&lt;&lt;</a>(<span class="keywordtype">size_t</span> <a class="code" href="namespaceboost_1_1xint.html#aaed048f3dc3a442152ebffa3f721d014" title="Bit-shift an integer, in either direction.">shift</a>)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#ae22c3492ecf08370a9a972c8d6fb8e96" title="Left-shift an integer by a specified number of bits.">shift_left</a>(*<span class="keyword">this</span>, shift); }
+<a name="l00190"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a6eb932be75bcc68ca4fca3845c811f87">00190</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>  <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a6eb932be75bcc68ca4fca3845c811f87">nothrow_integer::operator&gt;&gt;</a>(<span class="keywordtype">size_t</span> <a class="code" href="namespaceboost_1_1xint.html#aaed048f3dc3a442152ebffa3f721d014" title="Bit-shift an integer, in either direction.">shift</a>)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#aca7453fa9e276ebefacc9827b55f69d2" title="Right-shift an integer by a specified number of bits.">shift_right</a>(*<span class="keyword">this</span>, shift); }
+<a name="l00191"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a6d644e1792f821acd8d4b9dfe9aa557e">00191</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a6d644e1792f821acd8d4b9dfe9aa557e">nothrow_integer::operator&amp;=</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; n) { <a class="code" href="namespaceboost_1_1xint.html#ab828c0be1559b60537b959ef75092fb2" title="Combine two integers using a bitwise AND operation.">detail::bitwise_and</a>(*<span class="keyword">this</span>, *<span class="keyword">this</span>, n); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
+<a name="l00192"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a0d005b0e98ea4a078d6c471217c07a24">00192</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a0d005b0e98ea4a078d6c471217c07a24">nothrow_integer::operator|=</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; n) { <a class="code" href="namespaceboost_1_1xint.html#ab38ce0764a4b6433e11e30efa2175fec" title="Combine two integers using a bitwise OR operation.">detail::bitwise_or</a>(*<span class="keyword">this</span>, *<span class="keyword">this</span>, n); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
+<a name="l00193"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#aab4b0f9c0ffeb93f68185a6ae4a98986">00193</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#aab4b0f9c0ffeb93f68185a6ae4a98986">nothrow_integer::operator^=</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; n) { <a class="code" href="namespaceboost_1_1xint.html#a6afd5af4550b698f6a7065f457fcb0a1" title="Combine two integers using a bitwise XOR operation.">detail::bitwise_xor</a>(*<span class="keyword">this</span>, *<span class="keyword">this</span>, n); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
+<a name="l00194"></a>00194 
+<a name="l00195"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#aeddbf6a9232a10643c8bfb53576393ee">00195</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#aeddbf6a9232a10643c8bfb53576393ee">nothrow_integer::operator&lt;&lt;=</a>(<span class="keywordtype">size_t</span> <a class="code" href="namespaceboost_1_1xint.html#aaed048f3dc3a442152ebffa3f721d014" title="Bit-shift an integer, in either direction.">shift</a>) {
+<a name="l00196"></a>00196     <span class="keywordflow">try</span> {
+<a name="l00197"></a>00197         <a class="code" href="namespaceboost_1_1xint.html#ae22c3492ecf08370a9a972c8d6fb8e96" title="Left-shift an integer by a specified number of bits.">detail::shift_left</a>(*<span class="keyword">this</span>, *<span class="keyword">this</span>, shift);
+<a name="l00198"></a>00198     } <span class="keywordflow">catch</span> (std::exception&amp;) {
+<a name="l00199"></a>00199         *<span class="keyword">this</span>=<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a9a8d654139e4fb916f933d09c7238e10">nothrow_integer::nan</a>();
+<a name="l00200"></a>00200     }
+<a name="l00201"></a>00201     <span class="keywordflow">return</span> *<span class="keyword">this</span>;
+<a name="l00202"></a>00202 }
+<a name="l00203"></a>00203 
+<a name="l00204"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#aeb282d877481f9b21e1a9d1d1e6a1044">00204</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#aeb282d877481f9b21e1a9d1d1e6a1044">nothrow_integer::operator&gt;&gt;=</a>(<span class="keywordtype">size_t</span> <a class="code" href="namespaceboost_1_1xint.html#aaed048f3dc3a442152ebffa3f721d014" title="Bit-shift an integer, in either direction.">shift</a>) {
+<a name="l00205"></a>00205     <span class="keywordflow">try</span> {
+<a name="l00206"></a>00206         <a class="code" href="namespaceboost_1_1xint.html#aca7453fa9e276ebefacc9827b55f69d2" title="Right-shift an integer by a specified number of bits.">detail::shift_right</a>(*<span class="keyword">this</span>, *<span class="keyword">this</span>, shift);
+<a name="l00207"></a>00207     } <span class="keywordflow">catch</span> (std::exception&amp;) {
+<a name="l00208"></a>00208         *<span class="keyword">this</span>=<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a9a8d654139e4fb916f933d09c7238e10">nothrow_integer::nan</a>();
+<a name="l00209"></a>00209     }
+<a name="l00210"></a>00210     <span class="keywordflow">return</span> *<span class="keyword">this</span>;
+<a name="l00211"></a>00211 }
+<a name="l00212"></a>00212 
+<a name="l00213"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a2b3241400b0691fa5bd612358b48ccdd">00213</a> <span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a2b3241400b0691fa5bd612358b48ccdd">nothrow_integer::zero</a>() {
+<a name="l00214"></a>00214     <span class="keywordflow">if</span> (cZero.get()==0) {
+<a name="l00215"></a>00215         cZero.reset(<span class="keyword">new</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#add8423c7b0d729fe93a8aabf49d333ae">nothrow_integer</a>(<a class="code" href="classboost_1_1xint_1_1integer.html#a5c08ebe10f3f6333328b35193edd53d0">integer::zero</a>()));
+<a name="l00216"></a>00216         cZero-&gt;<a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a8e11790b0ec09eb4b74d2df00e63bf95">_set_readonly</a>();
+<a name="l00217"></a>00217     }
+<a name="l00218"></a>00218     <span class="keywordflow">return</span> *cZero;
+<a name="l00219"></a>00219 }
+<a name="l00220"></a>00220 
+<a name="l00221"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a1487576980f14a9011d76dab4d7bcb50">00221</a> <span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a1487576980f14a9011d76dab4d7bcb50">nothrow_integer::one</a>() {
+<a name="l00222"></a>00222     <span class="keywordflow">if</span> (cOne.get()==0) {
+<a name="l00223"></a>00223         cOne.reset(<span class="keyword">new</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#add8423c7b0d729fe93a8aabf49d333ae">nothrow_integer</a>(<a class="code" href="classboost_1_1xint_1_1integer.html#aa332681715634b73118ffe76090a75d3">integer::one</a>()));
+<a name="l00224"></a>00224         cOne-&gt;<a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a8e11790b0ec09eb4b74d2df00e63bf95">_set_readonly</a>();
+<a name="l00225"></a>00225     }
+<a name="l00226"></a>00226     <span class="keywordflow">return</span> *cOne;
+<a name="l00227"></a>00227 }
+<a name="l00228"></a>00228 
+<a name="l00229"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a9a8d654139e4fb916f933d09c7238e10">00229</a> <span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a9a8d654139e4fb916f933d09c7238e10">nothrow_integer::nan</a>() {
+<a name="l00230"></a>00230     <span class="keywordflow">if</span> (cNaN.get()==0) {
+<a name="l00231"></a>00231         cNaN.reset(<span class="keyword">new</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#add8423c7b0d729fe93a8aabf49d333ae">nothrow_integer</a>());
+<a name="l00232"></a>00232         cNaN-&gt;<a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a9e58a5897a80b8017ff7da7f0abacb6b">_base_attach</a>(0);
+<a name="l00233"></a>00233         cNaN-&gt;_set_readonly();
+<a name="l00234"></a>00234     }
+<a name="l00235"></a>00235     <span class="keywordflow">return</span> *cNaN;
+<a name="l00236"></a>00236 }
+<a name="l00237"></a>00237 
+<a name="l00238"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#aae36cdd1ec2d4d51116ae52ce2863803">00238</a> <span class="keywordtype">void</span> <a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a685da8a208baf4f77502062d4cc0f062">nothrow_integer::_make_unique</a>(<span class="keywordtype">bool</span>) {
+<a name="l00239"></a>00239     <span class="keywordflow">try</span> {
+<a name="l00240"></a>00240         <a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a685da8a208baf4f77502062d4cc0f062">detail::base_integer::_make_unique</a>();
+<a name="l00241"></a>00241     } <span class="keywordflow">catch</span> (std::exception&amp;) {
+<a name="l00242"></a>00242         <a class="code" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a9e58a5897a80b8017ff7da7f0abacb6b">_base_attach</a>(0); <span class="comment">// Turns it into a Not-a-Number.</span>
+<a name="l00243"></a>00243     }
+<a name="l00244"></a>00244 }
+<a name="l00245"></a>00245 
+<a name="l00246"></a>00246 } <span class="comment">// namespace xint</span>
+<a name="l00247"></a>00247 } <span class="comment">// namespace boost</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sat Apr 17 20:02:58 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Apr 30 00:24:24 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

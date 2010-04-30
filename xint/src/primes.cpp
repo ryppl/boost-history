@@ -15,7 +15,8 @@
     \brief Contains the definitions for functions related to prime numbers.
 */
 
-#include "../boost/xint/xint.hpp"
+#include "../boost/xint/integer.hpp"
+#include "../boost/xint/random.hpp"
 
 #include <vector>
 
@@ -28,7 +29,7 @@ std::vector<int> sieveOfEratosthenes(int upTo) {
     std::vector<int> sieve;
     sieve.reserve(upTo);
 
-    // Zero and one aren't prime, by this definition.
+    // Zero and one aren't prime, by definition.
     sieve.push_back(0);
     sieve.push_back(0);
 
@@ -80,6 +81,8 @@ int isProbablePrimeBaseB(const integer& n, const integer &b, callback_t
 
 /*! \brief Tests an integer for primality.
 
+- Complexity: Varies
+
 \param[in] n The number to test.
 \param[in] callback An optional function that will be called regularly during
 the operation. If it returns \c false, the function will immediately return.
@@ -117,7 +120,14 @@ int is_prime(const integer& n, callback_t callback) {
     return 1; // Appears to be prime!
 }
 
+//! \copydoc is_prime(const integer&, callback_t)
+int is_prime(const fixed_integer_any& n, callback_t callback) {
+    return is_prime(integer(n), callback);
+}
+
 /*! \brief Generate a randomly-generated prime number of a particular bit-size.
+
+- Complexity: Varies
 
 \param[in] size_in_bits The number of bits that you want the returned value to
 have.
@@ -152,7 +162,7 @@ integer random_prime(size_t size_in_bits, callback_t callback) {
         while (p < pe) {
             int r=is_prime(p, callback);
             if (r < 0) return integer::zero();
-            if (r == 1) return p;
+            if (r == 1) return BOOST_XINT_MOVE(p);
             p+=2;
         }
     }

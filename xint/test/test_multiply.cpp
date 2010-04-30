@@ -12,12 +12,15 @@
     division, but only indirectly, and not very thoroughly.
 */
 
-#include <boost/xint/xint.hpp>
+#include <boost/xint/integer.hpp>
+#include <boost/xint/random.hpp>
+#include <boost/xint/fixed_integer.hpp>
 
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
 
 #include <iostream>
+#include <boost/random/mersenne_twister.hpp>
 
 namespace boost {
 namespace xint {
@@ -26,7 +29,7 @@ using std::endl;
 
 namespace {
 
-void _test(int section, int test, integer n, integer m) {
+void _test(size_t section, size_t test, integer n, integer m) {
     //BOOST_MESSAGE("testMultiply " << section << ", " << test);
 
     integer result(m*n);
@@ -55,10 +58,11 @@ void _test(int section, int test, integer n, integer m) {
 BOOST_AUTO_TEST_CASE(testMultiply) {
     {
         // These caused a problem while trying to backport the new division
-        // algorithm into the version used elsewhere.
+        // algorithm into an alternate version.
         integer n=integer("-41e0348d52a1be49b7da339137639cde", 16);
 		integer m=integer("c3a1d54a63e80d5a8b851a01d244ea61", 16);
-        _test(0, 0, n, m);
+		integer expected=integer("-32576CEB63105D373FE83F8B3C8A0B68ADAD386F3B668C694D7ADCA8D1195C1E", 16);
+        BOOST_CHECK_EQUAL(n*m, expected);
 
         // 'm' contains a full digit of zeros, which caused problems with an
         // earlier implementation.
@@ -67,23 +71,34 @@ BOOST_AUTO_TEST_CASE(testMultiply) {
 		_test(0, 1, n, m);
     }
 
-    for (int i=0; i<10000; ++i) {
-        integer n(random_by_size(detail::bits_per_digit*4, false, false, true)),
-            m(random_by_size(detail::bits_per_digit*4, false, false, true));
-        _test(1, i, n, m);
-    }
+    set_random_generator(new boost::mt19937(42u));
 
-    for (int i=0; i<1000; ++i) {
-        integer n(random_by_size(detail::bits_per_digit*4, false, false, true)),
-            m(random_by_size(detail::bits_per_digit*3, false, false, true));
-        _test(2, i, n, m);
+    for (size_t nsize = detail::bits_per_digit * 3; nsize <
+        detail::bits_per_digit * 5; nsize += 4)
+    {
+        for (size_t msize = detail::bits_per_digit * 3; msize <
+            detail::bits_per_digit * 5; msize += 4)
+        {
+            integer n(random_by_size(nsize, false, false, true)),
+                m(random_by_size(msize, false, false, true));
+            _test(nsize, msize, n, m);
+        }
     }
+}
 
-    for (int i=0; i<1000; ++i) {
-        integer n(random_by_size(detail::bits_per_digit*3, false, false, true)),
-            m(random_by_size(detail::bits_per_digit*4, false, false, true));
-        _test(3, i, n, m);
-    }
+BOOST_AUTO_TEST_CASE(test_fixed_multiply) {
+    const size_t bits = detail::bits_per_digit + (detail::bits_per_digit / 2);
+    typedef fixed_integer<bits> T; // Digit-and-a-half
+
+    T n; n = ~n;
+    T a = n * n;
+    T check(integer(n) * integer(n));
+    BOOST_CHECK_EQUAL(a, check);
+}
+
+BOOST_AUTO_TEST_CASE(test_multiply_by_sqr) {
+    integer n(5);
+    BOOST_CHECK_EQUAL(n * -n, -25);
 }
 
 } // namespace xint

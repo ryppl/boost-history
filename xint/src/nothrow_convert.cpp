@@ -18,7 +18,7 @@
     function and must be defined in a header file.
 */
 
-#include "../boost/xint/xint.hpp"
+#include "../boost/xint/nothrow_integer.hpp"
 
 namespace boost {
 namespace xint {
@@ -34,7 +34,7 @@ If \c n is Not-a-Number, returns the string \c \#NaN#.
 */
 std::string to_string(const nothrow_integer& n, size_t base, bool uppercase) {
     try {
-        return to_string(xint::integer(n), base, uppercase);
+        return detail::to_string(n, base, uppercase);
     } catch (std::exception&) {
         return std::string();
     }
@@ -47,30 +47,37 @@ std::string to_string(const nothrow_integer& n, size_t base, bool uppercase) {
 nothrow_integer nothrow_from_string(const std::string& str, size_t base) {
     try {
         if (str==detail::nan_text) return nothrow_integer::nan();
-        return nothrow_integer(xint::from_string(str, base));
+
+        nothrow_integer r;
+        detail::from_string(r, str, base);
+        return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
         return nothrow_integer::nan();
     }
 }
 
 //! \copydoc xint::from_binary
-nothrow_integer nothrow_from_binary(const std::string& str) {
+nothrow_integer nothrow_from_binary(const xint::binary_t& b, size_t bits) {
     try {
-        return nothrow_integer(xint::from_binary(str));
+        nothrow_integer r;
+        detail::from_binary(r, b, bits);
+        return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
         return nothrow_integer::nan();
     }
 }
 
-/*! \copydoc xint::to_binary(const integer&)
+/*! \copydoc xint::to_binary(const integer&, size_t)
 
-\par Returns an empty std::string instead of throwing.
+\note Returns an empty xint::binary_t instead of throwing.
 */
-std::string to_binary(const nothrow_integer& n) {
+xint::binary_t to_binary(const nothrow_integer& n, size_t bits) {
     try {
-        return to_binary(xint::integer(n));
+        xint::binary_t r;
+        detail::to_binary(r, n, bits);
+        return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
-        return std::string();
+        return xint::binary_t();
     }
 }
 

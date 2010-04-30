@@ -18,7 +18,7 @@
     Reduction, used internally for an extra-fast xint::powmod.
 */
 
-#include "../boost/xint/xint.hpp"
+#include "../boost/xint/integer.hpp"
 
 #include <boost/scoped_array.hpp>
 
@@ -108,7 +108,9 @@ integer montgomeryMultiplyMod(const integer& a, const integer& b, const integer&
     } while (++i <= L1);
 
     t >>= (bits_per_digit * L); // Fast divide by r
-    return (t >= n ? t - n : t);
+
+    if (t >= n) return t - n;
+    else return BOOST_XINT_MOVE(t);
 }
 
 namespace {
@@ -273,7 +275,6 @@ integer montgomeryPowerMod(const integer& a, const integer& e, const integer& n)
             while (tu.first-- > 0) pp=montgomeryMultiplyMod(pp, pp, n, nPrime0);
         }
     }
-
     return montgomeryMultiplyMod(pp, integer::one(), n, nPrime0);
 }
 

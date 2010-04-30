@@ -21,6 +21,7 @@
 #include "internals.hpp"
 #include "integer.hpp"
 #include "nothrow_integer.hpp"
+#include "fixed_integer.hpp"
 #include "random.hpp"
 #include "exceptions.hpp"
 

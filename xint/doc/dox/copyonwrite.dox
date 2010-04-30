@@ -7,7 +7,9 @@ This mechanism makes copying a number (explicitly, by returning it, or by using
 it as a non-reference parameter to a function) very fast, regardless of its
 size.
 
-Unfortunately, this makes thread-safe operation impossible. If you need to use
-the library from multiple threads, you can disable this behavior by compiling it
-with \ref threadsafe "the thread-safe option".
+Unfortunately, copy-on-write isn't compatible with thread-safe operation. If you
+need to use the library from multiple threads, you can disable this behavior by
+compiling it with \ref threadsafe "the thread-safe option". This option also
+enables move semantics, via Boost.Move, which provide a similar speed increase,
+though at the time of this writing, not as good as copy-on-write can.
 */

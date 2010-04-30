@@ -15,7 +15,8 @@
     \brief Contains the definitions for the \c base_integer member functions.
 */
 
-#include "../boost/xint/xint.hpp"
+#include "../boost/xint/internals.hpp"
+#include "../boost/xint/integer.hpp"
 
 #ifdef XINT_THREADSAFE
     #define XINT_DISABLE_COPY_ON_WRITE
@@ -26,27 +27,40 @@ namespace xint {
 namespace detail {
 
 namespace {
-struct zerodata_t: public data_t<> {
+struct zerodata_t: public data_t {
     public:
-    zerodata_t() { copies=1; length=max_length=1; *magnitude=0; }
-} zerodata;
+    zerodata_t() { copies=1; fixed_mask=0; length=max_length=1; *magnitude=0; }
+};
+
+zerodata_t* zerodata() {
+    static std::auto_ptr<zerodata_t> z(new zerodata_t);
+    return z.get();
+}
+
 } // namespace
 
-base_integer::base_integer(size_t count, digit_t mask, void *d):
-    fixed_mask(mask), negative(false), data(reinterpret_cast<data_t<>*>(d))
+base_integer::base_integer(): flags(0), data(0) { }
+
+base_integer::base_integer(const base_integer& c, bool fixed): flags(0), data(0)
 {
-    assert(mask != 0);
+    if (fixed) flags |= flag_fixedlength;
+    _attach(c);
+}
 
-    data->copies=1;
-    data->length=1;
-    data->max_length=count;
+base_integer::base_integer(size_t count, digit_t mask): flags(flag_fixedlength),
+    data(0)
+{
+    _base_attach(allocate_fixed(mask, count, 1));
+}
 
-    digit_t *i = data->magnitude, *ie = i + data->max_length;
-    while (i != ie) *i++ = 0;
+base_integer::base_integer(data_t *adopt, bool neg): flags(0), data(0) {
+    if (adopt && adopt->fixed_mask != 0) flags |= flag_fixedlength;
+    _base_attach(adopt);
+    _set_negative(neg);
 }
 
 base_integer::~base_integer() {
-    if (fixed_mask != 0 && data && data->copies == 1) deallocate(data);
+    if (data && --data->copies == 0) deallocate(data);
 }
 
 digit_t base_integer::_get_digit(size_t index) const {
@@ -58,7 +72,8 @@ digit_t base_integer::_get_digit(size_t index, bool) const {
     return data->magnitude[index];
 }
 
-digit_t* base_integer::_get_digits() {
+digit_t* base_integer::_get_writable_digits() {
+    assert(!_get_readonly());
     return data->magnitude;
 }
 
@@ -70,213 +85,271 @@ size_t base_integer::_get_length() const {
     return data->length;
 }
 
-void base_integer::_duplicate(const base_integer& c, size_t extra) {
-    negative=c.negative;
-    data=duplicate(data, c.data, extra);
+size_t base_integer::_get_max_length() const {
+    return _is_fixed() ? _fixed_digits() : (std::numeric_limits<size_t>::max)();
 }
 
-void base_integer::_attach(data_t<> *new_data, bool neg) {
-    assert(fixed_mask == 0);
-
-    #ifdef XINT_DISABLE_COPY_ON_WRITE
-        data=duplicate(data, new_data);
-    #else
-        if (data && --data->copies == 0) deallocate(data);
-        data=new_data;
-        if (data) ++data->copies;
-    #endif
-    negative=neg;
+void base_integer::_set_length(size_t digits) {
+    data->length = digits;
 }
 
-void base_integer::_attach(const base_integer& copy) {
-    _attach(copy.data, copy.negative);
+size_t base_integer::_log2() const {
+    size_t len = _get_length() - 1;
+    return (bits_per_digit * len) + log2(_get_digit(len));
 }
 
-void base_integer::_attach_0() {
-    _attach(&zerodata);
-}
-
-void base_integer::_attach_1(digit_t n) {
-    if (n == 0) {
-        _attach(&zerodata);
+void base_integer::_set_unsigned(boost::uintmax_t n, bool negative) {
+    // Assumes that the proper allocation & sizing was already done
+    assert(!_get_readonly());
+    if (data == 0) _base_attach(allocate(detail::digits_in_uintmax));
+    if (digit_t(n) == n) {
+        data->length = 1;
+        *data->magnitude = digit_t(n);
     } else {
-        _attach(allocate(1));
-        *data->magnitude=n;
+        digit_t *i = data->magnitude, *ie = i + data->max_length;
+        while (n != 0 && i != ie) {
+            *i++ = digit_t(n & digit_mask);
+            n >>= bits_per_digit;
+        }
+        data->length = i - data->magnitude;
     }
-}
-
-void base_integer::_attach_n(boost::uintmax_t n) {
-    static int bits = std::numeric_limits<boost::uintmax_t>::digits;
-    static int maxDigits = (bits + bits_per_digit - 1) / bits_per_digit;
-
-    _attach(allocate(maxDigits));
-    _set_n(n);
-}
-
-void base_integer::_set_n(boost::uintmax_t n) {
-    // Assumes that the proper allocation was already done
-    data->length = data->max_length;
-    digit_t *i = data->magnitude, *ie = i + data->max_length;
-    while (n != 0 && i != ie) {
-        *i++ = digit_t(n & digit_mask);
-        n >>= bits_per_digit;
-    }
+    _set_negative(negative);
     _cleanup();
 }
 
+void base_integer::_set_signed(boost::intmax_t n) {
+    if (n >= 0) {
+        _set_unsigned(n);
+    } else if (n == (std::numeric_limits<boost::intmax_t>::min)()) {
+        // Have to treat the minimum number carefully, because -n is not
+        // what you'd think it is.
+        _set_unsigned(-(n+1), true);
+        _decrement();
+    } else {
+        _set_unsigned(-n, true);
+    }
+}
+
 bool base_integer::_is_unique() const {
-    return (!data || data->copies == 1);
+    return (!data || data->copies <= 1);
 }
 
 bool base_integer::_is_zero() const {
     return (data->length == 1 && *data->magnitude == 0);
 }
 
+bool base_integer::_is_fixed() const {
+    if (data) return (data->fixed_mask != 0);
+    else return ((flags & flag_fixedlength) != 0);
+}
+
+size_t base_integer::_fixed_digits() const {
+    return _is_fixed() ? data->max_length : 0;
+}
+
+size_t base_integer::_fixed_bits() const {
+    size_t digits = _fixed_digits();
+    if (digits != 0) return ((digits - 1) * detail::bits_per_digit) +
+            detail::log2(data->fixed_mask);
+    else return 0;
+}
+
 bool base_integer::_get_negative() const {
-    return negative;
+    return ((flags & flag_negative) ? true : false);
 }
 
 void base_integer::_set_negative(bool neg) {
-    negative=neg;
+    if (neg) flags |= flag_negative;
+    else flags &= ~flag_negative;
 }
 
-void base_integer::_cleanup() {
-    if (fixed_mask) data->magnitude[data->max_length-1] &= fixed_mask;
-    digit_t *p = data->magnitude + data->length - 1;
-    while (p != data->magnitude && *p == 0) { --data->length; --p; }
-    if (data->length == 1 && *data->magnitude == 0) negative = false;
+void base_integer::_toggle_negative() {
+    flags ^= flag_negative;
+}
 
+bool base_integer::_get_readonly() const {
+    return ((flags & flag_readonly) ? true : false);
+}
+
+void base_integer::_set_readonly() {
+    flags |= flag_readonly;
 }
 
 void base_integer::_realloc(size_t new_digit_count) {
-    assert(fixed_mask == 0);
     data = reallocate(data, new_digit_count);
 }
 
-void base_integer::_shift_left(size_t byBits) {
-    size_t bytes=byBits / bits_per_digit, bits=byBits % bits_per_digit;
-    size_t oldLength = data->length;
+void base_integer::_make_unique() {
+    if (data && !_is_unique()) {
+        data_t *olddata = data;
 
-    data=reallocate(data, data->length + bytes + 1);
+        data = (olddata->fixed_mask != 0 ?
+            allocate_fixed(olddata->fixed_mask, olddata->max_length, 0) :
+            allocate(olddata->length, 0));
+        data->copies = 1;
+        data->length = olddata->length;
 
-    if (bits != 0) {
-        // Handle both bits and bytes in one pass
-        digit_t *s = data->magnitude + oldLength - 1, *t = s + bytes + 1;
+        digit_t *s = olddata->magnitude, *se = s + olddata->length;
+        digit_t *t = data->magnitude;
+        while (s != se) *t++ = *s++;
 
-        *t-- = *s >> (bits_per_digit - bits);
-        while (s > data->magnitude) {
-            *t = (*s-- << bits);
-            *t-- |= (*s >> (bits_per_digit - bits));
-        }
-        *t = (*s << bits);
-
-        if (bytes != 0) {
-            digit_t *t = data->magnitude, *te = t + bytes;
-            while (t != te) *t++ = 0;
-        }
-    } else if (bytes != 0) {
-        memmove(data->magnitude + bytes, data->magnitude, sizeof(digit_t) *
-            oldLength);
-        memset(data->magnitude, 0, sizeof(digit_t) * bytes);
+        --olddata->copies;
     }
-    _cleanup();
 }
 
-void base_integer::_shift_right(size_t byBits) {
-    size_t bytes=byBits / bits_per_digit, bits=byBits % bits_per_digit,
-        bits2 = bits_per_digit - bits;
+void base_integer::_swap(base_integer& other) {
+    flag_t tempflags = flags;
+    flags = other.flags;
+    other.flags = tempflags;
 
-    if (bytes >= data->length) {
-        // Right-shift it into oblivion.
-        data->length = 1;
-        *data->magnitude = 0;
-    } else if (bits != 0) {
-        // Handle both bits and bytes in one pass
-        digit_t *t = data->magnitude, *s = data->magnitude + bytes,
-            *se = data->magnitude + data->length - 1;
-        while (s!=se) {
-            *t = (*s++ >> bits);
-            *t++ |= (*s << bits2);
+    data_t *tempdata = data;
+    data = other.data;
+    other.data = tempdata;
+}
+
+void base_integer::_base_attach(data_t *new_data, flag_t setflags, size_t
+    extra_allocation)
+{
+    #ifdef XINT_DISABLE_COPY_ON_WRITE
+        bool adopt=(new_data && new_data->copies == 0);
+    #else
+        bool adopt=true;
+    #endif
+
+    if (data != new_data || extra_allocation != 0) {
+        // If only one of them is fixed-length, the data can't be adopted.
+        if (adopt && new_data && _is_fixed() != (new_data->fixed_mask != 0))
+            adopt=false;
+
+        // If either of them are fixed-length, and they're not the same fixed-
+        // length, then the data can't be adopted.
+        if (adopt && data && new_data && (data->fixed_mask ||
+            new_data->fixed_mask) && (data->fixed_mask != new_data->fixed_mask
+            || data->max_length != new_data->max_length)) adopt=false;
+
+        // If we don't have a data item, but we're supposed to allocate extra
+        // data, we can't adopt the existing data item.
+        if (adopt && extra_allocation != 0 && !data) adopt=false;
+
+        // If extra_allocation is requested, and it's a variable-length integer,
+        // check the max_size. If there isn't enough to fit in the
+        // extra_allocation, don't allow adoption.
+        if (adopt && extra_allocation != 0 && data->fixed_mask == 0)
+            if (data->length + extra_allocation > data->max_length) adopt=false;
+
+        if (adopt) {
+            if (data && --data->copies == 0) deallocate(data);
+            data=new_data;
+            if (data) ++data->copies;
+        } else if (new_data != 0) {
+            // Duplicate the data in a unique data_t item
+            if (data == 0) {
+                data = (_is_fixed() ?
+                    allocate_fixed(new_data->fixed_mask, new_data->max_length,
+                        0) :
+                    allocate(new_data->length + extra_allocation, 0));
+                ++data->copies;
+            } else if ((data->copies > 1 || data->max_length < new_data->length
+                + extra_allocation) || _get_readonly())
+            {
+                data_t *olddata = data;
+                data = (_is_fixed() ?
+                    allocate_fixed(data->fixed_mask, data->max_length, 0) :
+                    allocate(new_data->length + extra_allocation, 0));
+                ++data->copies;
+                if (--olddata->copies == 0) deallocate(olddata);
+            }
+            data->length = (std::min)(new_data->length + extra_allocation,
+                data->max_length);
+
+            digit_t *s = new_data->magnitude, *se = s + new_data->length;
+            digit_t *t = data->magnitude, *te = t + data->length;
+            while (t != te && s != se) *t++ = *s++;
+            zero(t, te);
+        } else {
+            if (--data->copies == 0) deallocate(data);
+            data=0;
         }
-        *t = (*s >> bits);
-        if (bytes != 0) {
-            memset(data->magnitude + data->length - bytes, 0, sizeof(digit_t) *
-                bytes);
-            data->length -= bytes;
+    }
+    flags = setflags;
+}
+
+void base_integer::_attach(const base_integer& copy) {
+    _base_attach(copy.data, copy.flags);
+    if (data) _cleanup();
+}
+
+void base_integer::_cleanup() {
+    digit_t *p = data->magnitude + data->length - 1;
+    if (data->fixed_mask != 0 && p == data->magnitude + data->max_length - 1)
+        *p &= data->fixed_mask;
+    if (*p == 0) {
+        if (p != data->magnitude) {
+            while (--p != data->magnitude && *p == 0); // Null loop
+            if (*p == 0) _set_negative(false); // It's zero.
+            data->length = p - data->magnitude + 1;
+        } // It's zero, but it may legitimately be a "negative zero", leave it.
+    }
+}
+
+integer base_integer::_to_integer() const {
+    integer r;
+    r._attach(*this);
+    return r;
+}
+
+void base_integer::_increment(bool absolute_value) {
+    _make_unique();
+    if (_is_zero()) {
+        data->magnitude[0] = 1;
+        _set_negative(false);
+    } else if (!absolute_value && _get_negative()) {
+        _decrement(true);
+    } else {
+        _realloc(_get_length() + 1);
+        digit_t *p = _get_writable_digits(), *pe = p + _get_length();
+
+        while (p < pe) {
+            if (*p == digit_mask) *p++ = 0;
+            else { *p++ += 1; break; }
         }
         _cleanup();
-    } else if (bytes != 0) {
-        memmove(data->magnitude, data->magnitude + bytes, sizeof(digit_t) *
-            (data->length - bytes));
-        memset(data->magnitude + data->length - bytes, 0, sizeof(digit_t) *
-            bytes);
-        data->length -= bytes;
+    }
+}
+
+void base_integer::_decrement(bool absolute_value) {
+    _make_unique();
+    if (_is_zero()) {
+        data->magnitude[0]=1;
+        _set_negative(true);
+    } else if (!absolute_value && _get_negative()) {
+        _increment(true);
+    } else {
+        digit_t *p = _get_writable_digits(), *pe = p + _get_length();
+        while (p != pe) {
+            if (*p == 0) *p++ = digit_mask;
+            else { *p++ -= 1; break; }
+        }
         _cleanup();
     }
 }
 
-void base_integer::_base_make_unique() {
-    if (!_is_unique()) data=duplicate(data);
+////////////////////////////////////////////////////////////////////////////////
+
+void base_variable_length_integer::_attach_0() {
+    _base_attach(zerodata());
 }
 
-void base_integer::_add(const base_integer& n) {
-    //assert(mCopies==1);
-    //assert(mLength >= addend.mLength);
+size_t log10_bits(size_t bits) {
+    assert(std::numeric_limits<boost::intmax_t>::digits >= 32);
+    const boost::intmax_t large_step(1000000000), small_step(10);
+    const size_t count_per_large_step = 9, count_per_small_step = 1;
+    integer n(pow2(bits)-1);
 
-    // The answer to any addition problem contains, at most, one digit more
-    // than the largest addend.
-    data=reallocate(data, data->length + 1);
-
-    // Now add the digits, starting at the least-significant digit.
-    digit_t carry = 0;
-    size_t x = 0;
-    for (; x < n.data->length; ++x) {
-        doubledigit_t t = doubledigit_t(data->magnitude[x]) +
-            n.data->magnitude[x] + carry;
-        if (t >= digit_overflowbit) { carry = 1; t -= digit_overflowbit; }
-            else carry=0;
-        data->magnitude[x] = static_cast<digit_t>(t);
-    }
-
-    while (carry) {
-        doubledigit_t t = doubledigit_t(data->magnitude[x]) + 1;
-        if (t >= digit_overflowbit) { carry = 1; t -= digit_overflowbit; }
-            else carry=0;
-        data->magnitude[x] = static_cast<digit_t>(t);
-        ++x;
-    }
-
-    _cleanup();
-}
-
-void base_integer::_subtract(const base_integer& n) {
-    //assert(mCopies==1);
-    //assert(mLength >= subtrahend.mLength);
-
-    // For subtraction, the answer will always be less than or equal to the
-    // size of the longest operand, so we've already got enough room.
-
-    // Now subtract the digits, starting at the least-significant one.
-    size_t x;
-    int borrow = 0;
-    doubledigit_t t;
-    for (x = 0; x < n.data->length; ++x) {
-        t=(data->magnitude[x] + digit_overflowbit) - n.data->magnitude[x] -
-            borrow;
-        if (t < digit_overflowbit) borrow = 1;
-        else { borrow = 0; t -= digit_overflowbit; }
-        data->magnitude[x]=static_cast<digit_t>(t);
-    }
-
-    for (; x < data->length && borrow; ++x) {
-        t = (data->magnitude[x] + digit_overflowbit) - borrow;
-        if (t < digit_overflowbit) borrow=1;
-        else { borrow = 0; t -= digit_overflowbit; }
-        data->magnitude[x] = static_cast<digit_t>(t);
-    }
-
-    _cleanup();
-    if (borrow != 0) negative=!negative;
+    size_t r = 0;
+    while (n >= large_step) { n /= large_step; r += count_per_large_step; }
+    while (n >= small_step) { n /= small_step; r += count_per_small_step; }
+    return r;
 }
 
 } // namespace detail

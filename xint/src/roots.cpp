@@ -15,12 +15,48 @@
     \brief Contains the definitions for functions related to roots of a number.
 */
 
-#include "../boost/xint/xint.hpp"
+#include "../boost/xint/integer.hpp"
 
 namespace boost {
 namespace xint {
 
+namespace detail {
+
+void sqrt(base_integer& target, const base_integer& nn) {
+    if (nn._is_zero()) { target._attach(nn); return; }
+    if (nn._get_negative()) throw exceptions::cannot_represent("library cannot "
+        "represent imaginary values (tried to take sqrt of negative number)");
+
+    // A naive implementation using pure integers can result in an endless loop,
+    // cycling between two numbers that are approximately correct (try
+    // sqrt(23)). To deal with that, we multiply everything by an even power of
+    // two.
+    const size_t extra_bits = 1;
+
+    integer n(nn._to_integer());
+    n <<= (extra_bits * 2);
+
+    // Initial guess is half the length of n, in bits
+    integer guess;
+    setbit(guess, n._log2()/2);
+
+    // Now refine it until we're as close as we can get.
+    while (1) {
+        integer guess2=(guess + (n / guess)) >> 1;
+        if ((guess >> extra_bits) == (guess2 >> extra_bits)) break;
+        guess = guess2;
+    }
+
+    // Remove half of the added bits.
+    guess >>= extra_bits;
+    target._attach(guess);
+}
+
+} // namespace detail
+
 /*! \brief Calculate the square root of \c an integer.
+
+- Complexity: O(n<sup>2</sup>)
 
 \param[in] n The value to operate on.
 
@@ -31,22 +67,9 @@ root.
 \exception exceptions::cannot_represent if \c n is negative.
 */
 integer sqrt(const integer& n) {
-    if (n.sign() < 0) throw exceptions::cannot_represent("library cannot "
-        "represent imaginary values (tried to take sqrt of negative number)");
-    if (n.sign() == 0) return integer::zero();
-
-    // Initial guess is half the length of n, in bits
-    integer guess;
-    setbit(guess, log2(n)/2);
-
-    // Now refine it until we're as close as integers can get
-    while (1) {
-        integer guess2=(guess + (n/guess)) >> 1;
-        if (guess == guess2) break;
-        guess=guess2;
-    }
-
-    return guess;
+    integer r;
+    detail::sqrt(r, n);
+    return BOOST_XINT_MOVE(r);
 }
 
 } // namespace xint

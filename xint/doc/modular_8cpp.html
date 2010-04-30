@@ -12,7 +12,6 @@
   <div class="tabs">
     <ul>
       <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
@@ -39,7 +38,14 @@
 <p><tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><p>All the types and functions of the library are within this namespace. </p>
 <br/></td></tr>
 </p>
+<tr><td class="memItemLeft" align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html">boost::xint::detail</a></td></tr>
+
+<p><tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><p>The items within this namespace are meant for internal use only. </p>
+<br/></td></tr>
+</p>
 <tr><td colspan="2"><h2>Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a3395be771e1ce5d282e018a2735b6d86">boost::xint::detail::mod</a> (base_integer &amp;target, const base_integer &amp;n, const base_integer &amp;m)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#ac063e3fcb648313184b04ef7102d7695">boost::xint::detail::powmod</a> (base_integer &amp;target, const base_integer &amp;_n, const base_integer &amp;_e, const base_integer &amp;_m, bool noMontgomery)</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Modular math functions</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpbf63e6a6a1029bb25b7aa51052b38655"></a>A common reason to use a large-integer library is to implement public-key encryption, and the algorithms for such encryption often use modular math. </p>
 </div></td></tr>
@@ -47,10 +53,10 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the remainder after dividing a number by another.  <a href="#a9b8c31b64eb9700beea8b95edec31a73"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ac9af74aa79d9cc7f51c57cc7707824ba">boost::xint::mulmod</a> (const integer &amp;n, const integer &amp;by, const integer &amp;m)</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the modular product of two integers.  <a href="#ac9af74aa79d9cc7f51c57cc7707824ba"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#adb9a9cb117e7346a3b56c369cd438b0e">boost::xint::sqrmod</a> (const integer &amp;n, const integer &amp;m)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the modular product of squaring an integer.  <a href="#adb9a9cb117e7346a3b56c369cd438b0e"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a35e7556e9f2d8fb944dbf732ed3f96cd">boost::xint::powmod</a> (const integer &amp;n, const integer &amp;e, const integer &amp;m, bool noMontgomery)</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the result of <code>n<sup>e</sup></code> % <code>m</code>, keeping the intermediate results (relatively) small.  <a href="#a35e7556e9f2d8fb944dbf732ed3f96cd"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#adb9a9cb117e7346a3b56c369cd438b0e">boost::xint::sqrmod</a> (const integer &amp;n, const integer &amp;m)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the modular product of squaring an integer.  <a href="#adb9a9cb117e7346a3b56c369cd438b0e"></a><br/></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>Contains the definitions for the basic modular math functions. </p>
@@ -58,7 +64,7 @@
 
 <p>Definition in file <a class="el" href="modular_8cpp_source.html">modular.cpp</a>.</p>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sat Apr 17 20:02:58 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Apr 30 00:24:25 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

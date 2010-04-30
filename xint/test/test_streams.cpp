@@ -11,7 +11,8 @@
     This file contains the stream testing functions.
 */
 
-#include <boost/xint/xint.hpp>
+#include <boost/xint/integer.hpp>
+#include <boost/xint/nothrow_integer.hpp>
 
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>

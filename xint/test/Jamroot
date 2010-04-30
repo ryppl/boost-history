@@ -7,6 +7,8 @@ exe test
 		# Source code files
 		test_main.cpp test_streams.cpp test_add.cpp test_bit_manipulations.cpp
 		test_convert.cpp test_divide.cpp test_multiply.cpp test_monty.cpp
+		test_compare.cpp test_fixed.cpp test_powers.cpp test_modular.cpp
+		test_misc.cpp
 
 		# Boost libraries
 		boost_xint

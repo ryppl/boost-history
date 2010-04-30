@@ -16,7 +16,7 @@
            the \c nothrow_integer type.
 */
 
-#include "../boost/xint/xint.hpp"
+#include "../boost/xint/nothrow_integer.hpp"
 
 namespace boost {
 namespace xint {
@@ -24,7 +24,9 @@ namespace xint {
 //! \copydoc xint::mod(const integer&, const integer&)
 nothrow_integer mod(const nothrow_integer& n, const nothrow_integer& m) {
     try {
-        return nothrow_integer(mod(xint::integer(n), xint::integer(m)));
+        nothrow_integer r;
+        detail::mod(r, n, m);
+        return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
         return nothrow_integer::nan();
     }
@@ -33,8 +35,7 @@ nothrow_integer mod(const nothrow_integer& n, const nothrow_integer& m) {
 //! \copydoc xint::mulmod(const integer&, const integer&, const integer&)
 nothrow_integer mulmod(const nothrow_integer& n, const nothrow_integer& by, const nothrow_integer& m) {
     try {
-        return nothrow_integer(mod(xint::integer(n) * xint::integer(by),
-            xint::integer(m)));
+        return mod(n * by, m);
     } catch (std::exception&) {
         return nothrow_integer::nan();
     }
@@ -43,19 +44,20 @@ nothrow_integer mulmod(const nothrow_integer& n, const nothrow_integer& by, cons
 //! \copydoc xint::sqrmod(const integer&, const integer&)
 nothrow_integer sqrmod(const nothrow_integer& n, const nothrow_integer& m) {
     try {
-        return nothrow_integer(mod(sqr(xint::integer(n)), xint::integer(m)));
+        return mod(sqr(n), m);
     } catch (std::exception&) {
         return nothrow_integer::nan();
     }
 }
 
 //! \copydoc xint::powmod(const integer&, const integer&, const integer&, bool)
-nothrow_integer powmod(const nothrow_integer& n, const nothrow_integer& e, const nothrow_integer& m, bool
-    noMontgomery)
+nothrow_integer powmod(const nothrow_integer& n, const nothrow_integer& e, const
+    nothrow_integer& m, bool noMontgomery)
 {
     try {
-        return nothrow_integer(powmod(xint::integer(n), xint::integer(e),
-            xint::integer(m), noMontgomery));
+        nothrow_integer r;
+        detail::powmod(r, n, e, m, noMontgomery);
+        return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
         return nothrow_integer::nan();
     }
@@ -67,7 +69,9 @@ nothrow_integer powmod(const nothrow_integer& n, const nothrow_integer& e, const
 */
 nothrow_integer invmod(const nothrow_integer& n, const nothrow_integer& m) {
     try {
-        return nothrow_integer(invmod(xint::integer(n), xint::integer(m)));
+        nothrow_integer r;
+        detail::invmod(r, n, m);
+        return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
         return nothrow_integer::nan();
     }

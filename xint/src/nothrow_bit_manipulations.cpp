@@ -16,7 +16,7 @@
            type.
 */
 
-#include "../boost/xint/xint.hpp"
+#include "../boost/xint/nothrow_integer.hpp"
 
 namespace boost {
 namespace xint {
@@ -27,7 +27,7 @@ namespace xint {
 */
 bool getbit(const nothrow_integer& n, size_t bit) {
     try {
-        return getbit(xint::integer(n), bit);
+        return detail::getbit(n, bit);
     } catch (std::exception&) {
         return false;
     }
@@ -36,9 +36,7 @@ bool getbit(const nothrow_integer& n, size_t bit) {
 //! \copydoc xint::setbit
 void setbit(nothrow_integer& n, size_t bit) {
     try {
-        xint::integer nn(n);
-        setbit(nn, bit);
-        n=nothrow_integer(nn);
+        detail::setbit(n, bit);
     } catch (std::exception&) {
         // Do nothing
     }
@@ -47,9 +45,7 @@ void setbit(nothrow_integer& n, size_t bit) {
 //! \copydoc xint::clearbit
 void clearbit(nothrow_integer& n, size_t bit) {
     try {
-        xint::integer nn(n);
-        clearbit(nn, bit);
-        n=nothrow_integer(nn);
+        detail::clearbit(n, bit);
     } catch (std::exception&) {
         // Do nothing
     }
@@ -61,7 +57,7 @@ void clearbit(nothrow_integer& n, size_t bit) {
 */
 size_t lowestbit(const nothrow_integer& n, size_t valueIfZero) {
     try {
-        return lowestbit(xint::integer(n), valueIfZero);
+        return detail::lowestbit(n, valueIfZero);
     } catch (std::exception&) {
         return 0;
     }
@@ -73,7 +69,7 @@ size_t lowestbit(const nothrow_integer& n, size_t valueIfZero) {
 */
 size_t highestbit(const nothrow_integer& n, size_t valueIfZero) {
     try {
-        return highestbit(xint::integer(n), valueIfZero);
+        return detail::highestbit(n, valueIfZero);
     } catch (std::exception&) {
         return 0;
     }
@@ -82,7 +78,9 @@ size_t highestbit(const nothrow_integer& n, size_t valueIfZero) {
 //! \copydoc xint::bitwise_and
 nothrow_integer bitwise_and(const nothrow_integer& n1, const nothrow_integer& n2) {
     try {
-        return nothrow_integer(bitwise_and(xint::integer(n1), xint::integer(n2)));
+        nothrow_integer r;
+        detail::bitwise_and(r, n1, n2);
+        return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
         return nothrow_integer::nan();
     }
@@ -91,7 +89,9 @@ nothrow_integer bitwise_and(const nothrow_integer& n1, const nothrow_integer& n2
 //! \copydoc xint::bitwise_or
 nothrow_integer bitwise_or(const nothrow_integer& n1, const nothrow_integer& n2) {
     try {
-        return nothrow_integer(bitwise_or(xint::integer(n1), xint::integer(n2)));
+        nothrow_integer r;
+        detail::bitwise_or(r, n1, n2);
+        return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
         return nothrow_integer::nan();
     }
@@ -100,7 +100,9 @@ nothrow_integer bitwise_or(const nothrow_integer& n1, const nothrow_integer& n2)
 //! \copydoc xint::bitwise_xor
 nothrow_integer bitwise_xor(const nothrow_integer& n1, const nothrow_integer& n2) {
     try {
-        return nothrow_integer(bitwise_xor(xint::integer(n1), xint::integer(n2)));
+        nothrow_integer r;
+        detail::bitwise_xor(r, n1, n2);
+        return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
         return nothrow_integer::nan();
     }
@@ -115,7 +117,9 @@ nothrow_integer shift(const nothrow_integer& n, int byBits) {
 //! \copydoc xint::shift_left
 nothrow_integer shift_left(const nothrow_integer& n, size_t byBits) {
     try {
-        return nothrow_integer(shift_left(xint::integer(n), byBits));
+        nothrow_integer r;
+        detail::shift_left(r, n, byBits);
+        return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
         return nothrow_integer::nan();
     }
@@ -124,7 +128,9 @@ nothrow_integer shift_left(const nothrow_integer& n, size_t byBits) {
 //! \copydoc xint::shift_right
 nothrow_integer shift_right(const nothrow_integer& n, size_t byBits) {
     try {
-        return nothrow_integer(shift_right(xint::integer(n), byBits));
+        nothrow_integer r;
+        detail::shift_right(r, n, byBits);
+        return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
         return nothrow_integer::nan();
     }

@@ -12,7 +12,6 @@
   <div class="tabs">
     <ul>
       <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
@@ -37,122 +36,157 @@
 <a name="l00011"></a>00011 <span class="comment">    See http://www.boost.org/libs/xint for library home page.</span>
 <a name="l00012"></a>00012 <span class="comment">*/</span>
 <a name="l00013"></a>00013 
-<a name="l00018"></a>00018 <span class="preprocessor">#include &quot;../boost/xint/xint.hpp&quot;</span>
+<a name="l00018"></a>00018 <span class="preprocessor">#include &quot;../boost/xint/internals.hpp&quot;</span>
 <a name="l00019"></a>00019 
-<a name="l00020"></a>00020 <span class="preprocessor">#include &lt;cassert&gt;</span>
-<a name="l00021"></a>00021 
-<a name="l00022"></a>00022 <span class="keyword">namespace </span>boost {
-<a name="l00023"></a>00023 <span class="keyword">namespace </span>xint {
-<a name="l00024"></a>00024 <span class="keyword">namespace </span>detail {
-<a name="l00025"></a>00025 
-<a name="l00026"></a>00026 <span class="keyword">static</span> <span class="keywordtype">size_t</span> datasize=(<span class="keyword">sizeof</span>(data_t&lt;&gt;)+<span class="keyword">sizeof</span>(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>)-1) / <span class="keyword">sizeof</span>(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>);
+<a name="l00020"></a><a class="code" href="data__t_8cpp.html#a5319d73dcebfb0b95527d8edff2101c9">00020</a> <span class="preprocessor">#define VALGRIND_COMPATIBLE</span>
+<a name="l00021"></a>00021 <span class="preprocessor"></span>
+<a name="l00022"></a>00022 <span class="preprocessor">#include &lt;cassert&gt;</span>
+<a name="l00023"></a>00023 
+<a name="l00024"></a>00024 <span class="keyword">namespace </span>boost {
+<a name="l00025"></a>00025 <span class="keyword">namespace </span>xint {
+<a name="l00026"></a>00026 <span class="keyword">namespace </span>detail {
 <a name="l00027"></a>00027 
-<a name="l00028"></a>00028 data_t&lt;&gt; *<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a092b8b90955e65e858dfbdd1cc35b960">allocate</a>(<span class="keywordtype">size_t</span> max_digits, <span class="keywordtype">size_t</span> initial_length) {
-<a name="l00029"></a>00029     <span class="keywordflow">if</span> (max_digits &lt; 1) max_digits = 1;
-<a name="l00030"></a>00030     <span class="keywordtype">size_t</span> count = max_digits - 1 + datasize;
+<a name="l00028"></a>00028 <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> datasize = (<span class="keyword">sizeof</span>(data_t)+<span class="keyword">sizeof</span>(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>)-1) /
+<a name="l00029"></a>00029     <span class="keyword">sizeof</span>(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>);
+<a name="l00030"></a>00030 <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> minimum_digits = 1, digits_in_struct = 1;
 <a name="l00031"></a>00031 
-<a name="l00032"></a>00032     <span class="keywordflow">try</span> {
-<a name="l00033"></a>00033         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *storage(<span class="keyword">new</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>[count]);
-<a name="l00034"></a>00034         data_t&lt;&gt; *r=<span class="keyword">reinterpret_cast&lt;</span>data_t&lt;&gt;*<span class="keyword">&gt;</span>(storage);
-<a name="l00035"></a>00035         r-&gt;copies=0;
-<a name="l00036"></a>00036         r-&gt;length=(std::min)(initial_length, max_digits);
-<a name="l00037"></a>00037         r-&gt;max_length=max_digits;
-<a name="l00038"></a>00038 
-<a name="l00039"></a>00039         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *p = r-&gt;magnitude, *pe = p + r-&gt;length;
-<a name="l00040"></a>00040         <span class="keywordflow">while</span> (p!=pe) *p++=0;
-<a name="l00041"></a>00041         <span class="keywordflow">return</span> r;
-<a name="l00042"></a>00042     } <span class="keywordflow">catch</span> (std::bad_alloc&amp;) {
-<a name="l00043"></a>00043         <span class="keywordflow">throw</span> exceptions::overflow_error(<span class="stringliteral">&quot;Out of memory allocating integer&quot;</span>);
-<a name="l00044"></a>00044     }
-<a name="l00045"></a>00045 }
-<a name="l00046"></a>00046 
-<a name="l00047"></a>00047 data_t&lt;&gt; *<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a756b3b8912e24da52a5f1e54d49bbbbe">reallocate</a>(data_t&lt;&gt; *olddata, <span class="keywordtype">size_t</span> newsize) {
-<a name="l00048"></a>00048     <span class="keywordflow">if</span> (olddata==0) {
-<a name="l00049"></a>00049         data_t&lt;&gt; *newdata=<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a092b8b90955e65e858dfbdd1cc35b960">allocate</a>(newsize);
-<a name="l00050"></a>00050         newdata-&gt;copies=1;
-<a name="l00051"></a>00051         <span class="keywordflow">return</span> newdata;
-<a name="l00052"></a>00052     } <span class="keywordflow">if</span> (olddata-&gt;copies == 1 &amp;&amp; newsize &lt;= olddata-&gt;max_length) {
-<a name="l00053"></a>00053         <span class="comment">// We can re-use this data.</span>
-<a name="l00054"></a>00054         <span class="keywordflow">if</span> (olddata-&gt;length &lt; newsize) {
-<a name="l00055"></a>00055             <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *p=olddata-&gt;magnitude + olddata-&gt;length,
-<a name="l00056"></a>00056                 *pe=olddata-&gt;magnitude + newsize;
-<a name="l00057"></a>00057             <span class="keywordflow">while</span> (p!=pe) *p++=0;
-<a name="l00058"></a>00058         } <span class="keywordflow">else</span> {
-<a name="l00059"></a>00059             <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *p=olddata-&gt;magnitude + olddata-&gt;length,
-<a name="l00060"></a>00060                 *pe=olddata-&gt;magnitude + newsize;
-<a name="l00061"></a>00061             <span class="keywordflow">while</span> (p!=pe) *(--p)=0;
-<a name="l00062"></a>00062         }
-<a name="l00063"></a>00063         olddata-&gt;length = newsize;
-<a name="l00064"></a>00064         <span class="keywordflow">return</span> olddata;
-<a name="l00065"></a>00065     } <span class="keywordflow">else</span> {
-<a name="l00066"></a>00066         <span class="comment">// Have to allocate new data.</span>
-<a name="l00067"></a>00067         data_t&lt;&gt; *newdata=<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a092b8b90955e65e858dfbdd1cc35b960">allocate</a>(newsize, 0);
-<a name="l00068"></a>00068         newdata-&gt;copies=1;
-<a name="l00069"></a>00069         newdata-&gt;length=newsize;
-<a name="l00070"></a>00070         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *s=olddata-&gt;magnitude, *se=s+olddata-&gt;length,
-<a name="l00071"></a>00071             *t=newdata-&gt;magnitude, *te=t+newdata-&gt;length;
-<a name="l00072"></a>00072         <span class="keywordflow">while</span> (s!=se) *t++ = *s++;
-<a name="l00073"></a>00073         <span class="keywordflow">while</span> (t &lt; te) *t++ = 0;
-<a name="l00074"></a>00074 
-<a name="l00075"></a>00075         <span class="keywordflow">if</span> (--olddata-&gt;copies == 0) <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a3465b5d474bf9db2df3567fe68e15d33">deallocate</a>(olddata);
-<a name="l00076"></a>00076         <span class="keywordflow">return</span> newdata;
-<a name="l00077"></a>00077     }
-<a name="l00078"></a>00078 }
-<a name="l00079"></a>00079 
-<a name="l00080"></a>00080 data_t&lt;&gt; *<a class="code" href="namespaceboost_1_1xint_1_1detail.html#ab5aa26edc4b7699f3ff5d18729732b71">duplicate</a>(data_t&lt;&gt; *olddata, <span class="keywordtype">size_t</span> extra) {
-<a name="l00081"></a>00081     data_t&lt;&gt; *r = <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a092b8b90955e65e858dfbdd1cc35b960">allocate</a>(olddata-&gt;length+extra, 0);
-<a name="l00082"></a>00082     r-&gt;length = olddata-&gt;length;
-<a name="l00083"></a>00083     r-&gt;copies=1;
-<a name="l00084"></a>00084 
-<a name="l00085"></a>00085     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *s = olddata-&gt;magnitude, *se = s + olddata-&gt;length,
-<a name="l00086"></a>00086         *t = r-&gt;magnitude, *te = t + olddata-&gt;length + extra;
-<a name="l00087"></a>00087     <span class="keywordflow">while</span> (s!=se) *t++ = *s++;
-<a name="l00088"></a>00088     <span class="keywordflow">while</span> (t &lt; te) *t++ = 0;
-<a name="l00089"></a>00089 
-<a name="l00090"></a>00090     <span class="keywordflow">if</span> (olddata &amp;&amp; --olddata-&gt;copies == 0) <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a3465b5d474bf9db2df3567fe68e15d33">deallocate</a>(olddata);
-<a name="l00091"></a>00091     <span class="keywordflow">return</span> r;
-<a name="l00092"></a>00092 }
-<a name="l00093"></a>00093 
-<a name="l00094"></a>00094 data_t&lt;&gt; *<a class="code" href="namespaceboost_1_1xint_1_1detail.html#ab5aa26edc4b7699f3ff5d18729732b71">duplicate</a>(data_t&lt;&gt; *olddata, data_t&lt;&gt; *data_to_copy, <span class="keywordtype">size_t</span> extra) {
-<a name="l00095"></a>00095     <span class="keywordflow">if</span> (!olddata || olddata-&gt;copies &gt; 1 || data_to_copy-&gt;length + extra &gt;
-<a name="l00096"></a>00096         olddata-&gt;max_length)
-<a name="l00097"></a>00097     {
-<a name="l00098"></a>00098         data_t&lt;&gt; *r = <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a092b8b90955e65e858dfbdd1cc35b960">allocate</a>(data_to_copy-&gt;length+extra, 0);
-<a name="l00099"></a>00099         r-&gt;length = data_to_copy-&gt;length + extra;
-<a name="l00100"></a>00100         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *s = data_to_copy-&gt;magnitude, *se = s + data_to_copy-&gt;length,
-<a name="l00101"></a>00101             *t = r-&gt;magnitude, *te = t + r-&gt;length;
-<a name="l00102"></a>00102         <span class="keywordflow">while</span> (s!=se) *t++ = *s++;
-<a name="l00103"></a>00103         <span class="keywordflow">while</span> (t &lt; te) *t++ = 0;
-<a name="l00104"></a>00104         r-&gt;copies=1;
-<a name="l00105"></a>00105         <span class="keywordflow">if</span> (olddata &amp;&amp; --olddata-&gt;copies == 0) <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a3465b5d474bf9db2df3567fe68e15d33">deallocate</a>(olddata);
-<a name="l00106"></a>00106         <span class="keywordflow">return</span> r;
-<a name="l00107"></a>00107     } <span class="keywordflow">else</span> {
-<a name="l00108"></a>00108         data_t&lt;&gt; *r = olddata;
-<a name="l00109"></a>00109         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *s = data_to_copy-&gt;magnitude, *se = s + data_to_copy-&gt;length,
-<a name="l00110"></a>00110             *t = r-&gt;magnitude, *te = t + r-&gt;length + extra;
-<a name="l00111"></a>00111         <span class="keywordflow">while</span> (s != se) *t++ = *s++;
-<a name="l00112"></a>00112         <span class="keywordflow">while</span> (t &lt; te) *t++ = 0;
-<a name="l00113"></a>00113         r-&gt;length = data_to_copy-&gt;length;
-<a name="l00114"></a>00114         <span class="keywordflow">return</span> r;
-<a name="l00115"></a>00115     }
-<a name="l00116"></a>00116 }
-<a name="l00117"></a>00117 
-<a name="l00118"></a>00118 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a3465b5d474bf9db2df3567fe68e15d33">deallocate</a>(data_t&lt;&gt; *data) {
-<a name="l00119"></a>00119     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *digits=<span class="keyword">reinterpret_cast&lt;</span><a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>*<span class="keyword">&gt;</span>(data);
-<a name="l00120"></a>00120 
-<a name="l00121"></a>00121 <span class="preprocessor">    #ifdef XINT_SECURE</span>
-<a name="l00122"></a>00122 <span class="preprocessor"></span>    <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *p = digits, *pe = p + data-&gt;max_length + datasize;
-<a name="l00123"></a>00123     <span class="keywordflow">while</span> (p != pe) *p++ = 0;
-<a name="l00124"></a>00124 <span class="preprocessor">    #endif</span>
-<a name="l00125"></a>00125 <span class="preprocessor"></span>
-<a name="l00126"></a>00126     <span class="keyword">delete</span>[] digits;
-<a name="l00127"></a>00127 }
-<a name="l00128"></a>00128 
-<a name="l00129"></a>00129 } <span class="comment">// namespace detail</span>
-<a name="l00130"></a>00130 } <span class="comment">// namespace xint</span>
-<a name="l00131"></a>00131 } <span class="comment">// namespace boost</span>
+<a name="l00032"></a>00032 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4e055aa4ada37a5892b2605de2a953ae">zero</a>(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *p, <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *end) {
+<a name="l00033"></a>00033     <span class="keywordflow">while</span> (p &lt; end) *p++ = 0;
+<a name="l00034"></a>00034 }
+<a name="l00035"></a>00035 
+<a name="l00036"></a>00036 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4e055aa4ada37a5892b2605de2a953ae">zero</a>(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *p, <span class="keywordtype">size_t</span> size) {
+<a name="l00037"></a>00037     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4e055aa4ada37a5892b2605de2a953ae">zero</a>(p, p + size);
+<a name="l00038"></a>00038 }
+<a name="l00039"></a>00039 
+<a name="l00040"></a>00040 data_t *<a class="code" href="namespaceboost_1_1xint_1_1detail.html#af1f0f3f0daacef4f7c496378bf6bdfd8">allocate</a>(<span class="keywordtype">size_t</span> max_digits, <span class="keywordtype">size_t</span> initial_length, <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> mask) {
+<a name="l00041"></a>00041     max_digits = (std::max)(max_digits, minimum_digits);
+<a name="l00042"></a>00042     <span class="keywordtype">size_t</span> count = max_digits - digits_in_struct + datasize;
+<a name="l00043"></a>00043 
+<a name="l00044"></a>00044     <span class="keywordflow">try</span> {
+<a name="l00045"></a>00045 <span class="preprocessor">        #ifdef VALGRIND_COMPATIBLE</span>
+<a name="l00046"></a>00046 <span class="preprocessor"></span>            <span class="keywordtype">void</span> *storage = malloc(count * <span class="keyword">sizeof</span>(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>));
+<a name="l00047"></a>00047             data_t *r = <span class="keyword">new</span>(storage) data_t;
+<a name="l00048"></a>00048 <span class="preprocessor">        #else</span>
+<a name="l00049"></a>00049 <span class="preprocessor"></span>            <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *storage(<span class="keyword">new</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>[count]);
+<a name="l00050"></a>00050             data_t *r = <span class="keyword">new</span>(<span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">void</span>*<span class="keyword">&gt;</span>(storage)) data_t;
+<a name="l00051"></a>00051 <span class="preprocessor">        #endif</span>
+<a name="l00052"></a>00052 <span class="preprocessor"></span>        r-&gt;copies=0;
+<a name="l00053"></a>00053         r-&gt;length=(std::min)(initial_length, max_digits);
+<a name="l00054"></a>00054         r-&gt;max_length=max_digits;
+<a name="l00055"></a>00055         r-&gt;fixed_mask=mask;
+<a name="l00056"></a>00056         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4e055aa4ada37a5892b2605de2a953ae">zero</a>(r-&gt;magnitude, r-&gt;length);
+<a name="l00057"></a>00057         <span class="keywordflow">return</span> r;
+<a name="l00058"></a>00058     } <span class="keywordflow">catch</span> (std::bad_alloc&amp;) {
+<a name="l00059"></a>00059         <span class="keywordflow">throw</span> exceptions::overflow_error(<span class="stringliteral">&quot;Out of memory allocating integer&quot;</span>);
+<a name="l00060"></a>00060     }
+<a name="l00061"></a>00061 }
+<a name="l00062"></a>00062 
+<a name="l00063"></a>00063 data_t *<a class="code" href="namespaceboost_1_1xint_1_1detail.html#aa11166a9b6a4505bc8793ecdc31ad81f">allocate_fixed</a>(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> mask, <span class="keywordtype">size_t</span> max_digits, <span class="keywordtype">size_t</span> initial_length) {
+<a name="l00064"></a>00064     assert(mask != 0);
+<a name="l00065"></a>00065     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#af1f0f3f0daacef4f7c496378bf6bdfd8">allocate</a>(max_digits, initial_length, mask);
+<a name="l00066"></a>00066 }
+<a name="l00067"></a>00067 
+<a name="l00068"></a>00068 data_t *<a class="code" href="namespaceboost_1_1xint_1_1detail.html#ae0e0a61905f63dfe370ed6b4731fd076">allocate_fixed_zero</a>(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> mask, <span class="keywordtype">size_t</span> max_digits) {
+<a name="l00069"></a>00069     data_t *r=<a class="code" href="namespaceboost_1_1xint_1_1detail.html#af1f0f3f0daacef4f7c496378bf6bdfd8">allocate</a>(max_digits, 1, mask);
+<a name="l00070"></a>00070     r-&gt;copies = 1;
+<a name="l00071"></a>00071     <span class="keywordflow">return</span> r;
+<a name="l00072"></a>00072 }
+<a name="l00073"></a>00073 
+<a name="l00074"></a>00074 data_t *<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a1883fadafa2eeb3e70dfd9032f35bbdd">reallocate</a>(data_t *olddata, <span class="keywordtype">size_t</span> newsize) {
+<a name="l00075"></a>00075     <span class="keywordflow">if</span> (olddata==0) {
+<a name="l00076"></a>00076         data_t *newdata=<a class="code" href="namespaceboost_1_1xint_1_1detail.html#af1f0f3f0daacef4f7c496378bf6bdfd8">allocate</a>(newsize);
+<a name="l00077"></a>00077         newdata-&gt;copies=1;
+<a name="l00078"></a>00078         <span class="keywordflow">return</span> newdata;
+<a name="l00079"></a>00079     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (olddata-&gt;fixed_mask != 0) {
+<a name="l00080"></a>00080         <span class="comment">// It&#39;s a fixed-size item, have to re-use it.</span>
+<a name="l00081"></a>00081         newsize = (std::min)(newsize, olddata-&gt;max_length);
+<a name="l00082"></a>00082         <span class="keywordflow">if</span> (olddata-&gt;length &lt; newsize) <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4e055aa4ada37a5892b2605de2a953ae">zero</a>(olddata-&gt;magnitude +
+<a name="l00083"></a>00083             olddata-&gt;length, olddata-&gt;magnitude + newsize);
+<a name="l00084"></a>00084         olddata-&gt;length = newsize;
+<a name="l00085"></a>00085         <span class="keywordflow">return</span> olddata;
+<a name="l00086"></a>00086     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (olddata-&gt;copies == 1 &amp;&amp; newsize &lt;= olddata-&gt;max_length) {
+<a name="l00087"></a>00087         <span class="comment">// We can re-use this data.</span>
+<a name="l00088"></a>00088         <span class="keywordflow">if</span> (olddata-&gt;length &lt; newsize) <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4e055aa4ada37a5892b2605de2a953ae">zero</a>(olddata-&gt;magnitude +
+<a name="l00089"></a>00089             olddata-&gt;length, olddata-&gt;magnitude + newsize);
+<a name="l00090"></a>00090         olddata-&gt;length = newsize;
+<a name="l00091"></a>00091         <span class="keywordflow">return</span> olddata;
+<a name="l00092"></a>00092     } <span class="keywordflow">else</span> {
+<a name="l00093"></a>00093         <span class="comment">// Have to allocate new data.</span>
+<a name="l00094"></a>00094         data_t *newdata=<a class="code" href="namespaceboost_1_1xint_1_1detail.html#af1f0f3f0daacef4f7c496378bf6bdfd8">allocate</a>(newsize, 0);
+<a name="l00095"></a>00095         newdata-&gt;copies = 1;
+<a name="l00096"></a>00096         newdata-&gt;length = newsize;
+<a name="l00097"></a>00097 
+<a name="l00098"></a>00098         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *s = olddata-&gt;magnitude, *se = s + olddata-&gt;length,
+<a name="l00099"></a>00099             *t = newdata-&gt;magnitude, *te = t + newdata-&gt;length;
+<a name="l00100"></a>00100         <span class="keywordflow">while</span> (s!=se) *t++ = *s++;
+<a name="l00101"></a>00101         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4e055aa4ada37a5892b2605de2a953ae">zero</a>(t, te);
+<a name="l00102"></a>00102 
+<a name="l00103"></a>00103         <span class="keywordflow">if</span> (--olddata-&gt;copies == 0) <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a44089260e9472ac378d3e2ed739e7e08">deallocate</a>(olddata);
+<a name="l00104"></a>00104         <span class="keywordflow">return</span> newdata;
+<a name="l00105"></a>00105     }
+<a name="l00106"></a>00106 }
+<a name="l00107"></a>00107 
+<a name="l00108"></a>00108 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a44089260e9472ac378d3e2ed739e7e08">deallocate</a>(data_t *data) {
+<a name="l00109"></a>00109     data-&gt;~data_t();
+<a name="l00110"></a>00110     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *digits=<span class="keyword">reinterpret_cast&lt;</span><a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>*<span class="keyword">&gt;</span>(data);
+<a name="l00111"></a>00111 
+<a name="l00112"></a>00112 <span class="preprocessor">    #ifdef XINT_SECURE</span>
+<a name="l00113"></a>00113 <span class="preprocessor"></span>    <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4e055aa4ada37a5892b2605de2a953ae">zero</a>(digits, data-&gt;max_length + datasize - digits_in_struct);
+<a name="l00114"></a>00114 <span class="preprocessor">    #endif</span>
+<a name="l00115"></a>00115 <span class="preprocessor"></span>
+<a name="l00116"></a>00116 <span class="preprocessor">    #ifdef VALGRIND_COMPATIBLE</span>
+<a name="l00117"></a>00117 <span class="preprocessor"></span>        free(digits);
+<a name="l00118"></a>00118 <span class="preprocessor">    #else</span>
+<a name="l00119"></a>00119 <span class="preprocessor"></span>        <span class="keyword">delete</span>[] digits;
+<a name="l00120"></a>00120 <span class="preprocessor">    #endif</span>
+<a name="l00121"></a>00121 <span class="preprocessor"></span>}
+<a name="l00122"></a>00122 
+<a name="l00124"></a>00124 <span class="comment">// bitqueue_t functions</span>
+<a name="l00125"></a>00125 
+<a name="l00126"></a><a class="code" href="classboost_1_1xint_1_1detail_1_1bitqueue__t.html#a9c77b31a13dd08ae79a087b27a414cbf">00126</a> <span class="keywordtype">void</span> <a class="code" href="classboost_1_1xint_1_1detail_1_1bitqueue__t.html#a9c77b31a13dd08ae79a087b27a414cbf">bitqueue_t::push</a>(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a> bits, <span class="keywordtype">size_t</span> count) {
+<a name="l00127"></a>00127     <span class="keywordflow">if</span> (count &lt; ddbits) {
+<a name="l00128"></a>00128         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a> mask = (<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a>(1) &lt;&lt; count) - 1;
+<a name="l00129"></a>00129         bits &amp;= mask;
+<a name="l00130"></a>00130     }
+<a name="l00131"></a>00131 
+<a name="l00132"></a>00132     <span class="keywordflow">if</span> (pending.empty()) {
+<a name="l00133"></a>00133         pending.push(std::make_pair(bits, count));
+<a name="l00134"></a>00134     } <span class="keywordflow">else</span> {
+<a name="l00135"></a>00135         indata_t &amp;n(pending.back());
+<a name="l00136"></a>00136         <span class="keywordflow">if</span> (n.second + count &lt;= ddbits) {
+<a name="l00137"></a>00137             n.first |= bits &lt;&lt; n.second;
+<a name="l00138"></a>00138             n.second += count;
+<a name="l00139"></a>00139         } <span class="keywordflow">else</span> {
+<a name="l00140"></a>00140             pending.push(std::make_pair(bits, count));
+<a name="l00141"></a>00141         }
+<a name="l00142"></a>00142     }
+<a name="l00143"></a>00143     bits_pending += count;
+<a name="l00144"></a>00144 }
+<a name="l00145"></a>00145 
+<a name="l00146"></a><a class="code" href="classboost_1_1xint_1_1detail_1_1bitqueue__t.html#abb4ca67f80032f3a9f76981e8c8381cd">00146</a> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a> <a class="code" href="classboost_1_1xint_1_1detail_1_1bitqueue__t.html#abb4ca67f80032f3a9f76981e8c8381cd">bitqueue_t::pop</a>(<span class="keywordtype">size_t</span> requestedbits) {
+<a name="l00147"></a>00147     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a> buffer = 0;
+<a name="l00148"></a>00148     <span class="keywordtype">size_t</span> bits_in_buffer = 0;
+<a name="l00149"></a>00149     <span class="keywordflow">while</span> (bits_in_buffer &lt; requestedbits &amp;&amp; !pending.empty()) {
+<a name="l00150"></a>00150         indata_t &amp;n(pending.front());
+<a name="l00151"></a>00151         <span class="keywordtype">size_t</span> maxbits = requestedbits - bits_in_buffer, actualbits =
+<a name="l00152"></a>00152             (std::min)(n.second, maxbits);
+<a name="l00153"></a>00153         buffer |= (n.first &lt;&lt; bits_in_buffer);
+<a name="l00154"></a>00154 
+<a name="l00155"></a>00155         n.first &gt;&gt;= actualbits;
+<a name="l00156"></a>00156         n.second -= actualbits;
+<a name="l00157"></a>00157         bits_in_buffer += actualbits;
+<a name="l00158"></a>00158         bits_pending -= actualbits;
+<a name="l00159"></a>00159 
+<a name="l00160"></a>00160         <span class="keywordflow">if</span> (n.second == 0) pending.pop();
+<a name="l00161"></a>00161     }
+<a name="l00162"></a>00162     <span class="keywordflow">return</span> (buffer &amp; ((<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a>(1) &lt;&lt; requestedbits) - 1));
+<a name="l00163"></a>00163 }
+<a name="l00164"></a>00164 
+<a name="l00165"></a>00165 } <span class="comment">// namespace detail</span>
+<a name="l00166"></a>00166 } <span class="comment">// namespace xint</span>
+<a name="l00167"></a>00167 } <span class="comment">// namespace boost</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sat Apr 17 20:02:57 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Apr 30 00:24:24 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

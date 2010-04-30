@@ -3,7 +3,6 @@
 \section sinterface Interface
 - \subpage r_interface
 - \subpage r_interface_design_only
-- \subpage r_core
 
 \section scow Copy-on-Write
 - \subpage r_cow
@@ -11,6 +10,7 @@
 
 \section snan Not-a-Number and The nothrow_integer Type
 - \subpage r_nan
+- \subpage r_core
 - \subpage r_exception_blocking
 - \subpage r_negzero
 

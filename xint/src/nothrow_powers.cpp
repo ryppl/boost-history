@@ -16,7 +16,7 @@
            powers of a number.
 */
 
-#include "../boost/xint/xint.hpp"
+#include "../boost/xint/nothrow_integer.hpp"
 
 namespace boost {
 namespace xint {
@@ -25,13 +25,15 @@ namespace xint {
 nothrow_integer nothrow_pow2(size_t e) {
     nothrow_integer r;
     setbit(r, e);
-    return r;
+    return BOOST_XINT_MOVE(r);
 }
 
 //! \copydoc xint::sqr(const integer&)
 nothrow_integer sqr(const nothrow_integer& n) {
     try {
-        return nothrow_integer(sqr(xint::integer(n)));
+        nothrow_integer r;
+        detail::sqr(r, n);
+        return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
         return nothrow_integer::nan();
     }
@@ -40,7 +42,9 @@ nothrow_integer sqr(const nothrow_integer& n) {
 //! \copydoc xint::pow(const integer&, const integer&)
 nothrow_integer pow(const nothrow_integer& n, const nothrow_integer& e) {
     try {
-        return nothrow_integer(pow(xint::integer(n), xint::integer(e)));
+        nothrow_integer r;
+        detail::pow(r, n, e);
+        return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
         return nothrow_integer::nan();
     }
@@ -49,7 +53,9 @@ nothrow_integer pow(const nothrow_integer& n, const nothrow_integer& e) {
 //! \copydoc xint::factorial
 nothrow_integer nothrow_factorial(size_t n) {
     try {
-        return nothrow_integer(xint::factorial(n));
+        nothrow_integer r;
+        detail::factorial(r, n);
+        return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
         return nothrow_integer::nan();
     }

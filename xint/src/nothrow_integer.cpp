@@ -15,7 +15,7 @@
     \brief Contains the definitions for the \c nothrow_integer member functions.
 */
 
-#include "../boost/xint/xint.hpp"
+#include "../boost/xint/nothrow_integer.hpp"
 #include <memory> // for auto_ptr
 
 namespace boost {
@@ -35,7 +35,17 @@ nothrow_integer::nothrow_integer() {
     _attach_0();
 }
 
-//! \copydoc integer::integer(const integer&)
+/*! \brief Creates a copy of an existing integer.
+
+\param[in] b An existing integer. If passed a Not-a-Number, it will create
+another Not-a-Number.
+
+\note
+This library can use a \ref cow "copy-on-write technique", making copying (even
+of large numbers) a very inexpensive operation.
+
+\overload
+*/
 nothrow_integer::nothrow_integer(const nothrow_integer& b) {
     try {
         if (!b.is_nan()) _attach(b);
@@ -55,6 +65,20 @@ of large numbers) a very inexpensive operation.
 \overload
 */
 nothrow_integer::nothrow_integer(const integer& b) {
+    try {
+        _attach(b);
+    } catch (std::exception&) {
+        // Do nothing, automatically sets to Not-a-Number
+    }
+}
+
+/*! \brief Creates a nothrow_integer from any fixed_integer type.
+
+\param[in] b An existing fixed_integer.
+
+\overload
+*/
+nothrow_integer::nothrow_integer(const fixed_integer_any& b) {
     try {
         _attach(b);
     } catch (std::exception&) {
@@ -105,7 +129,8 @@ int nothrow_integer::sign(bool signed_zero) const {
 */
 size_t nothrow_integer::hex_digits() const {
     try {
-        return xint::nothrow_integer(*this).hex_digits();
+        size_t bits=_log2();
+        return (bits+3)/4; // Four bits per hex digit, rounded up
     } catch (std::exception&) {
         return 0;
     }
@@ -123,7 +148,7 @@ bool nothrow_integer::is_nan() const {
 
 nothrow_integer& nothrow_integer::operator+=(const nothrow_integer& addend) {
     try {
-        *this=nothrow_integer(xint::nothrow_integer(*this).operator+=(xint::nothrow_integer(addend)));
+        detail::add(*this, *this, addend);
     } catch (std::exception&) {
         *this=nothrow_integer::nan();
     }
@@ -132,40 +157,44 @@ nothrow_integer& nothrow_integer::operator+=(const nothrow_integer& addend) {
 
 nothrow_integer& nothrow_integer::operator-=(const nothrow_integer& subtrahend) {
     try {
-        *this=nothrow_integer(xint::nothrow_integer(*this).operator-=(xint::nothrow_integer(subtrahend)));
+        detail::subtract(*this, *this, subtrahend);
     } catch (std::exception&) {
         *this=nothrow_integer::nan();
     }
     return *this;
 }
 
-nothrow_integer& nothrow_integer::operator=(const nothrow_integer &c) {
+nothrow_integer& nothrow_integer::operator=(BOOST_XINT_COPY_ASSIGN_REF(
+    nothrow_integer) c)
+{
     try {
         _attach(c);
     } catch (std::exception&) {
-        _attach(0);
+        _base_attach(0);
     }
     return *this;
 }
 
-nothrow_integer& nothrow_integer::operator*=(const nothrow_integer& b) { *this=multiply(*this, b); return *this; }
-nothrow_integer& nothrow_integer::operator/=(const nothrow_integer& b) { *this=divide(*this, b); return *this; }
-nothrow_integer& nothrow_integer::operator%=(const nothrow_integer& b) { *this=mod(*this, b); return *this; }
+nothrow_integer  nothrow_integer::operator-() const { return negate(*this); }
 
-nothrow_integer& nothrow_integer::operator++() { *this += one(); return *this; }
-nothrow_integer& nothrow_integer::operator--() { *this -= one(); return *this; }
-nothrow_integer  nothrow_integer::operator++(int) { nothrow_integer s=*this; *this += one(); return s; }
-nothrow_integer  nothrow_integer::operator--(int) { nothrow_integer s=*this; *this -= one(); return s; }
+nothrow_integer& nothrow_integer::operator*=(const nothrow_integer& b) { detail::multiply(*this, *this, b); return *this; }
+nothrow_integer& nothrow_integer::operator/=(const nothrow_integer& b) { detail::divide(*this, *this, b); return *this; }
+nothrow_integer& nothrow_integer::operator%=(const nothrow_integer& b) { detail::mod(*this, *this, b); return *this; }
+
+nothrow_integer& nothrow_integer::operator++() { _make_unique(true); _increment(); return *this; }
+nothrow_integer& nothrow_integer::operator--() { _make_unique(true); _decrement(); return *this; }
+nothrow_integer  nothrow_integer::operator++(int) { nothrow_integer s=*this; _make_unique(true); _increment(); return BOOST_XINT_MOVE(s); }
+nothrow_integer  nothrow_integer::operator--(int) { nothrow_integer s=*this; _make_unique(true); _decrement(); return BOOST_XINT_MOVE(s); }
 
 nothrow_integer  nothrow_integer::operator<<(size_t shift) const { return shift_left(*this, shift); }
 nothrow_integer  nothrow_integer::operator>>(size_t shift) const { return shift_right(*this, shift); }
-nothrow_integer& nothrow_integer::operator&=(const nothrow_integer& n) { *this=bitwise_and(*this, n); return *this; }
-nothrow_integer& nothrow_integer::operator|=(const nothrow_integer& n) { *this=bitwise_or(*this, n); return *this; }
-nothrow_integer& nothrow_integer::operator^=(const nothrow_integer& n) { *this=bitwise_xor(*this, n); return *this; }
+nothrow_integer& nothrow_integer::operator&=(const nothrow_integer& n) { detail::bitwise_and(*this, *this, n); return *this; }
+nothrow_integer& nothrow_integer::operator|=(const nothrow_integer& n) { detail::bitwise_or(*this, *this, n); return *this; }
+nothrow_integer& nothrow_integer::operator^=(const nothrow_integer& n) { detail::bitwise_xor(*this, *this, n); return *this; }
 
 nothrow_integer& nothrow_integer::operator<<=(size_t shift) {
     try {
-        *this=nothrow_integer(xint::nothrow_integer(*this).operator<<=(shift));
+        detail::shift_left(*this, *this, shift);
     } catch (std::exception&) {
         *this=nothrow_integer::nan();
     }
@@ -174,7 +203,7 @@ nothrow_integer& nothrow_integer::operator<<=(size_t shift) {
 
 nothrow_integer& nothrow_integer::operator>>=(size_t shift) {
     try {
-        *this=nothrow_integer(xint::nothrow_integer(*this).operator>>=(shift));
+        detail::shift_right(*this, *this, shift);
     } catch (std::exception&) {
         *this=nothrow_integer::nan();
     }
@@ -182,29 +211,35 @@ nothrow_integer& nothrow_integer::operator>>=(size_t shift) {
 }
 
 const nothrow_integer& nothrow_integer::zero() {
-    if (cZero.get()==0) cZero.reset(new nothrow_integer(xint::nothrow_integer::zero()));
+    if (cZero.get()==0) {
+        cZero.reset(new nothrow_integer(integer::zero()));
+        cZero->_set_readonly();
+    }
     return *cZero;
 }
 
 const nothrow_integer& nothrow_integer::one() {
-    if (cOne.get()==0) cOne.reset(new nothrow_integer(xint::nothrow_integer::one()));
+    if (cOne.get()==0) {
+        cOne.reset(new nothrow_integer(integer::one()));
+        cOne->_set_readonly();
+    }
     return *cOne;
 }
 
 const nothrow_integer& nothrow_integer::nan() {
     if (cNaN.get()==0) {
-        nothrow_integer *n=new nothrow_integer();
-        n->_attach(0);
-        cNaN.reset(n);
+        cNaN.reset(new nothrow_integer());
+        cNaN->_base_attach(0);
+        cNaN->_set_readonly();
     }
     return *cNaN;
 }
 
-void nothrow_integer::_make_unique() {
+void nothrow_integer::_make_unique(bool) {
     try {
-        _base_make_unique();
+        detail::base_integer::_make_unique();
     } catch (std::exception&) {
-        _attach(0); // Turns it into a Not-a-Number.
+        _base_attach(0); // Turns it into a Not-a-Number.
     }
 }
 

@@ -18,9 +18,7 @@
 #ifndef BOOST_INCLUDED_XINT_NOTHROW_INTEGER_HPP
 #define BOOST_INCLUDED_XINT_NOTHROW_INTEGER_HPP
 
-#include "internals.hpp"
 #include "integer.hpp"
-#include <boost/type_traits.hpp>
 
 namespace boost {
 namespace xint {
@@ -32,19 +30,17 @@ namespace xint {
 
     There are only a few member functions; most of the functionality is
     implemented using standalone functions.
-
-    Functions that start with an underscore (such as \c _make_unique) are
-    intended for internal use only. They may change arbitrarily in future
-    versions.
 */
-class nothrow_integer: public detail::base_integer {
+class nothrow_integer: public detail::base_variable_length_integer {
     public:
 
     //! \name Constructors & Destructors
     //!@{
     nothrow_integer();
     nothrow_integer(const nothrow_integer& b);
-    nothrow_integer(const integer& b);
+    nothrow_integer(BOOST_XINT_RV_REF(nothrow_integer) b) { _swap(b); }
+    explicit nothrow_integer(const integer& b);
+    explicit nothrow_integer(const fixed_integer_any& b);
     explicit nothrow_integer(const std::string& str, size_t base=10);
     template <typename T> nothrow_integer(const T& n,
         typename boost::enable_if<boost::is_integral<T> >::type* = 0,
@@ -63,7 +59,16 @@ class nothrow_integer: public detail::base_integer {
         it.
     */
     //@{
-    nothrow_integer& operator=(const nothrow_integer &c);
+    nothrow_integer& operator=(BOOST_XINT_COPY_ASSIGN_REF(nothrow_integer) c);
+    nothrow_integer& operator=(BOOST_XINT_RV_REF(nothrow_integer) c) { _swap(c);
+        return *this; }
+    template <typename T> nothrow_integer& operator=(const T& n) {
+        nothrow_integer nn(n); _swap(nn); return *this; }
+
+    bool operator!() const { return _is_zero(); }
+    nothrow_integer operator-() const;
+    nothrow_integer& operator+() { return *this; }
+    const nothrow_integer& operator+() const { return *this; }
 
     nothrow_integer& operator+=(const nothrow_integer& b);
     nothrow_integer& operator-=(const nothrow_integer& b);
@@ -107,13 +112,13 @@ class nothrow_integer: public detail::base_integer {
     static const nothrow_integer& nan();
     //@}
 
-    /*! \name Internal Functions
-        \brief These functions allow access to the internals of the
-               %integer. They are intended for internal use only.
-    */
-    //@{
-    void _make_unique();
-    //@}
+    //! \brief For internal use only.
+    void _make_unique(bool);
+
+    typedef base_divide_t<nothrow_integer> divide_t;
+
+    private:
+    BOOST_XINT_COPYABLE_AND_MOVABLE(nothrow_integer)
 };
 
 //! \name Mathematical primitives
@@ -127,8 +132,8 @@ nothrow_integer multiply(const nothrow_integer& n, const nothrow_integer&
     multiplicand);
 nothrow_integer divide(const nothrow_integer& dividend, const nothrow_integer&
     divisor);
-std::pair<nothrow_integer, nothrow_integer> divide_r(const nothrow_integer&
-    dividend, const nothrow_integer& divisor);
+nothrow_integer::divide_t divide_r(const nothrow_integer& dividend, const
+    nothrow_integer& divisor);
 //!@}
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -150,8 +155,8 @@ template <typename T> T to(const nothrow_integer& n);
 std::string to_string(const nothrow_integer& n, size_t base=10, bool upperCase =
     false);
 nothrow_integer nothrow_from_string(const std::string& str, size_t base=10);
-std::string to_binary(const nothrow_integer& n);
-nothrow_integer nothrow_from_binary(const std::string& s);
+xint::binary_t to_binary(const nothrow_integer& n, size_t bits=0);
+nothrow_integer nothrow_from_binary(const xint::binary_t& s, size_t bits=0);
 //!@}
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -217,7 +222,6 @@ nothrow_integer nothrow_random_prime(size_t sizeInBits, callback_t callback =
     These act exactly the same as for the built-in %integer types.
 */
 //!@{
-bool operator!(const nothrow_integer& n1);
 bool operator<(const nothrow_integer& n1, const nothrow_integer& n2);
 bool operator>(const nothrow_integer& n1, const nothrow_integer& n2);
 bool operator<=(const nothrow_integer& n1, const nothrow_integer& n2);
@@ -225,8 +229,6 @@ bool operator>=(const nothrow_integer& n1, const nothrow_integer& n2);
 bool operator==(const nothrow_integer& n1, const nothrow_integer& n2);
 bool operator!=(const nothrow_integer& n1, const nothrow_integer& n2);
 
-const nothrow_integer& operator+(const nothrow_integer& a);
-nothrow_integer operator-(const nothrow_integer& a);
 nothrow_integer operator+(const nothrow_integer& n1, const nothrow_integer& n2);
 nothrow_integer operator-(const nothrow_integer& n1, const nothrow_integer& n2);
 nothrow_integer operator*(const nothrow_integer& n1, const nothrow_integer& n2);
@@ -268,9 +270,9 @@ template <typename T> nothrow_integer::nothrow_integer(const T& n,
     typename boost::enable_if<boost::is_signed<T> >::type*)
 {
     try {
-        *this=nothrow_integer(xint::nothrow_integer(n));
+        _set_signed(n);
     } catch (std::exception&) {
-        _attach(0);
+        _base_attach(0);
     }
 }
 
@@ -291,9 +293,9 @@ template <typename T> nothrow_integer::nothrow_integer(const T& n,
     typename boost::enable_if<boost::is_unsigned<T> >::type*)
 {
     try {
-        *this=nothrow_integer(xint::nothrow_integer(n));
+        _set_unsigned(n);
     } catch (std::exception&) {
-        _attach(0);
+        _base_attach(0);
     }
 }
 
@@ -304,7 +306,7 @@ template <typename T> nothrow_integer::nothrow_integer(const T& n,
 template <typename T>
 T to(const nothrow_integer& n) {
     try {
-        return to<T>(xint::nothrow_integer(n));
+        return detail::to<T>(n);
     } catch (std::exception&) {
         return 0;
     }
@@ -320,7 +322,7 @@ inline std::basic_ostream<charT,traits>& operator<<(std::basic_ostream<charT,
         out << detail::nan_text;
         return out;
     } else {
-        return xint::operator<<(out, xint::nothrow_integer(n));
+        return detail::operator<<(out, n);
     }
 }
 
@@ -331,21 +333,30 @@ inline std::basic_istream<charT,traits>& operator>>(std::basic_istream<charT,
     if (in.peek()=='#') {
         // Must be either #NaN# or an error
         char buffer[6];
-        std::streamsize size=in.readsome(buffer, 5);
-        buffer[size]=0;
+        
+        // These are efficient and safe, but MSVC complains about them anyway.
+        //std::streamsize size=in.readsome(buffer, 5);
+        //buffer[size]=0;
+        
+        // Replacing them with these.
+        char *p = buffer, *pe = p + 5;
+        while (p != pe) in >> *p++;
+        *p = 0;
+        
         std::string str(buffer);
 
         if (str==detail::nan_text) n=nothrow_integer::nan();
         else in.setstate(std::ios::failbit);
+        return in;
     } else {
-        xint::nothrow_integer nn;
-        xint::operator>>(in, nn);
-        if (in) n=nn;
+        return detail::operator>>(in, n);
     }
-
-    return in;
 }
 //!@}
+
+inline void swap(nothrow_integer& left, nothrow_integer& right) {
+    left._swap(right);
+}
 
 } // namespace xint
 } // namespace boost

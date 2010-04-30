@@ -15,7 +15,9 @@
     \brief Contains the definitions for data_t allocation functions.
 */
 
-#include "../boost/xint/xint.hpp"
+#include "../boost/xint/internals.hpp"
+
+#define VALGRIND_COMPATIBLE
 
 #include <cassert>
 
@@ -23,107 +25,141 @@ namespace boost {
 namespace xint {
 namespace detail {
 
-static size_t datasize=(sizeof(data_t<>)+sizeof(digit_t)-1) / sizeof(digit_t);
+static const size_t datasize = (sizeof(data_t)+sizeof(digit_t)-1) /
+    sizeof(digit_t);
+static const size_t minimum_digits = 1, digits_in_struct = 1;
 
-data_t<> *allocate(size_t max_digits, size_t initial_length) {
-    if (max_digits < 1) max_digits = 1;
-    size_t count = max_digits - 1 + datasize;
+void zero(digit_t *p, digit_t *end) {
+    while (p < end) *p++ = 0;
+}
+
+void zero(digit_t *p, size_t size) {
+    zero(p, p + size);
+}
+
+data_t *allocate(size_t max_digits, size_t initial_length, digit_t mask) {
+    max_digits = (std::max)(max_digits, minimum_digits);
+    size_t count = max_digits - digits_in_struct + datasize;
 
     try {
-        digit_t *storage(new digit_t[count]);
-        data_t<> *r=reinterpret_cast<data_t<>*>(storage);
+        #ifdef VALGRIND_COMPATIBLE
+            void *storage = malloc(count * sizeof(digit_t));
+            data_t *r = new(storage) data_t;
+        #else
+            digit_t *storage(new digit_t[count]);
+            data_t *r = new(reinterpret_cast<void*>(storage)) data_t;
+        #endif
         r->copies=0;
         r->length=(std::min)(initial_length, max_digits);
         r->max_length=max_digits;
-
-        digit_t *p = r->magnitude, *pe = p + r->length;
-        while (p!=pe) *p++=0;
+        r->fixed_mask=mask;
+        zero(r->magnitude, r->length);
         return r;
     } catch (std::bad_alloc&) {
         throw exceptions::overflow_error("Out of memory allocating integer");
     }
 }
 
-data_t<> *reallocate(data_t<> *olddata, size_t newsize) {
+data_t *allocate_fixed(digit_t mask, size_t max_digits, size_t initial_length) {
+    assert(mask != 0);
+    return allocate(max_digits, initial_length, mask);
+}
+
+data_t *allocate_fixed_zero(digit_t mask, size_t max_digits) {
+    data_t *r=allocate(max_digits, 1, mask);
+    r->copies = 1;
+    return r;
+}
+
+data_t *reallocate(data_t *olddata, size_t newsize) {
     if (olddata==0) {
-        data_t<> *newdata=allocate(newsize);
+        data_t *newdata=allocate(newsize);
         newdata->copies=1;
         return newdata;
-    } if (olddata->copies == 1 && newsize <= olddata->max_length) {
+    } else if (olddata->fixed_mask != 0) {
+        // It's a fixed-size item, have to re-use it.
+        newsize = (std::min)(newsize, olddata->max_length);
+        if (olddata->length < newsize) zero(olddata->magnitude +
+            olddata->length, olddata->magnitude + newsize);
+        olddata->length = newsize;
+        return olddata;
+    } else if (olddata->copies == 1 && newsize <= olddata->max_length) {
         // We can re-use this data.
-        if (olddata->length < newsize) {
-            digit_t *p=olddata->magnitude + olddata->length,
-                *pe=olddata->magnitude + newsize;
-            while (p!=pe) *p++=0;
-        } else {
-            digit_t *p=olddata->magnitude + olddata->length,
-                *pe=olddata->magnitude + newsize;
-            while (p!=pe) *(--p)=0;
-        }
+        if (olddata->length < newsize) zero(olddata->magnitude +
+            olddata->length, olddata->magnitude + newsize);
         olddata->length = newsize;
         return olddata;
     } else {
         // Have to allocate new data.
-        data_t<> *newdata=allocate(newsize, 0);
-        newdata->copies=1;
-        newdata->length=newsize;
-        digit_t *s=olddata->magnitude, *se=s+olddata->length,
-            *t=newdata->magnitude, *te=t+newdata->length;
+        data_t *newdata=allocate(newsize, 0);
+        newdata->copies = 1;
+        newdata->length = newsize;
+
+        digit_t *s = olddata->magnitude, *se = s + olddata->length,
+            *t = newdata->magnitude, *te = t + newdata->length;
         while (s!=se) *t++ = *s++;
-        while (t < te) *t++ = 0;
+        zero(t, te);
 
         if (--olddata->copies == 0) deallocate(olddata);
         return newdata;
     }
 }
 
-data_t<> *duplicate(data_t<> *olddata, size_t extra) {
-    data_t<> *r = allocate(olddata->length+extra, 0);
-    r->length = olddata->length;
-    r->copies=1;
-
-    digit_t *s = olddata->magnitude, *se = s + olddata->length,
-        *t = r->magnitude, *te = t + olddata->length + extra;
-    while (s!=se) *t++ = *s++;
-    while (t < te) *t++ = 0;
-
-    if (olddata && --olddata->copies == 0) deallocate(olddata);
-    return r;
-}
-
-data_t<> *duplicate(data_t<> *olddata, data_t<> *data_to_copy, size_t extra) {
-    if (!olddata || olddata->copies > 1 || data_to_copy->length + extra >
-        olddata->max_length)
-    {
-        data_t<> *r = allocate(data_to_copy->length+extra, 0);
-        r->length = data_to_copy->length + extra;
-        digit_t *s = data_to_copy->magnitude, *se = s + data_to_copy->length,
-            *t = r->magnitude, *te = t + r->length;
-        while (s!=se) *t++ = *s++;
-        while (t < te) *t++ = 0;
-        r->copies=1;
-        if (olddata && --olddata->copies == 0) deallocate(olddata);
-        return r;
-    } else {
-        data_t<> *r = olddata;
-        digit_t *s = data_to_copy->magnitude, *se = s + data_to_copy->length,
-            *t = r->magnitude, *te = t + r->length + extra;
-        while (s != se) *t++ = *s++;
-        while (t < te) *t++ = 0;
-        r->length = data_to_copy->length;
-        return r;
-    }
-}
-
-void deallocate(data_t<> *data) {
+void deallocate(data_t *data) {
+    data->~data_t();
     digit_t *digits=reinterpret_cast<digit_t*>(data);
 
     #ifdef XINT_SECURE
-    digit_t *p = digits, *pe = p + data->max_length + datasize;
-    while (p != pe) *p++ = 0;
+    zero(digits, data->max_length + datasize - digits_in_struct);
     #endif
 
-    delete[] digits;
+    #ifdef VALGRIND_COMPATIBLE
+        free(digits);
+    #else
+        delete[] digits;
+    #endif
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// bitqueue_t functions
+
+void bitqueue_t::push(doubledigit_t bits, size_t count) {
+    if (count < ddbits) {
+        doubledigit_t mask = (doubledigit_t(1) << count) - 1;
+        bits &= mask;
+    }
+
+    if (pending.empty()) {
+        pending.push(std::make_pair(bits, count));
+    } else {
+        indata_t &n(pending.back());
+        if (n.second + count <= ddbits) {
+            n.first |= bits << n.second;
+            n.second += count;
+        } else {
+            pending.push(std::make_pair(bits, count));
+        }
+    }
+    bits_pending += count;
+}
+
+doubledigit_t bitqueue_t::pop(size_t requestedbits) {
+    doubledigit_t buffer = 0;
+    size_t bits_in_buffer = 0;
+    while (bits_in_buffer < requestedbits && !pending.empty()) {
+        indata_t &n(pending.front());
+        size_t maxbits = requestedbits - bits_in_buffer, actualbits =
+            (std::min)(n.second, maxbits);
+        buffer |= (n.first << bits_in_buffer);
+
+        n.first >>= actualbits;
+        n.second -= actualbits;
+        bits_in_buffer += actualbits;
+        bits_pending -= actualbits;
+
+        if (n.second == 0) pending.pop();
+    }
+    return (buffer & ((doubledigit_t(1) << requestedbits) - 1));
 }
 
 } // namespace detail

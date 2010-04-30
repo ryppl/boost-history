@@ -11,7 +11,8 @@
     This file contains the functions that test the low-level bit manipulations.
 */
 
-#include <boost/xint/xint.hpp>
+#include <boost/xint/integer.hpp>
+#include <boost/xint/fixed_integer.hpp>
 
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
@@ -24,89 +25,125 @@ namespace xint {
 
 using std::hex;
 
-BOOST_AUTO_TEST_CASE(testBitManipulations) {
+BOOST_AUTO_TEST_CASE(test_unfixed_bit_shifting) {
     const std::string nSrc="1a2b3c4d5e6f7f6e5d4c3b2a1a2b3c4d5e6f7f6e5d4c3b2a1";
     integer n(nSrc, 16), n2;
 
     // If this fails, abort the rest of the test.
-    if (to_string(n, 16) != nSrc) BOOST_FAIL("failure in reading string, can't test");
+    if (to_string(n, 16) != nSrc) BOOST_FAIL("failure in reading string, can't "
+        "test");
+
+    // Null-shifting
+
+    BOOST_CHECK_EQUAL(n >> 0, n);
+    BOOST_CHECK_EQUAL(n << 0, n);
 
     // Bits only
 
     n2 = n << 4;
-    if (to_string(n2, 16) != nSrc+'0') {
-        std::ostringstream out;
-        out << "testBitManipulations: << 4 failure, " << hex << n2;
-        BOOST_ERROR(out.str());
-    }
+    BOOST_CHECK_EQUAL(to_string(n2, 16), nSrc+'0');
 
     n2 >>= 4;
-    if (n2 != n) {
-        std::ostringstream out;
-        out << "testBitManipulations: >>= 4 failure, " << hex << n2;
-        BOOST_ERROR(out.str());
-    }
+    BOOST_CHECK_EQUAL(n2, n);
 
     // Digits only
 
     const int cDigitsPerDigit=(detail::bits_per_digit / 4);
     n2 <<= detail::bits_per_digit;
-    if (to_string(n2, 16) != nSrc + std::string(cDigitsPerDigit, '0')) {
-        std::ostringstream out;
-        out << "testBitManipulations: <<= BpD failure, " << hex << n2;
-        BOOST_ERROR(out.str());
-    }
+    BOOST_CHECK_EQUAL(to_string(n2, 16), nSrc + std::string(cDigitsPerDigit, '0'));
 
     n2 >>= detail::bits_per_digit;
-    if (n2 != n) {
-        std::ostringstream out;
-        out << "testBitManipulations: >>= BpD failure, " << hex << n2;
-        BOOST_ERROR(out.str());
-    }
+    BOOST_CHECK_EQUAL(n2, n);
 
     // Bits and digits simultaaneously
 
     const int bits_per_digit2=(detail::bits_per_digit + detail::bits_per_digit/2);
     const int cDigitsPerDigit2=(bits_per_digit2 / 4);
     n2 <<= bits_per_digit2;
-    if (to_string(n2, 16) != nSrc + std::string(cDigitsPerDigit2, '0')) {
-        std::ostringstream out;
-        out << "testBitManipulations: <<= BpD2 failure, " << hex << n2;
-        BOOST_ERROR(out.str());
-    }
+    BOOST_CHECK_EQUAL(to_string(n2, 16), nSrc + std::string(cDigitsPerDigit2, '0'));
 
     n2 >>= bits_per_digit2;
-    if (n2 != n) {
-        std::ostringstream out;
-        out << "testBitManipulations: >>= BpD2 failure, " << hex << n2;
-        BOOST_ERROR(out.str());
-    }
+    BOOST_CHECK_EQUAL(n2, n);
 
     // Right-shift to oblivion
 
     n2 >>= (detail::bits_per_digit * n2._get_length());
-    if (n2.sign()!=0) {
-        std::ostringstream out;
-        out << "testBitManipulations: >>= inf failure, " << hex << n2;
-        BOOST_ERROR(out.str());
-    }
+    BOOST_CHECK_EQUAL(n2.sign(), 0);
 
     // Single-digit by bits
 
-    n=n2=0xEF;
+    n = n2 = 0xEF;
     n2 <<= 4;
-    if (to_string(n2, 16) != "ef0") {
-        std::ostringstream out;
-        out << "testBitManipulations: single <<= 4 failure, " << hex << n2;
-        BOOST_ERROR(out.str());
-    }
+    BOOST_CHECK_EQUAL(to_string(n2, 16), "ef0");
 
     n2 >>= 4;
-    if (n2 != n) {
-        std::ostringstream out;
-        out << "testBitManipulations: single >>= 4 failure, " << hex << n2;
-        BOOST_ERROR(out.str());
-    }
+    BOOST_CHECK_EQUAL(n2, n);
+}
+
+BOOST_AUTO_TEST_CASE(test_fixed_bit_shifting) {
+    const std::string nSrc="1a2b3c4d5e6f7f6e5d4c3b2a1";
+    fixed_integer<100> n(nSrc, 16), n2;
+
+    // If this fails, abort the rest of the test.
+    if (to_string(n, 16) != nSrc) BOOST_FAIL("failure in reading string, can't "
+        "test");
+
+    BOOST_MESSAGE("** Null-shifting");
+
+    BOOST_CHECK_EQUAL(n >> 0, n);
+    BOOST_CHECK_EQUAL(n << 0, n);
+
+    BOOST_MESSAGE("** Bits only");
+
+    n2 = n << 4;
+    BOOST_CHECK_EQUAL(to_string(n2, 16), nSrc.substr(1)+'0');
+
+    n2 >>= 4;
+    BOOST_CHECK_EQUAL(to_string(n2, 16), nSrc.substr(1));
+
+    BOOST_MESSAGE("** Digits only");
+
+    const int cDigitsPerDigit=(detail::bits_per_digit / 4);
+    n2 <<= detail::bits_per_digit;
+    BOOST_CHECK_EQUAL(to_string(n2, 16), nSrc.substr(cDigitsPerDigit) +
+        std::string(cDigitsPerDigit, '0'));
+
+    n2 >>= detail::bits_per_digit;
+    BOOST_CHECK_EQUAL(to_string(n2, 16), nSrc.substr(cDigitsPerDigit));
+
+    n2 = n >> detail::bits_per_digit;
+    BOOST_CHECK_EQUAL(to_string(n2, 16), nSrc.substr(0, nSrc.length() -
+        cDigitsPerDigit));
+
+    BOOST_MESSAGE("** Bits & digits both");
+
+    n2 = n << (detail::bits_per_digit + 4);
+    BOOST_CHECK_EQUAL(to_string(n2, 16), nSrc.substr(cDigitsPerDigit + 1) +
+        std::string(cDigitsPerDigit + 1, '0'));
+
+    n2 = n >> (detail::bits_per_digit + 4);
+    BOOST_CHECK_EQUAL(to_string(n2, 16), nSrc.substr(0, nSrc.length() -
+        cDigitsPerDigit -1));
+
+    BOOST_MESSAGE("** Left-shift to oblivion");
+
+    n2 <<= 100;
+    BOOST_CHECK_EQUAL(to_string(n2, 16), "0");
+}
+
+BOOST_AUTO_TEST_CASE(test_bitwise_operations) {
+    // These numbers look like mirror images, but they're deliberately not.
+    integer n("0123456789abcdefedcba9876543210", 16),
+        m("fedcba98765432100123456789abcdef", 16);
+
+    BOOST_CHECK_EQUAL(m | n, integer("FEDEBEDE7EDEBEDEFFFFFFFFFFFFFFFF", 16));
+    BOOST_CHECK_EQUAL(m ^ n, integer("FECE8ECE0ECE8ECEFFFFFFFFFFFFFFFF", 16));
+    BOOST_CHECK_EQUAL(m & n, integer("103010701030100000000000000000", 16));
+
+    fixed_integer<12> nn(0xABC), mm(0x123);
+    BOOST_CHECK_EQUAL(mm | nn, 0xBBF);
+    BOOST_CHECK_EQUAL(mm ^ nn, 0xB9F);
+    BOOST_CHECK_EQUAL(mm & nn, 0x20);
 }
 
 } // namespace xint

@@ -12,29 +12,26 @@
 */
 
 /*! \file
-    \brief Functions for blockable integers that don't fall into any other
-           category.
+    \brief Functions for the \c nothrow_integer type that don't fall into any
+           other category.
 */
 
-#include "../boost/xint/xint.hpp"
+#include "../boost/xint/nothrow_integer.hpp"
 
 namespace boost {
 namespace xint {
-namespace blockable {
 
-/*! \copydoc core::log2
+/*! \copydoc xint::log2(const integer&)
 
-\note If exceptions are blocked, returns 0 instead of throwing.
+\note Returns 0 instead of throwing.
 */
-size_t log2(const integer& n) {
+size_t log2(const nothrow_integer& n) {
     try {
-        return log2(core::integer(n));
+        return (n._is_nan() ? 0 : n._log2());
     } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        else return 0;
+        return 0;
     }
 }
 
-} // namespace blockable
 } // namespace xint
 } // namespace boost

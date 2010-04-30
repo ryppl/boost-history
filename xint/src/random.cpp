@@ -24,14 +24,13 @@
 
 #include "../boost/xint/integer.hpp"
 #include "../boost/xint/random.hpp"
-#include "../boost/xint/exceptions.hpp"
 #include <vector>
 #include <sstream>
 #include <fstream>
 #include <ctime>
 #include <memory> // for auto_ptr
 #include <boost/random/mersenne_twister.hpp>
-#include <boost/static_assert.hpp> //! \todo Move to random.cpp?
+#include <boost/static_assert.hpp>
 
 #ifdef XINT_THREADSAFE
     #include <boost/thread.hpp>
@@ -58,7 +57,15 @@ class generator_t {
 
     result_type operator()() { return mGeneratorObj->operator()(); }
 
-    static void set_generator(base_random_generator *p) { mGeneratorObj.reset(p); }
+    static void set_generator(base_random_generator *p) {
+        #ifdef XINT_THREADSAFE
+            mLock.lock();
+            mGeneratorObj.reset(p);
+            mLock.unlock();
+        #else
+            mGeneratorObj.reset(p);
+        #endif
+    }
 
     private:
     void init() {
@@ -188,6 +195,8 @@ strong_random_generator::result_type strong_random_generator::max
 
 /*! \brief Generates a random integer with specific attributes.
 
+- Complexity: O(n)
+
 \param[in] bits The maximum number of bits that you want the returned number to
 have.
 \param[in] high_bit_on If \c true, the returned number will have exactly the
@@ -211,31 +220,32 @@ integer random_by_size(size_t bits, bool high_bit_on, bool low_bit_on, bool
 {
     if (bits<=0) return integer::zero();
 
+    // Grab a bunch of bits
     generator_t randomGenerator;
-    const size_t cBitsPerIteration=std::numeric_limits<generator_t::result_type>::digits;
+    bitqueue_t bitqueue;
+    while (bitqueue.size() < bits) bitqueue.push(randomGenerator(),
+        std::numeric_limits<generator_t::result_type>::digits);
 
-    // Grab a set of random bits, of at least the specified size
-    size_t iterations = (bits+cBitsPerIteration-1) / cBitsPerIteration;
-    std::vector<generator_t::result_type> v;
-    for (size_t i=0; i<iterations; ++i) v.push_back(randomGenerator());
-
-    const char *vptr=(const char *)&v[0], *vptr_end=vptr+(v.size() * sizeof(generator_t::result_type));
-    integer p=from_binary(std::string(vptr, vptr_end));
+    // Stick them into an integer
+    integer p;
+    p._realloc((bits + bits_per_digit - 1) / bits_per_digit);
+    digit_t *pp = p._get_writable_digits(), *ppe = pp + p._get_length();
+    while (pp < ppe) *pp++ = static_cast<digit_t>(bitqueue.pop(bits_per_digit));
 
     // Trim it to the proper length
     size_t index=(bits/bits_per_digit);
     digit_t mask=(digit_t(1) << (bits % bits_per_digit))-1;
     if (mask==0) { mask=digit_mask; --index; }
-    p._get_digits()[index] &= mask;
-    for (digit_t *i=p._get_digits()+index+1,
-        *ie=p._get_digits()+p._get_length(); i<ie; ++i) *i=0;
+    p._get_writable_digits()[index] &= mask;
+    for (digit_t *i=p._get_writable_digits()+index+1,
+        *ie=p._get_writable_digits()+p._get_length(); i<ie; ++i) *i=0;
     p._cleanup();
 
     if (high_bit_on) setbit(p, bits-1);
     if (low_bit_on) setbit(p, 0);
     if (can_be_negative) p._set_negative(randomGenerator() & 0x01);
 
-    return p;
+    return BOOST_XINT_MOVE(p);
 }
 
 } // namespace xint

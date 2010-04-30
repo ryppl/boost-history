@@ -11,7 +11,8 @@
     This file contains the tests for the addition and subtraction functions.
 */
 
-#include <boost/xint/xint.hpp>
+#include <boost/xint/integer.hpp>
+#include <boost/xint/fixed_integer.hpp>
 
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
@@ -99,6 +100,49 @@ BOOST_AUTO_TEST_CASE(testNegativeZero) {
     BOOST_CHECK_EQUAL(a, 0);
     BOOST_CHECK_EQUAL(a.sign(), 0);
     BOOST_CHECK_EQUAL(a.sign(true), -1);
+}
+
+BOOST_AUTO_TEST_CASE(testIncrementVariable) {
+    integer one(1), zero(0), negative_one(-1);
+    BOOST_CHECK_EQUAL(++one, 2);
+    BOOST_CHECK_EQUAL(++zero, 1);
+    BOOST_CHECK_EQUAL(++negative_one, 0);
+
+    integer max1(detail::digit_mask);
+    BOOST_CHECK_EQUAL(++max1, detail::digit_overflowbit);
+}
+
+BOOST_AUTO_TEST_CASE(testIncrementFixed) {
+    fixed_integer<detail::bits_per_digit> one(1), zero(0), negative_one(-1);
+    BOOST_CHECK_EQUAL(++one, 2);
+    BOOST_CHECK_EQUAL(++zero, 1);
+    BOOST_CHECK_EQUAL(++negative_one, 0);
+
+    fixed_integer<detail::bits_per_digit> max1(detail::digit_mask);
+    BOOST_CHECK_EQUAL(++max1, 0);
+}
+
+BOOST_AUTO_TEST_CASE(testDecrementVariable) {
+    integer one(1), zero(0), negative_one(-1);
+    BOOST_CHECK_EQUAL(--one, 0);
+    BOOST_CHECK_EQUAL(--zero, -1);
+    BOOST_CHECK_EQUAL(--negative_one, -2);
+
+    integer min1(detail::digit_mask), expected(detail::digit_overflowbit);
+    min1._set_negative(true);
+    expected._set_negative(true);
+    BOOST_CHECK_EQUAL(--min1, expected);
+}
+
+BOOST_AUTO_TEST_CASE(testDecrementFixed) {
+    fixed_integer<detail::bits_per_digit> one(1), zero(0), negative_one(-1);
+    BOOST_CHECK_EQUAL(--one, 0);
+    BOOST_CHECK_EQUAL(--zero, -1);
+    BOOST_CHECK_EQUAL(--negative_one, -2);
+
+    fixed_integer<detail::bits_per_digit> min1(detail::digit_mask);
+    min1._set_negative(true);
+    BOOST_CHECK_EQUAL(--min1, 0);
 }
 
 } // namespace xint

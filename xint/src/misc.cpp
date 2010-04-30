@@ -15,7 +15,7 @@
     \brief Functions that don't fall into any other category.
 */
 
-#include "../boost/xint/xint.hpp"
+#include "../boost/xint/integer.hpp"
 
 namespace boost {
 namespace xint {
@@ -49,7 +49,9 @@ bool opt_thread_safe() {
 
 /*! \brief Get the log<sub>2</sub> value of an integer.
 
-\param[in] n The integer to operate on.
+- Complexity: O(1)
+
+\param[in] n The %integer to operate on.
 
 \returns The %integer log<sub>2</sub> value of the integer.
 
@@ -61,14 +63,12 @@ assuming that \c n is non-zero.
 Similar to the #highestbit function.
 */
 size_t log2(const integer& n) {
-    size_t r=detail::bits_per_digit * n._get_length();
-    detail::digit_t mask=detail::digit_hibit, d=n._get_digit(n._get_length()-1);
-    while (mask!=0) {
-        if ((mask & d)!=0) break;
-        mask>>=1;
-        --r;
-    }
-    return r;
+    return n._log2();
+}
+
+//! \copydoc log2(const integer&)
+size_t log2(const fixed_integer_any& n) {
+    return n._log2();
 }
 
 } // namespace xint

@@ -13,38 +13,35 @@
 
 /*! \file
     \brief Contains the definitions for functions related to prime numbers for
-           blockable integers.
+           the \c nothrow_integer type.
 */
 
-#include "../boost/xint/xint.hpp"
+#include "../boost/xint/nothrow_integer.hpp"
 
 namespace boost {
 namespace xint {
-namespace blockable {
 
-/*! \copydoc core::is_prime
+/*! \copydoc xint::is_prime(const integer&, callback_t)
 
-\note If exceptions are blocked, returns -1 instead of throwing.
+\note Returns -1 instead of throwing.
 */
-int is_prime(const integer& n, callback_t callback) {
+int is_prime(const nothrow_integer& n, callback_t callback) {
     try {
-        return is_prime(core::integer(n), callback);
+        return is_prime(xint::integer(n), callback);
     } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        else return -1;
+        return -1;
     }
 }
 
-//! \copydoc core::random_prime
-integer random_prime(size_t size_in_bits, callback_t callback) {
+//! \copydoc xint::random_prime
+nothrow_integer nothrow_random_prime(size_t size_in_bits, callback_t callback) {
     try {
-        return integer(core::random_prime(size_in_bits, callback));
+        nothrow_integer r(xint::random_prime(size_in_bits, callback));
+        return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        else return integer::nan();
+        return nothrow_integer::nan();
     }
 }
 
-} // namespace blockable
 } // namespace xint
 } // namespace boost

@@ -19,8 +19,6 @@
 #define BOOST_INCLUDED_XINT_INTEGER_HPP
 
 #include "internals.hpp"
-#include "exceptions.hpp"
-#include <boost/type_traits.hpp>
 
 namespace boost {
 namespace xint {
@@ -31,19 +29,17 @@ namespace xint {
 
     There are only a few member functions; most of the functionality is
     implemented using standalone functions.
-
-    Functions that start with an underscore (such as \c _make_unique) are
-    intended for internal use only. They may change arbitrarily in future
-    versions.
 */
-class integer: public detail::base_integer {
+class integer: public detail::base_variable_length_integer {
     public:
 
     //! \name Constructors & Destructors
     //!@{
     integer();
     integer(const integer& b);
+    integer(BOOST_XINT_RV_REF(integer) b) { _swap(b); }
     explicit integer(const nothrow_integer& b);
+    explicit integer(const fixed_integer_any& b);
     explicit integer(const std::string& str, size_t base=10);
     template <typename T> integer(const T& n,
         typename boost::enable_if<boost::is_integral<T> >::type* = 0,
@@ -61,7 +57,15 @@ class integer: public detail::base_integer {
         a fixed maximum size, there is no logical way to implement it.
     */
     //@{
-    integer& operator=(const integer &c);
+    integer& operator=(BOOST_XINT_COPY_ASSIGN_REF(integer) c);
+    integer& operator=(BOOST_XINT_RV_REF(integer) c) { _swap(c); return *this; }
+    template <typename T> integer& operator=(const T& n) { integer nn(n);
+        _swap(nn); return *this; }
+
+    bool operator!() const { return _is_zero(); }
+    integer operator-() const;
+    integer& operator+() { return *this; }
+    const integer& operator+() const { return *this; }
 
     integer& operator+=(const integer& b);
     integer& operator-=(const integer& b);
@@ -103,13 +107,10 @@ class integer: public detail::base_integer {
     size_t hex_digits() const;
     //!@}
 
-    /*! \name Internal Functions
-        \brief These functions allow access to the internals of the %integer.
-               They are intended for internal use only.
-    */
-    //@{
-    void _make_unique();
-    //@}
+    typedef base_divide_t<integer> divide_t;
+
+    private:
+    BOOST_XINT_COPYABLE_AND_MOVABLE(integer)
 };
 
 //! \name Mathematical primitives
@@ -120,8 +121,7 @@ integer add(const integer& n, const integer& addend);
 integer subtract(const integer& n, const integer& subtrahend);
 integer multiply(const integer& n, const integer& multiplicand);
 integer divide(const integer& dividend, const integer& divisor);
-std::pair<integer, integer> divide_r(const integer& dividend, const integer&
-    divisor);
+integer::divide_t divide_r(const integer& dividend, const integer& divisor);
 //!@}
 
 //! \name Powers and roots
@@ -138,8 +138,8 @@ integer sqrt(const integer& n);
 template <typename T> T to(const integer& n);
 std::string to_string(const integer& n, size_t base=10, bool upperCase=false);
 integer from_string(const std::string& str, size_t base=10);
-std::string to_binary(const integer& n);
-integer from_binary(const std::string& s);
+xint::binary_t to_binary(const integer& n, size_t bits=0);
+integer from_binary(const xint::binary_t& b, size_t bits=0);
 //!@}
 
 //! \name Bit-manipulation functions
@@ -188,7 +188,6 @@ integer random_prime(size_t sizeInBits, callback_t callback=no_callback);
     These act exactly the same as for the built-in %integer types.
 */
 //!@{
-bool operator!(const integer& n1);
 bool operator<(const integer& n1, const integer& n2);
 bool operator>(const integer& n1, const integer& n2);
 bool operator<=(const integer& n1, const integer& n2);
@@ -196,8 +195,6 @@ bool operator>=(const integer& n1, const integer& n2);
 bool operator==(const integer& n1, const integer& n2);
 bool operator!=(const integer& n1, const integer& n2);
 
-const integer& operator+(const integer& a);
-integer operator-(const integer& a);
 integer operator+(const integer& n1, const integer& n2);
 integer operator-(const integer& n1, const integer& n2);
 integer operator*(const integer& n1, const integer& n2);
@@ -235,20 +232,7 @@ template <typename T> integer::integer(const T& n,
     typename boost::enable_if<boost::is_integral<T> >::type*,
     typename boost::enable_if<boost::is_signed<T> >::type*)
 {
-    if (n >= 0) {
-        if (static_cast<T>(n & detail::digit_mask) == n)
-            _attach_1(detail::digit_t(n));
-        else _attach_n(boost::uintmax_t(n));
-    } else if (n == (std::numeric_limits<T>::min)()) {
-        // Have to treat the minimum number carefully, because -n is not
-        // what you'd think it is.
-        _attach_n(boost::uintmax_t(-(n+1)));
-        _set_negative(true);
-        --(*this);
-    } else {
-        _attach_n(boost::uintmax_t(-n));
-        _set_negative(true);
-    }
+    _set_signed(n);
 }
 
 /*!
@@ -267,15 +251,13 @@ template <typename T> integer::integer(const T& n,
     typename boost::enable_if<boost::is_integral<T> >::type*,
     typename boost::enable_if<boost::is_unsigned<T> >::type*)
 {
-    if (static_cast<T>(n & detail::digit_mask) == n)
-        _attach_1(detail::digit_t(n));
-    else _attach_n(boost::uintmax_t(n));
+    _set_unsigned(n);
 }
 
 /*! \brief Efficiently converts from an xint::integer to a built-in %integer
            type.
 
-\param[in] n The integer to convert.
+\param[in] n The %integer to convert.
 \tparam T The type to convert it to.
 
 \returns The numeric value of \c n, converted to the specified type.
@@ -284,18 +266,7 @@ template <typename T> integer::integer(const T& n,
 */
 template <typename T>
 T to(const integer& n) {
-    if (n < (std::numeric_limits<T>::min)()
-        || n > (std::numeric_limits<T>::max)())
-            throw exceptions::too_big("value out of range for requested "
-                "conversion");
-
-    T rval=0;
-    size_t len=n._get_length();
-    for (size_t x=0; x<len; ++x)
-        rval=static_cast<T>((rval * detail::digit_overflowbit)
-            + n._get_digit(len-x-1));
-    if (n.sign() < 0) rval *= -1;
-    return rval;
+    return detail::to<T>(n);
 }
 
 //! \name Stream input/output functions
@@ -304,87 +275,20 @@ template <typename charT, typename traits>
 inline std::basic_ostream<charT,traits>& operator<<(std::basic_ostream<charT,
     traits>& out, const integer& n)
 {
-    int base=((out.flags() & std::ios::hex) ? 16
-        : (out.flags() & std::ios::oct) ? 8
-        : 10);
-    bool upperCase=(out.flags() & std::ios::uppercase ? true : false);
-
-    int nsign=n.sign();
-    if ((out.flags() & std::ios::showpos) && nsign >= 0) out << "+";
-
-    if (out.flags() & std::ios::showbase) {
-        if (nsign < 0) out << "-";
-
-        if (base==16 && upperCase) out << "0X";
-        else if (base==16) out << "0x";
-        else if (base==8) out << "0";
-
-        out << to_string(abs(n), base, upperCase);
-    } else {
-        out << to_string(n, base, upperCase);
-    }
-    return out;
+    return detail::operator<<(out, n);
 }
 
 template <typename charT, typename traits>
 inline std::basic_istream<charT,traits>& operator>>(std::basic_istream<charT,
     traits>& in, integer& n)
 {
-    int hex=(in.flags() & std::ios::hex) ? 1 : 0;
-    int dec=(in.flags() & std::ios::dec) ? 1 : 0;
-    int oct=(in.flags() & std::ios::oct) ? 1 : 0;
-    int count=hex+dec+oct;
-
-    size_t base=autobase;
-    if (count==1) {
-        if (hex) base=16;
-        else if (oct) base=8;
-        else base=10;
-    } else if (count>1) base=10;
-    // else auto-base
-
-    std::string s;
-    if (in.peek()=='+') {
-        in.ignore();
-    } else if (in.peek()=='-') {
-        in.ignore();
-        s.push_back('-');
-    }
-
-    if (base==autobase) {
-        if (in.peek()=='0') {
-            in.ignore();
-            int c=in.peek();
-            if (c=='x' || c=='X') {
-                in.ignore();
-                base=16;
-            } else base=8;
-        } else base=10;
-    }
-
-    while (in) {
-        int c=in.peek();
-        if ((base==8 && (c>='0' && c<='7')) ||
-            (base==10 && (c>='0' && c<='9')) ||
-            (base==16 && ((c>='0' && c<='9') || (c>='a' && c<='f') ||
-                (c>='A' && c<='F'))))
-        {
-            in.ignore();
-            s.push_back(char(c));
-        } else break;
-    }
-
-    try {
-        integer testValue=from_string(s, base);
-        n=testValue;
-    } catch (std::exception&) {
-        // Catch invalid strings
-        in.setstate(std::ios::failbit);
-    }
-
-    return in;
+    return detail::operator>>(in, n);
 }
 //!@}
+
+inline void swap(integer& left, integer& right) {
+    left._swap(right);
+}
 
 } // namespace xint
 } // namespace boost

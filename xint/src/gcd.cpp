@@ -17,7 +17,7 @@
     Also holds the definition for invmod, since it uses the GCD algorithm.
 */
 
-#include "../boost/xint/xint.hpp"
+#include "../boost/xint/integer.hpp"
 
 namespace boost {
 namespace xint {
@@ -39,9 +39,10 @@ struct gcd_core {
 
                 if (t3.even() || u3 < t3) {
                     // Swap the u's with the t's
-                    std::swap(u1, t1);
-                    std::swap(u2, t2);
-                    std::swap(u3, t3);
+                    using std::swap;
+                    swap(u1, t1);
+                    swap(u2, t2);
+                    swap(u3, t3);
                 }
             } while (u3.even());
 
@@ -57,7 +58,102 @@ struct gcd_core {
 
 } // namespace
 
+namespace detail {
+
+void gcd(base_integer& target, const base_integer& num1, const base_integer&
+    num2)
+{
+    if (num1._is_zero() && num2._is_zero()) {
+        target._set_unsigned(0);
+    } else if (num1._is_zero()) {
+        target._attach(num2);
+    } else if (num2._is_zero()) {
+        target._attach(num1);
+    } else {
+        temp_t n(num1), m(num2);
+        n._set_negative(false);
+        m._set_negative(false);
+
+        size_t k = 0;
+        if (!getbit(n, k) && !getbit(m, k)) ++k;
+        if (k != 0) {
+            shift_right(n, n, k);
+            shift_right(m, m, k);
+        }
+
+        gcd_core core(n._to_integer(), m._to_integer());
+
+        if (core.u3._is_zero()) {
+            shift_left(target, fixed_integer_any(1), k);
+        } else {
+            shift_left(target, core.u3, k);
+        }
+    }
+}
+
+void lcm(base_integer& target, const base_integer& num1, const base_integer&
+    num2)
+{
+    if (num1._is_zero() || num2._is_zero()) {
+        target._set_unsigned(0);
+    } else {
+        integer common;
+        gcd(common, num1, num2);
+
+        integer answer, remainder;
+        multiply(answer, num1, num2);
+        answer._set_negative(false);
+        divide(answer, remainder, answer, common);
+
+        target._attach(answer);
+    }
+}
+
+void invmod(base_integer& target, const base_integer& n, const base_integer& m)
+{
+    // Calculates the modular inverse of n mod m, or (n^(-1)) mod m
+    // Defined as b, where n*b corresponds to 1 (mod m)
+    if (m._is_zero() || m._get_negative()) throw exceptions::invalid_modulus();
+
+    if (n._is_zero()) {
+        target._set_unsigned(0);
+    } else if (n._get_negative()) {
+        integer _n(n._to_integer());
+        _n._set_negative(false);
+
+        integer nn;
+        invmod(nn, _n, m);
+        if (nn._is_zero()) {
+            target._attach(nn);
+        } else {
+            nn._set_negative(true);
+            add(target, nn, m);
+        }
+    } else {
+        integer nn(n._to_integer()), mm(m._to_integer());
+        if (nn.even() && mm.even()) {
+            // GCD != 1, no inverse possible.
+            target._set_unsigned(0);
+            return;
+        }
+
+        gcd_core core(nn, mm);
+
+        if (core.u3 != integer::one()) {
+            // GCD != 1, no inverse possible.
+            target._set_unsigned(0);
+            return;
+        }
+
+        target._attach(core.u1);
+    }
+}
+
+} // namespace detail
+
 /*! \brief Calculate the Greatest Common Denominator of two integers.
+
+- Complexity: O((log n)<sup>3</sup>)
 
 \param[in] num1, num2 The integers to operate on.
 
@@ -65,23 +161,14 @@ struct gcd_core {
 be a positive number.
 */
 integer gcd(const integer& num1, const integer& num2) {
-    int sign1=num1.sign(), sign2=num2.sign();
-    if (sign1==0 && sign2==0) return integer::zero();
-    else if (sign1==0) return num2;
-    else if (sign2==0) return num1;
-
-    integer n(abs(num1)), m(abs(num2));
-
-    size_t k=0;
-    while (n.even() && m.even()) { ++k; n >>= 1; m >>= 1; }
-
-    gcd_core core(n, m);
-
-    if (core.u3.sign() != 0) return core.u3 << k;
-    return integer::one() << k;
+    integer r;
+    detail::gcd(r, num1, num2);
+    return BOOST_XINT_MOVE(r);
 }
 
 /*! \brief Calculate the Least Common Multiple of two integers.
+
+- Complexity: O((log n)<sup>3</sup> + n<sup>2</sup>)
 
 \param[in] num1, num2 The integers to operate on.
 
@@ -90,13 +177,16 @@ zero, then the return value will be zero, by convention; in all other cases, the
 return value will be a positive number.
 */
 integer lcm(const integer& num1, const integer& num2) {
-    if (num1.sign() == 0 || num2.sign() == 0) return integer::zero();
-    return abs(num1 * num2) / gcd(num1, num2);
+    integer r;
+    detail::lcm(r, num1, num2);
+    return BOOST_XINT_MOVE(r);
 }
 
 /*! \brief Get the modular inverse of a number in a modulus, if there is one.
 
-\param[in] n The number to retrieve the inverse of.
+- Complexity: O((log n)<sup>3</sup>)
+
+\param[in] n The number to calculate the inverse of.
 \param[in] m The modulus to use.
 
 \returns The modular inverse of \c n in \c m. If \c n has no modular inverse in
@@ -105,30 +195,9 @@ integer lcm(const integer& num1, const integer& num2) {
 \exception exceptions::invalid_modulus if the modulus is less than one.
 */
 integer invmod(const integer& n, const integer& m) {
-    // Calculates the modular inverse of n mod m, or (n^(-1)) mod m
-    // Defined as b, where n*b corresponds to 1 (mod m)
-    if (m < integer::one()) throw exceptions::invalid_modulus();
-
-    int sign=n.sign();
-    if (sign==0) {
-        return integer::zero();
-    } else if (n.sign() < 0) {
-        integer _n(n);
-        _n._set_negative(false);
-
-        integer nn=invmod(_n, m);
-        if (nn.sign()==0) return nn;
-
-        nn._set_negative(true);
-        return nn + m;
-    }
-
-    if (n.even() && m.even()) return integer::zero(); // GCD(x,y)!=1, no inverse possible.
-
-    gcd_core core(n, m);
-
-    if (core.u3 != integer::one()) return integer::zero(); // GCD(x,y)!=1, no inverse possible.
-    return core.u1;
+    integer r;
+    detail::invmod(r, n, m);
+    return BOOST_XINT_MOVE(r);
 }
 
 } // namespace xint

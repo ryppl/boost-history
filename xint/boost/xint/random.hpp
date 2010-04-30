@@ -57,6 +57,7 @@ namespace detail {
     struct base_random_generator {
         typedef unsigned int result_type;
         virtual result_type operator()()=0;
+        virtual ~base_random_generator() { }
     };
 
     //! Support class for the random generator code.

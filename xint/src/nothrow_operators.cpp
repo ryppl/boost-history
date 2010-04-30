@@ -16,13 +16,11 @@
            \c nothrow_integer type.
 */
 
-#include "../boost/xint/xint.hpp"
+#include "../boost/xint/nothrow_integer.hpp"
 
 namespace boost {
 namespace xint {
 
-const nothrow_integer& operator+(const nothrow_integer& a) { return a; }
-nothrow_integer operator-(const nothrow_integer& a) { return negate(a); }
 nothrow_integer operator+(const nothrow_integer& num1, const nothrow_integer& num2) { return add(num1, num2); }
 nothrow_integer operator-(const nothrow_integer& num1, const nothrow_integer& num2) { return subtract(num1, num2); }
 nothrow_integer operator*(const nothrow_integer& num1, const nothrow_integer& num2) { return multiply(num1, num2); }

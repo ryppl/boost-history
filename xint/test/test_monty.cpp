@@ -11,7 +11,8 @@
     This file contains the test functions for the Montgomery stuff.
 */
 
-#include <boost/xint/xint.hpp>
+#include <boost/xint/integer.hpp>
+#include <boost/xint/random.hpp>
 #include <boost/xint/monty.hpp>
 
 #define BOOST_TEST_DYN_LINK
@@ -28,13 +29,13 @@ using std::endl;
 
 namespace {
 
-void _test1(int section, int test, integer x, integer y, integer m) {
+void _test1(size_t section, size_t test, integer x, integer y, integer m) {
     integer xx=toMontgomeryForm(x, m), yy=toMontgomeryForm(y, m);
     integer mResult=fromMontgomeryForm(montgomeryMultiplyMod(xx, yy, m,
         inverse0(m)), m);
     integer cResult=mod(x * y, m);
 
-    if (mResult != cResult) {
+    if (mResult != cResult && mod(-mResult, m) != cResult) {
         std::ostringstream out;
         out << "testMontyMultiply, section " << section << ", " << test << endl;
         out << "x        = " << to_string(x, 16) << endl;
@@ -46,7 +47,7 @@ void _test1(int section, int test, integer x, integer y, integer m) {
     }
 }
 
-void _test2(int section, int test, integer b, integer r, integer modulus) {
+void _test2(size_t section, size_t test, integer b, integer r, integer modulus) {
     integer mResult=montgomeryPowerMod(b%modulus, r, modulus);
     integer cResult=powmod(b%modulus, r, modulus, true);
     if (mResult != cResult) {
@@ -78,25 +79,28 @@ BOOST_AUTO_TEST_CASE(testMontyMultiply) {
     // there are problems.
     set_random_generator(new boost::mt19937(42u));
 
-    for (int i=0; i<1000; ++i) {
-        integer n(random_by_size(detail::bits_per_digit*3 + random1ToDigitLength(), false, false, true));
-        integer m(random_by_size(detail::bits_per_digit*3 + random1ToDigitLength(), false, false, true));
-        integer modulus(random_by_size(detail::bits_per_digit*4 + random1ToDigitLength(), true, true, false));
-        _test1(1, i, n, m, modulus);
+    {
+        integer n("ffffffffaec73757", 16);
+        integer m("-3856431e", 16);
+        integer modulus("10000000000000000fffffffff14e691d", 16);
+        _test1(0, 1, n, m, modulus);
     }
 
-    for (int i=0; i<1000; ++i) {
-        integer n(random_by_size(detail::bits_per_digit*3 + random1ToDigitLength(), false, false, true));
-        integer m(random_by_size(detail::bits_per_digit*2 + random1ToDigitLength(), false, false, true));
-        integer modulus(random_by_size(detail::bits_per_digit*4 + random1ToDigitLength(), true, true, false));
-        _test1(2, i, n, m, modulus);
-    }
-
-    for (int i=0; i<1000; ++i) {
-        integer n(random_by_size(detail::bits_per_digit*2 + random1ToDigitLength(), false, false, true));
-        integer m(random_by_size(detail::bits_per_digit*3 + random1ToDigitLength(), false, false, true));
-        integer modulus(random_by_size(detail::bits_per_digit*4 + random1ToDigitLength(), true, true, false));
-        _test1(3, i, n, m, modulus);
+    for (size_t nsize = detail::bits_per_digit * 2; nsize <
+        detail::bits_per_digit * 4; nsize += 4)
+    {
+        for (size_t msize = detail::bits_per_digit * 2; msize <
+            detail::bits_per_digit * 4; msize += 4)
+        {
+            for (size_t modsize = detail::bits_per_digit * 4; msize <
+                detail::bits_per_digit * 5; msize += 4)
+            {
+                integer n(random_by_size(nsize, false, false, true)),
+                    m(random_by_size(msize, false, false, true)),
+                    modulus(random_by_size(modsize, true, true, false));
+                _test1(nsize, msize, n, m, modulus);
+            }
+        }
     }
 }
 
@@ -106,30 +110,27 @@ BOOST_AUTO_TEST_CASE(testMontyPowerMod) {
     set_random_generator(new boost::mt19937(42u));
 
     {
-        integer modulus(random_by_size(detail::bits_per_digit * 5 + random1ToDigitLength(), true, true));
+        integer modulus(random_by_size(detail::bits_per_digit * 5 +
+            (detail::bits_per_digit / 2), true, true));
         for (int i=2; i<100; ++i)
             _test2(0, i, integer("abcd1234", 16), i, modulus);
     }
 
-    for (int i=0; i<100; ++i) {
-        integer n(random_by_size(detail::bits_per_digit*3 + random1ToDigitLength(), false, false));
-        integer m(random_by_size(detail::bits_per_digit*3 + random1ToDigitLength(), false, false));
-        integer modulus(random_by_size(detail::bits_per_digit * 2 + random(size_t(1), 3*detail::bits_per_digit), true, true));
-        _test2(1, i, n, m, modulus);
-    }
-
-    for (int i=0; i<100; ++i) {
-        integer n(random_by_size(detail::bits_per_digit*3 + random1ToDigitLength(), false, false));
-        integer m(random_by_size(detail::bits_per_digit*2 + random1ToDigitLength(), false, false));
-        integer modulus(random_by_size(detail::bits_per_digit * 4 + random1ToDigitLength(), true, true));
-        _test2(2, i, n, m, modulus);
-    }
-
-    for (int i=0; i<100; ++i) {
-        integer n(random_by_size(detail::bits_per_digit*2 + random1ToDigitLength(), false, false));
-        integer m(random_by_size(detail::bits_per_digit*3 + random1ToDigitLength(), false, false));
-        integer modulus(random_by_size(detail::bits_per_digit * 4 + random1ToDigitLength(), true, true));
-        _test2(3, i, n, m, modulus);
+    for (size_t nsize = detail::bits_per_digit * 2; nsize <
+        detail::bits_per_digit * 4; nsize += 8)
+    {
+        for (size_t msize = detail::bits_per_digit * 2; msize <
+            detail::bits_per_digit * 4; msize += 8)
+        {
+            for (size_t modsize = detail::bits_per_digit * 2; msize <
+                detail::bits_per_digit * 5; msize += 8)
+            {
+                integer n(random_by_size(nsize, false, false)),
+                    m(random_by_size(msize, false, false)),
+                    modulus(random_by_size(modsize, true, true));
+                _test2(nsize, msize, n, m, modulus);
+            }
+        }
     }
 }
 

@@ -16,16 +16,17 @@ This revision history refers only to this incarnation.
 - Many improvements, primarily from feedback on the first Boost upload. Second
 version posted to the Boost File Vault.
 
-\b 2010-04-?? (updated through 10th)
-- Major refactoring, separating xint::integer and xint::nothrow_integer and
-eliminating the exception-blocking functions.
-- Fixed problem with MSVC 9.
-- Major overhaul of the division function.
-- All test functions now use Boost.Test.
-- "Fixed" several small memory leaks. They weren't real leaks, but Boost.Test
-couldn't tell that.
+\b 2010-04-30
+- Third version posted to the Boost File Vault for preliminary review.
+- Major redesign, separating xint::integer and xint::nothrow_integer,
+eliminating the exception-blocking functions, and adding an xint::fixed_integer
+template class.
+- Major overhaul of many of the functions, making them more efficient and fixing
+newly-discovered bugs.
+- All test functions now use Boost.Test, many new tests added.
 - All documentation moved to Doxygen format.
 - Moved xint namespace into boost namespace.
-- Fixed minor stream-output formatting problem (the code wasn't aware of the \c
-showpos stream option).
+- "Fixed" several small memory leaks. Most of them weren't real leaks, but
+Boost.Test couldn't tell that.
+- Many less-major changes.
 */

@@ -1,0 +1,7 @@
+/*! \page complexity A Note on Algorithmic Complexity
+
+This documentation includes a time-complexity estimate, in big-O notation, for
+each algorithm. The time complexity is well-known for some algorithms, but for
+others, I had to make an educated guess. If you discover an error in the listed
+complexity, please report it.
+*/

@@ -12,7 +12,6 @@
   <div class="tabs">
     <ul>
       <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
       <li class="current"><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
@@ -33,32 +32,86 @@
 <a href="#_details">More...</a></p>
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td colspan="2"><h2>Classes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a></td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Holds the magnitude digits of an integer.  <a href="structboost_1_1xint_1_1detail_1_1data__t.html#_details">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a></td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The base class for the integer classes.  <a href="classboost_1_1xint_1_1detail_1_1base__integer.html#_details">More...</a><br/></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The base class for all integer classes.  <a href="classboost_1_1xint_1_1detail_1_1base__integer.html#_details">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structboost_1_1xint_1_1detail_1_1base__random__generator.html">base_random_generator</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The base class for <a class="el" href="structboost_1_1xint_1_1detail_1_1random__generator.html" title="Support class for the random generator code.">random_generator</a>.  <a href="structboost_1_1xint_1_1detail_1_1base__random__generator.html#_details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__variable__length__integer.html">base_variable_length_integer</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The base class for the variable-length integer classes.  <a href="classboost_1_1xint_1_1detail_1_1base__variable__length__integer.html#_details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1bitqueue__t.html">bitqueue_t</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Used internally to reorder bits into different-sized groupings.  <a href="classboost_1_1xint_1_1detail_1_1bitqueue__t.html#_details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Holds the magnitude digits of an integer.  <a href="structboost_1_1xint_1_1detail_1_1data__t.html#_details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1neg__t.html">neg_t</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Makes a negated temporary integer that can always share storage.  <a href="classboost_1_1xint_1_1detail_1_1neg__t.html#_details">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structboost_1_1xint_1_1detail_1_1random__generator.html">random_generator</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Support class for the random generator code.  <a href="structboost_1_1xint_1_1detail_1_1random__generator.html#_details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1temp__t.html">temp_t</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Makes a temporary integer that can always share storage.  <a href="classboost_1_1xint_1_1detail_1_1temp__t.html#_details">More...</a><br/></td></tr>
 <tr><td colspan="2"><h2>Typedefs</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">typedef boost::uintmax_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">typedef boost::uint_t<br class="typebreak"/>
 &lt; std::numeric_limits<br class="typebreak"/>
 &lt; <a class="el" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a> &gt;::digits/2 &gt;<br class="typebreak"/>
 ::fast&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">typedef boost::uintmax_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a></td></tr>
 <tr><td colspan="2"><h2>Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#ab9babbdf59f52b65d8cecc33e20e0a3f">add</a> (<a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;target, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n1, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n2)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a53d3a82d1e9cc3093f7152536226ad26">bitwise_and</a> (<a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;target, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n1, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n2)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a371947fdd527dc7f9749288893da9ef2">bitwise_or</a> (<a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;target, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n1, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n2)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a3021d365585065f356b81a0250403541">bitwise_xor</a> (<a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;target, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n1, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n2)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#acac1cc20095f62e9c39941651dde4316">clearbit</a> (<a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n, size_t bit)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a9de8315201bc9967495a289fc8579dd7">compare</a> (const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;b1, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;b2, bool ignoresign)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a0032a7ede8873065bda17e3ab96897db">divide</a> (<a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;target, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n1, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n2)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a30a579455d99a87796390eb2fbf4498a">divide</a> (<a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;qtarget, <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;rtarget, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;d1, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;d2)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#af5a00863dc0d17859957738dbc22b98f">factorial</a> (<a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;target, size_t n)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#af6486dc129e2175a1c5e69a0490d1dec">from_binary</a> (<a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;target, const <a class="el" href="namespaceboost_1_1xint.html#aae3128529370506165793f2771834e58">xint::binary_t</a> &amp;b, size_t bits)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a8ba37df48cdda7d54becb08bbe97fa5f">from_string</a> (<a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;target, const std::string &amp;str, size_t base)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a3855da89983ace165f708111723d8d1a">gcd</a> (<a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;target, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;num1, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;num2)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a6486d7febde540f90921e9925d077534">get_random</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a6e4e8f8c4d7f25dbf7a6c5d13e74472b">getbit</a> (const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n, size_t bit)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#aa5632075443060f8efc8c2d76e3d0d38">highestbit</a> (const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n, size_t valueIfZero)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a5b0d8fb9d0f8d7feffb43ca63e10a4b3">invmod</a> (<a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;target, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;m)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a931235bb5e181c038944d773a1e03158">lcm</a> (<a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;target, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;num1, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;num2)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#aee0c323135ed34026523afa598e8a270">log10_bits</a> (size_t bits)</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a3c6ea7edbed003bc5ed8254fd2f12ac5">log2</a> (const T &amp;nn, typename boost::enable_if&lt; boost::is_integral&lt; T &gt; &gt;::type *=0, typename boost::enable_if&lt; boost::is_signed&lt; T &gt; &gt;::type *=0)</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a35e711ff550651a2d9414249e9adcc60">log2</a> (const T &amp;n, typename boost::enable_if&lt; boost::is_integral&lt; T &gt; &gt;::type *=0, typename boost::enable_if&lt; boost::is_unsigned&lt; T &gt; &gt;::type *=0)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a70ae609a4ed2dfd6fb2c237eadfe8a71">lowestbit</a> (const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n, size_t valueIfZero)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a3395be771e1ce5d282e018a2735b6d86">mod</a> (<a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;target, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;m)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#ae35185e26f2828524b2830778186ac19">multiply</a> (<a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;target, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;by)</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename charT , typename traits &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">std::basic_ostream&lt; charT, <br class="typebreak"/>
+traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a674271483ebe199824cdfbd63a6adee1">operator&lt;&lt;</a> (std::basic_ostream&lt; charT, traits &gt; &amp;out, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n)</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename charT , typename traits &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">std::basic_istream&lt; charT, <br class="typebreak"/>
+traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a2cab37c14507681f47915d9e3f0d6c86">operator&gt;&gt;</a> (std::basic_istream&lt; charT, traits &gt; &amp;in, <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#ac81c5a94831c7aea3a665eb33491ebe2">pow</a> (<a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;target, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;e)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#ac063e3fcb648313184b04ef7102d7695">powmod</a> (<a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;target, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;_n, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;_e, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;_m, bool noMontgomery)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a17e1b4fcb11ff18fd2641dc43ee905b8">set_random_generator</a> (<a class="el" href="structboost_1_1xint_1_1detail_1_1base__random__generator.html">base_random_generator</a> *obj)</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Support function.  <a href="#a17e1b4fcb11ff18fd2641dc43ee905b8"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a6486d7febde540f90921e9925d077534">get_random</a> ()</td></tr>
-<tr><td colspan="2"><div class="groupHeader">The variable-length data_t functions.</div></td></tr>
-<tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp80e5972139cba853c07c583d1d68268c"></a> </p>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#aab28ac84cd1fb51d3d6206abad9fba01">setbit</a> (<a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n, size_t bit)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a2c4f8bb0f54061c28c9eb9c2cc852273">shift_left</a> (<a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;target, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n, size_t byBits)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#ac6682e4cab49f639aa538ccd10b3a8e5">shift_right</a> (<a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;target, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n, size_t byBits)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#abdd8d6819281b304dad578d720e5a651">sqr</a> (<a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;target, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#aca96f8988b99f3d7153073ef408b875d">sqrt</a> (<a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;target, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;nn)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a0424e97ecd4549ba637bbf16e31f3047">subtract</a> (<a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;target, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n1, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n2)</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">T&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a6d3ab42bef0e91fcfcf74de54ca623a0">to</a> (const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a8c7dab9ec8b34c81c577a3b9d3e44118">to_binary</a> (<a class="el" href="namespaceboost_1_1xint.html#aae3128529370506165793f2771834e58">xint::binary_t</a> &amp;target, const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n, size_t bits)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#af928647d948f09a6564ccd83a80dad14">to_string</a> (const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n, size_t base, bool uppercase)</td></tr>
+<tr><td colspan="2"><div class="groupHeader">The data_t functions.</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp583f07902076b847c6a492abda2f342d"></a> </p>
 </div></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a092b8b90955e65e858dfbdd1cc35b960">allocate</a> (size_t max_digits, size_t initial_length)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a756b3b8912e24da52a5f1e54d49bbbbe">reallocate</a> (<a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a>&lt;&gt; *olddata, size_t newsize)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#ab5aa26edc4b7699f3ff5d18729732b71">duplicate</a> (<a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a>&lt;&gt; *olddata, size_t extra)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a5e040a2d24aaf0c1d4b85fdd0721ee8e">duplicate</a> (<a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a>&lt;&gt; *olddata, <a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a>&lt;&gt; *data_to_copy, size_t extra)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a3465b5d474bf9db2df3567fe68e15d33">deallocate</a> (<a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a>&lt;&gt; *data)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#af1f0f3f0daacef4f7c496378bf6bdfd8">allocate</a> (size_t max_digits, size_t initial_length, <a class="el" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> mask)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#aa11166a9b6a4505bc8793ecdc31ad81f">allocate_fixed</a> (<a class="el" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> mask, size_t max_digits, size_t initial_length)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#ae0e0a61905f63dfe370ed6b4731fd076">allocate_fixed_zero</a> (<a class="el" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> mask, size_t max_digits)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a44089260e9472ac378d3e2ed739e7e08">deallocate</a> (<a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a> *data)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#af233ab6ae59b3ef29d352b8d08cf772f">duplicate</a> (<a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a> *olddata, <a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a> *data_to_copy, size_t extra=0)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a685a3fff60bd1083508712548203cf7b">duplicate</a> (<a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a> *olddata, size_t extra=0)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a1883fadafa2eeb3e70dfd9032f35bbdd">reallocate</a> (<a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a> *olddata, size_t newsize)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a589b1fc1784e06a3aef44c86254f1a45">zero</a> (<a class="el" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *p, size_t size)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a4e055aa4ada37a5892b2605de2a953ae">zero</a> (<a class="el" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *p, <a class="el" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> *end)</td></tr>
 <tr><td colspan="2"><h2>Variables</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">const std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#ab0df946a2c10228501ef82bf823d0978">nan_text</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Holds the text representation of the Not-a-Number value.  <a href="#ab0df946a2c10228501ef82bf823d0978"></a><br/></td></tr>
@@ -67,9 +120,10 @@
 </div></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">const size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a> = std::numeric_limits&lt;<a class="el" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>&gt;::digits</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#ab7d9f30b8cad63e2e82998aa2e8d0fcd">digit_hibit</a> = (<a class="el" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>(1) &lt;&lt; (<a class="el" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a>-1))</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a33ea157e34285642e6924bbffffc4367">doubledigit_hibit</a> = (<a class="el" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a>(1) &lt;&lt; (<a class="el" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a>*2-1))</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#aa743d942f784ec3a77e85816628d14cc">digit_overflowbit</a> = (<a class="el" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a>(1) &lt;&lt; <a class="el" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a>)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#aecc94d5cb515781b3a33ddf76884e8f5">digit_mask</a> = <a class="el" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>(<a class="el" href="namespaceboost_1_1xint_1_1detail.html#aa743d942f784ec3a77e85816628d14cc">digit_overflowbit</a>-1)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#aa743d942f784ec3a77e85816628d14cc">digit_overflowbit</a> = (<a class="el" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a>(1) &lt;&lt; <a class="el" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a>)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a2dcd1e1d9d0bed7c296c7474ed4f976e">digits_in_uintmax</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a33ea157e34285642e6924bbffffc4367">doubledigit_hibit</a> = (<a class="el" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">doubledigit_t</a>(1) &lt;&lt; (<a class="el" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a>*2-1))</td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>The items within this namespace are meant for internal use only. </p>
@@ -86,7 +140,7 @@
 <div class="memdoc">
 <p>This is the type used to store information about the integer. It must contain at least half the number of bits that a doubledigit_t can hold, and is most memory-efficient when it's exactly that. </p>
 
-<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00053">53</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00101">101</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
 
 </div>
 </div>
@@ -102,18 +156,90 @@
 <div class="memdoc">
 <p>This is the type used for calculations. It should be the largest built-in integral type the system can offer, for maximum processing efficiency. </p>
 
-<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00045">45</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00093">93</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
 
 </div>
 </div>
 <hr/><h2>Function Documentation</h2>
-<a class="anchor" id="a092b8b90955e65e858dfbdd1cc35b960"></a><!-- doxytag: member="boost::xint::detail::allocate" ref="a092b8b90955e65e858dfbdd1cc35b960" args="(size_t max_digits, size_t initial_length)" -->
+<a class="anchor" id="ab9babbdf59f52b65d8cecc33e20e0a3f"></a><!-- doxytag: member="boost::xint::detail::add" ref="ab9babbdf59f52b65d8cecc33e20e0a3f" args="(base_integer &amp;target, const base_integer &amp;n1, const base_integer &amp;n2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::add </td>
+          <td>(</td>
+          <td class="paramtype">base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>target</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="af1f0f3f0daacef4f7c496378bf6bdfd8"></a><!-- doxytag: member="boost::xint::detail::allocate" ref="af1f0f3f0daacef4f7c496378bf6bdfd8" args="(size_t max_digits, size_t initial_length, digit_t mask)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a> * boost::xint::detail::allocate </td>
           <td>(</td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>max_digits</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>initial_length</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">digit_t&nbsp;</td>
+          <td class="paramname"> <em>mask</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aa11166a9b6a4505bc8793ecdc31ad81f"></a><!-- doxytag: member="boost::xint::detail::allocate_fixed" ref="aa11166a9b6a4505bc8793ecdc31ad81f" args="(digit_t mask, size_t max_digits, size_t initial_length)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a> * boost::xint::detail::allocate_fixed </td>
+          <td>(</td>
+          <td class="paramtype">digit_t&nbsp;</td>
+          <td class="paramname"> <em>mask</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">size_t&nbsp;</td>
           <td class="paramname"> <em>max_digits</em>, </td>
         </tr>
@@ -134,45 +260,21 @@
 
 </div>
 </div>
-<a class="anchor" id="a3465b5d474bf9db2df3567fe68e15d33"></a><!-- doxytag: member="boost::xint::detail::deallocate" ref="a3465b5d474bf9db2df3567fe68e15d33" args="(data_t&lt;&gt; *data)" -->
+<a class="anchor" id="ae0e0a61905f63dfe370ed6b4731fd076"></a><!-- doxytag: member="boost::xint::detail::allocate_fixed_zero" ref="ae0e0a61905f63dfe370ed6b4731fd076" args="(digit_t mask, size_t max_digits)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void boost::xint::detail::deallocate </td>
+          <td class="memname"><a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a> * boost::xint::detail::allocate_fixed_zero </td>
           <td>(</td>
-          <td class="paramtype">data_t&lt;&gt; *&nbsp;</td>
-          <td class="paramname"> <em>data</em></td>
-          <td>&nbsp;)&nbsp;</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a5e040a2d24aaf0c1d4b85fdd0721ee8e"></a><!-- doxytag: member="boost::xint::detail::duplicate" ref="a5e040a2d24aaf0c1d4b85fdd0721ee8e" args="(data_t&lt;&gt; *olddata, data_t&lt;&gt; *data_to_copy, size_t extra)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a> * boost::xint::detail::duplicate </td>
-          <td>(</td>
-          <td class="paramtype">data_t&lt;&gt; *&nbsp;</td>
-          <td class="paramname"> <em>olddata</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">data_t&lt;&gt; *&nbsp;</td>
-          <td class="paramname"> <em>data_to_copy</em>, </td>
+          <td class="paramtype">digit_t&nbsp;</td>
+          <td class="paramname"> <em>mask</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">size_t&nbsp;</td>
-          <td class="paramname"> <em>extra</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>max_digits</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -185,21 +287,429 @@
 
 </div>
 </div>
-<a class="anchor" id="ab5aa26edc4b7699f3ff5d18729732b71"></a><!-- doxytag: member="boost::xint::detail::duplicate" ref="ab5aa26edc4b7699f3ff5d18729732b71" args="(data_t&lt;&gt; *olddata, size_t extra)" -->
+<a class="anchor" id="a53d3a82d1e9cc3093f7152536226ad26"></a><!-- doxytag: member="boost::xint::detail::bitwise_and" ref="a53d3a82d1e9cc3093f7152536226ad26" args="(base_integer &amp;target, const base_integer &amp;n1, const base_integer &amp;n2)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a> * boost::xint::detail::duplicate </td>
+          <td class="memname">void boost::xint::detail::bitwise_and </td>
           <td>(</td>
-          <td class="paramtype">data_t&lt;&gt; *&nbsp;</td>
+          <td class="paramtype">base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>target</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a371947fdd527dc7f9749288893da9ef2"></a><!-- doxytag: member="boost::xint::detail::bitwise_or" ref="a371947fdd527dc7f9749288893da9ef2" args="(base_integer &amp;target, const base_integer &amp;n1, const base_integer &amp;n2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::bitwise_or </td>
+          <td>(</td>
+          <td class="paramtype">base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>target</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a3021d365585065f356b81a0250403541"></a><!-- doxytag: member="boost::xint::detail::bitwise_xor" ref="a3021d365585065f356b81a0250403541" args="(base_integer &amp;target, const base_integer &amp;n1, const base_integer &amp;n2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::bitwise_xor </td>
+          <td>(</td>
+          <td class="paramtype">base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>target</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="acac1cc20095f62e9c39941651dde4316"></a><!-- doxytag: member="boost::xint::detail::clearbit" ref="acac1cc20095f62e9c39941651dde4316" args="(base_integer &amp;n, size_t bit)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::clearbit </td>
+          <td>(</td>
+          <td class="paramtype">base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>bit</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a9de8315201bc9967495a289fc8579dd7"></a><!-- doxytag: member="boost::xint::detail::compare" ref="a9de8315201bc9967495a289fc8579dd7" args="(const base_integer &amp;b1, const base_integer &amp;b2, bool ignoresign)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int boost::xint::detail::compare </td>
+          <td>(</td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>b1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>b2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>ignoresign</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a44089260e9472ac378d3e2ed739e7e08"></a><!-- doxytag: member="boost::xint::detail::deallocate" ref="a44089260e9472ac378d3e2ed739e7e08" args="(data_t *data)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::deallocate </td>
+          <td>(</td>
+          <td class="paramtype">data_t *&nbsp;</td>
+          <td class="paramname"> <em>data</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a0032a7ede8873065bda17e3ab96897db"></a><!-- doxytag: member="boost::xint::detail::divide" ref="a0032a7ede8873065bda17e3ab96897db" args="(base_integer &amp;target, const base_integer &amp;n1, const base_integer &amp;n2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::divide </td>
+          <td>(</td>
+          <td class="paramtype">base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>target</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a30a579455d99a87796390eb2fbf4498a"></a><!-- doxytag: member="boost::xint::detail::divide" ref="a30a579455d99a87796390eb2fbf4498a" args="(base_integer &amp;qtarget, base_integer &amp;rtarget, const base_integer &amp;d1, const base_integer &amp;d2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::divide </td>
+          <td>(</td>
+          <td class="paramtype">base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>qtarget</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>rtarget</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>d1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>d2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="af233ab6ae59b3ef29d352b8d08cf772f"></a><!-- doxytag: member="boost::xint::detail::duplicate" ref="af233ab6ae59b3ef29d352b8d08cf772f" args="(data_t *olddata, data_t *data_to_copy, size_t extra=0)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a>* boost::xint::detail::duplicate </td>
+          <td>(</td>
+          <td class="paramtype">data_t *&nbsp;</td>
+          <td class="paramname"> <em>olddata</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">data_t *&nbsp;</td>
+          <td class="paramname"> <em>data_to_copy</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>extra</em> = <code>0</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a685a3fff60bd1083508712548203cf7b"></a><!-- doxytag: member="boost::xint::detail::duplicate" ref="a685a3fff60bd1083508712548203cf7b" args="(data_t *olddata, size_t extra=0)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a>* boost::xint::detail::duplicate </td>
+          <td>(</td>
+          <td class="paramtype">data_t *&nbsp;</td>
           <td class="paramname"> <em>olddata</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">size_t&nbsp;</td>
-          <td class="paramname"> <em>extra</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>extra</em> = <code>0</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="af5a00863dc0d17859957738dbc22b98f"></a><!-- doxytag: member="boost::xint::detail::factorial" ref="af5a00863dc0d17859957738dbc22b98f" args="(base_integer &amp;target, size_t n)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::factorial </td>
+          <td>(</td>
+          <td class="paramtype">base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>target</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>n</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="af6486dc129e2175a1c5e69a0490d1dec"></a><!-- doxytag: member="boost::xint::detail::from_binary" ref="af6486dc129e2175a1c5e69a0490d1dec" args="(base_integer &amp;target, const xint::binary_t &amp;b, size_t bits)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::from_binary </td>
+          <td>(</td>
+          <td class="paramtype">base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>target</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const xint::binary_t &amp;&nbsp;</td>
+          <td class="paramname"> <em>b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>bits</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a8ba37df48cdda7d54becb08bbe97fa5f"></a><!-- doxytag: member="boost::xint::detail::from_string" ref="a8ba37df48cdda7d54becb08bbe97fa5f" args="(base_integer &amp;target, const std::string &amp;str, size_t base)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::from_string </td>
+          <td>(</td>
+          <td class="paramtype">base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>target</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&nbsp;</td>
+          <td class="paramname"> <em>str</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>base</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a3855da89983ace165f708111723d8d1a"></a><!-- doxytag: member="boost::xint::detail::gcd" ref="a3855da89983ace165f708111723d8d1a" args="(base_integer &amp;target, const base_integer &amp;num1, const base_integer &amp;num2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::gcd </td>
+          <td>(</td>
+          <td class="paramtype">base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>target</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>num1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>num2</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -231,14 +741,459 @@
 
 </div>
 </div>
-<a class="anchor" id="a756b3b8912e24da52a5f1e54d49bbbbe"></a><!-- doxytag: member="boost::xint::detail::reallocate" ref="a756b3b8912e24da52a5f1e54d49bbbbe" args="(data_t&lt;&gt; *olddata, size_t newsize)" -->
+<a class="anchor" id="a6e4e8f8c4d7f25dbf7a6c5d13e74472b"></a><!-- doxytag: member="boost::xint::detail::getbit" ref="a6e4e8f8c4d7f25dbf7a6c5d13e74472b" args="(const base_integer &amp;n, size_t bit)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool boost::xint::detail::getbit </td>
+          <td>(</td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>bit</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aa5632075443060f8efc8c2d76e3d0d38"></a><!-- doxytag: member="boost::xint::detail::highestbit" ref="aa5632075443060f8efc8c2d76e3d0d38" args="(const base_integer &amp;n, size_t valueIfZero)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t boost::xint::detail::highestbit </td>
+          <td>(</td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>valueIfZero</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a5b0d8fb9d0f8d7feffb43ca63e10a4b3"></a><!-- doxytag: member="boost::xint::detail::invmod" ref="a5b0d8fb9d0f8d7feffb43ca63e10a4b3" args="(base_integer &amp;target, const base_integer &amp;n, const base_integer &amp;m)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::invmod </td>
+          <td>(</td>
+          <td class="paramtype">base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>target</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>m</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a931235bb5e181c038944d773a1e03158"></a><!-- doxytag: member="boost::xint::detail::lcm" ref="a931235bb5e181c038944d773a1e03158" args="(base_integer &amp;target, const base_integer &amp;num1, const base_integer &amp;num2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::lcm </td>
+          <td>(</td>
+          <td class="paramtype">base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>target</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>num1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>num2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aee0c323135ed34026523afa598e8a270"></a><!-- doxytag: member="boost::xint::detail::log10_bits" ref="aee0c323135ed34026523afa598e8a270" args="(size_t bits)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t boost::xint::detail::log10_bits </td>
+          <td>(</td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>bits</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a3c6ea7edbed003bc5ed8254fd2f12ac5"></a><!-- doxytag: member="boost::xint::detail::log2" ref="a3c6ea7edbed003bc5ed8254fd2f12ac5" args="(const T &amp;nn, typename boost::enable_if&lt; boost::is_integral&lt; T &gt; &gt;::type *=0, typename boost::enable_if&lt; boost::is_signed&lt; T &gt; &gt;::type *=0)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t boost::xint::detail::log2 </td>
+          <td>(</td>
+          <td class="paramtype">const T &amp;&nbsp;</td>
+          <td class="paramname"> <em>nn</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">typename boost::enable_if&lt; boost::is_integral&lt; T &gt; &gt;::type *&nbsp;</td>
+          <td class="paramname"> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">typename boost::enable_if&lt; boost::is_signed&lt; T &gt; &gt;::type *&nbsp;</td>
+          <td class="paramname"> = <code>0</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00405">405</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a35e711ff550651a2d9414249e9adcc60"></a><!-- doxytag: member="boost::xint::detail::log2" ref="a35e711ff550651a2d9414249e9adcc60" args="(const T &amp;n, typename boost::enable_if&lt; boost::is_integral&lt; T &gt; &gt;::type *=0, typename boost::enable_if&lt; boost::is_unsigned&lt; T &gt; &gt;::type *=0)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t boost::xint::detail::log2 </td>
+          <td>(</td>
+          <td class="paramtype">const T &amp;&nbsp;</td>
+          <td class="paramname"> <em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">typename boost::enable_if&lt; boost::is_integral&lt; T &gt; &gt;::type *&nbsp;</td>
+          <td class="paramname"> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">typename boost::enable_if&lt; boost::is_unsigned&lt; T &gt; &gt;::type *&nbsp;</td>
+          <td class="paramname"> = <code>0</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00391">391</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a70ae609a4ed2dfd6fb2c237eadfe8a71"></a><!-- doxytag: member="boost::xint::detail::lowestbit" ref="a70ae609a4ed2dfd6fb2c237eadfe8a71" args="(const base_integer &amp;n, size_t valueIfZero)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t boost::xint::detail::lowestbit </td>
+          <td>(</td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>valueIfZero</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a3395be771e1ce5d282e018a2735b6d86"></a><!-- doxytag: member="boost::xint::detail::mod" ref="a3395be771e1ce5d282e018a2735b6d86" args="(base_integer &amp;target, const base_integer &amp;n, const base_integer &amp;m)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::mod </td>
+          <td>(</td>
+          <td class="paramtype">base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>target</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>m</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ae35185e26f2828524b2830778186ac19"></a><!-- doxytag: member="boost::xint::detail::multiply" ref="ae35185e26f2828524b2830778186ac19" args="(base_integer &amp;target, const base_integer &amp;n, const base_integer &amp;by)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::multiply </td>
+          <td>(</td>
+          <td class="paramtype">base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>target</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>by</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a674271483ebe199824cdfbd63a6adee1"></a><!-- doxytag: member="boost::xint::detail::operator&lt;&lt;" ref="a674271483ebe199824cdfbd63a6adee1" args="(std::basic_ostream&lt; charT, traits &gt; &amp;out, const base_integer &amp;n)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename charT , typename traits &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::basic_ostream&lt;charT,traits&gt;&amp; boost::xint::detail::operator&lt;&lt; </td>
+          <td>(</td>
+          <td class="paramtype">std::basic_ostream&lt; charT, traits &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>out</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00431">431</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2cab37c14507681f47915d9e3f0d6c86"></a><!-- doxytag: member="boost::xint::detail::operator&gt;&gt;" ref="a2cab37c14507681f47915d9e3f0d6c86" args="(std::basic_istream&lt; charT, traits &gt; &amp;in, base_integer &amp;n)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename charT , typename traits &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::basic_istream&lt;charT,traits&gt;&amp; boost::xint::detail::operator&gt;&gt; </td>
+          <td>(</td>
+          <td class="paramtype">std::basic_istream&lt; charT, traits &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>in</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00461">461</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac81c5a94831c7aea3a665eb33491ebe2"></a><!-- doxytag: member="boost::xint::detail::pow" ref="ac81c5a94831c7aea3a665eb33491ebe2" args="(base_integer &amp;target, const base_integer &amp;n, const base_integer &amp;e)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::pow </td>
+          <td>(</td>
+          <td class="paramtype">base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>target</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>e</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ac063e3fcb648313184b04ef7102d7695"></a><!-- doxytag: member="boost::xint::detail::powmod" ref="ac063e3fcb648313184b04ef7102d7695" args="(base_integer &amp;target, const base_integer &amp;_n, const base_integer &amp;_e, const base_integer &amp;_m, bool noMontgomery)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::powmod </td>
+          <td>(</td>
+          <td class="paramtype">base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>target</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>_n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>_e</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>_m</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>noMontgomery</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a1883fadafa2eeb3e70dfd9032f35bbdd"></a><!-- doxytag: member="boost::xint::detail::reallocate" ref="a1883fadafa2eeb3e70dfd9032f35bbdd" args="(data_t *olddata, size_t newsize)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a> * boost::xint::detail::reallocate </td>
           <td>(</td>
-          <td class="paramtype">data_t&lt;&gt; *&nbsp;</td>
+          <td class="paramtype">data_t *&nbsp;</td>
           <td class="paramname"> <em>olddata</em>, </td>
         </tr>
         <tr>
@@ -279,6 +1234,328 @@
 
 </div>
 </div>
+<a class="anchor" id="aab28ac84cd1fb51d3d6206abad9fba01"></a><!-- doxytag: member="boost::xint::detail::setbit" ref="aab28ac84cd1fb51d3d6206abad9fba01" args="(base_integer &amp;n, size_t bit)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::setbit </td>
+          <td>(</td>
+          <td class="paramtype">base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>bit</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a2c4f8bb0f54061c28c9eb9c2cc852273"></a><!-- doxytag: member="boost::xint::detail::shift_left" ref="a2c4f8bb0f54061c28c9eb9c2cc852273" args="(base_integer &amp;target, const base_integer &amp;n, size_t byBits)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::shift_left </td>
+          <td>(</td>
+          <td class="paramtype">base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>target</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>byBits</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ac6682e4cab49f639aa538ccd10b3a8e5"></a><!-- doxytag: member="boost::xint::detail::shift_right" ref="ac6682e4cab49f639aa538ccd10b3a8e5" args="(base_integer &amp;target, const base_integer &amp;n, size_t byBits)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::shift_right </td>
+          <td>(</td>
+          <td class="paramtype">base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>target</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>byBits</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="abdd8d6819281b304dad578d720e5a651"></a><!-- doxytag: member="boost::xint::detail::sqr" ref="abdd8d6819281b304dad578d720e5a651" args="(base_integer &amp;target, const base_integer &amp;n)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::sqr </td>
+          <td>(</td>
+          <td class="paramtype">base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>target</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aca96f8988b99f3d7153073ef408b875d"></a><!-- doxytag: member="boost::xint::detail::sqrt" ref="aca96f8988b99f3d7153073ef408b875d" args="(base_integer &amp;target, const base_integer &amp;nn)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::sqrt </td>
+          <td>(</td>
+          <td class="paramtype">base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>target</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>nn</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a0424e97ecd4549ba637bbf16e31f3047"></a><!-- doxytag: member="boost::xint::detail::subtract" ref="a0424e97ecd4549ba637bbf16e31f3047" args="(base_integer &amp;target, const base_integer &amp;n1, const base_integer &amp;n2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::subtract </td>
+          <td>(</td>
+          <td class="paramtype">base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>target</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a6d3ab42bef0e91fcfcf74de54ca623a0"></a><!-- doxytag: member="boost::xint::detail::to" ref="a6d3ab42bef0e91fcfcf74de54ca623a0" args="(const base_integer &amp;n)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">T boost::xint::detail::to </td>
+          <td>(</td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00414">414</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a8c7dab9ec8b34c81c577a3b9d3e44118"></a><!-- doxytag: member="boost::xint::detail::to_binary" ref="a8c7dab9ec8b34c81c577a3b9d3e44118" args="(xint::binary_t &amp;target, const base_integer &amp;n, size_t bits)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::to_binary </td>
+          <td>(</td>
+          <td class="paramtype">xint::binary_t &amp;&nbsp;</td>
+          <td class="paramname"> <em>target</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>bits</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="af928647d948f09a6564ccd83a80dad14"></a><!-- doxytag: member="boost::xint::detail::to_string" ref="af928647d948f09a6564ccd83a80dad14" args="(const base_integer &amp;n, size_t base, bool uppercase)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string boost::xint::detail::to_string </td>
+          <td>(</td>
+          <td class="paramtype">const base_integer &amp;&nbsp;</td>
+          <td class="paramname"> <em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>base</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>uppercase</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a589b1fc1784e06a3aef44c86254f1a45"></a><!-- doxytag: member="boost::xint::detail::zero" ref="a589b1fc1784e06a3aef44c86254f1a45" args="(digit_t *p, size_t size)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::zero </td>
+          <td>(</td>
+          <td class="paramtype">digit_t *&nbsp;</td>
+          <td class="paramname"> <em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>size</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a4e055aa4ada37a5892b2605de2a953ae"></a><!-- doxytag: member="boost::xint::detail::zero" ref="a4e055aa4ada37a5892b2605de2a953ae" args="(digit_t *p, digit_t *end)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::zero </td>
+          <td>(</td>
+          <td class="paramtype">digit_t *&nbsp;</td>
+          <td class="paramname"> <em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">digit_t *&nbsp;</td>
+          <td class="paramname"> <em>end</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
 <hr/><h2>Variable Documentation</h2>
 <a class="anchor" id="a7502e1dd4c20a5ad799c6414b55e6818"></a><!-- doxytag: member="boost::xint::detail::bits_per_digit" ref="a7502e1dd4c20a5ad799c6414b55e6818" args="" -->
 <div class="memitem">
@@ -291,7 +1568,7 @@
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00057">57</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00105">105</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
 
 </div>
 </div>
@@ -306,7 +1583,7 @@
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00058">58</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00109">109</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
 
 </div>
 </div>
@@ -321,7 +1598,7 @@
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00061">61</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00112">112</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
 
 </div>
 </div>
@@ -336,7 +1613,25 @@
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00060">60</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00111">111</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2dcd1e1d9d0bed7c296c7474ed4f976e"></a><!-- doxytag: member="boost::xint::detail::digits_in_uintmax" ref="a2dcd1e1d9d0bed7c296c7474ed4f976e" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const size_t <a class="el" href="namespaceboost_1_1xint_1_1detail.html#a2dcd1e1d9d0bed7c296c7474ed4f976e">boost::xint::detail::digits_in_uintmax</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<b>Initial value:</b><div class="fragment"><pre class="fragment">
+    (std::numeric_limits&lt;boost::uintmax_t&gt;::digits + <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a> - 1) /
+    <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">bits_per_digit</a>
+</pre></div>
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00106">106</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
 
 </div>
 </div>
@@ -351,7 +1646,7 @@
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00059">59</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00110">110</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
 
 </div>
 </div>
@@ -371,7 +1666,7 @@
 </div>
 </div>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sat Apr 17 20:02:58 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Apr 30 00:24:28 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

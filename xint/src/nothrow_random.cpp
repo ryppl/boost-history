@@ -12,29 +12,26 @@
 */
 
 /*! \file
-    \brief Contains the definitions for the random number functions for
-           blockable integers.
+    \brief Contains the definitions for the random number functions for the \c
+           nothrow_integer type.
 */
 
-#include "../boost/xint/xint.hpp"
+#include "../boost/xint/nothrow_integer.hpp"
 
 namespace boost {
 namespace xint {
-namespace blockable {
 
-//! \copydoc core::random_by_size
-integer random_by_size(size_t bits, bool high_bit_on, bool low_bit_on, bool
-    can_be_negative)
+//! \copydoc xint::random_by_size
+nothrow_integer nothrow_random_by_size(size_t bits, bool high_bit_on, bool
+    low_bit_on, bool can_be_negative)
 {
     try {
-        return integer(core::random_by_size(bits, high_bit_on, low_bit_on,
-            can_be_negative));
+        return nothrow_integer(xint::random_by_size(bits, high_bit_on,
+            low_bit_on, can_be_negative));
     } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        return integer::nan();
+        return nothrow_integer::nan();
     }
 }
 
-} // namespace blockable
 } // namespace xint
 } // namespace boost

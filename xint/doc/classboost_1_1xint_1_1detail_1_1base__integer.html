@@ -12,7 +12,6 @@
   <div class="tabs">
     <ul>
       <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
@@ -30,7 +29,7 @@
 </div>
 <div class="contents">
 <h1>boost::xint::detail::base_integer Class Reference</h1><!-- doxytag: class="boost::xint::detail::base_integer" -->
-<p>The base class for the integer classes.  
+<p>The base class for all integer classes.  
 <a href="#_details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for boost::xint::detail::base_integer:</div>
@@ -38,8 +37,13 @@ Inheritance diagram for boost::xint::detail::base_integer:</div>
  <div class="center">
   <img src="classboost_1_1xint_1_1detail_1_1base__integer.png" usemap="#boost::xint::detail::base_integer_map" alt=""/>
   <map id="boost::xint::detail::base_integer_map" name="boost::xint::detail::base_integer_map">
-<area href="classboost_1_1xint_1_1integer.html" alt="boost::xint::integer" shape="rect" coords="0,56,182,80"/>
-<area href="classboost_1_1xint_1_1nothrow__integer.html" alt="boost::xint::nothrow_integer" shape="rect" coords="192,56,374,80"/>
+<area href="classboost_1_1xint_1_1detail_1_1base__variable__length__integer.html" alt="boost::xint::detail::base_variable_length_integer" shape="rect" coords="143,56,419,80"/>
+<area href="classboost_1_1xint_1_1detail_1_1temp__t.html" alt="boost::xint::detail::temp_t" shape="rect" coords="572,56,848,80"/>
+<area href="classboost_1_1xint_1_1fixed__integer__any.html" alt="boost::xint::fixed_integer_any" shape="rect" coords="858,56,1134,80"/>
+<area href="classboost_1_1xint_1_1integer.html" alt="boost::xint::integer" shape="rect" coords="0,112,276,136"/>
+<area href="classboost_1_1xint_1_1nothrow__integer.html" alt="boost::xint::nothrow_integer" shape="rect" coords="286,112,562,136"/>
+<area href="classboost_1_1xint_1_1detail_1_1neg__t.html" alt="boost::xint::detail::neg_t" shape="rect" coords="572,112,848,136"/>
+<area href="classboost_1_1xint_1_1fixed__integer.html" alt="boost::xint::fixed_integer&lt; Bits &gt;" shape="rect" coords="858,112,1134,136"/>
 </map>
  </div>
 </div>
@@ -51,38 +55,73 @@ Inheritance diagram for boost::xint::detail::base_integer:</div>
 <tr><td colspan="2"><div class="groupHeader">Internal Functions</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpae260ff3a3a80dad696f01482c30bb91"></a> </p>
 </div></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">detail::digit_t</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#aad96a1fe27c2b1da6fe933acc444d98f">_get_digit</a> (size_t index) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a3e0e821a38c37d4b94b61a62a9448b42">_add</a> (const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a9ee6c6d706a8dc8cdd1a16b1e65a47e2">_attach</a> (const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;copy)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#ab74b3c73fe6560f1f760b1a94612b189">_cleanup</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a91e4b721c42445501b136a13d7ce9d32">_decrement</a> (bool absolute_value=false)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a89015b1e803dbd5162f6b6e5f3ff374c">_fixed_bits</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a546d2270418066857ddf948b20de4810">_fixed_digits</a> () const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">detail::digit_t</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a04f1087ed90152d3cc1b803b359951ab">_get_digit</a> (size_t index, bool) const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">detail::digit_t</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a9ee8727d51762352bba8ea8e3b8489f2">_get_digits</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">detail::digit_t</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#aad96a1fe27c2b1da6fe933acc444d98f">_get_digit</a> (size_t index) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">detail::digit_t</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a4dbd638f790c50cfb2f68af5d3852372">_get_digits</a> () const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a7462afdf5589caa01bb1ed732f633469">_get_length</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#ac9fbd48df9971107d98ff5840ee3557e">_get_max_length</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a2a6ba9a67a9167e9535d735dacbaace7">_get_negative</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#ac4692f68ae9b4c949680421c877dc400">_get_readonly</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">detail::digit_t</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a355b981cef93f9c674fe4202b4d02d64">_get_writable_digits</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#ab47afee36e91b35b199b0ac3b6542ad2">_increment</a> (bool absolute_value=false)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a70e40ee3b40acbc6a7dd55a7f8d5c13c">_is_fixed</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#afdaa612dd6669a12d349d6268f1ea3ff">_is_nan</a> () const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#aee70939aaa336233f62341cf7d595010">_is_unique</a> () const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a576bd802f9b2cb8450250839bc52b98c">_is_zero</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a2a6ba9a67a9167e9535d735dacbaace7">_get_negative</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a91cb2f84f30425e9158c2ac9bfcd9cb6">_set_negative</a> (bool neg)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#ab74b3c73fe6560f1f760b1a94612b189">_cleanup</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a29f37fcd3e14cd2b271d990edc3dbb56">_log2</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a685da8a208baf4f77502062d4cc0f062">_make_unique</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a36175e45a3f8660f59a9de593328fefd">_realloc</a> (size_t new_digit_count)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#ad75a8d9bef5eb2d57cbac37cafd925eb">_duplicate</a> (const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;copy, size_t extra)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#aea0cff03f7886f2c44747538e27ad7f1">_shift_left</a> (size_t byBits)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a8236c349f72d154823d592123d94f218">_shift_right</a> (size_t byBits)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a3e0e821a38c37d4b94b61a62a9448b42">_add</a> (const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a44cf0d0743513fe84addcaf2e66bb343">_set_length</a> (size_t digits)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a91cb2f84f30425e9158c2ac9bfcd9cb6">_set_negative</a> (bool neg)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#af81476d55eaf931ff396c82894c7f72d">_set_signed</a> (boost::intmax_t n)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#ad87a527e2b5379b358484893a1cd8ebb">_set_unsigned</a> (boost::uintmax_t n, bool negative=false)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a4f7e982aa22a1910dd5daf0e260c43c5">_subtract</a> (const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;n)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a6c2015c98805bf96d68aae1c13287a36">_swap</a> (<a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;other)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer.html">integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a1ee8597806a71bb2846b9b8eb8d05dce">_to_integer</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a2397061bb963562fd145ed5b4a6799ca">_toggle_negative</a> ()</td></tr>
+<tr><td colspan="2"><h2>Protected Types</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">typedef unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#af85f2e55215d2ec3f15164fff64cddd9">flag_t</a></td></tr>
 <tr><td colspan="2"><h2>Protected Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a9e58a5897a80b8017ff7da7f0abacb6b">_base_attach</a> (<a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a> *new_data, <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#af85f2e55215d2ec3f15164fff64cddd9">flag_t</a> flags=0, size_t extra_allocation=0)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a8e11790b0ec09eb4b74d2df00e63bf95">_set_readonly</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a160a243a54984431613c88fb7fbacb0c">base_integer</a> (size_t count, <a class="el" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> mask)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a94fcb8494e0a8787c34ea6dcb9d5c4cf">base_integer</a> (<a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a> *adopt, bool neg=false)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#ab5e59c173051f19be31b5af9c2077de0">base_integer</a> (const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;c, bool fixed)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a0e91eb0fd9e83d3cfc284d5b7e20207e">base_integer</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a94ba0c5d0b11588062116ebf6263f2cc">base_integer</a> (size_t count, <a class="el" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> mask, void *d)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#afdaa612dd6669a12d349d6268f1ea3ff">_is_nan</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#abdfe224ab8dae4dbd4cfdd16e6c0612f">_base_make_unique</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a0ff9a2dc0d72f2c16caf68c6277cdab9">_attach</a> (<a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a>&lt;&gt; *new_data, bool neg=false)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a9ee6c6d706a8dc8cdd1a16b1e65a47e2">_attach</a> (const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;copy)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a4f2678c34cdf09e8df0c38ea91347fd7">_attach_0</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#ab94f96758a658c1523291c6d10ca7dc0">_attach_1</a> (<a class="el" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> n)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a00be0a0a2d19316259c54a8ced4e8451">_attach_n</a> (boost::uintmax_t n)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a0980c3f09050640e8f33a9f10bcd2c38">_set_n</a> (boost::uintmax_t n)</td></tr>
+<tr><td colspan="2"><h2>Static Protected Attributes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#af85f2e55215d2ec3f15164fff64cddd9">flag_t</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a988572f30ed3d8fc3b936eeec09724ef">flag_fixedlength</a> = 0x04</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#af85f2e55215d2ec3f15164fff64cddd9">flag_t</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a406617f773cbc0901a60290c5bc4dbac">flag_negative</a> = 0x01</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#af85f2e55215d2ec3f15164fff64cddd9">flag_t</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a993c7f7bfba3eec3cc5d1ed0fe7aa36c">flag_readonly</a> = 0x02</td></tr>
+<tr><td colspan="2"><h2>Friends</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#abd3bad49963ec70a929110fbb435832a">base_variable_length_integer</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#ac1e1911bc92a092158db403a5412c561">temp_t</a></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
-<p>The base class for the integer classes. </p>
+<p>The base class for all integer classes. </p>
 
-<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00085">85</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00144">144</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+<hr/><h2>Member Typedef Documentation</h2>
+<a class="anchor" id="af85f2e55215d2ec3f15164fff64cddd9"></a><!-- doxytag: member="boost::xint::detail::base_integer::flag_t" ref="af85f2e55215d2ec3f15164fff64cddd9" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef unsigned int <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#af85f2e55215d2ec3f15164fff64cddd9">boost::xint::detail::base_integer::flag_t</a><code> [protected]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00192">192</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+
+</div>
+</div>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a33dd417aa6d0a7892efe3d497b8f3f80"></a><!-- doxytag: member="boost::xint::detail::base_integer::~base_integer" ref="a33dd417aa6d0a7892efe3d497b8f3f80" args="()" -->
 <div class="memitem">
@@ -99,7 +138,7 @@ Inheritance diagram for boost::xint::detail::base_integer:</div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00041">41</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00055">55</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -112,17 +151,75 @@ Inheritance diagram for boost::xint::detail::base_integer:</div>
           <td>(</td>
           <td class="paramname"></td>
           <td>&nbsp;)&nbsp;</td>
-          <td><code> [inline, protected]</code></td>
+          <td><code> [protected]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00110">110</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00035">35</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a94ba0c5d0b11588062116ebf6263f2cc"></a><!-- doxytag: member="boost::xint::detail::base_integer::base_integer" ref="a94ba0c5d0b11588062116ebf6263f2cc" args="(size_t count, digit_t mask, void *d)" -->
+<a class="anchor" id="ab5e59c173051f19be31b5af9c2077de0"></a><!-- doxytag: member="boost::xint::detail::base_integer::base_integer" ref="ab5e59c173051f19be31b5af9c2077de0" args="(const base_integer &amp;c, bool fixed)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">boost::xint::detail::base_integer::base_integer </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>c</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>fixed</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [protected]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00037">37</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a94fcb8494e0a8787c34ea6dcb9d5c4cf"></a><!-- doxytag: member="boost::xint::detail::base_integer::base_integer" ref="a94fcb8494e0a8787c34ea6dcb9d5c4cf" args="(data_t *adopt, bool neg=false)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">boost::xint::detail::base_integer::base_integer </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a> *&nbsp;</td>
+          <td class="paramname"> <em>adopt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>neg</em> = <code>false</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [explicit, protected]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00049">49</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a160a243a54984431613c88fb7fbacb0c"></a><!-- doxytag: member="boost::xint::detail::base_integer::base_integer" ref="a160a243a54984431613c88fb7fbacb0c" args="(size_t count, digit_t mask)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -136,13 +233,7 @@ Inheritance diagram for boost::xint::detail::base_integer:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>&nbsp;</td>
-          <td class="paramname"> <em>mask</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">void *&nbsp;</td>
-          <td class="paramname"> <em>d</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>mask</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -153,7 +244,7 @@ Inheritance diagram for boost::xint::detail::base_integer:</div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00028">28</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00043">43</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -174,8 +265,6 @@ Inheritance diagram for boost::xint::detail::base_integer:</div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00215">215</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="a9ee6c6d706a8dc8cdd1a16b1e65a47e2"></a><!-- doxytag: member="boost::xint::detail::base_integer::_attach" ref="a9ee6c6d706a8dc8cdd1a16b1e65a47e2" args="(const base_integer &amp;copy)" -->
@@ -188,31 +277,37 @@ Inheritance diagram for boost::xint::detail::base_integer:</div>
           <td class="paramtype">const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>copy</em></td>
           <td>&nbsp;)&nbsp;</td>
-          <td><code> [protected]</code></td>
+          <td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00084">84</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00270">270</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a0ff9a2dc0d72f2c16caf68c6277cdab9"></a><!-- doxytag: member="boost::xint::detail::base_integer::_attach" ref="a0ff9a2dc0d72f2c16caf68c6277cdab9" args="(data_t&lt;&gt; *new_data, bool neg=false)" -->
+<a class="anchor" id="a9e58a5897a80b8017ff7da7f0abacb6b"></a><!-- doxytag: member="boost::xint::detail::base_integer::_base_attach" ref="a9e58a5897a80b8017ff7da7f0abacb6b" args="(data_t *new_data, flag_t flags=0, size_t extra_allocation=0)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void boost::xint::detail::base_integer::_attach </td>
+          <td class="memname">void boost::xint::detail::base_integer::_base_attach </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a>&lt;&gt; *&nbsp;</td>
+          <td class="paramtype"><a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">data_t</a> *&nbsp;</td>
           <td class="paramname"> <em>new_data</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>neg</em> = <code>false</code></td><td>&nbsp;</td>
+          <td class="paramtype"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#af85f2e55215d2ec3f15164fff64cddd9">flag_t</a>&nbsp;</td>
+          <td class="paramname"> <em>flags</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>extra_allocation</em> = <code>0</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -223,85 +318,7 @@ Inheritance diagram for boost::xint::detail::base_integer:</div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00071">71</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a4f2678c34cdf09e8df0c38ea91347fd7"></a><!-- doxytag: member="boost::xint::detail::base_integer::_attach_0" ref="a4f2678c34cdf09e8df0c38ea91347fd7" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void boost::xint::detail::base_integer::_attach_0 </td>
-          <td>(</td>
-          <td class="paramname"></td>
-          <td>&nbsp;)&nbsp;</td>
-          <td><code> [protected]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00088">88</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ab94f96758a658c1523291c6d10ca7dc0"></a><!-- doxytag: member="boost::xint::detail::base_integer::_attach_1" ref="ab94f96758a658c1523291c6d10ca7dc0" args="(digit_t n)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void boost::xint::detail::base_integer::_attach_1 </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a>&nbsp;</td>
-          <td class="paramname"> <em>n</em></td>
-          <td>&nbsp;)&nbsp;</td>
-          <td><code> [protected]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00092">92</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a00be0a0a2d19316259c54a8ced4e8451"></a><!-- doxytag: member="boost::xint::detail::base_integer::_attach_n" ref="a00be0a0a2d19316259c54a8ced4e8451" args="(boost::uintmax_t n)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void boost::xint::detail::base_integer::_attach_n </td>
-          <td>(</td>
-          <td class="paramtype">boost::uintmax_t&nbsp;</td>
-          <td class="paramname"> <em>n</em></td>
-          <td>&nbsp;)&nbsp;</td>
-          <td><code> [protected]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00101">101</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="abdfe224ab8dae4dbd4cfdd16e6c0612f"></a><!-- doxytag: member="boost::xint::detail::base_integer::_base_make_unique" ref="abdfe224ab8dae4dbd4cfdd16e6c0612f" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void boost::xint::detail::base_integer::_base_make_unique </td>
-          <td>(</td>
-          <td class="paramname"></td>
-          <td>&nbsp;)&nbsp;</td>
-          <td><code> [protected]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00211">211</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00203">203</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -320,36 +337,65 @@ Inheritance diagram for boost::xint::detail::base_integer:</div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00136">136</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00275">275</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ad75a8d9bef5eb2d57cbac37cafd925eb"></a><!-- doxytag: member="boost::xint::detail::base_integer::_duplicate" ref="ad75a8d9bef5eb2d57cbac37cafd925eb" args="(const base_integer &amp;copy, size_t extra)" -->
+<a class="anchor" id="a91e4b721c42445501b136a13d7ce9d32"></a><!-- doxytag: member="boost::xint::detail::base_integer::_decrement" ref="a91e4b721c42445501b136a13d7ce9d32" args="(bool absolute_value=false)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void boost::xint::detail::base_integer::_duplicate </td>
+          <td class="memname">void boost::xint::detail::base_integer::_decrement </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>copy</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>absolute_value</em> = <code>false</code></td>
+          <td>&nbsp;)&nbsp;</td>
           <td></td>
-          <td class="paramtype">size_t&nbsp;</td>
-          <td class="paramname"> <em>extra</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00066">66</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00313">313</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a89015b1e803dbd5162f6b6e5f3ff374c"></a><!-- doxytag: member="boost::xint::detail::base_integer::_fixed_bits" ref="a89015b1e803dbd5162f6b6e5f3ff374c" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t boost::xint::detail::base_integer::_fixed_bits </td>
+          <td>(</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00143">143</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a546d2270418066857ddf948b20de4810"></a><!-- doxytag: member="boost::xint::detail::base_integer::_fixed_digits" ref="a546d2270418066857ddf948b20de4810" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t boost::xint::detail::base_integer::_fixed_digits </td>
+          <td>(</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00139">139</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -379,7 +425,7 @@ Inheritance diagram for boost::xint::detail::base_integer:</div>
 <div class="memdoc">
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
-<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00049">49</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00063">63</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -399,7 +445,7 @@ Inheritance diagram for boost::xint::detail::base_integer:</div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00045">45</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00059">59</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -419,26 +465,7 @@ Inheritance diagram for boost::xint::detail::base_integer:</div>
 <div class="memdoc">
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
-<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00058">58</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a9ee8727d51762352bba8ea8e3b8489f2"></a><!-- doxytag: member="boost::xint::detail::base_integer::_get_digits" ref="a9ee8727d51762352bba8ea8e3b8489f2" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> * boost::xint::detail::base_integer::_get_digits </td>
-          <td>(</td>
-          <td class="paramname"></td>
-          <td>&nbsp;)&nbsp;</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00054">54</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00073">73</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -457,7 +484,26 @@ Inheritance diagram for boost::xint::detail::base_integer:</div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00062">62</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00077">77</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac9fbd48df9971107d98ff5840ee3557e"></a><!-- doxytag: member="boost::xint::detail::base_integer::_get_max_length" ref="ac9fbd48df9971107d98ff5840ee3557e" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t boost::xint::detail::base_integer::_get_max_length </td>
+          <td>(</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00081">81</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -476,7 +522,84 @@ Inheritance diagram for boost::xint::detail::base_integer:</div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00128">128</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00150">150</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac4692f68ae9b4c949680421c877dc400"></a><!-- doxytag: member="boost::xint::detail::base_integer::_get_readonly" ref="ac4692f68ae9b4c949680421c877dc400" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool boost::xint::detail::base_integer::_get_readonly </td>
+          <td>(</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00163">163</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a355b981cef93f9c674fe4202b4d02d64"></a><!-- doxytag: member="boost::xint::detail::base_integer::_get_writable_digits" ref="a355b981cef93f9c674fe4202b4d02d64" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">digit_t</a> * boost::xint::detail::base_integer::_get_writable_digits </td>
+          <td>(</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00068">68</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab47afee36e91b35b199b0ac3b6542ad2"></a><!-- doxytag: member="boost::xint::detail::base_integer::_increment" ref="ab47afee36e91b35b199b0ac3b6542ad2" args="(bool absolute_value=false)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::base_integer::_increment </td>
+          <td>(</td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>absolute_value</em> = <code>false</code></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00294">294</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a70e40ee3b40acbc6a7dd55a7f8d5c13c"></a><!-- doxytag: member="boost::xint::detail::base_integer::_is_fixed" ref="a70e40ee3b40acbc6a7dd55a7f8d5c13c" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool boost::xint::detail::base_integer::_is_fixed </td>
+          <td>(</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00134">134</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -489,13 +612,13 @@ Inheritance diagram for boost::xint::detail::base_integer:</div>
           <td>(</td>
           <td class="paramname"></td>
           <td>&nbsp;)&nbsp;</td>
-          <td> const<code> [inline, protected]</code></td>
+          <td> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00113">113</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00161">161</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
 
 </div>
 </div>
@@ -514,7 +637,7 @@ Inheritance diagram for boost::xint::detail::base_integer:</div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00120">120</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00126">126</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -533,7 +656,45 @@ Inheritance diagram for boost::xint::detail::base_integer:</div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00124">124</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00130">130</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a29f37fcd3e14cd2b271d990edc3dbb56"></a><!-- doxytag: member="boost::xint::detail::base_integer::_log2" ref="a29f37fcd3e14cd2b271d990edc3dbb56" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t boost::xint::detail::base_integer::_log2 </td>
+          <td>(</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00089">89</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a685da8a208baf4f77502062d4cc0f062"></a><!-- doxytag: member="boost::xint::detail::base_integer::_make_unique" ref="a685da8a208baf4f77502062d4cc0f062" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::base_integer::_make_unique </td>
+          <td>(</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00175">175</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -553,27 +714,27 @@ Inheritance diagram for boost::xint::detail::base_integer:</div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00144">144</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00171">171</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a0980c3f09050640e8f33a9f10bcd2c38"></a><!-- doxytag: member="boost::xint::detail::base_integer::_set_n" ref="a0980c3f09050640e8f33a9f10bcd2c38" args="(boost::uintmax_t n)" -->
+<a class="anchor" id="a44cf0d0743513fe84addcaf2e66bb343"></a><!-- doxytag: member="boost::xint::detail::base_integer::_set_length" ref="a44cf0d0743513fe84addcaf2e66bb343" args="(size_t digits)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void boost::xint::detail::base_integer::_set_n </td>
+          <td class="memname">void boost::xint::detail::base_integer::_set_length </td>
           <td>(</td>
-          <td class="paramtype">boost::uintmax_t&nbsp;</td>
-          <td class="paramname"> <em>n</em></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>digits</em></td>
           <td>&nbsp;)&nbsp;</td>
-          <td><code> [protected]</code></td>
+          <td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00109">109</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00085">85</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -593,19 +754,38 @@ Inheritance diagram for boost::xint::detail::base_integer:</div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00132">132</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00154">154</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="aea0cff03f7886f2c44747538e27ad7f1"></a><!-- doxytag: member="boost::xint::detail::base_integer::_shift_left" ref="aea0cff03f7886f2c44747538e27ad7f1" args="(size_t byBits)" -->
+<a class="anchor" id="a8e11790b0ec09eb4b74d2df00e63bf95"></a><!-- doxytag: member="boost::xint::detail::base_integer::_set_readonly" ref="a8e11790b0ec09eb4b74d2df00e63bf95" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void boost::xint::detail::base_integer::_shift_left </td>
+          <td class="memname">void boost::xint::detail::base_integer::_set_readonly </td>
           <td>(</td>
-          <td class="paramtype">size_t&nbsp;</td>
-          <td class="paramname"> <em>byBits</em></td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td><code> [protected]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00167">167</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af81476d55eaf931ff396c82894c7f72d"></a><!-- doxytag: member="boost::xint::detail::base_integer::_set_signed" ref="af81476d55eaf931ff396c82894c7f72d" args="(boost::intmax_t n)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::base_integer::_set_signed </td>
+          <td>(</td>
+          <td class="paramtype">boost::intmax_t&nbsp;</td>
+          <td class="paramname"> <em>n</em></td>
           <td>&nbsp;)&nbsp;</td>
           <td></td>
         </tr>
@@ -613,27 +793,36 @@ Inheritance diagram for boost::xint::detail::base_integer:</div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00149">149</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00113">113</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a8236c349f72d154823d592123d94f218"></a><!-- doxytag: member="boost::xint::detail::base_integer::_shift_right" ref="a8236c349f72d154823d592123d94f218" args="(size_t byBits)" -->
+<a class="anchor" id="ad87a527e2b5379b358484893a1cd8ebb"></a><!-- doxytag: member="boost::xint::detail::base_integer::_set_unsigned" ref="ad87a527e2b5379b358484893a1cd8ebb" args="(boost::uintmax_t n, bool negative=false)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void boost::xint::detail::base_integer::_shift_right </td>
+          <td class="memname">void boost::xint::detail::base_integer::_set_unsigned </td>
           <td>(</td>
-          <td class="paramtype">size_t&nbsp;</td>
-          <td class="paramname"> <em>byBits</em></td>
-          <td>&nbsp;)&nbsp;</td>
+          <td class="paramtype">boost::uintmax_t&nbsp;</td>
+          <td class="paramname"> <em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>negative</em> = <code>false</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00178">178</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00094">94</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
 
 </div>
 </div>
@@ -653,7 +842,140 @@ Inheritance diagram for boost::xint::detail::base_integer:</div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00245">245</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+</div>
+</div>
+<a class="anchor" id="a6c2015c98805bf96d68aae1c13287a36"></a><!-- doxytag: member="boost::xint::detail::base_integer::_swap" ref="a6c2015c98805bf96d68aae1c13287a36" args="(base_integer &amp;other)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::base_integer::_swap </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">base_integer</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>other</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00193">193</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1ee8597806a71bb2846b9b8eb8d05dce"></a><!-- doxytag: member="boost::xint::detail::base_integer::_to_integer" ref="a1ee8597806a71bb2846b9b8eb8d05dce" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer.html">integer</a> boost::xint::detail::base_integer::_to_integer </td>
+          <td>(</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00288">288</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2397061bb963562fd145ed5b4a6799ca"></a><!-- doxytag: member="boost::xint::detail::base_integer::_toggle_negative" ref="a2397061bb963562fd145ed5b4a6799ca" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::detail::base_integer::_toggle_negative </td>
+          <td>(</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="base__integer_8cpp_source.html#l00159">159</a> of file <a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a>.</p>
+
+</div>
+</div>
+<hr/><h2>Friends And Related Function Documentation</h2>
+<a class="anchor" id="abd3bad49963ec70a929110fbb435832a"></a><!-- doxytag: member="boost::xint::detail::base_integer::base_variable_length_integer" ref="abd3bad49963ec70a929110fbb435832a" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">friend class <a class="el" href="classboost_1_1xint_1_1detail_1_1base__variable__length__integer.html">base_variable_length_integer</a><code> [friend]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00213">213</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac1e1911bc92a092158db403a5412c561"></a><!-- doxytag: member="boost::xint::detail::base_integer::temp_t" ref="ac1e1911bc92a092158db403a5412c561" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">friend class <a class="el" href="classboost_1_1xint_1_1detail_1_1temp__t.html">temp_t</a><code> [friend]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00212">212</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+
+</div>
+</div>
+<hr/><h2>Member Data Documentation</h2>
+<a class="anchor" id="a988572f30ed3d8fc3b936eeec09724ef"></a><!-- doxytag: member="boost::xint::detail::base_integer::flag_fixedlength" ref="a988572f30ed3d8fc3b936eeec09724ef" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#af85f2e55215d2ec3f15164fff64cddd9">flag_t</a> <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a988572f30ed3d8fc3b936eeec09724ef">boost::xint::detail::base_integer::flag_fixedlength</a> = 0x04<code> [static, protected]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00206">206</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a406617f773cbc0901a60290c5bc4dbac"></a><!-- doxytag: member="boost::xint::detail::base_integer::flag_negative" ref="a406617f773cbc0901a60290c5bc4dbac" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#af85f2e55215d2ec3f15164fff64cddd9">flag_t</a> <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a406617f773cbc0901a60290c5bc4dbac">boost::xint::detail::base_integer::flag_negative</a> = 0x01<code> [static, protected]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00204">204</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a993c7f7bfba3eec3cc5d1ed0fe7aa36c"></a><!-- doxytag: member="boost::xint::detail::base_integer::flag_readonly" ref="a993c7f7bfba3eec3cc5d1ed0fe7aa36c" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#af85f2e55215d2ec3f15164fff64cddd9">flag_t</a> <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a993c7f7bfba3eec3cc5d1ed0fe7aa36c">boost::xint::detail::base_integer::flag_readonly</a> = 0x02<code> [static, protected]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00205">205</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
 
 </div>
 </div>
@@ -662,7 +984,7 @@ Inheritance diagram for boost::xint::detail::base_integer:</div>
 <li><a class="el" href="base__integer_8cpp_source.html">base_integer.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sat Apr 17 20:02:58 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Apr 30 00:24:29 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

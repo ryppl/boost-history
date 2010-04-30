@@ -12,63 +12,44 @@
 */
 
 /*! \file
-    \brief Contains the the compare function and comparison operators for
-           blockable integers.
+    \brief Contains the the compare function and comparison operators for the \c
+           nothrow_integer type.
 */
 
-#include "../boost/xint/xint.hpp"
+#include "../boost/xint/nothrow_integer.hpp"
 
 namespace boost {
 namespace xint {
-namespace blockable {
 
-/*! \copydoc core::compare
+/*! \copydoc xint::compare(const integer&, const integer&, bool)
 
-\note If exceptions are blocked, returns 0 instead of throwing.
+\note Returns 0 instead of throwing.
 */
-int compare(const integer &b1, const integer &b2, bool ignoresign) {
-    try {
-        return compare(core::integer(b1), core::integer(b2));
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        else return 0;
-    }
+int compare(const nothrow_integer &b1, const nothrow_integer &b2, bool ignoresign) {
+    if (b1.is_nan() || b2.is_nan()) return 0;
+    return detail::compare(b1, b2);
 }
 
 namespace {
 template <typename T>
-bool cmp(const integer &num1, const integer &num2, const T& t) {
-    try {
-        return t(compare(core::integer(num1), core::integer(num2)), 0);
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        else return false;
-    }
+bool cmp(const nothrow_integer &b1, const nothrow_integer &b2, const T& t) {
+    if (b1.is_nan() || b2.is_nan()) return false;
+    return t(detail::compare(b1, b2), 0);
 }
 } // namespace
 
-bool operator!(const integer &num1) {
-    try {
-        return operator!(core::integer(num1));
-    } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        else return false;
-    }
-}
-
-bool operator==(const integer &num1, const integer &num2) {
+bool operator==(const nothrow_integer &num1, const nothrow_integer &num2) {
     return cmp(num1, num2, std::equal_to<int>()); }
-bool operator!=(const integer& num1, const integer& num2) {
+bool operator!=(const nothrow_integer& num1, const nothrow_integer& num2) {
     return cmp(num1, num2, std::not_equal_to<int>()); }
-bool operator<(const integer& num1, const integer& num2) {
+bool operator<(const nothrow_integer& num1, const nothrow_integer& num2) {
     return cmp(num1, num2, std::less<int>()); }
-bool operator>(const integer& num1, const integer& num2) {
+bool operator>(const nothrow_integer& num1, const nothrow_integer& num2) {
     return cmp(num1, num2, std::greater<int>()); }
-bool operator<=(const integer& num1, const integer& num2) {
+bool operator<=(const nothrow_integer& num1, const nothrow_integer& num2) {
     return cmp(num1, num2, std::less_equal<int>()); }
-bool operator>=(const integer& num1, const integer& num2) {
+bool operator>=(const nothrow_integer& num1, const nothrow_integer& num2) {
     return cmp(num1, num2, std::greater_equal<int>()); }
 
-} // namespace blockable
 } // namespace xint
 } // namespace boost

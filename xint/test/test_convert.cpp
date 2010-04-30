@@ -11,7 +11,9 @@
     This file contains the tests for the conversion functions.
 */
 
-#include <boost/xint/xint.hpp>
+#include <boost/xint/integer.hpp>
+#include <boost/xint/nothrow_integer.hpp>
+#include <boost/xint/fixed_integer.hpp>
 
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
@@ -27,7 +29,7 @@ using std::endl;
 namespace boost {
 namespace xint {
 
-BOOST_AUTO_TEST_CASE(testConvert) {
+BOOST_AUTO_TEST_CASE(test_string_conversions) {
     // Come up with a sufficiently complex number to test with. It must be
     // greater than one digit's worth of data, and have at least one leading
     // zero in base 16.
@@ -39,7 +41,8 @@ BOOST_AUTO_TEST_CASE(testConvert) {
 
     // Make sure that the number is greater than one digit's worth of data, and
     // that it has at least one leading zero in base 16.
-    detail::digit_t mask=(detail::doubledigit_t(0x0F) << (detail::bits_per_digit - 4));
+    detail::digit_t mask=(detail::doubledigit_t(0x0F) << (detail::bits_per_digit
+        - 4));
     BOOST_REQUIRE_GT(n._get_length(), size_t(1));
     BOOST_REQUIRE_EQUAL(n._get_digit(n._get_length()-1) & mask, 0);
 
@@ -81,16 +84,92 @@ BOOST_AUTO_TEST_CASE(testConvert) {
     boost::int32_t nTgt = to<boost::int32_t>(n);
     BOOST_CHECK_EQUAL(nTgt, nSrc);
 
+    BOOST_CHECK_NO_THROW(nothrow_integer badConversion("abcdefg", 16));
+    
     {
-        BOOST_CHECK_NO_THROW(nothrow_integer badConversion("abcdefg", 16));
+		nothrow_integer test1 = nothrow_integer::nan();
+		std::ostringstream outstream;
+		outstream << test1;
+		BOOST_CHECK_EQUAL(outstream.str(), detail::nan_text);
+		
+		std::istringstream instream;
+		instream.str(outstream.str());
+		nothrow_integer test2;
+		instream >> test2;
+		BOOST_CHECK(test2.is_nan());
+	}
+}
+
+BOOST_AUTO_TEST_CASE(test_binary_conversions) {
+    integer test(0x12345678);
+    binary_t testbin = to_binary(test, 4);
+    int x = 8;
+    for (binary_t::iterator i = testbin.begin(), ie = testbin.end(); i != ie;
+        ++i) BOOST_CHECK_EQUAL(*i, x--);
+    BOOST_CHECK_EQUAL(x, 0);
+    integer test2 = from_binary(testbin, 4);
+    BOOST_CHECK_EQUAL(test, test2);
+
+    integer n1("3856431dee2035bc3e0e41328688527f70b1", 16);
+    binary_t nbin = to_binary(n1);
+    BOOST_CHECK_EQUAL(nbin[0], 0xb1);
+    integer n2 = from_binary(nbin);
+    BOOST_CHECK_EQUAL(n1, n2);
+
+    fixed_integer<8> n3 = fixed_from_binary<8>(nbin);
+    BOOST_CHECK_EQUAL(n3, 0xb1);
+
+    nbin = to_binary(n1, 5);
+    n2 = from_binary(nbin, 5);
+    BOOST_CHECK_EQUAL(n1, n2);
+
+    BOOST_CHECK_THROW(from_binary(nbin, std::numeric_limits<unsigned char>::
+        digits + 1), exceptions::invalid_argument);
+    BOOST_CHECK_THROW(to_binary(n1, std::numeric_limits<unsigned char>::
+        digits + 1), exceptions::invalid_argument);
+}
+
+BOOST_AUTO_TEST_CASE(test_to) {
+    {
+        typedef int T;
+        T t = 1;
+        integer n = (std::numeric_limits<T>::max)();
+        BOOST_CHECK_NO_THROW(t = to<T>(n));
+        BOOST_CHECK_EQUAL(t, (std::numeric_limits<T>::max)());
+        ++n;
+        BOOST_CHECK_THROW(t = to<T>(n), exceptions::too_big);
+
+        n = (std::numeric_limits<T>::min)();
+        BOOST_CHECK_NO_THROW(t = to<T>(n));
+        BOOST_CHECK_EQUAL(t, (std::numeric_limits<T>::min)());
+        --n;
+        BOOST_CHECK_THROW(t = to<T>(n), exceptions::too_big);
     }
 
     {
-        integer n1("8688527F70B1", 16);
-        std::string nbin=to_binary(n1);
-        integer n2=from_binary(nbin);
-        BOOST_CHECK_EQUAL(n1, n2);
+        typedef unsigned int T;
+        T t = 1;
+        integer n = (std::numeric_limits<T>::max)();
+        BOOST_CHECK_NO_THROW(t = to<T>(n));
+        BOOST_CHECK_EQUAL(t, (std::numeric_limits<T>::max)());
+        ++n;
+        BOOST_CHECK_THROW(t = to<T>(n), exceptions::too_big);
+
+        n = (std::numeric_limits<T>::min)();
+        BOOST_CHECK_NO_THROW(t = to<T>(n));
+        BOOST_CHECK_EQUAL(t, (std::numeric_limits<T>::min)());
+        --n;
+        BOOST_CHECK_THROW(t = to<T>(n), exceptions::too_big);
     }
+}
+
+BOOST_AUTO_TEST_CASE(test_copy_nan) {
+    nothrow_integer n(nothrow_integer::nan());
+    BOOST_CHECK(n.is_nan());
+    nothrow_integer n2(n);
+    BOOST_CHECK(n2.is_nan());
+    n2=n;
+    BOOST_CHECK(n2.is_nan());
 }
 
 } // namespace xint

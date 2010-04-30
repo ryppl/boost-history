@@ -17,18 +17,18 @@
     writing them or in production.
 */
 
-#include <boost/xint/xint.hpp>
-
 #if 1
     #define BOOST_TEST_MAIN
     #define BOOST_TEST_DYN_LINK
     #include <boost/test/unit_test.hpp>
 #else
+    #include <boost/xint/xint.hpp>
     #include <iostream>
+    #include <iomanip>
 
     // For running one-off tests
     int main() {
-        using namespace boost::xint::core;
-        std::cout << boost::xint::core::pow(19, 1412);
+        using namespace std;
+        using namespace boost::xint;
     }
 #endif

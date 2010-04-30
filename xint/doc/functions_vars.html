@@ -12,7 +12,6 @@
   <div class="tabs">
     <ul>
       <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
@@ -31,17 +30,20 @@
       <li><a href="functions_func.html"><span>Functions</span></a></li>
       <li class="current"><a href="functions_vars.html"><span>Variables</span></a></li>
       <li><a href="functions_type.html"><span>Typedefs</span></a></li>
+      <li><a href="functions_rela.html"><span>Related&nbsp;Functions</span></a></li>
     </ul>
   </div>
   <div class="tabs">
     <ul>
       <li><a href="#index_c"><span>c</span></a></li>
       <li><a href="#index_d"><span>d</span></a></li>
+      <li><a href="#index_f"><span>f</span></a></li>
       <li><a href="#index_g"><span>g</span></a></li>
       <li><a href="#index_h"><span>h</span></a></li>
       <li><a href="#index_i"><span>i</span></a></li>
       <li><a href="#index_l"><span>l</span></a></li>
       <li><a href="#index_m"><span>m</span></a></li>
+      <li><a href="#index_q"><span>q</span></a></li>
       <li><a href="#index_r"><span>r</span></a></li>
       <li><a href="#index_t"><span>t</span></a></li>
     </ul>
@@ -52,19 +54,37 @@
 
 <h3><a class="anchor" id="index_c">- c -</a></h3><ul>
 <li>copies
-: <a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html#a2c4e92bbb54af690e1a53e2c02196e52">boost::xint::detail::data_t&lt; digit_count &gt;</a>
+: <a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html#a75fbdec9c81fcd83302e479ed2cae3c0">boost::xint::detail::data_t</a>
 </li>
 </ul>
 
 
 <h3><a class="anchor" id="index_d">- d -</a></h3><ul>
 <li>digits
-: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#ad2b6d99afd7e533fe7bb39675c50f4d8">std::numeric_limits&lt; boost::xint::integer &gt;</a>
+: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1fixed__integer_3_01_bits_01_4_01_4.html#ad3e98855a62b258e681216a6ff9083c3">std::numeric_limits&lt; boost::xint::fixed_integer&lt; Bits &gt; &gt;</a>
+, <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#ad2b6d99afd7e533fe7bb39675c50f4d8">std::numeric_limits&lt; boost::xint::integer &gt;</a>
 , <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#a8db85ce6bfd29378cd5b054ffa9dcc73">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
 </li>
 <li>digits10
-: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#a59c21d55527213fb2638618f986a5a23">std::numeric_limits&lt; boost::xint::integer &gt;</a>
+: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1fixed__integer_3_01_bits_01_4_01_4.html#a0b85344ce9c9ce5a66e27373d854c378">std::numeric_limits&lt; boost::xint::fixed_integer&lt; Bits &gt; &gt;</a>
+, <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#a59c21d55527213fb2638618f986a5a23">std::numeric_limits&lt; boost::xint::integer &gt;</a>
 , <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#a635a92c394110e24ad5446906d32dbac">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_f">- f -</a></h3><ul>
+<li>fixed_mask
+: <a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html#a5ecd68cad8903d2b85c295279df5cf99">boost::xint::detail::data_t</a>
+</li>
+<li>flag_fixedlength
+: <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a988572f30ed3d8fc3b936eeec09724ef">boost::xint::detail::base_integer</a>
+</li>
+<li>flag_negative
+: <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a406617f773cbc0901a60290c5bc4dbac">boost::xint::detail::base_integer</a>
+</li>
+<li>flag_readonly
+: <a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html#a993c7f7bfba3eec3cc5d1ed0fe7aa36c">boost::xint::detail::base_integer</a>
 </li>
 </ul>
 
@@ -81,26 +101,31 @@
 
 <h3><a class="anchor" id="index_h">- h -</a></h3><ul>
 <li>has_denorm
-: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#af6ad8de5f9785bce47d09baa074f209a">std::numeric_limits&lt; boost::xint::integer &gt;</a>
+: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1fixed__integer_3_01_bits_01_4_01_4.html#a97aeaa6158ec8146c740b1974c08868e">std::numeric_limits&lt; boost::xint::fixed_integer&lt; Bits &gt; &gt;</a>
+, <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#af6ad8de5f9785bce47d09baa074f209a">std::numeric_limits&lt; boost::xint::integer &gt;</a>
 , <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#a8eb59688fd79c9928927d524d7c700c4">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
 </li>
 <li>has_denorm_loss
-: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#addb4eee85c09f7e5395e67c918671d05">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
+: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1fixed__integer_3_01_bits_01_4_01_4.html#a8318be63a6530eb99b1ce8a6472559af">std::numeric_limits&lt; boost::xint::fixed_integer&lt; Bits &gt; &gt;</a>
 , <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#a16c5bbfdae90e62a46d9d604a615d071">std::numeric_limits&lt; boost::xint::integer &gt;</a>
+, <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#addb4eee85c09f7e5395e67c918671d05">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
 </li>
 <li>has_fixed_range
 : <a class="el" href="classboost_1_1xint_1_1strong__random__generator.html#a1fec38eaf8f94dbcb866e9ee495a1eef">boost::xint::strong_random_generator</a>
 </li>
 <li>has_infinity
-: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#af2f45b256a4e7ad9f6304e0f743400ec">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
+: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1fixed__integer_3_01_bits_01_4_01_4.html#a6f1865061768dfe8d0bd5b50e931c163">std::numeric_limits&lt; boost::xint::fixed_integer&lt; Bits &gt; &gt;</a>
 , <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#afc2b5e56fb2057c2459180219491d930">std::numeric_limits&lt; boost::xint::integer &gt;</a>
+, <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#af2f45b256a4e7ad9f6304e0f743400ec">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
 </li>
 <li>has_quiet_NaN
-: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#a4349ec37234b540226385641b57849c4">std::numeric_limits&lt; boost::xint::integer &gt;</a>
-, <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#aae261d33d81d7ce984a045e96b46f962">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
+: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#aae261d33d81d7ce984a045e96b46f962">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
+, <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#a4349ec37234b540226385641b57849c4">std::numeric_limits&lt; boost::xint::integer &gt;</a>
+, <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1fixed__integer_3_01_bits_01_4_01_4.html#a113cd07ba3b16dd6278496e58d3f3dc7">std::numeric_limits&lt; boost::xint::fixed_integer&lt; Bits &gt; &gt;</a>
 </li>
 <li>has_signaling_NaN
 : <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#a49ff05bed05568f4a4ddf0b3d25e5980">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
+, <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1fixed__integer_3_01_bits_01_4_01_4.html#ac19b019e4042bee86427bdac0e8d49cb">std::numeric_limits&lt; boost::xint::fixed_integer&lt; Bits &gt; &gt;</a>
 , <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#aaa2f2d54b32c5c675a012b64d5b03302">std::numeric_limits&lt; boost::xint::integer &gt;</a>
 </li>
 </ul>
@@ -108,31 +133,38 @@
 
 <h3><a class="anchor" id="index_i">- i -</a></h3><ul>
 <li>is_bounded
-: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#aaa3d9b178e56460ba4701baf6044a6e1">std::numeric_limits&lt; boost::xint::integer &gt;</a>
+: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1fixed__integer_3_01_bits_01_4_01_4.html#a9547f495471bd63016167ef86e847330">std::numeric_limits&lt; boost::xint::fixed_integer&lt; Bits &gt; &gt;</a>
+, <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#aaa3d9b178e56460ba4701baf6044a6e1">std::numeric_limits&lt; boost::xint::integer &gt;</a>
 , <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#a53d8df36b3487d8eb3e923c6729edf21">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
 </li>
 <li>is_exact
-: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#a7349047386bb539ab5a714b5864f8b2b">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
+: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1fixed__integer_3_01_bits_01_4_01_4.html#a98088e6ad547b72b61ff5be0dbce2e5c">std::numeric_limits&lt; boost::xint::fixed_integer&lt; Bits &gt; &gt;</a>
 , <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#af14e06e3d92f0642f1936ed2f789fe62">std::numeric_limits&lt; boost::xint::integer &gt;</a>
+, <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#a7349047386bb539ab5a714b5864f8b2b">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
 </li>
 <li>is_iec559
 : <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#aa29c196c9fdae93c3c7ebc2bdcde118e">std::numeric_limits&lt; boost::xint::integer &gt;</a>
 , <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#abea02c5396ab75990b17946fb8e9aa9b">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
+, <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1fixed__integer_3_01_bits_01_4_01_4.html#acc062d3edf895f977a69930bbd2712c4">std::numeric_limits&lt; boost::xint::fixed_integer&lt; Bits &gt; &gt;</a>
 </li>
 <li>is_integer
-: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#ab6e1b183e5175d71bf9e4d6df54aef0a">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
+: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1fixed__integer_3_01_bits_01_4_01_4.html#a4bb885f7700371ba03ca74ad72185b44">std::numeric_limits&lt; boost::xint::fixed_integer&lt; Bits &gt; &gt;</a>
 , <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#a0a0ca82b32be38bd2b1129678c29a367">std::numeric_limits&lt; boost::xint::integer &gt;</a>
+, <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#ab6e1b183e5175d71bf9e4d6df54aef0a">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
 </li>
 <li>is_modulo
-: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#a88b83cf94dbe0c5d665c0da31384373b">std::numeric_limits&lt; boost::xint::integer &gt;</a>
-, <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#a3a65bc9e353e0a09aeb1b35384d65f40">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
+: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#a3a65bc9e353e0a09aeb1b35384d65f40">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
+, <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1fixed__integer_3_01_bits_01_4_01_4.html#a7d3d991e72ddaafc7f365e9920b16c01">std::numeric_limits&lt; boost::xint::fixed_integer&lt; Bits &gt; &gt;</a>
+, <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#a88b83cf94dbe0c5d665c0da31384373b">std::numeric_limits&lt; boost::xint::integer &gt;</a>
 </li>
 <li>is_signed
-: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#ab805f71787e27a6a760a1158eed67604">std::numeric_limits&lt; boost::xint::integer &gt;</a>
+: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1fixed__integer_3_01_bits_01_4_01_4.html#a69831914effe8dd477ed5f0b3f6025a4">std::numeric_limits&lt; boost::xint::fixed_integer&lt; Bits &gt; &gt;</a>
 , <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#a54b78ebfa3ddfc7b348487936aca5a69">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
+, <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#ab805f71787e27a6a760a1158eed67604">std::numeric_limits&lt; boost::xint::integer &gt;</a>
 </li>
 <li>is_specialized
-: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#ad75c31bcf281bc3d61fcaa86f5d637a4">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
+: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1fixed__integer_3_01_bits_01_4_01_4.html#a3360a21ceefd13ef2755c3e93f43bc35">std::numeric_limits&lt; boost::xint::fixed_integer&lt; Bits &gt; &gt;</a>
+, <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#ad75c31bcf281bc3d61fcaa86f5d637a4">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
 , <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#a797b5572e1defb2e54824d8f93757b70">std::numeric_limits&lt; boost::xint::integer &gt;</a>
 </li>
 </ul>
@@ -140,36 +172,40 @@
 
 <h3><a class="anchor" id="index_l">- l -</a></h3><ul>
 <li>length
-: <a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html#acf4a8986615aba673c134a4f56c3bf53">boost::xint::detail::data_t&lt; digit_count &gt;</a>
+: <a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html#a081b825b5fb98a03909fa3280e658c8c">boost::xint::detail::data_t</a>
 </li>
 </ul>
 
 
 <h3><a class="anchor" id="index_m">- m -</a></h3><ul>
 <li>magnitude
-: <a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html#aacce731ac73c34cab97ed3a86b16056a">boost::xint::detail::data_t&lt; digit_count &gt;</a>
+: <a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html#a47e251676febcdbf5ed47e13491c81b3">boost::xint::detail::data_t</a>
 </li>
 <li>max_exponent
-: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#a552090a8e12558fd5514176fb8b203c3">std::numeric_limits&lt; boost::xint::integer &gt;</a>
+: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1fixed__integer_3_01_bits_01_4_01_4.html#a04f60151b781f7bdc54cccbd896d0c8a">std::numeric_limits&lt; boost::xint::fixed_integer&lt; Bits &gt; &gt;</a>
 , <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#a5159625bece286f452e9b2b86e94b8d5">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
+, <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#a552090a8e12558fd5514176fb8b203c3">std::numeric_limits&lt; boost::xint::integer &gt;</a>
 </li>
 <li>max_exponent10
-: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#abcd8e2fb1e04a51fc5747603515cf497">std::numeric_limits&lt; boost::xint::integer &gt;</a>
+: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1fixed__integer_3_01_bits_01_4_01_4.html#a1ff0640dfde2863d62040fab4c05c015">std::numeric_limits&lt; boost::xint::fixed_integer&lt; Bits &gt; &gt;</a>
+, <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#abcd8e2fb1e04a51fc5747603515cf497">std::numeric_limits&lt; boost::xint::integer &gt;</a>
 , <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#a6a63de06c48db492872f44521d52d300">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
 </li>
 <li>max_length
-: <a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html#ac861550f6fa834587a7fafc24e006d22">boost::xint::detail::data_t&lt; digit_count &gt;</a>
+: <a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html#af6047dff158ec443f2f73d012710d4cd">boost::xint::detail::data_t</a>
 </li>
 <li>max_value
 : <a class="el" href="classboost_1_1xint_1_1strong__random__generator.html#ab1ae2657dfc2cbce1511d9991c21a68b">boost::xint::strong_random_generator</a>
 </li>
 <li>min_exponent
-: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#ae0fa48cc50faee763bb27126f48fd16c">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
+: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1fixed__integer_3_01_bits_01_4_01_4.html#a896b2960cdab358fe893ea8047afc16c">std::numeric_limits&lt; boost::xint::fixed_integer&lt; Bits &gt; &gt;</a>
 , <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#ad0d8fd556c393bf63f2525a4a494fcf7">std::numeric_limits&lt; boost::xint::integer &gt;</a>
+, <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#ae0fa48cc50faee763bb27126f48fd16c">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
 </li>
 <li>min_exponent10
-: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#a8b75c7ee1e29fdfc3a8d51386ed4389d">std::numeric_limits&lt; boost::xint::integer &gt;</a>
+: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1fixed__integer_3_01_bits_01_4_01_4.html#a502d3c024c47bc9f71bef8a581794885">std::numeric_limits&lt; boost::xint::fixed_integer&lt; Bits &gt; &gt;</a>
 , <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#aede69004d06de1fcf6a0a4d7fc601a5d">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
+, <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#a8b75c7ee1e29fdfc3a8d51386ed4389d">std::numeric_limits&lt; boost::xint::integer &gt;</a>
 </li>
 <li>min_value
 : <a class="el" href="classboost_1_1xint_1_1strong__random__generator.html#a487dc7bc2b00f9e692957fc7f7b2da25">boost::xint::strong_random_generator</a>
@@ -177,30 +213,44 @@
 </ul>
 
 
+<h3><a class="anchor" id="index_q">- q -</a></h3><ul>
+<li>quotient
+: <a class="el" href="classboost_1_1xint_1_1base__divide__t.html#a7b3f254223974ed79663f9a0e4d1649c">boost::xint::base_divide_t&lt; T &gt;</a>
+</li>
+</ul>
+
+
 <h3><a class="anchor" id="index_r">- r -</a></h3><ul>
 <li>radix
-: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#a14cba561a014bdaad371f21e8471e9f6">std::numeric_limits&lt; boost::xint::integer &gt;</a>
+: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1fixed__integer_3_01_bits_01_4_01_4.html#a33372a3cb350fa5607f95c6d4f3e29a7">std::numeric_limits&lt; boost::xint::fixed_integer&lt; Bits &gt; &gt;</a>
+, <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#a14cba561a014bdaad371f21e8471e9f6">std::numeric_limits&lt; boost::xint::integer &gt;</a>
 , <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#adae12b63475b14d19128eee60c665c5c">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
 </li>
+<li>remainder
+: <a class="el" href="classboost_1_1xint_1_1base__divide__t.html#aa79bd57f1bc85ceb86913fd0f81c9e2d">boost::xint::base_divide_t&lt; T &gt;</a>
+</li>
 <li>round_style
-: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#a8bb32df27ec29cc90e46adb78df8c4c2">std::numeric_limits&lt; boost::xint::integer &gt;</a>
-, <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#a6e305ad6c75f38d0d0ba4aa15865845d">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
+: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#a6e305ad6c75f38d0d0ba4aa15865845d">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
+, <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#a8bb32df27ec29cc90e46adb78df8c4c2">std::numeric_limits&lt; boost::xint::integer &gt;</a>
+, <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1fixed__integer_3_01_bits_01_4_01_4.html#a9f68d88c00266449ae6070b2188af46c">std::numeric_limits&lt; boost::xint::fixed_integer&lt; Bits &gt; &gt;</a>
 </li>
 </ul>
 
 
 <h3><a class="anchor" id="index_t">- t -</a></h3><ul>
 <li>tinyness_before
-: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#a6f43a2e1dcba42a7cf73a1a4323ed931">std::numeric_limits&lt; boost::xint::integer &gt;</a>
+: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1fixed__integer_3_01_bits_01_4_01_4.html#a48dff429909593ae6d19eba404126e8b">std::numeric_limits&lt; boost::xint::fixed_integer&lt; Bits &gt; &gt;</a>
+, <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#a6f43a2e1dcba42a7cf73a1a4323ed931">std::numeric_limits&lt; boost::xint::integer &gt;</a>
 , <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#a2cb05a6ce2f537c0be893bb3260fb186">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
 </li>
 <li>traps
-: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#ad469dddd16a7ba6fed9e88c969a5faa6">std::numeric_limits&lt; boost::xint::integer &gt;</a>
+: <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1fixed__integer_3_01_bits_01_4_01_4.html#ae13ce885b1b7b9e4f4a491acd5d434c0">std::numeric_limits&lt; boost::xint::fixed_integer&lt; Bits &gt; &gt;</a>
+, <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html#ad469dddd16a7ba6fed9e88c969a5faa6">std::numeric_limits&lt; boost::xint::integer &gt;</a>
 , <a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1nothrow__integer_01_4.html#a9d18eb71d6bad51653de3f58f62d5f47">std::numeric_limits&lt; boost::xint::nothrow_integer &gt;</a>
 </li>
 </ul>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sat Apr 17 20:02:58 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Apr 30 00:24:26 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

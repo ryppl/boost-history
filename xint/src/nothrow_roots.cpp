@@ -12,26 +12,25 @@
 */
 
 /*! \file
-    \brief Contains the definitions for blockable integer functions related to
+    \brief Contains the definitions for \c nothrow_integer functions related to
            roots of a number.
 */
 
-#include "../boost/xint/xint.hpp"
+#include "../boost/xint/nothrow_integer.hpp"
 
 namespace boost {
 namespace xint {
-namespace blockable {
 
-//! \copydoc core::sqrt
-integer sqrt(const integer& n) {
+//! \copydoc xint::sqrt(const integer&)
+nothrow_integer sqrt(const nothrow_integer& n) {
     try {
-        return integer(sqrt(core::integer(n)));
+        nothrow_integer r;
+        detail::sqrt(r, n);
+        return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
-        if (exceptions_allowed()) throw;
-        return integer::nan();
+        return nothrow_integer::nan();
     }
 }
 
-} // namespace blockable
 } // namespace xint
 } // namespace boost

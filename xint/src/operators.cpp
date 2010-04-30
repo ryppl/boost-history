@@ -15,11 +15,10 @@
     \brief Contains the definitions for the basic math operators.
 */
 
-#include "../boost/xint/xint.hpp"
+#include "../boost/xint/integer.hpp"
 
 namespace boost {
 namespace xint {
-const integer& operator+(const integer& a) { return a; }
 integer operator-(const integer& a) { return negate(a); }
 integer operator+(const integer& num1, const integer& num2) { return add(num1, num2); }
 integer operator-(const integer& num1, const integer& num2) { return subtract(num1, num2); }

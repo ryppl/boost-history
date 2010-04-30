@@ -12,7 +12,6 @@
   <div class="tabs">
     <ul>
       <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
@@ -37,7 +36,7 @@
 <a name="l00011"></a>00011 <span class="comment">    See http://www.boost.org/libs/xint for library home page.</span>
 <a name="l00012"></a>00012 <span class="comment">*/</span>
 <a name="l00013"></a>00013 
-<a name="l00018"></a>00018 <span class="preprocessor">#include &quot;../boost/xint/xint.hpp&quot;</span>
+<a name="l00018"></a>00018 <span class="preprocessor">#include &quot;../boost/xint/integer.hpp&quot;</span>
 <a name="l00019"></a>00019 
 <a name="l00020"></a>00020 <span class="keyword">namespace </span>boost {
 <a name="l00021"></a>00021 <span class="keyword">namespace </span>xint {
@@ -58,21 +57,18 @@
 <a name="l00047"></a>00047 <span class="preprocessor">    #endif</span>
 <a name="l00048"></a>00048 <span class="preprocessor"></span>}
 <a name="l00049"></a>00049 
-<a name="l00063"></a>00063 <span class="keywordtype">size_t</span> <a class="code" href="namespaceboost_1_1xint.html#a0cd277cd7a80cda764f889781f0140cd" title="Get the log2 value of an integer.">log2</a>(<span class="keyword">const</span> integer&amp; n) {
-<a name="l00064"></a>00064     <span class="keywordtype">size_t</span> r=<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">detail::bits_per_digit</a> * n._get_length();
-<a name="l00065"></a>00065     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">detail::digit_t</a> mask=<a class="code" href="namespaceboost_1_1xint_1_1detail.html#ab7d9f30b8cad63e2e82998aa2e8d0fcd">detail::digit_hibit</a>, d=n._get_digit(n._get_length()-1);
-<a name="l00066"></a>00066     <span class="keywordflow">while</span> (mask!=0) {
-<a name="l00067"></a>00067         <span class="keywordflow">if</span> ((mask &amp; d)!=0) <span class="keywordflow">break</span>;
-<a name="l00068"></a>00068         mask&gt;&gt;=1;
-<a name="l00069"></a>00069         --r;
-<a name="l00070"></a>00070     }
-<a name="l00071"></a>00071     <span class="keywordflow">return</span> r;
+<a name="l00065"></a>00065 <span class="keywordtype">size_t</span> <a class="code" href="namespaceboost_1_1xint.html#a0cd277cd7a80cda764f889781f0140cd" title="Get the log2 value of an integer.">log2</a>(<span class="keyword">const</span> integer&amp; n) {
+<a name="l00066"></a>00066     <span class="keywordflow">return</span> n._log2();
+<a name="l00067"></a>00067 }
+<a name="l00068"></a>00068 
+<a name="l00070"></a>00070 <span class="keywordtype">size_t</span> <a class="code" href="namespaceboost_1_1xint.html#a0cd277cd7a80cda764f889781f0140cd" title="Get the log2 value of an integer.">log2</a>(<span class="keyword">const</span> fixed_integer_any&amp; n) {
+<a name="l00071"></a>00071     <span class="keywordflow">return</span> n._log2();
 <a name="l00072"></a>00072 }
 <a name="l00073"></a>00073 
 <a name="l00074"></a>00074 } <span class="comment">// namespace xint</span>
 <a name="l00075"></a>00075 } <span class="comment">// namespace boost</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sat Apr 17 20:02:57 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Apr 30 00:24:24 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>
