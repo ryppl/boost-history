@@ -88,7 +88,7 @@ void test_explodebb() {
     {
     array<uint16_t, 1> in = {{(31 << 10) | (17 << 5) | (4 << 0)}};
     array<uint8_t, 3> out;
-    pack<big_octet_big_bit, 15, 5>(in, out);
+    pack<big_bit, 15, 5>(in, out);
     for (unsigned i = 0; i < out.size(); ++i) printf("%.2x ", (int)out[i]);
     printf("\n");
     array<uint8_t, 3> eout = {{31, 17, 4}};
@@ -329,7 +329,7 @@ void test_explodell() {
     {
     array<uint16_t, 1> in = {{(31 << 10) | (17 << 5) | (4 << 0)}};
     array<uint8_t, 3> out;
-    pack<little_octet_little_bit, 15, 5>(in, out);
+    pack<little_bit, 15, 5>(in, out);
     for (unsigned i = 0; i < out.size(); ++i) printf("%.2x ", (int)out[i]);
     printf("\n");
     array<uint8_t, 3> eout = {{4, 17, 31}};
@@ -416,7 +416,7 @@ void test_implodebb() {
     {
     array<uint8_t, 3> in = {{31, 17, 4}};
     array<uint16_t, 1> out;
-    pack<big_octet_big_bit, 5, 15>(in, out);
+    pack<big_bit, 5, 15>(in, out);
     for (unsigned i = 0; i < out.size(); ++i) printf("%.4x ", (int)out[i]);
     printf("\n");
     array<uint16_t, 1> eout = {{(31 << 10) | (17 << 5) | (4 << 0)}};
@@ -657,7 +657,7 @@ void test_implodell() {
     {
     array<uint8_t, 3> in = {{4, 17, 31}};
     array<uint16_t, 1> out;
-    pack<little_octet_little_bit, 5, 15>(in, out);
+    pack<little_bit, 5, 15>(in, out);
     for (unsigned i = 0; i < out.size(); ++i) printf("%.4x ", (int)out[i]);
     printf("\n");
     array<uint16_t, 1> eout = {{(31 << 10) | (17 << 5) | (4 << 0)}};
