@@ -25,16 +25,14 @@ namespace hash {
 template <typename Endianness,
           int InputBits, int OutputBits,
           bool Explode = (InputBits > OutputBits),
-          bool Implode = (InputBits < OutputBits),
-          bool BytesOnly = (InputBits % CHAR_BIT == 0 &&
-                            OutputBits % CHAR_BIT == 0),
-          bool Prefer = true>
-struct packer;
+          bool Implode = (InputBits < OutputBits)>
+struct real_packer;
 
 template <typename Endianness,
-          int Bits,
-          bool BytesOnly>
-struct packer<Endianness, Bits, Bits, false, false, BytesOnly, false> {
+          int Bits>
+struct real_packer<Endianness,
+                   Bits, Bits,
+                   false, false> {
 
     template <typename OutputType, typename InputType>
     static OutputType pack_array(InputType const &in) {
@@ -50,11 +48,10 @@ struct packer<Endianness, Bits, Bits, false, false, BytesOnly, false> {
 };
 
 template <typename Endianness,
-          int InputBits, int OutputBits,
-          bool BytesOnly>
-struct packer<Endianness,
-              InputBits, OutputBits,
-              true, false, BytesOnly, false> {
+          int InputBits, int OutputBits>
+struct real_packer<Endianness,
+                   InputBits, OutputBits,
+                   true, false> {
 
     BOOST_STATIC_ASSERT(InputBits % OutputBits == 0);
 
@@ -75,11 +72,10 @@ struct packer<Endianness,
 };
 
 template <typename Endianness,
-          int InputBits, int OutputBits,
-          bool BytesOnly>
-struct packer<Endianness,
-              InputBits, OutputBits,
-              false, true, BytesOnly, false> {
+          int InputBits, int OutputBits>
+struct real_packer<Endianness,
+                   InputBits, OutputBits,
+                   false, true> {
 
     BOOST_STATIC_ASSERT(OutputBits % InputBits == 0);
 
@@ -99,51 +95,52 @@ struct packer<Endianness,
 
 };
 
-// Forward Prefer to !Prefer if nothing better matches
+// Forward if nothing better matches
 template <typename Endianness,
           int InputBits, int OutputBits,
-          bool Explode, bool Implode, bool BytesOnly>
-struct packer<Endianness,
-              InputBits, OutputBits,
-              Explode, Implode, BytesOnly, true>
- : packer<Endianness,
-              InputBits, OutputBits,
-              Explode, Implode, BytesOnly, false> {};
+          bool BytesOnly = !(InputBits % CHAR_BIT) && !(OutputBits % CHAR_BIT)>
+struct packer : real_packer<Endianness, InputBits, OutputBits> {};
 
 #ifndef BOOST_HASH_NO_OPTIMIZATION
 
+// When inputs and outputs are multiples of bytes
+// and the requested endian matches that of the host,
+// use the non-portable -- and hopefully-faster -- implementation instead
+
 #ifdef BOOST_LITTLE_ENDIAN
-template <int InputBits, int OutputBits, bool Ex, bool Im>
+template <int InputBits, int OutputBits>
+struct packer<stream_endian::little_bit,
+              InputBits, OutputBits, true>
+ : real_packer<stream_endian::host_byte,
+               InputBits, OutputBits> {};
+template <int InputBits, int OutputBits>
 struct packer<stream_endian::little_byte_big_bit,
-              InputBits, OutputBits,
-              Ex, Im, true, true>
- : packer<stream_endian::host_byte,
-          InputBits, OutputBits,
-          Ex, Im, true, true> {};
-template <int InputBits, int OutputBits, bool Ex, bool Im>
+              InputBits, OutputBits, true>
+ : real_packer<stream_endian::host_byte,
+               InputBits, OutputBits> {};
+template <int InputBits, int OutputBits>
 struct packer<stream_endian::little_byte_little_bit,
-              InputBits, OutputBits,
-              Ex, Im, true, true>
- : packer<stream_endian::host_byte,
-          InputBits, OutputBits,
-          Ex, Im, true, true> {};
+              InputBits, OutputBits, true>
+ : real_packer<stream_endian::host_byte,
+               InputBits, OutputBits> {};
 #endif
 
 #ifdef BOOST_BIG_ENDIAN
-template <int InputBits, int OutputBits, bool Ex, bool Im>
+template <int InputBits, int OutputBits>
+struct packer<stream_endian::big_bit,
+              InputBits, OutputBits, true>
+ : real_packer<stream_endian::host_byte,
+               InputBits, OutputBits> {};
+template <int InputBits, int OutputBits>
 struct packer<stream_endian::big_byte_big_bit,
-              InputBits, OutputBits,
-              Ex, Im, true, true>
- : packer<stream_endian::host_byte,
-          InputBits, OutputBits,
-          Ex, Im, true, true> {};
-template <int InputBits, int OutputBits, bool Ex, bool Im>
+              InputBits, OutputBits, true>
+ : real_packer<stream_endian::host_byte,
+               InputBits, OutputBits> {};
+template <int InputBits, int OutputBits>
 struct packer<stream_endian::big_byte_little_bit,
-              InputBits, OutputBits,
-              Ex, Im, true, true>
- : packer<stream_endian::host_byte,
-          InputBits, OutputBits,
-          Ex, Im, true, true> {};
+              InputBits, OutputBits, true>
+ : real_packer<stream_endian::host_byte,
+               InputBits, OutputBits> {};
 #endif
 
 #endif
