@@ -148,31 +148,6 @@ struct imploder<stream_endian::little_unit_little_bit<UnitBits>,
     static void implode1_array(InputType const &, unsigned &, OutputValue &) {}
 };
 
-template <int UnitBits, int InputBits, int OutputBits,
-          int k>
-struct imploder<stream_endian::host_unit<UnitBits>,
-                InputBits, OutputBits, k> {
-    BOOST_STATIC_ASSERT(!(InputBits  % UnitBits) &&
-                        !(OutputBits % UnitBits));
-    template <typename InputValue, typename OutputValue>
-    static void step(InputValue z, OutputValue &x) {
-        std::memcpy((char*)&x + k/CHAR_BIT, &z, InputBits/CHAR_BIT);
-    }
-    template <typename InputType, typename OutputValue>
-    static void implode1_array(InputType const &in, unsigned &i, OutputValue &x) {
-        step(in[i++], x);
-        imploder<stream_endian::host_unit<UnitBits>,
-                InputBits, OutputBits, k+InputBits>
-         ::implode1_array(in, i, x);
-    }
-};
-template <int UnitBits, int InputBits, int OutputBits>
-struct imploder<stream_endian::host_unit<UnitBits>,
-                InputBits, OutputBits, OutputBits> {
-    template <typename InputType, typename OutputValue>
-    static void implode1_array(InputType const &, unsigned &, OutputValue &) {}
-};
-
 } // namespace detail
 } // namespace hash
 } // namespace boost

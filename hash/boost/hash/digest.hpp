@@ -14,6 +14,10 @@
 #include <boost/hash/pack.hpp>
 #include <boost/static_assert.hpp>
 
+#include <iterator>
+#include <ostream>
+#include <string>
+
 #include <cstring>
 
 namespace boost {
@@ -50,6 +54,12 @@ class digest {
             *it++ = "0123456789abcdef"[(b >> 0) & 0xF];
         }
         return it;
+    }
+
+    std::string
+    str() const {
+        cstring_type cstr = cstring();
+        return std::string(cstr.data(), cstr.size()-1);
     }
 
     cstring_type
@@ -125,6 +135,13 @@ template <unsigned DB>
 bool operator==(char const *b, digest<DB> const &a) {
     return a == b;
 }
+
+template <unsigned DB>
+std::ostream &
+operator<<(std::ostream &sink, digest<DB> const &d) {
+    d.ascii(std::ostream_iterator<char>(sink));
+    return sink;
+};
 
 } // namespace hash
 } // namespace boost

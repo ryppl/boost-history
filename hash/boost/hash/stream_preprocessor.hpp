@@ -42,8 +42,8 @@ class stream_preprocessor {
     static unsigned const value_bits = value_bits_;
     typedef typename uint_t<value_bits>::least value_type;
     BOOST_STATIC_ASSERT(word_bits % value_bits == 0);
-    typedef array<value_type, block_bits/value_bits>
-            value_array_type;
+    static unsigned const block_values = block_bits/value_bits;
+    typedef array<value_type, block_values> value_array_type;
 
   private:
 
@@ -106,6 +106,33 @@ class stream_preprocessor {
         if (i == block_bits - value_bits) {
             // Process the completed block
             process_block();
+        }
+        return *this;
+    }
+    template <typename T>
+    stream_preprocessor &update_n(T const *p_, size_t n) {
+        BOOST_STATIC_ASSERT(sizeof(T) == sizeof(value_type));
+        value_type const *p = reinterpret_cast<value_type const *>(p_);
+#ifndef BOOST_HASH_NO_OPTIMIZATION
+        for ( ; n && (seen % block_bits); --n, ++p) {
+            update(*p);
+        }
+        for ( ; n >= block_values; n -= block_values, p += block_values) {
+            // Convert the input into words
+            block_type block;
+            pack<endian, value_bits, word_bits>(p, block_values,
+                                                &block[0], block_words);
+            
+            // Process the block
+            block_hash.update(block);
+            seen += block_bits;
+
+            // Reset seen if we don't need to track the length
+            if (!length_bits) seen = 0;
+        }
+#endif        
+        for ( ; n; --n, ++p) {
+            update(*p);
         }
         return *this;
     }

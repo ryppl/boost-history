@@ -34,15 +34,25 @@ struct real_packer<Endianness,
                    Bits, Bits,
                    false, false> {
 
-    template <typename OutputType, typename InputType>
-    static OutputType pack_array(InputType const &in) {
+    template <typename InputType, typename OutputType>
+    static void pack_array(InputType const &in, OutputType &out) {
         BOOST_STATIC_ASSERT(OutputType::static_size == InputType::static_size);
-        OutputType out;
         unsigned i = 0;
         for (unsigned j = 0; j < InputType::static_size; ++j) {
             out[i++] = in[j];
         }
-        return out;
+        BOOST_ASSERT(i == OutputType::static_size);
+    }
+
+    template <typename InputType, typename OutputType>
+    static void pack_n(InputType const *in, size_t in_n,
+                       OutputType *out, size_t out_n) {
+        BOOST_ASSERT(in_n == out_n);
+        unsigned i = 0;
+        for (unsigned j = 0; j < in_n; ++j) {
+            out[i++] = in[j];
+        }
+        BOOST_ASSERT(i == out_n);
     }
 
 };
@@ -55,18 +65,28 @@ struct real_packer<Endianness,
 
     BOOST_STATIC_ASSERT(InputBits % OutputBits == 0);
 
-    template <typename OutputType, typename InputType>
-    static OutputType pack_array(InputType const &in) {
+    template <typename InputType, typename OutputType>
+    static void pack_array(InputType const &in, OutputType &out) {
         BOOST_STATIC_ASSERT(OutputType::static_size*OutputBits ==
                             InputType::static_size*InputBits);
-        OutputType out;
         unsigned i = 0;
         for (unsigned j = 0; j < InputType::static_size; ++j) {
             detail::exploder<Endianness, InputBits, OutputBits>
              ::explode1_array(out, i, in[j]);
         }
         BOOST_ASSERT(i == OutputType::static_size);
-        return out;
+    }
+
+    template <typename InputType, typename OutputType>
+    static void pack_n(InputType const *in, size_t in_n,
+                       OutputType *out, size_t out_n) {
+        BOOST_ASSERT(InputBits*in_n == OutputBits*out_n);
+        unsigned i = 0;
+        for (unsigned j = 0; j < in_n; ++j) {
+            detail::exploder<Endianness, InputBits, OutputBits>
+             ::explode1_array(out, i, in[j]);
+        }
+        BOOST_ASSERT(i == out_n);
     }
 
 };
@@ -79,21 +99,70 @@ struct real_packer<Endianness,
 
     BOOST_STATIC_ASSERT(OutputBits % InputBits == 0);
 
-    template <typename OutputType, typename InputType>
-    static OutputType pack_array(InputType const &in) {
+    template <typename InputType, typename OutputType>
+    static void pack_array(InputType const &in, OutputType &out) {
         BOOST_STATIC_ASSERT(OutputType::static_size*OutputBits ==
                             InputType::static_size*InputBits);
-        OutputType out;
         unsigned i = 0;
         for (unsigned j = 0; j < OutputType::static_size; ++j) {
             detail::imploder<Endianness, InputBits, OutputBits>
              ::implode1_array(in, i, out[j] = 0);
         }
         BOOST_ASSERT(i == InputType::static_size);
-        return out;
+    }
+
+    template <typename InputType, typename OutputType>
+    static void pack_n(InputType const *in, size_t in_n,
+                       OutputType *out, size_t out_n) {
+        BOOST_ASSERT(InputBits*in_n == OutputBits*out_n);
+        unsigned i = 0;
+        for (unsigned j = 0; j < out_n; ++j) {
+            detail::imploder<Endianness, InputBits, OutputBits>
+             ::implode1_array(in, i, out[j] = 0);
+        }
+        BOOST_ASSERT(i == in_n);
     }
 
 };
+
+template <int UnitBits, int InputBits, int OutputBits>
+struct real_packer<stream_endian::host_unit<UnitBits>,
+                   InputBits, OutputBits,
+                   true, true> {
+
+    BOOST_STATIC_ASSERT(!(InputBits  % UnitBits) &&
+                        !(OutputBits % UnitBits));
+
+    template <typename InputType, typename OutputType>
+    static void pack_array(InputType const &in, OutputType &out) {
+        BOOST_STATIC_ASSERT(OutputType::static_size*OutputBits ==
+                            InputType::static_size*InputBits);
+        std::memcpy(&out[0], &in[0], InputType::static_size*InputBits/CHAR_BIT);
+    }
+
+    template <typename InputType, typename OutputType>
+    static void pack_n(InputType const *in, size_t in_n,
+                       OutputType *out, size_t out_n) {
+        BOOST_ASSERT(sizeof(InputType)*in_n == sizeof(OutputType)*out_n);
+        BOOST_ASSERT(InputBits*in_n == OutputBits*out_n);
+        std::memcpy(&out[0], &in[0], InputBits*in_n/CHAR_BIT);
+    }
+
+};
+template <int UnitBits, int InputBits, int OutputBits>
+struct real_packer<stream_endian::host_unit<UnitBits>,
+                   InputBits, OutputBits,
+                   false, true>
+ : real_packer<stream_endian::host_unit<UnitBits>,
+               InputBits, OutputBits,
+               true, true> {};
+template <int UnitBits, int InputBits, int OutputBits>
+struct real_packer<stream_endian::host_unit<UnitBits>,
+                   InputBits, OutputBits,
+                   true, false>
+ : real_packer<stream_endian::host_unit<UnitBits>,
+               InputBits, OutputBits,
+               true, true> {};
 
 // Forward if nothing better matches
 template <typename Endianness,
@@ -150,7 +219,15 @@ template <typename Endianness,
           typename T1, typename T2>
 void pack(T1 const &in, T2 &out) {
     typedef packer<Endianness, InBits, OutBits> packer_type;
-    out = packer_type::template pack_array<T2>(in);
+    packer_type::pack_array(in, out);
+}
+
+template <typename Endianness,
+          int InBits, int OutBits,
+          typename T1, typename T2>
+void pack(T1 const *in, size_t in_n, T2 *out, size_t out_n) {
+    typedef packer<Endianness, InBits, OutBits> packer_type;
+    packer_type::pack_n(in, in_n, out, out_n);
 }
 
 } // namespace hash

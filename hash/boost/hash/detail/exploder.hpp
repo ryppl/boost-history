@@ -148,31 +148,6 @@ struct exploder<stream_endian::little_unit_little_bit<UnitBits>,
     static void explode1_array(OutputType &, unsigned &, IntputValue) {}
 };
 
-template <int UnitBits, int InputBits, int OutputBits,
-          int k>
-struct exploder<stream_endian::host_unit<UnitBits>,
-                InputBits, OutputBits, k> {
-    BOOST_STATIC_ASSERT(!(InputBits  % UnitBits) &&
-                        !(OutputBits % UnitBits));
-    template <typename OutputValue, typename InputValue>
-    static void step(OutputValue &z, InputValue x) {
-        std::memcpy(&z, (char*)&x + k/CHAR_BIT, OutputBits/CHAR_BIT);
-    }
-    template <typename OutputType, typename InputValue>
-    static void explode1_array(OutputType &out, unsigned &i, InputValue x) {
-        step(out[i++], x);
-        exploder<stream_endian::host_unit<UnitBits>,
-                InputBits, OutputBits, k+OutputBits>
-         ::explode1_array(out, i, x);
-    }
-};
-template <int UnitBits, int InputBits, int OutputBits>
-struct exploder<stream_endian::host_unit<UnitBits>,
-                InputBits, OutputBits, InputBits> {
-    template <typename OutputType, typename IntputValue>
-    static void explode1_array(OutputType &, unsigned &, IntputValue) {}
-};
-
 } // namespace detail
 } // namespace hash
 } // namespace boost
