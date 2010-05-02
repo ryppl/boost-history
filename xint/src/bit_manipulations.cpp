@@ -20,6 +20,7 @@
 namespace boost {
 namespace xint {
 
+//! @cond detail
 namespace detail {
 
 bool getbit(const base_integer& n, size_t bit) {
@@ -214,6 +215,7 @@ void shift_right(base_integer& target, const base_integer& n, size_t byBits) {
 }
 
 } // namespace detail
+//! @endcond detail
 
 /*! \brief Queries the value of a particular bit in an integer.
 

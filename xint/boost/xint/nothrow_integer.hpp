@@ -119,6 +119,8 @@ class nothrow_integer: public detail::base_variable_length_integer {
 
     private:
     BOOST_XINT_COPYABLE_AND_MOVABLE(nothrow_integer)
+
+    static std::auto_ptr<nothrow_integer> cZero, cOne, cNaN;
 };
 
 //! \name Mathematical primitives
@@ -333,16 +335,16 @@ inline std::basic_istream<charT,traits>& operator>>(std::basic_istream<charT,
     if (in.peek()=='#') {
         // Must be either #NaN# or an error
         char buffer[6];
-        
+
         // These are efficient and safe, but MSVC complains about them anyway.
         //std::streamsize size=in.readsome(buffer, 5);
         //buffer[size]=0;
-        
+
         // Replacing them with these.
         char *p = buffer, *pe = p + 5;
         while (p != pe) in >> *p++;
         *p = 0;
-        
+
         std::string str(buffer);
 
         if (str==detail::nan_text) n=nothrow_integer::nan();

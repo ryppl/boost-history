@@ -43,34 +43,34 @@
 <a name="l00023"></a>00023 
 <a name="l00028"></a>00028 <span class="keywordtype">int</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(<span class="keyword">const</span> nothrow_integer &amp;b1, <span class="keyword">const</span> nothrow_integer &amp;b2, <span class="keywordtype">bool</span> ignoresign) {
 <a name="l00029"></a>00029     <span class="keywordflow">if</span> (b1.is_nan() || b2.is_nan()) <span class="keywordflow">return</span> 0;
-<a name="l00030"></a>00030     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a9de8315201bc9967495a289fc8579dd7">detail::compare</a>(b1, b2);
+<a name="l00030"></a>00030     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">detail::compare</a>(b1, b2);
 <a name="l00031"></a>00031 }
 <a name="l00032"></a>00032 
-<a name="l00033"></a>00033 <span class="keyword">namespace </span>{
-<a name="l00034"></a>00034 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00035"></a>00035 <span class="keywordtype">bool</span> cmp(<span class="keyword">const</span> nothrow_integer &amp;b1, <span class="keyword">const</span> nothrow_integer &amp;b2, <span class="keyword">const</span> T&amp; t) {
-<a name="l00036"></a>00036     <span class="keywordflow">if</span> (b1.is_nan() || b2.is_nan()) <span class="keywordflow">return</span> <span class="keyword">false</span>;
-<a name="l00037"></a>00037     <span class="keywordflow">return</span> t(<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a9de8315201bc9967495a289fc8579dd7">detail::compare</a>(b1, b2), 0);
-<a name="l00038"></a>00038 }
-<a name="l00039"></a>00039 } <span class="comment">// namespace</span>
-<a name="l00040"></a>00040 
-<a name="l00041"></a>00041 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a66b558cce023df7b3e10ee22dfe653d0">operator==</a>(<span class="keyword">const</span> nothrow_integer &amp;num1, <span class="keyword">const</span> nothrow_integer &amp;num2) {
-<a name="l00042"></a>00042     <span class="keywordflow">return</span> cmp(num1, num2, std::equal_to&lt;int&gt;()); }
-<a name="l00043"></a>00043 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#ac5d5cb8db57fd0247aa4e36d9b25c492">operator!=</a>(<span class="keyword">const</span> nothrow_integer&amp; num1, <span class="keyword">const</span> nothrow_integer&amp; num2) {
-<a name="l00044"></a>00044     <span class="keywordflow">return</span> cmp(num1, num2, std::not_equal_to&lt;int&gt;()); }
-<a name="l00045"></a>00045 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#af845afe18e9b1326d630e5c0696e679d">operator&lt;</a>(<span class="keyword">const</span> nothrow_integer&amp; num1, <span class="keyword">const</span> nothrow_integer&amp; num2) {
-<a name="l00046"></a>00046     <span class="keywordflow">return</span> cmp(num1, num2, std::less&lt;int&gt;()); }
-<a name="l00047"></a>00047 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#ab09672bca82a7f4fbdca4443492210bc">operator&gt;</a>(<span class="keyword">const</span> nothrow_integer&amp; num1, <span class="keyword">const</span> nothrow_integer&amp; num2) {
-<a name="l00048"></a>00048     <span class="keywordflow">return</span> cmp(num1, num2, std::greater&lt;int&gt;()); }
-<a name="l00049"></a>00049 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a7749bff2e150c55649324ba9797aa6d0">operator&lt;=</a>(<span class="keyword">const</span> nothrow_integer&amp; num1, <span class="keyword">const</span> nothrow_integer&amp; num2) {
-<a name="l00050"></a>00050     <span class="keywordflow">return</span> cmp(num1, num2, std::less_equal&lt;int&gt;()); }
-<a name="l00051"></a>00051 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a1ace7bde7533ff9d8a3f38978e7bb046">operator&gt;=</a>(<span class="keyword">const</span> nothrow_integer&amp; num1, <span class="keyword">const</span> nothrow_integer&amp; num2) {
-<a name="l00052"></a>00052     <span class="keywordflow">return</span> cmp(num1, num2, std::greater_equal&lt;int&gt;()); }
-<a name="l00053"></a>00053 
-<a name="l00054"></a>00054 } <span class="comment">// namespace xint</span>
-<a name="l00055"></a>00055 } <span class="comment">// namespace boost</span>
+<a name="l00034"></a>00034 <span class="keyword">namespace </span>detail {
+<a name="l00035"></a>00035 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00036"></a>00036 <span class="keywordtype">bool</span> cmp(<span class="keyword">const</span> nothrow_integer &amp;b1, <span class="keyword">const</span> nothrow_integer &amp;b2, <span class="keyword">const</span> T&amp; t) {
+<a name="l00037"></a>00037     <span class="keywordflow">if</span> (b1.is_nan() || b2.is_nan()) <span class="keywordflow">return</span> <span class="keyword">false</span>;
+<a name="l00038"></a>00038     <span class="keywordflow">return</span> t(<a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">detail::compare</a>(b1, b2), 0);
+<a name="l00039"></a>00039 }
+<a name="l00040"></a>00040 } <span class="comment">// namespace detail</span>
+<a name="l00042"></a>00042 <span class="comment"></span>
+<a name="l00043"></a>00043 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a66b558cce023df7b3e10ee22dfe653d0">operator==</a>(<span class="keyword">const</span> nothrow_integer &amp;num1, <span class="keyword">const</span> nothrow_integer &amp;num2) {
+<a name="l00044"></a>00044     <span class="keywordflow">return</span> detail::cmp(num1, num2, std::equal_to&lt;int&gt;()); }
+<a name="l00045"></a>00045 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#ac5d5cb8db57fd0247aa4e36d9b25c492">operator!=</a>(<span class="keyword">const</span> nothrow_integer&amp; num1, <span class="keyword">const</span> nothrow_integer&amp; num2) {
+<a name="l00046"></a>00046     <span class="keywordflow">return</span> detail::cmp(num1, num2, std::not_equal_to&lt;int&gt;()); }
+<a name="l00047"></a>00047 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#af845afe18e9b1326d630e5c0696e679d">operator&lt;</a>(<span class="keyword">const</span> nothrow_integer&amp; num1, <span class="keyword">const</span> nothrow_integer&amp; num2) {
+<a name="l00048"></a>00048     <span class="keywordflow">return</span> detail::cmp(num1, num2, std::less&lt;int&gt;()); }
+<a name="l00049"></a>00049 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#ab09672bca82a7f4fbdca4443492210bc">operator&gt;</a>(<span class="keyword">const</span> nothrow_integer&amp; num1, <span class="keyword">const</span> nothrow_integer&amp; num2) {
+<a name="l00050"></a>00050     <span class="keywordflow">return</span> detail::cmp(num1, num2, std::greater&lt;int&gt;()); }
+<a name="l00051"></a>00051 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a7749bff2e150c55649324ba9797aa6d0">operator&lt;=</a>(<span class="keyword">const</span> nothrow_integer&amp; num1, <span class="keyword">const</span> nothrow_integer&amp; num2) {
+<a name="l00052"></a>00052     <span class="keywordflow">return</span> detail::cmp(num1, num2, std::less_equal&lt;int&gt;()); }
+<a name="l00053"></a>00053 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a1ace7bde7533ff9d8a3f38978e7bb046">operator&gt;=</a>(<span class="keyword">const</span> nothrow_integer&amp; num1, <span class="keyword">const</span> nothrow_integer&amp; num2) {
+<a name="l00054"></a>00054     <span class="keywordflow">return</span> detail::cmp(num1, num2, std::greater_equal&lt;int&gt;()); }
+<a name="l00055"></a>00055 
+<a name="l00056"></a>00056 } <span class="comment">// namespace xint</span>
+<a name="l00057"></a>00057 } <span class="comment">// namespace boost</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Apr 30 00:24:24 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun May 2 18:42:51 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

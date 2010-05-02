@@ -68,7 +68,7 @@
 <a name="l00051"></a>00051 nothrow_integer <a class="code" href="namespaceboost_1_1xint.html#a7b7903cb879b60d0d5e3403b3c6a1cdd">add</a>(<span class="keyword">const</span> nothrow_integer&amp; n1, <span class="keyword">const</span> nothrow_integer&amp; n2) {
 <a name="l00052"></a>00052     <span class="keywordflow">try</span> {
 <a name="l00053"></a>00053         nothrow_integer r;
-<a name="l00054"></a>00054         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#ab9babbdf59f52b65d8cecc33e20e0a3f">detail::add</a>(r, n1, n2);
+<a name="l00054"></a>00054         <a class="code" href="namespaceboost_1_1xint.html#a7b7903cb879b60d0d5e3403b3c6a1cdd">detail::add</a>(r, n1, n2);
 <a name="l00055"></a>00055         <span class="keywordflow">return</span> <a class="code" href="internals_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(r);
 <a name="l00056"></a>00056     } <span class="keywordflow">catch</span> (std::exception&amp;) {
 <a name="l00057"></a>00057         <span class="keywordflow">return</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a9a8d654139e4fb916f933d09c7238e10">nothrow_integer::nan</a>();
@@ -78,7 +78,7 @@
 <a name="l00062"></a>00062 nothrow_integer <a class="code" href="namespaceboost_1_1xint.html#a385b3869d8dcceab2ffb68ff33c95062">subtract</a>(<span class="keyword">const</span> nothrow_integer&amp; n1, <span class="keyword">const</span> nothrow_integer&amp; n2) {
 <a name="l00063"></a>00063     <span class="keywordflow">try</span> {
 <a name="l00064"></a>00064         nothrow_integer r;
-<a name="l00065"></a>00065         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a0424e97ecd4549ba637bbf16e31f3047">detail::subtract</a>(r, n1, n2);
+<a name="l00065"></a>00065         <a class="code" href="namespaceboost_1_1xint.html#a385b3869d8dcceab2ffb68ff33c95062">detail::subtract</a>(r, n1, n2);
 <a name="l00066"></a>00066         <span class="keywordflow">return</span> <a class="code" href="internals_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(r);
 <a name="l00067"></a>00067     } <span class="keywordflow">catch</span> (std::exception&amp;) {
 <a name="l00068"></a>00068         <span class="keywordflow">return</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a9a8d654139e4fb916f933d09c7238e10">nothrow_integer::nan</a>();
@@ -88,7 +88,7 @@
 <a name="l00073"></a>00073 nothrow_integer <a class="code" href="namespaceboost_1_1xint.html#af844548a421cfc751133081b334dbe4b">multiply</a>(<span class="keyword">const</span> nothrow_integer&amp; n, <span class="keyword">const</span> nothrow_integer&amp; by) {
 <a name="l00074"></a>00074     <span class="keywordflow">try</span> {
 <a name="l00075"></a>00075         nothrow_integer r;
-<a name="l00076"></a>00076         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#ae35185e26f2828524b2830778186ac19">detail::multiply</a>(r, n, by);
+<a name="l00076"></a>00076         <a class="code" href="namespaceboost_1_1xint.html#af844548a421cfc751133081b334dbe4b">detail::multiply</a>(r, n, by);
 <a name="l00077"></a>00077         <span class="keywordflow">return</span> <a class="code" href="internals_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(r);
 <a name="l00078"></a>00078     } <span class="keywordflow">catch</span> (std::exception&amp;) {
 <a name="l00079"></a>00079         <span class="keywordflow">return</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a9a8d654139e4fb916f933d09c7238e10">nothrow_integer::nan</a>();
@@ -107,7 +107,7 @@
 <a name="l00097"></a>00097 {
 <a name="l00098"></a>00098     <span class="keywordflow">try</span> {
 <a name="l00099"></a>00099         nothrow_integer q, r;
-<a name="l00100"></a>00100         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a30a579455d99a87796390eb2fbf4498a">detail::divide</a>(q, r, d1, d2);
+<a name="l00100"></a>00100         <a class="code" href="namespaceboost_1_1xint.html#a5b884361c54aa64a1974879cb3464c9a">detail::divide</a>(q, r, d1, d2);
 <a name="l00101"></a>00101         <span class="keywordflow">return</span> <a class="code" href="internals_8hpp.html#ad30e9ec163d1981dfee69c97d09ffd28">BOOST_XINT_FORWARD</a>(<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a65b4d583927453701d33aa35d727132a">nothrow_integer::divide_t</a>,
 <a name="l00102"></a>00102             <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a65b4d583927453701d33aa35d727132a">nothrow_integer::divide_t</a>( <a class="code" href="internals_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(q), <a class="code" href="internals_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(r)));
 <a name="l00103"></a>00103     } <span class="keywordflow">catch</span> (std::exception&amp;) {
@@ -120,7 +120,7 @@
 <a name="l00110"></a>00110 } <span class="comment">// namespace xint</span>
 <a name="l00111"></a>00111 } <span class="comment">// namespace boost</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Apr 30 00:24:24 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun May 2 18:42:51 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

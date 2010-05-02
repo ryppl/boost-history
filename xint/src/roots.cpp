@@ -20,6 +20,7 @@
 namespace boost {
 namespace xint {
 
+//! @cond detail
 namespace detail {
 
 void sqrt(base_integer& target, const base_integer& nn) {
@@ -53,6 +54,7 @@ void sqrt(base_integer& target, const base_integer& nn) {
 }
 
 } // namespace detail
+//! @endcond detail
 
 /*! \brief Calculate the square root of \c an integer.
 

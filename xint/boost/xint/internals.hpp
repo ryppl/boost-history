@@ -20,6 +20,11 @@
 #ifndef BOOST_INCLUDED_XINT_INTERNALS_HPP
 #define BOOST_INCLUDED_XINT_INTERNALS_HPP
 
+// For performance testing, uncomment one of these defines.
+//#define XINT_TEST_BASELINE
+//#define XINT_TEST_MOVE
+//#define XINT_TEST_COPY_ON_WRITE
+
 #include <string>
 #include <vector>
 #include <queue>
@@ -32,8 +37,20 @@
 #include <boost/function.hpp>
 #include <boost/type_traits.hpp>
 
-#ifdef XINT_THREADSAFE
+#if defined XINT_TEST_BASELINE
+    #define PERFORMANCE_TEST
+#elif defined XINT_TEST_COPY_ON_WRITE
+    #define PERFORMANCE_TEST
+    #define BOOST_XINT_USE_COPY_ON_WRITE
+#elif defined XINT_TEST_MOVE
+    #define PERFORMANCE_TEST
     #define BOOST_XINT_USE_MOVE
+#else
+    #ifdef XINT_THREADSAFE
+        #define BOOST_XINT_USE_MOVE
+    #else
+        #define BOOST_XINT_USE_COPY_ON_WRITE
+    #endif
 #endif
 
 #ifdef BOOST_XINT_USE_MOVE
@@ -84,6 +101,7 @@ const size_t autobase=(std::numeric_limits<size_t>::max)();
 
 //! \brief The items within this namespace are meant for internal use only.
 namespace detail {
+//! @cond detail
 
 /*!
     This is the type used for calculations. It should be the largest
@@ -305,6 +323,7 @@ void powmod(base_integer& target, const base_integer& n, const base_integer& e,
 
 size_t log10_bits(size_t bits);
 
+//! @endcond detail
 } // namespace detail
 
 /*! \brief The base class for all fixed_integer types.
@@ -385,6 +404,8 @@ class base_divide_t {
 
 namespace boost {
 namespace xint {
+
+//! @cond detail
 namespace detail {
 
 template <typename T>
@@ -516,6 +537,8 @@ inline std::basic_istream<charT,traits>& operator>>(std::basic_istream<charT,
 }
 
 } // namespace detail
+//! @endcond detail
+
 } // namespace xint
 } // namespace boost
 

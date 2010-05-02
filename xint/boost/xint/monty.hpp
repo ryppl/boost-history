@@ -18,12 +18,13 @@
     used internally to speed up the xint::powmod function for odd modulii.
 */
 
-#ifndef BOOST_INCLUDED_XINT_MONTY_H
-#define BOOST_INCLUDED_XINT_MONTY_H
+#ifndef BOOST_INCLUDED_XINT_MONTY_HPP
+#define BOOST_INCLUDED_XINT_MONTY_HPP
 
+//! @cond detail
 namespace boost {
 namespace xint {
-namespace core {
+namespace detail {
 
 //! \name Montgomery Reduction functions
 //!@{
@@ -36,8 +37,9 @@ integer montgomeryMultiplyMod(const integer& x, const integer& y, const integer&
 integer montgomeryPowerMod(const integer& x, const integer& e, const integer& m);
 //!@}
 
-} // namespace core
+} // namespace detail
 } // namespace xint
 } // namespace boost
+//! @endcond detail
 
-#endif // BOOST_INCLUDED_XINT_MONTY_H
+#endif // BOOST_INCLUDED_XINT_MONTY_HPP

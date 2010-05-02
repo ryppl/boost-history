@@ -39,9 +39,8 @@
 namespace boost {
 namespace xint {
 
-using namespace detail;
-
-namespace {
+//! @cond detail
+namespace detail {
 
 class generator_t {
     public:
@@ -90,10 +89,6 @@ std::auto_ptr<base_random_generator> generator_t::mGeneratorObj;
     boost::mutex generator_t::mLock;
 #endif
 
-} // namespace
-
-namespace detail {
-
 void set_random_generator(base_random_generator *obj) {
     generator_t::set_generator(obj);
 }
@@ -104,6 +99,7 @@ unsigned int get_random() {
 }
 
 } // namespace detail
+//! @endcond detail
 
 ////////////////////////////////////////////////////////////////////////////////
 // The secure random generator
@@ -219,6 +215,8 @@ integer random_by_size(size_t bits, bool high_bit_on, bool low_bit_on, bool
     can_be_negative)
 {
     if (bits<=0) return integer::zero();
+
+    using namespace detail;
 
     // Grab a bunch of bits
     generator_t randomGenerator;

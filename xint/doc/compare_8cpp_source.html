@@ -42,80 +42,80 @@
 <a name="l00021"></a>00021 <span class="keyword">namespace </span>boost {
 <a name="l00022"></a>00022 <span class="keyword">namespace </span>xint {
 <a name="l00023"></a>00023 
-<a name="l00024"></a>00024 <span class="keyword">namespace </span>detail {
-<a name="l00025"></a>00025 <span class="keywordtype">int</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a9de8315201bc9967495a289fc8579dd7">compare</a>(<span class="keyword">const</span> base_integer &amp;b1, <span class="keyword">const</span> base_integer &amp;b2, <span class="keywordtype">bool</span> ignoresign) {
-<a name="l00026"></a>00026     <span class="keywordtype">bool</span> invert_answer=<span class="keyword">false</span>;
-<a name="l00027"></a>00027     <span class="keywordflow">if</span> (!ignoresign) {
-<a name="l00028"></a>00028         <span class="keywordflow">if</span> (b1._is_zero()) {
-<a name="l00029"></a>00029             <span class="keywordflow">if</span> (b2._is_zero()) <span class="keywordflow">return</span> 0;
-<a name="l00030"></a>00030             <span class="keywordflow">return</span> (b2._get_negative() ? 1 : -1);
-<a name="l00031"></a>00031         } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (b2._is_zero()) {
-<a name="l00032"></a>00032             <span class="keywordflow">return</span> (b1._get_negative() ? -1 : 1);
-<a name="l00033"></a>00033         } <span class="keywordflow">else</span> {
-<a name="l00034"></a>00034             <span class="keywordflow">if</span> (b1._get_negative() != b2._get_negative())
-<a name="l00035"></a>00035                 <span class="keywordflow">return</span> (b1._get_negative() ? -1 : 1);
-<a name="l00036"></a>00036             <span class="keywordflow">if</span> (b1._get_negative()) invert_answer=<span class="keyword">true</span>;
-<a name="l00037"></a>00037         }
-<a name="l00038"></a>00038     }
-<a name="l00039"></a>00039 
-<a name="l00040"></a>00040     <span class="keywordtype">int</span> answer=0;
-<a name="l00041"></a>00041     <span class="keywordtype">size_t</span> len=b1._get_length(), len2=b2._get_length();
-<a name="l00042"></a>00042     <span class="keywordflow">if</span> (len != len2) {
-<a name="l00043"></a>00043         answer=((len &lt; len2) ? -1 : 1);
-<a name="l00044"></a>00044     } <span class="keywordflow">else</span> {
-<a name="l00045"></a>00045         <span class="keyword">const</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">detail::digit_t</a> *b1d=b1._get_digits(), *b1i=b1d+len;
-<a name="l00046"></a>00046         <span class="keyword">const</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">detail::digit_t</a> *b2d=b2._get_digits(), *b2i=b2d+len;
-<a name="l00047"></a>00047         <span class="keywordflow">while</span> (b1i &gt; b1d)
-<a name="l00048"></a>00048             <span class="keywordflow">if</span> (*(--b1i) != *(--b2i)) {
-<a name="l00049"></a>00049                 answer = ((*b1i &lt; *b2i) ? -1 : 1);
-<a name="l00050"></a>00050                 <span class="keywordflow">break</span>;
-<a name="l00051"></a>00051             }
-<a name="l00052"></a>00052     }
-<a name="l00053"></a>00053 
-<a name="l00054"></a>00054     <span class="keywordflow">return</span> (invert_answer ? -answer : answer);
-<a name="l00055"></a>00055 }
-<a name="l00056"></a>00056 } <span class="comment">// namespace detail</span>
-<a name="l00057"></a>00057 
-<a name="l00069"></a>00069 <span class="keywordtype">int</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(<span class="keyword">const</span> integer &amp;b1, <span class="keyword">const</span> integer &amp;b2, <span class="keywordtype">bool</span> ignoresign) {
-<a name="l00070"></a>00070     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a9de8315201bc9967495a289fc8579dd7">detail::compare</a>(b1, b2, ignoresign);
-<a name="l00071"></a>00071 }
-<a name="l00072"></a>00072 
-<a name="l00073"></a>00073 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a66b558cce023df7b3e10ee22dfe653d0">operator==</a>(<span class="keyword">const</span> integer &amp;num1, <span class="keyword">const</span> integer &amp;num2) {
-<a name="l00074"></a>00074     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(num1, num2)==0; }
-<a name="l00075"></a>00075 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#ac5d5cb8db57fd0247aa4e36d9b25c492">operator!=</a>(<span class="keyword">const</span> integer&amp; num1, <span class="keyword">const</span> integer&amp; num2) {
-<a name="l00076"></a>00076     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(num1, num2)!=0; }
-<a name="l00077"></a>00077 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#af845afe18e9b1326d630e5c0696e679d">operator&lt;</a>(<span class="keyword">const</span> integer&amp; num1, <span class="keyword">const</span> integer&amp; num2) {
-<a name="l00078"></a>00078     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(num1, num2)&lt;0; }
-<a name="l00079"></a>00079 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#ab09672bca82a7f4fbdca4443492210bc">operator&gt;</a>(<span class="keyword">const</span> integer&amp; num1, <span class="keyword">const</span> integer&amp; num2) {
-<a name="l00080"></a>00080     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(num1, num2)&gt;0; }
-<a name="l00081"></a>00081 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a7749bff2e150c55649324ba9797aa6d0">operator&lt;=</a>(<span class="keyword">const</span> integer&amp; num1, <span class="keyword">const</span> integer&amp; num2) {
-<a name="l00082"></a>00082     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(num1, num2)&lt;=0; }
-<a name="l00083"></a>00083 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a1ace7bde7533ff9d8a3f38978e7bb046">operator&gt;=</a>(<span class="keyword">const</span> integer&amp; num1, <span class="keyword">const</span> integer&amp; num2) {
-<a name="l00084"></a>00084     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(num1, num2)&gt;=0; }
-<a name="l00085"></a>00085 
-<a name="l00098"></a>00098 <span class="keywordtype">int</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(<span class="keyword">const</span> fixed_integer_any&amp; b1, <span class="keyword">const</span> fixed_integer_any&amp; b2, <span class="keywordtype">bool</span>
-<a name="l00099"></a>00099     ignoresign)
-<a name="l00100"></a>00100 {
-<a name="l00101"></a>00101     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a9de8315201bc9967495a289fc8579dd7">detail::compare</a>(b1, b2, ignoresign);
-<a name="l00102"></a>00102 }
-<a name="l00103"></a>00103 
-<a name="l00104"></a>00104 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a66b558cce023df7b3e10ee22dfe653d0">operator==</a>(<span class="keyword">const</span> fixed_integer_any &amp;num1, <span class="keyword">const</span> fixed_integer_any &amp;num2) {
-<a name="l00105"></a>00105     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(num1, num2)==0; }
-<a name="l00106"></a>00106 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#ac5d5cb8db57fd0247aa4e36d9b25c492">operator!=</a>(<span class="keyword">const</span> fixed_integer_any&amp; num1, <span class="keyword">const</span> fixed_integer_any&amp; num2) {
-<a name="l00107"></a>00107     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(num1, num2)!=0; }
-<a name="l00108"></a>00108 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#af845afe18e9b1326d630e5c0696e679d">operator&lt;</a>(<span class="keyword">const</span> fixed_integer_any&amp; num1, <span class="keyword">const</span> fixed_integer_any&amp; num2) {
-<a name="l00109"></a>00109     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(num1, num2)&lt;0; }
-<a name="l00110"></a>00110 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#ab09672bca82a7f4fbdca4443492210bc">operator&gt;</a>(<span class="keyword">const</span> fixed_integer_any&amp; num1, <span class="keyword">const</span> fixed_integer_any&amp; num2) {
-<a name="l00111"></a>00111     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(num1, num2)&gt;0; }
-<a name="l00112"></a>00112 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a7749bff2e150c55649324ba9797aa6d0">operator&lt;=</a>(<span class="keyword">const</span> fixed_integer_any&amp; num1, <span class="keyword">const</span> fixed_integer_any&amp; num2) {
-<a name="l00113"></a>00113     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(num1, num2)&lt;=0; }
-<a name="l00114"></a>00114 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a1ace7bde7533ff9d8a3f38978e7bb046">operator&gt;=</a>(<span class="keyword">const</span> fixed_integer_any&amp; num1, <span class="keyword">const</span> fixed_integer_any&amp; num2) {
-<a name="l00115"></a>00115     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(num1, num2)&gt;=0; }
-<a name="l00116"></a>00116 
-<a name="l00117"></a>00117 } <span class="comment">// namespace xint</span>
-<a name="l00118"></a>00118 } <span class="comment">// namespace boost</span>
+<a name="l00025"></a>00025 <span class="keyword">namespace </span>detail {
+<a name="l00026"></a>00026 <span class="keywordtype">int</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(<span class="keyword">const</span> base_integer &amp;b1, <span class="keyword">const</span> base_integer &amp;b2, <span class="keywordtype">bool</span> ignoresign) {
+<a name="l00027"></a>00027     <span class="keywordtype">bool</span> invert_answer=<span class="keyword">false</span>;
+<a name="l00028"></a>00028     <span class="keywordflow">if</span> (!ignoresign) {
+<a name="l00029"></a>00029         <span class="keywordflow">if</span> (b1._is_zero()) {
+<a name="l00030"></a>00030             <span class="keywordflow">if</span> (b2._is_zero()) <span class="keywordflow">return</span> 0;
+<a name="l00031"></a>00031             <span class="keywordflow">return</span> (b2._get_negative() ? 1 : -1);
+<a name="l00032"></a>00032         } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (b2._is_zero()) {
+<a name="l00033"></a>00033             <span class="keywordflow">return</span> (b1._get_negative() ? -1 : 1);
+<a name="l00034"></a>00034         } <span class="keywordflow">else</span> {
+<a name="l00035"></a>00035             <span class="keywordflow">if</span> (b1._get_negative() != b2._get_negative())
+<a name="l00036"></a>00036                 <span class="keywordflow">return</span> (b1._get_negative() ? -1 : 1);
+<a name="l00037"></a>00037             <span class="keywordflow">if</span> (b1._get_negative()) invert_answer=<span class="keyword">true</span>;
+<a name="l00038"></a>00038         }
+<a name="l00039"></a>00039     }
+<a name="l00040"></a>00040 
+<a name="l00041"></a>00041     <span class="keywordtype">int</span> answer=0;
+<a name="l00042"></a>00042     <span class="keywordtype">size_t</span> len=b1._get_length(), len2=b2._get_length();
+<a name="l00043"></a>00043     <span class="keywordflow">if</span> (len != len2) {
+<a name="l00044"></a>00044         answer=((len &lt; len2) ? -1 : 1);
+<a name="l00045"></a>00045     } <span class="keywordflow">else</span> {
+<a name="l00046"></a>00046         <span class="keyword">const</span> detail::digit_t *b1d=b1._get_digits(), *b1i=b1d+len;
+<a name="l00047"></a>00047         <span class="keyword">const</span> detail::digit_t *b2d=b2._get_digits(), *b2i=b2d+len;
+<a name="l00048"></a>00048         <span class="keywordflow">while</span> (b1i &gt; b1d)
+<a name="l00049"></a>00049             <span class="keywordflow">if</span> (*(--b1i) != *(--b2i)) {
+<a name="l00050"></a>00050                 answer = ((*b1i &lt; *b2i) ? -1 : 1);
+<a name="l00051"></a>00051                 <span class="keywordflow">break</span>;
+<a name="l00052"></a>00052             }
+<a name="l00053"></a>00053     }
+<a name="l00054"></a>00054 
+<a name="l00055"></a>00055     <span class="keywordflow">return</span> (invert_answer ? -answer : answer);
+<a name="l00056"></a>00056 }
+<a name="l00057"></a>00057 } <span class="comment">// namespace detail</span>
+<a name="l00059"></a>00059 <span class="comment"></span>
+<a name="l00071"></a>00071 <span class="keywordtype">int</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(<span class="keyword">const</span> integer &amp;b1, <span class="keyword">const</span> integer &amp;b2, <span class="keywordtype">bool</span> ignoresign) {
+<a name="l00072"></a>00072     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">detail::compare</a>(b1, b2, ignoresign);
+<a name="l00073"></a>00073 }
+<a name="l00074"></a>00074 
+<a name="l00075"></a>00075 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a66b558cce023df7b3e10ee22dfe653d0">operator==</a>(<span class="keyword">const</span> integer &amp;num1, <span class="keyword">const</span> integer &amp;num2) {
+<a name="l00076"></a>00076     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(num1, num2)==0; }
+<a name="l00077"></a>00077 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#ac5d5cb8db57fd0247aa4e36d9b25c492">operator!=</a>(<span class="keyword">const</span> integer&amp; num1, <span class="keyword">const</span> integer&amp; num2) {
+<a name="l00078"></a>00078     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(num1, num2)!=0; }
+<a name="l00079"></a>00079 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#af845afe18e9b1326d630e5c0696e679d">operator&lt;</a>(<span class="keyword">const</span> integer&amp; num1, <span class="keyword">const</span> integer&amp; num2) {
+<a name="l00080"></a>00080     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(num1, num2)&lt;0; }
+<a name="l00081"></a>00081 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#ab09672bca82a7f4fbdca4443492210bc">operator&gt;</a>(<span class="keyword">const</span> integer&amp; num1, <span class="keyword">const</span> integer&amp; num2) {
+<a name="l00082"></a>00082     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(num1, num2)&gt;0; }
+<a name="l00083"></a>00083 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a7749bff2e150c55649324ba9797aa6d0">operator&lt;=</a>(<span class="keyword">const</span> integer&amp; num1, <span class="keyword">const</span> integer&amp; num2) {
+<a name="l00084"></a>00084     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(num1, num2)&lt;=0; }
+<a name="l00085"></a>00085 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a1ace7bde7533ff9d8a3f38978e7bb046">operator&gt;=</a>(<span class="keyword">const</span> integer&amp; num1, <span class="keyword">const</span> integer&amp; num2) {
+<a name="l00086"></a>00086     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(num1, num2)&gt;=0; }
+<a name="l00087"></a>00087 
+<a name="l00100"></a>00100 <span class="keywordtype">int</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(<span class="keyword">const</span> fixed_integer_any&amp; b1, <span class="keyword">const</span> fixed_integer_any&amp; b2, <span class="keywordtype">bool</span>
+<a name="l00101"></a>00101     ignoresign)
+<a name="l00102"></a>00102 {
+<a name="l00103"></a>00103     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">detail::compare</a>(b1, b2, ignoresign);
+<a name="l00104"></a>00104 }
+<a name="l00105"></a>00105 
+<a name="l00106"></a>00106 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a66b558cce023df7b3e10ee22dfe653d0">operator==</a>(<span class="keyword">const</span> fixed_integer_any &amp;num1, <span class="keyword">const</span> fixed_integer_any &amp;num2) {
+<a name="l00107"></a>00107     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(num1, num2)==0; }
+<a name="l00108"></a>00108 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#ac5d5cb8db57fd0247aa4e36d9b25c492">operator!=</a>(<span class="keyword">const</span> fixed_integer_any&amp; num1, <span class="keyword">const</span> fixed_integer_any&amp; num2) {
+<a name="l00109"></a>00109     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(num1, num2)!=0; }
+<a name="l00110"></a>00110 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#af845afe18e9b1326d630e5c0696e679d">operator&lt;</a>(<span class="keyword">const</span> fixed_integer_any&amp; num1, <span class="keyword">const</span> fixed_integer_any&amp; num2) {
+<a name="l00111"></a>00111     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(num1, num2)&lt;0; }
+<a name="l00112"></a>00112 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#ab09672bca82a7f4fbdca4443492210bc">operator&gt;</a>(<span class="keyword">const</span> fixed_integer_any&amp; num1, <span class="keyword">const</span> fixed_integer_any&amp; num2) {
+<a name="l00113"></a>00113     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(num1, num2)&gt;0; }
+<a name="l00114"></a>00114 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a7749bff2e150c55649324ba9797aa6d0">operator&lt;=</a>(<span class="keyword">const</span> fixed_integer_any&amp; num1, <span class="keyword">const</span> fixed_integer_any&amp; num2) {
+<a name="l00115"></a>00115     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(num1, num2)&lt;=0; }
+<a name="l00116"></a>00116 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a1ace7bde7533ff9d8a3f38978e7bb046">operator&gt;=</a>(<span class="keyword">const</span> fixed_integer_any&amp; num1, <span class="keyword">const</span> fixed_integer_any&amp; num2) {
+<a name="l00117"></a>00117     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a23f712f01d6589687d2984b1c5efea8b" title="Compare two integer objects.">compare</a>(num1, num2)&gt;=0; }
+<a name="l00118"></a>00118 
+<a name="l00119"></a>00119 } <span class="comment">// namespace xint</span>
+<a name="l00120"></a>00120 } <span class="comment">// namespace boost</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Apr 30 00:24:24 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun May 2 18:42:51 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

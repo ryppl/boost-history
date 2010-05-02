@@ -17,12 +17,70 @@
     writing them or in production.
 */
 
-#if 1
-    #define BOOST_TEST_MAIN
-    #define BOOST_TEST_DYN_LINK
-    #include <boost/test/unit_test.hpp>
-#else
-    #include <boost/xint/xint.hpp>
+#include <boost/xint/xint.hpp>
+
+#if defined PERFORMANCE_TEST
+    #include <iostream>
+    #include <iomanip>
+
+    // To ensure that the compiler doesn't optimize away important parts of the
+    // tests.
+    #define USE_NUMBER(n) { n._get_writable_digits()[0] ^= 0xAAAAAAAA; }
+
+    // For running comparative tests with different options
+    int main() {
+        const size_t bits = 2048, add_rounds = 10000, mult_rounds = 10000,
+            mulmod_rounds = 1000;
+        const size_t raw_number_pairs = 10;
+
+        using namespace std;
+        using namespace boost::xint;
+
+        cout << "Generating numbers..." << endl;
+        std::vector<integer> n1, n2;
+        for (size_t x = 0; x < raw_number_pairs; ++x) {
+            n1.push_back(random_by_size(bits, true, true));
+            n2.push_back(random_by_size(bits, true, true));
+        }
+        const integer nmod = random_by_size(bits, true, true);
+
+        cout << "Running addition test" << flush;
+        for (size_t x = 0; x < 10; ++x) {
+            for (size_t y = 0; y < add_rounds / 10; ++y) {
+                for (size_t round = 0; round < raw_number_pairs; ++round) {
+                    integer r = n1[round] + n2[round];
+                    USE_NUMBER(r);
+                }
+            }
+            cout << "." << flush;
+        }
+        cout << endl;
+
+        cout << "Running multiplication test" << flush;
+        for (size_t x = 0; x < 10; ++x) {
+            for (size_t y = 0; y < mult_rounds / 10; ++y) {
+                for (size_t round = 0; round < raw_number_pairs; ++round) {
+                    integer r = n1[round] * n2[round];
+                    USE_NUMBER(r);
+                }
+            }
+            cout << "." << flush;
+        }
+        cout << endl;
+
+        cout << "Running mulmod test" << flush;
+        for (size_t x = 0; x < 10; ++x) {
+            for (size_t y = 0; y < mulmod_rounds / 10; ++y) {
+                for (size_t round = 0; round < raw_number_pairs; ++round) {
+                    integer r = mulmod(n1[round], n2[round], nmod);
+                    USE_NUMBER(r);
+                }
+            }
+            cout << "." << flush;
+        }
+        cout << endl;
+    }
+#elif defined CUSTOM_TEST
     #include <iostream>
     #include <iomanip>
 
@@ -31,4 +89,8 @@
         using namespace std;
         using namespace boost::xint;
     }
+#else
+    #define BOOST_TEST_MAIN
+    #define BOOST_TEST_DYN_LINK
+    #include <boost/test/unit_test.hpp>
 #endif

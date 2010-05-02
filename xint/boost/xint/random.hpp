@@ -52,6 +52,7 @@ class strong_random_generator {
     impl_t *impl;
 };
 
+//! @cond detail
 namespace detail {
     //! The base class for random_generator.
     struct base_random_generator {
@@ -82,6 +83,7 @@ namespace detail {
     */
     unsigned int get_random();
 } // namespace detail
+//! @endcond detail
 
 ////////////////////////////////////////////////////////////////////////////////
 // Template function definitions

@@ -30,26 +30,28 @@ int compare(const nothrow_integer &b1, const nothrow_integer &b2, bool ignoresig
     return detail::compare(b1, b2);
 }
 
-namespace {
+//! @cond detail
+namespace detail {
 template <typename T>
 bool cmp(const nothrow_integer &b1, const nothrow_integer &b2, const T& t) {
     if (b1.is_nan() || b2.is_nan()) return false;
     return t(detail::compare(b1, b2), 0);
 }
-} // namespace
+} // namespace detail
+//! @endcond detail
 
 bool operator==(const nothrow_integer &num1, const nothrow_integer &num2) {
-    return cmp(num1, num2, std::equal_to<int>()); }
+    return detail::cmp(num1, num2, std::equal_to<int>()); }
 bool operator!=(const nothrow_integer& num1, const nothrow_integer& num2) {
-    return cmp(num1, num2, std::not_equal_to<int>()); }
+    return detail::cmp(num1, num2, std::not_equal_to<int>()); }
 bool operator<(const nothrow_integer& num1, const nothrow_integer& num2) {
-    return cmp(num1, num2, std::less<int>()); }
+    return detail::cmp(num1, num2, std::less<int>()); }
 bool operator>(const nothrow_integer& num1, const nothrow_integer& num2) {
-    return cmp(num1, num2, std::greater<int>()); }
+    return detail::cmp(num1, num2, std::greater<int>()); }
 bool operator<=(const nothrow_integer& num1, const nothrow_integer& num2) {
-    return cmp(num1, num2, std::less_equal<int>()); }
+    return detail::cmp(num1, num2, std::less_equal<int>()); }
 bool operator>=(const nothrow_integer& num1, const nothrow_integer& num2) {
-    return cmp(num1, num2, std::greater_equal<int>()); }
+    return detail::cmp(num1, num2, std::greater_equal<int>()); }
 
 } // namespace xint
 } // namespace boost

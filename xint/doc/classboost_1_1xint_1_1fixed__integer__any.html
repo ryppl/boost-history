@@ -28,7 +28,7 @@
   </div>
 </div>
 <div class="contents">
-<h1>boost::xint::fixed_integer_any Class Reference</h1><!-- doxytag: class="boost::xint::fixed_integer_any" --><!-- doxytag: inherits="boost::xint::detail::base_integer" -->
+<h1>boost::xint::fixed_integer_any Class Reference</h1><!-- doxytag: class="boost::xint::fixed_integer_any" -->
 <p>The base class for all <a class="el" href="classboost_1_1xint_1_1fixed__integer.html" title="A fixed-size integer type.">fixed_integer</a> types.  
 <a href="#_details">More...</a></p>
 <div class="dynheader">
@@ -37,8 +37,7 @@ Inheritance diagram for boost::xint::fixed_integer_any:</div>
  <div class="center">
   <img src="classboost_1_1xint_1_1fixed__integer__any.png" usemap="#boost::xint::fixed_integer_any_map" alt=""/>
   <map id="boost::xint::fixed_integer_any_map" name="boost::xint::fixed_integer_any_map">
-<area href="classboost_1_1xint_1_1detail_1_1base__integer.html" alt="boost::xint::detail::base_integer" shape="rect" coords="0,0,190,24"/>
-<area href="classboost_1_1xint_1_1fixed__integer.html" alt="boost::xint::fixed_integer&lt; Bits &gt;" shape="rect" coords="0,112,190,136"/>
+<area href="classboost_1_1xint_1_1fixed__integer.html" alt="boost::xint::fixed_integer&lt; Bits &gt;" shape="rect" coords="0,56,190,80"/>
 </map>
  </div>
 </div>
@@ -53,14 +52,14 @@ Inheritance diagram for boost::xint::fixed_integer_any:</div>
 <tr><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer__any.html#af6e682f145aaa5ceea6f8d81bf533442">fixed_integer_any</a> (const T &amp;n, typename boost::enable_if&lt; boost::is_integral&lt; T &gt; &gt;::type *=0, typename boost::enable_if&lt; boost::is_signed&lt; T &gt; &gt;::type *=0)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer__any.html#abdd088ce22d3afd4a8c3dcc402401ace">fixed_integer_any</a> (const <a class="el" href="classboost_1_1xint_1_1fixed__integer__any.html">fixed_integer_any</a> &amp;c)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer__any.html#a9f0620259b6e2cdf3ea6e2bad2a21d22">fixed_integer_any</a> (<a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">detail::data_t</a> *adopt, bool neg=false)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer__any.html#aa1c3b00ad3be70fb2d42dd86fcfe3a00">fixed_integer_any</a> (size_t count, <a class="el" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">detail::digit_t</a> mask)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer__any.html#a9f0620259b6e2cdf3ea6e2bad2a21d22">fixed_integer_any</a> (detail::data_t *adopt, bool neg=false)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer__any.html#aa1c3b00ad3be70fb2d42dd86fcfe3a00">fixed_integer_any</a> (size_t count, detail::digit_t mask)</td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>The base class for all <a class="el" href="classboost_1_1xint_1_1fixed__integer.html" title="A fixed-size integer type.">fixed_integer</a> types. </p>
 <p>This class eases operations on different-sized <a class="el" href="classboost_1_1xint_1_1fixed__integer.html" title="A fixed-size integer type.">fixed_integer</a> types. </p>
 
-<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00314">314</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00333">333</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="af6e682f145aaa5ceea6f8d81bf533442"></a><!-- doxytag: member="boost::xint::fixed_integer_any::fixed_integer_any" ref="af6e682f145aaa5ceea6f8d81bf533442" args="(const T &amp;n, typename boost::enable_if&lt; boost::is_integral&lt; T &gt; &gt;::type *=0, typename boost::enable_if&lt; boost::is_signed&lt; T &gt; &gt;::type *=0)" -->
 <div class="memitem">
@@ -95,7 +94,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00322">322</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00341">341</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
 
 </div>
 </div>
@@ -132,7 +131,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00328">328</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00347">347</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
 
 </div>
 </div>
@@ -149,7 +148,7 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">detail::digit_t</a>&nbsp;</td>
+          <td class="paramtype">detail::digit_t&nbsp;</td>
           <td class="paramname"> <em>mask</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -161,7 +160,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00335">335</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00354">354</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
 
 </div>
 </div>
@@ -172,7 +171,7 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname">boost::xint::fixed_integer_any::fixed_integer_any </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">detail::data_t</a> *&nbsp;</td>
+          <td class="paramtype">detail::data_t *&nbsp;</td>
           <td class="paramname"> <em>adopt</em>, </td>
         </tr>
         <tr>
@@ -190,7 +189,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00337">337</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00356">356</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
 
 </div>
 </div>
@@ -210,7 +209,7 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00339">339</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00358">358</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
 
 </div>
 </div>
@@ -218,7 +217,7 @@ template&lt;typename T &gt; </div>
 <li><a class="el" href="internals_8hpp_source.html">internals.hpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Apr 30 00:24:27 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun May 2 18:42:51 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

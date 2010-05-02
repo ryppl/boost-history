@@ -42,87 +42,87 @@
 <a name="l00024"></a>00024 <span class="keyword">namespace </span>boost {
 <a name="l00025"></a>00025 <span class="keyword">namespace </span>xint {
 <a name="l00026"></a>00026 
-<a name="l00027"></a>00027 <span class="keyword">namespace </span>detail {
-<a name="l00028"></a>00028 
-<a name="l00029"></a>00029 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a3395be771e1ce5d282e018a2735b6d86">mod</a>(base_integer&amp; target, <span class="keyword">const</span> base_integer&amp; n, <span class="keyword">const</span> base_integer&amp; m) {
-<a name="l00030"></a>00030     integer q;
-<a name="l00031"></a>00031     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a30a579455d99a87796390eb2fbf4498a">divide</a>(q, target, n, m);
-<a name="l00032"></a>00032     <span class="keywordflow">if</span> (target._get_negative()) {
-<a name="l00033"></a>00033         temp_t mm(m);
-<a name="l00034"></a>00034         mm._set_negative(<span class="keyword">false</span>);
-<a name="l00035"></a>00035         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#ab9babbdf59f52b65d8cecc33e20e0a3f">add</a>(target, target, mm);
-<a name="l00036"></a>00036     }
-<a name="l00037"></a>00037 }
-<a name="l00038"></a>00038 
-<a name="l00039"></a>00039 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#ac063e3fcb648313184b04ef7102d7695">powmod</a>(base_integer&amp; target, <span class="keyword">const</span> base_integer&amp; _n, <span class="keyword">const</span> base_integer&amp;
-<a name="l00040"></a>00040     _e, <span class="keyword">const</span> base_integer&amp; _m, <span class="keywordtype">bool</span> noMontgomery)
-<a name="l00041"></a>00041 {
-<a name="l00042"></a>00042     <span class="keywordflow">if</span> (_m._is_zero() || _m._get_negative()) <span class="keywordflow">throw</span> exceptions::invalid_modulus();
-<a name="l00043"></a>00043     <span class="keywordflow">if</span> (_e._is_zero()) {
-<a name="l00044"></a>00044         target._set_unsigned(1);
-<a name="l00045"></a>00045         <span class="keywordflow">return</span>;
-<a name="l00046"></a>00046     }
-<a name="l00047"></a>00047 
-<a name="l00048"></a>00048     integer n(_n._to_integer()), e(_e._to_integer()), m(_m._to_integer()),
-<a name="l00049"></a>00049         answer(<a class="code" href="classboost_1_1xint_1_1integer.html#aa332681715634b73118ffe76090a75d3">integer::one</a>());
-<a name="l00050"></a>00050     <span class="keywordtype">bool</span> neg=(n.sign() &lt; 0 &amp;&amp; e.odd());
-<a name="l00051"></a>00051 
-<a name="l00052"></a>00052     <span class="comment">// Montgomery&#39;s method is often noticeably faster, but only works if the</span>
-<a name="l00053"></a>00053     <span class="comment">// m is odd.</span>
-<a name="l00054"></a>00054     <span class="keywordflow">if</span> (m.odd() &amp;&amp; !noMontgomery) {
-<a name="l00055"></a>00055         answer = <a class="code" href="namespaceboost_1_1xint.html#a9e0c8f5da23ce668a7b428256f6b8ed4" title="Returns the Montgomery equivalent of powmod(a, b, n). Used internally.">montgomeryPowerMod</a>(<a class="code" href="namespaceboost_1_1xint.html#a0e114c276fc9affcc068dd5f0fbd9ff9">abs</a>(n) % m, <a class="code" href="namespaceboost_1_1xint.html#a0e114c276fc9affcc068dd5f0fbd9ff9">abs</a>(e), m);
-<a name="l00056"></a>00056     } <span class="keywordflow">else</span> {
-<a name="l00057"></a>00057         integer p(<a class="code" href="namespaceboost_1_1xint.html#a0e114c276fc9affcc068dd5f0fbd9ff9">abs</a>(n));
-<a name="l00058"></a>00058 
-<a name="l00059"></a>00059         <span class="keywordtype">size_t</span> length=e._get_length(), lastBitCount=0;
-<a name="l00060"></a>00060         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">detail::digit_t</a> ee(e._get_digit(length-1));
-<a name="l00061"></a>00061         <span class="keywordflow">while</span> (ee != 0) { ee &gt;&gt;= 1; ++lastBitCount; }
-<a name="l00062"></a>00062 
-<a name="l00063"></a>00063         <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> eIndex=0; eIndex &lt; length; ++eIndex) {
-<a name="l00064"></a>00064             <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">detail::digit_t</a> ee(e._get_digit(eIndex));
-<a name="l00065"></a>00065 
-<a name="l00066"></a>00066             <span class="keywordtype">int</span> bitCount(<span class="keywordtype">int</span>(eIndex == length-1 ? lastBitCount :
-<a name="l00067"></a>00067                 <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">detail::bits_per_digit</a>));
-<a name="l00068"></a>00068             <span class="keywordflow">while</span> (bitCount-- &gt; 0) {
-<a name="l00069"></a>00069                 <span class="keywordflow">if</span> (ee &amp; 0x01) answer=<a class="code" href="namespaceboost_1_1xint.html#ac9af74aa79d9cc7f51c57cc7707824ba" title="Get the modular product of two integers.">mulmod</a>(answer, p, m);
-<a name="l00070"></a>00070                 p=<a class="code" href="namespaceboost_1_1xint.html#adb9a9cb117e7346a3b56c369cd438b0e" title="Get the modular product of squaring an integer.">sqrmod</a>(p, m);
-<a name="l00071"></a>00071                 ee &gt;&gt;= 1;
-<a name="l00072"></a>00072             }
-<a name="l00073"></a>00073         }
-<a name="l00074"></a>00074     }
-<a name="l00075"></a>00075 
-<a name="l00076"></a>00076     answer._set_negative(neg);
-<a name="l00077"></a>00077     target._attach(answer);
-<a name="l00078"></a>00078 }
-<a name="l00079"></a>00079 
-<a name="l00080"></a>00080 } <span class="comment">// namespace detail</span>
-<a name="l00081"></a>00081 
-<a name="l00091"></a>00091 integer <a class="code" href="namespaceboost_1_1xint.html#a9b8c31b64eb9700beea8b95edec31a73" title="Get the remainder after dividing a number by another.">mod</a>(<span class="keyword">const</span> integer&amp; n, <span class="keyword">const</span> integer&amp; m) {
-<a name="l00092"></a>00092     integer r;
-<a name="l00093"></a>00093     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a3395be771e1ce5d282e018a2735b6d86">detail::mod</a>(r, n, m);
-<a name="l00094"></a>00094     <span class="keywordflow">return</span> <a class="code" href="internals_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(r);
-<a name="l00095"></a>00095 }
-<a name="l00096"></a>00096 
-<a name="l00111"></a>00111 integer <a class="code" href="namespaceboost_1_1xint.html#ac9af74aa79d9cc7f51c57cc7707824ba" title="Get the modular product of two integers.">mulmod</a>(<span class="keyword">const</span> integer&amp; n, <span class="keyword">const</span> integer&amp; by, <span class="keyword">const</span> integer&amp; m) {
-<a name="l00112"></a>00112     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a9b8c31b64eb9700beea8b95edec31a73" title="Get the remainder after dividing a number by another.">mod</a>(n * by, m);
-<a name="l00113"></a>00113 }
-<a name="l00114"></a>00114 
-<a name="l00129"></a>00129 integer <a class="code" href="namespaceboost_1_1xint.html#adb9a9cb117e7346a3b56c369cd438b0e" title="Get the modular product of squaring an integer.">sqrmod</a>(<span class="keyword">const</span> integer&amp; n, <span class="keyword">const</span> integer&amp; m) {
-<a name="l00130"></a>00130     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a9b8c31b64eb9700beea8b95edec31a73" title="Get the remainder after dividing a number by another.">mod</a>(<a class="code" href="namespaceboost_1_1xint.html#a83ce32006b45117f9b3dc6c673fc9f01">sqr</a>(n), m);
-<a name="l00131"></a>00131 }
-<a name="l00132"></a>00132 
-<a name="l00156"></a>00156 integer <a class="code" href="namespaceboost_1_1xint.html#a35e7556e9f2d8fb944dbf732ed3f96cd" title="Get the result of ne % m, keeping the intermediate results (relatively) small.">powmod</a>(<span class="keyword">const</span> integer&amp; n, <span class="keyword">const</span> integer&amp; e, <span class="keyword">const</span> integer&amp; m, <span class="keywordtype">bool</span>
-<a name="l00157"></a>00157     noMontgomery)
-<a name="l00158"></a>00158 {
-<a name="l00159"></a>00159     integer r;
-<a name="l00160"></a>00160     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#ac063e3fcb648313184b04ef7102d7695">detail::powmod</a>(r, n, e, m, noMontgomery);
-<a name="l00161"></a>00161     <span class="keywordflow">return</span> <a class="code" href="internals_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(r);
-<a name="l00162"></a>00162 }
-<a name="l00163"></a>00163 
-<a name="l00164"></a>00164 } <span class="comment">// namespace xint</span>
-<a name="l00165"></a>00165 } <span class="comment">// namespace boost</span>
+<a name="l00028"></a>00028 <span class="keyword">namespace </span>detail {
+<a name="l00029"></a>00029 
+<a name="l00030"></a>00030 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a9b8c31b64eb9700beea8b95edec31a73" title="Get the remainder after dividing a number by another.">mod</a>(base_integer&amp; target, <span class="keyword">const</span> base_integer&amp; n, <span class="keyword">const</span> base_integer&amp; m) {
+<a name="l00031"></a>00031     integer q;
+<a name="l00032"></a>00032     <a class="code" href="namespaceboost_1_1xint.html#a5b884361c54aa64a1974879cb3464c9a">divide</a>(q, target, n, m);
+<a name="l00033"></a>00033     <span class="keywordflow">if</span> (target._get_negative()) {
+<a name="l00034"></a>00034         temp_t mm(m);
+<a name="l00035"></a>00035         mm._set_negative(<span class="keyword">false</span>);
+<a name="l00036"></a>00036         <a class="code" href="namespaceboost_1_1xint.html#a7b7903cb879b60d0d5e3403b3c6a1cdd">add</a>(target, target, mm);
+<a name="l00037"></a>00037     }
+<a name="l00038"></a>00038 }
+<a name="l00039"></a>00039 
+<a name="l00040"></a>00040 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a35e7556e9f2d8fb944dbf732ed3f96cd" title="Get the result of ne % m, keeping the intermediate results (relatively) small.">powmod</a>(base_integer&amp; target, <span class="keyword">const</span> base_integer&amp; _n, <span class="keyword">const</span> base_integer&amp;
+<a name="l00041"></a>00041     _e, <span class="keyword">const</span> base_integer&amp; _m, <span class="keywordtype">bool</span> noMontgomery)
+<a name="l00042"></a>00042 {
+<a name="l00043"></a>00043     <span class="keywordflow">if</span> (_m._is_zero() || _m._get_negative()) <span class="keywordflow">throw</span> exceptions::invalid_modulus();
+<a name="l00044"></a>00044     <span class="keywordflow">if</span> (_e._is_zero()) {
+<a name="l00045"></a>00045         target._set_unsigned(1);
+<a name="l00046"></a>00046         <span class="keywordflow">return</span>;
+<a name="l00047"></a>00047     }
+<a name="l00048"></a>00048 
+<a name="l00049"></a>00049     integer n(_n._to_integer()), e(_e._to_integer()), m(_m._to_integer()),
+<a name="l00050"></a>00050         answer(<a class="code" href="classboost_1_1xint_1_1integer.html#aa332681715634b73118ffe76090a75d3">integer::one</a>());
+<a name="l00051"></a>00051     <span class="keywordtype">bool</span> neg=(n.sign() &lt; 0 &amp;&amp; e.odd());
+<a name="l00052"></a>00052 
+<a name="l00053"></a>00053     <span class="comment">// Montgomery&#39;s method is often noticeably faster, but only works if the</span>
+<a name="l00054"></a>00054     <span class="comment">// m is odd.</span>
+<a name="l00055"></a>00055     <span class="keywordflow">if</span> (m.odd() &amp;&amp; !noMontgomery) {
+<a name="l00056"></a>00056         answer = montgomeryPowerMod(<a class="code" href="namespaceboost_1_1xint.html#a0e114c276fc9affcc068dd5f0fbd9ff9">abs</a>(n) % m, <a class="code" href="namespaceboost_1_1xint.html#a0e114c276fc9affcc068dd5f0fbd9ff9">abs</a>(e), m);
+<a name="l00057"></a>00057     } <span class="keywordflow">else</span> {
+<a name="l00058"></a>00058         integer p(<a class="code" href="namespaceboost_1_1xint.html#a0e114c276fc9affcc068dd5f0fbd9ff9">abs</a>(n));
+<a name="l00059"></a>00059 
+<a name="l00060"></a>00060         <span class="keywordtype">size_t</span> length=e._get_length(), lastBitCount=0;
+<a name="l00061"></a>00061         detail::digit_t ee(e._get_digit(length-1));
+<a name="l00062"></a>00062         <span class="keywordflow">while</span> (ee != 0) { ee &gt;&gt;= 1; ++lastBitCount; }
+<a name="l00063"></a>00063 
+<a name="l00064"></a>00064         <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> eIndex=0; eIndex &lt; length; ++eIndex) {
+<a name="l00065"></a>00065             detail::digit_t ee(e._get_digit(eIndex));
+<a name="l00066"></a>00066 
+<a name="l00067"></a>00067             <span class="keywordtype">int</span> bitCount(<span class="keywordtype">int</span>(eIndex == length-1 ? lastBitCount :
+<a name="l00068"></a>00068                 detail::bits_per_digit));
+<a name="l00069"></a>00069             <span class="keywordflow">while</span> (bitCount-- &gt; 0) {
+<a name="l00070"></a>00070                 <span class="keywordflow">if</span> (ee &amp; 0x01) answer=<a class="code" href="namespaceboost_1_1xint.html#ac9af74aa79d9cc7f51c57cc7707824ba" title="Get the modular product of two integers.">mulmod</a>(answer, p, m);
+<a name="l00071"></a>00071                 p=<a class="code" href="namespaceboost_1_1xint.html#adb9a9cb117e7346a3b56c369cd438b0e" title="Get the modular product of squaring an integer.">sqrmod</a>(p, m);
+<a name="l00072"></a>00072                 ee &gt;&gt;= 1;
+<a name="l00073"></a>00073             }
+<a name="l00074"></a>00074         }
+<a name="l00075"></a>00075     }
+<a name="l00076"></a>00076 
+<a name="l00077"></a>00077     answer._set_negative(neg);
+<a name="l00078"></a>00078     target._attach(answer);
+<a name="l00079"></a>00079 }
+<a name="l00080"></a>00080 
+<a name="l00081"></a>00081 } <span class="comment">// namespace detail</span>
+<a name="l00083"></a>00083 <span class="comment"></span>
+<a name="l00093"></a>00093 integer <a class="code" href="namespaceboost_1_1xint.html#a9b8c31b64eb9700beea8b95edec31a73" title="Get the remainder after dividing a number by another.">mod</a>(<span class="keyword">const</span> integer&amp; n, <span class="keyword">const</span> integer&amp; m) {
+<a name="l00094"></a>00094     integer r;
+<a name="l00095"></a>00095     <a class="code" href="namespaceboost_1_1xint.html#a9b8c31b64eb9700beea8b95edec31a73" title="Get the remainder after dividing a number by another.">detail::mod</a>(r, n, m);
+<a name="l00096"></a>00096     <span class="keywordflow">return</span> <a class="code" href="internals_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(r);
+<a name="l00097"></a>00097 }
+<a name="l00098"></a>00098 
+<a name="l00113"></a>00113 integer <a class="code" href="namespaceboost_1_1xint.html#ac9af74aa79d9cc7f51c57cc7707824ba" title="Get the modular product of two integers.">mulmod</a>(<span class="keyword">const</span> integer&amp; n, <span class="keyword">const</span> integer&amp; by, <span class="keyword">const</span> integer&amp; m) {
+<a name="l00114"></a>00114     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a9b8c31b64eb9700beea8b95edec31a73" title="Get the remainder after dividing a number by another.">mod</a>(n * by, m);
+<a name="l00115"></a>00115 }
+<a name="l00116"></a>00116 
+<a name="l00131"></a>00131 integer <a class="code" href="namespaceboost_1_1xint.html#adb9a9cb117e7346a3b56c369cd438b0e" title="Get the modular product of squaring an integer.">sqrmod</a>(<span class="keyword">const</span> integer&amp; n, <span class="keyword">const</span> integer&amp; m) {
+<a name="l00132"></a>00132     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a9b8c31b64eb9700beea8b95edec31a73" title="Get the remainder after dividing a number by another.">mod</a>(<a class="code" href="namespaceboost_1_1xint.html#a83ce32006b45117f9b3dc6c673fc9f01">sqr</a>(n), m);
+<a name="l00133"></a>00133 }
+<a name="l00134"></a>00134 
+<a name="l00158"></a>00158 integer <a class="code" href="namespaceboost_1_1xint.html#a35e7556e9f2d8fb944dbf732ed3f96cd" title="Get the result of ne % m, keeping the intermediate results (relatively) small.">powmod</a>(<span class="keyword">const</span> integer&amp; n, <span class="keyword">const</span> integer&amp; e, <span class="keyword">const</span> integer&amp; m, <span class="keywordtype">bool</span>
+<a name="l00159"></a>00159     noMontgomery)
+<a name="l00160"></a>00160 {
+<a name="l00161"></a>00161     integer r;
+<a name="l00162"></a>00162     <a class="code" href="namespaceboost_1_1xint.html#a35e7556e9f2d8fb944dbf732ed3f96cd" title="Get the result of ne % m, keeping the intermediate results (relatively) small.">detail::powmod</a>(r, n, e, m, noMontgomery);
+<a name="l00163"></a>00163     <span class="keywordflow">return</span> <a class="code" href="internals_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(r);
+<a name="l00164"></a>00164 }
+<a name="l00165"></a>00165 
+<a name="l00166"></a>00166 } <span class="comment">// namespace xint</span>
+<a name="l00167"></a>00167 } <span class="comment">// namespace boost</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Apr 30 00:24:24 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun May 2 18:42:51 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

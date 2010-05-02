@@ -40,158 +40,155 @@
 <a name="l00021"></a>00021 
 <a name="l00022"></a>00022 <span class="keyword">namespace </span>boost {
 <a name="l00023"></a>00023 <span class="keyword">namespace </span>xint {
-<a name="l00024"></a>00024 <span class="keyword">namespace </span>{
-<a name="l00025"></a>00025 
-<a name="l00026"></a>00026 <span class="keyword">struct </span>gcd_core {
-<a name="l00027"></a>00027     gcd_core(<span class="keyword">const</span> integer&amp; n, <span class="keyword">const</span> integer&amp; m): <a class="code" href="gcd_8cpp.html#accb7b3088be4aa6fea6fe05dc527f01c">u1</a>(integer::one()),
-<a name="l00028"></a>00028         <a class="code" href="gcd_8cpp.html#a35cdbdce7a7d33309a6cabd35c878b2f">u2</a>(integer::<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a4e055aa4ada37a5892b2605de2a953ae">zero</a>()), <a class="code" href="gcd_8cpp.html#a7ac8f5a4ca4a1c621ad1c8ea155faaf2">u3</a>(n)
-<a name="l00029"></a>00029     {
-<a name="l00030"></a>00030         integer t1=m, t2=n-<a class="code" href="classboost_1_1xint_1_1integer.html#aa332681715634b73118ffe76090a75d3">integer::one</a>(), t3=m;
-<a name="l00031"></a>00031         <span class="keywordflow">do</span> {
-<a name="l00032"></a>00032             <span class="keywordflow">do</span> {
-<a name="l00033"></a>00033                 <span class="keywordflow">if</span> (<a class="code" href="gcd_8cpp.html#a7ac8f5a4ca4a1c621ad1c8ea155faaf2">u3</a>.even()) {
-<a name="l00034"></a>00034                     <span class="keywordflow">if</span> (<a class="code" href="gcd_8cpp.html#accb7b3088be4aa6fea6fe05dc527f01c">u1</a>.odd() || <a class="code" href="gcd_8cpp.html#a35cdbdce7a7d33309a6cabd35c878b2f">u2</a>.odd()) { <a class="code" href="gcd_8cpp.html#accb7b3088be4aa6fea6fe05dc527f01c">u1</a>+=m; <a class="code" href="gcd_8cpp.html#a35cdbdce7a7d33309a6cabd35c878b2f">u2</a>+=n; }
-<a name="l00035"></a>00035                     <a class="code" href="gcd_8cpp.html#accb7b3088be4aa6fea6fe05dc527f01c">u1</a> &gt;&gt;= 1;
-<a name="l00036"></a>00036                     <a class="code" href="gcd_8cpp.html#a35cdbdce7a7d33309a6cabd35c878b2f">u2</a> &gt;&gt;= 1;
-<a name="l00037"></a>00037                     <a class="code" href="gcd_8cpp.html#a7ac8f5a4ca4a1c621ad1c8ea155faaf2">u3</a> &gt;&gt;= 1;
-<a name="l00038"></a>00038                 }
-<a name="l00039"></a>00039 
-<a name="l00040"></a>00040                 <span class="keywordflow">if</span> (t3.even() || <a class="code" href="gcd_8cpp.html#a7ac8f5a4ca4a1c621ad1c8ea155faaf2">u3</a> &lt; t3) {
-<a name="l00041"></a>00041                     <span class="comment">// Swap the u&#39;s with the t&#39;s</span>
-<a name="l00042"></a>00042                     <span class="keyword">using</span> <a class="code" href="namespaceboost_1_1xint.html#a7f5d22465d4dab8985c13479ec0e5e79">std::swap</a>;
-<a name="l00043"></a>00043                     <a class="code" href="namespaceboost_1_1xint.html#a7f5d22465d4dab8985c13479ec0e5e79">swap</a>(<a class="code" href="gcd_8cpp.html#accb7b3088be4aa6fea6fe05dc527f01c">u1</a>, t1);
-<a name="l00044"></a>00044                     <a class="code" href="namespaceboost_1_1xint.html#a7f5d22465d4dab8985c13479ec0e5e79">swap</a>(<a class="code" href="gcd_8cpp.html#a35cdbdce7a7d33309a6cabd35c878b2f">u2</a>, t2);
-<a name="l00045"></a>00045                     <a class="code" href="namespaceboost_1_1xint.html#a7f5d22465d4dab8985c13479ec0e5e79">swap</a>(<a class="code" href="gcd_8cpp.html#a7ac8f5a4ca4a1c621ad1c8ea155faaf2">u3</a>, t3);
-<a name="l00046"></a>00046                 }
-<a name="l00047"></a>00047             } <span class="keywordflow">while</span> (<a class="code" href="gcd_8cpp.html#a7ac8f5a4ca4a1c621ad1c8ea155faaf2">u3</a>.even());
-<a name="l00048"></a>00048 
-<a name="l00049"></a>00049             <span class="keywordflow">while</span> (<a class="code" href="gcd_8cpp.html#accb7b3088be4aa6fea6fe05dc527f01c">u1</a> &lt; t1 || <a class="code" href="gcd_8cpp.html#a35cdbdce7a7d33309a6cabd35c878b2f">u2</a> &lt; t2) { <a class="code" href="gcd_8cpp.html#accb7b3088be4aa6fea6fe05dc527f01c">u1</a>+=m; <a class="code" href="gcd_8cpp.html#a35cdbdce7a7d33309a6cabd35c878b2f">u2</a>+=n; }
-<a name="l00050"></a>00050             <a class="code" href="gcd_8cpp.html#accb7b3088be4aa6fea6fe05dc527f01c">u1</a>-=t1; <a class="code" href="gcd_8cpp.html#a35cdbdce7a7d33309a6cabd35c878b2f">u2</a>-=t2; <a class="code" href="gcd_8cpp.html#a7ac8f5a4ca4a1c621ad1c8ea155faaf2">u3</a>-=t3;
-<a name="l00051"></a>00051         } <span class="keywordflow">while</span> (t3 &gt; 0);
-<a name="l00052"></a>00052 
-<a name="l00053"></a>00053         <span class="keywordflow">while</span> (<a class="code" href="gcd_8cpp.html#accb7b3088be4aa6fea6fe05dc527f01c">u1</a> &gt;= m &amp;&amp; <a class="code" href="gcd_8cpp.html#a35cdbdce7a7d33309a6cabd35c878b2f">u2</a> &gt;= n) { <a class="code" href="gcd_8cpp.html#accb7b3088be4aa6fea6fe05dc527f01c">u1</a>-=m; <a class="code" href="gcd_8cpp.html#a35cdbdce7a7d33309a6cabd35c878b2f">u2</a>-=n; }
-<a name="l00054"></a>00054     }
-<a name="l00055"></a>00055 
-<a name="l00056"></a><a class="code" href="gcd_8cpp.html#a7ac8f5a4ca4a1c621ad1c8ea155faaf2">00056</a>     integer <a class="code" href="gcd_8cpp.html#accb7b3088be4aa6fea6fe05dc527f01c">u1</a>, <a class="code" href="gcd_8cpp.html#a35cdbdce7a7d33309a6cabd35c878b2f">u2</a>, <a class="code" href="gcd_8cpp.html#a7ac8f5a4ca4a1c621ad1c8ea155faaf2">u3</a>;
-<a name="l00057"></a>00057 };
-<a name="l00058"></a>00058 
-<a name="l00059"></a>00059 } <span class="comment">// namespace</span>
+<a name="l00024"></a>00024 
+<a name="l00026"></a>00026 <span class="keyword">namespace </span>detail {
+<a name="l00027"></a>00027 
+<a name="l00028"></a>00028 <span class="keyword">struct </span>gcd_core {
+<a name="l00029"></a>00029     gcd_core(<span class="keyword">const</span> integer&amp; n, <span class="keyword">const</span> integer&amp; m): u1(integer::one()),
+<a name="l00030"></a>00030         u2(integer::zero()), u3(n)
+<a name="l00031"></a>00031     {
+<a name="l00032"></a>00032         integer t1=m, t2=n-<a class="code" href="classboost_1_1xint_1_1integer.html#aa332681715634b73118ffe76090a75d3">integer::one</a>(), t3=m;
+<a name="l00033"></a>00033         <span class="keywordflow">do</span> {
+<a name="l00034"></a>00034             <span class="keywordflow">do</span> {
+<a name="l00035"></a>00035                 <span class="keywordflow">if</span> (u3.even()) {
+<a name="l00036"></a>00036                     <span class="keywordflow">if</span> (u1.odd() || u2.odd()) { u1+=m; u2+=n; }
+<a name="l00037"></a>00037                     u1 &gt;&gt;= 1;
+<a name="l00038"></a>00038                     u2 &gt;&gt;= 1;
+<a name="l00039"></a>00039                     u3 &gt;&gt;= 1;
+<a name="l00040"></a>00040                 }
+<a name="l00041"></a>00041 
+<a name="l00042"></a>00042                 <span class="keywordflow">if</span> (t3.even() || u3 &lt; t3) {
+<a name="l00043"></a>00043                     <span class="comment">// Swap the u&#39;s with the t&#39;s</span>
+<a name="l00044"></a>00044                     <span class="keyword">using</span> <a class="code" href="namespaceboost_1_1xint.html#a7f5d22465d4dab8985c13479ec0e5e79">std::swap</a>;
+<a name="l00045"></a>00045                     <a class="code" href="namespaceboost_1_1xint.html#a7f5d22465d4dab8985c13479ec0e5e79">swap</a>(u1, t1);
+<a name="l00046"></a>00046                     <a class="code" href="namespaceboost_1_1xint.html#a7f5d22465d4dab8985c13479ec0e5e79">swap</a>(u2, t2);
+<a name="l00047"></a>00047                     <a class="code" href="namespaceboost_1_1xint.html#a7f5d22465d4dab8985c13479ec0e5e79">swap</a>(u3, t3);
+<a name="l00048"></a>00048                 }
+<a name="l00049"></a>00049             } <span class="keywordflow">while</span> (u3.even());
+<a name="l00050"></a>00050 
+<a name="l00051"></a>00051             <span class="keywordflow">while</span> (u1 &lt; t1 || u2 &lt; t2) { u1+=m; u2+=n; }
+<a name="l00052"></a>00052             u1-=t1; u2-=t2; u3-=t3;
+<a name="l00053"></a>00053         } <span class="keywordflow">while</span> (t3 &gt; 0);
+<a name="l00054"></a>00054 
+<a name="l00055"></a>00055         <span class="keywordflow">while</span> (u1 &gt;= m &amp;&amp; u2 &gt;= n) { u1-=m; u2-=n; }
+<a name="l00056"></a>00056     }
+<a name="l00057"></a>00057 
+<a name="l00058"></a>00058     integer u1, u2, u3;
+<a name="l00059"></a>00059 };
 <a name="l00060"></a>00060 
-<a name="l00061"></a>00061 <span class="keyword">namespace </span>detail {
-<a name="l00062"></a>00062 
-<a name="l00063"></a>00063 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a3855da89983ace165f708111723d8d1a">gcd</a>(base_integer&amp; target, <span class="keyword">const</span> base_integer&amp; num1, <span class="keyword">const</span> base_integer&amp;
-<a name="l00064"></a>00064     num2)
-<a name="l00065"></a>00065 {
-<a name="l00066"></a>00066     <span class="keywordflow">if</span> (num1._is_zero() &amp;&amp; num2._is_zero()) {
-<a name="l00067"></a>00067         target._set_unsigned(0);
-<a name="l00068"></a>00068     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (num1._is_zero()) {
-<a name="l00069"></a>00069         target._attach(num2);
-<a name="l00070"></a>00070     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (num2._is_zero()) {
-<a name="l00071"></a>00071         target._attach(num1);
-<a name="l00072"></a>00072     } <span class="keywordflow">else</span> {
-<a name="l00073"></a>00073         temp_t n(num1), m(num2);
-<a name="l00074"></a>00074         n._set_negative(<span class="keyword">false</span>);
-<a name="l00075"></a>00075         m._set_negative(<span class="keyword">false</span>);
-<a name="l00076"></a>00076 
-<a name="l00077"></a>00077         <span class="keywordtype">size_t</span> k = 0;
-<a name="l00078"></a>00078         <span class="keywordflow">if</span> (!<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a6e4e8f8c4d7f25dbf7a6c5d13e74472b">getbit</a>(n, k) &amp;&amp; !<a class="code" href="namespaceboost_1_1xint_1_1detail.html#a6e4e8f8c4d7f25dbf7a6c5d13e74472b">getbit</a>(m, k)) ++k;
-<a name="l00079"></a>00079         <span class="keywordflow">if</span> (k != 0) {
-<a name="l00080"></a>00080             <a class="code" href="namespaceboost_1_1xint_1_1detail.html#ac6682e4cab49f639aa538ccd10b3a8e5">shift_right</a>(n, n, k);
-<a name="l00081"></a>00081             <a class="code" href="namespaceboost_1_1xint_1_1detail.html#ac6682e4cab49f639aa538ccd10b3a8e5">shift_right</a>(m, m, k);
-<a name="l00082"></a>00082         }
+<a name="l00061"></a>00061 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#ab551ac5968fdbcc639318b6f294da2cd" title="Calculate the Greatest Common Denominator of two integers.">gcd</a>(base_integer&amp; target, <span class="keyword">const</span> base_integer&amp; num1, <span class="keyword">const</span> base_integer&amp;
+<a name="l00062"></a>00062     num2)
+<a name="l00063"></a>00063 {
+<a name="l00064"></a>00064     <span class="keywordflow">if</span> (num1._is_zero() &amp;&amp; num2._is_zero()) {
+<a name="l00065"></a>00065         target._set_unsigned(0);
+<a name="l00066"></a>00066     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (num1._is_zero()) {
+<a name="l00067"></a>00067         target._attach(num2);
+<a name="l00068"></a>00068     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (num2._is_zero()) {
+<a name="l00069"></a>00069         target._attach(num1);
+<a name="l00070"></a>00070     } <span class="keywordflow">else</span> {
+<a name="l00071"></a>00071         temp_t n(num1), m(num2);
+<a name="l00072"></a>00072         n._set_negative(<span class="keyword">false</span>);
+<a name="l00073"></a>00073         m._set_negative(<span class="keyword">false</span>);
+<a name="l00074"></a>00074 
+<a name="l00075"></a>00075         <span class="keywordtype">size_t</span> k = 0;
+<a name="l00076"></a>00076         <span class="keywordflow">if</span> (!<a class="code" href="namespaceboost_1_1xint.html#ac00836bdc530b3eaf0a9b9f2e208273b" title="Queries the value of a particular bit in an integer.">getbit</a>(n, k) &amp;&amp; !<a class="code" href="namespaceboost_1_1xint.html#ac00836bdc530b3eaf0a9b9f2e208273b" title="Queries the value of a particular bit in an integer.">getbit</a>(m, k)) ++k;
+<a name="l00077"></a>00077         <span class="keywordflow">if</span> (k != 0) {
+<a name="l00078"></a>00078             <a class="code" href="namespaceboost_1_1xint.html#aca7453fa9e276ebefacc9827b55f69d2" title="Right-shift an integer by a specified number of bits.">shift_right</a>(n, n, k);
+<a name="l00079"></a>00079             <a class="code" href="namespaceboost_1_1xint.html#aca7453fa9e276ebefacc9827b55f69d2" title="Right-shift an integer by a specified number of bits.">shift_right</a>(m, m, k);
+<a name="l00080"></a>00080         }
+<a name="l00081"></a>00081 
+<a name="l00082"></a>00082         gcd_core core(n._to_integer(), m._to_integer());
 <a name="l00083"></a>00083 
-<a name="l00084"></a>00084         gcd_core core(n._to_integer(), m._to_integer());
-<a name="l00085"></a>00085 
-<a name="l00086"></a>00086         <span class="keywordflow">if</span> (core.u3._is_zero()) {
-<a name="l00087"></a>00087             <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a2c4f8bb0f54061c28c9eb9c2cc852273">shift_left</a>(target, fixed_integer_any(1), k);
-<a name="l00088"></a>00088         } <span class="keywordflow">else</span> {
-<a name="l00089"></a>00089             <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a2c4f8bb0f54061c28c9eb9c2cc852273">shift_left</a>(target, core.u3, k);
-<a name="l00090"></a>00090         }
-<a name="l00091"></a>00091     }
-<a name="l00092"></a>00092 }
-<a name="l00093"></a>00093 
-<a name="l00094"></a>00094 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a931235bb5e181c038944d773a1e03158">lcm</a>(base_integer&amp; target, <span class="keyword">const</span> base_integer&amp; num1, <span class="keyword">const</span> base_integer&amp;
-<a name="l00095"></a>00095     num2)
-<a name="l00096"></a>00096 {
-<a name="l00097"></a>00097     <span class="keywordflow">if</span> (num1._is_zero() || num2._is_zero()) {
-<a name="l00098"></a>00098         target._set_unsigned(0);
-<a name="l00099"></a>00099     } <span class="keywordflow">else</span> {
-<a name="l00100"></a>00100         integer common;
-<a name="l00101"></a>00101         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a3855da89983ace165f708111723d8d1a">gcd</a>(common, num1, num2);
-<a name="l00102"></a>00102 
-<a name="l00103"></a>00103         integer answer, remainder;
-<a name="l00104"></a>00104         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#ae35185e26f2828524b2830778186ac19">multiply</a>(answer, num1, num2);
-<a name="l00105"></a>00105         answer._set_negative(<span class="keyword">false</span>);
-<a name="l00106"></a>00106         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a30a579455d99a87796390eb2fbf4498a">divide</a>(answer, remainder, answer, common);
-<a name="l00107"></a>00107 
-<a name="l00108"></a>00108         target._attach(answer);
-<a name="l00109"></a>00109     }
-<a name="l00110"></a>00110 }
-<a name="l00111"></a>00111 
-<a name="l00112"></a>00112 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a5b0d8fb9d0f8d7feffb43ca63e10a4b3">invmod</a>(base_integer&amp; target, <span class="keyword">const</span> base_integer&amp; n, <span class="keyword">const</span> base_integer&amp; m)
-<a name="l00113"></a>00113 {
-<a name="l00114"></a>00114     <span class="comment">// Calculates the modular inverse of n mod m, or (n^(-1)) mod m</span>
-<a name="l00115"></a>00115     <span class="comment">// Defined as b, where n*b corresponds to 1 (mod m)</span>
-<a name="l00116"></a>00116     <span class="keywordflow">if</span> (m._is_zero() || m._get_negative()) <span class="keywordflow">throw</span> exceptions::invalid_modulus();
-<a name="l00117"></a>00117 
-<a name="l00118"></a>00118     <span class="keywordflow">if</span> (n._is_zero()) {
-<a name="l00119"></a>00119         target._set_unsigned(0);
-<a name="l00120"></a>00120     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (n._get_negative()) {
-<a name="l00121"></a>00121         integer _n(n._to_integer());
-<a name="l00122"></a>00122         _n._set_negative(<span class="keyword">false</span>);
-<a name="l00123"></a>00123 
-<a name="l00124"></a>00124         integer nn;
-<a name="l00125"></a>00125         <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a5b0d8fb9d0f8d7feffb43ca63e10a4b3">invmod</a>(nn, _n, m);
-<a name="l00126"></a>00126         <span class="keywordflow">if</span> (nn._is_zero()) {
-<a name="l00127"></a>00127             target._attach(nn);
-<a name="l00128"></a>00128         } <span class="keywordflow">else</span> {
-<a name="l00129"></a>00129             nn._set_negative(<span class="keyword">true</span>);
-<a name="l00130"></a>00130             <a class="code" href="namespaceboost_1_1xint_1_1detail.html#ab9babbdf59f52b65d8cecc33e20e0a3f">add</a>(target, nn, m);
-<a name="l00131"></a>00131         }
-<a name="l00132"></a>00132     } <span class="keywordflow">else</span> {
-<a name="l00133"></a>00133         integer nn(n._to_integer()), mm(m._to_integer());
-<a name="l00134"></a>00134         <span class="keywordflow">if</span> (nn.even() &amp;&amp; mm.even()) {
-<a name="l00135"></a>00135             <span class="comment">// GCD != 1, no inverse possible.</span>
-<a name="l00136"></a>00136             target._set_unsigned(0);
-<a name="l00137"></a>00137             <span class="keywordflow">return</span>;
-<a name="l00138"></a>00138         }
+<a name="l00084"></a>00084         <span class="keywordflow">if</span> (core.u3._is_zero()) {
+<a name="l00085"></a>00085             <a class="code" href="namespaceboost_1_1xint.html#ae22c3492ecf08370a9a972c8d6fb8e96" title="Left-shift an integer by a specified number of bits.">shift_left</a>(target, fixed_integer_any(1), k);
+<a name="l00086"></a>00086         } <span class="keywordflow">else</span> {
+<a name="l00087"></a>00087             <a class="code" href="namespaceboost_1_1xint.html#ae22c3492ecf08370a9a972c8d6fb8e96" title="Left-shift an integer by a specified number of bits.">shift_left</a>(target, core.u3, k);
+<a name="l00088"></a>00088         }
+<a name="l00089"></a>00089     }
+<a name="l00090"></a>00090 }
+<a name="l00091"></a>00091 
+<a name="l00092"></a>00092 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a0096ae57d50e4fe8b5413ea7a4e60495" title="Calculate the Least Common Multiple of two integers.">lcm</a>(base_integer&amp; target, <span class="keyword">const</span> base_integer&amp; num1, <span class="keyword">const</span> base_integer&amp;
+<a name="l00093"></a>00093     num2)
+<a name="l00094"></a>00094 {
+<a name="l00095"></a>00095     <span class="keywordflow">if</span> (num1._is_zero() || num2._is_zero()) {
+<a name="l00096"></a>00096         target._set_unsigned(0);
+<a name="l00097"></a>00097     } <span class="keywordflow">else</span> {
+<a name="l00098"></a>00098         integer common;
+<a name="l00099"></a>00099         <a class="code" href="namespaceboost_1_1xint.html#ab551ac5968fdbcc639318b6f294da2cd" title="Calculate the Greatest Common Denominator of two integers.">gcd</a>(common, num1, num2);
+<a name="l00100"></a>00100 
+<a name="l00101"></a>00101         integer answer, remainder;
+<a name="l00102"></a>00102         <a class="code" href="namespaceboost_1_1xint.html#af844548a421cfc751133081b334dbe4b">multiply</a>(answer, num1, num2);
+<a name="l00103"></a>00103         answer._set_negative(<span class="keyword">false</span>);
+<a name="l00104"></a>00104         <a class="code" href="namespaceboost_1_1xint.html#a5b884361c54aa64a1974879cb3464c9a">divide</a>(answer, remainder, answer, common);
+<a name="l00105"></a>00105 
+<a name="l00106"></a>00106         target._attach(answer);
+<a name="l00107"></a>00107     }
+<a name="l00108"></a>00108 }
+<a name="l00109"></a>00109 
+<a name="l00110"></a>00110 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a1e2477157ea768d8c57fac1c31a8f7ca" title="Get the modular inverse of a number in a modulus, if there is one.">invmod</a>(base_integer&amp; target, <span class="keyword">const</span> base_integer&amp; n, <span class="keyword">const</span> base_integer&amp; m)
+<a name="l00111"></a>00111 {
+<a name="l00112"></a>00112     <span class="comment">// Calculates the modular inverse of n mod m, or (n^(-1)) mod m</span>
+<a name="l00113"></a>00113     <span class="comment">// Defined as b, where n*b corresponds to 1 (mod m)</span>
+<a name="l00114"></a>00114     <span class="keywordflow">if</span> (m._is_zero() || m._get_negative()) <span class="keywordflow">throw</span> exceptions::invalid_modulus();
+<a name="l00115"></a>00115 
+<a name="l00116"></a>00116     <span class="keywordflow">if</span> (n._is_zero()) {
+<a name="l00117"></a>00117         target._set_unsigned(0);
+<a name="l00118"></a>00118     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (n._get_negative()) {
+<a name="l00119"></a>00119         integer _n(n._to_integer());
+<a name="l00120"></a>00120         _n._set_negative(<span class="keyword">false</span>);
+<a name="l00121"></a>00121 
+<a name="l00122"></a>00122         integer nn;
+<a name="l00123"></a>00123         <a class="code" href="namespaceboost_1_1xint.html#a1e2477157ea768d8c57fac1c31a8f7ca" title="Get the modular inverse of a number in a modulus, if there is one.">invmod</a>(nn, _n, m);
+<a name="l00124"></a>00124         <span class="keywordflow">if</span> (nn._is_zero()) {
+<a name="l00125"></a>00125             target._attach(nn);
+<a name="l00126"></a>00126         } <span class="keywordflow">else</span> {
+<a name="l00127"></a>00127             nn._set_negative(<span class="keyword">true</span>);
+<a name="l00128"></a>00128             <a class="code" href="namespaceboost_1_1xint.html#a7b7903cb879b60d0d5e3403b3c6a1cdd">add</a>(target, nn, m);
+<a name="l00129"></a>00129         }
+<a name="l00130"></a>00130     } <span class="keywordflow">else</span> {
+<a name="l00131"></a>00131         integer nn(n._to_integer()), mm(m._to_integer());
+<a name="l00132"></a>00132         <span class="keywordflow">if</span> (nn.even() &amp;&amp; mm.even()) {
+<a name="l00133"></a>00133             <span class="comment">// GCD != 1, no inverse possible.</span>
+<a name="l00134"></a>00134             target._set_unsigned(0);
+<a name="l00135"></a>00135             <span class="keywordflow">return</span>;
+<a name="l00136"></a>00136         }
+<a name="l00137"></a>00137 
+<a name="l00138"></a>00138         gcd_core core(nn, mm);
 <a name="l00139"></a>00139 
-<a name="l00140"></a>00140         gcd_core core(nn, mm);
-<a name="l00141"></a>00141 
-<a name="l00142"></a>00142         <span class="keywordflow">if</span> (core.u3 != <a class="code" href="classboost_1_1xint_1_1integer.html#aa332681715634b73118ffe76090a75d3">integer::one</a>()) {
-<a name="l00143"></a>00143             <span class="comment">// GCD != 1, no inverse possible.</span>
-<a name="l00144"></a>00144             target._set_unsigned(0);
-<a name="l00145"></a>00145             <span class="keywordflow">return</span>;
-<a name="l00146"></a>00146         }
-<a name="l00147"></a>00147 
-<a name="l00148"></a>00148         target._attach(core.u1);
-<a name="l00149"></a>00149     }
-<a name="l00150"></a>00150 }
-<a name="l00151"></a>00151 
-<a name="l00152"></a>00152 } <span class="comment">// namespace detail</span>
-<a name="l00153"></a>00153 
-<a name="l00163"></a>00163 integer <a class="code" href="namespaceboost_1_1xint.html#ab551ac5968fdbcc639318b6f294da2cd" title="Calculate the Greatest Common Denominator of two integers.">gcd</a>(<span class="keyword">const</span> integer&amp; num1, <span class="keyword">const</span> integer&amp; num2) {
-<a name="l00164"></a>00164     integer r;
-<a name="l00165"></a>00165     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a3855da89983ace165f708111723d8d1a">detail::gcd</a>(r, num1, num2);
-<a name="l00166"></a>00166     <span class="keywordflow">return</span> <a class="code" href="internals_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(r);
-<a name="l00167"></a>00167 }
-<a name="l00168"></a>00168 
-<a name="l00179"></a>00179 integer <a class="code" href="namespaceboost_1_1xint.html#a0096ae57d50e4fe8b5413ea7a4e60495" title="Calculate the Least Common Multiple of two integers.">lcm</a>(<span class="keyword">const</span> integer&amp; num1, <span class="keyword">const</span> integer&amp; num2) {
-<a name="l00180"></a>00180     integer r;
-<a name="l00181"></a>00181     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a931235bb5e181c038944d773a1e03158">detail::lcm</a>(r, num1, num2);
-<a name="l00182"></a>00182     <span class="keywordflow">return</span> <a class="code" href="internals_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(r);
-<a name="l00183"></a>00183 }
-<a name="l00184"></a>00184 
-<a name="l00197"></a>00197 integer <a class="code" href="namespaceboost_1_1xint.html#a1e2477157ea768d8c57fac1c31a8f7ca" title="Get the modular inverse of a number in a modulus, if there is one.">invmod</a>(<span class="keyword">const</span> integer&amp; n, <span class="keyword">const</span> integer&amp; m) {
-<a name="l00198"></a>00198     integer r;
-<a name="l00199"></a>00199     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#a5b0d8fb9d0f8d7feffb43ca63e10a4b3">detail::invmod</a>(r, n, m);
-<a name="l00200"></a>00200     <span class="keywordflow">return</span> <a class="code" href="internals_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(r);
-<a name="l00201"></a>00201 }
-<a name="l00202"></a>00202 
-<a name="l00203"></a>00203 } <span class="comment">// namespace xint</span>
-<a name="l00204"></a>00204 } <span class="comment">// namespace boost</span>
+<a name="l00140"></a>00140         <span class="keywordflow">if</span> (core.u3 != <a class="code" href="classboost_1_1xint_1_1integer.html#aa332681715634b73118ffe76090a75d3">integer::one</a>()) {
+<a name="l00141"></a>00141             <span class="comment">// GCD != 1, no inverse possible.</span>
+<a name="l00142"></a>00142             target._set_unsigned(0);
+<a name="l00143"></a>00143             <span class="keywordflow">return</span>;
+<a name="l00144"></a>00144         }
+<a name="l00145"></a>00145 
+<a name="l00146"></a>00146         target._attach(core.u1);
+<a name="l00147"></a>00147     }
+<a name="l00148"></a>00148 }
+<a name="l00149"></a>00149 
+<a name="l00150"></a>00150 } <span class="comment">// namespace detail</span>
+<a name="l00152"></a>00152 <span class="comment"></span>
+<a name="l00162"></a>00162 integer <a class="code" href="namespaceboost_1_1xint.html#ab551ac5968fdbcc639318b6f294da2cd" title="Calculate the Greatest Common Denominator of two integers.">gcd</a>(<span class="keyword">const</span> integer&amp; num1, <span class="keyword">const</span> integer&amp; num2) {
+<a name="l00163"></a>00163     integer r;
+<a name="l00164"></a>00164     <a class="code" href="namespaceboost_1_1xint.html#ab551ac5968fdbcc639318b6f294da2cd" title="Calculate the Greatest Common Denominator of two integers.">detail::gcd</a>(r, num1, num2);
+<a name="l00165"></a>00165     <span class="keywordflow">return</span> <a class="code" href="internals_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(r);
+<a name="l00166"></a>00166 }
+<a name="l00167"></a>00167 
+<a name="l00178"></a>00178 integer <a class="code" href="namespaceboost_1_1xint.html#a0096ae57d50e4fe8b5413ea7a4e60495" title="Calculate the Least Common Multiple of two integers.">lcm</a>(<span class="keyword">const</span> integer&amp; num1, <span class="keyword">const</span> integer&amp; num2) {
+<a name="l00179"></a>00179     integer r;
+<a name="l00180"></a>00180     <a class="code" href="namespaceboost_1_1xint.html#a0096ae57d50e4fe8b5413ea7a4e60495" title="Calculate the Least Common Multiple of two integers.">detail::lcm</a>(r, num1, num2);
+<a name="l00181"></a>00181     <span class="keywordflow">return</span> <a class="code" href="internals_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(r);
+<a name="l00182"></a>00182 }
+<a name="l00183"></a>00183 
+<a name="l00196"></a>00196 integer <a class="code" href="namespaceboost_1_1xint.html#a1e2477157ea768d8c57fac1c31a8f7ca" title="Get the modular inverse of a number in a modulus, if there is one.">invmod</a>(<span class="keyword">const</span> integer&amp; n, <span class="keyword">const</span> integer&amp; m) {
+<a name="l00197"></a>00197     integer r;
+<a name="l00198"></a>00198     <a class="code" href="namespaceboost_1_1xint.html#a1e2477157ea768d8c57fac1c31a8f7ca" title="Get the modular inverse of a number in a modulus, if there is one.">detail::invmod</a>(r, n, m);
+<a name="l00199"></a>00199     <span class="keywordflow">return</span> <a class="code" href="internals_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(r);
+<a name="l00200"></a>00200 }
+<a name="l00201"></a>00201 
+<a name="l00202"></a>00202 } <span class="comment">// namespace xint</span>
+<a name="l00203"></a>00203 } <span class="comment">// namespace boost</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Apr 30 00:24:24 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun May 2 18:42:51 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

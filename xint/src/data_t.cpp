@@ -23,6 +23,8 @@
 
 namespace boost {
 namespace xint {
+
+//! @cond detail
 namespace detail {
 
 static const size_t datasize = (sizeof(data_t)+sizeof(digit_t)-1) /
@@ -163,5 +165,7 @@ doubledigit_t bitqueue_t::pop(size_t requestedbits) {
 }
 
 } // namespace detail
+//! @endcond detail
+
 } // namespace xint
 } // namespace boost

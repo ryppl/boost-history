@@ -38,69 +38,14 @@
 <p><tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><p>All the types and functions of the library are within this namespace. </p>
 <br/></td></tr>
 </p>
-<tr><td colspan="2"><h2>Defines</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="monty_8cpp.html#a5e044fcc16f6eb5e891ef312f47209ac">ddPowerOfTwo</a>(p)&nbsp;&nbsp;&nbsp;(doubledigit_t(1) &lt;&lt; p)</td></tr>
-<tr><td colspan="2"><h2>Functions</h2></td></tr>
-<tr><td colspan="2"><div class="groupHeader">Montgomery Reduction functions</div></td></tr>
-<tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpef45384829a28a8031424a8c453ceaa0"></a> </p>
-</div></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a07914d9486e835d2dcea3268937296c4">boost::xint::fromMontgomeryForm</a> (const integer &amp;n, const integer &amp;m)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the integer from the Montgomery form of a number. Used for testing.  <a href="#a07914d9486e835d2dcea3268937296c4"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">digit_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a50ceb8725ce5a326ef1e43a4d593efac">boost::xint::inverse0</a> (const integer &amp;n)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the low digit of the inverse of a number. Used internally.  <a href="#a50ceb8725ce5a326ef1e43a4d593efac"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ab62e3e69cbc7781a86fc9a0192ef5d37">boost::xint::montgomeryMultiplyMod</a> (const integer &amp;a, const integer &amp;b, const integer &amp;n, digit_t nPrime0)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the Montgomery equivalent of <code>mulmod(a, b, n)</code>. Used internally.  <a href="#ab62e3e69cbc7781a86fc9a0192ef5d37"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a9e0c8f5da23ce668a7b428256f6b8ed4">boost::xint::montgomeryPowerMod</a> (const integer &amp;a, const integer &amp;e, const integer &amp;n)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the Montgomery equivalent of <code>powmod(a, b, n)</code>. Used internally.  <a href="#a9e0c8f5da23ce668a7b428256f6b8ed4"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a5a7360e7330dcc35838ba324c523b395">boost::xint::montgomeryR</a> (const integer &amp;n)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the most efficient R value for a number and the library's internal representation. Used internally.  <a href="#a5a7360e7330dcc35838ba324c523b395"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a512ff2447d52a228c1c9f99fea8fd860">boost::xint::toMontgomeryForm</a> (const integer &amp;n, const integer &amp;m)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the Montgomery form of a number. Used for testing.  <a href="#a512ff2447d52a228c1c9f99fea8fd860"></a><br/></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>Internally used functions. </p>
 <p>This file contains the definitions for functions based on the Montgomery Reduction, used internally for an extra-fast xint::powmod. </p>
 
 <p>Definition in file <a class="el" href="monty_8cpp_source.html">monty.cpp</a>.</p>
-<hr/><h2>Define Documentation</h2>
-<a class="anchor" id="a5e044fcc16f6eb5e891ef312f47209ac"></a><!-- doxytag: member="monty.cpp::ddPowerOfTwo" ref="a5e044fcc16f6eb5e891ef312f47209ac" args="(p)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ddPowerOfTwo</td>
-          <td>(</td>
-          <td class="paramtype">p&nbsp;</td>
-          <td class="paramname"></td>
-          <td>&nbsp;)&nbsp;</td>
-          <td>&nbsp;&nbsp;&nbsp;(doubledigit_t(1) &lt;&lt; p)</td>
-        </tr>
-      </table>
 </div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="monty_8cpp_source.html#l00127">127</a> of file <a class="el" href="monty_8cpp_source.html">monty.cpp</a>.</p>
-
-</div>
-</div>
-<hr/><h2>Variable Documentation</h2>
-<a class="anchor" id="a934de4c9ba95abb023be91f96559097d"></a><!-- doxytag: member="monty.cpp::mTable" ref="a934de4c9ba95abb023be91f96559097d" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">boost::scoped_array&lt;value_t&gt; <a class="el" href="monty_8cpp.html#a934de4c9ba95abb023be91f96559097d">mTable</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="monty_8cpp_source.html#l00164">164</a> of file <a class="el" href="monty_8cpp_source.html">monty.cpp</a>.</p>
-
-</div>
-</div>
-</div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Apr 30 00:24:25 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun May 2 18:42:51 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

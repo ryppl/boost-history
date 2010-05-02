@@ -31,7 +31,7 @@
 <p>To deal with this, I separated the <code>xint::integer</code> and <code>xint::nothrow_integer</code> types. <code>xint::integer</code> functions now always throw exceptions on errors, and always hold valid numbers; <code>xint::nothrow_integer</code> functions (as implied by the name) never throw exceptions, instead returning the Not-a-Number value (which only <code>xint::nothrow_integer</code> can hold).</p>
 <p>This design ensures that the Not-a-Number value only needs to be checked for in a single place (the <code>xint::integer</code> conversion constructor), and ensures that any speed penalty from it is only incurred by people who choose to use the <code>nothrow_integer</code> type. It also preserves the no-exceptions behavior, which is useful under some circumstances. </p>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Apr 30 00:24:25 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun May 2 18:42:51 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

@@ -21,6 +21,7 @@
 namespace boost {
 namespace xint {
 
+//! @cond detail
 namespace detail {
 int compare(const base_integer &b1, const base_integer &b2, bool ignoresign) {
     bool invert_answer=false;
@@ -54,6 +55,7 @@ int compare(const base_integer &b1, const base_integer &b2, bool ignoresign) {
     return (invert_answer ? -answer : answer);
 }
 } // namespace detail
+//! @endcond detail
 
 /*! \brief Compare two integer objects.
 

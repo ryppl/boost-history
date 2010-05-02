@@ -21,11 +21,9 @@
 namespace boost {
 namespace xint {
 
-using namespace detail;
-
+//! @cond detail
 namespace detail {
 
-namespace {
 void sub_add(base_integer& target, const base_integer& n1, const base_integer&
     n2)
 {
@@ -234,8 +232,6 @@ void sub_divide(base_integer& qtarget, base_integer& rtarget, const
     }
 }
 
-} // namespace
-
 void add(base_integer& target, const base_integer& n1, const base_integer& n2) {
     if (n1._is_zero()) {
         target._attach(n2);
@@ -363,6 +359,7 @@ void divide(base_integer& target, const base_integer& n1, const base_integer&
 }
 
 } // namespace detail
+//! @endcond detail
 
 /*! \brief Returns the absolute value of an integer.
 

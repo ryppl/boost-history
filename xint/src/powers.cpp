@@ -23,8 +23,7 @@
 namespace boost {
 namespace xint {
 
-using namespace detail;
-
+//! @cond detail
 namespace detail {
 
 void sqr(base_integer& target, const base_integer& n) {
@@ -137,6 +136,7 @@ void factorial(base_integer& target, size_t n) {
 }
 
 } // namespace detail
+//! @endcond detail
 
 /*! \brief Calculate the value of 2<sup>e</sup>
 

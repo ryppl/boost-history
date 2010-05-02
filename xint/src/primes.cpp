@@ -23,7 +23,8 @@
 namespace boost {
 namespace xint {
 
-namespace {
+//! @cond detail
+namespace detail {
 
 std::vector<int> sieveOfEratosthenes(int upTo) {
     std::vector<int> sieve;
@@ -77,7 +78,8 @@ int isProbablePrimeBaseB(const integer& n, const integer &b, callback_t
     return 0;
 }
 
-} // namespace
+} // namespace detail
+//! @endcond detail
 
 /*! \brief Tests an integer for primality.
 
@@ -106,7 +108,7 @@ int is_prime(const integer& n, callback_t callback) {
         "numbers below 2");
 
     // First we trial-divide it by the primes below 2000
-    static const std::vector<int> cLowPrimes(sieveOfEratosthenes(2000));
+    static const std::vector<int> cLowPrimes(detail::sieveOfEratosthenes(2000));
     std::vector<int>::const_iterator i=cLowPrimes.begin(), ie=cLowPrimes.end();
     for (; i!=ie; ++i) if ((n % *i)==0) return (n==*i);
 

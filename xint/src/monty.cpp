@@ -27,7 +27,8 @@
 namespace boost {
 namespace xint {
 
-using namespace detail;
+//! @cond detail
+namespace detail {
 
 //! Returns the low digit of the inverse of a number. Used internally.
 digit_t inverse0(const integer& n) {
@@ -112,8 +113,6 @@ integer montgomeryMultiplyMod(const integer& a, const integer& b, const integer&
     if (t >= n) return t - n;
     else return BOOST_XINT_MOVE(t);
 }
-
-namespace {
 
 // cMaxK sets the balance between memory/precalculations required and the number
 // of calculations required for an exponentiation. Increasing it can only reduce
@@ -220,8 +219,6 @@ vkbitdigit_t splitIntoKBitDigits(const integer& e, size_t k) {
     return rval;
 }
 
-} // namespace
-
 /*! \brief Returns the Montgomery equivalent of <code>powmod(a, b, n)</code>.
            Used internally.
 */
@@ -277,6 +274,9 @@ integer montgomeryPowerMod(const integer& a, const integer& e, const integer& n)
     }
     return montgomeryMultiplyMod(pp, integer::one(), n, nPrime0);
 }
+
+} // namespace detail
+//! @endcond detail
 
 } // namespace xint
 } // namespace boost

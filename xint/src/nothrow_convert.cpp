@@ -23,8 +23,6 @@
 namespace boost {
 namespace xint {
 
-using namespace detail;
-
 /*! \copydoc xint::to_string(const integer&, size_t, bool)
 
 \note Returns an empty std::string instead of throwing.

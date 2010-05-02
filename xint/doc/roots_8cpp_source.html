@@ -41,50 +41,50 @@
 <a name="l00020"></a>00020 <span class="keyword">namespace </span>boost {
 <a name="l00021"></a>00021 <span class="keyword">namespace </span>xint {
 <a name="l00022"></a>00022 
-<a name="l00023"></a>00023 <span class="keyword">namespace </span>detail {
-<a name="l00024"></a>00024 
-<a name="l00025"></a>00025 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint_1_1detail.html#aca96f8988b99f3d7153073ef408b875d">sqrt</a>(base_integer&amp; target, <span class="keyword">const</span> base_integer&amp; nn) {
-<a name="l00026"></a>00026     <span class="keywordflow">if</span> (nn._is_zero()) { target._attach(nn); <span class="keywordflow">return</span>; }
-<a name="l00027"></a>00027     <span class="keywordflow">if</span> (nn._get_negative()) <span class="keywordflow">throw</span> exceptions::cannot_represent(<span class="stringliteral">&quot;library cannot &quot;</span>
-<a name="l00028"></a>00028         <span class="stringliteral">&quot;represent imaginary values (tried to take sqrt of negative number)&quot;</span>);
-<a name="l00029"></a>00029 
-<a name="l00030"></a>00030     <span class="comment">// A naive implementation using pure integers can result in an endless loop,</span>
-<a name="l00031"></a>00031     <span class="comment">// cycling between two numbers that are approximately correct (try</span>
-<a name="l00032"></a>00032     <span class="comment">// sqrt(23)). To deal with that, we multiply everything by an even power of</span>
-<a name="l00033"></a>00033     <span class="comment">// two.</span>
-<a name="l00034"></a>00034     <span class="keyword">const</span> <span class="keywordtype">size_t</span> extra_bits = 1;
-<a name="l00035"></a>00035 
-<a name="l00036"></a>00036     integer n(nn._to_integer());
-<a name="l00037"></a>00037     n &lt;&lt;= (extra_bits * 2);
-<a name="l00038"></a>00038 
-<a name="l00039"></a>00039     <span class="comment">// Initial guess is half the length of n, in bits</span>
-<a name="l00040"></a>00040     integer guess;
-<a name="l00041"></a>00041     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#aab28ac84cd1fb51d3d6206abad9fba01">setbit</a>(guess, n._log2()/2);
-<a name="l00042"></a>00042 
-<a name="l00043"></a>00043     <span class="comment">// Now refine it until we&#39;re as close as we can get.</span>
-<a name="l00044"></a>00044     <span class="keywordflow">while</span> (1) {
-<a name="l00045"></a>00045         integer guess2=(guess + (n / guess)) &gt;&gt; 1;
-<a name="l00046"></a>00046         <span class="keywordflow">if</span> ((guess &gt;&gt; extra_bits) == (guess2 &gt;&gt; extra_bits)) <span class="keywordflow">break</span>;
-<a name="l00047"></a>00047         guess = guess2;
-<a name="l00048"></a>00048     }
-<a name="l00049"></a>00049 
-<a name="l00050"></a>00050     <span class="comment">// Remove half of the added bits.</span>
-<a name="l00051"></a>00051     guess &gt;&gt;= extra_bits;
-<a name="l00052"></a>00052     target._attach(guess);
-<a name="l00053"></a>00053 }
-<a name="l00054"></a>00054 
-<a name="l00055"></a>00055 } <span class="comment">// namespace detail</span>
-<a name="l00056"></a>00056 
-<a name="l00069"></a>00069 integer <a class="code" href="namespaceboost_1_1xint.html#a0825d8d9d4644df8d9b6922f5b0d7064">sqrt</a>(<span class="keyword">const</span> integer&amp; n) {
-<a name="l00070"></a>00070     integer r;
-<a name="l00071"></a>00071     <a class="code" href="namespaceboost_1_1xint_1_1detail.html#aca96f8988b99f3d7153073ef408b875d">detail::sqrt</a>(r, n);
-<a name="l00072"></a>00072     <span class="keywordflow">return</span> <a class="code" href="internals_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(r);
-<a name="l00073"></a>00073 }
-<a name="l00074"></a>00074 
-<a name="l00075"></a>00075 } <span class="comment">// namespace xint</span>
-<a name="l00076"></a>00076 } <span class="comment">// namespace boost</span>
+<a name="l00024"></a>00024 <span class="keyword">namespace </span>detail {
+<a name="l00025"></a>00025 
+<a name="l00026"></a>00026 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a0825d8d9d4644df8d9b6922f5b0d7064">sqrt</a>(base_integer&amp; target, <span class="keyword">const</span> base_integer&amp; nn) {
+<a name="l00027"></a>00027     <span class="keywordflow">if</span> (nn._is_zero()) { target._attach(nn); <span class="keywordflow">return</span>; }
+<a name="l00028"></a>00028     <span class="keywordflow">if</span> (nn._get_negative()) <span class="keywordflow">throw</span> exceptions::cannot_represent(<span class="stringliteral">&quot;library cannot &quot;</span>
+<a name="l00029"></a>00029         <span class="stringliteral">&quot;represent imaginary values (tried to take sqrt of negative number)&quot;</span>);
+<a name="l00030"></a>00030 
+<a name="l00031"></a>00031     <span class="comment">// A naive implementation using pure integers can result in an endless loop,</span>
+<a name="l00032"></a>00032     <span class="comment">// cycling between two numbers that are approximately correct (try</span>
+<a name="l00033"></a>00033     <span class="comment">// sqrt(23)). To deal with that, we multiply everything by an even power of</span>
+<a name="l00034"></a>00034     <span class="comment">// two.</span>
+<a name="l00035"></a>00035     <span class="keyword">const</span> <span class="keywordtype">size_t</span> extra_bits = 1;
+<a name="l00036"></a>00036 
+<a name="l00037"></a>00037     integer n(nn._to_integer());
+<a name="l00038"></a>00038     n &lt;&lt;= (extra_bits * 2);
+<a name="l00039"></a>00039 
+<a name="l00040"></a>00040     <span class="comment">// Initial guess is half the length of n, in bits</span>
+<a name="l00041"></a>00041     integer guess;
+<a name="l00042"></a>00042     <a class="code" href="namespaceboost_1_1xint.html#a6278915cf51b0d448a9db40031226182" title="Sets a specific bit in an integer to one.">setbit</a>(guess, n._log2()/2);
+<a name="l00043"></a>00043 
+<a name="l00044"></a>00044     <span class="comment">// Now refine it until we&#39;re as close as we can get.</span>
+<a name="l00045"></a>00045     <span class="keywordflow">while</span> (1) {
+<a name="l00046"></a>00046         integer guess2=(guess + (n / guess)) &gt;&gt; 1;
+<a name="l00047"></a>00047         <span class="keywordflow">if</span> ((guess &gt;&gt; extra_bits) == (guess2 &gt;&gt; extra_bits)) <span class="keywordflow">break</span>;
+<a name="l00048"></a>00048         guess = guess2;
+<a name="l00049"></a>00049     }
+<a name="l00050"></a>00050 
+<a name="l00051"></a>00051     <span class="comment">// Remove half of the added bits.</span>
+<a name="l00052"></a>00052     guess &gt;&gt;= extra_bits;
+<a name="l00053"></a>00053     target._attach(guess);
+<a name="l00054"></a>00054 }
+<a name="l00055"></a>00055 
+<a name="l00056"></a>00056 } <span class="comment">// namespace detail</span>
+<a name="l00058"></a>00058 <span class="comment"></span>
+<a name="l00071"></a>00071 integer <a class="code" href="namespaceboost_1_1xint.html#a0825d8d9d4644df8d9b6922f5b0d7064">sqrt</a>(<span class="keyword">const</span> integer&amp; n) {
+<a name="l00072"></a>00072     integer r;
+<a name="l00073"></a>00073     <a class="code" href="namespaceboost_1_1xint.html#a0825d8d9d4644df8d9b6922f5b0d7064">detail::sqrt</a>(r, n);
+<a name="l00074"></a>00074     <span class="keywordflow">return</span> <a class="code" href="internals_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(r);
+<a name="l00075"></a>00075 }
+<a name="l00076"></a>00076 
+<a name="l00077"></a>00077 } <span class="comment">// namespace xint</span>
+<a name="l00078"></a>00078 } <span class="comment">// namespace boost</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Apr 30 00:24:24 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun May 2 18:42:51 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

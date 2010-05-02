@@ -18,26 +18,24 @@
 #include "../boost/xint/internals.hpp"
 #include "../boost/xint/integer.hpp"
 
-#ifdef XINT_THREADSAFE
-    #define XINT_DISABLE_COPY_ON_WRITE
-#endif
-
 namespace boost {
 namespace xint {
+
+//! @cond detail
 namespace detail {
 
-namespace {
-struct zerodata_t: public data_t {
+struct variable_zerodata_t: public data_t {
     public:
-    zerodata_t() { copies=1; fixed_mask=0; length=max_length=1; *magnitude=0; }
+    variable_zerodata_t() { copies=1; fixed_mask=0; length=max_length=1;
+        *magnitude=0; }
 };
 
-zerodata_t* zerodata() {
-    static std::auto_ptr<zerodata_t> z(new zerodata_t);
+variable_zerodata_t* variable_zerodata() {
+    static std::auto_ptr<variable_zerodata_t> z(new variable_zerodata_t);
     return z.get();
 }
 
-} // namespace
+////////////////////////////////////////////////////////////////////////////////
 
 base_integer::base_integer(): flags(0), data(0) { }
 
@@ -210,10 +208,10 @@ void base_integer::_swap(base_integer& other) {
 void base_integer::_base_attach(data_t *new_data, flag_t setflags, size_t
     extra_allocation)
 {
-    #ifdef XINT_DISABLE_COPY_ON_WRITE
-        bool adopt=(new_data && new_data->copies == 0);
-    #else
+    #ifdef BOOST_XINT_USE_COPY_ON_WRITE
         bool adopt=true;
+    #else
+        bool adopt=(new_data && new_data->copies == 0);
     #endif
 
     if (data != new_data || extra_allocation != 0) {
@@ -337,7 +335,7 @@ void base_integer::_decrement(bool absolute_value) {
 ////////////////////////////////////////////////////////////////////////////////
 
 void base_variable_length_integer::_attach_0() {
-    _base_attach(zerodata());
+    _base_attach(variable_zerodata());
 }
 
 size_t log10_bits(size_t bits) {
@@ -353,5 +351,7 @@ size_t log10_bits(size_t bits) {
 }
 
 } // namespace detail
+//! @endcond detail
+
 } // namespace xint
 } // namespace boost

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>The Extended Integer (XInt) Library: Dependencies</title>
+<title>The Extended Integer (XInt) Library: The Different Integer Types</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -12,7 +12,6 @@
   <div class="tabs">
     <ul>
       <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
-      <li class="current"><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
@@ -24,19 +23,11 @@
 <div class="contents">
 
 
-<h1><a class="anchor" id="dependencies">Dependencies </a></h1><p>Like any non-trivial program, this library uses several other pieces of code, though I've tried to minimize the dependencies. Here are the ones that are required:</p>
-<ul>
-<li>Boost.Integer</li>
-<li>Boost.Function</li>
-<li>Boost.StaticAssert</li>
-<li>Boost.Random</li>
-<li>Boost.TypeTraits</li>
-<li>Boost.SmartPointers</li>
-<li>Boost.Thread (but only if the library was compiled for <a class="el" href="threadsafe.html">thread-safe operation</a>)</li>
-</ul>
-<p>With the exception of Boost.Thread, all of these are header-only libraries, meaning that you don't need to worry about linking your program with them. </p>
+<h1><a class="anchor" id="fixed_and_variable">The Different Integer Types </a></h1><p>The main integer class in this library is <a class="el" href="classboost_1_1xint_1_1integer.html">xint::integer</a>. It allows for arbitrary-length numbers, limited only by your patience and your system's memory. There is an error-code-based variant of it as well, <a class="el" href="classboost_1_1xint_1_1nothrow__integer.html">xint::nothrow_integer</a>.</p>
+<p>There is also a fixed-length type, the template class <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">xint::fixed_integer</a>, where you to specify the number of bits to limit it to.</p>
+<p>All three types have an essentially identical set of functions and operators, and can do pretty much the same things, though with different time and memory efficiencies. See the "detailed description" portion of the reference pages linked above for a description of each type and its unique properties. </p>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sat Apr 17 20:02:58 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun May 2 18:42:51 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

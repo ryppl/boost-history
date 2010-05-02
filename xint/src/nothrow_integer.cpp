@@ -21,14 +21,15 @@
 namespace boost {
 namespace xint {
 
+//! @cond detail
 const std::string detail::nan_text("#NaN#");
+//! @endcond detail
 
 ////////////////////////////////////////////////////////////////////////////////
 // The nothrow_integer class
 
-namespace {
-	std::auto_ptr<nothrow_integer> cZero, cOne, cNaN;
-}
+std::auto_ptr<nothrow_integer> nothrow_integer::cZero, nothrow_integer::cOne,
+    nothrow_integer::cNaN;
 
 //! \copydoc xint::integer::integer()
 nothrow_integer::nothrow_integer() {

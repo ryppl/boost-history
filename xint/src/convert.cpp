@@ -26,15 +26,14 @@
 namespace boost {
 namespace xint {
 
-namespace {
+//! @cond detail
+namespace detail {
+
 char nToChar(int n, bool upperCase) {
     if (n < 10) return char(n+'0');
     else if (upperCase) return char((n - 10) + 'A');
     else return char((n - 10) + 'a');
 }
-} // namespace
-
-namespace detail {
 
 std::string to_string(const base_integer& n, size_t base, bool uppercase) {
     if (base<2 || base>36) throw exceptions::invalid_base();
@@ -181,6 +180,7 @@ void from_binary(base_integer& target, const xint::binary_t& b, size_t bits) {
 }
 
 } // namespace detail
+//! @endcond detail
 
 /*! \brief Creates a string representation of the specified %integer.
 

@@ -34,21 +34,9 @@
 <tr><td colspan="2"><h2>Classes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1base__divide__t.html">boost::xint::base_divide_t&lt; T &gt;</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Holds the results from a division-with-remainder call.  <a href="classboost_1_1xint_1_1base__divide__t.html#_details">More...</a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__integer.html">boost::xint::detail::base_integer</a></td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The base class for all integer classes.  <a href="classboost_1_1xint_1_1detail_1_1base__integer.html#_details">More...</a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1base__variable__length__integer.html">boost::xint::detail::base_variable_length_integer</a></td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The base class for the variable-length integer classes.  <a href="classboost_1_1xint_1_1detail_1_1base__variable__length__integer.html#_details">More...</a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1bitqueue__t.html">boost::xint::detail::bitqueue_t</a></td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Used internally to reorder bits into different-sized groupings.  <a href="classboost_1_1xint_1_1detail_1_1bitqueue__t.html#_details">More...</a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structboost_1_1xint_1_1detail_1_1data__t.html">boost::xint::detail::data_t</a></td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Holds the magnitude digits of an integer.  <a href="structboost_1_1xint_1_1detail_1_1data__t.html#_details">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisable__boost__rv__ref.html">disable_boost_rv_ref&lt; T &gt;</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer__any.html">boost::xint::fixed_integer_any</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The base class for all <a class="el" href="classboost_1_1xint_1_1fixed__integer.html" title="A fixed-size integer type.">fixed_integer</a> types.  <a href="classboost_1_1xint_1_1fixed__integer__any.html#_details">More...</a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1neg__t.html">boost::xint::detail::neg_t</a></td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Makes a negated temporary integer that can always share storage.  <a href="classboost_1_1xint_1_1detail_1_1neg__t.html#_details">More...</a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1detail_1_1temp__t.html">boost::xint::detail::temp_t</a></td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Makes a temporary integer that can always share storage.  <a href="classboost_1_1xint_1_1detail_1_1temp__t.html#_details">More...</a><br/></td></tr>
 <tr><td colspan="2"><h2>Namespaces</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost.html">boost</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html">boost::xint</a></td></tr>
@@ -67,70 +55,12 @@
 <tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="internals_8hpp.html#ad30e9ec163d1981dfee69c97d09ffd28">BOOST_XINT_FORWARD</a>(type, value)&nbsp;&nbsp;&nbsp;value</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="internals_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(value)&nbsp;&nbsp;&nbsp;value</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="internals_8hpp.html#a0533c283bce9e4d9468ea9b3a5ab509b">BOOST_XINT_RV_REF</a>(type)&nbsp;&nbsp;&nbsp;<a class="el" href="classdisable__boost__rv__ref.html">disable_boost_rv_ref</a>&lt;type&gt;</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="internals_8hpp.html#a82e7dee9581106a0231613be0f1fbd3f">BOOST_XINT_USE_COPY_ON_WRITE</a></td></tr>
 <tr><td colspan="2"><h2>Typedefs</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; unsigned <br class="typebreak"/>
 char &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#aae3128529370506165793f2771834e58">boost::xint::binary_t</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">typedef boost::function&lt; bool()&gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a48deb76c9c428a4b3a50177b1b0cb547">boost::xint::callback_t</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">typedef boost::uint_t<br class="typebreak"/>
-&lt; std::numeric_limits<br class="typebreak"/>
-&lt; doubledigit_t &gt;::digits/2 &gt;<br class="typebreak"/>
-::fast&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a46b5dc5524403d8a09d1bb419abcc347">boost::xint::detail::digit_t</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">typedef boost::uintmax_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a4a5cc16afeb1b8f5c3f0e9585f8e7d23">boost::xint::detail::doubledigit_t</a></td></tr>
 <tr><td colspan="2"><h2>Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#ab9babbdf59f52b65d8cecc33e20e0a3f">boost::xint::detail::add</a> (base_integer &amp;target, const base_integer &amp;n1, const base_integer &amp;n2)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a53d3a82d1e9cc3093f7152536226ad26">boost::xint::detail::bitwise_and</a> (base_integer &amp;target, const base_integer &amp;n1, const base_integer &amp;n2)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a371947fdd527dc7f9749288893da9ef2">boost::xint::detail::bitwise_or</a> (base_integer &amp;target, const base_integer &amp;n1, const base_integer &amp;n2)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a3021d365585065f356b81a0250403541">boost::xint::detail::bitwise_xor</a> (base_integer &amp;target, const base_integer &amp;n1, const base_integer &amp;n2)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#acac1cc20095f62e9c39941651dde4316">boost::xint::detail::clearbit</a> (base_integer &amp;n, size_t bit)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a9de8315201bc9967495a289fc8579dd7">boost::xint::detail::compare</a> (const base_integer &amp;b1, const base_integer &amp;b2, bool ignoresign)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a0032a7ede8873065bda17e3ab96897db">boost::xint::detail::divide</a> (base_integer &amp;target, const base_integer &amp;n1, const base_integer &amp;n2)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a30a579455d99a87796390eb2fbf4498a">boost::xint::detail::divide</a> (base_integer &amp;qtarget, base_integer &amp;rtarget, const base_integer &amp;d1, const base_integer &amp;d2)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#af5a00863dc0d17859957738dbc22b98f">boost::xint::detail::factorial</a> (base_integer &amp;target, size_t n)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#af6486dc129e2175a1c5e69a0490d1dec">boost::xint::detail::from_binary</a> (base_integer &amp;target, const xint::binary_t &amp;b, size_t bits)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a8ba37df48cdda7d54becb08bbe97fa5f">boost::xint::detail::from_string</a> (base_integer &amp;target, const std::string &amp;str, size_t base)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a3855da89983ace165f708111723d8d1a">boost::xint::detail::gcd</a> (base_integer &amp;target, const base_integer &amp;num1, const base_integer &amp;num2)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a6e4e8f8c4d7f25dbf7a6c5d13e74472b">boost::xint::detail::getbit</a> (const base_integer &amp;n, size_t bit)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#aa5632075443060f8efc8c2d76e3d0d38">boost::xint::detail::highestbit</a> (const base_integer &amp;n, size_t valueIfZero)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a5b0d8fb9d0f8d7feffb43ca63e10a4b3">boost::xint::detail::invmod</a> (base_integer &amp;target, const base_integer &amp;n, const base_integer &amp;m)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a931235bb5e181c038944d773a1e03158">boost::xint::detail::lcm</a> (base_integer &amp;target, const base_integer &amp;num1, const base_integer &amp;num2)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#aee0c323135ed34026523afa598e8a270">boost::xint::detail::log10_bits</a> (size_t bits)</td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a3c6ea7edbed003bc5ed8254fd2f12ac5">boost::xint::detail::log2</a> (const T &amp;nn, typename boost::enable_if&lt; boost::is_integral&lt; T &gt; &gt;::type *=0, typename boost::enable_if&lt; boost::is_signed&lt; T &gt; &gt;::type *=0)</td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a35e711ff550651a2d9414249e9adcc60">boost::xint::detail::log2</a> (const T &amp;n, typename boost::enable_if&lt; boost::is_integral&lt; T &gt; &gt;::type *=0, typename boost::enable_if&lt; boost::is_unsigned&lt; T &gt; &gt;::type *=0)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a70ae609a4ed2dfd6fb2c237eadfe8a71">boost::xint::detail::lowestbit</a> (const base_integer &amp;n, size_t valueIfZero)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a3395be771e1ce5d282e018a2735b6d86">boost::xint::detail::mod</a> (base_integer &amp;target, const base_integer &amp;n, const base_integer &amp;m)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#ae35185e26f2828524b2830778186ac19">boost::xint::detail::multiply</a> (base_integer &amp;target, const base_integer &amp;n, const base_integer &amp;by)</td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;typename charT , typename traits &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">std::basic_ostream&lt; charT, <br class="typebreak"/>
-traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a674271483ebe199824cdfbd63a6adee1">boost::xint::detail::operator&lt;&lt;</a> (std::basic_ostream&lt; charT, traits &gt; &amp;out, const base_integer &amp;n)</td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;typename charT , typename traits &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">std::basic_istream&lt; charT, <br class="typebreak"/>
-traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a2cab37c14507681f47915d9e3f0d6c86">boost::xint::detail::operator&gt;&gt;</a> (std::basic_istream&lt; charT, traits &gt; &amp;in, base_integer &amp;n)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#ac81c5a94831c7aea3a665eb33491ebe2">boost::xint::detail::pow</a> (base_integer &amp;target, const base_integer &amp;n, const base_integer &amp;e)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#ac063e3fcb648313184b04ef7102d7695">boost::xint::detail::powmod</a> (base_integer &amp;target, const base_integer &amp;_n, const base_integer &amp;_e, const base_integer &amp;_m, bool noMontgomery)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#aab28ac84cd1fb51d3d6206abad9fba01">boost::xint::detail::setbit</a> (base_integer &amp;n, size_t bit)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a2c4f8bb0f54061c28c9eb9c2cc852273">boost::xint::detail::shift_left</a> (base_integer &amp;target, const base_integer &amp;n, size_t byBits)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#ac6682e4cab49f639aa538ccd10b3a8e5">boost::xint::detail::shift_right</a> (base_integer &amp;target, const base_integer &amp;n, size_t byBits)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#abdd8d6819281b304dad578d720e5a651">boost::xint::detail::sqr</a> (base_integer &amp;target, const base_integer &amp;n)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#aca96f8988b99f3d7153073ef408b875d">boost::xint::detail::sqrt</a> (base_integer &amp;target, const base_integer &amp;nn)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a0424e97ecd4549ba637bbf16e31f3047">boost::xint::detail::subtract</a> (base_integer &amp;target, const base_integer &amp;n1, const base_integer &amp;n2)</td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">T&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a6d3ab42bef0e91fcfcf74de54ca623a0">boost::xint::detail::to</a> (const base_integer &amp;n)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a8c7dab9ec8b34c81c577a3b9d3e44118">boost::xint::detail::to_binary</a> (xint::binary_t &amp;target, const base_integer &amp;n, size_t bits)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#af928647d948f09a6564ccd83a80dad14">boost::xint::detail::to_string</a> (const base_integer &amp;n, size_t base, bool uppercase)</td></tr>
-<tr><td colspan="2"><div class="groupHeader">The data_t functions.</div></td></tr>
-<tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp583f07902076b847c6a492abda2f342d"></a> </p>
-</div></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">data_t *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#af1f0f3f0daacef4f7c496378bf6bdfd8">boost::xint::detail::allocate</a> (size_t max_digits, size_t initial_length, digit_t mask)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">data_t *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#aa11166a9b6a4505bc8793ecdc31ad81f">boost::xint::detail::allocate_fixed</a> (digit_t mask, size_t max_digits, size_t initial_length)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">data_t *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#ae0e0a61905f63dfe370ed6b4731fd076">boost::xint::detail::allocate_fixed_zero</a> (digit_t mask, size_t max_digits)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a44089260e9472ac378d3e2ed739e7e08">boost::xint::detail::deallocate</a> (data_t *data)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">data_t *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#af233ab6ae59b3ef29d352b8d08cf772f">boost::xint::detail::duplicate</a> (data_t *olddata, data_t *data_to_copy, size_t extra=0)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">data_t *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a685a3fff60bd1083508712548203cf7b">boost::xint::detail::duplicate</a> (data_t *olddata, size_t extra=0)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">data_t *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a1883fadafa2eeb3e70dfd9032f35bbdd">boost::xint::detail::reallocate</a> (data_t *olddata, size_t newsize)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a589b1fc1784e06a3aef44c86254f1a45">boost::xint::detail::zero</a> (digit_t *p, size_t size)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a4e055aa4ada37a5892b2605de2a953ae">boost::xint::detail::zero</a> (digit_t *p, digit_t *end)</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Miscellaneous functions</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp458f92801f3edfaf2e30b1f530c324e2"></a> </p>
 </div></td></tr>
@@ -140,18 +70,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tells whether the library was compiled with the <a class="el" href="threadsafe.html">Thread Safe Operation option </a> enabled.  <a href="#ac80750e62d5ffa2484332aae4b23d379"></a><br/></td></tr>
 <tr><td colspan="2"><h2>Variables</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">const size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a086ec65a0273dccedca0fbfbddb03398">boost::xint::autobase</a> = (std::numeric_limits&lt;size_t&gt;::max)()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#ab0df946a2c10228501ef82bf823d0978">boost::xint::detail::nan_text</a></td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Holds the text representation of the Not-a-Number value.  <a href="#ab0df946a2c10228501ef82bf823d0978"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">const callback_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a758d415a476a5eeed28dc6b5869b1696">boost::xint::no_callback</a></td></tr>
-<tr><td colspan="2"><div class="groupHeader">Some constants used by the library.</div></td></tr>
-<tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpe1f42a3ea000e0468230fb7abe73e7b1"></a> </p>
-</div></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a7502e1dd4c20a5ad799c6414b55e6818">boost::xint::detail::bits_per_digit</a> = std::numeric_limits&lt;digit_t&gt;::digits</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const digit_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#ab7d9f30b8cad63e2e82998aa2e8d0fcd">boost::xint::detail::digit_hibit</a> = (digit_t(1) &lt;&lt; (bits_per_digit-1))</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const digit_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#aecc94d5cb515781b3a33ddf76884e8f5">boost::xint::detail::digit_mask</a> = digit_t(digit_overflowbit-1)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const doubledigit_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#aa743d942f784ec3a77e85816628d14cc">boost::xint::detail::digit_overflowbit</a> = (doubledigit_t(1) &lt;&lt; bits_per_digit)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a2dcd1e1d9d0bed7c296c7474ed4f976e">boost::xint::detail::digits_in_uintmax</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const doubledigit_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html#a33ea157e34285642e6924bbffffc4367">boost::xint::detail::doubledigit_hibit</a> = (doubledigit_t(1) &lt;&lt; (bits_per_digit*2-1))</td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>Contains the internal definitions required for all XInt types. </p>
@@ -175,7 +94,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00048">48</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00065">65</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
 
 </div>
 </div>
@@ -195,7 +114,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00049">49</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00066">66</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
 
 </div>
 </div>
@@ -220,7 +139,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00052">52</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00069">69</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
 
 </div>
 </div>
@@ -240,7 +159,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00051">51</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00068">68</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
 
 </div>
 </div>
@@ -260,12 +179,27 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00050">50</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00067">67</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a82e7dee9581106a0231613be0f1fbd3f"></a><!-- doxytag: member="internals.hpp::BOOST_XINT_USE_COPY_ON_WRITE" ref="a82e7dee9581106a0231613be0f1fbd3f" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BOOST_XINT_USE_COPY_ON_WRITE</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="internals_8hpp_source.html#l00052">52</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
 
 </div>
 </div>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Apr 30 00:24:24 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun May 2 18:42:51 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

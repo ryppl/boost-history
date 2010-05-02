@@ -22,9 +22,7 @@
 namespace boost {
 namespace xint {
 
-namespace {
-	std::auto_ptr<integer> cZero, cOne;
-}
+std::auto_ptr<integer> integer::cZero, integer::cOne;
 
 //! \brief Creates a new integer with an initial value of zero.
 integer::integer() {

@@ -21,7 +21,9 @@
 
 namespace boost {
 namespace xint {
-namespace {
+
+//! @cond detail
+namespace detail {
 
 struct gcd_core {
     gcd_core(const integer& n, const integer& m): u1(integer::one()),
@@ -55,10 +57,6 @@ struct gcd_core {
 
     integer u1, u2, u3;
 };
-
-} // namespace
-
-namespace detail {
 
 void gcd(base_integer& target, const base_integer& num1, const base_integer&
     num2)
@@ -150,6 +148,7 @@ void invmod(base_integer& target, const base_integer& n, const base_integer& m)
 }
 
 } // namespace detail
+//! @endcond detail
 
 /*! \brief Calculate the Greatest Common Denominator of two integers.
 

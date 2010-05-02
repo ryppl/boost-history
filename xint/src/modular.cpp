@@ -24,6 +24,7 @@
 namespace boost {
 namespace xint {
 
+//! @cond detail
 namespace detail {
 
 void mod(base_integer& target, const base_integer& n, const base_integer& m) {
@@ -78,6 +79,7 @@ void powmod(base_integer& target, const base_integer& _n, const base_integer&
 }
 
 } // namespace detail
+//! @endcond detail
 
 /*! \brief Get the remainder after dividing a number by another.
 

@@ -111,6 +111,8 @@ class integer: public detail::base_variable_length_integer {
 
     private:
     BOOST_XINT_COPYABLE_AND_MOVABLE(integer)
+
+    static std::auto_ptr<integer> cZero, cOne;
 };
 
 //! \name Mathematical primitives
