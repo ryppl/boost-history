@@ -517,7 +517,7 @@ namespace Loki
             tup::RefMapper<Fun, TrgTupleT, SelfType>::Do(target, *this);
         }
 
-        // Need example here to reduce abstraction pain
+        // Using an example to clarify the template parameters:
         //        A value generator template     A generator-function-type: value generating function  value-tuple-type        
         //                              GentorT                                   e.g.  SomeValue      to be generated
         template <template<class>class UnaryTpl, template<class TrgTupleT,template<class>class>class Fun, class TrgTupleT>

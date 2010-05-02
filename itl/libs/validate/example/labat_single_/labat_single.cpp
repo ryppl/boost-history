@@ -70,7 +70,7 @@ void test_LawValidater()
     //    <interval_map<int,int,partial_enricher>, itl::inplace_plus, itl::inplace_minus> TestLawT;
     //LawValidater<TestLawT, RandomGentor> test_law;
 
-    typedef InplaceCommutativity<itl::list<double> > TestLawT;
+    typedef InplaceCommutativity<itl::set<double> > TestLawT;
     LawValidater<TestLawT> test_law;
 
     

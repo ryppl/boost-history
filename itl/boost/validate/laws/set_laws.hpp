@@ -11,6 +11,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #define BOOST_ITL_SET_LAWS_HPP_JOFA_071124
 
 #include <boost/itl/type_traits/value_size.hpp>
+#include <boost/itl/predicates.hpp>
 #include <boost/validate/laws/law.hpp>
 #include <boost/itl/functors.hpp>
 

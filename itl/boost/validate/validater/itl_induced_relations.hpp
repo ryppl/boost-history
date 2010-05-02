@@ -7,7 +7,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#pragma once
+#ifndef BOOST_ITL_VALIDATE_VALIDATER_ITL_INDUCED_RELATIONS_HPP_JOFA_090304
+#define BOOST_ITL_VALIDATE_VALIDATER_ITL_INDUCED_RELATIONS_HPP_JOFA_090304
 
 #include <boost/itl/functors.hpp>
 #include <boost/itl/detail/interval_morphism.hpp>
@@ -17,8 +18,6 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 
 namespace boost{namespace itl
 {
-    typedef WeightedNumberGentor<int> ChoiceT;
-
 
     template <typename Type>
     class itl_induced_relations_validater : public concept_validater
@@ -57,34 +56,12 @@ namespace boost{namespace itl
             }
         }
 
-        void validate()
-        {
-            _validater = chooseValidater();
-            if(_validater)
-            {
-                _validater->run();
-                _validater->addFrequencies(_frequencies);
-                _validater->addViolations(_violationsCount, _violations);
-                delete _validater;
-            }
-        }
-
-        void addFrequencies(ValidationCounterT& summary) { summary += _frequencies; }
-        void addViolations(ViolationCounterT& summary, ViolationMapT& collector)
-        { 
-            summary += _violationsCount; 
-            collector += _violations;  
-        }
-
     private:
         ChoiceT        _lawChoice;
-        LawValidaterI* _validater;
-        ValidationCounterT _frequencies;
-        ViolationCounterT  _violationsCount;
-        ViolationMapT      _violations;
     }; //class itl_induced_relations_validater
 
 
-
 }} // namespace itl boost
+
+#endif BOOST_ITL_VALIDATE_VALIDATER_ITL_INDUCED_RELATIONS_HPP_JOFA_090304
 

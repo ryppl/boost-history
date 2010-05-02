@@ -20,7 +20,6 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 
 namespace boost{namespace itl
 {
-    typedef WeightedNumberGentor<int> ChoiceT;
 
     template <typename Type, template<class>class Relation>
     class strict_weak_order_validater : public concept_validater
@@ -58,32 +57,8 @@ namespace boost{namespace itl
             }
         }
 
-        void validate()
-        {
-            _validater = chooseValidater();
-            if(_validater)
-            {
-                _validater->run();
-                _validater->addFrequencies(_frequencies);
-                _validater->addViolations(_violationsCount, _violations);
-                delete _validater;
-            }
-        }
-
-        void addFrequencies(ValidationCounterT& summary) { summary += _frequencies; }
-        void addViolations(ViolationCounterT& summary, ViolationMapT& collector)
-        { 
-            summary   += _violationsCount; 
-            collector += _violations;  
-        }
-
-
     private:
-        ChoiceT            _lawChoice;
-        LawValidaterI*     _validater;
-        ValidationCounterT _frequencies;
-        ViolationCounterT  _violationsCount;
-        ViolationMapT      _violations;
+        ChoiceT _lawChoice;
     }; //class concept_validater
 
 

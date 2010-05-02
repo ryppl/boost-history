@@ -7,7 +7,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#pragma once
+#ifndef BOOST_ITL_VALIDATE_CONCEPT_VALIDATER_HPP_JOFA_080203
+#define BOOST_ITL_VALIDATE_CONCEPT_VALIDATER_HPP_JOFA_080203
 
 #include <boost/itl/type_traits/is_continuous.hpp>
 #include <boost/itl/functors.hpp>
@@ -24,14 +25,37 @@ namespace boost{namespace itl
         // the choice probability, and also the availability of laws is individual to each type
         // Somehow it has to be defined in conjunction to every type. So it is an aspect of
         // type traits.
-        virtual void setProfile()=0;
-        virtual void validate()=0;
-        virtual void addFrequencies(ValidationCounterT&)=0;
-        virtual void addViolations(ViolationCounterT&, ViolationMapT&)=0;
-
+        //CL virtual void setProfile()=0;
+		virtual LawValidaterI* chooseValidater()=0;
         virtual bool hasValidProfile()const{ return true; }
 
+        void validate()
+		{
+			_validater = chooseValidater();
+			if(_validater)
+			{
+				_validater->run();
+				_validater->addFrequencies(_frequencies);
+				_validater->addViolations(_violationsCount, _violations);
+				delete _validater;
+			}
+		}
+
+		void addFrequencies(ValidationCounterT& summary) { summary += _frequencies; }
+
+		void addViolations(ViolationCounterT& summary, ViolationMapT& collector)
+		{ 
+		    summary   += _violationsCount; 
+		    collector += _violations;  
+		}
+
         static int share(int total, int& index, int& rest_shares);
+
+	private:
+		LawValidaterI*     _validater;
+		ValidationCounterT _frequencies;
+		ViolationCounterT  _violationsCount;
+		ViolationMapT      _violations;
     };
 
     inline int concept_validater::share(int total, int& index, int& rest_shares)
@@ -45,3 +69,4 @@ namespace boost{namespace itl
 
 }} // namespace itl boost
 
+#endif // BOOST_ITL_VALIDATE_CONCEPT_VALIDATER_HPP_JOFA_080203

@@ -229,47 +229,47 @@ namespace boost{namespace itl
 
         bool holds()
         {
-            Type lsum = this->template getInputValue<operand_a>();
-            Accumulator<Type>()(lsum, this->template getInputValue<operand_b>());
-            Accumulator<Type>()(lsum, this->template getInputValue<operand_c>());
+            Type lhs = this->template getInputValue<operand_a>();
+            Accumulator<Type>()(lhs, this->template getInputValue<operand_b>());
+            Accumulator<Type>()(lhs, this->template getInputValue<operand_c>());
 
-            Type rsum = this->template getInputValue<operand_a>();
+            Type rhs = this->template getInputValue<operand_a>();
             Type b_plus_c = this->template getInputValue<operand_b>();
             Accumulator<Type>()(b_plus_c, this->template getInputValue<operand_c>());
-            Accumulator<Type>()(rsum, b_plus_c);
+            Accumulator<Type>()(rhs, b_plus_c);
 
-            this->template setOutputValue<lhs_result>(lsum);
-            this->template setOutputValue<rhs_result>(rsum);
+            this->template setOutputValue<lhs_result>(lhs);
+            this->template setOutputValue<rhs_result>(rhs);
 
-            return Equality<Type>()(lsum, rsum);
+            return Equality<Type>()(lhs, rhs);
         }
 
         bool debug_holds()
         {
-            std::cout << typeString() << std::endl;
-            std::cout << formula() << std::endl;
-            std::cout << "a: " << this->template getInputValue<operand_a>() << std::endl;
-            std::cout << "b: " << this->template getInputValue<operand_b>() << std::endl;
-            std::cout << "c: " << this->template getInputValue<operand_c>() << std::endl;
+			std::cout << "--- function debug_holds -----------------------------\n";
+            std::cout << "          a = " << this->template getInputValue<operand_a>() << std::endl;
+            std::cout << "          b = " << this->template getInputValue<operand_b>() << std::endl;
+            std::cout << "          c = " << this->template getInputValue<operand_c>() << std::endl;
 
-            Type lsum = this->template getInputValue<operand_a>();
-            Accumulator<Type>()(lsum, this->template getInputValue<operand_b>());
-            std::cout << "a o b: " << lsum << std::endl;
+            Type lhs = this->template getInputValue<operand_a>();
+            Accumulator<Type>()(lhs, this->template getInputValue<operand_b>());
+            std::cout << " a o b      = " << lhs << std::endl;
 
-            Accumulator<Type>()(lsum, this->template getInputValue<operand_c>());
-            std::cout << "(a o b) o c: " << lsum << std::endl;
+            Accumulator<Type>()(lhs, this->template getInputValue<operand_c>());
+            std::cout << "(a o b) o c = " << lhs << std::endl;
 
-            Type rsum = this->template getInputValue<operand_a>();
+            Type rhs      = this->template getInputValue<operand_a>();
             Type b_plus_c = this->template getInputValue<operand_b>();
             Accumulator<Type>()(b_plus_c, this->template getInputValue<operand_c>());
-            std::cout << "b o c: " << b_plus_c << std::endl;
-            Accumulator<Type>()(rsum, b_plus_c);
-            std::cout << "a o (b o c): " << rsum << std::endl;
+            std::cout << "     b o c  = " << b_plus_c << std::endl;
+            Accumulator<Type>()(rhs, b_plus_c);
+            std::cout << "a o (b o c) = " << rhs << std::endl;
 
-            this->template setOutputValue<lhs_result>(lsum);
-            this->template setOutputValue<rhs_result>(rsum);
+            this->template setOutputValue<lhs_result>(lhs);
+            this->template setOutputValue<rhs_result>(rhs);
+			std::cout << "------------------------------------------------------\n";
 
-            return Equality<Type>()(lsum, rsum);
+            return Equality<Type>()(lhs, rhs);
         }
 
     };
@@ -281,7 +281,7 @@ namespace boost{namespace itl
                      LOKI_TYPELIST_2(Type,Type), LOKI_TYPELIST_2(Type,Type)>
     {
         /** a o b == b o a computed as
-        lsum=a; lsum+=b; rsum=b; rsum+=a => lsum==rsum 
+        lhs=a; lhs+=b; rhs=b; rhs+=a => lhs==rhs 
         Input  = (a := inVal1, b := inVal2)
         Output = (sum_lhs, sum_rhs)
         */
@@ -305,36 +305,36 @@ namespace boost{namespace itl
 
         bool holds()
         {
-            Type lsum = this->template getInputValue<operand_a>();
-            lsum += this->template getInputValue<operand_b>();
-            Type rsum = this->template getInputValue<operand_b>();
-            rsum += this->template getInputValue<operand_a>();
+            Type lhs = this->template getInputValue<operand_a>();
+            Accumulator<Type>()(lhs, this->template getInputValue<operand_b>());
+            Type rhs = this->template getInputValue<operand_b>();
+            Accumulator<Type>()(rhs, this->template getInputValue<operand_a>());
 
-            this->template setOutputValue<lhs_result>(lsum);
-            this->template setOutputValue<rhs_result>(rsum);
+            this->template setOutputValue<lhs_result>(lhs);
+            this->template setOutputValue<rhs_result>(rhs);
 
-            return lsum == rsum;
+            return lhs == rhs;
         }
 
         bool debug_holds()
         { 
-            std::cout << typeString() << std::endl;
-            std::cout << formula() << std::endl;
-            std::cout << "a: " << this->template getInputValue<operand_a>() << std::endl;
-            std::cout << "b: " << this->template getInputValue<operand_b>() << std::endl;
+			std::cout << "--- function debug_holds -----------------------------\n";
+            std::cout << "    a = " << this->template getInputValue<operand_a>() << std::endl;
+            std::cout << "    b = " << this->template getInputValue<operand_b>() << std::endl;
 
-            Type lsum = this->template getInputValue<operand_a>();
-            lsum += this->template getInputValue<operand_b>();
-            std::cout << "a o b: " << lsum << std::endl;
+            Type lhs = this->template getInputValue<operand_a>();
+            Accumulator<Type>()(lhs, this->template getInputValue<operand_b>());
+            std::cout << "a o b = " << lhs << std::endl;
 
-            Type rsum = this->template getInputValue<operand_b>();
-            rsum += this->template getInputValue<operand_a>();
-            std::cout << "b o a: " << rsum << std::endl;
+            Type rhs = this->template getInputValue<operand_b>();
+            Accumulator<Type>()(rhs, this->template getInputValue<operand_a>());
+            std::cout << "b o a = " << rhs << std::endl;
 
-            this->template setOutputValue<lhs_result>(lsum);
-            this->template setOutputValue<rhs_result>(rsum);
+            this->template setOutputValue<lhs_result>(lhs);
+            this->template setOutputValue<rhs_result>(rhs);
+			std::cout << "------------------------------------------------------\n";
 
-            return lsum == rsum;
+            return lhs == rhs;
         }
 
     };
