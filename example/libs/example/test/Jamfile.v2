@@ -1,0 +1,18 @@
+
+# Copyright (C) 2008-2009 John Doe
+# Distributed under the Boost Software License, Version 1.0. (See accompanying
+# file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+# Run the example tests.
+
+# First create an alias for the boost unit test framework. You don't need this
+# if you're using minimal or lightweight test.
+
+use-project /boost/test : $(BOOST_ROOT)/libs/test/build ;
+alias boost_unit_test : /boost/test//boost_unit_test_framework/<link>static ;
+
+test-suite "example test"
+    :
+        [ run foo_test.cpp boost_unit_test ]
+        [ compile-fail bar_fail.cpp ]
+    ;
