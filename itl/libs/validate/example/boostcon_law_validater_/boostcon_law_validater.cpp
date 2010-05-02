@@ -21,7 +21,7 @@ using namespace boost::posix_time;
 
 void test_LawValidater()
 {
-	typedef InplaceCommutativity<itl::set<int> > TestLawT;
+	typedef InplaceCommutativity<int> TestLawT;
     LawValidater<TestLawT> validater;
 
     //-----------------------------------------------------------------------------
@@ -31,8 +31,7 @@ void test_LawValidater()
     GentorProfileSgl::it()->set_std_profile(8,1);
     validater.set_trials_count(test_count);
 
-    TestLawT law;
-	cout << "Testing " << law.typeString()  << endl
+	cout << "Testing " << TestLawT().typeString()  << endl
 	     << "trials_count = " << test_count << endl
 	     << "Start ...\n";
     start = ptime(microsec_clock::local_time());
