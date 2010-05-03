@@ -17,7 +17,7 @@
 // Macros to compact code
 #define SIGN_EXTEND_TEST(d, b, e) \
 	BOOST_TEST(::boost::sign_extend(d, b) == e); \
-	BOOST_TEST((::boost::static_sign_extend<int, d, b>::value) == e)
+	BOOST_TEST((::boost::static_sign_extend<intmax_t, d, b>::value) == e)
 
 
 // Main testing function
@@ -63,8 +63,9 @@ int main(int, char* [])
 	SIGN_EXTEND_TEST(0x7FFFFFFF, 31, -1);
 	
 #ifndef BOOST_NO_INT64_T
-	//SIGN_EXTEND_TEST(0x1000000000000000l, 63, 0x1000000000000000);
-	//SIGN_EXTEND_TEST(0x7FFFFFFFFF, 39, 0xffffffffffffffff);
+	SIGN_EXTEND_TEST(0x7FFFFFFFFF, 39, 0xFFFFFFFFFFFFFFFF);
+	SIGN_EXTEND_TEST(0x1000000000000000, 63, 0x1000000000000000);
+	SIGN_EXTEND_TEST(0x7FFFFFFFFFFFFFFF, 63, -0x1);
 #endif
 	
 	return boost::report_errors();
