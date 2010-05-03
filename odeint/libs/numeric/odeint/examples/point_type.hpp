@@ -1,4 +1,4 @@
-/* Boost libs/numeric/odeint/examples/solar_system.hpp
+/* Boost libs/numeric/odeint/examples/point_type.hpp
 
  Copyright 2009 Karsten Ahnert
  Copyright 2009 Mario Mulansky
@@ -10,127 +10,123 @@
  copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
-#ifndef SOLAR_SYSTEM_HPP_INCLUDED
-#define SOLAR_SYSTEM_HPP_INCLUDED
+#ifndef POINT_TYPE_HPP_INCLUDED
+#define POINT_TYPE_HPP_INCLUDED
 
 
 #include <boost/operators.hpp>
 #include <ostream>
 
+
 //
 // the point type
-//               
+//
 template< class T , size_t Dim >
-class point :                   
+class point :
     boost::additive1< point< T , Dim > ,
     boost::additive2< point< T , Dim  > , T ,
     boost::multiplicative2< point< T , Dim > , T
-    > > >                                       
-{                                               
-public:                                         
+    > > >
+{
+public:
 
     const static size_t dim = Dim;
-    typedef T value_type;         
+    typedef T value_type;
     typedef point< value_type , dim > point_type;
 
     point( void )
-        {        
-            for( size_t i=0 ; i<dim ; ++i ) m_val[i] = 0.0;
-        }                                                  
-    point( value_type val )                                
-        {                                                  
-            for( size_t i=0 ; i<dim ; ++i ) m_val[i] = val;
-        }                                                  
+    {
+        for( size_t i=0 ; i<dim ; ++i ) m_val[i] = 0.0;
+    }
+    point( value_type val )
+    {
+        for( size_t i=0 ; i<dim ; ++i ) m_val[i] = val;
+    }
     point( value_type x , value_type y , value_type z = 0.0 )
-        {                                                    
-            if( dim > 0 ) m_val[0] = x;                      
-            if( dim > 1 ) m_val[1] = y;                      
-            if( dim > 2 ) m_val[2] = z;                      
-        }                                                    
-
-    template< size_t i > T get( void ) const
-        {                                   
-            BOOST_STATIC_ASSERT( i < dim ); 
-            return m_val[i];                
-        }                                   
-    template< size_t i > T& get( void )     
-        {                                   
-            BOOST_STATIC_ASSERT( i < dim ); 
-            return m_val[i];                
-        }                                   
+    {
+        if( dim > 0 ) m_val[0] = x;
+        if( dim > 1 ) m_val[1] = y;
+        if( dim > 2 ) m_val[2] = z;
+    }
 
     T operator[]( size_t i ) const { return m_val[i]; }
-    T& operator[]( size_t i ) { return m_val[i]; }     
-                                                       
+    T& operator[]( size_t i ) { return m_val[i]; }
+    
+
 
     point_type& operator+=( const point_type& p ) 
-        {                                         
-            for( size_t i=0 ; i<dim ; ++i )       
-                m_val[i] += p[i];                 
-            return *this;                         
-        }                                         
+    {
+        for( size_t i=0 ; i<dim ; ++i )
+            m_val[i] += p[i];
+        return *this;
+    }
 
     point_type& operator-=( const point_type& p )
-        {                                        
-            for( size_t i=0 ; i<dim ; ++i )      
-                m_val[i] -= p[i];                
-            return *this;                        
-        }                                        
+    {
+        for( size_t i=0 ; i<dim ; ++i )
+            m_val[i] -= p[i];
+        return *this;
+    }
 
     point_type& operator+=( const value_type& val )
-        {                                          
-            for( size_t i=0 ; i<dim ; ++i )        
-                m_val[i] += val;                   
-            return *this;                          
-        }                                          
+    {
+        for( size_t i=0 ; i<dim ; ++i )
+            m_val[i] += val;
+        return *this;
+    }
 
     point_type& operator-=( const value_type& val )
-        {                                          
-            for( size_t i=0 ; i<dim ; ++i )        
-                m_val[i] -= val;                   
-            return *this;                          
-        }                                          
+    {
+        for( size_t i=0 ; i<dim ; ++i )
+            m_val[i] -= val;
+        return *this;
+    }
 
     point_type& operator*=( const value_type &val )
-        {                                          
-            for( size_t i=0 ; i<dim ; ++i )        
-                m_val[i] *= val;                   
-            return *this;                          
-        }                                          
+    {
+        for( size_t i=0 ; i<dim ; ++i )
+            m_val[i] *= val;
+        return *this;
+    }
 
     point_type& operator/=( const value_type &val )
-        {                                          
-            for( size_t i=0 ; i<dim ; ++i )        
-                m_val[i] /= val;                   
-            return *this;                          
-        }                                          
+    {
+        for( size_t i=0 ; i<dim ; ++i )
+            m_val[i] /= val;
+        return *this;
+    }
 
 private:
 
     T m_val[dim];
-};               
+};
+
 
 //
 // the - operator
-//               
+//
 template< class T , size_t Dim >
 point< T , Dim > operator-( const point< T , Dim > &p )
-{                                                      
-    point< T , Dim > tmp;                              
-    for( size_t i=0 ; i<Dim ; ++i ) tmp[i] = -p[i];    
-    return tmp;                                        
-}                                                      
+{
+    point< T , Dim > tmp;
+    for( size_t i=0 ; i<Dim ; ++i ) tmp[i] = -p[i];
+    return tmp;
+}
+
+
 
 //
 // scalar product
-//               
+//
 template< class T , size_t Dim >
 T scalar_prod( const point< T , Dim > &p1 , const point< T , Dim > &p2 )
-{                                                                       
-    T tmp = 0.0;                                                        
-    for( size_t i=0 ; i<Dim ; ++i ) tmp += p1[i] * p2[i];               
-    return tmp;                                                         
-}                                                                       
+{
+    T tmp = 0.0;
+    for( size_t i=0 ; i<Dim ; ++i ) tmp += p1[i] * p2[i];
+    return tmp;
+}
+
+
 
 //
 // norm
@@ -141,6 +137,9 @@ T norm( const point< T , Dim > &p1 )
     return scalar_prod( p1 , p1 );
 }
 
+
+
+
 //
 // absolute value
 //
@@ -149,6 +148,9 @@ T abs( const point< T , Dim > &p1 )
 {
     return sqrt( norm( p1 ) );
 }
+
+
+
 
 //
 // output operator
@@ -163,4 +165,4 @@ std::ostream& operator<<( std::ostream &out , const point< T , Dim > &p )
 
 
 
-#endif //SOLAR_SYSTEM_HPP_INCLUDED
+#endif //POINT_TYPE_HPP_INCLUDED
