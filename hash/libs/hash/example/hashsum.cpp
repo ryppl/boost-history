@@ -21,16 +21,27 @@
 typedef boost::hash::HASH hash_policy;
 
 hash_policy::digest_type
-hash_streambuf(std::streambuf *buf) {
+hash_streambuf(std::streambuf *sbuf) {
+#ifdef BOOST_HASH_NO_OPTIMIZATION
     return boost::hash::compute_digest<hash_policy>(
-               std::istreambuf_iterator<char>(buf),
+               std::istreambuf_iterator<char>(sbuf),
                std::istreambuf_iterator<char>()
            );
+#else
+    hash_policy::stream_hash<8>::type hash;
+    for (;;) {
+        boost::array<char, 8*1024> buf;
+        std::streamsize n = sbuf->sgetn(&buf[0], buf.size());
+        if (!n) break;
+        hash.update_n(buf.begin(), n);
+    }
+    return hash.end_message();
+#endif           
 }
 
 hash_policy::digest_type
 hash_memory(void *buf, size_t n) {
-    return boost::hash::compute_digest<hash_policy>((char*)buf, n);
+    return boost::hash::compute_digest_n<hash_policy>((char*)buf, n);
 }
 
 std::ostream &

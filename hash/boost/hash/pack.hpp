@@ -35,24 +35,17 @@ struct real_packer<Endianness,
                    false, false> {
 
     template <typename InputType, typename OutputType>
-    static void pack_array(InputType const &in, OutputType &out) {
-        BOOST_STATIC_ASSERT(OutputType::static_size == InputType::static_size);
-        unsigned i = 0;
-        for (unsigned j = 0; j < InputType::static_size; ++j) {
-            out[i++] = in[j];
-        }
-        BOOST_ASSERT(i == OutputType::static_size);
-    }
-
-    template <typename InputType, typename OutputType>
     static void pack_n(InputType const *in, size_t in_n,
-                       OutputType *out, size_t out_n) {
-        BOOST_ASSERT(in_n == out_n);
+                       OutputType *out) {
         unsigned i = 0;
         for (unsigned j = 0; j < in_n; ++j) {
             out[i++] = in[j];
         }
-        BOOST_ASSERT(i == out_n);
+    }
+
+    template <typename IterT1, typename IterT2>
+    void pack(IterT1 b1, IterT1 e1, IterT2 b2) {
+        while (b1 != e1) *b2++ = *b1++;
     }
 
 };
@@ -66,27 +59,13 @@ struct real_packer<Endianness,
     BOOST_STATIC_ASSERT(InputBits % OutputBits == 0);
 
     template <typename InputType, typename OutputType>
-    static void pack_array(InputType const &in, OutputType &out) {
-        BOOST_STATIC_ASSERT(OutputType::static_size*OutputBits ==
-                            InputType::static_size*InputBits);
-        unsigned i = 0;
-        for (unsigned j = 0; j < InputType::static_size; ++j) {
-            detail::exploder<Endianness, InputBits, OutputBits>
-             ::explode1_array(out, i, in[j]);
-        }
-        BOOST_ASSERT(i == OutputType::static_size);
-    }
-
-    template <typename InputType, typename OutputType>
     static void pack_n(InputType const *in, size_t in_n,
-                       OutputType *out, size_t out_n) {
-        BOOST_ASSERT(InputBits*in_n == OutputBits*out_n);
+                       OutputType *out) {
         unsigned i = 0;
         for (unsigned j = 0; j < in_n; ++j) {
             detail::exploder<Endianness, InputBits, OutputBits>
              ::explode1_array(out, i, in[j]);
         }
-        BOOST_ASSERT(i == out_n);
     }
 
 };
@@ -100,27 +79,14 @@ struct real_packer<Endianness,
     BOOST_STATIC_ASSERT(OutputBits % InputBits == 0);
 
     template <typename InputType, typename OutputType>
-    static void pack_array(InputType const &in, OutputType &out) {
-        BOOST_STATIC_ASSERT(OutputType::static_size*OutputBits ==
-                            InputType::static_size*InputBits);
-        unsigned i = 0;
-        for (unsigned j = 0; j < OutputType::static_size; ++j) {
-            detail::imploder<Endianness, InputBits, OutputBits>
-             ::implode1_array(in, i, out[j] = 0);
-        }
-        BOOST_ASSERT(i == InputType::static_size);
-    }
-
-    template <typename InputType, typename OutputType>
     static void pack_n(InputType const *in, size_t in_n,
-                       OutputType *out, size_t out_n) {
-        BOOST_ASSERT(InputBits*in_n == OutputBits*out_n);
+                       OutputType *out) {
+        size_t out_n = in_n/(OutputBits/InputBits);
         unsigned i = 0;
         for (unsigned j = 0; j < out_n; ++j) {
             detail::imploder<Endianness, InputBits, OutputBits>
              ::implode1_array(in, i, out[j] = 0);
         }
-        BOOST_ASSERT(i == in_n);
     }
 
 };
@@ -134,17 +100,11 @@ struct real_packer<stream_endian::host_unit<UnitBits>,
                         !(OutputBits % UnitBits));
 
     template <typename InputType, typename OutputType>
-    static void pack_array(InputType const &in, OutputType &out) {
-        BOOST_STATIC_ASSERT(OutputType::static_size*OutputBits ==
-                            InputType::static_size*InputBits);
-        std::memcpy(&out[0], &in[0], InputType::static_size*InputBits/CHAR_BIT);
-    }
-
-    template <typename InputType, typename OutputType>
     static void pack_n(InputType const *in, size_t in_n,
-                       OutputType *out, size_t out_n) {
-        BOOST_ASSERT(sizeof(InputType)*in_n == sizeof(OutputType)*out_n);
-        BOOST_ASSERT(InputBits*in_n == OutputBits*out_n);
+                       OutputType *out) {
+        // FIXME: Bad assumption
+        BOOST_ASSERT(sizeof(InputType)*OutputBits == 
+                     sizeof(OutputType)*InputBits);
         std::memcpy(&out[0], &in[0], InputBits*in_n/CHAR_BIT);
     }
 
@@ -164,7 +124,6 @@ struct real_packer<stream_endian::host_unit<UnitBits>,
                InputBits, OutputBits,
                true, true> {};
 
-// Forward if nothing better matches
 template <typename Endianness,
           int InputBits, int OutputBits,
           bool BytesOnly = !(InputBits % CHAR_BIT) && !(OutputBits % CHAR_BIT)>
@@ -215,19 +174,85 @@ struct packer<stream_endian::big_byte_little_bit,
 #endif
 
 template <typename Endianness,
-          int InBits, int OutBits,
-          typename T1, typename T2>
-void pack(T1 const &in, T2 &out) {
-    typedef packer<Endianness, InBits, OutBits> packer_type;
-    packer_type::pack_array(in, out);
+          int InValueBits, int OutValueBits,
+          typename IterT1, typename IterT2>
+void pack_n(IterT1 in, size_t in_n, 
+            IterT2 out) {
+    typedef packer<Endianness, InValueBits, OutValueBits> packer_type;
+    packer_type::pack_n(in, in_n, out);
 }
 
 template <typename Endianness,
-          int InBits, int OutBits,
-          typename T1, typename T2>
-void pack(T1 const *in, size_t in_n, T2 *out, size_t out_n) {
-    typedef packer<Endianness, InBits, OutBits> packer_type;
-    packer_type::pack_n(in, in_n, out, out_n);
+          int InValueBits, int OutValueBits,
+          typename IterT1, typename IterT2>
+void pack_n(IterT1 in, size_t in_n, 
+            IterT2 out, size_t out_n) {
+    BOOST_ASSERT(in_n*InValueBits == out_n*OutValueBits);
+    pack_n<Endianness, InValueBits, OutValueBits>(in, in_n, out);
+}
+
+template <typename Endianness,
+          int InValueBits, int OutValueBits,
+          typename IterT1, typename IterT2>
+void pack(IterT1 b1, IterT1 e1, std::random_access_iterator_tag,
+          IterT2 b2) {
+    pack_n<Endianness, InValueBits, OutValueBits>(b1, e1-b1, b2);
+}
+
+template <typename Endianness,
+          int InValueBits, int OutValueBits,
+          typename IterT1, typename CatT1,
+          typename IterT2>
+void pack(IterT1 b1, IterT1 e1, CatT1,
+          IterT2 b2) {
+    typedef packer<Endianness, InValueBits, OutValueBits> packer_type;
+    packer_type::pack(b1, e1, b2);
+}
+
+template <typename Endianness,
+          int InValueBits, int OutValueBits,
+          typename IterT1, typename IterT2>
+void pack(IterT1 b1, IterT1 e1,
+          IterT2 b2) {
+    typedef typename std::iterator_traits<IterT1>::iterator_category cat1;
+    pack<Endianness, InValueBits, OutValueBits>(b1, e1, cat1(), b2);
+}
+
+template <typename Endianness,
+          int InValueBits, int OutValueBits,
+          typename IterT1, typename IterT2>
+void pack(IterT1 b1, IterT1 e1, std::random_access_iterator_tag,
+          IterT2 b2, IterT2 e2, std::random_access_iterator_tag) {
+    pack_n<Endianness, InValueBits, OutValueBits>(b1, e1-b1, b2, e2-b2);
+}
+
+template <typename Endianness,
+          int InValueBits, int OutValueBits,
+          typename IterT1, typename CatT1,
+          typename IterT2, typename CatT2>
+void pack(IterT1 b1, IterT1 e1, CatT1,
+          IterT2 b2, IterT2, CatT2) {
+    pack<Endianness, InValueBits, OutValueBits>(b1, e1, b2);
+}
+
+template <typename Endianness,
+          int InValueBits, int OutValueBits,
+          typename IterT1, typename IterT2>
+void pack(IterT1 b1, IterT1 e1,
+          IterT2 b2, IterT2 e2) {
+    typedef typename std::iterator_traits<IterT1>::iterator_category cat1;
+    typedef typename std::iterator_traits<IterT2>::iterator_category cat2;
+    pack<Endianness, InValueBits, OutValueBits>(b1, e1, cat1(), b2, e2, cat2());
+}
+
+template <typename Endianness,
+          int InValueBits, int OutValueBits,
+          typename InputType, typename OutputType>
+void pack(InputType const &in, OutputType &out) {
+    BOOST_STATIC_ASSERT(InputType::static_size*InValueBits ==
+                        OutputType::static_size*OutValueBits);
+    pack_n<Endianness, InValueBits, OutValueBits>(&in[0], in.size(),
+                                                  &out[0], out.size());
 }
 
 } // namespace hash

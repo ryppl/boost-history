@@ -103,7 +103,7 @@ int main() {
            "b271bb1349a4a17b6dd065bde8f1dfc1" == d);
 
 #ifndef BOOST_HASH_SHOW_PROGRESS
-    for (unsigned i = 0; i < 1000000; ++i) sh.update('a');
+    for (unsigned i = 0; i < 1000000; ++i) sh.update_one('a');
     d = sh.end_message();
     printf("%s\n", d.cstring().data());
     assert("b2255396660eb6d08cdfd5f391ff522a"
@@ -112,7 +112,7 @@ int main() {
            "00bfff4ad4b107aa71419c84ae30814e" == d);
 
 #ifndef QUICK
-    for (unsigned i = 0; i < 1000000000; ++i) sh.update('a');
+    for (unsigned i = 0; i < 1000000000; ++i) sh.update_one('a');
     d = sh.end_message();
     printf("%s\n", d.cstring().data());
     assert("cad33236b5a4810ea619e069bb2beff1"
@@ -167,14 +167,14 @@ int main() {
            "cfed5b69ecde8a0aee0766d879e13e7b" == d);
 
 #ifndef BOOST_HASH_SHOW_PROGRESS
-    for (unsigned i = 0; i < 1000000; ++i) sh.update('a');
+    for (unsigned i = 0; i < 1000000; ++i) sh.update_one('a');
     d = sh.end_message();
     printf("%s\n", d.cstring().data());
     assert("bdaaff72d49f8d5a66e4760fc54c2587"
            "d909bd21811473d252e8589d30b34352" == d);
 
 #ifndef QUICK
-    for (unsigned i = 0; i < 1000000000; ++i) sh.update('a');
+    for (unsigned i = 0; i < 1000000000; ++i) sh.update_one('a');
     d = sh.end_message();
     printf("%s\n", d.cstring().data());
     assert("7ed524f063da37f9e38e5ad9bbb4db9f"

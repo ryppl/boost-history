@@ -15,6 +15,8 @@
 #include <boost/static_assert.hpp>
 #include <boost/utility/enable_if.hpp>
 
+#include <iterator>
+
 namespace boost {
 namespace hash {
 
@@ -63,7 +65,8 @@ class stream_preprocessor {
     BOOST_STATIC_ASSERT(!length_bits || value_bits <= length_bits);
 
   private:
-    void process_block() {
+    void
+    process_block() {
         // Convert the input into words
         block_type block;
         pack<endian, value_bits, word_bits>(value_array, block);
@@ -98,7 +101,8 @@ class stream_preprocessor {
         // No appending requested, so nothing to do
     }
   public:
-    stream_preprocessor &update(value_type value) {
+    stream_preprocessor &
+    update_one(value_type value) {
         unsigned i = seen % block_bits;
         unsigned j = i / value_bits;
         value_array[j] = value;
@@ -109,20 +113,19 @@ class stream_preprocessor {
         }
         return *this;
     }
-    template <typename T>
-    stream_preprocessor &update_n(T const *p_, size_t n) {
-        BOOST_STATIC_ASSERT(sizeof(T) == sizeof(value_type));
-        value_type const *p = reinterpret_cast<value_type const *>(p_);
+    template <typename IterT>
+    stream_preprocessor &
+    update_n(IterT p, size_t n) {
 #ifndef BOOST_HASH_NO_OPTIMIZATION
         for ( ; n && (seen % block_bits); --n, ++p) {
-            update(*p);
+            update_one(*p);
         }
         for ( ; n >= block_values; n -= block_values, p += block_values) {
             // Convert the input into words
             block_type block;
-            pack<endian, value_bits, word_bits>(p, block_values,
-                                                &block[0], block_words);
-            
+            pack_n<endian, value_bits, word_bits>(p, block_values,
+                                                  &block[0], block_words);
+
             // Process the block
             block_hash.update(block);
             seen += block_bits;
@@ -130,13 +133,36 @@ class stream_preprocessor {
             // Reset seen if we don't need to track the length
             if (!length_bits) seen = 0;
         }
-#endif        
+#endif
         for ( ; n; --n, ++p) {
-            update(*p);
+            update_one(*p);
         }
         return *this;
     }
-    digest_type end_message() {
+    template <typename IterT>
+    stream_preprocessor &
+    update(IterT b, IterT e, std::random_access_iterator_tag) {
+        return update_n(b, e-b);
+    }
+    template <typename IterT, typename Category>
+    stream_preprocessor &
+    update(IterT b, IterT e, Category) {
+        while (b != e) update_one(*b++);
+        return *this;
+    }
+    template <typename IterT>
+    stream_preprocessor &
+    update(IterT b, IterT e) {
+        typedef typename std::iterator_traits<IterT>::iterator_category cat;
+        return update(b, e, cat());
+    }
+    template <typename ContainerT>
+    stream_preprocessor &
+    update(ContainerT const &c) {
+        return update(c.begin(), c.end());
+    }    
+    digest_type
+    end_message() {
         length_type length = seen;
 
         // Add a 1 bit
@@ -144,16 +170,16 @@ class stream_preprocessor {
         array<bool, value_bits> padding_bits = {{1}};
         array<value_type, 1> padding_values;
         pack<endian, 1, value_bits>(padding_bits, padding_values);
-        update(padding_values[0]);
+        update_one(padding_values[0]);
 #else
         value_type pad = 0;
         detail::imploder<endian, 1, value_bits>::step(1, pad);
-        update(pad);
+        update_one(pad);
 #endif
 
         // Pad with 0 bits
         while ((seen + length_bits) % block_bits != 0) {
-            update(value_type());
+            update_one(value_type());
         }
 
         // Append length
@@ -171,7 +197,8 @@ class stream_preprocessor {
 
   public:
     stream_preprocessor() : value_array(), block_hash(), seen() {}
-    void reset() {
+    void
+    reset() {
         seen = 0;
         block_hash.reset();
     }

@@ -26,7 +26,7 @@ void test_subbyte_sha2() {
     // B.1/1
     unsigned n = 5;
     bool a[] = {0, 1, 1, 0, 1};
-    sha2<224>::digest_type d = compute_digest<sha2<224> >(a, n);
+    sha2<224>::digest_type d = compute_digest_n<sha2<224> >(a, n);
     std::printf("%s\n", d.cstring().data());
     assert(!strcmp("e3b048552c3c387bcab37f6eb06bb79b"
                    "96a4aee5ff27f51531a9551c",
@@ -37,7 +37,7 @@ void test_subbyte_sha2() {
     // C.1/1
     unsigned n = 5;
     bool a[] = {0, 1, 1, 0, 1};
-    sha2<256>::digest_type d = compute_digest<sha2<256> >(a, n);
+    sha2<256>::digest_type d = compute_digest_n<sha2<256> >(a, n);
     std::printf("%s\n", d.cstring().data());
     assert(!strcmp("d6d3e02a31a84a8caa9718ed6c2057be"
                    "09db45e7823eb5079ce7a573a3760f95",
@@ -48,7 +48,7 @@ void test_subbyte_sha2() {
     // D.1/1
     unsigned n = 5;
     bool a[] = {0, 0, 0, 1, 0};
-    sha2<384>::digest_type d = compute_digest<sha2<384> >(a, n);
+    sha2<384>::digest_type d = compute_digest_n<sha2<384> >(a, n);
     std::printf("%s\n", d.cstring().data());
     assert(!strcmp("8d17be79e32b6718e07d8a603eb84ba0478f7fcfd1bb9399"
                    "5f7d1149e09143ac1ffcfc56820e469f3878d957a15a3fe4",
@@ -59,7 +59,7 @@ void test_subbyte_sha2() {
     // E.1/1
     unsigned n = 5;
     bool a[] = {1, 0, 1, 1, 0};
-    sha2<512>::digest_type d = compute_digest<sha2<512> >(a, n);
+    sha2<512>::digest_type d = compute_digest_n<sha2<512> >(a, n);
     std::printf("%s\n", d.cstring().data());
     assert(!strcmp("d4ee29a9e90985446b913cf1d1376c836f4be2c1cf3cada0"
                    "720a6bf4857d886a7ecb3c4e4c0fa8c7f95214e41dc1b0d2"
@@ -302,7 +302,7 @@ void test_preprocessor_sha256() {
     {
     // Example from Appendix B.1
     HASH::stream_hash<8>::type h;
-    h.update('a').update('b').update('c');
+    h.update_one('a').update_one('b').update_one('c');
     HASH::digest_type s = h.end_message();
     std::printf("%s\n", s.cstring().data());
     assert("ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad" == s);
@@ -313,7 +313,7 @@ void test_preprocessor_sha256() {
     // Example from Appendix B.3
     HASH::stream_hash<8>::type h;
     for (unsigned i = 0; i < 1000000; ++i) {
-        h.update('a');
+        h.update_one('a');
     }
     HASH::digest_type s = h.end_message();
     std::printf("%s\n", s.cstring().data());
@@ -336,7 +336,7 @@ void test_preprocessor_sha384() {
     {
     // Example from Appendix D.1
     HASH::stream_hash<8>::type h;
-    h.update('a').update('b').update('c');
+    h.update_one('a').update_one('b').update_one('c');
     HASH::digest_type s = h.end_message();
     std::printf("%s\n", s.cstring().data());
     assert("cb00753f45a35e8bb5a03d699ac65007272c32ab0eded163"
@@ -348,7 +348,7 @@ void test_preprocessor_sha384() {
     // Example from Appendix D.3
     HASH::stream_hash<8>::type h;
     for (unsigned i = 0; i < 1000000; ++i) {
-        h.update('a');
+        h.update_one('a');
     }
     HASH::digest_type s = h.end_message();
     std::printf("%s\n", s.cstring().data());
@@ -372,7 +372,7 @@ void test_preprocessor_sha512() {
     {
     // Example from Appendix C.1
     HASH::stream_hash<8>::type h;
-    h.update('a').update('b').update('c');
+    h.update_one('a').update_one('b').update_one('c');
     HASH::digest_type s = h.end_message();
     std::printf("%s\n", s.cstring().data());
     assert("ddaf35a193617abacc417349ae20413112e6fa4e89a97ea20a9eeee64b55d39a"
@@ -384,7 +384,7 @@ void test_preprocessor_sha512() {
     // Example from Appendix C.3
     HASH::stream_hash<8>::type h;
     for (unsigned i = 0; i < 1000000; ++i) {
-        h.update('a');
+        h.update_one('a');
     }
     HASH::digest_type s = h.end_message();
     std::printf("%s\n", s.cstring().data());
@@ -406,7 +406,7 @@ int main() {
     test_preprocessor_sha512();
 
     {
-    sha2<224>::digest_type h = compute_digest<sha2<224> >("abc", 3);
+    sha2<224>::digest_type h = compute_digest_n<sha2<224> >("abc", 3);
     std::printf("%s\n", h.cstring().data());
     assert(!strcmp("23097d223405d8228642a477bda255b32aadbce4bda0b3f7e36c9da7",
                    h.cstring().data()));
@@ -415,7 +415,7 @@ int main() {
     {
     sha2<512>::stream_hash<16>::type pp;
     for (unsigned i = 0; i < 1000000/2; ++i) {
-        pp.update(('a'<<8) | 'a');
+        pp.update_one(('a'<<8) | 'a');
     }
     sha2<512>::digest_type h = pp.end_message();
     std::printf("%s\n", h.cstring().data());
@@ -427,7 +427,7 @@ int main() {
     {
     sha2<512>::stream_hash<32>::type pp;
     for (unsigned i = 0; i < 1000000/4; ++i) {
-        pp.update(('a'<<24) | ('a'<<16) | ('a'<<8) | 'a');
+        pp.update_one(('a'<<24) | ('a'<<16) | ('a'<<8) | 'a');
     }
     sha2<512>::digest_type h = pp.end_message();
     std::printf("%s\n", h.cstring().data());

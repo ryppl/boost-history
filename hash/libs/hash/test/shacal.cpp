@@ -235,7 +235,7 @@ void test_sha512() {
 
     {
     sha512_octet_hash h;
-    h.update('a').update('b').update('c');
+    h.update_one('a').update_one('b').update_one('c');
     digest_type d = h.end_message();
     printf("%s\n", d.cstring().data());
     char const *ed = "ddaf35a193617abacc417349ae20413112e6fa4e89a97ea20a9eeee64b55d39a"
@@ -248,7 +248,7 @@ void test_sha512() {
     char const *m = "abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmn"
                     "hijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu";
     for (char const *p = m; *p; ++p) {
-        h.update(*p);
+        h.update_one(*p);
     }
     digest_type d = h.end_message();
     printf("%s\n", d.cstring().data());
@@ -260,7 +260,7 @@ void test_sha512() {
 #ifndef BOOST_HASH_SHOW_PROGRESS
     {
     sha512_octet_hash h;
-    for (unsigned n = 1000000; n--; ) h.update('a');
+    for (unsigned n = 1000000; n--; ) h.update_one('a');
     digest_type d = h.end_message();
     printf("%s\n", d.cstring().data());
     char const *ed = "e718483d0ce769644e2e42c7bc15b4638e1f98b13b2044285632a803afa973eb"
@@ -272,7 +272,7 @@ void test_sha512() {
     {
     // perl -e 'for ($x = 1000000000; $x--;) {print "a";}' | sha512sum
     sha512_octet_hash h;
-    for (unsigned n = 1000000000; n--; ) h.update('a');
+    for (unsigned n = 1000000000; n--; ) h.update_one('a');
     digest_type d = h.end_message();
     printf("%s\n", d.cstring().data());
     char const *ed = "7cc86d7e06edc6a2029b8c0fa0e3ffb013888fd360f8faf681c7cffd08eacffb"

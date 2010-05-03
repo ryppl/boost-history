@@ -67,9 +67,9 @@ void test_collision_sha0() {
 
     assert(sizeof(fic1) == sizeof(fic2));
 
-    sha::digest_type h1 = compute_digest<sha>(fic1, bitlength/32);
+    sha::digest_type h1 = compute_digest_n<sha>(fic1, bitlength/32);
     printf("%s\n", h1.cstring().data());
-    sha::digest_type h2 = compute_digest<sha>(fic2, bitlength/32);
+    sha::digest_type h2 = compute_digest_n<sha>(fic2, bitlength/32);
     printf("%s\n", h2.cstring().data());
     assert(h1 == h2);
 
@@ -89,9 +89,9 @@ void test_subbyte_sha1() {
     {
     // echo -n "abc" | sha1sum
     sha1::stream_hash<4>::type h;
-    h.update(0x6).update(0x1)
-     .update(0x6).update(0x2)
-     .update(0x6).update(0x3);
+    h.update_one(0x6).update_one(0x1)
+     .update_one(0x6).update_one(0x2)
+     .update_one(0x6).update_one(0x3);
     sha1::digest_type d = h.end_message();
     assert(!strcmp("a9993e364706816aba3e25717850c26c9cd0d89d",
                    d.cstring().data()));
@@ -102,7 +102,7 @@ void test_subbyte_sha1() {
     {
     // A.1/1
     bool a[] = {1, 0, 0, 1, 1};
-    sha1::digest_type d = compute_digest<sha1>(a, sizeof(a)/sizeof(*a));
+    sha1::digest_type d = compute_digest_n<sha1>(a, sizeof(a)/sizeof(*a));
     std::printf("%s\n", d.cstring().data());
     assert(!strcmp("29826b003b906e660eff4027ce98af3531ac75ba",
                    d.cstring().data()));
@@ -112,9 +112,9 @@ void test_subbyte_sha1() {
     // A.1/2
     bool a[] = {0, 1, 0, 1,
                 1, 1, 1, 0};
-    sha1::digest_type d = compute_digest<sha1>(a, sizeof(a)/sizeof(*a));
+    sha1::digest_type d = compute_digest_n<sha1>(a, sizeof(a)/sizeof(*a));
     std::printf("%s\n", d.cstring().data());
-    assert(d == compute_digest<sha1>("\x5e", 1));
+    assert(d == compute_digest_n<sha1>("\x5e", 1));
     }
 
 #define B0 0, 0, 0, 0
@@ -141,7 +141,7 @@ void test_subbyte_sha1() {
                 B5, B9, B4, BB, BB, BE, B3, BA,
                 B3, BB, B1, B1, B7, B5, B4, B2,
                 BD, B9, B4, BA, BC, B8, B8};
-    sha1::digest_type d = compute_digest<sha1>(a, n);
+    sha1::digest_type d = compute_digest_n<sha1>(a, n);
     std::printf("%s\n", d.cstring().data());
     assert(!strcmp("6239781e03729919c01955b3ffa8acb60b988340",
                    d.cstring().data()));
@@ -172,7 +172,7 @@ void test_subbyte_sha1() {
         B1, B1, BA, B1, BB, B3, B2, BA,
         BE
     };
-    sha1::digest_type d = compute_digest<sha1>(a, n);
+    sha1::digest_type d = compute_digest_n<sha1>(a, n);
     std::printf("%s\n", d.cstring().data());
     assert(!strcmp("8c5b2a5ddae5a97fc7f9d85661c672adbf7933d4",
                    d.cstring().data()));
@@ -186,7 +186,7 @@ void test_subbyte_sha1() {
     };
     sha1::stream_hash<4>::type h;
     for (unsigned i = 0; i < n; i += 4) {
-        h.update((a[i/32] >> (32-4-i%32)) % 0x10);
+        h.update_one((a[i/32] >> (32-4-i%32)) % 0x10);
     }
     sha1::digest_type d = h.end_message();
     std::printf("%s\n", d.cstring().data());
@@ -208,7 +208,7 @@ void test_subbyte_sha1() {
     };
     sha1::stream_hash<4>::type h;
     for (unsigned i = 0; i < n; i += 4) {
-        h.update((a[i/32] >> (32-4-i%32)) % 0x10);
+        h.update_one((a[i/32] >> (32-4-i%32)) % 0x10);
     }
     sha1::digest_type d = h.end_message();
     std::printf("%s\n", d.cstring().data());
@@ -303,7 +303,7 @@ void test_preprocessor_sha1() {
     {
     // Example from Appendix A.1
     sha1::stream_hash<8>::type h;
-    h.update('a').update('b').update('c');
+    h.update_one('a').update_one('b').update_one('c');
     sha1::digest_type s = h.end_message();
     std::printf("%s\n", s.cstring().data());
     assert(!strcmp("a9993e364706816aba3e25717850c26c9cd0d89d",
@@ -315,7 +315,7 @@ void test_preprocessor_sha1() {
     // Example from Appendix A.3
     sha1::stream_hash<8>::type h;
     for (unsigned i = 0; i < 1000000; ++i) {
-        h.update('a');
+        h.update_one('a');
     }
     sha1::digest_type s = h.end_message();
     std::printf("%s\n", s.cstring().data());
@@ -339,7 +339,7 @@ int main() {
     }
 
     {
-    sha1::digest_type h = compute_digest<sha0>("abc", 3);
+    sha1::digest_type h = compute_digest_n<sha0>("abc", 3);
     std::printf("%s\n", h.cstring().data());
     assert(!strcmp("0164b8a914cd2a5e74c4f7ff082c4d97f1edf880",
                    h.cstring().data()));

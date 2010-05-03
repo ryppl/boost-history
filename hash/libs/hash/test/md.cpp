@@ -97,7 +97,7 @@ void test_preprocessor_md4() {
 
     {
     md4::stream_hash<8>::type h;
-    h.update('a').update('b').update('c');
+    h.update_one('a').update_one('b').update_one('c');
     assert(h.digest() == h.digest());
     md4::block_hash_type::digest_type s = h.end_message();
     std::printf("%s\n", s.cstring().data());
@@ -108,7 +108,7 @@ void test_preprocessor_md4() {
     {
     md4::stream_hash<8>::type h;
     for (unsigned i = 0; i < 1000000; ++i) {
-        h.update('a');
+        h.update_one('a');
     }
     md4::block_hash_type::digest_type s = h.end_message();
     std::printf("%s\n", s.cstring().data());
@@ -128,7 +128,7 @@ void test_preprocessor_md5() {
 
     {
     md5::stream_hash<8>::type h;
-    h.update('a').update('b').update('c');
+    h.update_one('a').update_one('b').update_one('c');
     assert(!(h.digest() != h.digest()));
     md5::block_hash_type::digest_type s = h.end_message();
     std::printf("%s\n", s.cstring().data());
@@ -140,7 +140,7 @@ void test_preprocessor_md5() {
     // perl -e 'for (1..1000000) { print "a"; }' | md5sum
     md5::stream_hash<8>::type h;
     for (unsigned i = 0; i < 1000000; ++i) {
-        h.update('a');
+        h.update_one('a');
     }
     md5::block_hash_type::digest_type s = h.end_message();
     std::printf("%s\n", s.cstring().data());
