@@ -26,7 +26,7 @@
 <h1><a class="anchor" id="cow">Copying and Argument-Passing </a></h1><p>By default, the integer and nothrow_integer classes use copy-on-write, which means that if you copy one of them, the copy and the original share the same storage. They are only assigned separate storage when one of them is changed. This mechanism makes copying a number (explicitly, by returning it, or by using it as a non-reference parameter to a function) very fast, regardless of its size.</p>
 <p>Unfortunately, copy-on-write isn't compatible with thread-safe operation. If you need to use the library from multiple threads, you can disable this behavior by compiling it with <a class="el" href="threadsafe.html">the thread-safe option</a>. This option also enables move semantics, via Boost.Move, which provide a similar speed increase, though at the time of this writing, not as good as copy-on-write can. </p>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Tue May 4 01:25:21 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Tue May 4 10:20:16 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

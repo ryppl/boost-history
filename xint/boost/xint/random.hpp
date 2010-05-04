@@ -124,8 +124,9 @@ integer random_by_size(T& gen, size_t bits, bool high_bit_on, bool low_bit_on,
     bool can_be_negative)
 {
     detail::random_generator<T> generator(gen);
-    return BOOST_XINT_MOVE(detail::random_by_size(generator, bits, high_bit_on,
-        low_bit_on, can_be_negative));
+    integer r(detail::random_by_size(generator, bits, high_bit_on, low_bit_on,
+        can_be_negative));
+    return BOOST_XINT_MOVE(r);
 }
 
 /*! \brief Generate a randomly-generated prime number of a particular bit-size.

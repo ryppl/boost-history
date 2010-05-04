@@ -66,8 +66,8 @@
 <a name="l00074"></a>00074     <span class="keywordtype">size_t</span> <a class="code" href="classboost_1_1xint_1_1fixed__integer.html#a7234a3a5bea21f0045cee62e5427f3bf">hex_digits</a>() <span class="keyword">const</span>;
 <a name="l00076"></a>00076 
 <a name="l00081"></a>00081 
-<a name="l00082"></a><a class="code" href="classboost_1_1xint_1_1fixed__integer.html#a5488c21218c4590496962b5fee817e8e">00082</a>     <a class="code" href="classboost_1_1xint_1_1fixed__integer.html" title="A fixed-size integer type.">fixed_integer&lt;Bits&gt;</a>&amp; <a class="code" href="classboost_1_1xint_1_1fixed__integer.html#a8cd90bde9fd2284d2260986b9f23b3c7">operator=</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1fixed__integer.html" title="A fixed-size integer type.">fixed_integer&lt;Bits&gt;</a>&amp; c) { _attach(c);
-<a name="l00083"></a>00083                 <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
+<a name="l00082"></a><a class="code" href="classboost_1_1xint_1_1fixed__integer.html#a5488c21218c4590496962b5fee817e8e">00082</a>     <a class="code" href="classboost_1_1xint_1_1fixed__integer.html" title="A fixed-size integer type.">fixed_integer&lt;Bits&gt;</a>&amp; <a class="code" href="classboost_1_1xint_1_1fixed__integer.html#a8cd90bde9fd2284d2260986b9f23b3c7">operator=</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1fixed__integer.html" title="A fixed-size integer type.">fixed_integer&lt;Bits&gt;</a>&amp; c) { _attach(c,
+<a name="l00083"></a>00083         <span class="keyword">false</span>); <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
 <a name="l00084"></a>00084 
 <a name="l00085"></a>00085     <span class="keywordtype">bool</span> <a class="code" href="classboost_1_1xint_1_1fixed__integer.html#ae2f227bfbdf7f7f4b69a968ae491f8df">operator!</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> _is_zero(); }
 <a name="l00086"></a>00086     fixed_integer&lt;Bits&gt; <a class="code" href="classboost_1_1xint_1_1fixed__integer.html#aac0ac16865a09e299593891ae0399139">operator-</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#aedc1654de47ce6d6635e5339b236f94d">negate</a>(*<span class="keyword">this</span>); }
@@ -269,7 +269,7 @@
 <a name="l00333"></a>00333     fixed_integer_any(preallocated_zero.get())
 <a name="l00334"></a>00334 {
 <a name="l00335"></a>00335     <span class="keywordflow">if</span> (b._is_nan()) <span class="keywordflow">throw</span> exceptions::not_a_number();
-<a name="l00336"></a>00336     _attach(b);
+<a name="l00336"></a>00336     _attach(b, <span class="keyword">false</span>);
 <a name="l00337"></a>00337 }
 <a name="l00338"></a>00338 
 <a name="l00344"></a>00344 <span class="keyword">template</span> &lt;<span class="keywordtype">size_t</span> Bits&gt;
@@ -752,7 +752,7 @@
 <a name="l00899"></a>00899 
 <a name="l00900"></a>00900 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_FIXED_INTEGER_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Tue May 4 01:25:21 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Tue May 4 10:20:16 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

@@ -55,7 +55,7 @@
 <a name="l00038"></a>00038 
 <a name="l00050"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a9a9c9e622a764a004d256c18b7929081">00050</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#add8423c7b0d729fe93a8aabf49d333ae">nothrow_integer::nothrow_integer</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>&amp; b) {
 <a name="l00051"></a>00051     <span class="keywordflow">try</span> {
-<a name="l00052"></a>00052         <span class="keywordflow">if</span> (!b.<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a1dd4d6157a77e2e1e13d2915661dce7d" title="Tests *this for Not-a-Number.">is_nan</a>()) _attach(b);
+<a name="l00052"></a>00052         <span class="keywordflow">if</span> (!b.<a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a1dd4d6157a77e2e1e13d2915661dce7d" title="Tests *this for Not-a-Number.">is_nan</a>()) _attach(b, <span class="keyword">false</span>);
 <a name="l00053"></a>00053     } <span class="keywordflow">catch</span> (std::exception&amp;) {
 <a name="l00054"></a>00054         <span class="comment">// Do nothing, automatically sets to Not-a-Number</span>
 <a name="l00055"></a>00055     }
@@ -63,7 +63,7 @@
 <a name="l00057"></a>00057 
 <a name="l00068"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a195e4062a0f980e1bc9df47f8645854a">00068</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#add8423c7b0d729fe93a8aabf49d333ae">nothrow_integer::nothrow_integer</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1integer.html" title="The core integer class.">integer</a>&amp; b) {
 <a name="l00069"></a>00069     <span class="keywordflow">try</span> {
-<a name="l00070"></a>00070         _attach(b);
+<a name="l00070"></a>00070         _attach(b, <span class="keyword">false</span>);
 <a name="l00071"></a>00071     } <span class="keywordflow">catch</span> (std::exception&amp;) {
 <a name="l00072"></a>00072         <span class="comment">// Do nothing, automatically sets to Not-a-Number</span>
 <a name="l00073"></a>00073     }
@@ -71,7 +71,7 @@
 <a name="l00075"></a>00075 
 <a name="l00082"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#aa6314aa9f8ff03ce52152febc6444a58">00082</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#add8423c7b0d729fe93a8aabf49d333ae">nothrow_integer::nothrow_integer</a>(<span class="keyword">const</span> <a class="code" href="classboost_1_1xint_1_1fixed__integer__any.html" title="The base class for all fixed_integer types.">fixed_integer_any</a>&amp; b) {
 <a name="l00083"></a>00083     <span class="keywordflow">try</span> {
-<a name="l00084"></a>00084         _attach(b);
+<a name="l00084"></a>00084         _attach(b, <span class="keyword">false</span>);
 <a name="l00085"></a>00085     } <span class="keywordflow">catch</span> (std::exception&amp;) {
 <a name="l00086"></a>00086         <span class="comment">// Do nothing, automatically sets to Not-a-Number</span>
 <a name="l00087"></a>00087     }
@@ -79,7 +79,7 @@
 <a name="l00089"></a>00089 
 <a name="l00091"></a><a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a70c7b596f17102c6e292b8994dda76cc">00091</a> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#add8423c7b0d729fe93a8aabf49d333ae">nothrow_integer::nothrow_integer</a>(<span class="keyword">const</span> std::string&amp; str, <span class="keywordtype">size_t</span> base) {
 <a name="l00092"></a>00092     <span class="keywordflow">try</span> {
-<a name="l00093"></a>00093         _attach(<a class="code" href="namespaceboost_1_1xint.html#af263105e57d48eff5fe14d4d03ca10e1" title="Converts a string to an integer.">from_string</a>(str, base));
+<a name="l00093"></a>00093         _attach(<a class="code" href="namespaceboost_1_1xint.html#af263105e57d48eff5fe14d4d03ca10e1" title="Converts a string to an integer.">from_string</a>(str, base), <span class="keyword">true</span>);
 <a name="l00094"></a>00094     } <span class="keywordflow">catch</span> (std::exception&amp;) {
 <a name="l00095"></a>00095         <span class="comment">// Do nothing, automatically sets to Not-a-Number</span>
 <a name="l00096"></a>00096     }
@@ -136,7 +136,7 @@
 <a name="l00169"></a>00169     <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html" title="The nothrow_integer class.">nothrow_integer</a>) c)
 <a name="l00170"></a>00170 {
 <a name="l00171"></a>00171     <span class="keywordflow">try</span> {
-<a name="l00172"></a>00172         _attach(c);
+<a name="l00172"></a>00172         _attach(c, <span class="keyword">false</span>);
 <a name="l00173"></a>00173     } <span class="keywordflow">catch</span> (std::exception&amp;) {
 <a name="l00174"></a>00174         _base_attach(0);
 <a name="l00175"></a>00175     }
@@ -214,7 +214,7 @@
 <a name="l00247"></a>00247 } <span class="comment">// namespace xint</span>
 <a name="l00248"></a>00248 } <span class="comment">// namespace boost</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Tue May 4 01:25:21 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Tue May 4 10:20:16 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

@@ -79,8 +79,8 @@ class fixed_integer: public fixed_integer_any {
                %integer types.
     */
     //!@{
-    fixed_integer<Bits>& operator=(const fixed_integer<Bits>& c) { _attach(c);
-		return *this; }
+    fixed_integer<Bits>& operator=(const fixed_integer<Bits>& c) { _attach(c,
+        false); return *this; }
 
     bool operator!() const { return _is_zero(); }
     fixed_integer<Bits> operator-() const { return negate(*this); }
@@ -333,7 +333,7 @@ fixed_integer<Bits>::fixed_integer(const base_integer& b):
     fixed_integer_any(preallocated_zero.get())
 {
     if (b._is_nan()) throw exceptions::not_a_number();
-    _attach(b);
+    _attach(b, false);
 }
 
 /*! \copydoc integer::integer(const std::string&, size_t)

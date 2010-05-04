@@ -97,7 +97,7 @@
 <a name="l00080"></a>00080         <span class="comment">// this function, I&#39;ll add it later.</span>
 <a name="l00081"></a>00081 
 <a name="l00082"></a>00082         <span class="keyword">const</span> integer <a class="code" href="namespaceboost_1_1xint.html#aaed048f3dc3a442152ebffa3f721d014" title="Bit-shift an integer, in either direction.">shift</a>(base);
-<a name="l00083"></a>00083         <a class="code" href="classboost_1_1xint_1_1integer.html#a5c47ab8e93d541e298dcfa3d73845d5a">integer::divide_t</a> a(n._to_integer(), <a class="code" href="classboost_1_1xint_1_1integer.html#a5c08ebe10f3f6333328b35193edd53d0">integer::zero</a>());
+<a name="l00083"></a>00083         <a class="code" href="classboost_1_1xint_1_1integer.html#a5c47ab8e93d541e298dcfa3d73845d5a">integer::divide_t</a> a(n._to_integer(<span class="keyword">false</span>), <a class="code" href="classboost_1_1xint_1_1integer.html#a5c08ebe10f3f6333328b35193edd53d0">integer::zero</a>());
 <a name="l00084"></a>00084         a.quotient._set_negative(<span class="keyword">false</span>);
 <a name="l00085"></a>00085 
 <a name="l00086"></a>00086         integer r;
@@ -158,7 +158,7 @@
 <a name="l00141"></a>00141     }
 <a name="l00142"></a>00142     r._set_negative(negate);
 <a name="l00143"></a>00143 
-<a name="l00144"></a>00144     target._attach(r);
+<a name="l00144"></a>00144     target._attach(r, <span class="keyword">true</span>);
 <a name="l00145"></a>00145 }
 <a name="l00146"></a>00146 
 <a name="l00147"></a>00147 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a61303b2b007d23cc8c9b7450c848c14d" title="Creates a binary representation of an integer.">to_binary</a>(<a class="code" href="namespaceboost_1_1xint.html#aae3128529370506165793f2771834e58">xint::binary_t</a>&amp; target, <span class="keyword">const</span> base_integer&amp; n, <span class="keywordtype">size_t</span> bits) {
@@ -193,7 +193,7 @@
 <a name="l00176"></a>00176                 *t++ = static_cast&lt;digit_t&gt;(bitqueue.pop(bits_per_digit));
 <a name="l00177"></a>00177 
 <a name="l00178"></a>00178     r._cleanup();
-<a name="l00179"></a>00179     target._attach(r);
+<a name="l00179"></a>00179     target._attach(r, <span class="keyword">true</span>);
 <a name="l00180"></a>00180 }
 <a name="l00181"></a>00181 
 <a name="l00182"></a>00182 } <span class="comment">// namespace detail</span>
@@ -227,7 +227,7 @@
 <a name="l00305"></a>00305 } <span class="comment">// namespace xint</span>
 <a name="l00306"></a>00306 } <span class="comment">// namespace boost</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Tue May 4 01:25:21 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Tue May 4 10:20:16 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

@@ -24,7 +24,7 @@ namespace xint {
 namespace detail {
 
 void sqrt(base_integer& target, const base_integer& nn) {
-    if (nn._is_zero()) { target._attach(nn); return; }
+    if (nn._is_zero()) { target._attach(nn, false); return; }
     if (nn._get_negative()) throw exceptions::cannot_represent("library cannot "
         "represent imaginary values (tried to take sqrt of negative number)");
 
@@ -34,7 +34,7 @@ void sqrt(base_integer& target, const base_integer& nn) {
     // two.
     const size_t extra_bits = 1;
 
-    integer n(nn._to_integer());
+    integer n(nn._to_integer(false));
     n <<= (extra_bits * 2);
 
     // Initial guess is half the length of n, in bits
@@ -50,7 +50,7 @@ void sqrt(base_integer& target, const base_integer& nn) {
 
     // Remove half of the added bits.
     guess >>= extra_bits;
-    target._attach(guess);
+    target._attach(guess, true);
 }
 
 } // namespace detail

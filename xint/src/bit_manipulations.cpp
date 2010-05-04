@@ -145,7 +145,7 @@ void bitwise_xor(base_integer& target, const base_integer& n1, const
 
 void shift_left(base_integer& target, const base_integer& n, size_t byBits) {
     if (byBits==0) {
-        target._attach(n);
+        target._attach(n, false);
         return;
     }
 
@@ -178,12 +178,12 @@ void shift_left(base_integer& target, const base_integer& n, size_t byBits) {
     }
     answer._cleanup();
     answer._set_negative(n._get_negative());
-    target._attach(answer);
+    target._attach(answer, true);
 }
 
 void shift_right(base_integer& target, const base_integer& n, size_t byBits) {
     if (byBits==0) {
-        target._attach(n);
+        target._attach(n, false);
         return;
     }
 
@@ -211,7 +211,7 @@ void shift_right(base_integer& target, const base_integer& n, size_t byBits) {
     }
     answer._cleanup();
     answer._set_negative(n._get_negative());
-    target._attach(answer);
+    target._attach(answer, true);
 }
 
 } // namespace detail

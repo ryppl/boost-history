@@ -61,7 +61,7 @@
 <a name="l00042"></a>00042 base_integer::base_integer(<span class="keyword">const</span> base_integer&amp; c, <span class="keywordtype">bool</span> fixed): flags(0), data(0)
 <a name="l00043"></a>00043 {
 <a name="l00044"></a>00044     <span class="keywordflow">if</span> (fixed) flags |= flag_fixedlength;
-<a name="l00045"></a>00045     _attach(c);
+<a name="l00045"></a>00045     _attach(c, <span class="keyword">false</span>);
 <a name="l00046"></a>00046 }
 <a name="l00047"></a>00047 
 <a name="l00048"></a>00048 base_integer::base_integer(<span class="keywordtype">size_t</span> count, digit_t mask): flags(flag_fixedlength),
@@ -214,166 +214,176 @@
 <a name="l00195"></a>00195     }
 <a name="l00196"></a>00196 }
 <a name="l00197"></a>00197 
-<a name="l00198"></a>00198 <span class="keywordtype">void</span> base_integer::_swap(base_integer&amp; other) {
-<a name="l00199"></a>00199     flag_t tempflags = flags;
-<a name="l00200"></a>00200     flags = other.flags;
-<a name="l00201"></a>00201     other.flags = tempflags;
-<a name="l00202"></a>00202 
-<a name="l00203"></a>00203     data_t *tempdata = data;
-<a name="l00204"></a>00204     data = other.data;
-<a name="l00205"></a>00205     other.data = tempdata;
-<a name="l00206"></a>00206 }
-<a name="l00207"></a>00207 
-<a name="l00208"></a>00208 <span class="keywordtype">void</span> base_integer::_base_attach(data_t *new_data, flag_t setflags, <span class="keywordtype">size_t</span>
-<a name="l00209"></a>00209     extra_allocation)
-<a name="l00210"></a>00210 {
-<a name="l00211"></a>00211 <span class="preprocessor">    #ifdef BOOST_XINT_USE_COPY_ON_WRITE</span>
-<a name="l00212"></a>00212 <span class="preprocessor"></span>        <span class="keywordtype">bool</span> adopt=<span class="keyword">true</span>;
-<a name="l00213"></a>00213 <span class="preprocessor">    #else</span>
-<a name="l00214"></a>00214 <span class="preprocessor"></span>        <span class="keywordtype">bool</span> adopt=(new_data &amp;&amp; new_data-&gt;copies == 0);
-<a name="l00215"></a>00215 <span class="preprocessor">    #endif</span>
-<a name="l00216"></a>00216 <span class="preprocessor"></span>
-<a name="l00217"></a>00217     <span class="keywordflow">if</span> (data != new_data || extra_allocation != 0) {
-<a name="l00218"></a>00218         <span class="comment">// If only one of them is fixed-length, the data can&#39;t be adopted.</span>
-<a name="l00219"></a>00219         <span class="keywordflow">if</span> (adopt &amp;&amp; new_data &amp;&amp; _is_fixed() != (new_data-&gt;fixed_mask != 0))
-<a name="l00220"></a>00220             adopt=<span class="keyword">false</span>;
-<a name="l00221"></a>00221 
-<a name="l00222"></a>00222         <span class="comment">// If either of them are fixed-length, and they&#39;re not the same fixed-</span>
-<a name="l00223"></a>00223         <span class="comment">// length, then the data can&#39;t be adopted.</span>
-<a name="l00224"></a>00224         <span class="keywordflow">if</span> (adopt &amp;&amp; data &amp;&amp; new_data &amp;&amp; (data-&gt;fixed_mask ||
-<a name="l00225"></a>00225             new_data-&gt;fixed_mask) &amp;&amp; (data-&gt;fixed_mask != new_data-&gt;fixed_mask
-<a name="l00226"></a>00226             || data-&gt;max_length != new_data-&gt;max_length)) adopt=<span class="keyword">false</span>;
-<a name="l00227"></a>00227 
-<a name="l00228"></a>00228         <span class="comment">// If we don&#39;t have a data item, but we&#39;re supposed to allocate extra</span>
-<a name="l00229"></a>00229         <span class="comment">// data, we can&#39;t adopt the existing data item.</span>
-<a name="l00230"></a>00230         <span class="keywordflow">if</span> (adopt &amp;&amp; extra_allocation != 0 &amp;&amp; !data) adopt=<span class="keyword">false</span>;
-<a name="l00231"></a>00231 
-<a name="l00232"></a>00232         <span class="comment">// If extra_allocation is requested, and it&#39;s a variable-length integer,</span>
-<a name="l00233"></a>00233         <span class="comment">// check the max_size. If there isn&#39;t enough to fit in the</span>
-<a name="l00234"></a>00234         <span class="comment">// extra_allocation, don&#39;t allow adoption.</span>
-<a name="l00235"></a>00235         <span class="keywordflow">if</span> (adopt &amp;&amp; extra_allocation != 0 &amp;&amp; data-&gt;fixed_mask == 0)
-<a name="l00236"></a>00236             <span class="keywordflow">if</span> (data-&gt;length + extra_allocation &gt; data-&gt;max_length) adopt=<span class="keyword">false</span>;
-<a name="l00237"></a>00237 
-<a name="l00238"></a>00238         <span class="keywordflow">if</span> (adopt) {
-<a name="l00239"></a>00239             <span class="keywordflow">if</span> (data &amp;&amp; --data-&gt;copies == 0) deallocate(data);
-<a name="l00240"></a>00240             data=new_data;
-<a name="l00241"></a>00241             <span class="keywordflow">if</span> (data) ++data-&gt;copies;
-<a name="l00242"></a>00242         } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (new_data != 0) {
-<a name="l00243"></a>00243             <span class="comment">// Duplicate the data in a unique data_t item</span>
-<a name="l00244"></a>00244             <span class="keywordflow">if</span> (data == 0) {
-<a name="l00245"></a>00245                 data = (_is_fixed() ?
-<a name="l00246"></a>00246                     allocate_fixed(new_data-&gt;fixed_mask, new_data-&gt;max_length,
-<a name="l00247"></a>00247                         0) :
-<a name="l00248"></a>00248                     allocate(new_data-&gt;length + extra_allocation, 0));
-<a name="l00249"></a>00249                 ++data-&gt;copies;
-<a name="l00250"></a>00250             } <span class="keywordflow">else</span> <span class="keywordflow">if</span> ((data-&gt;copies &gt; 1 || data-&gt;max_length &lt; new_data-&gt;length
-<a name="l00251"></a>00251                 + extra_allocation) || _get_readonly())
-<a name="l00252"></a>00252             {
-<a name="l00253"></a>00253                 data_t *olddata = data;
-<a name="l00254"></a>00254                 data = (_is_fixed() ?
-<a name="l00255"></a>00255                     allocate_fixed(data-&gt;fixed_mask, data-&gt;max_length, 0) :
+<a name="l00198"></a>00198 <span class="keywordtype">void</span> base_integer::_mark_movable() {
+<a name="l00199"></a>00199     <span class="keywordflow">if</span> (_is_unique()) flags |= flag_movable;
+<a name="l00200"></a>00200 }
+<a name="l00201"></a>00201 
+<a name="l00202"></a>00202 <span class="keywordtype">bool</span> base_integer::_is_movable()<span class="keyword"> const </span>{
+<a name="l00203"></a>00203     <span class="keywordflow">return</span> ((flags &amp; flag_movable) ? <span class="keyword">true</span> : <span class="keyword">false</span>);
+<a name="l00204"></a>00204 }
+<a name="l00205"></a>00205 
+<a name="l00206"></a>00206 <span class="keywordtype">void</span> base_integer::_swap(base_integer&amp; other) {
+<a name="l00207"></a>00207     flag_t tempflags = flags;
+<a name="l00208"></a>00208     flags = other.flags;
+<a name="l00209"></a>00209     other.flags = tempflags;
+<a name="l00210"></a>00210 
+<a name="l00211"></a>00211     data_t *tempdata = data;
+<a name="l00212"></a>00212     data = other.data;
+<a name="l00213"></a>00213     other.data = tempdata;
+<a name="l00214"></a>00214 }
+<a name="l00215"></a>00215 
+<a name="l00216"></a>00216 <span class="keywordtype">void</span> base_integer::_base_attach(data_t *new_data, flag_t setflags, <span class="keywordtype">size_t</span>
+<a name="l00217"></a>00217     extra_allocation, <span class="keywordtype">bool</span> is_movable)
+<a name="l00218"></a>00218 {
+<a name="l00219"></a>00219 <span class="preprocessor">    #ifdef BOOST_XINT_USE_COPY_ON_WRITE</span>
+<a name="l00220"></a>00220 <span class="preprocessor"></span>        <span class="keywordtype">bool</span> adopt=<span class="keyword">true</span>;
+<a name="l00221"></a>00221 <span class="preprocessor">    #else</span>
+<a name="l00222"></a>00222 <span class="preprocessor"></span>        <span class="keywordtype">bool</span> adopt=(new_data &amp;&amp; is_movable);
+<a name="l00223"></a>00223 <span class="preprocessor">    #endif</span>
+<a name="l00224"></a>00224 <span class="preprocessor"></span>
+<a name="l00225"></a>00225     <span class="keywordflow">if</span> (data != new_data || extra_allocation != 0) {
+<a name="l00226"></a>00226         <span class="comment">// If only one of them is fixed-length, the data can&#39;t be adopted.</span>
+<a name="l00227"></a>00227         <span class="keywordflow">if</span> (adopt &amp;&amp; new_data &amp;&amp; _is_fixed() != (new_data-&gt;fixed_mask != 0))
+<a name="l00228"></a>00228             adopt=<span class="keyword">false</span>;
+<a name="l00229"></a>00229 
+<a name="l00230"></a>00230         <span class="comment">// If either of them are fixed-length, and they&#39;re not the same fixed-</span>
+<a name="l00231"></a>00231         <span class="comment">// length, then the data can&#39;t be adopted.</span>
+<a name="l00232"></a>00232         <span class="keywordflow">if</span> (adopt &amp;&amp; data &amp;&amp; new_data &amp;&amp; (data-&gt;fixed_mask ||
+<a name="l00233"></a>00233             new_data-&gt;fixed_mask) &amp;&amp; (data-&gt;fixed_mask != new_data-&gt;fixed_mask
+<a name="l00234"></a>00234             || data-&gt;max_length != new_data-&gt;max_length)) adopt=<span class="keyword">false</span>;
+<a name="l00235"></a>00235 
+<a name="l00236"></a>00236         <span class="comment">// If we don&#39;t have a data item, but we&#39;re supposed to allocate extra</span>
+<a name="l00237"></a>00237         <span class="comment">// data, we can&#39;t adopt the existing data item.</span>
+<a name="l00238"></a>00238         <span class="keywordflow">if</span> (adopt &amp;&amp; extra_allocation != 0 &amp;&amp; !data) adopt=<span class="keyword">false</span>;
+<a name="l00239"></a>00239 
+<a name="l00240"></a>00240         <span class="comment">// If extra_allocation is requested, and it&#39;s a variable-length integer,</span>
+<a name="l00241"></a>00241         <span class="comment">// check the max_size. If there isn&#39;t enough to fit in the</span>
+<a name="l00242"></a>00242         <span class="comment">// extra_allocation, don&#39;t allow adoption.</span>
+<a name="l00243"></a>00243         <span class="keywordflow">if</span> (adopt &amp;&amp; extra_allocation != 0 &amp;&amp; data-&gt;fixed_mask == 0)
+<a name="l00244"></a>00244             <span class="keywordflow">if</span> (data-&gt;length + extra_allocation &gt; data-&gt;max_length) adopt=<span class="keyword">false</span>;
+<a name="l00245"></a>00245 
+<a name="l00246"></a>00246         <span class="keywordflow">if</span> (adopt) {
+<a name="l00247"></a>00247             <span class="keywordflow">if</span> (data &amp;&amp; --data-&gt;copies == 0) deallocate(data);
+<a name="l00248"></a>00248             data=new_data;
+<a name="l00249"></a>00249             <span class="keywordflow">if</span> (data) ++data-&gt;copies;
+<a name="l00250"></a>00250         } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (new_data != 0) {
+<a name="l00251"></a>00251             <span class="comment">// Duplicate the data in a unique data_t item</span>
+<a name="l00252"></a>00252             <span class="keywordflow">if</span> (data == 0) {
+<a name="l00253"></a>00253                 data = (_is_fixed() ?
+<a name="l00254"></a>00254                     allocate_fixed(new_data-&gt;fixed_mask, new_data-&gt;max_length,
+<a name="l00255"></a>00255                         0) :
 <a name="l00256"></a>00256                     allocate(new_data-&gt;length + extra_allocation, 0));
 <a name="l00257"></a>00257                 ++data-&gt;copies;
-<a name="l00258"></a>00258                 <span class="keywordflow">if</span> (--olddata-&gt;copies == 0) deallocate(olddata);
-<a name="l00259"></a>00259             }
-<a name="l00260"></a>00260             data-&gt;length = (std::min)(new_data-&gt;length + extra_allocation,
-<a name="l00261"></a>00261                 data-&gt;max_length);
-<a name="l00262"></a>00262 
-<a name="l00263"></a>00263             digit_t *s = new_data-&gt;magnitude, *se = s + new_data-&gt;length;
-<a name="l00264"></a>00264             digit_t *t = data-&gt;magnitude, *te = t + data-&gt;length;
-<a name="l00265"></a>00265             <span class="keywordflow">while</span> (t != te &amp;&amp; s != se) *t++ = *s++;
-<a name="l00266"></a>00266             zero(t, te);
-<a name="l00267"></a>00267         } <span class="keywordflow">else</span> {
-<a name="l00268"></a>00268             <span class="keywordflow">if</span> (--data-&gt;copies == 0) deallocate(data);
-<a name="l00269"></a>00269             data=0;
-<a name="l00270"></a>00270         }
-<a name="l00271"></a>00271     }
-<a name="l00272"></a>00272     flags = setflags;
-<a name="l00273"></a>00273 }
-<a name="l00274"></a>00274 
-<a name="l00275"></a>00275 <span class="keywordtype">void</span> base_integer::_attach(<span class="keyword">const</span> base_integer&amp; copy) {
-<a name="l00276"></a>00276     _base_attach(copy.data, copy.flags);
-<a name="l00277"></a>00277     <span class="keywordflow">if</span> (data) _cleanup();
-<a name="l00278"></a>00278 }
-<a name="l00279"></a>00279 
-<a name="l00280"></a>00280 <span class="keywordtype">void</span> base_integer::_cleanup() {
-<a name="l00281"></a>00281     digit_t *p = data-&gt;magnitude + data-&gt;length - 1;
-<a name="l00282"></a>00282     <span class="keywordflow">if</span> (data-&gt;fixed_mask != 0 &amp;&amp; p == data-&gt;magnitude + data-&gt;max_length - 1)
-<a name="l00283"></a>00283         *p &amp;= data-&gt;fixed_mask;
-<a name="l00284"></a>00284     <span class="keywordflow">if</span> (*p == 0) {
-<a name="l00285"></a>00285         <span class="keywordflow">if</span> (p != data-&gt;magnitude) {
-<a name="l00286"></a>00286             <span class="keywordflow">while</span> (--p != data-&gt;magnitude &amp;&amp; *p == 0); <span class="comment">// Null loop</span>
-<a name="l00287"></a>00287             <span class="keywordflow">if</span> (*p == 0) _set_negative(<span class="keyword">false</span>); <span class="comment">// It&#39;s zero.</span>
-<a name="l00288"></a>00288             data-&gt;length = p - data-&gt;magnitude + 1;
-<a name="l00289"></a>00289         } <span class="comment">// It&#39;s zero, but it may legitimately be a &quot;negative zero&quot;, leave it.</span>
-<a name="l00290"></a>00290     }
-<a name="l00291"></a>00291 }
-<a name="l00292"></a>00292 
-<a name="l00293"></a>00293 <a class="code" href="classboost_1_1xint_1_1integer.html" title="The core integer class.">integer</a> base_integer::_to_integer()<span class="keyword"> const </span>{
-<a name="l00294"></a>00294     <a class="code" href="classboost_1_1xint_1_1integer.html" title="The core integer class.">integer</a> r;
-<a name="l00295"></a>00295     r._attach(*<span class="keyword">this</span>);
-<a name="l00296"></a>00296     <span class="keywordflow">return</span> r;
-<a name="l00297"></a>00297 }
-<a name="l00298"></a>00298 
-<a name="l00299"></a>00299 <span class="keywordtype">void</span> base_integer::_increment(<span class="keywordtype">bool</span> absolute_value) {
-<a name="l00300"></a>00300     _make_unique();
-<a name="l00301"></a>00301     <span class="keywordflow">if</span> (_is_zero()) {
-<a name="l00302"></a>00302         data-&gt;magnitude[0] = 1;
-<a name="l00303"></a>00303         _set_negative(<span class="keyword">false</span>);
-<a name="l00304"></a>00304     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (!absolute_value &amp;&amp; _get_negative()) {
-<a name="l00305"></a>00305         _decrement(<span class="keyword">true</span>);
-<a name="l00306"></a>00306     } <span class="keywordflow">else</span> {
-<a name="l00307"></a>00307         _realloc(_get_length() + 1);
-<a name="l00308"></a>00308         digit_t *p = _get_writable_digits(), *pe = p + _get_length();
-<a name="l00309"></a>00309 
-<a name="l00310"></a>00310         <span class="keywordflow">while</span> (p &lt; pe) {
-<a name="l00311"></a>00311             <span class="keywordflow">if</span> (*p == digit_mask) *p++ = 0;
-<a name="l00312"></a>00312             <span class="keywordflow">else</span> { *p++ += 1; <span class="keywordflow">break</span>; }
-<a name="l00313"></a>00313         }
-<a name="l00314"></a>00314         _cleanup();
-<a name="l00315"></a>00315     }
-<a name="l00316"></a>00316 }
-<a name="l00317"></a>00317 
-<a name="l00318"></a>00318 <span class="keywordtype">void</span> base_integer::_decrement(<span class="keywordtype">bool</span> absolute_value) {
-<a name="l00319"></a>00319     _make_unique();
-<a name="l00320"></a>00320     <span class="keywordflow">if</span> (_is_zero()) {
-<a name="l00321"></a>00321         data-&gt;magnitude[0]=1;
-<a name="l00322"></a>00322         _set_negative(<span class="keyword">true</span>);
-<a name="l00323"></a>00323     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (!absolute_value &amp;&amp; _get_negative()) {
-<a name="l00324"></a>00324         _increment(<span class="keyword">true</span>);
-<a name="l00325"></a>00325     } <span class="keywordflow">else</span> {
-<a name="l00326"></a>00326         digit_t *p = _get_writable_digits(), *pe = p + _get_length();
-<a name="l00327"></a>00327         <span class="keywordflow">while</span> (p != pe) {
-<a name="l00328"></a>00328             <span class="keywordflow">if</span> (*p == 0) *p++ = digit_mask;
-<a name="l00329"></a>00329             <span class="keywordflow">else</span> { *p++ -= 1; <span class="keywordflow">break</span>; }
-<a name="l00330"></a>00330         }
-<a name="l00331"></a>00331         _cleanup();
-<a name="l00332"></a>00332     }
-<a name="l00333"></a>00333 }
-<a name="l00334"></a>00334 
-<a name="l00336"></a>00336 
-<a name="l00337"></a>00337 <span class="keywordtype">void</span> base_variable_length_integer::_attach_0() {
-<a name="l00338"></a>00338     _base_attach(variable_zerodata());
-<a name="l00339"></a>00339 }
-<a name="l00340"></a>00340 
-<a name="l00341"></a>00341 <span class="keywordtype">size_t</span> log10_bits(<span class="keywordtype">size_t</span> bits) {
-<a name="l00342"></a>00342     assert(std::numeric_limits&lt;boost::intmax_t&gt;::digits &gt;= 32);
-<a name="l00343"></a>00343     <span class="keyword">const</span> boost::intmax_t large_step(1000000000), small_step(10);
-<a name="l00344"></a>00344     <span class="keyword">const</span> <span class="keywordtype">size_t</span> count_per_large_step = 9, count_per_small_step = 1;
-<a name="l00345"></a>00345     <a class="code" href="classboost_1_1xint_1_1integer.html" title="The core integer class.">integer</a> n(<a class="code" href="namespaceboost_1_1xint.html#af710e4b39cfa66096c202f17d12cc7b7" title="Calculate the value of 2e">pow2</a>(bits)-1);
+<a name="l00258"></a>00258             } <span class="keywordflow">else</span> <span class="keywordflow">if</span> ((data-&gt;copies &gt; 1 || data-&gt;max_length &lt; new_data-&gt;length
+<a name="l00259"></a>00259                 + extra_allocation) || _get_readonly())
+<a name="l00260"></a>00260             {
+<a name="l00261"></a>00261                 data_t *olddata = data;
+<a name="l00262"></a>00262                 data = (_is_fixed() ?
+<a name="l00263"></a>00263                     allocate_fixed(data-&gt;fixed_mask, data-&gt;max_length, 0) :
+<a name="l00264"></a>00264                     allocate(new_data-&gt;length + extra_allocation, 0));
+<a name="l00265"></a>00265                 ++data-&gt;copies;
+<a name="l00266"></a>00266                 <span class="keywordflow">if</span> (--olddata-&gt;copies == 0) deallocate(olddata);
+<a name="l00267"></a>00267             }
+<a name="l00268"></a>00268             data-&gt;length = (std::min)(new_data-&gt;length + extra_allocation,
+<a name="l00269"></a>00269                 data-&gt;max_length);
+<a name="l00270"></a>00270 
+<a name="l00271"></a>00271             digit_t *s = new_data-&gt;magnitude, *se = s + new_data-&gt;length;
+<a name="l00272"></a>00272             digit_t *t = data-&gt;magnitude, *te = t + data-&gt;length;
+<a name="l00273"></a>00273             <span class="keywordflow">while</span> (t != te &amp;&amp; s != se) *t++ = *s++;
+<a name="l00274"></a>00274             zero(t, te);
+<a name="l00275"></a>00275         } <span class="keywordflow">else</span> {
+<a name="l00276"></a>00276             <span class="keywordflow">if</span> (--data-&gt;copies == 0) deallocate(data);
+<a name="l00277"></a>00277             data=0;
+<a name="l00278"></a>00278         }
+<a name="l00279"></a>00279     }
+<a name="l00280"></a>00280     flags = setflags;
+<a name="l00281"></a>00281 }
+<a name="l00282"></a>00282 
+<a name="l00283"></a>00283 <span class="keywordtype">void</span> base_integer::_attach(<span class="keyword">const</span> base_integer&amp; copy, <span class="keywordtype">bool</span> movable) {
+<a name="l00284"></a>00284     <span class="keywordtype">bool</span> move = (copy._is_movable() || (movable &amp;&amp; copy.data &amp;&amp;
+<a name="l00285"></a>00285         copy.data-&gt;copies &lt;= 1));
+<a name="l00286"></a>00286     _base_attach(copy.data, copy.flags, 0, move);
+<a name="l00287"></a>00287     <span class="keywordflow">if</span> (data) _cleanup();
+<a name="l00288"></a>00288 }
+<a name="l00289"></a>00289 
+<a name="l00290"></a>00290 <span class="keywordtype">void</span> base_integer::_cleanup() {
+<a name="l00291"></a>00291     digit_t *p = data-&gt;magnitude + data-&gt;length - 1;
+<a name="l00292"></a>00292     <span class="keywordflow">if</span> (data-&gt;fixed_mask != 0 &amp;&amp; p == data-&gt;magnitude + data-&gt;max_length - 1)
+<a name="l00293"></a>00293         *p &amp;= data-&gt;fixed_mask;
+<a name="l00294"></a>00294     <span class="keywordflow">if</span> (*p == 0) {
+<a name="l00295"></a>00295         <span class="keywordflow">if</span> (p != data-&gt;magnitude) {
+<a name="l00296"></a>00296             <span class="keywordflow">while</span> (--p != data-&gt;magnitude &amp;&amp; *p == 0); <span class="comment">// Null loop</span>
+<a name="l00297"></a>00297             <span class="keywordflow">if</span> (*p == 0) _set_negative(<span class="keyword">false</span>); <span class="comment">// It&#39;s zero.</span>
+<a name="l00298"></a>00298             data-&gt;length = p - data-&gt;magnitude + 1;
+<a name="l00299"></a>00299         } <span class="comment">// It&#39;s zero, but it may legitimately be a &quot;negative zero&quot;, leave it.</span>
+<a name="l00300"></a>00300     }
+<a name="l00301"></a>00301 }
+<a name="l00302"></a>00302 
+<a name="l00303"></a>00303 <a class="code" href="classboost_1_1xint_1_1integer.html" title="The core integer class.">integer</a> base_integer::_to_integer(<span class="keywordtype">bool</span> treat_as_movable)<span class="keyword"> const </span>{
+<a name="l00304"></a>00304     <a class="code" href="classboost_1_1xint_1_1integer.html" title="The core integer class.">integer</a> r;
+<a name="l00305"></a>00305     r._attach(*<span class="keyword">this</span>, treat_as_movable);
+<a name="l00306"></a>00306     <span class="keywordflow">return</span> r;
+<a name="l00307"></a>00307 }
+<a name="l00308"></a>00308 
+<a name="l00309"></a>00309 <span class="keywordtype">void</span> base_integer::_increment(<span class="keywordtype">bool</span> absolute_value) {
+<a name="l00310"></a>00310     _make_unique();
+<a name="l00311"></a>00311     <span class="keywordflow">if</span> (_is_zero()) {
+<a name="l00312"></a>00312         data-&gt;magnitude[0] = 1;
+<a name="l00313"></a>00313         _set_negative(<span class="keyword">false</span>);
+<a name="l00314"></a>00314     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (!absolute_value &amp;&amp; _get_negative()) {
+<a name="l00315"></a>00315         _decrement(<span class="keyword">true</span>);
+<a name="l00316"></a>00316     } <span class="keywordflow">else</span> {
+<a name="l00317"></a>00317         _realloc(_get_length() + 1);
+<a name="l00318"></a>00318         digit_t *p = _get_writable_digits(), *pe = p + _get_length();
+<a name="l00319"></a>00319 
+<a name="l00320"></a>00320         <span class="keywordflow">while</span> (p &lt; pe) {
+<a name="l00321"></a>00321             <span class="keywordflow">if</span> (*p == digit_mask) *p++ = 0;
+<a name="l00322"></a>00322             <span class="keywordflow">else</span> { *p++ += 1; <span class="keywordflow">break</span>; }
+<a name="l00323"></a>00323         }
+<a name="l00324"></a>00324         _cleanup();
+<a name="l00325"></a>00325     }
+<a name="l00326"></a>00326 }
+<a name="l00327"></a>00327 
+<a name="l00328"></a>00328 <span class="keywordtype">void</span> base_integer::_decrement(<span class="keywordtype">bool</span> absolute_value) {
+<a name="l00329"></a>00329     _make_unique();
+<a name="l00330"></a>00330     <span class="keywordflow">if</span> (_is_zero()) {
+<a name="l00331"></a>00331         data-&gt;magnitude[0]=1;
+<a name="l00332"></a>00332         _set_negative(<span class="keyword">true</span>);
+<a name="l00333"></a>00333     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (!absolute_value &amp;&amp; _get_negative()) {
+<a name="l00334"></a>00334         _increment(<span class="keyword">true</span>);
+<a name="l00335"></a>00335     } <span class="keywordflow">else</span> {
+<a name="l00336"></a>00336         digit_t *p = _get_writable_digits(), *pe = p + _get_length();
+<a name="l00337"></a>00337         <span class="keywordflow">while</span> (p != pe) {
+<a name="l00338"></a>00338             <span class="keywordflow">if</span> (*p == 0) *p++ = digit_mask;
+<a name="l00339"></a>00339             <span class="keywordflow">else</span> { *p++ -= 1; <span class="keywordflow">break</span>; }
+<a name="l00340"></a>00340         }
+<a name="l00341"></a>00341         _cleanup();
+<a name="l00342"></a>00342     }
+<a name="l00343"></a>00343 }
+<a name="l00344"></a>00344 
 <a name="l00346"></a>00346 
-<a name="l00347"></a>00347     <span class="keywordtype">size_t</span> r = 0;
-<a name="l00348"></a>00348     <span class="keywordflow">while</span> (n &gt;= large_step) { n /= large_step; r += count_per_large_step; }
-<a name="l00349"></a>00349     <span class="keywordflow">while</span> (n &gt;= small_step) { n /= small_step; r += count_per_small_step; }
-<a name="l00350"></a>00350     <span class="keywordflow">return</span> r;
-<a name="l00351"></a>00351 }
-<a name="l00352"></a>00352 
-<a name="l00353"></a>00353 } <span class="comment">// namespace detail</span>
-<a name="l00355"></a>00355 <span class="comment"></span>
-<a name="l00356"></a>00356 } <span class="comment">// namespace xint</span>
-<a name="l00357"></a>00357 } <span class="comment">// namespace boost</span>
+<a name="l00347"></a>00347 <span class="keywordtype">void</span> base_variable_length_integer::_attach_0() {
+<a name="l00348"></a>00348     _base_attach(variable_zerodata());
+<a name="l00349"></a>00349 }
+<a name="l00350"></a>00350 
+<a name="l00351"></a>00351 <span class="keywordtype">size_t</span> log10_bits(<span class="keywordtype">size_t</span> bits) {
+<a name="l00352"></a>00352     assert(std::numeric_limits&lt;boost::intmax_t&gt;::digits &gt;= 32);
+<a name="l00353"></a>00353     <span class="keyword">const</span> boost::intmax_t large_step(1000000000), small_step(10);
+<a name="l00354"></a>00354     <span class="keyword">const</span> <span class="keywordtype">size_t</span> count_per_large_step = 9, count_per_small_step = 1;
+<a name="l00355"></a>00355     <a class="code" href="classboost_1_1xint_1_1integer.html" title="The core integer class.">integer</a> n(<a class="code" href="namespaceboost_1_1xint.html#af710e4b39cfa66096c202f17d12cc7b7" title="Calculate the value of 2e">pow2</a>(bits)-1);
+<a name="l00356"></a>00356 
+<a name="l00357"></a>00357     <span class="keywordtype">size_t</span> r = 0;
+<a name="l00358"></a>00358     <span class="keywordflow">while</span> (n &gt;= large_step) { n /= large_step; r += count_per_large_step; }
+<a name="l00359"></a>00359     <span class="keywordflow">while</span> (n &gt;= small_step) { n /= small_step; r += count_per_small_step; }
+<a name="l00360"></a>00360     <span class="keywordflow">return</span> r;
+<a name="l00361"></a>00361 }
+<a name="l00362"></a>00362 
+<a name="l00363"></a>00363 } <span class="comment">// namespace detail</span>
+<a name="l00365"></a>00365 <span class="comment"></span>
+<a name="l00366"></a>00366 } <span class="comment">// namespace xint</span>
+<a name="l00367"></a>00367 } <span class="comment">// namespace boost</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Tue May 4 01:25:21 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Tue May 4 10:20:16 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

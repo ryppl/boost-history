@@ -82,9 +82,9 @@
 <a name="l00064"></a>00064     <span class="keywordflow">if</span> (num1._is_zero() &amp;&amp; num2._is_zero()) {
 <a name="l00065"></a>00065         target._set_unsigned(0);
 <a name="l00066"></a>00066     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (num1._is_zero()) {
-<a name="l00067"></a>00067         target._attach(num2);
+<a name="l00067"></a>00067         target._attach(num2, <span class="keyword">false</span>);
 <a name="l00068"></a>00068     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (num2._is_zero()) {
-<a name="l00069"></a>00069         target._attach(num1);
+<a name="l00069"></a>00069         target._attach(num1, <span class="keyword">false</span>);
 <a name="l00070"></a>00070     } <span class="keywordflow">else</span> {
 <a name="l00071"></a>00071         temp_t n(num1), m(num2);
 <a name="l00072"></a>00072         n._set_negative(<span class="keyword">false</span>);
@@ -97,7 +97,7 @@
 <a name="l00079"></a>00079             <a class="code" href="namespaceboost_1_1xint.html#aca7453fa9e276ebefacc9827b55f69d2" title="Right-shift an integer by a specified number of bits.">shift_right</a>(m, m, k);
 <a name="l00080"></a>00080         }
 <a name="l00081"></a>00081 
-<a name="l00082"></a>00082         gcd_core core(n._to_integer(), m._to_integer());
+<a name="l00082"></a>00082         gcd_core core(n._to_integer(<span class="keyword">false</span>), m._to_integer(<span class="keyword">false</span>));
 <a name="l00083"></a>00083 
 <a name="l00084"></a>00084         <span class="keywordflow">if</span> (core.u3._is_zero()) {
 <a name="l00085"></a>00085             <a class="code" href="namespaceboost_1_1xint.html#ae22c3492ecf08370a9a972c8d6fb8e96" title="Left-shift an integer by a specified number of bits.">shift_left</a>(target, fixed_integer_any(1), k);
@@ -121,7 +121,7 @@
 <a name="l00103"></a>00103         answer._set_negative(<span class="keyword">false</span>);
 <a name="l00104"></a>00104         <a class="code" href="namespaceboost_1_1xint.html#a5b884361c54aa64a1974879cb3464c9a">divide</a>(answer, remainder, answer, common);
 <a name="l00105"></a>00105 
-<a name="l00106"></a>00106         target._attach(answer);
+<a name="l00106"></a>00106         target._attach(answer, <span class="keyword">true</span>);
 <a name="l00107"></a>00107     }
 <a name="l00108"></a>00108 }
 <a name="l00109"></a>00109 
@@ -134,19 +134,19 @@
 <a name="l00116"></a>00116     <span class="keywordflow">if</span> (n._is_zero()) {
 <a name="l00117"></a>00117         target._set_unsigned(0);
 <a name="l00118"></a>00118     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (n._get_negative()) {
-<a name="l00119"></a>00119         integer _n(n._to_integer());
+<a name="l00119"></a>00119         integer _n(n._to_integer(<span class="keyword">false</span>));
 <a name="l00120"></a>00120         _n._set_negative(<span class="keyword">false</span>);
 <a name="l00121"></a>00121 
 <a name="l00122"></a>00122         integer nn;
 <a name="l00123"></a>00123         <a class="code" href="namespaceboost_1_1xint.html#a1e2477157ea768d8c57fac1c31a8f7ca" title="Get the modular inverse of a number in a modulus, if there is one.">invmod</a>(nn, _n, m);
 <a name="l00124"></a>00124         <span class="keywordflow">if</span> (nn._is_zero()) {
-<a name="l00125"></a>00125             target._attach(nn);
+<a name="l00125"></a>00125             target._attach(nn, <span class="keyword">true</span>);
 <a name="l00126"></a>00126         } <span class="keywordflow">else</span> {
 <a name="l00127"></a>00127             nn._set_negative(<span class="keyword">true</span>);
 <a name="l00128"></a>00128             <a class="code" href="namespaceboost_1_1xint.html#a7b7903cb879b60d0d5e3403b3c6a1cdd">add</a>(target, nn, m);
 <a name="l00129"></a>00129         }
 <a name="l00130"></a>00130     } <span class="keywordflow">else</span> {
-<a name="l00131"></a>00131         integer nn(n._to_integer()), mm(m._to_integer());
+<a name="l00131"></a>00131         integer nn(n._to_integer(<span class="keyword">false</span>)), mm(m._to_integer(<span class="keyword">false</span>));
 <a name="l00132"></a>00132         <span class="keywordflow">if</span> (nn.even() &amp;&amp; mm.even()) {
 <a name="l00133"></a>00133             <span class="comment">// GCD != 1, no inverse possible.</span>
 <a name="l00134"></a>00134             target._set_unsigned(0);
@@ -161,7 +161,7 @@
 <a name="l00143"></a>00143             <span class="keywordflow">return</span>;
 <a name="l00144"></a>00144         }
 <a name="l00145"></a>00145 
-<a name="l00146"></a>00146         target._attach(core.u1);
+<a name="l00146"></a>00146         target._attach(core.u1, <span class="keyword">true</span>);
 <a name="l00147"></a>00147     }
 <a name="l00148"></a>00148 }
 <a name="l00149"></a>00149 
@@ -188,7 +188,7 @@
 <a name="l00202"></a>00202 } <span class="comment">// namespace xint</span>
 <a name="l00203"></a>00203 } <span class="comment">// namespace boost</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Tue May 4 01:25:21 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Tue May 4 10:20:16 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

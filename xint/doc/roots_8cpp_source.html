@@ -44,7 +44,7 @@
 <a name="l00024"></a>00024 <span class="keyword">namespace </span>detail {
 <a name="l00025"></a>00025 
 <a name="l00026"></a>00026 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a0825d8d9d4644df8d9b6922f5b0d7064">sqrt</a>(base_integer&amp; target, <span class="keyword">const</span> base_integer&amp; nn) {
-<a name="l00027"></a>00027     <span class="keywordflow">if</span> (nn._is_zero()) { target._attach(nn); <span class="keywordflow">return</span>; }
+<a name="l00027"></a>00027     <span class="keywordflow">if</span> (nn._is_zero()) { target._attach(nn, <span class="keyword">false</span>); <span class="keywordflow">return</span>; }
 <a name="l00028"></a>00028     <span class="keywordflow">if</span> (nn._get_negative()) <span class="keywordflow">throw</span> exceptions::cannot_represent(<span class="stringliteral">&quot;library cannot &quot;</span>
 <a name="l00029"></a>00029         <span class="stringliteral">&quot;represent imaginary values (tried to take sqrt of negative number)&quot;</span>);
 <a name="l00030"></a>00030 
@@ -54,7 +54,7 @@
 <a name="l00034"></a>00034     <span class="comment">// two.</span>
 <a name="l00035"></a>00035     <span class="keyword">const</span> <span class="keywordtype">size_t</span> extra_bits = 1;
 <a name="l00036"></a>00036 
-<a name="l00037"></a>00037     integer n(nn._to_integer());
+<a name="l00037"></a>00037     integer n(nn._to_integer(<span class="keyword">false</span>));
 <a name="l00038"></a>00038     n &lt;&lt;= (extra_bits * 2);
 <a name="l00039"></a>00039 
 <a name="l00040"></a>00040     <span class="comment">// Initial guess is half the length of n, in bits</span>
@@ -70,7 +70,7 @@
 <a name="l00050"></a>00050 
 <a name="l00051"></a>00051     <span class="comment">// Remove half of the added bits.</span>
 <a name="l00052"></a>00052     guess &gt;&gt;= extra_bits;
-<a name="l00053"></a>00053     target._attach(guess);
+<a name="l00053"></a>00053     target._attach(guess, <span class="keyword">true</span>);
 <a name="l00054"></a>00054 }
 <a name="l00055"></a>00055 
 <a name="l00056"></a>00056 } <span class="comment">// namespace detail</span>
@@ -84,7 +84,7 @@
 <a name="l00077"></a>00077 } <span class="comment">// namespace xint</span>
 <a name="l00078"></a>00078 } <span class="comment">// namespace boost</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Tue May 4 01:25:21 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Tue May 4 10:20:16 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

@@ -42,7 +42,7 @@ base_integer::base_integer(): flags(0), data(0) { }
 base_integer::base_integer(const base_integer& c, bool fixed): flags(0), data(0)
 {
     if (fixed) flags |= flag_fixedlength;
-    _attach(c);
+    _attach(c, false);
 }
 
 base_integer::base_integer(size_t count, digit_t mask): flags(flag_fixedlength),
@@ -195,6 +195,14 @@ void base_integer::_make_unique() {
     }
 }
 
+void base_integer::_mark_movable() {
+    if (_is_unique()) flags |= flag_movable;
+}
+
+bool base_integer::_is_movable() const {
+    return ((flags & flag_movable) ? true : false);
+}
+
 void base_integer::_swap(base_integer& other) {
     flag_t tempflags = flags;
     flags = other.flags;
@@ -206,12 +214,12 @@ void base_integer::_swap(base_integer& other) {
 }
 
 void base_integer::_base_attach(data_t *new_data, flag_t setflags, size_t
-    extra_allocation)
+    extra_allocation, bool is_movable)
 {
     #ifdef BOOST_XINT_USE_COPY_ON_WRITE
         bool adopt=true;
     #else
-        bool adopt=(new_data && new_data->copies == 0);
+        bool adopt=(new_data && is_movable);
     #endif
 
     if (data != new_data || extra_allocation != 0) {
@@ -272,8 +280,10 @@ void base_integer::_base_attach(data_t *new_data, flag_t setflags, size_t
     flags = setflags;
 }
 
-void base_integer::_attach(const base_integer& copy) {
-    _base_attach(copy.data, copy.flags);
+void base_integer::_attach(const base_integer& copy, bool movable) {
+    bool move = (copy._is_movable() || (movable && copy.data &&
+        copy.data->copies <= 1));
+    _base_attach(copy.data, copy.flags, 0, move);
     if (data) _cleanup();
 }
 
@@ -290,9 +300,9 @@ void base_integer::_cleanup() {
     }
 }
 
-integer base_integer::_to_integer() const {
+integer base_integer::_to_integer(bool treat_as_movable) const {
     integer r;
-    r._attach(*this);
+    r._attach(*this, treat_as_movable);
     return r;
 }
 

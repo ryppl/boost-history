@@ -77,7 +77,7 @@ void sqr(base_integer& target, const base_integer& n) {
     *rp += static_cast<digit_t>(c);
 
     r._cleanup();
-    target._attach(r);
+    target._attach(r, true);
 }
 
 void pow(base_integer& target, const base_integer& n, const base_integer& e) {
@@ -117,7 +117,7 @@ void pow(base_integer& target, const base_integer& n, const base_integer& e) {
     }
 
     answer._set_negative(neg);
-    target._attach(answer);
+    target._attach(answer, true);
 }
 
 void factorial(base_integer& target, size_t n) {
@@ -132,7 +132,7 @@ void factorial(base_integer& target, size_t n) {
         nn._decrement();
     }
 
-    target._attach(answer);
+    target._attach(answer, true);
 }
 
 } // namespace detail

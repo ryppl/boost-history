@@ -64,9 +64,9 @@ void gcd(base_integer& target, const base_integer& num1, const base_integer&
     if (num1._is_zero() && num2._is_zero()) {
         target._set_unsigned(0);
     } else if (num1._is_zero()) {
-        target._attach(num2);
+        target._attach(num2, false);
     } else if (num2._is_zero()) {
-        target._attach(num1);
+        target._attach(num1, false);
     } else {
         temp_t n(num1), m(num2);
         n._set_negative(false);
@@ -79,7 +79,7 @@ void gcd(base_integer& target, const base_integer& num1, const base_integer&
             shift_right(m, m, k);
         }
 
-        gcd_core core(n._to_integer(), m._to_integer());
+        gcd_core core(n._to_integer(false), m._to_integer(false));
 
         if (core.u3._is_zero()) {
             shift_left(target, fixed_integer_any(1), k);
@@ -103,7 +103,7 @@ void lcm(base_integer& target, const base_integer& num1, const base_integer&
         answer._set_negative(false);
         divide(answer, remainder, answer, common);
 
-        target._attach(answer);
+        target._attach(answer, true);
     }
 }
 
@@ -116,19 +116,19 @@ void invmod(base_integer& target, const base_integer& n, const base_integer& m)
     if (n._is_zero()) {
         target._set_unsigned(0);
     } else if (n._get_negative()) {
-        integer _n(n._to_integer());
+        integer _n(n._to_integer(false));
         _n._set_negative(false);
 
         integer nn;
         invmod(nn, _n, m);
         if (nn._is_zero()) {
-            target._attach(nn);
+            target._attach(nn, true);
         } else {
             nn._set_negative(true);
             add(target, nn, m);
         }
     } else {
-        integer nn(n._to_integer()), mm(m._to_integer());
+        integer nn(n._to_integer(false)), mm(m._to_integer(false));
         if (nn.even() && mm.even()) {
             // GCD != 1, no inverse possible.
             target._set_unsigned(0);
@@ -143,7 +143,7 @@ void invmod(base_integer& target, const base_integer& n, const base_integer& m)
             return;
         }
 
-        target._attach(core.u1);
+        target._attach(core.u1, true);
     }
 }
 

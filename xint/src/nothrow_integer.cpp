@@ -49,7 +49,7 @@ of large numbers) a very inexpensive operation.
 */
 nothrow_integer::nothrow_integer(const nothrow_integer& b) {
     try {
-        if (!b.is_nan()) _attach(b);
+        if (!b.is_nan()) _attach(b, false);
     } catch (std::exception&) {
         // Do nothing, automatically sets to Not-a-Number
     }
@@ -67,7 +67,7 @@ of large numbers) a very inexpensive operation.
 */
 nothrow_integer::nothrow_integer(const integer& b) {
     try {
-        _attach(b);
+        _attach(b, false);
     } catch (std::exception&) {
         // Do nothing, automatically sets to Not-a-Number
     }
@@ -81,7 +81,7 @@ nothrow_integer::nothrow_integer(const integer& b) {
 */
 nothrow_integer::nothrow_integer(const fixed_integer_any& b) {
     try {
-        _attach(b);
+        _attach(b, false);
     } catch (std::exception&) {
         // Do nothing, automatically sets to Not-a-Number
     }
@@ -90,7 +90,7 @@ nothrow_integer::nothrow_integer(const fixed_integer_any& b) {
 //! \copydoc xint::integer::integer(const std::string&, size_t)
 nothrow_integer::nothrow_integer(const std::string& str, size_t base) {
     try {
-        _attach(from_string(str, base));
+        _attach(from_string(str, base), true);
     } catch (std::exception&) {
         // Do nothing, automatically sets to Not-a-Number
     }
@@ -169,7 +169,7 @@ nothrow_integer& nothrow_integer::operator=(BOOST_XINT_COPY_ASSIGN_REF(
     nothrow_integer) c)
 {
     try {
-        _attach(c);
+        _attach(c, false);
     } catch (std::exception&) {
         _base_attach(0);
     }

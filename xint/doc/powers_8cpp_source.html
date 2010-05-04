@@ -97,7 +97,7 @@
 <a name="l00077"></a>00077     *rp += <span class="keyword">static_cast&lt;</span>digit_t<span class="keyword">&gt;</span>(c);
 <a name="l00078"></a>00078 
 <a name="l00079"></a>00079     r._cleanup();
-<a name="l00080"></a>00080     target._attach(r);
+<a name="l00080"></a>00080     target._attach(r, <span class="keyword">true</span>);
 <a name="l00081"></a>00081 }
 <a name="l00082"></a>00082 
 <a name="l00083"></a>00083 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a7f73207284ff1f32b20fb8a6a7a82649">pow</a>(base_integer&amp; target, <span class="keyword">const</span> base_integer&amp; n, <span class="keyword">const</span> base_integer&amp; e) {
@@ -137,7 +137,7 @@
 <a name="l00117"></a>00117     }
 <a name="l00118"></a>00118 
 <a name="l00119"></a>00119     answer._set_negative(neg);
-<a name="l00120"></a>00120     target._attach(answer);
+<a name="l00120"></a>00120     target._attach(answer, <span class="keyword">true</span>);
 <a name="l00121"></a>00121 }
 <a name="l00122"></a>00122 
 <a name="l00123"></a>00123 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a942e346f6e6d069dc19c28e7e56634ab" title="Calculate the value of n! ">factorial</a>(base_integer&amp; target, <span class="keywordtype">size_t</span> n) {
@@ -152,7 +152,7 @@
 <a name="l00132"></a>00132         nn._decrement();
 <a name="l00133"></a>00133     }
 <a name="l00134"></a>00134 
-<a name="l00135"></a>00135     target._attach(answer);
+<a name="l00135"></a>00135     target._attach(answer, <span class="keyword">true</span>);
 <a name="l00136"></a>00136 }
 <a name="l00137"></a>00137 
 <a name="l00138"></a>00138 } <span class="comment">// namespace detail</span>
@@ -184,7 +184,7 @@
 <a name="l00207"></a>00207 } <span class="comment">// namespace xint</span>
 <a name="l00208"></a>00208 } <span class="comment">// namespace boost</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Tue May 4 01:25:21 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Tue May 4 10:20:16 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

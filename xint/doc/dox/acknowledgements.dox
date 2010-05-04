@@ -9,8 +9,14 @@ framework and Doxygen/QuickBook;
 - Providing test cases and documentation tweaks;
 - General advice and moral support.
 
-The library wouldn't be nearly as good without his work, and I hope I didn't
-irritate him too much. :-)
+...and to Jeffrey Lee Hellrung, Jr., for...
+- advice on implementing move-aware objects;
+- an invigorating discussion on the differing needs of an integer library versus
+a floating-point one;
+- politely pointing out a logic bug that I was blind to;
+- and several other things that I'm sure I missed.
+
+The library wouldn't be nearly as good without their work.
 
 Other contributors from the Boost development list, roughly in the order that
 they contributed:
@@ -21,11 +27,10 @@ comments on the random number code.
 value, and the blockable exceptions design, and for accidentally pointing out an
 error in the square-root function, among other things.
 - "Pavel" for suggesting adding the algorithmic complexity of each function to
-the documentation, and for understanding what I was trying to explain when no
-one else seemed to.
-- Jeffrey Lee Hellrung, Jr., for advice on implementing move-aware objects, and
-for an invigorating discussion on the differing needs of an integer library
-versus a floating-point one, among other things.
+the documentation, and for more than once understanding what I was trying to
+explain when no one else seemed to.
+- Vincente Juan Botet Escribá, for doubting everything I wrote... irritating,
+but sometimes useful.
 - Peter Dimov, for suggesting a separate \c overflow_error exception class.
 - "Fred," a.k.a. "Gottlob Frege", for information on infinities.
 - Joachim Faulhaber, for a discussion of intervals and interval containers.
@@ -36,7 +41,6 @@ variable-length and fixed-length integers.
 And the other Boost development list members who joined the discussion:
 
 - Anders Dalvander
-- Vincente Juan Botet Escribá
 - Arash Partow
 - Robert Stewart
 - Frank Mori Hess

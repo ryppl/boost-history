@@ -46,8 +46,8 @@ void powmod(base_integer& target, const base_integer& _n, const base_integer&
         return;
     }
 
-    integer n(_n._to_integer()), e(_e._to_integer()), m(_m._to_integer()),
-        answer(integer::one());
+    integer n(_n._to_integer(false)), e(_e._to_integer(false)),
+        m(_m._to_integer(false)), answer(integer::one());
     bool neg=(n.sign() < 0 && e.odd());
 
     // Montgomery's method is often noticeably faster, but only works if the
@@ -75,7 +75,7 @@ void powmod(base_integer& target, const base_integer& _n, const base_integer&
     }
 
     answer._set_negative(neg);
-    target._attach(answer);
+    target._attach(answer, true);
 }
 
 } // namespace detail

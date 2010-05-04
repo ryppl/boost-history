@@ -40,7 +40,7 @@ of large numbers) a very inexpensive operation.
 \overload
 */
 integer::integer(const integer& b) {
-    _attach(b);
+    _attach(b, false);
 }
 
 /*! \brief Creates an integer from a nothrow_integer.
@@ -55,7 +55,7 @@ of large numbers) a very inexpensive operation.
 */
 integer::integer(const nothrow_integer& b) {
     if (b.is_nan()) throw exceptions::not_a_number();
-    _attach(b);
+    _attach(b, false);
 }
 
 /*! \brief Creates an integer from any fixed_integer type.
@@ -65,7 +65,7 @@ integer::integer(const nothrow_integer& b) {
 \overload
 */
 integer::integer(const fixed_integer_any& b) {
-    _attach(b);
+    _attach(b, false);
 }
 
 /*! \brief Create an integer from a string representation.
@@ -154,7 +154,7 @@ integer& integer::operator-=(const integer& subtrahend) {
 }
 
 integer& integer::operator=(BOOST_XINT_COPY_ASSIGN_REF(integer) c) {
-    _attach(c);
+    _attach(c, false);
     return *this;
 }
 

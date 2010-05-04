@@ -103,23 +103,24 @@
 <a name="l00124"></a>00124     <span class="keywordtype">bool</span> can_be_negative)
 <a name="l00125"></a>00125 {
 <a name="l00126"></a>00126     detail::random_generator&lt;T&gt; generator(gen);
-<a name="l00127"></a>00127     <span class="keywordflow">return</span> <a class="code" href="internals_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(<a class="code" href="namespaceboost_1_1xint.html#af431075692c7b5b7bc01768856876512" title="Generates a random integer with specific attributes.">detail::random_by_size</a>(generator, bits, high_bit_on,
-<a name="l00128"></a>00128         low_bit_on, can_be_negative));
-<a name="l00129"></a>00129 }
-<a name="l00130"></a>00130 
-<a name="l00158"></a>00158 <span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;
-<a name="l00159"></a><a class="code" href="namespaceboost_1_1xint.html#ad9c43d1fa76d7c19288c841aa1cbaf63">00159</a> <a class="code" href="classboost_1_1xint_1_1integer.html" title="The core integer class.">integer</a> <a class="code" href="namespaceboost_1_1xint.html#afec65ec6ec0b57c0483a703040d97107">random_prime</a>(T&amp; gen, <span class="keywordtype">size_t</span> size_in_bits, <a class="code" href="namespaceboost_1_1xint.html#a48deb76c9c428a4b3a50177b1b0cb547">callback_t</a> callback) {
-<a name="l00160"></a>00160     detail::random_generator&lt;T&gt; generator(gen);
-<a name="l00161"></a>00161     <span class="keywordflow">return</span> <a class="code" href="internals_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(<a class="code" href="namespaceboost_1_1xint.html#afec65ec6ec0b57c0483a703040d97107">detail::random_prime</a>(generator, size_in_bits,
-<a name="l00162"></a>00162         callback));
-<a name="l00163"></a>00163 }
-<a name="l00164"></a>00164 
-<a name="l00165"></a>00165 } <span class="comment">// namespace xint</span>
-<a name="l00166"></a>00166 } <span class="comment">// namespace boost</span>
-<a name="l00167"></a>00167 
-<a name="l00168"></a>00168 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_RANDOM_HPP</span>
+<a name="l00127"></a>00127     <a class="code" href="classboost_1_1xint_1_1integer.html" title="The core integer class.">integer</a> r(<a class="code" href="namespaceboost_1_1xint.html#af431075692c7b5b7bc01768856876512" title="Generates a random integer with specific attributes.">detail::random_by_size</a>(generator, bits, high_bit_on, low_bit_on,
+<a name="l00128"></a>00128         can_be_negative));
+<a name="l00129"></a>00129     <span class="keywordflow">return</span> <a class="code" href="internals_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(r);
+<a name="l00130"></a>00130 }
+<a name="l00131"></a>00131 
+<a name="l00159"></a>00159 <span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;
+<a name="l00160"></a><a class="code" href="namespaceboost_1_1xint.html#ad9c43d1fa76d7c19288c841aa1cbaf63">00160</a> <a class="code" href="classboost_1_1xint_1_1integer.html" title="The core integer class.">integer</a> <a class="code" href="namespaceboost_1_1xint.html#afec65ec6ec0b57c0483a703040d97107">random_prime</a>(T&amp; gen, <span class="keywordtype">size_t</span> size_in_bits, <a class="code" href="namespaceboost_1_1xint.html#a48deb76c9c428a4b3a50177b1b0cb547">callback_t</a> callback) {
+<a name="l00161"></a>00161     detail::random_generator&lt;T&gt; generator(gen);
+<a name="l00162"></a>00162     <span class="keywordflow">return</span> <a class="code" href="internals_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(<a class="code" href="namespaceboost_1_1xint.html#afec65ec6ec0b57c0483a703040d97107">detail::random_prime</a>(generator, size_in_bits,
+<a name="l00163"></a>00163         callback));
+<a name="l00164"></a>00164 }
+<a name="l00165"></a>00165 
+<a name="l00166"></a>00166 } <span class="comment">// namespace xint</span>
+<a name="l00167"></a>00167 } <span class="comment">// namespace boost</span>
+<a name="l00168"></a>00168 
+<a name="l00169"></a>00169 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_RANDOM_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Tue May 4 01:25:21 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Tue May 4 10:20:16 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

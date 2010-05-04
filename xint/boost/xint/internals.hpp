@@ -185,20 +185,20 @@ class base_integer {
     size_t _fixed_bits() const;
 
     bool _get_readonly() const;
+    void _mark_movable();
+    bool _is_movable() const;
     bool _get_negative() const;
     void _set_negative(bool neg);
     void _toggle_negative();
 
     void _realloc(size_t new_digit_count);
     void _cleanup();
-    void _attach(const base_integer& copy);
+    void _attach(const base_integer& copy, bool treat_as_movable);
 
     void _increment(bool absolute_value=false);
     void _decrement(bool absolute_value=false);
-    void _add(const base_integer& n);
-    void _subtract(const base_integer& n);
 
-    integer _to_integer() const;
+    integer _to_integer(bool treat_as_movable) const;
     void _set_signed(boost::intmax_t n);
     void _set_unsigned(boost::uintmax_t n, bool negative=false);
 
@@ -213,8 +213,8 @@ class base_integer {
     base_integer(const base_integer& c, bool fixed);
     explicit base_integer(data_t *adopt, bool neg=false);
     base_integer(size_t count, digit_t mask);
-    void _base_attach(data_t *new_data, flag_t flags=0, size_t
-        extra_allocation=0);
+    void _base_attach(data_t *new_data, flag_t flags = 0, size_t
+        extra_allocation = 0, bool is_movable = false);
 
     void _set_readonly();
 
@@ -222,6 +222,7 @@ class base_integer {
     static const flag_t flag_negative = 0x01;
     static const flag_t flag_readonly = 0x02;
     static const flag_t flag_fixedlength = 0x04;
+    static const flag_t flag_movable = 0x08;
 
     private:
     flag_t flags;

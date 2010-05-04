@@ -80,7 +80,7 @@ std::string to_string(const base_integer& n, size_t base, bool uppercase) {
         // this function, I'll add it later.
 
         const integer shift(base);
-        integer::divide_t a(n._to_integer(), integer::zero());
+        integer::divide_t a(n._to_integer(false), integer::zero());
         a.quotient._set_negative(false);
 
         integer r;
@@ -141,7 +141,7 @@ void from_string(base_integer& target, const std::string& str, size_t base) {
     }
     r._set_negative(negate);
 
-    target._attach(r);
+    target._attach(r, true);
 }
 
 void to_binary(xint::binary_t& target, const base_integer& n, size_t bits) {
@@ -176,7 +176,7 @@ void from_binary(base_integer& target, const xint::binary_t& b, size_t bits) {
 		*t++ = static_cast<digit_t>(bitqueue.pop(bits_per_digit));
 
     r._cleanup();
-    target._attach(r);
+    target._attach(r, true);
 }
 
 } // namespace detail

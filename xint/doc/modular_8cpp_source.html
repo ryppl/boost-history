@@ -63,8 +63,8 @@
 <a name="l00046"></a>00046         <span class="keywordflow">return</span>;
 <a name="l00047"></a>00047     }
 <a name="l00048"></a>00048 
-<a name="l00049"></a>00049     integer n(_n._to_integer()), e(_e._to_integer()), m(_m._to_integer()),
-<a name="l00050"></a>00050         answer(<a class="code" href="classboost_1_1xint_1_1integer.html#aa332681715634b73118ffe76090a75d3">integer::one</a>());
+<a name="l00049"></a>00049     integer n(_n._to_integer(<span class="keyword">false</span>)), e(_e._to_integer(<span class="keyword">false</span>)),
+<a name="l00050"></a>00050         m(_m._to_integer(<span class="keyword">false</span>)), answer(<a class="code" href="classboost_1_1xint_1_1integer.html#aa332681715634b73118ffe76090a75d3">integer::one</a>());
 <a name="l00051"></a>00051     <span class="keywordtype">bool</span> neg=(n.sign() &lt; 0 &amp;&amp; e.odd());
 <a name="l00052"></a>00052 
 <a name="l00053"></a>00053     <span class="comment">// Montgomery&#39;s method is often noticeably faster, but only works if the</span>
@@ -92,7 +92,7 @@
 <a name="l00075"></a>00075     }
 <a name="l00076"></a>00076 
 <a name="l00077"></a>00077     answer._set_negative(neg);
-<a name="l00078"></a>00078     target._attach(answer);
+<a name="l00078"></a>00078     target._attach(answer, <span class="keyword">true</span>);
 <a name="l00079"></a>00079 }
 <a name="l00080"></a>00080 
 <a name="l00081"></a>00081 } <span class="comment">// namespace detail</span>
@@ -122,7 +122,7 @@
 <a name="l00166"></a>00166 } <span class="comment">// namespace xint</span>
 <a name="l00167"></a>00167 } <span class="comment">// namespace boost</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Tue May 4 01:25:21 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Tue May 4 10:20:16 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

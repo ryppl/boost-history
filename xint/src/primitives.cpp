@@ -65,7 +65,7 @@ void sub_add(base_integer& target, const base_integer& n1, const base_integer&
 
     if (n1._get_negative()) a._set_negative(true);
     a._cleanup();
-    target._attach(a);
+    target._attach(a, true);
 }
 
 void sub_subtract(base_integer& target, const base_integer& n1, const
@@ -109,11 +109,8 @@ void sub_subtract(base_integer& target, const base_integer& n1, const
     if (neg1) a._set_negative(true);
     a._cleanup();
 
-    if (swap) {
-        target._attach(neg_t(a));
-    } else {
-        target._attach(a);
-    }
+    if (swap) a._toggle_negative();
+    target._attach(a, true);
 }
 
 void divide_by_single_digit(base_integer& qtarget, base_integer& rtarget, const
@@ -143,8 +140,8 @@ void divide_by_single_digit(base_integer& qtarget, base_integer& rtarget, const
 
     quotient._cleanup();
     remainder._cleanup();
-    qtarget._attach(quotient);
-    rtarget._attach(remainder);
+    qtarget._attach(quotient, true);
+    rtarget._attach(remainder, true);
 }
 
 void sub_divide2(base_integer& qtarget, base_integer& rtarget, const
@@ -154,7 +151,7 @@ void sub_divide2(base_integer& qtarget, base_integer& rtarget, const
 
     const digit_t *byDigits = d2._get_digits();
 
-    integer quotient, r(d1._to_integer());
+    integer quotient, r(d1._to_integer(false));
 
     size_t n=d2._get_length(), m=d1._get_length() - n;
     size_t i=m+n, j=m;
@@ -197,8 +194,8 @@ void sub_divide2(base_integer& qtarget, base_integer& rtarget, const
 
     quotient._cleanup();
 
-    qtarget._attach(quotient);
-    rtarget._attach(r);
+    qtarget._attach(quotient, true);
+    rtarget._attach(r, true);
 }
 
 void sub_divide(base_integer& qtarget, base_integer& rtarget, const
@@ -225,8 +222,8 @@ void sub_divide(base_integer& qtarget, base_integer& rtarget, const
         // Denormalization step. This requires a division by a single digit_t.
         integer qq, rr;
         divide_by_single_digit(qq, rr, r, _d);
-        qtarget._attach(q);
-        rtarget._attach(qq);
+        qtarget._attach(q, true);
+        rtarget._attach(qq, true);
     } else {
         sub_divide2(qtarget, rtarget, d1, d2);
     }
@@ -234,10 +231,10 @@ void sub_divide(base_integer& qtarget, base_integer& rtarget, const
 
 void add(base_integer& target, const base_integer& n1, const base_integer& n2) {
     if (n1._is_zero()) {
-        target._attach(n2);
+        target._attach(n2, false);
         return;
     } else if (n2._is_zero()) {
-        target._attach(n1);
+        target._attach(n1, false);
         return;
     } else if (n1._get_negative() != n2._get_negative()) {
         sub_subtract(target, n1, neg_t(n2));
@@ -250,9 +247,9 @@ void subtract(base_integer& target, const base_integer& n1, const base_integer&
     n2)
 {
     if (n1._is_zero()) {
-        target._attach(neg_t(n2));
+        target._attach(neg_t(n2), false);
     } else if (n2._is_zero()) {
-        target._attach(n1);
+        target._attach(n1, false);
     } else if (n1._get_negative() != n2._get_negative()) {
         sub_add(target, n1, neg_t(n2));
     } else {
@@ -317,7 +314,7 @@ void multiply(base_integer& target, const base_integer& n, const base_integer&
 
     answer._set_negative(n._get_negative() != by._get_negative());
     answer._cleanup();
-    target._attach(answer);
+    target._attach(answer, true);
 }
 
 void divide(base_integer& qtarget, base_integer& rtarget, const base_integer&
@@ -329,11 +326,11 @@ void divide(base_integer& qtarget, base_integer& rtarget, const base_integer&
 
     int comp=compare(d1, d2, true);
     if (comp < 0) {
-        qtarget._attach(integer::zero());
-        rtarget._attach(d1);
+        qtarget._attach(integer::zero(), false);
+        rtarget._attach(d1, false);
     } else if (comp == 0) {
-        qtarget._attach(fixed_integer_any(sign1 != sign2 ? 1 : -1));
-        rtarget._attach(integer::zero());
+        qtarget._attach(fixed_integer_any(sign1 != sign2 ? 1 : -1), true);
+        rtarget._attach(integer::zero(), false);
     } else if (sign1 < 0 && sign2 < 0) {
         sub_divide(qtarget, rtarget, neg_t(d1), neg_t(d2));
         rtarget._set_negative(true);
