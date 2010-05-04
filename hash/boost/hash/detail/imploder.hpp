@@ -38,7 +38,7 @@ struct imploder<stream_endian::big_unit_big_bit<UnitBits>,
                         !(OutputBits % UnitBits && UnitBits % OutputBits));
     template <typename InputValue, typename OutputValue>
     static void step(InputValue z, OutputValue &x) {
-        OutputValue y = low_bits<OutputBits>(OutputValue(z));
+        OutputValue y = low_bits<InputBits>(OutputValue(z));
         x |= unbounded_shl<OutputBits - (InputBits+k)>(y);
     }
     template <typename InputType, typename OutputValue>
@@ -64,7 +64,7 @@ struct imploder<stream_endian::little_unit_big_bit<UnitBits>,
                         !((OutputBits % UnitBits) && (UnitBits % OutputBits)));
     template <typename InputValue, typename OutputValue>
     static void step(InputValue z, OutputValue &x) {
-        OutputValue y = low_bits<OutputBits>(OutputValue(z));
+        OutputValue y = low_bits<InputBits>(OutputValue(z));
         int const kb = (k % UnitBits);
         int const ku = k - kb;
         int const shift =
@@ -96,7 +96,7 @@ struct imploder<stream_endian::big_unit_little_bit<UnitBits>,
                         !((OutputBits % UnitBits) && (UnitBits % OutputBits)));
     template <typename InputValue, typename OutputValue>
     static void step(InputValue z, OutputValue &x) {
-        OutputValue y = low_bits<OutputBits>(OutputValue(z));
+        OutputValue y = low_bits<InputBits>(OutputValue(z));
         int const kb = (k % UnitBits);
         int const ku = k - kb;
         int const shift =
@@ -130,7 +130,7 @@ struct imploder<stream_endian::little_unit_little_bit<UnitBits>,
                         !((OutputBits % UnitBits) && (UnitBits % OutputBits)));
     template <typename InputValue, typename OutputValue>
     static void step(InputValue z, OutputValue &x) {
-        OutputValue y = low_bits<OutputBits>(OutputValue(z));
+        OutputValue y = low_bits<InputBits>(OutputValue(z));
         x |= unbounded_shl<k>(y);
     }
     template <typename InputType, typename OutputValue>
