@@ -173,7 +173,7 @@ class stream_preprocessor {
         update_one(padding_values[0]);
 #else
         value_type pad = 0;
-        detail::imploder<endian, 1, value_bits>::step(1, pad);
+        detail::imploder_step<endian, 1, value_bits, 0>::step(1, pad);
         update_one(pad);
 #endif
 

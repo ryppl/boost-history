@@ -58,13 +58,25 @@ struct real_packer<Endianness,
 
     BOOST_STATIC_ASSERT(InputBits % OutputBits == 0);
 
-    template <typename InputType, typename OutputType>
-    static void pack_n(InputType const *in, size_t in_n,
-                       OutputType *out) {
-        unsigned i = 0;
+    template <typename InIter, typename OutIter>
+    static void pack_n(InIter in, size_t in_n,
+                       OutIter out) {
         for (unsigned j = 0; j < in_n; ++j) {
+            typedef typename std::iterator_traits<InIter>::value_type InValue;
+            InValue const value = *in++;
             detail::exploder<Endianness, InputBits, OutputBits>
-             ::explode1_array(out, i, in[j]);
+             ::explode(value, out);
+        }
+    }
+
+    template <typename InIter, typename OutIter>
+    static void pack(InIter in, InIter in_e,
+                     OutIter out) {
+        while (in != in_e) {
+            typedef typename std::iterator_traits<InIter>::value_type InValue;
+            InValue const value = *in++;
+            detail::exploder<Endianness, InputBits, OutputBits>
+             ::explode(value, out);
         }
     }
 
@@ -78,100 +90,37 @@ struct real_packer<Endianness,
 
     BOOST_STATIC_ASSERT(OutputBits % InputBits == 0);
 
-    template <typename InputType, typename OutputType>
-    static void pack_n(InputType const *in, size_t in_n,
-                       OutputType *out) {
+    template <typename InIter, typename OutIter>
+    static void pack_n(InIter in, size_t in_n,
+                       OutIter out) {
         size_t out_n = in_n/(OutputBits/InputBits);
-        unsigned i = 0;
         for (unsigned j = 0; j < out_n; ++j) {
+            typedef typename std::iterator_traits<OutIter>::value_type OutValue;
+            OutValue value = OutValue();
             detail::imploder<Endianness, InputBits, OutputBits>
-             ::implode1_array(in, i, out[j] = 0);
+             ::implode(in, value);
+            *out++ = value;
+        }
+    }
+
+    template <typename InIter, typename OutIter>
+    static void pack(InIter in, InIter in_e,
+                     OutIter out) {
+        while (in != in_e) {
+            typedef typename std::iterator_traits<OutIter>::value_type OutValue;
+            OutValue value = OutValue();
+            detail::imploder<Endianness, InputBits, OutputBits>
+             ::implode(in, value);
+            *out++ = value;
         }
     }
 
 };
 
-template <int UnitBits, int InputBits, int OutputBits>
-struct real_packer<stream_endian::host_unit<UnitBits>,
-                   InputBits, OutputBits,
-                   true, true> {
-
-    BOOST_STATIC_ASSERT(!(InputBits  % UnitBits) &&
-                        !(OutputBits % UnitBits));
-
-    template <typename InputType, typename OutputType>
-    static void pack_n(InputType const *in, size_t in_n,
-                       OutputType *out) {
-        // FIXME: Bad assumption
-        BOOST_ASSERT(sizeof(InputType)*OutputBits == 
-                     sizeof(OutputType)*InputBits);
-        std::memcpy(&out[0], &in[0], InputBits*in_n/CHAR_BIT);
-    }
-
-};
-template <int UnitBits, int InputBits, int OutputBits>
-struct real_packer<stream_endian::host_unit<UnitBits>,
-                   InputBits, OutputBits,
-                   false, true>
- : real_packer<stream_endian::host_unit<UnitBits>,
-               InputBits, OutputBits,
-               true, true> {};
-template <int UnitBits, int InputBits, int OutputBits>
-struct real_packer<stream_endian::host_unit<UnitBits>,
-                   InputBits, OutputBits,
-                   true, false>
- : real_packer<stream_endian::host_unit<UnitBits>,
-               InputBits, OutputBits,
-               true, true> {};
-
 template <typename Endianness,
           int InputBits, int OutputBits,
           bool BytesOnly = !(InputBits % CHAR_BIT) && !(OutputBits % CHAR_BIT)>
 struct packer : real_packer<Endianness, InputBits, OutputBits> {};
-
-#ifndef BOOST_HASH_NO_OPTIMIZATION
-
-// When inputs and outputs are multiples of bytes
-// and the requested endian matches that of the host,
-// use the non-portable -- and hopefully-faster -- implementation instead
-
-#ifdef BOOST_LITTLE_ENDIAN
-template <int InputBits, int OutputBits>
-struct packer<stream_endian::little_bit,
-              InputBits, OutputBits, true>
- : real_packer<stream_endian::host_byte,
-               InputBits, OutputBits> {};
-template <int InputBits, int OutputBits>
-struct packer<stream_endian::little_byte_big_bit,
-              InputBits, OutputBits, true>
- : real_packer<stream_endian::host_byte,
-               InputBits, OutputBits> {};
-template <int InputBits, int OutputBits>
-struct packer<stream_endian::little_byte_little_bit,
-              InputBits, OutputBits, true>
- : real_packer<stream_endian::host_byte,
-               InputBits, OutputBits> {};
-#endif
-
-#ifdef BOOST_BIG_ENDIAN
-template <int InputBits, int OutputBits>
-struct packer<stream_endian::big_bit,
-              InputBits, OutputBits, true>
- : real_packer<stream_endian::host_byte,
-               InputBits, OutputBits> {};
-template <int InputBits, int OutputBits>
-struct packer<stream_endian::big_byte_big_bit,
-              InputBits, OutputBits, true>
- : real_packer<stream_endian::host_byte,
-               InputBits, OutputBits> {};
-template <int InputBits, int OutputBits>
-struct packer<stream_endian::big_byte_little_bit,
-              InputBits, OutputBits, true>
- : real_packer<stream_endian::host_byte,
-               InputBits, OutputBits> {};
-#endif
-
-#endif
 
 template <typename Endianness,
           int InValueBits, int OutValueBits,
