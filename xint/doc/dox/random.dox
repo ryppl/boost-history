@@ -1,15 +1,21 @@
 /*! \page random The XInt Random Number System
 
-The library includes a random number system to support the \c xint::random_prime
-function. The default random number generator is \e not cryptographically secure
-(see \ref rationale "the rationale page" for details). However, the system can
-easily be configured to use a cryptographically-secure generator.
+The library includes two convenience classes, meant to be used with the \c
+xint::random_prime function.
 
-The XInt library provides a convenience class, \c xint::strong_random_generator,
-for both Windows and UNIX-derived systems. It will throw an exception of type
-\c no_strong_random if you try to instantiate it on a system that does not have
-a strong random number generator.
+\c default_random_generator is a thin shell around one of the faster
+pseudo-random generators provided by Boost.Random. It does \e not produce secure
+random numbers, but is often all that is needed.
+
+\c strong_random_generator provides an interface to the operating system's
+secure random number generator, for both Windows and UNIX-derived systems. It
+will throw an exception of type \c no_strong_random if you try to instantiate it
+on a system that does not have an operating-system-supplied generator.
+
+If you have a different preferred generator, perhaps one that uses dedicated
+hardware to produce randomness, you can plug that into the library's \c
+random_by_size and \c random_prime functions instead.
 
 See the code at the top of \ref primes "the Prime Numbers page" for an example
-of how to use it.
+of how to use these generators to produce secure prime numbers.
 */

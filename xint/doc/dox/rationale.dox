@@ -17,5 +17,4 @@
 \section srandom Random generator
 - \subpage r_random
 - \subpage r_insecure_default
-- \subpage r_default_necessary
 */

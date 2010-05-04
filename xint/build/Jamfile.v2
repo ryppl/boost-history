@@ -5,8 +5,13 @@
 
 project boost/xint
     : source-location ../src
-    :
+    : requirements
+       <use>/boost//headers
+       <threading>multi:<define>XINT_THREADSAFE
+    : usage-requirements
+       <threading>multi:<define>XINT_THREADSAFE
     ;
+
 
 SOURCES =
     base_integer.cpp
@@ -47,7 +52,7 @@ lib boost_xint
     :
         <include>../
         <link>static:<define>BOOST_XINT_STATIC_LINK=1
-	    <link>shared:<define>BOOST_XINT_DYN_LINK=1
+        <link>shared:<define>BOOST_XINT_DYN_LINK=1
     ;
 
 boost-install boost_xint ;

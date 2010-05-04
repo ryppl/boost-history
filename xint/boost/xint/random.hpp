@@ -21,16 +21,16 @@
 #include "internals.hpp"
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/variate_generator.hpp>
+#include <boost/random/mersenne_twister.hpp>
 
 namespace boost {
 namespace xint {
 
 /*! \brief A convenience class for cryptographically-secure random numbers.
 
-    Used with xint::set_random_generator to set the XInt library to use the
-    system-supplied strong random number generator.
-
     \see \ref random
+    \see \ref boost::xint::random_by_size
+    \see \ref boost::xint::random_prime
 */
 class strong_random_generator {
     public:
@@ -52,6 +52,20 @@ class strong_random_generator {
     impl_t *impl;
 };
 
+/*! \brief A convenience class for general-purpose (insecure) random numbers.
+
+    This is nothing more than a very thin shell around one of the faster
+    pseudo-random number generators provided by Boost.Random.
+
+    \see \ref random
+    \see \ref boost::xint::random_by_size
+    \see \ref boost::xint::random_prime
+*/
+class default_random_generator: public boost::mt19937 {
+    public:
+    default_random_generator(): mt19937(time(0)+clock()) { }
+};
+
 //! @cond detail
 namespace detail {
     //! The base class for random_generator.
@@ -66,45 +80,86 @@ namespace detail {
     struct random_generator: public base_random_generator {
         typedef boost::uniform_int<result_type> dist_t;
         typedef boost::variate_generator<T&, dist_t> gen_t;
-        random_generator(T *g): genobj(g), gen(*g,
+        random_generator(T& g): gen(g,
             dist_t((std::numeric_limits<result_type>::min)(),
                 (std::numeric_limits<result_type>::max)())) { }
         result_type operator()() { return gen(); }
-        std::auto_ptr<T> genobj;
         gen_t gen;
     };
 
-    //! Support function \see xint::set_random_generator
-    void set_random_generator(base_random_generator *obj);
-
-    /*!
-        \return An unsigned int from the current random generator.
-        \see xint::set_random_generator
-    */
-    unsigned int get_random();
+    integer random_by_size(base_random_generator& gen, size_t bits, bool
+        high_bit_on, bool low_bit_on, bool can_be_negative);
+    integer random_prime(base_random_generator& gen, size_t size_in_bits,
+        callback_t callback);
 } // namespace detail
 //! @endcond detail
 
 ////////////////////////////////////////////////////////////////////////////////
 // Template function definitions
 
-/*! \brief Change the random generator that the library uses.
+/*! \brief Generates a random integer with specific attributes.
 
-\param[in] gen A pointer to the new generator to use.
+- Complexity: O(n)
 
-\warning The generator must be a heap-allocated pointer (one created with
-<code>new</code>), which the XInt library assumes ownership of. Don't pass in a
-stack-created item, don't try to delete the item that you passed in, and don't
-attempt to use it separately after passing it to this function, or the behavior
-is undefined.
+\param[in] gen The random number generator to use. This can be
+boost::xint::default_random_generator, boost::xint::strong_random_generator, or
+any other class that supplies the member functions required by the Boost.Random
+random number generators.
+\param[in] bits The maximum number of bits that you want the returned number to
+have.
+\param[in] high_bit_on If \c true, the returned number will have exactly the
+requested size. If \c false, the upper bits may be zero, resulting in a number
+that is slightly smaller than requested.
+\param[in] low_bit_on If \c true, the returned number will always be odd. If
+\c false, it has an equal chance of being odd or even.
+\param[in] can_be_negative If \c true, the returned value has an equal chance
+of being positive or negative. If \c false, it will always be positive.
 
-\remarks
-See the \ref random "Random Number page" for an example of how to use it.
+\returns A random integer with the requested attributes.
+
+\see \ref random
 */
-template <typename T>
-void set_random_generator(T *gen) {
-    detail::random_generator<T> *obj=new detail::random_generator<T>(gen);
-    detail::set_random_generator(obj);
+template <class T>
+integer random_by_size(T& gen, size_t bits, bool high_bit_on, bool low_bit_on,
+    bool can_be_negative)
+{
+    detail::random_generator<T> generator(gen);
+    return BOOST_XINT_MOVE(detail::random_by_size(generator, bits, high_bit_on,
+        low_bit_on, can_be_negative));
+}
+
+/*! \brief Generate a randomly-generated prime number of a particular bit-size.
+
+- Complexity: Varies
+
+\param[in] gen The random number generator to use. This can be
+boost::xint::default_random_generator, boost::xint::strong_random_generator, or
+any other class that supplies the member functions required by the Boost.Random
+random number generators.
+\param[in] size_in_bits The number of bits that you want the returned value to
+have.
+\param[in] callback An optional function that will be called regularly during
+the operation. If it returns \c false, the function will immediately return.
+
+\returns A randomly-generated prime integer with the specified number of bits,
+or zero if the provided callback function cancelled the operation.
+
+\exception exceptions::invalid_argument if \c size_in_bits is less than two.
+
+\note This function uses xint::is_prime. See the description of it for details
+of its limitations.
+
+\par
+See the \link random Random Number Functions page\endlink for details on how to
+get cryptographically-secure random numbers.
+
+\see \ref primes
+*/
+template <class T>
+integer random_prime(T& gen, size_t size_in_bits, callback_t callback) {
+    detail::random_generator<T> generator(gen);
+    return BOOST_XINT_MOVE(detail::random_prime(generator, size_in_bits,
+        callback));
 }
 
 } // namespace xint

@@ -13,8 +13,13 @@
 
 #include <boost/xint/integer.hpp>
 #include <boost/xint/fixed_integer.hpp>
+#include <boost/xint/random.hpp>
 
-#define BOOST_TEST_DYN_LINK
+#ifdef BOOST_XINT_SINGLE_TEST_PROGRAM
+    #define BOOST_TEST_DYN_LINK
+#else
+    #define BOOST_TEST_MAIN
+#endif
 #include <boost/test/unit_test.hpp>
 
 #include <iostream>
@@ -59,6 +64,8 @@ void _test(int section, int test, integer n, integer m) {
 } // namespace
 
 BOOST_AUTO_TEST_CASE(testAddSubtract) {
+    boost::mt19937 random(42u);
+
     {
         integer n("-3000000080000000600000000", 16),
             m("8000000090000000600000000", 16);
@@ -66,26 +73,32 @@ BOOST_AUTO_TEST_CASE(testAddSubtract) {
     }
 
     for (int i=0; i<10000; ++i) {
-        integer n(random_by_size(detail::bits_per_digit*4)),
-            m(random_by_size(detail::bits_per_digit*4));
+        integer n(random_by_size(random, detail::bits_per_digit*4)),
+            m(random_by_size(random, detail::bits_per_digit*4));
         _test(1, i, n, m);
     }
 
     for (int i=0; i<1000; ++i) {
-        integer n(random_by_size(detail::bits_per_digit*4, false, false, true)),
-            m(random_by_size(detail::bits_per_digit*4, false, false, true));
+        integer n(random_by_size(random, detail::bits_per_digit*4, false, false,
+                true)),
+            m(random_by_size(random, detail::bits_per_digit*4, false, false,
+                true));
         _test(2, i, n, m);
     }
 
     for (int i=0; i<1000; ++i) {
-        integer n(random_by_size(detail::bits_per_digit*4, false, false, true)),
-            m(random_by_size(detail::bits_per_digit*3, false, false, true));
+        integer n(random_by_size(random, detail::bits_per_digit*4, false, false,
+                true)),
+            m(random_by_size(random, detail::bits_per_digit*3, false, false,
+                true));
         _test(3, i, n, m);
     }
 
     for (int i=0; i<1000; ++i) {
-        integer n(random_by_size(detail::bits_per_digit*3, false, false, true)),
-            m(random_by_size(detail::bits_per_digit*4, false, false, true));
+        integer n(random_by_size(random, detail::bits_per_digit*3, false, false,
+                true)),
+            m(random_by_size(random, detail::bits_per_digit*4, false, false,
+                true));
         _test(4, i, n, m);
     }
 }

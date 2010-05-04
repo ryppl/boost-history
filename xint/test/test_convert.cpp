@@ -15,7 +15,11 @@
 #include <boost/xint/nothrow_integer.hpp>
 #include <boost/xint/fixed_integer.hpp>
 
-#define BOOST_TEST_DYN_LINK
+#ifdef BOOST_XINT_SINGLE_TEST_PROGRAM
+    #define BOOST_TEST_DYN_LINK
+#else
+    #define BOOST_TEST_MAIN
+#endif
 #include <boost/test/unit_test.hpp>
 
 #include <iostream>
@@ -85,13 +89,13 @@ BOOST_AUTO_TEST_CASE(test_string_conversions) {
     BOOST_CHECK_EQUAL(nTgt, nSrc);
 
     BOOST_CHECK_NO_THROW(nothrow_integer badConversion("abcdefg", 16));
-    
+
     {
 		nothrow_integer test1 = nothrow_integer::nan();
 		std::ostringstream outstream;
 		outstream << test1;
 		BOOST_CHECK_EQUAL(outstream.str(), detail::nan_text);
-		
+
 		std::istringstream instream;
 		instream.str(outstream.str());
 		nothrow_integer test2;

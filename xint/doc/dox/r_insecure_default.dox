@@ -1,4 +1,4 @@
-/*! \page r_insecure_default But why default to an insecure random number generator? Why not default to the secure one?
+/*! \page r_insecure_default But why have an insecure random number generator as the default? Why not default to the secure one?
 
 Because the secure one isn't available on all systems. If the library relied on
 \c random_device as a default, it wouldn't compile under those systems. If it

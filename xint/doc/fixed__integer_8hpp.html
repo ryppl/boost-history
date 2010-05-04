@@ -128,13 +128,13 @@
 <tr><td colspan="2"><div class="groupHeader">Random number functions</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpdd4713a71c208a173c1f2436d4e32ff7"></a> </p>
 </div></td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;size_t Bits&gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">fixed_integer&lt; Bits &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a96c7867b9ad53a718c08db8226edec62">boost::xint::fixed_random_by_size</a> (size_t bits, bool high_bit_on, bool low_bit_on, bool can_be_negative)</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;class T , size_t Bits&gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">fixed_integer&lt; Bits &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a5678fe823ef045bd64e405108da42c4e">boost::xint::fixed_random_by_size</a> (T &amp;gen, size_t bits, bool high_bit_on, bool low_bit_on, bool can_be_negative)</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Prime number functions</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp540e8e12721acbe497d2b9b53ecc76ec"></a> </p>
 </div></td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;size_t Bits&gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">fixed_integer&lt; Bits &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#afab685e9431b90c98079030eae8bdb35">boost::xint::fixed_random_prime</a> (size_t size_in_bits, callback_t callback)</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;class T , size_t Bits&gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">fixed_integer&lt; Bits &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a81c131d55fde5e16d63f7126e0532136">boost::xint::fixed_random_prime</a> (T &amp;gen, size_t size_in_bits, callback_t callback)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a0711bdafefe7d376e5cc603731318fc6">boost::xint::is_prime</a> (const fixed_integer_any &amp;n, callback_t callback)</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Modular math functions</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpbf63e6a6a1029bb25b7aa51052b38655"></a>A common reason to use a large-integer library is to implement public-key encryption, and the algorithms for such encryption often use modular math. </p>
@@ -270,7 +270,7 @@ fixed_integer&lt;Bits&gt;&amp; fixed_integer&lt;Bits&gt;::name(<span class="keyw
 </div>
 </div>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun May 2 18:42:51 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Tue May 4 01:25:21 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

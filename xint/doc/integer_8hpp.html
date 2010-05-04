@@ -143,8 +143,7 @@
 </div></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">detail int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a58aa3df545d1da848922c13de2a87fc9">boost::xint::is_prime</a> (const integer &amp;n, callback_t callback)</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tests an integer for primality.  <a href="#a58aa3df545d1da848922c13de2a87fc9"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#aaf58d56e1a47ac55e0aa97a55e6fb2c9">boost::xint::random_prime</a> (size_t size_in_bits, callback_t callback)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Generate a randomly-generated prime number of a particular bit-size.  <a href="#aaf58d56e1a47ac55e0aa97a55e6fb2c9"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#afec65ec6ec0b57c0483a703040d97107">boost::xint::random_prime</a> (size_t sizeInBits, callback_t callback=no_callback)</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Operators</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpb3c5827f54218753bb2c3338236446c2"></a> These act exactly the same as for the built-in integer types. </p>
 </div></td></tr>
@@ -174,15 +173,16 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 <tr><td colspan="2"><div class="groupHeader">Random number functions</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpdd4713a71c208a173c1f2436d4e32ff7"></a> </p>
 </div></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ac8d879e19a6608b21184236e00806be5">boost::xint::random_by_size</a> (size_t bits, bool high_bit_on, bool low_bit_on, bool can_be_negative)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Generates a random integer with specific attributes.  <a href="#ac8d879e19a6608b21184236e00806be5"></a><br/></td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">integer&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#af431075692c7b5b7bc01768856876512">boost::xint::random_by_size</a> (T &amp;gen, size_t bits, bool high_bit_on, bool low_bit_on, bool can_be_negative)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Generates a random integer with specific attributes.  <a href="#af431075692c7b5b7bc01768856876512"></a><br/></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>Declares the core integer type. </p>
 
 <p>Definition in file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun May 2 18:42:51 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Tue May 4 01:25:21 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

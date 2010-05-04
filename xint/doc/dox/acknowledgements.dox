@@ -31,6 +31,7 @@ versus a floating-point one, among other things.
 - Joachim Faulhaber, for a discussion of intervals and interval containers.
 - Domagoj Saric, for suggesting a design that would allow for both
 variable-length and fixed-length integers.
+- Juergen Hunold, for major improvements to the build system.
 
 And the other Boost development list members who joined the discussion:
 

@@ -12,11 +12,10 @@ required:
 - Boost.SmartPointers
 
 If you compile the library for \ref threadsafe "thread-safe operation", you'll
-also need these:
+also need:
 
 - Boost.Move
-- Boost.Thread
 
-With the exception of Boost.Thread, all of these are header-only libraries,
-meaning that you don't need to worry about linking your program with them.
+All of these are header-only libraries, meaning that you don't need to worry
+about linking your program with them.
 */

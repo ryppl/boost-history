@@ -1,4 +1,4 @@
-/*! \page exceptions Exceptions and the \c nothrow_integer type.
+/*! \page exceptions Exceptions and the \c nothrow_integer type
 
 Many things can go wrong while operating on an integer, such as divide-by-zero
 errors. Under normal circumstances, these result in exceptions. But exceptions

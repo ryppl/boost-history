@@ -29,12 +29,7 @@
 #include <fstream>
 #include <ctime>
 #include <memory> // for auto_ptr
-#include <boost/random/mersenne_twister.hpp>
 #include <boost/static_assert.hpp>
-
-#ifdef XINT_THREADSAFE
-    #include <boost/thread.hpp>
-#endif
 
 namespace boost {
 namespace xint {
@@ -42,60 +37,36 @@ namespace xint {
 //! @cond detail
 namespace detail {
 
-class generator_t {
-    public:
-    typedef base_random_generator::result_type result_type;
-    typedef boost::mt19937 default_random_t;
+integer random_by_size(base_random_generator& gen, size_t bits, bool high_bit_on, bool
+    low_bit_on, bool can_be_negative)
+{
+    if (bits<=0) return integer::zero();
 
-    #ifdef XINT_THREADSAFE
-        generator_t() { mLock.lock(); init(); }
-        ~generator_t() { mLock.unlock(); }
-    #else
-        generator_t() { init(); }
-    #endif
+    // Grab a bunch of bits
+    bitqueue_t bitqueue;
+    while (bitqueue.size() < bits) bitqueue.push(gen(),
+        std::numeric_limits<base_random_generator::result_type>::digits);
 
-    result_type operator()() { return mGeneratorObj->operator()(); }
+    // Stick them into an integer
+    integer p;
+    p._realloc((bits + bits_per_digit - 1) / bits_per_digit);
+    digit_t *pp = p._get_writable_digits(), *ppe = pp + p._get_length();
+    while (pp < ppe) *pp++ = static_cast<digit_t>(bitqueue.pop(bits_per_digit));
 
-    static void set_generator(base_random_generator *p) {
-        #ifdef XINT_THREADSAFE
-            mLock.lock();
-            mGeneratorObj.reset(p);
-            mLock.unlock();
-        #else
-            mGeneratorObj.reset(p);
-        #endif
-    }
+    // Trim it to the proper length
+    size_t index=(bits/bits_per_digit);
+    digit_t mask=(digit_t(1) << (bits % bits_per_digit))-1;
+    if (mask==0) { mask=digit_mask; --index; }
+    p._get_writable_digits()[index] &= mask;
+    for (digit_t *i=p._get_writable_digits()+index+1,
+        *ie=p._get_writable_digits()+p._get_length(); i<ie; ++i) *i=0;
+    p._cleanup();
 
-    private:
-    void init() {
-        if (mGeneratorObj.get() == 0) {
-            typedef default_random_t T;
-            T *genobj(new T(boost::uint32_t(time(0)+clock())));
-            random_generator<T> *obj=new random_generator<T>(genobj);
-            set_generator(obj);
-        }
-    }
+    if (high_bit_on) setbit(p, bits-1);
+    if (low_bit_on) setbit(p, 0);
+    if (can_be_negative) p._set_negative(gen() & 0x01);
 
-    static std::auto_ptr<base_random_generator> mGeneratorObj;
-
-    #ifdef XINT_THREADSAFE
-        static boost::mutex mLock;
-    #endif
-};
-
-std::auto_ptr<base_random_generator> generator_t::mGeneratorObj;
-
-#ifdef XINT_THREADSAFE
-    boost::mutex generator_t::mLock;
-#endif
-
-void set_random_generator(base_random_generator *obj) {
-    generator_t::set_generator(obj);
-}
-
-unsigned int get_random() {
-    generator_t gen;
-    return gen();
+    return BOOST_XINT_MOVE(p);
 }
 
 } // namespace detail
@@ -184,67 +155,6 @@ strong_random_generator::result_type strong_random_generator::min
 strong_random_generator::result_type strong_random_generator::max
     BOOST_PREVENT_MACRO_SUBSTITUTION () const { return max_value; }
 //! @endcond
-
-////////////////////////////////////////////////////////////////////////////////
-// Returns a positive (unless told otherwise) integer between zero and
-// (1<<bits)-1, inclusive
-
-/*! \brief Generates a random integer with specific attributes.
-
-- Complexity: O(n)
-
-\param[in] bits The maximum number of bits that you want the returned number to
-have.
-\param[in] high_bit_on If \c true, the returned number will have exactly the
-requested size. If \c false, the upper bits may be zero, resulting in a number
-that is slightly smaller than requested.
-\param[in] low_bit_on If \c true, the returned number will always be odd. If
-\c false, it has an equal chance of being odd or even.
-\param[in] can_be_negative If \c true, the returned value has an equal chance
-of being positive or negative. If \c false, it will always be positive.
-
-\returns A random integer with the requested attributes.
-
-\remarks
-This function uses the currently-defined random generator.
-
-\see \ref random
-\see xint::set_random_generator
-*/
-integer random_by_size(size_t bits, bool high_bit_on, bool low_bit_on, bool
-    can_be_negative)
-{
-    if (bits<=0) return integer::zero();
-
-    using namespace detail;
-
-    // Grab a bunch of bits
-    generator_t randomGenerator;
-    bitqueue_t bitqueue;
-    while (bitqueue.size() < bits) bitqueue.push(randomGenerator(),
-        std::numeric_limits<generator_t::result_type>::digits);
-
-    // Stick them into an integer
-    integer p;
-    p._realloc((bits + bits_per_digit - 1) / bits_per_digit);
-    digit_t *pp = p._get_writable_digits(), *ppe = pp + p._get_length();
-    while (pp < ppe) *pp++ = static_cast<digit_t>(bitqueue.pop(bits_per_digit));
-
-    // Trim it to the proper length
-    size_t index=(bits/bits_per_digit);
-    digit_t mask=(digit_t(1) << (bits % bits_per_digit))-1;
-    if (mask==0) { mask=digit_mask; --index; }
-    p._get_writable_digits()[index] &= mask;
-    for (digit_t *i=p._get_writable_digits()+index+1,
-        *ie=p._get_writable_digits()+p._get_length(); i<ie; ++i) *i=0;
-    p._cleanup();
-
-    if (high_bit_on) setbit(p, bits-1);
-    if (low_bit_on) setbit(p, 0);
-    if (can_be_negative) p._set_negative(randomGenerator() & 0x01);
-
-    return BOOST_XINT_MOVE(p);
-}
 
 } // namespace xint
 } // namespace boost

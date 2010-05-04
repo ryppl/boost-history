@@ -17,12 +17,12 @@ int main() {
     try {
         // Use the system's strong random number generator, via the XInt-
         // provided convenience class.
-        set_random_generator(new strong_random_generator);
+        strong_random_generator gen;
 
         // Generate the prime number, keeping the user informed of the
         // progress.
         cout << "Generating...";
-        integer p=random_prime(bits, callback);
+        integer p = random_prime(gen, bits, callback);
 
         // Success!
         cout << "\nA random " << bits << "-bit prime is: " << p << endl;

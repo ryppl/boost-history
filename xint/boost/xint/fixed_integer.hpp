@@ -225,17 +225,17 @@ fixed_integer<Bits> invmod(const fixed_integer<Bits>& n, const
 
 //! \name Random number functions
 //!@{
-template <size_t Bits>
-fixed_integer<Bits> fixed_random_by_size(size_t sizeInBits, bool highBitOn =
-    false, bool lowBitOn = false, bool canBeNegative = false);
+template <class T, size_t Bits>
+fixed_integer<Bits> fixed_random_by_size(T& gen, size_t sizeInBits, bool
+    highBitOn = false, bool lowBitOn = false, bool canBeNegative = false);
 //!@}
 
 //! \name Prime number functions
 //!@{
 int is_prime(const fixed_integer_any& n, callback_t callback = no_callback);
-template <size_t Bits>
-fixed_integer<Bits> fixed_random_prime(size_t sizeInBits, callback_t callback =
-    no_callback);
+template <class T, size_t Bits>
+fixed_integer<Bits> fixed_random_prime(T& gen, size_t sizeInBits, callback_t
+    callback = no_callback);
 //!@}
 
 /*! \name Operators
@@ -779,19 +779,21 @@ fixed_integer<Bits> invmod(const fixed_integer<Bits>& n, const
 }
 
 //! \copydoc random_by_size
-template <size_t Bits>
-fixed_integer<Bits> fixed_random_by_size(size_t bits, bool high_bit_on, bool
-    low_bit_on, bool can_be_negative)
+template <class T, size_t Bits>
+fixed_integer<Bits> fixed_random_by_size(T& gen, size_t bits, bool high_bit_on,
+    bool low_bit_on, bool can_be_negative)
 {
-    return fixed_integer<Bits>(random_by_size((std::min)(Bits, bits),
-        high_bit_on, low_bit_on, can_be_negative));
+    return BOOST_XINT_MOVE(fixed_integer<Bits>(random_by_size(gen,
+        (std::min)(Bits, bits), high_bit_on, low_bit_on, can_be_negative)));
 }
 
 //! \copydoc random_prime
-template <size_t Bits>
-fixed_integer<Bits> fixed_random_prime(size_t size_in_bits, callback_t callback)
+template <class T, size_t Bits>
+fixed_integer<Bits> fixed_random_prime(T& gen, size_t size_in_bits, callback_t
+    callback)
 {
-    fixed_integer<Bits> r(random_prime((std::min)(Bits, size_in_bits), callback));
+    fixed_integer<Bits> r(random_prime(gen, (std::min)(Bits, size_in_bits),
+        callback));
     return BOOST_XINT_MOVE(r);
 }
 

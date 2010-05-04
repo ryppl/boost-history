@@ -49,19 +49,10 @@
 <a name="l00033"></a>00033     }
 <a name="l00034"></a>00034 }
 <a name="l00035"></a>00035 
-<a name="l00037"></a>00037 nothrow_integer <a class="code" href="namespaceboost_1_1xint.html#aed98791058e6a589b06f8015ae0acaef">nothrow_random_prime</a>(<span class="keywordtype">size_t</span> size_in_bits, <a class="code" href="namespaceboost_1_1xint.html#a48deb76c9c428a4b3a50177b1b0cb547">callback_t</a> callback) {
-<a name="l00038"></a>00038     <span class="keywordflow">try</span> {
-<a name="l00039"></a>00039         nothrow_integer r(<a class="code" href="namespaceboost_1_1xint.html#aaf58d56e1a47ac55e0aa97a55e6fb2c9" title="Generate a randomly-generated prime number of a particular bit-size.">xint::random_prime</a>(size_in_bits, callback));
-<a name="l00040"></a>00040         <span class="keywordflow">return</span> <a class="code" href="internals_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(r);
-<a name="l00041"></a>00041     } <span class="keywordflow">catch</span> (std::exception&amp;) {
-<a name="l00042"></a>00042         <span class="keywordflow">return</span> <a class="code" href="classboost_1_1xint_1_1nothrow__integer.html#a9a8d654139e4fb916f933d09c7238e10">nothrow_integer::nan</a>();
-<a name="l00043"></a>00043     }
-<a name="l00044"></a>00044 }
-<a name="l00045"></a>00045 
-<a name="l00046"></a>00046 } <span class="comment">// namespace xint</span>
-<a name="l00047"></a>00047 } <span class="comment">// namespace boost</span>
+<a name="l00036"></a>00036 } <span class="comment">// namespace xint</span>
+<a name="l00037"></a>00037 } <span class="comment">// namespace boost</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun May 2 18:42:51 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Tue May 4 01:25:21 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

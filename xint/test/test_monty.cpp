@@ -15,12 +15,15 @@
 #include <boost/xint/random.hpp>
 #include <boost/xint/monty.hpp>
 
-#define BOOST_TEST_DYN_LINK
+#ifdef BOOST_XINT_SINGLE_TEST_PROGRAM
+    #define BOOST_TEST_DYN_LINK
+#else
+    #define BOOST_TEST_MAIN
+#endif
 #include <boost/test/unit_test.hpp>
 
 #include <iostream>
 #include <iomanip>
-#include <boost/random/mersenne_twister.hpp>
 
 namespace boost {
 namespace xint {
@@ -62,22 +65,12 @@ void _test2(size_t section, size_t test, integer b, integer r, integer modulus) 
     }
 }
 
-size_t random(size_t low, size_t high) {
-    unsigned long r=detail::get_random();
-    size_t range=high-low+1;
-    return size_t(low + (r % range));
-}
-
-size_t random1ToDigitLength() {
-    return random(1, detail::bits_per_digit);
-}
-
 } // namespace
 
 BOOST_AUTO_TEST_CASE(testMontyMultiply) {
     // We always want these to run on the same data, so we can reproduce it if
     // there are problems.
-    set_random_generator(new boost::mt19937(42u));
+    boost::mt19937 random(42u);
 
     {
         integer n("ffffffffaec73757", 16);
@@ -95,9 +88,9 @@ BOOST_AUTO_TEST_CASE(testMontyMultiply) {
             for (size_t modsize = detail::bits_per_digit * 4; msize <
                 detail::bits_per_digit * 5; msize += 4)
             {
-                integer n(random_by_size(nsize, false, false, true)),
-                    m(random_by_size(msize, false, false, true)),
-                    modulus(random_by_size(modsize, true, true, false));
+                integer n(random_by_size(random, nsize, false, false, true)),
+                    m(random_by_size(random, msize, false, false, true)),
+                    modulus(random_by_size(random, modsize, true, true, false));
                 _test1(nsize, msize, n, m, modulus);
             }
         }
@@ -107,10 +100,10 @@ BOOST_AUTO_TEST_CASE(testMontyMultiply) {
 BOOST_AUTO_TEST_CASE(testMontyPowerMod) {
     // We always want these to run on the same data, so we can reproduce it if
     // there are problems.
-    set_random_generator(new boost::mt19937(42u));
+    boost::mt19937 random(42u);
 
     {
-        integer modulus(random_by_size(detail::bits_per_digit * 5 +
+        integer modulus(random_by_size(random, detail::bits_per_digit * 5 +
             (detail::bits_per_digit / 2), true, true));
         for (int i=2; i<100; ++i)
             _test2(0, i, integer("abcd1234", 16), i, modulus);
@@ -125,9 +118,9 @@ BOOST_AUTO_TEST_CASE(testMontyPowerMod) {
             for (size_t modsize = detail::bits_per_digit * 2; msize <
                 detail::bits_per_digit * 5; msize += 8)
             {
-                integer n(random_by_size(nsize, false, false)),
-                    m(random_by_size(msize, false, false)),
-                    modulus(random_by_size(modsize, true, true));
+                integer n(random_by_size(random, nsize, false, false)),
+                    m(random_by_size(random, msize, false, false)),
+                    modulus(random_by_size(random, modsize, true, true));
                 _test2(nsize, msize, n, m, modulus);
             }
         }

@@ -175,7 +175,8 @@ integer invmod(const integer& n, const integer& modulus);
 
 //! \name Random number functions
 //!@{
-integer random_by_size(size_t sizeInBits, bool highBitOn=false, bool
+template <class T>
+integer random_by_size(T& gen, size_t sizeInBits, bool highBitOn=false, bool
     lowBitOn=false, bool canBeNegative=false);
 //!@}
 

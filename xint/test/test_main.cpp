@@ -37,12 +37,13 @@
         using namespace boost::xint;
 
         cout << "Generating numbers..." << endl;
+        default_random_generator gen;
         std::vector<integer> n1, n2;
         for (size_t x = 0; x < raw_number_pairs; ++x) {
-            n1.push_back(random_by_size(bits, true, true));
-            n2.push_back(random_by_size(bits, true, true));
+            n1.push_back(random_by_size(gen, bits, true, true));
+            n2.push_back(random_by_size(gen, bits, true, true));
         }
-        const integer nmod = random_by_size(bits, true, true);
+        const integer nmod = random_by_size(gen, bits, true, true);
 
         cout << "Running addition test" << flush;
         for (size_t x = 0; x < 10; ++x) {
@@ -90,7 +91,11 @@
         using namespace boost::xint;
     }
 #else
-    #define BOOST_TEST_MAIN
-    #define BOOST_TEST_DYN_LINK
+    #ifdef BOOST_XINT_SINGLE_TEST_PROGRAM
+        #define BOOST_TEST_DYN_LINK
+        #define BOOST_TEST_MAIN
+    #else
+        #define BOOST_TEST_MAIN
+    #endif
     #include <boost/test/unit_test.hpp>
 #endif

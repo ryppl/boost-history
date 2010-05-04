@@ -204,8 +204,9 @@ nothrow_integer invmod(const nothrow_integer& n, const nothrow_integer&
 
 //! \name Random number functions
 //!@{
-nothrow_integer nothrow_random_by_size(size_t sizeInBits, bool highBitOn=false,
-    bool lowBitOn=false, bool canBeNegative=false);
+template <class T>
+nothrow_integer nothrow_random_by_size(T& gen, size_t sizeInBits, bool
+    highBitOn = false, bool lowBitOn = false, bool canBeNegative = false);
 //!@}
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -213,8 +214,9 @@ nothrow_integer nothrow_random_by_size(size_t sizeInBits, bool highBitOn=false,
 //! \name Prime number functions
 //!@{
 int is_prime(const nothrow_integer& n, callback_t callback=no_callback);
-nothrow_integer nothrow_random_prime(size_t sizeInBits, callback_t callback =
-    no_callback);
+template <class T>
+nothrow_integer nothrow_random_prime(T& gen, size_t sizeInBits, callback_t
+    callback = no_callback);
 //!@}
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -355,6 +357,32 @@ inline std::basic_istream<charT,traits>& operator>>(std::basic_istream<charT,
     }
 }
 //!@}
+
+//! \copydoc xint::random_by_size
+template <class T>
+nothrow_integer nothrow_random_by_size(T& gen, size_t bits, bool high_bit_on,
+    bool low_bit_on, bool can_be_negative)
+{
+    try {
+        return nothrow_integer(xint::random_by_size(gen, bits, high_bit_on,
+            low_bit_on, can_be_negative));
+    } catch (std::exception&) {
+        return nothrow_integer::nan();
+    }
+}
+
+//! \copydoc xint::random_prime
+template <class T>
+nothrow_integer nothrow_random_prime(T& gen, size_t size_in_bits, callback_t
+    callback)
+{
+    try {
+        nothrow_integer r(xint::random_prime(gen, size_in_bits, callback));
+        return BOOST_XINT_MOVE(r);
+    } catch (std::exception&) {
+        return nothrow_integer::nan();
+    }
+}
 
 inline void swap(nothrow_integer& left, nothrow_integer& right) {
     left._swap(right);

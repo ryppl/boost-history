@@ -33,15 +33,5 @@ int is_prime(const nothrow_integer& n, callback_t callback) {
     }
 }
 
-//! \copydoc xint::random_prime
-nothrow_integer nothrow_random_prime(size_t size_in_bits, callback_t callback) {
-    try {
-        nothrow_integer r(xint::random_prime(size_in_bits, callback));
-        return BOOST_XINT_MOVE(r);
-    } catch (std::exception&) {
-        return nothrow_integer::nan();
-    }
-}
-
 } // namespace xint
 } // namespace boost

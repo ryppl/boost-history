@@ -45,6 +45,8 @@
 <tr><td colspan="2"><h2>Classes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1base__divide__t.html">base_divide_t</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Holds the results from a division-with-remainder call.  <a href="classboost_1_1xint_1_1base__divide__t.html#_details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1default__random__generator.html">default_random_generator</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A convenience class for general-purpose (insecure) random numbers.  <a href="classboost_1_1xint_1_1default__random__generator.html#_details">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A fixed-size integer type.  <a href="classboost_1_1xint_1_1fixed__integer.html#_details">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer__any.html">fixed_integer_any</a></td></tr>
@@ -61,9 +63,9 @@ char &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href=
 <tr><td class="memItemLeft" align="right" valign="top">typedef boost::function&lt; bool()&gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a48deb76c9c428a4b3a50177b1b0cb547">callback_t</a></td></tr>
 <tr><td colspan="2"><h2>Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer.html">integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a92ee4f1138215a36f4374a356fa5a359">operator-</a> (const <a class="el" href="classboost_1_1xint_1_1integer.html">integer</a> &amp;a)</td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">detail void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ae64e3e8c8da2f0a1cb7064d1775fbf54">set_random_generator</a> (T *gen)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Change the random generator that the library uses.  <a href="#ae64e3e8c8da2f0a1cb7064d1775fbf54"></a><br/></td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer.html">integer</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ad9c43d1fa76d7c19288c841aa1cbaf63">random_prime</a> (T &amp;gen, size_t size_in_bits, <a class="el" href="namespaceboost_1_1xint.html#a48deb76c9c428a4b3a50177b1b0cb547">callback_t</a> callback)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Generate a randomly-generated prime number of a particular bit-size.  <a href="#ad9c43d1fa76d7c19288c841aa1cbaf63"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a27c1978abf1c401febe61285e8a3af0b">swap</a> (<a class="el" href="classboost_1_1xint_1_1nothrow__integer.html">nothrow_integer</a> &amp;left, <a class="el" href="classboost_1_1xint_1_1nothrow__integer.html">nothrow_integer</a> &amp;right)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a7832686d860601f27625d42b7532639e">swap</a> (<a class="el" href="classboost_1_1xint_1_1integer.html">integer</a> &amp;left, <a class="el" href="classboost_1_1xint_1_1integer.html">integer</a> &amp;right)</td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;size_t Bits&gt; </td></tr>
@@ -250,23 +252,25 @@ char &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href=
 <tr><td colspan="2"><div class="groupHeader">Random number functions</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpdd4713a71c208a173c1f2436d4e32ff7"></a> </p>
 </div></td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;size_t Bits&gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a96c7867b9ad53a718c08db8226edec62">fixed_random_by_size</a> (size_t bits, bool high_bit_on, bool low_bit_on, bool can_be_negative)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1nothrow__integer.html">nothrow_integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a1b55b4b192aa6abc491e3ed8c5ef2627">nothrow_random_by_size</a> (size_t bits, bool high_bit_on, bool low_bit_on, bool can_be_negative)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer.html">integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ac8d879e19a6608b21184236e00806be5">random_by_size</a> (size_t bits, bool high_bit_on, bool low_bit_on, bool can_be_negative)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Generates a random integer with specific attributes.  <a href="#ac8d879e19a6608b21184236e00806be5"></a><br/></td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;class T , size_t Bits&gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a5678fe823ef045bd64e405108da42c4e">fixed_random_by_size</a> (T &amp;gen, size_t bits, bool high_bit_on, bool low_bit_on, bool can_be_negative)</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1nothrow__integer.html">nothrow_integer</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ab7558a893d0f1e3bb3f12f3a9d2cd469">nothrow_random_by_size</a> (T &amp;gen, size_t bits, bool high_bit_on, bool low_bit_on, bool can_be_negative)</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer.html">integer</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#af431075692c7b5b7bc01768856876512">random_by_size</a> (T &amp;gen, size_t bits, bool high_bit_on, bool low_bit_on, bool can_be_negative)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Generates a random integer with specific attributes.  <a href="#af431075692c7b5b7bc01768856876512"></a><br/></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Prime number functions</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp540e8e12721acbe497d2b9b53ecc76ec"></a> </p>
 </div></td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;size_t Bits&gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#afab685e9431b90c98079030eae8bdb35">fixed_random_prime</a> (size_t size_in_bits, <a class="el" href="namespaceboost_1_1xint.html#a48deb76c9c428a4b3a50177b1b0cb547">callback_t</a> callback)</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;class T , size_t Bits&gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a81c131d55fde5e16d63f7126e0532136">fixed_random_prime</a> (T &amp;gen, size_t size_in_bits, <a class="el" href="namespaceboost_1_1xint.html#a48deb76c9c428a4b3a50177b1b0cb547">callback_t</a> callback)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a0711bdafefe7d376e5cc603731318fc6">is_prime</a> (const <a class="el" href="classboost_1_1xint_1_1fixed__integer__any.html">fixed_integer_any</a> &amp;n, <a class="el" href="namespaceboost_1_1xint.html#a48deb76c9c428a4b3a50177b1b0cb547">callback_t</a> callback)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">detail int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a58aa3df545d1da848922c13de2a87fc9">is_prime</a> (const <a class="el" href="classboost_1_1xint_1_1integer.html">integer</a> &amp;n, <a class="el" href="namespaceboost_1_1xint.html#a48deb76c9c428a4b3a50177b1b0cb547">callback_t</a> callback)</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tests an integer for primality.  <a href="#a58aa3df545d1da848922c13de2a87fc9"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ad581832932a4816cbc9f24740732c3a0">is_prime</a> (const <a class="el" href="classboost_1_1xint_1_1nothrow__integer.html">nothrow_integer</a> &amp;n, <a class="el" href="namespaceboost_1_1xint.html#a48deb76c9c428a4b3a50177b1b0cb547">callback_t</a> callback)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1nothrow__integer.html">nothrow_integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#aed98791058e6a589b06f8015ae0acaef">nothrow_random_prime</a> (size_t size_in_bits, <a class="el" href="namespaceboost_1_1xint.html#a48deb76c9c428a4b3a50177b1b0cb547">callback_t</a> callback)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer.html">integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#aaf58d56e1a47ac55e0aa97a55e6fb2c9">random_prime</a> (size_t size_in_bits, <a class="el" href="namespaceboost_1_1xint.html#a48deb76c9c428a4b3a50177b1b0cb547">callback_t</a> callback)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Generate a randomly-generated prime number of a particular bit-size.  <a href="#aaf58d56e1a47ac55e0aa97a55e6fb2c9"></a><br/></td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1nothrow__integer.html">nothrow_integer</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a0a6aa40775c6a0664c772be372342c12">nothrow_random_prime</a> (T &amp;gen, size_t size_in_bits, <a class="el" href="namespaceboost_1_1xint.html#a48deb76c9c428a4b3a50177b1b0cb547">callback_t</a> callback)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer.html">integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#afec65ec6ec0b57c0483a703040d97107">random_prime</a> (size_t sizeInBits, <a class="el" href="namespaceboost_1_1xint.html#a48deb76c9c428a4b3a50177b1b0cb547">callback_t</a> callback=<a class="el" href="namespaceboost_1_1xint.html#a758d415a476a5eeed28dc6b5869b1696">no_callback</a>)</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Modular math functions</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpbf63e6a6a1029bb25b7aa51052b38655"></a>A common reason to use a large-integer library is to implement public-key encryption, and the algorithms for such encryption often use modular math. </p>
 </div></td></tr>
@@ -392,7 +396,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 <p>A callback function takes no parameters and returns a bool. </p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#ad581832932a4816cbc9f24740732c3a0">xint::is_prime</a> </dd>
 <dd>
-<a class="el" href="namespaceboost_1_1xint.html#aaf58d56e1a47ac55e0aa97a55e6fb2c9" title="Generate a randomly-generated prime number of a particular bit-size.">xint::random_prime</a> </dd></dl>
+<a class="el" href="namespaceboost_1_1xint.html#afec65ec6ec0b57c0483a703040d97107">xint::random_prime</a> </dd></dl>
 
 <p>Definition at line <a class="el" href="internals_8hpp_source.html#l00080">80</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
 
@@ -1705,15 +1709,21 @@ template&lt;size_t Bits&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a96c7867b9ad53a718c08db8226edec62"></a><!-- doxytag: member="boost::xint::fixed_random_by_size" ref="a96c7867b9ad53a718c08db8226edec62" args="(size_t bits, bool high_bit_on, bool low_bit_on, bool can_be_negative)" -->
+<a class="anchor" id="a5678fe823ef045bd64e405108da42c4e"></a><!-- doxytag: member="boost::xint::fixed_random_by_size" ref="a5678fe823ef045bd64e405108da42c4e" args="(T &amp;gen, size_t bits, bool high_bit_on, bool low_bit_on, bool can_be_negative)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits&gt; </div>
+template&lt;class T , size_t Bits&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits &gt; boost::xint::fixed_random_by_size </td>
           <td>(</td>
+          <td class="paramtype">T &amp;&nbsp;</td>
+          <td class="paramname"> <em>gen</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">size_t&nbsp;</td>
           <td class="paramname"> <em>bits</em>, </td>
         </tr>
@@ -1748,6 +1758,7 @@ template&lt;size_t Bits&gt; </div>
 </ul>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>gen</em>&nbsp;</td><td>The random number generator to use. This can be <a class="el" href="classboost_1_1xint_1_1default__random__generator.html" title="A convenience class for general-purpose (insecure) random numbers.">boost::xint::default_random_generator</a>, <a class="el" href="classboost_1_1xint_1_1strong__random__generator.html" title="A convenience class for cryptographically-secure random numbers.">boost::xint::strong_random_generator</a>, or any other class that supplies the member functions required by the Boost.Random random number generators. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>bits</em>&nbsp;</td><td>The maximum number of bits that you want the returned number to have. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>high_bit_on</em>&nbsp;</td><td>If <code>true</code>, the returned number will have exactly the requested size. If <code>false</code>, the upper bits may be zero, resulting in a number that is slightly smaller than requested. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>low_bit_on</em>&nbsp;</td><td>If <code>true</code>, the returned number will always be odd. If <code>false</code>, it has an equal chance of being odd or even. </td></tr>
@@ -1756,25 +1767,28 @@ template&lt;size_t Bits&gt; </div>
   </dd>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>A random integer with the requested attributes.</dd></dl>
-<dl class="remark"><dt><b>Remarks:</b></dt><dd>This function uses the currently-defined random generator.</dd></dl>
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="random.html">The XInt Random Number System</a> </dd>
-<dd>
-<a class="el" href="namespaceboost_1_1xint.html#ae64e3e8c8da2f0a1cb7064d1775fbf54" title="Change the random generator that the library uses.">xint::set_random_generator</a> </dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="random.html">The XInt Random Number System</a> </dd></dl>
  </p>
 
 <p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00781">781</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="afab685e9431b90c98079030eae8bdb35"></a><!-- doxytag: member="boost::xint::fixed_random_prime" ref="afab685e9431b90c98079030eae8bdb35" args="(size_t size_in_bits, callback_t callback)" -->
+<a class="anchor" id="a81c131d55fde5e16d63f7126e0532136"></a><!-- doxytag: member="boost::xint::fixed_random_prime" ref="a81c131d55fde5e16d63f7126e0532136" args="(T &amp;gen, size_t size_in_bits, callback_t callback)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits&gt; </div>
+template&lt;class T , size_t Bits&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits &gt; boost::xint::fixed_random_prime </td>
           <td>(</td>
+          <td class="paramtype">T &amp;&nbsp;</td>
+          <td class="paramname"> <em>gen</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">size_t&nbsp;</td>
           <td class="paramname"> <em>size_in_bits</em>, </td>
         </tr>
@@ -1792,27 +1806,7 @@ template&lt;size_t Bits&gt; </div>
       </table>
 </div>
 <div class="memdoc">
-<p>Generate a randomly-generated prime number of a particular bit-size. <ul>
-<li>Complexity: Varies</li>
-</ul>
-<dl><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>size_in_bits</em>&nbsp;</td><td>The number of bits that you want the returned value to have. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>callback</em>&nbsp;</td><td>An optional function that will be called regularly during the operation. If it returns <code>false</code>, the function will immediately return.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>A randomly-generated prime integer with the specified number of bits, or zero if the provided callback function cancelled the operation.</dd></dl>
-<dl><dt><b>Exceptions:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html">exceptions::invalid_argument</a></em>&nbsp;</td><td>if <code>size_in_bits</code> is less than two.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="note"><dt><b>Note:</b></dt><dd>This function uses <a class="el" href="namespaceboost_1_1xint.html#ad581832932a4816cbc9f24740732c3a0">xint::is_prime</a>. See the description of it for details of its limitations.</dd></dl>
-<dl class="user"><dt><b></b></dt><dd>It also uses the library's currently-set random number generator. See the <a class="el" href="random.html">Random Number Functions page</a> for details on its limitations and requirements, and how to get cryptographically-secure random numbers.</dd></dl>
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="primes.html">Generating Prime Numbers</a> </dd></dl>
- </p>
+<p> </p>
 
 <p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00790">790</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
@@ -1952,7 +1946,7 @@ template&lt;size_t Bits&gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The greatest common denominator of the two integers, which will always be a positive number. </dd></dl>
  </p>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00798">798</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00800">800</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -2601,7 +2595,7 @@ template&lt;size_t Bits&gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The least common multiple of the two integers. If either integer is zero, then the return value will be zero, by convention; in all other cases, the return value will be a positive number. </dd></dl>
  </p>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00808">808</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00810">810</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -3522,13 +3516,21 @@ template&lt;size_t Bits&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a1b55b4b192aa6abc491e3ed8c5ef2627"></a><!-- doxytag: member="boost::xint::nothrow_random_by_size" ref="a1b55b4b192aa6abc491e3ed8c5ef2627" args="(size_t bits, bool high_bit_on, bool low_bit_on, bool can_be_negative)" -->
+<a class="anchor" id="ab7558a893d0f1e3bb3f12f3a9d2cd469"></a><!-- doxytag: member="boost::xint::nothrow_random_by_size" ref="ab7558a893d0f1e3bb3f12f3a9d2cd469" args="(T &amp;gen, size_t bits, bool high_bit_on, bool low_bit_on, bool can_be_negative)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classboost_1_1xint_1_1nothrow__integer.html">nothrow_integer</a> boost::xint::nothrow_random_by_size </td>
           <td>(</td>
+          <td class="paramtype">T &amp;&nbsp;</td>
+          <td class="paramname"> <em>gen</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">size_t&nbsp;</td>
           <td class="paramname"> <em>bits</em>, </td>
         </tr>
@@ -3553,7 +3555,7 @@ template&lt;size_t Bits&gt; </div>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td></td>
+          <td></td><td></td><td><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -3563,6 +3565,7 @@ template&lt;size_t Bits&gt; </div>
 </ul>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>gen</em>&nbsp;</td><td>The random number generator to use. This can be <a class="el" href="classboost_1_1xint_1_1default__random__generator.html" title="A convenience class for general-purpose (insecure) random numbers.">boost::xint::default_random_generator</a>, <a class="el" href="classboost_1_1xint_1_1strong__random__generator.html" title="A convenience class for cryptographically-secure random numbers.">boost::xint::strong_random_generator</a>, or any other class that supplies the member functions required by the Boost.Random random number generators. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>bits</em>&nbsp;</td><td>The maximum number of bits that you want the returned number to have. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>high_bit_on</em>&nbsp;</td><td>If <code>true</code>, the returned number will have exactly the requested size. If <code>false</code>, the upper bits may be zero, resulting in a number that is slightly smaller than requested. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>low_bit_on</em>&nbsp;</td><td>If <code>true</code>, the returned number will always be odd. If <code>false</code>, it has an equal chance of being odd or even. </td></tr>
@@ -3571,21 +3574,28 @@ template&lt;size_t Bits&gt; </div>
   </dd>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>A random integer with the requested attributes.</dd></dl>
-<dl class="remark"><dt><b>Remarks:</b></dt><dd>This function uses the currently-defined random generator.</dd></dl>
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="random.html">The XInt Random Number System</a> </dd>
-<dd>
-<a class="el" href="namespaceboost_1_1xint.html#ae64e3e8c8da2f0a1cb7064d1775fbf54" title="Change the random generator that the library uses.">xint::set_random_generator</a> </dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="random.html">The XInt Random Number System</a> </dd></dl>
  </p>
+
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00363">363</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="aed98791058e6a589b06f8015ae0acaef"></a><!-- doxytag: member="boost::xint::nothrow_random_prime" ref="aed98791058e6a589b06f8015ae0acaef" args="(size_t size_in_bits, callback_t callback)" -->
+<a class="anchor" id="a0a6aa40775c6a0664c772be372342c12"></a><!-- doxytag: member="boost::xint::nothrow_random_prime" ref="a0a6aa40775c6a0664c772be372342c12" args="(T &amp;gen, size_t size_in_bits, callback_t callback)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classboost_1_1xint_1_1nothrow__integer.html">nothrow_integer</a> boost::xint::nothrow_random_prime </td>
           <td>(</td>
+          <td class="paramtype">T &amp;&nbsp;</td>
+          <td class="paramname"> <em>gen</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">size_t&nbsp;</td>
           <td class="paramname"> <em>size_in_bits</em>, </td>
         </tr>
@@ -3598,32 +3608,14 @@ template&lt;size_t Bits&gt; </div>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td></td>
+          <td></td><td></td><td><code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Generate a randomly-generated prime number of a particular bit-size. <ul>
-<li>Complexity: Varies</li>
-</ul>
-<dl><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>size_in_bits</em>&nbsp;</td><td>The number of bits that you want the returned value to have. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>callback</em>&nbsp;</td><td>An optional function that will be called regularly during the operation. If it returns <code>false</code>, the function will immediately return.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>A randomly-generated prime integer with the specified number of bits, or zero if the provided callback function cancelled the operation.</dd></dl>
-<dl><dt><b>Exceptions:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html">exceptions::invalid_argument</a></em>&nbsp;</td><td>if <code>size_in_bits</code> is less than two.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="note"><dt><b>Note:</b></dt><dd>This function uses <a class="el" href="namespaceboost_1_1xint.html#ad581832932a4816cbc9f24740732c3a0">xint::is_prime</a>. See the description of it for details of its limitations.</dd></dl>
-<dl class="user"><dt><b></b></dt><dd>It also uses the library's currently-set random number generator. See the <a class="el" href="random.html">Random Number Functions page</a> for details on its limitations and requirements, and how to get cryptographically-secure random numbers.</dd></dl>
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="primes.html">Generating Prime Numbers</a> </dd></dl>
- </p>
+<p> </p>
+
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00376">376</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -4160,7 +4152,7 @@ template&lt;typename charT , typename traits &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00320">320</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00322">322</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -4191,7 +4183,7 @@ template&lt;typename charT , typename traits &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00277">277</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00278">278</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -4222,7 +4214,7 @@ template&lt;typename charT , typename traits , size_t Bits&gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00819">819</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00821">821</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -4577,7 +4569,7 @@ template&lt;typename charT , typename traits &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00332">332</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00334">334</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -4608,7 +4600,7 @@ template&lt;typename charT , typename traits &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00284">284</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00285">285</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -4639,7 +4631,7 @@ template&lt;typename charT , typename traits , size_t Bits&gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00826">826</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00828">828</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -5129,13 +5121,21 @@ template&lt;size_t Bits&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="ac8d879e19a6608b21184236e00806be5"></a><!-- doxytag: member="boost::xint::random_by_size" ref="ac8d879e19a6608b21184236e00806be5" args="(size_t bits, bool high_bit_on, bool low_bit_on, bool can_be_negative)" -->
+<a class="anchor" id="af431075692c7b5b7bc01768856876512"></a><!-- doxytag: member="boost::xint::random_by_size" ref="af431075692c7b5b7bc01768856876512" args="(T &amp;gen, size_t bits, bool high_bit_on, bool low_bit_on, bool can_be_negative)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer.html">integer</a> boost::xint::random_by_size </td>
+          <td class="memname">detail <a class="el" href="classboost_1_1xint_1_1integer.html">integer</a> boost::xint::random_by_size </td>
           <td>(</td>
+          <td class="paramtype">T &amp;&nbsp;</td>
+          <td class="paramname"> <em>gen</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">size_t&nbsp;</td>
           <td class="paramname"> <em>bits</em>, </td>
         </tr>
@@ -5160,7 +5160,7 @@ template&lt;size_t Bits&gt; </div>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td></td>
+          <td></td><td></td><td><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -5172,6 +5172,7 @@ template&lt;size_t Bits&gt; </div>
 </ul>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>gen</em>&nbsp;</td><td>The random number generator to use. This can be <a class="el" href="classboost_1_1xint_1_1default__random__generator.html" title="A convenience class for general-purpose (insecure) random numbers.">boost::xint::default_random_generator</a>, <a class="el" href="classboost_1_1xint_1_1strong__random__generator.html" title="A convenience class for cryptographically-secure random numbers.">boost::xint::strong_random_generator</a>, or any other class that supplies the member functions required by the Boost.Random random number generators. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>bits</em>&nbsp;</td><td>The maximum number of bits that you want the returned number to have. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>high_bit_on</em>&nbsp;</td><td>If <code>true</code>, the returned number will have exactly the requested size. If <code>false</code>, the upper bits may be zero, resulting in a number that is slightly smaller than requested. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>low_bit_on</em>&nbsp;</td><td>If <code>true</code>, the returned number will always be odd. If <code>false</code>, it has an equal chance of being odd or even. </td></tr>
@@ -5180,20 +5181,27 @@ template&lt;size_t Bits&gt; </div>
   </dd>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>A random integer with the requested attributes.</dd></dl>
-<dl class="remark"><dt><b>Remarks:</b></dt><dd>This function uses the currently-defined random generator.</dd></dl>
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="random.html">The XInt Random Number System</a> </dd>
-<dd>
-<a class="el" href="namespaceboost_1_1xint.html#ae64e3e8c8da2f0a1cb7064d1775fbf54" title="Change the random generator that the library uses.">xint::set_random_generator</a> </dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="random.html">The XInt Random Number System</a> </dd></dl>
+
+<p>Definition at line <a class="el" href="random_8hpp_source.html#l00123">123</a> of file <a class="el" href="random_8hpp_source.html">random.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="aaf58d56e1a47ac55e0aa97a55e6fb2c9"></a><!-- doxytag: member="boost::xint::random_prime" ref="aaf58d56e1a47ac55e0aa97a55e6fb2c9" args="(size_t size_in_bits, callback_t callback)" -->
+<a class="anchor" id="ad9c43d1fa76d7c19288c841aa1cbaf63"></a><!-- doxytag: member="boost::xint::random_prime" ref="ad9c43d1fa76d7c19288c841aa1cbaf63" args="(T &amp;gen, size_t size_in_bits, callback_t callback)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer.html">integer</a> boost::xint::random_prime </td>
           <td>(</td>
+          <td class="paramtype">T &amp;&nbsp;</td>
+          <td class="paramname"> <em>gen</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">size_t&nbsp;</td>
           <td class="paramname"> <em>size_in_bits</em>, </td>
         </tr>
@@ -5206,7 +5214,7 @@ template&lt;size_t Bits&gt; </div>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td></td>
+          <td></td><td></td><td><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -5218,6 +5226,7 @@ template&lt;size_t Bits&gt; </div>
 </ul>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>gen</em>&nbsp;</td><td>The random number generator to use. This can be <a class="el" href="classboost_1_1xint_1_1default__random__generator.html" title="A convenience class for general-purpose (insecure) random numbers.">boost::xint::default_random_generator</a>, <a class="el" href="classboost_1_1xint_1_1strong__random__generator.html" title="A convenience class for cryptographically-secure random numbers.">boost::xint::strong_random_generator</a>, or any other class that supplies the member functions required by the Boost.Random random number generators. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>size_in_bits</em>&nbsp;</td><td>The number of bits that you want the returned value to have. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>callback</em>&nbsp;</td><td>An optional function that will be called regularly during the operation. If it returns <code>false</code>, the function will immediately return.</td></tr>
   </table>
@@ -5231,40 +5240,37 @@ template&lt;size_t Bits&gt; </div>
   </dd>
 </dl>
 <dl class="note"><dt><b>Note:</b></dt><dd>This function uses <a class="el" href="namespaceboost_1_1xint.html#ad581832932a4816cbc9f24740732c3a0">xint::is_prime</a>. See the description of it for details of its limitations.</dd></dl>
-<dl class="user"><dt><b></b></dt><dd>It also uses the library's currently-set random number generator. See the <a class="el" href="random.html">Random Number Functions page</a> for details on its limitations and requirements, and how to get cryptographically-secure random numbers.</dd></dl>
+<dl class="user"><dt><b></b></dt><dd>See the <a class="el" href="random.html">Random Number Functions page</a> for details on how to get cryptographically-secure random numbers.</dd></dl>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="primes.html">Generating Prime Numbers</a> </dd></dl>
+
+<p>Definition at line <a class="el" href="random_8hpp_source.html#l00159">159</a> of file <a class="el" href="random_8hpp_source.html">random.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ae64e3e8c8da2f0a1cb7064d1775fbf54"></a><!-- doxytag: member="boost::xint::set_random_generator" ref="ae64e3e8c8da2f0a1cb7064d1775fbf54" args="(T *gen)" -->
+<a class="anchor" id="afec65ec6ec0b57c0483a703040d97107"></a><!-- doxytag: member="boost::xint::random_prime" ref="afec65ec6ec0b57c0483a703040d97107" args="(size_t sizeInBits, callback_t callback=no_callback)" -->
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">detail void boost::xint::set_random_generator </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer.html">integer</a> boost::xint::random_prime </td>
           <td>(</td>
-          <td class="paramtype">T *&nbsp;</td>
-          <td class="paramname"> <em>gen</em></td>
-          <td>&nbsp;)&nbsp;</td>
-          <td><code> [inline]</code></td>
+          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramname"> <em>sizeInBits</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">callback_t&nbsp;</td>
+          <td class="paramname"> <em>callback</em> = <code>no_callback</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-
-<p>Change the random generator that the library uses. </p>
-<dl><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>gen</em>&nbsp;</td><td>A pointer to the new generator to use.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="warning"><dt><b>Warning:</b></dt><dd>The generator must be a heap-allocated pointer (one created with <code>new</code>), which the XInt library assumes ownership of. Don't pass in a stack-created item, don't try to delete the item that you passed in, and don't attempt to use it separately after passing it to this function, or the behavior is undefined.</dd></dl>
-<dl class="remark"><dt><b>Remarks:</b></dt><dd>See the <a class="el" href="random.html">Random Number page</a> for an example of how to use it. </dd></dl>
-
-<p>Definition at line <a class="el" href="random_8hpp_source.html#l00105">105</a> of file <a class="el" href="random_8hpp_source.html">random.hpp</a>.</p>
 
 </div>
 </div>
@@ -6228,7 +6234,7 @@ template&lt;size_t Bits&gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00359">359</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00387">387</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -6257,7 +6263,7 @@ template&lt;size_t Bits&gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00291">291</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00292">292</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -6288,7 +6294,7 @@ template&lt;size_t Bits&gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00837">837</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00839">839</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -6331,7 +6337,7 @@ template&lt;typename T &gt; </div>
  </p>
 <dl class="note"><dt><b>Note:</b></dt><dd>Returns T(0) instead of throwing. </dd></dl>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00309">309</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00311">311</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -6374,7 +6380,7 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00270">270</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00271">271</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -6772,14 +6778,14 @@ template&lt;size_t Bits&gt; </div>
 <p>An empty callback_t, used as a default parameter for some functions. </p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#ad581832932a4816cbc9f24740732c3a0">xint::is_prime</a> </dd>
 <dd>
-<a class="el" href="namespaceboost_1_1xint.html#aaf58d56e1a47ac55e0aa97a55e6fb2c9" title="Generate a randomly-generated prime number of a particular bit-size.">xint::random_prime</a> </dd></dl>
+<a class="el" href="namespaceboost_1_1xint.html#afec65ec6ec0b57c0483a703040d97107">xint::random_prime</a> </dd></dl>
 
 <p>Definition at line <a class="el" href="internals_8hpp_source.html#l00095">95</a> of file <a class="el" href="internals_8hpp_source.html">internals.hpp</a>.</p>
 
 </div>
 </div>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun May 2 18:42:51 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Tue May 4 01:25:21 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

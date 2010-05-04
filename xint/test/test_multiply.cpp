@@ -16,11 +16,14 @@
 #include <boost/xint/random.hpp>
 #include <boost/xint/fixed_integer.hpp>
 
-#define BOOST_TEST_DYN_LINK
+#ifdef BOOST_XINT_SINGLE_TEST_PROGRAM
+    #define BOOST_TEST_DYN_LINK
+#else
+    #define BOOST_TEST_MAIN
+#endif
 #include <boost/test/unit_test.hpp>
 
 #include <iostream>
-#include <boost/random/mersenne_twister.hpp>
 
 namespace boost {
 namespace xint {
@@ -71,7 +74,7 @@ BOOST_AUTO_TEST_CASE(testMultiply) {
 		_test(0, 1, n, m);
     }
 
-    set_random_generator(new boost::mt19937(42u));
+    boost::mt19937 random(42u);
 
     for (size_t nsize = detail::bits_per_digit * 3; nsize <
         detail::bits_per_digit * 5; nsize += 4)
@@ -79,8 +82,8 @@ BOOST_AUTO_TEST_CASE(testMultiply) {
         for (size_t msize = detail::bits_per_digit * 3; msize <
             detail::bits_per_digit * 5; msize += 4)
         {
-            integer n(random_by_size(nsize, false, false, true)),
-                m(random_by_size(msize, false, false, true));
+            integer n(random_by_size(random, nsize, false, false, true)),
+                m(random_by_size(random, msize, false, false, true));
             _test(nsize, msize, n, m);
         }
     }

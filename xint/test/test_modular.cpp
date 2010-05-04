@@ -13,7 +13,11 @@
 
 #include <boost/xint/integer.hpp>
 
-#define BOOST_TEST_DYN_LINK
+#ifdef BOOST_XINT_SINGLE_TEST_PROGRAM
+    #define BOOST_TEST_DYN_LINK
+#else
+    #define BOOST_TEST_MAIN
+#endif
 #include <boost/test/unit_test.hpp>
 
 namespace boost {
