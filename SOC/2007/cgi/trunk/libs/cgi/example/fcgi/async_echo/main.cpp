@@ -1,13 +1,13 @@
-//                    -- main.hpp --
+//              -- fcgi/async_echo/main.hpp --
 //
-//         Copyright (c) Darren Garvey 2007-2009.
+//         Copyright (c) Darren Garvey 2007-2010.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 //
 ////////////////////////////////////////////////////////////////
 //
-//[fcgi_echo
+//[fcgi_async_echo
 //
 // This example simply echoes all variables back to the user. ie.
 // the environment and the parsed GET, POST and cookie variables.
@@ -18,7 +18,6 @@
 #include <iostream>
 ///////////////////////////////////////////////////////////
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/program_options/environment_iterator.hpp>
 ///////////////////////////////////////////////////////////
 #include "boost/cgi/fcgi.hpp"
 
@@ -28,15 +27,15 @@ using namespace boost::fcgi;
 // The styling information for the page, just to make things look nicer.
 static const char* gCSS_text =
 "body { padding: 0; margin: 3%; border-color: #efe; }"
-".var_map_title"
+"ul.data-map .title"
     "{ font-weight: bold; font-size: large; }"
-".var_map"
+"ul.data-map"
     "{ border: 1px dotted; padding: 2px 3px 2px 3px; margin-bottom: 3%; }"
-".var_pair"
+"ul.data-map li"
     "{ border-top: 1px dotted; overflow: auto; padding: 0; margin: 0; }"
-".var_name"
+"ul.data-map div.name"
     "{ position: relative; float: left; width: 30%; font-weight: bold; }"
-".var_value"
+"ul.data-map div.value"
     "{ position: relative; float: left; width: 65%; left: 1%;"
      " border-left: 1px solid; padding: 0 5px 0 5px;"
      " overflow: auto; white-space: pre; }"
@@ -51,27 +50,26 @@ static const char* gCSS_text =
 template<typename OStream, typename Request, typename Map>
 void format_map(OStream& os, Request& req, Map& m, const std::string& title)
 {
-  os<< "<div class=\"var_map\">"
-         "<div class=\"var_map_title\">"
+  os<< "<ul class=\"data-map\">"
+         "<div class=\"title\">"
     <<       title
     <<   "</div>";
 
   if (m.empty())
-    os<< "<div class=\"var_pair\">EMPTY</div>";
+    os<< "<li>EMPTY</li>";
   else
     for (typename Map::const_iterator i = m.begin(); i != m.end(); ++i)
     {
-      os<< "<div class=\"var_pair\">"
-             "<div class=\"var_name\">"
+      os<< "<li>"
+             "<div class=\"name\">"
         <<       i->first
         <<   "</div>"
-             "<div class=\"var_value\">"
+             "<div class=\"value\">"
         <<       i->second
-             << (req.is_file(i->first) ? " (file)" : "")
         <<   "</div>"
-           "</div>";
+           "</li>";
     }
-  os<< "<div class=\"clear\"></div></div>";
+  os<< "<div class=\"clear\"></div></ul>";
 }
 
 std::size_t process_id()
@@ -84,9 +82,7 @@ std::size_t process_id()
 }
 
 
-/// This function accepts and handles a single request.
-template<typename Request>
-int handle_request(Request& req)
+int handle_request(acceptor& a, request& req)
 {
   boost::system::error_code ec;
   
@@ -119,7 +115,7 @@ int handle_request(Request& req)
            "Request ID = " << req.id() << "<br />"
            "Request Hash = " << req.hash() << "<br />"
            "Process ID = " << process_id() << "<br />"
-           "<form method=post>" // enctype=\"multipart/form-data\">"
+           "<form method=post enctype=\"multipart/form-data\">"
              "<input type=text name=name value='"
       <<         req.post["name"] << "' />"
              "<br />"
@@ -139,6 +135,7 @@ int handle_request(Request& req)
   format_map(resp, req, req.env, "Environment Variables");
   format_map(resp, req, req.get, "GET Variables");
   format_map(resp, req, req.post, "POST Variables");
+  format_map(resp, req, req.uploads, "File Uploads");
   format_map(resp, req, req.cookies, "Cookie Variables");
 
   // Print the buffer containing the POST data and the FastCGI params.
@@ -152,9 +149,16 @@ int handle_request(Request& req)
   resp<< "Response content-length == "
       << resp.content_length(); // the content-length (returns std::size_t)
 
-  // This function finishes up. The optional third argument
-  // is the program status (default: 0).
-  return commit(req, resp);
+  //
+  // Write the response. If the commit is successful, start up another
+  // asynchronous accept request.
+  //
+  int status = commit(req, resp);
+  if (!status)
+    a.async_accept(boost::bind(&handle_request, boost::ref(a), _1));
+
+  // The return value isn't used for anything.
+  return status;
 }
 
 int main()
@@ -165,59 +169,52 @@ try {
   // Make a `service` (more about this in other examples).
   service s;
   
-  using boost::asio::ip::tcp;
-
   // Make an `acceptor` for accepting requests through.
-#if defined (BOOST_WINDOWS)
-  acceptor a(s, 8009);    // Accept requests on port 8009.
-#else
-  acceptor a(s);
-#endif // defined (BOOST_WINDOWS)
+  acceptor a;
 
   //
   // After the initial setup, we can enter a loop to handle one request at a
   // time until there's an error of some sort.
   //
-  int ret(0);
-  for (;;)
+  int count(10);
+  while (--count)
   {
-    request req(s);
     //
-    // Now we enter another loop that reuses the request's memory - makes
-    // things more efficient). You should always do this for 
-    // now; this requirement might be removed in future.
+    // An acceptor can take a request handler as an argument to `accept` and it
+    // will accept a request and pass the handler the request. The return value
+    // of `accept` when used like this is the result of the handler.
     //
-    for (;;)
-    {
-      a.accept(req);
-      std::cerr<< "Accepted new request.\n";
-      ret = handle_request(req);
-      if (ret)
-        break;
-      //
-      // Clear the request's data, so information doesn't pass between
-      // different users (this step isn't really necessary, because
-      // the library will do this automatically.
-      //
-      req.clear();
-    }
+    // Note that a request handler is any function or function object with the
+    // signature:
+    //  boost::function<int (boost::fcgi::request&)>
+    // See the documentation for Boost.Function and Boost.Bind for more.
+    //
+    // The acceptor maintains an internal queue of requests and will reuse a
+    // dead request if one is waiting.
+    //
+    a.async_accept(boost::bind(&handle_request, boost::ref(a), _1));
   }
   
+  std::cerr<< "Start running service..." << std::endl;
+  s.run();
+  std::cerr<< "Shutdown ." << std::endl;
+  
+  std::cerr<< "Processing finished. Press enter to continue..." << std::endl;
   std::cin.get();
   
-  return ret;
+  //return 0;
 
 }catch(boost::system::system_error const& se){
   // This is the type of error thrown by the library.
   std::cerr<< "[fcgi] System error: " << se.what() << std::endl;
-  return -1;
+  //return -1;
 }catch(std::exception const& e){
   // Catch any other exceptions
   std::cerr<< "[fcgi] Exception: " << e.what() << std::endl;
-  return -2;
+  //return -2;
 }catch(...){
   std::cerr<< "[fcgi] Uncaught exception!" << std::endl;
-  return -3;
+  //return -3;
 }
   std::cerr<< "Press enter to continue." << std::endl;
   std::cin.get();
