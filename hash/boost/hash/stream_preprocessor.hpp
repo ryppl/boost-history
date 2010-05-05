@@ -159,7 +159,7 @@ class stream_preprocessor {
     template <typename ContainerT>
     stream_preprocessor &
     update(ContainerT const &c) {
-        return update(c.begin(), c.end());
+        return update_n(c.data(), c.size());
     }    
     digest_type
     end_message() {
