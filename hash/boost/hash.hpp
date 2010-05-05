@@ -9,7 +9,6 @@
 #ifndef BOOST_HASH_HPP
 #define BOOST_HASH_HPP
 
-#include <boost/hash/badhash.hpp>
 #include <boost/hash/cubehash.hpp>
 #include <boost/hash/md4.hpp>
 #include <boost/hash/md5.hpp>

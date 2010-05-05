@@ -162,7 +162,8 @@ struct real_packer<Endianness,
                        OutIter out) {
         size_t out_n = in_n/(OutputBits/InputBits);
         while (out_n--) {
-            typedef typename std::iterator_traits<OutIter>::value_type OutValue;
+            typedef typename detail::outvalue_helper<OutIter, OutputBits>::type 
+                    OutValue;
             OutValue value = OutValue();
             detail::imploder<Endianness, InputBits, OutputBits>
              ::implode(in, value);
@@ -174,7 +175,8 @@ struct real_packer<Endianness,
     static void pack(InIter in, InIter in_e,
                      OutIter out) {
         while (in != in_e) {
-            typedef typename std::iterator_traits<OutIter>::value_type OutValue;
+            typedef typename detail::outvalue_helper<OutIter, OutputBits>::type 
+                    OutValue;
             OutValue value = OutValue();
             detail::imploder<Endianness, InputBits, OutputBits>
              ::implode(in, value);

@@ -11,7 +11,10 @@
 
 #include <boost/hash/stream_endian.hpp>
 #include <boost/hash/detail/unbounded_shift.hpp>
+#include <boost/integer.hpp>
 #include <boost/static_assert.hpp>
+
+#include <iterator>
 
 #include <climits>
 #include <cstring>
@@ -22,6 +25,16 @@ namespace detail {
 
 // By definition, for all exploders, InputBits > OutputBits,
 // so we're taking one value and splitting it into many smaller values
+
+template <typename OutIter, int OutBits,
+          typename T = typename std::iterator_traits<OutIter>::value_type>
+struct outvalue_helper {
+    typedef T type;
+};
+template <typename OutIter, int OutBits>
+struct outvalue_helper<OutIter, OutBits, void> {
+    typedef typename uint_t<OutBits>::least type;
+};
 
 template <typename Endianness,
           int InputBits, int OutputBits,
@@ -34,7 +47,7 @@ struct exploder_step<stream_endian::big_unit_big_bit<UnitBits>,
     template <typename InputValue, typename OutIter>
     static void step(InputValue const &x, OutIter &out) {
         int const shift = InputBits - (OutputBits+k);
-        typedef typename std::iterator_traits<OutIter>::value_type OutValue;
+        typedef typename outvalue_helper<OutIter, OutputBits>::type OutValue;
         InputValue y = unbounded_shr<shift>(x);
         *out++ = OutValue(low_bits<OutputBits>(y));
     }
@@ -51,7 +64,7 @@ struct exploder_step<stream_endian::little_unit_big_bit<UnitBits>,
             OutputBits >= UnitBits ? k :
             InputBits  >= UnitBits ? ku + (UnitBits-(OutputBits+kb)) :
                                      InputBits - (OutputBits+kb);
-        typedef typename std::iterator_traits<OutIter>::value_type OutValue;
+        typedef typename outvalue_helper<OutIter, OutputBits>::type OutValue;
         InputValue y = unbounded_shr<shift>(x);
         *out++ = OutValue(low_bits<OutputBits>(y));
     }
@@ -68,7 +81,7 @@ struct exploder_step<stream_endian::big_unit_little_bit<UnitBits>,
             OutputBits >= UnitBits ? InputBits - (OutputBits+k) :
             InputBits  >= UnitBits ? InputBits - (UnitBits+ku) + kb :
                                      kb;
-        typedef typename std::iterator_traits<OutIter>::value_type OutValue;
+        typedef typename outvalue_helper<OutIter, OutputBits>::type OutValue;
         InputValue y = unbounded_shr<shift>(x);
         *out++ = OutValue(low_bits<OutputBits>(y));
     }
@@ -80,7 +93,7 @@ struct exploder_step<stream_endian::little_unit_little_bit<UnitBits>,
     template <typename InputValue, typename OutIter>
     static void step(InputValue const &x, OutIter &out) {
         int const shift = k;
-        typedef typename std::iterator_traits<OutIter>::value_type OutValue;
+        typedef typename outvalue_helper<OutIter, OutputBits>::type OutValue;
         InputValue y = unbounded_shr<shift>(x);
         *out++ = OutValue(low_bits<OutputBits>(y));
     }
@@ -91,7 +104,7 @@ struct exploder_step<stream_endian::host_unit<UnitBits>,
                      InputBits, OutputBits, k> {
     template <typename InputValue, typename OutIter>
     static void step(InputValue const &x, OutIter &out) {
-        typedef typename std::iterator_traits<OutIter>::value_type OutValue;
+        typedef typename outvalue_helper<OutIter, OutputBits>::type OutValue;
         BOOST_STATIC_ASSERT(sizeof(InputValue)*CHAR_BIT == InputBits);
         BOOST_STATIC_ASSERT(sizeof(OutValue)*CHAR_BIT == OutputBits);
         OutValue value;

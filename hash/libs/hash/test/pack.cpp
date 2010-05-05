@@ -1,12 +1,18 @@
 
-#include <cassert>
-#include <cstdio>
-
 #include <boost/array.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/hash/pack.hpp>
 
+#include <sstream>
+#include <iterator>
+
+#include <cassert>
+#include <cstdio>
+
 using boost::array;
+using boost::int8_t;
+using boost::int16_t;
+using boost::int32_t;
 using namespace boost::hash;
 using namespace boost::hash::stream_endian;
 
@@ -677,6 +683,46 @@ int main() {
     test_implodelb();
     test_implodebl();
     test_implodell();
+
+    {
+    using namespace std;
+    istringstream iss("-1 -2 -4 -8");
+    ostringstream oss;
+    pack<big_bit, 4, 16>(istream_iterator<int>(iss), istream_iterator<int>(),
+                         ostream_iterator<int>(oss, " "));
+    printf("%s\n", oss.str().c_str());
+    assert(oss.str() == "65224 ");
+    }
+
+    {
+    using namespace std;
+    istringstream iss("-1 -2 -4 -8");
+    ostringstream oss;
+    pack<little_bit, 4, 16>(istream_iterator<int>(iss), istream_iterator<int>(),
+                            ostream_iterator<int>(oss, " "));
+    printf("%s\n", oss.str().c_str());
+    assert(oss.str() == "36079 ");
+    }
+
+    {
+    using namespace std;
+    istringstream iss("-312");
+    ostringstream oss;
+    pack<big_bit, 16, 4>(istream_iterator<int>(iss), istream_iterator<int>(),
+                         ostream_iterator<int>(oss, " "));
+    printf("%s\n", oss.str().c_str());
+    assert(oss.str() == "15 14 12 8 ");
+    }
+
+    {
+    using namespace std;
+    istringstream iss("-29457");
+    ostringstream oss;
+    pack<little_bit, 16, 4>(istream_iterator<int>(iss), istream_iterator<int>(),
+                            ostream_iterator<int>(oss, " "));
+    printf("%s\n", oss.str().c_str());
+    assert(oss.str() == "15 14 12 8 ");
+    }
 
 }
 
