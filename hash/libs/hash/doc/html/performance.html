@@ -1,0 +1,100 @@
+<html>
+<head>
+<title>The MaybeBoost Hash Library</title>
+<body>
+
+<P STYLE="float:right"><A HREF="../..">Back to Index</A></P>
+
+<H2>The MaybeBoost Hash Library: Performance</H2>
+
+<P>At this time there are no assembly- or intrinsic-using implementations of any of of the algorithms.  There are a few portable changes applied that proved effective for the author, which may or may not help with any particular compiler setup.
+
+<P>Currently the implementations are about half the speed of GNU's coreutils or better.  Here are the author's numbers for hashing a 244.25 MiB file (a plasma rendered in GIMP) 8 times using the <tt>example/hashsum.cpp</tt> program:<BR>
+<TABLE BORDER=1>
+<TR>
+<TH>Algorithm
+<TH>GNU coreutils
+<TH>Boost.Hash<sup>1</sup>
+<TH>Slower by
+</TR>
+<TR>
+<TD>SHA-1
+<TD>9.406
+<TD>16.119s
+<TD>73%
+</TR>
+<TR>
+<TD>MD5
+<TD>6.330s
+<TD>7.750s
+<TD>23%
+</TR>
+<TR>
+<TD>SHA-512
+<TD>12.483
+<TD>16.466
+<TD>32%
+</TR>
+</TABLE>
+<small><sup>1</sup> Best time from table below</small>
+
+<P>Here are a few general suggestions if you require high throughput.
+
+<H3>Play with your Optimizer Settings</H3>
+
+<P>Compiler flags make a big difference, and not always in an intuitive way.  As shown below, going from -O1 to -O3 can double throughput, but going from -O2 to -O3 can also half it.
+
+<P>Here are the author's numbers for hashing a 244.25 MiB file (a plasma rendered in GIMP) 8 times using the <tt>example/hashsum.cpp</tt> program compiled with a SVN version of g++ 4.5.1:<BR>
+<TABLE BORDER=1>
+<TR>
+<TH>Algorithm
+<TH>-O1
+<TH>-O2
+<TH>-O3
+</TR>
+<TR>
+<TD>SHA-1
+<TD>32.344s
+<TD>18.512s
+<TD>16.119s
+</TR>
+<TR>
+<TD>MD5
+<TD>8.220s
+<TD>7.750s
+<TD BGCOLOR="red">7.890s
+</TR>
+<TR>
+<TD>SHA-512
+<TD>29.121s
+<TD>16.466
+<TD BGCOLOR="red">31.011
+</TR>
+<TR>
+<TD>CubeHash16/32-512
+<TD>39.894s
+<TD BGCOLOR="red">45.487
+<TD BGCOLOR="red">43.747
+</TR>
+</TABLE>
+
+<H3>Try Providing Pointers for Input</H3>
+
+<P>Each hash algorithm defines the endianness used to convert the provided bits into words.  When that byte order matches that of the host (Little-Endian for MD4, MD5, and CubeHash; Big-Endian for SHA, SHA-1, and SHA-2) and the input type is sized appropriately, the endianness can be handled with a simple <tt>memcpy</tt>.
+
+<P>For most users (those on x86 or amd64), this means that MD5 will perform best when given a char*s (or unsigned char*s) for input.
+
+<H3>Use Random-Access Iterators or the <tt>_n</tt> Functions</H3>
+
+<P>Because most hash algorithms are block-oriented internally, the preprocessing stage can skip an internal buffering stage if it knows that a full block is available in the input.
+
+<P>Random-access iterators will automatically use the length, but if you're buffering from something else and have the length available, provide it.
+
+<HR>
+
+<P>Copyright Scott McMurray 2010</P>
+<P>Distributed under the Boost Software License, Version 1.0. (See accompanying file <A href="/LICENSE_1_0.txt">LICENSE_1_0.txt</A> or copy at <A href="/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</A>).</P>
+
+</body>
+</html>
+

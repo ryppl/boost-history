@@ -1,0 +1,31 @@
+<html>
+<head>
+<title>The MaybeBoost Hash Library</title>
+<body>
+
+<P STYLE="float:right"><A HREF="../..">Back to Index</A></P>
+
+<H2>The MaybeBoost Hash Library: Validation</H2>
+
+<H3>Test Vectors</H3>
+
+<P>The tests include all the test vectors available in the standards, as well as others verified against reference or other well-known implementations.
+
+<P>For MD4 and MD5, these are the test vectors from the RFCs.  For SHA-1 and the SHA-2 family, they come from the FIPS standard and the SHAVS examples.  SHA-0 is checked against a published collision.  CubeHash is tested against answers obtained from the NIST-submitted "reference" implementation.
+
+<P>See <tt>libs/hash/test/</tt> for full details.
+
+<H3>Speed vs Code Clarity</H3>
+
+<P>All implementations were initially written to follow the specs very closely to simplify manual verification by code inspection.  These implementations, however, are usually a few hundred percent slower than optimized implementations, and occasionally much worse than that.
+
+<P>In various places, optimizations have been applied, and these are used by default.  The original implementations are still accessible, however, by defining <tt>BOOST_HASH_NO_OPTIMIZATION</tt>.  This is useful for checking the correctness of the optimizations.
+
+<HR>
+
+<P>Copyright Scott McMurray 2010</P>
+<P>Distributed under the Boost Software License, Version 1.0. (See accompanying file <A href="/LICENSE_1_0.txt">LICENSE_1_0.txt</A> or copy at <A href="/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</A>).</P>
+
+</body>
+</html>
+

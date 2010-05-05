@@ -1,0 +1,48 @@
+<html>
+<head>
+<title>The MaybeBoost Hash Library</title>
+<body>
+
+<P STYLE="float:right"><A HREF="../..">Back to Index</A></P>
+
+<H2>The MaybeBoost Hash Library: Functions</H2>
+
+<H3 ID="compute_digest">The <tt>compute_digest</tt> Family</H3>
+
+<P>These are convenience functions for calculating the message digest of a single range of data.  All versions take a <A HREF="concepts.html#hashpolicy"><tt><i>HashPolicy</i></tt></A> model as an explicit template parameter and return the corresponding <tt><i>HashPolicy</i>::digest_type</tt>. All the bits in the provided values are used (including the sign bit, if present).
+
+<P>There are three ways to provide the range:
+
+<OL>
+<LI>As a pair of iterators
+    <UL>
+    <LI><tt>compute_digest&lt;<i>HashPolicy</i>&gt;(<i>InIter</i> b, <i>InIter</i> e)</tt>
+    </UL>
+<LI>As an iterator and a length
+    <UL>
+    <LI><tt>compute_digest_n&lt;<i>HashPolicy</i>&gt;(<i>InIter</i> b, size_t n)</tt>
+    </UL>
+<LI>As a whole container
+    <UL>
+    <LI><tt>compute_digest&lt;<i>HashPolicy</i>&gt;(<i>Container</i> const &c)</tt><BR>
+        when <tt>c</tt> has <tt>begin()</tt> and <tt>end()</tt> member functions
+    <LI><tt>compute_digest_n&lt;<i>HashPolicy</i>&gt;(<i>Container</i> const &c)</tt><BR>
+        when <tt>c</tt> has <tt>begin()</tt> and <tt>size()</tt> member functions
+    <LI><tt>compute_digest_data&lt;<i>HashPolicy</i>&gt;(<i>Container</i> const &c)</tt><BR>
+        when <tt>c</tt> has <tt>data()</tt> and <tt>size()</tt> member functions
+    </UL>
+    When the <tt>Container</tt> is a <tt>std::basic_string</tt>, <tt>compute_digest</tt> or <tt>compute_digest_n</tt> delegate to <tt>compute_digest_data</tt>.
+</OL>
+
+<P><B>Portability Note:</B> Because the number of bits to use is taken from the size of the iterator's <tt>value_type</tt>, it's best to use the <tt>uint_t&lt;<i>N</i>&gt;::exact</tt> types from Boost.Integer rather than directly use fundamental types.  Most users are unlikely to need to worry about this, however, as they will be using ranges of bytes on POSIX-compatible machines (where <tt>CHAR_BIT</tt> is always 8).
+
+<P><B>Alternative:</B> If you need to specify the number of bits to use from each value, then use the <A HREF="concepts.html#streamhash"><i><tt>StreamHash</tt></i></A> directly.  This can still be done as an expression as follows: <tt><i>HashPolicy</i>::stream_hash&lt;<i>N</i>&gt;::type().update(<i>b</i>, <i>e</i>).end_message()</tt>.
+
+<HR>
+
+<P>Copyright Scott McMurray 2010</P>
+<P>Distributed under the Boost Software License, Version 1.0. (See accompanying file <A href="/LICENSE_1_0.txt">LICENSE_1_0.txt</A> or copy at <A href="/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</A>).</P>
+
+</body>
+</html>
+

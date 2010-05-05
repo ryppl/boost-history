@@ -1,0 +1,118 @@
+<html>
+<head>
+<title>The MaybeBoost Hash Library</title>
+<body>
+
+<P STYLE="float:right"><A HREF="../..">Back to Index</A></P>
+
+<H2>The MaybeBoost Hash Library: Quickstart</H2>
+
+<P>Want to get started without worry about the details?  Here's how.</P>
+
+<P><OL>
+
+<LI>Include the <tt>boost/hash.hpp</tt> header.  No linking is required.
+
+<LI>Choose the hash algorithm you with to use.  The following are provided:<BR>
+    <TABLE BORDER=1>
+
+    <TR>
+    <TH>Name
+    <TH>Digest Bits
+    <TH><A HREF="concepts.html#hashpolicy"><tt>HashPolicy</tt></A> Model (in <tt>boost::hash</tt>)
+    <TH>Reference
+    <TH>Notes
+    </TR>
+
+    <TR>
+    <TD>MD4
+    <TD>128
+    <TD><tt>md4</tt>
+    <TD><A HREF="http://www.faqs.org/rfcs/rfc1320.html">RFC 1320</A>
+    <TD>Practical attacks exist
+    </TR>
+    <TR>
+    <TD>MD5
+    <TD>128
+    <TD><tt>md5</tt>
+    <TD><A HREF="http://www.faqs.org/rfcs/rfc1321.html">RFC 1321</A>
+    <TD>Practical attacks exist
+    </TR>
+
+    <TR>
+    <TD>SHA
+    <TD>160
+    <TD><tt>sha</tt>
+    <TD>FIPS 180
+    <TD>Collisions known; Repealed
+    </TR>
+
+    <TR>
+    <TD>SHA-1
+    <TD>160
+    <TD><tt>sha1</tt>
+    <TD ROWSPAN=5><A HREF="http://csrc.nist.gov/publications/fips/fips180-3/fips180-3_final.pdf">FIPS 180-3</A>
+    <TD>Some concern
+    </TR>
+
+    <TR>
+    <TD>SHA-224
+    <TD>224
+    <TD><tt>sha2&lt;224&gt;</tt>
+    <TD ROWSPAN=4>As of 2010, <A HREF="http://csrc.nist.gov/groups/ST/hash/policy.html">considered secure by NIST</A>
+    </TR>
+    <TR>
+    <TD>SHA-256
+    <TD>256
+    <TD><tt>sha2&lt;224&gt;</tt>
+    </TR>
+    <TR>
+    <TD>SHA-384
+    <TD>384
+    <TD><tt>sha2&lt;384&gt;</tt>
+    </TR>
+    <TR>
+    <TD>SHA-512
+    <TD>512
+    <TD><tt>sha2&lt;512&gt;</tt>
+    </TR>
+    
+    <TR>
+    <TD>CubeHash-<i>h</i> (<i>h</i> in {8, 16, 24, ..., 512})
+    <TD><i>h</i>
+    <TD><tt>cubehash&lt;<i>h</i>&gt;</tt>
+    <TD><A HREF="http://cubehash.cr.yp.to/submission2/spec.pdf">CubeHash NIST Submission</A>
+    <TD>SHA-3 candidate; Suggest waiting for further cryptanalysis
+    </TR>
+
+    </TABLE>
+
+<LI>With the chosen <i>HashPolicy</i>, call the <tt>boost::hash::<A HREF="functions.html#compute_digest">compute_digest</a>&lt;<i>HashPolicy</i>&gt;</tt> function, passing it a container.  That will return the digest as an object of type <tt><i>HashPolicy</i>::digest_type</tt>.
+
+<LI>The resulting message digest may be output to a <tt>std::ostream</tt> or directly converted to a <tt>std::string</tt> for display with the <tt>.str()</tt> member function.
+
+</OL></P>
+
+<P>Here's a sample complete program (<tt>example/quickstart.cpp</tt>):
+<BLOCKQUOTE><PRE>
+#include &lt;boost/hash.hpp&gt;
+
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+int main() {
+    std::string s = "Hello World!";
+    typedef boost::hash::sha2&lt;256&gt; HashPolicy;
+    HashPolicy::digest_type digest = boost::hash::compute_digest<HashPolicy>(s);
+    std::cout &lt;&lt; digest &lt;&lt; "\n";
+}
+</PRE></BLOCKQUOTE>
+
+<HR>
+
+<P>Copyright Scott McMurray 2010</P>
+<P>Distributed under the Boost Software License, Version 1.0. (See accompanying file <A href="/LICENSE_1_0.txt">LICENSE_1_0.txt</A> or copy at <A href="/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</A>).</P>
+
+</body>
+</html>
+

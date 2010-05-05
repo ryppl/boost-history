@@ -26,10 +26,9 @@ namespace boost {
 namespace hash {
 namespace block_cyphers {
 
-// The original FIPS-180 seems to be gone, but according to
-// http://www.derkeiler.com/Newsgroups/sci.crypt/2003-06/0017.html
-// the only difference in SHA(-0) is the lack of a rotation in the
-// key scheduling (which was borne out by test vectors).
+// The original FIPS-180 seems to be gone, but FIPS 180-1
+// (http://www.itl.nist.gov/fipspubs/fip180-1.htm) says the only change
+// in SHA-1 from SHA(-0) is the rotation in the key scheduling.
 class shacal : public basic_shacal {
   public:
     shacal(key_type const &k)

@@ -13,8 +13,10 @@
 
 #include <iterator>
 #include <limits>
+#include <string>
 
 #include <cstring>
+#include <cwchar>
 
 namespace boost {
 namespace hash {
@@ -49,10 +51,47 @@ compute_digest_n(iter_T b, size_t n) {
     return sh.end_message();
 }
 
+template <typename hash_T, typename container_T>
+typename hash_T::digest_type
+compute_digest(container_T const &c) {
+    return compute_digest<hash_T>(c.begin(), c.end());
+}
+
+template <typename hash_T, typename container_T>
+typename hash_T::digest_type
+compute_digest_n(container_T const &c) {
+    return compute_digest_n<hash_T>(c.begin(), c.size());
+}
+
+template <typename hash_T, typename container_T>
+typename hash_T::digest_type
+compute_digest_data(container_T const &c) {
+    return compute_digest_n<hash_T>(c.data(), c.size());
+}
+
+template <typename hash_T,
+          typename Char, typename CharTraits, typename Alloc>
+typename hash_T::digest_type
+compute_digest(std::basic_string<Char, CharTraits, Alloc> const &s) {
+    return compute_digest_data<hash_T>(s);
+}
+template <typename hash_T,
+          typename Char, typename CharTraits, typename Alloc>
+typename hash_T::digest_type
+compute_digest_n(std::basic_string<Char, CharTraits, Alloc> const &s) {
+    return compute_digest_data<hash_T>(s);
+}
+
 template <typename hash_T>
 typename hash_T::digest_type
 compute_digest(char const *p) {
     return compute_digest_n<hash_T>(p, std::strlen(p));
+}
+
+template <typename hash_T>
+typename hash_T::digest_type
+compute_digest(wchar_t const *p) {
+    return compute_digest_n<hash_T>(p, std::wcslen(p));
 }
 
 } // namespace hash
