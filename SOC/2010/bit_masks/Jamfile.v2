@@ -5,7 +5,7 @@
 project bit_mask
     : requirements
         <include>.
-        <include>$(boost-root)
+        <include>$(BOOST_ROOT)
     :
         build-dir bin.v2
     ;
