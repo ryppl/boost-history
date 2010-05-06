@@ -9,6 +9,13 @@
 #ifndef BOOST_INTEGER_BIT_MASK_HPP
 #define BOOST_INTEGER_BIT_MASK_HPP
 
-#include <boost/mpl/at.hpp>
+#include <boost/mpl/int.hpp>
+
+namespace boost {
+
+// template <typename TypeWidth, typename BitOffset, typename MaskWidth>
+// struct 
+
+} // namespace boost
 
 #endif
