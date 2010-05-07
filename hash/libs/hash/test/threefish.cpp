@@ -2,17 +2,22 @@
 //#define BOOST_HASH_THREEFISH_OLD_ROTATION_CONSTANTS
 #include <boost/hash/block_cyphers/threefish.hpp>
 #include <boost/hash/digest.hpp>
+#include <boost/hash/pack.hpp>
 
 #include <cassert>
 #include <cstdio>
 
 template <typename digest_type, typename state_type>
 digest_type to_digest(state_type state) {
-    return digest_type::template from_state<
-               boost::hash::stream_endian::little_octet_big_bit,
-               state_type::static_size*64,
-               64
-           >(state);
+    using namespace boost::hash;
+    int const digest_bits = digest_type::digest_bits;
+    int const word_bits = 64;
+    digest_type d;
+    pack_n<stream_endian::little_octet_big_bit,
+           word_bits,
+           octet_bits>(state.data(), digest_bits/word_bits,
+                       d.data(), digest_bits/octet_bits);
+    return d;
 }
 
 // All test vectors are from skein_golden_kat_internals.txt

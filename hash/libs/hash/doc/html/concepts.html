@@ -7,43 +7,70 @@
 
 <H2>The MaybeBoost Hash Library: Concepts</H2>
 
-<H3 id="hashpolicy"><tt>HashPolicy</tt> Concept</H3>
+<H3 id="hashalgorithm"><tt>HashAlgorithm</tt> Concept</H3>
 
-<P>A type <tt>T</tt> modelling the <tt>HashPolicy</tt> concept must support the following:
+<P>Models of the <tt>HashAlgorithm</tt> concept are policies to be provided as template arguments to other templates.  They provide access to the set of types needed to generically compute and store digests with a particular algorithm.  (For example, the <A HREF="functions.html#compute_digest"><tt>compute_digest</tt></A> function templates are parametrized by a <tt>HashAlgorithm</tt>, as would a future <A HREF="http://en.wikipedia.org/wiki/HMAC">HMAC</A>-computing function template.)
+
+<P>A type <tt>T</tt> modelling the <tt>HashAlgorithm</tt> concept must support the following:
     <DL style="margin-left: 1em">
     <DT><tt>T::stream_hash&lt;<i>ValueBits</i>&gt;::type</tt>
-    <DD>must model the <tt>StreamHash&lt;<i>ValueBits</i>&gt;</tt> concept.
+    <DD>must model the <A HREF="concepts.html#streamhash"><tt>StreamHash&lt;<i>ValueBits</i>&gt;</tt> concept</A>.
     <DD>Not all possible values of <i>ValueBits</i> need be accepted.  Typically, small powers of 2 (1, 2, 4, 8, 16, 32, 64) are accepted.
     <DT><tt>T::digest_type</tt>
-    <DD>must model the <tt>MessageDigest</tt> concept
+    <DD>an instantiation of the <A HREF="classes.html#digest"><tt>digest</tt> class template</A>.
     <DD>must match the <tt>digest_type</tt> of the <tt>StreamHash&lt;<i>ValueBits</i>&gt;</tt> policies mentioned above for any allowed choice of <i>ValueBits</i>.
     </DL>
 
 <P>Provided models:
-    <UL>
-    <LI>cubehash&lt;<i>h</i>&gt;, cubehash&lt;<i>r</i>, <i>b</i>, <i>h</i>&gt;, with <i>h</i> in {8, 16, 24, ..., 512}, <i>r</i> in {1, 2, 3, ...} (default 16), <i>b</i> in {4, 8, 12, ..., 128} (default 32)
-    <LI>md4, md5
-    <LI>sha (or sha0), sha1
-    <li>sha2&lt;<i>h</i>&gt;, with <i>h</i> in {224, 256, 384, 512}
-    </UL>
+    <TABLE BORDER=1>
+    <TR>
+    <TH>Header</TH>
+    <TH>Type</TH>
+    <TH><tt>digest_type</tt></TH>
+    </TR>
+    <TR>
+    <TD>&lt;boost/hash/cubehash.hpp&gt;</TD>
+    <TD><tt>cubehash&lt;<i>h</i>&gt;</tt>, <tt>cubehash&lt;<i>r</i>, <i>b</i>, <i>h</i>&gt;</tt>, with <i>h</i> in {8, 16, 24, ..., 512}, <i>r</i> in {1, 2, 3, ...} (default 16), <i>b</i> in {4, 8, 12, ..., 128} (default 32)</TD>
+    <TD>digest&lt;<i>h</i>&gt;</TD>
+    </TR>
+    <TR>
+    <TD>&lt;boost/hash/md4.hpp&gt;</TD>
+    <TD><tt>md4</tt></TD>
+    <TD>digest&lt;128&gt;</TD>
+    </TR>
+    <TR>
+    <TD>&lt;boost/hash/md5.hpp&gt;</TD>
+    <TD><tt>md5</tt></TD>
+    <TD>digest&lt;128&gt;</TD>
+    </TR>
+    <TR>
+    <TD>&lt;boost/hash/sha.hpp&gt;</TD>
+    <TD><tt>sha</tt>, <tt>sha0</tt></TD>
+    <TD>digest&lt;128&gt;</TD>
+    </TR>
+    <TR>
+    <TD>&lt;boost/hash/sha1.hpp&gt;</TD>
+    <TD><tt>sha1</tt></TD>
+    <TD>digest&lt;160&gt;</TD>
+    </TR>
+    <TR>
+    <TD>&lt;boost/hash/sha2.hpp&gt;</TD>
+    <TD><tt>sha2&lt;<i>h</i>&gt;</tt>, with <i>h</i> in {224, 256, 384, 512}</TD>
+    <TD>digest&lt;<i>h</i>&gt;</TD>
+    </TR>
+    </TABLE>
 
 <H3 id="streamhash"><tt>StreamHash&lt;<i>ValueBits</i>&gt;</tt> Concept</H3>
 
-<P>A type <tt>T</tt> modelling the <tt>StreamHash&lt;<i>ValueBits</i>&gt;</tt> concept must support the following (<tt>h</tt> is an object of type <tt>T</tt>, <tt>hc</tt> is an object of type <tt>T const</tt>):
+<P>A type <tt>T</tt> modelling the <tt>StreamHash&lt;<i>ValueBits</i>&gt;</tt> concept must be default-constructible, copy-constructible, and copy-assignable, as well as support the following (<tt>h</tt> is an object of type <tt>T</tt>, <tt>hc</tt> is an object of type <tt>T const</tt>):
 
     <DL style="margin-left: 1em">
     <DT><tt>T::digest_type</tt>
-    <DD>models the <tt>MessageDigest</tt> concept
+    <DD>an instantiation of the <A HREF="classes.html#digest"><tt>digest</tt> class template</A>.
     <DT><tt>T::value_type</tt>
     <DD>an unsigned fundamental integral type that can hold least <i>ValueBits</i> bits
-    <DT><tt>T x;</tt>
-    <DD>default-constructible
-    <DT><tt>T x = h;</tt>
-    <DD>copy-constructible
-    <DT><tt>T x; x = h;</tt>
-    <DD>copy-assignable
     <DT><tt>h.reset();</tt>
-    <DD>equivalent to <tt>h = T();</tt>
+    <DD>(equivalent to <tt>h = T();</tt>)
     <DT><tt>T::digest_type d = h.end_message();</tt>
     <DD>returns the digest of all input provided since the last reset, then resets
     <DD>(equivalent to <tt>digest_type d = h.digest(); h.reset();</tt>, though typically more efficient if the hash involves padding or finalization)
@@ -58,7 +85,14 @@
     <DD>Equivalent to <tt>{ InputIterator i = b; for (size_t j = 0; j != n; ++j) h.update_one(*i++); }</tt>
     </DL>
 
-<P>Provided models are accessible through HashPolicy models.
+<P>Each <A HREF="#hashalgorithm">HashAlgorithm</a> model provides access to all its associated StreamHash models; Those StreamHash models are generally not accessibly in other ways.
+
+<P><TABLE WIDTH="100%">
+<TR>
+<TD>Previous: <A HREF="functions.html">Functions</A></TD>
+<TD ALIGN="RIGHT">Next: <A HREF="performance.html">Performance</A></TD>
+</TR>
+</TABLE>
 
 <HR>
 

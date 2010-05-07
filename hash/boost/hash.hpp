@@ -17,5 +17,7 @@
 #include <boost/hash/sha2.hpp>
 
 #include <boost/hash/compute_digest.hpp>
+#include <boost/hash/digest.hpp>
+#include <boost/hash/digest_io.hpp>
 
 #endif // BOOST_HASH_HPP

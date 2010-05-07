@@ -25,12 +25,17 @@ struct md4 {
     typedef block_cyphers::md4 block_cypher_type;
   public:
     typedef merkle_damgard_block_hash<
+                stream_endian::little_octet_big_bit,
+                policy_type::digest_bits,
                 policy_type::iv_generator,
                 davies_meyer_compressor<block_cypher_type,
-                                        detail::state_adder>,
-                digest_from_state<digest<policy_type::digest_bits>,
-                                  stream_endian::little_octet_big_bit>
-            > block_hash_type;
+                                        detail::state_adder>
+            > block_hash_type_;
+#ifdef BOOST_HASH_NO_HIDE_INTERNAL_TYPES
+    typedef block_hash_type_ block_hash_type;
+#else
+    struct block_hash_type : block_hash_type_ {};
+#endif
     template <unsigned value_bits>
     struct stream_hash {
         typedef stream_preprocessor<
@@ -38,7 +43,12 @@ struct md4 {
                     value_bits,
                     block_hash_type::word_bits * 2,
                     block_hash_type
-                > type;
+                > type_;
+#ifdef BOOST_HASH_NO_HIDE_INTERNAL_TYPES
+        typedef type_ type;
+#else
+        struct type : type_ {};
+#endif
     };
     typedef block_hash_type::digest_type digest_type;
 };

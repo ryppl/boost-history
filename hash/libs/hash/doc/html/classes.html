@@ -1,0 +1,57 @@
+<html>
+<head>
+<title>The MaybeBoost Hash Library</title>
+<body>
+
+<P STYLE="float:right"><A HREF="../..">Back to Index</A></P>
+
+<H2>The MaybeBoost Hash Library: Classes</H2>
+
+<H3 id="digest"><tt>digest&lt;<i>Bits</i>&gt;</tt></H3>
+
+<P>Defined in <tt>&lt;boost/hash/digest.hpp&gt;</tt>
+
+<P>The <tt>digest</tt> class template stores a <i>Bits</i>-bit message digest as a sequence of 8-bit octets.  Octets are stored in the smallest unsigned type able to hold 8 bits, hereinafter referred to as <tt>octet_type</tt>.  <i>Bits</i> must be a multiple of 8.
+
+<P>It is independent of any particular algorithm; For example <tt>sha2&lt;224&gt;</tt> and <tt>cubehash&lt;224&gt;</tt> both produce a <tt>digest&lt;224&gt;</tt>.  Each algorithm generates its digest such that it will be displayed in the canonical order for that algorithm.  The <tt>truncate</tt> and <tt>resize</tt> function templates are provided to handle digests with lengths other than you're expecting.  For instance, generating name-based <A HREF="http://www.boost.org/libs/uuid">UUID</A>s uses only 128 bits but SHA-1 provides a 160-bit digest, so it would be truncated.  (Using <tt>truncate</tt> instead of <tt>resize</tt> means that a compilation error will result from trying to use a hash algorithm with too small an output.)  On the other hand, for storing as much as possible of the results of various algorithms, <tt>resize</tt> allows you to pad them out to a large size, such as a <tt>digest&lt;512&gt;</tt>.
+
+<P><tt>digest&lt;<i>Bits</i>&gt;</tt> derives publicly from <tt><A HREF="http://boost.org/libs/array/">boost::array</A>&lt;octet_type, <i>Bits</i>/8&gt;</tt> and supports all of its operations in order to provide direct access to the contained octets.  Note that a <tt>digest</tt> is <i>not</i> an aggregate; A default-constructed <tt>digest</tt> has all its contained octets set to zero.  The <tt>base_array()</tt> member function provides a reference to the <tt>boost::array</tt> sub-object.
+
+<P><tt>digest</tt>s with different numbers of bits may be compared.  For the comparison, the smaller is considered as though it were padded with <tt>0</tt>s out to the size of the larger.  The <tt>operator&lt;</tt> provides a strict total order.  For convenience, equality comparison with narrow c-style strings is also provided.
+
+<P>In addition, the following operations are supported:
+    <DL STYLE="margin-left: 1em">
+    <DT><tt>template &lt;int NewBits, int OldBits&gt;<br>
+            digest&lt;NewBits&gt; truncate(digest&lt;OldBits&gt; const&);</tt>
+    <DD>Returns a digest containing only the first <i>NewBits</i> bits of the argument digest.  Requires that NewBits <= OldBits.
+    <DD>Truncating a message digest generally does not weaken the hash algorithm beyond the amount necessitated by the shorted output size.
+    <DT><tt>template &lt;int NewBits, int OldBits&gt;<br>
+            digest&lt;NewBits&gt; resize(digest&lt;OldBits&gt; const&);</tt>
+    <DD>Returns a digest containing the first min(<i>NewBits</i>, <i>OldBits</i>) bits of the argument digest followed by max(0, <i>NewBits</i> - <i>OldBits</i>) <tt>0</tt> bits.
+    </DL>
+
+<P>The <tt>&lt;boost/hash/digest_io.hpp&gt;</tt> header provides these additional operations:
+    <DL STYLE="margin-left: 1em">
+    <DT><tt>template &lt;int Bits&gt;<br>
+            std::ostream &operator<<(std::ostream &, digest&lt;Bits&gt; const &);</tt>
+    <DD>Writes the stored octets to the sink as <i>Bits</i>/4 lower-case hexadecimal digits in big-bit order.
+    <DT><tt>template &lt;int Bits&gt;<br>
+            std::istream &operator>>(std::istream &, digest&lt;Bits&gt; &);</tt>
+    <DD>Reads the stored octets from the source as <i>Bits</i>/4 case-insensitive hexadecimal digits in big-bit order.  If fewer hexadecimal digits are available, they are assumed to be <tt>0</tt> and the stream's <tt>failbit</tt> is set.
+    </DL>
+
+<P><TABLE WIDTH="100%">
+<TR>
+<TD>Previous: <A HREF="quickstart.html">Quickstart</A></TD>
+<TD ALIGN="RIGHT">Next: <A HREF="functions.html">Functions</A></TD>
+</TR>
+</TABLE>
+
+<HR>
+
+<P>Copyright Scott McMurray 2010</P>
+<P>Distributed under the Boost Software License, Version 1.0. (See accompanying file <A href="/LICENSE_1_0.txt">LICENSE_1_0.txt</A> or copy at <A href="/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</A>).</P>
+
+</body>
+</html>
+

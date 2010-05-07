@@ -12,9 +12,10 @@
 #include <string>
 
 int main() {
+    using namespace boost::hash;
     std::string s = "Hello World!";
-    typedef boost::hash::sha2<256> HashPolicy;
-    HashPolicy::digest_type digest = boost::hash::compute_digest<HashPolicy>(s);
+    typedef sha2<256> HashAlgorithm;
+    HashAlgorithm::digest_type digest = compute_digest<HashAlgorithm>(s);
     std::cout << digest << "\n";
 }
 

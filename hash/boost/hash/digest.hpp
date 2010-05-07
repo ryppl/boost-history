@@ -11,11 +11,8 @@
 
 #include <boost/array.hpp>
 #include <boost/integer.hpp>
-#include <boost/hash/pack.hpp>
 #include <boost/static_assert.hpp>
 
-#include <iterator>
-#include <ostream>
 #include <string>
 
 #include <cstring>
@@ -23,33 +20,31 @@
 namespace boost {
 namespace hash {
 
+unsigned const octet_bits = 8;
+typedef uint_t<octet_bits>::least octet_type;
+
 // Always stored internally as a sequence of octets in display order.
 // This allows digests from different algorithms to have the same type,
 // allowing them to be more easily stored and compared.
 template <unsigned digest_bits_>
-class digest {
+class digest : public array<octet_type, digest_bits_/octet_bits> {
   public:
-    static unsigned const octet_bits = 8;
-    typedef typename uint_t<octet_bits>::least octet_type;
 
     static unsigned const digest_bits = digest_bits_;
     BOOST_STATIC_ASSERT(digest_bits % octet_bits == 0);
     static unsigned const digest_octets = digest_bits/octet_bits;
-    typedef array<octet_type, digest_octets> data_type;
+    typedef array<octet_type, digest_octets> base_array_type;
 
     static unsigned const cstring_size = digest_bits/4 + 1;
     typedef array<char, cstring_size> cstring_type;
 
-    digest() : data_() {}
-    digest(data_type const &d) : data_(d) {}
-
-    data_type &data() { return data_; }
-    data_type const &data() const { return data_; }
+    digest() : base_array_type() {}
+    digest(base_array_type const &a) : base_array_type(a) {}
 
     template <typename oit_T>
-    oit_T ascii(oit_T it) const {
+    oit_T to_ascii(oit_T it) const {
         for (unsigned j = 0; j < digest_octets; ++j) {
-            octet_type b = data_[j];
+            octet_type b = base_array()[j];
             *it++ = "0123456789abcdef"[(b >> 4) & 0xF];
             *it++ = "0123456789abcdef"[(b >> 0) & 0xF];
         }
@@ -65,68 +60,67 @@ class digest {
     cstring_type
     cstring() const {
         cstring_type s;
-        char *p = ascii(s.data());
+        char *p = to_ascii(s.data());
         *p++ = '\0';
         return s;
     }
 
-    template <typename endian,
-              unsigned state_bits,
-              unsigned word_bits,
-              typename state_type>
-    static digest
-    from_state(state_type const &s) {
-        static unsigned const state_words = state_bits/word_bits;
-        BOOST_STATIC_ASSERT(state_words <= state_words);
-        BOOST_STATIC_ASSERT(digest_bits % word_bits == 0);
-
-        array<octet_type, state_bits/octet_bits> d;
-        pack<endian, word_bits, octet_bits>(s, d);
-        data_type td;
-        for (unsigned i = 0; i < digest_octets; ++i) {
-            td[i] = d[i];
-        }
-        return digest(td);
-    }
-  private:
-    data_type data_;
+    base_array_type const &base_array() const { return *this; }
 };
 
-template <typename digest_type_,
-          typename endian>
-struct digest_from_state {
-    typedef digest_type_ digest_type;
-    template <unsigned state_bits,
-              unsigned word_bits,
-              typename state_type>
-    static digest_type
-    from_state(state_type const &s) {
-        return digest_type::template from_state<
-                    endian, state_bits, word_bits
-               >(s);
-    }
-};
-
-template <unsigned DB>
-bool operator==(digest<DB> const &a, digest<DB> const &b) {
-    return a.data() == b.data();
+template <unsigned NDB, unsigned ODB>
+digest<NDB>
+resize(digest<ODB> const &od) {
+    digest<NDB> nd;
+    unsigned bytes = sizeof(octet_type)*(NDB < ODB ? NDB : ODB)/octet_bits;
+    std::memcpy(nd.data(), od.data(), bytes);
+    return nd;
 }
 
-template <unsigned DB>
-bool operator!=(digest<DB> const &a, digest<DB> const &b) {
+template <unsigned NDB, unsigned ODB>
+digest<NDB>
+truncate(digest<ODB> const &od) {
+    BOOST_STATIC_ASSERT(NDB <= ODB);
+    return resize<NDB>(od);
+}
+
+template <unsigned DB1, unsigned DB2>
+bool operator==(digest<DB1> const &a, digest<DB2> const &b) {
+    unsigned const DB = DB1 < DB2 ? DB2 : DB1;
+    return resize<DB>(a).base_array() == resize<DB>(b).base_array();
+}
+template <unsigned DB1, unsigned DB2>
+bool operator!=(digest<DB1> const &a, digest<DB2> const &b) {
     return !(a == b);
+}
+
+template <unsigned DB1, unsigned DB2>
+bool operator<(digest<DB1> const &a, digest<DB2> const &b) {
+    unsigned const DB = DB1 < DB2 ? DB2 : DB1;
+    return resize<DB>(a).base_array() < resize<DB>(b).base_array();
+}
+template <unsigned DB1, unsigned DB2>
+bool operator>(digest<DB1> const &a, digest<DB2> const &b) {
+    return b < a;
+}
+template <unsigned DB1, unsigned DB2>
+bool operator<=(digest<DB1> const &a, digest<DB2> const &b) {
+    return !(b < a);
+}
+template <unsigned DB1, unsigned DB2>
+bool operator>=(digest<DB1> const &a, digest<DB2> const &b) {
+    return !(b > a);
 }
 
 template <unsigned DB>
 bool operator!=(digest<DB> const &a, char const *b) {
+    BOOST_ASSERT(std::strlen(b) == DB/4);
     return std::strcmp(a.cstring().data(), b);
 }
-
 template <unsigned DB>
 bool operator==(digest<DB> const &a, char const *b) {
     return !(a != b);
 }
-
 template <unsigned DB>
 bool operator!=(char const *b, digest<DB> const &a) {
     return a != b;
@@ -135,13 +129,6 @@ template <unsigned DB>
 bool operator==(char const *b, digest<DB> const &a) {
     return a == b;
 }
-
-template <unsigned DB>
-std::ostream &
-operator<<(std::ostream &sink, digest<DB> const &d) {
-    d.ascii(std::ostream_iterator<char>(sink));
-    return sink;
-};
 
 } // namespace hash
 } // namespace boost

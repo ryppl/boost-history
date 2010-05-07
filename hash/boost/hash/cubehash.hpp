@@ -93,12 +93,17 @@ struct cubehash {
     typedef detail::cubehash_policy<r, b, h> policy_type;
   public:
     typedef merkle_damgard_block_hash<
+                stream_endian::little_octet_big_bit,
+                policy_type::digest_bits,
                 typename policy_type::iv_generator,
                 cubehash_compressor<r, b, h>,
-                digest_from_state<digest<policy_type::digest_bits>,
-                                  stream_endian::little_octet_big_bit>,
                 cubehash_finalizer<r, b, h>
-            > block_hash_type;
+            > block_hash_type_;
+#ifdef BOOST_HASH_NO_HIDE_INTERNAL_TYPES
+    typedef block_hash_type_ block_hash_type;
+#else
+    struct block_hash_type : block_hash_type_ {};
+#endif
     template <unsigned value_bits>
     struct stream_hash {
         typedef stream_preprocessor<
@@ -106,7 +111,12 @@ struct cubehash {
                     value_bits,
                     0, // No length padding!
                     block_hash_type
-                > type;
+                > type_;
+#ifdef BOOST_HASH_NO_HIDE_INTERNAL_TYPES
+        typedef type_ type;
+#else
+        struct type : type_ {};
+#endif
     };
     typedef typename block_hash_type::digest_type digest_type;
 };

@@ -9,34 +9,51 @@
 
 <H3 ID="compute_digest">The <tt>compute_digest</tt> Family</H3>
 
-<P>These are convenience functions for calculating the message digest of a single range of data.  All versions take a <A HREF="concepts.html#hashpolicy"><tt><i>HashPolicy</i></tt></A> model as an explicit template parameter and return the corresponding <tt><i>HashPolicy</i>::digest_type</tt>. All the bits in the provided values are used (including the sign bit, if present).
+<P>Defined in <tt>&lt;boost/hash/compute_digest.hpp&gt;</tt>
 
-<P>There are three ways to provide the range:
+<P>These are convenience functions for calculating the message digest of a single range of data.  All versions take a <A HREF="concepts.html#hashalgorithm"><tt><i>HashAlgorithm</i></tt></A> model as an explicit template parameter and return the corresponding <tt><i>HashAlgorithm</i>::digest_type</tt>.  All the bits in the input range values are used (including the sign bit, if present).
 
-<OL>
-<LI>As a pair of iterators
+<P>There are multiple ways to provide the range:
+
+<UL>
+<LI>As a pair of input iterators
     <UL>
-    <LI><tt>compute_digest&lt;<i>HashPolicy</i>&gt;(<i>InIter</i> b, <i>InIter</i> e)</tt>
+    <LI><tt>compute_digest&lt;<i>HashAlgorithm</i>&gt;(<i>InIter</i> b, <i>InIter</i> e)</tt>
     </UL>
-<LI>As an iterator and a length
+<LI>As an input iterator and a length
     <UL>
-    <LI><tt>compute_digest_n&lt;<i>HashPolicy</i>&gt;(<i>InIter</i> b, size_t n)</tt>
+    <LI><tt>compute_digest_n&lt;<i>HashAlgorithm</i>&gt;(<i>InIter</i> b, size_t n)</tt>
     </UL>
-<LI>As a whole container
+<LI>As a <A HREF="http://www.boost.org/libs/range/doc/html/range/concepts/single_pass_range.html">single-pass range</A> of <A HREF="http://www.boost.org/libs/iterator/doc/new-iter-concepts.html#readable-iterators-lib-readable-iterators">readable iterators</A>
     <UL>
-    <LI><tt>compute_digest&lt;<i>HashPolicy</i>&gt;(<i>Container</i> const &c)</tt><BR>
-        when <tt>c</tt> has <tt>begin()</tt> and <tt>end()</tt> member functions
-    <LI><tt>compute_digest_n&lt;<i>HashPolicy</i>&gt;(<i>Container</i> const &c)</tt><BR>
-        when <tt>c</tt> has <tt>begin()</tt> and <tt>size()</tt> member functions
-    <LI><tt>compute_digest_data&lt;<i>HashPolicy</i>&gt;(<i>Container</i> const &c)</tt><BR>
-        when <tt>c</tt> has <tt>data()</tt> and <tt>size()</tt> member functions
+    <LI><tt>compute_digest&lt;<i>HashAlgorithm</i>&gt;(<i>Range</i> const &r)</tt><BR>
+        equivalent to <tt>compute_digest&lt;<i>HashAlgorithm</i>&gt;(boost::begin(r), boost::end(r))</tt>
     </UL>
-    When the <tt>Container</tt> is a <tt>std::basic_string</tt>, <tt>compute_digest</tt> or <tt>compute_digest_n</tt> delegate to <tt>compute_digest_data</tt>.
-</OL>
+    (When the <tt>Range</tt> is a <tt>std::basic_string</tt>, <tt>compute_digest</tt> and <tt>compute_digest_n</tt> delegate to <tt>compute_digest_data</tt> to allow pointer-dependant optimizations.)
+<LI>As an object providing <tt>begin()</tt> and <tt>size()</tt> member functions
+    <UL>
+    <LI><tt>compute_digest_n&lt;<i>HashAlgorithm</i>&gt;(<i>T</i> const &x)</tt><BR>
+        equivalent to <tt>compute_digest_n&lt;<i>HashAlgorithm</i>&gt;(x.begin(), x.size())</tt>
+    </UL>
+<LI>As an object providing <tt>data()</tt> and <tt>size()</tt> member functions
+    <UL>
+    <LI><tt>compute_digest_data&lt;<i>HashAlgorithm</i>&gt;(<i>T</i> const &x)</tt><BR>
+        equivalent to <tt>compute_digest_n&lt;<i>HashAlgorithm</i>&gt;(x.data(), x.size())</tt>
+    </UL>
+</UL>
 
-<P><B>Portability Note:</B> Because the number of bits to use is taken from the size of the iterator's <tt>value_type</tt>, it's best to use the <tt>uint_t&lt;<i>N</i>&gt;::exact</tt> types from Boost.Integer rather than directly use fundamental types.  Most users are unlikely to need to worry about this, however, as they will be using ranges of bytes on POSIX-compatible machines (where <tt>CHAR_BIT</tt> is always 8).
+<P><B>Portability Note:</B> Hashing values with <tt>compute_digest</tt> is portable if you ensure that the size in bits of the range iterator's value_type is the same on all machines.  It's expected that most users will be hashing bytes on POSIX-compatible machines (where bytes are always 8 bits), and thus will have no portability issues.
 
-<P><B>Alternative:</B> If you need to specify the number of bits to use from each value, then use the <A HREF="concepts.html#streamhash"><i><tt>StreamHash</tt></i></A> directly.  This can still be done as an expression as follows: <tt><i>HashPolicy</i>::stream_hash&lt;<i>N</i>&gt;::type().update(<i>b</i>, <i>e</i>).end_message()</tt>.
+<P><B>Limitation:</B> It is not possible to explicitly specify the number of bits to use from each value in the range when using <tt>compute_digest</tt>.  The alternative is to use the <A HREF="concepts.html#streamhash"><i><tt>StreamHash</tt></i></A> directly.  This can still be done as an expression using code along the lines of the following:
+<BLOCKQUOTE><tt>typedef <i>HashAlgorithm</i>::stream_hash&lt;<i>N</i>&gt;::type shn;<BR>
+shn::digest_type d = shn().update(<i>b</i>, <i>e</i>).end_message();</tt></BLOCKQUOTE>
+
+<P><TABLE WIDTH="100%">
+<TR>
+<TD>Previous: <A HREF="classes.html">Classes</A></TD>
+<TD ALIGN="RIGHT">Next: <A HREF="concepts.html">Concepts</A></TD>
+</TR>
+</TABLE>
 
 <HR>
 

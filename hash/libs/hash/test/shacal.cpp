@@ -72,11 +72,10 @@ void test_shacal1_block_cypher() {
     }
 
     typedef boost::hash::merkle_damgard_block_hash<
+                boost::hash::stream_endian::big_octet_big_bit,
+                160,
                 boost::hash::detail::sha1_policy::iv_generator,
-                owcft,
-                boost::hash::digest_from_state<
-                    boost::hash::digest<160>,
-                    boost::hash::stream_endian::big_octet_big_bit>
+                owcft
             > bht;
 
     {
@@ -158,11 +157,10 @@ void test_shacal256_block_cypher() {
     }
 
     typedef boost::hash::merkle_damgard_block_hash<
+                boost::hash::stream_endian::big_octet_big_bit,
+                256,
                 boost::hash::detail::sha2_policy<256>::iv_generator,
-                owcft,
-                boost::hash::digest_from_state<
-                    boost::hash::digest<256>,
-                    boost::hash::stream_endian::big_octet_big_bit>
+                owcft
             > bht;
 
     {
@@ -181,9 +179,10 @@ void test_shacal256_block_cypher() {
 void test_sha1() {
     using namespace boost::hash;
     typedef merkle_damgard_block_hash<
+                stream_endian::big_octet_big_bit,
+                160,
                 detail::sha1_policy::iv_generator,
-                davies_meyer_compressor<block_cyphers::shacal1, state_adder>,
-                digest_from_state<digest<160>, stream_endian::big_octet_big_bit>
+                davies_meyer_compressor<block_cyphers::shacal1, state_adder>
             > block_hash_type;
     typedef stream_preprocessor<
                 stream_endian::big_octet_big_bit,
@@ -212,9 +211,10 @@ void test_sha512() {
     using namespace boost::hash;
     unsigned const SHA = 512;
     typedef merkle_damgard_block_hash<
+                stream_endian::big_octet_big_bit,
+                SHA,
                 detail::sha2_policy<SHA>::iv_generator,
-                davies_meyer_compressor<block_cyphers::shacal2<SHA>, state_adder>,
-                digest_from_state<digest<SHA>, stream_endian::big_octet_big_bit>
+                davies_meyer_compressor<block_cyphers::shacal2<SHA>, state_adder>
             > block_hash_type;
     typedef stream_preprocessor<
                 stream_endian::big_octet_big_bit,

@@ -7,7 +7,7 @@
 //
 
 //
-// Define HASH to one of the models of the HashPolicy concept.
+// Define HASH to one of the models of the HashAlgorithm concept.
 // Do not include the boost::hash:: namespace qualifier.
 //
 
@@ -30,17 +30,17 @@
 #include <sys/mman.h>
 #endif
 
-typedef boost::hash::HASH hash_policy;
+typedef boost::hash::HASH HashAlgorithm;
 
-hash_policy::digest_type
+HashAlgorithm::digest_type
 hash_streambuf(std::streambuf *sbuf) {
 #ifdef BOOST_HASH_NO_OPTIMIZATION
-    return boost::hash::compute_digest<hash_policy>(
+    return boost::hash::compute_digest<HashAlgorithm>(
                std::istreambuf_iterator<char>(sbuf),
                std::istreambuf_iterator<char>()
            );
 #else
-    hash_policy::stream_hash<8>::type hash;
+    HashAlgorithm::stream_hash<8>::type hash;
     for (;;) {
         boost::array<char, 8*1024> buf;
         std::streamsize n = sbuf->sgetn(&buf[0], buf.size());
@@ -51,9 +51,9 @@ hash_streambuf(std::streambuf *sbuf) {
 #endif           
 }
 
-hash_policy::digest_type
+HashAlgorithm::digest_type
 hash_memory(void *buf, size_t n) {
-    return boost::hash::compute_digest_n<hash_policy>((char*)buf, n);
+    return boost::hash::compute_digest_n<HashAlgorithm>((char*)buf, n);
 }
 
 std::ostream &

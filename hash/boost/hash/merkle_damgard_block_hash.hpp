@@ -9,6 +9,9 @@
 #ifndef BOOST_HASH_MERKLE_DAMGARD_BLOCK_HASH_HPP
 #define BOOST_HASH_MERKLE_DAMGARD_BLOCK_HASH_HPP
 
+#include <boost/hash/digest.hpp>
+#include <boost/hash/pack.hpp>
+
 namespace boost {
 namespace hash {
 
@@ -26,16 +29,17 @@ struct nop_finalizer {
     operator()(T &) {}
 };
 
-template <typename iv_G,
+template <typename digest_endian,
+          int digest_bits,
+          typename iv_G,
           typename compressor_F,
-          typename digest_C,
           typename finalizer_F = nop_finalizer>
 class merkle_damgard_block_hash {
   public:
+    typedef hash::digest<digest_bits> digest_type;
+
     typedef iv_G iv_generator;
     typedef compressor_F compressor_functor;
-    typedef digest_C digest_creator;
-    typedef typename digest_creator::digest_type digest_type;
     typedef finalizer_F finalizer_functor;
 
     static unsigned const word_bits = compressor_functor::word_bits;
@@ -58,9 +62,13 @@ class merkle_damgard_block_hash {
     digest_type end_message() {
         finalizer_functor finalizer;
         finalizer(state_);
-        digest_type digest = digest_creator::template from_state<state_bits, word_bits>(state_);
+        digest_type d;
+        pack_n<digest_endian,
+               word_bits,
+               octet_bits>(state_.data(), digest_bits/word_bits,
+                           d.data(), digest_bits/octet_bits);
         reset();
-        return digest;
+        return d;
     }
     digest_type digest() const {
         return merkle_damgard_block_hash(*this).end_message();

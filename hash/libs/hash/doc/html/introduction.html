@@ -1,0 +1,38 @@
+<html>
+<head>
+<title>The MaybeBoost Hash Library</title>
+<body>
+
+<P STYLE="float:right"><A HREF="../..">Back to Index</A></P>
+
+<H2>The MaybeBoost Hash Library: Introduction</H2>
+
+<P>A cryptographic hash algorithm <i>H</i> takes a message <i>M</i> and produces a <i>B</i>-bit digest <i>D</i> = <i>H</i>(<i>M</i>) in such a way that the following properties hold:
+    <DL STYLE="margin-left: 1em">
+    <DT>Preimage resistance
+    <DD>Given a digest <i>D</i>, it is challenging to produce a message <i>M'</i> such that <i>D</i> = <i>H</i>(<i>M'</i>).  Ideally it would be &Omega;(2<sup><i>B</i></sup>), the average complexity of a brute-force search.
+    <DT>Second preimage resistance
+    <DD>Given a message <i>M</i>, it should be challenging to find a different second message <i>M'</i> such that <i>H</i>(<i>M</i>) = <i>H</i>(<i>M'</i>).  Ideally it would require the same as a preimage search for <i>D</i> = <i>H</i>(<i>M</i>).
+    <DT>Collision resistance
+    <DD>It is challenging to produce two different messages <i>M</i> and <i>M'</i> such that <i>H</i>(<i>M</i>) = <i>H</i>(<i>M'</i>).  Because of the <A HREF="http://en.wikipedia.org/wiki/Birthday_problem">birthday paradox</A>, ideally it would be &Omega;(2<sup><i>B</i>/2</sup>), the average complexity of a brute-force search.
+    </DL>
+
+<P>As their name suggests, they have many uses in cryptography, mostly as part of authentication schemes.  They have many other uses as well, including corruption detection, digital fingerprinting, and duplication detection.  For more information, see the <A HREF="http://en.wikipedia.org/wiki/Cryptographic_hash">Wikipedia article on cryptographic hashing</A>.
+
+<P>For uses outside of cryptography, cryptographic hash functions provide advantages against a malicious adversary at a performance cost over specialized techniques.  For example, Boost.CRC offers good protection against accidental transmission errors, but it's simple for an attacker to modify the stream without changing its CRC.  (That said, even the strongest hash algorithm won't help if the attacker can modify the hash as well as the input.)  Similarly, it would be harder for an attacker to induce worst-case behaviour in a hash table if it used a cryptographic hash function.  (Typically a cryptographic hash algorithm with a truncated digest is no less secure than is implied by the smaller number of bits.)
+
+<P><TABLE WIDTH="100%">
+<TR>
+<TD></TD>
+<TD ALIGN="RIGHT">Next: <A HREF="quickstart.html">Quickstart</A></TD>
+</TR>
+</TABLE>
+
+<HR>
+
+<P>Copyright Scott McMurray 2010</P>
+<P>Distributed under the Boost Software License, Version 1.0. (See accompanying file <A href="/LICENSE_1_0.txt">LICENSE_1_0.txt</A> or copy at <A href="/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</A>).</P>
+
+</body>
+</html>
+

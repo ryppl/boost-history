@@ -9,6 +9,8 @@
 #ifndef BOOST_HASH_COMPUTE_DIGEST_HPP
 #define BOOST_HASH_COMPUTE_DIGEST_HPP
 
+#include <boost/range/begin.hpp>
+#include <boost/range/end.hpp>
 #include <boost/static_assert.hpp>
 
 #include <iterator>
@@ -51,10 +53,10 @@ compute_digest_n(iter_T b, size_t n) {
     return sh.end_message();
 }
 
-template <typename hash_T, typename container_T>
+template <typename hash_T, typename range_T>
 typename hash_T::digest_type
-compute_digest(container_T const &c) {
-    return compute_digest<hash_T>(c.begin(), c.end());
+compute_digest(range_T const &r) {
+    return compute_digest<hash_T>(boost::begin(r), boost::end(r));
 }
 
 template <typename hash_T, typename container_T>

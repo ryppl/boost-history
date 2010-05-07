@@ -19,7 +19,7 @@
     <TR>
     <TH>Name
     <TH>Digest Bits
-    <TH><A HREF="concepts.html#hashpolicy"><tt>HashPolicy</tt></A> Model (in <tt>boost::hash</tt>)
+    <TH><A HREF="concepts.html#hashalgorithm"><tt>HashAlgorithm</tt></A> Model (in <tt>boost::hash</tt>)
     <TH>Reference
     <TH>Notes
     </TR>
@@ -64,7 +64,7 @@
     <TR>
     <TD>SHA-256
     <TD>256
-    <TD><tt>sha2&lt;224&gt;</tt>
+    <TD><tt>sha2&lt;256&gt;</tt>
     </TR>
     <TR>
     <TD>SHA-384
@@ -86,14 +86,15 @@
     </TR>
 
     </TABLE>
+If you need security against a malicious adversary, <tt>sha2&lt;<i>h</i>&gt;</tt> is, as of 2010, the recommended choice. If not, then MD5 is a popular choice and is much faster than any of the SHAs.
 
-<LI>With the chosen <i>HashPolicy</i>, call the <tt>boost::hash::<A HREF="functions.html#compute_digest">compute_digest</a>&lt;<i>HashPolicy</i>&gt;</tt> function, passing it a container.  That will return the digest as an object of type <tt><i>HashPolicy</i>::digest_type</tt>.
+<LI>With the chosen <i>HashAlgorithm</i>, call the <tt>boost::hash::<A HREF="functions.html#compute_digest">compute_digest</a>&lt;<i>HashAlgorithm</i>&gt;</tt> function, passing it an <A HREF="http://boost.org/libs/range">input range</A> (such as a container).  That will return the digest as an object of type <tt><i>HashAlgorithm</i>::digest_type</tt>.
 
-<LI>The resulting message digest may be output to a <tt>std::ostream</tt> or directly converted to a <tt>std::string</tt> for display with the <tt>.str()</tt> member function.
+<LI>The resulting <A HREF="classes.html#digest">digest</A> may then be output to a <tt>std::ostream</tt> or compared against other message digests (such as one read from a <tt>std::istream</tt>).
 
 </OL></P>
 
-<P>Here's a sample complete program (<tt>example/quickstart.cpp</tt>):
+<P>Here's a sample complete program, <A HREF="../../example/quickstart.cpp"><tt>example/quickstart.cpp</tt></A>:
 <BLOCKQUOTE><PRE>
 #include &lt;boost/hash.hpp&gt;
 
@@ -102,11 +103,25 @@
 
 int main() {
     std::string s = "Hello World!";
-    typedef boost::hash::sha2&lt;256&gt; HashPolicy;
-    HashPolicy::digest_type digest = boost::hash::compute_digest<HashPolicy>(s);
+}
+
+int main() {
+    using namespace boost::hash;
+    std::string s = "Hello World!";
+    typedef boost::hash::sha2&lt;256&gt; HashAlgorithm;
+    HashAlgorithm::digest_type digest = compute_digest&lt;HashAlgorithm&gt;(s);
     std::cout &lt;&lt; digest &lt;&lt; "\n";
 }
 </PRE></BLOCKQUOTE>
+
+<P>The distribution also includes a "hash this file" example, <A HREF="../../example/hashsum.cpp"><tt>example/hashsum.cpp</tt></A>,  along the lines of the coreutils md5sum and sha1sum programs.<tt>
+
+<P><TABLE WIDTH="100%">
+<TR>
+<TD>Previous: <A HREF="introduction.html">Introduction</A></TD>
+<TD ALIGN="RIGHT">Next: <A HREF="functions.html">Functions</A></TD>
+</TR>
+</TABLE>
 
 <HR>
 
