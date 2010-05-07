@@ -63,12 +63,15 @@ namespace boost {
                 ForwardIteratorT InEnd, 
                 PredicateT IsSpace )
             {
-                ForwardIteratorT It=InBegin;
+                /*ForwardIteratorT It=InBegin;
                 for(; It!=InEnd; ++It )
                 {
                     if (!IsSpace(*It))
                         return It;
-                }
+                }*/
+				ForwardIteratorT It = InBegin;
+				for (; It != InEnd && IsSpace(*It); ++It)
+					;
 
                 return It;
             }

@@ -29,10 +29,10 @@
             ordered fashion. Character is any value type with "cheap" copying and assignment.                
         </para>
         <para>
-            First requirement of string-type is that it must accessible using 
+            First requirement of string-type is that it must be accessible using 
             <ulink url="../../libs/range/index.html">Boost.Range</ulink>. This facility allows to access
             the elements inside the string in a uniform iterator-based fashion. 
-            This is sufficient for our library
+            This is sufficient for our library.
         </para>
         <para>            
             Second requirement defines the way in which the characters are stored in the string. Algorithms in 

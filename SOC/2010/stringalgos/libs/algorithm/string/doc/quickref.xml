@@ -151,7 +151,7 @@
                     </row>
                     <row>
                         <entry><code>lexicographical_compare</code></entry>
-                        <entry>Check if a string is lexicographically less then another one</entry>
+                        <entry>Check if a string is lexicographically less than another one</entry>
                         <entry>
                             <functionname>lexicographical_compare()</functionname>
                             <sbr/>
