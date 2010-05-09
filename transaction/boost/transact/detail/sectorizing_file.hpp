@@ -24,15 +24,11 @@ public:
         : base(name)
         , size(0){}
     template<class Size>
-    void save_binary(void const *data,Size s){
+    void write(void const *data,Size s){
         if(this->size + s <= max_size){
             std::memcpy(this->buffer(this->size),data,s);
             this->size+=s;
-        }else this->save_overflow(data,s);
-    }
-    template<class T>
-    void save(T const &t){
-        this->save_binary(&t,mpl::size_t<sizeof(T)>());
+        }else this->write_overflow(data,s);
     }
     size_type position() const{
         return this->base.position() + this->size + 1;
@@ -57,7 +53,7 @@ private:
     static std::size_t const sector_size=512;
     static std::size_t const max_size=sector_size-2;
 
-    void save_overflow(void const *data,std::size_t s){
+    void write_overflow(void const *data,std::size_t s){
         BOOST_ASSERT(this->size + s > max_size);
 
         std::size_t write=max_size-this->size;
@@ -78,7 +74,7 @@ private:
             BOOST_ASSERT(this->size <= max_size);
             this->buffer_[0]=this->size | 0x80;
             this->buffer_[sector_size-1]=(this->size >> 7) | 0x80;
-            this->base.save_binary(this->buffer_,mpl::size_t<sector_size>());
+            this->base.write(this->buffer_,mpl::size_t<sector_size>());
             this->size=0;
         }
     }
@@ -100,8 +96,8 @@ public:
         , pos(0)
         , size(0){}
     template<class Size>
-    void load_binary(void *data,Size s){
-        if(this->size == 0 || this->pos == this->size) this->load_sector();
+    void read(void *data,Size s){
+        if(this->size == 0 || this->pos == this->size) this->read_sector();
         if(this->pos + s <= this->size){
             std::memcpy(data,this->buffer(this->pos),s);
             this->pos+=s;
@@ -113,7 +109,7 @@ public:
                 std::size_t left=s - read;
                 char *cdata=static_cast<char *>(data)+read;
                 while(left > 0){
-                    this->load_sector();
+                    this->read_sector();
                     if(left <= this->size) read=left; else read=this->size;
                     std::memcpy(cdata,this->buffer(this->pos),read); this->pos+=read;
                     left-=read; cdata+=read;
@@ -124,16 +120,12 @@ public:
             }
         }
     }
-    template<class T>
-    void load(T &t){
-        this->load_binary(&t,mpl::size_t<sizeof(T)>());
-    }
     size_type position() const;
 private:
-    void load_sector(){
+    void read_sector(){
         BOOST_ASSERT(this->pos == this->size);
         do{
-            this->base.load_binary(this->buffer_,mpl::size_t<sector_size>());
+            this->base.read(this->buffer_,mpl::size_t<sector_size>());
             if(this->buffer_[0] == 0 || this->buffer_[sector_size-1] == 0) throw eof_exception();
             this->size=((this->buffer_[sector_size-1] & 0x7f) << 7) | (this->buffer_[0] & 0x7f);
             if(this->size > max_size) throw io_failure();

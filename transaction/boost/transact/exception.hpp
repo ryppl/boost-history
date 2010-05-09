@@ -8,11 +8,15 @@
 #define BOOST_TRANSACT_EXCEPTION_HEADER_HPP
 
 #include <exception>
-#include <boost/mpl/begin.hpp>
-#include <boost/mpl/end.hpp>
-#include <boost/mpl/next.hpp>
-#include <boost/mpl/deref.hpp>
 #include <boost/assert.hpp>
+#include <boost/mpl/pair.hpp>
+#include <boost/mpl/bool.hpp>
+#include <boost/mpl/for_each.hpp>
+#include <boost/mpl/fold.hpp>
+#include <boost/mpl/vector.hpp>
+#include <boost/mpl/at.hpp>
+#include <boost/type_traits/is_same.hpp>
+#include <boost/optional/optional.hpp>
 
 
 namespace boost{
@@ -46,30 +50,13 @@ struct resource_isolation_exception;
 
 namespace detail{
 
-//this used so that resource managers can throw isolation exceptions
-//without knowing the type of the transaction manager. as a result,
-//the type of the transaction manager is only known to isolation_exception::unwind(),
-//which makes it a function template, i.e. not a virtual function. to still be able to call
-//the correct unwind() function of the derived class the resource managers are iterated.
-
-template<class TxMgr,class Iterator>
-struct isolation_unwind_visitor{
-    void operator()(isolation_exception const &iso){
-        typedef typename mpl::deref<Iterator>::type resource_type;
-        if(resource_isolation_exception<resource_type> const *viso=dynamic_cast<resource_isolation_exception<resource_type> const *>(&iso)){
-            viso->template unwind<TxMgr>();
-        }else{
-            isolation_unwind_visitor<TxMgr,typename mpl::next<Iterator>::type> visit;
-            visit(iso);
-        }
-    }
-};
-
 template<class TxMgr>
-struct isolation_unwind_visitor<TxMgr,typename mpl::end<typename TxMgr::resource_types>::type>{
-    void operator()(isolation_exception const &){
-        BOOST_ASSERT(false);
-    }
+struct tag_types{
+    typedef typename mpl::fold<
+        typename TxMgr::resource_types,
+        mpl::vector0<>,
+        mpl::push_back<mpl::_1,mpl::first<mpl::_2> >
+    >::type type;
 };
 
 }
@@ -84,11 +71,27 @@ struct isolation_exception : transact::exception{
     ///\pre TxMgr::current_transaction() must be a rolled back transaction
     template<class TxMgr>
     void unwind() const{ //pseudo-virtual
-        detail::isolation_unwind_visitor<TxMgr,typename mpl::begin<typename TxMgr::resource_types>::type> visit;
-        visit(*this);
+        //TODO optimization: stop iteration when correct resource_isolation_exception is found
+        mpl::for_each<typename detail::tag_types<TxMgr>::type>(unwinder<TxMgr>(*this));
     }
+    virtual ~isolation_exception() throw(){}
 protected:
     isolation_exception(){}
+private:
+    template<class TxMgr>
+    struct unwinder{
+        explicit unwinder(isolation_exception const &e) : e(e){}
+        template<class Tag>
+        void operator()(Tag){
+            typedef typename mpl::at<typename TxMgr::resource_types,Tag>::type resource_type;
+            typedef resource_isolation_exception<resource_type> der_type;
+            if(der_type const *der=dynamic_cast<der_type const *>(&this->e)){
+                der->template unwind<TxMgr>();
+            }
+        }
+    private:
+        isolation_exception const &e;
+    };
 };
 
 
@@ -99,26 +102,56 @@ protected:
 template<class ResMgr>
 struct resource_isolation_exception : isolation_exception{
     ///\brief Constructs a resource_isolation_exception
-    resource_isolation_exception() : retry(0){}
+    resource_isolation_exception(){}
 
     ///\brief Constructs a resource_isolation_exception
+    ///\param res The resource manager that is throwing the exception
     ///\param retry The transaction that caused the isolation_exception and ought to be repeated.
     ///Must be a transaction on the nested transaction stack.
-    explicit resource_isolation_exception(typename ResMgr::transaction &retry)
-        : retry(&retry){}
+    explicit resource_isolation_exception(ResMgr const &res,typename ResMgr::transaction const &retry)
+        : retry(std::pair<ResMgr const &,typename ResMgr::transaction const &>(res,retry)){}
 
     ///Throws: thread_resource_error. no_transaction if \c retry was not on the nested transaction stack or it was removed before unwind() was called.
     ///\brief Equivalent to <tt>isolation_exception::unwind<TxMgr>()</tt>
     ///\pre TxMgr::current_transaction() must be a rolled back transaction
     template<class TxMgr>
     void unwind() const{ //pseudo-virtual
+        //FIXME: does not work correctly with flat nested transaction emulation. possibly make TxMgr::restart_transaction throw accordingly?
         if(this->retry){
-            typename ResMgr::transaction &currenttx=TxMgr::resource_transaction(TxMgr::current_transaction(),typename ResMgr::tag());
-            if(this->retry != &currenttx) throw;
+            //TODO optimization: stop iteration when correct resource manager is found
+            mpl::for_each<typename detail::tag_types<TxMgr>::type>(is_current<TxMgr>(*this->retry));
         }else throw;
     }
+    virtual ~resource_isolation_exception() throw(){}
 private:
-    typename ResMgr::transaction *retry;
+    template<class TxMgr>
+    struct is_current{
+        explicit is_current(std::pair<ResMgr const &,typename ResMgr::transaction const &> const &retry) : retry(retry){}
+        template<class Tag>
+        void operator()(Tag const &tag) const{
+            typedef typename mpl::at<typename TxMgr::resource_types,Tag>::type resource_type;
+            return this->operator()(tag,typename is_same<resource_type,ResMgr>::type());
+        }
+    private:
+        template<class Tag>
+        void operator()(Tag const &,mpl::true_) const{
+            typedef typename TxMgr::resource_iterator iterator;
+            std::pair<iterator,iterator> range=TxMgr::template resources<Tag>();
+            for(iterator it=range.first;it != range.second;++it){
+                if(&it->second == &this->retry.first){
+                    typename TxMgr::transaction *tx=TxMgr::current_transaction();
+                    BOOST_ASSERT(tx);
+                    if(&TxMgr::resource_transaction(*tx,it->first) != &this->retry.second) throw;
+                }
+            }
+        }
+        template<class Tag>
+        void operator()(Tag,mpl::false_) const{
+            return false;
+        }
+        std::pair<ResMgr const &,typename ResMgr::transaction const &> retry;
+    };
+    optional<std::pair<ResMgr const &,typename ResMgr::transaction const &> > retry;
 };
 
 }

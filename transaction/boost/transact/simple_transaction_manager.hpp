@@ -8,9 +8,14 @@
 #ifndef BOOST_TRANSACT_SIMPLE_TRANSACTION_MANAGER_HEADER_HPP
 #define BOOST_TRANSACT_SIMPLE_TRANSACTION_MANAGER_HEADER_HPP
 
-#include <boost/mpl/vector.hpp>
+#include <boost/mpl/map.hpp>
 #include <boost/mpl/contains.hpp>
 #include <boost/mpl/bool.hpp>
+#include <boost/assert.hpp>
+#include <boost/static_assert.hpp>
+#include <boost/ref.hpp>
+#include <boost/type_traits/is_empty.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/utility/in_place_factory.hpp>
 #include <boost/optional/optional.hpp>
 #include <boost/transact/exception.hpp>
@@ -27,12 +32,16 @@ namespace transact{
 ///
 /// Template parameters:
 /// \li \c Resource The type of the resource manager used.
+/// \li \c FlatNested Use emulated flat nested transactions instead of the NestedTransactionService offered by the ResourceManager.
 /// \li \c Threads \c true if multiple threads are used to access this transaction manager.
+/// \li \c ResourceTag The tag that identifies the Resource
 // \brief A transaction manager that only supports one resource manager.
-template<class Resource,bool Threads=true>
+template<class Resource,bool FlatNested=false,bool Threads=true,class ResourceTag=default_tag>
 class simple_transaction_manager : noncopyable{
 public:
     class transaction;
+    /// \cond
+    friend class transaction;
 private:
     class transaction_construct_t{
         explicit transaction_construct_t(transaction *parent)
@@ -49,59 +58,64 @@ private:
 
     struct detail{ //for QuickBook
         typedef typename simple_transaction_manager::transaction_construct_t transaction_construct_t;
+        typedef std::pair<ResourceTag,Resource &> *resource_iterator;
     };
-    /// \endcond
 public:
     class transaction : noncopyable{
-    /// \cond
     public:
         explicit transaction(transaction_construct_t const &c)
-            : parent(c.parent){
-            if(res){
-                if(this->parent){
-                    BOOST_ASSERT(this->parent->rtx);
-                    this->rtx=in_place(res->begin_nested_transaction(*this->parent->rtx));
-                }else{
-                    this->rtx=in_place(res->begin_root_transaction());
-                }
-            }
+            : rtx(0),rolled_back(false),parent(c.parent){
+            simple_transaction_manager::begin_transaction(*this);
         }
     private:
+        void reset(){
+            this->rtx=0;
+            this->rtx_storage=none;
+            this->rolled_back=false;
+        }
         friend class simple_transaction_manager;
-        optional<typename Resource::transaction> rtx;
+        optional<typename Resource::transaction> rtx_storage;
+        typename Resource::transaction *rtx; //if(FlatNested) == root transaction; else == &*rtx_storage
+        bool rolled_back;
         transaction * const parent;
+    };
     /// \endcond
-    };
-    typedef mpl::vector1<Resource> resource_types;
-    template<class ServiceTag>
-    struct default_resource{
-        typedef typename Resource::tag type;
-    };
+    typedef mpl::map1<mpl::pair<ResourceTag,Resource> > resource_types;
 
-    typedef typename Resource::tag resource_tag_t;
-    
     /// \brief Constructs a simple_transaction_manager
     simple_transaction_manager(){}
 
     /// TODO doc, not part of the concept
-    static void connect_resource(Resource &newres){
-        if(res) throw resource_error();
-        res=&newres;
+    static void connect_resource(Resource &newres,ResourceTag const &tag=ResourceTag()){
+        if(res){
+            if(tag_is_equal(tag)) throw resource_error();
+            else throw unsupported_operation();
+        }
+        res=in_place(tag,boost::ref(newres));
     }
 
     /// TODO doc, not part of the concept
-    static void disconnect_resource(resource_tag_t tag= resource_tag_t()){
-        res=0;
-    }
-
-    static Resource &resource(resource_tag_t tag= resource_tag_t()){
-        if(res) return *res;
+    static void disconnect_resource(ResourceTag const &tag=ResourceTag()){
+        if(res && tag_is_equal(tag)) res=none;
         else throw resource_error();
     }
 
+    static Resource &resource(ResourceTag const &tag=ResourceTag()){
+        if(res && tag_is_equal(tag)) return res->second;
+        else throw resource_error();
+    }
+
+    typedef typename detail::resource_iterator resource_iterator;
+    template<class Tag>
+    static std::pair<resource_iterator,resource_iterator> resources(){
+        BOOST_STATIC_ASSERT((boost::is_same<Tag,ResourceTag>::value));
+        if(res) return std::pair<resource_iterator,resource_iterator>(&*res,&*res + 1);
+        else return std::pair<resource_iterator,resource_iterator>(0,0);
+    }
+
     static typename Resource::transaction &
-    resource_transaction(transaction &tx,resource_tag_t tag= resource_tag_t()){
-        if(tx.rtx) return *tx.rtx;
+    resource_transaction(transaction &tx,ResourceTag const &tag=ResourceTag()){
+        if(tx.rtx && tag_is_equal(tag)) return *tx.rtx;
         else throw resource_error();
     }
 
@@ -113,8 +127,8 @@ public:
         bind_transaction(tx);
         if(res){
             BOOST_ASSERT(tx.rtx);
-            res->finish_transaction(*tx.rtx);
-            res->commit_transaction(*tx.rtx);
+            res->second.finish_transaction(*tx.rtx);
+            res->second.commit_transaction(*tx.rtx);
         }
     }
 
@@ -122,13 +136,18 @@ public:
         bind_transaction(tx);
         if(res){
             BOOST_ASSERT(tx.rtx);
-            res->rollback_transaction(*tx.rtx);
+            BOOST_ASSERT(FlatNested || !tx.rolled_back);
+            if(!FlatNested || !tx.rolled_back){
+                mark_rolled_back(tx);
+                res->second.rollback_transaction(*tx.rtx);
+            }
         }
     }
 
     static void restart_transaction(transaction &tx){
         if(res){
             BOOST_ASSERT(tx.rtx);
+            if(FlatNested && tx.rtx != &*tx.rtx_storage) throw unsupported_operation();
             restart_transaction(tx,typename mpl::contains<typename Resource::services,transaction_restart_service_tag>::type());
         }
     }
@@ -139,34 +158,68 @@ public:
     static void unbind_transaction(){
         currenttx::reset(0);
     }
-    static transaction &current_transaction(){
-        if(transaction *tx=currenttx::get()) return *tx;
-        else throw no_transaction();
+    static transaction *current_transaction(){
+        return currenttx::get();
     }
-    static bool has_current_transaction(){
-        return currenttx::get() ? true : false;
-    }
-
     /// \cond
 private:
-    static void restart_transaction(transaction &tx,mpl::true_ service){
-        res->restart_transaction(*tx.rtx);
-    }
-    static void restart_transaction(transaction &tx,mpl::false_ service){
-        if(tx.parent){
-            BOOST_ASSERT(tx.parent->rtx);
-            tx.rtx=in_place(res->begin_nested_transaction(*tx.parent->rtx));
-        }else{
-            tx.rtx=in_place(res->begin_root_transaction());
+    static void begin_transaction(transaction &tx){
+        if(res){
+            if(tx.parent){
+                begin_nested_transaction(tx,mpl::bool_<FlatNested>(),typename has_service<Resource,nested_transaction_service_tag>::type());
+            }else{
+                tx.rtx_storage=in_place(res->second.begin_transaction());
+                tx.rtx=&*tx.rtx_storage;
+            }
         }
     }
+    template<bool Service>
+    static void begin_nested_transaction(transaction &tx,mpl::true_ flatnested,mpl::bool_<Service>){
+        if(tx.parent->rtx) tx.rtx=tx.parent->rtx;
+        else throw no_transaction();
+    }
+    static void begin_nested_transaction(transaction &tx,mpl::false_ flatnested,mpl::true_ service){
+        BOOST_ASSERT(tx.parent->rtx);
+        tx.rtx_storage=in_place(res->second.begin_nested_transaction(*tx.parent->rtx));
+        tx.rtx=&*tx.rtx_storage;
+    }
+    static void begin_nested(transaction &,mpl::false_ flatnested,mpl::false_ service){
+        throw unsupported_operation();
+    }
 
-    static Resource *res;
+    static void mark_rolled_back(transaction &tx){
+        tx.rolled_back=true;
+        if(FlatNested){
+            for(transaction *current=tx.parent;current;current=current->parent){
+                current->rolled_back=true;
+            }
+        }
+    }
+    static void restart_transaction(transaction &tx,mpl::true_ service){
+        BOOST_ASSERT(res);
+        res->second.restart_transaction(*tx.rtx);
+    }
+    static void restart_transaction(transaction &tx,mpl::false_ service){
+        tx.reset();
+        begin_transaction(tx);
+    }
+    static bool tag_is_equal(ResourceTag const &o){
+        return tag_is_equal(o,boost::is_empty<ResourceTag>());
+    }
+    static bool tag_is_equal(ResourceTag const &,true_type empty){
+        return true;
+    }
+    static bool tag_is_equal(ResourceTag const &o,false_type empty){
+        BOOST_ASSERT(res);
+        return res->first == o;
+    }
+
+    static optional<std::pair<ResourceTag,Resource &> > res;
     /// \endcond
 };
 
-template<class Res,bool Thr>
-Res *simple_transaction_manager<Res,Thr>::res=0;
+template<class Resource,bool FlatNested,bool Threads,class ResourceTag>
+optional<std::pair<ResourceTag,Resource &> > simple_transaction_manager<Resource,FlatNested,Threads,ResourceTag>::res;
 
 
 }

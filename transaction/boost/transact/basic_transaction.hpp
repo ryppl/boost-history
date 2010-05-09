@@ -33,7 +33,7 @@ public:
     /// thrown by resource managers beginning local transactions.
     /// \brief Constructs a basic_transaction, beginning a new transaction scope
     explicit basic_transaction()
-        : parent(TxMgr::has_current_transaction() ? &TxMgr::current_transaction() : 0)
+        : parent(TxMgr::current_transaction())
         , tx(TxMgr::begin_transaction())
         , done(false){
         TxMgr::bind_transaction(this->tx);
@@ -62,7 +62,7 @@ public:
         else TxMgr::unbind_transaction();
     }
 
-    /// Throws: \c isolation_exception, \c io_failure, \c thread_resource_error,
+    /// Throws: \c no_transaction_manager, \c isolation_exception, \c io_failure, \c thread_resource_error,
     /// resource-specific exceptions thrown by resource managers committing local
     /// transactions.
     /// \brief Commits the transaction.
@@ -71,12 +71,21 @@ public:
         TxMgr::commit_transaction(this->tx);
     }
 
-    /// Throws: \c io_failure, \c thread_resource_error, resource-specific exceptions
+    /// Throws: \c no_transaction_manager, \c io_failure, \c thread_resource_error, resource-specific exceptions
     /// thrown by resource managers rolling back transactions.
     /// \brief Unwinds all changes made during this transaction.
     void rollback(){
         this->done=true;
         TxMgr::rollback_transaction(this->tx);
+    }
+
+    /// Equivalent to rolling back the transaction and beginning a new one.
+    /// Throws: \c no_transaction_manager, \c io_failure, \c thread_resource_error,
+    /// resource-specific exceptions thrown by resource managers restarting transactions.
+    /// \brief Restarts the transactions
+    void restart(){
+        TxMgr::restart_transaction(this->tx);
+        this->done=false;
     }
 
     /// Throws: thread_resource_error
@@ -93,11 +102,6 @@ public:
             TxMgr::unbind_transaction();
         }
     }
-
-    void restart(){
-        TxMgr::restart_transaction(this->tx);
-    }
-
     /// \cond
 private:
     typename TxMgr::transaction *parent;
@@ -152,6 +156,7 @@ private:
                 break; \
             }catch(boost::transact::isolation_exception &___i){ \
                 ___i.unwind<TXMGR>(); \
+                ___tx.restart(); \
                 do{ \
                     ___control=1; \
                     if(false);else
@@ -160,9 +165,8 @@ private:
                     ___control=0; \
                     break; \
                 }while((___control=2),false); \
+                BOOST_ASSERT(___control == 0); \
             } \
-            BOOST_ASSERT(___control == 0); \
-            ___tx.restart(); \
         }; \
         BOOST_ASSERT(___control == 0); \
     }void()
@@ -171,9 +175,8 @@ private:
                     ___control=0; \
                     break; \
                 }while((___control=2),false); \
+                if(___control != 0) break; \
             } \
-            if(___control != 0) break; \
-            ___tx.restart(); \
         }; \
         if(___control != 0){ \
             if(___control==1) break; \

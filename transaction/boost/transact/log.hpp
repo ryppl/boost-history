@@ -107,7 +107,6 @@ public:
             && (this->file->position() > this->max_log_size + this->header_size);
     }
 
-    
     bool rolling() const{ return this->rolling_; }
     template<class Header>
     void begin_roll(Header header){

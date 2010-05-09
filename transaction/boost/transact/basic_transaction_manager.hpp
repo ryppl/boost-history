@@ -23,16 +23,17 @@
 #include <boost/mpl/contains.hpp>
 #include <boost/mpl/insert.hpp>
 #include <boost/mpl/empty.hpp>
-#include <boost/fusion/include/mpl.hpp>
-#include <boost/fusion/include/at.hpp>
-#include <boost/fusion/include/pair.hpp>
-#include <boost/fusion/include/as_map.hpp>
-#include <boost/fusion/include/at_key.hpp>
+#include <boost/fusion/adapted/mpl.hpp>
+#include <boost/fusion/sequence/intrinsic/at.hpp>
+#include <boost/fusion/sequence/intrinsic/at_key.hpp>
+#include <boost/fusion/support/pair.hpp>
+#include <boost/fusion/container/map/convert.hpp>
 #include <boost/transact/detail/mutex.hpp>
 #include <boost/transact/exception.hpp>
 #include <boost/transact/detail/static_tss.hpp>
 #include <boost/transact/resource_manager.hpp>
 
+//TODO: TransactionManager::resources, nested transaction emulation, stateful tags
 
 namespace boost{
 namespace transact{
@@ -45,7 +46,7 @@ struct get_tag{
 };
 
 template<class State,class F>
-struct runtime_folder{
+struct runtime_folder{ //TODO mit fusion::fold austauschen
     explicit runtime_folder(State &state,F &f)
         : state(state),f(f){}
     template<class U>
@@ -133,15 +134,6 @@ private:
         struct resource_type{
             typedef typename basic_transaction_manager::template resource_type<Tag>::type type;
         };
-        template<class ServiceTag>
-        struct default_resource{
-            typedef typename mpl::deref<
-                typename mpl::find_if<
-                    Resources,
-                    mpl::contains<get_services<mpl::_1>,ServiceTag>
-                >::type
-            >::type::tag type;
-        };
     };
 
     /// \endcond
@@ -179,10 +171,6 @@ public:
     /// \endcond
     };
     typedef Resources resource_types;
-    template<class ServiceTag>
-    struct default_resource{
-        typedef typename detail::template default_resource<ServiceTag>::type type;
-    };
 
     /// A basic_transaction_manager constructed using this constructor
     /// is not able to commit transactions that involve two or more persistent

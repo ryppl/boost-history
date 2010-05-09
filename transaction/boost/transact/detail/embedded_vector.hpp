@@ -1,3 +1,9 @@
+//          Copyright Stefan Strasser 2010.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+
+
 #ifndef BOOST_TRANSACT_DETAIL_EMBEDDED_VECTOR_HEADER_HPP
 #define BOOST_TRANSACT_DETAIL_EMBEDDED_VECTOR_HEADER_HPP
 
@@ -6,6 +12,11 @@
 #include <cstring>
 #include <boost/utility/in_place_factory.hpp>
 #include <boost/type_traits/is_pod.hpp>
+#include <boost/mpl/bool.hpp>
+#include <boost/mpl/size_t.hpp>
+#include <boost/assert.hpp>
+#include <boost/transact/array_extension.hpp>
+
 
 namespace boost{
 namespace transact{
@@ -16,7 +27,7 @@ class embedded_vector{
 public:
     typedef T &reference;
     typedef T const &const_reference;
-    typedef T *iterator;
+    typedef T *iterator; //continuous values
     typedef T const *const_iterator;
     typedef std::size_t size_type;
     typedef std::ptrdiff_t difference_type;
@@ -43,9 +54,7 @@ public:
             }
         }else BOOST_ASSERT(this->begin() == this->emb_data());
     }
-    
     embedded_vector &operator=(embedded_vector const &);
-    
     iterator begin(){ return this->begin_; }
     const_iterator begin() const{ return this->begin_; }
     iterator end(){ return this->end_; }
@@ -232,6 +241,10 @@ private:
 
 
 }
+
+template<class T,std::size_t EmbeddedSize,bool Expand>
+struct array_extension<detail::embedded_vector<T,EmbeddedSize,Expand> > : mpl::true_{};
+
 }
 }
 

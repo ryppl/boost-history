@@ -41,11 +41,11 @@ public:
     explicit aligning_seq_ofile(std::string const &name)
         : base(name)
         , sectors(0){}
-    void save_binary(void const *data,mpl::size_t<sector_size> size){
+    void write(void const *data,mpl::size_t<sector_size> size){
         if(this->sectors < max_sectors){
             std::memcpy(this->buffer + this->sectors * sector_size,data,size);
             ++this->sectors;
-        }else this->save_overflow(data);
+        }else this->write_overflow(data);
     }
     size_type position() const{
         if(this->sectors <= max_sectors) return this->base.position() + this->sectors * sector_size;
@@ -74,19 +74,19 @@ public:
         }
     }
 private:
-    void save_overflow(void const *data){
+    void write_overflow(void const *data){
         BOOST_ASSERT(this->sectors >= max_sectors);
         if(this->sectors == max_sectors){
             this->align(max_alignment);
             this->flush_buffer();
             this->sectors=max_sectors+1;
         }
-        this->base.save_binary(data,sector_size);
+        this->base.write(data,sector_size);
     }
 
     void flush_buffer(){
         if(this->sectors > 0 && this->sectors <= max_sectors){
-            this->base.save_binary(this->buffer,this->sectors * sector_size);
+            this->base.write(this->buffer,this->sectors * sector_size);
         }
     }
     void align(std::size_t alignment){
@@ -95,7 +95,7 @@ private:
         if(mod != 0){
             std::size_t write=alignment - mod;
             BOOST_ASSERT(write <= empty_sectors_t::size && write % sector_size == 0);
-            this->base.save_binary(empty_sectors.data,write);
+            this->base.write(empty_sectors.data,write);
             this->base.flush();
             //this sync is unnecessary from a data-consistency viewpoint.
             //but it is required to keep linux is sequential writing.

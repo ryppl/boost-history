@@ -28,10 +28,6 @@
 #error no POSIX synchronized IO available
 #endif
 
-#ifndef _LARGEFILE64_SOURCE
-#error need POSIX Large File Support extension
-#endif
-
 #endif
 
 
@@ -41,13 +37,9 @@ namespace detail{
 
 class syncing_seq_ofile{
 public:
-    typedef unsigned long long size_type;
+    typedef unsigned int size_type;
     explicit syncing_seq_ofile(std::string const &name);
-    void save_binary(void const *data,std::size_t size);
-    template<class T>
-    void save(T const &t){
-        this->save_binary(&t,mpl::size_t<sizeof(T)>());
-    }
+    void write(void const *data,std::size_t size);
     size_type position() const{ return this->pos; }
     void flush();
     void sync();
@@ -63,7 +55,7 @@ private:
     void write_ahead(size_type const &s){
         BOOST_ASSERT(s % write_ahead_size == 0);
         if(this->pos != s){
-            if(::lseek64(this->filedes,s,SEEK_SET) != off64_t(s)) throw io_failure();
+            if(::lseek(this->filedes,s,SEEK_SET) != off_t(s)) throw io_failure();
         }
         char data[write_page_size]; memset(data,0,write_page_size);
         BOOST_STATIC_ASSERT(write_ahead_size % write_page_size == 0);
@@ -71,7 +63,7 @@ private:
             if(::write(this->filedes,data,write_page_size) != ssize_t(write_page_size)) throw io_failure();
         }
         if(::fsync(this->filedes) != 0) throw io_failure();
-        if(::lseek64(this->filedes,this->pos,SEEK_SET) != off64_t(this->pos)) throw io_failure();
+        if(::lseek(this->filedes,this->pos,SEEK_SET) != off_t(this->pos)) throw io_failure();
     }
     void write_ahead(size_type const &start,size_type const &end){
         BOOST_ASSERT(start % write_ahead_size == 0);
@@ -109,7 +101,7 @@ inline syncing_seq_ofile::syncing_seq_ofile(std::string const &name)
     this->write_ahead(0);
 }
 
-void syncing_seq_ofile::save_binary(void const *data,std::size_t size){
+void syncing_seq_ofile::write(void const *data,std::size_t size){
     size_type const s=this->pos % write_ahead_size;
     if(s + size >= write_ahead_size){ //there must be at least one 0 at the and, so also write ahead if this is equal.
         size_type start=this->pos - s + write_ahead_size;

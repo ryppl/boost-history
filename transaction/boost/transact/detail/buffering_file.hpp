@@ -24,15 +24,11 @@ public:
         : base(name)
         , size(0){}
     template<class Size>
-    void save_binary(void const *data,Size s){
+    void write(void const *data,Size s){
         if(this->size + s <= Capacity){
             std::memcpy(this->buffer+this->size,data,s);
             this->size+=s;
-        }else this->save_overflow(data,s);
-    }
-    template<class T>
-    void save(T const &t){
-        this->save_binary(&t,mpl::size_t<sizeof(T)>());
+        }else this->write_overflow(data,s);
     }
     size_type position() const{
         return this->base.position() + this->size;
@@ -55,21 +51,21 @@ public:
         }
     }
 private:
-    void save_overflow(void const *data,std::size_t s){
+    void write_overflow(void const *data,std::size_t s){
         BOOST_ASSERT(this->size + s > Capacity);
         if(this->size == 0){
-            this->base.save_binary(data,s);
+            this->base.write(data,s);
         }else{
             std::size_t write=Capacity - this->size;
             std::memcpy(this->buffer+this->size,data,write);
             this->size=Capacity;
             this->flush_buffer();
-            this->save_binary(static_cast<char const *>(data)+write,s-write);
+            this->write(static_cast<char const *>(data)+write,s-write);
         }
     }
     void flush_buffer(){
         if(this->size > 0){
-            this->base.save_binary(this->buffer,this->size);
+            this->base.write(this->buffer,this->size);
             this->size=0;
         }
     }
