@@ -186,15 +186,15 @@ void test_LawValidater()
     // Equality relation: std_equal    implements segmental equality (default)
 
     LawValidater
-		<InplaceDeMorgan<interval_set<int>, inplace_et, inplace_plus > > 
-		validater1;
+        <InplaceDeMorgan<interval_set<int>, inplace_et, inplace_plus > > 
+        validater1;
     cout << "===== validater 1 ====================================\n";
     test_law(validater1);
     // Ok the law was successfully validated.
 
     // Next we check the same law for split_interval_sets
     LawValidater
-		<InplaceDeMorgan<split_interval_set<int>, inplace_et, inplace_plus > >
+        <InplaceDeMorgan<split_interval_set<int>, inplace_et, inplace_plus > >
         validater2;
     cout << "\n===== validater 2 ====================================\n";
     test_law(validater2);
@@ -208,9 +208,9 @@ void test_LawValidater()
 
     // Using element equality that abstracts from the segmentation ...
     LawValidater
-		<InplaceDeMorgan<split_interval_set<int>, inplace_et, inplace_plus, 
+        <InplaceDeMorgan<split_interval_set<int>, inplace_et, inplace_plus, 
                          inplace_minus, element_equal> > 
-		validater3;
+        validater3;
     cout << "\n===== validater 3 ====================================\n";
     test_law(validater3);
     // finally leads to an instantiation of the law that holds for

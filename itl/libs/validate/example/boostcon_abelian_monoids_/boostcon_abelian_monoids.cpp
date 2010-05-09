@@ -16,9 +16,9 @@ using namespace std;
 using namespace boost;
 using namespace boost::itl;
 
-void test_abelian_monoid_driver()
+int main()
 {
-    abelian_monoid_driver validater;
+    abelian_monoid_driver model_tester;
     cout << 
     ">> ------------------------------------------------------ <<\n"
     ">> -------- Law based test automaton 'LaBatea' ---------- <<\n"
@@ -27,12 +27,6 @@ void test_abelian_monoid_driver()
     ">> ------------------------------------------------------ <<\n";
     GentorProfileSgl::it()->set_std_profile(16,1);
     GentorProfileSgl::it()->report_profile();
-    validater.validate();
-};
-
-
-int main()
-{
-    test_abelian_monoid_driver();
+    model_tester.validate();
     return 0;
 }

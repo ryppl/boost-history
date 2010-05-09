@@ -103,7 +103,7 @@ public:
         case inplacePlusDeMorgan:       return new LawValidater<InplaceDeMorgan<Type, inplace_plus, inplace_et, itl::std_equal> >;
         case inplaceEtDeMorgan:        
             if(itl::is_interval_splitter<Type>::value || itl::is_interval_separator<Type>::value)
-				                        return new LawValidater<InplaceDeMorgan<Type, inplace_et, inplace_plus, inplace_minus, itl::element_equal> >;
+                                        return new LawValidater<InplaceDeMorgan<Type, inplace_et, inplace_plus, inplace_minus, itl::element_equal> >;
             else                        return new LawValidater<InplaceDeMorgan<Type, inplace_et, inplace_plus, inplace_minus, itl::std_equal> >;
 
         default: return NULL;

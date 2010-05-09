@@ -246,7 +246,7 @@ namespace boost{namespace itl
 
         bool debug_holds()
         {
-			std::cout << "--- function debug_holds -----------------------------\n";
+            std::cout << "--- function debug_holds -----------------------------\n";
             std::cout << "          a = " << this->template getInputValue<operand_a>() << std::endl;
             std::cout << "          b = " << this->template getInputValue<operand_b>() << std::endl;
             std::cout << "          c = " << this->template getInputValue<operand_c>() << std::endl;
@@ -267,7 +267,7 @@ namespace boost{namespace itl
 
             this->template setOutputValue<lhs_result>(lhs);
             this->template setOutputValue<rhs_result>(rhs);
-			std::cout << "------------------------------------------------------\n";
+            std::cout << "------------------------------------------------------\n";
 
             return Equality<Type>()(lhs, rhs);
         }
@@ -318,7 +318,7 @@ namespace boost{namespace itl
 
         bool debug_holds()
         { 
-			std::cout << "--- function debug_holds -----------------------------\n";
+            std::cout << "--- function debug_holds -----------------------------\n";
             std::cout << "    a = " << this->template getInputValue<operand_a>() << std::endl;
             std::cout << "    b = " << this->template getInputValue<operand_b>() << std::endl;
 
@@ -332,7 +332,7 @@ namespace boost{namespace itl
 
             this->template setOutputValue<lhs_result>(lhs);
             this->template setOutputValue<rhs_result>(rhs);
-			std::cout << "------------------------------------------------------\n";
+            std::cout << "------------------------------------------------------\n";
 
             return lhs == rhs;
         }

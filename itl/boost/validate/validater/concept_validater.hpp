@@ -26,36 +26,35 @@ namespace boost{namespace itl
         // Somehow it has to be defined in conjunction to every type. So it is an aspect of
         // type traits.
         //CL virtual void setProfile()=0;
-		virtual LawValidaterI* chooseValidater()=0;
+        virtual LawValidaterI* chooseValidater()=0;
         virtual bool hasValidProfile()const{ return true; }
 
         void validate()
-		{
-			_validater = chooseValidater();
-			if(_validater)
-			{
-				_validater->run();
-				_validater->addFrequencies(_frequencies);
-				_validater->addViolations(_violationsCount, _violations);
-				delete _validater;
-			}
-		}
+        {
+            LawValidaterI* law_validater = chooseValidater();
+            if(law_validater)
+            {
+                law_validater->run();
+                law_validater->addFrequencies(_frequencies);
+                law_validater->addViolations(_violationsCount, _violations);
+                delete law_validater;
+            }
+        }
 
-		void addFrequencies(ValidationCounterT& summary) { summary += _frequencies; }
+        void addFrequencies(ValidationCounterT& summary) { summary += _frequencies; }
 
-		void addViolations(ViolationCounterT& summary, ViolationMapT& collector)
-		{ 
-		    summary   += _violationsCount; 
-		    collector += _violations;  
-		}
+        void addViolations(ViolationCounterT& summary, ViolationMapT& collector)
+        { 
+            summary   += _violationsCount; 
+            collector += _violations;  
+        }
 
         static int share(int total, int& index, int& rest_shares);
 
-	private:
-		LawValidaterI*     _validater;
-		ValidationCounterT _frequencies;
-		ViolationCounterT  _violationsCount;
-		ViolationMapT      _violations;
+    private:
+        ValidationCounterT _frequencies;
+        ViolationCounterT  _violationsCount;
+        ViolationMapT      _violations;
     };
 
     inline int concept_validater::share(int total, int& index, int& rest_shares)

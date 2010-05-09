@@ -31,14 +31,14 @@ typedef unsigned char bound_type;
 class interval_bounds
 {
 public:
-	BOOST_STATIC_CONSTANT(bound_type, _open      = 0);
-	BOOST_STATIC_CONSTANT(bound_type, _leftopen  = 1);
-	BOOST_STATIC_CONSTANT(bound_type, _rightopen = 2);
-	BOOST_STATIC_CONSTANT(bound_type, _closed    = 3);
+    BOOST_STATIC_CONSTANT(bound_type, _open      = 0);
+    BOOST_STATIC_CONSTANT(bound_type, _leftopen  = 1);
+    BOOST_STATIC_CONSTANT(bound_type, _rightopen = 2);
+    BOOST_STATIC_CONSTANT(bound_type, _closed    = 3);
 
-	BOOST_STATIC_CONSTANT(bound_type, _right     = 1);
-	BOOST_STATIC_CONSTANT(bound_type, _left      = 2);
-	BOOST_STATIC_CONSTANT(bound_type, _all       = 3);
+    BOOST_STATIC_CONSTANT(bound_type, _right     = 1);
+    BOOST_STATIC_CONSTANT(bound_type, _left      = 2);
+    BOOST_STATIC_CONSTANT(bound_type, _all       = 3);
 
 public:
     interval_bounds():_bits(){}

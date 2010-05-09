@@ -16,7 +16,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 
 namespace boost{ namespace itl
 {
-	template <class DomainT, ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT)> 
+    template <class DomainT, ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT)> 
     struct interval_type_of
     {
         typedef 

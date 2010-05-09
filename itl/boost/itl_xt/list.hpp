@@ -124,11 +124,11 @@ namespace boost{namespace itl
         //JODO concept InplaceAddable
         /// Add a list \c tail to this list.
         list& operator += (const list& tail) 
-		{ 
-			list rear(tail);
-			splice(end(), rear); 
-			return *this; 
-		}
+        { 
+            list rear(tail);
+            splice(end(), rear); 
+            return *this; 
+        }
 
         /** yields true if any of the elements in \c *this has the property \c prop */
         bool any(const property<DataT>& prop)const;

@@ -50,7 +50,7 @@ public:
 
 private:
     ChoiceT                _lawChoice;
-	monoid_validater<Type> _monoid_validater;
+    monoid_validater<Type> _monoid_validater;
 };
 
 

@@ -138,6 +138,7 @@ namespace boost{namespace itl
         void reportFrequencies()
         {
             std::cout << "------------------------------------------------------------------------------" << std::endl;
+            std::cout << "--- Successfully tested law instantiation -------------------------runs---time" << std::endl;
             int valid_count = 1;
             double avg_evaluation_time = 0.0;
             long   instance_count      = 0;
@@ -157,13 +158,18 @@ namespace boost{namespace itl
             std::cout << "------------------------------------------------------------------------------" << std::endl;
             // Summary for the current cycle
             double avg_evaluation_time_per_law = avg_evaluation_time/_frequencies.size();
-            printf( "    %10.3lf%-50s%7ld%7.0lf\n", 
-                    avg_evaluation_time_per_law, " ", instance_count, avg_evaluation_time_per_law);
+            printf( " %10.3lf%-53s%7ld%7.0lf\n", 
+                    avg_evaluation_time_per_law, " total avg of atomic evaluation (micro sec)", instance_count, avg_evaluation_time_per_law);
 
             int violation_count = 1;
+            if(!_violations.empty())
+            {
+                std::cout << "------------------------------------------------------------------------------" << std::endl;
+                std::cout << "--- Law violations -----------------------------------------------count-------" << std::endl;
+            }
             ITL_FORALL(ViolationMapT, it, _violations)
             {
-                printf("%3d %-66s%8d\n", violation_count, it->first.c_str(), it->second.getViolationsCount());
+                printf("%3d %-59s%8d\n", violation_count, it->first.c_str(), it->second.getViolationsCount());
                 violation_count++;
             }
             if(!_violations.empty())

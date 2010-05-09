@@ -19,34 +19,28 @@ using namespace boost;
 using namespace boost::itl;
 using namespace boost::posix_time;
 
-void test_LawValidater()
+int main()
 {
-	typedef InplaceCommutativity<int> TestLawT;
-    LawValidater<TestLawT> validater;
+    typedef InplaceCommutativity<int> TestLawT;
+    LawValidater<TestLawT> law_validator;
 
     //-----------------------------------------------------------------------------
     int test_count = 10000;
-	ptime start, stop;
+    ptime start, stop;
 
     GentorProfileSgl::it()->set_std_profile(8,1);
-    validater.set_trials_count(test_count);
+    law_validator.set_trials_count(test_count);
 
-	cout << "Testing " << TestLawT().typeString()  << endl
-	     << "trials_count = " << test_count << endl
-	     << "Start ...\n";
+    cout << "Testing " << TestLawT().typeString()  << endl
+         << "trials_count = " << test_count << endl
+         << "Start ...\n";
     start = ptime(microsec_clock::local_time());
-    validater.run();
+    law_validator.run();
     stop = ptime(microsec_clock::local_time());
     cout << "Stop. Time elapsed: " << stop - start << endl;
 
-    if(validater.violation_count() == 0)
+    if(law_validator.violation_count() == 0)
         cout << "Law successfully validated\n";
-}
 
-
-
-int main()
-{
-    test_LawValidater();
     return 0;
 }
