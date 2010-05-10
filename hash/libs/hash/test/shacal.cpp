@@ -197,7 +197,7 @@ void test_sha1() {
     {
     // perl -e 'for ($x = 1000000000; $x--;) {print "a";}' | sha1sum
     sha1_octet_hash h;
-    for (unsigned n = 1000000000; n--; ) h.update('a');
+    for (unsigned n = 1000000000; n--; ) h.update_one('a');
     digest_type d = h.end_message();
     printf("%s\n", d.cstring().data());
     char const *ed = "d0f3e4f2f31c665abbd8f518e848d5cb80ca78f7";

@@ -18,6 +18,16 @@
 #include <cstdio>
 #endif
 
+#ifndef BOOST_HASH_NO_OPTIMIZATION
+#ifdef __SSE2__
+#define BOOST_HASH_CUBEHASH_USE_INTRINSICS
+#endif
+#endif
+
+#ifdef BOOST_HASH_CUBEHASH_USE_INTRINSICS
+#include <emmintrin.h>
+#endif
+
 namespace boost {
 namespace hash {
 namespace detail {
@@ -41,6 +51,13 @@ struct basic_cubehash_policy : basic_functions<32> {
         a = b;
         b = t;
     }
+#ifdef BOOST_HASH_CUBEHASH_USE_INTRINSICS
+    static void multiword_swap(__m128i &a, __m128i &b) {
+        __m128i t = a;
+        a = b;
+        b = t;
+    }
+#endif
 
     static void transform(state_type &state, unsigned n) {
 #ifdef BOOST_HASH_SHOW_PROGRESS
@@ -71,10 +88,84 @@ struct basic_cubehash_policy : basic_functions<32> {
             for (i = 0;i < 16;++i) x[i + 16] = y[i];
         }
 #else
+
+#ifdef BOOST_HASH_CUBEHASH_USE_INTRINSICS
+
+        __m128i x0 = _mm_loadu_si128((__m128i*)&state[ 0]);
+        __m128i x1 = _mm_loadu_si128((__m128i*)&state[ 4]);
+        __m128i x2 = _mm_loadu_si128((__m128i*)&state[ 8]);
+        __m128i x3 = _mm_loadu_si128((__m128i*)&state[12]);
+        __m128i x4 = _mm_loadu_si128((__m128i*)&state[16]);
+        __m128i x5 = _mm_loadu_si128((__m128i*)&state[20]);
+        __m128i x6 = _mm_loadu_si128((__m128i*)&state[24]);
+        __m128i x7 = _mm_loadu_si128((__m128i*)&state[28]);
+
+        while (n--) {
+        
+            x4 = _mm_add_epi32(x0, x4);
+            x5 = _mm_add_epi32(x1, x5);
+            x6 = _mm_add_epi32(x2, x6);
+            x7 = _mm_add_epi32(x3, x7);
+
+            multiword_swap(x0, x2);
+            multiword_swap(x1, x3);
+
+            x0 = _mm_xor_si128(_mm_slli_epi32(x0,  7), _mm_srli_epi32(x0, 25));
+            x1 = _mm_xor_si128(_mm_slli_epi32(x1,  7), _mm_srli_epi32(x1, 25));
+            x2 = _mm_xor_si128(_mm_slli_epi32(x2,  7), _mm_srli_epi32(x2, 25));
+            x3 = _mm_xor_si128(_mm_slli_epi32(x3,  7), _mm_srli_epi32(x3, 25));
+
+
+            x0 = _mm_xor_si128(x0, x4);
+            x1 = _mm_xor_si128(x1, x5);
+            x2 = _mm_xor_si128(x2, x6);
+            x3 = _mm_xor_si128(x3, x7);
+
+            x4 = _mm_shuffle_epi32(x4, 0x4e);
+            x5 = _mm_shuffle_epi32(x5, 0x4e);
+            x6 = _mm_shuffle_epi32(x6, 0x4e);
+            x7 = _mm_shuffle_epi32(x7, 0x4e);
+
+            x4 = _mm_add_epi32(x0, x4);
+            x5 = _mm_add_epi32(x1, x5);
+            x6 = _mm_add_epi32(x2, x6);
+            x7 = _mm_add_epi32(x3, x7);
+
+            multiword_swap(x0, x1);
+            multiword_swap(x2, x3);
+
+            x0 = _mm_xor_si128(_mm_slli_epi32(x0, 11), _mm_srli_epi32(x0, 21));
+            x1 = _mm_xor_si128(_mm_slli_epi32(x1, 11), _mm_srli_epi32(x1, 21));
+            x2 = _mm_xor_si128(_mm_slli_epi32(x2, 11), _mm_srli_epi32(x2, 21));
+            x3 = _mm_xor_si128(_mm_slli_epi32(x3, 11), _mm_srli_epi32(x3, 21));
+
+            x0 = _mm_xor_si128(x0, x4);
+            x1 = _mm_xor_si128(x1, x5);
+            x2 = _mm_xor_si128(x2, x6);
+            x3 = _mm_xor_si128(x3, x7);
+
+            x4 = _mm_shuffle_epi32(x4, 0xb1);
+            x5 = _mm_shuffle_epi32(x5, 0xb1);
+            x6 = _mm_shuffle_epi32(x6, 0xb1);
+            x7 = _mm_shuffle_epi32(x7, 0xb1);
+
+        }
+
+        _mm_storeu_si128((__m128i*)&state[ 0], x0);
+        _mm_storeu_si128((__m128i*)&state[ 4], x1);
+        _mm_storeu_si128((__m128i*)&state[ 8], x2);
+        _mm_storeu_si128((__m128i*)&state[12], x3);
+        _mm_storeu_si128((__m128i*)&state[16], x4);
+        _mm_storeu_si128((__m128i*)&state[20], x5);
+        _mm_storeu_si128((__m128i*)&state[24], x6);
+        _mm_storeu_si128((__m128i*)&state[28], x7);
+
+#else
+
         //
-        // The fully-unrolled version is about 100 times faster (-O3) than
-        // the simple version above and actually comes out *smaller* on x64
-        // by a few hundred bytes whether on -O, -Os, or -O3.
+        // The fully-unrolled version is about 2.5x slower than the SSE2
+        // version on amd64, but that's still about 50 times faster than
+        // the unoptimized reference version, at negligible size cost.
         //
 
         //         ijklm
@@ -293,6 +384,9 @@ struct basic_cubehash_policy : basic_functions<32> {
         state[29] = x11101;
         state[30] = x11110;
         state[31] = x11111;
+
+#endif
+
 #endif
 
 #ifdef BOOST_HASH_SHOW_PROGRESS
