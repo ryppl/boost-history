@@ -1,0 +1,102 @@
+This is used for keeping track of different ideas about different possible
+interfaces or implementations of bit masks.
+
+
+
+The bit_masks should be combinable (i.e. use recursive template), to allow for
+a combination of different masks to compose one mask.
+
+The bit_mask type is going to have an integral_c base class, which is going to
+hold the data which would make up the mask itself.
+
+Notes for later creating a test suite:
+The mask type will be one of the following built in data types OR one of the
+data types supplied by the boost.integer library.
+List to follow:
+char
+unsigned char
+short
+unsigned short
+long
+unsigned long
+int
+unsigned int
+float
+unsigned float
+double
+unsigned double
+long double
+unsigned long double
+long long
+unsigned long long
+
+
+integer types from boost integer:
+
+int_least8_t
+int_least16_t
+int_least32_t
+uint_least8_t
+uint_least16_t
+uint_least32_t
+
+
+The following types are available only if, after including <boost/cstdint.hpp>,
+the macro BOOST_NO_INT64_T is not defined:
+
+int_least64_t
+uint_least64_t
+
+The following fastest minimum-width integer types are provided for all platforms:
+
+int_fast8_t
+int_fast16_t
+int_fast32_t
+uint_fast8_t
+uint_fast16_t
+uint_fast32_t
+
+The following types are available only if, after including <boost/cstdint.hpp>,
+the macro BOOST_NO_INT64_T is not defined:
+
+int_fast64_t
+uint_fast64_t
+
+
+
+
+
+Interface Idea:
+All interface ideas need to be able to work with recursive templates.
+Also note that Andrew says that the beginning of this function is not
+actually going to be a meta function so don't try to make it one. 
+
+
+Simple interface:
+
+specify width of mask or type which the mask is going to be applied to,
+the offset in bits which a mask will begin, and the width the mask in bits.
+
+E.x. if some one would want to use the bit masks to specify a sub net mask
+this would be ideal for doing that.
+
+
+Integral Constant Specialization:
+
+Provide a Specialization of bit_mask which will take an integral constant
+from boost::mpl and create a bit mask from that.
+
+
+Specification of a mask through offsets and widths:
+
+Provide a mask which will take a combination of "pairs"* of offsets and widths.
+*NOT std::pair just some data that comes int 2's.
+
+A valid example of something like this would look like the following:
+// mask type followed by masks.
+bit_mask< int, mask<0,2>, mask<13,2> ... etc ... >
+
+
+
+
+
