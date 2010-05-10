@@ -11,11 +11,11 @@
 
  /*
   *   LOCATION:    see http://www.boost.org for most recent version.
-  *   FILE         regex_grep_example_1.cpp
+  *   FILE         regex_search_example.cpp
   *   VERSION      see <boost/version.hpp>
-  *   DESCRIPTION: regex_grep example 1: searches a cpp file for class definitions.
+  *   DESCRIPTION: regex_search example: searches a cpp file for class definitions.
   */
-
+  
 #include <string>
 #include <map>
 #include <boost/regex.hpp>
@@ -49,39 +49,35 @@ const char* re =
    // terminate in { or :
    "(\\{|:[^;\\{()]*\\{)";
 
+
 boost::regex expression(re);
 
-class IndexClassesPred
+void IndexClasses(map_type& m, const std::string& file)
 {
-   map_type& m;
-   std::string::const_iterator base;
-public:
-   IndexClassesPred(map_type& a, std::string::const_iterator b) : m(a), base(b) {}
-   bool operator()(const boost::match_results<std::string::const_iterator>& what)
+   std::string::const_iterator start, end;
+   start = file.begin();
+   end = file.end();   
+   boost::match_results<std::string::const_iterator> what;
+   boost::match_flag_type flags = boost::match_default;
+   while(boost::regex_search(start, end, what, expression, flags))   
    {
       // what[0] contains the whole string
       // what[5] contains the class name.
       // what[6] contains the template specialisation if any.
       // add class name and position to map:
       m[std::string(what[5].first, what[5].second) + std::string(what[6].first, what[6].second)] = 
-               what[5].first - base;
-      return true;
+               what[5].first - file.begin();      
+      // update search position:
+      start = what[0].second;      
+      // update flags:
+      flags |= boost::match_prev_avail;
+      flags |= boost::match_not_bob;
    }
-private:
-   IndexClassesPred& operator=(const IndexClassesPred&);
-};
-
-void IndexClasses(map_type& m, const std::string& file)
-{
-   std::string::const_iterator start, end;
-   start = file.begin();
-   end = file.end();
-   boost::regex_grep(IndexClassesPred(m, start), start, end, expression);
 }
 
 
-#include <fstream>
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -122,6 +118,8 @@ int main(int argc, const char** argv)
    }
    return 0;
 }
+
+
 
 
 
