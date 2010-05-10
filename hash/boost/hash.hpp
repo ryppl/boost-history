@@ -9,6 +9,10 @@
 #ifndef BOOST_HASH_HPP
 #define BOOST_HASH_HPP
 
+// Checksums
+#include <boost/hash/adler.hpp>
+
+// Cryptographic Hashes
 #include <boost/hash/cubehash.hpp>
 #include <boost/hash/md4.hpp>
 #include <boost/hash/md5.hpp>
@@ -16,6 +20,7 @@
 #include <boost/hash/sha1.hpp>
 #include <boost/hash/sha2.hpp>
 
+// Infrastructure
 #include <boost/hash/compute_digest.hpp>
 #include <boost/hash/digest.hpp>
 #include <boost/hash/digest_io.hpp>

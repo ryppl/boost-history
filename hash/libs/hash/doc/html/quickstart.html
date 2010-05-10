@@ -21,7 +21,26 @@
     <TH>Digest Bits
     <TH><A HREF="concepts.html#hashalgorithm"><tt>HashAlgorithm</tt></A> Model (in <tt>boost::hash</tt>)
     <TH>Reference
+    <TH>Design Type
     <TH>Notes
+    </TR>
+
+    <TR>
+    <TD>Adler-<i>h</i> (<i>h</i> in {8, 16, 24, ..., 64})
+    <TD><i>h</i>
+    <TD><tt>adler&lt;<i>h</i>&gt;</tt>
+    <TD><A HREF="http://www.faqs.org/rfcs/rfc1950.html">RFC 1950</A>
+    <TD>Checksum
+    <TD>&nbsp;
+    </TR>
+
+    <TR>
+    <TD>CubeHash-<i>h</i> (<i>h</i> in {8, 16, 24, ..., 512})
+    <TD><i>h</i>
+    <TD><tt>cubehash&lt;<i>h</i>&gt;</tt>
+    <TD><A HREF="http://cubehash.cr.yp.to/submission2/spec.pdf">CubeHash NIST Submission</A>
+    <TD>Cryptographic
+    <TD>SHA-3 candidate; Not yet mature.
     </TR>
 
     <TR>
@@ -29,14 +48,14 @@
     <TD>128
     <TD><tt>md4</tt>
     <TD><A HREF="http://www.faqs.org/rfcs/rfc1320.html">RFC 1320</A>
-    <TD>Practical attacks exist
+    <TD ROWSPAN=2>Cryptographic
+    <TD ROWSPAN=2>Practical attacks exist
     </TR>
     <TR>
     <TD>MD5
     <TD>128
     <TD><tt>md5</tt>
     <TD><A HREF="http://www.faqs.org/rfcs/rfc1321.html">RFC 1321</A>
-    <TD>Practical attacks exist
     </TR>
 
     <TR>
@@ -44,6 +63,7 @@
     <TD>160
     <TD><tt>sha</tt>
     <TD>FIPS 180
+    <TD ROWSPAN=6>Cryptographic
     <TD>Collisions known; Repealed
     </TR>
 
@@ -77,16 +97,8 @@
     <TD><tt>sha2&lt;512&gt;</tt>
     </TR>
     
-    <TR>
-    <TD>CubeHash-<i>h</i> (<i>h</i> in {8, 16, 24, ..., 512})
-    <TD><i>h</i>
-    <TD><tt>cubehash&lt;<i>h</i>&gt;</tt>
-    <TD><A HREF="http://cubehash.cr.yp.to/submission2/spec.pdf">CubeHash NIST Submission</A>
-    <TD>SHA-3 candidate; Suggest waiting for further cryptanalysis
-    </TR>
-
     </TABLE>
-If you need security against a malicious adversary, <tt>sha2&lt;<i>h</i>&gt;</tt> is, as of 2010, the recommended choice. If not, then MD5 is a popular choice and is much faster than any of the SHAs.
+If you need security against a malicious adversary, <tt>sha2&lt;<i>h</i>&gt;</tt> is, as of 2010, the recommended choice. If not, then two popular choices are <tt>crc&lt;<i>h</i>&gt;</tt> for checksums and <tt>md5</tt> for fingerprinting.
 
 <LI>With the chosen <i>HashAlgorithm</i>, call the <tt>boost::hash::<A HREF="functions.html#compute_digest">compute_digest</a>&lt;<i>HashAlgorithm</i>&gt;</tt> function, passing it an <A HREF="http://boost.org/libs/range">input range</A> (such as a container).  That will return the digest as an object of type <tt><i>HashAlgorithm</i>::digest_type</tt>.
 

@@ -29,6 +29,11 @@
     <TH><tt>digest_type</tt></TH>
     </TR>
     <TR>
+    <TD>&lt;boost/hash/adler.hpp&gt;</TD>
+    <TD><tt>adler&lt;<i>h</i>&gt;</tt>, with <i>h</i> in {8, 16, 24, ..., 64}</TD>
+    <TD>digest&lt;<i>h</i>&gt;</TD>
+    </TR>
+    <TR>
     <TD>&lt;boost/hash/cubehash.hpp&gt;</TD>
     <TD><tt>cubehash&lt;<i>h</i>&gt;</tt>, <tt>cubehash&lt;<i>r</i>, <i>b</i>, <i>h</i>&gt;</tt>, with <i>h</i> in {8, 16, 24, ..., 512}, <i>r</i> in {1, 2, 3, ...} (default 16), <i>b</i> in {4, 8, 12, ..., 128} (default 32)</TD>
     <TD>digest&lt;<i>h</i>&gt;</TD>
@@ -85,7 +90,7 @@
     <DD>Equivalent to <tt>{ InputIterator i = b; for (size_t j = 0; j != n; ++j) h.update_one(*i++); }</tt>
     </DL>
 
-<P>Each <A HREF="#hashalgorithm">HashAlgorithm</a> model provides access to all its associated StreamHash models; Those StreamHash models are generally not accessibly in other ways.
+<P>Each <A HREF="#hashalgorithm">HashAlgorithm</a> model provides access to all its associated StreamHash models; Those StreamHash models are generally not accessible in other ways.
 
 <P><TABLE WIDTH="100%">
 <TR>
