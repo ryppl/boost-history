@@ -286,7 +286,7 @@ namespace boost{namespace itl
         Output = (sum_lhs, sum_rhs)
         */
     public:
-        std::string name()const { return "Inplace Commutativity"; }
+        std::string name()const { return "Commutativity"; }
         std::string formula()const { return "a o b == b o a 'inplace'"; }
 
         std::string typeString()const

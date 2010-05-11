@@ -21,7 +21,7 @@ using namespace boost::posix_time;
 
 int main()
 {
-    typedef InplaceCommutativity<int> TestLawT;
+	typedef InplaceCommutativity<itl::list<int> > TestLawT;
     LawValidater<TestLawT> law_validator;
 
     //-----------------------------------------------------------------------------

@@ -191,7 +191,7 @@ inline typename interval_set<DomainT,Compare,Interval,Alloc>::iterator
         }
         else
         {
-            iterator succ_=it_; //succ_++;
+            iterator succ_=it_; succ_++;
             if(succ_!=this->_set.end())
             {
                 // it's a non border element that might have a right touching neighbour
