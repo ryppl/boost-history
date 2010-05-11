@@ -1,5 +1,5 @@
 This is used for keeping track of different ideas about different possible
-interfaces or implementations of bit masks.
+interfaces or implementation of bit masks.
 
 
 
@@ -67,10 +67,13 @@ uint_fast64_t
 
 
 Interface Idea:
-All interface ideas need to be able to work with recursive templates.
+All interface idea's need to be able to work with recursive templates.
 Also note that Andrew says that the beginning of this function is not
 actually going to be a meta function so don't try to make it one. 
 
+
+Referencing bits inside a mask is right to left where right starts at 0 and left
+is the last index 
 
 Simple interface:
 
@@ -79,6 +82,9 @@ the offset in bits which a mask will begin, and the width the mask in bits.
 
 E.x. if some one would want to use the bit masks to specify a sub net mask
 this would be ideal for doing that.
+
+// starting at the 8th bit so picking done by index similar to an array.
+bit_mask<int, 7, 24>
 
 
 Integral Constant Specialization:
