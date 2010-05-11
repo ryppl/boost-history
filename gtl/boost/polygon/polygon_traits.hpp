@@ -1347,6 +1347,12 @@ namespace boost { namespace polygon{
           int oabedge = edge_utils<Unit>::on_above_or_below(tmppt, he);
           if(oabedge == 0) return consider_touch;
           if(oabedge == 1) ++above;
+        } else if(x(point) == xmax) {
+          Point tmppt;
+          assign(tmppt, point);
+          if( edge_utils<Unit>::on_above_or_below(tmppt, he) == 0 ) {
+            return consider_touch;
+          }
         }
       }
       he.first = he.second;
