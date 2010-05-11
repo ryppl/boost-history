@@ -104,5 +104,13 @@ bit_mask< int, mask<0,2>, mask<13,2> ... etc ... >
 
 
 
+NOTE for future Developement:
+Making Dynamic Bit masks instead of static.
+Possibly making this into a meta function instead of using this by itself.
 
 
+
+For the bit_mask tuple look at the interface used inside the stl's tuple
+that is the goal for that psudo-data structure (psudo-data structure as it isn't
+really intended to be instanced and doesn't store any actual data, just ICEs
+(Integral Constant Expressions NOT Internal Compiler Errors.)).
