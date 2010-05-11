@@ -11,6 +11,7 @@
 
 // Checksums
 #include <boost/hash/adler.hpp>
+#include <boost/hash/crc.hpp>
 
 // Cryptographic Hashes
 #include <boost/hash/cubehash.hpp>

@@ -31,7 +31,16 @@
     <TD><tt>adler&lt;<i>h</i>&gt;</tt>
     <TD><A HREF="http://www.faqs.org/rfcs/rfc1950.html">RFC 1950</A>
     <TD>Checksum
-    <TD>&nbsp;
+    <TD>Only supports octets as input values
+    </TR>
+
+    <TR>
+    <TD>CRC-32/PNG
+    <TD>32
+    <TD><tt>crc32_png</tt>
+    <TD><A HREF="http://www.libpng.org/pub/png/spec/1.2/PNG-Structure.html#CRC-algorithm">PNG Specification, Section 3.4</A>
+    <TD>Checksum
+    <TD>Also used by <A HREF="http://www.iki.fi/shd/foss/cksfv/">cksfv</A>; Only supports bytes as input values
     </TR>
 
     <TR>

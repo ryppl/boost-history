@@ -96,6 +96,63 @@ compute_digest(wchar_t const *p) {
     return compute_digest_n<hash_T>(p, std::wcslen(p));
 }
 
+template <typename hash_T>
+struct digest_computer {
+    typedef typename hash_T::digest_type digest_type;
+    template <typename T>
+    digest_type operator()(T const &t) {
+        return compute_digest<hash_T>(t);
+    }
+    template <typename T, typename U>
+    digest_type operator()(T const &t, U const &u) {
+        return compute_digest<hash_T>(t, u);
+    }
+};
+
+template <typename hash_T>
+digest_computer<hash_T>
+compute_digest() {
+    return digest_computer<hash_T>();
+}
+
+template <typename hash_T>
+struct digest_computer_n {
+    typedef typename hash_T::digest_type digest_type;
+    template <typename T>
+    digest_type operator()(T const &t) {
+        return compute_digest_n<hash_T>(t);
+    }
+    template <typename T, typename U>
+    digest_type operator()(T const &t, U const &u) {
+        return compute_digest_n<hash_T>(t, u);
+    }
+};
+
+template <typename hash_T>
+digest_computer_n<hash_T>
+compute_digest_n() {
+    return digest_computer_n<hash_T>();
+}
+
+template <typename hash_T>
+struct digest_computer_data {
+    typedef typename hash_T::digest_type digest_type;
+    template <typename T>
+    digest_type operator()(T const &t) {
+        return compute_digest_data<hash_T>(t);
+    }
+    template <typename T, typename U>
+    digest_type operator()(T const &t, U const &u) {
+        return compute_digest_data<hash_T>(t, u);
+    }
+};
+
+template <typename hash_T>
+digest_computer_data<hash_T>
+compute_digest_data() {
+    return digest_computer_data<hash_T>();
+}
+
 } // namespace hash
 } // namespace boost
 

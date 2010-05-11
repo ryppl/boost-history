@@ -14,8 +14,6 @@
 #include <boost/hash/pack.hpp>
 #include <boost/static_assert.hpp>
 
-#include <limits>
-
 #ifdef BOOST_HASH_SHOW_PROGRESS
 #include <cstdio>
 #endif

@@ -22,7 +22,7 @@ struct all_ones {
 };
 template <>
 struct all_ones<0> {
-    typedef typename uint_t<0>::least type;
+    typedef uint_t<0>::least type;
     static type const value = 0;
 };
 
