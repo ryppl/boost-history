@@ -1451,7 +1451,7 @@ In particular, elements modeling <a href="#concept-ref_wrapper"><tt>RefWrapper</
 
   <h4>Notation</h4> 
 
-  Let <tt>r1</tt> denote an object modeling <tt>RangeComparable</tt> and <tt>r2</tt> modeling
+  Let <tt>r1</tt> denote a proxy object defined in Boost.Assign and modeling <tt>RangeComparable</tt> and <tt>r2</tt> modeling
   <a href="http://www.boost.org/doc/libs/1_42_0/libs/range/doc/range.html"><tt>Range</tt></a>.
   
   <h4>Requirements</h4> 
@@ -2118,9 +2118,9 @@ support better initialization (see <a href="#initializer">[4]</a>).
   <li> Pavel Vozenilek for his countless suggestions, improvements and 
        portability fixes. 
   <li> Rene Rivera for Code Warrior portability.     
-  <li> Manuel Peinado Gallego for identifying the need for an <a href="#concept-auto_size">auto-size framework</a>, 
+  <li> Manuel Peinado Gallego for identifying the need for an <a href="#ref-ref_list_of"><code>ref_list_of()</code></a>, 
   his valuable advice throughout its development, and proposing a
-  <a href="http://gist.github.com/287791">design</a> that laid the foundation for <a href="#chain"> chaining multiple ranges</a>.
+  <a href="http://gist.github.com/287791">design</a> that laid the foundation for <a href="#chain">chaining multiple ranges</a>.
        
        </ul>
   </p>
@@ -2129,8 +2129,19 @@ support better initialization (see <a href="#initializer">[4]</a>).
   <h2><a name="upgrading_from_1_42">Upgrading from Boost v. <span class=number>1</span><span class=special>.</span><span class=number>42</span></a></h2>
 
   <p> 
-  The <a href="#concept-auto_size">auto-size framework</a> for building a collection of references whose size is deduced at compile time supersedes <a href="#ref-list_of"><code>ref_list_of&lt;int&gt;()</code></a>.
-  The latter will continue to be supported to ensure backward compatibility.
+  This upgrades adds an <a href="#concept-auto_size">auto-size framework</a> for building a collection of references whose size is deduced at compile time . Specifically,
+  <ul>
+  <li> <a href="#ref-ref_list_of"><code>ref_list_of()</code></a> and its variants supersede <a href="#ref-list_of"><code>ref_list_of&lt;int&gt;()</code></a>, which will continue to be supported to ensure backward compatibility
+  <li> <a href="#ref-ref_csv"><code>ref_csv()</code></a> and variants
+  <li> <a href="#ref-chain"><code>operator &&</code></a> and variants
+  </ul>
+  
+  As part of this framework the distinction between <a href="#concept-ref_wrapper_assign">rebind</a> and <a href="#concept-ref_wrapper_assign">copy</a> 
+  assignment semantics has been introduced, as well as <a href="#concept-range_comparable"><tt>range comparability</tt></a>. Note that 
+  <a href="#ref-list_of"><code>list_of()</code></a> has been upgraded to model the associated concept (previously comparison to a proxy object defined in 
+  Boost.Assign was not possible).
+  
+    
   </p>
 
 
