@@ -2159,18 +2159,13 @@ support better initialization (see <a href="#initializer">[4]</a>).
   <h2><a name="upgrading_from_1_42">Upgrading from Boost v. <span class=number>1</span><span class=special>.</span><span class=number>42</span></a></h2>
 
   <p> 
-  This upgrades adds an <a href="#concept-auto_size">auto-size framework</a> for building a collection of references whose size is deduced at compile time . Specifically,
+  This upgrades adds an <a href="#concept-auto_size">auto-size framework</a> for building a collection of references whose size is deduced at compile time . New functionality includes:
   <ul>
   <li> <a href="#ref-ref_list_of"><code>ref_list_of()</code></a> and its variants supersede <a href="#ref-list_of"><code>ref_list_of&lt;int&gt;()</code></a>, which will continue to be supported to ensure backward compatibility
   <li> <a href="#ref-ref_csv"><code>ref_csv()</code></a> and variants
   <li> <a href="#ref-chain"><code>operator &&</code></a> and variants
   </ul>
-  
-  As part of this framework the distinction between <a href="#concept-ref_wrapper_assign">rebind</a> and <a href="#concept-ref_wrapper_assign">copy</a> 
-  assignment semantics has been introduced, as well as <a href="#concept-range_comparable"><tt>range comparability</tt></a>. Note that 
-  <a href="#ref-list_of"><code>list_of()</code></a> has been upgraded to model the associated concept (previously comparison to a proxy object defined in 
-  Boost.Assign was not possible).
-      
+        
   </p>
 
 
