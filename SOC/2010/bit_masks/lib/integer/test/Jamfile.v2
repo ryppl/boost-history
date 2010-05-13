@@ -13,3 +13,5 @@ test-suite integer
         [ run low_bit_mask_test.cpp ]
         [ compile bit_mask_test.cpp ]
     ;
+
+# run low_bit_mask_test.cpp
