@@ -13,12 +13,19 @@
 
 namespace boost {
 
-template <typename T, T Width>
+
+/** Creates a mask of the supplied width in side type T, from the lower portion 
+ *  of the integer starting from the right most bit moving towards the left.
+ */
+template <typename T, unsigned int Width>
 struct low_bits
     :integral_constant<T, ~(~T(0) << Width) >
 {
+    
     typedef low_bits<T,Width>  type;
 };
+
+
 
 } // namespace boost 
 

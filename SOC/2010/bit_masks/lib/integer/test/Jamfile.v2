@@ -11,7 +11,8 @@ test-suite integer
         [ run mask_check.cpp ]
         [ run high_bit_mask_test.cpp ]
         [ run low_bit_mask_test.cpp ]
-        [ compile bit_mask_test.cpp ]
+        # [ compile bit_mask_test.cpp ]
+        [ run bit_width_test.cpp ]
     ;
 
 # run low_bit_mask_test.cpp
