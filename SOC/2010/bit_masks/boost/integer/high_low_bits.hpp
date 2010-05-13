@@ -8,8 +8,8 @@
 #ifndef BOOST_HIGH_LOW_BIT_HPP
 #define BOOST_HIGH_LOW_BIT_HPP
 
-#include <boost/mpl/integral_c.hpp>
 #include <boost/type_traits.hpp>
+#include <boost/integer/details/high_low_impl.hpp>
 
 namespace boost {
 
@@ -19,10 +19,21 @@ namespace boost {
  */
 template <typename T, unsigned int Width>
 struct low_bits
-    :integral_constant<T, ~(~T(0) << Width) >
-{
-    
+    :details::low_bits_preconditions<T,Width>,
+    integral_constant<T, ~(~T(0) << Width) >
+{    
     typedef low_bits<T,Width>  type;
+};
+
+/** Creates a mask of the supplied width in side type T, from the lower portion 
+ *  of the integer starting from the right most bit moving towards the left.
+ */
+template <typename T, unsigned int Width>
+struct high_bits
+    :details::high_bits_preconditions<T,Width>,
+    integral_constant<T, ~(~T(0) >> Width) >
+{    
+    typedef high_bits<T,Width>  type;
 };
 
 

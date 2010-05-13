@@ -7,7 +7,7 @@
 #ifndef BOOST_INTEGRAL_BIT_WIDTH_HPP
 #define BOOST_INTEGRAL_BIT_WIDTH_HPP
 #include <boost/type_traits.hpp>
-#include <boost/integer/details/high_low_impl.hpp>
+
 
 
 namespace boost {
