@@ -10,7 +10,6 @@
 #define BOOST_INTEGER_BIT_MASK_HPP
 
 // boost dependencies.
-#include <boost/mpl/int.hpp>
 
 
 
@@ -19,46 +18,13 @@
 namespace boost {
 
 
-/** Intention of this mask is to provide a simple mask which can be used
- *  to make simplified masks which are used for contigious bits.
- *  This needs to evolve into a specialization of the regular
- *  bit_mask.
+/** bit_mask.
+ *  Mask which creates a mask give type, offset and width of the mask
  */
-template <  typename MaskedType,
-            typename MaskOffsetInBits,
-            typename MaskWidth >
-struct simple_bit_mask;
-
-
-
-// forward declaration of the bit mask structure which will all 
-// a recursive definition of how
-template <typename Value, typename SecondValue = mpl::int_<0> >
-struct bit_mask;
-
-
-
-
-// termination specialization this will cause the psudo-recursive definition 
-// being evalueated to finish.
-template <int NewMaskValue, int CurrentMaskValue>
-struct bit_mask< mpl::int_< NewMaskValue >, mpl::int_< CurrentMaskValue > >
-    :mpl::bitor_<
-        mpl::int_<NewMaskValue>,
-        mpl::int_< CurrentMaskValue >
-    >::type
+template <typename T, typename Offset, typename Width>
+struct bit_maks
 { };
 
-
-
-// this is the recursive step for the bit_mask.
-template <int MaskValue, int CurrentMaskValue>
-struct bit_mask < bit_mask< mpl::int_<MaskValue> >, mpl::int_<CurrentMaskValue> >
-    :mpl::bitor_<
-        mpl::int_< CurrentMaskValue >,
-        bit_mask< mpl::int_< MaskValue > >
-    >::type
-{ };
 
 
 } // namespace boost
