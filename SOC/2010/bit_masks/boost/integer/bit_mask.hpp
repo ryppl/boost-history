@@ -34,8 +34,10 @@ struct bit_mask
  */
 template <typename T, T Value>
 struct integral_mask
+    :details::integral_mask_preconditions<T,Value>,
+    integral_constant<T, Value>
 {
-
+    typedef integral_mask<T,Value> type;
 };
 
 } // namespace boost

@@ -11,6 +11,7 @@
 #include <boost/mpl/bitwise.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/integer/bit_width.hpp>
+#include <limits>
 
 namespace boost { namespace details {
 
@@ -22,11 +23,9 @@ namespace boost { namespace details {
  *  1. The width of the masked section must not be longer then the
  *  mask itself.
  *
- *  2. Valid range for offset is >= 0.
- *
- *  3. Valid range for mask width is > 0.
+ *  2. Valid range for mask width is > 0.
  *  
- *  4. The type which is being masked must satisfy the is_integral type trait.
+ *  3. The type which is being masked must satisfy the is_integral type trait.
  */
 template <typename T, unsigned int Offset, unsigned int Width>
 struct bit_mask_preconditions {
@@ -35,15 +34,31 @@ struct bit_mask_preconditions {
     BOOST_STATIC_ASSERT(( (Offset + Width) < ( bit_width<T>::value - 1)  ));
 
     // precondition 2.
-    // this is always true because the offset is specified as an unsigned integer.
-    // BOOST_STATIC_ASSERT((  >= 0 ));
-
-    // precondition 3.
     BOOST_STATIC_ASSERT(( Width > 0 ));
     
-    // precondition 4.
+    // precondition 3.
     BOOST_STATIC_ASSERT(( is_integral<T>::value ));
 };
+
+
+/** The following preconditions apply to the integral_mask type.
+ *  Preconditions
+ *
+ *  1. T must be an integral type.
+ *  
+ *  2. Value must be in the domain of the integral type T.
+ *
+ */
+template <typename T, T Value>
+struct integral_mask_preconditions {
+    // precondition 1.
+    BOOST_STATIC_ASSERT(( is_integral<T>::value ));
+    
+    // precondition 2.
+    BOOST_STATIC_ASSERT((std::numeric_limits<T>::max >= Value ));
+    BOOST_STATIC_ASSERT((std::numeric_limits<T>::min <= Value ));
+};
+
 
 } // end of details namespace.
 } // end of boost namespace.
