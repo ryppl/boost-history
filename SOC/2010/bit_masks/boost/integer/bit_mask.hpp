@@ -27,6 +27,11 @@ struct bit_mask
     integral_constant<T, (low_bits<T,Width>::value << Offset) >
 {
     typedef bit_mask<T, Offset, Width> type;
+
+
+    T operator()() {
+        return type::value;
+    }
 };
 
 /** Integral Mask.
@@ -38,6 +43,10 @@ struct integral_mask
     integral_constant<T, Value>
 {
     typedef integral_mask<T,Value> type;
+
+    T operator()() {
+        return type::value;
+    }
 };
 
 } // namespace boost
