@@ -16,7 +16,9 @@ namespace boost {
 template <typename T, T Width>
 struct low_bits
     :integral_constant<T, ~(~T(0) << Width) >
-{ };
+{
+    typedef low_bits<T,Width>  type;
+};
 
 } // namespace boost 
 

@@ -21,12 +21,6 @@ long
 unsigned long
 int
 unsigned int
-float
-unsigned float
-double
-unsigned double
-long double
-unsigned long double
 long long
 unsigned long long
 
