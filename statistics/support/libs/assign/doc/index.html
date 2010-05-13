@@ -62,6 +62,8 @@
                                                                       <a href="#ref-repeat"><code>range()</code>
                                                                       </a></li>
          <li>Operator <a href="#ref-chain"><code>&&</code></a></li>
+        <li>Function <a href="ref-chain_l"> <code>chain_l()</code></a> </li>
+        <li>Function <a href="ref-chain_r"> <code>chain_r()</code></a> </li>
        <li><a href="#ref-limit">Customizing</a> argument list sizes </li>
      </ul>
     <li> <a href="#concepts" >Concepts</a> </li>
@@ -846,6 +848,8 @@ Originally arguments were passed by value (and still is in
         <li>Operator <a href="#ref-std"><code>+=</code></a> for standard containers</li>
         <li>Functions <a href="#ref-repeat"><code>repeat()</code></a>, <a href="#ref-repeat"><code>repeat_fun()</code></a> and <a href="#ref-repeat"><code>range()</code></a></li>
         <li>Operator <a href="#ref-chain"><code>&&</code></a></li>
+        <li>Function <a href="#ref-chain_l"> <code>chain_l()</code></a> </li>
+        <li>Function <a href="#ref-chain_r"> <code>chain_r()</code></a> </li>
         <li><a href="#ref-limit">Customizing</a> argument list sizes </li>
      </ul>
 
@@ -1281,14 +1285,40 @@ In particular, elements modeling <a href="#concept-ref_wrapper"><tt>RefWrapper</
   	<tr><td><tt>s1 && s2</tt></td><td> <a href="#ref-chain_impl_l"><code>result_of::chain_r</code></a><code>&lt;R1,R2&gt;::type</code>  </td></tr>
   	</table>
   </blockquote>
+
+  <h3> <a name="ref-chain_l"> <code>chain_l()</code></a> </h3>
   
-  <h4> Fine control </h4>
+  This is a fine-control version of <a href="#ref-chain"><code>operator &&</code></a> that can be
+  used to chain l-value ranges.
 
-  Let <tt>T1</tt> and <tt>T2</tt> each be <tt>const</tt> or non-<tt>const</tt> without restriction. 
-  For finer control over the resulting proxy objects, one may call <tt>chain_l&lt;V,R&gt;(r1)(r2)</tt> or <tt>chain_l(r1)(r2)</tt>, where
-<tt>V</tt> is a value type, and <tt>R</tt> a reference type, and similarly <tt>chain_r&lt;V,R&gt;(t1)(t2)</tt> or 
-<tt>chain_r(t1)(t2)</tt>.
+  <h4> Template parameters </h4>
 
+    <blockquote>
+  	<table cellpadding=5 border=1>
+  	<tr><th class="head">Parameter</th> <th class="head">Result</th>
+  	<tr><td><tt>V</tt></td><td> A value type  </td></tr>
+  	<tr><td><tt>R</tt></td><td> A reference type, or <tt>use_default<tt>  </td></tr>
+  	<tr><td><tt>Rng1</tt></td><td> An l-value that models <a href="http://www.boost.org/doc/libs/1_42_0/libs/range/doc/range.html"><tt>Range</tt></a> </td></tr>
+  	</table>
+  </blockquote>
+
+  <h4> Usage </h4>
+  
+    Let <code>r1</code> denote an object of type <code>Rng1</code>.
+  
+    <blockquote>
+  	<table cellpadding=5 border=1>
+  	<tr><th class="head">Expression</th> <th class="head">Result</th>
+  	<tr><td><tt>chain_l&lt;V,R&gt;(r1)</tt></td> <td>An object that models <a href="#concept-chainable">Chainable</a>  </td></tr>
+  	<tr><td><tt>chain_l(r1)</tt>           </td> <td>An object that models <a href="#concept-chainable">Chainable</a> </td> </tr>
+  	</table>
+  </blockquote>
+
+  <h3> <a name="ref-chain_r"> <code>chain_r()</code></a> </h3>
+   
+  Same as <a href="#ref-chain_l"> <code>chain_l</code></a> but for r-values. If l-values are passed
+  as arguments, they are treated as l-values.
+  
   <h2>Concepts <a name="concepts"> </h2>
 
   <h3>Contents</h3>
@@ -1325,7 +1355,7 @@ In particular, elements modeling <a href="#concept-ref_wrapper"><tt>RefWrapper</
 
   <h4>Models</h4>
 
-  <a href="#ref-expr">expr&lt;&gt;</a>, <a href="#ref-chain_impl_l">chain_l&lt;&gt;</a>, and <a href="#ref-chain_impl_r">chain_r&lt;&gt;</a>.
+  <a href="#ref-expr">expr&lt;&gt;</a>, <a href="#ref-chain_impl_l">expr_l&lt;&gt;</a>, and <a href="#ref-chain_impl_r">expr_r&lt;&gt;</a>.
     
   <h3>Concept <a name="concept-chainable"><tt>Chainable</tt></a></h3>
 
@@ -2140,8 +2170,7 @@ support better initialization (see <a href="#initializer">[4]</a>).
   assignment semantics has been introduced, as well as <a href="#concept-range_comparable"><tt>range comparability</tt></a>. Note that 
   <a href="#ref-list_of"><code>list_of()</code></a> has been upgraded to model the associated concept (previously comparison to a proxy object defined in 
   Boost.Assign was not possible).
-  
-    
+      
   </p>
 
 
