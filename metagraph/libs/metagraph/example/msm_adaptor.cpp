@@ -18,18 +18,27 @@
 //front-end
 #include <boost/msm/front/state_machine_def.hpp>
 
-#ifndef SKIP_DFS
+#ifdef SKIP_DFS
+#define DO_DFS 0
+#else
+#ifndef DO_DFS
+#define DO_DFS 5
+#endif
+#endif
 
+#if DO_DFS>1
 // mpl_graph graph implementation and depth first search
 #include <boost/metagraph/mpl_graph/incidence_list_graph.hpp>
 #include <boost/metagraph/mpl_graph/depth_first_search.hpp>
-
+#if DO_BFS>0
+#include <boost/metagraph/mpl_graph/breadth_first_search.hpp>
+#endif
 #endif
 
 namespace msm = boost::msm;
 namespace mpl = boost::mpl;
 
-#ifndef SKIP_DFS
+#if DO_DFS>1
 namespace mpl_graph = boost::metagraph::mpl_graph;
 #endif
 
@@ -171,7 +180,7 @@ namespace
         }
 
 
-#ifndef SKIP_DFS
+#if DO_DFS>2
 
         // transition table is already an incidence list; 
         // select Edge, Source, Target  =  pair<Start,Event>, Start, Next
@@ -189,23 +198,44 @@ namespace
         typedef mpl_graph::incidence_list_graph<transition_incidence_list>
             transition_graph;
         
-        struct preordering_visitor : mpl_graph::dfs_default_visitor_operations {    
+        struct preordering_dfs_visitor : mpl_graph::dfs_default_visitor_operations {    
             template<typename Node, typename Graph, typename State>
             struct discover_vertex :
                 mpl::push_back<State, Node>
             {};
         };
 
+#if DO_DFS>3
         typedef mpl::first<mpl_graph::
             depth_first_search<transition_graph, 
-                               preordering_visitor,
+                               preordering_dfs_visitor,
                                mpl::vector<>,
                                player_::initial_state>::type>::type
                     dfs_from_initial_state;
-                    
+#if DO_DFS>4        
         BOOST_MPL_ASSERT(( mpl::equal<dfs_from_initial_state, 
                                       mpl::vector<Empty,Open,Stopped,Playing,Paused> > ));
-                                      
+#endif
+#endif
+
+#if DO_BFS>0
+        struct preordering_bfs_visitor : mpl_graph::bfs_default_visitor_operations {    
+            template<typename Node, typename Graph, typename State>
+            struct discover_vertex :
+                mpl::push_back<State, Node>
+            {};
+        };
+        typedef mpl::first<mpl_graph::
+            breadth_first_search<transition_graph, 
+                               preordering_bfs_visitor,
+                               mpl::vector<>,
+                               player_::initial_state>::type>::type
+                    bfs_from_initial_state;
+        BOOST_MPL_ASSERT(( mpl::equal<bfs_from_initial_state, 
+                                      mpl::vector<Empty,Open,Stopped,Playing,Paused> > ));
+#endif
+
+                          
 #endif
 
 
