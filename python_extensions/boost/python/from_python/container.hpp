@@ -27,7 +27,7 @@ namespace python {
 template <typename Container, typename Value=typename Container::value_type>
 struct container_from_python_sequence {
 
-    static void declare() {
+    container_from_python_sequence() {
         converter::registry::push_back(
             &convertible,
             &construct,
@@ -62,7 +62,62 @@ struct container_from_python_sequence {
     }
 };
 
+/**
+ *  @brief An rvalue from-python converter that creates a pair-associative container from an arbitrary
+ *         Python mapping.
+ *
+ *  If 'key' is an object of type Key and 'mapped' is an object of type Mapped,
+ *  the statements
+ *  @code
+ *  Container c;
+ *  c.insert(Value(key, mapped));
+ *  @endcode
+ *  must be valid for the given Container type.
+ *
+ *  For overloaded functions, this converter will match for any object with a 'keys' attribute,
+ *  and will raise an exception if an element is not convertible to the appropriate C++ type.
+ *
+ *  When the key and/or mapped type are wrapped C++ types, explicitly setting the Key and/or Mapped template
+ *  parameters to (const) reference types may eliminate some unnecessary copies.
+ */
+template <typename Container, 
+          typename Key=typename Container::key_type,
+          typename Mapped=typename Container::mapped_type,
+          typename Value=typename Container::value_type
+          >
+struct container_from_python_mapping {
+
+    container_from_python_mapping() {
+        converter::registry::push_back(
+            &convertible,
+            &construct,
+            type_id< Container >()
+        );
+    }
+
+    static void* convertible(PyObject * obj) {
+        if (PyObject_HasAttrString(obj, "keys")) {
+            return obj;
+        }
+        return NULL;
+    }
+
+    static void construct(PyObject* obj, converter::rvalue_from_python_stage1_data* data) {
+        object mapping(handle<>(borrowed(obj)));
+        typedef converter::rvalue_from_python_storage<Container> storage_t;
+        storage_t* storage = reinterpret_cast<storage_t*>(data);
+        void* bytes = storage->storage.bytes;
+        Container * result = new (bytes) Container();
+        from_python_iterator<Key> const end;
+        for (from_python_iterator<Key> iter(mapping.attr("keys")()); iter != end; ++iter) {
+            object mapped = mapping[iter.get_py()];
+            result->insert(Value(*iter, extract<Mapped>(mapped)));
+        }
+        data->convertible = bytes;
+    }
+};
+
 } // namespace boost::python
 } // namespace boost
 
-#endif // !BOOST_PYTHON_FROM_PYTHON_BOOST_FUSION_HPP
+#endif // !BOOST_PYTHON_FROM_PYTHON_CONTAINER_HPP

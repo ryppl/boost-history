@@ -30,7 +30,7 @@ struct boost_fusion_from_python_check {
         }
         object item(item_handle);
         extract<T> can_extract(item);
-        if (!can_extract) throw boost_fusion_from_python_failed();
+        if (!can_extract.check()) throw boost_fusion_from_python_failed();
         copy.append(item);
     }
 
@@ -40,10 +40,10 @@ struct boost_fusion_from_python_check {
 
 struct boost_fusion_from_python_set {
     list sequence;
-    int index;
+    mutable int index;
 
     template <typename T> void operator()(T & x) const {
-        x = extract<T>(sequence[index]);
+        x = extract<T>(sequence[index++]);
     }
 
     explicit boost_fusion_from_python_set(object const & sequence_) :
@@ -52,10 +52,16 @@ struct boost_fusion_from_python_set {
 
 } // namespace detail
 
+/**
+ *  @brief An rvalue from-python converter that converts any Python iterable to a Boost.Fusion sequence.
+ *
+ *  The converter will only match if all of the elements in the iterable are convertable to
+ *  the corresponding types in the Boost.Fusion sequence.  
+ */
 template <typename Sequence>
 struct boost_fusion_from_python {
 
-    static void declare() {
+    boost_fusion_from_python() {
         converter::registry::push_back(
             &convertible,
             &construct,

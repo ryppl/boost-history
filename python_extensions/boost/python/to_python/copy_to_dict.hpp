@@ -3,8 +3,8 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt
 
-#ifndef BOOST_PYTHON_TO_PYTHON_COPY_TO_LIST_HPP
-#define BOOST_PYTHON_TO_PYTHON_COPY_TO_LIST_HPP
+#ifndef BOOST_PYTHON_COPY_TO_LIST_HPP
+#define BOOST_PYTHON_COPY_TO_LIST_HPP
 
 #include <boost/python.hpp>
 #include <boost/range.hpp>
@@ -12,10 +12,10 @@
 namespace boost { namespace python {
 
 /**
- *  @brief A model of ResultConverterGenerator (see Boost.Python docs) that copies an arbirary iterator
+ *  @brief A model of ResultConverterGenerator (see Boost.Python docs) that copies any valid iterator
  *         range into a Python list.
  *
- *  Useful for functions that return an STL container that one would like transformed into a Python list;
+ *  Useful for functions that return a STL container that one would like transformed into a Python list;
  *  use return_value_policy<copy_to_list>().
  */
 struct copy_to_list {
@@ -54,4 +54,4 @@ struct copy_to_list {
 
 }}
 
-#endif // !BOOST_PYTHON_TO_PYTHON_COPY_TO_LIST_HPP
+#endif // !BOOST_PYTHON_COPY_TO_LIST_HPP

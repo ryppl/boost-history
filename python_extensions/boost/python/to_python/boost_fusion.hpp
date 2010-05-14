@@ -21,6 +21,9 @@ struct boost_fusion_to_python_append {
 
 } // namespace boost::python::detail
 
+/**
+ *  @brief A to-python converter for arbitrary Boost.Fusion sequences.
+ */
 template <typename Sequence>
 struct boost_fusion_to_python {
 
@@ -32,7 +35,7 @@ struct boost_fusion_to_python {
 
     static PyTypeObject const * get_pytype() { return &PyTuple_Type; }
 
-    static void declare() {
+    boost_fusion_to_python() {
         boost::python::to_python_converter<Sequence,boost_fusion_to_python,true>();
     }
 

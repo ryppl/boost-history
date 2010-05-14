@@ -12,10 +12,19 @@
 namespace boost {
 namespace python {
 
+/**
+ *  @brief A to-python converter for std::pair that yields a two-element Python tuple.
+ */
 template <typename T1, typename T2>
 struct std_pair_to_python 
     : public boost_fusion_to_python< std::pair<T1,T2> > 
-{};
+{
+
+    std_pair_to_python() {
+        boost::python::to_python_converter<std::pair<T1,T2>,std_pair_to_python,true>();
+    }
+
+};
 
 } // namespace boost::python
 } // namespace boost

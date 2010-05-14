@@ -1,0 +1,75 @@
+OVERVIEW
+
+This is a collection of fairly self-contained utilities I've
+I've found to be useful in wrapping C++ code using Boost.Python,
+posted here in the hopes that others might find them useful,
+and perhaps contribute their own utilitites in the same place.
+
+
+FEATURES
+
+ - Converting STL containers and other entities supported by
+   Boost.Range to Python builtins ('to_python/copy_to_list.hpp',
+   'to_python/copy_to_tuple.hpp', 'to_python/copy_to_dict.hpp').
+
+ - Converting Python builtin sequences and mappings to STL
+   containers and iterators ('from_python/iterator.hpp',
+   'from_python/container.hpp')
+
+ - Conversions involving Boost.Fusion sequences, including tuples
+   and std::pair ('(to|from)_python/(std_pair|boost_fusion).hpp').
+
+ - Implicit to-python conversions ('to_python/implicit.hpp').
+
+ - boost::shared_ptr<T const> conversions that work simply by 
+   casting away constness ('to_python/const_cast_shared_ptr.hpp').
+
+
+INSTALLATION
+
+All the libraries are header only, and the SCons-based build system
+is only used to run tests (and it doesn't try very hard to locate
+Boost.Python if that's non-trivial on your system.
+
+While I have only tested these on gcc 4.4 in Linux, I don't have
+any reason to think they won't work on any other platform with
+a modern C++ compiler.
+
+As of this writing (May 2010), the latest version of this code 
+is in the boost sandbox at
+http://svn.boost.org/svn/boost/sandbox/python_extensions
+
+Depending on how useful these utilites are to others, and how much
+time I have, some of these may eventually move into the core
+Boost.Python library.
+
+
+BUGS/SUPPORT/FEEDBACK
+
+If you have questions, find a bug, or have a suggestion for how to
+improve something, feel free to email the author (see below).  If
+something doesn't work, and there's a reasonable chance your problem
+is with Boost.Python itself, and not this extension code, please
+post to cplusplus-sig@python.org.
+
+
+CONTRIBUTING
+
+If you have similarly simple-yet-useful and self-contained
+Boost.Python, I'd love to see it contributed here.  However, I would
+rather not add code here whose purpose is to provide a Boost.Python
+interface for some other, non-Boost C++ library, or which depends
+on a non-Boost C++ library.
+
+If you already have such a collection posted somewhere, but would
+like to see it collected here instead, and don't have the time to
+do it, let me know; I might be willing to do the organizational work
+to drop it in here myself.  However, I don't want to just maintain a
+perpetually out-of-date mirror of other people's code repositories;
+if you intend to maintain your utilities somewhere else, it's
+probably best if we just link to each other in our README files,
+or maybe use svn:external declarations.
+
+
+Jim Bosch
+talljimbo@gmail.com

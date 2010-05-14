@@ -6,6 +6,12 @@
 #ifndef BOOST_MPL_ADAPTED_STD_PAIR_HPP
 #define BOOST_MPL_ADAPTED_STD_PAIR_HPP
 
+/**
+ *  @file boost/mpl/std_pair.hpp
+ *
+ *  @brief Provides interface for std::pair as a valid MPL sequence.
+ */
+
 #include <utility>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/deref.hpp>
