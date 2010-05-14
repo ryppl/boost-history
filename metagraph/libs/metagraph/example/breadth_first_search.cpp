@@ -86,64 +86,119 @@ struct tree_edge_visitor : mpl_graph::bfs_default_visitor_operations {
 // adjacency list tests
 
 // preordering, start from A
-typedef mpl::first<mpl_graph::breadth_first_search<some_adjacency_list_graph, A, mpl_graph::search_state_and_operations<mpl::vector<>, preordering_visitor > >::type>::type preorder_adj_a;
+typedef mpl::first<mpl_graph::
+    breadth_first_search<some_adjacency_list_graph, 
+                         preordering_visitor, 
+                         mpl::vector<>, 
+                         A>::type>::type 
+                preorder_adj_a;
 BOOST_MPL_ASSERT(( mpl::equal<preorder_adj_a::type, mpl::vector<A,B,C,F,D,E> > ));
 
 // examine edges, start from A
-typedef mpl::first<mpl_graph::breadth_first_search<some_adjacency_list_graph, A, mpl_graph::search_state_and_operations<mpl::vector<>, examine_edge_visitor > >::type>::type ex_edges_adj_a;
+typedef mpl::first<mpl_graph::
+    breadth_first_search<some_adjacency_list_graph, 
+                         examine_edge_visitor,
+                         mpl::vector<>,
+                         A>::type>::type 
+                ex_edges_adj_a;
 BOOST_MPL_ASSERT(( mpl::equal<ex_edges_adj_a::type, mpl::vector<A_B,B_C,B_F,C_D,C_E,C_F> > ));
 
 // tree edges, start from A
-typedef mpl::first<mpl_graph::breadth_first_search<some_adjacency_list_graph, A, mpl_graph::search_state_and_operations<mpl::vector<>, tree_edge_visitor > >::type>::type tree_edges_adj_a;
+typedef mpl::first<mpl_graph::
+    breadth_first_search<some_adjacency_list_graph, 
+                         tree_edge_visitor, 
+                         mpl::vector<>,
+                         A>::type>::type 
+                tree_edges_adj_a;
 BOOST_MPL_ASSERT(( mpl::equal<tree_edges_adj_a::type, mpl::vector<A_B,B_C,B_F,C_D,C_E> > ));
 
 // preordering, search all, default start node (first)
-typedef mpl::first<mpl_graph::breadth_first_search_all<some_adjacency_list_graph,mpl_graph::search_state_and_operations<mpl::vector<>, preordering_visitor > >::type>::type preorder_adj;
+typedef mpl::first<mpl_graph::
+    breadth_first_search_all<some_adjacency_list_graph,
+                             preordering_visitor, 
+                             mpl::vector<> >::type>::type 
+                preorder_adj;
 BOOST_MPL_ASSERT(( mpl::equal<preorder_adj::type, mpl::vector<A,B,C,F,D,E,G> > ));
 
 // postordering, starting at A (same as preordering because BFS fully processes one vertex b4 moving to next)
-typedef mpl::first<mpl_graph::breadth_first_search<some_adjacency_list_graph,A,mpl_graph::search_state_and_operations<mpl::vector<>, postordering_visitor > >::type>::type postorder_adj_a;
+typedef mpl::first<mpl_graph::
+    breadth_first_search<some_adjacency_list_graph,
+                         postordering_visitor,
+                         mpl::vector<>,
+                         A>::type>::type 
+                postorder_adj_a;
 BOOST_MPL_ASSERT(( mpl::equal<postorder_adj_a::type, mpl::vector<A,B,C,F,D,E> > ));
 
 // postordering, default start node (same as preordering because BFS fully processes one vertex b4 moving to next)
-typedef mpl::first<mpl_graph::breadth_first_search_all<some_adjacency_list_graph,mpl_graph::search_state_and_operations<mpl::vector<>, postordering_visitor > >::type>::type postorder_adj;
+typedef mpl::first<mpl_graph::
+    breadth_first_search_all<some_adjacency_list_graph,
+                             postordering_visitor,
+                             mpl::vector<> >::type>::type 
+                postorder_adj;
 BOOST_MPL_ASSERT(( mpl::equal<postorder_adj::type, mpl::vector<A,B,C,F,D,E,G> > ));
 
 // preordering starting at C
-typedef mpl::first<mpl_graph::breadth_first_search<some_adjacency_list_graph, C,
-                                                 mpl_graph::search_state_and_operations<mpl::vector<>, preordering_visitor >
-                                                 >::type>::type preorder_adj_from_c;
+typedef mpl::first<mpl_graph::
+    breadth_first_search<some_adjacency_list_graph,
+                         preordering_visitor, 
+                         mpl::vector<>,
+                         C>::type>::type 
+                preorder_adj_from_c;
 BOOST_MPL_ASSERT(( mpl::equal<preorder_adj_from_c::type, mpl::vector<C,D,E,F> > ));
 
 // preordering, search all, starting at C
-typedef mpl::first<mpl_graph::breadth_first_search_all<some_adjacency_list_graph,
-                                                 mpl_graph::search_state_and_operations<mpl::vector<>, preordering_visitor >,
-                                                 C>::type>::type preorder_adj_from_c_all;
+typedef mpl::first<mpl_graph::
+    breadth_first_search_all<some_adjacency_list_graph,
+                             preordering_visitor,
+                             mpl::vector<>,
+                             C>::type>::type 
+                preorder_adj_from_c_all;
 BOOST_MPL_ASSERT(( mpl::equal<preorder_adj_from_c_all::type, mpl::vector<C,D,E,F,A,B,G> > ));
 
 
 // incidence list tests
 
 // preordering, start from A
-typedef mpl::first<mpl_graph::breadth_first_search<some_incidence_list_graph, A, mpl_graph::search_state_and_operations<mpl::vector<>, preordering_visitor > >::type>::type preorder_inc_a;
+typedef mpl::first<mpl_graph::
+    breadth_first_search<some_incidence_list_graph, 
+                         preordering_visitor, 
+                         mpl::vector<>,
+                         A>::type>::type 
+                preorder_inc_a;
 BOOST_MPL_ASSERT(( mpl::equal<preorder_inc_a::type, mpl::vector<A,B,C,F,D,E> > ));
 
 // preordering, start from C
-typedef mpl::first<mpl_graph::breadth_first_search<some_incidence_list_graph, C, mpl_graph::search_state_and_operations<mpl::vector<>, preordering_visitor > >::type>::type preorder_inc_c;
+typedef mpl::first<mpl_graph::
+    breadth_first_search<some_incidence_list_graph, 
+                         preordering_visitor, 
+                         mpl::vector<>,
+                         C>::type>::type 
+                preorder_inc_c;
 BOOST_MPL_ASSERT(( mpl::equal<preorder_inc_c::type, mpl::vector<C,D,E,F> > ));
 
 // preordering, default start node (first)
-typedef mpl::first<mpl_graph::breadth_first_search_all<some_incidence_list_graph,mpl_graph::search_state_and_operations<mpl::vector<>, preordering_visitor > >::type>::type preorder_inc;
+typedef mpl::first<mpl_graph::
+    breadth_first_search_all<some_incidence_list_graph,
+                             preordering_visitor,
+                             mpl::vector<> >::type>::type 
+                preorder_inc;
 BOOST_MPL_ASSERT(( mpl::equal<preorder_inc::type, mpl::vector<A,B,C,F,D,E> > ));
 
 // postordering, default start node
-typedef mpl::first<mpl_graph::breadth_first_search_all<some_incidence_list_graph,mpl_graph::search_state_and_operations<mpl::vector<>, postordering_visitor > >::type>::type postorder_inc;
+typedef mpl::first<mpl_graph::
+    breadth_first_search_all<some_incidence_list_graph,
+                             postordering_visitor,
+                             mpl::vector<> >::type>::type 
+                postorder_inc;
 BOOST_MPL_ASSERT(( mpl::equal<postorder_inc::type, mpl::vector<A,B,C,F,D,E> > ));
 
 // preordering, search all, starting at C
-typedef mpl::first<mpl_graph::breadth_first_search_all<some_incidence_list_graph,
-                                                 mpl_graph::search_state_and_operations<mpl::vector<>, preordering_visitor >,
-                                                 C>::type>::type preorder_inc_from_c;
+typedef mpl::first<mpl_graph::
+    breadth_first_search_all<some_incidence_list_graph,
+                             preordering_visitor,
+                             mpl::vector<>,
+                             C>::type>::type 
+                preorder_inc_from_c;
 BOOST_MPL_ASSERT(( mpl::equal<preorder_inc_from_c::type, mpl::vector<C,D,E,F,A,B> > ));
 
 
