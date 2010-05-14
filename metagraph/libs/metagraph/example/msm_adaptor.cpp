@@ -231,6 +231,8 @@ namespace
                                mpl::vector<>,
                                player_::initial_state>::type>::type
                     bfs_from_initial_state;
+                    
+        // yawn, BFS happens to produce the same result as DFS for this example
         BOOST_MPL_ASSERT(( mpl::equal<bfs_from_initial_state, 
                                       mpl::vector<Empty,Open,Stopped,Playing,Paused> > ));
 #endif
