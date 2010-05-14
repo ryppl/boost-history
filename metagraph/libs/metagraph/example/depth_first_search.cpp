@@ -100,10 +100,10 @@ BOOST_MPL_ASSERT(( mpl::equal<preorder_adj_all_from_c::type, mpl::vector<C,D,E,F
 // preordering just those starting at C
 typedef mpl::first<mpl_graph::
     depth_first_search<some_adjacency_list_graph,
-                           preordering_visitor, 
-                           mpl::vector<>,
-                           C>::type>::type 
-                    preorder_adj_from_c;
+                       preordering_visitor, 
+                       mpl::vector<>,
+                       C>::type>::type 
+                preorder_adj_from_c;
 BOOST_MPL_ASSERT(( mpl::equal<preorder_adj_from_c::type, mpl::vector<C,D,E,F> > ));
 
 
@@ -137,10 +137,10 @@ BOOST_MPL_ASSERT(( mpl::equal<preorder_inc_all_from_c::type, mpl::vector<C,D,E,F
 // preordering starting at B
 typedef mpl::first<mpl_graph::
     depth_first_search<some_incidence_list_graph,
-                           preordering_visitor,
-                           mpl::vector<>,
-                           B>::type>::type 
-                    preorder_inc_from_b;
+                       preordering_visitor,
+                       mpl::vector<>,
+                       B>::type>::type 
+                preorder_inc_from_b;
 BOOST_MPL_ASSERT(( mpl::equal<preorder_inc_from_b::type, mpl::vector<B,C,D,E,F> > ));
 
 
