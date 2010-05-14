@@ -26,7 +26,7 @@ struct low_bits
 };
 
 /** Creates a mask of the supplied width in side type T, from the lower portion 
- *  of the integer starting from the right most bit moving towards the left.
+ *  of the integer starting from the left most bit moving towards the right.
  */
 template <typename T, unsigned int Width>
 struct high_bits
