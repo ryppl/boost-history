@@ -8,7 +8,7 @@
 
 // Clang compiler setup.
 
-#if __has_feature(cxx_exceptions)
+#if __has_feature(cxx_exceptions) && !defined(BOOST_NO_EXCEPTIONS)
 #else
 #  define BOOST_NO_EXCEPTIONS
 #endif
@@ -28,7 +28,7 @@
 #  define BOOST_HAS_MS_INT64
 #endif
 
-// NOTE: Clang does not yet support NRVO.
+#define BOOST_HAS_NRVO
 
 // NOTE: Clang's C++0x support is not worth detecting. However, it
 // supports both extern templates and "long long" even in C++98/03
@@ -60,6 +60,5 @@
 #define BOOST_NO_EXTERN_TEMPLATE
 
 #ifndef BOOST_COMPILER
-// NOTE: Clang does not expose a version number
-#  define BOOST_COMPILER "Clang C++"
+#  define BOOST_COMPILER "Clang version " __clang_version__
 #endif
