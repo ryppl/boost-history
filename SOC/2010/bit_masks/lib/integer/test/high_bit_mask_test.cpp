@@ -3,11 +3,9 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at 
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/detail/lightweight_test.hpp>
-#include <boost/assert.hpp>
-#include <boost/type_traits.hpp>
-#include "test_type_list.hpp"
 
+
+#include "test_type_list.hpp"
 #include <boost/integer/high_low_bits.hpp>
 
 // tesitng for bit width.
