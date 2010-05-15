@@ -90,8 +90,7 @@ typedef boost::mpl::list<int,long,unsigned char> test_types;
 
 
 
-template <typename T>
-void test_function() {
+BOOST_TEST_CASE_TEMPLATE_FUNCTION( test_function, T ) {
     // making sure that the value type is transfered correctly.
     BOOST_TEST( (is_same< typename low_bits<T, 3>::value_type, T >::value) );
 
@@ -109,7 +108,7 @@ void test_function() {
 struct value_printer {
     template< typename U >
     void operator()(U) {
-        test_function<U>();
+        // test_function<U>();
     }
 };
 
