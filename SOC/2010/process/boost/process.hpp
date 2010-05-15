@@ -24,18 +24,22 @@
 #include <boost/process/config.hpp> 
 
 #if defined(BOOST_POSIX_API) 
+/*
 #  include <boost/process/posix_child.hpp> 
 #  include <boost/process/posix_context.hpp> 
 #  include <boost/process/posix_operations.hpp> 
 #  include <boost/process/posix_status.hpp> 
+*/
 #elif defined(BOOST_WINDOWS_API) 
+/*
 #  include <boost/process/win32_child.hpp> 
 #  include <boost/process/win32_context.hpp> 
 #  include <boost/process/win32_operations.hpp> 
+*/
 #else 
 #  error "Unsupported platform." 
 #endif 
-
+/*
 #include <boost/process/child.hpp> 
 #include <boost/process/context.hpp> 
 #include <boost/process/environment.hpp> 
@@ -46,5 +50,5 @@
 #include <boost/process/self.hpp> 
 #include <boost/process/status.hpp> 
 #include <boost/process/stream_behavior.hpp> 
-
+*/
 #endif 

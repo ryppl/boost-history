@@ -45,70 +45,66 @@ namespace process {
  * the caller explicitly close the communication channel. 
  * 
  * \remark Blocking remarks: Functions that write data to this 
- *         stream can block if the associated file handle blocks during 
- *         the write. As this class is used to communicate with child 
- *         processes through anonymous pipes, the most typical blocking 
- *         condition happens when the child is not processing the data 
- *         in the pipe's system buffer. When this happens, the buffer 
- *         eventually fills up and the system blocks until the reader 
- *         consumes some data, leaving some new room. 
+ *     stream can block if the associated file handle blocks during 
+ *     the write. As this class is used to communicate with child 
+ *     processes through anonymous pipes, the most typical blocking 
+ *     condition happens when the child is not processing the data 
+ *     in the pipe's system buffer. When this happens, the buffer 
+ *     eventually fills up and the system blocks until the reader 
+ *     consumes some data, leaving some new room. 
  */ 
-class postream : public std::ostream, public boost::noncopyable 
-{ 
-public: 
-    /** 
-     * Creates a new process' input stream. 
-     * 
-     * Given a file handle, this constructor creates a new postream 
-     * object that owns the given file handle \a fh. Ownership of 
-     * \a fh is transferred to the created postream object. 
-     * 
-     * \pre \a fh is valid. 
-     * \post \a fh is invalid. 
-     * \post The new postream object owns \a fh. 
-     */ 
-    explicit postream(detail::file_handle &fh) 
-        : std::ostream(0), 
-        handle_(fh), 
-        systembuf_(handle_.get()) 
-    { 
-        rdbuf(&systembuf_); 
-    } 
+class postream : public std::ostream, public boost::noncopyable{
+public:
+        /** 
+         * Creates a new process' input stream. 
+         * 
+         * Given a file handle, this constructor creates a new postream 
+         * object that owns the given file handle \a fh. Ownership of 
+         * \a fh is transferred to the created postream object. 
+         * 
+         * \pre \a fh is valid. 
+         * \post \a fh is invalid. 
+         * \post The new postream object owns \a fh. 
+         */ 
+        explicit postream(detail::file_handle &fh) 
+            : std::ostream(0), 
+            handle_(fh), 
+            systembuf_(handle_.get()){ 
+                rdbuf(&systembuf_); 
+        } 
 
-    /** 
-     * Returns the file handle managed by this stream. 
-     * 
-     * The file handle must not be copied. Copying invalidates 
-     * the source file handle making the postream unusable. 
-     */ 
-    detail::file_handle &handle() 
-    { 
-        return handle_; 
-    } 
+        /** 
+         * Returns the file handle managed by this stream. 
+         * 
+         * The file handle must not be copied. Copying invalidates 
+         * the source file handle making the postream unusable. 
+         */ 
+        detail::file_handle &handle(){ 
+                return handle_; 
+        } 
 
-    /** 
-     * Closes the file handle managed by this stream. 
-     * 
-     * Explicitly closes the file handle managed by this stream. This 
-     * function can be used by the user to tell the child process there 
-     * is no more data to send. 
-     */ 
-    void close() 
-    { 
-        systembuf_.sync(); 
-        handle_.close(); 
-    } 
+        /** 
+         * Closes the file handle managed by this stream. 
+         * 
+         * Explicitly closes the file handle managed by this stream. This 
+         * function can be used by the user to tell the child process there 
+         * is no more data to send. 
+         */ 
+        void close(){ 
+                systembuf_.sync(); 
+                handle_.close(); 
+        } 
 
 private: 
-    /** 
-     * The file handle managed by this stream. 
-     */ 
-    detail::file_handle handle_; 
+        /** 
+         * The file handle managed by this stream. 
+         */ 
+        detail::file_handle handle_; 
 
-    /** 
-     * The systembuf object used to manage this stream's data. 
-     */ 
-    detail::systembuf systembuf_; 
+        /** 
+         * The systembuf object used to manage this stream's data. 
+         */ 
+        detail::systembuf systembuf_; 
 }; 
 
 } 
