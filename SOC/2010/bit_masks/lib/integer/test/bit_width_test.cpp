@@ -30,7 +30,6 @@ int main( ) {
     mpl::for_each< test_types_3 >( type_tester() ); 
 
     typedef bit_width<char> bw;
-    BOOST_ASSERT(( bw::value == 8 ));
     BOOST_ASSERT(( is_same< bw::value_type, unsigned int>::value ));
     BOOST_ASSERT(( is_same<bw::type, bw>::value ));
 
