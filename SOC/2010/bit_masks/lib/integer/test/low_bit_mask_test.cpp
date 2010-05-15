@@ -1,16 +1,10 @@
 
-#include <boost/cstdint.hpp>
-
-// #define BOOST_TEST_MODULE S
-// #include <boost/test/unit_test.hpp>
-// #include <boost/test/test_case_template.hpp>
-#include <boost/test/minimal.hpp>
 #include <boost/mpl/list.hpp>
 #include <boost/mpl/for_each.hpp>
 
 
-// #include <boost/test/execution_monitor.hpp>
-// #include <boost/assert.hpp>
+
+#include <boost/assert.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/integer/high_low_bits.hpp>
 
@@ -90,31 +84,32 @@ typedef boost::mpl::list<int,long,unsigned char> test_types;
 
 
 
-BOOST_TEST_CASE_TEMPLATE_FUNCTION( test_function, T ) {
+template <typename T>
+void test_function() {
+
     // making sure that the value type is transfered correctly.
-    BOOST_TEST( (is_same< typename low_bits<T, 3>::value_type, T >::value) );
+    BOOST_ASSERT((is_same< typename low_bits<T, 3>::value_type, T >::value));
 
     // assert that mask is correct.
     // T r = typename ;
-    BOOST_TEST( boost::low_bits<T,3>::value );
+    BOOST_ASSERT(( boost::low_bits<T,3>::value ));
 
     // assert that type returns the correct typedef.
-    BOOST_TEST( is_same< typename low_bits<T, 3>::type, low_bits<T, 3> >::value );
+    BOOST_ASSERT(( is_same< typename low_bits<T, 3>::type, low_bits<T, 3> >::value ));
 }
 
 // basic typedef
 // typedef low_bits<unsigned int, 3> lbits;
 
-struct value_printer {
+struct type_tester {
     template< typename U >
     void operator()(U) {
-        // test_function<U>();
+        test_function<U>();
     }
 };
 
 
-int test_main(int argc, char** argv) {   
-    // test_function<int>();
-    // mpl::for_each<test_types>( value_printer() ); 
+int main( ) {   
+    mpl::for_each<test_types>( type_tester() ); 
     return 0;
 }
