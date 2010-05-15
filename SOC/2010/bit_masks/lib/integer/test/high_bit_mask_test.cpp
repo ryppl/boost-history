@@ -3,19 +3,52 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at 
 //  http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/detail/lightweight_test.hpp>
 #include <boost/assert.hpp>
 #include <boost/type_traits.hpp>
+#include "test_type_list.hpp"
+
 #include <boost/integer/high_low_bits.hpp>
 
 // tesitng for bit width.
 using namespace boost;
 
-int main() {
-    {
-        typedef high_bits<unsigned int, 3> hb;
-        BOOST_ASSERT(( hb::value == 3758096384 ));
-        BOOST_ASSERT(( is_same<hb::value_type, unsigned int>::value ));
-        BOOST_ASSERT(( is_same<hb::type, hb>::value ));
+template <typename T>
+void test_function() {
+
+    // making sure that the value type is transfered correctly.
+    BOOST_TEST((is_same< typename high_bits<T, 3>::value_type, T >::value));
+
+    
+    BOOST_TEST(( boost::high_bits<T,1>::value == ~(~(T(0)) >> 1) ));
+    BOOST_TEST(( boost::high_bits<T,2>::value == ~(~(T(0)) >> 2) ));
+    BOOST_TEST(( boost::high_bits<T,3>::value == ~(~(T(0)) >> 3) ));
+    BOOST_TEST(( boost::high_bits<T,4>::value == ~(~(T(0)) >> 4) ));
+    BOOST_TEST(( boost::high_bits<T,5>::value == ~(~(T(0)) >> 5) ));
+    BOOST_TEST(( boost::high_bits<T,6>::value == ~(~(T(0)) >> 6) ));
+    BOOST_TEST(( boost::high_bits<T,7>::value == ~(~(T(0)) >> 7) ));
+    BOOST_TEST(( boost::high_bits<T,8>::value == ~(~(T(0)) >> 8) ));
+
+    // assert that type returns the correct typedef.
+    BOOST_TEST(( is_same< 
+                    typename high_bits<T, 3>::type,
+                    low_bits<T, 3> >::value
+              ));
+}
+
+
+struct type_tester {
+    template< typename U >
+    void operator()(U) {
+        test_function<U>();
+
     }
+};
+
+
+int main() {
+    mpl::for_each< test_types   >( type_tester() ); 
+    mpl::for_each< test_types_2 >( type_tester() ); 
+    mpl::for_each< test_types_3 >( type_tester() ); 
     return 0;
 }

@@ -20,6 +20,7 @@
 
 
 // boost includes
+#include <boost/detail/lightweight_test.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/mpl/list.hpp>
 #include <boost/mpl/for_each.hpp>

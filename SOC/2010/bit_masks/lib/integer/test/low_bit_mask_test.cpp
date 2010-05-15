@@ -3,13 +3,8 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at 
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/mpl/list.hpp>
-#include <boost/mpl/for_each.hpp>
 
 
-#include <boost/detail/lightweight_test.hpp>  // for main, BOOST_TEST
-#include <boost/assert.hpp>
-#include <boost/type_traits.hpp>
 #include "test_type_list.hpp"
 #include <boost/integer/high_low_bits.hpp>
 
@@ -24,7 +19,7 @@ void test_function() {
     // making sure that the value type is transfered correctly.
     BOOST_TEST((is_same< typename low_bits<T, 3>::value_type, T >::value));
 
-
+    
     BOOST_TEST(( boost::low_bits<T,1>::value == 1));
     BOOST_TEST(( boost::low_bits<T,2>::value == 3));
     BOOST_TEST(( boost::low_bits<T,3>::value == 7));
