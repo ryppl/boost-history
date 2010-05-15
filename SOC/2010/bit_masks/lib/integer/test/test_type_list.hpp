@@ -20,6 +20,7 @@
 
 
 // boost includes
+#include <boost/assert.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/mpl/list.hpp>
@@ -27,41 +28,6 @@
 
 using namespace boost;
 
-/*
-integer types from boost integer:
-
-int_least8_t
-int_least16_t
-int_least32_t
-uint_least8_t
-uint_least16_t
-uint_least32_t
-
-
-The following types are available only if, after including <boost/cstdint.hpp>,
-the macro BOOST_NO_INT64_T is not defined:
-
-int_least64_t
-uint_least64_t
-
-The following fastest minimum-width integer types are provided for all platforms:
-
-int_fast8_t
-int_fast16_t
-int_fast32_t
-uint_fast8_t
-uint_fast16_t
-uint_fast32_t
-
-The following types are available only if, after including <boost/cstdint.hpp>,
-the macro BOOST_NO_INT64_T is not defined:
-
-int_fast64_t
-uint_fast64_t
-
-/////
-typedef low_bits<T, 3> lbits
-*/
 
 // testing type list.
 typedef boost::mpl::list<
