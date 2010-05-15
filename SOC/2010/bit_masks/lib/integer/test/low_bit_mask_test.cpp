@@ -8,23 +8,22 @@
 #include <boost/type_traits.hpp>
 #include <boost/integer/high_low_bits.hpp>
 
-// Testing of low_bits function.
 using namespace boost;
 
-// testing additional integral types.
-
-// char
-// unsigned char
-// short
-// unsigned short
-// long
-// unsigned long
-// int
-// unsigned int
-// long long
-// unsigned long long
-
 /*
+
+// testing additional integral types.
+char
+unsigned char
+short
+unsigned short
+long
+unsigned long
+int
+unsigned int
+long long
+unsigned long long
+
 integer types from boost integer:
 
 int_least8_t
@@ -60,28 +59,21 @@ uint_fast64_t
 typedef low_bits<T, 3> lbits
 */
 
-
-
-// BOOST_AUTO_TEST_CASE( my_test )
-// {
-//     BOOST_CHECK_EQUAL( (boost::low_bits<int, 3>::value) , 7 );
-//}
-// BOOST_AUTO_TEST_CASE_TEMPLATE( my_test, T, test_types )
-// {
-    
-    // making sure that the value type is transfered correctly.
-    // BOOST_CHECK( bool i(is_same< typename low_bits<T, 3>::value_type, T >::value) );
-
-    // assert that mask is correct.
-    // T r = typename ::;
-    // BOOST_CHECK( 1 );
-
-    // assert that type returns the correct typedef.
-    // BOOST_CHECK( bool i2(is_same< typename low_bits<T, 3>::type, low_bits<T, 3> >::value) );
-// }
-
-typedef boost::mpl::list<int,long,unsigned char> test_types;
-
+// testing type list.
+typedef boost::mpl::list<
+                            char,
+                            unsigned char,
+                            short,
+                            unsigned short,
+                            long,
+                            unsigned long,
+                            int,
+                            unsigned int
+#if 0
+                            long long,
+                            unsigned long long
+#endif
+                        > test_types;
 
 
 template <typename T>
@@ -96,15 +88,15 @@ void test_function() {
 
     // assert that type returns the correct typedef.
     BOOST_ASSERT(( is_same< typename low_bits<T, 3>::type, low_bits<T, 3> >::value ));
+
 }
 
-// basic typedef
-// typedef low_bits<unsigned int, 3> lbits;
 
 struct type_tester {
     template< typename U >
     void operator()(U) {
         test_function<U>();
+
     }
 };
 
