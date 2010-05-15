@@ -56,13 +56,12 @@ struct context{
         stream_behavior stdout_behavior; //default: inherit
         stream_behavior stderr_behavior; //default: inherit
 
-        context(std::string work_d, stream_behavior def_behavior){
-                stdin_behavior = def_behavior;
-                stdout_behavior = def_behavior;
-                stderr_behavior = def_behavior;
-                work_dir = work_d;
+        context(){
+                stdin_behavior = inherit;
+                stdout_behavior = inherit;
+                stderr_behavior = inherit;
+                work_dir = ""; //self::get_work_directory();
         }
-        context(){};
 
 };
 
@@ -72,7 +71,7 @@ struct context{
  * assign to a process if no context is passed by parameter.
  */
 
-static struct context DEFAULT_CONTEXT("",inherit);
+static struct context DEFAULT_CONTEXT;
 
 
 }
