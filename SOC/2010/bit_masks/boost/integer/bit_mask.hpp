@@ -1,5 +1,3 @@
-//  Boost integer/bit_mask.hpp header file
-
 //  (C) Copyright Brian Bartman 2010.
 //  Distributed under the Boost Software License, Version 1.0. (See
 //  accompanying file LICENSE_1_0.txt or copy at
@@ -9,40 +7,46 @@
 #ifndef BOOST_INTEGER_BIT_MASK_HPP
 #define BOOST_INTEGER_BIT_MASK_HPP
 
-// boost dependencies.
-
-
 #include <boost/integer/high_low_bits.hpp>
-#include <boost/integer/details/bit_mask_impl.hpp>
+#include <boost/type_traits.hpp>
+#include <boost/static_assert.hpp>
+#include <boost/integer/bit_width.hpp>
+#include <limits>
+
 
 namespace boost {
 
 
 /** bit_mask.
- *  Mask which creates a mask give type, offset and width of the mask
+ *  Mask which creates a mask give type, offset and width of the mask.
+ *  Preconditions for bit_mask
+ *  Pre-Conditions
+ *
+ *  1. The width of the masked section must not be longer then the
+ *  mask itself.
+ *
+ *  2. Valid range for mask width is > 0.
+ *  
+ *  3. The type which is being masked must satisfy the is_integral type trait.
+ *  NOTE: This is documented but not enforeced.
+ *
  */
 template <typename T, unsigned int Offset, unsigned int Width = 1 >
 struct bit_mask
-    :details::bit_mask_preconditions<T, Offset, Width>,
-    integral_constant<T, (low_bits<T,Width>::value << Offset) >
+    :integral_constant<T, (low_bits<T,Width>::value << Offset) >
 {
+    // precondition 1.
+    BOOST_STATIC_ASSERT(( (Offset + Width) < ( bit_width<T>::value - 1)  ));
+
+    // precondition 2.
+    BOOST_STATIC_ASSERT(( Width > 0 ));
+    
+    // precondition 3.
+    // BOOST_STATIC_ASSERT(( is_integral<T>::value ));
+
+
     typedef bit_mask<T, Offset, Width> type;
 
-
-    T operator()() {
-        return type::value;
-    }
-};
-
-/** Integral Mask.
- *  This integral Mask is defined similar to an integral constant.
- */
-template <typename T, T Value>
-struct integral_mask
-    :details::integral_mask_preconditions<T,Value>,
-    integral_constant<T, Value>
-{
-    typedef integral_mask<T,Value> type;
 
     T operator()() {
         return type::value;
