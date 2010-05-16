@@ -13,6 +13,7 @@ project
 
 test-suite integer
     : 
+        [ run bit_mask_test.cpp  ]
         [ run mask_check.cpp  ]
         [ run integral_mask_test.cpp  ]
         [ run high_bit_mask_test.cpp ]

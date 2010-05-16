@@ -11,7 +11,7 @@
 #include <boost/type_traits.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/integer/bit_width.hpp>
-#include <limits>
+
 
 
 namespace boost {
@@ -40,13 +40,12 @@ struct bit_mask
 
     // precondition 2.
     BOOST_STATIC_ASSERT(( Width > 0 ));
-    
-    // precondition 3.
-    // BOOST_STATIC_ASSERT(( is_integral<T>::value ));
-
 
     typedef bit_mask<T, Offset, Width> type;
 
+    BOOST_STATIC_CONSTANT(unsigned int, offset = Offset);
+
+    BOOST_STATIC_CONSTANT(unsigned int, width  = Width);
 
     T operator()() {
         return type::value;
