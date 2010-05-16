@@ -11,31 +11,28 @@
 // 
 
 /** 
- * \file boost/process/detail/helper_functions.hpp 
+ * \file boost/process/detail/posix_helper.hpp 
  * 
- * Includes the declaration of helper functions for the operations in a win32 system.
+ * Includes the declaration of helper functions for the operations in a posix system.
  * It's for internal purposes.
  *
  */ 
 
-#include <boost/process/detail/file_handle.hpp> 
-#include <boost/process/detail/pipe.hpp> 
-#include <boost/scoped_ptr.hpp> 
-#include <boost/shared_array.hpp> 
-#include <boost/scoped_array.hpp> 
-#include <boost/assert.hpp> 
-#include <boost/system/system_error.hpp> 
-#include <boost/throw_exception.hpp> 
-#include <vector> 
-#include <string> 
-#include <cstddef> 
-#include <string.h> 
-#include <windows.h> 
+
+#if defined(BOOST_POSIX_API) 
+        #include <unistd.h>
+        #include <sys/stat.h>
+        #include <fcntl.h>
+#endif
+#include <map>
+#include <string.h>
+#include <boost/optional.hpp>
+#include <boost/process/stream_behavior.hpp>
+#include <boost/process/detail/stream_detail.hpp>
 
 
-
-#ifndef BOOST_PROCESS_WIN32_HELPERS_HPP 
-#define BOOST_PROCESS_WIN32_HELPERS_HPP
+#ifndef BOOST_PROCESS_POSIX_HELPERS_HPP 
+#define BOOST_PROCESS_POSIX_HELPERS_HPP
 namespace boost{
 namespace process{
 namespace detail{
@@ -49,22 +46,22 @@ namespace detail{
  * Note that this function is meant to be called on a brand-new child. 
  *
  */
-inline void configure_stream(stream_detail &s){
+inline configure_posix_stream(stream_detail &s){
 
         switch(s.behavior){
-                case dummy:{
+                       case dummy:{
 
-						char null_file[10];
-                        if(s.stream_type == stdin_type)
-								null_file = "/dev/null";
-						else
-								null_file = "/dev/zero";
+                       std::string null_file;
+                       if(s.stream_type == stdin_type)
+                                null_file = "/dev/null";
+                       else
+                                null_file = "/dev/zero";
 
                         int fd;
                         if(s.stream_type == stdin_type)
-                                fd = ::open(null_file, O_RDONLY); 
+                                fd = ::open(null_file.c_str(), O_RDONLY); 
                         else
-                                fd = ::open(null_file, O_WRONLY); 
+                                fd = ::open(null_file.c_str(), O_WRONLY); 
 
                         if (fd == -1)
                                 boost::throw_exception(boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::detail::setup_input: open(2) of " + s.object.file_ + " failed")); 

@@ -51,4 +51,12 @@
 #include <boost/process/status.hpp> 
 #include <boost/process/stream_behavior.hpp> 
 */
+#include <boost/process/child.hpp> 
+#include <boost/process/context.hpp> 
+#include <boost/process/operations.hpp> 
+#include <boost/process/pistream.hpp> 
+#include <boost/process/postream.hpp> 
+#include <boost/process/process.hpp> 
+#include <boost/process/status.hpp> 
+#include <boost/process/stream_behavior.hpp> 
 #endif 
