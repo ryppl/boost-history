@@ -88,7 +88,7 @@ public:
                         while (*env){ 
                                 std::string s = *env; 
                                 std::string::size_type pos = s.find('='); 
-                                e.insert(boost::process::environment::value_type(
+                                e.insert(boost::process::environment_t::value_type(
                                         s.substr(0, pos), s.substr(pos + 1))); 
                                 ++env; 
                         }                
@@ -125,20 +125,21 @@ public:
 
         static char * get_work_dir(){
                 #if defined(BOOST_POSIX_API) 
-                        
-                        
+                        int size = pathconf(".",_PC_PATH_MAX);
+                        char * buffer = (char *)malloc(size);
+                        if(buffer == NULL)
+                                BOOST_ASSERT(false);
+                        return getcwd(buffer, size);
+
                 #elif defined(BOOST_WINDOWS_API) 
-                        
+
                         char* buffer;
 
                         BOOST_ASSERT( (buffer = _getcwd( NULL, 0 )) != NULL );
                         return buffer;
-                               
-                                        
-                        
-                       
+
                 #endif
-                         
+
         }
 
 private: 
