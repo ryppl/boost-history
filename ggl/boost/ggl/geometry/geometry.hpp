@@ -11,9 +11,9 @@
 
 // Shortcut to include all header files
 #if defined(_MSC_VER) || defined(__BORLANDC__) || defined(__DMC__)
-#  pragma message ("Warning: for Formal Review, please use .../ggl/formal_review/boost/ggl/ggl.hpp")
+#  pragma message ("Warning: Obsolete! Please use http://svn.boost.org/svn/boost/sandbox/geometry/")
 #elif defined(__GNUC__) || defined(__HP_aCC) || defined(__SUNPRO_CC) || defined(__IBMCPP__)
-#  warning "Warning: for Formal Review, please use .../ggl/formal_review/boost/ggl/ggl.hpp")
+#  warning "Warning: Obsolete! Please use http://svn.boost.org/svn/boost/sandbox/geometry/"
 #endif
 
 

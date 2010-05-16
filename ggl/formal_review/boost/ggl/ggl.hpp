@@ -11,6 +11,11 @@
 #define GGL_GGL_HPP
 
 // Shortcut to include all header files
+#if defined(_MSC_VER) || defined(__BORLANDC__) || defined(__DMC__)
+#  pragma message ("Warning: Obsolete! Please use http://svn.boost.org/svn/boost/sandbox/geometry/")
+#elif defined(__GNUC__) || defined(__HP_aCC) || defined(__SUNPRO_CC) || defined(__IBMCPP__)
+#  warning "Warning: Obsolete! Please use http://svn.boost.org/svn/boost/sandbox/geometry/"
+#endif
 
 
 #include <ggl/core/cs.hpp>
