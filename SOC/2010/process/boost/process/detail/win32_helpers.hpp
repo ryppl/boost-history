@@ -137,89 +137,89 @@ inline boost::shared_array<char> collection_to_win32_cmdline(const Arguments &ar
 
 
 
-void configure_win32_stream(stream_detail &sd, STARTUPINFOA &si){
+void configure_win32_stream(stream_detail &sd, STARTUPINFOA *si){
 
-		file_handle return_handle;
+        file_handle return_handle;
 
-	  	switch (sd.behavior){ 
-				case closed:{ 
+        switch (sd.behavior){ 
+                case closed:{ 
 
-            			break; 
-        		} 
-				case inherit:{
-            			return_handle = file_handle::win32_dup_std(sd.stream_handler, true);
-						break; 
-        		} 
+                        break; 
+                } 
+                case inherit:{
+                        return_handle = file_handle::win32_dup_std(sd.stream_handler, true);
+                        break; 
+                } 
 
-    			case dummy:{
-						HANDLE h;
-						if(sd.stream_type == stdin_type){
-							h = ::CreateFileA("NUL",
-								GENERIC_READ, 0, NULL, OPEN_EXISTING, 
-								FILE_ATTRIBUTE_NORMAL, NULL); 
-            			
-						}
-						else{
-							h = ::CreateFileA("NUL", 
-								GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, 
-								FILE_ATTRIBUTE_NORMAL, NULL); 							
-						}
+                case dummy:{
+                        HANDLE h;
+                        if(sd.stream_type == stdin_type){
+                                h = ::CreateFileA("NUL",
+                                        GENERIC_READ, 0, NULL, OPEN_EXISTING, 
+                                        FILE_ATTRIBUTE_NORMAL, NULL); 
 
-            			if (h == INVALID_HANDLE_VALUE) 
-                			boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::detail::win32_start: CreateFile failed")); 
+                        }
+                        else{
+                                h = ::CreateFileA("NUL", 
+                                        GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, 
+                                        FILE_ATTRIBUTE_NORMAL, NULL); 							
+                        }
 
-            			return_handle = file_handle(h); 
-										
-            			break; 
-        		} 
-    				   
-				case capture:{ 
-						if(sd.stream_type == stdin_type){
-			            		sd.object.pipe_->rend().win32_set_inheritable(true); 
-			            		return_handle = sd.object.pipe_->rend(); 
-						}
-						else{
-            					sd.object.pipe_->wend().win32_set_inheritable(true); 	
-            					return_handle = sd.object.pipe_->wend(); 
-						}
-						
-					    break; 
-        		} 
+                        if (h == INVALID_HANDLE_VALUE) 
+                                boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::detail::win32_start: CreateFile failed")); 
 
-    			default:{ 
-            			BOOST_ASSERT(false); 
-            			break; 
-        		} 
-   		}
+                        return_handle = file_handle(h); 
+                		
+                        break; 
+                } 
 
+                case capture:{ 
+                        if(sd.stream_type == stdin_type){
+                                sd.object.pipe_->rend().win32_set_inheritable(true); 
+                                return_handle = sd.object.pipe_->rend(); 
+                        }
+                        else{
+                                sd.object.pipe_->wend().win32_set_inheritable(true); 	
+                                return_handle = sd.object.pipe_->wend(); 
+                        }
 
-		file_handle h;
+                        break; 
+                } 
+
+                default:{ 
+                        BOOST_ASSERT(false); 
+                        
+                } 
+        }
 
 
-		switch(sd.stream_type){
-				case stdin_type:{
-						if(return_handle.valid())
-								si.hStdInput = return_handle.get();
-						else
-								si.hStdInput =  INVALID_HANDLE_VALUE;
-						break;
-				}
-				case stdout_type:{
-						if(return_handle.valid())
-								si.hStdOutput = return_handle.get();
-						else
-								si.hStdOutput =  INVALID_HANDLE_VALUE;
-						break;
-				}
-				case stderr_type:{
-						if(return_handle.valid())
-								si.hStdError = return_handle.get();
-						else
-								si.hStdError =  INVALID_HANDLE_VALUE;
-						break;
-				}
+        file_handle h;
+                
 
-		}
+        switch(sd.stream_type){
+                case stdin_type:{
+                        if(return_handle.valid())
+                                (*si).hStdInput = return_handle.get();
+                        else
+                                (*si).hStdInput =  INVALID_HANDLE_VALUE;
+                        break;
+                }
+                case stdout_type:{
+                        if(return_handle.valid())
+                                (*si).hStdOutput = return_handle.get();
+                        else
+                                (*si).hStdOutput =  INVALID_HANDLE_VALUE;
+                        break;
+                }
+                case stderr_type:{
+                        if(return_handle.valid())
+                                (*si).hStdError = return_handle.get();
+                        else
+                                (*si).hStdError =  INVALID_HANDLE_VALUE;
+                        break;
+                }
+
+        }
 
 }
 

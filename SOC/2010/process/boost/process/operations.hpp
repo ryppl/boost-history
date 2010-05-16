@@ -269,47 +269,47 @@ inline child create_child(const std::string &executable, Arguments args, context
 #elif defined(BOOST_WINDOWS_API) 
 
 
-		//Set up the pipes when needed for the current process.
-		if (stdin_stream.behavior == capture)
-				fhstdin = stdin_stream.object.pipe_->wend();
-		if (stdin_stream.behavior == capture)
-				fhstdin = stdin_stream.object.pipe_->wend();
-		if (stdin_stream.behavior == capture)
-				fhstdin = stdin_stream.object.pipe_->wend();
+        //Set up the pipes when needed for the current process.
+        if (stdin_stream.behavior == capture)
+                fhstdin = stdin_stream.object.pipe_->wend();
+        if (stdin_stream.behavior == capture)
+                fhstdin = stdin_stream.object.pipe_->wend();
+        if (stdin_stream.behavior == capture)
+                fhstdin = stdin_stream.object.pipe_->wend();
 
-		//define startup info from the new child
+        //define startup info from the new child
         STARTUPINFOA start_up_info;
         ::ZeroMemory(&start_up_info, sizeof(start_up_info)); 
         start_up_info.cb = sizeof(start_up_info); 
 
-	   	start_up_info.dwFlags |= STARTF_USESTDHANDLES; 
+        start_up_info.dwFlags |= STARTF_USESTDHANDLES; 
 		
-		configure_win32_stream(stdin_stream, start_up_info); 
-    	configure_win32_stream(stdout_stream, start_up_info); 
-		configure_win32_stream(stderr_stream, start_up_info);  
+	configure_win32_stream(stdin_stream, &start_up_info); 
+    	configure_win32_stream(stdout_stream, &start_up_info); 
+	configure_win32_stream(stderr_stream, &start_up_info);  
 
-		//define basic info to start the process
+	//define basic info to start the process
     	PROCESS_INFORMATION pi; 
     	::ZeroMemory(&pi, sizeof(pi)); 
 
     	boost::shared_array<char> cmdline = detail::collection_to_win32_cmdline(args); 
 
-	    boost::scoped_array<char> exe(new char[executable.size() + 1]); 
-		::strcpy_s(exe.get(), executable.size() + 1, executable.c_str()); 
+	boost::scoped_array<char> exe(new char[executable.size() + 1]); 
+	::strcpy_s(exe.get(), executable.size() + 1, executable.c_str()); 
 
     	boost::scoped_array<char> workdir(new char[ctx.work_dir.size() + 1]); 
-		::strcpy_s(workdir.get(), ctx.work_dir.size() + 1, ctx.work_dir.c_str()); 
+	::strcpy_s(workdir.get(), ctx.work_dir.size() + 1, ctx.work_dir.c_str()); 
 		
 
-	    boost::shared_array<char> envstrs = detail::environment_to_win32_strings(ctx.environment); 
+	boost::shared_array<char> envstrs = detail::environment_to_win32_strings(ctx.environment); 
 
-   		if ( ! ::CreateProcessA(exe.get(), cmdline.get(), 
-			NULL, NULL, TRUE, 0, envstrs.get(), workdir.get(), 
+   	if ( ! ::CreateProcessA(exe.get(), cmdline.get(), 
+	        	NULL, NULL, TRUE, 0, envstrs.get(), workdir.get(), 
 			&start_up_info, &pi)) 
-        		boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::detail::win32_start: CreateProcess failed")); 
+                boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::detail::win32_start: CreateProcess failed")); 
 
         if (! ::CloseHandle(pi.hThread)) 
-            boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::launch: CloseHandle failed")); 
+                boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::launch: CloseHandle failed")); 
 
         return child(pi.dwProcessId, fhstdin, fhstdout, fhstderr, detail::file_handle(pi.hProcess)); 
 
