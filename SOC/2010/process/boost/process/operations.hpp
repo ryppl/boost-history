@@ -21,17 +21,17 @@
 #include <boost/process/config.hpp> 
 
 #if defined(BOOST_POSIX_API) 
-//#  include <boost/process/detail/posix_ops.hpp> 
-#  include <stdlib.h> 
-#  include <unistd.h> 
-#  if defined(__CYGWIN__) 
-#    include <boost/scoped_array.hpp> 
-#    include <sys/cygwin.h> 
-#  endif 
+		#include <boost/process/detail/posix_helpers.hpp> 
+		#include <stdlib.h> 
+		#include <unistd.h> 
+		#if defined(__CYGWIN__) 
+				#include <boost/scoped_array.hpp> 
+				#include <sys/cygwin.h> 
+				#endif 
 #elif defined(BOOST_WINDOWS_API) 
-#  include <boost/process/detail/win32_ops.hpp> 
-#  include <boost/algorithm/string/predicate.hpp> 
-#  include <windows.h> 
+		#include <boost/process/detail/win32_helpers.hpp> 
+		#include <boost/algorithm/string/predicate.hpp> 
+		#include <windows.h> 		 
 #else 
 #  error "Unsupported platform." 
 #endif 
@@ -50,7 +50,7 @@
 #include <boost/process/status.hpp> 
 #include <boost/process/detail/file_handle.hpp> 
 #include <boost/process/detail/stream_detail.hpp>
-#include <boost/process/detail/helper_functions.hpp>
+
 
 #include <boost/filesystem/path.hpp> 
 #include <boost/algorithm/string/predicate.hpp> 
@@ -204,40 +204,22 @@ inline std::string executable_to_progname(const std::string &exe)
 
 template<class Arguments>
 inline child create_child(const std::string &executable, Arguments args, context &ctx = DEFAULT_CONTEXT){ 
-        detail::file_handle fhstdin, fhstdout, fhstderr; 
-        detail::stream_detail stdin_stream, stdout_stream, stderr_stream;
+
+        detail::file_handle fhstdin, fhstdout, fhstderr;
+
+        detail::stream_detail stdin_stream(detail::stdin_type), 
+								stdout_stream(detail::stdout_type),
+								stderr_stream(detail::stderr_type);
 
         stdin_stream.behavior = ctx.stdin_behavior;
-        stdin_stream.stream_handler = STDIN_FILENO;
-
         stdout_stream.behavior = ctx.stdout_behavior;
-        stdout_stream.stream_handler = STDOUT_FILENO;
-
         stderr_stream.behavior = ctx.stderr_behavior;
-        stderr_stream.stream_handler = STDERR_FILENO;
+
+		std::string p_name = ctx.process_name.empty() ? executable : ctx.process_name;
+        args.insert(args.begin(),p_name);
 
 
 #if defined(BOOST_POSIX_API)
-
-        //adjust_output_behavior(ctx); //adjusts the std streams after child lanched
-
-        std::string p_name = ctx.process_name.empty() ? executable : ctx.process_name;
-        args.insert(args.begin(),p_name);
-
-        std::pair<std::size_t, char**> argcv = detail::collection_to_posix_argv(args); 
-        char **envp = detail::environment_to_envp(ctx.environment);
-
-
-        /*
-        detail::posix_setup s;
-        s();
-        s.work_directory = ctx.work_directory; 
-        s.uid = ctx.uid; 
-        s.euid = ctx.euid; 
-        s.gid = ctx.gid; 
-        s.egid = ctx.egid; 
-        s.chroot = ctx.chroot; 
-        */
 
         child::id_type pid = ::fork(); 
         if (pid == -1) 
@@ -245,9 +227,12 @@ inline child create_child(const std::string &executable, Arguments args, context
 
         else if (pid == 0){ 
 
-                detail::configure_stream(stdin_stream);
-                detail::configure_stream(stdout_stream);
-                detail::configure_stream(stderr_stream);
+                detail::configure_posix_stream(stdin_stream);
+                detail::configure_posix_stream(stdout_stream);
+                detail::configure_posix_stream(stderr_stream);
+
+				std::pair<std::size_t, char**> argcv = detail::collection_to_posix_argv(args); 
+        		char **envp = detail::environment_to_envp(ctx.environment);
 
                 ::execve(executable.c_str(), argcv.second, envp); 
 
@@ -257,6 +242,8 @@ inline child create_child(const std::string &executable, Arguments args, context
 
         BOOST_ASSERT(pid > 0); 
 
+
+		//TODO: turn this in a helper
         if(ctx.stdin_behavior == capture){
                 stdin_stream.object.pipe_->rend().close();
                 fhstdin = stdin_stream.object.pipe_->rend().release();
@@ -280,30 +267,52 @@ inline child create_child(const std::string &executable, Arguments args, context
 
 
 #elif defined(BOOST_WINDOWS_API) 
-        detail::stream_info behin = detail::stream_info(ctx.stdin_behavior, false); 
-        if (behin.type_ == detail::stream_info::use_pipe) 
-            fhstdin = behin.pipe_->wend(); 
-        detail::stream_info behout = detail::stream_info(ctx.stdout_behavior, true); 
-        if (behout.type_ == detail::stream_info::use_pipe) 
-            fhstdout = behout.pipe_->rend(); 
-        detail::stream_info beherr = detail::stream_info(ctx.stderr_behavior, true); 
-        if (beherr.type_ == detail::stream_info::use_pipe) 
-            fhstderr = beherr.pipe_->rend(); 
 
-        STARTUPINFOA si; 
-        ::ZeroMemory(&si, sizeof(si)); 
-        si.cb = sizeof(si); 
 
-        detail::win32_setup s; 
-        s.work_directory = ctx.work_directory; 
-        s.startupinfo = &si; 
+		//Set up the pipes when needed for the current process.
+		if (stdin_stream.behavior == capture)
+				fhstdin = stdin_stream.object.pipe_->wend();
+		if (stdin_stream.behavior == capture)
+				fhstdin = stdin_stream.object.pipe_->wend();
+		if (stdin_stream.behavior == capture)
+				fhstdin = stdin_stream.object.pipe_->wend();
 
-        PROCESS_INFORMATION pi = detail::win32_start(exe, args, ctx.environment, behin, behout, beherr, s); 
+		//define startup info from the new child
+        STARTUPINFOA start_up_info;
+        ::ZeroMemory(&start_up_info, sizeof(start_up_info)); 
+        start_up_info.cb = sizeof(start_up_info); 
 
-        if (!::CloseHandle(pi.hThread)) 
+	   	start_up_info.dwFlags |= STARTF_USESTDHANDLES; 
+		
+		configure_win32_stream(stdin_stream, start_up_info); 
+    	configure_win32_stream(stdout_stream, start_up_info); 
+		configure_win32_stream(stderr_stream, start_up_info);  
+
+		//define basic info to start the process
+    	PROCESS_INFORMATION pi; 
+    	::ZeroMemory(&pi, sizeof(pi)); 
+
+    	boost::shared_array<char> cmdline = detail::collection_to_win32_cmdline(args); 
+
+	    boost::scoped_array<char> exe(new char[executable.size() + 1]); 
+		::strcpy_s(exe.get(), executable.size() + 1, executable.c_str()); 
+
+    	boost::scoped_array<char> workdir(new char[ctx.work_dir.size() + 1]); 
+		::strcpy_s(workdir.get(), ctx.work_dir.size() + 1, ctx.work_dir.c_str()); 
+		
+
+	    boost::shared_array<char> envstrs = detail::environment_to_win32_strings(ctx.environment); 
+
+   		if ( ! ::CreateProcessA(exe.get(), cmdline.get(), 
+			NULL, NULL, TRUE, 0, envstrs.get(), workdir.get(), 
+			&start_up_info, &pi)) 
+        		boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::detail::win32_start: CreateProcess failed")); 
+
+        if (! ::CloseHandle(pi.hThread)) 
             boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::launch: CloseHandle failed")); 
 
         return child(pi.dwProcessId, fhstdin, fhstdout, fhstderr, detail::file_handle(pi.hProcess)); 
+
 #endif 
 } 
 

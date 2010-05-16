@@ -73,7 +73,42 @@ struct stream_detail {
         struct stream_object object;
         std_stream_type stream_type;
         stream_behavior behavior;
+
+		stream_detail(std_stream_type st){
+				switch(st){
+						case stdin_type:{
+								stream_type = st;
+								
+       							#if defined(BOOST_POSIX_API) 
+             							stream_handler = STDIN_FILENO;
+      							#elif defined(BOOST_WINDOWS_API) 
+                						stream_handler = STD_INPUT_HANDLE; 
+        						#endif 
+						}
+						case stdout_type:{
+								stream_type = st;
+								
+       							#if defined(BOOST_POSIX_API) 
+             							stream_handler = STDOUT_FILENO;
+      							#elif defined(BOOST_WINDOWS_API) 
+                						stream_handler = STD_OUTPUT_HANDLE; 
+        						#endif 
+						}
+						case stderr_type:{
+								stream_type = st;
+								
+       							#if defined(BOOST_POSIX_API) 
+             							stream_handler = STDERR_FILENO;
+      							#elif defined(BOOST_WINDOWS_API) 
+                						stream_handler = STD_ERROR_HANDLE; 
+        						#endif 
+						}
+								
+				}
+		}
 };
+
+
 
 }
 }

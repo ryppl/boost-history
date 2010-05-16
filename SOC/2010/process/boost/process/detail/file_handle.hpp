@@ -345,7 +345,7 @@ public:
          *        DuplicateHandle() fails.
          */
 
-        static file_handle win32_std(DWORD d, bool inheritable){ 
+        static file_handle win32_dup_std(DWORD d, bool inheritable){ 
                 BOOST_ASSERT(d == STD_INPUT_HANDLE || d == STD_OUTPUT_HANDLE || d == STD_ERROR_HANDLE); 
 
                 HANDLE h = ::GetStdHandle(d); 
