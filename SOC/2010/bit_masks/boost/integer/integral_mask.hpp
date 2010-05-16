@@ -22,22 +22,16 @@ namespace boost {
  *  The following preconditions apply to the integral_mask type.
  *  Preconditions
  *
- *  1. T must be an integral type. NOTE: This is documented, but NOT enforeced.
- *  
+ *  1. T must be an integral type. 
+ *  NOTE: This is documented, but NOT enforeced.
+ *
  *  2. Value must be in the domain of the integral type T.
+ *  NOTE: Documented Requirement but Not enforeced.
  */
 template <typename T, T Value>
 struct integral_mask
-    : // details::integral_mask_preconditions<T,Value>,
-    integral_constant<T, Value>
+    : integral_constant<T, Value>
 {
-    // precondition 1.
-    // BOOST_STATIC_ASSERT(( is_integral<T>::value ));
-    
-    // precondition 2.
-    BOOST_STATIC_ASSERT((std::numeric_limits<T>::max >= Value ));
-    BOOST_STATIC_ASSERT((std::numeric_limits<T>::min <= Value ));
-
     typedef integral_mask<T,Value> type;
 
     T operator()() {

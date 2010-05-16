@@ -10,6 +10,7 @@
 
 #include <boost/type_traits.hpp>
 #include <boost/integer/details/high_low_impl.hpp>
+#include <boost/integer/integral_mask.hpp>
 
 namespace boost {
 
@@ -20,7 +21,7 @@ namespace boost {
 template <typename T, unsigned int Width>
 struct low_bits
     :details::low_bits_preconditions<T,Width>,
-    integral_constant<T, ~(~T(0) << Width) >
+    integral_mask<T, ~(~T(0) << Width) >
 {    
     typedef low_bits<T,Width>  type;
 };
@@ -31,7 +32,7 @@ struct low_bits
 template <typename T, unsigned int Width>
 struct high_bits
     :details::high_bits_preconditions<T,Width>,
-    integral_constant<T, ~(~T(0) >> Width) >
+    integral_mask<T, ~(~T(0) >> Width) >
 {    
     typedef high_bits<T,Width>  type;
 };
