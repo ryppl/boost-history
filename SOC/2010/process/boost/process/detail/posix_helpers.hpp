@@ -114,11 +114,11 @@ inline configure_posix_stream(stream_detail &s){
  *         the environment's content. Each array entry is a 
  *         NULL-terminated string of the form var=value. 
  */ 
-inline char ** environment_to_envp( std::map<std::string,std::string> env){ 
+inline char ** environment_to_envp( environment_t env){ 
         char **envp = new char*[env.size() + 1]; 
 
         unsigned int i = 0; 
-        for (std::map<std::string,std::string>::const_iterator it = env.begin(); it != env.end(); ++it){ 
+        for (environment_t::const_iterator it = env.begin(); it != env.end(); ++it){ 
                 std::string s = (*it).first + "=" + (*it).second; 
                 envp[i] = new char[s.size() + 1]; 
                 ::strncpy(envp[i], s.c_str(), s.size() + 1); 

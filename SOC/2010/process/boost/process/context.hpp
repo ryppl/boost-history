@@ -20,6 +20,8 @@
 #include <boost/process/config.hpp> 
 #include <map>
 #include <boost/process/stream_behavior.hpp>
+#include <boost/process/environment.hpp>
+#include <boost/process/self.hpp>
 
 
 #ifndef BOOST_PROCESS_CONTEXT_HPP 
@@ -46,21 +48,23 @@ namespace process{
          */
 struct context{
 
-        std::map<std::string,std::string> environment; //default: empty
+        environment_t environment; //default: empty
 
         std::string process_name; //default: empty
         //io_service *ioservice; //default: NULL
-        std::string work_dir; //default: self::get_work_dir();
+        std::string work_dir;
 
-        stream_behavior stdin_behavior; //default: inherit
-        stream_behavior stdout_behavior; //default: inherit
-        stream_behavior stderr_behavior; //default: inherit
+        stream_behavior stdin_behavior; 
+        stream_behavior stdout_behavior; 
+        stream_behavior stderr_behavior; 
 
         context(){
                 stdin_behavior = inherit;
                 stdout_behavior = inherit;
                 stderr_behavior = inherit;
-                work_dir = ""; //self::get_work_directory();
+                work_dir = self::get_work_dir();
+                environment = self::get_environment();
+
         }
 
 };

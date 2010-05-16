@@ -63,6 +63,7 @@
 #include <stdexcept> 
 #include <cstddef> 
 
+
 namespace boost { 
 namespace process { 
 
@@ -208,16 +209,16 @@ inline child create_child(const std::string &executable, Arguments args, context
         detail::file_handle fhstdin, fhstdout, fhstderr;
 
         detail::stream_detail stdin_stream(detail::stdin_type), 
-								stdout_stream(detail::stdout_type),
-								stderr_stream(detail::stderr_type);
+                                stdout_stream(detail::stdout_type),
+                                stderr_stream(detail::stderr_type);
 
         stdin_stream.behavior = ctx.stdin_behavior;
         stdout_stream.behavior = ctx.stdout_behavior;
         stderr_stream.behavior = ctx.stderr_behavior;
 
-		std::string p_name = ctx.process_name.empty() ? executable : ctx.process_name;
+        std::string p_name = ctx.process_name.empty() ? executable : ctx.process_name;
         args.insert(args.begin(),p_name);
-
+     
 
 #if defined(BOOST_POSIX_API)
 
@@ -231,8 +232,8 @@ inline child create_child(const std::string &executable, Arguments args, context
                 detail::configure_posix_stream(stdout_stream);
                 detail::configure_posix_stream(stderr_stream);
 
-				std::pair<std::size_t, char**> argcv = detail::collection_to_posix_argv(args); 
-        		char **envp = detail::environment_to_envp(ctx.environment);
+                std::pair<std::size_t, char**> argcv = detail::collection_to_posix_argv(args); 
+                char **envp = detail::environment_to_envp(ctx.environment);
 
                 ::execve(executable.c_str(), argcv.second, envp); 
 
@@ -243,7 +244,7 @@ inline child create_child(const std::string &executable, Arguments args, context
         BOOST_ASSERT(pid > 0); 
 
 
-		//TODO: turn this in a helper
+	//TODO: turn this in a helper
         if(ctx.stdin_behavior == capture){
                 stdin_stream.object.pipe_->rend().close();
                 fhstdin = stdin_stream.object.pipe_->rend().release();
@@ -278,15 +279,15 @@ inline child create_child(const std::string &executable, Arguments args, context
                 fhstdin = stdin_stream.object.pipe_->wend();
 
         //define startup info from the new child
-        STARTUPINFOA start_up_info;
-        ::ZeroMemory(&start_up_info, sizeof(start_up_info)); 
-        start_up_info.cb = sizeof(start_up_info); 
-
-        start_up_info.dwFlags |= STARTF_USESTDHANDLES; 
-		
-	configure_win32_stream(stdin_stream, &start_up_info); 
-    	configure_win32_stream(stdout_stream, &start_up_info); 
-	configure_win32_stream(stderr_stream, &start_up_info);  
+        STARTUPINFOA startup_info;
+        ::ZeroMemory(&startup_info, sizeof(startup_info)); 
+        startup_info.cb = sizeof(startup_info); 
+	
+        //configure std stream info for the child
+	configure_win32_stream(stdin_stream, &startup_info); 
+    	configure_win32_stream(stdout_stream, &startup_info); 
+	configure_win32_stream(stderr_stream, &startup_info); 
+        
 
 	//define basic info to start the process
     	PROCESS_INFORMATION pi; 
@@ -299,13 +300,13 @@ inline child create_child(const std::string &executable, Arguments args, context
 
     	boost::scoped_array<char> workdir(new char[ctx.work_dir.size() + 1]); 
 	::strcpy_s(workdir.get(), ctx.work_dir.size() + 1, ctx.work_dir.c_str()); 
-		
 
-	boost::shared_array<char> envstrs = detail::environment_to_win32_strings(ctx.environment); 
+        boost::shared_array<char> envstrs = detail::environment_to_win32_strings(ctx.environment); 
+
 
    	if ( ! ::CreateProcessA(exe.get(), cmdline.get(), 
 	        	NULL, NULL, TRUE, 0, envstrs.get(), workdir.get(), 
-			&start_up_info, &pi)) 
+			&startup_info, &pi)) 
                 boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::detail::win32_start: CreateProcess failed")); 
 
         if (! ::CloseHandle(pi.hThread)) 

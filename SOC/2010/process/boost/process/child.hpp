@@ -21,13 +21,15 @@
 #include <boost/process/config.hpp> 
 
 #if defined(BOOST_POSIX_API) 
-#  include <sys/types.h> 
-#  include <sys/wait.h> 
-#  include <cerrno> 
+        #include <sys/types.h> 
+        #include <sys/wait.h> 
+        #include <cerrno> 
+
 #elif defined(BOOST_WINDOWS_API) 
-#  include <windows.h> 
+        #include <windows.h> 
+
 #else 
-#  error "Unsupported platform." 
+        #error "Unsupported platform." 
 #endif 
 
 #include <boost/process/process.hpp> 
@@ -35,8 +37,8 @@
 
 #include <boost/process/pistream.hpp> 
 #include <boost/process/postream.hpp> 
-#include <boost/process/status.hpp> 
 #include <boost/process/detail/file_handle.hpp> 
+
 #include <boost/system/system_error.hpp> 
 #include <boost/throw_exception.hpp> 
 #include <boost/shared_ptr.hpp> 
@@ -62,10 +64,9 @@ public:
          * standard input communication channel with the child process. 
          */ 
         postream &get_stdin() const 
-        { 
-            BOOST_ASSERT(stdin_); 
-
-            return *stdin_; 
+        {
+                BOOST_ASSERT(stdin_); 
+                return *stdin_; 
         } 
 
         /** 
@@ -77,7 +78,6 @@ public:
         pistream &get_stdout() const 
         { 
             BOOST_ASSERT(stdout_); 
-
             return *stdout_; 
         } 
 
@@ -90,36 +90,10 @@ public:
         pistream &get_stderr() const 
         { 
             BOOST_ASSERT(stderr_); 
-
             return *stderr_; 
         } 
 
-        /** 
-         * Blocks and waits for the child process to terminate. 
-         * 
-         * Returns a status object that represents the child process' 
-         * finalization condition. The child process object ceases to be 
-         * valid after this call. 
-         * 
-         * \remark Blocking remarks: This call blocks if the child 
-         *         process has not finalized execution and waits until 
-         *         it terminates. 
-         */ 
-        status wait() 
-        { 
-#if defined(BOOST_POSIX_API) 
-            int s; 
-            if (::waitpid(get_id(), &s, 0) == -1) 
-                boost::throw_exception(boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::child::wait: waitpid(2) failed")); 
-            return status(s); 
-#elif defined(BOOST_WINDOWS_API) 
-            ::WaitForSingleObject(process_handle_.get(), INFINITE); 
-            DWORD code; 
-            if (!::GetExitCodeProcess(process_handle_.get(), &code)) 
-                boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::child::wait: GetExitCodeProcess failed")); 
-            return status(code); 
-#endif 
-        } 
+
 
         /** 
          * Creates a new child object that represents the just spawned child 
@@ -137,9 +111,9 @@ public:
          */ 
         child(id_type id, detail::file_handle fhstdin, detail::file_handle fhstdout, detail::file_handle fhstderr, detail::file_handle fhprocess = detail::file_handle()) 
             : process(id) 
-#if defined(BOOST_WINDOWS_API) 
+        #if defined(BOOST_WINDOWS_API) 
             , process_handle_(fhprocess.release(), ::CloseHandle) 
-#endif 
+        #endif 
         { 
             if (fhstdin.valid()) 
                 stdin_.reset(new postream(fhstdin)); 
@@ -180,13 +154,13 @@ private:
          */ 
         boost::shared_ptr<pistream> stderr_; 
 
-#if defined(BOOST_WINDOWS_API) 
-        /** 
-         * Process handle owned by RAII object. 
-         */ 
-        boost::shared_ptr<void> process_handle_; 
-#endif 
-}; 
+        #if defined(BOOST_WINDOWS_API) 
+                /** 
+                 * Process handle owned by RAII object. 
+                 */ 
+                boost::shared_ptr<void> process_handle_; 
+        #endif 
+
 
 /** 
  * Collection of child objects. 
@@ -196,7 +170,7 @@ private:
  */ 
 typedef std::vector<child> children; 
 
+} ;
 } 
-} 
-
+}
 #endif 

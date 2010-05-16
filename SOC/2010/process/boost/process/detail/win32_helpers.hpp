@@ -55,7 +55,7 @@ namespace detail{
  *         the environment's content. This string is of the form 
  *         var1=value1\\0var2=value2\\0\\0. 
  */ 
-inline boost::shared_array<char> environment_to_win32_strings(std::map<std::string,std::string> &env){ 
+inline boost::shared_array<char> environment_to_win32_strings(environment_t &env){ 
     boost::shared_array<char> envp; 
 
     if (env.empty()) 
@@ -66,7 +66,7 @@ inline boost::shared_array<char> environment_to_win32_strings(std::map<std::stri
     else 
     { 
         std::string s; 
-        for (std::map<std::string,std::string>::const_iterator it = env.begin(); it != env.end(); ++it) 
+        for (environment_t::const_iterator it = env.begin(); it != env.end(); ++it) 
         { 
             s += (*it).first + "=" + (*it).second; 
             s.push_back(0); 
@@ -135,8 +135,11 @@ inline boost::shared_array<char> collection_to_win32_cmdline(const Arguments &ar
     return cmdline; 
 } 
 
-
-
+/*
+ * This function configures the std stream of the new process.
+ * It recieves stream_detail from that stream and a STARTUPINFOA
+ * That will be stored the configuration. 
+ */
 void configure_win32_stream(stream_detail &sd, STARTUPINFOA *si){
 
         file_handle return_handle;
@@ -147,6 +150,7 @@ void configure_win32_stream(stream_detail &sd, STARTUPINFOA *si){
                         break; 
                 } 
                 case inherit:{
+                       
                         return_handle = file_handle::win32_dup_std(sd.stream_handler, true);
                         break; 
                 } 
@@ -195,30 +199,25 @@ void configure_win32_stream(stream_detail &sd, STARTUPINFOA *si){
 
         file_handle h;
                 
-
-        switch(sd.stream_type){
-                case stdin_type:{
-                        if(return_handle.valid())
+        if(return_handle.valid()){
+                switch(sd.stream_type){
+                        case stdin_type:{
                                 (*si).hStdInput = return_handle.get();
-                        else
-                                (*si).hStdInput =  INVALID_HANDLE_VALUE;
-                        break;
-                }
-                case stdout_type:{
-                        if(return_handle.valid())
+                                break;
+                        }
+                        case stdout_type:{
                                 (*si).hStdOutput = return_handle.get();
-                        else
-                                (*si).hStdOutput =  INVALID_HANDLE_VALUE;
-                        break;
-                }
-                case stderr_type:{
-                        if(return_handle.valid())
-                                (*si).hStdError = return_handle.get();
-                        else
-                                (*si).hStdError =  INVALID_HANDLE_VALUE;
-                        break;
-                }
+                                break;
+                        }
+                        case stderr_type:{
+                                (*si).hStdError =  return_handle.get();
+                                break;
+                        }
 
+                }
+        }
+        else{
+                si->hStdError = INVALID_HANDLE_VALUE;
         }
 
 }
