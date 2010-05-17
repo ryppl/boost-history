@@ -25,7 +25,7 @@
 
 
 #include <boost/geometry/algorithms/detail/ring_identifier.hpp>
-#include <boost/geometry/algorithms/overlay/copy_segment_point.hpp>
+#include <boost/geometry/algorithms/detail/overlay/copy_segment_point.hpp>
 #include <boost/geometry/algorithms/detail/overlay/get_relative_order.hpp>
 
 
@@ -194,7 +194,7 @@ struct sort_on_segment_and_distance
         segment_identifier const& sr = right.subject.seg_id;
 
         return sl == sr
-            ? compare_distances(left.subject, right.subject)
+            ? this->compare_distances(left.subject, right.subject)
             : sl < sr;
     }
 };
