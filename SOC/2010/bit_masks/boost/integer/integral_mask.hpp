@@ -8,7 +8,6 @@
 
 #ifndef BOOST_INTEGRAL_MASK_HPP
 #define BOOST_INTEGRAL_MASK_HPP
-#include <boost/integer/high_low_bits.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/integer/bit_width.hpp>
@@ -40,5 +39,7 @@ struct integral_mask
 };
 
 } // namespace boost
+
+#include <boost/integer/details/integral_mask_support_functions.hpp>
 
 #endif
