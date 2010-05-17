@@ -51,8 +51,44 @@ struct bit_mask
     }
 };
 
+// Runtime support functions.
+
+// Overloads for bitwise and
+template <typename T, unsigned int Offset, unsigned int Width>
+inline T operator&(T t, bit_mask<T,Offset,Width> ) {
+    return t & bit_mask<T, Offset, Width>::value;
+}
+
+template <typename T, unsigned int Offset, unsigned int Width>
+inline T operator&(bit_mask<T,Offset,Width>, T t) {
+    return bit_mask<T,Offset,Width>::value & t;
+}
+
+// Overloads for bitwise or
+template <typename T, unsigned int Offset, unsigned int Width>
+inline T operator|(T t, bit_mask<T,Offset,Width>) {
+    return t | bit_mask<T,Offset,Width>::value;
+}
+
+template <typename T, unsigned int Offset, unsigned int Width>
+inline T operator|(bit_mask<T,Offset,Width>, T t) {
+    return bit_mask<T,Offset,Width>::value | t;
+}
+
+// Overloads for bitwise xor
+template <typename T, unsigned int Offset, unsigned int Width>
+inline T operator^(T t, bit_mask<T,Offset,Width>) {
+    return t ^ bit_mask<T,Offset,Width>::value;
+}
+
+template <typename T, unsigned int Offset, unsigned int Width>
+inline T operator^(bit_mask<T,Offset,Width>, T t) {
+    return bit_mask<T,Offset,Width>::value ^ t;
+}
+
+
 } // namespace boost
-#include <boost/integer/details/bit_mask_function_support.hpp>
+
 
 #endif
 

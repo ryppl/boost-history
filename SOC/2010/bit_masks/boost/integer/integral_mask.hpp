@@ -38,8 +38,43 @@ struct integral_mask
     }
 };
 
+
+// runtime support functions.
+
+// Overloads for bitwise and
+template <typename T, unsigned int Value>
+inline T operator&(T t, integral_mask<T,Value> ) {
+    return t & integral_mask<T,Value>::value;
+}
+
+template <typename T, unsigned int Value>
+inline T operator&(integral_mask<T,Value>, T t) {
+    return integral_mask<T,Value>::value & t;
+}
+
+// Overloads for bitwise or
+template <typename T, unsigned int Value>
+inline T operator|(T t, integral_mask<T,Value>) {
+    return t | integral_mask<T,Value>::value;
+}
+
+template <typename T, unsigned int Value>
+inline T operator|(integral_mask<T,Value>, T t) {
+    return integral_mask<T,Value>::value | t;
+}
+
+// Overloads for bitwise xor
+template <typename T, unsigned int Value>
+inline T operator^(T t, integral_mask<T,Value>) {
+    return t ^ integral_mask<T,Value>::value;
+}
+
+template <typename T, unsigned int Value>
+inline T operator^(integral_mask<T,Value>, T t) {
+    return integral_mask<T,Value>::value ^ t;
+}
+
 } // namespace boost
 
-#include <boost/integer/details/integral_mask_support_functions.hpp>
 
 #endif
