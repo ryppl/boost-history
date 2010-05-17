@@ -21,5 +21,7 @@ test-suite integer
         [ run bit_width_test.cpp ]
         [ run bitwise_operator_test.cpp ]
         [ run bitwise_integral_mask_testing.cpp ]
+        [ run bitwise_high_bits_testing.cpp ]
+        [ run bitwise_low_bits_testing.cpp ]
     ;
 

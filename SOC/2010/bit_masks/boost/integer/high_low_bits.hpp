@@ -28,6 +28,8 @@ struct low_bits
     BOOST_STATIC_CONSTANT(unsigned int, width  = Width);    
 };
 
+
+
 /** Creates a mask of the supplied width in side type T, from the lower portion 
  *  of the integer starting from the left most bit moving towards the right.
  */
@@ -41,6 +43,75 @@ struct high_bits
     BOOST_STATIC_CONSTANT(unsigned int, width  = Width);
 };
 
+
+// Low_bits runtime support functions.
+// Overloads for bitwise and
+template <typename T, unsigned int Width>
+inline T operator&(T t, low_bits<T,Width> ) {
+    return t & low_bits<T,Width>::value;
+}
+
+template <typename T, unsigned int Width>
+inline T operator&(low_bits<T,Width>, T t) {
+    return low_bits<T,Width>::value & t;
+}
+
+// Overloads for bitwise or
+template <typename T, unsigned int Width>
+inline T operator|(T t, low_bits<T,Width>) {
+    return t | low_bits<T,Width>::value;
+}
+
+template <typename T, unsigned int Width>
+inline T operator|(low_bits<T,Width>, T t) {
+    return low_bits<T,Width>::value | t;
+}
+
+// Overloads for bitwise xor
+template <typename T, unsigned int Width>
+inline T operator^(T t, low_bits<T,Width>) {
+    return t ^ low_bits<T,Width>::value;
+}
+
+template <typename T, unsigned int Width>
+inline T operator^(low_bits<T,Width>, T t) {
+    return low_bits<T,Width>::value ^ t;
+}
+
+
+// high_bits runtime support functions.
+// Overloads for bitwise and
+template <typename T, unsigned int Width>
+inline T operator&(T t, high_bits<T,Width> ) {
+    return t & high_bits<T,Width>::value;
+}
+
+template <typename T, unsigned int Width>
+inline T operator&(high_bits<T,Width>, T t) {
+    return high_bits<T,Width>::value & t;
+}
+
+// Overloads for bitwise or
+template <typename T, unsigned int Width>
+inline T operator|(T t, high_bits<T,Width>) {
+    return t | high_bits<T,Width>::value;
+}
+
+template <typename T, unsigned int Width>
+inline T operator|(high_bits<T,Width>, T t) {
+    return high_bits<T,Width>::value | t;
+}
+
+// Overloads for bitwise xor
+template <typename T, unsigned int Width>
+inline T operator^(T t, high_bits<T,Width>) {
+    return t ^ high_bits<T,Width>::value;
+}
+
+template <typename T, unsigned int Width>
+inline T operator^(high_bits<T,Width>, T t) {
+    return high_bits<T,Width>::value ^ t;
+}
 
 
 } // namespace boost 
