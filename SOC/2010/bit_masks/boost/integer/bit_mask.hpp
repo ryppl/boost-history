@@ -13,7 +13,6 @@
 #include <boost/integer/bit_width.hpp>
 
 
-
 namespace boost {
 
 
@@ -53,5 +52,7 @@ struct bit_mask
 };
 
 } // namespace boost
+#include <boost/integer/details/bit_mask_function_support.hpp>
 
 #endif
+
