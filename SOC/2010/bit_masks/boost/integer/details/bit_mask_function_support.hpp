@@ -17,34 +17,34 @@ namespace boost {
 // Overloads for bitwise and
 template <typename T, unsigned int Offset, unsigned int Width>
 inline T operator&(T t, bit_mask<T,Offset,Width> ) {
-    return t & bit_mask<T,Offset,Width>::value;
+    return t & bit_mask<T, Offset, Width>::value;
 }
 
-template <typename Mask, typename T>
-inline T operator&(Mask m, T t) {
-    return Mask::value & t;
+template <typename T, unsigned int Offset, unsigned int Width>
+inline T operator&(bit_mask<T,Offset,Width>, T t) {
+    return bit_mask<T,Offset,Width>::value & t;
 }
 
 // Overloads for bitwise or
-template <typename T, typename Mask >
-inline T operator|(T t, Mask m) {
-    return t | Mask::value;
+template <typename T, unsigned int Offset, unsigned int Width>
+inline T operator|(T t, bit_mask<T,Offset,Width>) {
+    return t | bit_mask<T,Offset,Width>::value;
 }
 
-template <typename Mask, typename T>
-inline T operator|(Mask, T t) {
-    return Mask::value | t;
+template <typename T, unsigned int Offset, unsigned int Width>
+inline T operator|(bit_mask<T,Offset,Width>, T t) {
+    return bit_mask<T,Offset,Width>::value | t;
 }
 
 // Overloads for bitwise xor
-template <typename T, typename Mask>
-inline T operator^(T t, Mask) {
-    return t ^ Mask::value;
+template <typename T, unsigned int Offset, unsigned int Width>
+inline T operator^(T t, bit_mask<T,Offset,Width>) {
+    return t ^ bit_mask<T,Offset,Width>::value;
 }
 
-template <typename T, typename Mask>
-inline T operator^(Mask, T t) {
-    return Mask::value ^ t;
+template <typename T, unsigned int Offset, unsigned int Width>
+inline T operator^(bit_mask<T,Offset,Width>, T t) {
+    return bit_mask<T,Offset,Width>::value ^ t;
 }
 
 } // end of boost namespace.
