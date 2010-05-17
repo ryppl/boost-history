@@ -23,7 +23,9 @@ struct low_bits
     :details::low_bits_preconditions<T,Width>,
     integral_mask<T, ~(~T(0) << Width) >
 {    
-    typedef low_bits<T,Width>  type;
+    typedef low_bits<T,Width> type;
+
+    BOOST_STATIC_CONSTANT(unsigned int, width  = Width);    
 };
 
 /** Creates a mask of the supplied width in side type T, from the lower portion 
@@ -35,6 +37,8 @@ struct high_bits
     integral_mask<T, ~(~T(0) >> Width) >
 {    
     typedef high_bits<T,Width>  type;
+
+    BOOST_STATIC_CONSTANT(unsigned int, width  = Width);
 };
 
 

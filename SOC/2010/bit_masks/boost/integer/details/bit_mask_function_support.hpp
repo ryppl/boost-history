@@ -6,6 +6,8 @@
 
 #ifndef BOOST_BIT_MASK_FREE_FUNCTION_SUPPORT_HPP
 #define BOOST_BIT_MASK_FREE_FUNCTION_SUPPORT_HPP
+#include <boost/utility/enable_if.hpp>
+
 
 namespace boost {
 
@@ -13,9 +15,9 @@ namespace boost {
 // and applications there of.
 
 // Overloads for bitwise and
-template <typename T, typename Mask>
-inline T operator&(T t, Mask) {
-    return t & Mask::value;
+template <typename T, unsigned int Offset, unsigned int Width>
+inline T operator&(T t, bit_mask<T,Offset,Width> ) {
+    return t & bit_mask<T,Offset,Width>::value;
 }
 
 template <typename Mask, typename T>
@@ -24,8 +26,8 @@ inline T operator&(Mask m, T t) {
 }
 
 // Overloads for bitwise or
-template <typename T, typename Mask>
-inline T operator|(T t, Mask) {
+template <typename T, typename Mask >
+inline T operator|(T t, Mask m) {
     return t | Mask::value;
 }
 
