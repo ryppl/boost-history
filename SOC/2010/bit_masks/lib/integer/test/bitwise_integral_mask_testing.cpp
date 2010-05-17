@@ -23,19 +23,19 @@ void test_function() {
     bit_result = integral_mask<T, 1>() & T(0);
     
     // operator |(T, integral_mask)
-    // bit_result = T(0) | bit_mask<T,1>();
+    bit_result = T(0) | integral_mask<T, 1>();
     
     // operator |(integral_mask, T)
-    // bit_result = T(0) | integral_mask<T,1>();
+    bit_result = T(0) | integral_mask<T,1>();
 
     // operator |(T, integral_mask)
-    // bit_result = integral_mask<T,1>() | T(0);
+    bit_result = integral_mask<T,1>() | T(0);
 
     // operator ^(integral_mask, T)
-    // bit_result = T(0) ^ integral_mask<T,1>();
+    bit_result = T(0) ^ integral_mask<T,1>();
 
     // operator ^(T, bit_mask)
-    // bit_result = integral_mask<T,1>() ^ T(0);
+    bit_result = integral_mask<T,1>() ^ T(0);
 }
 
 
