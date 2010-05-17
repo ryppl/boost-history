@@ -74,6 +74,11 @@ inline T operator^(integral_mask<T,Value>, T t) {
     return integral_mask<T,Value>::value ^ t;
 }
 
+template <typename T, unsigned int Width>
+inline T operator~(integral_mask<T,Width>) {
+    return ~( integral_mask<T,Width>::value );
+}
+
 } // namespace boost
 
 

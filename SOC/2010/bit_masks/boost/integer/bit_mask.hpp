@@ -86,6 +86,10 @@ inline T operator^(bit_mask<T,Offset,Width>, T t) {
     return bit_mask<T,Offset,Width>::value ^ t;
 }
 
+template <typename T, unsigned int Offset, unsigned int Width>
+inline T operator~(bit_mask<T,Offset,Width>) {
+    return ~( bit_mask<T,Offset,Width>::value );
+}
 
 } // namespace boost
 

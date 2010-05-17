@@ -78,6 +78,11 @@ inline T operator^(low_bits<T,Width>, T t) {
     return low_bits<T,Width>::value ^ t;
 }
 
+template <typename T, unsigned int Width>
+inline T operator~(low_bits<T,Width>) {
+    return ~( low_bits<T,Width>::value );
+}
+
 
 // high_bits runtime support functions.
 // Overloads for bitwise and
@@ -113,6 +118,10 @@ inline T operator^(high_bits<T,Width>, T t) {
     return high_bits<T,Width>::value ^ t;
 }
 
+template <typename T, unsigned int Width>
+inline T operator~(high_bits<T,Width>) {
+    return ~( high_bits<T,Width>::value );
+}
 
 } // namespace boost 
 
