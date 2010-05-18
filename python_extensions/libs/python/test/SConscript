@@ -1,8 +1,6 @@
-Import("env")
-import os
+Import("bp_extensions_env")
 
-module = env.SharedLibrary("test_mod", "test_mod.cpp", SHLIBPREFIX="")
-path = os.path.abspath(os.curdir)
-runs = [env.Command(".%s" % script, [module, script], "python %s" % os.path.join(path,script)) 
-        for script in ("test_script.py",)]
-test = Alias("test", [runs])
+test_mod = bp_extensions_env.SharedLibrary("test_mod", "test_mod.cpp", SHLIBPREFIX="")
+test = bp_extensions_env.PythonUnitTest("test_script.py", test_mod)
+
+Return("test")

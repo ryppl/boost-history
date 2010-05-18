@@ -53,7 +53,7 @@ class TestFusion(unittest.TestCase):
     def testPair(self):
         v = test_mod.return_pair()
         self.assertEqual(type(v), tuple)
-        self.assertEqual(v, (3, "test string"))
+        self.assertEqual(v, (3, 5.0))
         self.assert_(test_mod.accept_pair(v))
 
 class TestConstSharedPtr(unittest.TestCase):

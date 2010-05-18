@@ -1,37 +1,8 @@
-import distutils.sysconfig
-import re
-import os
+import scons_tools
 
-def ApplyFlags(env, flags):
-    flags = env.ParseFlags(flags)
-    flags["CCFLAGS"] = [opt for opt in flags["CCFLAGS"] if not opt.startswith("-O")]
-    flags["CFLAGS"] = [opt for opt in flags["CFLAGS"] if not opt.startswith("-O")]
-    debug = ARGUMENTS.get('debug', 0)
-    if int(debug):
-        try:
-            flags["CPPDEFINES"].remove("NDEBUG")
-        except: pass
-    env.MergeFlags(flags)
+bp_extensions_env = scons_tools.MakeEnvironment()
+bp_extensions_env.SetupPackages(["boost.python"])
+bp_extensions_env.Append(CPPPATH = "#")
 
-def ConfigurePython(env):
-    cflags = " ".join(v for v in distutils.sysconfig.get_config_vars("BASECFLAGS","OPT")
-                      if v is not None).split()
-    libs = " ".join(v for v in distutils.sysconfig.get_config_vars("BLDLIBRARY","LIBS")
-                    if v is not None).split()
-    try: # not valid for C++
-        cflags.remove("-Wstrict-prototypes")
-    except ValueError: pass
-    cflags = [f for f in cflags if not f.startswith("-O")]
-    try:
-        libs.remove("-L.")
-    except ValueError: pass
-    cflags.append("-I%s" % distutils.sysconfig.get_python_inc())
-    ApplyFlags(env, cflags + libs)
-
-env = Environment()
-ConfigurePython(env)
-env.Append(LIBS = "boost_python")
-env.Append(CPPPATH = "#")
-
-Export("env")
+Export("bp_extensions_env")
 SConscript("libs/python/test/SConscript")

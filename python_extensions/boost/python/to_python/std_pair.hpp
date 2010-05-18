@@ -20,9 +20,7 @@ struct std_pair_to_python
     : public boost_fusion_to_python< std::pair<T1,T2> > 
 {
 
-    std_pair_to_python() {
-        boost::python::to_python_converter<std::pair<T1,T2>,std_pair_to_python,true>();
-    }
+    std_pair_to_python() {}
 
 };
 

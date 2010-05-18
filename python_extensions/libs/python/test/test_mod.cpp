@@ -71,15 +71,15 @@ static bool accept_tuple(test_tuple const & tuple) {
 }
 
 
-typedef std::pair<int,std::string> test_pair;
+typedef std::pair<int,double> test_pair;
 
 static test_pair return_pair() {
-    return test_pair(3, "test string");
+    return test_pair(3, 5.0);
 }
 
 static bool accept_pair(test_pair const & pair) {
     return pair.first == 3 
-        && pair.second == "test string";
+        && pair.second == 5.0;
 }
 
 
@@ -124,9 +124,9 @@ BOOST_PYTHON_MODULE(test_mod) {
     bp::def("return_tuple", &return_tuple);
     bp::def("accept_tuple", &accept_tuple);
 
-
-    bp::std_pair_to_python<int,std::string>();
-    bp::std_pair_from_python<int,std::string>();
+    
+    bp::std_pair_to_python<int,double>();
+    bp::std_pair_from_python<int,double>();
 
     bp::def("return_pair", &return_pair);
     bp::def("accept_pair", &accept_pair);

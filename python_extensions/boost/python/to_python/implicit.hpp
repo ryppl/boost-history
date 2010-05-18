@@ -32,9 +32,9 @@ struct implicit_to_python {
         return converter.get_pytype();
     }
 
-    implicit_to_python() {
-        boost::python::to_python_converter<Source,implicit_to_python,true>();
-    }
+    implicit_to_python() { declare(); }
+
+    static void declare() { boost::python::to_python_converter<Source,implicit_to_python,true>(); }
 
 };
 
