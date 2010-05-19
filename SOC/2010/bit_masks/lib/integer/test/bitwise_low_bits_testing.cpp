@@ -36,6 +36,8 @@ void test_function() {
 
     // operator ^(T, low_bits)
     bit_result = low_bits<T,1>() ^ T(0);
+
+    bit_result = ~ (low_bits<T,1>());
 }
 
 

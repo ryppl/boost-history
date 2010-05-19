@@ -13,29 +13,42 @@
 // Testing for operator overloads.
 using namespace boost;
 
+// Operators compaired against the same operatorations to assure that 
+// the operators preform in the same manner.
+
 template <typename T>
 void test_function() {
 
-    // operator &(T, bit_mask)
+    T mask_value( integral_mask<T,1>::value );
+
+    // operator &(T, integral_mask)
     T bit_result = T(0) & integral_mask<T, 1>();
+    BOOST_ASSERT(( bit_result == (T(0) & mask_value) ));
 
     // operator &(integral_mask, T)
     bit_result = integral_mask<T, 1>() & T(0);
+    BOOST_ASSERT(( bit_result == ( mask_value & T(0)) ));
     
     // operator |(T, integral_mask)
     bit_result = T(0) | integral_mask<T, 1>();
+    BOOST_ASSERT(( bit_result == (T(0) | mask_value) ));
     
     // operator |(integral_mask, T)
-    bit_result = T(0) | integral_mask<T,1>();
-
-    // operator |(T, integral_mask)
     bit_result = integral_mask<T,1>() | T(0);
+    BOOST_ASSERT(( bit_result == (mask_value | T(0)) ));
 
     // operator ^(integral_mask, T)
     bit_result = T(0) ^ integral_mask<T,1>();
+    BOOST_ASSERT(( bit_result == (T(0) ^ mask_value) ));
 
-    // operator ^(T, bit_mask)
+    // operator ^(T, integral_mask.)
     bit_result = integral_mask<T,1>() ^ T(0);
+    BOOST_ASSERT(( bit_result == (mask_value ^ T(0)) ));
+
+    // operator~(integral_mask)
+    bit_result = ~ (integral_mask<T,1>());
+    mask_value = ~mask_value;
+    BOOST_ASSERT(( bit_result == mask_value ));
 }
 
 

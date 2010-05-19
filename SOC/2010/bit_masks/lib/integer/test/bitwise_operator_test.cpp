@@ -37,6 +37,8 @@ void test_function() {
 
     // operator ^(T, bit_mask)
     bit_result = bit_mask<T,1>() ^ T(0);
+
+    bit_result = ~ (bit_mask<T,1>());
 }
 
 
