@@ -16,28 +16,36 @@ using namespace boost;
 template <typename T>
 void test_function() {
 
+    T mask_value( low_bits<T, 1>::value );
+
     // operator &(T, low_bits)
     T bit_result = T(0) & low_bits<T, 1>();
+    BOOST_ASSERT(( bit_result == (T(0) & mask_value) ));
 
     // operator &(low_bits, T)
     bit_result = low_bits<T, 1>() & T(0);
+    BOOST_ASSERT(( bit_result == (mask_value & T(0)) ));
     
     // operator |(T, low_bits)
     bit_result = T(0) | low_bits<T, 1>();
-    
-    // operator |(low_bits, T)
-    bit_result = T(0) | low_bits<T,1>();
+    BOOST_ASSERT(( bit_result == (T(0) | mask_value) ));
 
     // operator |(T, low_bits)
     bit_result = low_bits<T,1>() | T(0);
+    BOOST_ASSERT(( bit_result == (mask_value | T(0)) ));
 
     // operator ^(low_bits, T)
     bit_result = T(0) ^ low_bits<T,1>();
+    BOOST_ASSERT(( bit_result == (T(0) ^ mask_value) ));
 
     // operator ^(T, low_bits)
     bit_result = low_bits<T,1>() ^ T(0);
+    BOOST_ASSERT(( bit_result == (mask_value ^ T(0)) ));
 
+    // operator~(low_bits)
     bit_result = ~ (low_bits<T,1>());
+    mask_value = ~mask_value;
+    BOOST_ASSERT(( bit_result == mask_value ));
 }
 
 
