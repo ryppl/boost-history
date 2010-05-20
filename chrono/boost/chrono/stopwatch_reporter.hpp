@@ -75,42 +75,42 @@ namespace boost { namespace chrono  {
         typedef typename Formatter::char_type char_type;
         typedef typename Formatter::ostream_type ostream_type;
 
-        explicit basic_stopwatch_reporter( system::error_code & ec = system::throws )
+        explicit basic_stopwatch_reporter( system::error_code & /*ec*/ = system::throws )
         : m_places(Formatter::default_places()), m_os(Formatter::default_os()), m_format(Formatter::default_format()), m_reported(false) { }
         explicit basic_stopwatch_reporter( ostream_type & os,
-                    system::error_code & ec = system::throws )
+                    system::error_code & /*ec*/ = system::throws )
         : m_places(Formatter::default_places()), m_os(os), m_format(Formatter::default_format()), m_reported(false) { }
 
         explicit basic_stopwatch_reporter( const string_type & format,
-                    system::error_code & ec = system::throws )
+                    system::error_code & /*ec*/ = system::throws )
         : m_places(Formatter::default_places()), m_os(Formatter::default_os()), m_format(format), m_reported(false) {}
 
         explicit basic_stopwatch_reporter( int places,
-                    system::error_code & ec = system::throws )
+                    system::error_code & /*ec*/ = system::throws )
         : m_places(places), m_os(Formatter::default_os()), m_format(Formatter::default_format()), m_reported(false) { }
 
         basic_stopwatch_reporter( ostream_type & os, const string_type & format,
-                    system::error_code & ec = system::throws )
+                    system::error_code & /*ec*/ = system::throws )
         : m_places(Formatter::default_places()), m_os(os), m_format(format), m_reported(false) { }
 
         basic_stopwatch_reporter( const string_type & format, int places,
-                    system::error_code & ec = system::throws )
+                    system::error_code & /*ec*/ = system::throws )
         : m_places(places), m_os(Formatter::default_os()), m_format(format), m_reported(false) { }
 
         basic_stopwatch_reporter( ostream_type & os, int places,
-                    system::error_code & ec = system::throws )
+                    system::error_code & /*ec*/ = system::throws )
         : m_places(places), m_os(os), m_format(Formatter::default_format()), m_reported(false) { }
 
         basic_stopwatch_reporter( int places, const string_type & format,
-                    system::error_code & ec = system::throws )
+                    system::error_code & /*ec*/ = system::throws )
         : m_places(places), m_os(Formatter::default_os()), m_format(format), m_reported(false) { }
 
         basic_stopwatch_reporter( ostream_type & os, const string_type & format, int places,
-                    system::error_code & ec = system::throws )
+                    system::error_code & /*ec*/ = system::throws )
         : m_places(places), m_os(os), m_format(format), m_reported(false) { }
 
         basic_stopwatch_reporter( ostream_type & os, int places, const string_type & format,
-                    system::error_code & ec = system::throws )
+                    system::error_code & /*ec*/ = system::throws )
         : m_places(places), m_os(os), m_format(format), m_reported(false) { }
 
         ~basic_stopwatch_reporter() {// never throws
@@ -122,7 +122,7 @@ namespace boost { namespace chrono  {
         }
 
 
-        inline void report( system::error_code & ec = system::throws );
+        inline void report( system::error_code & /*ec*/ = system::throws );
         bool reported() const { return m_reported; }
 
 

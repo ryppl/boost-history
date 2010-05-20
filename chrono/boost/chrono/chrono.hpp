@@ -393,17 +393,10 @@ namespace chrono {
     {
         ToDuration operator()(const FromDuration& fd) const
         {
-    #if BOOST_VARIADIC_COMMON_TYPE == 0
-            typedef typename common_type<
-                typename common_type<typename ToDuration::rep,
-                typename FromDuration::rep>::type,
-                intmax_t>::type C;
-    #else
             typedef typename common_type<
                 typename ToDuration::rep,
                 typename FromDuration::rep,
                 intmax_t>::type C;
-    #endif
             return ToDuration(static_cast<typename ToDuration::rep>(
                               static_cast<C>(fd.count()) / static_cast<C>(Period::den)));
         }
@@ -419,17 +412,10 @@ namespace chrono {
     {
         ToDuration operator()(const FromDuration& fd) const
         {
-    #if BOOST_VARIADIC_COMMON_TYPE == 0
-            typedef typename common_type<
-                typename common_type<typename ToDuration::rep,
-                typename FromDuration::rep>::type,
-                intmax_t>::type C;
-    #else
             typedef typename common_type<
               typename ToDuration::rep,
               typename FromDuration::rep,
               intmax_t>::type C;
-    #endif
             return ToDuration(static_cast<typename ToDuration::rep>(
                               static_cast<C>(fd.count()) * static_cast<C>(Period::num)));
         }
@@ -446,18 +432,10 @@ namespace chrono {
     {
         ToDuration operator()(const FromDuration& fd) const
         {
-    #if BOOST_VARIADIC_COMMON_TYPE == 0
-            typedef typename common_type<
-                typename common_type<
-                  typename ToDuration::rep,
-                  typename FromDuration::rep>::type,
-                intmax_t>::type C;
-    #else
             typedef typename common_type<
               typename ToDuration::rep,
               typename FromDuration::rep,
               intmax_t>::type C;
-    #endif
             return ToDuration(static_cast<typename ToDuration::rep>(
                static_cast<C>(fd.count()) * static_cast<C>(Period::num)
                  / static_cast<C>(Period::den)));
