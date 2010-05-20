@@ -9,10 +9,30 @@
 #ifndef BOOST_COMMON_TYPE_HPP
 #define BOOST_COMMON_TYPE_HPP
 
-#define BOOST_VARIADIC_COMMON_TYPE 0
+#include <boost/config.hpp>
 
+//----------------------------------------------------------------------------//
+#if defined(BOOST_NO_VARIADIC_TEMPLATES)
+#define BOOST_COMMON_TYPE_ARITY 3
+#endif
+
+//----------------------------------------------------------------------------//
+#if defined(BOOST_NO_RVALUE_REFERENCES) \
+    || defined(BOOST_NO_DECLTYPE)
 #define BOOST_TYPEOF_SILENT
 #include <boost/typeof/typeof.hpp>   // boost wonders never cease!
+#endif
+
+//----------------------------------------------------------------------------//
+#if !defined(BOOST_NO_STATIC_ASSERT)
+#define BOOST_COMMON_TYPE_STATIC_ASSERT(CND,MSG) \
+        static_assert(CND, MSG)
+#else
+#include <boost/static_assert.hpp>   // boost wonders never cease!
+#define BOOST_COMMON_TYPE_STATIC_ASSERT(CND,MSG) \
+        BOOST_STATIC_ASSERT(CND)
+#endif    
+
 
 //----------------------------------------------------------------------------//
 //                                                                            //
@@ -23,63 +43,71 @@
 //                                                                            //
 //----------------------------------------------------------------------------//
 
-namespace boost
-{
-#ifndef BOOST_NO_VARIADIC_TEMPLATES
+namespace boost {
+
+// prototype    
+#if !defined(BOOST_NO_VARIADIC_TEMPLATES)
     template<typename... T>
     struct common_type;
+#else // or no specialization
+    template <class T, class U = void, class V = void>
+    struct common_type 
+    {
+    public:
+        typedef typename common_type<typename common_type<T, U>::type, V>::type type;
+    };
+#endif    
 
+
+// 1 arg
     template<typename T>
-    struct common_type<T> {
-        static_assert(sizeof(T) > 0, "must be complete type");
+#if !defined(BOOST_NO_VARIADIC_TEMPLATES)
+    struct common_type<T> 
+#else
+    struct common_type<T, void, void>
+
+#endif    
+    {
+        BOOST_COMMON_TYPE_STATIC_ASSERT(sizeof(T) > 0, "must be complete type");
+    public:
         typedef T type;
     };
 
-    template<typename T, typename U>
-    class common_type<T, U> {
-        static_assert(sizeof(T) > 0, "must be complete type");
-        static_assert(sizeof(U) > 0, "must be complete type");
-        static T&& m_t();
-        static U&& m_u();
-
+// 2 args
+    
+#if !defined(BOOST_NO_VARIADIC_TEMPLATES)
+    template <class T, class U>
+    struct common_type<T, U> 
+#else
+    template <class T, class U>
+    struct common_type<T, U, void>
+#endif    
+    {
+        BOOST_COMMON_TYPE_STATIC_ASSERT(sizeof(T) > 0, "must be complete type");
+        BOOST_COMMON_TYPE_STATIC_ASSERT(sizeof(U) > 0, "must be complete type");
         static bool m_f();  // workaround gcc bug; not required by std
+#if !defined(BOOST_NO_RVALUE_REFERENCES) \
+    && !defined(BOOST_NO_DECLTYPE)
+            static T&& m_t();
+            static U&& m_u();
 
-    public:
-        typedef decltype(m_true_or_false() ? m_t() : m_u()) type;
+        public:
+            typedef decltype(m_f() ? m_t() : m_u()) type;
+#else
+            static T m_t();
+            static U m_u();
+        public:
+            typedef BOOST_TYPEOF_TPL(m_f() ? m_t() : m_u()) type;
+#endif        
     };
-
+    
+// 3 or more args
+#if !defined(BOOST_NO_VARIADIC_TEMPLATES)  
     template<typename T, typename U, typename... V>
     struct common_type<T, U, V...> {
-        typedef typename
-            common_type<typename common_type<T, U>::type, V...>::type type;
+    public:
+        typedef typename common_type<typename common_type<T, U>::type, V...>::type type;
     };
-#else
-
-  template <class T, class U = void, class V = void>
-  struct common_type
-  {
-  public:
-     typedef typename common_type<typename common_type<T, U>::type, V>::type type;
-  };
-
-  template <class T>
-  struct common_type<T, void, void>
-  {
-  public:
-     typedef T type;
-  };
-
-  template <class T, class U>
-  struct common_type<T, U, void>
-  {
-  private:
-     static T m_t();
-     static U m_u();
-     static bool m_f();  // workaround gcc bug; not required by std
-  public:
-
-     typedef BOOST_TYPEOF_TPL(m_f() ? m_t() : m_u()) type;
-  };
 #endif
 }  // namespace boost
 
