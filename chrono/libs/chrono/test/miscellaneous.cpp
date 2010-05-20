@@ -139,15 +139,14 @@ void test_milliseconds()
 
 int main()
 {
+    using namespace boost;
     drive_physics_function();
     test_range();
     test_extended_range();
     inspect_all();
     test_milliseconds();
-#if BOOST_VARIADIC_COMMON_TYPE
     inspect_duration(common_type<duration<double>, hours, microseconds>::type(),
                     "common_type<duration<double>, hours, microseconds>::type");
-#endif
     duration<double, boost::milli> d = milliseconds(3) * 2.5;
     inspect_duration(milliseconds(3) * 2.5, "milliseconds(3) * 2.5");
     std::cout << d.count() << '\n';

@@ -1639,10 +1639,8 @@ int main()
     test_duration_division();
     I_dont_like_the_default_duration_behavior::test();
     test_min();
-#if BOOST_VARIADIC_COMMON_TYPE
     inspect_duration(common_type<duration<double>, hours, microseconds>::type(),
                     "common_type<duration<double>, hours, microseconds>::type");
-#endif
     explore_limits();
     manipulate_clock_object(system_clock());
     duration<double, boost::milli> d = milliseconds(3) * 2.5;
