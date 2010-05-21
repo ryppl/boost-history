@@ -42,7 +42,7 @@ Logical Device: An un-named graph node with a device type<br>
 Logical Pin: A special net that defines an input or output for the circuit<br>
 Schematic Database: A graph consisting of nets and logical 
 devices</p>
-<p>Next lets define the sequence of operations performed by our toy 
+<p>Next let's define the sequence of operations performed by our toy 
 layout versus schematic application:</p>
 <p>Parse Layout: Stream layout rectangles and polygons into a layout database 
 and stream layout pins into a connectivity database<br>
@@ -89,7 +89,7 @@ voltage at the gate is the same as the ground voltage the p-type transistor is
 &quot;on&quot; and can pass current from the voltage source to the output .&nbsp; The 
 poly-silicon lines that are not insulated create electrical connections to the 
 transistor for output signals and source voltage.&nbsp; The n-type transistor 
-differs from the p-type in that its diffusion it n-type material outside of NWELL area.&nbsp; Current can pass from the output to the ground when the 
+differs from the p-type in that its diffusion is n-type material outside of NWELL area.&nbsp; Current can pass from the output to the ground when the 
 voltage at the gate of the n-type transistor is at the source voltage level.&nbsp; 
 Above the poly-silicon layer is a layer of silicon-oxide insulator with holes 
 cut out of it that get filled in with metal.&nbsp; These metal filled holes are 
@@ -109,7 +109,7 @@ gate might be laid out and is not drawn to scale for any real process
 technology.</p>
 <p>
 <img border="0" src="images/NAND.PNG" width="602" height="387"></p>
-<p>The following is the input layout file for the above NAND gate:</p>
+<p>The following is the input layout file for the above NAND gate layout:</p>
 <p><font face="Courier New" size="2">Rectangle 0 60 24 48 NWELL<br>
 Rectangle 3 57 32 43 PDIFF<br>
 Rectangle 3 57 5 16 NDIFF<br>
@@ -135,11 +135,14 @@ Rectangle 0 60 46 48 METAL1<br>
 Rectangle 3 57 18 20 METAL1<br>
 Rectangle 3 57 23 25 METAL1<br>
 Pin 29 31 0 2 METAL1 GND<br>
-Pin 29 31 23 25 METAL1 OUTPUT<br>
-Pin 29 31 28 30 METAL1 INPUT1<br>
+Pin 29 31 23 25 METAL1 OUTPUT</font><font face="Courier New" size="2"><br>
+Pin 29 31 28 30 METAL1 INPUT1</font><font face="Courier New" size="2"><br>
 Pin 29 31 46 48 METAL1 VDD<br>
 Pin 29 31 18 20 METAL1 INPUT2</font></p>
-<p>The following is the logic schematic net list for a NAND gate:</p>
+<p>
+<img border="0" src="images/nands.PNG" width="421" height="402"></p>
+<p>The following is the logic schematic net list file for the above NAND gate 
+schematic:</p>
 <p><font face="Courier New" size="2">Pin OUTPUT<br>Pin INPUT1<br>Pin INPUT2<br>
 Pin VDD<br>Pin GND<br>Device PTRANS VDD INPUT1 OUTPUT<br>Device PTRANS VDD 
 INPUT2 OUTPUT<br>Device NTRANS GND INPUT1 NET1<br>Device NTRANS NET1 INPUT2 
@@ -156,21 +159,24 @@ the identification of transistors and the tracing of connectivity.&nbsp; Based
 on this
 <a href="analysis.htm">analysis</a> of Boost.Polygon performance we can expect 
 this methodology to easily scale up to million gate blocks on standard 
-workstations and arbitrarily large designs given sufficient system memory.&nbsp; Lets start 
+workstations and arbitrarily large designs given sufficient system memory.&nbsp; 
+let's start 
 by implementing some data structures for our application.</p>
 <p><font face="Courier New" size="2">struct layout_rectangle {<br>
 &nbsp; int xl, yl, xh, yh;<br>
 &nbsp; std::string layer;<br>
 };</font></p>
 <p>Our layout rectangle is nice and minimal, just enough to store its data.&nbsp; 
-It is defined in <a href="tutorial/layout_rectangle.hpp">layout_rectangle.hpp</a>. Next lets implement the layout 
+It is defined in <a href="tutorial/layout_rectangle.hpp">layout_rectangle.hpp</a>. Next 
+let's implement the layout 
 pin in a similar way.</p>
 <p><font face="Courier New" size="2">struct layout_pin {<br>
 &nbsp; int xl, yl, xh, yh;<br>
 &nbsp; std::string layer;<br>
 &nbsp; std::string net;<br>
 };</font></p>
-<p>Our layout pin is defined in <a href="tutorial/layout_pin.hpp">layout_pin.hpp</a>.&nbsp; Now lets define a layout database object and populate it from our parsed 
+<p>Our layout pin is defined in <a href="tutorial/layout_pin.hpp">layout_pin.hpp</a>.&nbsp; Now 
+let's define a layout database object and populate it from our parsed 
 layout data in in <a href="tutorial/layout_database.hpp">layout_database.hpp</a>.</p>
 <p><font face="Courier New" size="2">typedef std::map&lt;std::string, 
 boost::polygon::polygon_90_set_data&lt;int&gt; &gt; layout_database;<br>
@@ -210,12 +216,12 @@ an object for a logical device in <a href="tutorial/device.hpp">device.hpp</a>.&
 Since we are lazy this object does double duty as a pin and both types of 
 transistor.&nbsp; A traditional object oriented design might declare a base 
 class with virtual destructor and derive every device from that.&nbsp; Since we 
-aren't paid by the line of code lets just keep things simple.</p>
+aren't paid by the line of code let's just keep things simple.</p>
 <p><font face="Courier New" size="2">struct device {<br>
 &nbsp; std::string type;<br>
 &nbsp; std::vector&lt;std::string&gt; terminals;<br>
 };</font></p>
-<p>Now lets define a schematic database object in
+<p>Now let's define a schematic database object in
 <a href="tutorial/schematic_database.hpp">schematic_database.hpp</a> and populate it from our parsed 
 schematic data.</p>
 <p><font face="Courier New"><font size="2">struct schematic_database{<br>
@@ -430,8 +436,8 @@ layout_layer);<br>
 most complicated part of this simple procedure.&nbsp; Now that we have our 
 connectivity database extracted from pins down to transistors we need to extract 
 our transistors and establish the relationship between transistor terminals and 
-nets in our connectivity database.&nbsp; First lets extract transistors with the 
-functions defined in defined in <a href="tutorial/extract_devices.hpp">
+nets in our connectivity database.&nbsp; First let's extract transistors with 
+the functions defined in defined in <a href="tutorial/extract_devices.hpp">
 extract_devices.hpp</a>.</p>
 <p><font size="2" face="Courier New">typedef boost::polygon::connectivity_extraction_90&lt;int&gt; 
 connectivity_extraction;<br>

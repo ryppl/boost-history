@@ -139,8 +139,10 @@ disjoint-union of that with polygon list <i>a</i> deflated by some integer amoun
 The end result is accumulated into a list of polygons with a union operation.&nbsp; 
 It is considerably more typing to describe this usage of the API than to code 
 it, and the description is not much clearer than the code itself.&nbsp; 
-Functions are named for what they do, or are overloads of C++ operators that make it 
-easy to infer from reading the code what to expect from it.&nbsp; Operators are 
+A picture is worth a thousand words.</p>
+<p><img border="0" src="images/foo.PNG" width="432" height="371"></p>
+<p>In Boost.Polygon operations such as those shown above are free functions named for what they do, or are overloads of C++ operators that make it 
+easy to infer from reading the code what to expect.&nbsp; Operators are 
 contained in the namespace <font face="Courier New">boost::polygon::operators</font> 
 so that they can be used outside the <font face="Courier New">boost::polygon</font> 
 namespace without bringing in the entire <font face="Courier New">boost::polygon</font> 
@@ -181,6 +183,13 @@ performing these programming tasks.</p>
 		<li><a href="gtl_property_merge_usage.htm">property_merge_usage.cpp</a> 
 		Using the n-layer map-overlay algorithm on polygon data</li>
     </ul>
+
+<li>Tutorial: 
+<ul>
+	<li><a href="gtl_tutorial.htm">Layout Versus Schematic</a> Learn how to 
+	apply Boost.Polygon capabilities to implement a simplified circuit 
+	extraction application</li>
+</ul>
 
 </ul>
 
