@@ -39,10 +39,16 @@ import path ;
 project boost/thread
     : source-location ../src
     : requirements <threading>multi
+        <library>/boost/system//boost_system
+        <library>/boost/chrono//boost_chrono
       <link>static:<define>BOOST_THREAD_BUILD_LIB=1
       <link>shared:<define>BOOST_THREAD_BUILD_DLL=1
       -<tag>@$(BOOST_JAMROOT_MODULE)%$(BOOST_JAMROOT_MODULE).tag
       <tag>@$(__name__).tag
+#    : usage-requirements  # pass these requirement to dependents (i.e. users)
+#        <threading>multi
+#        <library>/boost/system//boost_system
+#        <library>/boost/chrono//boost_chrono
     : default-build <threading>multi
     ;
 

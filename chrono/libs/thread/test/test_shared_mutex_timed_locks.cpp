@@ -15,6 +15,25 @@
         BOOST_CHECK_EQUAL(value,expected_value);                     \
     }
 
+#ifdef BOOST_THREAD_TEST_CHRONO        
+    using namespace boost::chrono;
+    typedef system_clock::time_point system_time_point;
+    system_time_point now() {return system_clock::now();}
+    template <typename OSTREAM>
+    OSTREAM& operator<<(OSTREAM & os, system_time_point t) {
+        os << t.count();
+        return os;
+    }
+#else        
+    using namespace boost::posix_time;
+    typedef boost::system_time system_time_point;
+    system_time_point now() {return boost::get_system_time();}
+    template <typename OSTREAM>
+    OSTREAM& operator<<(OSTREAM & os, system_time_point t) {
+        return os;
+    }
+#endif    
+
 
 void test_timed_lock_shared_times_out_if_write_lock_held()
 {
@@ -27,21 +46,36 @@ void test_timed_lock_shared_times_out_if_write_lock_held()
     boost::thread::sleep(delay(1));
     CHECK_LOCKED_VALUE_EQUAL(unblocked_mutex,unblocked_count,1u);
 
-    boost::system_time const start=boost::get_system_time();
-    boost::system_time const timeout=start+boost::posix_time::milliseconds(500);
-    boost::posix_time::milliseconds const timeout_resolution(50);
+    system_time_point const start=now();
+    system_time_point const timeout=start+milliseconds(500);
+    milliseconds const timeout_resolution(50);
+#ifdef BOOST_THREAD_TEST_CHRONO        
+    bool timed_lock_succeeded=rw_mutex.try_lock_shared_until(timeout);
+#else
     bool timed_lock_succeeded=rw_mutex.timed_lock_shared(timeout);
-    BOOST_CHECK((timeout-timeout_resolution)<boost::get_system_time());
+#endif    
+    system_time_point const end=now();
+    std::cout
+        << "timeout = " << timeout
+        << "end = " << end
+        << "\n";
+    std::cout.flush();
+    BOOST_CHECK((timeout-timeout_resolution)<end);
     BOOST_CHECK(!timed_lock_succeeded);
     if(timed_lock_succeeded)
     {
         rw_mutex.unlock_shared();
     }
 
-    boost::posix_time::milliseconds const wait_duration(500);
-    boost::system_time const timeout2=boost::get_system_time()+wait_duration;
+    milliseconds const wait_duration(500);
+    system_time_point const timeout2=now()+wait_duration;
+#ifdef BOOST_THREAD_TEST_CHRONO        
+    timed_lock_succeeded=rw_mutex.try_lock_shared_for(wait_duration);
+#else
     timed_lock_succeeded=rw_mutex.timed_lock_shared(wait_duration);
-    BOOST_CHECK((timeout2-timeout_resolution)<boost::get_system_time());
+#endif    
+    BOOST_CHECK((timeout2-timeout_resolution)<now());
+    
     BOOST_CHECK(!timed_lock_succeeded);
     if(timed_lock_succeeded)
     {
@@ -58,21 +92,29 @@ void test_timed_lock_shared_succeeds_if_no_lock_held()
     boost::mutex finish_mutex;
     boost::mutex unblocked_mutex;
 
-    boost::system_time const start=boost::get_system_time();
-    boost::system_time const timeout=start+boost::posix_time::milliseconds(500);
-    boost::posix_time::milliseconds const timeout_resolution(50);
+    system_time_point const start=now();
+    system_time_point const timeout=start+milliseconds(500);
+    milliseconds const timeout_resolution(50);
+#ifdef BOOST_THREAD_TEST_CHRONO        
+    bool timed_lock_succeeded=rw_mutex.try_lock_shared_until(timeout);
+#else    
     bool timed_lock_succeeded=rw_mutex.timed_lock_shared(timeout);
-    BOOST_CHECK(boost::get_system_time()<timeout);
+#endif    
+    BOOST_CHECK(now()<timeout);
     BOOST_CHECK(timed_lock_succeeded);
     if(timed_lock_succeeded)
     {
         rw_mutex.unlock_shared();
     }
 
-    boost::posix_time::milliseconds const wait_duration(500);
-    boost::system_time const timeout2=boost::get_system_time()+wait_duration;
+    milliseconds const wait_duration(500);
+    system_time_point const timeout2=now()+wait_duration;
+#ifdef BOOST_THREAD_TEST_CHRONO        
+    timed_lock_succeeded=rw_mutex.try_lock_shared_for(wait_duration);
+#else    
     timed_lock_succeeded=rw_mutex.timed_lock_shared(wait_duration);
-    BOOST_CHECK(boost::get_system_time()<timeout2);
+#endif    
+    BOOST_CHECK(now()<timeout2);
     BOOST_CHECK(timed_lock_succeeded);
     if(timed_lock_succeeded)
     {
@@ -92,21 +134,29 @@ void test_timed_lock_shared_succeeds_if_read_lock_held()
     boost::thread::sleep(delay(1));
     CHECK_LOCKED_VALUE_EQUAL(unblocked_mutex,unblocked_count,1u);
 
-    boost::system_time const start=boost::get_system_time();
-    boost::system_time const timeout=start+boost::posix_time::milliseconds(500);
-    boost::posix_time::milliseconds const timeout_resolution(50);
+    system_time_point const start=now();
+    system_time_point const timeout=start+milliseconds(500);
+    milliseconds const timeout_resolution(50);
+#ifdef BOOST_THREAD_TEST_CHRONO        
+    bool timed_lock_succeeded=rw_mutex.try_lock_shared_until(timeout);
+#else    
     bool timed_lock_succeeded=rw_mutex.timed_lock_shared(timeout);
-    BOOST_CHECK(boost::get_system_time()<timeout);
+#endif    
+    BOOST_CHECK(now()<timeout);
     BOOST_CHECK(timed_lock_succeeded);
     if(timed_lock_succeeded)
     {
         rw_mutex.unlock_shared();
     }
 
-    boost::posix_time::milliseconds const wait_duration(500);
-    boost::system_time const timeout2=boost::get_system_time()+wait_duration;
+    milliseconds const wait_duration(500);
+    system_time_point const timeout2=now()+wait_duration;
+#ifdef BOOST_THREAD_TEST_CHRONO        
+    timed_lock_succeeded=rw_mutex.try_lock_shared_for(wait_duration);
+#else    
     timed_lock_succeeded=rw_mutex.timed_lock_shared(wait_duration);
-    BOOST_CHECK(boost::get_system_time()<timeout2);
+#endif    
+    BOOST_CHECK(now()<timeout2);
     BOOST_CHECK(timed_lock_succeeded);
     if(timed_lock_succeeded)
     {
@@ -128,21 +178,35 @@ void test_timed_lock_times_out_if_write_lock_held()
     boost::thread::sleep(delay(1));
     CHECK_LOCKED_VALUE_EQUAL(unblocked_mutex,unblocked_count,1u);
 
-    boost::system_time const start=boost::get_system_time();
-    boost::system_time const timeout=start+boost::posix_time::milliseconds(500);
-    boost::posix_time::milliseconds const timeout_resolution(50);
+    system_time_point const start=now();
+    system_time_point const timeout=start+milliseconds(500);
+    milliseconds const timeout_resolution(50);
+#ifdef BOOST_THREAD_TEST_CHRONO        
+    bool timed_lock_succeeded=rw_mutex.try_lock_until(timeout);
+#else    
     bool timed_lock_succeeded=rw_mutex.timed_lock(timeout);
-    BOOST_CHECK((timeout-timeout_resolution)<boost::get_system_time());
+#endif    
+    system_time_point const end=now();
+    std::cout
+        << "timeout = " << timeout
+        << "end = " << end
+        << "\n";
+    std::cout.flush();
+    BOOST_CHECK((timeout-timeout_resolution)<end);
     BOOST_CHECK(!timed_lock_succeeded);
     if(timed_lock_succeeded)
     {
         rw_mutex.unlock();
     }
 
-    boost::posix_time::milliseconds const wait_duration(500);
-    boost::system_time const timeout2=boost::get_system_time()+wait_duration;
+    milliseconds const wait_duration(500);
+    system_time_point const timeout2=now()+wait_duration;
+#ifdef BOOST_THREAD_TEST_CHRONO        
+    timed_lock_succeeded=rw_mutex.try_lock_for(wait_duration);
+#else    
     timed_lock_succeeded=rw_mutex.timed_lock(wait_duration);
-    BOOST_CHECK((timeout2-timeout_resolution)<boost::get_system_time());
+#endif    
+    BOOST_CHECK((timeout2-timeout_resolution)<now());
     BOOST_CHECK(!timed_lock_succeeded);
     if(timed_lock_succeeded)
     {
@@ -159,21 +223,29 @@ void test_timed_lock_succeeds_if_no_lock_held()
     boost::mutex finish_mutex;
     boost::mutex unblocked_mutex;
 
-    boost::system_time const start=boost::get_system_time();
-    boost::system_time const timeout=start+boost::posix_time::milliseconds(500);
-    boost::posix_time::milliseconds const timeout_resolution(50);
+    system_time_point const start=now();
+    system_time_point const timeout=start+milliseconds(500);
+    milliseconds const timeout_resolution(50);
+#ifdef BOOST_THREAD_TEST_CHRONO        
+    bool timed_lock_succeeded=rw_mutex.try_lock_until(timeout);
+#else    
     bool timed_lock_succeeded=rw_mutex.timed_lock(timeout);
-    BOOST_CHECK(boost::get_system_time()<timeout);
+#endif    
+    BOOST_CHECK(now()<timeout);
     BOOST_CHECK(timed_lock_succeeded);
     if(timed_lock_succeeded)
     {
         rw_mutex.unlock();
     }
 
-    boost::posix_time::milliseconds const wait_duration(500);
-    boost::system_time const timeout2=boost::get_system_time()+wait_duration;
+    milliseconds const wait_duration(500);
+    system_time_point const timeout2=now()+wait_duration;
+#ifdef BOOST_THREAD_TEST_CHRONO        
+    timed_lock_succeeded=rw_mutex.try_lock_for(wait_duration);
+#else    
     timed_lock_succeeded=rw_mutex.timed_lock(wait_duration);
-    BOOST_CHECK(boost::get_system_time()<timeout2);
+#endif    
+    BOOST_CHECK(now()<timeout2);
     BOOST_CHECK(timed_lock_succeeded);
     if(timed_lock_succeeded)
     {
@@ -193,21 +265,35 @@ void test_timed_lock_times_out_if_read_lock_held()
     boost::thread::sleep(delay(1));
     CHECK_LOCKED_VALUE_EQUAL(unblocked_mutex,unblocked_count,1u);
 
-    boost::system_time const start=boost::get_system_time();
-    boost::system_time const timeout=start+boost::posix_time::milliseconds(500);
-    boost::posix_time::milliseconds const timeout_resolution(50);
+    system_time_point const start=now();
+    system_time_point const timeout=start+milliseconds(500);
+    milliseconds const timeout_resolution(50);
+#ifdef BOOST_THREAD_TEST_CHRONO        
+    bool timed_lock_succeeded=rw_mutex.try_lock_until(timeout);
+#else    
     bool timed_lock_succeeded=rw_mutex.timed_lock(timeout);
-    BOOST_CHECK((timeout-timeout_resolution)<boost::get_system_time());
+#endif    
+    system_time_point const end=now();
+    std::cout
+        << "timeout = " << timeout
+        << "end = " << end
+        << "\n";
+    std::cout.flush();
+    BOOST_CHECK((timeout-timeout_resolution)<end);
     BOOST_CHECK(!timed_lock_succeeded);
     if(timed_lock_succeeded)
     {
         rw_mutex.unlock();
     }
 
-    boost::posix_time::milliseconds const wait_duration(500);
-    boost::system_time const timeout2=boost::get_system_time()+wait_duration;
+    milliseconds const wait_duration(500);
+    system_time_point const timeout2=now()+wait_duration;
+#ifdef BOOST_THREAD_TEST_CHRONO        
+    timed_lock_succeeded=rw_mutex.try_lock_for(wait_duration);
+#else    
     timed_lock_succeeded=rw_mutex.timed_lock(wait_duration);
-    BOOST_CHECK((timeout2-timeout_resolution)<boost::get_system_time());
+#endif    
+    BOOST_CHECK((timeout2-timeout_resolution)<now());
     BOOST_CHECK(!timed_lock_succeeded);
     if(timed_lock_succeeded)
     {
@@ -226,20 +312,32 @@ void test_timed_lock_times_out_but_read_lock_succeeds_if_read_lock_held()
     unsigned unblocked_count=0;
     boost::mutex::scoped_lock finish_lock(finish_mutex);
     boost::thread reader(simple_reading_thread(rw_mutex,finish_mutex,unblocked_mutex,unblocked_count));
-    boost::this_thread::sleep(boost::posix_time::seconds(1));
+#ifdef BOOST_THREAD_TEST_CHRONO        
+    boost::this_thread::sleep_for(seconds(1));
+#else    
+    boost::this_thread::sleep(seconds(1));
+#endif    
     CHECK_LOCKED_VALUE_EQUAL(unblocked_mutex,unblocked_count,1u);
 
-    boost::system_time const start=boost::get_system_time();
-    boost::system_time const timeout=start+boost::posix_time::milliseconds(500);
+    system_time_point const start=now();
+    system_time_point const timeout=start+milliseconds(500);
+#ifdef BOOST_THREAD_TEST_CHRONO        
+    bool timed_lock_succeeded=rw_mutex.try_lock_until(timeout);
+#else    
     bool timed_lock_succeeded=rw_mutex.timed_lock(timeout);
+#endif    
     BOOST_CHECK(!timed_lock_succeeded);
     if(timed_lock_succeeded)
     {
         rw_mutex.unlock();
     }
     
-    boost::posix_time::milliseconds const wait_duration(500);
+    milliseconds const wait_duration(500);
+#ifdef BOOST_THREAD_TEST_CHRONO        
+    timed_lock_succeeded=rw_mutex.try_lock_shared_for(wait_duration);
+#else    
     timed_lock_succeeded=rw_mutex.timed_lock_shared(wait_duration);
+#endif    
     BOOST_CHECK(timed_lock_succeeded);
     if(timed_lock_succeeded)
     {

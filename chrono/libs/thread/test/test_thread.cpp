@@ -41,10 +41,20 @@ void test_sleep()
 {
     boost::xtime xt = delay(3);
     boost::thread::sleep(xt);
-
+    
     // Ensure it's in a range instead of checking actual equality due to time
     // lapse
     BOOST_CHECK(in_range(xt, 2));
+    
+}
+
+void test_sleep_chrono()
+{
+    boost::this_thread::sleep_for(boost::chrono::seconds(3));
+
+    // Ensure it's in a range instead of checking actual equality due to time
+    // lapse
+    //~ TBDONE BOOST_CHECK(in_range(xt, 2));
 }
 
 void do_test_creation()
@@ -222,6 +232,7 @@ boost::unit_test_framework::test_suite* init_unit_test_suite(int, char*[])
         BOOST_TEST_SUITE("Boost.Threads: thread test suite");
 
     test->add(BOOST_TEST_CASE(test_sleep));
+    test->add(BOOST_TEST_CASE(test_sleep_chrono));
     test->add(BOOST_TEST_CASE(test_creation));
     test->add(BOOST_TEST_CASE(test_id_comparison));
     test->add(BOOST_TEST_CASE(test_thread_interrupts_at_interruption_point));

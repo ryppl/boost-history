@@ -9,6 +9,17 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/thread_time.hpp>
 
+#ifdef BOOST_THREAD_TEST_CHRONO        
+    using namespace boost::chrono;
+    typedef system_clock::time_point system_time_point;
+    system_time_point now() {return system_clock::now();}
+#else        
+    using namespace boost::posix_time;
+    typedef boost::system_time system_time_point;
+    system_time_point now() {return boost::get_system_time();}
+#endif    
+
+
 unsigned const timeout_seconds=5;
     
 struct wait_for_flag
@@ -61,12 +72,16 @@ struct wait_for_flag
 
     void timed_wait_without_predicate()
     {
-        boost::system_time const timeout=boost::get_system_time()+boost::posix_time::seconds(timeout_seconds);
+        system_time_point const timeout=now()+seconds(timeout_seconds);
             
         boost::mutex::scoped_lock lock(mutex);
         while(!flag)
         {
+#ifdef BOOST_THREAD_TEST_CHRONO        
+            if(!cond_var.wait_until(lock,timeout))
+#else
             if(!cond_var.timed_wait(lock,timeout))
+#endif
             {
                 return;
             }
@@ -76,9 +91,13 @@ struct wait_for_flag
 
     void timed_wait_with_predicate()
     {
-        boost::system_time const timeout=boost::get_system_time()+boost::posix_time::seconds(timeout_seconds);
+        system_time_point const timeout=now()+seconds(timeout_seconds);
         boost::mutex::scoped_lock lock(mutex);
+#ifdef BOOST_THREAD_TEST_CHRONO        
+        if(cond_var.wait_until(lock,timeout,check_flag(flag)) && flag)
+#else
         if(cond_var.timed_wait(lock,timeout,check_flag(flag)) && flag)
+#endif
         {
             ++woken;
         }
@@ -86,7 +105,11 @@ struct wait_for_flag
     void relative_timed_wait_with_predicate()
     {
         boost::mutex::scoped_lock lock(mutex);
-        if(cond_var.timed_wait(lock,boost::posix_time::seconds(timeout_seconds),check_flag(flag)) && flag)
+#ifdef BOOST_THREAD_TEST_CHRONO        
+        if(cond_var.wait_for(lock,seconds(timeout_seconds),check_flag(flag)) && flag)
+#else
+        if(cond_var.timed_wait(lock,seconds(timeout_seconds),check_flag(flag)) && flag)
+#endif        
         {
             ++woken;
         }

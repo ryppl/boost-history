@@ -14,6 +14,17 @@
 
 #include <boost/test/unit_test.hpp>
 
+#ifdef BOOST_THREAD_TEST_CHRONO        
+    using namespace boost::chrono;
+    typedef system_clock::time_point system_time_point;
+    system_time_point now() {return system_clock::now();}
+#else        
+    using namespace boost::posix_time;
+    typedef boost::system_time system_time_point;
+    system_time_point now() {return boost::get_system_time();}
+#endif    
+
+
 #ifndef BOOST_NO_RVALUE_REFERENCES
     template<typename T>
     typename boost::remove_reference<T>::type&& cast_to_rval(T&& t)
@@ -582,16 +593,32 @@ void test_wait_callback_with_timed_wait()
     boost::promise<int> pi;
     boost::unique_future<int> fi=pi.get_future();
     pi.set_wait_callback(do_nothing_callback);
-    bool success=fi.timed_wait(boost::posix_time::milliseconds(10));
+#ifdef BOOST_THREAD_TEST_CHRONO        
+    bool success=fi.wait_for(milliseconds(10));
+#else
+    bool success=fi.timed_wait(milliseconds(10));
+#endif
     BOOST_CHECK(callback_called);
     BOOST_CHECK(!success);
-    success=fi.timed_wait(boost::posix_time::milliseconds(10));
+#ifdef BOOST_THREAD_TEST_CHRONO        
+    success=fi.wait_for(milliseconds(10));
+#else
+    success=fi.timed_wait(milliseconds(10));
+#endif
     BOOST_CHECK(!success);
-    success=fi.timed_wait(boost::posix_time::milliseconds(10));
+#ifdef BOOST_THREAD_TEST_CHRONO        
+    success=fi.wait_for(milliseconds(10));
+#else
+    success=fi.timed_wait(milliseconds(10));
+#endif
     BOOST_CHECK(!success);
     BOOST_CHECK(callback_called==3);
     pi.set_value(42);
-    success=fi.timed_wait(boost::posix_time::milliseconds(10));
+#ifdef BOOST_THREAD_TEST_CHRONO        
+    success=fi.wait_for(milliseconds(10));
+#else
+    success=fi.timed_wait(milliseconds(10));
+#endif
     BOOST_CHECK(success);
     BOOST_CHECK(callback_called==3);
     BOOST_CHECK(fi.get()==42);
@@ -694,7 +721,11 @@ void test_destroying_a_packaged_task_stores_broken_promise()
 
 int make_int_slowly()
 {
-    boost::this_thread::sleep(boost::posix_time::seconds(1));
+#ifdef BOOST_THREAD_TEST_CHRONO        
+    boost::this_thread::sleep_for(seconds(1));
+#else
+    boost::this_thread::sleep(seconds(1));
+#endif
     return 42;
 }
 

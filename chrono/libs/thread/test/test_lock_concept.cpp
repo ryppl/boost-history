@@ -540,9 +540,17 @@ void test_shared_lock()
     BOOST_CHECK(dummy.shared_locked);
     lk.unlock();
     BOOST_CHECK(dummy.shared_unlocked);
+#ifdef BOOST_THREAD_TEST_CHRONO        
+    lk.try_lock_for(boost::chrono::milliseconds(5));
+#else
     lk.timed_lock(boost::posix_time::milliseconds(5));
+#endif
     BOOST_CHECK(dummy.shared_timed_locked_relative);
+#ifdef BOOST_THREAD_TEST_CHRONO        
+    lk.try_lock_until(boost::chrono::system_clock::now());
+#else
     lk.timed_lock(boost::get_system_time());
+#endif
     BOOST_CHECK(dummy.shared_timed_locked_absolute);
 }
 

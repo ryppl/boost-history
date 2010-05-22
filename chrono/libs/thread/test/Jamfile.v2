@@ -1,6 +1,6 @@
-#  (C) Copyright William E. Kempf 2001. 
-#  (C) Copyright 2007 Anthony Williams. 
-#  Distributed under the Boost Software License, Version 1.0. (See accompanying 
+#  (C) Copyright William E. Kempf 2001.
+#  (C) Copyright 2007 Anthony Williams.
+#  Distributed under the Boost Software License, Version 1.0. (See accompanying
 #  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #
 # Boost.Threads test Jamfile
@@ -21,16 +21,21 @@ import testing ;
 project
     : requirements <library>/boost/test//boost_unit_test_framework/<link>static
                    <threading>multi
+            #<define>BOOST_THREAD_TEST_CHRONO
+            #<library>/boost/system//boost_system  <library>/boost/chrono//boost_chrono
     ;
 
 rule thread-run ( sources )
 {
-    return 
+    return
     [ run $(sources) ../build//boost_thread ]
-    [ run $(sources) ../src/tss_null.cpp ../build//boost_thread/<link>static 
+    [ run $(sources) ../src/tss_null.cpp ../build//boost_thread/<link>static
         : : : : $(sources[1]:B)_lib ]
+    [ run $(sources) ../build//boost_thread : : : <library>/boost/system//boost_system  <library>/boost/chrono//boost_chrono : $(sources[1]:B)_chrono ]
+    [ run $(sources) ../src/tss_null.cpp ../build//boost_thread/<link>static  
+        : : : <library>/boost/system//boost_system/<link>static  <library>/boost/chrono//boost_chrono/<link>static : $(sources[1]:B)_chronolib ]
     ;
-}    
+}
 
 {
     test-suite "threads"
@@ -38,8 +43,8 @@ rule thread-run ( sources )
           [ thread-run test_thread_id.cpp ]
           [ thread-run test_hardware_concurrency.cpp ]
           [ thread-run test_thread_move.cpp ]
-          [ thread-run test_thread_return_local.cpp ]
-          [ thread-run test_thread_move_return.cpp ]
+          #[ thread-run test_thread_return_local.cpp ]
+          #[ thread-run test_thread_move_return.cpp ]
           [ thread-run test_thread_launching.cpp ]
           [ thread-run test_thread_mf.cpp ]
           [ thread-run test_thread_exit.cpp ]
@@ -62,4 +67,7 @@ rule thread-run ( sources )
           [ compile-fail no_implicit_move_from_lvalue_thread.cpp ]
           [ compile-fail no_implicit_assign_from_lvalue_thread.cpp ]
     ;
+
+
+
 }

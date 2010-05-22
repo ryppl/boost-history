@@ -200,13 +200,33 @@ void do_test_notify_all_following_notify_one_wakes_all_threads()
     thread3.join();
 }
 
-void test_condition_notify_all()
+void test_condition_notify_all_wakes_from_wait()
 {
     timed_test(&do_test_condition_notify_all_wakes_from_wait, timeout_seconds);
+}
+
+void test_condition_notify_all_wakes_from_wait_with_predicate()
+{
     timed_test(&do_test_condition_notify_all_wakes_from_wait_with_predicate, timeout_seconds);
+}
+
+void test_condition_notify_all_wakes_from_timed_wait()
+{
     timed_test(&do_test_condition_notify_all_wakes_from_timed_wait, timeout_seconds);
+}
+
+void test_condition_notify_all_wakes_from_timed_wait_with_predicate()
+{
     timed_test(&do_test_condition_notify_all_wakes_from_timed_wait_with_predicate, timeout_seconds);
+}
+
+void test_condition_notify_all_wakes_from_relative_timed_wait_with_predicate()
+{
     timed_test(&do_test_condition_notify_all_wakes_from_relative_timed_wait_with_predicate, timeout_seconds);
+}
+
+void test_notify_all_following_notify_one_wakes_all_threads()
+{
     timed_test(&do_test_notify_all_following_notify_one_wakes_all_threads, timeout_seconds);
 }
 
@@ -216,7 +236,12 @@ boost::unit_test_framework::test_suite* init_unit_test_suite(int, char*[])
     boost::unit_test_framework::test_suite* test =
         BOOST_TEST_SUITE("Boost.Threads: condition test suite");
 
-    test->add(BOOST_TEST_CASE(&test_condition_notify_all));
+    test->add(BOOST_TEST_CASE(&test_condition_notify_all_wakes_from_wait));
+    test->add(BOOST_TEST_CASE(&test_condition_notify_all_wakes_from_wait_with_predicate));
+    test->add(BOOST_TEST_CASE(&test_condition_notify_all_wakes_from_timed_wait));
+    test->add(BOOST_TEST_CASE(&test_condition_notify_all_wakes_from_timed_wait_with_predicate));
+    test->add(BOOST_TEST_CASE(&test_condition_notify_all_wakes_from_relative_timed_wait_with_predicate));
+    test->add(BOOST_TEST_CASE(&test_notify_all_following_notify_one_wakes_all_threads));
 
     return test;
 }
