@@ -5,6 +5,8 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 // (C) Copyright 2007-8 Anthony Williams
 
+#include <boost/config.hpp>
+
 #include <boost/assert.hpp>
 #include <boost/throw_exception.hpp>
 #include <pthread.h>
@@ -12,6 +14,11 @@
 #include <boost/thread/locks.hpp>
 #include <boost/thread/thread_time.hpp>
 #include <boost/thread/xtime.hpp>
+
+#include <boost/chrono.hpp>
+#include <boost/conversion/boost/chrono_duration_to_posix_time_duration.hpp>
+#include <boost/conversion/boost/chrono_time_point_to_posix_time_ptime.hpp>
+#include <boost/thread/detail/cv_status.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -21,7 +28,7 @@ namespace boost
     {
     private:
         pthread_cond_t cond;
-        
+
         condition_variable(condition_variable&);
         condition_variable& operator=(condition_variable&);
 
@@ -80,6 +87,33 @@ namespace boost
         bool timed_wait(unique_lock<mutex>& m,duration_type const& wait_duration,predicate_type pred)
         {
             return timed_wait(m,get_system_time()+wait_duration,pred);
+        }
+
+        template <class Clock, class Duration>
+        BOOST_ENUM_CLASS(cv_status) wait_until(unique_lock<mutex>& lock,
+                        const chrono::time_point<Clock, Duration>& abs_time) {
+            return (timed_wait(lock, convert_to<system_time>(abs_time)))
+                    ? cv_status::timeout
+                    : cv_status::no_timeout;
+        }
+        template <class Clock, class Duration, class Predicate>
+        bool wait_until(unique_lock<mutex>& lock,
+                        const chrono::time_point<Clock, Duration>& abs_time,
+        Predicate pred) {
+            return timed_wait(lock, convert_to<system_time>(abs_time), pred);
+        }
+        template <class Rep, class Period>
+        BOOST_ENUM_CLASS(cv_status) wait_for(unique_lock<mutex>& lock,
+                        const chrono::duration<Rep, Period>& rel_time) {
+            return (timed_wait(lock, convert_to<posix_time::time_duration>(rel_time)))
+                    ? cv_status::timeout
+                    : cv_status::no_timeout;
+        }
+        template <class Rep, class Period, class Predicate>
+        bool wait_for(unique_lock<mutex>& lock,
+                        const chrono::duration<Rep, Period>& rel_time,
+        Predicate pred) {
+            return timed_wait(lock, convert_to<posix_time::time_duration>(rel_time), pred);
         }
 
         typedef pthread_cond_t* native_handle_type;

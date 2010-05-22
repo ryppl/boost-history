@@ -23,6 +23,10 @@
 #endif
 #endif
 
+#include <boost/chrono.hpp>
+#include <boost/conversion/boost/chrono_duration_to_posix_time_duration.hpp>
+#include <boost/conversion/boost/chrono_time_point_to_posix_time_ptime.hpp>
+
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost
@@ -118,6 +122,14 @@ namespace boost
         bool timed_lock(boost::xtime const & absolute_time)
         {
             return timed_lock(system_time(absolute_time));
+        }
+        template <class Rep, class Period>
+        bool try_lock_for(chrono::duration<Rep, Period> const & rel_time) {
+            return timed_lock(convert_to<posix_time::time_duration>(rel_time));
+        }
+        template <class Clock, class Duration>
+        bool try_lock_until(const chrono::time_point<Clock, Duration>& abs_time) {
+            return timed_lock(convert_to<system_time>(abs_time));
         }
 
 #ifdef BOOST_PTHREAD_HAS_TIMEDLOCK

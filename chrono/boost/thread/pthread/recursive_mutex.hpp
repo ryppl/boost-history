@@ -26,6 +26,10 @@
 #endif
 #endif
 
+#include <boost/chrono.hpp>
+#include <boost/conversion/boost/chrono_duration_to_posix_time_duration.hpp>
+#include <boost/conversion/boost/chrono_time_point_to_posix_time_ptime.hpp>
+
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost
@@ -39,7 +43,7 @@ namespace boost
         recursive_mutex()
         {
             pthread_mutexattr_t attr;
-            
+
             int const init_attr_res=pthread_mutexattr_init(&attr);
             if(init_attr_res)
             {
@@ -50,7 +54,7 @@ namespace boost
             {
                 boost::throw_exception(thread_resource_error());
             }
-            
+
             int const res=pthread_mutex_init(&m,&attr);
             if(res)
             {
@@ -62,7 +66,7 @@ namespace boost
         {
             BOOST_VERIFY(!pthread_mutex_destroy(&m));
         }
-        
+
         void lock()
         {
             BOOST_VERIFY(!pthread_mutex_lock(&m));
@@ -72,7 +76,7 @@ namespace boost
         {
             BOOST_VERIFY(!pthread_mutex_unlock(&m));
         }
-        
+
         bool try_lock()
         {
             int const res=pthread_mutex_trylock(&m);
@@ -108,7 +112,7 @@ namespace boost
         {
 #ifdef BOOST_PTHREAD_HAS_TIMEDLOCK
             pthread_mutexattr_t attr;
-            
+
             int const init_attr_res=pthread_mutexattr_init(&attr);
             if(init_attr_res)
             {
@@ -119,7 +123,7 @@ namespace boost
             {
                 boost::throw_exception(thread_resource_error());
             }
-            
+
             int const res=pthread_mutex_init(&m,&attr);
             if(res)
             {
@@ -157,6 +161,16 @@ namespace boost
             return timed_lock(get_system_time()+relative_time);
         }
 
+        template <class Rep, class Period>
+        bool try_lock_for(const chrono::duration<Rep, Period>& rel_time) {
+            return timed_lock(convert_to<posix_time::time_duration>(rel_time));
+        }
+
+        template <class Clock, class Duration>
+        bool try_lock_until(const chrono::time_point<Clock, Duration>& abs_time) {
+            return timed_lock(convert_to<system_time>(abs_time));
+        }
+
 #ifdef BOOST_PTHREAD_HAS_TIMEDLOCK
         void lock()
         {
@@ -167,7 +181,7 @@ namespace boost
         {
             BOOST_VERIFY(!pthread_mutex_unlock(&m));
         }
-        
+
         bool try_lock()
         {
             int const res=pthread_mutex_trylock(&m);
@@ -197,7 +211,7 @@ namespace boost
                 ++count;
                 return;
             }
-            
+
             while(is_locked)
             {
                 BOOST_VERIFY(!pthread_cond_wait(&cond,&m));
@@ -216,7 +230,7 @@ namespace boost
             }
             BOOST_VERIFY(!pthread_cond_signal(&cond));
         }
-        
+
         bool try_lock()
         {
             boost::pthread::pthread_mutex_scoped_lock const local_lock(&m);

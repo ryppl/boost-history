@@ -10,6 +10,10 @@
 #include "thread_data.hpp"
 #include "condition_variable_fwd.hpp"
 
+#include <boost/chrono.hpp>
+#include <boost/conversion/boost/chrono_duration_to_posix_time_duration.hpp>
+#include <boost/conversion/boost/chrono_time_point_to_posix_time_ptime.hpp>
+
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost
@@ -37,19 +41,19 @@ namespace boost
     {
         BOOST_VERIFY(!pthread_cond_signal(&cond));
     }
-        
+
     inline void condition_variable::notify_all()
     {
         BOOST_VERIFY(!pthread_cond_broadcast(&cond));
     }
-    
+
     class condition_variable_any
     {
         pthread_mutex_t internal_mutex;
         pthread_cond_t cond;
 
-        condition_variable_any(condition_variable&);
-        condition_variable_any& operator=(condition_variable&);
+        condition_variable_any(condition_variable_any&);
+        condition_variable_any& operator=(condition_variable_any&);
 
     public:
         condition_variable_any()
@@ -71,7 +75,7 @@ namespace boost
             BOOST_VERIFY(!pthread_mutex_destroy(&internal_mutex));
             BOOST_VERIFY(!pthread_cond_destroy(&cond));
         }
-        
+
         template<typename lock_type>
         void wait(lock_type& m)
         {
@@ -96,7 +100,7 @@ namespace boost
         {
             while(!pred()) wait(m);
         }
-        
+
         template<typename lock_type>
         bool timed_wait(lock_type& m,boost::system_time const& wait_until)
         {
@@ -156,12 +160,39 @@ namespace boost
             return timed_wait(m,get_system_time()+wait_duration,pred);
         }
 
+        template <typename lock_type,class Clock, class Duration>
+        BOOST_ENUM_CLASS(cv_status) wait_until(lock_type& lock,
+                        const chrono::time_point<Clock, Duration>& abs_time) {
+            return (timed_wait(lock, convert_to<system_time>(abs_time)))
+                    ? cv_status::timeout
+                    : cv_status::no_timeout;
+        }
+        template <typename lock_type,class Clock, class Duration, class Predicate>
+        bool wait_until(lock_type& lock,
+                        const chrono::time_point<Clock, Duration>& abs_time,
+        Predicate pred) {
+            return timed_wait(lock, convert_to<system_time>(abs_time), pred);
+        }
+        template <typename lock_type,class Rep, class Period>
+        BOOST_ENUM_CLASS(cv_status) wait_for(lock_type& lock,
+                        const chrono::duration<Rep, Period>& rel_time) {
+            return (timed_wait(lock, convert_to<posix_time::time_duration>(rel_time)))
+                    ? cv_status::timeout
+                    : cv_status::no_timeout;
+        }
+        template <typename lock_type,class Rep, class Period, class Predicate>
+        bool wait_for(lock_type& lock,
+                        const chrono::duration<Rep, Period>& rel_time,
+        Predicate pred) {
+            return timed_wait(lock, convert_to<posix_time::time_duration>(rel_time), pred);
+        }
+
         void notify_one()
         {
             boost::pthread::pthread_mutex_scoped_lock internal_lock(&internal_mutex);
             BOOST_VERIFY(!pthread_cond_signal(&cond));
         }
-        
+
         void notify_all()
         {
             boost::pthread::pthread_mutex_scoped_lock internal_lock(&internal_mutex);

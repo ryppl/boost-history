@@ -1,4 +1,4 @@
-//  (C) Copyright 2008-10 Anthony Williams 
+//  (C) Copyright 2008-10 Anthony Williams
 //
 //  Distributed under the Boost Software License, Version 1.0. (See
 //  accompanying file LICENSE_1_0.txt or copy at
@@ -27,8 +27,36 @@
 #include <boost/next_prior.hpp>
 #include <vector>
 
+#include <boost/chrono.hpp>
+#include <boost/conversion/boost/chrono_duration_to_posix_time_duration.hpp>
+#include <boost/conversion/boost/chrono_time_point_to_posix_time_ptime.hpp>
+
+#ifndef BOOST_ENUM_CLASS
+#if defined(BOOST_NO_SCOPED_ENUMS)
+#define BOOST_ENUM_CLASS(T) T::type
+#else
+#define BOOST_ENUM_CLASS(T) T
+#endif
+#endif
+
 namespace boost
 {
+#if defined(BOOST_NO_SCOPED_ENUMS)
+    namespace future_status {
+        enum type {
+            ready,
+            timeout,
+            deferred
+        };
+    }
+#else
+    enum class future_status {
+        ready,
+        timeout,
+        deferred
+    };
+#endif
+
     class future_uninitialized:
         public std::logic_error
     {
@@ -109,7 +137,7 @@ namespace boost
                 do_callback(lock);
                 return external_waiters.insert(external_waiters.end(),&cv);
             }
-            
+
             void remove_external_waiter(waiter_list::iterator it)
             {
                 boost::lock_guard<boost::mutex> lock(mutex);
@@ -130,7 +158,7 @@ namespace boost
             struct relocker
             {
                 boost::unique_lock<boost::mutex>& lock;
-                
+
                 relocker(boost::unique_lock<boost::mutex>& lock_):
                     lock(lock_)
                 {
@@ -151,7 +179,7 @@ namespace boost
                     local_callback();
                 }
             }
-            
+
 
             void wait(bool rethrow=true)
             {
@@ -181,7 +209,21 @@ namespace boost
                 }
                 return true;
             }
-            
+
+            template <class Rep, class Period>
+            BOOST_ENUM_CLASS(future_status) wait_for(const chrono::duration<Rep, Period>& rel_time) {
+                return (timed_wait_until(convert_to<posix_time::time_duration>(rel_time)))
+                            ? future_status::timeout
+                            : future_status::ready;
+            }
+
+            template <class Clock, class Duration>
+            BOOST_ENUM_CLASS(future_status) wait_until(const chrono::time_point<Clock, Duration>& abs_time) {
+                return (timed_wait_until(convert_to<system_time>(abs_time)))
+                            ? future_status::timeout
+                            : future_status::ready;
+            }
+
             void mark_exceptional_finish_internal(boost::exception_ptr const& e)
             {
                 exception=e;
@@ -209,7 +251,7 @@ namespace boost
             {
                 callback=boost::bind(f,boost::ref(*u));
             }
-            
+
         private:
             future_object_base(future_object_base const&);
             future_object_base& operator=(future_object_base const&);
@@ -234,7 +276,7 @@ namespace boost
             {
                 storage.reset(new T(t));
             }
-            
+
             static void init(storage_type& storage,rvalue_source_type t)
             {
                 storage.reset(new T(static_cast<rvalue_source_type>(t)));
@@ -245,7 +287,7 @@ namespace boost
                 storage.reset();
             }
         };
-        
+
         template<typename T>
         struct future_traits<T&>
         {
@@ -292,7 +334,7 @@ namespace boost
             typedef typename future_traits<T>::source_reference_type source_reference_type;
             typedef typename future_traits<T>::rvalue_source_type rvalue_source_type;
             typedef typename future_traits<T>::move_dest_type move_dest_type;
-            
+
             storage_type result;
 
             future_object():
@@ -367,7 +409,7 @@ namespace boost
             {
                 wait();
             }
-            
+
             future_state::state get_state()
             {
                 boost::lock_guard<boost::mutex> guard(mutex);
@@ -401,13 +443,13 @@ namespace boost
                 {}
 
             };
-            
+
             struct all_futures_lock
             {
                 typedef std::vector<registered_waiter>::size_type count_type;
                 count_type count;
                 boost::scoped_array<boost::unique_lock<boost::mutex> > locks;
-                
+
                 all_futures_lock(std::vector<registered_waiter>& futures):
                     count(futures.size()),locks(new boost::unique_lock<boost::mutex>[count])
                 {
@@ -416,12 +458,12 @@ namespace boost
                         locks[i]=boost::unique_lock<boost::mutex>(futures[i].future->mutex);
                     }
                 }
-                
+
                 void lock()
                 {
                     boost::lock(locks.get(),locks.get()+count);
                 }
-                
+
                 void unlock()
                 {
                     for(unsigned i=0;i<count;++i)
@@ -430,16 +472,16 @@ namespace boost
                     }
                 }
             };
-            
+
             boost::condition_variable_any cv;
             std::vector<registered_waiter> futures;
             unsigned future_count;
-            
+
         public:
             future_waiter():
                 future_count(0)
             {}
-            
+
             template<typename F>
             void add(F& f)
             {
@@ -465,7 +507,7 @@ namespace boost
                     cv.wait(lk);
                 }
             }
-            
+
             ~future_waiter()
             {
                 for(unsigned i=0;i<futures.size();++i)
@@ -473,9 +515,9 @@ namespace boost
                     futures[i].future->remove_external_waiter(futures[i].wait_iterator);
                 }
             }
-            
+
         };
-        
+
     }
 
     template <typename R>
@@ -489,13 +531,13 @@ namespace boost
     {
         BOOST_STATIC_CONSTANT(bool, value=false);
     };
-    
+
     template<typename T>
     struct is_future_type<unique_future<T> >
     {
         BOOST_STATIC_CONSTANT(bool, value=true);
     };
-    
+
     template<typename T>
     struct is_future_type<shared_future<T> >
     {
@@ -525,7 +567,7 @@ namespace boost
         f2.wait();
         f3.wait();
     }
-    
+
     template<typename F1,typename F2,typename F3,typename F4>
     void wait_for_all(F1& f1,F2& f2,F3& f3,F4& f4)
     {
@@ -574,7 +616,7 @@ namespace boost
         waiter.add(f3);
         return waiter.wait();
     }
-    
+
     template<typename F1,typename F2,typename F3,typename F4>
     unsigned wait_for_any(F1& f1,F2& f2,F3& f3,F4& f4)
     {
@@ -597,7 +639,7 @@ namespace boost
         waiter.add(f5);
         return waiter.wait();
     }
-    
+
     template <typename R>
     class promise;
 
@@ -611,7 +653,7 @@ namespace boost
         unique_future& operator=(unique_future& rhs);// = delete;
 
         typedef boost::shared_ptr<detail::future_object<R> > future_ptr;
-        
+
         future_ptr future;
 
         friend class shared_future<R>;
@@ -630,7 +672,7 @@ namespace boost
 
         unique_future()
         {}
-       
+
         ~unique_future()
         {}
 
@@ -680,7 +722,7 @@ namespace boost
 
             return future->get();
         }
-        
+
         // functions to check state, and wait for ready
         state get_state() const
         {
@@ -690,23 +732,23 @@ namespace boost
             }
             return future->get_state();
         }
-        
+
 
         bool is_ready() const
         {
             return get_state()==future_state::ready;
         }
-        
+
         bool has_exception() const
         {
             return future && future->has_exception();
         }
-        
+
         bool has_value() const
         {
             return future && future->has_value();
         }
-        
+
         void wait() const
         {
             if(!future)
@@ -715,13 +757,13 @@ namespace boost
             }
             future->wait(false);
         }
-        
+
         template<typename Duration>
         bool timed_wait(Duration const& rel_time) const
         {
             return timed_wait_until(boost::get_system_time()+rel_time);
         }
-        
+
         bool timed_wait_until(boost::system_time const& abs_time) const
         {
             if(!future)
@@ -730,14 +772,27 @@ namespace boost
             }
             return future->timed_wait_until(abs_time);
         }
-        
+        template <class Rep, class Period>
+        BOOST_ENUM_CLASS(future_status) wait_for(const chrono::duration<Rep, Period>& rel_time) {
+            return (timed_wait(convert_to<posix_time::time_duration>(rel_time)))
+                        ? future_status::timeout
+                        : future_status::ready;
+        }
+
+        template <class Clock, class Duration>
+        BOOST_ENUM_CLASS(future_status) wait_until(const chrono::time_point<Clock, Duration>& abs_time) {
+            return (timed_wait_until(convert_to<system_time>(abs_time)))
+                        ? future_status::timeout
+                        : future_status::ready;
+        }
+
     };
 
     template <typename R>
     class shared_future
     {
         typedef boost::shared_ptr<detail::future_object<R> > future_ptr;
-        
+
         future_ptr future;
 
 //         shared_future(const unique_future<R>& other);
@@ -746,7 +801,7 @@ namespace boost
         friend class detail::future_waiter;
         friend class promise<R>;
         friend class packaged_task<R>;
-        
+
         shared_future(future_ptr future_):
             future(future_)
         {}
@@ -790,7 +845,7 @@ namespace boost
             other.future.reset();
             return *this;
         }
-#else            
+#else
         shared_future(boost::detail::thread_move_t<shared_future> other):
             future(other->future)
         {
@@ -837,7 +892,7 @@ namespace boost
 
             return future->get();
         }
-        
+
         // functions to check state, and wait for ready
         state get_state() const
         {
@@ -847,18 +902,18 @@ namespace boost
             }
             return future->get_state();
         }
-        
+
 
         bool is_ready() const
         {
             return get_state()==future_state::ready;
         }
-        
+
         bool has_exception() const
         {
             return future && future->has_exception();
         }
-        
+
         bool has_value() const
         {
             return future && future->has_value();
@@ -872,13 +927,13 @@ namespace boost
             }
             future->wait(false);
         }
-        
+
         template<typename Duration>
         bool timed_wait(Duration const& rel_time) const
         {
             return timed_wait_until(boost::get_system_time()+rel_time);
         }
-        
+
         bool timed_wait_until(boost::system_time const& abs_time) const
         {
             if(!future)
@@ -887,17 +942,30 @@ namespace boost
             }
             return future->timed_wait_until(abs_time);
         }
-        
+        template <class Rep, class Period>
+        BOOST_ENUM_CLASS(future_status) wait_for(const chrono::duration<Rep, Period>& rel_time) {
+            return (timed_wait(convert_to<posix_time::time_duration>(rel_time)))
+                        ? future_status::timeout
+                        : future_status::ready;
+        }
+
+        template <class Clock, class Duration>
+        BOOST_ENUM_CLASS(future_status) wait_until(const chrono::time_point<Clock, Duration>& abs_time) {
+            return (timed_wait_until(convert_to<system_time>(abs_time)))
+                        ? future_status::timeout
+                        : future_status::ready;
+        }
+
     };
 
     template <typename R>
     class promise
     {
         typedef boost::shared_ptr<detail::future_object<R> > future_ptr;
-        
+
         future_ptr future;
         bool future_obtained;
-        
+
         promise(promise & rhs);// = delete;
         promise & operator=(promise & rhs);// = delete;
 
@@ -909,14 +977,14 @@ namespace boost
                 future.reset(new detail::future_object<R>);
             }
         }
-        
+
     public:
 //         template <class Allocator> explicit promise(Allocator a);
 
         promise():
             future(),future_obtained(false)
         {}
-        
+
         ~promise()
         {
             if(future)
@@ -962,8 +1030,8 @@ namespace boost
         {
             return boost::detail::thread_move_t<promise>(*this);
         }
-#endif   
-        
+#endif
+
         void swap(promise& other)
         {
             future.swap(other.future);
@@ -1022,17 +1090,17 @@ namespace boost
             lazy_init();
             future->set_wait_callback(f,this);
         }
-        
+
     };
 
     template <>
     class promise<void>
     {
         typedef boost::shared_ptr<detail::future_object<void> > future_ptr;
-        
+
         future_ptr future;
         bool future_obtained;
-        
+
         promise(promise & rhs);// = delete;
         promise & operator=(promise & rhs);// = delete;
 
@@ -1050,7 +1118,7 @@ namespace boost
         promise():
             future(),future_obtained(false)
         {}
-        
+
         ~promise()
         {
             if(future)
@@ -1097,7 +1165,7 @@ namespace boost
             return boost::detail::thread_move_t<promise>(*this);
         }
 #endif
-        
+
         void swap(promise& other)
         {
             future.swap(other.future);
@@ -1108,7 +1176,7 @@ namespace boost
         unique_future<void> get_future()
         {
             lazy_init();
-            
+
             if(future_obtained)
             {
                 boost::throw_exception(future_already_retrieved());
@@ -1145,7 +1213,7 @@ namespace boost
             lazy_init();
             future->set_wait_callback(f,this);
         }
-        
+
     };
 
     namespace detail
@@ -1182,12 +1250,12 @@ namespace boost
                     this->mark_exceptional_finish_internal(boost::copy_exception(boost::broken_promise()));
                 }
             }
-            
-            
+
+
             virtual void do_run()=0;
         };
-        
-        
+
+
         template<typename R,typename F>
         struct task_object:
             task_base<R>
@@ -1199,7 +1267,7 @@ namespace boost
             task_object(boost::detail::thread_move_t<F> f_):
                 f(f_)
             {}
-            
+
             void do_run()
             {
                 try
@@ -1224,7 +1292,7 @@ namespace boost
             task_object(boost::detail::thread_move_t<F> f_):
                 f(f_)
             {}
-            
+
             void do_run()
             {
                 try
@@ -1240,7 +1308,7 @@ namespace boost
         };
 
     }
-    
+
 
     template<typename R>
     class packaged_task
@@ -1250,12 +1318,12 @@ namespace boost
 
         packaged_task(packaged_task&);// = delete;
         packaged_task& operator=(packaged_task&);// = delete;
-        
+
     public:
         packaged_task():
             future_obtained(false)
         {}
-        
+
         // construction and destruction
         template <class F>
         explicit packaged_task(F const& f):
@@ -1264,7 +1332,7 @@ namespace boost
         explicit packaged_task(R(*f)()):
             task(new detail::task_object<R,R(*)()>(f)),future_obtained(false)
         {}
-        
+
         template <class F>
         explicit packaged_task(boost::detail::thread_move_t<F> f):
             task(new detail::task_object<R,F>(f)),future_obtained(false)
@@ -1340,7 +1408,7 @@ namespace boost
                 boost::throw_exception(future_already_retrieved());
             }
         }
-        
+
 
         // execution
         void operator()()
@@ -1357,7 +1425,7 @@ namespace boost
         {
             task->set_wait_callback(f,this);
         }
-        
+
     };
 
 }

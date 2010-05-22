@@ -13,6 +13,10 @@
 #include <boost/thread/condition_variable.hpp>
 #include <boost/thread/detail/thread_interruption.hpp>
 
+#include <boost/chrono.hpp>
+#include <boost/conversion/boost/chrono_duration_to_posix_time_duration.hpp>
+#include <boost/conversion/boost/chrono_time_point_to_posix_time_ptime.hpp>
+
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost
@@ -27,7 +31,7 @@ namespace boost
             bool upgrade;
             bool exclusive_waiting_blocked;
         };
-        
+
 
 
         state_data state;
@@ -41,7 +45,7 @@ namespace boost
             exclusive_cond.notify_one();
             shared_cond.notify_all();
         }
-        
+
 
     public:
         shared_mutex()
@@ -58,7 +62,7 @@ namespace boost
         {
             boost::this_thread::disable_interruption do_not_disturb;
             boost::mutex::scoped_lock lk(state_change);
-                
+
             while(state.exclusive || state.exclusive_waiting_blocked)
             {
                 shared_cond.wait(lk);
@@ -69,7 +73,7 @@ namespace boost
         bool try_lock_shared()
         {
             boost::mutex::scoped_lock lk(state_change);
-                
+
             if(state.exclusive || state.exclusive_waiting_blocked)
             {
                 return false;
@@ -85,7 +89,7 @@ namespace boost
         {
             boost::this_thread::disable_interruption do_not_disturb;
             boost::mutex::scoped_lock lk(state_change);
-                
+
             while(state.exclusive || state.exclusive_waiting_blocked)
             {
                 if(!shared_cond.timed_wait(lk,timeout))
@@ -103,11 +107,21 @@ namespace boost
             return timed_lock_shared(get_system_time()+relative_time);
         }
 
+        template <class Rep, class Period>
+        bool try_lock_shared_for(const chrono::duration<Rep, Period>& rel_time) {
+            return timed_lock_shared(convert_to<posix_time::time_duration>(rel_time));
+        }
+
+        template <class Clock, class Duration>
+        bool try_lock_shared_until(const chrono::time_point<Clock, Duration>& abs_time) {
+            return timed_lock_shared(convert_to<system_time>(abs_time));
+        }
+        
         void unlock_shared()
         {
             boost::mutex::scoped_lock lk(state_change);
             bool const last_reader=!--state.shared_count;
-                
+
             if(last_reader)
             {
                 if(state.upgrade)
@@ -128,7 +142,7 @@ namespace boost
         {
             boost::this_thread::disable_interruption do_not_disturb;
             boost::mutex::scoped_lock lk(state_change);
-                
+
             while(state.shared_count || state.exclusive)
             {
                 state.exclusive_waiting_blocked=true;
@@ -165,11 +179,21 @@ namespace boost
         {
             return timed_lock(get_system_time()+relative_time);
         }
+        
+        template <class Rep, class Period>
+        bool try_lock_for(const chrono::duration<Rep, Period>& rel_time) {
+            return timed_lock(convert_to<posix_time::time_duration>(rel_time));
+        }
+
+        template <class Clock, class Duration>
+        bool try_lock_until(const chrono::time_point<Clock, Duration>& abs_time) {
+            return timed_lock(convert_to<system_time>(abs_time));
+        }
 
         bool try_lock()
         {
             boost::mutex::scoped_lock lk(state_change);
-                
+
             if(state.shared_count || state.exclusive)
             {
                 return false;
@@ -179,7 +203,7 @@ namespace boost
                 state.exclusive=true;
                 return true;
             }
-                
+
         }
 
         void unlock()
@@ -225,7 +249,17 @@ namespace boost
         template<typename TimeDuration>
         bool timed_lock_upgrade(TimeDuration const & relative_time)
         {
-            return timed_lock(get_system_time()+relative_time);
+            return timed_lock_upgrade(get_system_time()+relative_time);
+        }
+        
+        template <class Rep, class Period>
+        bool try_lock_upgrade_for(const chrono::duration<Rep, Period>& rel_time) {
+            return timed_lock_upgrade(convert_to<posix_time::time_duration>(rel_time));
+        }
+
+        template <class Clock, class Duration>
+        bool try_lock_upgrade_until(const chrono::time_point<Clock, Duration>& abs_time) {
+            return timed_lock_upgrade(convert_to<system_time>(abs_time));
         }
 
         bool try_lock_upgrade()
@@ -248,7 +282,7 @@ namespace boost
             boost::mutex::scoped_lock lk(state_change);
             state.upgrade=false;
             bool const last_reader=!--state.shared_count;
-                
+
             if(last_reader)
             {
                 state.exclusive_waiting_blocked=false;
@@ -278,7 +312,7 @@ namespace boost
             state.exclusive_waiting_blocked=false;
             release_waiters();
         }
-        
+
         void unlock_and_lock_shared()
         {
             boost::mutex::scoped_lock lk(state_change);
@@ -287,7 +321,7 @@ namespace boost
             state.exclusive_waiting_blocked=false;
             release_waiters();
         }
-        
+
         void unlock_upgrade_and_lock_shared()
         {
             boost::mutex::scoped_lock lk(state_change);

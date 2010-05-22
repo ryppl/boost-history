@@ -3,7 +3,7 @@
 
 //  basic_timed_mutex_win32.hpp
 //
-//  (C) Copyright 2006-8 Anthony Williams 
+//  (C) Copyright 2006-8 Anthony Williams
 //
 //  Distributed under the Boost Software License, Version 1.0. (See
 //  accompanying file LICENSE_1_0.txt or copy at
@@ -16,6 +16,9 @@
 #include <boost/thread/xtime.hpp>
 #include <boost/detail/interlocked.hpp>
 
+#include <boost/chrono.hpp>
+#include <boost/conversion/boost/chrono_duration_to_posix_time_duration.hpp>
+#include <boost/conversion/boost/chrono_time_point_to_posix_time_ptime.hpp>
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost
@@ -52,13 +55,13 @@ namespace boost
                     win32::CloseHandle(old_event);
                 }
             }
-            
-          
+
+
             bool try_lock()
             {
                 return !win32::interlocked_bit_test_and_set(&active_count,lock_flag_bit);
             }
-            
+
             void lock()
             {
                 if(try_lock())
@@ -112,8 +115,8 @@ namespace boost
                     old_count=current;
                 }
             }
-            
-            
+
+
             bool timed_lock(::boost::system_time const& wait_until)
             {
                 if(try_lock())
@@ -154,6 +157,16 @@ namespace boost
                 return timed_lock(system_time(timeout));
             }
 
+            template <class Rep, class Period>
+            bool try_lock_for(const chrono::duration<Rep, Period>& rel_time) {
+                return timed_lock(convert_to<posix_time::time_duration>(rel_time));
+            }
+
+            template <class Clock, class Duration>
+            bool try_lock_until(const chrono::time_point<Clock, Duration>& abs_time) {
+                return timed_lock(convert_to<system_time>(abs_time));
+            }
+
             void unlock()
             {
                 long const offset=lock_flag_value;
@@ -171,7 +184,7 @@ namespace boost
             void* get_event()
             {
                 void* current_event=::boost::detail::interlocked_read_acquire(&event);
-                
+
                 if(!current_event)
                 {
                     void* const new_event=win32::create_anonymous_event(win32::auto_reset_event,win32::event_initially_reset);
@@ -196,9 +209,9 @@ namespace boost
                 }
                 return current_event;
             }
-            
+
         };
-        
+
     }
 }
 

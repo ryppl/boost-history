@@ -15,6 +15,10 @@
 #include <boost/utility.hpp>
 #include <boost/thread/thread_time.hpp>
 
+#include <boost/chrono.hpp>
+#include <boost/conversion/boost/chrono_duration_to_posix_time_duration.hpp>
+#include <boost/conversion/boost/chrono_time_point_to_posix_time_ptime.hpp>
+
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost
@@ -37,7 +41,7 @@ namespace boost
                 return *reinterpret_cast<unsigned const*>(&lhs)==*reinterpret_cast<unsigned const*>(&rhs);
             }
         };
-        
+
 
         template<typename T>
         T interlocked_compare_exchange(T* target,T new_value,T comparand)
@@ -61,18 +65,18 @@ namespace boost
             {
                 BOOST_VERIFY(detail::win32::ReleaseSemaphore(exclusive_sem,1,0)!=0);
             }
-                        
+
             if(old_state.shared_waiting || old_state.exclusive_waiting)
             {
                 BOOST_VERIFY(detail::win32::ReleaseSemaphore(unlock_sem,old_state.shared_waiting + (old_state.exclusive_waiting?1:0),0)!=0);
             }
         }
-        
+
 
     public:
         shared_mutex():
             unlock_sem(semaphores[0]),
-            exclusive_sem(semaphores[1]) 
+            exclusive_sem(semaphores[1])
         {
             unlock_sem=detail::win32::create_anonymous_semaphore(0,LONG_MAX);
             exclusive_sem=detail::win32::create_anonymous_semaphore(0,LONG_MAX);
@@ -98,7 +102,7 @@ namespace boost
                 {
                     ++new_state.shared_count;
                 }
-                
+
                 state_data const current_state=interlocked_compare_exchange(&state,new_state,old_state);
                 if(current_state==old_state)
                 {
@@ -149,7 +153,7 @@ namespace boost
                 {
                     return true;
                 }
-                    
+
                 unsigned long const res=detail::win32::WaitForSingleObject(unlock_sem,::boost::detail::get_milliseconds_until(wait_until));
                 if(res==detail::win32::timeout)
                 {
@@ -182,9 +186,19 @@ namespace boost
                     }
                     return false;
                 }
-                
+
                 BOOST_ASSERT(res==0);
             }
+        }
+
+        template <class Rep, class Period>
+        bool try_lock_shared_for(const chrono::duration<Rep, Period>& rel_time) {
+            return timed_lock_shared(convert_to<posix_time::time_duration>(rel_time));
+        }
+
+        template <class Clock, class Duration>
+        bool try_lock_shared_until(const chrono::time_point<Clock, Duration>& abs_time) {
+            return timed_lock_shared(convert_to<system_time>(abs_time));
         }
 
         void unlock_shared()
@@ -194,7 +208,7 @@ namespace boost
             {
                 state_data new_state=old_state;
                 bool const last_reader=!--new_state.shared_count;
-                
+
                 if(last_reader)
                 {
                     if(new_state.upgrade)
@@ -212,7 +226,7 @@ namespace boost
                         new_state.shared_waiting=0;
                     }
                 }
-                
+
                 state_data const current_state=interlocked_compare_exchange(&state,new_state,old_state);
                 if(current_state==old_state)
                 {
@@ -258,7 +272,7 @@ namespace boost
                 {
                     new_state.exclusive=true;
                 }
-                
+
                 state_data const current_state=interlocked_compare_exchange(&state,new_state,old_state);
                 if(current_state==old_state)
                 {
@@ -339,6 +353,16 @@ namespace boost
             }
         }
 
+        template <class Rep, class Period>
+        bool try_lock_for(const chrono::duration<Rep, Period>& rel_time) {
+            return timed_lock(convert_to<posix_time::time_duration>(rel_time));
+        }
+
+        template <class Clock, class Duration>
+        bool try_lock_until(const chrono::time_point<Clock, Duration>& abs_time) {
+            return timed_lock(convert_to<system_time>(abs_time));
+        }
+
         void unlock()
         {
             state_data old_state=state;
@@ -393,7 +417,7 @@ namespace boost
                 {
                     return;
                 }
-                    
+
                 BOOST_VERIFY(!detail::win32::WaitForSingleObject(unlock_sem,detail::win32::infinite));
             }
         }
@@ -413,7 +437,7 @@ namespace boost
                     ++new_state.shared_count;
                     new_state.upgrade=true;
                 }
-                
+
                 state_data const current_state=interlocked_compare_exchange(&state,new_state,old_state);
                 if(current_state==old_state)
                 {
@@ -432,7 +456,7 @@ namespace boost
                 state_data new_state=old_state;
                 new_state.upgrade=false;
                 bool const last_reader=!--new_state.shared_count;
-                
+
                 if(last_reader)
                 {
                     if(new_state.exclusive_waiting)
@@ -442,7 +466,7 @@ namespace boost
                     }
                     new_state.shared_waiting=0;
                 }
-                
+
                 state_data const current_state=interlocked_compare_exchange(&state,new_state,old_state);
                 if(current_state==old_state)
                 {
@@ -463,13 +487,13 @@ namespace boost
             {
                 state_data new_state=old_state;
                 bool const last_reader=!--new_state.shared_count;
-                
+
                 if(last_reader)
                 {
                     new_state.upgrade=false;
                     new_state.exclusive=true;
                 }
-                
+
                 state_data const current_state=interlocked_compare_exchange(&state,new_state,old_state);
                 if(current_state==old_state)
                 {
@@ -508,7 +532,7 @@ namespace boost
             }
             release_waiters(old_state);
         }
-        
+
         void unlock_and_lock_shared()
         {
             state_data old_state=state;
@@ -533,7 +557,7 @@ namespace boost
             }
             release_waiters(old_state);
         }
-        
+
         void unlock_upgrade_and_lock_shared()
         {
             state_data old_state=state;
@@ -557,7 +581,7 @@ namespace boost
             }
             release_waiters(old_state);
         }
-        
+
     };
 }
 

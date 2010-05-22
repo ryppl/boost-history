@@ -10,6 +10,7 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/thread/detail/platform.hpp>
+#include <boost/thread/detail/cv_status.hpp>
 #if defined(BOOST_THREAD_PLATFORM_WIN32)
 #include <boost/thread/win32/condition_variable.hpp>
 #elif defined(BOOST_THREAD_PLATFORM_PTHREAD)
