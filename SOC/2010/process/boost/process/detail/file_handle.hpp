@@ -243,18 +243,23 @@ public:
          * \throw boost::system::system_error If the internal remapping 
          *        operation fails. 
          */ 
-        void posix_remap(handle_type h){
+        void posix_remap(handle_type &h){
 
             BOOST_ASSERT(valid());
 
+            /*
             if (::dup2(handle_, h) == -1) 
                 boost::throw_exception(boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::detail::file_handle::posix_remap: dup2(2) failed")); 
 
             if (::close(handle_) == -1){ 
                 ::close(h); 
                 boost::throw_exception(boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::detail::file_handle::posix_remap: close(2) failed")); 
-            } 
+            } */
 
+            if( ::dup2(handle_,h) == -1 ){
+                boost::throw_exception(boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::detail::file_handle::posix_remap: dup2(2) failed")); 
+
+            }
             handle_ = h; 
         } 
 

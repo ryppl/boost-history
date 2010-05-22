@@ -24,6 +24,7 @@
 		#include <boost/process/detail/posix_helpers.hpp> 
 		#include <stdlib.h> 
 		#include <unistd.h> 
+                #include <semaphore.h>
 		#if defined(__CYGWIN__) 
 				#include <boost/scoped_array.hpp> 
 				#include <sys/cygwin.h> 
@@ -88,11 +89,16 @@ inline std::string find_executable_in_path(const std::string &file, std::string 
         std::string result; 
 
         #if defined(BOOST_POSIX_API) 
+
                 if (path.empty()){ 
                         const char *envpath = ::getenv("PATH"); 
-                if (!envpath) 
-                    boost::throw_exception(boost::filesystem::filesystem_error("boost::process::find_executable_in_path: retrieving PATH failed", file, boost::system::errc::make_error_code(boost::system::errc::no_such_file_or_directory))); 
-
+                if (!envpath) {
+                    boost::throw_exception(
+                              boost::filesystem::filesystem_error(
+                              "boost::process::find_executable_in_path: retrieving PATH failed", file, 
+                              boost::system::errc::make_error_code(
+                              boost::system::errc::no_such_file_or_directory))); 
+                }
                 path = envpath; 
 
                 } 
@@ -148,8 +154,13 @@ inline std::string find_executable_in_path(const std::string &file, std::string 
                 } 
 
         #endif 
-        if (result.empty()) 
-                boost::throw_exception(boost::filesystem::filesystem_error("boost::process::find_executable_in_path: file not found", file, boost::system::errc::make_error_code(boost::system::errc::no_such_file_or_directory))); 
+        if (result.empty()){ 
+                boost::throw_exception(
+                            boost::filesystem::filesystem_error(
+                            "boost::process::find_executable_in_path: file not found", file,
+                            boost::system::errc::make_error_code(
+                            boost::system::errc::no_such_file_or_directory))); 
+        }
 
         return result; 
 } 
@@ -222,15 +233,27 @@ inline child create_child(const std::string &executable, Arguments args, context
 
 #if defined(BOOST_POSIX_API)
 
-        child::id_type pid = ::fork(); 
-        if (pid == -1) 
-                boost::throw_exception(boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::detail::posix_start: fork(2) failed")); 
+        static sem_t  * sem_stream_config;
 
-        else if (pid == 0){ 
+        ::sem_unlink("boost_sem_stream_config");
+        sem_stream_config = ::sem_open("boost_sem_stream_config",O_CREAT,511,0); 
+        BOOST_ASSERT( sem_stream_config != SEM_FAILED);
+
+        child::id_type pid = ::fork(); 
+
+        if (pid == -1){
+                boost::throw_exception(
+                         boost::system::system_error(
+                         boost::system::error_code(errno, boost::system::get_system_category()),
+                         "boost::process::detail::posix_start: fork(2) failed")); 
+        }
+
+        if (pid == 0){ 
 
                 detail::configure_posix_stream(stdin_stream);
                 detail::configure_posix_stream(stdout_stream);
-                detail::configure_posix_stream(stderr_stream);
+                detail::configure_posix_stream(stderr_stream); 
+                ::sem_post(sem_stream_config); 
 
                 std::pair<std::size_t, char**> argcv = detail::collection_to_posix_argv(args); 
                 char **envp = detail::environment_to_envp(ctx.environment);
@@ -242,26 +265,26 @@ inline child create_child(const std::string &executable, Arguments args, context
         }
 
         BOOST_ASSERT(pid > 0); 
+        ::sem_wait(sem_stream_config);
 
-
-	//TODO: turn this in a helper
         if(ctx.stdin_behavior == capture){
-                stdin_stream.object.pipe_->rend().close();
-                fhstdin = stdin_stream.object.pipe_->rend().release();
+                stdin_stream.object.pipe_.rend().close();
+                fhstdin = stdin_stream.object.pipe_.wend().release();
                 BOOST_ASSERT(fhstdin.valid()); 
         }
 
         if(ctx.stdout_behavior == capture){
-                stdout_stream.object.pipe_->wend().close();
-                fhstdout = stdout_stream.object.pipe_->wend().release();
+                stdout_stream.object.pipe_.wend().close();
+                fhstdout = stdout_stream.object.pipe_.wend().release();
                 BOOST_ASSERT(fhstdout.valid()); 
         }
 
         if(ctx.stderr_behavior == capture){
-                stderr_stream.object.pipe_->wend().close();
-                fhstderr = stderr_stream.object.pipe_->wend().release();
+                stderr_stream.object.pipe_.wend().close();
+                fhstderr = stderr_stream.object.pipe_.wend().release();
                 BOOST_ASSERT(fhstderr.valid()); 
         }
+
 
 
         return child(pid, fhstdin, fhstdout, fhstderr); 

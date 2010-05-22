@@ -69,7 +69,7 @@ class status
          * \pre exited() is true. 
          */ 
 
-        int exit_status() const{ 
+        int exit_code() const{ 
                 BOOST_ASSERT(exited()); 
 
                 #if defined(BOOST_POSIX_API) 

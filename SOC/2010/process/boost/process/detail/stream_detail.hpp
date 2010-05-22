@@ -22,6 +22,7 @@
 #include <map>
 #include <boost/optional.hpp>
 #include <boost/process/stream_behavior.hpp>
+#include <boost/process/detail/file_handle.hpp>
 #include <boost/process/detail/pipe.hpp>
 
 
@@ -44,7 +45,7 @@ struct stream_object {
         int desc_to; 
         std::string file_;
         file_handle handle_;
-        boost::optional<pipe> pipe_;
+        pipe pipe_;
 };
 
 
@@ -52,7 +53,7 @@ struct stream_object {
  * This defines the std_stream_type enum.
  * It lists all possible std stream types.
  */
-enum std_stream_type {stdin_type, stdout_type, stderr_type};
+enum std_stream_type {stdin_type=0, stdout_type=1, stderr_type=2};
 
 
 /*
@@ -69,39 +70,43 @@ enum std_stream_type {stdin_type, stdout_type, stderr_type};
  */
 
 struct stream_detail {
-        int stream_handler;
+        detail::file_handle::handle_type stream_handle;
         struct stream_object object;
         std_stream_type stream_type;
         stream_behavior behavior;
 
         stream_detail(std_stream_type st){
+                stream_type = st;
+                object.pipe_ = pipe();
                 switch(st){
                         case stdin_type:{
-                                stream_type = st;
 
                                 #if defined(BOOST_POSIX_API) 
-                                        stream_handler = STDIN_FILENO;
+                                        stream_handle = STDIN_FILENO;
                                 #elif defined(BOOST_WINDOWS_API) 
-                                        stream_handler = STD_INPUT_HANDLE; 
+                                        stream_handle = STD_INPUT_HANDLE; 
                                 #endif 
+                                break;
                         }
                         case stdout_type:{
-                                stream_type = st;
-
                                 #if defined(BOOST_POSIX_API) 
-                                        stream_handler = STDOUT_FILENO;
+                                        stream_handle = STDOUT_FILENO;
                                 #elif defined(BOOST_WINDOWS_API) 
-                                        stream_handler = STD_OUTPUT_HANDLE; 
+                                        stream_handle = STD_OUTPUT_HANDLE; 
                                 #endif 
+                                break;
                         }
                         case stderr_type:{
-                                stream_type = st;
-
                                 #if defined(BOOST_POSIX_API) 
-                                        stream_handler = STDERR_FILENO;
+                                        stream_handle = STDERR_FILENO;
                                 #elif defined(BOOST_WINDOWS_API) 
-                                        stream_handler = STD_ERROR_HANDLE; 
+                                        stream_handle = STD_ERROR_HANDLE; 
                                 #endif 
+                                break;
+                        }
+                        default:{
+
+                                BOOST_ASSERT(false);
                         }
 
                 }

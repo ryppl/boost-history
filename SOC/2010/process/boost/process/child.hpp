@@ -17,7 +17,7 @@
 
 #ifndef BOOST_PROCESS_CHILD_HPP 
 #define BOOST_PROCESS_CHILD_HPP 
-
+#include <iostream>
 #include <boost/process/config.hpp> 
 
 #if defined(BOOST_POSIX_API) 
@@ -109,7 +109,7 @@ public:
          * It is only used on Windows as the implementation of wait() needs a 
          * process handle. 
          */ 
-        child(id_type id, detail::file_handle fhstdin, detail::file_handle fhstdout, detail::file_handle fhstderr, detail::file_handle fhprocess = detail::file_handle()) 
+        child(id_type id, detail::file_handle &fhstdin, detail::file_handle &fhstdout, detail::file_handle &fhstderr, detail::file_handle fhprocess = detail::file_handle()) 
             : process(id) 
         #if defined(BOOST_WINDOWS_API) 
             , process_handle_(fhprocess.release(), ::CloseHandle) 

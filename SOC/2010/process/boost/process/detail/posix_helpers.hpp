@@ -23,6 +23,7 @@
         #include <unistd.h>
         #include <sys/stat.h>
         #include <fcntl.h>
+        #include <stdio.h>
 #endif
 #include <map>
 #include <string.h>
@@ -36,7 +37,8 @@
 namespace boost{
 namespace process{
 namespace detail{
-	
+
+
 
 /*
  * This is the declaration of configure_stream function.
@@ -46,7 +48,7 @@ namespace detail{
  * Note that this function is meant to be called on a brand-new child. 
  *
  */
-inline configure_posix_stream(stream_detail &s){
+inline configure_child_posix_stream(stream_detail &s){
 
         switch(s.behavior){
                        case dummy:{
@@ -67,14 +69,16 @@ inline configure_posix_stream(stream_detail &s){
                                 boost::throw_exception(boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::detail::setup_input: open(2) of " + s.object.file_ + " failed")); 
 
                         s.object.handle_ = file_handle(fd); 
-                        s.object.handle_.posix_remap(s.stream_handler); 
+                        s.object.handle_.posix_remap(s.stream_handle); 
                         s.object.handle_.release(); 
 
                         break;
                            }
 
                 case closed:
-                        //?
+                        #if defined(BOOST_POSIX_API)
+                                  ::close(s.stream_handle);
+                        #endif
                         break;
 
                 case inherit:
@@ -82,15 +86,15 @@ inline configure_posix_stream(stream_detail &s){
                         break;
 
                 case capture:
-                        s.object.pipe_ = pipe(); 
                         if(s.stream_type == stdin_type){
-                                s.object.pipe_->wend().close(); 
-                                s.object.pipe_->rend().posix_remap(s.stream_handler); 
+                                s.object.pipe_.wend().close(); 
+                                s.object.pipe_.rend().posix_remap(s.stream_handle); 
                         }
                        else{
-                                s.object.pipe_->rend().close(); 
-                                s.object.pipe_->wend().posix_remap(s.stream_handler); 
+                                s.object.pipe_.rend().close(); 
+                                s.object.pipe_.wend().posix_remap(s.stream_handle); 
                         }
+                        
                         break;
 
                 default:

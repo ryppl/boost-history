@@ -153,7 +153,7 @@ protected:
          * \returns traits_type::eof() if a write error occurrs. Otherwise 
          *          returns traits_type::not_eof(c). 
          */ 
-        virtual int_type overflow(int c){ 
+        int_type overflow(int c){ 
                 BOOST_ASSERT(pptr() >= epptr()); 
 
                 if (sync() == -1) 

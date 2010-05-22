@@ -151,7 +151,7 @@ void configure_win32_stream(stream_detail &sd, STARTUPINFOA *si){
                 } 
                 case inherit:{
                        
-                        return_handle = file_handle::win32_dup_std(sd.stream_handler, true);
+                        return_handle = file_handle::win32_dup_std(sd.stream_handle, true);
                         break; 
                 } 
 
