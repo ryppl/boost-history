@@ -82,7 +82,6 @@ class PythonConfiguration(FlagConfiguration):
 
     def _check(self):
         env = MakeEnvironment()
-        context = scons.Configure(env)
         try:
             from distutils.sysconfig import get_config_vars, get_python_inc
         except ImportError:
@@ -98,7 +97,9 @@ class PythonConfiguration(FlagConfiguration):
         self._flags = [f for f in self._flags if not f.startswith("-O")]
         self._flags.append("-I%s" % get_python_inc())
         self._apply(env)
+        context = scons.Configure(env)
         if not context.CheckHeader(["Python.h"]):
+            context.Finish()
             return False
         context.Finish()
         return True
@@ -112,15 +113,15 @@ class NumPyConfiguration(VariableConfiguration):
 
     def _check(self):
         env = MakeEnvironment()
-        context = scons.Configure(env)
-        self._apply_dependencies(context.env)
+        self._apply_dependencies(env)
         try:
             import numpy.distutils.misc_util
             self._variables = {"CPPPATH": numpy.distutils.misc_util.get_numpy_include_dirs()}
         except ImportError:
-            context.Result(False)
+            context.Finish()
             return False
-        self._apply(context.env)
+        self._apply(env)
+        context = scons.Configure(env)
         if not context.CheckHeader(["Python.h", "numpy/arrayobject.h"]):
             return False
         context.Finish()
@@ -139,14 +140,16 @@ class LibraryConfiguration(VariableConfiguration):
 
     def _check(self):
         env = MakeEnvironment()
+        self._apply_dependencies(env)
+        self._apply(env)
         context = scons.Configure(env)
-        self._apply_dependencies(context.env)
-        self._apply(context.env)
         if self._headers:
             if not context.CheckHeader(self._headers, language="C++"):
+                context.Finish()
                 return False
         if self._libraries:
             if not context.CheckLib(self._libraries, language="C++"):
+                context.Finish()
                 return False
             self._variables = {"LIBS": self._libraries}
         context.Finish()
@@ -205,12 +208,12 @@ def BoostUnitTest(env, name, source):
     except KeyError:
         libs = "boost_unit_test_framework"
     bin = env.Program(name, source, LIBS=libs)
-    run = env.Command(".%s.succeeded" % name, name, RunProgramUnitTest)
+    run = env.Command(".%s.succeeded" % str(name), name, RunProgramUnitTest)
     env.Depends(run, bin)
     return run
 
 def PythonUnitTest(env, script, dependencies):
-    run = env.Command(".%s.succeeded" % script, script, RunPythonUnitTest)
+    run = env.Command(".%s.succeeded" % str(script), script, RunPythonUnitTest)
     env.Depends(run, dependencies)
     return run
 
@@ -219,7 +222,9 @@ def SetupPackages(env, packages):
         database[package].apply(env)
 
 def MakeEnvironment():
-    env = scons.Environment()
+    env = scons.Environment(tools = ["default", "doxygen"])
+    env.Append(CPPPATH="#include")
+    env.Append(LIBPATH="#lib")
     env.AddMethod(RecursiveInstall, "RecursiveInstall")
     env.AddMethod(SetupPackages, "SetupPackages")
     env.AddMethod(BoostUnitTest, "BoostUnitTest")
