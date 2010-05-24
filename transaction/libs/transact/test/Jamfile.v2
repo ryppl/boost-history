@@ -25,7 +25,7 @@ project
         #<library>/boost/system//boost_system/<link>static
         #<include>.
         #<include>../../..
-        #<include>$BOOST_ROOT
+        <include>$(BOOST_ROOT)
         #<threading>multi
         #<variant>debug
 
@@ -49,7 +49,11 @@ project
         [ run transaction_stack_unwind.cpp ]
     ;
 
-
+    alias filewriteperf
+    :
+        [ run ../perf/filewrite.cpp :  :  : <library>/boost//date_time <library>/boost//system <link>static ]
+    ;
+	
     alias all
-        : tm perf
+        : tm perf filewriteperf
     ;

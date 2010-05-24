@@ -114,7 +114,7 @@ private:
         static std::size_t const size=max_alignment - sector_size;
         static std::size_t const sectors = size / sector_size;
         unsigned char data[size];
-        static void clear_sector(char *sec){
+        static void clear_sector(unsigned char *sec){
             sec[0]=0x80;
             sec[sector_size-1]=0x80;
         }

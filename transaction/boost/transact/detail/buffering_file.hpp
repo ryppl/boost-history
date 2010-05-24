@@ -22,7 +22,15 @@ public:
     typedef typename Base::size_type size_type;
     explicit buffering_seq_ofile(std::string const &name)
         : base(name)
-        , size(0){}
+        , size(0){
+#ifdef _WIN32
+		// support possibility that Base is using unbuffered I/O
+		// requiring specific buffer memory alignment
+		int alignment=1; // largest power of 2 >= Capacity
+		for (std::size_t i=Capacity; (i>>=1); alignment<<=1 )
+		buffer = (char*)_aligned_malloc(Capacity, alignment);
+#endif
+	}
     template<class Size>
     void write(void const *data,Size s){
         if(this->size + s <= Capacity){
@@ -49,6 +57,9 @@ public:
             std::cerr << "ignored exception" << std::endl;
 #endif
         }
+#ifdef _WIN32
+		_aligned_free(buffer);
+#endif
     }
 private:
     void write_overflow(void const *data,std::size_t s){
@@ -71,8 +82,12 @@ private:
     }
 
     Base base;
-    char buffer[Capacity];
-    std::size_t size;
+#ifdef _WIN32
+	char *buffer;
+#else
+	char buffer[Capacity];
+#endif
+	std::size_t size;
 };
 
 

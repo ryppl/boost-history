@@ -14,22 +14,7 @@
 #include <boost/static_assert.hpp>
 #include <boost/assert.hpp>
 #include <boost/config.hpp>
-
-#ifdef WIN32
-
-//TODO
-
-#else
-
-#include <unistd.h>
-#include <fcntl.h>
-
-#ifndef _POSIX_SYNCHRONIZED_IO
-#error no POSIX synchronized IO available
-#endif
-
-#endif
-
+#include <boost/transact/detail/file.hpp>
 
 namespace boost{
 namespace transact{
@@ -45,25 +30,21 @@ public:
     void sync();
 private:
     size_type pos;
-#ifdef WIN32
-#else
-public:
-    ~syncing_seq_ofile(){
-        if(this->filedes != -1) ::close(this->filedes);
-    }
+	ofile  filedes;
+
 private:
     void write_ahead(size_type const &s){
         BOOST_ASSERT(s % write_ahead_size == 0);
         if(this->pos != s){
-            if(::lseek(this->filedes,s,SEEK_SET) != off_t(s)) throw io_failure();
+			filedes.seek(s);
         }
         char data[write_page_size]; memset(data,0,write_page_size);
         BOOST_STATIC_ASSERT(write_ahead_size % write_page_size == 0);
         for(std::size_t c=0;c<write_ahead_size / write_page_size;++c){
-            if(::write(this->filedes,data,write_page_size) != ssize_t(write_page_size)) throw io_failure();
+			filedes.write(data,write_page_size);
         }
-        if(::fsync(this->filedes) != 0) throw io_failure();
-        if(::lseek(this->filedes,this->pos,SEEK_SET) != off_t(this->pos)) throw io_failure();
+		filedes.sync();
+		filedes.seek(this->pos);
     }
     void write_ahead(size_type const &start,size_type const &end){
         BOOST_ASSERT(start % write_ahead_size == 0);
@@ -73,31 +54,12 @@ private:
 
     static std::size_t const write_ahead_size=10*1024*1024;
     static std::size_t const write_page_size=4096;
-
-    int filedes;
-#endif
 };
-
-#ifdef WIN32
-#else
 
 inline syncing_seq_ofile::syncing_seq_ofile(std::string const &name)
     : pos(0)
-    , filedes(-1){
-    int flags=O_CREAT | O_WRONLY;
-#ifdef linux
-    flags|=O_NOATIME;
-#endif
-    this->filedes=::open(name.c_str(),flags,S_IRUSR | S_IWUSR);
-    if(this->filedes==-1) throw io_failure();
-    { //make sure the directory entry has reached the disk:
-        std::string dirname=filesystem::path(name).directory_string();
-        if(dirname.empty()) dirname=".";
-        int dirfd=::open(dirname.c_str(),O_RDONLY);
-        if(dirfd==-1) throw io_failure();
-        int ret=::fsync(dirfd);
-        if(::close(dirfd) != 0 || ret != 0) throw io_failure();
-    }
+    , filedes(name)
+{
     this->write_ahead(0);
 }
 
@@ -110,23 +72,18 @@ void syncing_seq_ofile::write(void const *data,std::size_t size){
         this->write_ahead(start,end);
     }
 
-    ssize_t ret=::write(this->filedes,data,size);
+	std::size_t ret= filedes.write((char const *)data,size);
     if(ret > 0) this->pos+=ret;
-    if(ret != ssize_t(size)) throw io_failure();
+    if(ret != std::size_t(size)) throw io_failure();
 }
 
 
 inline void syncing_seq_ofile::flush(){}
+	
 inline void syncing_seq_ofile::sync(){
-#ifdef linux
-    if(::fdatasync(this->filedes) != 0) throw io_failure();
-#else //multiple sources say fdatasync is not safe on other systems
-    if(::fsync(this->filedes) != 0) throw io_failure();
-#endif
+	filedes.sync();
 }
 
-
-#endif
 
 }
 }
