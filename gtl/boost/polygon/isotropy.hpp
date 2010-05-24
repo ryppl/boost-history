@@ -305,13 +305,13 @@ namespace boost { namespace polygon{
   struct area_type_by_domain<manhattan_domain, coordinate_type> { 
     typedef typename coordinate_traits<coordinate_type>::manhattan_area_type type; };
 
-	struct y_c_edist : gtl_yes {};
+  struct y_c_edist : gtl_yes {};
 
   template <typename coordinate_type_1, typename coordinate_type_2>
     typename enable_if< 
     typename gtl_and_3<y_c_edist, typename gtl_same_type<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type,
-	typename gtl_same_type<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type>::type,
-	typename coordinate_traits<coordinate_type_1>::coordinate_difference>::type
+                       typename gtl_same_type<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type>::type,
+    typename coordinate_traits<coordinate_type_1>::coordinate_difference>::type
   euclidean_distance(const coordinate_type_1& lvalue, const coordinate_type_2& rvalue) {
     typedef typename coordinate_traits<coordinate_type_1>::coordinate_difference Unit;
     return (lvalue < rvalue) ? (Unit)rvalue - (Unit)lvalue : (Unit)lvalue - (Unit)rvalue;

@@ -128,11 +128,11 @@ namespace boost { namespace polygon{
       }
       for(iT itr = begin; itr != end; ++itr) {
         typename std::map<Unit, std::vector<std::pair<half_edge, segment_id> > >::iterator lb = 
-          bins.lower_bound(std::min((*itr).first.first.y(), (*itr).first.second.y()));
+          bins.lower_bound((std::min)((*itr).first.first.y(), (*itr).first.second.y()));
         if(lb != bins.begin())
           --lb;
         typename std::map<Unit, std::vector<std::pair<half_edge, segment_id> > >::iterator ub = 
-          bins.upper_bound(std::max((*itr).first.first.y(), (*itr).first.second.y()));
+          bins.upper_bound((std::max)((*itr).first.first.y(), (*itr).first.second.y()));
         for( ; lb != ub; ++lb) {
           (*lb).second.push_back(*itr);
         }

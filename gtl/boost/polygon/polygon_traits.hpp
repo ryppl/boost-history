@@ -1294,8 +1294,8 @@ namespace boost { namespace polygon{
     holes_iterator itH = begin_holes( polygon );
     while( itH != end_holes( polygon ) ) {
       if(  contains( *itH, point, !consider_touch )  ) {
-	isInside = false;
-	break;
+        isInside = false;
+        break;
       }
       ++itH;
     }

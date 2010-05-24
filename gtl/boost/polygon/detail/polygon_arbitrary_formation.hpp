@@ -280,9 +280,9 @@ namespace boost { namespace polygon{
         pack_ = that.pack_; 
         return *this; }
       inline bool operator () (const half_edge& elm1, const half_edge& elm2) const {
-        if(std::max(elm1.first.y(), elm1.second.y()) < std::min(elm2.first.y(), elm2.second.y()))
+        if((std::max)(elm1.first.y(), elm1.second.y()) < (std::min)(elm2.first.y(), elm2.second.y()))
           return true;
-        if(std::min(elm1.first.y(), elm1.second.y()) > std::max(elm2.first.y(), elm2.second.y()))
+        if((std::min)(elm1.first.y(), elm1.second.y()) > (std::max)(elm2.first.y(), elm2.second.y()))
           return false;
 
         //check if either x of elem1 is equal to x_
@@ -458,6 +458,13 @@ namespace boost { namespace polygon{
         Point result(x_unit, y_unit);
         if(!projected && !contains(rect1, result, true)) return false;
         if(!projected && !contains(rect2, result, true)) return false;
+        if(projected) {
+          rectangle_data<long double> inf_rect((long double)(std::numeric_limits<Unit>::min)(), 
+                                               (long double) (std::numeric_limits<Unit>::min)(), 
+                                               (long double)(std::numeric_limits<Unit>::max)(), 
+                                               (long double) (std::numeric_limits<Unit>::max)() );
+          return contains(inf_rect, intersection, true);
+        }
         intersection = result;
         return true;
       }
@@ -472,13 +479,7 @@ namespace boost { namespace polygon{
               return true;
           }
         } else {
-          if(lazy_success) {
-            rectangle_data<Unit> inf_rect((std::numeric_limits<Unit>::min)(),  (std::numeric_limits<Unit>::min)(), 
-                                          (std::numeric_limits<Unit>::max)(),  (std::numeric_limits<Unit>::max)() );
-            return contains(inf_rect, intersection, true);
-          } else {
-            return false;
-          }
+          return lazy_success;
         }
         typedef rectangle_data<Unit> Rectangle;
         Rectangle rect1, rect2;
@@ -739,9 +740,9 @@ namespace boost { namespace polygon{
       inline less_vertex_half_edge(const less_vertex_half_edge& that) : x_(that.x_), justBefore_(that.justBefore_) {}
       inline less_vertex_half_edge& operator=(const less_vertex_half_edge& that) { x_ = that.x_; justBefore_ = that.justBefore_; return *this; }
       inline bool operator () (const vertex_half_edge& elm1, const vertex_half_edge& elm2) const {
-        if(std::max(elm1.pt.y(), elm1.other_pt.y()) < std::min(elm2.pt.y(), elm2.other_pt.y()))
+        if((std::max)(elm1.pt.y(), elm1.other_pt.y()) < (std::min)(elm2.pt.y(), elm2.other_pt.y()))
           return true;
-        if(std::min(elm1.pt.y(), elm1.other_pt.y()) > std::max(elm2.pt.y(), elm2.other_pt.y()))
+        if((std::min)(elm1.pt.y(), elm1.other_pt.y()) > (std::max)(elm2.pt.y(), elm2.other_pt.y()))
           return false;
         //check if either x of elem1 is equal to x_
         Unit localx = *x_;

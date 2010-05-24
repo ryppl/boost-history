@@ -431,7 +431,7 @@ namespace boost { namespace polygon {
     template <typename geometry_type>
     inline polygon_set_data& 
     insert_with_resize_dispatch(const geometry_type& poly, coordinate_type resizing, bool corner_fill_arc, unsigned int num_circle_segments, bool hole, 
-	                             polygon_with_holes_concept tag) {
+                               polygon_with_holes_concept tag) {
       insert_with_resize_dispatch(poly, resizing, corner_fill_arc, num_circle_segments, hole, polygon_concept());
       for(typename polygon_with_holes_traits<geometry_type>::iterator_holes_type itr =
             begin_holes(poly); itr != end_holes(poly);
@@ -444,7 +444,7 @@ namespace boost { namespace polygon {
     template <typename geometry_type>
     inline polygon_set_data& 
     insert_with_resize_dispatch(const geometry_type& poly, coordinate_type resizing, bool corner_fill_arc, unsigned int num_circle_segments, bool hole, 
-	                        polygon_concept tag) {
+                          polygon_concept tag) {
 
       if (resizing==0)
          return *this;
@@ -503,7 +503,7 @@ namespace boost { namespace polygon {
         v = point_data<double>(v.x()/s,v.y()/s);
         point_data<T> curr_prev;
         if (prev_concave)
-	//TODO missing round_down()
+          //TODO missing round_down()
           curr_prev = point_data<T>(first->x()+v.x(),first->y()+v.y());
         else 
           curr_prev = prev_point;
