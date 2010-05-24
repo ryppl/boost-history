@@ -67,10 +67,7 @@ INVERT operation.&nbsp; A NAND gate can be implemented in the CMOS circuit
 family with four transistors.&nbsp; The NAND gate has two inputs and one output.&nbsp; 
 Each input goes to two transistors, one p-type transistor and one n-type 
 transistor.&nbsp; The &quot;p&quot; stands for positive and the &quot;n&quot; stands for negative.&nbsp; 
-A p-type transistor behaves like a diode (allows voltage and current to pass 
-forward but not reverse) between the voltage source and the output when it is 
-switched on in digital operation.&nbsp; The n-type transistor behaves like a 
-diode between the output and the ground.&nbsp; When the p-type transistor is on 
+When the p-type transistor is on 
 it pulls the output up to the same voltage as the voltage source.&nbsp; When the 
 n-type transistor is on it pulls the output down to the same voltage as the 
 ground.&nbsp; The process of creating a p-type transistor begins by &quot;doping&quot; the silicon 
@@ -106,10 +103,13 @@ logical &quot;false&quot; the p-type transistor it is connected to will be &quot
 output of the gate will be a logical &quot;true&quot; because the transistor will connect 
 it to the voltage supply.&nbsp; The diagram below is an example of how a NAND 
 gate might be laid out and is not drawn to scale for any real process 
-technology.</p>
+technology.&nbsp; The diffusion material is intended to be cut away under the 
+gate material by a Boolean NOT operation and is represented as solid bars under 
+the gates of transistors only for convenience of drawing.</p>
 <p>
 <img border="0" src="images/NAND.PNG" width="602" height="387"></p>
-<p>The following is the input layout file for the above NAND gate layout:</p>
+<p>The following is the input layout file for the above NAND gate layout, 
+rectangle format is XL XH YL YH:</p>
 <p><font face="Courier New" size="2">Rectangle 0 60 24 48 NWELL<br>
 Rectangle 3 57 32 43 PDIFF<br>
 Rectangle 3 57 5 16 NDIFF<br>
