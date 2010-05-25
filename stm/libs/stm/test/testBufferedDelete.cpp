@@ -17,7 +17,7 @@ public:
    int val_;
 };
 
-Simple *instance = new Simple;
+Simple *instance = NULL;
 
 using namespace stm;
 
@@ -60,6 +60,8 @@ int testBufferedDelete()
 	srand(time(NULL));
 
    stm::transaction::do_deferred_updating();
+
+   instance = new Simple;
 
    instance->val_ = 0;
 
