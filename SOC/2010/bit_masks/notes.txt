@@ -108,3 +108,62 @@ For the bit_mask tuple look at the interface used inside the stl's tuple
 that is the goal for that psudo-data structure (psudo-data structure as it isn't
 really intended to be instanced and doesn't store any actual data, just ICEs
 (Integral Constant Expressions NOT Internal Compiler Errors.)).
+
+
+------- Interface Ides for test, set, clear and flip ---------
+
+
+Thoughts from standard bitset's set member function.
+
+What it does is take size_t, bool and if bool is true it sets all bits in the
+expression. So it would be best to have meta-functions (one which specializes on
+true) to do the exact same thing for a bit_mask on compile time.
+
+
+
+
+Compile time interface only.
+
+For operations on masks try what Andrew suggested:
+Functors for the different operations so the following would work for 
+compile time.
+
+
+
+                    Compile time set_bit meta-function
+
+// this would need to have a specialization for SetAll where set all is = to true.
+the setting of all bits is simply a shift to the right or left = to the width of
+the mask in bits then calling the ~ operator on the thing.
+
+
+// assuming T is some mask type.
+template <typename T, unsigned int N, bool SetAll = false >
+struct set_bit
+    :integral_mask< T::value_type, T::value >// <--- this will do all of the internal 
+    // work as far as keeping types + value etc...
+{ };
+
+
+                    Compile time test_bit meta-function
+
+This meta function should take one mask and an integral value and check to see
+of the bit value at the position indicated by the integral value is set or not.
+This meta-function will evaluate to true or false if the bit is or isn't false.
+
+template <typename T, unsigned int N>
+struct test_bit
+    :integral_constant< bool, (T::value & (low_bits<T::value_type,1>::value << N) >
+{ };
+
+
+                    Compile time flip_bit meta-function
+
+template <typename T, unsigned int N = std::numeric_limits<unsigned int>::max >
+struct flip_bits
+
+compile time + runtime interface.
+
+
+runtime only interface.
+
