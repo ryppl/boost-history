@@ -117,7 +117,7 @@ struct stream_detail {
 
 
                 }
-                std::cout << "Inicializado com: " << stream_handle << std::endl;
+
         }
 };
 

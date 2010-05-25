@@ -24,7 +24,6 @@
 		#include <boost/process/detail/posix_helpers.hpp> 
 		#include <stdlib.h> 
 		#include <unistd.h> 
-                #include <semaphore.h>
 		#if defined(__CYGWIN__) 
 				#include <boost/scoped_array.hpp> 
 				#include <sys/cygwin.h> 
@@ -235,13 +234,6 @@ inline child create_child(const std::string &executable, Arguments args, context
 
         #if defined(BOOST_POSIX_API)
 
-                //TODO: do we need this semaphore?
-                static sem_t  * sem_stream_config;
-
-                ::sem_unlink("boost_sem_stream_config");
-                sem_stream_config = ::sem_open("boost_sem_stream_config",O_CREAT,511,0); 
-                BOOST_ASSERT( sem_stream_config != SEM_FAILED);
-
                 child::id_type pid = ::fork(); 
 
                 if (pid == -1){
@@ -257,7 +249,7 @@ inline child create_child(const std::string &executable, Arguments args, context
                         detail::configure_posix_stream(stdin_stream);
                         detail::configure_posix_stream(stdout_stream);
                         detail::configure_posix_stream(stderr_stream); 
-                        ::sem_post(sem_stream_config); 
+
 
                         //execve call
                         std::pair<std::size_t, char**> argcv = detail::collection_to_posix_argv(args); 
@@ -270,7 +262,7 @@ inline child create_child(const std::string &executable, Arguments args, context
                 }
 
                 BOOST_ASSERT(pid > 0); 
-                ::sem_wait(sem_stream_config);
+
 
                 //adjust father pipes
                 if(ctx.stdin_behavior == capture){
@@ -307,6 +299,7 @@ inline child create_child(const std::string &executable, Arguments args, context
                 if (stderr_stream.behavior == capture)
                         fhstderr = stderr_stream.object.pipe_.rend();
 
+
                 //define startup info from the new child
                 STARTUPINFOA startup_info;
                 ::ZeroMemory(&startup_info, sizeof(startup_info)); 
@@ -315,11 +308,19 @@ inline child create_child(const std::string &executable, Arguments args, context
                 startup_info.dwFlags |= STARTF_USESTDHANDLES; 
                 
                 //configure std stream info for the child
-        	configure_win32_stream(stdin_stream, &startup_info); 
-            	configure_win32_stream(stdout_stream, &startup_info); 
-                configure_win32_stream(stderr_stream, &startup_info); 
+                //TODO: Find a better way to do it.
+                detail::file_handle fh;
+        	fh = configure_win32_stream(stdin_stream); 
+                startup_info.hStdInput = fh.get();
 
-                WriteFile(startup_info.hStdOutput , "Test2\n", 6, NULL, NULL);
+            	fh = configure_win32_stream(stdout_stream); 
+                startup_info.hStdOutput = fh.get();
+
+                fh = configure_win32_stream(stderr_stream); 
+                startup_info.hStdError = fh.get();
+                
+                
+                
            
 
         	//define process info and create it
@@ -337,7 +338,7 @@ inline child create_child(const std::string &executable, Arguments args, context
                 boost::shared_array<char> envstrs = detail::environment_to_win32_strings(ctx.environment); 
 
    
-
+                WriteFile(startup_info.hStdOutput, "Test\n", 5, NULL, NULL);
 
                 //I dare you to understand this code at first look.
            	if ( ::CreateProcessA(exe.get(), cmdline.get(), 
@@ -350,8 +351,7 @@ inline child create_child(const std::string &executable, Arguments args, context
                            "boost::process::detail::win32_start: CreateProcess failed")); 
 
 
-                //is this necessary?
-                
+                //is this necessary?                
                 if (! ::CloseHandle(pi.hThread)) 
                         boost::throw_exception(
                             boost::system::system_error(boost::system::error_code(

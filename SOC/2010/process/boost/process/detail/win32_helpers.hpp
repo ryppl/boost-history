@@ -140,7 +140,7 @@ inline boost::shared_array<char> collection_to_win32_cmdline(const Arguments &ar
  * It recieves stream_detail from that stream and a STARTUPINFOA
  * That will be stored the configuration. 
  */
-void configure_win32_stream(stream_detail &sd, STARTUPINFOA *si){
+inline file_handle configure_win32_stream(stream_detail &sd){
 
         file_handle return_handle;
 
@@ -149,8 +149,7 @@ void configure_win32_stream(stream_detail &sd, STARTUPINFOA *si){
 
                         break; 
                 } 
-                case inherit:{
-                       
+                case inherit:{                       
                         return_handle = file_handle::win32_dup_std(sd.stream_handle, true);
                         break; 
                 } 
@@ -195,30 +194,9 @@ void configure_win32_stream(stream_detail &sd, STARTUPINFOA *si){
                         
                 } 
         }
-
-
-        file_handle h;
-        if(return_handle.valid()){
-                switch(sd.stream_type){
-                        case stdin_type:{
-                                (*si).hStdInput = return_handle.get();
-                                break;
-                        }
-                        case stdout_type:{
-                                (*si).hStdOutput = return_handle.get();
-                                WriteFile(si->hStdOutput , "Test1\n", 6, NULL, NULL);
-                                break;
-                        }
-                        case stderr_type:{
-                                (*si).hStdError =  return_handle.get();
-                                break;
-                        }
-
-                }
-        }
-        else{
-                si->hStdError = INVALID_HANDLE_VALUE;
-        }
+        
+        return return_handle;
+        
 
 }
 
