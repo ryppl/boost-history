@@ -245,7 +245,7 @@ void TestGlobalIntArrayWithMultipleThreads()
 #ifdef DELAY_INVALIDATION_DOOMED_TXS_UNTIL_COMMIT
    cout << "DEL_INVAL_";
 #endif
-   cout << transaction::consistency_checking_string() << " ";
+   //cout << transaction::consistency_checking_string() << " ";
    cout << "(array size, copy iters, time, commits, priority aborts, total aborts)\t";
    cout << kMaxArrSize << "\t" << kMaxArrIter << "\t";
    cout << averageRunTime << "\t" << transaction::bookkeeping().commits() << "\t";
