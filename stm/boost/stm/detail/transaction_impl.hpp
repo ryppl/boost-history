@@ -512,7 +512,7 @@ inline boost::stm::transaction::transaction() :
    auto_general_lock_.release_lock();
     //transactionMutexLocker_.unlock();
 
-   if (direct_updating()) doIntervalDeletions();
+   doIntervalDeletions();
 #if PERFORMING_LATM
    while (blocked()) { SLEEP(10) ; }
 #endif
@@ -1322,7 +1322,7 @@ inline void boost::stm::transaction::deferred_abort
    wbloom().clear();
 #endif
 
-   if (!alreadyRemovedFromInFlight)
+   // (some error exists with this optimization) if (!alreadyRemovedFromInFlight)
    {
       lock_inflight_access();
       // if I'm the last transaction of this thread, reset abort to false
@@ -1915,13 +1915,15 @@ inline void boost::stm::transaction::directCommitTransactionDeletedMemory() thro
 //----------------------------------------------------------------------------
 inline void boost::stm::transaction::deferredCommitTransactionDeletedMemory() throw()
 {
-   for (MemoryContainerList::iterator i = deletedMemoryList().begin();
-      i != deletedMemoryList().end(); ++i)
-   {
-      delete *i;
-   }
+   using namespace boost::stm;
 
-   deletedMemoryList().clear();
+   if (!deletedMemoryList().empty())
+   {
+      var_auto_lock<PLOCK> a(&deletionBufferMutex_, NULL);
+      deletionBuffer_.insert( std::pair<size_t, MemoryContainerList>
+         (time(NULL), deletedMemoryList()) );
+      deletedMemoryList().clear();
+   }
 }
 
 ////////////////////////////////////////////////////////////////////////////
