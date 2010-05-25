@@ -31,6 +31,8 @@
 #include "smart.h"
 #include "pointer_test.h"
 #include "testatom.h"
+#include "testEmbedded.h"
+#include "testBufferedDelete.h"
 #if 0
 #include "testLinkedListWithLocks.h"
 #include "testHashMapAndLinkedListsWithLocks.h"
@@ -181,6 +183,8 @@ int main(int argc, char **argv)
       else if ("smart" == bench) test_smart();
       else if ("pointer" == bench) pointer_test();
       else if ("accounts" == bench) testAccounts();
+      else if ("embedded" == bench) testEmbedded();
+      else if ("delete" == bench) testBufferedDelete();
 #if 0
       else if ("linkedlist_w_locks" == bench) TestLinkedListWithLocks();
       else if ("hashmap_w_locks" == bench) TestHashMapWithLocks();
