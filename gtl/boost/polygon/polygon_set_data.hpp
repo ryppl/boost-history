@@ -235,7 +235,7 @@ namespace boost { namespace polygon {
     }
 
     template <typename output_container>
-    inline void get(output_container& output) {
+    inline void get(output_container& output) const {
       get_dispatch(output, typename geometry_concept<typename output_container::value_type>::type());
     }
 
