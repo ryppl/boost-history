@@ -42,7 +42,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /c
-# ADD CPP /nologo /MT /W3 /GX /O2 /I "../" /I "../../" /I "../../../" /I "../../../../" /I "../../../../../" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /c
+# ADD CPP /nologo /MT /W3 /GX /O2 /I "../" /I "../../" /I "../../../" /I "../../../../" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -50,7 +50,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib pthreadVC2.lib /nologo /subsystem:console /machine:I386 /nodefaultlib:"libc.lib"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib pthreadVC2.lib /nologo /subsystem:console /machine:I386
 
 !ELSEIF  "$(CFG)" == "TBoostSTM - Win32 Debug"
 
@@ -66,7 +66,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "../" /I "../../" /I "../../../" /I "../../../../" /I "../../../../../" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /FR /YX /FD /GZ /c
+# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "../" /I "../../" /I "../../../" /I "../../../../" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /FR /YX /FD /GZ /c
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -74,7 +74,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib pthreadVC2.lib /nologo /subsystem:console /debug /machine:I386 /nodefaultlib:"libcd.lib" /pdbtype:sept
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib pthreadVC2.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept
 
 !ENDIF 
 
@@ -95,7 +95,119 @@ SOURCE=..\..\src\contention_manager.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\test\globalIntArr.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\irrevocableInt.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\isolatedComposedIntLockInTx.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\isolatedComposedIntLockInTx2.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\isolatedInt.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\isolatedIntLockInTx.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\litExample.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\lotExample.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\nestedTxs.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\pointer_test.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\smart.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\stm.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\testatom.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\testBufferedDelete.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\testEmbedded.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\testHashMap.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\testHashMapAndLinkedListsWithLocks.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\testHashMapWithLocks.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\testHT_latm.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\testInt.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\testLinkedList.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\testLinkedListWithLocks.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\testLL_latm.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\testPerson.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\testRBTree.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\src\transaction.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\transferFun.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\txLinearLock.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\usingLockTx.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -131,6 +243,30 @@ SOURCE=..\..\..\..\boost\stm\detail\datatypes.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\test\globalIntArr.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\irrevocableInt.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\isolatedComposedIntLockInTx.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\isolatedComposedIntLockInTx2.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\isolatedInt.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\isolatedIntLockInTx.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\boost\stm\detail\jenkins_hash.hpp
 # End Source File
 # Begin Source File
@@ -163,7 +299,91 @@ SOURCE=..\..\..\..\boost\stm\detail\latm_general_impl.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\test\litExample.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\lotExample.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\main.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\boost\stm\detail\memory_pool.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\nestedTxs.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\boost\stm\tx\numeric.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\boost\stm\tx\pointer.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\pointer_test.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\smart.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\testatom.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\testBufferedDelete.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\testEmbedded.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\testHashMap.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\testHashMapAndLinkedListsWithLocks.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\testHashMapWithLocks.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\testHT_latm.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\testInt.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\testLinkedList.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\testLinkedListWithLocks.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\testLL_latm.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\testPerson.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\testRBTree.h
 # End Source File
 # Begin Source File
 
@@ -183,7 +403,27 @@ SOURCE=..\..\..\..\boost\stm\detail\transaction_impl.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\boost\stm\detail\transaction_impl.hpp~
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\boost\stm\detail\transactions_stack.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\transferFun.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\boost\stm\detail\tx_ptr.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\txLinearLock.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\test\usingLockTx.h
 # End Source File
 # Begin Source File
 
@@ -194,201 +434,9 @@ SOURCE=..\..\..\..\boost\stm\detail\vector_map.hpp
 SOURCE=..\..\..\..\boost\stm\detail\vector_set.hpp
 # End Source File
 # End Group
-# Begin Group "tests"
+# Begin Group "Resource Files"
 
-# PROP Default_Filter ""
-# Begin Source File
-
-SOURCE=..\..\test\globalIntArr.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\globalIntArr.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\irrevocableInt.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\irrevocableInt.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\isolatedComposedIntLockInTx.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\isolatedComposedIntLockInTx.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\isolatedComposedIntLockInTx2.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\isolatedComposedIntLockInTx2.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\isolatedInt.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\isolatedInt.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\isolatedIntLockInTx.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\isolatedIntLockInTx.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\litExample.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\litExample.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\lotExample.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\lotExample.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\main.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\nestedTxs.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\nestedTxs.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\smart.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\smart.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\stm.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\testHashMap.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\testHashMap.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\testHashMapAndLinkedListsWithLocks.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\testHashMapAndLinkedListsWithLocks.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\testHashMapWithLocks.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\testHashMapWithLocks.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\testHT_latm.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\testHT_latm.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\testInt.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\testInt.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\testLinkedList.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\testLinkedList.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\testLinkedListWithLocks.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\testLinkedListWithLocks.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\testLL_latm.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\testLL_latm.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\testPerson.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\testPerson.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\testRBTree.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\testRBTree.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\transferFun.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\transferFun.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\txLinearLock.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\txLinearLock.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\usingLockTx.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\test\usingLockTx.h
-# End Source File
+# PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 # End Group
 # End Target
 # End Project
