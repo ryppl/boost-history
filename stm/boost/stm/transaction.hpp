@@ -1,3 +1,4 @@
+
 //////////////////////////////////////////////////////////////////////////////
 //
 // (C) Copyright Justin E. Gottchlich 2009.
@@ -1228,8 +1229,10 @@ private:
 #ifndef DISABLE_READ_SETS
    inline bool isReading() const { return !readListRef_.empty(); }
 #endif
-   inline bool isWriting() const { return !write_list()->empty(); }
-   inline bool is_only_reading() const { return !isWriting(); }
+   inline bool isWriting() 
+   { return ! (write_list()->empty() && deletedMemoryList().empty() && newMemoryList().empty()) ; }
+
+   inline bool is_only_reading() { return !isWriting(); }
 
    // undefined and hidden - never allow these - bad things would happen
    transaction& operator=(transaction const &);
