@@ -84,12 +84,14 @@ namespace boost { namespace stm {
 
    typedef std::pair<base_transaction_object*, base_transaction_object*> tx_pair;
 
+#if 0 // these are not portable for Visual Studio 6
    template <typename MUTEX, MUTEX& mtx>
    struct locker {
        inline locker();
        inline ~locker();
        inline void unlock();
    };
+#endif
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1784,6 +1786,7 @@ inline transaction* current_transaction() {
     return transaction::current_transaction();
 }
 
+#if 0 // these are not portable for Visual Studio 6
 template <typename MUTEX, MUTEX& mtx>
 locker<MUTEX,mtx>::locker() {
     boost::stm::lock(mtx);
@@ -1795,6 +1798,7 @@ template <typename MUTEX, MUTEX& mtx>
 void locker<MUTEX,mtx>::unlock() {
     boost::stm::unlock(mtx);
 }
+#endif
 
 
 //-----------------------------------------------------------------------------
