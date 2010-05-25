@@ -1339,7 +1339,7 @@ inline void boost::stm::transaction::deferred_abort
 
       unlock_inflight_access();
    }
-   else unforce_to_abort();
+   //else unforce_to_abort();
 }
 
 ////////////////////////////////////////////////////////////////////////////
