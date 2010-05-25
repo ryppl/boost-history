@@ -1,0 +1,8 @@
+const_aware:
+ - check for in-Python construction of proxies (maybe needs to be disabled with something like no_init)
+ - smarter shared_ptr converter registration (take held_type into account)
+ - test subclasses and back-reference wrappers
+ - documentation!
+
+to_python:
+ - create rvalue converters corresponding to copy_to_XXX policies

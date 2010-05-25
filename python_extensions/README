@@ -24,16 +24,28 @@ FEATURES
  - boost::shared_ptr<T const> conversions that work simply by 
    casting away constness ('to_python/const_cast_shared_ptr.hpp').
 
+ - Wrapping classes in a const_correct manner ('const_aware'), by
+   creating a const proxy class with a subset of the methods and
+   properties of the master class.  Const proxies can be
+   automatically generated from shared_ptr<T const> return values,
+   or generated explicitly by using the as_const<> call policies.
+   See the const_aware test code for an example (yes, better
+   documentation is needed).
 
 INSTALLATION
 
-All the libraries are header only, and the SCons-based build system
-is only used to run tests (and it doesn't try very hard to locate
-Boost.Python if that's non-trivial on your system.
+Most of the extensions (the exception is the const_aware package)
+are header only, and can be used simply by including the
+appropriate files.  The simple SCons build system is mostly intended
+to be used just to run tests (and it doesn't try very hard to locate
+Boost.Python if that's non-trivial on your system).
 
 While I have only tested these on gcc 4.4 in Linux, I don't have
 any reason to think they won't work on any other platform with
-a modern C++ compiler.
+a modern C++ compiler, though I'm not an expert on the differences
+in dynamic linking and symbol visibility on different platforms,
+and those might cause a problem for const_aware.  I'd be curious
+to hear of any successes and/or failures.
 
 As of this writing (May 2010), the latest version of this code 
 is in the boost sandbox at

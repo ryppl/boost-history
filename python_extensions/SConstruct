@@ -5,4 +5,12 @@ bp_extensions_env.SetupPackages(["boost.python"])
 bp_extensions_env.Append(CPPPATH = "#")
 
 Export("bp_extensions_env")
+lib = SConscript("libs/python/src/SConscript")
+libpath = os.path.abspath("libs/python/src")
+if os.environ.has_key("LD_LIBRARY_PATH"):
+    bp_extensions_env["ENV"]["LD_LIBRARY_PATH"] = "%s:%s" % (libpath, os.environ["LD_LIBRARY_PATH"])
+else:
+    bp_extensions_env["ENV"]["LD_LIBRARY_PATH"] = libpath
+bp_extensions_env.Append(LIBPATH="#libs/python/src")
+
 SConscript("libs/python/test/SConscript")
