@@ -28,6 +28,7 @@ transaction::MutexThreadMap transaction::latmLockedLocksOfThreadMap_;
 transaction::MutexSet transaction::tmConflictingLocks_;
 transaction::DeletionBuffer transaction::deletionBuffer_;
 transaction::ThreadTransactionsStack transaction::threadTransactionsStack_;
+transaction::MapOfTxObjects transaction::threadBoundObjects_;
 
 size_t transaction::global_clock_ = 0;
 size_t transaction::stalls_ = 0;
