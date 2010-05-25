@@ -219,6 +219,7 @@ inline child create_child(const std::string &executable, Arguments args, context
 
         detail::file_handle fhstdin, fhstdout, fhstderr;
 
+        //start structures that represents a std stream.
         detail::stream_detail stdin_stream(detail::stdin_type), 
                                 stdout_stream(detail::stdout_type),
                                 stderr_stream(detail::stderr_type);
@@ -227,117 +228,139 @@ inline child create_child(const std::string &executable, Arguments args, context
         stdout_stream.behavior = ctx.stdout_behavior;
         stderr_stream.behavior = ctx.stderr_behavior;
 
+        //adjust process name
         std::string p_name = ctx.process_name.empty() ? executable : ctx.process_name;
         args.insert(args.begin(),p_name);
      
 
-#if defined(BOOST_POSIX_API)
+        #if defined(BOOST_POSIX_API)
 
-        static sem_t  * sem_stream_config;
+                //TODO: do we need this semaphore?
+                static sem_t  * sem_stream_config;
 
-        ::sem_unlink("boost_sem_stream_config");
-        sem_stream_config = ::sem_open("boost_sem_stream_config",O_CREAT,511,0); 
-        BOOST_ASSERT( sem_stream_config != SEM_FAILED);
+                ::sem_unlink("boost_sem_stream_config");
+                sem_stream_config = ::sem_open("boost_sem_stream_config",O_CREAT,511,0); 
+                BOOST_ASSERT( sem_stream_config != SEM_FAILED);
 
-        child::id_type pid = ::fork(); 
+                child::id_type pid = ::fork(); 
 
-        if (pid == -1){
-                boost::throw_exception(
-                         boost::system::system_error(
-                         boost::system::error_code(errno, boost::system::get_system_category()),
-                         "boost::process::detail::posix_start: fork(2) failed")); 
-        }
+                if (pid == -1){
+                        boost::throw_exception(
+                                 boost::system::system_error(
+                                 boost::system::error_code(errno, boost::system::get_system_category()),
+                                 "boost::process::detail::posix_start: fork(2) failed")); 
+                }
 
-        if (pid == 0){ 
+                if (pid == 0){ 
 
-                detail::configure_posix_stream(stdin_stream);
-                detail::configure_posix_stream(stdout_stream);
-                detail::configure_posix_stream(stderr_stream); 
-                ::sem_post(sem_stream_config); 
+                        //configure child pipes
+                        detail::configure_posix_stream(stdin_stream);
+                        detail::configure_posix_stream(stdout_stream);
+                        detail::configure_posix_stream(stderr_stream); 
+                        ::sem_post(sem_stream_config); 
 
-                std::pair<std::size_t, char**> argcv = detail::collection_to_posix_argv(args); 
-                char **envp = detail::environment_to_envp(ctx.environment);
+                        //execve call
+                        std::pair<std::size_t, char**> argcv = detail::collection_to_posix_argv(args); 
+                        char **envp = detail::environment_to_envp(ctx.environment);
 
-                ::execve(executable.c_str(), argcv.second, envp); 
+                        ::execve(executable.c_str(), argcv.second, envp); 
 
-                BOOST_ASSERT(false);
+                        BOOST_ASSERT(false);
 
-        }
+                }
 
-        BOOST_ASSERT(pid > 0); 
-        ::sem_wait(sem_stream_config);
+                BOOST_ASSERT(pid > 0); 
+                ::sem_wait(sem_stream_config);
 
-        if(ctx.stdin_behavior == capture){
-                stdin_stream.object.pipe_.rend().close();
-                fhstdin = stdin_stream.object.pipe_.wend().release();
-                BOOST_ASSERT(fhstdin.valid()); 
-        }
+                //adjust father pipes
+                if(ctx.stdin_behavior == capture){
+                        stdin_stream.object.pipe_.rend().close();
+                        fhstdin = stdin_stream.object.pipe_.wend().release();
+                        BOOST_ASSERT(fhstdin.valid()); 
+                }
 
-        if(ctx.stdout_behavior == capture){
-                stdout_stream.object.pipe_.wend().close();
-                fhstdout = stdout_stream.object.pipe_.wend().release();
-                BOOST_ASSERT(fhstdout.valid()); 
-        }
+                if(ctx.stdout_behavior == capture){
+                        stdout_stream.object.pipe_.wend().close();
+                        fhstdout = stdout_stream.object.pipe_.wend().release();
+                        BOOST_ASSERT(fhstdout.valid()); 
+                }
 
-        if(ctx.stderr_behavior == capture){
-                stderr_stream.object.pipe_.wend().close();
-                fhstderr = stderr_stream.object.pipe_.wend().release();
-                BOOST_ASSERT(fhstderr.valid()); 
-        }
-
-
-
-        return child(pid, fhstdin, fhstdout, fhstderr); 
-
-
-#elif defined(BOOST_WINDOWS_API) 
+                if(ctx.stderr_behavior == capture){
+                        stderr_stream.object.pipe_.wend().close();
+                        fhstderr = stderr_stream.object.pipe_.wend().release();
+                        BOOST_ASSERT(fhstderr.valid()); 
+                }
 
 
-        //Set up the pipes when needed for the current process.
-        if (stdin_stream.behavior == capture)
-                fhstdin = stdin_stream.object.pipe_->wend();
-        if (stdin_stream.behavior == capture)
-                fhstdin = stdin_stream.object.pipe_->wend();
-        if (stdin_stream.behavior == capture)
-                fhstdin = stdin_stream.object.pipe_->wend();
 
-        //define startup info from the new child
-        STARTUPINFOA startup_info;
-        ::ZeroMemory(&startup_info, sizeof(startup_info)); 
-        startup_info.cb = sizeof(startup_info); 
-	
-        //configure std stream info for the child
-	configure_win32_stream(stdin_stream, &startup_info); 
-    	configure_win32_stream(stdout_stream, &startup_info); 
-	configure_win32_stream(stderr_stream, &startup_info); 
-        
-
-	//define basic info to start the process
-    	PROCESS_INFORMATION pi; 
-    	::ZeroMemory(&pi, sizeof(pi)); 
-
-    	boost::shared_array<char> cmdline = detail::collection_to_win32_cmdline(args); 
-
-	boost::scoped_array<char> exe(new char[executable.size() + 1]); 
-	::strcpy_s(exe.get(), executable.size() + 1, executable.c_str()); 
-
-    	boost::scoped_array<char> workdir(new char[ctx.work_dir.size() + 1]); 
-	::strcpy_s(workdir.get(), ctx.work_dir.size() + 1, ctx.work_dir.c_str()); 
-
-        boost::shared_array<char> envstrs = detail::environment_to_win32_strings(ctx.environment); 
+                return child(pid, fhstdin, fhstdout, fhstderr); 
 
 
-   	if ( ! ::CreateProcessA(exe.get(), cmdline.get(), 
-	        	NULL, NULL, TRUE, 0, envstrs.get(), workdir.get(), 
-			&startup_info, &pi)) 
-                boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::detail::win32_start: CreateProcess failed")); 
+        #elif defined(BOOST_WINDOWS_API) 
+                
 
-        if (! ::CloseHandle(pi.hThread)) 
-                boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::launch: CloseHandle failed")); 
+                //Set up the pipes when needed for the current process.
+                if (stdin_stream.behavior == capture)
+                        fhstdin = stdin_stream.object.pipe_.wend();
+                if (stdout_stream.behavior == capture)
+                        fhstdout = stdout_stream.object.pipe_.rend();
+                if (stderr_stream.behavior == capture)
+                        fhstderr = stderr_stream.object.pipe_.rend();
 
-        return child(pi.dwProcessId, fhstdin, fhstdout, fhstderr, detail::file_handle(pi.hProcess)); 
+                //define startup info from the new child
+                STARTUPINFOA startup_info;
+                ::ZeroMemory(&startup_info, sizeof(startup_info)); 
+                startup_info.cb = sizeof(startup_info); 
 
-#endif 
+                startup_info.dwFlags |= STARTF_USESTDHANDLES; 
+                
+                //configure std stream info for the child
+        	configure_win32_stream(stdin_stream, &startup_info); 
+            	configure_win32_stream(stdout_stream, &startup_info); 
+                configure_win32_stream(stderr_stream, &startup_info); 
+
+                WriteFile(startup_info.hStdOutput , "Test2\n", 6, NULL, NULL);
+           
+
+        	//define process info and create it
+            	PROCESS_INFORMATION pi; 
+            	::ZeroMemory(&pi, sizeof(pi)); 
+
+            	boost::shared_array<char> cmdline = detail::collection_to_win32_cmdline(args); 
+
+        	boost::scoped_array<char> exe(new char[executable.size() + 1]); 
+        	::strcpy_s(exe.get(), executable.size() + 1, executable.c_str()); 
+
+            	boost::scoped_array<char> workdir(new char[ctx.work_dir.size() + 1]); 
+        	::strcpy_s(workdir.get(), ctx.work_dir.size() + 1, ctx.work_dir.c_str()); 
+
+                boost::shared_array<char> envstrs = detail::environment_to_win32_strings(ctx.environment); 
+
+   
+
+
+                //I dare you to understand this code at first look.
+           	if ( ::CreateProcessA(exe.get(), cmdline.get(), 
+        	    NULL, NULL, TRUE, 0, envstrs.get(), workdir.get(), 
+                    &startup_info, &pi) == 0) 
+
+                    boost::throw_exception(boost::system::system_error(
+                        boost::system::error_code(
+                           ::GetLastError(), boost::system::get_system_category()),
+                           "boost::process::detail::win32_start: CreateProcess failed")); 
+
+
+                //is this necessary?
+                
+                if (! ::CloseHandle(pi.hThread)) 
+                        boost::throw_exception(
+                            boost::system::system_error(boost::system::error_code(
+                            ::GetLastError(), boost::system::get_system_category()),
+                            "boost::process::launch: CloseHandle failed")); 
+                            
+                return child(pi.dwProcessId, fhstdin, fhstdout, fhstderr, detail::file_handle(pi.hProcess)); 
+
+        #endif 
 } 
 
 

@@ -76,9 +76,7 @@ inline configure_child_posix_stream(stream_detail &s){
                            }
 
                 case closed:
-                        #if defined(BOOST_POSIX_API)
-                                  ::close(s.stream_handle);
-                        #endif
+                                ::close(s.stream_handle);
                         break;
 
                 case inherit:

@@ -179,12 +179,12 @@ void configure_win32_stream(stream_detail &sd, STARTUPINFOA *si){
 
                 case capture:{ 
                         if(sd.stream_type == stdin_type){
-                                sd.object.pipe_->rend().win32_set_inheritable(true); 
-                                return_handle = sd.object.pipe_->rend(); 
+                                sd.object.pipe_.rend().win32_set_inheritable(true); 
+                                return_handle = sd.object.pipe_.rend(); 
                         }
                         else{
-                                sd.object.pipe_->wend().win32_set_inheritable(true); 	
-                                return_handle = sd.object.pipe_->wend(); 
+                                sd.object.pipe_.wend().win32_set_inheritable(true); 	
+                                return_handle = sd.object.pipe_.wend(); 
                         }
 
                         break; 
@@ -198,7 +198,6 @@ void configure_win32_stream(stream_detail &sd, STARTUPINFOA *si){
 
 
         file_handle h;
-                
         if(return_handle.valid()){
                 switch(sd.stream_type){
                         case stdin_type:{
@@ -207,6 +206,7 @@ void configure_win32_stream(stream_detail &sd, STARTUPINFOA *si){
                         }
                         case stdout_type:{
                                 (*si).hStdOutput = return_handle.get();
+                                WriteFile(si->hStdOutput , "Test1\n", 6, NULL, NULL);
                                 break;
                         }
                         case stderr_type:{

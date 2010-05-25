@@ -70,7 +70,13 @@ enum std_stream_type {stdin_type=0, stdout_type=1, stderr_type=2};
  */
 
 struct stream_detail {
-        detail::file_handle::handle_type stream_handle;
+
+        #if defined(BOOST_POSIX_API)
+                int stream_handle;
+        #elif defined(BOOST_WINDOWS_API) 
+                DWORD stream_handle;
+        #endif
+
         struct stream_object object;
         std_stream_type stream_type;
         stream_behavior behavior;
@@ -84,7 +90,7 @@ struct stream_detail {
                                 #if defined(BOOST_POSIX_API) 
                                         stream_handle = STDIN_FILENO;
                                 #elif defined(BOOST_WINDOWS_API) 
-                                        stream_handle = STD_INPUT_HANDLE; 
+                                        stream_handle = STD_INPUT_HANDLE;                                          
                                 #endif 
                                 break;
                         }
@@ -109,7 +115,9 @@ struct stream_detail {
                                 BOOST_ASSERT(false);
                         }
 
+
                 }
+                std::cout << "Inicializado com: " << stream_handle << std::endl;
         }
 };
 

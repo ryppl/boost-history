@@ -33,6 +33,7 @@
 #include <boost/assert.hpp> 
 #include <boost/system/system_error.hpp> 
 #include <boost/throw_exception.hpp> 
+#include <stdio.h> 
 
 namespace boost { 
 namespace process { 
@@ -322,12 +323,14 @@ public:
         static file_handle win32_dup(HANDLE h, bool inheritable){
                 HANDLE h2;
 
-                if (!::DuplicateHandle(::GetCurrentProcess(), h,
-                                        ::GetCurrentProcess(), &h2, 0,
-                                        inheritable ? TRUE : FALSE,
-                                        DUPLICATE_SAME_ACCESS))
-
-                        boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::detail::file_handle::win32_dup: DuplicateHandle failed")); 
+                if (  ::DuplicateHandle(::GetCurrentProcess(), h,
+                           ::GetCurrentProcess(), &h2, 0,
+                           false , DUPLICATE_SAME_ACCESS) ==0 )
+                                     boost::throw_exception(boost::system::system_error(
+                                     boost::system::error_code(::GetLastError(), 
+                                     boost::system::get_system_category()), 
+                                     "boost::process::detail::file_handle::win32_dup: DuplicateHandle failed")); 
+                
 
                 return file_handle(h2);
         }
@@ -352,13 +355,16 @@ public:
 
         static file_handle win32_dup_std(DWORD d, bool inheritable){ 
                 BOOST_ASSERT(d == STD_INPUT_HANDLE || d == STD_OUTPUT_HANDLE || d == STD_ERROR_HANDLE); 
+                
 
                 HANDLE h = ::GetStdHandle(d); 
                 if (h == INVALID_HANDLE_VALUE) 
                         boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::detail::file_handle::win32_std: GetStdHandle failed")); 
 
-                return win32_dup(h, inheritable); 
+                file_handle dh = win32_dup(h, inheritable); 
+                return dh;
         }
+
 
         /** 
          * Changes the file handle's inheritable flag. 
