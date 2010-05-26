@@ -325,7 +325,7 @@ public:
 
                 if (  ::DuplicateHandle(::GetCurrentProcess(), h,
                            ::GetCurrentProcess(), &h2, 0,
-                           false , DUPLICATE_SAME_ACCESS) ==0 )
+                           inheritable ? TRUE : FALSE, DUPLICATE_SAME_ACCESS) ==0 )
                                      boost::throw_exception(boost::system::system_error(
                                      boost::system::error_code(::GetLastError(), 
                                      boost::system::get_system_category()), 
