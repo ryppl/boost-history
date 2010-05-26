@@ -124,7 +124,7 @@ true) to do the exact same thing for a bit_mask on compile time.
 
 Compile time interface only.
 
-For operations on masks try what Andrew suggested:
+For operations on masks which are compile and runtime try what Andrew suggested:
 Functors for the different operations so the following would work for 
 compile time.
 
@@ -140,7 +140,7 @@ the mask in bits then calling the ~ operator on the thing.
 // assuming T is some mask type.
 template <typename T, unsigned int N, bool SetAll = false >
 struct set_bit
-    :integral_mask< T::value_type, T::value >// <--- this will do all of the internal 
+    :integral_mask< T::value_type, T::value > // <--- this will do all of the internal 
     // work as far as keeping types + value etc...
 { };
 
@@ -156,14 +156,41 @@ struct test_bit
     :integral_constant< bool, (T::value & (low_bits<T::value_type,1>::value << N) >
 { };
 
-
                     Compile time flip_bit meta-function
+Intent is to specify either a single bit or all bits to be fliped. This meta-function
+will require one specilization as wll for std::numeric_limits<unsigned int>::max.
 
 template <typename T, unsigned int N = std::numeric_limits<unsigned int>::max >
 struct flip_bits
+    :integral_constant<T::value_type, ( ) >
+{ };
+
+
+
+                    Compile time clear_bit meta-function
+
+The intent of this function would be for clearing of a single bit or all bits 
+from within a mask. This would also require a specilization for
+std::numeric_limits< unsigned int>::max.
+
+
+template <typename T, unsigned int N = std::numeric_limits<unsigned int>::max>
+struct clear_bit
+    :integral_constant<T::value_type,(
+                ( test_bit<T,N>::value ) ?
+                    ( T::value ^ ( low_bits<T::value_type,1>::value << N) )
+                :
+                    ( test_bit<T,N>::value )
+            ) >
+{ };
+
 
 compile time + runtime interface.
 
+These are functors which provide runtime support for preforming regular masking
+operations with complie time composed masks.
 
 runtime only interface.
+
+
 
