@@ -83,7 +83,7 @@ class TestConstAware(unittest.TestCase):
         original_copy = const_aware.Example(original)
         proxy_copy = const_aware.Example(proxy)
         self.assertNotEqual(original.address, original_copy.address)
-        self.assertNotEqual(proxyx.address, proxy_copy.address)
+        self.assertNotEqual(proxy.address, proxy_copy.address)
         self.checkNonConst(original_copy)
         self.checkNonConst(proxy_copy)
 
