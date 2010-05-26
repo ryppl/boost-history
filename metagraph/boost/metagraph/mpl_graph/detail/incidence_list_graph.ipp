@@ -1,4 +1,9 @@
+// Copyright 2008-2010 Gordon Woodhull
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
 #ifndef BOOST_METAGRAPH_MPL_GRAPH_DETAIL_INCIDENCE_LIST_GRAPH_IPP_INCLUDED
+
 #define BOOST_METAGRAPH_MPL_GRAPH_DETAIL_INCIDENCE_LIST_GRAPH_IPP_INCLUDED
 
 // these metafunctions provide the metadata structures needed by the public interface 
@@ -29,8 +34,13 @@
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/filter_view.hpp>
+#include <boost/mpl/transform_view.hpp>
 #include <boost/mpl/equal.hpp>
 #include <boost/type_traits.hpp>
+
+#ifdef USE_AS_MPL_MAP
+#include <boost/metagraph/mpl_graph/detail/as_mpl_map.hpp>
+#endif
 
 namespace boost {
 namespace metagraph {
@@ -73,12 +83,22 @@ struct produce_out_map<incidence_list_tag, Source, ESTSequence> :
 // Edge->Target map for an Source for out_*, adjacent_vertices
 template<typename Source, typename ESTSequence>
 struct produce_out_map<incidence_list_tag, Source, ESTSequence> :
+#ifdef USE_AS_MPL_MAP
+    mpl::as_map<
+        typename mpl::fold<typename mpl::filter_view<ESTSequence, boost::is_same<fetch_source<mpl::_1>,Source> >::type,
+             mpl::vector<>,
+             mpl::push_back<mpl::_1,mpl::pair<fetch_edge<mpl::_2>,fetch_target<mpl::_2> > > >::type>
+#else
     mpl::fold<typename mpl::filter_view<ESTSequence, boost::is_same<fetch_source<mpl::_1>,Source> >::type,
          mpl::map<>,
          mpl::insert<mpl::_1,mpl::pair<fetch_edge<mpl::_2>,fetch_target<mpl::_2> > > >
+#endif
 {};
+
 #endif
 
+/*
+*/
 // Edge->Source map for a Target for in_*, degree
 template<typename Target, typename ESTSequence>
 struct produce_in_map<incidence_list_tag, Target, ESTSequence> :

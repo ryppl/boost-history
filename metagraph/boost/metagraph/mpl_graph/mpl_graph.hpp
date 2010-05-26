@@ -1,3 +1,7 @@
+// Copyright 2008-2010 Gordon Woodhull
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
 // mpl_graph - defines a metadata implementation of the BGL immutable graph concepts
 
 // (c) 2008 Gordon Woodhull 

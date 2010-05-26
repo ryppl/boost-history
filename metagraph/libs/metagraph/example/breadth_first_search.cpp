@@ -1,3 +1,7 @@
+// Copyright 2008-2010 Gordon Woodhull
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
 #include <boost/metagraph/mpl_graph/breadth_first_search.hpp>
 #include <boost/metagraph/mpl_graph/adjacency_list_graph.hpp>
 #include <boost/metagraph/mpl_graph/incidence_list_graph.hpp>
