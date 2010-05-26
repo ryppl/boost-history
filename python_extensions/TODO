@@ -1,7 +1,7 @@
 const_aware:
- - check for in-Python construction of proxies (maybe needs to be disabled with something like no_init)
  - smarter shared_ptr converter registration (take held_type into account)
  - test subclasses and back-reference wrappers
+ - devise better workarounds to deal with lack of visitor support
  - documentation!
 
 to_python:

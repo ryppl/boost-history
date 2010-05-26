@@ -75,5 +75,17 @@ class TestConstAware(unittest.TestCase):
         self.checkNonConst(by_shared_ptr)
         self.checkConst(by_const_shared_ptr)
 
+    def testConstruction(self):
+        original = self.owner.by_value()
+        proxy = const_aware.FrozenExample(original)
+        self.assertEqual(original.address, original.address)
+        self.checkConst(proxy)
+        original_copy = const_aware.Example(original)
+        proxy_copy = const_aware.Example(proxy)
+        self.assertNotEqual(original.address, original_copy.address)
+        self.assertNotEqual(proxyx.address, proxy_copy.address)
+        self.checkNonConst(original_copy)
+        self.checkNonConst(proxy_copy)
+
 if __name__=="__main__":
     unittest.main()

@@ -43,6 +43,7 @@ private:
 static void export_module() {
 
     bp::class_<Example> pyExample("Example");
+    pyExample.def(bp::init<Example const &>());
         
     bp::make_const_aware(pyExample, "FrozenExample")
         .add_property("address", &Example::get_address)
