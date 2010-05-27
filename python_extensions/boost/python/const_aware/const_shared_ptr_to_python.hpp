@@ -8,7 +8,6 @@
 
 #include <boost/python.hpp>
 #include <boost/python/const_aware/proxy_class.hpp>
-#include <boost/python/const_aware/registry.hpp>
 
 namespace boost { namespace python { namespace const_aware {
 
@@ -27,7 +26,7 @@ struct const_shared_ptr_to_python {
     
     static PyTypeObject const * get_pytype() {
         Converter converter;
-        return const_aware::registry::query(converter.get_pytype());
+        return converter.get_pytype();
     }
 
     const_shared_ptr_to_python() {

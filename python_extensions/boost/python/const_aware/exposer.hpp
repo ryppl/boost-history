@@ -41,23 +41,51 @@ class exposer {
     typedef exposer<W,X1,X2,X3> self;
     typedef typename objects::class_metadata<W,X1,X2,X3> metadata;
     typedef typename metadata::wrapped wrapped;
-    class_t & m_class;
+    class_t m_class;
     proxy_class m_proxy;
 
 public: // constructors
 
-    exposer(class_t & class_ref, char const * proxy_name, char const * proxy_doc=0) :
-        m_class(class_ref), m_proxy(proxy_name, m_class, proxy_doc) {}
+    exposer(class_t const & class_ref) : m_class(class_ref), m_proxy(m_class) {}
+
+    // Construct with the class name, with or without docstring, and default __init__() function
+    exposer(char const* name, char const* doc = 0) : m_class(name, doc), m_proxy(m_class) {}
+
+    // Construct with class name, no docstring, and an uncallable __init__ function
+    exposer(char const* name, no_init_t n) : m_class(name, n), m_proxy(m_class) {}
+
+    // Construct with class name, docstring, and an uncallable __init__ function
+    exposer(char const* name, char const* doc, no_init_t n) : m_class(name, doc, n), m_proxy(m_class) {}
+
+    // Construct with class name and init<> function
+    template <class DerivedT>
+    exposer(char const* name, init_base<DerivedT> const& i) : m_class(name, i), m_proxy(m_class) {}
+
+    // Construct with class name, docstring and init<> function
+    template <class DerivedT>
+    exposer(char const* name, char const* doc, init_base<DerivedT> const& i)
+        : m_class(name, doc, i), m_proxy(m_class) {}
 
 public: // miscellaneous
 
+    class_t & main_class() { return m_class; }
     proxy_class & const_proxy() { return m_proxy; }
 
-    self& enable_shared_ptr() {
+    self & enable_shared_ptr() {
         register_ptr_to_python< boost::shared_ptr<wrapped> >();
         const_aware::const_shared_ptr_to_python<wrapped>();
         converter::shared_ptr_from_python<wrapped const>();
         const_aware::shared_ptr_from_proxy<wrapped const>();
+        return *this;
+    }
+
+    self & enable_pickling() {
+        m_class.enable_pickling();
+        return *this;
+    }
+
+    self & copy_method_to_proxy(char const * name) {
+        m_proxy.use_method(name, m_class.attr(name));
         return *this;
     }
 
@@ -151,11 +179,6 @@ public: // data members
     self & add_property(char const* name, Get fget, Set fset, char const* docstr = 0) {
         m_class.add_property(name, fget, fset, docstr);
         m_proxy.use_property(name, m_class.attr(name));
-        return *this;
-    }
-            
-    self & enable_pickling() {
-        m_class.enable_pickling();
         return *this;
     }
 

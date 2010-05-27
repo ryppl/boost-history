@@ -17,19 +17,11 @@ struct proxy_class_base : python::api::object {
 
     // constructor
     proxy_class_base(
-        char const* name,              // The name of the class
-        
         std::size_t num_types,         // A list of class_ids. The first is the type
-        type_info const * const types, // this is wrapping. The rest are the types of
+        type_info const * const types  // this is wrapping. The rest are the types of
                                        // any bases.
-        
-        char const * doc = 0           // Docstring, if any.
     );
 
-    
-    // Implementation detail. Hiding this in the private section would
-    // require use of template friend declarations.
-    void enable_pickling_(bool getstate_manages_dict);
 
 protected:
 
@@ -64,13 +56,8 @@ class proxy_class : proxy_class_base {
 public:
 
     template <typename W, typename X1, typename X2, typename X3>
-    proxy_class(char const * name, class_<W,X1,X2,X3> & target, char const* doc=0)
-        : proxy_class_base(
-            name, 
-            target_metadata<W,X1,X2,X3>::size,
-            target_metadata<W,X1,X2,X3>().ids,
-            doc
-        )
+    proxy_class(class_<W,X1,X2,X3> & target)
+        : proxy_class_base(target_metadata<W,X1,X2,X3>::size, target_metadata<W,X1,X2,X3>().ids)
     {
         rvalue_from_proxy<typename target_metadata<W,X1,X2,X3>::wrapped>();
     }
@@ -89,6 +76,11 @@ public:
 
     proxy_class & use_property(char const * name, object const & prop) {
         proxy_class_base::setattr(name, make_proxy_property(prop));
+        return *this;
+    }
+
+    proxy_class & add_property(char const * name, object const & fget, char const * doc=0) {
+        proxy_class_base::setattr(name, make_new_proxy_property(fget));
         return *this;
     }
 

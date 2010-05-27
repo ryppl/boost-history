@@ -74,6 +74,20 @@ extern "C" {
         return 0;
     }
 
+    static PyObject * proxy_instance_reduce_ex(proxy_instance * self, PyObject * args, PyObject * kwds) {
+        PyObject * method = PyObject_GetAttrString(self->target, "__reduce_ex__");
+        if (method == 0) return 0;
+        return PyObject_Call(method, args, kwds);
+    }
+
+    static PyObject * proxy_instance_repr(proxy_instance * self) {
+        return PyObject_Repr(self->target);
+    }
+
+    static PyObject * proxy_instance_str(proxy_instance * self) {
+        return PyObject_Str(self->target);
+    }
+
 }  // extern "C"
 
 // Mostly copied from class_metatype_object from object/class.cpp in the main Boost.Python library.
@@ -129,6 +143,11 @@ static PyTypeObject proxy_class_metatype_object = {
 #endif
 };
 
+static PyMethodDef proxy_instance_methods[] = {
+    {const_cast<char*>("__reduce_ex__"), (PyCFunction)&proxy_instance_reduce_ex, METH_KEYWORDS, 0},
+    {0, 0, 0, 0}
+};
+
 static PyGetSetDef proxy_instance_getsets[] = {
     {const_cast<char*>("__dict__"),  proxy_instance_get_dict,  proxy_instance_set_dict, NULL, 0},
     {0, 0, 0, 0, 0}
@@ -150,13 +169,13 @@ static PyTypeObject proxy_class_type_object = {
     0,                                      /* tp_getattr */
     0,                                      /* tp_setattr */
     0,                                      /* tp_compare */
-    0,                                      /* tp_repr */
+    (reprfunc)proxy_instance_repr,          /* tp_repr */
     0,                                      /* tp_as_number */
     0,                                      /* tp_as_sequence */
     0,                                      /* tp_as_mapping */
     0,                                      /* tp_hash */
     0,                                      /* tp_call */
-    0,                                      /* tp_str */
+    (reprfunc)proxy_instance_str,           /* tp_str */
     0,                                      /* tp_getattro */
     0,                                      /* tp_setattro */
     0,                                      /* tp_as_buffer */
@@ -169,7 +188,7 @@ static PyTypeObject proxy_class_type_object = {
     offsetof(proxy_instance,weakrefs),      /* tp_weaklistoffset */
     0,                                      /* tp_iter */
     0,                                      /* tp_iternext */
-    0,                                      /* tp_methods */
+    proxy_instance_methods,                 /* tp_methods */
     proxy_instance_members,                 /* tp_members */
     proxy_instance_getsets,                 /* tp_getset */
     0, //&PyBaseObject_Type,                /* tp_base */
@@ -222,53 +241,22 @@ object module_prefix() {
     );
 }
 
-// Find a registered extension class object corresponding to id. Return a
-// null handle if no such class is registered.
-inline type_handle query_target_class(type_info id) {
-    converter::registration const* p = converter::registry::query(id);
-    return type_handle(
-        python::borrowed(
-                python::allow_null(p ? p->m_class_object : 0))
-    );
-}
-
 // Find a registered extension corresponding to id. If not found,
 // throw an appropriate exception.
 type_handle get_target_class(type_info id) {
-    type_handle result(query_target_class(id));
-
-    if (result.get() == 0)
-        {
-            object report("extension class wrapper for proxy target class ");
-            report = report + id.name() + " has not been created yet";
-            PyErr_SetObject(PyExc_RuntimeError, report.ptr());
-            throw_error_already_set();
-        }
+    converter::registration const* reg = converter::registry::query(id);
+    type_handle result(python::borrowed(python::allow_null(reg ? reg->m_class_object : 0)));
+    if (result.get() == 0) {
+        object report("extension class wrapper for proxy target class or base class ");
+        report = report + id.name() + " has not been created yet";
+        PyErr_SetObject(PyExc_RuntimeError, report.ptr());
+        throw_error_already_set();
+    }
     return result;
 }
 
-// Find a registered proxy class object corresponding to id. Return a
-// null handle if no such class is registered.
-inline type_handle query_proxy_class(type_info id) {
-    converter::registration const* p = converter::registry::query(id);
-    return type_handle(
-        python::borrowed(
-                python::allow_null(p ? const_aware::registry::query(p->m_class_object) : 0))
-    );
-}
-
-// Find a registered proxy class corresponding to id. If not found,
-// throw an appropriate exception.
-type_handle get_proxy_class(type_info id) {
-    type_handle result(query_proxy_class(id));
-
-    if (result.get() == 0)
-        {
-            object report("proxy class wrapper for base class ");
-            report = report + id.name() + " has not been created yet";
-            PyErr_SetObject(PyExc_RuntimeError, report.ptr());
-            throw_error_already_set();
-        }
+type_handle get_proxy_class(type_handle const & target) {
+    type_handle result(PyObject_GetAttrString(upcast<PyObject>(target.get()), "__const_proxy__"));
     return result;
 }
 
@@ -283,7 +271,7 @@ type_handle get_proxy_class(type_info id) {
 //             rest corresponding to its declared bases.
 //
 inline object
-new_proxy_class(char const* name, std::size_t num_types, type_info const* const types, char const* doc) {
+new_proxy_class(std::size_t num_types, type_info const* const types) {
     assert(num_types >= 1);
     
     // Build a tuple of the base Python type objects. If no bases
@@ -294,46 +282,38 @@ new_proxy_class(char const* name, std::size_t num_types, type_info const* const 
 
     for (ssize_t i = 1; i <= num_bases; ++i) {
         type_handle c = (i >= static_cast<ssize_t>(num_types)) 
-            ? proxy_class_type() : get_proxy_class(types[i]);
+            ? proxy_class_type() : get_proxy_class(get_target_class(types[i]));
         // PyTuple_SET_ITEM steals this reference
         PyTuple_SET_ITEM(bases.get(), static_cast<ssize_t>(i - 1), upcast<PyObject>(c.release()));
     }
     
     // Call the class metatype to create a new class
+
+    object target(get_target_class(types[0]));
+
     dict d;
-    
+    d["__proxy_target__"] = target;
+    d["__doc__"] = target.attr("__doc__");
+
+    object name = "%s.__const_proxy__" % make_tuple(target.attr("__name__"));
+
     object m = module_prefix();
     if (m) d["__module__"] = m;
-        
-    if (doc != 0)
-        d["__doc__"] = doc;
-
-    type_handle target = get_target_class(types[0]);
-    d["__proxy_target__"] = object(target);
 
     object result = object(proxy_class_metatype())(name, bases, d);
     assert(PyType_IsSubtype(Py_TYPE(result.ptr()), &PyType_Type));
-    
-    if (scope().ptr() != Py_None)
-        scope().attr(name) = result;
-    
+
+    target.attr("__const_proxy__") = result;
+
     return result;
 }
 
 } // <unnamed>
   
 proxy_class_base::proxy_class_base(
-    char const* name, std::size_t num_types, type_info const* const types, char const* doc)
-    : object(new_proxy_class(name, num_types, types, doc))
-{
-    // Insert the new class object in the const_registry
-    // Class object is leaked, for now
-    object target = this->attr("__proxy_target__");
-    const_aware::registry::insert(
-        (PyTypeObject*)target.ptr(),
-        (PyTypeObject*)incref(this->ptr())
-    );
-}
+    std::size_t num_types, type_info const* const types)
+    : object(new_proxy_class(num_types, types))
+{}
 
 void proxy_class_base::setattr(char const* name, object const& x) {
     if (PyObject_SetAttrString(this->ptr(), const_cast<char*>(name), x.ptr()) < 0)
@@ -343,13 +323,9 @@ void proxy_class_base::setattr(char const* name, object const& x) {
 PyObject * construct_proxy_class(PyObject * target_arg) {
     handle<> target(target_arg);
     PyTypeObject * target_type = Py_TYPE(target.get());
-    PyTypeObject * proxy_type = const_aware::registry::query(target_type);
-    if (proxy_type == 0) {
-        object report("no const proxy class registered for objects of type ");
-        report = report + str(object(type_handle(borrowed(target_type))));
-        PyErr_SetObject(PyExc_RuntimeError, report.ptr());
-        throw_error_already_set();
-    }
+    PyTypeObject * proxy_type = 
+        (PyTypeObject*)PyObject_GetAttrString((PyObject*)target_type, "__const_proxy__");
+    if (proxy_type == 0) return 0;
     PyObject * raw_proxy = proxy_type->tp_alloc(proxy_type, 0);
     if (raw_proxy != 0) {
         proxy_instance * proxy = (proxy_instance*)raw_proxy;

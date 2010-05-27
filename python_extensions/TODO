@@ -1,6 +1,4 @@
 const_aware:
- - check pickle support
- - investigate standardized special names for proxy classes (remove registry?)
  - smarter shared_ptr converter registration (take held_type into account)
  - test subclasses and back-reference wrappers
  - devise better workarounds to deal with lack of visitor support

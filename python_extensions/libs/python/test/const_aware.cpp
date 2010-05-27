@@ -8,6 +8,8 @@ class Example {
 public:
     Example() : value(0) {}
 
+    Example(int v) : value(v) {}
+
     std::size_t get_address() const { return std::size_t(this); }
 
     bool non_const_method() { return true; }
@@ -42,17 +44,16 @@ private:
 
 static void export_module() {
 
-    bp::class_<Example> pyExample("Example");
-    pyExample.def(bp::init<Example const &>());
-        
-    bp::make_const_aware(pyExample, "FrozenExample")
+    bp::const_aware::exposer<Example>("Example", bp::init<Example const &>())
         .add_property("address", &Example::get_address)
         .def("non_const_method", &Example::non_const_method)
         .def("const_method", &Example::const_method)
         .add_property("value_prop", &Example::get_value, &Example::set_value)
         .def_readonly("value_ro", &Example::value)
         .def_readwrite("value_rw", &Example::value)
-        .enable_shared_ptr();
+        .enable_shared_ptr()
+        .enable_pickling()
+        .main_class().def(bp::init<int>((bp::arg("value")=0)))
         ;
 
     bp::class_<Owner>("Owner")

@@ -17,6 +17,10 @@ object make_proxy_method(object const & target);
 // a proxy method and removing fset.
 object make_proxy_property(object const & target);
 
+// Construct a new property object by making a proxy method from the given
+// getter.
+object make_new_proxy_property(object const & fget, char const * doc=0);
+
 }}} // namespace boost::python::const_aware
 
 #endif // !BOOST_PYTHON_CONST_AWARE_PROXY_METHOD_HPP
