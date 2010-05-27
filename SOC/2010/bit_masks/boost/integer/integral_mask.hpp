@@ -33,51 +33,11 @@ struct integral_mask
 {
     typedef integral_mask<T,Value> type;
 
-    T operator()() {
+    operator T() {
         return type::value;
     }
+
 };
-
-
-// runtime support functions.
-
-// Overloads for bitwise and
-template <typename T, unsigned int Value>
-inline T operator&(T t, integral_mask<T,Value> ) {
-    return t & integral_mask<T,Value>::value;
-}
-
-template <typename T, unsigned int Value>
-inline T operator&(integral_mask<T,Value>, T t) {
-    return integral_mask<T,Value>::value & t;
-}
-
-// Overloads for bitwise or
-template <typename T, unsigned int Value>
-inline T operator|(T t, integral_mask<T,Value>) {
-    return t | integral_mask<T,Value>::value;
-}
-
-template <typename T, unsigned int Value>
-inline T operator|(integral_mask<T,Value>, T t) {
-    return integral_mask<T,Value>::value | t;
-}
-
-// Overloads for bitwise xor
-template <typename T, unsigned int Value>
-inline T operator^(T t, integral_mask<T,Value>) {
-    return t ^ integral_mask<T,Value>::value;
-}
-
-template <typename T, unsigned int Value>
-inline T operator^(integral_mask<T,Value>, T t) {
-    return integral_mask<T,Value>::value ^ t;
-}
-
-template <typename T, unsigned int Width>
-inline T operator~(integral_mask<T,Width>) {
-    return ~( integral_mask<T,Width>::value );
-}
 
 } // namespace boost
 

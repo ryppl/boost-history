@@ -46,50 +46,10 @@ struct bit_mask
 
     BOOST_STATIC_CONSTANT(unsigned int, width  = Width);
 
-    T operator()() {
+    operator T() {
         return type::value;
     }
 };
-
-// Runtime support functions.
-
-// Overloads for bitwise and
-template <typename T, unsigned int Offset, unsigned int Width>
-inline T operator&(T t, bit_mask<T,Offset,Width> ) {
-    return t & bit_mask<T, Offset, Width>::value;
-}
-
-template <typename T, unsigned int Offset, unsigned int Width>
-inline T operator&(bit_mask<T,Offset,Width>, T t) {
-    return bit_mask<T,Offset,Width>::value & t;
-}
-
-// Overloads for bitwise or
-template <typename T, unsigned int Offset, unsigned int Width>
-inline T operator|(T t, bit_mask<T,Offset,Width>) {
-    return t | bit_mask<T,Offset,Width>::value;
-}
-
-template <typename T, unsigned int Offset, unsigned int Width>
-inline T operator|(bit_mask<T,Offset,Width>, T t) {
-    return bit_mask<T,Offset,Width>::value | t;
-}
-
-// Overloads for bitwise xor
-template <typename T, unsigned int Offset, unsigned int Width>
-inline T operator^(T t, bit_mask<T,Offset,Width>) {
-    return t ^ bit_mask<T,Offset,Width>::value;
-}
-
-template <typename T, unsigned int Offset, unsigned int Width>
-inline T operator^(bit_mask<T,Offset,Width>, T t) {
-    return bit_mask<T,Offset,Width>::value ^ t;
-}
-
-template <typename T, unsigned int Offset, unsigned int Width>
-inline T operator~(bit_mask<T,Offset,Width>) {
-    return ~( bit_mask<T,Offset,Width>::value );
-}
 
 } // namespace boost
 
