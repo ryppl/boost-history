@@ -32,7 +32,7 @@ namespace boost {
  */
 template <typename T, unsigned int Offset, unsigned int Width = 1 >
 struct bit_mask
-    :integral_constant<T, (low_bits<T,Width>::value << Offset) >
+    :integral_mask<T, (low_bits<T,Width>::value << Offset) >
 {
     // precondition 1.
     BOOST_STATIC_ASSERT(( (Offset + Width) < ( bit_width<T>::value - 1)  ));
@@ -46,9 +46,6 @@ struct bit_mask
 
     BOOST_STATIC_CONSTANT(unsigned int, width  = Width);
 
-    operator T() {
-        return type::value;
-    }
 };
 
 } // namespace boost
