@@ -166,7 +166,7 @@ PyTypeObject proxy_method_type_object = {
 type_handle proxy_method_type() {
     if (proxy_method_type_object.tp_dict == 0) {
         if (PyType_Ready(&proxy_method_type_object))
-            return type_handle();
+            return handle<>();
     }
     return type_handle(borrowed(&proxy_method_type_object));
 }
