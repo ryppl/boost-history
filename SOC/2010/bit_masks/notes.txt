@@ -177,18 +177,37 @@ struct clear_mask_bit;
 compile time + runtime interface.
 
 These are functors which provide runtime support for preforming regular masking
-operations with complie time composed masks.
+operations with complie time composed masks. The reasoning behind creating functions
+which create a mask on compile time and that mask would then be applied to some
+integral type T at a later time.
+
+
 
                 Compile + run time set interface.
 All masks should be hidden unless one is supplied as a template parameter?
 however the internal mask created will be availiable always its just that the user
 may not want to actually see it or have to use it themselves.
 
-template <typename T, size_t N>
+template <size_t N>
 struct set_bit
 {
-    void operator() ( T::value_type& bits );
+    template <typename T>
+    void operator() ( T& bits );
 };
+
+
+example usage for something like this could be:
+
+typedef set_bit< 3 > set_third_bit;
+
+unsigned int some_integer(0);
+set_third_bit()(some_integer);
+
+
+this would the third bit of the some_integer would then be set.
+
+
+
                 Compile + run time test interface.
 
                 Compile + run time flip interface.
