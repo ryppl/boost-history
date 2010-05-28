@@ -1,164 +1,178 @@
-// 
-// Boost.Process 
-// ~~~~~~~~~~~~~ 
-// 
-// Copyright (c) 2006, 2007 Julio M. Merino Vidal 
-// Copyright (c) 2008, 2009 Boris Schaeling 
-// 
-// Distributed under the Boost Software License, Version 1.0. (See accompanying 
-// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt) 
-// 
+//
+// Boost.Process
+// ~~~~~~~~~~~~~
+//
+// Copyright (c) 2006, 2007 Julio M. Merino Vidal
+// Copyright (c) 2008, 2009 Boris Schaeling
+//
+// Distributed under the Boost Software License, Version 1.0. (See accompanying
+// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
 
-/** 
- * \file boost/process/self.hpp 
- * 
- * Includes the declaration of the self class. 
- */ 
+/**
+ * \file boost/process/self.hpp
+ *
+ * Includes the declaration of the self class.
+ */
 
-#ifndef BOOST_PROCESS_SELF_HPP 
-#define BOOST_PROCESS_SELF_HPP 
+#ifndef BOOST_PROCESS_SELF_HPP
+#define BOOST_PROCESS_SELF_HPP
 
-#include <boost/process/config.hpp> 
+#include <boost/process/config.hpp>
 
-#if defined(BOOST_POSIX_API) 
-        #include <unistd.h> 
+#if defined(BOOST_POSIX_API)
+#include <unistd.h>
 
-        #if defined(__APPLE__) 
-                #include <crt_externs.h> 
-        #endif 
+#if defined(__APPLE__)
+#include <crt_externs.h>
+#endif
 
-#elif defined(BOOST_WINDOWS_API) 
-        #include <windows.h> 
-        #include <direct.h>
-#else 
-        #error "Unsupported platform." 
-#endif 
+#elif defined(BOOST_WINDOWS_API)
+#include <windows.h>
+#include <direct.h>
+#else
+#error "Unsupported platform." 
+#endif
 
-#include <boost/process/process.hpp> 
-#include <boost/process/environment.hpp> 
-#include <boost/system/system_error.hpp> 
-#include <boost/throw_exception.hpp> 
-#include <boost/noncopyable.hpp> 
-#include <string> 
+#include <boost/process/process.hpp>
+#include <boost/process/environment.hpp>
+#include <boost/system/system_error.hpp>
+#include <boost/throw_exception.hpp>
+#include <boost/noncopyable.hpp>
+#include <string>
 #include <iostream>
 
-#if defined(BOOST_POSIX_API) 
-extern "C" 
-{ 
-    extern char **environ; 
-} 
-#endif 
+#if defined(BOOST_POSIX_API)
+extern "C"
+{
+    extern char **environ;
+}
+#endif
 
-namespace boost { 
-namespace process { 
+namespace boost
+{
+namespace process
+{
 
-/** 
- * Generic implementation of the Process concept. 
- * 
- * The self singleton provides access to the current process. 
- */ 
-class self : public process, boost::noncopyable{ 
-public: 
-    /** 
-     * Returns the self instance representing the caller's process. 
-     */ 
-        static self &get_instance(){ 
-                static self *instance = 0; 
-                if (!instance) 
-                        instance = new self; 
-                return *instance; 
-        } 
+/**
+ * Generic implementation of the Process concept.
+ *
+ * The self singleton provides access to the current process.
+ */
+class self : public process, boost::noncopyable
+{
+public:
+    /**
+     * Returns the self instance representing the caller's process.
+     */
+    static self &get_instance()
+    {
+        static self *instance = 0;
+        if (!instance)
+            instance = new self;
+        return *instance;
+    }
 
-    /** 
-     * Returns the current environment. 
-     * 
-     * Returns the current process' environment variables. Modifying the 
-     * returned object has no effect on the current environment. 
-     */ 
-        static environment_t get_environment(){ 
-                environment_t e; 
+    /**
+     * Returns the current environment.
+     *
+     * Returns the current process' environment variables. Modifying the
+     * returned object has no effect on the current environment.
+     */
+    static environment_t get_environment()
+    {
+        environment_t e;
 
-                #if defined(BOOST_POSIX_API) 
-                        #if defined(__APPLE__) 
-                                char **env = *_NSGetEnviron(); 
-                        #else 
-                                char **env = ::environ; 
-                        #endif 
+#if defined(BOOST_POSIX_API)
+#if defined(__APPLE__)
+        char **env = *_NSGetEnviron();
+#else
+        char **env = ::environ;
+#endif
 
-                        while (*env){ 
-                                std::string s = *env; 
-                                std::string::size_type pos = s.find('='); 
-                                e.insert(boost::process::environment_t::value_type(
-                                        s.substr(0, pos), s.substr(pos + 1))); 
-                                ++env; 
-                        }                
-
-                #elif defined(BOOST_WINDOWS_API) 
-                        #ifdef GetEnvironmentStrings 
-                                #undef GetEnvironmentStrings 
-                        #endif 
-
-                        char *ms_environ = ::GetEnvironmentStrings(); 
-                        if (!ms_environ) 
-                                boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::self::get_environment: GetEnvironmentStrings failed")); 
-                        try{ 
-                                char *env = ms_environ; 
-                                while (*env){ 
-                                        std::string s = env; 
-                                        std::string::size_type pos = s.find('='); 
-                                        e.insert(boost::process::environment_t::value_type(
-                                                s.substr(0, pos), s.substr(pos + 1))
-                                                ); 
-                                        env += s.size() + 1; 
-                                } 
-                        } 
-                        catch (...){ 
-                                ::FreeEnvironmentStringsA(ms_environ); 
-                                throw; 
-                        } 
-                        ::FreeEnvironmentStringsA(ms_environ); 
-                #endif 
-
-        return e; 
+        while (*env)
+        {
+            std::string s = *env;
+            std::string::size_type pos = s.find('=');
+            e.insert(boost::process::environment_t::value_type(
+                         s.substr(0, pos), s.substr(pos + 1)));
+            ++env;
         }
 
+#elif defined(BOOST_WINDOWS_API)
+#ifdef GetEnvironmentStrings
+#undef GetEnvironmentStrings
+#endif
 
-        static char * get_work_dir(){
-                #if defined(BOOST_POSIX_API) 
-                        int size = pathconf(".",_PC_PATH_MAX);
-                        char * buffer = (char *)malloc(size);
-                        if(buffer == NULL)
-                                BOOST_ASSERT(false);
-                        return getcwd(buffer, size);
-
-                #elif defined(BOOST_WINDOWS_API) 
-
-                        char* buffer;
-
-                        BOOST_ASSERT( (buffer = _getcwd( NULL, 0 )) != NULL );
-                        return buffer;
-
-                #endif
-
+        char *ms_environ = ::GetEnvironmentStrings();
+        if (!ms_environ)
+            boost::throw_exception(boost::system::system_error(
+                        boost::system::error_code(::GetLastError(),
+                            boost::system::get_system_category()),
+                        "boost::process::self::get_environment:\ 
+                        GetEnvironmentStrings failed"));
+        try
+        {
+            char *env = ms_environ;
+            while (*env)
+            {
+                std::string s = env;
+                std::string::size_type pos = s.find('=');
+                e.insert(boost::process::environment_t::value_type(
+                             s.substr(0, pos), s.substr(pos + 1))
+                        );
+                env += s.size() + 1;
+            }
         }
+        catch (...)
+        {
+            ::FreeEnvironmentStringsA(ms_environ);
+            throw;
+        }
+        ::FreeEnvironmentStringsA(ms_environ);
+#endif
 
-private: 
-        /** 
-         * Constructs a new self object. 
-         * 
-         * Creates a new self object that represents the current process. 
-         */ 
-        self() : 
-        #if defined(BOOST_POSIX_API) 
-                process(::getpid()) 
-        #elif defined(BOOST_WINDOWS_API) 
-                process(::GetCurrentProcessId()) 
-        #endif 
-       {} 
+        return e;
+    }
 
-}; 
 
-} 
-} 
+    static char * get_work_dir()
+    {
+#if defined(BOOST_POSIX_API)
+        int size = pathconf(".",_PC_PATH_MAX);
+        char * buffer = (char *)malloc(size);
+        if(buffer == NULL)
+            BOOST_ASSERT(false);
+        return getcwd(buffer, size);
 
-#endif 
+#elif defined(BOOST_WINDOWS_API)
+
+        char* buffer;
+
+        BOOST_ASSERT( (buffer = _getcwd( NULL, 0 )) != NULL );
+        return buffer;
+
+#endif
+
+    }
+
+private:
+    /**
+     * Constructs a new self object.
+     *
+     * Creates a new self object that represents the current process.
+     */
+    self() :
+#if defined(BOOST_POSIX_API)
+        process(::getpid())
+#elif defined(BOOST_WINDOWS_API)
+        process(::GetCurrentProcessId())
+#endif
+    {}
+
+};
+
+}
+}
+
+#endif
