@@ -16,7 +16,7 @@
 #define HASH_MAP_H
 
 ///////////////////////////////////////////////////////////////////////////////
-#include <boost/stm/transaction.hpp>
+#include <boost/stm.hpp>
 #include "testLinkedList.h"
 
 void TestHashMapWithMultipleThreads();

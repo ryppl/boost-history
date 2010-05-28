@@ -17,7 +17,7 @@
 #include <string>
 #include <sstream>
 #include <fstream>
-#include <boost/stm/transaction.hpp>
+#include <boost/stm.hpp>
 
 void TestRedBlackTree();
 void TestRedBlackTreeWithMultipleThreads();

@@ -12,7 +12,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "testInt.h"
-#include <boost/stm/transaction.hpp>
+#include <boost/stm.hpp>
 
 Integer *globalInt = 0;
 

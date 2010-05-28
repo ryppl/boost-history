@@ -32,8 +32,8 @@
 
 #include <iostream>
 #include "isolatedComposedIntLockInTx.h"
-#include <boost/stm/transaction.hpp>
-#include <boost/stm/synch.hpp>
+#include <boost/stm.hpp>
+//~ #include <boost/stm/synch.hpp>
 #include "main.h"
 
 #ifndef BOOST_STM_T_USE_BOOST_MUTEX

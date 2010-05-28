@@ -16,7 +16,7 @@
 #define NESTED_TXS_H
 
 #include "main.h"
-#include <boost/stm/transaction.hpp>
+#include <boost/stm.hpp>
 #include <pthread.h>
 #include <fstream>
 

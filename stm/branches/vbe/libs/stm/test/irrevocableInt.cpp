@@ -32,7 +32,7 @@
 
 #include <iostream>
 #include "irrevocableInt.h"
-#include <boost/stm/transaction.hpp>
+#include <boost/stm.hpp>
 #include "main.h"
 
 static boost::stm::native_trans<int> gInt;

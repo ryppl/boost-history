@@ -32,7 +32,7 @@
 
 #include <iostream>
 #include "lotExample.h"
-#include <boost/stm/transaction.hpp>
+#include <boost/stm.hpp>
 #include "main.h"
 
 using namespace boost::stm;

@@ -20,7 +20,7 @@
 //#define BOOST_STM_LL_USES_NODE 1
 
 #include "main.h"
-#include <boost/stm/transaction.hpp>
+#include <boost/stm.hpp>
 
 #include <fstream>
 

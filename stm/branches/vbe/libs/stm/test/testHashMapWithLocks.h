@@ -16,7 +16,7 @@
 #define HASH_MAP_WITH_LOCKS_H
 
 ///////////////////////////////////////////////////////////////////////////////
-#include <boost/stm/transaction.hpp>
+#include <boost/stm.hpp>
 #include "testLinkedListWithLocks.h"
 
 void TestHashMapWithLocks();

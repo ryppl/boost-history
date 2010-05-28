@@ -14,7 +14,7 @@
 #ifndef TEST_INT_H
 #define TEST_INT_H
 
-#include <boost/stm/transaction.hpp>
+#include <boost/stm.hpp>
 
 ////////////////////////////////////////////////////////////////////////////
 // Int Transaction class

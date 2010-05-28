@@ -16,7 +16,7 @@
 #define LATM_HASH_MAP_WITH_LOCKS_H
 
 ///////////////////////////////////////////////////////////////////////////////
-#include <boost/stm/transaction.hpp>
+#include <boost/stm.hpp>
 #include "testLL_latm.h"
 
 void TestHashMapWithLocks();

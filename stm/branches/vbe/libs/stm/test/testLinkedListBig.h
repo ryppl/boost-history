@@ -16,7 +16,7 @@
 #define TEST_LINKED_LIST_H
 
 #include "main.h"
-#include <boost/stm/transaction.hpp>
+#include <boost/stm.hpp>
 
 #include <fstream>
 

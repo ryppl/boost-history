@@ -16,8 +16,8 @@
 #define TEST_LINKED_LIST_WITH_LOCKS_H
 
 #include "main.h"
-#include <boost/stm/transaction.hpp>
-#include <boost/stm/synch.hpp>
+#include <boost/stm.hpp>
+//~ #include <boost/stm/synch.hpp>
 #include <pthread.h>
 #include <fstream>
 

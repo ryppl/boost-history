@@ -13,8 +13,8 @@
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-#include <boost/stm/transaction.hpp>
-#include <boost/stm/tx_ptr.hpp>
+#include <boost/stm.hpp>
+//~ #include <boost/stm/tx_ptr.hpp>
 #include "smart.h"
 #include "main.h"
 

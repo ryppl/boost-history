@@ -16,7 +16,7 @@
 
 #include <iostream>
 #include "main.h"
-#include <boost/stm/transaction.hpp>
+#include <boost/stm.hpp>
 
 void TestPerson();
 

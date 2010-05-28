@@ -13,8 +13,8 @@
 
 #include <iostream>
 #include "txLinearLock.h"
-#include <boost/stm/transaction.hpp>
-#include <boost/stm/synch.hpp>
+#include <boost/stm.hpp>
+//~ #include <boost/stm/synch.hpp>
 #include "main.h"
 
 static boost::stm::native_trans<int> gInt1;

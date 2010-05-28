@@ -14,7 +14,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include <boost/stm/transaction.hpp>
+#include <boost/stm.hpp>
 
 namespace nMain
 {
