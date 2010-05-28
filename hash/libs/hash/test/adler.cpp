@@ -44,7 +44,7 @@ namespace primes_check {
     BOOST_STATIC_ASSERT(largest_prime<29>::value == 536870909);
     BOOST_STATIC_ASSERT(largest_prime<30>::value == 1073741789);
     BOOST_STATIC_ASSERT(largest_prime<31>::value == 2147483647);
-    BOOST_STATIC_ASSERT(largest_prime<32>::value == 4294967291);
+    BOOST_STATIC_ASSERT(largest_prime<32>::value == 4294967291U);
 
 }
 

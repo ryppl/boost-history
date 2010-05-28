@@ -11,6 +11,8 @@
 
 #include <boost/hash/block_cyphers/detail/threefish_policy.hpp>
 
+#include <boost/cstdint.hpp>
+
 #ifdef BOOST_HASH_SHOW_PROGRESS
 #include <cstdio>
 #endif
@@ -70,7 +72,7 @@ class threefish {
   private:
     void
     set_key(key_type const &key) {
-        word_type k_N_w = 0x5555555555555555L;
+        word_type k_N_w = UINT64_C(0x5555555555555555);
         for (unsigned t = 0; t < key_words; ++t) {
             key_schedule[t] = key[t];
 #ifdef BOOST_HASH_SHOW_PROGRESS

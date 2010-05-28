@@ -154,7 +154,7 @@ void test_accumulator_sha384() {
     // A single 1 bit after the (empty) message,
     // then pad with 0s,
     // then add the length, which is also 0
-    HASH::block_hash_type::block_type m = {{0x8000000000000000ul}};
+    HASH::block_hash_type::block_type m = {{UINT64_C(0x8000000000000000)}};
     a.update(m);
 
     HASH::digest_type s = a.end_message();
@@ -167,8 +167,8 @@ void test_accumulator_sha384() {
     {
     // Example from appendix D.1: echo -n "abc" | sha384sum
     HASH::block_hash_type::block_type m = {{}};
-    m[ 0] = 0x6162638000000000L;
-    m[15] = 0x0000000000000018L;
+    m[ 0] = UINT64_C(0x6162638000000000);
+    m[15] = UINT64_C(0x0000000000000018);
     a.update(m);
 
     HASH::digest_type s = a.end_message();
@@ -183,22 +183,22 @@ void test_accumulator_sha384() {
     // echo -n "abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmn (continues)
     //          hijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu" | sha384sum
     HASH::block_hash_type::block_type m1 = {{
-        0x6162636465666768L,
-        0x6263646566676869L,
-        0x636465666768696aL,
-        0x6465666768696a6bL,
-        0x65666768696a6b6cL,
-        0x666768696a6b6c6dL,
-        0x6768696a6b6c6d6eL,
-        0x68696a6b6c6d6e6fL,
-        0x696a6b6c6d6e6f70L,
-        0x6a6b6c6d6e6f7071L,
-        0x6b6c6d6e6f707172L,
-        0x6c6d6e6f70717273L,
-        0x6d6e6f7071727374L,
-        0x6e6f707172737475L,
-        0x8000000000000000L,
-        0x0000000000000000L,
+        UINT64_C(0x6162636465666768),
+        UINT64_C(0x6263646566676869),
+        UINT64_C(0x636465666768696a),
+        UINT64_C(0x6465666768696a6b),
+        UINT64_C(0x65666768696a6b6c),
+        UINT64_C(0x666768696a6b6c6d),
+        UINT64_C(0x6768696a6b6c6d6e),
+        UINT64_C(0x68696a6b6c6d6e6f),
+        UINT64_C(0x696a6b6c6d6e6f70),
+        UINT64_C(0x6a6b6c6d6e6f7071),
+        UINT64_C(0x6b6c6d6e6f707172),
+        UINT64_C(0x6c6d6e6f70717273),
+        UINT64_C(0x6d6e6f7071727374),
+        UINT64_C(0x6e6f707172737475),
+        UINT64_C(0x8000000000000000),
+        UINT64_C(0x0000000000000000),
     }};
     a.update(m1);
     assert("2a7f1d895fd58e0beaae96d1a673c741015a2173796c1a88"
@@ -229,7 +229,7 @@ void test_accumulator_sha512() {
     // A single 1 bit after the (empty) message,
     // then pad with 0s,
     // then add the length, which is also 0
-    HASH::block_hash_type::block_type m = {{0x8000000000000000ul}};
+    HASH::block_hash_type::block_type m = {{UINT64_C(0x8000000000000000)}};
     a.update(m);
 
     HASH::digest_type s = a.end_message();
@@ -242,8 +242,8 @@ void test_accumulator_sha512() {
     {
     // Example from appendix C.1: echo -n "abc" | sha512sum
     HASH::block_hash_type::block_type m = {{}};
-    m[ 0] = 0x6162638000000000L;
-    m[15] = 0x0000000000000018L;
+    m[ 0] = UINT64_C(0x6162638000000000);
+    m[15] = UINT64_C(0x0000000000000018);
     a.update(m);
 
     HASH::digest_type s = a.end_message();
@@ -258,22 +258,22 @@ void test_accumulator_sha512() {
     // echo -n "abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmn (continues)
     //          hijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu" | sha512sum
     HASH::block_hash_type::block_type m1 = {{
-        0x6162636465666768L,
-        0x6263646566676869L,
-        0x636465666768696aL,
-        0x6465666768696a6bL,
-        0x65666768696a6b6cL,
-        0x666768696a6b6c6dL,
-        0x6768696a6b6c6d6eL,
-        0x68696a6b6c6d6e6fL,
-        0x696a6b6c6d6e6f70L,
-        0x6a6b6c6d6e6f7071L,
-        0x6b6c6d6e6f707172L,
-        0x6c6d6e6f70717273L,
-        0x6d6e6f7071727374L,
-        0x6e6f707172737475L,
-        0x8000000000000000L,
-        0x0000000000000000L,
+        UINT64_C(0x6162636465666768),
+        UINT64_C(0x6263646566676869),
+        UINT64_C(0x636465666768696a),
+        UINT64_C(0x6465666768696a6b),
+        UINT64_C(0x65666768696a6b6c),
+        UINT64_C(0x666768696a6b6c6d),
+        UINT64_C(0x6768696a6b6c6d6e),
+        UINT64_C(0x68696a6b6c6d6e6f),
+        UINT64_C(0x696a6b6c6d6e6f70),
+        UINT64_C(0x6a6b6c6d6e6f7071),
+        UINT64_C(0x6b6c6d6e6f707172),
+        UINT64_C(0x6c6d6e6f70717273),
+        UINT64_C(0x6d6e6f7071727374),
+        UINT64_C(0x6e6f707172737475),
+        UINT64_C(0x8000000000000000),
+        UINT64_C(0x0000000000000000),
     }};
     a.update(m1);
     assert("4319017a2b706e69cd4b05938bae5e890186bf199f30aa956ef8b71d2f810585"
