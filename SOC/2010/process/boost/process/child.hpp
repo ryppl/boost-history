@@ -110,11 +110,12 @@ public:
          * process handle. 
          */ 
         child(id_type id, detail::file_handle &fhstdin, detail::file_handle &fhstdout, detail::file_handle &fhstderr, detail::file_handle fhprocess = detail::file_handle()) 
-            : process(id) 
-        #if defined(BOOST_WINDOWS_API) 
-            , process_handle_(fhprocess.release(), ::CloseHandle) 
-        #endif 
-        { 
+            : process(id){ 
+
+            #if defined(BOOST_WINDOWS_API) 
+                process_handle_ =  boost::shared_ptr<void>(fhprocess.release(), ::CloseHandle);
+            #endif 
+            std::cout << "Criado com ID " << process_handle_.get() << std::endl;  
             if (fhstdin.valid()) 
                 stdin_.reset(new postream(fhstdin)); 
             if (fhstdout.valid()) 
@@ -122,6 +123,8 @@ public:
             if (fhstderr.valid()) 
                 stderr_.reset(new pistream(fhstderr)); 
         } 
+
+
 
 private: 
         /** 
@@ -153,13 +156,6 @@ private:
          * data stream. 
          */ 
         boost::shared_ptr<pistream> stderr_; 
-
-        #if defined(BOOST_WINDOWS_API) 
-                /** 
-                 * Process handle owned by RAII object. 
-                 */ 
-                boost::shared_ptr<void> process_handle_; 
-        #endif 
 
 
 /** 

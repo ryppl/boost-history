@@ -44,8 +44,7 @@ class process;
  * 
  * \see posix_status 
  */ 
-class status 
-{ 
+class status{ 
         friend class process; 
 
         public: 

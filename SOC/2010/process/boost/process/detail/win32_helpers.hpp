@@ -146,7 +146,7 @@ inline file_handle configure_win32_stream(stream_detail &sd){
 
         switch (sd.behavior){ 
                 case closed:{ 
-
+                        return_handle = file_handle();
                         break; 
                 } 
                 case inherit:{                       

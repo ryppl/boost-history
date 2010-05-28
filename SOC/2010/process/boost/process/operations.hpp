@@ -308,20 +308,21 @@ inline child create_child(const std::string &executable, Arguments args, context
                 startup_info.dwFlags |= STARTF_USESTDHANDLES; 
                 
                 //configure std stream info for the child
-                //TODO: Find a better way to do it.
+                //TODO: Find a better way to do it,without file handle
                 detail::file_handle fh;
-        	fh = configure_win32_stream(stdin_stream); 
-                startup_info.hStdInput = fh.get();
 
-            	fh = configure_win32_stream(stdout_stream); 
-                startup_info.hStdOutput = fh.get();
+        	fh = configure_win32_stream(stdin_stream); 
+                if(fh.valid())                
+                        startup_info.hStdInput = fh.get();
+                
+            	fh = configure_win32_stream(stdout_stream);
+                if(fh.valid())
+                        startup_info.hStdOutput = fh.get();
 
                 fh = configure_win32_stream(stderr_stream); 
-                startup_info.hStdError = fh.get();
-                
-                
-                
-           
+                if(fh.valid())
+                        startup_info.hStdError = fh.get();
+                    
 
         	//define process info and create it
             	PROCESS_INFORMATION pi; 
@@ -337,9 +338,6 @@ inline child create_child(const std::string &executable, Arguments args, context
 
                 boost::shared_array<char> envstrs = detail::environment_to_win32_strings(ctx.environment); 
 
-   
-                WriteFile(startup_info.hStdOutput, "Test\n", 5, NULL, NULL);
-
                 //I dare you to understand this code at first look.
            	if ( ::CreateProcessA(exe.get(), cmdline.get(), 
         	    NULL, NULL, TRUE, 0, envstrs.get(), workdir.get(), 
@@ -351,14 +349,15 @@ inline child create_child(const std::string &executable, Arguments args, context
                            "boost::process::detail::win32_start: CreateProcess failed")); 
 
 
-                //is this necessary?                
-                if (! ::CloseHandle(pi.hThread)) 
+                //is this necessary?              
+                 if (! ::CloseHandle(pi.hThread)) 
                         boost::throw_exception(
                             boost::system::system_error(boost::system::error_code(
                             ::GetLastError(), boost::system::get_system_category()),
                             "boost::process::launch: CloseHandle failed")); 
                             
-                return child(pi.dwProcessId, fhstdin, fhstdout, fhstderr, detail::file_handle(pi.hProcess)); 
+                 std::cout << "Process handle passado para o child:" << pi.hProcess << std::endl;
+                 return child(pi.dwProcessId, fhstdin, fhstdout, fhstderr, detail::file_handle(pi.hProcess)); 
 
         #endif 
 } 
