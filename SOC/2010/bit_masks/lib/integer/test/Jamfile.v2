@@ -23,5 +23,6 @@ test-suite integer
         [ run bitwise_integral_mask_testing.cpp ]
         [ run bitwise_high_bits_testing.cpp ]
         [ run bitwise_low_bits_testing.cpp ]
+        [ run compound_mask_test.cpp ]
     ;
 
