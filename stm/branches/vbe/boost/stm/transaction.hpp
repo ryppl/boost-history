@@ -15,7 +15,6 @@
 #define BOOST_STM_TRANSACTION__HPP
 
 //-----------------------------------------------------------------------------
-#include <assert.h>
 //~ #include <pthread.h>
 #include <boost/thread.hpp>
 
@@ -231,7 +230,7 @@ public:
     // thread specific data
     struct tss_context
     {
-        inline tss_context()
+        tss_context()
         : tx_()
         #ifndef BOOST_STM_USE_BOOST_MUTEX
         #if WIN32
@@ -249,7 +248,7 @@ public:
             pthread_mutex_init(&mutex_, 0);
             #endif
         }
-        inline ~tss_context() {
+        ~tss_context() {
             #ifndef BOOST_STM_USE_BOOST_MUTEX
             pthread_mutex_destroy(&mutex_);
             #endif
@@ -1940,9 +1939,9 @@ BOOST_STM_TRANSACTION_INVARIANT;
 ////////////////////////////////////////
 #ifndef BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP
 ////////////////////////////////////////
-//public:
+public:
     BOOST_STM_ASSERT_VAR_DCL(tx_context &, context_);
-//private:
+private:
 #ifdef BOOST_STM_TX_CONTAINS_REFERENCES_TO_TSS_FIELDS
     //~ mutable WriteContainer * const write_list_ref_;
     BOOST_STM_ASSERT_VAR_DCL(WriteContainer * const, write_list_ref_);
@@ -2576,7 +2575,6 @@ namespace detail {
 } // boost namespace
 
 
-#include <boost/stm/tx_memory_manager.hpp>
 #include <boost/stm/detail/transaction_impl.hpp>
 #include <boost/stm/detail/latm_general_impl.hpp>
 

@@ -22,7 +22,7 @@
 #include <boost/stm/trace.hpp>
 //-----------------------------------------------------------------------------
 #include <boost/stm/base_transaction_object.hpp>
-#include <boost/stm/cache_fct.hpp>
+#include <boost/stm/tx_memory_manager.hpp>
 #include <boost/stm/memory_managers/memory_manager.hpp>
 //-----------------------------------------------------------------------------
 

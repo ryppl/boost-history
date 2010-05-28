@@ -26,7 +26,6 @@
 #include <boost/stm/detail/config.hpp>
 //-----------------------------------------------------------------------------
 #include <boost/stm/base_transaction_object.hpp>
-#include <boost/stm/cache_fct.hpp>
 #include <boost/stm/datatypes.hpp>
 #include <boost/stm/memory_managers/base_memory_manager.hpp>
 //-----------------------------------------------------------------------------

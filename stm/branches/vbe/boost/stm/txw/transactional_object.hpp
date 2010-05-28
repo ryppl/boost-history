@@ -16,6 +16,7 @@
 
 //-----------------------------------------------------------------------------
 #include <boost/stm/base_transaction.hpp>
+#include <boost/stm/tx_memory_manager.hpp>
 #include <boost/stm/memory_managers/memory_manager.hpp>
 //-----------------------------------------------------------------------------
 

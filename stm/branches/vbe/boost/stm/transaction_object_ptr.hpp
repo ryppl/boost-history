@@ -16,6 +16,7 @@
 
 
 #include <boost/stm/base_transaction.hpp>
+#include <boost/stm/transaction_object.hpp>
 
 namespace boost { namespace stm {
 

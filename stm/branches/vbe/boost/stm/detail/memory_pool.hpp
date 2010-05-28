@@ -25,7 +25,7 @@
 
 #include <boost/stm/detail/vector_map.hpp>
 
-#ifdef WIN32
+#if defined(WIN32)
 #pragma warning( disable : 4786 )
 #endif
 

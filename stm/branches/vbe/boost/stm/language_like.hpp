@@ -65,7 +65,7 @@ struct commit_on_destruction {
     }
 };
 
-bool no_opt_false() {return false;}
+inline bool no_opt_false() {return false;}
 
 template <typename TX, typename T> T commit_and_return(TX &t, T const& var) {
     T tmp(var);
@@ -78,11 +78,11 @@ bool commit_expr(TX &t) {
     t.commit(); return true;
 }
 
-int get_int(const char* s) {
+inline int get_int(const char* s) {
     return 1+strlen(s);
 }
 
-void commit(std::nothrow_t, transaction&t)
+inline void commit(std::nothrow_t, transaction&t)
 {
     try { t.commit(); }
     catch (...) {}

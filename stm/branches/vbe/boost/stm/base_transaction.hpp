@@ -16,7 +16,6 @@
 
 //-----------------------------------------------------------------------------
 #include <stdarg.h>
-//~ #include <pthread.h>
 #include <boost/thread.hpp>
 //-----------------------------------------------------------------------------
 #include <list>
@@ -27,10 +26,8 @@
 //-----------------------------------------------------------------------------
 #include <boost/stm/contention_managers/base_contention_manager.hpp>
 #include <boost/stm/base_transaction_object.hpp>
-#include <boost/stm/cache_fct.hpp>
 #include <boost/stm/datatypes.hpp>
 #include <boost/stm/exceptions.hpp>
-#include <boost/stm/transaction_object.hpp>
 //-----------------------------------------------------------------------------
 #include <boost/stm/detail/move.hpp>
 
