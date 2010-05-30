@@ -56,8 +56,8 @@ TODO:
 
 */
 
-#ifndef BOOST_CHRONO_HPP
-#define BOOST_CHRONO_HPP
+#ifndef BOOST_CHRONO_CHRONO__HPP
+#define BOOST_CHRONO_CHRONO__HPP
 
 #include <boost/chrono/config.hpp>
 #include <boost/chrono/detail/static_assert.hpp>
