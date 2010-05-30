@@ -17,6 +17,7 @@
 #include <boost/mpl/unpack_args.hpp>
 #include <boost/mpl/vector/vector10.hpp>
 #include <boost/mpl/zip_view.hpp>
+#include <boost/mpl/transform_view.hpp>
 
 #include <boost/mpl/detail/partition_by_position_parity.hpp>
 

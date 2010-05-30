@@ -9,6 +9,7 @@
 #define BOOST_FUSION_CONTAINER_MAP_DETAIL_UNPACK_MAP_HPP_ER_2010
 #include <boost/fusion/include/map.hpp>
 #include <boost/fusion/include/void.hpp>
+#include <boost/parameter/config.hpp>
 #include <boost/mpl/detail/sequence_to_unpack_variadic.hpp>
 
 namespace boost{
