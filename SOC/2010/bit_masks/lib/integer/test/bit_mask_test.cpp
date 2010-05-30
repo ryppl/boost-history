@@ -3,8 +3,8 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at 
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-#include "test_type_list.hpp"
 #include <boost/integer/bit_mask.hpp>
+#include "test_type_list.hpp"
 
 template <typename T>
 void test_function() {
