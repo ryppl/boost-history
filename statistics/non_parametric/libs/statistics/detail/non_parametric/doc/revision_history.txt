@@ -1,0 +1,32 @@
+//////////////////////////////////////////////////////////////////////////////
+// non_parametric                                                           //
+//                                                                          //
+//  (C) Copyright 2009-2010 Erwann Rogard                                   //
+//  Use, modification and distribution are subject to the                   //
+//  Boost Software License, Version 1.0. (See accompanying file             //
+//  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
+//////////////////////////////////////////////////////////////////////////////
+
+REVISION HISTORY
+
+    May 30th, 2010
+        - Added directory contingency table
+        - Replaced kolmogorov_smirnov::tag::statistic by 
+        tag::kolmogorov_smirnov,  no longer computes the statistic, but defines
+        dependepencies needed for it.
+
+	January 20th, 2010
+    	- Miscellanea reorganization of the files
+
+	January 17th, 2010. 
+        - Modified non_parametric/kolmogorov_smirnov/statistic.hpp from an 
+        STL-like algorithm to a simpler accumulator.
+        - Added check_convergence
+        
+	January 14th, 2010. 
+    	- Added non_parametric/empirical_distribution
+        - Modified non_parametric/kolmogorov_smirnov/statistic.hpp to allow
+        combos
+
+    October 11th 2009. First version. Implementation of kolmogorov_smirnov
+    transfered from distribution_toolkit
