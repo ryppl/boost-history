@@ -1,0 +1,3 @@
+Platform                Compiler              Boost version   Date Tested         Compiles    Runtime     
+Mac OS X 10.6           gcc 4.2               boost_1_41_0    May 30th, 2010      Yes         Fine
+
