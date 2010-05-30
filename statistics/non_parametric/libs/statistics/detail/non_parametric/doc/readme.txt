@@ -9,7 +9,7 @@
 
 [ Contact ]
 
-er.ci.2020 at gmail.com
+er.ci.2020 <at> gmail.com
 
 [ Overview ]
 
@@ -20,4 +20,4 @@ er.ci.2020 at gmail.com
 [ Dependencies ]
 
     /boost_1_41_0
-    /sandbox/statistics/detail/support
+    /sandbox/statistics/support

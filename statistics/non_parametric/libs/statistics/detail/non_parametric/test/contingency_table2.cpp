@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// contingency_table2.cpp     						                         //
+// contingency_table2.cpp                                                    //
 //                                                                           //
 //  Copyright 2010 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
