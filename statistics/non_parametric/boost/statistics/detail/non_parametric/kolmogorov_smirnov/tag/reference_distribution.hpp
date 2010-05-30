@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_STATISTICS_DETAIL_NON_PARAMETRIC_KOLMOGOROV_SMIRNOV_TAG_REFERENCE_DISTRIBUTION_HPP_2010
 #define BOOST_STATISTICS_DETAIL_NON_PARAMETRIC_KOLMOGOROV_SMIRNOV_TAG_REFERENCE_DISTRIBUTION_HPP_2010
+/*
 #include <boost/parameter/name.hpp>
 #include <boost/parameter/keyword.hpp>
 
@@ -23,3 +24,4 @@ namespace tag{
 }// boost
 
 #endif
+*/
