@@ -33,36 +33,29 @@ namespace statistics{
 namespace detail{
 namespace kolmogorov_smirnov{
 
-    // Usage:
-    //     namespace ns = kolmogorov_smirnov;
-    //     accumulator_set<T,stats<ns::tag::statistic<T1> > acc;
-    //     acc = boost:for_each(samples,acc);
-    //     ns::extract::statistic<T1>(acc,normal_distribution<T1>(0,1));
-    // In this example, the kolmogorov-statistic between the samples and the 
-    // standard normal distribution is computed.
-
 namespace impl{
 
     // Warning : See empirical_distribution::impl::count
-    template<typename T,typename T1>
-    class statistic : public boost::accumulators::accumulator_base{
+    template<typename T>
+    class kolmogorov_smirnov : public boost::accumulators::accumulator_base{
     	
         typedef std::size_t size_;
         typedef boost::accumulators::dont_care dont_care_;
 
         public:
 
-        statistic(dont_care_){};
+        kolmogorov_smirnov(dont_care_){};
 
         typedef size_ size_type;
         typedef T sample_type;
-        typedef T1 result_type;
+        typedef void result_type;
 
         void operator()(dont_care_)const{}
 
         template<typename Args>
-        result_type result(const Args& args) const
+        result_type result(dont_care_) const
         {
+/*
             typedef T1 val_;
             typedef boost::accumulators::tag::accumulator tag_acc_;        
             typedef boost::accumulators::tag::count tag_n_;
@@ -105,6 +98,7 @@ namespace impl{
             }
             
             return m1;
+*/
         }
 	};
     
@@ -112,8 +106,7 @@ namespace impl{
 
 namespace tag
 {
-    template<typename T1 = double>
-    struct statistic
+    struct kolmogorov_smirnov
       : boost::accumulators::depends_on<
       	statistics::detail::empirical_distribution::tag::ordered_sample,
         boost::accumulators::tag::count
@@ -122,52 +115,63 @@ namespace tag
         struct impl{
             template<typename T,typename W>
             struct apply{
-                typedef boost::statistics::detail::kolmogorov_smirnov
-                	::impl::statistic<T,T1> type;    	
+                typedef detail::kolmogorov_smirnov::impl::kolmogorov_smirnov<T> type;    	
             };
         };
     };
 }
-
 namespace result_of{
-	
-    template<typename T1,typename AccSet>
-    struct statistic{
-    	typedef boost::statistics::detail
-        	::kolmogorov_smirnov::tag::statistic<T1> tag_;
-        typedef typename boost::accumulators::detail::extractor_result<
-            AccSet,
-            tag_
-        >::type type;
+
+    template<typename T1,typename AccSet,typename D>
+    struct statistic
+    {
+        typedef T1 type;
     };
 
 }
 
-namespace extract
-{
-
     // Usage : statistic<T1>(acc,dist)
     template<typename T1,typename AccSet,typename D>
-    typename boost::statistics::detail::kolmogorov_smirnov
-    	::result_of::template statistic<T1,AccSet>::type
+    typename kolmogorov_smirnov
+        ::result_of::template statistic<T1,AccSet,D>::type
     statistic(AccSet const& acc,const D& dist)
     {
-    	typedef boost::statistics::detail
-        	::kolmogorov_smirnov::tag::statistic<T1> the_tag;
-        return boost::accumulators::extract_result<the_tag>(
-            acc,
-            (
-            	boost::statistics::detail::kolmogorov_smirnov
-                	::keyword::reference_distribution = dist
-            )
-        );
+            namespace ed = boost::statistics::detail::empirical_distribution;
+            namespace ks = boost::statistics::detail::kolmogorov_smirnov;
+            typedef T1 val_;
+            typedef std::size_t size_;
+            typedef boost::accumulators::tag::count tag_n_;
+            typedef ed::tag::ordered_sample tag_os_;
+
+            typedef typename ed::result_of::ordered_sample<
+                AccSet>::type ref_os_; 
+            typedef typename boost::remove_const< //in case ref changed to cref
+            	typename boost::remove_reference<
+                	ref_os_
+                >::type
+            >::type os_;
+            typedef typename boost::range_reference<os_>::type ref_elem_;
+
+            ref_os_ ref_os 
+                = boost::accumulators::extract_result<tag_os_>( acc );
+
+            val_ m1 = static_cast<val_>(0);
+            size_ i = 0;
+            size_ n = boost::accumulators::extract::count( acc );
+            
+            BOOST_FOREACH(ref_elem_ e,ref_os){
+                i += e.second; 
+                val_ ecdf = static_cast<val_>(i) / static_cast<val_>(n);
+                val_ true_cdf = cdf( dist, e.first );
+                val_ m2 
+                	= (true_cdf > ecdf)?(true_cdf - ecdf) : (ecdf - true_cdf);
+                if(m2 > m1){ m1 = m2; } 
+            }
+            
+            return m1;
     }
 
-}
-
-using extract::statistic;
-
-}// kolmogorov_smirnov
+}// empirical_distribution
 }// detail
 }// statistics
 }// boost

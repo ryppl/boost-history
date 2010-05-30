@@ -62,18 +62,6 @@ namespace impl{
         template<typename Args>
         result_type result(const Args& args) const
         {
-            typedef boost::accumulators::tag::accumulator tag_acc_;        
-            typedef boost::parameter::binding<Args,tag_acc_> bind_;
-            typedef typename bind_::type cref_;
-        	typedef boost::accumulators::tag::count tag_n_;
-            cref_ acc = args[boost::accumulators::accumulator];
-            size_ i =  boost::statistics::detail::empirical_distribution
-            	::extract::count<Cum>( 
-            		acc,
-                	args[boost::accumulators::sample]
-            	);
-            size_ n = boost::accumulators::extract_result<tag_n_>( acc );
-            return static_cast<T1>(i)/static_cast<T1>(n);
         }
     };
     
@@ -120,12 +108,14 @@ namespace extract
     	::result_of::template frequency<Cum,T1,AccSet>::type
     frequency(AccSet const& acc,const T& x)
     {
-    	typedef boost::statistics::detail::empirical_distribution
-    		::tag::frequency<Cum,T1> the_tag;
-        return boost::accumulators::extract_result<the_tag>(
-            acc,
-            (boost::accumulators::sample = x)
-        );
+		    typedef std::size_t size_;
+        	typedef boost::accumulators::tag::count tag_n_;
+
+            namespace ns = boost::statistics::detail::empirical_distribution;
+
+            size_ i =  ns::extract::count<Cum>( acc, x );
+            size_ n = boost::accumulators::extract_result<tag_n_>( acc );
+            return static_cast<T1>(i)/static_cast<T1>(n);
     }
 
 }

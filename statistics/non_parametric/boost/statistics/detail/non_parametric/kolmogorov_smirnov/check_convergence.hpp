@@ -21,6 +21,7 @@
 #include <boost/accumulators/framework/accumulator_set.hpp>
 #include <boost/accumulators/statistics/stats.hpp>
 
+#include <boost/statistics/detail/non_parametric/empirical_distribution/ordered_sample.hpp>
 #include <boost/statistics/detail/non_parametric/kolmogorov_smirnov/statistic.hpp>
 
 namespace boost{
@@ -41,7 +42,7 @@ namespace kolmogorov_smirnov{
     struct check_convergence{
     
     	typedef T1 value_type;
-        typedef kolmogorov_smirnov::tag::statistic<value_type> tag_;
+        typedef kolmogorov_smirnov::tag::kolmogorov_smirnov tag_;
     	typedef boost::accumulators::stats<tag_> state_;
     	typedef boost::mpl::push_back<boost::mpl::_,boost::mpl::_> op_;
     
@@ -135,8 +136,8 @@ namespace kolmogorov_smirnov{
 		
             template<typename AccSet>
             void operator()(const AccSet& acc,const D& d,std::ostream& os)const{
-            	value_type ks 
-                	= kolmogorov_smirnov::extract::statistic<value_type>(acc,d);
+                namespace ns = kolmogorov_smirnov;
+            	value_type ks = ns::statistic<value_type>( acc, d );
                 os 
                     << '('
                     << boost::accumulators::extract::count(acc) 
