@@ -9,24 +9,46 @@
 
 
 #include <boost/integer/compound_mask.hpp>
-// #include <boost/mpl/list.hpp>
+// #include <boost/mpl/vector.hpp>
+#include <boost/mpl/if.hpp>
+
 
 
 
 namespace boost {
 
+// TODO: move this into a sperate file
+namespace details {
+struct null_mask { };
+typedef null_mask unused_parameter;
+
+template <typename T, typename TypeVector>
+struct add_to_vector{
+    template <typename NewT, typename NewTypeVector>
+    struct rebind {
+    };
+};
+}
 template <  typename Mask0,
-            typename Mask1  = integral_mask< typename Mask0::value_type, 0 >,
-            typename Mask2  = integral_mask< typename Mask0::value_type, 0 >,
-            typename Mask3  = integral_mask< typename Mask0::value_type, 0 >,
-            typename Mask4  = integral_mask< typename Mask0::value_type, 0 >,
-            typename Mask5  = integral_mask< typename Mask0::value_type, 0 >,
-            typename Mask6  = integral_mask< typename Mask0::value_type, 0 >,
-            typename Mask7  = integral_mask< typename Mask0::value_type, 0 >,
-            typename Mask8  = integral_mask< typename Mask0::value_type, 0 >,
-            typename Mask9  = integral_mask< typename Mask0::value_type, 0 >
+            typename Mask1  = details::unused_parameter,
+            typename Mask2  = details::unused_parameter,
+            typename Mask3  = details::unused_parameter,
+            typename Mask4  = details::unused_parameter,
+            typename Mask5  = details::unused_parameter,
+            typename Mask6  = details::unused_parameter,
+            typename Mask7  = details::unused_parameter,
+            typename Mask8  = details::unused_parameter,
+            typename Mask9  = details::unused_parameter
         >
-struct t;
+struct bit_mask_group
+    // if they are the same then do nothing? if they arn't the same 
+    // that means that I located a mask or something to be part of
+    // the mask group.
+{
+    // typedef typename mpl::if_<
+    //    is_same<Mask1,typename details::unused_parameter>,
+    //    Mask1,
+};
 
 
 } // namespace
