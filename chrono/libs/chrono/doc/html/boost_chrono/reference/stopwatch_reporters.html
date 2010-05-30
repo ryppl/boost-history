@@ -1,6 +1,6 @@
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Stopwatch
       Reporters</title>
 <link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
@@ -94,7 +94,7 @@
           <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span></code>, ec is a system::error_code
         </p>
 <div class="table">
-<a name="id4871962"></a><p class="title"><b>Table 3. Stopwatch Requirements</b></p>
+<a name="id4870154"></a><p class="title"><b>Table&#160;3.&#160;Stopwatch Requirements</b></p>
 <table class="table" summary="Stopwatch Requirements">
 <colgroup>
 <col>
@@ -103,92 +103,93 @@
 </colgroup>
 <thead><tr>
 <th>
-              <p>
-                expression
-              </p>
-              </th>
+                  <p>
+                    expression
+                  </p>
+                </th>
 <th>
-              <p>
-                return type
-              </p>
-              </th>
+                  <p>
+                    return type
+                  </p>
+                </th>
 <th>
-              <p>
-                operational semantics
-              </p>
-              </th>
+                  <p>
+                    operational semantics
+                  </p>
+                </th>
 </tr></thead>
 <tbody>
 <tr>
 <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">F</span><span class="special">::</span><span class="identifier">default_os</span><span class="special">()</span></code>
-              </p>
-              </td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">F</span><span class="special">::</span><span class="identifier">default_os</span><span class="special">()</span></code>
+                  </p>
+                </td>
 <td>
-              <p>
-                std::otream&amp;
-              </p>
-              </td>
+                  <p>
+                    std::otream&amp;
+                  </p>
+                </td>
 <td>
-              <p>
-                The output stream.
-              </p>
-              </td>
+                  <p>
+                    The output stream.
+                  </p>
+                </td>
 </tr>
 <tr>
 <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">F</span><span class="special">::</span><span class="identifier">default_places</span><span class="special">()</span></code>
-              </p>
-              </td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">F</span><span class="special">::</span><span class="identifier">default_places</span><span class="special">()</span></code>
+                  </p>
+                </td>
 <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span></code>
-              </p>
-              </td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span></code>
+                  </p>
+                </td>
 <td>
-              <p>
-                The precission when displaying a double.
-              </p>
-              </td>
+                  <p>
+                    The precission when displaying a double.
+                  </p>
+                </td>
 </tr>
 <tr>
 <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">F</span><span class="special">::</span><span class="identifier">default_format</span><span class="special">()</span></code>
-              </p>
-              </td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">F</span><span class="special">::</span><span class="identifier">default_format</span><span class="special">()</span></code>
+                  </p>
+                </td>
 <td>
-              <p>
-                <code class="computeroutput"><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span></code>
-              </p>
-              </td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span></code>
+                  </p>
+                </td>
 <td>
-              <p>
-                The default format.
-              </p>
-              </td>
+                  <p>
+                    The default format.
+                  </p>
+                </td>
 </tr>
 <tr>
 <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">F</span><span class="special">::</span><span class="identifier">show_time</span><span class="special">(</span><span class="identifier">s</span><span class="special">,</span><span class="identifier">f</span><span class="special">,</span><span class="identifier">p</span><span class="special">,</span><span class="identifier">os</span><span class="special">,</span><span class="identifier">ec</span><span class="special">)</span></code>
-              </p>
-              </td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">F</span><span class="special">::</span><span class="identifier">show_time</span><span class="special">(</span><span class="identifier">s</span><span class="special">,</span><span class="identifier">f</span><span class="special">,</span><span class="identifier">p</span><span class="special">,</span><span class="identifier">os</span><span class="special">,</span><span class="identifier">ec</span><span class="special">)</span></code>
+                  </p>
+                </td>
 <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">S</span><span class="special">::</span><span class="identifier">time_point</span></code>
-              </p>
-              </td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">S</span><span class="special">::</span><span class="identifier">time_point</span></code>
+                  </p>
+                </td>
 <td>
-              <p>
-                outputs on <code class="computeroutput"><span class="identifier">os</span></code> a formatted
-                string combining informations from the Stopwatch <code class="computeroutput"><span class="identifier">s</span></code>,
-                the format <code class="computeroutput"><span class="identifier">f</span></code> and
-                the double precission <code class="computeroutput"><span class="identifier">p</span></code>.
-              </p>
-              </td>
+                  <p>
+                    outputs on <code class="computeroutput"><span class="identifier">os</span></code>
+                    a formatted string combining informations from the Stopwatch
+                    <code class="computeroutput"><span class="identifier">s</span></code>, the format
+                    <code class="computeroutput"><span class="identifier">f</span></code> and the double
+                    precission <code class="computeroutput"><span class="identifier">p</span></code>.
+                  </p>
+                </td>
 </tr>
 </tbody>
 </table>
@@ -1027,7 +1028,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2008 Howard Hinnant<br>Copyright © 2006 , 2008 Beman Dawes<br>Copyright © 2009 -2010 Vicente J. Botet Escriba<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2008 Howard Hinnant<br>Copyright &#169; 2006 , 2008 Beman Dawes<br>Copyright &#169; 2009 -2010 Vicente J. Botet Escriba<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

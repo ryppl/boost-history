@@ -1,6 +1,6 @@
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Tutorial</title>
 <link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
@@ -97,131 +97,9 @@
         <span class="comment">// transform to nanoseconds
 </span>        <span class="keyword">return</span> <span class="identifier">time_point</span><span class="special">(</span><span class="identifier">duration</span><span class="special">(</span>
             <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">rep</span><span class="special">&gt;(</span> <span class="identifier">ts</span><span class="special">.</span><span class="identifier">tv_sec</span> <span class="special">)</span> <span class="special">*</span> <span class="number">1000000000</span> <span class="special">+</span> <span class="identifier">ts</span><span class="special">.</span><span class="identifier">tv_nsec</span><span class="special">));</span>
-
     <span class="special">}</span>
 <span class="special">};</span>
 </pre>
-<p>
-          class thread_clock { public: typedef nanoseconds duration; typedef duration::rep
-          rep; typedef duration::period period; typedef chrono::time_point&lt;process_real_cpu_clock&gt;
-          time_point; static const bool is_monotonic = true;
-        </p>
-<pre class="programlisting">    <span class="keyword">static</span> <span class="identifier">time_point</span> <span class="identifier">now</span><span class="special">(</span> <span class="special">)</span> <span class="special">{</span>
-        <span class="comment">// get the current thread
-</span>        <span class="identifier">pthread_t</span> <span class="identifier">pth</span><span class="special">=</span><span class="identifier">pthread_self</span><span class="special">(</span><span class="keyword">void</span><span class="special">);</span>
-        <span class="comment">// get the clock_id associated to the current thread
-</span>        <span class="identifier">clockid_t</span> <span class="identifier">clock_id</span><span class="special">;</span>
-        <span class="identifier">pthread_getcpuclockid</span><span class="special">(</span><span class="identifier">pth</span><span class="special">,</span> <span class="identifier">clock_id</span><span class="special">);</span>
-        <span class="comment">// get the timespec associated to the thread clock
-</span>        <span class="keyword">struct</span> <span class="identifier">timespec</span> <span class="identifier">ts</span><span class="special">;</span>
-        <span class="keyword">if</span> <span class="special">(</span> <span class="special">::</span><span class="identifier">clock_gettime</span><span class="special">(</span> <span class="identifier">clock_id</span><span class="special">,</span> <span class="special">&amp;</span><span class="identifier">ts</span> <span class="special">)</span> <span class="special">)</span>
-        <span class="special">{</span>
-            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">throw_exception</span><span class="special">(</span>
-            <span class="identifier">system</span><span class="special">::</span><span class="identifier">system_error</span><span class="special">(</span> <span class="identifier">errno</span><span class="special">,</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">system_category</span><span class="special">,</span> <span class="string">"chrono::thread_clock"</span> <span class="special">));</span>
-        <span class="special">}</span>
-
-        <span class="comment">// transform to nanoseconds
-</span>        <span class="keyword">return</span> <span class="identifier">time_point</span><span class="special">(</span><span class="identifier">duration</span><span class="special">(</span>
-            <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">rep</span><span class="special">&gt;(</span> <span class="identifier">ts</span><span class="special">.</span><span class="identifier">tv_sec</span> <span class="special">)</span> <span class="special">*</span> <span class="number">1000000000</span> <span class="special">+</span> <span class="identifier">ts</span><span class="special">.</span><span class="identifier">tv_nsec</span><span class="special">));</span>
-
-    <span class="special">}</span>
-    <span class="keyword">static</span> <span class="identifier">time_point</span> <span class="identifier">now</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">)</span> <span class="special">{</span>
-        <span class="comment">// get the current thread
-</span>        <span class="identifier">pthread_t</span> <span class="identifier">pth</span><span class="special">=</span><span class="identifier">pthread_self</span><span class="special">(</span><span class="keyword">void</span><span class="special">);</span>
-        <span class="comment">// get the clock_id associated to the current thread
-</span>        <span class="identifier">clockid_t</span> <span class="identifier">clock_id</span><span class="special">;</span>
-        <span class="identifier">pthread_getcpuclockid</span><span class="special">(</span><span class="identifier">pth</span><span class="special">,</span> <span class="identifier">clock_id</span><span class="special">);</span>
-        <span class="comment">// get the timespec associated to the thread clock
-</span>        <span class="keyword">struct</span> <span class="identifier">timespec</span> <span class="identifier">ts</span><span class="special">;</span>
-        <span class="keyword">if</span> <span class="special">(</span> <span class="special">::</span><span class="identifier">clock_gettime</span><span class="special">(</span> <span class="identifier">clock_id</span><span class="special">,</span> <span class="special">&amp;</span><span class="identifier">ts</span> <span class="special">)</span> <span class="special">)</span>
-        <span class="special">{</span>
-          <span class="identifier">ec</span><span class="special">.</span><span class="identifier">assign</span><span class="special">(</span> <span class="identifier">errno</span><span class="special">,</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">system_category</span> <span class="special">);</span>
-          <span class="keyword">return</span> <span class="identifier">time_point</span><span class="special">();</span>
-        <span class="special">}</span>
-        <span class="identifier">ec</span><span class="special">.</span><span class="identifier">clear</span><span class="special">();</span>
-        <span class="comment">// transform to nanoseconds
-</span>        <span class="keyword">return</span> <span class="identifier">time_point</span><span class="special">(</span><span class="identifier">duration</span><span class="special">(</span>
-            <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">rep</span><span class="special">&gt;(</span> <span class="identifier">ts</span><span class="special">.</span><span class="identifier">tv_sec</span> <span class="special">)</span> <span class="special">*</span> <span class="number">1000000000</span> <span class="special">+</span> <span class="identifier">ts</span><span class="special">.</span><span class="identifier">tv_nsec</span><span class="special">));</span>
-
-    <span class="special">}</span>
-<span class="special">};</span>
-</pre>
-<p>
-          static time_point now( ) { <span class="emphasis"><em>/ get the current thread pthread_t
-          pth=pthread_self(void); /</em></span> get the clock_id associated to the
-          current thread clockid_t clock_id; pthread_getcpuclockid(pth, clock_id);
-          // get the timespec associated to the thread clock struct timespec ts;
-          if ( ::clock_gettime( clock_id, &amp;ts ) ) { boost::throw_exception( system::system_error(
-          errno, system::system_category, "chrono::thread_clock" )); }
-        </p>
-<pre class="programlisting">        <span class="comment">// transform to nanoseconds
-</span>        <span class="keyword">return</span> <span class="identifier">time_point</span><span class="special">(</span><span class="identifier">duration</span><span class="special">(</span>
-            <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">rep</span><span class="special">&gt;(</span> <span class="identifier">ts</span><span class="special">.</span><span class="identifier">tv_sec</span> <span class="special">)</span> <span class="special">*</span> <span class="number">1000000000</span> <span class="special">+</span> <span class="identifier">ts</span><span class="special">.</span><span class="identifier">tv_nsec</span><span class="special">));</span>
-
-    <span class="special">}</span>
-    <span class="keyword">static</span> <span class="identifier">time_point</span> <span class="identifier">now</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">)</span> <span class="special">{</span>
-        <span class="comment">// get the current thread
-</span>        <span class="identifier">pthread_t</span> <span class="identifier">pth</span><span class="special">=</span><span class="identifier">pthread_self</span><span class="special">(</span><span class="keyword">void</span><span class="special">);</span>
-        <span class="comment">// get the clock_id associated to the current thread
-</span>        <span class="identifier">clockid_t</span> <span class="identifier">clock_id</span><span class="special">;</span>
-        <span class="identifier">pthread_getcpuclockid</span><span class="special">(</span><span class="identifier">pth</span><span class="special">,</span> <span class="identifier">clock_id</span><span class="special">);</span>
-        <span class="comment">// get the timespec associated to the thread clock
-</span>        <span class="keyword">struct</span> <span class="identifier">timespec</span> <span class="identifier">ts</span><span class="special">;</span>
-        <span class="keyword">if</span> <span class="special">(</span> <span class="special">::</span><span class="identifier">clock_gettime</span><span class="special">(</span> <span class="identifier">clock_id</span><span class="special">,</span> <span class="special">&amp;</span><span class="identifier">ts</span> <span class="special">)</span> <span class="special">)</span>
-        <span class="special">{</span>
-          <span class="identifier">ec</span><span class="special">.</span><span class="identifier">assign</span><span class="special">(</span> <span class="identifier">errno</span><span class="special">,</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">system_category</span> <span class="special">);</span>
-          <span class="keyword">return</span> <span class="identifier">time_point</span><span class="special">();</span>
-        <span class="special">}</span>
-        <span class="identifier">ec</span><span class="special">.</span><span class="identifier">clear</span><span class="special">();</span>
-        <span class="comment">// transform to nanoseconds
-</span>        <span class="keyword">return</span> <span class="identifier">time_point</span><span class="special">(</span><span class="identifier">duration</span><span class="special">(</span>
-            <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">rep</span><span class="special">&gt;(</span> <span class="identifier">ts</span><span class="special">.</span><span class="identifier">tv_sec</span> <span class="special">)</span> <span class="special">*</span> <span class="number">1000000000</span> <span class="special">+</span> <span class="identifier">ts</span><span class="special">.</span><span class="identifier">tv_nsec</span><span class="special">));</span>
-
-    <span class="special">}</span>
-<span class="special">};</span>
-</pre>
-<p>
-          // transform to nanoseconds return time_point(duration( static_cast&lt;thread_clock::rep&gt;(
-          ts.tv_sec ) * 1000000000 + ts.tv_nsec));
-        </p>
-<pre class="programlisting">    <span class="special">}</span>
-    <span class="keyword">static</span> <span class="identifier">time_point</span> <span class="identifier">now</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">)</span> <span class="special">{</span>
-        <span class="comment">// get the current thread
-</span>        <span class="identifier">pthread_t</span> <span class="identifier">pth</span><span class="special">=</span><span class="identifier">pthread_self</span><span class="special">(</span><span class="keyword">void</span><span class="special">);</span>
-        <span class="comment">// get the clock_id associated to the current thread
-</span>        <span class="identifier">clockid_t</span> <span class="identifier">clock_id</span><span class="special">;</span>
-        <span class="identifier">pthread_getcpuclockid</span><span class="special">(</span><span class="identifier">pth</span><span class="special">,</span> <span class="identifier">clock_id</span><span class="special">);</span>
-        <span class="comment">// get the timespec associated to the thread clock
-</span>        <span class="keyword">struct</span> <span class="identifier">timespec</span> <span class="identifier">ts</span><span class="special">;</span>
-        <span class="keyword">if</span> <span class="special">(</span> <span class="special">::</span><span class="identifier">clock_gettime</span><span class="special">(</span> <span class="identifier">clock_id</span><span class="special">,</span> <span class="special">&amp;</span><span class="identifier">ts</span> <span class="special">)</span> <span class="special">)</span>
-        <span class="special">{</span>
-          <span class="identifier">ec</span><span class="special">.</span><span class="identifier">assign</span><span class="special">(</span> <span class="identifier">errno</span><span class="special">,</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">system_category</span> <span class="special">);</span>
-          <span class="keyword">return</span> <span class="identifier">time_point</span><span class="special">();</span>
-        <span class="special">}</span>
-        <span class="identifier">ec</span><span class="special">.</span><span class="identifier">clear</span><span class="special">();</span>
-        <span class="comment">// transform to nanoseconds
-</span>        <span class="keyword">return</span> <span class="identifier">time_point</span><span class="special">(</span><span class="identifier">duration</span><span class="special">(</span>
-            <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">rep</span><span class="special">&gt;(</span> <span class="identifier">ts</span><span class="special">.</span><span class="identifier">tv_sec</span> <span class="special">)</span> <span class="special">*</span> <span class="number">1000000000</span> <span class="special">+</span> <span class="identifier">ts</span><span class="special">.</span><span class="identifier">tv_nsec</span><span class="special">));</span>
-
-    <span class="special">}</span>
-<span class="special">};</span>
-</pre>
-<p>
-          } static time_point now( system::error_code &amp; ec ) { <span class="emphasis"><em>/ get
-          the current thread pthread_t pth=pthread_self(void); /</em></span> get the
-          clock_id associated to the current thread clockid_t clock_id; pthread_getcpuclockid(pth,
-          clock_id); <span class="emphasis"><em>/ get the timespec associated to the thread clock
-          struct timespec ts; if ( ::clock_gettime( clock_id, &amp;ts ) ) { ec.assign(
-          errno, system::system_category ); return time_point(); } ec.clear(); /</em></span>
-          transform to nanoseconds return time_point(duration( static_cast&lt;thread_clock::rep&gt;(
-          ts.tv_sec ) * 1000000000 + ts.tv_nsec));
-        </p>
-<pre class="programlisting">    <span class="special">}</span>
-<span class="special">};</span>
-</pre>
-<p>
-          } };
-        </p>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
@@ -240,7 +118,8 @@
           this you will need to do something like:
         </p>
 <pre class="programlisting"><span class="keyword">static</span> <span class="identifier">stopclock_accumulator</span><span class="special">&lt;&gt;</span> <span class="identifier">acc</span><span class="special">(</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="identifier">BOOST_CURRENT_FUNCTION</span><span class="special">)</span> <span class="special">+</span> <span class="string">":  "</span> <span class="special">+</span> <span class="identifier">stopwatch_accumulator_formatter</span><span class="special">::</span><span class="identifier">default_format</span><span class="special">()</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="identifier">BOOST_CURRENT_FUNCTION</span><span class="special">)</span> <span class="special">+</span> <span class="string">":  "</span> 
+        <span class="special">+</span> <span class="identifier">stopwatch_accumulator_formatter</span><span class="special">::</span><span class="identifier">default_format</span><span class="special">()</span>
 <span class="special">);</span>
 <span class="identifier">stopclock_accumulator</span><span class="special">&lt;&gt;::</span><span class="identifier">scoped_run</span> <span class="identifier">_</span><span class="special">(</span><span class="identifier">acc</span><span class="special">);</span>
 </pre>
@@ -249,10 +128,14 @@
           You can of course define your own macro as
         </p>
 <pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">REPORT_FUNCTION_ACCUMULATED_LIFETIME</span><span class="special">\</span>
-    <span class="keyword">static</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopclock_accumulator</span><span class="special">&lt;&gt;</span> <span class="identifier">BOOST_JOIN</span><span class="special">(</span><span class="identifier">_boost_chrono_stopclock_accumulator_</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">)(</span> <span class="special">\</span>
-        <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="identifier">BOOST_CURRENT_FUNCTION</span><span class="special">)</span> <span class="special">+</span> <span class="string">":  "</span> <span class="special">+</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch_accumulator_formatter</span><span class="special">::</span><span class="identifier">default_format</span><span class="special">()</span> <span class="special">\</span>
+    <span class="keyword">static</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopclock_accumulator</span><span class="special">&lt;&gt;</span> <span class="special">\</span>
+            <span class="identifier">BOOST_JOIN</span><span class="special">(</span><span class="identifier">_accumulator_</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">)</span><span class="identifier">_</span>
+        <span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="identifier">BOOST_CURRENT_FUNCTION</span><span class="special">)</span> <span class="special">+</span> <span class="string">":  "</span> <span class="special">+</span> <span class="special">\</span>
+            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch_accumulator_formatter</span><span class="special">::</span><span class="identifier">default_format</span><span class="special">()</span> <span class="special">\</span>
     <span class="special">);</span> <span class="special">\</span>
-    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopclock_accumulator</span><span class="special">&lt;&gt;::</span><span class="identifier">scoped_run</span> <span class="identifier">BOOST_JOIN</span><span class="special">(</span><span class="identifier">_boost_chrono_stopclock_accumulator_run_</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">)(</span><span class="identifier">BOOST_JOIN</span><span class="special">(</span><span class="identifier">_boost_chrono_stopclock_accumulator_</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">))</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopclock_accumulator</span><span class="special">&lt;&gt;::</span><span class="identifier">scoped_run</span> <span class="special">\</span>
+            <span class="identifier">BOOST_JOIN</span><span class="special">(</span><span class="identifier">_accumulator_run_</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">)</span> <span class="special">\</span>
+        <span class="special">(</span><span class="identifier">BOOST_JOIN</span><span class="special">(</span><span class="identifier">_accumulator_</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">))</span>
 </pre>
 <p>
           With this macro you will just have
@@ -276,10 +159,14 @@
           as described below:
         </p>
 <pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">REPORT_LINE_ACCUMULATED_LIFETIME</span> <span class="special">\</span>
-    <span class="keyword">static</span> <span class="identifier">stopclock_accumulator</span><span class="special">&lt;&gt;</span> <span class="identifier">BOOST_JOIN</span><span class="special">(</span><span class="identifier">_boost_chrono_stopclock_accumulator_</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">)(</span> <span class="special">\</span>
-        <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="identifier">__FILE__</span><span class="special">)</span> <span class="special">+</span> <span class="string">"["</span> <span class="special">+</span> <span class="identifier">BOOST_STRINGIZE</span><span class="special">(</span><span class="identifier">__LINE__</span><span class="special">)</span> <span class="special">+</span> <span class="string">"] "</span> <span class="special">+</span> <span class="identifier">stopwatch_accumulator_formatter</span><span class="special">::</span><span class="identifier">default_format</span><span class="special">()</span> <span class="special">\</span>
+    <span class="keyword">static</span> <span class="identifier">stopclock_accumulator</span><span class="special">&lt;&gt;</span> 
+            <span class="identifier">BOOST_JOIN</span><span class="special">(</span><span class="identifier">_accumulator_</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">)</span> <span class="special">\</span>
+            <span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="identifier">__FILE__</span><span class="special">)</span> <span class="special">+</span> <span class="string">"["</span> <span class="special">+</span> <span class="identifier">BOOST_STRINGIZE</span><span class="special">(</span><span class="identifier">__LINE__</span><span class="special">)</span> <span class="special">+</span> <span class="string">"] "</span> 
+                <span class="special">+</span> <span class="identifier">stopwatch_accumulator_formatter</span><span class="special">::</span><span class="identifier">default_format</span><span class="special">()</span> <span class="special">\</span>
     <span class="special">);</span> <span class="special">\</span>
-    <span class="identifier">stopclock_accumulator</span><span class="special">&lt;&gt;::</span><span class="identifier">scoped_run</span> <span class="identifier">BOOST_JOIN</span><span class="special">(</span><span class="identifier">_boost_chrono_stopclock_accumulator_run_</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">)</span> <span class="special">(</span><span class="identifier">BOOST_JOIN</span><span class="special">(</span><span class="identifier">_boost_chrono_stopclock_accumulator_</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">))</span>
+    <span class="identifier">stopclock_accumulator</span><span class="special">&lt;&gt;::</span><span class="identifier">scoped_run</span> <span class="special">\</span>
+            <span class="identifier">BOOST_JOIN</span><span class="special">(</span><span class="identifier">_accumulator_run_</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">)</span> 
+            <span class="special">(</span><span class="identifier">BOOST_JOIN</span><span class="special">(</span><span class="identifier">_accumulator_</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">))</span>
 </pre>
 <p>
           Now you can mix fcntion and line reports as follows
@@ -309,7 +196,8 @@
           takes for each one of its laps.
         </p>
 <pre class="programlisting"><span class="identifier">stopclock_accumulator</span><span class="special">&lt;&gt;</span> <span class="identifier">acc</span><span class="special">(</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="identifier">__FILE__</span><span class="special">)</span> <span class="special">+</span> <span class="string">"["</span> <span class="special">+</span> <span class="identifier">BOOST_STRINGIZE</span><span class="special">(</span><span class="identifier">__LINE__</span><span class="special">)</span> <span class="special">+</span> <span class="string">"] "</span> <span class="special">+</span> <span class="identifier">stopwatch_accumulator_formatter</span><span class="special">::</span><span class="identifier">default_format</span><span class="special">()</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="identifier">__FILE__</span><span class="special">)</span> <span class="special">+</span> <span class="string">"["</span> <span class="special">+</span> <span class="identifier">BOOST_STRINGIZE</span><span class="special">(</span><span class="identifier">__LINE__</span><span class="special">)</span> <span class="special">+</span> <span class="string">"] "</span> 
+        <span class="special">+</span> <span class="identifier">stopwatch_accumulator_formatter</span><span class="special">::</span><span class="identifier">default_format</span><span class="special">()</span>
 <span class="special">);</span>
 <span class="keyword">for</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span><span class="special">=</span><span class="number">0</span><span class="special">;</span> <span class="identifier">i</span><span class="special">&lt;</span><span class="identifier">N</span><span class="special">;</span> <span class="identifier">i</span><span class="special">++)</span> <span class="special">{</span>
     <span class="identifier">stopclock_accumulator</span><span class="special">&lt;&gt;::</span><span class="identifier">scoped_run</span> <span class="identifier">_</span><span class="special">(</span><span class="identifier">acc</span><span class="special">);</span>
@@ -450,7 +338,9 @@
     <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span> <span class="identifier">ostream_type</span><span class="special">;</span>
 
     <span class="keyword">static</span> <span class="identifier">ostream_type</span> <span class="special">&amp;</span>  <span class="identifier">default_os</span><span class="special">()</span> <span class="special">{</span><span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span><span class="special">;}</span>
-    <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">char_type</span><span class="special">*</span> <span class="identifier">default_format</span><span class="special">()</span> <span class="special">{</span><span class="keyword">return</span> <span class="string">"%c times, sum=%ss, mean=%as, variance=%vs\n"</span><span class="special">;}</span>
+    <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">char_type</span><span class="special">*</span> <span class="identifier">default_format</span><span class="special">()</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="string">"%c times, sum=%ss, mean=%as, variance=%vs\n"</span><span class="special">;</span>
+    <span class="special">}</span>
     <span class="keyword">static</span> <span class="keyword">int</span> <span class="identifier">default_places</span><span class="special">()</span> <span class="special">{</span> <span class="keyword">return</span> <span class="number">3</span><span class="special">;</span> <span class="special">}</span>
 
     <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Stopwatch</span> <span class="special">&gt;</span>
@@ -472,11 +362,13 @@
                 <span class="special">++</span><span class="identifier">format</span><span class="special">;</span>
                 <span class="keyword">switch</span> <span class="special">(</span> <span class="special">*</span><span class="identifier">format</span> <span class="special">)</span> <span class="special">{</span>
                 <span class="keyword">case</span> <span class="char">'s'</span><span class="special">:</span>
-                    <span class="identifier">os</span> <span class="special">&lt;&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;(</span><span class="identifier">duration_t</span><span class="special">(</span><span class="identifier">accumulators</span><span class="special">::</span><span class="identifier">sum</span><span class="special">(</span><span class="identifier">acc</span><span class="special">))).</span><span class="identifier">count</span><span class="special">();</span>
+                    <span class="identifier">os</span> <span class="special">&lt;&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;(</span>
+                            <span class="identifier">duration_t</span><span class="special">(</span><span class="identifier">accumulators</span><span class="special">::</span><span class="identifier">sum</span><span class="special">(</span><span class="identifier">acc</span><span class="special">))).</span><span class="identifier">count</span><span class="special">();</span>
                     <span class="keyword">break</span><span class="special">;</span>
                 <span class="keyword">case</span> <span class="char">'a'</span><span class="special">:</span>
                     <span class="identifier">os</span> <span class="special">&lt;&lt;</span> <span class="special">(</span><span class="identifier">accumulators</span><span class="special">::</span><span class="identifier">count</span><span class="special">(</span><span class="identifier">acc</span><span class="special">)&gt;</span><span class="number">0</span><span class="special">)</span>
-                            <span class="special">?</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;(</span><span class="identifier">duration_t</span><span class="special">(</span><span class="identifier">duration_t</span><span class="special">::</span><span class="identifier">rep</span><span class="special">(</span><span class="identifier">accumulators</span><span class="special">::</span><span class="identifier">mean</span><span class="special">(</span><span class="identifier">acc</span><span class="special">)))).</span><span class="identifier">count</span><span class="special">()</span>
+                            <span class="special">?</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;(</span><span class="identifier">duration_t</span><span class="special">(</span>
+                                <span class="identifier">duration_t</span><span class="special">::</span><span class="identifier">rep</span><span class="special">(</span><span class="identifier">accumulators</span><span class="special">::</span><span class="identifier">mean</span><span class="special">(</span><span class="identifier">acc</span><span class="special">)))).</span><span class="identifier">count</span><span class="special">()</span>
                             <span class="special">:</span> <span class="number">0</span><span class="special">;</span>
                     <span class="keyword">break</span><span class="special">;</span>
                 <span class="keyword">case</span> <span class="char">'c'</span><span class="special">:</span>
@@ -484,7 +376,8 @@
                     <span class="keyword">break</span><span class="special">;</span>
                 <span class="keyword">case</span> <span class="char">'v'</span><span class="special">:</span>
                     <span class="identifier">os</span> <span class="special">&lt;&lt;</span> <span class="special">(</span><span class="identifier">accumulators</span><span class="special">::</span><span class="identifier">count</span><span class="special">(</span><span class="identifier">acc</span><span class="special">)&gt;</span><span class="number">0</span><span class="special">)</span>
-                            <span class="special">?</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;(</span><span class="identifier">duration_t</span><span class="special">(</span><span class="identifier">duration_t</span><span class="special">::</span><span class="identifier">rep</span><span class="special">(</span><span class="identifier">accumulators</span><span class="special">::</span><span class="identifier">variance</span><span class="special">(</span><span class="identifier">acc</span><span class="special">)))).</span><span class="identifier">count</span><span class="special">()</span>
+                            <span class="special">?</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;(</span><span class="identifier">duration_t</span><span class="special">(</span>
+                                <span class="identifier">duration_t</span><span class="special">::</span><span class="identifier">rep</span><span class="special">(</span><span class="identifier">accumulators</span><span class="special">::</span><span class="identifier">variance</span><span class="special">(</span><span class="identifier">acc</span><span class="special">)))).</span><span class="identifier">count</span><span class="special">()</span>
                             <span class="special">:</span> <span class="number">0</span><span class="special">;</span>
                     <span class="keyword">break</span><span class="special">;</span>
                 <span class="keyword">default</span><span class="special">:</span>
@@ -499,7 +392,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2008 Howard Hinnant<br>Copyright © 2006 , 2008 Beman Dawes<br>Copyright © 2009 -2010 Vicente J. Botet Escriba<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2008 Howard Hinnant<br>Copyright &#169; 2006 , 2008 Beman Dawes<br>Copyright &#169; 2009 -2010 Vicente J. Botet Escriba<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

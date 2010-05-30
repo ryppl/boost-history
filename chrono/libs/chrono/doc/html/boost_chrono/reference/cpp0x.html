@@ -1,6 +1,6 @@
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title> Included on the C++0x
       recommendation</title>
 <link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
@@ -608,7 +608,7 @@
             and both of these calls happen before <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">::</span><span class="identifier">max</span><span class="special">()</span></code>.
           </p>
 <div class="table">
-<a name="id4839379"></a><p class="title"><b>Table 1. Clock Requirements</b></p>
+<a name="id4837668"></a><p class="title"><b>Table&#160;1.&#160;Clock Requirements</b></p>
 <table class="table" summary="Clock Requirements">
 <colgroup>
 <col>
@@ -617,136 +617,137 @@
 </colgroup>
 <thead><tr>
 <th>
-                <p>
-                  expression
-                </p>
-                </th>
+                    <p>
+                      expression
+                    </p>
+                  </th>
 <th>
-                <p>
-                  return type
-                </p>
-                </th>
+                    <p>
+                      return type
+                    </p>
+                  </th>
 <th>
-                <p>
-                  operational semantics
-                </p>
-                </th>
+                    <p>
+                      operational semantics
+                    </p>
+                  </th>
 </tr></thead>
 <tbody>
 <tr>
 <td>
-                <p>
-                  <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">rep</span></code>
-                </p>
-                </td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">rep</span></code>
+                    </p>
+                  </td>
 <td>
-                <p>
-                  An arithmetic type or class emulating an arithmetic type.
-                </p>
-                </td>
+                    <p>
+                      An arithmetic type or class emulating an arithmetic type.
+                    </p>
+                  </td>
 <td>
-                <p>
-                  The representation type of the native <code class="computeroutput"><span class="identifier">duration</span></code>
-                  and <code class="computeroutput"><span class="identifier">time_point</span></code>.
-                </p>
-                </td>
+                    <p>
+                      The representation type of the native <code class="computeroutput"><span class="identifier">duration</span></code>
+                      and <code class="computeroutput"><span class="identifier">time_point</span></code>.
+                    </p>
+                  </td>
 </tr>
 <tr>
 <td>
-                <p>
-                  <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">period</span></code>
-                </p>
-                </td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">period</span></code>
+                    </p>
+                  </td>
 <td>
-                <p>
-                  <code class="computeroutput"><span class="identifier">ratio</span></code>
-                </p>
-                </td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">ratio</span></code>
+                    </p>
+                  </td>
 <td>
-                <p>
-                  The tick period of the clock in seconds.
-                </p>
-                </td>
+                    <p>
+                      The tick period of the clock in seconds.
+                    </p>
+                  </td>
 </tr>
 <tr>
 <td>
-                <p>
-                  <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">duration</span></code>
-                </p>
-                </td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">duration</span></code>
+                    </p>
+                  </td>
 <td>
-                <p>
-                  <code class="computeroutput"><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">C1</span><span class="special">::</span><span class="identifier">rep</span><span class="special">,</span>
-                  <span class="identifier">C1</span><span class="special">::</span><span class="identifier">period</span><span class="special">&gt;</span></code>
-                </p>
-                </td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">C1</span><span class="special">::</span><span class="identifier">rep</span><span class="special">,</span>
+                      <span class="identifier">C1</span><span class="special">::</span><span class="identifier">period</span><span class="special">&gt;</span></code>
+                    </p>
+                  </td>
 <td>
-                <p>
-                  The native <code class="computeroutput"><span class="identifier">duration</span></code>
-                  type of the <code class="computeroutput"><span class="identifier">clock</span></code>.
-                </p>
-                </td>
+                    <p>
+                      The native <code class="computeroutput"><span class="identifier">duration</span></code>
+                      type of the <code class="computeroutput"><span class="identifier">clock</span></code>.
+                    </p>
+                  </td>
 </tr>
 <tr>
 <td>
-                <p>
-                  <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">time_point</span></code>
-                </p>
-                </td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">time_point</span></code>
+                    </p>
+                  </td>
 <td>
-                <p>
-                  <code class="computeroutput"><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">C1</span><span class="special">&gt;</span>
-                  <span class="keyword">or</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">C2</span><span class="special">,</span> <span class="identifier">C1</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&gt;</span></code>
-                </p>
-                </td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">C1</span><span class="special">&gt;</span>
+                      <span class="keyword">or</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">C2</span><span class="special">,</span> <span class="identifier">C1</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&gt;</span></code>
+                    </p>
+                  </td>
 <td>
-                <p>
-                  The native <code class="computeroutput"><span class="identifier">time_point</span></code>
-                  type of the <code class="computeroutput"><span class="identifier">clock</span></code>.
-                  Different clocks are permitted to share a <code class="computeroutput"><span class="identifier">time_point</span></code>
-                  definition if it is valid to compare their time_points by comparing
-                  their respective <code class="computeroutput"><span class="identifier">duration</span></code>s.
-                  <code class="computeroutput"><span class="identifier">C1</span></code> and <code class="computeroutput"><span class="identifier">C2</span></code> must refer to the same epoch.
-                </p>
-                </td>
+                    <p>
+                      The native <code class="computeroutput"><span class="identifier">time_point</span></code>
+                      type of the <code class="computeroutput"><span class="identifier">clock</span></code>.
+                      Different clocks are permitted to share a <code class="computeroutput"><span class="identifier">time_point</span></code>
+                      definition if it is valid to compare their time_points by comparing
+                      their respective <code class="computeroutput"><span class="identifier">duration</span></code>s.
+                      <code class="computeroutput"><span class="identifier">C1</span></code> and <code class="computeroutput"><span class="identifier">C2</span></code> must refer to the same
+                      epoch.
+                    </p>
+                  </td>
 </tr>
 <tr>
 <td>
-                <p>
-                  <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">is_monotonic</span></code>
-                </p>
-                </td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">is_monotonic</span></code>
+                    </p>
+                  </td>
 <td>
-                <p>
-                  <code class="computeroutput"><span class="keyword">const</span> <span class="keyword">bool</span></code>
-                </p>
-                </td>
+                    <p>
+                      <code class="computeroutput"><span class="keyword">const</span> <span class="keyword">bool</span></code>
+                    </p>
+                  </td>
 <td>
-                <p>
-                  <code class="computeroutput"><span class="keyword">true</span></code> if <code class="computeroutput"><span class="identifier">t1</span> <span class="special">&lt;=</span>
-                  <span class="identifier">t2</span></code> is always <code class="computeroutput"><span class="keyword">true</span></code>, else <code class="computeroutput"><span class="keyword">false</span></code>.
-                  <span class="bold"><strong>Note: A <code class="computeroutput"><span class="identifier">clock</span></code>
-                  that can be adjusted backwards is not monotonic</strong></span>
-                </p>
-                </td>
+                    <p>
+                      <code class="computeroutput"><span class="keyword">true</span></code> if <code class="computeroutput"><span class="identifier">t1</span> <span class="special">&lt;=</span>
+                      <span class="identifier">t2</span></code> is always <code class="computeroutput"><span class="keyword">true</span></code>, else <code class="computeroutput"><span class="keyword">false</span></code>.
+                      <span class="bold"><strong>Note: A <code class="computeroutput"><span class="identifier">clock</span></code>
+                      that can be adjusted backwards is not monotonic</strong></span>
+                    </p>
+                  </td>
 </tr>
 <tr>
 <td>
-                <p>
-                  <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span></code>
-                </p>
-                </td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span></code>
+                    </p>
+                  </td>
 <td>
-                <p>
-                  <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">time_point</span></code>
-                </p>
-                </td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">C1</span><span class="special">::</span><span class="identifier">time_point</span></code>
+                    </p>
+                  </td>
 <td>
-                <p>
-                  Returns a <code class="computeroutput"><span class="identifier">time_point</span></code>
-                  representing the current point in time.
-                </p>
-                </td>
+                    <p>
+                      Returns a <code class="computeroutput"><span class="identifier">time_point</span></code>
+                      representing the current point in time.
+                    </p>
+                  </td>
 </tr>
 </tbody>
 </table>
@@ -2264,7 +2265,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2008 Howard Hinnant<br>Copyright © 2006 , 2008 Beman Dawes<br>Copyright © 2009 -2010 Vicente J. Botet Escriba<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2008 Howard Hinnant<br>Copyright &#169; 2006 , 2008 Beman Dawes<br>Copyright &#169; 2009 -2010 Vicente J. Botet Escriba<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
