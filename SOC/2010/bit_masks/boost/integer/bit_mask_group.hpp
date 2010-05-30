@@ -9,14 +9,14 @@
 
 
 #include <boost/integer/compound_mask.hpp>
-#include <boost/mpl/list.hpp>
+// #include <boost/mpl/list.hpp>
 
 
-typedef mpl::list<int> temp;
+
 namespace boost {
 
 template <  typename Mask0,
-            typename Mask1  = mpl::nulltype_,
+            typename Mask1  = integral_mask< typename Mask0::value_type, 0 >,
             typename Mask2  = integral_mask< typename Mask0::value_type, 0 >,
             typename Mask3  = integral_mask< typename Mask0::value_type, 0 >,
             typename Mask4  = integral_mask< typename Mask0::value_type, 0 >,
