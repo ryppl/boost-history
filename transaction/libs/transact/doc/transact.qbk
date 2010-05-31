@@ -1,0 +1,198 @@
+[/
+ / Copyright (c) 2010 Vicente J. Botet Escriba
+ / Copyright (c) 2010 Stefan Strasser
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[article Boost.Transact
+    [quickbook 1.4]
+    [authors [Strasser, Stefan]]
+    [authors [Botet Escriba, Vicente J.]]
+    [copyright 2010 Strasser, Stefan]
+    [copyright 2010 Vicente J. Botet Escriba]
+    [/id transact]
+    [/dirname transact]
+    [purpose Transaction Generic Framework]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+]
+
+[/
+[section Preface]
+
+[:[".]]
+[:[*['-- ]]]
+
+[endsect]
+/]
+
+[warning Transact is not a part of the Boost libraries.]
+
+[/========================]
+[section:overview Overview]
+[/========================]
+
+[/==================]
+[heading Description]
+[/==================]
+
+
+[*Boost.Transact] provides:
+
+
+[/====================================]
+[heading How to Use This Documentation]
+[/====================================]
+
+This documentation makes use of the following naming and formatting conventions.
+
+* Code is in `fixed width font` and is syntax-highlighted.
+* Replaceable text that you will need to supply is in [~italics].
+* If a name refers to a free function, it is specified like this:
+  `free_function()`; that is, it is in code font and its name is followed by `()`   to indicate that it is a free function.
+* If a name refers to a class template, it is specified like this:   `class_template<>`; that is, it is in code font and its name is followed by `<>`   to indicate that it is a class template.
+* If a name refers to a function-like macro, it is specified like this: `MACRO()`;
+  that is, it is uppercase in code font and its name is followed by `()` to   indicate that it is a function-like macro. Object-like macros appear without the   trailing `()`.
+* Names that refer to /concepts/ in the generic programming sense are   specified in CamelCase.
+
+[note In addition, notes such as this one specify non-essential information that provides additional background or rationale.]
+
+Finally, you can mentally add the following to any code fragments in this document:
+
+    // Include all of the core Transact files
+    #include <boost/transact.hpp>
+
+    using namespace boost;
+
+[include motivation.qbk]
+
+[endsect]
+
+
+
+
+
+
+
+
+
+
+[/==============================]
+[section:users_guide Users' Guide]
+[/==============================]
+
+[/======================================]
+[section:getting_started Getting Started]
+[/======================================]
+
+[/======================================]
+[section:install Installing Transact]
+[/======================================]
+
+[/=================================]
+[heading Getting Boost.Transact]
+[/=================================]
+
+You can get the last stable release of Boost.Transact by downloading [^transact.zip] from the
+[@http://www.boostpro.com/vault/index.php?action=downloadfile&filename=transact.zip&directory=Transaction& Boost Vault Utilities directory]
+
+You can also access the latest (unstable?) state from the [@https://svn.boost.org/svn/boost/sandbox/transaction Boost Sandbox].
+
+[/=================================]
+[heading Building Boost.Transact]
+[/=================================]
+
+
+[/=========================]
+[heading Requirements]
+[/=========================]
+
+
+
+[/========================]
+[heading Exceptions safety]
+[/========================]
+
+All functions in the library are exception-neutral and provide strong guarantee of exception safety as long as the underlying parameters provide it.
+
+[/====================]
+[heading Thread safety]
+[/====================]
+
+All functions in the library are thread-unsafe except when noted explicitly.
+
+[/=======================]
+[heading Tested compilers]
+[/=======================]
+
+Currently, [*Boost.Transact] has been tested in the following compilers/platforms:
+
+*  GCC 3.4.4 Cygwin
+*  GCC 3.4.6 Linux
+[/*  GCC 4.3.2 Cygwin]
+*  GCC 4.1.2 Linux
+
+[note Please send any questions, comments and bug reports to boost <at> lists <dot> boost <dot> org.]
+
+[endsect]
+[/=============================]
+[section:hello_world Hello World! ]
+[/=============================]
+
+
+[endsect]
+
+[endsect]
+
+[include tutorial.qbk]
+
+[include references.qbk]
+
+
+[endsect]
+
+
+[include references.qbk]
+
+[include examples.qbk]
+
+
+[/=================]
+[section:appendices Appendices]
+[/=================]
+
+[section:history Appendix A: History]
+
+* Add transact between std::vector of explicitly convertible types.
+
+[section [*Version 0.1.0, XX YY, 2010] [']]
+[*Features:]
+
+[endsect]
+[endsect]
+
+[include rationale.qbk]
+[include implementation.qbk]
+
+[section:acknowledgements Appendix D: Acknowledgements]
+
+Thanks to ...
+
+[endsect]
+
+[/=====================================]
+[section:todo  Appendix E: Future plans]
+[/=====================================]
+
+[heading Tasks to do before review]
+
+
+[endsect]
+[endsect]
+
+
