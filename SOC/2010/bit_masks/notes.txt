@@ -184,35 +184,56 @@ integral type T at a later time.
 
 
                 Compile + run time set interface.
-All masks should be hidden unless one is supplied as a template parameter?
-however the internal mask created will be availiable always its just that the user
-may not want to actually see it or have to use it themselves.
+template <typename T, unsigned int Offset>
+struct set_single_bit {
+    T operator()(T x);
+};
 
-template <size_t N>
-struct set_bit
-{
-    template <typename T>
-    void operator() ( T& bits );
+template <typename T, unsigned int FromIndex, unsigned int ToIndex>
+struct set_bit_range {
+    T operator()(T x);
+};
+
+template <typename T>
+struct set_all_bits {
+    T operator()(T x);
+};
+
+template <typename T, typename bit_mask>
+struct set_selected {
+    T opeator()(T x);
 };
 
 
-example usage for something like this could be:
-
-typedef set_bit< 3 > set_third_bit;
-
-unsigned int some_integer(0);
-set_third_bit()(some_integer);
-
-
-this would the third bit of the some_integer would then be set.
-
-
-
                 Compile + run time test interface.
-
                 Compile + run time flip interface.
+
                 Compile + run time clear interface.
 
+clear one, clear many, clear all, clear selected
+
+Create masks based on T, and the index of the bit to clear
+and clear the bit at location Offset.
+
+template <typename T, unsigned int Offset>
+struct clear_single_bit {
+    T operator()(T x);
+};
+
+template <typename T, unsigned int FromIndex, unsigned int ToIndex>
+struct clear_bit_range {
+    T operator()(T x);
+};
+
+template <typename T>
+struct clear_all_bits {
+    T operator()(T x);
+};
+
+template <typename T, typename bit_mask>
+struct clear_selected {
+    T opeator()(T x);
+};
 
 
 
@@ -221,25 +242,47 @@ runtime only interface.
 
         runtime test
 This will throw a domain error if N is greater then the bit_width of T.
+single bit test.
 template <typename T>
-bool test_bit(T bits, size_t N);
+bool test(T bits, size_t N);
 
+range test + test all
+template <typename T>
+bool test(T bits, size_t from, size_t to);
 
 
         runtime set
 This will throw a domain error if N is greater then the bit_width of T.
+
+single bit set.
 template <typename T>
-void set_bit(T& bits, size_t N);
+T set(T bits, size_t N);
+
+set range + set all
+template <typename T>
+T set(T bits, size_t from, size_t to);
 
 
         runtime clear
 This will throw a domain error if N is greater then the bit_width of T.
-template <typename T>
-void clear_bit(T& bits, size_t N);
 
+clear a single bit.
+template <typename T>
+T clear(T bits, size_t N);
+
+range clear + clear all.
+template <typename T>
+T clear(T bits, size_t from, size_t to);
 
         runtime flip
 This will throw a domain error if N is greater then the bit_width of T.
+
+single bit flip.
 template <typename T>
-void flip_bit(T& bits, size_t N);
+T flip(T bits, size_t N);
+
+range flip + flip all.
+template <typanem T>
+T flip(T bits, size_t from, size_t to);
+
 
