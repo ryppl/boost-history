@@ -563,7 +563,6 @@ public:
     typedef typename detail::transaction transaction;
     typedef typename detail::resource_types resource_types;
 
-    //TODO evtl. nicht-konstruierbar machen und log anders starten?
     /// A basic_transaction_manager constructed using this constructor
     /// is not able to commit transactions that involve two or more persistent
     /// resource managers, i.e. that require a two phase commit protocol.
