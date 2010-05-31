@@ -241,7 +241,6 @@ runtime only interface.
 
 
         runtime test
-This will throw a domain error if N is greater then the bit_width of T.
 single bit test.
 template <typename T>
 bool test(T bits, size_t N);
@@ -252,7 +251,6 @@ bool test(T bits, size_t from, size_t to);
 
 
         runtime set
-This will throw a domain error if N is greater then the bit_width of T.
 
 single bit set.
 template <typename T>
@@ -264,7 +262,6 @@ T set(T bits, size_t from, size_t to);
 
 
         runtime clear
-This will throw a domain error if N is greater then the bit_width of T.
 
 clear a single bit.
 template <typename T>
@@ -275,8 +272,6 @@ template <typename T>
 T clear(T bits, size_t from, size_t to);
 
         runtime flip
-This will throw a domain error if N is greater then the bit_width of T.
-
 single bit flip.
 template <typename T>
 T flip(T bits, size_t N);

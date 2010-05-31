@@ -1,0 +1,145 @@
+1) Compile time only
+
+While this is interesting to me this doesn't seem all that useful over all. Is 
+    there really and need to clear, set, test or flip a bit mask on compile time
+    that would be able to be quickly done with preexisting meta functions within
+    the boost.mpl.
+
+Addressing each one individually:
+clear - doesn't seem necessary or useful
+set - already exists in a slightly roundabout way. This can already be done with
+        compound_mask + bit_mask + other mask although it would be useful to have
+        something which did that for you.
+test - Don't see any real use for this.
+flip - Some what useful but not sure if its necessary, shouldn't one have simply
+        constructed the mask differently
+
+
+
+2) Compile time generated masks applied to run time data.
+For set and test there should be over loads for accepting different masks as 
+well as their regular parameters, so that a test or set with a specific mask can
+be preformed. All of the different operations are given as functors (this is 
+nice because one can easily pass them around to different algorithms, however 
+I'm not sure if this is all that necessary).
+
+clear - This function clears a single bit a section of bits or all of the bits
+inside an integral type.
+
+Different interfaces of clear
+
+suggested interface:
+
+template <typename T, unsigned int FromIndex = 0, unsigned int ToIndex = FromIndex>
+struct clear_bits {
+    T operator()(T x);
+};
+// specialization which returns T(0).
+template <typename T>
+struct clear_bits<T, 0, bit_width<T>::value >
+{
+    T operator()(T x);
+};
+
+
+clear bits based on the bits set within a given mask.
+
+template <typename T, typename bit_mask>
+struct clear_selected {
+    T opeator()(T x);
+};
+
+
+set - Set the bits inside an integral value based on a single index, another mask or a bit range.
+
+suggested interface:
+template <typename T, unsigned int FromIndex = 0, unsigned int ToIndex =FromIndex>
+struct set_bits {
+    T operator()(T x);
+};
+
+template <typename T>
+struct set_bits<T,0,bit_width<T>::value> {
+    T operator()(T x);
+};
+
+template <typename T, typename bit_mask>
+struct set_selected {
+    T opeator()(T x);
+};
+
+
+test - Testing facilities for testing single bits, a range of bits, a bit mask or all bits.
+
+suggested interface:
+template <typename T, unsigned int FromIndex = 0, unsigned int ToIndex =FromIndex>
+struct test_bits {
+    bool operator()(T x);
+};
+
+template <typename T>
+struct test_bits<T,0,bit_width<T>::value> {
+    bool operator()(T x);
+};
+
+template <typename T, typename bit_mask>
+struct test_selected {
+    bool opeator()(T x);
+};
+
+flip - Toggle a single bit, range of bits, all bits or bits based on a mask.
+
+suggested interface:
+template <typename T, unsigned int FromIndex = 0, unsigned int ToIndex =FromIndex>
+struct flip_bits {
+    T operator()(T x);
+};
+
+template <typename T>
+struct flip_bits<T,0,bit_width<T>::value> {
+    T operator()(T x);
+};
+
+template <typename T, typename bit_mask>
+struct flip_selected {
+    T opeator()(T x);
+};
+
+3) Runtime generated masks applied to runtime data.
+        runtime test.
+single bit test.
+template <typename T>
+bool test(T bits, size_t N);
+
+range test + test all
+template <typename T>
+bool test(T bits, size_t from, size_t to);
+
+
+        runtime set
+single bit set.
+template <typename T>
+T set(T bits, size_t N);
+
+set range + set all
+template <typename T>
+T set(T bits, size_t from, size_t to);
+
+
+        runtime clear
+clear a single bit.
+template <typename T>
+T clear(T bits, size_t N);
+
+range clear + clear all.
+template <typename T>
+T clear(T bits, size_t from, size_t to);
+
+       Runtime flip
+single bit flip.
+template <typename T>
+T flip(T bits, size_t N);
+
+range flip + flip all.
+template <typanem T>
+T flip(T bits, size_t from, size_t to);

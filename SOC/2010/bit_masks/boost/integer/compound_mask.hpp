@@ -8,8 +8,6 @@
 #define BOOST_COMPOIND_BIT_MASK_HPP
 
 #include <boost/integer/bit_mask.hpp>
-#include <boost/mpl/assert.hpp>
-#include <boost/mpl/bitor.hpp>
 
 namespace boost {
 
