@@ -155,7 +155,7 @@ struct bit_mask_group {
     //@{
     template <typename Name>
     struct get_by_name {
-        typedef typename mpl::m_at<named_type_map, Name>::type type;
+        typedef typename mpl::at<named_type_map, Name>::type type;
     };
 
     template <unsigned int Index>

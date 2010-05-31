@@ -18,5 +18,21 @@ int main() {
 
     BOOST_ASSERT(( testing_type1().get< 0 >() == low_bits<int,9>() ));
     BOOST_ASSERT(( testing_type1().get< name_tag >() == low_bits<int,9>() ));
+
+    BOOST_ASSERT((
+        is_same<
+            testing_type1::get_by_index<0>::type,
+            low_bits<int,9>
+        >::value
+    ));
+
+    BOOST_ASSERT((
+        is_same<
+            testing_type1::get_by_name< name_tag >::type,
+            low_bits<int,9>
+        >::value
+    ));
+    
+
     return 0;
 }
