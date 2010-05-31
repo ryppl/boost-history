@@ -143,8 +143,8 @@ struct bit_mask_group {
     /** Vector and map types used to store the information about named and
      *  unnamed types.
      */
-    typedef typename _impl_type::named_type_map      named_type_map;
-    typedef typename _impl_type::type_vector         type_vector;
+    typedef typename _impl_type::named_type_map      named_mask_map;
+    typedef typename _impl_type::type_vector         mask_vector;
 
 
 
@@ -155,13 +155,13 @@ struct bit_mask_group {
     //@{
     template <typename Name>
     struct get_by_name {
-        typedef typename mpl::at<named_type_map, Name>::type type;
+        typedef typename mpl::at<named_mask_map, Name>::type type;
     };
 
     template <unsigned int Index>
     struct get_by_index {
         typedef typename mpl::at<
-            type_vector,
+            mask_vector,
             integral_constant< unsigned int,Index>
         >::type type;
     };
@@ -178,19 +178,19 @@ struct bit_mask_group {
      */
     //@{
     template <typename Name>
-    inline typename mpl::at<named_type_map, Name>::type::value_type
+    inline typename mpl::at<named_mask_map, Name>::type::value_type
     get() {
-        return mpl::at<named_type_map, Name>::type::value;
+        return mpl::at<named_mask_map, Name>::type::value;
     }
 
     template <unsigned int Index>
     inline typename mpl::at<
-        type_vector,
+        mask_vector,
         integral_constant<unsigned int, Index>
     >::type::value_type
     get() {
         return mpl::at<
-            type_vector,
+            mask_vector,
             integral_constant<unsigned int, Index>
         >::type::value;
     }
