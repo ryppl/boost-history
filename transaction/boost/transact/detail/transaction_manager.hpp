@@ -26,7 +26,7 @@ namespace detail{
 template<class Tag,class Resource>
 class tag_resource_pair : noncopyable{
 public:
-    typedef std::pair<Tag,Resource *> *iterator;
+    typedef std::pair<Tag,Resource *> const *iterator;
     void connect(Tag const &tag,Resource &res){
         if(this->pair){
             if(this->tag_is_equal(tag)) throw resource_error();
@@ -68,13 +68,13 @@ public:
         return this->pair->first;
     }
 private:
-    bool tag_is_equal(Tag const &o){
+    bool tag_is_equal(Tag const &o) const{
         return this->tag_is_equal(o,boost::is_empty<Tag>());
     }
-    bool tag_is_equal(Tag const &,mpl::true_ empty){
+    bool tag_is_equal(Tag const &,mpl::true_ empty) const{
         return true;
     }
-    bool tag_is_equal(Tag const &o,mpl::false_ empty){
+    bool tag_is_equal(Tag const &o,mpl::false_ empty) const{
         BOOST_ASSERT(this->pair);
         return this->pair->first == o;
     }

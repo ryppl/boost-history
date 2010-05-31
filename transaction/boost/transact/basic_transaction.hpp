@@ -83,10 +83,11 @@ public:
     /// Throws: \c no_transaction_manager, \c io_failure, \c thread_resource_error,
     /// resource-specific exceptions thrown by resource managers restarting transactions.
     /// \brief Restarts the transactions
+    /// \pre This transaction must neither be committed nor rolled back
     void restart(){
-        if(!this->done) this->rollback();
+        //do not assert the !this->done to test the precondition. restart() is ok
+        //after commit() has failed with an isolation_exception.
         TxMgr::restart_transaction(this->tx);
-        this->done=false;
     }
 
     /// Throws: thread_resource_error

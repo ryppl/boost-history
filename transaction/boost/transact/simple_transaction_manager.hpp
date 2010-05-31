@@ -111,6 +111,7 @@ private:
     void construct(resources &ress,mpl::false_ flat){
         this->construct_closed(ress);
     }
+    friend struct transact::detail::beginner<transaction,resources>;
     void construct_closed(resources &ress){
         this->rtxs_storage=in_place();
         this->rtxs=&*this->rtxs_storage;
@@ -190,11 +191,11 @@ public:
 
     template<class Tag>
     struct resource_iterator{
-        typedef typename detail::resources_type::template iterator<Tag>::type type;
+        typedef typename detail::resources_type::iterator type;
     };
     template<class Tag>
     static std::pair<typename resource_iterator<Tag>::type,typename resource_iterator<Tag>::type> resources(){
-        return resources_.template range<Tag>();
+        return resources_.range();
     }
 
     static typename Resource::transaction &
