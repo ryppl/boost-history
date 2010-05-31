@@ -88,6 +88,7 @@ public:
         //do not assert the !this->done to test the precondition. restart() is ok
         //after commit() has failed with an isolation_exception.
         TxMgr::restart_transaction(this->tx);
+        this->done=false;
     }
 
     /// Throws: thread_resource_error
