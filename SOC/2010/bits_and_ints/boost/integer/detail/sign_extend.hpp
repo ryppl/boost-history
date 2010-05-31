@@ -1,4 +1,4 @@
-//  Boost integer/sign_extend.hpp header file  ------------------------------//
+//  Boost integer/detail/sign_extend.hpp header file  ------------------------------//
 
 //  (C) Copyright Murilo Adriano Vasconcelos 2010.
 //  Distributed under the Boost Software License, Version 1.0. (See
@@ -7,10 +7,10 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history. 
 
-#ifndef BOOST_SIGN_EXTEND
-#define BOOST_SIGN_EXTEND
+#ifndef BOOST_SIGN_EXTEND_INCLUDED
+#define BOOST_SIGN_EXTEND_INCLUDED
 
-#include <boost/cstdint.hpp> // for uintmax_t
+#include <boost/cstdint.hpp> // for intmax_t
 #include <boost/assert.hpp>
 
 namespace boost 
@@ -26,17 +26,7 @@ inline Raw sign_extend(IntegralType data, unsigned b)
 	Raw const m = (Raw(1) << (b - 1));
 	return (data ^ m) - m;
 }
-
-// Compile-time version of sign_extend
-template<typename IntegralType, Raw raw, unsigned B>
-struct static_sign_extend 
-{
-	typedef IntegralType T;
-	BOOST_STATIC_CONSTANT(Raw, 
-		value = ((raw & ((T(1) << B) - 1)) ^ (T(1) << (B - 1))) - (T(1) << (B - 1)) ); 
-}; // boost::static_sign_extend
 	
-
-}
+} // boost
 
 #endif
