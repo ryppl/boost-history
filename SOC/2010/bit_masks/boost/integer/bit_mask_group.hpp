@@ -13,6 +13,10 @@
 #include <boost/mpl/map.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/insert.hpp>
+#include <boost/mpl/push_back.hpp>
+#include <boost/mpl/aux_/at_impl.hpp>
+#include <boost/mpl/at.hpp>
+#include <boost/mpl/apply.hpp>
 
 
 
@@ -39,14 +43,14 @@ struct bit_mask_group_impl_ {
 
     typedef bit_mask_group_impl_< T, TypeVector, NamedTypeMap>  type;
     typedef T                                                   type_added;
-    typedef typename mpl::push_back<TypeVector, T>::type        vector_type;
+    typedef typename mpl::push_back<TypeVector, T>::type        type_vector;
     typedef NamedTypeMap                                        named_type_map;
 
 
     // adds to the back of the vector and calls this meta function again.
     template <typename NewT>
     struct add {
-        typedef bit_mask_group_impl_< NewT, vector_type, NamedTypeMap> type;
+        typedef bit_mask_group_impl_< NewT, type_vector, NamedTypeMap> type;
     };
 
 
@@ -62,7 +66,7 @@ struct bit_mask_group_impl_< unused_parameter, TypeVector, NamedTypeMap > {
 
     typedef bit_mask_group_impl_< unused_parameter, TypeVector, NamedTypeMap>  type;
     typedef unused_parameter                                                   type_added;
-    typedef TypeVector                                                         vector_type;
+    typedef TypeVector                                                         type_vector;
     typedef NamedTypeMap                                                       named_type_map;
 
     // fake adding the parameter to the TypeVector instead do nothing.
@@ -79,14 +83,14 @@ struct bit_mask_group_impl_< unused_parameter, TypeVector, NamedTypeMap > {
 template <typename Name, typename Value, typename TypeVector, typename NamedTypeMap>
 struct bit_mask_group_impl_< named<Name, Value>, TypeVector, NamedTypeMap>
 {
-    typedef bit_mask_group_impl_< Value, TypeVector, NamedTypeMap>      type;
-    typedef unused_parameter                                            type_added;
-    typedef typename mpl::push_back<TypeVector, Value>::type            vector_type;
-    typedef typename mpl::insert<NamedTypeMap,mpl::pair<Name,Value> >   named_type_map;
+    typedef bit_mask_group_impl_< Value, TypeVector, NamedTypeMap>          type;
+    typedef Value                                                           type_added;
+    typedef typename mpl::push_back<TypeVector, Value>::type                type_vector;
+    typedef typename mpl::insert<NamedTypeMap,mpl::pair<Name,Value> >::type named_type_map;
 
     template <typename NewT>
     struct add {
-        typedef bit_mask_group_impl_<NewT, vector_type, named_type_map> type;
+        typedef bit_mask_group_impl_<NewT, type_vector, named_type_map> type;
     };
 };
 
@@ -119,7 +123,11 @@ struct bit_mask_group {
      *  psudo variadic behavior. (i.e. this will get more parameters via value
      *  specific by another macro).
      */
-    typedef typename details::bit_mask_group_impl_<Mask0, mpl::vector<>, mpl::map<> >::
+    typedef typename details::bit_mask_group_impl_<
+        Mask0,
+            mpl::vector<>,
+            mpl::map<>
+        >::
         template add<Mask2>::type::
         template add<Mask3>::type::
         template add<Mask4>::type::
@@ -128,6 +136,9 @@ struct bit_mask_group {
         template add<Mask7>::type::
         template add<Mask8>::type::
         template add<Mask9>::type    _impl_type;
+
+    typedef bit_mask_group<Mask0, Mask1, Mask2, Mask3, Mask4,
+                           Mask5, Mask6, Mask7, Mask8, Mask9 > type;
 
     /** Vector and map types used to store the information about named and
      *  unnamed types.
@@ -144,36 +155,44 @@ struct bit_mask_group {
     //@{
     template <typename Name>
     struct get_by_name {
-        typedef typename mpl::at<named_type_map, Name>::type type;
+        typedef typename mpl::m_at<named_type_map, Name>::type type;
     };
 
     template <unsigned int Index>
     struct get_by_index {
-        typedef typename mpl::at<type_vector, integral_constant< unsigned int,Index> >::type type;
+        typedef typename mpl::at<
+            type_vector,
+            integral_constant< unsigned int,Index>
+        >::type type;
     };
     //@}
 
 
 
     /** Runtime support functions for the bit mask group.
-     *  These are going to be the runtime support function for the bit mask group
-     *  they are based on the interface for standard tupe
+     *  The get functions are runtime support funtions. They provide the
+     *  following inteface:
+     *  get<name>() // will fetch a named mask and return the value of the mask.
+     *  get< number >() // will fetch and retun a mask with an index the same 
+     *                  // as number.
      */
     //@{
     template <typename Name>
-    typename mpl::at<named_type_map, Name>::type 
+    inline typename mpl::at<named_type_map, Name>::type::value_type
     get() {
-        typedef typename mpl::at<named_type_map, Name>::type temp;
-        return temp();
+        return mpl::at<named_type_map, Name>::type::value;
     }
-    
+
     template <unsigned int Index>
-    typename mpl::at<type_vector, integral_constant<unsigned int, Index> >::type
+    inline typename mpl::at<
+        type_vector,
+        integral_constant<unsigned int, Index>
+    >::type::value_type
     get() {
-        return typename mpl::at<
+        return mpl::at<
             type_vector,
             integral_constant<unsigned int, Index>
-        >::type();
+        >::type::value;
     }
     //@}
 };

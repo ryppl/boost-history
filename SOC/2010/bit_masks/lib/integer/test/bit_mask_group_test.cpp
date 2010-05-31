@@ -7,8 +7,16 @@
 #include "test_type_list.hpp"
 
 
-
+struct name_tag { };
 int main() {
-    typedef bit_mask_group< low_bits<int,9>, bit_mask<int,3,9> > testing_type1;
+    typedef bit_mask_group< named<
+        name_tag,low_bits<int,9> >,
+        bit_mask<int,3,9>
+    > testing_type1;
+
+    BOOST_ASSERT(( sizeof(testing_type1) == 1 ));
+
+    BOOST_ASSERT(( testing_type1().get< 0 >() == low_bits<int,9>() ));
+    BOOST_ASSERT(( testing_type1().get< name_tag >() == low_bits<int,9>() ));
     return 0;
 }
