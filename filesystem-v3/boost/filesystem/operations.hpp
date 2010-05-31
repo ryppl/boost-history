@@ -582,9 +582,9 @@ namespace detail
 
   private:
     friend struct detail::dir_itr_imp;
-    friend void detail::directory_iterator_construct(directory_iterator& it,
+    friend BOOST_FILESYSTEM_DECL void detail::directory_iterator_construct(directory_iterator& it,
       const path& p, system::error_code* ec);
-    friend void detail::directory_iterator_increment(directory_iterator& it,
+    friend BOOST_FILESYSTEM_DECL void detail::directory_iterator_increment(directory_iterator& it,
       system::error_code* ec);
 
     // shared_ptr provides shallow-copy semantics required for InputIterators.

@@ -16,11 +16,6 @@
 
 #define _POSIX_PTHREAD_SEMANTICS  // Sun readdir_r()needs this
 
-// enable the XPG-compliant version of readdir_r()on AIX
-#if defined(_AIX)
-# define _LINUX_SOURCE_COMPAT
-#endif
-
 #if !(defined(__HP_aCC) && defined(_ILP32) && \
       !defined(_STATVFS_ACPP_PROBLEMS_FIXED))
 #define _FILE_OFFSET_BITS 64 // at worst, these defines may have no effect,
@@ -39,6 +34,7 @@
 #include <boost/filesystem/operations.hpp>
 #include <boost/scoped_array.hpp>
 #include <boost/detail/workaround.hpp>
+#include <cstdlib>  // for malloc, free
 
 #ifdef BOOST_FILEYSTEM_INCLUDE_IOSTREAM
 # include <iostream>
@@ -76,8 +72,8 @@ using std::wstring;
 
 # else // BOOST_WINDOW_API
 
-#   if defined(__MINGW32__) && !defined(WINVER)
-      // Versions of MinGW that support Filesystem V3 support at least WINVER 0x501.
+#   if (defined(__MINGW32__) || defined(__CYGWIN__)) && !defined(WINVER)
+      // Versions of MinGW or Cygwin that support Filesystem V3 support at least WINVER 0x501.
       // See MinGW's windef.h
 #     define WINVER 0x501
 #   endif
@@ -239,9 +235,9 @@ namespace
     { //  error
       if (ec == 0)
         BOOST_FILESYSTEM_THROW(filesystem_error(message,
-          error_code(BOOST_ERRNO, system_category)));
+          error_code(BOOST_ERRNO, system_category())));
       else
-        ec->assign(BOOST_ERRNO, system_category);
+        ec->assign(BOOST_ERRNO, system_category());
     }
     return was_error;
   }
@@ -256,9 +252,9 @@ namespace
     { //  error
       if (ec == 0)
         BOOST_FILESYSTEM_THROW(filesystem_error(message,
-          p, error_code(BOOST_ERRNO, system_category)));
+          p, error_code(BOOST_ERRNO, system_category())));
       else
-        ec->assign(BOOST_ERRNO, system_category);
+        ec->assign(BOOST_ERRNO, system_category());
     }
     return was_error;
   }
@@ -274,9 +270,9 @@ namespace
     { //  error
       if (ec == 0)
         BOOST_FILESYSTEM_THROW(filesystem_error(message,
-          p1, p2, error_code(BOOST_ERRNO, system_category)));
+          p1, p2, error_code(BOOST_ERRNO, system_category())));
       else
-        ec->assign(BOOST_ERRNO, system_category);
+        ec->assign(BOOST_ERRNO, system_category());
     }
     return was_error;
   }
@@ -452,6 +448,8 @@ namespace
     return errval == ERROR_FILE_NOT_FOUND
       || errval == ERROR_PATH_NOT_FOUND
       || errval == ERROR_INVALID_NAME  // "tools/jam/src/:sys:stat.h", "//foo"
+      || errval == ERROR_INVALID_DRIVE  // USB card reader with no card inserted
+      || errval == ERROR_NOT_READY  // CD/DVD drive with no disc inserted
       || errval == ERROR_INVALID_PARAMETER  // ":sys:stat.h"
       || errval == ERROR_BAD_PATHNAME  // "//nosuch" on Win64
       || errval == ERROR_BAD_NETPATH;  // "//nosuch" on Win32
@@ -609,8 +607,8 @@ namespace detail
     {
       if (ec == 0)
         BOOST_FILESYSTEM_THROW(filesystem_error("boost::filesystem::copy",
-          from, to, error_code(BOOST_ERROR_NOT_SUPPORTED, system_category)));
-      ec->assign(BOOST_ERROR_NOT_SUPPORTED, system_category);
+          from, to, error_code(BOOST_ERROR_NOT_SUPPORTED, system_category())));
+      ec->assign(BOOST_ERROR_NOT_SUPPORTED, system_category());
     }
   }
 
@@ -643,14 +641,14 @@ namespace detail
     create_symlink(p, to, ec);
 
 #   elif _WIN32_WINNT < 0x0600  // SDK earlier than Vista and Server 2008
-    error(true, error_code(BOOST_ERROR_NOT_SUPPORTED, system_category), to, from, ec,
+    error(true, error_code(BOOST_ERROR_NOT_SUPPORTED, system_category()), to, from, ec,
       "boost::filesystem::copy_symlink");
 
 #   else  // modern Windows
 
     // see if actually supported by Windows runtime dll
     if (error(!create_symbolic_link_api,
-        error_code(BOOST_ERROR_NOT_SUPPORTED, system_category),
+        error_code(BOOST_ERROR_NOT_SUPPORTED, system_category()),
         to, from, ec,
         "boost::filesystem::copy_symlink"))
       return;
@@ -673,8 +671,8 @@ namespace detail
         if (ec == 0)
         BOOST_FILESYSTEM_THROW(filesystem_error(
             "boost::filesystem::create_directories", p,
-            error_code(system::errc::file_exists, system::generic_category)));
-        else ec->assign(system::errc::file_exists, system::generic_category);
+            error_code(system::errc::file_exists, system::generic_category())));
+        else ec->assign(system::errc::file_exists, system::generic_category());
       }
       return false;
     }
@@ -707,9 +705,9 @@ namespace detail
     //  attempt to create directory failed && it doesn't already exist
     if (ec == 0)
       BOOST_FILESYSTEM_THROW(filesystem_error("boost::filesystem::create_directory",
-        p, error_code(errval, system_category)));
+        p, error_code(errval, system_category())));
     else
-      ec->assign(errval, system_category);
+      ec->assign(errval, system_category());
     return false;
   }
 
@@ -719,14 +717,14 @@ namespace detail
   {
 #   if defined(BOOST_WINDOWS_API) && _WIN32_WINNT < 0x0600  // SDK earlier than Vista and Server 2008
 
-    error(true, error_code(BOOST_ERROR_NOT_SUPPORTED, system_category), to, from, ec,
+    error(true, error_code(BOOST_ERROR_NOT_SUPPORTED, system_category()), to, from, ec,
       "boost::filesystem::create_directory_symlink");
 #   else
 
 #     if defined(BOOST_WINDOWS_API) && _WIN32_WINNT >= 0x0600
         // see if actually supported by Windows runtime dll
         if (error(!create_symbolic_link_api,
-            error_code(BOOST_ERROR_NOT_SUPPORTED, system_category),
+            error_code(BOOST_ERROR_NOT_SUPPORTED, system_category()),
             to, from, ec,
             "boost::filesystem::create_directory_symlink"))
           return;
@@ -743,14 +741,14 @@ namespace detail
 
 #   if defined(BOOST_WINDOWS_API) && _WIN32_WINNT < 0x0500  // SDK earlier than Win 2K
 
-    error(true, error_code(BOOST_ERROR_NOT_SUPPORTED, system_category), to, from, ec,
+    error(true, error_code(BOOST_ERROR_NOT_SUPPORTED, system_category()), to, from, ec,
       "boost::filesystem::create_hard_link");
 #   else
 
 #     if defined(BOOST_WINDOWS_API) && _WIN32_WINNT >= 0x0500
         // see if actually supported by Windows runtime dll
         if (error(!create_hard_link_api,
-            error_code(BOOST_ERROR_NOT_SUPPORTED, system_category),
+            error_code(BOOST_ERROR_NOT_SUPPORTED, system_category()),
             to, from, ec,
             "boost::filesystem::create_hard_link"))
           return;
@@ -765,14 +763,14 @@ namespace detail
   void create_symlink(const path& to, const path& from, error_code* ec)
   {
 #   if defined(BOOST_WINDOWS_API) && _WIN32_WINNT < 0x0600  // SDK earlier than Vista and Server 2008
-    error(true, error_code(BOOST_ERROR_NOT_SUPPORTED, system_category), to, from, ec,
+    error(true, error_code(BOOST_ERROR_NOT_SUPPORTED, system_category()), to, from, ec,
       "boost::filesystem::create_directory_symlink");
 #   else
 
 #     if defined(BOOST_WINDOWS_API) && _WIN32_WINNT >= 0x0600
         // see if actually supported by Windows runtime dll
         if (error(!create_symbolic_link_api,
-            error_code(BOOST_ERROR_NOT_SUPPORTED, system_category),
+            error_code(BOOST_ERROR_NOT_SUPPORTED, system_category()),
             to, from, ec,
             "boost::filesystem::create_directory_symlink"))
           return;
@@ -934,7 +932,7 @@ namespace detail
         p, ec, "boost::filesystem::file_size"))
       return static_cast<boost::uintmax_t>(-1);
    if (error(!S_ISREG(path_stat.st_mode),
-      error_code(EPERM, system_category),
+      error_code(EPERM, system_category()),
         p, ec, "boost::filesystem::file_size"))
       return static_cast<boost::uintmax_t>(-1);
 
@@ -951,7 +949,7 @@ namespace detail
         return static_cast<boost::uintmax_t>(-1);
 
     if (error((fad.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)!= 0,
-      error_code(ERROR_NOT_SUPPORTED, system_category),
+      error_code(ERROR_NOT_SUPPORTED, system_category()),
         p, ec, "boost::filesystem::file_size"))
       return static_cast<boost::uintmax_t>(-1);
 
@@ -1108,8 +1106,8 @@ namespace detail
       {
         if (ec == 0)
           BOOST_FILESYSTEM_THROW(filesystem_error("boost::filesystem::read_symlink",
-            p, error_code(errno, system_category)));
-        else ec->assign(errno, system_category);
+            p, error_code(errno, system_category())));
+        else ec->assign(errno, system_category());
         break;
       }
       else
@@ -1124,7 +1122,7 @@ namespace detail
     }
 
 #   elif _WIN32_WINNT < 0x0600  // SDK earlier than Vista and Server 2008
-    error(true, error_code(BOOST_ERROR_NOT_SUPPORTED, system_category), p, ec,
+    error(true, error_code(BOOST_ERROR_NOT_SUPPORTED, system_category()), p, ec,
           "boost::filesystem::read_symlink");
 #   else  // Vista and Server 2008 SDK, or later
 
@@ -1245,7 +1243,7 @@ namespace detail
   {
     int errval(::GetLastError());
     if (ec != 0)                             // always report errval, even though some
-      ec->assign(errval, system_category);   // errval values are not status_errors
+      ec->assign(errval, system_category());   // errval values are not status_errors
 
     if (not_found_error(errval))
     {
@@ -1257,7 +1255,7 @@ namespace detail
     }
     if (ec == 0)
       BOOST_FILESYSTEM_THROW(filesystem_error("boost::filesystem::status",
-        p, error_code(errval, system_category)));
+        p, error_code(errval, system_category())));
     return file_status(status_error);
   }
 # endif
@@ -1271,7 +1269,7 @@ namespace detail
     if (::stat(p.c_str(), &path_stat)!= 0)
     {
       if (ec != 0)                            // always report errno, even though some
-        ec->assign(errno, system_category);   // errno values are not status_errors
+        ec->assign(errno, system_category());   // errno values are not status_errors
 
       if (not_found_error(errno))
       {
@@ -1279,7 +1277,7 @@ namespace detail
       }
       if (ec == 0)
         BOOST_FILESYSTEM_THROW(filesystem_error("boost::filesystem::status",
-          p, error_code(errno, system_category)));
+          p, error_code(errno, system_category())));
       return fs::file_status(fs::status_error);
     }
     if (ec != 0) ec->clear();;
@@ -1340,7 +1338,7 @@ namespace detail
     if (::lstat(p.c_str(), &path_stat)!= 0)
     {
       if (ec != 0)                            // always report errno, even though some
-        ec->assign(errno, system_category);   // errno values are not status_errors
+        ec->assign(errno, system_category());   // errno values are not status_errors
 
       if (errno == ENOENT || errno == ENOTDIR) // these are not errors
       {
@@ -1348,7 +1346,7 @@ namespace detail
       }
       if (ec == 0)
         BOOST_FILESYSTEM_THROW(filesystem_error("boost::filesystem::status",
-          p, error_code(errno, system_category)));
+          p, error_code(errno, system_category())));
       return fs::file_status(fs::status_error);
     }
     if (ec != 0) ec->clear();
@@ -1505,7 +1503,7 @@ namespace
       {
         if (errno == 0)// indeterminate
           max = 4096; // guess
-        else return error_code(errno, system_category);
+        else return error_code(errno, system_category());
       }
       else max = static_cast<std::size_t>(tmp + 1); // relative root
     }
@@ -1518,7 +1516,7 @@ namespace
     fs::file_status &, fs::file_status &)
   {
     if ((handle = ::opendir(dir))== 0)
-      return error_code(errno, system_category);
+      return error_code(errno, system_category());
     target = string(".");  // string was static but caused trouble
                              // when iteration called from dtor, after
                              // static had already been destroyed
@@ -1541,7 +1539,8 @@ namespace
     && defined(_POSIX_THREAD_SAFE_FUNCTIONS)\
     && defined(_SC_THREAD_SAFE_FUNCTIONS)\
     && (_POSIX_THREAD_SAFE_FUNCTIONS+0 >= 0)\
-    && (!defined(__hpux) || (defined(__hpux) && defined(_REENTRANT)))
+    && (!defined(__hpux) || defined(_REENTRANT)) \
+    && (!defined(_AIX) || defined(__THREAD_SAFE))
     if (::sysconf(_SC_THREAD_SAFE_FUNCTIONS)>= 0)
       { return ::readdir_r(dirp, entry, result); }
 #   endif
@@ -1563,7 +1562,7 @@ namespace
     dirent * result;
     int return_code;
     if ((return_code = readdir_r_simulator(static_cast<DIR*>(handle),
-      entry, &result))!= 0)return error_code(errno, system_category);
+      entry, &result))!= 0)return error_code(errno, system_category());
     if (result == 0)
       return fs::detail::dir_itr_close(handle, buffer);
     target = entry->d_name;
@@ -1614,7 +1613,7 @@ namespace
       return error_code( (::GetLastError() == ERROR_FILE_NOT_FOUND
                        // Windows Mobile returns ERROR_NO_MORE_FILES; see ticket #3551                                           
                        || ::GetLastError() == ERROR_NO_MORE_FILES) 
-        ? 0 : ::GetLastError(), system_category );
+        ? 0 : ::GetLastError(), system_category() );
     }
     target = data.cFileName;
     if (data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
@@ -1631,7 +1630,7 @@ namespace
     {
       int error = ::GetLastError();
       fs::detail::dir_itr_close(handle);
-      return error_code(error == ERROR_NO_MORE_FILES ? 0 : error, system_category);
+      return error_code(error == ERROR_NO_MORE_FILES ? 0 : error, system_category());
     }
     target = data.cFileName;
     if (data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
@@ -1647,7 +1646,7 @@ namespace
 #     else
         ENOENT 
 #     endif
-        , system_category);
+        , system_category());
 
 }  // unnamed namespace
 
@@ -1674,7 +1673,7 @@ namespace detail
     if (handle == 0)return ok;
     DIR * h(static_cast<DIR*>(handle));
     handle = 0;
-    return error_code(::closedir(h)== 0 ? 0 : errno, system_category);
+    return error_code(::closedir(h)== 0 ? 0 : errno, system_category());
 
 #   else
     if (handle != 0)
@@ -1747,8 +1746,8 @@ namespace detail
           BOOST_FILESYSTEM_THROW(
             filesystem_error("boost::filesystem::directory_iterator::operator++",
               it.m_imp->dir_entry.path().parent_path(),
-              error_code(BOOST_ERRNO, system_category)));
-        ec->assign(BOOST_ERRNO, system_category);
+              error_code(BOOST_ERRNO, system_category())));
+        ec->assign(BOOST_ERRNO, system_category());
         return;
       }
       else if (ec != 0) ec->clear();

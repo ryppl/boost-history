@@ -15,13 +15,13 @@ project
 # to know if failures in shared library tests are related to sharing or not.
 
    test-suite "filesystem" :
-       [ run path_unit_test.cpp ]                  
+       [ run path_unit_test.cpp :  :  : <link>shared ]                  
        [ run path_unit_test.cpp :  :  : <link>static : path_unit_test_static ]                  
-       [ run path_test.cpp ]                  
+       [ run path_test.cpp :  :  : <link>shared ]                  
        [ run path_test.cpp :  :  : <link>static : path_test_static ]                  
-       [ run operations_unit_test.cpp ]
+       [ run operations_unit_test.cpp :  :  : <link>shared ]
        [ run operations_unit_test.cpp :  :  : <link>static : operations_unit_test_static ]
-       [ run operations_test.cpp ]
+       [ run operations_test.cpp :  :  : <link>shared ]
        [ run operations_test.cpp :  :  : <link>static : operations_test_static ]
        [ run fstream_test.cpp ]
        [ run convenience_test.cpp ]

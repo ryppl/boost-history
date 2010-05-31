@@ -66,7 +66,7 @@ namespace
     std::ofstream f(ph.BOOST_FILESYSTEM_C_STR);
     if (!f)
       throw fs::filesystem_error("operations_test create_file",
-      ph, error_code(errno, system_category));
+      ph, error_code(errno, system_category()));
     if (!contents.empty()) f << contents;
   }
 
@@ -75,7 +75,7 @@ namespace
     std::ifstream f(ph.BOOST_FILESYSTEM_C_STR);
     if (!f)
       throw fs::filesystem_error("operations_test verify_file",
-        ph, error_code(errno, system_category));
+        ph, error_code(errno, system_category()));
     std::string contents;
     f >> contents;
     if (contents != expected)
@@ -822,7 +822,7 @@ namespace
     BOOST_TEST(&ec.category() == &poison_category()); 
     fs::file_status s = fs::status(".",ec);
     BOOST_TEST(ec.value() == 0);
-    BOOST_TEST(ec.category() == system_category); 
+    BOOST_TEST(ec.category() == system_category()); 
     BOOST_TEST(fs::exists(s));
     BOOST_TEST(fs::is_directory(s));
 
@@ -831,7 +831,7 @@ namespace
     ec.assign(-1,poison_category());
     s = fs::status(p,ec);
     BOOST_TEST(ec.value() != 0);
-    BOOST_TEST(ec.category() == system_category); 
+    BOOST_TEST(ec.category() == system_category()); 
 
     BOOST_TEST(!fs::exists(s));
     BOOST_TEST_EQ(s.type(), fs::file_not_found);
@@ -845,29 +845,29 @@ namespace
     ec.assign(-1,poison_category());
     BOOST_TEST(fs::exists(".", ec));
     BOOST_TEST(ec.value() == 0);
-    BOOST_TEST(ec.category() == system_category); 
+    BOOST_TEST(ec.category() == system_category()); 
     ec.assign(-1,poison_category());
     BOOST_TEST(!fs::is_regular_file(".", ec));
     BOOST_TEST(ec.value() == 0);
-    BOOST_TEST(ec.category() == system_category); 
+    BOOST_TEST(ec.category() == system_category()); 
     ec.assign(-1,poison_category());
     BOOST_TEST(fs::is_directory(".", ec));
     BOOST_TEST(ec.value() == 0);
-    BOOST_TEST(ec.category() == system_category); 
+    BOOST_TEST(ec.category() == system_category()); 
 
     // test queries, ec, for non-existing file
     ec.assign(-1,poison_category());
     BOOST_TEST(!fs::exists(p, ec));
     BOOST_TEST(ec.value() != 0);
-    BOOST_TEST(ec.category() == system_category); 
+    BOOST_TEST(ec.category() == system_category()); 
     ec.assign(-1,poison_category());
     BOOST_TEST(!fs::is_regular_file(p, ec));
     BOOST_TEST(ec.value() != 0);
-    BOOST_TEST(ec.category() == system_category); 
+    BOOST_TEST(ec.category() == system_category()); 
     ec.assign(-1,poison_category());
     BOOST_TEST(!fs::is_directory(p, ec));
     BOOST_TEST(ec.value() != 0);
-    BOOST_TEST(ec.category() == system_category); 
+    BOOST_TEST(ec.category() == system_category()); 
   }
 
   //  remove_tests  --------------------------------------------------------------------//
@@ -1171,22 +1171,22 @@ int main(int argc, char* argv[])
 {
 // document state of critical macros
 #ifdef BOOST_POSIX_API
-  std::cout << "BOOST_POSIX_API\n";
+  std::cout << "BOOST_POSIX_API is defined\n";
 #endif
 #ifdef BOOST_WINDOWS_API
-  std::cout << "BOOST_WINDOWS_API\n";
+  std::cout << "BOOST_WINDOWS_API is defined\n";
 #endif
 #ifdef BOOST_POSIX_PATH
-  std::cout << "BOOST_POSIX_PATH\n";
+  std::cout << "BOOST_POSIX_PATH is defined\n";
 #endif
 #ifdef BOOST_WINDOWS_PATH
-  std::cout << "BOOST_WINDOWS_PATH\n";
+  std::cout << "BOOST_WINDOWS_PATH is defined\n";
 #endif
 
   if (argc > 1 && *argv[1]=='-' && *(argv[1]+1)=='t') report_throws = true;
   if (argc > 1 && *argv[1]=='-' && *(argv[1]+1)=='x') cleanup = false;
 
-  // The choice of platform is make at runtime rather than compile-time
+  // The choice of platform to test is make at runtime rather than compile-time
   // so that compile errors for all platforms will be detected even though
   // only the current platform is runtime tested.
 # if defined(BOOST_POSIX_API)
@@ -1199,9 +1199,7 @@ int main(int argc, char* argv[])
       language_id = 0x0409; // Assume US English
 #   endif
 # else
-    platform = (platform == "Win32" || platform == "Win64" || platform == "Cygwin")
-               ? "Windows"
-               : "POSIX";
+#   error neither BOOST_POSIX_API nor BOOST_WINDOWS_API is defined. See boost/system/api_config.hpp
 # endif
   std::cout << "API is " << platform << std::endl;
 

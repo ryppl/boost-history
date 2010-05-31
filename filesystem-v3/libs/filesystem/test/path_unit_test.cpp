@@ -56,7 +56,7 @@ namespace
 
   boost::system::error_code ec;
   const boost::system::error_code ok;
-  const boost::system::error_code ng(-1, boost::system::system_category);
+  const boost::system::error_code ng(-1, boost::system::system_category());
 
   std::string platform(BOOST_PLATFORM);
 

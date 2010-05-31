@@ -29,10 +29,10 @@ void fail(int err, boost::system::error_code* ec)
 {
   if (ec == 0)
     BOOST_FILESYSTEM_THROW( boost::system::system_error(err,
-      boost::system::system_category,
+      boost::system::system_category(),
       "boost::filesystem::unique_path"));
 
-  ec->assign(err, boost::system::system_category);
+  ec->assign(err, boost::system::system_category());
   return;
 }
 

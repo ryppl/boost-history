@@ -27,8 +27,6 @@ using std::string;
 namespace
 {
 
-  std::string this_file;
-  
   void check(bool ok, const char* file, int line)
   {
     if (ok) return;
@@ -55,19 +53,19 @@ namespace
     CHECK(is_directory("/"));
     CHECK(!exists("no-such-file"));
 
-    exists(this_file, ec);
+    exists("/", ec);
     if (ec)
     {
-      std::cout << "ec non-zero: " << ec.value() << ", message: "<< ec.message() << std::endl;
-      std::cout << "  file: " << this_file << std::endl; 
+      std::cout << "exists(\"/\", ec) resulted in non-zero ec.value()" << std::endl;
+      std::cout << "ec value: " << ec.value() << ", message: "<< ec.message() << std::endl;
     }
     CHECK(!ec);
 
-    CHECK(exists(this_file));
-    CHECK(!is_directory(this_file));
-    CHECK(is_regular_file(this_file));
-    CHECK(!boost::filesystem::is_empty(this_file));
-    CHECK(!is_other(this_file));
+    CHECK(exists("/"));
+    CHECK(is_directory("/"));
+    CHECK(!is_regular_file("/"));
+    CHECK(!boost::filesystem::is_empty("/"));
+    CHECK(!is_other("/"));
   }
 
   //  directory_iterator_test  -----------------------------------------------//
@@ -161,6 +159,34 @@ namespace
     path p(*it);
   }
 
+  //  error_handling_test  -------------------------------------------------------------//
+
+  void error_handling_test()
+  {
+    std::cout << "error handling test..." << std::endl;
+
+    bool threw(false);
+    try
+    { 
+      file_size("no-such-file");
+    }
+    catch (const boost::filesystem::filesystem_error & ex)
+    {
+      threw = true;
+      cout << "\nas expected, attempt to get size of non-existent file threw a filesystem_error\n"
+        "what() returns " << ex.what() << "\n";
+    }
+    catch (...)
+    {
+      cout << "\nunexpected exception type caught" << std::endl;
+    }
+
+    CHECK(threw);
+
+    error_code ec;
+    CHECK(!create_directory("/", ec));
+  }
+
 }  // unnamed namespace
 
 //--------------------------------------------------------------------------------------//
@@ -169,54 +195,32 @@ namespace
 //                                                                                      //
 //--------------------------------------------------------------------------------------//
 
-int main(int, char* argv[])
+int main()
 {
 // document state of critical macros
 #ifdef BOOST_POSIX_API
-  cout << "BOOST_POSIX_API\n";
+  cout << "BOOST_POSIX_API is defined\n";
 #endif
 #ifdef BOOST_WINDOWS_API
-  cout << "BOOST_WINDOWS_API\n";
+  cout << "BOOST_WINDOWS_API is defined\n";
 #endif
 #ifdef BOOST_POSIX_PATH
-  cout << "BOOST_POSIX_PATH\n";
+  cout << "BOOST_POSIX_PATH is defined\n";
 #endif
 #ifdef BOOST_WINDOWS_PATH
-  cout << "BOOST_WINDOWS_PATH\n";
+  cout << "BOOST_WINDOWS_PATH is defined\n";
 #endif
+  cout << "BOOST_FILESYSTEM_DECL" << BOOST_STRINGIZE(=BOOST_FILESYSTEM_DECL) << "\n";
+  cout << "BOOST_SYMBOL_VISIBLE" << BOOST_STRINGIZE(=BOOST_SYMBOL_VISIBLE) << "\n";
   
-  this_file = argv[0];
-
-  cout << current_path().string() << std::endl;
-
-  //  error handling tests
-
-  bool threw(false);
-  try
-  { 
-    file_size("no-such-file");
-  }
-  catch (const boost::filesystem::filesystem_error & ex)
-  {
-    threw = true;
-    cout << "\nas expected, attempt to get size of non-existent file threw a filesystem_error\n"
-      "what() returns " << ex.what() << "\n";
-  }
-  catch (...)
-  {
-    cout << "\nunexpected exception type caught" << std::endl;
-  }
-
-  CHECK(threw);
-
-  error_code ec;
-  CHECK(!create_directory("/", ec));
+  cout << "current_path() is " << current_path().string() << std::endl;
 
   query_test();
   directory_iterator_test();
   operations_test();
   directory_entry_test();
   directory_entry_overload_test();
+  error_handling_test();
 
   std::cout << unique_path() << std::endl;
   std::cout << unique_path("foo-%%%%%-%%%%%-bar") << std::endl;
