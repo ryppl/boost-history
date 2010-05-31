@@ -11,6 +11,7 @@
 #include <string>
 #include <boost/mpl/size_t.hpp>
 #include <boost/transact/exception.hpp>
+#include <boost/transact/detail/file.hpp>
 
 #ifdef BOOST_MSVC
 #pragma warning(push)

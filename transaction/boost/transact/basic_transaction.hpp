@@ -42,7 +42,7 @@ public:
     /// The transaction is rolled back if it is still active. Exceptions
     /// caused by rolling back the transaction are ignored.
     ///
-    /// Throws: Nothing
+    /// Throws: thread_resource_error
     /// \brief Destructs the basic_transaction object
     ~basic_transaction(){
         if(!this->done){
@@ -84,6 +84,7 @@ public:
     /// resource-specific exceptions thrown by resource managers restarting transactions.
     /// \brief Restarts the transactions
     void restart(){
+        if(!this->done) this->rollback();
         TxMgr::restart_transaction(this->tx);
         this->done=false;
     }

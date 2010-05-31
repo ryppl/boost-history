@@ -1,4 +1,5 @@
-//          Copyright Stefan Strasser 2009 - 2010.
+//          Copyright Stefan Strasser 2009 - 2010
+//                Copyright Bob Walters 2010
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -33,34 +34,37 @@ private:
 	ofile  filedes;
 
 private:
-    void write_ahead(size_type const &s){
-        BOOST_ASSERT(s % write_ahead_size == 0);
-        if(this->pos != s){
-			filedes.seek(s);
-        }
-        char data[write_page_size]; memset(data,0,write_page_size);
-        BOOST_STATIC_ASSERT(write_ahead_size % write_page_size == 0);
-        for(std::size_t c=0;c<write_ahead_size / write_page_size;++c){
-			filedes.write(data,write_page_size);
+    void write_ahead(size_type const &start,size_type const &end){
+        BOOST_ASSERT(start % write_ahead_size == 0);
+        BOOST_ASSERT(end % write_ahead_size == 0);
+        BOOST_STATIC_ASSERT(write_ahead_size % page_size == 0);
+        filedes.seek(start);
+        for(size_type off=start;off < end;off+=page_size){
+            filedes.write(empty_page.data,page_size);
         }
 		filedes.sync();
 		filedes.seek(this->pos);
     }
-    void write_ahead(size_type const &start,size_type const &end){
-        BOOST_ASSERT(start % write_ahead_size == 0);
-        BOOST_ASSERT(end % write_ahead_size == 0);
-        for(size_type off=start;off < end;off+=write_ahead_size) this->write_ahead(off);
-    }
 
     static std::size_t const write_ahead_size=10*1024*1024;
-    static std::size_t const write_page_size=4096;
+    static std::size_t const page_size=4096;
+
+    struct empty_page_type{
+        empty_page_size(){
+            std::memset(data,0,page_size);
+        }
+        char data[page_size];
+    }
+    static empty_page_type empty_page;
+    int filedes;
 };
+
+syncing_seq_ofile::empty_page_type syncing_seq_ofile::empty_page;
 
 inline syncing_seq_ofile::syncing_seq_ofile(std::string const &name)
     : pos(0)
-    , filedes(name)
-{
-    this->write_ahead(0);
+    , filedes(name){
+    this->write_ahead(0,write_ahead_size);
 }
 
 void syncing_seq_ofile::write(void const *data,std::size_t size){

@@ -11,6 +11,7 @@
 #include <boost/static_assert.hpp>
 #include <boost/assert.hpp>
 #include <cstring>
+#include <boost/transact/detail/file.hpp>
 
 namespace boost{
 namespace transact{

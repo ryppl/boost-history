@@ -9,14 +9,10 @@
 
 #include <exception>
 #include <boost/assert.hpp>
-#include <boost/mpl/pair.hpp>
-#include <boost/mpl/bool.hpp>
-#include <boost/mpl/for_each.hpp>
-#include <boost/mpl/fold.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/at.hpp>
+#include <boost/mpl/begin.hpp>
+#include <boost/mpl/end.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include <boost/optional/optional.hpp>
+#include <boost/transact/detail/algorithm.hpp>
 
 
 namespace boost{
@@ -48,19 +44,6 @@ struct isolation_exception;
 template<class ResMgr>
 struct resource_isolation_exception;
 
-namespace detail{
-
-template<class TxMgr>
-struct tag_types{
-    typedef typename mpl::fold<
-        typename TxMgr::resource_types,
-        mpl::vector0<>,
-        mpl::push_back<mpl::_1,mpl::first<mpl::_2> >
-    >::type type;
-};
-
-}
-
 ///\brief Indicates that the operation conflicted with another transaction.
 ///
 ///\c isolation_exception is an abstract base class. The derived class
@@ -71,8 +54,8 @@ struct isolation_exception : transact::exception{
     ///\pre TxMgr::current_transaction() must be a rolled back transaction
     template<class TxMgr>
     void unwind() const{ //pseudo-virtual
-        //TODO optimization: stop iteration when correct resource_isolation_exception is found
-        mpl::for_each<typename detail::tag_types<TxMgr>::type>(unwinder<TxMgr>(*this));
+        typedef typename TxMgr::resource_types res_types;
+        BOOST_VERIFY(( ! detail::for_each_if<res_types>(unwinder<TxMgr>(*this)) ));
     }
     virtual ~isolation_exception() throw(){}
 protected:
@@ -81,13 +64,13 @@ private:
     template<class TxMgr>
     struct unwinder{
         explicit unwinder(isolation_exception const &e) : e(e){}
-        template<class Tag>
-        void operator()(Tag){
-            typedef typename mpl::at<typename TxMgr::resource_types,Tag>::type resource_type;
-            typedef resource_isolation_exception<resource_type> der_type;
+        template<class Pair>
+        bool operator()() const{
+            typedef resource_isolation_exception<typename Pair::second> der_type;
             if(der_type const *der=dynamic_cast<der_type const *>(&this->e)){
                 der->template unwind<TxMgr>();
-            }
+                return false;
+            }else return true;
         }
     private:
         isolation_exception const &e;
@@ -102,56 +85,74 @@ private:
 template<class ResMgr>
 struct resource_isolation_exception : isolation_exception{
     ///\brief Constructs a resource_isolation_exception
-    resource_isolation_exception(){}
+    resource_isolation_exception()
+        : res(0),tx(0){}
 
     ///\brief Constructs a resource_isolation_exception
     ///\param res The resource manager that is throwing the exception
     ///\param retry The transaction that caused the isolation_exception and ought to be repeated.
     ///Must be a transaction on the nested transaction stack.
     explicit resource_isolation_exception(ResMgr const &res,typename ResMgr::transaction const &retry)
-        : retry(std::pair<ResMgr const &,typename ResMgr::transaction const &>(res,retry)){}
+        : res(&res),tx(&retry){}
 
-    ///Throws: thread_resource_error. no_transaction if \c retry was not on the nested transaction stack or it was removed before unwind() was called.
     ///\brief Equivalent to <tt>isolation_exception::unwind<TxMgr>()</tt>
-    ///\pre TxMgr::current_transaction() must be a rolled back transaction
     template<class TxMgr>
     void unwind() const{ //pseudo-virtual
-        //FIXME: does not work correctly with flat nested transaction emulation. possibly make TxMgr::restart_transaction throw accordingly?
-        if(this->retry){
-            //TODO optimization: stop iteration when correct resource manager is found
-            mpl::for_each<typename detail::tag_types<TxMgr>::type>(is_current<TxMgr>(*this->retry));
+        if(this->res){
+            typedef typename TxMgr::resource_types res_types;
+            unwinder<TxMgr> unw(*this->res,*this->tx);
+            BOOST_VERIFY(( ! detail::for_each_if<res_types>(unw) ));
         }else throw;
     }
     virtual ~resource_isolation_exception() throw(){}
 private:
     template<class TxMgr>
-    struct is_current{
-        explicit is_current(std::pair<ResMgr const &,typename ResMgr::transaction const &> const &retry) : retry(retry){}
-        template<class Tag>
-        void operator()(Tag const &tag) const{
-            typedef typename mpl::at<typename TxMgr::resource_types,Tag>::type resource_type;
-            return this->operator()(tag,typename is_same<resource_type,ResMgr>::type());
+    struct unwinder{
+        unwinder(ResMgr const &res,typename ResMgr::transaction const &rtx) : res(res),rtx(rtx){}
+        template<class Pair>
+        bool operator()() const{
+            return this->operator()<typename Pair::first>(typename is_same<typename Pair::second,ResMgr>::type());
         }
     private:
         template<class Tag>
-        void operator()(Tag const &,mpl::true_) const{
-            typedef typename TxMgr::resource_iterator iterator;
+        bool operator()(mpl::true_) const{
+            typedef typename TxMgr::template resource_iterator<Tag>::type iterator;
             std::pair<iterator,iterator> range=TxMgr::template resources<Tag>();
             for(iterator it=range.first;it != range.second;++it){
-                if(&it->second == &this->retry.first){
+                if(it->second == &this->res){
                     typename TxMgr::transaction *tx=TxMgr::current_transaction();
                     BOOST_ASSERT(tx);
-                    if(&TxMgr::resource_transaction(*tx,it->first) != &this->retry.second) throw;
+                    typename ResMgr::transaction &foundrtx=TxMgr::resource_transaction(*tx,it->first);
+                    if(&foundrtx != &this->rtx){
+                        //the transaction that ought to be retried must be a parent of tx:
+                        BOOST_ASSERT(TxMgr::parent_transaction(*tx));
+                        throw;
+                    }else{
+                        //the following only works if the TM either uses flat nested txs for all RMs or for none:
+                        typename TxMgr::transaction *parent=TxMgr::parent_transaction(*tx);
+                        if(parent && &foundrtx == &TxMgr::resource_transaction(*parent,it->first)){
+                            //the resource transaction in tx is the same resource transaction as in the parent of tx.
+                            //this means the TM is using flat nested transactions. the outermost transaction using rtx must be repeated, not this one:
+                            throw;
+                        }
+                    }
+                    return false;
                 }
             }
+            return true;
         }
-        template<class Tag>
-        void operator()(Tag,mpl::false_) const{
-            return false;
+        template<class Pair>
+        bool operator()(mpl::false_) const{
+            // Pair does correspond to another type of resource manager, continue iterating:
+            return true;
         }
-        std::pair<ResMgr const &,typename ResMgr::transaction const &> retry;
+
+        ResMgr const &res;
+        typename ResMgr::transaction const &rtx;
     };
-    optional<std::pair<ResMgr const &,typename ResMgr::transaction const &> > retry;
+    //always: bool(res) == bool(tx)
+    ResMgr const *res;
+    typename ResMgr::transaction const *tx;
 };
 
 }

@@ -16,8 +16,11 @@
 namespace boost{
 namespace transact{
 
-struct transaction_restart_service_tag{};
+struct restart_transaction_service_tag{};
+struct finish_transaction_service_tag{};
 struct nested_transaction_service_tag{};
+struct distributed_transaction_service_tag{};
+
 
 namespace detail{
 
