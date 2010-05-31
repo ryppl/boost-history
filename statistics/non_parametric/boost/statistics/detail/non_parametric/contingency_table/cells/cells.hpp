@@ -94,14 +94,12 @@ namespace impl{
         void operator()(const Args& args){
             namespace ns = boost::statistics::detail;
             typedef boost::math::policies::policy<> pol_;
-            for(long int i = 0; i< args[boost::accumulators::weight]; i++)
-            {
-                this->update_if(
-                    hashable_subsample_( args[boost::accumulators::sample] ),
-                    args[ boost::accumulators::accumulator ],
-                    args[ ns::_policy |  pol_() ]
-                ); 
-            }
+            this->update_if(
+                hashable_subsample_( args[boost::accumulators::sample] ),
+                args[ boost::accumulators::accumulator ],
+                args[ ns::_policy |  pol_() ],
+                args[boost::accumulators::weight]
+            ); 
         }
 		
         result_type result(dont_care_)const{
@@ -109,11 +107,12 @@ namespace impl{
         }
 
 		private:
-        template<typename V,typename A,typename P>
+        template<typename V,typename A,typename P,typename N>
         void update_if(
             const V& s,
             const A& acc,
-            const P& policy
+            const P& policy,
+            const N& size
         ){
             this->error_logger.reset();
             boost::fusion::for_each( 
@@ -122,7 +121,7 @@ namespace impl{
             );
             if(!this->error_logger.is_error())
             {
-                ++( this->map )[ s ];
+                ( this->map )[ s ] += size;
             }else{
                 namespace ns = contingency_table;
                 static const char* fun = "impl::cells::update_if %1%";

@@ -54,50 +54,6 @@ namespace impl{
         template<typename Args>
         result_type result(dont_care_) const
         {
-/*
-            typedef T1 val_;
-            typedef boost::accumulators::tag::accumulator tag_acc_;        
-            typedef boost::accumulators::tag::count tag_n_;
-            typedef boost::statistics::detail::empirical_distribution
-            	::tag::ordered_sample tag_os_;
-            typedef boost::statistics::detail::kolmogorov_smirnov
-            	::tag::reference_distribution tag_dist_;
-
-            typedef boost::parameter::binding<Args,tag_acc_> bind1_;
-            typedef typename bind1_::type cref_acc_;
-            typedef boost::parameter::binding<Args,tag_dist_> bind2_;
-            typedef typename bind2_::type cref_dist_;
-			typedef typename boost::accumulators::detail
-            	::extractor_result<Args,tag_os_>::type ref_os_;
-            typedef typename boost::remove_const< //in case ref changed to cref
-            	typename boost::remove_reference<
-                	ref_os_
-                >::type
-            >::type os_;
-            typedef typename boost::range_reference<os_>::type ref_elem_;
-
-            cref_acc_ 	acc = args[boost::accumulators::accumulator];
-            cref_dist_ 	dist = args[
-            	boost::statistics::detail
-                	::kolmogorov_smirnov::keyword::reference_distribution
-            ];
-            ref_os_ ref_os = boost::accumulators::extract_result<tag_os_>(acc);
-
-            val_ m1 = static_cast<val_>(0);
-            size_type i = 0;
-            size_type n = boost::accumulators::extract_result<tag_n_>(acc);
-            
-            BOOST_FOREACH(ref_elem_ e,ref_os){
-                i += e.second;
-                val_ ecdf = static_cast<val_>(i) / static_cast<val_>(n);
-                val_ true_cdf = cdf(dist,e.first);
-                val_ m2 
-                	= (true_cdf > ecdf)?(true_cdf - ecdf) : (ecdf - true_cdf);
-                if(m2 > m1){ m1 = m2; } 
-            }
-            
-            return m1;
-*/
         }
 	};
     

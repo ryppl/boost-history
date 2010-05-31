@@ -10,7 +10,6 @@
 #include <boost/mpl/assert.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/statistics/detail/non_parametric/contingency_table/cells/cells.hpp>
-#include <boost/statistics/detail/non_parametric/contingency_table/sample/view.hpp>
 #include <boost/mpl/detail/wrapper.hpp>
 
 namespace boost{
