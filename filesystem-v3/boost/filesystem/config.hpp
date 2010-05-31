@@ -43,13 +43,7 @@
 #define BOOST_FILESYSTEM_THROW(EX) throw EX
 
 # if defined( BOOST_NO_STD_WSTRING )
-#   error Boost.Filesystem V3 and later requires std::wstring support
-# endif
-
-# ifdef BOOST_WINDOWS_API
-#   define BOOST_WINDOWS_PATH
-# else
-#   define BOOST_POSIX_PATH
+#   error Configuration not supported: Boost.Filesystem V3 and later requires std::wstring support
 # endif
 
 //  enable dynamic linking -------------------------------------------------------------//

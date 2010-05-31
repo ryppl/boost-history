@@ -16,7 +16,7 @@
 <body>
 
 <h1>Boost Filesystem Do List<br>
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->05 March 2010<!--webbot bot="Timestamp" endspan i-checksum="27230" --></h1>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->31 May 2010<!--webbot bot="Timestamp" endspan i-checksum="15103" --></h1>
 
 <h2>Beta 1 comments</h2>
 <ul>
@@ -123,7 +123,7 @@ to return paths with fewer elements.]</pre>
   <li>Review all operations.cpp code for race conditions similar to #2925. Fix 
   or document.</li>
   <li>Enable all BOOST_FILESYSTEM_NO_DEPRECATED code.</li>
-  <li>rename and remove really need to be renamed. If users says &quot;using 
+  <li>rename and remove names are problems. If users says &quot;using 
   namespace boost::filesystem&quot;<br>
   and some header included stdio, there is just too much chance of silent error.</li>
   <li>create_directories error handling needs work.</li>
@@ -131,12 +131,10 @@ to return paths with fewer elements.]</pre>
   <li>Two argument recursive_directory_iterator ctor isn't recognizing throws(). 
   Would it be better to fold into a single two argument ctor with default?</li>
   <li>Add the push_directory class from tools/release/required_files.cpp</li>
-  <li>directory_entry needs relational operators?</li>
 </ul>
 
 <h3>Miscellaneous</h3>
 <ul>
-  <li style="font-size: 10pt">directory_entry needs relationals.</li>
   <li style="font-size: 10pt"><i>Regular</i> classes need hash functions.</li>
 </ul>
 

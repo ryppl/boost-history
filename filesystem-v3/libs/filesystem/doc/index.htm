@@ -251,20 +251,6 @@ provided, so users can ignore these macros unless they have special needs.</p>
     <td valign="top">Deprecated features are excluded from headers.</td>
   </tr>
   <tr>
-    <td valign="top"><code>BOOST_WINDOWS_API</code></td>
-    <td valign="top">Defined if Windows is detected by Boost.System's automatic configuration 
-    code, otherwise not defined.</td>
-    <td valign="top">Implementation uses the Microsoft Windows native 
-    application program interface (API).</td>
-  </tr>
-  <tr>
-    <td valign="top"><code>BOOST_POSIX_API</code></td>
-    <td valign="top">Defined if Windows is not detected by Boost.System's automatic configuration 
-    code.</td>
-    <td valign="top">Implementation uses the POSIX native 
-    application program interface (API).</td>
-  </tr>
-  <tr>
     <td valign="top"><code>BOOST_FILESYSTEM_DYN_LINK</code></td>
     <td valign="top">Defined if <code>BOOST_ALL_DYN_LINK</code> is defined, 
     otherwise not defined.</td>
@@ -279,6 +265,8 @@ provided, so users can ignore these macros unless they have special needs.</p>
     facility.</td>
   </tr>
   </table>
+<p>User-defined BOOST_POSIX_API and BOOST_WINDOWS_API macros are no longer 
+supported.</p>
 <h2><a name="Building">Building</a> the object-library</h2>
 <p>The object-library will  be built automatically if you are using the Boost 
 build system. See
@@ -299,12 +287,9 @@ macros. See the <a href="http://www.boost.org/development/separate_compilation.h
 Compilation</a> page for a description of the techniques used.</p>
 <h3>Note for <a name="Cgywin">Cygwin</a> users</h3>
 <p> <a href="http://www.cygwin.com/">Cygwin</a> version 1.7 or later is 
-required. The current platform (POSIX emulation via Cygwin, or Windows via MinGW) 
-is detected automatically. Automatic 
-platform detection during object library compilation can be overridden by 
-defining either BOOST_POSIX_API or BOOST_WINDOWS_API macros. There is usually no reason to define these macros, as the 
-software development kits supplied with most compilers only support a single 
-platform.</p>
+required. Only later versions of GCC with wide character strings are supported. 
+The library's implementation code treats Cygwin as a Windows platform, and thus 
+uses the Windows API.</p>
 
 <h2><a name="Change-history">Version history</a></h2>
 
@@ -443,7 +428,7 @@ version 1.31.0.&nbsp;</p>
 
 <hr>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->03 March, 2010<!--webbot bot="Timestamp" endspan i-checksum="28754" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->31 May, 2010<!--webbot bot="Timestamp" endspan i-checksum="13955" --></p>
 
 <p>&copy; Copyright Beman Dawes, 2002-2005</p>
 <p> Use, modification, and distribution are subject to the Boost Software 

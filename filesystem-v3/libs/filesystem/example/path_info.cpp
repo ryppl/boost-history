@@ -20,9 +20,9 @@ int main(int argc, char* argv[])
   {
     cout << "Usage: path_info path-portion...\n"
              "Example: path_info foo/bar baz\n"
-#            ifdef BOOST_POSIX_PATH
+#            ifdef BOOST_POSIX_API
              "         would report info about the composed path foo/bar/baz\n";
-#            else  // BOOST_WINDOWS_PATH
+#            else  // BOOST_WINDOWS_API
              "         would report info about the composed path foo/bar\\baz\n";
 #            endif
     return 1;

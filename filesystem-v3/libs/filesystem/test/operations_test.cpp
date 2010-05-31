@@ -1176,11 +1176,11 @@ int main(int argc, char* argv[])
 #ifdef BOOST_WINDOWS_API
   std::cout << "BOOST_WINDOWS_API is defined\n";
 #endif
-#ifdef BOOST_POSIX_PATH
-  std::cout << "BOOST_POSIX_PATH is defined\n";
+#ifdef BOOST_POSIX_API
+  std::cout << "BOOST_POSIX_API is defined\n";
 #endif
-#ifdef BOOST_WINDOWS_PATH
-  std::cout << "BOOST_WINDOWS_PATH is defined\n";
+#ifdef BOOST_WINDOWS_API
+  std::cout << "BOOST_WINDOWS_API is defined\n";
 #endif
 
   if (argc > 1 && *argv[1]=='-' && *(argv[1]+1)=='t') report_throws = true;

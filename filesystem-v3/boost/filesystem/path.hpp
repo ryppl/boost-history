@@ -208,9 +208,9 @@ namespace filesystem
     void   clear()             { m_pathname.clear(); }
     path&  make_absolute(const path& base); 
     path&  make_preferred()
-#                              ifdef BOOST_POSIX_PATH
+#                              ifdef BOOST_POSIX_API
                                { return *this; }  // POSIX no effect
-#                              else // BOOST_WINDOWS_PATH
+#                              else // BOOST_WINDOWS_API
                                ;  // change slashes to backslashes
 #                              endif
     path&  remove_filename();
@@ -301,7 +301,7 @@ namespace filesystem
     bool has_extension() const       { return !extension().empty(); }
     bool is_absolute() const
     {
-#     ifdef BOOST_WINDOWS_PATH
+#     ifdef BOOST_WINDOWS_API
       return has_root_name() && has_root_directory();
 #     else
       return has_root_directory();

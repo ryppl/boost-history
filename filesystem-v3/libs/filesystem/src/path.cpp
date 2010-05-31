@@ -22,6 +22,7 @@
 
 #ifdef BOOST_WINDOWS_API
 # include "windows_file_codecvt.hpp"
+# include <windows.h>
 #elif defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)
 # include "utf8_codecvt_facet.hpp"
 #endif
@@ -29,10 +30,6 @@
 #ifdef BOOST_FILESYSTEM_DEBUG
 # include <iostream>
 # include <iomanip>
-#endif
-
-#ifdef BOOST_WINDOWS_PATH
-#  include <windows.h>
 #endif
 
 namespace fs = boost::filesystem;
@@ -66,7 +63,7 @@ namespace
 
   const std::size_t default_codecvt_buf_size = BOOST_FILESYSTEM_CODECVT_BUF_SIZE;
 
-# ifdef BOOST_WINDOWS_PATH
+# ifdef BOOST_WINDOWS_API
 
   const wchar_t separator = L'/';
   const wchar_t preferred_separator = L'\\';
@@ -95,7 +92,7 @@ namespace
   inline bool is_separator(fs::path::value_type c)
   {
     return c == separator
-#     ifdef BOOST_WINDOWS_PATH
+#     ifdef BOOST_WINDOWS_API
       || c == preferred_separator
 #     endif
       ;
@@ -145,7 +142,7 @@ namespace filesystem
     return *this;
   }
 
-# ifdef BOOST_WINDOWS_PATH
+# ifdef BOOST_WINDOWS_API
 
   const std::string  path::string() const
   { 
@@ -180,14 +177,14 @@ namespace filesystem
     return tmp.wstring();
   }
 
-# endif  // BOOST_WINDOWS_PATH
+# endif  // BOOST_WINDOWS_API
 
   //  m_append_separator_if_needed  ----------------------------------------------------//
 
   path::string_type::size_type path::m_append_separator_if_needed()
   {
     if (!m_pathname.empty() &&
-#     ifdef BOOST_WINDOWS_PATH
+#     ifdef BOOST_WINDOWS_API
       *(m_pathname.end()-1) != colon && 
 #     endif
       !is_separator(*(m_pathname.end()-1)))
@@ -206,7 +203,7 @@ namespace filesystem
     if (sep_pos                         // a separator was added
       && sep_pos < m_pathname.size()         // and something was appended
       && (m_pathname[sep_pos+1] == separator // and it was also separator
-#      ifdef BOOST_WINDOWS_PATH
+#      ifdef BOOST_WINDOWS_API
        || m_pathname[sep_pos+1] == preferred_separator  // or preferred_separator
 #      endif
 )) { m_pathname.erase(sep_pos, 1); } // erase the added separator
@@ -221,7 +218,7 @@ namespace filesystem
     path base_root_name (base.root_name());
     path this_root_directory (root_directory());
 
-#   ifdef BOOST_WINDOWS_PATH
+#   ifdef BOOST_WINDOWS_API
     BOOST_ASSERT(!this_root_name.empty() || !base_root_name.empty());
 #   endif
 
@@ -243,7 +240,7 @@ namespace filesystem
 
     else if (has_root_directory())
     {
-#     ifdef BOOST_POSIX_PATH
+#     ifdef BOOST_POSIX_API
       if (base_root_name.empty()) return *this;
 #     endif
       path tmp (base_root_name / m_pathname);
@@ -259,7 +256,7 @@ namespace filesystem
     return *this;
   }
 
-# ifdef BOOST_WINDOWS_PATH
+# ifdef BOOST_WINDOWS_API
   path & path::make_preferred()
   {
     for (string_type::iterator it = m_pathname.begin();
@@ -312,7 +309,7 @@ namespace filesystem
             && is_separator(itr.m_element.m_pathname[0])
             && is_separator(itr.m_element.m_pathname[1])
    )
-#       ifdef BOOST_WINDOWS_PATH
+#       ifdef BOOST_WINDOWS_API
         || itr.m_element.m_pathname[itr.m_element.m_pathname.size()-1] == colon
 #       endif
   ))
@@ -335,7 +332,7 @@ namespace filesystem
 
     for (; itr.m_pos != m_pathname.size()
       && (is_separator(itr.m_element.m_pathname[0])
-#     ifdef BOOST_WINDOWS_PATH
+#     ifdef BOOST_WINDOWS_API
       || itr.m_element.m_pathname[itr.m_element.m_pathname.size()-1] == colon
 #     endif
     ); ++itr) {}
@@ -435,7 +432,7 @@ namespace filesystem
           && (lf.size() != 2 
             || (lf[0] != dot
               && lf[1] != dot
-#             ifdef BOOST_WINDOWS_PATH
+#             ifdef BOOST_WINDOWS_API
               && lf[1] != colon
 #             endif
                )
@@ -497,7 +494,7 @@ namespace
     return  pos != 0
       && (pos <= 2 || !is_separator(str[1])
         || str.find_first_of(separators, 2) != pos)
-#     ifdef BOOST_WINDOWS_PATH
+#     ifdef BOOST_WINDOWS_API
       && (pos !=2 || str[1] != colon)
 #     endif
         ;
@@ -521,7 +518,7 @@ namespace
     // set pos to start of last element
     size_type pos(str.find_last_of(separators, end_pos-1));
 
-#   ifdef BOOST_WINDOWS_PATH
+#   ifdef BOOST_WINDOWS_API
     if (pos == string_type::npos)
       pos = str.find_last_of(colon, end_pos-2);
 #   endif
@@ -538,7 +535,7 @@ namespace
   // return npos if no root_directory found
   {
 
-#   ifdef BOOST_WINDOWS_PATH
+#   ifdef BOOST_WINDOWS_API
     // case "c:/"
     if (size > 2
       && path[1] == colon
@@ -613,7 +610,7 @@ namespace
 
     // find the end
     while (cur < size
-#     ifdef BOOST_WINDOWS_PATH
+#     ifdef BOOST_WINDOWS_API
       && src[cur] != colon
 #     endif
       && !is_separator(src[cur]))
@@ -622,7 +619,7 @@ namespace
       ++element_size;
     }
 
-#   ifdef BOOST_WINDOWS_PATH
+#   ifdef BOOST_WINDOWS_API
     if (cur == size) return;
     // include device delimiter
     if (src[cur] == colon)
@@ -690,7 +687,7 @@ namespace filesystem
     {
       // detect root directory
       if (was_net
-#       ifdef BOOST_WINDOWS_PATH
+#       ifdef BOOST_WINDOWS_API
         // case "c:/"
         || it.m_element.m_pathname[it.m_element.m_pathname.size()-1] == colon
 #       endif

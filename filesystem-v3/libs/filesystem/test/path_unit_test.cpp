@@ -218,11 +218,11 @@ namespace
   {
     std::cout << "testing appends..." << std::endl;
 
-#   ifdef BOOST_WINDOWS_PATH
+# ifdef BOOST_WINDOWS_API
 #   define BOOST_FS_FOO L"/foo\\"
-#   else   // POSIX paths
+# else   // POSIX paths
 #   define BOOST_FS_FOO L"/foo/"
-#   endif
+# endif
 
     x = "/foo";
     x /= path("");                                      // empty path
@@ -291,7 +291,7 @@ namespace
     CHECK(p0.wstring() == L"abc");
     CHECK(p0.wstring().size() == 3);
 
-# ifdef BOOST_WINDOWS_PATH
+# ifdef BOOST_WINDOWS_API
 
     path p("abc\\def/ghi");
 
@@ -307,7 +307,7 @@ namespace
     CHECK(p.generic_string<wstring>() == L"abc/def/ghi");
     CHECK(p.generic_string<path::string_type>() == L"abc/def/ghi");
 
-# else  // BOOST_POSIX_PATH
+# else  // BOOST_POSIX_API
 
     path p("abc\\def/ghi");
 
@@ -474,7 +474,7 @@ namespace
 //    CHECK(path("").make_absolute("") == "");  // should assert
 //    CHECK(path("").make_absolute("foo") == ""); // should assert
 
-#   ifdef BOOST_WINDOWS_PATH
+#   ifdef BOOST_WINDOWS_API
     CHECK(path("baa").make_absolute("c:/") == "c:/baa");
     CHECK(path("/baa").make_absolute("c:/foo").string() == path("c:/baa").string());
     CHECK(path("baa/baz").make_absolute("c:/foo/bar").string()
@@ -581,14 +581,14 @@ namespace
 
     std::cout << "  testing p0 ..." << std::endl;
     path p0(L"\u2722");  // for tests that depend on path_traits::convert
-#   ifdef BOOST_WINDOWS_PATH
+#   ifdef BOOST_WINDOWS_API
     CHECK(p0.string() != "\xE2\x9C\xA2");
 #   endif
     string p0_string(p0.string());
 
     std::cout << "  testing p1 ..." << std::endl;
     path p1("\xE2\x9C\xA2");
-#   ifdef BOOST_WINDOWS_PATH
+#   ifdef BOOST_WINDOWS_API
     CHECK(p1 != L"\u2722");
 #   endif
     wstring p1_wstring(p1.wstring());
@@ -611,7 +611,7 @@ namespace
     std::cout << "  testing with the original locale ..." << std::endl;
     CHECK(p0.string() == p0_string);
     path p3("\xE2\x9C\xA2");
-#   ifdef BOOST_WINDOWS_PATH
+#   ifdef BOOST_WINDOWS_API
     CHECK(p3 != L"\u2722");
 #   endif
     CHECK(p3.wstring() == p1_wstring);
@@ -693,7 +693,7 @@ namespace
     //  These tests rely on a path constructor that fails in the locale conversion.
     //  Thus construction has to call codecvt. Force that by using a narrow string
     //  for Windows, and a wide string for POSIX.
-#   ifdef BOOST_WINDOWS_PATH
+#   ifdef BOOST_WINDOWS_API
 #     define STRING_FOO_ "foo"
 #   else
 #     define STRING_FOO_ L"foo"
@@ -843,11 +843,11 @@ int main(int, char*[])
 #ifdef BOOST_WINDOWS_API
   cout << "BOOST_WINDOWS_API" << endl;
 #endif
-#ifdef BOOST_POSIX_PATH
+#ifdef BOOST_POSIX_API
   cout << "BOOST_PATH_API" << endl;
 #endif
-#ifdef BOOST_WINDOWS_PATH
-  cout << "BOOST_WINDOWS_PATH" << endl;
+#ifdef BOOST_WINDOWS_API
+  cout << "BOOST_WINDOWS_API" << endl;
 #endif
 
   l.push_back('s');

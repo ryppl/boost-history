@@ -214,7 +214,7 @@ typedef struct _REPARSE_DATA_BUFFER {
 namespace
 {
 
-# ifdef BOOST_POSIX_PATH
+# ifdef BOOST_POSIX_API
   const char dot = '.';
 # else
   const wchar_t dot = L'.';
