@@ -1,0 +1,17 @@
+/*! \page different_types The Different Integer Types
+
+The main %integer class in this library is \ref boost::xint::integer. It allows
+for arbitrary-length numbers, limited only by your system's memory. There is an
+error-code-based variant of it as well, \ref boost::xint::nothrow_integer, and a
+fixed-length type (\ref boost::xint::fixed_integer), where you to specify the
+number of bits to limit it to.
+
+All three types are defined as templates, and can be instantiated with different
+allocators, with or without thread safety, and optionally with memory erasure
+for high-security applications.
+
+All three types have an essentially identical set of functions and operators,
+and can do pretty much the same things, though with different time and memory
+efficiencies. See the "detailed description" portion of the reference pages
+linked above for a description of each type and its unique properties.
+*/

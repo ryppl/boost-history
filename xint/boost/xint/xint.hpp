@@ -18,7 +18,6 @@
 #ifndef BOOST_INCLUDED_XINT_HPP
 #define BOOST_INCLUDED_XINT_HPP
 
-#include "internals.hpp"
 #include "integer.hpp"
 #include "nothrow_integer.hpp"
 #include "fixed_integer.hpp"

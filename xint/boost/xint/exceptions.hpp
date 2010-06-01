@@ -18,7 +18,7 @@
 #ifndef BOOST_INCLUDED_XINT_EXCEPTIONS_HPP
 #define BOOST_INCLUDED_XINT_EXCEPTIONS_HPP
 
-#include "internals.hpp"
+#include <stdexcept>
 
 namespace boost {
 namespace xint {

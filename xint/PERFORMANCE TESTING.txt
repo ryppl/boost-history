@@ -1,7 +1,0 @@
-To reproduce the test results that I offered on the Boost Developer's mailing
-list, use this version of the library. Uncomment one of the XINT_TEST_* defines
-near the top of internals.hpp and recompile the library (see README.txt for the
-proper setup for that), then compile and run the test program (use the Jamroot
-file in the test directory for that).
-
-The testing code is in test/test_main.cpp.
