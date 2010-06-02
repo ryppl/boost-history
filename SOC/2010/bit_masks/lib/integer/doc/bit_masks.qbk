@@ -25,5 +25,44 @@ please use the table of contents above.
 
 [endsect]
 
+[section:bit_mask_purpose Purpose]
+The purpose of this library extension to the boost.integer library is to make
+the creation of simple and complex integral masks simple and easy and constructable on 
+compile time. The structure of the masks are extensions of the type `integral_constant`
+provided by boost.type_traits library. All masks are able to be treated as the 
+`integral_constant` type. All masks provide the following three compile time accessible
+features. They all provide `::type`,`::value_type` and `::value` for compile time
+support. This also means that all masks can be used with the boost.mpl bitwise 
+operator meta-functions for creation of more complex masks. Now because these values
+were intended to be used during the runtime of a program all of the masking types 
+which are provided by this library provide an additional functionality for run time
+support. All of the mask types in this library provide the implicit cast operator 
+allowing for the meta-function objects to be used as if they were the integral value
+they were used to construct. For example,
+[c++]
+``
+#include <boost/integer/integral_mask.hpp>
 
+using namespace boost;
+
+
+int main() {
+    int t = 0xdeadbeef;
+    typedef integral_mask<int, 3> mask_type;
+
+    int unmasked_t = t & mask_type();
+    return 0;
+}
+``
+For the use of a mask all that one needs to do is to construct the mask and 
+simply treat it as though it were an integer.
+
+[note All masks are trivially default constructible and destructible.]
+
+[endsect]
+
+[section:integral_mask `integral_mask` type]
+This type is used for composing the most basic masks.
+
+[endsect]
 
