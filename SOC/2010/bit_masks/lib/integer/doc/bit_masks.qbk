@@ -1,7 +1,7 @@
 [article Boost.Integer
     [quickbook 1.5]
     [copyright 2010 Brian Bartman]
-    [purpose Integer Type Selection]
+    [purpose Bit Mask Selection]
     [license
         Distributed under the Boost Software License, Version 1.0.
         (See accompanying file LICENSE_1_0.txt or copy at
@@ -31,15 +31,12 @@
 [endsect]
 
 [section Overview]
-
-
-[endsect]
-
-[section:rationale Rationale]
-
 [endsect]
 
 [section:example Example]
+
+[endsect]
+[section:rationale Rationale]
 
 [endsect]
 
