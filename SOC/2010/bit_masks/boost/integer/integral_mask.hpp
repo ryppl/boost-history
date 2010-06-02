@@ -33,7 +33,7 @@ struct integral_mask
 {
     typedef integral_mask<T,Value> type;
 
-    operator T() const{
+    operator T() const {
         return type::value;
     }
 

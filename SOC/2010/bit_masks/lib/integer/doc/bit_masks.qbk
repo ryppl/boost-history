@@ -1,4 +1,4 @@
-[article Boost.Integer
+[article Boost.Integer Bits Masks extention
     [quickbook 1.5]
     [copyright 2010 Brian Bartman]
     [purpose Bit Mask Selection]
@@ -28,9 +28,6 @@
    ]
 ]
 
-[endsect]
-
-[section Overview]
 [endsect]
 
 [section:example Example]

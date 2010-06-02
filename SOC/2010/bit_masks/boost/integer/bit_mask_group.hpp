@@ -126,6 +126,7 @@ struct bit_mask_group {
             mpl::vector<>,
             mpl::map<>
         >::
+        template add<Mask1>::type::
         template add<Mask2>::type::
         template add<Mask3>::type::
         template add<Mask4>::type::
