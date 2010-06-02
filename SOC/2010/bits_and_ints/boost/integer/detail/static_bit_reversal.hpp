@@ -25,29 +25,46 @@
 namespace boost 
 {
 
+namespace bits_and_ints_private {
+
 // Base container
-template <typename T, T val>
+template <typename T, T data>
 struct static_bit_reversal_base
 {
-	BOOST_STATIC_CONSTANT(T, value = val);
+	BOOST_STATIC_CONSTANT(T, value = data);
 };
 
-//	@TODO: shift template parameter 
-//		must not be changeable by user
-template <typename T, T val, std::size_t shift = sizeof(T) * 8>
-struct static_bit_reversal : 
+//	Recursion implementation
+template <typename T, T data, std::size_t shift>
+struct static_bit_reversal_impl : 
 	public static_bit_reversal_base<T, 
-		((is_bit_set<T, val, (sizeof(T) * 8 - shift)>::value << (shift - 1)) 
-		+ static_bit_reversal<T, val, shift - 1>::value)
+		((is_bit_set<T, data, (sizeof(T) * 8 - shift)>::value << (shift - 1)) 
+		 + static_bit_reversal_impl<T, data, shift - 1>::value)
 	>
 {};
 
 //	Base case
-template <typename T, T val>
-struct static_bit_reversal<T, val, 0> : 
+template <typename T, T data>
+struct static_bit_reversal_impl<T, data, 0> : 
 	static_bit_reversal_base<T, T(0)> {};
 
+} // bits_and_ints_private
+
 	
+//	If T is not an integral type, static_bit_reversal<T, data>::value call
+//		will result an error.
+template <typename T, T data, class Enable = void>
+struct static_bit_reversal {};
+
+//	If T is an integral type, static_bit_reversal<T, data>::value will
+//		be `data' with the bits reversed
+template <typename T, T data>
+struct static_bit_reversal<T, data, typename enable_if<is_integral<T> >::type> { 
+	BOOST_STATIC_CONSTANT(T, value = 
+		(bits_and_ints_private::static_bit_reversal_impl<T, data, sizeof(T) * 8>::value)
+	);
+};
+
 } // boost
 
-#endif
+#endif	
