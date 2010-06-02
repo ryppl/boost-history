@@ -1,4 +1,4 @@
-[article Boost.Integer Bits Masks extention
+[article Boost.Integer Bits Masks Extension
     [quickbook 1.5]
     [copyright 2010 Brian Bartman]
     [purpose Bit Mask Selection]
@@ -10,30 +10,20 @@
     [authors [Bartman, Brian]]
 ]
 
-[template super[x]'''<superscript>'''[x]'''</superscript>''']
-
-[section:overview Overview]
-
-# Note to self: Add file documentation here.
-# Add all header/source files here (there shouldn't need 
-# to be any source files as of yet)
-
-
-[table 
-   [[Component][Header][Purpose]]
+[section:HeaderSummary Header File Summary]
+The following table contains header files used within the bit masks library extension.
+For additional information such as full descriptions, tutorials and interface guides
+please use the table of contents above.
+[table
+   [[Component][Header][Contence]]
    [
-      [Forward Declarations.]
-      [[^[@../../../../boost/integer_fwd.hpp <boost/integer_fwd.hpp>]]]
+      [`Integral_mask` type]
+      [ [^[@http://svn.boost.org/svn/boost/sandbox/SOC/2010/bit_masks/boost/integer/integral_mask.hpp <boost/integer/integral_mask.hpp>]]]
       [Forward declarations of classes and class templates - for use when just the name of a class is needed.]
    ]
 ]
 
 [endsect]
 
-[section:example Example]
 
-[endsect]
-[section:rationale Rationale]
-
-[endsect]
 
