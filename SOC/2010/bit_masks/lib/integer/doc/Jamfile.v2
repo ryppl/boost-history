@@ -7,10 +7,10 @@
 
 using quickbook ;
 
-xml integer : integer.qbk ;
+xml bit_masks_doc : bit_masks.qbk ;
 boostbook standalone
     :
-        integer
+        bit_masks_doc
     :
         # HTML options first:
         # Use graphics not text for navigation:
