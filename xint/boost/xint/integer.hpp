@@ -44,10 +44,10 @@ namespace xint {
     \tparam Threadsafe If \c true, the library ensures that each object has its
     own unique storage before returning it. If \c false, identical objects are
     allowed to share storage using a copy-on-write design, potentially
-    increasing the speed of the library, but making it unsafe for programs where
-    an %integer object might be accessed by more than one thread. The library
-    allows copy-on-write for internal functions regardless of this parameter,
-    which is safe because the internal functions are single-threaded.
+    increasing the speed of the library, but making it unsafe for multithreaded
+    use (with \ref threadsafe "some exceptions"). The library allows
+    copy-on-write for internal functions regardless of this parameter, which is
+    safe because the internal functions are single-threaded.
 
     \tparam Secure If \c true, the library zeros out all memory before
     deallocating it, for maximum security.
@@ -63,13 +63,15 @@ class integer_t: private detail::digitmanager_t<Alloc, Threadsafe, Secure>,
     //! \name Constructors & Destructors
     //!@{
     integer_t();
-    integer_t(const integer_t<Alloc, Threadsafe, Secure>& b);
+    integer_t(const integer_t<Alloc, Threadsafe, Secure>& b, bool
+        force_thread_safety = false);
     integer_t(BOOST_XINT_RV_REF(type) b): any_integer(*this, 1) { _swap(b); }
     explicit integer_t(const char *str, size_t base = 10);
     explicit integer_t(const char *str, char **endptr, size_t base = 10);
     explicit integer_t(const std::string& str, size_t base = 10);
     explicit integer_t(const xint::binary_t b, size_t bits = 0);
-    explicit integer_t(const any_integer& other);
+    explicit integer_t(const any_integer& other, bool force_thread_safety =
+        false);
     template <typename Type> integer_t(const Type n,
         typename boost::enable_if<boost::is_integral<Type> >::type* = 0);
 
@@ -179,14 +181,20 @@ integer_t<Alloc, Threadsafe, Secure>::integer_t(): any_integer(*this, 1) {
 
 \param[in] b An existing integer.
 
+\param[in] force_thread_safety If the \c Threadsafe template parameter is \c
+false, you can use this to make a thread-safe copy anyway. See \ref
+threadsafe "this page" for a full treatment of the matter.
+
 \overload
 */
 template<class Alloc, bool Threadsafe, bool Secure>
 integer_t<Alloc, Threadsafe, Secure>::integer_t(const integer_t<Alloc,
-    Threadsafe, Secure>& b): detail::digitmanager_t<Alloc, Threadsafe, Secure>(
-    *b.data.holder()), any_integer(*this, b.data.length, b.data.negative)
+    Threadsafe, Secure>& b, bool force_thread_safety): detail::digitmanager_t<
+    Alloc, Threadsafe, Secure>(*b.data.holder()), any_integer(*this,
+    b.data.length, b.data.negative)
 {
     data.beginendmod();
+    if (force_thread_safety && Threadsafe == false) data.make_unique();
 }
 
 //! \copydoc integer_t(const std::string&, size_t)
@@ -293,15 +301,26 @@ integer_t<Alloc, Threadsafe, Secure>::integer_t(const xint::binary_t b, size_t
 
 /*! Constructs a new integer object from an existing integer object.
 
-    Converts any existing integer_t, fixed_integer, or nothrow_integer object to
-    this type.
+Converts any existing integer_t, fixed_integer, or nothrow_integer object to
+this type.
+
+\param[in] c An existing integer.
+
+\param[in] force_thread_safety If the \c Threadsafe template parameter is \c
+false, you can use this to make a thread-safe copy anyway. See \ref
+threadsafe "this page" for a full treatment of the matter. This parameter isn't
+really necessary on this version of the constructor, because objects of
+different types aren't allowed to share storage; it's here only for signature
+compatibility with the same-type copy constructor.
+
+\overload
 */
 template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure>::integer_t(const any_integer& c):
-    detail::digitmanager_t<Alloc, Threadsafe, Secure>(*c._data().holder()),
-    any_integer(*this, c._data().length, c._data().negative)
+integer_t<Alloc, Threadsafe, Secure>::integer_t(const any_integer& c, bool):
+    any_integer(*this, 1)
 {
-    data.beginendmod();
+    if (c._data().is_nan()) throw exceptions::not_a_number();
+    data.duplicate_data(c._data());
 }
 
 /*!

@@ -57,7 +57,7 @@ Threadsafe, Secure &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a cl
 </div></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;typename Type &gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1integer__t.html#a062fcea2e786126d58ed8b811756b533">integer_t</a> (const Type n, typename boost::enable_if&lt; boost::is_integral&lt; Type &gt; &gt;::<a class="el" href="classboost_1_1xint_1_1integer__t.html">type</a> *=0)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1integer__t.html#af894084ebf4257fea1b421fe6b7458e9">integer_t</a> (const <a class="el" href="classboost_1_1xint_1_1any__integer.html">any_integer</a> &amp;other)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1integer__t.html#af59658f9e4b86ce84c4d81a3891b6ed8">integer_t</a> (const <a class="el" href="classboost_1_1xint_1_1any__integer.html">any_integer</a> &amp;other, bool force_thread_safety=false)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1integer__t.html#ae96e43ad0a2fe66c47b31ed70bf7d993">integer_t</a> (const <a class="el" href="namespaceboost_1_1xint.html#aae3128529370506165793f2771834e58">xint::binary_t</a> b, size_t bits=0)</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Converts a portable binary representation of a number into an integer.  <a href="#ae96e43ad0a2fe66c47b31ed70bf7d993"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1integer__t.html#aa74700f73a0d9a93d405ea9c068b4f33">integer_t</a> (const std::string &amp;str, size_t base=10)</td></tr>
@@ -66,8 +66,8 @@ Threadsafe, Secure &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a cl
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Parse an integer from a string representation.  <a href="#a8fb9aeb7655bdefe98f35d32c9e33ae5"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1integer__t.html#af32638e92cb198f5f5f64e14bca48be1">integer_t</a> (const char *str, size_t base=10)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1integer__t.html#a07b1efcf58f1e19b54a9a90d9a3f1090">integer_t</a> (BOOST_XINT_RV_REF(<a class="el" href="classboost_1_1xint_1_1integer__t.html">type</a>) b)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1integer__t.html#a3d378fe63c900d07abad3f4991cfc1df">integer_t</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; Alloc, Threadsafe, Secure &gt; &amp;b)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a copy of an existing integer.  <a href="#a3d378fe63c900d07abad3f4991cfc1df"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1integer__t.html#a9c3643a29c85e4290b5abe12d26cf886">integer_t</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; Alloc, Threadsafe, Secure &gt; &amp;b, bool force_thread_safety=false)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a copy of an existing integer.  <a href="#a9c3643a29c85e4290b5abe12d26cf886"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1integer__t.html#a2973ba192540ef2cad780bb9d4a981ba">integer_t</a> ()</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a new integer with an initial value of zero.  <a href="#a2973ba192540ef2cad780bb9d4a981ba"></a><br/></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Miscellaneous Functions</div></td></tr>
@@ -163,7 +163,7 @@ Threadsafe, Secure &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom">
 <dl><dt><b>Template Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>Alloc</em>&nbsp;</td><td>The allocator to use. It must be for the <code>boost::xint::detail::digit_t</code> type.</td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>Threadsafe</em>&nbsp;</td><td>If <code>true</code>, the library ensures that each object has its own unique storage before returning it. If <code>false</code>, identical objects are allowed to share storage using a copy-on-write design, potentially increasing the speed of the library, but making it unsafe for programs where an integer object might be accessed by more than one thread. The library allows copy-on-write for internal functions regardless of this parameter, which is safe because the internal functions are single-threaded.</td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>Threadsafe</em>&nbsp;</td><td>If <code>true</code>, the library ensures that each object has its own unique storage before returning it. If <code>false</code>, identical objects are allowed to share storage using a copy-on-write design, potentially increasing the speed of the library, but making it unsafe for multithreaded use (with <a class="el" href="threadsafe.html">some exceptions</a>). The library allows copy-on-write for internal functions regardless of this parameter, which is safe because the internal functions are single-threaded.</td></tr>
     <tr><td valign="top"></td><td valign="top"><em>Secure</em>&nbsp;</td><td>If <code>true</code>, the library zeros out all memory before deallocating it, for maximum security. </td></tr>
   </table>
   </dd>
@@ -184,7 +184,7 @@ template&lt;class Alloc = std::allocator&lt;detail::digit_t&gt;, bool Threadsafe
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00142">142</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00144">144</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -225,11 +225,11 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 
 <p>Creates a new integer with an initial value of zero. </p>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00174">174</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00176">176</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a3d378fe63c900d07abad3f4991cfc1df"></a><!-- doxytag: member="boost::xint::integer_t::integer_t" ref="a3d378fe63c900d07abad3f4991cfc1df" args="(const integer_t&lt; Alloc, Threadsafe, Secure &gt; &amp;b)" -->
+<a class="anchor" id="a9c3643a29c85e4290b5abe12d26cf886"></a><!-- doxytag: member="boost::xint::integer_t::integer_t" ref="a9c3643a29c85e4290b5abe12d26cf886" args="(const integer_t&lt; Alloc, Threadsafe, Secure &gt; &amp;b, bool force_thread_safety=false)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -239,9 +239,18 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
           <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">boost::xint::integer_t</a>&lt; Alloc, Threadsafe, Secure &gt;::<a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; Alloc, Threadsafe, Secure &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>b</em></td>
-          <td>&nbsp;)&nbsp;</td>
-          <td><code> [inline]</code></td>
+          <td class="paramname"> <em>b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>force_thread_safety</em> = <code>false</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -251,12 +260,13 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>b</em>&nbsp;</td><td>An existing integer.</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>force_thread_safety</em>&nbsp;</td><td>If the <code>Threadsafe</code> template parameter is <code>false</code>, you can use this to make a thread-safe copy anyway. See <a class="el" href="threadsafe.html">this page</a> for a full treatment of the matter.</td></tr>
   </table>
   </dd>
 </dl>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00185">185</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00191">191</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -278,7 +288,7 @@ template&lt;class Alloc = std::allocator&lt;detail::digit_t&gt;, bool Threadsafe
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00067">67</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00068">68</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -328,7 +338,7 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
 <dl class="remark"><dt><b>Remarks:</b></dt><dd>This is the most common way to initialize literal values that are too large to fit into a native integral type.</dd></dl>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts.  </p>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00194">194</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00202">202</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -387,7 +397,7 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
 <dl class="remark"><dt><b>Remarks:</b></dt><dd>This function is based on the <code>strtol</code> function from the standard library. Like <code>strtol</code>, it first discards any leading whitespace characters, then takes as many characters as are valid for the given <code>base</code> and interprets them as an integer. Then a pointer to the first character following the integer is stored in the object pointed by <code>endptr</code>.</dd></dl>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00229">229</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00237">237</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -439,7 +449,7 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
 <dl class="remark"><dt><b>Remarks:</b></dt><dd>This is the most common way to initialize literal values that are too large to fit into a native integral type.</dd></dl>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00260">260</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00268">268</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -491,11 +501,11 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#a8df94bce4e819234572029a62d8c8681">xint::to_binary</a></dd></dl>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00288">288</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00296">296</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="af894084ebf4257fea1b421fe6b7458e9"></a><!-- doxytag: member="boost::xint::integer_t::integer_t" ref="af894084ebf4257fea1b421fe6b7458e9" args="(const any_integer &amp;other)" -->
+<a class="anchor" id="af59658f9e4b86ce84c4d81a3891b6ed8"></a><!-- doxytag: member="boost::xint::integer_t::integer_t" ref="af59658f9e4b86ce84c4d81a3891b6ed8" args="(const any_integer &amp;other, bool force_thread_safety=false)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -505,17 +515,34 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
           <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">boost::xint::integer_t</a>&lt; Alloc, Threadsafe, Secure &gt;::<a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classboost_1_1xint_1_1any__integer.html">any_integer</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>c</em></td>
-          <td>&nbsp;)&nbsp;</td>
-          <td><code> [inline, explicit]</code></td>
+          <td class="paramname"> <em>c</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>force_thread_safety</em> = <code>false</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [inline, explicit]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 <p>Constructs a new integer object from an existing integer object.</p>
-<p>Converts any existing <a class="el" href="classboost_1_1xint_1_1integer__t.html" title="The integer_t class template.">integer_t</a>, <a class="el" href="classboost_1_1xint_1_1fixed__integer.html" title="A fixed-size integer type.">fixed_integer</a>, or nothrow_integer object to this type. </p>
+<p>Converts any existing <a class="el" href="classboost_1_1xint_1_1integer__t.html" title="The integer_t class template.">integer_t</a>, <a class="el" href="classboost_1_1xint_1_1fixed__integer.html" title="A fixed-size integer type.">fixed_integer</a>, or nothrow_integer object to this type.</p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>c</em>&nbsp;</td><td>An existing integer.</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>force_thread_safety</em>&nbsp;</td><td>If the <code>Threadsafe</code> template parameter is <code>false</code>, you can use this to make a thread-safe copy anyway. See <a class="el" href="threadsafe.html">this page</a> for a full treatment of the matter. This parameter isn't really necessary on this version of the constructor, because objects of different types aren't allowed to share storage; it's here only for signature compatibility with the same-type copy constructor.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00300">300</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00319">319</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -563,7 +590,7 @@ template&lt;typename Type &gt; </div>
 <p>You can ignore the <code>enable_if</code> parameter, it's there only to tell the compiler what types the function applies to.</p>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00320">320</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00339">339</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -586,7 +613,7 @@ template&lt;class Alloc = std::allocator&lt;detail::digit_t&gt;, bool Threadsafe
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00162">162</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00164">164</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -621,7 +648,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd><code>n</code> factorial, defined as <code>1*2*3*...*n</code></dd></dl>
 <dl class="warning"><dt><b>Warning:</b></dt><dd>Factorials get ridiculously huge, even with fairly small values of <code>n</code>. This function, when used with a large parameter, is the easiest way to exhaust the system's memory. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00614">614</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00633">633</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -648,7 +675,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 </ul>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The number of hexadecimal digits that would be required to encode <code>this</code>. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00573">573</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00592">592</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -675,7 +702,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 </ul>
 <dl class="return"><dt><b>Returns:</b></dt><dd><code>true</code> if <code>*this</code> is even, otherwise <code>false</code>. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00545">545</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00564">564</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -702,7 +729,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 </ul>
 <dl class="return"><dt><b>Returns:</b></dt><dd><code>true</code> if <code>*this</code> is odd, otherwise <code>false</code>. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00534">534</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00553">553</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -723,7 +750,7 @@ template&lt;class Alloc = std::allocator&lt;detail::digit_t&gt;, bool Threadsafe
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00100">100</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00102">102</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -746,7 +773,7 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
 <div class="memdoc">
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#a97026411d9278076da5d7e002e28d50e" title="Get the remainder after dividing a number by another.">operator%(integer_t, integer_t)</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00390">390</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00409">409</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -769,7 +796,7 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
 <div class="memdoc">
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#a98557cd228ac20fcab7c9cc1c44886e2" title="Combine two integers using a bitwise AND operation.">operator&amp;(integer_t, integer_t)</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00453">453</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00472">472</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -792,7 +819,7 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
 <div class="memdoc">
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#a5cea7adbf4ce6d7984c67d7a25a4aeb0" title="Calculate the product of two integers.">operator*(integer_t, integer_t)</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00372">372</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00391">391</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -813,7 +840,7 @@ template&lt;class Alloc = std::allocator&lt;detail::digit_t&gt;, bool Threadsafe
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00103">103</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00105">105</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -834,7 +861,7 @@ template&lt;class Alloc = std::allocator&lt;detail::digit_t&gt;, bool Threadsafe
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00102">102</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00104">104</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -861,7 +888,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 </ul>
 <p>This is not recommended. It must make a copy before incrementing the <code>*this</code> object, making it noticeably less efficient than the preincrement operator. </p>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00429">429</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00448">448</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -886,7 +913,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 <li>Complexity: amortized O(1) </li>
 </ul>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00402">402</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00421">421</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -909,7 +936,7 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
 <div class="memdoc">
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#a21b3d8b32aaabb1bbc2b8ed7af7f8bf9" title="Calculate the sum of two integers.">operator+(integer_t, integer_t)</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00354">354</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00373">373</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -936,7 +963,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 </ul>
 <dl class="return"><dt><b>Returns:</b></dt><dd><code>*this</code> with the sign reversed. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00345">345</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00364">364</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -963,7 +990,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 </ul>
 <p>This is not recommended. It must make a copy before decrementing the <code>*this</code> object, making it noticeably less efficient than the predecrement operator. </p>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00444">444</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00463">463</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -988,7 +1015,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 <li>Complexity: amortized O(1) </li>
 </ul>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00414">414</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00433">433</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1011,7 +1038,7 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
 <div class="memdoc">
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#aacff6cce935c8b470d4ab3dbc890c671" title="Calculate the difference between two integers.">operator-(integer_t, integer_t)</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00363">363</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00382">382</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1034,7 +1061,7 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
 <div class="memdoc">
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#a86e4aa1c928f1e95d98c4190228af465" title="Calculate how many dividends would fit into divisor.">operator/(integer_t, integer_t)</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00381">381</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00400">400</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1068,7 +1095,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The bit-shifted integer. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00487">487</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00506">506</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1091,7 +1118,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 <div class="memdoc">
 <dl class="see"><dt><b>See also:</b></dt><dd>operator&lt;&lt;(integer_t, integer_t) </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00512">512</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00531">531</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1115,7 +1142,7 @@ template&lt;typename Type &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00096">96</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00098">98</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1137,7 +1164,7 @@ template&lt;class Alloc = std::allocator&lt;detail::digit_t&gt;, bool Threadsafe
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00094">94</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00096">96</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1159,7 +1186,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00330">330</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00349">349</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1193,7 +1220,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The bit-shifted integer. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00503">503</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00522">522</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1216,7 +1243,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 <div class="memdoc">
 <dl class="see"><dt><b>See also:</b></dt><dd>operator&gt;&gt;(integer_t, integer_t) </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00521">521</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00540">540</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1239,7 +1266,7 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
 <div class="memdoc">
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#a9b1be15753413b8dc2959c02b2e7c523" title="Combine two integers using a bitwise XOR operation.">operator^(integer_t, integer_t)</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00471">471</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00490">490</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1262,7 +1289,7 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
 <div class="memdoc">
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#ab2c828853db40ffbba5188d82a728e30" title="Combine two integers using a bitwise OR operation.">operator|(integer_t, integer_t)</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00462">462</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00481">481</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1297,7 +1324,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>2 to the power of <code>exponent</code>.</dd></dl>
 <dl class="remark"><dt><b>Remarks:</b></dt><dd>This is a convenience function, to help with self-documenting code. It is also more efficient than using bit-shifting or the <code>pow</code> function to get the same result. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00592">592</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00611">611</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1365,7 +1392,7 @@ template&lt;class Type &gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>A random integer with the requested attributes.</dd></dl>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="random.html">The XInt Random Number System</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00646">646</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00665">665</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1427,7 +1454,7 @@ template&lt;class Type &gt; </div>
 <dl class="user"><dt><b></b></dt><dd>See the <a class="el" href="random.html">Random Number Functions page</a> for details on how to get cryptographically-secure random numbers.</dd></dl>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="primes.html">Generating Prime Numbers</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00687">687</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00706">706</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1461,7 +1488,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>-1 if <code>*this</code> is negative, 0 if it's zero, or 1 if it's greater than zero. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00561">561</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00580">580</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1469,7 +1496,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 <li><a class="el" href="integer_8hpp_source.html">integer.hpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Mon May 31 19:53:14 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Wed Jun 2 13:37:03 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

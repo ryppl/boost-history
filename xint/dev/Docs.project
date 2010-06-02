@@ -36,6 +36,7 @@
     <File Name="../libs/xint/doc/dox/rationale.dox"/>
     <File Name="../libs/xint/doc/dox/testing.dox"/>
     <File Name="../libs/xint/doc/dox/zero.dox"/>
+    <File Name="../libs/xint/doc/dox/threadsafe.dox"/>
   </VirtualDirectory>
   <VirtualDirectory Name="Project">
     <File Name="../libs/xint/doc/dox/Doxyfile"/>
@@ -58,6 +59,7 @@
       <PreBuild/>
       <PostBuild/>
       <CustomBuild Enabled="yes">
+        <Target Name="Show">firefox ../index.html</Target>
         <RebuildCommand/>
         <CleanCommand>rm ~/projects/xint/libs/xint/doc/*</CleanCommand>
         <BuildCommand>doxygen</BuildCommand>

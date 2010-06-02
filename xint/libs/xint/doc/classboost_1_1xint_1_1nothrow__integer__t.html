@@ -57,13 +57,13 @@ Threadsafe, Secure &gt; &gt;&nbsp;</td><td class="memItemRight" valign="bottom">
 </div></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;typename Type &gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1nothrow__integer__t.html#a085a4528dac5f11fb09d55a3db64cb8d">nothrow_integer_t</a> (const Type n, typename boost::enable_if&lt; boost::is_integral&lt; Type &gt; &gt;::<a class="el" href="classboost_1_1xint_1_1nothrow__integer__t.html">type</a> *=0)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1nothrow__integer__t.html#a26cfdba26f364f33df7a3331ca9330a7">nothrow_integer_t</a> (const <a class="el" href="classboost_1_1xint_1_1any__integer.html">any_integer</a> &amp;other)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1nothrow__integer__t.html#a1db9273619edb62ad3cb6acd4f0fd89b">nothrow_integer_t</a> (const <a class="el" href="classboost_1_1xint_1_1any__integer.html">any_integer</a> &amp;other, bool force_thread_safety=false)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1nothrow__integer__t.html#a19457b182291e32b1c91058ad3decb2c">nothrow_integer_t</a> (const <a class="el" href="namespaceboost_1_1xint.html#aae3128529370506165793f2771834e58">xint::binary_t</a> b, size_t bits=0)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1nothrow__integer__t.html#abc414392f46c1fd70026bb9ae45df637">nothrow_integer_t</a> (const std::string &amp;str, size_t base=10)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1nothrow__integer__t.html#a5dd558509a3cd81d420d5e7cc4bad91b">nothrow_integer_t</a> (const char *str, char **endptr, size_t base=10)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1nothrow__integer__t.html#a98c9a743013b2bd77a15d69ffa4b5d67">nothrow_integer_t</a> (const char *str, size_t base=10)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1nothrow__integer__t.html#a1649f01b4ad6b550f46420982347d72a">nothrow_integer_t</a> (BOOST_XINT_RV_REF(<a class="el" href="classboost_1_1xint_1_1nothrow__integer__t.html">type</a>) b)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1nothrow__integer__t.html#ab74caf92258cad1ba2398411f3fdc2fb">nothrow_integer_t</a> (const <a class="el" href="classboost_1_1xint_1_1nothrow__integer__t.html">nothrow_integer_t</a>&lt; Alloc, Threadsafe, Secure &gt; &amp;b)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1nothrow__integer__t.html#ac003ac6e6b1d5ab963ca3adefe3f3382">nothrow_integer_t</a> (const <a class="el" href="classboost_1_1xint_1_1nothrow__integer__t.html">nothrow_integer_t</a>&lt; Alloc, Threadsafe, Secure &gt; &amp;b, bool force_thread_safety=false)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1nothrow__integer__t.html#a5a03f5a74e7ddec395a0600319398c62">nothrow_integer_t</a> ()</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Miscellaneous Functions</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpf5be5219a55995e13d6b8d7bf99ed653"></a> </p>
@@ -152,7 +152,7 @@ Threadsafe, Secure &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a cl
 <dl><dt><b>Template Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>Alloc</em>&nbsp;</td><td>The allocator to use. It must be for the <code>boost::xint::detail::digit_t</code> type.</td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>Threadsafe</em>&nbsp;</td><td>If <code>true</code>, the library ensures that each object has its own unique storage before returning it. If <code>false</code>, identical objects are allowed to share storage using a copy-on-write design, potentially increasing the speed of the library, but making it unsafe for programs where an integer object might be accessed by more than one thread. The library allows copy-on-write for internal functions regardless of this parameter, which is safe because the internal functions are single-threaded.</td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>Threadsafe</em>&nbsp;</td><td>If <code>true</code>, the library ensures that each object has its own unique storage before returning it. If <code>false</code>, identical objects are allowed to share storage using a copy-on-write design, potentially increasing the speed of the library, but making it unsafe for multithreaded use (with <a class="el" href="threadsafe.html">some exceptions</a>). The library allows copy-on-write for internal functions regardless of this parameter, which is safe because the internal functions are single-threaded.</td></tr>
     <tr><td valign="top"></td><td valign="top"><em>Secure</em>&nbsp;</td><td>If <code>true</code>, the library zeros out all memory before deallocating it, for maximum security. </td></tr>
   </table>
   </dd>
@@ -173,7 +173,7 @@ template&lt;class Alloc = std::allocator&lt;detail::digit_t&gt;, bool Threadsafe
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00156">156</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00158">158</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -213,11 +213,11 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 <div class="memdoc">
 <p>Creates a new integer with an initial value of zero.  </p>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00196">196</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00198">198</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ab74caf92258cad1ba2398411f3fdc2fb"></a><!-- doxytag: member="boost::xint::nothrow_integer_t::nothrow_integer_t" ref="ab74caf92258cad1ba2398411f3fdc2fb" args="(const nothrow_integer_t&lt; Alloc, Threadsafe, Secure &gt; &amp;b)" -->
+<a class="anchor" id="ac003ac6e6b1d5ab963ca3adefe3f3382"></a><!-- doxytag: member="boost::xint::nothrow_integer_t::nothrow_integer_t" ref="ac003ac6e6b1d5ab963ca3adefe3f3382" args="(const nothrow_integer_t&lt; Alloc, Threadsafe, Secure &gt; &amp;b, bool force_thread_safety=false)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -227,9 +227,18 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
           <td class="memname"><a class="el" href="classboost_1_1xint_1_1nothrow__integer__t.html">boost::xint::nothrow_integer_t</a>&lt; Alloc, Threadsafe, Secure &gt;::<a class="el" href="classboost_1_1xint_1_1nothrow__integer__t.html">nothrow_integer_t</a> </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classboost_1_1xint_1_1nothrow__integer__t.html">nothrow_integer_t</a>&lt; Alloc, Threadsafe, Secure &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>b</em></td>
-          <td>&nbsp;)&nbsp;</td>
-          <td><code> [inline]</code></td>
+          <td class="paramname"> <em>b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>force_thread_safety</em> = <code>false</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -237,12 +246,13 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
 <p>Creates a copy of an existing integer. <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>b</em>&nbsp;</td><td>An existing integer.</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>force_thread_safety</em>&nbsp;</td><td>If the <code>Threadsafe</code> template parameter is <code>false</code>, you can use this to make a thread-safe copy anyway. See <a class="el" href="threadsafe.html">this page</a> for a full treatment of the matter.</td></tr>
   </table>
   </dd>
 </dl>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts.  </p>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00204">204</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00206">206</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -264,7 +274,7 @@ template&lt;class Alloc = std::allocator&lt;detail::digit_t&gt;, bool Threadsafe
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00074">74</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00075">75</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -314,7 +324,7 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
 <dl class="remark"><dt><b>Remarks:</b></dt><dd>This is the most common way to initialize literal values that are too large to fit into a native integral type.</dd></dl>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts.  </p>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00217">217</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00223">223</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -371,7 +381,7 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
 <dl class="remark"><dt><b>Remarks:</b></dt><dd>This function is based on the <code>strtol</code> function from the standard library. Like <code>strtol</code>, it first discards any leading whitespace characters, then takes as many characters as are valid for the given <code>base</code> and interprets them as an integer. Then a pointer to the first character following the integer is stored in the object pointed by <code>endptr</code>.</dd></dl>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts.  </p>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00229">229</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00235">235</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -421,7 +431,7 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
 <dl class="remark"><dt><b>Remarks:</b></dt><dd>This is the most common way to initialize literal values that are too large to fit into a native integral type.</dd></dl>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts.  </p>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00241">241</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00247">247</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -471,11 +481,11 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#a8df94bce4e819234572029a62d8c8681">xint::to_binary</a></dd></dl>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts.  </p>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00253">253</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00259">259</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a26cfdba26f364f33df7a3331ca9330a7"></a><!-- doxytag: member="boost::xint::nothrow_integer_t::nothrow_integer_t" ref="a26cfdba26f364f33df7a3331ca9330a7" args="(const any_integer &amp;other)" -->
+<a class="anchor" id="a1db9273619edb62ad3cb6acd4f0fd89b"></a><!-- doxytag: member="boost::xint::nothrow_integer_t::nothrow_integer_t" ref="a1db9273619edb62ad3cb6acd4f0fd89b" args="(const any_integer &amp;other, bool force_thread_safety=false)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -485,16 +495,32 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
           <td class="memname"><a class="el" href="classboost_1_1xint_1_1nothrow__integer__t.html">boost::xint::nothrow_integer_t</a>&lt; Alloc, Threadsafe, Secure &gt;::<a class="el" href="classboost_1_1xint_1_1nothrow__integer__t.html">nothrow_integer_t</a> </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classboost_1_1xint_1_1any__integer.html">any_integer</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>c</em></td>
-          <td>&nbsp;)&nbsp;</td>
-          <td><code> [inline, explicit]</code></td>
+          <td class="paramname"> <em>c</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>force_thread_safety</em> = <code>false</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [inline, explicit]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Constructs a new integer object from an existing integer object.Converts any existing <a class="el" href="classboost_1_1xint_1_1integer__t.html" title="The integer_t class template.">integer_t</a>, <a class="el" href="classboost_1_1xint_1_1fixed__integer.html" title="A fixed-size integer type.">fixed_integer</a>, or nothrow_integer object to this type.  </p>
+<p>Constructs a new integer object from an existing integer object.Converts any existing <a class="el" href="classboost_1_1xint_1_1integer__t.html" title="The integer_t class template.">integer_t</a>, <a class="el" href="classboost_1_1xint_1_1fixed__integer.html" title="A fixed-size integer type.">fixed_integer</a>, or nothrow_integer object to this type.<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>c</em>&nbsp;</td><td>An existing integer.</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>force_thread_safety</em>&nbsp;</td><td>If the <code>Threadsafe</code> template parameter is <code>false</code>, you can use this to make a thread-safe copy anyway. See <a class="el" href="threadsafe.html">this page</a> for a full treatment of the matter. This parameter isn't really necessary on this version of the constructor, because objects of different types aren't allowed to share storage; it's here only for signature compatibility with the same-type copy constructor.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts.  </p>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00265">265</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00271">271</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -542,7 +568,7 @@ template&lt;typename Type &gt; </div>
 <p>You can ignore the <code>enable_if</code> parameter, it's there only to tell the compiler what types the function applies to.</p>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00293">293</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00299">299</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -564,7 +590,7 @@ template&lt;class Alloc = std::allocator&lt;detail::digit_t&gt;, bool Threadsafe
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00179">179</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00181">181</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -586,7 +612,7 @@ template&lt;class Alloc = std::allocator&lt;detail::digit_t&gt;, bool Threadsafe
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00177">177</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00179">179</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -620,7 +646,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 <dl class="warning"><dt><b>Warning:</b></dt><dd>Factorials get ridiculously huge, even with fairly small values of <code>n</code>. This function, when used with a large parameter, is the easiest way to exhaust the system's memory. </dd></dl>
  </p>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00630">630</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00636">636</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -647,7 +673,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 </p>
 <p>Returns zero instead of throwing. </p>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00605">605</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00611">611</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -674,7 +700,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 </p>
 <p>Returns false instead of throwing. </p>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00577">577</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00583">583</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -695,7 +721,7 @@ template&lt;class Alloc = std::allocator&lt;detail::digit_t&gt;, bool Threadsafe
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00150">150</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00152">152</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -722,7 +748,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 </p>
 <p>Returns false instead of throwing. </p>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00564">564</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00570">570</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -743,7 +769,7 @@ template&lt;class Alloc = std::allocator&lt;detail::digit_t&gt;, bool Threadsafe
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00168">168</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00170">170</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -764,7 +790,7 @@ template&lt;class Alloc = std::allocator&lt;detail::digit_t&gt;, bool Threadsafe
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00108">108</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00110">110</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -787,7 +813,7 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
 <div class="memdoc">
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#a3ffd5aa4e148e1a7a419c6ea3250764b">operator%(nothrow_integer_t, nothrow_integer_t)</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00394">394</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00400">400</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -810,7 +836,7 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
 <div class="memdoc">
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#a362e710ac0f70f97f5d53231a680c66c">operator&amp;(nothrow_integer_t, nothrow_integer_t)</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00463">463</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00469">469</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -833,7 +859,7 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
 <div class="memdoc">
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#a4f2c6c6e76f57d0153ee9b47153ccb2c">operator*(nothrow_integer_t, nothrow_integer_t)</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00364">364</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00370">370</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -854,7 +880,7 @@ template&lt;class Alloc = std::allocator&lt;detail::digit_t&gt;, bool Threadsafe
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00112">112</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00114">114</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -875,7 +901,7 @@ template&lt;class Alloc = std::allocator&lt;detail::digit_t&gt;, bool Threadsafe
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00110">110</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00112">112</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -901,7 +927,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 </ul>
 This is not recommended. It must make a copy before incrementing the <code>*this</code> object, making it noticeably less efficient than the preincrement operator.  </p>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00435">435</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00441">441</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -926,7 +952,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 </ul>
  </p>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00409">409</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00415">415</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -949,7 +975,7 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
 <div class="memdoc">
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#acacfb031e6df7df26e792c98e267828e">operator+(nothrow_integer_t, nothrow_integer_t)</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00334">334</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00340">340</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -975,7 +1001,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd><code>*this</code> with the sign reversed. </dd></dl>
  </p>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00320">320</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00326">326</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1001,7 +1027,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 </ul>
 This is not recommended. It must make a copy before decrementing the <code>*this</code> object, making it noticeably less efficient than the predecrement operator.  </p>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00449">449</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00455">455</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1026,7 +1052,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 </ul>
  </p>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00422">422</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00428">428</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1049,7 +1075,7 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
 <div class="memdoc">
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#af99e5d07405fd8e7bcc4eb1875a2e74c">operator-(nothrow_integer_t, nothrow_integer_t)</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00349">349</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00355">355</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1072,7 +1098,7 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
 <div class="memdoc">
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#a78b193f46b6afd0b4a4c8370e8825dc5">operator/(nothrow_integer_t, nothrow_integer_t)</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00379">379</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00385">385</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1105,7 +1131,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The bit-shifted integer. </dd></dl>
  </p>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00508">508</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00514">514</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1128,7 +1154,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 <div class="memdoc">
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="classboost_1_1xint_1_1nothrow__integer__t.html#adfd91e122ab7f4dd07ba67aa0394c058">nothrow_integer_t::operator&lt;&lt;(size_t) const </a> </dd></dl>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00536">536</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00542">542</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1152,7 +1178,7 @@ template&lt;typename Type &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00105">105</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00107">107</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1174,7 +1200,7 @@ template&lt;class Alloc = std::allocator&lt;detail::digit_t&gt;, bool Threadsafe
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00102">102</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00104">104</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1196,7 +1222,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00306">306</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00312">312</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1229,7 +1255,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The bit-shifted integer. </dd></dl>
  </p>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00522">522</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00528">528</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1252,7 +1278,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 <div class="memdoc">
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="classboost_1_1xint_1_1nothrow__integer__t.html#a69f4368491ceea5e6f06fc24add4c3c3">nothrow_integer_t::operator&gt;&gt;(size_t) const </a> </dd></dl>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00549">549</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00555">555</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1275,7 +1301,7 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
 <div class="memdoc">
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#a17706bcfb856b02251c2286d4cee158e">operator^(nothrow_integer_t, nothrow_integer_t)</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00493">493</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00499">499</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1298,7 +1324,7 @@ template&lt;class Alloc, bool Threadsafe, bool Secure&gt; </div>
 <div class="memdoc">
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#a40cf7174119d2d9c35b80da3ac66faed">operator|(nothrow_integer_t, nothrow_integer_t)</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00478">478</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00484">484</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1351,7 +1377,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 <dl class="remark"><dt><b>Remarks:</b></dt><dd>This is a convenience function, to help with self-documenting code. It is also more efficient than using bit-shifting or the <code>pow</code> function to get the same result. </dd></dl>
  </p>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00616">616</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00622">622</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1418,7 +1444,7 @@ template&lt;class Type &gt; </div>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="random.html">The XInt Random Number System</a> </dd></dl>
  </p>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00645">645</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00651">651</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1479,7 +1505,7 @@ template&lt;class Type &gt; </div>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="primes.html">Generating Prime Numbers</a> </dd></dl>
  </p>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00664">664</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00670">670</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1513,7 +1539,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 </p>
 <p>Returns zero instead of throwing. </p>
 
-<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00590">590</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="nothrow__integer_8hpp_source.html#l00596">596</a> of file <a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1521,7 +1547,7 @@ template&lt;class Alloc , bool Threadsafe, bool Secure&gt; </div>
 <li><a class="el" href="nothrow__integer_8hpp_source.html">nothrow_integer.hpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Mon May 31 19:53:14 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Wed Jun 2 13:37:03 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

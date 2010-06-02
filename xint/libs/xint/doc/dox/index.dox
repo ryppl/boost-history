@@ -61,6 +61,7 @@ Detailed Usage Information:
 - \subpage primes (with example code)
 - \subpage exceptions (with example code)
 - \subpage random
+- \subpage threadsafe
 
 Library Information:
 - \subpage cow
