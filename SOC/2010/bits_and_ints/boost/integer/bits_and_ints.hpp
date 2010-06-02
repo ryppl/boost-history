@@ -11,7 +11,7 @@
 #define BOOST_BITS_AND_INTS
 
 // sign_extends and static_sign_extends
-//#include "utils.hpp"
+#include "detail/utils.hpp"
 #include "detail/sign_extend.hpp"
 #include "detail/static_sign_extend.hpp"
 #include "detail/bit_reversal.hpp"
