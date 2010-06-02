@@ -10,35 +10,81 @@
 //  GeNeSys mbH & Co. KG in producing this work.
 //
 
-#ifndef _BOOST_UBLAS_BANDED_
-#define _BOOST_UBLAS_BANDED_
+#ifndef _BOOST_UBLAS_TRIANGULAR_
+#define _BOOST_UBLAS_TRIANGULAR_
 
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/detail/temporary.hpp>
+#include <boost/type_traits/remove_const.hpp>
 
 // Iterators based on ideas of Jeremy Siek
 
 namespace boost { namespace numeric { namespace ublas {
 
-    /** \brief A banded matrix of values of type \c T.
+    namespace detail {
+        using namespace boost::numeric::ublas;
+
+        // Matrix resizing algorithm
+        template <class L, class T, class M>
+        BOOST_UBLAS_INLINE
+        void matrix_resize_preserve (M& m, M& temporary) {
+            typedef L layout_type;
+            typedef T triangular_type;
+            typedef typename M::size_type size_type;
+            const size_type msize1 (m.size1 ());        // original size
+            const size_type msize2 (m.size2 ());
+            const size_type size1 (temporary.size1 ());    // new size is specified by temporary
+            const size_type size2 (temporary.size2 ());
+            // Common elements to preserve
+            const size_type size1_min = (std::min) (size1, msize1);
+            const size_type size2_min = (std::min) (size2, msize2);
+            // Order for major and minor sizes
+            const size_type major_size = layout_type::size_M (size1_min, size2_min);
+            const size_type minor_size = layout_type::size_m (size1_min, size2_min);
+            // Indexing copy over major
+            for (size_type major = 0; major != major_size; ++major) {
+                for (size_type minor = 0; minor != minor_size; ++minor) {
+                        // find indexes - use invertability of element_ functions
+                    const size_type i1 = layout_type::index_M(major, minor);
+                    const size_type i2 = layout_type::index_m(major, minor);
+                    if ( triangular_type::other(i1,i2) ) {
+                        temporary.data () [triangular_type::element (layout_type (), i1, size1, i2, size2)] =
+                            m.data() [triangular_type::element (layout_type (), i1, msize1, i2, msize2)];
+                    }
+                }
+            }
+            m.assign_temporary (temporary);
+        }
+    }
+
+    /** \brief A triangular matrix of values of type \c T.
      *
-     * For a \f$(mxn)\f$-dimensional banded matrix with \f$l\f$ lower and \f$u\f$ upper diagonals and 
-     * \f$0 \leq i < m\f$ and \f$0 \leq j < n\f$, if \f$i>j+l\f$ or \f$i<j-u\f$ then \f$b_{i,j}=0\f$. 
-     * The default storage for banded matrices is packed. Orientation and storage can also be specified. 
+     * a banded matrix of values of type T of variable size with n_lower sub diagonals and n_upper super diagonals. 
+     * Only the nonzero elements are stored in the given order TRI (packed storage).
+     *
+     * For a \f$(n \times n )\f$-dimensional lower triangular matrix and if \f$0 \leq i < n\f$, \f$0 \leq j < n\f$ and \f$i>j\f$ holds, 
+     * \f$m_{i,j}=0\f$. Furthermore if \f$m_{i,i}=1\f$, the matrix is called unit lower triangular.
+     *
+     * For a \f$(n \times n )\f$-dimensional upper triangular matrix and if \f$0 \leq i < n\f$, \f$0 \leq j < n\f$ and \f$i<j\f$ holds, 
+     * \f$m_{i,j}=0\f$. Furthermore if \f$m_{i,i}=1\f$, the matrix is called unit upper triangular.
+     *
+     * The default storage for triangular matrices is packed. Orientation and storage can also be specified. 
      * Default is \c row_major and and unbounded_array. It is \b not required by the storage to initialize 
      * elements of the matrix.
      *
      * \tparam T the type of object stored in the matrix (like double, float, complex, etc...)
+     * \tparam TRI the type of the triangular matrix. It can either be \c lower or \c upper. Default is \c lower
      * \tparam L the storage organization. It can be either \c row_major or \c column_major. Default is \c row_major
      * \tparam A the type of Storage array. Default is \c unbounded_array
      */
-    template<class T, class L, class A>
-    class banded_matrix:
-        public matrix_container<banded_matrix<T, L, A> > {
+    template<class T, class TRI, class L, class A>
+    class triangular_matrix:
+        public matrix_container<triangular_matrix<T, TRI, L, A> > {
 
         typedef T *pointer;
+        typedef TRI triangular_type;
         typedef L layout_type;
-        typedef banded_matrix<T, L, A> self_type;
+        typedef triangular_matrix<T, TRI, L, A> self_type;
     public:
 #ifdef BOOST_UBLAS_ENABLE_PROXY_SHORTCUTS
         using matrix_container<self_type>::operator ();
@@ -49,6 +95,7 @@ namespace boost { namespace numeric { namespace ublas {
         typedef const T &const_reference;
         typedef T &reference;
         typedef A array_type;
+
         typedef const matrix_reference<const self_type> const_closure_type;
         typedef matrix_reference<self_type> closure_type;
         typedef vector<T, A> vector_temporary_type;
@@ -58,33 +105,28 @@ namespace boost { namespace numeric { namespace ublas {
 
         // Construction and destruction
         BOOST_UBLAS_INLINE
-        banded_matrix ():
+        triangular_matrix ():
             matrix_container<self_type> (),
-            size1_ (0), size2_ (0),
-            lower_ (0), upper_ (0), data_ (0) {}
+            size1_ (0), size2_ (0), data_ (0) {}
         BOOST_UBLAS_INLINE
-        banded_matrix (size_type size1, size_type size2, size_type lower = 0, size_type upper = 0):
+        triangular_matrix (size_type size1, size_type size2):
             matrix_container<self_type> (),
-            size1_ (size1), size2_ (size2),
-            lower_ (lower), upper_ (upper), data_ ((std::max) (size1, size2) * (lower + 1 + upper)) {
+            size1_ (size1), size2_ (size2), data_ (triangular_type::packed_size (layout_type (), size1, size2)) {
         }
         BOOST_UBLAS_INLINE
-        banded_matrix (size_type size1, size_type size2, size_type lower, size_type upper, const array_type &data):
+        triangular_matrix (size_type size1, size_type size2, const array_type &data):
             matrix_container<self_type> (),
-            size1_ (size1), size2_ (size2),
-            lower_ (lower), upper_ (upper), data_ (data) {}
+            size1_ (size1), size2_ (size2), data_ (data) {}
         BOOST_UBLAS_INLINE
-        banded_matrix (const banded_matrix &m):
+        triangular_matrix (const triangular_matrix &m):
             matrix_container<self_type> (),
-            size1_ (m.size1_), size2_ (m.size2_),
-            lower_ (m.lower_), upper_ (m.upper_), data_ (m.data_) {}
+            size1_ (m.size1_), size2_ (m.size2_), data_ (m.data_) {}
         template<class AE>
         BOOST_UBLAS_INLINE
-        banded_matrix (const matrix_expression<AE> &ae, size_type lower = 0, size_type upper = 0):
+        triangular_matrix (const matrix_expression<AE> &ae):
             matrix_container<self_type> (),
             size1_ (ae ().size1 ()), size2_ (ae ().size2 ()),
-            lower_ (lower), upper_ (upper),
-            data_ ((std::max) (size1_, size2_) * (lower_ + 1 + upper_)) {
+            data_ (triangular_type::packed_size (layout_type (), size1_, size2_)) {
             matrix_assign<scalar_assign> (*this, ae);
         }
 
@@ -96,14 +138,6 @@ namespace boost { namespace numeric { namespace ublas {
         BOOST_UBLAS_INLINE
         size_type size2 () const {
             return size2_;
-        }
-        BOOST_UBLAS_INLINE
-        size_type lower () const {
-            return lower_;
-        }
-        BOOST_UBLAS_INLINE
-        size_type upper () const {
-            return upper_;
         }
 
         // Storage accessors
@@ -118,27 +152,22 @@ namespace boost { namespace numeric { namespace ublas {
 
         // Resizing
         BOOST_UBLAS_INLINE
-        void resize (size_type size1, size_type size2, size_type lower = 0, size_type upper = 0, bool preserve = true) {
+        void resize (size_type size1, size_type size2, bool preserve = true) {
             if (preserve) {
-                self_type temporary (size1, size2, lower, upper);
-                detail::matrix_resize_preserve<layout_type> (*this, temporary);
+                self_type temporary (size1, size2);
+                detail::matrix_resize_preserve<layout_type, triangular_type> (*this, temporary);
             }
             else {
-                data ().resize ((std::max) (size1, size2) * (lower + 1 + upper));
+                data ().resize (triangular_type::packed_size (layout_type (), size1, size2));
                 size1_ = size1;
                 size2_ = size2;
-                lower_ = lower;
-                upper_ = upper;
             }
         }
-
         BOOST_UBLAS_INLINE
-        void resize_packed_preserve (size_type size1, size_type size2, size_type lower = 0, size_type upper = 0) {
+        void resize_packed_preserve (size_type size1, size_type size2) {
             size1_ = size1;
             size2_ = size2;
-            lower_ = lower;
-            upper_ = upper;
-            data ().resize ((std::max) (size1, size2) * (lower + 1 + upper), value_type ());
+            data ().resize (triangular_type::packed_size (layout_type (), size1_, size2_), value_type ());
         }
 
         // Element access
@@ -146,66 +175,30 @@ namespace boost { namespace numeric { namespace ublas {
         const_reference operator () (size_type i, size_type j) const {
             BOOST_UBLAS_CHECK (i < size1_, bad_index ());
             BOOST_UBLAS_CHECK (j < size2_, bad_index ());
-#ifdef BOOST_UBLAS_OWN_BANDED
-            const size_type k = (std::max) (i, j);
-            const size_type l = lower_ + j - i;
-            if (k < (std::max) (size1_, size2_) &&
-                l < lower_ + 1 + upper_)
-                return data () [layout_type::element (k, (std::max) (size1_, size2_),
-                                                       l, lower_ + 1 + upper_)];
-#else
-            const size_type k = j;
-            const size_type l = upper_ + i - j;
-            if (k < size2_ &&
-                l < lower_ + 1 + upper_)
-                return data () [layout_type::element (k, size2_,
-                                                       l, lower_ + 1 + upper_)];
-#endif
-            return zero_;
+            if (triangular_type::other (i, j))
+                return data () [triangular_type::element (layout_type (), i, size1_, j, size2_)];
+            else if (triangular_type::one (i, j))
+                return one_;
+            else
+                return zero_;
         }
         BOOST_UBLAS_INLINE
         reference at_element (size_type i, size_type j) {
             BOOST_UBLAS_CHECK (i < size1_, bad_index ());
             BOOST_UBLAS_CHECK (j < size2_, bad_index ());
-#ifdef BOOST_UBLAS_OWN_BANDED
-            const size_type k = (std::max) (i, j);
-            const size_type l = lower_ + j - i;
-            return data () [layout_type::element (k, (std::max) (size1_, size2_),
-                                                   l, lower_ + 1 + upper_)];
-#else
-            const size_type k = j;
-            const size_type l = upper_ + i - j;
-            return data () [layout_type::element (k, size2_,
-                                                   l, lower_ + 1 + upper_)];
-#endif
+            return data () [triangular_type::element (layout_type (), i, size1_, j, size2_)];
         }
         BOOST_UBLAS_INLINE
         reference operator () (size_type i, size_type j) {
             BOOST_UBLAS_CHECK (i < size1_, bad_index ());
             BOOST_UBLAS_CHECK (j < size2_, bad_index ());
-#ifdef BOOST_UBLAS_OWN_BANDED
-            const size_type k = (std::max) (i, j);
-            const size_type l = lower_ + j - i;
-            if (! (k < (std::max) (size1_, size2_) &&
-                  l < lower_ + 1 + upper_) ) {
+            if (!triangular_type::other (i, j)) {
                 bad_index ().raise ();
                 // NEVER reached
             }
-            return data () [layout_type::element (k, (std::max) (size1_, size2_),
-                                                       l, lower_ + 1 + upper_)];
-#else
-            const size_type k = j;
-            const size_type l = upper_ + i - j;
-            if (! (k < size2_ &&
-                   l < lower_ + 1 + upper_) ) {
-                bad_index ().raise ();
-                // NEVER reached
-            }
-            return data () [layout_type::element (k, size2_,
-                                                       l, lower_ + 1 + upper_)];
-#endif
+            return data () [triangular_type::element (layout_type (), i, size1_, j, size2_)];
         }
-
+        
         // Element assignment
         BOOST_UBLAS_INLINE
         reference insert_element (size_type i, size_type j, const_reference t) {
@@ -215,90 +208,88 @@ namespace boost { namespace numeric { namespace ublas {
         void erase_element (size_type i, size_type j) {
             operator () (i, j) = value_type/*zero*/();
         }
-
+        
         // Zeroing
         BOOST_UBLAS_INLINE
         void clear () {
+            // data ().clear ();
             std::fill (data ().begin (), data ().end (), value_type/*zero*/());
         }
 
         // Assignment
         BOOST_UBLAS_INLINE
-        banded_matrix &operator = (const banded_matrix &m) {
+        triangular_matrix &operator = (const triangular_matrix &m) {
             size1_ = m.size1_;
             size2_ = m.size2_;
-            lower_ = m.lower_;
-            upper_ = m.upper_;
             data () = m.data ();
             return *this;
         }
         BOOST_UBLAS_INLINE
-        banded_matrix &assign_temporary (banded_matrix &m) {
+        triangular_matrix &assign_temporary (triangular_matrix &m) {
             swap (m);
             return *this;
         }
         template<class AE>
         BOOST_UBLAS_INLINE
-        banded_matrix &operator = (const matrix_expression<AE> &ae) {
-            self_type temporary (ae, lower_, upper_);
+        triangular_matrix &operator = (const matrix_expression<AE> &ae) {
+            self_type temporary (ae);
             return assign_temporary (temporary);
         }
         template<class AE>
         BOOST_UBLAS_INLINE
-        banded_matrix &assign (const matrix_expression<AE> &ae) {
+        triangular_matrix &assign (const matrix_expression<AE> &ae) {
             matrix_assign<scalar_assign> (*this, ae);
             return *this;
         }
         template<class AE>
         BOOST_UBLAS_INLINE
-        banded_matrix& operator += (const matrix_expression<AE> &ae) {
-            self_type temporary (*this + ae, lower_, upper_);
+        triangular_matrix& operator += (const matrix_expression<AE> &ae) {
+            self_type temporary (*this + ae);
             return assign_temporary (temporary);
         }
         template<class AE>
         BOOST_UBLAS_INLINE
-        banded_matrix &plus_assign (const matrix_expression<AE> &ae) {
+        triangular_matrix &plus_assign (const matrix_expression<AE> &ae) {
             matrix_assign<scalar_plus_assign> (*this, ae);
             return *this;
         }
         template<class AE>
         BOOST_UBLAS_INLINE
-        banded_matrix& operator -= (const matrix_expression<AE> &ae) {
-            self_type temporary (*this - ae, lower_, upper_);
+        triangular_matrix& operator -= (const matrix_expression<AE> &ae) {
+            self_type temporary (*this - ae);
             return assign_temporary (temporary);
         }
         template<class AE>
         BOOST_UBLAS_INLINE
-        banded_matrix &minus_assign (const matrix_expression<AE> &ae) {
+        triangular_matrix &minus_assign (const matrix_expression<AE> &ae) {
             matrix_assign<scalar_minus_assign> (*this, ae);
             return *this;
         }
         template<class AT>
         BOOST_UBLAS_INLINE
-        banded_matrix& operator *= (const AT &at) {
+        triangular_matrix& operator *= (const AT &at) {
             matrix_assign_scalar<scalar_multiplies_assign> (*this, at);
             return *this;
         }
         template<class AT>
         BOOST_UBLAS_INLINE
-        banded_matrix& operator /= (const AT &at) {
+        triangular_matrix& operator /= (const AT &at) {
             matrix_assign_scalar<scalar_divides_assign> (*this, at);
             return *this;
         }
 
         // Swapping
         BOOST_UBLAS_INLINE
-        void swap (banded_matrix &m) {
+        void swap (triangular_matrix &m) {
             if (this != &m) {
+                // BOOST_UBLAS_CHECK (size2_ == m.size2_, bad_size ());
                 std::swap (size1_, m.size1_);
                 std::swap (size2_, m.size2_);
-                std::swap (lower_, m.lower_);
-                std::swap (upper_, m.upper_);
                 data ().swap (m.data ());
             }
         }
         BOOST_UBLAS_INLINE
-        friend void swap (banded_matrix &m1, banded_matrix &m2) {
+        friend void swap (triangular_matrix &m1, triangular_matrix &m2) {
             m1.swap (m2);
         }
 
@@ -322,42 +313,34 @@ namespace boost { namespace numeric { namespace ublas {
         // Element lookup
         BOOST_UBLAS_INLINE
         const_iterator1 find1 (int rank, size_type i, size_type j) const {
-            if (rank == 1) {
-                size_type lower_i = (std::max) (difference_type (j - upper_), difference_type (0));
-                i = (std::max) (i, lower_i);
-                size_type upper_i = (std::min) (j + 1 + lower_, size1_);
-                i = (std::min) (i, upper_i);
-            }
+            if (rank == 1)
+                i = triangular_type::restrict1 (i, j, size1_, size2_);
+            if (rank == 0)
+                i = triangular_type::global_restrict1 (i, size1_, j, size2_);
             return const_iterator1 (*this, i, j);
         }
         BOOST_UBLAS_INLINE
         iterator1 find1 (int rank, size_type i, size_type j) {
-            if (rank == 1) {
-                size_type lower_i = (std::max) (difference_type (j - upper_), difference_type (0));
-                i = (std::max) (i, lower_i);
-                size_type upper_i = (std::min) (j + 1 + lower_, size1_);
-                i = (std::min) (i, upper_i);
-            }
+            if (rank == 1)
+                i = triangular_type::mutable_restrict1 (i, j, size1_, size2_);
+            if (rank == 0)
+                i = triangular_type::global_mutable_restrict1 (i, size1_, j, size2_);
             return iterator1 (*this, i, j);
         }
         BOOST_UBLAS_INLINE
         const_iterator2 find2 (int rank, size_type i, size_type j) const {
-            if (rank == 1) {
-                size_type lower_j = (std::max) (difference_type (i - lower_), difference_type (0));
-                j = (std::max) (j, lower_j);
-                size_type upper_j = (std::min) (i + 1 + upper_, size2_);
-                j = (std::min) (j, upper_j);
-            }
+            if (rank == 1)
+                j = triangular_type::restrict2 (i, j, size1_, size2_);
+            if (rank == 0)
+                j = triangular_type::global_restrict2 (i, size1_, j, size2_);
             return const_iterator2 (*this, i, j);
         }
         BOOST_UBLAS_INLINE
         iterator2 find2 (int rank, size_type i, size_type j) {
-            if (rank == 1) {
-                size_type lower_j = (std::max) (difference_type (i - lower_), difference_type (0));
-                j = (std::max) (j, lower_j);
-                size_type upper_j = (std::min) (i + 1 + upper_, size2_);
-                j = (std::min) (j, upper_j);
-            }
+            if (rank == 1)
+                j = triangular_type::mutable_restrict2 (i, j, size1_, size2_);
+            if (rank == 0)
+                j = triangular_type::global_mutable_restrict2 (i, size1_, j, size2_);
             return iterator2 (*this, i, j);
         }
 
@@ -365,14 +348,14 @@ namespace boost { namespace numeric { namespace ublas {
 
 #ifndef BOOST_UBLAS_USE_INDEXED_ITERATOR
         class const_iterator1:
-            public container_const_reference<banded_matrix>,
+            public container_const_reference<triangular_matrix>,
             public random_access_iterator_base<packed_random_access_iterator_tag,
                                                const_iterator1, value_type> {
         public:
-            typedef typename banded_matrix::value_type value_type;
-            typedef typename banded_matrix::difference_type difference_type;
-            typedef typename banded_matrix::const_reference reference;
-            typedef const typename banded_matrix::pointer pointer;
+            typedef typename triangular_matrix::value_type value_type;
+            typedef typename triangular_matrix::difference_type difference_type;
+            typedef typename triangular_matrix::const_reference reference;
+            typedef const typename triangular_matrix::pointer pointer;
 
             typedef const_iterator2 dual_iterator_type;
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
@@ -507,14 +490,14 @@ namespace boost { namespace numeric { namespace ublas {
 
 #ifndef BOOST_UBLAS_USE_INDEXED_ITERATOR
         class iterator1:
-            public container_reference<banded_matrix>,
+            public container_reference<triangular_matrix>,
             public random_access_iterator_base<packed_random_access_iterator_tag,
                                                iterator1, value_type> {
         public:
-            typedef typename banded_matrix::value_type value_type;
-            typedef typename banded_matrix::difference_type difference_type;
-            typedef typename banded_matrix::reference reference;
-            typedef typename banded_matrix::pointer pointer;
+            typedef typename triangular_matrix::value_type value_type;
+            typedef typename triangular_matrix::difference_type difference_type;
+            typedef typename triangular_matrix::reference reference;
+            typedef typename triangular_matrix::pointer pointer;
 
             typedef iterator2 dual_iterator_type;
             typedef reverse_iterator2 dual_reverse_iterator_type;
@@ -558,7 +541,7 @@ namespace boost { namespace numeric { namespace ublas {
             // Dereference
             BOOST_UBLAS_INLINE
             reference operator * () const {
-                return (*this) ().at_element (it1_, it2_);
+                return (*this) () (it1_, it2_);
             }
             BOOST_UBLAS_INLINE
             reference operator [] (difference_type n) const {
@@ -648,14 +631,14 @@ namespace boost { namespace numeric { namespace ublas {
 
 #ifndef BOOST_UBLAS_USE_INDEXED_ITERATOR
         class const_iterator2:
-            public container_const_reference<banded_matrix>,
+            public container_const_reference<triangular_matrix>,
             public random_access_iterator_base<packed_random_access_iterator_tag,
                                                const_iterator2, value_type> {
         public:
-            typedef typename banded_matrix::value_type value_type;
-            typedef typename banded_matrix::difference_type difference_type;
-            typedef typename banded_matrix::const_reference reference;
-            typedef const typename banded_matrix::pointer pointer;
+            typedef typename triangular_matrix::value_type value_type;
+            typedef typename triangular_matrix::difference_type difference_type;
+            typedef typename triangular_matrix::const_reference reference;
+            typedef const typename triangular_matrix::pointer pointer;
 
             typedef const_iterator1 dual_iterator_type;
             typedef const_reverse_iterator1 dual_reverse_iterator_type;
@@ -790,14 +773,14 @@ namespace boost { namespace numeric { namespace ublas {
 
 #ifndef BOOST_UBLAS_USE_INDEXED_ITERATOR
         class iterator2:
-            public container_reference<banded_matrix>,
+            public container_reference<triangular_matrix>,
             public random_access_iterator_base<packed_random_access_iterator_tag,
                                                iterator2, value_type> {
         public:
-            typedef typename banded_matrix::value_type value_type;
-            typedef typename banded_matrix::difference_type difference_type;
-            typedef typename banded_matrix::reference reference;
-            typedef typename banded_matrix::pointer pointer;
+            typedef typename triangular_matrix::value_type value_type;
+            typedef typename triangular_matrix::difference_type difference_type;
+            typedef typename triangular_matrix::reference reference;
+            typedef typename triangular_matrix::pointer pointer;
 
             typedef iterator1 dual_iterator_type;
             typedef reverse_iterator1 dual_reverse_iterator_type;
@@ -841,7 +824,7 @@ namespace boost { namespace numeric { namespace ublas {
             // Dereference
             BOOST_UBLAS_INLINE
             reference operator * () const {
-                return (*this) ().at_element (it1_, it2_);
+                return (*this) () (it1_, it2_);
             }
             BOOST_UBLAS_INLINE
             reference operator [] (difference_type n) const {
@@ -970,85 +953,31 @@ namespace boost { namespace numeric { namespace ublas {
     private:
         size_type size1_;
         size_type size2_;
-        size_type lower_;
-        size_type upper_;
         array_type data_;
-        typedef const value_type const_value_type;
-        static const_value_type zero_;
+        static const value_type zero_;
+        static const value_type one_;
     };
 
-    template<class T, class L, class A>
-    typename banded_matrix<T, L, A>::const_value_type banded_matrix<T, L, A>::zero_ = value_type/*zero*/();
+    template<class T, class TRI, class L, class A>
+    const typename triangular_matrix<T, TRI, L, A>::value_type triangular_matrix<T, TRI, L, A>::zero_ = value_type/*zero*/();
+    template<class T, class TRI, class L, class A>
+    const typename triangular_matrix<T, TRI, L, A>::value_type triangular_matrix<T, TRI, L, A>::one_ (1);
 
 
-    /** \brief A diagonal matrix of values of type \c T, which is a specialization of a banded matrix
-     *
-     * For a \f$(mxm)\f$-dimensional diagonal matrix, \f$0 \leq i < m\f$ and \f$0 \leq j < m\f$, if \f$i\neq j\f$ then
-     * \f$b_{i,j}=0\f$. The default storage for diagonal matrices is packed. Orientation and storage can also be specified.
-     * Default is \c row major \c unbounded_array. 
-     *
-     * As a specialization of a banded matrix, the constructor of the diagonal matrix creates a banded matrix with 0 upper 
-     * and lower diagonals around the main diagonal and the matrix is obviously a square matrix. Operations are optimized 
-     * based on these 2 assumptions. It is \b not required by the storage to initialize elements of the matrix.  
-     *
-     * \tparam T the type of object stored in the matrix (like double, float, complex, etc...)
-     * \tparam L the storage organization. It can be either \c row_major or \c column_major. Default is \c row_major
-     * \tparam A the type of Storage array. Default is \c unbounded_array
-     */
-    template<class T, class L, class A>
-    class diagonal_matrix:
-        public banded_matrix<T, L, A> {
-    public:
-        typedef typename A::size_type size_type;
-        typedef banded_matrix<T, L, A> matrix_type;
-        typedef A array_type;
+    // Triangular matrix adaptor class
+    template<class M, class TRI>
+    class triangular_adaptor:
+        public matrix_expression<triangular_adaptor<M, TRI> > {
 
-        // Construction and destruction
-        BOOST_UBLAS_INLINE
-        diagonal_matrix ():
-            matrix_type () {}
-        BOOST_UBLAS_INLINE
-        diagonal_matrix (size_type size):
-            matrix_type (size, size) {}
-        BOOST_UBLAS_INLINE
-        diagonal_matrix (size_type size, const array_type& data):
-            matrix_type (size, size, 0, 0, data) {}
-        BOOST_UBLAS_INLINE
-        diagonal_matrix (size_type size1, size_type size2):
-            matrix_type (size1, size2) {}
-        template<class AE>
-        BOOST_UBLAS_INLINE
-        diagonal_matrix (const matrix_expression<AE> &ae):
-            matrix_type (ae) {}
-        BOOST_UBLAS_INLINE
-        ~diagonal_matrix () {}
+        typedef triangular_adaptor<M, TRI> self_type;
 
-        // Assignment
-        BOOST_UBLAS_INLINE
-        diagonal_matrix &operator = (const diagonal_matrix &m) {
-            matrix_type::operator = (m);
-            return *this;
-        }
-        template<class AE>
-        BOOST_UBLAS_INLINE
-        diagonal_matrix &operator = (const matrix_expression<AE> &ae) {
-            matrix_type::operator = (ae);
-            return *this;
-        }
-    };
-
-    // Banded matrix adaptor class
-    template<class M>
-    class banded_adaptor:
-        public matrix_expression<banded_adaptor<M> > {
-
-        typedef banded_adaptor<M> self_type;
     public:
 #ifdef BOOST_UBLAS_ENABLE_PROXY_SHORTCUTS
         using matrix_expression<self_type>::operator ();
 #endif
         typedef const M const_matrix_type;
         typedef M matrix_type;
+        typedef TRI triangular_type;
         typedef typename M::size_type size_type;
         typedef typename M::difference_type difference_type;
         typedef typename M::value_type value_type;
@@ -1070,13 +999,13 @@ namespace boost { namespace numeric { namespace ublas {
 
         // Construction and destruction
         BOOST_UBLAS_INLINE
-        banded_adaptor (matrix_type &data, size_type lower = 0, size_type upper = 0):
+        triangular_adaptor (matrix_type &data):
             matrix_expression<self_type> (),
-            data_ (data), lower_ (lower), upper_ (upper) {}
+            data_ (data) {}
         BOOST_UBLAS_INLINE
-        banded_adaptor (const banded_adaptor &m):
+        triangular_adaptor (const triangular_adaptor &m):
             matrix_expression<self_type> (),
-            data_ (m.data_), lower_ (m.lower_), upper_ (m.upper_) {}
+            data_ (m.data_) {}
 
         // Accessors
         BOOST_UBLAS_INLINE
@@ -1086,14 +1015,6 @@ namespace boost { namespace numeric { namespace ublas {
         BOOST_UBLAS_INLINE
         size_type size2 () const {
             return data_.size2 ();
-        }
-        BOOST_UBLAS_INLINE
-        size_type lower () const {
-            return lower_;
-        }
-        BOOST_UBLAS_INLINE
-        size_type upper () const {
-            return upper_;
         }
 
         // Storage accessors
@@ -1112,151 +1033,115 @@ namespace boost { namespace numeric { namespace ublas {
         const_reference operator () (size_type i, size_type j) const {
             BOOST_UBLAS_CHECK (i < size1 (), bad_index ());
             BOOST_UBLAS_CHECK (j < size2 (), bad_index ());
-#ifdef BOOST_UBLAS_OWN_BANDED
-            size_type k = (std::max) (i, j);
-            size_type l = lower_ + j - i;
-            if (k < (std::max) (size1 (), size2 ()) &&
-                l < lower_ + 1 + upper_)
+            if (triangular_type::other (i, j))
                 return data () (i, j);
-#else
-            size_type k = j;
-            size_type l = upper_ + i - j;
-            if (k < size2 () &&
-                l < lower_ + 1 + upper_)
-                return data () (i, j);
-#endif
-            return zero_;
+            else if (triangular_type::one (i, j))
+                return one_;
+            else
+                return zero_;
         }
         BOOST_UBLAS_INLINE
         reference operator () (size_type i, size_type j) {
             BOOST_UBLAS_CHECK (i < size1 (), bad_index ());
             BOOST_UBLAS_CHECK (j < size2 (), bad_index ());
-#ifdef BOOST_UBLAS_OWN_BANDED
-            size_type k = (std::max) (i, j);
-            size_type l = lower_ + j - i;
-            if (k < (std::max) (size1 (), size2 ()) &&
-                l < lower_ + 1 + upper_)
-                return data () (i, j);
-#else
-            size_type k = j;
-            size_type l = upper_ + i - j;
-            if (k < size2 () &&
-                l < lower_ + 1 + upper_)
-                return data () (i, j);
-#endif
-#ifndef BOOST_UBLAS_REFERENCE_CONST_MEMBER
-            bad_index ().raise ();
-#endif
-            return const_cast<reference>(zero_);
+            if (!triangular_type::other (i, j)) {
+                bad_index ().raise ();
+                // NEVER reached
+            }
+            return data () (i, j);
         }
 #else
         BOOST_UBLAS_INLINE
         reference operator () (size_type i, size_type j) const {
             BOOST_UBLAS_CHECK (i < size1 (), bad_index ());
             BOOST_UBLAS_CHECK (j < size2 (), bad_index ());
-#ifdef BOOST_UBLAS_OWN_BANDED
-            size_type k = (std::max) (i, j);
-            size_type l = lower_ + j - i;
-            if (k < (std::max) (size1 (), size2 ()) &&
-                l < lower_ + 1 + upper_)
-                return data () (i, j);
-#else
-            size_type k = j;
-            size_type l = upper_ + i - j;
-            if (k < size2 () &&
-                l < lower_ + 1 + upper_)
-                return data () (i, j);
-#endif
-#ifndef BOOST_UBLAS_REFERENCE_CONST_MEMBER
-            bad_index ().raise ();
-#endif
-            return const_cast<reference>(zero_);
+            if (!triangular_type::other (i, j)) {
+                bad_index ().raise ();
+                // NEVER reached
+            }
+            return data () (i, j);
         }
 #endif
 
         // Assignment
         BOOST_UBLAS_INLINE
-        banded_adaptor &operator = (const banded_adaptor &m) {
+        triangular_adaptor &operator = (const triangular_adaptor &m) {
             matrix_assign<scalar_assign> (*this, m);
             return *this;
         }
         BOOST_UBLAS_INLINE
-        banded_adaptor &assign_temporary (banded_adaptor &m) {
+        triangular_adaptor &assign_temporary (triangular_adaptor &m) {
             *this = m;
             return *this;
         }
         template<class AE>
         BOOST_UBLAS_INLINE
-        banded_adaptor &operator = (const matrix_expression<AE> &ae) {
+        triangular_adaptor &operator = (const matrix_expression<AE> &ae) {
             matrix_assign<scalar_assign> (*this, matrix<value_type> (ae));
             return *this;
         }
         template<class AE>
         BOOST_UBLAS_INLINE
-        banded_adaptor &assign (const matrix_expression<AE> &ae) {
+        triangular_adaptor &assign (const matrix_expression<AE> &ae) {
             matrix_assign<scalar_assign> (*this, ae);
             return *this;
         }
         template<class AE>
         BOOST_UBLAS_INLINE
-        banded_adaptor& operator += (const matrix_expression<AE> &ae) {
+        triangular_adaptor& operator += (const matrix_expression<AE> &ae) {
             matrix_assign<scalar_assign> (*this, matrix<value_type> (*this + ae));
             return *this;
         }
         template<class AE>
         BOOST_UBLAS_INLINE
-        banded_adaptor &plus_assign (const matrix_expression<AE> &ae) {
+        triangular_adaptor &plus_assign (const matrix_expression<AE> &ae) {
             matrix_assign<scalar_plus_assign> (*this, ae);
             return *this;
         }
         template<class AE>
         BOOST_UBLAS_INLINE
-        banded_adaptor& operator -= (const matrix_expression<AE> &ae) {
+        triangular_adaptor& operator -= (const matrix_expression<AE> &ae) {
             matrix_assign<scalar_assign> (*this, matrix<value_type> (*this - ae));
             return *this;
         }
         template<class AE>
         BOOST_UBLAS_INLINE
-        banded_adaptor &minus_assign (const matrix_expression<AE> &ae) {
+        triangular_adaptor &minus_assign (const matrix_expression<AE> &ae) {
             matrix_assign<scalar_minus_assign> (*this, ae);
             return *this;
         }
         template<class AT>
         BOOST_UBLAS_INLINE
-        banded_adaptor& operator *= (const AT &at) {
+        triangular_adaptor& operator *= (const AT &at) {
             matrix_assign_scalar<scalar_multiplies_assign> (*this, at);
             return *this;
         }
         template<class AT>
         BOOST_UBLAS_INLINE
-        banded_adaptor& operator /= (const AT &at) {
+        triangular_adaptor& operator /= (const AT &at) {
             matrix_assign_scalar<scalar_divides_assign> (*this, at);
             return *this;
         }
 
         // Closure comparison
         BOOST_UBLAS_INLINE
-        bool same_closure (const banded_adaptor &ba) const {
-            return (*this).data ().same_closure (ba.data ());
+        bool same_closure (const triangular_adaptor &ta) const {
+            return (*this).data ().same_closure (ta.data ());
         }
 
         // Swapping
         BOOST_UBLAS_INLINE
-        void swap (banded_adaptor &m) {
-            if (this != &m) {
-                BOOST_UBLAS_CHECK (lower_ == m.lower_, bad_size ());
-                BOOST_UBLAS_CHECK (upper_ == m.upper_, bad_size ());
+        void swap (triangular_adaptor &m) {
+            if (this != &m)
                 matrix_swap<scalar_swap> (*this, m);
-            }
         }
         BOOST_UBLAS_INLINE
-        friend void swap (banded_adaptor &m1, banded_adaptor &m2) {
+        friend void swap (triangular_adaptor &m1, triangular_adaptor &m2) {
             m1.swap (m2);
         }
 
         // Iterator types
-    private:
-        // Use the matrix iterator
+   private:
         typedef typename M::const_iterator1 const_subiterator1_type;
         typedef typename boost::mpl::if_<boost::is_const<M>,
                                           typename M::const_iterator1,
@@ -1286,42 +1171,34 @@ namespace boost { namespace numeric { namespace ublas {
         // Element lookup
         BOOST_UBLAS_INLINE
         const_iterator1 find1 (int rank, size_type i, size_type j) const {
-            if (rank == 1) {
-                size_type lower_i = (std::max) (difference_type (j - upper_), difference_type (0));
-                i = (std::max) (i, lower_i);
-                size_type upper_i = (std::min) (j + 1 + lower_, size1 ());
-                i = (std::min) (i, upper_i);
-            }
+            if (rank == 1)
+                i = triangular_type::restrict1 (i, j, size1(), size2());
+            if (rank == 0)
+                i = triangular_type::global_restrict1 (i, size1(), j, size2());
             return const_iterator1 (*this, data ().find1 (rank, i, j));
         }
         BOOST_UBLAS_INLINE
         iterator1 find1 (int rank, size_type i, size_type j) {
-            if (rank == 1) {
-                size_type lower_i = (std::max) (difference_type (j - upper_), difference_type (0));
-                i = (std::max) (i, lower_i);
-                size_type upper_i = (std::min) (j + 1 + lower_, size1 ());
-                i = (std::min) (i, upper_i);
-            }
+            if (rank == 1)
+                i = triangular_type::mutable_restrict1 (i, j, size1(), size2());
+            if (rank == 0)
+                i = triangular_type::global_mutable_restrict1 (i, size1(), j, size2());
             return iterator1 (*this, data ().find1 (rank, i, j));
         }
         BOOST_UBLAS_INLINE
         const_iterator2 find2 (int rank, size_type i, size_type j) const {
-            if (rank == 1) {
-                size_type lower_j = (std::max) (difference_type (i - lower_), difference_type (0));
-                j = (std::max) (j, lower_j);
-                size_type upper_j = (std::min) (i + 1 + upper_, size2 ());
-                j = (std::min) (j, upper_j);
-            }
+            if (rank == 1)
+                j = triangular_type::restrict2 (i, j, size1(), size2());
+            if (rank == 0)
+                j = triangular_type::global_restrict2 (i, size1(), j, size2());
             return const_iterator2 (*this, data ().find2 (rank, i, j));
         }
         BOOST_UBLAS_INLINE
         iterator2 find2 (int rank, size_type i, size_type j) {
-            if (rank == 1) {
-                size_type lower_j = (std::max) (difference_type (i - lower_), difference_type (0));
-                j = (std::max) (j, lower_j);
-                size_type upper_j = (std::min) (i + 1 + upper_, size2 ());
-                j = (std::min) (j, upper_j);
-            }
+            if (rank == 1)
+                j = triangular_type::mutable_restrict2 (i, j, size1(), size2());
+            if (rank == 0)
+                j = triangular_type::global_mutable_restrict2 (i, size1(), j, size2());
             return iterator2 (*this, data ().find2 (rank, i, j));
         }
 
@@ -1329,7 +1206,7 @@ namespace boost { namespace numeric { namespace ublas {
 
 #ifndef BOOST_UBLAS_USE_INDEXED_ITERATOR
         class const_iterator1:
-            public container_const_reference<banded_adaptor>,
+            public container_const_reference<triangular_adaptor>,
             public random_access_iterator_base<typename iterator_restrict_traits<
                                                    typename const_subiterator1_type::iterator_category, packed_random_access_iterator_tag>::iterator_category,
                                                const_iterator1, value_type> {
@@ -1387,20 +1264,10 @@ namespace boost { namespace numeric { namespace ublas {
                 size_type j = index2 ();
                 BOOST_UBLAS_CHECK (i < (*this) ().size1 (), bad_index ());
                 BOOST_UBLAS_CHECK (j < (*this) ().size2 (), bad_index ());
-#ifdef BOOST_UBLAS_OWN_BANDED
-                size_type k = (std::max) (i, j);
-                size_type l = (*this) ().lower () + j - i;
-                if (k < (std::max) ((*this) ().size1 (), (*this) ().size2 ()) &&
-                    l < (*this) ().lower () + 1 + (*this) ().upper ())
+                if (triangular_type::other (i, j))
                     return *it1_;
-#else
-                size_type k = j;
-                size_type l = (*this) ().upper () + i - j;
-                if (k < (*this) ().size2 () &&
-                    l < (*this) ().lower () + 1 + (*this) ().upper ())
-                    return *it1_;
-#endif
-                return (*this) () (i, j);
+                else
+                    return (*this) () (i, j);
             }
             BOOST_UBLAS_INLINE
             const_reference operator [] (difference_type n) const {
@@ -1484,7 +1351,7 @@ namespace boost { namespace numeric { namespace ublas {
 
 #ifndef BOOST_UBLAS_USE_INDEXED_ITERATOR
         class iterator1:
-            public container_reference<banded_adaptor>,
+            public container_reference<triangular_adaptor>,
             public random_access_iterator_base<typename iterator_restrict_traits<
                                                    typename subiterator1_type::iterator_category, packed_random_access_iterator_tag>::iterator_category,
                                                iterator1, value_type> {
@@ -1539,20 +1406,10 @@ namespace boost { namespace numeric { namespace ublas {
                 size_type j = index2 ();
                 BOOST_UBLAS_CHECK (i < (*this) ().size1 (), bad_index ());
                 BOOST_UBLAS_CHECK (j < (*this) ().size2 (), bad_index ());
-#ifdef BOOST_UBLAS_OWN_BANDED
-                size_type k = (std::max) (i, j);
-                size_type l = (*this) ().lower () + j - i;
-                if (k < (std::max) ((*this) ().size1 (), (*this) ().size2 ()) &&
-                    l < (*this) ().lower () + 1 + (*this) ().upper ())
+                if (triangular_type::other (i, j))
                     return *it1_;
-#else
-                size_type k = j;
-                size_type l = (*this) ().upper () + i - j;
-                if (k < (*this) ().size2 () &&
-                    l < (*this) ().lower () + 1 + (*this) ().upper ())
-                    return *it1_;
-#endif
-                return (*this) () (i, j);
+                else
+                    return (*this) () (i, j);
             }
             BOOST_UBLAS_INLINE
             reference operator [] (difference_type n) const {
@@ -1638,12 +1495,11 @@ namespace boost { namespace numeric { namespace ublas {
 
 #ifndef BOOST_UBLAS_USE_INDEXED_ITERATOR
         class const_iterator2:
-            public container_const_reference<banded_adaptor>,
-            public random_access_iterator_base<packed_random_access_iterator_tag,
+            public container_const_reference<triangular_adaptor>,
+            public random_access_iterator_base<typename iterator_restrict_traits<
+                                                   typename const_subiterator1_type::iterator_category, packed_random_access_iterator_tag>::iterator_category,
                                                const_iterator2, value_type> {
         public:
-            typedef typename iterator_restrict_traits<typename const_subiterator2_type::iterator_category,
-                                                      packed_random_access_iterator_tag>::iterator_category iterator_category;
             typedef typename const_subiterator2_type::value_type value_type;
             typedef typename const_subiterator2_type::difference_type difference_type;
             typedef typename const_subiterator2_type::reference reference;
@@ -1697,20 +1553,10 @@ namespace boost { namespace numeric { namespace ublas {
                 size_type j = index2 ();
                 BOOST_UBLAS_CHECK (i < (*this) ().size1 (), bad_index ());
                 BOOST_UBLAS_CHECK (j < (*this) ().size2 (), bad_index ());
-#ifdef BOOST_UBLAS_OWN_BANDED
-                size_type k = (std::max) (i, j);
-                size_type l = (*this) ().lower () + j - i;
-                if (k < (std::max) ((*this) ().size1 (), (*this) ().size2 ()) &&
-                    l < (*this) ().lower () + 1 + (*this) ().upper ())
+                if (triangular_type::other (i, j))
                     return *it2_;
-#else
-                size_type k = j;
-                size_type l = (*this) ().upper () + i - j;
-                if (k < (*this) ().size2 () &&
-                    l < (*this) ().lower () + 1 + (*this) ().upper ())
-                    return *it2_;
-#endif
-                return (*this) () (i, j);
+                else
+                    return (*this) () (i, j);
             }
             BOOST_UBLAS_INLINE
             const_reference operator [] (difference_type n) const {
@@ -1794,9 +1640,9 @@ namespace boost { namespace numeric { namespace ublas {
 
 #ifndef BOOST_UBLAS_USE_INDEXED_ITERATOR
         class iterator2:
-            public container_reference<banded_adaptor>,
+            public container_reference<triangular_adaptor>,
             public random_access_iterator_base<typename iterator_restrict_traits<
-                                                   typename subiterator2_type::iterator_category, packed_random_access_iterator_tag>::iterator_category,
+                                                   typename subiterator1_type::iterator_category, packed_random_access_iterator_tag>::iterator_category,
                                                iterator2, value_type> {
         public:
             typedef typename subiterator2_type::value_type value_type;
@@ -1849,20 +1695,10 @@ namespace boost { namespace numeric { namespace ublas {
                 size_type j = index2 ();
                 BOOST_UBLAS_CHECK (i < (*this) ().size1 (), bad_index ());
                 BOOST_UBLAS_CHECK (j < (*this) ().size2 (), bad_index ());
-#ifdef BOOST_UBLAS_OWN_BANDED
-                size_type k = (std::max) (i, j);
-                size_type l = (*this) ().lower () + j - i;
-                if (k < (std::max) ((*this) ().size1 (), (*this) ().size2 ()) &&
-                    l < (*this) ().lower () + 1 + (*this) ().upper ())
+                if (triangular_type::other (i, j))
                     return *it2_;
-#else
-                size_type k = j;
-                size_type l = (*this) ().upper () + i - j;
-                if (k < (*this) ().size2 () &&
-                    l < (*this) ().lower () + 1 + (*this) ().upper ())
-                    return *it2_;
-#endif
-                return (*this) () (i, j);
+                else
+                    return (*this) () (i, j);
             }
             BOOST_UBLAS_INLINE
             reference operator [] (difference_type n) const {
@@ -1986,62 +1822,774 @@ namespace boost { namespace numeric { namespace ublas {
 
     private:
         matrix_closure_type data_;
-        size_type lower_;
-        size_type upper_;
-        typedef const value_type const_value_type;
-        static const_value_type zero_;
+        static const value_type zero_;
+        static const value_type one_;
     };
 
-    // Specialization for temporary_traits
-    template <class M>
-    struct vector_temporary_traits< banded_adaptor<M> >
-    : vector_temporary_traits< M > {} ;
-    template <class M>
-    struct vector_temporary_traits< const banded_adaptor<M> >
-    : vector_temporary_traits< M > {} ;
+    template<class M, class TRI>
+    const typename triangular_adaptor<M, TRI>::value_type triangular_adaptor<M, TRI>::zero_ = value_type/*zero*/();
+    template<class M, class TRI>
+    const typename triangular_adaptor<M, TRI>::value_type triangular_adaptor<M, TRI>::one_ (1);
 
-    template <class M>
-    struct matrix_temporary_traits< banded_adaptor<M> >
-    : matrix_temporary_traits< M > {} ;
-    template <class M>
-    struct matrix_temporary_traits< const banded_adaptor<M> >
-    : matrix_temporary_traits< M > {} ;
+    template <class M, class TRI>
+    struct vector_temporary_traits< triangular_adaptor<M, TRI> >
+    : vector_temporary_traits< typename boost::remove_const<M>::type > {} ;
+    template <class M, class TRI>
+    struct vector_temporary_traits< const triangular_adaptor<M, TRI> >
+    : vector_temporary_traits< typename boost::remove_const<M>::type > {} ;
+
+    template <class M, class TRI>
+    struct matrix_temporary_traits< triangular_adaptor<M, TRI> >
+    : matrix_temporary_traits< typename boost::remove_const<M>::type > {};
+    template <class M, class TRI>
+    struct matrix_temporary_traits< const triangular_adaptor<M, TRI> >
+    : matrix_temporary_traits< typename boost::remove_const<M>::type > {};
 
 
-    template<class M>
-    typename banded_adaptor<M>::const_value_type banded_adaptor<M>::zero_ = value_type/*zero*/();
-
-    // Diagonal matrix adaptor class
-    template<class M>
-    class diagonal_adaptor:
-        public banded_adaptor<M> {
-    public:
-        typedef M matrix_type;
-        typedef banded_adaptor<M> adaptor_type;
-
-        // Construction and destruction
-        BOOST_UBLAS_INLINE
-        diagonal_adaptor ():
-            adaptor_type () {}
-        BOOST_UBLAS_INLINE
-        diagonal_adaptor (matrix_type &data):
-            adaptor_type (data) {}
-        BOOST_UBLAS_INLINE
-        ~diagonal_adaptor () {}
-
-        // Assignment
-        BOOST_UBLAS_INLINE
-        diagonal_adaptor &operator = (const diagonal_adaptor &m) {
-            adaptor_type::operator = (m);
-            return *this;
-        }
-        template<class AE>
-        BOOST_UBLAS_INLINE
-        diagonal_adaptor &operator = (const matrix_expression<AE> &ae) {
-            adaptor_type::operator = (ae);
-            return *this;
-        }
+    template<class E1, class E2>
+    struct matrix_vector_solve_traits {
+        typedef typename promote_traits<typename E1::value_type, typename E2::value_type>::promote_type promote_type;
+        typedef vector<promote_type> result_type;
     };
+
+    // Operations:
+    //  n * (n - 1) / 2 + n = n * (n + 1) / 2 multiplications,
+    //  n * (n - 1) / 2 additions
+
+    // Dense (proxy) case
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, vector_expression<E2> &e2,
+                        lower_tag, column_major_tag, dense_proxy_tag) {
+        typedef typename E2::size_type size_type;
+        typedef typename E2::difference_type difference_type;
+        typedef typename E2::value_type value_type;
+
+        BOOST_UBLAS_CHECK (e1 ().size1 () == e1 ().size2 (), bad_size ());
+        BOOST_UBLAS_CHECK (e1 ().size2 () == e2 ().size (), bad_size ());
+        size_type size = e2 ().size ();
+        for (size_type n = 0; n < size; ++ n) {
+#ifndef BOOST_UBLAS_SINGULAR_CHECK
+            BOOST_UBLAS_CHECK (e1 () (n, n) != value_type/*zero*/(), singular ());
+#else
+            if (e1 () (n, n) == value_type/*zero*/())
+                singular ().raise ();
+#endif
+            value_type t = e2 () (n) /= e1 () (n, n);
+            if (t != value_type/*zero*/()) {
+                for (size_type m = n + 1; m < size; ++ m)
+                    e2 () (m) -= e1 () (m, n) * t;
+            }
+        }
+    }
+    // Packed (proxy) case
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, vector_expression<E2> &e2,
+                        lower_tag, column_major_tag, packed_proxy_tag) {
+        typedef typename E2::size_type size_type;
+        typedef typename E2::difference_type difference_type;
+        typedef typename E2::value_type value_type;
+
+        BOOST_UBLAS_CHECK (e1 ().size1 () == e1 ().size2 (), bad_size ());
+        BOOST_UBLAS_CHECK (e1 ().size2 () == e2 ().size (), bad_size ());
+        size_type size = e2 ().size ();
+        for (size_type n = 0; n < size; ++ n) {
+#ifndef BOOST_UBLAS_SINGULAR_CHECK
+            BOOST_UBLAS_CHECK (e1 () (n, n) != value_type/*zero*/(), singular ());
+#else
+            if (e1 () (n, n) == value_type/*zero*/())
+                singular ().raise ();
+#endif
+            value_type t = e2 () (n) /= e1 () (n, n);
+            if (t != value_type/*zero*/()) {
+                typename E1::const_iterator1 it1e1 (e1 ().find1 (1, n + 1, n));
+                typename E1::const_iterator1 it1e1_end (e1 ().find1 (1, e1 ().size1 (), n));
+                difference_type m (it1e1_end - it1e1);
+                while (-- m >= 0)
+                    e2 () (it1e1.index1 ()) -= *it1e1 * t, ++ it1e1;
+            }
+        }
+    }
+    // Sparse (proxy) case
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, vector_expression<E2> &e2,
+                        lower_tag, column_major_tag, unknown_storage_tag) {
+        typedef typename E2::size_type size_type;
+        typedef typename E2::difference_type difference_type;
+        typedef typename E2::value_type value_type;
+
+        BOOST_UBLAS_CHECK (e1 ().size1 () == e1 ().size2 (), bad_size ());
+        BOOST_UBLAS_CHECK (e1 ().size2 () == e2 ().size (), bad_size ());
+        size_type size = e2 ().size ();
+        for (size_type n = 0; n < size; ++ n) {
+#ifndef BOOST_UBLAS_SINGULAR_CHECK
+            BOOST_UBLAS_CHECK (e1 () (n, n) != value_type/*zero*/(), singular ());
+#else
+            if (e1 () (n, n) == value_type/*zero*/())
+                singular ().raise ();
+#endif
+            value_type t = e2 () (n) /= e1 () (n, n);
+            if (t != value_type/*zero*/()) {
+                typename E1::const_iterator1 it1e1 (e1 ().find1 (1, n + 1, n));
+                typename E1::const_iterator1 it1e1_end (e1 ().find1 (1, e1 ().size1 (), n));
+                while (it1e1 != it1e1_end)
+                    e2 () (it1e1.index1 ()) -= *it1e1 * t, ++ it1e1;
+            }
+        }
+    }
+    // Redirectors :-)
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, vector_expression<E2> &e2,
+                        lower_tag, column_major_tag) {
+        typedef typename E1::storage_category storage_category;
+        inplace_solve (e1, e2,
+                       lower_tag (), column_major_tag (), storage_category ());
+    }
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, vector_expression<E2> &e2,
+                        lower_tag, row_major_tag) {
+        typedef typename E1::storage_category storage_category;
+        inplace_solve (e2, trans (e1),
+                       upper_tag (), row_major_tag (), storage_category ());
+    }
+    // Dispatcher
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, vector_expression<E2> &e2,
+                        lower_tag) {
+        typedef typename E1::orientation_category orientation_category;
+        inplace_solve (e1, e2,
+                       lower_tag (), orientation_category ());
+    }
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, vector_expression<E2> &e2,
+                        unit_lower_tag) {
+        typedef typename E1::orientation_category orientation_category;
+        inplace_solve (triangular_adaptor<const E1, unit_lower> (e1 ()), e2,
+                       unit_lower_tag (), orientation_category ());
+    }
+
+    // Dense (proxy) case
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, vector_expression<E2> &e2,
+                        upper_tag, column_major_tag, dense_proxy_tag) {
+        typedef typename E2::size_type size_type;
+        typedef typename E2::difference_type difference_type;
+        typedef typename E2::value_type value_type;
+
+        BOOST_UBLAS_CHECK (e1 ().size1 () == e1 ().size2 (), bad_size ());
+        BOOST_UBLAS_CHECK (e1 ().size2 () == e2 ().size (), bad_size ());
+        size_type size = e2 ().size ();
+        for (difference_type n = size - 1; n >= 0; -- n) {
+#ifndef BOOST_UBLAS_SINGULAR_CHECK
+            BOOST_UBLAS_CHECK (e1 () (n, n) != value_type/*zero*/(), singular ());
+#else
+            if (e1 () (n, n) == value_type/*zero*/())
+                singular ().raise ();
+#endif
+            value_type t = e2 () (n) /= e1 () (n, n);
+            if (t != value_type/*zero*/()) {
+                for (difference_type m = n - 1; m >= 0; -- m)
+                    e2 () (m) -= e1 () (m, n) * t;
+            }
+        }
+    }
+    // Packed (proxy) case
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, vector_expression<E2> &e2,
+                        upper_tag, column_major_tag, packed_proxy_tag) {
+        typedef typename E2::size_type size_type;
+        typedef typename E2::difference_type difference_type;
+        typedef typename E2::value_type value_type;
+
+        BOOST_UBLAS_CHECK (e1 ().size1 () == e1 ().size2 (), bad_size ());
+        BOOST_UBLAS_CHECK (e1 ().size2 () == e2 ().size (), bad_size ());
+        size_type size = e2 ().size ();
+        for (difference_type n = size - 1; n >= 0; -- n) {
+#ifndef BOOST_UBLAS_SINGULAR_CHECK
+            BOOST_UBLAS_CHECK (e1 () (n, n) != value_type/*zero*/(), singular ());
+#else
+            if (e1 () (n, n) == value_type/*zero*/())
+                singular ().raise ();
+#endif
+            value_type t = e2 () (n) /= e1 () (n, n);
+            if (t != value_type/*zero*/()) {
+                typename E1::const_reverse_iterator1 it1e1 (e1 ().find1 (1, n, n));
+                typename E1::const_reverse_iterator1 it1e1_rend (e1 ().find1 (1, 0, n));
+                difference_type m (it1e1_rend - it1e1);
+                while (-- m >= 0)
+                    e2 () (it1e1.index1 ()) -= *it1e1 * t, ++ it1e1;
+            }
+        }
+    }
+    // Sparse (proxy) case
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, vector_expression<E2> &e2,
+                        upper_tag, column_major_tag, unknown_storage_tag) {
+        typedef typename E2::size_type size_type;
+        typedef typename E2::difference_type difference_type;
+        typedef typename E2::value_type value_type;
+
+        BOOST_UBLAS_CHECK (e1 ().size1 () == e1 ().size2 (), bad_size ());
+        BOOST_UBLAS_CHECK (e1 ().size2 () == e2 ().size (), bad_size ());
+        size_type size = e2 ().size ();
+        for (difference_type n = size - 1; n >= 0; -- n) {
+#ifndef BOOST_UBLAS_SINGULAR_CHECK
+            BOOST_UBLAS_CHECK (e1 () (n, n) != value_type/*zero*/(), singular ());
+#else
+            if (e1 () (n, n) == value_type/*zero*/())
+                singular ().raise ();
+#endif
+            value_type t = e2 () (n) /= e1 () (n, n);
+            if (t != value_type/*zero*/()) {
+                typename E1::const_reverse_iterator1 it1e1 (e1 ().find1 (1, n, n));
+                typename E1::const_reverse_iterator1 it1e1_rend (e1 ().find1 (1, 0, n));
+                while (it1e1 != it1e1_rend)
+                    e2 () (it1e1.index1 ()) -= *it1e1 * t, ++ it1e1;
+            }
+        }
+    }
+    // Redirectors :-)
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, vector_expression<E2> &e2,
+                        upper_tag, column_major_tag) {
+        typedef typename E1::storage_category storage_category;
+        inplace_solve (e1, e2,
+                       upper_tag (), column_major_tag (), storage_category ());
+    }
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, vector_expression<E2> &e2,
+                        upper_tag, row_major_tag) {
+        typedef typename E1::storage_category storage_category;
+        inplace_solve (e2, trans (e1),
+                       lower_tag (), row_major_tag (), storage_category ());
+    }
+    // Dispatcher
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, vector_expression<E2> &e2,
+                        upper_tag) {
+        typedef typename E1::orientation_category orientation_category;
+        inplace_solve (e1, e2,
+                       upper_tag (), orientation_category ());
+    }
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, vector_expression<E2> &e2,
+                        unit_upper_tag) {
+        typedef typename E1::orientation_category orientation_category;
+        inplace_solve (triangular_adaptor<const E1, unit_upper> (e1 ()), e2,
+                       unit_upper_tag (), orientation_category ());
+    }
+
+    template<class E1, class E2, class C>
+    BOOST_UBLAS_INLINE
+    typename matrix_vector_solve_traits<E1, E2>::result_type
+    solve (const matrix_expression<E1> &e1,
+           const vector_expression<E2> &e2,
+           C) {
+        typename matrix_vector_solve_traits<E1, E2>::result_type r (e2);
+        inplace_solve (e1, r, C ());
+        return r;
+    }
+
+    // Dense (proxy) case
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (vector_expression<E1> &e1, const matrix_expression<E2> &e2,
+                        lower_tag, row_major_tag, dense_proxy_tag) {
+        typedef typename E1::size_type size_type;
+        typedef typename E1::difference_type difference_type;
+        typedef typename E1::value_type value_type;
+
+        BOOST_UBLAS_CHECK (e1 ().size () == e2 ().size1 (), bad_size ());
+        BOOST_UBLAS_CHECK (e2 ().size1 () == e2 ().size2 (), bad_size ());
+        size_type size = e1 ().size ();
+        for (difference_type n = size - 1; n >= 0; -- n) {
+#ifndef BOOST_UBLAS_SINGULAR_CHECK
+            BOOST_UBLAS_CHECK (e2 () (n, n) != value_type/*zero*/(), singular ());
+#else
+            if (e2 () (n, n) == value_type/*zero*/())
+                singular ().raise ();
+#endif
+            value_type t = e1 () (n) /= e2 () (n, n);
+            if (t != value_type/*zero*/()) {
+                for (difference_type m = n - 1; m >= 0; -- m)
+                    e1 () (m) -= t * e2 () (n, m);
+            }
+        }
+    }
+    // Packed (proxy) case
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (vector_expression<E1> &e1, const matrix_expression<E2> &e2,
+                        lower_tag, row_major_tag, packed_proxy_tag) {
+        typedef typename E1::size_type size_type;
+        typedef typename E1::difference_type difference_type;
+        typedef typename E1::value_type value_type;
+
+        BOOST_UBLAS_CHECK (e1 ().size () == e2 ().size1 (), bad_size ());
+        BOOST_UBLAS_CHECK (e2 ().size1 () == e2 ().size2 (), bad_size ());
+        size_type size = e1 ().size ();
+        for (difference_type n = size - 1; n >= 0; -- n) {
+#ifndef BOOST_UBLAS_SINGULAR_CHECK
+            BOOST_UBLAS_CHECK (e2 () (n, n) != value_type/*zero*/(), singular ());
+#else
+            if (e2 () (n, n) == value_type/*zero*/())
+                singular ().raise ();
+#endif
+            value_type t = e1 () (n) /= e2 () (n, n);
+            if (t != value_type/*zero*/()) {
+                typename E2::const_reverse_iterator2 it2e2 (e2 ().find2 (1, n, n));
+                typename E2::const_reverse_iterator2 it2e2_rend (e2 ().find2 (1, n, 0));
+                difference_type m (it2e2_rend - it2e2);
+                while (-- m >= 0)
+                    e1 () (it2e2.index2 ()) -= *it2e2 * t, ++ it2e2;
+            }
+        }
+    }
+    // Sparse (proxy) case
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (vector_expression<E1> &e1, const matrix_expression<E2> &e2,
+                        lower_tag, row_major_tag, unknown_storage_tag) {
+        typedef typename E1::size_type size_type;
+        typedef typename E1::difference_type difference_type;
+        typedef typename E1::value_type value_type;
+
+        BOOST_UBLAS_CHECK (e1 ().size () == e2 ().size1 (), bad_size ());
+        BOOST_UBLAS_CHECK (e2 ().size1 () == e2 ().size2 (), bad_size ());
+        size_type size = e1 ().size ();
+        for (difference_type n = size - 1; n >= 0; -- n) {
+#ifndef BOOST_UBLAS_SINGULAR_CHECK
+            BOOST_UBLAS_CHECK (e2 () (n, n) != value_type/*zero*/(), singular ());
+#else
+            if (e2 () (n, n) == value_type/*zero*/())
+                singular ().raise ();
+#endif
+            value_type t = e1 () (n) /= e2 () (n, n);
+            if (t != value_type/*zero*/()) {
+                typename E2::const_reverse_iterator2 it2e2 (e2 ().find2 (1, n, n));
+                typename E2::const_reverse_iterator2 it2e2_rend (e2 ().find2 (1, n, 0));
+                while (it2e2 != it2e2_rend)
+                    e1 () (it2e2.index2 ()) -= *it2e2 * t, ++ it2e2;
+            }
+        }
+    }
+    // Redirectors :-)
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (vector_expression<E1> &e1, const matrix_expression<E2> &e2,
+                        lower_tag, row_major_tag) {
+        typedef typename E1::storage_category storage_category;
+        inplace_solve (e1, e2,
+                       lower_tag (), row_major_tag (), storage_category ());
+    }
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (vector_expression<E1> &e1, const matrix_expression<E2> &e2,
+                        lower_tag, column_major_tag) {
+        typedef typename E1::storage_category storage_category;
+        inplace_solve (trans (e2), e1,
+                       upper_tag (), row_major_tag (), storage_category ());
+    }
+    // Dispatcher
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (vector_expression<E1> &e1, const matrix_expression<E2> &e2,
+                        lower_tag) {
+        typedef typename E2::orientation_category orientation_category;
+        inplace_solve (e1, e2,
+                       lower_tag (), orientation_category ());
+    }
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (vector_expression<E1> &e1, const matrix_expression<E2> &e2,
+                        unit_lower_tag) {
+        typedef typename E2::orientation_category orientation_category;
+        inplace_solve (e1, triangular_adaptor<const E2, unit_lower> (e2 ()),
+                       unit_lower_tag (), orientation_category ());
+    }
+
+    // Dense (proxy) case
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (vector_expression<E1> &e1, const matrix_expression<E2> &e2,
+                        upper_tag, row_major_tag, dense_proxy_tag) {
+        typedef typename E1::size_type size_type;
+        typedef typename E1::difference_type difference_type;
+        typedef typename E1::value_type value_type;
+
+        BOOST_UBLAS_CHECK (e1 ().size () == e2 ().size1 (), bad_size ());
+        BOOST_UBLAS_CHECK (e2 ().size1 () == e2 ().size2 (), bad_size ());
+        size_type size = e1 ().size ();
+        for (size_type n = 0; n < size; ++ n) {
+#ifndef BOOST_UBLAS_SINGULAR_CHECK
+            BOOST_UBLAS_CHECK (e2 () (n, n) != value_type/*zero*/(), singular ());
+#else
+            if (e2 () (n, n) == value_type/*zero*/())
+                singular ().raise ();
+#endif
+            value_type t = e1 () (n) /= e2 () (n, n);
+            if (t != value_type/*zero*/()) {
+                for (size_type m = n + 1; m < size; ++ m)
+                    e1 () (m) -= t * e2 () (n, m);
+            }
+        }
+    }
+    // Packed (proxy) case
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (vector_expression<E1> &e1, const matrix_expression<E2> &e2,
+                        upper_tag, row_major_tag, packed_proxy_tag) {
+        typedef typename E1::size_type size_type;
+        typedef typename E1::difference_type difference_type;
+        typedef typename E1::value_type value_type;
+
+        BOOST_UBLAS_CHECK (e1 ().size () == e2 ().size1 (), bad_size ());
+        BOOST_UBLAS_CHECK (e2 ().size1 () == e2 ().size2 (), bad_size ());
+        size_type size = e1 ().size ();
+        for (size_type n = 0; n < size; ++ n) {
+#ifndef BOOST_UBLAS_SINGULAR_CHECK
+            BOOST_UBLAS_CHECK (e2 () (n, n) != value_type/*zero*/(), singular ());
+#else
+            if (e2 () (n, n) == value_type/*zero*/())
+                singular ().raise ();
+#endif
+            value_type t = e1 () (n) /= e2 () (n, n);
+            if (t != value_type/*zero*/()) {
+                typename E2::const_iterator2 it2e2 (e2 ().find2 (1, n, n + 1));
+                typename E2::const_iterator2 it2e2_end (e2 ().find2 (1, n, e2 ().size2 ()));
+                difference_type m (it2e2_end - it2e2);
+                while (-- m >= 0)
+                    e1 () (it2e2.index2 ()) -= *it2e2 * t, ++ it2e2;
+            }
+        }
+    }
+    // Sparse (proxy) case
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (vector_expression<E1> &e1, const matrix_expression<E2> &e2,
+                        upper_tag, row_major_tag, unknown_storage_tag) {
+        typedef typename E1::size_type size_type;
+        typedef typename E1::difference_type difference_type;
+        typedef typename E1::value_type value_type;
+
+        BOOST_UBLAS_CHECK (e1 ().size () == e2 ().size1 (), bad_size ());
+        BOOST_UBLAS_CHECK (e2 ().size1 () == e2 ().size2 (), bad_size ());
+        size_type size = e1 ().size ();
+        for (size_type n = 0; n < size; ++ n) {
+#ifndef BOOST_UBLAS_SINGULAR_CHECK
+            BOOST_UBLAS_CHECK (e2 () (n, n) != value_type/*zero*/(), singular ());
+#else
+            if (e2 () (n, n) == value_type/*zero*/())
+                singular ().raise ();
+#endif
+            value_type t = e1 () (n) /= e2 () (n, n);
+            if (t != value_type/*zero*/()) {
+                typename E2::const_iterator2 it2e2 (e2 ().find2 (1, n, n + 1));
+                typename E2::const_iterator2 it2e2_end (e2 ().find2 (1, n, e2 ().size2 ()));
+                while (it2e2 != it2e2_end)
+                    e1 () (it2e2.index2 ()) -= *it2e2 * t, ++ it2e2;
+            }
+        }
+    }
+    // Redirectors :-)
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (vector_expression<E1> &e1, const matrix_expression<E2> &e2,
+                        upper_tag, row_major_tag) {
+        typedef typename E1::storage_category storage_category;
+        inplace_solve (e1, e2,
+                       upper_tag (), row_major_tag (), storage_category ());
+    }
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (vector_expression<E1> &e1, const matrix_expression<E2> &e2,
+                        upper_tag, column_major_tag) {
+        typedef typename E1::storage_category storage_category;
+        inplace_solve (trans (e2), e1,
+                       lower_tag (), row_major_tag (), storage_category ());
+    }
+    // Dispatcher
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (vector_expression<E1> &e1, const matrix_expression<E2> &e2,
+                        upper_tag) {
+        typedef typename E2::orientation_category orientation_category;
+        inplace_solve (e1, e2,
+                       upper_tag (), orientation_category ());
+    }
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (vector_expression<E1> &e1, const matrix_expression<E2> &e2,
+                        unit_upper_tag) {
+        typedef typename E2::orientation_category orientation_category;
+        inplace_solve (e1, triangular_adaptor<const E2, unit_upper> (e2 ()),
+                       unit_upper_tag (), orientation_category ());
+    }
+
+    template<class E1, class E2, class C>
+    BOOST_UBLAS_INLINE
+    typename matrix_vector_solve_traits<E1, E2>::result_type
+    solve (const vector_expression<E1> &e1,
+           const matrix_expression<E2> &e2,
+           C) {
+        typename matrix_vector_solve_traits<E1, E2>::result_type r (e1);
+        inplace_solve (r, e2, C ());
+        return r;
+    }
+
+    template<class E1, class E2>
+    struct matrix_matrix_solve_traits {
+        typedef typename promote_traits<typename E1::value_type, typename E2::value_type>::promote_type promote_type;
+        typedef matrix<promote_type> result_type;
+    };
+
+    // Operations:
+    //  k * n * (n - 1) / 2 + k * n = k * n * (n + 1) / 2 multiplications,
+    //  k * n * (n - 1) / 2 additions
+
+    // Dense (proxy) case
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, matrix_expression<E2> &e2,
+                        lower_tag, dense_proxy_tag) {
+        typedef typename E2::size_type size_type;
+        typedef typename E2::difference_type difference_type;
+        typedef typename E2::value_type value_type;
+
+        BOOST_UBLAS_CHECK (e1 ().size1 () == e1 ().size2 (), bad_size ());
+        BOOST_UBLAS_CHECK (e1 ().size2 () == e2 ().size1 (), bad_size ());
+        size_type size1 = e2 ().size1 ();
+        size_type size2 = e2 ().size2 ();
+        for (size_type n = 0; n < size1; ++ n) {
+#ifndef BOOST_UBLAS_SINGULAR_CHECK
+            BOOST_UBLAS_CHECK (e1 () (n, n) != value_type/*zero*/(), singular ());
+#else
+            if (e1 () (n, n) == value_type/*zero*/())
+                singular ().raise ();
+#endif
+            for (size_type l = 0; l < size2; ++ l) {
+                value_type t = e2 () (n, l) /= e1 () (n, n);
+                if (t != value_type/*zero*/()) {
+                    for (size_type m = n + 1; m < size1; ++ m)
+                        e2 () (m, l) -= e1 () (m, n) * t;
+                }
+            }
+        }
+    }
+    // Packed (proxy) case
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, matrix_expression<E2> &e2,
+                        lower_tag, packed_proxy_tag) {
+        typedef typename E2::size_type size_type;
+        typedef typename E2::difference_type difference_type;
+        typedef typename E2::value_type value_type;
+
+        BOOST_UBLAS_CHECK (e1 ().size1 () == e1 ().size2 (), bad_size ());
+        BOOST_UBLAS_CHECK (e1 ().size2 () == e2 ().size1 (), bad_size ());
+        size_type size1 = e2 ().size1 ();
+        size_type size2 = e2 ().size2 ();
+        for (size_type n = 0; n < size1; ++ n) {
+#ifndef BOOST_UBLAS_SINGULAR_CHECK
+            BOOST_UBLAS_CHECK (e1 () (n, n) != value_type/*zero*/(), singular ());
+#else
+            if (e1 () (n, n) == value_type/*zero*/())
+                singular ().raise ();
+#endif
+            for (size_type l = 0; l < size2; ++ l) {
+                value_type t = e2 () (n, l) /= e1 () (n, n);
+                if (t != value_type/*zero*/()) {
+                    typename E1::const_iterator1 it1e1 (e1 ().find1 (1, n + 1, n));
+                    typename E1::const_iterator1 it1e1_end (e1 ().find1 (1, e1 ().size1 (), n));
+                    difference_type m (it1e1_end - it1e1);
+                    while (-- m >= 0)
+                        e2 () (it1e1.index1 (), l) -= *it1e1 * t, ++ it1e1;
+                }
+            }
+        }
+    }
+    // Sparse (proxy) case
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, matrix_expression<E2> &e2,
+                        lower_tag, unknown_storage_tag) {
+        typedef typename E2::size_type size_type;
+        typedef typename E2::difference_type difference_type;
+        typedef typename E2::value_type value_type;
+
+        BOOST_UBLAS_CHECK (e1 ().size1 () == e1 ().size2 (), bad_size ());
+        BOOST_UBLAS_CHECK (e1 ().size2 () == e2 ().size1 (), bad_size ());
+        size_type size1 = e2 ().size1 ();
+        size_type size2 = e2 ().size2 ();
+        for (size_type n = 0; n < size1; ++ n) {
+#ifndef BOOST_UBLAS_SINGULAR_CHECK
+            BOOST_UBLAS_CHECK (e1 () (n, n) != value_type/*zero*/(), singular ());
+#else
+            if (e1 () (n, n) == value_type/*zero*/())
+                singular ().raise ();
+#endif
+            for (size_type l = 0; l < size2; ++ l) {
+                value_type t = e2 () (n, l) /= e1 () (n, n);
+                if (t != value_type/*zero*/()) {
+                    typename E1::const_iterator1 it1e1 (e1 ().find1 (1, n + 1, n));
+                    typename E1::const_iterator1 it1e1_end (e1 ().find1 (1, e1 ().size1 (), n));
+                    while (it1e1 != it1e1_end)
+                        e2 () (it1e1.index1 (), l) -= *it1e1 * t, ++ it1e1;
+                }
+            }
+        }
+    }
+    // Dispatcher
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, matrix_expression<E2> &e2,
+                        lower_tag) {
+        typedef typename E1::storage_category dispatch_category;
+        inplace_solve (e1, e2,
+                       lower_tag (), dispatch_category ());
+    }
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, matrix_expression<E2> &e2,
+                        unit_lower_tag) {
+        typedef typename E1::storage_category dispatch_category;
+        inplace_solve (triangular_adaptor<const E1, unit_lower> (e1 ()), e2,
+                       unit_lower_tag (), dispatch_category ());
+    }
+
+    // Dense (proxy) case
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, matrix_expression<E2> &e2,
+                        upper_tag, dense_proxy_tag) {
+        typedef typename E2::size_type size_type;
+        typedef typename E2::difference_type difference_type;
+        typedef typename E2::value_type value_type;
+
+        BOOST_UBLAS_CHECK (e1 ().size1 () == e1 ().size2 (), bad_size ());
+        BOOST_UBLAS_CHECK (e1 ().size2 () == e2 ().size1 (), bad_size ());
+        size_type size1 = e2 ().size1 ();
+        size_type size2 = e2 ().size2 ();
+        for (difference_type n = size1 - 1; n >= 0; -- n) {
+#ifndef BOOST_UBLAS_SINGULAR_CHECK
+            BOOST_UBLAS_CHECK (e1 () (n, n) != value_type/*zero*/(), singular ());
+#else
+            if (e1 () (n, n) == value_type/*zero*/())
+                singular ().raise ();
+#endif
+            for (difference_type l = size2 - 1; l >= 0; -- l) {
+                value_type t = e2 () (n, l) /= e1 () (n, n);
+                if (t != value_type/*zero*/()) {
+                    for (difference_type m = n - 1; m >= 0; -- m)
+                        e2 () (m, l) -= e1 () (m, n) * t;
+                }
+            }
+        }
+    }
+    // Packed (proxy) case
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, matrix_expression<E2> &e2,
+                        upper_tag, packed_proxy_tag) {
+        typedef typename E2::size_type size_type;
+        typedef typename E2::difference_type difference_type;
+        typedef typename E2::value_type value_type;
+
+        BOOST_UBLAS_CHECK (e1 ().size1 () == e1 ().size2 (), bad_size ());
+        BOOST_UBLAS_CHECK (e1 ().size2 () == e2 ().size1 (), bad_size ());
+        size_type size1 = e2 ().size1 ();
+        size_type size2 = e2 ().size2 ();
+        for (difference_type n = size1 - 1; n >= 0; -- n) {
+#ifndef BOOST_UBLAS_SINGULAR_CHECK
+            BOOST_UBLAS_CHECK (e1 () (n, n) != value_type/*zero*/(), singular ());
+#else
+            if (e1 () (n, n) == value_type/*zero*/())
+                singular ().raise ();
+#endif
+            for (difference_type l = size2 - 1; l >= 0; -- l) {
+                value_type t = e2 () (n, l) /= e1 () (n, n);
+                if (t != value_type/*zero*/()) {
+                    typename E1::const_reverse_iterator1 it1e1 (e1 ().find1 (1, n, n));
+                    typename E1::const_reverse_iterator1 it1e1_rend (e1 ().find1 (1, 0, n));
+                    difference_type m (it1e1_rend - it1e1);
+                    while (-- m >= 0)
+                        e2 () (it1e1.index1 (), l) -= *it1e1 * t, ++ it1e1;
+                }
+            }
+        }
+    }
+    // Sparse (proxy) case
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, matrix_expression<E2> &e2,
+                        upper_tag, unknown_storage_tag) {
+        typedef typename E2::size_type size_type;
+        typedef typename E2::difference_type difference_type;
+        typedef typename E2::value_type value_type;
+
+        BOOST_UBLAS_CHECK (e1 ().size1 () == e1 ().size2 (), bad_size ());
+        BOOST_UBLAS_CHECK (e1 ().size2 () == e2 ().size1 (), bad_size ());
+        size_type size1 = e2 ().size1 ();
+        size_type size2 = e2 ().size2 ();
+        for (difference_type n = size1 - 1; n >= 0; -- n) {
+#ifndef BOOST_UBLAS_SINGULAR_CHECK
+            BOOST_UBLAS_CHECK (e1 () (n, n) != value_type/*zero*/(), singular ());
+#else
+            if (e1 () (n, n) == value_type/*zero*/())
+                singular ().raise ();
+#endif
+            for (difference_type l = size2 - 1; l >= 0; -- l) {
+                value_type t = e2 () (n, l) /= e1 () (n, n);
+                if (t != value_type/*zero*/()) {
+                    typename E1::const_reverse_iterator1 it1e1 (e1 ().find1 (1, n, n));
+                    typename E1::const_reverse_iterator1 it1e1_rend (e1 ().find1 (1, 0, n));
+                    while (it1e1 != it1e1_rend)
+                        e2 () (it1e1.index1 (), l) -= *it1e1 * t, ++ it1e1;
+                }
+            }
+        }
+    }
+    // Dispatcher
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, matrix_expression<E2> &e2,
+                        upper_tag) {
+        typedef typename E1::storage_category dispatch_category;
+        inplace_solve (e1, e2,
+                       upper_tag (), dispatch_category ());
+    }
+    template<class E1, class E2>
+    BOOST_UBLAS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, matrix_expression<E2> &e2,
+                        unit_upper_tag) {
+        typedef typename E1::storage_category dispatch_category;
+        inplace_solve (triangular_adaptor<const E1, unit_upper> (e1 ()), e2,
+                       unit_upper_tag (), dispatch_category ());
+    }
+
+    template<class E1, class E2, class C>
+    BOOST_UBLAS_INLINE
+    typename matrix_matrix_solve_traits<E1, E2>::result_type
+    solve (const matrix_expression<E1> &e1,
+           const matrix_expression<E2> &e2,
+           C) {
+        typename matrix_matrix_solve_traits<E1, E2>::result_type r (e2);
+        inplace_solve (e1, r, C ());
+        return r;
+    }
 
 }}}
 
