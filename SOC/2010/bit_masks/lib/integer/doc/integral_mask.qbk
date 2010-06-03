@@ -3,7 +3,8 @@
 [h3 Description]
 The `integral_mask` type is the most basic mask type. It is used to abstract all
 masks back to a simple integral type. This type is used similar to an
-`integral_constant` type from the boost.type_traits library.
+`integral_constant` type from the boost.type_traits library. The `integral_mask`
+template is located in the following header file: <boost/integer/integral_mask.hpp>.
 
 
 [h3 Template Signature]
@@ -40,6 +41,33 @@ this function will be made fasters and more effieient.]]
 [h3 Examples]
 Examples and use cases related to the `integral_mask` type.
 
+Exaple:
+``
+#include <boost/integer/integral_mask.hpp>
+using namespace boost;
+
+int main() {
+    int bits = 255;
+
+    typedef integral_mask<int, 16> mask;
+    // mask has the folling binary value
+    // 0000 0000  0000 0000  0000 0000  0001 0110
+
+    // bits has binary value of:
+    // 0000 0000  0000 0000  0000 0000  0010 0101
+        
+    // the following is a bitwise and operation
+    // which is done to bits using the integral_mask type
+    int new_bits = bits & mask();
+
+    // Resulting value of new_bits:
+    // 0000 0000  0000 0000  0000 0000  0000 0100
+    return 0;
+}
+``
+The implicit cast operator allows for simplicity, clairity of code. In the
+above example `mask()` could be replaced with `mask::value` to achieve the same
+result. The same applies to all other bitwise operators.
 
 [endsect]
 
