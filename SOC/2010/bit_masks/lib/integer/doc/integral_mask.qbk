@@ -12,15 +12,28 @@ masks back to a simple integral type. This type is used similar to an
 template <typename T, T Value>
 struct integral_mask;
 ``
+[table
+    [[Parameter][Description]]
+    [[`T`][This Parameters specifies the integral type to be associated with the value.]]
+    [[`value`][ The integral value which is used to represent a mask.]]
+]
+
 [h3 Interface]
 `Integral_mask` Compile time interface. Assume that N is of type
 `integral_mask<int, 16>` the type supplied here is only for example.
 
 [table
     [[Operation][Description]]
-    [[`N::value`][Returns the value associated with N (in the current case that is 16). ]]
+    [[`N::value`][Returns the `value` associated with N (in the current case that is 16). ]]
     [[`N::value_type`][Returns the type of the value associated with N (in the current case that is int). ]]
     [[`N::type`][ Returns the current types type (using N as an example, `N::type` is equivalent to `integral_mask<int,16>` )]]
+    [[`operator T()`][ Run time support function. All this function does is return the value associated with the type. With the c++0x feature constexper this function will be made fasters and more effieient.]]
 ]
+
+
+[h3 Examples]
+Examples and use cases related to the `integral_mask` type.
+
+
 [endsect]
 
