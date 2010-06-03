@@ -1,4 +1,4 @@
-//  Boost integer/detail/sign_extend.hpp header file  ------------------------------//
+//  Boost integer/sign_extend.hpp header file  ------------------------------//
 
 //  (C) Copyright Murilo Adriano Vasconcelos 2010.
 //  Distributed under the Boost Software License, Version 1.0. (See
@@ -10,21 +10,21 @@
 #ifndef BOOST_SIGN_EXTEND_INCLUDED
 #define BOOST_SIGN_EXTEND_INCLUDED
 
-#include <boost/cstdint.hpp> // for intmax_t
-#include <boost/assert.hpp>
+#include <boost/type_traits.hpp> // is_integral
+#include <boost/utility/enable_if.hpp> // enable_if
 
 namespace boost 
 {
-	
-typedef intmax_t Raw;
 
-// Extend data represented in 'b' bits to sizeof(T)*8 bits
-template <typename IntegralType>
-inline Raw sign_extend(IntegralType data, unsigned b)
+//	Extend data represented in `bits' bits to 
+//		sizeof(Type) * 8 bits
+template <typename Type>
+inline typename enable_if<is_integral<Type>, Type>::type
+sign_extend(Type data, std::size_t bits)
 {
-	data = data & ((Raw(1) << b) - 1);
-	Raw const m = (Raw(1) << (b - 1));
-	return (data ^ m) - m;
+	data = data & ((Type(1) << bits) - 1);
+	Type const mask = (Type(1) << (bits - 1));
+	return (data ^ mask) - mask;
 }
 	
 } // boost

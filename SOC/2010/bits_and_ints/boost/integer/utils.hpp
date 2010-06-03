@@ -1,4 +1,4 @@
-//  Boost integer/detail/utils.hpp header file  ------------------------------//
+//  Boost integer/utils.hpp header file  ------------------------------//
 
 //  (C) Copyright Murilo Adriano Vasconcelos 2010.
 //  Distributed under the Boost Software License, Version 1.0. (See
@@ -9,6 +9,8 @@
 
 #ifndef BOOST_INTEGER_UTILS_INCLUDED
 #define BOOST_INTEGER_UTILS_INCLUDED
+
+#include <boost/cstdint.hpp>
 
 /*
  *	Some utilities to handle integers.

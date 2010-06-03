@@ -1,4 +1,4 @@
-//  Boost integer/detail/bit_reversal.hpp header file  ------------------------------//
+//  Boost integer/bit_reversal.hpp header file  ------------------------------//
 
 //  (C) Copyright Murilo Adriano Vasconcelos 2010.
 //  Distributed under the Boost Software License, Version 1.0. (See
