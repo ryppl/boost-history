@@ -15,16 +15,16 @@ namespace boost { namespace fusion { namespace extension
     template<typename>
     struct size_impl;
 
-    template <>
+    template<>
     struct size_impl<struct_tag>
     {
-        template <typename Seq>
+        template<typename Seq>
         struct apply
           : struct_size<typename detail::identity<Seq>::type>
         {};
     };
 
-    template <>
+    template<>
     struct size_impl<assoc_struct_tag>
       : size_impl<struct_tag>
     {};

@@ -61,7 +61,7 @@ namespace boost { namespace fusion
     };
 
 #define BOOST_FUSION_NIL_ITERATOR(MODIFIER,_)\
-      template <>\
+      template<>\
       struct cons_iterator<nil MODIFIER>\
         : nil_iterator\
       {\
@@ -73,7 +73,7 @@ namespace boost { namespace fusion
           {}\
       };\
       \
-      template <>\
+      template<>\
       struct cons_iterator<list<> MODIFIER>\
         : nil_iterator\
       {\

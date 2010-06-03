@@ -14,13 +14,13 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename>
+    template<typename>
     struct at_impl;
 
-    template <>
+    template<>
     struct at_impl<reverse_view_tag>
     {
-        template <typename Seq, typename N>
+        template<typename Seq, typename N>
         struct apply
         {
             typedef typename detail::remove_reference<Seq>::type seq;
@@ -28,7 +28,7 @@ namespace boost { namespace fusion { namespace extension
 
             typedef typename
                 result_of::at<
-                    typename detail::forward_as<
+                    typename detail::forward_as_lref<
                         Seq
                       , typename seq::seq_type
                     >::type

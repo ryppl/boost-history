@@ -9,6 +9,7 @@
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/result_of.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
+#include <boost/fusion/support/internal/template.hpp>
 #include <boost/preprocessor/empty.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/type_traits/add_const.hpp>
@@ -18,6 +19,14 @@
 
 namespace boost { namespace fusion
 {
+#ifdef BOOST_MSVC
+#   pragma warning(push)
+    //'class' : multiple copy constructors specified
+#   pragma warning(disable:4521)
+    //'class' : multiple assignment operators specified
+#   pragma warning(disable:4522)
+#endif
+
     template<typename F>
     struct BOOST_PP_CAT(fused,BOOST_FUSION_ADAPTER_POSTFIX)
     {
@@ -27,7 +36,7 @@ namespace boost { namespace fusion
         template<class Self, class Seq>
         struct result<Self(Seq)>
           : result_of::BOOST_PP_CAT(invoke,BOOST_FUSION_ADAPTER_POSTFIX)<
-                typename detail::forward_as<Self,F>::type
+                typename detail::forward_as_lref<Self,F>::type
               , Seq
             >
         {};
@@ -121,5 +130,9 @@ namespace boost { namespace fusion
 
         F f;
     };
+
+#ifdef BOOST_MSVC
+#   pragma warning(pop)
+#endif
 }}
 

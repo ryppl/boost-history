@@ -22,7 +22,7 @@
 
 namespace boost { namespace fusion
 {
-    template <typename Seq1, typename Seq2>
+    template<typename Seq1, typename Seq2>
     inline bool
     not_equal_to(Seq1 const& seq1, Seq2 const& seq2)
     {
@@ -46,7 +46,7 @@ namespace boost { namespace fusion
 
     namespace operators
     {
-        template <typename Seq1, typename Seq2>
+        template<typename Seq1, typename Seq2>
         inline typename
             enable_if<
                 detail::enable_equality<Seq1 const&, Seq2 const&>

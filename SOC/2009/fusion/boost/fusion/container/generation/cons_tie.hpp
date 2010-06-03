@@ -17,7 +17,7 @@ namespace boost { namespace fusion
 
     namespace result_of
     {
-        template <typename Car, typename Cdr = nil>
+        template<typename Car, typename Cdr = nil>
         struct cons_tie
         {
             typedef
@@ -30,7 +30,7 @@ namespace boost { namespace fusion
     }
 
     // $$$ do we really want a cons_tie? $$$
-    template <typename Car>
+    template<typename Car>
     inline typename result_of::cons_tie<BOOST_FUSION_R_ELSE_LREF(Car)>::type
     cons_tie(BOOST_FUSION_R_ELSE_LREF(Car) car)
     {
@@ -39,7 +39,7 @@ namespace boost { namespace fusion
                 BOOST_FUSION_FORWARD(Car,car));
     }
 
-    template <typename Car, typename Cdr>
+    template<typename Car, typename Cdr>
     inline typename
         result_of::cons_tie<
             BOOST_FUSION_R_ELSE_LREF(Car)

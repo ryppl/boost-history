@@ -24,7 +24,7 @@ namespace boost { namespace fusion
         template<typename>
         struct is_iterator_impl
         {
-            template <typename T>
+            template<typename T>
             struct apply
               : is_base_of<iterator_root, typename detail::identity<T>::type>
             {};
@@ -33,7 +33,7 @@ namespace boost { namespace fusion
 
     namespace traits
     {
-        template <typename T>
+        template<typename T>
         struct is_iterator
           : extension::is_iterator_impl<
                 typename fusion::traits::tag_of<T>::type

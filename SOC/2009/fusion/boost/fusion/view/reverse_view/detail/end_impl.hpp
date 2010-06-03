@@ -12,13 +12,13 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename>
+    template<typename>
     struct end_impl;
 
-    template <>
+    template<>
     struct end_impl<reverse_view_tag>
     {
-        template <typename Seq>
+        template<typename Seq>
         struct apply
         {
             typedef
@@ -27,7 +27,7 @@ namespace boost { namespace fusion { namespace extension
 #ifdef BOOST_FUSION_REVERSE_VIEW_USE_FORWARD_AS_GCC_HELPER
                         typename detail::reverse_view_forward_as_gcc_helper<
 #else
-                        typename detail::forward_as<
+                        typename detail::forward_as_lref<
 #endif
                             Seq
                           , typename detail::remove_reference<

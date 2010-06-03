@@ -16,7 +16,7 @@
         struct result<Self(EXPAND_TEMPLATE_ARGUMENTS(BOOST_FUSION_N))>
           : boost::result_of<
                 typename detail::get_func_base<
-                    typename detail::forward_as<Self,F>::type
+                    typename detail::forward_as_lref<Self,F>::type
                 >::type(BOOST_FUSION_R_ELSE_LREF(
                     BOOST_PP_IF(BOOST_FUSION_N, typename, BOOST_PP_EMPTY())
                     result_of::vector_tie<

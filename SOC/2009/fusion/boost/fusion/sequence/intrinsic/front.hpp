@@ -21,7 +21,7 @@ namespace boost { namespace fusion
 
     namespace result_of
     {
-        template <typename Seq>
+        template<typename Seq>
         struct front
           : deref<typename begin<Seq>::type>
         {
@@ -31,7 +31,7 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename Seq>
+    template<typename Seq>
     inline typename result_of::front<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type
     front(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
@@ -39,7 +39,7 @@ namespace boost { namespace fusion
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-    template <typename Seq>
+    template<typename Seq>
     inline typename result_of::front<Seq&>::type
     front(Seq& seq)
     {

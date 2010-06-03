@@ -19,13 +19,13 @@ namespace boost
 
     namespace mpl
     {
-        template <typename>
+        template<typename>
         struct at_impl;
 
-        template <>
+        template<>
         struct at_impl<fusion::fusion_sequence_tag>
         {
-            template <typename Seq, typename N>
+            template<typename Seq, typename N>
             struct apply
               : fusion::result_of::value_at<Seq, N>
             {};

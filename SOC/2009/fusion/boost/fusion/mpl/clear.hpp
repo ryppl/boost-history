@@ -14,13 +14,13 @@
 
 namespace boost { namespace mpl
 {
-    template <typename>
+    template<typename>
     struct clear_impl;
 
-    template <>
+    template<>
     struct clear_impl<fusion::fusion_sequence_tag>
     {
-        template <typename Seq>
+        template<typename Seq>
         struct apply
           : fusion::result_of::clear<Seq>
         {};

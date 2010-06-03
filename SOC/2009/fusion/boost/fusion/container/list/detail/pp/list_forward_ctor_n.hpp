@@ -24,14 +24,13 @@
 #   else
 #       ifdef BOOST_NO_RVALUE_REFERENCES
       : base_type(vector<
-                      BOOST_PP_ENUM_BINARY_PARAMS(BOOST_FUSION_N,
-                              typename call_traits<T,
-                              >::param_type BOOST_PP_INTERCEPT)
-                  >(EXPAND_PARAMETERS_A(BOOST_FUSION_N)))
+            BOOST_PP_ENUM_BINARY_PARAMS(
+               BOOST_FUSION_N,
+               typename call_traits<T,
+               >::param_type BOOST_PP_INTERCEPT)
+            >(EXPAND_PARAMETERS_A(BOOST_FUSION_N)))
 #       else
-      : base_type(vector<
-                      BOOST_PP_ENUM_BINARY_PARAMS(N, A,&& BOOST_PP_INTERCEPT)
-                  >(EXPAND_PARAMETERS_A(BOOST_FUSION_N)))
+      : base_type(fusion::vector_tie(EXPAND_PARAMETERS_A(BOOST_FUSION_N)))
 #       endif
 #   endif
 #endif

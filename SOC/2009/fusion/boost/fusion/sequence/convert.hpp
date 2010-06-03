@@ -18,7 +18,7 @@ namespace boost { namespace fusion
 {
     namespace extension
     {
-        template <typename>
+        template<typename>
         struct convert_impl
         {
             template<typename Seq>
@@ -37,7 +37,7 @@ namespace boost { namespace fusion
 
     namespace result_of
     {
-        template <typename Tag, typename Seq>
+        template<typename Tag, typename Seq>
         struct convert
           : extension::convert_impl<Tag>::template apply<Seq>
         {
@@ -46,7 +46,7 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename Tag, typename Seq>
+    template<typename Tag, typename Seq>
     inline typename
         result_of::convert<Tag, BOOST_FUSION_R_ELSE_CLREF(Seq)>::type
     convert(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)

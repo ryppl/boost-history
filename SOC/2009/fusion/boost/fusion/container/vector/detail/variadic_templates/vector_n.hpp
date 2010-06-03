@@ -28,13 +28,13 @@ namespace boost { namespace fusion
 #   if !BOOST_FUSION_N
     struct void_;
 
-    template <typename T0=void_>
+    template<typename T0=void_>
     struct vector0;
 
     template<>
     struct vector0<void_>
 #   else
-    template <BOOST_PP_ENUM_PARAMS(BOOST_FUSION_N, typename T)>
+    template<BOOST_PP_ENUM_PARAMS(BOOST_FUSION_N, typename T)>
     struct BOOST_PP_CAT(vector, BOOST_FUSION_N)
 #   endif
       : vector<BOOST_PP_ENUM_PARAMS(BOOST_FUSION_N, T)>
@@ -70,7 +70,7 @@ namespace boost { namespace fusion
 #           define BOOST_FUSION_FORWARD_ARGUMENT(Z, N, __)\
                 std::forward<BOOST_PP_CAT(A,N)>(BOOST_PP_CAT(_,N))
 
-        template <BOOST_PP_ENUM_PARAMS(BOOST_FUSION_N, typename A)>
+        template<BOOST_PP_ENUM_PARAMS(BOOST_FUSION_N, typename A)>
         BOOST_PP_CAT(vector, BOOST_FUSION_N)(
             BOOST_PP_ENUM_BINARY_PARAMS(BOOST_FUSION_N, A,&& _))
           : base_type(

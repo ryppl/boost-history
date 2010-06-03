@@ -12,18 +12,18 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename>
+    template<typename>
     struct at_key_impl;
 
-    template <>
+    template<>
     struct at_key_impl<detail::filter_key_view_tag>
     {
-        template <typename Seq,typename Key>
+        template<typename Seq,typename Key>
         struct apply
         {
             typedef typename
                 result_of::at_key<
-                    typename detail::forward_as<
+                    typename detail::forward_as_lref<
                         Seq
                       , typename detail::remove_reference<Seq>::type_seq_type
                     >::type

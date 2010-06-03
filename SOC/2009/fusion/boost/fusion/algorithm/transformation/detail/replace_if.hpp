@@ -16,7 +16,7 @@
 
 namespace boost { namespace fusion { namespace detail
 {
-    template <typename F, typename NewValue>
+    template<typename F, typename NewValue>
     struct replace_if_helper
     {
         template<typename Sig>
@@ -29,6 +29,7 @@ namespace boost { namespace fusion { namespace detail
             typedef U type;
         };
 #else
+        //TODO!!!
           : mpl::if_<
                 mpl::and_<
                     is_convertible<
@@ -67,14 +68,14 @@ namespace boost { namespace fusion { namespace detail
             return *this;
         }
 
-        template <typename U>
+        template<typename U>
         U&
         call_impl(U& x, mpl::false_ /*is_convertible*/) const
         {
             return x;
         }
 
-        template <typename U>
+        template<typename U>
         U&
         call_impl(U& x, mpl::true_ /*is_convertible*/) const
         {
@@ -86,7 +87,7 @@ namespace boost { namespace fusion { namespace detail
             return x;
         }
 
-        template <typename U>
+        template<typename U>
         typename result<replace_if_helper(U&)>::type
         operator()(U& x) const
         {

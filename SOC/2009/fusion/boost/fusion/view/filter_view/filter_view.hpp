@@ -38,7 +38,7 @@ namespace boost { namespace fusion
 {
     struct fusion_sequence_tag;
 
-    template <typename Seq, typename Pred>
+    template<typename Seq, typename Pred>
     struct filter_view
       : sequence_base<filter_view<Seq, Pred> >
     {

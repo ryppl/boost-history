@@ -12,13 +12,13 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename>
+    template<typename>
     struct value_of_data_impl;
 
-    template <>
+    template<>
     struct value_of_data_impl<map_iterator_tag>
     {
-        template <typename It>
+        template<typename It>
         struct apply
         {
             typedef typename

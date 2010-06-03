@@ -69,7 +69,23 @@
                 BOOST_PP_ENUM_PARAMS(BOOST_FUSION_N, K)
                 BOOST_FUSION_COMMA
                 EXPAND_TEMPLATE_ARGUMENTS_A_R_ELSE_LREF(BOOST_FUSION_N)
-            >::type(EXPAND_PARAMETERS_A(BOOST_FUSION_N));
+            >::type(
+#ifdef BOOST_NO_RVALUE_REFERENCES
+                EXPAND_PARAMETERS_A(BOOST_FUSION_N)
+#else
+
+#   define BOOST_FUSION_MAP_TIE_FORWARD_ARGS(Z,N,__)\
+                static_cast<\
+                    typename detail::deduce_ref<BOOST_PP_CAT(A,N)&&>::type\
+                >(BOOST_PP_CAT(_,N))
+
+                BOOST_PP_ENUM(
+                    BOOST_FUSION_N,BOOST_FUSION_MAP_TIE_FORWARD_ARGS,_)
+
+#   undef BOOST_FUSION_MAP_TIE_FORWARD_ARGS
+
+#endif
+            );
     }
 
 #undef BOOST_FUSION_COMMA

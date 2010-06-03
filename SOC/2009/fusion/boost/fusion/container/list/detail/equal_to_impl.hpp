@@ -13,13 +13,13 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename>
+    template<typename>
     struct equal_to_impl;
 
-    template <>
+    template<>
     struct equal_to_impl<cons_iterator_tag>
     {
-        template <typename It1, typename It2>
+        template<typename It1, typename It2>
         struct apply
           : is_same<
                 typename detail::identity<

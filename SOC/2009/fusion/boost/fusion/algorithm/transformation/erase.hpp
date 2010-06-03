@@ -25,7 +25,7 @@ namespace boost { namespace fusion
 {
     namespace detail
     {
-        template <typename Seq, typename BeginRef>
+        template<typename Seq, typename BeginRef>
         struct compute_erase_last
         {
             typedef typename result_of::end<Seq>::type end_type;
@@ -61,7 +61,7 @@ namespace boost { namespace fusion
 
     namespace result_of
     {
-        template <
+        template<
             typename Seq
           , typename Begin
           , typename End=typename detail::compute_erase_last<Seq, Begin>::type
@@ -101,7 +101,7 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename Seq, typename Begin, typename End>
+    template<typename Seq, typename Begin, typename End>
     typename result_of::erase<
         BOOST_FUSION_R_ELSE_CLREF(Seq)
       , Begin const&
@@ -133,7 +133,7 @@ namespace boost { namespace fusion
                 ));
     }
 
-    template <typename Seq, typename Begin>
+    template<typename Seq, typename Begin>
     typename result_of::erase<BOOST_FUSION_R_ELSE_CLREF(Seq), Begin const&>::type
     erase(BOOST_FUSION_R_ELSE_CLREF(Seq) seq, Begin const& first)
     {
@@ -147,7 +147,7 @@ namespace boost { namespace fusion
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-    template <typename Seq, typename Begin, typename End>
+    template<typename Seq, typename Begin, typename End>
     typename result_of::erase<Seq&, Begin const&, End const&>::type
     erase(Seq& seq,Begin const& first,End const& last)
     {
@@ -167,7 +167,7 @@ namespace boost { namespace fusion
                 ));
     }
 
-    template <typename Seq, typename Begin>
+    template<typename Seq, typename Begin>
     typename result_of::erase<Seq&, Begin const&>::type
     erase(Seq& seq, Begin const& first)
     {

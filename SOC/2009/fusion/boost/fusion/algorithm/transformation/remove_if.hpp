@@ -20,7 +20,7 @@ namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename Seq, typename Pred>
+        template<typename Seq, typename Pred>
         struct remove_if
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
@@ -30,7 +30,7 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename Pred, typename Seq>
+    template<typename Pred, typename Seq>
     inline typename result_of::remove_if<
         BOOST_FUSION_R_ELSE_CLREF(Seq)
       , Pred
@@ -44,7 +44,7 @@ namespace boost { namespace fusion
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-    template <typename Pred, typename Seq>
+    template<typename Pred, typename Seq>
     inline BOOST_FUSION_EXPLICIT_TEMPLATE_NON_CONST_ARG_OVERLOAD(
             result_of::remove_if<,Seq,&, Pred>)
     remove_if(Seq& seq)

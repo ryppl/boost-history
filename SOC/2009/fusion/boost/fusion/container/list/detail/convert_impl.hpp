@@ -15,13 +15,13 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename T>
+    template<typename T>
     struct convert_impl;
 
-    template <>
+    template<>
     struct convert_impl<cons_tag>
     {
-        template <typename Seq>
+        template<typename Seq>
         struct apply
         {
             typedef

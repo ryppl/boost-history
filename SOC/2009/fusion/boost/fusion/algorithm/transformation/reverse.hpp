@@ -17,7 +17,7 @@ namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename Seq>
+        template<typename Seq>
         struct reverse
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
@@ -27,7 +27,7 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename Seq>
+    template<typename Seq>
     inline typename result_of::reverse<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type
     reverse(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
@@ -37,7 +37,7 @@ namespace boost { namespace fusion
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-    template <typename Seq>
+    template<typename Seq>
     inline typename result_of::reverse<Seq&>::type
     reverse(Seq& seq)
     {

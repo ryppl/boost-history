@@ -13,10 +13,6 @@
 #include <boost/fusion/algorithm/transformation/transform.hpp>
 #include <boost/fusion/support/unused.hpp>
 
-#include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/identity.hpp>
-#include <boost/type_traits/is_same.hpp>
-
 namespace boost { namespace fusion
 {
     namespace detail
@@ -28,12 +24,14 @@ namespace boost { namespace fusion
 
             template<typename Self, typename SeqRef>
             struct result<Self(SeqRef)>
-              : mpl::eval_if<
-                    is_same<SeqRef, unused_type const&>
-                  , mpl::identity<unused_type const&>
-                  , result_of::begin<SeqRef>
-                >
+              : result_of::begin<SeqRef>
             {};
+
+            template<typename Self>
+            struct result<Self(unused_type const&)>
+            {
+                typedef unused_type const& type;
+            };
 
             template<typename Seq>
             typename result<poly_begin(BOOST_FUSION_R_ELSE_LREF(Seq))>::type

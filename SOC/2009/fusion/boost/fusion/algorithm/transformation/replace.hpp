@@ -22,10 +22,10 @@ namespace boost { namespace fusion
 {
     namespace detail
     {
-        template <typename OldValue>
+        template<typename OldValue>
         struct replace_helper
         {
-            template <typename OtherOldValue>
+            template<typename OtherOldValue>
             replace_helper(
                 BOOST_FUSION_R_ELSE_CLREF(OtherOldValue) old_value
               , int)
@@ -45,7 +45,7 @@ namespace boost { namespace fusion
                 return *this;
             }
 
-            template <typename U>
+            template<typename U>
             bool
             operator()(BOOST_FUSION_R_ELSE_LREF(U) x) const
             {
@@ -58,7 +58,7 @@ namespace boost { namespace fusion
 
     namespace result_of
     {
-        template <typename Seq, typename T>
+        template<typename Seq, typename T>
         struct replace
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
@@ -74,7 +74,7 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename Seq, typename OldValue, typename NewValue>
+    template<typename Seq, typename OldValue, typename NewValue>
     inline typename
         result_of::replace<
             BOOST_FUSION_R_ELSE_CLREF(Seq)
@@ -108,7 +108,7 @@ namespace boost { namespace fusion
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-    template <typename Seq, typename OldValue, typename NewValue>
+    template<typename Seq, typename OldValue, typename NewValue>
     inline typename result_of::replace<Seq&, OldValue const&>::type
     replace(Seq& seq, OldValue const& old_value, NewValue const& new_value)
     {

@@ -13,10 +13,13 @@
 #include <boost/fusion/support/internal/small_big_type.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
 
+#include <boost/mpl/or.hpp>
 #include <boost/mpl/bool.hpp>
+#include <boost/type_traits/is_convertible.hpp>
 #include <boost/type_traits/config.hpp>
 #include <boost/type_traits/add_volatile.hpp>
 #include <boost/get_pointer.hpp>
+#include <boost/utility/enable_if.hpp>
 #include <boost/utility/addressof.hpp>
 
 namespace boost { namespace fusion { namespace detail
@@ -54,9 +57,16 @@ namespace boost { namespace fusion { namespace detail
             return ptr;
         }
 
-        template <typename T>
+        template<typename T>
         static inline wanted
-        get(BOOST_FUSION_R_ELSE_LREF(T) t)
+        get(BOOST_FUSION_R_ELSE_LREF(T) t,
+            //TODO
+            typename disable_if<
+                mpl::or_<
+                    is_convertible<BOOST_FUSION_R_ELSE_LREF(T),wanted>
+                  , is_convertible<BOOST_FUSION_R_ELSE_LREF(T),WantedRef>
+                >
+            >::type* =NULL)
         {
             return do_get_pointer(
                     BOOST_FUSION_FORWARD(T,t),
@@ -75,7 +85,7 @@ namespace boost { namespace fusion { namespace detail
         template<typename T>
         big_type const_tester(T const*);
 
-        template <typename Ptr>
+        template<typename Ptr>
         struct const_pointee_impl
         {
             static Ptr* what;
@@ -94,7 +104,7 @@ namespace boost { namespace fusion { namespace detail
         template<typename T>
         big_type volatile_tester(T volatile*);
 
-        template <typename Ptr>
+        template<typename Ptr>
         struct volatile_pointee_impl
         {
             static Ptr* what;
@@ -108,14 +118,14 @@ namespace boost { namespace fusion { namespace detail
         };
     }
 
-    template <typename PtrOrSmartPtr>
+    template<typename PtrOrSmartPtr>
     struct const_pointee
         : adl_barrier::const_pointee_impl<
               typename identity<PtrOrSmartPtr>::type
           >::type
     {};
 
-    template <typename PtrOrSmartPtr>
+    template<typename PtrOrSmartPtr>
     struct volatile_pointee
         : adl_barrier::volatile_pointee_impl<
               typename identity<PtrOrSmartPtr>::type

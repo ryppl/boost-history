@@ -36,7 +36,7 @@ namespace boost { namespace fusion
 {
     namespace detail
     {
-        template <typename Tag>
+        template<typename Tag>
         int get_xalloc_index(Tag* = 0)
         {
             // each Tag will have a unique index
@@ -44,7 +44,7 @@ namespace boost { namespace fusion
             return index;
         }
 
-        template <typename Stream, typename Tag, typename T>
+        template<typename Stream, typename Tag, typename T>
         struct stream_data
         {
             struct arena
@@ -76,7 +76,7 @@ namespace boost { namespace fusion
             }
         };
 
-        template <typename Tag, typename Stream>
+        template<typename Tag, typename Stream>
         class string_ios_manip
         {
         public:
@@ -128,7 +128,7 @@ namespace boost { namespace fusion
 
         private:
 
-            template <typename Char>
+            template<typename Char>
             void
             check_delim(Char c) const
             {
@@ -161,14 +161,14 @@ namespace boost { namespace fusion
             name##_type(const string_type& d): data(d) {}                       \
         };                                                                      \
                                                                                 \
-        template <typename Stream>                                              \
+        template<typename Stream>                                              \
         Stream& operator>>(Stream& s, const name##_type& m)                     \
         {                                                                       \
             string_ios_manip<name##_tag, Stream>(s).set(m.data);                \
             return s;                                                           \
         }                                                                       \
                                                                                 \
-        template <typename Stream>                                              \
+        template<typename Stream>                                              \
         Stream& operator<<(Stream& s, const name##_type& m)                     \
         {                                                                       \
             string_ios_manip<name##_tag, Stream>(s).set(m.data);                \
@@ -200,7 +200,7 @@ namespace boost { namespace fusion
 #if defined(BOOST_NO_FUNCTION_TEMPLATE_ORDERING)
 
 #define STD_TUPLE_DEFINE_MANIPULATOR_FUNCTIONS(name)                            \
-    template <typename Char, typename Traits>                                   \
+    template<typename Char, typename Traits>                                   \
     inline detail::name##_type<Char, Traits>                                    \
     name(const std::basic_string<Char, Traits>& s)                              \
     {                                                                           \
@@ -234,28 +234,28 @@ namespace boost { namespace fusion
 #else // defined(BOOST_NO_FUNCTION_TEMPLATE_ORDERING)
 
 #define STD_TUPLE_DEFINE_MANIPULATOR_FUNCTIONS(name)                            \
-    template <typename Char, typename Traits>                                   \
+    template<typename Char, typename Traits>                                   \
     inline detail::name##_type<Char, Traits>                                    \
     name(const std::basic_string<Char, Traits>& s)                              \
     {                                                                           \
         return detail::name##_type<Char, Traits>(s);                            \
     }                                                                           \
                                                                                 \
-    template <typename Char>                                                    \
+    template<typename Char>                                                    \
     inline detail::name##_type<Char>                                            \
     name(Char s[])                                                              \
     {                                                                           \
         return detail::name##_type<Char>(std::basic_string<Char>(s));           \
     }                                                                           \
                                                                                 \
-    template <typename Char>                                                    \
+    template<typename Char>                                                    \
     inline detail::name##_type<Char>                                            \
     name(Char const s[])                                                        \
     {                                                                           \
         return detail::name##_type<Char>(std::basic_string<Char>(s));           \
     }                                                                           \
                                                                                 \
-    template <typename Char>                                                    \
+    template<typename Char>                                                    \
     inline detail::name##_type<Char>                                            \
     name(Char c)                                                                \
     {                                                                           \
@@ -269,7 +269,7 @@ namespace boost { namespace fusion
     {                                                                           \
         struct name##_tag;                                                      \
                                                                                 \
-        template <typename Char, typename Traits = std::char_traits<Char> >     \
+        template<typename Char, typename Traits = std::char_traits<Char> >     \
         struct name##_type                                                      \
         {                                                                       \
             typedef std::basic_string<Char, Traits> string_type;                \
@@ -277,14 +277,14 @@ namespace boost { namespace fusion
             name##_type(const string_type& d): data(d) {}                       \
         };                                                                      \
                                                                                 \
-        template <typename Stream, typename Char, typename Traits>              \
+        template<typename Stream, typename Char, typename Traits>              \
         Stream& operator>>(Stream& s, const name##_type<Char,Traits>& m)        \
         {                                                                       \
             string_ios_manip<name##_tag, Stream>(s).set(m.data);                \
             return s;                                                           \
         }                                                                       \
                                                                                 \
-        template <typename Stream, typename Char, typename Traits>              \
+        template<typename Stream, typename Char, typename Traits>              \
         Stream& operator<<(Stream& s, const name##_type<Char,Traits>& m)        \
         {                                                                       \
             string_ios_manip<name##_tag, Stream>(s).set(m.data);                \

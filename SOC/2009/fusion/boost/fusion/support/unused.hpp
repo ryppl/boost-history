@@ -15,24 +15,25 @@
 #   pragma warning(disable: 4522)
 #endif
 
-namespace boost { namespace fusion {
+namespace boost { namespace fusion
+{
     struct unused_type
     {
         unused_type()
         {}
 
-        template <typename T>
+        template<typename T>
         unused_type(T const&)
         {}
 
-        template <typename T>
+        template<typename T>
         unused_type const&
         operator=(T const&) const
         {
             return *this;
         }
 
-        template <typename T>
+        template<typename T>
         unused_type&
         operator=(T const&)
         {

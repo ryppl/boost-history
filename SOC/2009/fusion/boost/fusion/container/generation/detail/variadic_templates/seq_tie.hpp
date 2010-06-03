@@ -13,7 +13,7 @@ namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename... Types>
+        template<typename... Types>
         struct BOOST_FUSION_FUNCTION_NAME
         {
             typedef
@@ -24,15 +24,21 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename... Types>
+    template<typename... Types>
     inline typename result_of::BOOST_FUSION_FUNCTION_NAME<
-        BOOST_FUSION_R_ELSE_CLREF(Types)...
+        BOOST_FUSION_R_ELSE_LREF(Types)...
     >::type
-    BOOST_FUSION_FUNCTION_NAME(BOOST_FUSION_R_ELSE_CLREF(Types)... types)
+    BOOST_FUSION_FUNCTION_NAME(BOOST_FUSION_R_ELSE_LREF(Types)... types)
     {
         return typename result_of::BOOST_FUSION_FUNCTION_NAME<
-            BOOST_FUSION_R_ELSE_CLREF(Types)...
-        >::type(BOOST_FUSION_FORWARD(Types, types)...);
+            BOOST_FUSION_R_ELSE_LREF(Types)...
+        >::type(
+#if BOOST_NO_RVALUE_REFERENCES
+            types
+#else
+            static_cast<typename detail::deduce_ref<Types&&>::type>(types)...
+#endif
+        );
     }
 }}
 

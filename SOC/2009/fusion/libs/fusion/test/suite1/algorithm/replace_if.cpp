@@ -38,7 +38,8 @@ main()
     {
         char const* s = "Ruby";
         typedef vector<int, short, double, long, char const*, float> vector_type;
-        vector_type t1(1, 2, 3.3, 4, s, 5.5);
+        //TODO
+        vector_type t1(1, 2, 3.3, 4, s, 5.5f);
 
         {
             //TODO

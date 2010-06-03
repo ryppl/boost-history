@@ -11,13 +11,13 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename>
+    template<typename>
     struct begin_impl;
 
-    template <>
+    template<>
     struct begin_impl<cons_tag>
     {
-        template <typename Seq>
+        template<typename Seq>
         struct apply
         {
             typedef cons_iterator<typename detail::add_lref<Seq>::type> type;
@@ -30,7 +30,7 @@ namespace boost { namespace fusion { namespace extension
         };
     };
 
-    template <>
+    template<>
     struct begin_impl<list_tag>
       : begin_impl<cons_tag>
     {};

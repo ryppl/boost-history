@@ -18,7 +18,7 @@
 
 namespace boost { namespace fusion { namespace detail
 {
-    template <int Size>
+    template<int Size>
     struct BOOST_PP_CAT(BOOST_PP_CAT(as_,BOOST_FUSION_SEQ_NAME),_impl);
 
 #define BOOST_PP_FILENAME_1 <boost/fusion/container/detail/pp/as_seq_n.hpp>

@@ -18,7 +18,7 @@ namespace boost { namespace fusion
 
     namespace result_of
     {
-        template <typename Car, typename Cdr = nil>
+        template<typename Car, typename Cdr = nil>
         struct make_cons
         {
             typedef
@@ -30,7 +30,7 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename Car>
+    template<typename Car>
     inline typename result_of::make_cons<BOOST_FUSION_R_ELSE_CLREF(Car)>::type
     make_cons(BOOST_FUSION_R_ELSE_CLREF(Car) car)
     {
@@ -41,7 +41,7 @@ namespace boost { namespace fusion
         return type(BOOST_FUSION_FORWARD(Car,car));
     }
 
-    template <typename Car, typename Cdr>
+    template<typename Car, typename Cdr>
     inline typename
         result_of::make_cons<
             BOOST_FUSION_R_ELSE_CLREF(Car)

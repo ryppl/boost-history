@@ -14,13 +14,13 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename>
+    template<typename>
     struct size_impl;
 
-    template <>
+    template<>
     struct size_impl<filter_view_tag>
     {
-        template <typename Seq>
+        template<typename Seq>
         struct apply
           : result_of::distance<
                 typename result_of::begin<Seq>::type

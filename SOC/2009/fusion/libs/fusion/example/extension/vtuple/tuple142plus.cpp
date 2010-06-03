@@ -61,20 +61,20 @@ namespace variadic_tuple
 {
 
 // Test for tuple index size too large.
-template <typename Sq, int N>
+template<typename Sq, int N>
 struct VARIADIC_TUPLE_INDEX_TOO_LARGE 
   : boost::mpl::greater_equal<boost::mpl::int_<N>,boost::mpl::int_<
   std::tuple_size<typename Sq::base_type>::value> >
 {};
 
 // Test for tuple index size too small.
-template <typename Sq, int N>
+template<typename Sq, int N>
 struct VARIADIC_TUPLE_INDEX_TOO_SMALL
   : boost::mpl::less<boost::mpl::int_<N>,boost::mpl::int_<0> >
 {};
 
 // This has been added for the member functions defined below.
-template <typename Sq, int N>
+template<typename Sq, int N>
 struct VARIADIC_TUPLE_RETURN_TYPE_N : boost::mpl::if_<
   VARIADIC_TUPLE_INDEX_TOO_LARGE<Sq,N>,
   boost::mpl::void_,
@@ -84,7 +84,7 @@ struct VARIADIC_TUPLE_RETURN_TYPE_N : boost::mpl::if_<
 // This has been added for the member functions defined below.
 // This does not have the checks for type in at the moment.
 // It defines a member type internally instead of by inheritance.
-template <typename Sq, typename Key, typename Key_Sq>
+template<typename Sq, typename Key, typename Key_Sq>
 struct VARIADIC_TUPLE_RETURN_TYPE_KEY
 {
   typedef typename std::tuple_element<
@@ -161,7 +161,7 @@ struct VARIADIC_TUPLE_RETURN_TYPE_KEY
           : deref<It>
         {};
 
-      template <typename SeqRef_, int N>
+      template<typename SeqRef_, int N>
         struct deref<vtuple_iterator<SeqRef_, N> >
         {
             typedef typename
@@ -232,17 +232,17 @@ struct VARIADIC_TUPLE_RETURN_TYPE_KEY
         vtuple()
             : base_type() {}
 
-        template <typename... Args>
+        template<typename... Args>
         vtuple(const Args&... args) : base_type(args...) { }
 
-        template <typename... Args>
+        template<typename... Args>
         vtuple(Args&... args) : base_type(args...) { }
 
-        template <typename T>
+        template<typename T>
         explicit vtuple(T const& rhs)
             : base_type(rhs) {}
 
-        template <typename T>
+        template<typename T>
         vtuple&
         operator=(T const& rhs)
         {
@@ -279,7 +279,7 @@ struct VARIADIC_TUPLE_RETURN_TYPE_KEY
         }
 
         // Generalised for any element in the sequence.
-        template <int N>
+        template<int N>
         typename VARIADIC_TUPLE_RETURN_TYPE_N<This_type,N>::type
         any() const
         {
@@ -288,7 +288,7 @@ struct VARIADIC_TUPLE_RETURN_TYPE_KEY
         }
 
         // Generalised for any element in the sequence by key.
-        template <typename Key,typename Key_Sequence>
+        template<typename Key,typename Key_Sequence>
         typename VARIADIC_TUPLE_RETURN_TYPE_KEY<This_type,Key,Key_Sequence>::type
         any_key() const
         {
@@ -308,7 +308,7 @@ struct VARIADIC_TUPLE_RETURN_TYPE_KEY
       // This has in fact liberated the top level code to supply any key sequence.
       // It does not have to be the same length as the sequence.
       // Any problem cases will not compile because of the tests here.
-      template <typename Key,typename Key_Sequence>
+      template<typename Key,typename Key_Sequence>
       int pos()
       {
         typedef typename boost::mpl::end<Key_Sequence>::type finish;
@@ -321,7 +321,7 @@ struct VARIADIC_TUPLE_RETURN_TYPE_KEY
       }
        
       // location function for the enum method
-      template <typename Enums, Enums Key>
+      template<typename Enums, Enums Key>
       int locate()
       {
         BOOST_MPL_ASSERT_NOT((VARIADIC_TUPLE_INDEX_TOO_LARGE<This_type,
@@ -329,7 +329,7 @@ struct VARIADIC_TUPLE_RETURN_TYPE_KEY
     return boost::mpl::integral_c<Enums,Key>::value;
       }
       // Access function for the enum method
-      /*      template <typename Enums, Enums Key>
+      /*      template<typename Enums, Enums Key>
       typename VARIADIC_TUPLE_RETURN_TYPE_N<This_type,
                boost::mpl::integral_c<Enums,Key>::value>::type
       at()

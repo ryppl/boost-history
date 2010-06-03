@@ -24,7 +24,7 @@ namespace boost { namespace fusion { namespace detail
     template<int N>
     struct unrolled_all
     {
-        template <typename It0, typename F>
+        template<typename It0, typename F>
         static bool
         call(It0 const& it0, BOOST_FUSION_RREF_ELSE_OBJ(F) f)
         {
@@ -63,7 +63,7 @@ namespace boost { namespace fusion { namespace detail
     template<>
     struct unrolled_all<3>
     {
-        template <typename It0, typename F>
+        template<typename It0, typename F>
         static bool
         call(It0 const& it0, BOOST_FUSION_RREF_ELSE_OBJ(F) f)
         {
@@ -88,7 +88,7 @@ namespace boost { namespace fusion { namespace detail
     template<>
     struct unrolled_all<2>
     {
-        template <typename It0, typename F>
+        template<typename It0, typename F>
         static bool
         call(It0 const& it0, BOOST_FUSION_RREF_ELSE_OBJ(F) f)
         {
@@ -106,7 +106,7 @@ namespace boost { namespace fusion { namespace detail
     template<>
     struct unrolled_all<1>
     {
-        template <typename It0, typename F>
+        template<typename It0, typename F>
         static bool
         call(It0 const& it0, BOOST_FUSION_RREF_ELSE_OBJ(F) f)
         {
@@ -117,7 +117,7 @@ namespace boost { namespace fusion { namespace detail
     template<>
     struct unrolled_all<0>
     {
-        template <typename It0, typename F>
+        template<typename It0, typename F>
         static BOOST_FUSION_CONSTEXPR
         bool
         call(It0 const& it0, BOOST_FUSION_RREF_ELSE_OBJ(F) f)

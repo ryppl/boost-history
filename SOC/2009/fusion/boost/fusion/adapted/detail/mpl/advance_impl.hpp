@@ -12,13 +12,13 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename>
+    template<typename>
     struct advance_impl;
 
-    template <>
+    template<>
     struct advance_impl<mpl_iterator_tag>
     {
-        template <typename It, typename N>
+        template<typename It, typename N>
         struct apply
         {
             typedef

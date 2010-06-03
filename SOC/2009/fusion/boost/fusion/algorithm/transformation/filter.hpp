@@ -21,7 +21,7 @@ namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename Seq, typename T>
+        template<typename Seq, typename T>
         struct filter
           : filter_if<Seq, is_same<mpl::_1, T> >
         {
@@ -30,7 +30,7 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename T, typename Seq>
+    template<typename T, typename Seq>
     inline typename result_of::filter<BOOST_FUSION_R_ELSE_CLREF(Seq), T>::type
     filter(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
@@ -38,7 +38,7 @@ namespace boost { namespace fusion
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-    template <typename T, typename Seq>
+    template<typename T, typename Seq>
     inline BOOST_FUSION_EXPLICIT_TEMPLATE_NON_CONST_ARG_OVERLOAD(
             result_of::filter<,Seq,&, T>)
     filter(Seq& seq)

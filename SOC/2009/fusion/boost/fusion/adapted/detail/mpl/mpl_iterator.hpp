@@ -23,29 +23,29 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template <typename>
+        template<typename>
         struct value_of_impl;
 
-        template <typename>
+        template<typename>
         struct equal_to_impl;
 
-        template <typename>
+        template<typename>
         struct deref_impl;
 
-        template <typename>
+        template<typename>
         struct next_impl;
 
-        template <typename>
+        template<typename>
         struct prior_impl;
 
-        template <typename>
+        template<typename>
         struct advance_impl;
 
-        template <typename>
+        template<typename>
         struct distance_impl;
     }
 
-    template <typename It>
+    template<typename It>
     struct mpl_iterator
       : iterator_facade<
             mpl_iterator<It>
@@ -56,49 +56,49 @@ namespace boost { namespace fusion
         typedef void void_;
         typedef It it_type;
 
-        template <typename>
+        template<typename>
         struct value_of
           : extension::value_of_impl<
                 typename mpl::apply1<mpl::always<mpl_iterator_tag>,It>::type
             >::template apply<It>
         {};
 
-        template <typename, typename It2>
+        template<typename, typename It2>
         struct equal_to
           : extension::equal_to_impl<
                 typename mpl::apply1<mpl::always<mpl_iterator_tag>,It>::type
             >::template apply<It,It2>
         {};
 
-        template <typename>
+        template<typename>
         struct deref
           : extension::deref_impl<
                 typename mpl::apply1<mpl::always<mpl_iterator_tag>,It>::type
             >::template apply<It>
         {};
 
-        template <typename>
+        template<typename>
         struct next
           : extension::next_impl<
                 typename mpl::apply1<mpl::always<mpl_iterator_tag>,It>::type
             >::template apply<It>
         {};
 
-        template <typename>
+        template<typename>
         struct prior
           : extension::prior_impl<
                 typename mpl::apply1<mpl::always<mpl_iterator_tag>,It>::type
             >::template apply<It>
         {};
 
-        template <typename, typename N>
+        template<typename, typename N>
         struct advance
           : extension::advance_impl<
                 typename mpl::apply1<mpl::always<mpl_iterator_tag>,It>::type
             >::template apply<It,N>
         {};
 
-        template <typename, typename It2>
+        template<typename, typename It2>
         struct distance
           : extension::distance_impl<
                 typename mpl::apply1<mpl::always<mpl_iterator_tag>,It>::type

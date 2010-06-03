@@ -10,13 +10,13 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename>
+    template<typename>
     struct prior_impl;
 
-    template <>
+    template<>
     struct prior_impl<single_view_iterator_tag>
     {
-        template <typename It>
+        template<typename It>
         struct apply
         {
             typedef typename detail::remove_reference<It>::type it;

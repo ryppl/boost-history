@@ -17,10 +17,10 @@ namespace boost { namespace fusion { namespace extension
     template<typename>
     struct begin_impl;
 
-    template <>
+    template<>
     struct begin_impl<struct_tag>
     {
-        template <typename Seq>
+        template<typename Seq>
         struct apply
         {
             typedef
@@ -40,10 +40,10 @@ namespace boost { namespace fusion { namespace extension
         };
     };
 
-    template <>
+    template<>
     struct begin_impl<assoc_struct_tag>
     {
-        template <typename Seq>
+        template<typename Seq>
         struct apply
         {
             typedef

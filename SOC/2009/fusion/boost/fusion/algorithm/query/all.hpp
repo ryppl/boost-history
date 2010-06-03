@@ -21,7 +21,7 @@ namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename Seq, typename>
+        template<typename Seq, typename>
         struct all
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
@@ -31,7 +31,7 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename Seq, typename F>
+    template<typename Seq, typename F>
     inline typename
         result_of::all<
             BOOST_FUSION_R_ELSE_CLREF(Seq)
@@ -46,7 +46,7 @@ namespace boost { namespace fusion
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-    template <typename Seq, typename F>
+    template<typename Seq, typename F>
     inline typename result_of::all<Seq&, F>::type
     all(Seq& seq, F f)
     {

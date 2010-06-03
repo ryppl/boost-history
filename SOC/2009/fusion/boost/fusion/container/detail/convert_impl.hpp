@@ -15,7 +15,7 @@
 #include <boost/preprocessor/cat.hpp>
 
 //cschmidt: mpl's maximum supported arity is set to 5 by default. We need more
-//for the variadic templates implementations though. Therefore use the pp
+//for the variadic templates implementations though. Therefore we use the pp
 //implementation for now.
 //TODO: native variadic template unrolled workaround!.
 
@@ -29,13 +29,13 @@ namespace boost { namespace fusion
 {
     namespace extension
     {
-        template <typename T>
+        template<typename T>
         struct convert_impl;
 
-        template <>
+        template<>
         struct convert_impl<BOOST_PP_CAT(BOOST_FUSION_SEQ_NAME,_tag)>
         {
-            template <typename Seq>
+            template<typename Seq>
             struct apply
             {
 //#ifdef BOOST_NO_VARIADIC_TEMPLATES
@@ -68,7 +68,7 @@ namespace boost { namespace fusion
 
     namespace result_of
     {
-        template <typename Seq>
+        template<typename Seq>
         struct BOOST_PP_CAT(as_,BOOST_FUSION_SEQ_NAME)
           : extension::convert_impl<
                 BOOST_PP_CAT(BOOST_FUSION_SEQ_NAME,_tag)
@@ -79,7 +79,7 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename Seq>
+    template<typename Seq>
     inline typename
         result_of::BOOST_PP_CAT(as_,BOOST_FUSION_SEQ_NAME)<
             BOOST_FUSION_R_ELSE_CLREF(Seq)

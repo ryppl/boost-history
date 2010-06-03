@@ -1,6 +1,6 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -18,26 +18,15 @@
 
 namespace boost { namespace fusion
 {
-    struct iterator_facade_tag;
-
     namespace extension
     {
-        template <typename>
+        template<typename>
         struct equal_to_impl;
-
-        template <>
-        struct equal_to_impl<iterator_facade_tag>
-        {
-            template <typename It1, typename It2>
-            struct apply
-              : detail::remove_reference<It1>::type::template equal_to<It1, It2>
-            {};
-        };
     }
 
     namespace result_of
     {
-        template <typename It1, typename It2>
+        template<typename It1, typename It2>
         struct equal_to
           : extension::equal_to_impl<typename traits::tag_of<It1>::type>::
                 template apply<It1, It2>::type
@@ -49,7 +38,7 @@ namespace boost { namespace fusion
 
     namespace iterator_operators
     {
-        template <typename It1, typename It2>
+        template<typename It1, typename It2>
         inline BOOST_FUSION_CONSTEXPR
         typename enable_if<
             mpl::and_<traits::is_iterator<It1>, traits::is_iterator<It2> >
@@ -60,7 +49,7 @@ namespace boost { namespace fusion
             return result_of::equal_to<It1 const&, It1 const&>::value;
         }
 
-        template <typename It1, typename It2>
+        template<typename It1, typename It2>
         inline BOOST_FUSION_CONSTEXPR
         typename enable_if<
             mpl::and_<

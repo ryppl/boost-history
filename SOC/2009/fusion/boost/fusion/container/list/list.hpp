@@ -1,6 +1,6 @@
 /*=============================================================================
     Copyright (c) 2005 Joel de Guzman
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -9,6 +9,7 @@
 #ifndef BOOST_FUSION_CONTAINER_LIST_LIST_HPP
 #define BOOST_FUSION_CONTAINER_LIST_LIST_HPP
 
+#include <boost/config.hpp>
 #include <boost/fusion/container/list/list_fwd.hpp>
 #include <boost/fusion/container/list/cons.hpp>
 #include <boost/fusion/container/generation/vector_tie.hpp>
@@ -17,6 +18,12 @@
 
 namespace boost { namespace fusion
 {
+#ifdef BOOST_MSVC
+#   pragma warning(push)
+    //'class' : multiple copy constructors specified
+#   pragma warning(disable:4521)
+#endif
+
     VARIADIC_TEMPLATE(FUSION_MAX_LIST_SIZE)
     struct list
       : detail::cons_gen<EXPAND_TEMPLATE_ARGUMENTS(FUSION_MAX_LIST_SIZE)>::type
@@ -42,12 +49,12 @@ namespace boost { namespace fusion
 
 #   include <boost/fusion/container/list/detail/pp/list_forward_ctor.hpp>
 
-        template<typename SeqAssign>
-        list(SeqAssign const& seq_assign)
-          : base_type(seq_assign)
+        template<typename Seq>
+        list(Seq const& seq)
+          : base_type(seq)
         {}
 
-        template <typename Seq>
+        template<typename Seq>
         list&
         operator=(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
         {
@@ -64,6 +71,10 @@ namespace boost { namespace fusion
 #   undef BOOST_FUSION_USE_BASE_TYPE
 #endif
     };
+
+#ifdef BOOST_MSVC
+#   pragma warning(pop)
+#endif
 }}
 
 #endif

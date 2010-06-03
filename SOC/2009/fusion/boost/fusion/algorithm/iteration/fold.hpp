@@ -25,7 +25,7 @@ namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename Seq, typename State, typename F>
+        template<typename Seq, typename State, typename F>
         struct fold
           : detail::fold_impl<
                 size<Seq>::value
@@ -47,7 +47,7 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename Seq, typename State, typename F>
+    template<typename Seq, typename State, typename F>
     inline typename result_of::fold<
         BOOST_FUSION_R_ELSE_CLREF(Seq)
       , BOOST_FUSION_R_ELSE_CLREF(State)
@@ -68,11 +68,9 @@ namespace boost { namespace fusion
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-    template <typename Seq, typename State, typename F>
+    template<typename Seq, typename State, typename F>
     inline typename result_of::fold<Seq&,State const&,F>::type
-    fold(Seq& seq,
-         State const& state,
-         F f)
+    fold(Seq& seq,State const& state,F f)
     {
         return result_of::fold<Seq&,State const&,F>::call(
                 state, fusion::begin(seq), f);

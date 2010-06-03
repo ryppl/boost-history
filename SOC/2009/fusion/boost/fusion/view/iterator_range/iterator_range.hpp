@@ -30,7 +30,7 @@ namespace boost { namespace fusion
     struct iterator_range_tag;
     struct fusion_sequence_tag;
 
-    template <typename Begin, typename End>
+    template<typename Begin, typename End>
     struct iterator_range
       : sequence_base<iterator_range<Begin, End> >
     {

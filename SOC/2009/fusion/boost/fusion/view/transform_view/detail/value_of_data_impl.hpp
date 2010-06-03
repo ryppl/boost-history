@@ -10,13 +10,13 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename>
+    template<typename>
     struct value_of_data_impl;
 
-    template <>
+    template<>
     struct value_of_data_impl<transform_view_iterator_tag>
     {
-        template <typename It>
+        template<typename It>
         struct apply
         {
             typedef typename
@@ -26,10 +26,10 @@ namespace boost { namespace fusion { namespace extension
         };
     };
 
-    template <>
+    template<>
     struct value_of_data_impl<transform_view_iterator2_tag>
     {
-        template <typename It>
+        template<typename It>
         struct apply
         {
             typedef typename

@@ -1,5 +1,5 @@
 /*=============================================================================
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -8,8 +8,14 @@
 #ifndef BOOST_FUSION_SUPPORT_INTERNAL_REF_HPP
 #define BOOST_FUSION_SUPPORT_INTERNAL_REF_HPP
 
-#include <boost/config.hpp>
+#include <boost/detail/workaround.hpp>
+#if !defined(BOOST_NO_RVALUE_REFERENCES) &&                                     \
+    BOOST_WORKAROUND(__GNUC__,==4)&&                                            \
+    BOOST_WORKAROUND(__GNUC_MINOR__,<5)
+#   error The c++0x extension of your compiler is not supported!
+#endif
 
+#include <boost/config.hpp>
 #include <boost/preprocessor/empty.hpp>
 #include <boost/mpl/if.hpp>
 #ifndef BOOST_NO_RVALUE_REFERENCES
@@ -23,7 +29,10 @@
 #include <boost/type_traits/is_array.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/add_const.hpp>
-#ifndef BOOST_FUSION_NO_PROPAGATE_VOLATILE
+#if BOOST_WORKAROUND(BOOST_MSVC,==1600)
+#   include <boost/type_traits/is_function.hpp>
+#endif
+#ifdef BOOST_FUSION_PROPAGATE_VOLATILE
 #   include <boost/type_traits/is_volatile.hpp>
 #   include <boost/type_traits/add_volatile.hpp>
 #   include <boost/type_traits/remove_cv.hpp>
@@ -73,10 +82,34 @@
 namespace boost { namespace fusion { namespace detail
 {
     //cschmidt: workaround until boost::is_reference supports rvalues
+#if BOOST_WORKAROUND(BOOST_MSVC, == 1600)
+    template<typename T>
+    struct is_lrref_stage2
+      : mpl::false_
+    {};
+
+    template<typename T>
+    struct is_lrref_stage2<T&&>
+      : mpl::true_
+    {};
+
+    template<typename T>
+    struct is_lrref
+      : is_lrref_stage2<T>
+    {};
+#else
     template<typename T>
     struct is_lrref
       : mpl::false_
     {};
+
+#   ifndef BOOST_NO_RVALUE_REFERENCES
+    template<typename T>
+    struct is_lrref<T&&>
+      : mpl::true_
+    {};
+#   endif
+#endif
 
     template<typename T>
     struct is_lrref<T&>
@@ -84,11 +117,6 @@ namespace boost { namespace fusion { namespace detail
     {};
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
-    template<typename T>
-    struct is_lrref<T&&>
-      : mpl::true_
-    {};
-
     template<typename T>
     struct is_rref
       : mpl::false_
@@ -100,12 +128,38 @@ namespace boost { namespace fusion { namespace detail
     {};
 #endif
 
-    //cschmidt: workaround until boost::is_reference supports rvalues
+#if BOOST_WORKAROUND(BOOST_MSVC, == 1600)
+    template<typename T>
+    struct remove_reference_stage2
+    {
+        typedef T type;
+    };
+
+    template<typename T>
+    struct remove_reference_stage2<T&&>
+    {
+        typedef T type;
+    };
+
+    template<typename T>
+    struct remove_reference
+      : remove_reference_stage2<T>
+    {};
+#else
     template<typename T>
     struct remove_reference
     {
         typedef T type;
     };
+
+#   ifndef BOOST_NO_RVALUE_REFERENCES
+    template<typename T>
+    struct remove_reference<T&&>
+    {
+        typedef T type;
+    };
+#   endif
+#endif
 
     template<typename T>
     struct remove_reference<T&>
@@ -113,38 +167,49 @@ namespace boost { namespace fusion { namespace detail
         typedef T type;
     };
 
-#ifndef BOOST_NO_RVALUE_REFERENCES
+#if BOOST_WORKAROUND(BOOST_MSVC, == 1600)
     template<typename T>
-    struct remove_reference<T&&>
+    struct add_lref_stage2
     {
-        typedef T type;
+        typedef T& type;
     };
-#endif
 
-    template <typename T>
+    template<typename T>
+    struct add_lref_stage2<T&&>
+    {
+        typedef T&& type;
+    };
+
+    template<typename T>
+    struct add_lref
+      : add_lref_stage2<T>
+    {};
+#else
+    template<typename T>
     struct add_lref
     {
         typedef T& type;
     };
 
-    template <typename T>
+#   ifndef BOOST_NO_RVALUE_REFERENCES
+    template<typename T>
+    struct add_lref<T&&>
+    {
+        typedef T&& type;
+    };
+#   endif
+#endif
+
+    template<typename T>
     struct add_lref<T&>
     {
         typedef T& type;
     };
 
-#ifndef BOOST_NO_RVALUE_REFERENCES
-    template <typename T>
-    struct add_lref<T&&>
-    {
-        typedef T&& type;
-    };
-#endif
-
-    template <typename T>
+    template<typename T>
     struct identity
       :
- #ifdef BOOST_FUSION_NO_PROPAGATE_VOLATILE
+#ifndef BOOST_FUSION_PROPAGATE_VOLATILE
         remove_const<
 #else
         remove_cv<
@@ -153,7 +218,7 @@ namespace boost { namespace fusion { namespace detail
         >
     {};
 
-    template <typename TestType,typename Type>
+    template<typename TestType,typename Type>
     struct forward_as
     {
         typedef typename remove_reference<TestType>::type test_type;
@@ -164,7 +229,7 @@ namespace boost { namespace fusion { namespace detail
               , typename add_const<Type>::type
               , Type
             >::type
-#ifndef BOOST_FUSION_NO_PROPAGATE_VOLATILE
+#ifdef BOOST_FUSION_PROPAGATE_VOLATILE
         const_type;
 
         typedef typename
@@ -194,24 +259,45 @@ namespace boost { namespace fusion { namespace detail
 #endif
     };
 
-#ifndef BOOST_NO_RVALUE_REFERENCES
-    //8.5.3p5...
-    template <typename TestType,typename Type>
-    struct forward_as<TestType,Type&&>
-      : mpl::if_<
-            mpl::or_<is_class<Type>, is_array<Type> >
-          , Type&&
-          , Type
-        >
-    {};
-#endif
-
-    //Optimization
-    template <typename TestType,typename Type>
+#if !defined(BOOST_MSVC) || BOOST_MSVC!=1600
+    template<typename TestType,typename Type>
     struct forward_as<TestType,Type&>
     {
         typedef Type& type;
     };
+#endif
+
+#ifndef BOOST_NO_RVALUE_REFERENCES
+    //8.5.3p5...
+    template<typename TestType,typename Type>
+    struct forward_as<TestType,Type&&>
+      : mpl::if_<
+            mpl::or_<is_class<Type>, is_array<Type> >
+          , Type&&
+#if BOOST_WORKAROUND(BOOST_MSVC,==1600)
+          , typename mpl::if_<
+                is_function<Type>
+              , Type&
+              , Type
+            >::type
+#else
+          , Type
+#endif
+        >
+    {};
+#endif
+
+    template<typename TestType, typename Type>
+    struct forward_as_lref
+      : forward_as<TestType, Type>
+    {};
+
+#ifndef BOOST_NO_RVALUE_REFERENCES
+    template<typename TestType,typename Type>
+    struct forward_as_lref<TestType,Type&&>
+      : forward_as<TestType, Type&>
+    {};
+#endif
 }}}
 
 #endif

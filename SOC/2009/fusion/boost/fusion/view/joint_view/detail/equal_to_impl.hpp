@@ -52,7 +52,7 @@ namespace boost { namespace fusion
             };
         };
 
-        template <>
+        template<>
         struct equal_to_impl<concat_iterator_tag>
           : equal_to_impl<joint_view_iterator_tag>
         {};

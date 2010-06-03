@@ -38,7 +38,7 @@ namespace boost
               : mpl::equal_to<typename T::category, Category>
             {};
 
-            template <typename T, typename Enable>
+            template<typename T, typename Enable>
             struct tag_of_fallback;
 
             template<typename T>

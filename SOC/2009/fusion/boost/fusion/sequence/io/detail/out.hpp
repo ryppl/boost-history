@@ -22,11 +22,11 @@
 
 namespace boost { namespace fusion { namespace detail
 {
-    template <typename Tag>
+    template<typename Tag>
     struct delimiter_out
     {
         // print a delimiter
-        template <typename OS>
+        template<typename OS>
         static void
         print(OS& os, char const* delim, mpl::false_ = mpl::false_())
         {
@@ -34,7 +34,7 @@ namespace boost { namespace fusion { namespace detail
             manip.print(delim);
         }
 
-        template <typename OS>
+        template<typename OS>
         static void
         print(OS& os, char const* delim, mpl::true_)
         {
@@ -43,13 +43,13 @@ namespace boost { namespace fusion { namespace detail
 
     struct print_sequence_loop
     {
-        template <typename OS, typename Begin, typename End>
+        template<typename OS, typename Begin, typename End>
         static void
         call(OS& os, Begin const&, End const&, mpl::true_)
         {
         }
 
-        template <typename OS, typename Begin, typename End>
+        template<typename OS, typename Begin, typename End>
         static void
         call(OS& os, Begin const& first, End const& last, mpl::false_)
         {
@@ -65,7 +65,7 @@ namespace boost { namespace fusion { namespace detail
             call(os, fusion::next(first), last, is_last());
         }
 
-        template <typename OS, typename Begin, typename End>
+        template<typename OS, typename Begin, typename End>
         static void
         call(OS& os, Begin const& first, End const& last)
         {
@@ -79,7 +79,7 @@ namespace boost { namespace fusion { namespace detail
         }
     };
 
-    template <typename OS, typename Seq>
+    template<typename OS, typename Seq>
     inline void
     print_sequence(OS& os, Seq const& seq)
     {

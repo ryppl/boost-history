@@ -15,9 +15,11 @@
 #   ifdef BOOST_NO_VARIADIC_TEMPLATES
 #       include <boost/preprocessor/empty.hpp>
 
-#       define BOOST_FUSION_FUNCTION_NAME BOOST_PP_CAT(BOOST_FUSION_SEQ_NAME(BOOST_PP_EMPTY()),_tie)
+#       define BOOST_FUSION_FUNCTION_NAME\
+            BOOST_PP_CAT(BOOST_FUSION_SEQ_NAME(BOOST_PP_EMPTY()),_tie)
 #   else
-#       define BOOST_FUSION_FUNCTION_NAME BOOST_PP_CAT(BOOST_FUSION_SEQ_NAME,_tie)
+#       define BOOST_FUSION_FUNCTION_NAME\
+            BOOST_PP_CAT(BOOST_FUSION_SEQ_NAME,_tie)
 #   endif
 #endif
 

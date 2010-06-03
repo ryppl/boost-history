@@ -16,7 +16,7 @@ namespace boost { namespace fusion
 {
     namespace extension
     {
-        template <typename>
+        template<typename>
         struct segments_impl;
     }
 

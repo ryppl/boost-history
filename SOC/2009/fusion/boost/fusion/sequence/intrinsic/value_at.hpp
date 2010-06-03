@@ -15,7 +15,6 @@
 
 namespace boost { namespace fusion
 {
-    struct sequence_facade_tag;
 #ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
     struct list_tag;
     struct cons_tag;
@@ -23,23 +22,13 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template <typename>
+        template<typename>
         struct value_at_impl;
-
-        template <>
-        struct value_at_impl<sequence_facade_tag>
-        {
-            template <typename Seq, typename N>
-            struct apply
-              : detail::remove_reference<Seq>::type::
-                    template value_at<Seq, N>
-            {};
-        };
     }
 
     namespace result_of
     {
-        template <typename Seq, typename N>
+        template<typename Seq, typename N>
         struct value_at
           : extension::value_at_impl<typename traits::tag_of<Seq>::type>::
                 template apply<Seq, N>
@@ -61,9 +50,9 @@ namespace boost { namespace fusion
             BOOST_FUSION_INDEX_CHECK(N::value,size<Seq>::value);
         };
 
-        template <typename Seq, int N>
+        template<typename Seq, int N>
         struct value_at_c
-          : result_of::value_at<Seq,mpl::int_<N> >
+          : value_at<Seq,mpl::int_<N> >
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((

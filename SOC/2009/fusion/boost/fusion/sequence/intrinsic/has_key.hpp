@@ -20,14 +20,12 @@
 
 namespace boost { namespace fusion
 {
-    struct sequence_facade_tag;
-
     namespace extension
     {
-        template <typename>
+        template<typename>
         struct has_key_impl
         {
-            template <typename Seq, typename Key>
+            template<typename Seq, typename Key>
             struct apply
               : mpl::not_<
                     typename result_of::equal_to<
@@ -37,20 +35,11 @@ namespace boost { namespace fusion
                 >::type
             {};
         };
-
-        template <>
-        struct has_key_impl<sequence_facade_tag>
-        {
-            template <typename Seq, typename Key>
-            struct apply
-              : detail::remove_reference<Seq>::type::template has_key<Seq, Key>
-            {};
-        };
     }
 
     namespace result_of
     {
-        template <typename Seq, typename Key>
+        template<typename Seq, typename Key>
         struct has_key
           : extension::has_key_impl<typename traits::tag_of<Seq>::type>::
                 template apply<Seq, Key>
@@ -60,7 +49,7 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename Key, typename Seq>
+    template<typename Key, typename Seq>
     inline typename result_of::has_key<Seq const&, Key>::type
     has_key(Seq const& seq)
     {

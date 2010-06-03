@@ -12,10 +12,10 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <>
+    template<>
     struct prior_impl<reverse_view_iterator_tag>
     {
-        template <typename It>
+        template<typename It>
         struct apply
         {
             typedef

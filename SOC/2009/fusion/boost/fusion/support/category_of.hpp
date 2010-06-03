@@ -101,7 +101,7 @@ namespace boost { namespace fusion
 
     namespace traits
     {
-        template <typename T>
+        template<typename T>
         struct category_of
           : extension::category_of_impl<
                 typename fusion::traits::tag_of<T>::type
@@ -111,7 +111,7 @@ namespace boost { namespace fusion
                 mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >));
         };
 
-        template <typename T>
+        template<typename T>
         struct is_associative
           : is_base_of<
                 associative_tag
@@ -122,7 +122,7 @@ namespace boost { namespace fusion
                 mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >));
         };
 
-        template <typename T>
+        template<typename T>
         struct is_incrementable
           : is_base_of<
                 incrementable_traversal_tag
@@ -133,7 +133,7 @@ namespace boost { namespace fusion
                 mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >));
         };
 
-        template <typename T>
+        template<typename T>
         struct is_single_pass
           : is_base_of<
                 single_pass_traversal_tag
@@ -144,7 +144,7 @@ namespace boost { namespace fusion
                 mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >));
         };
 
-        template <typename T>
+        template<typename T>
         struct is_forward
           : is_base_of<
                 forward_traversal_tag
@@ -155,7 +155,7 @@ namespace boost { namespace fusion
                 mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >));
         };
 
-        template <typename T>
+        template<typename T>
         struct is_bidirectional
           : is_base_of<
                 bidirectional_traversal_tag
@@ -166,7 +166,7 @@ namespace boost { namespace fusion
                 mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >));
         };
 
-        template <typename T>
+        template<typename T>
         struct is_random_access
           : is_base_of<
                 random_access_traversal_tag

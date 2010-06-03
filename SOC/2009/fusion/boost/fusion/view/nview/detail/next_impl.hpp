@@ -13,13 +13,13 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template<typename Tag>
     struct next_impl;
 
-    template <>
+    template<>
     struct next_impl<nview_iterator_tag>
     {
-        template <typename It>
+        template<typename It>
         struct apply
         {
             typedef typename detail::remove_reference<It>::type it;

@@ -13,13 +13,13 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename>
+    template<typename>
     struct begin_impl;
 
-    template <>
+    template<>
     struct begin_impl<vector_tag>
     {
-        template <typename Seq>
+        template<typename Seq>
         struct apply
         {
             typedef

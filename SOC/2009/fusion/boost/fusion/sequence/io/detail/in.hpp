@@ -23,11 +23,11 @@
 
 namespace boost { namespace fusion { namespace detail
 {
-    template <typename Tag>
+    template<typename Tag>
     struct delimiter_in
     {
         // read a delimiter
-        template <typename IS>
+        template<typename IS>
         static void
         read(IS& is, char const* delim, mpl::false_ = mpl::false_())
         {
@@ -35,7 +35,7 @@ namespace boost { namespace fusion { namespace detail
             manip.read(delim);
         }
 
-        template <typename IS>
+        template<typename IS>
         static void
         read(IS& is, char const* delim, mpl::true_)
         {
@@ -44,13 +44,13 @@ namespace boost { namespace fusion { namespace detail
 
     struct read_sequence_loop
     {
-        template <typename IS, typename Begin, typename End>
+        template<typename IS, typename Begin, typename End>
         static void
         call(IS& is, Begin const&, End const&, mpl::true_)
         {
         }
 
-        template <typename IS, typename Begin, typename End>
+        template<typename IS, typename Begin, typename End>
         static void
         call(IS& is, Begin const& first, End const& last, mpl::false_)
         {
@@ -66,7 +66,7 @@ namespace boost { namespace fusion { namespace detail
             call(is, fusion::next(first), last, is_last());
         }
 
-        template <typename IS, typename Begin, typename End>
+        template<typename IS, typename Begin, typename End>
         static void
         call(IS& is, Begin const& first, End const& last)
         {
@@ -80,7 +80,7 @@ namespace boost { namespace fusion { namespace detail
         }
     };
 
-    template <typename IS, typename Seq>
+    template<typename IS, typename Seq>
     inline void
     read_sequence(IS& is, Seq& seq)
     {

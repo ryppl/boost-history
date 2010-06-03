@@ -48,7 +48,7 @@ main()
     std::cout << tuple_delimiter(", ");
 
     {
-        BOOST_MPL_ASSERT_NOT((traits::is_view<adapted::point>));
+        BOOST_MPL_ASSERT((traits::is_view<adapted::point>));
         ns::point basep = {123, 456};
         adapted::point p(basep);
 
@@ -69,7 +69,8 @@ main()
     }
 
     {
-        vector<int, float> v1(4, 2);
+        //TODO
+        vector<int, float> v1(4, 2.0f);
         ns::point basev2 = {5, 3};
         adapted::point v2(basev2);
 

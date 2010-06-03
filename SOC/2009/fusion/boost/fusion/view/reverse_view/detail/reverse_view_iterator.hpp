@@ -15,7 +15,7 @@ namespace boost { namespace fusion
 {
     struct reverse_view_iterator_tag;
 
-    template <typename It>
+    template<typename It>
     struct reverse_view_iterator
       : iterator_base<reverse_view_iterator<It> >
     {

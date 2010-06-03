@@ -13,18 +13,18 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename>
+    template<typename>
     struct begin_impl;
 
-    template <>
+    template<>
     struct begin_impl<filter_view_tag>
     {
-        template <typename Seq>
+        template<typename Seq>
         struct apply
         {
             typedef typename detail::remove_reference<Seq>::type seq;
             typedef typename
-                detail::forward_as<Seq, typename seq::seq_type>::type
+                detail::forward_as_lref<Seq, typename seq::seq_type>::type
             underlying_seq_type;
 
             typedef

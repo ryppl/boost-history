@@ -1,5 +1,5 @@
 /*=============================================================================
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -9,23 +9,26 @@
 #define BOOST_FUSION_ITERATOR_ITERATOR_FACADE_HPP
 
 #include <boost/fusion/support/iterator_base.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
+#include <boost/fusion/support/internal/facade_generation.hpp>
 
-#include <boost/mpl/always.hpp>
-#include <boost/mpl/apply.hpp>
+#define BOOST_FUSION_ITERATOR_INTRINSIC_FUNCS                                   \
+    ((advance, 1, 1))                                                           \
+    ((deref_data, 0, 0))                                                        \
+    ((deref, 0, 0))                                                             \
+    ((distance, 1, 0))                                                          \
+    ((equal_to, 1, 0))                                                          \
+    ((key_of, 0, 0))                                                            \
+    ((next, 0, 0))                                                              \
+    ((prior, 0, 0))                                                             \
+    ((value_of_data, 0, 0))                                                     \
+    ((value_of, 0, 0))
+
+BOOST_FUSION_FACADE_DEFINE_INTRINSIC_FUNCS_WRAPPER(
+    iterator_facade_tag, BOOST_FUSION_ITERATOR_INTRINSIC_FUNCS)
 
 namespace boost { namespace fusion
 {
-    struct void_;
-    struct iterator_facade_tag;
-
-    namespace extension
-    {
-        template<typename>
-        struct advance_impl;
-    }
-
-    template <typename Derived, typename Category>
+    template<typename Derived, typename Category>
     struct iterator_facade
       : iterator_base<Derived>
     {
@@ -35,13 +38,11 @@ namespace boost { namespace fusion
 
         //TODO doc
 
-        template <typename It, typename N>
-        struct advance
-          :  extension::advance_impl<
-                 typename mpl::apply1<mpl::always<void_>,It>::type
-             >::template apply<It,N>
-        {};
+        BOOST_FUSION_FACADE_DEFINE_INTRINSIC_FUNCS_FORWARDER(
+            BOOST_FUSION_ITERATOR_INTRINSIC_FUNCS)
     };
 }}
+
+#undef BOOST_FUSION_ITERATOR_INTRINSIC_FUNCS
 
 #endif

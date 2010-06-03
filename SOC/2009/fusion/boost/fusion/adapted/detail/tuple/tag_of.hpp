@@ -58,7 +58,7 @@ namespace boost
 #else
 #   ifdef BOOST_NO_PARTIAL_SPECIALIZATION_IMPLICIT_DEFAULT_ARGS
 #       define BOOST_FUSION_TUPLE_TAG_OF_SPECIALIZATION(MODIFIER,_)\
-            template <\
+            template<\
                 class T0, class T1, class T2, class T3, class T4, \
                 class T5, class T6, class T7, class T8, class T9\
             >\
@@ -70,20 +70,20 @@ namespace boost
                 typedef boost_tuple_tag type;\
             };\
             \
-            template <class Head, class Tail>\
+            template<class Head, class Tail>\
             struct tag_of<tuples::cons<Head, Tail> MODIFIER,void>\
             {\
                 typedef boost_tuple_tag type;\
             };\
             \
-            template <>\
+            template<>\
             struct tag_of<tuples::null_type MODIFIER,void>\
             {\
                 typedef boost_tuple_tag type;\
             };
 #   else
 #       define BOOST_FUSION_TUPLE_TAG_OF_SPECIALIZATION(MODIFIER,_)\
-            template <\
+            template<\
                 class T0, class T1, class T2, class T3, class T4, \
                 class T5, class T6, class T7, class T8, class T9\
             >\
@@ -94,13 +94,13 @@ namespace boost
                 typedef boost_tuple_tag type;\
             };\
             \
-            template <class Head, class Tail>\
+            template<class Head, class Tail>\
             struct tag_of<tuples::cons<Head, Tail> MODIFIER>\
             {\
                 typedef boost_tuple_tag type;\
             };\
             \
-            template <>\
+            template<>\
             struct tag_of<tuples::null_type MODIFIER>\
             {\
                 typedef boost_tuple_tag type;\
@@ -159,7 +159,7 @@ namespace boost
         };
 #   endif
 #else
-        template <
+        template<
             class T0, class T1, class T2, class T3, class T4,
             class T5, class T6, class T7, class T8, class T9
         >
@@ -170,7 +170,7 @@ namespace boost
             typedef fusion::fusion_sequence_tag type;
         };
 
-        template <
+        template<
             class T0, class T1, class T2, class T3, class T4,
             class T5, class T6, class T7, class T8, class T9
         >
@@ -181,25 +181,25 @@ namespace boost
             typedef fusion::fusion_sequence_tag type;
         };
 
-        template <class Head, class Tail>
+        template<class Head, class Tail>
         struct sequence_tag<tuples::cons<Head, Tail> >
         {
             typedef fusion::fusion_sequence_tag type;
         };
 
-        template <class Head, class Tail>
+        template<class Head, class Tail>
         struct sequence_tag<tuples::cons<Head, Tail> const>
         {
             typedef fusion::fusion_sequence_tag type;
         };
 
-        template <>
+        template<>
         struct sequence_tag<tuples::null_type>
         {
             typedef fusion::fusion_sequence_tag type;
         };
 
-        template <>
+        template<>
         struct sequence_tag<tuples::null_type const>
         {
             typedef fusion::fusion_sequence_tag type;

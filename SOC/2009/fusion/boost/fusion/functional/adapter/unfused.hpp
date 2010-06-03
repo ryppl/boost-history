@@ -23,6 +23,14 @@
 
 namespace boost { namespace fusion
 {
+#ifdef BOOST_MSVC
+#   pragma warning(push)
+    //'class' : multiple copy constructors specified
+#   pragma warning(disable:4521)
+    //'class' : multiple assignment operators specified
+#   pragma warning(disable:4522)
+#endif
+
     template<
         typename F
         //TODO remove?
@@ -38,7 +46,7 @@ namespace boost { namespace fusion
         struct result<Self(Args...)>
           : boost::result_of<
               typename detail::get_func_base<
-                  typename detail::forward_as<Self,F>::type
+                  typename detail::forward_as_lref<Self,F>::type
                >::type(BOOST_FUSION_R_ELSE_LREF(
                    typename result_of::vector_tie<Args...>::type))
           >
@@ -122,6 +130,10 @@ namespace boost { namespace fusion
 
         F f;
     };
+
+#ifdef BOOST_MSVC
+#   pragma warning(pop)
+#endif
 }}
 
 #endif

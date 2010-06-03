@@ -9,6 +9,8 @@
 #define BOOST_FUSION_SUPPORT_INTERNAL_WORKAROUND_HPP
 
 #include <boost/config.hpp>
+#include <boost/detail/workaround.hpp>
+
 #ifdef BOOST_NO_RVALUE_REFERENCES
 //cschmidt: see https://svn.boost.org/trac/boost/ticket/3305
 #   if defined(BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS) || BOOST_WORKAROUND(__GNUC__,<4)

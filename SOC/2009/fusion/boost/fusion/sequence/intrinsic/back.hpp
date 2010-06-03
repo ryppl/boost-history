@@ -1,5 +1,6 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -13,16 +14,13 @@
 #include <boost/fusion/iterator/deref.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
-
 #include <boost/mpl/bool.hpp>
 
 namespace boost { namespace fusion
 {
-    struct sequence_facade_tag;
-
     namespace result_of
     {
-        template <typename Seq>
+        template<typename Seq>
         struct back
           : deref<typename prior<typename end<Seq>::type>::type>
         {
@@ -32,7 +30,7 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename Seq>
+    template<typename Seq>
     inline typename result_of::back<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type
     back(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
@@ -41,7 +39,7 @@ namespace boost { namespace fusion
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-    template <typename Seq>
+    template<typename Seq>
     inline typename result_of::back<Seq&>::type
     back(Seq& seq)
     {

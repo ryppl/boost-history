@@ -1,6 +1,6 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -9,18 +9,23 @@
 #ifndef BOOST_FUSION_CONTAINER_VECTOR_DETAIL_PP_VECTOR_HPP
 #define BOOST_FUSION_CONTAINER_VECTOR_DETAIL_PP_VECTOR_HPP
 
+#include <boost/config.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/container/vector/detail/pp/vector_n_chooser.hpp>
-
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/type_traits/add_const.hpp>
-
 #include <boost/fusion/container/detail/forward_interface.hpp>
 
 namespace boost { namespace fusion
 {
     struct fusion_sequence_tag;
+
+#ifdef BOOST_MSVC
+#   pragma warning(push)
+    //'class' : multiple copy constructors specified
+#   pragma warning(disable:4521)
+#endif
 
     VARIADIC_TEMPLATE(FUSION_MAX_VECTOR_SIZE)
     struct vector
@@ -44,6 +49,10 @@ namespace boost { namespace fusion
 #undef BOOST_FUSION_SEQ_NAME
 #undef BOOST_FUSION_USE_BASE_TYPE
     };
+
+#ifdef BOOST_MSVC
+#   pragma warning(pop)
+#endif
 }}
 
 #endif

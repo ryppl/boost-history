@@ -12,10 +12,10 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename>
+    template<typename>
     struct deref_data_impl;
 
-    template <>
+    template<>
     struct deref_data_impl<set_iterator_tag>
       : deref_impl<set_iterator_tag>
     {};

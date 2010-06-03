@@ -27,10 +27,10 @@ namespace boost { namespace fusion
 {
     namespace detail
     {
-        template <typename Begin, typename End, typename Pred>
+        template<typename Begin, typename End, typename Pred>
         struct main_find_if;
 
-        template <typename Begin, typename End, typename Pred>
+        template<typename Begin, typename End, typename Pred>
         struct next_find_if
           : main_find_if<
                 typename result_of::next<Begin>::type
@@ -39,7 +39,7 @@ namespace boost { namespace fusion
             >
         {};
 
-        template <typename Begin, typename End, typename Pred>
+        template<typename Begin, typename End, typename Pred>
         struct main_find_if
           : mpl::eval_if<
                 mpl::or_<
@@ -64,7 +64,7 @@ namespace boost { namespace fusion
         template<typename It, typename Pred, int N>
         struct unroll_again;
 
-        template <typename It, typename Pred, int Offset>
+        template<typename It, typename Pred, int Offset>
         struct apply_offset_filter
           : mpl::apply1<
                 Pred
@@ -160,7 +160,7 @@ namespace boost { namespace fusion
             >
         {};
 
-        template <typename Begin, typename End, typename Pred>
+        template<typename Begin, typename End, typename Pred>
         struct static_find_if
         {
             typedef typename
@@ -172,7 +172,7 @@ namespace boost { namespace fusion
                 >::type
             type;
 
-            template <typename It>
+            template<typename It>
             static type
             call(It const& it)
             {
@@ -183,11 +183,11 @@ namespace boost { namespace fusion
             }
         };
 
-        template <typename Begin, typename End, typename Pred>
+        template<typename Begin, typename End, typename Pred>
         struct static_seq_find_if
           : static_find_if<Begin, End, Pred>
         {
-            template <typename Seq>
+            template<typename Seq>
             static typename static_find_if<Begin, End, Pred>::type
             call(BOOST_FUSION_R_ELSE_LREF(Seq) seq)
             {

@@ -16,7 +16,7 @@ namespace boost { namespace fusion
     struct joint_view_iterator_tag;
     struct concat_iterator_tag;
 
-    template <typename Category, typename Begin, typename End, typename Concat>
+    template<typename Category, typename Begin, typename End, typename Concat>
     struct joint_view_iterator
       : iterator_base<joint_view_iterator<Category, Begin, End, Concat> >
     {
@@ -55,7 +55,7 @@ namespace boost { namespace fusion
         concat_type concat;
     };
 
-    template <typename Category, typename Begin>
+    template<typename Category, typename Begin>
     struct concat_iterator
       : iterator_base<concat_iterator<Category, Begin> >
     {

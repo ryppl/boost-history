@@ -1,7 +1,7 @@
 /*=============================================================================
     Copyright (c) 2005 Joel de Guzman
     Copyright (c) 2005 Eric Niebler
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -10,6 +10,7 @@
 #ifndef BOOST_FUSION_CONTAINER_LIST_CONS_HPP
 #define BOOST_FUSION_CONTAINER_LIST_CONS_HPP
 
+#include <boost/config.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/front.hpp>
 #include <boost/fusion/iterator/next.hpp>
@@ -44,6 +45,12 @@ namespace boost { namespace fusion
 {
     struct void_;
     struct fusion_sequence_tag;
+
+#ifdef BOOST_MSVC
+#   pragma warning(push)
+    //'class' : multiple copy constructors specified
+#   pragma warning(disable:4521)
+#endif
 
     struct nil
       : sequence_base<nil>
@@ -95,7 +102,7 @@ namespace boost { namespace fusion
         {}
     };
 
-    template <typename Car, typename Cdr = nil>
+    template<typename Car, typename Cdr = nil>
     struct cons
       : sequence_base<cons<Car, Cdr> >
     {
@@ -149,7 +156,13 @@ namespace boost { namespace fusion
 #   else
         template<typename OtherCar>
         explicit
-        cons(OtherCar&& car)
+        cons(OtherCar&& car,
+            typename enable_if<
+                detail::is_explicitly_convertible<
+                    BOOST_FUSION_R_ELSE_CLREF(OtherCar)
+                  , car_type
+                >
+            >::type* =0)
           : car(std::forward<OtherCar>(car))
         {}
 
@@ -242,6 +255,10 @@ namespace boost { namespace fusion
         car_type car;
         cdr_type cdr;
     };
+
+#ifdef BOOST_MSVC
+#   pragma warning(pop)
+#endif
 }}
 
 #endif

@@ -21,7 +21,7 @@
 
 namespace boost { namespace mpl
 {
-    template <typename It>
+    template<typename It>
     struct fusion_iterator
       : fusion::result_of::value_of<It>
     {
@@ -29,7 +29,7 @@ namespace boost { namespace mpl
         typedef It iterator;
     };
 
-    template <typename It>
+    template<typename It>
     struct next<fusion_iterator<It> >
     {
         typedef
@@ -37,7 +37,7 @@ namespace boost { namespace mpl
         type;
     };
 
-    template <typename It>
+    template<typename It>
     struct prior<fusion_iterator<It> >
     {
         typedef
@@ -45,7 +45,7 @@ namespace boost { namespace mpl
         type;
     };
 
-    template <typename It, typename N>
+    template<typename It, typename N>
     struct advance<fusion_iterator<It>, N>
     {
         typedef
@@ -55,7 +55,7 @@ namespace boost { namespace mpl
         type;
     };
 
-    template <typename Begin, typename End>
+    template<typename Begin, typename End>
     struct distance<fusion_iterator<Begin>, fusion_iterator<End> >
       : fusion::result_of::distance<Begin, End>
     {};

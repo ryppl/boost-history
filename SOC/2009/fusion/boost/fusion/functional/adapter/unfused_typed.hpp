@@ -49,6 +49,14 @@ namespace boost { namespace fusion
     }
 #endif
 
+#ifdef BOOST_MSVC
+#   pragma warning(push)
+    //'class' : multiple copy constructors specified
+#   pragma warning(disable:4521)
+    //'class' : multiple assignment operators specified
+#   pragma warning(disable:4522)
+#endif
+
     template<typename F, typename TransformSeq>
     struct unfused_typed
 #if defined(BOOST_NO_VARIADIC_TEMPLATES) || defined(BOOST_NO_RVALUE_REFERENCES)
@@ -71,7 +79,7 @@ namespace boost { namespace fusion
         struct result<Self(Args...)>
           : boost::result_of<
                 typename detail::get_func_base<
-                    typename detail::forward_as<Self,F>::type
+                    typename detail::forward_as_lref<Self,F>::type
                 >::type(transformed_args&&)
             >
         {};
@@ -148,6 +156,10 @@ namespace boost { namespace fusion
 
         F f;
     };
+
+#ifdef BOOST_MSVC
+#   pragma warning(pop)
+#endif
 }}
 
 #undef BOOST_FUSION_ADAPTER_NAME

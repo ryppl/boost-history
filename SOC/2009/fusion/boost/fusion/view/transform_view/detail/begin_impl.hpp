@@ -13,21 +13,21 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename>
+    template<typename>
     struct begin_impl;
 
     // Unary Version
-    template <>
+    template<>
     struct begin_impl<transform_view_tag>
     {
-        template <typename Seq>
+        template<typename Seq>
         struct apply
         {
             typedef typename
                 detail::remove_reference<Seq>::type
             seq;
             typedef typename
-                detail::forward_as<
+                detail::forward_as_lref<
                     Seq
                   , typename seq::transform_type
                 >::type
@@ -36,12 +36,12 @@ namespace boost { namespace fusion { namespace extension
             typedef
                 transform_view_iterator<
                     typename result_of::begin<
-                        typename detail::forward_as<
+                        typename detail::forward_as_lref<
                             Seq
                           , typename seq::seq_type
                         >::type
                     >::type
-                  , typename detail::forward_as<
+                  , typename detail::forward_as_lref<
                         Seq
                       , typename seq::transform_type
                     >::type
@@ -60,15 +60,15 @@ namespace boost { namespace fusion { namespace extension
     };
 
     // Binary Version
-    template <>
+    template<>
     struct begin_impl<transform_view2_tag>
     {
-        template <typename Seq>
+        template<typename Seq>
         struct apply
         {
             typedef typename detail::remove_reference<Seq>::type seq;
             typedef typename
-                detail::forward_as<
+                detail::forward_as_lref<
                     Seq
                   , typename seq::transform_type
                 >::type
@@ -77,13 +77,13 @@ namespace boost { namespace fusion { namespace extension
             typedef
                 transform_view_iterator2<
                     typename result_of::begin<
-                        typename detail::forward_as<
+                        typename detail::forward_as_lref<
                             Seq
                           , typename seq::seq1_type
                         >::type
                     >::type
                   , typename result_of::begin<
-                        typename detail::forward_as<
+                        typename detail::forward_as_lref<
                             Seq
                           , typename seq::seq2_type
                         >::type

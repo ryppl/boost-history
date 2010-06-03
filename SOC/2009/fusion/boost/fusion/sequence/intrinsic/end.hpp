@@ -14,26 +14,15 @@
 
 namespace boost { namespace fusion
 {
-    struct sequence_facade_tag;
-
     namespace extension
     {
-        template <typename>
+        template<typename>
         struct end_impl;
-
-        template <>
-        struct end_impl<sequence_facade_tag>
-        {
-            template <typename Seq>
-            struct apply
-              : detail::remove_reference<Seq>::type::template end<Seq>
-            {};
-        };
     }
 
     namespace result_of
     {
-        template <typename Seq>
+        template<typename Seq>
         struct end
           : extension::end_impl<typename traits::tag_of<Seq>::type>::
                 template apply<Seq>
@@ -42,7 +31,7 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename Seq>
+    template<typename Seq>
     inline typename
         result_of::end<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type const
     end(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
@@ -52,7 +41,7 @@ namespace boost { namespace fusion
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-    template <typename Seq>
+    template<typename Seq>
     inline typename result_of::end<Seq&>::type
     end(Seq& seq)
     {

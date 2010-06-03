@@ -1,5 +1,5 @@
 /*=============================================================================
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -14,26 +14,15 @@
 
 namespace boost { namespace fusion
 {
-    struct iterator_facade_tag;
-
     namespace extension
     {
-        template <typename>
+        template<typename>
         struct deref_data_impl;
-
-        template <>
-        struct deref_data_impl<iterator_facade_tag>
-        {
-            template <typename It>
-            struct apply
-              : detail::remove_reference<It>::type::template deref_data<It>
-            {};
-       };
     }
 
     namespace result_of
     {
-        template <typename It>
+        template<typename It>
         struct deref_data
           : extension::deref_data_impl<typename traits::tag_of<It>::type>::
                 template apply<It>
@@ -43,7 +32,7 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename It>
+    template<typename It>
     typename result_of::deref_data<It const&>::type
     deref_data(It const& it)
     {

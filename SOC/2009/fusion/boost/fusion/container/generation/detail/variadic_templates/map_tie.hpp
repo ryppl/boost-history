@@ -29,7 +29,7 @@ namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename... KeysTypes>
+        template<typename... KeysTypes>
         struct map_tie
         {
             typedef typename
@@ -72,15 +72,21 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename... Keys, typename... Types>
+    template<typename... Keys, typename... Types>
     inline typename
-        result_of::map_tie<Keys...,BOOST_FUSION_R_ELSE_CLREF(Types)...>::type
-    map_tie(BOOST_FUSION_R_ELSE_CLREF(Types)... types)
+        result_of::map_tie<Keys...,BOOST_FUSION_R_ELSE_LREF(Types)...>::type
+    map_tie(BOOST_FUSION_R_ELSE_LREF(Types)... types)
     {
         return typename result_of::map_tie<
             Keys...
-          , BOOST_FUSION_R_ELSE_CLREF(Types)...
-        >::type(BOOST_FUSION_FORWARD(Types, types)...);
+          , BOOST_FUSION_R_ELSE_LREF(Types)...
+        >::type(
+#if BOOST_NO_RVALUE_REFERENCES
+            types
+#else
+            static_cast<typename detail::deduce_ref<Types&&>::type>(types)...
+#endif
+        );
     }
 }}
 

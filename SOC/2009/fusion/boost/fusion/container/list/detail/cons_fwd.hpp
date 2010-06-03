@@ -14,7 +14,7 @@ namespace boost { namespace fusion
     struct cons_tag;
     struct nil;
 
-    template <typename Car, typename Cdr>
+    template<typename Car, typename Cdr>
     struct cons;
 }}
 

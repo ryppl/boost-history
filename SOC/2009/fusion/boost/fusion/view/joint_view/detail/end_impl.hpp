@@ -15,13 +15,13 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename>
+    template<typename>
     struct end_impl;
 
-    template <>
+    template<>
     struct end_impl<joint_view_tag>
     {
-        template <typename Seq>
+        template<typename Seq>
         struct apply
         {
             typedef typename detail::remove_reference<Seq>::type seq;
@@ -30,7 +30,7 @@ namespace boost { namespace fusion { namespace extension
                 concat_iterator<
                     typename seq::category
                   , typename result_of::end<
-                        typename detail::forward_as<
+                        typename detail::forward_as_lref<
                             Seq
                           , typename seq::seq2_type
                         >::type

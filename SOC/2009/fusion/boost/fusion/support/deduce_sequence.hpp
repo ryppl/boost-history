@@ -24,7 +24,7 @@ namespace boost { namespace fusion
 {
     namespace traits
     {
-        template <typename Seq>
+        template<typename Seq>
         struct deduce_sequence
           : result_of::as_vector<
                 mpl::transform_view<

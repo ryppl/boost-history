@@ -1,5 +1,6 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -15,14 +16,13 @@
 namespace boost { namespace fusion
 {
     struct random_access_traversal_tag;
-    struct iterator_facade_tag;
 
     namespace extension
     {
-        template <typename>
+        template<typename>
         struct advance_impl
         {
-            template <typename It, typename N>
+            template<typename It, typename N>
             struct apply
               : mpl::if_c<
                     (N::value > 0)
@@ -31,20 +31,11 @@ namespace boost { namespace fusion
                 >::type
             {};
         };
-
-        template <>
-        struct advance_impl<iterator_facade_tag>
-        {
-            template <typename It, typename N>
-            struct apply
-              : detail::remove_reference<It>::type::template advance<It, N>
-            {};
-        };
     }
 
     namespace result_of
     {
-        template <typename It, int N>
+        template<typename It, int N>
         struct advance_c
           : extension::advance_impl<typename traits::tag_of<It>::type>::
                 template apply<It, mpl::int_<N> >
@@ -56,7 +47,7 @@ namespace boost { namespace fusion
 
         };
 
-        template <typename It, typename N>
+        template<typename It, typename N>
         struct advance
           : extension::advance_impl<typename traits::tag_of<It>::type>::
                 template apply<It, N>
@@ -68,7 +59,7 @@ namespace boost { namespace fusion
         };
     }
 
-    template <int N, typename It>
+    template<int N, typename It>
     inline typename result_of::advance_c<It const&, N>::type const
     advance_c(It const& it)
     {

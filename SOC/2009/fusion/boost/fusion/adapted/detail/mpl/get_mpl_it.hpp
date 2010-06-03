@@ -10,13 +10,13 @@
 
 namespace boost { namespace fusion { namespace detail
 {
-    template <typename It, typename Active = void>
+    template<typename It, typename Active = void>
     struct get_mpl_it
     {
         typedef It type;
     };
 
-    template <typename It>
+    template<typename It>
     struct get_mpl_it<It, typename It::void_>
     {
         typedef typename It::it_type type;

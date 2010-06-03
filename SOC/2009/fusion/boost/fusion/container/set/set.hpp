@@ -1,6 +1,6 @@
 /*=============================================================================
     Copyright (c) 2005 Joel de Guzman
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -9,6 +9,7 @@
 #ifndef BOOST_FUSION_CONTAINER_SET_SET_HPP
 #define BOOST_FUSION_CONTAINER_SET_SET_HPP
 
+#include <boost/config.hpp>
 #include <boost/fusion/container/set/set_fwd.hpp>
 #include <boost/fusion/container/vector/vector.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
@@ -29,6 +30,12 @@
 namespace boost { namespace fusion
 {
     struct fusion_sequence_tag;
+
+#ifdef BOOST_MSVC
+#   pragma warning(push)
+    //'class' : multiple copy constructors specified
+#   pragma warning(disable:4521)
+#endif
 
     VARIADIC_TEMPLATE(FUSION_MAX_SET_SIZE)
     struct set
@@ -56,6 +63,10 @@ namespace boost { namespace fusion
     private:
         storage_type data;
     };
+
+#ifdef BOOST_MSVC
+#   pragma warning(pop)
+#endif
 }}
 
 #endif

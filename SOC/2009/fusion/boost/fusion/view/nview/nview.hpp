@@ -32,6 +32,7 @@
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/vector_c.hpp>
+#include <boost/detail/workaround.hpp>
 
 #include <boost/fusion/view/nview/detail/nview_fwd.hpp>
 #include <boost/fusion/view/nview/detail/nview_iterator.hpp>

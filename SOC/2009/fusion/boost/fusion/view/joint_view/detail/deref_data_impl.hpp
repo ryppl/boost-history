@@ -12,13 +12,13 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename>
+    template<typename>
     struct deref_data_impl;
 
-    template <>
+    template<>
     struct deref_data_impl<joint_view_iterator_tag>
     {
-        template <typename It>
+        template<typename It>
         struct apply
         {
             typedef typename
@@ -35,7 +35,7 @@ namespace boost { namespace fusion { namespace extension
         };
     };
 
-    template <>
+    template<>
     struct deref_data_impl<concat_iterator_tag>
       : deref_data_impl<joint_view_iterator_tag>
     {};

@@ -42,7 +42,7 @@ namespace boost { namespace fusion
     struct forward_traversal_tag;
     struct fusion_sequence_tag;
 
-    template <typename Seq1, typename Seq2>
+    template<typename Seq1, typename Seq2>
     struct joint_view
       : sequence_base<joint_view<Seq1, Seq2> >
     {

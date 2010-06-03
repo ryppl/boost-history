@@ -9,6 +9,7 @@
 #ifndef BOOST_FUSION_TUPLE_TUPLE_HPP
 #define BOOST_FUSION_TUPLE_TUPLE_HPP
 
+#include <boost/config.hpp>
 #include <boost/fusion/tuple/tuple_fwd.hpp>
 #include <boost/fusion/container/vector/vector.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
@@ -24,6 +25,12 @@
 
 namespace boost { namespace fusion
 {
+#ifdef BOOST_MSVC
+#   pragma warning(push)
+    //'class' : multiple copy constructors specified
+#   pragma warning(disable:4521)
+#endif
+
     VARIADIC_TEMPLATE(FUSION_MAX_VECTOR_SIZE)
     struct tuple
       : vector<EXPAND_TEMPLATE_ARGUMENTS(FUSION_MAX_VECTOR_SIZE)>
@@ -33,7 +40,7 @@ namespace boost { namespace fusion
         base_type;
 
 #define TUPLE_CTOR(MODIFIER,_)\
-        template <typename A1, typename A2>\
+        template<typename A1, typename A2>\
         tuple(std::pair<A1, A2> MODIFIER pair)\
           : base_type(static_cast<std::pair<A1, A2> MODIFIER>(pair))\
         {}
@@ -51,17 +58,17 @@ namespace boost { namespace fusion
 #undef BOOST_FUSION_USE_BASE_TYPE
     };
 
-    template <typename Tuple>
+    template<typename Tuple>
     struct tuple_size
       : result_of::size<Tuple>
     {};
 
-    template <int N, typename Tuple>
+    template<int N, typename Tuple>
     struct tuple_element
       : result_of::value_at_c<Tuple, N>
     {};
 
-    template <int N, typename Tuple>
+    template<int N, typename Tuple>
     inline typename result_of::at_c<BOOST_FUSION_R_ELSE_CLREF(Tuple), N>::type
     get(BOOST_FUSION_R_ELSE_CLREF(Tuple) tuple)
     {
@@ -69,13 +76,17 @@ namespace boost { namespace fusion
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-    template <int N, typename Tuple>
+    template<int N, typename Tuple>
     inline BOOST_FUSION_EXPLICIT_TEMPLATE_NON_CONST_ARG_OVERLOAD(
             result_of::at_c<,Tuple,&, N>)
     get(Tuple& tuple)
     {
         return at_c<N>(tuple);
     }
+#endif
+
+#ifdef BOOST_MSVC
+#   pragma warning(pop)
 #endif
 }}
 

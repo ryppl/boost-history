@@ -13,13 +13,13 @@
 
 namespace boost { namespace mpl
 {
-    template <typename>
+    template<typename>
     struct push_back_impl;
 
-    template <>
+    template<>
     struct push_back_impl<fusion::fusion_sequence_tag>
     {
-        template <typename Seq, typename T>
+        template<typename Seq, typename T>
         struct apply
           : fusion::result_of::push_back<Seq, T>
         {};

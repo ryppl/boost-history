@@ -13,7 +13,7 @@ namespace boost { namespace fusion
     struct iterator_root
     {};
 
-    template <typename It>
+    template<typename It>
     struct iterator_base
       : iterator_root
     {

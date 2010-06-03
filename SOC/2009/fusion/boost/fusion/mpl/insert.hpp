@@ -13,13 +13,13 @@
 
 namespace boost { namespace mpl
 {
-    template <typename>
+    template<typename>
     struct insert_impl;
 
-    template <>
+    template<>
     struct insert_impl<fusion::fusion_sequence_tag>
     {
-        template <typename Seq, typename Pos, typename T>
+        template<typename Seq, typename Pos, typename T>
         struct apply
           : fusion::result_of::insert<Seq, Pos, T>
         {};

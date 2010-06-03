@@ -20,7 +20,7 @@ namespace boost { namespace fusion { namespace extension
         struct apply
         {
             typedef typename
-                detail::forward_as<
+                detail::forward_as_lref<
                     Seq
                   , typename detail::remove_reference<Seq>::type::value_type
                 >::type

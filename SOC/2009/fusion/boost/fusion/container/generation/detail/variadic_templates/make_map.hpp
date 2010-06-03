@@ -29,7 +29,7 @@ namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename... KeysTypes>
+        template<typename... KeysTypes>
         struct make_map
         {
             typedef typename
@@ -69,7 +69,7 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename... Keys, typename... Types>
+    template<typename... Keys, typename... Types>
     inline typename
         result_of::make_map<Keys...,BOOST_FUSION_R_ELSE_CLREF(Types)...>::type
     make_map(BOOST_FUSION_R_ELSE_CLREF(Types)... types)

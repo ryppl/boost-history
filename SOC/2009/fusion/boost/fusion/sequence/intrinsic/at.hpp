@@ -1,5 +1,6 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -16,7 +17,6 @@
 
 namespace boost { namespace fusion
 {
-    struct sequence_facade_tag;
 #ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
     struct list_tag;
     struct cons_tag;
@@ -24,22 +24,13 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template <typename>
+        template<typename>
         struct at_impl;
-
-        template <>
-        struct at_impl<sequence_facade_tag>
-        {
-            template <typename Seq, typename N>
-            struct apply
-              : detail::remove_reference<Seq>::type::template at<Seq, N>
-            {};
-        };
     }
 
     namespace result_of
     {
-        template <typename Seq, typename N>
+        template<typename Seq, typename N>
         struct at
           : extension::at_impl<typename traits::tag_of<Seq>::type>::
                 template apply<Seq, N>
@@ -61,7 +52,7 @@ namespace boost { namespace fusion
             BOOST_FUSION_INDEX_CHECK(N::value,size<Seq>::value);
         };
 
-        template <typename Seq, int N>
+        template<typename Seq, int N>
         struct at_c
           : at<Seq, mpl::int_<N> >
         {
@@ -82,7 +73,7 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename N, typename Seq>
+    template<typename N, typename Seq>
     inline typename result_of::at<BOOST_FUSION_R_ELSE_CLREF(Seq), N>::type
     at(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
@@ -91,7 +82,7 @@ namespace boost { namespace fusion
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-    template <typename N, typename Seq>
+    template<typename N, typename Seq>
     inline BOOST_FUSION_EXPLICIT_TEMPLATE_NON_CONST_ARG_OVERLOAD(
             result_of::at<,Seq,&,N>)
     at(Seq& seq)
@@ -100,7 +91,7 @@ namespace boost { namespace fusion
     }
 #endif
 
-    template <int N, typename Seq>
+    template<int N, typename Seq>
     inline typename
         result_of::at_c<BOOST_FUSION_R_ELSE_CLREF(Seq), N>::type
     at_c(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
@@ -109,7 +100,7 @@ namespace boost { namespace fusion
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-    template <int N, typename Seq>
+    template<int N, typename Seq>
     inline BOOST_FUSION_EXPLICIT_TEMPLATE_NON_CONST_ARG_OVERLOAD(
             result_of::at_c<,Seq,&, N>)
     at_c(Seq& seq)

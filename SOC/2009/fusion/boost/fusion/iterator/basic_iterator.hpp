@@ -1,5 +1,5 @@
 /*=============================================================================
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -10,7 +10,7 @@
 
 #include <boost/fusion/iterator/iterator_facade.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
-
+#include <boost/fusion/support/internal/assert.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/equal_to.hpp>
 #include <boost/mpl/minus.hpp>
@@ -21,19 +21,19 @@ namespace boost { namespace fusion
 {
     namespace extension
     {
-        template <typename>
+        template<typename>
         struct value_of_impl;
 
-        template <typename>
+        template<typename>
         struct deref_impl;
 
-        template <typename>
+        template<typename>
         struct value_of_data_impl;
 
-        template <typename>
+        template<typename>
         struct key_of_impl;
 
-        template <typename>
+        template<typename>
         struct deref_data_impl;
     }
 
@@ -47,32 +47,32 @@ namespace boost { namespace fusion
         typedef SeqRef seq_type;
         typedef typename detail::remove_reference<SeqRef>::type* seq_ptr_type;
 
-        template <typename It>
+        template<typename It>
         struct value_of
           : extension::value_of_impl<Tag>::template apply<It>
         {};
 
-        template <typename It>
+        template<typename It>
         struct deref
           : extension::deref_impl<Tag>::template apply<It>
         {};
 
-        template <typename It>
+        template<typename It>
         struct value_of_data
           : extension::value_of_data_impl<Tag>::template apply<It>
         {};
 
-        template <typename It>
+        template<typename It>
         struct key_of
           : extension::key_of_impl<Tag>::template apply<It>
         {};
 
-        template <typename It>
+        template<typename It>
         struct deref_data
           : extension::deref_data_impl<Tag>::template apply<It>
         {};
 
-        template <typename It, typename N>
+        template<typename It, typename N>
         struct advance
         {
             typedef
@@ -86,17 +86,17 @@ namespace boost { namespace fusion
             }
         };
 
-        template <typename It>
+        template<typename It>
         struct next
           : advance<It, mpl::int_<1> >
         {};
 
-        template <typename It>
+        template<typename It>
         struct prior
           : advance<It, mpl::int_<-1> >
         {};
 
-        template <typename It1, typename It2>
+        template<typename It1, typename It2>
         struct distance
           : mpl::minus<
                 typename detail::remove_reference<It2>::type::index
@@ -104,7 +104,7 @@ namespace boost { namespace fusion
             >
         {};
 
-        template <typename It1, typename It2>
+        template<typename It1, typename It2>
         struct equal_to
         {
             typedef typename detail::remove_reference<It2>::type it2;

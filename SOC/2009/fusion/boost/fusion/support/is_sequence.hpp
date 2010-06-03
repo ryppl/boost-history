@@ -19,10 +19,10 @@ namespace boost { namespace fusion
 {
     namespace extension
     {
-        template <typename>
+        template<typename>
         struct is_sequence_impl
         {
-            template <typename Seq>
+            template<typename Seq>
             struct apply
               : is_base_of<
                     sequence_root
@@ -34,7 +34,7 @@ namespace boost { namespace fusion
 
     namespace traits
     {
-        template <typename T>
+        template<typename T>
         struct is_sequence
           : extension::is_sequence_impl<typename traits::tag_of<T>::type>::
                 template apply<T>

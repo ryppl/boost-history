@@ -15,14 +15,14 @@
 
 namespace boost { namespace fusion { namespace detail
 {
-    template <
+    template<
         typename Begin
       , typename End
       , bool is_empty = result_of::equal_to<Begin, End>::value
     >
     struct build_cons;
 
-    template <typename Begin, typename End>
+    template<typename Begin, typename End>
     struct build_cons<Begin, End, true>
     {
         typedef nil type;
@@ -34,7 +34,7 @@ namespace boost { namespace fusion { namespace detail
         }
     };
 
-    template <typename Begin, typename End>
+    template<typename Begin, typename End>
     struct build_cons<Begin, End, false>
     {
         typedef

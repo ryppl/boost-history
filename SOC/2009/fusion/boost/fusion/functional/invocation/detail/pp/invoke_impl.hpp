@@ -171,7 +171,7 @@ namespace boost { namespace fusion { namespace detail
                   , SeqRef
                   , type
                 >
-            >::type::call(f_, seq);
+            >::type::call(f_, static_cast<SeqRef>(seq));
         }
     };
 }}}

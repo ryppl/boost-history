@@ -15,14 +15,14 @@
 
 namespace boost { namespace fusion { namespace detail
 {
-    template <bool is_convertible>
+    template<bool is_convertible>
     struct compare_convertible;
 
     // T1 is convertible to T2 or vice versa
-    template <>
+    template<>
     struct compare_convertible<true>
     {
-        template <typename T1, typename T2>
+        template<typename T1, typename T2>
         static bool
         call(BOOST_FUSION_R_ELSE_CLREF(T1) x, BOOST_FUSION_R_ELSE_CLREF(T2) y)
         {
@@ -31,10 +31,10 @@ namespace boost { namespace fusion { namespace detail
     };
 
     // T1 is NEITHER convertible to T2 NOR vice versa
-    template <>
+    template<>
     struct compare_convertible<false>
     {
-        template <typename T1, typename T2>
+        template<typename T1, typename T2>
         static BOOST_FUSION_CONSTEXPR
         bool
         call(BOOST_FUSION_R_ELSE_CLREF(T1) x, BOOST_FUSION_R_ELSE_CLREF(T2) y)
@@ -43,14 +43,20 @@ namespace boost { namespace fusion { namespace detail
         }
     };
 
-    template <typename T1Ref>
+    template<typename T1Ref>
     struct count_helper
     {
+#ifdef BOOST_NO_RVALUE_REFERENCES
+        typedef T1Ref x_type;
+#else
+        typedef typename remove_reference<T1Ref>::type& x_type;
+#endif
+
         count_helper(T1Ref x)
-          : x(static_cast<T1Ref>(x))
+          : x(static_cast<x_type>(x))
         {}
 
-        template <typename T2>
+        template<typename T2>
         bool
         operator()(BOOST_FUSION_R_ELSE_CLREF(T2) y)const
         {
@@ -69,7 +75,7 @@ namespace boost { namespace fusion { namespace detail
             >::call(static_cast<T1Ref>(x),BOOST_FUSION_FORWARD(T2,y));
         }
 
-        T1Ref x;
+        x_type x;
     };
 }}}
 

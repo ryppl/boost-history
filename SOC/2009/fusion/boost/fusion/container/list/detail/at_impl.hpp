@@ -14,13 +14,13 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename>
+    template<typename>
     struct at_impl;
 
-    template <>
+    template<>
     struct at_impl<cons_tag>
     {
-        template <typename Seq, typename N>
+        template<typename Seq, typename N>
         struct apply
         {
             typedef typename
@@ -32,14 +32,14 @@ namespace boost { namespace fusion { namespace extension
                 >::type
             type;
 
-            template <typename Cons, int N2>
+            template<typename Cons, int N2>
             static type
             call(Cons& cons, mpl::int_<N2>)
             {
                 return call(cons.cdr, mpl::int_<N2-1>());
             }
 
-            template <typename Cons>
+            template<typename Cons>
             static type
             call(Cons& cons, mpl::int_<0>)
             {
@@ -54,7 +54,7 @@ namespace boost { namespace fusion { namespace extension
         };
     };
 
-    template <>
+    template<>
     struct at_impl<list_tag>
       : at_impl<cons_tag>
     {};

@@ -17,7 +17,7 @@ namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename F>
+        template<typename F>
         struct BOOST_FUSION_FUNC_NAME
         {
             typedef

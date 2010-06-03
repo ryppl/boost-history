@@ -37,7 +37,7 @@ namespace
 {
     struct fused_sum
     {
-        template <typename Seq>
+        template<typename Seq>
         int operator()(Seq const & seq) const
         {
             int state = 0;
@@ -50,13 +50,13 @@ namespace
 
         struct sum_op
         {
-            template <typename T>
+            template<typename T>
             int operator()(T const & elem, int value) const
             {
               return value + sizeof(T) * elem;
             }
 
-            template <typename T>
+            template<typename T>
             int operator()(T & elem, int value) const
             {
               elem += sizeof(T);

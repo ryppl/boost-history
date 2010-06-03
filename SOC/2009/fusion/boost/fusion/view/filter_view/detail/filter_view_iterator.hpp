@@ -23,7 +23,7 @@ namespace boost { namespace fusion
 {
     struct filter_view_iterator_tag;
 
-    template <typename Category,typename Begin, typename End, typename Pred>
+    template<typename Category,typename Begin, typename End, typename Pred>
     struct filter_iterator
       : iterator_base<filter_iterator<Category, Begin, End, Pred> >
     {

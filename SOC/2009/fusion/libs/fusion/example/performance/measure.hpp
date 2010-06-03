@@ -19,7 +19,7 @@ namespace test
 
   // Call objects of the given Accumulator type repeatedly with x as
   // an argument.
-  template <class Accumulator, class Arg>
+  template<class Accumulator, class Arg>
   void hammer(Arg const& x, long const repeats)
   {
       // Strategy: because the sum in an accumulator after each call
@@ -66,7 +66,7 @@ namespace test
 
   // Measure the time required to hammer accumulators of the given
   // type with the argument x.
-  template <class Accumulator, class T>
+  template<class Accumulator, class T>
   double measure(T const& x, long const repeats)
   {
       // Hammer accumulators a couple of times to ensure the

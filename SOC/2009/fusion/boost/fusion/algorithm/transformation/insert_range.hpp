@@ -23,7 +23,7 @@ namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename Seq, typename Pos, typename Range>
+        template<typename Seq, typename Pos, typename Range>
         struct insert_range
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
@@ -54,7 +54,7 @@ namespace boost { namespace fusion
     }
 
 #define BOOST_FUSION_INSERT_RANGE(SEQ_CV_REF_MODIFIER,RANGE_CV_REF_MODIFIER)\
-    template <typename Seq, typename Pos, typename Range>\
+    template<typename Seq, typename Pos, typename Range>\
     inline typename\
         result_of::insert_range<\
             Seq SEQ_CV_REF_MODIFIER\

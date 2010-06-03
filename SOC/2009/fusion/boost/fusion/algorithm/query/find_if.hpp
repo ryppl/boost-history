@@ -27,7 +27,7 @@ namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename Seq, typename Pred>
+        template<typename Seq, typename Pred>
         struct find_if
           : detail::static_find_if<
                 typename begin<Seq>::type
@@ -43,7 +43,7 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename Pred, typename Seq>
+    template<typename Pred, typename Seq>
     inline typename
         result_of::find_if<BOOST_FUSION_R_ELSE_CLREF(Seq), Pred>::type
     find_if(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
@@ -55,7 +55,7 @@ namespace boost { namespace fusion
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-    template <typename Pred, typename Seq>
+    template<typename Pred, typename Seq>
     inline BOOST_FUSION_EXPLICIT_TEMPLATE_NON_CONST_ARG_OVERLOAD(
             result_of::find_if<,Seq,&,Pred>)
     find_if(Seq& seq)

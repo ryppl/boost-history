@@ -14,7 +14,7 @@ namespace boost { namespace fusion
 {
     namespace detail
     {
-        template <typename T, typename Dummy>
+        template<typename T, typename Dummy>
         struct get_identity
           : identity<T>
         {};
@@ -22,7 +22,7 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template <typename T, int N>
+        template<typename T, int N>
         struct class_member_proxy;
     }
 }}

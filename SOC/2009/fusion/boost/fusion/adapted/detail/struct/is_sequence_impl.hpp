@@ -26,7 +26,7 @@ namespace boost { namespace fusion { namespace extension
         {};
     };
 
-    template <>
+    template<>
     struct is_sequence_impl<assoc_struct_tag>
       : is_sequence_impl<struct_tag>
     {};

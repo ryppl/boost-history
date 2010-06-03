@@ -27,7 +27,7 @@
         struct result<Self(EXPAND_TEMPLATE_ARGUMENTS(BOOST_FUSION_N))>
           : boost::result_of<
                 typename detail::get_func_base<
-                    typename detail::forward_as<Self,F>::type
+                    typename detail::forward_as_lref<Self,F>::type
                 >::type(transformed_args_arg)
             >
         {};
@@ -51,11 +51,13 @@
         }
 #else
 #   define BOOST_FUSION_CALL_OPERATOR(F_,MODIFIER)\
-        BOOST_FUSION_VARIADIC_TEMPLATES_A(BOOST_FUSION_N)\
+        VARIADIC_TEMPLATE_A(BOOST_FUSION_N)\
         typename boost::result_of<\
             typename detail::get_func_base<F_>::type(transformed_args_arg)\
         >::type\
-        operator()(EXPAND_TEMPLATE_ARGUMENTS_A_R_ELSE_LREF(BOOST_FUSION_N))\
+        operator()(\
+            EXPAND_TEMPLATE_ARGUMENTS_PARAMETERS_A_R_ELSE_LREF(\
+                BOOST_FUSION_N))\
             MODIFIER\
         {\
             return static_cast<unfused_typed<F,TransformSeq> MODIFIER&>(*this).\

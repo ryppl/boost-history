@@ -15,10 +15,10 @@ namespace boost { namespace fusion { namespace extension
     template<typename>
     struct value_at_impl;
 
-    template <>
+    template<>
     struct value_at_impl<po_array_tag>
     {
-        template <typename Seq, typename N>
+        template<typename Seq, typename N>
         struct apply
           : remove_extent<typename detail::remove_reference<Seq>::type>
         {};

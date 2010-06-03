@@ -19,7 +19,7 @@ namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename Seq, typename>
+        template<typename Seq, typename>
         struct count
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
@@ -29,7 +29,7 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename Seq, typename T>
+    template<typename Seq, typename T>
     inline typename result_of::count<
         BOOST_FUSION_R_ELSE_CLREF(Seq)
       , BOOST_FUSION_R_ELSE_CLREF(T)
@@ -43,7 +43,7 @@ namespace boost { namespace fusion
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-    template <typename Seq, typename T>
+    template<typename Seq, typename T>
     inline typename result_of::count<Seq&, T const&>::type
     count(Seq& seq, T const& x)
     {

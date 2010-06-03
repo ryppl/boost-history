@@ -16,11 +16,11 @@
 // fwd declarations
 namespace boost { namespace fusion
 {
-    template <typename Sequence, typename F>
+    template<typename Sequence, typename F>
     void
     for_each_s(Sequence& seq, F const& f);
 
-    template <typename Sequence, typename F>
+    template<typename Sequence, typename F>
     void
     for_each_s(Sequence const& seq, F const& f);
 }}
@@ -66,21 +66,21 @@ namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename Sequence, typename F>
+        template<typename Sequence, typename F>
         struct for_each_s
         {
             typedef void type;
         };
     }
 
-    template <typename Sequence, typename F>
+    template<typename Sequence, typename F>
     inline void
     for_each_s(Sequence& seq, F const& f)
     {
         detail::for_each_s(seq, f, traits::is_segmented<Sequence>());
     }
 
-    template <typename Sequence, typename F>
+    template<typename Sequence, typename F>
     inline void
     for_each_s(Sequence const& seq, F const& f)
     {

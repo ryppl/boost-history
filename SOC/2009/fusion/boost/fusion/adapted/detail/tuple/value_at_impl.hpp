@@ -11,10 +11,10 @@ namespace boost { namespace fusion { namespace extension
     template<typename>
     struct value_at_impl;
 
-    template <>
+    template<>
     struct value_at_impl<BOOST_FUSION_ADAPTED_TUPLE_TAG>
     {
-        template <typename Seq, typename N>
+        template<typename Seq, typename N>
         struct apply
           : BOOST_FUSION_ADAPTED_TUPLE_NAMESPACE(element)<
                 N::value

@@ -11,13 +11,13 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename>
+    template<typename>
     struct end_impl;
 
-    template <>
+    template<>
     struct end_impl<cons_tag>
     {
-        template <typename Seq>
+        template<typename Seq>
         struct apply
         {
             typedef
@@ -32,7 +32,7 @@ namespace boost { namespace fusion { namespace extension
         };
     };
 
-    template <>
+    template<>
     struct end_impl<list_tag>
       : end_impl<cons_tag>
     {};

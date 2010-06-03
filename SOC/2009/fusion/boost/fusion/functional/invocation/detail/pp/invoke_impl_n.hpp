@@ -68,8 +68,9 @@ namespace random_access_impl
             return
 #   endif
                 (that_ptr<typename preevaluate<F>::gen::class_type>::get(
-                    fusion::front(seq))->*f)(BOOST_PP_ENUM_SHIFTED_1(
-                        BOOST_FUSION_N,BOOST_FUSION_SEQ_AT_N,_));
+                    fusion::front(static_cast<SeqRef>(seq)))->*f)(
+                        BOOST_PP_ENUM_SHIFTED_1(
+                            BOOST_FUSION_N,BOOST_FUSION_SEQ_AT_N,_));
         }
     };
 
@@ -93,7 +94,7 @@ namespace random_access_impl
                             Instance
                           , typename remove_reference<F>::type
                         >::cv_class_type&
-                    >::get(fusion::front(seq))->*f);
+                    >::get(fusion::front(static_cast<SeqRef>(seq)))->*f);
         }
     };
 #   endif
@@ -151,7 +152,7 @@ namespace forward_impl
 
 #   define BOOST_FUSION_DEFINE_ITS()\
         typedef typename result_of::begin<SeqRef>::type It0;\
-        It0 it0=fusion::begin(seq);\
+        It0 it0=fusion::begin(static_cast<SeqRef>(seq));\
         \
         BOOST_PP_REPEAT_FROM_TO(1, BOOST_FUSION_N, BOOST_FUSION_IT_N, _)
 
@@ -222,11 +223,11 @@ namespace forward_impl
             typedef typename result_of::front<SeqRef>::type Instance;
 
             return (that_ptr<
-                        typename get_object_pointer_result_type<
-                            Instance
-                          , typename remove_reference<F>::type
-                        >::cv_class_type&
-                    >::get(fusion::front(seq))->*f);
+                    typename get_object_pointer_result_type<
+                        Instance
+                      , typename remove_reference<F>::type
+                    >::cv_class_type&
+                >::get(fusion::front(static_cast<SeqRef>(seq)))->*f);
         }
     };
 #   endif

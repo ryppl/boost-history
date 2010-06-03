@@ -25,22 +25,22 @@ namespace boost { namespace fusion
 
     namespace detail
     {
-        template <typename Category>
+        template<typename Category>
         struct mpl_iterator_category;
 
-        template <>
+        template<>
         struct mpl_iterator_category<mpl::forward_iterator_tag>
         {
             typedef forward_traversal_tag type;
         };
 
-        template <>
+        template<>
         struct mpl_iterator_category<mpl::bidirectional_iterator_tag>
         {
             typedef bidirectional_traversal_tag type;
         };
 
-        template <>
+        template<>
         struct mpl_iterator_category<mpl::random_access_iterator_tag>
         {
             typedef random_access_traversal_tag type;

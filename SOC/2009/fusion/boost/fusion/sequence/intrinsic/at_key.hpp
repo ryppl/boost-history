@@ -1,7 +1,7 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2006 Dan Marsden
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -18,14 +18,12 @@
 
 namespace boost { namespace fusion
 {
-    struct sequence_facade_tag;
-
     namespace extension
     {
-        template <typename>
+        template<typename>
         struct at_key_impl
         {
-            template <typename Seq, typename Key>
+            template<typename Seq, typename Key>
             struct apply
             {
                 typedef typename
@@ -42,21 +40,11 @@ namespace boost { namespace fusion
                 }
             };
         };
-
-        template <>
-        struct at_key_impl<sequence_facade_tag>
-        {
-            template <typename Seq, typename Key>
-            struct apply
-              : detail::remove_reference<Seq>::type::
-                    template at_key<Seq, Key>
-            {};
-        };
     }
 
     namespace result_of
     {
-        template <typename Seq, typename Key>
+        template<typename Seq, typename Key>
         struct at_key
             : extension::at_key_impl<typename traits::tag_of<Seq>::type>::
                 template apply<Seq, Key>
@@ -67,7 +55,7 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename Key, typename Seq>
+    template<typename Key, typename Seq>
     inline typename
         result_of::at_key<
             BOOST_FUSION_R_ELSE_CLREF(Seq)
@@ -80,7 +68,7 @@ namespace boost { namespace fusion
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-    template <typename Key, typename Seq>
+    template<typename Key, typename Seq>
     inline typename result_of::at_key<Seq&, Key>::type
     at_key(Seq& seq)
     {

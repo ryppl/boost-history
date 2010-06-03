@@ -17,7 +17,7 @@ namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename Seq, typename Pred>
+        template<typename Seq, typename Pred>
         struct filter_if
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
@@ -27,7 +27,7 @@ namespace boost { namespace fusion
         };
     }
     
-    template <typename Pred, typename Seq>
+    template<typename Pred, typename Seq>
     inline typename
         result_of::filter_if<BOOST_FUSION_R_ELSE_CLREF(Seq), Pred>::type
     filter_if(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
@@ -38,7 +38,7 @@ namespace boost { namespace fusion
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-    template <typename Pred, typename Seq>
+    template<typename Pred, typename Seq>
     inline BOOST_FUSION_EXPLICIT_TEMPLATE_NON_CONST_ARG_OVERLOAD(
             result_of::filter_if<,Seq,&, Pred>)
     filter_if(Seq& seq)

@@ -17,13 +17,13 @@
 
 namespace boost { namespace fusion { namespace detail
 {
-    template <typename Seq1, typename Seq2>
+    template<typename Seq1, typename Seq2>
     struct sequence_less_equal
     {
         typedef typename result_of::end<Seq1>::type end1_type;
         typedef typename result_of::end<Seq2>::type end2_type;
 
-        template <typename It1, typename It2>
+        template<typename It1, typename It2>
         static BOOST_FUSION_CONSTEXPR
         bool
         call(It1 const&, It2 const&, mpl::true_)
@@ -31,7 +31,7 @@ namespace boost { namespace fusion { namespace detail
             return true;
         }
 
-        template <typename It1, typename It2>
+        template<typename It1, typename It2>
         static bool
         call(It1 const& it1, It2 const& it2, mpl::false_)
         {
@@ -40,7 +40,7 @@ namespace boost { namespace fusion { namespace detail
                        call(fusion::next(it1), fusion::next(it2)));
         }
 
-        template <typename It1, typename It2>
+        template<typename It1, typename It2>
         static bool
         call(It1 const& it1, It2 const& it2)
         {

@@ -60,14 +60,14 @@ namespace impl
 
     // Placeholders (we inherit from mpl::int_, so we can use placeholders
     // as indices for fusion::at, later) 
-    template <int I> struct placeholder : mpl::int_<I> { };
+    template<int I> struct placeholder : mpl::int_<I> { };
 
     // A traits class to find out whether T is a placeholeder
-    template <typename T> struct is_placeholder              : mpl::false_  { };
-    template <int I> struct is_placeholder< placeholder<I> > : mpl::true_   { };
-    template <int I> struct is_placeholder< placeholder<I> & > : mpl::true_   { };
-    template <int I> struct is_placeholder< placeholder<I> const   > : mpl::true_   { };
-    template <int I> struct is_placeholder< placeholder<I> const & > : mpl::true_   { };
+    template<typename T> struct is_placeholder              : mpl::false_  { };
+    template<int I> struct is_placeholder< placeholder<I> > : mpl::true_   { };
+    template<int I> struct is_placeholder< placeholder<I> & > : mpl::true_   { };
+    template<int I> struct is_placeholder< placeholder<I> const   > : mpl::true_   { };
+    template<int I> struct is_placeholder< placeholder<I> const & > : mpl::true_   { };
 
     // This class template provides a Polymorphic Function Object to be used
     // with fusion::transform. It is applied to the sequence of arguments that
@@ -83,22 +83,22 @@ namespace impl
         { }
 
         // A placeholder? Replace it with an argument from the final call...
-        template <int Index>
+        template<int Index>
         inline typename result_of::at_c<FinalArgs const, Index>::type
         operator()(placeholder<Index> const &) const
         {
             return fusion::at_c<Index>(this->ref_final_args);
         }
         // ...just return the bound argument, otherwise.
-        template <typename T> inline T & operator()(T & bound) const
+        template<typename T> inline T & operator()(T & bound) const
         {
             return bound;
         }
 
-        template <typename Signature>
+        template<typename Signature>
         struct result;
 
-        template <class Self, typename T>
+        template<class Self, typename T>
         struct result< Self (T) >
             : mpl::eval_if< is_placeholder<T>, 
                 result_of::at<FinalArgs,typename boost::remove_reference<T>::type>,
@@ -109,7 +109,7 @@ namespace impl
 
     // Fused implementation of the bound function, the function object 
     // returned by bind
-    template <class BindArgs> class fused_bound_function 
+    template<class BindArgs> class fused_bound_function 
     {
         // Transform arguments to be held by value
         typedef typename traits::deduce_sequence<BindArgs>::type bound_args;
@@ -121,10 +121,10 @@ namespace impl
           : fsq_bind_args(bind_args)
         { }
 
-        template <typename Signature>
+        template<typename Signature>
         struct result;
 
-        template <class FinalArgs>
+        template<class FinalArgs>
         struct result_impl
             : result_of::invoke< typename result_of::front<bound_args>::type,
                 typename result_of::transform<
@@ -134,12 +134,12 @@ namespace impl
             >
         { }; 
 
-        template <class Self, class FinalArgs>
+        template<class Self, class FinalArgs>
         struct result< Self (FinalArgs) >
             : result_impl< typename boost::remove_reference<FinalArgs>::type > 
         { };
 
-        template <class FinalArgs>
+        template<class FinalArgs>
         inline typename result_impl<FinalArgs>::type 
         operator()(FinalArgs const & final_args) const
         {
@@ -156,16 +156,16 @@ namespace impl
     {
         struct fold_op
         {
-            template <typename Sig> struct result;
-            template <class S, class A, class B> struct result< S(A &,B &) > 
+            template<typename Sig> struct result;
+            template<class S, class A, class B> struct result< S(A &,B &) > 
                 : mpl::max<A,B> { };
         };
         struct filter_pred
         {
-            template <class X> struct apply : is_placeholder<X> { };
+            template<class X> struct apply : is_placeholder<X> { };
         };
 
-        template <typename Seq>
+        template<typename Seq>
         struct apply
             : mpl::next< typename result_of::fold<
                 fusion::filter_view<Seq,filter_pred>, mpl::int_<-1>, fold_op
@@ -176,10 +176,10 @@ namespace impl
     // Fused implementation of the 'bind' function
     struct fused_binder
     {
-        template <class Signature>
+        template<class Signature>
         struct result;
 
-        template <class BindArgs,
+        template<class BindArgs,
             int Placeholders = n_placeholders::apply<BindArgs>::value>
         struct result_impl
         {
@@ -187,12 +187,12 @@ namespace impl
                 fused_bound_function<BindArgs>,!Placeholders>,Placeholders> type;
         };
 
-        template <class Self, class BindArgs>
+        template<class Self, class BindArgs>
         struct result< Self (BindArgs) >
             : result_impl< typename boost::remove_reference<BindArgs>::type >
         { };
 
-        template <class BindArgs>
+        template<class BindArgs>
         inline typename result_impl< BindArgs >::type 
         operator()(BindArgs & bind_args) const
         {
@@ -230,7 +230,7 @@ struct func
         return 0;
     }
 
-    template <typename A> 
+    template<typename A> 
     inline int operator()(A const & a) const
     {
         std::cout << "operator()(A const & a)" << std::endl;
@@ -238,7 +238,7 @@ struct func
         return 1;
     }
 
-    template <typename A, typename B> 
+    template<typename A, typename B> 
     inline int operator()(A const & a, B & b) const
     {
         std::cout << "operator()(A const & a, B & b)" << std::endl;

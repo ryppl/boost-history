@@ -1,5 +1,5 @@
 /*=============================================================================
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -9,34 +9,26 @@
 #define BOOST_FUSION_SEQUENCE_SEQUENCE_FACADE_HPP
 
 #include <boost/fusion/support/sequence_base.hpp>
-
-#include <boost/mpl/apply.hpp>
-#include <boost/mpl/always.hpp>
+#include <boost/fusion/support/internal/facade_generation.hpp>
 #include <boost/mpl/bool.hpp>
+
+#define BOOST_FUSION_SEQUENCE_INTRINSIC_FUNCS                                   \
+    ((at_key, 1, 1))                                                            \
+    ((at, 1, 0))                                                                \
+    ((back, 0, 0))                                                              \
+    ((begin, 0, 0))                                                             \
+    ((empty, 0, 1))                                                             \
+    ((end, 0, 0))                                                               \
+    ((has_key, 1, 1))                                                           \
+    ((size, 0, 1))                                                              \
+    ((value_at_key, 1, 1))                                                      \
+    ((value_at, 1, 0))
+
+BOOST_FUSION_FACADE_DEFINE_INTRINSIC_FUNCS_WRAPPER(
+    sequence_facade_tag, BOOST_FUSION_SEQUENCE_INTRINSIC_FUNCS)
 
 namespace boost { namespace fusion
 {
-    struct void_;
-    struct sequence_facade_tag;
-
-    namespace extension
-    {
-        template<typename>
-        struct at_key_impl;
-
-        template<typename>
-        struct empty_impl;
-
-        template<typename>
-        struct size_impl;
-
-        template<typename>
-        struct has_key_impl;
-
-        template<typename>
-        struct value_at_key_impl;
-    }
-
     template<
         typename Derived
       , typename Category
@@ -51,42 +43,11 @@ namespace boost { namespace fusion
         typedef Category category;
         typedef IsView is_view;
 
-        template<typename Seq,typename Key>
-        struct at_key
-          : extension::at_key_impl<
-                typename mpl::apply1<mpl::always<void_>,Seq>::type
-            >::template apply<Seq,Key>
-        {};
-
-        template<typename Seq>
-        struct empty
-          : extension::empty_impl<
-                typename mpl::apply1<mpl::always<void_>,Seq>::type
-            >::template apply<Seq>
-        {};
-
-        template<typename Seq>
-        struct size
-          : extension::size_impl<
-                typename mpl::apply1<mpl::always<void_>,Seq>::type
-            >::template apply<Seq>
-        {};
-
-        template<typename Seq,typename Key>
-        struct has_key
-          : extension::has_key_impl<
-                typename mpl::apply1<mpl::always<void_>,Seq>::type
-            >::template apply<Seq,Key>
-        {};
-
-        template<typename Seq,typename Key>
-        struct value_at_key
-          : extension::value_at_key_impl<
-                typename mpl::apply1<mpl::always<void_>,Seq>::type
-            >::template apply<Seq,Key>
-        {};
-
+        BOOST_FUSION_FACADE_DEFINE_INTRINSIC_FUNCS_FORWARDER(
+            BOOST_FUSION_SEQUENCE_INTRINSIC_FUNCS)
     };
 }}
+
+ #undef BOOST_FUSION_SEQUENCE_INTRINSIC_FUNCS
 
 #endif

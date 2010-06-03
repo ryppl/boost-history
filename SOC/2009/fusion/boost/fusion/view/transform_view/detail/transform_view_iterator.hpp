@@ -18,7 +18,7 @@ namespace boost { namespace fusion
     // Unary Version
     struct transform_view_iterator_tag;
 
-    template <typename It, typename FRef, typename IsAssociative>
+    template<typename It, typename FRef, typename IsAssociative>
     struct transform_view_iterator
       : iterator_base<transform_view_iterator<It, FRef, IsAssociative> >
     {
@@ -77,7 +77,7 @@ namespace boost { namespace fusion
     // Binary Version
     struct transform_view_iterator2_tag;
 
-    template <typename It1, typename It2, typename FRef, typename IsAssociative>
+    template<typename It1, typename It2, typename FRef, typename IsAssociative>
     struct transform_view_iterator2
       : iterator_base<transform_view_iterator2<It1, It2, FRef, IsAssociative> >
     {

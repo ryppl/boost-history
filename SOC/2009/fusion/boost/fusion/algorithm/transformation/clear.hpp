@@ -25,7 +25,7 @@ namespace boost { namespace fusion
     namespace result_of
     {
         //TODO empty sequence!!!
-        template <typename Seq>
+        template<typename Seq>
         struct clear
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
           : convert<typename traits::tag_of<Seq>::type, vector0<> >
@@ -38,7 +38,7 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename Seq>
+    template<typename Seq>
     inline typename result_of::clear<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type
     clear(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {

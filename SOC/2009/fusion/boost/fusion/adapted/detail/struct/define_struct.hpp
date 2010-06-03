@@ -276,8 +276,8 @@
         template<typename Arg>                                                  \
         explicit                                                                \
         NAME(Arg&& arg                                                          \
-          , typename enable_if<                                                 \
-                detail::is_explicitly_convertible<                              \
+          , typename boost::enable_if<                                          \
+                boost::fusion::detail::is_explicitly_convertible<               \
                     Arg&&                                                       \
                   , BOOST_PP_TUPLE_ELEM(                                        \
                       ATTRIBUTE_TUPEL_SIZE,0,BOOST_PP_SEQ_HEAD(ATTRIBUTES_SEQ)) \

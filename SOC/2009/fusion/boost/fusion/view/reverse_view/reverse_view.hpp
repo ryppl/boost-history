@@ -42,7 +42,7 @@ namespace boost { namespace fusion
 {
     struct fusion_sequence_tag;
 
-    template <typename Seq>
+    template<typename Seq>
     struct reverse_view
       : sequence_base<reverse_view<Seq> >
     {

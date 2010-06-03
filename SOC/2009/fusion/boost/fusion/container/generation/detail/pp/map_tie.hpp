@@ -10,6 +10,7 @@
 #ifndef BOOST_FUSION_CONTAINER_GENERATION_DETAIL_PP_MAP_TIE_HPP
 #define BOOST_FUSION_CONTAINER_GENERATION_DETAIL_PP_MAP_TIE_HPP
 
+#include <boost/config.hpp>
 #include <boost/fusion/container/map/map.hpp>
 #include <boost/fusion/support/deduce.hpp>
 #include <boost/fusion/support/pair.hpp>
@@ -21,6 +22,9 @@
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
+#ifndef BOOST_NO_RVALUE_REFERENCES
+#   include <boost/preprocessor/repetition/enum.hpp>
+#endif
 
 namespace boost { namespace fusion
 {

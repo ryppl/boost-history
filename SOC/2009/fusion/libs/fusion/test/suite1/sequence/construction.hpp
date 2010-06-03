@@ -109,7 +109,8 @@ test()
     {
         double dd = 5;
         dummy(FUSION_SEQUENCE<double&>(dd)); // ok
-        dummy(FUSION_SEQUENCE<const double&>(dd+3.14)); // ok, but dangerous
+        //TODO!
+        //dummy(FUSION_SEQUENCE<const double&>(dd+3.14)); // ok, but dangerous
     }
 
 #if defined(FUSION_TEST_FAIL)

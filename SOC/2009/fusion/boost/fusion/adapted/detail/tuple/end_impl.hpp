@@ -10,13 +10,13 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename>
+    template<typename>
     struct end_impl;
 
-    template <>
+    template<>
     struct end_impl<BOOST_FUSION_ADAPTED_TUPLE_TAG>
     {
-        template <typename Seq>
+        template<typename Seq>
         struct apply
         {
             typedef

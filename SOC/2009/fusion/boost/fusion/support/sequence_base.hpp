@@ -18,7 +18,7 @@ namespace boost
         struct sequence_root
         {};
 
-        template <typename Seq>
+        template<typename Seq>
         struct sequence_base
           : sequence_root
         {

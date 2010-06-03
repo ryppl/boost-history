@@ -13,13 +13,13 @@
 
 namespace boost { namespace mpl
 {
-    template <typename>
+    template<typename>
     struct erase_impl;
 
-    template <>
+    template<>
     struct erase_impl<fusion::fusion_sequence_tag>
     {
-        template <typename Seq, typename Begin, typename End>
+        template<typename Seq, typename Begin, typename End>
         struct apply
           : fusion::result_of::erase<Seq, Begin, End>
         {};

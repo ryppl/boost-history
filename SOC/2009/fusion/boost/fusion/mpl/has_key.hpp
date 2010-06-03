@@ -12,13 +12,13 @@
 
 namespace boost { namespace mpl
 {
-    template <typename>
+    template<typename>
     struct has_key_impl;
 
-    template <>
+    template<>
     struct has_key_impl<fusion::fusion_sequence_tag>
     {
-        template <typename Seq, typename Key>
+        template<typename Seq, typename Key>
         struct apply
           : fusion::result_of::has_key<Seq, Key>
         {};

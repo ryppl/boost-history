@@ -20,10 +20,10 @@ namespace boost { namespace fusion { namespace detail
     // Default advance implementation, perform next(it)
     // or prior(it) N times.
 
-    template <typename It, int N>
+    template<typename It, int N>
     struct forward;
 
-    template <typename It, int N>
+    template<typename It, int N>
     struct next_forward
       : forward<
             typename result_of::next<It>::type
@@ -31,7 +31,7 @@ namespace boost { namespace fusion { namespace detail
         >
     {};
 
-    template <typename It, int N>
+    template<typename It, int N>
     struct forward
     {
         typedef typename
@@ -48,7 +48,7 @@ namespace boost { namespace fusion { namespace detail
             return it;
         }
 
-        template <typename OtherIt>
+        template<typename OtherIt>
         static type
         call(OtherIt const& it)
         {
@@ -56,10 +56,10 @@ namespace boost { namespace fusion { namespace detail
         }
     };
 
-    template <typename It, int N>
+    template<typename It, int N>
     struct backward;
 
-    template <typename It, int N>
+    template<typename It, int N>
     struct next_backward
       : backward<
             typename result_of::prior<It>::type
@@ -67,7 +67,7 @@ namespace boost { namespace fusion { namespace detail
         >
     {};
 
-    template <typename It, int N>
+    template<typename It, int N>
     struct backward
     {
         typedef typename
@@ -84,7 +84,7 @@ namespace boost { namespace fusion { namespace detail
             return it;
         }
 
-        template <typename OtherIt>
+        template<typename OtherIt>
         static type
         call(OtherIt const& it)
         {

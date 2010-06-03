@@ -19,35 +19,23 @@
 
 namespace boost { namespace fusion
 {
-    struct sequence_facade_tag;
-
     namespace extension
     {
-        template <typename>
+        template<typename>
         struct value_at_key_impl
         {
-            template <typename Seq, typename Key>
+            template<typename Seq, typename Key>
             struct apply
               : result_of::value_of_data<
                     typename result_of::find_key<Seq, Key>::type
                 >
             {};
         };
-
-        template <>
-        struct value_at_key_impl<sequence_facade_tag>
-        {
-            template <typename Seq, typename Key>
-            struct apply
-              : detail::remove_reference<Seq>::type::
-                    template value_at_key<Seq, Key>
-            {};
-        };
     }
 
     namespace result_of
     {
-        template <typename Seq, typename Key>
+        template<typename Seq, typename Key>
         struct value_at_key
           : extension::value_at_key_impl<typename traits::tag_of<Seq>::type>::
                 template apply<Seq, Key>

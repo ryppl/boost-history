@@ -21,8 +21,7 @@
           : BOOST_FUSION_INIT_BASE(arguments)
         {}
 #   else
-        template <typename... OtherArguments>
-        explicit
+        template<typename... OtherArguments>
         BOOST_FUSION_SEQ_NAME(OtherArguments&&... arguments)
           : BOOST_FUSION_INIT_BASE(std::forward<OtherArguments>(arguments)...)
         {}

@@ -46,14 +46,16 @@
 #       include <boost/fusion/container/detail/variadic_templates/forward_interface.hpp>
 #   endif
 
-        template<typename SeqAssign>
-        BOOST_FUSION_SEQ_NAME(BOOST_FUSION_R_ELSE_CLREF(SeqAssign) seq_assign)
-          : BOOST_FUSION_INIT_BASE(BOOST_FUSION_FORWARD(SeqAssign,seq_assign))
-        {}
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    template<typename Arg>
+    BOOST_FUSION_SEQ_NAME(BOOST_FUSION_R_ELSE_CLREF(Arg) arg)
+      : BOOST_FUSION_INIT_BASE(BOOST_FUSION_FORWARD(Arg, arg))
+    {}
+#endif
 
 #   undef BOOST_FUSION_INIT_BASE
 
-        template <typename Seq>
+        template<typename Seq>
         BOOST_FUSION_SEQ_NAME&
         operator=(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
         {

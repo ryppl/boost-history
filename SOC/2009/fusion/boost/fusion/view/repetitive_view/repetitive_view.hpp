@@ -19,6 +19,7 @@
 #include <boost/fusion/support/internal/assert.hpp>
 #include <boost/fusion/view/detail/view_storage.hpp>
 
+#include <boost/detail/workaround.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/integer_traits.hpp>

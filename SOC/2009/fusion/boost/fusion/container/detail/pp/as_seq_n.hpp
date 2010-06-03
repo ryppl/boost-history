@@ -7,12 +7,12 @@
 
 #define BOOST_FUSION_N BOOST_PP_ITERATION()
 
-    template <>
+    template<>
     struct BOOST_PP_CAT(BOOST_PP_CAT(as_,BOOST_FUSION_SEQ_NAME),_impl)<
         BOOST_FUSION_N
     >
     {
-        template <typename It0>
+        template<typename It0>
         struct apply
         {
 #if BOOST_FUSION_N

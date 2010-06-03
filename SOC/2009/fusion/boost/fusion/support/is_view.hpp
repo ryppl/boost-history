@@ -20,7 +20,7 @@ namespace boost { namespace fusion
         template<typename>
         struct is_view_impl
         {
-            template <typename Seq>
+            template<typename Seq>
             struct apply
               :  detail::remove_reference<Seq>::type::is_view
             {};
@@ -29,7 +29,7 @@ namespace boost { namespace fusion
 
     namespace traits
     {
-        template <typename Seq>
+        template<typename Seq>
         struct is_view
           : extension::is_view_impl<typename fusion::traits::tag_of<Seq>::type>::
                 template apply<Seq>::type

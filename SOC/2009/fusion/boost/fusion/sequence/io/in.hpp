@@ -19,7 +19,7 @@
 
 namespace boost { namespace fusion
 {
-    template <typename Seq>
+    template<typename Seq>
     inline std::istream&
     in(std::istream& is, Seq& seq)
     {
@@ -32,7 +32,7 @@ namespace boost { namespace fusion
 
     namespace operators
     {
-        template <typename Seq>
+        template<typename Seq>
         inline typename
             enable_if<
                fusion::traits::is_sequence<Seq>

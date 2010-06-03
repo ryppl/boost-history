@@ -27,7 +27,7 @@ namespace boost { namespace fusion
 
     namespace detail
     {
-        template <typename Seq, typename Pred>
+        template<typename Seq, typename Pred>
         struct filter_key_view
           : sequence_base<filter_key_view<Seq, Pred> >
         {

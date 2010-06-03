@@ -222,7 +222,7 @@ namespace boost { namespace fusion
     
     namespace result_of
     {
-        template <typename Seq, typename Pred>
+        template<typename Seq, typename Pred>
         struct find_if_s
           : detail::static_find_if_s<Seq, Pred>
         {};
@@ -238,7 +238,7 @@ namespace boost { namespace fusion
         return detail::static_find_if_s<Sequence, Pred>::call(seq);
     }
 
-    template <typename Pred, typename Sequence>
+    template<typename Pred, typename Sequence>
     typename result_of::find_if_s<Sequence const, Pred>::type
     find_if_s(Sequence const& seq)
     {

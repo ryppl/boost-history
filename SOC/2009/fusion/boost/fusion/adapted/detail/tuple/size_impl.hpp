@@ -13,10 +13,10 @@ namespace boost { namespace fusion { namespace extension
     template<typename>
     struct size_impl;
 
-    template <>
+    template<>
     struct size_impl<BOOST_FUSION_ADAPTED_TUPLE_TAG>
     {
-        template <typename Seq>
+        template<typename Seq>
         struct apply
           : mpl::int_<
 #ifdef BOOST_FUSION_ADAPTED_STD_TUPLE

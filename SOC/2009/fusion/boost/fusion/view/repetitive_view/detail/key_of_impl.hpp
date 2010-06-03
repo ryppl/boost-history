@@ -12,13 +12,13 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename>
+    template<typename>
     struct key_of_impl;
 
-    template <>
+    template<>
     struct key_of_impl<repetitive_view_iterator_tag>
     {
-        template <typename It>
+        template<typename It>
         struct apply
           : result_of::key_of<
                 typename detail::remove_reference<It>::type::it_type

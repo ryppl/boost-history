@@ -12,13 +12,13 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename>
+    template<typename>
     struct value_of_impl;
 
-    template <>
+    template<>
     struct value_of_impl<po_array_iterator_tag>
     {
-        template <typename It>
+        template<typename It>
         struct apply
           : remove_extent<
                 typename detail::remove_reference<

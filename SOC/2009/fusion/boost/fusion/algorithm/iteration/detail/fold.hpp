@@ -132,7 +132,7 @@ namespace boost { namespace fusion { namespace detail
         }
     };
 
-    template <typename StateRef, typename It, typename F>
+    template<typename StateRef, typename It, typename F>
     struct fold_apply
       : boost::result_of<
             F(

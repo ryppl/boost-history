@@ -13,13 +13,13 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename>
+    template<typename>
     struct value_at_impl;
 
-    template <>
+    template<>
     struct value_at_impl<mpl_sequence_tag>
     {
-        template <typename Seq, typename N>
+        template<typename Seq, typename N>
         struct apply
           : mpl::at<typename detail::identity<Seq>::type, N>
         {};

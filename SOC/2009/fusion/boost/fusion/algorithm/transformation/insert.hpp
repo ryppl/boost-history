@@ -20,7 +20,7 @@ namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename Seq, typename Pos, typename T>
+        template<typename Seq, typename Pos, typename T>
         struct insert
           : insert_range<
                 Seq
@@ -36,7 +36,7 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename Seq, typename Pos, typename T>
+    template<typename Seq, typename Pos, typename T>
     inline typename
         result_of::insert<
             BOOST_FUSION_R_ELSE_CLREF(Seq)
@@ -54,7 +54,7 @@ namespace boost { namespace fusion
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-    template <typename Seq, typename Pos, typename T>
+    template<typename Seq, typename Pos, typename T>
     inline typename result_of::insert<Seq&, Pos const&, T const&>::type
     insert(Seq& seq,Pos const& pos,T const& x)
     {

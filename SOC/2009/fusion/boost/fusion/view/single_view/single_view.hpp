@@ -9,6 +9,7 @@
 #ifndef BOOST_FUSION_VIEW_SINGLE_VIEW_SINGLE_VIEW_HPP
 #define BOOST_FUSION_VIEW_SINGLE_VIEW_SINGLE_VIEW_HPP
 
+#include <boost/config.hpp>
 #ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
 #   include <boost/fusion/sequence/intrinsic/size.hpp>
 #endif
@@ -20,6 +21,7 @@
 #include <boost/fusion/support/internal/sequence_assign.hpp>
 #include <boost/fusion/support/internal/is_explicitly_convertible.hpp>
 
+#include <boost/detail/workaround.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/int.hpp>
 #ifdef BOOST_NO_RVALUE_REFERENCES
@@ -45,7 +47,13 @@ namespace boost { namespace fusion
     struct single_view_tag;
     struct fusion_sequence_tag;
 
-    template <typename T>
+#ifdef BOOST_MSVC
+#   pragma warning(push)
+    //'class' : multiple copy constructors specified
+#   pragma warning(disable:4521)
+#endif
+
+    template<typename T>
     struct single_view
       : sequence_base<single_view<T> >
     {
@@ -173,7 +181,7 @@ namespace boost { namespace fusion
         };
     };
 
-    template <typename T>
+    template<typename T>
     inline typename
         result_of::make_single_view<BOOST_FUSION_R_ELSE_CLREF(T)>::type
     make_single_view(BOOST_FUSION_R_ELSE_CLREF(T) val)
@@ -184,7 +192,7 @@ namespace boost { namespace fusion
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-    template <typename T, typename Seq>
+    template<typename T, typename Seq>
     //cschmidt: see https://svn.boost.org/trac/boost/ticket/3305
 #   if defined(BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS) || BOOST_WORKAROUND(__GNUC__,<4)
     typename lazy_disable_if<
@@ -198,6 +206,10 @@ namespace boost { namespace fusion
     {
         return typename result_of::make_single_view<T&>::type(val);
     }
+#endif
+
+#ifdef BOOST_MSVC
+#   pragma warning(pop)
 #endif
 }}
 

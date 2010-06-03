@@ -10,13 +10,13 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename>
+    template<typename>
     struct begin_impl;
 
-    template <>
+    template<>
     struct begin_impl<single_view_tag>
     {
-        template <typename Seq>
+        template<typename Seq>
         struct apply
         {
             typedef typename detail::remove_reference<Seq>::type seq;
@@ -24,7 +24,7 @@ namespace boost { namespace fusion { namespace extension
             typedef
                 single_view_iterator<
                     typename seq::value_type
-                  , typename detail::forward_as<
+                  , typename detail::forward_as_lref<
                         Seq
                       , typename seq::value_type
                     >::type

@@ -22,7 +22,7 @@
 
 namespace boost { namespace fusion
 {
-    template <typename Seq1, typename Seq2>
+    template<typename Seq1, typename Seq2>
     inline bool
     less_equal(Seq1 const& seq1, Seq2 const& seq2)
     {
@@ -48,21 +48,21 @@ namespace boost { namespace fusion
     {
 #if defined(BOOST_MSVC) && (BOOST_MSVC <= 1400) 
 // Workaround for  VC8.0 and VC7.1
-        template <typename Seq1, typename Seq2>
+        template<typename Seq1, typename Seq2>
         inline bool
         operator<=(sequence_base<Seq1> const& seq1, sequence_base<Seq2 const&> const& seq2)
         {
             return less_equal(seq1.derived(), seq2.derived());
         }
 
-        template <typename Seq1, typename Seq2>
+        template<typename Seq1, typename Seq2>
         inline typename disable_if<detail::is_native_fusion_sequence<Seq2 const&>, bool>::type
         operator<=(sequence_base<Seq1> const& seq1, Seq2 const& seq2)
         {
             return less_equal(seq1.derived(), seq2);
         }
 
-        template <typename Seq1, typename Seq2>
+        template<typename Seq1, typename Seq2>
         inline typename disable_if<detail::is_native_fusion_sequence<Seq1 const&>, bool>::type
         operator<=(Seq1 const& seq1, sequence_base<Seq2> const& b)
         {
@@ -72,7 +72,7 @@ namespace boost { namespace fusion
 #else
 // Somehow VC8.0 and VC7.1 does not like this code
 // but barfs somewhere else. 
-        template <typename Seq1, typename Seq2>
+        template<typename Seq1, typename Seq2>
         inline typename
             enable_if<
                 detail::enable_comparison<Seq1 const&, Seq2 const&>

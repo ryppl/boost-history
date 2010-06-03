@@ -1,5 +1,6 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -14,26 +15,15 @@
 
 namespace boost { namespace fusion
 {
-    struct sequence_facade_tag;
-
     namespace extension
     {
-        template <typename>
+        template<typename>
         struct begin_impl;
-
-        template <>
-        struct begin_impl<sequence_facade_tag>
-        {
-            template <typename Seq>
-            struct apply
-              : detail::remove_reference<Seq>::type::template begin<Seq>
-            {};
-        };
     }
 
     namespace result_of
     {
-        template <typename Seq>
+        template<typename Seq>
         struct begin
             : extension::begin_impl<typename traits::tag_of<Seq>::type>::
                 template apply<Seq>
@@ -43,7 +33,7 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename Seq>
+    template<typename Seq>
     inline typename
         result_of::begin<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type
     begin(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
@@ -53,7 +43,7 @@ namespace boost { namespace fusion
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-    template <typename Seq>
+    template<typename Seq>
     inline typename result_of::begin<Seq&>::type
     begin(Seq& seq)
     {

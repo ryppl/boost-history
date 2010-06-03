@@ -1,5 +1,6 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -13,26 +14,15 @@
 
 namespace boost { namespace fusion
 {
-    struct iterator_facade_tag;
-
     namespace extension
     {
-        template <typename>
+        template<typename>
         struct next_impl;
-
-        template <>
-        struct next_impl<iterator_facade_tag>
-        {
-            template <typename It>
-            struct apply
-              : detail::remove_reference<It>::type::template next<It>
-            {};
-        };
     }
 
     namespace result_of
     {
-        template <typename It>
+        template<typename It>
         struct next
           : extension::next_impl<typename traits::tag_of<It>::type>::
                 template apply<It>
@@ -41,7 +31,7 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename It>
+    template<typename It>
     typename result_of::next<It const&>::type const
     next(It const& it)
     {

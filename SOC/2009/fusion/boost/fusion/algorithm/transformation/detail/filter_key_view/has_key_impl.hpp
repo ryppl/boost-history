@@ -17,13 +17,13 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename>
+    template<typename>
     struct has_key_impl;
 
-    template <>
+    template<>
     struct has_key_impl<detail::filter_key_view_tag>
     {
-        template <typename Seq,typename Key>
+        template<typename Seq,typename Key>
         struct apply
         {
             typedef typename detail::remove_reference<Seq>::type seq;

@@ -20,7 +20,7 @@ namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename Seq, typename F, typename NewValue>
+        template<typename Seq, typename F, typename NewValue>
         struct replace_if
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
@@ -37,7 +37,7 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename Seq, typename F, typename NewValue>
+    template<typename Seq, typename F, typename NewValue>
     inline typename result_of::replace_if<
         BOOST_FUSION_R_ELSE_CLREF(Seq)
       , BOOST_FUSION_RREF_ELSE_OBJ(F)
@@ -63,7 +63,7 @@ namespace boost { namespace fusion
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-    template <typename Seq, typename F, typename NewValue>
+    template<typename Seq, typename F, typename NewValue>
     inline typename result_of::replace_if<Seq&, F, NewValue const&>::type
     replace_if(Seq& seq,F pred,NewValue const& new_value)
     {

@@ -26,7 +26,7 @@ namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename Seq, typename Key>
+        template<typename Seq, typename Key>
         struct erase_key
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
@@ -70,7 +70,7 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename Key, typename Seq>
+    template<typename Key, typename Seq>
     inline typename
         result_of::erase_key<BOOST_FUSION_R_ELSE_CLREF(Seq), Key>::type
     erase_key(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
@@ -81,7 +81,7 @@ namespace boost { namespace fusion
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-    template <typename Key, typename Seq>
+    template<typename Key, typename Seq>
     inline BOOST_FUSION_EXPLICIT_TEMPLATE_NON_CONST_ARG_OVERLOAD(
             result_of::erase_key<,Seq,&, Key>)
     erase_key(Seq& seq)

@@ -77,14 +77,14 @@ namespace
     };
 
     // Our Accumulator function
-    template <typename T>
+    template<typename T>
     struct accumulator
     {
         accumulator()
             : sum()
         {}
         
-        template <typename Sequence>
+        template<typename Sequence>
         void operator()(Sequence const& seq)
         {
             this->sum += boost::fusion::accumulate(seq, 0, poly_add());
@@ -94,14 +94,14 @@ namespace
     };
 
     // Plain Accumulator function
-    template <typename T>
+    template<typename T>
     struct plain_accumulator
     {
         plain_accumulator()
             : sum()
         {}
         
-        template <typename X>
+        template<typename X>
         void operator()(X const& x)
         {
             this->sum += x;
@@ -110,14 +110,14 @@ namespace
         T sum;
     };
     
-    template <typename T>
+    template<typename T>
     void check(T const& seq, char const* info)
     {
         test::measure<accumulator<int> >(seq, 1);
         std::cout << info << test::live_code << std::endl;
     }
 
-    template <typename T>
+    template<typename T>
     void measure(T const& seq, char const* info, long const repeats, double base)
     {
         double t = test::measure<accumulator<int> >(seq, repeats);
@@ -128,7 +128,7 @@ namespace
             << std::endl;
     }
 
-    template <typename T>
+    template<typename T>
     void test_assembler(T const& seq)
     {
         test::live_code = boost::fusion::accumulate(seq, 0, poly_add());

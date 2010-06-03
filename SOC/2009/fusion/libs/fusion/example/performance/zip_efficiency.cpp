@@ -45,14 +45,14 @@ namespace
     };
 
     // Our Accumulator function
-    template <typename T>
+    template<typename T>
     struct zip_accumulator
     {
         zip_accumulator()
             : sum()
         {}
         
-        template <typename Sequence>
+        template<typename Sequence>
         void operator()(Sequence const& seq)
         {
             this->sum += boost::fusion::accumulate(seq, 0, zip_add());
@@ -61,14 +61,14 @@ namespace
         T sum;
     };
     
-    template <typename T>
+    template<typename T>
     void check(T const& seq, char const* info)
     {
         test::measure<zip_accumulator<int> >(seq, 1);
         std::cout << info << test::live_code << std::endl;
     }
 
-    template <typename T>
+    template<typename T>
     void measure(T const& seq, char const* info, long const repeats)
     {
         std::cout 

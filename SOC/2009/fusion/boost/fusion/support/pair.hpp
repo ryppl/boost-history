@@ -27,7 +27,7 @@
 namespace boost { namespace fusion
 {
     // A half runtime pair where the first type does not have data
-    template <typename First, typename Second>
+    template<typename First, typename Second>
     struct pair
     {
         typedef First first_type;
@@ -59,7 +59,7 @@ namespace boost { namespace fusion
         pair(Arg&& arg,
             typename enable_if<
                 detail::is_explicitly_convertible<Arg&&,second_type>
-            >::type* =0);
+            >::type* =0)
           : second(std::forward<Arg>(arg))
         {}
 #   endif
@@ -82,7 +82,7 @@ namespace boost { namespace fusion
         {}
 #endif
 
-        template <typename Second2>
+        template<typename Second2>
         pair& operator=(pair<First, Second2>
             BOOST_FUSION_R_ELSE_CLREF(BOOST_PP_EMPTY()) rhs)
         {
@@ -119,7 +119,7 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename First, typename Second>
+    template<typename First, typename Second>
     inline typename
         result_of::make_pair<First,BOOST_FUSION_R_ELSE_CLREF(Second)>::type
     make_pair(BOOST_FUSION_R_ELSE_CLREF(Second) second)
@@ -131,7 +131,7 @@ namespace boost { namespace fusion
             >::type(BOOST_FUSION_FORWARD(Second,second));
     }
 
-    template <typename OStream, typename First, typename Second>
+    template<typename OStream, typename First, typename Second>
     inline BOOST_FUSION_R_ELSE_LREF(OStream)
     operator<<(
             BOOST_FUSION_R_ELSE_LREF(OStream) os,
@@ -141,7 +141,7 @@ namespace boost { namespace fusion
         return os;
     }
 
-    template <typename IStream, typename First, typename Second>
+    template<typename IStream, typename First, typename Second>
     inline BOOST_FUSION_R_ELSE_LREF(IStream)
     operator>>(
             BOOST_FUSION_R_ELSE_LREF(IStream) is
@@ -153,7 +153,7 @@ namespace boost { namespace fusion
         return is;
     }
 
-    template <typename First, typename SecondLhs, typename SecondRhs>
+    template<typename First, typename SecondLhs, typename SecondRhs>
     inline bool
     operator==(pair<First, SecondLhs> const& lhs,
             pair<First, SecondRhs> const& rhs)
@@ -161,7 +161,7 @@ namespace boost { namespace fusion
         return lhs.second == rhs.second;
     }
 
-    template <typename First, typename SecondLhs, typename SecondRhs>
+    template<typename First, typename SecondLhs, typename SecondRhs>
     inline bool
     operator!=(pair<First, SecondLhs> const& lhs,
             pair<First, SecondRhs> const& rhs)

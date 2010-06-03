@@ -18,7 +18,7 @@
 
 namespace boost { namespace fusion { namespace detail
 {
-    template <typename Seq1Ref, typename Seq2Ref>
+    template<typename Seq1Ref, typename Seq2Ref>
     struct enable_equality
       : mpl::or_<
             traits::is_sequence<Seq1Ref>
@@ -26,7 +26,7 @@ namespace boost { namespace fusion { namespace detail
         >
     {};
 
-    template <typename Seq1Ref, typename Seq2Ref>
+    template<typename Seq1Ref, typename Seq2Ref>
     struct enable_comparison
         : mpl::and_<
             mpl::or_<

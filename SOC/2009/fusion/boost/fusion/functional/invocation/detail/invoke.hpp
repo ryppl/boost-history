@@ -35,22 +35,28 @@ namespace boost { namespace fusion
         };
     }
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
-    template <typename F, typename Seq>
+#if defined(BOOST_NO_RVALUE_REFERENCES) ||\
+    defined(BOOST_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)
+    template<typename F, typename Seq>
     inline typename result_of::BOOST_FUSION_INVOKE_NAME<F, Seq const&>::type
-    BOOST_FUSION_INVOKE_NAME(F f, Seq const& seq)
+    BOOST_FUSION_INVOKE_NAME(F f, BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
-         return result_of::BOOST_FUSION_INVOKE_NAME<F, Seq const&>::call(f,seq);
+         return result_of::BOOST_FUSION_INVOKE_NAME<
+             F
+           , BOOST_FUSION_R_ELSE_CLREF(Seq)
+         >::call(f,BOOST_FUSION_FORWARD(Seq,seq));
     }
 
-    template <typename F, typename Seq>
+#   ifdef BOOST_NO_RVALUE_REFERENCES
+    template<typename F, typename Seq>
     inline typename result_of::BOOST_FUSION_INVOKE_NAME<F,Seq&>::type
     BOOST_FUSION_INVOKE_NAME(F f,Seq& seq)
     {
         return result_of::BOOST_FUSION_INVOKE_NAME<F,Seq&>::call(f,seq);
     }
+#   endif
 #else
-    template <typename FQualified=void,typename F=void, typename Seq=void>
+    template<typename FQualified=void,typename F=void, typename Seq=void>
     inline typename result_of::BOOST_FUSION_INVOKE_NAME<
         typename mpl::if_<
             is_same<FQualified, void>
