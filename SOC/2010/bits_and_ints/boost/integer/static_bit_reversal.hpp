@@ -11,8 +11,7 @@
 #define BOOST_STATIC_BIT_REVERSAL_INCLUDED
 
 #include <boost/utility/enable_if.hpp>
-#include <boost/type_traits.hpp>
-#include <boost/integer/utils.hpp> 
+#include <boost/type_traits/is_integral.hpp>
 #include <boost/integer/detail/static_bit_reversal.hpp>
 
 /* 

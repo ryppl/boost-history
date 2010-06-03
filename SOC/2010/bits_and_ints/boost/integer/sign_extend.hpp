@@ -10,8 +10,8 @@
 #ifndef BOOST_SIGN_EXTEND_INCLUDED
 #define BOOST_SIGN_EXTEND_INCLUDED
 
-#include <boost/type_traits.hpp> // is_integral
-#include <boost/utility/enable_if.hpp> // enable_if
+#include <boost/type_traits/is_integral.hpp>
+#include <boost/utility/enable_if.hpp>
 
 namespace boost 
 {

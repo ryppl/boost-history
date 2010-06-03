@@ -10,8 +10,9 @@
 #ifndef BOOST_BITS_AND_INTS
 #define BOOST_BITS_AND_INTS
 
-// sign_extends and static_sign_extends
-#include <boost/integer/utils.hpp>
+// Bit and Ints library forwarder
+
+#include <boost/integer/bit_utils.hpp>
 #include <boost/integer/sign_extend.hpp>
 #include <boost/integer/static_sign_extend.hpp>
 #include <boost/integer/bit_reversal.hpp>

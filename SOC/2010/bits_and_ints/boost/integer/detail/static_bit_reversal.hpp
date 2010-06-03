@@ -11,7 +11,7 @@
 #define BOOST_DETAIL_STATIC_BIT_REVERSAL_INCLUDED
 
 #include <boost/type_traits/integral_constant.hpp>
-#include <boost/integer/utils.hpp>
+#include <boost/integer/bit_utils.hpp>
 
 namespace boost {
 namespace integer_detail {
@@ -20,7 +20,7 @@ namespace integer_detail {
 template <typename T, T data, std::size_t shift>
 struct static_bit_reversal_impl : 
 	public integral_constant<T, 
-		((is_bit_set<T, data, (sizeof(T) * 8 - shift)>::value << (shift - 1)) 
+		((test_bit<T, data, (sizeof(T) * 8 - shift)>::value << (shift - 1)) 
 		 + static_bit_reversal_impl<T, data, shift - 1>::value)
 	>
 {};
