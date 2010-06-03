@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2006, 2007 Julio M. Merino Vidal
 // Copyright (c) 2008, 2009 Boris Schaeling
-// Copyright (c) 2010 Boris Schaeling, Felipe Tanus
+// Copyright (c) 2010 Felipe Tanus, Boris Schaeling
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -18,19 +18,17 @@
  */
 
 #include <boost/process/config.hpp>
-#include <map>
 #include <boost/process/stream_behavior.hpp>
 #include <boost/process/environment.hpp>
 #include <boost/process/self.hpp>
-
+#include <map>
+#include <string>
 
 #ifndef BOOST_PROCESS_CONTEXT_HPP
 #define BOOST_PROCESS_CONTEXT_HPP
-namespace boost
-{
-namespace process
-{
 
+namespace boost {
+namespace process {
 
 /*
  * This is the declaration of context struct.
@@ -50,13 +48,9 @@ namespace process
  */
 struct context
 {
-
-    environment_t environment; //default: empty
-
-    std::string process_name; //default: empty
-    //io_service *ioservice; //default: NULL
+    environment_t environment;
+    std::string process_name;
     std::string work_dir;
-
     stream_behavior stdin_behavior;
     stream_behavior stdout_behavior;
     stream_behavior stderr_behavior;
@@ -68,9 +62,7 @@ struct context
         stderr_behavior = inherit;
         work_dir = self::get_work_dir();
         environment = self::get_environment();
-
     }
-
 };
 
 /*
@@ -78,12 +70,9 @@ struct context
  * It represents a context with default values that will be
  * assign to a process if no context is passed by parameter.
  */
-
 static struct context DEFAULT_CONTEXT;
 
-
 }
 }
-
 
 #endif

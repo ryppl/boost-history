@@ -4,6 +4,7 @@
 //
 // Copyright (c) 2006, 2007 Julio M. Merino Vidal
 // Copyright (c) 2008, 2009 Boris Schaeling
+// Copyright (c) 2010 Felipe Tanus, Boris Schaeling
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -22,12 +23,12 @@
 #include <boost/process/config.hpp>
 
 #if defined(BOOST_POSIX_API)
-#include <cerrno>
-#include <unistd.h>
+#  include <cerrno>
+#  include <unistd.h>
 #elif defined(BOOST_WINDOWS_API)
-#include <windows.h>
+#  include <windows.h>
 #else
-#error "Unsupported platform." 
+#  error "Unsupported platform." 
 #endif
 
 #include <boost/assert.hpp>
@@ -35,12 +36,9 @@
 #include <boost/throw_exception.hpp>
 #include <stdio.h>
 
-namespace boost
-{
-namespace process
-{
-namespace detail
-{
+namespace boost {
+namespace process {
+namespace detail {
 
 /**
  * Simple RAII model for system file handles.
@@ -179,7 +177,6 @@ public:
         return handle_ != invalid_value();
     }
 
-
     /**
      * Reclaims ownership of the native file handle.
      *
@@ -219,7 +216,6 @@ public:
     }
 
 #if defined(BOOST_POSIX_API) || defined(BOOST_PROCESS_DOXYGEN)
-
     /**
      * Closes the file handle.
      *
@@ -258,34 +254,18 @@ public:
      */
     void posix_remap(handle_type &h)
     {
-
         BOOST_ASSERT(valid());
 
         if (::dup2(handle_, h) == -1)
-            boost::throw_exception(boost::system::system_error(
-                        boost::system::error_code(errno, 
-                            boost::system::get_system_category()),
-                        "boost::process::detail::file_handle::posix_remap: \
-                        dup2(2) failed"));
+            boost::throw_exception(boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::detail::file_handle::posix_remap: dup2(2) failed"));
 
-        if (::close(handle_) == -1){
+        if (::close(handle_) == -1)
             ::close(h);
-            boost::throw_exception(boost::system::system_error(
-                        boost::system::error_code(errno, 
-                            boost::system::get_system_category()),
-                        "boost::process::detail::file_handle::posix_remap:\
-                        close(2) failed"));
-        } 
+            boost::throw_exception(boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::detail::file_handle::posix_remap: close(2) failed"));
 
-        if( ::dup2(handle_,h) == -1 )
-        {
-            boost::throw_exception(boost::system::system_error(
-                        boost::system::error_code(errno, 
-                            boost::system::get_system_category()), 
-                        "boost::process::detail::file_handle::posix_remap:\
-                        dup2(2) failed"));
+        if(::dup2(handle_,h) == -1)
+            boost::throw_exception(boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::detail::file_handle::posix_remap: dup2(2) failed"));
 
-        }
         handle_ = h;
     }
 
@@ -309,17 +289,13 @@ public:
     static file_handle duplicate(int h1, int h2)
     {
         if (::dup2(h1, h2) == -1)
-            boost::throw_exception(boost::system::system_error(
-                        boost::system::error_code(errno, 
-                            boost::system::get_system_category()), 
-                        "boost::process::detail::file_handle::posix_dup:\ 
-                        dup2(2) failed"));
+            boost::throw_exception(boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::detail::file_handle::posix_dup: dup2(2) failed"));
 
         return file_handle(h2);
     }
 #endif
-#if defined(BOOST_WINDOWS_API) || defined(BOOST_PROCESS_DOXYGEN)
 
+#if defined(BOOST_WINDOWS_API) || defined(BOOST_PROCESS_DOXYGEN)
     /**
      * Closes the file handle.
      *
@@ -354,15 +330,8 @@ public:
     {
         HANDLE h2;
 
-        if (::DuplicateHandle(::GetCurrentProcess(), h,
-                 ::GetCurrentProcess(), &h2, 0,
-                 inheritable ? TRUE : FALSE, DUPLICATE_SAME_ACCESS) ==0 )
-                 boost::throw_exception(boost::system::system_error(
-                         boost::system::error_code(::GetLastError(),
-                         boost::system::get_system_category()),
-                         "boost::process::detail::file_handle::win32_dup:\
-                         DuplicateHandle failed"));
-
+        if (::DuplicateHandle(::GetCurrentProcess(), h, ::GetCurrentProcess(), &h2, 0, inheritable ? TRUE : FALSE, DUPLICATE_SAME_ACCESS) == 0)
+                 boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::detail::file_handle::win32_dup: DuplicateHandle failed"));
 
         return file_handle(h2);
     }
@@ -384,25 +353,15 @@ public:
      * \throw boost::system::system_error If GetStdHandle() or
      *        DuplicateHandle() fails.
      */
-
     static file_handle win32_dup_std(DWORD d, bool inheritable)
     {
-        BOOST_ASSERT(d == STD_INPUT_HANDLE || d == STD_OUTPUT_HANDLE
-                || d == STD_ERROR_HANDLE);
-
-
+        BOOST_ASSERT(d == STD_INPUT_HANDLE || d == STD_OUTPUT_HANDLE || d == STD_ERROR_HANDLE);
         HANDLE h = ::GetStdHandle(d);
         if (h == INVALID_HANDLE_VALUE)
-            boost::throw_exception(boost::system::system_error(
-                        boost::system::error_code(::GetLastError(), 
-                            boost::system::get_system_category()), 
-                        "boost::process::detail::file_handle::win32_std:
-                        GetStdHandle failed"));
-
+            boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::detail::file_handle::win32_std:GetStdHandle failed"));
         file_handle dh = win32_dup(h, inheritable);
         return dh;
     }
-
 
     /**
      * Changes the file handle's inheritable flag.
@@ -420,13 +379,8 @@ public:
     {
         BOOST_ASSERT(valid());
 
-        if (!::SetHandleInformation(handle_, HANDLE_FLAG_INHERIT, i ? 
-                    HANDLE_FLAG_INHERIT : 0))
-            boost::throw_exception(boost::system::system_error(
-                    boost::system::error_code(::GetLastError(),
-                    boost::system::get_system_category()),
-                   "boost::process::detail::file_handle::win32_set_inheritable:\
-                   SetHandleInformation failed"));
+        if (!::SetHandleInformation(handle_, HANDLE_FLAG_INHERIT, i ? HANDLE_FLAG_INHERIT : 0))
+            boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::detail::file_handle::win32_set_inheritable: SetHandleInformation failed"));
     }
 #endif
 

@@ -4,6 +4,7 @@
 //
 // Copyright (c) 2006, 2007 Julio M. Merino Vidal
 // Copyright (c) 2008, 2009 Boris Schaeling
+// Copyright (c) 2010 Felipe Tanus, Boris Schaeling
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -21,17 +22,15 @@
 #include <boost/process/config.hpp>
 
 #if defined(BOOST_POSIX_API)
-#include <unistd.h>
-
-#if defined(__APPLE__)
-#include <crt_externs.h>
-#endif
-
+#  include <unistd.h>
+#  if defined(__APPLE__)
+#    include <crt_externs.h>
+#  endif
 #elif defined(BOOST_WINDOWS_API)
-#include <windows.h>
-#include <direct.h>
+#  include <windows.h>
+#  include <direct.h>
 #else
-#error "Unsupported platform." 
+#  error "Unsupported platform." 
 #endif
 
 #include <boost/process/process.hpp>
@@ -49,10 +48,8 @@ extern "C"
 }
 #endif
 
-namespace boost
-{
-namespace process
-{
+namespace boost {
+namespace process {
 
 /**
  * Generic implementation of the Process concept.
@@ -84,33 +81,28 @@ public:
         environment_t e;
 
 #if defined(BOOST_POSIX_API)
-#if defined(__APPLE__)
+#  if defined(__APPLE__)
         char **env = *_NSGetEnviron();
-#else
+#  else
         char **env = ::environ;
-#endif
+#  endif
 
         while (*env)
         {
             std::string s = *env;
             std::string::size_type pos = s.find('=');
-            e.insert(boost::process::environment_t::value_type(
-                         s.substr(0, pos), s.substr(pos + 1)));
+            e.insert(boost::process::environment_t::value_type(s.substr(0, pos), s.substr(pos + 1)));
             ++env;
         }
 
 #elif defined(BOOST_WINDOWS_API)
-#ifdef GetEnvironmentStrings
-#undef GetEnvironmentStrings
-#endif
+#  ifdef GetEnvironmentStrings
+#  undef GetEnvironmentStrings
+#  endif
 
         char *ms_environ = ::GetEnvironmentStrings();
         if (!ms_environ)
-            boost::throw_exception(boost::system::system_error(
-                        boost::system::error_code(::GetLastError(),
-                            boost::system::get_system_category()),
-                        "boost::process::self::get_environment:\ 
-                        GetEnvironmentStrings failed"));
+            boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::self::get_environment: GetEnvironmentStrings failed"));
         try
         {
             char *env = ms_environ;
@@ -118,9 +110,7 @@ public:
             {
                 std::string s = env;
                 std::string::size_type pos = s.find('=');
-                e.insert(boost::process::environment_t::value_type(
-                             s.substr(0, pos), s.substr(pos + 1))
-                        );
+                e.insert(boost::process::environment_t::value_type(s.substr(0, pos), s.substr(pos + 1)));
                 env += s.size() + 1;
             }
         }
@@ -135,25 +125,19 @@ public:
         return e;
     }
 
-
-    static char * get_work_dir()
+    static char *get_work_dir()
     {
 #if defined(BOOST_POSIX_API)
         int size = pathconf(".",_PC_PATH_MAX);
-        char * buffer = (char *)malloc(size);
-        if(buffer == NULL)
+        char *buffer = (char *)malloc(size);
+        if (!buffer) 
             BOOST_ASSERT(false);
         return getcwd(buffer, size);
-
 #elif defined(BOOST_WINDOWS_API)
-
         char* buffer;
-
-        BOOST_ASSERT( (buffer = _getcwd( NULL, 0 )) != NULL );
+        BOOST_ASSERT((buffer = _getcwd( NULL, 0 )) != NULL);
         return buffer;
-
 #endif
-
     }
 
 private:
@@ -168,8 +152,8 @@ private:
 #elif defined(BOOST_WINDOWS_API)
         process(::GetCurrentProcessId())
 #endif
-    {}
-
+    {
+    }
 };
 
 }

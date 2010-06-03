@@ -4,6 +4,7 @@
 //
 // Copyright (c) 2006, 2007 Julio M. Merino Vidal
 // Copyright (c) 2008, 2009 Boris Schaeling
+// Copyright (c) 2010 Felipe Tanus, Boris Schaeling
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -17,38 +18,32 @@
 
 #ifndef BOOST_PROCESS_CHILD_HPP
 #define BOOST_PROCESS_CHILD_HPP
-#include <iostream>
+
 #include <boost/process/config.hpp>
 
 #if defined(BOOST_POSIX_API)
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <cerrno>
-
+#  include <sys/types.h>
+#  include <sys/wait.h>
+#  include <cerrno>
 #elif defined(BOOST_WINDOWS_API)
-#include <windows.h>
-
+#  include <windows.h>
 #else
-#error "Unsupported platform." 
+#  error "Unsupported platform." 
 #endif
 
 #include <boost/process/process.hpp>
-
-
 #include <boost/process/pistream.hpp>
 #include <boost/process/postream.hpp>
 #include <boost/process/detail/file_handle.hpp>
-
 #include <boost/system/system_error.hpp>
 #include <boost/throw_exception.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/assert.hpp>
+#include <iostream>
 #include <vector>
 
-namespace boost
-{
-namespace process
-{
+namespace boost {
+namespace process {
 
 /**
  * Generic implementation of the Child concept.
@@ -95,8 +90,6 @@ public:
         return *stderr_;
     }
 
-
-
     /**
      * Creates a new child object that represents the just spawned child
      * process \a id.
@@ -116,7 +109,6 @@ public:
             fhprocess = detail::file_handle())
         : process(id)
     {
-
 #if defined(BOOST_WINDOWS_API)
         process_handle_ =  boost::shared_ptr<void>(fhprocess.release(),
                 ::CloseHandle);
@@ -129,8 +121,6 @@ public:
         if (fhstderr.valid())
             stderr_.reset(new pistream(fhstderr));
     }
-
-
 
 private:
     /**
@@ -163,7 +153,6 @@ private:
      */
     boost::shared_ptr<pistream> stderr_;
 
-
     /**
      * Collection of child objects.
      *
@@ -171,8 +160,9 @@ private:
      * by a vector.
      */
     typedef std::vector<child> children;
+};
 
-} ;
 }
 }
+
 #endif

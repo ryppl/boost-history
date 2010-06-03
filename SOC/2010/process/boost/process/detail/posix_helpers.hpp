@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2006, 2007 Julio M. Merino Vidal
 // Copyright (c) 2008, 2009 Boris Schaeling
-// Copyright (c) 2010 Boris Schaeling, Felipe Tanus
+// Copyright (c) 2010 Felipe Tanus, Boris Schaeling
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -18,30 +18,27 @@
  *
  */
 
+#include <boost/process/config.hpp>
 
 #if defined(BOOST_POSIX_API)
-#include <unistd.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <stdio.h>
+#  include <unistd.h>
+#  include <sys/stat.h>
+#  include <fcntl.h>
+#  include <stdio.h>
 #endif
-#include <map>
-#include <string.h>
+
 #include <boost/optional.hpp>
 #include <boost/process/stream_behavior.hpp>
 #include <boost/process/detail/stream_detail.hpp>
-
+#include <map>
+#include <string.h>
 
 #ifndef BOOST_PROCESS_POSIX_HELPERS_HPP
 #define BOOST_PROCESS_POSIX_HELPERS_HPP
-namespace boost
-{
-namespace process
-{
-namespace detail
-{
 
-
+namespace boost {
+namespace process {
+namespace detail {
 
 /*
  * This is the declaration of configure_stream function.
@@ -53,12 +50,10 @@ namespace detail
  */
 inline configure_child_posix_stream(stream_detail &s)
 {
-
-    switch(s.behavior)
+    switch (s.behavior)
     {
     case dummy:
     {
-
         std::string null_file;
         if(s.stream_type == stdin_type)
             null_file = "/dev/null";
@@ -72,29 +67,21 @@ inline configure_child_posix_stream(stream_detail &s)
             fd = ::open(null_file.c_str(), O_WRONLY);
 
         if (fd == -1)
-            boost::throw_exception(boost::system::system_error(
-                        boost::system::error_code(errno,
-                            boost::system::get_system_category()),
-                        "boost::process::detail::setup_input: open(2) of "
-                        + s.object.file_ + " failed"));
+            boost::throw_exception(boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::detail::setup_input: open(2) of " + s.object.file_ + " failed"));
 
         s.object.handle_ = file_handle(fd);
         s.object.handle_.posix_remap(s.stream_handle);
         s.object.handle_.release();
-
         break;
     }
-
     case closed:
         ::close(s.stream_handle);
         break;
-
     case inherit:
         //do nothing since is default?
         break;
-
     case capture:
-        if(s.stream_type == stdin_type)
+        if (s.stream_type == stdin_type)
         {
             s.object.pipe_.wend().close();
             s.object.pipe_.rend().posix_remap(s.stream_handle);
@@ -104,15 +91,11 @@ inline configure_child_posix_stream(stream_detail &s)
             s.object.pipe_.rend().close();
             s.object.pipe_.wend().posix_remap(s.stream_handle);
         }
-
         break;
-
     default:
         BOOST_ASSERT(false);
     }
-
 }
-
 
 /**
  * Converts an environment to a char** table as used by execve().
@@ -128,7 +111,7 @@ inline configure_child_posix_stream(stream_detail &s)
  *         the environment's content. Each array entry is a
  *         NULL-terminated string of the form var=value.
  */
-inline char ** environment_to_envp( environment_t env)
+inline char **environment_to_envp(environment_t env)
 {
     char **envp = new char*[env.size() + 1];
 
@@ -159,16 +142,14 @@ inline char ** environment_to_envp( environment_t env)
  *         to the executable. The caller is responsible of freeing them.
  */
 template <class Arguments>
-inline std::pair<std::size_t, char**> collection_to_posix_argv(const Arguments
-        &args)
+inline std::pair<std::size_t, char**> collection_to_posix_argv(const Arguments &args)
 {
     std::size_t nargs = args.size();
     BOOST_ASSERT(nargs >= 0);
 
     char **argv = new char*[nargs + 1];
     typename Arguments::size_type i = 0;
-    for (typename Arguments::const_iterator it = args.begin();
-            it != args.end(); ++it)
+    for (typename Arguments::const_iterator it = args.begin(); it != args.end(); ++it)
     {
         argv[i] = new char[it->size() + 1];
         ::strncpy(argv[i], it->c_str(), it->size() + 1);
@@ -182,6 +163,5 @@ inline std::pair<std::size_t, char**> collection_to_posix_argv(const Arguments
 }
 }
 }
-
 
 #endif

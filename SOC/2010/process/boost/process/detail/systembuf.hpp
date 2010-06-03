@@ -4,6 +4,7 @@
 //
 // Copyright (c) 2006, 2007 Julio M. Merino Vidal
 // Copyright (c) 2008, 2009 Boris Schaeling
+// Copyright (c) 2010 Felipe Tanus, Boris Schaeling
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -22,13 +23,12 @@
 #include <boost/process/config.hpp>
 
 #if defined(BOOST_POSIX_API)
-#include <sys/types.h>
-#include <unistd.h>
-
+#  include <sys/types.h>
+#  include <unistd.h>
 #elif defined(BOOST_WINDOWS_API)
-#include <windows.h>
+#  include <windows.h>
 #else
-#error "Unsupported platform." 
+#  error "Unsupported platform." 
 #endif
 
 #include <boost/noncopyable.hpp>
@@ -37,15 +37,12 @@
 #include <streambuf>
 #include <cstddef>
 
-namespace boost
-{
-namespace process
-{
+namespace boost {
+namespace process {
 
 class postream;
 
-namespace detail
-{
+namespace detail {
 
 /**
  * std::streambuf implementation for system file handles.
@@ -61,7 +58,6 @@ namespace detail
  */
 class systembuf : public std::streambuf, public boost::noncopyable
 {
-
     friend class ::boost::process::postream;
 
 public:
@@ -90,7 +86,6 @@ public:
      *
      * \see pistream and postream
      */
-
     explicit systembuf(handle_type h, std::size_t bufsize = 8192)
         : handle_(h),
           bufsize_(bufsize),
@@ -103,7 +98,6 @@ public:
         BOOST_ASSERT(handle_ != INVALID_HANDLE_VALUE);
 #endif
         BOOST_ASSERT(bufsize_ > 0);
-
         setp(write_buf_.get(), write_buf_.get() + bufsize_);
     }
 
@@ -186,8 +180,6 @@ protected:
      *
      * \returns 0 on success, -1 if an error occurred.
      */
-
-
 #if defined(BOOST_POSIX_API)
     virtual int sync()
     {

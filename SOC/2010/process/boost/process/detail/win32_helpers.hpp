@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2006, 2007 Julio M. Merino Vidal
 // Copyright (c) 2008, 2009 Boris Schaeling
-// Copyright (c) 2010 Boris Schaeling, Felipe Tanus
+// Copyright (c) 2010 Felipe Tanus, Boris Schaeling
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -18,10 +18,14 @@
  *
  */
 
+#ifndef BOOST_PROCESS_WIN32_HELPERS_HPP
+#define BOOST_PROCESS_WIN32_HELPERS_HPP
+
+#include <boost/process/config.hpp>
+#include <boost/process/child.hpp>
 #include <boost/process/detail/file_handle.hpp>
 #include <boost/process/detail/stream_detail.hpp>
 #include <boost/process/detail/pipe.hpp>
-#include <boost/process/child.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <boost/shared_array.hpp>
 #include <boost/scoped_array.hpp>
@@ -35,16 +39,9 @@
 #include <string.h>
 #include <windows.h>
 
-
-
-#ifndef BOOST_PROCESS_WIN32_HELPERS_HPP
-#define BOOST_PROCESS_WIN32_HELPERS_HPP
-namespace boost
-{
-namespace process
-{
-namespace detail
-{
+namespace boost {
+namespace process {
+namespace detail {
 
 /**
  * Converts an environment to a string used by CreateProcess().
@@ -88,8 +85,6 @@ inline boost::shared_array<char>environment_to_win32_strings(environment_t &env)
     return envp;
 }
 
-
-
 /**
  * Converts the command line to a plain string. Converts the command line's
  * list of arguments to the format expected by the \a lpCommandLine parameter
@@ -102,15 +97,13 @@ inline boost::shared_array<char>environment_to_win32_strings(environment_t &env)
  *         shared_array object to ensure its release at some point.
  */
 template <class Arguments>
-inline boost::shared_array<char> collection_to_win32_cmdline(const Arguments
-        &args)
+inline boost::shared_array<char> collection_to_win32_cmdline(const Arguments &args)
 {
     typedef std::vector<std::string> arguments_t;
     arguments_t args2;
     typename Arguments::size_type i = 0;
     std::size_t size = 0;
-    for (typename Arguments::const_iterator it = args.begin();
-            it != args.end(); ++it)
+    for (typename Arguments::const_iterator it = args.begin(); it != args.end(); ++it)
     {
         std::string arg = *it;
 
@@ -150,7 +143,6 @@ inline boost::shared_array<char> collection_to_win32_cmdline(const Arguments
  */
 inline file_handle configure_win32_stream(stream_detail &sd)
 {
-
     file_handle return_handle;
 
     switch (sd.behavior)
@@ -165,32 +157,20 @@ inline file_handle configure_win32_stream(stream_detail &sd)
         return_handle = file_handle::win32_dup_std(sd.stream_handle, true);
         break;
     }
-
     case dummy:
     {
         HANDLE h;
         if(sd.stream_type == stdin_type)
         {
-            h = ::CreateFileA("NUL",
-                              GENERIC_READ, 0, NULL, OPEN_EXISTING,
-                              FILE_ATTRIBUTE_NORMAL, NULL);
-
+            h = ::CreateFileA("NUL", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
         }
         else
         {
-            h = ::CreateFileA("NUL",
-                              GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
-                              FILE_ATTRIBUTE_NORMAL, NULL);
+            h = ::CreateFileA("NUL", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
         }
-
         if (h == INVALID_HANDLE_VALUE)
-            boost::throw_exception(boost::system::system_error(
-                     boost::system::error_code(::GetLastError(),
-                     boost::system::get_system_category()),
-                     "boost::process::detail::win32_start: CreateFile failed"));
-
+            boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::detail::win32_start: CreateFile failed"));
         return_handle = file_handle(h);
-
         break;
     }
 
@@ -213,19 +193,14 @@ inline file_handle configure_win32_stream(stream_detail &sd)
     default:
     {
         BOOST_ASSERT(false);
-
     }
     }
 
     return return_handle;
-
-
 }
-
 
 }
 }
 }
-
 
 #endif

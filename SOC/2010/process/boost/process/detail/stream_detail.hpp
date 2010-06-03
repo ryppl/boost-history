@@ -4,7 +4,7 @@
 //
 // Copyright (c) 2006, 2007 Julio M. Merino Vidal
 // Copyright (c) 2008, 2009 Boris Schaeling
-// Copyright (c) 2010 Boris Schaeling, Felipe Tanus
+// Copyright (c) 2010 Felipe Tanus, Boris Schaeling
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -19,23 +19,18 @@
  */
 
 #include <boost/process/config.hpp>
-#include <map>
-#include <boost/optional.hpp>
 #include <boost/process/stream_behavior.hpp>
 #include <boost/process/detail/file_handle.hpp>
 #include <boost/process/detail/pipe.hpp>
-
-
+#include <boost/optional.hpp>
+#include <map>
 
 #ifndef BOOST_PROCESS_STREAM_DETAIL_HPP
 #define BOOST_PROCESS_STREAM_DETAIL_HPP
-namespace boost
-{
-namespace process
-{
-namespace detail
-{
 
+namespace boost {
+namespace process {
+namespace detail {
 
 /*
  * This is the declaration of stream_object.
@@ -43,7 +38,6 @@ namespace detail
  * representation. For example, it can point to another stream or
  * to a pipe.
  */
-
 struct stream_object
 {
     int desc_to;
@@ -52,13 +46,11 @@ struct stream_object
     pipe pipe_;
 };
 
-
 /*
  * This defines the std_stream_type enum.
  * It lists all possible std stream types.
  */
-enum std_stream_type {stdin_type=0, stdout_type=1, stderr_type=2};
-
+enum std_stream_type { stdin_type = 0, stdout_type = 1, stderr_type = 2 };
 
 /*
  * This is the declaration of a stream detail.
@@ -72,10 +64,8 @@ enum std_stream_type {stdin_type=0, stdout_type=1, stderr_type=2};
  * object: The object required to this behavior (see stream_object above)
  *
  */
-
 struct stream_detail
 {
-
 #if defined(BOOST_POSIX_API)
     int stream_handle;
 #elif defined(BOOST_WINDOWS_API)
@@ -94,7 +84,6 @@ struct stream_detail
         {
         case stdin_type:
         {
-
 #if defined(BOOST_POSIX_API)
             stream_handle = STDIN_FILENO;
 #elif defined(BOOST_WINDOWS_API)
@@ -122,21 +111,14 @@ struct stream_detail
         }
         default:
         {
-
             BOOST_ASSERT(false);
         }
-
-
         }
-
     }
 };
 
-
-
 }
 }
 }
-
 
 #endif

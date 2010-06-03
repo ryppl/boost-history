@@ -4,6 +4,7 @@
 //
 // Copyright (c) 2006, 2007 Julio M. Merino Vidal
 // Copyright (c) 2008, 2009 Boris Schaeling
+// Copyright (c) 2010 Felipe Tanus, Boris Schaeling
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -38,12 +39,9 @@
 #include <boost/system/system_error.hpp>
 #include <boost/throw_exception.hpp>
 
-namespace boost
-{
-namespace process
-{
-namespace detail
-{
+namespace boost {
+namespace process {
+namespace detail {
 
 /**
  * Simple RAII model for anonymous pipes.
@@ -86,45 +84,28 @@ public:
 
 #if defined(BOOST_POSIX_API)
         if (::pipe(hs) == -1)
-            boost::throw_exception(boost::system::system_error(
-                         boost::system::error_code(
-                         errno, boost::system::get_system_category()),
-                        "boost::process::detail::pipe::pipe: pipe(2) failed"));
+            boost::throw_exception(boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::detail::pipe::pipe: pipe(2) failed"));
 #elif defined(BOOST_WINDOWS_API)
-
         SECURITY_ATTRIBUTES sa;
         ZeroMemory(&sa, sizeof(sa));
         sa.nLength = sizeof(sa);
-
         sa.lpSecurityDescriptor = NULL;
         sa.bInheritHandle = TRUE;
-
-#if defined(BOOST_PROCESS_WINDOWS_USE_NAMED_PIPE)
+#  if defined(BOOST_PROCESS_WINDOWS_USE_NAMED_PIPE)
         static unsigned int nextid = 0;
-        std::string pipe = "\\\\.\\pipe\\boost_process_" + 
-            boost::lexical_cast<std::string>(::GetCurrentProcessId()) + "_"
-            + boost::lexical_cast<std::string>(nextid++);
-        hs[0] = ::CreateNamedPipeA(pipe.c_str(), PIPE_ACCESS_INBOUND |
-                FILE_FLAG_OVERLAPPED, 0, 1, 8192, 8192, 0, &sa);
+        std::string pipe = "\\\\.\\pipe\\boost_process_" + boost::lexical_cast<std::string>(::GetCurrentProcessId()) + "_" + boost::lexical_cast<std::string>(nextid++);
+        hs[0] = ::CreateNamedPipeA(pipe.c_str(), PIPE_ACCESS_INBOUND | FILE_FLAG_OVERLAPPED, 0, 1, 8192, 8192, 0, &sa);
         if (hs[0] == INVALID_HANDLE_VALUE)
-            boost::throw_exception(boost::system::system_error(::GetLastError(),
-                        boost::system::system_category, 
-                        "boost::process::detail::pipe::pipe:\
-                        CreateNamedPipe failed"));
-        hs[1] = ::CreateFileA(pipe.c_str(), GENERIC_WRITE, 0, NULL,\ 
-                OPEN_EXISTING, FILE_FLAG_OVERLAPPED, NULL);
+            boost::throw_exception(boost::system::system_error(::GetLastError(), boost::system::system_category, "boost::process::detail::pipe::pipe: CreateNamedPipe failed"));
+        hs[1] = ::CreateFileA(pipe.c_str(), GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_FLAG_OVERLAPPED, NULL);
         if (hs[1] == INVALID_HANDLE_VALUE)
-           boost::throw_exception(boost::system::system_error(::GetLastError(),\
-                       boost::system::system_category,
-                      "boost::process::detail::pipe::pipe: CreateFile failed"));
+            boost::throw_exception(boost::system::system_error(::GetLastError(), boost::system::system_category, "boost::process::detail::pipe::pipe: CreateFile failed"));
 
         OVERLAPPED overlapped;
         ZeroMemory(&overlapped, sizeof(overlapped));
         overlapped.hEvent = ::CreateEvent(NULL, TRUE, FALSE, NULL);
         if (!overlapped.hEvent)
-            boost::throw_exception(boost::system::system_error(::GetLastError(),
-                      boost::system::system_category,
-                     "boost::process::detail::pipe::pipe: CreateEvent failed"));
+            boost::throw_exception(boost::system::system_error(::GetLastError(), boost::system::system_category, "boost::process::detail::pipe::pipe: CreateEvent failed"));
         BOOL b = ::ConnectNamedPipe(hs[0], &overlapped);
         if (!b)
         {
@@ -134,28 +115,19 @@ public:
                         == WAIT_FAILED)
                 {
                     ::CloseHandle(overlapped.hEvent);
-                    boost::throw_exception(boost::system::system_error(
-                                ::GetLastError(), 
-                                boost::system::system_category, 
-                                "boost::process::detail::pipe::pipe:\ 
-                                WaitForSingleObject failed"));
+                    boost::throw_exception(boost::system::system_error(::GetLastError(), boost::system::system_category, "boost::process::detail::pipe::pipe: WaitForSingleObject failed"));
                 }
             }
             else if (::GetLastError() != ERROR_PIPE_CONNECTED)
             {
                 ::CloseHandle(overlapped.hEvent);
-                boost::throw_exception(boost::system::system_error(
-                            ::GetLastError(), boost::system::system_category,
-                            "boost::process::detail::pipe::pipe:\ 
-                            ConnectNamedPipe failed"));
+                boost::throw_exception(boost::system::system_error(::GetLastError(), boost::system::system_category, "boost::process::detail::pipe::pipe: ConnectNamedPipe failed"));
             }
         }
         ::CloseHandle(overlapped.hEvent);
-#else
+#  else
         if (!::CreatePipe(&hs[0], &hs[1], &sa, 0))
-            boost::throw_exception(boost::system::system_error(::GetLastError(),
-                      boost::system::system_category,
-                     "boost::process::detail::pipe::pipe: CreatePipe failed"));
+            boost::throw_exception(boost::system::system_error(::GetLastError(), boost::system::system_category, "boost::process::detail::pipe::pipe: CreatePipe failed"));
 #  endif
 #endif
 
