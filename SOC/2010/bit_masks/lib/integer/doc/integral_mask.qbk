@@ -27,7 +27,7 @@ value.]]
     [[Operation][Description]]
     [[`N::value`][Returns the `value` associated with `N` (in the current case 
 that is 16). ]]
-    [[`N::value_type`][Returns `T` or the type associated with `value` inside `N` (in the
+    [[`N::value_type`][Returns `T` which is the type associated with `value` inside `N` (in the
 current case that is int). ]]
     [[`N::type`][ Returns the current types type (using N as an example,
 `N::type` is equivalent to `integral_mask<int,16>` )]]
