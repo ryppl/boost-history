@@ -1,8 +1,3 @@
-libs/xint/doc/*.html
-libs/xint/doc/*.gif
-libs/xint/doc/*.png
-libs/xint/doc/*.css
-
 libs/xint/test/bin/*
 
 dev/Debug/*
