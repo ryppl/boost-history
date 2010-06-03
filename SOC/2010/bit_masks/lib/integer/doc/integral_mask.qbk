@@ -1,14 +1,26 @@
-[article Integral_mask
-    [quickbook 1.5]
-    [copyright 2010 Brian Bartman]
-    [purpose Bit Mask Selection]
-    [license
-        Distributed under the Boost Software License, Version 1.0.
-        (See accompanying file LICENSE_1_0.txt or copy at
-        [@http://www.boost.org/LICENSE_1_0.txt])
-    ]
-    [authors [Bartman, Brian]]
-]
-
+[c++]
 [section:integral_mask integral_mask type]
+[h3 Description]
+The `integral_mask` type is the most basic mask type. It is used to abstract all
+masks back to a simple integral type. This type is used similar to an
+`integral_constant` type from the boost.type_traits library.
+
+
+[h3 Template Signature]
+`integral_mask` has the following template signature:
+``
+template <typename T, T Value>
+struct integral_mask;
+``
+[h3 Interface]
+`Integral_mask` Compile time interface. Assume that N is of type
+`integral_mask<int, 16>` the type supplied here is only for example.
+
+[table
+    [[Operation][Description]]
+    [[`N::value`][Returns the value associated with N (in the current case that is 16). ]]
+    [[`N::value_type`][Returns the type of the value associated with N (in the current case that is int). ]]
+    [[`N::type`][ Returns the current types type (using N as an example, `N::type` is equivalent to `integral_mask<int,16>` )]]
+]
 [endsect]
+

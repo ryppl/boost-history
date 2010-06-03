@@ -19,7 +19,7 @@ please use the table of contents above.
    [
       [`Integral_mask` type]
       [ [^[@http://svn.boost.org/svn/boost/sandbox/SOC/2010/bit_masks/boost/integer/integral_mask.hpp <boost/integer/integral_mask.hpp>]]]
-      [Forward declarations of classes and class templates - for use when just the name of a class is needed.]
+      [ Header contains `integral_mask` type]
    ]
 ]
 
@@ -61,8 +61,5 @@ simply treat it as though it were an integer.
 
 [endsect]
 
-[section:integral_mask `integral_mask` type]
-This type is used for composing the most basic masks.
-
-[endsect]
+[include:integral_mask integral_mask.qbk]
 

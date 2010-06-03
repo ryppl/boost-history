@@ -8,6 +8,7 @@
 using quickbook ;
 
 xml bit_masks_doc : bit_masks.qbk ;
+#xml integral_mask_doc : integral_mask.qbk ;
 boostbook standalone
     :
         bit_masks_doc
