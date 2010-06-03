@@ -624,6 +624,9 @@ class any_integer {
     detail::data_t data;
     #endif
 };
+
+typedef size_t bitsize_t;
+
 } // namespace xint
 } // namespace boost
 

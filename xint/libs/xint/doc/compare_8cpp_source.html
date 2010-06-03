@@ -46,7 +46,7 @@
 <a name="l00028"></a>00028 <span class="keyword">namespace </span>xint {
 <a name="l00029"></a>00029 <span class="keyword">namespace </span>detail {
 <a name="l00030"></a>00030 
-<a name="l00032"></a>00032 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">int</span> <a class="code" href="namespaceboost_1_1xint.html#afb9c5c79428eb4ccac0b562fee65d0b8">compare</a>(<span class="keyword">const</span> digit_t *b1, <span class="keyword">const</span> digit_t *b2, <span class="keywordtype">size_t</span> len,
+<a name="l00032"></a>00032 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">int</span> <a class="code" href="namespaceboost_1_1xint.html#a39a3143ef1f03a35f2b7409b365fc853">compare</a>(<span class="keyword">const</span> digit_t *b1, <span class="keyword">const</span> digit_t *b2, <span class="keywordtype">size_t</span> len,
 <a name="l00033"></a>00033     <span class="keywordtype">bool</span> equal_only)
 <a name="l00034"></a>00034 {
 <a name="l00035"></a>00035     <span class="keyword">const</span> detail::digit_t *b1i = b1 + len, *b2i = b2 + len;
@@ -63,7 +63,7 @@
 <a name="l00046"></a>00046     <span class="keywordflow">return</span> 0; <span class="comment">// They&#39;re identical.</span>
 <a name="l00047"></a>00047 }
 <a name="l00048"></a>00048 
-<a name="l00050"></a>00050 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">int</span> <a class="code" href="namespaceboost_1_1xint.html#afb9c5c79428eb4ccac0b562fee65d0b8">compare</a>(<span class="keyword">const</span> data_t b1, <span class="keyword">const</span> data_t b2, <span class="keywordtype">bool</span> ignoresign)
+<a name="l00050"></a>00050 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">int</span> <a class="code" href="namespaceboost_1_1xint.html#a39a3143ef1f03a35f2b7409b365fc853">compare</a>(<span class="keyword">const</span> data_t b1, <span class="keyword">const</span> data_t b2, <span class="keywordtype">bool</span> ignoresign)
 <a name="l00051"></a>00051 {
 <a name="l00052"></a>00052     <span class="keywordtype">bool</span> invert_answer=<span class="keyword">false</span>;
 <a name="l00053"></a>00053     <span class="keywordflow">if</span> (!ignoresign) {
@@ -82,7 +82,7 @@
 <a name="l00066"></a>00066     <span class="keywordflow">if</span> (b1.length != b2.length) {
 <a name="l00067"></a>00067         answer = ((b1.length &lt; b2.length) ? -1 : 1);
 <a name="l00068"></a>00068     } <span class="keywordflow">else</span> {
-<a name="l00069"></a>00069         answer = <a class="code" href="namespaceboost_1_1xint.html#afb9c5c79428eb4ccac0b562fee65d0b8">compare</a>(b1.digits(), b2.digits(), b1.length, <span class="keyword">false</span>);
+<a name="l00069"></a>00069         answer = <a class="code" href="namespaceboost_1_1xint.html#a39a3143ef1f03a35f2b7409b365fc853">compare</a>(b1.digits(), b2.digits(), b1.length, <span class="keyword">false</span>);
 <a name="l00070"></a>00070     }
 <a name="l00071"></a>00071 
 <a name="l00072"></a>00072     <span class="keywordflow">return</span> (invert_answer ? -answer : answer);
@@ -95,21 +95,21 @@
 <a name="l00080"></a>00080         <span class="keywordflow">return</span> (!b1.is_zero() || !b2.is_zero() ? 1 : 0);
 <a name="l00081"></a>00081     }
 <a name="l00082"></a>00082     <span class="keywordflow">if</span> (b1.length != b2.length) <span class="keywordflow">return</span> 1;
-<a name="l00083"></a>00083     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#afb9c5c79428eb4ccac0b562fee65d0b8">compare</a>(b1.digits(), b2.digits(), b1.length, <span class="keyword">true</span>);
+<a name="l00083"></a>00083     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a39a3143ef1f03a35f2b7409b365fc853">compare</a>(b1.digits(), b2.digits(), b1.length, <span class="keyword">true</span>);
 <a name="l00084"></a>00084 }
 <a name="l00085"></a>00085 
-<a name="l00086"></a>00086 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a98729313d45436188620f68e22bbdb70">operator==</a>(<span class="keyword">const</span> data_t num1, <span class="keyword">const</span> data_t num2) {
+<a name="l00086"></a>00086 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#ac9268bd409f006775f248d03213282d5">operator==</a>(<span class="keyword">const</span> data_t num1, <span class="keyword">const</span> data_t num2) {
 <a name="l00087"></a>00087     <span class="keywordflow">return</span> compare_eq(num1, num2)==0; }
-<a name="l00088"></a>00088 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#aa8f75504b016bb521dfed18e78bb14d8">operator!=</a>(<span class="keyword">const</span> data_t num1, <span class="keyword">const</span> data_t num2) {
+<a name="l00088"></a>00088 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a3ae00595a180a21d326ad50a072add0f">operator!=</a>(<span class="keyword">const</span> data_t num1, <span class="keyword">const</span> data_t num2) {
 <a name="l00089"></a>00089     <span class="keywordflow">return</span> compare_eq(num1, num2)!=0; }
-<a name="l00090"></a>00090 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a83fd4da3b3042634e9da37736a6370ca">operator&lt;</a>(<span class="keyword">const</span> data_t num1, <span class="keyword">const</span> data_t num2) {
-<a name="l00091"></a>00091     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#afb9c5c79428eb4ccac0b562fee65d0b8">compare</a>(num1, num2)&lt;0; }
-<a name="l00092"></a>00092 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#afd7579141c2234e60ef97735d30d93c5">operator&gt;</a>(<span class="keyword">const</span> data_t num1, <span class="keyword">const</span> data_t num2) {
-<a name="l00093"></a>00093     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#afb9c5c79428eb4ccac0b562fee65d0b8">compare</a>(num1, num2)&gt;0; }
-<a name="l00094"></a>00094 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#ab1fadb8af4f49d89c6923371fe8cf8e6">operator&lt;=</a>(<span class="keyword">const</span> data_t num1, <span class="keyword">const</span> data_t num2) {
-<a name="l00095"></a>00095     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#afb9c5c79428eb4ccac0b562fee65d0b8">compare</a>(num1, num2)&lt;=0; }
-<a name="l00096"></a>00096 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a35b4d25344f3365c8b898e40734167b8">operator&gt;=</a>(<span class="keyword">const</span> data_t num1, <span class="keyword">const</span> data_t num2) {
-<a name="l00097"></a>00097     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#afb9c5c79428eb4ccac0b562fee65d0b8">compare</a>(num1, num2)&gt;=0; }
+<a name="l00090"></a>00090 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a921174a41a68a6eef2584526590c18cf">operator&lt;</a>(<span class="keyword">const</span> data_t num1, <span class="keyword">const</span> data_t num2) {
+<a name="l00091"></a>00091     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a39a3143ef1f03a35f2b7409b365fc853">compare</a>(num1, num2)&lt;0; }
+<a name="l00092"></a>00092 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a492d33d92db8bf3b6b6221b8e1933228">operator&gt;</a>(<span class="keyword">const</span> data_t num1, <span class="keyword">const</span> data_t num2) {
+<a name="l00093"></a>00093     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a39a3143ef1f03a35f2b7409b365fc853">compare</a>(num1, num2)&gt;0; }
+<a name="l00094"></a>00094 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a980f9747bff82e9cf8744151fc91a108">operator&lt;=</a>(<span class="keyword">const</span> data_t num1, <span class="keyword">const</span> data_t num2) {
+<a name="l00095"></a>00095     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a39a3143ef1f03a35f2b7409b365fc853">compare</a>(num1, num2)&lt;=0; }
+<a name="l00096"></a>00096 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#ab47039ec5d5e120f869cf2d5f8d63843">operator&gt;=</a>(<span class="keyword">const</span> data_t num1, <span class="keyword">const</span> data_t num2) {
+<a name="l00097"></a>00097     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#a39a3143ef1f03a35f2b7409b365fc853">compare</a>(num1, num2)&gt;=0; }
 <a name="l00098"></a>00098 
 <a name="l00099"></a>00099 } <span class="comment">// namespace detail</span>
 <a name="l00100"></a>00100 } <span class="comment">// namespace xint</span>
@@ -117,7 +117,7 @@
 <a name="l00103"></a>00103 <span class="comment"></span>
 <a name="l00104"></a>00104 <span class="preprocessor">#endif // defined(BOOST_XINT_COMPILED_LIB) || defined(BOOST_XINT_FROM_HEADER)</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Wed Jun 2 13:37:02 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Jun 3 00:00:36 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

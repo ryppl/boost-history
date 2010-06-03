@@ -80,7 +80,7 @@
 <a name="l00062"></a>00062 }
 <a name="l00063"></a>00063 
 <a name="l00064"></a>00064 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">void</span> sub_subtract(data_t&amp; n, <span class="keyword">const</span> data_t n2) {
-<a name="l00065"></a>00065     <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a985791f681a1afaeaf6a32c05ecc43e0">swap</a> = (<a class="code" href="namespaceboost_1_1xint.html#afb9c5c79428eb4ccac0b562fee65d0b8">compare</a>(n, n2, <span class="keyword">true</span>) &lt; 0);
+<a name="l00065"></a>00065     <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a00ebb69a2c4e772f6ae9de36b4430d62">swap</a> = (<a class="code" href="namespaceboost_1_1xint.html#a39a3143ef1f03a35f2b7409b365fc853">compare</a>(n, n2, <span class="keyword">true</span>) &lt; 0);
 <a name="l00066"></a>00066 
 <a name="l00067"></a>00067     n.beginmod((std::max)(n.length, n2.length), <span class="keyword">true</span>);
 <a name="l00068"></a>00068     digit_t *ndig = n.digits(), *t = ndig, *te = t + n.length;
@@ -184,7 +184,7 @@
 <a name="l00166"></a>00166     <span class="keywordflow">return</span> r;
 <a name="l00167"></a>00167 }
 <a name="l00168"></a>00168 
-<a name="l00169"></a>00169 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> data_t <a class="code" href="namespaceboost_1_1xint.html#aba68c6109d44641a0c77d949e0069d5e">data_t::operator-</a>()<span class="keyword"> const </span>{
+<a name="l00169"></a>00169 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> data_t <a class="code" href="namespaceboost_1_1xint.html#af29f603561c73ae4dfefa314f854a9b9">data_t::operator-</a>()<span class="keyword"> const </span>{
 <a name="l00170"></a>00170     data_t r(negate());
 <a name="l00171"></a>00171     r.beginmod();
 <a name="l00172"></a>00172     r.endmod(<span class="keyword">true</span>);
@@ -225,13 +225,13 @@
 <a name="l00207"></a>00207     <span class="keywordflow">return</span> *<span class="keyword">this</span>;
 <a name="l00208"></a>00208 }
 <a name="l00209"></a>00209 
-<a name="l00210"></a>00210 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> data_t <a class="code" href="namespaceboost_1_1xint.html#ab9b2e2c83946da247f379f4cbfed41cd">operator+</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2) {
+<a name="l00210"></a>00210 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> data_t <a class="code" href="namespaceboost_1_1xint.html#a1e894e947435664ba17c27a93c7325e1">operator+</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2) {
 <a name="l00211"></a>00211     data_t r(n1);
 <a name="l00212"></a>00212     r+=n2;
 <a name="l00213"></a>00213     <span class="keywordflow">return</span> r;
 <a name="l00214"></a>00214 }
 <a name="l00215"></a>00215 
-<a name="l00216"></a>00216 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> data_t <a class="code" href="namespaceboost_1_1xint.html#aba68c6109d44641a0c77d949e0069d5e">operator-</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2) {
+<a name="l00216"></a>00216 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> data_t <a class="code" href="namespaceboost_1_1xint.html#af29f603561c73ae4dfefa314f854a9b9">operator-</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2) {
 <a name="l00217"></a>00217     data_t r(n1);
 <a name="l00218"></a>00218     r-=n2;
 <a name="l00219"></a>00219     <span class="keywordflow">return</span> r;
@@ -243,7 +243,7 @@
 <a name="l00226"></a>00226 <span class="comment"></span>
 <a name="l00227"></a>00227 <span class="preprocessor">#endif // defined(BOOST_XINT_COMPILED_LIB) || defined(BOOST_XINT_FROM_HEADER)</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Wed Jun 2 13:37:02 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Jun 3 00:00:36 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

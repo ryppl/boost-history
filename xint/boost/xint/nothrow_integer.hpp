@@ -25,16 +25,27 @@ namespace boost {
 namespace xint {
 
 #ifdef _WIN32
-	// The file's constructors make heavy use of the 'this' pointer, in a safe
-	// manner. MSVC isn't smart enough to know that it's safe.
-	#pragma warning(push)
-	#pragma warning(disable: 4355)
+    // The file's constructors make heavy use of the 'this' pointer, in a safe
+    // manner. MSVC isn't smart enough to know that it's safe.
+    #pragma warning(push)
+    #pragma warning(disable: 4355)
 #endif
 
-#ifndef BOOST_XINT_DOXYGEN_IGNORE
-namespace detail {
-    struct nan_t { };
-}
+#ifdef BOOST_XINT_DOXYGEN_IGNORE
+    // The documentation should see a simplified version of the functions.
+    #define BOOST_XINT_INTEGER_INITIAL_TPL template<...>
+    #define BOOST_XINT_INTEGER_TPL template<...>
+    #define BOOST_XINT_NTINTEGER_TYPE nothrow_integer_t
+#else
+    namespace detail { struct nan_t { }; }
+
+    #define BOOST_XINT_INTEGER_INITIAL_TPL template <class Alloc = \
+        std::allocator<detail::digit_t>, bool Threadsafe = true, bool Secure = \
+        false>
+    #define BOOST_XINT_INTEGER_TPL template<class Alloc, bool Threadsafe, bool \
+        Secure>
+    #define BOOST_XINT_NTINTEGER_TYPE nothrow_integer_t<Alloc, Threadsafe, \
+        Secure>
 #endif
 
 /*! \brief The %nothrow_integer_t class template.
@@ -59,30 +70,29 @@ namespace detail {
     \tparam Secure If \c true, the library zeros out all memory before
     deallocating it, for maximum security.
 */
-template <class Alloc = std::allocator<detail::digit_t>, bool Threadsafe = true,
-    bool Secure = false>
+BOOST_XINT_INTEGER_INITIAL_TPL
 class nothrow_integer_t: public detail::digitmanager_t<Alloc, Threadsafe,
     Secure>, public any_integer
 {
     public:
-    typedef nothrow_integer_t<Alloc, Threadsafe, Secure> type;
+    typedef BOOST_XINT_NTINTEGER_TYPE type;
 
     //! \name Constructors & Destructors
     //!@{
     nothrow_integer_t();
-    nothrow_integer_t(const nothrow_integer_t<Alloc, Threadsafe, Secure>& b,
-        bool force_thread_safety = false);
+    nothrow_integer_t(const BOOST_XINT_NTINTEGER_TYPE& b, bool
+        force_thread_safety = false);
     nothrow_integer_t(BOOST_XINT_RV_REF(type) b): any_integer(*this, 1) {
         _swap(b); }
     explicit nothrow_integer_t(const char *str, size_t base = 10);
     explicit nothrow_integer_t(const char *str, char **endptr, size_t base =
         10);
     explicit nothrow_integer_t(const std::string& str, size_t base = 10);
-    explicit nothrow_integer_t(const xint::binary_t b, size_t bits = 0);
+    explicit nothrow_integer_t(const xint::binary_t b, bitsize_t bits = 0);
     explicit nothrow_integer_t(const any_integer& other, bool
         force_thread_safety = false);
-    template <typename Type> nothrow_integer_t(const Type n,
-        typename boost::enable_if<boost::is_integral<Type> >::type* = 0);
+    template <typename Type> nothrow_integer_t(const Type n, typename
+        boost::enable_if<boost::is_integral<Type> >::type* = 0);
 
     #ifndef BOOST_XINT_DOXYGEN_IGNORE
     //! This one is used internally.
@@ -99,50 +109,36 @@ class nothrow_integer_t: public detail::digitmanager_t<Alloc, Threadsafe,
                %integer types.
     */
     //@{
-    nothrow_integer_t<Alloc, Threadsafe, Secure>& operator=(
-        BOOST_XINT_COPY_ASSIGN_REF(type) c);
-    nothrow_integer_t<Alloc, Threadsafe, Secure>& operator=(
-        BOOST_XINT_RV_REF(type) c) { _swap(c); return *this; }
-    template <typename Type> nothrow_integer_t<Alloc, Threadsafe, Secure>&
-        operator=(const Type n) { nothrow_integer_t<Alloc, Threadsafe,
-        Secure> nn(n); _swap(nn); return *this; }
+    BOOST_XINT_NTINTEGER_TYPE& operator=(BOOST_XINT_COPY_ASSIGN_REF(type) c);
+    BOOST_XINT_NTINTEGER_TYPE& operator=(BOOST_XINT_RV_REF(type) c) { _swap(c);
+        return *this; }
+    template <typename Type> BOOST_XINT_NTINTEGER_TYPE& operator=(const Type n)
+        { BOOST_XINT_NTINTEGER_TYPE nn(n); _swap(nn); return *this; }
 
     bool operator!() const { return data.is_zero(); }
-    nothrow_integer_t<Alloc, Threadsafe, Secure> operator-() const;
-    nothrow_integer_t<Alloc, Threadsafe, Secure>& operator+() { return
-        *this; }
-    const nothrow_integer_t<Alloc, Threadsafe, Secure>& operator+() const {
-        return *this; }
-    nothrow_integer_t<Alloc, Threadsafe, Secure> operator~() const;
+    BOOST_XINT_NTINTEGER_TYPE operator-() const;
+    BOOST_XINT_NTINTEGER_TYPE& operator+() { return *this; }
+    const BOOST_XINT_NTINTEGER_TYPE& operator+() const { return *this; }
+    BOOST_XINT_NTINTEGER_TYPE operator~() const;
 
-    nothrow_integer_t<Alloc, Threadsafe, Secure>& operator+=(const
-        nothrow_integer_t<Alloc, Threadsafe, Secure> b);
-    nothrow_integer_t<Alloc, Threadsafe, Secure>& operator-=(const
-        nothrow_integer_t<Alloc, Threadsafe, Secure> b);
-    nothrow_integer_t<Alloc, Threadsafe, Secure>& operator*=(const
-        nothrow_integer_t<Alloc, Threadsafe, Secure> b);
-    nothrow_integer_t<Alloc, Threadsafe, Secure>& operator/=(const
-        nothrow_integer_t<Alloc, Threadsafe, Secure> b);
-    nothrow_integer_t<Alloc, Threadsafe, Secure>& operator%=(const
-        nothrow_integer_t<Alloc, Threadsafe, Secure> b);
+    BOOST_XINT_NTINTEGER_TYPE& operator+=(const BOOST_XINT_NTINTEGER_TYPE b);
+    BOOST_XINT_NTINTEGER_TYPE& operator-=(const BOOST_XINT_NTINTEGER_TYPE b);
+    BOOST_XINT_NTINTEGER_TYPE& operator*=(const BOOST_XINT_NTINTEGER_TYPE b);
+    BOOST_XINT_NTINTEGER_TYPE& operator/=(const BOOST_XINT_NTINTEGER_TYPE b);
+    BOOST_XINT_NTINTEGER_TYPE& operator%=(const BOOST_XINT_NTINTEGER_TYPE b);
 
-    nothrow_integer_t<Alloc, Threadsafe, Secure>& operator++();
-    nothrow_integer_t<Alloc, Threadsafe, Secure>& operator--();
-    nothrow_integer_t<Alloc, Threadsafe, Secure>  operator++(int);
-    nothrow_integer_t<Alloc, Threadsafe, Secure>  operator--(int);
+    BOOST_XINT_NTINTEGER_TYPE& operator++();
+    BOOST_XINT_NTINTEGER_TYPE& operator--();
+    BOOST_XINT_NTINTEGER_TYPE  operator++(int);
+    BOOST_XINT_NTINTEGER_TYPE  operator--(int);
 
-    nothrow_integer_t<Alloc, Threadsafe, Secure>& operator&=(const
-        nothrow_integer_t<Alloc, Threadsafe, Secure> n);
-    nothrow_integer_t<Alloc, Threadsafe, Secure>& operator|=(const
-        nothrow_integer_t<Alloc, Threadsafe, Secure> n);
-    nothrow_integer_t<Alloc, Threadsafe, Secure>& operator^=(const
-        nothrow_integer_t<Alloc, Threadsafe, Secure> n);
-    nothrow_integer_t<Alloc, Threadsafe, Secure>  operator<<(size_t shift)
-        const;
-    nothrow_integer_t<Alloc, Threadsafe, Secure>  operator>>(size_t shift)
-        const;
-    nothrow_integer_t<Alloc, Threadsafe, Secure>& operator<<=(size_t shift);
-    nothrow_integer_t<Alloc, Threadsafe, Secure>& operator>>=(size_t shift);
+    BOOST_XINT_NTINTEGER_TYPE& operator&=(const BOOST_XINT_NTINTEGER_TYPE n);
+    BOOST_XINT_NTINTEGER_TYPE& operator|=(const BOOST_XINT_NTINTEGER_TYPE n);
+    BOOST_XINT_NTINTEGER_TYPE& operator^=(const BOOST_XINT_NTINTEGER_TYPE n);
+    BOOST_XINT_NTINTEGER_TYPE  operator<<(bitsize_t shift) const;
+    BOOST_XINT_NTINTEGER_TYPE  operator>>(bitsize_t shift) const;
+    BOOST_XINT_NTINTEGER_TYPE& operator<<=(bitsize_t shift);
+    BOOST_XINT_NTINTEGER_TYPE& operator>>=(bitsize_t shift);
     //@}
 
     //! \name Miscellaneous Functions
@@ -154,8 +150,7 @@ class nothrow_integer_t: public detail::digitmanager_t<Alloc, Threadsafe,
     size_t hex_digits() const;
     //!@}
 
-    typedef base_divide_t<nothrow_integer_t<Alloc, Threadsafe, Secure> >
-        divide_t;
+    typedef base_divide_t<BOOST_XINT_NTINTEGER_TYPE> divide_t;
 
     /*! \name Static Member Functions
 
@@ -165,47 +160,42 @@ class nothrow_integer_t: public detail::digitmanager_t<Alloc, Threadsafe,
         type instead.
     */
     //!@{
-    static nothrow_integer_t<Alloc, Threadsafe, Secure> pow2(size_t exponent);
-    static nothrow_integer_t<Alloc, Threadsafe, Secure> factorial(size_t n);
-    static nothrow_integer_t<Alloc, Threadsafe, Secure> nan() { return _nan; }
-    template <class Type> static nothrow_integer_t<Alloc, Threadsafe, Secure>
-        random_by_size(Type& gen, size_t size_in_bits, bool high_bit_on = false,
-        bool low_bit_on = false, bool can_be_negative = false);
-    template <class Type> static nothrow_integer_t<Alloc, Threadsafe, Secure>
-        random_prime(Type& gen, size_t size_in_bits, callback_t callback =
-        no_callback);
+    static BOOST_XINT_NTINTEGER_TYPE pow2(size_t exponent);
+    static BOOST_XINT_NTINTEGER_TYPE factorial(size_t n);
+    static BOOST_XINT_NTINTEGER_TYPE nan() { return _nan; }
+    template <class Type> static BOOST_XINT_NTINTEGER_TYPE random_by_size(Type&
+        gen, bitsize_t size_in_bits, bool high_bit_on = false, bool low_bit_on =
+        false, bool can_be_negative = false);
+    template <class Type> static BOOST_XINT_NTINTEGER_TYPE random_prime(Type&
+        gen, bitsize_t size_in_bits, callback_t callback = no_callback);
     //!@}
 
-    void _swap(nothrow_integer_t<Alloc, Threadsafe, Secure>& s) { using
-        std::swap; swap(data, s.data); }
+    void _swap(BOOST_XINT_NTINTEGER_TYPE& s) { using std::swap; swap(data,
+        s.data); }
     static std::string _nan_text() { return "#NaN#"; }
 
     private:
-    static nothrow_integer_t<Alloc, Threadsafe, Secure> _nan;
+    static BOOST_XINT_NTINTEGER_TYPE _nan;
     BOOST_XINT_COPYABLE_AND_MOVABLE(type)
 };
 
-template <class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure> nothrow_integer_t<Alloc,
-    Threadsafe, Secure>::_nan = nothrow_integer_t<Alloc, Threadsafe, Secure>(
-    detail::nan_t());
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE BOOST_XINT_NTINTEGER_TYPE::_nan =
+    BOOST_XINT_NTINTEGER_TYPE(detail::nan_t());
 
 ////////////////////////////////////////////////////////////////////////////////
 // Function template definitions
 
 //! \copydoc integer_t::integer_t()
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure>::nothrow_integer_t():
-    any_integer(*this, 1)
-{
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE::nothrow_integer_t(): any_integer(*this, 1) {
     // Don't need to do anything, already preinitialized to zero.
 }
 
 //! \copydoc integer_t::integer_t(const integer_t&, bool)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure>::nothrow_integer_t(const
-    nothrow_integer_t<Alloc, Threadsafe, Secure>& b, bool force_thread_safety):
-    any_integer(*this, 1)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE::nothrow_integer_t(const BOOST_XINT_NTINTEGER_TYPE& b,
+    bool force_thread_safety): any_integer(*this, 1)
 {
     try {
         data = b.data;
@@ -219,9 +209,9 @@ nothrow_integer_t<Alloc, Threadsafe, Secure>::nothrow_integer_t(const
 }
 
 //! \copydoc integer_t::integer_t(const std::string&, size_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure>::nothrow_integer_t(const char *str,
-    size_t base): any_integer(*this, 1)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE::nothrow_integer_t(const char *str, size_t base):
+    any_integer(*this, 1)
 {
     try {
         data.from_string(str, strlen(str), base);
@@ -231,9 +221,9 @@ nothrow_integer_t<Alloc, Threadsafe, Secure>::nothrow_integer_t(const char *str,
 }
 
 //! \copydoc integer_t::integer_t(const char *, char **, size_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure>::nothrow_integer_t(const char *str,
-    char **endptr, size_t base): any_integer(*this, 1)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE::nothrow_integer_t(const char *str, char **endptr,
+    size_t base): any_integer(*this, 1)
 {
     try {
         data.from_string(str, endptr, base);
@@ -243,9 +233,9 @@ nothrow_integer_t<Alloc, Threadsafe, Secure>::nothrow_integer_t(const char *str,
 }
 
 //! \copydoc integer_t::integer_t(const std::string&, size_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure>::nothrow_integer_t(const
-    std::string& str, size_t base): any_integer(*this, 1)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE::nothrow_integer_t(const std::string& str, size_t
+    base): any_integer(*this, 1)
 {
     try {
         data.from_string(str.c_str(), str.length(), base);
@@ -254,10 +244,10 @@ nothrow_integer_t<Alloc, Threadsafe, Secure>::nothrow_integer_t(const
     }
 }
 
-//! \copydoc integer_t::integer_t(const xint::binary_t, size_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure>::nothrow_integer_t(const
-    xint::binary_t b, size_t bits): any_integer(*this, 1)
+//! \copydoc integer_t::integer_t(const xint::binary_t, bitsize_t)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE::nothrow_integer_t(const xint::binary_t b, bitsize_t
+    bits): any_integer(*this, 1)
 {
     try {
         data.from_binary(b, bits);
@@ -267,9 +257,9 @@ nothrow_integer_t<Alloc, Threadsafe, Secure>::nothrow_integer_t(const
 }
 
 //! \copydoc integer_t::integer_t(const any_integer&, bool)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure>::nothrow_integer_t(const
-    any_integer& c, bool): any_integer(*this, 1)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE::nothrow_integer_t(const any_integer& c, bool):
+    any_integer(*this, 1)
 {
     if (c._data().is_nan()) {
         *this = nan();
@@ -294,10 +284,10 @@ nothrow_integer_t<Alloc, Threadsafe, Secure>::nothrow_integer_t(const
 
     \overload
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-template <typename Type> nothrow_integer_t<Alloc, Threadsafe,
-    Secure>::nothrow_integer_t(const Type n, typename
-    boost::enable_if<boost::is_integral<Type> >::type*): any_integer(*this, 1)
+BOOST_XINT_INTEGER_TPL
+template <typename Type> BOOST_XINT_NTINTEGER_TYPE::nothrow_integer_t(const Type
+    n, typename boost::enable_if<boost::is_integral<Type> >::type*):
+    any_integer(*this, 1)
 {
     try {
         if (std::numeric_limits<Type>::is_signed) data.set_signed(n);
@@ -307,9 +297,9 @@ template <typename Type> nothrow_integer_t<Alloc, Threadsafe,
     }
 }
 
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure>& nothrow_integer_t<Alloc,
-    Threadsafe, Secure>::operator=(BOOST_XINT_COPY_ASSIGN_REF(type) c)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE& BOOST_XINT_NTINTEGER_TYPE::operator=(
+    BOOST_XINT_COPY_ASSIGN_REF(type) c)
 {
     try {
         data = c.data;
@@ -321,13 +311,11 @@ nothrow_integer_t<Alloc, Threadsafe, Secure>& nothrow_integer_t<Alloc,
 }
 
 //! \copydoc integer_t::operator-
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure> nothrow_integer_t<Alloc,
-    Threadsafe, Secure>::operator-() const
-{
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE BOOST_XINT_NTINTEGER_TYPE::operator-() const {
     try {
         if (is_nan()) return *this;
-        nothrow_integer_t<Alloc, Threadsafe, Secure> r(-data);
+        BOOST_XINT_NTINTEGER_TYPE r(-data);
         return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
         return nan();
@@ -335,10 +323,9 @@ nothrow_integer_t<Alloc, Threadsafe, Secure> nothrow_integer_t<Alloc,
 }
 
 //! \see operator+(nothrow_integer_t, nothrow_integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure>& nothrow_integer_t<Alloc,
-    Threadsafe, Secure>::operator+=(const nothrow_integer_t<Alloc, Threadsafe,
-    Secure> b)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE& BOOST_XINT_NTINTEGER_TYPE::operator+=(const
+    BOOST_XINT_NTINTEGER_TYPE b)
 {
     try {
         if (!is_nan() && !b.is_nan()) data += b.data;
@@ -350,10 +337,9 @@ nothrow_integer_t<Alloc, Threadsafe, Secure>& nothrow_integer_t<Alloc,
 }
 
 //! \see operator-(nothrow_integer_t, nothrow_integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure>& nothrow_integer_t<Alloc,
-    Threadsafe, Secure>::operator-=(const nothrow_integer_t<Alloc, Threadsafe,
-    Secure> b)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE& BOOST_XINT_NTINTEGER_TYPE::operator-=(const
+    BOOST_XINT_NTINTEGER_TYPE b)
 {
     try {
         if (!is_nan() && !b.is_nan()) data -= b.data;
@@ -365,10 +351,9 @@ nothrow_integer_t<Alloc, Threadsafe, Secure>& nothrow_integer_t<Alloc,
 }
 
 //! \see operator*(nothrow_integer_t, nothrow_integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure>& nothrow_integer_t<Alloc,
-    Threadsafe, Secure>::operator*=(const nothrow_integer_t<Alloc, Threadsafe,
-    Secure> b)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE& BOOST_XINT_NTINTEGER_TYPE::operator*=(const
+    BOOST_XINT_NTINTEGER_TYPE b)
 {
     try {
         if (!is_nan() && !b.is_nan()) data *= b.data;
@@ -380,10 +365,9 @@ nothrow_integer_t<Alloc, Threadsafe, Secure>& nothrow_integer_t<Alloc,
 }
 
 //! \see operator/(nothrow_integer_t, nothrow_integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure>& nothrow_integer_t<Alloc,
-    Threadsafe, Secure>::operator/=(const nothrow_integer_t<Alloc, Threadsafe,
-    Secure> b)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE& BOOST_XINT_NTINTEGER_TYPE::operator/=(const
+    BOOST_XINT_NTINTEGER_TYPE b)
 {
     try {
         if (!is_nan() && !b.is_nan()) data /= b.data;
@@ -395,10 +379,9 @@ nothrow_integer_t<Alloc, Threadsafe, Secure>& nothrow_integer_t<Alloc,
 }
 
 //! \see operator%(nothrow_integer_t, nothrow_integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure>& nothrow_integer_t<Alloc,
-    Threadsafe, Secure>::operator%=(const nothrow_integer_t<Alloc, Threadsafe,
-    Secure> b)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE& BOOST_XINT_NTINTEGER_TYPE::operator%=(const
+    BOOST_XINT_NTINTEGER_TYPE b)
 {
     try {
         if (!is_nan() && !b.is_nan()) data %= b.data;
@@ -410,10 +393,8 @@ nothrow_integer_t<Alloc, Threadsafe, Secure>& nothrow_integer_t<Alloc,
 }
 
 //! \copydoc integer_t::operator++
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure>& nothrow_integer_t<Alloc,
-    Threadsafe, Secure>::operator++()
-{
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE& BOOST_XINT_NTINTEGER_TYPE::operator++() {
     try {
         if (!is_nan()) ++data;
     } catch (std::exception&) {
@@ -423,10 +404,8 @@ nothrow_integer_t<Alloc, Threadsafe, Secure>& nothrow_integer_t<Alloc,
 }
 
 //! \copydoc integer_t::operator--
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure>& nothrow_integer_t<Alloc,
-    Threadsafe, Secure>::operator--()
-{
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE& BOOST_XINT_NTINTEGER_TYPE::operator--() {
     try {
         if (!is_nan()) --data;
     } catch (std::exception&) {
@@ -436,13 +415,11 @@ nothrow_integer_t<Alloc, Threadsafe, Secure>& nothrow_integer_t<Alloc,
 }
 
 //! \copydoc integer_t::operator++(int)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure> nothrow_integer_t<Alloc,
-    Threadsafe, Secure>::operator++(int)
-{
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE BOOST_XINT_NTINTEGER_TYPE::operator++(int) {
     try {
         if (is_nan()) return *this;
-        nothrow_integer_t<Alloc, Threadsafe, Secure> r(data++);
+        BOOST_XINT_NTINTEGER_TYPE r(data++);
         return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
         return nan();
@@ -450,13 +427,11 @@ nothrow_integer_t<Alloc, Threadsafe, Secure> nothrow_integer_t<Alloc,
 }
 
 //! \copydoc integer_t::operator--(int)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure> nothrow_integer_t<Alloc,
-    Threadsafe, Secure>::operator--(int)
-{
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE BOOST_XINT_NTINTEGER_TYPE::operator--(int) {
     try {
         if (is_nan()) return *this;
-        nothrow_integer_t<Alloc, Threadsafe, Secure> r(data--);
+        BOOST_XINT_NTINTEGER_TYPE r(data--);
         return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
         return nan();
@@ -464,10 +439,9 @@ nothrow_integer_t<Alloc, Threadsafe, Secure> nothrow_integer_t<Alloc,
 }
 
 //! \see operator&(nothrow_integer_t, nothrow_integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure>& nothrow_integer_t<Alloc,
-    Threadsafe, Secure>::operator&=(const nothrow_integer_t<Alloc, Threadsafe,
-    Secure> n)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE& BOOST_XINT_NTINTEGER_TYPE::operator&=(const
+    BOOST_XINT_NTINTEGER_TYPE n)
 {
     try {
         if (!is_nan() && !n.is_nan()) data &= n.data;
@@ -479,10 +453,9 @@ nothrow_integer_t<Alloc, Threadsafe, Secure>& nothrow_integer_t<Alloc,
 }
 
 //! \see operator|(nothrow_integer_t, nothrow_integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure>& nothrow_integer_t<Alloc,
-    Threadsafe, Secure>::operator|=(const nothrow_integer_t<Alloc, Threadsafe,
-    Secure> n)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE& BOOST_XINT_NTINTEGER_TYPE::operator|=(const
+    BOOST_XINT_NTINTEGER_TYPE n)
 {
     try {
         if (!is_nan() && !n.is_nan()) data |= n.data;
@@ -494,10 +467,9 @@ nothrow_integer_t<Alloc, Threadsafe, Secure>& nothrow_integer_t<Alloc,
 }
 
 //! \see operator^(nothrow_integer_t, nothrow_integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure>& nothrow_integer_t<Alloc,
-    Threadsafe, Secure>::operator^=(const nothrow_integer_t<Alloc, Threadsafe,
-    Secure> n)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE& BOOST_XINT_NTINTEGER_TYPE::operator^=(const
+    BOOST_XINT_NTINTEGER_TYPE n)
 {
     try {
         if (!is_nan() && !n.is_nan()) data ^= n.data;
@@ -508,38 +480,38 @@ nothrow_integer_t<Alloc, Threadsafe, Secure>& nothrow_integer_t<Alloc,
     return *this;
 }
 
-//! \copydoc integer_t::operator<<(size_t) const
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure> nothrow_integer_t<Alloc,
-    Threadsafe, Secure>::operator<<(size_t shift) const
+//! \copydoc integer_t::operator<<(bitsize_t) const
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE BOOST_XINT_NTINTEGER_TYPE::operator<<(bitsize_t shift)
+    const
 {
     try {
         if (is_nan()) return *this;
-        nothrow_integer_t<Alloc, Threadsafe, Secure> r(data << shift);
+        BOOST_XINT_NTINTEGER_TYPE r(data << shift);
         return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
-        return nothrow_integer_t<Alloc, Threadsafe, Secure>::nan();
+        return BOOST_XINT_NTINTEGER_TYPE::nan();
     }
 }
 
-//! \copydoc integer_t::operator>>(size_t) const
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure> nothrow_integer_t<Alloc,
-    Threadsafe, Secure>::operator>>(size_t shift) const
+//! \copydoc integer_t::operator>>(bitsize_t) const
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE BOOST_XINT_NTINTEGER_TYPE::operator>>(bitsize_t shift)
+    const
 {
     try {
         if (is_nan()) return *this;
-        nothrow_integer_t<Alloc, Threadsafe, Secure> r(data >> shift);
+        BOOST_XINT_NTINTEGER_TYPE r(data >> shift);
         return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
-        return nothrow_integer_t<Alloc, Threadsafe, Secure>::nan();
+        return BOOST_XINT_NTINTEGER_TYPE::nan();
     }
 }
 
-//! \see nothrow_integer_t::operator<<(size_t) const
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure>& nothrow_integer_t<Alloc,
-    Threadsafe, Secure>::operator<<=(size_t shift)
+//! \see nothrow_integer_t::operator<<(bitsize_t) const
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE& BOOST_XINT_NTINTEGER_TYPE::operator<<=(bitsize_t
+    shift)
 {
     try {
         if (!is_nan()) data <<= shift;
@@ -549,10 +521,10 @@ nothrow_integer_t<Alloc, Threadsafe, Secure>& nothrow_integer_t<Alloc,
     return *this;
 }
 
-//! \see nothrow_integer_t::operator>>(size_t) const
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure>& nothrow_integer_t<Alloc,
-    Threadsafe, Secure>::operator>>=(size_t shift)
+//! \see nothrow_integer_t::operator>>(bitsize_t) const
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE& BOOST_XINT_NTINTEGER_TYPE::operator>>=(bitsize_t
+    shift)
 {
     try {
         if (!is_nan()) data >>= shift;
@@ -566,8 +538,8 @@ nothrow_integer_t<Alloc, Threadsafe, Secure>& nothrow_integer_t<Alloc,
 
     Returns false instead of throwing.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-bool nothrow_integer_t<Alloc, Threadsafe, Secure>::is_odd() const {
+BOOST_XINT_INTEGER_TPL
+bool BOOST_XINT_NTINTEGER_TYPE::is_odd() const {
     try {
         return (is_nan() ? false : data.is_odd());
     } catch (std::exception&) {
@@ -579,8 +551,8 @@ bool nothrow_integer_t<Alloc, Threadsafe, Secure>::is_odd() const {
 
     Returns false instead of throwing.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-bool nothrow_integer_t<Alloc, Threadsafe, Secure>::is_even() const {
+BOOST_XINT_INTEGER_TPL
+bool BOOST_XINT_NTINTEGER_TYPE::is_even() const {
     try {
         return (is_nan() ? false : data.is_even());
     } catch (std::exception&) {
@@ -592,10 +564,8 @@ bool nothrow_integer_t<Alloc, Threadsafe, Secure>::is_even() const {
 
     Returns zero instead of throwing.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-int nothrow_integer_t<Alloc, Threadsafe, Secure>::sign(bool signed_zero)
-    const
-{
+BOOST_XINT_INTEGER_TPL
+int BOOST_XINT_NTINTEGER_TYPE::sign(bool signed_zero) const {
     try {
         return (is_nan() ? 0 : data.sign(signed_zero));
     } catch (std::exception&) {
@@ -607,8 +577,8 @@ int nothrow_integer_t<Alloc, Threadsafe, Secure>::sign(bool signed_zero)
 
     Returns zero instead of throwing.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-size_t nothrow_integer_t<Alloc, Threadsafe, Secure>::hex_digits() const {
+BOOST_XINT_INTEGER_TPL
+size_t BOOST_XINT_NTINTEGER_TYPE::hex_digits() const {
     try {
         return (is_nan() ? 0 : data.hex_digits());
     } catch (std::exception&) {
@@ -617,67 +587,62 @@ size_t nothrow_integer_t<Alloc, Threadsafe, Secure>::hex_digits() const {
 }
 
 //! \copydoc integer_t::pow2
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure> nothrow_integer_t<Alloc,
-    Threadsafe, Secure>::pow2(size_t exponent)
-{
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE BOOST_XINT_NTINTEGER_TYPE::pow2(size_t exponent) {
     try {
-        nothrow_integer_t<Alloc, Threadsafe, Secure> r;
+        BOOST_XINT_NTINTEGER_TYPE r;
         detail::pow2(r.data, exponent);
         return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
-        return nothrow_integer_t<Alloc, Threadsafe, Secure>::nan();
+        return BOOST_XINT_NTINTEGER_TYPE::nan();
     }
 }
 
 //! \copydoc integer_t::factorial
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure> nothrow_integer_t<Alloc,
-    Threadsafe, Secure>::factorial(size_t n)
-{
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE BOOST_XINT_NTINTEGER_TYPE::factorial(size_t n) {
     try {
-        nothrow_integer_t<Alloc, Threadsafe, Secure> r;
+        BOOST_XINT_NTINTEGER_TYPE r;
         detail::factorial(r.data, n);
         return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
-        return nothrow_integer_t<Alloc, Threadsafe, Secure>::nan();
+        return BOOST_XINT_NTINTEGER_TYPE::nan();
     }
 }
 
 //! \copydoc integer_t::random_by_size
-template<class Alloc, bool Threadsafe, bool Secure>
+BOOST_XINT_INTEGER_TPL
 template <class Type>
-nothrow_integer_t<Alloc, Threadsafe, Secure> nothrow_integer_t<Alloc,
-    Threadsafe, Secure>::random_by_size(Type& gen, size_t size_in_bits, bool
-    high_bit_on, bool low_bit_on, bool can_be_negative)
+BOOST_XINT_NTINTEGER_TYPE BOOST_XINT_NTINTEGER_TYPE::random_by_size(Type& gen,
+    bitsize_t size_in_bits, bool high_bit_on, bool low_bit_on, bool
+    can_be_negative)
 {
     try {
         detail::random_generator<Type> rgen(gen);
 
-        nothrow_integer_t<Alloc, Threadsafe, Secure> r;
+        BOOST_XINT_NTINTEGER_TYPE r;
         detail::random_by_size(r._data(), rgen, size_in_bits, high_bit_on,
             low_bit_on, can_be_negative);
         return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
-        return nothrow_integer_t<Alloc, Threadsafe, Secure>::nan();
+        return BOOST_XINT_NTINTEGER_TYPE::nan();
     }
 }
 
 //! \copydoc integer_t::random_prime
-template<class Alloc, bool Threadsafe, bool Secure>
+BOOST_XINT_INTEGER_TPL
 template <class Type>
-nothrow_integer_t<Alloc, Threadsafe, Secure> nothrow_integer_t<Alloc,
-    Threadsafe, Secure>::random_prime(Type& gen, size_t size_in_bits, callback_t
-    callback)
+BOOST_XINT_NTINTEGER_TYPE BOOST_XINT_NTINTEGER_TYPE::random_prime(Type& gen,
+    bitsize_t size_in_bits, callback_t callback)
 {
     try {
         detail::random_generator<Type> rgen(gen);
 
-        nothrow_integer_t<Alloc, Threadsafe, Secure> r;
+        BOOST_XINT_NTINTEGER_TYPE r;
         detail::random_prime(r._data(), rgen, size_in_bits, callback);
         return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
-        return nothrow_integer_t<Alloc, Threadsafe, Secure>::nan();
+        return BOOST_XINT_NTINTEGER_TYPE::nan();
     }
 }
 
@@ -688,13 +653,11 @@ nothrow_integer_t<Alloc, Threadsafe, Secure> nothrow_integer_t<Alloc,
 //!@{
 
 //! \copydoc abs(integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure> abs(const nothrow_integer_t<Alloc,
-    Threadsafe, Secure> n)
-{
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE abs(const BOOST_XINT_NTINTEGER_TYPE n) {
     try {
         if (n.is_nan()) return n;
-        nothrow_integer_t<Alloc, Threadsafe, Secure> r(abs(n._data()));
+        BOOST_XINT_NTINTEGER_TYPE r(abs(n._data()));
         return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
         return n.nan();
@@ -705,15 +668,14 @@ nothrow_integer_t<Alloc, Threadsafe, Secure> abs(const nothrow_integer_t<Alloc,
 
 \note Returns two Not-a-Number values instead of throwing.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-typename nothrow_integer_t<Alloc, Threadsafe, Secure>::divide_t divide(const
-    nothrow_integer_t<Alloc, Threadsafe, Secure> dividend, const
-    nothrow_integer_t<Alloc, Threadsafe, Secure> divisor)
+BOOST_XINT_INTEGER_TPL
+typename BOOST_XINT_NTINTEGER_TYPE::divide_t divide(const
+    BOOST_XINT_NTINTEGER_TYPE dividend, const BOOST_XINT_NTINTEGER_TYPE divisor)
 {
     try {
         if (dividend.is_nan() || divisor.is_nan())
             return std::make_pair(dividend.nan(), dividend.nan());
-        typename nothrow_integer_t<Alloc, Threadsafe, Secure>::divide_t r;
+        typename BOOST_XINT_NTINTEGER_TYPE::divide_t r;
         divide(r.quotient._data(), r.remainder._data(), dividend._data(),
             divisor._data());
         return BOOST_XINT_MOVE(r);
@@ -727,13 +689,11 @@ typename nothrow_integer_t<Alloc, Threadsafe, Secure>::divide_t divide(const
 //!@{
 
 //! \copydoc square(integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure> square(const nothrow_integer_t<
-    Alloc, Threadsafe, Secure> n)
-{
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE square(const BOOST_XINT_NTINTEGER_TYPE n) {
     try {
         if (n.is_nan()) return n;
-        nothrow_integer_t<Alloc, Threadsafe, Secure> r;
+        BOOST_XINT_NTINTEGER_TYPE r;
         square(r._data(), n._data());
         return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
@@ -742,13 +702,13 @@ nothrow_integer_t<Alloc, Threadsafe, Secure> square(const nothrow_integer_t<
 }
 
 //! \copydoc pow(integer_t, integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure> pow(const nothrow_integer_t<Alloc,
-    Threadsafe, Secure> n, const nothrow_integer_t<Alloc, Threadsafe, Secure> e)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE pow(const BOOST_XINT_NTINTEGER_TYPE n, const
+    BOOST_XINT_NTINTEGER_TYPE e)
 {
     try {
         if (n.is_nan() || e.is_nan()) return n.nan();
-        nothrow_integer_t<Alloc, Threadsafe, Secure> r;
+        BOOST_XINT_NTINTEGER_TYPE r;
         pow(r._data(), n._data(), e._data());
         return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
@@ -757,13 +717,11 @@ nothrow_integer_t<Alloc, Threadsafe, Secure> pow(const nothrow_integer_t<Alloc,
 }
 
 //! \copydoc sqrt(integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure> sqrt(const nothrow_integer_t<Alloc,
-    Threadsafe, Secure> n)
-{
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE sqrt(const BOOST_XINT_NTINTEGER_TYPE n) {
     try {
         if (n.is_nan()) return n;
-        nothrow_integer_t<Alloc, Threadsafe, Secure> r;
+        BOOST_XINT_NTINTEGER_TYPE r;
         sqrt(r._data(), n._data());
         return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
@@ -780,7 +738,7 @@ nothrow_integer_t<Alloc, Threadsafe, Secure> sqrt(const nothrow_integer_t<Alloc,
 \note Returns T(0) instead of throwing.
 */
 template <typename Type, class Alloc, bool Threadsafe, bool Secure>
-Type to(const nothrow_integer_t<Alloc, Threadsafe, Secure> n) {
+Type to(const BOOST_XINT_NTINTEGER_TYPE n) {
     try {
         if (n.is_nan()) return Type(0);
         return to<Type>(n._data());
@@ -793,9 +751,9 @@ Type to(const nothrow_integer_t<Alloc, Threadsafe, Secure> n) {
 
 \note Returns an empty string instead of throwing.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-std::string to_string(const nothrow_integer_t<Alloc, Threadsafe, Secure> n,
-    size_t base = 10, bool uppercase = false)
+BOOST_XINT_INTEGER_TPL
+std::string to_string(const BOOST_XINT_NTINTEGER_TYPE n, size_t base = 10, bool
+    uppercase = false)
 {
     try {
         if (n.is_nan()) return n._nan_text();
@@ -810,9 +768,8 @@ std::string to_string(const nothrow_integer_t<Alloc, Threadsafe, Secure> n,
 \note Returns an empty \c binary_t object instead of throwing. Note that a zero
 value will also return an empty \c binary_t object.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-xint::binary_t to_binary(const nothrow_integer_t<Alloc, Threadsafe, Secure> n,
-    size_t bits = 0)
+BOOST_XINT_INTEGER_TPL
+xint::binary_t to_binary(const BOOST_XINT_NTINTEGER_TYPE n, bitsize_t bits = 0)
 {
     try {
         if (n.is_nan()) return xint::binary_t();
@@ -826,12 +783,12 @@ xint::binary_t to_binary(const nothrow_integer_t<Alloc, Threadsafe, Secure> n,
 //! \name Bit-manipulation functions
 //!@{
 
-/*! \copydoc getbit(const integer_t, size_t)
+/*! \copydoc getbit(const integer_t, bitsize_t)
 
 \note Returns false instead of throwing.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-bool getbit(const nothrow_integer_t<Alloc, Threadsafe, Secure> n, size_t bit) {
+BOOST_XINT_INTEGER_TPL
+bool getbit(const BOOST_XINT_NTINTEGER_TYPE n, bitsize_t bit) {
     try {
         if (n.is_nan()) return false;
         return getbit(n._data(), bit);
@@ -840,12 +797,12 @@ bool getbit(const nothrow_integer_t<Alloc, Threadsafe, Secure> n, size_t bit) {
     }
 }
 
-/*! \copydoc setbit(integer_t&, size_t)
+/*! \copydoc setbit(integer_t&, bitsize_t)
 
 \note Does nothing instead of throwing.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-void setbit(nothrow_integer_t<Alloc, Threadsafe, Secure>& n, size_t bit) {
+BOOST_XINT_INTEGER_TPL
+void setbit(BOOST_XINT_NTINTEGER_TYPE& n, bitsize_t bit) {
     try {
         if (!n.is_nan()) setbit(n._data(), bit);
     } catch (std::exception&) {
@@ -853,12 +810,12 @@ void setbit(nothrow_integer_t<Alloc, Threadsafe, Secure>& n, size_t bit) {
     }
 }
 
-/*! \copydoc clearbit(integer_t&, size_t)
+/*! \copydoc clearbit(integer_t&, bitsize_t)
 
 \note Does nothing instead of throwing.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-void clearbit(nothrow_integer_t<Alloc, Threadsafe, Secure>& n, size_t bit) {
+BOOST_XINT_INTEGER_TPL
+void clearbit(BOOST_XINT_NTINTEGER_TYPE& n, bitsize_t bit) {
     try {
         if (!n.is_nan()) clearbit(n._data(), bit);
     } catch (std::exception&) {
@@ -866,13 +823,13 @@ void clearbit(nothrow_integer_t<Alloc, Threadsafe, Secure>& n, size_t bit) {
     }
 }
 
-/*! \copydoc lowestbit(integer_t, size_t)
+/*! \copydoc lowestbit(integer_t, bitsize_t)
 
 \note Returns \c return_if_zero instead of throwing.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-size_t lowestbit(const nothrow_integer_t<Alloc, Threadsafe, Secure> n, size_t
-    return_if_zero = 0)
+BOOST_XINT_INTEGER_TPL
+bitsize_t lowestbit(const BOOST_XINT_NTINTEGER_TYPE n, bitsize_t return_if_zero
+    = 0)
 {
     try {
         if (n.is_nan()) return return_if_zero;
@@ -882,13 +839,13 @@ size_t lowestbit(const nothrow_integer_t<Alloc, Threadsafe, Secure> n, size_t
     }
 }
 
-/*! \copydoc highestbit(integer_t, size_t)
+/*! \copydoc highestbit(integer_t, bitsize_t)
 
 \note Returns \c return_if_zero instead of throwing.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-size_t highestbit(const nothrow_integer_t<Alloc, Threadsafe, Secure> n, size_t
-    return_if_zero = 0)
+BOOST_XINT_INTEGER_TPL
+bitsize_t highestbit(const BOOST_XINT_NTINTEGER_TYPE n, bitsize_t return_if_zero
+    = 0)
 {
     try {
         if (n.is_nan()) return return_if_zero;
@@ -903,14 +860,13 @@ size_t highestbit(const nothrow_integer_t<Alloc, Threadsafe, Secure> n, size_t
 //!@{
 
 //! \copydoc mulmod(integer_t, integer_t, integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure> mulmod(const nothrow_integer_t<
-    Alloc, Threadsafe, Secure> n, const nothrow_integer_t<Alloc, Threadsafe,
-    Secure> by, const nothrow_integer_t<Alloc, Threadsafe, Secure> modulus)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE mulmod(const BOOST_XINT_NTINTEGER_TYPE n, const
+    BOOST_XINT_NTINTEGER_TYPE by, const BOOST_XINT_NTINTEGER_TYPE modulus)
 {
     try {
         if (n.is_nan() || by.is_nan() || modulus.is_nan()) return n.nan();
-        nothrow_integer_t<Alloc, Threadsafe, Secure> r;
+        BOOST_XINT_NTINTEGER_TYPE r;
         mulmod(r._data(), n._data(), by._data(), modulus._data());
         return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
@@ -919,14 +875,13 @@ nothrow_integer_t<Alloc, Threadsafe, Secure> mulmod(const nothrow_integer_t<
 }
 
 //! \copydoc sqrmod(integer_t, integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure> sqrmod(const nothrow_integer_t<
-    Alloc, Threadsafe, Secure> n, const nothrow_integer_t<Alloc, Threadsafe,
-    Secure> modulus)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE sqrmod(const BOOST_XINT_NTINTEGER_TYPE n, const
+    BOOST_XINT_NTINTEGER_TYPE modulus)
 {
     try {
         if (n.is_nan() || modulus.is_nan()) return n.nan();
-        nothrow_integer_t<Alloc, Threadsafe, Secure> r;
+        BOOST_XINT_NTINTEGER_TYPE r;
         sqrmod(r._data(), n._data(), modulus._data());
         return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
@@ -935,15 +890,14 @@ nothrow_integer_t<Alloc, Threadsafe, Secure> sqrmod(const nothrow_integer_t<
 }
 
 //! \copydoc powmod(integer_t, integer_t, integer_t, bool)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure> powmod(const nothrow_integer_t<
-    Alloc, Threadsafe, Secure> n, const nothrow_integer_t<Alloc, Threadsafe,
-    Secure> exponent, const nothrow_integer_t<Alloc, Threadsafe, Secure>
-    modulus, bool no_monty)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE powmod(const BOOST_XINT_NTINTEGER_TYPE n, const
+    BOOST_XINT_NTINTEGER_TYPE exponent, const BOOST_XINT_NTINTEGER_TYPE modulus,
+    bool no_monty)
 {
     try {
         if (n.is_nan() || exponent.is_nan() || modulus.is_nan()) return n.nan();
-        nothrow_integer_t<Alloc, Threadsafe, Secure> r;
+        BOOST_XINT_NTINTEGER_TYPE r;
         powmod(r._data(), n._data(), exponent._data(), modulus._data(),
             no_monty);
         return BOOST_XINT_MOVE(r);
@@ -953,14 +907,13 @@ nothrow_integer_t<Alloc, Threadsafe, Secure> powmod(const nothrow_integer_t<
 }
 
 //! \copydoc invmod(integer_t, integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure> invmod(const nothrow_integer_t<
-    Alloc, Threadsafe, Secure> n, const nothrow_integer_t<Alloc, Threadsafe,
-    Secure> modulus)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE invmod(const BOOST_XINT_NTINTEGER_TYPE n, const
+    BOOST_XINT_NTINTEGER_TYPE modulus)
 {
     try {
         if (n.is_nan() || modulus.is_nan()) return n.nan();
-        nothrow_integer_t<Alloc, Threadsafe, Secure> r;
+        BOOST_XINT_NTINTEGER_TYPE r;
         invmod(r._data(), n._data(), modulus._data());
         return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
@@ -976,9 +929,9 @@ nothrow_integer_t<Alloc, Threadsafe, Secure> invmod(const nothrow_integer_t<
 
 \note Returns -2 instead of throwing.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-int is_prime(const nothrow_integer_t<Alloc, Threadsafe, Secure> n, callback_t
-    callback = no_callback)
+BOOST_XINT_INTEGER_TPL
+int is_prime(const BOOST_XINT_NTINTEGER_TYPE n, callback_t callback =
+    no_callback)
 {
     try {
         if (n.is_nan()) return -2;
@@ -992,9 +945,8 @@ int is_prime(const nothrow_integer_t<Alloc, Threadsafe, Secure> n, callback_t
 //! \name Comparison Operators
 //!@{
 
-template<class Alloc, bool Threadsafe, bool Secure> bool
-    operator<(const nothrow_integer_t<Alloc, Threadsafe, Secure> n1, const
-    nothrow_integer_t<Alloc, Threadsafe, Secure> n2)
+BOOST_XINT_INTEGER_TPL bool operator<(const BOOST_XINT_NTINTEGER_TYPE n1, const
+    BOOST_XINT_NTINTEGER_TYPE n2)
 {
     if (n1.is_nan() || n2.is_nan()) return false;
     try {
@@ -1004,9 +956,8 @@ template<class Alloc, bool Threadsafe, bool Secure> bool
     }
 }
 
-template<class Alloc, bool Threadsafe, bool Secure> bool
-    operator>(const nothrow_integer_t<Alloc, Threadsafe, Secure> n1, const
-    nothrow_integer_t<Alloc, Threadsafe, Secure> n2)
+BOOST_XINT_INTEGER_TPL bool operator>(const BOOST_XINT_NTINTEGER_TYPE n1, const
+    BOOST_XINT_NTINTEGER_TYPE n2)
 {
     if (n1.is_nan() || n2.is_nan()) return false;
     try {
@@ -1016,9 +967,8 @@ template<class Alloc, bool Threadsafe, bool Secure> bool
     }
 }
 
-template<class Alloc, bool Threadsafe, bool Secure> bool
-    operator<=(const nothrow_integer_t<Alloc, Threadsafe, Secure> n1, const
-    nothrow_integer_t<Alloc, Threadsafe, Secure> n2)
+BOOST_XINT_INTEGER_TPL bool operator<=(const BOOST_XINT_NTINTEGER_TYPE n1, const
+    BOOST_XINT_NTINTEGER_TYPE n2)
 {
     if (n1.is_nan() || n2.is_nan()) return false;
     try {
@@ -1028,9 +978,8 @@ template<class Alloc, bool Threadsafe, bool Secure> bool
     }
 }
 
-template<class Alloc, bool Threadsafe, bool Secure> bool
-    operator>=(const nothrow_integer_t<Alloc, Threadsafe, Secure> n1, const
-    nothrow_integer_t<Alloc, Threadsafe, Secure> n2)
+BOOST_XINT_INTEGER_TPL bool operator>=(const BOOST_XINT_NTINTEGER_TYPE n1, const
+    BOOST_XINT_NTINTEGER_TYPE n2)
 {
     if (n1.is_nan() || n2.is_nan()) return false;
     try {
@@ -1040,9 +989,8 @@ template<class Alloc, bool Threadsafe, bool Secure> bool
     }
 }
 
-template<class Alloc, bool Threadsafe, bool Secure> bool
-    operator==(const nothrow_integer_t<Alloc, Threadsafe, Secure> n1, const
-    nothrow_integer_t<Alloc, Threadsafe, Secure> n2)
+BOOST_XINT_INTEGER_TPL bool operator==(const BOOST_XINT_NTINTEGER_TYPE n1, const
+    BOOST_XINT_NTINTEGER_TYPE n2)
 {
     if (n1.is_nan() || n2.is_nan()) return false;
     try {
@@ -1052,9 +1000,8 @@ template<class Alloc, bool Threadsafe, bool Secure> bool
     }
 }
 
-template<class Alloc, bool Threadsafe, bool Secure> bool
-    operator!=(const nothrow_integer_t<Alloc, Threadsafe, Secure> n1, const
-    nothrow_integer_t<Alloc, Threadsafe, Secure> n2)
+BOOST_XINT_INTEGER_TPL bool operator!=(const BOOST_XINT_NTINTEGER_TYPE n1, const
+    BOOST_XINT_NTINTEGER_TYPE n2)
 {
     if (n1.is_nan() || n2.is_nan()) return false;
     try {
@@ -1069,14 +1016,13 @@ template<class Alloc, bool Threadsafe, bool Secure> bool
 //!@{
 
 //! \copydoc operator+(integer_t, integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure> operator+(const nothrow_integer_t<
-    Alloc, Threadsafe, Secure> n1, const nothrow_integer_t<Alloc, Threadsafe,
-    Secure> n2)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE operator+(const BOOST_XINT_NTINTEGER_TYPE n1, const
+    BOOST_XINT_NTINTEGER_TYPE n2)
 {
     if (n1.is_nan() || n2.is_nan()) return false;
     try {
-        nothrow_integer_t<Alloc, Threadsafe, Secure> r(n1._data() + n2._data());
+        BOOST_XINT_NTINTEGER_TYPE r(n1._data() + n2._data());
         return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
         return n1.nan();
@@ -1084,14 +1030,13 @@ nothrow_integer_t<Alloc, Threadsafe, Secure> operator+(const nothrow_integer_t<
 }
 
 //! \copydoc operator-(integer_t, integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure> operator-(const nothrow_integer_t<
-    Alloc, Threadsafe, Secure> n1, const nothrow_integer_t<Alloc, Threadsafe,
-    Secure> n2)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE operator-(const BOOST_XINT_NTINTEGER_TYPE n1, const
+    BOOST_XINT_NTINTEGER_TYPE n2)
 {
     if (n1.is_nan() || n2.is_nan()) return false;
     try {
-        nothrow_integer_t<Alloc, Threadsafe, Secure> r(n1._data() - n2._data());
+        BOOST_XINT_NTINTEGER_TYPE r(n1._data() - n2._data());
         return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
         return n1.nan();
@@ -1099,14 +1044,13 @@ nothrow_integer_t<Alloc, Threadsafe, Secure> operator-(const nothrow_integer_t<
 }
 
 //! \copydoc operator*(integer_t, integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure> operator*(const
-    nothrow_integer_t<Alloc, Threadsafe, Secure> n1, const nothrow_integer_t<
-    Alloc, Threadsafe, Secure> n2)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE operator*(const BOOST_XINT_NTINTEGER_TYPE n1, const
+    BOOST_XINT_NTINTEGER_TYPE n2)
 {
     if (n1.is_nan() || n2.is_nan()) return false;
     try {
-        nothrow_integer_t<Alloc, Threadsafe, Secure> r(n1._data() * n2._data());
+        BOOST_XINT_NTINTEGER_TYPE r(n1._data() * n2._data());
         return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
         return n1.nan();
@@ -1114,14 +1058,13 @@ nothrow_integer_t<Alloc, Threadsafe, Secure> operator*(const
 }
 
 //! \copydoc operator/(integer_t, integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure> operator/(const nothrow_integer_t<
-    Alloc, Threadsafe, Secure> dividend, const nothrow_integer_t<Alloc,
-    Threadsafe, Secure> divisor)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE operator/(const BOOST_XINT_NTINTEGER_TYPE dividend,
+    const BOOST_XINT_NTINTEGER_TYPE divisor)
 {
     if (dividend.is_nan() || divisor.is_nan()) return false;
     try {
-        nothrow_integer_t<Alloc, Threadsafe, Secure> r(dividend._data() /
+        BOOST_XINT_NTINTEGER_TYPE r(dividend._data() /
             divisor._data());
         return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
@@ -1130,14 +1073,13 @@ nothrow_integer_t<Alloc, Threadsafe, Secure> operator/(const nothrow_integer_t<
 }
 
 //! \copydoc operator%(integer_t, integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure> operator%(const nothrow_integer_t<
-    Alloc, Threadsafe, Secure> n1, const nothrow_integer_t<Alloc, Threadsafe,
-    Secure> n2)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE operator%(const BOOST_XINT_NTINTEGER_TYPE n1, const
+    BOOST_XINT_NTINTEGER_TYPE n2)
 {
     if (n1.is_nan() || n2.is_nan()) return false;
     try {
-        nothrow_integer_t<Alloc, Threadsafe, Secure> r(n1._data() % n2._data());
+        BOOST_XINT_NTINTEGER_TYPE r(n1._data() % n2._data());
         return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
         return n1.nan();
@@ -1145,14 +1087,13 @@ nothrow_integer_t<Alloc, Threadsafe, Secure> operator%(const nothrow_integer_t<
 }
 
 //! \copydoc operator&(integer_t, integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure> operator&(const nothrow_integer_t<
-    Alloc, Threadsafe, Secure> n1, const nothrow_integer_t<Alloc, Threadsafe,
-    Secure> n2)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE operator&(const BOOST_XINT_NTINTEGER_TYPE n1, const
+    BOOST_XINT_NTINTEGER_TYPE n2)
 {
     if (n1.is_nan() || n2.is_nan()) return false;
     try {
-        nothrow_integer_t<Alloc, Threadsafe, Secure> r(n1._data() & n2._data());
+        BOOST_XINT_NTINTEGER_TYPE r(n1._data() & n2._data());
         return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
         return n1.nan();
@@ -1160,14 +1101,13 @@ nothrow_integer_t<Alloc, Threadsafe, Secure> operator&(const nothrow_integer_t<
 }
 
 //! \copydoc operator|(integer_t, integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure> operator|(const nothrow_integer_t<
-    Alloc, Threadsafe, Secure> n1, const nothrow_integer_t<Alloc, Threadsafe,
-    Secure> n2)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE operator|(const BOOST_XINT_NTINTEGER_TYPE n1, const
+    BOOST_XINT_NTINTEGER_TYPE n2)
 {
     if (n1.is_nan() || n2.is_nan()) return false;
     try {
-        nothrow_integer_t<Alloc, Threadsafe, Secure> r(n1._data() | n2._data());
+        BOOST_XINT_NTINTEGER_TYPE r(n1._data() | n2._data());
         return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
         return n1.nan();
@@ -1175,14 +1115,13 @@ nothrow_integer_t<Alloc, Threadsafe, Secure> operator|(const nothrow_integer_t<
 }
 
 //! \copydoc operator^(integer_t, integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure> operator^(const nothrow_integer_t<
-    Alloc, Threadsafe, Secure> n1, const nothrow_integer_t<Alloc, Threadsafe,
-    Secure> n2)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE operator^(const BOOST_XINT_NTINTEGER_TYPE n1, const
+    BOOST_XINT_NTINTEGER_TYPE n2)
 {
     if (n1.is_nan() || n2.is_nan()) return false;
     try {
-        nothrow_integer_t<Alloc, Threadsafe, Secure> r(n1._data() ^ n2._data());
+        BOOST_XINT_NTINTEGER_TYPE r(n1._data() ^ n2._data());
         return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
         return n1.nan();
@@ -1194,14 +1133,13 @@ nothrow_integer_t<Alloc, Threadsafe, Secure> operator^(const nothrow_integer_t<
 //!@{
 
 //! \copydoc gcd(integer_t, integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure> gcd(const nothrow_integer_t<Alloc,
-    Threadsafe, Secure> num1, const nothrow_integer_t<Alloc, Threadsafe, Secure>
-    num2)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE gcd(const BOOST_XINT_NTINTEGER_TYPE num1, const
+    BOOST_XINT_NTINTEGER_TYPE num2)
 {
     if (num1.is_nan() || num2.is_nan()) return num1.nan();
     try {
-        nothrow_integer_t<Alloc, Threadsafe, Secure> r;
+        BOOST_XINT_NTINTEGER_TYPE r;
         gcd(r._data(), num1._data(), num2._data());
         return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
@@ -1210,14 +1148,13 @@ nothrow_integer_t<Alloc, Threadsafe, Secure> gcd(const nothrow_integer_t<Alloc,
 }
 
 //! \copydoc lcm(integer_t, integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-nothrow_integer_t<Alloc, Threadsafe, Secure> lcm(const nothrow_integer_t<Alloc,
-    Threadsafe, Secure> num1, const nothrow_integer_t<Alloc, Threadsafe, Secure>
-    num2)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_NTINTEGER_TYPE lcm(const BOOST_XINT_NTINTEGER_TYPE num1, const
+    BOOST_XINT_NTINTEGER_TYPE num2)
 {
     if (num1.is_nan() || num2.is_nan()) return num1.nan();
     try {
-        nothrow_integer_t<Alloc, Threadsafe, Secure> r;
+        BOOST_XINT_NTINTEGER_TYPE r;
         lcm(r._data(), num1._data(), num2._data());
         return BOOST_XINT_MOVE(r);
     } catch (std::exception&) {
@@ -1229,9 +1166,9 @@ nothrow_integer_t<Alloc, Threadsafe, Secure> lcm(const nothrow_integer_t<Alloc,
 
 \note Returns 2 instead of throwing, so say that the items are not equal.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-int compare(const nothrow_integer_t<Alloc, Threadsafe, Secure> n1, const
-    nothrow_integer_t<Alloc, Threadsafe, Secure> n2, bool ignoresign = false)
+BOOST_XINT_INTEGER_TPL
+int compare(const BOOST_XINT_NTINTEGER_TYPE n1, const BOOST_XINT_NTINTEGER_TYPE
+    n2, bool ignoresign = false)
 {
     if (n1.is_nan() || n2.is_nan()) return 2;
     try {
@@ -1245,8 +1182,8 @@ int compare(const nothrow_integer_t<Alloc, Threadsafe, Secure> n1, const
 
 \note Returns zero instead of throwing.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-size_t log2(const nothrow_integer_t<Alloc, Threadsafe, Secure> n) {
+BOOST_XINT_INTEGER_TPL
+size_t log2(const BOOST_XINT_NTINTEGER_TYPE n) {
     try {
         return (n.is_nan() ? 0 : log2(n._data()));
     } catch (std::exception&) {
@@ -1259,17 +1196,13 @@ size_t log2(const nothrow_integer_t<Alloc, Threadsafe, Secure> n) {
 //! values.
 #define BOOST_XINT_NOTHROW_ANY_COMPARE(rtype, op) \
     template <class Alloc, bool Threadsafe, bool Secure, typename N> \
-    rtype op(const nothrow_integer_t<Alloc, Threadsafe, Secure> n1, const N \
-        n2) \
-    { \
-        return op(n1, nothrow_integer_t<Alloc, Threadsafe, Secure>(n2)); \
+    rtype op(const BOOST_XINT_NTINTEGER_TYPE n1, const N n2) { \
+        return op(n1, BOOST_XINT_NTINTEGER_TYPE(n2)); \
     } \
     \
     template <typename N, class Alloc, bool Threadsafe, bool Secure> \
-    rtype op(const N n1, const nothrow_integer_t<Alloc, Threadsafe, Secure> \
-        n2) \
-    { \
-        return op(nothrow_integer_t<Alloc, Threadsafe, Secure>(n1), n2); \
+    rtype op(const N n1, const BOOST_XINT_NTINTEGER_TYPE n2) { \
+        return op(BOOST_XINT_NTINTEGER_TYPE(n1), n2); \
     }
 
 BOOST_XINT_NOTHROW_ANY_COMPARE(bool, operator<)
@@ -1284,20 +1217,18 @@ BOOST_XINT_NOTHROW_ANY_COMPARE(int, compare)
 //! values.
 #define BOOST_XINT_NOTHROW_ANY_MATH(op) \
     template <class Alloc, bool Threadsafe, bool Secure, typename N> \
-    nothrow_integer_t<Alloc, Threadsafe, Secure> op(const nothrow_integer_t< \
-        Alloc, Threadsafe, Secure> n1, const N n2) \
+    BOOST_XINT_NTINTEGER_TYPE op(const BOOST_XINT_NTINTEGER_TYPE n1, const N \
+        n2) \
     { \
-        nothrow_integer_t<Alloc, Threadsafe, Secure> r(op(n1, \
-            nothrow_integer_t<Alloc, Threadsafe, Secure>(n2))); \
+        BOOST_XINT_NTINTEGER_TYPE r(op(n1, BOOST_XINT_NTINTEGER_TYPE(n2))); \
         return BOOST_XINT_MOVE(r); \
     } \
     \
     template <typename N, class Alloc, bool Threadsafe, bool Secure> \
-    nothrow_integer_t<Alloc, Threadsafe, Secure> op(const N n1, const \
-        nothrow_integer_t<Alloc, Threadsafe, Secure> n2) \
+    BOOST_XINT_NTINTEGER_TYPE op(const N n1, const BOOST_XINT_NTINTEGER_TYPE \
+        n2) \
     { \
-        nothrow_integer_t<Alloc, Threadsafe, Secure> r(op(nothrow_integer_t< \
-            Alloc, Threadsafe, Secure>(n1), n2)); \
+        BOOST_XINT_NTINTEGER_TYPE r(op(BOOST_XINT_NTINTEGER_TYPE(n1), n2)); \
         return BOOST_XINT_MOVE(r); \
     }
 
@@ -1319,19 +1250,19 @@ BOOST_XINT_NOTHROW_ANY_MATH(lcm)
 
 //! \name Stream input/output functions
 //!@{
-template <typename charT, typename traits, class Alloc, bool
-    Threadsafe, bool Secure> inline std::basic_ostream<charT,traits>&
-    operator<<(std::basic_ostream<charT, traits>& out, const nothrow_integer_t<
-    Alloc, Threadsafe, Secure> n)
+template <typename charT, typename traits, class Alloc, bool Threadsafe, bool
+    Secure> inline std::basic_ostream<charT,traits>&
+    operator<<(std::basic_ostream<charT, traits>& out, const
+    BOOST_XINT_NTINTEGER_TYPE n)
 {
     if (n.is_nan()) return operator<<(out, n._nan_text());
     return operator<<(out, n._data());
 }
 
-template <typename charT, typename traits, class Alloc, bool
-    Threadsafe, bool Secure> inline std::basic_istream<charT,traits>&
-    operator>>(std::basic_istream<charT, traits>& in, nothrow_integer_t<Alloc,
-    Threadsafe, Secure>& n)
+template <typename charT, typename traits, class Alloc, bool Threadsafe, bool
+    Secure> inline std::basic_istream<charT,traits>&
+    operator>>(std::basic_istream<charT, traits>& in, BOOST_XINT_NTINTEGER_TYPE&
+    n)
 {
     if (in.peek()=='#') {
         // Must be either #NaN# or an error
@@ -1357,9 +1288,9 @@ template <typename charT, typename traits, class Alloc, bool
 }
 //!@}
 
-template<class Alloc, bool Threadsafe, bool Secure>
-inline void swap(nothrow_integer_t<Alloc, Threadsafe, Secure>& left,
-    nothrow_integer_t<Alloc, Threadsafe, Secure>& right)
+BOOST_XINT_INTEGER_TPL
+inline void swap(BOOST_XINT_NTINTEGER_TYPE& left, BOOST_XINT_NTINTEGER_TYPE&
+    right)
 {
     left._swap(right);
 }
@@ -1419,8 +1350,8 @@ class numeric_limits<boost::xint::nothrow_integer> {
 } // namespace std
 
 #ifdef _WIN32
-	// Return the warning setting to its original value.
-	#pragma warning(pop)
+    // Return the warning setting to its original value.
+    #pragma warning(pop)
 #endif
 
 #endif // BOOST_INCLUDED_XINT_NOTHROW_INTEGER_HPP

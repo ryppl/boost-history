@@ -147,7 +147,7 @@
 <a name="l00133"></a>00133     } <span class="keywordflow">else</span> sub_divide2(qtarget, rtarget, d1, d2);
 <a name="l00134"></a>00134 }
 <a name="l00135"></a>00135 
-<a name="l00138"></a>00138 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#aafccc57266902713de78a2ac7eb9b37c">divide</a>(data_t&amp; qtarget, data_t&amp; rtarget, <span class="keyword">const</span> data_t d1,
+<a name="l00138"></a>00138 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a729653da022f22652cd5aa2d29f0c8fd">divide</a>(data_t&amp; qtarget, data_t&amp; rtarget, <span class="keyword">const</span> data_t d1,
 <a name="l00139"></a>00139     <span class="keyword">const</span> data_t d2)
 <a name="l00140"></a>00140 {
 <a name="l00141"></a>00141     <span class="keywordtype">int</span> sign1 = (d1.is_zero() ? 0 : d1.negative ? -1 : 1);
@@ -156,7 +156,7 @@
 <a name="l00144"></a>00144 
 <a name="l00145"></a>00145     qtarget.beginmod();
 <a name="l00146"></a>00146     rtarget.beginmod();
-<a name="l00147"></a>00147     <span class="keywordtype">int</span> comp = <a class="code" href="namespaceboost_1_1xint.html#afb9c5c79428eb4ccac0b562fee65d0b8">compare</a>(d1, d2, <span class="keyword">true</span>);
+<a name="l00147"></a>00147     <span class="keywordtype">int</span> comp = <a class="code" href="namespaceboost_1_1xint.html#a39a3143ef1f03a35f2b7409b365fc853">compare</a>(d1, d2, <span class="keyword">true</span>);
 <a name="l00148"></a>00148     <span class="keywordflow">if</span> (comp &lt; 0) {
 <a name="l00149"></a>00149         qtarget.set(0);
 <a name="l00150"></a>00150         rtarget.duplicate_data(d1);
@@ -182,30 +182,30 @@
 <a name="l00170"></a>00170     qtarget.endmod();
 <a name="l00171"></a>00171 }
 <a name="l00172"></a>00172 
-<a name="l00173"></a>00173 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> data_t::divide_t <a class="code" href="namespaceboost_1_1xint.html#aafccc57266902713de78a2ac7eb9b37c">divide</a>(<span class="keyword">const</span> data_t d1, <span class="keyword">const</span> data_t d2) {
+<a name="l00173"></a>00173 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> data_t::divide_t <a class="code" href="namespaceboost_1_1xint.html#a729653da022f22652cd5aa2d29f0c8fd">divide</a>(<span class="keyword">const</span> data_t d1, <span class="keyword">const</span> data_t d2) {
 <a name="l00174"></a>00174     data_t q(d1.new_holder()), r(d1.new_holder());
-<a name="l00175"></a>00175     <a class="code" href="namespaceboost_1_1xint.html#aafccc57266902713de78a2ac7eb9b37c">divide</a>(q, r, d1, d2);
+<a name="l00175"></a>00175     <a class="code" href="namespaceboost_1_1xint.html#a729653da022f22652cd5aa2d29f0c8fd">divide</a>(q, r, d1, d2);
 <a name="l00176"></a>00176     <span class="keywordflow">return</span> data_t::divide_t(q, r);
 <a name="l00177"></a>00177 }
 <a name="l00178"></a>00178 
 <a name="l00179"></a>00179 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> data_t&amp; data_t::operator/=(<span class="keyword">const</span> data_t b) {
 <a name="l00180"></a>00180     data_t remainder(new_holder());
-<a name="l00181"></a>00181     <a class="code" href="namespaceboost_1_1xint.html#aafccc57266902713de78a2ac7eb9b37c">divide</a>(*<span class="keyword">this</span>, remainder, duplicate(), b);
+<a name="l00181"></a>00181     <a class="code" href="namespaceboost_1_1xint.html#a729653da022f22652cd5aa2d29f0c8fd">divide</a>(*<span class="keyword">this</span>, remainder, duplicate(), b);
 <a name="l00182"></a>00182     <span class="keywordflow">return</span> *<span class="keyword">this</span>;
 <a name="l00183"></a>00183 }
 <a name="l00184"></a>00184 
 <a name="l00185"></a>00185 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> data_t&amp; data_t::operator%=(<span class="keyword">const</span> data_t b) {
 <a name="l00186"></a>00186     data_t quotient(new_holder());
-<a name="l00187"></a>00187     <a class="code" href="namespaceboost_1_1xint.html#aafccc57266902713de78a2ac7eb9b37c">divide</a>(quotient, *<span class="keyword">this</span>, duplicate(), b);
+<a name="l00187"></a>00187     <a class="code" href="namespaceboost_1_1xint.html#a729653da022f22652cd5aa2d29f0c8fd">divide</a>(quotient, *<span class="keyword">this</span>, duplicate(), b);
 <a name="l00188"></a>00188     <span class="keywordflow">if</span> (negative) *<span class="keyword">this</span> += b.abs();
 <a name="l00189"></a>00189     <span class="keywordflow">return</span> *<span class="keyword">this</span>;
 <a name="l00190"></a>00190 }
 <a name="l00191"></a>00191 
-<a name="l00192"></a>00192 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> data_t <a class="code" href="namespaceboost_1_1xint.html#a8004420023afd5d01cd85879a158f9db">operator/</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2) {
+<a name="l00192"></a>00192 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> data_t <a class="code" href="namespaceboost_1_1xint.html#a2606613cee80fbd4fd17100d6d0e09b9">operator/</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2) {
 <a name="l00193"></a>00193     <span class="keywordflow">return</span> data_t(n1) /= n2;
 <a name="l00194"></a>00194 }
 <a name="l00195"></a>00195 
-<a name="l00196"></a>00196 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> data_t <a class="code" href="namespaceboost_1_1xint.html#addd9f25375d6bb0f38b902016e0edfd8">operator%</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2) {
+<a name="l00196"></a>00196 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> data_t <a class="code" href="namespaceboost_1_1xint.html#a3b804d111a60509665d6a7227039aee9">operator%</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2) {
 <a name="l00197"></a>00197     <span class="keywordflow">return</span> data_t(n1) %= n2;
 <a name="l00198"></a>00198 }
 <a name="l00199"></a>00199 
@@ -215,7 +215,7 @@
 <a name="l00204"></a>00204 <span class="comment"></span>
 <a name="l00205"></a>00205 <span class="preprocessor">#endif // defined(BOOST_XINT_COMPILED_LIB) || defined(BOOST_XINT_FROM_HEADER)</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Wed Jun 2 13:37:02 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Jun 3 00:00:36 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

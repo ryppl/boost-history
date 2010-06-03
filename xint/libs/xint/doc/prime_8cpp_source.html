@@ -88,11 +88,11 @@
 <a name="l00070"></a>00070     <span class="comment">// from 0 to a - 1. If any one is correct, then n passes.</span>
 <a name="l00071"></a>00071     <span class="comment">// Otherwise, n fails.</span>
 <a name="l00072"></a>00072     data_t test(n.new_holder());
-<a name="l00073"></a>00073     <a class="code" href="namespaceboost_1_1xint.html#ae827f2e153ca6eccbe3367afb2a6f2c0">powmod</a>(test, b, r, n);
+<a name="l00073"></a>00073     <a class="code" href="namespaceboost_1_1xint.html#a3df211c7086c4652a7e12492d7d103f7">powmod</a>(test, b, r, n);
 <a name="l00074"></a>00074     <span class="keywordflow">if</span> (test == one || test == nMinus1) <span class="keywordflow">return</span> 1; <span class="comment">// Better than 3/4 chance it&#39;s prime</span>
 <a name="l00075"></a>00075 
 <a name="l00076"></a>00076     <span class="keywordflow">while</span> (a-- &gt; 0) {
-<a name="l00077"></a>00077         <a class="code" href="namespaceboost_1_1xint.html#afb9af493fcf2fdda1eb1a44482df3bf4">sqrmod</a>(test, test, n);
+<a name="l00077"></a>00077         <a class="code" href="namespaceboost_1_1xint.html#a250379d4753bbd26002eac066114b756">sqrmod</a>(test, test, n);
 <a name="l00078"></a>00078         <span class="keywordflow">if</span> (test == nMinus1) <span class="keywordflow">return</span> 1;
 <a name="l00079"></a>00079     }
 <a name="l00080"></a>00080 
@@ -100,7 +100,7 @@
 <a name="l00082"></a>00082     <span class="keywordflow">return</span> 0;
 <a name="l00083"></a>00083 }
 <a name="l00084"></a>00084 
-<a name="l00085"></a>00085 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">int</span> <a class="code" href="namespaceboost_1_1xint.html#a8a188df259a5b64cf9a600a196ce8461">is_prime</a>(<span class="keyword">const</span> data_t n, <a class="code" href="namespaceboost_1_1xint.html#a48deb76c9c428a4b3a50177b1b0cb547" title="A callback function takes no parameters and returns a bool.">callback_t</a> callback) {
+<a name="l00085"></a>00085 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">int</span> <a class="code" href="namespaceboost_1_1xint.html#a0f70e8b365600e14df023c83435a56ff">is_prime</a>(<span class="keyword">const</span> data_t n, <a class="code" href="namespaceboost_1_1xint.html#a48deb76c9c428a4b3a50177b1b0cb547" title="A callback function takes no parameters and returns a bool.">callback_t</a> callback) {
 <a name="l00086"></a>00086     data_t tmp(n.new_holder(), 2);
 <a name="l00087"></a>00087     <span class="keywordflow">if</span> (n &lt; tmp) <span class="keywordflow">throw</span> exceptions::invalid_argument(<span class="stringliteral">&quot;xint::is_prime cannot &quot;</span>
 <a name="l00088"></a>00088         <span class="stringliteral">&quot;test numbers below 2&quot;</span>);
@@ -151,7 +151,7 @@
 <a name="l00133"></a>00133     <span class="keywordflow">while</span> (1) {
 <a name="l00134"></a>00134         random_by_size(target, gen, size_in_bits, <span class="keyword">true</span>, <span class="keyword">true</span>, <span class="keyword">false</span>);
 <a name="l00135"></a>00135         <span class="keywordflow">while</span> (target &lt; pe) {
-<a name="l00136"></a>00136             <span class="keywordtype">int</span> r = <a class="code" href="namespaceboost_1_1xint.html#a8a188df259a5b64cf9a600a196ce8461">is_prime</a>(target, callback);
+<a name="l00136"></a>00136             <span class="keywordtype">int</span> r = <a class="code" href="namespaceboost_1_1xint.html#a0f70e8b365600e14df023c83435a56ff">is_prime</a>(target, callback);
 <a name="l00137"></a>00137             <span class="keywordflow">if</span> (r &lt; 0) { target.set(0); <span class="keywordflow">return</span>; }
 <a name="l00138"></a>00138             <span class="keywordflow">if</span> (r == 1) <span class="keywordflow">return</span>;
 <a name="l00139"></a>00139             target += two;
@@ -165,7 +165,7 @@
 <a name="l00148"></a>00148 <span class="comment"></span>
 <a name="l00149"></a>00149 <span class="preprocessor">#endif // defined(BOOST_XINT_COMPILED_LIB) || defined(BOOST_XINT_FROM_HEADER)</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Wed Jun 2 13:37:02 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Jun 3 00:00:36 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

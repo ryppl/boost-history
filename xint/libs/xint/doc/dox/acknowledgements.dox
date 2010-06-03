@@ -38,6 +38,9 @@ but sometimes useful.
 variable-length and fixed-length integers.
 - Juergen Hunold, for major improvements to the build system.
 - Robert Stewart, for a thorough review of the headers.
+- John Bytheway, for an idea for simplifying the template documentation greatly.
+- David Abrahams, for contributing a thought on how to use Boost.Parameter
+effectively with multiple \c bool parameters.
 
 And the other Boost development list members who joined the discussion:
 

@@ -58,7 +58,7 @@
 <a name="l00040"></a>00040     <span class="keywordflow">return</span> r;
 <a name="l00041"></a>00041 }
 <a name="l00042"></a>00042 
-<a name="l00043"></a>00043 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#ae44adcf3207860b998256c60357e1cc0">pow</a>(data_t&amp; target, <span class="keyword">const</span> data_t n, <span class="keyword">const</span> data_t e) {
+<a name="l00043"></a>00043 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a29a7d787472df22c7c554af6588e9102">pow</a>(data_t&amp; target, <span class="keyword">const</span> data_t n, <span class="keyword">const</span> data_t e) {
 <a name="l00044"></a>00044     <span class="keywordflow">if</span> (e.is_zero()) {
 <a name="l00045"></a>00045         <span class="comment">// Anything to the zeroth power is one.</span>
 <a name="l00046"></a>00046         target.set(1);
@@ -77,9 +77,9 @@
 <a name="l00059"></a>00059     <span class="keywordflow">while</span> (ee != 0) { ee &gt;&gt;= 1; ++lastBitCount; }
 <a name="l00060"></a>00060 
 <a name="l00061"></a>00061     data_t p(n.abs());
-<a name="l00062"></a>00062     p.beginmod(data_t::bits_to_digits(<a class="code" href="namespaceboost_1_1xint.html#abe2baf8e6f99d5b3ca9cfb5d530ced30">log2</a>(p) * <a class="code" href="namespaceboost_1_1xint.html#abe2baf8e6f99d5b3ca9cfb5d530ced30">log2</a>(e)));
+<a name="l00062"></a>00062     p.beginmod(data_t::bits_to_digits(<a class="code" href="namespaceboost_1_1xint.html#a9d9b4f302607bcf96bd2ab2c3145f453">log2</a>(p) * <a class="code" href="namespaceboost_1_1xint.html#a9d9b4f302607bcf96bd2ab2c3145f453">log2</a>(e)));
 <a name="l00063"></a>00063 
-<a name="l00064"></a>00064     target.beginmod(data_t::bits_to_digits(<a class="code" href="namespaceboost_1_1xint.html#abe2baf8e6f99d5b3ca9cfb5d530ced30">log2</a>(p) * count_one_bits(e)));
+<a name="l00064"></a>00064     target.beginmod(data_t::bits_to_digits(<a class="code" href="namespaceboost_1_1xint.html#a9d9b4f302607bcf96bd2ab2c3145f453">log2</a>(p) * count_one_bits(e)));
 <a name="l00065"></a>00065     target.set(1);
 <a name="l00066"></a>00066     <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> eIndex=0; eIndex &lt; e.length; ++eIndex) {
 <a name="l00067"></a>00067         digit_t eee(e[eIndex]);
@@ -88,7 +88,7 @@
 <a name="l00070"></a>00070             bits_per_digit));
 <a name="l00071"></a>00071         <span class="keywordflow">while</span> (bitCount-- &gt; 0) {
 <a name="l00072"></a>00072             <span class="keywordflow">if</span> (eee &amp; 0x01) target *= p;
-<a name="l00073"></a>00073             <a class="code" href="namespaceboost_1_1xint.html#abe0193015e6085246d5a3b5d5193f692">square</a>(p, p);
+<a name="l00073"></a>00073             <a class="code" href="namespaceboost_1_1xint.html#ac3f13e684b487865506362e4b382bc11">square</a>(p, p);
 <a name="l00074"></a>00074 
 <a name="l00075"></a>00075             eee &gt;&gt;= 1;
 <a name="l00076"></a>00076         }
@@ -102,12 +102,12 @@
 <a name="l00084"></a>00084 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">void</span> pow2(data_t&amp; target, <span class="keywordtype">size_t</span> exponent) {
 <a name="l00085"></a>00085     target.beginmod();
 <a name="l00086"></a>00086     target.set(0);
-<a name="l00087"></a>00087     <a class="code" href="namespaceboost_1_1xint.html#ab30774cb5018703c4351a678a055c3f2">setbit</a>(target, exponent);
+<a name="l00087"></a>00087     <a class="code" href="namespaceboost_1_1xint.html#a677abb914051570846048717ff0a7172">setbit</a>(target, exponent);
 <a name="l00088"></a>00088     target.endmod();
 <a name="l00089"></a>00089 }
 <a name="l00090"></a>00090 
 <a name="l00091"></a>00091 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">void</span> factorial(data_t&amp; target, <span class="keywordtype">size_t</span> n) {
-<a name="l00092"></a>00092     target.beginmod(data_t::bits_to_digits(n * <a class="code" href="namespaceboost_1_1xint.html#abe2baf8e6f99d5b3ca9cfb5d530ced30">log2</a>(n / 2)) + 1);
+<a name="l00092"></a>00092     target.beginmod(data_t::bits_to_digits(n * <a class="code" href="namespaceboost_1_1xint.html#a9d9b4f302607bcf96bd2ab2c3145f453">log2</a>(n / 2)) + 1);
 <a name="l00093"></a>00093     target.set(1);
 <a name="l00094"></a>00094 
 <a name="l00095"></a>00095     data_t one(target.new_holder(), 1);
@@ -126,7 +126,7 @@
 <a name="l00109"></a>00109 
 <a name="l00110"></a>00110 <span class="preprocessor">#endif // defined(BOOST_XINT_COMPILED_LIB) || defined(BOOST_XINT_FROM_HEADER)</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Wed Jun 2 13:37:02 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Jun 3 00:00:36 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

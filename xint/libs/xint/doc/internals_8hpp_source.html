@@ -99,9 +99,9 @@
 <a name="l00087"></a><a class="code" href="classboost_1_1xint_1_1base__divide__t.html#ac74a636871dd2988a4f654fc745426c7">00087</a>     <a class="code" href="classboost_1_1xint_1_1base__divide__t.html" title="Holds the results from a division-with-remainder call.">base_divide_t</a>&amp; <a class="code" href="classboost_1_1xint_1_1base__divide__t.html#ac74a636871dd2988a4f654fc745426c7">operator=</a>(<a class="code" href="internals_8hpp.html#a8177a6a6c68ea042f7e644d8ef7128f9">BOOST_XINT_COPY_ASSIGN_REF</a>(<a class="code" href="classboost_1_1xint_1_1base__divide__t.html" title="Holds the results from a division-with-remainder call.">base_divide_t</a>) copy)
 <a name="l00088"></a>00088         { <a class="code" href="classboost_1_1xint_1_1base__divide__t.html#a7b3f254223974ed79663f9a0e4d1649c">quotient</a> = copy.<a class="code" href="classboost_1_1xint_1_1base__divide__t.html#a7b3f254223974ed79663f9a0e4d1649c">quotient</a>; <a class="code" href="classboost_1_1xint_1_1base__divide__t.html#aa79bd57f1bc85ceb86913fd0f81c9e2d">remainder</a> = copy.<a class="code" href="classboost_1_1xint_1_1base__divide__t.html#aa79bd57f1bc85ceb86913fd0f81c9e2d">remainder</a>; <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
 <a name="l00089"></a><a class="code" href="classboost_1_1xint_1_1base__divide__t.html#a5f66ee628dc58d181b8c2886354909fb">00089</a>     <a class="code" href="classboost_1_1xint_1_1base__divide__t.html" title="Holds the results from a division-with-remainder call.">base_divide_t</a>&amp; <a class="code" href="classboost_1_1xint_1_1base__divide__t.html#a5f66ee628dc58d181b8c2886354909fb">operator=</a>(<a class="code" href="internals_8hpp.html#a0533c283bce9e4d9468ea9b3a5ab509b">BOOST_XINT_RV_REF</a>(<a class="code" href="classboost_1_1xint_1_1base__divide__t.html" title="Holds the results from a division-with-remainder call.">base_divide_t</a>) move) {
-<a name="l00090"></a>00090         <span class="keyword">using</span> <a class="code" href="namespaceboost_1_1xint.html#a985791f681a1afaeaf6a32c05ecc43e0">std::swap</a>;
-<a name="l00091"></a>00091         <a class="code" href="namespaceboost_1_1xint.html#a985791f681a1afaeaf6a32c05ecc43e0">swap</a>(<a class="code" href="classboost_1_1xint_1_1base__divide__t.html#a7b3f254223974ed79663f9a0e4d1649c">quotient</a>, move.<a class="code" href="classboost_1_1xint_1_1base__divide__t.html#a7b3f254223974ed79663f9a0e4d1649c">quotient</a>);
-<a name="l00092"></a>00092         <a class="code" href="namespaceboost_1_1xint.html#a985791f681a1afaeaf6a32c05ecc43e0">swap</a>(<a class="code" href="classboost_1_1xint_1_1base__divide__t.html#aa79bd57f1bc85ceb86913fd0f81c9e2d">remainder</a>, move.<a class="code" href="classboost_1_1xint_1_1base__divide__t.html#aa79bd57f1bc85ceb86913fd0f81c9e2d">remainder</a>);
+<a name="l00090"></a>00090         <span class="keyword">using</span> <a class="code" href="namespaceboost_1_1xint.html#a00ebb69a2c4e772f6ae9de36b4430d62">std::swap</a>;
+<a name="l00091"></a>00091         <a class="code" href="namespaceboost_1_1xint.html#a00ebb69a2c4e772f6ae9de36b4430d62">swap</a>(<a class="code" href="classboost_1_1xint_1_1base__divide__t.html#a7b3f254223974ed79663f9a0e4d1649c">quotient</a>, move.<a class="code" href="classboost_1_1xint_1_1base__divide__t.html#a7b3f254223974ed79663f9a0e4d1649c">quotient</a>);
+<a name="l00092"></a>00092         <a class="code" href="namespaceboost_1_1xint.html#a00ebb69a2c4e772f6ae9de36b4430d62">swap</a>(<a class="code" href="classboost_1_1xint_1_1base__divide__t.html#aa79bd57f1bc85ceb86913fd0f81c9e2d">remainder</a>, move.<a class="code" href="classboost_1_1xint_1_1base__divide__t.html#aa79bd57f1bc85ceb86913fd0f81c9e2d">remainder</a>);
 <a name="l00093"></a>00093         <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
 <a name="l00094"></a>00094 
 <a name="l00095"></a><a class="code" href="classboost_1_1xint_1_1base__divide__t.html#aa79bd57f1bc85ceb86913fd0f81c9e2d">00095</a>     T <a class="code" href="classboost_1_1xint_1_1base__divide__t.html#a7b3f254223974ed79663f9a0e4d1649c">quotient</a>, <a class="code" href="classboost_1_1xint_1_1base__divide__t.html#aa79bd57f1bc85ceb86913fd0f81c9e2d">remainder</a>;
@@ -195,7 +195,7 @@
 <a name="l00217"></a>00217 
 <a name="l00218"></a>00218     raw_digits_t *raw_data;
 <a name="l00219"></a>00219 
-<a name="l00220"></a>00220     <span class="keyword">friend</span> <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a985791f681a1afaeaf6a32c05ecc43e0">swap</a>(base_digitmanager_t&amp; p1, base_digitmanager_t&amp; p2);
+<a name="l00220"></a>00220     <span class="keyword">friend</span> <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a00ebb69a2c4e772f6ae9de36b4430d62">swap</a>(base_digitmanager_t&amp; p1, base_digitmanager_t&amp; p2);
 <a name="l00221"></a>00221 };
 <a name="l00222"></a>00222 
 <a name="l00225"></a>00225 <span class="keyword">template</span> &lt;<span class="keyword">class</span> Alloc = std::allocator&lt;digit_t&gt;, <span class="keywordtype">bool</span> Threadsafe = true, <span class="keywordtype">bool</span>
@@ -278,7 +278,7 @@
 <a name="l00304"></a>00304     <span class="keywordtype">bool</span> is_fixed_length()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> (dataholder-&gt;fixed_length() &gt; 0); }
 <a name="l00305"></a>00305 
 <a name="l00306"></a>00306     <span class="keywordtype">bool</span> is_zero() <span class="keyword">const</span>;
-<a name="l00307"></a>00307     <span class="keyword">const</span> data_t <a class="code" href="namespaceboost_1_1xint.html#abbbf814dccf87b2293ab62976c15acac">abs</a>() <span class="keyword">const</span>;
+<a name="l00307"></a>00307     <span class="keyword">const</span> data_t <a class="code" href="namespaceboost_1_1xint.html#a22c29f49cfee8ee7bf809db665e1d9d7">abs</a>() <span class="keyword">const</span>;
 <a name="l00308"></a>00308     <span class="keyword">const</span> data_t negate() <span class="keyword">const</span>;
 <a name="l00309"></a>00309 
 <a name="l00310"></a>00310     <span class="keywordtype">void</span> extend(<span class="keywordtype">size_t</span> new_length = 0, <span class="keywordtype">bool</span> skip_mod = <span class="keyword">false</span>);
@@ -305,9 +305,9 @@
 <a name="l00338"></a>00338     data_t        operator--(<span class="keywordtype">int</span>); <span class="comment">// Postdecrement</span>
 <a name="l00339"></a>00339 
 <a name="l00340"></a>00340     <span class="keywordtype">bool</span>          operator!()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> is_zero(); }
-<a name="l00341"></a>00341     data_t        <a class="code" href="namespaceboost_1_1xint.html#aba68c6109d44641a0c77d949e0069d5e">operator-</a>() <span class="keyword">const</span>;
-<a name="l00342"></a>00342     data_t&amp;       <a class="code" href="namespaceboost_1_1xint.html#ab9b2e2c83946da247f379f4cbfed41cd">operator+</a>()       { <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
-<a name="l00343"></a>00343     <span class="keyword">const</span> data_t&amp; <a class="code" href="namespaceboost_1_1xint.html#ab9b2e2c83946da247f379f4cbfed41cd">operator+</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
+<a name="l00341"></a>00341     data_t        <a class="code" href="namespaceboost_1_1xint.html#af29f603561c73ae4dfefa314f854a9b9">operator-</a>() <span class="keyword">const</span>;
+<a name="l00342"></a>00342     data_t&amp;       <a class="code" href="namespaceboost_1_1xint.html#a1e894e947435664ba17c27a93c7325e1">operator+</a>()       { <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
+<a name="l00343"></a>00343     <span class="keyword">const</span> data_t&amp; <a class="code" href="namespaceboost_1_1xint.html#a1e894e947435664ba17c27a93c7325e1">operator+</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
 <a name="l00344"></a>00344     <span class="comment">// Fixed-size types can also implement operator~</span>
 <a name="l00345"></a>00345 
 <a name="l00346"></a>00346     data_t&amp;       operator+=(<span class="keyword">const</span> data_t b);
@@ -335,73 +335,73 @@
 <a name="l00369"></a>00369     <span class="keywordtype">bool</span> mod_requested_extend;
 <a name="l00370"></a>00370     <span class="keywordtype">bool</span> call_endmod_hook;
 <a name="l00371"></a>00371 
-<a name="l00372"></a>00372     <span class="keyword">friend</span> <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a985791f681a1afaeaf6a32c05ecc43e0">swap</a>(data_t&amp; p1, data_t&amp; p2);
+<a name="l00372"></a>00372     <span class="keyword">friend</span> <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a00ebb69a2c4e772f6ae9de36b4430d62">swap</a>(data_t&amp; p1, data_t&amp; p2);
 <a name="l00373"></a>00373 };
 <a name="l00374"></a>00374 
 <a name="l00375"></a>00375 <span class="comment">// Conversion functions</span>
-<a name="l00376"></a>00376 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt; T <a class="code" href="namespaceboost_1_1xint.html#a5fe32b763999fadb91a12f672693f801">to</a>(<span class="keyword">const</span> data_t n, <span class="keyword">typename</span>
+<a name="l00376"></a>00376 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt; T <a class="code" href="namespaceboost_1_1xint.html#addfb10ab763fc55ecd4123c9a93769a0">to</a>(<span class="keyword">const</span> data_t n, <span class="keyword">typename</span>
 <a name="l00377"></a>00377     boost::enable_if&lt;boost::is_integral&lt;T&gt; &gt;::type* = 0);
-<a name="l00378"></a>00378 std::string <a class="code" href="namespaceboost_1_1xint.html#abb495759cf044c873237e4635a902043">to_string</a>(<span class="keyword">const</span> data_t n, <span class="keywordtype">size_t</span> base = 10, <span class="keywordtype">bool</span> uppercase = <span class="keyword">false</span>);
-<a name="l00379"></a>00379 <a class="code" href="namespaceboost_1_1xint.html#aae3128529370506165793f2771834e58" title="The format for the binary representations of integers.">xint::binary_t</a> <a class="code" href="namespaceboost_1_1xint.html#a8df94bce4e819234572029a62d8c8681">to_binary</a>(<span class="keyword">const</span> data_t n, <span class="keywordtype">size_t</span> bits = 0);
+<a name="l00378"></a>00378 std::string <a class="code" href="namespaceboost_1_1xint.html#a6ae4ddf930587218746f08a2a5982746">to_string</a>(<span class="keyword">const</span> data_t n, <span class="keywordtype">size_t</span> base = 10, <span class="keywordtype">bool</span> uppercase = <span class="keyword">false</span>);
+<a name="l00379"></a>00379 <a class="code" href="namespaceboost_1_1xint.html#aae3128529370506165793f2771834e58" title="The format for the binary representations of integers.">xint::binary_t</a> <a class="code" href="namespaceboost_1_1xint.html#ac1c6eb0f3c5166761d81503fa68f4b78">to_binary</a>(<span class="keyword">const</span> data_t n, <span class="keywordtype">size_t</span> bits = 0);
 <a name="l00380"></a>00380 
 <a name="l00381"></a>00381 <span class="comment">// Bit-manipulation functions</span>
-<a name="l00382"></a>00382 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#ab5fac6813200ea2c299e3bb4c204be83">getbit</a>(<span class="keyword">const</span> data_t n, <span class="keywordtype">size_t</span> bit_index);
-<a name="l00383"></a>00383 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#ab30774cb5018703c4351a678a055c3f2">setbit</a>(data_t&amp; n, <span class="keywordtype">size_t</span> bit_index);
-<a name="l00384"></a>00384 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a6daa6fa41abc95511f073cf8225d6a80">clearbit</a>(data_t&amp; n, <span class="keywordtype">size_t</span> bit_index);
-<a name="l00385"></a>00385 <span class="keywordtype">size_t</span> <a class="code" href="namespaceboost_1_1xint.html#a2d0ae658d9b34cdf4d7427a02b359a3e">lowestbit</a>(<span class="keyword">const</span> data_t n, <span class="keywordtype">size_t</span> valueIfZero = 0);
-<a name="l00386"></a>00386 <span class="keywordtype">size_t</span> <a class="code" href="namespaceboost_1_1xint.html#a20eb9d41f9cfbce3136f00661d15b4cc">highestbit</a>(<span class="keyword">const</span> data_t n, <span class="keywordtype">size_t</span> valueIfZero = 0);
+<a name="l00382"></a>00382 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#ab9f07ea184f62952ec0bc51ae7f63946">getbit</a>(<span class="keyword">const</span> data_t n, <span class="keywordtype">size_t</span> bit_index);
+<a name="l00383"></a>00383 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a677abb914051570846048717ff0a7172">setbit</a>(data_t&amp; n, <span class="keywordtype">size_t</span> bit_index);
+<a name="l00384"></a>00384 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a05dfa039837daba29cfac939335b8364">clearbit</a>(data_t&amp; n, <span class="keywordtype">size_t</span> bit_index);
+<a name="l00385"></a>00385 <span class="keywordtype">size_t</span> <a class="code" href="namespaceboost_1_1xint.html#a88132067ca7e259160bcb7ed0b51e34f">lowestbit</a>(<span class="keyword">const</span> data_t n, <span class="keywordtype">size_t</span> valueIfZero = 0);
+<a name="l00386"></a>00386 <span class="keywordtype">size_t</span> <a class="code" href="namespaceboost_1_1xint.html#a4eb6d95cc77c2f1fe1e7c7c1bf81260b">highestbit</a>(<span class="keyword">const</span> data_t n, <span class="keywordtype">size_t</span> valueIfZero = 0);
 <a name="l00387"></a>00387 
 <a name="l00388"></a>00388 <span class="comment">// Random and prime number functions</span>
-<a name="l00389"></a>00389 <span class="keywordtype">int</span> <a class="code" href="namespaceboost_1_1xint.html#a8a188df259a5b64cf9a600a196ce8461">is_prime</a>(<span class="keyword">const</span> data_t n, <a class="code" href="namespaceboost_1_1xint.html#a48deb76c9c428a4b3a50177b1b0cb547" title="A callback function takes no parameters and returns a bool.">callback_t</a> callback = <a class="code" href="namespaceboost_1_1xint.html#a758d415a476a5eeed28dc6b5869b1696" title="An empty callback_t, used as a default parameter for some functions.">no_callback</a>);
+<a name="l00389"></a>00389 <span class="keywordtype">int</span> <a class="code" href="namespaceboost_1_1xint.html#a0f70e8b365600e14df023c83435a56ff">is_prime</a>(<span class="keyword">const</span> data_t n, <a class="code" href="namespaceboost_1_1xint.html#a48deb76c9c428a4b3a50177b1b0cb547" title="A callback function takes no parameters and returns a bool.">callback_t</a> callback = <a class="code" href="namespaceboost_1_1xint.html#a758d415a476a5eeed28dc6b5869b1696" title="An empty callback_t, used as a default parameter for some functions.">no_callback</a>);
 <a name="l00390"></a>00390 
 <a name="l00391"></a>00391 <span class="comment">// Comparison Operators</span>
-<a name="l00392"></a>00392 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a83fd4da3b3042634e9da37736a6370ca">operator&lt;</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2);
-<a name="l00393"></a>00393 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#afd7579141c2234e60ef97735d30d93c5">operator&gt;</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2);
-<a name="l00394"></a>00394 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#ab1fadb8af4f49d89c6923371fe8cf8e6">operator&lt;=</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2);
-<a name="l00395"></a>00395 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a35b4d25344f3365c8b898e40734167b8">operator&gt;=</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2);
-<a name="l00396"></a>00396 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a98729313d45436188620f68e22bbdb70">operator==</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2);
-<a name="l00397"></a>00397 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#aa8f75504b016bb521dfed18e78bb14d8">operator!=</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2);
+<a name="l00392"></a>00392 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a921174a41a68a6eef2584526590c18cf">operator&lt;</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2);
+<a name="l00393"></a>00393 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a492d33d92db8bf3b6b6221b8e1933228">operator&gt;</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2);
+<a name="l00394"></a>00394 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a980f9747bff82e9cf8744151fc91a108">operator&lt;=</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2);
+<a name="l00395"></a>00395 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#ab47039ec5d5e120f869cf2d5f8d63843">operator&gt;=</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2);
+<a name="l00396"></a>00396 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#ac9268bd409f006775f248d03213282d5">operator==</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2);
+<a name="l00397"></a>00397 <span class="keywordtype">bool</span> <a class="code" href="namespaceboost_1_1xint.html#a3ae00595a180a21d326ad50a072add0f">operator!=</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2);
 <a name="l00398"></a>00398 
 <a name="l00399"></a>00399 <span class="comment">// Mathematical operators</span>
-<a name="l00400"></a>00400 data_t <a class="code" href="namespaceboost_1_1xint.html#ab9b2e2c83946da247f379f4cbfed41cd">operator+</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2);
-<a name="l00401"></a>00401 data_t <a class="code" href="namespaceboost_1_1xint.html#aba68c6109d44641a0c77d949e0069d5e">operator-</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2);
-<a name="l00402"></a>00402 data_t <a class="code" href="namespaceboost_1_1xint.html#a72b3b1b110612e99609f0c98d69cf2bf">operator*</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2);
-<a name="l00403"></a>00403 data_t <a class="code" href="namespaceboost_1_1xint.html#a8004420023afd5d01cd85879a158f9db">operator/</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2);
-<a name="l00404"></a>00404 data_t <a class="code" href="namespaceboost_1_1xint.html#addd9f25375d6bb0f38b902016e0edfd8">operator%</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2);
+<a name="l00400"></a>00400 data_t <a class="code" href="namespaceboost_1_1xint.html#a1e894e947435664ba17c27a93c7325e1">operator+</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2);
+<a name="l00401"></a>00401 data_t <a class="code" href="namespaceboost_1_1xint.html#af29f603561c73ae4dfefa314f854a9b9">operator-</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2);
+<a name="l00402"></a>00402 data_t <a class="code" href="namespaceboost_1_1xint.html#af877fa3d7e129eb0ea0d873396868723">operator*</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2);
+<a name="l00403"></a>00403 data_t <a class="code" href="namespaceboost_1_1xint.html#a2606613cee80fbd4fd17100d6d0e09b9">operator/</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2);
+<a name="l00404"></a>00404 data_t <a class="code" href="namespaceboost_1_1xint.html#a3b804d111a60509665d6a7227039aee9">operator%</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2);
 <a name="l00405"></a>00405 
 <a name="l00406"></a>00406 <span class="comment">// Bitwise operators</span>
-<a name="l00407"></a>00407 data_t <a class="code" href="namespaceboost_1_1xint.html#a1620277cb71145a88d6755c9b6d55900">operator&amp;</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2);
-<a name="l00408"></a>00408 data_t <a class="code" href="namespaceboost_1_1xint.html#aa3c76fd1028d68d389ed0ec99af9dce7">operator|</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2);
-<a name="l00409"></a>00409 data_t <a class="code" href="namespaceboost_1_1xint.html#a136bb0995f8e93a65fe92944b4865d16">operator^</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2);
+<a name="l00407"></a>00407 data_t <a class="code" href="namespaceboost_1_1xint.html#ad86517e5d3b5826470694001075de255">operator&amp;</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2);
+<a name="l00408"></a>00408 data_t <a class="code" href="namespaceboost_1_1xint.html#a2e0a49149f74db4161870090d948e817">operator|</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2);
+<a name="l00409"></a>00409 data_t <a class="code" href="namespaceboost_1_1xint.html#a964396cc2b187769a3f45a7b348ce60c">operator^</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2);
 <a name="l00410"></a>00410 
 <a name="l00411"></a>00411 <span class="comment">// Shift operators</span>
-<a name="l00412"></a>00412 data_t <a class="code" href="namespaceboost_1_1xint.html#a62a34e58a8eb03bca43b36723576e933">operator&lt;&lt;</a>(<span class="keyword">const</span> data_t n, <span class="keywordtype">size_t</span> by);
-<a name="l00413"></a>00413 data_t <a class="code" href="namespaceboost_1_1xint.html#a469e97ebec08482ffe232f1e9ac22d26">operator&gt;&gt;</a>(<span class="keyword">const</span> data_t n, <span class="keywordtype">size_t</span> by);
+<a name="l00412"></a>00412 data_t <a class="code" href="namespaceboost_1_1xint.html#a21f7b0cbf5d79162f157c107873db431">operator&lt;&lt;</a>(<span class="keyword">const</span> data_t n, <span class="keywordtype">size_t</span> by);
+<a name="l00413"></a>00413 data_t <a class="code" href="namespaceboost_1_1xint.html#a177570efda84175d3ea979894f63e5b8">operator&gt;&gt;</a>(<span class="keyword">const</span> data_t n, <span class="keywordtype">size_t</span> by);
 <a name="l00414"></a>00414 
 <a name="l00415"></a>00415 <span class="comment">// Miscellaneous</span>
-<a name="l00416"></a>00416 data_t <a class="code" href="namespaceboost_1_1xint.html#abbbf814dccf87b2293ab62976c15acac">abs</a>(<span class="keyword">const</span> data_t n);
-<a name="l00417"></a>00417 <span class="keywordtype">size_t</span> <a class="code" href="namespaceboost_1_1xint.html#abe2baf8e6f99d5b3ca9cfb5d530ced30">log2</a>(<span class="keyword">const</span> data_t n);
-<a name="l00418"></a>00418 <span class="keywordtype">int</span> <a class="code" href="namespaceboost_1_1xint.html#afb9c5c79428eb4ccac0b562fee65d0b8">compare</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2, <span class="keywordtype">bool</span> ignoresign = <span class="keyword">false</span>);
+<a name="l00416"></a>00416 data_t <a class="code" href="namespaceboost_1_1xint.html#a22c29f49cfee8ee7bf809db665e1d9d7">abs</a>(<span class="keyword">const</span> data_t n);
+<a name="l00417"></a>00417 <span class="keywordtype">size_t</span> <a class="code" href="namespaceboost_1_1xint.html#a9d9b4f302607bcf96bd2ab2c3145f453">log2</a>(<span class="keyword">const</span> data_t n);
+<a name="l00418"></a>00418 <span class="keywordtype">int</span> <a class="code" href="namespaceboost_1_1xint.html#a39a3143ef1f03a35f2b7409b365fc853">compare</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2, <span class="keywordtype">bool</span> ignoresign = <span class="keyword">false</span>);
 <a name="l00419"></a>00419 
-<a name="l00420"></a>00420 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#ae44adcf3207860b998256c60357e1cc0">pow</a>(data_t&amp; target, <span class="keyword">const</span> data_t n, <span class="keyword">const</span> data_t exponent);
+<a name="l00420"></a>00420 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a29a7d787472df22c7c554af6588e9102">pow</a>(data_t&amp; target, <span class="keyword">const</span> data_t n, <span class="keyword">const</span> data_t exponent);
 <a name="l00421"></a>00421 <span class="keywordtype">void</span> pow2(data_t&amp; target, <span class="keywordtype">size_t</span> exponent);
 <a name="l00422"></a>00422 <span class="keywordtype">void</span> factorial(data_t&amp; target, <span class="keywordtype">size_t</span> n);
 <a name="l00423"></a>00423 
-<a name="l00424"></a>00424 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a6a4d8e4e7cb423551c8ef184ea0e4900">sqrt</a>(data_t&amp; target, <span class="keyword">const</span> data_t n);
+<a name="l00424"></a>00424 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a3f266530ae26fd9553a7b965fa1db2ea">sqrt</a>(data_t&amp; target, <span class="keyword">const</span> data_t n);
 <a name="l00425"></a>00425 
-<a name="l00426"></a>00426 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#ab301e480ed5f042f3a94cf2b11a2c8d3">gcd</a>(data_t&amp; target, <span class="keyword">const</span> data_t num1, <span class="keyword">const</span> data_t num2);
-<a name="l00427"></a>00427 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a6556ca65dfd925a0dc653922356bfc6d">lcm</a>(data_t&amp; target, <span class="keyword">const</span> data_t num1, <span class="keyword">const</span> data_t num2);
-<a name="l00428"></a>00428 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a21e6936385f6b647524c925c8c80b9fe">invmod</a>(data_t&amp; target, <span class="keyword">const</span> data_t n, <span class="keyword">const</span> data_t modulus);
+<a name="l00426"></a>00426 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a808dafe43afa6f06a5a44b0e956b885a">gcd</a>(data_t&amp; target, <span class="keyword">const</span> data_t num1, <span class="keyword">const</span> data_t num2);
+<a name="l00427"></a>00427 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a0ef1c4af129617e9d5f01f96edf2b867">lcm</a>(data_t&amp; target, <span class="keyword">const</span> data_t num1, <span class="keyword">const</span> data_t num2);
+<a name="l00428"></a>00428 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#ac628e1a39065df013c263455992c00eb">invmod</a>(data_t&amp; target, <span class="keyword">const</span> data_t n, <span class="keyword">const</span> data_t modulus);
 <a name="l00429"></a>00429 
-<a name="l00430"></a>00430 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a954551199dbef1e09eb40c4eda947edc">mulmod</a>(data_t&amp; target, <span class="keyword">const</span> data_t n, <span class="keyword">const</span> data_t by, <span class="keyword">const</span> data_t
+<a name="l00430"></a>00430 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a08936f9fc3d9b799f98604bedefb1ee8">mulmod</a>(data_t&amp; target, <span class="keyword">const</span> data_t n, <span class="keyword">const</span> data_t by, <span class="keyword">const</span> data_t
 <a name="l00431"></a>00431     modulus);
-<a name="l00432"></a>00432 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#afb9af493fcf2fdda1eb1a44482df3bf4">sqrmod</a>(data_t&amp; target, <span class="keyword">const</span> data_t n, <span class="keyword">const</span> data_t modulus);
-<a name="l00433"></a>00433 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#ae827f2e153ca6eccbe3367afb2a6f2c0">powmod</a>(data_t&amp; target, <span class="keyword">const</span> data_t n, <span class="keyword">const</span> data_t exponent, <span class="keyword">const</span> data_t
+<a name="l00432"></a>00432 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a250379d4753bbd26002eac066114b756">sqrmod</a>(data_t&amp; target, <span class="keyword">const</span> data_t n, <span class="keyword">const</span> data_t modulus);
+<a name="l00433"></a>00433 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a3df211c7086c4652a7e12492d7d103f7">powmod</a>(data_t&amp; target, <span class="keyword">const</span> data_t n, <span class="keyword">const</span> data_t exponent, <span class="keyword">const</span> data_t
 <a name="l00434"></a>00434     modulus, <span class="keywordtype">bool</span> noMontgomery=<span class="keyword">false</span>);
 <a name="l00435"></a>00435 
-<a name="l00436"></a>00436 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#abe0193015e6085246d5a3b5d5193f692">square</a>(data_t&amp; target, <span class="keyword">const</span> data_t n);
-<a name="l00437"></a>00437 data_t::divide_t <a class="code" href="namespaceboost_1_1xint.html#aafccc57266902713de78a2ac7eb9b37c">divide</a>(<span class="keyword">const</span> data_t d1, <span class="keyword">const</span> data_t d2);
-<a name="l00438"></a>00438 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#aafccc57266902713de78a2ac7eb9b37c">divide</a>(data_t&amp; qtarget, data_t&amp; rtarget, <span class="keyword">const</span> data_t d1, <span class="keyword">const</span> data_t d2);
+<a name="l00436"></a>00436 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#ac3f13e684b487865506362e4b382bc11">square</a>(data_t&amp; target, <span class="keyword">const</span> data_t n);
+<a name="l00437"></a>00437 data_t::divide_t <a class="code" href="namespaceboost_1_1xint.html#a729653da022f22652cd5aa2d29f0c8fd">divide</a>(<span class="keyword">const</span> data_t d1, <span class="keyword">const</span> data_t d2);
+<a name="l00438"></a>00438 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a729653da022f22652cd5aa2d29f0c8fd">divide</a>(data_t&amp; qtarget, data_t&amp; rtarget, <span class="keyword">const</span> data_t d1, <span class="keyword">const</span> data_t d2);
 <a name="l00439"></a>00439 
 <a name="l00440"></a>00440 <span class="keywordtype">size_t</span> log10_bits(<span class="keywordtype">size_t</span> bits);
 <a name="l00441"></a>00441 
@@ -447,14 +447,14 @@
 <a name="l00484"></a>00484 }
 <a name="l00485"></a>00485 
 <a name="l00486"></a>00486 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00487"></a>00487 <span class="keywordtype">size_t</span> <a class="code" href="namespaceboost_1_1xint.html#abe2baf8e6f99d5b3ca9cfb5d530ced30">log2</a>(<span class="keyword">const</span> T n,
+<a name="l00487"></a>00487 <span class="keywordtype">size_t</span> <a class="code" href="namespaceboost_1_1xint.html#a9d9b4f302607bcf96bd2ab2c3145f453">log2</a>(<span class="keyword">const</span> T n,
 <a name="l00488"></a>00488     <span class="keyword">typename</span> boost::enable_if&lt;boost::is_integral&lt;T&gt; &gt;::type* = 0)
 <a name="l00489"></a>00489 {
 <a name="l00490"></a>00490     <span class="keywordflow">return</span> log2_helper(n);
 <a name="l00491"></a>00491 }
 <a name="l00492"></a>00492 
 <a name="l00493"></a>00493 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00494"></a>00494 T <a class="code" href="namespaceboost_1_1xint.html#a5fe32b763999fadb91a12f672693f801">to</a>(<span class="keyword">const</span> data_t n, <span class="keyword">typename</span> boost::enable_if&lt;boost::is_integral&lt;T&gt; &gt;::type*) {
+<a name="l00494"></a>00494 T <a class="code" href="namespaceboost_1_1xint.html#addfb10ab763fc55ecd4123c9a93769a0">to</a>(<span class="keyword">const</span> data_t n, <span class="keyword">typename</span> boost::enable_if&lt;boost::is_integral&lt;T&gt; &gt;::type*) {
 <a name="l00495"></a>00495     <span class="keyword">using</span> std::numeric_limits;
 <a name="l00496"></a>00496 
 <a name="l00497"></a>00497     <span class="comment">// We&#39;ve got to use an unfixed manager, rather than n&#39;s manager, because</span>
@@ -478,7 +478,7 @@
 <a name="l00515"></a>00515 }
 <a name="l00516"></a>00516 
 <a name="l00517"></a>00517 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> <span class="keywordtype">char</span>T, <span class="keyword">typename</span> traits&gt;
-<a name="l00518"></a>00518 <span class="keyword">inline</span> std::basic_ostream&lt;charT,traits&gt;&amp; <a class="code" href="namespaceboost_1_1xint.html#a62a34e58a8eb03bca43b36723576e933">operator&lt;&lt;</a>(std::basic_ostream&lt;charT,
+<a name="l00518"></a>00518 <span class="keyword">inline</span> std::basic_ostream&lt;charT,traits&gt;&amp; <a class="code" href="namespaceboost_1_1xint.html#a21f7b0cbf5d79162f157c107873db431">operator&lt;&lt;</a>(std::basic_ostream&lt;charT,
 <a name="l00519"></a>00519     traits&gt;&amp; out, <span class="keyword">const</span> data_t n)
 <a name="l00520"></a>00520 {
 <a name="l00521"></a>00521     <span class="keywordtype">int</span> base=((out.flags() &amp; std::ios::hex) ? 16
@@ -496,15 +496,15 @@
 <a name="l00533"></a>00533         <span class="keywordflow">else</span> <span class="keywordflow">if</span> (base==16) out &lt;&lt; <span class="stringliteral">&quot;0x&quot;</span>;
 <a name="l00534"></a>00534         <span class="keywordflow">else</span> <span class="keywordflow">if</span> (base==8) out &lt;&lt; <span class="stringliteral">&quot;0&quot;</span>;
 <a name="l00535"></a>00535 
-<a name="l00536"></a>00536         out &lt;&lt; <a class="code" href="namespaceboost_1_1xint.html#abb495759cf044c873237e4635a902043">to_string</a>(n.abs(), base, upperCase);
+<a name="l00536"></a>00536         out &lt;&lt; <a class="code" href="namespaceboost_1_1xint.html#a6ae4ddf930587218746f08a2a5982746">to_string</a>(n.abs(), base, upperCase);
 <a name="l00537"></a>00537     } <span class="keywordflow">else</span> {
-<a name="l00538"></a>00538         out &lt;&lt; <a class="code" href="namespaceboost_1_1xint.html#abb495759cf044c873237e4635a902043">to_string</a>(n, base, upperCase);
+<a name="l00538"></a>00538         out &lt;&lt; <a class="code" href="namespaceboost_1_1xint.html#a6ae4ddf930587218746f08a2a5982746">to_string</a>(n, base, upperCase);
 <a name="l00539"></a>00539     }
 <a name="l00540"></a>00540     <span class="keywordflow">return</span> out;
 <a name="l00541"></a>00541 }
 <a name="l00542"></a>00542 
 <a name="l00543"></a>00543 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> <span class="keywordtype">char</span>T, <span class="keyword">typename</span> traits&gt;
-<a name="l00544"></a>00544 <span class="keyword">inline</span> std::basic_istream&lt;charT,traits&gt;&amp; <a class="code" href="namespaceboost_1_1xint.html#a469e97ebec08482ffe232f1e9ac22d26">operator&gt;&gt;</a>(std::basic_istream&lt;charT,
+<a name="l00544"></a>00544 <span class="keyword">inline</span> std::basic_istream&lt;charT,traits&gt;&amp; <a class="code" href="namespaceboost_1_1xint.html#a177570efda84175d3ea979894f63e5b8">operator&gt;&gt;</a>(std::basic_istream&lt;charT,
 <a name="l00545"></a>00545     traits&gt;&amp; in, data_t&amp; n)
 <a name="l00546"></a>00546 {
 <a name="l00547"></a>00547     <span class="keywordtype">int</span> hex=(in.flags() &amp; std::ios::hex) ? 1 : 0;
@@ -585,50 +585,53 @@
 <a name="l00624"></a>00624     detail::data_t data;
 <a name="l00625"></a>00625 <span class="preprocessor">    #endif</span>
 <a name="l00626"></a>00626 <span class="preprocessor"></span>};
-<a name="l00627"></a>00627 } <span class="comment">// namespace xint</span>
-<a name="l00628"></a>00628 } <span class="comment">// namespace boost</span>
+<a name="l00627"></a>00627 
+<a name="l00628"></a><a class="code" href="namespaceboost_1_1xint.html#ab256530d9916860983abdb6f0c6fad63">00628</a> <span class="keyword">typedef</span> <span class="keywordtype">size_t</span> <a class="code" href="namespaceboost_1_1xint.html#ab256530d9916860983abdb6f0c6fad63">bitsize_t</a>;
 <a name="l00629"></a>00629 
-<a name="l00630"></a>00630 <span class="preprocessor">#ifndef BOOST_XINT_COMPILED_LIB</span>
-<a name="l00631"></a>00631 <span class="preprocessor"></span><span class="preprocessor">    #include &quot;../exceptions.hpp&quot;</span>
-<a name="l00632"></a>00632 <span class="preprocessor">    #include &quot;../random.hpp&quot;</span>
-<a name="l00633"></a>00633 <span class="preprocessor">    #include &quot;<a class="code" href="bitqueue_8hpp.html" title="Contains the bitqueue_t class, used internally.">bitqueue.hpp</a>&quot;</span>
-<a name="l00634"></a>00634 <span class="preprocessor">    #ifdef _WIN32</span>
-<a name="l00635"></a>00635 <span class="preprocessor"></span><span class="preprocessor">        #define STRICT</span>
-<a name="l00636"></a>00636 <span class="preprocessor"></span><span class="preprocessor">        #define WIN32_LEAN_AND_MEAN</span>
-<a name="l00637"></a>00637 <span class="preprocessor"></span><span class="preprocessor">        #define NOMINMAX</span>
-<a name="l00638"></a>00638 <span class="preprocessor"></span><span class="preprocessor">        #include &lt;windows.h&gt;</span>
-<a name="l00639"></a>00639 <span class="preprocessor">    #endif</span>
-<a name="l00640"></a>00640 <span class="preprocessor"></span><span class="preprocessor">    #include &lt;sstream&gt;</span>
-<a name="l00641"></a>00641 <span class="preprocessor">    #include &lt;fstream&gt;</span>
-<a name="l00642"></a>00642 <span class="preprocessor">    #include &lt;ctime&gt;</span>
-<a name="l00643"></a>00643 <span class="preprocessor">    #include &lt;boost/scoped_array.hpp&gt;</span>
-<a name="l00644"></a><a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">00644</a> <span class="preprocessor">    #define BOOST_XINT_INLINE inline</span>
-<a name="l00645"></a>00645 <span class="preprocessor"></span>
-<a name="l00646"></a><a class="code" href="internals_8hpp.html#a7621c4fd1f5760b878ca8f5e5e6bb4c2">00646</a> <span class="preprocessor">    #define BOOST_XINT_FROM_HEADER</span>
-<a name="l00647"></a>00647 <span class="preprocessor"></span><span class="preprocessor">    #include &quot;<a class="code" href="data__t_8cpp.html" title="Contains the function definitions for data_t and raw_digits_t.">data_t.cpp</a>&quot;</span>
-<a name="l00648"></a>00648 <span class="preprocessor">    #include &quot;<a class="code" href="compare_8cpp.html" title="Contains the definitions for the comparison functions.">compare.cpp</a>&quot;</span>
-<a name="l00649"></a>00649 <span class="preprocessor">    #include &quot;<a class="code" href="shift_8cpp.html" title="Contains the bit-shifting function definitions.">shift.cpp</a>&quot;</span>
-<a name="l00650"></a>00650 <span class="preprocessor">    #include &quot;<a class="code" href="bitfunctions_8cpp.html" title="Contains the definitions for the bit-manipulation functions.">bitfunctions.cpp</a>&quot;</span>
-<a name="l00651"></a>00651 <span class="preprocessor">    #include &quot;<a class="code" href="andorxor_8cpp.html" title="Contains the functions for ANDing, ORing, and XORing.">andorxor.cpp</a>&quot;</span>
-<a name="l00652"></a>00652 <span class="preprocessor">    #include &quot;<a class="code" href="addsubtract_8cpp.html" title="Contains the definitions of the addition and subtraction functions.">addsubtract.cpp</a>&quot;</span>
-<a name="l00653"></a>00653 <span class="preprocessor">    #include &quot;<a class="code" href="multiply_8cpp.html" title="Contains the multiplication and squaring functions.">multiply.cpp</a>&quot;</span>
-<a name="l00654"></a>00654 <span class="preprocessor">    #include &quot;<a class="code" href="divide_8cpp.html" title="Contains the definitions of the divide function, and its supporting functions.">divide.cpp</a>&quot;</span>
-<a name="l00655"></a>00655 <span class="preprocessor">    #include &quot;<a class="code" href="powers_8cpp.html" title="Contains functions related to powers of a number.">powers.cpp</a>&quot;</span>
-<a name="l00656"></a>00656 <span class="preprocessor">    #include &quot;<a class="code" href="roots_8cpp.html" title="Contains the square-root function definition, and any future root-related ones.">roots.cpp</a>&quot;</span>
-<a name="l00657"></a>00657 <span class="preprocessor">    #include &quot;<a class="code" href="monty_8cpp.html" title="Contains the Montgomery Reduction functions.">monty.cpp</a>&quot;</span>
-<a name="l00658"></a>00658 <span class="preprocessor">    #include &quot;<a class="code" href="modular_8cpp.html" title="Contains the modular math functions.">modular.cpp</a>&quot;</span>
-<a name="l00659"></a>00659 <span class="preprocessor">    #include &quot;<a class="code" href="gcd_8cpp.html" title="Contains functions using the Greatest Common Denominator algorithm.">gcd.cpp</a>&quot;</span>
-<a name="l00660"></a>00660 <span class="preprocessor">    #include &quot;<a class="code" href="convert_8cpp.html" title="Contains the conversion functions.">convert.cpp</a>&quot;</span>
-<a name="l00661"></a>00661 <span class="preprocessor">    #include &quot;<a class="code" href="prime_8cpp.html" title="Contains the function definitions for the prime number functions.">prime.cpp</a>&quot;</span>
-<a name="l00662"></a>00662 <span class="preprocessor">    #include &quot;<a class="code" href="random_8cpp.html" title="Contains the function definitions for the random number functions.">random.cpp</a>&quot;</span>
-<a name="l00663"></a>00663 <span class="preprocessor">    #undef BOOST_XINT_FROM_HEADER</span>
-<a name="l00664"></a>00664 <span class="preprocessor"></span><span class="preprocessor">#else</span>
-<a name="l00665"></a>00665 <span class="preprocessor"></span><span class="preprocessor">    #define BOOST_XINT_INLINE</span>
-<a name="l00666"></a>00666 <span class="preprocessor"></span><span class="preprocessor">#endif // BOOST_XINT_COMPILED_LIB</span>
-<a name="l00667"></a>00667 <span class="preprocessor"></span>
-<a name="l00668"></a>00668 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_INTERNALS_HPP</span>
+<a name="l00630"></a>00630 } <span class="comment">// namespace xint</span>
+<a name="l00631"></a>00631 } <span class="comment">// namespace boost</span>
+<a name="l00632"></a>00632 
+<a name="l00633"></a>00633 <span class="preprocessor">#ifndef BOOST_XINT_COMPILED_LIB</span>
+<a name="l00634"></a>00634 <span class="preprocessor"></span><span class="preprocessor">    #include &quot;../exceptions.hpp&quot;</span>
+<a name="l00635"></a>00635 <span class="preprocessor">    #include &quot;../random.hpp&quot;</span>
+<a name="l00636"></a>00636 <span class="preprocessor">    #include &quot;<a class="code" href="bitqueue_8hpp.html" title="Contains the bitqueue_t class, used internally.">bitqueue.hpp</a>&quot;</span>
+<a name="l00637"></a>00637 <span class="preprocessor">    #ifdef _WIN32</span>
+<a name="l00638"></a>00638 <span class="preprocessor"></span><span class="preprocessor">        #define STRICT</span>
+<a name="l00639"></a>00639 <span class="preprocessor"></span><span class="preprocessor">        #define WIN32_LEAN_AND_MEAN</span>
+<a name="l00640"></a>00640 <span class="preprocessor"></span><span class="preprocessor">        #define NOMINMAX</span>
+<a name="l00641"></a>00641 <span class="preprocessor"></span><span class="preprocessor">        #include &lt;windows.h&gt;</span>
+<a name="l00642"></a>00642 <span class="preprocessor">    #endif</span>
+<a name="l00643"></a>00643 <span class="preprocessor"></span><span class="preprocessor">    #include &lt;sstream&gt;</span>
+<a name="l00644"></a>00644 <span class="preprocessor">    #include &lt;fstream&gt;</span>
+<a name="l00645"></a>00645 <span class="preprocessor">    #include &lt;ctime&gt;</span>
+<a name="l00646"></a>00646 <span class="preprocessor">    #include &lt;boost/scoped_array.hpp&gt;</span>
+<a name="l00647"></a><a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">00647</a> <span class="preprocessor">    #define BOOST_XINT_INLINE inline</span>
+<a name="l00648"></a>00648 <span class="preprocessor"></span>
+<a name="l00649"></a><a class="code" href="internals_8hpp.html#a7621c4fd1f5760b878ca8f5e5e6bb4c2">00649</a> <span class="preprocessor">    #define BOOST_XINT_FROM_HEADER</span>
+<a name="l00650"></a>00650 <span class="preprocessor"></span><span class="preprocessor">    #include &quot;<a class="code" href="data__t_8cpp.html" title="Contains the function definitions for data_t and raw_digits_t.">data_t.cpp</a>&quot;</span>
+<a name="l00651"></a>00651 <span class="preprocessor">    #include &quot;<a class="code" href="compare_8cpp.html" title="Contains the definitions for the comparison functions.">compare.cpp</a>&quot;</span>
+<a name="l00652"></a>00652 <span class="preprocessor">    #include &quot;<a class="code" href="shift_8cpp.html" title="Contains the bit-shifting function definitions.">shift.cpp</a>&quot;</span>
+<a name="l00653"></a>00653 <span class="preprocessor">    #include &quot;<a class="code" href="bitfunctions_8cpp.html" title="Contains the definitions for the bit-manipulation functions.">bitfunctions.cpp</a>&quot;</span>
+<a name="l00654"></a>00654 <span class="preprocessor">    #include &quot;<a class="code" href="andorxor_8cpp.html" title="Contains the functions for ANDing, ORing, and XORing.">andorxor.cpp</a>&quot;</span>
+<a name="l00655"></a>00655 <span class="preprocessor">    #include &quot;<a class="code" href="addsubtract_8cpp.html" title="Contains the definitions of the addition and subtraction functions.">addsubtract.cpp</a>&quot;</span>
+<a name="l00656"></a>00656 <span class="preprocessor">    #include &quot;<a class="code" href="multiply_8cpp.html" title="Contains the multiplication and squaring functions.">multiply.cpp</a>&quot;</span>
+<a name="l00657"></a>00657 <span class="preprocessor">    #include &quot;<a class="code" href="divide_8cpp.html" title="Contains the definitions of the divide function, and its supporting functions.">divide.cpp</a>&quot;</span>
+<a name="l00658"></a>00658 <span class="preprocessor">    #include &quot;<a class="code" href="powers_8cpp.html" title="Contains functions related to powers of a number.">powers.cpp</a>&quot;</span>
+<a name="l00659"></a>00659 <span class="preprocessor">    #include &quot;<a class="code" href="roots_8cpp.html" title="Contains the square-root function definition, and any future root-related ones.">roots.cpp</a>&quot;</span>
+<a name="l00660"></a>00660 <span class="preprocessor">    #include &quot;<a class="code" href="monty_8cpp.html" title="Contains the Montgomery Reduction functions.">monty.cpp</a>&quot;</span>
+<a name="l00661"></a>00661 <span class="preprocessor">    #include &quot;<a class="code" href="modular_8cpp.html" title="Contains the modular math functions.">modular.cpp</a>&quot;</span>
+<a name="l00662"></a>00662 <span class="preprocessor">    #include &quot;<a class="code" href="gcd_8cpp.html" title="Contains functions using the Greatest Common Denominator algorithm.">gcd.cpp</a>&quot;</span>
+<a name="l00663"></a>00663 <span class="preprocessor">    #include &quot;<a class="code" href="convert_8cpp.html" title="Contains the conversion functions.">convert.cpp</a>&quot;</span>
+<a name="l00664"></a>00664 <span class="preprocessor">    #include &quot;<a class="code" href="prime_8cpp.html" title="Contains the function definitions for the prime number functions.">prime.cpp</a>&quot;</span>
+<a name="l00665"></a>00665 <span class="preprocessor">    #include &quot;<a class="code" href="random_8cpp.html" title="Contains the function definitions for the random number functions.">random.cpp</a>&quot;</span>
+<a name="l00666"></a>00666 <span class="preprocessor">    #undef BOOST_XINT_FROM_HEADER</span>
+<a name="l00667"></a>00667 <span class="preprocessor"></span><span class="preprocessor">#else</span>
+<a name="l00668"></a>00668 <span class="preprocessor"></span><span class="preprocessor">    #define BOOST_XINT_INLINE</span>
+<a name="l00669"></a>00669 <span class="preprocessor"></span><span class="preprocessor">#endif // BOOST_XINT_COMPILED_LIB</span>
+<a name="l00670"></a>00670 <span class="preprocessor"></span>
+<a name="l00671"></a>00671 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_INTERNALS_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Wed Jun 2 13:37:02 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Jun 3 00:00:36 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

@@ -71,10 +71,10 @@
 <a name="l00053"></a>00053 
 <a name="l00054"></a>00054                 <span class="keywordflow">if</span> (t3.is_even() || u3 &lt; t3) {
 <a name="l00055"></a>00055                     <span class="comment">// Swap the u&#39;s with the t&#39;s</span>
-<a name="l00056"></a>00056                     <span class="keyword">using</span> <a class="code" href="namespaceboost_1_1xint.html#a985791f681a1afaeaf6a32c05ecc43e0">std::swap</a>;
-<a name="l00057"></a>00057                     <a class="code" href="namespaceboost_1_1xint.html#a985791f681a1afaeaf6a32c05ecc43e0">swap</a>(u1, t1);
-<a name="l00058"></a>00058                     <a class="code" href="namespaceboost_1_1xint.html#a985791f681a1afaeaf6a32c05ecc43e0">swap</a>(u2, t2);
-<a name="l00059"></a>00059                     <a class="code" href="namespaceboost_1_1xint.html#a985791f681a1afaeaf6a32c05ecc43e0">swap</a>(u3, t3);
+<a name="l00056"></a>00056                     <span class="keyword">using</span> <a class="code" href="namespaceboost_1_1xint.html#a00ebb69a2c4e772f6ae9de36b4430d62">std::swap</a>;
+<a name="l00057"></a>00057                     <a class="code" href="namespaceboost_1_1xint.html#a00ebb69a2c4e772f6ae9de36b4430d62">swap</a>(u1, t1);
+<a name="l00058"></a>00058                     <a class="code" href="namespaceboost_1_1xint.html#a00ebb69a2c4e772f6ae9de36b4430d62">swap</a>(u2, t2);
+<a name="l00059"></a>00059                     <a class="code" href="namespaceboost_1_1xint.html#a00ebb69a2c4e772f6ae9de36b4430d62">swap</a>(u3, t3);
 <a name="l00060"></a>00060                 }
 <a name="l00061"></a>00061             } <span class="keywordflow">while</span> (u3.is_even());
 <a name="l00062"></a>00062 
@@ -95,7 +95,7 @@
 <a name="l00077"></a>00077     data_t u1, u2, u3;
 <a name="l00078"></a>00078 };
 <a name="l00079"></a>00079 
-<a name="l00080"></a>00080 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#ab301e480ed5f042f3a94cf2b11a2c8d3">gcd</a>(data_t&amp; target, <span class="keyword">const</span> data_t num1, <span class="keyword">const</span> data_t num2)
+<a name="l00080"></a>00080 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a808dafe43afa6f06a5a44b0e956b885a">gcd</a>(data_t&amp; target, <span class="keyword">const</span> data_t num1, <span class="keyword">const</span> data_t num2)
 <a name="l00081"></a>00081 {
 <a name="l00082"></a>00082     target.beginmod();
 <a name="l00083"></a>00083     <span class="keywordflow">if</span> (num1.is_zero() &amp;&amp; num2.is_zero()) {
@@ -108,7 +108,7 @@
 <a name="l00090"></a>00090         data_t n(num1, <span class="keyword">false</span>), m(num2, <span class="keyword">false</span>);
 <a name="l00091"></a>00091 
 <a name="l00092"></a>00092         <span class="keywordtype">size_t</span> k = 0;
-<a name="l00093"></a>00093         <span class="keywordflow">if</span> (!<a class="code" href="namespaceboost_1_1xint.html#ab5fac6813200ea2c299e3bb4c204be83">getbit</a>(n, k) &amp;&amp; !<a class="code" href="namespaceboost_1_1xint.html#ab5fac6813200ea2c299e3bb4c204be83">getbit</a>(m, k)) ++k;
+<a name="l00093"></a>00093         <span class="keywordflow">if</span> (!<a class="code" href="namespaceboost_1_1xint.html#ab9f07ea184f62952ec0bc51ae7f63946">getbit</a>(n, k) &amp;&amp; !<a class="code" href="namespaceboost_1_1xint.html#ab9f07ea184f62952ec0bc51ae7f63946">getbit</a>(m, k)) ++k;
 <a name="l00094"></a>00094         <span class="keywordflow">if</span> (k != 0) { n &gt;&gt;= k; m &gt;&gt;= k; }
 <a name="l00095"></a>00095 
 <a name="l00096"></a>00096         gcd_core core(n, m);
@@ -123,13 +123,13 @@
 <a name="l00105"></a>00105     target.endmod();
 <a name="l00106"></a>00106 }
 <a name="l00107"></a>00107 
-<a name="l00108"></a>00108 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a6556ca65dfd925a0dc653922356bfc6d">lcm</a>(data_t&amp; target, <span class="keyword">const</span> data_t num1, <span class="keyword">const</span> data_t num2)
+<a name="l00108"></a>00108 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a0ef1c4af129617e9d5f01f96edf2b867">lcm</a>(data_t&amp; target, <span class="keyword">const</span> data_t num1, <span class="keyword">const</span> data_t num2)
 <a name="l00109"></a>00109 {
 <a name="l00110"></a>00110     <span class="keywordflow">if</span> (num1.is_zero() || num2.is_zero()) {
 <a name="l00111"></a>00111         target.set(0);
 <a name="l00112"></a>00112     } <span class="keywordflow">else</span> {
 <a name="l00113"></a>00113         data_t common(target.new_holder());
-<a name="l00114"></a>00114         <a class="code" href="namespaceboost_1_1xint.html#ab301e480ed5f042f3a94cf2b11a2c8d3">gcd</a>(common, num1, num2);
+<a name="l00114"></a>00114         <a class="code" href="namespaceboost_1_1xint.html#a808dafe43afa6f06a5a44b0e956b885a">gcd</a>(common, num1, num2);
 <a name="l00115"></a>00115 
 <a name="l00116"></a>00116         target.beginmod();
 <a name="l00117"></a>00117         target.duplicate_data(num1);
@@ -140,14 +140,14 @@
 <a name="l00122"></a>00122     }
 <a name="l00123"></a>00123 }
 <a name="l00124"></a>00124 
-<a name="l00127"></a>00127 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a21e6936385f6b647524c925c8c80b9fe">invmod</a>(data_t&amp; target, <span class="keyword">const</span> data_t n, <span class="keyword">const</span> data_t m) {
+<a name="l00127"></a>00127 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#ac628e1a39065df013c263455992c00eb">invmod</a>(data_t&amp; target, <span class="keyword">const</span> data_t n, <span class="keyword">const</span> data_t m) {
 <a name="l00128"></a>00128     <span class="keywordflow">if</span> (m.is_zero() || m.negative) <span class="keywordflow">throw</span> exceptions::invalid_modulus();
 <a name="l00129"></a>00129 
 <a name="l00130"></a>00130     <span class="keywordflow">if</span> (n.is_zero()) {
 <a name="l00131"></a>00131         target.set(0);
 <a name="l00132"></a>00132     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (n.negative) {
 <a name="l00133"></a>00133         target.beginmod();
-<a name="l00134"></a>00134         <a class="code" href="namespaceboost_1_1xint.html#a21e6936385f6b647524c925c8c80b9fe">invmod</a>(target, n.abs(), m);
+<a name="l00134"></a>00134         <a class="code" href="namespaceboost_1_1xint.html#ac628e1a39065df013c263455992c00eb">invmod</a>(target, n.abs(), m);
 <a name="l00135"></a>00135         <span class="keywordflow">if</span> (!target.is_zero()) {
 <a name="l00136"></a>00136             target.negative = <span class="keyword">true</span>;
 <a name="l00137"></a>00137             target += m;
@@ -173,7 +173,7 @@
 <a name="l00158"></a>00158 <span class="comment"></span>
 <a name="l00159"></a>00159 <span class="preprocessor">#endif // defined(BOOST_XINT_COMPILED_LIB) || defined(BOOST_XINT_FROM_HEADER)</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Wed Jun 2 13:37:02 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Jun 3 00:00:36 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

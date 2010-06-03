@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>The Extended Integer (XInt) Library: boost::xint::fixed_integer&lt; Bits, Alloc, Threadsafe, Secure &gt; Class Template Reference</title>
+<title>The Extended Integer (XInt) Library: boost::xint::fixed_integer&lt;&gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -28,16 +28,16 @@
   </div>
 </div>
 <div class="contents">
-<h1>boost::xint::fixed_integer&lt; Bits, Alloc, Threadsafe, Secure &gt; Class Template Reference</h1><!-- doxytag: class="boost::xint::fixed_integer" --><!-- doxytag: inherits="boost::xint::any_integer" -->
+<h1>boost::xint::fixed_integer&lt;&gt; Class Template Reference</h1><!-- doxytag: class="boost::xint::fixed_integer" --><!-- doxytag: inherits="boost::xint::any_integer" -->
 <p>A fixed-size integer type.  
 <a href="#_details">More...</a></p>
 <div class="dynheader">
-Inheritance diagram for boost::xint::fixed_integer&lt; Bits, Alloc, Threadsafe, Secure &gt;:</div>
+Inheritance diagram for boost::xint::fixed_integer&lt;&gt;:</div>
 <div class="dynsection">
  <div class="center">
-  <img src="classboost_1_1xint_1_1fixed__integer.png" usemap="#boost::xint::fixed_integer&lt; Bits, Alloc, Threadsafe, Secure &gt;_map" alt=""/>
-  <map id="boost::xint::fixed_integer&lt; Bits, Alloc, Threadsafe, Secure &gt;_map" name="boost::xint::fixed_integer&lt; Bits, Alloc, Threadsafe, Secure &gt;_map">
-<area href="classboost_1_1xint_1_1any__integer.html" alt="boost::xint::any_integer" shape="rect" coords="0,0,351,24"/>
+  <img src="classboost_1_1xint_1_1fixed__integer.png" usemap="#boost::xint::fixed_integer&lt;&gt;_map" alt=""/>
+  <map id="boost::xint::fixed_integer&lt;&gt;_map" name="boost::xint::fixed_integer&lt;&gt;_map">
+<area href="classboost_1_1xint_1_1any__integer.html" alt="boost::xint::any_integer" shape="rect" coords="0,0,160,24"/>
 </map>
  </div>
 </div>
@@ -46,102 +46,73 @@ Inheritance diagram for boost::xint::fixed_integer&lt; Bits, Alloc, Threadsafe, 
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td colspan="2"><h2>Public Types</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="classboost_1_1xint_1_1base__divide__t.html">base_divide_t</a><br class="typebreak"/>
-&lt; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, <br class="typebreak"/>
-Threadsafe, Secure &gt; &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a3753687de4a3f8b7193a35a04d95f046">divide_t</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, <br class="typebreak"/>
-Alloc, Threadsafe, Secure &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a0f31a0440c5e8375039132805b90cb3b">type</a></td></tr>
+&lt; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a6919f6d6ac20e8a6dd2d539939ce1e38">divide_t</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a6db421b2d6ddf1d406e3d5770e221146">type</a></td></tr>
 <tr><td colspan="2"><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#ac37e27a0fe56972f2e1abbc93f626c19">_swap</a> (<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; &amp;s)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a0a87772618416f9a5522db186accea2e">_swap</a> (<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp;s)</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Constructors &amp; Destructors</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpab1e74c734dea693114ec1f1cb9434ad"></a> </p>
 </div></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;typename Type &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a260165f5838c34ef9c801f467472e050">fixed_integer</a> (const Type n, typename boost::enable_if&lt; boost::is_integral&lt; Type &gt; &gt;::<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">type</a> *=0)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a3a8b80c3e08e8982fd53cfb420227d92">fixed_integer</a> (const <a class="el" href="classboost_1_1xint_1_1any__integer.html">any_integer</a> &amp;other, bool force_thread_safety=false)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#ab0d4f0550b07bf2d17560a43da2d61eb">fixed_integer</a> (const <a class="el" href="namespaceboost_1_1xint.html#aae3128529370506165793f2771834e58">xint::binary_t</a> b, size_t bits=0)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a44be309d435e9de3e007e05004f8eb9f">fixed_integer</a> (const std::string &amp;str, size_t base=10)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a41ea24f0b42d5159104eabbebf8a825e">fixed_integer</a> (const char *str, char **endptr, size_t base=10)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a807d0a263b90659b04780862ddbc18d8">fixed_integer</a> (const char *str, size_t base=10)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#ac1efb99a21e74b137e6d0257328bfd44">fixed_integer</a> (BOOST_XINT_RV_REF(<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">type</a>) b)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a4e0c60b4ee56f2f7f3aa833c58fe1167">fixed_integer</a> (const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; &amp;b, bool force_thread_safety=false)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a2f3d9f11d3c9c2ba957e4b632e842505">fixed_integer</a> ()</td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#ac19dd3384f20dbad8d5aacafc541c773">fixed_integer</a> (const Type n, typename boost::enable_if&lt; boost::is_integral&lt; Type &gt; &gt;::<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">type</a> *=0)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a9caad2ce5da7b3a30385f6159903a680">fixed_integer</a> (const <a class="el" href="classboost_1_1xint_1_1any__integer.html">any_integer</a> &amp;other, bool force_thread_safety=false)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#abcc8ca0500c3647d20cfbc501df485b6">fixed_integer</a> (const <a class="el" href="namespaceboost_1_1xint.html#aae3128529370506165793f2771834e58">xint::binary_t</a> b, <a class="el" href="namespaceboost_1_1xint.html#ab256530d9916860983abdb6f0c6fad63">bitsize_t</a> bits=0)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a00ad5031863762ad96f8c6f9e0dc6e05">fixed_integer</a> (const std::string &amp;str, size_t base=10)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a8d3981a928f5fcce48e3202760c70ae3">fixed_integer</a> (const char *str, char **endptr, size_t base=10)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#aef70310853aaca757ae564f2b5b3ba2f">fixed_integer</a> (const char *str, size_t base=10)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a08b015ede2d74d353558d28e02a1c5ba">fixed_integer</a> (BOOST_XINT_RV_REF(<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">type</a>) b)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#acd32b9af167671d4edbe2b2f26f2fce7">fixed_integer</a> (const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp;b, bool force_thread_safety=false)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a2319506640477364b75decc7151a5776">fixed_integer</a> ()</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Miscellaneous Functions</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpf5be5219a55995e13d6b8d7bf99ed653"></a> </p>
 </div></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a17adcb23a4a650db9fe8116f8609580a">hex_digits</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a5d525f8201bb8c64aba1c3743ed747ea">is_even</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a60b08696d3cd35badb2f1bf6fe417aa6">is_odd</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a471ea05daa9fe48bcdf57849b7294607">sign</a> (bool signed_zero=false) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a729023140c1b6edba03ffaa063c14e7f">hex_digits</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a8d1217f7cded81d3ac3803ec4fd8a282">is_even</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#af7439d5c106032c8dd7909fca6ad8d12">is_odd</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a8ee6b3914e05703471fde2057226ddb3">sign</a> (bool signed_zero=false) const </td></tr>
 <tr><td colspan="2"><div class="groupHeader">Mathematical and Bitwise Operators</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp8eb1e0f0af70edd858d54ba68b80ce7e"></a>These operate exactly like their counterparts for the built-in integer types. </p>
 </div></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#ac4fa27bf6c290acb49a5c74c2de97d8c">operator!</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, <br class="typebreak"/>
-Threadsafe, Secure &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#ad4abb002f1f191ae4291e6839eda3e65">operator%=</a> (const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; b)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, <br class="typebreak"/>
-Threadsafe, Secure &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a1d2f11d197b42b95075dd10cf7190bdf">operator&amp;=</a> (const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; n)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, <br class="typebreak"/>
-Threadsafe, Secure &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a52bcfa0fe42281e7822d3a4e98c22ee9">operator*=</a> (const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; b)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, <br class="typebreak"/>
-Alloc, Threadsafe, Secure &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#afeeeb3da14d1c1ded9ade0be5197fcdc">operator+</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, <br class="typebreak"/>
-Threadsafe, Secure &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#af6bf243eef74ee50547e22e7d6f62786">operator+</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, <br class="typebreak"/>
-Threadsafe, Secure &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#ad4881e69d0acb87685229f37d9c1831e">operator++</a> (int)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, <br class="typebreak"/>
-Threadsafe, Secure &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#aa2faf4964295c574bb1eea0e1172f34e">operator++</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, <br class="typebreak"/>
-Threadsafe, Secure &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#ae4e90a34dece2e7d421abfc90fd68ee6">operator+=</a> (const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; b)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, <br class="typebreak"/>
-Threadsafe, Secure &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#ade35a5d9f21f85212a2f5271d3b95863">operator-</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, <br class="typebreak"/>
-Threadsafe, Secure &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a6fa15f1f03769c8cb64e0f0c9affb24b">operator--</a> (int)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, <br class="typebreak"/>
-Threadsafe, Secure &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a3fd2ee6deb880a91247bbaf786b67f5e">operator--</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, <br class="typebreak"/>
-Threadsafe, Secure &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a112a05f5bd880bb47f04d991d8e1b2d1">operator-=</a> (const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; b)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, <br class="typebreak"/>
-Threadsafe, Secure &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#ad17449189e7bb89e5d45fd2c543337d0">operator/=</a> (const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; b)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, <br class="typebreak"/>
-Threadsafe, Secure &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#ade4692342c999dcb87b1cebcabd4e564">operator&lt;&lt;</a> (size_t shift) const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, <br class="typebreak"/>
-Threadsafe, Secure &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#ac88b76594191237a3d8ca8271c370003">operator&lt;&lt;=</a> (size_t shift)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a1833c141efc0b733cb6a3c1ccb012815">operator!</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a5be10cf23614f86487795d3a52c59fe0">operator%=</a> (const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> b)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#aaa2bd5962f94dfecdb629fe91ca11916">operator&amp;=</a> (const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> n)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#ae6933c0021c085aefef2c84871cf56aa">operator*=</a> (const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> b)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a25f6feb79f23377b9a070ac57dc3272d">operator+</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a946b6f16a5138e190ec6b3663a4e405f">operator+</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a43d91bef8635dbe48d89e6bcc6b7c644">operator++</a> (int)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a88dbfe8b18a9ea266e7613a55e0c8008">operator++</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a41854f088fcd6eee52d9b99ad9f631f6">operator+=</a> (const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> b)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#aff23f92ff8251cb1ef691e73ed3fe777">operator-</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a54a920edd865aa7e8b26ff8ba457e826">operator--</a> (int)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#ad85b39d612438f84970e1d812f078b8a">operator--</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#affc385351bd34308be1681f9c3893f10">operator-=</a> (const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> b)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#af114bab3ffdcabfbb1dd968e32c47cd0">operator/=</a> (const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> b)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a326278f38ee384d2469f758e2d91c941">operator&lt;&lt;</a> (<a class="el" href="namespaceboost_1_1xint.html#ab256530d9916860983abdb6f0c6fad63">bitsize_t</a> shift) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a45846e1b9b7a31865ba2fb49b57ab138">operator&lt;&lt;=</a> (<a class="el" href="namespaceboost_1_1xint.html#ab256530d9916860983abdb6f0c6fad63">bitsize_t</a> shift)</td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;typename Type &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, <br class="typebreak"/>
-Threadsafe, Secure &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#aad8090d91aa220a7bf9425c0cf608045">operator=</a> (const Type n)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, <br class="typebreak"/>
-Threadsafe, Secure &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a72ceb6ec8441fe4540d90235ddefa9e3">operator=</a> (BOOST_XINT_RV_REF(<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">type</a>) c)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, <br class="typebreak"/>
-Threadsafe, Secure &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a61c76e7457cdc43f2d817cc5a12f23b9">operator=</a> (BOOST_XINT_COPY_ASSIGN_REF(<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">type</a>) c)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, <br class="typebreak"/>
-Threadsafe, Secure &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a4c383b5a4827a19fb314e2798e4c2390">operator&gt;&gt;</a> (size_t shift) const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, <br class="typebreak"/>
-Threadsafe, Secure &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a39b71726a8790f6f11ad99a1ffa84313">operator&gt;&gt;=</a> (size_t shift)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, <br class="typebreak"/>
-Threadsafe, Secure &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#aa87de0d5846b92982af0e998c757043b">operator^=</a> (const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; n)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, <br class="typebreak"/>
-Threadsafe, Secure &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a921a727af7fd8a7836fb480fb814ee48">operator|=</a> (const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; n)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, <br class="typebreak"/>
-Threadsafe, Secure &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a6ec6b3dd4e921587bc1fcdf578bf0665">operator~</a> () const </td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The Bitwise Ones' Complement (i.e. bitwise NOT) operator.  <a href="#a6ec6b3dd4e921587bc1fcdf578bf0665"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a653c0a77740b27d6626daf6d3f75690f">operator=</a> (const Type n)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#aad86c142066a690b214affe3e9338f3e">operator=</a> (BOOST_XINT_RV_REF(<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">type</a>) c)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#aa0aca358b7caa1ea3a4d32546ce438a3">operator=</a> (BOOST_XINT_COPY_ASSIGN_REF(<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">type</a>) c)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#afaa0193c95ade2362b9e55dc4ebeb8f3">operator&gt;&gt;</a> (<a class="el" href="namespaceboost_1_1xint.html#ab256530d9916860983abdb6f0c6fad63">bitsize_t</a> shift) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#ac13d7456ad391ce19c5b2c22c94dadf5">operator&gt;&gt;=</a> (<a class="el" href="namespaceboost_1_1xint.html#ab256530d9916860983abdb6f0c6fad63">bitsize_t</a> shift)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#ad568affeea647ef91d0de1d88cc76192">operator^=</a> (const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> n)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a2272dbf43c92ce1f56d5f0618a137425">operator|=</a> (const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> n)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a2e924b61df38e812c682f86e540f37d6">operator~</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The Bitwise Ones' Complement (i.e. bitwise NOT) operator.  <a href="#a2e924b61df38e812c682f86e540f37d6"></a><br/></td></tr>
 <tr><td colspan="2"><h2>Static Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Static Member Functions</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpa31d6da946887ed6180c9a44a76c862f"></a> These are functions that return a <a class="el" href="classboost_1_1xint_1_1fixed__integer.html" title="A fixed-size integer type.">fixed_integer</a>, but don't take one as a parameter. To use them as free functions, you would have to specify the return type anyway, so I made them static member functions of the type instead. </p>
 </div></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, <br class="typebreak"/>
-Alloc, Threadsafe, Secure &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a62f1465cf1e2ba909e27c732c48017e3">factorial</a> (size_t n)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, <br class="typebreak"/>
-Alloc, Threadsafe, Secure &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#aede86c64ce68a1f7a5e71d6cb39b8561">pow2</a> (size_t exponent)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a2870a3a1b0b144dbfca6cc7f9134890c">factorial</a> (size_t n)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#ac4928defd092ad3f30af55e0a221bd90">pow2</a> (size_t exponent)</td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;class Type &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, <br class="typebreak"/>
-Alloc, Threadsafe, Secure &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#ae9f2ada421ee7936ce0fa754eaad18ae">random_by_size</a> (Type &amp;gen, size_t size_in_bits, bool high_bit_on=false, bool low_bit_on=false, bool can_be_negative=false)</td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#afe0884583cdf8c3a60dc3fd35fa40a31">random_by_size</a> (Type &amp;gen, <a class="el" href="namespaceboost_1_1xint.html#ab256530d9916860983abdb6f0c6fad63">bitsize_t</a> size_in_bits, bool high_bit_on=false, bool low_bit_on=false, bool can_be_negative=false)</td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;class Type &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, <br class="typebreak"/>
-Alloc, Threadsafe, Secure &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#ab9b05bf978444e556eba92cbe28d9ae2">random_prime</a> (Type &amp;gen, size_t size_in_bits, <a class="el" href="namespaceboost_1_1xint.html#a48deb76c9c428a4b3a50177b1b0cb547">callback_t</a> callback=<a class="el" href="namespaceboost_1_1xint.html#a758d415a476a5eeed28dc6b5869b1696">no_callback</a>)</td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a7215f0327bf6d96d27f3ea805657e64c">random_prime</a> (Type &amp;gen, <a class="el" href="namespaceboost_1_1xint.html#ab256530d9916860983abdb6f0c6fad63">bitsize_t</a> size_in_bits, <a class="el" href="namespaceboost_1_1xint.html#a48deb76c9c428a4b3a50177b1b0cb547">callback_t</a> callback=<a class="el" href="namespaceboost_1_1xint.html#a758d415a476a5eeed28dc6b5869b1696">no_callback</a>)</td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
-<h3>template&lt;size_t Bits, class Alloc = std::allocator&lt;detail::digit_t&gt;, bool Threadsafe = true, bool Secure = false&gt;<br/>
- class boost::xint::fixed_integer&lt; Bits, Alloc, Threadsafe, Secure &gt;</h3>
+<h3>template&lt;...&gt;<br/>
+ class boost::xint::fixed_integer&lt;&gt;</h3>
 
 <p>A fixed-size integer type. </p>
 <dl><dt><b>Template Parameters:</b></dt><dd>
@@ -157,51 +128,51 @@ Alloc, Threadsafe, Secure &gt;&nbsp;</td><td class="memTemplItemRight" valign="b
 <dl class="note"><dt><b>Note:</b></dt><dd>The number of bits refers only to the unsigned magnitude of the number. The sign is stored separately. This means that, for example, a <code>fixed_integer&lt;8&gt;</code> has a range of -255 to +255, not -128 to +127 like an <code>int8_t</code>.</dd></dl>
 <dl class="user"><dt><b></b></dt><dd>Also note that when calculating with fixed_integer types, the number does not "wrap around" when it exceeds the type's size like the built-in signed integer types do. It is truncated to the lower bits instead. For example, <code>fixed_integer&lt;8&gt;(-255) - 1</code> and <code>fixed_integer&lt;8&gt;(255) + 1</code> will both be zero. However, the sign (on non-zero answers) is preserved, so <code>fixed_integer&lt;8&gt;(-255) - 2</code> will be -1. </dd></dl>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00119">119</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00134">134</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 <hr/><h2>Member Typedef Documentation</h2>
-<a class="anchor" id="a3753687de4a3f8b7193a35a04d95f046"></a><!-- doxytag: member="boost::xint::fixed_integer::divide_t" ref="a3753687de4a3f8b7193a35a04d95f046" args="" -->
+<a class="anchor" id="a6919f6d6ac20e8a6dd2d539939ce1e38"></a><!-- doxytag: member="boost::xint::fixed_integer::divide_t" ref="a6919f6d6ac20e8a6dd2d539939ce1e38" args="" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc = std::allocator&lt;detail::digit_t&gt;, bool Threadsafe = true, bool Secure = false&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="classboost_1_1xint_1_1base__divide__t.html">base_divide_t</a>&lt;<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt;Bits, Alloc, Threadsafe, Secure&gt; &gt; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::<a class="el" href="classboost_1_1xint_1_1base__divide__t.html">divide_t</a></td>
+          <td class="memname">typedef <a class="el" href="classboost_1_1xint_1_1base__divide__t.html">base_divide_t</a>&lt; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &gt; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::<a class="el" href="classboost_1_1xint_1_1base__divide__t.html">divide_t</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00109">109</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00208">208</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a0f31a0440c5e8375039132805b90cb3b"></a><!-- doxytag: member="boost::xint::fixed_integer::type" ref="a0f31a0440c5e8375039132805b90cb3b" args="" -->
+<a class="anchor" id="a6db421b2d6ddf1d406e3d5770e221146"></a><!-- doxytag: member="boost::xint::fixed_integer::type" ref="a6db421b2d6ddf1d406e3d5770e221146" args="" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc = std::allocator&lt;detail::digit_t&gt;, bool Threadsafe = true, bool Secure = false&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt;Bits, Alloc, Threadsafe, Secure&gt; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">type</a></td>
+          <td class="memname">typedef <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">type</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00024">24</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00138">138</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a2f3d9f11d3c9c2ba957e4b632e842505"></a><!-- doxytag: member="boost::xint::fixed_integer::fixed_integer" ref="a2f3d9f11d3c9c2ba957e4b632e842505" args="()" -->
+<a class="anchor" id="a2319506640477364b75decc7151a5776"></a><!-- doxytag: member="boost::xint::fixed_integer::fixed_integer" ref="a2319506640477364b75decc7151a5776" args="()" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> </td>
           <td>(</td>
           <td class="paramname"></td>
           <td>&nbsp;)&nbsp;</td>
@@ -212,20 +183,20 @@ template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
 <div class="memdoc">
 <p>Creates a new integer with an initial value of zero.  </p>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00237">237</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00236">236</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a4e0c60b4ee56f2f7f3aa833c58fe1167"></a><!-- doxytag: member="boost::xint::fixed_integer::fixed_integer" ref="a4e0c60b4ee56f2f7f3aa833c58fe1167" args="(const fixed_integer&lt; Bits, Alloc, Threadsafe, Secure &gt; &amp;b, bool force_thread_safety=false)" -->
+<a class="anchor" id="acd32b9af167671d4edbe2b2f26f2fce7"></a><!-- doxytag: member="boost::xint::fixed_integer::fixed_integer" ref="acd32b9af167671d4edbe2b2f26f2fce7" args="(const fixed_integer &amp;b, bool force_thread_safety=false)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc, bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt;&gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>b</em>, </td>
         </tr>
         <tr>
@@ -251,18 +222,18 @@ template&lt;size_t Bits, class Alloc, bool Threadsafe, bool Secure&gt; </div>
 </dl>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts.  </p>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00245">245</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00242">242</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ac1efb99a21e74b137e6d0257328bfd44"></a><!-- doxytag: member="boost::xint::fixed_integer::fixed_integer" ref="ac1efb99a21e74b137e6d0257328bfd44" args="(BOOST_XINT_RV_REF(type) b)" -->
+<a class="anchor" id="a08b015ede2d74d353558d28e02a1c5ba"></a><!-- doxytag: member="boost::xint::fixed_integer::fixed_integer" ref="a08b015ede2d74d353558d28e02a1c5ba" args="(BOOST_XINT_RV_REF(type) b)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc = std::allocator&lt;detail::digit_t&gt;, bool Threadsafe = true, bool Secure = false&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> </td>
           <td>(</td>
           <td class="paramtype">BOOST_XINT_RV_REF(<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">type</a>)&nbsp;</td>
           <td class="paramname"> <em>b</em></td>
@@ -273,18 +244,18 @@ template&lt;size_t Bits, class Alloc = std::allocator&lt;detail::digit_t&gt;, bo
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00031">31</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00145">145</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a807d0a263b90659b04780862ddbc18d8"></a><!-- doxytag: member="boost::xint::fixed_integer::fixed_integer" ref="a807d0a263b90659b04780862ddbc18d8" args="(const char *str, size_t base=10)" -->
+<a class="anchor" id="aef70310853aaca757ae564f2b5b3ba2f"></a><!-- doxytag: member="boost::xint::fixed_integer::fixed_integer" ref="aef70310853aaca757ae564f2b5b3ba2f" args="(const char *str, size_t base=10)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc, bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> </td>
           <td>(</td>
           <td class="paramtype">const char *&nbsp;</td>
           <td class="paramname"> <em>str</em>, </td>
@@ -324,18 +295,18 @@ template&lt;size_t Bits, class Alloc, bool Threadsafe, bool Secure&gt; </div>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 <dl class="note"><dt><b>Note:</b></dt><dd>This function does <em>not</em> stop when the fixed_integer's bits are full. It uses the entire string, then truncates the result to the proper number of bits. </dd></dl>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00263">263</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00258">258</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a41ea24f0b42d5159104eabbebf8a825e"></a><!-- doxytag: member="boost::xint::fixed_integer::fixed_integer" ref="a41ea24f0b42d5159104eabbebf8a825e" args="(const char *str, char **endptr, size_t base=10)" -->
+<a class="anchor" id="a8d3981a928f5fcce48e3202760c70ae3"></a><!-- doxytag: member="boost::xint::fixed_integer::fixed_integer" ref="a8d3981a928f5fcce48e3202760c70ae3" args="(const char *str, char **endptr, size_t base=10)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc, bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> </td>
           <td>(</td>
           <td class="paramtype">const char *&nbsp;</td>
           <td class="paramname"> <em>str</em>, </td>
@@ -382,18 +353,18 @@ template&lt;size_t Bits, class Alloc, bool Threadsafe, bool Secure&gt; </div>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 <dl class="note"><dt><b>Note:</b></dt><dd>This function does <em>not</em> stop when the fixed_integer's bits are full. It continues as long as there are valid digits for the base in question, then truncates the result to the proper number of bits. </dd></dl>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00277">277</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00272">272</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a44be309d435e9de3e007e05004f8eb9f"></a><!-- doxytag: member="boost::xint::fixed_integer::fixed_integer" ref="a44be309d435e9de3e007e05004f8eb9f" args="(const std::string &amp;str, size_t base=10)" -->
+<a class="anchor" id="a00ad5031863762ad96f8c6f9e0dc6e05"></a><!-- doxytag: member="boost::xint::fixed_integer::fixed_integer" ref="a00ad5031863762ad96f8c6f9e0dc6e05" args="(const std::string &amp;str, size_t base=10)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc, bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>str</em>, </td>
@@ -433,18 +404,18 @@ template&lt;size_t Bits, class Alloc, bool Threadsafe, bool Secure&gt; </div>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 <dl class="note"><dt><b>Note:</b></dt><dd>This function does <em>not</em> stop when the fixed_integer's bits are full. It uses the entire string, then truncates the result to the proper number of bits. </dd></dl>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00290">290</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00285">285</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ab0d4f0550b07bf2d17560a43da2d61eb"></a><!-- doxytag: member="boost::xint::fixed_integer::fixed_integer" ref="ab0d4f0550b07bf2d17560a43da2d61eb" args="(const xint::binary_t b, size_t bits=0)" -->
+<a class="anchor" id="abcc8ca0500c3647d20cfbc501df485b6"></a><!-- doxytag: member="boost::xint::fixed_integer::fixed_integer" ref="abcc8ca0500c3647d20cfbc501df485b6" args="(const xint::binary_t b, bitsize_t bits=0)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc, bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="namespaceboost_1_1xint.html#aae3128529370506165793f2771834e58">xint::binary_t</a>&nbsp;</td>
           <td class="paramname"> <em>b</em>, </td>
@@ -452,7 +423,7 @@ template&lt;size_t Bits, class Alloc, bool Threadsafe, bool Secure&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramtype"><a class="el" href="namespaceboost_1_1xint.html#ab256530d9916860983abdb6f0c6fad63">bitsize_t</a>&nbsp;</td>
           <td class="paramname"> <em>bits</em> = <code>0</code></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -480,22 +451,22 @@ template&lt;size_t Bits, class Alloc, bool Threadsafe, bool Secure&gt; </div>
   </dd>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>An integer representing the bytes.</dd></dl>
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#a8df94bce4e819234572029a62d8c8681">xint::to_binary</a></dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#ac1c6eb0f3c5166761d81503fa68f4b78">xint::to_binary</a></dd></dl>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 <dl class="note"><dt><b>Note:</b></dt><dd>This function does <em>not</em> stop when the fixed_integer's bits are full. It uses the entire <code>binary_t</code> item, then truncates the result to the proper number of bits. </dd></dl>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00304">304</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00299">299</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a3a8b80c3e08e8982fd53cfb420227d92"></a><!-- doxytag: member="boost::xint::fixed_integer::fixed_integer" ref="a3a8b80c3e08e8982fd53cfb420227d92" args="(const any_integer &amp;other, bool force_thread_safety=false)" -->
+<a class="anchor" id="a9caad2ce5da7b3a30385f6159903a680"></a><!-- doxytag: member="boost::xint::fixed_integer::fixed_integer" ref="a9caad2ce5da7b3a30385f6159903a680" args="(const any_integer &amp;other, bool force_thread_safety=false)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc, bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classboost_1_1xint_1_1any__integer.html">any_integer</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>c</em>, </td>
@@ -523,20 +494,20 @@ template&lt;size_t Bits, class Alloc, bool Threadsafe, bool Secure&gt; </div>
 </dl>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts.  </p>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00312">312</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00307">307</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a260165f5838c34ef9c801f467472e050"></a><!-- doxytag: member="boost::xint::fixed_integer::fixed_integer" ref="a260165f5838c34ef9c801f467472e050" args="(const Type n, typename boost::enable_if&lt; boost::is_integral&lt; Type &gt; &gt;::type *=0)" -->
+<a class="anchor" id="ac19dd3384f20dbad8d5aacafc541c773"></a><!-- doxytag: member="boost::xint::fixed_integer::fixed_integer" ref="ac19dd3384f20dbad8d5aacafc541c773" args="(const Type n, typename boost::enable_if&lt; boost::is_integral&lt; Type &gt; &gt;::type *=0)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
 <div class="memtemplate">
 template&lt;typename Type &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> </td>
           <td>(</td>
           <td class="paramtype">const Type&nbsp;</td>
           <td class="paramname"> <em>n</em>, </td>
@@ -571,21 +542,21 @@ template&lt;typename Type &gt; </div>
 <p>You can ignore the <code>enable_if</code> parameter, it's there only to tell the compiler what types the function applies to.</p>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00333">333</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00327">327</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="ac37e27a0fe56972f2e1abbc93f626c19"></a><!-- doxytag: member="boost::xint::fixed_integer::_swap" ref="ac37e27a0fe56972f2e1abbc93f626c19" args="(fixed_integer&lt; Bits, Alloc, Threadsafe, Secure &gt; &amp;s)" -->
+<a class="anchor" id="a0a87772618416f9a5522db186accea2e"></a><!-- doxytag: member="boost::xint::fixed_integer::_swap" ref="a0a87772618416f9a5522db186accea2e" args="(fixed_integer &amp;s)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc = std::allocator&lt;detail::digit_t&gt;, bool Threadsafe = true, bool Secure = false&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::_swap </td>
+          <td class="memname">void <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::_swap </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; &amp;&nbsp;</td>
+          <td class="paramtype"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt;&gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>s</em></td>
           <td>&nbsp;)&nbsp;</td>
           <td><code> [inline]</code></td>
@@ -594,18 +565,18 @@ template&lt;size_t Bits, class Alloc = std::allocator&lt;detail::digit_t&gt;, bo
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00129">129</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00227">227</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a62f1465cf1e2ba909e27c732c48017e3"></a><!-- doxytag: member="boost::xint::fixed_integer::factorial" ref="a62f1465cf1e2ba909e27c732c48017e3" args="(size_t n)" -->
+<a class="anchor" id="a2870a3a1b0b144dbfca6cc7f9134890c"></a><!-- doxytag: member="boost::xint::fixed_integer::factorial" ref="a2870a3a1b0b144dbfca6cc7f9134890c" args="(size_t n)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::factorial </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::factorial </td>
           <td>(</td>
           <td class="paramtype">size_t&nbsp;</td>
           <td class="paramname"> <em>n</em></td>
@@ -628,18 +599,18 @@ template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
 <dl class="warning"><dt><b>Warning:</b></dt><dd>Factorials get ridiculously huge, even with fairly small values of <code>n</code>. This function, when used with a large parameter, is the easiest way to exhaust the system's memory. </dd></dl>
  </p>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00569">569</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00535">535</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a17adcb23a4a650db9fe8116f8609580a"></a><!-- doxytag: member="boost::xint::fixed_integer::hex_digits" ref="a17adcb23a4a650db9fe8116f8609580a" args="() const " -->
+<a class="anchor" id="a729023140c1b6edba03ffaa063c14e7f"></a><!-- doxytag: member="boost::xint::fixed_integer::hex_digits" ref="a729023140c1b6edba03ffaa063c14e7f" args="() const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">size_t <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::hex_digits </td>
+          <td class="memname">size_t <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::hex_digits </td>
           <td>(</td>
           <td class="paramname"></td>
           <td>&nbsp;)&nbsp;</td>
@@ -654,18 +625,18 @@ template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The number of hexadecimal digits that would be required to encode <code>this</code>. </dd></dl>
  </p>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00552">552</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00521">521</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a5d525f8201bb8c64aba1c3743ed747ea"></a><!-- doxytag: member="boost::xint::fixed_integer::is_even" ref="a5d525f8201bb8c64aba1c3743ed747ea" args="() const " -->
+<a class="anchor" id="a8d1217f7cded81d3ac3803ec4fd8a282"></a><!-- doxytag: member="boost::xint::fixed_integer::is_even" ref="a8d1217f7cded81d3ac3803ec4fd8a282" args="() const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::is_even </td>
+          <td class="memname">bool <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::is_even </td>
           <td>(</td>
           <td class="paramname"></td>
           <td>&nbsp;)&nbsp;</td>
@@ -680,18 +651,18 @@ template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd><code>true</code> if <code>*this</code> is even, otherwise <code>false</code>. </dd></dl>
  </p>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00538">538</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00509">509</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a60b08696d3cd35badb2f1bf6fe417aa6"></a><!-- doxytag: member="boost::xint::fixed_integer::is_odd" ref="a60b08696d3cd35badb2f1bf6fe417aa6" args="() const " -->
+<a class="anchor" id="af7439d5c106032c8dd7909fca6ad8d12"></a><!-- doxytag: member="boost::xint::fixed_integer::is_odd" ref="af7439d5c106032c8dd7909fca6ad8d12" args="() const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::is_odd </td>
+          <td class="memname">bool <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::is_odd </td>
           <td>(</td>
           <td class="paramname"></td>
           <td>&nbsp;)&nbsp;</td>
@@ -706,18 +677,18 @@ template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd><code>true</code> if <code>*this</code> is odd, otherwise <code>false</code>. </dd></dl>
  </p>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00532">532</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00503">503</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ac4fa27bf6c290acb49a5c74c2de97d8c"></a><!-- doxytag: member="boost::xint::fixed_integer::operator!" ref="ac4fa27bf6c290acb49a5c74c2de97d8c" args="() const " -->
+<a class="anchor" id="a1833c141efc0b733cb6a3c1ccb012815"></a><!-- doxytag: member="boost::xint::fixed_integer::operator!" ref="a1833c141efc0b733cb6a3c1ccb012815" args="() const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc = std::allocator&lt;detail::digit_t&gt;, bool Threadsafe = true, bool Secure = false&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::operator! </td>
+          <td class="memname">bool <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::operator! </td>
           <td>(</td>
           <td class="paramname"></td>
           <td>&nbsp;)&nbsp;</td>
@@ -727,20 +698,20 @@ template&lt;size_t Bits, class Alloc = std::allocator&lt;detail::digit_t&gt;, bo
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00062">62</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00174">174</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ad4abb002f1f191ae4291e6839eda3e65"></a><!-- doxytag: member="boost::xint::fixed_integer::operator%=" ref="ad4abb002f1f191ae4291e6839eda3e65" args="(const fixed_integer&lt; Bits, Alloc, Threadsafe, Secure &gt; b)" -->
+<a class="anchor" id="a5be10cf23614f86487795d3a52c59fe0"></a><!-- doxytag: member="boost::xint::fixed_integer::operator%=" ref="a5be10cf23614f86487795d3a52c59fe0" args="(const fixed_integer b)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc, bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; &amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::operator%= </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::operator%= </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;&nbsp;</td>
+          <td class="paramtype">const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt;&gt;&nbsp;</td>
           <td class="paramname"> <em>b</em></td>
           <td>&nbsp;)&nbsp;</td>
           <td><code> [inline]</code></td>
@@ -748,22 +719,22 @@ template&lt;size_t Bits, class Alloc, bool Threadsafe, bool Secure&gt; </div>
       </table>
 </div>
 <div class="memdoc">
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#addd9f25375d6bb0f38b902016e0edfd8">operator%(fixed_integer, fixed_integer)</a> </dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#a3b804d111a60509665d6a7227039aee9">operator%(fixed_integer, fixed_integer)</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00421">421</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00407">407</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a1d2f11d197b42b95075dd10cf7190bdf"></a><!-- doxytag: member="boost::xint::fixed_integer::operator&amp;=" ref="a1d2f11d197b42b95075dd10cf7190bdf" args="(const fixed_integer&lt; Bits, Alloc, Threadsafe, Secure &gt; n)" -->
+<a class="anchor" id="aaa2bd5962f94dfecdb629fe91ca11916"></a><!-- doxytag: member="boost::xint::fixed_integer::operator&amp;=" ref="aaa2bd5962f94dfecdb629fe91ca11916" args="(const fixed_integer n)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc, bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; &amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::operator&amp;= </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::operator&amp;= </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;&nbsp;</td>
+          <td class="paramtype">const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt;&gt;&nbsp;</td>
           <td class="paramname"> <em>n</em></td>
           <td>&nbsp;)&nbsp;</td>
           <td><code> [inline]</code></td>
@@ -771,22 +742,22 @@ template&lt;size_t Bits, class Alloc, bool Threadsafe, bool Secure&gt; </div>
       </table>
 </div>
 <div class="memdoc">
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#a1620277cb71145a88d6755c9b6d55900">operator&amp;(fixed_integer, fixed_integer)</a> </dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#ad86517e5d3b5826470694001075de255">operator&amp;(fixed_integer, fixed_integer)</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00467">467</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00444">444</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a52bcfa0fe42281e7822d3a4e98c22ee9"></a><!-- doxytag: member="boost::xint::fixed_integer::operator*=" ref="a52bcfa0fe42281e7822d3a4e98c22ee9" args="(const fixed_integer&lt; Bits, Alloc, Threadsafe, Secure &gt; b)" -->
+<a class="anchor" id="ae6933c0021c085aefef2c84871cf56aa"></a><!-- doxytag: member="boost::xint::fixed_integer::operator*=" ref="ae6933c0021c085aefef2c84871cf56aa" args="(const fixed_integer b)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc, bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; &amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::operator*= </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::operator*= </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;&nbsp;</td>
+          <td class="paramtype">const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt;&gt;&nbsp;</td>
           <td class="paramname"> <em>b</em></td>
           <td>&nbsp;)&nbsp;</td>
           <td><code> [inline]</code></td>
@@ -794,20 +765,20 @@ template&lt;size_t Bits, class Alloc, bool Threadsafe, bool Secure&gt; </div>
       </table>
 </div>
 <div class="memdoc">
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#a72b3b1b110612e99609f0c98d69cf2bf">operator*(fixed_integer, fixed_integer)</a> </dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#af877fa3d7e129eb0ea0d873396868723">operator*(fixed_integer, fixed_integer)</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00401">401</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00389">389</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="afeeeb3da14d1c1ded9ade0be5197fcdc"></a><!-- doxytag: member="boost::xint::fixed_integer::operator+" ref="afeeeb3da14d1c1ded9ade0be5197fcdc" args="() const " -->
+<a class="anchor" id="a25f6feb79f23377b9a070ac57dc3272d"></a><!-- doxytag: member="boost::xint::fixed_integer::operator+" ref="a25f6feb79f23377b9a070ac57dc3272d" args="() const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc = std::allocator&lt;detail::digit_t&gt;, bool Threadsafe = true, bool Secure = false&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt;Bits, Alloc, Threadsafe, Secure&gt;&amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::operator+ </td>
+          <td class="memname">const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::operator+ </td>
           <td>(</td>
           <td class="paramname"></td>
           <td>&nbsp;)&nbsp;</td>
@@ -817,18 +788,18 @@ template&lt;size_t Bits, class Alloc = std::allocator&lt;detail::digit_t&gt;, bo
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00066">66</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00177">177</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="af6bf243eef74ee50547e22e7d6f62786"></a><!-- doxytag: member="boost::xint::fixed_integer::operator+" ref="af6bf243eef74ee50547e22e7d6f62786" args="()" -->
+<a class="anchor" id="a946b6f16a5138e190ec6b3663a4e405f"></a><!-- doxytag: member="boost::xint::fixed_integer::operator+" ref="a946b6f16a5138e190ec6b3663a4e405f" args="()" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc = std::allocator&lt;detail::digit_t&gt;, bool Threadsafe = true, bool Secure = false&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt;Bits, Alloc, Threadsafe, Secure&gt;&amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::operator+ </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::operator+ </td>
           <td>(</td>
           <td class="paramname"></td>
           <td>&nbsp;)&nbsp;</td>
@@ -838,18 +809,18 @@ template&lt;size_t Bits, class Alloc = std::allocator&lt;detail::digit_t&gt;, bo
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00064">64</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00176">176</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ad4881e69d0acb87685229f37d9c1831e"></a><!-- doxytag: member="boost::xint::fixed_integer::operator++" ref="ad4881e69d0acb87685229f37d9c1831e" args="(int)" -->
+<a class="anchor" id="a43d91bef8635dbe48d89e6bcc6b7c644"></a><!-- doxytag: member="boost::xint::fixed_integer::operator++" ref="a43d91bef8635dbe48d89e6bcc6b7c644" args="(int)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::operator++ </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::operator++ </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"></td>
@@ -864,18 +835,18 @@ template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
 </ul>
 This is not recommended. It must make a copy before incrementing the <code>*this</code> object, making it noticeably less efficient than the preincrement operator.  </p>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00449">449</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00430">430</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="aa2faf4964295c574bb1eea0e1172f34e"></a><!-- doxytag: member="boost::xint::fixed_integer::operator++" ref="aa2faf4964295c574bb1eea0e1172f34e" args="()" -->
+<a class="anchor" id="a88dbfe8b18a9ea266e7613a55e0c8008"></a><!-- doxytag: member="boost::xint::fixed_integer::operator++" ref="a88dbfe8b18a9ea266e7613a55e0c8008" args="()" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; &amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::operator++ </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::operator++ </td>
           <td>(</td>
           <td class="paramname"></td>
           <td>&nbsp;)&nbsp;</td>
@@ -889,20 +860,20 @@ template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
 </ul>
  </p>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00431">431</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00416">416</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ae4e90a34dece2e7d421abfc90fd68ee6"></a><!-- doxytag: member="boost::xint::fixed_integer::operator+=" ref="ae4e90a34dece2e7d421abfc90fd68ee6" args="(const fixed_integer&lt; Bits, Alloc, Threadsafe, Secure &gt; b)" -->
+<a class="anchor" id="a41854f088fcd6eee52d9b99ad9f631f6"></a><!-- doxytag: member="boost::xint::fixed_integer::operator+=" ref="a41854f088fcd6eee52d9b99ad9f631f6" args="(const fixed_integer b)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc, bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; &amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::operator+= </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::operator+= </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;&nbsp;</td>
+          <td class="paramtype">const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt;&gt;&nbsp;</td>
           <td class="paramname"> <em>b</em></td>
           <td>&nbsp;)&nbsp;</td>
           <td><code> [inline]</code></td>
@@ -910,20 +881,20 @@ template&lt;size_t Bits, class Alloc, bool Threadsafe, bool Secure&gt; </div>
       </table>
 </div>
 <div class="memdoc">
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#ab9b2e2c83946da247f379f4cbfed41cd">operator+(fixed_integer, fixed_integer)</a> </dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#a1e894e947435664ba17c27a93c7325e1">operator+(fixed_integer, fixed_integer)</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00381">381</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00371">371</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ade35a5d9f21f85212a2f5271d3b95863"></a><!-- doxytag: member="boost::xint::fixed_integer::operator&#45;" ref="ade35a5d9f21f85212a2f5271d3b95863" args="() const " -->
+<a class="anchor" id="aff23f92ff8251cb1ef691e73ed3fe777"></a><!-- doxytag: member="boost::xint::fixed_integer::operator&#45;" ref="aff23f92ff8251cb1ef691e73ed3fe777" args="() const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::operator- </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::operator- </td>
           <td>(</td>
           <td class="paramname"></td>
           <td>&nbsp;)&nbsp;</td>
@@ -938,18 +909,18 @@ template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd><code>*this</code> with the sign reversed. </dd></dl>
  </p>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00352">352</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00346">346</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a6fa15f1f03769c8cb64e0f0c9affb24b"></a><!-- doxytag: member="boost::xint::fixed_integer::operator&#45;&#45;" ref="a6fa15f1f03769c8cb64e0f0c9affb24b" args="(int)" -->
+<a class="anchor" id="a54a920edd865aa7e8b26ff8ba457e826"></a><!-- doxytag: member="boost::xint::fixed_integer::operator&#45;&#45;" ref="a54a920edd865aa7e8b26ff8ba457e826" args="(int)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::operator-- </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::operator-- </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"></td>
@@ -964,18 +935,18 @@ template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
 </ul>
 This is not recommended. It must make a copy before decrementing the <code>*this</code> object, making it noticeably less efficient than the predecrement operator.  </p>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00458">458</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00437">437</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a3fd2ee6deb880a91247bbaf786b67f5e"></a><!-- doxytag: member="boost::xint::fixed_integer::operator&#45;&#45;" ref="a3fd2ee6deb880a91247bbaf786b67f5e" args="()" -->
+<a class="anchor" id="ad85b39d612438f84970e1d812f078b8a"></a><!-- doxytag: member="boost::xint::fixed_integer::operator&#45;&#45;" ref="ad85b39d612438f84970e1d812f078b8a" args="()" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; &amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::operator-- </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::operator-- </td>
           <td>(</td>
           <td class="paramname"></td>
           <td>&nbsp;)&nbsp;</td>
@@ -989,20 +960,20 @@ template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
 </ul>
  </p>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00440">440</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00423">423</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a112a05f5bd880bb47f04d991d8e1b2d1"></a><!-- doxytag: member="boost::xint::fixed_integer::operator&#45;=" ref="a112a05f5bd880bb47f04d991d8e1b2d1" args="(const fixed_integer&lt; Bits, Alloc, Threadsafe, Secure &gt; b)" -->
+<a class="anchor" id="affc385351bd34308be1681f9c3893f10"></a><!-- doxytag: member="boost::xint::fixed_integer::operator&#45;=" ref="affc385351bd34308be1681f9c3893f10" args="(const fixed_integer b)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc, bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; &amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::operator-= </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::operator-= </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;&nbsp;</td>
+          <td class="paramtype">const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt;&gt;&nbsp;</td>
           <td class="paramname"> <em>b</em></td>
           <td>&nbsp;)&nbsp;</td>
           <td><code> [inline]</code></td>
@@ -1010,22 +981,22 @@ template&lt;size_t Bits, class Alloc, bool Threadsafe, bool Secure&gt; </div>
       </table>
 </div>
 <div class="memdoc">
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#aba68c6109d44641a0c77d949e0069d5e">operator-(fixed_integer, fixed_integer)</a> </dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#af29f603561c73ae4dfefa314f854a9b9">operator-(fixed_integer, fixed_integer)</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00391">391</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00380">380</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ad17449189e7bb89e5d45fd2c543337d0"></a><!-- doxytag: member="boost::xint::fixed_integer::operator/=" ref="ad17449189e7bb89e5d45fd2c543337d0" args="(const fixed_integer&lt; Bits, Alloc, Threadsafe, Secure &gt; b)" -->
+<a class="anchor" id="af114bab3ffdcabfbb1dd968e32c47cd0"></a><!-- doxytag: member="boost::xint::fixed_integer::operator/=" ref="af114bab3ffdcabfbb1dd968e32c47cd0" args="(const fixed_integer b)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc, bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; &amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::operator/= </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::operator/= </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;&nbsp;</td>
+          <td class="paramtype">const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt;&gt;&nbsp;</td>
           <td class="paramname"> <em>b</em></td>
           <td>&nbsp;)&nbsp;</td>
           <td><code> [inline]</code></td>
@@ -1033,22 +1004,22 @@ template&lt;size_t Bits, class Alloc, bool Threadsafe, bool Secure&gt; </div>
       </table>
 </div>
 <div class="memdoc">
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#a8004420023afd5d01cd85879a158f9db">operator/(fixed_integer, fixed_integer)</a> </dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#a2606613cee80fbd4fd17100d6d0e09b9">operator/(fixed_integer, fixed_integer)</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00411">411</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00398">398</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ade4692342c999dcb87b1cebcabd4e564"></a><!-- doxytag: member="boost::xint::fixed_integer::operator&lt;&lt;" ref="ade4692342c999dcb87b1cebcabd4e564" args="(size_t shift) const " -->
+<a class="anchor" id="a326278f38ee384d2469f758e2d91c941"></a><!-- doxytag: member="boost::xint::fixed_integer::operator&lt;&lt;" ref="a326278f38ee384d2469f758e2d91c941" args="(bitsize_t shift) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::operator&lt;&lt; </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::operator&lt;&lt; </td>
           <td>(</td>
-          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramtype"><a class="el" href="namespaceboost_1_1xint.html#ab256530d9916860983abdb6f0c6fad63">bitsize_t</a>&nbsp;</td>
           <td class="paramname"> <em>shift</em></td>
           <td>&nbsp;)&nbsp;</td>
           <td> const<code> [inline]</code></td>
@@ -1068,20 +1039,20 @@ template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The bit-shifted integer. </dd></dl>
  </p>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00497">497</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00471">471</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ac88b76594191237a3d8ca8271c370003"></a><!-- doxytag: member="boost::xint::fixed_integer::operator&lt;&lt;=" ref="ac88b76594191237a3d8ca8271c370003" args="(size_t shift)" -->
+<a class="anchor" id="a45846e1b9b7a31865ba2fb49b57ab138"></a><!-- doxytag: member="boost::xint::fixed_integer::operator&lt;&lt;=" ref="a45846e1b9b7a31865ba2fb49b57ab138" args="(bitsize_t shift)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; &amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::operator&lt;&lt;= </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::operator&lt;&lt;= </td>
           <td>(</td>
-          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramtype"><a class="el" href="namespaceboost_1_1xint.html#ab256530d9916860983abdb6f0c6fad63">bitsize_t</a>&nbsp;</td>
           <td class="paramname"> <em>shift</em></td>
           <td>&nbsp;)&nbsp;</td>
           <td><code> [inline]</code></td>
@@ -1089,22 +1060,22 @@ template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
       </table>
 </div>
 <div class="memdoc">
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#ade4692342c999dcb87b1cebcabd4e564">fixed_integer::operator&lt;&lt;(size_t) const </a> </dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a326278f38ee384d2469f758e2d91c941">fixed_integer::operator&lt;&lt;(bitsize_t) const </a> </dd></dl>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00515">515</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00489">489</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="aad8090d91aa220a7bf9425c0cf608045"></a><!-- doxytag: member="boost::xint::fixed_integer::operator=" ref="aad8090d91aa220a7bf9425c0cf608045" args="(const Type n)" -->
+<a class="anchor" id="a653c0a77740b27d6626daf6d3f75690f"></a><!-- doxytag: member="boost::xint::fixed_integer::operator=" ref="a653c0a77740b27d6626daf6d3f75690f" args="(const Type n)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc = std::allocator&lt;detail::digit_t&gt;, bool Threadsafe = true, bool Secure = false&gt; </div>
+template&lt;... &gt; </div>
 <div class="memtemplate">
 template&lt;typename Type &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt;Bits, Alloc, Threadsafe, Secure&gt;&amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::operator= </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::operator= </td>
           <td>(</td>
           <td class="paramtype">const Type&nbsp;</td>
           <td class="paramname"> <em>n</em></td>
@@ -1115,18 +1086,18 @@ template&lt;typename Type &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00059">59</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00171">171</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a72ceb6ec8441fe4540d90235ddefa9e3"></a><!-- doxytag: member="boost::xint::fixed_integer::operator=" ref="a72ceb6ec8441fe4540d90235ddefa9e3" args="(BOOST_XINT_RV_REF(type) c)" -->
+<a class="anchor" id="aad86c142066a690b214affe3e9338f3e"></a><!-- doxytag: member="boost::xint::fixed_integer::operator=" ref="aad86c142066a690b214affe3e9338f3e" args="(BOOST_XINT_RV_REF(type) c)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc = std::allocator&lt;detail::digit_t&gt;, bool Threadsafe = true, bool Secure = false&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt;Bits, Alloc, Threadsafe, Secure&gt;&amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::operator= </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::operator= </td>
           <td>(</td>
           <td class="paramtype">BOOST_XINT_RV_REF(<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">type</a>)&nbsp;</td>
           <td class="paramname"> <em>c</em></td>
@@ -1137,18 +1108,18 @@ template&lt;size_t Bits, class Alloc = std::allocator&lt;detail::digit_t&gt;, bo
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00056">56</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00169">169</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a61c76e7457cdc43f2d817cc5a12f23b9"></a><!-- doxytag: member="boost::xint::fixed_integer::operator=" ref="a61c76e7457cdc43f2d817cc5a12f23b9" args="(BOOST_XINT_COPY_ASSIGN_REF(type) c)" -->
+<a class="anchor" id="aa0aca358b7caa1ea3a4d32546ce438a3"></a><!-- doxytag: member="boost::xint::fixed_integer::operator=" ref="aa0aca358b7caa1ea3a4d32546ce438a3" args="(BOOST_XINT_COPY_ASSIGN_REF(type) c)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; &amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::operator= </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::operator= </td>
           <td>(</td>
           <td class="paramtype">BOOST_XINT_COPY_ASSIGN_REF(<a class="el" href="classboost_1_1xint_1_1fixed__integer.html">type</a>)&nbsp;</td>
           <td class="paramname"> <em>c</em></td>
@@ -1159,20 +1130,20 @@ template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00342">342</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00337">337</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a4c383b5a4827a19fb314e2798e4c2390"></a><!-- doxytag: member="boost::xint::fixed_integer::operator&gt;&gt;" ref="a4c383b5a4827a19fb314e2798e4c2390" args="(size_t shift) const " -->
+<a class="anchor" id="afaa0193c95ade2362b9e55dc4ebeb8f3"></a><!-- doxytag: member="boost::xint::fixed_integer::operator&gt;&gt;" ref="afaa0193c95ade2362b9e55dc4ebeb8f3" args="(bitsize_t shift) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::operator&gt;&gt; </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::operator&gt;&gt; </td>
           <td>(</td>
-          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramtype"><a class="el" href="namespaceboost_1_1xint.html#ab256530d9916860983abdb6f0c6fad63">bitsize_t</a>&nbsp;</td>
           <td class="paramname"> <em>shift</em></td>
           <td>&nbsp;)&nbsp;</td>
           <td> const<code> [inline]</code></td>
@@ -1192,20 +1163,20 @@ template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The bit-shifted integer. </dd></dl>
  </p>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00506">506</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00480">480</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a39b71726a8790f6f11ad99a1ffa84313"></a><!-- doxytag: member="boost::xint::fixed_integer::operator&gt;&gt;=" ref="a39b71726a8790f6f11ad99a1ffa84313" args="(size_t shift)" -->
+<a class="anchor" id="ac13d7456ad391ce19c5b2c22c94dadf5"></a><!-- doxytag: member="boost::xint::fixed_integer::operator&gt;&gt;=" ref="ac13d7456ad391ce19c5b2c22c94dadf5" args="(bitsize_t shift)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; &amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::operator&gt;&gt;= </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::operator&gt;&gt;= </td>
           <td>(</td>
-          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramtype"><a class="el" href="namespaceboost_1_1xint.html#ab256530d9916860983abdb6f0c6fad63">bitsize_t</a>&nbsp;</td>
           <td class="paramname"> <em>shift</em></td>
           <td>&nbsp;)&nbsp;</td>
           <td><code> [inline]</code></td>
@@ -1213,22 +1184,22 @@ template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
       </table>
 </div>
 <div class="memdoc">
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#a4c383b5a4827a19fb314e2798e4c2390">fixed_integer::operator&gt;&gt;(size_t) const </a> </dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="classboost_1_1xint_1_1fixed__integer.html#afaa0193c95ade2362b9e55dc4ebeb8f3">fixed_integer::operator&gt;&gt;(bitsize_t) const </a> </dd></dl>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00524">524</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00496">496</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="aa87de0d5846b92982af0e998c757043b"></a><!-- doxytag: member="boost::xint::fixed_integer::operator^=" ref="aa87de0d5846b92982af0e998c757043b" args="(const fixed_integer&lt; Bits, Alloc, Threadsafe, Secure &gt; n)" -->
+<a class="anchor" id="ad568affeea647ef91d0de1d88cc76192"></a><!-- doxytag: member="boost::xint::fixed_integer::operator^=" ref="ad568affeea647ef91d0de1d88cc76192" args="(const fixed_integer n)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc, bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; &amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::operator^= </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::operator^= </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;&nbsp;</td>
+          <td class="paramtype">const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt;&gt;&nbsp;</td>
           <td class="paramname"> <em>n</em></td>
           <td>&nbsp;)&nbsp;</td>
           <td><code> [inline]</code></td>
@@ -1236,22 +1207,22 @@ template&lt;size_t Bits, class Alloc, bool Threadsafe, bool Secure&gt; </div>
       </table>
 </div>
 <div class="memdoc">
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#a136bb0995f8e93a65fe92944b4865d16">operator^(fixed_integer, fixed_integer)</a> </dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#a964396cc2b187769a3f45a7b348ce60c">operator^(fixed_integer, fixed_integer)</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00487">487</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00462">462</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a921a727af7fd8a7836fb480fb814ee48"></a><!-- doxytag: member="boost::xint::fixed_integer::operator|=" ref="a921a727af7fd8a7836fb480fb814ee48" args="(const fixed_integer&lt; Bits, Alloc, Threadsafe, Secure &gt; n)" -->
+<a class="anchor" id="a2272dbf43c92ce1f56d5f0618a137425"></a><!-- doxytag: member="boost::xint::fixed_integer::operator|=" ref="a2272dbf43c92ce1f56d5f0618a137425" args="(const fixed_integer n)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc, bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; &amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::operator|= </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> &amp; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::operator|= </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;&nbsp;</td>
+          <td class="paramtype">const <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt;&gt;&nbsp;</td>
           <td class="paramname"> <em>n</em></td>
           <td>&nbsp;)&nbsp;</td>
           <td><code> [inline]</code></td>
@@ -1259,20 +1230,20 @@ template&lt;size_t Bits, class Alloc, bool Threadsafe, bool Secure&gt; </div>
       </table>
 </div>
 <div class="memdoc">
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#aa3c76fd1028d68d389ed0ec99af9dce7">operator|(fixed_integer, fixed_integer)</a> </dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#a2e0a49149f74db4161870090d948e817">operator|(fixed_integer, fixed_integer)</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00477">477</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00453">453</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a6ec6b3dd4e921587bc1fcdf578bf0665"></a><!-- doxytag: member="boost::xint::fixed_integer::operator~" ref="a6ec6b3dd4e921587bc1fcdf578bf0665" args="() const " -->
+<a class="anchor" id="a2e924b61df38e812c682f86e540f37d6"></a><!-- doxytag: member="boost::xint::fixed_integer::operator~" ref="a2e924b61df38e812c682f86e540f37d6" args="() const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::operator~ </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::operator~ </td>
           <td>(</td>
           <td class="paramname"></td>
           <td>&nbsp;)&nbsp;</td>
@@ -1285,18 +1256,18 @@ template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
 <p>The Bitwise Ones' Complement (i.e. bitwise NOT) operator. </p>
 <p>This operator does not exist in the integer and nothrow_integer classes, because as their lengths are not limited, it would result in an infinitely long number. </p>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00365">365</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00357">357</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="aede86c64ce68a1f7a5e71d6cb39b8561"></a><!-- doxytag: member="boost::xint::fixed_integer::pow2" ref="aede86c64ce68a1f7a5e71d6cb39b8561" args="(size_t exponent)" -->
+<a class="anchor" id="ac4928defd092ad3f30af55e0a221bd90"></a><!-- doxytag: member="boost::xint::fixed_integer::pow2" ref="ac4928defd092ad3f30af55e0a221bd90" args="(size_t exponent)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::pow2 </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::pow2 </td>
           <td>(</td>
           <td class="paramtype">size_t&nbsp;</td>
           <td class="paramname"> <em>exponent</em></td>
@@ -1319,20 +1290,20 @@ template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
 <dl class="remark"><dt><b>Remarks:</b></dt><dd>This is a convenience function, to help with self-documenting code. It is also more efficient than using bit-shifting or the <code>pow</code> function to get the same result. </dd></dl>
  </p>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00559">559</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00527">527</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ae9f2ada421ee7936ce0fa754eaad18ae"></a><!-- doxytag: member="boost::xint::fixed_integer::random_by_size" ref="ae9f2ada421ee7936ce0fa754eaad18ae" args="(Type &amp;gen, size_t size_in_bits, bool high_bit_on=false, bool low_bit_on=false, bool can_be_negative=false)" -->
+<a class="anchor" id="afe0884583cdf8c3a60dc3fd35fa40a31"></a><!-- doxytag: member="boost::xint::fixed_integer::random_by_size" ref="afe0884583cdf8c3a60dc3fd35fa40a31" args="(Type &amp;gen, bitsize_t size_in_bits, bool high_bit_on=false, bool low_bit_on=false, bool can_be_negative=false)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
 <div class="memtemplate">
 template&lt;class Type &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::random_by_size </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::random_by_size </td>
           <td>(</td>
           <td class="paramtype">Type &amp;&nbsp;</td>
           <td class="paramname"> <em>gen</em>, </td>
@@ -1340,7 +1311,7 @@ template&lt;class Type &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramtype"><a class="el" href="namespaceboost_1_1xint.html#ab256530d9916860983abdb6f0c6fad63">bitsize_t</a>&nbsp;</td>
           <td class="paramname"> <em>size_in_bits</em>, </td>
         </tr>
         <tr>
@@ -1386,20 +1357,20 @@ template&lt;class Type &gt; </div>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="random.html">The XInt Random Number System</a> </dd></dl>
  </p>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00580">580</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00544">544</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ab9b05bf978444e556eba92cbe28d9ae2"></a><!-- doxytag: member="boost::xint::fixed_integer::random_prime" ref="ab9b05bf978444e556eba92cbe28d9ae2" args="(Type &amp;gen, size_t size_in_bits, callback_t callback=no_callback)" -->
+<a class="anchor" id="a7215f0327bf6d96d27f3ea805657e64c"></a><!-- doxytag: member="boost::xint::fixed_integer::random_prime" ref="a7215f0327bf6d96d27f3ea805657e64c" args="(Type &amp;gen, bitsize_t size_in_bits, callback_t callback=no_callback)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
 <div class="memtemplate">
 template&lt;class Type &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt; <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::random_prime </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1fixed__integer.html">fixed_integer</a> <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::random_prime </td>
           <td>(</td>
           <td class="paramtype">Type &amp;&nbsp;</td>
           <td class="paramname"> <em>gen</em>, </td>
@@ -1407,7 +1378,7 @@ template&lt;class Type &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">size_t&nbsp;</td>
+          <td class="paramtype"><a class="el" href="namespaceboost_1_1xint.html#ab256530d9916860983abdb6f0c6fad63">bitsize_t</a>&nbsp;</td>
           <td class="paramname"> <em>size_in_bits</em>, </td>
         </tr>
         <tr>
@@ -1442,23 +1413,23 @@ template&lt;class Type &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="note"><dt><b>Note:</b></dt><dd>This function uses <a class="el" href="namespaceboost_1_1xint.html#a8a188df259a5b64cf9a600a196ce8461">xint::is_prime</a>. See the description of it for details of its limitations.</dd></dl>
+<dl class="note"><dt><b>Note:</b></dt><dd>This function uses <a class="el" href="namespaceboost_1_1xint.html#a0f70e8b365600e14df023c83435a56ff">xint::is_prime</a>. See the description of it for details of its limitations.</dd></dl>
 <dl class="user"><dt><b></b></dt><dd>See the <a class="el" href="random.html">Random Number Functions page</a> for details on how to get cryptographically-secure random numbers.</dd></dl>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="primes.html">Generating Prime Numbers</a> </dd></dl>
  </p>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00595">595</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00559">559</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a471ea05daa9fe48bcdf57849b7294607"></a><!-- doxytag: member="boost::xint::fixed_integer::sign" ref="a471ea05daa9fe48bcdf57849b7294607" args="(bool signed_zero=false) const " -->
+<a class="anchor" id="a8ee6b3914e05703471fde2057226ddb3"></a><!-- doxytag: member="boost::xint::fixed_integer::sign" ref="a8ee6b3914e05703471fde2057226ddb3" args="(bool signed_zero=false) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
+template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt; Bits, Alloc, Threadsafe, Secure &gt;::sign </td>
+          <td class="memname">int <a class="el" href="classboost_1_1xint_1_1fixed__integer.html">boost::xint::fixed_integer</a>&lt;&gt;::sign </td>
           <td>(</td>
           <td class="paramtype">bool&nbsp;</td>
           <td class="paramname"> <em>signed_zero</em> = <code>false</code></td>
@@ -1480,7 +1451,7 @@ template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>-1 if <code>*this</code> is negative, 0 if it's zero, or 1 if it's greater than zero. </dd></dl>
  </p>
 
-<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00544">544</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="fixed__integer_8hpp_source.html#l00515">515</a> of file <a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1488,7 +1459,7 @@ template&lt;size_t Bits, class Alloc , bool Threadsafe, bool Secure&gt; </div>
 <li><a class="el" href="fixed__integer_8hpp_source.html">fixed_integer.hpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Wed Jun 2 13:37:03 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Jun 3 00:00:36 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

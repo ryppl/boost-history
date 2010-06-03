@@ -46,7 +46,7 @@
 <a name="l00028"></a>00028 <span class="keyword">namespace </span>xint {
 <a name="l00029"></a>00029 <span class="keyword">namespace </span>detail {
 <a name="l00030"></a>00030 
-<a name="l00031"></a>00031 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#abe0193015e6085246d5a3b5d5193f692">square</a>(data_t&amp; target, <span class="keyword">const</span> data_t n) {
+<a name="l00031"></a>00031 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#ac3f13e684b487865506362e4b382bc11">square</a>(data_t&amp; target, <span class="keyword">const</span> data_t n) {
 <a name="l00032"></a>00032     target.set(0);
 <a name="l00033"></a>00033     target.beginmod(n.length * 2 + 1, <span class="keyword">true</span>);
 <a name="l00034"></a>00034 
@@ -115,11 +115,11 @@
 <a name="l00097"></a>00097 
 <a name="l00098"></a>00098     <span class="keywordflow">if</span> (n.same_storage(by)) {
 <a name="l00099"></a>00099         <span class="keywordflow">if</span> (n.negative != by.negative) {
-<a name="l00100"></a>00100             <a class="code" href="namespaceboost_1_1xint.html#abe0193015e6085246d5a3b5d5193f692">square</a>(target, n);
+<a name="l00100"></a>00100             <a class="code" href="namespaceboost_1_1xint.html#ac3f13e684b487865506362e4b382bc11">square</a>(target, n);
 <a name="l00101"></a>00101             target.negative = <span class="keyword">true</span>;
 <a name="l00102"></a>00102             <span class="keywordflow">return</span>;
 <a name="l00103"></a>00103         } <span class="keywordflow">else</span> {
-<a name="l00104"></a>00104             <a class="code" href="namespaceboost_1_1xint.html#abe0193015e6085246d5a3b5d5193f692">square</a>(target, n);
+<a name="l00104"></a>00104             <a class="code" href="namespaceboost_1_1xint.html#ac3f13e684b487865506362e4b382bc11">square</a>(target, n);
 <a name="l00105"></a>00105             <span class="keywordflow">return</span>;
 <a name="l00106"></a>00106         }
 <a name="l00107"></a>00107     }
@@ -170,7 +170,7 @@
 <a name="l00152"></a>00152     <span class="keywordflow">return</span> *<span class="keyword">this</span>;
 <a name="l00153"></a>00153 }
 <a name="l00154"></a>00154 
-<a name="l00155"></a>00155 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> data_t <a class="code" href="namespaceboost_1_1xint.html#a72b3b1b110612e99609f0c98d69cf2bf">operator*</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2) {
+<a name="l00155"></a>00155 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> data_t <a class="code" href="namespaceboost_1_1xint.html#af877fa3d7e129eb0ea0d873396868723">operator*</a>(<span class="keyword">const</span> data_t n1, <span class="keyword">const</span> data_t n2) {
 <a name="l00156"></a>00156     data_t r(n1.new_holder());
 <a name="l00157"></a>00157     multiply(r, n1, n2);
 <a name="l00158"></a>00158     <span class="keywordflow">return</span> r;
@@ -182,7 +182,7 @@
 <a name="l00165"></a>00165 <span class="comment"></span>
 <a name="l00166"></a>00166 <span class="preprocessor">#endif // defined(BOOST_XINT_COMPILED_LIB) || defined(BOOST_XINT_FROM_HEADER)</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Wed Jun 2 13:37:02 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Jun 3 00:00:36 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

@@ -53,7 +53,7 @@
 <a name="l00035"></a>00035     <span class="keywordflow">else</span> <span class="keywordflow">return</span> char((n - 10) + <span class="charliteral">&#39;a&#39;</span>);
 <a name="l00036"></a>00036 }
 <a name="l00037"></a>00037 
-<a name="l00038"></a>00038 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> std::string <a class="code" href="namespaceboost_1_1xint.html#abb495759cf044c873237e4635a902043">to_string</a>(<span class="keyword">const</span> data_t n, <span class="keywordtype">size_t</span> base, <span class="keywordtype">bool</span>
+<a name="l00038"></a>00038 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> std::string <a class="code" href="namespaceboost_1_1xint.html#a6ae4ddf930587218746f08a2a5982746">to_string</a>(<span class="keyword">const</span> data_t n, <span class="keywordtype">size_t</span> base, <span class="keywordtype">bool</span>
 <a name="l00039"></a>00039     uppercase)
 <a name="l00040"></a>00040 {
 <a name="l00041"></a>00041     <span class="keywordflow">if</span> (base&lt;2 || base&gt;36) <span class="keywordflow">throw</span> exceptions::invalid_base();
@@ -100,10 +100,10 @@
 <a name="l00082"></a>00082         <span class="comment">// this function, I&#39;ll add it later.</span>
 <a name="l00083"></a>00083 
 <a name="l00084"></a>00084         <span class="keyword">const</span> data_t shift(n.new_holder(), base);
-<a name="l00085"></a>00085         data_t::divide_t a(<a class="code" href="namespaceboost_1_1xint.html#aafccc57266902713de78a2ac7eb9b37c">divide</a>(n.abs(), shift));
+<a name="l00085"></a>00085         data_t::divide_t a(<a class="code" href="namespaceboost_1_1xint.html#a729653da022f22652cd5aa2d29f0c8fd">divide</a>(n.abs(), shift));
 <a name="l00086"></a>00086         <span class="keywordflow">do</span> {
 <a name="l00087"></a>00087             out &lt;&lt; nToChar(a.remainder[0], uppercase);
-<a name="l00088"></a>00088             a = <a class="code" href="namespaceboost_1_1xint.html#aafccc57266902713de78a2ac7eb9b37c">divide</a>(a.quotient, shift);
+<a name="l00088"></a>00088             a = <a class="code" href="namespaceboost_1_1xint.html#a729653da022f22652cd5aa2d29f0c8fd">divide</a>(a.quotient, shift);
 <a name="l00089"></a>00089         } <span class="keywordflow">while</span> (!a.quotient.is_zero());
 <a name="l00090"></a>00090         <span class="keywordflow">if</span> (!a.remainder.is_zero()) out &lt;&lt; nToChar(a.remainder[0], uppercase);
 <a name="l00091"></a>00091 
@@ -222,7 +222,7 @@
 <a name="l00204"></a>00204     from_string(str.c_str(), str.length(), base);
 <a name="l00205"></a>00205 }
 <a name="l00206"></a>00206 
-<a name="l00207"></a>00207 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <a class="code" href="namespaceboost_1_1xint.html#aae3128529370506165793f2771834e58" title="The format for the binary representations of integers.">xint::binary_t</a> <a class="code" href="namespaceboost_1_1xint.html#a8df94bce4e819234572029a62d8c8681">to_binary</a>(<span class="keyword">const</span> data_t n, <span class="keywordtype">size_t</span> bits) {
+<a name="l00207"></a>00207 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <a class="code" href="namespaceboost_1_1xint.html#aae3128529370506165793f2771834e58" title="The format for the binary representations of integers.">xint::binary_t</a> <a class="code" href="namespaceboost_1_1xint.html#ac1c6eb0f3c5166761d81503fa68f4b78">to_binary</a>(<span class="keyword">const</span> data_t n, <span class="keywordtype">size_t</span> bits) {
 <a name="l00208"></a>00208     <span class="keywordflow">if</span> (bits &gt; <span class="keywordtype">size_t</span>(std::numeric_limits&lt;unsigned char&gt;::digits)) <span class="keywordflow">throw</span>
 <a name="l00209"></a>00209         exceptions::invalid_argument(<span class="stringliteral">&quot;can&#39;t fit that many bits into an &quot;</span>
 <a name="l00210"></a>00210         <span class="stringliteral">&quot;unsigned character on this system&quot;</span>);
@@ -267,7 +267,7 @@
 <a name="l00250"></a>00250 <span class="comment"></span>
 <a name="l00251"></a>00251 <span class="preprocessor">#endif // defined(BOOST_XINT_COMPILED_LIB) || defined(BOOST_XINT_FROM_HEADER)</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Wed Jun 2 13:37:02 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Jun 3 00:00:36 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

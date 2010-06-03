@@ -46,7 +46,7 @@
 <a name="l00029"></a>00029 <span class="keyword">namespace </span>xint {
 <a name="l00030"></a>00030 <span class="keyword">namespace </span>detail {
 <a name="l00031"></a>00031 
-<a name="l00032"></a>00032 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a6a4d8e4e7cb423551c8ef184ea0e4900">sqrt</a>(data_t&amp; target, data_t n) {
+<a name="l00032"></a>00032 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a3f266530ae26fd9553a7b965fa1db2ea">sqrt</a>(data_t&amp; target, data_t n) {
 <a name="l00033"></a>00033     <span class="keywordflow">if</span> (n.is_zero()) { target.set(0); <span class="keywordflow">return</span>; }
 <a name="l00034"></a>00034     <span class="keywordflow">if</span> (n.negative) <span class="keywordflow">throw</span> exceptions::cannot_represent(<span class="stringliteral">&quot;library cannot &quot;</span>
 <a name="l00035"></a>00035         <span class="stringliteral">&quot;represent imaginary values (tried to take sqrt of negative number)&quot;</span>);
@@ -61,7 +61,7 @@
 <a name="l00044"></a>00044     <span class="comment">// Initial guess is half the length of n, in bits</span>
 <a name="l00045"></a>00045     target.beginmod();
 <a name="l00046"></a>00046     target.set(0);
-<a name="l00047"></a>00047     <a class="code" href="namespaceboost_1_1xint.html#ab30774cb5018703c4351a678a055c3f2">setbit</a>(target, <a class="code" href="namespaceboost_1_1xint.html#abe2baf8e6f99d5b3ca9cfb5d530ced30">log2</a>(n) / 2);
+<a name="l00047"></a>00047     <a class="code" href="namespaceboost_1_1xint.html#a677abb914051570846048717ff0a7172">setbit</a>(target, <a class="code" href="namespaceboost_1_1xint.html#a9d9b4f302607bcf96bd2ab2c3145f453">log2</a>(n) / 2);
 <a name="l00048"></a>00048 
 <a name="l00049"></a>00049     <span class="comment">// Now refine it until we&#39;re as close as we can get.</span>
 <a name="l00050"></a>00050     <span class="keywordflow">while</span> (1) {
@@ -81,7 +81,7 @@
 <a name="l00065"></a>00065 <span class="comment"></span>
 <a name="l00066"></a>00066 <span class="preprocessor">#endif // defined(BOOST_XINT_COMPILED_LIB) || defined(BOOST_XINT_FROM_HEADER)</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Wed Jun 2 13:37:02 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Jun 3 00:00:36 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

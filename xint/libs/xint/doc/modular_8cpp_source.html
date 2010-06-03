@@ -47,7 +47,7 @@
 <a name="l00029"></a>00029 <span class="keyword">namespace </span>xint {
 <a name="l00030"></a>00030 <span class="keyword">namespace </span>detail {
 <a name="l00031"></a>00031 
-<a name="l00032"></a>00032 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a954551199dbef1e09eb40c4eda947edc">mulmod</a>(data_t&amp; target, <span class="keyword">const</span> data_t n, <span class="keyword">const</span> data_t by,
+<a name="l00032"></a>00032 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a08936f9fc3d9b799f98604bedefb1ee8">mulmod</a>(data_t&amp; target, <span class="keyword">const</span> data_t n, <span class="keyword">const</span> data_t by,
 <a name="l00033"></a>00033     <span class="keyword">const</span> data_t modulus)
 <a name="l00034"></a>00034 {
 <a name="l00035"></a>00035     target.duplicate_data(n);
@@ -55,14 +55,14 @@
 <a name="l00037"></a>00037     target %= modulus;
 <a name="l00038"></a>00038 }
 <a name="l00039"></a>00039 
-<a name="l00040"></a>00040 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#afb9af493fcf2fdda1eb1a44482df3bf4">sqrmod</a>(data_t&amp; target, <span class="keyword">const</span> data_t n, <span class="keyword">const</span> data_t
+<a name="l00040"></a>00040 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a250379d4753bbd26002eac066114b756">sqrmod</a>(data_t&amp; target, <span class="keyword">const</span> data_t n, <span class="keyword">const</span> data_t
 <a name="l00041"></a>00041     modulus)
 <a name="l00042"></a>00042 {
-<a name="l00043"></a>00043     <a class="code" href="namespaceboost_1_1xint.html#abe0193015e6085246d5a3b5d5193f692">square</a>(target, n);
+<a name="l00043"></a>00043     <a class="code" href="namespaceboost_1_1xint.html#ac3f13e684b487865506362e4b382bc11">square</a>(target, n);
 <a name="l00044"></a>00044     target %= modulus;
 <a name="l00045"></a>00045 }
 <a name="l00046"></a>00046 
-<a name="l00047"></a>00047 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#ae827f2e153ca6eccbe3367afb2a6f2c0">powmod</a>(data_t&amp; target, <span class="keyword">const</span> data_t n, <span class="keyword">const</span> data_t e,
+<a name="l00047"></a>00047 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a3df211c7086c4652a7e12492d7d103f7">powmod</a>(data_t&amp; target, <span class="keyword">const</span> data_t n, <span class="keyword">const</span> data_t e,
 <a name="l00048"></a>00048     <span class="keyword">const</span> data_t m, <span class="keywordtype">bool</span> noMontgomery)
 <a name="l00049"></a>00049 {
 <a name="l00050"></a>00050     <span class="keywordflow">if</span> (m.is_zero() || m.negative) <span class="keywordflow">throw</span> exceptions::invalid_modulus();
@@ -73,9 +73,9 @@
 <a name="l00055"></a>00055     <span class="comment">// Montgomery&#39;s method is often noticeably faster, but only works if the</span>
 <a name="l00056"></a>00056     <span class="comment">// m is odd.</span>
 <a name="l00057"></a>00057     <span class="keywordflow">if</span> (m.is_odd() &amp;&amp; !noMontgomery) {
-<a name="l00058"></a>00058         montgomeryPowerMod(target, <a class="code" href="namespaceboost_1_1xint.html#abbbf814dccf87b2293ab62976c15acac">abs</a>(n) % m, <a class="code" href="namespaceboost_1_1xint.html#abbbf814dccf87b2293ab62976c15acac">abs</a>(e), m);
+<a name="l00058"></a>00058         montgomeryPowerMod(target, <a class="code" href="namespaceboost_1_1xint.html#a22c29f49cfee8ee7bf809db665e1d9d7">abs</a>(n) % m, <a class="code" href="namespaceboost_1_1xint.html#a22c29f49cfee8ee7bf809db665e1d9d7">abs</a>(e), m);
 <a name="l00059"></a>00059     } <span class="keywordflow">else</span> {
-<a name="l00060"></a>00060         data_t answer(target.new_holder(), 1), p(<a class="code" href="namespaceboost_1_1xint.html#abbbf814dccf87b2293ab62976c15acac">abs</a>(n));
+<a name="l00060"></a>00060         data_t answer(target.new_holder(), 1), p(<a class="code" href="namespaceboost_1_1xint.html#a22c29f49cfee8ee7bf809db665e1d9d7">abs</a>(n));
 <a name="l00061"></a>00061         answer.beginmod();
 <a name="l00062"></a>00062         p.beginmod();
 <a name="l00063"></a>00063 
@@ -93,7 +93,7 @@
 <a name="l00075"></a>00075                     answer *= p;
 <a name="l00076"></a>00076                     answer %= m;
 <a name="l00077"></a>00077                 }
-<a name="l00078"></a>00078                 <a class="code" href="namespaceboost_1_1xint.html#afb9af493fcf2fdda1eb1a44482df3bf4">sqrmod</a>(p, p, m);
+<a name="l00078"></a>00078                 <a class="code" href="namespaceboost_1_1xint.html#a250379d4753bbd26002eac066114b756">sqrmod</a>(p, p, m);
 <a name="l00079"></a>00079                 ee &gt;&gt;= 1;
 <a name="l00080"></a>00080             }
 <a name="l00081"></a>00081         }
@@ -111,7 +111,7 @@
 <a name="l00094"></a>00094 <span class="comment"></span>
 <a name="l00095"></a>00095 <span class="preprocessor">#endif // defined(BOOST_XINT_COMPILED_LIB) || defined(BOOST_XINT_FROM_HEADER)</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Wed Jun 2 13:37:02 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Jun 3 00:00:36 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

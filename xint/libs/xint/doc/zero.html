@@ -27,10 +27,10 @@
 <p>However, the XInt library does have limited support for a "negative zero," for use in a planned future unlimited-precision floating point library built on it. To get a negative zero, negate a normal zero value with the unary minus, like so:</p>
 <div class="fragment"><pre class="fragment"><a class="code" href="namespaceboost_1_1xint.html#a3f9537c30e9c1f7341574fcd0223147c" title="The default arbitrary-length integer type.">integer</a> z = ...
 integer nz = -z;
-</pre></div><p>A negative zero will act exactly like a "normal" zero in all respects. The only way to detect a sign on it is by calling <a class="el" href="classboost_1_1xint_1_1integer__t.html#ac0a4add7959b246146e66eed4cf596f1">the sign function</a> with the <code>signed_zero</code> parameter <code>true</code>. With that parameter, it will return -1 on any negative number, including zero.</p>
+</pre></div><p>A negative zero will act exactly like a "normal" zero in all respects. The only way to detect a sign on it is by calling <a class="el" href="classboost_1_1xint_1_1integer__t.html#aa278c48753019fe3deaa623eecdb16b3">the sign function</a> with the <code>signed_zero</code> parameter <code>true</code>. With that parameter, it will return -1 on any negative number, including zero.</p>
 <p>Note that the unary minus operator is the only function that will ever return a negative zero. </p>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Wed Jun 2 13:37:02 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Jun 3 00:00:36 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

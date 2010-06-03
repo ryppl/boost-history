@@ -22,10 +22,24 @@
 #include "random.hpp"
 
 #ifdef _WIN32
-	// The file's constructors make heavy use of the 'this' pointer, in a safe
-	// manner. MSVC isn't smart enough to know that it's safe.
-	#pragma warning(push)
-	#pragma warning(disable: 4355)
+    // The file's constructors make heavy use of the 'this' pointer, in a safe
+    // manner. MSVC isn't smart enough to know that it's safe.
+    #pragma warning(push)
+    #pragma warning(disable: 4355)
+#endif
+
+#ifdef BOOST_XINT_DOXYGEN_IGNORE
+    // The documentation should see a simplified version of the functions.
+    #define BOOST_XINT_INTEGER_INITIAL_TPL template<...>
+    #define BOOST_XINT_INTEGER_TPL template<...>
+    #define BOOST_XINT_INTEGER_TYPE integer_t
+#else
+    #define BOOST_XINT_INTEGER_INITIAL_TPL template <class Alloc = \
+        std::allocator<detail::digit_t>, bool Threadsafe = true, bool Secure = \
+        false>
+    #define BOOST_XINT_INTEGER_TPL template<class Alloc, bool Threadsafe, bool \
+        Secure>
+    #define BOOST_XINT_INTEGER_TYPE integer_t<Alloc, Threadsafe, Secure>
 #endif
 
 namespace boost {
@@ -52,24 +66,23 @@ namespace xint {
     \tparam Secure If \c true, the library zeros out all memory before
     deallocating it, for maximum security.
 */
-template <class Alloc = std::allocator<detail::digit_t>, bool Threadsafe = true,
-    bool Secure = false>
+BOOST_XINT_INTEGER_INITIAL_TPL
 class integer_t: private detail::digitmanager_t<Alloc, Threadsafe, Secure>,
     public any_integer
 {
     public:
-    typedef integer_t<Alloc, Threadsafe, Secure> type;
+    typedef BOOST_XINT_INTEGER_TYPE type;
 
     //! \name Constructors & Destructors
     //!@{
     integer_t();
-    integer_t(const integer_t<Alloc, Threadsafe, Secure>& b, bool
-        force_thread_safety = false);
+    integer_t(const BOOST_XINT_INTEGER_TYPE& b, bool force_thread_safety =
+        false);
     integer_t(BOOST_XINT_RV_REF(type) b): any_integer(*this, 1) { _swap(b); }
     explicit integer_t(const char *str, size_t base = 10);
     explicit integer_t(const char *str, char **endptr, size_t base = 10);
     explicit integer_t(const std::string& str, size_t base = 10);
-    explicit integer_t(const xint::binary_t b, size_t bits = 0);
+    explicit integer_t(const xint::binary_t b, bitsize_t bits = 0);
     explicit integer_t(const any_integer& other, bool force_thread_safety =
         false);
     template <typename Type> integer_t(const Type n,
@@ -77,9 +90,9 @@ class integer_t: private detail::digitmanager_t<Alloc, Threadsafe, Secure>,
 
     #ifndef BOOST_XINT_DOXYGEN_IGNORE
     //! This one is used internally.
-    integer_t(const detail::data_t c): detail::digitmanager_t<Alloc, Threadsafe,
-        Secure>(*c.holder()), any_integer(*this, c.length, c.negative) {
-        data.beginendmod(); }
+    integer_t(const detail::data_t c):
+    detail::digitmanager_t<Alloc, Threadsafe, Secure>(*c.holder()),
+    any_integer(*this, c.length, c.negative) { data.beginendmod(); }
     #endif
     //!@}
 
@@ -91,46 +104,35 @@ class integer_t: private detail::digitmanager_t<Alloc, Threadsafe, Secure>,
         a fixed maximum size, there is no logical way to implement it.
     */
     //@{
-    integer_t<Alloc, Threadsafe, Secure>& operator=(BOOST_XINT_COPY_ASSIGN_REF(
-        type) c);
-    integer_t<Alloc, Threadsafe, Secure>& operator=(BOOST_XINT_RV_REF(type) c) {
+    BOOST_XINT_INTEGER_TYPE& operator=(BOOST_XINT_COPY_ASSIGN_REF(type) c);
+    BOOST_XINT_INTEGER_TYPE& operator=(BOOST_XINT_RV_REF(type) c) {
         _swap(c); return *this; }
-    template <typename Type> integer_t<Alloc, Threadsafe, Secure>& operator=(
-        const Type n) { integer_t<Alloc, Threadsafe, Secure> nn(n); _swap(nn);
-        return *this; }
+    template <typename Type> BOOST_XINT_INTEGER_TYPE& operator=(const Type n) {
+        BOOST_XINT_INTEGER_TYPE nn(n); _swap(nn); return *this; }
 
     bool operator!() const { return data.is_zero(); }
-    integer_t<Alloc, Threadsafe, Secure> operator-() const;
-    integer_t<Alloc, Threadsafe, Secure>& operator+() { return *this; }
-    const integer_t<Alloc, Threadsafe, Secure>& operator+() const { return
-        *this; }
+    BOOST_XINT_INTEGER_TYPE operator-() const;
+    BOOST_XINT_INTEGER_TYPE& operator+() { return *this; }
+    const BOOST_XINT_INTEGER_TYPE& operator+() const { return *this; }
 
-    integer_t<Alloc, Threadsafe, Secure>& operator+=(const integer_t<Alloc,
-        Threadsafe, Secure> b);
-    integer_t<Alloc, Threadsafe, Secure>& operator-=(const integer_t<Alloc,
-        Threadsafe, Secure> b);
-    integer_t<Alloc, Threadsafe, Secure>& operator*=(const integer_t<Alloc,
-        Threadsafe, Secure> b);
-    integer_t<Alloc, Threadsafe, Secure>& operator/=(const integer_t<Alloc,
-        Threadsafe, Secure> b);
-    integer_t<Alloc, Threadsafe, Secure>& operator%=(const integer_t<Alloc,
-        Threadsafe, Secure> b);
+    BOOST_XINT_INTEGER_TYPE& operator+=(const BOOST_XINT_INTEGER_TYPE b);
+    BOOST_XINT_INTEGER_TYPE& operator-=(const BOOST_XINT_INTEGER_TYPE b);
+    BOOST_XINT_INTEGER_TYPE& operator*=(const BOOST_XINT_INTEGER_TYPE b);
+    BOOST_XINT_INTEGER_TYPE& operator/=(const BOOST_XINT_INTEGER_TYPE b);
+    BOOST_XINT_INTEGER_TYPE& operator%=(const BOOST_XINT_INTEGER_TYPE b);
 
-    integer_t<Alloc, Threadsafe, Secure>& operator++();
-    integer_t<Alloc, Threadsafe, Secure>& operator--();
-    integer_t<Alloc, Threadsafe, Secure>  operator++(int);
-    integer_t<Alloc, Threadsafe, Secure>  operator--(int);
+    BOOST_XINT_INTEGER_TYPE& operator++();
+    BOOST_XINT_INTEGER_TYPE& operator--();
+    BOOST_XINT_INTEGER_TYPE  operator++(int);
+    BOOST_XINT_INTEGER_TYPE  operator--(int);
 
-    integer_t<Alloc, Threadsafe, Secure>& operator&=(const integer_t<Alloc,
-        Threadsafe, Secure> n);
-    integer_t<Alloc, Threadsafe, Secure>& operator|=(const integer_t<Alloc,
-        Threadsafe, Secure> n);
-    integer_t<Alloc, Threadsafe, Secure>& operator^=(const integer_t<Alloc,
-        Threadsafe, Secure> n);
-    integer_t<Alloc, Threadsafe, Secure>  operator<<(size_t shift) const;
-    integer_t<Alloc, Threadsafe, Secure>  operator>>(size_t shift) const;
-    integer_t<Alloc, Threadsafe, Secure>& operator<<=(size_t shift);
-    integer_t<Alloc, Threadsafe, Secure>& operator>>=(size_t shift);
+    BOOST_XINT_INTEGER_TYPE& operator&=(const BOOST_XINT_INTEGER_TYPE n);
+    BOOST_XINT_INTEGER_TYPE& operator|=(const BOOST_XINT_INTEGER_TYPE n);
+    BOOST_XINT_INTEGER_TYPE& operator^=(const BOOST_XINT_INTEGER_TYPE n);
+    BOOST_XINT_INTEGER_TYPE  operator<<(bitsize_t shift) const;
+    BOOST_XINT_INTEGER_TYPE  operator>>(bitsize_t shift) const;
+    BOOST_XINT_INTEGER_TYPE& operator<<=(bitsize_t shift);
+    BOOST_XINT_INTEGER_TYPE& operator>>=(bitsize_t shift);
     //@}
 
     //! \name Miscellaneous Functions
@@ -141,7 +143,7 @@ class integer_t: private detail::digitmanager_t<Alloc, Threadsafe, Secure>,
     size_t hex_digits() const;
     //!@}
 
-    typedef base_divide_t<integer_t<Alloc, Threadsafe, Secure> > divide_t;
+    typedef base_divide_t<BOOST_XINT_INTEGER_TYPE > divide_t;
 
     /*! \name Static Member Functions
 
@@ -151,17 +153,16 @@ class integer_t: private detail::digitmanager_t<Alloc, Threadsafe, Secure>,
         instead.
     */
     //!@{
-    static integer_t<Alloc, Threadsafe, Secure> pow2(size_t exponent);
-    static integer_t<Alloc, Threadsafe, Secure> factorial(size_t n);
-    template <class Type> static integer_t<Alloc, Threadsafe, Secure>
-        random_by_size(Type& gen, size_t size_in_bits, bool high_bit_on = false,
-        bool low_bit_on = false, bool can_be_negative = false);
-    template <class Type> static integer_t<Alloc, Threadsafe, Secure>
-        random_prime(Type& gen, size_t size_in_bits, callback_t callback =
-        no_callback);
+    static BOOST_XINT_INTEGER_TYPE pow2(size_t exponent);
+    static BOOST_XINT_INTEGER_TYPE factorial(size_t n);
+    template <class Type> static BOOST_XINT_INTEGER_TYPE random_by_size(Type&
+        gen, bitsize_t size_in_bits, bool high_bit_on = false, bool low_bit_on =
+        false, bool can_be_negative = false);
+    template <class Type> static BOOST_XINT_INTEGER_TYPE random_prime(Type& gen,
+        bitsize_t size_in_bits, callback_t callback = no_callback);
     //!@}
 
-    void _swap(integer_t<Alloc, Threadsafe, Secure>& s) { using std::swap;
+    void _swap(BOOST_XINT_INTEGER_TYPE& s) { using std::swap;
         swap(data, s.data); }
 
     private:
@@ -172,8 +173,8 @@ class integer_t: private detail::digitmanager_t<Alloc, Threadsafe, Secure>,
 // Member function template definitions
 
 //! \brief Creates a new integer with an initial value of zero.
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure>::integer_t(): any_integer(*this, 1) {
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE::integer_t(): any_integer(*this, 1) {
     // Don't need to do anything, already preinitialized to zero.
 }
 
@@ -187,19 +188,19 @@ threadsafe "this page" for a full treatment of the matter.
 
 \overload
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure>::integer_t(const integer_t<Alloc,
-    Threadsafe, Secure>& b, bool force_thread_safety): detail::digitmanager_t<
-    Alloc, Threadsafe, Secure>(*b.data.holder()), any_integer(*this,
-    b.data.length, b.data.negative)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE::integer_t(const BOOST_XINT_INTEGER_TYPE& b, bool
+    force_thread_safety): detail::digitmanager_t<Alloc, Threadsafe,
+    Secure>(*b.data.holder()), any_integer(*this, b.data.length,
+    b.data.negative)
 {
     data.beginendmod();
     if (force_thread_safety && Threadsafe == false) data.make_unique();
 }
 
 //! \copydoc integer_t(const std::string&, size_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure>::integer_t(const char *str, size_t base):
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE::integer_t(const char *str, size_t base):
     any_integer(*this, 1)
 {
     data.from_string(str, strlen(str), base);
@@ -233,9 +234,9 @@ in the object pointed by \c endptr.
 
 \overload
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure>::integer_t(const char *str, char **endptr,
-    size_t base): any_integer(*this, 1)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE::integer_t(const char *str, char **endptr, size_t base):
+    any_integer(*this, 1)
 {
     data.from_string(str, endptr, base);
 }
@@ -264,9 +265,9 @@ fit into a native integral type.
 
 \overload
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure>::integer_t(const std::string& str, size_t
-    base): any_integer(*this, 1)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE::integer_t(const std::string& str, size_t base):
+    any_integer(*this, 1)
 {
     data.from_string(str.c_str(), str.length(), base);
 }
@@ -292,9 +293,9 @@ bits in an unsigned character.
 
 \overload
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure>::integer_t(const xint::binary_t b, size_t
-    bits): any_integer(*this, 1)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE::integer_t(const xint::binary_t b, bitsize_t bits):
+    any_integer(*this, 1)
 {
     data.from_binary(b, bits);
 }
@@ -315,8 +316,8 @@ compatibility with the same-type copy constructor.
 
 \overload
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure>::integer_t(const any_integer& c, bool):
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE::integer_t(const any_integer& c, bool):
     any_integer(*this, 1)
 {
     if (c._data().is_nan()) throw exceptions::not_a_number();
@@ -335,18 +336,18 @@ integer_t<Alloc, Threadsafe, Secure>::integer_t(const any_integer& c, bool):
 
     \overload
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-template <typename Type> integer_t<Alloc, Threadsafe, Secure>::integer_t(const
-    Type n, typename boost::enable_if<boost::is_integral<Type> >::type*):
+BOOST_XINT_INTEGER_TPL
+template <typename Type> BOOST_XINT_INTEGER_TYPE::integer_t(const Type n,
+    typename boost::enable_if<boost::is_integral<Type> >::type*):
     any_integer(*this, 1)
 {
     if (std::numeric_limits<Type>::is_signed) data.set_signed(n);
     else data.set_unsigned(n);
 }
 
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure>& integer_t<Alloc, Threadsafe,
-    Secure>::operator=(BOOST_XINT_COPY_ASSIGN_REF(type) c)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::
+    operator=(BOOST_XINT_COPY_ASSIGN_REF(type) c)
 {
     data = c.data;
     data.beginendmod();
@@ -359,54 +360,52 @@ integer_t<Alloc, Threadsafe, Secure>& integer_t<Alloc, Threadsafe,
 
 \returns \c *this with the sign reversed.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure> integer_t<Alloc, Threadsafe,
-    Secure>::operator-() const
-{
-    integer_t<Alloc, Threadsafe, Secure> r(-data);
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE BOOST_XINT_INTEGER_TYPE::operator-() const {
+    BOOST_XINT_INTEGER_TYPE r(-data);
     return BOOST_XINT_MOVE(r);
 }
 
 //! \see operator+(integer_t, integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure>& integer_t<Alloc, Threadsafe,
-    Secure>::operator+=(const integer_t<Alloc, Threadsafe, Secure> b)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::operator+=(const
+    BOOST_XINT_INTEGER_TYPE b)
 {
     data += b.data;
     return *this;
 }
 
 //! \see operator-(integer_t, integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure>& integer_t<Alloc, Threadsafe,
-    Secure>::operator-=(const integer_t<Alloc, Threadsafe, Secure> b)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::operator-=(const
+    BOOST_XINT_INTEGER_TYPE b)
 {
     data -= b.data;
     return *this;
 }
 
 //! \see operator*(integer_t, integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure>& integer_t<Alloc, Threadsafe,
-    Secure>::operator*=(const integer_t<Alloc, Threadsafe, Secure> b)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::operator*=(const
+    BOOST_XINT_INTEGER_TYPE b)
 {
     data *= b.data;
     return *this;
 }
 
 //! \see operator/(integer_t, integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure>& integer_t<Alloc, Threadsafe,
-    Secure>::operator/=(const integer_t<Alloc, Threadsafe, Secure> b)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::operator/=(const
+    BOOST_XINT_INTEGER_TYPE b)
 {
     data /= b.data;
     return *this;
 }
 
 //! \see operator%(integer_t, integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure>& integer_t<Alloc, Threadsafe,
-    Secure>::operator%=(const integer_t<Alloc, Threadsafe, Secure> b)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::operator%=(const
+    BOOST_XINT_INTEGER_TYPE b)
 {
     data %= b.data;
     return *this;
@@ -416,10 +415,8 @@ integer_t<Alloc, Threadsafe, Secure>& integer_t<Alloc, Threadsafe,
 
 - Complexity: amortized O(1)
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure>& integer_t<Alloc, Threadsafe,
-    Secure>::operator++()
-{
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::operator++() {
     ++data;
     return *this;
 }
@@ -428,10 +425,8 @@ integer_t<Alloc, Threadsafe, Secure>& integer_t<Alloc, Threadsafe,
 
 - Complexity: amortized O(1)
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure>& integer_t<Alloc, Threadsafe,
-    Secure>::operator--()
-{
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::operator--() {
     --data;
     return *this;
 }
@@ -443,11 +438,9 @@ integer_t<Alloc, Threadsafe, Secure>& integer_t<Alloc, Threadsafe,
 This is not recommended. It must make a copy before incrementing the \c *this
 object, making it noticeably less efficient than the preincrement operator.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure> integer_t<Alloc, Threadsafe,
-    Secure>::operator++(int)
-{
-    integer_t<Alloc, Threadsafe, Secure> r(data++);
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE BOOST_XINT_INTEGER_TYPE::operator++(int) {
+    BOOST_XINT_INTEGER_TYPE r(data++);
     return BOOST_XINT_MOVE(r);
 }
 
@@ -458,36 +451,34 @@ integer_t<Alloc, Threadsafe, Secure> integer_t<Alloc, Threadsafe,
 This is not recommended. It must make a copy before decrementing the \c *this
 object, making it noticeably less efficient than the predecrement operator.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure> integer_t<Alloc, Threadsafe,
-    Secure>::operator--(int)
-{
-    integer_t<Alloc, Threadsafe, Secure> r(data--);
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE BOOST_XINT_INTEGER_TYPE::operator--(int) {
+    BOOST_XINT_INTEGER_TYPE r(data--);
     return BOOST_XINT_MOVE(r);
 }
 
 //! \see operator&(integer_t, integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure>& integer_t<Alloc, Threadsafe,
-    Secure>::operator&=(const integer_t<Alloc, Threadsafe, Secure> n)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::operator&=(const
+    BOOST_XINT_INTEGER_TYPE n)
 {
     data &= n.data;
     return *this;
 }
 
 //! \see operator|(integer_t, integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure>& integer_t<Alloc, Threadsafe,
-    Secure>::operator|=(const integer_t<Alloc, Threadsafe, Secure> n)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::operator|=(const
+    BOOST_XINT_INTEGER_TYPE n)
 {
     data |= n.data;
     return *this;
 }
 
 //! \see operator^(integer_t, integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure>& integer_t<Alloc, Threadsafe,
-    Secure>::operator^=(const integer_t<Alloc, Threadsafe, Secure> n)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::operator^=(const
+    BOOST_XINT_INTEGER_TYPE n)
 {
     data ^= n.data;
     return *this;
@@ -501,11 +492,11 @@ integer_t<Alloc, Threadsafe, Secure>& integer_t<Alloc, Threadsafe,
 
 \returns The bit-shifted integer.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure> integer_t<Alloc, Threadsafe,
-    Secure>::operator<<(size_t shift) const
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE BOOST_XINT_INTEGER_TYPE::operator<<(bitsize_t shift)
+    const
 {
-    integer_t<Alloc, Threadsafe, Secure> r(data << shift);
+    BOOST_XINT_INTEGER_TYPE r(data << shift);
     return BOOST_XINT_MOVE(r);
 }
 
@@ -517,28 +508,24 @@ integer_t<Alloc, Threadsafe, Secure> integer_t<Alloc, Threadsafe,
 
 \returns The bit-shifted integer.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure> integer_t<Alloc, Threadsafe,
-    Secure>::operator>>(size_t shift) const
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE BOOST_XINT_INTEGER_TYPE::operator>>(bitsize_t shift)
+    const
 {
-    integer_t<Alloc, Threadsafe, Secure> r(data >> shift);
+    BOOST_XINT_INTEGER_TYPE r(data >> shift);
     return BOOST_XINT_MOVE(r);
 }
 
 //! \see operator<<(integer_t, integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure>& integer_t<Alloc, Threadsafe,
-    Secure>::operator<<=(size_t shift)
-{
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::operator<<=(bitsize_t shift) {
     data <<= shift;
     return *this;
 }
 
 //! \see operator>>(integer_t, integer_t)
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure>& integer_t<Alloc, Threadsafe,
-    Secure>::operator>>=(size_t shift)
-{
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::operator>>=(bitsize_t shift) {
     data >>= shift;
     return *this;
 }
@@ -549,8 +536,8 @@ integer_t<Alloc, Threadsafe, Secure>& integer_t<Alloc, Threadsafe,
 
 \returns \c true if \c *this is odd, otherwise \c false.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-bool integer_t<Alloc, Threadsafe, Secure>::is_odd() const {
+BOOST_XINT_INTEGER_TPL
+bool BOOST_XINT_INTEGER_TYPE::is_odd() const {
     return data.is_odd();
 }
 
@@ -560,8 +547,8 @@ bool integer_t<Alloc, Threadsafe, Secure>::is_odd() const {
 
 \returns \c true if \c *this is even, otherwise \c false.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-bool integer_t<Alloc, Threadsafe, Secure>::is_even() const {
+BOOST_XINT_INTEGER_TPL
+bool BOOST_XINT_INTEGER_TYPE::is_even() const {
     return data.is_even();
 }
 
@@ -576,8 +563,8 @@ to identify a \ref zero "negative zero".
 \returns -1 if \c *this is negative, 0 if it's zero, or 1 if it's greater than
 zero.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-int integer_t<Alloc, Threadsafe, Secure>::sign(bool signed_zero) const {
+BOOST_XINT_INTEGER_TPL
+int BOOST_XINT_INTEGER_TYPE::sign(bool signed_zero) const {
     return data.sign(signed_zero);
 }
 
@@ -588,8 +575,8 @@ int integer_t<Alloc, Threadsafe, Secure>::sign(bool signed_zero) const {
 \returns The number of hexadecimal digits that would be required to encode \c
 *this.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-size_t integer_t<Alloc, Threadsafe, Secure>::hex_digits() const {
+BOOST_XINT_INTEGER_TPL
+size_t BOOST_XINT_INTEGER_TYPE::hex_digits() const {
     return data.hex_digits();
 }
 
@@ -606,11 +593,9 @@ This is a convenience function, to help with self-documenting code. It is also
 more efficient than using bit-shifting or the \c pow function to get the same
 result.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure> integer_t<Alloc, Threadsafe,
-    Secure>::pow2(size_t exponent)
-{
-    integer_t<Alloc, Threadsafe, Secure> r;
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE BOOST_XINT_INTEGER_TYPE::pow2(size_t exponent) {
+    BOOST_XINT_INTEGER_TYPE r;
     detail::pow2(r.data, exponent);
     return BOOST_XINT_MOVE(r);
 }
@@ -628,11 +613,9 @@ Factorials get ridiculously huge, even with fairly small values of \c n. This
 function, when used with a large parameter, is the easiest way to exhaust the
 system's memory.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure> integer_t<Alloc, Threadsafe,
-    Secure>::factorial(size_t n)
-{
-    integer_t<Alloc, Threadsafe, Secure> r;
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE BOOST_XINT_INTEGER_TYPE::factorial(size_t n) {
+    BOOST_XINT_INTEGER_TYPE r;
     detail::factorial(r.data, n);
     return BOOST_XINT_MOVE(r);
 }
@@ -659,15 +642,15 @@ of being positive or negative. If \c false, it will always be positive.
 
 \see \ref random
 */
-template<class Alloc, bool Threadsafe, bool Secure>
+BOOST_XINT_INTEGER_TPL
 template <class Type>
-integer_t<Alloc, Threadsafe, Secure> integer_t<Alloc, Threadsafe,
-    Secure>::random_by_size(Type& gen, size_t size_in_bits, bool high_bit_on,
-    bool low_bit_on, bool can_be_negative)
+BOOST_XINT_INTEGER_TYPE BOOST_XINT_INTEGER_TYPE::random_by_size(Type& gen,
+    bitsize_t size_in_bits, bool high_bit_on, bool low_bit_on, bool
+    can_be_negative)
 {
     detail::random_generator<Type> rgen(gen);
 
-    integer_t<Alloc, Threadsafe, Secure> r;
+    BOOST_XINT_INTEGER_TYPE r;
     detail::random_by_size(r._data(), rgen, size_in_bits, high_bit_on,
         low_bit_on, can_be_negative);
     return BOOST_XINT_MOVE(r);
@@ -700,14 +683,14 @@ get cryptographically-secure random numbers.
 
 \see \ref primes
 */
-template<class Alloc, bool Threadsafe, bool Secure>
+BOOST_XINT_INTEGER_TPL
 template <class Type>
-integer_t<Alloc, Threadsafe, Secure> integer_t<Alloc, Threadsafe,
-    Secure>::random_prime(Type& gen, size_t size_in_bits, callback_t callback)
+BOOST_XINT_INTEGER_TYPE BOOST_XINT_INTEGER_TYPE::random_prime(Type& gen,
+    bitsize_t size_in_bits, callback_t callback)
 {
     detail::random_generator<Type> rgen(gen);
 
-    integer_t<Alloc, Threadsafe, Secure> r;
+    BOOST_XINT_INTEGER_TYPE r;
     detail::random_prime(r._data(), rgen, size_in_bits, callback);
     return BOOST_XINT_MOVE(r);
 }
@@ -729,11 +712,9 @@ integer_t<Alloc, Threadsafe, Secure> integer_t<Alloc, Threadsafe,
 
 \returns If \c n is zero or positive, returns \c n. Otherwise returns \c -n.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure> abs(const integer_t<Alloc, Threadsafe,
-    Secure> n)
-{
-    integer_t<Alloc, Threadsafe, Secure> r(abs(n._data()));
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE abs(const BOOST_XINT_INTEGER_TYPE n) {
+    BOOST_XINT_INTEGER_TYPE r(abs(n._data()));
     return BOOST_XINT_MOVE(r);
 }
 
@@ -754,12 +735,11 @@ dividend divided by \c divisor.
 \see integer_t::operator/=
 \see integer_t::operator%=
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-typename integer_t<Alloc, Threadsafe, Secure>::divide_t divide(const
-    integer_t<Alloc, Threadsafe, Secure> dividend, const integer_t<Alloc,
-    Threadsafe, Secure> divisor)
+BOOST_XINT_INTEGER_TPL
+typename BOOST_XINT_INTEGER_TYPE::divide_t divide(const BOOST_XINT_INTEGER_TYPE
+    dividend, const BOOST_XINT_INTEGER_TYPE divisor)
 {
-    typename integer_t<Alloc, Threadsafe, Secure>::divide_t r;
+    typename BOOST_XINT_INTEGER_TYPE::divide_t r;
     divide(r.quotient._data(), r.remainder._data(), dividend._data(),
         divisor._data());
     return BOOST_XINT_MOVE(r);
@@ -783,11 +763,9 @@ typename integer_t<Alloc, Threadsafe, Secure>::divide_t divide(const
 
 This function uses a more-efficient algorithm than standard multiplication.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure> square(const integer_t<Alloc, Threadsafe,
-    Secure> n)
-{
-    integer_t<Alloc, Threadsafe, Secure> r;
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE square(const BOOST_XINT_INTEGER_TYPE n) {
+    BOOST_XINT_INTEGER_TYPE r;
     square(r._data(), n._data());
     return BOOST_XINT_MOVE(r);
 }
@@ -800,11 +778,11 @@ integer_t<Alloc, Threadsafe, Secure> square(const integer_t<Alloc, Threadsafe,
 
 \returns \c n to the power of \c e.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure> pow(const integer_t<Alloc, Threadsafe,
-    Secure> n, const integer_t<Alloc, Threadsafe, Secure> e)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE pow(const BOOST_XINT_INTEGER_TYPE n, const
+    BOOST_XINT_INTEGER_TYPE e)
 {
-    integer_t<Alloc, Threadsafe, Secure> r;
+    BOOST_XINT_INTEGER_TYPE r;
     pow(r._data(), n._data(), e._data());
     return BOOST_XINT_MOVE(r);
 }
@@ -821,11 +799,9 @@ root.
 
 \exception exceptions::cannot_represent if \c n is negative.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure> sqrt(const integer_t<Alloc, Threadsafe,
-    Secure> n)
-{
-    integer_t<Alloc, Threadsafe, Secure> r;
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE sqrt(const BOOST_XINT_INTEGER_TYPE n) {
+    BOOST_XINT_INTEGER_TYPE r;
     sqrt(r._data(), n._data());
     return BOOST_XINT_MOVE(r);
 }
@@ -851,7 +827,7 @@ This function provides the most efficient means of converting to a built-in
 integral type.
 */
 template <typename Type, class Alloc, bool Threadsafe, bool Secure>
-Type to(const integer_t<Alloc, Threadsafe, Secure> n) {
+Type to(const BOOST_XINT_INTEGER_TYPE n) {
     return to<Type>(n._data());
 }
 
@@ -874,9 +850,9 @@ This is the function that's called when you ask the library to write an %integer
 to a stream, but it's more flexible because you can specify any base between 2
 and 36. (Streams only allow base-8, base-10, or base-16.)
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-std::string to_string(const integer_t<Alloc, Threadsafe, Secure> n, size_t base
-    = 10, bool uppercase = false)
+BOOST_XINT_INTEGER_TPL
+std::string to_string(const BOOST_XINT_INTEGER_TYPE n, size_t base = 10, bool
+    uppercase = false)
 {
     return to_string(n._data(), base, uppercase);
 }
@@ -905,12 +881,10 @@ must store it separately.
 A binary representation is sometimes desirable for persistent storage or
 transmission, as it is more space-efficient than a string representation.
 
-\see integer_t::integer_t(xint::binary_t, size_t bits)
+\see integer_t::integer_t(xint::binary_t, bitsize_t bits)
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-xint::binary_t to_binary(const integer_t<Alloc, Threadsafe, Secure> n, size_t
-    bits = 0)
-{
+BOOST_XINT_INTEGER_TPL
+xint::binary_t to_binary(const BOOST_XINT_INTEGER_TYPE n, bitsize_t bits = 0) {
     return to_binary(n._data(), bits);
 }
 //!@}
@@ -928,8 +902,8 @@ xint::binary_t to_binary(const integer_t<Alloc, Threadsafe, Secure> n, size_t
 \returns \c true if the specified bit is set (has a value of one), \c false if
 it is clear.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-bool getbit(const integer_t<Alloc, Threadsafe, Secure> n, size_t bit) {
+BOOST_XINT_INTEGER_TPL
+bool getbit(const BOOST_XINT_INTEGER_TYPE n, bitsize_t bit) {
     return getbit(n._data(), bit);
 }
 
@@ -942,8 +916,8 @@ bool getbit(const integer_t<Alloc, Threadsafe, Secure> n, size_t bit) {
 
 \returns Nothing.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-void setbit(integer_t<Alloc, Threadsafe, Secure>& n, size_t bit) {
+BOOST_XINT_INTEGER_TPL
+void setbit(BOOST_XINT_INTEGER_TYPE& n, bitsize_t bit) {
     setbit(n._data(), bit);
 }
 
@@ -956,8 +930,8 @@ void setbit(integer_t<Alloc, Threadsafe, Secure>& n, size_t bit) {
 
 \returns Nothing.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-void clearbit(integer_t<Alloc, Threadsafe, Secure>& n, size_t bit) {
+BOOST_XINT_INTEGER_TPL
+void clearbit(BOOST_XINT_INTEGER_TYPE& n, bitsize_t bit) {
     clearbit(n._data(), bit);
 }
 
@@ -973,9 +947,9 @@ correct answer in that case).
 \returns The zero-based index of the lowest one-bit in the integer, or \c
 return_if_zero if the integer contains no set bits.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-size_t lowestbit(const integer_t<Alloc, Threadsafe, Secure> n, size_t
-    return_if_zero = 0)
+BOOST_XINT_INTEGER_TPL
+bitsize_t lowestbit(const BOOST_XINT_INTEGER_TYPE n, bitsize_t return_if_zero =
+    0)
 {
     return lowestbit(n._data(), return_if_zero);
 }
@@ -992,9 +966,9 @@ correct answer in that case).
 \returns The zero-based index of the highest one-bit in the integer, or \c
 return_if_zero if the integer contains no set bits.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-size_t highestbit(const integer_t<Alloc, Threadsafe, Secure> n, size_t
-    return_if_zero = 0)
+BOOST_XINT_INTEGER_TPL
+bitsize_t highestbit(const BOOST_XINT_INTEGER_TYPE n, bitsize_t return_if_zero =
+    0)
 {
     return highestbit(n._data(), return_if_zero);
 }
@@ -1024,12 +998,11 @@ This is purely a convenience function, to make it easier to write
 self-documenting code. It does not provide any additional efficiency over
 writing out the calculation.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure> mulmod(const integer_t<Alloc, Threadsafe,
-    Secure> n, const integer_t<Alloc, Threadsafe, Secure> by, const
-    integer_t<Alloc, Threadsafe, Secure> modulus)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE mulmod(const BOOST_XINT_INTEGER_TYPE n, const
+    BOOST_XINT_INTEGER_TYPE by, const BOOST_XINT_INTEGER_TYPE modulus)
 {
-    integer_t<Alloc, Threadsafe, Secure> r;
+    BOOST_XINT_INTEGER_TYPE r;
     mulmod(r._data(), n._data(), by._data(), modulus._data());
     return BOOST_XINT_MOVE(r);
 }
@@ -1048,11 +1021,11 @@ This is purely a convenience function, to make it easier to write
 self-documenting code. It does not provide any additional efficiency over
 writing out the calculation.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure> sqrmod(const integer_t<Alloc, Threadsafe,
-    Secure> n, const integer_t<Alloc, Threadsafe, Secure> modulus)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE sqrmod(const BOOST_XINT_INTEGER_TYPE n, const
+    BOOST_XINT_INTEGER_TYPE modulus)
 {
-    integer_t<Alloc, Threadsafe, Secure> r;
+    BOOST_XINT_INTEGER_TYPE r;
     sqrmod(r._data(), n._data(), modulus._data());
     return BOOST_XINT_MOVE(r);
 }
@@ -1080,12 +1053,12 @@ In addition, this function will use the Montgomery Reduction internally, if the
 modulus is an odd number (and if \c no_monty isn't set), which is almost always
 faster than the non-Montgomery method.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure> powmod(const integer_t<Alloc, Threadsafe,
-    Secure> n, const integer_t<Alloc, Threadsafe, Secure> exponent, const
-    integer_t<Alloc, Threadsafe, Secure> modulus, bool no_monty = false)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE powmod(const BOOST_XINT_INTEGER_TYPE n, const
+    BOOST_XINT_INTEGER_TYPE exponent, const BOOST_XINT_INTEGER_TYPE modulus,
+    bool no_monty = false)
 {
-    integer_t<Alloc, Threadsafe, Secure> r;
+    BOOST_XINT_INTEGER_TYPE r;
     powmod(r._data(), n._data(), exponent._data(), modulus._data(), no_monty);
     return BOOST_XINT_MOVE(r);
 }
@@ -1102,11 +1075,11 @@ inverse in \c modulus, returns zero.
 
 \exception exceptions::invalid_modulus if the modulus is less than one.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure> invmod(const integer_t<Alloc, Threadsafe,
-    Secure> n, const integer_t<Alloc, Threadsafe, Secure> modulus)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE invmod(const BOOST_XINT_INTEGER_TYPE n, const
+    BOOST_XINT_INTEGER_TYPE modulus)
 {
-    integer_t<Alloc, Threadsafe, Secure> r;
+    BOOST_XINT_INTEGER_TYPE r;
     invmod(r._data(), n._data(), modulus._data());
     return BOOST_XINT_MOVE(r);
 }
@@ -1142,9 +1115,8 @@ each time.
 
 \see \ref primes
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-int is_prime(const integer_t<Alloc, Threadsafe, Secure> n, callback_t callback =
-    no_callback)
+BOOST_XINT_INTEGER_TPL
+int is_prime(const BOOST_XINT_INTEGER_TYPE n, callback_t callback = no_callback)
 {
     return is_prime(n._data(), callback);
 }
@@ -1155,24 +1127,24 @@ int is_prime(const integer_t<Alloc, Threadsafe, Secure> n, callback_t callback =
     \see compare(integer_t, integer_t, bool)
 */
 //!@{
-template<class Alloc, bool Threadsafe, bool Secure> bool operator<(const
-    integer_t<Alloc, Threadsafe, Secure> n1, const integer_t<Alloc, Threadsafe,
-    Secure> n2) { return operator<(n1._data(), n2._data()); }
-template<class Alloc, bool Threadsafe, bool Secure> bool operator>(const
-    integer_t<Alloc, Threadsafe, Secure> n1, const integer_t<Alloc, Threadsafe,
-    Secure> n2) { return operator>(n1._data(), n2._data()); }
-template<class Alloc, bool Threadsafe, bool Secure> bool operator<=(const
-    integer_t<Alloc, Threadsafe, Secure> n1, const integer_t<Alloc, Threadsafe,
-    Secure> n2) { return operator<=(n1._data(), n2._data()); }
-template<class Alloc, bool Threadsafe, bool Secure> bool operator>=(const
-    integer_t<Alloc, Threadsafe, Secure> n1, const integer_t<Alloc, Threadsafe,
-    Secure> n2) { return operator>=(n1._data(), n2._data()); }
-template<class Alloc, bool Threadsafe, bool Secure> bool operator==(const
-    integer_t<Alloc, Threadsafe, Secure> n1, const integer_t<Alloc, Threadsafe,
-    Secure> n2) { return operator==(n1._data(), n2._data()); }
-template<class Alloc, bool Threadsafe, bool Secure> bool operator!=(const
-    integer_t<Alloc, Threadsafe, Secure> n1, const integer_t<Alloc, Threadsafe,
-    Secure> n2) { return operator!=(n1._data(), n2._data()); }
+BOOST_XINT_INTEGER_TPL bool operator<(const BOOST_XINT_INTEGER_TYPE n1, const
+    BOOST_XINT_INTEGER_TYPE n2) { return operator<(n1._data(),
+    n2._data()); }
+BOOST_XINT_INTEGER_TPL bool operator>(const BOOST_XINT_INTEGER_TYPE n1, const
+    BOOST_XINT_INTEGER_TYPE n2) { return operator>(n1._data(),
+    n2._data()); }
+BOOST_XINT_INTEGER_TPL bool operator<=(const BOOST_XINT_INTEGER_TYPE n1, const
+    BOOST_XINT_INTEGER_TYPE n2) { return operator<=(n1._data(),
+    n2._data()); }
+BOOST_XINT_INTEGER_TPL bool operator>=(const BOOST_XINT_INTEGER_TYPE n1, const
+    BOOST_XINT_INTEGER_TYPE n2) { return operator>=(n1._data(),
+    n2._data()); }
+BOOST_XINT_INTEGER_TPL bool operator==(const BOOST_XINT_INTEGER_TYPE n1, const
+    BOOST_XINT_INTEGER_TYPE n2) { return operator==(n1._data(),
+    n2._data()); }
+BOOST_XINT_INTEGER_TPL bool operator!=(const BOOST_XINT_INTEGER_TYPE n1, const
+    BOOST_XINT_INTEGER_TYPE n2) { return operator!=(n1._data(),
+    n2._data()); }
 //!@}
 
 /*! \name Mathematical and Bitwise Operators
@@ -1189,11 +1161,11 @@ template<class Alloc, bool Threadsafe, bool Secure> bool operator!=(const
 
 \returns The sum of the parameters.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure> operator+(const integer_t<Alloc,
-    Threadsafe, Secure> n1, const integer_t<Alloc, Threadsafe, Secure> n2)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE operator+(const BOOST_XINT_INTEGER_TYPE n1, const
+    BOOST_XINT_INTEGER_TYPE n2)
 {
-    integer_t<Alloc, Threadsafe, Secure> r(n1._data() + n2._data());
+    BOOST_XINT_INTEGER_TYPE r(n1._data() + n2._data());
     return BOOST_XINT_MOVE(r);
 }
 
@@ -1205,11 +1177,11 @@ integer_t<Alloc, Threadsafe, Secure> operator+(const integer_t<Alloc,
 
 \returns The difference between the parameters.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure> operator-(const integer_t<Alloc,
-    Threadsafe, Secure> n1, const integer_t<Alloc, Threadsafe, Secure> n2)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE operator-(const BOOST_XINT_INTEGER_TYPE n1, const
+    BOOST_XINT_INTEGER_TYPE n2)
 {
-    integer_t<Alloc, Threadsafe, Secure> r(n1._data() - n2._data());
+    BOOST_XINT_INTEGER_TYPE r(n1._data() - n2._data());
     return BOOST_XINT_MOVE(r);
 }
 
@@ -1225,11 +1197,11 @@ integer_t<Alloc, Threadsafe, Secure> operator-(const integer_t<Alloc,
 Automatically uses the more-efficient squaring algorithm if it can trivially
 detect that the two parameters are copies of the same number.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure> operator*(const integer_t<Alloc,
-    Threadsafe, Secure> n1, const integer_t<Alloc, Threadsafe, Secure> n2)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE operator*(const BOOST_XINT_INTEGER_TYPE n1, const
+    BOOST_XINT_INTEGER_TYPE n2)
 {
-    integer_t<Alloc, Threadsafe, Secure> r(n1._data() * n2._data());
+    BOOST_XINT_INTEGER_TYPE r(n1._data() * n2._data());
     return BOOST_XINT_MOVE(r);
 }
 
@@ -1243,12 +1215,11 @@ integer_t<Alloc, Threadsafe, Secure> operator*(const integer_t<Alloc,
 
 \exception exceptions::divide_by_zero if \c divisor is zero.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure> operator/(const integer_t<Alloc,
-    Threadsafe, Secure> dividend, const integer_t<Alloc, Threadsafe, Secure>
-    divisor)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE operator/(const BOOST_XINT_INTEGER_TYPE dividend, const
+    BOOST_XINT_INTEGER_TYPE divisor)
 {
-    integer_t<Alloc, Threadsafe, Secure> r(dividend._data() / divisor._data());
+    BOOST_XINT_INTEGER_TYPE r(dividend._data() / divisor._data());
     return BOOST_XINT_MOVE(r);
 }
 
@@ -1261,11 +1232,11 @@ integer_t<Alloc, Threadsafe, Secure> operator/(const integer_t<Alloc,
 
 \returns The remainder after dividing \c n1 by \c n2.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure> operator%(const integer_t<Alloc,
-    Threadsafe, Secure> n1, const integer_t<Alloc, Threadsafe, Secure> n2)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE operator%(const BOOST_XINT_INTEGER_TYPE n1, const
+    BOOST_XINT_INTEGER_TYPE n2)
 {
-    integer_t<Alloc, Threadsafe, Secure> r(n1._data() % n2._data());
+    BOOST_XINT_INTEGER_TYPE r(n1._data() % n2._data());
     return BOOST_XINT_MOVE(r);
 }
 
@@ -1278,11 +1249,11 @@ integer_t<Alloc, Threadsafe, Secure> operator%(const integer_t<Alloc,
 \returns A positive integer with all bits that are set in both parameters turned
 on.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure> operator&(const integer_t<Alloc,
-    Threadsafe, Secure> n1, const integer_t<Alloc, Threadsafe, Secure> n2)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE operator&(const BOOST_XINT_INTEGER_TYPE n1, const
+    BOOST_XINT_INTEGER_TYPE n2)
 {
-    integer_t<Alloc, Threadsafe, Secure> r(n1._data() & n2._data());
+    BOOST_XINT_INTEGER_TYPE r(n1._data() & n2._data());
     return BOOST_XINT_MOVE(r);
 }
 
@@ -1295,11 +1266,11 @@ integer_t<Alloc, Threadsafe, Secure> operator&(const integer_t<Alloc,
 \returns A positive integer with all bits that are set in either parameter
 turned on.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure> operator|(const integer_t<Alloc,
-    Threadsafe, Secure> n1, const integer_t<Alloc, Threadsafe, Secure> n2)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE operator|(const BOOST_XINT_INTEGER_TYPE n1, const
+    BOOST_XINT_INTEGER_TYPE n2)
 {
-    integer_t<Alloc, Threadsafe, Secure> r(n1._data() | n2._data());
+    BOOST_XINT_INTEGER_TYPE r(n1._data() | n2._data());
     return BOOST_XINT_MOVE(r);
 }
 
@@ -1312,11 +1283,11 @@ integer_t<Alloc, Threadsafe, Secure> operator|(const integer_t<Alloc,
 \returns A positive integer with all bits that are set in either parameter, but
 not both, turned on.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure> operator^(const integer_t<Alloc,
-    Threadsafe, Secure> n1, const integer_t<Alloc, Threadsafe, Secure> n2)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE operator^(const BOOST_XINT_INTEGER_TYPE n1, const
+    BOOST_XINT_INTEGER_TYPE n2)
 {
-    integer_t<Alloc, Threadsafe, Secure> r(n1._data() ^ n2._data());
+    BOOST_XINT_INTEGER_TYPE r(n1._data() ^ n2._data());
     return BOOST_XINT_MOVE(r);
 }
 //!@}
@@ -1333,11 +1304,11 @@ integer_t<Alloc, Threadsafe, Secure> operator^(const integer_t<Alloc,
 \returns The greatest common denominator of the two integers, which will always
 be a positive number.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure> gcd(const integer_t<Alloc, Threadsafe,
-    Secure> num1, const integer_t<Alloc, Threadsafe, Secure> num2)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE gcd(const BOOST_XINT_INTEGER_TYPE num1, const
+    BOOST_XINT_INTEGER_TYPE num2)
 {
-    integer_t<Alloc, Threadsafe, Secure> r;
+    BOOST_XINT_INTEGER_TYPE r;
     gcd(r._data(), num1._data(), num2._data());
     return BOOST_XINT_MOVE(r);
 }
@@ -1352,11 +1323,11 @@ integer_t<Alloc, Threadsafe, Secure> gcd(const integer_t<Alloc, Threadsafe,
 zero, then the return value will be zero, by convention; in all other cases, the
 return value will be a positive number.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-integer_t<Alloc, Threadsafe, Secure> lcm(const integer_t<Alloc, Threadsafe,
-    Secure> num1, const integer_t<Alloc, Threadsafe, Secure> num2)
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE lcm(const BOOST_XINT_INTEGER_TYPE num1, const
+    BOOST_XINT_INTEGER_TYPE num2)
 {
-    integer_t<Alloc, Threadsafe, Secure> r;
+    BOOST_XINT_INTEGER_TYPE r;
     lcm(r._data(), num1._data(), num2._data());
     return BOOST_XINT_MOVE(r);
 }
@@ -1373,9 +1344,9 @@ instead of their signed values. Used internally.
 \returns A negative number if \c n1 < \c n2; zero if \c n1 == \c n2, or a
 positive number if \c n1 > \c n2.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-int compare(const integer_t<Alloc, Threadsafe, Secure> n1, const integer_t<
-    Alloc, Threadsafe, Secure> n2, bool ignoresign = false)
+BOOST_XINT_INTEGER_TPL
+int compare(const BOOST_XINT_INTEGER_TYPE n1, const BOOST_XINT_INTEGER_TYPE n2,
+    bool ignoresign = false)
 {
     return compare(n1._data(), n2._data(), ignoresign);
 }
@@ -1395,8 +1366,8 @@ assuming that \c n is non-zero.
 \par
 Similar to the #highestbit function.
 */
-template<class Alloc, bool Threadsafe, bool Secure>
-size_t log2(const integer_t<Alloc, Threadsafe, Secure> n) {
+BOOST_XINT_INTEGER_TPL
+size_t log2(const BOOST_XINT_INTEGER_TYPE n) {
     return log2(n._data());
 }
 //!@}
@@ -1404,13 +1375,13 @@ size_t log2(const integer_t<Alloc, Threadsafe, Secure> n) {
 //! Allows for comparisons between integer_t types and other integral values.
 #define BOOST_XINT_ANY_COMPARE(rtype, op) \
     template <class Alloc, bool Threadsafe, bool Secure, typename N> \
-    rtype op(const integer_t<Alloc, Threadsafe, Secure> n1, const N n2) { \
-        return op(n1, integer_t<Alloc, Threadsafe, Secure>(n2)); \
+    rtype op(const BOOST_XINT_INTEGER_TYPE n1, const N n2) { \
+        return op(n1, BOOST_XINT_INTEGER_TYPE(n2)); \
     } \
     \
     template <typename N, class Alloc, bool Threadsafe, bool Secure> \
-    rtype op(const N n1, const integer_t<Alloc, Threadsafe, Secure> n2) { \
-        return op(integer_t<Alloc, Threadsafe, Secure>(n1), n2); \
+    rtype op(const N n1, const BOOST_XINT_INTEGER_TYPE n2) { \
+        return op(BOOST_XINT_INTEGER_TYPE(n1), n2); \
     }
 
 BOOST_XINT_ANY_COMPARE(bool, operator<)
@@ -1424,20 +1395,20 @@ BOOST_XINT_ANY_COMPARE(int, compare)
 //! Allows for operations between integer_t types and other integral values.
 #define BOOST_XINT_ANY_MATH(op) \
     template <class Alloc, bool Threadsafe, bool Secure, typename N> \
-    integer_t<Alloc, Threadsafe, Secure> op(const integer_t<Alloc, Threadsafe, \
+    BOOST_XINT_INTEGER_TYPE op(const integer_t<Alloc, Threadsafe, \
         Secure> n1, const N n2) \
     { \
-        integer_t<Alloc, Threadsafe, Secure> r(op(n1, integer_t<Alloc, \
-            Threadsafe, Secure>(n2))); \
+        BOOST_XINT_INTEGER_TYPE r(op(n1, integer_t<Alloc, Threadsafe, \
+            Secure>(n2))); \
         return BOOST_XINT_MOVE(r); \
     } \
     \
     template <typename N, class Alloc, bool Threadsafe, bool Secure> \
-    integer_t<Alloc, Threadsafe, Secure> op(const N n1, const integer_t<Alloc, \
-        Threadsafe, Secure> n2) \
+    BOOST_XINT_INTEGER_TYPE op(const N n1, const integer_t<Alloc, Threadsafe, \
+        Secure> n2) \
     { \
-        integer_t<Alloc, Threadsafe, Secure> r(op(integer_t<Alloc, Threadsafe, \
-            Secure>(n1), n2)); \
+        BOOST_XINT_INTEGER_TYPE r(op(integer_t<Alloc, Threadsafe, Secure>(n1), \
+            n2)); \
         return BOOST_XINT_MOVE(r); \
     }
 
@@ -1469,16 +1440,14 @@ template <typename charT, typename traits, class Alloc, bool Threadsafe, bool
 
 template <typename charT, typename traits, class Alloc, bool Threadsafe, bool
     Secure> inline std::basic_istream<charT,traits>& operator>>(
-    std::basic_istream<charT, traits>& in, integer_t<Alloc, Threadsafe, Secure>&
-    n)
+    std::basic_istream<charT, traits>& in, BOOST_XINT_INTEGER_TYPE& n)
 {
     return operator>>(in, n._data());
 }
 //!@}
 
-template<class Alloc, bool Threadsafe, bool Secure>
-inline void swap(integer_t<Alloc, Threadsafe, Secure>& left, integer_t<Alloc,
-    Threadsafe, Secure>& right)
+BOOST_XINT_INTEGER_TPL
+inline void swap(BOOST_XINT_INTEGER_TYPE& left, BOOST_XINT_INTEGER_TYPE& right)
 {
     left._swap(right);
 }
@@ -1537,8 +1506,8 @@ class numeric_limits<boost::xint::integer> {
 } // namespace std
 
 #ifdef _WIN32
-	// Return the warning setting to its original value.
-	#pragma warning(pop)
+    // Return the warning setting to its original value.
+    #pragma warning(pop)
 #endif
 
 #endif // BOOST_INCLUDED_XINT_INTEGER_HPP

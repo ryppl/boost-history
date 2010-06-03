@@ -76,7 +76,7 @@
 <a name="l00064"></a>00064     data_t mont(montgomeryR(m));
 <a name="l00065"></a>00065 
 <a name="l00066"></a>00066     data_t inv(target.new_holder());
-<a name="l00067"></a>00067     <a class="code" href="namespaceboost_1_1xint.html#a21e6936385f6b647524c925c8c80b9fe">invmod</a>(inv, mont, m);
+<a name="l00067"></a>00067     <a class="code" href="namespaceboost_1_1xint.html#ac628e1a39065df013c263455992c00eb">invmod</a>(inv, mont, m);
 <a name="l00068"></a>00068 
 <a name="l00069"></a>00069     target.duplicate_data(n * inv % m);
 <a name="l00070"></a>00070 }
@@ -171,7 +171,7 @@
 <a name="l00162"></a>00162 std::auto_ptr&lt;TUTable&lt;T&gt; &gt; TUTable&lt;T&gt;::mPtr;
 <a name="l00163"></a>00163 
 <a name="l00164"></a>00164 <a class="code" href="internals_8hpp.html#ad98e63b2824264e53b562c9a833ffeab">BOOST_XINT_INLINE</a> <span class="keywordtype">int</span> mostEfficientK(<span class="keyword">const</span> data_t e) {
-<a name="l00165"></a>00165     doubledigit_t k = cMaxK, kTarget = <a class="code" href="namespaceboost_1_1xint.html#abe2baf8e6f99d5b3ca9cfb5d530ced30">log2</a>(e) - 1;
+<a name="l00165"></a>00165     doubledigit_t k = cMaxK, kTarget = <a class="code" href="namespaceboost_1_1xint.html#a9d9b4f302607bcf96bd2ab2c3145f453">log2</a>(e) - 1;
 <a name="l00166"></a>00166     <span class="keywordflow">while</span> (k &gt; 1 &amp;&amp; ((k - 1) * (k &lt;&lt; ((k - 1) &lt;&lt; 1))
 <a name="l00167"></a>00167         / (ddPowerOfTwo(k) - k - 1)) &gt;= kTarget)
 <a name="l00168"></a>00168             --k;
@@ -276,7 +276,7 @@
 <a name="l00268"></a>00268 <span class="comment"></span>
 <a name="l00269"></a>00269 <span class="preprocessor">#endif // defined(BOOST_XINT_COMPILED_LIB) || defined(BOOST_XINT_FROM_HEADER)</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Wed Jun 2 13:37:02 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Jun 3 00:00:36 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>
