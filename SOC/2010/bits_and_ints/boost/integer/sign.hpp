@@ -18,6 +18,13 @@
 namespace boost
 {
 
+/*
+ * sign(data) returns:
+ *		-1 - if data is less than 0
+ *		 0 - if data is equal to 0
+ *		 1 - if data is greater than 0
+ */
+	
 
 /*
  *	If T is the type of data  and T is a signed type, 
