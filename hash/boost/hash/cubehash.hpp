@@ -23,7 +23,7 @@
 #endif
 
 namespace boost {
-namespace hash {
+namespace hashes {
 
 template <unsigned r, unsigned b, unsigned h>
 struct cubehash_compressor {
@@ -127,7 +127,7 @@ struct cubehash<h, 0, 0>
             BOOST_HASH_CUBEHASH_DEFAULT_B,
             h> {};
 
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_CUBEHASH_HPP

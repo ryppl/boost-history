@@ -15,7 +15,7 @@
 #include <boost/cstdint.hpp>
 
 namespace boost {
-namespace hash {
+namespace hashes {
 namespace block_cyphers {
 namespace detail {
 
@@ -133,7 +133,7 @@ struct shacal2_policy<512> : basic_shacal2_policy<64> {
 
 } // namespace detail
 } // namespace block_cyphers
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_BLOCK_CYPHERS_DETAIL_SHACAL2_POLICY_HPP

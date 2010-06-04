@@ -13,7 +13,7 @@
 #include <boost/hash/block_cyphers/detail/shacal_functions.hpp>
 
 namespace boost {
-namespace hash {
+namespace hashes {
 namespace block_cyphers {
 namespace detail {
 
@@ -66,7 +66,7 @@ typedef shacal_policy shacal0_policy;
 
 } // namespace detail
 } // namespace block_cyphers
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_BLOCK_CYPHERS_DETAIL_SHACAL_POLICY_HPP

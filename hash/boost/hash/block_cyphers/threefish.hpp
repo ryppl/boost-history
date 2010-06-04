@@ -23,7 +23,7 @@
 //
 
 namespace boost {
-namespace hash {
+namespace hashes {
 namespace block_cyphers {
 
 template <unsigned Version>
@@ -260,7 +260,7 @@ class threefish {
 };
 
 } // namespace block_cyphers
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_BLOCK_CYPHERS_THREEFISH_HPP

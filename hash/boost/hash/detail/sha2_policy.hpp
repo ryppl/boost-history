@@ -15,7 +15,7 @@
 #include <boost/cstdint.hpp>
 
 namespace boost {
-namespace hash {
+namespace hashes {
 namespace detail {
 
 template <unsigned CypherVersion>
@@ -112,7 +112,7 @@ struct sha2_policy<512> : basic_sha2_policy<512> {
 };
 
 } // namespace detail
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_DETAIL_SHA2_POLICY_HPP

@@ -13,7 +13,7 @@
 #include <boost/static_assert.hpp>
 
 namespace boost {
-namespace hash {
+namespace hashes {
 namespace block_cyphers {
 namespace detail {
 
@@ -57,7 +57,7 @@ struct basic_functions {
 
 } // namespace detail
 } // namespace block_cyphers
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_BLOCK_CYPHERS_DETAIL_BASIC_FUNCTIONS_HPP

@@ -9,8 +9,8 @@
 #include <cassert>
 
 void test32() {
-    typedef boost::hash::crc32_png HASH;
-    using boost::hash::compute_digest;
+    typedef boost::hashes::crc32_png HASH;
+    using boost::hashes::compute_digest;
 
     // Messages from MD4/MD5 test vectors
     
@@ -93,7 +93,7 @@ void test32() {
 }
 
 int main() {
-    using namespace boost::hash;
+    using namespace boost::hashes;
 
     test32();
     

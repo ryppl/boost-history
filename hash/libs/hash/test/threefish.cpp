@@ -9,7 +9,7 @@
 
 template <typename digest_type, typename state_type>
 digest_type to_digest(state_type state) {
-    using namespace boost::hash;
+    using namespace boost::hashes;
     int const digest_bits = digest_type::digest_bits;
     int const word_bits = 64;
     digest_type d;
@@ -23,11 +23,11 @@ digest_type to_digest(state_type state) {
 // All test vectors are from skein_golden_kat_internals.txt
 
 void test_256() {
-    typedef boost::hash::block_cyphers::threefish<256> cypher_type;
+    typedef boost::hashes::block_cyphers::threefish<256> cypher_type;
     typedef cypher_type::key_type key_type;
     typedef cypher_type::tweak_type tweak_type;
     typedef cypher_type::block_type block_type;
-    typedef boost::hash::digest<cypher_type::block_bits> digest_type;
+    typedef boost::hashes::digest<cypher_type::block_bits> digest_type;
 
     {
     // All-zero key, tweak, and plaintext
@@ -74,11 +74,11 @@ void test_256() {
 }
 
 void test_512() {
-    typedef boost::hash::block_cyphers::threefish<512> cypher_type;
+    typedef boost::hashes::block_cyphers::threefish<512> cypher_type;
     typedef cypher_type::key_type key_type;
     typedef cypher_type::tweak_type tweak_type;
     typedef cypher_type::block_type block_type;
-    typedef boost::hash::digest<cypher_type::block_bits> digest_type;
+    typedef boost::hashes::digest<cypher_type::block_bits> digest_type;
 
     {
     // All-zero key, tweak, and plaintext
@@ -135,11 +135,11 @@ void test_512() {
 }
 
 void test_1024() {
-    typedef boost::hash::block_cyphers::threefish<1024> cypher_type;
+    typedef boost::hashes::block_cyphers::threefish<1024> cypher_type;
     typedef cypher_type::key_type key_type;
     typedef cypher_type::tweak_type tweak_type;
     typedef cypher_type::block_type block_type;
-    typedef boost::hash::digest<cypher_type::block_bits> digest_type;
+    typedef boost::hashes::digest<cypher_type::block_bits> digest_type;
 
     {
     // All-zero key, tweak, and plaintext

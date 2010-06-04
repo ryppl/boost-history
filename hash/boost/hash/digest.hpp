@@ -18,7 +18,7 @@
 #include <cstring>
 
 namespace boost {
-namespace hash {
+namespace hashes {
 
 unsigned const octet_bits = 8;
 typedef uint_t<octet_bits>::least octet_type;
@@ -130,7 +130,7 @@ bool operator==(char const *b, digest<DB> const &a) {
     return a == b;
 }
 
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_DIGEST_HPP

@@ -13,8 +13,8 @@ using boost::array;
 using boost::int8_t;
 using boost::int16_t;
 using boost::int32_t;
-using namespace boost::hash;
-using namespace boost::hash::stream_endian;
+using namespace boost::hashes;
+using namespace boost::hashes::stream_endian;
 
 void test_explodebb() {
 

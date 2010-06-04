@@ -13,7 +13,7 @@
 #include <boost/hash/digest.hpp>
 
 namespace boost {
-namespace hash {
+namespace hashes {
 namespace detail {
 
 struct sha_policy {
@@ -41,7 +41,7 @@ struct sha_policy {
 typedef sha_policy sha0_policy;
 
 } // namespace detail
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_DETAIL_SHA_POLICY_HPP

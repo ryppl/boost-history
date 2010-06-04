@@ -12,7 +12,7 @@
 #include <boost/integer.hpp>
 
 namespace boost {
-namespace hash {
+namespace hashes {
 namespace detail {
 
 template <int Bits>
@@ -71,7 +71,7 @@ BOOST_HASH_DEFINE_LARGEST_PRIME_BY_OFFSET(31, 0);
 BOOST_HASH_DEFINE_LARGEST_PRIME_BY_OFFSET(32, 4);
 
 } // namespace detail
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_DETAIL_PRIMES_HPP

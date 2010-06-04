@@ -22,7 +22,7 @@
 #endif
 
 namespace boost {
-namespace hash {
+namespace hashes {
 
 // Boost.CRC undefs this, so re-define it
 #define BOOST_CRC_PARM_TYPE  typename ::boost::uint_t<Bits>::fast
@@ -43,7 +43,7 @@ class basic_crc {
     BOOST_STATIC_ASSERT(Bits >= value_bits);
 
     static unsigned const digest_bits = Bits;
-    typedef hash::digest<digest_bits> digest_type;
+    typedef hashes::digest<digest_bits> digest_type;
 
   public:
     basic_crc() { reset(); }
@@ -149,7 +149,7 @@ struct crc {
 // http://www.libpng.org/pub/png/spec/1.2/PNG-Structure.html#CRC-algorithm
 typedef crc<32, 0x04C11DB7, 0xFFFFFFFF, 0xFFFFFFFF, true, true> crc32_png;
 
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_CRC_HPP

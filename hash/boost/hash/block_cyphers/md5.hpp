@@ -28,7 +28,7 @@
 //
 
 namespace boost {
-namespace hash {
+namespace hashes {
 namespace block_cyphers {
 
 class md5 {
@@ -227,7 +227,7 @@ class md5 {
 };
 
 } // namespace block_cyphers
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_BLOCK_CYPHERS_MD5_HPP

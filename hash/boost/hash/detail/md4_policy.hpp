@@ -13,7 +13,7 @@
 #include <boost/hash/digest.hpp>
 
 namespace boost {
-namespace hash {
+namespace hashes {
 namespace detail {
 
 struct md4_policy {
@@ -37,7 +37,7 @@ struct md4_policy {
 };
 
 } // namespace detail
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_DETAIL_MD4_POLICY_HPP

@@ -14,7 +14,7 @@ int main() {
 
     {
     // Test of just the policy, equivalent to hashing an empty message
-    typedef boost::hash::detail::cubehash_policy<16, 32, 512> policy_type;
+    typedef boost::hashes::detail::cubehash_policy<16, 32, 512> policy_type;
     policy_type::state_type s = policy_type::iv_generator()();
     printf("initial s[0] = %.8x\n", s[0]);
     assert(s[0] == 0x2aea2a61);
@@ -29,7 +29,7 @@ int main() {
     }
 
     {
-    typedef boost::hash::cubehash<16, 32, 512> hash;
+    typedef boost::hashes::cubehash<16, 32, 512> hash;
     typedef hash::block_hash_type bht;
     bht bh;
     printf("initial s[0] = %.8x\n", bh.state()[0]);
@@ -46,8 +46,8 @@ int main() {
     }
 
     {
-    typedef boost::hash::cubehash<16, 32, 512> hash;
-    using boost::hash::compute_digest;
+    typedef boost::hashes::cubehash<16, 32, 512> hash;
+    using boost::hashes::compute_digest;
     hash::stream_hash<8>::type sh;
     hash::digest_type d;
 
@@ -124,8 +124,8 @@ int main() {
     }
 
     {
-    typedef boost::hash::cubehash<16, 32, 256> hash;
-    using boost::hash::compute_digest;
+    typedef boost::hashes::cubehash<16, 32, 256> hash;
+    using boost::hashes::compute_digest;
     hash::stream_hash<8>::type sh;
     hash::digest_type d;
 

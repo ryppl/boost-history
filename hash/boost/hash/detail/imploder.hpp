@@ -17,7 +17,7 @@
 #include <cstring>
 
 namespace boost {
-namespace hash {
+namespace hashes {
 namespace detail {
 
 // By definition, for all imploders, InputBits < OutputBits,
@@ -129,7 +129,7 @@ struct imploder<Endian<UnitBits>, InputBits, OutputBits, OutputBits> {
 };
 
 } // namespace detail
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_DETAIL_IMPLODER_HPP

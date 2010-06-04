@@ -20,7 +20,7 @@
 #include <cstring>
 
 namespace boost {
-namespace hash {
+namespace hashes {
 namespace detail {
 
 // By definition, for all exploders, InputBits > OutputBits,
@@ -149,7 +149,7 @@ struct exploder<Endian<UnitBits>, InputBits, OutputBits, InputBits> {
 };
 
 } // namespace detail
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_DETAIL_EXPLODER_HPP

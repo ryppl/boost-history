@@ -10,7 +10,7 @@
 #define BOOST_HASH_DETAIL_STATE_ADDER_HPP
 
 namespace boost {
-namespace hash {
+namespace hashes {
 namespace detail {
 
 struct state_adder {
@@ -25,7 +25,7 @@ struct state_adder {
 };
 
 } // namespace detail
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_DETAIL_STATE_ADDER_HPP

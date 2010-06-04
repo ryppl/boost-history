@@ -12,13 +12,13 @@
 #include <boost/hash/block_cyphers/detail/basic_functions.hpp>
 
 namespace boost {
-namespace hash {
+namespace hashes {
 namespace detail {
 
 using block_cyphers::detail::basic_functions;
 
 } // namespace detail
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_DETAIL_BASIC_FUNCTIONS_HPP

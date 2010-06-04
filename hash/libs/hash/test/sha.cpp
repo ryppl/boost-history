@@ -10,7 +10,7 @@
 #include <cstring>
 #include <boost/cstdint.hpp>
 
-using namespace boost::hash;
+using namespace boost::hashes;
 
 //
 // Appendix references are from

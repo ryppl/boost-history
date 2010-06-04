@@ -12,7 +12,7 @@
 #include <boost/assert.hpp>
 
 namespace boost {
-namespace hash {
+namespace hashes {
 namespace detail {
 
 template <int N, typename T>
@@ -42,7 +42,7 @@ T low_bits(T x) {
 }
 
 } // namespace detail
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_DETAIL_UNBOUNDED_SHIFT_HPP

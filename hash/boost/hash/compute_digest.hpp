@@ -21,7 +21,7 @@
 #include <cwchar>
 
 namespace boost {
-namespace hash {
+namespace hashes {
 
 template <typename hash_T, typename iter_T>
 typename hash_T::digest_type
@@ -153,7 +153,7 @@ compute_digest_data() {
     return digest_computer_data<hash_T>();
 }
 
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_COMPUTE_DIGEST_HPP

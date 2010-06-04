@@ -56,7 +56,7 @@ void test_block_cypher() {
 }
 
 int main() {
-    using namespace boost::hash::block_cyphers;
+    using namespace boost::hashes::block_cyphers;
     test_block_cypher<md4>();
     test_block_cypher<md5>();
     test_block_cypher<shacal>();

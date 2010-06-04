@@ -7,7 +7,7 @@
 #include <cstdio>
 #include <cstring>
 
-using namespace boost::hash;
+using namespace boost::hashes;
 
 //
 // Appendix references are from

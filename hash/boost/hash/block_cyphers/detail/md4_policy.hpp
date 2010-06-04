@@ -13,7 +13,7 @@
 #include <boost/hash/block_cyphers/detail/basic_functions.hpp>
 
 namespace boost {
-namespace hash {
+namespace hashes {
 namespace block_cyphers {
 namespace detail {
 
@@ -65,7 +65,7 @@ struct md4_policy : md4_functions {
 
 } // namespace detail
 } // namespace block_cyphers
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_BLOCK_CYPHERS_DETAIL_MD4_POLICY_HPP

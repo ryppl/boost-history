@@ -8,7 +8,7 @@
 #include <cassert>
 
 int main() {
-    using boost::hash::digest;
+    using boost::hashes::digest;
 
     {
     std::stringstream ss;
@@ -39,8 +39,8 @@ int main() {
     }
 
     {
-    using boost::hash::truncate;
-    using boost::hash::resize;
+    using boost::hashes::truncate;
+    using boost::hashes::resize;
     std::stringstream ss("0123456789abcdeffedcba9876543210");
     digest<32*4> d;
     ss >> d;

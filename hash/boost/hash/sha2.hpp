@@ -17,7 +17,7 @@
 #include <boost/hash/stream_preprocessor.hpp>
 
 namespace boost {
-namespace hash {
+namespace hashes {
 
 template <unsigned Version>
 struct sha2 {
@@ -55,7 +55,7 @@ struct sha2 {
     typedef typename block_hash_type::digest_type digest_type;
 };
 
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_SHA2_HPP

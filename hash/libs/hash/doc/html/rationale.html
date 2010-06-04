@@ -5,13 +5,20 @@
 
 <P STYLE="float:right"><A HREF="../..">Back to Index</A></P>
 
-<H2>The MaybeBoost Hash Library: Objectives</H2>
+<H2>The MaybeBoost Hash Library: Rationale</H2>
 
 <P>The seed for this library came back during the Boost.UUID review.  For random-based UUIDs, Boost.Random had defined the necessary concepts to implement a useful basic_random_generator, but for name-based UUIDs there was no hash concept available.  As a result, Boost.UUID currently includes an SHA-1 implementation, but cannot provide the MD5-based UUIDs described by RFC 4122.
 
-<P>Message digests are also useful on their own for integrity checking beyond what Boost.CRC provides, or as part of a potential future Cryptography library.
-
 <P>On the implementation side, hash algorithms are build out of smaller components (see, for instance, the <A HREF="http://en.wikipedia.org/wiki/One-way_compression_function#Davies.E2.80.93Meyer">Davies-Meyer</A> and <A HREF="http://en.wikipedia.org/wiki/Merkle%E2%80%93Damg%C3%A5rd_construction">Merkle-Damg&aring;rd</A> constructions) in a way which provides for an elegant generic implementation.  Generic programming also allows them to accept a wide range of input sizes, instead of just allowing byte-oriented input like the vast majority of other implementations.
+
+<P>The namespace <tt>hashes</tt> is used because <tt>boost::hash</tt> is a class template provided by <tt>boost/functional/hash.hpp</tt> for use with unordered containers.
+
+<P><TABLE WIDTH="100%">
+<TR>
+<TD>Previous: <A HREF="validation.html">Validation</A></TD>
+<TD ALIGN="RIGHT"></TD>
+</TR>
+</TABLE>
 
 <HR>
 

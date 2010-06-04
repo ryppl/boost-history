@@ -12,13 +12,13 @@
 #include <boost/hash/detail/sha_policy.hpp>
 
 namespace boost {
-namespace hash {
+namespace hashes {
 namespace detail {
 
 typedef sha_policy sha1_policy;
 
 } // namespace detail
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_DETAIL_SHA1_POLICY_HPP

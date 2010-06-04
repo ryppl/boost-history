@@ -29,7 +29,7 @@
 #endif
 
 namespace boost {
-namespace hash {
+namespace hashes {
 namespace detail {
 
 //
@@ -466,7 +466,7 @@ struct cubehash_policy : basic_cubehash_policy {
 };
 
 } // namespace detail
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_DETAIL_CUBEHASH_POLICY_HPP

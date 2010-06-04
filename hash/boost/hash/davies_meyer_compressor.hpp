@@ -10,7 +10,7 @@
 #define BOOST_HASH_DAVIES_MEYER_COMPRESSOR_HPP
 
 namespace boost {
-namespace hash {
+namespace hashes {
 
 //
 // The Davies-Meyer construction turns a block cypher
@@ -53,7 +53,7 @@ struct davies_meyer_compressor {
     }
 };
 
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_DAVIES_MEYER_COMPRESSOR_HPP

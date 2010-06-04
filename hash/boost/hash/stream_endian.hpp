@@ -14,7 +14,7 @@
 #include <climits>
 
 namespace boost {
-namespace hash {
+namespace hashes {
 
 namespace stream_endian {
 
@@ -51,7 +51,7 @@ namespace stream_endian {
 
 }
 
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_STREAM_ENDIAN_HPP

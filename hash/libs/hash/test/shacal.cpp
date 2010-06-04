@@ -25,7 +25,7 @@ struct state_adder {
 };
 
 void test_shacal1_block_cypher() {
-    typedef boost::hash::block_cyphers::shacal1 bct;
+    typedef boost::hashes::block_cyphers::shacal1 bct;
 
     {
     // Test with the equivalent of SHA-1("")
@@ -49,7 +49,7 @@ void test_shacal1_block_cypher() {
     assert(plaintext == new_plaintext);
     }
 
-    typedef boost::hash::davies_meyer_compressor<bct, state_adder> owcft;
+    typedef boost::hashes::davies_meyer_compressor<bct, state_adder> owcft;
 
     {
     // Test with the equivalent of SHA-256("")
@@ -71,10 +71,10 @@ void test_shacal1_block_cypher() {
     assert(H == H1);
     }
 
-    typedef boost::hash::merkle_damgard_block_hash<
-                boost::hash::stream_endian::big_octet_big_bit,
+    typedef boost::hashes::merkle_damgard_block_hash<
+                boost::hashes::stream_endian::big_octet_big_bit,
                 160,
-                boost::hash::detail::sha1_policy::iv_generator,
+                boost::hashes::detail::sha1_policy::iv_generator,
                 owcft
             > bht;
 
@@ -92,7 +92,7 @@ void test_shacal1_block_cypher() {
 }
 
 void test_shacal256_block_cypher() {
-    typedef boost::hash::block_cyphers::shacal2<256> bct;
+    typedef boost::hashes::block_cyphers::shacal2<256> bct;
 
     {
     // Test with the equivalent of SHA-256("")
@@ -125,7 +125,7 @@ void test_shacal256_block_cypher() {
     assert(plaintext == new_plaintext);
     }
 
-    typedef boost::hash::davies_meyer_compressor<bct, state_adder> owcft;
+    typedef boost::hashes::davies_meyer_compressor<bct, state_adder> owcft;
 
     {
     // Test with the equivalent of SHA-256("")
@@ -156,10 +156,10 @@ void test_shacal256_block_cypher() {
     assert(H == H1);
     }
 
-    typedef boost::hash::merkle_damgard_block_hash<
-                boost::hash::stream_endian::big_octet_big_bit,
+    typedef boost::hashes::merkle_damgard_block_hash<
+                boost::hashes::stream_endian::big_octet_big_bit,
                 256,
-                boost::hash::detail::sha2_policy<256>::iv_generator,
+                boost::hashes::detail::sha2_policy<256>::iv_generator,
                 owcft
             > bht;
 
@@ -177,7 +177,7 @@ void test_shacal256_block_cypher() {
 }
 
 void test_sha1() {
-    using namespace boost::hash;
+    using namespace boost::hashes;
     typedef merkle_damgard_block_hash<
                 stream_endian::big_octet_big_bit,
                 160,
@@ -208,7 +208,7 @@ void test_sha1() {
 }
 
 void test_sha512() {
-    using namespace boost::hash;
+    using namespace boost::hashes;
     unsigned const SHA = 512;
     typedef merkle_damgard_block_hash<
                 stream_endian::big_octet_big_bit,

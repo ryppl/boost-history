@@ -13,7 +13,7 @@
 #include <boost/hash/pack.hpp>
 
 namespace boost {
-namespace hash {
+namespace hashes {
 
 //
 // The Merkle-Damgård construction builds a block hash from a
@@ -36,7 +36,7 @@ template <typename digest_endian,
           typename finalizer_F = nop_finalizer>
 class merkle_damgard_block_hash {
   public:
-    typedef hash::digest<digest_bits> digest_type;
+    typedef hashes::digest<digest_bits> digest_type;
 
     typedef iv_G iv_generator;
     typedef compressor_F compressor_functor;
@@ -86,7 +86,7 @@ class merkle_damgard_block_hash {
     state_type state_;
 };
 
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_MERKLE_DAMGARD_BLOCK_HASH_HPP

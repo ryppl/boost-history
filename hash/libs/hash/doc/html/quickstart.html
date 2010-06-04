@@ -19,7 +19,7 @@
     <TR>
     <TH>Name
     <TH>Digest Bits
-    <TH><A HREF="concepts.html#hashalgorithm"><tt>HashAlgorithm</tt></A> Model (in <tt>boost::hash</tt>)
+    <TH><A HREF="concepts.html#hashalgorithm"><tt>HashAlgorithm</tt></A> Model (in <tt>boost::hashes</tt>)
     <TH>Reference
     <TH>Design Type
     <TH>Notes
@@ -109,7 +109,7 @@
     </TABLE>
 If you need security against a malicious adversary, <tt>sha2&lt;<i>h</i>&gt;</tt> is, as of 2010, the recommended choice. If not, then two popular choices are <tt>crc&lt;<i>h</i>&gt;</tt> for checksums and <tt>md5</tt> for fingerprinting.
 
-<LI>With the chosen <i>HashAlgorithm</i>, call the <tt>boost::hash::<A HREF="functions.html#compute_digest">compute_digest</a>&lt;<i>HashAlgorithm</i>&gt;</tt> function, passing it an <A HREF="http://boost.org/libs/range">input range</A> (such as a container).  That will return the digest as an object of type <tt><i>HashAlgorithm</i>::digest_type</tt>.
+<LI>With the chosen <i>HashAlgorithm</i>, call the <tt>boost::hashes::<A HREF="functions.html#compute_digest">compute_digest</a>&lt;<i>HashAlgorithm</i>&gt;</tt> function, passing it an <A HREF="http://boost.org/libs/range">input range</A> (such as a container).  That will return the digest as an object of type <tt><i>HashAlgorithm</i>::digest_type</tt>.
 
 <LI>The resulting <A HREF="classes.html#digest">digest</A> may then be output to a <tt>std::ostream</tt> or compared against other message digests (such as one read from a <tt>std::istream</tt>).
 
@@ -127,9 +127,9 @@ int main() {
 }
 
 int main() {
-    using namespace boost::hash;
+    using namespace boost::hashes;
     std::string s = "Hello World!";
-    typedef boost::hash::sha2&lt;256&gt; HashAlgorithm;
+    typedef sha2&lt;256&gt; HashAlgorithm;
     HashAlgorithm::digest_type digest = compute_digest&lt;HashAlgorithm&gt;(s);
     std::cout &lt;&lt; digest &lt;&lt; "\n";
 }

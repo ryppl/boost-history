@@ -17,7 +17,7 @@
 #include <boost/hash/stream_preprocessor.hpp>
 
 namespace boost {
-namespace hash {
+namespace hashes {
 
 struct sha1 {
   private:
@@ -53,7 +53,7 @@ struct sha1 {
     typedef block_hash_type::digest_type digest_type;
 };
 
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_SHA1_HPP

@@ -12,7 +12,7 @@
 #include <string>
 
 int main() {
-    using namespace boost::hash;
+    using namespace boost::hashes;
     std::string s = "Hello World!";
     typedef sha2<256> HashAlgorithm;
     HashAlgorithm::digest_type digest = compute_digest<HashAlgorithm>(s);

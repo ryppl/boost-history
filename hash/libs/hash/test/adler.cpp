@@ -11,7 +11,7 @@
 #include <cassert>
 
 namespace primes_check {
-    using boost::hash::detail::largest_prime;
+    using boost::hashes::detail::largest_prime;
 
     BOOST_STATIC_ASSERT(largest_prime< 2>::value == 3);
     BOOST_STATIC_ASSERT(largest_prime< 3>::value == 7);
@@ -49,8 +49,8 @@ namespace primes_check {
 }
 
 void test32() {
-    typedef boost::hash::adler<32> HASH;
-    using boost::hash::compute_digest;
+    typedef boost::hashes::adler<32> HASH;
+    using boost::hashes::compute_digest;
 
     {
     HASH::digest_type d = compute_digest<HASH>("\x2");
@@ -143,7 +143,7 @@ void test32() {
 }
 
 int main() {
-    using namespace boost::hash;
+    using namespace boost::hashes;
 
     test32();
     

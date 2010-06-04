@@ -23,7 +23,7 @@
 //
 
 namespace boost {
-namespace hash {
+namespace hashes {
 namespace block_cyphers {
 
 // The original FIPS-180 seems to be gone, but FIPS 180-1
@@ -68,7 +68,7 @@ class shacal : public basic_shacal {
 typedef shacal shacal0;
 
 } // namespace block_cyphers
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_BLOCK_CYPHERS_SHACAL_HPP

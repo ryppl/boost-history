@@ -8,7 +8,7 @@
 
 //
 // Define HASH to one of the models of the HashAlgorithm concept.
-// Do not include the boost::hash:: namespace qualifier.
+// Do not include the boost::hashes:: namespace qualifier.
 //
 
 #ifndef HASH
@@ -30,12 +30,12 @@
 #include <sys/mman.h>
 #endif
 
-typedef boost::hash::HASH HashAlgorithm;
+typedef boost::hashes::HASH HashAlgorithm;
 
 HashAlgorithm::digest_type
 hash_streambuf(std::streambuf *sbuf) {
 #ifdef BOOST_HASH_NO_OPTIMIZATION
-    return boost::hash::compute_digest<HashAlgorithm>(
+    return boost::hashes::compute_digest<HashAlgorithm>(
                std::istreambuf_iterator<char>(sbuf),
                std::istreambuf_iterator<char>()
            );
@@ -53,7 +53,7 @@ hash_streambuf(std::streambuf *sbuf) {
 
 HashAlgorithm::digest_type
 hash_memory(void *buf, size_t n) {
-    return boost::hash::compute_digest_n<HashAlgorithm>((char*)buf, n);
+    return boost::hashes::compute_digest_n<HashAlgorithm>((char*)buf, n);
 }
 
 std::ostream &
@@ -84,7 +84,7 @@ do_file(std::ostream &sink, std::string const &fn) {
 }
 
 int main(int argc, char **argv) {
-    std::cerr << "Using boost::hash::" XSTR(HASH) "\n";
+    std::cerr << "Using boost::hashes::" XSTR(HASH) "\n";
     if (argc < 2) {
         do_istream(std::cout, "-", std::cin);
     } else {

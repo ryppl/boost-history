@@ -19,7 +19,7 @@
 #include <cctype>
 
 namespace boost {
-namespace hash {
+namespace hashes {
 
 template <unsigned DB>
 std::ostream &
@@ -54,7 +54,7 @@ operator>>(std::istream &source, digest<DB> &d) {
     return source;
 };
 
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_DIGEST_IO_HPP

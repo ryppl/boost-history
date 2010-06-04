@@ -31,7 +31,7 @@
 //
 
 namespace boost {
-namespace hash {
+namespace hashes {
 namespace block_cyphers {
 
 //
@@ -227,7 +227,7 @@ class basic_shacal {
 };
 
 } // namespace block_cyphers
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_BLOCK_CYPHERS_BASIC_SHACAL_HPP

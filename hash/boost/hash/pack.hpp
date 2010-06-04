@@ -21,7 +21,7 @@
 #endif
 
 namespace boost {
-namespace hash {
+namespace hashes {
 
 #ifndef BOOST_HASH_NO_OPTIMIZATION
 
@@ -294,7 +294,7 @@ void pack(InputType const &in, OutputType &out) {
                                                   out.data(), out.size());
 }
 
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_PACK_HPP

@@ -18,7 +18,7 @@
 #include <iterator>
 
 namespace boost {
-namespace hash {
+namespace hashes {
 
 //
 // This will do the usual Merkle-Damgård-style strengthening, padding with
@@ -209,7 +209,7 @@ class stream_preprocessor {
     length_type seen;
 };
 
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_STREAM_PREPROCESSOR_HPP

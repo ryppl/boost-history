@@ -8,7 +8,7 @@
 #include <cstdio>
 #include <cstring>
 
-using namespace boost::hash;
+using namespace boost::hashes;
 
 void test_accumulator_md4() {
     md4::block_hash_type a;

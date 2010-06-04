@@ -19,7 +19,7 @@
 #endif
 
 namespace boost {
-namespace hash {
+namespace hashes {
 
 template <unsigned Bits>
 class basic_adler {
@@ -37,7 +37,7 @@ class basic_adler {
 
     typedef boost::array<word_type, 2> state_type;
 
-    typedef hash::digest<digest_bits> digest_type;
+    typedef hashes::digest<digest_bits> digest_type;
 
     static word_type const modulo = detail::largest_prime<Bits/2>::value;
 
@@ -213,7 +213,7 @@ struct adler {
     typedef typename octet_hash_type::digest_type digest_type;
 };
 
-} // namespace hash
+} // namespace hashes
 } // namespace boost
 
 #endif // BOOST_HASH_ADLER_HPP
