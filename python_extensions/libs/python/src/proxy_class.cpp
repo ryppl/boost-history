@@ -6,7 +6,6 @@
 
 #include <boost/python.hpp>
 #include <boost/python/const_aware/proxy_class.hpp>
-#include <boost/python/const_aware/registry.hpp>
 #include <structmember.h>
 
 // Most of this is copied with minor modifications from object/class.cpp in the main Boost.Python library.
