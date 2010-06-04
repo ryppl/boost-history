@@ -18,6 +18,11 @@
 namespace boost
 {
 
+
+/*
+ *	If T is the type of data  and T is a signed type, 
+ *	sign(data) will call this function.
+ */
 template <typename T>
 inline typename enable_if<is_signed<T>, int>::type
 sign(T data)
@@ -36,10 +41,14 @@ sign(T data)
 	return is_negative | is_positive;
 }
 
+/*
+ *	If T is unsigned, this function will be called.
+ */
 template <typename T>
 inline typename enable_if<is_unsigned<T>, int>::type
 sign(T data)
 {
+	// Just return 0 if data = 0 or 1 otherwise
 	return int(!!data);
 }
 
