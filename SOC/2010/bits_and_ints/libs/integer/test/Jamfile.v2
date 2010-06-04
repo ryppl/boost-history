@@ -17,6 +17,7 @@ test-suite integer
         [ run static_min_max_test.cpp ]
 		[ run sign_extend_test.cpp ]
 		[ run bit_reversal_test.cpp ]
+		[ run sign_test.cpp ]
         [ compile cstdint_include_test.cpp ]
         [ compile integer_traits_include_test.cpp ]
         [ compile integer_include_test.cpp ]

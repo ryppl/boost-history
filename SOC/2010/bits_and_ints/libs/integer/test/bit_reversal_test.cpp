@@ -30,7 +30,7 @@ int main(int, char* [])
 	BIT_REVERSAL_TEST(uint8_t(0), uint8_t(0));
 	BIT_REVERSAL_TEST(uint8_t(1), uint8_t(1) << 7);
 	BIT_REVERSAL_TEST(uint8_t(0xF0), uint8_t(0x0F));
-    BIT_REVERSAL_TEST(uint8_t(0x50), uint8_t(0x0A));
+	BIT_REVERSAL_TEST(uint8_t(0x50), uint8_t(0x0A));
 	
 	for (uint8_t i = 2, acc = 2; i < 8; ++i) {
 		BIT_REVERSAL_TEST(acc, (uint8_t(1) << (8 - i)));
@@ -40,7 +40,7 @@ int main(int, char* [])
 	BIT_REVERSAL_TEST(uint16_t(0), uint16_t(0));
 	BIT_REVERSAL_TEST(uint16_t(1), uint16_t(1) << 15);
 	BIT_REVERSAL_TEST(uint16_t(0xF000), uint16_t(0x000F));
-    BIT_REVERSAL_TEST(uint16_t(0x5000), uint16_t(0x000A));
+	BIT_REVERSAL_TEST(uint16_t(0x5000), uint16_t(0x000A));
 	BIT_REVERSAL_TEST(uint16_t(0xA000), uint16_t(0x0005));
 	BIT_REVERSAL_TEST(uint16_t(0x1000), uint16_t(0x0008));
 	BIT_REVERSAL_TEST(uint16_t(0xFF00), uint16_t(0x00FF));

@@ -11,7 +11,7 @@
 #include <boost/cstdlib.hpp>				// for boost::exit_success
 #include <boost/integer/bits_and_ints.hpp>  // for boost::sign_extend and boost::static_sign_extend
 
-	#include <iostream>  // for std::cout (std::endl indirectly)
+#include <iostream>  // for std::cout (std::endl indirectly)
 
 
 // Macros to compact code
