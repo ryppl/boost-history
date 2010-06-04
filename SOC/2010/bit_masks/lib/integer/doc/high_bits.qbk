@@ -1,29 +1,41 @@
 [c++]
-[section:MASKNAME MASKNAME]
+[section:high_bits high_bits]
 [h3 Description]
-
+THe template `high_bits` preforms bitwise operations on compile time then 
+exposes the newly created mask via `value` and `operator T()`. What `high_bits` 
+does is create a mask inside your integral type which sets all bits starting
+from the left most bit reaching out width bits to the right. For example,
+``
+// using high bits to create a mask starting from the left most bit with a width
+// of 15
+typedef high_bits<int, 15> bits;
+// bits::value will have the following value in binary.
+// 1111 1111  1111 1110  0000 0000  0000 0000
+``
 
 [h3 Template Signature]
-`TYPENME` has the following template signature:
+`high_bits` has the following template signature:
 ``
-TEMPLATE SIGNATURE.
+template <typename T, unsigned int Width>
+struct high_bits;
 ``
 
 [table
     [[Parameter][Description]]
-    [[][ ]]
-    [[][ ]]
+    [[`T`][ Is an integral type which the mask is to be created over. ]]
+    [[`Width`][ This is the width of the mask in bits. ]]
 ]
 
 [h3 Interface]
-`TYPENAME` Compile time interface. Assume that N is of type
-`N TYPE` the type supplied here is only for example.
+`high_bits` Compile time interface. Assume that N is of type
+`high_bits` the type supplied here is only for example.
 
 [table
     [[Operation][Description]]
     [[`N::value`][Returns the `value` associated with `N`. ]]
     [[`N::value_type`][Returns `T` which is the type associated with `value` inside `N`. ]]
     [[`N::type`][ Returns the current types type. ]]
+    [[`N::width`][ Returns the integral value associated with the `width` template parameter. ]]
     [[`operator T()`][ Run time support function. All this function does is
 return the value associated with the type. With the c++0x feature constexper
 this function will be made fasters and more effieient.]]
@@ -31,7 +43,7 @@ this function will be made fasters and more effieient.]]
 
 
 [h3 Examples]
-Examples and use cases related to the `TYPENAME` type.
+Examples and use cases related to the `high_bits` type.
 
 
 Exaple:

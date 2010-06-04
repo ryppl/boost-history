@@ -62,4 +62,5 @@ simply treat it as though it were an integer.
 [endsect]
 
 [include:integral_mask integral_mask.qbk]
+[include:high_bits high_bits.qbk]
 
