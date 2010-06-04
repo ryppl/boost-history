@@ -66,6 +66,38 @@ bit_reversal(T data)
 	
 	return data;
 }
+	
+// 16-bit version
+template <typename T>
+inline typename enable_if_c<is_integral<T>::type::value && sizeof(T) == 2, T>::type
+bit_reversal(T data)
+{
+	// swap odd and even bits
+	data = ((data >> 1) & 0x5555) | ((data & 0x5555) << 1);
+	// swap consecutive pairs
+	data = ((data >> 2) & 0x3333) | ((data & 0x3333) << 2);
+	// swap nibbles 
+	data = ((data >> 4) & 0x0F0F) | ((data & 0x0F0F) << 4);
+	// swap bytes
+	data = (data >> 8) | (data << 8);
+	
+	return data;
+}
+	
+// 8-bit version
+template <typename T>
+inline typename enable_if_c<is_integral<T>::type::value && sizeof(T) == 1, T>::type
+bit_reversal(T data)
+{
+	// swap odd and even bits
+	data = ((data >> 1) & 0x55) | ((data & 0x55) << 1);
+	// swap consecutive pairs
+	data = ((data >> 2) & 0x33) | ((data & 0x33) << 2);
+	// swap nibbles 
+	data = (data >> 4) | (data << 4);
+	
+	return data;
+}
 
 } // boost
 
