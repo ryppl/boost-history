@@ -48,7 +48,20 @@ Examples and use cases related to the `high_bits` type.
 
 Exaple:
 ``
-    EXAMPLE
+typedef high_bits<int,4> mask;
+
+// binary for mask::value
+// 1111 0000  0000 0000  0000 0000  0000 0000
+
+int integral_value = 0xc000000c;
+
+// integral_value's binary value
+// 1100 0000  0000 0000  0000 0000  0000 1100
+
+int result = integral_value & mask();
+// binary value of result
+// 1100 0000  0000 0000  0000 0000  0000 0000
+
 ``
 
 The implicit cast operator allows for simplicity, clairity of code. In the
