@@ -1,12 +1,13 @@
 [c++]
-[section:MASKNAME MASKNAME]
+[section:bits_mask bits_mask]
 [h3 Description]
 
 
 [h3 Template Signature]
-`TYPENME` has the following template signature:
+`bits_mask` has the following template signature:
 ``
-TEMPLATE SIGNATURE.
+template <typename T, unsigned int Offset, unsigned int Width>
+struct bits_mask;
 ``
 
 [table
