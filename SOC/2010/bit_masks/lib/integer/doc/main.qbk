@@ -42,11 +42,13 @@ please use the table of contents above.
       [ [^[@http://svn.boost.org/svn/boost/sandbox/SOC/2010/bit_masks/boost/integer/bits_mask.hpp <boost/integer/bits_mask.hpp>]]]
       [ Header contains `bits_mask` template. ]
    ]
-   [
+
+[/   [
       [`compound_mask` type]
       [ [^[@http://svn.boost.org/svn/boost/sandbox/SOC/2010/bit_masks/boost/integer/compound_mask.hpp <boost/integer/compound_mask.hpp>]]]
       [ Header contains `compound_mask` meta-function. ]
    ]
+]
    [
       [`bit_mask_group` type]
       [ [^[@http://svn.boost.org/svn/boost/sandbox/SOC/2010/bit_masks/boost/integer/bit_mask_group.hpp <boost/integer/bit_mask_group.hpp>]]]
