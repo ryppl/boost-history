@@ -9,6 +9,7 @@
 
 
 #include <boost/integer/compound_mask.hpp>
+#include <boost/integer/bit_mask_group_impl.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/map.hpp>
 #include <boost/mpl/insert.hpp>
@@ -21,12 +22,18 @@
 
 namespace boost {
 
+
+
+
+/** This is used for naming/tagging arguments within the bit_mask_group. */
 template <typename T, typename NameType>
 struct tagged {
     typedef NameType            name;
     typedef T                   value;
     typedef tagged<NameType, T> type;
 };
+
+
 
 // TODO: move this into a sperate file
 namespace details {
@@ -50,8 +57,6 @@ struct bit_mask_group_impl_ {
     struct add {
         typedef bit_mask_group_impl_< NewT, type_vector, NamedTypeMap> type;
     };
-
-
 };
 
 /** Specialization for unused parameters. 
@@ -107,6 +112,7 @@ struct bit_mask_group_impl_< tagged<Value, Name>, TypeVector, NamedTypeMap>
 
 
 
+
 /** \name bit_mask_group
  *  \brief This a psudo variadic class which uses default template parameters
  *  and allows for both named and unnamed mask types to be stored within this
@@ -127,9 +133,9 @@ template <  typename Mask0,
 struct bit_mask_group {
 
     /** This strange looking typedef is for adding all of the different mask 
-     *  template parameters. This may one day be replaced by a macro for creating
-     *  psudo variadic behavior. (i.e. this will get more parameters via value
-     *  specific by another macro).
+     *  template parameters. This may one day be replaced by a macro for 
+     *  creating psudo variadic behavior. (i.e. this will get more parameters 
+     *  via value specific by another macro).
      */
     typedef typename details::bit_mask_group_impl_<
         Mask0,
@@ -144,7 +150,7 @@ struct bit_mask_group {
         template add<Mask6>::type::
         template add<Mask7>::type::
         template add<Mask8>::type::
-        template add<Mask9>::type    _impl_type;
+        template add<Mask9>::type       _impl_type;
 
     typedef bit_mask_group<Mask0, Mask1, Mask2, Mask3, Mask4,
                            Mask5, Mask6, Mask7, Mask8, Mask9 > type;
