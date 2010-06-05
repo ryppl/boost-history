@@ -213,6 +213,6 @@ struct bit_mask_group {
 };
 
 
-} // namespace
+} // end boost
 
 #endif

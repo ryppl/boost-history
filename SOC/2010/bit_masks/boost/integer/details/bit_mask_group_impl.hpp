@@ -8,7 +8,8 @@
 
 #include <boost/fusion/support/tag_of_fwd.hpp>
 #include <boost/fusion/include/tag_of_fwd.hpp>
-
+#include <boost/fusion/support/iterator_base.hpp>
+#include <boost/fusion/support/category_of.hpp>
 
 /** This is used for creating an extention into the boost fusion library for 
  *  the bit_mask_group.
@@ -42,6 +43,66 @@ namespace boost { namespace fusion { namespace traits {
         typedef boost::details::bit_mask_group_tag type;
     };
 }}} // end boost::fusion::traits
+
+
+/** Iterator type for fusion sequence.
+ *  This is the iterator for iteration over our sequence.
+ */
+namespace boost {
+
+
+/** This is my sequence for iteration over the items in bit_mask_group. */
+template<typename Struct, int Pos>
+struct bit_mask_group_iterator
+    : boost::fusion::iterator_base< bit_mask_group_iterator<Struct, Pos> >
+{
+    // TODO: At a later time add preconditions for the iterator.
+    // BOOST_STATIC_ASSERT(Pos >=0 && Pos < 3);
+    typedef Struct struct_type;
+    typedef boost::mpl::int_<Pos>   index;
+    typedef boost::fusion::random_access_traversal_tag category;
+
+    bit_mask_group_iterator(Struct& str) { }
+
+    Struct& struct_;
+};
+
+namespace details {
+    struct bit_mask_group_iterator_tag { };
+}} // end boost::details
+
+
+
+/** providing another type_of specilization for the bit_mask_group's 
+ * iterator.
+ */ 
+namespace boost { namespace fusion { namespace traits {
+
+    template<>
+    template <typename Struct, int Pos>
+    struct tag_of< boost::bit_mask_group_iterator<Struct,Pos> > {
+        typedef boost::details::bit_mask_group_iterator_tag type;
+    };
+}}} // end boost::fusion::traits
+
+
+namespace boost { namespace fusion { namespace extension {
+template<typename T>
+struct value_at_impl;
+
+template <>
+struct value_at_impl<details::bit_mask_group_iterator_tag> {
+    template<typename Iterator>
+    struct apply;
+
+
+    template<typename Struct, int Pos>
+    struct apply<boost::bit_mask_group_iterator<Struct,Pos> > {
+        typedef typename Struct::template get_by_index<Pos>::type type;
+    };
+};
+
+}}} // end boost::fusion::extention
 
 
 #endif
