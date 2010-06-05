@@ -15,7 +15,7 @@
 #include <boost/mpl/insert.hpp>
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/at.hpp>
-
+#include <boost/mpl/void.hpp>
 
 
 
@@ -37,8 +37,8 @@ struct tagged {
 
 // TODO: move this into a sperate file
 namespace details {
-struct null_mask { };
-typedef null_mask unused_parameter;
+
+typedef mpl::void_ unused_parameter;
 
 /** This is a metafunction which is used for filling an mpl::vector with
  *  types which arn't of type unused parameter.
