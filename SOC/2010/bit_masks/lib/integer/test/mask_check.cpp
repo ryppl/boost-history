@@ -3,7 +3,7 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at 
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/integer/bit_mask.hpp>
+#include <boost/integer/bits_mask.hpp>
 
 int main() {
     return 0;

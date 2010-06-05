@@ -12,21 +12,21 @@ int main() {
     // first testing section for using compond mask.
     {
         // first test.
-        typedef compound_mask< high_bits<int,1> , low_bits<int,1> > combo_mask;
-        BOOST_ASSERT(( combo_mask() == (high_bits<int,1>() | low_bits<int,1>()) ));
+        typedef compound_mask< high_bits_mask<int,1> , low_bits_mask<int,1> > combo_mask;
+        BOOST_ASSERT(( combo_mask() == (high_bits_mask<int,1>() | low_bits_mask<int,1>()) ));
 
-        typedef compound_mask< combo_mask, bit_mask<int, 3, 5> > combo_mask2;
-        BOOST_ASSERT(( combo_mask2() == (combo_mask() | bit_mask<int, 3, 5>() ) ));
+        typedef compound_mask< combo_mask, bits_mask<int, 3, 5> > combo_mask2;
+        BOOST_ASSERT(( combo_mask2() == (combo_mask() | bits_mask<int, 3, 5>() ) ));
         BOOST_ASSERT(( combo_mask2() > 0 )) ;
         
         typedef compound_mask<
                     combo_mask2,
-                    bit_mask<int,15,10>,
+                    bits_mask<int,15,10>,
                     integral_mask<int, 6>
                 > combo_mask3;
 
         BOOST_ASSERT((combo_mask3() ==
-            ( combo_mask2() | bit_mask<int,15,10>() | integral_mask<int, 6>() )
+            ( combo_mask2() | bits_mask<int,15,10>() | integral_mask<int, 6>() )
         ));
 
     }

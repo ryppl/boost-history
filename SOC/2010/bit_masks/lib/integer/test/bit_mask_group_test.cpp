@@ -9,27 +9,30 @@
 
 struct name_tag { };
 int main() {
-    typedef bit_mask_group< named<
-        name_tag,low_bits<int,9> >,
-        bit_mask<int,3,9>
+    typedef bit_mask_group<
+        named<
+            name_tag,
+            low_bits_mask<int,9>
+        >,
+        bits_mask<int,3,9>
     > testing_type1;
 
     BOOST_ASSERT(( sizeof(testing_type1) == 1 ));
 
-    BOOST_ASSERT(( testing_type1().get< 0 >() == low_bits<int,9>() ));
-    BOOST_ASSERT(( testing_type1().get< name_tag >() == low_bits<int,9>() ));
+    BOOST_ASSERT(( testing_type1().get< 0 >() == low_bits_mask<int,9>() ));
+    BOOST_ASSERT(( testing_type1().get< name_tag >() == low_bits_mask<int,9>() ));
 
     BOOST_ASSERT((
         is_same<
             testing_type1::get_by_index<0>::type,
-            low_bits<int,9>
+            low_bits_mask<int,9>
         >::value
     ));
 
     BOOST_ASSERT((
         is_same<
             testing_type1::get_by_name< name_tag >::type,
-            low_bits<int,9>
+            low_bits_mask<int,9>
         >::value
     ));
     

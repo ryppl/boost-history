@@ -20,33 +20,33 @@ using namespace boost;
 template <typename T>
 void test_function() {
 
-    T mask_value(high_bits<T, 1>::value);
-    // operator &(T, high_bits)
-    T bit_result = T(0) & high_bits<T, 1>();
+    T mask_value(high_bits_mask<T, 1>::value);
+    // operator &(T, high_bits_mask)
+    T bit_result = T(0) & high_bits_mask<T, 1>();
     BOOST_ASSERT(( bit_result == (T(0) &  mask_value) ));
 
-    // operator &(high_bits, T)
-    bit_result = high_bits<T, 1>() & T(0);
+    // operator &(high_bits_mask, T)
+    bit_result = high_bits_mask<T, 1>() & T(0);
     BOOST_ASSERT(( bit_result == (mask_value & T(0)) ));
     
-    // operator |(T, high_bits)
-    bit_result = T(0) | high_bits<T, 1>();
+    // operator |(T, high_bits_mask)
+    bit_result = T(0) | high_bits_mask<T, 1>();
     BOOST_ASSERT(( bit_result == ( T(0) | mask_value) ));
     
-    // operator |(high_bits, T)
-    bit_result = high_bits<T,1>() | T(0);
+    // operator |(high_bits_mask, T)
+    bit_result = high_bits_mask<T,1>() | T(0);
     BOOST_ASSERT(( bit_result == (mask_value  | T(0)) ));
 
-    // operator ^(high_bits, T)
-    bit_result = T(0) ^ high_bits<T,1>();
+    // operator ^(high_bits_mask, T)
+    bit_result = T(0) ^ high_bits_mask<T,1>();
     BOOST_ASSERT(( bit_result == (T(0) ^ mask_value) ));
 
-    // operator ^(T, high_bits)
-    bit_result = high_bits<T,1>() ^ T(0);
+    // operator ^(T, high_bits_mask)
+    bit_result = high_bits_mask<T,1>() ^ T(0);
     BOOST_ASSERT(( bit_result == ( mask_value ^ T(0)) ));
 
-    // operator ~(high_bits)
-    bit_result = ~ (high_bits<T,1>());
+    // operator ~(high_bits_mask)
+    bit_result = ~ (high_bits_mask<T,1>());
 
     // this is causing errors with unsigned types.
     mask_value = ~( mask_value );

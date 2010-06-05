@@ -5,8 +5,8 @@
 
 
 
-#include "test_type_list.hpp"
 #include <boost/integer/high_low_bits.hpp>
+#include "test_type_list.hpp"
 
 // tesitng for bit width.
 using namespace boost;
@@ -15,22 +15,22 @@ template <typename T>
 void test_function() {
 
     // making sure that the value type is transfered correctly.
-    BOOST_ASSERT((is_same< typename high_bits<T, 3>::value_type, T >::value));
+    BOOST_ASSERT((is_same< typename high_bits_mask<T, 3>::value_type, T >::value));
 
     
-    BOOST_ASSERT(( boost::high_bits<T,1>::value == ~(~(T(0)) >> 1) ));
-    BOOST_ASSERT(( boost::high_bits<T,2>::value == ~(~(T(0)) >> 2) ));
-    BOOST_ASSERT(( boost::high_bits<T,3>::value == ~(~(T(0)) >> 3) ));
-    BOOST_ASSERT(( boost::high_bits<T,4>::value == ~(~(T(0)) >> 4) ));
-    BOOST_ASSERT(( boost::high_bits<T,5>::value == ~(~(T(0)) >> 5) ));
-    BOOST_ASSERT(( boost::high_bits<T,6>::value == ~(~(T(0)) >> 6) ));
-    BOOST_ASSERT(( boost::high_bits<T,7>::value == ~(~(T(0)) >> 7) ));
-    BOOST_ASSERT(( boost::high_bits<T,8>::value == ~(~(T(0)) >> 8) ));
+    BOOST_ASSERT(( boost::high_bits_mask<T,1>::value == ~(~(T(0)) >> 1) ));
+    BOOST_ASSERT(( boost::high_bits_mask<T,2>::value == ~(~(T(0)) >> 2) ));
+    BOOST_ASSERT(( boost::high_bits_mask<T,3>::value == ~(~(T(0)) >> 3) ));
+    BOOST_ASSERT(( boost::high_bits_mask<T,4>::value == ~(~(T(0)) >> 4) ));
+    BOOST_ASSERT(( boost::high_bits_mask<T,5>::value == ~(~(T(0)) >> 5) ));
+    BOOST_ASSERT(( boost::high_bits_mask<T,6>::value == ~(~(T(0)) >> 6) ));
+    BOOST_ASSERT(( boost::high_bits_mask<T,7>::value == ~(~(T(0)) >> 7) ));
+    BOOST_ASSERT(( boost::high_bits_mask<T,8>::value == ~(~(T(0)) >> 8) ));
 
     // assert that type returns the correct typedef.
     BOOST_ASSERT(( is_same< 
-                    typename high_bits<T, 3>::type,
-                    high_bits<T, 3> >::value
+                    typename high_bits_mask<T, 3>::type,
+                    high_bits_mask<T, 3> >::value
               ));
 }
 
