@@ -1,19 +1,43 @@
 [c++]
 [section:bits_mask bits_mask]
 [h3 Description]
+The `bits_mask` template provides an extention to the `low_bits_mask` template,
+by incorporating an `Offset` with the template. The `offest` is always relative
+to the right most bit, or bit 0. For a basic view of how `bits_mask` works
+consider the following examples:
 
+``
+typedef bits_mask<int, 10, 3> mask;
+// mask::value has the following binary value
+// 0000 0000  0000 0000  0001 1100  0000 0000
+``
+For simplicity there is a defualt parameter for `Width` giving it a value
+of `1`. This makes writing of normally left or right shift masks simple and 
+staticly checkable. For example,
+
+``
+// If one would need to create a mask for checking the 11th bit within an
+// integer it can be done simple with the following mask
+typedef bits_mask<int,11> mask;
+// this creates a mask at the 11th bit within an integer.
+``
+
+The `bits_mask` template is located in the <boost/integer/bits_mask.hpp> header
+file.
 
 [h3 Template Signature]
 `bits_mask` has the following template signature:
 ``
-template <typename T, unsigned int Offset, unsigned int Width>
+template <typename T, unsigned int Offset, unsigned int Width = 1 >
 struct bits_mask;
 ``
 
 [table
     [[Parameter][Description]]
-    [[][ ]]
-    [[][ ]]
+    [[`T`][ Is an integral type which the mask is to be created over. ]]
+    [[`Offset`][ This is the number of bits which is used for a left shift of
+the `width`. ]]
+    [[`Width`][ This is the width of the mask in bits. ]]
 ]
 
 [h3 Interface]
@@ -25,20 +49,94 @@ struct bits_mask;
     [[`N::value`][Returns the `value` associated with `N`. ]]
     [[`N::value_type`][Returns `T` which is the type associated with `value` inside `N`. ]]
     [[`N::type`][ Returns the current types type. ]]
+    [[`N::width`][ Returns the integral value associated with the `width` template parameter. ]]
+    [[`N::offset`][ Returns the integral value associated with the `Offset` template parameter. ]]
     [[`operator T()`][ Run time support function. All this function does is
-return the value associated with the type. With the c++0x feature constexper
+return the value associated with the type. With the c++0x feature `constexper`
 this function will be made fasters and more effieient.]]
 ]
+[h3 Preconditions]
+Preconditions associated with the `bits_mask` template. There are two types 
+of precondtions ones which are only documented and ones which are both enforced
+and documented. Preconditions will specify which are which within the 
+documentation. All of the preconditions will document how they are enforced when
+they are enforced.
 
+[table
+    [[Precondition][Reasoning][Enforcement]]
+    [
+        [`(Offset + Width) < ( bit_width<T>::value - 1)`]
+        [It will cause overflow if the width plus the offset is greater then
+total width of the type in bits. ]
+        [ Enforced by `BOOST_STATIC_ASSERT`. ]
+    ]
+    [
+        [`Width > 0`]
+        [ This would create an empty mask, which won't do anything. ]
+        [ Enfoced by the domain of the `Width` template parameter which is an
+`unsigned int`, which prevents the value from being negative, and by
+`BOOST_STATIC_ASSERT`, which prevents the value from being zero. ]
+    ]
+    [
+        [ `T` must satisfy the `is_integral` type trait.]
+        [ The `bits_mask` template has only been tested with integral types. ]
+        [ This is only a documented precondition. ]
+    ]
+]
 
 [h3 Examples]
-Examples and use cases related to the `TYPENAME` type.
+Examples and use cases related to the `bits_mask` template.
 
+Example:
 
-Exaple:
+Single bit mask using the default parameter for width.
 ``
-    EXAMPLE
+typedef bits_mask< int, 0 > mask;
+// mask in this case has the following value
+// 0000 0000  0000 0000  0000 0000  0000 0001
+
+int some_bit_value = 0xdeadbeef;
+
+// now testing to see if the zero bit is set in some_bit_value
+if(some_bit_value & mask() ) {
+    ...
+    true case
+    ...
+} else {
+    ...
+    false case
+    ...
+}
 ``
+
+Here is another case where the `bits_mask` template is used used similar to a
+bit field. The goal in this case would be to extract a single value from
+within an integral storage type, which may be storing one or more values.
+
+``
+typedef bits_mask<int,10,3> mask;
+// binary value of mask
+// 0000 0000  0000 0000  0001 1111  1111 1000
+
+// this will then be used to retrieve a value within an integer.
+int some_bit_value = 0xdeadbeef;
+// binary value of some_bit_value
+// 1101 1110  1010 1011  1011 1110  1110 1111
+
+// now to extract the value from within some_bit_value
+int new_int_value = ( some_bit_value & mask() ) >> mask::offset;
+
+// basic operations taking place.
+// 1101 1110  1010 1011  1011 1110  1110 1111 <- some_bit_value
+// 0000 0000  0000 0000  0001 1111  1111 1000 <- mask::value
+
+// preforming bitwise and operator.
+
+// 0000 0000  0000 0000  0001 1110  1110 1000 <- result of bitwise and operator
+// preform right shift operation.
+// 0000 0000  0000 0000  0000 0011  1101 1101 <- value of new_int_value. 
+``
+
 
 The implicit cast operator allows for simplicity, clairity of code. In the
 above example `mask()` could be replaced with `mask::value` to achieve the same

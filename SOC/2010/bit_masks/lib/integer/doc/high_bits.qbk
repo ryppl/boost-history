@@ -37,7 +37,7 @@ struct high_bits_mask;
     [[`N::type`][ Returns the current types type. ]]
     [[`N::width`][ Returns the integral value associated with the `width` template parameter. ]]
     [[`operator T()`][ Run time support function. All this function does is
-return the value associated with the type. With the c++0x feature constexper
+return the value associated with the type. With the c++0x feature `constexper`
 this function will be made fasters and more effieient.]]
 ]
 
@@ -46,7 +46,7 @@ this function will be made fasters and more effieient.]]
 Examples and use cases related to the `high_bits_mask` template.
 
 
-Exaple:
+Example:
 ``
 typedef high_bits_mask<int,4> mask;
 
