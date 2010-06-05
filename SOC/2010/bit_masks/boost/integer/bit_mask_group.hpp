@@ -7,9 +7,9 @@
 #ifndef BOOST_BIT_MASK_GROUP_HPP
 #define BOOST_BIT_MASK_GROUP_HPP
 
-
+#include <boost/integer/bit_mask_group_fwd.hpp>
 #include <boost/integer/compound_mask.hpp>
-#include <boost/integer/bit_mask_group_impl.hpp>
+#include <boost/integer/details/bit_mask_group_impl.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/map.hpp>
 #include <boost/mpl/insert.hpp>

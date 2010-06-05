@@ -6,6 +6,10 @@
 #ifndef BOOST_BIT_MASK_GROUP_IMPL_HPP
 #define BOOST_BIT_MASK_GROUP_IMPL_HPP
 
+#include <boost/fusion/support/tag_of_fwd.hpp>
+#include <boost/fusion/include/tag_of_fwd.hpp>
+
+
 /** This is used for creating an extention into the boost fusion library for 
  *  the bit_mask_group.
  */
@@ -26,9 +30,6 @@ struct bit_mask_group_tag { };
 /** Next step in sequence extention.
  *  Adding dispatch look up mechanism.
  */
-#include <boost/fusion/support/tag_of_fwd.hpp>
-#include <boost/fusion/include/tag_of_fwd.hpp>
-
 namespace boost { namespace fusion { namespace traits {
 
     template<>
@@ -38,11 +39,9 @@ namespace boost { namespace fusion { namespace traits {
     struct tag_of< boost::bit_mask_group<Mask0, Mask1, Mask2, Mask3, Mask4,
                            Mask5, Mask6, Mask7, Mask8, Mask9 > >
     {
-        typedef example::bit_mask_group_tag type;
+        typedef boost::details::bit_mask_group_tag type;
     };
 }}} // end boost::fusion::traits
-
-
 
 
 #endif
