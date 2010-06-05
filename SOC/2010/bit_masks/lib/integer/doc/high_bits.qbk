@@ -1,23 +1,23 @@
 [c++]
-[section:high_bits high_bits]
+[section:high_bits_maskbits high_bits_mask]
 [h3 Description]
-THe template `high_bits` preforms bitwise operations on compile time then 
-exposes the newly created mask via `value` and `operator T()`. What `high_bits` 
+THe template `high_bits_mask` preforms bitwise operations on compile time then 
+exposes the newly created mask via `value` and `operator T()`. What `high_bits_mask` 
 does is create a mask inside your integral type which sets all bits starting
 from the left most bit reaching out width bits to the right. For example,
 ``
 // using high bits to create a mask starting from the left most bit with a width
 // of 15
-typedef high_bits<int, 15> bits;
+typedef high_bits_mask<int, 15> bits;
 // bits::value will have the following value in binary.
 // 1111 1111  1111 1110  0000 0000  0000 0000
 ``
 
 [h3 Template Signature]
-`high_bits` has the following template signature:
+`high_bits_mask` has the following template signature:
 ``
 template <typename T, unsigned int Width>
-struct high_bits;
+struct high_bits_mask;
 ``
 
 [table
@@ -27,8 +27,8 @@ struct high_bits;
 ]
 
 [h3 Interface]
-`high_bits` Compile time interface. Assume that N is of type
-`high_bits` the type supplied here is only for example.
+`high_bits_mask` Compile time interface. Assume that N is of type
+`high_bits_mask<int, 10>` the type supplied here is only for example.
 
 [table
     [[Operation][Description]]
@@ -43,12 +43,12 @@ this function will be made fasters and more effieient.]]
 
 
 [h3 Examples]
-Examples and use cases related to the `high_bits` type.
+Examples and use cases related to the `high_bits_mask` template.
 
 
 Exaple:
 ``
-typedef high_bits<int,4> mask;
+typedef high_bits_mask<int,4> mask;
 
 // binary for mask::value
 // 1111 0000  0000 0000  0000 0000  0000 0000

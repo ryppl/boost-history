@@ -17,9 +17,35 @@ please use the table of contents above.
 [table
    [[Component][Header][Contence]]
    [
-      [`Integral_mask` type]
+      [`integral_mask` type]
       [ [^[@http://svn.boost.org/svn/boost/sandbox/SOC/2010/bit_masks/boost/integer/integral_mask.hpp <boost/integer/integral_mask.hpp>]]]
-      [ Header contains `integral_mask` type]
+      [ Header contains `integral_mask` type. ]
+   ]
+   [
+      [`high_bits_mask` type]
+      [ [^[@http://svn.boost.org/svn/boost/sandbox/SOC/2010/bit_masks/boost/integer/high_bits_mask.hpp <boost/integer/high_bits_mask.hpp>]]]
+      [ Header contains `high_bits_mask` type. ]
+   ]
+   [
+      [`low_bits_mask` type]
+      [ [^[@http://svn.boost.org/svn/boost/sandbox/SOC/2010/bit_masks/boost/integer/low_bits_mask.hpp <boost/integer/low_bits_mask.hpp>]]]
+      [ Header contains `low_bits_mask` type. ]
+   ]
+
+   [
+      [ `high_bits_mask` type and `low_bits_mask` type ]
+      [ [^[@http://svn.boost.org/svn/boost/sandbox/SOC/2010/bit_masks/boost/integer/high_low_bits.hpp <boost/integer/high_low_bits.hpp>]]]
+      [ Header contains includes for `high_bits_mask` and `low_bits_mask`. ]
+   ]
+   [
+      [`compound_mask` type]
+      [ [^[@http://svn.boost.org/svn/boost/sandbox/SOC/2010/bit_masks/boost/integer/compound_mask.hpp <boost/integer/compound_mask.hpp>]]]
+      [ Header contains `compound_mask` type. ]
+   ]
+   [
+      [`bit_mask_group` type]
+      [ [^[@http://svn.boost.org/svn/boost/sandbox/SOC/2010/bit_masks/boost/integer/bit_mask_group.hpp <boost/integer/bit_mask_group.hpp>]]]
+      [ Header contains `bit_mask_group` type. ]
    ]
 ]
 
@@ -62,5 +88,5 @@ simply treat it as though it were an integer.
 [endsect]
 
 [include:integral_mask integral_mask.qbk]
-[include:high_bits high_bits.qbk]
-
+[include:high_bits_mask high_bits.qbk]
+[include:low_bits_mask low_bits.qbk]
