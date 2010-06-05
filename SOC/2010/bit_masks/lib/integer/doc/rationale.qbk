@@ -1,0 +1,36 @@
+[section:rationale Rationale And Motivation]
+The motivation and rationale behind the creation a bit masking library stems
+from the following example:
+``
+struct foo {
+    bool b1:1;
+    bool b2:1;
+    int i1:2;
+    int i2:2;
+};
+``
+The struct `foo` is composed of bit fields. This is fine and wouldn't be a big
+issues accept that there is something which the user can't see that can cause
+problems with this struct. The size of struct `foo` need not be any larger then
+`char`, 1 byte, which is the smalles type which can hold it. Now the actual size
+of `foo` is 4 bytes. This can cause havoc if a union was made with this type and
+a char while the user was thinking that their type is 1 byte in size. So in order
+to create something which could handle this situation correctly. This library
+was created to help with the internal management and storage bit fields and
+non-standardly aligned data. The goal is to provide both masking utilities and
+commonlly used structures which would be able to correct the size of the
+structure and provide simple accessors to the data stored within.
+
+[h3 Project Data Structure Motivation and Rationale]
+There are several data structures provided which make doing some slightly more
+complex tasks simple and organized. The structures which the library provides
+are `bit_mask_group`, `bit_mask_tuple`, `bit_field_tuple` and 
+`pointer_plus_bits`.
+
+
+`bit_mask_group` is not a container it doesn't store any data however it
+provides a way of organizing your masks. The structure also provides additional
+run time support on top of its tuple style interface.
+
+[endsect]
+

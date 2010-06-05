@@ -21,11 +21,11 @@
 
 namespace boost {
 
-template <typename NameType, typename T>
-struct named {
-    typedef NameType           name;
-    typedef T                  value;
-    typedef named<NameType, T> type;
+template <typename T, typename NameType>
+struct tagged {
+    typedef NameType            name;
+    typedef T                   value;
+    typedef tagged<NameType, T> type;
 };
 
 // TODO: move this into a sperate file
@@ -62,10 +62,15 @@ struct bit_mask_group_impl_ {
 template <typename TypeVector, typename NamedTypeMap>
 struct bit_mask_group_impl_< unused_parameter, TypeVector, NamedTypeMap > {
 
-    typedef bit_mask_group_impl_< unused_parameter, TypeVector, NamedTypeMap>  type;
-    typedef unused_parameter                                                   type_added;
-    typedef TypeVector                                                         type_vector;
-    typedef NamedTypeMap                                                       named_type_map;
+    typedef bit_mask_group_impl_<
+        unused_parameter,
+        TypeVector,
+        NamedTypeMap
+    >  type;
+
+    typedef unused_parameter type_added;
+    typedef TypeVector type_vector;
+    typedef NamedTypeMap named_type_map;
 
     // fake adding the parameter to the TypeVector instead do nothing.
     template <typename NewT>
@@ -78,13 +83,18 @@ struct bit_mask_group_impl_< unused_parameter, TypeVector, NamedTypeMap > {
 /** Used for dealing with the "named" types or types which basically contain a
  *  single tag which allows them to be referenced instead of an index.
  */
-template <typename Name, typename Value, typename TypeVector, typename NamedTypeMap>
-struct bit_mask_group_impl_< named<Name, Value>, TypeVector, NamedTypeMap>
+template <  typename Name,
+            typename Value,
+            typename TypeVector,
+            typename NamedTypeMap>
+struct bit_mask_group_impl_< tagged<Value, Name>, TypeVector, NamedTypeMap>
 {
-    typedef bit_mask_group_impl_< Value, TypeVector, NamedTypeMap>          type;
-    typedef Value                                                           type_added;
-    typedef typename mpl::push_back<TypeVector, Value>::type                type_vector;
-    typedef typename mpl::insert<NamedTypeMap,mpl::pair<Name,Value> >::type named_type_map;
+    typedef bit_mask_group_impl_< Value, TypeVector, NamedTypeMap> type;
+    typedef Value type_added;
+    typedef typename mpl::push_back<TypeVector, Value>::type type_vector;
+    typedef typename mpl::insert<
+        NamedTypeMap,mpl::pair<Name, Value>
+    >::type named_type_map;
 
     template <typename NewT>
     struct add {

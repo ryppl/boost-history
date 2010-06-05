@@ -10,9 +10,9 @@
 struct name_tag { };
 int main() {
     typedef bit_mask_group<
-        named<
-            name_tag,
-            low_bits_mask<int,9>
+        tagged<
+            low_bits_mask<int,9>,
+            name_tag
         >,
         bits_mask<int,3,9>
     > testing_type1;
