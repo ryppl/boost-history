@@ -3,7 +3,8 @@
 //  accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 //  See http://www.boost.org for updates, documentation, and revision history. 
-
+#ifndef BOOST_HIGH_LOW_IMPL_HPP
+#define BOOST_HIGH_LOW_IMPL_HPP
 
 #include <boost/static_assert.hpp>
 #include <boost/integer/bit_width.hpp>
@@ -30,3 +31,5 @@ struct high_bits_preconditions {
 
 
 } } // namespace boost::details
+
+#endif

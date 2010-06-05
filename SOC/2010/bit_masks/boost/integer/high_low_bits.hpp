@@ -12,8 +12,10 @@
 #include <boost/integer/details/high_low_impl.hpp>
 #include <boost/integer/integral_mask.hpp>
 
-namespace boost {
+#include <boost/integer/high_bits_mask.hpp>
+#include <boost/integer/low_bits_mask.hpp>
 
+namespace boost {
 
 /** Creates a mask of the supplied width in side type T, from the lower portion 
  *  of the integer starting from the right most bit moving towards the left.

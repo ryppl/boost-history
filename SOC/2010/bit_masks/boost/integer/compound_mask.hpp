@@ -7,7 +7,7 @@
 #ifndef BOOST_COMPOIND_BIT_MASK_HPP
 #define BOOST_COMPOIND_BIT_MASK_HPP
 
-#include <boost/integer/bit_mask.hpp>
+#include <boost/integer/bits_mask.hpp>
 
 namespace boost {
 
