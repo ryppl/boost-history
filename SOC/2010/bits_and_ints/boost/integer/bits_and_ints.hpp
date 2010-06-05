@@ -18,5 +18,6 @@
 #include <boost/integer/bit_reversal.hpp>
 #include <boost/integer/static_bit_reversal.hpp>
 #include <boost/integer/sign.hpp>
+#include <boost/integer/same_sign.hpp>
 
 #endif
