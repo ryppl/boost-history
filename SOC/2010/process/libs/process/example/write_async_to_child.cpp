@@ -27,10 +27,11 @@ int main()
 { 
     std::string exe = find_executable_in_path("ftp"); 
     context ctx; 
-    ctx.stdin_behavior = stream_behavior::capture; 
+    ctx.stdin_behavior = capture; 
     child c = create_child(exe, ctx); 
     postream &os = c.get_stdin(); 
-    async_write(os, buffer("quit\n"), boost::bind(&end_write, placeholders::error)); 
+    pipe write_end(ioservice, os.native()); 
+    async_write(write_end, buffer("quit\n"), boost::bind(&end_write, placeholders::error)); 
     ioservice.run(); 
 } 
 

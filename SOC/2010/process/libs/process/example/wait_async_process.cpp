@@ -21,7 +21,6 @@ using namespace boost::process;
 using namespace boost::asio; 
 
 io_service ioservice; 
-status s(ioservice); 
 
 void end_wait(const boost::system::error_code &ec); 
 

@@ -20,9 +20,8 @@ int main()
 { 
     std::string exe = find_executable_in_path("ftp"); 
     context ctx; 
-    ctx.stdin_behavior = stream_behavior::capture; 
+    ctx.stdin_behavior = capture; 
     child c = create_child(exe, ctx); 
     postream &os = c.get_stdin(); 
     os << "quit" << std::endl; 
 } 
-

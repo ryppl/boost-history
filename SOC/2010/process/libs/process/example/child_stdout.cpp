@@ -20,7 +20,7 @@ int main()
 { 
     std::string exe = find_executable_in_path("hostname"); 
     context ctx; 
-    ctx.stdout_behavior = stream_behavior::capture; 
+    ctx.stdout_behavior = capture; 
     child c = create_child(exe, ctx); 
     pistream &is = c.get_stdout(); 
     std::cout << is.rdbuf(); 

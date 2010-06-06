@@ -23,9 +23,10 @@ void end_write(const boost::system::error_code &ec);
 
 int main() 
 { 
-    parent p(ioservice); 
+    parent p; 
     postream &os = p.get_stdin(); 
-    async_write(os, buffer("Hello, world!"), boost::bind(&end_write, placeholders::error)); 
+    pipe write_end(ioservice, os.native()); 
+    async_write(write_end, buffer("Hello, world!"), boost::bind(&end_write, placeholders::error)); 
     ioservice.run(); 
 } 
 
