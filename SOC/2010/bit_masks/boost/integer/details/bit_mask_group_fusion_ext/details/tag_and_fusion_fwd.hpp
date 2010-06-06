@@ -16,10 +16,10 @@ namespace details {
 /** bit_mask_group's Sequence tag.
  *  Used for dispatching to overloads.
  */
-struct bit_mask_group_tag;
+struct bit_mask_group_tag { };
 
 /** bit_mask_group's iterator tag. */
-struct bit_mask_group_iterator_tag;
+struct bit_mask_group_iterator_tag { };
 
 } // end details
 

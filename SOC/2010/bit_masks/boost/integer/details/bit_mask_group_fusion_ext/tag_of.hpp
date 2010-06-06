@@ -3,29 +3,37 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at 
 //  http://www.boost.org/LICENSE_1_0.txt)
 
+
 #ifndef BOOST_BIT_MASK_GROUP_TAG_OF_HPP
 #define BOOST_BIT_MASK_GROUP_TAG_OF_HPP
 
-namespace boost { namespace fusion { namespace traits {
+#include <boost/fusion/support/tag_of_fwd.hpp>
+#include <cstddef>
 
-/** bit_mask_group specilization. */
-template<>
-template <  typename Mask0, typename Mask1, typename Mask2, typename Mask3,
-            typename Mask4, typename Mask5, typename Mask6, typename Mask7,
-            typename Mask8,typename Mask9 >
-struct tag_of< boost::bit_mask_group<Mask0, Mask1, Mask2, Mask3, Mask4,
-                       Mask5, Mask6, Mask7, Mask8, Mask9 > >
-{
-    typedef boost::details::bit_mask_group_tag type;
-};
+namespace boost { namespace fusion {
+
+    struct bit_mask_group_tag;
+    struct bit_mask_group_iterator_tag;
+    
+    namespace traits {
+
+    /** bit_mask_group specilization. */
+    template <  typename Mask0, typename Mask1, typename Mask2, typename Mask3,
+                typename Mask4, typename Mask5, typename Mask6, typename Mask7,
+                typename Mask8, typename Mask9 >
+    struct tag_of< boost::bit_mask_group< Mask0, Mask1, Mask2, Mask3, Mask4,
+                                          Mask5, Mask6, Mask7, Mask8, Mask9 > >
+    {
+        typedef bit_mask_group_tag type;
+    };
 
 
-/** Iterator tag_of specilization. */
-template<>
-template <typename MaskGroup, unsigned int Pos>
-struct tag_of< boost::bit_mask_group_iterator<MaskGroup,Pos> > {
-    typedef boost::details::bit_mask_group_iterator_tag type;
-};
+    /** Iterator tag_of specilization. */
+    template <typename Extra>
+    template <typename MaskGroup, std::size_t Pos>
+    struct tag_of< boost::fusion::bit_mask_group_iterator< MaskGroup, Pos >, Extra> {
+        typedef bit_mask_group_iterator_tag type;
+    };
 
 }}} // end boost::fusion::traits
 

@@ -25,14 +25,14 @@
 #include "details/tag_and_fusion_fwd.hpp"
 #include "bit_mask_group_iterator.hpp"
 #include "tag_of.hpp"
-#include "details/category_of_impl.hpp"
+// #include "details/category_of_impl.hpp"
 #include "details/is_sequence_impl.hpp"
 #include "details/is_view_impl.hpp"
-#include "details/end_impl.hpp"
+// #include "details/end_impl.hpp"
 #include "details/begin_impl.hpp"
-#include "details/size_impl.hpp"
-#include "details/value_at_impl.hpp"
-#include "details/at_impl.hpp"
+// #include "details/size_impl.hpp"
+// #include "details/value_at_impl.hpp"
+// #include "details/at_impl.hpp"
 
 
 #endif

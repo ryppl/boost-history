@@ -16,7 +16,7 @@
 #include <boost/type_traits/is_const.hpp>
 #include <boost/fusion/iterator/iterator_facade.hpp>
 
-namespace boost {
+namespace boost { namespace fusion {
 
 /** This is the iterator which holds the maskgroup and allows
  *  the user to iterate over a bit_mask_group type.
@@ -91,10 +91,11 @@ struct bit_mask_group_iterator
         static type call(I1 const&, I2 const&) {
             return type();
         }
+
     };
 
 };
 
-} // end boost
+} } // end boost::fusion
 
 #endif

@@ -6,13 +6,22 @@
 #ifndef BOOST_BIT_MASK_GROUP_FUSION_EXT_IS_VIEW_IMPL_HPP
 #define BOOST_BIT_MASK_GROUP_FUSION_EXT_IS_VIEW_IMPL_HPP
 
-namespace boost { namespace fusion { namespace extension {
+#include <boost/mpl/bool.hpp>
 
-template <>
-struct is_view_impl< boost::details::bit_mask_group_tag > {
-    template <typename Sequence>
-    struct apply : mpl::false_ { };
-};
+namespace boost { namespace fusion {
+
+    struct bit_mask_group;
+
+    namespace extension {
+
+    template<typename Tag>
+    struct is_view_impl;
+
+    template <>
+    struct is_view_impl< bit_mask_group_tag > {
+        template <typename>
+        struct apply : mpl::false_ { };
+    };
 
 }}} // end boost::fusion::extension
 

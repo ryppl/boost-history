@@ -18,7 +18,7 @@
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/void.hpp>
-#include <boost/integer/details/bit_mask_group_fusion_ext/fusion_includes.hpp>
+
 
 
 
@@ -94,7 +94,7 @@ struct bit_mask_group_impl_< tagged<Value, Name>, TypeVector, NamedTypeMap>
 };
 
 } } // end details
-
+#if 0
 
 namespace boost { namespace fusion { namespace extension {
 //TODO: May not need the impl overloads for the iterator because its gets 
@@ -247,7 +247,7 @@ struct at_key_impl< boost::details::bit_mask_group_tag > {
 
 
 }}} // end boost::fusion::extention
-
+#endif
 
 #endif
 

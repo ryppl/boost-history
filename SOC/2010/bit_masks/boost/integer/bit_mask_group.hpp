@@ -123,4 +123,6 @@ struct bit_mask_group {
 
 } // end boost
 
+#include <boost/integer/details/bit_mask_group_fusion_ext/fusion_includes.hpp>
+
 #endif
