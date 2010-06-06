@@ -85,20 +85,13 @@ int main() {
     BOOST_ASSERT(( size(bmg) == 6));
     BOOST_ASSERT(( distance(begin(bmg), end(bmg)) == 6 ));
 
-#if 0
+    BOOST_MPL_ASSERT((
+        is_same<
+            traits::category_of<bmg_t>::type,
+            random_access_traversal_tag
+        >
+    ));
 
-
-    BOOST_TEST();
-    BOOST_TEST();
-    BOOST_TEST();
-    BOOST_TEST();
-    BOOST_TEST();
-    BOOST_TEST();
-    BOOST_TEST();
-
-    return boost::report_errors();
-}
-#endif
     }
     return 0;
 }
