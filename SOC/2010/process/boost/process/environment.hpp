@@ -19,8 +19,8 @@
 #ifndef BOOST_PROCESS_ENVIRONMENT_HPP
 #define BOOST_PROCESS_ENVIRONMENT_HPP
 
-#include <string>
 #include <map>
+#include <string>
 
 namespace boost {
 namespace process {

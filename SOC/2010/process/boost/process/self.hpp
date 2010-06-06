@@ -22,13 +22,14 @@
 #include <boost/process/config.hpp>
 
 #if defined(BOOST_POSIX_API)
-#  include <unistd.h>
+#  include <boost/scoped_array.hpp> 
+#  include <cerrno> 
+#  include <unistd.h> 
 #  if defined(__APPLE__)
 #    include <crt_externs.h>
 #  endif
 #elif defined(BOOST_WINDOWS_API)
 #  include <windows.h>
-#  include <direct.h>
 #else
 #  error "Unsupported platform." 
 #endif
@@ -125,19 +126,29 @@ public:
         return e;
     }
 
-    static char *get_work_dir()
+    static std::string get_work_dir()
     {
-#if defined(BOOST_POSIX_API)
-        int size = pathconf(".",_PC_PATH_MAX);
-        char *buffer = (char *)malloc(size);
-        if (!buffer) 
-            BOOST_ASSERT(false);
-        return getcwd(buffer, size);
-#elif defined(BOOST_WINDOWS_API)
-        char* buffer;
-        BOOST_ASSERT((buffer = _getcwd( NULL, 0 )) != NULL);
-        return buffer;
-#endif
+#if defined(BOOST_POSIX_API) 
+        errno = 0;
+        long size = ::pathconf(".", _PC_PATH_MAX);
+        if (size == -1 && errno)
+            boost::throw_exception(boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::self::get_work_dir: pathconf(2) failed"));
+        else if (size == -1) 
+            size = BOOST_PROCESS_POSIX_PATH_MAX; 
+        BOOST_ASSERT(size > 0); 
+        boost::scoped_array<char> cwd(new char[size]); 
+        if (!::getcwd(cwd.get(), size)) 
+            boost::throw_exception(boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::self::get_work_dir: getcwd(2) failed")); 
+        BOOST_ASSERT(cwd[0] != '\0'); 
+        return cwd.get(); 
+#elif defined(BOOST_WINDOWS_API) 
+        BOOST_ASSERT(MAX_PATH > 0); 
+        char cwd[MAX_PATH]; 
+        if (!::GetCurrentDirectoryA(sizeof(cwd), cwd)) 
+            boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::self::get_work_dir: GetCurrentDirectory failed")); 
+        BOOST_ASSERT(cwd[0] != '\0'); 
+        return cwd; 
+#endif 
     }
 
 private:

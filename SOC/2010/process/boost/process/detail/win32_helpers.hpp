@@ -147,7 +147,7 @@ inline file_handle configure_win32_stream(stream_detail &sd)
 
     switch (sd.behavior)
     {
-    case closed:
+    case close:
     {
         return_handle = file_handle();
         break;
@@ -157,7 +157,7 @@ inline file_handle configure_win32_stream(stream_detail &sd)
         return_handle = file_handle::win32_dup_std(sd.stream_handle, true);
         break;
     }
-    case dummy:
+    case mute:
     {
         HANDLE h;
         if(sd.stream_type == stdin_type)

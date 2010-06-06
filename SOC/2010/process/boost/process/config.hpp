@@ -31,9 +31,8 @@
  * By default it is set to 259. You should set the macro to PATH_MAX
  * which should be defined in limits.h provided by your operating system
  * if you experience problems when instantiating a context. The
- * constructor of basic_work_directory_context tries to find out
- * dynamically the maximal supported path length but uses
- * BOOST_PROCESS_POSIX_PATH_MAX if it fails.
+ * constructor of context tries to find out the maximal supported path 
+ * length but uses BOOST_PROCESS_POSIX_PATH_MAX if it fails.
  */
 #    define BOOST_PROCESS_POSIX_PATH_MAX 259
 #  endif

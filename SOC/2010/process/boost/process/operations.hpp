@@ -68,8 +68,7 @@ namespace process {
  * \throw boost::filesystem::filesystem_error If the file cannot be found
  *        in the path.
  */
-inline std::string find_executable_in_path(const std::string &file,
-        std::string path = "")
+inline std::string find_executable_in_path(const std::string &file, std::string path = "")
 {
 #if defined(BOOST_POSIX_API)
     BOOST_ASSERT(file.find('/') == std::string::npos);
@@ -85,6 +84,7 @@ inline std::string find_executable_in_path(const std::string &file,
         const char *envpath = ::getenv("PATH");
         if (!envpath)
             boost::throw_exception(boost::filesystem::filesystem_error("boost::process::find_executable_in_path: retrieving PATH failed", file, boost::system::errc::make_error_code(boost::system::errc::no_such_file_or_directory)));
+
         path = envpath;
     }
     BOOST_ASSERT(!path.empty());
@@ -103,32 +103,21 @@ inline std::string find_executable_in_path(const std::string &file,
     do
     {
         pos2 = path.find(':', pos1);
-        std::string dir;
-        if(pos2 != std::string::npos)
-            dir = path.substr(pos1, pos2 - pos1);
-        else
-            path.substr(pos1);
-
+        std::string dir = (pos2 != std::string::npos) ? path.substr(pos1, pos2 - pos1) : path.substr(pos1); 
         std::string f = dir + (boost::algorithm::ends_with(dir, "/") ? "" : "/") + file;
-
         if (!::access(f.c_str(), X_OK))
             result = f;
         pos1 = pos2 + 1;
-    }
-    while (pos2 != std::string::npos && result.empty());
-
+    } while (pos2 != std::string::npos && result.empty());
 #elif defined(BOOST_WINDOWS_API)
     const char *exts[] = { "", ".exe", ".com", ".bat", NULL };
     const char **ext = exts;
-
     while (*ext)
     {
         char buf[MAX_PATH];
         char *dummy;
-
         DWORD size = ::SearchPathA(path.empty() ? NULL : path.c_str(), file.c_str(), *ext, MAX_PATH, buf, &dummy);
         BOOST_ASSERT(size < MAX_PATH);
-
         if (size > 0)
         {
             result = buf;
@@ -160,7 +149,6 @@ inline std::string executable_to_progname(const std::string &exe)
 #elif defined(BOOST_WINDOWS_API)
     std::string::size_type slash = exe.find_last_of("/\\");
 #endif
-
     if (slash != std::string::npos)
         begin = slash + 1;
 
@@ -185,10 +173,23 @@ inline std::string executable_to_progname(const std::string &exe)
  *
  * \return A handle to the new child process.
  */
-template<class Arguments>
-inline child create_child(const std::string &executable, Arguments args, 
-        context &ctx = DEFAULT_CONTEXT)
+template <class Arguments>
+inline child create_child(const std::string &executable, Arguments args, context ctx = default_context)
 {
+    /*
+     * BEHAVIOR | BEFORE fork/CreateProcess        | AFTER fork/CreateProcess 
+     * ---------+----------------------------------+--------------------------------- 
+     * inherit  | Windows: duplicate handle and    | 
+     *          |          save it in STARTUPINFO  | 
+     * capture  | POSIX: create pipe               | POSIX: use one end to initialize 
+     *          | Windows: create pipe and save    |        child process object 
+     *          |          one end in STARTUPINFO  | 
+     * mute     | POSIX: open file                 | 
+     *          | Windows: open file and save      | 
+     *          |          handle in STARTUPINFO   | 
+     * close    |                                  | POSIX: close explicitly 
+     */
+
     detail::file_handle fhstdin, fhstdout, fhstderr;
 
     //start structures that represents a std stream.
@@ -201,28 +202,40 @@ inline child create_child(const std::string &executable, Arguments args,
     stderr_stream.behavior = ctx.stderr_behavior;
 
     //adjust process name
-    std::string p_name = ctx.process_name.empty() ? executable:ctx.process_name;
-    args.insert(args.begin(),p_name);
+    std::string p_name = ctx.process_name.empty() ? executable : ctx.process_name;
+    args.insert(args.begin(), p_name);
 
 #if defined(BOOST_POSIX_API)
     child::id_type pid = ::fork();
 
     if (pid == -1)
-        boost::throw_exception(boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::detail::posix_start: fork(2) failed"));
+        boost::throw_exception(boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::create_child: fork(2) failed"));
 
     if (pid == 0)
     {
-        //configure child pipes
+        // child process 
         detail::configure_posix_stream(stdin_stream);
         detail::configure_posix_stream(stdout_stream);
         detail::configure_posix_stream(stderr_stream);
 
-        //execve call
         std::pair<std::size_t, char**> argcv = detail::collection_to_posix_argv(args);
         char **envp = detail::environment_to_envp(ctx.environment);
         ::execve(executable.c_str(), argcv.second, envp);
 
-        BOOST_ASSERT(false);
+        // error handling in case execve() failed 
+        boost::system::system_error e(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::create_child: execve(2) failed"); 
+
+        for (std::size_t i = 0; i < argcv.first; ++i) 
+            delete[] argcv.second[i]; 
+        delete[] argcv.second; 
+
+        for (std::size_t i = 0; i < env.size(); ++i) 
+            delete[] envp[i]; 
+        delete[] envp; 
+
+        ::write(STDERR_FILENO, e.what(), std::strlen(e.what())); 
+        ::write(STDERR_FILENO, "\n", 1); 
+        std::exit(EXIT_FAILURE); 
     }
 
     BOOST_ASSERT(pid > 0);
@@ -304,16 +317,13 @@ inline child create_child(const std::string &executable, Arguments args,
     if (!::CloseHandle(pi.hThread))
         boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::launch: CloseHandle failed"));
 
-    std::cout << "Process handle passado para o child:" << pi.hProcess << std::endl;
     return child(pi.dwProcessId, fhstdin, fhstdout, fhstderr, detail::file_handle(pi.hProcess));
 #endif
 }
 
-inline child create_child(const std::string &executable, 
-        context &ctx = DEFAULT_CONTEXT)
+inline child create_child(const std::string &executable, context ctx = default_context)
 {
-    std::vector<std::string> args ;
-    return create_child(executable,args,ctx);
+    return create_child(executable, std::vector<std::string>(), ctx); 
 }
 
 }

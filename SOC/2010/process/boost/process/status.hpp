@@ -39,10 +39,7 @@ class process;
  * Status returned by a finalized %child process.
  *
  * This class represents the %status returned by a child process after it
- * has terminated. It only provides that information available under all
- * supported platforms.
- *
- * \see posix_status
+ * has terminated. 
  */
 class status
 {
@@ -57,7 +54,11 @@ public:
 #if defined(BOOST_POSIX_API)
         return WIFEXITED(flags_);
 #elif defined(BOOST_WINDOWS_API)
-        //TODO: Is that really right?
+        // TODO 
+        // Felipe: Is that really right?
+        // Boris: Not sure in the moment. I think we have to check the 
+        //        sample programs to see if there is a use case where 
+        //        this is not true? 
         return true;
 #endif
     }
@@ -69,7 +70,6 @@ public:
      *
      * \pre exited() is true.
      */
-
     int exit_code() const
     {
         BOOST_ASSERT(exited());
@@ -93,7 +93,9 @@ protected:
      *        Windows system it contains the exit code only.
      */
     status(int flags)
-        : flags_(flags) {}
+        : flags_(flags) 
+    {
+    }
 
     /**
      * OS-specific codification of exit status.

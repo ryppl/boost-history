@@ -11,7 +11,7 @@
 //
 
 #include <boost/process/all.hpp> 
-#include <iostream> 
+#include <boost/assign/list_of.hpp> 
 #include <vector> 
 #include <string> 
 #include <utility> 
@@ -22,15 +22,11 @@ int main()
 { 
     child c1 = create_child(find_executable_in_path("hostname")); 
 
-    std::vector<std::string> args; 
-    args.push_back("-?"); 
+    std::vector<std::string> args = boost::assign::list_of("-?"); 
     child c2 = create_child(find_executable_in_path("hostname"), args); 
 
     context ctx; 
     ctx.environment.insert(std::make_pair("NEW_ENV_VARIABLE", "VALUE")); 
-    ctx.process_name = "My_process_name"; 
-    ctx.stdin_behavior = stream_behavior::inherit; 
-    ctx.stdout_behavior = stream_behavior::closed; 
-    ctx.stderr_behavior = stream_behavior::closed; 
+    ctx.stdin_behavior = stream_behavior::close; 
     child c3 = create_child(find_executable_in_path("hostname"), args, ctx); 
 } 

@@ -22,9 +22,6 @@
 #include <boost/process/config.hpp>
 
 #if defined(BOOST_POSIX_API)
-#  include <sys/types.h>
-#  include <sys/wait.h>
-#  include <cerrno>
 #elif defined(BOOST_WINDOWS_API)
 #  include <windows.h>
 #else
@@ -35,11 +32,8 @@
 #include <boost/process/pistream.hpp>
 #include <boost/process/postream.hpp>
 #include <boost/process/detail/file_handle.hpp>
-#include <boost/system/system_error.hpp>
-#include <boost/throw_exception.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/assert.hpp>
-#include <iostream>
 #include <vector>
 
 namespace boost {
@@ -104,16 +98,12 @@ public:
      * It is only used on Windows as the implementation of wait() needs a
      * process handle.
      */
-    child(id_type id, detail::file_handle &fhstdin, detail::file_handle 
-            &fhstdout, detail::file_handle &fhstderr, detail::file_handle
-            fhprocess = detail::file_handle())
+    child(id_type id, detail::file_handle &fhstdin, detail::file_handle &fhstdout, detail::file_handle &fhstderr, detail::file_handle fhprocess = detail::file_handle())
         : process(id)
+#if defined(BOOST_WINDOWS_API) 
+        ,process_handle_(fhprocess.release(), ::CloseHandle) 
+#endif 
     {
-#if defined(BOOST_WINDOWS_API)
-        process_handle_ =  boost::shared_ptr<void>(fhprocess.release(),
-                ::CloseHandle);
-#endif
-        std::cout << "Criado com ID " << process_handle_.get() << std::endl;
         if (fhstdin.valid())
             stdin_.reset(new postream(fhstdin));
         if (fhstdout.valid())
@@ -153,14 +143,21 @@ private:
      */
     boost::shared_ptr<pistream> stderr_;
 
-    /**
-     * Collection of child objects.
-     *
-     * This convenience type represents a collection of child objects backed
-     * by a vector.
-     */
-    typedef std::vector<child> children;
+#if defined(BOOST_WINDOWS_API) 
+    /** 
+     * Process handle owned by RAII object. 
+     */ 
+    boost::shared_ptr<void> process_handle_; 
+#endif 
 };
+
+/**
+ * Collection of child objects.
+ *
+ * This convenience type represents a collection of child objects backed
+ * by a vector.
+ */
+typedef std::vector<child> children;
 
 }
 }

@@ -18,15 +18,15 @@
  *
  */
 
+#ifndef BOOST_PROCESS_STREAM_DETAIL_HPP
+#define BOOST_PROCESS_STREAM_DETAIL_HPP
+
 #include <boost/process/config.hpp>
 #include <boost/process/stream_behavior.hpp>
 #include <boost/process/detail/file_handle.hpp>
 #include <boost/process/detail/pipe.hpp>
 #include <boost/optional.hpp>
 #include <map>
-
-#ifndef BOOST_PROCESS_STREAM_DETAIL_HPP
-#define BOOST_PROCESS_STREAM_DETAIL_HPP
 
 namespace boost {
 namespace process {

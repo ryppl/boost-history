@@ -13,7 +13,7 @@
 /**
  * \file boost/process/stream_behavior.hpp
  *
- * Includes the declaration of the stream_behavior
+ * Includes the declaration of the stream_behavior enumeration. 
  *
  */
 
@@ -25,18 +25,17 @@
 namespace boost {
 namespace process {
 
-/*
+/**
  *
- * stream_behavior defines how a stream should behavior
- * from a brand-new child.
+ * Stream behaviors to define how standard streams are passed to a child process.
  *
- * inherit: The stream are inherit from it's father
- * capture: The stream is connected with an anonymous pipe
- * closed: The stream is closed as soon as the process is created
- * dummy: Dummy data will be writed or read from this stream
+ * inherit: A stream is inherited from its parent process. 
+ * capture: A stream is redirected to its parent process (anonymous pipe). 
+ * mute: A stream is redirected to /dev/null, /dev/zero or NUL. 
+ * close: A stream is closed. 
  *
  */
-enum stream_behavior { inherit, capture, closed, dummy};
+enum stream_behavior { inherit, capture, mute, close }; 
 
 }
 }

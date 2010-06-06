@@ -101,13 +101,11 @@ public:
      * \throw boost::system::system_error If the system call used to
      *        terminate the process fails.
      */
-
     void terminate(bool force = false) const
     {
 #if defined(BOOST_POSIX_API)
         if (::kill(id_, force ? SIGKILL : SIGTERM) == -1)
             boost::throw_exception(boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::process::terminate: kill(2) failed"));
-
 #elif defined(BOOST_WINDOWS_API)
         HANDLE h = ::OpenProcess(PROCESS_TERMINATE, FALSE, id_);
         if (h == NULL)
@@ -122,6 +120,7 @@ public:
             boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::process::terminate: CloseHandle failed"));
 #endif
     }
+
     /**
      * Blocks and waits for the child process to terminate.
      *
@@ -138,18 +137,24 @@ public:
 #if defined(BOOST_POSIX_API)
         int s;
         if (::waitpid(get_id(), &s, 0) == -1)
-            boost::throw_exception(boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::child::wait: waitpid(2) failed"));
+            boost::throw_exception(boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::process::wait: waitpid(2) failed"));
         return status(s);
 #elif defined(BOOST_WINDOWS_API)
-        std::cout << "Criado com ID " << process_handle_.get() << std::endl;
-        if(::WaitForSingleObject(process_handle_.get(),INFINITE) == WAIT_FAILED)
+        // TODO 
+        // Boris: Where do we get the process handle from? It should be possible to fetch it 
+        //        as we do have the process ID saved in the member variable id_. I guess 
+        //        there must be a Windows API function to get a process handle from a process ID? 
+        if (::WaitForSingleObject(process_handle_.get(),INFINITE) == WAIT_FAILED)
         {
-            std::cout << "Last error:" << GetLastError() << std::endl;
-            std::cout << "Criado com ID " << process_handle_.get() << std::endl;
+            // TODO 
+            // Boris: What should happen if WaitForSingleObject() fails? Under what 
+            //        conditions can it fail? 
+            // std::cout << "Last error:" << GetLastError() << std::endl;
+            // std::cout << "Criado com ID " << process_handle_.get() << std::endl;
         }
         DWORD code;
         if (!::GetExitCodeProcess(process_handle_.get(), &code))
-            boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::child::wait: GetExitCodeProcess failed"));
+            boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::process::wait: GetExitCodeProcess failed"));
         return status(code);
 #endif
     }
