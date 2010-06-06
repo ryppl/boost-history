@@ -46,24 +46,6 @@ template <typename> struct value_at_impl;
 template <typename> struct at_impl;
 template <typename> struct at_key_impl;
 
-/** Forward declaration of all spcilizations. */
-// iterator overloads.
-template <> struct value_at_impl< boost::details::bit_mask_group_iterator_tag >;
-template <> struct deref_impl< boost::details::bit_mask_group_iterator_tag >;
-template <> struct next_impl< boost::details::bit_mask_group_iterator_tag >;
-template <> struct prior_impl< boost::details::bit_mask_group_iterator_tag >;
-template <> struct advance_impl< boost::details::bit_mask_group_iterator_tag >;
-template <> struct distance_impl< boost::details::bit_mask_group_iterator_tag >;
-template <> struct equal_to_impl< boost::details::bit_mask_group_iterator_tag >;
-
-// sequence overloads.
-template <> struct category_of_impl< boost::details::bit_mask_group_tag >;
-template <> struct begin_impl< boost::details::bit_mask_group_tag >;
-template <> struct end_impl< boost::details::bit_mask_group_tag >;
-template <> struct size_impl< boost::details::bit_mask_group_tag >;
-template <> struct value_at_impl< boost::details::bit_mask_group_tag >;
-template <> struct at_impl< boost::details::bit_mask_group_tag >;
-template <> struct at_key_impl< boost::details::bit_mask_group_tag >;
 
 }}} // end boost::fusion::extension
 
