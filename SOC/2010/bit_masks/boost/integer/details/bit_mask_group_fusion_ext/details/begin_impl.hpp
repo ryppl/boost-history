@@ -5,6 +5,7 @@
 
 #ifndef BOOST_BIT_MASK_GROUP_FUSION_EXT_BEGIN_IMPL_HPP
 #define BOOST_BIT_MASK_GROUP_FUSION_EXT_BEGIN_IMPL_HPP
+#include "../bit_mask_group_iterator.hpp"
 
 namespace boost { namespace fusion {
 

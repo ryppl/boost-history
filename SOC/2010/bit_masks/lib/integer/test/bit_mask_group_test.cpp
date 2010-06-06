@@ -61,13 +61,22 @@ int main() {
     BOOST_ASSERT(( traits::is_sequence<bmg_t>::value ));
     BOOST_ASSERT(( ! traits::is_view<bmg_t>::value ));
 
+
+    // testing tag_of for bit_mask_group.
+    BOOST_MPL_ASSERT((
+        is_same<
+            traits::tag_of<bmg_t>::type,
+            bit_mask_group_tag
+        >
+    ));
+
+
     // create an instance of this type and then test the rest
     // of the functions which are implemented on this type to make sure they
     // work.
     bmg_t bmg;
 
     BOOST_ASSERT(( (*begin(bmg)) == bmg.get<0>() ));
-    // BOOST_ASSERT(( ));
     // BOOST_ASSERT(( ));
     // BOOST_ASSERT(( ));
     // BOOST_ASSERT(( ));

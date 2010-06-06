@@ -27,14 +27,6 @@ namespace boost { namespace fusion {
         typedef bit_mask_group_tag type;
     };
 
-
-    /** Iterator tag_of specilization. */
-    template <typename Extra>
-    template <typename MaskGroup, std::size_t Pos>
-    struct tag_of< boost::fusion::bit_mask_group_iterator< MaskGroup, Pos >, Extra> {
-        typedef bit_mask_group_iterator_tag type;
-    };
-
 }}} // end boost::fusion::traits
 
 #endif

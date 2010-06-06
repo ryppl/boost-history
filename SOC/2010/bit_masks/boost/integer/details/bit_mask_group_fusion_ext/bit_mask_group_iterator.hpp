@@ -3,9 +3,6 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at 
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-
-
-
 #ifndef BOOST_BIT_MASK_GROUP_ITERATOR_HPP
 #define BOOST_BIT_MASK_GROUP_ITERATOR_HPP
 
@@ -25,9 +22,9 @@ namespace boost { namespace fusion {
  */
 template<typename MaskGroup, unsigned int Pos>
 struct bit_mask_group_iterator
-    : boost::fusion::iterator_facade<
+    : iterator_facade<
         bit_mask_group_iterator<MaskGroup, Pos>,
-        boost::fusion::random_access_traversal_tag
+        random_access_traversal_tag
     >
 {
     // TODO: At a later time add preconditions for the iterator.
