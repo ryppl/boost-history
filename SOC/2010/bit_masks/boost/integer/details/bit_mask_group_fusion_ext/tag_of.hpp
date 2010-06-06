@@ -18,11 +18,13 @@ namespace boost { namespace fusion {
     namespace traits {
 
     /** bit_mask_group specilization. */
+    template <  typename Extra>
     template <  typename Mask0, typename Mask1, typename Mask2, typename Mask3,
                 typename Mask4, typename Mask5, typename Mask6, typename Mask7,
                 typename Mask8, typename Mask9 >
     struct tag_of< boost::bit_mask_group< Mask0, Mask1, Mask2, Mask3, Mask4,
-                                          Mask5, Mask6, Mask7, Mask8, Mask9 > >
+                                          Mask5, Mask6, Mask7, Mask8, Mask9 >,
+                                          Extra >
     {
         typedef bit_mask_group_tag type;
     };
