@@ -12,120 +12,93 @@
 #include <boost/type_traits.hpp>
 #include <boost/mpl/minus.hpp>
 #include <boost/mpl/size.hpp>
+#include <boost/mpl/vector.hpp>
+#include <boost/mpl/map.hpp>
+#include <boost/mpl/insert.hpp>
+#include <boost/mpl/push_back.hpp>
+#include <boost/mpl/at.hpp>
+#include <boost/mpl/void.hpp>
+#include <boost/integer/details/bit_mask_group_fusion_ext/fusion_includes.hpp>
 
-/** This is used for creating an extention into the boost fusion library for 
- *  the bit_mask_group.
+
+
+namespace boost { namespace details {
+
+typedef mpl::void_ unused_parameter;
+
+/** This is a metafunction which is used for filling an mpl::vector with
+ *  types which arn't of type unused parameter.
  */
-namespace boost {
-/** Forward declaration of the iterator, for the fusion sequence extention
- *  bit_mask_group
+template <typename T, typename TypeVector, typename NamedTypeMap >
+struct bit_mask_group_impl_ {
+
+    typedef bit_mask_group_impl_< T, TypeVector, NamedTypeMap>  type;
+    typedef T                                                   type_added;
+    typedef typename mpl::push_back<TypeVector, T>::type        type_vector;
+    typedef NamedTypeMap                                        named_type_map;
+
+
+    // adds to the back of the vector and calls this meta function again.
+    template <typename NewT>
+    struct add {
+        typedef bit_mask_group_impl_< NewT, type_vector, NamedTypeMap> type;
+    };
+};
+
+/** Specialization for unused parameters. 
+ *  This is the case where the parameter wasn't used by the user and is instead
+ *  going to be ignored, however its behavior is going to similar to that of
+ *  the more general form above.
  */
-template<typename MaskGroup, unsigned int Pos>
-struct bit_mask_group_iterator;
+template <typename TypeVector, typename NamedTypeMap>
+struct bit_mask_group_impl_< unused_parameter, TypeVector, NamedTypeMap > {
 
-namespace details {
-/** Sequence tag.
- *  This is used for the boost.fusion extention.
- *  Used for dispatching to function overloads.
- *  The only thing needed for this is the declaration but just in case I have
- *  provided an empty definition.
+    typedef bit_mask_group_impl_<
+        unused_parameter,
+        TypeVector,
+        NamedTypeMap
+    >  type;
+
+    typedef unused_parameter type_added;
+    typedef TypeVector type_vector;
+    typedef NamedTypeMap named_type_map;
+
+    // fake adding the parameter to the TypeVector instead do nothing.
+    template <typename NewT>
+    struct add {
+        typedef bit_mask_group_impl_<NewT, TypeVector, NamedTypeMap > type;
+    };
+};
+
+
+/** Used for dealing with the "named" types or types which basically contain a
+ *  single tag which allows them to be referenced instead of an index.
  */
-struct bit_mask_group_tag { };
-
-/** bit_mask_group's sequence iterator tag. */
-struct bit_mask_group_iterator_tag { };
-
-} // end of details namespace.
-
-/** This is the iterator which holds the maskgroup and allows
- *  the user to iterate over a bit_mask_group type.
- *  As the type bit_mask_group is trivially constructible, copyable and 
- *  destructable there is no member to actually hold any data.
- */
-template<typename MaskGroup, unsigned int Pos>
-struct bit_mask_group_iterator
-    : boost::fusion::iterator_base< bit_mask_group_iterator<MaskGroup, Pos> >
+template <  typename Name,
+            typename Value,
+            typename TypeVector,
+            typename NamedTypeMap>
+struct bit_mask_group_impl_< tagged<Value, Name>, TypeVector, NamedTypeMap>
 {
-    // TODO: At a later time add preconditions for the iterator.
-    typedef MaskGroup mask_group;
-    typedef boost::mpl::int_<Pos> index;
-    typedef boost::fusion::random_access_traversal_tag category;
+    typedef bit_mask_group_impl_< Value, TypeVector, NamedTypeMap> type;
+    typedef Value type_added;
+    typedef typename mpl::push_back<TypeVector, Value>::type type_vector;
+    typedef typename mpl::insert<
+        NamedTypeMap,mpl::pair<Name, Value>
+    >::type named_type_map;
+
+    template <typename NewT>
+    struct add {
+        typedef bit_mask_group_impl_<NewT, type_vector, named_type_map> type;
+    };
 };
 
-
-/** tag_of tag dispatch functions which allow me to feed directly into
- *  boost.fusion.
- */
-namespace fusion { namespace traits {
-
-/** bit_mask_group specilization. */
-template<>
-template <  typename Mask0, typename Mask1, typename Mask2, typename Mask3,
-            typename Mask4, typename Mask5, typename Mask6, typename Mask7,
-            typename Mask8,typename Mask9 >
-struct tag_of< boost::bit_mask_group<Mask0, Mask1, Mask2, Mask3, Mask4,
-                       Mask5, Mask6, Mask7, Mask8, Mask9 > >
-{
-    typedef boost::details::bit_mask_group_tag type;
-};
-
-
-/** Iterator tag_of specilization. */
-template<>
-template <typename MaskGroup, unsigned int Pos>
-struct tag_of< boost::bit_mask_group_iterator<MaskGroup,Pos> > {
-    typedef boost::details::bit_mask_group_iterator_tag type;
-};
-
-} // end traits
-namespace extension {
-
-/** All Forward decalations for all of the impl funcitons used by the fusion
- *  extension process.
- */
-template <typename> struct value_at_impl;
-template <typename> struct deref_impl;
-template <typename> struct next_impl;
-template <typename> struct prior_impl;
-template <typename> struct advance_impl;
-template <typename> struct distance_impl;
-template <typename> struct equal_to_impl;
-template <typename> struct category_of_impl;
-template <typename> struct is_sequence_impl;
-template <typename> struct is_view_impl;
-template <typename> struct begin_impl;
-template <typename> struct end_impl;
-template <typename> struct size_impl;
-template <typename> struct value_at_impl;
-template <typename> struct at_impl;
-template <typename> struct at_key_impl;
-
-/** Forward declaration of all spcilizations. */
-// iterator overloads.
-template <> struct value_at_impl< boost::details::bit_mask_group_iterator_tag >;
-template <> struct deref_impl< boost::details::bit_mask_group_iterator_tag >;
-template <> struct next_impl< boost::details::bit_mask_group_iterator_tag >;
-template <> struct prior_impl< boost::details::bit_mask_group_iterator_tag >;
-template <> struct advance_impl< boost::details::bit_mask_group_iterator_tag >;
-template <> struct distance_impl< boost::details::bit_mask_group_iterator_tag >;
-template <> struct equal_to_impl< boost::details::bit_mask_group_iterator_tag >;
-// sequence overloads.
-template <> struct category_of_impl< boost::details::bit_mask_group_tag >;
-template <> struct begin_impl< boost::details::bit_mask_group_tag >;
-template <> struct end_impl< boost::details::bit_mask_group_tag >;
-template <> struct size_impl< boost::details::bit_mask_group_tag >;
-template <> struct value_at_impl< boost::details::bit_mask_group_tag >;
-template <> struct at_impl< boost::details::bit_mask_group_tag >;
-template <> struct at_key_impl< boost::details::bit_mask_group_tag >;
-} // end extension
-} // end fusion
-} // end boost
-
-
+} } // end details
 
 
 namespace boost { namespace fusion { namespace extension {
-
+//TODO: May not need the impl overloads for the iterator because its gets 
+// done implicitly somewhere else.
 
 
 template <>
@@ -253,105 +226,6 @@ struct equal_to_impl< boost::details::bit_mask_group_iterator_tag > {
         >::type
     { };
 };
-
-
-template <>
-struct category_of_impl< boost::details::bit_mask_group_tag > {
-    template<typename T>
-    struct apply {
-        typedef random_access_traversal_tag type;
-    };
-};
-
-template<>
-struct is_sequence_impl< boost::details::bit_mask_group_tag > {
-    template<typename T>
-    struct apply : mpl::true_ { };
-};
-
-
-
-template <>
-struct is_view_impl< boost::details::bit_mask_group_tag > {
-    template <typename Sequence>
-    struct apply : mpl::false_ { };
-};
-
-
-
-
-
-template <>
-struct end_impl< boost::details::bit_mask_group_tag > {
-    template <typename MaskGroup>
-    struct apply {
-        typedef boost::bit_mask_group_iterator<
-            MaskGroup,
-            mpl::size<
-                typename MaskGroup::mask_vector
-             >::value
-        > type;
-
-        static type call(MaskGroup&) {
-            return type();
-        }
-    };
-};
-
-template <>
-struct begin_impl< boost::details::bit_mask_group_tag > {
-    template<typename MaskGroup>
-    struct apply {
-        typedef boost::bit_mask_group_iterator<MaskGroup, 0> type;
-        static type call(MaskGroup&) {
-            return type();
-        }
-    };
-};
-
-
-
-template<>
-struct size_impl< boost::details::bit_mask_group_tag > {
-    template<typename MaskGroup>
-    struct apply
-      : mpl::size< typename MaskGroup::mask_vector >
-    { };
-};
-
-
-
-template <>
-struct value_at_impl< boost::details::bit_mask_group_tag > {
-    template <typename MaskGroup, typename N>
-    struct apply {
-        typedef typename MaskGroup::
-            template get_by_index<
-                N::value
-            >::type
-        type;
-    };
-};
-
-
-
-
-
-template <>
-struct at_impl< boost::details::bit_mask_group_tag > {
-    template <typename MaskGroup, typename N>
-    struct apply {
-        typedef typename MaskGroup::
-            template get_by_index<
-                N::value
-            >::type
-        type;
-        static typename type::value_type call(MaskGroup&) {
-            return type::value;
-        }
-    };
-};
-
 
 
 template<>

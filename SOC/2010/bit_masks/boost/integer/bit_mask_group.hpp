@@ -10,20 +10,8 @@
 #include <boost/integer/bit_mask_group_fwd.hpp>
 #include <boost/integer/compound_mask.hpp>
 #include <boost/integer/details/bit_mask_group_impl.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/map.hpp>
-#include <boost/mpl/insert.hpp>
-#include <boost/mpl/push_back.hpp>
-#include <boost/mpl/at.hpp>
-#include <boost/mpl/void.hpp>
-
-
-
 
 namespace boost {
-
-
-
 
 /** This is used for naming/tagging arguments within the bit_mask_group. */
 template <typename T, typename NameType>
@@ -32,86 +20,6 @@ struct tagged {
     typedef T                   value;
     typedef tagged<NameType, T> type;
 };
-
-
-
-// TODO: move this into a sperate file
-namespace details {
-
-typedef mpl::void_ unused_parameter;
-
-/** This is a metafunction which is used for filling an mpl::vector with
- *  types which arn't of type unused parameter.
- */
-template <typename T, typename TypeVector, typename NamedTypeMap >
-struct bit_mask_group_impl_ {
-
-    typedef bit_mask_group_impl_< T, TypeVector, NamedTypeMap>  type;
-    typedef T                                                   type_added;
-    typedef typename mpl::push_back<TypeVector, T>::type        type_vector;
-    typedef NamedTypeMap                                        named_type_map;
-
-
-    // adds to the back of the vector and calls this meta function again.
-    template <typename NewT>
-    struct add {
-        typedef bit_mask_group_impl_< NewT, type_vector, NamedTypeMap> type;
-    };
-};
-
-/** Specialization for unused parameters. 
- *  This is the case where the parameter wasn't used by the user and is instead
- *  going to be ignored, however its behavior is going to similar to that of
- *  the more general form above.
- */
-template <typename TypeVector, typename NamedTypeMap>
-struct bit_mask_group_impl_< unused_parameter, TypeVector, NamedTypeMap > {
-
-    typedef bit_mask_group_impl_<
-        unused_parameter,
-        TypeVector,
-        NamedTypeMap
-    >  type;
-
-    typedef unused_parameter type_added;
-    typedef TypeVector type_vector;
-    typedef NamedTypeMap named_type_map;
-
-    // fake adding the parameter to the TypeVector instead do nothing.
-    template <typename NewT>
-    struct add {
-        typedef bit_mask_group_impl_<NewT, TypeVector, NamedTypeMap > type;
-    };
-};
-
-
-/** Used for dealing with the "named" types or types which basically contain a
- *  single tag which allows them to be referenced instead of an index.
- */
-template <  typename Name,
-            typename Value,
-            typename TypeVector,
-            typename NamedTypeMap>
-struct bit_mask_group_impl_< tagged<Value, Name>, TypeVector, NamedTypeMap>
-{
-    typedef bit_mask_group_impl_< Value, TypeVector, NamedTypeMap> type;
-    typedef Value type_added;
-    typedef typename mpl::push_back<TypeVector, Value>::type type_vector;
-    typedef typename mpl::insert<
-        NamedTypeMap,mpl::pair<Name, Value>
-    >::type named_type_map;
-
-    template <typename NewT>
-    struct add {
-        typedef bit_mask_group_impl_<NewT, type_vector, named_type_map> type;
-    };
-};
-
-} // namespace details.
-
-
-
-
 
 /** \name bit_mask_group
  *  \brief This a psudo variadic class which uses default template parameters
