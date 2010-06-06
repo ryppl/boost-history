@@ -49,12 +49,12 @@ int main() {
 
     using namespace boost::fusion;
     typedef boost::bit_mask_group<
-        // tagged< low_bits_mask< int, 9 >, name_tag >,
-        // bits_mask< int, 9 >,
-        // bits_mask<int, 8 >,
-        // high_bits_mask< int, 3 >,
-        integral_mask< int, 0xdeadbeef > //,
-        // tagged< integral_mask< unsigned int, 0xdeadbabe >, name_tag_2 >
+        tagged< low_bits_mask< int, 9 >, name_tag >,
+        bits_mask< int, 9 >,
+        bits_mask<int, 8 >,
+        high_bits_mask< int, 3 >,
+        integral_mask< int, 0xdeadbeef >,
+        tagged< integral_mask< unsigned int, 0xdeadbabe >, name_tag_2 >
     > bmg_t;
 
     // make sure that this is a sequence and is not a view.
@@ -77,20 +77,24 @@ int main() {
     bmg_t bmg;
 
     BOOST_ASSERT(( (*begin(bmg)) == bmg.get<0>() ));
-    // BOOST_ASSERT(( ));
-    // BOOST_ASSERT(( ));
-    // BOOST_ASSERT(( ));
+    BOOST_ASSERT(( *next(begin(bmg)) == bmg.get<1>() ));
+    BOOST_ASSERT(( *advance_c<2>(begin(bmg)) == bmg.get<2>() ));
+    BOOST_ASSERT(( prior(next(begin(bmg))) == begin(bmg) ));
+    BOOST_ASSERT(( *prior(end(bmg)) == bmg.get<5>() ));
+    BOOST_ASSERT(( at_c<2>(bmg) == bmg.get<2>() ));
+    BOOST_ASSERT(( size(bmg) == 6));
+    BOOST_ASSERT(( distance(begin(bmg), end(bmg)) == 6 ));
+
 #if 0
 
 
-    BOOST_TEST(*begin(arr) == 1);
-    BOOST_TEST(*next(begin(arr)) == 2);
-    BOOST_TEST(*advance_c<2>(begin(arr)) == 3);
-    BOOST_TEST(prior(next(begin(arr))) == begin(arr));
-    BOOST_TEST(*prior(end(arr)) == 3);
-    BOOST_TEST(at_c<2>(arr) == 3);
-    BOOST_TEST(size(arr) == 3);
-    BOOST_TEST(distance(begin(arr), end(arr)) == 3);
+    BOOST_TEST();
+    BOOST_TEST();
+    BOOST_TEST();
+    BOOST_TEST();
+    BOOST_TEST();
+    BOOST_TEST();
+    BOOST_TEST();
 
     return boost::report_errors();
 }

@@ -6,19 +6,25 @@
 #ifndef BOOST_BIT_MASK_GROUP_FUSION_EXT_VALUE_AT_IMPL_HPP
 #define BOOST_BIT_MASK_GROUP_FUSION_EXT_VALUE_AT_IMPL_HPP
 
-namespace boost { namespace fusion { namespace extension {
+namespace boost { namespace fusion {
 
-template <>
-struct value_at_impl< boost::details::bit_mask_group_tag > {
-    template <typename MaskGroup, typename N>
-    struct apply {
-        typedef typename MaskGroup::
-            template get_by_index<
-                N::value
-            >::type
-        type;
+    struct bit_mask_group_tag;
+
+    namespace extension {
+    
+    template <typename> struct value_at_impl;
+    
+    template <>
+    struct value_at_impl< bit_mask_group_tag > {
+        template <typename MaskGroup, typename N>
+        struct apply {
+            typedef typename MaskGroup::
+                template get_by_index<
+                    N::value
+                >::type
+            type;
+        };
     };
-};
 
 }}} // end boost::fusion::extension
 

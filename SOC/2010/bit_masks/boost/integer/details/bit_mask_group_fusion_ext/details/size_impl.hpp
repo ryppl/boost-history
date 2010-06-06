@@ -6,15 +6,21 @@
 #ifndef BOOST_BIT_MASK_GROUP_FUSION_EXT_SIZE_IMPL_HPP
 #define BOOST_BIT_MASK_GROUP_FUSION_EXT_SIZE_IMPL_HPP
 
-namespace boost { namespace fusion { namespace extension {
+namespace boost { namespace fusion {
 
-template<>
-struct size_impl< boost::details::bit_mask_group_tag > {
-    template<typename MaskGroup>
-    struct apply
-      : mpl::size< typename MaskGroup::mask_vector >
-    { };
-};
+    struct bit_mask_group_tag;
+
+    namespace extension {
+    
+    template <typename> struct size_impl;
+    
+    template <>
+    struct size_impl< bit_mask_group_tag > {
+        template<typename MaskGroup>
+        struct apply
+          : mpl::size< typename MaskGroup::mask_vector >
+        { };
+    };
 
 }}} // end boost::fusion::extension
 

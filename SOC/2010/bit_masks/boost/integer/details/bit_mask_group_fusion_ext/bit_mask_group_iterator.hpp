@@ -64,7 +64,7 @@ struct bit_mask_group_iterator
             index::value + N::value
         > type;
 
-        static type call(Iterator const& i) {
+        static type call(Iterator const&) {
             return type();
         }
     };
