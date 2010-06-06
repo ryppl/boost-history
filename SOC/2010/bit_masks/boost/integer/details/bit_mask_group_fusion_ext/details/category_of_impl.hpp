@@ -6,15 +6,21 @@
 #ifndef BOOST_BIT_MASK_GROUP_FUSION_EXT_CATEGORY_OF_IMPL_HPP
 #define BOOST_BIT_MASK_GROUP_FUSION_EXT_CATEGORY_OF_IMPL_HPP
 
-namespace boost { namespace fusion { namespace extension {
+namespace boost { namespace fusion {
 
-template <>
-struct category_of_impl< boost::details::bit_mask_group_tag > {
-    template<typename T>
-    struct apply {
-        typedef random_access_traversal_tag type;
+    struct bit_mask_group_tag;
+
+    namespace extension {
+
+    template <typename> struct category_of_impl;
+    
+    template <>
+    struct category_of_impl< bit_mask_group_tag > {
+        template<typename T>
+        struct apply {
+            typedef random_access_traversal_tag type;
+        };
     };
-};
 
 }}} // end boost::fusion::extension
 
