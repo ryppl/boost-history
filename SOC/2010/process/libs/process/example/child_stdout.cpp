@@ -10,7 +10,8 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#include <boost/all/process.hpp> 
+#include <boost/process/all.hpp> 
+#include <boost/make_shared.hpp> 
 #include <string> 
 #include <iostream> 
 
@@ -20,8 +21,10 @@ int main()
 { 
     std::string exe = find_executable_in_path("hostname"); 
     context ctx; 
-    ctx.stdout_behavior = capture; 
+    ctx.stdout_behavior = boost::make_shared<capture>(capture(capture::output_stream)); 
     child c = create_child(exe, ctx); 
     pistream &is = c.get_stdout(); 
-    std::cout << is.rdbuf(); 
+    std::string hostname; 
+    is >> hostname; 
+    std::cout << hostname << std::endl; 
 } 

@@ -22,19 +22,19 @@
 #include <boost/process/config.hpp>
 
 #if defined(BOOST_POSIX_API)
-#  include <boost/process/detail/posix_helpers.hpp>
-#  include <stdlib.h>
-#  include <unistd.h>
-#  if defined(__CYGWIN__)
-#    include <boost/scoped_array.hpp>
-#    include <sys/cygwin.h>
-#  endif
+#   include <boost/process/detail/posix_helpers.hpp>
+#   include <stdlib.h>
+#   include <unistd.h>
+#   if defined(__CYGWIN__)
+#       include <boost/scoped_array.hpp>
+#       include <sys/cygwin.h>
+#   endif
 #elif defined(BOOST_WINDOWS_API)
-#  include <boost/process/detail/win32_helpers.hpp>
-#  include <boost/algorithm/string/predicate.hpp>
-#  include <windows.h>
+#   include <boost/process/detail/win32_helpers.hpp>
+#   include <boost/algorithm/string/predicate.hpp>
+#   include <windows.h>
 #else
-#  error "Unsupported platform."
+#   error "Unsupported platform."
 #endif
 
 #include <boost/process/child.hpp>
@@ -174,7 +174,7 @@ inline std::string executable_to_progname(const std::string &exe)
  * \return A handle to the new child process.
  */
 template <class Arguments>
-inline child create_child(const std::string &executable, Arguments args, context ctx = default_context)
+inline child create_child(const std::string &executable, Arguments args, context ctx = context())
 {
     /*
      * BEHAVIOR | BEFORE fork/CreateProcess        | AFTER fork/CreateProcess 
@@ -190,6 +190,77 @@ inline child create_child(const std::string &executable, Arguments args, context
      * close    |                                  | POSIX: close explicitly 
      */
 
+    std::string p_name = ctx.process_name.empty() ? executable : ctx.process_name; 
+    args.insert(args.begin(), p_name); 
+
+#if defined(BOOST_POSIX_API)
+    child::id_type pid = ::fork();
+
+    if (pid == -1)
+        BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("fork(2) failed"); 
+
+    if (pid == 0) 
+    { 
+        std::pair<std::size_t, char**> argcv = detail::collection_to_posix_argv(args);
+        char **envp = detail::environment_to_envp(ctx.environment);
+        ::execve(executable.c_str(), argcv.second, envp);
+
+        boost::system::system_error e(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::create_child: execve(2) failed"); 
+
+        for (std::size_t i = 0; i < argcv.first; ++i) 
+            delete[] argcv.second[i]; 
+        delete[] argcv.second; 
+
+        for (std::size_t i = 0; i < env.size(); ++i) 
+            delete[] envp[i]; 
+        delete[] envp; 
+
+        ::write(STDERR_FILENO, e.what(), std::strlen(e.what())); 
+        ::write(STDERR_FILENO, "\n", 1); 
+        std::exit(EXIT_FAILURE); 
+    } 
+
+    BOOST_ASSERT(pid > 0);
+
+    return child(pid, 
+        detail::file_handle(ctx.stdin_behavior->get_parent_end()), 
+        detail::file_handle(ctx.stdout_behavior->get_parent_end()), 
+        detail::file_handle(ctx.stderr_behavior->get_parent_end())); 
+#elif defined(BOOST_WINDOWS_API)
+    STARTUPINFOA startup_info;
+    ::ZeroMemory(&startup_info, sizeof(startup_info));
+    startup_info.cb = sizeof(startup_info);
+    startup_info.dwFlags |= STARTF_USESTDHANDLES;
+    startup_info.hStdInput = ctx.stdin_behavior->get_child_end();
+    startup_info.hStdOutput = ctx.stdout_behavior->get_child_end();
+    startup_info.hStdError = ctx.stderr_behavior->get_child_end();
+
+    PROCESS_INFORMATION pi;
+    ::ZeroMemory(&pi, sizeof(pi));
+
+    boost::shared_array<char> cmdline = detail::collection_to_win32_cmdline(args);
+
+    boost::scoped_array<char> exe(new char[executable.size() + 1]);
+    ::strcpy_s(exe.get(), executable.size() + 1, executable.c_str());
+
+    boost::scoped_array<char> workdir(new char[ctx.work_dir.size() + 1]);
+    ::strcpy_s(workdir.get(), ctx.work_dir.size() + 1, ctx.work_dir.c_str());
+
+    boost::shared_array<char> envstrs = detail::environment_to_win32_strings(ctx.environment);
+
+    if (::CreateProcessA(exe.get(), cmdline.get(), NULL, NULL, TRUE, 0, envstrs.get(), workdir.get(), &startup_info, &pi) == 0)
+        BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreateProcess() failed"); 
+
+    if (!::CloseHandle(pi.hThread))
+        BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CloseHandle() failed"); 
+
+    return child(pi.dwProcessId, 
+        detail::file_handle(ctx.stdin_behavior->get_parent_end()), 
+        detail::file_handle(ctx.stdout_behavior->get_parent_end()), 
+        detail::file_handle(ctx.stderr_behavior->get_parent_end()), 
+        detail::file_handle(pi.hProcess)); 
+#endif 
+    /*
     detail::file_handle fhstdin, fhstdout, fhstderr;
 
     //start structures that represents a std stream.
@@ -319,9 +390,10 @@ inline child create_child(const std::string &executable, Arguments args, context
 
     return child(pi.dwProcessId, fhstdin, fhstdout, fhstderr, detail::file_handle(pi.hProcess));
 #endif
+    */
 }
 
-inline child create_child(const std::string &executable, context ctx = default_context)
+inline child create_child(const std::string &executable, context ctx = context())
 {
     return create_child(executable, std::vector<std::string>(), ctx); 
 }

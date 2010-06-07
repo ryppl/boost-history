@@ -22,6 +22,8 @@
 #include <boost/process/stream_behavior.hpp>
 #include <boost/process/environment.hpp>
 #include <boost/process/self.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 
 namespace boost {
 namespace process {
@@ -31,9 +33,9 @@ namespace process {
  */
 struct context
 {
-    stream_behavior stdin_behavior;
-    stream_behavior stdout_behavior;
-    stream_behavior stderr_behavior;
+    boost::shared_ptr<stream_behavior> stdin_behavior;
+    boost::shared_ptr<stream_behavior> stdout_behavior;
+    boost::shared_ptr<stream_behavior> stderr_behavior;
     std::string process_name;
     std::string work_dir;
     environment_t environment;
@@ -45,22 +47,20 @@ struct context
      * and environment variables. 
      */ 
     context() 
-        : stdin_behavior(inherit), 
-        stdout_behavior(inherit), 
-        stderr_behavior(inherit), 
+#if defined(BOOST_POSIX_API) 
+        : stdin_behavior(boost::make_shared<inherit>(inherit(STDIN_FILENO))), 
+        stdout_behavior(boost::make_shared<inherit>(inherit(STDOUT_FILENO))), 
+        stderr_behavior(boost::make_shared<inherit>(inherit(STDERR_FILENO))), 
+#elif defined(BOOST_WINDOWS_API) 
+        : stdin_behavior(boost::make_shared<inherit>(inherit(::GetStdHandle(STD_INPUT_HANDLE)))), 
+        stdout_behavior(boost::make_shared<inherit>(inherit(::GetStdHandle(STD_OUTPUT_HANDLE)))), 
+        stderr_behavior(boost::make_shared<inherit>(inherit(::GetStdHandle(STD_ERROR_HANDLE)))), 
+#endif 
         work_dir(self::get_work_dir()), 
         environment(self::get_environment()) 
     {
     }
 };
-
-/** 
- * Default context object. 
- * 
- * The default context object is used when child processes are created 
- * without defining a context explicitly. 
- */
-const context default_context; 
 
 }
 }

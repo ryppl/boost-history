@@ -23,12 +23,12 @@
 #include <boost/process/config.hpp>
 
 #if defined(BOOST_POSIX_API)
-#  include <cerrno>
-#  include <unistd.h>
+#   include <cerrno>
+#   include <unistd.h>
 #elif defined(BOOST_WINDOWS_API)
-#  include <windows.h>
+#   include <windows.h>
 #else
-#  error "Unsupported platform." 
+#   error "Unsupported platform." 
 #endif
 
 #include <boost/assert.hpp>
@@ -108,7 +108,7 @@ public:
     file_handle(handle_type h)
         : handle_(h)
     {
-        BOOST_ASSERT(handle_ != invalid_value());
+        // BOOST_ASSERT(handle_ != invalid_value());
     }
 
     /**

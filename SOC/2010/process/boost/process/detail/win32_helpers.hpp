@@ -141,6 +141,7 @@ inline boost::shared_array<char> collection_to_win32_cmdline(const Arguments &ar
  * It recieves stream_detail from that stream and return a file_handle
  * that contains the handle to the stream.
  */
+/*
 inline file_handle configure_win32_stream(stream_detail &sd)
 {
     file_handle return_handle;
@@ -198,6 +199,7 @@ inline file_handle configure_win32_stream(stream_detail &sd)
 
     return return_handle;
 }
+*/
 
 }
 }
