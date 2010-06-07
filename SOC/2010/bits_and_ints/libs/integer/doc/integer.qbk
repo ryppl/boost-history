@@ -66,6 +66,11 @@ compile-time value; and computing min and max of constant expressions.
       [Templates for finding the extrema of two numbers: 
       Use to find a bound based on a minimum or maximum value. Useful for generic programming. ]
    ]
+   [
+      [[link boost_integer.bits_and_ints Binary integral algorithms].]
+      [[^[@../../../../boost/integer/bits_and_ints.hpp <boost/integer/bits_and_ints.hpp>]]]
+      [Integer algorithms and utilities. ]
+   ]
 ]
 
 [endsect]
@@ -720,125 +725,304 @@ Gennaro Prota wrote the actual source file.
 [endsect]
 
 [section:bits_and_ints Bits and Ints]
-Bla bla bla
 
+The intent of this library is to extend Boost.Integer with fast integer algorithms and utilities. This library can be included via	[@../../../../boost/integer/bits_and_ints.hpp <boost/integer/bits_and_ints.hpp>].
 
-df
-f
+[section:sign_extend Sign Extending]
 
-ds
-f
-asdf
+Sign extension is automatic for built-in types, such as chars and ints. But suppose you have a signed two's complement number, x, that is stored 
+using only b bits. Moreover, suppose you want to convert x to an int, which has more than b bits. A simple copy will work if x is positive, but if
+negative, the sign must be extended. For example, if we have only 4 bits to store a number, then -3 is represented as 1101 in binary. If we have
+8 bits, then -3 is 11111101. The most-significant bit of the 4-bit representation is replicated sinistrally to fill in the destination when we
+convert to a representation with more bits; this is sign extending.
 
-fsd
-f
-das
-d
-f
-a
-sf
-dsa
-fda
-f
-samefs
-daf
-asdffsa
-f
-AddendSize1f
-ads
-fsa
-f
-samefsfsa
-f
-asdffsa
-df
-sf
-sa
-fas
-f
-asf
-as
-f
-samefsfas
-f
+[section Run-time version]
+The run-time version can be included via [@../../../../boost/integer/sign_extend.hpp <boost/integer/sign_extend.hpp>].
 
-fsa
-df
-dsafas
-f
+	template <typename Type>
+	inline typename enable_if<is_integral<Type>, Type>::type
+	sign_extend(Type data, std::size_t bits);
+   
+[h4 Parameters]
 
+[table
+	[[Parameter][Description]]
+	[[`data`][ The data to be extended. ]]
+	[[`bits`][ The amount of bits in wich data is represented. ]]
+]
 
-asdffsadsa
+[h4 Return]
+`data` sign-extended to `sizeof(Type)` bytes. The return type is `Type`.
 
+[endsect]
 
-s
-a
-s
-dfa
-dsf
-dsfa
-f
+[section Compile-time version]
+The compile-time version can be included via [@../../../../boost/integer/static_sign_extend.hpp <boost/integer/static_sign_extend.hpp>].
+The result will be in `value` member.
 
+	template<typename Type, Type data, std::size_t Bits, 
+		class Enable = ``['implementation-defined]``>
+	struct static_sign_extend 
+	{
+		static const Type value = ``['implementation-defined]``; 
+	};
 
-adsf
+[h4 Template Parameters]
 
-asdf
-d
-fsasf
-d
-f
-sda
+[table
+	[[Parameter][Description]]
+	[[`Type`][ The data type. ]]
+	[[`data`][ The data to be extended. ]]
+	[[`Bits`][ The amount of bits in wich data is represented. ]]
+]
+[endsect]
 
+[section Examples]
+[h4 Run-time version]
+	
+	#include <boost/integer/sign_extend.hpp>
+	#include <iostream>
 
+	int main()
+	{
+		// data is represented in 24-bits
+		int data = 0xFFFFFF; // -1 in 24-bits
 
-fasd
+		int result = boost::sign_extend(data, 24);
 
-dasf
+		std::cout << result << std::endl; // -1
+	}
+	
+[h4 Compile-time version]
+	
+	#include <boost/integer/static_sign_extend.hpp>
+	#include <iostream>
 
-dsf
-dsaasdf
+	int main()
+	{
+		// 0xFFFFF is -1 in 20-bits
+		int result = boost::static_sign_extend<int, 0xFFFFF, 20>::value;
 
+		std::cout << result << std::endl; // -1
+	}
+	
+[endsect]
 
+[endsect]
 
-asdf
+[section:bit_reversal Bit Reversal]
+The bit reversal functions reverts the bits of integral types.
 
-dsa
-dfs
-dsafsd
-afterd
+[section Run-time version]
+The run-time version can be included via [@../../../../boost/integer/bit_reversal.hpp <boost/integer/bit_reversal.hpp>]. 
+For valid types T, the function `bit_reversal` will be:
 
+	template <typename T>
+	inline T bit_reversal(T data);
+   
+[h4 Parameters]
 
+[table
+	[[Parameter][Description]]
+	[[`data`][ The data to be reversed. The type of data *must* be an integral type and it's size *must* be 8, 16, 32 or 64-bits, otherwise, bit_reversal(data) will result in an error. ]]
+]
 
-sdfa
+[h4 Return]
+`data` with its bits reversed.
 
-sdf
-d
-fsasfd
-asdffsadfs
+[endsect]
 
+[section Compile-time version]
+The compile-time version can be included via [@../../../../boost/integer/static_bit_reversal.hpp <boost/integer/static_bit_reversal.hpp>].
+The result will be in `value` member.
+	
+	template <typename T, T data, class Enable = ``['implementation-defined]``>
+	struct static_bit_reversal { 
+		static const Type value = ``['implementation-defined]``; 
+	};
 
-dfsa
-fds
-fds
-afds
-f
+[h4 Template Parameters]
 
+[table
+	[[Parameter][Description]]
+	[[`T`][ The data type. ]]
+	[[`data`][ The data to be reversed. ]]
+]
+[endsect]
 
-dsafsd
+[section Examples]
+[h4 Run-time version]
+	
+	#include <boost/integer/bit_reversal.hpp>
+	#include <iostream>
 
-dsf
-dfs
-a
-daf
-fds
+	int main()
+	{
+		// data = 0101 0101
+		uint8_t data = 0x55;
 
-fds
+		uint8_t result = boost::bit_reversal(data);
 
-dsafsd
+		// will print 0xaa (1010 1010)
+		std::cout << std::hex << result << std::endl; // -1
+	}
+	
+[h4 Compile-time version]
+	
+	#include <boost/integer/static_bit_reversal.hpp>
+	#include <iostream>
 
+	int main()
+	{
+		// 0x30A5 == 0011 0000 1010 0101
+		uint16_t result = boost::static_sign_extend<uint16_t, 0x30A5>::value;
 
-[section:sign_extend Sign Extending functions]
-EEEEEE
+		// will print 0x5A0B
+		std::cout << std::hex << result << std::endl;
+	}
+	
+[endsect]
+[endsect]
+
+[section:same_sign Same Sign]
+These functions check if wheter the sign of two integers are equal.
+
+[section Run-time version]
+The run-time version can be included via [@../../../../boost/integer/same_sign.hpp <boost/integer/same_sign.hpp>]. 
+For valid types T, the function `bit_reversal` will be:
+
+	template <typename T>
+	inline bool same_sign(T first, T second);
+   
+[h4 Parameters]
+
+[table
+	[[Parameter][Description]]
+	[[`first`, `second`][ The two integral values to be compared. The type of data *must* be an integral type. `first` and `second` must have the same type. ]]
+]
+
+[h4 Return]
+`false`: if the signs of first and second are different
+
+`true`: if the signs are equal
+
+[endsect]
+
+[section Compile-time version]
+The compile-time version can be included via [@../../../../boost/integer/same_sign.hpp <boost/integer/same_sign.hpp>].
+The result will be in `value` member.
+	
+	template <typename T, T first, T second, class Enable = ``['implementation-defined]``>
+	struct static_same_sign
+	{
+		static const bool value = ``['implementation-defined]``;
+	};
+
+[h4 Template Parameters]
+
+[table
+	[[Parameter][Description]]
+	[[`T`][ The data type. ]]
+	[[`first`, `second`][ The two integral values to be compared. ]]
+]
+[endsect]
+
+[section Examples]
+[h4 Run-time version]
+
+	#include <boost/integer/same_sign.hpp>
+	#include <iostream>
+
+	int main()
+	{
+		int first = -1, second = -2, third = 1;
+		
+		bool result = boost::same_sign(first, second);
+		std::cout << result << std::endl; // true
+		
+		result = boost::same_sign(first, third);
+		std::cout << result << std::endl; // false
+	}
+	
+[h4 Compile-time version]
+
+	#include <boost/integer/same_sign.hpp>
+	#include <iostream>
+
+	int main()
+	{
+		bool result = boost::static_same_sign<int, 2, 10>::value;
+		std::cout << result << std::endl; //true
+		
+		result = boost::static_same_sign<int, 10, -2>::value;
+		std::cout << result << std::endl; // false
+	}
+
+[endsect]
+[endsect]
+
+[section:sign Sign function]
+The `sign` function check the signal of integrals.
+
+[section Run-time version]
+The run-time version can be included via [@../../../../boost/integer/sign.hpp <boost/integer/sign.hpp>]. 
+For valid types T, the function `sign` will be:
+
+	template <typename T>
+	int sign(T data);
+   
+[h4 Parameters]
+
+[table
+	[[Parameter][Description]]
+	[[`data`][ The data to be checked. The type of data *must* be an integral otherwise, sign(data) will result in an error. ]]
+]
+
+[h4 Return]
+[table
+	[[Value][Description]]
+	[[`-1`][ `data` is negative. ]]
+	[[`0`][ `data` is equal to zero. ]]
+	[[`1`][ `data` is positive. ]]
+]
+
+[endsect]
+
+[section Examples]
+[h4 Run-time version]
+
+	#include <boost/integer/sign.hpp>
+	#include <iostream>
+
+	int main()
+	{
+		int first = -100, second = 340, third = 0;
+		
+		int result = boost::sign(first);
+		std::cout << result << std::endl; // -1
+		
+		result = boost::sign(second);
+		std::cout << result << std::endl; // 1
+		
+		result = boost::sing(third);
+		std::cout << result << std::endl; // 0
+	}
+	
+[endsect]
+[endsect]
+
+[section:bin_utils Binary Utilities]
+The header [@../../../../boost/integer/bin_utils.hpp <boost/integer/bin_utils.hpp>] cotains some metafunctions to handle binary data.
+All the metafunctions have an member varible named `value` where will be the result.
+
+[table
+	[[Metafuntion][Parameters][Description]]
+	[[set_bit][`typename T`, `T data`, `unsigned char pos`][ Sets the bit `pos` active in `data`. ]]
+	[[clear_bit][`typename T`, `T data`, `unsigned char pos`][ Sets the bit `pos` inactive in `data`. ]]
+	[[test_bit][`typename T`, `T data`, `unsigned char pos`][ Test if the bit `pos` in `data` is active or not. ]]
+	[[flip_bit][`typename T`, `T data`, `unsigned char pos`][ Invert the value of the bit `pos` in `data`. ]]
+	[[modify_bit][`typename T`, `T data`, `unsigned char pos`, `bool state`][ Sets the bit `pos` in `data` active if `state` is `true` or inactive if `state` is `false`. ]]
+]
 [endsect]
 
 [endsect]
