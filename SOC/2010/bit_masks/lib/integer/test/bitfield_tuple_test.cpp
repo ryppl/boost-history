@@ -73,27 +73,25 @@ int main() {
     // testing bitfield_element_
     {
         // bitfield_element_
-        typedef details::bitfield_element_<int,red,5,4> bft_element_test_1;
+        typedef details::bitfield_element_<int, red, mpl::size_t<5>, mpl::size_t<4> > bft_element_test_1;
         BOOST_ASSERT(( is_same<bft_element_test_1::return_type, int>::value ));
         BOOST_ASSERT(( is_same<bft_element_test_1::name_type, red>::value ));
-        BOOST_ASSERT(( bft_element_test_1::offset == 5 ));
-        BOOST_ASSERT(( bft_element_test_1::field_width == 4 ));
+        BOOST_ASSERT(( bft_element_test_1::offset::value == 5 ));
+        BOOST_ASSERT(( bft_element_test_1::field_width::value == 4 ));
 
     }
-#if 0
-    details::bft_impl_< storage<int, storage_policy_stack>,
-                        member<int, red, 6u>,
-                        mpl::void_,
-                        mpl::void_,
-                        mpl::void_,
-                        mpl::void_,
-                        mpl::void_,
-                        mpl::void_,
-                        mpl::void_,
-                        mpl::void_ > temp;
-    // >
 
-    ignore(&temp);
-#endif
+    // testing for parsing of aruments passed into template parameters.    
+    {
+    
+    typedef bitfield_tuple< storage<int>, member<int,red,3> > bft;
+    typedef bft::processed_args pa;
+    BOOST_MPL_ASSERT((
+        is_same<
+            pa::storage_policy,
+            storage<int>
+        >
+    ));
+    }
     return 0;
 }

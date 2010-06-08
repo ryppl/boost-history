@@ -31,204 +31,127 @@ namespace details {
  */
 template <  typename ReturnType,
             typename NameType, 
-            std::size_t Offset,
-            std::size_t FieldWidth
+            typename Offset,
+            typename FieldWidth
 >
 struct bitfield_element_ {
     typedef ReturnType  return_type;
     typedef NameType    name_type;
-    BOOST_STATIC_CONSTANT( std::size_t, offset = Offset );
-    BOOST_STATIC_CONSTANT( std::size_t, field_width = FieldWidth );
+    typedef Offset      offset;
+    typedef FieldWidth  field_width;
     typedef bitfield_element_<return_type, name_type, offset, field_width> type;
 };
 
-/** Default case for managing template parameters. */
-template <typename Param, typename FieldVector, std::size_t Offset>
-struct bft_impl_ {
-    typedef Param   param;
-    typedef FieldVector field_vector;
-    BOOST_STATIC_CONSTANT( std::size_t, offset = Offset );
 
-    typedef bft_impl_<param,field_vector,offset> type;
+
+
+/** Default case for managing template parameters. */
+template <  typename Param,
+            typename StoragePolicy,
+            typename FieldVector,
+            typename Offset
+>
+struct bft_impl_ {
+    typedef Param           param;
+    typedef FieldVector     field_vector;
+    typedef StoragePolicy   storage_policy;
+    typedef Offset          offset;
+
+    typedef bft_impl_<param,storage_policy,field_vector,offset> type;
 
     template <typename NextParam>
     struct process {
-        typedef typename bft_impl_<NextParam, field_vector, Offset>::type type;
-    };
-};
-#if 0
-/** Template Parameter descriptions and behaviors.
- *  Storage - Is the storage type. The behavior for this is going to be
- *      static assertion if set_storage is called and storage_type is something
- *      other then mpl::void_.
- *
- *  MapType - This is the associative sequence used for associating names
- *      with internal types and bitfields. The intended end use of this
- *      structure is to provided a simplified interface for a tuple via
- *      tag parameters.
- *
- *  VectorType - This sequence may be the only thing which is actually needed
- *      to store all information about types the different parameters.
- *
- */
-template <typename Storage = mpl::void_,
-          typename FieldVector = typename mpl::vector<>,
-          std::size_t NextOffset = 0
->
-struct bitfield_tuple_info_ {
-    typedef Storage         storage_policy;
-    typedef FieldVector     field_vector;
-    BOOST_STATIC_CONSTANT( std::size_t, next_offset = NextOffset );
-
-
-    typedef bitfield_tuple_info_ <
-        storage_policy,
-        field_vector,
-        next_offset
-    > type;
-
-    typedef bitfield_tuple_info_<storage_policy,field_vector,next_offset> _self;
-    /** Internal meta functions which are used to abstract overly complex 
-     *  operations which would normally be done via rebinding but that it
-     *  a massive pain. This is simplier to deal with from a usability
-     *  stand point as well as readability.
-     */
-    //@{
-
-    /** Used for setting the storage type associated with the current template.
-     *  Preconditions
-     *      Must not be called twice.
-     *      Unless called with mpl::void_ multiple times
-     *      (which one shouldn't do)(that is in a row before its set to any
-     *      thing else).
-     */
-    template <typename NewStorageType>
-    struct set_storage {
-        // BOOST_STATIC_ASSERT(( !is_same< storage_policy, mpl::void_ >::value  ));
-        
-        typedef typename bitfield_tuple_info_ <
-            NewStorageType,
+        typedef typename bft_impl_<
+            NextParam,
+            storage_policy,
             field_vector,
-            next_offset
+            offset
         >::type type;
     };
-
-    /** Used to add a single structure into the field_vector. */
-    template <typename TypeToAdd>
-    struct add_field {
-
-        typedef typename bitfield_element_<
-            typename TypeToAdd::return_type,
-            typename TypeToAdd::name_type,
-            next_offset,
-            TypeToAdd::field_width
-        >::type bft_element;
-
-        typedef typename mpl::push_back <
-                typename _self::field_vector::type,
-                bft_element
-            >::type new_field_vector;
-
-        typedef typename bitfield_tuple_info_ <
-            storage_policy,
-            typename new_field_vector::type,
-            NextOffset + TypeToAdd::field_width
-        >::type         type;
-    };
-    //@}
 };
 
-
-
-// this is forward declaration for something I'm going to do later.
-template <typename T> struct bft_stack_allocated_policy;
-
-/** bft means bitfield_tuple its just shorter to write then bitfield tuple.
- *  This class is used to select the correct base classes which the bitfield
- *  tuple should inherit from, as well as deal with the messy meta programming.
- */
-template <  typename T0,
-            typename T1,
-            typename T2,
-            typename T3,
-            typename T4,
-            typename T5,
-            typename T6,
-            typename T7,
-            typename T8,
-            typename T9
+template <  typename StorageType, 
+            typename AllocationPolicy,
+            typename StoragePolicy,
+            typename FieldVector,
+            typename Offset
 >
-struct bft_impl_ {
-/*
-    typedef typename bft_process_args_< T0, bitfield_tuple_info_ < > >::type pa1;
-    BOOST_STATIC_ASSERT((
-        !is_same<
-            typename pa1::info_type::storage_policy,
-            mpl::void_
-         >::value
-    ));
+struct bft_impl_ <
+    storage<
+        StorageType,
+        AllocationPolicy
+    >,
+    StoragePolicy,
+    FieldVector,
+    Offset >
+{
+    typedef typename storage<
+        StorageType,
+        AllocationPolicy
+    >::type                 param;
+    typedef FieldVector     field_vector;
+    typedef param           storage_policy;
+    typedef Offset          offset;
 
-    typedef typename pa1::template process< T1 >::type pa2;
-    BOOST_STATIC_ASSERT((
-        !is_same<
-            typename pa1::info_type::storage_policy,
-            mpl::void_
-         >::value
-    ));
-    typedef typename pa2::template process< T2 >::type pa3;
-    BOOST_STATIC_ASSERT((
-        !is_same<
-            typename pa1::info_type::storage_policy,
-            mpl::void_
-         >::value
-    ));
-    typedef typename pa3::template process< T3 >::type pa4;
-    typedef typename pa4::template process< T4 >::type pa5;
-    typedef typename pa5::template process< T5 >::type pa6;
-    typedef typename pa6::template process< T6 >::type pa7;
-    typedef typename pa7::template process< T7 >::type pa8;
-    typedef typename pa8::template process< T8 >::type pa9;
-    typedef typename pa9::template process< T9 >::type pa10;
+    typedef bft_impl_<param,storage_policy,field_vector,offset> type;
 
-                template process<T2>::type::
-                template process<T3>::type::
-                template process<T4>::type::
-                template process<T5>::type::
-                template process<T6>::type::
-                template process<T7>::type::
-                template process<T8>::type::
-                template process<T9>::type  processed_args;
-
-    typedef pa10 processed_args;
-
-    typedef typename processed_args::info_type  info_type;
-    typedef typename info_type::storage_policy  storage_policy;
-    typedef typename info_type::field_vector    field_vector;
-
-
-    // Precondition: user must supply storage type.
-//    BOOST_STATIC_ASSERT((
-//        !is_same<
-//            typename info_type::storage_policy,
-//            mpl::void_
-//        >::value
-//    ));
-    
-    typedef typename mpl::if_<
-            is_same<
-                typename storage_policy::alloc,
-                storage_policy_stack
-            >,
-        // true
-        bft_stack_allocated_policy<
-            typename storage_policy::storage_type
-        >
-        , // else
-        typename storage_policy::alloc
-    >::type                                     allocation_policy;
-*/
+    template <typename NextParam>
+    struct process {
+        typedef typename bft_impl_<
+            NextParam,
+            storage_policy,
+            field_vector,
+            offset
+        >::type type;
+    };
 };
-#endif
+
+
+template <  typename StoragePolicy,
+            typename FieldVector,
+            typename Offset,
+            typename ReturnType,
+            typename NameType,
+            std::size_t FieldWidth
+>
+struct bft_impl_ <
+    member<
+        ReturnType,
+        NameType,
+        FieldWidth
+    >,
+    StoragePolicy,
+    FieldVector,
+    Offset >
+{
+    typedef member< ReturnType, NameType, FieldWidth > param;
+
+    // typedef 
+    typedef StoragePolicy   storage_policy;
+    typedef typename mpl::push_back<
+        FieldVector,
+        bitfield_element_<
+            ReturnType,
+            NameType,
+            Offset,
+            typename mpl::size_t< FieldWidth >
+        >
+    >::type field_vector;
+    typedef mpl::size_t< Offset::value + FieldWidth > offset;
+
+    typedef bft_impl_<param,storage_policy,field_vector,offset> type;
+
+    template <typename NextParam>
+    struct process {
+        typedef typename bft_impl_<
+            NextParam,
+            storage_policy,
+            field_vector,
+            offset
+        >::type type;
+    };
+};
+
 } // end details
 
 
@@ -243,11 +166,26 @@ template <  typename T0,
             typename T8 = mpl::void_,
             typename T9 = mpl::void_
 >
-class bitfield_tuple
+struct bitfield_tuple
     // : // public details::bft_impl_<T0,T1,T2,T3,T4,T5,T6,T7,T8,T9>
 {
+    typedef typename details::bft_impl_<T0,
+            mpl::void_,
+            mpl::vector<>,
+            mpl::size_t<0>
+        >::
+        template process<T1>::type::
+        template process<T2>::type::
+        template process<T3>::type::
+        template process<T4>::type::
+        template process<T5>::type::
+        template process<T6>::type::
+        template process<T7>::type::
+        template process<T8>::type::
+        template process<T9>::type processed_args;
 
-};
+
+};  
 
 
 
