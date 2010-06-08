@@ -9,27 +9,29 @@
 
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/map.hpp>
-
-
+#include <boost/integer/details/tagged.hpp>
+#include <boost/integer/details/storage.hpp>
 namespace boost {
-
-template <typename Field, typename Tag>
-struct tag {
-    typedef Field   field;
-    typedef Tag     tag;
-};
-
 
 namespace detials {
 
-
+// template <typename 
+// struct bitfield_tuple_impl_
 
 } // end details
 
 
-template <  typename Field1,
-            typename Field1,
-            typename Field1,
+template <  typename T0,
+            typename T2,
+            typename T3,
+            typename T4,
+            typename T5,
+            typename T6,
+            typename T7,
+            typename T8,
+            typename T9
+>
+struct bitfield_tuple { };
 
 
 
