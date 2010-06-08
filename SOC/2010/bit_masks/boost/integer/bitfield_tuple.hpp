@@ -22,6 +22,10 @@ namespace boost {
 namespace details {
 
 
+
+
+
+
 /** This is the type which sits inside the mpl vector type.
  *  This has all information for constructing a bitfield.
  */
@@ -32,12 +36,27 @@ template <  typename ReturnType,
 >
 struct bitfield_element_ {
     typedef ReturnType  return_type;
-    typedef NameType    name;
+    typedef NameType    name_type;
     BOOST_STATIC_CONSTANT( std::size_t, offset = Offset );
-    BOOST_STATIC_CONSTANT( std::size_t, width = FieldWidth );
-    typedef bitfield_element_<return_type, name, offset, width> type;
+    BOOST_STATIC_CONSTANT( std::size_t, field_width = FieldWidth );
+    typedef bitfield_element_<return_type, name_type, offset, field_width> type;
 };
 
+/** Default case for managing template parameters. */
+template <typename Param, typename FieldVector, std::size_t Offset>
+struct bft_impl_ {
+    typedef Param   param;
+    typedef FieldVector field_vector;
+    BOOST_STATIC_CONSTANT( std::size_t, offset = Offset );
+
+    typedef bft_impl_<param,field_vector,offset> type;
+
+    template <typename NextParam>
+    struct process {
+        typedef typename bft_impl_<NextParam, field_vector, Offset>::type type;
+    };
+};
+#if 0
 /** Template Parameter descriptions and behaviors.
  *  Storage - Is the storage type. The behavior for this is going to be
  *      static assertion if set_storage is called and storage_type is something
@@ -68,6 +87,7 @@ struct bitfield_tuple_info_ {
         next_offset
     > type;
 
+    typedef bitfield_tuple_info_<storage_policy,field_vector,next_offset> _self;
     /** Internal meta functions which are used to abstract overly complex 
      *  operations which would normally be done via rebinding but that it
      *  a massive pain. This is simplier to deal with from a usability
@@ -86,32 +106,34 @@ struct bitfield_tuple_info_ {
     struct set_storage {
         // BOOST_STATIC_ASSERT(( !is_same< storage_policy, mpl::void_ >::value  ));
         
-        typedef bitfield_tuple_info_ <
+        typedef typename bitfield_tuple_info_ <
             NewStorageType,
             field_vector,
             next_offset
-        > type;
+        >::type type;
     };
 
     /** Used to add a single structure into the field_vector. */
     template <typename TypeToAdd>
     struct add_field {
 
-        typedef bitfield_tuple_info_ <
-            storage_policy,
+        typedef typename bitfield_element_<
+            typename TypeToAdd::return_type,
+            typename TypeToAdd::name_type,
+            next_offset,
+            TypeToAdd::field_width
+        >::type bft_element;
 
-            // adding parameter into the element type.
-            typename mpl::push_back <
-                field_vector,
-                typename bitfield_element_ <
-                    typename TypeToAdd::return_type,
-                    typename TypeToAdd::name,
-                    next_offset,
-                    TypeToAdd::field_width
-                >::type
-            >::type,
+        typedef typename mpl::push_back <
+                typename _self::field_vector::type,
+                bft_element
+            >::type new_field_vector;
+
+        typedef typename bitfield_tuple_info_ <
+            storage_policy,
+            typename new_field_vector::type,
             NextOffset + TypeToAdd::field_width
-        > type;
+        >::type         type;
     };
     //@}
 };
@@ -206,7 +228,7 @@ struct bft_impl_ {
     >::type                                     allocation_policy;
 */
 };
-
+#endif
 } // end details
 
 
@@ -222,7 +244,7 @@ template <  typename T0,
             typename T9 = mpl::void_
 >
 class bitfield_tuple
-    :public details::bft_impl_<T0,T1,T2,T3,T4,T5,T6,T7,T8,T9>
+    // : // public details::bft_impl_<T0,T1,T2,T3,T4,T5,T6,T7,T8,T9>
 {
 
 };
