@@ -9,8 +9,12 @@
 
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/map.hpp>
-#include <boost/integer/details/tagged.hpp>
+
+// #include <boost/integer/details/tagged.hpp>
+
 #include <boost/integer/details/storage.hpp>
+#include <boost/integer/details/member.hpp>
+
 namespace boost {
 
 namespace detials {

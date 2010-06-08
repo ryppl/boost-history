@@ -7,8 +7,9 @@
 #ifndef BOOST_BIT_MASKS_TAGGED_HPP
 #define BOOST_BIT_MASKS_TAGGED_HPP
 
-#include <allocator>
+#include <memory>
 #include <boost/mpl/void.hpp>
+
 namespace boost {
 
 /** This forces the storage policy to allocate using the stack. 
@@ -30,7 +31,7 @@ template < typename StorageType,
 >
 struct storage {
     typedef StorageType                                 storage_type;
-    typedef Alloc::template rebind<StorageType>::type   alloc;
+    typedef typename Alloc::template rebind<StorageType>::type   alloc;
     typedef storage<StorageType, Alloc>                 type;
 };
 
@@ -43,7 +44,7 @@ struct storage {
  *  to then deal with it accordingly.
  */ 
 template < typename StorageType>
-struct storage<StorageType< StorageType, storage_policy_stack > {
+struct storage<StorageType, storage_policy_stack > {
     typedef StorageType                                 storage_type;
     typedef storage_policy_stack                        alloc;
     typedef storage<StorageType, storage_policy_stack>  type;
