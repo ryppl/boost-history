@@ -15,7 +15,7 @@ namespace boost {
 /** This forces the storage policy to allocate using the stack. 
  *  in stead of using an allocator.
  */
-struct storage_policy_stack;
+struct storage_policy_stack { };
 
 /** This structure is used for specifying the storage type within
  *  bitfield tuple and bit_mask_tuple.

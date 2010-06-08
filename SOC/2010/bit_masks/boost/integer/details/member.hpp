@@ -20,8 +20,8 @@ namespace boost {
 
 template <typename ReturnType, typename Name, std::size_t FieldWidth>
 struct member {
-    typedef ReturnType          return_type;
-    typedef Name                name_type;
+    typedef ReturnType return_type;
+    typedef Name name_type;
     BOOST_STATIC_CONSTANT(std::size_t, field_width  = FieldWidth);
 };
 
