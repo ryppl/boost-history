@@ -5,6 +5,8 @@
 
 #include <boost/integer/bitfield_tuple.hpp>
 #include "test_type_list.hpp"
+#include <boost/mpl/front.hpp>
+
 void ignore(...) {}
 
 struct red { };
@@ -86,12 +88,27 @@ int main() {
     
     typedef bitfield_tuple< storage<int>, member<int,red,3> > bft;
     typedef bft::processed_args pa;
+
+    // checking for storage type.
     BOOST_MPL_ASSERT((
         is_same<
             pa::storage_policy,
             storage<int>
         >
     ));
+
+    BOOST_MPL_ASSERT((
+        is_same<
+            mpl::front< pa::field_vector >::type,
+            details::bitfield_element_<
+                int,
+                red,
+                mpl::size_t<0>,
+                mpl::size_t<3> 
+            > 
+        >
+    ));
+
     }
     return 0;
 }
