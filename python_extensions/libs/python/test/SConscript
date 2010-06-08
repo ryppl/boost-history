@@ -1,7 +1,7 @@
 Import("bp_extensions_env")
 
 test_mod = bp_extensions_env.SharedLibrary("test_mod", "test_mod.cpp", SHLIBPREFIX="")
-const_aware_mod = bp_extensions_env.SharedLibrary("const_aware", "const_aware.cpp", SHLIBPREFIX="",
+const_aware_mod = bp_extensions_env.SharedLibrary("const_aware_mod", "const_aware_mod.cpp", SHLIBPREFIX="",
                                                   LIBS="boost_python_extensions")
 test = (
     bp_extensions_env.PythonUnitTest("test_script.py", test_mod)

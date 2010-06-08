@@ -1,16 +1,16 @@
-import const_aware
+import const_aware_mod
 import unittest
 import pickle
 
-const_aware.Example.__reduce__ = lambda self: (const_aware.Example, (self.value_prop,))
+const_aware_mod.Example.__reduce__ = lambda self: (const_aware_mod.Example, (self.value_prop,))
 
 class TestConstAware(unittest.TestCase):
 
     def setUp(self):
-        self.owner = const_aware.Owner()
+        self.owner = const_aware_mod.Owner()
 
     def checkNonConst(self, x):
-        self.assertEqual(type(x), const_aware.Example)        
+        self.assertEqual(type(x), const_aware_mod.Example)        
         self.assert_(x.const_method())
         self.assert_(x.non_const_method())
         self.assert_(self.owner.accept_by_value(x))
@@ -36,7 +36,7 @@ class TestConstAware(unittest.TestCase):
         self.assertRaises(AttributeError, set_value_ro, 1)
 
     def checkConst(self, x):
-        self.assertEqual(type(x), const_aware.Example.__const_proxy__)
+        self.assertEqual(type(x), const_aware_mod.Example.__const_proxy__)
         self.assert_(x.const_method())
         self.assertFalse(hasattr(x,"non_const_method"))
         self.assert_(self.owner.accept_by_value(x))
@@ -81,11 +81,11 @@ class TestConstAware(unittest.TestCase):
 
     def testConstruction(self):
         original = self.owner.by_value()
-        proxy = const_aware.Example.__const_proxy__(original)
+        proxy = const_aware_mod.Example.__const_proxy__(original)
         self.assertEqual(original.address, original.address)
         self.checkConst(proxy)
-        original_copy = const_aware.Example(original)
-        proxy_copy = const_aware.Example(proxy)
+        original_copy = const_aware_mod.Example(original)
+        proxy_copy = const_aware_mod.Example(proxy)
         self.assertNotEqual(original.address, original_copy.address)
         self.assertNotEqual(proxy.address, proxy_copy.address)
         self.checkNonConst(original_copy)
@@ -97,7 +97,7 @@ class TestConstAware(unittest.TestCase):
         original_pickled = pickle.dumps(original)
         original_loaded = pickle.loads(original_pickled)
         self.assertEqual(original_loaded.value_prop, original.value_prop)
-        proxy = const_aware.Example.__const_proxy__(original)
+        proxy = const_aware_mod.Example.__const_proxy__(original)
         proxy_pickled = pickle.dumps(proxy)
         proxy_loaded = pickle.loads(proxy_pickled)
         self.assertEqual(proxy_loaded.value_prop, proxy.value_prop)
