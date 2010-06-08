@@ -54,20 +54,17 @@ struct bitfield_element_ {
  */
 template <typename Storage = mpl::void_,
           typename FieldVector = typename mpl::vector<>,
-          typename NameVactor  = typename mpl::vector<>,
           std::size_t NextOffset = 0
 >
 struct bitfield_tuple_info_ {
     typedef Storage storage_policy;
     typedef FieldVector  field_vector;
-    typedef NameVactor   name_vector;
     BOOST_STATIC_CONSTANT( std::size_t, next_offset = NextOffset );
 
 
     typedef bitfield_tuple_info_ <
         storage_policy,
         field_vector,
-        name_vector,
         NextOffset
     > type;
 
@@ -91,7 +88,6 @@ struct bitfield_tuple_info_ {
         typedef typename bitfield_tuple_info_ <
             NewStorageType,
             field_vector,
-            name_vector,
             NextOffset
         >::type type;
     };
@@ -112,12 +108,6 @@ struct bitfield_tuple_info_ {
                     NextOffset,
                     TypeToAdd::field_width
                 >::type
-            >::type,
-
-            // adding name into the name vector.
-            typename mpl::push_back< 
-                field_vector,
-                typename TypeToAdd::name
             >::type,
             NextOffset + TypeToAdd::field_width
         >::type type;
@@ -246,7 +236,7 @@ struct bft_impl_ {
             typename storage_policy::storage_type
         >,
         typename storage_policy::alloc
-    >::type   allocation_policy;
+    >::type                                     allocation_policy;
         
         
 
