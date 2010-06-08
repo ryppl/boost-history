@@ -1,0 +1,424 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>bits_mask</title>
+<link rel="stylesheet" href="../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../index.html" title="Boost.Integer Bits Masks Extension">
+<link rel="up" href="../index.html" title="Boost.Integer Bits Masks Extension">
+<link rel="prev" href="../low_bits_mask/low_bits_mask.html" title="low_bits_mask">
+<link rel="next" href="../rationale/rationale.html" title="Rationale And Motivation">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../low_bits_mask/low_bits_mask.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../rationale/rationale.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="bits_mask.bits_mask"></a><a class="link" href="bits_mask.html" title="bits_mask"> bits_mask</a>
+</h2></div></div></div>
+<a name="bits_mask.bits_mask.description"></a><h4>
+<a name="id2936130"></a>
+      <a class="link" href="bits_mask.html#bits_mask.bits_mask.description">Description</a>
+    </h4>
+<p>
+      The <code class="computeroutput"><span class="identifier">bits_mask</span></code> template provides
+      an extention to the <code class="computeroutput"><span class="identifier">low_bits_mask</span></code>
+      template, by incorporating an <code class="computeroutput"><span class="identifier">Offset</span></code>
+      with the template. The <code class="computeroutput"><span class="identifier">offest</span></code>
+      is always relative to the right most bit, or bit 0. For a basic view of how
+      <code class="computeroutput"><span class="identifier">bits_mask</span></code> works consider the
+      following examples:
+    </p>
+<p>
+      
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">bits_mask</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="number">10</span><span class="special">,</span> <span class="number">3</span><span class="special">&gt;</span> <span class="identifier">mask</span><span class="special">;</span>
+<span class="comment">// mask::value has the following binary value
+</span><span class="comment">// 0000 0000  0000 0000  0001 1100  0000 0000
+</span></pre>
+<p>
+      For simplicity there is a defualt parameter for <code class="computeroutput"><span class="identifier">Width</span></code>
+      giving it a value of <code class="computeroutput"><span class="number">1</span></code>. This makes
+      writing of normally left or right shift masks simple and staticly checkable.
+      For example,
+    </p>
+<p>
+      
+</p>
+<pre class="programlisting"><span class="comment">// If one would need to create a mask for checking the 11th bit within an
+</span><span class="comment">// integer it can be done simple with the following mask
+</span><span class="keyword">typedef</span> <span class="identifier">bits_mask</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="number">11</span><span class="special">&gt;</span> <span class="identifier">mask</span><span class="special">;</span>
+<span class="comment">// this creates a mask at the 11th bit within an integer.
+</span></pre>
+<p>
+    </p>
+<p>
+      The <code class="computeroutput"><span class="identifier">bits_mask</span></code> template is located
+      in the &lt;boost/integer/bits_mask.hpp&gt; header file.
+    </p>
+<a name="bits_mask.bits_mask.template_signature"></a><h4>
+<a name="id2936370"></a>
+      <a class="link" href="bits_mask.html#bits_mask.bits_mask.template_signature">Template Signature</a>
+    </h4>
+<p>
+      <code class="computeroutput"><span class="identifier">bits_mask</span></code> has the following
+      template signature: 
+</p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">Offset</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">Width</span> <span class="special">=</span> <span class="number">1</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">bits_mask</span><span class="special">;</span>
+</pre>
+<p>
+    </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Parameter
+              </p>
+            </th>
+<th>
+              <p>
+                Description
+              </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">T</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Is an integral type which the mask is to be created over.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">Offset</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                This is the number of bits which is used for a left shift of the
+                <code class="computeroutput"><span class="identifier">width</span></code>.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">Width</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                This is the width of the mask in bits.
+              </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+<a name="bits_mask.bits_mask.interface"></a><h4>
+<a name="id2936618"></a>
+      <a class="link" href="bits_mask.html#bits_mask.bits_mask.interface">Interface</a>
+    </h4>
+<p>
+      <code class="computeroutput"><span class="identifier">TYPENAME</span></code> Compile time interface.
+      Assume that N is of type <code class="computeroutput"><span class="identifier">N</span> <span class="identifier">TYPE</span></code> the type supplied here is only for example.
+    </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Operation
+              </p>
+            </th>
+<th>
+              <p>
+                Description
+              </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">N</span><span class="special">::</span><span class="identifier">value</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Returns the <code class="computeroutput"><span class="identifier">value</span></code>
+                associated with <code class="computeroutput"><span class="identifier">N</span></code>.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">N</span><span class="special">::</span><span class="identifier">value_type</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Returns <code class="computeroutput"><span class="identifier">T</span></code> which is
+                the type associated with <code class="computeroutput"><span class="identifier">value</span></code>
+                inside <code class="computeroutput"><span class="identifier">N</span></code>.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">N</span><span class="special">::</span><span class="identifier">type</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Returns the current types type.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">N</span><span class="special">::</span><span class="identifier">width</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Returns the integral value associated with the <code class="computeroutput"><span class="identifier">width</span></code>
+                template parameter.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">N</span><span class="special">::</span><span class="identifier">offset</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Returns the integral value associated with the <code class="computeroutput"><span class="identifier">Offset</span></code>
+                template parameter.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="keyword">operator</span> <span class="identifier">T</span><span class="special">()</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Run time support function. All this function does is return the value
+                associated with the type. With the c++0x feature <code class="computeroutput"><span class="identifier">constexper</span></code>
+                this function will be made fasters and more effieient.
+              </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+<a name="bits_mask.bits_mask.preconditions"></a><h4>
+<a name="id2936982"></a>
+      <a class="link" href="bits_mask.html#bits_mask.bits_mask.preconditions">Preconditions</a>
+    </h4>
+<p>
+      Preconditions associated with the <code class="computeroutput"><span class="identifier">bits_mask</span></code>
+      template. There are two types of precondtions ones which are only documented
+      and ones which are both enforced and documented. Preconditions will specify
+      which are which within the documentation. All of the preconditions will document
+      how they are enforced when they are enforced.
+    </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Precondition
+              </p>
+            </th>
+<th>
+              <p>
+                Reasoning
+              </p>
+            </th>
+<th>
+              <p>
+                Enforcement
+              </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="special">(</span><span class="identifier">Offset</span>
+                <span class="special">+</span> <span class="identifier">Width</span><span class="special">)</span> <span class="special">&lt;</span> <span class="special">(</span> <span class="identifier">bit_width</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span>
+                <span class="special">-</span> <span class="number">1</span><span class="special">)</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                It will cause overflow if the width plus the offset is greater then
+                total width of the type in bits.
+              </p>
+            </td>
+<td>
+              <p>
+                Enforced by <code class="computeroutput"><span class="identifier">BOOST_STATIC_ASSERT</span></code>.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">Width</span> <span class="special">&gt;</span>
+                <span class="number">0</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                This would create an empty mask, which won't do anything.
+              </p>
+            </td>
+<td>
+              <p>
+                Enfoced by the domain of the <code class="computeroutput"><span class="identifier">Width</span></code>
+                template parameter which is an <code class="computeroutput"><span class="keyword">unsigned</span>
+                <span class="keyword">int</span></code>, which prevents the value
+                from being negative, and by <code class="computeroutput"><span class="identifier">BOOST_STATIC_ASSERT</span></code>,
+                which prevents the value from being zero.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">T</span></code> must satisfy the
+                <code class="computeroutput"><span class="identifier">is_integral</span></code> type
+                trait.
+              </p>
+            </td>
+<td>
+              <p>
+                The <code class="computeroutput"><span class="identifier">bits_mask</span></code> template
+                has only been tested with integral types.
+              </p>
+            </td>
+<td>
+              <p>
+                This is only a documented precondition.
+              </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+<a name="bits_mask.bits_mask.examples"></a><h4>
+<a name="id2937301"></a>
+      <a class="link" href="bits_mask.html#bits_mask.bits_mask.examples">Examples</a>
+    </h4>
+<p>
+      Examples and use cases related to the <code class="computeroutput"><span class="identifier">bits_mask</span></code>
+      template.
+    </p>
+<p>
+      Example:
+    </p>
+<p>
+      Single bit mask using the default parameter for width. 
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">bits_mask</span><span class="special">&lt;</span> <span class="keyword">int</span><span class="special">,</span> <span class="number">0</span> <span class="special">&gt;</span> <span class="identifier">mask</span><span class="special">;</span>
+<span class="comment">// mask in this case has the following value
+</span><span class="comment">// 0000 0000  0000 0000  0000 0000  0000 0001
+</span>
+<span class="keyword">int</span> <span class="identifier">some_bit_value</span> <span class="special">=</span> <span class="number">0xdeadbeef</span><span class="special">;</span>
+
+<span class="comment">// now testing to see if the zero bit is set in some_bit_value
+</span><span class="keyword">if</span><span class="special">(</span><span class="identifier">some_bit_value</span> <span class="special">&amp;</span> <span class="identifier">mask</span><span class="special">()</span> <span class="special">)</span> <span class="special">{</span>
+    <span class="special">...</span>
+    <span class="keyword">true</span> <span class="keyword">case</span>
+    <span class="special">...</span>
+<span class="special">}</span> <span class="keyword">else</span> <span class="special">{</span>
+    <span class="special">...</span>
+    <span class="keyword">false</span> <span class="keyword">case</span>
+    <span class="special">...</span>
+<span class="special">}</span>
+</pre>
+<p>
+    </p>
+<p>
+      Here is another case where the <code class="computeroutput"><span class="identifier">bits_mask</span></code>
+      template is used used similar to a bit field. The goal in this case would be
+      to extract a single value from within an integral storage type, which may be
+      storing one or more values.
+    </p>
+<p>
+      
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">bits_mask</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="number">10</span><span class="special">,</span><span class="number">3</span><span class="special">&gt;</span> <span class="identifier">mask</span><span class="special">;</span>
+<span class="comment">// binary value of mask
+</span><span class="comment">// 0000 0000  0000 0000  0001 1111  1111 1000
+</span>
+<span class="comment">// this will then be used to retrieve a value within an integer.
+</span><span class="keyword">int</span> <span class="identifier">some_bit_value</span> <span class="special">=</span> <span class="number">0xdeadbeef</span><span class="special">;</span>
+<span class="comment">// binary value of some_bit_value
+</span><span class="comment">// 1101 1110  1010 1011  1011 1110  1110 1111
+</span>
+<span class="comment">// now to extract the value from within some_bit_value
+</span><span class="keyword">int</span> <span class="identifier">new_int_value</span> <span class="special">=</span> <span class="special">(</span> <span class="identifier">some_bit_value</span> <span class="special">&amp;</span> <span class="identifier">mask</span><span class="special">()</span> <span class="special">)</span> <span class="special">&gt;&gt;</span> <span class="identifier">mask</span><span class="special">::</span><span class="identifier">offset</span><span class="special">;</span>
+
+<span class="comment">// basic operations taking place.
+</span><span class="comment">// 1101 1110  1010 1011  1011 1110  1110 1111 &lt;- some_bit_value
+</span><span class="comment">// 0000 0000  0000 0000  0001 1111  1111 1000 &lt;- mask::value
+</span>
+<span class="comment">// preforming bitwise and operator.
+</span>
+<span class="comment">// 0000 0000  0000 0000  0001 1110  1110 1000 &lt;- result of bitwise and operator
+</span><span class="comment">// preform right shift operation.
+</span><span class="comment">// 0000 0000  0000 0000  0000 0011  1101 1101 &lt;- value of new_int_value. 
+</span></pre>
+<p>
+    </p>
+<p>
+      The implicit cast operator allows for simplicity, clairity of code. In the
+      above example <code class="computeroutput"><span class="identifier">mask</span><span class="special">()</span></code>
+      could be replaced with <code class="computeroutput"><span class="identifier">mask</span><span class="special">::</span><span class="identifier">value</span></code> to
+      achieve the same result. The same applies to all other bitwise operators.
+    </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2010 Brian Bartman<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../low_bits_mask/low_bits_mask.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../rationale/rationale.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

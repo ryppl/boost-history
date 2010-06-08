@@ -1,0 +1,244 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>low_bits_mask</title>
+<link rel="stylesheet" href="../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../index.html" title="Boost.Integer Bits Masks Extension">
+<link rel="up" href="../index.html" title="Boost.Integer Bits Masks Extension">
+<link rel="prev" href="../high_bits_mask/high_bits_maskbits.html" title="high_bits_mask">
+<link rel="next" href="../bits_mask/bits_mask.html" title="bits_mask">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../high_bits_mask/high_bits_maskbits.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../bits_mask/bits_mask.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="low_bits_mask.low_bits_mask"></a><a class="link" href="low_bits_mask.html" title="low_bits_mask"> low_bits_mask</a>
+</h2></div></div></div>
+<a name="low_bits_mask.low_bits_mask.description"></a><h4>
+<a name="id2935250"></a>
+      <a class="link" href="low_bits_mask.html#low_bits_mask.low_bits_mask.description">Description</a>
+    </h4>
+<p>
+      <code class="computeroutput"><span class="identifier">low_bits_mask</span></code> creates a mask
+      of bits starting from the right most bit and extending out to the left. The
+      <code class="computeroutput"><span class="identifier">low_bits_mask</span></code> is similar to
+      the <code class="computeroutput"><span class="identifier">high_bits_mask</span></code> just starts
+      on the right most bit instead of the left most bit. The way <code class="computeroutput"><span class="identifier">low_bits_mask</span></code>
+      behaves in the following example:
+    </p>
+<p>
+      
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">low_bits_mask</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="number">10</span><span class="special">&gt;</span> <span class="identifier">mask</span><span class="special">;</span>
+<span class="comment">// mask::value has the following binary value
+</span><span class="comment">// 0000 0000  0000 0000  0000 0011  1111 1111
+</span></pre>
+<p>
+      The <code class="computeroutput"><span class="identifier">low_bits_mask</span></code> template
+      is located in the &lt;boost/integer/low_bits_mask.hpp&gt; header file.
+    </p>
+<a name="low_bits_mask.low_bits_mask.template_signature"></a><h4>
+<a name="id2935384"></a>
+      <a class="link" href="low_bits_mask.html#low_bits_mask.low_bits_mask.template_signature">Template Signature</a>
+    </h4>
+<p>
+      <code class="computeroutput"><span class="identifier">low_bits_mask</span></code> has the following
+      template signature: 
+</p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">Width</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">low_bits_mask</span><span class="special">;</span>
+</pre>
+<p>
+    </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Parameter
+              </p>
+            </th>
+<th>
+              <p>
+                Description
+              </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">T</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Is an integral type which the mask is to be created over.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">Width</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                This is the width of the mask in bits.
+              </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+<a name="low_bits_mask.low_bits_mask.interface"></a><h4>
+<a name="id2935564"></a>
+      <a class="link" href="low_bits_mask.html#low_bits_mask.low_bits_mask.interface">Interface</a>
+    </h4>
+<p>
+      <code class="computeroutput"><span class="identifier">low_bits_mask</span></code> Compile time
+      interface. Assume that <code class="computeroutput"><span class="identifier">N</span></code> is
+      of type <code class="computeroutput"><span class="identifier">low_bits_mask</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="number">10</span><span class="special">&gt;</span></code> the type supplied here is only for example.
+    </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Operation
+              </p>
+            </th>
+<th>
+              <p>
+                Description
+              </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">N</span><span class="special">::</span><span class="identifier">value</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Returns the <code class="computeroutput"><span class="identifier">value</span></code>
+                associated with <code class="computeroutput"><span class="identifier">N</span></code>.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">N</span><span class="special">::</span><span class="identifier">value_type</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Returns <code class="computeroutput"><span class="identifier">T</span></code> which is
+                the type associated with <code class="computeroutput"><span class="identifier">value</span></code>
+                inside <code class="computeroutput"><span class="identifier">N</span></code>.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">N</span><span class="special">::</span><span class="identifier">type</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Returns the current types type.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">N</span><span class="special">::</span><span class="identifier">width</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Returns the integral value associated with the <code class="computeroutput"><span class="identifier">width</span></code>
+                template parameter.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="keyword">operator</span> <span class="identifier">T</span><span class="special">()</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Run time support function. All this function does is return the value
+                associated with the type. With the c++0x feature <code class="computeroutput"><span class="identifier">constexper</span></code>
+                this function will be made fasters and more effieient.
+              </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+<a name="low_bits_mask.low_bits_mask.examples"></a><h4>
+<a name="id2935908"></a>
+      <a class="link" href="low_bits_mask.html#low_bits_mask.low_bits_mask.examples">Examples</a>
+    </h4>
+<p>
+      Examples and use cases related to the <code class="computeroutput"><span class="identifier">low_bits_mask</span></code>
+      template.
+    </p>
+<p>
+      Example: 
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">low_bits_mask</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="number">4</span><span class="special">&gt;</span> <span class="identifier">mask</span><span class="special">;</span>
+
+<span class="comment">// binary for mask::value
+</span><span class="comment">// 0000 0000  0000 0000  0000 0000  0000 1111
+</span>
+<span class="keyword">int</span> <span class="identifier">integral_value</span> <span class="special">=</span> <span class="number">0xc000000c</span><span class="special">;</span>
+
+<span class="comment">// integral_value's binary value
+</span><span class="comment">// 1100 0000  0000 0000  0000 0000  0000 1100
+</span>
+<span class="keyword">int</span> <span class="identifier">result</span> <span class="special">=</span> <span class="identifier">integral_value</span> <span class="special">&amp;</span> <span class="identifier">mask</span><span class="special">();</span>
+<span class="comment">// binary value of result
+</span><span class="comment">// 0000 0000  0000 0000  0000 0000  0000 1100
+</span></pre>
+<p>
+    </p>
+<p>
+      The implicit cast operator allows for simplicity, clairity of code. In the
+      above example <code class="computeroutput"><span class="identifier">mask</span><span class="special">()</span></code>
+      could be replaced with <code class="computeroutput"><span class="identifier">mask</span><span class="special">::</span><span class="identifier">value</span></code> to
+      achieve the same result. The same applies to all other bitwise operators.
+    </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2010 Brian Bartman<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../high_bits_mask/high_bits_maskbits.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../bits_mask/bits_mask.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

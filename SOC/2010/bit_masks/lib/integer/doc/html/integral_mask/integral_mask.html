@@ -1,0 +1,226 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>integral_mask type</title>
+<link rel="stylesheet" href="../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../index.html" title="Boost.Integer Bits Masks Extension">
+<link rel="up" href="../index.html" title="Boost.Integer Bits Masks Extension">
+<link rel="prev" href="../boost_integer_bits_masks_extension/bit_mask_purpose.html" title="Purpose">
+<link rel="next" href="../high_bits_mask/high_bits_maskbits.html" title="high_bits_mask">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../boost_integer_bits_masks_extension/bit_mask_purpose.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../high_bits_mask/high_bits_maskbits.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="integral_mask.integral_mask"></a><a class="link" href="integral_mask.html" title="integral_mask type"> integral_mask type</a>
+</h2></div></div></div>
+<a name="integral_mask.integral_mask.description"></a><h4>
+<a name="id2882999"></a>
+      <a class="link" href="integral_mask.html#integral_mask.integral_mask.description">Description</a>
+    </h4>
+<p>
+      The <code class="computeroutput"><span class="identifier">integral_mask</span></code> type is the
+      most basic mask type. It is used to abstract all masks back to a simple integral
+      type. This type is used similar to an <code class="computeroutput"><span class="identifier">integral_constant</span></code>
+      type from the boost.type_traits library. The <code class="computeroutput"><span class="identifier">integral_mask</span></code>
+      template is located in the following header file: &lt;boost/integer/integral_mask.hpp&gt;.
+    </p>
+<a name="integral_mask.integral_mask.template_signature"></a><h4>
+<a name="id2883060"></a>
+      <a class="link" href="integral_mask.html#integral_mask.integral_mask.template_signature">Template Signature</a>
+    </h4>
+<p>
+      <code class="computeroutput"><span class="identifier">integral_mask</span></code> has the following
+      template signature: 
+</p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">Value</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">integral_mask</span><span class="special">;</span>
+</pre>
+<p>
+    </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Parameter
+              </p>
+            </th>
+<th>
+              <p>
+                Description
+              </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">T</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                This Parameters specifies the integral type to be associated with
+                the value.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">value</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                The integral value which is used to represent a mask.
+              </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+<a name="integral_mask.integral_mask.interface"></a><h4>
+<a name="id2933793"></a>
+      <a class="link" href="integral_mask.html#integral_mask.integral_mask.interface">Interface</a>
+    </h4>
+<p>
+      <code class="computeroutput"><span class="identifier">Integral_mask</span></code> Compile time
+      interface. Assume that N is of type <code class="computeroutput"><span class="identifier">integral_mask</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span>
+      <span class="number">16</span><span class="special">&gt;</span></code>
+      the type supplied here is only for example.
+    </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Operation
+              </p>
+            </th>
+<th>
+              <p>
+                Description
+              </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">N</span><span class="special">::</span><span class="identifier">value</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Returns the <code class="computeroutput"><span class="identifier">value</span></code>
+                associated with <code class="computeroutput"><span class="identifier">N</span></code>
+                (in the current case that is 16).
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">N</span><span class="special">::</span><span class="identifier">value_type</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Returns <code class="computeroutput"><span class="identifier">T</span></code> which is
+                the type associated with <code class="computeroutput"><span class="identifier">value</span></code>
+                inside <code class="computeroutput"><span class="identifier">N</span></code> (in the
+                current case that is int).
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">N</span><span class="special">::</span><span class="identifier">type</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Returns the current types type (using N as an example, <code class="computeroutput"><span class="identifier">N</span><span class="special">::</span><span class="identifier">type</span></code> is equivalent to <code class="computeroutput"><span class="identifier">integral_mask</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="number">16</span><span class="special">&gt;</span></code>
+                )
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="keyword">operator</span> <span class="identifier">T</span><span class="special">()</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Run time support function. All this function does is return the value
+                associated with the type. With the c++0x feature <code class="computeroutput"><span class="identifier">constexper</span></code>
+                this function will be made fasters and more effieient.
+              </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+<a name="integral_mask.integral_mask.examples"></a><h4>
+<a name="id2934135"></a>
+      <a class="link" href="integral_mask.html#integral_mask.integral_mask.examples">Examples</a>
+    </h4>
+<p>
+      Examples and use cases related to the <code class="computeroutput"><span class="identifier">integral_mask</span></code>
+      template.
+    </p>
+<p>
+      Example: 
+</p>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">bits</span> <span class="special">=</span> <span class="number">255</span><span class="special">;</span>
+
+<span class="keyword">typedef</span> <span class="identifier">integral_mask</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="number">16</span><span class="special">&gt;</span> <span class="identifier">mask</span><span class="special">;</span>
+<span class="comment">// mask has the folling binary value
+</span><span class="comment">// 0000 0000  0000 0000  0000 0000  0001 0110
+</span>
+<span class="comment">// bits has binary value of:
+</span><span class="comment">// 0000 0000  0000 0000  0000 0000  0010 0101
+</span>    
+<span class="comment">// the following is a bitwise and operation
+</span><span class="comment">// which is done to bits using the integral_mask type
+</span><span class="keyword">int</span> <span class="identifier">new_bits</span> <span class="special">=</span> <span class="identifier">bits</span> <span class="special">&amp;</span> <span class="identifier">mask</span><span class="special">();</span>
+
+<span class="comment">// Resulting value of new_bits:
+</span><span class="comment">// 0000 0000  0000 0000  0000 0000  0000 0100
+</span>
+
+</pre>
+<p>
+      The implicit cast operator allows for simplicity, clairity of code. In the
+      above example <code class="computeroutput"><span class="identifier">mask</span><span class="special">()</span></code>
+      could be replaced with <code class="computeroutput"><span class="identifier">mask</span><span class="special">::</span><span class="identifier">value</span></code> to
+      achieve the same result. The same applies to all other bitwise operators.
+    </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2010 Brian Bartman<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../boost_integer_bits_masks_extension/bit_mask_purpose.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../high_bits_mask/high_bits_maskbits.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

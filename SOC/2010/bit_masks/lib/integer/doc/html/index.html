@@ -1,0 +1,209 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Boost.Integer Bits Masks Extension</title>
+<link rel="stylesheet" href="../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="Boost.Integer Bits Masks Extension">
+<link rel="next" href="boost_integer_bits_masks_extension/bit_mask_purpose.html" title="Purpose">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="boost_integer_bits_masks_extension/bit_mask_purpose.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a></div>
+<div class="article">
+<div class="titlepage">
+<div>
+<div><h2 class="title">
+<a name="boost_integer_bits_masks_extension"></a>Boost.Integer Bits Masks Extension</h2></div>
+<div><div class="authorgroup"><div class="author"><h3 class="author">
+<span class="firstname">Brian</span> <span class="surname">Bartman</span>
+</h3></div></div></div>
+<div><p class="copyright">Copyright &#169; 2010 Brian Bartman</p></div>
+<div><div class="legalnotice">
+<a name="id2924026"></a><p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></div>
+</div>
+<hr>
+</div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl>
+<dt><span class="section"><a href="index.html#boost_integer_bits_masks_extension.HeaderSummary"> Header
+    File Summary</a></span></dt>
+<dt><span class="section"><a href="boost_integer_bits_masks_extension/bit_mask_purpose.html"> Purpose</a></span></dt>
+<dt><span class="section"><a href="integral_mask/integral_mask.html"> integral_mask type</a></span></dt>
+<dt><span class="section"><a href="high_bits_mask/high_bits_maskbits.html"> high_bits_mask</a></span></dt>
+<dt><span class="section"><a href="low_bits_mask/low_bits_mask.html"> low_bits_mask</a></span></dt>
+<dt><span class="section"><a href="bits_mask/bits_mask.html"> bits_mask</a></span></dt>
+<dt><span class="section"><a href="rationale/rationale.html"> Rationale And Motivation</a></span></dt>
+</dl>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_integer_bits_masks_extension.HeaderSummary"></a><a class="link" href="index.html#boost_integer_bits_masks_extension.HeaderSummary" title="Header File Summary"> Header
+    File Summary</a>
+</h2></div></div></div>
+<p>
+      The following table contains header files used within the bit masks library
+      extension. For additional information such as full descriptions, tutorials
+      and interface guides please use the table of contents above.
+    </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Component
+              </p>
+            </th>
+<th>
+              <p>
+                Header
+              </p>
+            </th>
+<th>
+              <p>
+                Contence
+              </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">integral_mask</span></code> type
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="literal"><a href="http://svn.boost.org/svn/boost/sandbox/SOC/2010/bit_masks/boost/integer/integral_mask.hpp" target="_top">&lt;boost/integer/integral_mask.hpp&gt;</a></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Header contains <code class="computeroutput"><span class="identifier">integral_mask</span></code>
+                template.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">high_bits_mask</span></code> type
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="literal"><a href="http://svn.boost.org/svn/boost/sandbox/SOC/2010/bit_masks/boost/integer/high_bits_mask.hpp" target="_top">&lt;boost/integer/high_bits_mask.hpp&gt;</a></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Header contains <code class="computeroutput"><span class="identifier">high_bits_mask</span></code>
+                template.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">low_bits_mask</span></code> type
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="literal"><a href="http://svn.boost.org/svn/boost/sandbox/SOC/2010/bit_masks/boost/integer/low_bits_mask.hpp" target="_top">&lt;boost/integer/low_bits_mask.hpp&gt;</a></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Header contains <code class="computeroutput"><span class="identifier">low_bits_mask</span></code>
+                template.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">high_bits_mask</span></code> type
+                and <code class="computeroutput"><span class="identifier">low_bits_mask</span></code>
+                type
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="literal"><a href="http://svn.boost.org/svn/boost/sandbox/SOC/2010/bit_masks/boost/integer/high_low_bits.hpp" target="_top">&lt;boost/integer/high_low_bits.hpp&gt;</a></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Header contains includes for <code class="computeroutput"><span class="identifier">high_bits_mask</span></code>
+                and <code class="computeroutput"><span class="identifier">low_bits_mask</span></code>.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">bits_mask</span></code> type and
+                <code class="computeroutput"><span class="identifier">low_bits_mask</span></code> type
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="literal"><a href="http://svn.boost.org/svn/boost/sandbox/SOC/2010/bit_masks/boost/integer/bits_mask.hpp" target="_top">&lt;boost/integer/bits_mask.hpp&gt;</a></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Header contains <code class="computeroutput"><span class="identifier">bits_mask</span></code>
+                template.
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">bit_mask_group</span></code> type
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="literal"><a href="http://svn.boost.org/svn/boost/sandbox/SOC/2010/bit_masks/boost/integer/bit_mask_group.hpp" target="_top">&lt;boost/integer/bit_mask_group.hpp&gt;</a></code>
+              </p>
+            </td>
+<td>
+              <p>
+                Header contains <code class="computeroutput"><span class="identifier">bit_mask_group</span></code>
+                meta-function/container.
+              </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p>
+  </p>
+<p>
+  </p>
+<p>
+  </p>
+<p>
+  </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"><p><small>Last revised: June 08, 2010 at 19:47:44 GMT</small></p></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="boost_integer_bits_masks_extension/bit_mask_purpose.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a></div>
+</body>
+</html>

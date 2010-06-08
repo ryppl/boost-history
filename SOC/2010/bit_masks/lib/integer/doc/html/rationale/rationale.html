@@ -1,0 +1,79 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Rationale And Motivation</title>
+<link rel="stylesheet" href="../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../index.html" title="Boost.Integer Bits Masks Extension">
+<link rel="up" href="../index.html" title="Boost.Integer Bits Masks Extension">
+<link rel="prev" href="../bits_mask/bits_mask.html" title="bits_mask">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../bits_mask/bits_mask.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="rationale.rationale"></a><a class="link" href="rationale.html" title="Rationale And Motivation"> Rationale And Motivation</a>
+</h2></div></div></div>
+<p>
+      The motivation and rationale behind the creation a bit masking library stems
+      from the following example: 
+</p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">foo</span> <span class="special">{</span>
+    <span class="keyword">bool</span> <span class="identifier">b1</span><span class="special">:</span><span class="number">1</span><span class="special">;</span>
+    <span class="keyword">bool</span> <span class="identifier">b2</span><span class="special">:</span><span class="number">1</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">i1</span><span class="special">:</span><span class="number">2</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">i2</span><span class="special">:</span><span class="number">2</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+      The struct <code class="computeroutput"><span class="identifier">foo</span></code> is composed
+      of bit fields. This is fine and wouldn't be a big issues accept that there
+      is something which the user can't see that can cause problems with this struct.
+      The size of struct <code class="computeroutput"><span class="identifier">foo</span></code> need
+      not be any larger then <code class="computeroutput"><span class="keyword">char</span></code>, 1
+      byte, which is the smalles type which can hold it. Now the actual size of
+      <code class="computeroutput"><span class="identifier">foo</span></code> is 4 bytes. This can cause
+      havoc if a union was made with this type and a char while the user was thinking
+      that their type is 1 byte in size. So in order to create something which could
+      handle this situation correctly. This library was created to help with the
+      internal management and storage bit fields and non-standardly aligned data.
+      The goal is to provide both masking utilities and commonlly used structures
+      which would be able to correct the size of the structure and provide simple
+      accessors to the data stored within.
+    </p>
+<a name="rationale.rationale.project_data_structure_motivation_and_rationale"></a><h4>
+<a name="id2937993"></a>
+      <a class="link" href="rationale.html#rationale.rationale.project_data_structure_motivation_and_rationale">Project
+      Data Structure Motivation and Rationale</a>
+    </h4>
+<p>
+      There are several data structures provided which make doing some slightly more
+      complex tasks simple and organized. The structures which the library provides
+      are <code class="computeroutput"><span class="identifier">bit_mask_group</span></code>, <code class="computeroutput"><span class="identifier">bit_mask_tuple</span></code>, <code class="computeroutput"><span class="identifier">bit_field_tuple</span></code>
+      and <code class="computeroutput"><span class="identifier">pointer_plus_bits</span></code>.
+    </p>
+<p>
+      <code class="computeroutput"><span class="identifier">bit_mask_group</span></code> is not a container
+      it doesn't store any data however it provides a way of organizing your masks.
+      The structure also provides additional run time support on top of its tuple
+      style interface.
+    </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2010 Brian Bartman<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../bits_mask/bits_mask.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a>
+</div>
+</body>
+</html>
