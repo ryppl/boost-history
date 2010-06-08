@@ -19,7 +19,7 @@
 
 
 namespace boost {
-namespace detials {
+namespace details {
 
 
 /** This is the type which sits inside the mpl vector type.
@@ -57,15 +57,15 @@ template <typename Storage = mpl::void_,
           std::size_t NextOffset = 0
 >
 struct bitfield_tuple_info_ {
-    typedef Storage storage_policy;
-    typedef FieldVector  field_vector;
+    typedef Storage         storage_policy;
+    typedef FieldVector     field_vector;
     BOOST_STATIC_CONSTANT( std::size_t, next_offset = NextOffset );
 
 
     typedef bitfield_tuple_info_ <
         storage_policy,
         field_vector,
-        NextOffset
+        next_offset
     > type;
 
     /** Internal meta functions which are used to abstract overly complex 
@@ -84,19 +84,20 @@ struct bitfield_tuple_info_ {
      */
     template <typename NewStorageType>
     struct set_storage {
-        BOOST_STATIC_ASSERT(( is_same< storage_policy, mpl::void_ >::value  ));
-        typedef typename bitfield_tuple_info_ <
+        // BOOST_STATIC_ASSERT(( !is_same< storage_policy, mpl::void_ >::value  ));
+        
+        typedef bitfield_tuple_info_ <
             NewStorageType,
             field_vector,
-            NextOffset
-        >::type type;
+            next_offset
+        > type;
     };
 
     /** Used to add a single structure into the field_vector. */
     template <typename TypeToAdd>
     struct add_field {
 
-        typedef typename bitfield_tuple_info_ <
+        typedef bitfield_tuple_info_ <
             storage_policy,
 
             // adding parameter into the element type.
@@ -105,90 +106,17 @@ struct bitfield_tuple_info_ {
                 typename bitfield_element_ <
                     typename TypeToAdd::return_type,
                     typename TypeToAdd::name,
-                    NextOffset,
+                    next_offset,
                     TypeToAdd::field_width
                 >::type
             >::type,
             NextOffset + TypeToAdd::field_width
-        >::type type;
+        > type;
     };
     //@}
 };
 
-/** The generic case fails to intanceate because the data structure recieved
- *  something that wasn't supposed to be in the parameter list.
- */
-template <typename ParameterToProcess,
-          typename InfoType = bitfield_tuple_info_<>
->
-struct bft_process_args_;
 
-/**Specilization over mpl::void_ so they get ignored. */
-template <typename InfoType>
-struct bft_process_args_< mpl::void_, InfoType > {
-
-    typedef  mpl::void_ processed_param;
-    typedef InfoType info_type;
-
-    typedef bft_process_args_< processed_param, info_type > type;
-
-    /** The following meta function is used for rebind thing type each time its 
-     *  called and effectivly parsing the types which are supplied to it.
-     */
-    template <typename NextParam>
-    struct process {
-       typedef typename bft_process_args_<NextParam, info_type>::type type;
-    };
-};
-
-
-
-/** This specilization is used for processing the storage type. */
-template <typename InfoType >
-template <typename StorageType, typename AllocType>
-struct bft_process_args_< storage< StorageType, AllocType >, InfoType > {
-
-    typedef storage< StorageType, AllocType >  processed_param;
-    typedef typename InfoType::template set_storage<
-        processed_param
-    > info_type;
-
-    typedef bft_process_args_< processed_param, info_type > type;
-
-    /** The following meta function is used for rebind thing type each time its 
-     *  called and effectivly parsing the types which are supplied to it.
-     */
-    template <typename NextParam>
-    struct process {
-       typedef typename bft_process_args_<NextParam, info_type>::type type;
-    };
-};
-
-/** "member"  specilization.
- *  This mask sure that the members of the bitfield_tuple are delt with
- *  accoringly.
- */
-template <typename InfoType>
-template <typename ReturnType, typename NameType, std::size_t FieldWidth>
-struct bft_process_args_ <
-    member< ReturnType, NameType, FieldWidth >,
-    InfoType > 
-{
-    typedef member< ReturnType, NameType, FieldWidth >  processed_param;
-    typedef typename InfoType::template add_field<
-        processed_param
-    > info_type;
-
-    typedef bft_process_args_< processed_param, info_type > type;
-
-    /** The following meta function is used for rebind thing type each time its 
-     *  called and effectivly parsing the types which are supplied to it.
-     */
-    template <typename NextParam>
-    struct process {
-       typedef typename bft_process_args_<NextParam, info_type>::type type;
-    };
-};
 
 // this is forward declaration for something I'm going to do later.
 template <typename T> struct bft_stack_allocated_policy;
@@ -209,53 +137,81 @@ template <  typename T0,
             typename T9
 >
 struct bft_impl_ {
+/*
+    typedef typename bft_process_args_< T0, bitfield_tuple_info_ < > >::type pa1;
+    BOOST_STATIC_ASSERT((
+        !is_same<
+            typename pa1::info_type::storage_policy,
+            mpl::void_
+         >::value
+    ));
 
-    typedef typename bft_process_args_<T0>::
-        template process<T1>::type::
-        template process<T2>::type::
-        template process<T3>::type::
-        template process<T4>::type::
-        template process<T5>::type::
-        template process<T6>::type::
-        template process<T7>::type::
-        template process<T8>::type::
-        template process<T9>::type  processed_args;
+    typedef typename pa1::template process< T1 >::type pa2;
+    BOOST_STATIC_ASSERT((
+        !is_same<
+            typename pa1::info_type::storage_policy,
+            mpl::void_
+         >::value
+    ));
+    typedef typename pa2::template process< T2 >::type pa3;
+    BOOST_STATIC_ASSERT((
+        !is_same<
+            typename pa1::info_type::storage_policy,
+            mpl::void_
+         >::value
+    ));
+    typedef typename pa3::template process< T3 >::type pa4;
+    typedef typename pa4::template process< T4 >::type pa5;
+    typedef typename pa5::template process< T5 >::type pa6;
+    typedef typename pa6::template process< T6 >::type pa7;
+    typedef typename pa7::template process< T7 >::type pa8;
+    typedef typename pa8::template process< T8 >::type pa9;
+    typedef typename pa9::template process< T9 >::type pa10;
+
+                template process<T2>::type::
+                template process<T3>::type::
+                template process<T4>::type::
+                template process<T5>::type::
+                template process<T6>::type::
+                template process<T7>::type::
+                template process<T8>::type::
+                template process<T9>::type  processed_args;
+
+    typedef pa10 processed_args;
 
     typedef typename processed_args::info_type  info_type;
     typedef typename info_type::storage_policy  storage_policy;
     typedef typename info_type::field_vector    field_vector;
-    typedef typename info_type::name_vector     name_vector;
 
+
+    // Precondition: user must supply storage type.
+//    BOOST_STATIC_ASSERT((
+//        !is_same<
+//            typename info_type::storage_policy,
+//            mpl::void_
+//        >::value
+//    ));
     
     typedef typename mpl::if_<
             is_same<
                 typename storage_policy::alloc,
                 storage_policy_stack
             >,
+        // true
         bft_stack_allocated_policy<
             typename storage_policy::storage_type
-        >,
+        >
+        , // else
         typename storage_policy::alloc
     >::type                                     allocation_policy;
-        
-        
-
-
-    // Precondition: user must supply storage type.
-    BOOST_STATIC_ASSERT((
-        !is_same<
-            typename info_type::storage_type,
-            mpl::void_
-        >::value
-    ));
-
-
+*/
 };
 
 } // end details
 
 
 template <  typename T0,
+            typename T1 = mpl::void_,
             typename T2 = mpl::void_,
             typename T3 = mpl::void_,
             typename T4 = mpl::void_,
@@ -265,8 +221,10 @@ template <  typename T0,
             typename T8 = mpl::void_,
             typename T9 = mpl::void_
 >
-class bitfield_tuple {
-    
+class bitfield_tuple
+    :public details::bft_impl_<T0,T1,T2,T3,T4,T5,T6,T7,T8,T9>
+{
+
 };
 
 

@@ -27,12 +27,12 @@ struct storage_policy_stack { };
  *  rebinding must be done just in case its specified incorrectly.
  */
 template < typename StorageType,
-           typename Alloc = typename std::allocator< StorageType >
+           typename Alloc = storage_policy_stack
 >
 struct storage {
-    typedef StorageType                                 storage_type;
-    typedef typename Alloc::template rebind<StorageType>::type   alloc;
-    typedef storage<StorageType, Alloc>                 type;
+    typedef StorageType storage_type;
+    typedef typename Alloc::template rebind<StorageType>::other alloc;
+    typedef storage<StorageType, Alloc> type;
 };
 
 
