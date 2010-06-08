@@ -25,5 +25,6 @@ test-suite integer
         [ run bitwise_low_bits_testing.cpp ]
         [ run compound_mask_test.cpp ]
         [ run bit_mask_group_test.cpp ]
+        [ run bitfield_tuple_test.cpp ]
     ;
 
