@@ -7,7 +7,31 @@
 #ifndef BOOST_BITFIELD_TUPLE_HPP
 #define BOOST_BITFIELD_TUPLE_HPP
 
+#include <boost/mpl/vector.hpp>
+#include <boost/mpl/map.hpp>
+
+
 namespace boost {
+
+template <typename Field, typename Tag>
+struct tag {
+    typedef Field   field;
+    typedef Tag     tag;
+};
+
+
+namespace detials {
+
+
+
+} // end details
+
+
+template <  typename Field1,
+            typename Field1,
+            typename Field1,
+
+
 
 } // end boost
 

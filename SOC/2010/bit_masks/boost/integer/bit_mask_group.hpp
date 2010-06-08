@@ -10,16 +10,11 @@
 #include <boost/integer/bit_mask_group_fwd.hpp>
 #include <boost/integer/compound_mask.hpp>
 #include <boost/integer/details/bit_mask_group_impl.hpp>
+#include <boost/integer/details/tagged.hpp>
+
 
 namespace boost {
 
-/** This is used for naming/tagging arguments within the bit_mask_group. */
-template <typename T, typename NameType>
-struct tagged {
-    typedef NameType            name;
-    typedef T                   value;
-    typedef tagged<NameType, T> type;
-};
 
 /** \name bit_mask_group
  *  \brief This a psudo variadic class which uses default template parameters
