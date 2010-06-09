@@ -51,7 +51,9 @@ template <  typename Param,
             typename FieldVector,
             typename Offset
 >
-struct bft_impl_ {
+struct bft_impl_;
+#if 0
+{
     typedef Param           param;
     typedef FieldVector     field_vector;
     typedef StoragePolicy   storage_policy;
@@ -69,7 +71,33 @@ struct bft_impl_ {
         >::type type;
     };
 };
+#endif
 
+/** Specialization over mpl::void_. */
+template <  typename StoragePolicy,
+            typename FieldVector,
+            typename Offset
+>
+struct bft_impl_ <mpl::void_, StoragePolicy, FieldVector, Offset>{
+    typedef mpl::void_           param;
+    typedef FieldVector     field_vector;
+    typedef StoragePolicy   storage_policy;
+    typedef Offset          offset;
+
+    typedef bft_impl_<param,storage_policy,field_vector,offset> type;
+
+    template <typename NextParam>
+    struct process {
+        typedef typename bft_impl_<
+            NextParam,
+            storage_policy,
+            field_vector,
+            offset
+        >::type type;
+    };
+};
+
+/** Specilization for storage type. */
 template <  typename StorageType, 
             typename AllocationPolicy,
             typename StoragePolicy,
@@ -106,7 +134,7 @@ struct bft_impl_ <
     };
 };
 
-
+/** Specilization for member. */
 template <  typename StoragePolicy,
             typename FieldVector,
             typename Offset,
@@ -167,7 +195,6 @@ template <  typename T0,
             typename T9 = mpl::void_
 >
 struct bitfield_tuple
-    // : // public details::bft_impl_<T0,T1,T2,T3,T4,T5,T6,T7,T8,T9>
 {
     typedef typename details::bft_impl_<T0,
             mpl::void_,
@@ -182,7 +209,7 @@ struct bitfield_tuple
         template process<T6>::type::
         template process<T7>::type::
         template process<T8>::type::
-        template process<T9>::type processed_args;
+        template process<T9>::type      processed_args;
 
 
 };  
