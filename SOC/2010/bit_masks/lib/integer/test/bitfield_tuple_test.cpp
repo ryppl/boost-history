@@ -6,12 +6,19 @@
 #include <boost/integer/bitfield_tuple.hpp>
 #include "test_type_list.hpp"
 #include <boost/mpl/front.hpp>
+#include <boost/mpl/find_if.hpp>
 
 void ignore(...) {}
 
 struct red { };
 struct green { };
 struct blue { };
+
+template <typename T, typename U>
+struct match_name
+    :is_same<typename T::name_type, U>::type
+{ };
+
 int main() {
     // lets make some errors : )
     // bitfield_tuple < storage<int>, member<int,red,6> > temp;
@@ -108,6 +115,20 @@ int main() {
             > 
         >
     ));
+
+    typedef mpl::vector<
+        details::bitfield_element_<
+            int,
+            red,
+            mpl::size_t<0>,
+            mpl::size_t<3>
+        > 
+    > temp_vect;
+
+    // tesitng so I can learn to use mpl::find_if
+    typedef mpl::find_if<temp_vect, match_name<mpl::_1, red> >::type temp_located;
+    
+    
 
     }
     return 0;

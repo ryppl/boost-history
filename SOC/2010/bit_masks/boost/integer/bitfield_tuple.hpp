@@ -7,7 +7,9 @@
 #ifndef BOOST_BITFIELD_TUPLE_HPP
 #define BOOST_BITFIELD_TUPLE_HPP
 #include <boost/integer/details/storage.hpp>
+
 #include <boost/integer/details/member.hpp>
+#include <boost/integer/bit_width.hpp>
 #include <cstddef>
 #include <boost/mpl/void.hpp>
 #include <boost/mpl/vector.hpp>
@@ -175,6 +177,17 @@ struct bft_impl_ <
     };
 };
 
+
+/** This structure does all of the assertions related to constraints
+ *  which must be enforced after all of the arguments have been delt with.
+ *  This class is a planned refactoring for later on.
+ */
+template <typename Impl>
+struct bft_base {
+
+};
+
+
 } // end details
 
 
@@ -189,8 +202,8 @@ template <  typename T0,
             typename T8 = mpl::void_,
             typename T9 = mpl::void_
 >
-struct bitfield_tuple
-{
+struct bitfield_tuple {
+
     typedef typename details::bft_impl_<T0,
             mpl::void_,
             mpl::vector<>,
@@ -206,7 +219,33 @@ struct bitfield_tuple
         template process<T8>::type::
         template process<T9>::type      processed_args;
 
+    // extracting te Arguments from processed_args relating to 
+    // the storage policy. Also preforming static assertios 
+    // where they can be done.
+    typedef typename processed_args::storage_policy storage_policy;
 
+    // Precondition:
+    //      A storage policy must be supplied.
+    BOOST_STATIC_ASSERT((
+        !is_same<
+            storage_policy,
+            typename mpl::void_
+        >::value
+    ));
+
+    typedef typename storage_policy::storage_type   storage_type;
+
+    // precondition: the storage type must be a pod type (for now).
+    // NOTE: this may become a documented requirement only.
+    BOOST_STATIC_ASSERT(( is_pod<storage_type>::value ));
+
+    // Precondition: the offet at the end of everything must be the
+    // the same as or less then the bit_width of the storage type.
+    BOOST_STATIC_ASSERT((
+        bit_width< storage_type >::value
+            >=
+        processed_args::offset::value
+    ));
 };  
 
 
