@@ -45,33 +45,17 @@ struct bitfield_element_ {
 
 
 
-/** Default case for managing template parameters. */
+/** This is the empty which prevents the user from supply things which are
+ *  not enclosed within either a member template or a storage template.
+ *  This enforces a domain requirement on the template parameters of
+ *  bitfield_tuple.
+ */
 template <  typename Param,
             typename StoragePolicy,
             typename FieldVector,
             typename Offset
->
-struct bft_impl_;
-#if 0
-{
-    typedef Param           param;
-    typedef FieldVector     field_vector;
-    typedef StoragePolicy   storage_policy;
-    typedef Offset          offset;
+> struct bft_impl_;
 
-    typedef bft_impl_<param,storage_policy,field_vector,offset> type;
-
-    template <typename NextParam>
-    struct process {
-        typedef typename bft_impl_<
-            NextParam,
-            storage_policy,
-            field_vector,
-            offset
-        >::type type;
-    };
-};
-#endif
 
 /** Specialization over mpl::void_. */
 template <  typename StoragePolicy,
@@ -97,7 +81,11 @@ struct bft_impl_ <mpl::void_, StoragePolicy, FieldVector, Offset>{
     };
 };
 
-/** Specilization for storage type. */
+/** Specilization for storage type.
+ *  Preconditions enforced on this function :
+ *      For now its going to be documented but not enforeced.
+ *      Do NOT set the storage type more then once!
+ */
 template <  typename StorageType, 
             typename AllocationPolicy,
             typename StoragePolicy,
@@ -134,7 +122,14 @@ struct bft_impl_ <
     };
 };
 
-/** Specilization for member. */
+/** Specilization for member.
+ *  Documented and enforced preconditions
+ *      1. The user must not supply the same name for more then 1 parameter
+ *      (This may result in additional overhead during compile time ).
+ *      Currently not enforced, will take more time then I have at the moment.
+ */
+
+// TODO: Implement Precondition 1 listed above!
 template <  typename StoragePolicy,
             typename FieldVector,
             typename Offset,

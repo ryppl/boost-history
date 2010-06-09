@@ -8,6 +8,7 @@
 #define BOOST_MEMBER_FIELD_HPP
 #include <cstddef>
 #include <boost/type_traits.hpp>
+#include <boost/static_assert.hpp>
 
 namespace boost {
 
@@ -16,10 +17,13 @@ namespace boost {
  *  specifically to associate a group of parameters to gather within a type
  *  and make it easier for the data structure to figure out what to do with
  *  those parameter.
+ *
+ *  Documented and enforced preconditions
+ *      The width of a field must not be 0.
  */
-
 template <typename ReturnType, typename Name, std::size_t FieldWidth>
 struct member {
+    BOOST_STATIC_ASSERT(( FieldWidth != 0 ));
     typedef ReturnType return_type;
     typedef Name name_type;
     BOOST_STATIC_CONSTANT(std::size_t, field_width  = FieldWidth);
