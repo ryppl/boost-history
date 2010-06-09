@@ -42,7 +42,6 @@
 #include <boost/process/stream_behavior.hpp>
 #include <boost/process/status.hpp>
 #include <boost/process/detail/file_handle.hpp>
-#include <boost/process/detail/stream_detail.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/system/system_error.hpp>
@@ -128,7 +127,7 @@ inline std::string find_executable_in_path(const std::string &file, std::string 
 #endif
 
     if (result.empty())
-        boost::throw_exception(boost::filesystem::filesystem_error("boost::process::find_executable_in_path: file not found", file, boost::system::errc::make_error_code(boost::system::errc::no_such_file_or_directory)));
+        boost::throw_exception(boost::filesystem::filesystem_error(BOOST_PROCESS_SOURCE_LOCATION "file not found", file, boost::system::errc::make_error_code(boost::system::errc::no_such_file_or_directory)));
 
     return result;
 }
@@ -176,22 +175,8 @@ inline std::string executable_to_progname(const std::string &exe)
 template <class Arguments>
 inline child create_child(const std::string &executable, Arguments args, context ctx = context())
 {
-    /*
-     * BEHAVIOR | BEFORE fork/CreateProcess        | AFTER fork/CreateProcess 
-     * ---------+----------------------------------+--------------------------------- 
-     * inherit  | Windows: duplicate handle and    | 
-     *          |          save it in STARTUPINFO  | 
-     * capture  | POSIX: create pipe               | POSIX: use one end to initialize 
-     *          | Windows: create pipe and save    |        child process object 
-     *          |          one end in STARTUPINFO  | 
-     * mute     | POSIX: open file                 | 
-     *          | Windows: open file and save      | 
-     *          |          handle in STARTUPINFO   | 
-     * close    |                                  | POSIX: close explicitly 
-     */
-
-    std::string p_name = ctx.process_name.empty() ? executable : ctx.process_name; 
-    args.insert(args.begin(), p_name); 
+    std::string p_name = ctx.process_name.empty() ? executable : ctx.process_name;
+    args.insert(args.begin(), p_name);
 
 #if defined(BOOST_POSIX_API)
     child::id_type pid = ::fork();
@@ -201,11 +186,56 @@ inline child create_child(const std::string &executable, Arguments args, context
 
     if (pid == 0) 
     { 
+#if defined(F_MAXFD) 
+        int maxdescs = ::fcntl(-1, F_MAXFD, 0); 
+        if (maxdescs == -1) 
+            maxdescs = ::sysconf(_SC_OPEN_MAX); 
+#else 
+        int maxdescs = ::sysconf(_SC_OPEN_MAX); 
+#endif 
+        if (maxdescs == -1) 
+            maxdescs = 1024; 
+        try 
+        { 
+            boost::scoped_array<bool> closeflags(new bool[maxdescs]); 
+            for (int i = 0; i < maxdescs; ++i) 
+                closeflags[i] = true; 
+
+            // setup_input(infoin, closeflags.get(), maxdescs); 
+            // setup_output(infoout, closeflags.get(), maxdescs); 
+
+            int stdin_fd = ctx.stdin_behavior->get_child_end();
+            if (stdin_fd != -1 && stdin_fd < maxdescs)
+                closeflags[stdin_fd] = false;
+
+            int stdout_fd = ctx.stdout_behavior->get_child_end();
+            if (stdout_fd != -1 && stdout_fd < maxdescs)
+                closeflags[stdout_fd] = false;
+
+            int stderr_fd = ctx.stderr_behavior->get_child_end();
+            if (stderr_fd != -1 && stderr_fd < maxdescs)
+                closeflags[stderr_fd] = false;
+
+            for (int i = 0; i < maxdescs; ++i) 
+            { 
+                if (closeflags[i]) 
+                    ::close(i); 
+            } 
+
+            // setup(); 
+        } 
+        catch (const boost::system::system_error &e) 
+        { 
+            ::write(STDERR_FILENO, e.what(), std::strlen(e.what())); 
+            ::write(STDERR_FILENO, "\n", 1); 
+            std::exit(EXIT_FAILURE); 
+        } 
+
         std::pair<std::size_t, char**> argcv = detail::collection_to_posix_argv(args);
         char **envp = detail::environment_to_envp(ctx.environment);
         ::execve(executable.c_str(), argcv.second, envp);
 
-        boost::system::system_error e(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::create_child: execve(2) failed"); 
+        boost::system::system_error e(boost::system::error_code(errno, boost::system::get_system_category()), BOOST_PROCESS_SOURCE_LOCATION "execve(2) failed"); 
 
         for (std::size_t i = 0; i < argcv.first; ++i) 
             delete[] argcv.second[i]; 
@@ -217,10 +247,19 @@ inline child create_child(const std::string &executable, Arguments args, context
 
         ::write(STDERR_FILENO, e.what(), std::strlen(e.what())); 
         ::write(STDERR_FILENO, "\n", 1); 
+        // TODO: Use return values which is less likely used by the
+        // program which should have been started.
         std::exit(EXIT_FAILURE); 
     } 
 
     BOOST_ASSERT(pid > 0);
+
+    if (ctx.stdin_behavior->get_child_end() != -1)
+        ::close(ctx.stdin_behavior->get_child_end());
+    if (ctx.stdout_behavior->get_child_end() != -1)
+        ::close(ctx.stdout_behavior->get_child_end());
+    if (ctx.stderr_behavior->get_child_end() != -1)
+        ::close(ctx.stderr_behavior->get_child_end());
 
     return child(pid, 
         detail::file_handle(ctx.stdin_behavior->get_parent_end()), 
@@ -260,137 +299,6 @@ inline child create_child(const std::string &executable, Arguments args, context
         detail::file_handle(ctx.stderr_behavior->get_parent_end()), 
         detail::file_handle(pi.hProcess)); 
 #endif 
-    /*
-    detail::file_handle fhstdin, fhstdout, fhstderr;
-
-    //start structures that represents a std stream.
-    detail::stream_detail stdin_stream(detail::stdin_type),
-           stdout_stream(detail::stdout_type),
-           stderr_stream(detail::stderr_type);
-
-    stdin_stream.behavior = ctx.stdin_behavior;
-    stdout_stream.behavior = ctx.stdout_behavior;
-    stderr_stream.behavior = ctx.stderr_behavior;
-
-    //adjust process name
-    std::string p_name = ctx.process_name.empty() ? executable : ctx.process_name;
-    args.insert(args.begin(), p_name);
-
-#if defined(BOOST_POSIX_API)
-    child::id_type pid = ::fork();
-
-    if (pid == -1)
-        boost::throw_exception(boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::create_child: fork(2) failed"));
-
-    if (pid == 0)
-    {
-        // child process 
-        detail::configure_posix_stream(stdin_stream);
-        detail::configure_posix_stream(stdout_stream);
-        detail::configure_posix_stream(stderr_stream);
-
-        std::pair<std::size_t, char**> argcv = detail::collection_to_posix_argv(args);
-        char **envp = detail::environment_to_envp(ctx.environment);
-        ::execve(executable.c_str(), argcv.second, envp);
-
-        // error handling in case execve() failed 
-        boost::system::system_error e(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::create_child: execve(2) failed"); 
-
-        for (std::size_t i = 0; i < argcv.first; ++i) 
-            delete[] argcv.second[i]; 
-        delete[] argcv.second; 
-
-        for (std::size_t i = 0; i < env.size(); ++i) 
-            delete[] envp[i]; 
-        delete[] envp; 
-
-        ::write(STDERR_FILENO, e.what(), std::strlen(e.what())); 
-        ::write(STDERR_FILENO, "\n", 1); 
-        std::exit(EXIT_FAILURE); 
-    }
-
-    BOOST_ASSERT(pid > 0);
-
-    //adjust father pipes
-    if(ctx.stdin_behavior == capture)
-    {
-        stdin_stream.object.pipe_.rend().close();
-        fhstdin = stdin_stream.object.pipe_.wend().release();
-        BOOST_ASSERT(fhstdin.valid());
-    }
-
-    if(ctx.stdout_behavior == capture)
-    {
-        stdout_stream.object.pipe_.wend().close();
-        fhstdout = stdout_stream.object.pipe_.wend().release();
-        BOOST_ASSERT(fhstdout.valid());
-    }
-
-    if(ctx.stderr_behavior == capture)
-    {
-        stderr_stream.object.pipe_.wend().close();
-        fhstderr = stderr_stream.object.pipe_.wend().release();
-        BOOST_ASSERT(fhstderr.valid());
-    }
-
-    return child(pid, fhstdin, fhstdout, fhstderr);
-#elif defined(BOOST_WINDOWS_API)
-    //Set up the pipes when needed for the current process.
-    if (stdin_stream.behavior == capture)
-        fhstdin = stdin_stream.object.pipe_.wend();
-    if (stdout_stream.behavior == capture)
-        fhstdout = stdout_stream.object.pipe_.rend();
-    if (stderr_stream.behavior == capture)
-        fhstderr = stderr_stream.object.pipe_.rend();
-
-    //define startup info from the new child
-    STARTUPINFOA startup_info;
-    ::ZeroMemory(&startup_info, sizeof(startup_info));
-    startup_info.cb = sizeof(startup_info);
-
-    startup_info.dwFlags |= STARTF_USESTDHANDLES;
-
-    //configure std stream info for the child
-    //TODO: Find a better way to do it,without file handle
-    detail::file_handle fh;
-
-    fh = configure_win32_stream(stdin_stream);
-    if(fh.valid())
-        startup_info.hStdInput = fh.get();
-
-    fh = configure_win32_stream(stdout_stream);
-    if(fh.valid())
-        startup_info.hStdOutput = fh.get();
-
-    fh = configure_win32_stream(stderr_stream);
-    if(fh.valid())
-        startup_info.hStdError = fh.get();
-
-    //define process info and create it
-    PROCESS_INFORMATION pi;
-    ::ZeroMemory(&pi, sizeof(pi));
-
-    boost::shared_array<char> cmdline=detail::collection_to_win32_cmdline(args);
-
-    boost::scoped_array<char> exe(new char[executable.size() + 1]);
-    ::strcpy_s(exe.get(), executable.size() + 1, executable.c_str());
-
-    boost::scoped_array<char> workdir(new char[ctx.work_dir.size() + 1]);
-    ::strcpy_s(workdir.get(), ctx.work_dir.size() + 1, ctx.work_dir.c_str());
-
-    boost::shared_array<char> envstrs =
-        detail::environment_to_win32_strings(ctx.environment);
-
-    //create the process
-    if (::CreateProcessA(exe.get(), cmdline.get(), NULL, NULL, TRUE, 0, envstrs.get(), workdir.get(), &startup_info, &pi) == 0)
-        boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::detail::win32_start: CreateProcess failed"));
-
-    if (!::CloseHandle(pi.hThread))
-        boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::launch: CloseHandle failed"));
-
-    return child(pi.dwProcessId, fhstdin, fhstdout, fhstderr, detail::file_handle(pi.hProcess));
-#endif
-    */
 }
 
 inline child create_child(const std::string &executable, context ctx = context())

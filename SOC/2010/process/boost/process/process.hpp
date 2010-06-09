@@ -22,13 +22,13 @@
 #include <boost/process/config.hpp>
 
 #if defined(BOOST_POSIX_API)
-#  include <cerrno>
-#  include <signal.h>
+#   include <cerrno>
+#   include <signal.h>
 #elif defined(BOOST_WINDOWS_API)
-#  include <cstdlib>
-#  include <windows.h>
+#   include <cstdlib>
+#   include <windows.h>
 #else
-#  error "Unsupported platform." 
+#   error "Unsupported platform." 
 #endif
 
 #include <boost/process/status.hpp>
@@ -40,10 +40,8 @@ namespace boost {
 namespace process {
 
 /**
- * Generic implementation of the Process concept.
- *
- * The process class implements the Process concept in an operating system
- * agnostic way.
+ * The process class provides access to an unrelated process (a process 
+ * which is neither a child process nor a parent process nor self). 
  */
 class process
 {
@@ -105,19 +103,19 @@ public:
     {
 #if defined(BOOST_POSIX_API)
         if (::kill(id_, force ? SIGKILL : SIGTERM) == -1)
-            boost::throw_exception(boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::process::terminate: kill(2) failed"));
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("kill(2) failed"); 
 #elif defined(BOOST_WINDOWS_API)
         HANDLE h = ::OpenProcess(PROCESS_TERMINATE, FALSE, id_);
         if (h == NULL)
-            boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::process::terminate: OpenProcess failed"));
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("OpenProcess() failed"); 
 
         if (!::TerminateProcess(h, EXIT_FAILURE))
         {
             ::CloseHandle(h);
-            boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::process::terminate: TerminateProcess failed"));
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("TerminateProcess() failed"); 
         }
         if (!::CloseHandle(h))
-            boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::process::terminate: CloseHandle failed"));
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CloseHandle() failed"); 
 #endif
     }
 
@@ -137,14 +135,14 @@ public:
 #if defined(BOOST_POSIX_API)
         int s;
         if (::waitpid(get_id(), &s, 0) == -1)
-            boost::throw_exception(boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::process::wait: waitpid(2) failed"));
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("waitpid(2) failed"); 
         return status(s);
 #elif defined(BOOST_WINDOWS_API)
         // TODO 
         // Boris: Where do we get the process handle from? It should be possible to fetch it 
         //        as we do have the process ID saved in the member variable id_. I guess 
         //        there must be a Windows API function to get a process handle from a process ID? 
-        if (::WaitForSingleObject(process_handle_.get(),INFINITE) == WAIT_FAILED)
+        if (::WaitForSingleObject(process_handle_.get(), INFINITE) == WAIT_FAILED)
         {
             // TODO 
             // Boris: What should happen if WaitForSingleObject() fails? Under what 
@@ -154,7 +152,7 @@ public:
         }
         DWORD code;
         if (!::GetExitCodeProcess(process_handle_.get(), &code))
-            boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::process::wait: GetExitCodeProcess failed"));
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("GetExitCodeProcess() failed"); 
         return status(code);
 #endif
     }

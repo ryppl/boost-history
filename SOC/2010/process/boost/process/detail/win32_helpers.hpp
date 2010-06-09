@@ -14,7 +14,7 @@
  * \file boost/process/detail/helper_functions.hpp
  *
  * Includes the declaration of helper functions for the operations in a win32
- * system. It's for internal purposes.
+ * system.
  *
  */
 
@@ -22,19 +22,9 @@
 #define BOOST_PROCESS_WIN32_HELPERS_HPP
 
 #include <boost/process/config.hpp>
-#include <boost/process/child.hpp>
-#include <boost/process/detail/file_handle.hpp>
-#include <boost/process/detail/stream_detail.hpp>
-#include <boost/process/detail/pipe.hpp>
-#include <boost/scoped_ptr.hpp>
 #include <boost/shared_array.hpp>
-#include <boost/scoped_array.hpp>
-#include <boost/assert.hpp>
-#include <boost/system/system_error.hpp>
-#include <boost/throw_exception.hpp>
-#include <vector>
-#include <map>
 #include <string>
+#include <vector>
 #include <cstddef>
 #include <string.h>
 #include <windows.h>
@@ -55,7 +45,7 @@ namespace detail {
  *         the environment's content. This string is of the form
  *         var1=value1\\0var2=value2\\0\\0.
  */
-inline boost::shared_array<char>environment_to_win32_strings(environment_t &env)
+inline boost::shared_array<char> environment_to_win32_strings(environment &env)
 {
     boost::shared_array<char> envp;
 
@@ -67,8 +57,7 @@ inline boost::shared_array<char>environment_to_win32_strings(environment_t &env)
     else
     {
         std::string s;
-        for (environment_t::const_iterator it = env.begin();
-                it != env.end(); ++it)
+        for (environment::const_iterator it = env.begin(); it != env.end(); ++it)
         {
             s += (*it).first + "=" + (*it).second;
             s.push_back(0);
@@ -135,71 +124,6 @@ inline boost::shared_array<char> collection_to_win32_cmdline(const Arguments &ar
 
     return cmdline;
 }
-
-/*
- * This function configures the std stream of the new process.
- * It recieves stream_detail from that stream and return a file_handle
- * that contains the handle to the stream.
- */
-/*
-inline file_handle configure_win32_stream(stream_detail &sd)
-{
-    file_handle return_handle;
-
-    switch (sd.behavior)
-    {
-    case close:
-    {
-        return_handle = file_handle();
-        break;
-    }
-    case inherit:
-    {
-        return_handle = file_handle::win32_dup_std(sd.stream_handle, true);
-        break;
-    }
-    case mute:
-    {
-        HANDLE h;
-        if(sd.stream_type == stdin_type)
-        {
-            h = ::CreateFileA("NUL", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-        }
-        else
-        {
-            h = ::CreateFileA("NUL", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-        }
-        if (h == INVALID_HANDLE_VALUE)
-            boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::detail::win32_start: CreateFile failed"));
-        return_handle = file_handle(h);
-        break;
-    }
-
-    case capture:
-    {
-        if(sd.stream_type == stdin_type)
-        {
-            sd.object.pipe_.rend().win32_set_inheritable(true);
-            return_handle = sd.object.pipe_.rend();
-        }
-        else
-        {
-            sd.object.pipe_.wend().win32_set_inheritable(true);
-            return_handle = sd.object.pipe_.wend();
-        }
-
-        break;
-    }
-
-    default:
-    {
-        BOOST_ASSERT(false);
-    }
-    }
-
-    return return_handle;
-}
-*/
 
 }
 }

@@ -45,14 +45,39 @@ namespace boost {
 namespace process {
 
 /**
- * Generic implementation of the Child concept.
- *
- * The child class implements the Child concept in an operating system
- * agnostic way.
+ * The child class provides access to a child process.
  */
 class child : public process
 {
 public:
+    /**
+     * Creates a new child object that represents the just spawned child
+     * process \a id.
+     *
+     * The \a fhstdin, \a fhstdout and \a fhstderr file handles represent
+     * the parent's handles used to communicate with the corresponding
+     * data streams. They needn't be valid but their availability must
+     * match the redirections configured by the launcher that spawned this
+     * process.
+     *
+     * The \a fhprocess handle represents a handle to the child process.
+     * It is only used on Windows as the implementation of wait() needs a
+     * process handle.
+     */
+    child(id_type id, detail::file_handle &fhstdin, detail::file_handle &fhstdout, detail::file_handle &fhstderr, detail::file_handle fhprocess = detail::file_handle())
+        : process(id)
+#if defined(BOOST_WINDOWS_API) 
+        , process_handle_(fhprocess.release(), ::CloseHandle) 
+#endif 
+    {
+        if (fhstdin.valid())
+            stdin_.reset(new postream(fhstdin));
+        if (fhstdout.valid())
+            stdout_.reset(new pistream(fhstdout));
+        if (fhstderr.valid())
+            stderr_.reset(new pistream(fhstderr));
+    }
+
     /**
      * Gets a reference to the child's standard input stream.
      *
@@ -87,34 +112,6 @@ public:
     {
         BOOST_ASSERT(stderr_);
         return *stderr_;
-    }
-
-    /**
-     * Creates a new child object that represents the just spawned child
-     * process \a id.
-     *
-     * The \a fhstdin, \a fhstdout and \a fhstderr file handles represent
-     * the parent's handles used to communicate with the corresponding
-     * data streams. They needn't be valid but their availability must
-     * match the redirections configured by the launcher that spawned this
-     * process.
-     *
-     * The \a fhprocess handle represents a handle to the child process.
-     * It is only used on Windows as the implementation of wait() needs a
-     * process handle.
-     */
-    child(id_type id, detail::file_handle &fhstdin, detail::file_handle &fhstdout, detail::file_handle &fhstderr, detail::file_handle fhprocess = detail::file_handle())
-        : process(id)
-#if defined(BOOST_WINDOWS_API) 
-        ,process_handle_(fhprocess.release(), ::CloseHandle) 
-#endif 
-    {
-        if (fhstdin.valid())
-            stdin_.reset(new postream(fhstdin));
-        if (fhstdout.valid())
-            stdout_.reset(new pistream(fhstdout));
-        if (fhstderr.valid())
-            stderr_.reset(new pistream(fhstderr));
     }
 
 private:
@@ -157,6 +154,46 @@ private:
 
 #if defined(BOOST_POSIX_API) 
 public:
+    /**
+     * Creates a new child object on a POSIX platform.
+     *
+     * The \a infoin and \a infoout maps contain the pipes used to handle
+     * the redirections of the child process; at the moment, no other
+     * stream_info types are supported. If the launcher was asked to
+     * redirect any of the three standard flows, their pipes must be
+     * present in these maps.
+     */
+    child(id_type id, detail::info_map &infoin, detail::info_map &infoout)
+        : child(id,
+        detail::posix_info_locate_pipe(infoin, STDIN_FILENO, false),
+        detail::posix_info_locate_pipe(infoout, STDOUT_FILENO, true),
+        detail::posix_info_locate_pipe(infoout, STDERR_FILENO, true))
+    {
+        for (detail::info_map::iterator it = infoin.begin();
+                it != infoin.end(); ++it)
+        {
+            detail::stream_info &si = it->second;
+            if (si.type_ == detail::stream_info::use_pipe)
+            {
+                BOOST_ASSERT(si.pipe_->wend().valid());
+                boost::shared_ptr<postream> st(new postream(si.pipe_->wend()));
+                input_map_.insert(input_map_t::value_type(it->first, st));
+            }
+        }
+
+        for (detail::info_map::iterator it = infoout.begin();
+                it != infoout.end(); ++it)
+        {
+            detail::stream_info &si = it->second;
+            if (si.type_ == detail::stream_info::use_pipe)
+            {
+                BOOST_ASSERT(si.pipe_->rend().valid());
+                boost::shared_ptr<pistream> st(new pistream(si.pipe_->rend()));
+                output_map_.insert(output_map_t::value_type(it->first, st));
+            }
+        }
+    }
+
     /**
      * Gets a reference to the child's input stream \a desc.
      *
@@ -206,46 +243,6 @@ public:
             output_map_t::const_iterator it = output_map_.find(desc);
             BOOST_ASSERT(it != output_map_.end());
             return *it->second;
-        }
-    }
-
-    /**
-     * Creates a new child object on a POSIX platform.
-     *
-     * The \a infoin and \a infoout maps contain the pipes used to handle
-     * the redirections of the child process; at the moment, no other
-     * stream_info types are supported. If the launcher was asked to
-     * redirect any of the three standard flows, their pipes must be
-     * present in these maps.
-     */
-    child(id_type id, detail::info_map &infoin, detail::info_map &infoout)
-        : child(id,
-        detail::posix_info_locate_pipe(infoin, STDIN_FILENO, false),
-        detail::posix_info_locate_pipe(infoout, STDOUT_FILENO, true),
-        detail::posix_info_locate_pipe(infoout, STDERR_FILENO, true))
-    {
-        for (detail::info_map::iterator it = infoin.begin();
-                it != infoin.end(); ++it)
-        {
-            detail::stream_info &si = it->second;
-            if (si.type_ == detail::stream_info::use_pipe)
-            {
-                BOOST_ASSERT(si.pipe_->wend().valid());
-                boost::shared_ptr<postream> st(new postream(si.pipe_->wend()));
-                input_map_.insert(input_map_t::value_type(it->first, st));
-            }
-        }
-
-        for (detail::info_map::iterator it = infoout.begin();
-                it != infoout.end(); ++it)
-        {
-            detail::stream_info &si = it->second;
-            if (si.type_ == detail::stream_info::use_pipe)
-            {
-                BOOST_ASSERT(si.pipe_->rend().valid());
-                boost::shared_ptr<pistream> st(new pistream(si.pipe_->rend()));
-                output_map_.insert(output_map_t::value_type(it->first, st));
-            }
         }
     }
 

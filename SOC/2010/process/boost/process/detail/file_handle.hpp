@@ -32,9 +32,6 @@
 #endif
 
 #include <boost/assert.hpp>
-#include <boost/system/system_error.hpp>
-#include <boost/throw_exception.hpp>
-#include <stdio.h>
 
 namespace boost {
 namespace process {
@@ -108,6 +105,8 @@ public:
     file_handle(handle_type h)
         : handle_(h)
     {
+        // Boris: I wonder why this assert existed before (also in
+        //        previous Boost.Process versions).
         // BOOST_ASSERT(handle_ != invalid_value());
     }
 
@@ -232,67 +231,6 @@ public:
         ::close(handle_);
         handle_ = invalid_value();
     }
-
-    /**
-     * Changes the native file handle to the given one.
-     *
-     * Given a new native file handle \a h, this operation assigns this
-     * handle to the current object, closing its old native file handle.
-     * In other words, it first calls dup2() to remap the old handle to
-     * the new one and then closes the old handle.
-     *
-     * If \a h is open, it is automatically closed by dup2().
-     *
-     * This operation is only available in POSIX systems.
-     *
-     * \pre The file handle is valid.
-     * \pre The native file handle \a h is valid; i.e., it must be
-     *      closeable.
-     * \post The file handle's native file handle is \a h.
-     * \throw boost::system::system_error If the internal remapping
-     *        operation fails.
-     */
-    void posix_remap(handle_type &h)
-    {
-        BOOST_ASSERT(valid());
-
-        if (::dup2(handle_, h) == -1)
-            boost::throw_exception(boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::detail::file_handle::posix_remap: dup2(2) failed"));
-
-        if (::close(handle_) == -1)
-            ::close(h);
-            boost::throw_exception(boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::detail::file_handle::posix_remap: close(2) failed"));
-
-        if(::dup2(handle_,h) == -1)
-            boost::throw_exception(boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::detail::file_handle::posix_remap: dup2(2) failed"));
-
-        handle_ = h;
-    }
-
-    /**
-     * Duplicates an open native file handle.
-     *
-     * Given a native file handle \a h1, this routine duplicates it so
-     * that it ends up being identified by the native file handle \a h2
-     * and returns a new \a file_handle owning \a h2.
-     *
-     * This operation is only available in POSIX systems.
-     *
-     * \pre The native file handle \a h1 is open.
-     * \pre The native file handle \a h2 is valid (non-negative).
-     * \post The native file handle \a h1 is closed.
-     * \post The native file handle \a h2 is the same as the old \a h1
-     *       from the operating system's point of view.
-     * \return A new \a file_handle object that owns \a h2.
-     * \throw boost::system::system_error If dup2() fails.
-     */
-    static file_handle duplicate(int h1, int h2)
-    {
-        if (::dup2(h1, h2) == -1)
-            boost::throw_exception(boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::detail::file_handle::posix_dup: dup2(2) failed"));
-
-        return file_handle(h2);
-    }
 #endif
 
 #if defined(BOOST_WINDOWS_API) || defined(BOOST_PROCESS_DOXYGEN)
@@ -311,76 +249,6 @@ public:
         BOOST_ASSERT(valid());
         ::CloseHandle(handle_);
         handle_ = invalid_value();
-    }
-
-    /**
-     * Duplicates the \a h native file handle.
-     *
-     * Given a native file handle \a h, this routine constructs a new
-     * \a file_handle object that owns a new duplicate of \a h. The
-     * duplicate's inheritable flag is set to the value of \a inheritable.
-     *
-     * This operation is only available in Windows systems.
-     *
-     * \pre The native file handle \a h is valid.
-     * \return A file handle owning a duplicate of \a h.
-     * \throw boost::system::system_error If DuplicateHandle() fails.
-     */
-    static file_handle win32_dup(HANDLE h, bool inheritable)
-    {
-        HANDLE h2;
-
-        if (::DuplicateHandle(::GetCurrentProcess(), h, ::GetCurrentProcess(), &h2, 0, inheritable ? TRUE : FALSE, DUPLICATE_SAME_ACCESS) == 0)
-                 boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::detail::file_handle::win32_dup: DuplicateHandle failed"));
-
-        return file_handle(h2);
-    }
-
-    /**
-     * Creates a new duplicate of a standard file handle.
-     *
-     * Constructs a new \a file_handle object that owns a duplicate of a
-     * standard file handle. The \a d parameter specifies which standard
-     * file handle to duplicate and can be one of \a STD_INPUT_HANDLE,
-     * \a STD_OUTPUT_HANDLE or \a STD_ERROR_HANDLE. The duplicate's
-     * inheritable flag is set to the value of \a inheritable.
-     *
-     * This operation is only available in Windows systems.
-     *
-     * \pre \a d refers to one of the standard handles as described above.
-     * \return A file handle owning a duplicate of the standard handle
-     *         referred to by \a d.
-     * \throw boost::system::system_error If GetStdHandle() or
-     *        DuplicateHandle() fails.
-     */
-    static file_handle win32_dup_std(DWORD d, bool inheritable)
-    {
-        BOOST_ASSERT(d == STD_INPUT_HANDLE || d == STD_OUTPUT_HANDLE || d == STD_ERROR_HANDLE);
-        HANDLE h = ::GetStdHandle(d);
-        if (h == INVALID_HANDLE_VALUE)
-            boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::detail::file_handle::win32_std:GetStdHandle failed"));
-        file_handle dh = win32_dup(h, inheritable);
-        return dh;
-    }
-
-    /**
-     * Changes the file handle's inheritable flag.
-     *
-     * Changes the file handle's inheritable flag to \a i. It is not
-     * necessary for the file handle's flag to be different than \a i.
-     *
-     * This operation is only available in Windows systems.
-     *
-     * \pre The file handle is valid.
-     * \post The native file handle's inheritable flag is set to \a i.
-     * \throw boost::system::system_error If the property change fails.
-     */
-    void win32_set_inheritable(bool i)
-    {
-        BOOST_ASSERT(valid());
-
-        if (!::SetHandleInformation(handle_, HANDLE_FLAG_INHERIT, i ? HANDLE_FLAG_INHERIT : 0))
-            boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::detail::file_handle::win32_set_inheritable: SetHandleInformation failed"));
     }
 #endif
 

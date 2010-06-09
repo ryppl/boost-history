@@ -22,16 +22,16 @@
 #include <boost/process/config.hpp>
 
 #if defined(BOOST_POSIX_API)
-#  include <boost/scoped_array.hpp> 
-#  include <cerrno> 
-#  include <unistd.h> 
-#  if defined(__APPLE__)
-#    include <crt_externs.h>
-#  endif
+#   include <boost/scoped_array.hpp> 
+#   include <cerrno> 
+#   include <unistd.h> 
+#   if defined(__APPLE__)
+#       include <crt_externs.h>
+#   endif
 #elif defined(BOOST_WINDOWS_API)
-#  include <windows.h>
+#   include <windows.h>
 #else
-#  error "Unsupported platform." 
+#   error "Unsupported platform." 
 #endif
 
 #include <boost/process/process.hpp>
@@ -53,9 +53,7 @@ namespace boost {
 namespace process {
 
 /**
- * Generic implementation of the Process concept.
- *
- * The self singleton provides access to the current process.
+ * The self class provides access to the process itself.
  */
 class self : public process, boost::noncopyable
 {
@@ -77,33 +75,32 @@ public:
      * Returns the current process' environment variables. Modifying the
      * returned object has no effect on the current environment.
      */
-    static environment_t get_environment()
+    static environment get_environment()
     {
-        environment_t e;
+        environment e;
 
 #if defined(BOOST_POSIX_API)
-#  if defined(__APPLE__)
+#   if defined(__APPLE__)
         char **env = *_NSGetEnviron();
-#  else
+#   else
         char **env = ::environ;
-#  endif
+#   endif
 
         while (*env)
         {
             std::string s = *env;
             std::string::size_type pos = s.find('=');
-            e.insert(boost::process::environment_t::value_type(s.substr(0, pos), s.substr(pos + 1)));
+            e.insert(boost::process::environment::value_type(s.substr(0, pos), s.substr(pos + 1)));
             ++env;
         }
-
 #elif defined(BOOST_WINDOWS_API)
-#  ifdef GetEnvironmentStrings
-#  undef GetEnvironmentStrings
-#  endif
+#   ifdef GetEnvironmentStrings
+#   undef GetEnvironmentStrings
+#   endif
 
         char *ms_environ = ::GetEnvironmentStrings();
         if (!ms_environ)
-            boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::self::get_environment: GetEnvironmentStrings failed"));
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("GetEnvironmentStrings() failed");
         try
         {
             char *env = ms_environ;
@@ -111,7 +108,7 @@ public:
             {
                 std::string s = env;
                 std::string::size_type pos = s.find('=');
-                e.insert(boost::process::environment_t::value_type(s.substr(0, pos), s.substr(pos + 1)));
+                e.insert(boost::process::environment::value_type(s.substr(0, pos), s.substr(pos + 1)));
                 env += s.size() + 1;
             }
         }
@@ -132,20 +129,20 @@ public:
         errno = 0;
         long size = ::pathconf(".", _PC_PATH_MAX);
         if (size == -1 && errno)
-            boost::throw_exception(boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::self::get_work_dir: pathconf(2) failed"));
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("pathconf(2) failed");
         else if (size == -1) 
             size = BOOST_PROCESS_POSIX_PATH_MAX; 
         BOOST_ASSERT(size > 0); 
         boost::scoped_array<char> cwd(new char[size]); 
         if (!::getcwd(cwd.get(), size)) 
-            boost::throw_exception(boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), "boost::process::self::get_work_dir: getcwd(2) failed")); 
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("getcwd(2) failed");
         BOOST_ASSERT(cwd[0] != '\0'); 
         return cwd.get(); 
 #elif defined(BOOST_WINDOWS_API) 
         BOOST_ASSERT(MAX_PATH > 0); 
         char cwd[MAX_PATH]; 
         if (!::GetCurrentDirectoryA(sizeof(cwd), cwd)) 
-            boost::throw_exception(boost::system::system_error(boost::system::error_code(::GetLastError(), boost::system::get_system_category()), "boost::process::self::get_work_dir: GetCurrentDirectory failed")); 
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("GetCurrentDirectory() failed");
         BOOST_ASSERT(cwd[0] != '\0'); 
         return cwd; 
 #endif 

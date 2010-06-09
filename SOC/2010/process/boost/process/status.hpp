@@ -22,10 +22,10 @@
 #include <boost/process/config.hpp>
 
 #if defined(BOOST_POSIX_API)
-#  include <sys/wait.h>
+#   include <sys/wait.h>
 #elif defined(BOOST_WINDOWS_API)
 #else
-#  error "Unsupported platform."
+#   error "Unsupported platform."
 #endif
 
 #include <boost/assert.hpp>

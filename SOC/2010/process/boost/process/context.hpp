@@ -38,7 +38,7 @@ struct context
     boost::shared_ptr<stream_behavior> stderr_behavior;
     std::string process_name;
     std::string work_dir;
-    environment_t environment;
+    environment environment;
 
     /** 
      * Constructs a process context. 

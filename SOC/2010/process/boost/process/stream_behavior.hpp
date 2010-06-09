@@ -13,7 +13,7 @@
 /**
  * \file boost/process/stream_behavior.hpp
  *
- * Includes the declaration of the stream_behavior enumeration. 
+ * Includes the declaration of the stream_behavior classes.
  *
  */
 
@@ -35,18 +35,26 @@
 namespace boost {
 namespace process {
 
-/**
- *
- * Stream behaviors to define how standard streams are passed to a child process.
- *
- * inherit: A stream is inherited from its parent process. 
- * capture: A stream is redirected to its parent process (anonymous pipe). 
- * mute: A stream is redirected to /dev/null, /dev/zero or NUL. 
- * close: A stream is closed. 
- *
+/*
+ * BEHAVIOR | BEFORE fork/CreateProcess        | AFTER fork/CreateProcess 
+ * ---------+----------------------------------+--------------------------------- 
+ * close    |                                  | POSIX: close explicitly 
+ * inherit  | Windows: duplicate handle and    | 
+ *          |          save it in STARTUPINFO  | 
+ * capture  | POSIX: create pipe               | POSIX: use one end to initialize 
+ *          | Windows: create pipe and save    |        child process object 
+ *          |          one end in STARTUPINFO  | Windows: same 
+ * mute     | POSIX: open file                 | 
+ *          | Windows: open file and save      | 
+ *          |          handle in STARTUPINFO   | 
  */
-// enum stream_behavior { inherit, capture, mute, close }; 
 
+/**
+ * Stream behaviors are used to configure streams of a child process.
+ *
+ * The class stream_behavior is the base class all other stream behavior
+ * classes must be derived from.
+ */
 class stream_behavior 
 { 
 public: 
@@ -75,8 +83,19 @@ public:
     } 
 }; 
 
+/**
+ * Stream behavior to close streams of a child process.
+ *
+ * A child process will not be able to use its streams.
+ */
 typedef stream_behavior close; 
 
+/**
+ * Stream behavior to make a child process inherit streams.
+ *
+ * A child process will use the very same streams the current
+ * process uses.
+ */
 class inherit : public stream_behavior 
 { 
 public: 
@@ -98,6 +117,12 @@ private:
     native_type child_end_; 
 }; 
 
+/**
+ * Stream behavior to redirect streams with a pipe.
+ *
+ * A child process will be able to communicate with the current
+ * process.
+ */
 class capture : public stream_behavior 
 { 
 public: 
@@ -141,50 +166,66 @@ private:
     native_type parent_end_; 
 }; 
 
+/**
+ * Stream behavior to redirect streams with a named pipe.
+ *
+ * A child process will be able to communicate with the current
+ * process. On Windows this stream behavior must be used for
+ * asynchronous I/O (as only named pipes support asynchronous I/O
+ * on Windows).
+ */
 class capture_with_named_pipe : public stream_behavior 
 { 
 public: 
     enum stream_type { input_stream, output_stream }; 
 
-    capture_with_named_pipe(stream_type stream) 
+    capture_with_named_pipe(stream_type stream, std::string name = "") 
     { 
         native_type natives[2]; 
 #if defined(BOOST_POSIX_API) 
+        if (name.empty()) 
+            // TODO: Generate unique filename.
+            name = "/tmp/fifo.1"; 
+
         // TODO: Use RAII to close HANDLEs if an exception is thrown. 
-        if (::mkfifo("/tmp/fifo.1", S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) == -1) 
+        if (::mkfifo(name.c_str(), S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) == -1) 
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("mkfifo(3) failed"); 
         if (stream == input_stream) 
         { 
-            child_end_ = ::open("/tmp/fifo.1", O_RDONLY); 
+            child_end_ = ::open(name.c_str(), O_RDONLY); 
             if (child_end_ == -1) 
                 BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("open(2) failed"); 
-            parent_end_ = ::open("/tmp/fifo.1", O_WRONLY); 
+            parent_end_ = ::open(name.c_str(), O_WRONLY); 
             if (parent_end_ == -1) 
                 BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("open(2) failed"); 
         } 
         else 
         { 
-            child_end_ = ::open("/tmp/fifo.1", O_WRONLY); 
+            child_end_ = ::open(name.c_str(), O_WRONLY); 
             if (child_end_ == -1) 
                 BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("open(2) failed"); 
-            parent_end_ = ::open("/tmp/fifo.1", O_RDONLY); 
+            parent_end_ = ::open(name.c_str(), O_RDONLY); 
             if (parent_end_ == -1) 
                 BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("open(2) failed"); 
         } 
 #elif defined(BOOST_WINDOWS_API) 
+        if (name.empty()) 
+        { 
+            // TODO: Make this thread-safe (create unique filename differently). 
+            static unsigned int nextid = 0; 
+            name = "\\\\.\\pipe\\boost_process_" + boost::lexical_cast<std::string>(::GetCurrentProcessId()) + "_" + boost::lexical_cast<std::string>(nextid++);
+        } 
+
         // TODO: Use RAII to close HANDLEs if an exception is thrown. 
         SECURITY_ATTRIBUTES sa;
         ZeroMemory(&sa, sizeof(sa));
         sa.nLength = sizeof(sa);
         sa.lpSecurityDescriptor = NULL;
         sa.bInheritHandle = TRUE;
-        // TODO: Make this thread-safe (create unique filename differently). 
-        static unsigned int nextid = 0; 
-        std::string pipe = "\\\\.\\pipe\\boost_process_" + boost::lexical_cast<std::string>(::GetCurrentProcessId()) + "_" + boost::lexical_cast<std::string>(nextid++); 
-        natives[0] = ::CreateNamedPipeA(pipe.c_str(), PIPE_ACCESS_INBOUND | FILE_FLAG_OVERLAPPED, 0, 1, 8192, 8192, 0, &sa); 
+        natives[0] = ::CreateNamedPipeA(name.c_str(), PIPE_ACCESS_INBOUND | FILE_FLAG_OVERLAPPED, 0, 1, 8192, 8192, 0, &sa); 
         if (natives[0] == INVALID_HANDLE_VALUE) 
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreateNamedPipe() failed"); 
-        natives[1] = ::CreateFileA(pipe.c_str(), GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_FLAG_OVERLAPPED, NULL); 
+        natives[1] = ::CreateFileA(name.c_str(), GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_FLAG_OVERLAPPED, NULL); 
         if (natives[1] == INVALID_HANDLE_VALUE) 
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreateFile() failed"); 
 
@@ -235,6 +276,12 @@ private:
     native_type parent_end_; 
 }; 
 
+/**
+ * Stream behavior to mute streams.
+ *
+ * A child process will be able to use streams. But data written to an 
+ * output stream is discarded and data read from an input stream is 0.
+ */
 class mute : public stream_behavior 
 { 
 public: 
@@ -249,7 +296,7 @@ public:
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("open(2) failed"); 
 #elif defined(BOOST_WINDOWS_API) 
         child_end_ = ::CreateFileA("NUL", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL); 
-        if (child_end_ == INVALID_HANDLE_VALUE) 
+        if (child_end_ == INVALID_HANDLE_VALUE)
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreateFile() failed"); 
 #endif 
     } 
