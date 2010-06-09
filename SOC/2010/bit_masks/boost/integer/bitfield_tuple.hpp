@@ -18,7 +18,7 @@
 #include <boost/type_traits.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/mpl/if.hpp>
-
+#include <boost/utility/enable_if.hpp>
 
 namespace boost {
 namespace details {
@@ -246,6 +246,8 @@ struct bitfield_tuple {
             >=
         processed_args::offset::value
     ));
+
+    
 };  
 
 
