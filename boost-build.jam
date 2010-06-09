@@ -18,10 +18,11 @@ local rule if-has-file ( file + : dir * )
 
 #~ Attempts to find the Boost source tree...
 
-local boost-src = [ if-has-file configure :
+local boost-src = [ if-has-file LICENSE_1_0.txt :
     [ MATCH --boost=(.*) : $(ARGV) ]
     $(BOOST)
     $(.boost-build-file:D)/../boost
+    $(.boost-build-file:D)/../Trunk
     ] ;
 
 #~ Attempts to find the Boost.Build files...
@@ -41,3 +42,4 @@ BOOST_ROOT ?= $(boost-src) ;
 #~ And load up Boost.Build...
 
 boost-build $(boost-build-src) ;
+
