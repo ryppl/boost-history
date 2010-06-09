@@ -97,7 +97,7 @@ struct bit_mask_group {
     //@{
     template <typename Name>
     inline typename mpl::at<named_mask_map, Name>::type::value_type
-    get() {
+    get() const {
         return mpl::at<named_mask_map, Name>::type::value;
     }
 
@@ -106,7 +106,7 @@ struct bit_mask_group {
         mask_vector,
         integral_constant<unsigned int, Index>
     >::type::value_type
-    get() {
+    get() const {
         return mpl::at<
             mask_vector,
             integral_constant<unsigned int, Index>

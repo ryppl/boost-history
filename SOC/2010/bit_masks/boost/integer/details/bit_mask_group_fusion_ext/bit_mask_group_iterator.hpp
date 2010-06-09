@@ -49,7 +49,7 @@ struct bit_mask_group_iterator
             Iterator::index::value
         >::type type;
 
-        static type call(Iterator const&){
+        static type call(Iterator const&) {
             return type();
         }
     };
