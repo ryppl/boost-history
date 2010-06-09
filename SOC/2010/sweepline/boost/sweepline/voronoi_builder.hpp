@@ -15,17 +15,14 @@
 namespace boost {
 namespace sweepline {
 
-    template <typename Point2D, typename EventQueue, typename BeachLine>
+template <typename Point2D, typename BeachLine>
     class voronoi_builder {
     public:
-        voronoi_builder() {}
+        voronoi_builder() {
+            beach_line_ = new BeachLine;
+        }
         
         ~voronoi_builder() {
-            if (event_queue_) {
-                delete event_queue_;
-                event_queue_ = NULL;
-            }
-
             if (beach_line_) {
                 delete beach_line_;
                 beach_line_ = NULL;
@@ -33,25 +30,18 @@ namespace sweepline {
         }
 
         void init(const std::vector<Point2D> &sites) {
-            event_queue_->init(sites);
+            beach_line_->init(sites);
         }
 
         void reset() {
-            event_queue_->reset();
             beach_line_->reset();
         }
 
         void build_voronoi_diagram() {
-            while (!event_queue_->empty())
-                make_one_iteration();
+            beach_line_->run_sweepline();
         }
 
     private:
-        void make_one_iteration() {
-            //Not implemented yet
-        }
-
-        EventQueue* event_queue_;
         BeachLine* beach_line_;
     };
 

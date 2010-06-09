@@ -12,9 +12,7 @@
 
 #include <boost/mpl/list.hpp>
 
-typedef boost::mpl::list<int,
-                         long long,
-                         float,
+typedef boost::mpl::list<float,
                          double,
                          long double> test_types;
 

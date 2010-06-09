@@ -13,4 +13,5 @@ project
 test-suite "sweepline"
     : 
         [ run event_queue_test.cpp :  :  : <link>static ]
+	[ run beach_line_test.cpp :  :  : <link>static ]
     ;

@@ -14,19 +14,15 @@ namespace boost {
 namespace sweepline {
     
     template <typename T>
-    class sweepline_event;
-
-    template <typename T>
-    class site_event;
+    struct site_event;
     
     template <typename T>
-    class circle_event;
+    struct circle_event;
 
     template <typename T>
-    class point_2d {
+    struct point_2d {
     public:
         typedef T coordinate_type;
-        typedef sweepline_event<T> sweepline_event_type;
         typedef site_event<T> site_event_type;
         typedef circle_event<T> circle_event_type;
 
@@ -90,33 +86,52 @@ namespace sweepline {
     }
 
     template <typename T>
-    class sweepline_event : public point_2d<T> {
+    struct site_event {
     public:
-        enum kEventType {
-            SITE_EVENT = 0,
-            CIRCLE_EVENT = 1,
-            NONE = 2,
-        };
+        typedef T coordinate_type;
 
-        sweepline_event() : point_2d() {}
-
-        sweepline_event(T x, T y) : point_2d(x, y) {}
-
-        virtual kEventType get_event_type() const {
-            return NONE;
-        }
-    };
-
-    template <typename T>
-    class site_event : public sweepline_event<T> {
-    public:
-        site_event() : sweepline_event() {}
+        site_event() {}
         
-        site_event(T x, T y) : sweepline_event(x, y) {}
+        site_event(T x, T y) : point_(x, y) {}
 
-        virtual kEventType get_event_type() const {
-            return SITE_EVENT;
+        bool operator==(const site_event &s_event) const {
+            return point_ == s_event.get_point();
         }
+
+        bool operator!=(const site_event &s_event) const {
+            return point_ != s_event.get_point();
+        }
+
+        bool operator<(const site_event &s_event) const {
+            return point_ < s_event.get_point();
+        }
+
+        bool operator<=(const site_event &s_event) const {
+            return point_ <= s_event.get_point();
+        }
+
+        bool operator>(const site_event &s_event) const {
+            return point_ > s_event.get_point();
+        }
+
+        bool operator>=(const site_event &s_event) const {
+            return point_ >= s_event.get_point();
+        }
+
+        coordinate_type x() const {
+            return point_.x();
+        }
+
+        coordinate_type y() const {
+            return point_.y();
+        }
+
+        const point_2d<T> &get_point() const {
+            return point_;
+        }
+
+    private:
+        point_2d<T> point_;
     };
 
     template <typename T>
@@ -124,27 +139,70 @@ namespace sweepline {
         return site_event<T>(x,y);
     }
 
+    struct BeachLineNode;
+
     template <typename T>
-    class circle_event : public site_event<T> {
+    struct circle_event {
     public:
-        circle_event() : site_event() { 
-            active_ = true;
+        typedef T coordinate_type;
+
+        circle_event() {}
+
+        circle_event(T x, T y) : point_(x, y) {}
+
+        bool operator==(const circle_event &c_event) const {
+            return point_ == c_event.get_point();
         }
 
-        circle_event(T x, T y) : site_event(x, y) {
-            active_ = true;
+        bool operator!=(const circle_event &c_event) const {
+            return point_ != c_event.get_point();
         }
 
-        bool is_active() {
-            return active_;
+        bool operator<(const circle_event &c_event) const {
+            return point_ < c_event.get_point();
         }
 
-        virtual kEventType get_event_type() const {
-            return CIRCLE_EVENT;
+        bool operator<=(const circle_event &c_event) const {
+            return point_ <= c_event.get_point();
+        }
+
+        bool operator>(const circle_event &c_event) const {
+            return point_ > c_event.get_point();
+        }
+
+        bool operator>=(const circle_event &c_event) const {
+            return point_ >= c_event.get_point();
+        }
+
+        coordinate_type x() const {
+            return point_.x();
+        }
+
+        coordinate_type y() const {
+            return point_.y();
+        }
+
+        const point_2d<T> &get_point() const {
+            return point_;
+        }
+
+        void set_bisector(const point_2d<T> &left_point, const point_2d<T> &right_point) {
+            bisector_left_point_ = left_point;
+            bisector_right_point_ = right_point;
+        }
+
+        const point_2d<T> &get_bisector_left_point() const {
+            return bisector_left_point_;
+        }
+
+        const point_2d<T> &get_bisector_right_point() const {
+            return bisector_right_point_;
         }
 
     private:
-        bool active_;
+        point_2d<T> point_;
+        point_2d<T> bisector_left_point_;
+        point_2d<T> bisector_right_point_;
     };
 
     template <typename T>

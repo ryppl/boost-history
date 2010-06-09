@@ -21,20 +21,26 @@ namespace sweepline {
     class event_queue {
     public:
         typedef typename Point2D::coordinate_type coordinate_type;
-        typedef typename Point2D::sweepline_event_type sweepline_event_type;
         typedef typename Point2D::site_event_type site_event_type;
         typedef typename Point2D::circle_event_type circle_event_type;
-        typedef typename Point2D::sweepline_event_type::kEventType kEventType;
+
+        enum kEventType {
+            SITE_EVENT = 0,
+            CIRCLE_EVENT = 1,
+            NONE = 2,
+        };
 
         event_queue() {
             site_events_iterator_ = site_events_.begin();
         }
 
-        void init(const std::vector<Point2D> &sites) {
+        void init(const std::vector<Point2D> &sites, int skip) {
             site_events_.clear();
-            site_events_.resize(sites.size());
-            for (int i = 0; i < sites.size(); i++)
-                site_events_[i] = make_site_event(sites[i].x(), sites[i].y());
+            site_events_.resize(sites.size() - skip);
+            std::vector<Point2D>::const_iterator sites_it;
+            int index = 0;
+            for (sites_it = sites.begin() + skip; sites_it != sites.end(); sites_it++)
+                site_events_[index++] = make_site_event(sites_it->x(), sites_it->y());
             init_site_events();
         }
 
@@ -55,53 +61,57 @@ namespace sweepline {
             return true;
         }
 
-        const sweepline_event_type &top() {
+        template <typename event_handler>
+        void process_top_event(event_handler &functor) {
             kEventType top_event_type = get_top_event_type();
-            if (top_event_type == kEventType::SITE_EVENT)
-                return *site_events_iterator_;
+            if (top_event_type == SITE_EVENT)
+                functor(*site_events_iterator_);
             else
-                return circle_events_.top();
+                functor(circle_events_.top());
         }
 
         void pop() {
             kEventType top_event_type = get_top_event_type();
-            if (top_event_type == kEventType::SITE_EVENT)
+            if (top_event_type == SITE_EVENT)
                 site_events_iterator_++;
-            else if (top_event_type == kEventType::CIRCLE_EVENT)
+            else if (top_event_type == CIRCLE_EVENT)
                 circle_events_.pop();
         }
 
-        void push(circle_event_type circle_event) {
+        void push(circle_event_type &circle_event) {
             circle_events_.push(circle_event);
+        }
+
+        void deactivate_event(circle_event_type &circle_event) {
+            deactivated_events_.push(circle_event);
         }
 
     private:
         void init_site_events() {
-            std::sort(site_events_.begin(), site_events_.end());
             site_events_iterator_ = site_events_.begin();
-            last_event_type_ = kEventType::SITE_EVENT;
         }
 
         void remove_not_active_events() {
-            while (!circle_events_.empty() && 
-                   !circle_events_.top().is_active())
+            while (!circle_events_.empty() && !deactivated_events_.empty() &&
+                circle_events_.top() == deactivated_events_.top()) {
                 circle_events_.pop();
+                deactivated_events_.pop();
+            }
         }
 
         kEventType get_top_event_type() {
             remove_not_active_events();
-
             if (site_events_iterator_ == site_events_.end())
-                return kEventType::CIRCLE_EVENT;
+                return CIRCLE_EVENT;
             else if (circle_events_.empty())
-                return kEventType::SITE_EVENT;
+                return SITE_EVENT;
             else {
-                if ((*site_events_iterator_) <= circle_events_.top())
-                    return kEventType::SITE_EVENT;
+                if (site_events_iterator_->get_point() <= circle_events_.top().get_point())
+                    return SITE_EVENT;
                 else
-                    return kEventType::CIRCLE_EVENT;
+                    return CIRCLE_EVENT;
             }
-            return kEventType::NONE;
+            return NONE;
         }
 
         typename std::vector<site_event_type>::const_iterator 
@@ -110,7 +120,9 @@ namespace sweepline {
         std::priority_queue< circle_event_type,
                              std::vector<circle_event_type>,
                              std::greater<circle_event_type> > circle_events_;
-        kEventType last_event_type_;
+        std::priority_queue< circle_event_type,
+                             std::vector<circle_event_type>,
+                             std::greater<circle_event_type> > deactivated_events_;
 
         //Disallow copy constructor and operator=
         event_queue(const event_queue&);

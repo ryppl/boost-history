@@ -6,3 +6,15 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 //  See http://www.boost.org for updates, documentation, and revision history.
+
+//#include "test_type_list.hpp"
+//#include <boost/sweepline/beach_line.hpp>
+//#include <boost/sweepline/event_queue.hpp>
+//#include <boost/sweepline/event_types.hpp>
+//#include <boost/sweepline/voronoi_builder.hpp>
+//
+//#define BOOST_TEST_MODULE voronoi_builder_test
+//#include <boost/test/test_case_template.hpp>
+//
+//BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test1, T, test_types) {
+//}
