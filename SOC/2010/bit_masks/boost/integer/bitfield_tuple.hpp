@@ -7,7 +7,8 @@
 #ifndef BOOST_BITFIELD_TUPLE_HPP
 #define BOOST_BITFIELD_TUPLE_HPP
 #include <boost/integer/details/storage.hpp>
-
+#include <boost/integer/bits_mask.hpp>
+#include <string>
 #include <boost/integer/details/member.hpp>
 #include <boost/integer/bit_width.hpp>
 #include <cstddef>
@@ -403,8 +404,54 @@ public:
     typedef typename _base::processed_args          processed_args;
     typedef typename _base::field_vector            members;
     typedef typename _base::storage_type            storage_type;
+    typedef typename _base::offset                  bits_used;
+
+    
+    /** Proxy type returned by get functions.
+     *  This serves as the go between things within this class.
+     */
+    template <typename MaskInfo>
+    struct bit_ref {
+
+        /** typedefs 
+         *  return_type - is the type which is retrieved from
+         *      within storage is turned into and returned as.
+         *
+         *  mask - contains all information needed to iteract with data in the
+         *      the stroage.
+         */
+        typedef typename MaskInfo::return_type                  return_type;
+        typedef bits_mask<
+            typename MaskInfo::storage_type,
+            MaskInfo::offset,
+            MaskInfo::field_width
+        >                                                       mask;
+
+        typedef bit_ref<MaskInfo>                               _self;
+
+        /** Reference constructor.
+         *  Because the bit_ref is an abstraction of a reference then it also
+         *  must behave like a reference type.
+         */
+        bit_ref(storage_type& ref)
+            :_ref(ref)
+        { }
+        
+        operator return_type() const {
+            return (_ref & mask()) >> mask::offset;
+        }
 
 
+        _self const& operator=(return_type const& rhs) {
+            _ref ^= (_ref & mask());
+            _ref |= (static_cast<storage_type>(rhs) << mask::offset);
+            return *this;
+        }
+        
+    private:
+        storage_type& _ref;
+        bit_ref(); // not default constructible.
+    };
 
 
     /** Value constructor.
@@ -435,7 +482,11 @@ public:
 
     // TODO: look into the creation of a member wise constructor.
     
-    /** Interface: Stack Allocated.
+    _self const& operator=(_self const& x) {
+        this->_data = x._data;
+    }
+
+    /**
      *  Retuns a copy of the internally stored type.
      */
     //@{
@@ -447,8 +498,20 @@ public:
          return this->get_data();
     }
     //@}
+
+    /** Returns a string with the bits from the internal storage within it. */
+    //@{
+    std::string to_string() const;
+    //@}
+
+
+    /** Get function interfaces.
+     *  These provide access into the tuple.
+     */
+    //@{
     
-};  
+    //@}
+};
 
 
 
