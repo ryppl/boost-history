@@ -422,9 +422,9 @@ public:
          */
         typedef typename MaskInfo::return_type                  return_type;
         typedef bits_mask<
-            typename MaskInfo::storage_type,
-            MaskInfo::offset,
-            MaskInfo::field_width
+            storage_type,
+            MaskInfo::offset::value,
+            MaskInfo::field_width::value
         >                                                       mask;
 
         typedef bit_ref<MaskInfo>                               _self;
@@ -444,7 +444,7 @@ public:
 
         _self const& operator=(return_type const& rhs) {
             _ref ^= (_ref & mask());
-            _ref |= (static_cast<storage_type>(rhs) << mask::offset);
+            _ref |= ((static_cast<storage_type>(rhs) << mask::offset) & mask());
             return *this;
         }
         

@@ -31,5 +31,6 @@ test-suite integer
         [ compile-fail bft_testing/compile_fail/bft_storage_width_acceded.cpp ]
         [ compile bft_testing/compile_pass/bft_member_max_out.cpp ]
         [ run bitfield_tuple_test.cpp ]
+        [ run bft_testing/ref_type_testing.cpp ]
     ;
 
