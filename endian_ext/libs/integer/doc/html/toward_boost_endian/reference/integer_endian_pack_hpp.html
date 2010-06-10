@@ -1,0 +1,74 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>
+      Header &lt;boost/integer/endian_pack.hpp&gt;</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Toward Boost.Endian">
+<link rel="up" href="../reference.html" title="Reference">
+<link rel="prev" href="endian_shared_tree_hpp.html" title="
+      Header &lt;boost/endian/domain_map.hpp&gt;">
+<link rel="next" href="integer_endian_hpp.html" title=" Header
+      &lt;boost/integer/endian.hpp&gt;">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="endian_shared_tree_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="integer_endian_hpp.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_endian.reference.integer_endian_pack_hpp"></a><a href="integer_endian_pack_hpp.html" title="
+      Header &lt;boost/integer/endian_pack.hpp&gt;">
+      Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">endian_pack</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h3></div></div></div>
+<p>
+        This file contains the core class template of Integer.Endian. Provides byte-holder
+        binary types with explicit control over byte order, value type, size, and
+        alignment. Typedefs provide easy-to-use names for common configurations.
+      </p>
+<p>
+        These types provide portable byte-holders for integer data, independent of
+        particular computer architectures. Use cases almost always involve I/O, either
+        via files or network connections. Although data portability is the primary
+        motivation, these integer byte-holders may also be used to reduce memory
+        use, file size, or network activity since they provide binary integer sizes
+        not otherwise available.
+      </p>
+<p>
+        Such integer byte-holder types are traditionally called endian types. See
+        the Wikipedia for a full exploration of endianness, including definitions
+        of big endian and little endian.
+      </p>
+<p>
+        This class soesn't provides arithmetic operators, but of course automatic
+        conversion is provided to the underlying integer value type.
+      </p>
+<p>
+        An <code class="computeroutput"><span class="identifier">endian_pack</span></code> is an byte-holder
+        with user-specified endianness, intger value type, size, and alignment.
+      </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2006 -2009 Beman Dawes<br>Copyright &#169; 2010 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="endian_shared_tree_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="integer_endian_hpp.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
