@@ -17,8 +17,14 @@
 #include <boost/mpl/map.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/mpl/plus.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/utility/enable_if.hpp>
+
+
+// TODO: Remove me.
+#include <iostream>
+#include <boost/mpl/empty.hpp>
 
 namespace boost {
 namespace details {
@@ -39,6 +45,14 @@ struct bitfield_element_ {
     typedef bitfield_element_<return_type, name_type, offset, field_width> type;
 };
 
+
+template <typename ReturnType, typename Name, typename FieldWidth>
+struct parsible_member_elem_ {
+    typedef ReturnType return_type;
+    typedef Name name_type;
+    typedef FieldWidth field_width;
+    typedef parsible_member_elem_<ReturnType,Name,FieldWidth> type;
+};
 
 
 
@@ -69,13 +83,21 @@ struct bft_impl_ <mpl::void_, StoragePolicy, FieldVector, Offset>{
 
     template <typename NextParam>
     struct process {
-        typedef typename bft_impl_<
+        typedef bft_impl_<
             NextParam,
             storage_policy,
             field_vector,
             offset
-        >::type type;
+        > type;
     };
+
+
+    static void debug_info() {
+        using namespace std;
+        cout << "bft_impl_ <mpl::void_, StoragePolicy, FieldVector, Offset>" << endl;
+        cout << "Offset Value: " << Offset::value << endl;
+        cout << "offset Value: " << offset::value << endl;
+    }
 };
 
 /** Specilization for storage type.
@@ -110,13 +132,20 @@ struct bft_impl_ <
 
     template <typename NextParam>
     struct process {
-        typedef typename bft_impl_<
+        typedef bft_impl_<
             NextParam,
             storage_policy,
             field_vector,
             offset
-        >::type type;
+        > type;
     };
+
+    static void debug_info() {
+        using namespace std;
+        cout << "bft_impl_ <storage<StorageType,AllocationPolicy>,StoragePolicy,FieldVector,Offset >" << endl;
+        cout << "Offset Value: " << Offset::value << endl;
+        cout << "offset Value: " << offset::value << endl;
+    }
 };
 
 /** Specilization for member.
@@ -129,13 +158,13 @@ struct bft_impl_ <
 // TODO: Implement Precondition 1 listed above!
 template <  typename StoragePolicy,
             typename FieldVector,
-            typename Offset,
+            std::size_t FieldWidth,
             typename ReturnType,
             typename NameType,
-            std::size_t FieldWidth
+            typename Offset
 >
 struct bft_impl_ <
-    member<
+    member <
         ReturnType,
         NameType,
         FieldWidth
@@ -154,22 +183,37 @@ struct bft_impl_ <
             ReturnType,
             NameType,
             Offset,
-            typename mpl::size_t< FieldWidth >
+            mpl::size_t<FieldWidth>
         >
     >::type field_vector;
-    typedef mpl::size_t< Offset::value + FieldWidth > offset;
+
+    typedef mpl::size_t< 
+        mpl::plus<
+            Offset,
+            mpl::size_t<FieldWidth>
+        >::value
+    >                                   offset;
 
     typedef bft_impl_<param,storage_policy,field_vector,offset> type;
 
     template <typename NextParam>
     struct process {
-        typedef typename bft_impl_<
+        typedef bft_impl_<
             NextParam,
             storage_policy,
             field_vector,
             offset
-        >::type type;
+        > type;
     };
+
+    static void debug_info() {
+        using namespace std;
+        cout << "bft_impl_ <member<ReturnType,NameType,FieldWidth>,StoragePolicy,FieldVector,Offset >" << endl;
+        cout << "Offset Value: " << Offset::value << endl;
+        cout << "offset Value: " << offset::value << endl;
+        cout << "FieldWidth Value: " << FieldWidth << endl;
+        cout << "mpl::size_t<FieldWidth> Value: " << mpl::size_t< FieldWidth >::value << endl;
+    }
 };
 
 /** This structure is going to be used when an allocator isn't assked for.
@@ -223,13 +267,54 @@ struct allocator_wraper_base_policy {
 // Only used for writing clarity and only used once and then undef'ed when
 // before the end of the details namespace/after the end of the
 // bitfield_tuple_base
-#define BOOST_BFT_ARG_PROCESSING_CLASS \
-        details::bft_impl_<T0, \
+
+
+
+/** Used for fixing member arguments by projecting numbers into the type
+ *  system.
+ */
+template <typename T>
+struct fix_args;
+
+template <>
+struct fix_args <mpl::void_> {
+    typedef mpl::void_ apply;
+};
+
+template <typename ReturnType, typename NameType, std::size_t FieldWidth>
+struct fix_args <
+    member<
+        ReturnType,
+        NameType, 
+        FieldWidth
+    > >
+{
+    typedef parsible_member_elem_<
+        ReturnType,
+        NameType,
+        typename mpl::size_t<FieldWidth>
+    > apply;
+};
+
+template <typename StorageType, typename AllocType>
+struct fix_args <
+    storage<
+        StorageType,
+        AllocType
+    > >
+{
+    typedef storage<StorageType,AllocType> apply;
+};
+
+
+#define BOOST_BFT_ARG_PROCESSING_CLASS      \
+        details::bft_impl_<\
+            T0, \
             mpl::void_,\
             mpl::vector<>,\
-            mpl::size_t<0>\
+            mpl::size_t<0u>\
         >::\
-        template process<T1>::type::\
+        template process<T1 >::type::\
         template process<T2>::type::\
         template process<T3>::type::\
         template process<T4>::type::\
@@ -281,8 +366,8 @@ struct bitfield_tuple_base
     : BOOST_BFT_ARG_PROCESSING_CLASS
 {
 
-    typedef typename bitfield_tuple_base<T0,T1,T2,T3,T4,
-        T5,T6,T7,T8,T9>::type                           processed_args;
+    
+    typedef typename BOOST_BFT_ARG_PROCESSING_CLASS   processed_args;
 
     // extracting te Arguments from processed_args relating to 
     // the storage policy. Also preforming static assertios 
@@ -335,9 +420,9 @@ struct bitfield_tuple_base
     // Precondition: the offet at the end of everything must be the
     // the same as or less then the bit_width of the storage type.
     BOOST_STATIC_ASSERT((
-        bit_width< storage_type >::value
-            >=
-        processed_args::offset::value
+        offset::value
+            <=
+        bit_width< storage_type >::value + 1
     ));
 
     /** Meta-calculations used for enabling and disabling functionality based
@@ -358,6 +443,52 @@ struct bitfield_tuple_base
         storage_policy_stack
     >::type                                 is_stack_allocated;
 
+#if 1
+    void display_debug_info() {
+        using namespace std;
+
+        typedef typename details::bft_impl_<T0, mpl::void_,mpl::vector<>,mpl::size_t<0u> >::type step_1;
+        cout << step_1::offset::value << endl;
+        step_1::debug_info();
+
+        typedef typename step_1::template process<T1 >::type step_2;
+        // cout << step_2::offset::value << endl;
+        step_2::debug_info();
+
+        typedef typename step_2::template process<T2>::type step_3;
+        // cout << step_3::offset::value << endl;
+        step_3::debug_info();
+
+        typedef typename step_3::template process<T3>::type step_4;
+        // cout << step_4::offset::value << endl;
+        step_4::debug_info();
+
+        typedef typename step_4::template process<T4>::type step_5;
+        // cout << step_5::offset::value << endl;
+        step_5::debug_info();
+
+        typedef typename step_5::template process<T5>::type step_6;
+        // cout << step_6::offset::value << endl;
+        step_6::debug_info();
+
+        typedef typename step_6::template process<T6>::type step_7;
+        // cout << step_7::offset::value << endl;
+        step_7::debug_info();
+
+        typedef typename step_7::template process<T7>::type step_8;
+        // cout << step_8::offset::value << endl;
+        step_8::debug_info();
+
+        typedef typename step_8::template process<T8>::type step_9;
+        // cout << step_9::offset::value << endl;
+        step_9::debug_info();
+
+        typedef typename step_9::template process<T9>::type step_10;
+        // cout << step_10::offset::value << endl;
+        step_10::debug_info();
+
+    }
+#endif
 };
 
 #undef BOOST_BFT_ARG_PROCESSING_CLASS
@@ -439,7 +570,10 @@ public:
          return this->get_data();
     }
     //@}
-    
+
+    void debug() {
+        this->display_debug_info();
+    }
     
 };  
 

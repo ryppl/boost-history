@@ -48,6 +48,7 @@ struct storage<StorageType, storage_policy_stack > {
     typedef StorageType                                 storage_type;
     typedef storage_policy_stack                        alloc;
     typedef storage<StorageType, storage_policy_stack>  type;
+
 };
 
 } // end boost

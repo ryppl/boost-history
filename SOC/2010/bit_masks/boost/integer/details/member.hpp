@@ -9,8 +9,10 @@
 #include <cstddef>
 #include <boost/type_traits.hpp>
 #include <boost/static_assert.hpp>
-
+#include <boost/mpl/size_t.hpp>
 namespace boost {
+
+
 
 /** The purpose of the member struct is to provide a simple way of passing
  *  parameters into a bitfield_tuple or bit_mask_tuple. The use of this is
@@ -27,7 +29,10 @@ struct member {
     typedef ReturnType return_type;
     typedef Name name_type;
     BOOST_STATIC_CONSTANT(std::size_t, field_width  = FieldWidth);
+
 };
+
+
 
 } // end boost
 

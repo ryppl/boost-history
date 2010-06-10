@@ -25,8 +25,10 @@ test-suite integer
         [ run bitwise_low_bits_testing.cpp ]
         [ run compound_mask_test.cpp ]
         [ run bit_mask_group_test.cpp ]
-        [ run bitfield_tuple_test.cpp ]
         [ compile-fail bft_testing/compile_fail/member_precond_width_zero.cpp ]
         [ compile-fail bft_testing/compile_fail/bft_no_storage_type.cpp ]
+        [ compile-fail bft_testing/compile_fail/non_pod_storage_type.cpp ]
+        [ compile-fail bft_testing/compile_fail/bft_storage_width_acceded.cpp ]
+        [ run bitfield_tuple_test.cpp ]
     ;
 
