@@ -13,14 +13,12 @@ struct red { };
 // the storage type.
 typedef bitfield_tuple<
     storage<int>,
-    member<int, red, 10u>
+    member<int, red, 33u>
 > bft;
 
 
 
 int main() {
-    typedef bft::offset something;
-    std::cout << bft::offset::value << std::endl;
     bft();
     return 0;
 }
