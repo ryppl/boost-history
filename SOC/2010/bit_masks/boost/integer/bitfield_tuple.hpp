@@ -391,7 +391,8 @@ struct bitfield_tuple
 {
 private:
     typedef details::bitfield_tuple_base<T0,T1,T2,T3,T4,T5,T6,T7,T8,T9> _base;
-    typedef typename _base::allocation_base_policy _alloc_base;
+    typedef typename _base::allocation_base_policy  _alloc_base;
+    typedef bitfield_tuple<T0,T1,T2,T3,T4,T5,T6,T7,T8,T9>  _self;
 
 public:
     typedef typename _base::is_stack_allocated      is_stack_allocated;
@@ -402,6 +403,35 @@ public:
 
 
 
+
+    /** Value constructor.
+     *  This sets the initial value of the internal data to x.
+     *  Also functions as the default constructor.
+     */
+    bitfield_tuple(storage_type x = 0)
+        :_alloc_base(x)
+    { }
+
+    /** Copy constructor. */
+    bitfield_tuple(_self const& x)
+        :_alloc_base( x.data() )
+    { }
+
+    /** "Identical members" copy constructor.
+     *  Basically this is used to get the data within a structure whose 
+     *  bitfields are the same (in the same order) but the storage is 
+     *  specified in a different place within the template arguments.
+     *
+     *  XXX 
+     *      TODO: The signature of this will need to change possibly to
+     *      use enable_if or some form of internal dispatching.
+     *  XXX
+     */
+    template <typename T>
+    bitfield_tuple(T const& x);
+
+    // TODO: look into the creation of a member wise constructor.
+    
     /** Interface: Stack Allocated.
      *  Retuns a copy of the internally stored type.
      */

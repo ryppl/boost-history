@@ -173,9 +173,18 @@ int main() {
     ));
 
 
-    bft b;
-    b.data();
-    // BOOST_ASSERT(( ));
+    }
+
+    // bitfield_tuple runtime tests.
+    {
+        // default constructor.
+        typedef bitfield_tuple< storage<int>, member<int,red,3> > bft1;
+        bft1 bft_test_1;
+        BOOST_ASSERT(( bft_test_1.data() == 0 ));
+
+        // value constructor
+        bft1 bft_test_2(5);
+        BOOST_ASSERT(( bft_test_2.data() == 5 ));
 
     }
     return 0;
