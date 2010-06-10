@@ -7,12 +7,19 @@
 #include "test_type_list.hpp"
 #include <boost/mpl/front.hpp>
 #include <boost/mpl/find_if.hpp>
+#include <boost/mpl/end.hpp>
+#include <boost/mpl/begin.hpp>
 
 void ignore(...) {}
 
 struct red { };
 struct green { };
 struct blue { };
+
+template <typename T>
+void test_get_data(T const& x, int value) {
+    BOOST_ASSERT(( x.get_data() == value ));
+}
 
 template <typename T, typename U>
 struct match_name
@@ -82,7 +89,9 @@ int main() {
     // testing bitfield_element_
     {
         // bitfield_element_
-        typedef details::bitfield_element_<int, red, mpl::size_t<5>, mpl::size_t<4> > bft_element_test_1;
+        typedef details::bitfield_element_<
+            int, red, mpl::size_t<5>, mpl::size_t<4>
+        > bft_element_test_1;
         BOOST_ASSERT(( is_same<bft_element_test_1::return_type, int>::value ));
         BOOST_ASSERT(( is_same<bft_element_test_1::name_type, red>::value ));
         BOOST_ASSERT(( bft_element_test_1::offset::value == 5 ));
@@ -90,6 +99,34 @@ int main() {
 
     }
 
+    // stack allocation policy for bitfield_tuple
+    {
+        // default constructor.
+        details::stack_alloc_base_policy<int> sap_test_1;
+        BOOST_ASSERT(( sap_test_1._data == 0));
+
+        // value constructor
+        details::stack_alloc_base_policy<int> sap_test_2( 2 );
+        BOOST_ASSERT(( sap_test_2._data == 2));
+
+        // copy constructor
+        details::stack_alloc_base_policy<int> sap_test_3( sap_test_2 );
+        BOOST_ASSERT(( sap_test_3._data == 2));
+
+        // assignement.
+        details::stack_alloc_base_policy<int> sap_test_4;
+        sap_test_4 = sap_test_3;
+        BOOST_ASSERT(( sap_test_4._data == 2));
+        sap_test_4 = sap_test_1;
+        BOOST_ASSERT(( sap_test_4._data == 0));
+
+        // const test for get data
+        test_get_data( sap_test_4, 0 );
+
+        // non const test for get data
+        BOOST_ASSERT(( sap_test_4.get_data() == 0));
+
+    }
     // testing for parsing of aruments passed into template parameters.    
     {
     
@@ -126,9 +163,19 @@ int main() {
     > temp_vect;
 
     // tesitng so I can learn to use mpl::find_if
+    // for looking up while useing the get<> function in side bitfield_tuple.
     typedef mpl::find_if<temp_vect, match_name<mpl::_1, red> >::type temp_located;
-    
-    
+    BOOST_MPL_ASSERT_NOT((
+        is_same<
+            temp_located,
+            mpl::end<temp_vect>::type
+        >
+    ));
+
+
+    bft b;
+    b.data();
+    // BOOST_ASSERT(( ));
 
     }
     return 0;
