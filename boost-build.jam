@@ -25,6 +25,15 @@ local boost-src = [ if-has-file LICENSE_1_0.txt :
     $(.boost-build-file:D)/../Trunk
     ] ;
 
+# error handling:
+if ! $(boost-src)
+{
+  ECHO Unable to find the Boost source tree in the locations searched. ;
+  ECHO Try setting the environment variable BOOST to point to your ;
+  ECHO Boost tree, or else invoke bjam with the --boost=path option. ;
+  ECHO The Boost include path will not be automatically set. ;
+}
+
 #~ Attempts to find the Boost.Build files...
 
 local boost-build-src = [ if-has-file bootstrap.jam :
@@ -34,6 +43,15 @@ local boost-build-src = [ if-has-file bootstrap.jam :
     $(boost-src)/tools/build/v2
     ] ;
 
+# error handling:
+if ! $(boost-build-src)
+{
+  ECHO Unable to find the Boost.Build source tree in the locations searched. ;
+  ECHO Try setting the environment variable BOOST_BUILD to point to your ;
+  ECHO Boost.Build tree, or else invoke bjam with the --boost-build=path option. ;
+  ECHO More failures will very likely follow... ;
+}
+
 #~ Set some common vars to refer to the Boost sources...
 
 BOOST ?= $(boost-src) ;
@@ -42,4 +60,6 @@ BOOST_ROOT ?= $(boost-src) ;
 #~ And load up Boost.Build...
 
 boost-build $(boost-build-src) ;
+
+
 

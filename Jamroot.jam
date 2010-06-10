@@ -1,0 +1,7 @@
+
+import modules ;
+
+local boost = [ modules.peek : BOOST ] ;
+
+project sandbox : requirements <include>$(boost) ;
+
