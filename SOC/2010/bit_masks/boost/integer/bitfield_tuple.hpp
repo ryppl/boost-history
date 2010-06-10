@@ -23,11 +23,6 @@
 namespace boost {
 namespace details {
 
-
-
-
-
-
 /** This is the type which sits inside the mpl vector type.
  *  This has all information for constructing a bitfield.
  */
