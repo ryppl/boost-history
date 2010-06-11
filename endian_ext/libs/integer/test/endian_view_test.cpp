@@ -15,6 +15,7 @@
 //  between operand types.
 
 //----------------------------------------------------------------------------//
+#include <iostream>
 
 #include <boost/detail/lightweight_test.hpp>  // for main
 
@@ -56,9 +57,17 @@ void check_access()
     as_endian<big_endian>(a.s1)=0x0102;
     as_big(a.i1)=0x01020304;
     
+    
     as_little(a.c2)=0x0A;
     as_little(a.s2)=0x0102;
     as_little(a.i2)=0x01020304;
+
+    std::cout << std::hex << int(a.c1) << std::endl;
+    std::cout << std::hex << a.s1 << std::endl;
+    std::cout << std::hex << a.i1 << std::endl;
+    std::cout << std::hex << int(a.c2) << std::endl;
+    std::cout << std::hex << a.s2 << std::endl;
+    std::cout << std::hex << a.i2 << std::endl;
 
     a.c1=as_big(a.c1);
     a.s1=as_big(a.s1);
@@ -75,7 +84,14 @@ void check_access()
     BOOST_TEST(a.c2 == 0x0A);   
     BOOST_TEST(a.s2 == 0x0102);   
     BOOST_TEST(a.i2 == 0x01020304);   
+
+    as_big(a.c1)=as_little(a.c1);
+    as_big(a.s1)=as_little(a.s1);
+    as_big(a.i1)=as_little(a.i1);
     
+    std::cout << std::hex << int(a.c1) << std::endl;
+    std::cout << std::hex << a.s1 << std::endl;
+    std::cout << std::hex << a.i1 << std::endl;
     
 }
 } // unnamed namespace
