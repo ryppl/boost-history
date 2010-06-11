@@ -47,7 +47,7 @@ namespace endian {
         // fundamental types are native
         template <typename Domain, typename T, bool IsSeq>
         struct domain_map_impl<Domain, T, true, IsSeq> {
-            typedef native type;
+            typedef Domain type;
         };
 
         // other type which has not been explicitly declared is undefined,
