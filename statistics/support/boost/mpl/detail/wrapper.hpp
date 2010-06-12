@@ -11,13 +11,13 @@
 #include <boost/math/policies/policy.hpp>  
 
 namespace boost{
-namespace statistics{
+namespace mpl{
 namespace detail{
 
     // TODO Is there already generic default constructible wrapper in MPL/Fusion?
     // boost::mpl::for_each<Seq,wrapper<mpl::_> > 
     template<typename Tag>
-    struct mpl_wrapper{ mpl_wrapper(){} };
+    struct wrapper{ wrapper(){} };
 
     
 }// detail

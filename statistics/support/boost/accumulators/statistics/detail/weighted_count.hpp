@@ -1,7 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
-// factor.hpp                                                                //
+// weighted_count.hpp                                                        //
 //                                                                           //
-//  Copyright 2010 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,6 +16,8 @@
 #include <boost/accumulators/framework/accumulators/external_accumulator.hpp>
 #include <boost/accumulators/framework/depends_on.hpp>
 #include <boost/accumulators/statistics_fwd.hpp>
+
+// This file is a modification of Boost.Accumulator's count.hpp by Eric Niebler. 
 
 namespace boost { namespace accumulators
 {

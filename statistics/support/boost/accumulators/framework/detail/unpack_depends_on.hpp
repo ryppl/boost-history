@@ -18,6 +18,7 @@ namespace detail{
 
     // typedef boost::mpl::vector<tag1,...,tagn> tags_;
     // typedef unpack_depends_on<tags_>::type depends_on_;
+    // struct feature : depens_on_{};
     BOOST_DETAIL_MPL_SEQUENCE_TO_UNPACK_VARIADIC(
         boost::accumulators::depends_on,
         unpack_depends_on,

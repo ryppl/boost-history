@@ -94,7 +94,7 @@
     <li> <a href="#examples">Examples</a></li>
     <li> <a href="#portability">Portability</a></li>
     <li> <a href="#history">History and Acknowledgment</a></li>    
-    <li> <a href="#upgrading_from_1_42">Upgrading from Boost v. <span class=number>1</span><span class=special>.</span><span class=number>42</span></a></li>
+    <li> <a href="#upgrading_from_1_4x">Upgrading from Boost v. <span class=number>1</span><span class=special>.</span><span class=number>4x</span></a></li>
     <li> <a href="#ref">References</a></li>
   </ul>
   <hr>
@@ -1317,7 +1317,7 @@ In particular, elements modeling <a href="#concept-ref_wrapper"><tt>RefWrapper</
   <h3> <a name="ref-chain_r"> <code>chain_r()</code></a> </h3>
    
   Same as <a href="#ref-chain_l"> <code>chain_l</code></a> but for r-values. If l-values are passed
-  as arguments, they are treated as l-values.
+  as arguments, they are converted to r-values.
   
   <h2>Concepts <a name="concepts"> </h2>
 
@@ -1349,7 +1349,7 @@ In particular, elements modeling <a href="#concept-ref_wrapper"><tt>RefWrapper</
   <h4>Description</h4>
 
   <p>For now <tt>Auto-Size</tt> list is still a loose concept (once an acceptable formalization is found,
-  this doc will be updated accordingly). Its distinguishing feature, is that it is a compile time expression 
+  this doc will be updated accordingly). Its distinguishing feature is that it is a compile time expression 
   that is formed from references to passed argument, which may be faster than runtime alternatives, and frees the user from the need to specify the size of 
   the resulting collection.</p>
 
@@ -2156,7 +2156,7 @@ support better initialization (see <a href="#initializer">[4]</a>).
   </p>
 
   <hr>
-  <h2><a name="upgrading_from_1_42">Upgrading from Boost v. <span class=number>1</span><span class=special>.</span><span class=number>42</span></a></h2>
+  <h2><a name="upgrading_from_1_4x">Upgrading from Boost v. <span class=number>1</span><span class=special>.</span><span class=number>4x</span></a></h2>
 
   <p> 
   This upgrades adds an <a href="#concept-auto_size">auto-size framework</a> for building a collection of references whose size is deduced at compile time . New functionality includes:
