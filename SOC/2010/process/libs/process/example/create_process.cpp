@@ -1,4 +1,4 @@
-//
+/
 // Boost.Process
 // ~~~~~~~~~~~~~
 //
@@ -27,6 +27,11 @@ int main()
 
     context ctx; 
     ctx.environment.insert(std::make_pair("NEW_ENV_VARIABLE", "VALUE")); 
-    ctx.stdin_behavior = stream_behavior::close; 
+    
+    ctx.stdin_behavior = boost::make_shared<close>(close());
+    ctx.stdout_behavior = boost::make_shared<close>(close()); 
     child c3 = create_child(find_executable_in_path("hostname"), args, ctx); 
+
+    int x;
+    std::cin >> x;
 } 

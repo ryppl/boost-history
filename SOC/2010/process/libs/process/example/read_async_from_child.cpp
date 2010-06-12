@@ -30,7 +30,7 @@ int main()
 { 
     std::string exe = find_executable_in_path("hostname"); 
     context ctx; 
-    ctx.stdout_behavior = capture; 
+    ctx.stdout_behavior = boost::make_shared<capture>(capture(capture::output_stream)); ; 
     child c = create_child(exe, ctx); 
     pistream &is = c.get_stdout(); 
     pipe read_end(ioservice, is.native()); 

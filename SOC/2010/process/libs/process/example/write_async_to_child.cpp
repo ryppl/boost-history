@@ -27,7 +27,7 @@ int main()
 { 
     std::string exe = find_executable_in_path("ftp"); 
     context ctx; 
-    ctx.stdin_behavior = capture; 
+    ctx.stdin_behavior = boost::make_shared<capture>(capture(capture::input_stream)); ; 
     child c = create_child(exe, ctx); 
     postream &os = c.get_stdin(); 
     pipe write_end(ioservice, os.native()); 
