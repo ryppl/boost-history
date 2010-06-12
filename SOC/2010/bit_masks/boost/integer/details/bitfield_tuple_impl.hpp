@@ -24,7 +24,7 @@
 #include <boost/mpl/plus.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <boost/integer/details/bft_element.hpp>
+#include <boost/integer/details/bft/bft_element.hpp>
 
 namespace boost { namespace details {
 
