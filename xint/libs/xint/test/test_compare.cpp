@@ -16,7 +16,6 @@
 */
 
 #include <boost/xint/integer.hpp>
-#include <boost/xint/fixed_integer.hpp>
 
 #ifndef BOOST_XINT_SINGLE_TEST_PROGRAM
     #define BOOST_TEST_MAIN
@@ -25,6 +24,10 @@
 
 namespace boost {
 namespace xint {
+
+using namespace boost::xint::options;
+typedef integer_t<fixedlength<8> > integer8;
+typedef integer_t<fixedlength<12> > integer12;
 
 BOOST_AUTO_TEST_CASE(test_compare_zero) {
     integer zero(0), one(1), negative_one(-1);
@@ -57,16 +60,16 @@ BOOST_AUTO_TEST_CASE(test_compare_mixed_signs) {
 }
 
 BOOST_AUTO_TEST_CASE(test_compare_fixed_overflow) {
-    BOOST_CHECK_GT(fixed_integer<8>(255), 256);
-    BOOST_CHECK_LT(fixed_integer<8>(-255), -256);
-    BOOST_CHECK_LT(256, fixed_integer<8>(255));
-    BOOST_CHECK_GT(-256, fixed_integer<8>(-255));
+    BOOST_CHECK_GT(integer8(255), 256);
+    BOOST_CHECK_LT(integer8(-255), -256);
+    BOOST_CHECK_LT(256, integer8(255));
+    BOOST_CHECK_GT(-256, integer8(-255));
 }
 
 BOOST_AUTO_TEST_CASE(test_compare_fixed_different_sizes) {
-    fixed_integer<12> i1(0x890);
-    fixed_integer<8> i2(0xA0);
-    BOOST_CHECK_GT(i1, fixed_integer<12>(i2));
+    integer12 i1(0x890);
+    integer8 i2(0xA0);
+    BOOST_CHECK_GT(i1, integer12(i2));
 }
 
 } // namespace xint

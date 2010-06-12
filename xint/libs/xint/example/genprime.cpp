@@ -1,5 +1,5 @@
 #include <iostream>
-#include <boost/xint/xint.hpp>
+#include <boost/xint/integer.hpp>
 
 bool callback() {
     std::cout << '.' << std::flush;
@@ -12,7 +12,7 @@ int main() {
     using namespace boost;
     using namespace xint;
 
-    const unsigned int bits=512;
+    const unsigned int bits = 512;
 
     try {
         // Use the system's strong random number generator, via the XInt-

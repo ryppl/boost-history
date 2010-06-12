@@ -1356,10 +1356,8 @@ PREDEFINED             = BOOST_XINT_DOXYGEN_IGNORE
 EXPAND_AS_DEFINED      = BOOST_XINT_INTEGER_TPL \
                          BOOST_XINT_INTEGER_TYPE \
                          BOOST_XINT_INTEGER_INITIAL_TPL \
-                         BOOST_XINT_NTINTEGER_TYPE \
-                         BOOST_XINT_FINTEGER_TPL \
-                         BOOST_XINT_FINTEGER_TYPE \
-                         BOOST_XINT_FINTEGER_INITIAL_TPL
+                         BOOST_XINT_OTHER_TPL \
+                         BOOST_XINT_OTHER_TYPE
 
 # If the SKIP_FUNCTION_MACROS tag is set to YES (the default) then
 # doxygen's preprocessor will remove all function-like macros that are alone

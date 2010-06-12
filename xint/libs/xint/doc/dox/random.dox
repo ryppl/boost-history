@@ -12,9 +12,9 @@ secure random number generator, for both Windows and UNIX-derived systems. It
 will throw an exception of type \c no_strong_random if you try to instantiate it
 on a system that does not have an operating-system-supplied generator.
 
-If you have a different preferred generator, perhaps one that uses dedicated
-hardware to produce randomness, you can plug that into the library's \c
-random_by_size and \c random_prime functions instead.
+If you have a different preferred generator, perhaps one that interfaces with
+dedicated hardware to produce randomness, you can plug that into the library's
+\c random_by_size and \c random_prime functions instead.
 
 See the code at the top of \ref primes "the Prime Numbers page" for an example
 of how to use these generators to produce secure prime numbers.

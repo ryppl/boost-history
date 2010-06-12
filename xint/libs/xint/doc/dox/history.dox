@@ -34,4 +34,14 @@ Boost.Test couldn't tell that.
 - Fourth version posted to the Boost File Vault for preliminary review.
 - Another major redesign. All three types are now templates; and it can now be
 compiled or used as a header-only library.
+
+\b 2010-06-12
+- Fifth version posted to the Boost File Vault for preliminary review.
+- Final major redesign (I hope). All types are consolidated into a single \c
+integer_t template type.
+- The library is now solely header-only, dictated by the templated nature of the
+types.
+- Added Boost.Parameter options to the \c integer_t type, so you're no longer
+forced to list the options in order, and list all earlier options before the one
+that you want to change.
 */

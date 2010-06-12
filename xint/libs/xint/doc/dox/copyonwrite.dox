@@ -7,16 +7,16 @@ too, until I read Dave Abrahams' excellent article,
 <http://cpp-next.com/archive/2009/08/want-speed-pass-by-value/>.
 
 To increase the speed of the library further, it uses a copy-on-write system
-internally. That means that if you copy an integer object, the copy and the
-original share the same storage. They are only assigned separate storage when
-one of them is changed. This mechanism makes copying a number (explicitly, by
-returning it, or by using it as a non-reference parameter to a function) very
-fast, regardless of its size.
+internally. That means that if the internal functions copy an integer object,
+the copy and the original share the same storage. They are only assigned
+separate storage when one of them is changed. This mechanism makes copying a
+number (explicitly, by returning it, or by using it as a non-reference parameter
+to a function) very fast, regardless of its size.
 
 Unfortunately, copy-on-write isn't compatible with thread-safe operation, so by
 default the library will ensure that all of its objects have unique storage
 before they are returned to your program. If you want maximum speed, and can
 ensure that %integer objects are only used in the threads they are created in,
-you can disable this by setting the \c Threadsafe option to \c false on the \c
-integer_t, \c nothrow_integer_t, or \c fixed_integer class templates.
+you can disable this by using the \c threadsafe<false> option on the \c
+integer_t class template.
 */

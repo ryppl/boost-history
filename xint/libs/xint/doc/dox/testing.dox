@@ -1,9 +1,9 @@
 /*! \page testing The Self-Testing Program
 
 The library has a self-testing program that you can build and run to confirm
-that it is working properly. You can find the source code for it in the \c test
-subdirectory under the main \c %xint directory. All of the major functions are
-thoroughly exercised, and many of the minor ones as well.
+that it is working properly. You can find the source code for it in the \c
+libs/xint/test directory. All of the major functions are thoroughly exercised,
+and many of the minor ones as well.
 
 The source code for the testing program also demonstrates how to use many of the
 library's functions.

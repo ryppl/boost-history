@@ -12,8 +12,6 @@
 */
 
 #include <boost/xint/integer.hpp>
-#include <boost/xint/nothrow_integer.hpp>
-#include <boost/xint/fixed_integer.hpp>
 
 #ifndef BOOST_XINT_SINGLE_TEST_PROGRAM
     #define BOOST_TEST_MAIN
@@ -27,6 +25,7 @@
 #include <boost/assign/list_of.hpp>
 
 using std::endl;
+namespace xopts = boost::xint::options;
 
 namespace boost {
 namespace xint {
@@ -43,13 +42,13 @@ BOOST_AUTO_TEST_CASE(test_string_conversions) {
 
     // Make sure that the number is greater than one digit's worth of data, and
     // that it has at least one leading zero in base 16.
-    detail::digit_t mask=(detail::doubledigit_t(0x0F) << (detail::bits_per_digit
-        - 4));
+    detail::digit_t mask = (detail::doubledigit_t(0x0F) <<
+        (detail::bits_per_digit - 4));
     BOOST_REQUIRE_GT(n._get_length(), size_t(1));
     BOOST_REQUIRE_EQUAL(n._get_digit(n._get_length()-1) & mask, 0);
 
-    for (int base=2; base<=36; ++base) {
-        std::string s=to_string(n, base);
+    for (int base = 2; base <= 36; ++base) {
+        std::string s = to_string(n, base);
         integer nn(s, base);
         if (nn != n) {
             std::ostringstream out;
@@ -59,7 +58,7 @@ BOOST_AUTO_TEST_CASE(test_string_conversions) {
         }
 
         // Shouldn't be any extraneous leading zeros
-        if (s[0]=='0') {
+        if (s[0] == '0') {
             std::ostringstream out;
             out << "testConvert 2, " << base << ": " << s << endl;
             BOOST_ERROR(out.str());
@@ -76,13 +75,13 @@ BOOST_AUTO_TEST_CASE(test_string_conversions) {
     }
 
     // Test base numbers that shouldn't be allowed
-    const std::vector<int> testBases=boost::assign::list_of(-1)(0)(1)(37);
-    for (std::vector<int>::const_iterator b=testBases.begin();
+    const std::vector<int> testBases = boost::assign::list_of(-1)(0)(1)(37);
+    for (std::vector<int>::const_iterator b = testBases.begin();
         b!=testBases.end(); ++b)
             BOOST_CHECK_THROW(to_string(n, *b), exceptions::invalid_base);
 
     boost::int32_t nSrc = 1234567890;
-    n=nSrc;
+    n = nSrc;
     boost::int32_t nTgt = to<boost::int32_t>(n);
     BOOST_CHECK_EQUAL(nTgt, nSrc);
 
@@ -95,7 +94,7 @@ BOOST_AUTO_TEST_CASE(test_string_conversions) {
         nothrow_integer test1 = nothrow_integer::nan();
         std::ostringstream outstream;
         outstream << test1;
-        BOOST_CHECK_EQUAL(outstream.str(), nothrow_integer::_nan_text());
+        BOOST_CHECK_EQUAL(outstream.str(), nan_text);
 
         std::istringstream instream;
         instream.str(outstream.str());
@@ -121,7 +120,8 @@ BOOST_AUTO_TEST_CASE(test_binary_conversions) {
     integer n2 = integer(nbin);
     BOOST_CHECK_EQUAL(n1, n2);
 
-    fixed_integer<8> n3 = fixed_integer<8>(nbin);
+    typedef integer_t<xopts::fixedlength<8> > integer8;
+    integer8 n3 = integer8(nbin);
     BOOST_CHECK_EQUAL(n3, 0xb1);
 
     nbin = to_binary(n1, 5);

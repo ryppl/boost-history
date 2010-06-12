@@ -12,8 +12,6 @@
 */
 
 #include <boost/xint/integer.hpp>
-#include <boost/xint/fixed_integer.hpp>
-#include <boost/xint/random.hpp>
 
 #ifndef BOOST_XINT_SINGLE_TEST_PROGRAM
     #define BOOST_TEST_MAIN
@@ -28,12 +26,13 @@ namespace xint {
 using std::endl;
 using std::dec;
 using std::hex;
+namespace xopts = boost::xint::options;
 
 namespace {
 
 void _test(int section, int test, integer n, integer m) {
-    integer answer(m+n);
-    if (answer-m != n || answer-n != m) {
+    integer answer(m + n);
+    if (answer - m != n || answer - n != m) {
         std::ostringstream out;
         out << "testAddSubtract, section " << section << ", " << test << endl;
 
@@ -142,16 +141,17 @@ BOOST_AUTO_TEST_CASE(test_increment_variable) {
     BOOST_CHECK_EQUAL(++negative_one, 0);
 
     integer max1(detail::digit_mask);
-    BOOST_CHECK_EQUAL(++max1, detail::digit_overflowbit);
+    BOOST_CHECK_EQUAL(++max1, integer(detail::digit_overflowbit));
 }
 
 BOOST_AUTO_TEST_CASE(test_increment_fixed) {
-    fixed_integer<detail::bits_per_digit> one(1), zero(0), negative_one(-1);
+    typedef integer_t<xopts::fixedlength<detail::bits_per_digit> > T;
+    T one(1), zero(0), negative_one(-1);
     BOOST_CHECK_EQUAL(++one, 2);
     BOOST_CHECK_EQUAL(++zero, 1);
     BOOST_CHECK_EQUAL(++negative_one, 0);
 
-    fixed_integer<detail::bits_per_digit> max1(detail::digit_mask);
+    T max1(detail::digit_mask);
     BOOST_CHECK_EQUAL(++max1, 0);
 }
 
@@ -167,7 +167,7 @@ BOOST_AUTO_TEST_CASE(test_decrement_variable) {
 }
 
 BOOST_AUTO_TEST_CASE(test_decrement_fixed) {
-    typedef fixed_integer<detail::bits_per_digit> T;
+    typedef integer_t<xopts::fixedlength<detail::bits_per_digit> > T;
     T one(1), zero(0), negative_one(-1);
     BOOST_CHECK_EQUAL(--one, 0);
     BOOST_CHECK_EQUAL(--zero, -1);

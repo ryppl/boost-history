@@ -27,7 +27,7 @@
 <p>With larger bit-sizes, the <code>is_prime</code> and <code>random_prime</code> functions can take a very long time to run, so you can pass an optional callback function to them as well. The provided callback function (which takes no parameters and returns a <code>bool</code>) will be called regularly during this time, and if it returns <code>false</code>, the function will abort and return zero (for random_prime) or -1 (for is_prime) instead of a value.</p>
 <p>Here is an example of how to use the library functions to create a prime number of a specific length, using the system's strong random number generator:</p>
 <div class="fragment"><pre class="fragment"><span class="preprocessor">#include &lt;iostream&gt;</span>
-<span class="preprocessor">#include &lt;<a class="code" href="xint_8hpp.html" title="This is the include-everything header.">boost/xint/xint.hpp</a>&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="integer_8hpp.html" title="Declares the arbitrary-length integer type.">boost/xint/integer.hpp</a>&gt;</span>
 
 <span class="keywordtype">bool</span> callback() {
     std::cout &lt;&lt; <span class="charliteral">&#39;.&#39;</span> &lt;&lt; std::flush;
@@ -40,7 +40,7 @@
     <span class="keyword">using namespace </span>boost;
     <span class="keyword">using namespace </span>xint;
 
-    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> bits=512;
+    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> bits = 512;
 
     <span class="keywordflow">try</span> {
         <span class="comment">// Use the system&#39;s strong random number generator, via the XInt-</span>
@@ -65,7 +65,7 @@
 }
 </pre></div><p>(You can find it in the <code>examples</code> directory, by the name <code>genprime.cpp</code>.) </p>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Jun 3 00:00:36 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sat Jun 12 11:43:08 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

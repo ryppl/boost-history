@@ -12,7 +12,6 @@
 */
 
 #include <boost/xint/integer.hpp>
-#include <boost/xint/fixed_integer.hpp>
 
 #ifndef BOOST_XINT_SINGLE_TEST_PROGRAM
     #define BOOST_TEST_MAIN
@@ -26,6 +25,7 @@ namespace boost {
 namespace xint {
 
 using std::hex;
+using namespace boost::xint::options;
 
 BOOST_AUTO_TEST_CASE(test_unfixed_bit_shifting) {
     const std::string nSrc="1a2b3c4d5e6f7f6e5d4c3b2a1a2b3c4d5e6f7f6e5d4c3b2a1";
@@ -84,7 +84,8 @@ BOOST_AUTO_TEST_CASE(test_unfixed_bit_shifting) {
 
 BOOST_AUTO_TEST_CASE(test_fixed_bit_shifting) {
     const std::string nSrc="1a2b3c4d5e6f7f6e5d4c3b2a1";
-    fixed_integer<100> n(nSrc, 16), n2;
+    typedef integer_t<fixedlength<100> > integer100;
+    integer100 n(nSrc, 16), n2;
 
     // If this fails, abort the rest of the test.
     BOOST_REQUIRE_EQUAL(to_string(n, 16), nSrc);
@@ -152,7 +153,8 @@ BOOST_AUTO_TEST_CASE(test_bitwise_operations) {
     BOOST_CHECK_EQUAL(lowestbit(n, 0), 4);
     BOOST_CHECK_EQUAL(highestbit(n, 0), 117);
 
-    fixed_integer<12> nn(0xABC), mm(0x123);
+    typedef integer_t<fixedlength<12> > integer12;
+    integer12 nn(0xABC), mm(0x123);
     BOOST_CHECK_EQUAL(mm | nn, 0xBBF);
     BOOST_CHECK_EQUAL(mm ^ nn, 0xB9F);
     BOOST_CHECK_EQUAL(mm & nn, 0x20);

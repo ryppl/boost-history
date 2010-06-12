@@ -12,7 +12,6 @@
 */
 
 #include <boost/xint/integer.hpp>
-#include <boost/xint/fixed_integer.hpp>
 
 #ifndef BOOST_XINT_SINGLE_TEST_PROGRAM
     #define BOOST_TEST_MAIN
@@ -22,8 +21,8 @@
 namespace boost {
 namespace xint {
 
-//using namespace detail;
 using detail::bits_per_digit;
+using namespace boost::xint::options;
 
 BOOST_AUTO_TEST_CASE(test_square) {
     {
@@ -72,7 +71,7 @@ BOOST_AUTO_TEST_CASE(test_pow) {
     }
 
     {
-        fixed_integer<8> n(-235), n2(pow(n, 2)), n3(pow(n, 3));
+        integer_t<fixedlength<8> > n(-235), n2(pow(n, 2)), n3(pow(n, 3));
         BOOST_CHECK_EQUAL(n2, 0xb9);
         BOOST_CHECK_EQUAL(n3, -0xd3);
     }
@@ -82,15 +81,16 @@ BOOST_AUTO_TEST_CASE(test_factorial) {
     integer i1 = integer::factorial(20);
     BOOST_CHECK_EQUAL(i1, integer("21C3677C82B40000", 16));
 
-    fixed_integer<12> i2 = fixed_integer<12>::factorial(8);
+    typedef integer_t<fixedlength<12> > integer12;
+    integer12 i2 = integer12::factorial(8);
     BOOST_CHECK_EQUAL(i2, 0xd80);
 }
 
-BOOST_AUTO_TEST_CASE(test_sqrt) {
+BOOST_AUTO_TEST_CASE(test_square_root) {
     integer n(1), i(1);
     while (n < 30) {
         integer target = square(n + 1);
-        while (i < target) { BOOST_CHECK_EQUAL(sqrt(i), n); ++i; }
+        while (i < target) { BOOST_CHECK_EQUAL(square_root(i), n); ++i; }
         ++n;
     }
 }

@@ -17,12 +17,11 @@
     writing them or in production.
 */
 
-#include <boost/xint/xint.hpp>
-
 //#define CUSTOM_TEST
 //#define PERFORMANCE_TEST
 
 #if defined PERFORMANCE_TEST
+    #include <boost/xint/xint.hpp>
     #include <iostream>
     #include <iomanip>
 
@@ -87,11 +86,19 @@
 #elif defined CUSTOM_TEST
     #include <iostream>
     #include <iomanip>
+    #include <boost/xint/integer.hpp>
 
     // For running one-off tests
     int main() {
         using namespace std;
         using namespace boost::xint;
+        namespace xopts = boost::xint::options;
+
+        typedef integer_t<std::allocator<detail::digit_t>,
+            xopts::threadsafe<false>, xopts::fixedlength<12>,
+            xopts::secure<true> >::type T;
+        T::type t(0xFFFF);
+        cout << hex << t << endl;
     }
 #else
     #define BOOST_TEST_MAIN

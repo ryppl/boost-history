@@ -18,7 +18,6 @@
 #ifndef BOOST_INCLUDED_XINT_RANDOM_HPP
 #define BOOST_INCLUDED_XINT_RANDOM_HPP
 
-#include "detail/internals.hpp"
 #include <ctime>
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/variate_generator.hpp>
@@ -71,11 +70,6 @@ namespace detail {
         result_type operator()() { return gen(); }
         gen_t gen;
     };
-
-    void random_by_size(data_t& target, base_random_generator& gen, size_t bits,
-        bool high_bit_on, bool low_bit_on, bool can_be_negative);
-    void random_prime(data_t& target, base_random_generator& gen, size_t
-        size_in_bits, callback_t callback = no_callback);
 
 //! @endcond detail
 } // namespace detail

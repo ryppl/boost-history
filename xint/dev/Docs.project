@@ -15,7 +15,6 @@
     <File Name="../libs/xint/doc/dox/dependencies.dox"/>
     <File Name="../libs/xint/doc/dox/ex_fibonacci.dox"/>
     <File Name="../libs/xint/doc/dox/exceptions.dox"/>
-    <File Name="../libs/xint/doc/dox/fixed_and_variable.dox"/>
     <File Name="../libs/xint/doc/dox/history.dox"/>
     <File Name="../libs/xint/doc/dox/index.dox"/>
     <File Name="../libs/xint/doc/dox/nan.dox"/>
@@ -37,6 +36,8 @@
     <File Name="../libs/xint/doc/dox/testing.dox"/>
     <File Name="../libs/xint/doc/dox/zero.dox"/>
     <File Name="../libs/xint/doc/dox/threadsafe.dox"/>
+    <File Name="../libs/xint/doc/dox/fixedlength.dox"/>
+    <File Name="../../../../xint/libs/xint/doc/dox/r_whynotx.dox"/>
   </VirtualDirectory>
   <VirtualDirectory Name="Project">
     <File Name="../libs/xint/doc/dox/Doxyfile"/>

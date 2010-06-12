@@ -18,10 +18,8 @@
 #ifndef BOOST_INCLUDED_XINT_HPP
 #define BOOST_INCLUDED_XINT_HPP
 
+// Everything is presently included by including integer.hpp. This file is
+// provided for future expansion.
 #include "integer.hpp"
-#include "nothrow_integer.hpp"
-#include "fixed_integer.hpp"
-#include "random.hpp"
-#include "exceptions.hpp"
 
 #endif // BOOST_INCLUDED_XINT_HPP

@@ -1,5 +1,5 @@
 
-#include <boost/xint/xint.hpp>
+#include <boost/xint/integer.hpp>
 #include <ostream>
 
 int main() {

@@ -1,0 +1,18 @@
+/*! \page r_whynotx I've got a great idea! Why don't you do \e X?
+
+This kind of suggestion, where \e X is something that would require days or
+weeks of work to finish and test properly, has come up several times already.
+Often enough that I've gotten tired of finding ways to diplomatically say no. So
+I'll lay out the reasons here, once and for all:
+
+- The alternative to "release early, release often" is to release late and
+infrequently, or not at all.
+- I need feedback from people who are actually \e using the library in order to
+improve it. Repeatedly delaying it to add another neat feature makes this
+impossible.
+
+By all means, make suggestions. But don't be offended if I respond by referring
+you to this page. It only means that I feel that your suggestion isn't
+appropriate for this version, because it would delay it further, not that it
+isn't appropriate at all.
+*/

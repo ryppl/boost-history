@@ -1,8 +1,6 @@
 project xint/test
     : requirements
         <toolset>gcc:<cflags>-fno-strict-aliasing
-
-        <library>../build//boost_xint
         <library>/boost/test//boost_unit_test_framework
     ;
 

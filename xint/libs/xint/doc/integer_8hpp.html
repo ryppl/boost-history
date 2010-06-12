@@ -34,17 +34,11 @@
 <tr><td colspan="2"><h2>Classes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classboost_1_1xint_1_1integer__t.html">boost::xint::integer_t&lt;&gt;</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The <a class="el" href="classboost_1_1xint_1_1integer__t.html" title="The integer_t class template.">integer_t</a> class template.  <a href="classboost_1_1xint_1_1integer__t.html#_details">More...</a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstd_1_1numeric__limits_3_01boost_1_1xint_1_1integer_01_4.html">std::numeric_limits&lt; boost::xint::integer &gt;</a></td></tr>
 <tr><td colspan="2"><h2>Namespaces</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost.html">boost</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html">boost::xint</a></td></tr>
 
 <p><tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><p>All the types and functions of the library are within this namespace. </p>
-<br/></td></tr>
-</p>
-<tr><td class="memItemLeft" align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestd.html">std</a></td></tr>
-
-<p><tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><p>STL namespace. </p>
 <br/></td></tr>
 </p>
 <tr><td colspan="2"><h2>Defines</h2></td></tr>
@@ -55,14 +49,19 @@
 <tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="integer_8hpp.html#aa7c3e1efa96c7df6333940b38b2d7e5b">BOOST_XINT_INTEGER_INITIAL_TPL</a>&nbsp;&nbsp;&nbsp;template&lt;...&gt;</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="integer_8hpp.html#ae52121dc019a317d3d044eb35e44b817">BOOST_XINT_INTEGER_TPL</a>&nbsp;&nbsp;&nbsp;template&lt;...&gt;</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="integer_8hpp.html#a4aaa66b9b8169b785506dfaf7de1fcd7">BOOST_XINT_INTEGER_TYPE</a>&nbsp;&nbsp;&nbsp;integer_t</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="integer_8hpp.html#a29684216936e84f92ac88714348ca53b">BOOST_XINT_OTHER_TPL</a>&nbsp;&nbsp;&nbsp;template&lt;...&gt;</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="integer_8hpp.html#a4ddb5cb10f0acff5d6df8ee6e9791cad">BOOST_XINT_OTHER_TYPE</a>&nbsp;&nbsp;&nbsp;integer_t&lt;other&gt;</td></tr>
 <tr><td colspan="2"><h2>Typedefs</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">typedef integer_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a3f9537c30e9c1f7341574fcd0223147c">boost::xint::integer</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The default arbitrary-length integer type.  <a href="#a3f9537c30e9c1f7341574fcd0223147c"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">typedef integer_t<br class="typebreak"/>
+&lt; options::nothrow&lt; true &gt; &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#af3a28f270195952c3bbe42bff5bf2cd4">boost::xint::nothrow_integer</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The default arbitrary-length nothrow_integer type.  <a href="#af3a28f270195952c3bbe42bff5bf2cd4"></a><br/></td></tr>
 <tr><td colspan="2"><h2>Functions</h2></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a1a857d5cc4b15822d3dcaf70ec15b4e5">boost::xint::swap</a> (integer_t &amp;left, integer_t &amp;right)</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Mathematical primitives</div></td></tr>
-<tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp196dd2a5f50860e057df961a96d84ea3"></a> </p>
+<tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp196dd2a5f50860e057df961a96d84ea3"></a> There are only a couple of functions here because almost all mathematical primitives are implemented as operators. </p>
 </div></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">integer_t&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a5a98564162f30f3117a871a617af9523">boost::xint::abs</a> (const integer_t n)</td></tr>
@@ -104,7 +103,10 @@
 <tr><td class="memTemplItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ab6cef2e4e1b3c3b841f6c1a085952f18">boost::xint::log2</a> (const integer_t n)</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the log<sub>2</sub> value of an integer.  <a href="#ab6cef2e4e1b3c3b841f6c1a085952f18"></a><br/></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Modular math functions</div></td></tr>
-<tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpbf63e6a6a1029bb25b7aa51052b38655"></a> </p>
+<tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpbf63e6a6a1029bb25b7aa51052b38655"></a> A common reason to use a large-integer library is to implement public-key encryption, and the algorithms for such encryption often use modular math.</p>
+<dl class="see"><dt><b>See also:</b></dt><dd>operator%(integer_t, integer_t) </dd>
+<dd>
+integer_t::operator%= </dd></dl>
 </div></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">integer_t&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ada4e628fe2275e6d6459b9b87167cbad">boost::xint::invmod</a> (const integer_t n, const integer_t modulus)</td></tr>
@@ -120,12 +122,16 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the modular product of squaring an integer.  <a href="#a979ddb09a4d1a5dbfcb0707c19695877"></a><br/></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Random and prime number functions</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpa3caa0f3187a2dcc617c005b6b75011b"></a> </p>
+<dl class="see"><dt><b>See also:</b></dt><dd>integer_t::random_by_size </dd>
+<dd>
+integer_t::random_prime </dd></dl>
 </div></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">int&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a089d98ffc4599122209d1a3c1c7c39d4">boost::xint::is_prime</a> (const integer_t n, callback_t callback=no_callback)</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tests an integer for primality.  <a href="#a089d98ffc4599122209d1a3c1c7c39d4"></a><br/></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Comparison Operators</div></td></tr>
-<tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp54923b9793dae891d9489cc5947f263a"></a> </p>
+<tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp54923b9793dae891d9489cc5947f263a"></a> The nothrow&lt;true&gt; versions of these functions return <code>false</code> instead of throwing.</p>
+<dl class="see"><dt><b>See also:</b></dt><dd>compare(integer_t, integer_t, bool) </dd></dl>
 </div></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ac6bf18fab19873cc55142b26ce11fda4">boost::xint::operator!=</a> (const integer_t n1, const integer_t n2)</td></tr>
@@ -140,7 +146,7 @@
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ad4fd77e8ed2e76028c3ae554bfc564f7">boost::xint::operator&gt;=</a> (const integer_t n1, const integer_t n2)</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Mathematical and Bitwise Operators</div></td></tr>
-<tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp8eb1e0f0af70edd858d54ba68b80ce7e"></a> </p>
+<tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp8eb1e0f0af70edd858d54ba68b80ce7e"></a> These act exactly the same as for the built-in integer types. </p>
 </div></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">integer_t&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#aac56e280afa13284381f144a208eaf67">boost::xint::operator%</a> (const integer_t n1, const integer_t n2)</td></tr>
@@ -169,30 +175,33 @@
 <tr><td colspan="2"><div class="groupHeader">Stream input/output functions</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpd9927783c44c1aad288df0ab8bfa9ddf"></a> </p>
 </div></td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;typename charT , typename traits , class Alloc , bool Threadsafe, bool Secure&gt; </td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename charT , typename traits , class A0 , class A1 , class A2 , class A3 , class A4 &gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">std::basic_ostream&lt; charT, <br class="typebreak"/>
-traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a06ea2b89f8b6f52b2e89d0b9c51b60c0">boost::xint::operator&lt;&lt;</a> (std::basic_ostream&lt; charT, traits &gt; &amp;out, const integer_t&lt; Alloc, Threadsafe, Secure &gt; n)</td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;typename charT , typename traits , class Alloc , bool Threadsafe, bool Secure&gt; </td></tr>
+traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a678851ea0cb31cb4ef66bc8389d369d3">boost::xint::operator&lt;&lt;</a> (std::basic_ostream&lt; charT, traits &gt; &amp;out, const integer_t n)</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename charT , typename traits , class A0 , class A1 , class A2 , class A3 , class A4 &gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">std::basic_istream&lt; charT, <br class="typebreak"/>
 traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ad5bc89da790a0843ba90a88cbc7856a6">boost::xint::operator&gt;&gt;</a> (std::basic_istream&lt; charT, traits &gt; &amp;in, integer_t &amp;n)</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Powers and roots</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp928a8cb047602f789d7433e262ed4560"></a> </p>
+<dl class="see"><dt><b>See also:</b></dt><dd>integer_t::pow2 </dd>
+<dd>
+integer_t::factorial </dd></dl>
 </div></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">integer_t&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a499b28ba7acd8b1534bb968826e23c52">boost::xint::pow</a> (const integer_t n, const integer_t e)</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the value of n<sup>e</sup>  <a href="#a499b28ba7acd8b1534bb968826e23c52"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">integer_t&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a730b703534656d2f4d96484d7bb8cfc6">boost::xint::sqrt</a> (const integer_t n)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the square root of <code>an</code> integer.  <a href="#a730b703534656d2f4d96484d7bb8cfc6"></a><br/></td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">integer_t&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#abe5e63185f27f2c795dc287e030ec424">boost::xint::square</a> (const integer_t n)</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the value of n<sup>2</sup>  <a href="#abe5e63185f27f2c795dc287e030ec424"></a><br/></td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">integer_t&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#adb652fa006fd8ed34993ea86cf317cb2">boost::xint::square_root</a> (const integer_t n)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the square root of <code>an</code> integer.  <a href="#adb652fa006fd8ed34993ea86cf317cb2"></a><br/></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Conversion functions</div></td></tr>
-<tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp9c2e8a06d85d2c9b83b5a0d27e85d535"></a> </p>
+<tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp9c2e8a06d85d2c9b83b5a0d27e85d535"></a> Note that these only convert an integer type to something else. See the integer constructors for conversions the other way. </p>
 </div></td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;typename Type , class Alloc , bool Threadsafe, bool Secure&gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">Type&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a36b0be620a1e56f439dde05db5d0033b">boost::xint::to</a> (const integer_t n)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Converts an <a class="el" href="namespaceboost_1_1xint.html#a3f9537c30e9c1f7341574fcd0223147c" title="The default arbitrary-length integer type.">xint::integer</a> type to a built-in integer type.  <a href="#a36b0be620a1e56f439dde05db5d0033b"></a><br/></td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename T , class A0 , class A1 , class A2 , class A3 , class A4 &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">T&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#afd9d2c7743d11e6959d6cda44c8abf69">boost::xint::to</a> (const integer_t n)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Converts an <a class="el" href="namespaceboost_1_1xint.html#a3f9537c30e9c1f7341574fcd0223147c" title="The default arbitrary-length integer type.">xint::integer</a> type to a built-in integer type.  <a href="#afd9d2c7743d11e6959d6cda44c8abf69"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">xint::binary_t&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a66514eef6594409cda1dfad652e2dc40">boost::xint::to_binary</a> (const integer_t n, bitsize_t bits=0)</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a binary representation of an integer.  <a href="#a66514eef6594409cda1dfad652e2dc40"></a><br/></td></tr>
@@ -225,19 +234,35 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
       </table>
 </div>
 <div class="memdoc">
-<b>Value:</b><div class="fragment"><pre class="fragment"><span class="keyword">template</span> &lt;<span class="keyword">class</span> Alloc, <span class="keywordtype">bool</span> Threadsafe, <span class="keywordtype">bool</span> Secure, <span class="keyword">typename</span> N&gt; \
+<b>Value:</b><div class="fragment"><pre class="fragment"><span class="keyword">template</span> &lt;<span class="keyword">class</span> A0, <span class="keyword">class</span> A1, <span class="keyword">class</span> A2, <span class="keyword">class</span> A3, <span class="keyword">class</span> A4, <span class="keyword">typename</span> N&gt; \
     rtype op(<span class="keyword">const</span> <a class="code" href="integer_8hpp.html#a4aaa66b9b8169b785506dfaf7de1fcd7">BOOST_XINT_INTEGER_TYPE</a> n1, <span class="keyword">const</span> N n2) { \
-        <span class="keywordflow">return</span> op(n1, <a class="code" href="integer_8hpp.html#a4aaa66b9b8169b785506dfaf7de1fcd7">BOOST_XINT_INTEGER_TYPE</a>(n2)); \
+        <span class="keywordflow">if</span> (BOOST_XINT_INTEGER_TYPE::Nothrow) { \
+            <span class="keywordflow">try</span> { \
+                <span class="keywordflow">return</span> op(n1, <a class="code" href="integer_8hpp.html#a4aaa66b9b8169b785506dfaf7de1fcd7">BOOST_XINT_INTEGER_TYPE</a>(n2)); \
+            } <span class="keywordflow">catch</span> (std::exception&amp;) { \
+                <span class="keywordflow">return</span> rtype(0); \
+            } \
+        } <span class="keywordflow">else</span> { \
+            <span class="keywordflow">return</span> op(n1, <a class="code" href="integer_8hpp.html#a4aaa66b9b8169b785506dfaf7de1fcd7">BOOST_XINT_INTEGER_TYPE</a>(n2)); \
+        } \
     } \
     \
-    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> N, <span class="keyword">class</span> Alloc, <span class="keywordtype">bool</span> Threadsafe, <span class="keywordtype">bool</span> Secure&gt; \
+    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> N, <span class="keyword">class</span> A0, <span class="keyword">class</span> A1, <span class="keyword">class</span> A2, <span class="keyword">class</span> A3, <span class="keyword">class</span> A4&gt; \
     rtype op(<span class="keyword">const</span> N n1, <span class="keyword">const</span> <a class="code" href="integer_8hpp.html#a4aaa66b9b8169b785506dfaf7de1fcd7">BOOST_XINT_INTEGER_TYPE</a> n2) { \
-        <span class="keywordflow">return</span> op(<a class="code" href="integer_8hpp.html#a4aaa66b9b8169b785506dfaf7de1fcd7">BOOST_XINT_INTEGER_TYPE</a>(n1), n2); \
+        <span class="keywordflow">if</span> (BOOST_XINT_INTEGER_TYPE::Nothrow) { \
+            <span class="keywordflow">try</span> { \
+                <span class="keywordflow">return</span> op(<a class="code" href="integer_8hpp.html#a4aaa66b9b8169b785506dfaf7de1fcd7">BOOST_XINT_INTEGER_TYPE</a>(n1), n2); \
+            } <span class="keywordflow">catch</span> (std::exception&amp;) { \
+                <span class="keywordflow">return</span> rtype(0); \
+            } \
+        } <span class="keywordflow">else</span> { \
+            <span class="keywordflow">return</span> op(<a class="code" href="integer_8hpp.html#a4aaa66b9b8169b785506dfaf7de1fcd7">BOOST_XINT_INTEGER_TYPE</a>(n1), n2); \
+        } \
     }
 </pre></div>
 <p>Allows for comparisons between integer_t types and other integral values. </p>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01376">1376</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02284">2284</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -256,27 +281,10 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
       </table>
 </div>
 <div class="memdoc">
-<b>Value:</b><div class="fragment"><pre class="fragment"><span class="keyword">template</span> &lt;<span class="keyword">class</span> Alloc, <span class="keywordtype">bool</span> Threadsafe, <span class="keywordtype">bool</span> Secure, <span class="keyword">typename</span> N&gt; \
-    <a class="code" href="integer_8hpp.html#a4aaa66b9b8169b785506dfaf7de1fcd7">BOOST_XINT_INTEGER_TYPE</a> op(<span class="keyword">const</span> integer_t&lt;Alloc, Threadsafe, \
-        Secure&gt; n1, <span class="keyword">const</span> N n2) \
-    { \
-        <a class="code" href="integer_8hpp.html#a4aaa66b9b8169b785506dfaf7de1fcd7">BOOST_XINT_INTEGER_TYPE</a> r(op(n1, integer_t&lt;Alloc, Threadsafe, \
-            Secure&gt;(n2))); \
-        <span class="keywordflow">return</span> <a class="code" href="internals_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(r); \
-    } \
-    \
-    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> N, <span class="keyword">class</span> Alloc, <span class="keywordtype">bool</span> Threadsafe, <span class="keywordtype">bool</span> Secure&gt; \
-    <a class="code" href="integer_8hpp.html#a4aaa66b9b8169b785506dfaf7de1fcd7">BOOST_XINT_INTEGER_TYPE</a> op(<span class="keyword">const</span> N n1, <span class="keyword">const</span> integer_t&lt;Alloc, Threadsafe, \
-        Secure&gt; n2) \
-    { \
-        <a class="code" href="integer_8hpp.html#a4aaa66b9b8169b785506dfaf7de1fcd7">BOOST_XINT_INTEGER_TYPE</a> r(op(integer_t&lt;Alloc, Threadsafe, Secure&gt;(n1), \
-            n2)); \
-        <span class="keywordflow">return</span> <a class="code" href="internals_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(r); \
-    }
-</pre></div>
+
 <p>Allows for operations between integer_t types and other integral values. </p>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01396">1396</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02320">2320</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -291,7 +299,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00033">33</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00026">26</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -306,7 +314,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00034">34</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00027">27</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -321,12 +329,42 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00035">35</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00028">28</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a29684216936e84f92ac88714348ca53b"></a><!-- doxytag: member="integer.hpp::BOOST_XINT_OTHER_TPL" ref="a29684216936e84f92ac88714348ca53b" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BOOST_XINT_OTHER_TPL&nbsp;&nbsp;&nbsp;template&lt;...&gt;</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00029">29</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a4ddb5cb10f0acff5d6df8ee6e9791cad"></a><!-- doxytag: member="integer.hpp::BOOST_XINT_OTHER_TYPE" ref="a4ddb5cb10f0acff5d6df8ee6e9791cad" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BOOST_XINT_OTHER_TYPE&nbsp;&nbsp;&nbsp;integer_t&lt;other&gt;</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l00030">30</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Jun 3 00:00:36 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sat Jun 12 11:43:07 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

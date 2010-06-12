@@ -10,6 +10,7 @@ required:
 - Boost.Random
 - Boost.TypeTraits
 - Boost.SmartPtr
+- Boost.Parameter
 - Boost.Move
 
 All of these are header-only libraries, meaning that you don't need to worry

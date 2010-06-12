@@ -55,7 +55,7 @@ might find it.
 More information on how to use it can be found on the pages listed below.
 
 Detailed Usage Information:
-- \subpage different_types
+- \subpage fixedlength
 - \subpage nan
 - \subpage zero
 - \subpage primes (with example code)

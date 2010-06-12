@@ -21,87 +21,137 @@
 #include "detail/internals.hpp"
 #include "random.hpp"
 
-#ifdef _WIN32
-    // The file's constructors make heavy use of the 'this' pointer, in a safe
-    // manner. MSVC isn't smart enough to know that it's safe.
-    #pragma warning(push)
-    #pragma warning(disable: 4355)
-#endif
-
 #ifdef BOOST_XINT_DOXYGEN_IGNORE
     // The documentation should see a simplified version of the functions.
     #define BOOST_XINT_INTEGER_INITIAL_TPL template<...>
     #define BOOST_XINT_INTEGER_TPL template<...>
     #define BOOST_XINT_INTEGER_TYPE integer_t
+    #define BOOST_XINT_OTHER_TPL template<...>
+    #define BOOST_XINT_OTHER_TYPE integer_t<other>
 #else
-    #define BOOST_XINT_INTEGER_INITIAL_TPL template <class Alloc = \
-        std::allocator<detail::digit_t>, bool Threadsafe = true, bool Secure = \
-        false>
-    #define BOOST_XINT_INTEGER_TPL template<class Alloc, bool Threadsafe, bool \
-        Secure>
-    #define BOOST_XINT_INTEGER_TYPE integer_t<Alloc, Threadsafe, Secure>
+    #define BOOST_XINT_INTEGER_INITIAL_TPL template < \
+        class A0 = parameter::void_, \
+        class A1 = parameter::void_, \
+        class A2 = parameter::void_, \
+        class A3 = parameter::void_, \
+        class A4 = parameter::void_>
+    #define BOOST_XINT_INTEGER_TPL template<class A0, class A1, class A2, \
+        class A3, class A4>
+    #define BOOST_XINT_INTEGER_TYPE integer_t<A0, A1, A2, A3, A4>
+
+    #define BOOST_XINT_OTHER_TPL template <class B0, class B1, class B2, class \
+        B3, class B4>
+    #define BOOST_XINT_OTHER_TYPE integer_t<B0, B1, B2, B3, B4>
 #endif
 
 namespace boost {
 namespace xint {
 
+// todo: update for new parameters
 /*! \brief The integer_t class template.
 
-    This class implements the standard aribitrary-length %integer type.
+This class implements the standard aribitrary-length %integer type.
 
-    There are only a few member functions, primarily operators. Most of the
-    functionality is implemented using standalone functions.
+There are only a few member functions, primarily operators. Most of the
+functionality is implemented using standalone functions.
 
-    \tparam Alloc The allocator to use. It must be for the \c
-    boost::xint::detail::digit_t type.
+You can specify several template parameters for the type. Most of these
+parameters must be specified via helper classes defined in the \c
+boost::xint::options namespace. Thanks to the magic of Boost.Parameter, you can
+use as few or as many as you need, and in any order. The parameters are:
 
-    \tparam Threadsafe If \c true, the library ensures that each object has its
-    own unique storage before returning it. If \c false, identical objects are
-    allowed to share storage using a copy-on-write design, potentially
-    increasing the speed of the library, but making it unsafe for multithreaded
-    use (with \ref threadsafe "some exceptions"). The library allows
-    copy-on-write for internal functions regardless of this parameter, which is
-    safe because the internal functions are single-threaded.
+    \tparam fixedlength<Bits> If \c Bits is non-zero, integers of this type are
+    \ref fixedlength "fixed-length", limited to the specified number of bits. If
+    zero (the default), the %integer is limited only by your system's memory.
 
-    \tparam Secure If \c true, the library zeros out all memory before
-    deallocating it, for maximum security.
+    \tparam threadsafe<T> If \c T is \c true, the library ensures that each
+    object has its own unique storage before returning it. If \c false,
+    identical objects are allowed to share storage using a copy-on-write design,
+    potentially increasing the speed of the library, but making it unsafe for
+    multithreaded use (with \ref threadsafe "some exceptions"). The library
+    allows copy-on-write for internal functions regardless of this parameter,
+    which is safe because the internal functions only use one thread at a time.
+    Defaults to \c true.
+
+    \tparam secure<T> If \c T is \c true, the library zeros out all memory
+    before deallocating it, for maximum security. Defaults to \c false.
+
+    \tparam nothrow<T> If \c T is \c true, then operations using this class do
+    not throw exceptions, they return special values (most often \ref
+    nan "Not-a-Number") to indicate failures. Defaults to \c false.
+
+You can also specify an allocator, which is just passed to the \c integer_t
+template directly. If specified, it must be for the \c
+boost::xint::detail::digit_t type. Defaults to \c std::allocator<digit_t>.
+
+Here are some examples of how to specify an integer type:
+
+<code><pre>
+    namespace xopts = boost::xint::options;
+    typedef boost::xint::integer_t<xopts::fixedlength<512>,
+        xopts::secure<true> > secureint512;
+    typedef boost::xint::integer_t<xopts::threadsafe<false>,
+        my_allocator<boost::xint::detail::digit_t> > my_integer;
+</pre></code>
+
+Note that the \ref boost::xint::integer "integer" and \ref
+boost::xint::nothrow_integer "nothrow_integer" types are already typedef'd for
+you.
 */
 BOOST_XINT_INTEGER_INITIAL_TPL
-class integer_t: private detail::digitmanager_t<Alloc, Threadsafe, Secure>,
-    public any_integer
-{
+class integer_t {
+    #ifndef BOOST_XINT_DOXYGEN_IGNORE
+    typedef typename options::integer_signature::bind<A0,A1,A2,A3,A4>::type
+        args;
+    typedef const typename binding<args, tag::fixedlength_tag,
+		options::fixedlength<0> >::type BitsType;
+    typedef const typename binding<args, tag::threadsafe_tag, mpl::true_>::type
+        ThreadsafeType;
+    typedef const typename binding<args, tag::secure_tag, mpl::false_>::type
+        SecureType;
+    typedef const typename binding<args, tag::nothrow_tag, mpl::false_>::type
+        NothrowType;
+    #endif // BOOST_XINT_DOXYGEN_IGNORE
+
     public:
+    #ifndef BOOST_XINT_DOXYGEN_IGNORE
+    static const bitsize_t Bits;
+    static const bool Threadsafe, Secure, Nothrow;
+    typedef typename binding<args, tag::allocator_tag,
+        std::allocator<detail::digit_t> >::type Alloc;
     typedef BOOST_XINT_INTEGER_TYPE type;
+    typedef detail::raw_integer_t<BitsType::value, SecureType::value, Alloc>
+        datatype;
+    #endif // BOOST_XINT_DOXYGEN_IGNORE
 
     //! \name Constructors & Destructors
     //!@{
     integer_t();
     integer_t(const BOOST_XINT_INTEGER_TYPE& b, bool force_thread_safety =
         false);
-    integer_t(BOOST_XINT_RV_REF(type) b): any_integer(*this, 1) { _swap(b); }
+    integer_t(BOOST_XINT_RV_REF(type) b) { _swap(b); }
     explicit integer_t(const char *str, size_t base = 10);
     explicit integer_t(const char *str, char **endptr, size_t base = 10);
     explicit integer_t(const std::string& str, size_t base = 10);
     explicit integer_t(const xint::binary_t b, bitsize_t bits = 0);
-    explicit integer_t(const any_integer& other, bool force_thread_safety =
-        false);
+    BOOST_XINT_OTHER_TPL explicit integer_t(const BOOST_XINT_OTHER_TYPE& other,
+        bool force_thread_safety = false);
     template <typename Type> integer_t(const Type n,
         typename boost::enable_if<boost::is_integral<Type> >::type* = 0);
 
     #ifndef BOOST_XINT_DOXYGEN_IGNORE
-    //! This one is used internally.
-    integer_t(const detail::data_t c):
-    detail::digitmanager_t<Alloc, Threadsafe, Secure>(*c.holder()),
-    any_integer(*this, c.length, c.negative) { data.beginendmod(); }
-    #endif
+    //! These are used internally.
+    integer_t(const detail::raw_integer_t<BitsType::value, SecureType::value,
+        Alloc> c): data(c) { if (Threadsafe == true) data.make_unique(); }
+    integer_t(const detail::raw_integer_t<BitsType::value, SecureType::value,
+        Alloc> c, bool negative): data(c, negative) { if (Threadsafe == true)
+        data.make_unique(); }
+    #endif // BOOST_XINT_DOXYGEN_IGNORE
     //!@}
 
     /*! \name Mathematical and Bitwise Operators
         \brief These operate exactly like their counterparts for the built-in
                %integer types.
-
-        Note that there is no \c operator~. Since the integer type doesn't have
-        a fixed maximum size, there is no logical way to implement it.
     */
     //@{
     BOOST_XINT_INTEGER_TYPE& operator=(BOOST_XINT_COPY_ASSIGN_REF(type) c);
@@ -114,6 +164,7 @@ class integer_t: private detail::digitmanager_t<Alloc, Threadsafe, Secure>,
     BOOST_XINT_INTEGER_TYPE operator-() const;
     BOOST_XINT_INTEGER_TYPE& operator+() { return *this; }
     const BOOST_XINT_INTEGER_TYPE& operator+() const { return *this; }
+    BOOST_XINT_INTEGER_TYPE operator~() const;
 
     BOOST_XINT_INTEGER_TYPE& operator+=(const BOOST_XINT_INTEGER_TYPE b);
     BOOST_XINT_INTEGER_TYPE& operator-=(const BOOST_XINT_INTEGER_TYPE b);
@@ -139,6 +190,7 @@ class integer_t: private detail::digitmanager_t<Alloc, Threadsafe, Secure>,
     //!@{
     bool is_odd() const;
     bool is_even() const;
+    bool is_nan() const;
     int  sign(bool signed_zero = false) const;
     size_t hex_digits() const;
     //!@}
@@ -149,12 +201,13 @@ class integer_t: private detail::digitmanager_t<Alloc, Threadsafe, Secure>,
 
         These are functions that return an integer_t, but don't take one as a
         parameter. To use them as free functions, you would have to specify the
-        return type anyway, so I made them static member functions of the type
+        return type anyway, so they're static member functions of the type
         instead.
     */
     //!@{
     static BOOST_XINT_INTEGER_TYPE pow2(size_t exponent);
     static BOOST_XINT_INTEGER_TYPE factorial(size_t n);
+    static BOOST_XINT_INTEGER_TYPE nan();
     template <class Type> static BOOST_XINT_INTEGER_TYPE random_by_size(Type&
         gen, bitsize_t size_in_bits, bool high_bit_on = false, bool low_bit_on =
         false, bool can_be_negative = false);
@@ -162,19 +215,46 @@ class integer_t: private detail::digitmanager_t<Alloc, Threadsafe, Secure>,
         bitsize_t size_in_bits, callback_t callback = no_callback);
     //!@}
 
+    #ifndef BOOST_XINT_DOXYGEN_IGNORE
+    //! \name Internal Functions
+    //@{
     void _swap(BOOST_XINT_INTEGER_TYPE& s) { using std::swap;
         swap(data, s.data); }
+    datatype& _data() { return data; }
+    const datatype& _data() const { return data; }
+    size_t _get_length() const { return data.length; }
+    detail::digit_t _get_digit(size_t i) const { return data[i]; }
+    void _make_unique() { data.make_unique(); }
+    //@}
+    #endif
 
     private:
+    datatype data;
+
     BOOST_XINT_COPYABLE_AND_MOVABLE(type)
 };
+
+#ifndef BOOST_XINT_DOXYGEN_IGNORE
+BOOST_XINT_INTEGER_TPL
+const bitsize_t BOOST_XINT_INTEGER_TYPE::Bits =
+    BOOST_XINT_INTEGER_TYPE::BitsType::value;
+BOOST_XINT_INTEGER_TPL
+const bool BOOST_XINT_INTEGER_TYPE::Threadsafe =
+    BOOST_XINT_INTEGER_TYPE::ThreadsafeType::value;
+BOOST_XINT_INTEGER_TPL
+const bool BOOST_XINT_INTEGER_TYPE::Secure =
+    BOOST_XINT_INTEGER_TYPE::SecureType::value;
+BOOST_XINT_INTEGER_TPL
+const bool BOOST_XINT_INTEGER_TYPE::Nothrow =
+    BOOST_XINT_INTEGER_TYPE::NothrowType::value;
+#endif // BOOST_XINT_DOXYGEN_IGNORE
 
 ////////////////////////////////////////////////////////////////////////////////
 // Member function template definitions
 
 //! \brief Creates a new integer with an initial value of zero.
 BOOST_XINT_INTEGER_TPL
-BOOST_XINT_INTEGER_TYPE::integer_t(): any_integer(*this, 1) {
+BOOST_XINT_INTEGER_TYPE::integer_t() {
     // Don't need to do anything, already preinitialized to zero.
 }
 
@@ -182,7 +262,7 @@ BOOST_XINT_INTEGER_TYPE::integer_t(): any_integer(*this, 1) {
 
 \param[in] b An existing integer.
 
-\param[in] force_thread_safety If the \c Threadsafe template parameter is \c
+\param[in] force_thread_safety If the \c threadsafe template parameter is \c
 false, you can use this to make a thread-safe copy anyway. See \ref
 threadsafe "this page" for a full treatment of the matter.
 
@@ -190,20 +270,39 @@ threadsafe "this page" for a full treatment of the matter.
 */
 BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE::integer_t(const BOOST_XINT_INTEGER_TYPE& b, bool
-    force_thread_safety): detail::digitmanager_t<Alloc, Threadsafe,
-    Secure>(*b.data.holder()), any_integer(*this, b.data.length,
-    b.data.negative)
+    force_thread_safety)
 {
-    data.beginendmod();
-    if (force_thread_safety && Threadsafe == false) data.make_unique();
+    if (Nothrow) {
+        try {
+            data = b.data;
+            if (!data.is_nan()) {
+                if (force_thread_safety && Threadsafe == false) data.make_unique();
+            }
+        } catch (std::exception&) {
+            data.make_nan();
+        }
+    } else {
+        data = b.data;
+        if (force_thread_safety && Threadsafe == false) data.make_unique();
+    }
 }
 
 //! \copydoc integer_t(const std::string&, size_t)
 BOOST_XINT_INTEGER_TPL
-BOOST_XINT_INTEGER_TYPE::integer_t(const char *str, size_t base):
-    any_integer(*this, 1)
-{
-    data.from_string(str, strlen(str), base);
+BOOST_XINT_INTEGER_TYPE::integer_t(const char *str, size_t base) {
+    if (Nothrow) {
+        try {
+            if (str[0] == nan_text[0] && std::string(str) == nan_text) {
+                data.make_nan();
+            } else {
+                data.from_string(str, base);
+            }
+        } catch (std::exception&) {
+            data.make_nan();
+        }
+    } else {
+        data.from_string(str, base);
+    }
 }
 
 /*! \brief Parse an integer from a string representation.
@@ -235,10 +334,25 @@ in the object pointed by \c endptr.
 \overload
 */
 BOOST_XINT_INTEGER_TPL
-BOOST_XINT_INTEGER_TYPE::integer_t(const char *str, char **endptr, size_t base):
-    any_integer(*this, 1)
+BOOST_XINT_INTEGER_TYPE::integer_t(const char *str, char **endptr, size_t base)
 {
-    data.from_string(str, endptr, base);
+    if (Nothrow) {
+        try {
+            if (str[0] == nan_text[0]) {
+                std::string s(str);
+                if (s.substr(0, nan_text.length()) == nan_text) {
+                    data.make_nan();
+                    *endptr = str + nan_text.length();
+                    return;
+                }
+            }
+            data.from_string(str, endptr, base);
+        } catch (std::exception&) {
+            data.make_nan();
+        }
+    } else {
+        data.from_string(str, endptr, base);
+    }
 }
 
 /*! \brief Create an integer from a string representation.
@@ -266,10 +380,17 @@ fit into a native integral type.
 \overload
 */
 BOOST_XINT_INTEGER_TPL
-BOOST_XINT_INTEGER_TYPE::integer_t(const std::string& str, size_t base):
-    any_integer(*this, 1)
-{
-    data.from_string(str.c_str(), str.length(), base);
+BOOST_XINT_INTEGER_TYPE::integer_t(const std::string& str, size_t base) {
+    if (Nothrow) {
+        try {
+            if (str == nan_text) data.make_nan();
+            else data.from_string(str, base);
+        } catch (std::exception&) {
+            data.make_nan();
+        }
+    } else {
+        data.from_string(str, base);
+    }
 }
 
 /*! \brief Converts a portable binary representation of a number into an
@@ -294,34 +415,52 @@ bits in an unsigned character.
 \overload
 */
 BOOST_XINT_INTEGER_TPL
-BOOST_XINT_INTEGER_TYPE::integer_t(const xint::binary_t b, bitsize_t bits):
-    any_integer(*this, 1)
-{
-    data.from_binary(b, bits);
+BOOST_XINT_INTEGER_TYPE::integer_t(const xint::binary_t b, bitsize_t bits) {
+    if (Nothrow) {
+        try {
+            data.from_binary(b, bits);
+        } catch (std::exception&) {
+            data.make_nan();
+        }
+    } else {
+        data.from_binary(b, bits);
+    }
 }
 
 /*! Constructs a new integer object from an existing integer object.
 
-Converts any existing integer_t, fixed_integer, or nothrow_integer object to
-this type.
+Converts any existing integer_t object to this type.
 
-\param[in] c An existing integer.
+\param[in] b An existing integer.
 
-\param[in] force_thread_safety If the \c Threadsafe template parameter is \c
+\param[in] force_thread_safety If the \c threadsafe template parameter is \c
 false, you can use this to make a thread-safe copy anyway. See \ref
-threadsafe "this page" for a full treatment of the matter. This parameter isn't
-really necessary on this version of the constructor, because objects of
-different types aren't allowed to share storage; it's here only for signature
-compatibility with the same-type copy constructor.
+threadsafe "this page" for a full treatment of the matter.
 
 \overload
 */
 BOOST_XINT_INTEGER_TPL
-BOOST_XINT_INTEGER_TYPE::integer_t(const any_integer& c, bool):
-    any_integer(*this, 1)
+BOOST_XINT_OTHER_TPL
+BOOST_XINT_INTEGER_TYPE::integer_t(const BOOST_XINT_OTHER_TYPE& b, bool
+    force_thread_safety)
 {
-    if (c._data().is_nan()) throw exceptions::not_a_number();
-    data.duplicate_data(c._data());
+    if (Nothrow) {
+        try {
+            if (b.is_nan()) {
+                data.make_nan();
+            } else {
+                data = b._data();
+                if (!data.is_nan() && force_thread_safety && Threadsafe ==
+                    false) data.make_unique();
+            }
+        } catch (std::exception&) {
+            data.make_nan();
+        }
+    } else {
+        if (b._data().is_nan()) throw exceptions::not_a_number();
+        data = b._data();
+        if (force_thread_safety && Threadsafe == false) data.make_unique();
+    }
 }
 
 /*!
@@ -338,20 +477,66 @@ BOOST_XINT_INTEGER_TYPE::integer_t(const any_integer& c, bool):
 */
 BOOST_XINT_INTEGER_TPL
 template <typename Type> BOOST_XINT_INTEGER_TYPE::integer_t(const Type n,
-    typename boost::enable_if<boost::is_integral<Type> >::type*):
-    any_integer(*this, 1)
+    typename boost::enable_if<boost::is_integral<Type> >::type*)
 {
-    if (std::numeric_limits<Type>::is_signed) data.set_signed(n);
-    else data.set_unsigned(n);
+    if (Nothrow) {
+        try {
+            if (std::numeric_limits<Type>::is_signed) data.set_signed(n);
+            else data.set_unsigned(n);
+        } catch (std::exception&) {
+            data.make_nan();
+        }
+    } else {
+        if (std::numeric_limits<Type>::is_signed) data.set_signed(n);
+        else data.set_unsigned(n);
+    }
 }
 
 BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::
     operator=(BOOST_XINT_COPY_ASSIGN_REF(type) c)
 {
-    data = c.data;
-    data.beginendmod();
+    if (Nothrow) {
+        if (c._data().is_nan()) data.make_nan();
+        else {
+            try {
+                data = c.data;
+                if (Threadsafe == true) data.make_unique();
+            } catch (std::exception&) {
+                data.make_nan();
+            }
+        }
+    } else {
+        data = c.data;
+        if (Threadsafe == true) data.make_unique();
+    }
     return *this;
+}
+
+/*! \brief The Bitwise Ones' Complement (i.e. bitwise NOT) operator.
+
+- Complexity: O(n)
+
+Note that this operator is only useful with fixed-size integers. If used with a
+variable-size integer, it will throw a \c too_big exception, because a proper
+implementation would result in an infinitely long number.
+*/
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE BOOST_XINT_INTEGER_TYPE::operator~() const {
+    if (Nothrow) {
+        if (is_nan()) return *this;
+        try {
+            BOOST_XINT_INTEGER_TYPE r(~data);
+            if (Threadsafe == true) r._make_unique();
+            return BOOST_XINT_MOVE(r);
+        } catch (std::exception&) {
+            return nan();
+        }
+    } else {
+        BOOST_XINT_INTEGER_TYPE r(~data);
+        if (Threadsafe == true) r._make_unique();
+        return BOOST_XINT_MOVE(r);
+    }
 }
 
 /*! \brief Return the additive inverse of an integer.
@@ -362,8 +547,22 @@ BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::
 */
 BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE BOOST_XINT_INTEGER_TYPE::operator-() const {
-    BOOST_XINT_INTEGER_TYPE r(-data);
-    return BOOST_XINT_MOVE(r);
+    if (Nothrow) {
+        if (is_nan()) return *this;
+        try {
+            BOOST_XINT_INTEGER_TYPE r(*this);
+            if (Threadsafe == true) r._make_unique();
+            r.data = -r.data;
+            return BOOST_XINT_MOVE(r);
+        } catch (std::exception&) {
+            return nan();
+        }
+    } else {
+        BOOST_XINT_INTEGER_TYPE r(*this);
+        if (Threadsafe == true) r._make_unique();
+        r.data = -r.data;
+        return BOOST_XINT_MOVE(r);
+    }
 }
 
 //! \see operator+(integer_t, integer_t)
@@ -371,7 +570,20 @@ BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::operator+=(const
     BOOST_XINT_INTEGER_TYPE b)
 {
-    data += b.data;
+    if (Nothrow) {
+        if (b.is_nan()) data.make_nan();
+        if (!is_nan()) {
+            try {
+                data += b.data;
+                if (Threadsafe == true) data.make_unique();
+            } catch (std::exception&) {
+                data.make_nan();
+            }
+        }
+    } else {
+        data += b.data;
+        if (Threadsafe == true) data.make_unique();
+    }
     return *this;
 }
 
@@ -380,7 +592,20 @@ BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::operator-=(const
     BOOST_XINT_INTEGER_TYPE b)
 {
-    data -= b.data;
+    if (Nothrow) {
+        if (b.is_nan()) data.make_nan();
+        if (!is_nan()) {
+            try {
+                data -= b.data;
+                if (Threadsafe == true) data.make_unique();
+            } catch (std::exception&) {
+                data.make_nan();
+            }
+        }
+    } else {
+        data -= b.data;
+        if (Threadsafe == true) data.make_unique();
+    }
     return *this;
 }
 
@@ -389,7 +614,20 @@ BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::operator*=(const
     BOOST_XINT_INTEGER_TYPE b)
 {
-    data *= b.data;
+    if (Nothrow) {
+        if (b.is_nan()) data.make_nan();
+        if (!is_nan()) {
+            try {
+                data *= b.data;
+                if (Threadsafe == true) data.make_unique();
+            } catch (std::exception&) {
+                data.make_nan();
+            }
+        }
+    } else {
+        data *= b.data;
+        if (Threadsafe == true) data.make_unique();
+    }
     return *this;
 }
 
@@ -398,7 +636,20 @@ BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::operator/=(const
     BOOST_XINT_INTEGER_TYPE b)
 {
-    data /= b.data;
+    if (Nothrow) {
+        if (b.is_nan()) data.make_nan();
+        if (!is_nan()) {
+            try {
+                data /= b.data;
+                if (Threadsafe == true) data.make_unique();
+            } catch (std::exception&) {
+                data.make_nan();
+            }
+        }
+    } else {
+        data /= b.data;
+        if (Threadsafe == true) data.make_unique();
+    }
     return *this;
 }
 
@@ -407,7 +658,20 @@ BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::operator%=(const
     BOOST_XINT_INTEGER_TYPE b)
 {
-    data %= b.data;
+    if (Nothrow) {
+        if (b.is_nan()) data.make_nan();
+        if (!is_nan()) {
+            try {
+                data %= b.data;
+                if (Threadsafe == true) data.make_unique();
+            } catch (std::exception&) {
+                data.make_nan();
+            }
+        }
+    } else {
+        data %= b.data;
+        if (Threadsafe == true) data.make_unique();
+    }
     return *this;
 }
 
@@ -417,7 +681,19 @@ BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::operator%=(const
 */
 BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::operator++() {
-    ++data;
+    if (Nothrow) {
+        if (!is_nan()) {
+            try {
+                ++data;
+                if (Threadsafe == true) data.make_unique();
+            } catch (std::exception&) {
+                data.make_nan();
+            }
+        }
+    } else {
+        ++data;
+        if (Threadsafe == true) data.make_unique();
+    }
     return *this;
 }
 
@@ -427,7 +703,19 @@ BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::operator++() {
 */
 BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::operator--() {
-    --data;
+    if (Nothrow) {
+        if (!is_nan()) {
+            try {
+                --data;
+                if (Threadsafe == true) data.make_unique();
+            } catch (std::exception&) {
+                data.make_nan();
+            }
+        }
+    } else {
+        --data;
+        if (Threadsafe == true) data.make_unique();
+    }
     return *this;
 }
 
@@ -440,8 +728,20 @@ object, making it noticeably less efficient than the preincrement operator.
 */
 BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE BOOST_XINT_INTEGER_TYPE::operator++(int) {
-    BOOST_XINT_INTEGER_TYPE r(data++);
-    return BOOST_XINT_MOVE(r);
+    if (Nothrow) {
+        if (is_nan()) return *this;
+        try {
+            BOOST_XINT_INTEGER_TYPE r(data++);
+            if (Threadsafe == true) { r._make_unique(); data.make_unique(); }
+            return BOOST_XINT_MOVE(r);
+        } catch (std::exception&) {
+            data.make_nan();
+        }
+    } else {
+        BOOST_XINT_INTEGER_TYPE r(data++);
+        if (Threadsafe == true) { r._make_unique(); data.make_unique(); }
+        return BOOST_XINT_MOVE(r);
+    }
 }
 
 /*! Postdecrement operator
@@ -453,8 +753,20 @@ object, making it noticeably less efficient than the predecrement operator.
 */
 BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE BOOST_XINT_INTEGER_TYPE::operator--(int) {
-    BOOST_XINT_INTEGER_TYPE r(data--);
-    return BOOST_XINT_MOVE(r);
+    if (Nothrow) {
+        if (is_nan()) return *this;
+        try {
+            BOOST_XINT_INTEGER_TYPE r(data--);
+            if (Threadsafe == true) { r._make_unique(); data.make_unique(); }
+            return BOOST_XINT_MOVE(r);
+        } catch (std::exception&) {
+            data.make_nan();
+        }
+    } else {
+        BOOST_XINT_INTEGER_TYPE r(data--);
+        if (Threadsafe == true) { r._make_unique(); data.make_unique(); }
+        return BOOST_XINT_MOVE(r);
+    }
 }
 
 //! \see operator&(integer_t, integer_t)
@@ -462,7 +774,20 @@ BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::operator&=(const
     BOOST_XINT_INTEGER_TYPE n)
 {
-    data &= n.data;
+    if (Nothrow) {
+        if (n.is_nan()) data.make_nan();
+        if (!is_nan()) {
+            try {
+                data &= n.data;
+                if (Threadsafe == true) data.make_unique();
+            } catch (std::exception&) {
+                data.make_nan();
+            }
+        }
+    } else {
+        data &= n.data;
+        if (Threadsafe == true) data.make_unique();
+    }
     return *this;
 }
 
@@ -471,7 +796,20 @@ BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::operator|=(const
     BOOST_XINT_INTEGER_TYPE n)
 {
-    data |= n.data;
+    if (Nothrow) {
+        if (n.is_nan()) data.make_nan();
+        if (!is_nan()) {
+            try {
+                data |= n.data;
+                if (Threadsafe == true) data.make_unique();
+            } catch (std::exception&) {
+                data.make_nan();
+            }
+        }
+    } else {
+        data |= n.data;
+        if (Threadsafe == true) data.make_unique();
+    }
     return *this;
 }
 
@@ -480,7 +818,20 @@ BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::operator^=(const
     BOOST_XINT_INTEGER_TYPE n)
 {
-    data ^= n.data;
+    if (Nothrow) {
+        if (n.is_nan()) data.make_nan();
+        if (!is_nan()) {
+            try {
+                data ^= n.data;
+                if (Threadsafe == true) data.make_unique();
+            } catch (std::exception&) {
+                data.make_nan();
+            }
+        }
+    } else {
+        data ^= n.data;
+        if (Threadsafe == true) data.make_unique();
+    }
     return *this;
 }
 
@@ -496,8 +847,20 @@ BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE BOOST_XINT_INTEGER_TYPE::operator<<(bitsize_t shift)
     const
 {
-    BOOST_XINT_INTEGER_TYPE r(data << shift);
-    return BOOST_XINT_MOVE(r);
+    if (Nothrow) {
+        if (is_nan()) return *this;
+        try {
+            BOOST_XINT_INTEGER_TYPE r(data << shift);
+            if (Threadsafe == true) r._make_unique();
+            return BOOST_XINT_MOVE(r);
+        } catch (std::exception&) {
+            return nan();
+        }
+    } else {
+        BOOST_XINT_INTEGER_TYPE r(data << shift);
+        if (Threadsafe == true) r._make_unique();
+        return BOOST_XINT_MOVE(r);
+    }
 }
 
 /*! \brief Right-shift an integer by a specified number of bits.
@@ -512,21 +875,57 @@ BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE BOOST_XINT_INTEGER_TYPE::operator>>(bitsize_t shift)
     const
 {
-    BOOST_XINT_INTEGER_TYPE r(data >> shift);
-    return BOOST_XINT_MOVE(r);
+    if (Nothrow) {
+        if (is_nan()) return *this;
+        try {
+            BOOST_XINT_INTEGER_TYPE r(data >> shift);
+            if (Threadsafe == true) r._make_unique();
+            return BOOST_XINT_MOVE(r);
+        } catch (std::exception&) {
+            return nan();
+        }
+    } else {
+        BOOST_XINT_INTEGER_TYPE r(data >> shift);
+        if (Threadsafe == true) r._make_unique();
+        return BOOST_XINT_MOVE(r);
+    }
 }
 
 //! \see operator<<(integer_t, integer_t)
 BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::operator<<=(bitsize_t shift) {
-    data <<= shift;
+    if (Nothrow) {
+        if (!is_nan()) {
+            try {
+                data <<= shift;
+                if (Threadsafe == true) data.make_unique();
+            } catch (std::exception&) {
+                data.make_nan();
+            }
+        }
+    } else {
+        data <<= shift;
+        if (Threadsafe == true) data.make_unique();
+    }
     return *this;
 }
 
 //! \see operator>>(integer_t, integer_t)
 BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::operator>>=(bitsize_t shift) {
-    data >>= shift;
+    if (Nothrow) {
+        if (!is_nan()) {
+            try {
+                data >>= shift;
+                if (Threadsafe == true) data.make_unique();
+            } catch (std::exception&) {
+                data.make_nan();
+            }
+        }
+    } else {
+        data >>= shift;
+        if (Threadsafe == true) data.make_unique();
+    }
     return *this;
 }
 
@@ -534,22 +933,50 @@ BOOST_XINT_INTEGER_TYPE& BOOST_XINT_INTEGER_TYPE::operator>>=(bitsize_t shift) {
 
 - Complexity: O(1)
 
-\returns \c true if \c *this is odd, otherwise \c false.
+\returns \c true if \c *this is odd, otherwise \c false. The nothrow<true>
+version returns false instead of throwing.
 */
 BOOST_XINT_INTEGER_TPL
 bool BOOST_XINT_INTEGER_TYPE::is_odd() const {
-    return data.is_odd();
+    if (Nothrow) {
+        if (is_nan()) return false;
+        return data.is_odd();
+    } else {
+        return data.is_odd();
+    }
 }
 
 /*! \brief Tests the lowest bit of \c *this to determine evenness.
 
 - Complexity: O(1)
 
-\returns \c true if \c *this is even, otherwise \c false.
+\returns \c true if \c *this is even, otherwise \c false. The nothrow<true>
+version returns false instead of throwing.
 */
 BOOST_XINT_INTEGER_TPL
 bool BOOST_XINT_INTEGER_TYPE::is_even() const {
-    return data.is_even();
+    if (Nothrow) {
+        if (is_nan()) return false;
+        return data.is_even();
+    } else {
+        return data.is_even();
+    }
+}
+
+/*! \brief Tests whether the object is a Not-a-Number.
+
+- Complexity: O(1)
+
+\returns \c true if \c *this is a Not-a-Number value, otherwise \c false.
+
+\see \ref nan
+
+\note This will always return \c false on any type where the \c nothrow template
+parameter is \c false.
+*/
+BOOST_XINT_INTEGER_TPL
+bool BOOST_XINT_INTEGER_TYPE::is_nan() const {
+    return data.is_nan();
 }
 
 /*! \brief Tests the sign of \c *this.
@@ -561,11 +988,20 @@ is zero. If \c true, returns 1 or -1 on a zero \c *this as well. Primarily used
 to identify a \ref zero "negative zero".
 
 \returns -1 if \c *this is negative, 0 if it's zero, or 1 if it's greater than
-zero.
+zero. The nothrow<true> version returns zero instead of throwing.
 */
 BOOST_XINT_INTEGER_TPL
 int BOOST_XINT_INTEGER_TYPE::sign(bool signed_zero) const {
-    return data.sign(signed_zero);
+    if (Nothrow) {
+        if (is_nan()) return 0;
+        try {
+            return data.sign(signed_zero);
+        } catch (std::exception&) {
+            return 0;
+        }
+    } else {
+        return data.sign(signed_zero);
+    }
 }
 
 /*! \brief Tells you roughly how large \c *this is.
@@ -573,11 +1009,20 @@ int BOOST_XINT_INTEGER_TYPE::sign(bool signed_zero) const {
 - Complexity: O(1)
 
 \returns The number of hexadecimal digits that would be required to encode \c
-*this.
+*this. The nothrow<true> version returns zero instead of throwing.
 */
 BOOST_XINT_INTEGER_TPL
 size_t BOOST_XINT_INTEGER_TYPE::hex_digits() const {
-    return data.hex_digits();
+    if (Nothrow) {
+        if (is_nan()) return 0;
+        try {
+            return data.hex_digits();
+        } catch (std::exception&) {
+            return 0;
+        }
+    } else {
+        return data.hex_digits();
+    }
 }
 
 /*! \brief Calculate the value of 2<sup>e</sup>
@@ -595,9 +1040,21 @@ result.
 */
 BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE BOOST_XINT_INTEGER_TYPE::pow2(size_t exponent) {
-    BOOST_XINT_INTEGER_TYPE r;
-    detail::pow2(r.data, exponent);
-    return BOOST_XINT_MOVE(r);
+    if (Nothrow) {
+        try {
+            BOOST_XINT_INTEGER_TYPE r;
+            detail::pow2(r.data, exponent);
+            if (Threadsafe == true) r._make_unique();
+            return BOOST_XINT_MOVE(r);
+        } catch (std::exception&) {
+            return nan();
+        }
+    } else {
+        BOOST_XINT_INTEGER_TYPE r;
+        detail::pow2(r.data, exponent);
+        if (Threadsafe == true) r._make_unique();
+        return BOOST_XINT_MOVE(r);
+    }
 }
 
 /*! \brief Calculate the value of \c n!
@@ -610,14 +1067,50 @@ BOOST_XINT_INTEGER_TYPE BOOST_XINT_INTEGER_TYPE::pow2(size_t exponent) {
 
 \warning
 Factorials get ridiculously huge, even with fairly small values of \c n. This
-function, when used with a large parameter, is the easiest way to exhaust the
-system's memory.
+function, when used on an unlimited-size integer and with a large parameter, is
+the easiest way to exhaust the system's memory.
 */
 BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE BOOST_XINT_INTEGER_TYPE::factorial(size_t n) {
-    BOOST_XINT_INTEGER_TYPE r;
-    detail::factorial(r.data, n);
-    return BOOST_XINT_MOVE(r);
+    if (Nothrow) {
+        try {
+            BOOST_XINT_INTEGER_TYPE r;
+            detail::factorial(r.data, n);
+            if (Threadsafe == true) r._make_unique();
+            return BOOST_XINT_MOVE(r);
+        } catch (std::exception&) {
+            return nan();
+        }
+    } else {
+        BOOST_XINT_INTEGER_TYPE r;
+        detail::factorial(r.data, n);
+        if (Threadsafe == true) r._make_unique();
+        return BOOST_XINT_MOVE(r);
+    }
+}
+
+/*! \brief Returns a Not-a-Number value, for types that support it.
+
+- Complexity: O(1)
+
+\returns A Not-a-Number value of the specified type.
+
+\note
+If called on a type that does not support Not-a-Number values (i.e. any type
+whose \c nothrow template parameter is <code>false</code>), it will throw a
+\c not_a_number exception.
+
+\see \ref nan
+*/
+BOOST_XINT_INTEGER_TPL
+BOOST_XINT_INTEGER_TYPE BOOST_XINT_INTEGER_TYPE::nan() {
+    if (Nothrow) {
+        BOOST_XINT_INTEGER_TYPE r;
+        r._data().make_nan();
+        return BOOST_XINT_MOVE(r);
+    } else {
+        throw exceptions::not_a_number();
+    }
 }
 
 /*! \brief Generates a random integer with specific attributes.
@@ -648,12 +1141,17 @@ BOOST_XINT_INTEGER_TYPE BOOST_XINT_INTEGER_TYPE::random_by_size(Type& gen,
     bitsize_t size_in_bits, bool high_bit_on, bool low_bit_on, bool
     can_be_negative)
 {
-    detail::random_generator<Type> rgen(gen);
-
-    BOOST_XINT_INTEGER_TYPE r;
-    detail::random_by_size(r._data(), rgen, size_in_bits, high_bit_on,
-        low_bit_on, can_be_negative);
-    return BOOST_XINT_MOVE(r);
+    if (Nothrow) {
+        try {
+            return datatype::random_by_size(gen, size_in_bits, high_bit_on,
+                low_bit_on, can_be_negative);
+        } catch (std::exception&) {
+            return nan();
+        }
+    } else {
+        return datatype::random_by_size(gen, size_in_bits, high_bit_on,
+            low_bit_on, can_be_negative);
+    }
 }
 
 /*! \brief Generate a randomly-generated prime number of a particular bit-size.
@@ -688,11 +1186,15 @@ template <class Type>
 BOOST_XINT_INTEGER_TYPE BOOST_XINT_INTEGER_TYPE::random_prime(Type& gen,
     bitsize_t size_in_bits, callback_t callback)
 {
-    detail::random_generator<Type> rgen(gen);
-
-    BOOST_XINT_INTEGER_TYPE r;
-    detail::random_prime(r._data(), rgen, size_in_bits, callback);
-    return BOOST_XINT_MOVE(r);
+    if (Nothrow) {
+        try {
+            return datatype::random_prime(gen, size_in_bits, callback);
+        } catch (std::exception&) {
+            return nan();
+        }
+    } else {
+        return datatype::random_prime(gen, size_in_bits, callback);
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -714,8 +1216,20 @@ BOOST_XINT_INTEGER_TYPE BOOST_XINT_INTEGER_TYPE::random_prime(Type& gen,
 */
 BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE abs(const BOOST_XINT_INTEGER_TYPE n) {
-    BOOST_XINT_INTEGER_TYPE r(abs(n._data()));
-    return BOOST_XINT_MOVE(r);
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n.is_nan()) return BOOST_XINT_INTEGER_TYPE::nan();
+        try {
+            BOOST_XINT_INTEGER_TYPE r(n._data().abs());
+            if (BOOST_XINT_INTEGER_TYPE::Threadsafe == true) r._make_unique();
+            return BOOST_XINT_MOVE(r);
+        } catch (std::exception&) {
+            return BOOST_XINT_INTEGER_TYPE::nan();
+        }
+    } else {
+        BOOST_XINT_INTEGER_TYPE r(n._data().abs());
+        if (BOOST_XINT_INTEGER_TYPE::Threadsafe == true) r._make_unique();
+        return BOOST_XINT_MOVE(r);
+    }
 }
 
 /*! \brief Calculate how many \c dividends would fit into \c divisor, with the
@@ -726,7 +1240,8 @@ BOOST_XINT_INTEGER_TYPE abs(const BOOST_XINT_INTEGER_TYPE n) {
 \param[in] dividend, divisor The integers to operate on.
 
 \returns A \c divide_t class containing the quotient and remainder of \c
-dividend divided by \c divisor.
+dividend divided by \c divisor. The nothrow<true> version returns a \c divide_t
+with both items set to Not-a-Number instead of throwing.
 
 \exception exceptions::divide_by_zero if \c d2 is zero.
 
@@ -739,10 +1254,26 @@ BOOST_XINT_INTEGER_TPL
 typename BOOST_XINT_INTEGER_TYPE::divide_t divide(const BOOST_XINT_INTEGER_TYPE
     dividend, const BOOST_XINT_INTEGER_TYPE divisor)
 {
-    typename BOOST_XINT_INTEGER_TYPE::divide_t r;
-    divide(r.quotient._data(), r.remainder._data(), dividend._data(),
-        divisor._data());
-    return BOOST_XINT_MOVE(r);
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (dividend.is_nan() || divisor.is_nan()) return typename
+            BOOST_XINT_INTEGER_TYPE::divide_t(BOOST_XINT_INTEGER_TYPE::nan(),
+                BOOST_XINT_INTEGER_TYPE::nan());
+        try {
+            typename BOOST_XINT_INTEGER_TYPE::datatype::divide_t rr =
+                detail::divide(dividend._data(), divisor._data());
+            typename BOOST_XINT_INTEGER_TYPE::divide_t r(rr.quotient,
+                rr.remainder);
+            return BOOST_XINT_MOVE(r);
+        } catch (std::exception&) {
+            return typename BOOST_XINT_INTEGER_TYPE::divide_t(
+                BOOST_XINT_INTEGER_TYPE::nan(), BOOST_XINT_INTEGER_TYPE::nan());
+        }
+    } else {
+        typename BOOST_XINT_INTEGER_TYPE::datatype::divide_t rr =
+            detail::divide(dividend._data(), divisor._data());
+        typename BOOST_XINT_INTEGER_TYPE::divide_t r(rr.quotient, rr.remainder);
+        return BOOST_XINT_MOVE(r);
+    }
 }
 //!@}
 
@@ -761,13 +1292,25 @@ typename BOOST_XINT_INTEGER_TYPE::divide_t divide(const BOOST_XINT_INTEGER_TYPE
 
 \returns \c n times \c n.
 
-This function uses a more-efficient algorithm than standard multiplication.
+The repetitive nature of the input (multiplying a number by itself) allows this
+function to use a more-efficient algorithm than standard multiplication.
 */
 BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE square(const BOOST_XINT_INTEGER_TYPE n) {
-    BOOST_XINT_INTEGER_TYPE r;
-    square(r._data(), n._data());
-    return BOOST_XINT_MOVE(r);
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n.is_nan()) return n;
+        try {
+            BOOST_XINT_INTEGER_TYPE r = detail::square(n._data());
+            if (BOOST_XINT_INTEGER_TYPE::Threadsafe == true) r._make_unique();
+            return BOOST_XINT_MOVE(r);
+        } catch (std::exception&) {
+            return BOOST_XINT_INTEGER_TYPE::nan();
+        }
+    } else {
+        BOOST_XINT_INTEGER_TYPE r = detail::square(n._data());
+        if (BOOST_XINT_INTEGER_TYPE::Threadsafe == true) r._make_unique();
+        return BOOST_XINT_MOVE(r);
+    }
 }
 
 /*! \brief Calculate the value of n<sup>e</sup>
@@ -782,9 +1325,22 @@ BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE pow(const BOOST_XINT_INTEGER_TYPE n, const
     BOOST_XINT_INTEGER_TYPE e)
 {
-    BOOST_XINT_INTEGER_TYPE r;
-    pow(r._data(), n._data(), e._data());
-    return BOOST_XINT_MOVE(r);
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n.is_nan() || e.is_nan()) return BOOST_XINT_INTEGER_TYPE::nan();
+        try {
+            BOOST_XINT_INTEGER_TYPE r;
+            pow(r._data(), n._data(), e._data());
+            if (BOOST_XINT_INTEGER_TYPE::Threadsafe == true) r._make_unique();
+            return BOOST_XINT_MOVE(r);
+        } catch (std::exception&) {
+            return BOOST_XINT_INTEGER_TYPE::nan();
+        }
+    } else {
+        BOOST_XINT_INTEGER_TYPE r;
+        pow(r._data(), n._data(), e._data());
+        if (BOOST_XINT_INTEGER_TYPE::Threadsafe == true) r._make_unique();
+        return BOOST_XINT_MOVE(r);
+    }
 }
 
 /*! \brief Calculate the square root of \c an integer.
@@ -800,10 +1356,21 @@ root.
 \exception exceptions::cannot_represent if \c n is negative.
 */
 BOOST_XINT_INTEGER_TPL
-BOOST_XINT_INTEGER_TYPE sqrt(const BOOST_XINT_INTEGER_TYPE n) {
-    BOOST_XINT_INTEGER_TYPE r;
-    sqrt(r._data(), n._data());
-    return BOOST_XINT_MOVE(r);
+BOOST_XINT_INTEGER_TYPE square_root(const BOOST_XINT_INTEGER_TYPE n) {
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n.is_nan()) return n;
+        try {
+            BOOST_XINT_INTEGER_TYPE r = square_root(n._data());
+            if (BOOST_XINT_INTEGER_TYPE::Threadsafe == true) r._make_unique();
+            return BOOST_XINT_MOVE(r);
+        } catch (std::exception&) {
+            return BOOST_XINT_INTEGER_TYPE::nan();
+        }
+    } else {
+        BOOST_XINT_INTEGER_TYPE r = square_root(n._data());
+        if (BOOST_XINT_INTEGER_TYPE::Threadsafe == true) r._make_unique();
+        return BOOST_XINT_MOVE(r);
+    }
 }
 //!@}
 
@@ -824,11 +1391,20 @@ BOOST_XINT_INTEGER_TYPE sqrt(const BOOST_XINT_INTEGER_TYPE n) {
 \exception exceptions::too_big if \c n would not fit into the specified type.
 
 This function provides the most efficient means of converting to a built-in
-integral type.
+integral type. The nothrow<true> version returns T(0) instead of throwing.
 */
-template <typename Type, class Alloc, bool Threadsafe, bool Secure>
-Type to(const BOOST_XINT_INTEGER_TYPE n) {
-    return to<Type>(n._data());
+template <typename T, class A0, class A1, class A2, class A3, class A4>
+T to(const BOOST_XINT_INTEGER_TYPE n) {
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n.is_nan()) return T(0);
+        try {
+            return to<T>(n._data());
+        } catch (std::exception&) {
+            return T(0);
+        }
+    } else {
+        return to<T>(n._data());
+    }
 }
 
 /*! \brief Creates a string representation of the specified %integer.
@@ -841,7 +1417,8 @@ to base 10.
 \param[in] uppercase Whether to make alphabetic characters (for bases greater
 than ten) uppercase or not. Defaults to \c false.
 
-\returns The string value of \c n.
+\returns The string value of \c n. The nothrow<true> version returns the string
+"#NaN#" if \c n is a Not-a-Number, and an empty string instead of throwing.
 
 \exception exceptions::invalid_base if base is less than two or greater than 36.
 
@@ -854,7 +1431,16 @@ BOOST_XINT_INTEGER_TPL
 std::string to_string(const BOOST_XINT_INTEGER_TYPE n, size_t base = 10, bool
     uppercase = false)
 {
-    return to_string(n._data(), base, uppercase);
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n.is_nan()) return nan_text;
+        try {
+            return to_string(n._data(), base, uppercase);
+        } catch (std::exception&) {
+            return std::string();
+        }
+    } else {
+        return to_string(n._data(), base, uppercase);
+    }
 }
 
 /*! \brief Creates a binary representation of an %integer.
@@ -868,7 +1454,8 @@ zero (the default) to assume the number of bits in the current system's
 unsigned character type.
 
 \returns An \c xint::binary_t containing the binary representation, lowest byte
-first.
+first. The nothrow<true> version returns an empty \c binary_t object instead of
+throwing.
 
 \exception exceptions::invalid_argument if \c bits is greater than the number of
 bits in an unsigned character.
@@ -885,7 +1472,16 @@ transmission, as it is more space-efficient than a string representation.
 */
 BOOST_XINT_INTEGER_TPL
 xint::binary_t to_binary(const BOOST_XINT_INTEGER_TYPE n, bitsize_t bits = 0) {
-    return to_binary(n._data(), bits);
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n.is_nan()) return xint::binary_t();
+        try {
+            return to_binary(n._data(), bits);
+        } catch (std::exception&) {
+            return xint::binary_t();
+        }
+    } else {
+        return to_binary(n._data(), bits);
+    }
 }
 //!@}
 
@@ -900,11 +1496,20 @@ xint::binary_t to_binary(const BOOST_XINT_INTEGER_TYPE n, bitsize_t bits = 0) {
 \param[in] bit The zero-based index of the bit you're asking about.
 
 \returns \c true if the specified bit is set (has a value of one), \c false if
-it is clear.
+it is clear. The nothrow<true> version returns \c false instead of throwing.
 */
 BOOST_XINT_INTEGER_TPL
 bool getbit(const BOOST_XINT_INTEGER_TYPE n, bitsize_t bit) {
-    return getbit(n._data(), bit);
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n.is_nan()) return false;
+        try {
+            return getbit(n._data(), bit);
+        } catch (std::exception&) {
+            return false;
+        }
+    } else {
+        return getbit(n._data(), bit);
+    }
 }
 
 /*! \brief Sets a specific bit in an integer to one.
@@ -918,7 +1523,17 @@ bool getbit(const BOOST_XINT_INTEGER_TYPE n, bitsize_t bit) {
 */
 BOOST_XINT_INTEGER_TPL
 void setbit(BOOST_XINT_INTEGER_TYPE& n, bitsize_t bit) {
-    setbit(n._data(), bit);
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (!n.is_nan()) {
+            try {
+                setbit(n._data(), bit);
+            } catch (std::exception&) {
+                // Do nothing.
+            }
+        }
+    } else {
+        setbit(n._data(), bit);
+    }
 }
 
 /*! \brief Sets a specific bit in an integer to zero.
@@ -932,7 +1547,17 @@ void setbit(BOOST_XINT_INTEGER_TYPE& n, bitsize_t bit) {
 */
 BOOST_XINT_INTEGER_TPL
 void clearbit(BOOST_XINT_INTEGER_TYPE& n, bitsize_t bit) {
-    clearbit(n._data(), bit);
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (!n.is_nan()) {
+            try {
+                clearbit(n._data(), bit);
+            } catch (std::exception&) {
+                // Do nothing.
+            }
+        }
+    } else {
+        clearbit(n._data(), bit);
+    }
 }
 
 /*! \brief Obtains the index of the lowest bit in an integer with a value of
@@ -945,13 +1570,23 @@ void clearbit(BOOST_XINT_INTEGER_TYPE& n, bitsize_t bit) {
 correct answer in that case).
 
 \returns The zero-based index of the lowest one-bit in the integer, or \c
-return_if_zero if the integer contains no set bits.
+return_if_zero if the integer contains no set bits. The nothrow<true> version
+returns \c return_if_zero instead of throwing.
 */
 BOOST_XINT_INTEGER_TPL
 bitsize_t lowestbit(const BOOST_XINT_INTEGER_TYPE n, bitsize_t return_if_zero =
     0)
 {
-    return lowestbit(n._data(), return_if_zero);
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n.is_nan()) return return_if_zero;
+        try {
+            return lowestbit(n._data(), return_if_zero);
+        } catch (std::exception&) {
+            return return_if_zero;
+        }
+    } else {
+        return lowestbit(n._data(), return_if_zero);
+    }
 }
 
 /*! \brief Obtains the index of the highest bit in an integer with a value of
@@ -964,13 +1599,23 @@ bitsize_t lowestbit(const BOOST_XINT_INTEGER_TYPE n, bitsize_t return_if_zero =
 correct answer in that case).
 
 \returns The zero-based index of the highest one-bit in the integer, or \c
-return_if_zero if the integer contains no set bits.
+return_if_zero if the integer contains no set bits. The nothrow<true> version
+returns \c return_if_zero instead of throwing.
 */
 BOOST_XINT_INTEGER_TPL
 bitsize_t highestbit(const BOOST_XINT_INTEGER_TYPE n, bitsize_t return_if_zero =
     0)
 {
-    return highestbit(n._data(), return_if_zero);
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n.is_nan()) return return_if_zero;
+        try {
+            return highestbit(n._data(), return_if_zero);
+        } catch (std::exception&) {
+            return return_if_zero;
+        }
+    } else {
+        return highestbit(n._data(), return_if_zero);
+    }
 }
 //!@}
 
@@ -1002,9 +1647,23 @@ BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE mulmod(const BOOST_XINT_INTEGER_TYPE n, const
     BOOST_XINT_INTEGER_TYPE by, const BOOST_XINT_INTEGER_TYPE modulus)
 {
-    BOOST_XINT_INTEGER_TYPE r;
-    mulmod(r._data(), n._data(), by._data(), modulus._data());
-    return BOOST_XINT_MOVE(r);
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n.is_nan() || by.is_nan() || modulus.is_nan()) return
+            BOOST_XINT_INTEGER_TYPE::nan();
+        try {
+            BOOST_XINT_INTEGER_TYPE r = mulmod(n._data(), by._data(),
+                modulus._data());
+            if (BOOST_XINT_INTEGER_TYPE::Threadsafe == true) r._make_unique();
+            return BOOST_XINT_MOVE(r);
+        } catch (std::exception&) {
+            return BOOST_XINT_INTEGER_TYPE::nan();
+        }
+    } else {
+        BOOST_XINT_INTEGER_TYPE r = mulmod(n._data(), by._data(),
+            modulus._data());
+        if (BOOST_XINT_INTEGER_TYPE::Threadsafe == true) r._make_unique();
+        return BOOST_XINT_MOVE(r);
+    }
 }
 
 /*! \brief Get the modular product of squaring an integer.
@@ -1025,9 +1684,20 @@ BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE sqrmod(const BOOST_XINT_INTEGER_TYPE n, const
     BOOST_XINT_INTEGER_TYPE modulus)
 {
-    BOOST_XINT_INTEGER_TYPE r;
-    sqrmod(r._data(), n._data(), modulus._data());
-    return BOOST_XINT_MOVE(r);
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n.is_nan()) return n;
+        try {
+            BOOST_XINT_INTEGER_TYPE r = sqrmod(n._data(), modulus._data());
+            if (BOOST_XINT_INTEGER_TYPE::Threadsafe == true) r._make_unique();
+            return BOOST_XINT_MOVE(r);
+        } catch (std::exception&) {
+            return BOOST_XINT_INTEGER_TYPE::nan();
+        }
+    } else {
+        BOOST_XINT_INTEGER_TYPE r = sqrmod(n._data(), modulus._data());
+        if (BOOST_XINT_INTEGER_TYPE::Threadsafe == true) r._make_unique();
+        return BOOST_XINT_MOVE(r);
+    }
 }
 
 /*! \brief Get the result of \c n<sup>e</sup> % \c m, keeping the intermediate
@@ -1058,9 +1728,23 @@ BOOST_XINT_INTEGER_TYPE powmod(const BOOST_XINT_INTEGER_TYPE n, const
     BOOST_XINT_INTEGER_TYPE exponent, const BOOST_XINT_INTEGER_TYPE modulus,
     bool no_monty = false)
 {
-    BOOST_XINT_INTEGER_TYPE r;
-    powmod(r._data(), n._data(), exponent._data(), modulus._data(), no_monty);
-    return BOOST_XINT_MOVE(r);
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n.is_nan() || exponent.is_nan() || modulus.is_nan()) return
+            BOOST_XINT_INTEGER_TYPE::nan();
+        try {
+            BOOST_XINT_INTEGER_TYPE r = powmod(n._data(), exponent._data(),
+                modulus._data(), no_monty);
+            if (BOOST_XINT_INTEGER_TYPE::Threadsafe == true) r._make_unique();
+            return BOOST_XINT_MOVE(r);
+        } catch (std::exception&) {
+            return BOOST_XINT_INTEGER_TYPE::nan();
+        }
+    } else {
+        BOOST_XINT_INTEGER_TYPE r = powmod(n._data(), exponent._data(),
+            modulus._data(), no_monty);
+        if (BOOST_XINT_INTEGER_TYPE::Threadsafe == true) r._make_unique();
+        return BOOST_XINT_MOVE(r);
+    }
 }
 
 /*! \brief Get the modular inverse of a number in a modulus, if there is one.
@@ -1079,9 +1763,21 @@ BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE invmod(const BOOST_XINT_INTEGER_TYPE n, const
     BOOST_XINT_INTEGER_TYPE modulus)
 {
-    BOOST_XINT_INTEGER_TYPE r;
-    invmod(r._data(), n._data(), modulus._data());
-    return BOOST_XINT_MOVE(r);
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n.is_nan() || modulus.is_nan()) return
+            BOOST_XINT_INTEGER_TYPE::nan();
+        try {
+            BOOST_XINT_INTEGER_TYPE r = invmod(n._data(), modulus._data());
+            if (BOOST_XINT_INTEGER_TYPE::Threadsafe == true) r._make_unique();
+            return BOOST_XINT_MOVE(r);
+        } catch (std::exception&) {
+            return BOOST_XINT_INTEGER_TYPE::nan();
+        }
+    } else {
+        BOOST_XINT_INTEGER_TYPE r = invmod(n._data(), modulus._data());
+        if (BOOST_XINT_INTEGER_TYPE::Threadsafe == true) r._make_unique();
+        return BOOST_XINT_MOVE(r);
+    }
 }
 //!@}
 
@@ -1101,7 +1797,8 @@ BOOST_XINT_INTEGER_TYPE invmod(const BOOST_XINT_INTEGER_TYPE n, const
 the operation. If it returns \c false, the function will immediately return.
 
 \returns 1 if \c n seems to be prime, 0 if it isn't, or -1 if the provided
-callback function cancelled the operation.
+callback function cancelled the operation. The nothrow<true> version returns -2
+instead of throwing.
 
 \exception exceptions::invalid_argument if \c n is less than 2.
 
@@ -1118,33 +1815,116 @@ each time.
 BOOST_XINT_INTEGER_TPL
 int is_prime(const BOOST_XINT_INTEGER_TYPE n, callback_t callback = no_callback)
 {
-    return is_prime(n._data(), callback);
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n.is_nan()) return -2;
+        try {
+            return is_prime(n._data(), callback);
+        } catch (std::exception&) {
+            return -2;
+        }
+    } else {
+        return is_prime(n._data(), callback);
+    }
 }
 //!@}
 
 /*! \name Comparison Operators
 
+    The nothrow<true> versions of these functions return \c false instead of
+    throwing.
+
     \see compare(integer_t, integer_t, bool)
 */
 //!@{
 BOOST_XINT_INTEGER_TPL bool operator<(const BOOST_XINT_INTEGER_TYPE n1, const
-    BOOST_XINT_INTEGER_TYPE n2) { return operator<(n1._data(),
-    n2._data()); }
+    BOOST_XINT_INTEGER_TYPE n2)
+{
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n1.is_nan() || n2.is_nan()) return false;
+        try {
+            return operator<(n1._data(), n2._data());
+        } catch (std::exception&) {
+            return false;
+        }
+    } else {
+        return operator<(n1._data(), n2._data());
+    }
+}
+
 BOOST_XINT_INTEGER_TPL bool operator>(const BOOST_XINT_INTEGER_TYPE n1, const
-    BOOST_XINT_INTEGER_TYPE n2) { return operator>(n1._data(),
-    n2._data()); }
+    BOOST_XINT_INTEGER_TYPE n2)
+{
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n1.is_nan() || n2.is_nan()) return false;
+        try {
+            return operator>(n1._data(), n2._data());
+        } catch (std::exception&) {
+            return false;
+        }
+    } else {
+        return operator>(n1._data(), n2._data());
+    }
+}
+
 BOOST_XINT_INTEGER_TPL bool operator<=(const BOOST_XINT_INTEGER_TYPE n1, const
-    BOOST_XINT_INTEGER_TYPE n2) { return operator<=(n1._data(),
-    n2._data()); }
+    BOOST_XINT_INTEGER_TYPE n2)
+{
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n1.is_nan() || n2.is_nan()) return false;
+        try {
+            return operator<=(n1._data(), n2._data());
+        } catch (std::exception&) {
+            return false;
+        }
+    } else {
+        return operator<=(n1._data(), n2._data());
+    }
+}
+
 BOOST_XINT_INTEGER_TPL bool operator>=(const BOOST_XINT_INTEGER_TYPE n1, const
-    BOOST_XINT_INTEGER_TYPE n2) { return operator>=(n1._data(),
-    n2._data()); }
+    BOOST_XINT_INTEGER_TYPE n2)
+{
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n1.is_nan() || n2.is_nan()) return false;
+        try {
+            return operator>=(n1._data(), n2._data());
+        } catch (std::exception&) {
+            return false;
+        }
+    } else {
+        return operator>=(n1._data(), n2._data());
+    }
+}
+
 BOOST_XINT_INTEGER_TPL bool operator==(const BOOST_XINT_INTEGER_TYPE n1, const
-    BOOST_XINT_INTEGER_TYPE n2) { return operator==(n1._data(),
-    n2._data()); }
+    BOOST_XINT_INTEGER_TYPE n2)
+{
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n1.is_nan() || n2.is_nan()) return false;
+        try {
+            return operator==(n1._data(), n2._data());
+        } catch (std::exception&) {
+            return false;
+        }
+    } else {
+        return operator==(n1._data(), n2._data());
+    }
+}
+
 BOOST_XINT_INTEGER_TPL bool operator!=(const BOOST_XINT_INTEGER_TYPE n1, const
-    BOOST_XINT_INTEGER_TYPE n2) { return operator!=(n1._data(),
-    n2._data()); }
+    BOOST_XINT_INTEGER_TYPE n2)
+{
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n1.is_nan() || n2.is_nan()) return false;
+        try {
+            return operator!=(n1._data(), n2._data());
+        } catch (std::exception&) {
+            return false;
+        }
+    } else {
+        return operator!=(n1._data(), n2._data());
+    }
+}
 //!@}
 
 /*! \name Mathematical and Bitwise Operators
@@ -1165,8 +1945,18 @@ BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE operator+(const BOOST_XINT_INTEGER_TYPE n1, const
     BOOST_XINT_INTEGER_TYPE n2)
 {
-    BOOST_XINT_INTEGER_TYPE r(n1._data() + n2._data());
-    return BOOST_XINT_MOVE(r);
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n1.is_nan() || n2.is_nan()) return BOOST_XINT_INTEGER_TYPE::nan();
+        try {
+            BOOST_XINT_INTEGER_TYPE r(n1._data() + n2._data());
+            return BOOST_XINT_MOVE(r);
+        } catch (std::exception&) {
+            return BOOST_XINT_INTEGER_TYPE::nan();
+        }
+    } else {
+        BOOST_XINT_INTEGER_TYPE r(n1._data() + n2._data());
+        return BOOST_XINT_MOVE(r);
+    }
 }
 
 /*! \brief Calculate the difference between two integers.
@@ -1181,8 +1971,18 @@ BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE operator-(const BOOST_XINT_INTEGER_TYPE n1, const
     BOOST_XINT_INTEGER_TYPE n2)
 {
-    BOOST_XINT_INTEGER_TYPE r(n1._data() - n2._data());
-    return BOOST_XINT_MOVE(r);
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n1.is_nan() || n2.is_nan()) return BOOST_XINT_INTEGER_TYPE::nan();
+        try {
+            BOOST_XINT_INTEGER_TYPE r(n1._data() - n2._data());
+            return BOOST_XINT_MOVE(r);
+        } catch (std::exception&) {
+            return BOOST_XINT_INTEGER_TYPE::nan();
+        }
+    } else {
+        BOOST_XINT_INTEGER_TYPE r(n1._data() - n2._data());
+        return BOOST_XINT_MOVE(r);
+    }
 }
 
 /*! \brief Calculate the product of two integers.
@@ -1201,8 +2001,18 @@ BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE operator*(const BOOST_XINT_INTEGER_TYPE n1, const
     BOOST_XINT_INTEGER_TYPE n2)
 {
-    BOOST_XINT_INTEGER_TYPE r(n1._data() * n2._data());
-    return BOOST_XINT_MOVE(r);
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n1.is_nan() || n2.is_nan()) return BOOST_XINT_INTEGER_TYPE::nan();
+        try {
+            BOOST_XINT_INTEGER_TYPE r(n1._data() * n2._data());
+            return BOOST_XINT_MOVE(r);
+        } catch (std::exception&) {
+            return BOOST_XINT_INTEGER_TYPE::nan();
+        }
+    } else {
+        BOOST_XINT_INTEGER_TYPE r(n1._data() * n2._data());
+        return BOOST_XINT_MOVE(r);
+    }
 }
 
 /*! \brief Calculate how many \c dividends would fit into \c divisor.
@@ -1219,8 +2029,19 @@ BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE operator/(const BOOST_XINT_INTEGER_TYPE dividend, const
     BOOST_XINT_INTEGER_TYPE divisor)
 {
-    BOOST_XINT_INTEGER_TYPE r(dividend._data() / divisor._data());
-    return BOOST_XINT_MOVE(r);
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (dividend.is_nan() || divisor.is_nan()) return
+            BOOST_XINT_INTEGER_TYPE::nan();
+        try {
+            BOOST_XINT_INTEGER_TYPE r(dividend._data() / divisor._data());
+            return BOOST_XINT_MOVE(r);
+        } catch (std::exception&) {
+            return BOOST_XINT_INTEGER_TYPE::nan();
+        }
+    } else {
+        BOOST_XINT_INTEGER_TYPE r(dividend._data() / divisor._data());
+        return BOOST_XINT_MOVE(r);
+    }
 }
 
 /*! \brief Get the remainder after dividing a number by another.
@@ -1236,8 +2057,18 @@ BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE operator%(const BOOST_XINT_INTEGER_TYPE n1, const
     BOOST_XINT_INTEGER_TYPE n2)
 {
-    BOOST_XINT_INTEGER_TYPE r(n1._data() % n2._data());
-    return BOOST_XINT_MOVE(r);
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n1.is_nan() || n2.is_nan()) return BOOST_XINT_INTEGER_TYPE::nan();
+        try {
+            BOOST_XINT_INTEGER_TYPE r(n1._data() % n2._data());
+            return BOOST_XINT_MOVE(r);
+        } catch (std::exception&) {
+            return BOOST_XINT_INTEGER_TYPE::nan();
+        }
+    } else {
+        BOOST_XINT_INTEGER_TYPE r(n1._data() % n2._data());
+        return BOOST_XINT_MOVE(r);
+    }
 }
 
 /*! \brief Combine two integers using a bitwise \c AND operation.
@@ -1253,8 +2084,18 @@ BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE operator&(const BOOST_XINT_INTEGER_TYPE n1, const
     BOOST_XINT_INTEGER_TYPE n2)
 {
-    BOOST_XINT_INTEGER_TYPE r(n1._data() & n2._data());
-    return BOOST_XINT_MOVE(r);
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n1.is_nan() || n2.is_nan()) return BOOST_XINT_INTEGER_TYPE::nan();
+        try {
+            BOOST_XINT_INTEGER_TYPE r(n1._data() & n2._data());
+            return BOOST_XINT_MOVE(r);
+        } catch (std::exception&) {
+            return BOOST_XINT_INTEGER_TYPE::nan();
+        }
+    } else {
+        BOOST_XINT_INTEGER_TYPE r(n1._data() & n2._data());
+        return BOOST_XINT_MOVE(r);
+    }
 }
 
 /*! \brief Combine two integers using a bitwise \c OR operation.
@@ -1270,8 +2111,18 @@ BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE operator|(const BOOST_XINT_INTEGER_TYPE n1, const
     BOOST_XINT_INTEGER_TYPE n2)
 {
-    BOOST_XINT_INTEGER_TYPE r(n1._data() | n2._data());
-    return BOOST_XINT_MOVE(r);
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n1.is_nan() || n2.is_nan()) return BOOST_XINT_INTEGER_TYPE::nan();
+        try {
+            BOOST_XINT_INTEGER_TYPE r(n1._data() | n2._data());
+            return BOOST_XINT_MOVE(r);
+        } catch (std::exception&) {
+            return BOOST_XINT_INTEGER_TYPE::nan();
+        }
+    } else {
+        BOOST_XINT_INTEGER_TYPE r(n1._data() | n2._data());
+        return BOOST_XINT_MOVE(r);
+    }
 }
 
 /*! \brief Combine two integers using a bitwise \c XOR operation.
@@ -1287,8 +2138,18 @@ BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE operator^(const BOOST_XINT_INTEGER_TYPE n1, const
     BOOST_XINT_INTEGER_TYPE n2)
 {
-    BOOST_XINT_INTEGER_TYPE r(n1._data() ^ n2._data());
-    return BOOST_XINT_MOVE(r);
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n1.is_nan() || n2.is_nan()) return BOOST_XINT_INTEGER_TYPE::nan();
+        try {
+            BOOST_XINT_INTEGER_TYPE r(n1._data() ^ n2._data());
+            return BOOST_XINT_MOVE(r);
+        } catch (std::exception&) {
+            return BOOST_XINT_INTEGER_TYPE::nan();
+        }
+    } else {
+        BOOST_XINT_INTEGER_TYPE r(n1._data() ^ n2._data());
+        return BOOST_XINT_MOVE(r);
+    }
 }
 //!@}
 
@@ -1308,9 +2169,23 @@ BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE gcd(const BOOST_XINT_INTEGER_TYPE num1, const
     BOOST_XINT_INTEGER_TYPE num2)
 {
-    BOOST_XINT_INTEGER_TYPE r;
-    gcd(r._data(), num1._data(), num2._data());
-    return BOOST_XINT_MOVE(r);
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (num1.is_nan() || num2.is_nan()) return
+            BOOST_XINT_INTEGER_TYPE::nan();
+        try {
+            BOOST_XINT_INTEGER_TYPE r;
+            gcd(r._data(), num1._data(), num2._data());
+            if (BOOST_XINT_INTEGER_TYPE::Threadsafe == true) r._make_unique();
+            return BOOST_XINT_MOVE(r);
+        } catch (std::exception&) {
+            return BOOST_XINT_INTEGER_TYPE::nan();
+        }
+    } else {
+        BOOST_XINT_INTEGER_TYPE r;
+        gcd(r._data(), num1._data(), num2._data());
+        if (BOOST_XINT_INTEGER_TYPE::Threadsafe == true) r._make_unique();
+        return BOOST_XINT_MOVE(r);
+    }
 }
 
 /*! \brief Calculate the Least Common Multiple of two integers.
@@ -1327,9 +2202,23 @@ BOOST_XINT_INTEGER_TPL
 BOOST_XINT_INTEGER_TYPE lcm(const BOOST_XINT_INTEGER_TYPE num1, const
     BOOST_XINT_INTEGER_TYPE num2)
 {
-    BOOST_XINT_INTEGER_TYPE r;
-    lcm(r._data(), num1._data(), num2._data());
-    return BOOST_XINT_MOVE(r);
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (num1.is_nan() || num2.is_nan()) return
+            BOOST_XINT_INTEGER_TYPE::nan();
+        try {
+            BOOST_XINT_INTEGER_TYPE r;
+            lcm(r._data(), num1._data(), num2._data());
+            if (BOOST_XINT_INTEGER_TYPE::Threadsafe == true) r._make_unique();
+            return BOOST_XINT_MOVE(r);
+        } catch (std::exception&) {
+            return BOOST_XINT_INTEGER_TYPE::nan();
+        }
+    } else {
+        BOOST_XINT_INTEGER_TYPE r;
+        lcm(r._data(), num1._data(), num2._data());
+        if (BOOST_XINT_INTEGER_TYPE::Threadsafe == true) r._make_unique();
+        return BOOST_XINT_MOVE(r);
+    }
 }
 
 /*! \brief Compare two integer objects.
@@ -1341,14 +2230,23 @@ down to O(1) if they have different signs or wildly different magnitudes.
 \param[in] ignoresign If \c true, the absolute values of n1 and n2 are compared,
 instead of their signed values. Used internally.
 
-\returns A negative number if \c n1 < \c n2; zero if \c n1 == \c n2, or a
-positive number if \c n1 > \c n2.
+\returns -1 if \c n1 < \c n2; zero if \c n1 == \c n2, or 1 if \c n1 > \c n2. The
+nothrow<true> version returns 2 instead of throwing.
 */
 BOOST_XINT_INTEGER_TPL
 int compare(const BOOST_XINT_INTEGER_TYPE n1, const BOOST_XINT_INTEGER_TYPE n2,
     bool ignoresign = false)
 {
-    return compare(n1._data(), n2._data(), ignoresign);
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n1.is_nan() || n2.is_nan()) return 2;
+        try {
+            return compare(n1._data(), n2._data(), ignoresign);
+        } catch (std::exception&) {
+            return 2;
+        }
+    } else {
+        return compare(n1._data(), n2._data(), ignoresign);
+    }
 }
 
 /*! \brief Get the log<sub>2</sub> value of an integer.
@@ -1357,7 +2255,8 @@ int compare(const BOOST_XINT_INTEGER_TYPE n1, const BOOST_XINT_INTEGER_TYPE n2,
 
 \param[in] n The %integer to operate on.
 
-\returns The %integer log<sub>2</sub> value of the integer.
+\returns The %integer log<sub>2</sub> value of the integer. The nothrow<true>
+version returns zero instead of throwing.
 
 \remarks
 pow2(log2(n)-1) will give you an integer with the highest set bit of \c n,
@@ -1368,20 +2267,45 @@ Similar to the #highestbit function.
 */
 BOOST_XINT_INTEGER_TPL
 size_t log2(const BOOST_XINT_INTEGER_TYPE n) {
-    return log2(n._data());
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n.is_nan()) return 0;
+        try {
+            return log2(n._data());
+        } catch (std::exception&) {
+            return 0;
+        }
+    } else {
+        return log2(n._data());
+    }
 }
 //!@}
 
 //! Allows for comparisons between integer_t types and other integral values.
 #define BOOST_XINT_ANY_COMPARE(rtype, op) \
-    template <class Alloc, bool Threadsafe, bool Secure, typename N> \
+    template <class A0, class A1, class A2, class A3, class A4, typename N> \
     rtype op(const BOOST_XINT_INTEGER_TYPE n1, const N n2) { \
-        return op(n1, BOOST_XINT_INTEGER_TYPE(n2)); \
+        if (BOOST_XINT_INTEGER_TYPE::Nothrow) { \
+            try { \
+                return op(n1, BOOST_XINT_INTEGER_TYPE(n2)); \
+            } catch (std::exception&) { \
+                return rtype(0); \
+            } \
+        } else { \
+            return op(n1, BOOST_XINT_INTEGER_TYPE(n2)); \
+        } \
     } \
     \
-    template <typename N, class Alloc, bool Threadsafe, bool Secure> \
+    template <typename N, class A0, class A1, class A2, class A3, class A4> \
     rtype op(const N n1, const BOOST_XINT_INTEGER_TYPE n2) { \
-        return op(BOOST_XINT_INTEGER_TYPE(n1), n2); \
+        if (BOOST_XINT_INTEGER_TYPE::Nothrow) { \
+            try { \
+                return op(BOOST_XINT_INTEGER_TYPE(n1), n2); \
+            } catch (std::exception&) { \
+                return rtype(0); \
+            } \
+        } else { \
+            return op(BOOST_XINT_INTEGER_TYPE(n1), n2); \
+        } \
     }
 
 BOOST_XINT_ANY_COMPARE(bool, operator<)
@@ -1394,22 +2318,38 @@ BOOST_XINT_ANY_COMPARE(int, compare)
 
 //! Allows for operations between integer_t types and other integral values.
 #define BOOST_XINT_ANY_MATH(op) \
-    template <class Alloc, bool Threadsafe, bool Secure, typename N> \
-    BOOST_XINT_INTEGER_TYPE op(const integer_t<Alloc, Threadsafe, \
-        Secure> n1, const N n2) \
-    { \
-        BOOST_XINT_INTEGER_TYPE r(op(n1, integer_t<Alloc, Threadsafe, \
-            Secure>(n2))); \
-        return BOOST_XINT_MOVE(r); \
+    template <class A0, class A1, class A2, class A3, class A4, typename N> \
+    BOOST_XINT_INTEGER_TYPE op(const BOOST_XINT_INTEGER_TYPE n1, const N n2) { \
+        if (BOOST_XINT_INTEGER_TYPE::Nothrow) { \
+            try { \
+                BOOST_XINT_INTEGER_TYPE r(op(n1, BOOST_XINT_INTEGER_TYPE(n2)));\
+                if (BOOST_XINT_INTEGER_TYPE::Threadsafe == true) r._make_unique(); \
+                return BOOST_XINT_MOVE(r); \
+            } catch (std::exception&) { \
+                return BOOST_XINT_INTEGER_TYPE::nan(); \
+            } \
+        } else { \
+            BOOST_XINT_INTEGER_TYPE r(op(n1, BOOST_XINT_INTEGER_TYPE(n2))); \
+            if (BOOST_XINT_INTEGER_TYPE::Threadsafe == true) r._make_unique(); \
+            return BOOST_XINT_MOVE(r); \
+        } \
     } \
     \
-    template <typename N, class Alloc, bool Threadsafe, bool Secure> \
-    BOOST_XINT_INTEGER_TYPE op(const N n1, const integer_t<Alloc, Threadsafe, \
-        Secure> n2) \
-    { \
-        BOOST_XINT_INTEGER_TYPE r(op(integer_t<Alloc, Threadsafe, Secure>(n1), \
-            n2)); \
-        return BOOST_XINT_MOVE(r); \
+    template <typename N, class A0, class A1, class A2, class A3, class A4> \
+    BOOST_XINT_INTEGER_TYPE op(const N n1, const BOOST_XINT_INTEGER_TYPE n2) { \
+        if (BOOST_XINT_INTEGER_TYPE::Nothrow) { \
+            try { \
+                BOOST_XINT_INTEGER_TYPE r(op(BOOST_XINT_INTEGER_TYPE(n1), n2));\
+                if (BOOST_XINT_INTEGER_TYPE::Threadsafe == true) r._make_unique(); \
+                return BOOST_XINT_MOVE(r); \
+            } catch (std::exception&) { \
+                return BOOST_XINT_INTEGER_TYPE::nan(); \
+            } \
+        } else { \
+            BOOST_XINT_INTEGER_TYPE r(op(BOOST_XINT_INTEGER_TYPE(n1), n2)); \
+            if (BOOST_XINT_INTEGER_TYPE::Threadsafe == true) r._make_unique(); \
+            return BOOST_XINT_MOVE(r); \
+        } \
     }
 
 BOOST_XINT_ANY_MATH(pow)
@@ -1430,18 +2370,40 @@ BOOST_XINT_ANY_MATH(lcm)
 
 //! \name Stream input/output functions
 //!@{
-template <typename charT, typename traits, class Alloc, bool Threadsafe, bool
-    Secure> inline std::basic_ostream<charT,traits>& operator<<(
-    std::basic_ostream<charT, traits>& out, const integer_t<Alloc, Threadsafe,
-    Secure> n)
+template <typename charT, typename traits, class A0, class A1, class A2, class
+    A3, class A4> inline std::basic_ostream<charT,traits>&
+    operator<<(std::basic_ostream<charT, traits>& out, const
+    BOOST_XINT_INTEGER_TYPE n)
 {
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow && n.is_nan()) return operator<<(out,
+        nan_text);
     return operator<<(out, n._data());
 }
 
-template <typename charT, typename traits, class Alloc, bool Threadsafe, bool
-    Secure> inline std::basic_istream<charT,traits>& operator>>(
-    std::basic_istream<charT, traits>& in, BOOST_XINT_INTEGER_TYPE& n)
+template <typename charT, typename traits, class A0, class A1, class A2, class
+    A3, class A4> inline std::basic_istream<charT,traits>&
+    operator>>(std::basic_istream<charT, traits>& in, BOOST_XINT_INTEGER_TYPE&
+    n)
 {
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow && in.peek()=='#') {
+        // Must be either #NaN# or an error
+        char buffer[6];
+
+        // These are efficient and safe, but MSVC complains about them anyway.
+        //std::streamsize size = in.readsome(buffer, 5);
+        //buffer[size]=0;
+
+        // Replacing them with these.
+        char *p = buffer, *pe = p + 5;
+        while (p != pe) in >> *p++;
+        *p = 0;
+
+        std::string str(buffer);
+
+        if (str == boost::xint::nan_text) n = n.nan();
+        else in.setstate(std::ios::failbit);
+        return in;
+    }
     return operator>>(in, n._data());
 }
 //!@}
@@ -1458,56 +2420,155 @@ inline void swap(BOOST_XINT_INTEGER_TYPE& left, BOOST_XINT_INTEGER_TYPE& right)
 */
 typedef integer_t<> integer;
 
+/*! \brief The default arbitrary-length nothrow_integer type.
+
+    This uses the default parameters for the integer_t template, other than the
+    \c nothrow one.
+*/
+typedef integer_t<options::nothrow<true> > nothrow_integer;
+
 } // namespace xint
 } // namespace boost
 
+#ifndef BOOST_XINT_DOXYGEN_IGNORE
 namespace std {
-template<>
-class numeric_limits<boost::xint::integer> {
+
+#define BOOST_XINT_INTEGER_TYPENAME boost::xint::integer_t<A0, A1, A2, A3, A4>
+
+BOOST_XINT_INTEGER_TPL
+class numeric_limits<BOOST_XINT_INTEGER_TYPENAME> {
     public:
-    static const bool is_specialized = true;
+    static const bool is_specialized;
 
-    static boost::xint::integer min() throw() { return 0; } // Not applicable
-    static boost::xint::integer max() throw() { return 0; } // Not applicable
+    static BOOST_XINT_INTEGER_TYPENAME min BOOST_PREVENT_MACRO_SUBSTITUTION()
+		throw()
+	{
+        if (BOOST_XINT_INTEGER_TYPENAME::Bits)
+            return -~(BOOST_XINT_INTEGER_TYPENAME());
+        else return 0;
+    }
+    static BOOST_XINT_INTEGER_TYPENAME max BOOST_PREVENT_MACRO_SUBSTITUTION()
+		throw()
+	{
+        if (BOOST_XINT_INTEGER_TYPENAME::Bits)
+            return ~(BOOST_XINT_INTEGER_TYPENAME());
+        else return 0;
+    }
 
-    static const int digits = 0; // Not applicable
-    static const int digits10 = 0; // Not applicable
-    static const bool is_signed = true;
-    static const bool is_integer = true;
-    static const bool is_exact = true;
-    static const int radix = 2;
-    static boost::xint::integer epsilon() throw() { return 0; }
-    static boost::xint::integer round_error() throw() { return 0; }
+    static const int digits;
+    static const int digits10;
+    static const bool is_signed;
+    static const bool is_integer;
+    static const bool is_exact;
+    static const int radix;
+    static BOOST_XINT_INTEGER_TYPENAME epsilon() throw() { return 0; }
+    static BOOST_XINT_INTEGER_TYPENAME round_error() throw() { return 0; }
 
-    static const int min_exponent = 0; // Not applicable
-    static const int min_exponent10 = 0; // Not applicable
-    static const int max_exponent = 0; // Not applicable
-    static const int max_exponent10 = 0; // Not applicable
+    static const int min_exponent; // N/A
+    static const int min_exponent10; // N/A
+    static const int max_exponent; // N/A
+    static const int max_exponent10; // N/A
 
-    static const bool has_infinity = false;
-    static const bool has_quiet_NaN = false;
-    static const bool has_signaling_NaN = false;
-    static const float_denorm_style has_denorm = denorm_absent; // Not applicable
-    static const bool has_denorm_loss = false; // Not applicable
+    static const bool has_infinity; // N/A
+    static const bool has_quiet_NaN;
+    static const bool has_signaling_NaN; // N/A
+    static const float_denorm_style has_denorm; // N/A
+    static const bool has_denorm_loss; // N/A
 
-    static boost::xint::integer infinity() throw() { return 0; } // Not applicable
-    static boost::xint::integer quiet_NaN() throw() { return 0; } // Not applicable
-    static boost::xint::integer signaling_NaN() throw() { return 0; } // Not applicable
-    static boost::xint::integer denorm_min() throw() { return 0; } // Not applicable
+    static BOOST_XINT_INTEGER_TYPENAME infinity() throw() { return 0; } // N/A
+    static BOOST_XINT_INTEGER_TYPENAME quiet_NaN() throw() {
+        if (BOOST_XINT_INTEGER_TYPENAME::Nothrow)
+            return BOOST_XINT_INTEGER_TYPENAME::nan();
+        else return 0;
+    }
+    static BOOST_XINT_INTEGER_TYPENAME signaling_NaN() throw() { return 0; } // N/A
+    static BOOST_XINT_INTEGER_TYPENAME denorm_min() throw() { return 0; } // N/A
 
-    static const bool is_iec559 = false;
-    static const bool is_bounded = false;
-    static const bool is_modulo = false;
+    static const bool is_iec559; // N/A
+    static const bool is_bounded;
+    static const bool is_modulo;
 
-    static const bool traps = true; // I assume this means exceptions?
-    static const bool tinyness_before = false; // Not applicable
-    static const float_round_style round_style = round_indeterminate; // Not applicable
+    static const bool traps; // I assume this means exceptions?
+    static const bool tinyness_before; // N/A
+    static const float_round_style round_style; // N/A
 };
+
+BOOST_XINT_INTEGER_TPL
+const bool numeric_limits<BOOST_XINT_INTEGER_TYPENAME>::is_specialized = true;
+
+BOOST_XINT_INTEGER_TPL
+const int numeric_limits<BOOST_XINT_INTEGER_TYPENAME>::digits =
+    static_cast<int>(BOOST_XINT_INTEGER_TYPENAME::Bits);
+
+BOOST_XINT_INTEGER_TPL
+const int numeric_limits<BOOST_XINT_INTEGER_TYPENAME>::digits10 =
+    static_cast<int>(boost::xint::detail::log10_bits(
+    BOOST_XINT_INTEGER_TYPENAME::Bits));
+
+BOOST_XINT_INTEGER_TPL
+const bool numeric_limits<BOOST_XINT_INTEGER_TYPENAME>::is_signed = true;
+
+BOOST_XINT_INTEGER_TPL
+const bool numeric_limits<BOOST_XINT_INTEGER_TYPENAME>::is_integer = true;
+
+BOOST_XINT_INTEGER_TPL
+const bool numeric_limits<BOOST_XINT_INTEGER_TYPENAME>::is_exact = true;
+
+BOOST_XINT_INTEGER_TPL
+const int numeric_limits<BOOST_XINT_INTEGER_TYPENAME>::radix = 2;
+
+BOOST_XINT_INTEGER_TPL
+const int numeric_limits<BOOST_XINT_INTEGER_TYPENAME>::min_exponent = 0;
+
+BOOST_XINT_INTEGER_TPL
+const int numeric_limits<BOOST_XINT_INTEGER_TYPENAME>::min_exponent10 = 0;
+
+BOOST_XINT_INTEGER_TPL
+const int numeric_limits<BOOST_XINT_INTEGER_TYPENAME>::max_exponent = 0;
+
+BOOST_XINT_INTEGER_TPL
+const int numeric_limits<BOOST_XINT_INTEGER_TYPENAME>::max_exponent10 = 0;
+
+BOOST_XINT_INTEGER_TPL
+const bool numeric_limits<BOOST_XINT_INTEGER_TYPENAME>::has_infinity = false;
+
+BOOST_XINT_INTEGER_TPL
+const bool numeric_limits<BOOST_XINT_INTEGER_TYPENAME>::has_quiet_NaN =
+    (BOOST_XINT_INTEGER_TYPENAME::Nothrow ? true : false);
+
+BOOST_XINT_INTEGER_TPL
+const bool numeric_limits<BOOST_XINT_INTEGER_TYPENAME>::has_signaling_NaN =
+    false;
+
+BOOST_XINT_INTEGER_TPL
+const float_denorm_style numeric_limits<BOOST_XINT_INTEGER_TYPENAME>::has_denorm
+    = denorm_absent;
+
+BOOST_XINT_INTEGER_TPL
+const bool numeric_limits<BOOST_XINT_INTEGER_TYPENAME>::has_denorm_loss = false;
+
+BOOST_XINT_INTEGER_TPL
+const bool numeric_limits<BOOST_XINT_INTEGER_TYPENAME>::is_iec559 = false;
+
+BOOST_XINT_INTEGER_TPL
+const bool numeric_limits<BOOST_XINT_INTEGER_TYPENAME>::is_bounded =
+    (BOOST_XINT_INTEGER_TYPENAME::Bits == 0 ? false : true);
+
+BOOST_XINT_INTEGER_TPL
+const bool numeric_limits<BOOST_XINT_INTEGER_TYPENAME>::is_modulo =
+    (BOOST_XINT_INTEGER_TYPENAME::Bits == 0 ? false : true);
+
+BOOST_XINT_INTEGER_TPL
+const bool numeric_limits<BOOST_XINT_INTEGER_TYPENAME>::traps =
+    (BOOST_XINT_INTEGER_TYPENAME::Nothrow ? false : true);
+
+BOOST_XINT_INTEGER_TPL
+const bool numeric_limits<BOOST_XINT_INTEGER_TYPENAME>::tinyness_before = false;
+
+BOOST_XINT_INTEGER_TPL
+const float_round_style numeric_limits<BOOST_XINT_INTEGER_TYPENAME>::round_style
+    = round_indeterminate;
+
 } // namespace std
-
-#ifdef _WIN32
-    // Return the warning setting to its original value.
-    #pragma warning(pop)
-#endif
-
+#endif // BOOST_XINT_DOXYGEN_IGNORE
 #endif // BOOST_INCLUDED_XINT_INTEGER_HPP

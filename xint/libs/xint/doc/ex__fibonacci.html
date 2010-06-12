@@ -27,7 +27,7 @@
 <p><code>0 1 1 2 3 5 8 13 21 34 55 89 144...</code></p>
 <p>You might be curious what the first Fibonacci number is that's too big to calculate using the standard C++ <code>unsigned long</code> type. A brute-force method of calculating this would be problematic, since it might not be possible to tell when it overflows. But with the XInt library, it's child's play:</p>
 <div class="fragment"><pre class="fragment"><span class="preprocessor">#include &lt;iostream&gt;</span>
-<span class="preprocessor">#include &lt;<a class="code" href="xint_8hpp.html" title="This is the include-everything header.">boost/xint/xint.hpp</a>&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="integer_8hpp.html" title="Declares the arbitrary-length integer type.">boost/xint/integer.hpp</a>&gt;</span>
 
 <span class="keywordtype">int</span> main() {
     <span class="keyword">using namespace </span>boost::xint;
@@ -64,7 +64,7 @@
 </pre></div><p>If you're not intimately familiar with the Fibonacci sequence, and how fast the numbers in it grow, the answer might shock you.</p>
 <p>As you can see, using the XInt library is just like using the native integer types -- except that an <code>xint::integer</code> won't overflow on you until you completely exhaust your system's memory. :-) </p>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Jun 3 00:00:36 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sat Jun 12 11:43:07 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

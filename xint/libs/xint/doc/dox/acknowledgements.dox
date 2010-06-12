@@ -41,13 +41,14 @@ variable-length and fixed-length integers.
 - John Bytheway, for an idea for simplifying the template documentation greatly.
 - David Abrahams, for contributing a thought on how to use Boost.Parameter
 effectively with multiple \c bool parameters.
+- Christopher Jefferson, for sharing the best way to support \c
+BOOST_NO_EXCEPTIONS.
 
 And the other Boost development list members who joined the discussion:
 
 - Anders Dalvander
 - Arash Partow
 - Frank Mori Hess
-- Christopher Jefferson
 - Daniel (Herring?)
 - "OvermindDL1"
 - Marius Stoica
@@ -55,6 +56,7 @@ And the other Boost development list members who joined the discussion:
 - Mathias Gaunard
 - Giovanni Piero Deretta
 - Daniel F.
+- Lucanus J Simonson
 
 If I've forgotten anyone, please let me know and I'll correct the oversight.
 */

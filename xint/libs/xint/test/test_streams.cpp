@@ -12,7 +12,6 @@
 */
 
 #include <boost/xint/integer.hpp>
-#include <boost/xint/nothrow_integer.hpp>
 
 #ifndef BOOST_XINT_SINGLE_TEST_PROGRAM
     #define BOOST_TEST_MAIN
@@ -28,7 +27,9 @@ namespace xint {
 
 namespace {
 
-bool testStreamOut(std::string name, std::stringstream& str, const integer& n, std::string expected) {
+bool testStreamOut(std::string name, std::stringstream& str, const integer& n,
+    std::string expected)
+{
     str.str(std::string());
     str << n;
     if (str.str() != expected) {
@@ -37,7 +38,9 @@ bool testStreamOut(std::string name, std::stringstream& str, const integer& n, s
     } else return true;
 }
 
-bool testStreamIn(std::string name, std::stringstream& str, std::string value, const integer& expected) {
+bool testStreamIn(std::string name, std::stringstream& str, std::string value,
+    const integer& expected)
+{
     integer test;
 
     str.clear(); // Reset any error states on the stream
@@ -153,8 +156,8 @@ BOOST_AUTO_TEST_CASE(test_streams) {
         BOOST_CHECK_EQUAL(test, 123); // Shouldn't have touched it
         if (!!str) BOOST_ERROR("stream error signal wasn't set");
     } catch (std::exception& e) {
-        std::string err=std::string("testStreams: erroneous input stream "
-            "exception '")+e.what()+"'";
+        std::string err = std::string("testStreams: erroneous input stream "
+            "exception '") + e.what() + "'";
         BOOST_ERROR(err);
     }
 
@@ -163,7 +166,7 @@ BOOST_AUTO_TEST_CASE(test_streams) {
         str.clear();
 
         str << nothrow_integer::nan();
-        std::string temp=str.str();
+        std::string temp = str.str();
 
         nothrow_integer test;
         str.str(temp);
@@ -172,7 +175,7 @@ BOOST_AUTO_TEST_CASE(test_streams) {
         if (!str) BOOST_ERROR("testStream: isNaN set stream error signal, "
             "shouldn't have");
     } catch (std::exception& e) {
-        std::string err=std::string("testStreams: erroneous input stream "
+        std::string err = std::string("testStreams: erroneous input stream "
             "exception '")+e.what()+"'";
         BOOST_ERROR(err);
     }

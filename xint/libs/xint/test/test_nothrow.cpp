@@ -15,7 +15,7 @@
     \brief Contains tests for the nothrow_integer type.
 */
 
-#include <boost/xint/nothrow_integer.hpp>
+#include <boost/xint/integer.hpp>
 
 #ifndef BOOST_XINT_SINGLE_TEST_PROGRAM
     #define BOOST_TEST_MAIN
@@ -25,15 +25,16 @@
 namespace boost {
 namespace xint {
 
+using namespace boost::xint::options;
+
 BOOST_AUTO_TEST_CASE(test_nothrow_init) {
     nothrow_integer n1(5), n2(n1);
     BOOST_CHECK_EQUAL(n1, 5);
     BOOST_CHECK_EQUAL(n2, 5);
 
-    // Test the any_integer constructor from a different type of
-    // nothrow_integer's Not-a-Number value.
-    nothrow_integer n3(nothrow_integer_t<std::allocator<detail::digit_t>, false,
-        true>::nan());
+    // Test the copy constructor from a different type of nothrow_integer's
+    // Not-a-Number value.
+    nothrow_integer n3(integer_t<fixedlength<12>, nothrow<true> >::nan());
     BOOST_CHECK(n3.is_nan());
 }
 

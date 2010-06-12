@@ -174,70 +174,6 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
-			<File
-				RelativePath="..\boost\xint\detail\addsubtract.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\boost\xint\detail\andorxor.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\boost\xint\detail\bitfunctions.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\boost\xint\detail\compare.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\boost\xint\detail\convert.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\boost\xint\detail\data_t.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\boost\xint\detail\divide.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\boost\xint\detail\gcd.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\boost\xint\detail\modular.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\boost\xint\detail\monty.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\boost\xint\detail\multiply.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\boost\xint\detail\powers.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\boost\xint\detail\prime.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\boost\xint\detail\random.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\boost\xint\detail\roots.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\boost\xint\detail\shift.cpp"
-				>
-			</File>
 			<Filter
 				Name="test"
 				>
@@ -305,15 +241,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\boost\xint\detail\bitqueue.hpp"
-				>
-			</File>
-			<File
 				RelativePath="..\boost\xint\exceptions.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\boost\xint\fixed_integer.hpp"
 				>
 			</File>
 			<File
@@ -321,25 +249,109 @@
 				>
 			</File>
 			<File
-				RelativePath="..\boost\xint\detail\internals.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\boost\xint\detail\monty.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\boost\xint\nothrow_integer.hpp"
-				>
-			</File>
-			<File
 				RelativePath="..\boost\xint\random.hpp"
 				>
 			</File>
-			<File
-				RelativePath="..\boost\xint\xint.hpp"
+			<Filter
+				Name="detail"
 				>
-			</File>
+				<File
+					RelativePath="..\boost\xint\detail\addsubtract.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\boost\xint\detail\andorxor.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\boost\xint\detail\basic_types_and_includes.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\boost\xint\detail\bitfunctions.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\boost\xint\detail\bitqueue.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\boost\xint\detail\compare.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\boost\xint\detail\convert.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\boost\xint\detail\divide.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\boost\xint\detail\gcd.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\boost\xint\detail\internals.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\boost\xint\detail\log2.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\boost\xint\detail\magnitude_manager.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\boost\xint\detail\modular.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\boost\xint\detail\monty.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\boost\xint\detail\multiply.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\boost\xint\detail\options.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\boost\xint\detail\policies.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\boost\xint\detail\powers.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\boost\xint\detail\prime.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\boost\xint\detail\random_by_size.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\boost\xint\detail\randomgen.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\boost\xint\detail\raw_integer.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\boost\xint\detail\roots.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\boost\xint\detail\shift.hpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"

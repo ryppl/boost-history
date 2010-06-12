@@ -39,77 +39,71 @@
 <a name="l00018"></a>00018 <span class="preprocessor">#ifndef BOOST_INCLUDED_XINT_RANDOM_HPP</span>
 <a name="l00019"></a>00019 <span class="preprocessor"></span><span class="preprocessor">#define BOOST_INCLUDED_XINT_RANDOM_HPP</span>
 <a name="l00020"></a>00020 <span class="preprocessor"></span>
-<a name="l00021"></a>00021 <span class="preprocessor">#include &quot;<a class="code" href="internals_8hpp.html" title="Contains the internal definitions required for all XInt types.">detail/internals.hpp</a>&quot;</span>
-<a name="l00022"></a>00022 <span class="preprocessor">#include &lt;ctime&gt;</span>
-<a name="l00023"></a>00023 <span class="preprocessor">#include &lt;boost/random/uniform_int.hpp&gt;</span>
-<a name="l00024"></a>00024 <span class="preprocessor">#include &lt;boost/random/variate_generator.hpp&gt;</span>
-<a name="l00025"></a>00025 <span class="preprocessor">#include &lt;boost/random/mersenne_twister.hpp&gt;</span>
-<a name="l00026"></a>00026 
-<a name="l00027"></a>00027 <span class="keyword">namespace </span>boost {
-<a name="l00028"></a>00028 <span class="keyword">namespace </span>xint {
-<a name="l00029"></a>00029 
-<a name="l00030"></a>00030 <span class="keyword">namespace </span>detail {
-<a name="l00032"></a>00032 
-<a name="l00033"></a>00033     <span class="comment">// This is a template only so that the static member variables don&#39;t cause</span>
-<a name="l00034"></a>00034     <span class="comment">// problems in header-only mode.</span>
-<a name="l00035"></a>00035     <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T = <span class="keywordtype">void</span>&gt;
-<a name="l00036"></a>00036     <span class="keyword">class </span>strong_random_generator_t {
-<a name="l00037"></a>00037         <span class="keyword">public</span>:
-<a name="l00038"></a>00038         <span class="keyword">typedef</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> result_type;
-<a name="l00039"></a>00039 
-<a name="l00040"></a>00040         strong_random_generator_t();
-<a name="l00041"></a>00041         ~strong_random_generator_t();
-<a name="l00042"></a>00042         result_type operator()();
-<a name="l00043"></a>00043 
-<a name="l00044"></a>00044         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">bool</span> has_fixed_range;
-<a name="l00045"></a>00045         <span class="keyword">static</span> <span class="keyword">const</span> result_type min_value;
-<a name="l00046"></a>00046         <span class="keyword">static</span> <span class="keyword">const</span> result_type max_value;
-<a name="l00047"></a>00047         result_type min() <span class="keyword">const</span>;
-<a name="l00048"></a>00048         result_type max() <span class="keyword">const</span>;
-<a name="l00049"></a>00049         <span class="keywordtype">double</span> entropy() <span class="keyword">const</span>;
-<a name="l00050"></a>00050 
-<a name="l00051"></a>00051         <span class="keyword">private</span>:
-<a name="l00052"></a>00052         <span class="keyword">struct </span>impl_t;
-<a name="l00053"></a>00053         impl_t *impl;
-<a name="l00054"></a>00054     };
-<a name="l00055"></a>00055 
-<a name="l00057"></a>00057     <span class="keyword">struct </span>base_random_generator {
-<a name="l00058"></a>00058         <span class="keyword">typedef</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> result_type;
-<a name="l00059"></a>00059         <span class="keyword">virtual</span> result_type operator()()=0;
-<a name="l00060"></a>00060         <span class="keyword">virtual</span> ~base_random_generator() { }
-<a name="l00061"></a>00061     };
-<a name="l00062"></a>00062 
-<a name="l00064"></a>00064     <span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;
-<a name="l00065"></a>00065     <span class="keyword">struct </span>random_generator: <span class="keyword">public</span> base_random_generator {
-<a name="l00066"></a>00066         <span class="keyword">typedef</span> boost::uniform_int&lt;result_type&gt; dist_t;
-<a name="l00067"></a>00067         <span class="keyword">typedef</span> boost::variate_generator&lt;T&amp;, dist_t&gt; gen_t;
-<a name="l00068"></a>00068         random_generator(T&amp; g): gen(g,
-<a name="l00069"></a>00069             dist_t((std::numeric_limits&lt;result_type&gt;::min)(),
-<a name="l00070"></a>00070                 (std::numeric_limits&lt;result_type&gt;::max)())) { }
-<a name="l00071"></a>00071         result_type operator()() { <span class="keywordflow">return</span> gen(); }
-<a name="l00072"></a>00072         gen_t gen;
-<a name="l00073"></a>00073     };
-<a name="l00074"></a>00074 
-<a name="l00075"></a>00075     <span class="keywordtype">void</span> random_by_size(data_t&amp; target, base_random_generator&amp; gen, <span class="keywordtype">size_t</span> bits,
-<a name="l00076"></a>00076         <span class="keywordtype">bool</span> high_bit_on, <span class="keywordtype">bool</span> low_bit_on, <span class="keywordtype">bool</span> can_be_negative);
-<a name="l00077"></a>00077     <span class="keywordtype">void</span> random_prime(data_t&amp; target, base_random_generator&amp; gen, <span class="keywordtype">size_t</span>
-<a name="l00078"></a>00078         size_in_bits, <a class="code" href="namespaceboost_1_1xint.html#a48deb76c9c428a4b3a50177b1b0cb547" title="A callback function takes no parameters and returns a bool.">callback_t</a> callback = <a class="code" href="namespaceboost_1_1xint.html#a758d415a476a5eeed28dc6b5869b1696" title="An empty callback_t, used as a default parameter for some functions.">no_callback</a>);
-<a name="l00079"></a>00079 
-<a name="l00081"></a>00081 } <span class="comment">// namespace detail</span>
-<a name="l00082"></a>00082 
-<a name="l00092"></a><a class="code" href="classboost_1_1xint_1_1default__random__generator.html">00092</a> <span class="keyword">class </span><a class="code" href="classboost_1_1xint_1_1default__random__generator.html" title="A convenience class for general-purpose (insecure) random numbers.">default_random_generator</a>: <span class="keyword">public</span> boost::mt19937 {
-<a name="l00093"></a>00093     <span class="keyword">public</span>:
-<a name="l00094"></a><a class="code" href="classboost_1_1xint_1_1default__random__generator.html#a4289636c47258469b78703ae791812f6">00094</a>     <a class="code" href="classboost_1_1xint_1_1default__random__generator.html#a4289636c47258469b78703ae791812f6">default_random_generator</a>(): mt19937(boost::uint32_t(time(0)+clock())) { }
-<a name="l00095"></a>00095 };
-<a name="l00096"></a>00096 
-<a name="l00103"></a><a class="code" href="namespaceboost_1_1xint.html#ac38b0aafb375c80ff42b5488a52d9e8f">00103</a> <span class="keyword">typedef</span> detail::strong_random_generator_t&lt;&gt; <a class="code" href="namespaceboost_1_1xint.html#ac38b0aafb375c80ff42b5488a52d9e8f" title="A convenience class for cryptographically-secure random numbers.">strong_random_generator</a>;
-<a name="l00104"></a>00104 
-<a name="l00105"></a>00105 } <span class="comment">// namespace xint</span>
-<a name="l00106"></a>00106 } <span class="comment">// namespace boost</span>
-<a name="l00107"></a>00107 
-<a name="l00108"></a>00108 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_RANDOM_HPP</span>
+<a name="l00021"></a>00021 <span class="preprocessor">#include &lt;ctime&gt;</span>
+<a name="l00022"></a>00022 <span class="preprocessor">#include &lt;boost/random/uniform_int.hpp&gt;</span>
+<a name="l00023"></a>00023 <span class="preprocessor">#include &lt;boost/random/variate_generator.hpp&gt;</span>
+<a name="l00024"></a>00024 <span class="preprocessor">#include &lt;boost/random/mersenne_twister.hpp&gt;</span>
+<a name="l00025"></a>00025 
+<a name="l00026"></a>00026 <span class="keyword">namespace </span>boost {
+<a name="l00027"></a>00027 <span class="keyword">namespace </span>xint {
+<a name="l00028"></a>00028 
+<a name="l00029"></a>00029 <span class="keyword">namespace </span>detail {
+<a name="l00031"></a>00031 
+<a name="l00032"></a>00032     <span class="comment">// This is a template only so that the static member variables don&#39;t cause</span>
+<a name="l00033"></a>00033     <span class="comment">// problems in header-only mode.</span>
+<a name="l00034"></a>00034     <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T = <span class="keywordtype">void</span>&gt;
+<a name="l00035"></a>00035     <span class="keyword">class </span>strong_random_generator_t {
+<a name="l00036"></a>00036         <span class="keyword">public</span>:
+<a name="l00037"></a>00037         <span class="keyword">typedef</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> result_type;
+<a name="l00038"></a>00038 
+<a name="l00039"></a>00039         strong_random_generator_t();
+<a name="l00040"></a>00040         ~strong_random_generator_t();
+<a name="l00041"></a>00041         result_type operator()();
+<a name="l00042"></a>00042 
+<a name="l00043"></a>00043         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">bool</span> has_fixed_range;
+<a name="l00044"></a>00044         <span class="keyword">static</span> <span class="keyword">const</span> result_type min_value;
+<a name="l00045"></a>00045         <span class="keyword">static</span> <span class="keyword">const</span> result_type max_value;
+<a name="l00046"></a>00046         result_type min() <span class="keyword">const</span>;
+<a name="l00047"></a>00047         result_type max() <span class="keyword">const</span>;
+<a name="l00048"></a>00048         <span class="keywordtype">double</span> entropy() <span class="keyword">const</span>;
+<a name="l00049"></a>00049 
+<a name="l00050"></a>00050         <span class="keyword">private</span>:
+<a name="l00051"></a>00051         <span class="keyword">struct </span>impl_t;
+<a name="l00052"></a>00052         impl_t *impl;
+<a name="l00053"></a>00053     };
+<a name="l00054"></a>00054 
+<a name="l00056"></a>00056     <span class="keyword">struct </span>base_random_generator {
+<a name="l00057"></a>00057         <span class="keyword">typedef</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> result_type;
+<a name="l00058"></a>00058         <span class="keyword">virtual</span> result_type operator()()=0;
+<a name="l00059"></a>00059         <span class="keyword">virtual</span> ~base_random_generator() { }
+<a name="l00060"></a>00060     };
+<a name="l00061"></a>00061 
+<a name="l00063"></a>00063     <span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;
+<a name="l00064"></a>00064     <span class="keyword">struct </span>random_generator: <span class="keyword">public</span> base_random_generator {
+<a name="l00065"></a>00065         <span class="keyword">typedef</span> boost::uniform_int&lt;result_type&gt; dist_t;
+<a name="l00066"></a>00066         <span class="keyword">typedef</span> boost::variate_generator&lt;T&amp;, dist_t&gt; gen_t;
+<a name="l00067"></a>00067         random_generator(T&amp; g): gen(g,
+<a name="l00068"></a>00068             dist_t((std::numeric_limits&lt;result_type&gt;::min)(),
+<a name="l00069"></a>00069                 (std::numeric_limits&lt;result_type&gt;::max)())) { }
+<a name="l00070"></a>00070         result_type operator()() { <span class="keywordflow">return</span> gen(); }
+<a name="l00071"></a>00071         gen_t gen;
+<a name="l00072"></a>00072     };
+<a name="l00073"></a>00073 
+<a name="l00075"></a>00075 } <span class="comment">// namespace detail</span>
+<a name="l00076"></a>00076 
+<a name="l00086"></a><a class="code" href="classboost_1_1xint_1_1default__random__generator.html">00086</a> <span class="keyword">class </span><a class="code" href="classboost_1_1xint_1_1default__random__generator.html" title="A convenience class for general-purpose (insecure) random numbers.">default_random_generator</a>: <span class="keyword">public</span> boost::mt19937 {
+<a name="l00087"></a>00087     <span class="keyword">public</span>:
+<a name="l00088"></a><a class="code" href="classboost_1_1xint_1_1default__random__generator.html#a4289636c47258469b78703ae791812f6">00088</a>     <a class="code" href="classboost_1_1xint_1_1default__random__generator.html#a4289636c47258469b78703ae791812f6">default_random_generator</a>(): mt19937(boost::uint32_t(time(0)+clock())) { }
+<a name="l00089"></a>00089 };
+<a name="l00090"></a>00090 
+<a name="l00097"></a><a class="code" href="namespaceboost_1_1xint.html#ac38b0aafb375c80ff42b5488a52d9e8f">00097</a> <span class="keyword">typedef</span> detail::strong_random_generator_t&lt;&gt; <a class="code" href="namespaceboost_1_1xint.html#ac38b0aafb375c80ff42b5488a52d9e8f" title="A convenience class for cryptographically-secure random numbers.">strong_random_generator</a>;
+<a name="l00098"></a>00098 
+<a name="l00099"></a>00099 } <span class="comment">// namespace xint</span>
+<a name="l00100"></a>00100 } <span class="comment">// namespace boost</span>
+<a name="l00101"></a>00101 
+<a name="l00102"></a>00102 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_RANDOM_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Jun 3 00:00:36 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sat Jun 12 11:43:07 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>
