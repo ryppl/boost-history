@@ -25,9 +25,12 @@
 #include <boost/integer/endian_conversion.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/mpl/vector.hpp>
+#include <boost/mpl/list.hpp>
 #include <boost/fusion/adapted/struct/adapt_struct.hpp>
+#include <boost/mpl/push_front.hpp>
+#include <boost/mpl/front.hpp>
 
-//~ #include <boost/static_assert.hpp>
+#include <boost/static_assert.hpp>
 
 //~ using namespace std;             // Not the best programming practice, but I
 using namespace boost;           //   want to verify this combination of using
@@ -57,7 +60,7 @@ struct mixed_c {
 struct network {};
     
 namespace boost { 
-namespace endian {
+namespace endianness {
     
     template <> 
     struct domain_map <network, X::big_c> {
@@ -90,41 +93,109 @@ BOOST_FUSION_ADAPT_STRUCT(
     (X::little_c, b)
 )
 
+BOOST_MPL_ASSERT_MSG((is_same<endianness::domain_map<network, X::big_c>::type,
+                             mpl::vector<endianness::big,endianness::big> >::value), 
+            SS, (network,endianness::domain_map<network, X::big_c>::type));
+
+BOOST_MPL_ASSERT_MSG((is_same<endianness::domain_map<network, X::little_c>::type,
+                             mpl::vector<endianness::little,endianness::little> >::value), 
+            RR, (network,endianness::domain_map<network, X::little_c>::type));
+
+typedef mpl::list<> floats;
+typedef mpl::push_front<floats,int>::type types;
+
+BOOST_MPL_ASSERT(( is_same< mpl::front<types>::type, int > ));
+
+
+BOOST_MPL_ASSERT_MSG((
+            is_same<
+                mpl::front<
+                    endianness::domain_map<network, X::mixed_c>::type
+                >::type,
+                endianness::domain_map<network, X::big_c>::type 
+            >::value), 
+            SS, 
+            (   network,
+                mpl::front<
+                    endianness::domain_map<network, X::mixed_c>::type
+                >::type, 
+                endianness::domain_map<network,X::big_c>::type
+            ));
+
+
+BOOST_MPL_ASSERT_MSG((
+            is_same<
+                mpl::front<
+                    endianness::domain_map<network, X::big_c>::type
+                >::type,
+                endianness::big 
+            >::value), 
+            SS, 
+            (   network,
+                mpl::front<
+                    endianness::domain_map<network, X::big_c>::type
+                >::type, 
+                endianness::domain_map<network,X::big_c>::type
+            ));
+
+typedef endianness::domain_map<network, X::mixed_c>::type endian_mixed_c;
+
+typedef mpl::begin<endian_mixed_c>::type begin_endian_mixed_c;
+typedef mpl::deref<begin_endian_mixed_c>::type deref_begin_endian_mixed_c;
+
+BOOST_MPL_ASSERT_MSG((
+            is_same<
+                deref_begin_endian_mixed_c,
+                endianness::domain_map<network, X::big_c>::type 
+            >::value), 
+            SS, 
+            (   deref_begin_endian_mixed_c, 
+                endianness::domain_map<network, X::big_c>::type
+            ));
+
 
 namespace
 {
+    X::mixed_c m;
+    
 void check_endian_send()
 {
 
-    X::mixed_c m;
-    m.a.a=0x01020304;
-    m.a.b=0x0A0B;    
-    m.b.a=0x04030201;
-    m.b.b=0x0B0A;
     
-    std::cout << std::hex << m.a.a << std::endl;
-    std::cout << std::hex << m.a.b << std::endl;
-    std::cout << std::hex << m.b.a << std::endl;
-    std::cout << std::hex << m.b.b << std::endl;
+    //~ std::cout << std::hex << m.a.a << std::endl;
+    //~ std::cout << std::hex << m.a.b << std::endl;
+    //~ std::cout << std::hex << m.b.a << std::endl;
+    //~ std::cout << std::hex << m.b.b << std::endl;
     
+    //~ integer::convert_from<network>(m.a);
+    //~ integer::convert_from<network>(m.b);
     integer::convert_from<network>(m);
-    std::cout << std::hex << m.a.a << std::endl;
-    std::cout << std::hex << m.a.b << std::endl;
-    std::cout << std::hex << m.b.a << std::endl;
-    std::cout << std::hex << m.b.b << std::endl;
+    //~ std::cout << std::hex << m.a.a << std::endl;
+    //~ std::cout << std::hex << m.a.b << std::endl;
+    //~ std::cout << std::hex << m.b.a << std::endl;
+    //~ std::cout << std::hex << m.b.b << std::endl;
 
     integer::convert_to<network>(m);
-    std::cout << std::hex << m.a.a << std::endl;
-    std::cout << std::hex << m.a.b << std::endl;
-    std::cout << std::hex << m.b.a << std::endl;
-    std::cout << std::hex << m.b.b << std::endl;
+    //~ std::cout << std::hex << m.a.a << std::endl;
+    //~ std::cout << std::hex << m.a.b << std::endl;
+    //~ std::cout << std::hex << m.b.a << std::endl;
+    //~ std::cout << std::hex << m.b.b << std::endl;
+    
+    //~ return m.a.a+m.a.b+ m.b.a+m.b.b;
+    //~ return 0;
+
     
 }
 } // unnamed namespace
 
 int main( int argc, char * argv[] )
 {
+    m.b.a=0x01020304;
+    m.b.b=0x0A0B;
+    m.a.a=0x04030201;
+    m.a.b=0x0B0A;    
+
     check_endian_send();
-    //~ return boost::report_errors();
-    return 1;
+    return boost::report_errors();
+    //~ return 1;
 } // main

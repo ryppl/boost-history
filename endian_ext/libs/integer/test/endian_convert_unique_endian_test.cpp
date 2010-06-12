@@ -50,7 +50,7 @@ struct mixed_c {
 struct network {};
     
 namespace boost { 
-namespace endian {
+namespace endianness {
     
     template <> 
     struct domain_map <network, X::big_c> {
