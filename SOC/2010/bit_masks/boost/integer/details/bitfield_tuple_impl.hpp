@@ -8,219 +8,32 @@
 #define BOOST_BITFIELD_TUPLE_IMPL_HPP
 
 
-
+// Integer Includes.
 #include <boost/integer/details/storage.hpp>
-#include <boost/integer/bits_mask.hpp>
-#include <string>
 #include <boost/integer/details/member.hpp>
+#include <boost/integer/bits_mask.hpp>
 #include <boost/integer/bit_width.hpp>
+
+// std includes
+#include <string>
 #include <cstddef>
-#include <boost/mpl/void.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/push_back.hpp>
-#include <boost/mpl/map.hpp>
+
+// Other boost includes.
 #include <boost/type_traits.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/mpl/plus.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/utility/enable_if.hpp>
+
+// implementation header files.
 #include <boost/integer/details/bft/bft_element.hpp>
+#include <boost/integer/details/bft/stack_allocation_policy.hpp>
+#include <boost/integer/details/bft/allocator_allocation_policy.hpp>
+#include <boost/integer/details/bft/arg_parse_impl.hpp>
 
 namespace boost { namespace details {
 
-
-
-/** This is the empty which prevents the user from supply things which are
- *  not enclosed within either a member template or a storage template.
- *  This enforces a domain requirement on the template parameters of
- *  bitfield_tuple.
- */
-template <  typename Param,
-            typename StoragePolicy,
-            typename FieldVector,
-            typename Offset
-> struct bft_impl_;
-
-
-/** Specialization over mpl::void_. */
-template <  typename StoragePolicy,
-            typename FieldVector,
-            typename Offset
->
-struct bft_impl_ <mpl::void_, StoragePolicy, FieldVector, Offset>{
-    typedef mpl::void_           param;
-    typedef FieldVector     field_vector;
-    typedef StoragePolicy   storage_policy;
-    typedef Offset          offset;
-
-    typedef bft_impl_<param,storage_policy,field_vector,offset> type;
-
-    template <typename NextParam>
-    struct process {
-        typedef bft_impl_<
-            NextParam,
-            storage_policy,
-            field_vector,
-            offset
-        > type;
-    };
-};
-
-/** Specilization for storage type.
- *  Preconditions enforced on this function :
- *      For now its going to be documented but not enforeced.
- *      Do NOT set the storage type more then once!
- */
-template <  typename StorageType, 
-            typename AllocationPolicy,
-            typename StoragePolicy,
-            typename FieldVector,
-            typename Offset
->
-struct bft_impl_ <
-    storage<
-        StorageType,
-        AllocationPolicy
-    >,
-    StoragePolicy,
-    FieldVector,
-    Offset >
-{
-    typedef typename storage<
-        StorageType,
-        AllocationPolicy
-    >::type                 param;
-    typedef FieldVector     field_vector;
-    typedef param           storage_policy;
-    typedef Offset          offset;
-
-    typedef bft_impl_<param,storage_policy,field_vector,offset> type;
-
-    template <typename NextParam>
-    struct process {
-        typedef bft_impl_<
-            NextParam,
-            storage_policy,
-            field_vector,
-            offset
-        > type;
-    };
-};
-
-/** Specilization for member.
- *  Documented and enforced preconditions
- *      1. The user must not supply the same name for more then 1 parameter
- *      (This may result in additional overhead during compile time ).
- *      Currently not enforced, will take more time then I have at the moment.
- */
-
-// TODO: Implement Precondition 1 listed above!
-template <  typename StoragePolicy,
-            typename FieldVector,
-            std::size_t FieldWidth,
-            typename ReturnType,
-            typename NameType,
-            typename Offset
->
-struct bft_impl_ <
-    member <
-        ReturnType,
-        NameType,
-        FieldWidth
-    >,
-    StoragePolicy,
-    FieldVector,
-    Offset >
-{
-    typedef member< ReturnType, NameType, FieldWidth > param;
-
-    // typedef 
-    typedef StoragePolicy   storage_policy;
-    typedef typename mpl::push_back<
-        FieldVector,
-        bitfield_element_<
-            ReturnType,
-            NameType,
-            Offset,
-            mpl::size_t<FieldWidth>
-        >
-    >::type field_vector;
-
-    typedef mpl::size_t< 
-        mpl::plus<
-            Offset,
-            mpl::size_t<FieldWidth>
-        >::value
-    >                                   offset;
-
-    typedef bft_impl_<param,storage_policy,field_vector,offset> type;
-
-    template <typename NextParam>
-    struct process {
-        typedef bft_impl_<
-            NextParam,
-            storage_policy,
-            field_vector,
-            offset
-        > type;
-    };
-};
-
-/** This structure is going to be used when an allocator isn't assked for.
- *  This means that the entire class is allocated on the stack.
- */
-template <typename T>
-struct stack_alloc_base_policy {
-    /** Default Constructor. */
-    stack_alloc_base_policy()
-        :_data()
-    { }
-
-    /** Copy constructor. */
-    stack_alloc_base_policy( stack_alloc_base_policy<T> const& x )
-        :_data( x._data )
-    { }
-    
-    /** Value constructor. */
-    stack_alloc_base_policy( T x )
-        :_data( x )
-    { }
-    
-    stack_alloc_base_policy<T> const& operator=( stack_alloc_base_policy const& x ) {
-        _data  =  x._data;
-        return *this;
-    }
-
-    /** get_data () this function exists within this class and the 
-     *      allocator_base_policy.
-     *  Returns a copy of _data.
-     */
-    //@{
-    T const get_data() const { return _data; }
-    T get_data() { return _data; }
-    //@}
-
-    T _data;
-};
-
-/** This isn't implemented yet and shouldn't be used just yet.
- *  This is eventually going to wrap up an pointer to an allocated object which
- *  will be retrievable via a alloc_get function.
- */
-template <typename T, typename Alloc>
-struct allocator_wraper_base_policy {
-    T const get_data() const { return _data; }
-    T get_data() { return _data; }
-    T _data;
-};
-
-// Only used for writing clarity and only used once and then undef'ed when
-// before the end of the details namespace/after the end of the
-// bitfield_tuple_base
-
-
-#define BOOST_BFT_ARG_PROCESSING_CLASS      \
-        details::bft_impl_<\
+// The following preprocessor MACRO only used for writing clarity, it's only 
+// used twice and then undef'ed before the end of this file.
+#define BOOST_BFT_ARG_PROCESSING      \
+        details::bft_arg_parse_impl_<\
             T0, \
             mpl::void_,\
             mpl::vector<>,\
@@ -237,8 +50,15 @@ struct allocator_wraper_base_policy {
         template process<T9>::type 
 
 /** bitfield_tuple base class
- *  This class is responsible for preforming static assertions and dealing with
- *  the parsing of arguments.
+ *  This class is responsible for preforming static assertions on some 
+ *  preconditions and dealing with the parsed arguments. This is the base class 
+ *  for bitfield_tuple. This class is responsible for, among other things, 
+ *  the allocation policy for the bitfield_tuple. The default uses stack 
+ *  type storage_type (for additional information reguarding the 
+ *  stack_allocation_policy please see its header file (
+ *  boost/integer/details/bft/stack_allocation_policy.hpp).
+ *
+ *
  *
  *  Base Class preconditions.
  *
@@ -275,11 +95,11 @@ template <  typename T0,
             typename T9
 >
 struct bitfield_tuple_base
-    : BOOST_BFT_ARG_PROCESSING_CLASS
+    : BOOST_BFT_ARG_PROCESSING
 {
 
     
-    typedef typename BOOST_BFT_ARG_PROCESSING_CLASS   processed_args;
+    typedef typename BOOST_BFT_ARG_PROCESSING   processed_args;
 
     // extracting te Arguments from processed_args relating to 
     // the storage policy. Also preforming static assertios 
@@ -325,6 +145,11 @@ struct bitfield_tuple_base
 
 
 
+
+    // Precondition: storage_type must not be an array type.
+    // I always forget if the is_pod will match array types like int [3] or not.
+    BOOST_STATIC_ASSERT(( !is_array<storage_type>::value ));
+
     // precondition: the storage type must be a pod type (for now).
     // NOTE: this may become a documented requirement only.
     BOOST_STATIC_ASSERT(( is_pod<storage_type>::value ));
@@ -338,7 +163,8 @@ struct bitfield_tuple_base
     ));
 
     /** Meta-calculations used for enabling and disabling functionality based
-     *  on the allocation policy, number of members etc...
+     *  on the allocation policy, number of members, endianness of storage type
+     *  signedness of internal storage type and other such things.
      *  The main reason for creating a class such as this is that it makes 
      *  the readability of bitfield_tupe higher.
      *  This will also allow me to quickly deduce whether or not two bft types
@@ -356,8 +182,7 @@ struct bitfield_tuple_base
     >::type                                 is_stack_allocated;
 
 };
-
-#undef BOOST_BFT_ARG_PROCESSING_CLASS
 }} // end boost::details
 
+#undef BOOST_BFT_ARG_PROCESSING
 #endif

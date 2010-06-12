@@ -1,0 +1,157 @@
+//  Copyright 2010 Brian Bartman.
+//  Distributed under the Boost Software License, Version 1.0.
+//  (See accompanying file LICENSE_1_0.txt or copy at 
+//  http://www.boost.org/LICENSE_1_0.txt)
+
+
+#ifndef BOOST_BITFIELD_TUPLE_BFT_ARG_PARSE_IMPL_HPP
+#define BOOST_BITFIELD_TUPLE_BFT_ARG_PARSE_IMPL_HPP
+#include <boost/mpl/vector.hpp>
+#include <boost/mpl/void.hpp>
+#include <boost/mpl/push_back.hpp>
+#include <boost/mpl/plus.hpp>
+#include <boost/mpl/if.hpp>
+
+namespace boost { namespace details {
+
+
+
+/** This is the empty which prevents the user from supply things which are
+ *  not enclosed within either a member template or a storage template.
+ *  This enforces a domain requirement on the template parameters of
+ *  bitfield_tuple.
+ */
+template <  typename Param,
+            typename StoragePolicy,
+            typename FieldVector,
+            typename Offset
+> struct bft_arg_parse_impl_;
+
+
+/** Specialization over mpl::void_. */
+template <  typename StoragePolicy,
+            typename FieldVector,
+            typename Offset
+>
+struct bft_arg_parse_impl_ <mpl::void_, StoragePolicy, FieldVector, Offset>{
+    typedef mpl::void_           param;
+    typedef FieldVector     field_vector;
+    typedef StoragePolicy   storage_policy;
+    typedef Offset          offset;
+
+    typedef bft_arg_parse_impl_<param,storage_policy,field_vector,offset> type;
+
+    template <typename NextParam>
+    struct process {
+        typedef bft_arg_parse_impl_<
+            NextParam,
+            storage_policy,
+            field_vector,
+            offset
+        > type;
+    };
+};
+
+/** Specilization for storage type.
+ *  Preconditions enforced on this function :
+ *      For now its going to be documented but not enforeced.
+ *      Do NOT set the storage type more then once!
+ */
+template <  typename StorageType, 
+            typename AllocationPolicy,
+            typename StoragePolicy,
+            typename FieldVector,
+            typename Offset
+>
+struct bft_arg_parse_impl_ <
+    storage<
+        StorageType,
+        AllocationPolicy
+    >,
+    StoragePolicy,
+    FieldVector,
+    Offset >
+{
+    typedef typename storage<
+        StorageType,
+        AllocationPolicy
+    >::type                 param;
+    typedef FieldVector     field_vector;
+    typedef param           storage_policy;
+    typedef Offset          offset;
+
+    typedef bft_arg_parse_impl_<param,storage_policy,field_vector,offset> type;
+
+    template <typename NextParam>
+    struct process {
+        typedef bft_arg_parse_impl_<
+            NextParam,
+            storage_policy,
+            field_vector,
+            offset
+        > type;
+    };
+};
+
+/** Specilization for member.
+ *  Documented and enforced preconditions
+ *      1. The user must not supply the same name for more then 1 parameter
+ *      (This may result in additional overhead during compile time ).
+ *      Currently not enforced, will take more time then I have at the moment.
+ */
+
+// TODO: Implement Precondition 1 listed above!
+template <  typename StoragePolicy,
+            typename FieldVector,
+            std::size_t FieldWidth,
+            typename ReturnType,
+            typename NameType,
+            typename Offset
+>
+struct bft_arg_parse_impl_ <
+    member <
+        ReturnType,
+        NameType,
+        FieldWidth
+    >,
+    StoragePolicy,
+    FieldVector,
+    Offset >
+{
+    typedef member< ReturnType, NameType, FieldWidth > param;
+
+    // typedef 
+    typedef StoragePolicy   storage_policy;
+    typedef typename mpl::push_back<
+        FieldVector,
+        bitfield_element_<
+            ReturnType,
+            NameType,
+            Offset,
+            mpl::size_t<FieldWidth>
+        >
+    >::type field_vector;
+
+    typedef mpl::size_t< 
+        mpl::plus<
+            Offset,
+            mpl::size_t<FieldWidth>
+        >::value
+    >                                   offset;
+
+    typedef bft_arg_parse_impl_<param,storage_policy,field_vector,offset> type;
+
+    template <typename NextParam>
+    struct process {
+        typedef bft_arg_parse_impl_<
+            NextParam,
+            storage_policy,
+            field_vector,
+            offset
+        > type;
+    };
+};
+
+}} // end boost::details
+
+#endif
