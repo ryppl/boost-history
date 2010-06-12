@@ -19,14 +19,27 @@ typedef bitfield_tuple<
     member<char,red,4>,
     member<unsigned char, green,5>,
     storage<std::size_t>,
-    member<int, blue, 16>
+    member<int, salmon, 16>
 >                                       test_tuple;
-void const_interface_testing() {
+template <typename T>
+void const_interface_testing(T const& x) {
     
 }
 
 int main() {
+    // testing look up interface
     {
-    }   
+        test_tuple test_1;
+        test_1.get<green>()     = 15;
+        test_1.get<red>()       = 14;
+        test_1.get<salmon>()    = 6;
+        BOOST_ASSERT((test_1.get<green>() == 15));
+        BOOST_ASSERT((test_1.get<red>() == 14));
+        BOOST_ASSERT(( test_1.get<salmon>() == 6));
+
+        // testing negative values
+        test_1.get<salmon>()    = -6;
+        //BOOST_ASSERT(( test_1.get<salmon>() == -6));
+    }
     return 0;
 }
