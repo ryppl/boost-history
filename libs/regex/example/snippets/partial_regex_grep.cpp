@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 1998-2007
+ * Copyright (c) 1998-2002
  * John Maddock
  *
  * Use, modification and distribution are subject to the 
@@ -11,7 +11,7 @@
 
  /*
   *   LOCATION:    see http://www.boost.org for most recent version.
-  *   FILE         partial_regex_iterate.cpp
+  *   FILE         partial_regex_grep.cpp
   *   VERSION      see <boost/version.hpp>
   *   DESCRIPTION: Search example using partial matches.
   */
@@ -31,16 +31,26 @@ namespace std{ using ::memmove; }
 boost::regex e("<[^>]*>");
 // count how many:
 unsigned int tags = 0;
+// saved position of partial match:
+const char* next_pos = 0;
+
+bool grep_callback(const boost::match_results<const char*>& m)
+{
+   if(m[0].matched == false)
+   {
+      // save position and return:
+      next_pos = m[0].first;
+   }
+   else
+      ++tags;
+   return true;
+}
 
 void search(std::istream& is)
 {
-   // buffer we'll be searching in:
    char buf[4096];
-   // saved position of end of partial match:
-   const char* next_pos = buf + sizeof(buf);
-   // flag to indicate whether there is more input to come:
+   next_pos = buf + sizeof(buf);
    bool have_more = true;
-
    while(have_more)
    {
       // how much do we copy forward from last try:
@@ -56,31 +66,12 @@ void search(std::istream& is)
       have_more = read == size;
       // reset next_pos:
       next_pos = buf + sizeof(buf);
-      // and then iterate:
-      boost::cregex_iterator a(
-         buf, 
-         buf + read + leftover, 
-         e, 
-         boost::match_default | boost::match_partial); 
-      boost::cregex_iterator b;
-
-      while(a != b)
-      {
-         if((*a)[0].matched == false)
-         {
-            // Partial match, save position and break:
-            next_pos = (*a)[0].first;
-            break;
-         }
-         else
-         {
-            // full match:
-            ++tags;
-         }
-         
-         // move to next match:
-         ++a;
-      }
+      // and then grep:
+      boost::regex_grep<bool(*)(const boost::cmatch&), const char*>(grep_callback,
+                        static_cast<const char*>(buf),
+                        static_cast<const char*>(buf + read + leftover),
+                        e,
+                        boost::match_default | boost::match_partial);
    }
 }
 

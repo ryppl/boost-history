@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 1998-2002
+ * Copyright (c) 2003
  * John Maddock
  *
  * Use, modification and distribution are subject to the 
@@ -11,14 +11,19 @@
 
  /*
   *   LOCATION:    see http://www.boost.org for most recent version.
-  *   FILE         regex_grep_example_1.cpp
+  *   FILE         regex_iterator_example_2.cpp
   *   VERSION      see <boost/version.hpp>
-  *   DESCRIPTION: regex_grep example 1: searches a cpp file for class definitions.
+  *   DESCRIPTION: regex_iterator example 2: searches a cpp file for class definitions,
+  *                using global data.
   */
 
 #include <string>
 #include <map>
+#include <fstream>
+#include <iostream>
 #include <boost/regex.hpp>
+
+using namespace std;
 
 // purpose:
 // takes the contents of a file in the form of a string
@@ -49,41 +54,19 @@ const char* re =
    // terminate in { or :
    "(\\{|:[^;\\{()]*\\{)";
 
+
 boost::regex expression(re);
+map_type class_index;
 
-class IndexClassesPred
+bool regex_callback(const boost::match_results<std::string::const_iterator>& what)
 {
-   map_type& m;
-   std::string::const_iterator base;
-public:
-   IndexClassesPred(map_type& a, std::string::const_iterator b) : m(a), base(b) {}
-   bool operator()(const boost::match_results<std::string::const_iterator>& what)
-   {
-      // what[0] contains the whole string
-      // what[5] contains the class name.
-      // what[6] contains the template specialisation if any.
-      // add class name and position to map:
-      m[std::string(what[5].first, what[5].second) + std::string(what[6].first, what[6].second)] = 
-               what[5].first - base;
-      return true;
-   }
-private:
-   IndexClassesPred& operator=(const IndexClassesPred&);
-};
-
-void IndexClasses(map_type& m, const std::string& file)
-{
-   std::string::const_iterator start, end;
-   start = file.begin();
-   end = file.end();
-   boost::regex_grep(IndexClassesPred(m, start), start, end, expression);
+   // what[0] contains the whole string
+   // what[5] contains the class name.
+   // what[6] contains the template specialisation if any.
+   // add class name and position to map:
+   class_index[what[5].str() + what[6].str()] = what.position(5);
+   return true;
 }
-
-
-#include <fstream>
-#include <iostream>
-
-using namespace std;
 
 void load_file(std::string& s, std::istream& is)
 {
@@ -105,27 +88,27 @@ int main(int argc, const char** argv)
    for(int i = 1; i < argc; ++i)
    {
       cout << "Processing file " << argv[i] << endl;
-      map_type m;
       std::ifstream fs(argv[i]);
       load_file(text, fs);
       fs.close();
-      IndexClasses(m, text);
-      cout << m.size() << " matches found" << endl;
+      // construct our iterators:
+      boost::sregex_iterator m1(text.begin(), text.end(), expression);
+      boost::sregex_iterator m2;
+      std::for_each(m1, m2, &regex_callback);
+      // copy results:
+      cout << class_index.size() << " matches found" << endl;
       map_type::iterator c, d;
-      c = m.begin();
-      d = m.end();
+      c = class_index.begin();
+      d = class_index.end();
       while(c != d)
       {
          cout << "class \"" << (*c).first << "\" found at index: " << (*c).second << endl;
          ++c;
       }
+      class_index.erase(class_index.begin(), class_index.end());
    }
    return 0;
 }
-
-
-
-
 
 
 
