@@ -1,5 +1,5 @@
-[article Test that &, < are being escaped.
-    [quickbook 1.5]
+[library Test that &, < are being escaped.
+    [quickbook 1.2]
     [purpose & should be &amp;, < should &lt;]
 ]
 
