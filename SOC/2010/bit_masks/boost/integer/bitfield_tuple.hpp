@@ -8,6 +8,11 @@
 #define BOOST_BITFIELD_TUPLE_HPP
 #include <boost/integer/details/bitfield_tuple_impl.hpp>
 #include <boost/bitfield/bitfield.hpp>
+#include <boost/integer/details/bft/name_lookup.hpp>
+#include <boost/mpl/not.hpp>
+#include <boost/utility/enable_if.hpp>
+#include <boost/mpl/deref.hpp>
+#include <boost/type_traits.hpp>
 
 namespace boost {
 
@@ -167,10 +172,94 @@ public:
 
 
     /** Get function interfaces.
-     *  These provide access into the tuple.
+     *  These provide access into the tuple via "reference".
+     *  If an invalid index or name is provided then then the user will cause
+     *  look up failure.
      */
     //@{
-    
+    template <typename Name>
+    inline typename disable_if<
+        is_same <
+            typename mpl::find_if<
+                members,
+                details::match_name<
+                    mpl::_1,
+                    Name
+                >
+            >::type,
+            typename mpl::end<
+                members
+            >::type
+        >,
+        bit_ref<
+            typename mpl::deref<
+                typename mpl::find_if<
+                    members,
+                    details::match_name<
+                        mpl::_1,
+                        Name
+                    >
+                >::type
+            >::type
+        >
+    >::type
+    get() {
+         typedef bit_ref< 
+            typename mpl::deref<
+                typename mpl::find_if<
+                    members,
+                     details::match_name<
+                        mpl::_1,
+                        Name
+                    >
+                >::type
+            >::type 
+        >                                   reference_info;
+        return reference_info( this->get_data() );
+    }
+
+
+    template <typename Name>
+    inline typename disable_if<
+        is_same <
+            typename mpl::find_if<
+                members,
+                details::match_name<
+                    mpl::_1,
+                    Name
+                >
+            >::type,
+            typename mpl::end<
+                members
+            >::type
+        >,
+        bit_ref<
+            typename mpl::deref<
+                typename mpl::find_if<
+                    members,
+                    details::match_name<
+                        mpl::_1,
+                        Name
+                    >
+                >::type
+            >::type
+        > const
+    >::type 
+    get() const {
+         typedef bit_ref< 
+            typename mpl::deref<
+                typename mpl::find_if<
+                    members,
+                     details::match_name<
+                        mpl::_1,
+                        Name
+                    >
+                >::type
+            >::type 
+        > const                             reference_info;
+        return reference_info( this->get_data() );
+    }
+
     //@}
 };
 

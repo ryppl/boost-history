@@ -40,8 +40,8 @@ struct stack_alloc_base_policy {
      *  Returns a copy of _data.
      */
     //@{
-    T const get_data() const { return _data; }
-    T get_data() { return _data; }
+    T const& get_data() const { return _data; }
+    T& get_data() { return _data; }
     //@}
 
     T _data;
