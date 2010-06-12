@@ -29,8 +29,10 @@ test-suite integer
         [ compile-fail bft_testing/compile_fail/bft_no_storage_type.cpp ]
         [ compile-fail bft_testing/compile_fail/non_pod_storage_type.cpp ]
         [ compile-fail bft_testing/compile_fail/bft_storage_width_acceded.cpp ]
+        [ compile-fail bft_testing/compile_fail/no_array_types.cpp ]
         [ compile bft_testing/compile_pass/bft_member_max_out.cpp ]
         [ run bitfield_tuple_test.cpp ]
         [ run bft_testing/ref_type_testing.cpp ]
+        [ run bft_testing/name_accessor_test.cpp ]
     ;
 

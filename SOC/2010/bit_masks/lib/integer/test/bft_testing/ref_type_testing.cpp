@@ -8,13 +8,13 @@
 #include <boost/assert.hpp>
 using namespace boost;
 struct red { };
-
+struct blue { };
 
 
 typedef bitfield_tuple<
     storage<int>,
     member<int, red, 15u>,
-    member<int, red, 17u>
+    member<int, blue, 17u>
 >       bft;
 
 
@@ -89,6 +89,14 @@ int main() {
         BOOST_ASSERT(( ref_2 == 'q' )); 
         BOOST_ASSERT(( ref_3 == 'r' )); 
         BOOST_ASSERT(( ref_4 == 's' )); 
+
+        // testing copy constructor
+        // ref_type_1 copy_of_ref_1( ref_1 );
+        // BOOST_ASSERT(( copy_of_ref_1 == ref_1 ));
+        // BOOST_ASSERT(( copy_of_ref_1 == 'p' ));
+        
     }
+    
+    
     return 0;
 }

@@ -57,13 +57,7 @@ public:
          *  mask - contains all information needed to iteract with data in the
          *      the stroage.
          */
-        typedef typename MaskInfo::return_type                  return_type;
-        typedef bits_mask<
-            storage_type,
-            MaskInfo::offset::value,
-            MaskInfo::field_width::value
-        >                                                       mask;
-        
+        typedef typename MaskInfo::return_type                  return_type;       
         typedef bit_ref<MaskInfo>                               _self;
         typedef typename make_unsigned<return_type>::type  unsigned_return_type;
         typedef typename make_unsigned<
@@ -79,7 +73,7 @@ public:
             MaskInfo::offset::value + MaskInfo::field_width::value - 1
         >                                                       bitfield_type;
 
-        // typedef typename bitfield_type::value_type somethingl;
+
         /** Reference constructor.
          *  Because the bit_ref is an abstraction of a reference then it also
          *  must behave like a reference type.
@@ -87,6 +81,13 @@ public:
         bit_ref(storage_type& ref)
             :_ref( *reinterpret_cast<unsigned_storage_type*>(&ref) )
         { }
+
+        /** copy constructor.
+         *  This is because references are copy construtible.
+         */
+        // bit_ref( bit_ref<MaskInfo> const& x)
+        //    :_ref( x )
+        // { }
         
         /** Implicit conversion operator 
          *  this allows for implicit conversion to the return_type.
@@ -101,7 +102,7 @@ public:
          */
         _self const& operator=(return_type const& rhs) {
             _ref.set(
-                static_cast< typename make_unsigned<storage_type>::type > (rhs));
+                static_cast<typename make_unsigned<storage_type>::type>(rhs));
             return *this;
         }
         

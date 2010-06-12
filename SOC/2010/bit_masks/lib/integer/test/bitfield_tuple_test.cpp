@@ -21,10 +21,6 @@ void test_get_data(T const& x, int value) {
     BOOST_ASSERT(( x.get_data() == value ));
 }
 
-template <typename T, typename U>
-struct match_name
-    :is_same<typename T::name_type, U>::type
-{ };
 
 int main() {
     // lets make some errors : )
@@ -153,26 +149,6 @@ int main() {
             > 
         >
     ));
-
-    typedef mpl::vector<
-        details::bitfield_element_<
-            int,
-            red,
-            mpl::size_t<0>,
-            mpl::size_t<3>
-        > 
-    > temp_vect;
-
-    // tesitng so I can learn to use mpl::find_if
-    // for looking up while useing the get<> function in side bitfield_tuple.
-    typedef mpl::find_if<temp_vect, match_name<mpl::_1, red> >::type temp_located;
-    BOOST_MPL_ASSERT_NOT((
-        is_same<
-            temp_located,
-            mpl::end<temp_vect>::type
-        >
-    ));
-
 
     }
 
