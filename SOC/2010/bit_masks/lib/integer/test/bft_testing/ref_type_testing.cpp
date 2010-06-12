@@ -32,7 +32,7 @@ int main() {
 
     typedef bft::bit_ref<element> ref_type_1;
 
-    ref_type_1 test_1(data_storage);
+    ref_type_1 test_1( data_storage );
 
     // char temp = test_1;
     char value_to_assign = 'a';

@@ -7,7 +7,7 @@
 #ifndef BOOST_BITFIELD_TUPLE_HPP
 #define BOOST_BITFIELD_TUPLE_HPP
 #include <boost/integer/details/bitfield_tuple_impl.hpp>
-#include <boost/bitfield.hpp>
+#include <boost/bitfield/bitfield.hpp>
 
 namespace boost {
 
@@ -63,31 +63,55 @@ public:
             MaskInfo::offset::value,
             MaskInfo::field_width::value
         >                                                       mask;
-
+        
         typedef bit_ref<MaskInfo>                               _self;
+        typedef typename make_unsigned<return_type>::type  unsigned_return_type;
+        typedef typename make_unsigned<
+            storage_type
+        >::type                                           unsigned_storage_type;
 
+        /** Internals bitfield type for extracting individual fields from 
+         *  within the storage_type.
+         */
+        typedef typename integer::bitfield<
+            unsigned_storage_type,
+            MaskInfo::offset::value,
+            MaskInfo::offset::value + MaskInfo::field_width::value - 1,
+            unsigned_return_type
+        >                                                       bitfield_type;
+
+        typedef typename bitfield_type::value_type somethingl;
         /** Reference constructor.
          *  Because the bit_ref is an abstraction of a reference then it also
          *  must behave like a reference type.
          */
         bit_ref(storage_type& ref)
-            :_ref(ref)
+            :_ref( (typename bitfield_type::storage_type&)ref )
         { }
         
+        /** Implicit conversion operator 
+         *  this allows for implicit conversion to the return_type.
+         */
         operator return_type() const {
-            return (_ref & mask()) >> mask::offset;
+            return static_cast< return_type >( _ref.get() );
         }
 
-
+        /** Assignment Of return_type into reference.
+         *  This allows values to be assigned to the get function, as part of 
+         *  the tuple like interface.
+         */
         _self const& operator=(return_type const& rhs) {
-            _ref ^= (_ref & mask());
-            _ref |= ((static_cast<storage_type>(rhs) << mask::offset) & mask());
+            _ref.set(
+                static_cast< typename make_unsigned<return_type>::type > (rhs));
             return *this;
         }
         
     private:
-        storage_type& _ref;
-        bit_ref(); // not default constructible.
+        // storage reference.
+        bitfield_type _ref;
+
+        // not default constructible because this is a reference type
+        bit_ref();
     };
 
 
