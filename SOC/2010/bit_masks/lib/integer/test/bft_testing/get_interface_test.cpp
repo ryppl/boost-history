@@ -15,29 +15,18 @@ struct pink;
 struct blue;
 struct salmon;
 
-
-
+typedef bitfield_tuple<
+    member<char,red,4>,
+    member<unsigned char, green,5>,
+    storage<std::size_t>,
+    member<int, blue, 16>
+>                                       test_tuple;
+void const_interface_testing() {
+    
+}
 
 int main() {
-   
-
-    // tesitng so I can learn to use mpl::find_if
-    // for looking up while useing the get<> function in side bitfield_tuple.
-    typedef mpl::find_if<
-        test_vect,
-        details::match_name<
-            mpl::_1,
-            red
-        >
-    >::type                         temp_located;
-
-    BOOST_MPL_ASSERT_NOT((
-        is_same<
-            temp_located,
-            mpl::end<
-                test_vect
-            >::type
-        >
-    ));
+    {
+    }   
     return 0;
 }
