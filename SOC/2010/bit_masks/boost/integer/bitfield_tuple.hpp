@@ -76,17 +76,16 @@ public:
         typedef typename integer::bitfield<
             unsigned_storage_type,
             MaskInfo::offset::value,
-            MaskInfo::offset::value + MaskInfo::field_width::value - 1,
-            unsigned_return_type
+            MaskInfo::offset::value + MaskInfo::field_width::value - 1
         >                                                       bitfield_type;
 
-        typedef typename bitfield_type::value_type somethingl;
+        // typedef typename bitfield_type::value_type somethingl;
         /** Reference constructor.
          *  Because the bit_ref is an abstraction of a reference then it also
          *  must behave like a reference type.
          */
         bit_ref(storage_type& ref)
-            :_ref( (typename bitfield_type::storage_type&)ref )
+            :_ref( *reinterpret_cast<unsigned_storage_type*>(&ref) )
         { }
         
         /** Implicit conversion operator 
@@ -102,7 +101,7 @@ public:
          */
         _self const& operator=(return_type const& rhs) {
             _ref.set(
-                static_cast< typename make_unsigned<return_type>::type > (rhs));
+                static_cast< typename make_unsigned<storage_type>::type > (rhs));
             return *this;
         }
         
