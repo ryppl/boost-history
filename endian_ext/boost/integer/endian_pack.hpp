@@ -43,9 +43,7 @@
 //~ #include <iosfwd>
 #include <climits>
 
-# ifndef BOOST_INTEGER_ENDIAN_USES_ENDIANNESS
 # include <boost/endian/endian.hpp>
-# endif
 
 # if CHAR_BIT != 8
 #   error Platforms with CHAR_BIT != 8 are not supported
@@ -159,31 +157,10 @@ namespace boost
     bool endian_log(true);
 # endif
 
-
-#   ifdef BOOST_INTEGER_ENDIAN_USES_ENDIANNESS
-  //  endian class template and specializations  ---------------------------------------//
-#   ifdef BOOST_BIG_ENDIAN
-    BOOST_SCOPED_ENUM_START(endianness) { big, little, mixed, native=big }; BOOST_SCOPED_ENUM_END
-#   else
-    BOOST_SCOPED_ENUM_START(endianness) { big, little, mixed, native=little }; BOOST_SCOPED_ENUM_END
-#   endif
-    const BOOST_SCOPED_ENUM_START(endianness) big_endian    = endianness::big;   
-    const BOOST_SCOPED_ENUM_START(endianness) little_endian = endianness::little;   
-    const BOOST_SCOPED_ENUM_START(endianness) native_endian = endianness::native;   
-#else
-    typedef endian::big     big_endian;
-    typedef endian::little  little_endian;
-    typedef endian::native  native_endian;
-#   endif
-  
+ 
     BOOST_SCOPED_ENUM_START(alignment) { unaligned, aligned }; BOOST_SCOPED_ENUM_END
 
-    template <
-#   ifdef BOOST_INTEGER_ENDIAN_USES_ENDIANNESS    
-        BOOST_SCOPED_ENUM(endianness) E, 
-#else
-        typename E,
-#endif    
+    template <typename E,
         typename T, 
         std::size_t n_bits=sizeof(T)*8,
         BOOST_SCOPED_ENUM(alignment) A = alignment::unaligned

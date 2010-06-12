@@ -48,12 +48,7 @@ namespace boost
   namespace integer
   {
 
-  template <
-#   ifdef BOOST_INTEGER_ENDIAN_USES_ENDIANNESS    
-        BOOST_SCOPED_ENUM(endianness) E, 
-#else
-        typename E,
-#endif    
+  template <typename E, 
         typename T, 
         std::size_t n_bits=sizeof(T)*8,
         BOOST_SCOPED_ENUM(alignment) A = alignment::unaligned

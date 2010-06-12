@@ -13,7 +13,7 @@
 #ifndef BOOST_INTEGER_ENDIAN_VIEW_HPP
 #define BOOST_INTEGER_ENDIAN_VIEW_HPP
 
-#include <boost/integer/endian.hpp>
+#include <boost/integer/endian_pack.hpp>
 
 namespace boost {
 
@@ -37,31 +37,24 @@ namespace integer {
         }
     };
 
-    template <
-#   ifdef BOOST_INTEGER_ENDIAN_USES_ENDIANNESS    
-        BOOST_SCOPED_ENUM(endianness) E, 
-#else
-        typename E,
-#endif    
-        typename T
-    >    
-    endian_view<endian<E,T> > as_endian(T& v) {
-        return endian_view<endian<E,T> >(v);
+    template <typename E, typename T>    
+    endian_view<endian_pack<E,T> > as_endian(T& v) {
+        return endian_view<endian_pack<E,T> >(v);
     }
  
     template <typename T>
-    endian_view<endian<native_endian,T> > as(T& v) 
+    endian_view<endian_pack<native_endian,T> > as(T& v) 
     { 
         return as_endian<native_endian>(v); 
     }
     template <typename T>
-    endian_view<endian<little_endian,T> > as_little(T& v)
+    endian_view<endian_pack<little_endian,T> > as_little(T& v)
     { 
         return as_endian<little_endian>(v); 
     }
     
     template <typename T>
-    endian_view<endian<big_endian,T> > as_big(T& v)
+    endian_view<endian_pack<big_endian,T> > as_big(T& v)
     { 
         return as_endian<big_endian>(v); 
     }

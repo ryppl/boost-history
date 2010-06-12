@@ -52,32 +52,17 @@ namespace integer_detail {
 //~ // fundamental types are native    
 template <typename T, bool IsSeq>
 struct endian_type_impl<T, true, IsSeq> {
-#   ifdef BOOST_INTEGER_ENDIAN_USES_ENDIANNESS    
-    static const BOOST_SCOPED_ENUM(endianness) value= endianness::native;
-#else
-    typedef boost::endian::native type;
-#endif    
-    
+    typedef endianness::native type;    
 };
 
 // we can consider that any other type which has not been explicitly declared is native, but it is more conservative to state that it could be mixted.
 template <typename T>
 struct endian_type_impl<T, false, false> {
-#   ifdef BOOST_INTEGER_ENDIAN_USES_ENDIANNESS    
-    static const BOOST_SCOPED_ENUM(endianness) value= endianness::mixed;
-#else
-    typedef boost::endian::mixed type;
-#endif    
+    typedef endianness::mixed type;
 };
 
 // if temp is equal the endian_type of the *it continue otherwise mixed
-template <
-#   ifdef BOOST_INTEGER_ENDIAN_USES_ENDIANNESS    
-        BOOST_SCOPED_ENUM(endianness) res, 
-#else
-        typename res,
-#endif    
-    typename It, typename End
+template <typename res, typename It, typename End
 > struct endian_type_loop {
 private:    
     typedef 
@@ -86,46 +71,24 @@ private:
                 typename fusion::result_of::deref<It>::type
             >::type 
         >::type it_type;
-#   ifdef BOOST_INTEGER_ENDIAN_USES_ENDIANNESS    
-    typedef typename mpl::if_c<endian_type< it_type >::value==res,
-        mpl::int_<endian_type_loop<res,typename fusion::result_of::next<It>::type, End>::value>,
-        mpl::int_<endianness::mixed>
-    >::type res_type;    
-public:    
-    static const BOOST_SCOPED_ENUM(endianness) value= BOOST_SCOPED_ENUM(endianness)(res_type::value);    
-#   else
 public:    
     typedef typename mpl::if_<is_same<typename endian_type< it_type >::type,res>,
         typename endian_type_loop<res,typename fusion::result_of::next<It>::type, End>::type,
-        boost::endian::mixed
+        endianness::mixed
     >::type type;    
-#   endif    
 };
 
 // endian_type of mixed is mixed
 template <typename It, typename End>
-#   ifdef BOOST_INTEGER_ENDIAN_USES_ENDIANNESS    
 struct endian_type_loop<endianness::mixed,It,End> {
-    static const BOOST_SCOPED_ENUM(endianness) value= endianness::mixed;    
+    typedef endianness::mixed type;
 };
-#else
-struct endian_type_loop<boost::endian::mixed,It,End> {
-    typedef boost::endian::mixed type;
-};
-#endif    
 
 // temp when iteration ends
-#   ifdef BOOST_INTEGER_ENDIAN_USES_ENDIANNESS    
-template <BOOST_SCOPED_ENUM(endianness) temp, typename End>
-struct endian_type_loop<temp,End,End> {
-    static const BOOST_SCOPED_ENUM(endianness) value= temp;    
-};
-#else
 template <typename temp, typename End>
 struct endian_type_loop<temp,End,End> {
     typedef temp type;
 };
-#endif    
 
 // fusion sequences are mixed if not all the elements habve the same endianess, 
 // otherwise the endianess of all the types.
@@ -139,19 +102,10 @@ private:
     >::type front_type;
 
 public:        
-#   ifdef BOOST_INTEGER_ENDIAN_USES_ENDIANNESS    
-    static const BOOST_SCOPED_ENUM(endianness) value= 
-        endian_type_loop<endian_type< front_type >::value, 
-                    typename fusion::result_of::begin<Seq>::type, 
-                    typename fusion::result_of::end<Seq>::type 
-    >::value;
-#else
     typedef typename endian_type_loop<typename endian_type< front_type >::type, 
                     typename fusion::result_of::begin<Seq>::type, 
                     typename fusion::result_of::end<Seq>::type 
     >::type type;
-#endif    
-
 };
 
 
@@ -168,76 +122,44 @@ struct endian_type<T[N]> : endian_type<T> {};
 
 // endianess of endian<E,T,n_bits,A> is E
 template <
-#   ifdef BOOST_INTEGER_ENDIAN_USES_ENDIANNESS    
-    BOOST_SCOPED_ENUM(endianness) E, 
-#   else
     typename E,
-#   endif    
     typename T, 
     std::size_t n_bits,
     BOOST_SCOPED_ENUM(alignment) A
 > struct endian_type<endian_pack<E,T,n_bits,A> >
 {
-#   ifdef BOOST_INTEGER_ENDIAN_USES_ENDIANNESS    
-    static const BOOST_SCOPED_ENUM(endianness) value= E;
-#else
     typedef E type;
-#endif    
 };
 
 // endianess of endian<E,T,n_bits,A> is E
 template <
-#   ifdef BOOST_INTEGER_ENDIAN_USES_ENDIANNESS    
-    BOOST_SCOPED_ENUM(endianness) E, 
-#   else
     typename E,
-#   endif    
     typename T, 
     std::size_t n_bits,
     BOOST_SCOPED_ENUM(alignment) A
 > struct endian_type<endian<E,T,n_bits,A> >  
 {
-#   ifdef BOOST_INTEGER_ENDIAN_USES_ENDIANNESS    
-    static const BOOST_SCOPED_ENUM(endianness) value= E;
-#else
     typedef E type;
-#endif    
 };
 
 template <typename T>
 struct is_native : 
-#   ifdef BOOST_INTEGER_ENDIAN_USES_ENDIANNESS    
-    mpl::bool_<endian_type<T>::value== endianness::native>
-#else
-    is_same<typename endian_type<T>::type, boost::endian::native>
-#endif    
+    is_same<typename endian_type<T>::type, endianness::native>
 {};
 
 template <typename T>
 struct is_big : 
-#   ifdef BOOST_INTEGER_ENDIAN_USES_ENDIANNESS    
-    mpl::bool_<endian_type<T>::value== endianness::big>
-#else
-    is_same<typename endian_type<T>::type, boost::endian::big>
-#endif    
+    is_same<typename endian_type<T>::type, endianness::big>
 {};
 
 template <typename T>
 struct is_little : 
-#   ifdef BOOST_INTEGER_ENDIAN_USES_ENDIANNESS    
-    mpl::bool_<endian_type<T>::value== endianness::little>
-#else
-    is_same<typename endian_type<T>::type, boost::endian::little>
-#endif    
+    is_same<typename endian_type<T>::type, endianness::little>
 {};
 
 template <typename T>
 struct is_mixed : 
-#   ifdef BOOST_INTEGER_ENDIAN_USES_ENDIANNESS    
-    mpl::bool_<endian_type<T>::value== endianness::mixed>
-#else
-    is_same<typename endian_type<T>::type, boost::endian::mixed>
-#endif    
+    is_same<typename endian_type<T>::type, endianness::mixed>
 {};
 
 

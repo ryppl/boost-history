@@ -103,14 +103,14 @@ namespace integer {
 
         // on fundamentals apply endian views
         template <typename T>
-        struct convert_to_from<boost::endian::big, boost::endian::little, T, true, false> {
+        struct convert_to_from<endianness::big, endianness::little, T, true, false> {
             static void apply(T& r) {
                 as_big(r)=as_little(r);
             }
         };
         // on fundamentals apply endian views
         template <typename T>
-        struct convert_to_from<boost::endian::little, boost::endian::big, T, true, false> {
+        struct convert_to_from<endianness::little, endianness::big, T, true, false> {
             static void apply(T& r) {
                 as_little(r)=as_big(r);
             }
@@ -144,8 +144,8 @@ inline void convert_to_from_impl(T& r) {
 template <typename EndianTarget, typename EndianSource, typename T>
 inline void convert_to_from(T& r) {
     integer_detail::convert_to_from<
-            typename boost::endian::domain_map<EndianTarget,T>::type, 
-            typename boost::endian::domain_map<EndianSource,T>::type, 
+            typename endianness::domain_map<EndianTarget,T>::type, 
+            typename endianness::domain_map<EndianSource,T>::type, 
             T
     >::apply(r);
 }
@@ -161,16 +161,16 @@ inline void convert_to_from(T& r) {
 template <typename EndianSource, typename T>
 void convert_from(T& r) {
     integer_detail::convert_to_from<
-        typename boost::endian::domain_map<boost::endian::native,T>::type,      
-        typename boost::endian::domain_map<EndianSource,T>::type, 
+        typename endianness::domain_map<endianness::native,T>::type,      
+        typename endianness::domain_map<EndianSource,T>::type, 
         T>::apply(r);
 }
 
 template <typename EndianTarget, typename T>
 void convert_to(T& r) {
     integer_detail::convert_to_from<
-        typename boost::endian::domain_map<EndianTarget,T>::type, 
-        typename boost::endian::domain_map<boost::endian::native, T>::type, 
+        typename endianness::domain_map<EndianTarget,T>::type, 
+        typename endianness::domain_map<endianness::native, T>::type, 
         T>::apply(r);
 }
 
