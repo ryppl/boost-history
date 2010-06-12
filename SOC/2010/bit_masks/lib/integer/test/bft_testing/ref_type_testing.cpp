@@ -32,6 +32,7 @@ red, mpl::size_t<16>, mpl::size_t<8> >          element_4;
 
 typedef details::bitfield_element_< char, 
 red, mpl::size_t<24>, mpl::size_t<8> >          element_5;
+
 int main() {
 
     int data_storage(0);

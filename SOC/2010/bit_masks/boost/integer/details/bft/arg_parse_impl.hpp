@@ -11,6 +11,9 @@
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/plus.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/mpl/find_if.hpp>
+#include <boost/integer/details/bft/name_lookup.hpp>
+
 
 namespace boost { namespace details {
 
@@ -72,6 +75,9 @@ struct bft_arg_parse_impl_ <
     FieldVector,
     Offset >
 {
+    // make sure that the storage type is not specifed twice
+    BOOST_STATIC_ASSERT(( is_same<StoragePolicy,mpl::void_>::value ));
+
     typedef typename storage<
         StorageType,
         AllocationPolicy
@@ -99,8 +105,6 @@ struct bft_arg_parse_impl_ <
  *      (This may result in additional overhead during compile time ).
  *      Currently not enforced, will take more time then I have at the moment.
  */
-
-// TODO: Implement Precondition 1 listed above!
 template <  typename StoragePolicy,
             typename FieldVector,
             std::size_t FieldWidth,
@@ -118,6 +122,21 @@ struct bft_arg_parse_impl_ <
     FieldVector,
     Offset >
 {
+
+    BOOST_STATIC_ASSERT((
+        is_same<
+            typename mpl::find_if<
+                FieldVector,
+                details::match_name<
+                    typename mpl::_1,
+                    NameType
+                >
+            >::type,
+            typename mpl::end<
+                FieldVector
+            >::type
+        >::value            
+    ));
     typedef member< ReturnType, NameType, FieldWidth > param;
 
     // typedef 

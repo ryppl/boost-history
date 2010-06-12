@@ -8,7 +8,7 @@
 
 using namespace boost;
 struct red { };
-
+struct pink;
 // this needs to pass because its a basic declaration and I should asume people
 // arn't going to be all that happy if things don't work the way the should
 
@@ -17,7 +17,7 @@ struct red { };
 typedef bitfield_tuple<
     storage<int>,
     member<int, red, 15u>,
-    member<int, red, 17u>
+    member<int, pink, 17u>
 > bft;
 
 
