@@ -15,8 +15,8 @@
 
 #include <cstddef>
 #include <boost/static_assert.hpp>
-//#include <boost/ref.hpp>
 
+#include <cassert>
 #include <limits>
 #include <netinet/in.h>
 

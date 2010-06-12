@@ -12,7 +12,7 @@
 #ifndef BOOST_INTEGER_BITFIELD_DCL__HPP
 #define BOOST_INTEGER_BITFIELD_DCL__HPP
 
-#include <boost/integer/bitfield.hpp>
+#include <boost/bitfield/bitfield.hpp>
 
 #define BOOST_BITFIELD_DCL(STORAGE_TYPE, STORAGE_VAR, VALUE_TYPE, FIELD, F, L) \
    typedef boost::integer::bitfield_traits<STORAGE_TYPE,F,L,VALUE_TYPE>   FIELD##_type; \
