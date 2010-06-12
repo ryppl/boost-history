@@ -26,7 +26,7 @@
 namespace boost {
 
 
-namespace endian {
+namespace endianness {
 
     namespace endian_detail {
 

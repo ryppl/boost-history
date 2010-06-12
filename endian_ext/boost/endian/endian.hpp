@@ -19,24 +19,34 @@
 
 namespace boost {
 
+#   ifdef BOOST_INTEGER_ENDIAN_USES_ENDIANNESS
+  //  endian class template and specializations  ---------------------------------------//
 #   ifdef BOOST_BIG_ENDIAN
     BOOST_SCOPED_ENUM_START(endianness) { big, little, middle, mixed, native=big }; BOOST_SCOPED_ENUM_END
 #   else
     BOOST_SCOPED_ENUM_START(endianness) { big, little, middle, mixed, native=little }; BOOST_SCOPED_ENUM_END
 #   endif
+    const BOOST_SCOPED_ENUM_START(endianness) big_endian    = endianness::big;   
+    const BOOST_SCOPED_ENUM_START(endianness) little_endian = endianness::little;   
+    const BOOST_SCOPED_ENUM_START(endianness) middle_endian = endianness::middle;   
+    const BOOST_SCOPED_ENUM_START(endianness) mixed_endian = endianness::mixed;   
+    const BOOST_SCOPED_ENUM_START(endianness) native_endian = endianness::native;   
+#else
     
-namespace endian {
+namespace endianness {
+    
+    
     struct big {
-        static const BOOST_SCOPED_ENUM(endianness) value= endianness::big;
+        //~ static const BOOST_SCOPED_ENUM(endianness) value= endianness::big;
     };
     struct little {
-        static const BOOST_SCOPED_ENUM(endianness) value= endianness::little;
+        //~ static const BOOST_SCOPED_ENUM(endianness) value= endianness::little;
     };
     struct middle {
-        static const BOOST_SCOPED_ENUM(endianness) value= endianness::middle;
+        //~ static const BOOST_SCOPED_ENUM(endianness) value= endianness::middle;
     };
     struct mixed {
-        static const BOOST_SCOPED_ENUM(endianness) value= endianness::mixed;
+        //~ static const BOOST_SCOPED_ENUM(endianness) value= endianness::mixed;
     };
 #   ifdef BOOST_BIG_ENDIAN
     typedef big native ;
@@ -45,6 +55,13 @@ namespace endian {
 #   endif
 
 }
+
+    typedef endianness::big     big_endian;
+    typedef endianness::little  little_endian;
+    typedef endianness::middle  middle_endian;
+    typedef endianness::mixed   mixed_endian;
+    typedef endianness::native  native_endian;
+#   endif
 
 } // namespace boost
 
