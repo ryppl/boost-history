@@ -7,6 +7,7 @@
 #ifndef BOOST_BITFIELD_TUPLE_HPP
 #define BOOST_BITFIELD_TUPLE_HPP
 #include <boost/integer/details/bitfield_tuple_impl.hpp>
+#include <boost/bitfield.hpp>
 
 namespace boost {
 
