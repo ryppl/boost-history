@@ -163,7 +163,7 @@ namespace boost
     template <typename E,
         typename T, 
         std::size_t n_bits=sizeof(T)*8,
-        BOOST_SCOPED_ENUM(alignment) A = alignment::unaligned
+        BOOST_SCOPED_ENUM(alignment) A = alignment::aligned
     > class endian_pack;
 
     //  Specializations that represent unaligned bytes.
@@ -295,64 +295,64 @@ namespace boost
   //  naming convention typedefs  ------------------------------------------------------//
 
     // unaligned big endian_pack signed integer types
-    typedef endian_pack< big_endian, int_least8_t, 8 >           big8_pt;
-    typedef endian_pack< big_endian, int_least16_t, 16 >         big16_pt;
-    typedef endian_pack< big_endian, int_least32_t, 24 >         big24_pt;
-    typedef endian_pack< big_endian, int_least32_t, 32 >         big32_pt;
-    typedef endian_pack< big_endian, int_least64_t, 40 >         big40_pt;
-    typedef endian_pack< big_endian, int_least64_t, 48 >         big48_pt;
-    typedef endian_pack< big_endian, int_least64_t, 56 >         big56_pt;
-    typedef endian_pack< big_endian, int_least64_t, 64 >         big64_pt;
+    typedef endian_pack< big_endian, int_least8_t, 8, alignment::unaligned >           big8_pt;
+    typedef endian_pack< big_endian, int_least16_t, 16, alignment::unaligned >         big16_pt;
+    typedef endian_pack< big_endian, int_least32_t, 24, alignment::unaligned >         big24_pt;
+    typedef endian_pack< big_endian, int_least32_t, 32, alignment::unaligned >         big32_pt;
+    typedef endian_pack< big_endian, int_least64_t, 40, alignment::unaligned >         big40_pt;
+    typedef endian_pack< big_endian, int_least64_t, 48, alignment::unaligned >         big48_pt;
+    typedef endian_pack< big_endian, int_least64_t, 56, alignment::unaligned >         big56_pt;
+    typedef endian_pack< big_endian, int_least64_t, 64, alignment::unaligned >         big64_pt;
 
     // unaligned big endian_pack unsigned integer types
-    typedef endian_pack< big_endian, uint_least8_t, 8 >          ubig8_pt;
-    typedef endian_pack< big_endian, uint_least16_t, 16 >        ubig16_pt;
-    typedef endian_pack< big_endian, uint_least32_t, 24 >        ubig24_pt;
-    typedef endian_pack< big_endian, uint_least32_t, 32 >        ubig32_pt;
-    typedef endian_pack< big_endian, uint_least64_t, 40 >        ubig40_pt;
-    typedef endian_pack< big_endian, uint_least64_t, 48 >        ubig48_pt;
-    typedef endian_pack< big_endian, uint_least64_t, 56 >        ubig56_pt;
-    typedef endian_pack< big_endian, uint_least64_t, 64 >        ubig64_pt;
+    typedef endian_pack< big_endian, uint_least8_t, 8, alignment::unaligned >          ubig8_pt;
+    typedef endian_pack< big_endian, uint_least16_t, 16, alignment::unaligned >        ubig16_pt;
+    typedef endian_pack< big_endian, uint_least32_t, 24, alignment::unaligned >        ubig24_pt;
+    typedef endian_pack< big_endian, uint_least32_t, 32, alignment::unaligned >        ubig32_pt;
+    typedef endian_pack< big_endian, uint_least64_t, 40, alignment::unaligned >        ubig40_pt;
+    typedef endian_pack< big_endian, uint_least64_t, 48, alignment::unaligned >        ubig48_pt;
+    typedef endian_pack< big_endian, uint_least64_t, 56, alignment::unaligned >        ubig56_pt;
+    typedef endian_pack< big_endian, uint_least64_t, 64, alignment::unaligned >        ubig64_pt;
 
     // unaligned little endian_pack signed integer types
-    typedef endian_pack< little_endian, int_least8_t, 8 >        little8_pt;
-    typedef endian_pack< little_endian, int_least16_t, 16 >      little16_pt;
-    typedef endian_pack< little_endian, int_least32_t, 24 >      little24_pt;
-    typedef endian_pack< little_endian, int_least32_t, 32 >      little32_pt;
-    typedef endian_pack< little_endian, int_least64_t, 40 >      little40_pt;
-    typedef endian_pack< little_endian, int_least64_t, 48 >      little48_pt;
-    typedef endian_pack< little_endian, int_least64_t, 56 >      little56_pt;
-    typedef endian_pack< little_endian, int_least64_t, 64 >      little64_pt;
+    typedef endian_pack< little_endian, int_least8_t, 8, alignment::unaligned >        little8_pt;
+    typedef endian_pack< little_endian, int_least16_t, 16, alignment::unaligned >      little16_pt;
+    typedef endian_pack< little_endian, int_least32_t, 24, alignment::unaligned >      little24_pt;
+    typedef endian_pack< little_endian, int_least32_t, 32, alignment::unaligned >      little32_pt;
+    typedef endian_pack< little_endian, int_least64_t, 40, alignment::unaligned >      little40_pt;
+    typedef endian_pack< little_endian, int_least64_t, 48, alignment::unaligned >      little48_pt;
+    typedef endian_pack< little_endian, int_least64_t, 56, alignment::unaligned >      little56_pt;
+    typedef endian_pack< little_endian, int_least64_t, 64, alignment::unaligned >      little64_pt;
 
     // unaligned little endian_pack unsigned integer types
-    typedef endian_pack< little_endian, uint_least8_t, 8 >       ulittle8_pt;
-    typedef endian_pack< little_endian, uint_least16_t, 16 >     ulittle16_pt;
-    typedef endian_pack< little_endian, uint_least32_t, 24 >     ulittle24_pt;
-    typedef endian_pack< little_endian, uint_least32_t, 32 >     ulittle32_pt;
-    typedef endian_pack< little_endian, uint_least64_t, 40 >     ulittle40_pt;
-    typedef endian_pack< little_endian, uint_least64_t, 48 >     ulittle48_pt;
-    typedef endian_pack< little_endian, uint_least64_t, 56 >     ulittle56_pt;
-    typedef endian_pack< little_endian, uint_least64_t, 64 >     ulittle64_pt;
+    typedef endian_pack< little_endian, uint_least8_t, 8, alignment::unaligned >       ulittle8_pt;
+    typedef endian_pack< little_endian, uint_least16_t, 16, alignment::unaligned >     ulittle16_pt;
+    typedef endian_pack< little_endian, uint_least32_t, 24, alignment::unaligned >     ulittle24_pt;
+    typedef endian_pack< little_endian, uint_least32_t, 32, alignment::unaligned >     ulittle32_pt;
+    typedef endian_pack< little_endian, uint_least64_t, 40, alignment::unaligned >     ulittle40_pt;
+    typedef endian_pack< little_endian, uint_least64_t, 48, alignment::unaligned >     ulittle48_pt;
+    typedef endian_pack< little_endian, uint_least64_t, 56, alignment::unaligned >     ulittle56_pt;
+    typedef endian_pack< little_endian, uint_least64_t, 64, alignment::unaligned >     ulittle64_pt;
 
     // unaligned native endian_pack signed integer types
-    typedef endian_pack< native_endian, int_least8_t, 8 >        native8_pt;
-    typedef endian_pack< native_endian, int_least16_t, 16 >      native16_pt;
-    typedef endian_pack< native_endian, int_least32_t, 24 >      native24_pt;
-    typedef endian_pack< native_endian, int_least32_t, 32 >      native32_pt;
-    typedef endian_pack< native_endian, int_least64_t, 40 >      native40_pt;
-    typedef endian_pack< native_endian, int_least64_t, 48 >      native48_pt;
-    typedef endian_pack< native_endian, int_least64_t, 56 >      native56_pt;
-    typedef endian_pack< native_endian, int_least64_t, 64 >      native64_pt;
+    typedef endian_pack< native_endian, int_least8_t, 8, alignment::unaligned >        native8_pt;
+    typedef endian_pack< native_endian, int_least16_t, 16, alignment::unaligned >      native16_pt;
+    typedef endian_pack< native_endian, int_least32_t, 24, alignment::unaligned >      native24_pt;
+    typedef endian_pack< native_endian, int_least32_t, 32, alignment::unaligned >      native32_pt;
+    typedef endian_pack< native_endian, int_least64_t, 40, alignment::unaligned >      native40_pt;
+    typedef endian_pack< native_endian, int_least64_t, 48, alignment::unaligned >      native48_pt;
+    typedef endian_pack< native_endian, int_least64_t, 56, alignment::unaligned >      native56_pt;
+    typedef endian_pack< native_endian, int_least64_t, 64, alignment::unaligned >      native64_pt;
 
     // unaligned native endian_pack unsigned integer types
-    typedef endian_pack< native_endian, uint_least8_t, 8 >       unative8_pt;
-    typedef endian_pack< native_endian, uint_least16_t, 16 >     unative16_pt;
-    typedef endian_pack< native_endian, uint_least32_t, 24 >     unative24_pt;
-    typedef endian_pack< native_endian, uint_least32_t, 32 >     unative32_pt;
-    typedef endian_pack< native_endian, uint_least64_t, 40 >     unative40_pt;
-    typedef endian_pack< native_endian, uint_least64_t, 48 >     unative48_pt;
-    typedef endian_pack< native_endian, uint_least64_t, 56 >     unative56_pt;
-    typedef endian_pack< native_endian, uint_least64_t, 64 >     unative64_pt;
+    typedef endian_pack< native_endian, uint_least8_t, 8, alignment::unaligned >       unative8_pt;
+    typedef endian_pack< native_endian, uint_least16_t, 16, alignment::unaligned >     unative16_pt;
+    typedef endian_pack< native_endian, uint_least32_t, 24, alignment::unaligned >     unative24_pt;
+    typedef endian_pack< native_endian, uint_least32_t, 32, alignment::unaligned >     unative32_pt;
+    typedef endian_pack< native_endian, uint_least64_t, 40, alignment::unaligned >     unative40_pt;
+    typedef endian_pack< native_endian, uint_least64_t, 48, alignment::unaligned >     unative48_pt;
+    typedef endian_pack< native_endian, uint_least64_t, 56, alignment::unaligned >     unative56_pt;
+    typedef endian_pack< native_endian, uint_least64_t, 64, alignment::unaligned >     unative64_pt;
 
 #define BOOST_HAS_INT16_T
 #define BOOST_HAS_INT32_T
