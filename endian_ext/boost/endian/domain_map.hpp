@@ -22,6 +22,9 @@
 #include <boost/fusion/include/begin.hpp>
 #include <boost/fusion/include/end.hpp>
 #include <boost/fusion/include/is_sequence.hpp>
+#include <boost/type_traits/is_fundamental.hpp>
+#include <boost/type_traits/remove_reference.hpp>
+#include <boost/type_traits/remove_cv.hpp>
 
 namespace boost {
 
