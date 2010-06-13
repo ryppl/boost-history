@@ -32,9 +32,9 @@
 
 #include <boost/static_assert.hpp>
 
-//~ using namespace std;             // Not the best programming practice, but I
+using namespace std;             // Not the best programming practice, but I
 using namespace boost;           //   want to verify this combination of using
-//~ using namespace boost::integer;  //   namespaces works. See endian_operations_test
+using namespace boost::integer;  //   namespaces works. See endian_operations_test
 //                               //   for tests that don't do "using namespace".
 
 namespace X {
@@ -169,13 +169,14 @@ void check_endian_send()
     
     //~ integer::convert_from<network>(m.a);
     //~ integer::convert_from<network>(m.b);
-    integer::convert_from<network>(m);
+    convert<from<network>, to<native_endian> >(m);
+    convert_from<network>(m);
     //~ std::cout << std::hex << m.a.a << std::endl;
     //~ std::cout << std::hex << m.a.b << std::endl;
     //~ std::cout << std::hex << m.b.a << std::endl;
     //~ std::cout << std::hex << m.b.b << std::endl;
 
-    integer::convert_to<network>(m);
+    convert_to<network>(m);
     //~ std::cout << std::hex << m.a.a << std::endl;
     //~ std::cout << std::hex << m.a.b << std::endl;
     //~ std::cout << std::hex << m.b.a << std::endl;
