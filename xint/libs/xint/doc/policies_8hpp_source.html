@@ -54,10 +54,10 @@
 <a name="l00037"></a>00037     BOOST_STATIC_ASSERT(<span class="keyword">sizeof</span>(<span class="keyword">typename</span> Alloc::value_type) == <span class="keyword">sizeof</span>(digit_t));
 <a name="l00038"></a>00038 
 <a name="l00039"></a>00039     <span class="keyword">public</span>:
-<a name="l00040"></a>00040     <span class="keyword">static</span> magnitude_t *alloc(<span class="keywordtype">size_t</span> size, <span class="keywordtype">bool</span> readonly = <span class="keyword">false</span>);
-<a name="l00041"></a>00041     <span class="keyword">static</span> magnitude_t *realloc_and_uniquify(magnitude_t *old, <span class="keywordtype">size_t</span> newsize
-<a name="l00042"></a>00042         = 0, realloc::strategy strategy = realloc::copy);
-<a name="l00043"></a>00043     <span class="keyword">static</span> magnitude_t *duplicate(magnitude_t *source, <span class="keywordtype">size_t</span> newsize = 0);
+<a name="l00040"></a>00040     <span class="keyword">static</span> magnitude_t *alloc(std::size_t size, <span class="keywordtype">bool</span> readonly = <span class="keyword">false</span>);
+<a name="l00041"></a>00041     <span class="keyword">static</span> magnitude_t *realloc_and_uniquify(magnitude_t *old, std::size_t
+<a name="l00042"></a>00042         newsize = 0, realloc::strategy strategy = realloc::copy);
+<a name="l00043"></a>00043     <span class="keyword">static</span> magnitude_t *duplicate(magnitude_t *source, std::size_t newsize = 0);
 <a name="l00044"></a>00044     <span class="keyword">static</span> <span class="keywordtype">void</span> dealloc(magnitude_t *p);
 <a name="l00045"></a>00045 
 <a name="l00046"></a>00046     <span class="keyword">static</span> <span class="keywordtype">void</span> attach(magnitude_t *p);
@@ -65,17 +65,17 @@
 <a name="l00048"></a>00048 
 <a name="l00049"></a>00049     <span class="keyword">private</span>:
 <a name="l00050"></a>00050     <span class="keyword">static</span> Alloc allocator;
-<a name="l00051"></a>00051     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> fixed_length;
-<a name="l00052"></a>00052     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> magnitude_datasize;
+<a name="l00051"></a>00051     <span class="keyword">static</span> <span class="keyword">const</span> std::size_t fixed_length;
+<a name="l00052"></a>00052     <span class="keyword">static</span> <span class="keyword">const</span> std::size_t magnitude_datasize;
 <a name="l00053"></a>00053 };
 <a name="l00054"></a>00054 
 <a name="l00055"></a>00055 <span class="keyword">template</span> &lt;bit<span class="keywordtype">size_t</span> Bits, <span class="keywordtype">bool</span> Secure, <span class="keyword">class</span> Alloc&gt;
 <a name="l00056"></a>00056     Alloc allocator_t&lt;Bits, Secure, Alloc&gt;::allocator;
 <a name="l00057"></a>00057 <span class="keyword">template</span> &lt;bit<span class="keywordtype">size_t</span> Bits, <span class="keywordtype">bool</span> Secure, <span class="keyword">class</span> Alloc&gt;
-<a name="l00058"></a>00058     <span class="keyword">const</span> <span class="keywordtype">size_t</span> allocator_t&lt;Bits, Secure, Alloc&gt;::fixed_length = (Bits +
+<a name="l00058"></a>00058     <span class="keyword">const</span> std::size_t allocator_t&lt;Bits, Secure, Alloc&gt;::fixed_length = (Bits +
 <a name="l00059"></a>00059     bits_per_digit - 1) / bits_per_digit;
 <a name="l00060"></a>00060 <span class="keyword">template</span> &lt;bit<span class="keywordtype">size_t</span> Bits, <span class="keywordtype">bool</span> Secure, <span class="keyword">class</span> Alloc&gt;
-<a name="l00061"></a>00061     <span class="keyword">const</span> <span class="keywordtype">size_t</span> allocator_t&lt;Bits, Secure, Alloc&gt;::magnitude_datasize =
+<a name="l00061"></a>00061     <span class="keyword">const</span> std::size_t allocator_t&lt;Bits, Secure, Alloc&gt;::magnitude_datasize =
 <a name="l00062"></a>00062     (<span class="keyword">sizeof</span>(magnitude_t) + <span class="keyword">sizeof</span>(digit_t) - 1) / <span class="keyword">sizeof</span>(digit_t);
 <a name="l00063"></a>00063 
 <a name="l00065"></a>00065 <span class="comment">// Fixed- or variable-length</span>
@@ -89,13 +89,13 @@
 <a name="l00073"></a>00073     }
 <a name="l00074"></a>00074 
 <a name="l00075"></a>00075     <span class="keyword">private</span>:
-<a name="l00076"></a>00076     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> last_digit;
+<a name="l00076"></a>00076     <span class="keyword">static</span> <span class="keyword">const</span> std::size_t last_digit;
 <a name="l00077"></a>00077     <span class="keyword">static</span> <span class="keyword">const</span> digit_t mask;
 <a name="l00078"></a>00078 };
 <a name="l00079"></a>00079 
 <a name="l00080"></a>00080 <span class="keyword">template</span> &lt;bit<span class="keywordtype">size_t</span> Bits, bit<span class="keywordtype">size_t</span> Modded&gt;
-<a name="l00081"></a>00081 <span class="keyword">const</span> <span class="keywordtype">size_t</span> fixedlength_t&lt;Bits, Modded&gt;::last_digit = ((Bits + bits_per_digit -
-<a name="l00082"></a>00082     1) / bits_per_digit) - 1;
+<a name="l00081"></a>00081 <span class="keyword">const</span> std::size_t fixedlength_t&lt;Bits, Modded&gt;::last_digit = ((Bits +
+<a name="l00082"></a>00082     bits_per_digit - 1) / bits_per_digit) - 1;
 <a name="l00083"></a>00083 <span class="keyword">template</span> &lt;bit<span class="keywordtype">size_t</span> Bits, bit<span class="keywordtype">size_t</span> Modded&gt;
 <a name="l00084"></a>00084 <span class="keyword">const</span> digit_t fixedlength_t&lt;Bits, Modded&gt;::mask = digit_t((doubledigit_t(1) &lt;&lt;
 <a name="l00085"></a>00085     (Bits % bits_per_digit)) - 1);
@@ -109,108 +109,110 @@
 <a name="l00094"></a>00094 <span class="comment">// Function Definitions</span>
 <a name="l00095"></a>00095 
 <a name="l00096"></a>00096 <span class="keyword">template</span> &lt;bit<span class="keywordtype">size_t</span> Bits, <span class="keywordtype">bool</span> Secure, <span class="keyword">class</span> Alloc&gt;
-<a name="l00097"></a>00097 magnitude_t *allocator_t&lt;Bits, Secure, Alloc&gt;::alloc(<span class="keywordtype">size_t</span> size, <span class="keywordtype">bool</span> readonly)
-<a name="l00098"></a>00098 {
-<a name="l00099"></a>00099     <span class="keywordflow">if</span> (fixed_length) size = fixed_length;
-<a name="l00100"></a>00100     <span class="keywordflow">else</span> <span class="keywordflow">if</span> (size &lt; minimum_digits) size = minimum_digits;
-<a name="l00101"></a>00101     <span class="keyword">const</span> <span class="keywordtype">size_t</span> count = size - minimum_digits + magnitude_datasize;
-<a name="l00102"></a>00102 
-<a name="l00103"></a>00103     digit_t *storage = 0;
-<a name="l00104"></a>00104     <span class="keywordflow">try</span> {
-<a name="l00105"></a>00105         storage = allocator.allocate(count);
-<a name="l00106"></a>00106         <span class="keywordflow">if</span> (readonly) <span class="keywordflow">return</span> <span class="keyword">new</span>(storage) magnitude_t(size, readonly, 0);
-<a name="l00107"></a>00107         <span class="keywordflow">else</span> <span class="keywordflow">return</span> <span class="keyword">new</span>(storage) magnitude_t(size, readonly);
-<a name="l00108"></a>00108     } <span class="keywordflow">catch</span> (std::bad_alloc&amp;) {
-<a name="l00109"></a>00109         <span class="keywordflow">throw</span> exceptions::overflow_error(<span class="stringliteral">&quot;Out of memory allocating integer&quot;</span>);
-<a name="l00110"></a>00110     } <span class="keywordflow">catch</span> (std::exception&amp;) {
-<a name="l00111"></a>00111         <span class="comment">// To make it exception-safe, we&#39;ve got to ensure that the allocated</span>
-<a name="l00112"></a>00112         <span class="comment">// data is properly disposed of if there&#39;s an exception, before passing</span>
-<a name="l00113"></a>00113         <span class="comment">// the exception on.</span>
-<a name="l00114"></a>00114         <span class="keywordflow">if</span> (storage) allocator.deallocate(storage, size);
-<a name="l00115"></a>00115         <span class="keywordflow">throw</span>;
-<a name="l00116"></a>00116     }
-<a name="l00117"></a>00117 }
-<a name="l00118"></a>00118 
-<a name="l00119"></a>00119 <span class="keyword">template</span> &lt;bit<span class="keywordtype">size_t</span> Bits, <span class="keywordtype">bool</span> Secure, <span class="keyword">class</span> Alloc&gt;
-<a name="l00120"></a>00120 magnitude_t *allocator_t&lt;Bits, Secure, Alloc&gt;::realloc_and_uniquify(magnitude_t
-<a name="l00121"></a>00121     *old, <span class="keywordtype">size_t</span> newsize, realloc::strategy strategy)
-<a name="l00122"></a>00122 {
-<a name="l00123"></a>00123     <span class="keywordflow">if</span> (fixed_length) {
-<a name="l00124"></a>00124         newsize = fixed_length;
-<a name="l00125"></a>00125     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (newsize == 0) {
-<a name="l00126"></a>00126         <span class="keywordflow">if</span> (old) newsize = old-&gt;max_length;
-<a name="l00127"></a>00127         <span class="keywordflow">else</span> newsize = minimum_digits;
-<a name="l00128"></a>00128     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (newsize &lt; minimum_digits) newsize = minimum_digits;
-<a name="l00129"></a>00129 
-<a name="l00130"></a>00130     magnitude_t *r = old;
-<a name="l00131"></a>00131     <span class="keywordflow">if</span> (old == 0 || newsize &gt; old-&gt;max_length || old-&gt;copies() &gt; 1) {
-<a name="l00132"></a>00132         r = alloc(newsize);
-<a name="l00133"></a>00133         attach(r);
-<a name="l00134"></a>00134 
-<a name="l00135"></a>00135         <span class="keywordflow">if</span> (strategy == realloc::ignore) {
-<a name="l00136"></a>00136             <span class="comment">// Do nothing.</span>
-<a name="l00137"></a>00137         } <span class="keywordflow">else</span> <span class="keywordflow">if</span> ((strategy == realloc::extend || strategy == realloc::copy) &amp;&amp;
-<a name="l00138"></a>00138             old != 0)
-<a name="l00139"></a>00139         {
-<a name="l00140"></a>00140             <span class="keyword">const</span> digit_t *s = old-&gt;digits, *se = s + old-&gt;max_length;
-<a name="l00141"></a>00141             digit_t *t = r-&gt;digits, *te = t + r-&gt;max_length;
-<a name="l00142"></a>00142             <span class="keywordflow">while</span> (s != se &amp;&amp; t != te) *t++ = *s++;
-<a name="l00143"></a>00143         } <span class="keywordflow">else</span> {
-<a name="l00144"></a>00144             <span class="comment">// It&#39;s realloc::zero, old == 0. Zero it.</span>
-<a name="l00145"></a>00145             digit_t *t = r-&gt;digits, *te = t + r-&gt;max_length;
-<a name="l00146"></a>00146             <span class="keywordflow">while</span> (t != te) *t++ = 0;
-<a name="l00147"></a>00147         }
-<a name="l00148"></a>00148 
-<a name="l00149"></a>00149         detach(old);
-<a name="l00150"></a>00150     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (strategy == realloc::zero) {
-<a name="l00151"></a>00151         digit_t *t = r-&gt;digits, *te = t + r-&gt;max_length;
-<a name="l00152"></a>00152         <span class="keywordflow">while</span> (t != te) *t++ = 0;
-<a name="l00153"></a>00153     }
-<a name="l00154"></a>00154 
-<a name="l00155"></a>00155     <span class="keywordflow">return</span> r;
-<a name="l00156"></a>00156 }
-<a name="l00157"></a>00157 
-<a name="l00158"></a>00158 <span class="keyword">template</span> &lt;bit<span class="keywordtype">size_t</span> Bits, <span class="keywordtype">bool</span> Secure, <span class="keyword">class</span> Alloc&gt;
-<a name="l00159"></a>00159 magnitude_t *allocator_t&lt;Bits, Secure, Alloc&gt;::duplicate(magnitude_t *source,
-<a name="l00160"></a>00160     <span class="keywordtype">size_t</span> newsize)
-<a name="l00161"></a>00161 {
-<a name="l00162"></a>00162     attach(source);
-<a name="l00163"></a>00163     <span class="keywordflow">return</span> realloc_and_uniquify(source, newsize, realloc::copy);
-<a name="l00164"></a>00164 }
-<a name="l00165"></a>00165 
-<a name="l00166"></a>00166 <span class="keyword">template</span> &lt;bit<span class="keywordtype">size_t</span> Bits, <span class="keywordtype">bool</span> Secure, <span class="keyword">class</span> Alloc&gt;
-<a name="l00167"></a>00167 <span class="keywordtype">void</span> allocator_t&lt;Bits, Secure, Alloc&gt;::dealloc(magnitude_t *data) {
-<a name="l00168"></a>00168     <span class="keywordflow">if</span> (data == 0) <span class="keywordflow">return</span>;
-<a name="l00169"></a>00169 
-<a name="l00170"></a>00170     <span class="keyword">const</span> <span class="keywordtype">size_t</span> len = (data-&gt;max_length + magnitude_datasize - minimum_digits);
-<a name="l00171"></a>00171 
-<a name="l00172"></a>00172     <span class="comment">// Since the data was initialized with placement-new, we have to manually</span>
-<a name="l00173"></a>00173     <span class="comment">// call the destructor.</span>
-<a name="l00174"></a>00174     data-&gt; ~magnitude_t();
-<a name="l00175"></a>00175 
-<a name="l00176"></a>00176     <span class="comment">// Finally, dispose of it.</span>
-<a name="l00177"></a>00177     digit_t *p = <span class="keyword">reinterpret_cast&lt;</span>digit_t*<span class="keyword">&gt;</span>(data);
-<a name="l00178"></a>00178     <span class="keywordflow">if</span> (Secure) memset(p, 0, len * <span class="keyword">sizeof</span>(digit_t));
-<a name="l00179"></a>00179     allocator.deallocate(p, len);
-<a name="l00180"></a>00180 }
-<a name="l00181"></a>00181 
-<a name="l00182"></a>00182 <span class="keyword">template</span> &lt;bit<span class="keywordtype">size_t</span> Bits, <span class="keywordtype">bool</span> Secure, <span class="keyword">class</span> Alloc&gt;
-<a name="l00183"></a>00183 <span class="keywordtype">void</span> allocator_t&lt;Bits, Secure, Alloc&gt;::attach(magnitude_t *p) {
-<a name="l00184"></a>00184     p-&gt;inc();
-<a name="l00185"></a>00185 }
-<a name="l00186"></a>00186 
-<a name="l00187"></a>00187 <span class="keyword">template</span> &lt;bit<span class="keywordtype">size_t</span> Bits, <span class="keywordtype">bool</span> Secure, <span class="keyword">class</span> Alloc&gt;
-<a name="l00188"></a>00188 <span class="keywordtype">void</span> allocator_t&lt;Bits, Secure, Alloc&gt;::detach(magnitude_t *p) {
-<a name="l00189"></a>00189     <span class="keywordflow">if</span> (p-&gt;dec()) dealloc(p);
-<a name="l00190"></a>00190 }
-<a name="l00191"></a>00191 
-<a name="l00193"></a>00193 } <span class="comment">// namespace detail</span>
-<a name="l00194"></a>00194 } <span class="comment">// namespace xint</span>
-<a name="l00195"></a>00195 } <span class="comment">// namespace boost</span>
-<a name="l00196"></a>00196 
-<a name="l00197"></a>00197 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_POLICY_HPP</span>
+<a name="l00097"></a>00097 magnitude_t *allocator_t&lt;Bits, Secure, Alloc&gt;::alloc(std::size_t size, <span class="keywordtype">bool</span>
+<a name="l00098"></a>00098     readonly)
+<a name="l00099"></a>00099 {
+<a name="l00100"></a>00100     <span class="keywordflow">if</span> (fixed_length) size = fixed_length;
+<a name="l00101"></a>00101     <span class="keywordflow">else</span> <span class="keywordflow">if</span> (size &lt; minimum_digits) size = minimum_digits;
+<a name="l00102"></a>00102     <span class="keyword">const</span> std::size_t count = size - minimum_digits + magnitude_datasize;
+<a name="l00103"></a>00103 
+<a name="l00104"></a>00104     digit_t *storage = 0;
+<a name="l00105"></a>00105     <span class="keywordflow">try</span> {
+<a name="l00106"></a>00106         storage = allocator.allocate(count);
+<a name="l00107"></a>00107         <span class="keywordflow">if</span> (readonly) <span class="keywordflow">return</span> <span class="keyword">new</span>(storage) magnitude_t(size, readonly, 0);
+<a name="l00108"></a>00108         <span class="keywordflow">else</span> <span class="keywordflow">return</span> <span class="keyword">new</span>(storage) magnitude_t(size, readonly);
+<a name="l00109"></a>00109     } <span class="keywordflow">catch</span> (std::bad_alloc&amp;) {
+<a name="l00110"></a>00110         <span class="keywordflow">throw</span> exceptions::overflow_error(<span class="stringliteral">&quot;Out of memory allocating integer&quot;</span>);
+<a name="l00111"></a>00111     } <span class="keywordflow">catch</span> (std::exception&amp;) {
+<a name="l00112"></a>00112         <span class="comment">// To make it exception-safe, we&#39;ve got to ensure that the allocated</span>
+<a name="l00113"></a>00113         <span class="comment">// data is properly disposed of if there&#39;s an exception, before passing</span>
+<a name="l00114"></a>00114         <span class="comment">// the exception on.</span>
+<a name="l00115"></a>00115         <span class="keywordflow">if</span> (storage) allocator.deallocate(storage, size);
+<a name="l00116"></a>00116         <span class="keywordflow">throw</span>;
+<a name="l00117"></a>00117     }
+<a name="l00118"></a>00118 }
+<a name="l00119"></a>00119 
+<a name="l00120"></a>00120 <span class="keyword">template</span> &lt;bit<span class="keywordtype">size_t</span> Bits, <span class="keywordtype">bool</span> Secure, <span class="keyword">class</span> Alloc&gt;
+<a name="l00121"></a>00121 magnitude_t *allocator_t&lt;Bits, Secure, Alloc&gt;::realloc_and_uniquify(magnitude_t
+<a name="l00122"></a>00122     *old, std::size_t newsize, realloc::strategy strategy)
+<a name="l00123"></a>00123 {
+<a name="l00124"></a>00124     <span class="keywordflow">if</span> (fixed_length) {
+<a name="l00125"></a>00125         newsize = fixed_length;
+<a name="l00126"></a>00126     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (newsize == 0) {
+<a name="l00127"></a>00127         <span class="keywordflow">if</span> (old) newsize = old-&gt;max_length;
+<a name="l00128"></a>00128         <span class="keywordflow">else</span> newsize = minimum_digits;
+<a name="l00129"></a>00129     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (newsize &lt; minimum_digits) newsize = minimum_digits;
+<a name="l00130"></a>00130 
+<a name="l00131"></a>00131     magnitude_t *r = old;
+<a name="l00132"></a>00132     <span class="keywordflow">if</span> (old == 0 || newsize &gt; old-&gt;max_length || old-&gt;copies() &gt; 1) {
+<a name="l00133"></a>00133         r = alloc(newsize);
+<a name="l00134"></a>00134         attach(r);
+<a name="l00135"></a>00135 
+<a name="l00136"></a>00136         <span class="keywordflow">if</span> (strategy == realloc::ignore) {
+<a name="l00137"></a>00137             <span class="comment">// Do nothing.</span>
+<a name="l00138"></a>00138         } <span class="keywordflow">else</span> <span class="keywordflow">if</span> ((strategy == realloc::extend || strategy == realloc::copy) &amp;&amp;
+<a name="l00139"></a>00139             old != 0)
+<a name="l00140"></a>00140         {
+<a name="l00141"></a>00141             <span class="keyword">const</span> digit_t *s = old-&gt;digits, *se = s + old-&gt;max_length;
+<a name="l00142"></a>00142             digit_t *t = r-&gt;digits, *te = t + r-&gt;max_length;
+<a name="l00143"></a>00143             <span class="keywordflow">while</span> (s != se &amp;&amp; t != te) *t++ = *s++;
+<a name="l00144"></a>00144         } <span class="keywordflow">else</span> {
+<a name="l00145"></a>00145             <span class="comment">// It&#39;s realloc::zero, old == 0. Zero it.</span>
+<a name="l00146"></a>00146             digit_t *t = r-&gt;digits, *te = t + r-&gt;max_length;
+<a name="l00147"></a>00147             <span class="keywordflow">while</span> (t != te) *t++ = 0;
+<a name="l00148"></a>00148         }
+<a name="l00149"></a>00149 
+<a name="l00150"></a>00150         detach(old);
+<a name="l00151"></a>00151     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (strategy == realloc::zero) {
+<a name="l00152"></a>00152         digit_t *t = r-&gt;digits, *te = t + r-&gt;max_length;
+<a name="l00153"></a>00153         <span class="keywordflow">while</span> (t != te) *t++ = 0;
+<a name="l00154"></a>00154     }
+<a name="l00155"></a>00155 
+<a name="l00156"></a>00156     <span class="keywordflow">return</span> r;
+<a name="l00157"></a>00157 }
+<a name="l00158"></a>00158 
+<a name="l00159"></a>00159 <span class="keyword">template</span> &lt;bit<span class="keywordtype">size_t</span> Bits, <span class="keywordtype">bool</span> Secure, <span class="keyword">class</span> Alloc&gt;
+<a name="l00160"></a>00160 magnitude_t *allocator_t&lt;Bits, Secure, Alloc&gt;::duplicate(magnitude_t *source,
+<a name="l00161"></a>00161     std::size_t newsize)
+<a name="l00162"></a>00162 {
+<a name="l00163"></a>00163     attach(source);
+<a name="l00164"></a>00164     <span class="keywordflow">return</span> realloc_and_uniquify(source, newsize, realloc::copy);
+<a name="l00165"></a>00165 }
+<a name="l00166"></a>00166 
+<a name="l00167"></a>00167 <span class="keyword">template</span> &lt;bit<span class="keywordtype">size_t</span> Bits, <span class="keywordtype">bool</span> Secure, <span class="keyword">class</span> Alloc&gt;
+<a name="l00168"></a>00168 <span class="keywordtype">void</span> allocator_t&lt;Bits, Secure, Alloc&gt;::dealloc(magnitude_t *data) {
+<a name="l00169"></a>00169     <span class="keywordflow">if</span> (data == 0) <span class="keywordflow">return</span>;
+<a name="l00170"></a>00170 
+<a name="l00171"></a>00171     <span class="keyword">const</span> std::size_t len = (data-&gt;max_length + magnitude_datasize -
+<a name="l00172"></a>00172         minimum_digits);
+<a name="l00173"></a>00173 
+<a name="l00174"></a>00174     <span class="comment">// Since the data was initialized with placement-new, we have to manually</span>
+<a name="l00175"></a>00175     <span class="comment">// call the destructor.</span>
+<a name="l00176"></a>00176     data-&gt; ~magnitude_t();
+<a name="l00177"></a>00177 
+<a name="l00178"></a>00178     <span class="comment">// Finally, dispose of it.</span>
+<a name="l00179"></a>00179     digit_t *p = <span class="keyword">reinterpret_cast&lt;</span>digit_t*<span class="keyword">&gt;</span>(data);
+<a name="l00180"></a>00180     <span class="keywordflow">if</span> (Secure) memset(p, 0, len * <span class="keyword">sizeof</span>(digit_t));
+<a name="l00181"></a>00181     allocator.deallocate(p, len);
+<a name="l00182"></a>00182 }
+<a name="l00183"></a>00183 
+<a name="l00184"></a>00184 <span class="keyword">template</span> &lt;bit<span class="keywordtype">size_t</span> Bits, <span class="keywordtype">bool</span> Secure, <span class="keyword">class</span> Alloc&gt;
+<a name="l00185"></a>00185 <span class="keywordtype">void</span> allocator_t&lt;Bits, Secure, Alloc&gt;::attach(magnitude_t *p) {
+<a name="l00186"></a>00186     p-&gt;inc();
+<a name="l00187"></a>00187 }
+<a name="l00188"></a>00188 
+<a name="l00189"></a>00189 <span class="keyword">template</span> &lt;bit<span class="keywordtype">size_t</span> Bits, <span class="keywordtype">bool</span> Secure, <span class="keyword">class</span> Alloc&gt;
+<a name="l00190"></a>00190 <span class="keywordtype">void</span> allocator_t&lt;Bits, Secure, Alloc&gt;::detach(magnitude_t *p) {
+<a name="l00191"></a>00191     <span class="keywordflow">if</span> (p-&gt;dec()) dealloc(p);
+<a name="l00192"></a>00192 }
+<a name="l00193"></a>00193 
+<a name="l00195"></a>00195 } <span class="comment">// namespace detail</span>
+<a name="l00196"></a>00196 } <span class="comment">// namespace xint</span>
+<a name="l00197"></a>00197 } <span class="comment">// namespace boost</span>
+<a name="l00198"></a>00198 
+<a name="l00199"></a>00199 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_POLICY_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 00:01:46 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 12:31:58 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

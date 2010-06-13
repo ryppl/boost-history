@@ -53,7 +53,7 @@
 <a name="l00036"></a>00036     <span class="keyword">typedef</span> magnitude_manager_t&lt;Bits, Secure, Alloc&gt; datatype;
 <a name="l00037"></a>00037     <span class="keyword">typedef</span> base_divide_t&lt;BOOST_XINT_RAWINT&gt; divide_t;
 <a name="l00038"></a>00038 
-<a name="l00039"></a>00039     <span class="keywordtype">size_t</span> length;
+<a name="l00039"></a>00039     std::size_t length;
 <a name="l00040"></a>00040     <span class="keywordtype">bool</span> negative;
 <a name="l00041"></a>00041 
 <a name="l00042"></a>00042     raw_integer_t(): length(1), negative(false), changed(false) { }
@@ -68,212 +68,222 @@
 <a name="l00051"></a>00051         <span class="keyword">false</span>): length(copy.length), negative(neg), changed(false),
 <a name="l00052"></a>00052         data(copy.data) { trim(allow_zero); }
 <a name="l00053"></a>00053     <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00054"></a>00054     raw_integer_t(T n, <span class="keywordtype">size_t</span> prealloc = 0, <span class="keyword">typename</span> boost::enable_if&lt;
+<a name="l00054"></a>00054     raw_integer_t(T n, std::size_t prealloc = 0, <span class="keyword">typename</span> boost::enable_if&lt;
 <a name="l00055"></a>00055         boost::is_integral&lt;T&gt; &gt;::type* = 0): length(1), negative(false),
 <a name="l00056"></a>00056         changed(false) { <span class="keywordflow">if</span> (std::numeric_limits&lt;T&gt;::is_signed) set_signed(n,
 <a name="l00057"></a>00057         prealloc); <span class="keywordflow">else</span> set_unsigned(n, <span class="keyword">false</span>, prealloc); }
 <a name="l00058"></a>00058     <span class="keyword">template</span> &lt;<span class="keyword">typename</span> <span class="keywordtype">char</span>T&gt;
-<a name="l00059"></a>00059     raw_integer_t(<span class="keyword">const</span> charT *s, <span class="keywordtype">size_t</span> base = 10): length(1), negative(false),
-<a name="l00060"></a>00060         changed(false) { from_string(s, base); }
+<a name="l00059"></a>00059     raw_integer_t(<span class="keyword">const</span> charT *s, std::size_t base = 10): length(1),
+<a name="l00060"></a>00060         negative(false), changed(false) { from_string(s, base); }
 <a name="l00061"></a>00061     <span class="keyword">template</span> &lt;<span class="keyword">typename</span> <span class="keywordtype">char</span>T&gt;
-<a name="l00062"></a>00062     raw_integer_t(<span class="keyword">const</span> std::basic_string&lt;charT&gt;&amp; s, <span class="keywordtype">size_t</span> base = 10):
-<a name="l00063"></a>00063         length(1), negative(false), changed(false) { from_string(s, base); }
-<a name="l00064"></a>00064     raw_integer_t(<span class="keyword">const</span> <a class="code" href="namespaceboost_1_1xint.html#aae3128529370506165793f2771834e58" title="The format for the binary representations of integers.">xint::binary_t</a> b, <span class="keywordtype">size_t</span> bits = 0): length(1),
-<a name="l00065"></a>00065         negative(false), changed(false) { from_binary(b, bits); }
-<a name="l00066"></a>00066 
-<a name="l00067"></a>00067     BOOST_XINT_RAWINT&amp; operator=(<span class="keyword">const</span> BOOST_XINT_RAWINT&amp; <span class="keyword">set</span>) { length =
-<a name="l00068"></a>00068         <span class="keyword">set</span>.length; negative = <span class="keyword">set</span>.negative; data = <span class="keyword">set</span>.data; <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
-<a name="l00069"></a>00069 
-<a name="l00070"></a>00070     digit_t *digits(<span class="keywordtype">size_t</span> resize, realloc::strategy strategy = realloc::copy);
-<a name="l00071"></a>00071     <span class="keyword">const</span> digit_t *digits()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> data.digits(); }
-<a name="l00072"></a>00072 
-<a name="l00073"></a>00073     digit_t get_digit(<span class="keywordtype">size_t</span> i)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> (i &lt; max_length() ? digits()[i] :
-<a name="l00074"></a>00074         0); }
-<a name="l00075"></a>00075     digit_t operator[](<span class="keywordtype">size_t</span> i) { <span class="keywordflow">return</span> digits()[i]; }
-<a name="l00076"></a>00076     digit_t operator[](<span class="keywordtype">size_t</span> i)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> get_digit(i); }
-<a name="l00077"></a>00077     <span class="keywordtype">size_t</span> max_length()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> data.max_length(); }
-<a name="l00078"></a>00078     <span class="keywordtype">bool</span> same_storage(<span class="keyword">const</span> BOOST_XINT_RAWINT n)<span class="keyword"> const </span>{ <span class="keywordflow">return</span>
-<a name="l00079"></a>00079         data.same_storage(n.data); }
-<a name="l00080"></a>00080 
-<a name="l00081"></a>00081     <span class="keywordtype">int</span> sign()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> negative ? -1 : is_zero() ? 0 : 1; }
-<a name="l00082"></a>00082     <span class="keywordtype">int</span> sign(<span class="keywordtype">bool</span> allow_signed_zero)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> (!allow_signed_zero &amp;&amp;
-<a name="l00083"></a>00083         is_zero() ? 0 : negative ? -1 : 1); }
-<a name="l00084"></a>00084     <span class="keywordtype">bool</span> is_zero()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> (length == 1 &amp;&amp; digits()[0] == 0); }
-<a name="l00085"></a>00085     <span class="keywordtype">bool</span> is_odd()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> (digits()[0] &amp; 0x01) != 0; }
-<a name="l00086"></a>00086     <span class="keywordtype">bool</span> is_even()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> (digits()[0] &amp; 0x01) == 0; }
-<a name="l00087"></a>00087     <span class="keywordtype">size_t</span> hex_digits()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> (<a class="code" href="namespaceboost_1_1xint.html#ab6cef2e4e1b3c3b841f6c1a085952f18" title="Get the log2 value of an integer.">log2</a>(*<span class="keyword">this</span>) + 3) / 4; }
-<a name="l00088"></a>00088     raw_integer_t <a class="code" href="namespaceboost_1_1xint.html#a5a98564162f30f3117a871a617af9523" title="Returns the absolute value of an integer.">abs</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> raw_integer_t(*<span class="keyword">this</span>, <span class="keyword">false</span>); }
-<a name="l00089"></a>00089     raw_integer_t negate()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> raw_integer_t(*<span class="keyword">this</span>, !negative); }
-<a name="l00090"></a>00090 
-<a name="l00091"></a>00091     <span class="keywordtype">void</span> <span class="keyword">set</span>(<span class="keywordtype">int</span> n) { set_signed(n); }
-<a name="l00092"></a>00092     <span class="keywordtype">void</span> set_signed(boost::intmax_t n, <span class="keywordtype">size_t</span> prealloc = 0);
-<a name="l00093"></a>00093     <span class="keywordtype">void</span> set_unsigned(boost::uintmax_t n, <span class="keywordtype">bool</span> neg = <span class="keyword">false</span>, <span class="keywordtype">size_t</span> prealloc =
-<a name="l00094"></a>00094         0);
-<a name="l00095"></a>00095 
-<a name="l00096"></a>00096     <span class="keywordtype">bool</span> is_nan()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> data.is_nan(); }
-<a name="l00097"></a>00097     <span class="keywordtype">void</span> make_nan() { data.make_nan(); }
-<a name="l00098"></a>00098 
-<a name="l00099"></a>00099     <span class="keywordtype">bool</span> is_unique()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> data.is_unique(); }
-<a name="l00100"></a>00100     <span class="keywordtype">void</span> make_unique() { <span class="keywordflow">if</span> (!is_unique()) data.resize_and_uniquify(length); }
+<a name="l00062"></a>00062     raw_integer_t(<span class="keyword">const</span> charT *s, <span class="keyword">const</span> charT*&amp; endptr, std::size_t base = 10):
+<a name="l00063"></a>00063         length(1), negative(false), changed(false) { from_string(s, endptr,
+<a name="l00064"></a>00064         base); }
+<a name="l00065"></a>00065     <span class="keyword">template</span> &lt;<span class="keyword">typename</span> <span class="keywordtype">char</span>T, <span class="keyword">typename</span> traitsT, <span class="keyword">typename</span> allocT&gt;
+<a name="l00066"></a>00066     raw_integer_t(<span class="keyword">const</span> std::basic_string&lt;charT, traitsT, allocT&gt;&amp; s,
+<a name="l00067"></a>00067         std::size_t base = 10): length(1), negative(false), changed(false) {
+<a name="l00068"></a>00068         from_string(s, base); }
+<a name="l00069"></a>00069     raw_integer_t(<span class="keyword">const</span> <a class="code" href="namespaceboost_1_1xint.html#aae3128529370506165793f2771834e58" title="The format for the binary representations of integers.">xint::binary_t</a> b, std::size_t bits = 0): length(1),
+<a name="l00070"></a>00070         negative(false), changed(false) { from_binary(b, bits); }
+<a name="l00071"></a>00071 
+<a name="l00072"></a>00072     BOOST_XINT_RAWINT&amp; operator=(<span class="keyword">const</span> BOOST_XINT_RAWINT&amp; <span class="keyword">set</span>) { length =
+<a name="l00073"></a>00073         <span class="keyword">set</span>.length; negative = <span class="keyword">set</span>.negative; data = <span class="keyword">set</span>.data; <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
+<a name="l00074"></a>00074 
+<a name="l00075"></a>00075     digit_t *digits(std::size_t resize, realloc::strategy strategy =
+<a name="l00076"></a>00076         realloc::copy);
+<a name="l00077"></a>00077     <span class="keyword">const</span> digit_t *digits()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> data.digits(); }
+<a name="l00078"></a>00078 
+<a name="l00079"></a>00079     digit_t get_digit(std::size_t i)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> (i &lt; max_length() ?
+<a name="l00080"></a>00080         digits()[i] : 0); }
+<a name="l00081"></a>00081     digit_t operator[](std::size_t i) { <span class="keywordflow">return</span> digits()[i]; }
+<a name="l00082"></a>00082     digit_t operator[](std::size_t i)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> get_digit(i); }
+<a name="l00083"></a>00083     std::size_t max_length()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> data.max_length(); }
+<a name="l00084"></a>00084     <span class="keywordtype">bool</span> same_storage(<span class="keyword">const</span> BOOST_XINT_RAWINT n)<span class="keyword"> const </span>{ <span class="keywordflow">return</span>
+<a name="l00085"></a>00085         data.same_storage(n.data); }
+<a name="l00086"></a>00086 
+<a name="l00087"></a>00087     <span class="keywordtype">int</span> sign()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> negative ? -1 : is_zero() ? 0 : 1; }
+<a name="l00088"></a>00088     <span class="keywordtype">int</span> sign(<span class="keywordtype">bool</span> allow_signed_zero)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> (!allow_signed_zero &amp;&amp;
+<a name="l00089"></a>00089         is_zero() ? 0 : negative ? -1 : 1); }
+<a name="l00090"></a>00090     <span class="keywordtype">bool</span> is_zero()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> (length == 1 &amp;&amp; digits()[0] == 0); }
+<a name="l00091"></a>00091     <span class="keywordtype">bool</span> is_odd()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> (digits()[0] &amp; 0x01) != 0; }
+<a name="l00092"></a>00092     <span class="keywordtype">bool</span> is_even()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> (digits()[0] &amp; 0x01) == 0; }
+<a name="l00093"></a>00093     std::size_t hex_digits()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> (<a class="code" href="namespaceboost_1_1xint.html#ab6cef2e4e1b3c3b841f6c1a085952f18" title="Get the log2 value of an integer.">log2</a>(*<span class="keyword">this</span>) + 3) / 4; }
+<a name="l00094"></a>00094     raw_integer_t <a class="code" href="namespaceboost_1_1xint.html#a5a98564162f30f3117a871a617af9523" title="Returns the absolute value of an integer.">abs</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> raw_integer_t(*<span class="keyword">this</span>, <span class="keyword">false</span>); }
+<a name="l00095"></a>00095     raw_integer_t negate()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> raw_integer_t(*<span class="keyword">this</span>, !negative); }
+<a name="l00096"></a>00096 
+<a name="l00097"></a>00097     <span class="keywordtype">void</span> <span class="keyword">set</span>(<span class="keywordtype">int</span> n) { set_signed(n); }
+<a name="l00098"></a>00098     <span class="keywordtype">void</span> set_signed(boost::intmax_t n, std::size_t prealloc = 0);
+<a name="l00099"></a>00099     <span class="keywordtype">void</span> set_unsigned(boost::uintmax_t n, <span class="keywordtype">bool</span> neg = <span class="keyword">false</span>, std::size_t prealloc
+<a name="l00100"></a>00100         = 0);
 <a name="l00101"></a>00101 
-<a name="l00102"></a>00102     <span class="keywordtype">void</span> trim(<span class="keywordtype">bool</span> allow_negative_zero = <span class="keyword">false</span>);
-<a name="l00103"></a>00103 
-<a name="l00104"></a>00104     raw_integer_t&amp;       operator++();    <span class="comment">// Preincrement</span>
-<a name="l00105"></a>00105     raw_integer_t&amp;       operator--();    <span class="comment">// Predecrement</span>
-<a name="l00106"></a>00106     raw_integer_t        operator++(<span class="keywordtype">int</span>); <span class="comment">// Postincrement</span>
-<a name="l00107"></a>00107     raw_integer_t        operator--(<span class="keywordtype">int</span>); <span class="comment">// Postdecrement</span>
-<a name="l00108"></a>00108 
-<a name="l00109"></a>00109     <span class="keywordtype">bool</span>                 operator!()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> is_zero(); }
-<a name="l00110"></a>00110     raw_integer_t        <a class="code" href="namespaceboost_1_1xint.html#acda2a7a7d63582732505cc7128096f27" title="Calculate the difference between two integers.">operator-</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> BOOST_XINT_RAWINT(*<span class="keyword">this</span>,
-<a name="l00111"></a>00111                                                  !negative, <span class="keyword">true</span>); }
-<a name="l00112"></a>00112     raw_integer_t&amp;       <a class="code" href="namespaceboost_1_1xint.html#a88b3b7bccb96dd8b0cd9d9f853025915" title="Calculate the sum of two integers.">operator+</a>()       { <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
-<a name="l00113"></a>00113     <span class="keyword">const</span> raw_integer_t&amp; <a class="code" href="namespaceboost_1_1xint.html#a88b3b7bccb96dd8b0cd9d9f853025915" title="Calculate the sum of two integers.">operator+</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
-<a name="l00114"></a>00114     raw_integer_t        operator~() <span class="keyword">const</span>; <span class="comment">// For fixed-size types only!</span>
-<a name="l00115"></a>00115 
-<a name="l00116"></a>00116     raw_integer_t&amp;       operator+=(<span class="keyword">const</span> raw_integer_t b);
-<a name="l00117"></a>00117     raw_integer_t&amp;       operator-=(<span class="keyword">const</span> raw_integer_t b);
-<a name="l00118"></a>00118     raw_integer_t&amp;       operator*=(<span class="keyword">const</span> raw_integer_t b);
-<a name="l00119"></a>00119     raw_integer_t&amp;       operator/=(<span class="keyword">const</span> raw_integer_t b);
-<a name="l00120"></a>00120     raw_integer_t&amp;       operator%=(<span class="keyword">const</span> raw_integer_t b);
+<a name="l00102"></a>00102     <span class="keywordtype">bool</span> is_nan()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> data.is_nan(); }
+<a name="l00103"></a>00103     <span class="keywordtype">void</span> make_nan() { data.make_nan(); }
+<a name="l00104"></a>00104 
+<a name="l00105"></a>00105     <span class="keywordtype">bool</span> is_unique()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> data.is_unique(); }
+<a name="l00106"></a>00106     <span class="keywordtype">void</span> make_unique() { <span class="keywordflow">if</span> (!is_unique()) data.resize_and_uniquify(length); }
+<a name="l00107"></a>00107 
+<a name="l00108"></a>00108     <span class="keywordtype">void</span> trim(<span class="keywordtype">bool</span> allow_negative_zero = <span class="keyword">false</span>);
+<a name="l00109"></a>00109 
+<a name="l00110"></a>00110     raw_integer_t&amp;       operator++();    <span class="comment">// Preincrement</span>
+<a name="l00111"></a>00111     raw_integer_t&amp;       operator--();    <span class="comment">// Predecrement</span>
+<a name="l00112"></a>00112     raw_integer_t        operator++(<span class="keywordtype">int</span>); <span class="comment">// Postincrement</span>
+<a name="l00113"></a>00113     raw_integer_t        operator--(<span class="keywordtype">int</span>); <span class="comment">// Postdecrement</span>
+<a name="l00114"></a>00114 
+<a name="l00115"></a>00115     <span class="keywordtype">bool</span>                 operator!()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> is_zero(); }
+<a name="l00116"></a>00116     raw_integer_t        <a class="code" href="namespaceboost_1_1xint.html#acda2a7a7d63582732505cc7128096f27" title="Calculate the difference between two integers.">operator-</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> BOOST_XINT_RAWINT(*<span class="keyword">this</span>,
+<a name="l00117"></a>00117                                                  !negative, <span class="keyword">true</span>); }
+<a name="l00118"></a>00118     raw_integer_t&amp;       <a class="code" href="namespaceboost_1_1xint.html#a88b3b7bccb96dd8b0cd9d9f853025915" title="Calculate the sum of two integers.">operator+</a>()       { <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
+<a name="l00119"></a>00119     <span class="keyword">const</span> raw_integer_t&amp; <a class="code" href="namespaceboost_1_1xint.html#a88b3b7bccb96dd8b0cd9d9f853025915" title="Calculate the sum of two integers.">operator+</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
+<a name="l00120"></a>00120     raw_integer_t        operator~() <span class="keyword">const</span>; <span class="comment">// For fixed-size types only!</span>
 <a name="l00121"></a>00121 
-<a name="l00122"></a>00122     raw_integer_t&amp;       operator&amp;=(<span class="keyword">const</span> raw_integer_t n);
-<a name="l00123"></a>00123     raw_integer_t&amp;       operator|=(<span class="keyword">const</span> raw_integer_t n);
-<a name="l00124"></a>00124     raw_integer_t&amp;       operator^=(<span class="keyword">const</span> raw_integer_t n);
-<a name="l00125"></a>00125     raw_integer_t&amp;       operator&lt;&lt;=(<span class="keywordtype">size_t</span> shift);
-<a name="l00126"></a>00126     raw_integer_t&amp;       operator&gt;&gt;=(<span class="keywordtype">size_t</span> shift);
+<a name="l00122"></a>00122     raw_integer_t&amp;       operator+=(<span class="keyword">const</span> raw_integer_t b);
+<a name="l00123"></a>00123     raw_integer_t&amp;       operator-=(<span class="keyword">const</span> raw_integer_t b);
+<a name="l00124"></a>00124     raw_integer_t&amp;       operator*=(<span class="keyword">const</span> raw_integer_t b);
+<a name="l00125"></a>00125     raw_integer_t&amp;       operator/=(<span class="keyword">const</span> raw_integer_t b);
+<a name="l00126"></a>00126     raw_integer_t&amp;       operator%=(<span class="keyword">const</span> raw_integer_t b);
 <a name="l00127"></a>00127 
-<a name="l00128"></a>00128     <span class="keyword">template</span> &lt;<span class="keyword">typename</span> <span class="keywordtype">char</span>T&gt;
-<a name="l00129"></a>00129     <span class="keywordtype">void</span> from_string(<span class="keyword">const</span> charT *str, <span class="keywordtype">size_t</span> base = 10);
-<a name="l00130"></a>00130     <span class="keyword">template</span> &lt;<span class="keyword">typename</span> <span class="keywordtype">char</span>T&gt;
-<a name="l00131"></a>00131     <span class="keywordtype">void</span> from_string(<span class="keyword">const</span> charT *str, <span class="keywordtype">char</span> **endptr, <span class="keywordtype">size_t</span> base = 10);
-<a name="l00132"></a>00132     <span class="keyword">template</span> &lt;<span class="keyword">typename</span> <span class="keywordtype">char</span>T&gt;
-<a name="l00133"></a>00133     <span class="keywordtype">void</span> from_string(<span class="keyword">const</span> std::basic_string&lt;charT&gt;&amp; str, <span class="keywordtype">size_t</span> base = 10);
-<a name="l00134"></a>00134     <span class="keywordtype">void</span> from_binary(<a class="code" href="namespaceboost_1_1xint.html#aae3128529370506165793f2771834e58" title="The format for the binary representations of integers.">xint::binary_t</a> b, <span class="keywordtype">size_t</span> bits = 0);
-<a name="l00135"></a>00135 
-<a name="l00136"></a>00136     <span class="keyword">template</span> &lt;<span class="keyword">class</span> GenType&gt;
-<a name="l00137"></a>00137     <span class="keyword">static</span> raw_integer_t random_by_size(GenType&amp; gen, <a class="code" href="namespaceboost_1_1xint.html#ab256530d9916860983abdb6f0c6fad63" title="This makes it easier to tell when an item is measured in bits.">bitsize_t</a> bits, <span class="keywordtype">bool</span>
-<a name="l00138"></a>00138         high_bit_on = <span class="keyword">false</span>, <span class="keywordtype">bool</span> low_bit_on = <span class="keyword">false</span>, <span class="keywordtype">bool</span> can_be_negative =
-<a name="l00139"></a>00139         <span class="keyword">false</span>);
-<a name="l00140"></a>00140 
-<a name="l00141"></a>00141     <span class="keyword">template</span> &lt;<span class="keyword">class</span> GenType&gt;
-<a name="l00142"></a>00142     <span class="keyword">static</span> raw_integer_t random_prime(GenType&amp; gen, <span class="keywordtype">size_t</span> size_in_bits,
-<a name="l00143"></a>00143         <a class="code" href="namespaceboost_1_1xint.html#a48deb76c9c428a4b3a50177b1b0cb547" title="A callback function takes no parameters and returns a bool.">callback_t</a> callback = <a class="code" href="namespaceboost_1_1xint.html#a758d415a476a5eeed28dc6b5869b1696" title="An empty callback_t, used as a default parameter for some functions.">no_callback</a>);
-<a name="l00144"></a>00144 
-<a name="l00145"></a>00145     <span class="keywordtype">void</span> _swap(BOOST_XINT_RAWINT&amp; i2);
-<a name="l00146"></a>00146 
-<a name="l00147"></a>00147     <span class="keyword">private</span>:
-<a name="l00148"></a>00148     <span class="keywordtype">bool</span> changed;
-<a name="l00149"></a>00149     datatype data;
-<a name="l00150"></a>00150 
-<a name="l00151"></a>00151     <span class="keyword">template</span> &lt;bit<span class="keywordtype">size_t</span> B, <span class="keywordtype">bool</span> S, <span class="keyword">class</span> A&gt;
-<a name="l00152"></a>00152     <span class="keyword">friend</span> <span class="keyword">class </span>raw_integer_t;
-<a name="l00153"></a>00153 };
+<a name="l00128"></a>00128     raw_integer_t&amp;       operator&amp;=(<span class="keyword">const</span> raw_integer_t n);
+<a name="l00129"></a>00129     raw_integer_t&amp;       operator|=(<span class="keyword">const</span> raw_integer_t n);
+<a name="l00130"></a>00130     raw_integer_t&amp;       operator^=(<span class="keyword">const</span> raw_integer_t n);
+<a name="l00131"></a>00131     raw_integer_t&amp;       operator&lt;&lt;=(std::size_t shift);
+<a name="l00132"></a>00132     raw_integer_t&amp;       operator&gt;&gt;=(std::size_t shift);
+<a name="l00133"></a>00133 
+<a name="l00134"></a>00134     <span class="keyword">template</span> &lt;<span class="keyword">typename</span> <span class="keywordtype">char</span>T&gt;
+<a name="l00135"></a>00135     <span class="keywordtype">void</span> from_string(<span class="keyword">const</span> charT *str, std::size_t base = 10);
+<a name="l00136"></a>00136     <span class="keyword">template</span> &lt;<span class="keyword">typename</span> <span class="keywordtype">char</span>T&gt;
+<a name="l00137"></a>00137     <span class="keywordtype">void</span> from_string(<span class="keyword">const</span> charT *str, <span class="keyword">const</span> charT*&amp; endptr, std::size_t base =
+<a name="l00138"></a>00138         10);
+<a name="l00139"></a>00139     <span class="keyword">template</span> &lt;<span class="keyword">typename</span> <span class="keywordtype">char</span>T, <span class="keyword">typename</span> traitsT, <span class="keyword">typename</span> allocT&gt;
+<a name="l00140"></a>00140     <span class="keywordtype">void</span> from_string(<span class="keyword">const</span> std::basic_string&lt;charT, traitsT, allocT&gt;&amp; str,
+<a name="l00141"></a>00141         std::size_t base = 10);
+<a name="l00142"></a>00142     <span class="keywordtype">void</span> from_binary(<a class="code" href="namespaceboost_1_1xint.html#aae3128529370506165793f2771834e58" title="The format for the binary representations of integers.">xint::binary_t</a> b, std::size_t bits = 0);
+<a name="l00143"></a>00143 
+<a name="l00144"></a>00144     <span class="keyword">template</span> &lt;<span class="keyword">class</span> GenType&gt;
+<a name="l00145"></a>00145     <span class="keyword">static</span> raw_integer_t random_by_size(GenType&amp; gen, <a class="code" href="namespaceboost_1_1xint.html#ae9f6d103df04ad19a841ed3f8b94a764" title="This makes it easier to tell when an item is measured in bits.">bitsize_t</a> bits, <span class="keywordtype">bool</span>
+<a name="l00146"></a>00146         high_bit_on = <span class="keyword">false</span>, <span class="keywordtype">bool</span> low_bit_on = <span class="keyword">false</span>, <span class="keywordtype">bool</span> can_be_negative =
+<a name="l00147"></a>00147         <span class="keyword">false</span>);
+<a name="l00148"></a>00148 
+<a name="l00149"></a>00149     <span class="keyword">template</span> &lt;<span class="keyword">class</span> GenType&gt;
+<a name="l00150"></a>00150     <span class="keyword">static</span> raw_integer_t random_prime(GenType&amp; gen, std::size_t size_in_bits,
+<a name="l00151"></a>00151         <a class="code" href="namespaceboost_1_1xint.html#a48deb76c9c428a4b3a50177b1b0cb547" title="A callback function takes no parameters and returns a bool.">callback_t</a> callback = <a class="code" href="namespaceboost_1_1xint.html#a758d415a476a5eeed28dc6b5869b1696" title="An empty callback_t, used as a default parameter for some functions.">no_callback</a>);
+<a name="l00152"></a>00152 
+<a name="l00153"></a>00153     <span class="keywordtype">void</span> _swap(BOOST_XINT_RAWINT&amp; i2);
 <a name="l00154"></a>00154 
-<a name="l00155"></a>00155 BOOST_XINT_RAWINT_TPL
-<a name="l00156"></a>00156 digit_t *BOOST_XINT_RAWINT::digits(<span class="keywordtype">size_t</span> resize, realloc::strategy strategy) {
-<a name="l00157"></a>00157     data.resize_and_uniquify(resize, strategy);
-<a name="l00158"></a>00158     <span class="keywordflow">if</span> (resize == 0 || resize &gt; data.max_length()) resize = data.max_length();
-<a name="l00159"></a>00159     <span class="keywordflow">if</span> (strategy != realloc::copy) {
-<a name="l00160"></a>00160         <span class="keywordflow">if</span> (length &lt; resize) {
-<a name="l00161"></a>00161             <span class="keywordflow">if</span> (strategy == realloc::extend) {
-<a name="l00162"></a>00162                 digit_t *d = data.digits(), *p = d + length, *pe = d + resize;
-<a name="l00163"></a>00163                 <span class="keywordflow">while</span> (p != pe) *p++ = 0;
-<a name="l00164"></a>00164             }
-<a name="l00165"></a>00165             length = resize;
-<a name="l00166"></a>00166         } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (length &gt; data.max_length()) length = data.max_length();
-<a name="l00167"></a>00167     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (length &gt; data.max_length()) length = data.max_length();
-<a name="l00168"></a>00168     changed = <span class="keyword">true</span>;
-<a name="l00169"></a>00169     <span class="keywordflow">return</span> data.digits();
-<a name="l00170"></a>00170 }
-<a name="l00171"></a>00171 
-<a name="l00172"></a>00172 BOOST_XINT_RAWINT_TPL
-<a name="l00173"></a>00173 <span class="keywordtype">void</span> BOOST_XINT_RAWINT::set_signed(boost::intmax_t n, <span class="keywordtype">size_t</span> prealloc) {
-<a name="l00174"></a>00174     <span class="keywordflow">if</span> (n &gt;= 0) {
-<a name="l00175"></a>00175         <span class="keywordflow">if</span> (n &lt;= digit_mask) {
-<a name="l00176"></a>00176             length = 1;
-<a name="l00177"></a>00177             negative = <span class="keyword">false</span>;
-<a name="l00178"></a>00178             <span class="keywordflow">if</span> (prealloc != 0) {
-<a name="l00179"></a>00179                 digits(prealloc, realloc::zero)[0] = <span class="keyword">static_cast&lt;</span>digit_t<span class="keyword">&gt;</span>(n);
-<a name="l00180"></a>00180             } <span class="keywordflow">else</span> {
-<a name="l00181"></a>00181                 digits(1, realloc::ignore)[0] = <span class="keyword">static_cast&lt;</span>digit_t<span class="keyword">&gt;</span>(n);
-<a name="l00182"></a>00182             }
-<a name="l00183"></a>00183             trim();
-<a name="l00184"></a>00184         } <span class="keywordflow">else</span> set_unsigned(n, <span class="keyword">false</span>, prealloc);
-<a name="l00185"></a>00185     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (n == (std::numeric_limits&lt;boost::intmax_t&gt;::min)()) {
-<a name="l00186"></a>00186         <span class="comment">// Have to treat the minimum number carefully, because -n is not</span>
-<a name="l00187"></a>00187         <span class="comment">// what you&#39;d think it is.</span>
-<a name="l00188"></a>00188         set_unsigned(-(n + 1), <span class="keyword">true</span>, prealloc);
-<a name="l00189"></a>00189         --*<span class="keyword">this</span>;
-<a name="l00190"></a>00190     } <span class="keywordflow">else</span> set_unsigned(-n, <span class="keyword">true</span>, prealloc);
-<a name="l00191"></a>00191 }
-<a name="l00192"></a>00192 
-<a name="l00193"></a>00193 BOOST_XINT_RAWINT_TPL
-<a name="l00194"></a>00194 <span class="keywordtype">void</span> BOOST_XINT_RAWINT::set_unsigned(boost::uintmax_t n, <span class="keywordtype">bool</span> neg, <span class="keywordtype">size_t</span>
-<a name="l00195"></a>00195     prealloc)
-<a name="l00196"></a>00196 {
-<a name="l00197"></a>00197     <span class="keywordflow">if</span> (n &lt;= digit_mask) {
-<a name="l00198"></a>00198         length = 1;
-<a name="l00199"></a>00199         <span class="keywordflow">if</span> (prealloc != 0) {
-<a name="l00200"></a>00200             digits(prealloc, realloc::zero)[0] = <span class="keyword">static_cast&lt;</span>digit_t<span class="keyword">&gt;</span>(n);
-<a name="l00201"></a>00201         } <span class="keywordflow">else</span> {
-<a name="l00202"></a>00202             digits(1, realloc::ignore)[0] = <span class="keyword">static_cast&lt;</span>digit_t<span class="keyword">&gt;</span>(n);
-<a name="l00203"></a>00203         }
-<a name="l00204"></a>00204     } <span class="keywordflow">else</span> {
-<a name="l00205"></a>00205         digit_t *d = digits((std::max)(digits_in_uintmax, prealloc),
-<a name="l00206"></a>00206             realloc::ignore), *i = d, *ie = i + max_length();
-<a name="l00207"></a>00207         <span class="keywordflow">while</span> (n != 0 &amp;&amp; i != ie) {
-<a name="l00208"></a>00208             *i++ = <span class="keyword">static_cast&lt;</span>digit_t<span class="keyword">&gt;</span>(n);
-<a name="l00209"></a>00209             n &gt;&gt;= bits_per_digit;
-<a name="l00210"></a>00210         }
-<a name="l00211"></a>00211         length = (i - d);
-<a name="l00212"></a>00212     }
-<a name="l00213"></a>00213     negative = neg;
-<a name="l00214"></a>00214     trim();
-<a name="l00215"></a>00215 }
-<a name="l00216"></a>00216 
-<a name="l00217"></a>00217 BOOST_XINT_RAWINT_TPL
-<a name="l00218"></a>00218 <span class="keywordtype">void</span> BOOST_XINT_RAWINT::trim(<span class="keywordtype">bool</span> allow_negative_zero) {
-<a name="l00219"></a>00219     assert(length &lt;= max_length());
-<a name="l00220"></a>00220 
-<a name="l00221"></a>00221     <span class="keywordtype">bool</span> zero = <span class="keyword">false</span>;
-<a name="l00222"></a>00222     <span class="keywordflow">if</span> (changed) {
-<a name="l00223"></a>00223         data.trim();
-<a name="l00224"></a>00224         <span class="keywordflow">if</span> (length &gt; 1) {
-<a name="l00225"></a>00225             digit_t *d = data.digits(), *i = d + length - 1;
-<a name="l00226"></a>00226             <span class="keywordflow">if</span> (*i == 0) {
-<a name="l00227"></a>00227                 <span class="keywordflow">do</span> { --i; } <span class="keywordflow">while</span> (i &gt; d &amp;&amp; *i == 0);
-<a name="l00228"></a>00228                 length = size_t(i - d) + 1;
-<a name="l00229"></a>00229                 <span class="keywordflow">if</span> (i == d &amp;&amp; *i == 0) zero = <span class="keyword">true</span>;
-<a name="l00230"></a>00230             }
-<a name="l00231"></a>00231         } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (data.digits()[0] == 0) zero = <span class="keyword">true</span>;
-<a name="l00232"></a>00232         changed = <span class="keyword">false</span>;
-<a name="l00233"></a>00233     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (length == 1 &amp;&amp; data.digits()[0] == 0) zero = <span class="keyword">true</span>;
-<a name="l00234"></a>00234     <span class="keywordflow">if</span> (zero &amp;&amp; !allow_negative_zero) negative = <span class="keyword">false</span>;
-<a name="l00235"></a>00235 }
-<a name="l00236"></a>00236 
-<a name="l00237"></a>00237 BOOST_XINT_RAWINT_TPL
-<a name="l00238"></a>00238 <span class="keywordtype">void</span> BOOST_XINT_RAWINT::_swap(BOOST_XINT_RAWINT&amp; i2) {
-<a name="l00239"></a>00239     <span class="keyword">using</span> <a class="code" href="namespaceboost_1_1xint.html#a1a857d5cc4b15822d3dcaf70ec15b4e5">std::swap</a>;
-<a name="l00240"></a>00240     <a class="code" href="namespaceboost_1_1xint.html#a1a857d5cc4b15822d3dcaf70ec15b4e5">swap</a>(length, i2.length);
-<a name="l00241"></a>00241     <a class="code" href="namespaceboost_1_1xint.html#a1a857d5cc4b15822d3dcaf70ec15b4e5">swap</a>(negative, i2.negative);
-<a name="l00242"></a>00242     <a class="code" href="namespaceboost_1_1xint.html#a1a857d5cc4b15822d3dcaf70ec15b4e5">swap</a>(changed, i2.changed);
-<a name="l00243"></a>00243     <a class="code" href="namespaceboost_1_1xint.html#a1a857d5cc4b15822d3dcaf70ec15b4e5">swap</a>(data, i2.data);
-<a name="l00244"></a>00244 }
-<a name="l00245"></a>00245 
-<a name="l00247"></a>00247 <span class="comment">// Free functions</span>
-<a name="l00248"></a>00248 
-<a name="l00249"></a>00249 BOOST_XINT_RAWINT_TPL
-<a name="l00250"></a>00250 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a1a857d5cc4b15822d3dcaf70ec15b4e5">swap</a>(BOOST_XINT_RAWINT&amp; i1, BOOST_XINT_RAWINT&amp; i2) {
-<a name="l00251"></a>00251     i1._swap(i2);
-<a name="l00252"></a>00252 }
-<a name="l00253"></a>00253 
-<a name="l00255"></a>00255 } <span class="comment">// namespace detail</span>
-<a name="l00256"></a>00256 } <span class="comment">// namespace xint</span>
-<a name="l00257"></a>00257 } <span class="comment">// namespace boost</span>
+<a name="l00155"></a>00155     <span class="keyword">private</span>:
+<a name="l00156"></a>00156     <span class="keywordtype">bool</span> changed;
+<a name="l00157"></a>00157     datatype data;
+<a name="l00158"></a>00158 
+<a name="l00159"></a>00159     <span class="keyword">template</span> &lt;bit<span class="keywordtype">size_t</span> B, <span class="keywordtype">bool</span> S, <span class="keyword">class</span> A&gt;
+<a name="l00160"></a>00160     <span class="keyword">friend</span> <span class="keyword">class </span>raw_integer_t;
+<a name="l00161"></a>00161 };
+<a name="l00162"></a>00162 
+<a name="l00163"></a>00163 BOOST_XINT_RAWINT_TPL
+<a name="l00164"></a>00164 digit_t *BOOST_XINT_RAWINT::digits(std::size_t resize, realloc::strategy
+<a name="l00165"></a>00165     strategy)
+<a name="l00166"></a>00166 {
+<a name="l00167"></a>00167     data.resize_and_uniquify(resize, strategy);
+<a name="l00168"></a>00168     <span class="keywordflow">if</span> (resize == 0 || resize &gt; data.max_length()) resize = data.max_length();
+<a name="l00169"></a>00169     <span class="keywordflow">if</span> (strategy != realloc::copy) {
+<a name="l00170"></a>00170         <span class="keywordflow">if</span> (length &lt; resize) {
+<a name="l00171"></a>00171             <span class="keywordflow">if</span> (strategy == realloc::extend) {
+<a name="l00172"></a>00172                 digit_t *d = data.digits(), *p = d + length, *pe = d + resize;
+<a name="l00173"></a>00173                 <span class="keywordflow">while</span> (p != pe) *p++ = 0;
+<a name="l00174"></a>00174             }
+<a name="l00175"></a>00175             length = resize;
+<a name="l00176"></a>00176         } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (length &gt; data.max_length()) length = data.max_length();
+<a name="l00177"></a>00177     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (length &gt; data.max_length()) length = data.max_length();
+<a name="l00178"></a>00178     changed = <span class="keyword">true</span>;
+<a name="l00179"></a>00179     <span class="keywordflow">return</span> data.digits();
+<a name="l00180"></a>00180 }
+<a name="l00181"></a>00181 
+<a name="l00182"></a>00182 BOOST_XINT_RAWINT_TPL
+<a name="l00183"></a>00183 <span class="keywordtype">void</span> BOOST_XINT_RAWINT::set_signed(boost::intmax_t n, std::size_t prealloc) {
+<a name="l00184"></a>00184     <span class="keywordflow">if</span> (n &gt;= 0) {
+<a name="l00185"></a>00185         <span class="keywordflow">if</span> (n &lt;= digit_mask) {
+<a name="l00186"></a>00186             length = 1;
+<a name="l00187"></a>00187             negative = <span class="keyword">false</span>;
+<a name="l00188"></a>00188             <span class="keywordflow">if</span> (prealloc != 0) {
+<a name="l00189"></a>00189                 digits(prealloc, realloc::zero)[0] = <span class="keyword">static_cast&lt;</span>digit_t<span class="keyword">&gt;</span>(n);
+<a name="l00190"></a>00190             } <span class="keywordflow">else</span> {
+<a name="l00191"></a>00191                 digits(1, realloc::ignore)[0] = <span class="keyword">static_cast&lt;</span>digit_t<span class="keyword">&gt;</span>(n);
+<a name="l00192"></a>00192             }
+<a name="l00193"></a>00193             trim();
+<a name="l00194"></a>00194         } <span class="keywordflow">else</span> set_unsigned(n, <span class="keyword">false</span>, prealloc);
+<a name="l00195"></a>00195     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (n == (std::numeric_limits&lt;boost::intmax_t&gt;::min)()) {
+<a name="l00196"></a>00196         <span class="comment">// Have to treat the minimum number carefully, because -n is not</span>
+<a name="l00197"></a>00197         <span class="comment">// what you&#39;d think it is.</span>
+<a name="l00198"></a>00198         set_unsigned(-(n + 1), <span class="keyword">true</span>, prealloc);
+<a name="l00199"></a>00199         --*<span class="keyword">this</span>;
+<a name="l00200"></a>00200     } <span class="keywordflow">else</span> set_unsigned(-n, <span class="keyword">true</span>, prealloc);
+<a name="l00201"></a>00201 }
+<a name="l00202"></a>00202 
+<a name="l00203"></a>00203 BOOST_XINT_RAWINT_TPL
+<a name="l00204"></a>00204 <span class="keywordtype">void</span> BOOST_XINT_RAWINT::set_unsigned(boost::uintmax_t n, <span class="keywordtype">bool</span> neg, std::size_t
+<a name="l00205"></a>00205     prealloc)
+<a name="l00206"></a>00206 {
+<a name="l00207"></a>00207     <span class="keywordflow">if</span> (n &lt;= digit_mask) {
+<a name="l00208"></a>00208         length = 1;
+<a name="l00209"></a>00209         <span class="keywordflow">if</span> (prealloc != 0) {
+<a name="l00210"></a>00210             digits(prealloc, realloc::zero)[0] = <span class="keyword">static_cast&lt;</span>digit_t<span class="keyword">&gt;</span>(n);
+<a name="l00211"></a>00211         } <span class="keywordflow">else</span> {
+<a name="l00212"></a>00212             digits(1, realloc::ignore)[0] = <span class="keyword">static_cast&lt;</span>digit_t<span class="keyword">&gt;</span>(n);
+<a name="l00213"></a>00213         }
+<a name="l00214"></a>00214     } <span class="keywordflow">else</span> {
+<a name="l00215"></a>00215         digit_t *d = digits((std::max)(digits_in_uintmax, prealloc),
+<a name="l00216"></a>00216             realloc::ignore), *i = d, *ie = i + max_length();
+<a name="l00217"></a>00217         <span class="keywordflow">while</span> (n != 0 &amp;&amp; i != ie) {
+<a name="l00218"></a>00218             *i++ = <span class="keyword">static_cast&lt;</span>digit_t<span class="keyword">&gt;</span>(n);
+<a name="l00219"></a>00219             n &gt;&gt;= bits_per_digit;
+<a name="l00220"></a>00220         }
+<a name="l00221"></a>00221         length = (i - d);
+<a name="l00222"></a>00222     }
+<a name="l00223"></a>00223     negative = neg;
+<a name="l00224"></a>00224     trim();
+<a name="l00225"></a>00225 }
+<a name="l00226"></a>00226 
+<a name="l00227"></a>00227 BOOST_XINT_RAWINT_TPL
+<a name="l00228"></a>00228 <span class="keywordtype">void</span> BOOST_XINT_RAWINT::trim(<span class="keywordtype">bool</span> allow_negative_zero) {
+<a name="l00229"></a>00229     assert(length &lt;= max_length());
+<a name="l00230"></a>00230 
+<a name="l00231"></a>00231     <span class="keywordtype">bool</span> zero = <span class="keyword">false</span>;
+<a name="l00232"></a>00232     <span class="keywordflow">if</span> (changed) {
+<a name="l00233"></a>00233         data.trim();
+<a name="l00234"></a>00234         <span class="keywordflow">if</span> (length &gt; 1) {
+<a name="l00235"></a>00235             digit_t *d = data.digits(), *i = d + length - 1;
+<a name="l00236"></a>00236             <span class="keywordflow">if</span> (*i == 0) {
+<a name="l00237"></a>00237                 <span class="keywordflow">do</span> { --i; } <span class="keywordflow">while</span> (i &gt; d &amp;&amp; *i == 0);
+<a name="l00238"></a>00238                 length = std::size_t(i - d) + 1;
+<a name="l00239"></a>00239                 <span class="keywordflow">if</span> (i == d &amp;&amp; *i == 0) zero = <span class="keyword">true</span>;
+<a name="l00240"></a>00240             }
+<a name="l00241"></a>00241         } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (data.digits()[0] == 0) zero = <span class="keyword">true</span>;
+<a name="l00242"></a>00242         changed = <span class="keyword">false</span>;
+<a name="l00243"></a>00243     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (length == 1 &amp;&amp; data.digits()[0] == 0) zero = <span class="keyword">true</span>;
+<a name="l00244"></a>00244     <span class="keywordflow">if</span> (zero &amp;&amp; !allow_negative_zero) negative = <span class="keyword">false</span>;
+<a name="l00245"></a>00245 }
+<a name="l00246"></a>00246 
+<a name="l00247"></a>00247 BOOST_XINT_RAWINT_TPL
+<a name="l00248"></a>00248 <span class="keywordtype">void</span> BOOST_XINT_RAWINT::_swap(BOOST_XINT_RAWINT&amp; i2) {
+<a name="l00249"></a>00249     <span class="keyword">using</span> <a class="code" href="namespaceboost_1_1xint.html#a1a857d5cc4b15822d3dcaf70ec15b4e5">std::swap</a>;
+<a name="l00250"></a>00250     <a class="code" href="namespaceboost_1_1xint.html#a1a857d5cc4b15822d3dcaf70ec15b4e5">swap</a>(length, i2.length);
+<a name="l00251"></a>00251     <a class="code" href="namespaceboost_1_1xint.html#a1a857d5cc4b15822d3dcaf70ec15b4e5">swap</a>(negative, i2.negative);
+<a name="l00252"></a>00252     <a class="code" href="namespaceboost_1_1xint.html#a1a857d5cc4b15822d3dcaf70ec15b4e5">swap</a>(changed, i2.changed);
+<a name="l00253"></a>00253     <a class="code" href="namespaceboost_1_1xint.html#a1a857d5cc4b15822d3dcaf70ec15b4e5">swap</a>(data, i2.data);
+<a name="l00254"></a>00254 }
+<a name="l00255"></a>00255 
+<a name="l00257"></a>00257 <span class="comment">// Free functions</span>
 <a name="l00258"></a>00258 
-<a name="l00259"></a>00259 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_RAW_INTEGER_HPP</span>
+<a name="l00259"></a>00259 BOOST_XINT_RAWINT_TPL
+<a name="l00260"></a>00260 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a1a857d5cc4b15822d3dcaf70ec15b4e5">swap</a>(BOOST_XINT_RAWINT&amp; i1, BOOST_XINT_RAWINT&amp; i2) {
+<a name="l00261"></a>00261     i1._swap(i2);
+<a name="l00262"></a>00262 }
+<a name="l00263"></a>00263 
+<a name="l00265"></a>00265 } <span class="comment">// namespace detail</span>
+<a name="l00266"></a>00266 } <span class="comment">// namespace xint</span>
+<a name="l00267"></a>00267 } <span class="comment">// namespace boost</span>
+<a name="l00268"></a>00268 
+<a name="l00269"></a>00269 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_RAW_INTEGER_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 00:01:46 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 12:31:58 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

@@ -51,8 +51,8 @@ void _test1(size_t section, size_t test, integer x, integer y, integer m) {
 }
 
 void _test2(size_t section, size_t test, integer b, integer r, integer modulus) {
-    integer mResult = montgomeryPowerMod((b % modulus)._data(), r._data(),
-        modulus._data());
+    integer mResult(montgomeryPowerMod((b % modulus)._data(), r._data(),
+        modulus._data()));
     integer cResult = powmod(b % modulus, r, modulus, true);
     if (mResult != cResult) {
         std::ostringstream out;

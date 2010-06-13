@@ -36,7 +36,7 @@ class raw_integer_t {
     typedef magnitude_manager_t<Bits, Secure, Alloc> datatype;
     typedef base_divide_t<BOOST_XINT_RAWINT> divide_t;
 
-    size_t length;
+    std::size_t length;
     bool negative;
 
     raw_integer_t(): length(1), negative(false), changed(false) { }
@@ -51,30 +51,36 @@ class raw_integer_t {
         false): length(copy.length), negative(neg), changed(false),
         data(copy.data) { trim(allow_zero); }
     template <typename T>
-    raw_integer_t(T n, size_t prealloc = 0, typename boost::enable_if<
+    raw_integer_t(T n, std::size_t prealloc = 0, typename boost::enable_if<
         boost::is_integral<T> >::type* = 0): length(1), negative(false),
         changed(false) { if (std::numeric_limits<T>::is_signed) set_signed(n,
         prealloc); else set_unsigned(n, false, prealloc); }
     template <typename charT>
-    raw_integer_t(const charT *s, size_t base = 10): length(1), negative(false),
-        changed(false) { from_string(s, base); }
+    raw_integer_t(const charT *s, std::size_t base = 10): length(1),
+        negative(false), changed(false) { from_string(s, base); }
     template <typename charT>
-    raw_integer_t(const std::basic_string<charT>& s, size_t base = 10):
-        length(1), negative(false), changed(false) { from_string(s, base); }
-    raw_integer_t(const xint::binary_t b, size_t bits = 0): length(1),
+    raw_integer_t(const charT *s, const charT*& endptr, std::size_t base = 10):
+        length(1), negative(false), changed(false) { from_string(s, endptr,
+        base); }
+    template <typename charT, typename traitsT, typename allocT>
+    raw_integer_t(const std::basic_string<charT, traitsT, allocT>& s,
+        std::size_t base = 10): length(1), negative(false), changed(false) {
+        from_string(s, base); }
+    raw_integer_t(const xint::binary_t b, std::size_t bits = 0): length(1),
         negative(false), changed(false) { from_binary(b, bits); }
 
     BOOST_XINT_RAWINT& operator=(const BOOST_XINT_RAWINT& set) { length =
         set.length; negative = set.negative; data = set.data; return *this; }
 
-    digit_t *digits(size_t resize, realloc::strategy strategy = realloc::copy);
+    digit_t *digits(std::size_t resize, realloc::strategy strategy =
+        realloc::copy);
     const digit_t *digits() const { return data.digits(); }
 
-    digit_t get_digit(size_t i) const { return (i < max_length() ? digits()[i] :
-        0); }
-    digit_t operator[](size_t i) { return digits()[i]; }
-    digit_t operator[](size_t i) const { return get_digit(i); }
-    size_t max_length() const { return data.max_length(); }
+    digit_t get_digit(std::size_t i) const { return (i < max_length() ?
+        digits()[i] : 0); }
+    digit_t operator[](std::size_t i) { return digits()[i]; }
+    digit_t operator[](std::size_t i) const { return get_digit(i); }
+    std::size_t max_length() const { return data.max_length(); }
     bool same_storage(const BOOST_XINT_RAWINT n) const { return
         data.same_storage(n.data); }
 
@@ -84,14 +90,14 @@ class raw_integer_t {
     bool is_zero() const { return (length == 1 && digits()[0] == 0); }
     bool is_odd() const { return (digits()[0] & 0x01) != 0; }
     bool is_even() const { return (digits()[0] & 0x01) == 0; }
-    size_t hex_digits() const { return (log2(*this) + 3) / 4; }
+    std::size_t hex_digits() const { return (log2(*this) + 3) / 4; }
     raw_integer_t abs() const { return raw_integer_t(*this, false); }
     raw_integer_t negate() const { return raw_integer_t(*this, !negative); }
 
     void set(int n) { set_signed(n); }
-    void set_signed(boost::intmax_t n, size_t prealloc = 0);
-    void set_unsigned(boost::uintmax_t n, bool neg = false, size_t prealloc =
-        0);
+    void set_signed(boost::intmax_t n, std::size_t prealloc = 0);
+    void set_unsigned(boost::uintmax_t n, bool neg = false, std::size_t prealloc
+        = 0);
 
     bool is_nan() const { return data.is_nan(); }
     void make_nan() { data.make_nan(); }
@@ -122,16 +128,18 @@ class raw_integer_t {
     raw_integer_t&       operator&=(const raw_integer_t n);
     raw_integer_t&       operator|=(const raw_integer_t n);
     raw_integer_t&       operator^=(const raw_integer_t n);
-    raw_integer_t&       operator<<=(size_t shift);
-    raw_integer_t&       operator>>=(size_t shift);
+    raw_integer_t&       operator<<=(std::size_t shift);
+    raw_integer_t&       operator>>=(std::size_t shift);
 
     template <typename charT>
-    void from_string(const charT *str, size_t base = 10);
+    void from_string(const charT *str, std::size_t base = 10);
     template <typename charT>
-    void from_string(const charT *str, char **endptr, size_t base = 10);
-    template <typename charT>
-    void from_string(const std::basic_string<charT>& str, size_t base = 10);
-    void from_binary(xint::binary_t b, size_t bits = 0);
+    void from_string(const charT *str, const charT*& endptr, std::size_t base =
+        10);
+    template <typename charT, typename traitsT, typename allocT>
+    void from_string(const std::basic_string<charT, traitsT, allocT>& str,
+        std::size_t base = 10);
+    void from_binary(xint::binary_t b, std::size_t bits = 0);
 
     template <class GenType>
     static raw_integer_t random_by_size(GenType& gen, bitsize_t bits, bool
@@ -139,7 +147,7 @@ class raw_integer_t {
         false);
 
     template <class GenType>
-    static raw_integer_t random_prime(GenType& gen, size_t size_in_bits,
+    static raw_integer_t random_prime(GenType& gen, std::size_t size_in_bits,
         callback_t callback = no_callback);
 
     void _swap(BOOST_XINT_RAWINT& i2);
@@ -153,7 +161,9 @@ class raw_integer_t {
 };
 
 BOOST_XINT_RAWINT_TPL
-digit_t *BOOST_XINT_RAWINT::digits(size_t resize, realloc::strategy strategy) {
+digit_t *BOOST_XINT_RAWINT::digits(std::size_t resize, realloc::strategy
+    strategy)
+{
     data.resize_and_uniquify(resize, strategy);
     if (resize == 0 || resize > data.max_length()) resize = data.max_length();
     if (strategy != realloc::copy) {
@@ -170,7 +180,7 @@ digit_t *BOOST_XINT_RAWINT::digits(size_t resize, realloc::strategy strategy) {
 }
 
 BOOST_XINT_RAWINT_TPL
-void BOOST_XINT_RAWINT::set_signed(boost::intmax_t n, size_t prealloc) {
+void BOOST_XINT_RAWINT::set_signed(boost::intmax_t n, std::size_t prealloc) {
     if (n >= 0) {
         if (n <= digit_mask) {
             length = 1;
@@ -191,7 +201,7 @@ void BOOST_XINT_RAWINT::set_signed(boost::intmax_t n, size_t prealloc) {
 }
 
 BOOST_XINT_RAWINT_TPL
-void BOOST_XINT_RAWINT::set_unsigned(boost::uintmax_t n, bool neg, size_t
+void BOOST_XINT_RAWINT::set_unsigned(boost::uintmax_t n, bool neg, std::size_t
     prealloc)
 {
     if (n <= digit_mask) {
@@ -225,7 +235,7 @@ void BOOST_XINT_RAWINT::trim(bool allow_negative_zero) {
             digit_t *d = data.digits(), *i = d + length - 1;
             if (*i == 0) {
                 do { --i; } while (i > d && *i == 0);
-                length = size_t(i - d) + 1;
+                length = std::size_t(i - d) + 1;
                 if (i == d && *i == 0) zero = true;
             }
         } else if (data.digits()[0] == 0) zero = true;

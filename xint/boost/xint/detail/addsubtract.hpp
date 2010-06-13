@@ -17,26 +17,24 @@
     This file will be included by the library itself when needed.
 */
 
-#if defined(BOOST_XINT_COMPILED_LIB) || defined(BOOST_XINT_FROM_HEADER)
-
-#if defined(BOOST_XINT_COMPILED_LIB)
-    #include "internals.hpp"
-#endif // defined(BOOST_XINT_COMPILED_LIB)
+#ifndef BOOST_INCLUDED_XINT_ADDSUBTRACT_HPP
+#define BOOST_INCLUDED_XINT_ADDSUBTRACT_HPP
 
 //! @cond detail
 namespace boost {
 namespace xint {
 namespace detail {
 
-void sub_increment(data_t& n, bool absolute_value = false);
-void sub_decrement(data_t& n, bool absolute_value = false);
+BOOST_XINT_RAWINT_TPL
+void sub_increment(BOOST_XINT_RAWINT& n, bool absolute_value = false);
+BOOST_XINT_RAWINT_TPL
+void sub_decrement(BOOST_XINT_RAWINT& n, bool absolute_value = false);
 
-BOOST_XINT_INLINE void sub_add(data_t& n, const data_t n2) {
-    n.beginmod((std::max)(n.length, n2.length) + 1, true);
-
-    digit_t *ndig = n.digits(), *t = ndig, *te = t + n.max_length();
-    const digit_t *p = n2.digits(), *pe = p + (std::min)(n2.length,
-        n.max_length());
+BOOST_XINT_RAWINT_TPL
+void sub_add(BOOST_XINT_RAWINT& n, const BOOST_XINT_RAWINT n2) {
+    digit_t *ndig = n.digits((std::max)(n.length, n2.length) + 1,
+        realloc::extend), *t = ndig, *te = t + n.length;
+    const digit_t *p = n2.digits(), *pe = p + (std::min)(n2.length, n.length);
 
     digit_t carry = 0;
     while (p != pe) {
@@ -57,15 +55,16 @@ BOOST_XINT_INLINE void sub_add(data_t& n, const data_t n2) {
         }
     }
 
-    n.length = (std::max)(n.length, size_t(t - ndig));
-    n.endmod();
+    n.length = (std::max)(n.length, std::size_t(t - ndig));
+    n.trim();
 }
 
-BOOST_XINT_INLINE void sub_subtract(data_t& n, const data_t n2) {
+BOOST_XINT_RAWINT_TPL
+void sub_subtract(BOOST_XINT_RAWINT& n, const BOOST_XINT_RAWINT n2) {
     bool swap = (compare(n, n2, true) < 0);
 
-    n.beginmod((std::max)(n.length, n2.length), true);
-    digit_t *ndig = n.digits(), *t = ndig, *te = t + n.length;
+    digit_t *ndig = n.digits((std::max)(n.length, n2.length), realloc::extend),
+        *t = ndig, *te = t + n.length;
     const digit_t *p = n2.digits(), *pe = p + (std::min)(n2.length, n.length);
 
     // Now subtract the digits, starting at the least-significant one.
@@ -83,7 +82,7 @@ BOOST_XINT_INLINE void sub_subtract(data_t& n, const data_t n2) {
             }
         }
 
-        n.length = size_t(t - ndig);
+        n.length = std::size_t(t - ndig);
         n.negative = !n.negative;
     } else {
         while (p != pe) {
@@ -103,125 +102,125 @@ BOOST_XINT_INLINE void sub_subtract(data_t& n, const data_t n2) {
                 else { *t++ -= 1; borrow = 0; break; }
             }
         }
-        n.length = (std::max)(n.length, size_t(t - ndig));
+        n.length = (std::max)(n.length, std::size_t(t - ndig));
     }
 
     assert(borrow == 0);
-    n.endmod();
+    n.trim();
 }
 
-BOOST_XINT_INLINE void sub_increment(data_t& n, bool absolute_value) {
+BOOST_XINT_RAWINT_TPL
+void sub_increment(BOOST_XINT_RAWINT& n, bool absolute_value) {
     if (n.is_zero()) {
         n.set(1);
     } else if (!absolute_value && n.negative) {
         sub_decrement(n, true);
     } else {
-        n.beginmod(n.length + 1, true);
-        digit_t *p = n.digits(), *pe = p + n.length;
-
+        std::size_t overflow = (n.digits()[n.length - 1] == digit_mask ? 1 : 0);
+        digit_t *d = n.digits(n.length + overflow, realloc::extend), *p = d, *pe
+            = p + n.length;
         while (p < pe) {
             if (*p == digit_mask) *p++ = 0;
             else { *p++ += 1; break; }
         }
-        n.endmod();
+        n.trim();
     }
 }
 
-BOOST_XINT_INLINE void sub_decrement(data_t& n, bool absolute_value) {
+BOOST_XINT_RAWINT_TPL
+void sub_decrement(BOOST_XINT_RAWINT& n, bool absolute_value) {
     if (n.is_zero()) {
         n.set(-1);
     } else if (!absolute_value && n.negative) {
         sub_increment(n, true);
     } else {
-        n.beginmod(n.length);
-        digit_t *p = n.digits(), *pe = p + n.length;
+        digit_t *p = n.digits(0), *pe = p + n.length;
 
         while (p < pe) {
             if (*p == 0) *p++ = digit_mask;
             else { *p++ -= 1; break; }
         }
-        n.endmod();
+        n.trim();
     }
 }
 
-BOOST_XINT_INLINE data_t& data_t::operator++() {
+BOOST_XINT_RAWINT_TPL
+BOOST_XINT_RAWINT& BOOST_XINT_RAWINT::operator++() {
     sub_increment(*this);
     return *this;
 }
 
-BOOST_XINT_INLINE data_t& data_t::operator--() {
+BOOST_XINT_RAWINT_TPL
+BOOST_XINT_RAWINT& BOOST_XINT_RAWINT::operator--() {
     sub_decrement(*this);
     return *this;
 }
 
-BOOST_XINT_INLINE data_t data_t::operator++(int) {
-    data_t r(*this);
+BOOST_XINT_RAWINT_TPL
+BOOST_XINT_RAWINT BOOST_XINT_RAWINT::operator++(int) {
+    BOOST_XINT_RAWINT r(*this);
     sub_increment(*this);
     return r;
 }
 
-BOOST_XINT_INLINE data_t data_t::operator--(int) {
-    data_t r(*this);
+BOOST_XINT_RAWINT_TPL
+BOOST_XINT_RAWINT BOOST_XINT_RAWINT::operator--(int) {
+    BOOST_XINT_RAWINT r(*this);
     sub_decrement(*this);
     return r;
 }
 
-BOOST_XINT_INLINE data_t data_t::operator-() const {
-    data_t r(negate());
-    r.beginmod();
-    r.endmod(true);
-    return r;
-}
-
-BOOST_XINT_INLINE data_t& data_t::operator+=(const data_t n) {
+BOOST_XINT_RAWINT_TPL
+BOOST_XINT_RAWINT& BOOST_XINT_RAWINT::operator+=(const BOOST_XINT_RAWINT n) {
     if (!n.is_zero()) {
-        beginmod();
-
         if (is_zero()) {
-            duplicate_data(n);
+            *this = n;
         } else if (negative != n.negative) {
             sub_subtract(*this, n.negate());
         } else {
             sub_add(*this, n);
         }
-
-        endmod();
     }
     return *this;
 }
 
-BOOST_XINT_INLINE data_t& data_t::operator-=(const data_t n) {
+BOOST_XINT_RAWINT_TPL
+BOOST_XINT_RAWINT& BOOST_XINT_RAWINT::operator-=(const BOOST_XINT_RAWINT n) {
     if (!n.is_zero()) {
-        beginmod();
-
         if (is_zero()) {
-            duplicate_data(n.negate());
+            *this = n.negate();
         } else if (negative != n.negative) {
             sub_add(*this, n.negate());
         } else {
             sub_subtract(*this, n);
         }
-
-        endmod();
     }
     return *this;
 }
 
-BOOST_XINT_INLINE data_t operator+(const data_t n1, const data_t n2) {
-    data_t r(n1);
+BOOST_XINT_RAWINT_TPL
+BOOST_XINT_RAWINT operator+(const BOOST_XINT_RAWINT n1, const BOOST_XINT_RAWINT
+    n2)
+{
+    BOOST_XINT_RAWINT r(n1);
     r+=n2;
     return r;
 }
 
-BOOST_XINT_INLINE data_t operator-(const data_t n1, const data_t n2) {
-    data_t r(n1);
+BOOST_XINT_RAWINT_TPL
+BOOST_XINT_RAWINT operator-(const BOOST_XINT_RAWINT n1, const BOOST_XINT_RAWINT
+    n2)
+{
+    BOOST_XINT_RAWINT r(n1);
     r-=n2;
     return r;
 }
+
+// note: once the test system is up and running, rewrite add/subtract code to write to a separate raw_integer & return it, for greater efficiency.
 
 } // namespace detail
 } // namespace xint
 } // namespace boost
 //! @endcond detail
 
-#endif // defined(BOOST_XINT_COMPILED_LIB) || defined(BOOST_XINT_FROM_HEADER)
+#endif // BOOST_INCLUDED_XINT_ADDSUBTRACT_HPP

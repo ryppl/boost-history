@@ -47,7 +47,7 @@
 <a name="l00030"></a>00030 <span class="keywordtype">void</span> divide_by_single_digit(BOOST_XINT_RAWINT&amp; qtarget, BOOST_XINT_RAWINT&amp;
 <a name="l00031"></a>00031     rtarget, <span class="keyword">const</span> BOOST_XINT_RAWINT d1, digit_t d2)
 <a name="l00032"></a>00032 {
-<a name="l00033"></a>00033     <span class="keywordtype">size_t</span> d1len = d1.length;
+<a name="l00033"></a>00033     std::size_t d1len = d1.length;
 <a name="l00034"></a>00034     <span class="keyword">const</span> digit_t *d1digits = d1.digits();
 <a name="l00035"></a>00035 
 <a name="l00036"></a>00036     doubledigit_t a = 0;
@@ -85,8 +85,8 @@
 <a name="l00068"></a>00068 
 <a name="l00069"></a>00069     <span class="keyword">const</span> digit_t *byDigits = d2.digits();
 <a name="l00070"></a>00070 
-<a name="l00071"></a>00071     <span class="keywordtype">size_t</span> n = d2.length, m = d1.length - n;
-<a name="l00072"></a>00072     <span class="keywordtype">size_t</span> i = m + n, j = m;
+<a name="l00071"></a>00071     std::size_t n = d2.length, m = d1.length - n;
+<a name="l00072"></a>00072     std::size_t i = m + n, j = m;
 <a name="l00073"></a>00073 
 <a name="l00074"></a>00074     digit_t *qdigits = qtarget.digits(j + 1, realloc::ignore);
 <a name="l00075"></a>00075     qtarget.length = (std::min)(j + 1, qtarget.max_length());
@@ -234,7 +234,7 @@
 <a name="l00223"></a>00223 <span class="comment"></span>
 <a name="l00224"></a>00224 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_DIVIDE_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 00:01:46 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 12:31:58 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

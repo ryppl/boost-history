@@ -17,28 +17,25 @@
     This file will be included by the library itself when needed.
 */
 
-#if defined(BOOST_XINT_COMPILED_LIB) || defined(BOOST_XINT_FROM_HEADER)
-
-#if defined(BOOST_XINT_COMPILED_LIB)
-    #include "internals.hpp"
-#endif // defined(BOOST_XINT_COMPILED_LIB)
+#ifndef BOOST_INCLUDED_XINT_MULTIPLY_HPP
+#define BOOST_INCLUDED_XINT_MULTIPLY_HPP
 
 //! @cond detail
 namespace boost {
 namespace xint {
 namespace detail {
 
-BOOST_XINT_INLINE void square(data_t& target, const data_t n) {
-    target.set(0);
-    target.beginmod(n.length * 2 + 1, true);
-
+BOOST_XINT_RAWINT_TPL
+BOOST_XINT_RAWINT square(const BOOST_XINT_RAWINT n) {
     const digit_t *ndigits = n.digits();
-    size_t nlen = n.length;
+    std::size_t nlen = n.length;
 
-    digit_t *rdigits = target.digits(), *rmax = rdigits + target.length;
+    BOOST_XINT_RAWINT target;
+    digit_t *rdigits = target.digits(n.length * 2 + 1, realloc::zero), *rmax =
+        rdigits + target.length;
 
     // Calculate the product of digits of unequal index
-    size_t i = 0;
+    std::size_t i = 0;
     doubledigit_t c;
     do {
         const doubledigit_t ii = ndigits[i];
@@ -88,29 +85,29 @@ BOOST_XINT_INLINE void square(data_t& target, const data_t n) {
 
     // No need to change length
     target.negative = false;
-    target.endmod();
+    target.trim();
+    return target;
 }
 
-BOOST_XINT_INLINE void multiply(data_t& target, const data_t n, const data_t by)
+BOOST_XINT_RAWINT_TPL
+BOOST_XINT_RAWINT multiply(const BOOST_XINT_RAWINT n, const BOOST_XINT_RAWINT
+    by)
 {
-    if (n.is_zero() || by.is_zero()) { target.set(0); return; }
+    if (n.is_zero() || by.is_zero()) return 0;
 
     if (n.same_storage(by)) {
         if (n.negative != by.negative) {
-            square(target, n);
-            target.negative = true;
-            return;
+            return BOOST_XINT_RAWINT(square(n), true);
         } else {
-            square(target, n);
-            return;
+            return square(n);
         }
     }
 
-    target.length = 0;
-    target.beginmod(n.length + by.length, true);
-
-    digit_t *adigits = target.digits(), *ae = adigits + target.max_length();
-    size_t maxdigit = target.max_length(), nlen = n.length, bylen = by.length;
+    BOOST_XINT_RAWINT target;
+    digit_t *adigits = target.digits(n.length + by.length, realloc::zero),
+        *ae = adigits + target.max_length();
+    std::size_t maxdigit = target.max_length(), nlen = n.length, bylen =
+        by.length;
 
     // Now multiply the digits, starting at the least-significant digit.
     const digit_t *d1 = n.digits(), *d1e = d1 + (std::min)(nlen, maxdigit);
@@ -122,15 +119,15 @@ BOOST_XINT_INLINE void multiply(data_t& target, const data_t n, const data_t by)
             doubledigit_t t = doubledigit_t(*d1) * *d2;
 
             // Now add the result to the answer.
-            int carry=0;
+            int carry = 0;
             digit_t *a = adigits + digit1 + digit2;
             doubledigit_t addt = doubledigit_t(*a) + (t & digit_mask);
-            if (addt >= digit_overflowbit) carry=1;
+            if (addt >= digit_overflowbit) carry = 1;
             *a++=static_cast<digit_t>(addt);
 
             if (a < ae) {
                 addt = *a + ((t >> bits_per_digit) & digit_mask) + carry;
-                if (addt >= digit_overflowbit) carry=1; else carry=0;
+                if (addt >= digit_overflowbit) carry = 1; else carry = 0;
                 *a++ = static_cast<digit_t>(addt);
 
                 while (carry && a < ae) {
@@ -144,18 +141,21 @@ BOOST_XINT_INLINE void multiply(data_t& target, const data_t n, const data_t by)
 
     // No need to change length
     target.negative = (n.negative != by.negative);
-    target.endmod();
+    target.trim();
+    return target;
 }
 
-BOOST_XINT_INLINE data_t& data_t::operator*=(const data_t by) {
-    multiply(*this, duplicate(), by);
+BOOST_XINT_RAWINT_TPL
+BOOST_XINT_RAWINT& BOOST_XINT_RAWINT::operator*=(const BOOST_XINT_RAWINT by) {
+    *this = multiply(*this, by);
     return *this;
 }
 
-BOOST_XINT_INLINE data_t operator*(const data_t n1, const data_t n2) {
-    data_t r(n1.new_holder());
-    multiply(r, n1, n2);
-    return r;
+BOOST_XINT_RAWINT_TPL
+BOOST_XINT_RAWINT operator*(const BOOST_XINT_RAWINT n1, const BOOST_XINT_RAWINT
+    n2)
+{
+    return multiply(n1, n2);
 }
 
 } // namespace detail
@@ -163,4 +163,4 @@ BOOST_XINT_INLINE data_t operator*(const data_t n1, const data_t n2) {
 } // namespace boost
 //! @endcond detail
 
-#endif // defined(BOOST_XINT_COMPILED_LIB) || defined(BOOST_XINT_FROM_HEADER)
+#endif // BOOST_INCLUDED_XINT_MULTIPLY_HPP

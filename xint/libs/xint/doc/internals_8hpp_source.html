@@ -81,26 +81,26 @@
 <a name="l00066"></a>00066 <span class="keyword">namespace </span>xint {
 <a name="l00067"></a>00067 <span class="keyword">namespace </span>detail {
 <a name="l00069"></a>00069 
-<a name="l00070"></a>00070 <span class="keyword">inline</span> <span class="keywordtype">size_t</span> log10_bits(<span class="keywordtype">size_t</span> bits) {
+<a name="l00070"></a>00070 <span class="keyword">inline</span> std::size_t log10_bits(std::size_t bits) {
 <a name="l00071"></a>00071     <span class="comment">// large_step and count_per_large_step are based on a minimum-32-bit integer</span>
 <a name="l00072"></a>00072     assert(std::numeric_limits&lt;boost::intmax_t&gt;::digits &gt;= 32);
 <a name="l00073"></a>00073 
 <a name="l00074"></a>00074     <span class="keyword">typedef</span> raw_integer_t&lt;0, false, std::allocator&lt;digit_t&gt; &gt; T;
 <a name="l00075"></a>00075     <span class="keyword">const</span> T large_step(1000000000), small_step(10);
-<a name="l00076"></a>00076     <span class="keyword">const</span> <span class="keywordtype">size_t</span> count_per_large_step = 9, count_per_small_step = 1;
+<a name="l00076"></a>00076     <span class="keyword">const</span> std::size_t count_per_large_step = 9, count_per_small_step = 1;
 <a name="l00077"></a>00077 
 <a name="l00078"></a>00078     T n;
 <a name="l00079"></a>00079     pow2(n, bits);
 <a name="l00080"></a>00080     --n;
 <a name="l00081"></a>00081 
-<a name="l00082"></a>00082     <span class="keywordtype">size_t</span> r = 0;
+<a name="l00082"></a>00082     std::size_t r = 0;
 <a name="l00083"></a>00083     <span class="keywordflow">while</span> (n &gt;= large_step) { n /= large_step; r += count_per_large_step; }
 <a name="l00084"></a>00084     <span class="keywordflow">while</span> (n &gt;= small_step) { n /= small_step; r += count_per_small_step; }
 <a name="l00085"></a>00085     <span class="keywordflow">return</span> r;
 <a name="l00086"></a>00086 }
 <a name="l00087"></a>00087 
 <a name="l00088"></a>00088 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> <span class="keywordtype">char</span>T&gt;
-<a name="l00089"></a>00089 std::basic_string&lt;charT&gt; nan_text() {
+<a name="l00089"></a>00089 <span class="keyword">const</span> std::basic_string&lt;charT&gt;&amp; nan_text() {
 <a name="l00090"></a>00090     <span class="keyword">static</span> std::basic_string&lt;charT&gt; r;
 <a name="l00091"></a>00091     <span class="keywordflow">if</span> (r.empty()) {
 <a name="l00092"></a>00092         std::basic_ostringstream&lt;charT&gt; out;
@@ -121,7 +121,7 @@
 <a name="l00108"></a>00108 
 <a name="l00109"></a>00109 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_INTERNALS_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 00:01:46 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 12:31:58 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

@@ -17,30 +17,21 @@
     This file will be included by the library itself when needed.
 */
 
-#if defined(BOOST_XINT_COMPILED_LIB) || defined(BOOST_XINT_FROM_HEADER)
-
-#if defined(BOOST_XINT_COMPILED_LIB)
-    #include "internals.hpp"
-#endif // defined(BOOST_XINT_COMPILED_LIB)
+#ifndef BOOST_INCLUDED_XINT_GCD_HPP
+#define BOOST_INCLUDED_XINT_GCD_HPP
 
 //! @cond detail
 namespace boost {
 namespace xint {
 namespace detail {
 
+BOOST_XINT_RAWINT_TPL
 struct gcd_core {
-    gcd_core(const data_t n, const data_t m): u1(n.new_holder(), 1),
-        u2(n.new_holder()), u3(n)
+    gcd_core(const BOOST_XINT_RAWINT n, const BOOST_XINT_RAWINT m): u1(1), u2(),
+        u3(n)
     {
-        const data_t zero(n.new_holder());
-        data_t t1(m), t2(n), t3(m);
-        t1.beginmod();
-        t2.beginmod();
-        t3.beginmod();
-        u1.beginmod();
-        u2.beginmod();
-        u3.beginmod();
-
+        const BOOST_XINT_RAWINT zero;
+        BOOST_XINT_RAWINT t1(m), t2(n), t3(m);
         --t2;
         do {
             do {
@@ -65,88 +56,81 @@ struct gcd_core {
         } while (t3 > zero);
 
         while (u1 >= m && u2 >= n) { u1 -= m; u2 -= n; }
-
-        u3.endmod();
-        u2.endmod();
-        u1.endmod();
-        t3.endmod();
-        t2.endmod();
-        t1.endmod();
     }
 
-    data_t u1, u2, u3;
+    BOOST_XINT_RAWINT u1, u2, u3;
 };
 
-BOOST_XINT_INLINE void gcd(data_t& target, const data_t num1, const data_t num2)
+BOOST_XINT_RAWINT_TPL
+void gcd(BOOST_XINT_RAWINT& target, const BOOST_XINT_RAWINT num1, const
+    BOOST_XINT_RAWINT num2)
 {
-    target.beginmod();
     if (num1.is_zero() && num2.is_zero()) {
         target.set(0);
     } else if (num1.is_zero()) {
-        target.duplicate_data(num2);
+        target = num2;
     } else if (num2.is_zero()) {
-        target.duplicate_data(num1);
+        target = num1;
     } else {
-        data_t n(num1, false), m(num2, false);
+        BOOST_XINT_RAWINT n(num1, false), m(num2, false);
 
-        size_t k = 0;
+        std::size_t k = 0;
         if (!getbit(n, k) && !getbit(m, k)) ++k;
         if (k != 0) { n >>= k; m >>= k; }
 
-        gcd_core core(n, m);
+        gcd_core<Bits, Secure, Alloc> core(n, m);
         if (core.u3.is_zero()) {
             target.set(1);
             target <<= k;
         } else {
-            target.duplicate_data(core.u3);
+            target = core.u3;
             target <<= k;
         }
     }
-    target.endmod();
 }
 
-BOOST_XINT_INLINE void lcm(data_t& target, const data_t num1, const data_t num2)
+BOOST_XINT_RAWINT_TPL
+void lcm(BOOST_XINT_RAWINT& target, const BOOST_XINT_RAWINT num1, const
+    BOOST_XINT_RAWINT num2)
 {
     if (num1.is_zero() || num2.is_zero()) {
         target.set(0);
     } else {
-        data_t common(target.new_holder());
+        BOOST_XINT_RAWINT common;
         gcd(common, num1, num2);
 
-        target.beginmod();
-        target.duplicate_data(num1);
-        target *= num2;
-        target /= common;
+        target = num1 * num2 / common;
         target.negative = false;
-        target.endmod();
+        target.trim();
     }
 }
 
 //! Calculates the modular inverse of n mod m, or (n^(-1)) mod m
 //! Defined as b, where n*b corresponds to 1 (mod m)
-BOOST_XINT_INLINE void invmod(data_t& target, const data_t n, const data_t m) {
+BOOST_XINT_RAWINT_TPL
+BOOST_XINT_RAWINT invmod(const BOOST_XINT_RAWINT n, const BOOST_XINT_RAWINT m) {
     if (m.is_zero() || m.negative) throw exceptions::invalid_modulus();
 
     if (n.is_zero()) {
-        target.set(0);
+        return 0;
     } else if (n.negative) {
-        target.beginmod();
-        invmod(target, n.abs(), m);
+        BOOST_XINT_RAWINT target = invmod(n.abs(), m);
         if (!target.is_zero()) {
             target.negative = true;
             target += m;
         }
-        target.endmod();
+        target.trim();
+        return target;
     } else {
         if (n.is_even() && m.is_even()) {
             // GCD != 1, no inverse possible.
-            target.set(0);
+            return 0;
         } else {
-            gcd_core core(n, m);
-            if (core.u3 != data_t(target.new_holder(), 1)) {
+            gcd_core<Bits, Secure, Alloc> core(n, m);
+            if (core.u3 != BOOST_XINT_RAWINT(1)) {
                 // GCD != 1, no inverse possible.
-                target.set(0);
-            } else target.duplicate_data(core.u1);
+                return 0;
+            } else return core.u1;
         }
     }
 }
@@ -156,4 +140,4 @@ BOOST_XINT_INLINE void invmod(data_t& target, const data_t n, const data_t m) {
 } // namespace boost
 //! @endcond detail
 
-#endif // defined(BOOST_XINT_COMPILED_LIB) || defined(BOOST_XINT_FROM_HEADER)
+#endif // BOOST_INCLUDED_XINT_GCD_HPP

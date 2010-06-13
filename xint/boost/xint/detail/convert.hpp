@@ -32,8 +32,8 @@ inline char nToChar(int n, bool upperCase) {
 }
 
 template <typename charT, bitsize_t Bits, bool Secure, class Alloc>
-std::basic_string<charT> to_string(const BOOST_XINT_RAWINT n, size_t base = 10,
-    bool uppercase = false)
+std::basic_string<charT> to_string(const BOOST_XINT_RAWINT n, std::size_t base =
+    10, bool uppercase = false)
 {
     if (base < 2 || base > 36) throw exceptions::invalid_base();
 
@@ -100,8 +100,8 @@ std::basic_string<charT> to_string(const BOOST_XINT_RAWINT n, size_t base = 10,
 
 BOOST_XINT_RAWINT_TPL
 template <typename charT>
-void BOOST_XINT_RAWINT::from_string(const charT *str, char **endptr, size_t
-    base)
+void BOOST_XINT_RAWINT::from_string(const charT *str, const charT*& endptr,
+    std::size_t base)
 {
     bool negate = false;
     const charT *c = str;
@@ -137,14 +137,14 @@ void BOOST_XINT_RAWINT::from_string(const charT *str, char **endptr, size_t
             || (*c >= 'A' && *c < upper))
                 tstr.push_back(*c++);
     }
-    *endptr = const_cast<charT*>(c);
+    endptr = c;
 
     from_string(tstr, base);
 }
 
 BOOST_XINT_RAWINT_TPL
 template <typename charT>
-void BOOST_XINT_RAWINT::from_string(const charT *str, size_t base) {
+void BOOST_XINT_RAWINT::from_string(const charT *str, std::size_t base) {
     bool negate = false;
     const charT *c = str;
     if (*c == '+') ++c;
@@ -193,16 +193,16 @@ void BOOST_XINT_RAWINT::from_string(const charT *str, size_t base) {
 }
 
 BOOST_XINT_RAWINT_TPL
-template <typename charT>
-void BOOST_XINT_RAWINT::from_string(const std::basic_string<charT>& str, size_t
-    base)
+template <typename charT, typename traitsT, typename allocT>
+void BOOST_XINT_RAWINT::from_string(const std::basic_string<charT, traitsT,
+    allocT>& str, std::size_t base)
 {
     from_string(str.c_str(), base);
 }
 
 BOOST_XINT_RAWINT_TPL
-xint::binary_t to_binary(const BOOST_XINT_RAWINT n, size_t bits = 0) {
-    if (bits > size_t(std::numeric_limits<unsigned char>::digits)) throw
+xint::binary_t to_binary(const BOOST_XINT_RAWINT n, std::size_t bits = 0) {
+    if (bits > std::size_t(std::numeric_limits<unsigned char>::digits)) throw
         exceptions::invalid_argument("can't fit that many bits into an "
         "unsigned character on this system");
     if (bits == 0) bits = std::numeric_limits<unsigned char>::digits;
@@ -219,8 +219,8 @@ xint::binary_t to_binary(const BOOST_XINT_RAWINT n, size_t bits = 0) {
 }
 
 BOOST_XINT_RAWINT_TPL
-void BOOST_XINT_RAWINT::from_binary(xint::binary_t b, size_t bits) {
-    if (bits > size_t(std::numeric_limits<unsigned char>::digits)) throw
+void BOOST_XINT_RAWINT::from_binary(xint::binary_t b, std::size_t bits) {
+    if (bits > std::size_t(std::numeric_limits<unsigned char>::digits)) throw
         exceptions::invalid_argument("can't fit that many bits into an "
         "unsigned character on this system");
     if (bits == 0) bits = std::numeric_limits<unsigned char>::digits;
@@ -249,7 +249,7 @@ T to(const BOOST_XINT_RAWINT n, typename boost::enable_if<boost::is_integral<T>
 		"for requested conversion");
 
     T rval = 0, shift = T(digit_overflowbit);
-    for (size_t x = 0; x < n.length; ++x) {
+    for (std::size_t x = 0; x < n.length; ++x) {
         if (sizeof(T) > sizeof(digit_t)) rval *= shift;
         rval += static_cast<T>(n[n.length - x - 1]);
     }

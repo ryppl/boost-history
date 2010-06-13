@@ -50,7 +50,7 @@
 <a name="l00031"></a>00031 <span class="preprocessor">#include &lt;vector&gt;</span>
 <a name="l00032"></a>00032 <span class="preprocessor">#include &lt;queue&gt;</span>
 <a name="l00033"></a>00033 <span class="preprocessor">#include &lt;limits&gt;</span>
-<a name="l00034"></a>00034 <span class="preprocessor">#include &lt;cstddef&gt;</span> <span class="comment">// for size_t</span>
+<a name="l00034"></a>00034 <span class="preprocessor">#include &lt;cstddef&gt;</span> <span class="comment">// for std::size_t</span>
 <a name="l00035"></a>00035 <span class="preprocessor">#include &lt;cassert&gt;</span>
 <a name="l00036"></a>00036 <span class="preprocessor">#include &lt;sstream&gt;</span>
 <a name="l00037"></a>00037 <span class="preprocessor">#include &lt;fstream&gt;</span>
@@ -92,9 +92,9 @@
 <a name="l00075"></a>00075 
 <a name="l00077"></a><a class="code" href="namespaceboost_1_1xint.html#aae3128529370506165793f2771834e58">00077</a> <span class="keyword">typedef</span> std::vector&lt;unsigned char&gt; <a class="code" href="namespaceboost_1_1xint.html#aae3128529370506165793f2771834e58" title="The format for the binary representations of integers.">binary_t</a>;
 <a name="l00078"></a>00078 
-<a name="l00081"></a><a class="code" href="namespaceboost_1_1xint.html#a086ec65a0273dccedca0fbfbddb03398">00081</a> <span class="keyword">const</span> <span class="keywordtype">size_t</span> <a class="code" href="namespaceboost_1_1xint.html#a086ec65a0273dccedca0fbfbddb03398" title="A value that can be used for the &amp;#39;base&amp;#39; parameter of the string-to-integer...">autobase</a> = (std::numeric_limits&lt;size_t&gt;::max)();
+<a name="l00081"></a><a class="code" href="namespaceboost_1_1xint.html#a6e2c55f95b91dfcb7586599faca34cb2">00081</a> <span class="keyword">const</span> std::size_t <a class="code" href="namespaceboost_1_1xint.html#a6e2c55f95b91dfcb7586599faca34cb2" title="A value that can be used for the &amp;#39;base&amp;#39; parameter of the string-to-integer...">autobase</a> = (std::numeric_limits&lt;size_t&gt;::max)();
 <a name="l00082"></a>00082 
-<a name="l00084"></a><a class="code" href="namespaceboost_1_1xint.html#ab256530d9916860983abdb6f0c6fad63">00084</a> <span class="keyword">typedef</span> <span class="keywordtype">size_t</span> <a class="code" href="namespaceboost_1_1xint.html#ab256530d9916860983abdb6f0c6fad63" title="This makes it easier to tell when an item is measured in bits.">bitsize_t</a>;
+<a name="l00084"></a><a class="code" href="namespaceboost_1_1xint.html#ae9f6d103df04ad19a841ed3f8b94a764">00084</a> <span class="keyword">typedef</span> std::size_t <a class="code" href="namespaceboost_1_1xint.html#ae9f6d103df04ad19a841ed3f8b94a764" title="This makes it easier to tell when an item is measured in bits.">bitsize_t</a>;
 <a name="l00085"></a>00085 
 <a name="l00087"></a>00087 <span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;
 <a name="l00088"></a><a class="code" href="classboost_1_1xint_1_1base__divide__t.html">00088</a> <span class="keyword">class </span><a class="code" href="classboost_1_1xint_1_1base__divide__t.html" title="Holds the results from a division-with-remainder call.">base_divide_t</a> {
@@ -127,46 +127,47 @@
 <a name="l00126"></a>00126 <span class="keyword">typedef</span> boost::uint_t&lt;std::numeric_limits&lt;doubledigit_t&gt;::digits / 2&gt;::fast
 <a name="l00127"></a>00127     digit_t;
 <a name="l00128"></a>00128 
-<a name="l00131"></a>00131 <span class="keyword">const</span> <span class="keywordtype">size_t</span>        minimum_digits    = 1;
-<a name="l00132"></a>00132 <span class="keyword">const</span> <span class="keywordtype">size_t</span>        bits_per_digit    = std::numeric_limits&lt;digit_t&gt;::digits;
-<a name="l00133"></a>00133 <span class="keyword">const</span> <span class="keywordtype">size_t</span>        digits_in_uintmax =
-<a name="l00134"></a>00134     (std::numeric_limits&lt;boost::uintmax_t&gt;::digits + bits_per_digit - 1) /
-<a name="l00135"></a>00135     bits_per_digit;
-<a name="l00136"></a>00136 <span class="keyword">const</span> digit_t       digit_hibit       = (digit_t(1) &lt;&lt; (bits_per_digit-1));
-<a name="l00137"></a>00137 <span class="keyword">const</span> doubledigit_t doubledigit_hibit = (doubledigit_t(1) &lt;&lt; (bits_per_digit*2-1));
-<a name="l00138"></a>00138 <span class="keyword">const</span> doubledigit_t digit_overflowbit = (doubledigit_t(1) &lt;&lt; bits_per_digit);
-<a name="l00139"></a>00139 <span class="keyword">const</span> digit_t       digit_mask        = digit_t(digit_overflowbit-1);
-<a name="l00141"></a>00141 
-<a name="l00143"></a>00143 
-<a name="l00146"></a>00146 <span class="keyword">struct </span>magnitude_t {
-<a name="l00147"></a>00147     <span class="keyword">private</span>:
-<a name="l00148"></a>00148     <span class="keywordtype">size_t</span> copy_count;
-<a name="l00149"></a>00149 
-<a name="l00150"></a>00150     <span class="keyword">public</span>:
-<a name="l00151"></a>00151     <span class="keyword">const</span> <span class="keywordtype">bool</span> readonly;
-<a name="l00152"></a>00152     <span class="keyword">const</span> <span class="keywordtype">size_t</span> max_length;
-<a name="l00153"></a>00153     digit_t digits[minimum_digits]; <span class="comment">// Must be last data item, see &quot;struct hack&quot;</span>
-<a name="l00154"></a>00154 
-<a name="l00155"></a>00155     magnitude_t(<span class="keywordtype">size_t</span> max_len = minimum_digits, <span class="keywordtype">bool</span> ro = <span class="keyword">false</span>):
-<a name="l00156"></a>00156         copy_count(0), readonly(ro), max_length(max_len) { }
-<a name="l00157"></a>00157     magnitude_t(<span class="keywordtype">size_t</span> max_len, <span class="keywordtype">bool</span> ro, digit_t init): copy_count(0),
-<a name="l00158"></a>00158         readonly(ro), max_length(max_len) { digits[0] = init; }
-<a name="l00159"></a>00159     <span class="keywordtype">size_t</span> copies()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> copy_count; }
-<a name="l00160"></a>00160 
-<a name="l00161"></a>00161     <span class="keywordtype">void</span> inc() { ++copy_count; }
-<a name="l00162"></a>00162     <span class="keywordtype">bool</span> dec() { <span class="keywordflow">return</span> (--copy_count == 0); }
-<a name="l00163"></a>00163 };
-<a name="l00164"></a>00164 
-<a name="l00165"></a>00165 <span class="keyword">inline</span> <span class="keywordtype">size_t</span> bits_to_digits(<span class="keywordtype">size_t</span> bits) { <span class="keywordflow">return</span> (bits + bits_per_digit - 1) /
-<a name="l00166"></a>00166     bits_per_digit; }
-<a name="l00167"></a>00167 
-<a name="l00169"></a>00169 } <span class="comment">// namespace detail</span>
-<a name="l00170"></a>00170 } <span class="comment">// namespace xint</span>
-<a name="l00171"></a>00171 } <span class="comment">// namespace boost</span>
-<a name="l00172"></a>00172 
-<a name="l00173"></a>00173 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_BASIC_TYPES_HPP</span>
+<a name="l00131"></a>00131 <span class="keyword">const</span> std::size_t        minimum_digits    = 1;
+<a name="l00132"></a>00132 <span class="keyword">const</span> std::size_t        bits_per_digit    =
+<a name="l00133"></a>00133     std::numeric_limits&lt;digit_t&gt;::digits;
+<a name="l00134"></a>00134 <span class="keyword">const</span> std::size_t        digits_in_uintmax =
+<a name="l00135"></a>00135     (std::numeric_limits&lt;boost::uintmax_t&gt;::digits + bits_per_digit - 1) /
+<a name="l00136"></a>00136     bits_per_digit;
+<a name="l00137"></a>00137 <span class="keyword">const</span> digit_t       digit_hibit       = (digit_t(1) &lt;&lt; (bits_per_digit-1));
+<a name="l00138"></a>00138 <span class="keyword">const</span> doubledigit_t doubledigit_hibit = (doubledigit_t(1) &lt;&lt; (bits_per_digit*2-1));
+<a name="l00139"></a>00139 <span class="keyword">const</span> doubledigit_t digit_overflowbit = (doubledigit_t(1) &lt;&lt; bits_per_digit);
+<a name="l00140"></a>00140 <span class="keyword">const</span> digit_t       digit_mask        = digit_t(digit_overflowbit-1);
+<a name="l00142"></a>00142 
+<a name="l00144"></a>00144 
+<a name="l00147"></a>00147 <span class="keyword">struct </span>magnitude_t {
+<a name="l00148"></a>00148     <span class="keyword">private</span>:
+<a name="l00149"></a>00149     std::size_t copy_count;
+<a name="l00150"></a>00150 
+<a name="l00151"></a>00151     <span class="keyword">public</span>:
+<a name="l00152"></a>00152     <span class="keyword">const</span> <span class="keywordtype">bool</span> readonly;
+<a name="l00153"></a>00153     <span class="keyword">const</span> std::size_t max_length;
+<a name="l00154"></a>00154     digit_t digits[minimum_digits]; <span class="comment">// Must be last data item, see &quot;struct hack&quot;</span>
+<a name="l00155"></a>00155 
+<a name="l00156"></a>00156     magnitude_t(std::size_t max_len = minimum_digits, <span class="keywordtype">bool</span> ro = <span class="keyword">false</span>):
+<a name="l00157"></a>00157         copy_count(0), readonly(ro), max_length(max_len) { }
+<a name="l00158"></a>00158     magnitude_t(std::size_t max_len, <span class="keywordtype">bool</span> ro, digit_t init): copy_count(0),
+<a name="l00159"></a>00159         readonly(ro), max_length(max_len) { digits[0] = init; }
+<a name="l00160"></a>00160     std::size_t copies()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> copy_count; }
+<a name="l00161"></a>00161 
+<a name="l00162"></a>00162     <span class="keywordtype">void</span> inc() { ++copy_count; }
+<a name="l00163"></a>00163     <span class="keywordtype">bool</span> dec() { <span class="keywordflow">return</span> (--copy_count == 0); }
+<a name="l00164"></a>00164 };
+<a name="l00165"></a>00165 
+<a name="l00166"></a>00166 <span class="keyword">inline</span> std::size_t bits_to_digits(std::size_t bits) { <span class="keywordflow">return</span> (bits +
+<a name="l00167"></a>00167     bits_per_digit - 1) / bits_per_digit; }
+<a name="l00168"></a>00168 
+<a name="l00170"></a>00170 } <span class="comment">// namespace detail</span>
+<a name="l00171"></a>00171 } <span class="comment">// namespace xint</span>
+<a name="l00172"></a>00172 } <span class="comment">// namespace boost</span>
+<a name="l00173"></a>00173 
+<a name="l00174"></a>00174 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_BASIC_TYPES_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 00:01:46 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 12:31:58 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

@@ -46,14 +46,14 @@
 <a name="l00028"></a>00028 BOOST_XINT_RAWINT_TPL
 <a name="l00029"></a>00029 BOOST_XINT_RAWINT <a class="code" href="namespaceboost_1_1xint.html#abe5e63185f27f2c795dc287e030ec424" title="Calculate the value of n2">square</a>(<span class="keyword">const</span> BOOST_XINT_RAWINT n) {
 <a name="l00030"></a>00030     <span class="keyword">const</span> digit_t *ndigits = n.digits();
-<a name="l00031"></a>00031     <span class="keywordtype">size_t</span> nlen = n.length;
+<a name="l00031"></a>00031     std::size_t nlen = n.length;
 <a name="l00032"></a>00032 
 <a name="l00033"></a>00033     BOOST_XINT_RAWINT target;
 <a name="l00034"></a>00034     digit_t *rdigits = target.digits(n.length * 2 + 1, realloc::zero), *rmax =
 <a name="l00035"></a>00035         rdigits + target.length;
 <a name="l00036"></a>00036 
 <a name="l00037"></a>00037     <span class="comment">// Calculate the product of digits of unequal index</span>
-<a name="l00038"></a>00038     <span class="keywordtype">size_t</span> i = 0;
+<a name="l00038"></a>00038     std::size_t i = 0;
 <a name="l00039"></a>00039     doubledigit_t c;
 <a name="l00040"></a>00040     <span class="keywordflow">do</span> {
 <a name="l00041"></a>00041         <span class="keyword">const</span> doubledigit_t ii = ndigits[i];
@@ -124,64 +124,65 @@
 <a name="l00106"></a>00106     BOOST_XINT_RAWINT target;
 <a name="l00107"></a>00107     digit_t *adigits = target.digits(n.length + by.length, realloc::zero),
 <a name="l00108"></a>00108         *ae = adigits + target.max_length();
-<a name="l00109"></a>00109     <span class="keywordtype">size_t</span> maxdigit = target.max_length(), nlen = n.length, bylen = by.length;
-<a name="l00110"></a>00110 
-<a name="l00111"></a>00111     <span class="comment">// Now multiply the digits, starting at the least-significant digit.</span>
-<a name="l00112"></a>00112     <span class="keyword">const</span> digit_t *d1 = n.digits(), *d1e = d1 + (std::min)(nlen, maxdigit);
-<a name="l00113"></a>00113     <span class="keywordflow">for</span> (<span class="keywordtype">int</span> digit1 = 0; d1 &lt; d1e; ++digit1, ++d1) {
-<a name="l00114"></a>00114         <span class="keyword">const</span> digit_t *d2 = by.digits(), *d2e = d2 + (std::min)(bylen, maxdigit
-<a name="l00115"></a>00115             - digit1);
-<a name="l00116"></a>00116         <span class="keywordflow">for</span> (<span class="keywordtype">int</span> digit2 = 0; d2 &lt; d2e; ++digit2, ++d2) {
-<a name="l00117"></a>00117             <span class="comment">// First multiply the two digits</span>
-<a name="l00118"></a>00118             doubledigit_t t = doubledigit_t(*d1) * *d2;
-<a name="l00119"></a>00119 
-<a name="l00120"></a>00120             <span class="comment">// Now add the result to the answer.</span>
-<a name="l00121"></a>00121             <span class="keywordtype">int</span> carry = 0;
-<a name="l00122"></a>00122             digit_t *a = adigits + digit1 + digit2;
-<a name="l00123"></a>00123             doubledigit_t addt = doubledigit_t(*a) + (t &amp; digit_mask);
-<a name="l00124"></a>00124             <span class="keywordflow">if</span> (addt &gt;= digit_overflowbit) carry = 1;
-<a name="l00125"></a>00125             *a++=<span class="keyword">static_cast&lt;</span>digit_t<span class="keyword">&gt;</span>(addt);
-<a name="l00126"></a>00126 
-<a name="l00127"></a>00127             <span class="keywordflow">if</span> (a &lt; ae) {
-<a name="l00128"></a>00128                 addt = *a + ((t &gt;&gt; bits_per_digit) &amp; digit_mask) + carry;
-<a name="l00129"></a>00129                 <span class="keywordflow">if</span> (addt &gt;= digit_overflowbit) carry = 1; <span class="keywordflow">else</span> carry = 0;
-<a name="l00130"></a>00130                 *a++ = <span class="keyword">static_cast&lt;</span>digit_t<span class="keyword">&gt;</span>(addt);
-<a name="l00131"></a>00131 
-<a name="l00132"></a>00132                 <span class="keywordflow">while</span> (carry &amp;&amp; a &lt; ae) {
-<a name="l00133"></a>00133                     addt = *a + 1;
-<a name="l00134"></a>00134                     *a++ = <span class="keyword">static_cast&lt;</span>digit_t<span class="keyword">&gt;</span>(addt);
-<a name="l00135"></a>00135                     <span class="keywordflow">if</span> (addt &lt; digit_overflowbit) <span class="keywordflow">break</span>;
-<a name="l00136"></a>00136                 }
-<a name="l00137"></a>00137             }
-<a name="l00138"></a>00138         }
-<a name="l00139"></a>00139     }
-<a name="l00140"></a>00140 
-<a name="l00141"></a>00141     <span class="comment">// No need to change length</span>
-<a name="l00142"></a>00142     target.negative = (n.negative != by.negative);
-<a name="l00143"></a>00143     target.trim();
-<a name="l00144"></a>00144     <span class="keywordflow">return</span> target;
-<a name="l00145"></a>00145 }
-<a name="l00146"></a>00146 
-<a name="l00147"></a>00147 BOOST_XINT_RAWINT_TPL
-<a name="l00148"></a>00148 BOOST_XINT_RAWINT&amp; BOOST_XINT_RAWINT::operator*=(<span class="keyword">const</span> BOOST_XINT_RAWINT by) {
-<a name="l00149"></a>00149     *<span class="keyword">this</span> = multiply(*<span class="keyword">this</span>, by);
-<a name="l00150"></a>00150     <span class="keywordflow">return</span> *<span class="keyword">this</span>;
-<a name="l00151"></a>00151 }
-<a name="l00152"></a>00152 
-<a name="l00153"></a>00153 BOOST_XINT_RAWINT_TPL
-<a name="l00154"></a>00154 BOOST_XINT_RAWINT <a class="code" href="namespaceboost_1_1xint.html#a69c9fa493989cc96676a007f58031455" title="Calculate the product of two integers.">operator*</a>(<span class="keyword">const</span> BOOST_XINT_RAWINT n1, <span class="keyword">const</span> BOOST_XINT_RAWINT
-<a name="l00155"></a>00155     n2)
-<a name="l00156"></a>00156 {
-<a name="l00157"></a>00157     <span class="keywordflow">return</span> multiply(n1, n2);
-<a name="l00158"></a>00158 }
-<a name="l00159"></a>00159 
-<a name="l00160"></a>00160 } <span class="comment">// namespace detail</span>
-<a name="l00161"></a>00161 } <span class="comment">// namespace xint</span>
-<a name="l00162"></a>00162 } <span class="comment">// namespace boost</span>
-<a name="l00164"></a>00164 <span class="comment"></span>
-<a name="l00165"></a>00165 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_MULTIPLY_HPP</span>
+<a name="l00109"></a>00109     std::size_t maxdigit = target.max_length(), nlen = n.length, bylen =
+<a name="l00110"></a>00110         by.length;
+<a name="l00111"></a>00111 
+<a name="l00112"></a>00112     <span class="comment">// Now multiply the digits, starting at the least-significant digit.</span>
+<a name="l00113"></a>00113     <span class="keyword">const</span> digit_t *d1 = n.digits(), *d1e = d1 + (std::min)(nlen, maxdigit);
+<a name="l00114"></a>00114     <span class="keywordflow">for</span> (<span class="keywordtype">int</span> digit1 = 0; d1 &lt; d1e; ++digit1, ++d1) {
+<a name="l00115"></a>00115         <span class="keyword">const</span> digit_t *d2 = by.digits(), *d2e = d2 + (std::min)(bylen, maxdigit
+<a name="l00116"></a>00116             - digit1);
+<a name="l00117"></a>00117         <span class="keywordflow">for</span> (<span class="keywordtype">int</span> digit2 = 0; d2 &lt; d2e; ++digit2, ++d2) {
+<a name="l00118"></a>00118             <span class="comment">// First multiply the two digits</span>
+<a name="l00119"></a>00119             doubledigit_t t = doubledigit_t(*d1) * *d2;
+<a name="l00120"></a>00120 
+<a name="l00121"></a>00121             <span class="comment">// Now add the result to the answer.</span>
+<a name="l00122"></a>00122             <span class="keywordtype">int</span> carry = 0;
+<a name="l00123"></a>00123             digit_t *a = adigits + digit1 + digit2;
+<a name="l00124"></a>00124             doubledigit_t addt = doubledigit_t(*a) + (t &amp; digit_mask);
+<a name="l00125"></a>00125             <span class="keywordflow">if</span> (addt &gt;= digit_overflowbit) carry = 1;
+<a name="l00126"></a>00126             *a++=<span class="keyword">static_cast&lt;</span>digit_t<span class="keyword">&gt;</span>(addt);
+<a name="l00127"></a>00127 
+<a name="l00128"></a>00128             <span class="keywordflow">if</span> (a &lt; ae) {
+<a name="l00129"></a>00129                 addt = *a + ((t &gt;&gt; bits_per_digit) &amp; digit_mask) + carry;
+<a name="l00130"></a>00130                 <span class="keywordflow">if</span> (addt &gt;= digit_overflowbit) carry = 1; <span class="keywordflow">else</span> carry = 0;
+<a name="l00131"></a>00131                 *a++ = <span class="keyword">static_cast&lt;</span>digit_t<span class="keyword">&gt;</span>(addt);
+<a name="l00132"></a>00132 
+<a name="l00133"></a>00133                 <span class="keywordflow">while</span> (carry &amp;&amp; a &lt; ae) {
+<a name="l00134"></a>00134                     addt = *a + 1;
+<a name="l00135"></a>00135                     *a++ = <span class="keyword">static_cast&lt;</span>digit_t<span class="keyword">&gt;</span>(addt);
+<a name="l00136"></a>00136                     <span class="keywordflow">if</span> (addt &lt; digit_overflowbit) <span class="keywordflow">break</span>;
+<a name="l00137"></a>00137                 }
+<a name="l00138"></a>00138             }
+<a name="l00139"></a>00139         }
+<a name="l00140"></a>00140     }
+<a name="l00141"></a>00141 
+<a name="l00142"></a>00142     <span class="comment">// No need to change length</span>
+<a name="l00143"></a>00143     target.negative = (n.negative != by.negative);
+<a name="l00144"></a>00144     target.trim();
+<a name="l00145"></a>00145     <span class="keywordflow">return</span> target;
+<a name="l00146"></a>00146 }
+<a name="l00147"></a>00147 
+<a name="l00148"></a>00148 BOOST_XINT_RAWINT_TPL
+<a name="l00149"></a>00149 BOOST_XINT_RAWINT&amp; BOOST_XINT_RAWINT::operator*=(<span class="keyword">const</span> BOOST_XINT_RAWINT by) {
+<a name="l00150"></a>00150     *<span class="keyword">this</span> = multiply(*<span class="keyword">this</span>, by);
+<a name="l00151"></a>00151     <span class="keywordflow">return</span> *<span class="keyword">this</span>;
+<a name="l00152"></a>00152 }
+<a name="l00153"></a>00153 
+<a name="l00154"></a>00154 BOOST_XINT_RAWINT_TPL
+<a name="l00155"></a>00155 BOOST_XINT_RAWINT <a class="code" href="namespaceboost_1_1xint.html#a69c9fa493989cc96676a007f58031455" title="Calculate the product of two integers.">operator*</a>(<span class="keyword">const</span> BOOST_XINT_RAWINT n1, <span class="keyword">const</span> BOOST_XINT_RAWINT
+<a name="l00156"></a>00156     n2)
+<a name="l00157"></a>00157 {
+<a name="l00158"></a>00158     <span class="keywordflow">return</span> multiply(n1, n2);
+<a name="l00159"></a>00159 }
+<a name="l00160"></a>00160 
+<a name="l00161"></a>00161 } <span class="comment">// namespace detail</span>
+<a name="l00162"></a>00162 } <span class="comment">// namespace xint</span>
+<a name="l00163"></a>00163 } <span class="comment">// namespace boost</span>
+<a name="l00165"></a>00165 <span class="comment"></span>
+<a name="l00166"></a>00166 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_MULTIPLY_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 00:01:46 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 12:31:58 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

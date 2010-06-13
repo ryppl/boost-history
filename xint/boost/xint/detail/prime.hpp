@@ -17,19 +17,15 @@
     This file will be included by the library itself when needed.
 */
 
-#if defined(BOOST_XINT_COMPILED_LIB) || defined(BOOST_XINT_FROM_HEADER)
-
-#if defined(BOOST_XINT_COMPILED_LIB)
-    #include "internals.hpp"
-    #include "../random.hpp"
-#endif // defined(BOOST_XINT_COMPILED_LIB)
+#ifndef BOOST_INCLUDED_XINT_PRIME_HPP
+#define BOOST_INCLUDED_XINT_PRIME_HPP
 
 //! @cond detail
 namespace boost {
 namespace xint {
 namespace detail {
 
-BOOST_XINT_INLINE std::vector<int> sieveOfEratosthenes(int upTo) {
+inline std::vector<int> sieveOfEratosthenes(int upTo) {
     std::vector<int> sieve;
     sieve.reserve(upTo);
 
@@ -56,25 +52,26 @@ BOOST_XINT_INLINE std::vector<int> sieveOfEratosthenes(int upTo) {
 }
 
 // The Miller-Rabin Probabilistic Test of Primality
-BOOST_XINT_INLINE int isProbablePrimeBaseB(const data_t n, const data_t b,
+BOOST_XINT_RAWINT_TPL
+int isProbablePrimeBaseB(const BOOST_XINT_RAWINT n, const BOOST_XINT_RAWINT b,
     callback_t callback)
 {
-    const data_t one(n.new_holder(), 1), nMinus1(n - one);
+    const BOOST_XINT_RAWINT one(1), nMinus1(n - one);
 
     // Find r and a satisfying: n - 1 = 2^a * r, r odd
-    data_t r(nMinus1);
+    BOOST_XINT_RAWINT r(nMinus1);
     unsigned long a = 0;
     while (r.is_even()) { r >>= 1; ++a; }
 
     // We check the congruence class of b^((2^i)r) % n for each i
     // from 0 to a - 1. If any one is correct, then n passes.
     // Otherwise, n fails.
-    data_t test(n.new_holder());
-    powmod(test, b, r, n);
-    if (test == one || test == nMinus1) return 1; // Better than 3/4 chance it's prime
+    BOOST_XINT_RAWINT test = powmod(b, r, n);
+    if (test == one || test == nMinus1)
+        return 1; // Better than 3/4 chance it's prime
 
     while (a-- > 0) {
-        sqrmod(test, test, n);
+        test = sqrmod(test, n);
         if (test == nMinus1) return 1;
     }
 
@@ -82,14 +79,15 @@ BOOST_XINT_INLINE int isProbablePrimeBaseB(const data_t n, const data_t b,
     return 0;
 }
 
-BOOST_XINT_INLINE int is_prime(const data_t n, callback_t callback) {
-    data_t tmp(n.new_holder(), 2);
+BOOST_XINT_RAWINT_TPL
+int is_prime(const BOOST_XINT_RAWINT n, callback_t callback) {
+    BOOST_XINT_RAWINT tmp(2);
     if (n < tmp) throw exceptions::invalid_argument("xint::is_prime cannot "
         "test numbers below 2");
 
     // First we trial-divide it by the primes below 2000
     static const std::vector<int> low_primes(sieveOfEratosthenes(2000));
-    const data_t zero(n.new_holder());
+    const BOOST_XINT_RAWINT zero;
     std::vector<int>::const_iterator i = low_primes.begin(), ie =
         low_primes.end();
     for (; i != ie; ++i) {
@@ -114,28 +112,31 @@ BOOST_XINT_INLINE int is_prime(const data_t n, callback_t callback) {
     return 1; // Appears to be prime!
 }
 
-BOOST_XINT_INLINE void random_prime(data_t& target, base_random_generator& gen,
-    size_t size_in_bits, callback_t callback)
+BOOST_XINT_RAWINT_TPL
+template <typename GenType>
+BOOST_XINT_RAWINT BOOST_XINT_RAWINT::random_prime(GenType& gen, std::size_t
+    size_in_bits, callback_t callback)
 {
     if (size_in_bits < 2) throw exceptions::invalid_argument("cannot create "
         "prime numbers smaller than two bits");
 
     // Call the callback for the first time
-    if (callback && !callback()) { target.set(0); return; }
+    if (callback && !callback()) return 0;
 
     // If, by rare chance, the number we're testing gets larger than the number
     // of bits requested, we have to start over with a new random number of the
     // proper size.
-    data_t pe(target.new_holder());
+    BOOST_XINT_RAWINT pe;
     pow2(pe, size_in_bits + 1);
 
-    const data_t two(target.new_holder(), 2);
+    const BOOST_XINT_RAWINT two(2);
     while (1) {
-        random_by_size(target, gen, size_in_bits, true, true, false);
+        BOOST_XINT_RAWINT target = random_by_size(gen, size_in_bits, true, true,
+            false);
         while (target < pe) {
             int r = is_prime(target, callback);
-            if (r < 0) { target.set(0); return; }
-            if (r == 1) return;
+            if (r < 0) return 0;
+            if (r == 1) return target;
             target += two;
         }
     }
@@ -146,4 +147,4 @@ BOOST_XINT_INLINE void random_prime(data_t& target, base_random_generator& gen,
 } // namespace boost
 //! @endcond detail
 
-#endif // defined(BOOST_XINT_COMPILED_LIB) || defined(BOOST_XINT_FROM_HEADER)
+#endif // BOOST_INCLUDED_XINT_PRIME_HPP

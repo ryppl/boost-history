@@ -60,13 +60,13 @@
 <a name="l00042"></a>00042 
 <a name="l00043"></a>00043     <span class="keywordtype">bool</span> neg = (!n.is_zero() &amp;&amp; n.negative &amp;&amp; e.is_odd());
 <a name="l00044"></a>00044 
-<a name="l00045"></a>00045     <span class="keywordtype">size_t</span> lastBitCount = 0;
+<a name="l00045"></a>00045     std::size_t lastBitCount = 0;
 <a name="l00046"></a>00046     digit_t ee(e[e.length - 1]);
 <a name="l00047"></a>00047     <span class="keywordflow">while</span> (ee != 0) { ee &gt;&gt;= 1; ++lastBitCount; }
 <a name="l00048"></a>00048 
 <a name="l00049"></a>00049     BOOST_XINT_RAWINT p(n.abs());
 <a name="l00050"></a>00050     target.set(1);
-<a name="l00051"></a>00051     <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> eIndex = 0; eIndex &lt; e.length; ++eIndex) {
+<a name="l00051"></a>00051     <span class="keywordflow">for</span> (std::size_t eIndex = 0; eIndex &lt; e.length; ++eIndex) {
 <a name="l00052"></a>00052         digit_t eee(e[eIndex]);
 <a name="l00053"></a>00053 
 <a name="l00054"></a>00054         <span class="keywordtype">int</span> bitCount(<span class="keywordtype">int</span>(eIndex == e.length - 1 ? lastBitCount :
@@ -81,29 +81,30 @@
 <a name="l00063"></a>00063     target.trim();
 <a name="l00064"></a>00064 }
 <a name="l00065"></a>00065 
-<a name="l00066"></a>00066 BOOST_XINT_RAWINT_TPL <span class="keywordtype">void</span> pow2(BOOST_XINT_RAWINT&amp; target, <span class="keywordtype">size_t</span> exponent) {
-<a name="l00067"></a>00067     target.set(0);
-<a name="l00068"></a>00068     <a class="code" href="namespaceboost_1_1xint.html#ac16087b6d58edabc3b67c94e63e22921" title="Sets a specific bit in an integer to one.">setbit</a>(target, exponent);
-<a name="l00069"></a>00069     target.trim();
-<a name="l00070"></a>00070 }
-<a name="l00071"></a>00071 
-<a name="l00072"></a>00072 BOOST_XINT_RAWINT_TPL <span class="keywordtype">void</span> factorial(BOOST_XINT_RAWINT&amp; target, <span class="keywordtype">size_t</span> n) {
-<a name="l00073"></a>00073     target.set(1);
-<a name="l00074"></a>00074 
-<a name="l00075"></a>00075     BOOST_XINT_RAWINT one(1), nn(n);
-<a name="l00076"></a>00076     <span class="keywordflow">while</span> (nn &gt; one) {
-<a name="l00077"></a>00077         target *= nn;
-<a name="l00078"></a>00078         --nn;
-<a name="l00079"></a>00079     }
-<a name="l00080"></a>00080 }
-<a name="l00081"></a>00081 
-<a name="l00083"></a>00083 } <span class="comment">// namespace detail</span>
-<a name="l00084"></a>00084 } <span class="comment">// namespace xint</span>
-<a name="l00085"></a>00085 } <span class="comment">// namespace boost</span>
-<a name="l00086"></a>00086 
-<a name="l00087"></a>00087 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_POWERS_HPP</span>
+<a name="l00066"></a>00066 BOOST_XINT_RAWINT_TPL <span class="keywordtype">void</span> pow2(BOOST_XINT_RAWINT&amp; target, std::size_t exponent)
+<a name="l00067"></a>00067 {
+<a name="l00068"></a>00068     target.set(0);
+<a name="l00069"></a>00069     <a class="code" href="namespaceboost_1_1xint.html#ac16087b6d58edabc3b67c94e63e22921" title="Sets a specific bit in an integer to one.">setbit</a>(target, exponent);
+<a name="l00070"></a>00070     target.trim();
+<a name="l00071"></a>00071 }
+<a name="l00072"></a>00072 
+<a name="l00073"></a>00073 BOOST_XINT_RAWINT_TPL <span class="keywordtype">void</span> factorial(BOOST_XINT_RAWINT&amp; target, std::size_t n) {
+<a name="l00074"></a>00074     target.set(1);
+<a name="l00075"></a>00075 
+<a name="l00076"></a>00076     BOOST_XINT_RAWINT one(1), nn(n);
+<a name="l00077"></a>00077     <span class="keywordflow">while</span> (nn &gt; one) {
+<a name="l00078"></a>00078         target *= nn;
+<a name="l00079"></a>00079         --nn;
+<a name="l00080"></a>00080     }
+<a name="l00081"></a>00081 }
+<a name="l00082"></a>00082 
+<a name="l00084"></a>00084 } <span class="comment">// namespace detail</span>
+<a name="l00085"></a>00085 } <span class="comment">// namespace xint</span>
+<a name="l00086"></a>00086 } <span class="comment">// namespace boost</span>
+<a name="l00087"></a>00087 
+<a name="l00088"></a>00088 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_POWERS_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 00:01:46 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 12:31:58 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

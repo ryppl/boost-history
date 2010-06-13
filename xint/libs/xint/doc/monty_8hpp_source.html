@@ -48,7 +48,7 @@
 <a name="l00031"></a>00031     <span class="comment">// Using the Dussé and Kalisk simplification</span>
 <a name="l00032"></a>00032     doubledigit_t x = 2, y = 1;
 <a name="l00033"></a>00033     digit_t n0 = n[0];
-<a name="l00034"></a>00034     <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 2; i &lt;= bits_per_digit; ++i, x &lt;&lt;= 1)
+<a name="l00034"></a>00034     <span class="keywordflow">for</span> (std::size_t i = 2; i &lt;= bits_per_digit; ++i, x &lt;&lt;= 1)
 <a name="l00035"></a>00035         <span class="keywordflow">if</span> (x &lt; ((n0 * y) &amp; ((x &lt;&lt; 1) - 1))) y += x;
 <a name="l00036"></a>00036     <span class="keywordflow">return</span> digit_t(x - y);
 <a name="l00037"></a>00037 }
@@ -87,9 +87,9 @@
 <a name="l00078"></a>00078     <span class="comment">// Unstated parameter r is B^L</span>
 <a name="l00079"></a>00079     <span class="comment">// nPrime0 is nPrime mod B, or digit zero of nPrime</span>
 <a name="l00080"></a>00080 
-<a name="l00081"></a>00081     <span class="keyword">const</span> <span class="keywordtype">size_t</span> L(n.length);
+<a name="l00081"></a>00081     <span class="keyword">const</span> std::size_t L(n.length);
 <a name="l00082"></a>00082 
-<a name="l00083"></a>00083     <span class="keywordtype">size_t</span> i = 0;
+<a name="l00083"></a>00083     std::size_t i = 0;
 <a name="l00084"></a>00084     BOOST_XINT_RAWINT t(a * b);
 <a name="l00085"></a>00085 
 <a name="l00086"></a>00086     <span class="keywordflow">do</span> {
@@ -110,7 +110,7 @@
 <a name="l00101"></a>00101 <span class="comment">// the calculations by a small amount, whereas it increases the memory</span>
 <a name="l00102"></a>00102 <span class="comment">// requirements and number of precalculations by an exponential amount. 8</span>
 <a name="l00103"></a>00103 <span class="comment">// provides a good balance.</span>
-<a name="l00104"></a>00104 <span class="keyword">const</span> <span class="keywordtype">size_t</span> cMaxK = 8;
+<a name="l00104"></a>00104 <span class="keyword">const</span> std::size_t cMaxK = 8;
 <a name="l00105"></a>00105 <span class="keyword">typedef</span> boost::uint_t&lt;cMaxK&gt;::fast kbitdigit_t; <span class="comment">// k bits have to fit into it</span>
 <a name="l00106"></a>00106 <span class="keyword">typedef</span> std::vector&lt;kbitdigit_t&gt; vkbitdigit_t;
 <a name="l00107"></a>00107 <span class="preprocessor">#define ddPowerOfTwo(p) (doubledigit_t(1) &lt;&lt; p)</span>
@@ -126,7 +126,7 @@
 <a name="l00117"></a>00117     <span class="keyword">public</span>:
 <a name="l00118"></a>00118     <span class="keyword">typedef</span> std::pair&lt;int, int&gt; value_t;
 <a name="l00119"></a>00119 
-<a name="l00120"></a>00120     <span class="keyword">const</span> value_t&amp; operator[](<span class="keywordtype">size_t</span> x)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> mTable[x]; }
+<a name="l00120"></a>00120     <span class="keyword">const</span> value_t&amp; operator[](std::size_t x)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> mTable[x]; }
 <a name="l00121"></a>00121 
 <a name="l00122"></a>00122     <span class="keyword">static</span> <span class="keyword">const</span> TUTable&amp; <span class="keyword">get</span>() {
 <a name="l00123"></a>00123         <span class="comment">// Construct a singleton instance on demand</span>
@@ -170,13 +170,13 @@
 <a name="l00161"></a>00161 
 <a name="l00162"></a>00162 BOOST_XINT_RAWINT_TPL
 <a name="l00163"></a>00163 std::vector&lt;BOOST_XINT_RAWINT&gt; precalculateOddPowersOfAa(<span class="keyword">const</span> BOOST_XINT_RAWINT
-<a name="l00164"></a>00164     a, <span class="keyword">const</span> BOOST_XINT_RAWINT r, <span class="keyword">const</span> BOOST_XINT_RAWINT n, <span class="keywordtype">size_t</span> k)
+<a name="l00164"></a>00164     a, <span class="keyword">const</span> BOOST_XINT_RAWINT r, <span class="keyword">const</span> BOOST_XINT_RAWINT n, std::size_t k)
 <a name="l00165"></a>00165 {
 <a name="l00166"></a>00166     BOOST_XINT_RAWINT zero, one(1);
 <a name="l00167"></a>00167     BOOST_XINT_RAWINT aa = a * r % n, aSquared = a * a % n;
 <a name="l00168"></a>00168 
 <a name="l00169"></a>00169     std::vector&lt;BOOST_XINT_RAWINT&gt; rval;
-<a name="l00170"></a>00170     rval.reserve(<span class="keywordtype">size_t</span>(ddPowerOfTwo(k)));
+<a name="l00170"></a>00170     rval.reserve(std::size_t(ddPowerOfTwo(k)));
 <a name="l00171"></a>00171     rval.push_back(one);                <span class="comment">// Anything to the zeroth power is one</span>
 <a name="l00172"></a>00172     rval.push_back(aa);                 <span class="comment">// Anything to the first power is itself</span>
 <a name="l00173"></a>00173 
@@ -204,7 +204,7 @@
 <a name="l00195"></a>00195         <span class="stringliteral">&quot;requires an odd modulus&quot;</span>);
 <a name="l00196"></a>00196 
 <a name="l00197"></a>00197     <span class="comment">// Precalculate some values</span>
-<a name="l00198"></a>00198     <span class="keyword">const</span> <span class="keywordtype">size_t</span> k(mostEfficientK(e));
+<a name="l00198"></a>00198     <span class="keyword">const</span> std::size_t k(mostEfficientK(e));
 <a name="l00199"></a>00199     <span class="keyword">const</span> BOOST_XINT_RAWINT r(montgomeryR(n));
 <a name="l00200"></a>00200     <span class="keyword">const</span> digit_t nPrime0(inverse0(n));
 <a name="l00201"></a>00201     <span class="keyword">const</span> std::vector&lt;BOOST_XINT_RAWINT&gt; oddPowersOfAa(
@@ -245,7 +245,7 @@
 <a name="l00236"></a>00236         } <span class="keywordflow">else</span> {
 <a name="l00237"></a>00237             std::pair&lt;int, int&gt; tu = tuTable[i];
 <a name="l00238"></a>00238 
-<a name="l00239"></a>00239             <span class="keywordtype">size_t</span> s = k - tu.first;
+<a name="l00239"></a>00239             std::size_t s = k - tu.first;
 <a name="l00240"></a>00240             <span class="keywordflow">while</span> (s-- &gt; 0) pp = montgomeryMultiplyMod(pp, pp, n, nPrime0);
 <a name="l00241"></a>00241 
 <a name="l00242"></a>00242             pp = montgomeryMultiplyMod(pp, oddPowersOfAa[tu.second], n,
@@ -264,7 +264,7 @@
 <a name="l00256"></a>00256 <span class="comment"></span>
 <a name="l00257"></a>00257 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_MONTY_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 00:01:46 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 12:31:58 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

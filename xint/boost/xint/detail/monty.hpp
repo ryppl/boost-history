@@ -31,7 +31,7 @@ digit_t inverse0(const BOOST_XINT_RAWINT n) {
     // Using the Dussé and Kalisk simplification
     doubledigit_t x = 2, y = 1;
     digit_t n0 = n[0];
-    for (size_t i = 2; i <= bits_per_digit; ++i, x <<= 1)
+    for (std::size_t i = 2; i <= bits_per_digit; ++i, x <<= 1)
         if (x < ((n0 * y) & ((x << 1) - 1))) y += x;
     return digit_t(x - y);
 }
@@ -78,9 +78,9 @@ BOOST_XINT_RAWINT montgomeryMultiplyMod(const BOOST_XINT_RAWINT a, const
     // Unstated parameter r is B^L
     // nPrime0 is nPrime mod B, or digit zero of nPrime
 
-    const size_t L(n.length);
+    const std::size_t L(n.length);
 
-    size_t i = 0;
+    std::size_t i = 0;
     BOOST_XINT_RAWINT t(a * b);
 
     do {
@@ -101,7 +101,7 @@ BOOST_XINT_RAWINT montgomeryMultiplyMod(const BOOST_XINT_RAWINT a, const
 // the calculations by a small amount, whereas it increases the memory
 // requirements and number of precalculations by an exponential amount. 8
 // provides a good balance.
-const size_t cMaxK = 8;
+const std::size_t cMaxK = 8;
 typedef boost::uint_t<cMaxK>::fast kbitdigit_t; // k bits have to fit into it
 typedef std::vector<kbitdigit_t> vkbitdigit_t;
 #define ddPowerOfTwo(p) (doubledigit_t(1) << p)
@@ -117,7 +117,7 @@ class TUTable {
     public:
     typedef std::pair<int, int> value_t;
 
-    const value_t& operator[](size_t x) const { return mTable[x]; }
+    const value_t& operator[](std::size_t x) const { return mTable[x]; }
 
     static const TUTable& get() {
         // Construct a singleton instance on demand
@@ -161,13 +161,13 @@ int mostEfficientK(const BOOST_XINT_RAWINT e) {
 
 BOOST_XINT_RAWINT_TPL
 std::vector<BOOST_XINT_RAWINT> precalculateOddPowersOfAa(const BOOST_XINT_RAWINT
-    a, const BOOST_XINT_RAWINT r, const BOOST_XINT_RAWINT n, size_t k)
+    a, const BOOST_XINT_RAWINT r, const BOOST_XINT_RAWINT n, std::size_t k)
 {
     BOOST_XINT_RAWINT zero, one(1);
     BOOST_XINT_RAWINT aa = a * r % n, aSquared = a * a % n;
 
     std::vector<BOOST_XINT_RAWINT> rval;
-    rval.reserve(size_t(ddPowerOfTwo(k)));
+    rval.reserve(std::size_t(ddPowerOfTwo(k)));
     rval.push_back(one);                // Anything to the zeroth power is one
     rval.push_back(aa);                 // Anything to the first power is itself
 
@@ -195,7 +195,7 @@ BOOST_XINT_RAWINT montgomeryPowerMod(const BOOST_XINT_RAWINT a, const
         "requires an odd modulus");
 
     // Precalculate some values
-    const size_t k(mostEfficientK(e));
+    const std::size_t k(mostEfficientK(e));
     const BOOST_XINT_RAWINT r(montgomeryR(n));
     const digit_t nPrime0(inverse0(n));
     const std::vector<BOOST_XINT_RAWINT> oddPowersOfAa(
@@ -236,7 +236,7 @@ BOOST_XINT_RAWINT montgomeryPowerMod(const BOOST_XINT_RAWINT a, const
         } else {
             std::pair<int, int> tu = tuTable[i];
 
-            size_t s = k - tu.first;
+            std::size_t s = k - tu.first;
             while (s-- > 0) pp = montgomeryMultiplyMod(pp, pp, n, nPrime0);
 
             pp = montgomeryMultiplyMod(pp, oddPowersOfAa[tu.second], n,

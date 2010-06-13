@@ -40,14 +40,14 @@ BOOST_XINT_RAWINT BOOST_XINT_RAWINT::random_by_size(GenType& _gen, bitsize_t
 
     // Stick them into an integer
     BOOST_XINT_RAWINT target;
-    size_t d = bits_to_digits(bits);
+    std::size_t d = bits_to_digits(bits);
     digit_t *tdigits = target.digits(d, realloc::ignore);
     target.length = (std::min)(d + 1, target.max_length());
     digit_t *pp = tdigits, *ppe = pp + target.length;
     while (pp < ppe) *pp++ = static_cast<digit_t>(bitqueue.pop(bits_per_digit));
 
     // Trim it to the proper length
-    size_t index = (bits / bits_per_digit);
+    std::size_t index = (bits / bits_per_digit);
     digit_t mask = (digit_t(1) << (bits % bits_per_digit)) - 1;
     if (mask == 0) { mask = digit_mask; --index; }
     target.length = index + 1;

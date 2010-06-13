@@ -62,7 +62,7 @@ inline std::basic_istream<charT,traits>& operator>>(std::basic_istream<charT,
     int oct=(in.flags() & std::ios::oct) ? 1 : 0;
     int count=hex+dec+oct;
 
-    size_t base=autobase;
+    std::size_t base=autobase;
     if (count == 1) {
         if (hex) base = 16;
         else if (oct) base = 8;

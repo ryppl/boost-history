@@ -37,10 +37,10 @@ class allocator_t {
     BOOST_STATIC_ASSERT(sizeof(typename Alloc::value_type) == sizeof(digit_t));
 
     public:
-    static magnitude_t *alloc(size_t size, bool readonly = false);
-    static magnitude_t *realloc_and_uniquify(magnitude_t *old, size_t newsize
-        = 0, realloc::strategy strategy = realloc::copy);
-    static magnitude_t *duplicate(magnitude_t *source, size_t newsize = 0);
+    static magnitude_t *alloc(std::size_t size, bool readonly = false);
+    static magnitude_t *realloc_and_uniquify(magnitude_t *old, std::size_t
+        newsize = 0, realloc::strategy strategy = realloc::copy);
+    static magnitude_t *duplicate(magnitude_t *source, std::size_t newsize = 0);
     static void dealloc(magnitude_t *p);
 
     static void attach(magnitude_t *p);
@@ -48,17 +48,17 @@ class allocator_t {
 
     private:
     static Alloc allocator;
-    static const size_t fixed_length;
-    static const size_t magnitude_datasize;
+    static const std::size_t fixed_length;
+    static const std::size_t magnitude_datasize;
 };
 
 template <bitsize_t Bits, bool Secure, class Alloc>
     Alloc allocator_t<Bits, Secure, Alloc>::allocator;
 template <bitsize_t Bits, bool Secure, class Alloc>
-    const size_t allocator_t<Bits, Secure, Alloc>::fixed_length = (Bits +
+    const std::size_t allocator_t<Bits, Secure, Alloc>::fixed_length = (Bits +
     bits_per_digit - 1) / bits_per_digit;
 template <bitsize_t Bits, bool Secure, class Alloc>
-    const size_t allocator_t<Bits, Secure, Alloc>::magnitude_datasize =
+    const std::size_t allocator_t<Bits, Secure, Alloc>::magnitude_datasize =
     (sizeof(magnitude_t) + sizeof(digit_t) - 1) / sizeof(digit_t);
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -73,13 +73,13 @@ class fixedlength_t {
     }
 
     private:
-    static const size_t last_digit;
+    static const std::size_t last_digit;
     static const digit_t mask;
 };
 
 template <bitsize_t Bits, bitsize_t Modded>
-const size_t fixedlength_t<Bits, Modded>::last_digit = ((Bits + bits_per_digit -
-    1) / bits_per_digit) - 1;
+const std::size_t fixedlength_t<Bits, Modded>::last_digit = ((Bits +
+    bits_per_digit - 1) / bits_per_digit) - 1;
 template <bitsize_t Bits, bitsize_t Modded>
 const digit_t fixedlength_t<Bits, Modded>::mask = digit_t((doubledigit_t(1) <<
     (Bits % bits_per_digit)) - 1);
@@ -94,11 +94,12 @@ class fixedlength_t<Bits, 0> {
 // Function Definitions
 
 template <bitsize_t Bits, bool Secure, class Alloc>
-magnitude_t *allocator_t<Bits, Secure, Alloc>::alloc(size_t size, bool readonly)
+magnitude_t *allocator_t<Bits, Secure, Alloc>::alloc(std::size_t size, bool
+    readonly)
 {
     if (fixed_length) size = fixed_length;
     else if (size < minimum_digits) size = minimum_digits;
-    const size_t count = size - minimum_digits + magnitude_datasize;
+    const std::size_t count = size - minimum_digits + magnitude_datasize;
 
     digit_t *storage = 0;
     try {
@@ -118,7 +119,7 @@ magnitude_t *allocator_t<Bits, Secure, Alloc>::alloc(size_t size, bool readonly)
 
 template <bitsize_t Bits, bool Secure, class Alloc>
 magnitude_t *allocator_t<Bits, Secure, Alloc>::realloc_and_uniquify(magnitude_t
-    *old, size_t newsize, realloc::strategy strategy)
+    *old, std::size_t newsize, realloc::strategy strategy)
 {
     if (fixed_length) {
         newsize = fixed_length;
@@ -157,7 +158,7 @@ magnitude_t *allocator_t<Bits, Secure, Alloc>::realloc_and_uniquify(magnitude_t
 
 template <bitsize_t Bits, bool Secure, class Alloc>
 magnitude_t *allocator_t<Bits, Secure, Alloc>::duplicate(magnitude_t *source,
-    size_t newsize)
+    std::size_t newsize)
 {
     attach(source);
     return realloc_and_uniquify(source, newsize, realloc::copy);
@@ -167,7 +168,8 @@ template <bitsize_t Bits, bool Secure, class Alloc>
 void allocator_t<Bits, Secure, Alloc>::dealloc(magnitude_t *data) {
     if (data == 0) return;
 
-    const size_t len = (data->max_length + magnitude_datasize - minimum_digits);
+    const std::size_t len = (data->max_length + magnitude_datasize -
+        minimum_digits);
 
     // Since the data was initialized with placement-new, we have to manually
     // call the destructor.

@@ -31,7 +31,7 @@
 #include <vector>
 #include <queue>
 #include <limits>
-#include <cstddef> // for size_t
+#include <cstddef> // for std::size_t
 #include <cassert>
 #include <sstream>
 #include <fstream>
@@ -78,10 +78,10 @@ typedef std::vector<unsigned char> binary_t;
 
 //! \brief A value that can be used for the 'base' parameter of the
 //!        string-to-integer constructor functions.
-const size_t autobase = (std::numeric_limits<size_t>::max)();
+const std::size_t autobase = (std::numeric_limits<size_t>::max)();
 
 //! \brief This makes it easier to tell when an item is measured in bits.
-typedef size_t bitsize_t;
+typedef std::size_t bitsize_t;
 
 //! \brief Holds the results from a division-with-remainder call.
 template <class T>
@@ -128,9 +128,10 @@ typedef boost::uint_t<std::numeric_limits<doubledigit_t>::digits / 2>::fast
 
 //! \name Some constants used by the library.
 //!@{
-const size_t        minimum_digits    = 1;
-const size_t        bits_per_digit    = std::numeric_limits<digit_t>::digits;
-const size_t        digits_in_uintmax =
+const std::size_t        minimum_digits    = 1;
+const std::size_t        bits_per_digit    =
+    std::numeric_limits<digit_t>::digits;
+const std::size_t        digits_in_uintmax =
     (std::numeric_limits<boost::uintmax_t>::digits + bits_per_digit - 1) /
     bits_per_digit;
 const digit_t       digit_hibit       = (digit_t(1) << (bits_per_digit-1));
@@ -145,25 +146,25 @@ const digit_t       digit_mask        = digit_t(digit_overflowbit-1);
 //! up if you're not familiar with it.
 struct magnitude_t {
     private:
-    size_t copy_count;
+    std::size_t copy_count;
 
     public:
     const bool readonly;
-    const size_t max_length;
+    const std::size_t max_length;
     digit_t digits[minimum_digits]; // Must be last data item, see "struct hack"
 
-    magnitude_t(size_t max_len = minimum_digits, bool ro = false):
+    magnitude_t(std::size_t max_len = minimum_digits, bool ro = false):
         copy_count(0), readonly(ro), max_length(max_len) { }
-    magnitude_t(size_t max_len, bool ro, digit_t init): copy_count(0),
+    magnitude_t(std::size_t max_len, bool ro, digit_t init): copy_count(0),
         readonly(ro), max_length(max_len) { digits[0] = init; }
-    size_t copies() const { return copy_count; }
+    std::size_t copies() const { return copy_count; }
 
     void inc() { ++copy_count; }
     bool dec() { return (--copy_count == 0); }
 };
 
-inline size_t bits_to_digits(size_t bits) { return (bits + bits_per_digit - 1) /
-    bits_per_digit; }
+inline std::size_t bits_to_digits(std::size_t bits) { return (bits +
+    bits_per_digit - 1) / bits_per_digit; }
 
 //! @endcond detail
 } // namespace detail

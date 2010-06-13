@@ -67,26 +67,26 @@ namespace xint {
 namespace detail {
 //! @cond detail
 
-inline size_t log10_bits(size_t bits) {
+inline std::size_t log10_bits(std::size_t bits) {
     // large_step and count_per_large_step are based on a minimum-32-bit integer
     assert(std::numeric_limits<boost::intmax_t>::digits >= 32);
 
     typedef raw_integer_t<0, false, std::allocator<digit_t> > T;
     const T large_step(1000000000), small_step(10);
-    const size_t count_per_large_step = 9, count_per_small_step = 1;
+    const std::size_t count_per_large_step = 9, count_per_small_step = 1;
 
     T n;
     pow2(n, bits);
     --n;
 
-    size_t r = 0;
+    std::size_t r = 0;
     while (n >= large_step) { n /= large_step; r += count_per_large_step; }
     while (n >= small_step) { n /= small_step; r += count_per_small_step; }
     return r;
 }
 
 template <typename charT>
-std::basic_string<charT> nan_text() {
+const std::basic_string<charT>& nan_text() {
     static std::basic_string<charT> r;
     if (r.empty()) {
         std::basic_ostringstream<charT> out;

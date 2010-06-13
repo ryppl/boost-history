@@ -45,7 +45,7 @@
 <a name="l00027"></a>00027 
 <a name="l00028"></a>00028 BOOST_XINT_RAWINT_TPL
 <a name="l00029"></a>00029 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> GenType&gt;
-<a name="l00030"></a>00030 BOOST_XINT_RAWINT BOOST_XINT_RAWINT::random_by_size(GenType&amp; _gen, <a class="code" href="namespaceboost_1_1xint.html#ab256530d9916860983abdb6f0c6fad63" title="This makes it easier to tell when an item is measured in bits.">bitsize_t</a>
+<a name="l00030"></a>00030 BOOST_XINT_RAWINT BOOST_XINT_RAWINT::random_by_size(GenType&amp; _gen, <a class="code" href="namespaceboost_1_1xint.html#ae9f6d103df04ad19a841ed3f8b94a764" title="This makes it easier to tell when an item is measured in bits.">bitsize_t</a>
 <a name="l00031"></a>00031     bits, <span class="keywordtype">bool</span> high_bit_on, <span class="keywordtype">bool</span> low_bit_on, <span class="keywordtype">bool</span> can_be_negative)
 <a name="l00032"></a>00032 {
 <a name="l00033"></a>00033     <span class="keywordflow">if</span> (bits == 0) <span class="keywordflow">return</span> 0;
@@ -58,14 +58,14 @@
 <a name="l00040"></a>00040 
 <a name="l00041"></a>00041     <span class="comment">// Stick them into an integer</span>
 <a name="l00042"></a>00042     BOOST_XINT_RAWINT target;
-<a name="l00043"></a>00043     <span class="keywordtype">size_t</span> d = bits_to_digits(bits);
+<a name="l00043"></a>00043     std::size_t d = bits_to_digits(bits);
 <a name="l00044"></a>00044     digit_t *tdigits = target.digits(d, realloc::ignore);
 <a name="l00045"></a>00045     target.length = (std::min)(d + 1, target.max_length());
 <a name="l00046"></a>00046     digit_t *pp = tdigits, *ppe = pp + target.length;
 <a name="l00047"></a>00047     <span class="keywordflow">while</span> (pp &lt; ppe) *pp++ = <span class="keyword">static_cast&lt;</span>digit_t<span class="keyword">&gt;</span>(bitqueue.pop(bits_per_digit));
 <a name="l00048"></a>00048 
 <a name="l00049"></a>00049     <span class="comment">// Trim it to the proper length</span>
-<a name="l00050"></a>00050     <span class="keywordtype">size_t</span> index = (bits / bits_per_digit);
+<a name="l00050"></a>00050     std::size_t index = (bits / bits_per_digit);
 <a name="l00051"></a>00051     digit_t mask = (digit_t(1) &lt;&lt; (bits % bits_per_digit)) - 1;
 <a name="l00052"></a>00052     <span class="keywordflow">if</span> (mask == 0) { mask = digit_mask; --index; }
 <a name="l00053"></a>00053     target.length = index + 1;
@@ -86,7 +86,7 @@
 <a name="l00069"></a>00069 
 <a name="l00070"></a>00070 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_RANDOM_BY_SIZE_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 00:01:46 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 12:31:58 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

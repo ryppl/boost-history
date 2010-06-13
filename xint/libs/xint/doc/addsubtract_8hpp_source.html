@@ -73,7 +73,7 @@
 <a name="l00055"></a>00055         }
 <a name="l00056"></a>00056     }
 <a name="l00057"></a>00057 
-<a name="l00058"></a>00058     n.length = (std::max)(n.length, <span class="keywordtype">size_t</span>(t - ndig));
+<a name="l00058"></a>00058     n.length = (std::max)(n.length, std::size_t(t - ndig));
 <a name="l00059"></a>00059     n.trim();
 <a name="l00060"></a>00060 }
 <a name="l00061"></a>00061 
@@ -100,7 +100,7 @@
 <a name="l00082"></a>00082             }
 <a name="l00083"></a>00083         }
 <a name="l00084"></a>00084 
-<a name="l00085"></a>00085         n.length = size_t(t - ndig);
+<a name="l00085"></a>00085         n.length = std::size_t(t - ndig);
 <a name="l00086"></a>00086         n.negative = !n.negative;
 <a name="l00087"></a>00087     } <span class="keywordflow">else</span> {
 <a name="l00088"></a>00088         <span class="keywordflow">while</span> (p != pe) {
@@ -120,7 +120,7 @@
 <a name="l00102"></a>00102                 <span class="keywordflow">else</span> { *t++ -= 1; borrow = 0; <span class="keywordflow">break</span>; }
 <a name="l00103"></a>00103             }
 <a name="l00104"></a>00104         }
-<a name="l00105"></a>00105         n.length = (std::max)(n.length, <span class="keywordtype">size_t</span>(t - ndig));
+<a name="l00105"></a>00105         n.length = (std::max)(n.length, std::size_t(t - ndig));
 <a name="l00106"></a>00106     }
 <a name="l00107"></a>00107 
 <a name="l00108"></a>00108     assert(borrow == 0);
@@ -134,7 +134,7 @@
 <a name="l00116"></a>00116     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (!absolute_value &amp;&amp; n.negative) {
 <a name="l00117"></a>00117         sub_decrement(n, <span class="keyword">true</span>);
 <a name="l00118"></a>00118     } <span class="keywordflow">else</span> {
-<a name="l00119"></a>00119         <span class="keywordtype">size_t</span> overflow = (n.digits()[n.length - 1] == digit_mask ? 1 : 0);
+<a name="l00119"></a>00119         std::size_t overflow = (n.digits()[n.length - 1] == digit_mask ? 1 : 0);
 <a name="l00120"></a>00120         digit_t *d = n.digits(n.length + overflow, realloc::extend), *p = d, *pe
 <a name="l00121"></a>00121             = p + n.length;
 <a name="l00122"></a>00122         <span class="keywordflow">while</span> (p &lt; pe) {
@@ -242,7 +242,7 @@
 <a name="l00225"></a>00225 <span class="comment"></span>
 <a name="l00226"></a>00226 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_ADDSUBTRACT_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 00:01:46 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 12:31:58 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

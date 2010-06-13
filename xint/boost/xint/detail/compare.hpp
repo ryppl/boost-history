@@ -17,11 +17,8 @@
     This file will be included by the library itself when needed.
 */
 
-#if defined(BOOST_XINT_COMPILED_LIB) || defined(BOOST_XINT_FROM_HEADER)
-
-#if defined(BOOST_XINT_COMPILED_LIB)
-    #include "internals.hpp"
-#endif // defined(BOOST_XINT_COMPILED_LIB)
+#ifndef BOOST_INCLUDED_XINT_COMPARE_HPP
+#define BOOST_INCLUDED_XINT_COMPARE_HPP
 
 //! @cond detail
 namespace boost {
@@ -29,8 +26,8 @@ namespace xint {
 namespace detail {
 
 //! Compares equal-length sets of digits.
-BOOST_XINT_INLINE int compare(const digit_t *b1, const digit_t *b2, size_t len,
-    bool equal_only)
+inline int compare(const digit_t *b1, const digit_t *b2, std::size_t len, bool
+    equal_only)
 {
     const detail::digit_t *b1i = b1 + len, *b2i = b2 + len;
     if (equal_only) {
@@ -47,7 +44,9 @@ BOOST_XINT_INLINE int compare(const digit_t *b1, const digit_t *b2, size_t len,
 }
 
 //! The full-fat comparison function.
-BOOST_XINT_INLINE int compare(const data_t b1, const data_t b2, bool ignoresign)
+BOOST_XINT_RAWINT_TPL
+int compare(const BOOST_XINT_RAWINT b1, const BOOST_XINT_RAWINT b2, bool
+    ignoresign = false)
 {
     bool invert_answer=false;
     if (!ignoresign) {
@@ -68,12 +67,12 @@ BOOST_XINT_INLINE int compare(const data_t b1, const data_t b2, bool ignoresign)
     } else {
         answer = compare(b1.digits(), b2.digits(), b1.length, false);
     }
-
     return (invert_answer ? -answer : answer);
 }
 
 //! Just compares for equality, returns non-zero if different.
-BOOST_XINT_INLINE int compare_eq(const data_t b1, const data_t b2) {
+BOOST_XINT_RAWINT_TPL
+int compare_eq(const BOOST_XINT_RAWINT b1, const BOOST_XINT_RAWINT b2) {
     if (b1.negative != b2.negative) {
         // Have to test for is_zero here, because in some rare cases, negative
         // zero is allowed, and negative zero is equal to zero.
@@ -83,17 +82,23 @@ BOOST_XINT_INLINE int compare_eq(const data_t b1, const data_t b2) {
     return compare(b1.digits(), b2.digits(), b1.length, true);
 }
 
-BOOST_XINT_INLINE bool operator==(const data_t num1, const data_t num2) {
+BOOST_XINT_RAWINT_TPL
+bool operator==(const BOOST_XINT_RAWINT num1, const BOOST_XINT_RAWINT num2) {
     return compare_eq(num1, num2)==0; }
-BOOST_XINT_INLINE bool operator!=(const data_t num1, const data_t num2) {
+BOOST_XINT_RAWINT_TPL
+bool operator!=(const BOOST_XINT_RAWINT num1, const BOOST_XINT_RAWINT num2) {
     return compare_eq(num1, num2)!=0; }
-BOOST_XINT_INLINE bool operator<(const data_t num1, const data_t num2) {
+BOOST_XINT_RAWINT_TPL
+bool operator<(const BOOST_XINT_RAWINT num1, const BOOST_XINT_RAWINT num2) {
     return compare(num1, num2)<0; }
-BOOST_XINT_INLINE bool operator>(const data_t num1, const data_t num2) {
+BOOST_XINT_RAWINT_TPL
+bool operator>(const BOOST_XINT_RAWINT num1, const BOOST_XINT_RAWINT num2) {
     return compare(num1, num2)>0; }
-BOOST_XINT_INLINE bool operator<=(const data_t num1, const data_t num2) {
+BOOST_XINT_RAWINT_TPL
+bool operator<=(const BOOST_XINT_RAWINT num1, const BOOST_XINT_RAWINT num2) {
     return compare(num1, num2)<=0; }
-BOOST_XINT_INLINE bool operator>=(const data_t num1, const data_t num2) {
+BOOST_XINT_RAWINT_TPL
+bool operator>=(const BOOST_XINT_RAWINT num1, const BOOST_XINT_RAWINT num2) {
     return compare(num1, num2)>=0; }
 
 } // namespace detail
@@ -101,4 +106,4 @@ BOOST_XINT_INLINE bool operator>=(const data_t num1, const data_t num2) {
 } // namespace boost
 //! @endcond detail
 
-#endif // defined(BOOST_XINT_COMPILED_LIB) || defined(BOOST_XINT_FROM_HEADER)
+#endif // BOOST_INCLUDED_XINT_COMPARE_HPP

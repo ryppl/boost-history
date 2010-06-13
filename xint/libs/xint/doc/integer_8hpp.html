@@ -206,11 +206,14 @@ integer_t::factorial </dd></dl>
 <tr><td class="memTemplItemLeft" align="right" valign="top">xint::binary_t&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a66514eef6594409cda1dfad652e2dc40">boost::xint::to_binary</a> (const integer_t n, bitsize_t bits=0)</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a binary representation of an integer.  <a href="#a66514eef6594409cda1dfad652e2dc40"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">std::string&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a34f1da34b7c169828bf55154f3cbccf2">boost::xint::to_string</a> (const integer_t n, size_t base=10, bool uppercase=false)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a string representation of the specified integer.  <a href="#a34f1da34b7c169828bf55154f3cbccf2"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">std::string&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a92cfd4119fbf9eeb0a503d4e0dbe553c">boost::xint::to_string</a> (const integer_t n, std::size_t base=10, bool uppercase=false)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A shorthand function that calls <a class="el" href="namespaceboost_1_1xint.html#a7621dd91fa7eb64856241f8cafd1ef7e">to_stringtype&lt;char&gt;</a>.  <a href="#a92cfd4119fbf9eeb0a503d4e0dbe553c"></a><br/></td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename charT , class A0 , class A1 , class A2 , class A3 , class A4 &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">std::basic_string&lt; charT &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a7621dd91fa7eb64856241f8cafd1ef7e">boost::xint::to_stringtype</a> (const integer_t n, std::size_t base=10, bool uppercase=false)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a string representation of the specified integer.  <a href="#a7621dd91fa7eb64856241f8cafd1ef7e"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">std::wstring&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ab1c726c14c688957565bb5d2e8478c0b">boost::xint::to_wstring</a> (const integer_t n, size_t base=10, bool uppercase=false)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a wide-character string representation of the specified integer.  <a href="#ab1c726c14c688957565bb5d2e8478c0b"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">std::wstring&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a2493d0acb308a3ec0abd7326d9bc6a27">boost::xint::to_wstring</a> (const integer_t n, std::size_t base=10, bool uppercase=false)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A shorthand function that calls <a class="el" href="namespaceboost_1_1xint.html#a7621dd91fa7eb64856241f8cafd1ef7e">to_stringtype&lt;wchar_t&gt;</a>.  <a href="#a2493d0acb308a3ec0abd7326d9bc6a27"></a><br/></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>Declares the arbitrary-length integer type. </p>
@@ -265,7 +268,7 @@ integer_t::factorial </dd></dl>
 </pre></div>
 <p>Allows for comparisons between integer_t types and other integral values. </p>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02332">2332</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02322">2322</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -287,7 +290,7 @@ integer_t::factorial </dd></dl>
 
 <p>Allows for operations between integer_t types and other integral values. </p>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02368">2368</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02358">2358</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -367,7 +370,7 @@ integer_t::factorial </dd></dl>
 </div>
 </div>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 00:01:46 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 12:31:58 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

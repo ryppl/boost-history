@@ -30,7 +30,7 @@ BOOST_XINT_RAWINT_TPL
 void divide_by_single_digit(BOOST_XINT_RAWINT& qtarget, BOOST_XINT_RAWINT&
     rtarget, const BOOST_XINT_RAWINT d1, digit_t d2)
 {
-    size_t d1len = d1.length;
+    std::size_t d1len = d1.length;
     const digit_t *d1digits = d1.digits();
 
     doubledigit_t a = 0;
@@ -68,8 +68,8 @@ void sub_divide2(BOOST_XINT_RAWINT& qtarget, BOOST_XINT_RAWINT& rtarget, const
 
     const digit_t *byDigits = d2.digits();
 
-    size_t n = d2.length, m = d1.length - n;
-    size_t i = m + n, j = m;
+    std::size_t n = d2.length, m = d1.length - n;
+    std::size_t i = m + n, j = m;
 
     digit_t *qdigits = qtarget.digits(j + 1, realloc::ignore);
     qtarget.length = (std::min)(j + 1, qtarget.max_length());

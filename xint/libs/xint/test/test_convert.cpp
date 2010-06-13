@@ -104,6 +104,13 @@ BOOST_AUTO_TEST_CASE(test_string_conversions) {
     }
 }
 
+BOOST_AUTO_TEST_CASE(test_strtol_like_conversion) {
+    const char src[] = "12345 67890", *c = src;
+    integer n1(c, c, 10), n2(c, c, 10);
+    BOOST_CHECK_EQUAL(n1, 12345);
+    BOOST_CHECK_EQUAL(n2, 67890);
+}
+
 BOOST_AUTO_TEST_CASE(test_wstring_conversions) {
     std::wstring nStr(L"2345678900987654321");
     integer n(nStr);

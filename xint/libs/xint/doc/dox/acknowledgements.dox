@@ -43,7 +43,7 @@ variable-length and fixed-length integers.
 effectively with multiple \c bool parameters.
 - Christopher Jefferson, for sharing the best way to support \c
 BOOST_NO_EXCEPTIONS.
-- Adam Merz, for suggesting wstring/wchar_t support.
+- Adam Merz, for his advice on proper wstring/wchar_t support.
 
 And the other Boost development list members who joined the discussion:
 

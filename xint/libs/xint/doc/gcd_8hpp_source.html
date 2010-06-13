@@ -92,7 +92,7 @@
 <a name="l00074"></a>00074     } <span class="keywordflow">else</span> {
 <a name="l00075"></a>00075         BOOST_XINT_RAWINT n(num1, <span class="keyword">false</span>), m(num2, <span class="keyword">false</span>);
 <a name="l00076"></a>00076 
-<a name="l00077"></a>00077         <span class="keywordtype">size_t</span> k = 0;
+<a name="l00077"></a>00077         std::size_t k = 0;
 <a name="l00078"></a>00078         <span class="keywordflow">if</span> (!<a class="code" href="namespaceboost_1_1xint.html#ae44f7918320a37538c5fa8e4622cbfba" title="Queries the value of a particular bit in an integer.">getbit</a>(n, k) &amp;&amp; !<a class="code" href="namespaceboost_1_1xint.html#ae44f7918320a37538c5fa8e4622cbfba" title="Queries the value of a particular bit in an integer.">getbit</a>(m, k)) ++k;
 <a name="l00079"></a>00079         <span class="keywordflow">if</span> (k != 0) { n &gt;&gt;= k; m &gt;&gt;= k; }
 <a name="l00080"></a>00080 
@@ -157,7 +157,7 @@
 <a name="l00142"></a>00142 <span class="comment"></span>
 <a name="l00143"></a>00143 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_GCD_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 00:01:46 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 12:31:58 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

@@ -25,14 +25,14 @@ namespace xint {
 namespace detail {
 //! @cond detail
 
-inline size_t log2_base(boost::uintmax_t n, size_t maxbits) {
+inline std::size_t log2_base(boost::uintmax_t n, std::size_t maxbits) {
     boost::uintmax_t lo = 0, hi = maxbits;
     while (lo < hi) {
         boost::uintmax_t s = lo + ((hi - lo) >> 1);
         if (n >= (boost::uintmax_t(1) << s)) lo = s + 1;
         else hi = s;
     }
-    return size_t(lo);
+    return std::size_t(lo);
 }
 
 template <typename T>
@@ -60,7 +60,7 @@ size_t log2(const T n,
 
 BOOST_XINT_RAWINT_TPL
 size_t log2(const BOOST_XINT_RAWINT n) {
-    size_t r = bits_per_digit * (n.length - 1);
+    std::size_t r = bits_per_digit * (n.length - 1);
     return r + log2(n[n.length - 1]);
 }
 

@@ -17,73 +17,63 @@
     This file will be included by the library itself when needed.
 */
 
-#if defined(BOOST_XINT_COMPILED_LIB) || defined(BOOST_XINT_FROM_HEADER)
-
-#if defined(BOOST_XINT_COMPILED_LIB)
-    #include "internals.hpp"
-    #include "monty.hpp"
-#endif // defined(BOOST_XINT_COMPILED_LIB)
+#ifndef BOOST_INCLUDED_XINT_MODULAR_HPP
+#define BOOST_INCLUDED_XINT_MODULAR_HPP
 
 //! @cond detail
 namespace boost {
 namespace xint {
 namespace detail {
 
-BOOST_XINT_INLINE void mulmod(data_t& target, const data_t n, const data_t by,
-    const data_t modulus)
+BOOST_XINT_RAWINT_TPL
+BOOST_XINT_RAWINT mulmod(const BOOST_XINT_RAWINT n, const BOOST_XINT_RAWINT by,
+    const BOOST_XINT_RAWINT modulus)
 {
-    target.duplicate_data(n);
-    target *= by;
-    target %= modulus;
+    return n * by % modulus;
 }
 
-BOOST_XINT_INLINE void sqrmod(data_t& target, const data_t n, const data_t
+BOOST_XINT_RAWINT_TPL
+BOOST_XINT_RAWINT sqrmod(const BOOST_XINT_RAWINT n, const BOOST_XINT_RAWINT
     modulus)
 {
-    square(target, n);
-    target %= modulus;
+    return square(n) % modulus;
 }
 
-BOOST_XINT_INLINE void powmod(data_t& target, const data_t n, const data_t e,
-    const data_t m, bool noMontgomery)
+BOOST_XINT_RAWINT_TPL
+BOOST_XINT_RAWINT powmod(const BOOST_XINT_RAWINT n, const BOOST_XINT_RAWINT e,
+    const BOOST_XINT_RAWINT m, bool no_montgomery = false)
 {
     if (m.is_zero() || m.negative) throw exceptions::invalid_modulus();
-    if (e.is_zero()) { target.set(1); return; }
+    if (e.is_zero()) return 1;
 
     bool neg = (n.negative && e.is_odd());
 
     // Montgomery's method is often noticeably faster, but only works if the
     // m is odd.
-    if (m.is_odd() && !noMontgomery) {
-        montgomeryPowerMod(target, abs(n) % m, abs(e), m);
+    if (m.is_odd() && !no_montgomery) {
+        return montgomeryPowerMod(n.abs() % m, e.abs(), m);
     } else {
-        data_t answer(target.new_holder(), 1), p(abs(n));
-        answer.beginmod();
-        p.beginmod();
+        BOOST_XINT_RAWINT answer(1), p(n.abs());
 
-        size_t lastBitCount = 0;
+        std::size_t lastBitCount = 0;
         detail::digit_t ee(e[e.length - 1]);
         while (ee != 0) { ee >>= 1; ++lastBitCount; }
 
-        for (size_t eIndex = 0; eIndex < e.length; ++eIndex) {
+        for (std::size_t eIndex = 0; eIndex < e.length; ++eIndex) {
             detail::digit_t ee(e[eIndex]);
 
             int bitCount(int(eIndex == e.length - 1 ? lastBitCount :
                 detail::bits_per_digit));
             while (bitCount-- > 0) {
-                if (ee & 0x01) {
-                    answer *= p;
-                    answer %= m;
-                }
-                sqrmod(p, p, m);
+                if (ee & 0x01) answer = mulmod(answer, p, m);
+                p = sqrmod(p, m);
                 ee >>= 1;
             }
         }
         answer.negative = neg;
-        p.endmod();
-        answer.endmod();
+        answer.trim();
 
-        target.duplicate_data(answer);
+        return answer;
     }
 }
 
@@ -92,4 +82,4 @@ BOOST_XINT_INLINE void powmod(data_t& target, const data_t n, const data_t e,
 } // namespace boost
 //! @endcond detail
 
-#endif // defined(BOOST_XINT_COMPILED_LIB) || defined(BOOST_XINT_FROM_HEADER)
+#endif // BOOST_INCLUDED_XINT_MODULAR_HPP

@@ -17,29 +17,28 @@
     This file will be included by the library itself when needed.
 */
 
-#if defined(BOOST_XINT_COMPILED_LIB) || defined(BOOST_XINT_FROM_HEADER)
-
-#if defined(BOOST_XINT_COMPILED_LIB)
-    #include "internals.hpp"
-#endif // defined(BOOST_XINT_COMPILED_LIB)
+#ifndef BOOST_INCLUDED_XINT_SHIFT_HPP
+#define BOOST_INCLUDED_XINT_SHIFT_HPP
 
 //! @cond detail
 namespace boost {
 namespace xint {
 namespace detail {
 
-BOOST_XINT_INLINE data_t& data_t::operator<<=(size_t byBits) {
+BOOST_XINT_RAWINT_TPL
+BOOST_XINT_RAWINT& BOOST_XINT_RAWINT::operator<<=(std::size_t byBits) {
     if (byBits == 0) return *this;
 
     // bits/dchunks is distance to move
-    size_t dchunks = byBits / bits_per_digit, bits = byBits % bits_per_digit;
-    size_t anslen = length + dchunks + (bits != 0 ? 1 : 0);
-    beginmod(anslen);
+    std::size_t dchunks = byBits / bits_per_digit, bits = byBits %
+        bits_per_digit;
+    std::size_t anslen = length + dchunks + (bits != 0 ? 1 : 0);
+    digit_t *dstart = digits(anslen);
 
     // nlen is one greater than top source byte to move
-    size_t nlen = (std::min)(length, anslen - dchunks - (bits != 0 ? 1 : 0));
+    std::size_t nlen = (std::min)(length, anslen - dchunks - (bits != 0 ? 1 :
+        0));
 
-    digit_t *dstart = digits();
     if (bits != 0 && dchunks + 1 < anslen) {
         // Handle both bits and dchunks in one pass
         const digit_t *s = dstart + nlen - 1;
@@ -63,19 +62,18 @@ BOOST_XINT_INLINE data_t& data_t::operator<<=(size_t byBits) {
         set(0);
     }
 
-    endmod();
+    trim();
     return *this;
 }
 
-BOOST_XINT_INLINE data_t& data_t::operator>>=(size_t byBits) {
+BOOST_XINT_RAWINT_TPL
+BOOST_XINT_RAWINT& BOOST_XINT_RAWINT::operator>>=(std::size_t byBits) {
     if (byBits == 0) return *this;
 
-    size_t dchunks = byBits / bits_per_digit, bits = byBits % bits_per_digit,
-        bits2 = bits_per_digit - bits;
+    std::size_t dchunks = byBits / bits_per_digit, bits = byBits %
+        bits_per_digit, bits2 = bits_per_digit - bits;
 
-    beginmod();
-    digit_t *tgt = digits();
-
+    digit_t *tgt = digits(0);
     if (dchunks < length) {
         if (bits != 0) {
             // Handle both bits and dchunks in one pass
@@ -92,15 +90,17 @@ BOOST_XINT_INLINE data_t& data_t::operator>>=(size_t byBits) {
             length -= dchunks;
         }
     } else set(0);
-    endmod();
+    trim();
     return *this;
 }
 
-BOOST_XINT_INLINE data_t operator<<(data_t n, size_t bits) {
+BOOST_XINT_RAWINT_TPL
+BOOST_XINT_RAWINT operator<<(BOOST_XINT_RAWINT n, std::size_t bits) {
     return (n <<= bits);
 }
 
-BOOST_XINT_INLINE data_t operator>>(data_t n, size_t bits) {
+BOOST_XINT_RAWINT_TPL
+BOOST_XINT_RAWINT operator>>(BOOST_XINT_RAWINT n, std::size_t bits) {
     return (n >>= bits);
 }
 
@@ -109,4 +109,4 @@ BOOST_XINT_INLINE data_t operator>>(data_t n, size_t bits) {
 } // namespace boost
 //! @endcond detail
 
-#endif // defined(BOOST_XINT_COMPILED_LIB) || defined(BOOST_XINT_FROM_HEADER)
+#endif // BOOST_INCLUDED_XINT_SHIFT_HPP

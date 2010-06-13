@@ -29,21 +29,22 @@ namespace detail {
 class bitqueue_t {
     public:
     bitqueue_t(): bits_pending(0) { }
-    void push(doubledigit_t bits, size_t count);
-    doubledigit_t pop(size_t requestedbits);
+    void push(doubledigit_t bits, std::size_t count);
+    doubledigit_t pop(std::size_t requestedbits);
     bool empty() const { return pending.empty(); }
-    size_t size() const { return bits_pending; }
+    std::size_t size() const { return bits_pending; }
 
     private:
-    static const size_t ddbits = std::numeric_limits<doubledigit_t>::digits;
-    typedef std::pair<doubledigit_t, size_t> indata_t;
+    static const std::size_t ddbits =
+        std::numeric_limits<doubledigit_t>::digits;
+    typedef std::pair<doubledigit_t, std::size_t> indata_t;
     typedef std::queue<indata_t> inqueue_t;
 
-    size_t bits_pending;
+    std::size_t bits_pending;
     inqueue_t pending;
 };
 
-inline void bitqueue_t::push(doubledigit_t bits, size_t count) {
+inline void bitqueue_t::push(doubledigit_t bits, std::size_t count) {
     if (count < ddbits) {
         doubledigit_t mask = (doubledigit_t(1) << count) - 1;
         bits &= mask;
@@ -63,12 +64,12 @@ inline void bitqueue_t::push(doubledigit_t bits, size_t count) {
     bits_pending += count;
 }
 
-inline doubledigit_t bitqueue_t::pop(size_t requestedbits) {
+inline doubledigit_t bitqueue_t::pop(std::size_t requestedbits) {
     doubledigit_t buffer = 0;
-    size_t bits_in_buffer = 0;
+    std::size_t bits_in_buffer = 0;
     while (bits_in_buffer < requestedbits && !pending.empty()) {
         indata_t &n(pending.front());
-        size_t maxbits = requestedbits - bits_in_buffer, actualbits =
+        std::size_t maxbits = requestedbits - bits_in_buffer, actualbits =
             (std::min)(n.second, maxbits);
         buffer |= (n.first << bits_in_buffer);
 
