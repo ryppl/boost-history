@@ -20,6 +20,7 @@
 #include <boost/detail/lightweight_test.hpp>  // for main
 
 #include <boost/integer/endian_view.hpp>
+#include <boost/fusion/adapted/struct/adapt_struct.hpp>
 //~ #include <boost/cstdint.hpp>
 //~ #include <boost/progress.hpp>
 
@@ -34,9 +35,66 @@ using namespace boost;           //   want to verify this combination of using
 using namespace boost::integer;  //   namespaces works. See endian_operations_test
 //                               //   for tests that don't do "using namespace".
 
+namespace X {
+
+struct big_c {
+    uint32_t a;
+    uint16_t b;
+};
+
+
+struct little_c {
+    int32_t a;
+    int16_t b;
+};
+
+struct mixed_c {
+    big_c a;
+    little_c b;
+};
+
+}
+
+struct network {};
+    
+namespace boost { 
+namespace endianness {
+    
+    template <> 
+    struct domain_map <network, X::big_c> {
+        typedef mpl::vector<big,big> type;
+    };
+    template <> 
+    struct domain_map <network, X::little_c> {
+        typedef mpl::vector<little,little> type;
+    };       
+    
+}
+}
+
+BOOST_FUSION_ADAPT_STRUCT(
+    X::big_c,
+    (uint32_t, a)
+    (uint16_t, b)
+)
+
+BOOST_FUSION_ADAPT_STRUCT(
+    X::little_c,
+    (int32_t, a)
+    (int16_t, b)
+)
+
+
+BOOST_FUSION_ADAPT_STRUCT(
+    X::mixed_c,
+    (X::big_c, a)
+    (X::little_c, b)
+)
 
 namespace
 {
+        X::mixed_c m;
+
 void check_access()
 {
     // structs with offsets % 2 == 1 for type of size > 1 to ensure no alignment
@@ -92,12 +150,41 @@ void check_access()
     std::cout << std::hex << int(a.c1) << std::endl;
     std::cout << std::hex << a.s1 << std::endl;
     std::cout << std::hex << a.i1 << std::endl;
+
+    std::cout << "**********" << std::endl;
+    std::cout << std::hex << m.a.a << std::endl;
+    std::cout << std::hex << m.a.b << std::endl;
+    std::cout << std::hex << m.b.a << std::endl;
+    std::cout << std::hex << m.b.b << std::endl;
+
+    as_endian<network>(a.i1)=as_endian<network>(a.i1);
+    std::cout << "**********" << std::endl;
+    std::cout << std::hex << m.a.a << std::endl;
+    std::cout << std::hex << m.a.b << std::endl;
+    std::cout << std::hex << m.b.a << std::endl;
+    std::cout << std::hex << m.b.b << std::endl;
     
+    //~ as_big(m)=as_big(m);
+    
+    as(m)=as_endian<network>(m);
+    std::cout << "**********" << std::endl;
+    std::cout << std::hex << m.a.a << std::endl;
+    std::cout << std::hex << m.a.b << std::endl;
+    std::cout << std::hex << m.b.a << std::endl;
+    std::cout << std::hex << m.b.b << std::endl;
+    
+    //~ as(m)=as_big(m);
 }
 } // unnamed namespace
 
 int main( int argc, char * argv[] )
 {
+    m.b.a=0x01020304;
+    m.b.b=0x0A0B;
+    m.a.a=0x04030201;
+    m.a.b=0x0B0A;    
+
     check_access();
     return boost::report_errors();
+    //~ return 1;
 } // main
