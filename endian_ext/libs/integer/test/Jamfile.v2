@@ -11,6 +11,7 @@
 
 project
     : requirements
+        <library>/boost/chrono//boost_chrono
         <library>/boost/system//boost_system
     ;
 

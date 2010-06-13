@@ -13,7 +13,7 @@
 
 //~ #include <iostream>
 //~ #include <cassert>
-//~ #include <cstdio>
+#include <boost/cstdint.hpp>
 #include <boost/integer/endian_pack.hpp>
 #include <boost/chrono/chrono.hpp>
 #include <boost/units/quantity.hpp>
@@ -67,16 +67,16 @@ namespace internet {
 
 
 struct IpHeader {
-    struct version{};
-    struct header_length{};
-    struct precedence{};
-    struct low_delay{};
-    struct high_thruput{};
-    struct high_reliability{};
-    struct minimize_cost{};
-    struct dont_frag{};
-    struct more_frag{};
-    struct frag_offset{};
+    struct version {};
+    struct header_length {};
+    struct precedence {};
+    struct low_delay {};
+    struct high_thruput {};
+    struct high_reliability {};
+    struct minimize_cost {};
+    struct dont_frag {};
+    struct more_frag {};
+    struct frag_offset {};
         
     /////////////////////////////
     bitfield::tuple<ubig8_pt, 
@@ -123,18 +123,17 @@ struct UdpHeader {
 
 
 struct UserMessage {
-  endian_pack<little, time_point<system_clock, duration<int64_t, nanoseconds> > > 
-timestamp;
+  endian_pack<little, system_clock::time_point > timestamp;
   ulittle32_pt aircraft_id;
   struct Position {
-     endian_pack<little, quantity<si::length, int> > x;
-     endian_pack<little, quantity<si::length, int> > y;
-     endian_pack<little, quantity<si::length, int> > z;
+     endian_pack<little, quantity<si::length, boost::int_least32_t> > x;
+     endian_pack<little, quantity<si::length, boost::int_least32_t> > y;
+     endian_pack<little, quantity<si::length, boost::int_least32_t> > z;
   } position;
   struct Attitude {
-      endian_pack<little, quantity<si::plane_angle, int8_t> > heading;
-      endian_pack<little, quantity<si::plane_angle, int8_t> > pitch;
-      endian_pack<little, quantity<si::plane_angle, int8_t> > roll;
+      endian_pack<little, quantity<si::plane_angle, boost::int_least8_t> > heading;
+      endian_pack<little, quantity<si::plane_angle, boost::int_least8_t> > pitch;
+      endian_pack<little, quantity<si::plane_angle, boost::int_least8_t> > roll;
   } attitude;
 }; // UserMessage
 
