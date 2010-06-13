@@ -157,9 +157,7 @@ namespace boost { namespace fusion
 #       ifndef BOOST_NO_RVALUE_REFERENCES
         VARIADIC_TEMPLATE_A(BOOST_FUSION_N)
 #       endif
-#       if BOOST_FUSION_N==1
         explicit
-#       endif
         BOOST_PP_CAT(vector, BOOST_FUSION_N)(
 #       ifdef BOOST_NO_RVALUE_REFERENCES
             EXPAND_TEMPLATE_ARGUMENTS_CALL_PARAMS(BOOST_FUSION_N)

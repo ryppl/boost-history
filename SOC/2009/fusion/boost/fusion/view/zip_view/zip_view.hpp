@@ -37,7 +37,6 @@
 #include <boost/fusion/view/zip_view/detail/at_impl.hpp>
 #include <boost/fusion/view/zip_view/detail/value_at_impl.hpp>
 #include <boost/fusion/view/zip_view/detail/zip_view_iterator.hpp>
-
 #include <boost/fusion/view/zip_view/detail/begin_impl.hpp>
 #include <boost/fusion/view/zip_view/detail/end_impl.hpp>
 #include <boost/fusion/view/zip_view/detail/deref_impl.hpp>

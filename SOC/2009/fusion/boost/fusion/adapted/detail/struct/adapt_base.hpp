@@ -84,7 +84,7 @@
         ATTRIBUTE)
 
 #define BOOST_FUSION_ADAPT_STRUCT_C_BASE(                                       \
-    TEMPLATE_PARAMS_SEQ,NAME_SEQ,I,PREFIX,ATTRIBUTE,ATTRIBUTE_TUPEL_SIZE)       \
+    TEMPLATE_PARAMS_SEQ, NAME_SEQ, I, ATTRIBUTE, ATTRIBUTE_TUPEL_SIZE)          \
                                                                                 \
     template<                                                                   \
         BOOST_FUSION_ADAPT_STRUCT_UNPACK_TEMPLATE_PARAMS(TEMPLATE_PARAMS_SEQ)   \
@@ -106,7 +106,7 @@
             static type                                                         \
             call(SeqRef seq)                                                    \
             {                                                                   \
-                return seq.PREFIX                                               \
+                return seq.                                                     \
                     BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 1, ATTRIBUTE);    \
             }                                                                   \
         };                                                                      \

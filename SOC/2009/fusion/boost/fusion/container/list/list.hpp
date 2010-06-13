@@ -12,9 +12,10 @@
 #include <boost/config.hpp>
 #include <boost/fusion/container/list/list_fwd.hpp>
 #include <boost/fusion/container/list/cons.hpp>
+#include <boost/fusion/container/list/detail/cons_gen.hpp>
 #include <boost/fusion/container/generation/vector_tie.hpp>
 #include <boost/fusion/container/detail/forward_interface.hpp>
-#include <boost/fusion/container/list/detail/cons_gen.hpp>
+#include <boost/fusion/support/internal/template.hpp>
 
 namespace boost { namespace fusion
 {
@@ -49,10 +50,12 @@ namespace boost { namespace fusion
 
 #   include <boost/fusion/container/list/detail/pp/list_forward_ctor.hpp>
 
+#   ifdef BOOST_NO_RVALUE_REFERENCES
         template<typename Seq>
         list(Seq const& seq)
           : base_type(seq)
         {}
+#   endif
 
         template<typename Seq>
         list&

@@ -1,6 +1,6 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -38,9 +38,13 @@ namespace boost { namespace fusion
 {
     struct fusion_sequence_tag;
 
-    template<typename Seq, typename Pred>
+    template<
+        typename Seq
+      , typename Pred
+      , typename PredIsMetafunction=mpl::true_
+    >
     struct filter_view
-      : sequence_base<filter_view<Seq, Pred> >
+      : sequence_base<filter_view<Seq, Pred, PredIsMetafunction> >
     {
         BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
@@ -48,6 +52,7 @@ namespace boost { namespace fusion
         typedef detail::view_storage<Seq> storage_type;
         typedef typename storage_type::type seq_type;
         typedef Pred pred_type;
+        typedef PredIsMetafunction pred_is_metafunction;
 
         typedef typename
             mpl::eval_if<
@@ -62,8 +67,11 @@ namespace boost { namespace fusion
 
 #define BOOST_FUSION_FILTER_VIEW_CTOR(MODIFIER,_)\
         template<typename OtherSeq>\
-        filter_view(filter_view<OtherSeq, Pred> MODIFIER view)\
-          : seq(static_cast<filter_view<OtherSeq, Pred> MODIFIER>(view).seq)\
+        filter_view(\
+            filter_view<OtherSeq, Pred, PredIsMetafunction> MODIFIER view)\
+          : seq(static_cast<\
+              filter_view<OtherSeq, Pred, PredIsMetafunction> MODIFIER\
+          >(view).seq)\
         {}
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_FILTER_VIEW_CTOR,_)

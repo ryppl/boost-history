@@ -51,6 +51,14 @@ struct reject_all
     {};
 };
 
+struct less_pred_metafunction
+{
+    template<typename Arg>
+    struct apply
+      : boost::mpl::less<Arg, boost::mpl::int_<3> >
+    {};
+};
+
 int
 main()
 {
@@ -59,7 +67,7 @@ main()
     using boost::mpl::int_;
     using boost::mpl::_;
     using boost::mpl::not_;
-    using boost::mpl::less;
+    using boost::mpl::false_;
     using boost::mpl::vector_c;
     using boost::is_class;
     using boost::is_same;
@@ -81,20 +89,14 @@ main()
     }
 
     {
-        // $$$ JDG $$$ For some obscure reason, EDG based compilers
-        // (e.g. comeau 4.3.3, intel) have problems with this.
-        // vc7.1 and g++ are ok. The errors from comeau are useless.
-        
-#ifndef __EDG_VERSION__
+        //TODO
         typedef vector_c<int, 5, 1, 2, 3, 6, 0, -1> vector_type;
-        typedef filter_view<vector_type const, less<_, int_<3> > > filter_view_type;
+        typedef filter_view<vector_type const, less_pred_metafunction, false_> filter_view_type;
         vector_type v;
         filter_view_type view(v);
-        //TODO!!!
-        //std::cout << view << std::endl;
-        //BOOST_TEST((view == make_vector(1, 2, 0, -1)));
-        //BOOST_STATIC_ASSERT(result_of::size<filter_view_type>::value == 4);
-#endif
+        std::cout << view << std::endl;
+        BOOST_TEST((view == make_vector(1, 2, 0, -1)));
+        BOOST_STATIC_ASSERT(result_of::size<filter_view_type>::value == 4);
     }
 
     {

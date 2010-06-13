@@ -9,9 +9,9 @@
 #define BOOST_FUSION_SUPPORT_INTERNAL_IS_EXPLICITLY_CONVERTIBLE_HPP
 
 #include <boost/detail/workaround.hpp>
-#if BOOST_WORKAROUND(__GNUC__,<4)
-#   include <boost/type_traits/is_convertible.hpp>
-#else
+#include <boost/type_traits/is_convertible.hpp>
+#if BOOST_WORKAROUND(__GNUC__,>=4)
+#   include <boost/mpl/or.hpp>
 #   include <boost/fusion/support/internal/small_big_type.hpp>
 #   include <boost/mpl/bool.hpp>
 #   include <cstddef>
@@ -20,7 +20,7 @@
 namespace boost { namespace fusion { namespace detail
 {
 //cschmidt: Fall back due to a defect in gcc 3.x's call_expr...
-#if BOOST_WORKAROUND(__GNUC__,<4)
+#if BOOST_WORKAROUND(__GNUC__,<4) || defined(BOOST_MSVC)
     template<typename From, typename To>
     struct is_explicitly_convertible
       : is_convertible<From,To>
@@ -42,6 +42,7 @@ namespace boost { namespace fusion { namespace detail
     template<typename From, typename To>
     struct is_explicitly_convertible_impl
     {
+        //cschmidt: is this even valid C++?
         template<typename T>
         static typename helper<sizeof(static_cast<T>(get_t<From>()),0)>::type
         impl(int);
@@ -55,7 +56,10 @@ namespace boost { namespace fusion { namespace detail
 
     template<typename From, typename To>
     struct is_explicitly_convertible
-      : is_explicitly_convertible_impl<From,To>::type
+      : mpl::or_<
+            is_explicitly_convertible_impl<From,To>
+          , is_convertible<From,To>
+        >
     {};
 #endif
 }}}

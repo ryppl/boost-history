@@ -40,7 +40,7 @@
                 struct result<This(State, Expr)>
                 {
                     typedef
-                        typename when<_, Transform>::template impl<Expr, State, Data>::result_type
+                        typename when<_, Transform>::template impl<Expr, typename fusion::detail::remove_reference<State>::type, Data>::result_type
                     type;
                 };
 

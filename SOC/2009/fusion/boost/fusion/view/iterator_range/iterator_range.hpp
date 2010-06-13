@@ -56,6 +56,7 @@ namespace boost { namespace fusion
             BOOST_FUSION_TAG_CHECK(OtherRange,iterator_range_tag);
         }
 
+        explicit
         iterator_range(Begin const& first, End const& last)
           : first(first)
           , last(last)

@@ -12,7 +12,6 @@
 
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/preprocessor/cat.hpp>
-#include <boost/preprocessor/empty.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
 
 #include <boost/fusion/adapted/detail/struct/extension.hpp>
@@ -39,10 +38,10 @@
 #define BOOST_FUSION_ADAPT_ASSOC_STRUCT_FILLER_1_END
 
 #define BOOST_FUSION_ADAPT_ASSOC_STRUCT_C_BASE(                                 \
-    TEMPLATE_PARAMS_SEQ,NAME_SEQ,I,PREFIX,ATTRIBUTE)                            \
+    TEMPLATE_PARAMS_SEQ, NAME_SEQ, I, ATTRIBUTE)                                \
                                                                                 \
     BOOST_FUSION_ADAPT_STRUCT_C_BASE(                                           \
-        TEMPLATE_PARAMS_SEQ, NAME_SEQ, I, PREFIX, ATTRIBUTE, 3)                 \
+        TEMPLATE_PARAMS_SEQ, NAME_SEQ, I, ATTRIBUTE, 3)                         \
                                                                                 \
     template<                                                                   \
         BOOST_FUSION_ADAPT_STRUCT_UNPACK_TEMPLATE_PARAMS(TEMPLATE_PARAMS_SEQ)   \
@@ -53,10 +52,10 @@
     };
 
 #define BOOST_FUSION_ADAPT_ASSOC_STRUCT_C(                                      \
-    TEMPLATE_PARAMS_SEQ,NAME_SEQ, I, ATTRIBUTE)                                 \
+    TEMPLATE_PARAMS_SEQ, NAME_SEQ, I, ATTRIBUTE)                                \
                                                                                 \
     BOOST_FUSION_ADAPT_ASSOC_STRUCT_C_BASE(                                     \
-        TEMPLATE_PARAMS_SEQ,NAME_SEQ,I,BOOST_PP_EMPTY(),ATTRIBUTE)
+        TEMPLATE_PARAMS_SEQ, NAME_SEQ, I, ATTRIBUTE)
 
 #define BOOST_FUSION_ADAPT_ASSOC_TPL_STRUCT(                                    \
     TEMPLATE_PARAMS_SEQ, NAME_SEQ, ATTRIBUTES)                                  \

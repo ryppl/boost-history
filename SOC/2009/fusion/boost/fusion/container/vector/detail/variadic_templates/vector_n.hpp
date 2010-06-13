@@ -22,7 +22,7 @@
 #else
 #   define BOOST_FUSION_N BOOST_PP_ITERATION()
 
-    //cschmidt: template typedefs if possible...
+    //cschmidt: template aliases if possible (BOOST_NO_TEMPLATE_ALIASES)...
 namespace boost { namespace fusion
 {
 #   if !BOOST_FUSION_N
@@ -55,29 +55,39 @@ namespace boost { namespace fusion
 
 #   undef BOOST_FUSION_VECTOR_CTOR
 
+#if BOOST_FUSION_N>1 || !BOOST_FUSION_N || defined(BOOST_NO_RVALUE_REFERENCES)
         template<typename Arg>
         BOOST_PP_CAT(vector, BOOST_FUSION_N)(BOOST_FUSION_R_ELSE_CLREF(Arg) arg)
           : base_type(BOOST_FUSION_FORWARD(Arg,arg))
         {}
+#endif
 
-#   if BOOST_FUSION_N > 1
+#   if BOOST_FUSION_N
 #       ifdef BOOST_NO_RVALUE_REFERENCES
+        explicit
         BOOST_PP_CAT(vector, BOOST_FUSION_N)(
             BOOST_PP_ENUM_BINARY_PARAMS(N, call_traits<T,>::param_type a))
           : base_type(BOOST_PP_ENUM_PARAMS(BOOST_FUSION_N, a))
         {}
 #       else
-#           define BOOST_FUSION_FORWARD_ARGUMENT(Z, N, __)\
-                std::forward<BOOST_PP_CAT(A,N)>(BOOST_PP_CAT(_,N))
-
         template<BOOST_PP_ENUM_PARAMS(BOOST_FUSION_N, typename A)>
+#           if BOOST_FUSION_N!=1
+        explicit
+#           endif
+
+#       define BOOST_FUSION_EXPAND_VECTOR_EXPAND_PARAMETERS(Z,N,__)\
+            BOOST_FUSION_FORWARD(BOOST_PP_CAT(A,N),BOOST_PP_CAT(_,N))
+
         BOOST_PP_CAT(vector, BOOST_FUSION_N)(
-            BOOST_PP_ENUM_BINARY_PARAMS(BOOST_FUSION_N, A,&& _))
-          : base_type(
-              BOOST_PP_ENUM(BOOST_FUSION_N, BOOST_FUSION_FORWARD_ARGUMENT, _))
+            BOOST_PP_ENUM_BINARY_PARAMS(BOOST_FUSION_N, A,&&_))
+          : base_type(BOOST_PP_ENUM(
+                BOOST_FUSION_N,
+                BOOST_FUSION_EXPAND_VECTOR_EXPAND_PARAMETERS,
+                _))
         {}
 
-#           undef BOOST_FUSION_FORWARD_ARGUMENT
+#       undef BOOST_FUSION_EXPAND_VECTOR_EXPAND_PARAMETERS
+
 #       endif
 #   endif
 

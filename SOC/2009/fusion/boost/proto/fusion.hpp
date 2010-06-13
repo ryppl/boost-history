@@ -29,6 +29,7 @@
 #include <boost/proto/proto_fwd.hpp>
 #include <boost/proto/traits.hpp>
 #include <boost/proto/eval.hpp>
+#include <boost/type_traits/remove_const.hpp>
 
 #if BOOST_MSVC
 #pragma warning(push)
@@ -53,11 +54,11 @@ namespace boost { namespace proto
             typedef fusion::random_access_traversal_tag category;
             typedef tag::proto_expr_iterator fusion_tag;
 
-            expr_iterator(Expr const &e)
+            expr_iterator(Expr &e)
               : expr(e)
             {}
 
-            Expr const &expr;
+            Expr &expr;
         };
 
         template<typename Expr>
@@ -203,7 +204,9 @@ namespace boost { namespace proto
             typename fusion::result_of::pop_front<Expr>::type
             operator ()(Expr &e) const
             {
-                return fusion::pop_front(e);
+                // Work around a const-correctness issue in Fusion
+                typedef typename fusion::result_of::pop_front<Expr>::type result_type;
+                return result_type(fusion::next(fusion::begin(e)), fusion::end(e));
             }
 
             template<typename Expr>
@@ -243,7 +246,9 @@ namespace boost { namespace proto
             typename fusion::result_of::reverse<Expr>::type
             operator ()(Expr &e) const
             {
-                return fusion::reverse(e);
+                // Work around a const-correctness issue in Fusion
+                typedef typename fusion::result_of::reverse<Expr>::type result_type;
+                return result_type(e);
             }
 
             template<typename Expr>
@@ -371,21 +376,6 @@ namespace boost { namespace fusion
         };
 
         template<typename Tag>
-        struct equal_to_impl;
-
-        template<>
-        struct equal_to_impl<proto::tag::proto_expr_iterator>
-        {
-            template<class It1, class It2>
-            class apply
-              : public is_same<
-                    typename remove_const<typename remove_reference<It1>::type>::type
-                  , typename remove_const<typename remove_reference<It2>::type>::type
-                >
-            {};
-        };
-
-        template<typename Tag>
         struct value_of_impl;
 
         template<>
@@ -393,13 +383,11 @@ namespace boost { namespace fusion
         {
             template<
                 typename Iterator
-              , long Arity = proto::arity_of<typename remove_reference<Iterator>::type::expr_type>::value
+              , long Arity = proto::arity_of<typename fusion::detail::remove_reference<Iterator>::type::expr_type>::value
             >
             struct apply
             {
-
-                typedef typename detail::remove_reference<Iterator>::type it;
-
+                typedef typename fusion::detail::remove_reference<Iterator>::type it;
                 typedef
                     typename proto::result_of::child_c<
                         typename it::expr_type
@@ -411,11 +399,9 @@ namespace boost { namespace fusion
             template<typename Iterator>
             struct apply<Iterator, 0>
             {
-                typedef typename detail::remove_reference<Iterator>::type it;
-
                 typedef
                     typename proto::result_of::value<
-                        typename it::expr_type
+                        typename fusion::detail::remove_reference<Iterator>::type::expr_type
                     >::value_type
                 type;
             };
@@ -429,15 +415,14 @@ namespace boost { namespace fusion
         {
             template<
                 typename Iterator
-              , long Arity = proto::arity_of<typename remove_reference<Iterator>::type::expr_type>::value
+              , long Arity = proto::arity_of<typename fusion::detail::remove_reference<Iterator>::type::expr_type>::value
             >
             struct apply
             {
-                typedef typename detail::remove_reference<Iterator>::type it;
-
+                typedef typename fusion::detail::remove_reference<Iterator>::type it;
                 typedef
                     typename proto::result_of::child_c<
-                        typename it::expr_type const &
+                        typename it::expr_type &
                       , it::index
                     >::type
                 type;
@@ -451,11 +436,9 @@ namespace boost { namespace fusion
             template<typename Iterator>
             struct apply<Iterator, 0>
             {
-                typedef typename detail::remove_reference<Iterator>::type it;
-
                 typedef
                     typename proto::result_of::value<
-                        typename it::expr_type const &
+                        typename fusion::detail::remove_reference<Iterator>::type::expr_type &
                     >::type
                 type;
 
@@ -475,8 +458,7 @@ namespace boost { namespace fusion
             template<typename Iterator, typename N>
             struct apply
             {
-                typedef typename detail::remove_reference<Iterator>::type it;
-
+                typedef typename fusion::detail::remove_reference<Iterator>::type it;
                 typedef
                     typename proto::detail::expr_iterator<
                         typename it::expr_type
@@ -499,7 +481,7 @@ namespace boost { namespace fusion
         {
             template<typename IteratorFrom, typename IteratorTo>
             struct apply
-              : mpl::long_<remove_reference<IteratorTo>::type::index - remove_reference<IteratorFrom>::type::index>
+              : mpl::long_<fusion::detail::remove_reference<IteratorTo>::type::index - fusion::detail::remove_reference<IteratorFrom>::type::index>
             {};
         };
 
@@ -528,6 +510,21 @@ namespace boost { namespace fusion
         };
 
         template<typename Tag>
+        struct equal_to_impl;
+
+        template<>
+        struct equal_to_impl<proto::tag::proto_expr_iterator>
+        {
+            template<class It1, class It2>
+            class apply
+              : public is_same<
+                    typename remove_const<typename fusion::detail::remove_reference<It1>::type>::type
+                  , typename remove_const<typename fusion::detail::remove_reference<It2>::type>::type
+                >
+            {};
+        };
+
+        template<typename Tag>
         struct category_of_impl;
 
         template<>
@@ -548,11 +545,8 @@ namespace boost { namespace fusion
         {
             template<typename Sequence>
             struct apply
-            {
-                typedef typename detail::remove_reference<Sequence>::type seq;
-
-                typedef mpl::long_<0 == seq::proto_arity_c ? 1 : seq::proto_arity_c> type;
-            };
+              : mpl::long_<0 == fusion::detail::remove_reference<Sequence>::type::proto_arity_c ? 1 : fusion::detail::remove_reference<Sequence>::type::proto_arity_c>
+            {};
         };
 
         template<typename Tag>
@@ -564,8 +558,7 @@ namespace boost { namespace fusion
             template<typename Sequence>
             struct apply
             {
-                typedef typename detail::remove_reference<Sequence>::type seq;
-                typedef proto::detail::expr_iterator<seq, 0> type;
+                typedef proto::detail::expr_iterator<typename fusion::detail::remove_reference<Sequence>::type, 0> type;
 
                 static type call(Sequence seq)
                 {
@@ -583,8 +576,7 @@ namespace boost { namespace fusion
             template<typename Sequence>
             struct apply
             {
-                typedef typename detail::remove_reference<Sequence>::type seq;
-
+                typedef typename fusion::detail::remove_reference<Sequence>::type seq;
                 typedef
                     proto::detail::expr_iterator<
                         seq
@@ -608,15 +600,13 @@ namespace boost { namespace fusion
             template<
                 typename Sequence
               , typename Index
-              , long Arity = proto::arity_of<typename remove_reference<Sequence>::type>::value
+              , long Arity = proto::arity_of<typename fusion::detail::remove_reference<Sequence>::type>::value
             >
             struct apply
             {
-                typedef typename detail::remove_reference<Sequence>::type seq;
-
                 typedef
                     typename proto::result_of::child_c<
-                        seq
+                        typename fusion::detail::remove_reference<Sequence>::type
                       , Index::value
                     >::value_type
                 type;
@@ -625,11 +615,9 @@ namespace boost { namespace fusion
             template<typename Sequence, typename Index>
             struct apply<Sequence, Index, 0>
             {
-                typedef typename detail::remove_reference<Sequence>::type seq;
-
                 typedef
                     typename proto::result_of::value<
-                        seq
+                        typename fusion::detail::remove_reference<Sequence>::type
                     >::value_type
                 type;
             };
@@ -644,18 +632,18 @@ namespace boost { namespace fusion
             template<
                 typename Sequence
               , typename Index
-              , long Arity = proto::arity_of<Sequence>::value
+              , long Arity = proto::arity_of<typename fusion::detail::remove_reference<Sequence>::type>::value
             >
             struct apply
             {
                 typedef
                     typename proto::result_of::child_c<
-                        Sequence &
+                        Sequence
                       , Index::value
                     >::type
                 type;
 
-                static type call(Sequence &seq)
+                static type call(Sequence seq)
                 {
                     return proto::child_c<Index::value>(seq);
                 }
@@ -666,7 +654,7 @@ namespace boost { namespace fusion
             {
                 typedef
                     typename proto::result_of::value<
-                        Sequence
+                        typename fusion::detail::remove_reference<Sequence>::type
                     >::type
                 type;
 
@@ -698,14 +686,15 @@ namespace boost { namespace fusion
             template<typename Sequence>
             struct apply
             {
-                typedef typename Sequence::proto_tag proto_tag;
+                typedef typename fusion::detail::remove_reference<Sequence>::type seq;
+                typedef typename seq::proto_tag proto_tag;
 
                 typedef fusion::transform_view<
-                    typename Sequence::expr_type
+                    typename seq::expr_type
                   , proto::detail::as_element<proto_tag>
                 > type;
 
-                static type call(Sequence &sequence)
+                static type call(Sequence sequence)
                 {
                     return type(sequence.expr_, proto::detail::as_element<proto_tag>());
                 }
@@ -748,7 +737,9 @@ namespace boost { namespace fusion
               : fusion::result_of::segmented_size<typename fusion::detail::remove_reference<Sequence>::type>
             {};
         };
+
     }
+
 }}
 
 namespace boost { namespace mpl

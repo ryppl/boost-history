@@ -1,6 +1,6 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -18,22 +18,37 @@
 #include <boost/mpl/lambda.hpp>
 #include <boost/mpl/bind.hpp>
 #include <boost/mpl/placeholders.hpp>
+#include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/identity.hpp>
 
 namespace boost { namespace fusion
 {
     struct filter_view_iterator_tag;
 
-    template<typename Category,typename Begin, typename End, typename Pred>
-    struct filter_iterator
-      : iterator_base<filter_iterator<Category, Begin, End, Pred> >
+    template<
+        typename Category
+      , typename Begin
+      , typename End
+      , typename Pred
+      , typename PredIsMetafunction
+    >
+    struct filter_view_iterator
+      : iterator_base<
+            filter_view_iterator<Category, Begin, End, Pred,PredIsMetafunction>
+        >
     {
+        typedef PredIsMetafunction pred_is_metafunction;
         typedef Pred pred_type;
         typedef
             detail::static_find_if<
                 Begin
               , End
               , mpl::bind1<
-                    typename mpl::lambda<Pred>::type
+                    typename mpl::eval_if<
+                        pred_is_metafunction
+                      , mpl::lambda<Pred>
+                      , mpl::identity<Pred>
+                    >::type
                   , mpl::bind1<mpl::quote1<result_of::value_of>,mpl::_1>
                 >
             >
@@ -45,18 +60,18 @@ namespace boost { namespace fusion
         typedef Category category;
 
         template<typename OtherIt>
-        filter_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
+        filter_view_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
           : first(BOOST_FUSION_FORWARD(OtherIt,it).first)
         {
             BOOST_FUSION_TAG_CHECK(OtherIt,filter_view_iterator_tag);
         }
 
-        filter_iterator(Begin const& first,int)
+        filter_view_iterator(Begin const& first,int)
           : first(filter::call(first))
         {}
 
         template<typename OtherIt>
-        filter_iterator&
+        filter_view_iterator&
         operator=(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
         {
             BOOST_FUSION_TAG_CHECK(OtherIt,filter_view_iterator_tag);

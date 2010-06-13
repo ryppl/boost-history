@@ -24,10 +24,10 @@
 #include <boost/detail/workaround.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/int.hpp>
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#include <boost/utility/enable_if.hpp>
+#if defined(BOOST_NO_VARIADIC_TEMPLATES) && defined(BOOST_NO_RVALUE_REFERENCES)
 #   include <boost/call_traits.hpp>
 #endif
-#include <boost/utility/enable_if.hpp>
 
 #include <boost/fusion/view/single_view/detail/single_view_fwd.hpp>
 #include <boost/fusion/view/single_view/detail/at_impl.hpp>
@@ -78,27 +78,14 @@ namespace boost { namespace fusion
           : val()
         {}
 
-#ifdef BOOST_NO_VARIADIC_TEMPLATES
-#   ifdef BOOST_NO_RVALUE_REFERENCES
+#if defined(BOOST_NO_VARIADIC_TEMPLATES) && defined(BOOST_NO_RVALUE_REFERENCES)
         explicit
         single_view(typename call_traits<T>::param_type val)
           : val(val)
         {}
-#   else
-        template<typename Arg>
-        explicit
-        single_view(Arg&& val
-          , typename enable_if<
-                detail::is_explicitly_convertible<
-                    BOOST_FUSION_R_ELSE_CLREF(Arg)
-                  , value_type
-                >
-            >::type* =0)
-          : val(std::forward<Arg>(val))
-        {}
-#   endif
 #else
         template<typename Arg>
+        explicit
         single_view(BOOST_FUSION_R_ELSE_CLREF(Arg) arg
           , typename enable_if<
                 detail::is_explicitly_convertible<
@@ -108,8 +95,11 @@ namespace boost { namespace fusion
             >::type* =0)
           : val(BOOST_FUSION_FORWARD(Arg,arg))
         {}
+#endif
 
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
         template<typename Arg1, typename Arg2, typename... Args>
+        explicit
         single_view(BOOST_FUSION_R_ELSE_CLREF(Arg1) arg1
           , BOOST_FUSION_R_ELSE_CLREF(Arg2) arg2
           , BOOST_FUSION_R_ELSE_CLREF(Args)... args)
@@ -142,7 +132,8 @@ namespace boost { namespace fusion
             BOOST_FUSION_STATIC_ASSERT((result_of::size<SeqRef>::value==1));\
         }
 
-        BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_SINGLE_VIEW_ASSIGN_CTOR,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(
+            BOOST_FUSION_SINGLE_VIEW_ASSIGN_CTOR,_)
 
 #undef BOOST_FUSION_SINGLE_VIEW_ASSIGN_CTOR
 

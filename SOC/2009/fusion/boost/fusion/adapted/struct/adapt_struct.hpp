@@ -11,7 +11,6 @@
 
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/preprocessor/cat.hpp>
-#include <boost/preprocessor/empty.hpp>
 
 #include <boost/fusion/adapted/detail/struct/extension.hpp>
 #include <boost/fusion/adapted/detail/struct/adapt_base.hpp>
@@ -35,7 +34,7 @@
 
 #define BOOST_FUSION_ADAPT_STRUCT_C(TEMPLATE_PARAMS_SEQ, NAME_SEQ, I, ATTRIBUTE)\
     BOOST_FUSION_ADAPT_STRUCT_C_BASE(                                           \
-        TEMPLATE_PARAMS_SEQ,NAME_SEQ,I,BOOST_PP_EMPTY(),ATTRIBUTE,2)
+        TEMPLATE_PARAMS_SEQ, NAME_SEQ, I, ATTRIBUTE, 2)
 
 #define BOOST_FUSION_ADAPT_TPL_STRUCT(TEMPLATE_PARAMS_SEQ,NAME_SEQ, ATTRIBUTES) \
     BOOST_FUSION_ADAPT_STRUCT_BASE(                                             \

@@ -109,6 +109,7 @@ namespace boost { namespace fusion
         {}
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
+        explicit
         transform_view(typename storage1_type::call_param seq1,
                 typename storage2_type::call_param seq2,
                 typename call_traits<F>::param_type f)
@@ -118,6 +119,7 @@ namespace boost { namespace fusion
         {}
 #else
         template<typename OtherSeq1, typename OtherSeq2,typename OtherF>
+        explicit
         transform_view(BOOST_FUSION_R_ELSE_CLREF(OtherSeq1) seq1,
                 BOOST_FUSION_R_ELSE_CLREF(OtherSeq2) seq2,
                 BOOST_FUSION_R_ELSE_CLREF(OtherF) f)
@@ -187,6 +189,7 @@ namespace boost { namespace fusion
         {}
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
+        explicit
         unary_transform_view(
             typename storage_type::call_param seq,
             typename call_traits<transform_type>::param_type f)
@@ -195,6 +198,7 @@ namespace boost { namespace fusion
         {}
 #else
         template<typename OtherSeq, typename OtherF>
+        explicit
         unary_transform_view(OtherSeq&& seq,OtherF&& f)
           : seq(std::forward<OtherSeq>(seq))
           , f(std::forward<OtherF>(f))
@@ -216,7 +220,7 @@ namespace boost { namespace fusion
         transform_type f;
     };
 
-    //TODO cschmidt: template typedef
+    //cschmidt: template aliases if possible...
     template<typename Seq, typename F>
     struct transform_view<Seq, F, mpl::true_,mpl::false_>
       : unary_transform_view<Seq, F, mpl::true_>
@@ -229,6 +233,7 @@ namespace boost { namespace fusion
         {}
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
+        explicit
         transform_view(
             typename base::storage_type::call_param seq,
             typename call_traits<typename base::transform_type>::param_type f)
@@ -236,6 +241,7 @@ namespace boost { namespace fusion
         {}
 #else
         template<typename OtherSeq, typename OtherF>
+        explicit
         transform_view(OtherSeq&& seq,OtherF&& f)
           : base(std::forward<OtherSeq>(seq),std::forward<OtherF>(f))
         {}
@@ -262,6 +268,7 @@ namespace boost { namespace fusion
         {}
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
+        explicit
         transform_view(
             typename base::storage_type::call_param seq,
             typename call_traits<typename base::transform_type>::param_type f)
@@ -269,6 +276,7 @@ namespace boost { namespace fusion
         {}
 #else
         template<typename OtherSeq, typename OtherF>
+        explicit
         transform_view(OtherSeq&& seq,OtherF&& f)
           : base(std::forward<OtherSeq>(seq),std::forward<OtherF>(f))
         {}

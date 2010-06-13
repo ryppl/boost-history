@@ -85,6 +85,7 @@ namespace boost { namespace fusion
         }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
+        explicit
         joint_view(typename storage1_type::call_param seq1,
                typename storage2_type::call_param seq2)
           : seq1(seq1)
@@ -92,6 +93,7 @@ namespace boost { namespace fusion
         {}
 #else
         template<typename OtherSeq1, typename OtherSeq2>
+        explicit
         joint_view(BOOST_FUSION_R_ELSE_CLREF(OtherSeq1) seq1,
                 BOOST_FUSION_R_ELSE_CLREF(OtherSeq2) seq2)
           : seq1(BOOST_FUSION_FORWARD(OtherSeq1,seq1))

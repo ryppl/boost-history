@@ -37,16 +37,6 @@ namespace boost
 
         struct fusion_sequence_tag;
     }
-
-    namespace mpl
-    {
-        // Deliberately break mpl::begin, so it doesn't lie that a Fusion
-        // sequence is not an MPL sequence by returning mpl::void_.
-        // In other words: Fusion Sequences are always MPL Sequences, but they
-        // can be incompletely defined.
-        template<>
-        struct begin_impl<fusion::fusion_sequence_tag>;
-    }
 }
 
 #endif

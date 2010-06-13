@@ -1,13 +1,17 @@
 /*=============================================================================
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
  
-#if !defined(BOOST_FUSION_SEQ_NAME) && !defined(BOOST_FUSION_CONTAINER_DETAIL_FORWARD_INTERFACE_HPP)
+#if !defined(BOOST_FUSION_SEQ_NAME) &&\
+    !defined(BOOST_FUSION_CONTAINER_DETAIL_FORWARD_INTERFACE_HPP)
 #   define BOOST_FUSION_CONTAINER_DETAIL_FORWARD_INTERFACE_HPP
+
 #   include <boost/config.hpp>
+#   include <boost/fusion/support/internal/sequence_assign.hpp>
+
 #endif
 
 #ifndef BOOST_FUSION_SEQ_NAME
@@ -46,12 +50,12 @@
 #       include <boost/fusion/container/detail/variadic_templates/forward_interface.hpp>
 #   endif
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
-    template<typename Arg>
-    BOOST_FUSION_SEQ_NAME(BOOST_FUSION_R_ELSE_CLREF(Arg) arg)
-      : BOOST_FUSION_INIT_BASE(BOOST_FUSION_FORWARD(Arg, arg))
-    {}
-#endif
+#   if defined(BOOST_NO_RVALUE_REFERENCES) || !defined(BOOST_NO_VARIADIC_TEMPLATES)
+        template<typename Arg>
+        BOOST_FUSION_SEQ_NAME(BOOST_FUSION_R_ELSE_CLREF(Arg) arg)
+          : BOOST_FUSION_INIT_BASE(BOOST_FUSION_FORWARD(Arg, arg))
+        {}
+#   endif
 
 #   undef BOOST_FUSION_INIT_BASE
 

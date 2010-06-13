@@ -24,6 +24,7 @@
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/mpl/placeholders.hpp>
+#include <boost/mpl/bool.hpp>
 
 namespace boost { namespace fusion
 {
@@ -32,6 +33,14 @@ namespace boost { namespace fusion
 
     namespace detail
     {
+        struct not_is_empty
+        {
+            template<typename Arg>
+            struct apply
+              : mpl::not_<result_of::empty<Arg> >
+            {};
+        };
+
         template<typename Sequence, typename Iterator, bool IsSegmented>
         struct segmented_range
           : sequence_base<segmented_range<Sequence, Iterator, IsSegmented> >
@@ -41,7 +50,11 @@ namespace boost { namespace fusion
             typedef typename
                 mpl::if_c<
                     IsSegmented
-                  , filter_view<Sequence, mpl::not_<result_of::empty<mpl::_1> > >
+                  , filter_view<
+                        Sequence
+                      , not_is_empty
+                      , mpl::false_
+                    >
                   , Sequence
                 >::type
             sequence_non_ref_type;
@@ -187,7 +200,7 @@ namespace boost { namespace fusion
         {
             typedef typename result_of::segments<Sequence>::type segments;
             typedef typename remove_reference<segments>::type sequence;
-            typedef typename result_of::begin<filter_view<sequence, mpl::not_<result_of::empty<mpl::_1> > > >::type begin;
+            typedef typename result_of::begin<filter_view<sequence, not_is_empty, mpl::false_ > >::type begin;
             typedef segmented_range<sequence, begin, true> type;
 
             static type call(Sequence &seq)
@@ -241,7 +254,7 @@ namespace boost { namespace fusion
             static type call(Sequence &seq, State const &state)
             {
                 range rng(as_segmented_range<Sequence>::call(seq));
-                next_ref nxt(*fusion::begin(rng));
+                next_ref nxt(fusion::deref(fusion::begin(rng)));
                 return push::call(nxt, fusion::make_cons(rng, state));
             }
         };
