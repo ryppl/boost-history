@@ -24,6 +24,9 @@
 #include <boost/fusion/include/begin.hpp>
 #include <boost/fusion/include/end.hpp>
 #include <boost/fusion/include/is_sequence.hpp>
+#include <boost/type_traits/is_fundamental.hpp>
+#include <boost/type_traits/remove_reference.hpp>
+#include <boost/type_traits/remove_cv.hpp>
 
 #include <boost/integer/endian_view.hpp>
 
@@ -142,7 +145,50 @@ inline void convert_to_from_impl(T& r) {
 }
 
 template <typename EndianTarget, typename EndianSource, typename T>
-inline void convert_to_from(T& r) {
+void convert_to_from(T& r) {
+    integer_detail::convert_to_from<
+            typename endianness::domain_map<EndianTarget,T>::type, 
+            typename endianness::domain_map<EndianSource,T>::type, 
+            T
+    >::apply(r);
+}
+
+template <typename Endian> 
+struct to {
+    typedef Endian type;
+};
+
+template <typename Endian> 
+struct from {
+    typedef Endian type;
+};
+
+template <typename Endian> 
+struct is_to : mpl::false_ {};
+template <typename Endian> 
+struct is_to<to<Endian> > : mpl::true_ {};
+
+template <typename Endian> 
+struct is_from : mpl::false_ {};
+template <typename Endian> 
+struct is_from<from<Endian> > : mpl::true_ {};
+
+
+template <typename Endian1, typename Endian2, typename T>
+void convert(T& r) {
+    typedef 
+        typename mpl::if_<is_to<Endian1>, typename Endian1::type,
+             typename mpl::if_<is_to<Endian2>, typename Endian2::type,
+                void
+             >::type
+    >::type EndianTarget;
+    typedef 
+        typename mpl::if_<is_from<Endian1>, typename Endian1::type,
+             typename mpl::if_<is_from<Endian2>, typename Endian2::type,
+                void
+             >::type
+    >::type EndianSource;
+        
     integer_detail::convert_to_from<
             typename endianness::domain_map<EndianTarget,T>::type, 
             typename endianness::domain_map<EndianSource,T>::type, 
