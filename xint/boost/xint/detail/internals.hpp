@@ -45,6 +45,7 @@
 #include "divide.hpp"
 
 #include "convert.hpp"
+#include "streams.hpp"
 
 #include "roots.hpp"
 #include "powers.hpp"
@@ -82,6 +83,22 @@ inline size_t log10_bits(size_t bits) {
     while (n >= large_step) { n /= large_step; r += count_per_large_step; }
     while (n >= small_step) { n /= small_step; r += count_per_small_step; }
     return r;
+}
+
+template <typename charT>
+std::basic_string<charT> nan_text() {
+    static std::basic_string<charT> r;
+    if (r.empty()) {
+        std::basic_ostringstream<charT> out;
+        out << "#NaN#";
+        r = out.str();
+    }
+    return r;
+}
+
+template <typename charT>
+bool is_nan_text(const std::basic_string<charT> str) {
+    return (str == nan_text<charT>());
 }
 
 //! @endcond detail

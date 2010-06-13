@@ -42,6 +42,7 @@
       <File Name="../../../../xint/boost/xint/detail/monty.hpp"/>
       <File Name="../../../../xint/boost/xint/detail/randomgen.hpp"/>
       <File Name="../../../../xint/boost/xint/detail/options.hpp"/>
+      <File Name="../boost/xint/detail/streams.hpp"/>
     </VirtualDirectory>
     <File Name="../../../../xint/boost/xint/random.hpp"/>
     <File Name="../../../../xint/boost/xint/exceptions.hpp"/>

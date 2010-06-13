@@ -55,10 +55,12 @@ class raw_integer_t {
         boost::is_integral<T> >::type* = 0): length(1), negative(false),
         changed(false) { if (std::numeric_limits<T>::is_signed) set_signed(n,
         prealloc); else set_unsigned(n, false, prealloc); }
-    raw_integer_t(const char *s, size_t base = 10): length(1), negative(false),
+    template <typename charT>
+    raw_integer_t(const charT *s, size_t base = 10): length(1), negative(false),
         changed(false) { from_string(s, base); }
-    raw_integer_t(const std::string& s, size_t base = 10): length(1),
-        negative(false), changed(false) { from_string(s, base); }
+    template <typename charT>
+    raw_integer_t(const std::basic_string<charT>& s, size_t base = 10):
+        length(1), negative(false), changed(false) { from_string(s, base); }
     raw_integer_t(const xint::binary_t b, size_t bits = 0): length(1),
         negative(false), changed(false) { from_binary(b, bits); }
 
@@ -123,9 +125,12 @@ class raw_integer_t {
     raw_integer_t&       operator<<=(size_t shift);
     raw_integer_t&       operator>>=(size_t shift);
 
-    void from_string(const char *str, size_t base = 10);
-    void from_string(const char *str, char **endptr, size_t base = 10);
-    void from_string(const std::string& str, size_t base = 10);
+    template <typename charT>
+    void from_string(const charT *str, size_t base = 10);
+    template <typename charT>
+    void from_string(const charT *str, char **endptr, size_t base = 10);
+    template <typename charT>
+    void from_string(const std::basic_string<charT>& str, size_t base = 10);
     void from_binary(xint::binary_t b, size_t bits = 0);
 
     template <class GenType>
@@ -136,9 +141,9 @@ class raw_integer_t {
     template <class GenType>
     static raw_integer_t random_prime(GenType& gen, size_t size_in_bits,
         callback_t callback = no_callback);
-    
+
     void _swap(BOOST_XINT_RAWINT& i2);
-    
+
     private:
     bool changed;
     datatype data;
@@ -244,92 +249,6 @@ void BOOST_XINT_RAWINT::_swap(BOOST_XINT_RAWINT& i2) {
 BOOST_XINT_RAWINT_TPL
 void swap(BOOST_XINT_RAWINT& i1, BOOST_XINT_RAWINT& i2) {
     i1._swap(i2);
-}
-
-template <typename charT, typename traits, bitsize_t Bits, bool Secure, class \
-    Alloc>
-inline std::basic_ostream<charT,traits>& operator<<(std::basic_ostream<charT,
-    traits>& out, const BOOST_XINT_RAWINT n)
-{
-    int base=((out.flags() & std::ios::hex) ? 16
-        : (out.flags() & std::ios::oct) ? 8
-        : 10);
-    bool upperCase=(out.flags() & std::ios::uppercase ? true : false);
-
-    int nsign = (n.is_zero() ? 0 : n.negative ? -1 : 1);
-    if ((out.flags() & std::ios::showpos) && nsign >= 0) out << "+";
-
-    if (out.flags() & std::ios::showbase) {
-        if (nsign < 0) out << "-";
-
-        if (base == 16 && upperCase) out << "0X";
-        else if (base == 16) out << "0x";
-        else if (base == 8) out << "0";
-
-        out << to_string(n.abs(), base, upperCase);
-    } else {
-        out << to_string(n, base, upperCase);
-    }
-    return out;
-}
-
-template <typename charT, typename traits, bitsize_t Bits, bool Secure, class \
-    Alloc>
-inline std::basic_istream<charT,traits>& operator>>(std::basic_istream<charT,
-    traits>& in, BOOST_XINT_RAWINT& n)
-{
-    int hex=(in.flags() & std::ios::hex) ? 1 : 0;
-    int dec=(in.flags() & std::ios::dec) ? 1 : 0;
-    int oct=(in.flags() & std::ios::oct) ? 1 : 0;
-    int count=hex+dec+oct;
-
-    size_t base=autobase;
-    if (count == 1) {
-        if (hex) base = 16;
-        else if (oct) base = 8;
-        else base = 10;
-    } else if (count > 1) base = 10;
-    // else auto-base
-
-    std::string s;
-    if (in.peek()=='+') {
-        in.ignore();
-    } else if (in.peek()=='-') {
-        in.ignore();
-        s.push_back('-');
-    }
-
-    if (base==autobase) {
-        if (in.peek()=='0') {
-            in.ignore();
-            int c=in.peek();
-            if (c=='x' || c=='X') {
-                in.ignore();
-                base=16;
-            } else base=8;
-        } else base=10;
-    }
-
-    while (in) {
-        int c=in.peek();
-        if ((base==8 && (c>='0' && c<='7')) ||
-            (base==10 && (c>='0' && c<='9')) ||
-            (base==16 && ((c>='0' && c<='9') || (c>='a' && c<='f') ||
-                (c>='A' && c<='F'))))
-        {
-            in.ignore();
-            s.push_back(char(c));
-        } else break;
-    }
-
-    try {
-        n.from_string(s, base);
-    } catch (std::exception&) {
-        // Catch invalid strings
-        in.setstate(std::ios::failbit);
-    }
-
-    return in;
 }
 
 //! @endcond detail

@@ -181,6 +181,27 @@ BOOST_AUTO_TEST_CASE(test_streams) {
     }
 }
 
+BOOST_AUTO_TEST_CASE(test_wstreams) {
+    const std::wstring nStreamSrc10 = L"28772997619311";
+    std::basic_istringstream<wchar_t> in(nStreamSrc10);
+    integer n;
+    in >> n;
+    std::basic_ostringstream<wchar_t> out;
+    out << n;
+    BOOST_CHECK(out.str() == nStreamSrc10);
+
+    nothrow_integer nt;
+    {
+        std::basic_istringstream<wchar_t> in(detail::nan_text<wchar_t>());
+        in >> nt;
+    }
+
+    BOOST_CHECK(nt.is_nan());
+    out.str(std::wstring());
+    out << nt;
+    BOOST_CHECK(out.str() == detail::nan_text<wchar_t>());
+}
+
 // The following is copyright Paul A. Bristow 2010
 
 //! Compare stream output with expected.

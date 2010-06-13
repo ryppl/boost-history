@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_CASE(test_string_conversions) {
         nothrow_integer test1 = nothrow_integer::nan();
         std::ostringstream outstream;
         outstream << test1;
-        BOOST_CHECK_EQUAL(outstream.str(), nan_text);
+        BOOST_CHECK_EQUAL(outstream.str(), detail::nan_text<char>());
 
         std::istringstream instream;
         instream.str(outstream.str());
@@ -102,6 +102,19 @@ BOOST_AUTO_TEST_CASE(test_string_conversions) {
         instream >> test2;
         BOOST_CHECK(test2.is_nan());
     }
+}
+
+BOOST_AUTO_TEST_CASE(test_wstring_conversions) {
+    std::wstring nStr(L"2345678900987654321");
+    integer n(nStr);
+    std::wstring nStr2 = to_wstring(n);
+    BOOST_CHECK(nStr == nStr2);
+
+    nothrow_integer nt = nothrow_integer::nan();
+    std::wstring ntStr = to_wstring(nt);
+    BOOST_CHECK(ntStr.length() > 0 && ntStr == detail::nan_text<wchar_t>());
+    nothrow_integer nt2(ntStr);
+    BOOST_CHECK(nt2.is_nan());
 }
 
 BOOST_AUTO_TEST_CASE(test_binary_conversions) {

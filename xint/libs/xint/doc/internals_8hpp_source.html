@@ -64,47 +64,64 @@
 <a name="l00045"></a>00045 <span class="preprocessor">#include &quot;<a class="code" href="divide_8hpp.html" title="Contains the definitions of the divide function, and its supporting functions.">divide.hpp</a>&quot;</span>
 <a name="l00046"></a>00046 
 <a name="l00047"></a>00047 <span class="preprocessor">#include &quot;<a class="code" href="convert_8hpp.html" title="Contains the conversion functions.">convert.hpp</a>&quot;</span>
-<a name="l00048"></a>00048 
-<a name="l00049"></a>00049 <span class="preprocessor">#include &quot;<a class="code" href="roots_8hpp.html" title="Contains the square-root function definition, and any future root-related ones.">roots.hpp</a>&quot;</span>
-<a name="l00050"></a>00050 <span class="preprocessor">#include &quot;<a class="code" href="powers_8hpp.html" title="Contains functions related to powers of a number.">powers.hpp</a>&quot;</span>
-<a name="l00051"></a>00051 <span class="preprocessor">#include &quot;<a class="code" href="gcd_8hpp.html" title="Contains functions using the Greatest Common Denominator algorithm.">gcd.hpp</a>&quot;</span>
-<a name="l00052"></a>00052 <span class="preprocessor">#include &quot;<a class="code" href="monty_8hpp.html" title="Contains the Montgomery Reduction functions.">monty.hpp</a>&quot;</span>
-<a name="l00053"></a>00053 <span class="preprocessor">#include &quot;<a class="code" href="modular_8hpp.html" title="Contains the modular math functions.">modular.hpp</a>&quot;</span>
-<a name="l00054"></a>00054 <span class="preprocessor">#include &quot;<a class="code" href="prime_8hpp.html" title="Contains the function definitions for the prime number functions.">prime.hpp</a>&quot;</span>
-<a name="l00055"></a>00055 
-<a name="l00056"></a>00056 <span class="preprocessor">#include &quot;<a class="code" href="options_8hpp.html" title="Declares the arbitrary-length integer type.">options.hpp</a>&quot;</span>
-<a name="l00057"></a>00057 
-<a name="l00060"></a>00060 
-<a name="l00063"></a>00063 
-<a name="l00064"></a>00064 <span class="keyword">namespace </span>boost {
-<a name="l00065"></a>00065 <span class="keyword">namespace </span>xint {
-<a name="l00066"></a>00066 <span class="keyword">namespace </span>detail {
-<a name="l00068"></a>00068 
-<a name="l00069"></a>00069 <span class="keyword">inline</span> <span class="keywordtype">size_t</span> log10_bits(<span class="keywordtype">size_t</span> bits) {
-<a name="l00070"></a>00070     <span class="comment">// large_step and count_per_large_step are based on a minimum-32-bit integer</span>
-<a name="l00071"></a>00071     assert(std::numeric_limits&lt;boost::intmax_t&gt;::digits &gt;= 32);
-<a name="l00072"></a>00072 
-<a name="l00073"></a>00073     <span class="keyword">typedef</span> raw_integer_t&lt;0, false, std::allocator&lt;digit_t&gt; &gt; T;
-<a name="l00074"></a>00074     <span class="keyword">const</span> T large_step(1000000000), small_step(10);
-<a name="l00075"></a>00075     <span class="keyword">const</span> <span class="keywordtype">size_t</span> count_per_large_step = 9, count_per_small_step = 1;
-<a name="l00076"></a>00076 
-<a name="l00077"></a>00077     T n;
-<a name="l00078"></a>00078     pow2(n, bits);
-<a name="l00079"></a>00079     --n;
-<a name="l00080"></a>00080 
-<a name="l00081"></a>00081     <span class="keywordtype">size_t</span> r = 0;
-<a name="l00082"></a>00082     <span class="keywordflow">while</span> (n &gt;= large_step) { n /= large_step; r += count_per_large_step; }
-<a name="l00083"></a>00083     <span class="keywordflow">while</span> (n &gt;= small_step) { n /= small_step; r += count_per_small_step; }
-<a name="l00084"></a>00084     <span class="keywordflow">return</span> r;
-<a name="l00085"></a>00085 }
-<a name="l00086"></a>00086 
-<a name="l00088"></a>00088 } <span class="comment">// namespace detail</span>
-<a name="l00089"></a>00089 } <span class="comment">// namespace xint</span>
-<a name="l00090"></a>00090 } <span class="comment">// namespace boost</span>
-<a name="l00091"></a>00091 
-<a name="l00092"></a>00092 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_INTERNALS_HPP</span>
+<a name="l00048"></a>00048 <span class="preprocessor">#include &quot;<a class="code" href="streams_8hpp.html" title="Contains the stream input/output code for raw_integer types.">streams.hpp</a>&quot;</span>
+<a name="l00049"></a>00049 
+<a name="l00050"></a>00050 <span class="preprocessor">#include &quot;<a class="code" href="roots_8hpp.html" title="Contains the square-root function definition, and any future root-related ones.">roots.hpp</a>&quot;</span>
+<a name="l00051"></a>00051 <span class="preprocessor">#include &quot;<a class="code" href="powers_8hpp.html" title="Contains functions related to powers of a number.">powers.hpp</a>&quot;</span>
+<a name="l00052"></a>00052 <span class="preprocessor">#include &quot;<a class="code" href="gcd_8hpp.html" title="Contains functions using the Greatest Common Denominator algorithm.">gcd.hpp</a>&quot;</span>
+<a name="l00053"></a>00053 <span class="preprocessor">#include &quot;<a class="code" href="monty_8hpp.html" title="Contains the Montgomery Reduction functions.">monty.hpp</a>&quot;</span>
+<a name="l00054"></a>00054 <span class="preprocessor">#include &quot;<a class="code" href="modular_8hpp.html" title="Contains the modular math functions.">modular.hpp</a>&quot;</span>
+<a name="l00055"></a>00055 <span class="preprocessor">#include &quot;<a class="code" href="prime_8hpp.html" title="Contains the function definitions for the prime number functions.">prime.hpp</a>&quot;</span>
+<a name="l00056"></a>00056 
+<a name="l00057"></a>00057 <span class="preprocessor">#include &quot;<a class="code" href="options_8hpp.html" title="Declares the arbitrary-length integer type.">options.hpp</a>&quot;</span>
+<a name="l00058"></a>00058 
+<a name="l00061"></a>00061 
+<a name="l00064"></a>00064 
+<a name="l00065"></a>00065 <span class="keyword">namespace </span>boost {
+<a name="l00066"></a>00066 <span class="keyword">namespace </span>xint {
+<a name="l00067"></a>00067 <span class="keyword">namespace </span>detail {
+<a name="l00069"></a>00069 
+<a name="l00070"></a>00070 <span class="keyword">inline</span> <span class="keywordtype">size_t</span> log10_bits(<span class="keywordtype">size_t</span> bits) {
+<a name="l00071"></a>00071     <span class="comment">// large_step and count_per_large_step are based on a minimum-32-bit integer</span>
+<a name="l00072"></a>00072     assert(std::numeric_limits&lt;boost::intmax_t&gt;::digits &gt;= 32);
+<a name="l00073"></a>00073 
+<a name="l00074"></a>00074     <span class="keyword">typedef</span> raw_integer_t&lt;0, false, std::allocator&lt;digit_t&gt; &gt; T;
+<a name="l00075"></a>00075     <span class="keyword">const</span> T large_step(1000000000), small_step(10);
+<a name="l00076"></a>00076     <span class="keyword">const</span> <span class="keywordtype">size_t</span> count_per_large_step = 9, count_per_small_step = 1;
+<a name="l00077"></a>00077 
+<a name="l00078"></a>00078     T n;
+<a name="l00079"></a>00079     pow2(n, bits);
+<a name="l00080"></a>00080     --n;
+<a name="l00081"></a>00081 
+<a name="l00082"></a>00082     <span class="keywordtype">size_t</span> r = 0;
+<a name="l00083"></a>00083     <span class="keywordflow">while</span> (n &gt;= large_step) { n /= large_step; r += count_per_large_step; }
+<a name="l00084"></a>00084     <span class="keywordflow">while</span> (n &gt;= small_step) { n /= small_step; r += count_per_small_step; }
+<a name="l00085"></a>00085     <span class="keywordflow">return</span> r;
+<a name="l00086"></a>00086 }
+<a name="l00087"></a>00087 
+<a name="l00088"></a>00088 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> <span class="keywordtype">char</span>T&gt;
+<a name="l00089"></a>00089 std::basic_string&lt;charT&gt; nan_text() {
+<a name="l00090"></a>00090     <span class="keyword">static</span> std::basic_string&lt;charT&gt; r;
+<a name="l00091"></a>00091     <span class="keywordflow">if</span> (r.empty()) {
+<a name="l00092"></a>00092         std::basic_ostringstream&lt;charT&gt; out;
+<a name="l00093"></a>00093         out &lt;&lt; <span class="stringliteral">&quot;#NaN#&quot;</span>;
+<a name="l00094"></a>00094         r = out.str();
+<a name="l00095"></a>00095     }
+<a name="l00096"></a>00096     <span class="keywordflow">return</span> r;
+<a name="l00097"></a>00097 }
+<a name="l00098"></a>00098 
+<a name="l00099"></a>00099 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> <span class="keywordtype">char</span>T&gt;
+<a name="l00100"></a>00100 <span class="keywordtype">bool</span> is_nan_text(<span class="keyword">const</span> std::basic_string&lt;charT&gt; str) {
+<a name="l00101"></a>00101     <span class="keywordflow">return</span> (str == nan_text&lt;charT&gt;());
+<a name="l00102"></a>00102 }
+<a name="l00103"></a>00103 
+<a name="l00105"></a>00105 } <span class="comment">// namespace detail</span>
+<a name="l00106"></a>00106 } <span class="comment">// namespace xint</span>
+<a name="l00107"></a>00107 } <span class="comment">// namespace boost</span>
+<a name="l00108"></a>00108 
+<a name="l00109"></a>00109 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_INTERNALS_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sat Jun 12 11:43:07 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 00:01:46 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

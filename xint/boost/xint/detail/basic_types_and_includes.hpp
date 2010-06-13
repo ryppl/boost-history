@@ -83,9 +83,6 @@ const size_t autobase = (std::numeric_limits<size_t>::max)();
 //! \brief This makes it easier to tell when an item is measured in bits.
 typedef size_t bitsize_t;
 
-//! \brief This is the string representation of the Not-a-Number value.
-const std::string nan_text("#NaN#");
-
 //! \brief Holds the results from a division-with-remainder call.
 template <class T>
 class base_divide_t {

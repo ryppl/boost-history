@@ -47,7 +47,6 @@
 namespace boost {
 namespace xint {
 
-// todo: update for new parameters
 /*! \brief The integer_t class template.
 
 This class implements the standard aribitrary-length %integer type.
@@ -104,7 +103,7 @@ class integer_t {
     typedef typename options::integer_signature::bind<A0,A1,A2,A3,A4>::type
         args;
     typedef const typename binding<args, tag::fixedlength_tag,
-		options::fixedlength<0> >::type BitsType;
+        options::fixedlength<0> >::type BitsType;
     typedef const typename binding<args, tag::threadsafe_tag, mpl::true_>::type
         ThreadsafeType;
     typedef const typename binding<args, tag::secure_tag, mpl::false_>::type
@@ -130,9 +129,12 @@ class integer_t {
     integer_t(const BOOST_XINT_INTEGER_TYPE& b, bool force_thread_safety =
         false);
     integer_t(BOOST_XINT_RV_REF(type) b) { _swap(b); }
-    explicit integer_t(const char *str, size_t base = 10);
-    explicit integer_t(const char *str, char **endptr, size_t base = 10);
-    explicit integer_t(const std::string& str, size_t base = 10);
+    template <typename charT>
+    explicit integer_t(const charT *str, size_t base = 10);
+    template <typename charT>
+    explicit integer_t(const charT *str, charT **endptr, size_t base = 10);
+    template <typename charT>
+    explicit integer_t(const std::basic_string<charT>& str, size_t base = 10);
     explicit integer_t(const xint::binary_t b, bitsize_t bits = 0);
     BOOST_XINT_OTHER_TPL explicit integer_t(const BOOST_XINT_OTHER_TYPE& other,
         bool force_thread_safety = false);
@@ -276,7 +278,8 @@ BOOST_XINT_INTEGER_TYPE::integer_t(const BOOST_XINT_INTEGER_TYPE& b, bool
         try {
             data = b.data;
             if (!data.is_nan()) {
-                if (force_thread_safety && Threadsafe == false) data.make_unique();
+                if (force_thread_safety && Threadsafe == false)
+                    data.make_unique();
             }
         } catch (std::exception&) {
             data.make_nan();
@@ -289,10 +292,12 @@ BOOST_XINT_INTEGER_TYPE::integer_t(const BOOST_XINT_INTEGER_TYPE& b, bool
 
 //! \copydoc integer_t(const std::string&, size_t)
 BOOST_XINT_INTEGER_TPL
-BOOST_XINT_INTEGER_TYPE::integer_t(const char *str, size_t base) {
+template <typename charT>
+BOOST_XINT_INTEGER_TYPE::integer_t(const charT *str, size_t base) {
     if (Nothrow) {
         try {
-            if (str[0] == nan_text[0] && std::string(str) == nan_text) {
+            std::basic_string<charT> tnan = detail::nan_text<charT>();
+            if (str[0] == tnan[0] && std::basic_string<charT>(str) == tnan) {
                 data.make_nan();
             } else {
                 data.from_string(str, base);
@@ -334,15 +339,18 @@ in the object pointed by \c endptr.
 \overload
 */
 BOOST_XINT_INTEGER_TPL
-BOOST_XINT_INTEGER_TYPE::integer_t(const char *str, char **endptr, size_t base)
+template <typename charT>
+BOOST_XINT_INTEGER_TYPE::integer_t(const charT *str, charT **endptr, size_t
+    base)
 {
     if (Nothrow) {
         try {
-            if (str[0] == nan_text[0]) {
-                std::string s(str);
-                if (s.substr(0, nan_text.length()) == nan_text) {
+            std::basic_string<charT> tnan = detail::nan_text<charT>();
+            if (str[0] == tnan[0]) {
+                std::basic_string<charT> s(str);
+                if (s.substr(0, tnan.length()) == tnan) {
                     data.make_nan();
-                    *endptr = str + nan_text.length();
+                    *endptr = str + tnan.length();
                     return;
                 }
             }
@@ -380,10 +388,13 @@ fit into a native integral type.
 \overload
 */
 BOOST_XINT_INTEGER_TPL
-BOOST_XINT_INTEGER_TYPE::integer_t(const std::string& str, size_t base) {
+template <typename charT>
+BOOST_XINT_INTEGER_TYPE::integer_t(const std::basic_string<charT>& str, size_t
+    base)
+{
     if (Nothrow) {
         try {
-            if (str == nan_text) data.make_nan();
+            if (str == detail::nan_text<charT>()) data.make_nan();
             else data.from_string(str, base);
         } catch (std::exception&) {
             data.make_nan();
@@ -1432,14 +1443,51 @@ std::string to_string(const BOOST_XINT_INTEGER_TYPE n, size_t base = 10, bool
     uppercase = false)
 {
     if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
-        if (n.is_nan()) return nan_text;
+        if (n.is_nan()) return detail::nan_text<char>();
         try {
-            return to_string(n._data(), base, uppercase);
+            return to_string<char>(n._data(), base, uppercase);
         } catch (std::exception&) {
             return std::string();
         }
     } else {
-        return to_string(n._data(), base, uppercase);
+        return to_string<char>(n._data(), base, uppercase);
+    }
+}
+
+/*! \brief Creates a wide-character string representation of the specified
+           %integer.
+
+- Complexity: O(n<sup>2</sup>)
+
+\param[in] n The %integer to convert.
+\param[in] base The base, between 2 and 36 inclusive, to convert it to. Defaults
+to base 10.
+\param[in] uppercase Whether to make alphabetic characters (for bases greater
+than ten) uppercase or not. Defaults to \c false.
+
+\returns The string value of \c n. The nothrow<true> version returns the string
+"#NaN#" if \c n is a Not-a-Number, and an empty string instead of throwing.
+
+\exception exceptions::invalid_base if base is less than two or greater than 36.
+
+\remarks
+This is the function that's called when you ask the library to write an %integer
+to a stream, but it's more flexible because you can specify any base between 2
+and 36. (Streams only allow base-8, base-10, or base-16.)
+*/
+BOOST_XINT_INTEGER_TPL
+std::wstring to_wstring(const BOOST_XINT_INTEGER_TYPE n, size_t base = 10, bool
+    uppercase = false)
+{
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        if (n.is_nan()) return detail::nan_text<wchar_t>();
+        try {
+            return to_string<wchar_t>(n._data(), base, uppercase);
+        } catch (std::exception&) {
+            return std::wstring();
+        }
+    } else {
+        return to_string<wchar_t>(n._data(), base, uppercase);
     }
 }
 
@@ -2376,7 +2424,7 @@ template <typename charT, typename traits, class A0, class A1, class A2, class
     BOOST_XINT_INTEGER_TYPE n)
 {
     if (BOOST_XINT_INTEGER_TYPE::Nothrow && n.is_nan()) return operator<<(out,
-        nan_text);
+        detail::nan_text<charT>());
     return operator<<(out, n._data());
 }
 
@@ -2385,24 +2433,30 @@ template <typename charT, typename traits, class A0, class A1, class A2, class
     operator>>(std::basic_istream<charT, traits>& in, BOOST_XINT_INTEGER_TYPE&
     n)
 {
-    if (BOOST_XINT_INTEGER_TYPE::Nothrow && in.peek()=='#') {
-        // Must be either #NaN# or an error
-        char buffer[6];
+    if (BOOST_XINT_INTEGER_TYPE::Nothrow) {
+        std::basic_string<charT> tnan = detail::nan_text<charT>();
+        charT nextchar = charT(in.peek());
+        if (nextchar == tnan[0]) {
+            // Must be either #NaN# or an error
+            std::vector<charT> buffer;
 
-        // These are efficient and safe, but MSVC complains about them anyway.
-        //std::streamsize size = in.readsome(buffer, 5);
-        //buffer[size]=0;
+            // These are efficient and safe, but MSVC complains about them anyway.
+            //std::streamsize size = in.readsome(buffer, 5);
+            //buffer[size]=0;
 
-        // Replacing them with these.
-        char *p = buffer, *pe = p + 5;
-        while (p != pe) in >> *p++;
-        *p = 0;
+            // Replacing them with these.
+            charT p = 0;
+            for (size_t i = 0; i < tnan.length(); ++i) {
+                in >> p;
+                buffer.push_back(p);
+            }
+            buffer.push_back(0);
 
-        std::string str(buffer);
-
-        if (str == boost::xint::nan_text) n = n.nan();
-        else in.setstate(std::ios::failbit);
-        return in;
+            std::basic_string<charT> str(&buffer[0]);
+            if (str == tnan) n = n.nan();
+            else in.setstate(std::ios::failbit);
+            return in;
+        }
     }
     return operator>>(in, n._data());
 }
@@ -2441,15 +2495,15 @@ class numeric_limits<BOOST_XINT_INTEGER_TYPENAME> {
     static const bool is_specialized;
 
     static BOOST_XINT_INTEGER_TYPENAME min BOOST_PREVENT_MACRO_SUBSTITUTION()
-		throw()
-	{
+        throw()
+    {
         if (BOOST_XINT_INTEGER_TYPENAME::Bits)
             return -~(BOOST_XINT_INTEGER_TYPENAME());
         else return 0;
     }
     static BOOST_XINT_INTEGER_TYPENAME max BOOST_PREVENT_MACRO_SUBSTITUTION()
-		throw()
-	{
+        throw()
+    {
         if (BOOST_XINT_INTEGER_TYPENAME::Bits)
             return ~(BOOST_XINT_INTEGER_TYPENAME());
         else return 0;
