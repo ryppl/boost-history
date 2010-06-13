@@ -8,7 +8,12 @@
 # See library home page at http://www.boost.org/libs/integer/doc/endian.html
 
    import testing ;
-   
+
+project
+    : requirements
+        <library>/boost/system//boost_system
+    ;
+
    test-suite "endian"
        :
          [ run binary_stream_test.cpp ]
@@ -23,4 +28,11 @@
          [ run endian_type_test.cpp ]
          [ run endian_convert_test.cpp ]
          [ run endian_convert_unique_endian_test.cpp ]
+      ;
+
+   test-suite "examples"
+       :
+         [ run ../example/endian_example.cpp ]
+         [ run ../example/endian_hello_world.cpp ]
+         [ run ../example/packet_example.cpp ]
       ;
