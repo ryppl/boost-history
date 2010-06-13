@@ -27,25 +27,31 @@
 <a name="boost_integer.bits_and_ints"></a><a class="link" href="bits_and_ints.html" title="Bits and Ints"> Bits and Ints</a>
 </h2></div></div></div>
 <div class="toc"><dl>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.overview">Overview</a></span></dt>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.sign_extend"> Sign Extending</a></span></dt>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bit_reversal"> Bit Reversal</a></span></dt>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.same_sign"> Same Sign</a></span></dt>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.sign"> Sign function</a></span></dt>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils"> Binary Utilities</a></span></dt>
 </dl></div>
+<div class="section" title="Overview">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_integer.bits_and_ints.overview"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.overview" title="Overview">Overview</a>
+</h3></div></div></div>
 <p>
-      The intent of this library is to extend Boost.Integer with fast integer algorithms
-      and utilities. This library can be included via <a href="../../../../../boost/integer/bits_and_ints.hpp" target="_top">&lt;boost/integer/bits_and_ints.hpp&gt;</a>.
-    </p>
+        The intent of this library is to extend Boost.Integer with fast integer algorithms
+        and utilities. This library can be included via <a href="../../../../../boost/integer/bits_and_ints.hpp" target="_top">&lt;boost/integer/bits_and_ints.hpp&gt;</a>.
+      </p>
+</div>
 <div class="section" title="Sign Extending">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_integer.bits_and_ints.sign_extend"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.sign_extend" title="Sign Extending"> Sign Extending</a>
 </h3></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.sign_extend.run_time_version">Run-time
-        version</a></span></dt>
-<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.sign_extend.compile_time_version">Compile-time
-        version</a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.sign_extend.non_member_function_template__sign_extend_">Non-Member
+        Function Template <code class="computeroutput"><span class="identifier">sign_extend</span></code></a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.sign_extend.template_class__static_sign_extend___">Template
+        Class <code class="computeroutput"><span class="identifier">static_sign_extend</span><span class="special">&lt;&gt;</span></code></a></span></dt>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.sign_extend.examples">Examples</a></span></dt>
 </dl></div>
 <p>
@@ -57,24 +63,31 @@
         number, then -3 is represented as 1101 in binary. If we have 8 bits, then
         -3 is 11111101. The most-significant bit of the 4-bit representation is replicated
         sinistrally to fill in the destination when we convert to a representation
-        with more bits; this is sign extending.
+        with more bits; this is sign extending. More about sign extending on <a href="http://en.wikipedia.org/wiki/Sign_extension" target="_top">http://en.wikipedia.org/wiki/Sign_extension</a>
       </p>
-<div class="section" title="Run-time version">
+<div class="section" title="Non-Member Function Template sign_extend">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_integer.bits_and_ints.sign_extend.run_time_version"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.sign_extend.run_time_version" title="Run-time version">Run-time
-        version</a>
+<a name="boost_integer.bits_and_ints.sign_extend.non_member_function_template__sign_extend_"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.sign_extend.non_member_function_template__sign_extend_" title="Non-Member Function Template sign_extend">Non-Member
+        Function Template <code class="computeroutput"><span class="identifier">sign_extend</span></code></a>
 </h4></div></div></div>
 <p>
           The run-time version can be included via <a href="../../../../../boost/integer/sign_extend.hpp" target="_top">&lt;boost/integer/sign_extend.hpp&gt;</a>.
         </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Type</span><span class="special">&gt;</span>
-<span class="keyword">inline</span> <span class="keyword">typename</span> <span class="identifier">enable_if</span><span class="special">&lt;</span><span class="identifier">is_integral</span><span class="special">&lt;</span><span class="identifier">Type</span><span class="special">&gt;,</span> <span class="identifier">Type</span><span class="special">&gt;::</span><span class="identifier">type</span>
-<span class="identifier">sign_extend</span><span class="special">(</span><span class="identifier">Type</span> <span class="identifier">data</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">bits</span><span class="special">);</span>
+<span class="identifier">Type</span> <span class="identifier">sign_extend</span><span class="special">(</span><span class="identifier">Type</span> <span class="identifier">data</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">bits</span><span class="special">);</span>
 </pre>
-<a name="boost_integer.bits_and_ints.sign_extend.run_time_version.parameters"></a><h5>
-<a name="id36188118"></a>
-          <a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.sign_extend.run_time_version.parameters">Parameters</a>
-        </h5>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+<span class="bold"><strong>Requires: </strong></span><code class="computeroutput"><span class="identifier">bits</span></code>
+            must be smaller than the size (in bits) of <code class="computeroutput"><span class="identifier">Type</span></code>.
+          </li>
+<li class="listitem">
+<span class="bold"><strong>Remarks: </strong></span><code class="computeroutput"><span class="identifier">Type</span></code>
+            must be an integral type. If this constraint is not met, this function
+            do not participate in overload resolution.
+          </li>
+<li class="listitem"><span class="bold"><strong>Parameters:</strong></span></li>
+</ul></div>
 <div class="informaltable"><table class="table">
 <colgroup>
 <col>
@@ -119,38 +132,44 @@
 </tr>
 </tbody>
 </table></div>
-<a name="boost_integer.bits_and_ints.sign_extend.run_time_version.return"></a><h5>
-<a name="id36188215"></a>
-          <a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.sign_extend.run_time_version.return">Return</a>
-        </h5>
-<p>
-          <code class="computeroutput"><span class="identifier">data</span></code> sign-extended to
-          <code class="computeroutput"><span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">Type</span><span class="special">)</span></code>
-          bytes. The return type is <code class="computeroutput"><span class="identifier">Type</span></code>.
-        </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+<span class="bold"><strong>Returns: </strong></span><code class="computeroutput"><span class="identifier">data</span></code>
+            sign-extended to <code class="computeroutput"><span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">Type</span><span class="special">)</span></code> bytes.
+          </li>
+<li class="listitem">
+<span class="bold"><strong>Throws:</strong></span> none.
+          </li>
+</ul></div>
 </div>
-<div class="section" title="Compile-time version">
+<div class="section" title="Template Class static_sign_extend&lt;&gt;">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_integer.bits_and_ints.sign_extend.compile_time_version"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.sign_extend.compile_time_version" title="Compile-time version">Compile-time
-        version</a>
+<a name="boost_integer.bits_and_ints.sign_extend.template_class__static_sign_extend___"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.sign_extend.template_class__static_sign_extend___" title="Template Class static_sign_extend&lt;&gt;">Template
+        Class <code class="computeroutput"><span class="identifier">static_sign_extend</span><span class="special">&lt;&gt;</span></code></a>
 </h4></div></div></div>
 <p>
           The compile-time version can be included via <a href="../../../../../boost/integer/static_sign_extend.hpp" target="_top">&lt;boost/integer/static_sign_extend.hpp&gt;</a>.
           The result will be in <code class="computeroutput"><span class="identifier">value</span></code>
           member.
         </p>
-<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Type</span><span class="special">,</span> <span class="identifier">Type</span> <span class="identifier">data</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">Bits</span><span class="special">,</span> 
-	<span class="keyword">class</span> <span class="identifier">Enable</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">&gt;</span>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Type</span><span class="special">,</span> <span class="identifier">Type</span> <span class="identifier">data</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">Bits</span><span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">static_sign_extend</span> 
 <span class="special">{</span>
 	<span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">Type</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> 
 <span class="special">};</span>
 </pre>
-<a name="boost_integer.bits_and_ints.sign_extend.compile_time_version.template_parameters"></a><h5>
-<a name="id36188440"></a>
-          <a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.sign_extend.compile_time_version.template_parameters">Template
-          Parameters</a>
-        </h5>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+<span class="bold"><strong>Requires: </strong></span><code class="computeroutput"><span class="identifier">Bits</span></code>
+            must be smaller than the size, in bits, of <code class="computeroutput"><span class="identifier">Type</span></code>.
+          </li>
+<li class="listitem">
+<span class="bold"><strong>Remarks: </strong></span><code class="computeroutput"><span class="identifier">Type</span></code>
+            must be an integral type. If this constraint is not met, this metafunction
+            do not participate in overload resolution.
+          </li>
+<li class="listitem"><span class="bold"><strong>Template Parameters:</strong></span></li>
+</ul></div>
 <div class="informaltable"><table class="table">
 <colgroup>
 <col>
@@ -212,12 +231,9 @@
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_integer.bits_and_ints.sign_extend.examples"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.sign_extend.examples" title="Examples">Examples</a>
 </h4></div></div></div>
-<a name="boost_integer.bits_and_ints.sign_extend.examples.run_time_version"></a><h5>
-<a name="id36188573"></a>
-          <a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.sign_extend.examples.run_time_version">Run-time
-          version</a>
-        </h5>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">sign_extend</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+<span class="bold"><strong>Run-time version</strong></span><pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">sign_extend</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
@@ -230,12 +246,9 @@
 	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">result</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// -1
 </span><span class="special">}</span>
 </pre>
-<a name="boost_integer.bits_and_ints.sign_extend.examples.compile_time_version"></a><h5>
-<a name="id36188811"></a>
-          <a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.sign_extend.examples.compile_time_version">Compile-time
-          version</a>
-        </h5>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">static_sign_extend</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</li>
+<li class="listitem">
+<span class="bold"><strong>Compile-time version</strong></span><pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">static_sign_extend</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
@@ -246,6 +259,8 @@
 	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">result</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// -1
 </span><span class="special">}</span>
 </pre>
+</li>
+</ul></div>
 </div>
 </div>
 <div class="section" title="Bit Reversal">
@@ -253,32 +268,27 @@
 <a name="boost_integer.bits_and_ints.bit_reversal"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bit_reversal" title="Bit Reversal"> Bit Reversal</a>
 </h3></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bit_reversal.run_time_version">Run-time
-        version</a></span></dt>
-<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bit_reversal.compile_time_version">Compile-time
-        version</a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bit_reversal.non_member_function__bit_reversal_">Non-Member
+        Function <code class="computeroutput"><span class="identifier">bit_reversal</span></code></a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bit_reversal.template_class__static_bit_reversal___">Template
+        Class <code class="computeroutput"><span class="identifier">static_bit_reversal</span><span class="special">&lt;&gt;</span></code></a></span></dt>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bit_reversal.examples">Examples</a></span></dt>
 </dl></div>
 <p>
         The bit reversal functions reverts the bits of integral types.
       </p>
-<div class="section" title="Run-time version">
+<div class="section" title="Non-Member Function bit_reversal">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_integer.bits_and_ints.bit_reversal.run_time_version"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bit_reversal.run_time_version" title="Run-time version">Run-time
-        version</a>
+<a name="boost_integer.bits_and_ints.bit_reversal.non_member_function__bit_reversal_"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bit_reversal.non_member_function__bit_reversal_" title="Non-Member Function bit_reversal">Non-Member
+        Function <code class="computeroutput"><span class="identifier">bit_reversal</span></code></a>
 </h4></div></div></div>
 <p>
           The run-time version can be included via <a href="../../../../../boost/integer/bit_reversal.hpp" target="_top">&lt;boost/integer/bit_reversal.hpp&gt;</a>.
-          For valid types T, the function <code class="computeroutput"><span class="identifier">bit_reversal</span></code>
-          will be:
         </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="keyword">inline</span> <span class="identifier">T</span> <span class="identifier">bit_reversal</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">data</span><span class="special">);</span>
 </pre>
-<a name="boost_integer.bits_and_ints.bit_reversal.run_time_version.parameters"></a><h5>
-<a name="id36189142"></a>
-          <a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bit_reversal.run_time_version.parameters">Parameters</a>
-        </h5>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><span class="bold"><strong>Parameters:</strong></span></li></ul></div>
 <div class="informaltable"><table class="table">
 <colgroup>
 <col>
@@ -312,34 +322,34 @@
                 </td>
 </tr></tbody>
 </table></div>
-<a name="boost_integer.bits_and_ints.bit_reversal.run_time_version.return"></a><h5>
-<a name="id36189226"></a>
-          <a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bit_reversal.run_time_version.return">Return</a>
-        </h5>
-<p>
-          <code class="computeroutput"><span class="identifier">data</span></code> with its bits reversed.
-        </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+<span class="bold"><strong>Remarks: </strong></span><code class="computeroutput"><span class="identifier">T</span></code>
+            must be an integral type. If this constraint is not met, this function
+            do not participate in overload resolution.
+          </li>
+<li class="listitem">
+<span class="bold"><strong>Returns: </strong></span><code class="computeroutput"><span class="identifier">data</span></code>
+            with its bits reversed.
+          </li>
+</ul></div>
 </div>
-<div class="section" title="Compile-time version">
+<div class="section" title="Template Class static_bit_reversal&lt;&gt;">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_integer.bits_and_ints.bit_reversal.compile_time_version"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bit_reversal.compile_time_version" title="Compile-time version">Compile-time
-        version</a>
+<a name="boost_integer.bits_and_ints.bit_reversal.template_class__static_bit_reversal___"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bit_reversal.template_class__static_bit_reversal___" title="Template Class static_bit_reversal&lt;&gt;">Template
+        Class <code class="computeroutput"><span class="identifier">static_bit_reversal</span><span class="special">&lt;&gt;</span></code></a>
 </h4></div></div></div>
 <p>
           The compile-time version can be included via <a href="../../../../../boost/integer/static_bit_reversal.hpp" target="_top">&lt;boost/integer/static_bit_reversal.hpp&gt;</a>.
           The result will be in <code class="computeroutput"><span class="identifier">value</span></code>
           member.
         </p>
-<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">data</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Enable</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">&gt;</span>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">data</span><span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">static_bit_reversal</span> <span class="special">{</span> 
-	<span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">Type</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> 
+	<span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">T</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> 
 <span class="special">};</span>
 </pre>
-<a name="boost_integer.bits_and_ints.bit_reversal.compile_time_version.template_parameters"></a><h5>
-<a name="id36189402"></a>
-          <a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bit_reversal.compile_time_version.template_parameters">Template
-          Parameters</a>
-        </h5>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><span class="bold"><strong>Template Parameters</strong></span></li></ul></div>
 <div class="informaltable"><table class="table">
 <colgroup>
 <col>
@@ -385,16 +395,18 @@
 </tbody>
 </table></div>
 </div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+<span class="bold"><strong>Remarks: </strong></span><code class="computeroutput"><span class="identifier">T</span></code>
+          must be an integral type. If this constraint is not met, this metafunction
+          do not participate in overload resolution.
+        </li></ul></div>
 <div class="section" title="Examples">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_integer.bits_and_ints.bit_reversal.examples"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bit_reversal.examples" title="Examples">Examples</a>
 </h4></div></div></div>
-<a name="boost_integer.bits_and_ints.bit_reversal.examples.run_time_version"></a><h5>
-<a name="id36189511"></a>
-          <a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bit_reversal.examples.run_time_version">Run-time
-          version</a>
-        </h5>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bit_reversal</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+<span class="bold"><strong>Run-time version</strong></span><pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bit_reversal</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
@@ -408,12 +420,9 @@
 </span>	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">hex</span> <span class="special">&lt;&lt;</span> <span class="identifier">result</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// -1
 </span><span class="special">}</span>
 </pre>
-<a name="boost_integer.bits_and_ints.bit_reversal.examples.compile_time_version"></a><h5>
-<a name="id36189759"></a>
-          <a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bit_reversal.examples.compile_time_version">Compile-time
-          version</a>
-        </h5>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">static_bit_reversal</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</li>
+<li class="listitem">
+<span class="bold"><strong>Compile-time version</strong></span><pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">static_bit_reversal</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
@@ -425,6 +434,8 @@
 </span>	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">hex</span> <span class="special">&lt;&lt;</span> <span class="identifier">result</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
+</li>
+</ul></div>
 </div>
 </div>
 <div class="section" title="Same Sign">
@@ -432,19 +443,19 @@
 <a name="boost_integer.bits_and_ints.same_sign"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.same_sign" title="Same Sign"> Same Sign</a>
 </h3></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.same_sign.run_time_version">Run-time
-        version</a></span></dt>
-<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.same_sign.compile_time_version">Compile-time
-        version</a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.same_sign.non_member_function__same_sign_">Non-Member
+        Function <code class="computeroutput"><span class="identifier">same_sign</span></code></a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.same_sign.template_class__static_same_sign___">Template
+        Class <code class="computeroutput"><span class="identifier">static_same_sign</span><span class="special">&lt;&gt;</span></code></a></span></dt>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.same_sign.examples">Examples</a></span></dt>
 </dl></div>
 <p>
         These functions check if wheter the sign of two integers are equal.
       </p>
-<div class="section" title="Run-time version">
+<div class="section" title="Non-Member Function same_sign">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_integer.bits_and_ints.same_sign.run_time_version"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.same_sign.run_time_version" title="Run-time version">Run-time
-        version</a>
+<a name="boost_integer.bits_and_ints.same_sign.non_member_function__same_sign_"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.same_sign.non_member_function__same_sign_" title="Non-Member Function same_sign">Non-Member
+        Function <code class="computeroutput"><span class="identifier">same_sign</span></code></a>
 </h4></div></div></div>
 <p>
           The run-time version can be included via <a href="../../../../../boost/integer/same_sign.hpp" target="_top">&lt;boost/integer/same_sign.hpp&gt;</a>.
@@ -454,10 +465,7 @@
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="keyword">inline</span> <span class="keyword">bool</span> <span class="identifier">same_sign</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">first</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">second</span><span class="special">);</span>
 </pre>
-<a name="boost_integer.bits_and_ints.same_sign.run_time_version.parameters"></a><h5>
-<a name="id36190114"></a>
-          <a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.same_sign.run_time_version.parameters">Parameters</a>
-        </h5>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><span class="bold"><strong>Parameters:</strong></span></li></ul></div>
 <div class="informaltable"><table class="table">
 <colgroup>
 <col>
@@ -489,39 +497,36 @@
                 </td>
 </tr></tbody>
 </table></div>
-<a name="boost_integer.bits_and_ints.same_sign.run_time_version.return"></a><h5>
-<a name="id36190215"></a>
-          <a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.same_sign.run_time_version.return">Return</a>
-        </h5>
-<p>
-          <code class="computeroutput"><span class="keyword">false</span></code>: if the signs of first
-          and second are different
-        </p>
-<p>
-          <code class="computeroutput"><span class="keyword">true</span></code>: if the signs are equal
-        </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+<span class="bold"><strong>Returns: </strong></span><code class="computeroutput"><span class="keyword">false</span></code>
+            if the signs of first and second are different or <code class="computeroutput"><span class="keyword">true</span></code>
+            if the signs are equal
+          </li>
+<li class="listitem">
+<span class="bold"><strong>Remarks: </strong></span><code class="computeroutput"><span class="identifier">T</span></code>
+            must be an integral type. If this constraint is not met, this function
+            do not participate in overload resolution.
+          </li>
+</ul></div>
 </div>
-<div class="section" title="Compile-time version">
+<div class="section" title="Template Class static_same_sign&lt;&gt;">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_integer.bits_and_ints.same_sign.compile_time_version"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.same_sign.compile_time_version" title="Compile-time version">Compile-time
-        version</a>
+<a name="boost_integer.bits_and_ints.same_sign.template_class__static_same_sign___"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.same_sign.template_class__static_same_sign___" title="Template Class static_same_sign&lt;&gt;">Template
+        Class <code class="computeroutput"><span class="identifier">static_same_sign</span><span class="special">&lt;&gt;</span></code></a>
 </h4></div></div></div>
 <p>
           The compile-time version can be included via <a href="../../../../../boost/integer/same_sign.hpp" target="_top">&lt;boost/integer/same_sign.hpp&gt;</a>.
           The result will be in <code class="computeroutput"><span class="identifier">value</span></code>
           member.
         </p>
-<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">first</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">second</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Enable</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">&gt;</span>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">first</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">second</span><span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">static_same_sign</span>
 <span class="special">{</span>
 	<span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span>
 <span class="special">};</span>
 </pre>
-<a name="boost_integer.bits_and_ints.same_sign.compile_time_version.template_parameters"></a><h5>
-<a name="id36190416"></a>
-          <a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.same_sign.compile_time_version.template_parameters">Template
-          Parameters</a>
-        </h5>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><span class="bold"><strong>Template Parameters:</strong></span></li></ul></div>
 <div class="informaltable"><table class="table">
 <colgroup>
 <col>
@@ -566,17 +571,19 @@
 </tr>
 </tbody>
 </table></div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+<span class="bold"><strong>Remarks: </strong></span><code class="computeroutput"><span class="identifier">T</span></code>
+            must be an integral type. If this constraint is not met, this class do
+            not participate in overload resolution.
+          </li></ul></div>
 </div>
 <div class="section" title="Examples">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_integer.bits_and_ints.same_sign.examples"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.same_sign.examples" title="Examples">Examples</a>
 </h4></div></div></div>
-<a name="boost_integer.bits_and_ints.same_sign.examples.run_time_version"></a><h5>
-<a name="id36190530"></a>
-          <a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.same_sign.examples.run_time_version">Run-time
-          version</a>
-        </h5>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">same_sign</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+<span class="bold"><strong>Run-time version:</strong></span><pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">same_sign</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
@@ -590,11 +597,12 @@
 	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">result</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// false
 </span><span class="special">}</span>
 </pre>
-<a name="boost_integer.bits_and_ints.same_sign.examples.compile_time_version"></a><h5>
-<a name="id36190900"></a>
-          <a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.same_sign.examples.compile_time_version">Compile-time
-          version</a>
-        </h5>
+</li>
+<li class="listitem"><span class="bold"><strong>Compile-time version:</strong></span></li>
+</ul></div>
+<p>
+          
+</p>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">same_sign</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
 
@@ -607,6 +615,8 @@
 	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">result</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// false
 </span><span class="special">}</span>
 </pre>
+<p>
+        </p>
 </div>
 </div>
 <div class="section" title="Sign function">
@@ -614,31 +624,26 @@
 <a name="boost_integer.bits_and_ints.sign"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.sign" title="Sign function"> Sign function</a>
 </h3></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.sign.run_time_version">Run-time
-        version</a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.sign.non_member_function__sign_">Non-Member
+        Function <code class="computeroutput"><span class="identifier">sign</span></code></a></span></dt>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.sign.examples">Examples</a></span></dt>
 </dl></div>
 <p>
         The <code class="computeroutput"><span class="identifier">sign</span></code> function check the
         signal of integrals.
       </p>
-<div class="section" title="Run-time version">
+<div class="section" title="Non-Member Function sign">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_integer.bits_and_ints.sign.run_time_version"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.sign.run_time_version" title="Run-time version">Run-time
-        version</a>
+<a name="boost_integer.bits_and_ints.sign.non_member_function__sign_"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.sign.non_member_function__sign_" title="Non-Member Function sign">Non-Member
+        Function <code class="computeroutput"><span class="identifier">sign</span></code></a>
 </h4></div></div></div>
 <p>
           The run-time version can be included via <a href="../../../../../boost/integer/sign.hpp" target="_top">&lt;boost/integer/sign.hpp&gt;</a>.
-          For valid types T, the function <code class="computeroutput"><span class="identifier">sign</span></code>
-          will be:
         </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="keyword">int</span> <span class="identifier">sign</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">data</span><span class="special">);</span>
 </pre>
-<a name="boost_integer.bits_and_ints.sign.run_time_version.parameters"></a><h5>
-<a name="id36191344"></a>
-          <a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.sign.run_time_version.parameters">Parameters</a>
-        </h5>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><span class="bold"><strong>Parameters:</strong></span></li></ul></div>
 <div class="informaltable"><table class="table">
 <colgroup>
 <col>
@@ -670,10 +675,7 @@
                 </td>
 </tr></tbody>
 </table></div>
-<a name="boost_integer.bits_and_ints.sign.run_time_version.return"></a><h5>
-<a name="id36191421"></a>
-          <a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.sign.run_time_version.return">Return</a>
-        </h5>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><span class="bold"><strong>Returns:</strong></span></li></ul></div>
 <div class="informaltable"><table class="table">
 <colgroup>
 <col>
@@ -731,16 +733,20 @@
 </tr>
 </tbody>
 </table></div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+<span class="bold"><strong>Remarks: </strong></span><code class="computeroutput"><span class="identifier">T</span></code>
+            must be an integral type. If this constraint is not met, this function
+            do not participate in overload resolution.
+          </li></ul></div>
 </div>
 <div class="section" title="Examples">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_integer.bits_and_ints.sign.examples"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.sign.examples" title="Examples">Examples</a>
 </h4></div></div></div>
-<a name="boost_integer.bits_and_ints.sign.examples.run_time_version"></a><h5>
-<a name="id36191577"></a>
-          <a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.sign.examples.run_time_version">Run-time
-          version</a>
-        </h5>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><span class="bold"><strong>Run-time version:</strong></span></li></ul></div>
+<p>
+          
+</p>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">sign</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
 
@@ -754,156 +760,174 @@
 	<span class="identifier">result</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">sign</span><span class="special">(</span><span class="identifier">second</span><span class="special">);</span>
 	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">result</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// 1
 </span>	
-	<span class="identifier">result</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">sing</span><span class="special">(</span><span class="identifier">third</span><span class="special">);</span>
+	<span class="identifier">result</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">sign</span><span class="special">(</span><span class="identifier">third</span><span class="special">);</span>
 	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">result</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// 0
 </span><span class="special">}</span>
 </pre>
+<p>
+        </p>
 </div>
 </div>
 <div class="section" title="Binary Utilities">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_integer.bits_and_ints.bin_utils"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils" title="Binary Utilities"> Binary Utilities</a>
 </h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.synopsis">Synopsis</a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__set_bit___">Template
+        Class <code class="computeroutput"><span class="identifier">set_bit</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__clear_bit___">Template
+        Class <code class="computeroutput"><span class="identifier">clear_bit</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__test_bit___">Template
+        Class <code class="computeroutput"><span class="identifier">test_bit</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__flip_bit___">Template
+        Class <code class="computeroutput"><span class="identifier">flip_bit</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+</dl></div>
 <p>
         The header <a href="../../../../../boost/integer/bin_utils.hpp" target="_top">&lt;boost/integer/bin_utils.hpp&gt;</a>
         cotains some metafunctions to handle binary data. All the metafunctions have
         an member varible named <code class="computeroutput"><span class="identifier">value</span></code>
         where will be the result.
       </p>
-<div class="informaltable"><table class="table">
-<colgroup>
-<col>
-<col>
-<col>
-</colgroup>
-<thead><tr>
-<th>
-              <p>
-                Metafuntion
-              </p>
-              </th>
-<th>
-              <p>
-                Parameters
-              </p>
-              </th>
-<th>
-              <p>
-                Description
-              </p>
-              </th>
-</tr></thead>
-<tbody>
-<tr>
-<td>
-              <p>
-                set_bit
-              </p>
-              </td>
-<td>
-              <p>
-                <code class="computeroutput"><span class="keyword">typename</span> <span class="identifier">T</span></code>,
-                <code class="computeroutput"><span class="identifier">T</span> <span class="identifier">data</span></code>,
-                <code class="computeroutput"><span class="keyword">unsigned</span> <span class="keyword">char</span>
-                <span class="identifier">pos</span></code>
-              </p>
-              </td>
-<td>
-              <p>
-                Sets the bit <code class="computeroutput"><span class="identifier">pos</span></code>
-                active in <code class="computeroutput"><span class="identifier">data</span></code>.
-              </p>
-              </td>
-</tr>
-<tr>
-<td>
-              <p>
-                clear_bit
-              </p>
-              </td>
-<td>
-              <p>
-                <code class="computeroutput"><span class="keyword">typename</span> <span class="identifier">T</span></code>,
-                <code class="computeroutput"><span class="identifier">T</span> <span class="identifier">data</span></code>,
-                <code class="computeroutput"><span class="keyword">unsigned</span> <span class="keyword">char</span>
-                <span class="identifier">pos</span></code>
-              </p>
-              </td>
-<td>
-              <p>
-                Sets the bit <code class="computeroutput"><span class="identifier">pos</span></code>
-                inactive in <code class="computeroutput"><span class="identifier">data</span></code>.
-              </p>
-              </td>
-</tr>
-<tr>
-<td>
-              <p>
-                test_bit
-              </p>
-              </td>
-<td>
-              <p>
-                <code class="computeroutput"><span class="keyword">typename</span> <span class="identifier">T</span></code>,
-                <code class="computeroutput"><span class="identifier">T</span> <span class="identifier">data</span></code>,
-                <code class="computeroutput"><span class="keyword">unsigned</span> <span class="keyword">char</span>
-                <span class="identifier">pos</span></code>
-              </p>
-              </td>
-<td>
-              <p>
-                Test if the bit <code class="computeroutput"><span class="identifier">pos</span></code>
-                in <code class="computeroutput"><span class="identifier">data</span></code> is active
-                or not.
-              </p>
-              </td>
-</tr>
-<tr>
-<td>
-              <p>
-                flip_bit
-              </p>
-              </td>
-<td>
-              <p>
-                <code class="computeroutput"><span class="keyword">typename</span> <span class="identifier">T</span></code>,
-                <code class="computeroutput"><span class="identifier">T</span> <span class="identifier">data</span></code>,
-                <code class="computeroutput"><span class="keyword">unsigned</span> <span class="keyword">char</span>
-                <span class="identifier">pos</span></code>
-              </p>
-              </td>
-<td>
-              <p>
-                Invert the value of the bit <code class="computeroutput"><span class="identifier">pos</span></code>
-                in <code class="computeroutput"><span class="identifier">data</span></code>.
-              </p>
-              </td>
-</tr>
-<tr>
-<td>
-              <p>
-                modify_bit
-              </p>
-              </td>
-<td>
-              <p>
-                <code class="computeroutput"><span class="keyword">typename</span> <span class="identifier">T</span></code>,
-                <code class="computeroutput"><span class="identifier">T</span> <span class="identifier">data</span></code>,
-                <code class="computeroutput"><span class="keyword">unsigned</span> <span class="keyword">char</span>
-                <span class="identifier">pos</span></code>, <code class="computeroutput"><span class="keyword">bool</span>
-                <span class="identifier">state</span></code>
-              </p>
-              </td>
-<td>
-              <p>
-                Sets the bit <code class="computeroutput"><span class="identifier">pos</span></code>
-                in <code class="computeroutput"><span class="identifier">data</span></code> active if
-                <code class="computeroutput"><span class="identifier">state</span></code> is <code class="computeroutput"><span class="keyword">true</span></code> or inactive if <code class="computeroutput"><span class="identifier">state</span></code> is <code class="computeroutput"><span class="keyword">false</span></code>.
-              </p>
-              </td>
-</tr>
-</tbody>
-</table></div>
+<div class="section" title="Synopsis">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_integer.bits_and_ints.bin_utils.synopsis"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.synopsis" title="Synopsis">Synopsis</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span>
+<span class="special">{</span>
+	
+<span class="comment">// Sets the bit `pos' in data
+</span><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">data</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="identifier">pos</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">set_bit</span>
+<span class="special">{</span>
+	<span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">T</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> 
+<span class="special">};</span> <span class="comment">// set_bit
+</span>	
+
+<span class="comment">// Clear the bit `pos' in data
+</span><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">data</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="identifier">pos</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">clear_bit</span>
+<span class="special">{</span>
+	<span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">T</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> 
+<span class="special">};</span> <span class="comment">// clear_bit
+</span>
+<span class="comment">// If the bit `pos' is 1 then it will be 0 if not the bit will be 1
+</span><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">data</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="identifier">pos</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">flip_bit</span>
+<span class="special">{</span>
+	<span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">T</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> 
+<span class="special">};</span> <span class="comment">// flip_bit
+</span>
+<span class="comment">// Test if the bit in `pos' positon is set or not
+</span><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">data</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="identifier">pos</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">test_bit</span>
+<span class="special">{</span>
+	<span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> 
+<span class="special">};</span> <span class="comment">// test_bit	
+</span>	
+<span class="special">}</span> <span class="comment">// boost
+</span></pre>
+</div>
+<div class="section" title="Template Class set_bit&lt;&gt;">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_integer.bits_and_ints.bin_utils.template_class__set_bit___"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__set_bit___" title="Template Class set_bit&lt;&gt;">Template
+        Class <code class="computeroutput"><span class="identifier">set_bit</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<p>
+          Sets the bit <code class="computeroutput"><span class="identifier">pos</span></code> active
+          in <code class="computeroutput"><span class="identifier">data</span></code>.
+        </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+<span class="bold"><strong>Requires: </strong></span><code class="computeroutput"><span class="identifier">pos</span></code>
+            must be smaller than the size (in bits) of <code class="computeroutput"><span class="identifier">Type</span></code>.
+          </li>
+<li class="listitem">
+<span class="bold"><strong>Remarks: </strong></span><code class="computeroutput"><span class="identifier">T</span></code>
+            must be an integral type. If this constraint is not met, this metafunction
+            do not participate in overload resolution.
+          </li>
+<li class="listitem"><span class="bold"><strong>Example:</strong></span></li>
+</ul></div>
+<pre class="programlisting"><span class="comment">// `new_value' becomes 101
+</span><span class="keyword">int</span> <span class="identifier">new_value</span> <span class="special">=</span> <span class="identifier">set_bit</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="number">100</span><span class="special">,</span> <span class="number">0</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">;</span>
+</pre>
+</div>
+<div class="section" title="Template Class clear_bit&lt;&gt;">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_integer.bits_and_ints.bin_utils.template_class__clear_bit___"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__clear_bit___" title="Template Class clear_bit&lt;&gt;">Template
+        Class <code class="computeroutput"><span class="identifier">clear_bit</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<p>
+          Sets the bit <code class="computeroutput"><span class="identifier">pos</span></code> inactive
+          in <code class="computeroutput"><span class="identifier">data</span></code>.
+        </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+<span class="bold"><strong>Requires: </strong></span><code class="computeroutput"><span class="identifier">pos</span></code>
+            must be smaller than the size (in bits) of <code class="computeroutput"><span class="identifier">Type</span></code>.
+          </li>
+<li class="listitem">
+<span class="bold"><strong>Remarks: </strong></span><code class="computeroutput"><span class="identifier">T</span></code>
+            must be an integral type. If this constraint is not met, this metafunction
+            do not participate in overload resolution.
+          </li>
+<li class="listitem"><span class="bold"><strong>Example:</strong></span></li>
+</ul></div>
+<pre class="programlisting"><span class="comment">// `new_value' becomes 1
+</span><span class="keyword">int</span> <span class="identifier">new_value</span> <span class="special">=</span> <span class="identifier">set_bit</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="number">3</span><span class="special">,</span> <span class="number">2</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">;</span>
+</pre>
+</div>
+<div class="section" title="Template Class test_bit&lt;&gt;">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_integer.bits_and_ints.bin_utils.template_class__test_bit___"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__test_bit___" title="Template Class test_bit&lt;&gt;">Template
+        Class <code class="computeroutput"><span class="identifier">test_bit</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<p>
+          Test if the bit <code class="computeroutput"><span class="identifier">pos</span></code> in
+          <code class="computeroutput"><span class="identifier">data</span></code> is active or not.
+        </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+<span class="bold"><strong>Requires: </strong></span><code class="computeroutput"><span class="identifier">pos</span></code>
+            must be smaller than the size (in bits) of <code class="computeroutput"><span class="identifier">Type</span></code>.
+          </li>
+<li class="listitem">
+<span class="bold"><strong>Remarks: </strong></span><code class="computeroutput"><span class="identifier">T</span></code>
+            must be an integral type. If this constraint is not met, this metafunction
+            do not participate in overload resolution.
+          </li>
+<li class="listitem"><span class="bold"><strong>Example:</strong></span></li>
+</ul></div>
+<pre class="programlisting"><span class="comment">// `is_set' becomes true
+</span><span class="keyword">bool</span> <span class="identifier">is_set</span> <span class="special">=</span> <span class="identifier">test_bit</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="number">3982</span><span class="special">,</span> <span class="number">11</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">;</span>
+</pre>
+</div>
+<div class="section" title="Template Class flip_bit&lt;&gt;">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_integer.bits_and_ints.bin_utils.template_class__flip_bit___"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__flip_bit___" title="Template Class flip_bit&lt;&gt;">Template
+        Class <code class="computeroutput"><span class="identifier">flip_bit</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<p>
+          Invert the value of the bit <code class="computeroutput"><span class="identifier">pos</span></code>
+          in <code class="computeroutput"><span class="identifier">data</span></code>
+        </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+<span class="bold"><strong>Requires: </strong></span><code class="computeroutput"><span class="identifier">pos</span></code>
+            must be smaller than the size (in bits) of <code class="computeroutput"><span class="identifier">Type</span></code>.
+          </li>
+<li class="listitem">
+<span class="bold"><strong>Remarks: </strong></span><code class="computeroutput"><span class="identifier">T</span></code>
+            must be an integral type. If this constraint is not met, this metafunction
+            do not participate in overload resolution.
+          </li>
+<li class="listitem"><span class="bold"><strong>Example:</strong></span></li>
+</ul></div>
+<pre class="programlisting"><span class="comment">// `new_value' becomes 14
+</span><span class="keyword">bool</span> <span class="identifier">new_value</span> <span class="special">=</span> <span class="identifier">flip_bit</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="number">10</span><span class="special">,</span> <span class="number">2</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">;</span>
+</pre>
+</div>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
