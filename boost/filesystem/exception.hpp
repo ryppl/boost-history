@@ -1,4 +1,4 @@
-//  boost/filesystem/operations.hpp  ---------------------------------------------------//
+//  boost/filesystem/exception.hpp  ----------------------------------------------------//
 
 //  Copyright Beman Dawes 2010
 
@@ -9,8 +9,8 @@
 
 //--------------------------------------------------------------------------------------// 
 
-#ifndef BOOST_FILESYSTEM_OPERATIONSX_HPP
-#define BOOST_FILESYSTEM_OPERATIONSX_HPP
+#ifndef BOOST_FILESYSTEM_EXCEPTIONX_HPP
+#define BOOST_FILESYSTEM_EXCEPTIONX_HPP
 
 # if defined(BOOST_FILESYSTEM_VERSION) \
   && BOOST_FILESYSTEM_VERSION != 2  && BOOST_FILESYSTEM_VERSION != 3
@@ -22,11 +22,11 @@
 # endif
 
 #if BOOST_FILESYSTEM_VERSION == 2
-#  include <boost/filesystem/v2/operations.hpp>
+#  include <boost/filesystem/v2/exception.hpp>
 
 # else
-#  include <boost/filesystem/v3/operations.hpp>
+#  include <boost/filesystem/v3/exception.hpp>
 
 # endif
 
-#endif  // BOOST_FILESYSTEM_OPERATIONSX_HPP 
+#endif  // BOOST_FILESYSTEM_EXCEPTIONX_HPP 
