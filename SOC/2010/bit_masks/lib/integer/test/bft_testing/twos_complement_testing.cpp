@@ -11,6 +11,7 @@
 #include <boost/integer/bits_mask.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/type_traits.hpp>
+#include <boost/mpl/not.hpp>
 
 // std includes.
 #include <cstddef>
@@ -106,8 +107,13 @@ Return_Type twos_complement_encoding(Encoded_Type  x) {
         Encoded_Type,
         Width,
         Return_Type,
-        is_signed<Encoded_Type>::value &&
-            bit_width<Return_Type>::value != Width
+        is_signed< Encoded_Type >::value
+          &&
+        bit_width< Encoded_Type >::value != Width
+          &&
+        mpl::not_< is_same< Encoded_Type, bool > >::value
+          &&
+        Width != 1
     >()(x);
 }
 
@@ -118,8 +124,13 @@ Return_Type twos_complement_decoding(Decoding_Type x) {
         Decoding_Type,
         Width,
         Return_Type,
-        is_signed<Return_Type>::value &&
-            bit_width<Return_Type>::value != Width
+        is_signed< Return_Type >::value
+          &&
+        bit_width< Return_Type >::value != Width
+          &&
+        mpl::not_< is_same< Return_Type, bool > >::value
+          &&
+        Width != 1
     >()( x );
 }
 
