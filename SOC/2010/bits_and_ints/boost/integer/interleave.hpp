@@ -13,6 +13,8 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/cstdint.hpp>
+#include <utility>
+#include <iostream>
 
 
 /*
@@ -33,11 +35,66 @@ namespace boost
 {
 
 /*
+ *	The morton<Size> types holds an unsigned integer with `Size' bytes.
+ *	These types are used by interleave functions.
+ */
+template <std::size_t Size>
+struct morton
+{
+};
+	
+template <>
+struct morton<8>
+{
+	typedef morton<8> type;
+	typedef uint8_t   value_type;
+	
+	morton() : value(0) {}
+	morton(uint8_t val) : value(val) {}
+	
+	value_type value;
+};
+	
+template <>
+struct morton<16>
+{
+	typedef morton<16> type;
+	typedef uint16_t   value_type;
+	
+	morton() : value(0) {}
+	morton(uint16_t val) : value(val) {}
+	
+	value_type value;
+};
+	
+template <>
+struct morton<32> {
+	typedef morton<32> type;
+	typedef uint32_t   value_type;
+	
+	morton() : value(0) {}
+	morton(uint32_t val) : value(val) {}
+	
+	value_type value;
+};
+	
+template <>
+struct morton<64> {
+	typedef morton<64> type;
+	typedef uint64_t   value_type;
+	
+	morton() : value(0) {}
+	morton(uint64_t val) : value(val) {}
+	
+	value_type value;
+};
+
+/*
  *	Interleave two 16-bit integral types and returns the bits interleaved in an
- *		uint32_t.
+ *		morton<32>.
  */
 template <typename T>
-inline typename enable_if_c<is_integral<T>::type::value && sizeof(T) == 2, uint32_t>::type
+inline typename enable_if_c<is_integral<T>::type::value && sizeof(T) == 2, morton<32> >::type
 interleave(T x, T y)
 {
 	uint32_t a(x), b(y);
@@ -69,10 +126,10 @@ interleave(T x, T y)
 
 /*
  *	Interleave two 8-bit integral types and returns the bits interleaved in an
- *		uint16_t.
+ *		morton<16>.
  */
 template <typename T>
-inline typename enable_if_c<is_integral<T>::type::value && sizeof(T) == 1, uint16_t>::type
+inline typename enable_if_c<is_integral<T>::type::value && sizeof(T) == 1, morton<16> >::type
 interleave(T x, T y)
 {
 	uint16_t a(x), b(y);
@@ -96,6 +153,56 @@ interleave(T x, T y)
 	
 	// the result is the union of a and b bits
 	return (a | b);
+}
+	
+/*
+ *	Interleave two morton<8> and returns the bits interleaved in an
+ *		morton<16>.
+ */
+inline morton<16> interleave(const morton<8>& x, const morton<8>& y)
+{
+	uint16_t a(x.value), b(y.value);
+	
+	// now the original bytes are in alternate bytes
+	a = (a | (a << 4)) & 0x0F0F;
+	
+	// now the original bits are in the lowest 2 bits of the nibbles
+	a = (a | (a << 2)) & 0x3333;
+	
+	// now the original bits are in the even bits
+	a = (a | (a << 1)) & 0x5555;
+	
+	// do the same with b
+	b = (b | (b << 4)) & 0x0F0F;
+	b = (b | (b << 2)) & 0x3333;
+	b = (b | (b << 1)) & 0x5555;
+	
+	// now the original bits are inthe odd bits
+	b <<= 1;
+	
+	return (a | b);
+}
+
+	
+/*
+ *	This function "uninterleaves" a morton number into two morton number with
+ *		half size.
+ *	
+ *	The parameter number must be an morton<S> with S equal 16, 32 or 64.
+ */
+template <std::size_t Bits>
+inline typename enable_if_c<Bits == 16 || Bits == 32 || Bits == 64,
+	std::pair<morton<Bits/2>, morton<Bits/2> > >::type 
+uninterleave(const morton<Bits>& number)
+{
+	morton<Bits/2> a, b;
+	
+	for (int i = 0; i < Bits; i += 2) {
+		a.value |= ((number.value & (1 << i))) >> (i >> 1);
+		b.value |= ((number.value & (1 << (i + 1)))) >> (i >> 1);
+	}
+
+	return make_pair(a, b);
 }
 
 }
