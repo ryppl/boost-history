@@ -8,13 +8,12 @@
 
 #include <boost/static_assert.hpp>
 #include <boost/integer/bits_mask.hpp>
-#include <boost/cstdint.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/mpl/not.hpp>
 
 // std includes.
 #include <cstddef>
-#include <stdexcept>
+
 
 namespace boost { namespace details {
 
