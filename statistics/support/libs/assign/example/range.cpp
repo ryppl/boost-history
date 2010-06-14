@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// range.cpp                                                                //
+// range.cpp                                                                 //
 //                                                                          //
 //////////////////////////////////////////////////////////////////////////////
 #include <ostream>
@@ -10,6 +10,7 @@
 #include <boost/next_prior.hpp>
 #include <boost/range/algorithm/copy.hpp>
 #include <boost/assign/auto_size/ref_list_of.hpp>
+#include <boost/assign/auto_size/ref_csv.hpp>
 #include <boost/assign/auto_size/range/basic_chain.hpp>
 #include <boost/assign/auto_size/range/chain_l.hpp>
 #include <boost/assign/auto_size/range/chain_r.hpp>
@@ -67,19 +68,34 @@ void example_range(std::ostream& os)
 }
 {
 
-
+   // [Boost.Assign] list_of::range without an initial	(single) element?
     boost::array<int, 2> a = { 1, 2 };
     boost::array<int, 2> b = { 3, 4 };
     boost::array<int, 4> c = a && b;
     
-    BOOST_ASSERT(c[0]==1);
-    BOOST_ASSERT(c[1]==2);    
-    BOOST_ASSERT(c[2]==3);    
-    BOOST_ASSERT(c[3]==4);
-    BOOST_ASSERT(c.size() == 4);
+    BOOST_ASSERT( c[0]==1 );
+    BOOST_ASSERT( c[1]==2 );    
+    BOOST_ASSERT( c[2]==3 );    
+    BOOST_ASSERT( c[3]==4 );
+    BOOST_ASSERT( c.size() == 4 );
     
     os << "array : OK" << std::endl;
 }
+{
+   // make<std::vector>(1,2,3,4,5); // Makes a std::vector<int> containing 1,2,3,4,5
+
+    list_of(1)(2)(3)(4)(5).convert_to_container<std::vector<int> >();
+    cref_csv(1,2,3,4,5).convert_to_container<std::vector<int> >();
+    std::vector<int> vec = cref_csv(1,2,3,4,5);
+    BOOST_ASSERT( vec[0]==1 );
+    BOOST_ASSERT( vec[1]==2 );    
+    BOOST_ASSERT( vec[2]==3 );    
+    BOOST_ASSERT( vec[3]==4 );
+    BOOST_ASSERT( vec[4]==5 );
+    BOOST_ASSERT( vec.size() == 5 );
+
+}
+
 
 	os << "<- " << std::endl;
     
