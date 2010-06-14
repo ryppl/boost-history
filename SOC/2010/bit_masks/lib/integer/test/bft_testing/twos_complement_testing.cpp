@@ -118,7 +118,8 @@ Return_Type twos_complement_decoding(Decoding_Type x) {
         Decoding_Type,
         Width,
         Return_Type,
-        is_signed<Return_Type>::value
+        is_signed<Return_Type>::value &&
+            bit_width<Return_Type>::value != Width
     >()( x );
 }
 
