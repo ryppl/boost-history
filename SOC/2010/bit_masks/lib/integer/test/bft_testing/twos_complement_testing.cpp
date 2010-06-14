@@ -106,7 +106,8 @@ Return_Type twos_complement_encoding(Encoded_Type  x) {
         Encoded_Type,
         Width,
         Return_Type,
-        is_signed<Encoded_Type>::value
+        is_signed<Encoded_Type>::value &&
+            bit_width<Return_Type>::value != Width
     >()(x);
 }
 
@@ -207,38 +208,6 @@ int main() {
     // getting value bits
     Return_Type eval_6 = static_cast<Return_Type>(storage & low_bits_mask<Decoding_From_Type,Width-1>::value );
     BOOST_ASSERT(( eval_6 == bits_mask<Return_Type,1,2>::value));
-
-
-
-    /*
-    // Attempting to reconstruct the value
-    // Return_Type eval_7 =
-        // sign bit.
-    Return_Type sign_bit = static_cast<Return_Type>(
-        high_bits_mask<
-            Return_Type,
-            bit_width<
-                Return_Type
-            >::value - Width
-        >::value
-    );
-
-    // Value Bits.
-    Return_Type value_bits =
-        static_cast<Return_Type>(
-            storage
-              &
-            bits_mask<
-                Decoding_From_Type,
-                Width - 1
-            >::value
-        )
-          <<
-        (bit_width<Return_Type>::value - Width);
-
-    // if(
-    */
-
     }
     {
         std::size_t storage = 0;
@@ -249,13 +218,6 @@ int main() {
         temp = twos_complement_decoding< unsigned int, 4, char >( storage );
         cout << "Value of Temp == "<< (int)temp <<endl;
         BOOST_ASSERT((temp == -2));
-
-        cout << static_cast<int>(temp) << endl;
-        cout << bits_mask<int,1,2>::value << endl;
-        int temp_2 (0);
-        temp_2 = ~temp_2;
-        temp_2 << 1;
-        cout << temp_2 << endl;
     }
     return 0;
 }
