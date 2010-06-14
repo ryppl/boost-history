@@ -35,7 +35,7 @@ struct bits_mask
     :integral_mask<T, (low_bits_mask<T,Width>::value << Offset) >
 {
     // precondition 1.
-    BOOST_STATIC_ASSERT(( (Offset + Width) < ( bit_width<T>::value - 1)  ));
+    BOOST_STATIC_ASSERT(( (Offset + Width) <= ( bit_width<T>::value )  ));
 
     // precondition 2.
     BOOST_STATIC_ASSERT(( Width > 0 ));
