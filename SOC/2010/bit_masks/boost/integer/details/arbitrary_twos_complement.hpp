@@ -3,8 +3,8 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at 
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_ARBITRART_TWOS_COMPLEMENT_HPP
-#define BOOST_ARBITRART_TWOS_COMPLEMENT_HPP
+#ifndef BOOST_ARBITRARY_TWOS_COMPLEMENT_HPP
+#define BOOST_ARBITRARY_TWOS_COMPLEMENT_HPP
 
 #include <boost/static_assert.hpp>
 #include <boost/integer/bits_mask.hpp>
