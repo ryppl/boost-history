@@ -5,6 +5,7 @@
 
 #ifndef BOOST_ARBITRART_TWOS_COMPLEMENT_HPP
 #define BOOST_ARBITRART_TWOS_COMPLEMENT_HPP
+
 #include <boost/static_assert.hpp>
 #include <boost/integer/bits_mask.hpp>
 #include <boost/cstdint.hpp>
