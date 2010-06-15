@@ -12,34 +12,41 @@
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_integral.hpp>
-#include <boost/integer/morton.hpp>
+#include <boost/integer.hpp>
 #include <utility>
 
 /*
- *	Bit interleaving functions.
+ *	Bit [un]interleaving functions.
  *
- *	Interleave the bits of two integers in one morton<> type.
+ *	interleave function interleaves the bits of two integrals in one integral
+ *		with the double of the size.
  *	For example:
- *		uint8_t a = 5;  // 0000 0101
- *		uint8_t b = 10; // 0000 1010
- *		morton<16> z = interleave(a, b); // z = 102
+ *		uint8_t  a = 5;  // 0000 0101
+ *		uint8_t  b = 10; // 0000 1010
+ *		uint16_t z = interleave(a, b); // z = 102
  *		
- *		a       = 0 0 0 0 0 1 0 1
- *		b       =  0 0 0 0 1 0 1 0
- *		z.value = 0000000001100110
+ *		a = 0 0 0 0 0 1 0 1
+ *		b =  0 0 0 0 1 0 1 0
+ *		z = 0000000001100110
+ *
+ *	uninterleave function do the reverse step:
+ *  pair< uint8_t, uint8_t > y = uninterleave(z);
+ *	
+ *	y.first  ==  a == 5
+ *	y.second ==  b == 10
  */
 
 namespace boost 
 {
 	
 /*
- *	Interleave two integrals of 8, 16 or 32 bits and returns
- *		one morton<S> with S equal to the double of the size of bits of `x' or `y'.
+ *	Interleave two unsigned integral of 8, 16 or 32 bits and returns
+ *		one unsigned integral with the double of the size.
  */
-template <typename T>
-inline typename enable_if_c<is_integral<T>::type::value 
-	&& (sizeof(T) == 1 || sizeof(T) == 2 || sizeof(T) == 4) , morton<sizeof(T) * 16> >::type
-interleave(T x, T y)
+template <int Bits>
+//inline typename enable_if_c<Bits == 8 || Bits == 16 || Bits == 32, typename uint_t<Bits * 2>::exact>::type 
+typename uint_t<Bits * 2>::exact
+interleave(const typename uint_t<Bits>::exact& x, const typename uint_t<Bits>::exact& y)
 {
 	static const uintmax_t
 	interleave_mask[3][5] = {
@@ -59,31 +66,34 @@ interleave(T x, T y)
 		{16, 8, 4, 2, 1}
 	};
 	
-	const std::size_t bytes = sizeof(T);
-	typedef typename integer_detail::morton_type<bytes * 16>::type value_type;
+	// Index for access above arrays
+	const int index = Bits / 16;
 	
-	value_type a(x), b(y);
+	// Return type is 2 times greater then the size of the parameters
+	typedef typename uint_t<Bits * 2>::exact  return_type;
 	
-	a = (a | (a << interleave_shift[bytes/2][0])) & value_type(interleave_mask[bytes/2][4]);
+	return_type a(x), b(y);
+	
+	a = (a | (a << interleave_shift[index][0])) & return_type(interleave_mask[index][4]);
 	
 	// puts the byte 2 in the byte 4 and the byte 3 in the byte 5
-	a = (a | (a << interleave_shift[bytes/2][1])) & value_type(interleave_mask[bytes/2][3]);
+	a = (a | (a << interleave_shift[index][1])) & return_type(interleave_mask[index][3]);
 	
 	// now the original bytes of x are in alternate bytes
-	a = (a | (a << interleave_shift[bytes/2][2])) & value_type(interleave_mask[bytes/2][2]);
+	a = (a | (a << interleave_shift[index][2])) & return_type(interleave_mask[index][2]);
 	
 	// now the original bits of x are in the lowest 2 bits of the nibbles
-	a = (a | (a << interleave_shift[bytes/2][3])) & value_type(interleave_mask[bytes/2][1]);
+	a = (a | (a << interleave_shift[index][3])) & return_type(interleave_mask[index][1]);
 	
 	// now the original bits are in the even bits
-	a = (a | (a << interleave_shift[bytes/2][4])) & value_type(interleave_mask[bytes/2][0]);
+	a = (a | (a << interleave_shift[index][4])) & return_type(interleave_mask[index][0]);
 	
 	// do the same with b
-	b = (b | (b << interleave_shift[bytes/2][0])) & value_type(interleave_mask[bytes/2][4]);
-	b = (b | (b << interleave_shift[bytes/2][1])) & value_type(interleave_mask[bytes/2][3]);
-	b = (b | (b << interleave_shift[bytes/2][2])) & value_type(interleave_mask[bytes/2][2]);
-	b = (b | (b << interleave_shift[bytes/2][3])) & value_type(interleave_mask[bytes/2][1]);
-	b = (b | (b << interleave_shift[bytes/2][4])) & value_type(interleave_mask[bytes/2][0]);
+	b = (b | (b << interleave_shift[index][0])) & return_type(interleave_mask[index][4]);
+	b = (b | (b << interleave_shift[index][1])) & return_type(interleave_mask[index][3]);
+	b = (b | (b << interleave_shift[index][2])) & return_type(interleave_mask[index][2]);
+	b = (b | (b << interleave_shift[index][3])) & return_type(interleave_mask[index][1]);
+	b = (b | (b << interleave_shift[index][4])) & return_type(interleave_mask[index][0]);
 	
 	// now the original bits are in the odd bits
 	b <<= 1;
@@ -99,16 +109,16 @@ interleave(T x, T y)
  *	
  *	The parameter number must be an morton<S> with S equal 16, 32 or 64.
  */
-template <std::size_t bits>
-inline typename enable_if_c<bits == 16 || bits == 32 || bits == 64, 
-	std::pair<morton<bits/2>, morton<bits/2> > >::type 
-uninterleave(const morton<bits>& number)
+template <int Bits>
+inline typename enable_if_c<Bits == 16 || Bits == 32 || Bits == 64, 
+	std::pair<typename uint_t<Bits/2>::exact, typename uint_t<Bits/2>::exact> >::type 
+uninterleave(const typename uint_t<Bits>::exact& number)
 {
-	morton<bits/2> a, b;
+	typename uint_t<Bits/2>::exact a, b;
 	
-	for (int i = 0; i < bits; i += 2) {
-		a.value |= ((number.value & (1 << i))) >> (i >> 1);
-		b.value |= ((number.value & (1 << (i + 1)))) >> ((i >> 1) + 1);
+	for (int i = 0; i < Bits; i += 2) {
+		a |= ((number & (1 << i))) >> (i >> 1);
+		b |= ((number & (1 << (i + 1)))) >> ((i >> 1) + 1);
 	}
 	
 	return make_pair(a, b);
