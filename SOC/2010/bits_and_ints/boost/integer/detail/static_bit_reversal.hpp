@@ -20,7 +20,7 @@ namespace integer_detail {
 template <typename T, T data, std::size_t shift>
 struct static_bit_reversal_impl : 
 	public integral_constant<T, 
-		((test_bit<T, data, (sizeof(T) * 8 - shift)>::value << (shift - 1)) 
+		((T(test_bit<T, data, (sizeof(T) * 8 - shift)>::value) << (shift - 1)) 
 		 + static_bit_reversal_impl<T, data, shift - 1>::value)
 	>
 {};

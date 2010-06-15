@@ -12,6 +12,7 @@
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_integral.hpp>
+#include <boost/cstdint.hpp>
 
 namespace boost 
 {
@@ -24,78 +25,40 @@ namespace boost
  *		11110000010101010000000000000000
  */
 
-
-#ifndef BOOST_NO_INT64_T	
-// 64-bit version
 template <typename T>
-inline typename enable_if_c<is_integral<T>::type::value && sizeof(T) == 8, T>::type
+inline typename enable_if_c<is_integral<T>::type::value 
+	&& (sizeof(T) == 1 || sizeof(T) == 2 || sizeof(T) == 4 || sizeof(T) == 8), T>::type
 bit_reversal(T data)
 {
-	// swap odd and even bits
-	data = ((data >> 1) & 0x5555555555555555) | ((data & 0x5555555555555555) << 1); 
-	// swap consecutive pairs
-	data = ((data >> 2) & 0x3333333333333333) | ((data & 0x3333333333333333) << 2); 
-	// swap nibbles 
-	data = ((data >> 4) & 0x0F0F0F0F0F0F0F0F) | ((data & 0x0F0F0F0F0F0F0F0F) << 4); 
-	// swap bytes
-	data = ((data >> 8) & 0x00FF00FF00FF00FF) | ((data & 0x00FF00FF00FF00FF) << 8); 
-	// swap 2-byte long pairs
-	data = ((data >> 16) & 0x0000FFFF0000FFFF) | ((data & 0x0000FFFF0000FFFF) << 16);
-	// swap the halves
-	data = (data >> 32 | data << 32);
 	
-	return data;
-}
+	static const uintmax_t mask[4][5] = {
+		{0x55, 0x33, 0xFF, 0xFF, 0xFF},
+		{0x5555, 0x3333, 0x0F0F, 0xFFFF, 0xFFFF},
+		{0x55555555, 0x33333333, 0x0F0F0F0F, 0x00FF00FF, 0xFFFFFFFF},
+#ifndef BOOST_HAS_NO_INT64_T
+		{0x5555555555555555, 0x3333333333333333, 0x0F0F0F0F0F0F0F0F, 0x00FF00FF00FF00FF, 0x0000FFFF0000FFFF}
+#else
+		{0x0, 0x0, 0x0, 0x0, 0x0}
 #endif
+	};
 	
-// 32-bit version
-template <typename T>
-inline typename enable_if_c<is_integral<T>::type::value && sizeof(T) == 4, T>::type
-bit_reversal(T data)
-{
-	// swap odd and even bits
-	data = ((data >> 1) & 0x55555555) | ((data & 0x55555555) << 1);
-	// swap consecutive pairs
-	data = ((data >> 2) & 0x33333333) | ((data & 0x33333333) << 2);
-	// swap nibbles 
-	data = ((data >> 4) & 0x0F0F0F0F) | ((data & 0x0F0F0F0F) << 4);
-	// swap bytes
-	data = ((data >> 8) & 0x00FF00FF) | ((data & 0x00FF00FF) << 8);
-	// swap 2-byte long pairs
-	data = (data >> 16) | (data << 16);
+	static const std::size_t shift[4][6] = {
+		{1, 2, 4, 0, 0, 0},
+		{1, 2, 4, 8, 0, 0},
+		{1, 2, 4, 8, 16, 0},
+		{1, 2, 4, 8, 16, 32}
+	};
 	
-	return data;
-}
+	const int index = (sizeof(T) / 2) - (sizeof(T) / 8);
 	
-// 16-bit version
-template <typename T>
-inline typename enable_if_c<is_integral<T>::type::value && sizeof(T) == 2, T>::type
-bit_reversal(T data)
-{
-	// swap odd and even bits
-	data = ((data >> 1) & 0x5555) | ((data & 0x5555) << 1);
-	// swap consecutive pairs
-	data = ((data >> 2) & 0x3333) | ((data & 0x3333) << 2);
-	// swap nibbles 
-	data = ((data >> 4) & 0x0F0F) | ((data & 0x0F0F) << 4);
-	// swap bytes
-	data = (data >> 8) | (data << 8);
-	
-	return data;
-}
-	
-// 8-bit version
-template <typename T>
-inline typename enable_if_c<is_integral<T>::type::value && sizeof(T) == 1, T>::type
-bit_reversal(T data)
-{
-	// swap odd and even bits
-	data = ((data >> 1) & 0x55) | ((data & 0x55) << 1);
-	// swap consecutive pairs
-	data = ((data >> 2) & 0x33) | ((data & 0x33) << 2);
-	// swap nibbles 
-	data = (data >> 4) | (data << 4);
-	
+	data = ((data >> shift[index][0]) & mask[index][0]) | ((data & mask[index][0]) << shift[index][0]); 
+	data = ((data >> shift[index][1]) & mask[index][1]) | ((data & mask[index][1]) << shift[index][1]); 
+	data = ((data >> shift[index][2]) & mask[index][2]) | ((data & mask[index][2]) << shift[index][2]); 
+	data = ((data >> shift[index][3]) & mask[index][3]) | ((data & mask[index][3]) << shift[index][3]); 
+	data = ((data >> shift[index][4]) & mask[index][4]) | ((data & mask[index][4]) << shift[index][4]);
+#ifndef BOOST_HAS_NO_INT64_T
+	data = (data >> shift[index][5] | data << shift[index][5]);
+#endif
 	return data;
 }
 
