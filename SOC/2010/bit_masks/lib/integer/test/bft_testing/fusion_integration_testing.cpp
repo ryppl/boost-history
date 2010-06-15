@@ -6,7 +6,7 @@
 
 #include <boost/integer/bitfield_tuple.hpp>
 #include <boost/assert.hpp>
-
+#include <boost/mpl/assert.hpp>
 
 using namespace boost;
 
@@ -25,6 +25,12 @@ typedef bitfield_tuple<
 
 
 int main() {
+    // tag of testing
+    {
+        // bitfield_tuple_tag
+        typedef fusion::traits::tag_of<test_tuple>::type    tag;
+        BOOST_MPL_ASSERT(( is_same< tag, fusion::bitfield_tuple_tag> ));
+    }
     /*
     bmg_t bmg;
 

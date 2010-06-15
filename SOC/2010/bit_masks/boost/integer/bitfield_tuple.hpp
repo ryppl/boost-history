@@ -17,7 +17,6 @@
 #include <boost/mpl/less.hpp>
 #include <boost/mpl/size.hpp>
 #include <string>
-
 #include <boost/integer/details/bft/ext/bitfield_tuple_fusion_includes.hpp>
 
 namespace boost {
@@ -52,7 +51,7 @@ public:
     /** Proxy type returned by get functions.
      *  This serves as the go between things within this class.
      */
-    template <typename MaskInfo>
+    template <typename Mask_Info>
     struct bit_ref {
 
         /** typedefs 
@@ -62,8 +61,8 @@ public:
          *  mask - contains all information needed to iteract with data in the
          *      the stroage.
          */
-        typedef typename MaskInfo::return_type                  return_type;       
-        typedef bit_ref<MaskInfo>                               _self;
+        typedef typename Mask_Info::return_type                  return_type;       
+        typedef bit_ref<Mask_Info>                               _self;
         typedef typename make_unsigned<return_type>::type  unsigned_return_type;
         typedef typename make_unsigned<
             storage_type
@@ -74,8 +73,8 @@ public:
          */
         typedef typename integer::bitfield<
             unsigned_storage_type,
-            MaskInfo::offset::value,
-            MaskInfo::offset::value + MaskInfo::field_width::value - 1
+            Mask_Info::offset::value,
+            Mask_Info::offset::value + Mask_Info::field_width::value - 1
         >                                                       bitfield_type;
 
 
@@ -98,7 +97,7 @@ public:
         /** copy constructor.
          *  This is because references are copy construtible.
          */
-        // bit_ref( bit_ref<MaskInfo> const& x)
+        // bit_ref( bit_ref<Mask_Info> const& x)
         //    :_ref( x )
         // { }
         
@@ -125,6 +124,63 @@ public:
 
         // not default constructible because this is a reference type
         bit_ref();
+    };
+
+    template <typename Mask_Info>
+    struct const_bit_ref {
+
+        /** typedefs 
+         *  return_type - is the type which is retrieved from
+         *      within storage is turned into and returned as.
+         *
+         *  mask - contains all information needed to iteract with data in the
+         *      the stroage.
+         */
+        typedef typename Mask_Info::return_type             return_type;       
+        typedef bit_ref<Mask_Info>                               _self;
+        typedef typename make_unsigned<return_type>::type  unsigned_return_type;
+        typedef typename make_unsigned<
+            storage_type
+        >::type const                                     unsigned_storage_type;
+
+        /** Internals bitfield type for extracting individual fields from 
+         *  within the storage_type.
+         */
+        typedef typename integer::bitfield<
+            unsigned_storage_type,
+            Mask_Info::offset::value,
+            Mask_Info::offset::value + Mask_Info::field_width::value - 1
+        >                                                       bitfield_type;
+
+
+        /** Reference constructor.
+         *  Because the bit_ref is an abstraction of a reference then it also
+         *  must behave like a reference type.
+         */
+        const_bit_ref(storage_type const& ref)
+            :_ref( *reinterpret_cast<unsigned_storage_type*>(&ref) )
+        { }
+
+        /** copy constructor.
+         *  This is because references are copy construtible.
+         */
+        // bit_ref( bit_ref<Mask_Info> const& x)
+        //    :_ref( x )
+        // { }
+        
+        /** Implicit conversion operator 
+         *  this allows for implicit conversion to the return_type.
+         */
+        operator return_type() const {
+            return static_cast< return_type >( _ref.get() );
+        }
+       
+    private:
+        // storage reference.
+        bitfield_type _ref;
+
+        // not default constructible because this is a reference type
+        const_bit_ref();
     };
 
 
@@ -241,7 +297,7 @@ public:
                 members
             >::type
         >,
-        bit_ref<
+        const_bit_ref<
             typename mpl::deref<
                 typename mpl::find_if<
                     members,
@@ -254,7 +310,7 @@ public:
         > 
     >::type const
     get() const {
-         typedef bit_ref< 
+         typedef const_bit_ref< 
             typename mpl::deref<
                 typename mpl::find_if<
                     members,
@@ -305,15 +361,15 @@ public:
                     members
                 >
             >,
-            bit_ref<
+            const_bit_ref<
                 typename mpl::at_c<
                     members,
                     Index
                 >::type
             >
-    >::type const
+    >::type
     get() const {
-        typedef bit_ref<
+        typedef const_bit_ref<
             typename mpl::at_c<
                 members,
                 Index

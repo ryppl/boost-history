@@ -35,20 +35,28 @@ int main() {
         BOOST_ASSERT((test_1.get<red>() == 14));
         BOOST_ASSERT(( test_1.get<salmon>() == 6));
 
-/*        BOOST_ASSERT((
+        BOOST_ASSERT((
             const_cast<
                 test_tuple const&
             >(test_1).get<salmon>() == 6
         ));
-*/
-        // XXX fix this at a later time maybe in a subsequent draft of the
-        // data structure.
-        // testing negative values
-        // test_1.get<salmon>()    = -6;
-        //BOOST_ASSERT(( test_1.get<salmon>() == -6));
     }
+
+    // get using an index.
     {
-        
+        test_tuple test_2;
+        test_2.get<0>() = 15;
+        test_2.get<1>() = 14;
+        test_2.get<2>() = 6;
+        BOOST_ASSERT((test_2.get<0>() == 15));
+        BOOST_ASSERT((test_2.get<1>() == 14));
+        BOOST_ASSERT((test_2.get<2>() == 6));
+
+        BOOST_ASSERT((
+            const_cast<
+                test_tuple const&
+            >(test_2).get<2>() == 6
+        ));
     }
     return 0;
 }
