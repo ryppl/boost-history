@@ -61,16 +61,13 @@ struct bft_arg_parse_impl_ <mpl::void_, StoragePolicy, FieldVector, Offset>{
  *      Do NOT set the storage type more then once!
  */
 template <  typename StorageType, 
-            typename AllocationPolicy,
+
             typename StoragePolicy,
             typename FieldVector,
             typename Offset
 >
 struct bft_arg_parse_impl_ <
-    storage<
-        StorageType,
-        AllocationPolicy
-    >,
+    storage<StorageType>,
     StoragePolicy,
     FieldVector,
     Offset >
@@ -79,8 +76,7 @@ struct bft_arg_parse_impl_ <
     BOOST_STATIC_ASSERT(( is_same<StoragePolicy,mpl::void_>::value ));
 
     typedef typename storage<
-        StorageType,
-        AllocationPolicy
+        StorageType
     >::type                 param;
     typedef FieldVector     field_vector;
     typedef param           storage_policy;

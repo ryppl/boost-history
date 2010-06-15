@@ -27,53 +27,8 @@ int main() {
     // bitfield_tuple < storage<int>, member<int,red,6> > temp;
     // test suite for the storage
     {
-        typedef storage<int, std::allocator<int> > test1;
-        test1 s;
-        ignore( s );
-
-        // make sure that the storage policy is the correct policy.
-        BOOST_ASSERT((
-            is_same<
-                test1::alloc,
-                std::allocator<int>
-            >::value
-        ));
-
-        BOOST_ASSERT((
-            is_same<
-                test1::storage_type,
-                int
-            >::value
-        ));
-        typedef storage<int, std::allocator<char> > test2;
-        BOOST_ASSERT((
-            is_same<
-                test2::alloc,
-                std::allocator<int>
-            >::value
-        ));
-
-        BOOST_ASSERT((
-            is_same<
-                int,
-                test2::storage_type
-            >::value
-        ));
-
-        typedef storage<char> test3;
-        BOOST_ASSERT((
-            is_same<
-                test3::alloc,
-                storage_policy_stack
-            >::value
-        ));
-
-        BOOST_ASSERT((
-            is_same<
-                test3::storage_type,
-                char
-            >::value
-        ));
+        typedef storage<int> storage_t;
+        BOOST_MPL_ASSERT(( is_same<storage_t::storage_type, int> ));
     }
     // testing member type
     {

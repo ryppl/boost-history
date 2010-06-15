@@ -24,9 +24,7 @@ struct bitfield_tuple_iterator
         bitfield_tuple_iterator<Bitfeid_Tuple, Pos>,
         random_access_traversal_tag
     >
-{
-
-};
+{ };
 
 }} // end boost::fusion
 
