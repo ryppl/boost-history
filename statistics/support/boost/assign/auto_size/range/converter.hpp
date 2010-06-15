@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// assign::detail::range::converter.hpp                                     //
+// converter.hpp                                                            //
 //                                                                          //
 //  Copyright Thorsten Ottosen 2003-2004.                                   //
 //  (C) Copyright 2010 Erwann Rogard                                        //
@@ -12,6 +12,7 @@
 #include <boost/assign/list_of.hpp> // contains parts of impl
 #include <boost/typeof/typeof.hpp>
 #include <boost/range.hpp>
+#include <boost/assign/auto_size/range/convert_range.hpp>
 
 // This brings the code within assign_detail::converter<> into a macro to be 
 // expanded in what would otherwise be a derived class. This is to solve 
@@ -56,7 +57,13 @@ namespace impl{
     Container convert( const Container*, 
         assign_detail::default_type_tag, const R& r) 
     { 
-        return Container( boost::begin(r), boost::end(r) );                    
+        typedef typename boost::range_reference<Container>::type ref_;
+        typedef typename boost::remove_reference<ref_>::type val_;
+        typedef typename boost::assign::detail::result_of::convert_range<
+            const R,val_>::type tmp_;
+        tmp_ tmp = boost::assign::convert_range<
+            val_,boost::use_default>( r );
+        return Container( boost::begin( tmp ), boost::end( tmp ) );                    
     } 
                                                                                      
     template< class Array ,class R>
