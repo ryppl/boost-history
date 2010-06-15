@@ -12,7 +12,6 @@ int main (int argc, char * const argv[]) {
     using namespace boost::assign::detail::auto_size;
 
     void (*fp)();
-    
     {   // 1
         fp = check_ref_list_of_example1<int>;
        (*fp)();
@@ -134,7 +133,7 @@ int main (int argc, char * const argv[]) {
         fp = check_ref_csv_example2<int>;
        (*fp)();
     }
-    
+
     std::cout << "check_ref_csv : ok" << std::endl;
 
     return 0;

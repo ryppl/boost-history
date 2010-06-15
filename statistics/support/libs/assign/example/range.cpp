@@ -2,6 +2,9 @@
 // range.cpp                                                                 //
 //                                                                          //
 //////////////////////////////////////////////////////////////////////////////
+#include <utility>
+#include <map>
+
 #include <ostream>
 #include <iterator>
 #include <vector>
@@ -9,6 +12,7 @@
 #include <boost/typeof/typeof.hpp>
 #include <boost/next_prior.hpp>
 #include <boost/range/algorithm/copy.hpp>
+#include <boost/tuple/tuple.hpp>
 #include <boost/assign/auto_size/ref_list_of.hpp>
 #include <boost/assign/auto_size/ref_csv.hpp>
 #include <boost/assign/auto_size/range/basic_chain.hpp>
@@ -95,8 +99,28 @@ void example_range(std::ostream& os)
     BOOST_ASSERT( vec.size() == 5 );
  
 }
+{
+    using namespace std;
+    typedef std::map<int,int> map_;
+    typedef std::pair<const int,int> pair_;
+    map_ map1 = cref_csv( pair_(1,2), pair_(2,3) );
+    BOOST_ASSERT( map1[1] == 2 );
+    BOOST_ASSERT( map1[2] == 3 );
+    BOOST_ASSERT( map1.size() == 2 );
+}
+{
+    typedef boost::tuple<int,std::string,int> tuple_;
 
-
+    std::vector<tuple_> v = cref_csv( tuple_(1, "foo", 2) , tuple_(3, "bar", 4) );
+    BOOST_ASSERT( v.size() == 2 );
+    BOOST_ASSERT( boost::get<0>( v[1] ) ==  3 );
+}
+{
+    std::vector<int> vec = (list_of(1),2,3);
+    BOOST_ASSERT(vec[0]==1);    
+    BOOST_ASSERT(vec[1]==2);    
+    BOOST_ASSERT(vec[2]==3);    
+}
 	os << "<- " << std::endl;
     
 }

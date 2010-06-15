@@ -1,5 +1,13 @@
 // Revision history:
 //
+// 
+// June 15th, 2010. The argument r in 
+//    Container convert( const Container*, 
+//        assign_detail::default_type_tag, const R& r) 
+// is internally passed to convert_range<>(), to allow, for example,
+//    typedef std::map<int,int> map_;
+//    typedef std::pair<const int,int> pair_;
+//    map_ map1 = cref_csv( pair_(1,2), pair_(2,3) );
 // April 15, 2010 chain_l(a)(b)(c) becomes a && b && c 
 // March 25, 2010 
 // in write_to_array, replaced 
