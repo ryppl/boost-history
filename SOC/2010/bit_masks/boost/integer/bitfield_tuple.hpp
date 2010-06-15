@@ -17,7 +17,7 @@
 #include <boost/mpl/less.hpp>
 #include <boost/mpl/size.hpp>
 #include <string>
-
+#include <boost/integer/details/bft/ext/bitfield_tuple_fusion_includes.hpp>
 
 
 namespace boost {
