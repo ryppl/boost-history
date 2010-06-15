@@ -50,35 +50,6 @@ int main() {
 
     }
 
-    // stack allocation policy for bitfield_tuple
-    {
-        // default constructor.
-        details::stack_alloc_base_policy<int> sap_test_1;
-        BOOST_ASSERT(( sap_test_1._data == 0));
-
-        // value constructor
-        details::stack_alloc_base_policy<int> sap_test_2( 2 );
-        BOOST_ASSERT(( sap_test_2._data == 2));
-
-        // copy constructor
-        details::stack_alloc_base_policy<int> sap_test_3( sap_test_2 );
-        BOOST_ASSERT(( sap_test_3._data == 2));
-
-        // assignement.
-        details::stack_alloc_base_policy<int> sap_test_4;
-        sap_test_4 = sap_test_3;
-        BOOST_ASSERT(( sap_test_4._data == 2));
-        sap_test_4 = sap_test_1;
-        BOOST_ASSERT(( sap_test_4._data == 0));
-
-        // const test for get data
-        test_get_data( sap_test_4, 0 );
-
-        // non const test for get data
-        BOOST_ASSERT(( sap_test_4.get_data() == 0));
-
-    }
-
     // testing for parsing of aruments passed into template parameters.    
     {
     

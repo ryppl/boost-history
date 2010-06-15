@@ -23,8 +23,6 @@
 
 // implementation header files.
 #include <boost/integer/details/bft/bft_element.hpp>
-#include <boost/integer/details/bft/stack_allocation_policy.hpp>
-#include <boost/integer/details/bft/allocator_allocation_policy.hpp>
 #include <boost/integer/details/bft/arg_parse_impl.hpp>
 
 namespace boost { namespace details {
