@@ -108,7 +108,7 @@ int main(int, char* [])
 	}
 	
 	STATIC_BIT_REVERSAL_TEST(uint64_t, 0, 0);
-	STATIC_BIT_REVERSAL_TEST(uint64_t, 1, uint64_t(1) << 63);
+	STATIC_BIT_REVERSAL_TEST(uint64_t, uint64_t(1), uint64_t(1) << 63);
 	STATIC_BIT_REVERSAL_TEST(uint64_t, 2, uint64_t(1) << 62);
 	STATIC_BIT_REVERSAL_TEST(uint64_t, 4, uint64_t(1) << 61);
 	STATIC_BIT_REVERSAL_TEST(uint64_t, 8, uint64_t(1) << 60);	
