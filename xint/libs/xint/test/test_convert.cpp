@@ -154,6 +154,24 @@ BOOST_AUTO_TEST_CASE(test_binary_conversions) {
         digits + 1), exceptions::invalid_argument);
 }
 
+BOOST_AUTO_TEST_CASE(test_bool_conversions) {
+    integer n(-1);
+    BOOST_CHECK(bool(n) == true);
+    BOOST_CHECK(!n == false);
+
+    ++n; // Now zero
+    BOOST_CHECK(bool(n) == false);
+    BOOST_CHECK(!n == true);
+
+    ++n; // Now one
+    BOOST_CHECK(bool(n) == true);
+    BOOST_CHECK(!n == false);
+
+    ++n; // Now two
+    BOOST_CHECK(bool(n) == true);
+    BOOST_CHECK(!n == false);
+}
+
 BOOST_AUTO_TEST_CASE(test_to) {
     {
         typedef int T;

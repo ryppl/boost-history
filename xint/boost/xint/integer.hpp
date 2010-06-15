@@ -121,6 +121,8 @@ class integer_t {
     typedef BOOST_XINT_INTEGER_TYPE type;
     typedef detail::raw_integer_t<BitsType::value, SecureType::value, Alloc>
         datatype;
+    typedef void (BOOST_XINT_INTEGER_TYPE::*safe_bool_type)() const;
+    void this_is_a_safe_bool_type() const { }
     #endif // BOOST_XINT_DOXYGEN_IGNORE
 
     //! \name Constructors & Destructors
@@ -164,6 +166,8 @@ class integer_t {
     template <typename Type> BOOST_XINT_INTEGER_TYPE& operator=(const Type n) {
         BOOST_XINT_INTEGER_TYPE nn(n); _swap(nn); return *this; }
 
+    operator safe_bool_type() const { return (data.is_zero() ? 0 :
+        &BOOST_XINT_INTEGER_TYPE::this_is_a_safe_bool_type); }
     bool operator!() const { return data.is_zero(); }
     BOOST_XINT_INTEGER_TYPE operator-() const;
     BOOST_XINT_INTEGER_TYPE& operator+() { return *this; }
