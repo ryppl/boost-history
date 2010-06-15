@@ -1,15 +1,19 @@
-From :  
-/sandbox/statistic/support/assign
-/sandbox/statistic/support/range
+Copy
+   /sandbox/statistic/support/range/chain.hpp
+   /sandbox/statistic/support/range/detail/chain_iterator.hpp
+To
+   /trunk/boost/range
 
-To the trunk, Add or Replace as follows:
+Copy
+ /sandbox/statistic/support/assign/boost/assign/auto_size 
+ /sandbox/statistic/support/assign/boost/assign/auto_size.hpp
+To
+  /trunk/boost/assign
 
-Add /boost/range/chain.hpp
-Add /boost/range/detail/chain_iterator.hpp
-Add -R /boost/assign/auto_size 
-Add boost/assign/auto_size.hpp
-Add /libs/assign/test/ref_list_of.cpp
-Add /libs/assign/test/ref_csv.cpp
-Replace /libs/assign/test/Jamfile.v2
-Replace /libs/assign/doc/index.html
+Copy
+ /sandbox/statistic/support/assign/libs/assign/test/ref_list_of.cpp
+ /sandbox/statistic/support/assign/libs/assign/test/ref_csv.cpp
+ /sandbox/statistic/support/assign/libs/assign/test/Jamfile.v2
+To
+  /trunk/libs/assign
 

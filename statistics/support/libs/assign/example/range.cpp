@@ -93,7 +93,7 @@ void example_range(std::ostream& os)
     BOOST_ASSERT( vec[3]==4 );
     BOOST_ASSERT( vec[4]==5 );
     BOOST_ASSERT( vec.size() == 5 );
-
+ 
 }
 
 
