@@ -11,83 +11,33 @@
 #ifndef BOOST_PROTO_DETAIL_AS_EXPR_HPP_EAN_06_09_2010
 #define BOOST_PROTO_DETAIL_AS_EXPR_HPP_EAN_06_09_2010
 
-#include <boost/type_traits/is_same.hpp>
+#include <boost/type_traits/remove_const.hpp>
 #include <boost/proto/proto_fwd.hpp>
 #include <boost/proto/args.hpp>
 
 namespace boost { namespace proto { namespace detail
 {
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    template<
-        typename T
-      , typename Generator
-      , bool IsExpr = is_expr<T>::value
-      , bool WantsBasicExpr = wants_basic_expr<Generator>::value
-    >
+    template<typename Generator>
+    struct base_generator
+    {
+        typedef Generator type;
+    };
+
+    template<typename Generator>
+    struct base_generator<use_basic_expr<Generator> >
+    {
+        typedef Generator type;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    template<typename T, typename Generator, bool WantsBasicExpr>
     struct as_expr;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    template<
-        typename T
-      , typename Generator
-      , bool IsExpr = is_expr<T>::value
-      , bool WantsBasicExpr = wants_basic_expr<Generator>::value
-    >
-    struct as_child;
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    template<typename Expr, typename Generator, bool SameGenerator>
-    struct already_expr
-    {
-        typedef typename Expr::proto_derived_expr uncv_expr_type;
-        typedef typename Generator::template result<Generator(uncv_expr_type)>::type result_type;
-
-        result_type operator()(Expr &e) const
-        {
-            return Generator()(e);
-        }
-    };
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    template<typename Expr, typename Generator>
-    struct already_expr<Expr, Generator, true>
-    {
-        typedef typename Expr::proto_derived_expr result_type;
-
-        result_type operator()(Expr &e) const
-        {
-            return e;
-        }
-    };
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    template<typename Expr, typename Generator, bool SameGenerator>
-    struct already_child
-    {
-        typedef typename Expr::proto_derived_expr uncv_expr_type;
-        typedef typename Generator::template result<Generator(uncv_expr_type)>::type result_type;
-
-        result_type operator()(Expr &e) const
-        {
-            return Generator()(e);
-        }
-    };
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    template<typename Expr, typename Generator>
-    struct already_child<Expr, Generator, true>
-    {
-        typedef Expr &result_type;
-
-        result_type operator()(Expr &e) const
-        {
-            return e;
-        }
-    };
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
     template<typename T, typename Generator>
-    struct as_expr<T, Generator, false, false>
+    struct as_expr<T, Generator, false>
     {
         typedef typename term_traits<T &>::value_type value_type;
         typedef proto::expr<proto::tag::terminal, term<value_type>, 0> expr_type;
@@ -101,7 +51,7 @@ namespace boost { namespace proto { namespace detail
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     template<typename T, typename Generator>
-    struct as_expr<T, Generator, false, true>
+    struct as_expr<T, Generator, true>
     {
         typedef typename term_traits<T &>::value_type value_type;
         typedef proto::basic_expr<proto::tag::terminal, term<value_type>, 0> expr_type;
@@ -114,34 +64,8 @@ namespace boost { namespace proto { namespace detail
     };
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    template<typename T, typename Generator>
-    struct as_expr<T, Generator, true, false>
-      : already_expr<
-            T
-          , Generator
-          , is_same<
-                typename Generator::proto_base_generator
-              , typename T::proto_generator::proto_base_generator
-            >::value
-        >
-    {};
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    template<typename T, typename Generator>
-    struct as_expr<T, Generator, true, true>
-      : already_expr<
-            T
-          , Generator
-          , is_same<
-                typename Generator::proto_base_generator
-              , typename T::proto_generator::proto_base_generator
-            >::value
-        >
-    {};
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
     template<typename T>
-    struct as_expr<T, proto::_, false, false>
+    struct as_expr<T, proto::default_generator, false>
     {
         typedef typename term_traits<T &>::value_type value_type;
         typedef proto::expr<proto::tag::terminal, term<value_type>, 0> result_type;
@@ -154,7 +78,7 @@ namespace boost { namespace proto { namespace detail
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     template<typename T>
-    struct as_expr<T, proto::_, false, true>
+    struct as_expr<T, proto::default_generator, true>
     {
         typedef typename term_traits<T &>::value_type value_type;
         typedef proto::basic_expr<proto::tag::terminal, term<value_type>, 0> result_type;
@@ -166,21 +90,12 @@ namespace boost { namespace proto { namespace detail
     };
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    template<typename T>
-    struct as_expr<T, proto::_, true, false>
-      : already_expr<T, proto::_, true>
-    {};
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    template<typename T>
-    struct as_expr<T, proto::_, true, true>
-      : already_expr<T, proto::_, true>
-    {};
-
+    template<typename T, typename Generator, bool WantsBasicExpr>
+    struct as_child;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     template<typename T, typename Generator>
-    struct as_child<T, Generator, false, false>
+    struct as_child<T, Generator, false>
     {
         typedef proto::expr<proto::tag::terminal, term<T &>, 0> expr_type;
         typedef typename Generator::template result<Generator(expr_type)>::type result_type;
@@ -193,7 +108,7 @@ namespace boost { namespace proto { namespace detail
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     template<typename T, typename Generator>
-    struct as_child<T, Generator, false, true>
+    struct as_child<T, Generator, true>
     {
         typedef proto::basic_expr<proto::tag::terminal, term<T &>, 0> expr_type;
         typedef typename Generator::template result<Generator(expr_type)>::type result_type;
@@ -205,34 +120,8 @@ namespace boost { namespace proto { namespace detail
     };
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    template<typename T, typename Generator>
-    struct as_child<T, Generator, true, false>
-      : already_child<
-            T
-          , Generator
-          , is_same<
-                typename Generator::proto_base_generator
-              , typename T::proto_generator::proto_base_generator
-            >::value
-        >
-    {};
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    template<typename T, typename Generator>
-    struct as_child<T, Generator, true, true>
-      : already_child<
-            T
-          , Generator
-          , is_same<
-                typename Generator::proto_base_generator
-              , typename T::proto_generator::proto_base_generator
-            >::value
-        >
-    {};
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
     template<typename T>
-    struct as_child<T, proto::_, false, false>
+    struct as_child<T, proto::default_generator, false>
     {
         typedef proto::expr<proto::tag::terminal, term<T &>, 0> result_type;
 
@@ -244,7 +133,7 @@ namespace boost { namespace proto { namespace detail
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     template<typename T>
-    struct as_child<T, proto::_, false, true>
+    struct as_child<T, proto::default_generator, true>
     {
         typedef proto::basic_expr<proto::tag::terminal, term<T &>, 0> result_type;
 
@@ -253,18 +142,6 @@ namespace boost { namespace proto { namespace detail
             return result_type::make(t);
         }
     };
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    template<typename T>
-    struct as_child<T, proto::_, true, false>
-      : already_child<T, proto::_, true>
-    {};
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    template<typename T>
-    struct as_child<T, proto::_, true, true>
-      : already_child<T, proto::_, true>
-    {};
 
 }}}
 
