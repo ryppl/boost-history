@@ -13,6 +13,10 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/deref.hpp>
 #include <boost/type_traits.hpp>
+#include <boost/mpl/at.hpp>
+#include <boost/mpl/less.hpp>
+#include <boost/mpl/size.hpp>
+
 
 namespace boost {
 
@@ -30,19 +34,13 @@ template <  typename T0,
 struct bitfield_tuple
     : protected details::bitfield_tuple_base<
         T0,T1,T2,T3,T4,T5,T6,T7,T8,T9
-    >,
-    details::bitfield_tuple_base<
-        T0,T1,T2,T3,T4,T5,T6,T7,T8,T9
-    >::allocation_base_policy
+    >
 {
 private:
     typedef details::bitfield_tuple_base<T0,T1,T2,T3,T4,T5,T6,T7,T8,T9> _base;
-    typedef typename _base::allocation_base_policy  _alloc_base;
     typedef bitfield_tuple<T0,T1,T2,T3,T4,T5,T6,T7,T8,T9>  _self;
 
 public:
-    typedef typename _base::is_stack_allocated      is_stack_allocated;
-    typedef typename _base::is_allocator_allocated  is_allocator_allocated;
     typedef typename _base::processed_args          processed_args;
     typedef typename _base::field_vector            members;
     typedef typename _base::storage_type            storage_type;
@@ -125,12 +123,12 @@ public:
      *  Also functions as the default constructor.
      */
     bitfield_tuple(storage_type x = 0)
-        :_alloc_base(x)
+        :_data(x)
     { }
 
     /** Copy constructor. */
     bitfield_tuple(_self const& x)
-        :_alloc_base( x.data() )
+        :_data( x.data() )
     { }
 
     /** "Identical members" copy constructor.
@@ -157,11 +155,11 @@ public:
      */
     //@{
     storage_type const data( ) const {
-         return this->get_data();
+         return _data;
     }
 
     storage_type data( ) {
-         return this->get_data();
+         return _data;
     }
     //@}
 
@@ -215,7 +213,7 @@ public:
                 >::type
             >::type 
         >                                   reference_info;
-        return reference_info( this->get_data() );
+        return reference_info( _data );
     }
 
 
@@ -257,10 +255,34 @@ public:
                 >::type
             >::type 
         > const                             reference_info;
-        return reference_info( this->get_data() );
+        return reference_info( _data );
     }
 
+    template <std::size_t Index>
+    inline typename enable_if< 
+            typename mpl::less<
+                mpl::size_t<
+                    Index
+                >,
+                mpl::size<
+                    members
+                >
+            >,
+            typename bit_ref<
+                typename mpl::at_c<
+                    members,
+                    Index
+                >::type
+            >::type
+    >::type
+    get() {
+    
+    }
+                    
     //@}
+
+private:
+    storage_type _data;
 };
 
 
