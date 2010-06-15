@@ -15,7 +15,6 @@
 #include <boost/integer/bit_width.hpp>
 
 // std includes
-#include <string>
 #include <cstddef>
 
 // Other boost includes.
@@ -119,31 +118,6 @@ struct bitfield_tuple_base
 
     typedef typename storage_policy::storage_type   storage_type;
 
-    // this is only defined if the storage type is a type that is not the
-    // storage_policy_stack which makes this class simple use a stack to
-    // allocate its storage. This leaves an option for the user to select an
-    // allocator. 
-    typedef typename mpl::if_<
-        is_same<
-            typename storage_policy::alloc,
-            storage_policy_stack
-        >,
-        typename mpl::void_,
-        storage_policy
-        >::type                                     allocator;
-
-    // get the template to be used as base class so that the bitfield_tuple
-    // class itself can inherit from it.
-    typedef typename mpl::if_<
-            is_same<
-                allocator,
-                mpl::void_
-            >,
-            stack_alloc_base_policy<storage_type>,
-            allocator_wraper_base_policy< storage_type, allocator >
-        >::type                                     allocation_base_policy;
-
-
 
 
     // Precondition: storage_type must not be an array type.
@@ -162,26 +136,8 @@ struct bitfield_tuple_base
         bit_width< storage_type >::value
     ));
 
-    /** Meta-calculations used for enabling and disabling functionality based
-     *  on the allocation policy, number of members, endianness of storage type
-     *  signedness of internal storage type and other such things.
-     *  The main reason for creating a class such as this is that it makes 
-     *  the readability of bitfield_tupe higher.
-     *  This will also allow me to quickly deduce whether or not two bft types
-     *  are equivilant based on a simple set of concepts about the type itself.
-     *
-     */
-    typedef typename is_same<
-        allocator,
-        mpl::void_
-    >::type                                 is_allocator_allocated;
-
-    typedef typename is_same<
-        typename storage_policy::alloc,
-        storage_policy_stack
-    >::type                                 is_stack_allocated;
-
 };
+
 }} // end boost::details
 
 #undef BOOST_BFT_ARG_PROCESSING

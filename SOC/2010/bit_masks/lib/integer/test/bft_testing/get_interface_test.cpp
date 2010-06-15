@@ -9,6 +9,7 @@
 
 
 using namespace boost;
+
 struct red;
 struct green;
 struct pink;
@@ -21,10 +22,6 @@ typedef bitfield_tuple<
     storage<std::size_t>,
     member<int, salmon, 16>
 >                                       test_tuple;
-template <typename T>
-void const_interface_testing(T const& x) {
-    
-}
 
 
 int main() {
@@ -38,9 +35,22 @@ int main() {
         BOOST_ASSERT((test_1.get<red>() == 14));
         BOOST_ASSERT(( test_1.get<salmon>() == 6));
 
+/*        BOOST_ASSERT((
+            const_cast<
+                test_tuple const&
+            >(test_1).get<salmon>() == 6
+        ));
+*/
+        // XXX fix this at a later time maybe in a subsequent draft of the
+        // data structure.
         // testing negative values
-        test_1.get<salmon>()    = -6;
+        // test_1.get<salmon>()    = -6;
         //BOOST_ASSERT(( test_1.get<salmon>() == -6));
+    }
+    {
+        
     }
     return 0;
 }
+
+

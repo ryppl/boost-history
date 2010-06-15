@@ -16,6 +16,8 @@
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/less.hpp>
 #include <boost/mpl/size.hpp>
+#include <string>
+
 
 
 namespace boost {
@@ -83,6 +85,14 @@ public:
          */
         bit_ref(storage_type& ref)
             :_ref( *reinterpret_cast<unsigned_storage_type*>(&ref) )
+        { }
+
+        /** const Reference constructor.
+         *  Because the bit_ref is an abstraction of a reference then it also
+         *  must behave like a reference type.
+         */
+        bit_ref(storage_type const& ref)
+            :_ref( *reinterpret_cast<unsigned_storage_type const*>(&ref) )
         { }
 
         /** copy constructor.
@@ -241,8 +251,8 @@ public:
                     >
                 >::type
             >::type
-        > const
-    >::type 
+        > 
+    >::type const
     get() const {
          typedef bit_ref< 
             typename mpl::deref<
@@ -260,6 +270,33 @@ public:
 
     template <std::size_t Index>
     inline typename enable_if< 
+        typename mpl::less<
+            mpl::size_t<
+                Index
+            >,
+            mpl::size<
+                members
+            >
+        >,
+        bit_ref<
+            typename mpl::at_c<
+                members,
+                Index
+            >::type
+        >
+    >::type
+    get() {
+        typedef bit_ref<
+            typename mpl::at_c<
+                members,
+                Index
+            >::type
+        >                         reference_info;
+        return reference_info(_data);
+    }
+
+    template <std::size_t Index>
+    inline typename enable_if< 
             typename mpl::less<
                 mpl::size_t<
                     Index
@@ -268,17 +305,22 @@ public:
                     members
                 >
             >,
-            typename bit_ref<
+            bit_ref<
                 typename mpl::at_c<
                     members,
                     Index
                 >::type
+            >
+    >::type const
+    get() const {
+        typedef bit_ref<
+            typename mpl::at_c<
+                members,
+                Index
             >::type
-    >::type
-    get() {
-    
+        > const                         reference_info;
+        return reference_info( _data );
     }
-                    
     //@}
 
 private:
