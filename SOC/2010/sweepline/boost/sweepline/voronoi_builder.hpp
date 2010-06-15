@@ -15,34 +15,25 @@
 namespace boost {
 namespace sweepline {
 
-template <typename Point2D, typename BeachLine>
+    template <typename Point2D, typename BeachLine>
     class voronoi_builder {
     public:
-        voronoi_builder() {
-            beach_line_ = new BeachLine;
-        }
-        
-        ~voronoi_builder() {
-            if (beach_line_) {
-                delete beach_line_;
-                beach_line_ = NULL;
-            }
-        }
+        voronoi_builder() {}
 
         void init(const std::vector<Point2D> &sites) {
-            beach_line_->init(sites);
+            beach_line_.init(sites);
         }
 
         void reset() {
-            beach_line_->reset();
+            beach_line_.reset();
         }
 
         void build_voronoi_diagram() {
-            beach_line_->run_sweepline();
+            beach_line_.run_sweepline();
         }
 
     private:
-        BeachLine* beach_line_;
+        BeachLine beach_line_;
     };
 
 } // sweepline

@@ -78,11 +78,11 @@ namespace sweepline {
                 circle_events_.pop();
         }
 
-        void push(circle_event_type &circle_event) {
+        void push(const circle_event_type &circle_event) {
             circle_events_.push(circle_event);
         }
 
-        void deactivate_event(circle_event_type &circle_event) {
+        void deactivate_event(const circle_event_type &circle_event) {
             deactivated_events_.push(circle_event);
         }
 
@@ -93,7 +93,7 @@ namespace sweepline {
 
         void remove_not_active_events() {
             while (!circle_events_.empty() && !deactivated_events_.empty() &&
-                circle_events_.top() == deactivated_events_.top()) {
+                circle_events_.top().equals(deactivated_events_.top())) {
                 circle_events_.pop();
                 deactivated_events_.pop();
             }
@@ -106,7 +106,9 @@ namespace sweepline {
             else if (circle_events_.empty())
                 return SITE_EVENT;
             else {
-                if (site_events_iterator_->get_point() <= circle_events_.top().get_point())
+                // If two event points have the same coordinates return
+                // site event at first.
+                if (circle_events_.top().compare(*site_events_iterator_) >= 0)
                     return SITE_EVENT;
                 else
                     return CIRCLE_EVENT;

@@ -1,10 +1,10 @@
 // Boost sweepline library event_queue_test.cpp file 
-
+//
 //          Copyright Andrii Sydorchuk 2010.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
-
+//
 //  See http://www.boost.org for updates, documentation, and revision history.
 
 #include "test_type_list.hpp"
@@ -33,7 +33,8 @@ struct event_processor {
     }
 
     void operator()(const circle_event_type &circle_event) {
-        x = circle_event.x();
+        x = circle_event.x() +
+            sqrt(static_cast<coordinate_type>(circle_event.get_sqr_radius()));
         y = circle_event.y();
     }
         
@@ -66,15 +67,15 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(event_queue_test1, T, test_types) {
     CHECK_TOP_ELEMENT_EQUALITY(test_processor, 1, 1);
 
     for (int i = 5; i < 10; i++) {
-        T x = static_cast<T>(10-i);
+        T x = static_cast<T>(-i);
         T y = static_cast<T>(10-i);
-        event_q.push(make_circle_event(x, y));
+        event_q.push(make_circle_event(x, y, static_cast<T>(100)));
     }
 
     for (int i = 0; i < 5; i++) {
-        T x = static_cast<T>(10-i);
+        T x = static_cast<T>(-i);
         T y = static_cast<T>(10-i-1);
-        event_q.push(make_circle_event(x, y));
+        event_q.push(make_circle_event(x, y, static_cast<T>(100)));
     }
     
     for (int i = 0; i < 10; i++) {
@@ -88,7 +89,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(event_queue_test1, T, test_types) {
         CHECK_TOP_ELEMENT_EQUALITY(test_processor, 1 + i/2, 1 + (i-1)/2);
         event_q.pop();
     }
-    
+
     BOOST_CHECK_EQUAL(event_q.empty(), true);
 }
 
@@ -99,13 +100,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(event_queue_test2, T, test_types) {
     for (int i = 0; i < 10; i++) {
         T x = static_cast<T>(10-i);
         T y = static_cast<T>(10-i);
-        event_q.push(make_circle_event(x, y));
+        event_q.push(make_circle_event(x, y, static_cast<T>(0)));
     }
 
     for (int i = 0; i < 5; i++) {
         T x = static_cast<T>(10-2*i-1);
         T y = static_cast<T>(10-2*i-1);
-        event_q.deactivate_event(make_circle_event(x, y));   
+        event_q.deactivate_event(make_circle_event(x, y, static_cast<T>(0)));   
     }
 
     for (int i = 0; i < 5; i++) {
