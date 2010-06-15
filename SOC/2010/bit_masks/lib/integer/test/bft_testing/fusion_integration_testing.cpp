@@ -31,21 +31,18 @@ int main() {
         typedef fusion::traits::tag_of<test_tuple>::type    tag;
         BOOST_MPL_ASSERT(( is_same< tag, fusion::bitfield_tuple_tag> ));
     }
-    // iterator tag_of testing. still don't know if this is really needed
-    // for fusion integration, at any rate I can't seem to get it to work.
-    {
-        // typedef bitfield_tuple_iterator<test_tuple,0> iter;
-        // typedef fusion::traits::tag_of<iter>::type tag;
-        // BOOST_MPL_ASSERT(( is_same<bitfield_tuple_iterator_tag, tag> ));
-    }
 
-    // iterator value of testing.
-    //      this is strange to tes, because of the construction of the
+    // iterator value_of
+    //      this is strange to test, because of the construction of the
     // members vector.
     {
         typedef bitfield_tuple_iterator<test_tuple,0>   iter;
         typedef fusion::result_of::value_of<iter>::type value_of_result;
         BOOST_MPL_ASSERT(( is_same< value_of_result::return_type, char> ));
+    }
+    // Iterator deref
+    {
+
     }
     /*
     bmg_t bmg;

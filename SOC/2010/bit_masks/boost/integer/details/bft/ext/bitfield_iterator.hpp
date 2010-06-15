@@ -45,6 +45,9 @@ struct bitfield_tuple_iterator
     bitfield_tuple_iterator(BitfieldTuple& bft)
         : _data(bft) { }
 
+
+    BitfieldTuple& _data;
+
     /** Important information about the current iterators
      *  template parameters.
      */
@@ -69,9 +72,12 @@ struct bitfield_tuple_iterator
     template <typename Iter>
     struct deref {
         // the type returned by dereferencing the iterator.
-        typedef typename details::IMPLEMENT_ME type;
+        typedef typename value_of<Iter>::type type;
+
         // dereference operation.
-        static type call(Iter& iter);
+        static type call(Iter& iter) {
+            return type( iter._data.data() );
+        }
     };
 
     template<typename Iter>
@@ -110,8 +116,7 @@ struct bitfield_tuple_iterator
         static type call(Iter& it);
     };
 
-private:
-    BitfieldTuple& _data;
+
 };
 
 } // end boost::fusion

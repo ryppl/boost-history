@@ -220,11 +220,11 @@ public:
      *  Retuns a copy of the internally stored type.
      */
     //@{
-    storage_type const data( ) const {
+    storage_type const& data( ) const {
          return _data;
     }
 
-    storage_type data( ) {
+    storage_type& data( ) {
          return _data;
     }
     //@}
