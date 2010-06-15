@@ -66,7 +66,6 @@
 #   define BOOST_FUSION_FOLD_IMPL_INVOKE_IT_TRANSFORM(IT) fusion::deref(IT)
 #endif
 
-
 namespace boost { namespace fusion
 {
     namespace detail
@@ -121,15 +120,16 @@ namespace boost { namespace fusion
                             f(
                                 f(
                                     BOOST_FUSION_FORWARD(State,state),
-                                    fusion::deref(it0)
+                                    BOOST_FUSION_FOLD_IMPL_INVOKE_IT_TRANSFORM(
+                                        it0)
                                 ),
-                                fusion::deref(it1)
+                                BOOST_FUSION_FOLD_IMPL_INVOKE_IT_TRANSFORM(it1)
                             ),
-                            fusion::deref(it2)
+                            BOOST_FUSION_FOLD_IMPL_INVOKE_IT_TRANSFORM(it2)
                         ),
-                        fusion::deref(it3)
+                        BOOST_FUSION_FOLD_IMPL_INVOKE_IT_TRANSFORM(it3)
                     ),
-                    fusion::next(it3),
+                    fusion::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION(it3),
                     BOOST_FUSION_FORWARD(F,f));
             }
         };
@@ -160,11 +160,11 @@ namespace boost { namespace fusion
                         f(
                             f(
                                 BOOST_FUSION_FORWARD(State,state),
-                                fusion::deref(it0)
+                                BOOST_FUSION_FOLD_IMPL_INVOKE_IT_TRANSFORM(it0)
                             ),
-                            fusion::deref(it1)
+                            BOOST_FUSION_FOLD_IMPL_INVOKE_IT_TRANSFORM(it1)
                         ),
-                        fusion::deref(
+                        BOOST_FUSION_FOLD_IMPL_INVOKE_IT_TRANSFORM(
                             fusion::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION(it1)
                         ));
             }
@@ -180,8 +180,9 @@ namespace boost { namespace fusion
                     BOOST_FUSION_RREF_ELSE_OBJ(F) f)
             {
                 return f(
-                    f(BOOST_FUSION_FORWARD(State,state),fusion::deref(it0)),
-                    fusion::deref(
+                    f(BOOST_FUSION_FORWARD(State,state),
+                        BOOST_FUSION_FOLD_IMPL_INVOKE_IT_TRANSFORM(it0)),
+                    BOOST_FUSION_FOLD_IMPL_INVOKE_IT_TRANSFORM(
                         fusion::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION(it0)));
             }
         };
@@ -195,7 +196,8 @@ namespace boost { namespace fusion
                 It0 const& it0,
                 BOOST_FUSION_RREF_ELSE_OBJ(F) f)
             {
-                return f(BOOST_FUSION_FORWARD(State,state),fusion::deref(it0));
+                return f(BOOST_FUSION_FORWARD(State,state),
+                    BOOST_FUSION_FOLD_IMPL_INVOKE_IT_TRANSFORM(it0));
             }
         };
 
@@ -405,7 +407,7 @@ namespace boost { namespace fusion
             static StateRef
             call(StateRef state, It0 const&, F)
             {
-                return state;
+                return static_cast<StateRef>(state);
             }
         };
     }
@@ -473,4 +475,5 @@ namespace boost { namespace fusion
 #undef BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION
 #undef BOOST_FUSION_FOLD_IMPL_FIRST_IT_META_TRANSFORM
 #undef BOOST_FUSION_FOLD_IMPL_FIRST_IT_TRANSFORM
+#undef BOOST_FUSION_FOLD_IMPL_INVOKE_IT_META_TRANSFORM
 #undef BOOST_FUSION_FOLD_IMPL_INVOKE_IT_TRANSFORM
