@@ -51,7 +51,7 @@ public:
     /** Proxy type returned by get functions.
      *  This serves as the go between things within this class.
      */
-    template <typename Mask_Info>
+    template <typename MaskInfo>
     struct bit_ref {
 
         /** typedefs 
@@ -61,8 +61,8 @@ public:
          *  mask - contains all information needed to iteract with data in the
          *      the stroage.
          */
-        typedef typename Mask_Info::return_type                  return_type;       
-        typedef bit_ref<Mask_Info>                               _self;
+        typedef typename MaskInfo::return_type                  return_type;       
+        typedef bit_ref<MaskInfo>                               _self;
         typedef typename make_unsigned<return_type>::type  unsigned_return_type;
         typedef typename make_unsigned<
             storage_type
@@ -73,8 +73,8 @@ public:
          */
         typedef typename integer::bitfield<
             unsigned_storage_type,
-            Mask_Info::offset::value,
-            Mask_Info::offset::value + Mask_Info::field_width::value - 1
+            MaskInfo::offset::value,
+            MaskInfo::offset::value + MaskInfo::field_width::value - 1
         >                                                       bitfield_type;
 
 
@@ -97,7 +97,7 @@ public:
         /** copy constructor.
          *  This is because references are copy construtible.
          */
-        // bit_ref( bit_ref<Mask_Info> const& x)
+        // bit_ref( bit_ref<MaskInfo> const& x)
         //    :_ref( x )
         // { }
         
@@ -126,7 +126,7 @@ public:
         bit_ref();
     };
 
-    template <typename Mask_Info>
+    template <typename MaskInfo>
     struct const_bit_ref {
 
         /** typedefs 
@@ -136,8 +136,8 @@ public:
          *  mask - contains all information needed to iteract with data in the
          *      the stroage.
          */
-        typedef typename Mask_Info::return_type             return_type;       
-        typedef bit_ref<Mask_Info>                               _self;
+        typedef typename MaskInfo::return_type             return_type;       
+        typedef bit_ref<MaskInfo>                               _self;
         typedef typename make_unsigned<return_type>::type  unsigned_return_type;
         typedef typename make_unsigned<
             storage_type
@@ -148,8 +148,8 @@ public:
          */
         typedef typename integer::bitfield<
             unsigned_storage_type,
-            Mask_Info::offset::value,
-            Mask_Info::offset::value + Mask_Info::field_width::value - 1
+            MaskInfo::offset::value,
+            MaskInfo::offset::value + MaskInfo::field_width::value - 1
         >                                                       bitfield_type;
 
 
@@ -164,7 +164,7 @@ public:
         /** copy constructor.
          *  This is because references are copy construtible.
          */
-        // bit_ref( bit_ref<Mask_Info> const& x)
+        // bit_ref( bit_ref<MaskInfo> const& x)
         //    :_ref( x )
         // { }
         

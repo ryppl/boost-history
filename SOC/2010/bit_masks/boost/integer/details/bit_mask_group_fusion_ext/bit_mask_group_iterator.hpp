@@ -20,16 +20,16 @@ namespace boost { namespace fusion {
  *  As the type bit_mask_group is trivially constructible, copyable and 
  *  destructable there is no member to actually hold any data.
  */
-template<typename Mask_Group, unsigned int Pos>
+template<typename MaskGroup, unsigned int Pos>
 struct bit_mask_group_iterator
     : iterator_facade<
-        bit_mask_group_iterator<Mask_Group, Pos>,
+        bit_mask_group_iterator<MaskGroup, Pos>,
         random_access_traversal_tag
     >
 {
     // TODO: At a later time add preconditions for the iterator.
     // maybe
-    typedef Mask_Group mask_group;
+    typedef MaskGroup mask_group;
     typedef boost::mpl::int_<Pos> index;
     typedef boost::fusion::random_access_traversal_tag category;
 
