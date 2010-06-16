@@ -34,22 +34,29 @@
 #   if (defined(_WIN32) || defined(__WIN32__) || defined(WIN32))
 #     define BOOST_CHRONO_WINDOWS_API
 #     define BOOST_CHRONO_HAS_CLOCK_MONOTONIC
+#     define BOOST_CHRONO_HAS_THREAD_CLOCK
+#     define BOOST_CHRONO_THREAD_CLOCK_IS_MONOTONIC true
 #   elif defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)
 #     define BOOST_CHRONO_MAC_API
 #     define BOOST_CHRONO_HAS_CLOCK_MONOTONIC
+#     define BOOST_CHRONO_THREAD_CLOCK_IS_MONOTONIC true
 #   else
 #     define BOOST_CHRONO_POSIX_API
 #   endif
 # endif
 
 # if defined( BOOST_CHRONO_POSIX_API )
-#   include <time.h>  //to check for CLOCK_REALTIME and CLOCK_MONOTONIC
+#   include <time.h>  //to check for CLOCK_REALTIME and CLOCK_MONOTONIC and _POSIX_THREAD_CPUTIME
 #   if defined(CLOCK_REALTIME)
 #     if defined(CLOCK_MONOTONIC)
 #        define BOOST_CHRONO_HAS_CLOCK_MONOTONIC
 #     endif
 #   else
 #     error <time.h> does not supply CLOCK_REALTIME
+#   endif
+#   if defined(_POSIX_THREAD_CPUTIME)
+#     define BOOST_CHRONO_HAS_THREAD_CLOCK
+#     define BOOST_CHRONO_THREAD_CLOCK_IS_MONOTONIC true
 #   endif
 # endif
 
@@ -83,7 +90,7 @@
 
 //  define constexpr related macros  ------------------------------//
 
-#include <boost/chrono/config.hpp>
+//~ #include <boost/config.hpp>
 #if defined(BOOST_NO_CONSTEXPR)
 #define BOOST_CHRONO_CONSTEXPR
 #define BOOST_CHRONO_CONST_REF const&
