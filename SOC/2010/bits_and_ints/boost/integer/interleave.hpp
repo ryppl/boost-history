@@ -40,16 +40,17 @@ namespace boost
 {
 	
 /*
- *	Interleave two unsigned integral of 8, 16 or 32 bits and returns
- *		one unsigned integral with the double of the size.
+ *	Interleave two unsigned integrals of 8, 16 or 32 bits and returns
+ *		one unsigned integral with 16, 32 or 64 bits.
  */
 template <int Bits>
-//inline typename enable_if_c<Bits == 8 || Bits == 16 || Bits == 32, typename uint_t<Bits * 2>::exact>::type 
-typename uint_t<Bits * 2>::exact
-interleave(const typename uint_t<Bits>::exact& x, const typename uint_t<Bits>::exact& y)
+inline typename enable_if_c<Bits == 8 || Bits == 16 || Bits == 32, typename uint_t<Bits * 2>::exact>::type 
+interleave(typename uint_t<Bits>::exact x, typename uint_t<Bits>::exact y)
 {
-	static const uintmax_t
-	interleave_mask[3][5] = {
+	// mask[0] - masks for 8-bit parameters
+	//     [1] - 16-bit
+	//     [2] - 32-bit
+	static const uintmax_t mask[3][5] = {
 		{0x5555, 0x3333, 0x0F0F, 0xFFFF, 0xFFFF},
 		{0x55555555, 0x33333333, 0x0F0F0F0F, 0x00FF00FF, 0xFFFFFFFF},
 #ifndef BOOST_NO_INT64_T
@@ -59,8 +60,10 @@ interleave(const typename uint_t<Bits>::exact& x, const typename uint_t<Bits>::e
 #endif
 	};
 	
-	static const std::size_t
-	interleave_shift[3][5] = {
+	// shift[0] - shift sizes for 8-bit parameters
+	//      [1] - 16-bit
+	//      [2] - 32-bit
+	static const std::size_t shift[3][5] = {
 		{0, 0, 4, 2, 1},
 		{0, 8, 4, 2, 1},
 		{16, 8, 4, 2, 1}
@@ -74,26 +77,26 @@ interleave(const typename uint_t<Bits>::exact& x, const typename uint_t<Bits>::e
 	
 	return_type a(x), b(y);
 	
-	a = (a | (a << interleave_shift[index][0])) & return_type(interleave_mask[index][4]);
+	a = (a | (a << shift[index][0])) & return_type(mask[index][4]);
 	
 	// puts the byte 2 in the byte 4 and the byte 3 in the byte 5
-	a = (a | (a << interleave_shift[index][1])) & return_type(interleave_mask[index][3]);
+	a = (a | (a << shift[index][1])) & return_type(mask[index][3]);
 	
 	// now the original bytes of x are in alternate bytes
-	a = (a | (a << interleave_shift[index][2])) & return_type(interleave_mask[index][2]);
+	a = (a | (a << shift[index][2])) & return_type(mask[index][2]);
 	
 	// now the original bits of x are in the lowest 2 bits of the nibbles
-	a = (a | (a << interleave_shift[index][3])) & return_type(interleave_mask[index][1]);
+	a = (a | (a << shift[index][3])) & return_type(mask[index][1]);
 	
 	// now the original bits are in the even bits
-	a = (a | (a << interleave_shift[index][4])) & return_type(interleave_mask[index][0]);
+	a = (a | (a << shift[index][4])) & return_type(mask[index][0]);
 	
 	// do the same with b
-	b = (b | (b << interleave_shift[index][0])) & return_type(interleave_mask[index][4]);
-	b = (b | (b << interleave_shift[index][1])) & return_type(interleave_mask[index][3]);
-	b = (b | (b << interleave_shift[index][2])) & return_type(interleave_mask[index][2]);
-	b = (b | (b << interleave_shift[index][3])) & return_type(interleave_mask[index][1]);
-	b = (b | (b << interleave_shift[index][4])) & return_type(interleave_mask[index][0]);
+	b = (b | (b << shift[index][0])) & return_type(mask[index][4]);
+	b = (b | (b << shift[index][1])) & return_type(mask[index][3]);
+	b = (b | (b << shift[index][2])) & return_type(mask[index][2]);
+	b = (b | (b << shift[index][3])) & return_type(mask[index][1]);
+	b = (b | (b << shift[index][4])) & return_type(mask[index][0]);
 	
 	// now the original bits are in the odd bits
 	b <<= 1;
@@ -104,10 +107,10 @@ interleave(const typename uint_t<Bits>::exact& x, const typename uint_t<Bits>::e
 } // interleave
 	
 /*
- *	This function "uninterleaves" a morton number into two morton number with
- *		half size.
+ *	This function "uninterleaves" an unsigned integral into unsigned integrals
+ *		with the half size.
  *	
- *	The parameter number must be an morton<S> with S equal 16, 32 or 64.
+ *	The parameter number must be unsigned integral with 16, 32 or 64 bits.
  */
 template <int Bits>
 inline typename enable_if_c<Bits == 16 || Bits == 32 || Bits == 64, 
