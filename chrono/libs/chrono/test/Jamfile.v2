@@ -20,7 +20,7 @@ project
     : requirements
         <os>LINUX:<threading>multi
         #<library>/boost/chrono//boost_chrono
-        #<library>/boost/system//boost_system
+        <library>/boost/system//boost_system
         <library>../build//boost_chrono
         #<library>/boost/thread//boost_thread/<link>shared
         # uncomment the line above if you build outside the Boost release

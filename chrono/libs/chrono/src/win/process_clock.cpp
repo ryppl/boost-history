@@ -46,9 +46,9 @@ namespace boost
       }
       else
       {
-        assert( 0 && "error handling not implemented yet" );
-        //ec = error_code( ::GetLastError(), native_ecat );
-        //times_.real = times_.system = times_.user = nanoseconds(-1);
+        //~ assert( 0 && "error handling not implemented yet" );
+        ec.assign( ::GetLastError(), system::system_category );
+        times_.real = times_.system = times_.user = nanoseconds(-1);
       }
 
     }

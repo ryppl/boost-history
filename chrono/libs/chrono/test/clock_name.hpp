@@ -1,6 +1,7 @@
 //  stopclock_perf.cpp  ---------------------------------------------------//
 
 //  Copyright 2009 Vicente J. Botet Escriba
+//  Copyright 2009 Howard Hinnant
 
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
