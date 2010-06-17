@@ -8,4 +8,9 @@
 #include <boost/fusion/iterator/value_of.hpp>
 #include <boost/fusion/iterator/deref.hpp>
 #include <boost/fusion/iterator/next.hpp>
+#include <boost/fusion/iterator/prior.hpp>
+#include <boost/fusion/iterator/distance.hpp>
+#include <boost/fusion/iterator/key_of.hpp>
+#include <boost/fusion/iterator/value_of_data.hpp>
+#include <boost/fusion/iterator/deref_data.hpp>
 #endif

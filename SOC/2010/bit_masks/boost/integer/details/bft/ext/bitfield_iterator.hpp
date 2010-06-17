@@ -99,8 +99,20 @@ struct bitfield_tuple_iterator
     /** Fusion Extension: prior */
     template<typename Iter>
     struct prior {
-        typedef typename details::IMPLEMENT_ME type;
-        static type call(Iter& iter);
+        typedef bitfield_tuple_iterator<
+            typename Iter::bitfield_tuple_type,
+            Iter::index::value - 1
+        >                                       type;
+
+        // const prior operation
+        static type call(Iter const& iter) {
+            return type( iter._data );
+        }
+
+        // non-const prior operation.
+        static type call(Iter& iter) {
+            return type( iter._data );
+        }
     };
 
     /** Fusion Extension: distance */
@@ -108,27 +120,47 @@ struct bitfield_tuple_iterator
     struct distance {
         // The distance between iterators of type It1 and It2 as 
         // an MPL Integral Constant
-        typedef typename details::IMPLEMENT_ME type;
-        static type call(Iter1& it1,Iter2& it2);
+        typedef typename mpl::minus<
+            typename Iter1::index,
+            typename Iter2::index
+        >                                       type;
+
+        // const distance
+        static type call(Iter1 const&, Iter2 const&) {
+            return type();
+        }
 	};
 
     /** Fusion Extension: key_of */
     template <typename Iter>
     struct key_of {
-        typedef typename details::IMPLEMENT_ME type;
+        typedef typename mpl::at<
+            typename Iter::bitfield_tuple_type::members,
+            typename Iter::index
+        >::type::name_type                      type;
     };
 
     /** Fusion Extension: value_of_data */
     template <typename Iter>
     struct value_of_data {
-        typedef typename details::IMPLEMENT_ME type;
+        typedef typename value_of<Iter>::type type;
     };
 
     /** Fusion Extension: deref_data */
     template <typename Iter>
     struct deref_data {
-        typedef typename details::IMPLEMENT_ME type;
-        static type call(Iter& it);
+        // the type returned by dereferencing the iterator.
+        typedef typename value_of<Iter>::type   type;
+
+        // const dereference operation.
+        static type call(Iter const& iter) {
+            return type( iter._data.data() );
+        }
+
+        // non-const dereference operation.
+        static type call(Iter& iter) {
+            return type( iter._data.data() );
+        }
     };
 
 };

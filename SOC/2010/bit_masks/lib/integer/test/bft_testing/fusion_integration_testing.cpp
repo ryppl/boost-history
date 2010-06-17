@@ -58,10 +58,67 @@ int main() {
         test_tuple temp;
         temp.get<green>() = 3;
         Iter it(temp);
-        BOOST_ASSERT(( fusion::deref(fusion::next(it)) == 3 ));        
+        BOOST_ASSERT(( fusion::deref(fusion::next(it)) == 3 ));
     }
 
+    // prior
+    {
+        typedef bitfield_tuple_iterator<test_tuple,0> Iter;
+        test_tuple temp;
+        temp.get<red>() = 2;
+        temp.get<green>() = 3;
+        Iter it(temp);
+        BOOST_ASSERT(( fusion::deref(fusion::prior(fusion::next(it))) == 2 ));
+    }
+    
+    // distance tesing
+    {
+        typedef bitfield_tuple_iterator<test_tuple,0> Iter1;
+        typedef bitfield_tuple_iterator<test_tuple,1> Iter2;
+        test_tuple temp;
+        temp.get<red>() = 2;
+        temp.get<green>() = 3;
+        Iter1 it1(temp);
+        Iter2 it2(temp);
+        BOOST_ASSERT(( fusion::distance(it2,it1) == 1 ));   
+    }
+    
+    // key_of testing
+    {
+        typedef bitfield_tuple_iterator<test_tuple,1> Iter;
+        test_tuple temp;
+        BOOST_MPL_ASSERT((
+            is_same<
+                fusion::result_of::key_of<
+                    Iter
+                >::type,
+                green
+            >
+        ));
+    }
 
+    // value_of_data testing
+    {
+
+        typedef bitfield_tuple_iterator<test_tuple,1> Iter;
+        typedef fusion::result_of::value_of_data<
+            Iter
+        >::type                             value_of_data_t;
+
+        test_tuple temp;
+        BOOST_MPL_ASSERT((is_same<value_of_data_t::return_type,unsigned char>));
+    }
+    
+    // deref_data testing
+    {
+        typedef bitfield_tuple_iterator<test_tuple,1>   Iter;
+        typedef fusion::result_of::deref_data<
+            Iter
+        >::type                             deref_data_t;
+
+        // test_tuple temp;
+        // BOOST_MPL_ASSERT((is_same<deref_data_t::return_type,unsigned char>));
+    }
     /*
     bmg_t bmg;
 
