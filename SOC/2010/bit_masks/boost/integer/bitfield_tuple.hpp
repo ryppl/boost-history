@@ -63,7 +63,6 @@ public:
          */
         typedef typename MaskInfo::return_type                  return_type;       
         typedef bit_ref<MaskInfo>                               _self;
-        typedef typename make_unsigned<return_type>::type  unsigned_return_type;
         typedef typename make_unsigned<
             storage_type
         >::type                                           unsigned_storage_type;
@@ -74,7 +73,8 @@ public:
         typedef typename integer::bitfield<
             unsigned_storage_type,
             MaskInfo::offset::value,
-            MaskInfo::offset::value + MaskInfo::field_width::value - 1
+            MaskInfo::offset::value + MaskInfo::field_width::value - 1,
+            return_type
         >                                                       bitfield_type;
 
 
@@ -113,8 +113,7 @@ public:
          *  the tuple like interface.
          */
         _self const& operator=(return_type const& rhs) {
-            _ref.set(
-                static_cast<typename make_unsigned<storage_type>::type>(rhs));
+            _ref.set( rhs );
             return *this;
         }
         
@@ -149,7 +148,8 @@ public:
         typedef typename integer::bitfield<
             unsigned_storage_type,
             MaskInfo::offset::value,
-            MaskInfo::offset::value + MaskInfo::field_width::value - 1
+            MaskInfo::offset::value + MaskInfo::field_width::value - 1,
+            return_type
         >                                                       bitfield_type;
 
 

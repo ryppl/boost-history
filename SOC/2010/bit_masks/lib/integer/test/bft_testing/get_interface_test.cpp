@@ -29,10 +29,10 @@ int main() {
     {
         test_tuple test_1;
         test_1.get<green>()     = 15;
-        test_1.get<red>()       = 14;
+        test_1.get<red>()       = 3;
         test_1.get<salmon>()    = 6;
         BOOST_ASSERT((test_1.get<green>() == 15));
-        BOOST_ASSERT((test_1.get<red>() == 14));
+        BOOST_ASSERT((test_1.get<red>() == 3));
         BOOST_ASSERT(( test_1.get<salmon>() == 6));
 
         BOOST_ASSERT((
@@ -45,10 +45,10 @@ int main() {
     // get using an index.
     {
         test_tuple test_2;
-        test_2.get<0>() = 15;
+        test_2.get<0>() = 3;
         test_2.get<1>() = 14;
         test_2.get<2>() = 6;
-        BOOST_ASSERT((test_2.get<0>() == 15));
+        BOOST_ASSERT((test_2.get<0>() == 3));
         BOOST_ASSERT((test_2.get<1>() == 14));
         BOOST_ASSERT((test_2.get<2>() == 6));
 
@@ -57,6 +57,13 @@ int main() {
                 test_tuple const&
             >(test_2).get<2>() == 6
         ));
+    }
+
+    // negative value testing
+    {
+        test_tuple test_3;
+        test_3.get<0>() = -1;
+        BOOST_ASSERT(( test_3.get<0>() == -1 ));
     }
     return 0;
 }
