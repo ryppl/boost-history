@@ -98,7 +98,7 @@ namespace sweepline {
 
         site_event() {}
         
-        site_event(T x, T y) : point_(x, y) {}
+        site_event(T x, T y, int index) : point_(x, y), site_index_(index) {}
 
         bool operator==(const site_event &s_event) const {
             return point_ == s_event.get_point();
@@ -136,13 +136,18 @@ namespace sweepline {
             return point_;
         }
 
+        int get_site_index() const {
+            return site_index_;
+        }
+
     private:
         point_2d<T> point_;
+        int site_index_;
     };
 
     template <typename T>
-    site_event<T> make_site_event(T x, T y) {
-        return site_event<T>(x,y);
+    site_event<T> make_site_event(T x, T y, int index) {
+        return site_event<T>(x, y, index);
     }
 
     // Circle event type. Occurs when sweepline sweeps over the bottom point of
@@ -275,24 +280,25 @@ namespace sweepline {
             return sqr_radius_;
         }
 
-        void set_bisector(const point_2d<T> &left_point, const point_2d<T> &right_point) {
-            bisector_left_point_ = left_point;
-            bisector_right_point_ = right_point;
+        void set_bisector(const site_event<T> &left_site,
+                          const site_event<T> &right_site) {
+            bisector_left_site_ = left_site;
+            bisector_right_site_ = right_site;
         }
 
-        const point_2d<T> &get_bisector_left_point() const {
-            return bisector_left_point_;
+        const site_event<T> &get_bisector_left_site() const {
+            return bisector_left_site_;
         }
 
-        const point_2d<T> &get_bisector_right_point() const {
-            return bisector_right_point_;
+        const site_event<T> &get_bisector_right_site() const {
+            return bisector_right_site_;
         }
 
     private:
         point_2d<T> center_;
         T sqr_radius_;
-        point_2d<T> bisector_left_point_;
-        point_2d<T> bisector_right_point_;
+        site_event<T> bisector_left_site_;
+        site_event<T> bisector_right_site_;
     };
 
     template <typename T>

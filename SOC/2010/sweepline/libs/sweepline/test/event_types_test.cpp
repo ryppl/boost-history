@@ -44,21 +44,23 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(point_2d_test1, T, test_types) {
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(site_event_test1, T, test_types) {
     site_event<T> site1 = make_site_event(static_cast<T>(1),
-                                          static_cast<T>(1.05));
+                                          static_cast<T>(1.05),
+                                          0);
     site_event<T> site2;
 
     BOOST_CHECK_EQUAL(site1.x(), static_cast<T>(1));
     BOOST_CHECK_EQUAL(site1.y(), static_cast<T>(1.05));
+    BOOST_CHECK_EQUAL(site1.get_site_index(), 0);
 
-    site2 = make_site_event(static_cast<T>(0.999999), static_cast<T>(1));
+    site2 = make_site_event(static_cast<T>(0.999999), static_cast<T>(1), 1);
     bool arr1[] = { false, true, false, true, false, true };
     EVENT_TYPES_CHECK_COMPARISON(site1, site2, arr1);
 
-    site2 = make_site_event(static_cast<T>(1), static_cast<T>(1.1));
+    site2 = make_site_event(static_cast<T>(1), static_cast<T>(1.1), 1);
     bool arr2[] = { true, false, true, false, false, true };
     EVENT_TYPES_CHECK_COMPARISON(site1, site2, arr2);
 
-    site2 = make_site_event(static_cast<T>(1), static_cast<T>(1.05));
+    site2 = make_site_event(static_cast<T>(1), static_cast<T>(1.05), 1);
     bool arr3[] = { false, false, true, true, true, false };
     EVENT_TYPES_CHECK_COMPARISON(site1, site2, arr3);
 }
@@ -111,18 +113,18 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(circle_event_test2, T, test_types) {
                                                    static_cast<T>(4));
     site_event<T> site;
 
-    site = make_site_event<T>(0, 100);
+    site = make_site_event<T>(0, 100, 0);
     BOOST_CHECK_EQUAL(circle.compare(site), 1);
 
-    site = make_site_event<T>(3, 0);
+    site = make_site_event<T>(3, 0, 0);
     BOOST_CHECK_EQUAL(circle.compare(site), 1);
 
-    site = make_site_event<T>(3, 2);
+    site = make_site_event<T>(3, 2, 0);
     BOOST_CHECK_EQUAL(circle.compare(site), 0);
     
-    site = make_site_event<T>(3, 2);
+    site = make_site_event<T>(3, 2, 0);
     BOOST_CHECK_EQUAL(circle.compare(site), 0);
 
-    site = make_site_event<T>(4, 2);
+    site = make_site_event<T>(4, 2, 0);
     BOOST_CHECK_EQUAL(circle.compare(site), -1);
 }

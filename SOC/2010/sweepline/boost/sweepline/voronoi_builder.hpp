@@ -21,7 +21,7 @@ namespace sweepline {
         voronoi_builder() {}
 
         void init(const std::vector<Point2D> &sites) {
-            beach_line_.init(sites);
+            beach_line_.init(sites, output_);
         }
 
         void reset() {

@@ -39,8 +39,10 @@ namespace sweepline {
             site_events_.resize(sites.size() - skip);
             std::vector<Point2D>::const_iterator sites_it;
             int index = 0;
-            for (sites_it = sites.begin() + skip; sites_it != sites.end(); sites_it++)
-                site_events_[index++] = make_site_event(sites_it->x(), sites_it->y());
+            for (sites_it = sites.begin() + skip; sites_it != sites.end(); sites_it++, index++)
+                site_events_[index] = make_site_event(sites_it->x(),
+                                                      sites_it->y(),
+                                                      index + skip);
             init_site_events();
         }
 
@@ -93,7 +95,7 @@ namespace sweepline {
 
         void remove_not_active_events() {
             while (!circle_events_.empty() && !deactivated_events_.empty() &&
-                circle_events_.top().equals(deactivated_events_.top())) {
+                   circle_events_.top().equals(deactivated_events_.top())) {
                 circle_events_.pop();
                 deactivated_events_.pop();
             }
