@@ -87,7 +87,12 @@ int main() {
     {
         test_tuple temp;
         temp.get<salmon>() = 3;
-        BOOST_ASSERT(( fusion::at_key<salmon>( temp ) == 3));
+
+        BOOST_ASSERT(( fusion::at_key<salmon>(  temp ) == 3));
+        fusion::at_key<salmon>(temp) = 4;
+        BOOST_ASSERT(( fusion::at_key<salmon>(  temp ) == 4));
+        BOOST_ASSERT(( temp.get<salmon>() == 4));
+        BOOST_ASSERT(( fusion::at_key<green>(  temp ) == 0));
     }
     /*
     bmg_t bmg;

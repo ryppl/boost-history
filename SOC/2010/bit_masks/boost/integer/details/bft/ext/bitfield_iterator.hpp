@@ -165,8 +165,8 @@ struct bitfield_tuple_iterator
 
     /** Fusion extension: advance. */
     template <typename Iterator, typename N>
-    struct advance :
-        mpl::if_c<
+    struct advance
+        : mpl::if_c<
             (N::value > 0),
             fusion::advance_detail::forward<Iterator, N::value>,
             fusion::advance_detail::backward<Iterator, N::value>
