@@ -69,6 +69,12 @@ int main() {
         temp.get<red>() = 4;
         BOOST_ASSERT(( fusion::deref(fusion::begin(temp)) == 4));
     }
+
+    // size testing
+    {
+        test_tuple temp;
+        BOOST_ASSERT(( fusion::size(temp) == 3 ));
+    }
     /*
     bmg_t bmg;
 
