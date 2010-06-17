@@ -75,6 +75,13 @@ int main() {
         test_tuple temp;
         BOOST_ASSERT(( fusion::size(temp) == 3 ));
     }
+    
+    // end testing
+    {
+        test_tuple temp;
+        temp.get<salmon>() = 3;
+        BOOST_ASSERT(( fusion::deref(fusion::prior(fusion::end(temp))) == 3 ));
+    }
     /*
     bmg_t bmg;
 
