@@ -234,6 +234,24 @@ public:
     std::string to_string() const;
     //@}
 
+    template <typename Name>
+    struct name_exists {
+        typedef typename mpl::not_<
+            is_same <
+                typename ::boost::mpl::find_if<
+                    members,
+                    details::match_name<
+                        mpl::_1,
+                        Name
+                    >
+                >::type,
+                typename mpl::end<
+                    members
+                >::type
+            >
+        >::type                     type;
+    };
+
 
     /** Get function interfaces.
      *  These provide access into the tuple via "reference".
