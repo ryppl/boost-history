@@ -26,6 +26,7 @@ typedef bitfield_tuple<
 
 
 int main() {
+
     // bitfield_tuple tag_of testing
     {
         // bitfield_tuple_tag
@@ -41,14 +42,26 @@ int main() {
         typedef fusion::result_of::value_of<iter>::type value_of_result;
         BOOST_MPL_ASSERT(( is_same< value_of_result::return_type, char> ));
     }
+
     // Iterator deref
     {
         typedef bitfield_tuple_iterator<test_tuple,0>   Iter;
         test_tuple temp;
         temp.get<red>() = 3;
         Iter it(temp);
-        BOOST_ASSERT(( fusion::result_of::deref<Iter>::call(it) == 3 ));
+        BOOST_ASSERT(( fusion::deref(it) == 3 ));
     }
+
+    // iterator next
+    {
+        typedef bitfield_tuple_iterator<test_tuple,0> Iter;
+        test_tuple temp;
+        temp.get<green>() = 3;
+        Iter it(temp);
+        BOOST_ASSERT(( fusion::deref(fusion::next(it)) == 3 ));        
+    }
+
+
     /*
     bmg_t bmg;
 

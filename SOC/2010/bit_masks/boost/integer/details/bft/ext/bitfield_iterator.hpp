@@ -15,10 +15,6 @@
 #include <boost/fusion/iterator/iterator_facade.hpp>
 #include <boost/mpl/void.hpp>
 
-
-
-
-
 namespace boost { 
 
 namespace details {
@@ -55,9 +51,7 @@ struct bitfield_tuple_iterator
     typedef BitfieldTuple       bitfield_tuple_type;
     //@}
 
-    /** member value Of struct.
-     *
-     */
+    /** Fusion Extension: value_of */
     template<typename Iter>
     struct value_of {
         typedef typename Iter::bitfield_tuple_type::template bit_ref<
@@ -65,32 +59,51 @@ struct bitfield_tuple_iterator
                 typename Iter::bitfield_tuple_type::members,
                 typename Iter::index
             >::type
-        >                                   type;
+        >                                       type;
     };
 
+    /** Fusion Extension: deref */
     template <typename Iter>
     struct deref {
         // the type returned by dereferencing the iterator.
-        typedef typename value_of<Iter>::type type;
+        typedef typename value_of<Iter>::type   type;
 
-        // dereference operation.
+        // const dereference operation.
+        static type call(Iter const& iter) {
+            return type( iter._data.data() );
+        }
+
+        // non-const dereference operation.
         static type call(Iter& iter) {
             return type( iter._data.data() );
         }
     };
 
+    /** Fusion Extension: next */
     template<typename Iter>
     struct next {
-        typedef typename details::IMPLEMENT_ME type;
-        static type call(Iter& iter);
+        typedef bitfield_tuple_iterator<
+            typename Iter::bitfield_tuple_type,
+            Iter::index::value + 1
+        >                                       type;
+        static type call(Iter const& iter) {
+            return type( iter._data );
+        }
+
+        // non-const next operation.
+        static type call(Iter& iter) {
+            return type( iter._data );
+        }
     };
 
+    /** Fusion Extension: prior */
     template<typename Iter>
     struct prior {
         typedef typename details::IMPLEMENT_ME type;
         static type call(Iter& iter);
     };
 
+    /** Fusion Extension: distance */
     template <typename Iter1,typename Iter2>
     struct distance {
         // The distance between iterators of type It1 and It2 as 
@@ -99,22 +112,24 @@ struct bitfield_tuple_iterator
         static type call(Iter1& it1,Iter2& it2);
 	};
 
+    /** Fusion Extension: key_of */
     template <typename Iter>
     struct key_of {
         typedef typename details::IMPLEMENT_ME type;
     };
 
+    /** Fusion Extension: value_of_data */
     template <typename Iter>
     struct value_of_data {
         typedef typename details::IMPLEMENT_ME type;
     };
 
+    /** Fusion Extension: deref_data */
     template <typename Iter>
     struct deref_data {
         typedef typename details::IMPLEMENT_ME type;
         static type call(Iter& it);
     };
-
 
 };
 
