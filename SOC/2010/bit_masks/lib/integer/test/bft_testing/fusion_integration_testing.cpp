@@ -53,8 +53,6 @@ int main() {
 
     // category_of testing
     {
-        // using fusion;
-        // using extension;
         BOOST_MPL_ASSERT((
             is_same<
                 fusion::traits::category_of<
@@ -65,6 +63,12 @@ int main() {
         ));
     }
 
+    // begin testing
+    {
+        test_tuple temp;
+        temp.get<red>() = 4;
+        BOOST_ASSERT(( fusion::deref(fusion::begin(temp)) == 4));
+    }
     /*
     bmg_t bmg;
 

@@ -22,7 +22,7 @@ namespace boost { namespace fusion {
             typedef bit_mask_group_iterator<MaskGroup, 0> type;
         
             static type call(MaskGroup&) {
-            return type();
+                return type();
             }
         };
     };

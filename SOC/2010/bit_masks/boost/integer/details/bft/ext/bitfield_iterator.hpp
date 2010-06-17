@@ -18,12 +18,12 @@
 namespace boost { 
 
 namespace details {
-struct category
+struct bft_category
   : boost::fusion::random_access_traversal_tag,
     boost::fusion::associative_tag
 { };
 
-typedef mpl::void_ IMPLEMENT_ME;
+
 } // end detials
 
 /** Fusion Iterator for bitfield_tuple class.
@@ -33,7 +33,7 @@ template <typename BitfieldTuple, std::size_t Pos>
 struct bitfield_tuple_iterator
     : fusion::iterator_facade<
         bitfield_tuple_iterator<BitfieldTuple, Pos>,
-        details::category
+        details::bft_category
     >
 {
     /** Constructor over a bitfield tuple. */
