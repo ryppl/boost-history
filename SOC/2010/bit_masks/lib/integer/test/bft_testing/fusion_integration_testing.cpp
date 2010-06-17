@@ -82,6 +82,13 @@ int main() {
         temp.get<salmon>() = 3;
         BOOST_ASSERT(( fusion::deref(fusion::prior(fusion::end(temp))) == 3 ));
     }
+    
+    // at_key
+    {
+        test_tuple temp;
+        temp.get<salmon>() = 3;
+        BOOST_ASSERT(( fusion::at_key<salmon>( temp ) == 3));
+    }
     /*
     bmg_t bmg;
 
