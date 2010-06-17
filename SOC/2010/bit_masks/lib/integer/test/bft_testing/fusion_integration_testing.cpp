@@ -34,6 +34,37 @@ int main() {
         BOOST_MPL_ASSERT(( is_same< tag, fusion::bitfield_tuple_tag> ));
     }
 
+    // at testing
+    {
+        test_tuple temp;
+        temp.get<green>() =3 ;
+        BOOST_ASSERT((fusion::at_c<1>(temp) == 3));
+    }
+
+    // is_sequence testing
+    {
+        BOOST_ASSERT(( fusion::traits::is_sequence<test_tuple>() ));
+    }
+    
+    // is_view testing
+    {
+        BOOST_ASSERT(( !fusion::traits::is_view<test_tuple>() ));
+    }
+
+    // category_of testing
+    {
+        // using fusion;
+        // using extension;
+        BOOST_MPL_ASSERT((
+            is_same<
+                fusion::traits::category_of<
+                    test_tuple
+                >::type, 
+                fusion::extension::bft_category
+            >
+        ));
+    }
+
     /*
     bmg_t bmg;
 
@@ -54,5 +85,6 @@ int main() {
     ));
 */
 }
+
 
 
