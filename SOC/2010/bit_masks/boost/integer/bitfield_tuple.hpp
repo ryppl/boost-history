@@ -172,7 +172,7 @@ public:
          *  this allows for implicit conversion to the return_type.
          */
         operator return_type() const {
-            return static_cast< return_type >( _ref.get() );
+            return  _ref.get();
         }
        
     private:
@@ -251,7 +251,6 @@ public:
             >
         >::type                     type;
     };
-
 
     /** Get function interfaces.
      *  These provide access into the tuple via "reference".
