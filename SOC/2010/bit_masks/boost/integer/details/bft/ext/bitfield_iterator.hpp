@@ -16,6 +16,8 @@
 #include <boost/mpl/void.hpp>
 #include <boost/fusion/iterator/value_of.hpp>
 #include <boost/fusion/include/value_of.hpp>
+#include <boost/fusion/iterator/deref.hpp>
+#include <boost/fusion/include/deref.hpp>
 
 
 

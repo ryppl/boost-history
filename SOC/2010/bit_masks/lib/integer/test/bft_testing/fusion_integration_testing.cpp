@@ -42,7 +42,11 @@ int main() {
     }
     // Iterator deref
     {
-
+        typedef bitfield_tuple_iterator<test_tuple,0>   Iter;
+        test_tuple temp;
+        temp.get<red>() = 3;
+        Iter it(temp);
+        BOOST_ASSERT(( fusion::result_of::deref<Iter>::call(it) == 3 ));
     }
     /*
     bmg_t bmg;
