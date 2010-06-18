@@ -1,29 +1,30 @@
-#include <boost/delimit_string.hpp>
+#include <boost/io/quoted_manip.hpp>
 #include <iostream>
 #include <sstream>
 #include <cassert>
 
-using boost::delimit;
-using boost::undelimit;
+using boost::io::quoted;
 
 int main()
 {
-  std::cout << delimit("foo\\bar, \" *") << std::endl;
-  std::cout << delimit("foo & bar, \" *", '&') << std::endl;
-  std::cout << delimit("foo & bar, * ", '&', '*') << std::endl;
 
-  std::wcout << delimit(L"foo$bar, \" *", L'$') << std::endl;
+  std::cout << quoted(std::string("foo\\bar, \" *")) << std::endl;
+  std::cout << quoted("foo\\bar, \" *") << std::endl;
+  std::cout << quoted("foo & bar, \" *", '&') << std::endl;
+  std::cout << quoted("foo & bar, * ", '&', '*') << std::endl;
 
-  std::string non_const_string("non_const_string");
-  std::cout << delimit(non_const_string) << '\n';
+  std::wcout << "Wide: " << quoted(L"foo$bar, \" *", L'$') << std::endl;
+
+  std::string non_const_string("non-const string");
+  std::cout << quoted(non_const_string) << '\n';
 
   std::stringstream ss;
 
   const std::string expected("foo\\bar, \" *");
   std::string actual;
 
-  ss << delimit(expected);
-  ss >> undelimit(actual);
+  ss << quoted(expected);
+  ss >> quoted(actual);
 
   std::cout << "round trip tests...\n";
   std::cout << "  expected--: " << expected << '\n';
@@ -31,9 +32,9 @@ int main()
 
   assert(expected == actual);
 
-  // each of these should fail to compile because they are const:
-  //   ss >> undelimit(expected);
-  //   ss >> undelimit("foo");
+  // these should fail to compile because the arguments are non-const:
+  //   ss >> quoted(expected);
+  //   ss >> quoted("foo");
 
   return 0;
 }

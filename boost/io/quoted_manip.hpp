@@ -1,15 +1,18 @@
+//  boost/io/quoted_manip.hpp  ---------------------------------------------------------//
+
 //  Copyright Beman Dawes 2010
 
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
 
+//  Library home page http://www.boost.org/libs/io
+
 //--------------------------------------------------------------------------------------// 
 
-#ifndef BOOST_QUOTE_MANIP
-#define BOOST_QUOTE_MANIP
+#ifndef BOOST_IO_QUOTED_MANIP
+#define BOOST_IO_QUOTED_MANIP
 
-#include <istream>
-#include <ostream>
+#include <iosfwd>
 #include <string>
 #include <boost/io/ios_state.hpp>
 
@@ -17,83 +20,88 @@ namespace boost
 {
   namespace io
   {
-    namespace detail { // forward declare the helpers
-      template <class Char, class Traits, class Alloc> struct quote_proxy;
-      template <class Char> struct c_str_quote_proxy;
-      template <class Char, class Traits, class Alloc> struct unquote_proxy;
-    }
+    namespace detail { template <class String, class Char> struct quoted_proxy; }
 
     //  ------------  public interface  ------------------------------------------------//
 
+    //  manipulator for const std::basic_string&
     template <class Char, class Traits, class Alloc>
-      detail::quote_proxy<Char, Traits, Alloc>
-        quote(const std::basic_string<Char, Traits, Alloc>& s,
-              Char escape='\\', Char delim='\"');
+      detail::quoted_proxy<std::basic_string<Char, Traits, Alloc> const &, Char>
+        quoted(const std::basic_string<Char, Traits, Alloc>& s,
+               Char escape='\\', Char delim='\"');
 
+    //  manipulator for non-const std::basic_string&
+    template <class Char, class Traits, class Alloc>
+      detail::quoted_proxy<std::basic_string<Char, Traits, Alloc> &, Char>
+        quoted(std::basic_string<Char, Traits, Alloc>& s,
+               Char escape='\\', Char delim='\"');
+
+    //  manipulator for const C-string*
     template <class Char>
-      detail::c_str_quote_proxy<Char>
-        quote(const Char* s, Char escape='\\', Char delim='\"');
-
-    template <class Char, class Traits, class Alloc>
-      detail::unquote_proxy<Char, Traits, Alloc>
-        unquote(std::basic_string<Char, Traits, Alloc>& s,
-                Char escape='\\', Char delim='\"');
+      detail::quoted_proxy<const Char*, Char>
+        quoted(const Char* s, Char escape='\\', Char delim='\"');
 
     //  -----------  implementation details  -------------------------------------------//
 
     namespace detail
     {
-      //  string inserter helpers
-
-      template <class Char, class Traits, class Alloc>
-      struct quote_proxy
+      //  proxy used as an argument pack 
+      template <class String, class Char>
+      struct quoted_proxy
       {
-        const std::basic_string<Char, Traits, Alloc>& s;
-        Char escape;
-        Char delim;
+        String  string;
+        Char    escape;
+        Char    delim;
 
-        quote_proxy(const std::basic_string<Char, Traits, Alloc>& s_,
-          Char escape_, Char delim_)
-          : s(s_), escape(escape_), delim(delim_) {}
+        quoted_proxy(String s_, Char escape_, Char delim_)
+          : string(s_), escape(escape_), delim(delim_) {}
       };
 
+      //  abstract away difference between proxies with const or non-const basic_strings
       template <class Char, class Traits, class Alloc>
-      std::basic_ostream<Char, Traits>& operator<<(std::basic_ostream<Char, Traits>& os, 
-        quote_proxy<Char, Traits, Alloc>& proxy)
+      std::basic_ostream<Char, Traits>&
+      basic_string_inserter_imp(std::basic_ostream<Char, Traits>& os,
+        std::basic_string<Char, Traits, Alloc> const & string, Char escape, Char delim)
       {
-        os << proxy.delim;
-        std::basic_string<Char, Traits, Alloc>::const_iterator end_it = proxy.s.end();
-        for (std::basic_string<Char, Traits, Alloc>::const_iterator it = proxy.s.begin();
+        os << delim;
+        std::basic_string<Char, Traits, Alloc>::const_iterator end_it = string.end();
+        for (std::basic_string<Char, Traits, Alloc>::const_iterator it = string.begin();
           it != end_it;
           ++it )
         {
-          if (*it == proxy.delim || *it == proxy.escape)
-            os << proxy.escape;
+          if (*it == delim || *it == escape)
+            os << escape;
           os << *it;
         }
-        os << proxy.delim;
+        os << delim;
         return os;
       }
 
-      //  c_str inserter helpers
-
-      template <class Char>
-      struct c_str_quote_proxy
+      //  inserter for const std::basic_string& proxies
+      template <class Char, class Traits, class Alloc>
+      inline
+      std::basic_ostream<Char, Traits>& operator<<(std::basic_ostream<Char, Traits>& os, 
+        const quoted_proxy<std::basic_string<Char, Traits, Alloc> const &, Char>& proxy)
       {
-        const Char* s;
-        Char escape;
-        Char delim;
+        return basic_string_inserter_imp(os, proxy.string, proxy.escape, proxy.delim);
+      }
 
-        c_str_quote_proxy(const Char* s_, Char escape_, Char delim_)
-          : s(s_), escape(escape_), delim(delim_) {}
-      };
-
+      //  inserter for non-const std::basic_string& proxies
+      template <class Char, class Traits, class Alloc>
+      inline
+      std::basic_ostream<Char, Traits>& operator<<(std::basic_ostream<Char, Traits>& os, 
+        const quoted_proxy<std::basic_string<Char, Traits, Alloc>&, Char>& proxy)
+      {
+        return basic_string_inserter_imp(os, proxy.string, proxy.escape, proxy.delim);
+      }
+ 
+      //  inserter for const C-string* proxies
       template <class Char, class Traits>
       std::basic_ostream<Char, Traits>& operator<<(std::basic_ostream<Char, Traits>& os, 
-        c_str_quote_proxy<Char>& proxy)
+        const quoted_proxy<const Char*, Char>& proxy)
       {
         os << proxy.delim;
-        for (const Char* it = proxy.s;
+        for (const Char* it = proxy.string;
           *it;
           ++it )
         {
@@ -105,33 +113,20 @@ namespace boost
         return os;
       }
 
-      //  string extractor helpers
-
-      template <class Char, class Traits, class Alloc>
-      struct unquote_proxy
-      {
-        std::basic_string<Char, Traits, Alloc>& s;
-        Char escape;
-        Char delim;
-
-        unquote_proxy(std::basic_string<Char, Traits, Alloc>& s_,
-          Char escape_, Char delim_)
-          : s(s_), escape(escape_), delim(delim_) {}
-      };
-
+      //  extractor for non-const std::basic_string& proxies
       template <class Char, class Traits, class Alloc>
       std::basic_istream<Char, Traits>& operator>>(std::basic_istream<Char, Traits>& is, 
-        unquote_proxy<Char, Traits, Alloc>& proxy)
+        const quoted_proxy<std::basic_string<Char, Traits, Alloc>&, Char>& proxy)
       {
         Char c;
         is >> c;
         if (c != proxy.delim)
         {
-          proxy.s = c;
-          is >> proxy.s;
+          proxy.string = c;
+          is >> proxy.string;
           return is;
         }
-        proxy.s.clear();
+        proxy.string.clear();
         {
           boost::io::ios_flags_saver ifs(is);
           is >> std::noskipws;
@@ -142,7 +137,7 @@ namespace boost
               is >> c;
             else if (c == proxy.delim)
               break;
-            proxy.s += c;
+            proxy.string += c;
           }
         }
         return is;
@@ -150,30 +145,33 @@ namespace boost
 
     }  // namespace detail
 
-    //  manipulator implementations
-
+    //  manipulator implementation for const std::basic_string&
     template <class Char, class Traits, class Alloc>
-    inline detail::quote_proxy<Char, Traits, Alloc>
-      quote(const std::basic_string<Char, Traits, Alloc>& s,  Char escape, Char delim)
+    inline detail::quoted_proxy<std::basic_string<Char, Traits, Alloc> const &, Char>
+    quoted(const std::basic_string<Char, Traits, Alloc>& s, Char escape, Char delim)
     {
-      return detail::quote_proxy<Char, Traits, Alloc>(s, escape, delim);
+      return detail::quoted_proxy<std::basic_string<Char, Traits, Alloc> const &, Char>
+        (s, escape, delim);
     }
 
+    //  manipulator implementation for non-const std::basic_string&
+    template <class Char, class Traits, class Alloc>
+    inline detail::quoted_proxy<std::basic_string<Char, Traits, Alloc> &, Char>
+    quoted(std::basic_string<Char, Traits, Alloc>& s, Char escape, Char delim)
+    {
+      return detail::quoted_proxy<std::basic_string<Char, Traits, Alloc>&, Char>
+        (s, escape, delim);
+    }
+
+    //  manipulator implementation for const C-string*
     template <class Char>
-    inline detail::c_str_quote_proxy<Char>
-      quote(const Char* s,  Char escape, Char delim)
+    inline detail::quoted_proxy<const Char*, Char>
+    quoted(const Char* s, Char escape, Char delim)
     {
-      return detail::c_str_quote_proxy<Char>(s, escape, delim);
-    }
-
-    template <class Char, class Traits, class Alloc>
-    inline detail::unquote_proxy<Char, Traits, Alloc>
-      unquote(std::basic_string<Char, Traits, Alloc>& s,  Char escape, Char delim)
-    {
-      return detail::unquote_proxy<Char, Traits, Alloc>(s, escape, delim);
+      return detail::quoted_proxy<const Char*, Char> (s, escape, delim);
     }
 
   }  // namespace io
 }  // namespace boost
 
-#endif // BOOST_QUOTE_MANIP
+#endif // BOOST_IO_QUOTED_MANIP
