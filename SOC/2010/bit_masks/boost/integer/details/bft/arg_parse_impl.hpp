@@ -99,7 +99,6 @@ struct bft_arg_parse_impl <
  *  Documented and enforced preconditions
  *      1. The user must not supply the same name for more then 1 parameter
  *      (This may result in additional overhead during compile time ).
- *      Currently not enforced, will take more time then I have at the moment.
  */
 template <  typename StoragePolicy,
             typename FieldVector,
@@ -133,6 +132,8 @@ struct bft_arg_parse_impl <
             >::type
         >::value            
     ));
+
+
     typedef member< ReturnType, NameType, FieldWidth > param;
 
     // typedef 

@@ -21,6 +21,242 @@
 
 namespace boost {
 
+/** bitfield_tuple
+ *  Description
+ *  This is a type which provides access to bitfields stored within integers
+ *  or other integral types (see future work, for extensions). This is a pseudo
+ *  variadic type. It currently only takes up to 10 parameters but I will be 
+ *  extending that to be adjustable via macro similar to the MPL. Each of the 
+ *  template parameters must be supplied as either a storage template or a 
+ *  member template. For example, if one wanted to declare a bitfield_tuple
+ *  that was the size of one byte and contained two boolean bitfields and 
+ *  two integers they would do the following,
+ *  
+ *  #include <boost/integer/bitfield_tuple.hpp>
+ *  #include <boost/assert.hpp>
+ *  struct bool_one;
+ *  struct bool_two;
+ *  struct int_one;
+ *  struct int_two;
+ *
+ *  typedef bitfield_tuple<
+ *      storage<char>,
+ *      member<bool,bool_one,1>,
+ *      member<bool,bool_two,1>,
+ *      member<int,int_one,2>,
+ *      member<int,int_two,2>
+ *  >                       example_type;
+ *
+ *  int main() {
+ *      example_type temp;
+ *      temp.get<bool_one>() = false; // assigns false to the first bitfield.
+ *      temp.get<bool_two>() = true;  // assigns false to the second bitfield.
+ *      temp.get<2>()        = -1;    // assigns -1 to the first integer 
+ *                                    // bitfield.
+ *
+ *      BOOST_ASSERT(( temp.get<2>()  == -1 )); // this passes the assert and 
+ *                                              // does not exit the program
+ *  }
+ *
+ *  Storage and Members 
+ *  The storage type can be specified anywhere with in the template parameters.
+ *  Here is an example of how one may wish to specify storage,
+ *  
+ *  typedef bitfield_tuple<
+ *      member<bool,bool_one,1>,
+ *      storage<char>,
+ *      member<bool,bool_one,1>,
+ *      member<int,int_one,2>,
+ *      member<int,int_two,2>
+ *  >                       example_2_type;
+ *  
+ *  The example_2_type above creates the same internal structure and
+ *  functionality as example_type in the first example. All the storage template
+ *  does is specify the type your internal storage takes and may be returned as.
+ *
+ *  storage template signature
+ *  template <typename StorageType> storage;
+ *
+ *  Members 
+ *  Unlike storage the order of member types the order in which they are  
+ *  specified and the order in which they are stored within the bitfield_tuple.
+ *  The template parameters for member are the same as specifying a regular 
+ *  bitfield in C or C++, so, the first parameter is the type, second is the 
+ *  name of that variable in this case its a tag class or something of that 
+ *  nature  and third is the width of the bitfield in bits. For example,
+ *
+ *  member<bool, bool_one,1>
+ *
+ *  specifies that the type stored within 1 bit is of type bool and is 
+ *  accessible from within a bitfield_tuple by using the supplied name bool_one 
+ *  or the index at which it was specified relative to the number of other 
+ *  members specified ahead of it and not counting the storage type. This means 
+ *  that the fields specified are accessible by either an unsigned integral 
+ *  constant or by the name provided in side the member template.
+ *
+ *
+ *
+ *  Interface overview
+ *
+ *  bft is a bitfield tuple like those mentioned in previous examples. 
+ *
+ *  Public Typedefs
+ *      bft::members      - This is an mpl::vector which contains 
+ *                          bitfield_elements. A bitfield_element is an internal
+ *                          type used to specify information about the bitfields
+ *                          which make up the bitfield_tuple. The reason that 
+ *                          this is public, is for the boost.fusion extension of
+ *                          this data structure.
+ *
+ *      bft::storage_type - The type specified inside the storage template.
+ *
+ *      bft::bits_used    - This is an integral_constant type that specifies
+ *                          the total number of bits used by all bitfields.
+ *
+ *
+ *  bitfield_tuple internal Class templates
+ *      bit_ref           - Template is a reference type which takes one
+ *                          parameter which is expected to be of type 
+ *                          bitfield_element and creates a proxy reference type
+ *                          to the element specified by the bitfield_element.
+ *
+ *      bit_ref interface
+ *          public typedefs
+ *              return_type - The type which is to be returned from a specified
+ *                            bitfield.
+ *              bitfield_type - this is of type boost::integer::bitfield located
+ *                              within the boost.vault. The bitfield type is
+ *                              used to deal with more complicated issues such
+ *                              as endianness within the internal storage type.
+ *
+ *          constructors
+ *              bit_ref( bit_ref<MaskInfo> const&);
+ *              bit_ref( storage_type& ref);
+ *          private constructors
+ *              bit_ref();
+ *
+ *          functions
+ *              operator return_type() // implicit conversion operator
+ *              bit_ref<MaskInfo> const& operator=(return_type const& rhs);
+ *
+ *
+ *      const_bit_ref   - Similar to the bit_ref class template how ever this
+ *                        is a const representation a reference.
+ *          The only difference between const_bit_ref and bit_ref is that
+ *          const_bit_ref does not define an assignment operator.
+ *
+ *
+ *  bitfield_tuple constructors
+ *  
+ *      bitfield_tuple() - Default constructor.
+ *
+ *      bitfield_tuple (storage_type const& x); - Construction over the 
+ *          storage_type. This provides a means of constructing a bitfield
+ *          tuple over an initial storage type.
+ *
+ *      bitfield_tuple( bitfield_tuple<T0..T9> const& x); - Copy constructor.
+ *
+ *  Future work - Constructors - Incomplete and Possible Extensions
+ *
+ *      bitfield_tuple( ... ); - Member Wise Constructor -
+ *          Description: a constructor which will take as many values as there 
+ *          are members and put each one of those values into the tuple in 
+ *          the same order that the bitfields are specified.
+ *
+ *
+ *      template <typename T> bitfield_tuple(T const& x);
+ *          - Bitfield_tuple which have the same members but storage is 
+ *          in a different place within the template parameters.
+ *          Just haven't gotten around to implementing it, yet.
+ *
+ *  Bitfield_tuple assignment operators
+ *
+ *      bitfield_tuple<T0..T9> const& operator=( storage_type const& new_value);
+ *          storage type assignment. Allows for the user to assign a perticular
+ *          value to the tuples internal storage.
+ *
+ *      bitfield_tuple<T0..T9> const& operator=(_self const& x);
+ *          copy assignment operator.
+ *
+ *
+ *  bitfield_tuple Member Functions.
+ *
+ *      Rationale for creation of data member function.
+ *      This is the only way I was able to make the boost.fusion extension 
+ *      work for this data structure. Thats the reason that data returns
+ *      a reference instead of a copy of the integer value.
+ *
+ *      storage_type const& data() const; 
+ *          - returns a const reference to the data inside of the 
+ *          bitfield_tuple.
+ *
+ *      storage_type& data(); 
+ *          - returns a reference to the data inside of the bitfield_tuple.
+ *          
+ *  get function
+ *      - The get function returns a bit_ref or const_bit_ref which is 
+ *      convertible to the type specified in the first template parameter of the
+ *      member type, that corresponds to the bit field being accessed. For
+ *      example, using example_type from the first example, if the get function
+ *      is called in the following manner, temp.get<bool_one>(), the return type
+ *      for get in this case is a bit_ref type thats convertible to bool and 
+ *      information retrieving data or storing data in the correct bitfield.
+ *
+ *      bit_ref<typename> get<typenam>(); // access by name.
+ *      const_bit_ref<typename> get<typenam>() const; // access by name.
+ *
+ *      bit_ref<typename> get<size_t>(); // access by index.
+ *      const_bit_ref<typename> get<size_t>() const; // access by index.
+ *
+ *
+ *  All get functions provide constant time run time access to the bitfield to
+ *  which they correspond.
+ *
+ *  Currently they get function WILL NOT throw if the value provided exceeds the
+ *  capacity of of the number of bits being used to store a particular value.
+ *
+ *  If an invalid name or index is provided to a get function it will result in 
+ *  look up failure.
+ *
+ *
+ *  Enforced preconditions of the bitfield_tuple template
+ *
+ *      All of these preconditions listed here result in static assertions if 
+ *  the bitfield_tuple template is instantiated. 
+ *
+ *  1) The storage policy must not be specified more then once within the 
+ *      template parameters of bitfield_tuple template.
+ *
+ *  2) A member can not have the same name type as another member.
+ *
+ *  3) The width of a member can not be 0.
+ *  
+ *  4) The width of a member can not exceed the width of its return type.
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *  future work/plans/thoughts
+ *  1) Switch to optionally deduced internal type.
+ *  2) Switch the internal storage to an array which will allow the user
+ *      to store as many fields as the which to, with out the constraint of
+ *      being limited to an integral type. 
+ */
 template <  typename T0,
             typename T1 = mpl::void_,
             typename T2 = mpl::void_,
@@ -42,7 +278,6 @@ private:
     typedef bitfield_tuple<T0,T1,T2,T3,T4,T5,T6,T7,T8,T9>  _self;
 
 public:
-    typedef typename _base::processed_args          processed_args;
     typedef typename _base::field_vector            members;
     typedef typename _base::storage_type            storage_type;
     typedef typename _base::offset                  bits_used;
@@ -53,15 +288,17 @@ public:
      */
     template <typename MaskInfo>
     struct bit_ref {
-
-        typedef typename MaskInfo::return_type                  return_type;       
+    private:
         typedef bit_ref<MaskInfo>                               _self;
         typedef typename make_unsigned<
             storage_type
         >::type                                           unsigned_storage_type;
+    public:
+        typedef typename MaskInfo::return_type                  return_type;
 
-        /** Internals bitfield type for extracting individual fields from 
-         *  within the storage_type.
+        /** Internals.
+         *  bitfield type for extracting individual fields from within the
+         *  storage_type.
          */
         typedef typename integer::bitfield<
             unsigned_storage_type,
@@ -71,11 +308,8 @@ public:
         >                                                       bitfield_type;
 
 
-        /** Reference constructor.
-         *  Because the bit_ref is an abstraction of a reference then it also
-         *  must behave like a reference type.
-         */
-        bit_ref(storage_type& ref, int = 0)
+        /** Reference constructor. */
+        bit_ref(storage_type& ref)
             :_ref( *reinterpret_cast<unsigned_storage_type*>(&ref) )
         { }
 
@@ -117,12 +351,13 @@ public:
      */
     template <typename MaskInfo>
     struct const_bit_ref {
-
-        typedef typename MaskInfo::return_type             return_type;       
+    private:
         typedef bit_ref<MaskInfo>                               _self;
         typedef typename make_unsigned<
             storage_type
         >::type const                                     unsigned_storage_type;
+    public:
+        typedef typename MaskInfo::return_type             return_type;       
 
         /** Internals bitfield type for extracting individual fields from 
          *  within the storage_type.
@@ -132,13 +367,10 @@ public:
             MaskInfo::offset::value,
             MaskInfo::offset::value + MaskInfo::field_width::value - 1,
             return_type
-        >                                                       bitfield_type;
+        >                                                   bitfield_type;
 
 
-        /** Reference constructor.
-         *  Because the bit_ref is an abstraction of a reference then it also
-         *  must behave like a reference type.
-         */
+        /** Reference constructor. */
         const_bit_ref(storage_type const& ref)
             :_ref( *reinterpret_cast<unsigned_storage_type*>(&ref) )
         { }
@@ -188,17 +420,25 @@ public:
      *      TODO: The signature of this will need to change possibly to
      *      use enable_if or some form of internal dispatching.
      *  XXX
-     *  TODO: look into the creation of a member wise constructor.
      */
     template <typename T>  bitfield_tuple(T const& x);
 
+     // TODO: look into the creation of a member wise constructor.
 
 
-    /** Assignment Operator.
-     * Provides assignment from this type to another.
+    /** Assignment from an integer
+     *  Allows for the user to assign a type which they wish for this type to
+     *  access.
+     */
+    _self const& operator=( storage_type const& new_value) {
+        _data = new_value;
+    }
+
+    /** Copy Assignment Operator.
+     *  Provides assignment from this type to another.
      */
     _self const& operator=(_self const& x) {
-        this->_data = x._data;
+        _data = x._data;
     }
 
     /** Internal storage accessors

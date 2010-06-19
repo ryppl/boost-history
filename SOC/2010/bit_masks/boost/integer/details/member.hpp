@@ -10,6 +10,9 @@
 #include <boost/type_traits.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/mpl/size_t.hpp>
+#include <boost/integer/bit_width.hpp>
+
+
 namespace boost {
 
 
@@ -26,6 +29,7 @@ namespace boost {
 template <typename ReturnType, typename Name, std::size_t FieldWidth>
 struct member {
     BOOST_STATIC_ASSERT(( FieldWidth != 0 ));
+    BOOST_STATIC_ASSERT(( FieldWidth <= bit_width<ReturnType>::value ));
     typedef ReturnType return_type;
     typedef Name name_type;
     BOOST_STATIC_CONSTANT(std::size_t, field_width  = FieldWidth);
