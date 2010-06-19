@@ -134,7 +134,7 @@ struct bft_arg_parse_impl <
     ));
 
 
-    typedef member< ReturnType, NameType, FieldWidth > param;
+    typedef typename member< ReturnType, NameType, FieldWidth >::type param;
 
     // typedef 
     typedef StoragePolicy   storage_policy;

@@ -33,7 +33,7 @@ struct member {
     typedef ReturnType return_type;
     typedef Name name_type;
     BOOST_STATIC_CONSTANT(std::size_t, field_width  = FieldWidth);
-
+    typedef member<ReturnType,Name,FieldWidth> type;
 };
 
 
