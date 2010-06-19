@@ -4,8 +4,8 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 
-#ifndef BOOST_BITFIELD_TUPLE_BFT_ARG_PARSE_IMPL_HPP
-#define BOOST_BITFIELD_TUPLE_BFT_ARG_PARSE_IMPL_HPP
+#ifndef BOOST_BITFIELD_TUPLE_bft_arg_parse_implHPP
+#define BOOST_BITFIELD_TUPLE_bft_arg_parse_implHPP
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/void.hpp>
 #include <boost/mpl/push_back.hpp>
@@ -28,7 +28,7 @@ template <  typename Param,
             typename StoragePolicy,
             typename FieldVector,
             typename Offset
-> struct bft_arg_parse_impl_;
+> struct bft_arg_parse_impl;
 
 
 /** Specialization over mpl::void_. */
@@ -36,17 +36,17 @@ template <  typename StoragePolicy,
             typename FieldVector,
             typename Offset
 >
-struct bft_arg_parse_impl_ <mpl::void_, StoragePolicy, FieldVector, Offset>{
+struct bft_arg_parse_impl <mpl::void_, StoragePolicy, FieldVector, Offset>{
     typedef mpl::void_           param;
     typedef FieldVector     field_vector;
     typedef StoragePolicy   storage_policy;
     typedef Offset          offset;
 
-    typedef bft_arg_parse_impl_<param,storage_policy,field_vector,offset> type;
+    typedef bft_arg_parse_impl<param,storage_policy,field_vector,offset> type;
 
     template <typename NextParam>
     struct process {
-        typedef bft_arg_parse_impl_<
+        typedef bft_arg_parse_impl<
             NextParam,
             storage_policy,
             field_vector,
@@ -66,7 +66,7 @@ template <  typename StorageType,
             typename FieldVector,
             typename Offset
 >
-struct bft_arg_parse_impl_ <
+struct bft_arg_parse_impl <
     storage<StorageType>,
     StoragePolicy,
     FieldVector,
@@ -82,11 +82,11 @@ struct bft_arg_parse_impl_ <
     typedef param           storage_policy;
     typedef Offset          offset;
 
-    typedef bft_arg_parse_impl_<param,storage_policy,field_vector,offset> type;
+    typedef bft_arg_parse_impl<param,storage_policy,field_vector,offset> type;
 
     template <typename NextParam>
     struct process {
-        typedef bft_arg_parse_impl_<
+        typedef bft_arg_parse_impl<
             NextParam,
             storage_policy,
             field_vector,
@@ -108,7 +108,7 @@ template <  typename StoragePolicy,
             typename NameType,
             typename Offset
 >
-struct bft_arg_parse_impl_ <
+struct bft_arg_parse_impl <
     member <
         ReturnType,
         NameType,
@@ -154,11 +154,11 @@ struct bft_arg_parse_impl_ <
         >::value
     >                                   offset;
 
-    typedef bft_arg_parse_impl_<param,storage_policy,field_vector,offset> type;
+    typedef bft_arg_parse_impl<param,storage_policy,field_vector,offset> type;
 
     template <typename NextParam>
     struct process {
-        typedef bft_arg_parse_impl_<
+        typedef bft_arg_parse_impl<
             NextParam,
             storage_policy,
             field_vector,

@@ -30,7 +30,7 @@ namespace boost { namespace details {
 // The following preprocessor MACRO only used for writing clarity, it's only 
 // used twice and then undef'ed before the end of this file.
 #define BOOST_BFT_ARG_PROCESSING      \
-        details::bft_arg_parse_impl_<\
+        details::bft_arg_parse_impl<\
             T0, \
             mpl::void_,\
             mpl::vector<>,\
