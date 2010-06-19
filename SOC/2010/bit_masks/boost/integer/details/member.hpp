@@ -24,7 +24,8 @@ namespace boost {
  *  those parameter.
  *
  *  Documented and enforced preconditions
- *      The width of a field must not be 0.
+ *      The Fieldwidth of a field must not be 0.
+ *      The Fieldwidth must not exceed the bit_width of the ReturnType.
  */
 template <typename ReturnType, typename Name, std::size_t FieldWidth>
 struct member {

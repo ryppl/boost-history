@@ -18,6 +18,7 @@
 #include <boost/mpl/size.hpp>
 #include <string>
 #include <boost/integer/details/bft/ext/bitfield_tuple_fusion_includes.hpp>
+#include <boost/integer/details/fusion_ext_includes.hpp>
 
 namespace boost {
 
@@ -233,6 +234,41 @@ namespace boost {
  *  
  *  4) The width of a member can not exceed the width of its return type.
  *
+ *  5) The user must specify a storage type.
+ *  
+ *  6) The storage type must be a POD type.
+ *  
+ *  7) The storage type can not be an array.
+ *
+ *  8) The total width of the sum of all bit fields must not exceed the bit 
+ *      width of the storage type.
+ *
+ *
+ *  bitfield_tuple boost.fusion extension
+ *
+ *      The bitfield_tuple use boost.fusion to provide additional runtime 
+ *  support. bitfield_tuple acts like an associative array, in terms of 
+ *  boost.fusion extension support.
+ *
+ *  The bitfield_tuple supports the following fusion functions and 
+ *  meta-functions.
+ *
+ *  begin
+ *  end 
+ *  is_sequence
+ *  is_view
+ *  category_of
+ *  at
+ *  size
+ *  at_key
+ *  tag_of
+ *  and all intrinsic functions which are available because of their 
+ *  implementation.
+ *
+ *
+ *  bitfield_tuple fusion iterator support
+ *
+ *
  *
  *
  *
@@ -256,6 +292,13 @@ namespace boost {
  *  2) Switch the internal storage to an array which will allow the user
  *      to store as many fields as the which to, with out the constraint of
  *      being limited to an integral type. 
+ *  3) Complete the two string member function.
+ *  4) the type restrictions on storage may need to be relaxed.
+ *  5) The if the storage type is a reference then possible allow for this type
+ *      to behave as reference to a bitfield_tuple instead of a bitfield type.
+ *      This would mean disabling the default constructor.
+ *
+ *
  */
 template <  typename T0,
             typename T1 = mpl::void_,
