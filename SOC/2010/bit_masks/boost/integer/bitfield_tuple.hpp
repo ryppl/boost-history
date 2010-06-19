@@ -214,7 +214,7 @@ namespace boost {
  *  which they correspond.
  *
  *  Currently they get function WILL NOT throw if the value provided exceeds the
- *  capacity of of the number of bits being used to store a particular value.
+ *  capacity of the number of bits being used to store a particular value.
  *
  *  If an invalid name or index is provided to a get function it will result in 
  *  look up failure.
@@ -266,25 +266,27 @@ namespace boost {
  *  implementation.
  *
  *
- *  bitfield_tuple fusion iterator support
+ *  bitfield_tuple fusion iterator support for functions and meta functions.
  *
+ *  deref
+ *  value_of
+ *  next
+ *  prior
+ *  distance
+ *  key_of
+ *  value_at_data
+ *  deref_data
+ *  advance
  *
+ *  Additional intrinsic functions are available for use with this iterator. 
  *
+ *  The following is the category used to define the bitfield_tuple_iterators
+ *  iterator_facade category.
  *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
+ *  struct bft_category
+ *       : boost::fusion::random_access_traversal_tag,
+ *         boost::fusion::associative_tag
+ *   { };
  *
  *
  *  future work/plans/thoughts
