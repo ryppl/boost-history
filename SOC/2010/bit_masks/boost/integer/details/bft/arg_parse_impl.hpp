@@ -136,7 +136,6 @@ struct bft_arg_parse_impl <
 
     typedef typename member< ReturnType, NameType, FieldWidth >::type param;
 
-    // typedef 
     typedef StoragePolicy   storage_policy;
     typedef typename mpl::push_back<
         FieldVector,
