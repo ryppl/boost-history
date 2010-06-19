@@ -30,6 +30,7 @@ int main() {
         typedef storage<int> storage_t;
         BOOST_MPL_ASSERT(( is_same<storage_t::storage_type, int> ));
     }
+
     // testing member type
     {
         typedef member<int, blue, 6 > member_test_1;
@@ -37,10 +38,10 @@ int main() {
         BOOST_ASSERT(( is_same<member_test_1::name_type, blue>::value ));
         BOOST_ASSERT(( member_test_1::field_width == 6 ));
     }
-    // testing bitfield_element_
+    // testing bitfield_element
     {
-        // bitfield_element_
-        typedef details::bitfield_element_<
+        // bitfield_element
+        typedef details::bitfield_element<
             int, red, mpl::size_t<5>, mpl::size_t<4>
         > bft_element_test_1;
         BOOST_ASSERT(( is_same<bft_element_test_1::return_type, int>::value ));
@@ -67,7 +68,7 @@ int main() {
     BOOST_MPL_ASSERT((
         is_same<
             mpl::front< pa::field_vector >::type,
-            details::bitfield_element_<
+            details::bitfield_element<
                 int,
                 red,
                 mpl::size_t<0>,

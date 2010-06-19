@@ -54,13 +54,6 @@ public:
     template <typename MaskInfo>
     struct bit_ref {
 
-        /** typedefs 
-         *  return_type - is the type which is retrieved from
-         *      within storage is turned into and returned as.
-         *
-         *  mask - contains all information needed to iteract with data in the
-         *      the stroage.
-         */
         typedef typename MaskInfo::return_type                  return_type;       
         typedef bit_ref<MaskInfo>                               _self;
         typedef typename make_unsigned<
@@ -82,27 +75,20 @@ public:
          *  Because the bit_ref is an abstraction of a reference then it also
          *  must behave like a reference type.
          */
-        bit_ref(storage_type& ref)
+        bit_ref(storage_type& ref, int = 0)
             :_ref( *reinterpret_cast<unsigned_storage_type*>(&ref) )
         { }
 
-        /** const Reference constructor.
-         *  Because the bit_ref is an abstraction of a reference then it also
-         *  must behave like a reference type.
-         */
-        bit_ref(storage_type const& ref)
-            :_ref( *reinterpret_cast<unsigned_storage_type const*>(&ref) )
-        { }
 
         /** copy constructor.
-         *  This is because references are copy construtible.
+         *  This is because references are copy constructible.
          */
-        // bit_ref( bit_ref<MaskInfo> const& x)
-        //    :_ref( x )
-        // { }
+        bit_ref( bit_ref<MaskInfo> const& x)
+           :_ref( x._ref )
+        { }
         
         /** Implicit conversion operator 
-         *  this allows for implicit conversion to the return_type.
+         *  Returns the value retrieved from the mask.
          */
         operator return_type() const {
             return static_cast< return_type >( _ref.get() );
@@ -125,19 +111,15 @@ public:
         bit_ref();
     };
 
+    /** Const reference type.
+     *  This class is used when the storage type is const so that mutability 
+     *  can be removed from the reference type. 
+     */
     template <typename MaskInfo>
     struct const_bit_ref {
 
-        /** typedefs 
-         *  return_type - is the type which is retrieved from
-         *      within storage is turned into and returned as.
-         *
-         *  mask - contains all information needed to iteract with data in the
-         *      the stroage.
-         */
         typedef typename MaskInfo::return_type             return_type;       
         typedef bit_ref<MaskInfo>                               _self;
-        typedef typename make_unsigned<return_type>::type  unsigned_return_type;
         typedef typename make_unsigned<
             storage_type
         >::type const                                     unsigned_storage_type;
@@ -162,14 +144,14 @@ public:
         { }
 
         /** copy constructor.
-         *  This is because references are copy construtible.
+         *  This is because references are copy constructible.
          */
-        // bit_ref( bit_ref<MaskInfo> const& x)
-        //    :_ref( x )
-        // { }
+        const_bit_ref( bit_ref<MaskInfo> const& x)
+            :_ref( x.ref )
+        { }
         
         /** Implicit conversion operator 
-         *  this allows for implicit conversion to the return_type.
+         *  Returns the value of the bit mask.
          */
         operator return_type() const {
             return  _ref.get();
@@ -206,18 +188,24 @@ public:
      *      TODO: The signature of this will need to change possibly to
      *      use enable_if or some form of internal dispatching.
      *  XXX
+     *  TODO: look into the creation of a member wise constructor.
      */
-    template <typename T>
-    bitfield_tuple(T const& x);
+    template <typename T>  bitfield_tuple(T const& x);
 
-    // TODO: look into the creation of a member wise constructor.
-    
+
+
+    /** Assignment Operator.
+     * Provides assignment from this type to another.
+     */
     _self const& operator=(_self const& x) {
         this->_data = x._data;
     }
 
-    /**
-     *  Retuns a copy of the internally stored type.
+    /** Internal storage accessors
+     *  Returns a reference of the internally stored type. This provides the
+     *  ability for the fusion sequence extension to work correctly.
+     *  TODO Remove this at a later time if I can figure out how to make get
+     *  callable from within the fusion functions.
      */
     //@{
     storage_type const& data( ) const {
@@ -234,6 +222,11 @@ public:
     std::string to_string() const;
     //@}
 
+
+    /** Meta-member-function
+     *  searches within member for a bft_element with name_type the same as Name
+     *  and returns mpl::true_ if it found it and mpl::false_ if not.
+     */
     template <typename Name>
     struct name_exists {
         typedef typename mpl::not_<
@@ -249,7 +242,7 @@ public:
                     members
                 >::type
             >
-        >::type                     type;
+        >::type       type;
     };
 
     /** Get function interfaces.

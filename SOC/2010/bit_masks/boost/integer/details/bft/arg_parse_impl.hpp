@@ -139,7 +139,7 @@ struct bft_arg_parse_impl_ <
     typedef StoragePolicy   storage_policy;
     typedef typename mpl::push_back<
         FieldVector,
-        bitfield_element_<
+        bitfield_element<
             ReturnType,
             NameType,
             Offset,

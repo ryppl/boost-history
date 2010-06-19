@@ -17,7 +17,7 @@ struct salmon;
 
 
     typedef mpl::vector<
-        details::bitfield_element_<
+        details::bitfield_element<
             int,
             red,
             mpl::size_t<0>,

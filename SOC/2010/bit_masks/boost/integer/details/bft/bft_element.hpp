@@ -16,12 +16,12 @@ template <  typename ReturnType,
             typename Offset,
             typename FieldWidth
 >
-struct bitfield_element_ {
+struct bitfield_element {
     typedef ReturnType  return_type;
     typedef NameType    name_type;
     typedef Offset      offset;
     typedef FieldWidth  field_width;
-    typedef bitfield_element_<return_type, name_type, offset, field_width> type;
+    typedef bitfield_element<return_type, name_type, offset, field_width> type;
 };
 
 

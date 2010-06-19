@@ -18,19 +18,19 @@ typedef bitfield_tuple<
 >       bft;
 
 
-typedef details::bitfield_element_< char,
+typedef details::bitfield_element< char,
 red,mpl::size_t<9>,mpl::size_t<8> >             element_1;
 
-typedef details::bitfield_element_< char, 
+typedef details::bitfield_element< char, 
 red, mpl::size_t<0>, mpl::size_t<8> >           element_2;
 
-typedef details::bitfield_element_< char, 
+typedef details::bitfield_element< char, 
 red, mpl::size_t<8>, mpl::size_t<8> >           element_3;
 
-typedef details::bitfield_element_< char, 
+typedef details::bitfield_element< char, 
 red, mpl::size_t<16>, mpl::size_t<8> >          element_4;
 
-typedef details::bitfield_element_< char, 
+typedef details::bitfield_element< char, 
 red, mpl::size_t<24>, mpl::size_t<8> >          element_5;
 
 int main() {
