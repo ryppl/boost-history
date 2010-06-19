@@ -22,7 +22,11 @@
 
 namespace boost {
 
+// TODO Move documentation into the correct place and redo with boostbook
+// formatting.
+
 /** bitfield_tuple
+ *
  *  Description
  *  This is a type which provides access to bitfields stored within integers
  *  or other integral types (see future work, for extensions). This is a pseudo
@@ -294,13 +298,20 @@ namespace boost {
  *  2) Switch the internal storage to an array which will allow the user
  *      to store as many fields as the which to, with out the constraint of
  *      being limited to an integral type. 
- *  3) Complete the two string member function.
+ *  3) Complete to_string member function.
+ *              I don't think I need this function.
  *  4) the type restrictions on storage may need to be relaxed.
  *  5) The if the storage type is a reference then possible allow for this type
  *      to behave as reference to a bitfield_tuple instead of a bitfield type.
  *      This would mean disabling the default constructor.
  *
- *
+ *  6) For second draft I would like to restructure the way the parsed 
+ *      arguments are stored. Change from bitfield_elements to a pair
+ *      the first item being the key/name the second item being a bitfield.
+ *      Instead of returning a bit_ref class return a bitfield class. 
+ *      this may be slightly more difficult then needed, because I need to store 
+ *      both a const and non const version of a bitfield. But even I don't do 
+ *      that I would like to change the way the reference class works.
  */
 template <  typename T0,
             typename T1 = mpl::void_,
@@ -500,11 +511,6 @@ public:
     storage_type& data( ) {
          return _data;
     }
-    //@}
-
-    /** Returns a string with the bits from the internal storage within it. */
-    //@{
-    std::string to_string() const;
     //@}
 
 
