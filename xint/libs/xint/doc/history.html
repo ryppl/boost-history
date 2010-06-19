@@ -54,10 +54,20 @@
 <li>Fifth version posted to the Boost File Vault for preliminary review.</li>
 <li>Final major redesign (I hope). All types are consolidated into a single <code>integer_t</code> template type.</li>
 <li>The library is now solely header-only, dictated by the templated nature of the types.</li>
-<li>Added Boost.Parameter options to the <code>integer_t</code> type, so you're no longer forced to list the options in order, and list all earlier options before the one that you want to change. </li>
+<li>Added Boost.Parameter options to the <code>integer_t</code> type, so you're no longer forced to list the options in order, and list all earlier options before the one that you want to change.</li>
+</ul>
+<p><b>2010-06-18</b> </p>
+<ul>
+<li>Sixth version posted to the Boost File Vault for preliminary review.</li>
+<li>Refined the use of Boost.Parameter. Now only <code>fixedlength</code> takes a parameter; the other options are non-parameter types, which simplifies both their use and their implementation.</li>
+<li>Minor redesign, taking advantage of <em>proper</em> policy-based design. nan() and operator~() are now only available on <code>nothrow</code> and <code>fixedlength</code> types, respectively, and is_nan() gets different definitions in the standard and <code>nothrow</code> types.</li>
+<li>Added unsigned support, by request, with a variety of options for what to do when a calculation results in a negative number.</li>
+<li>Added the <code>difference</code> function.</li>
+<li>Added support for wide-character strings, by request.</li>
+<li>Added the safe-bool idiom, by request. </li>
 </ul>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 12:31:58 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 18 20:03:13 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

@@ -108,21 +108,74 @@ BOOST_AUTO_TEST_CASE(test_numeric_limits) {
     }
 }
 
-BOOST_AUTO_TEST_CASE(test_throwing_nan) {
-    BOOST_CHECK_THROW(integer::nan(), exceptions::not_a_number);
-}
-
-BOOST_AUTO_TEST_CASE(test_nonfixed_bitwise_not) {
-    integer n;
-    BOOST_CHECK_THROW(~n, exceptions::too_big);
-}
-
 BOOST_AUTO_TEST_CASE(test_random_by_size) {
     default_random_generator gen;
     integer n = integer::random_by_size(gen, 512, true);
     BOOST_CHECK_EQUAL(log2(n), 512);
     n = integer::random_by_size(gen, 512, true, true);
     BOOST_CHECK_EQUAL(log2(n), 512);
+}
+
+BOOST_AUTO_TEST_CASE(test_unsigned_negative_policies) {
+    {
+        // Test signed behavior
+        typedef integer_t<negative_allowed> T;
+        T t;
+        BOOST_CHECK_EQUAL(--t, -1);
+    }
+
+    {
+        // Test unsigned variable-length default
+        typedef integer_t<negative_not_allowed> T;
+        T t;
+        BOOST_CHECK_THROW(--t, xint::exceptions::cannot_represent);
+    }
+
+    {
+        // Test unsigned fixedlength default
+        typedef integer_t<fixedlength<12>, negative_not_allowed> T;
+        T t;
+        BOOST_CHECK_EQUAL(--t, (std::numeric_limits<T>::max)());
+    }
+
+    {
+        // Test unsigned fixedlength modulus
+        typedef integer_t<fixedlength<12>, negative_modulus> T;
+        T t;
+        BOOST_CHECK_EQUAL(--t, (std::numeric_limits<T>::max)());
+    }
+
+    // Can't test unsigned variable-length modulus, because if it's working
+    // right, it can't be compiled.
+
+    {
+        // Test exception on standard integers
+        typedef integer_t<negative_exception> T;
+        T t;
+        BOOST_CHECK_THROW(--t, xint::exceptions::cannot_represent);
+    }
+
+    {
+        // Test exception on nothrow integers
+        typedef integer_t<negative_exception, nothrow> T;
+        T t;
+        --t;
+        BOOST_CHECK(t.is_nan());
+    }
+
+    {
+        // Test force-to-zero
+        typedef integer_t<negative_zero> T;
+        T t;
+        BOOST_CHECK_EQUAL(--t, 0);
+    }
+
+    {
+        // Test force-to-absolute
+        typedef integer_t<negative_absolute> T;
+        T t;
+        BOOST_CHECK_EQUAL(--t, 1);
+    }
 }
 
 } // namespace xint

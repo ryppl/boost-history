@@ -26,20 +26,34 @@
 </div>
 <div class="contents">
 <h1>detail/options.hpp File Reference</h1>
-<p>Declares the arbitrary-length integer type.  
+<p>Declares the integer_t template options.  
 <a href="#_details">More...</a></p>
 
 <p><a href="options_8hpp_source.html">Go to the source code of this file.</a></p>
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td colspan="2"><h2>Classes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structboost_1_1xint_1_1options_1_1copy__on__write.html">boost::xint::options::copy_on_write</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Allows faster operations, at a price.  <a href="structboost_1_1xint_1_1options_1_1copy__on__write.html#_details">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structboost_1_1xint_1_1options_1_1fixedlength.html">boost::xint::options::fixedlength&lt; Bits &gt;</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structboost_1_1xint_1_1options_1_1fixedlength__base.html">boost::xint::options::fixedlength_base</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structboost_1_1xint_1_1options_1_1nothrow.html">boost::xint::options::nothrow&lt; Value &gt;</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structboost_1_1xint_1_1options_1_1nothrow__base.html">boost::xint::options::nothrow_base</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structboost_1_1xint_1_1options_1_1secure.html">boost::xint::options::secure&lt; Value &gt;</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structboost_1_1xint_1_1options_1_1secure__base.html">boost::xint::options::secure_base</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structboost_1_1xint_1_1options_1_1threadsafe.html">boost::xint::options::threadsafe&lt; Value &gt;</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structboost_1_1xint_1_1options_1_1threadsafe__base.html">boost::xint::options::threadsafe_base</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Make fixed-length integers.  <a href="structboost_1_1xint_1_1options_1_1fixedlength.html#_details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structboost_1_1xint_1_1options_1_1negative__absolute.html">boost::xint::options::negative_absolute</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates an integer type that forces any negative number to its absolute value.  <a href="structboost_1_1xint_1_1options_1_1negative__absolute.html#_details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structboost_1_1xint_1_1options_1_1negative__allowed.html">boost::xint::options::negative_allowed</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a signed integer type.  <a href="structboost_1_1xint_1_1options_1_1negative__allowed.html#_details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structboost_1_1xint_1_1options_1_1negative__exception.html">boost::xint::options::negative_exception</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates an integer type that considers unsigned values invalid.  <a href="structboost_1_1xint_1_1options_1_1negative__exception.html#_details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structboost_1_1xint_1_1options_1_1negative__modulus.html">boost::xint::options::negative_modulus</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Make a fixedlength integer wrap like a built-in unsigned type.  <a href="structboost_1_1xint_1_1options_1_1negative__modulus.html#_details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structboost_1_1xint_1_1options_1_1negative__not__allowed.html">boost::xint::options::negative_not_allowed</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates an unsigned integer with the most common negative-value handling.  <a href="structboost_1_1xint_1_1options_1_1negative__not__allowed.html#_details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structboost_1_1xint_1_1options_1_1negative__zero.html">boost::xint::options::negative_zero</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates an integer type that forces any negative number to zero.  <a href="structboost_1_1xint_1_1options_1_1negative__zero.html#_details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structboost_1_1xint_1_1options_1_1nothrow.html">boost::xint::options::nothrow</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Disables exceptions from the library.  <a href="structboost_1_1xint_1_1options_1_1nothrow.html#_details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structboost_1_1xint_1_1options_1_1secure.html">boost::xint::options::secure</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Zeros memory before deallocating.  <a href="structboost_1_1xint_1_1options_1_1secure.html#_details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structboost_1_1xint_1_1options_1_1threadsafe.html">boost::xint::options::threadsafe</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Ensures that the <a class="el" href="classboost_1_1xint_1_1integer__t.html" title="The integer_t class template.">integer_t</a> objects can be safely used by multiple threads.  <a href="structboost_1_1xint_1_1options_1_1threadsafe.html#_details">More...</a><br/></td></tr>
 <tr><td colspan="2"><h2>Namespaces</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost.html">boost</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html">boost::xint</a></td></tr>
@@ -47,35 +61,105 @@
 <p><tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><p>All the types and functions of the library are within this namespace. </p>
 <br/></td></tr>
 </p>
+<tr><td class="memItemLeft" align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1detail.html">boost::xint::detail</a></td></tr>
+
+<p><tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><p>The items within this namespace are meant for internal use only. </p>
+<br/></td></tr>
+</p>
 <tr><td class="memItemLeft" align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1options.html">boost::xint::options</a></td></tr>
 
 <p><tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><p>Options for the <a class="el" href="classboost_1_1xint_1_1integer__t.html" title="The integer_t class template.">integer_t</a> template are stored in this namespace. </p>
 <br/></td></tr>
 </p>
-<tr><td colspan="2"><h2>Typedefs</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">typedef parameter::parameters<br class="typebreak"/>
-&lt; optional&lt; deduced<br class="typebreak"/>
-&lt; tag::fixedlength_tag &gt;<br class="typebreak"/>
-, is_base_of&lt; fixedlength_base, <br class="typebreak"/>
-_ &gt; &gt;, optional&lt; deduced<br class="typebreak"/>
-&lt; tag::threadsafe_tag &gt;<br class="typebreak"/>
-, is_base_of&lt; threadsafe_base, <br class="typebreak"/>
-_ &gt; &gt;, optional&lt; deduced<br class="typebreak"/>
-&lt; tag::secure_tag &gt;<br class="typebreak"/>
-, is_base_of&lt; secure_base, _ &gt;<br class="typebreak"/>
- &gt;, optional&lt; deduced<br class="typebreak"/>
-&lt; tag::nothrow_tag &gt;<br class="typebreak"/>
-, is_base_of&lt; nothrow_base, _ &gt;<br class="typebreak"/>
- &gt;, optional&lt; deduced<br class="typebreak"/>
-&lt; tag::allocator_tag &gt;<br class="typebreak"/>
-, is_class&lt; _ &gt; &gt;&gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint_1_1options.html#af65b057a2b140d4ca9daec17bba31722">boost::xint::options::integer_signature</a></td></tr>
+<tr><td colspan="2"><h2>Defines</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="options_8hpp.html#aa350afa46bc87068c0cefb1925130b6c">BOOST_XINT_APARAMS</a>&nbsp;&nbsp;&nbsp;...</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="options_8hpp.html#ac2e7764d34cf12c1de4ae325d982d8e3">BOOST_XINT_BPARAMS</a>&nbsp;&nbsp;&nbsp;other</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="options_8hpp.html#aeebffc787ad64df0fd45d351e3c36d89">BOOST_XINT_CLASS_APARAMS</a>&nbsp;&nbsp;&nbsp;...</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="options_8hpp.html#a703c6d9989c912340d776ea5b2dbf4cd">BOOST_XINT_CLASS_BPARAMS</a>&nbsp;&nbsp;&nbsp;other</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="options_8hpp.html#ab1e73a691d4b867f4a4269502bd09540">BOOST_XINT_INITIAL_APARAMS</a>&nbsp;&nbsp;&nbsp;...</td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
-<p>Declares the arbitrary-length integer type. </p>
+<p>Declares the integer_t template options. </p>
 
 <p>Definition in file <a class="el" href="options_8hpp_source.html">options.hpp</a>.</p>
+<hr/><h2>Define Documentation</h2>
+<a class="anchor" id="aa350afa46bc87068c0cefb1925130b6c"></a><!-- doxytag: member="options.hpp::BOOST_XINT_APARAMS" ref="aa350afa46bc87068c0cefb1925130b6c" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BOOST_XINT_APARAMS&nbsp;&nbsp;&nbsp;...</td>
+        </tr>
+      </table>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 12:31:58 2010 for The Extended Integer (XInt) Library by&nbsp;
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="options_8hpp_source.html#l00237">237</a> of file <a class="el" href="options_8hpp_source.html">options.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac2e7764d34cf12c1de4ae325d982d8e3"></a><!-- doxytag: member="options.hpp::BOOST_XINT_BPARAMS" ref="ac2e7764d34cf12c1de4ae325d982d8e3" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BOOST_XINT_BPARAMS&nbsp;&nbsp;&nbsp;other</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="options_8hpp_source.html#l00238">238</a> of file <a class="el" href="options_8hpp_source.html">options.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aeebffc787ad64df0fd45d351e3c36d89"></a><!-- doxytag: member="options.hpp::BOOST_XINT_CLASS_APARAMS" ref="aeebffc787ad64df0fd45d351e3c36d89" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BOOST_XINT_CLASS_APARAMS&nbsp;&nbsp;&nbsp;...</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="options_8hpp_source.html#l00235">235</a> of file <a class="el" href="options_8hpp_source.html">options.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a703c6d9989c912340d776ea5b2dbf4cd"></a><!-- doxytag: member="options.hpp::BOOST_XINT_CLASS_BPARAMS" ref="a703c6d9989c912340d776ea5b2dbf4cd" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BOOST_XINT_CLASS_BPARAMS&nbsp;&nbsp;&nbsp;other</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="options_8hpp_source.html#l00236">236</a> of file <a class="el" href="options_8hpp_source.html">options.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab1e73a691d4b867f4a4269502bd09540"></a><!-- doxytag: member="options.hpp::BOOST_XINT_INITIAL_APARAMS" ref="ab1e73a691d4b867f4a4269502bd09540" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BOOST_XINT_INITIAL_APARAMS&nbsp;&nbsp;&nbsp;...</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="options_8hpp_source.html#l00234">234</a> of file <a class="el" href="options_8hpp_source.html">options.hpp</a>.</p>
+
+</div>
+</div>
+</div>
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 18 20:03:13 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

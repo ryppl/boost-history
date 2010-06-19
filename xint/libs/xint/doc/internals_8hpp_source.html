@@ -73,55 +73,68 @@
 <a name="l00054"></a>00054 <span class="preprocessor">#include &quot;<a class="code" href="modular_8hpp.html" title="Contains the modular math functions.">modular.hpp</a>&quot;</span>
 <a name="l00055"></a>00055 <span class="preprocessor">#include &quot;<a class="code" href="prime_8hpp.html" title="Contains the function definitions for the prime number functions.">prime.hpp</a>&quot;</span>
 <a name="l00056"></a>00056 
-<a name="l00057"></a>00057 <span class="preprocessor">#include &quot;<a class="code" href="options_8hpp.html" title="Declares the arbitrary-length integer type.">options.hpp</a>&quot;</span>
-<a name="l00058"></a>00058 
-<a name="l00061"></a>00061 
-<a name="l00064"></a>00064 
-<a name="l00065"></a>00065 <span class="keyword">namespace </span>boost {
-<a name="l00066"></a>00066 <span class="keyword">namespace </span>xint {
-<a name="l00067"></a>00067 <span class="keyword">namespace </span>detail {
-<a name="l00069"></a>00069 
-<a name="l00070"></a>00070 <span class="keyword">inline</span> std::size_t log10_bits(std::size_t bits) {
-<a name="l00071"></a>00071     <span class="comment">// large_step and count_per_large_step are based on a minimum-32-bit integer</span>
-<a name="l00072"></a>00072     assert(std::numeric_limits&lt;boost::intmax_t&gt;::digits &gt;= 32);
-<a name="l00073"></a>00073 
-<a name="l00074"></a>00074     <span class="keyword">typedef</span> raw_integer_t&lt;0, false, std::allocator&lt;digit_t&gt; &gt; T;
-<a name="l00075"></a>00075     <span class="keyword">const</span> T large_step(1000000000), small_step(10);
-<a name="l00076"></a>00076     <span class="keyword">const</span> std::size_t count_per_large_step = 9, count_per_small_step = 1;
-<a name="l00077"></a>00077 
-<a name="l00078"></a>00078     T n;
-<a name="l00079"></a>00079     pow2(n, bits);
-<a name="l00080"></a>00080     --n;
-<a name="l00081"></a>00081 
-<a name="l00082"></a>00082     std::size_t r = 0;
-<a name="l00083"></a>00083     <span class="keywordflow">while</span> (n &gt;= large_step) { n /= large_step; r += count_per_large_step; }
-<a name="l00084"></a>00084     <span class="keywordflow">while</span> (n &gt;= small_step) { n /= small_step; r += count_per_small_step; }
-<a name="l00085"></a>00085     <span class="keywordflow">return</span> r;
-<a name="l00086"></a>00086 }
-<a name="l00087"></a>00087 
-<a name="l00088"></a>00088 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> <span class="keywordtype">char</span>T&gt;
-<a name="l00089"></a>00089 <span class="keyword">const</span> std::basic_string&lt;charT&gt;&amp; nan_text() {
-<a name="l00090"></a>00090     <span class="keyword">static</span> std::basic_string&lt;charT&gt; r;
-<a name="l00091"></a>00091     <span class="keywordflow">if</span> (r.empty()) {
-<a name="l00092"></a>00092         std::basic_ostringstream&lt;charT&gt; out;
-<a name="l00093"></a>00093         out &lt;&lt; <span class="stringliteral">&quot;#NaN#&quot;</span>;
-<a name="l00094"></a>00094         r = out.str();
-<a name="l00095"></a>00095     }
-<a name="l00096"></a>00096     <span class="keywordflow">return</span> r;
-<a name="l00097"></a>00097 }
-<a name="l00098"></a>00098 
-<a name="l00099"></a>00099 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> <span class="keywordtype">char</span>T&gt;
-<a name="l00100"></a>00100 <span class="keywordtype">bool</span> is_nan_text(<span class="keyword">const</span> std::basic_string&lt;charT&gt; str) {
-<a name="l00101"></a>00101     <span class="keywordflow">return</span> (str == nan_text&lt;charT&gt;());
-<a name="l00102"></a>00102 }
-<a name="l00103"></a>00103 
-<a name="l00105"></a>00105 } <span class="comment">// namespace detail</span>
-<a name="l00106"></a>00106 } <span class="comment">// namespace xint</span>
-<a name="l00107"></a>00107 } <span class="comment">// namespace boost</span>
-<a name="l00108"></a>00108 
-<a name="l00109"></a>00109 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_INTERNALS_HPP</span>
+<a name="l00059"></a>00059 
+<a name="l00062"></a>00062 
+<a name="l00063"></a>00063 <span class="keyword">namespace </span>boost {
+<a name="l00064"></a>00064 <span class="keyword">namespace </span>xint {
+<a name="l00065"></a>00065 <span class="keyword">namespace </span>detail {
+<a name="l00067"></a>00067 
+<a name="l00068"></a>00068 <span class="keyword">inline</span> std::size_t log10_bits(std::size_t bits) {
+<a name="l00069"></a>00069     <span class="comment">// large_step and count_per_large_step are based on a minimum-32-bit integer</span>
+<a name="l00070"></a>00070     assert(std::numeric_limits&lt;boost::intmax_t&gt;::digits &gt;= 32);
+<a name="l00071"></a>00071 
+<a name="l00072"></a>00072     <span class="keyword">typedef</span> raw_integer_t&lt;0, false, std::allocator&lt;digit_t&gt; &gt; T;
+<a name="l00073"></a>00073     <span class="keyword">const</span> T large_step(1000000000), small_step(10);
+<a name="l00074"></a>00074     <span class="keyword">const</span> std::size_t count_per_large_step = 9, count_per_small_step = 1;
+<a name="l00075"></a>00075 
+<a name="l00076"></a>00076     T n;
+<a name="l00077"></a>00077     pow2(n, bits);
+<a name="l00078"></a>00078     --n;
+<a name="l00079"></a>00079 
+<a name="l00080"></a>00080     std::size_t r = 0;
+<a name="l00081"></a>00081     <span class="keywordflow">while</span> (n &gt;= large_step) { n /= large_step; r += count_per_large_step; }
+<a name="l00082"></a>00082     <span class="keywordflow">while</span> (n &gt;= small_step) { n /= small_step; r += count_per_small_step; }
+<a name="l00083"></a>00083     <span class="keywordflow">return</span> r;
+<a name="l00084"></a>00084 }
+<a name="l00085"></a>00085 
+<a name="l00086"></a>00086 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> <span class="keywordtype">char</span>T&gt;
+<a name="l00087"></a>00087 <span class="keyword">const</span> std::basic_string&lt;charT&gt;&amp; nan_text() {
+<a name="l00088"></a>00088     <span class="keyword">static</span> std::basic_string&lt;charT&gt; r;
+<a name="l00089"></a>00089     <span class="keywordflow">if</span> (r.empty()) {
+<a name="l00090"></a>00090         std::basic_ostringstream&lt;charT&gt; out;
+<a name="l00091"></a>00091         out &lt;&lt; <span class="stringliteral">&quot;#NaN#&quot;</span>;
+<a name="l00092"></a>00092         r = out.str();
+<a name="l00093"></a>00093     }
+<a name="l00094"></a>00094     <span class="keywordflow">return</span> r;
+<a name="l00095"></a>00095 }
+<a name="l00096"></a>00096 
+<a name="l00097"></a>00097 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> <span class="keywordtype">char</span>T&gt;
+<a name="l00098"></a>00098 <span class="keywordtype">bool</span> is_nan_text(<span class="keyword">const</span> std::basic_string&lt;charT&gt; str) {
+<a name="l00099"></a>00099     <span class="keywordflow">return</span> (str == nan_text&lt;charT&gt;());
+<a name="l00100"></a>00100 }
+<a name="l00101"></a>00101 
+<a name="l00102"></a>00102 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00103"></a>00103 T get_nan() {
+<a name="l00104"></a>00104     <span class="keyword">static</span> T r;
+<a name="l00105"></a>00105     <span class="keyword">static</span> <span class="keywordtype">bool</span> init = <span class="keyword">false</span>;
+<a name="l00106"></a>00106 
+<a name="l00107"></a>00107     <span class="keywordflow">if</span> (!init) {
+<a name="l00108"></a>00108         init = <span class="keyword">true</span>;
+<a name="l00109"></a>00109         r._data().make_nan();
+<a name="l00110"></a>00110     }
+<a name="l00111"></a>00111 
+<a name="l00112"></a>00112     <span class="keywordflow">return</span> <a class="code" href="basic__types__and__includes_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(r);
+<a name="l00113"></a>00113 }
+<a name="l00114"></a>00114 
+<a name="l00116"></a>00116 } <span class="comment">// namespace detail</span>
+<a name="l00117"></a>00117 } <span class="comment">// namespace xint</span>
+<a name="l00118"></a>00118 } <span class="comment">// namespace boost</span>
+<a name="l00119"></a>00119 
+<a name="l00120"></a>00120 <span class="preprocessor">#include &quot;<a class="code" href="options_8hpp.html" title="Declares the integer_t template options.">options.hpp</a>&quot;</span>
+<a name="l00121"></a>00121 
+<a name="l00122"></a>00122 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_INTERNALS_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 12:31:58 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 18 20:03:13 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

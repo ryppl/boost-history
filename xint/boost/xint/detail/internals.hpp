@@ -54,8 +54,6 @@
 #include "modular.hpp"
 #include "prime.hpp"
 
-#include "options.hpp"
-
 //! \namespace boost::xint
 //! \brief All the types and functions of the library are within this namespace.
 
@@ -101,9 +99,24 @@ bool is_nan_text(const std::basic_string<charT> str) {
     return (str == nan_text<charT>());
 }
 
+template <typename T>
+T get_nan() {
+    static T r;
+    static bool init = false;
+
+    if (!init) {
+        init = true;
+        r._data().make_nan();
+    }
+
+    return BOOST_XINT_MOVE(r);
+}
+
 //! @endcond detail
 } // namespace detail
 } // namespace xint
 } // namespace boost
+
+#include "options.hpp"
 
 #endif // BOOST_INCLUDED_XINT_INTERNALS_HPP

@@ -177,5 +177,13 @@ BOOST_AUTO_TEST_CASE(test_decrement_fixed) {
     BOOST_CHECK_EQUAL(--min1, 0);
 }
 
+BOOST_AUTO_TEST_CASE(test_difference) {
+    typedef integer_t<xopts::negative_not_allowed> T;
+    T n1(3), n2(5);
+    BOOST_CHECK_THROW(n1 - n2, xint::exceptions::cannot_represent);
+    BOOST_CHECK_EQUAL(difference(n1, n2), 2);
+    BOOST_CHECK_EQUAL(difference(n2, n1), 2);
+}
+
 } // namespace xint
 } // namespace boost

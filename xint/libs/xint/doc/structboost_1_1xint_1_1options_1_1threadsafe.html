@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>The Extended Integer (XInt) Library: boost::xint::options::threadsafe&lt; Value &gt; Struct Template Reference</title>
+<title>The Extended Integer (XInt) Library: boost::xint::options::threadsafe Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -20,7 +20,6 @@
   <div class="tabs">
     <ul>
       <li><a href="annotated.html"><span>Class&nbsp;List</span></a></li>
-      <li><a href="hierarchy.html"><span>Class&nbsp;Hierarchy</span></a></li>
       <li><a href="functions.html"><span>Class&nbsp;Members</span></a></li>
     </ul>
   </div>
@@ -28,29 +27,22 @@
   </div>
 </div>
 <div class="contents">
-<h1>boost::xint::options::threadsafe&lt; Value &gt; Struct Template Reference</h1><!-- doxytag: class="boost::xint::options::threadsafe" --><!-- doxytag: inherits="boost::xint::options::threadsafe_base" --><div class="dynheader">
-Inheritance diagram for boost::xint::options::threadsafe&lt; Value &gt;:</div>
-<div class="dynsection">
- <div class="center">
-  <img src="structboost_1_1xint_1_1options_1_1threadsafe.png" usemap="#boost::xint::options::threadsafe&lt; Value &gt;_map" alt=""/>
-  <map id="boost::xint::options::threadsafe&lt; Value &gt;_map" name="boost::xint::options::threadsafe&lt; Value &gt;_map">
-<area href="structboost_1_1xint_1_1options_1_1threadsafe__base.html" alt="boost::xint::options::threadsafe_base" shape="rect" coords="0,0,236,24"/>
-</map>
- </div>
-</div>
+<h1>boost::xint::options::threadsafe Struct Reference</h1><!-- doxytag: class="boost::xint::options::threadsafe" -->
+<p>Ensures that the <a class="el" href="classboost_1_1xint_1_1integer__t.html" title="The integer_t class template.">integer_t</a> objects can be safely used by multiple threads.  
+<a href="#_details">More...</a></p>
 <table border="0" cellpadding="0" cellspacing="0">
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
-<h3>template&lt;bool Value&gt;<br/>
- struct boost::xint::options::threadsafe&lt; Value &gt;</h3>
+<p>Ensures that the <a class="el" href="classboost_1_1xint_1_1integer__t.html" title="The integer_t class template.">integer_t</a> objects can be safely used by multiple threads. </p>
+<p>This is the opposite of the <a class="el" href="structboost_1_1xint_1_1options_1_1copy__on__write.html">copy_on_write</a> option. It is the default behavior; the option is provided only to make it easier to write self-documenting code.</p>
+<p>Note that even with this option, it is still your responsibility to ensure that only one thread accesses a particular integer object at a time. </p>
 
-
-<p>Definition at line <a class="el" href="options_8hpp_source.html#l00045">45</a> of file <a class="el" href="options_8hpp_source.html">options.hpp</a>.</p>
+<p>Definition at line <a class="el" href="options_8hpp_source.html#l00112">112</a> of file <a class="el" href="options_8hpp_source.html">options.hpp</a>.</p>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>detail/<a class="el" href="options_8hpp_source.html">options.hpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 12:31:58 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 18 20:03:13 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

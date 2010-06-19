@@ -107,8 +107,8 @@
 <a name="l00090"></a>00090     <span class="keywordtype">bool</span> is_zero()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> (length == 1 &amp;&amp; digits()[0] == 0); }
 <a name="l00091"></a>00091     <span class="keywordtype">bool</span> is_odd()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> (digits()[0] &amp; 0x01) != 0; }
 <a name="l00092"></a>00092     <span class="keywordtype">bool</span> is_even()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> (digits()[0] &amp; 0x01) == 0; }
-<a name="l00093"></a>00093     std::size_t hex_digits()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> (<a class="code" href="namespaceboost_1_1xint.html#ab6cef2e4e1b3c3b841f6c1a085952f18" title="Get the log2 value of an integer.">log2</a>(*<span class="keyword">this</span>) + 3) / 4; }
-<a name="l00094"></a>00094     raw_integer_t <a class="code" href="namespaceboost_1_1xint.html#a5a98564162f30f3117a871a617af9523" title="Returns the absolute value of an integer.">abs</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> raw_integer_t(*<span class="keyword">this</span>, <span class="keyword">false</span>); }
+<a name="l00093"></a>00093     std::size_t hex_digits()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> (<a class="code" href="namespaceboost_1_1xint.html#aec7b803cbc9245ccae1f88e4efab327b" title="Get the log2 value of an integer.">log2</a>(*<span class="keyword">this</span>) + 3) / 4; }
+<a name="l00094"></a>00094     raw_integer_t <a class="code" href="namespaceboost_1_1xint.html#a331d95962aedbdb34f04ef373555dd8a" title="Returns the absolute value of an integer.">abs</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> raw_integer_t(*<span class="keyword">this</span>, <span class="keyword">false</span>); }
 <a name="l00095"></a>00095     raw_integer_t negate()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> raw_integer_t(*<span class="keyword">this</span>, !negative); }
 <a name="l00096"></a>00096 
 <a name="l00097"></a>00097     <span class="keywordtype">void</span> <span class="keyword">set</span>(<span class="keywordtype">int</span> n) { set_signed(n); }
@@ -130,10 +130,10 @@
 <a name="l00113"></a>00113     raw_integer_t        operator--(<span class="keywordtype">int</span>); <span class="comment">// Postdecrement</span>
 <a name="l00114"></a>00114 
 <a name="l00115"></a>00115     <span class="keywordtype">bool</span>                 operator!()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> is_zero(); }
-<a name="l00116"></a>00116     raw_integer_t        <a class="code" href="namespaceboost_1_1xint.html#acda2a7a7d63582732505cc7128096f27" title="Calculate the difference between two integers.">operator-</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> BOOST_XINT_RAWINT(*<span class="keyword">this</span>,
+<a name="l00116"></a>00116     raw_integer_t        <a class="code" href="namespaceboost_1_1xint.html#ab6132105fbe7d7bf7a756b868b6a372e" title="Calculate the difference between two integers.">operator-</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> BOOST_XINT_RAWINT(*<span class="keyword">this</span>,
 <a name="l00117"></a>00117                                                  !negative, <span class="keyword">true</span>); }
-<a name="l00118"></a>00118     raw_integer_t&amp;       <a class="code" href="namespaceboost_1_1xint.html#a88b3b7bccb96dd8b0cd9d9f853025915" title="Calculate the sum of two integers.">operator+</a>()       { <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
-<a name="l00119"></a>00119     <span class="keyword">const</span> raw_integer_t&amp; <a class="code" href="namespaceboost_1_1xint.html#a88b3b7bccb96dd8b0cd9d9f853025915" title="Calculate the sum of two integers.">operator+</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
+<a name="l00118"></a>00118     raw_integer_t&amp;       <a class="code" href="namespaceboost_1_1xint.html#a15c7951bc910713f8209b7ebd78396da" title="Calculate the sum of two integers.">operator+</a>()       { <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
+<a name="l00119"></a>00119     <span class="keyword">const</span> raw_integer_t&amp; <a class="code" href="namespaceboost_1_1xint.html#a15c7951bc910713f8209b7ebd78396da" title="Calculate the sum of two integers.">operator+</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> *<span class="keyword">this</span>; }
 <a name="l00120"></a>00120     raw_integer_t        operator~() <span class="keyword">const</span>; <span class="comment">// For fixed-size types only!</span>
 <a name="l00121"></a>00121 
 <a name="l00122"></a>00122     raw_integer_t&amp;       operator+=(<span class="keyword">const</span> raw_integer_t b);
@@ -263,17 +263,17 @@
 <a name="l00246"></a>00246 
 <a name="l00247"></a>00247 BOOST_XINT_RAWINT_TPL
 <a name="l00248"></a>00248 <span class="keywordtype">void</span> BOOST_XINT_RAWINT::_swap(BOOST_XINT_RAWINT&amp; i2) {
-<a name="l00249"></a>00249     <span class="keyword">using</span> <a class="code" href="namespaceboost_1_1xint.html#a1a857d5cc4b15822d3dcaf70ec15b4e5">std::swap</a>;
-<a name="l00250"></a>00250     <a class="code" href="namespaceboost_1_1xint.html#a1a857d5cc4b15822d3dcaf70ec15b4e5">swap</a>(length, i2.length);
-<a name="l00251"></a>00251     <a class="code" href="namespaceboost_1_1xint.html#a1a857d5cc4b15822d3dcaf70ec15b4e5">swap</a>(negative, i2.negative);
-<a name="l00252"></a>00252     <a class="code" href="namespaceboost_1_1xint.html#a1a857d5cc4b15822d3dcaf70ec15b4e5">swap</a>(changed, i2.changed);
-<a name="l00253"></a>00253     <a class="code" href="namespaceboost_1_1xint.html#a1a857d5cc4b15822d3dcaf70ec15b4e5">swap</a>(data, i2.data);
+<a name="l00249"></a>00249     <span class="keyword">using</span> <a class="code" href="namespaceboost_1_1xint.html#ab4aafdf3645cbad0cb3af54fdec4caff">std::swap</a>;
+<a name="l00250"></a>00250     <a class="code" href="namespaceboost_1_1xint.html#ab4aafdf3645cbad0cb3af54fdec4caff">swap</a>(length, i2.length);
+<a name="l00251"></a>00251     <a class="code" href="namespaceboost_1_1xint.html#ab4aafdf3645cbad0cb3af54fdec4caff">swap</a>(negative, i2.negative);
+<a name="l00252"></a>00252     <a class="code" href="namespaceboost_1_1xint.html#ab4aafdf3645cbad0cb3af54fdec4caff">swap</a>(changed, i2.changed);
+<a name="l00253"></a>00253     <a class="code" href="namespaceboost_1_1xint.html#ab4aafdf3645cbad0cb3af54fdec4caff">swap</a>(data, i2.data);
 <a name="l00254"></a>00254 }
 <a name="l00255"></a>00255 
 <a name="l00257"></a>00257 <span class="comment">// Free functions</span>
 <a name="l00258"></a>00258 
 <a name="l00259"></a>00259 BOOST_XINT_RAWINT_TPL
-<a name="l00260"></a>00260 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#a1a857d5cc4b15822d3dcaf70ec15b4e5">swap</a>(BOOST_XINT_RAWINT&amp; i1, BOOST_XINT_RAWINT&amp; i2) {
+<a name="l00260"></a>00260 <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#ab4aafdf3645cbad0cb3af54fdec4caff">swap</a>(BOOST_XINT_RAWINT&amp; i1, BOOST_XINT_RAWINT&amp; i2) {
 <a name="l00261"></a>00261     i1._swap(i2);
 <a name="l00262"></a>00262 }
 <a name="l00263"></a>00263 
@@ -283,7 +283,7 @@
 <a name="l00268"></a>00268 
 <a name="l00269"></a>00269 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_RAW_INTEGER_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 12:31:58 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 18 20:03:13 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

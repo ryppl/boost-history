@@ -122,11 +122,18 @@ BOOST_AUTO_TEST_CASE(test_unary_operators) {
     BOOST_CHECK_EQUAL(+one, 1);
     BOOST_CHECK_EQUAL(-one, -1);
 
+    // Digit-and-a-half
     const size_t bits = detail::bits_per_digit + (detail::bits_per_digit / 2);
-    typedef integer_t<fixedlength<bits> > T; // Digit-and-a-half
-    boost::uintmax_t src = 0x12345678;
-    T t(src);
-    BOOST_CHECK_EQUAL(~t, T(~src));
+    typedef integer_t<fixedlength<bits>, negative_not_allowed> T;
+    boost::uintmax_t usrc = 0x12345678;
+    T t(usrc);
+    BOOST_CHECK_EQUAL(~t, ~usrc);
+
+    const std::size_t int32bits = 31; // 31 bits for magnitude, 1 for sign
+    typedef integer_t<fixedlength<int32bits>, negative_allowed> U;
+    boost::int32_t ssrc = 0x12345678, exp = -0x6DCBA987;
+    U u(ssrc);
+    BOOST_CHECK_EQUAL(~u, exp);
 }
 
 BOOST_AUTO_TEST_CASE(test_fixed_add_subtract) {
@@ -150,6 +157,17 @@ BOOST_AUTO_TEST_CASE(test_fixed_add_subtract) {
     n4 = 255;
     n4 += 2;
     BOOST_CHECK_EQUAL(n4, 1);
+}
+
+BOOST_AUTO_TEST_CASE(test_unsigned_negative_modulus) {
+    const size_t bits = detail::bits_per_digit + (detail::bits_per_digit / 2);
+    typedef integer_t<fixedlength<bits>, negative_not_allowed> T;
+
+    const T max_value(boost::uintmax_t(-1));
+    T t(0);
+    BOOST_CHECK_EQUAL(--t, max_value);
+    BOOST_CHECK_EQUAL(T(1) - 3, max_value - 1);
+    BOOST_CHECK_EQUAL(T("-1"), max_value);
 }
 
 } // namespace xint

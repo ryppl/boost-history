@@ -19,7 +19,7 @@
       <Project Name="Example-Fibonacci" ConfigName="Debug"/>
       <Project Name="Example-GenPrime" ConfigName="Debug"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Release" Selected="yes">
+    <WorkspaceConfiguration Name="Release" Selected="no">
       <Project Name="XInt" ConfigName="Release"/>
       <Project Name="Docs" ConfigName="All"/>
       <Project Name="XInt" ConfigName="Release"/>

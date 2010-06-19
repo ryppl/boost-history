@@ -44,7 +44,7 @@
 <a name="l00027"></a>00027 <span class="keyword">namespace </span>detail {
 <a name="l00028"></a>00028 
 <a name="l00029"></a>00029 BOOST_XINT_RAWINT_TPL
-<a name="l00030"></a>00030 BOOST_XINT_RAWINT <a class="code" href="namespaceboost_1_1xint.html#adb652fa006fd8ed34993ea86cf317cb2" title="Calculate the square root of an integer.">square_root</a>(BOOST_XINT_RAWINT n) {
+<a name="l00030"></a>00030 BOOST_XINT_RAWINT <a class="code" href="namespaceboost_1_1xint.html#abb957c86cae5940b06172eb23345fe42" title="Calculate the square root of an integer.">square_root</a>(BOOST_XINT_RAWINT n) {
 <a name="l00031"></a>00031     <span class="keywordflow">if</span> (n.is_zero()) <span class="keywordflow">return</span> 0;
 <a name="l00032"></a>00032     <span class="keywordflow">if</span> (n.negative) <span class="keywordflow">throw</span> exceptions::cannot_represent(<span class="stringliteral">&quot;cannot represent &quot;</span>
 <a name="l00033"></a>00033         <span class="stringliteral">&quot;imaginary values (tried to take square_root of negative number)&quot;</span>);
@@ -58,7 +58,7 @@
 <a name="l00041"></a>00041 
 <a name="l00042"></a>00042     <span class="comment">// Initial guess is half the length of n, in bits</span>
 <a name="l00043"></a>00043     BOOST_XINT_RAWINT target;
-<a name="l00044"></a>00044     <a class="code" href="namespaceboost_1_1xint.html#ac16087b6d58edabc3b67c94e63e22921" title="Sets a specific bit in an integer to one.">setbit</a>(target, <a class="code" href="namespaceboost_1_1xint.html#ab6cef2e4e1b3c3b841f6c1a085952f18" title="Get the log2 value of an integer.">log2</a>(n) / 2);
+<a name="l00044"></a>00044     <a class="code" href="namespaceboost_1_1xint.html#ae957235f76cb2fa0e1530255ccbfa8d0" title="Sets a specific bit in an integer to one.">setbit</a>(target, <a class="code" href="namespaceboost_1_1xint.html#aec7b803cbc9245ccae1f88e4efab327b" title="Get the log2 value of an integer.">log2</a>(n) / 2);
 <a name="l00045"></a>00045 
 <a name="l00046"></a>00046     <span class="comment">// Now refine it until we&#39;re as close as we can get.</span>
 <a name="l00047"></a>00047     <span class="keywordflow">while</span> (1) {
@@ -78,7 +78,7 @@
 <a name="l00062"></a>00062 <span class="comment"></span>
 <a name="l00063"></a>00063 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_ROOTS_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 12:31:58 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 18 20:03:13 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

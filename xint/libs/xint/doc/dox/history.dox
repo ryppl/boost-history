@@ -44,4 +44,19 @@ types.
 - Added Boost.Parameter options to the \c integer_t type, so you're no longer
 forced to list the options in order, and list all earlier options before the one
 that you want to change.
+
+\b 2010-06-18
+- Sixth version posted to the Boost File Vault for preliminary review.
+- Refined the use of Boost.Parameter. Now only \c fixedlength takes a parameter;
+the other options are non-parameter types, which simplifies both their use and
+their implementation.
+- Minor redesign, taking advantage of \e proper policy-based design. nan() and
+operator~() are now only available on \c nothrow and \c fixedlength types,
+respectively, and is_nan() gets different definitions in the standard and \c
+nothrow types.
+- Added unsigned support, by request, with a variety of options for what to do
+when a calculation results in a negative number.
+- Added the \c difference function.
+- Added support for wide-character strings, by request.
+- Added the safe-bool idiom, by request.
 */

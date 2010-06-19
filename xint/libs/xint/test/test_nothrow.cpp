@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_CASE(test_nothrow_init) {
 
     // Test the copy constructor from a different type of nothrow_integer's
     // Not-a-Number value.
-    nothrow_integer n3(integer_t<fixedlength<12>, nothrow<true> >::nan());
+    nothrow_integer n3(integer_t<fixedlength<12>, nothrow>::nan());
     BOOST_CHECK(n3.is_nan());
 }
 

@@ -27,6 +27,10 @@
     #include <windows.h>
 #endif
 
+#ifndef BOOST_PARAMETER_MAX_ARITY
+#define BOOST_PARAMETER_MAX_ARITY 6
+#endif
+
 #include <string>
 #include <vector>
 #include <queue>
@@ -45,7 +49,8 @@
 #include <boost/static_assert.hpp>
 
 // Uncomment this to use Boost.Move, which can improve the speed when using
-// extremely large numbers.
+// extremely large numbers. Note that using options::copy_on_write gives a much
+// more noticeable speed improvement.
 //#define BOOST_XINT_USE_MOVE
 
 #ifdef BOOST_XINT_USE_MOVE

@@ -10,7 +10,11 @@ random numbers, but is often all that is needed.
 \c strong_random_generator provides an interface to the operating system's
 secure random number generator, for both Windows and UNIX-derived systems. It
 will throw an exception of type \c no_strong_random if you try to instantiate it
-on a system that does not have an operating-system-supplied generator.
+on a system that does not have an operating-system-supplied generator. Note
+that, as of Boost 1.43, the \c boost::random_device class is basically identical
+to \c xint::strong_random_generator, and probably better in some respects. \c
+xint::strong_random_generator is still provided because \c boost::random_device
+requires a compiled library, making it more difficult to use in examples.
 
 If you have a different preferred generator, perhaps one that interfaces with
 dedicated hardware to produce randomness, you can plug that into the library's

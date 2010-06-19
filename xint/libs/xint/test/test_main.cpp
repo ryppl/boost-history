@@ -27,7 +27,13 @@
 
     // To ensure that the compiler doesn't optimize away important parts of the
     // tests.
-    #define USE_NUMBER(n) n._data().beginendmod();
+    std::size_t counter;
+    #define USE_NUMBER(n) counter += n._data().max_length()
+
+    // Select the integer type to use in the tests.
+    namespace xopts = boost::xint::options;
+    //typedef boost::xint::integer_t<xopts::threadsafe<false> > T;
+    typedef boost::xint::integer_t<> T;
 
     // For running comparative tests with different options
     int main() {
@@ -40,18 +46,18 @@
 
         cout << "Generating numbers..." << endl;
         default_random_generator gen;
-        std::vector<integer> n1, n2;
+        std::vector<T> n1, n2;
         for (size_t x = 0; x < raw_number_pairs; ++x) {
-            n1.push_back(integer::random_by_size(gen, bits, true, true));
-            n2.push_back(integer::random_by_size(gen, bits, true, true));
+            n1.push_back(T::random_by_size(gen, bits, true, true));
+            n2.push_back(T::random_by_size(gen, bits, true, true));
         }
-        const integer nmod = integer::random_by_size(gen, bits, true, true);
+        const T nmod = T::random_by_size(gen, bits, true, true);
 
         cout << "Running addition test" << flush;
         for (size_t x = 0; x < 10; ++x) {
             for (size_t y = 0; y < add_rounds / 10; ++y) {
                 for (size_t round = 0; round < raw_number_pairs; ++round) {
-                    integer r = n1[round] + n2[round];
+                    T r = n1[round] + n2[round];
                     USE_NUMBER(r);
                 }
             }
@@ -63,7 +69,7 @@
         for (size_t x = 0; x < 10; ++x) {
             for (size_t y = 0; y < mult_rounds / 10; ++y) {
                 for (size_t round = 0; round < raw_number_pairs; ++round) {
-                    integer r = n1[round] * n2[round];
+                    T r = n1[round] * n2[round];
                     USE_NUMBER(r);
                 }
             }
@@ -75,7 +81,7 @@
         for (size_t x = 0; x < 10; ++x) {
             for (size_t y = 0; y < mulmod_rounds / 10; ++y) {
                 for (size_t round = 0; round < raw_number_pairs; ++round) {
-                    integer r = mulmod(n1[round], n2[round], nmod);
+                    T r = mulmod(n1[round], n2[round], nmod);
                     USE_NUMBER(r);
                 }
             }

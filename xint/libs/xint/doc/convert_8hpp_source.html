@@ -50,7 +50,7 @@
 <a name="l00032"></a>00032 }
 <a name="l00033"></a>00033 
 <a name="l00034"></a>00034 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> <span class="keywordtype">char</span>T, bit<span class="keywordtype">size_t</span> Bits, <span class="keywordtype">bool</span> Secure, <span class="keyword">class</span> Alloc&gt;
-<a name="l00035"></a>00035 std::basic_string&lt;charT&gt; <a class="code" href="namespaceboost_1_1xint.html#a92cfd4119fbf9eeb0a503d4e0dbe553c" title="A shorthand function that calls to_stringtype&amp;lt;char&amp;gt;.">to_string</a>(<span class="keyword">const</span> BOOST_XINT_RAWINT n, std::size_t base =
+<a name="l00035"></a>00035 std::basic_string&lt;charT&gt; <a class="code" href="namespaceboost_1_1xint.html#a2fb5a8cfac3e97a1641d424aac04a71f" title="A shorthand function that calls to_stringtype&amp;lt;char&amp;gt;.">to_string</a>(<span class="keyword">const</span> BOOST_XINT_RAWINT n, std::size_t base =
 <a name="l00036"></a>00036     10, <span class="keywordtype">bool</span> uppercase = <span class="keyword">false</span>)
 <a name="l00037"></a>00037 {
 <a name="l00038"></a>00038     <span class="keywordflow">if</span> (base &lt; 2 || base &gt; 36) <span class="keywordflow">throw</span> exceptions::invalid_base();
@@ -101,10 +101,10 @@
 <a name="l00083"></a>00083 
 <a name="l00084"></a>00084         BOOST_XINT_RAWINT shift;
 <a name="l00085"></a>00085         shift.set_unsigned(base);
-<a name="l00086"></a>00086         <span class="keyword">typename</span> BOOST_XINT_RAWINT::divide_t a(<a class="code" href="namespaceboost_1_1xint.html#a7d5e37941c1085e1cc1e513d9f1857b4" title="Calculate how many dividends would fit into divisor, with the remainder.">divide</a>(n.abs(), shift));
+<a name="l00086"></a>00086         <span class="keyword">typename</span> BOOST_XINT_RAWINT::divide_t a(<a class="code" href="namespaceboost_1_1xint.html#a9696321a0a8ddea617223472a62f2452" title="Calculate how many dividends would fit into divisor, with the remainder.">divide</a>(n.abs(), shift));
 <a name="l00087"></a>00087         <span class="keywordflow">do</span> {
 <a name="l00088"></a>00088             out &lt;&lt; nToChar(a.remainder[0], uppercase);
-<a name="l00089"></a>00089             a = <a class="code" href="namespaceboost_1_1xint.html#a7d5e37941c1085e1cc1e513d9f1857b4" title="Calculate how many dividends would fit into divisor, with the remainder.">divide</a>(a.quotient, shift);
+<a name="l00089"></a>00089             a = <a class="code" href="namespaceboost_1_1xint.html#a9696321a0a8ddea617223472a62f2452" title="Calculate how many dividends would fit into divisor, with the remainder.">divide</a>(a.quotient, shift);
 <a name="l00090"></a>00090         } <span class="keywordflow">while</span> (!a.quotient.is_zero());
 <a name="l00091"></a>00091         <span class="keywordflow">if</span> (!a.remainder.is_zero()) out &lt;&lt; nToChar(a.remainder[0], uppercase);
 <a name="l00092"></a>00092 
@@ -219,7 +219,7 @@
 <a name="l00201"></a>00201 }
 <a name="l00202"></a>00202 
 <a name="l00203"></a>00203 BOOST_XINT_RAWINT_TPL
-<a name="l00204"></a>00204 <a class="code" href="namespaceboost_1_1xint.html#aae3128529370506165793f2771834e58" title="The format for the binary representations of integers.">xint::binary_t</a> <a class="code" href="namespaceboost_1_1xint.html#a66514eef6594409cda1dfad652e2dc40" title="Creates a binary representation of an integer.">to_binary</a>(<span class="keyword">const</span> BOOST_XINT_RAWINT n, std::size_t bits = 0) {
+<a name="l00204"></a>00204 <a class="code" href="namespaceboost_1_1xint.html#aae3128529370506165793f2771834e58" title="The format for the binary representations of integers.">xint::binary_t</a> <a class="code" href="namespaceboost_1_1xint.html#a36d0321bee2aade461e0f504400c7c1b" title="Creates a binary representation of an integer.">to_binary</a>(<span class="keyword">const</span> BOOST_XINT_RAWINT n, std::size_t bits = 0) {
 <a name="l00205"></a>00205     <span class="keywordflow">if</span> (bits &gt; std::size_t(std::numeric_limits&lt;unsigned char&gt;::digits)) <span class="keywordflow">throw</span>
 <a name="l00206"></a>00206         exceptions::invalid_argument(<span class="stringliteral">&quot;can&#39;t fit that many bits into an &quot;</span>
 <a name="l00207"></a>00207         <span class="stringliteral">&quot;unsigned character on this system&quot;</span>);
@@ -256,7 +256,7 @@
 <a name="l00238"></a>00238 }
 <a name="l00239"></a>00239 
 <a name="l00240"></a>00240 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, bit<span class="keywordtype">size_t</span> Bits, <span class="keywordtype">bool</span> Secure, <span class="keyword">class</span> Alloc&gt;
-<a name="l00241"></a>00241 T <a class="code" href="namespaceboost_1_1xint.html#afd9d2c7743d11e6959d6cda44c8abf69" title="Converts an xint::integer type to a built-in integer type.">to</a>(<span class="keyword">const</span> BOOST_XINT_RAWINT n, <span class="keyword">typename</span> boost::enable_if&lt;boost::is_integral&lt;T&gt;
+<a name="l00241"></a>00241 T <a class="code" href="namespaceboost_1_1xint.html#a9aa52eb4533b04c27329b3f6b7aa842b" title="Converts an xint::integer type to a built-in integer type.">to</a>(<span class="keyword">const</span> BOOST_XINT_RAWINT n, <span class="keyword">typename</span> boost::enable_if&lt;boost::is_integral&lt;T&gt;
 <a name="l00242"></a>00242     &gt;::type* = 0)
 <a name="l00243"></a>00243 {
 <a name="l00244"></a>00244     <span class="keyword">using</span> std::numeric_limits;
@@ -281,7 +281,7 @@
 <a name="l00264"></a>00264 <span class="comment"></span>
 <a name="l00265"></a>00265 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_CONVERT_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 12:31:58 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 18 20:03:13 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

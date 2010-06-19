@@ -45,7 +45,7 @@
 <a name="l00027"></a>00027 
 <a name="l00028"></a>00028 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> charT, <span class="keyword">typename</span> traits, <a class="code" href="namespaceboost_1_1xint.html#ae9f6d103df04ad19a841ed3f8b94a764" title="This makes it easier to tell when an item is measured in bits.">bitsize_t</a> Bits, <span class="keywordtype">bool</span> Secure, <span class="keyword">class </span>\
 <a name="l00029"></a>00029     Alloc&gt;
-<a name="l00030"></a>00030 <span class="keyword">inline</span> std::basic_ostream&lt;charT,traits&gt;&amp; <a class="code" href="namespaceboost_1_1xint.html#a678851ea0cb31cb4ef66bc8389d369d3">operator&lt;&lt;</a>(std::basic_ostream&lt;charT,
+<a name="l00030"></a>00030 <span class="keyword">inline</span> std::basic_ostream&lt;charT,traits&gt;&amp; <a class="code" href="namespaceboost_1_1xint.html#a0e501790ec0437c226ce54f98493aad9">operator&lt;&lt;</a>(std::basic_ostream&lt;charT,
 <a name="l00031"></a>00031     traits&gt;&amp; out, <span class="keyword">const</span> BOOST_XINT_RAWINT n)
 <a name="l00032"></a>00032 {
 <a name="l00033"></a>00033     <span class="keywordtype">int</span> base=((out.flags() &amp; std::ios::hex) ? 16
@@ -72,7 +72,7 @@
 <a name="l00054"></a>00054 
 <a name="l00055"></a>00055 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> charT, <span class="keyword">typename</span> traits, <a class="code" href="namespaceboost_1_1xint.html#ae9f6d103df04ad19a841ed3f8b94a764" title="This makes it easier to tell when an item is measured in bits.">bitsize_t</a> Bits, <span class="keywordtype">bool</span> Secure, <span class="keyword">class </span>\
 <a name="l00056"></a>00056     Alloc&gt;
-<a name="l00057"></a>00057 <span class="keyword">inline</span> std::basic_istream&lt;charT,traits&gt;&amp; <a class="code" href="namespaceboost_1_1xint.html#ad5bc89da790a0843ba90a88cbc7856a6">operator&gt;&gt;</a>(std::basic_istream&lt;charT,
+<a name="l00057"></a>00057 <span class="keyword">inline</span> std::basic_istream&lt;charT,traits&gt;&amp; <a class="code" href="namespaceboost_1_1xint.html#a7ad17ed38204ec9a774788ea28368701">operator&gt;&gt;</a>(std::basic_istream&lt;charT,
 <a name="l00058"></a>00058     traits&gt;&amp; in, BOOST_XINT_RAWINT&amp; n)
 <a name="l00059"></a>00059 {
 <a name="l00060"></a>00060     <span class="keywordtype">int</span> hex=(in.flags() &amp; std::ios::hex) ? 1 : 0;
@@ -135,7 +135,7 @@
 <a name="l00118"></a>00118 
 <a name="l00119"></a>00119 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_RAW_STREAMS_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 12:31:58 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 18 20:03:13 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

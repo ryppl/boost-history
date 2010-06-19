@@ -65,168 +65,171 @@ char &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href=
 <tr><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a3f9537c30e9c1f7341574fcd0223147c">integer</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The default arbitrary-length integer type.  <a href="#a3f9537c30e9c1f7341574fcd0223147c"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a><br class="typebreak"/>
-&lt; <a class="el" href="structboost_1_1xint_1_1options_1_1nothrow.html">options::nothrow</a>&lt; true &gt; &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#af3a28f270195952c3bbe42bff5bf2cd4">nothrow_integer</a></td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The default arbitrary-length nothrow_integer type.  <a href="#af3a28f270195952c3bbe42bff5bf2cd4"></a><br/></td></tr>
+&lt; <a class="el" href="structboost_1_1xint_1_1options_1_1nothrow.html">options::nothrow</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#adb761045d90aee163058a57489b51df2">nothrow_integer</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The default arbitrary-length nothrow_integer type.  <a href="#adb761045d90aee163058a57489b51df2"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">typedef <br class="typebreak"/>
 detail::strong_random_generator_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ac38b0aafb375c80ff42b5488a52d9e8f">strong_random_generator</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A convenience class for cryptographically-secure random numbers.  <a href="#ac38b0aafb375c80ff42b5488a52d9e8f"></a><br/></td></tr>
 <tr><td colspan="2"><h2>Functions</h2></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a1a857d5cc4b15822d3dcaf70ec15b4e5">swap</a> (<a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> &amp;left, <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> &amp;right)</td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ab4aafdf3645cbad0cb3af54fdec4caff">swap</a> (<a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; &amp;left, <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; &amp;right)</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Mathematical primitives</div></td></tr>
-<tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp196dd2a5f50860e057df961a96d84ea3"></a> There are only a couple of functions here because almost all mathematical primitives are implemented as operators. </p>
+<tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp196dd2a5f50860e057df961a96d84ea3"></a> There are only a few functions here because almost all mathematical primitives are implemented as operators. </p>
 </div></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a5a98564162f30f3117a871a617af9523">abs</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the absolute value of an integer.  <a href="#a5a98564162f30f3117a871a617af9523"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a331d95962aedbdb34f04ef373555dd8a">abs</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the absolute value of an integer.  <a href="#a331d95962aedbdb34f04ef373555dd8a"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1base__divide__t.html">integer_t::divide_t</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a7d5e37941c1085e1cc1e513d9f1857b4">divide</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> dividend, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> divisor)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate how many <code>dividends</code> would fit into <code>divisor</code>, with the remainder.  <a href="#a7d5e37941c1085e1cc1e513d9f1857b4"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ae58734c3f93951819e43af9fff2b9496">difference</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n2)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the absolute difference between two integers.  <a href="#ae58734c3f93951819e43af9fff2b9496"></a><br/></td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt;::divide_t&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a9696321a0a8ddea617223472a62f2452">divide</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; dividend, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; divisor)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate how many <code>dividends</code> would fit into <code>divisor</code>, with the remainder.  <a href="#a9696321a0a8ddea617223472a62f2452"></a><br/></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Bit-manipulation functions</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpcc775c18f98f26f2b84ac7a2558636f2"></a> </p>
 </div></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a9f0fe7813dc7e6d6d92b64cd68677175">clearbit</a> (<a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> &amp;n, <a class="el" href="namespaceboost_1_1xint.html#ae9f6d103df04ad19a841ed3f8b94a764">bitsize_t</a> bit)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets a specific bit in an integer to zero.  <a href="#a9f0fe7813dc7e6d6d92b64cd68677175"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a5643216f91a4bb39bd88c1dc877e6ab8">clearbit</a> (<a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; &amp;n, <a class="el" href="namespaceboost_1_1xint.html#ae9f6d103df04ad19a841ed3f8b94a764">bitsize_t</a> bit)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets a specific bit in an integer to zero.  <a href="#a5643216f91a4bb39bd88c1dc877e6ab8"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ae44f7918320a37538c5fa8e4622cbfba">getbit</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n, <a class="el" href="namespaceboost_1_1xint.html#ae9f6d103df04ad19a841ed3f8b94a764">bitsize_t</a> bit)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Queries the value of a particular bit in an integer.  <a href="#ae44f7918320a37538c5fa8e4622cbfba"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a1f2a052f7f391bddace5348c3adcc97a">getbit</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n, <a class="el" href="namespaceboost_1_1xint.html#ae9f6d103df04ad19a841ed3f8b94a764">bitsize_t</a> bit)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Queries the value of a particular bit in an integer.  <a href="#a1f2a052f7f391bddace5348c3adcc97a"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceboost_1_1xint.html#ae9f6d103df04ad19a841ed3f8b94a764">bitsize_t</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a47f175d3a516b6e9e851890e2ce4a9b0">highestbit</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n, <a class="el" href="namespaceboost_1_1xint.html#ae9f6d103df04ad19a841ed3f8b94a764">bitsize_t</a> return_if_zero=0)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Obtains the index of the highest bit in an integer with a value of one.  <a href="#a47f175d3a516b6e9e851890e2ce4a9b0"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceboost_1_1xint.html#ae9f6d103df04ad19a841ed3f8b94a764">bitsize_t</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#adee99f516c2480b2381f6c9b1a2abc6e">highestbit</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n, <a class="el" href="namespaceboost_1_1xint.html#ae9f6d103df04ad19a841ed3f8b94a764">bitsize_t</a> return_if_zero=0)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Obtains the index of the highest bit in an integer with a value of one.  <a href="#adee99f516c2480b2381f6c9b1a2abc6e"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceboost_1_1xint.html#ae9f6d103df04ad19a841ed3f8b94a764">bitsize_t</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a8f1c7103d951ba19510458166d4fd2f4">lowestbit</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n, <a class="el" href="namespaceboost_1_1xint.html#ae9f6d103df04ad19a841ed3f8b94a764">bitsize_t</a> return_if_zero=0)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Obtains the index of the lowest bit in an integer with a value of one.  <a href="#a8f1c7103d951ba19510458166d4fd2f4"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceboost_1_1xint.html#ae9f6d103df04ad19a841ed3f8b94a764">bitsize_t</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a8512b348c82472dca48edb63f2a1f0e7">lowestbit</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n, <a class="el" href="namespaceboost_1_1xint.html#ae9f6d103df04ad19a841ed3f8b94a764">bitsize_t</a> return_if_zero=0)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Obtains the index of the lowest bit in an integer with a value of one.  <a href="#a8512b348c82472dca48edb63f2a1f0e7"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ac16087b6d58edabc3b67c94e63e22921">setbit</a> (<a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> &amp;n, <a class="el" href="namespaceboost_1_1xint.html#ae9f6d103df04ad19a841ed3f8b94a764">bitsize_t</a> bit)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets a specific bit in an integer to one.  <a href="#ac16087b6d58edabc3b67c94e63e22921"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ae957235f76cb2fa0e1530255ccbfa8d0">setbit</a> (<a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; &amp;n, <a class="el" href="namespaceboost_1_1xint.html#ae9f6d103df04ad19a841ed3f8b94a764">bitsize_t</a> bit)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets a specific bit in an integer to one.  <a href="#ae957235f76cb2fa0e1530255ccbfa8d0"></a><br/></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Miscellaneous functions</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp458f92801f3edfaf2e30b1f530c324e2"></a> </p>
 </div></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">int&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a740189c9646dcda553f1bd9de200cdd0">compare</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n2, bool ignoresign=false)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compare two integer objects.  <a href="#a740189c9646dcda553f1bd9de200cdd0"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">int&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ab832646bf44c70bae41518688d9f5cb5">compare</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n2, bool ignoresign=false)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compare two integer objects.  <a href="#ab832646bf44c70bae41518688d9f5cb5"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a011ac7b423cee444f6728ca2b061f31e">gcd</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> num1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> num2)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the Greatest Common Denominator of two integers.  <a href="#a011ac7b423cee444f6728ca2b061f31e"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ad58ca08a1482ae77a979027da61d17f4">gcd</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; num1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; num2)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the Greatest Common Denominator of two integers.  <a href="#ad58ca08a1482ae77a979027da61d17f4"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#affa4bae53c9bc3814816c70c8bb442b4">lcm</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> num1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> num2)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the Least Common Multiple of two integers.  <a href="#affa4bae53c9bc3814816c70c8bb442b4"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a7740825a61553e51cead8af64ec763c0">lcm</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; num1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; num2)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the Least Common Multiple of two integers.  <a href="#a7740825a61553e51cead8af64ec763c0"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ab6cef2e4e1b3c3b841f6c1a085952f18">log2</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the log<sub>2</sub> value of an integer.  <a href="#ab6cef2e4e1b3c3b841f6c1a085952f18"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#aec7b803cbc9245ccae1f88e4efab327b">log2</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the log<sub>2</sub> value of an integer.  <a href="#aec7b803cbc9245ccae1f88e4efab327b"></a><br/></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Modular math functions</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpbf63e6a6a1029bb25b7aa51052b38655"></a> A common reason to use a large-integer library is to implement public-key encryption, and the algorithms for such encryption often use modular math.</p>
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#aac56e280afa13284381f144a208eaf67" title="Get the remainder after dividing a number by another.">operator%(integer_t, integer_t)</a> </dd>
+<dl class="see"><dt><b>See also:</b></dt><dd>operator%(integer_t, integer_t) </dd>
 <dd>
-<a class="el" href="classboost_1_1xint_1_1integer__t.html#ac61ca4bfdf11efc044602e8d4205f7ce">integer_t::operator%=</a> </dd></dl>
+<a class="el" href="classboost_1_1xint_1_1integer__t.html#a2144da90955b26120f5cfc724a24b8fc">integer_t::operator%=</a> </dd></dl>
 </div></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ada4e628fe2275e6d6459b9b87167cbad">invmod</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> modulus)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the modular inverse of a number in a modulus, if there is one.  <a href="#ada4e628fe2275e6d6459b9b87167cbad"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#aca3ee91c50b15fa902c37fa16763f52b">invmod</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; modulus)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the modular inverse of a number in a modulus, if there is one.  <a href="#aca3ee91c50b15fa902c37fa16763f52b"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a2503b80a8b59b45190ea024884405564">mulmod</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> by, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> modulus)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the modular product of two integers.  <a href="#a2503b80a8b59b45190ea024884405564"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#aca6917c25cdd7cac7c3eda4684567625">mulmod</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; by, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; modulus)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the modular product of two integers.  <a href="#aca6917c25cdd7cac7c3eda4684567625"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a1108e56d7d500a384bd0bb0a6849bfa0">powmod</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> exponent, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> modulus, bool no_monty=false)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the result of <code>n<sup>e</sup></code> % <code>m</code>, keeping the intermediate results (relatively) small.  <a href="#a1108e56d7d500a384bd0bb0a6849bfa0"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a9c1648ef679123bb2bf77681ffdfa815">powmod</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; exponent, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; modulus, bool no_monty=false)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the result of <code>n<sup>e</sup></code> % <code>m</code>, keeping the intermediate results (relatively) small.  <a href="#a9c1648ef679123bb2bf77681ffdfa815"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a979ddb09a4d1a5dbfcb0707c19695877">sqrmod</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> modulus)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the modular product of squaring an integer.  <a href="#a979ddb09a4d1a5dbfcb0707c19695877"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#aa41f48c60b257cb321fe89fe0b65b6c3">sqrmod</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; modulus)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the modular product of squaring an integer.  <a href="#aa41f48c60b257cb321fe89fe0b65b6c3"></a><br/></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Random and prime number functions</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpa3caa0f3187a2dcc617c005b6b75011b"></a> </p>
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="classboost_1_1xint_1_1integer__t.html#a8826eb41c3e4ca9b6b4ec81ff61d9ba2" title="Generates a random integer with specific attributes.">integer_t::random_by_size</a> </dd>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="classboost_1_1xint_1_1integer__t.html#a60157b68c2e375faac4d325091fd1683" title="Generates a random integer with specific attributes.">integer_t::random_by_size</a> </dd>
 <dd>
-<a class="el" href="classboost_1_1xint_1_1integer__t.html#adbbd33c6281a946db3608140bba62f02" title="Generate a randomly-generated prime number of a particular bit-size.">integer_t::random_prime</a> </dd></dl>
+<a class="el" href="classboost_1_1xint_1_1integer__t.html#a87ea7ddc800621ebf2d9dda0d68d0947" title="Generate a randomly-generated prime number of a particular bit-size.">integer_t::random_prime</a> </dd></dl>
 </div></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">int&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a089d98ffc4599122209d1a3c1c7c39d4">is_prime</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n, <a class="el" href="namespaceboost_1_1xint.html#a48deb76c9c428a4b3a50177b1b0cb547">callback_t</a> callback=<a class="el" href="namespaceboost_1_1xint.html#a758d415a476a5eeed28dc6b5869b1696">no_callback</a>)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tests an integer for primality.  <a href="#a089d98ffc4599122209d1a3c1c7c39d4"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">int&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a22c8ff3260bcb5c4c8e09e632c488ace">is_prime</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n, <a class="el" href="namespaceboost_1_1xint.html#a48deb76c9c428a4b3a50177b1b0cb547">callback_t</a> callback=<a class="el" href="namespaceboost_1_1xint.html#a758d415a476a5eeed28dc6b5869b1696">no_callback</a>)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tests an integer for primality.  <a href="#a22c8ff3260bcb5c4c8e09e632c488ace"></a><br/></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Comparison Operators</div></td></tr>
-<tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp54923b9793dae891d9489cc5947f263a"></a> The nothrow&lt;true&gt; versions of these functions return <code>false</code> instead of throwing.</p>
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#a740189c9646dcda553f1bd9de200cdd0" title="Compare two integer objects.">compare(integer_t, integer_t, bool)</a> </dd></dl>
+<tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp54923b9793dae891d9489cc5947f263a"></a> The nothrow versions of these functions return <code>false</code> instead of throwing.</p>
+<dl class="see"><dt><b>See also:</b></dt><dd>compare(integer_t, integer_t, bool) </dd></dl>
 </div></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ac6bf18fab19873cc55142b26ce11fda4">operator!=</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n2)</td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a07e81815254a7ca3afddd5398695a2b7">operator!=</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n2)</td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a0a987fd73c7c0844f9ed4fdabf0f27e4">operator&lt;</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n2)</td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#af5698b6ba852f5a119429b17c2a08450">operator&lt;</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n2)</td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a9b01e116d91ad2d7d9f13138a1182d1d">operator&lt;=</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n2)</td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ac3daab81a55daeceedd256ce49634d4d">operator&lt;=</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n2)</td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#aa753a8fb37b38da8293fec1c9bb09711">operator==</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n2)</td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a7d9f811ac514e033c7fc965b5cd62ee3">operator==</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n2)</td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#af5c2bc8d95f42e9442c113d22614ac2d">operator&gt;</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n2)</td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ad1ac6fb8431b231faecf34a5a2d01626">operator&gt;</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n2)</td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ad4fd77e8ed2e76028c3ae554bfc564f7">operator&gt;=</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n2)</td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a00c5ad6cf63ecc8ea3a2294ccedac7d3">operator&gt;=</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n2)</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Mathematical and Bitwise Operators</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp8eb1e0f0af70edd858d54ba68b80ce7e"></a> These act exactly the same as for the built-in integer types. </p>
 </div></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#aac56e280afa13284381f144a208eaf67">operator%</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n2)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the remainder after dividing a number by another.  <a href="#aac56e280afa13284381f144a208eaf67"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a0ac4116f3a9285a7f2f10d0104b870f7">operator%</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n2)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the remainder after dividing a number by another.  <a href="#a0ac4116f3a9285a7f2f10d0104b870f7"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a356d6efa380af7ee2c2f6f0a83e7c9a3">operator&amp;</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n2)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Combine two integers using a bitwise <code>AND</code> operation.  <a href="#a356d6efa380af7ee2c2f6f0a83e7c9a3"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ad3bc201c8c1f3e87611abce8e6972538">operator&amp;</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n2)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Combine two integers using a bitwise <code>AND</code> operation.  <a href="#ad3bc201c8c1f3e87611abce8e6972538"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a69c9fa493989cc96676a007f58031455">operator*</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n2)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the product of two integers.  <a href="#a69c9fa493989cc96676a007f58031455"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ab33a5481a4a4b16ab592be6a88cd245c">operator*</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n2)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the product of two integers.  <a href="#ab33a5481a4a4b16ab592be6a88cd245c"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a88b3b7bccb96dd8b0cd9d9f853025915">operator+</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n2)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the sum of two integers.  <a href="#a88b3b7bccb96dd8b0cd9d9f853025915"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a15c7951bc910713f8209b7ebd78396da">operator+</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n2)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the sum of two integers.  <a href="#a15c7951bc910713f8209b7ebd78396da"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#acda2a7a7d63582732505cc7128096f27">operator-</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n2)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the difference between two integers.  <a href="#acda2a7a7d63582732505cc7128096f27"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ab6132105fbe7d7bf7a756b868b6a372e">operator-</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n2)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the difference between two integers.  <a href="#ab6132105fbe7d7bf7a756b868b6a372e"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a800dca196da627207b63fccd3c132c21">operator/</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> dividend, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> divisor)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate how many <code>dividends</code> would fit into <code>divisor</code>.  <a href="#a800dca196da627207b63fccd3c132c21"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a806df63b92124039591a4ca09a8538e0">operator/</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; dividend, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; divisor)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate how many <code>dividends</code> would fit into <code>divisor</code>.  <a href="#a806df63b92124039591a4ca09a8538e0"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a73c999d0550a46b24272e07f1720b025">operator^</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n2)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Combine two integers using a bitwise <code>XOR</code> operation.  <a href="#a73c999d0550a46b24272e07f1720b025"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a0d1ce319bfb004fb6b93283bcb4f98c2">operator^</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n2)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Combine two integers using a bitwise <code>XOR</code> operation.  <a href="#a0d1ce319bfb004fb6b93283bcb4f98c2"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#aa8537f29fb1ade411f79084ffe170075">operator|</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n2)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Combine two integers using a bitwise <code>OR</code> operation.  <a href="#aa8537f29fb1ade411f79084ffe170075"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a0b58f99b2c5bab4f7eec71d6058b23dd">operator|</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n1, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n2)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Combine two integers using a bitwise <code>OR</code> operation.  <a href="#a0b58f99b2c5bab4f7eec71d6058b23dd"></a><br/></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Stream input/output functions</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpd9927783c44c1aad288df0ab8bfa9ddf"></a> </p>
 </div></td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;typename charT , typename traits , class A0 , class A1 , class A2 , class A3 , class A4 &gt; </td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename charT , typename traits , ... &gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">std::basic_ostream&lt; charT, <br class="typebreak"/>
-traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a678851ea0cb31cb4ef66bc8389d369d3">operator&lt;&lt;</a> (std::basic_ostream&lt; charT, traits &gt; &amp;out, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n)</td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;typename charT , typename traits , class A0 , class A1 , class A2 , class A3 , class A4 &gt; </td></tr>
+traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a0e501790ec0437c226ce54f98493aad9">operator&lt;&lt;</a> (std::basic_ostream&lt; charT, traits &gt; &amp;out, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n)</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename charT , typename traits , ... &gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">std::basic_istream&lt; charT, <br class="typebreak"/>
-traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ad5bc89da790a0843ba90a88cbc7856a6">operator&gt;&gt;</a> (std::basic_istream&lt; charT, traits &gt; &amp;in, <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> &amp;n)</td></tr>
+traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a7ad17ed38204ec9a774788ea28368701">operator&gt;&gt;</a> (std::basic_istream&lt; charT, traits &gt; &amp;in, <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; &amp;n)</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Powers and roots</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp928a8cb047602f789d7433e262ed4560"></a> </p>
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="classboost_1_1xint_1_1integer__t.html#a5d14ff656a3464ecf2e81d490f1acb76" title="Calculate the value of 2e">integer_t::pow2</a> </dd>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="classboost_1_1xint_1_1integer__t.html#af1ba624cd3a118bad2f8b603837bd952" title="Calculate the value of 2e">integer_t::pow2</a> </dd>
 <dd>
-<a class="el" href="classboost_1_1xint_1_1integer__t.html#a7bc8e4868073626d1ea0dc7e9668f6e0" title="Calculate the value of n! ">integer_t::factorial</a> </dd></dl>
+<a class="el" href="classboost_1_1xint_1_1integer__t.html#aaa28dad29e0a3fd16ec4bb26ec241a65" title="Calculate the value of n! ">integer_t::factorial</a> </dd></dl>
 </div></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a499b28ba7acd8b1534bb968826e23c52">pow</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> e)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the value of n<sup>e</sup>  <a href="#a499b28ba7acd8b1534bb968826e23c52"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a483e2fdc6cef9afa1295afeceda4a644">pow</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n, const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; e)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the value of n<sup>e</sup>  <a href="#a483e2fdc6cef9afa1295afeceda4a644"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#abe5e63185f27f2c795dc287e030ec424">square</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the value of n<sup>2</sup>  <a href="#abe5e63185f27f2c795dc287e030ec424"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ac40d60956ef5af3b64804c7a9abffcdd">square</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the value of n<sup>2</sup>  <a href="#ac40d60956ef5af3b64804c7a9abffcdd"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#adb652fa006fd8ed34993ea86cf317cb2">square_root</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the square root of <code>an</code> integer.  <a href="#adb652fa006fd8ed34993ea86cf317cb2"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#abb957c86cae5940b06172eb23345fe42">square_root</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the square root of <code>an</code> integer.  <a href="#abb957c86cae5940b06172eb23345fe42"></a><br/></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Conversion functions</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp9c2e8a06d85d2c9b83b5a0d27e85d535"></a> Note that these only convert an integer type to something else. See the integer constructors for conversions the other way. </p>
 </div></td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;typename T , class A0 , class A1 , class A2 , class A3 , class A4 &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">T&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#afd9d2c7743d11e6959d6cda44c8abf69">to</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Converts an <a class="el" href="namespaceboost_1_1xint.html#a3f9537c30e9c1f7341574fcd0223147c" title="The default arbitrary-length integer type.">xint::integer</a> type to a built-in integer type.  <a href="#afd9d2c7743d11e6959d6cda44c8abf69"></a><br/></td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename T , ... &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">T&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a9aa52eb4533b04c27329b3f6b7aa842b">to</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Converts an <a class="el" href="namespaceboost_1_1xint.html#a3f9537c30e9c1f7341574fcd0223147c" title="The default arbitrary-length integer type.">xint::integer</a> type to a built-in integer type.  <a href="#a9aa52eb4533b04c27329b3f6b7aa842b"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceboost_1_1xint.html#aae3128529370506165793f2771834e58">xint::binary_t</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a66514eef6594409cda1dfad652e2dc40">to_binary</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n, <a class="el" href="namespaceboost_1_1xint.html#ae9f6d103df04ad19a841ed3f8b94a764">bitsize_t</a> bits=0)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a binary representation of an integer.  <a href="#a66514eef6594409cda1dfad652e2dc40"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceboost_1_1xint.html#aae3128529370506165793f2771834e58">xint::binary_t</a>&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a36d0321bee2aade461e0f504400c7c1b">to_binary</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n, <a class="el" href="namespaceboost_1_1xint.html#ae9f6d103df04ad19a841ed3f8b94a764">bitsize_t</a> bits=0)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a binary representation of an integer.  <a href="#a36d0321bee2aade461e0f504400c7c1b"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">std::string&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a92cfd4119fbf9eeb0a503d4e0dbe553c">to_string</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n, std::size_t base=10, bool uppercase=false)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A shorthand function that calls <a class="el" href="namespaceboost_1_1xint.html#a7621dd91fa7eb64856241f8cafd1ef7e">to_stringtype&lt;char&gt;</a>.  <a href="#a92cfd4119fbf9eeb0a503d4e0dbe553c"></a><br/></td></tr>
-<tr><td class="memTemplParams" colspan="2">template&lt;typename charT , class A0 , class A1 , class A2 , class A3 , class A4 &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">std::basic_string&lt; charT &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a7621dd91fa7eb64856241f8cafd1ef7e">to_stringtype</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n, std::size_t base=10, bool uppercase=false)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a string representation of the specified integer.  <a href="#a7621dd91fa7eb64856241f8cafd1ef7e"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">std::string&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a2fb5a8cfac3e97a1641d424aac04a71f">to_string</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n, std::size_t base=10, bool uppercase=false)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A shorthand function that calls <a class="el" href="namespaceboost_1_1xint.html#a12e9d9268bae5d099227af78c1dea758">to_stringtype&lt;char&gt;</a>.  <a href="#a2fb5a8cfac3e97a1641d424aac04a71f"></a><br/></td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename charT , ... &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">std::basic_string&lt; charT &gt;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a12e9d9268bae5d099227af78c1dea758">to_stringtype</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n, std::size_t base=10, bool uppercase=false)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a string representation of the specified integer.  <a href="#a12e9d9268bae5d099227af78c1dea758"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">std::wstring&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a2493d0acb308a3ec0abd7326d9bc6a27">to_wstring</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> n, std::size_t base=10, bool uppercase=false)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A shorthand function that calls <a class="el" href="namespaceboost_1_1xint.html#a7621dd91fa7eb64856241f8cafd1ef7e">to_stringtype&lt;wchar_t&gt;</a>.  <a href="#a2493d0acb308a3ec0abd7326d9bc6a27"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">std::wstring&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a6f24b4e0dc6e6c5de02480f5fb352030">to_wstring</a> (const <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; n, std::size_t base=10, bool uppercase=false)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A shorthand function that calls <a class="el" href="namespaceboost_1_1xint.html#a12e9d9268bae5d099227af78c1dea758">to_stringtype&lt;wchar_t&gt;</a>.  <a href="#a6f24b4e0dc6e6c5de02480f5fb352030"></a><br/></td></tr>
 <tr><td colspan="2"><h2>Variables</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">const std::size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a6e2c55f95b91dfcb7586599faca34cb2">autobase</a> = (std::numeric_limits&lt;size_t&gt;::max)()</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A value that can be used for the 'base' parameter of the string-to-integer constructor functions.  <a href="#a6e2c55f95b91dfcb7586599faca34cb2"></a><br/></td></tr>
@@ -249,7 +252,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 
 <p>The format for the binary representations of integers. </p>
 
-<p>Definition at line <a class="el" href="basic__types__and__includes_8hpp_source.html#l00077">77</a> of file <a class="el" href="basic__types__and__includes_8hpp_source.html">basic_types_and_includes.hpp</a>.</p>
+<p>Definition at line <a class="el" href="basic__types__and__includes_8hpp_source.html#l00082">82</a> of file <a class="el" href="basic__types__and__includes_8hpp_source.html">basic_types_and_includes.hpp</a>.</p>
 
 </div>
 </div>
@@ -266,7 +269,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 
 <p>This makes it easier to tell when an item is measured in bits. </p>
 
-<p>Definition at line <a class="el" href="basic__types__and__includes_8hpp_source.html#l00084">84</a> of file <a class="el" href="basic__types__and__includes_8hpp_source.html">basic_types_and_includes.hpp</a>.</p>
+<p>Definition at line <a class="el" href="basic__types__and__includes_8hpp_source.html#l00089">89</a> of file <a class="el" href="basic__types__and__includes_8hpp_source.html">basic_types_and_includes.hpp</a>.</p>
 
 </div>
 </div>
@@ -283,7 +286,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 
 <p>A callback function takes no parameters and returns a bool. </p>
 
-<p>Definition at line <a class="el" href="basic__types__and__includes_8hpp_source.html#l00071">71</a> of file <a class="el" href="basic__types__and__includes_8hpp_source.html">basic_types_and_includes.hpp</a>.</p>
+<p>Definition at line <a class="el" href="basic__types__and__includes_8hpp_source.html#l00076">76</a> of file <a class="el" href="basic__types__and__includes_8hpp_source.html">basic_types_and_includes.hpp</a>.</p>
 
 </div>
 </div>
@@ -301,16 +304,16 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 <p>The default arbitrary-length integer type. </p>
 <p>This uses the default parameters for the <a class="el" href="classboost_1_1xint_1_1integer__t.html" title="The integer_t class template.">integer_t</a> template. </p>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02460">2460</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02520">2520</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="af3a28f270195952c3bbe42bff5bf2cd4"></a><!-- doxytag: member="boost::xint::nothrow_integer" ref="af3a28f270195952c3bbe42bff5bf2cd4" args="" -->
+<a class="anchor" id="adb761045d90aee163058a57489b51df2"></a><!-- doxytag: member="boost::xint::nothrow_integer" ref="adb761045d90aee163058a57489b51df2" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt;<a class="el" href="structboost_1_1xint_1_1options_1_1nothrow.html">options::nothrow</a>&lt;true&gt; &gt; <a class="el" href="classboost_1_1xint_1_1integer__t.html">boost::xint::nothrow_integer</a></td>
+          <td class="memname">typedef <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt;<a class="el" href="structboost_1_1xint_1_1options_1_1nothrow.html">options::nothrow</a>&gt; <a class="el" href="classboost_1_1xint_1_1integer__t.html">boost::xint::nothrow_integer</a></td>
         </tr>
       </table>
 </div>
@@ -319,7 +322,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 <p>The default arbitrary-length nothrow_integer type. </p>
 <p>This uses the default parameters for the <a class="el" href="classboost_1_1xint_1_1integer__t.html" title="The integer_t class template.">integer_t</a> template, other than the <code>nothrow</code> one. </p>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02467">2467</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02527">2527</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -337,25 +340,25 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 <p>A convenience class for cryptographically-secure random numbers. </p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="random.html">The XInt Random Number System</a> </dd>
 <dd>
-<a class="el" href="classboost_1_1xint_1_1integer__t.html#a8826eb41c3e4ca9b6b4ec81ff61d9ba2">integer_t::random_by_size</a> </dd>
+<a class="el" href="classboost_1_1xint_1_1integer__t.html#a60157b68c2e375faac4d325091fd1683">integer_t::random_by_size</a> </dd>
 <dd>
-<a class="el" href="classboost_1_1xint_1_1integer__t.html#adbbd33c6281a946db3608140bba62f02">integer_t::random_prime</a> </dd></dl>
+<a class="el" href="classboost_1_1xint_1_1integer__t.html#a87ea7ddc800621ebf2d9dda0d68d0947">integer_t::random_prime</a> </dd></dl>
 
 <p>Definition at line <a class="el" href="random_8hpp_source.html#l00097">97</a> of file <a class="el" href="random_8hpp_source.html">random.hpp</a>.</p>
 
 </div>
 </div>
 <hr/><h2>Function Documentation</h2>
-<a class="anchor" id="a5a98564162f30f3117a871a617af9523"></a><!-- doxytag: member="boost::xint::abs" ref="a5a98564162f30f3117a871a617af9523" args="(const integer_t n)" -->
+<a class="anchor" id="a331d95962aedbdb34f04ef373555dd8a"></a><!-- doxytag: member="boost::xint::abs" ref="a331d95962aedbdb34f04ef373555dd8a" args="(const integer_t&lt; ... &gt; n)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> boost::xint::abs </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; boost::xint::abs </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n</em></td>
           <td>&nbsp;)&nbsp;</td>
           <td><code> [inline]</code></td>
@@ -376,11 +379,11 @@ template&lt;... &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>If <code>n</code> is zero or positive, returns <code>n</code>. Otherwise returns <code>-n</code>. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01231">1231</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01215">1215</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a9f0fe7813dc7e6d6d92b64cd68677175"></a><!-- doxytag: member="boost::xint::clearbit" ref="a9f0fe7813dc7e6d6d92b64cd68677175" args="(integer_t &amp;n, bitsize_t bit)" -->
+<a class="anchor" id="a5643216f91a4bb39bd88c1dc877e6ab8"></a><!-- doxytag: member="boost::xint::clearbit" ref="a5643216f91a4bb39bd88c1dc877e6ab8" args="(integer_t&lt; ... &gt; &amp;n, bitsize_t bit)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -389,7 +392,7 @@ template&lt;... &gt; </div>
         <tr>
           <td class="memname">void boost::xint::clearbit </td>
           <td>(</td>
-          <td class="paramtype">integer_t &amp;&nbsp;</td>
+          <td class="paramtype">integer_t&lt; ... &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>n</em>, </td>
         </tr>
         <tr>
@@ -420,11 +423,11 @@ template&lt;... &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Nothing. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01587">1587</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01605">1605</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a740189c9646dcda553f1bd9de200cdd0"></a><!-- doxytag: member="boost::xint::compare" ref="a740189c9646dcda553f1bd9de200cdd0" args="(const integer_t n1, const integer_t n2, bool ignoresign=false)" -->
+<a class="anchor" id="ab832646bf44c70bae41518688d9f5cb5"></a><!-- doxytag: member="boost::xint::compare" ref="ab832646bf44c70bae41518688d9f5cb5" args="(const integer_t&lt; ... &gt; n1, const integer_t&lt; ... &gt; n2, bool ignoresign=false)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -433,13 +436,13 @@ template&lt;... &gt; </div>
         <tr>
           <td class="memname">int boost::xint::compare </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n1</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n2</em>, </td>
         </tr>
         <tr>
@@ -468,28 +471,72 @@ template&lt;... &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>-1 if <code>n1</code> &lt; <code>n2</code>; zero if <code>n1</code> == <code>n2</code>, or 1 if <code>n1</code> &gt; <code>n2</code>. The nothrow&lt;true&gt; version returns 2 instead of throwing. </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>-1 if <code>n1</code> &lt; <code>n2</code>; zero if <code>n1</code> == <code>n2</code>, or 1 if <code>n1</code> &gt; <code>n2</code>. The nothrow version returns 2 instead of throwing. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02275">2275</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02312">2312</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a7d5e37941c1085e1cc1e513d9f1857b4"></a><!-- doxytag: member="boost::xint::divide" ref="a7d5e37941c1085e1cc1e513d9f1857b4" args="(const integer_t dividend, const integer_t divisor)" -->
+<a class="anchor" id="ae58734c3f93951819e43af9fff2b9496"></a><!-- doxytag: member="boost::xint::difference" ref="ae58734c3f93951819e43af9fff2b9496" args="(const integer_t&lt; ... &gt; n1, const integer_t&lt; ... &gt; n2)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> ::divide_t boost::xint::divide </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; boost::xint::difference </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
+          <td class="paramname"> <em>n1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
+          <td class="paramname"> <em>n2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Calculate the absolute difference between two integers. </p>
+<ul>
+<li>Complexity: O(n)</li>
+</ul>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>n1,n2</em>&nbsp;</td><td>The integers to operate on.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The absolute difference between the parameters.</dd></dl>
+<p>This function is especially useful when using unsigned types, because it's faster than doing a comparison to see which integer is larger before doing a subtraction. </p>
+
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01297">1297</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a9696321a0a8ddea617223472a62f2452"></a><!-- doxytag: member="boost::xint::divide" ref="a9696321a0a8ddea617223472a62f2452" args="(const integer_t&lt; ... &gt; dividend, const integer_t&lt; ... &gt; divisor)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;... &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt;::divide_t boost::xint::divide </td>
+          <td>(</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>dividend</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>divisor</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -511,41 +558,41 @@ template&lt;... &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>A <code>divide_t</code> class containing the quotient and remainder of <code>dividend</code> divided by <code>divisor</code>. The nothrow&lt;true&gt; version returns a <code>divide_t</code> with both items set to Not-a-Number instead of throwing.</dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>A <code>divide_t</code> class containing the quotient and remainder of <code>dividend</code> divided by <code>divisor</code>. The nothrow version returns a <code>divide_t</code> with both items set to Not-a-Number instead of throwing.</dd></dl>
 <dl><dt><b>Exceptions:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1exceptions_1_1divide__by__zero.html">exceptions::divide_by_zero</a></em>&nbsp;</td><td>if <code>d2</code> is zero.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="namespaceboost_1_1xint.html#a800dca196da627207b63fccd3c132c21" title="Calculate how many dividends would fit into divisor.">operator/(integer_t, integer_t)</a> </dd>
+<dl class="see"><dt><b>See also:</b></dt><dd>operator/(integer_t, integer_t) </dd>
 <dd>
-<a class="el" href="namespaceboost_1_1xint.html#aac56e280afa13284381f144a208eaf67" title="Get the remainder after dividing a number by another.">operator%(integer_t, integer_t)</a> </dd>
+operator%(integer_t, integer_t) </dd>
 <dd>
-<a class="el" href="classboost_1_1xint_1_1integer__t.html#ae55c6a634e3bd3c37f7cace2f9b9e496">integer_t::operator/=</a> </dd>
+<a class="el" href="classboost_1_1xint_1_1integer__t.html#a4bf7befde3cb5eff8e6e84b290c0ce50">integer_t::operator/=</a> </dd>
 <dd>
-<a class="el" href="classboost_1_1xint_1_1integer__t.html#ac61ca4bfdf11efc044602e8d4205f7ce">integer_t::operator%=</a> </dd></dl>
+<a class="el" href="classboost_1_1xint_1_1integer__t.html#a2144da90955b26120f5cfc724a24b8fc">integer_t::operator%=</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01267">1267</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01253">1253</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a011ac7b423cee444f6728ca2b061f31e"></a><!-- doxytag: member="boost::xint::gcd" ref="a011ac7b423cee444f6728ca2b061f31e" args="(const integer_t num1, const integer_t num2)" -->
+<a class="anchor" id="ad58ca08a1482ae77a979027da61d17f4"></a><!-- doxytag: member="boost::xint::gcd" ref="ad58ca08a1482ae77a979027da61d17f4" args="(const integer_t&lt; ... &gt; num1, const integer_t&lt; ... &gt; num2)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> boost::xint::gcd </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; boost::xint::gcd </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>num1</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>num2</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -569,11 +616,11 @@ template&lt;... &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The greatest common denominator of the two integers, which will always be a positive number. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02207">2207</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02242">2242</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ae44f7918320a37538c5fa8e4622cbfba"></a><!-- doxytag: member="boost::xint::getbit" ref="ae44f7918320a37538c5fa8e4622cbfba" args="(const integer_t n, bitsize_t bit)" -->
+<a class="anchor" id="a1f2a052f7f391bddace5348c3adcc97a"></a><!-- doxytag: member="boost::xint::getbit" ref="a1f2a052f7f391bddace5348c3adcc97a" args="(const integer_t&lt; ... &gt; n, bitsize_t bit)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -582,7 +629,7 @@ template&lt;... &gt; </div>
         <tr>
           <td class="memname">bool boost::xint::getbit </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n</em>, </td>
         </tr>
         <tr>
@@ -611,13 +658,13 @@ template&lt;... &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd><code>true</code> if the specified bit is set (has a value of one), <code>false</code> if it is clear. The nothrow&lt;true&gt; version returns <code>false</code> instead of throwing. </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd><code>true</code> if the specified bit is set (has a value of one), <code>false</code> if it is clear. The nothrow version returns <code>false</code> instead of throwing. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01540">1540</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01558">1558</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a47f175d3a516b6e9e851890e2ce4a9b0"></a><!-- doxytag: member="boost::xint::highestbit" ref="a47f175d3a516b6e9e851890e2ce4a9b0" args="(const integer_t n, bitsize_t return_if_zero=0)" -->
+<a class="anchor" id="adee99f516c2480b2381f6c9b1a2abc6e"></a><!-- doxytag: member="boost::xint::highestbit" ref="adee99f516c2480b2381f6c9b1a2abc6e" args="(const integer_t&lt; ... &gt; n, bitsize_t return_if_zero=0)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -626,7 +673,7 @@ template&lt;... &gt; </div>
         <tr>
           <td class="memname"><a class="el" href="namespaceboost_1_1xint.html#ae9f6d103df04ad19a841ed3f8b94a764">bitsize_t</a> boost::xint::highestbit </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n</em>, </td>
         </tr>
         <tr>
@@ -655,28 +702,28 @@ template&lt;... &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>The zero-based index of the highest one-bit in the integer, or <code>return_if_zero</code> if the integer contains no set bits. The nothrow&lt;true&gt; version returns <code>return_if_zero</code> instead of throwing. </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The zero-based index of the highest one-bit in the integer, or <code>return_if_zero</code> if the integer contains no set bits. The nothrow version returns <code>return_if_zero</code> instead of throwing. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01644">1644</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01662">1662</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ada4e628fe2275e6d6459b9b87167cbad"></a><!-- doxytag: member="boost::xint::invmod" ref="ada4e628fe2275e6d6459b9b87167cbad" args="(const integer_t n, const integer_t modulus)" -->
+<a class="anchor" id="aca3ee91c50b15fa902c37fa16763f52b"></a><!-- doxytag: member="boost::xint::invmod" ref="aca3ee91c50b15fa902c37fa16763f52b" args="(const integer_t&lt; ... &gt; n, const integer_t&lt; ... &gt; modulus)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> boost::xint::invmod </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; boost::xint::invmod </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>modulus</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -707,11 +754,11 @@ template&lt;... &gt; </div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01801">1801</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01824">1824</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a089d98ffc4599122209d1a3c1c7c39d4"></a><!-- doxytag: member="boost::xint::is_prime" ref="a089d98ffc4599122209d1a3c1c7c39d4" args="(const integer_t n, callback_t callback=no_callback)" -->
+<a class="anchor" id="a22c8ff3260bcb5c4c8e09e632c488ace"></a><!-- doxytag: member="boost::xint::is_prime" ref="a22c8ff3260bcb5c4c8e09e632c488ace" args="(const integer_t&lt; ... &gt; n, callback_t callback=no_callback)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -720,7 +767,7 @@ template&lt;... &gt; </div>
         <tr>
           <td class="memname">int boost::xint::is_prime </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n</em>, </td>
         </tr>
         <tr>
@@ -749,7 +796,7 @@ template&lt;... &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>1 if <code>n</code> seems to be prime, 0 if it isn't, or -1 if the provided callback function cancelled the operation. The nothrow&lt;true&gt; version returns -2 instead of throwing.</dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>1 if <code>n</code> seems to be prime, 0 if it isn't, or -1 if the provided callback function cancelled the operation. The nothrow version returns -2 instead of throwing.</dd></dl>
 <dl><dt><b>Exceptions:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html">exceptions::invalid_argument</a></em>&nbsp;</td><td>if <code>n</code> is less than 2.</td></tr>
@@ -759,26 +806,26 @@ template&lt;... &gt; </div>
 <dl class="remark"><dt><b>Remarks:</b></dt><dd>This function uses the Rabin-Miller probabilistic primality test. There is an infinitesimally small chance that it will think that a composite number is actually prime, but that is so small that it can be ignored for most practical purposes. If even that chance is too much, you can run this function over the number several times, it will use different randomly-selected "witness" numbers each time.</dd></dl>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="primes.html">Generating Prime Numbers</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01854">1854</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01878">1878</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="affa4bae53c9bc3814816c70c8bb442b4"></a><!-- doxytag: member="boost::xint::lcm" ref="affa4bae53c9bc3814816c70c8bb442b4" args="(const integer_t num1, const integer_t num2)" -->
+<a class="anchor" id="a7740825a61553e51cead8af64ec763c0"></a><!-- doxytag: member="boost::xint::lcm" ref="a7740825a61553e51cead8af64ec763c0" args="(const integer_t&lt; ... &gt; num1, const integer_t&lt; ... &gt; num2)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> boost::xint::lcm </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; boost::xint::lcm </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>num1</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>num2</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -802,11 +849,11 @@ template&lt;... &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The least common multiple of the two integers. If either integer is zero, then the return value will be zero, by convention; in all other cases, the return value will be a positive number. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02240">2240</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02276">2276</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ab6cef2e4e1b3c3b841f6c1a085952f18"></a><!-- doxytag: member="boost::xint::log2" ref="ab6cef2e4e1b3c3b841f6c1a085952f18" args="(const integer_t n)" -->
+<a class="anchor" id="aec7b803cbc9245ccae1f88e4efab327b"></a><!-- doxytag: member="boost::xint::log2" ref="aec7b803cbc9245ccae1f88e4efab327b" args="(const integer_t&lt; ... &gt; n)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -815,7 +862,7 @@ template&lt;... &gt; </div>
         <tr>
           <td class="memname">size_t boost::xint::log2 </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n</em></td>
           <td>&nbsp;)&nbsp;</td>
           <td><code> [inline]</code></td>
@@ -834,15 +881,15 @@ template&lt;... &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>The integer log<sub>2</sub> value of the integer. The nothrow&lt;true&gt; version returns zero instead of throwing.</dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The integer log<sub>2</sub> value of the integer. The nothrow version returns zero instead of throwing.</dd></dl>
 <dl class="remark"><dt><b>Remarks:</b></dt><dd>pow2(log2(n)-1) will give you an integer with the highest set bit of <code>n</code>, assuming that <code>n</code> is non-zero.</dd></dl>
-<dl class="user"><dt><b></b></dt><dd>Similar to the <a class="el" href="namespaceboost_1_1xint.html#a47f175d3a516b6e9e851890e2ce4a9b0" title="Obtains the index of the highest bit in an integer with a value of one.">highestbit</a> function. </dd></dl>
+<dl class="user"><dt><b></b></dt><dd>Similar to the <a class="el" href="namespaceboost_1_1xint.html#adee99f516c2480b2381f6c9b1a2abc6e" title="Obtains the index of the highest bit in an integer with a value of one.">highestbit</a> function. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02307">2307</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02344">2344</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a8f1c7103d951ba19510458166d4fd2f4"></a><!-- doxytag: member="boost::xint::lowestbit" ref="a8f1c7103d951ba19510458166d4fd2f4" args="(const integer_t n, bitsize_t return_if_zero=0)" -->
+<a class="anchor" id="a8512b348c82472dca48edb63f2a1f0e7"></a><!-- doxytag: member="boost::xint::lowestbit" ref="a8512b348c82472dca48edb63f2a1f0e7" args="(const integer_t&lt; ... &gt; n, bitsize_t return_if_zero=0)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -851,7 +898,7 @@ template&lt;... &gt; </div>
         <tr>
           <td class="memname"><a class="el" href="namespaceboost_1_1xint.html#ae9f6d103df04ad19a841ed3f8b94a764">bitsize_t</a> boost::xint::lowestbit </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n</em>, </td>
         </tr>
         <tr>
@@ -880,34 +927,34 @@ template&lt;... &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>The zero-based index of the lowest one-bit in the integer, or <code>return_if_zero</code> if the integer contains no set bits. The nothrow&lt;true&gt; version returns <code>return_if_zero</code> instead of throwing. </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The zero-based index of the lowest one-bit in the integer, or <code>return_if_zero</code> if the integer contains no set bits. The nothrow version returns <code>return_if_zero</code> instead of throwing. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01615">1615</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01633">1633</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a2503b80a8b59b45190ea024884405564"></a><!-- doxytag: member="boost::xint::mulmod" ref="a2503b80a8b59b45190ea024884405564" args="(const integer_t n, const integer_t by, const integer_t modulus)" -->
+<a class="anchor" id="aca6917c25cdd7cac7c3eda4684567625"></a><!-- doxytag: member="boost::xint::mulmod" ref="aca6917c25cdd7cac7c3eda4684567625" args="(const integer_t&lt; ... &gt; n, const integer_t&lt; ... &gt; by, const integer_t&lt; ... &gt; modulus)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> boost::xint::mulmod </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; boost::xint::mulmod </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>by</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>modulus</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -933,11 +980,11 @@ template&lt;... &gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The result of <code>n</code> * <code>by</code> % <code>modulus</code>.</dd></dl>
 <dl class="remark"><dt><b>Remarks:</b></dt><dd>This is purely a convenience function, to make it easier to write self-documenting code. It does not provide any additional efficiency over writing out the calculation. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01685">1685</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01703">1703</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ac6bf18fab19873cc55142b26ce11fda4"></a><!-- doxytag: member="boost::xint::operator!=" ref="ac6bf18fab19873cc55142b26ce11fda4" args="(const integer_t n1, const integer_t n2)" -->
+<a class="anchor" id="a07e81815254a7ca3afddd5398695a2b7"></a><!-- doxytag: member="boost::xint::operator!=" ref="a07e81815254a7ca3afddd5398695a2b7" args="(const integer_t&lt; ... &gt; n1, const integer_t&lt; ... &gt; n2)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -946,13 +993,13 @@ template&lt;... &gt; </div>
         <tr>
           <td class="memname">bool boost::xint::operator!= </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n1</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n2</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -964,26 +1011,26 @@ template&lt;... &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01952">1952</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01976">1976</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="aac56e280afa13284381f144a208eaf67"></a><!-- doxytag: member="boost::xint::operator%" ref="aac56e280afa13284381f144a208eaf67" args="(const integer_t n1, const integer_t n2)" -->
+<a class="anchor" id="a0ac4116f3a9285a7f2f10d0104b870f7"></a><!-- doxytag: member="boost::xint::operator%" ref="a0ac4116f3a9285a7f2f10d0104b870f7" args="(const integer_t&lt; ... &gt; n1, const integer_t&lt; ... &gt; n2)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> boost::xint::operator% </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; boost::xint::operator% </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n1</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n2</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -1008,26 +1055,26 @@ template&lt;... &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The remainder after dividing <code>n1</code> by <code>n2</code>. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02095">2095</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02126">2126</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a356d6efa380af7ee2c2f6f0a83e7c9a3"></a><!-- doxytag: member="boost::xint::operator&amp;" ref="a356d6efa380af7ee2c2f6f0a83e7c9a3" args="(const integer_t n1, const integer_t n2)" -->
+<a class="anchor" id="ad3bc201c8c1f3e87611abce8e6972538"></a><!-- doxytag: member="boost::xint::operator&amp;" ref="ad3bc201c8c1f3e87611abce8e6972538" args="(const integer_t&lt; ... &gt; n1, const integer_t&lt; ... &gt; n2)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> boost::xint::operator&amp; </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; boost::xint::operator&amp; </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n1</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n2</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -1051,26 +1098,26 @@ template&lt;... &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>A positive integer with all bits that are set in both parameters turned on. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02122">2122</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02154">2154</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a69c9fa493989cc96676a007f58031455"></a><!-- doxytag: member="boost::xint::operator*" ref="a69c9fa493989cc96676a007f58031455" args="(const integer_t n1, const integer_t n2)" -->
+<a class="anchor" id="ab33a5481a4a4b16ab592be6a88cd245c"></a><!-- doxytag: member="boost::xint::operator*" ref="ab33a5481a4a4b16ab592be6a88cd245c" args="(const integer_t&lt; ... &gt; n1, const integer_t&lt; ... &gt; n2)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> boost::xint::operator* </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; boost::xint::operator* </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n1</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n2</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -1095,26 +1142,26 @@ template&lt;... &gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The product of the parameters.</dd></dl>
 <dl class="remark"><dt><b>Remarks:</b></dt><dd>Automatically uses the more-efficient squaring algorithm if it can trivially detect that the two parameters are copies of the same number. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02039">2039</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02069">2069</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a88b3b7bccb96dd8b0cd9d9f853025915"></a><!-- doxytag: member="boost::xint::operator+" ref="a88b3b7bccb96dd8b0cd9d9f853025915" args="(const integer_t n1, const integer_t n2)" -->
+<a class="anchor" id="a15c7951bc910713f8209b7ebd78396da"></a><!-- doxytag: member="boost::xint::operator+" ref="a15c7951bc910713f8209b7ebd78396da" args="(const integer_t&lt; ... &gt; n1, const integer_t&lt; ... &gt; n2)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> boost::xint::operator+ </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; boost::xint::operator+ </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n1</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n2</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -1138,26 +1185,26 @@ template&lt;... &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The sum of the parameters. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01983">1983</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02007">2007</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="acda2a7a7d63582732505cc7128096f27"></a><!-- doxytag: member="boost::xint::operator&#45;" ref="acda2a7a7d63582732505cc7128096f27" args="(const integer_t n1, const integer_t n2)" -->
+<a class="anchor" id="ab6132105fbe7d7bf7a756b868b6a372e"></a><!-- doxytag: member="boost::xint::operator&#45;" ref="ab6132105fbe7d7bf7a756b868b6a372e" args="(const integer_t&lt; ... &gt; n1, const integer_t&lt; ... &gt; n2)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> boost::xint::operator- </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; boost::xint::operator- </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n1</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n2</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -1181,26 +1228,26 @@ template&lt;... &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The difference between the parameters. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02009">2009</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02034">2034</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a800dca196da627207b63fccd3c132c21"></a><!-- doxytag: member="boost::xint::operator/" ref="a800dca196da627207b63fccd3c132c21" args="(const integer_t dividend, const integer_t divisor)" -->
+<a class="anchor" id="a806df63b92124039591a4ca09a8538e0"></a><!-- doxytag: member="boost::xint::operator/" ref="a806df63b92124039591a4ca09a8538e0" args="(const integer_t&lt; ... &gt; dividend, const integer_t&lt; ... &gt; divisor)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> boost::xint::operator/ </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; boost::xint::operator/ </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>dividend</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>divisor</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -1230,11 +1277,11 @@ template&lt;... &gt; </div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02067">2067</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02098">2098</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a0a987fd73c7c0844f9ed4fdabf0f27e4"></a><!-- doxytag: member="boost::xint::operator&lt;" ref="a0a987fd73c7c0844f9ed4fdabf0f27e4" args="(const integer_t n1, const integer_t n2)" -->
+<a class="anchor" id="af5698b6ba852f5a119429b17c2a08450"></a><!-- doxytag: member="boost::xint::operator&lt;" ref="af5698b6ba852f5a119429b17c2a08450" args="(const integer_t&lt; ... &gt; n1, const integer_t&lt; ... &gt; n2)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -1243,13 +1290,13 @@ template&lt;... &gt; </div>
         <tr>
           <td class="memname">bool boost::xint::operator&lt; </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n1</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n2</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -1261,15 +1308,15 @@ template&lt;... &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01877">1877</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01901">1901</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a678851ea0cb31cb4ef66bc8389d369d3"></a><!-- doxytag: member="boost::xint::operator&lt;&lt;" ref="a678851ea0cb31cb4ef66bc8389d369d3" args="(std::basic_ostream&lt; charT, traits &gt; &amp;out, const integer_t n)" -->
+<a class="anchor" id="a0e501790ec0437c226ce54f98493aad9"></a><!-- doxytag: member="boost::xint::operator&lt;&lt;" ref="a0e501790ec0437c226ce54f98493aad9" args="(std::basic_ostream&lt; charT, traits &gt; &amp;out, const integer_t&lt; ... &gt; n)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename charT , typename traits , class A0 , class A1 , class A2 , class A3 , class A4 &gt; </div>
+template&lt;typename charT , typename traits , ... &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">std::basic_ostream&lt;charT,traits&gt;&amp; boost::xint::operator&lt;&lt; </td>
@@ -1280,7 +1327,7 @@ template&lt;typename charT , typename traits , class A0 , class A1 , class A2 , 
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -1292,11 +1339,11 @@ template&lt;typename charT , typename traits , class A0 , class A1 , class A2 , 
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02413">2413</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02469">2469</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a9b01e116d91ad2d7d9f13138a1182d1d"></a><!-- doxytag: member="boost::xint::operator&lt;=" ref="a9b01e116d91ad2d7d9f13138a1182d1d" args="(const integer_t n1, const integer_t n2)" -->
+<a class="anchor" id="ac3daab81a55daeceedd256ce49634d4d"></a><!-- doxytag: member="boost::xint::operator&lt;=" ref="ac3daab81a55daeceedd256ce49634d4d" args="(const integer_t&lt; ... &gt; n1, const integer_t&lt; ... &gt; n2)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -1305,13 +1352,13 @@ template&lt;... &gt; </div>
         <tr>
           <td class="memname">bool boost::xint::operator&lt;= </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n1</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n2</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -1323,11 +1370,11 @@ template&lt;... &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01907">1907</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01931">1931</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="aa753a8fb37b38da8293fec1c9bb09711"></a><!-- doxytag: member="boost::xint::operator==" ref="aa753a8fb37b38da8293fec1c9bb09711" args="(const integer_t n1, const integer_t n2)" -->
+<a class="anchor" id="a7d9f811ac514e033c7fc965b5cd62ee3"></a><!-- doxytag: member="boost::xint::operator==" ref="a7d9f811ac514e033c7fc965b5cd62ee3" args="(const integer_t&lt; ... &gt; n1, const integer_t&lt; ... &gt; n2)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -1336,13 +1383,13 @@ template&lt;... &gt; </div>
         <tr>
           <td class="memname">bool boost::xint::operator== </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n1</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n2</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -1354,11 +1401,11 @@ template&lt;... &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01937">1937</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01961">1961</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="af5c2bc8d95f42e9442c113d22614ac2d"></a><!-- doxytag: member="boost::xint::operator&gt;" ref="af5c2bc8d95f42e9442c113d22614ac2d" args="(const integer_t n1, const integer_t n2)" -->
+<a class="anchor" id="ad1ac6fb8431b231faecf34a5a2d01626"></a><!-- doxytag: member="boost::xint::operator&gt;" ref="ad1ac6fb8431b231faecf34a5a2d01626" args="(const integer_t&lt; ... &gt; n1, const integer_t&lt; ... &gt; n2)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -1367,13 +1414,13 @@ template&lt;... &gt; </div>
         <tr>
           <td class="memname">bool boost::xint::operator&gt; </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n1</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n2</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -1385,11 +1432,11 @@ template&lt;... &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01892">1892</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01916">1916</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ad4fd77e8ed2e76028c3ae554bfc564f7"></a><!-- doxytag: member="boost::xint::operator&gt;=" ref="ad4fd77e8ed2e76028c3ae554bfc564f7" args="(const integer_t n1, const integer_t n2)" -->
+<a class="anchor" id="a00c5ad6cf63ecc8ea3a2294ccedac7d3"></a><!-- doxytag: member="boost::xint::operator&gt;=" ref="a00c5ad6cf63ecc8ea3a2294ccedac7d3" args="(const integer_t&lt; ... &gt; n1, const integer_t&lt; ... &gt; n2)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -1398,13 +1445,13 @@ template&lt;... &gt; </div>
         <tr>
           <td class="memname">bool boost::xint::operator&gt;= </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n1</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n2</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -1416,15 +1463,15 @@ template&lt;... &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01922">1922</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01946">1946</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ad5bc89da790a0843ba90a88cbc7856a6"></a><!-- doxytag: member="boost::xint::operator&gt;&gt;" ref="ad5bc89da790a0843ba90a88cbc7856a6" args="(std::basic_istream&lt; charT, traits &gt; &amp;in, integer_t &amp;n)" -->
+<a class="anchor" id="a7ad17ed38204ec9a774788ea28368701"></a><!-- doxytag: member="boost::xint::operator&gt;&gt;" ref="a7ad17ed38204ec9a774788ea28368701" args="(std::basic_istream&lt; charT, traits &gt; &amp;in, integer_t&lt; ... &gt; &amp;n)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename charT , typename traits , class A0 , class A1 , class A2 , class A3 , class A4 &gt; </div>
+template&lt;typename charT , typename traits , ... &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">std::basic_istream&lt;charT,traits&gt;&amp; boost::xint::operator&gt;&gt; </td>
@@ -1435,7 +1482,7 @@ template&lt;typename charT , typename traits , class A0 , class A1 , class A2 , 
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">integer_t &amp;&nbsp;</td>
+          <td class="paramtype">integer_t&lt; ... &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>n</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -1447,26 +1494,26 @@ template&lt;typename charT , typename traits , class A0 , class A1 , class A2 , 
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02423">2423</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02478">2478</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a73c999d0550a46b24272e07f1720b025"></a><!-- doxytag: member="boost::xint::operator^" ref="a73c999d0550a46b24272e07f1720b025" args="(const integer_t n1, const integer_t n2)" -->
+<a class="anchor" id="a0d1ce319bfb004fb6b93283bcb4f98c2"></a><!-- doxytag: member="boost::xint::operator^" ref="a0d1ce319bfb004fb6b93283bcb4f98c2" args="(const integer_t&lt; ... &gt; n1, const integer_t&lt; ... &gt; n2)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> boost::xint::operator^ </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; boost::xint::operator^ </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n1</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n2</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -1490,26 +1537,26 @@ template&lt;... &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>A positive integer with all bits that are set in either parameter, but not both, turned on. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02176">2176</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02210">2210</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="aa8537f29fb1ade411f79084ffe170075"></a><!-- doxytag: member="boost::xint::operator|" ref="aa8537f29fb1ade411f79084ffe170075" args="(const integer_t n1, const integer_t n2)" -->
+<a class="anchor" id="a0b58f99b2c5bab4f7eec71d6058b23dd"></a><!-- doxytag: member="boost::xint::operator|" ref="a0b58f99b2c5bab4f7eec71d6058b23dd" args="(const integer_t&lt; ... &gt; n1, const integer_t&lt; ... &gt; n2)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> boost::xint::operator| </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; boost::xint::operator| </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n1</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n2</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -1533,26 +1580,26 @@ template&lt;... &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>A positive integer with all bits that are set in either parameter turned on. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02149">2149</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02182">2182</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a499b28ba7acd8b1534bb968826e23c52"></a><!-- doxytag: member="boost::xint::pow" ref="a499b28ba7acd8b1534bb968826e23c52" args="(const integer_t n, const integer_t e)" -->
+<a class="anchor" id="a483e2fdc6cef9afa1295afeceda4a644"></a><!-- doxytag: member="boost::xint::pow" ref="a483e2fdc6cef9afa1295afeceda4a644" args="(const integer_t&lt; ... &gt; n, const integer_t&lt; ... &gt; e)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> boost::xint::pow </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; boost::xint::pow </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>e</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -1576,32 +1623,32 @@ template&lt;... &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd><code>n</code> to the power of <code>e</code>. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01341">1341</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01353">1353</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a1108e56d7d500a384bd0bb0a6849bfa0"></a><!-- doxytag: member="boost::xint::powmod" ref="a1108e56d7d500a384bd0bb0a6849bfa0" args="(const integer_t n, const integer_t exponent, const integer_t modulus, bool no_monty=false)" -->
+<a class="anchor" id="a9c1648ef679123bb2bf77681ffdfa815"></a><!-- doxytag: member="boost::xint::powmod" ref="a9c1648ef679123bb2bf77681ffdfa815" args="(const integer_t&lt; ... &gt; n, const integer_t&lt; ... &gt; exponent, const integer_t&lt; ... &gt; modulus, bool no_monty=false)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> boost::xint::powmod </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; boost::xint::powmod </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>exponent</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>modulus</em>, </td>
         </tr>
         <tr>
@@ -1642,11 +1689,11 @@ template&lt;... &gt; </div>
 <dl class="remark"><dt><b>Remarks:</b></dt><dd>Because this function keeps the intermediate results small, it is far faster and uses far less memory than a naive implementation.</dd></dl>
 <dl class="user"><dt><b></b></dt><dd>In addition, this function will use the Montgomery Reduction internally, if the modulus is an odd number (and if <code>no_monty</code> isn't set), which is almost always faster than the non-Montgomery method. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01765">1765</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01787">1787</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ac16087b6d58edabc3b67c94e63e22921"></a><!-- doxytag: member="boost::xint::setbit" ref="ac16087b6d58edabc3b67c94e63e22921" args="(integer_t &amp;n, bitsize_t bit)" -->
+<a class="anchor" id="ae957235f76cb2fa0e1530255ccbfa8d0"></a><!-- doxytag: member="boost::xint::setbit" ref="ae957235f76cb2fa0e1530255ccbfa8d0" args="(integer_t&lt; ... &gt; &amp;n, bitsize_t bit)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -1655,7 +1702,7 @@ template&lt;... &gt; </div>
         <tr>
           <td class="memname">void boost::xint::setbit </td>
           <td>(</td>
-          <td class="paramtype">integer_t &amp;&nbsp;</td>
+          <td class="paramtype">integer_t&lt; ... &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>n</em>, </td>
         </tr>
         <tr>
@@ -1686,26 +1733,26 @@ template&lt;... &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Nothing. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01563">1563</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01581">1581</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a979ddb09a4d1a5dbfcb0707c19695877"></a><!-- doxytag: member="boost::xint::sqrmod" ref="a979ddb09a4d1a5dbfcb0707c19695877" args="(const integer_t n, const integer_t modulus)" -->
+<a class="anchor" id="aa41f48c60b257cb321fe89fe0b65b6c3"></a><!-- doxytag: member="boost::xint::sqrmod" ref="aa41f48c60b257cb321fe89fe0b65b6c3" args="(const integer_t&lt; ... &gt; n, const integer_t&lt; ... &gt; modulus)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> boost::xint::sqrmod </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; boost::xint::sqrmod </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>modulus</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -1731,20 +1778,20 @@ template&lt;... &gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The result of <code>square(n)</code> % <code>modulus</code>.</dd></dl>
 <dl class="remark"><dt><b>Remarks:</b></dt><dd>This is purely a convenience function, to make it easier to write self-documenting code. It does not provide any additional efficiency over writing out the calculation. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01722">1722</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01742">1742</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="abe5e63185f27f2c795dc287e030ec424"></a><!-- doxytag: member="boost::xint::square" ref="abe5e63185f27f2c795dc287e030ec424" args="(const integer_t n)" -->
+<a class="anchor" id="ac40d60956ef5af3b64804c7a9abffcdd"></a><!-- doxytag: member="boost::xint::square" ref="ac40d60956ef5af3b64804c7a9abffcdd" args="(const integer_t&lt; ... &gt; n)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> boost::xint::square </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; boost::xint::square </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n</em></td>
           <td>&nbsp;)&nbsp;</td>
           <td><code> [inline]</code></td>
@@ -1766,20 +1813,20 @@ template&lt;... &gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd><code>n</code> times <code>n</code>.</dd></dl>
 <p>The repetitive nature of the input (multiplying a number by itself) allows this function to use a more-efficient algorithm than standard multiplication. </p>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01315">1315</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01326">1326</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="adb652fa006fd8ed34993ea86cf317cb2"></a><!-- doxytag: member="boost::xint::square_root" ref="adb652fa006fd8ed34993ea86cf317cb2" args="(const integer_t n)" -->
+<a class="anchor" id="abb957c86cae5940b06172eb23345fe42"></a><!-- doxytag: member="boost::xint::square_root" ref="abb957c86cae5940b06172eb23345fe42" args="(const integer_t&lt; ... &gt; n)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;... &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a> boost::xint::square_root </td>
+          <td class="memname"><a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; boost::xint::square_root </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n</em></td>
           <td>&nbsp;)&nbsp;</td>
           <td><code> [inline]</code></td>
@@ -1806,11 +1853,11 @@ template&lt;... &gt; </div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01375">1375</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01389">1389</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a1a857d5cc4b15822d3dcaf70ec15b4e5"></a><!-- doxytag: member="boost::xint::swap" ref="a1a857d5cc4b15822d3dcaf70ec15b4e5" args="(integer_t &amp;left, integer_t &amp;right)" -->
+<a class="anchor" id="ab4aafdf3645cbad0cb3af54fdec4caff"></a><!-- doxytag: member="boost::xint::swap" ref="ab4aafdf3645cbad0cb3af54fdec4caff" args="(integer_t&lt; ... &gt; &amp;left, integer_t&lt; ... &gt; &amp;right)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -1819,13 +1866,13 @@ template&lt;... &gt; </div>
         <tr>
           <td class="memname">void boost::xint::swap </td>
           <td>(</td>
-          <td class="paramtype">integer_t &amp;&nbsp;</td>
+          <td class="paramtype">integer_t&lt; ... &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>left</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">integer_t &amp;&nbsp;</td>
+          <td class="paramtype">integer_t&lt; ... &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>right</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -1837,20 +1884,20 @@ template&lt;... &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02451">2451</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02510">2510</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="afd9d2c7743d11e6959d6cda44c8abf69"></a><!-- doxytag: member="boost::xint::to" ref="afd9d2c7743d11e6959d6cda44c8abf69" args="(const integer_t n)" -->
+<a class="anchor" id="a9aa52eb4533b04c27329b3f6b7aa842b"></a><!-- doxytag: member="boost::xint::to" ref="a9aa52eb4533b04c27329b3f6b7aa842b" args="(const integer_t&lt; ... &gt; n)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename T , class A0 , class A1 , class A2 , class A3 , class A4 &gt; </div>
+template&lt;typename T , ... &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">T boost::xint::to </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n</em></td>
           <td>&nbsp;)&nbsp;</td>
           <td><code> [inline]</code></td>
@@ -1879,13 +1926,13 @@ template&lt;typename T , class A0 , class A1 , class A2 , class A3 , class A4 &g
   </table>
   </dd>
 </dl>
-<p>This function provides the most efficient means of converting to a built-in integral type. The nothrow&lt;true&gt; version returns T(0) instead of throwing. </p>
+<p>This function provides the most efficient means of converting to a built-in integral type. The nothrow version returns T(0) instead of throwing. </p>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01413">1413</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01429">1429</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a66514eef6594409cda1dfad652e2dc40"></a><!-- doxytag: member="boost::xint::to_binary" ref="a66514eef6594409cda1dfad652e2dc40" args="(const integer_t n, bitsize_t bits=0)" -->
+<a class="anchor" id="a36d0321bee2aade461e0f504400c7c1b"></a><!-- doxytag: member="boost::xint::to_binary" ref="a36d0321bee2aade461e0f504400c7c1b" args="(const integer_t&lt; ... &gt; n, bitsize_t bits=0)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -1894,7 +1941,7 @@ template&lt;... &gt; </div>
         <tr>
           <td class="memname"><a class="el" href="namespaceboost_1_1xint.html#aae3128529370506165793f2771834e58">xint::binary_t</a> boost::xint::to_binary </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n</em>, </td>
         </tr>
         <tr>
@@ -1923,7 +1970,7 @@ template&lt;... &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>An <code><a class="el" href="namespaceboost_1_1xint.html#aae3128529370506165793f2771834e58" title="The format for the binary representations of integers.">xint::binary_t</a></code> containing the binary representation, lowest byte first. The nothrow&lt;true&gt; version returns an empty <code>binary_t</code> object instead of throwing.</dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>An <code><a class="el" href="namespaceboost_1_1xint.html#aae3128529370506165793f2771834e58" title="The format for the binary representations of integers.">xint::binary_t</a></code> containing the binary representation, lowest byte first. The nothrow version returns an empty <code>binary_t</code> object instead of throwing.</dd></dl>
 <dl><dt><b>Exceptions:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html">exceptions::invalid_argument</a></em>&nbsp;</td><td>if <code>bits</code> is greater than the number of bits in an unsigned character.</td></tr>
@@ -1934,11 +1981,11 @@ template&lt;... &gt; </div>
 <dl class="remark"><dt><b>Remarks:</b></dt><dd>A binary representation is sometimes desirable for persistent storage or transmission, as it is more space-efficient than a string representation.</dd></dl>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="classboost_1_1xint_1_1integer__t.html#a864a599e2de326e6e339ffc820fd849e" title="Converts a portable binary representation of a number into an integer.">integer_t::integer_t(xint::binary_t, bitsize_t bits)</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01512">1512</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01528">1528</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a92cfd4119fbf9eeb0a503d4e0dbe553c"></a><!-- doxytag: member="boost::xint::to_string" ref="a92cfd4119fbf9eeb0a503d4e0dbe553c" args="(const integer_t n, std::size_t base=10, bool uppercase=false)" -->
+<a class="anchor" id="a2fb5a8cfac3e97a1641d424aac04a71f"></a><!-- doxytag: member="boost::xint::to_string" ref="a2fb5a8cfac3e97a1641d424aac04a71f" args="(const integer_t&lt; ... &gt; n, std::size_t base=10, bool uppercase=false)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -1947,7 +1994,7 @@ template&lt;... &gt; </div>
         <tr>
           <td class="memname">std::string boost::xint::to_string </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n</em>, </td>
         </tr>
         <tr>
@@ -1971,22 +2018,22 @@ template&lt;... &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>A shorthand function that calls <a class="el" href="namespaceboost_1_1xint.html#a7621dd91fa7eb64856241f8cafd1ef7e">to_stringtype&lt;char&gt;</a>. </p>
+<p>A shorthand function that calls <a class="el" href="namespaceboost_1_1xint.html#a12e9d9268bae5d099227af78c1dea758">to_stringtype&lt;char&gt;</a>. </p>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01468">1468</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01484">1484</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a7621dd91fa7eb64856241f8cafd1ef7e"></a><!-- doxytag: member="boost::xint::to_stringtype" ref="a7621dd91fa7eb64856241f8cafd1ef7e" args="(const integer_t n, std::size_t base=10, bool uppercase=false)" -->
+<a class="anchor" id="a12e9d9268bae5d099227af78c1dea758"></a><!-- doxytag: member="boost::xint::to_stringtype" ref="a12e9d9268bae5d099227af78c1dea758" args="(const integer_t&lt; ... &gt; n, std::size_t base=10, bool uppercase=false)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename charT , class A0 , class A1 , class A2 , class A3 , class A4 &gt; </div>
+template&lt;typename charT , ... &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">std::basic_string&lt;charT&gt; boost::xint::to_stringtype </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n</em>, </td>
         </tr>
         <tr>
@@ -2028,7 +2075,7 @@ template&lt;typename charT , class A0 , class A1 , class A2 , class A3 , class A
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>The string value of <code>n</code>. The nothrow&lt;true&gt; version returns the string "#NaN#" if <code>n</code> is a Not-a-Number, and an empty string instead of throwing.</dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The string value of <code>n</code>. The nothrow version returns the string "#NaN#" if <code>n</code> is a Not-a-Number, and an empty string instead of throwing.</dd></dl>
 <dl><dt><b>Exceptions:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classboost_1_1xint_1_1exceptions_1_1invalid__base.html">exceptions::invalid_base</a></em>&nbsp;</td><td>if base is less than two or greater than 36.</td></tr>
@@ -2037,11 +2084,11 @@ template&lt;typename charT , class A0 , class A1 , class A2 , class A3 , class A
 </dl>
 <dl class="remark"><dt><b>Remarks:</b></dt><dd>This is the function that's called when you ask the library to write an integer to a stream, but it's more flexible because you can specify any base between 2 and 36. (Streams only allow base-8, base-10, or base-16.) </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01449">1449</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01465">1465</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a2493d0acb308a3ec0abd7326d9bc6a27"></a><!-- doxytag: member="boost::xint::to_wstring" ref="a2493d0acb308a3ec0abd7326d9bc6a27" args="(const integer_t n, std::size_t base=10, bool uppercase=false)" -->
+<a class="anchor" id="a6f24b4e0dc6e6c5de02480f5fb352030"></a><!-- doxytag: member="boost::xint::to_wstring" ref="a6f24b4e0dc6e6c5de02480f5fb352030" args="(const integer_t&lt; ... &gt; n, std::size_t base=10, bool uppercase=false)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -2050,7 +2097,7 @@ template&lt;... &gt; </div>
         <tr>
           <td class="memname">std::wstring boost::xint::to_wstring </td>
           <td>(</td>
-          <td class="paramtype">const integer_t&nbsp;</td>
+          <td class="paramtype">const integer_t&lt; ... &gt;&nbsp;</td>
           <td class="paramname"> <em>n</em>, </td>
         </tr>
         <tr>
@@ -2074,9 +2121,9 @@ template&lt;... &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>A shorthand function that calls <a class="el" href="namespaceboost_1_1xint.html#a7621dd91fa7eb64856241f8cafd1ef7e">to_stringtype&lt;wchar_t&gt;</a>. </p>
+<p>A shorthand function that calls <a class="el" href="namespaceboost_1_1xint.html#a12e9d9268bae5d099227af78c1dea758">to_stringtype&lt;wchar_t&gt;</a>. </p>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01478">1478</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01494">1494</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -2094,7 +2141,7 @@ template&lt;... &gt; </div>
 
 <p>A value that can be used for the 'base' parameter of the string-to-integer constructor functions. </p>
 
-<p>Definition at line <a class="el" href="basic__types__and__includes_8hpp_source.html#l00081">81</a> of file <a class="el" href="basic__types__and__includes_8hpp_source.html">basic_types_and_includes.hpp</a>.</p>
+<p>Definition at line <a class="el" href="basic__types__and__includes_8hpp_source.html#l00086">86</a> of file <a class="el" href="basic__types__and__includes_8hpp_source.html">basic_types_and_includes.hpp</a>.</p>
 
 </div>
 </div>
@@ -2111,12 +2158,12 @@ template&lt;... &gt; </div>
 
 <p>An empty callback_t, used as a default parameter for some functions. </p>
 
-<p>Definition at line <a class="el" href="basic__types__and__includes_8hpp_source.html#l00074">74</a> of file <a class="el" href="basic__types__and__includes_8hpp_source.html">basic_types_and_includes.hpp</a>.</p>
+<p>Definition at line <a class="el" href="basic__types__and__includes_8hpp_source.html#l00079">79</a> of file <a class="el" href="basic__types__and__includes_8hpp_source.html">basic_types_and_includes.hpp</a>.</p>
 
 </div>
 </div>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 12:31:58 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 18 20:03:13 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

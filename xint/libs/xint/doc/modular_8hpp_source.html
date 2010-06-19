@@ -44,21 +44,21 @@
 <a name="l00026"></a>00026 <span class="keyword">namespace </span>detail {
 <a name="l00027"></a>00027 
 <a name="l00028"></a>00028 BOOST_XINT_RAWINT_TPL
-<a name="l00029"></a>00029 BOOST_XINT_RAWINT <a class="code" href="namespaceboost_1_1xint.html#a2503b80a8b59b45190ea024884405564" title="Get the modular product of two integers.">mulmod</a>(<span class="keyword">const</span> BOOST_XINT_RAWINT n, <span class="keyword">const</span> BOOST_XINT_RAWINT by,
+<a name="l00029"></a>00029 BOOST_XINT_RAWINT <a class="code" href="namespaceboost_1_1xint.html#aca6917c25cdd7cac7c3eda4684567625" title="Get the modular product of two integers.">mulmod</a>(<span class="keyword">const</span> BOOST_XINT_RAWINT n, <span class="keyword">const</span> BOOST_XINT_RAWINT by,
 <a name="l00030"></a>00030     <span class="keyword">const</span> BOOST_XINT_RAWINT modulus)
 <a name="l00031"></a>00031 {
 <a name="l00032"></a>00032     <span class="keywordflow">return</span> n * by % modulus;
 <a name="l00033"></a>00033 }
 <a name="l00034"></a>00034 
 <a name="l00035"></a>00035 BOOST_XINT_RAWINT_TPL
-<a name="l00036"></a>00036 BOOST_XINT_RAWINT <a class="code" href="namespaceboost_1_1xint.html#a979ddb09a4d1a5dbfcb0707c19695877" title="Get the modular product of squaring an integer.">sqrmod</a>(<span class="keyword">const</span> BOOST_XINT_RAWINT n, <span class="keyword">const</span> BOOST_XINT_RAWINT
+<a name="l00036"></a>00036 BOOST_XINT_RAWINT <a class="code" href="namespaceboost_1_1xint.html#aa41f48c60b257cb321fe89fe0b65b6c3" title="Get the modular product of squaring an integer.">sqrmod</a>(<span class="keyword">const</span> BOOST_XINT_RAWINT n, <span class="keyword">const</span> BOOST_XINT_RAWINT
 <a name="l00037"></a>00037     modulus)
 <a name="l00038"></a>00038 {
-<a name="l00039"></a>00039     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#abe5e63185f27f2c795dc287e030ec424" title="Calculate the value of n2">square</a>(n) % modulus;
+<a name="l00039"></a>00039     <span class="keywordflow">return</span> <a class="code" href="namespaceboost_1_1xint.html#ac40d60956ef5af3b64804c7a9abffcdd" title="Calculate the value of n2">square</a>(n) % modulus;
 <a name="l00040"></a>00040 }
 <a name="l00041"></a>00041 
 <a name="l00042"></a>00042 BOOST_XINT_RAWINT_TPL
-<a name="l00043"></a>00043 BOOST_XINT_RAWINT <a class="code" href="namespaceboost_1_1xint.html#a1108e56d7d500a384bd0bb0a6849bfa0" title="Get the result of ne % m, keeping the intermediate results (relatively) small.">powmod</a>(<span class="keyword">const</span> BOOST_XINT_RAWINT n, <span class="keyword">const</span> BOOST_XINT_RAWINT e,
+<a name="l00043"></a>00043 BOOST_XINT_RAWINT <a class="code" href="namespaceboost_1_1xint.html#a9c1648ef679123bb2bf77681ffdfa815" title="Get the result of ne % m, keeping the intermediate results (relatively) small.">powmod</a>(<span class="keyword">const</span> BOOST_XINT_RAWINT n, <span class="keyword">const</span> BOOST_XINT_RAWINT e,
 <a name="l00044"></a>00044     <span class="keyword">const</span> BOOST_XINT_RAWINT m, <span class="keywordtype">bool</span> no_montgomery = <span class="keyword">false</span>)
 <a name="l00045"></a>00045 {
 <a name="l00046"></a>00046     <span class="keywordflow">if</span> (m.is_zero() || m.negative) <span class="keywordflow">throw</span> exceptions::invalid_modulus();
@@ -83,8 +83,8 @@
 <a name="l00065"></a>00065             <span class="keywordtype">int</span> bitCount(<span class="keywordtype">int</span>(eIndex == e.length - 1 ? lastBitCount :
 <a name="l00066"></a>00066                 detail::bits_per_digit));
 <a name="l00067"></a>00067             <span class="keywordflow">while</span> (bitCount-- &gt; 0) {
-<a name="l00068"></a>00068                 <span class="keywordflow">if</span> (ee &amp; 0x01) answer = <a class="code" href="namespaceboost_1_1xint.html#a2503b80a8b59b45190ea024884405564" title="Get the modular product of two integers.">mulmod</a>(answer, p, m);
-<a name="l00069"></a>00069                 p = <a class="code" href="namespaceboost_1_1xint.html#a979ddb09a4d1a5dbfcb0707c19695877" title="Get the modular product of squaring an integer.">sqrmod</a>(p, m);
+<a name="l00068"></a>00068                 <span class="keywordflow">if</span> (ee &amp; 0x01) answer = <a class="code" href="namespaceboost_1_1xint.html#aca6917c25cdd7cac7c3eda4684567625" title="Get the modular product of two integers.">mulmod</a>(answer, p, m);
+<a name="l00069"></a>00069                 p = <a class="code" href="namespaceboost_1_1xint.html#aa41f48c60b257cb321fe89fe0b65b6c3" title="Get the modular product of squaring an integer.">sqrmod</a>(p, m);
 <a name="l00070"></a>00070                 ee &gt;&gt;= 1;
 <a name="l00071"></a>00071             }
 <a name="l00072"></a>00072         }
@@ -101,7 +101,7 @@
 <a name="l00084"></a>00084 <span class="comment"></span>
 <a name="l00085"></a>00085 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_MODULAR_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Sun Jun 13 12:31:58 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 18 20:03:13 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>
