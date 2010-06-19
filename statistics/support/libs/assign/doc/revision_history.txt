@@ -1,6 +1,7 @@
 // Revision history:
 //
 // 
+// June 18th, 2010. Tentatively added detail/repeat.hpp
 // June 15th, 2010. The argument r in 
 //    Container convert( const Container*, 
 //        assign_detail::default_type_tag, const R& r) 

@@ -20,6 +20,8 @@
 #include <boost/assign/auto_size/range/chain_r.hpp>
 #include <boost/assign/auto_size/range/convert_range.hpp>
 
+#include <boost/assign/auto_size/detail/repeat.hpp>
+
 #include <libs/assign/example/range.h>
 
 void example_range(std::ostream& os)
@@ -113,7 +115,12 @@ void example_range(std::ostream& os)
 
     std::vector<tuple_> v = cref_csv( tuple_(1, "foo", 2) , tuple_(3, "bar", 4) );
     BOOST_ASSERT( v.size() == 2 );
+    BOOST_ASSERT( boost::get<0>( v[0] ) ==  1 );
+    BOOST_ASSERT( boost::get<1>( v[0] ) ==  "foo" );
+    BOOST_ASSERT( boost::get<2>( v[0] ) ==  2 );
     BOOST_ASSERT( boost::get<0>( v[1] ) ==  3 );
+    BOOST_ASSERT( boost::get<1>( v[1] ) ==  "bar" );
+    BOOST_ASSERT( boost::get<2>( v[1] ) ==  4 );
 }
 {
     std::vector<int> vec = (list_of(1),2,3);
@@ -121,6 +128,29 @@ void example_range(std::ostream& os)
     BOOST_ASSERT(vec[1]==2);    
     BOOST_ASSERT(vec[2]==3);    
 }
+{
+    int a = 4;
+    BOOST_AUTO( tmp, repeat<3>(a) );
+    BOOST_ASSERT( tmp[0] == 4 );    
+    BOOST_ASSERT( tmp[1] == 4 );    
+    BOOST_ASSERT( tmp[2] == 4 );    
+    BOOST_ASSERT( tmp.size() == 3 );
+    tmp[0] = 1;
+    BOOST_ASSERT( a == 1 );
+    tmp[1] = 2;
+    BOOST_ASSERT( a == 2 );
+    tmp[2] = 3;
+    BOOST_ASSERT( a == 3 );
+}
+{
+    int a = 4;
+    BOOST_AUTO( tmp, c_repeat<3>(a) );
+    BOOST_ASSERT( tmp[0] == 4 );    
+    BOOST_ASSERT( tmp[1] == 4 );    
+    BOOST_ASSERT( tmp[2] == 4 );    
+    BOOST_ASSERT( tmp.size() == 3 );
+}
+
 	os << "<- " << std::endl;
     
 }

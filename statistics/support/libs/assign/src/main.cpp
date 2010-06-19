@@ -4,8 +4,12 @@
 #include <boost/assign/auto_size/check/ref_csv.hpp>
 #undef BOOST_ASSIGN_CHECK_EQUAL
 #include <libs/assign/example/range.h>
+#include <libs/assign/test/speed.h>
 
 int main (int argc, char * const argv[]) {
+
+//    test_speed(std::cout);
+    example_range(std::cout);
 
     example_range(std::cout);
 
