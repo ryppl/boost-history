@@ -1,4 +1,4 @@
-/
+//
 // Boost.Process
 // ~~~~~~~~~~~~~
 //
@@ -11,6 +11,7 @@
 //
 
 #include <boost/process/all.hpp> 
+#include <boost/make_shared.hpp> 
 #include <boost/assign/list_of.hpp> 
 #include <vector> 
 #include <string> 
@@ -27,11 +28,7 @@ int main()
 
     context ctx; 
     ctx.environment.insert(std::make_pair("NEW_ENV_VARIABLE", "VALUE")); 
-    
-    ctx.stdin_behavior = boost::make_shared<close>(close());
-    ctx.stdout_behavior = boost::make_shared<close>(close()); 
+    ctx.stdin_behavior = behavior::close::def();
+    ctx.stdout_behavior = behavior::close::def(); 
     child c3 = create_child(find_executable_in_path("hostname"), args, ctx); 
-
-    int x;
-    std::cin >> x;
 } 

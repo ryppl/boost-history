@@ -10,10 +10,9 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#include <boost/all/process.hpp> 
 #include <boost/asio.hpp> 
+#include <boost/process/all.hpp> 
 #include <boost/array.hpp> 
-#include <boost/bind.hpp> 
 #include <string> 
 #include <iostream> 
 
@@ -23,31 +22,21 @@ using namespace boost::asio;
 io_service ioservice; 
 boost::array<char, 4096> buf; 
 
-void begin_read(pipe &read_end); 
-void end_read(const boost::system::error_code &ec, std::size_t bytes_transferred, pipe &read_end); 
+void handler(const boost::system::error_code &ec, std::size_t bytes_transferred); 
 
 int main() 
 { 
     std::string exe = find_executable_in_path("hostname"); 
     context ctx; 
-    ctx.stdout_behavior = boost::make_shared<capture>(capture(capture::output_stream)); ; 
+    ctx.stdout_behavior = behavior::named_pipe::def(behavior::named_pipe::output_stream); 
     child c = create_child(exe, ctx); 
     pistream &is = c.get_stdout(); 
-    pipe read_end(ioservice, is.native()); 
-    begin_read(read_end); 
+    pipe read_end(ioservice, is.native().release()); 
+    read_end.async_read_some(buffer(buf), handler); 
     ioservice.run(); 
 } 
 
-void begin_read(pipe &read_end) 
+void handler(const boost::system::error_code &ec, std::size_t bytes_transferred) 
 { 
-    read_end.async_read_some(buffer(buf), boost::bind(&end_read, placeholders::error, placeholders::bytes_transferred, read_end)); 
-} 
-
-void end_read(const boost::system::error_code &ec, std::size_t bytes_transferred, pipe &read_end) 
-{ 
-    if (!ec) 
-    { 
-      std::cout << std::string(buf.data(), bytes_transferred) << std::flush; 
-      begin_read(read_end); 
-    } 
+    std::cout << std::string(buf.data(), bytes_transferred) << std::flush; 
 } 

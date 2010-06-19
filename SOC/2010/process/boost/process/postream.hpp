@@ -82,7 +82,7 @@ public:
      * The file handle must not be copied. Copying invalidates
      * the source file handle making the postream unusable.
      */
-    detail::file_handle &handle()
+    detail::file_handle &native()
     {
         return handle_;
     }

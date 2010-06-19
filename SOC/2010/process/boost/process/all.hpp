@@ -25,6 +25,7 @@
 #include <boost/process/context.hpp> 
 #include <boost/process/environment.hpp> 
 #include <boost/process/operations.hpp> 
+#include <boost/process/pipe.hpp> 
 #include <boost/process/pistream.hpp> 
 #include <boost/process/postream.hpp> 
 #include <boost/process/process.hpp> 

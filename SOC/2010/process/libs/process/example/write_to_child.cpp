@@ -10,7 +10,7 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#include <boost/all/process.hpp> 
+#include <boost/process/all.hpp> 
 #include <string> 
 #include <iostream> 
 
@@ -20,7 +20,7 @@ int main()
 { 
     std::string exe = find_executable_in_path("ftp"); 
     context ctx; 
-    ctx.stdin_behavior = boost::make_shared<capture>(capture(capture::input_stream));  
+    ctx.stdin_behavior = behavior::pipe::def(behavior::pipe::input_stream); 
     child c = create_child(exe, ctx); 
     postream &os = c.get_stdin(); 
     os << "quit" << std::endl; 

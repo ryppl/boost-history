@@ -13,7 +13,7 @@
 /**
  * \file boost/process/stream_behavior.hpp
  *
- * Includes the declaration of the stream_behavior classes.
+ * Includes the declaration of stream behavior classes.
  *
  */
 
@@ -32,8 +32,12 @@
 #   include <windows.h> 
 #endif 
 
+#include <boost/shared_ptr.hpp> 
+#include <boost/make_shared.hpp> 
+
 namespace boost {
 namespace process {
+namespace behavior {
 
 /*
  * BEHAVIOR | BEFORE fork/CreateProcess        | AFTER fork/CreateProcess 
@@ -52,10 +56,10 @@ namespace process {
 /**
  * Stream behaviors are used to configure streams of a child process.
  *
- * The class stream_behavior is the base class all other stream behavior
- * classes must be derived from.
+ * The class stream is the base class all other stream behavior classes
+ * must be derived from.
  */
-class stream_behavior 
+class stream 
 { 
 public: 
 #if defined(BOOST_POSIX_API) 
@@ -64,7 +68,12 @@ public:
     typedef HANDLE native_type; 
 #endif 
 
-    virtual native_type get_child_end() const 
+    static boost::shared_ptr<stream> def() 
+    { 
+        return boost::make_shared<stream>(stream()); 
+    } 
+
+    virtual native_type get_child_end() 
     { 
 #if defined(BOOST_POSIX_API) 
         return -1; 
@@ -73,7 +82,7 @@ public:
 #endif 
     } 
 
-    virtual native_type get_parent_end() const 
+    virtual native_type get_parent_end() 
     { 
 #if defined(BOOST_POSIX_API) 
         return -1; 
@@ -88,7 +97,7 @@ public:
  *
  * A child process will not be able to use its streams.
  */
-typedef stream_behavior close; 
+typedef stream close; 
 
 /**
  * Stream behavior to make a child process inherit streams.
@@ -96,7 +105,7 @@ typedef stream_behavior close;
  * A child process will use the very same streams the current
  * process uses.
  */
-class inherit : public stream_behavior 
+class inherit : public stream 
 { 
 public: 
     inherit(native_type child_end) 
@@ -108,7 +117,12 @@ public:
 #endif 
     } 
 
-    native_type get_child_end() const 
+    static boost::shared_ptr<inherit> def(native_type child_end) 
+    { 
+        return boost::make_shared<inherit>(inherit(child_end)); 
+    } 
+
+    native_type get_child_end() 
     { 
         return child_end_; 
     } 
@@ -123,12 +137,12 @@ private:
  * A child process will be able to communicate with the current
  * process.
  */
-class capture : public stream_behavior 
+class pipe : public stream 
 { 
 public: 
     enum stream_type { input_stream, output_stream }; 
 
-    capture(stream_type stream) 
+    pipe(stream_type stream) 
     { 
         native_type natives[2]; 
 #if defined(BOOST_POSIX_API) 
@@ -151,12 +165,17 @@ public:
 #endif 
     } 
 
-    native_type get_child_end() const 
+    static boost::shared_ptr<pipe> def(stream_type stream) 
+    { 
+        return boost::make_shared<pipe>(pipe(stream)); 
+    } 
+
+    native_type get_child_end() 
     { 
         return child_end_; 
     } 
 
-    native_type get_parent_end() const 
+    native_type get_parent_end() 
     { 
         return parent_end_; 
     } 
@@ -174,12 +193,12 @@ private:
  * asynchronous I/O (as only named pipes support asynchronous I/O
  * on Windows).
  */
-class capture_with_named_pipe : public stream_behavior 
+class named_pipe : public stream 
 { 
 public: 
     enum stream_type { input_stream, output_stream }; 
 
-    capture_with_named_pipe(stream_type stream, std::string name = "") 
+    named_pipe(stream_type stream, std::string name = "") 
     { 
         native_type natives[2]; 
 #if defined(BOOST_POSIX_API) 
@@ -261,12 +280,17 @@ public:
 #endif 
     } 
 
-    native_type get_child_end() const 
+    static boost::shared_ptr<named_pipe> def(stream_type stream) 
+    { 
+        return boost::make_shared<named_pipe>(named_pipe(stream)); 
+    } 
+
+    native_type get_child_end() 
     { 
         return child_end_; 
     } 
 
-    native_type get_parent_end() const 
+    native_type get_parent_end() 
     { 
         return parent_end_; 
     } 
@@ -282,12 +306,12 @@ private:
  * A child process will be able to use streams. But data written to an 
  * output stream is discarded and data read from an input stream is 0.
  */
-class mute : public stream_behavior 
+class dummy : public stream 
 { 
 public: 
     enum stream_type { input_stream, output_stream }; 
 
-    mute(stream_type stream) 
+    dummy(stream_type stream) 
     { 
 #if defined(BOOST_POSIX_API) 
         std::string filename = (stream == input_stream) ? "/dev/zero" : "/dev/null"; 
@@ -301,7 +325,12 @@ public:
 #endif 
     } 
 
-    native_type get_child_end() const 
+    static boost::shared_ptr<dummy> def(stream_type stream) 
+    { 
+        return boost::make_shared<dummy>(dummy(stream)); 
+    } 
+
+    native_type get_child_end() 
     { 
         return child_end_; 
     } 
@@ -310,6 +339,7 @@ private:
     native_type child_end_; 
 }; 
 
+}
 }
 }
 

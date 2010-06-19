@@ -10,7 +10,7 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#include <boost/all/process.hpp> 
+#include <boost/process/all.hpp> 
 #include <string> 
 #include <iostream> 
 
@@ -19,7 +19,11 @@ using namespace boost::process;
 int main() 
 { 
     std::string exe = find_executable_in_path("hostname"); 
-    child c = create_child(exe); 
+    context ctx; 
+    ctx.stdout_behavior = behavior::pipe::def(behavior::pipe::output_stream); 
+    child c = create_child(exe, ctx); 
     pistream &is = c.get_stdout(); 
-    std::cout << is.rdbuf(); 
+    std::string hostname; 
+    is >> hostname; 
+    std::cout << hostname << std::endl; 
 } 
