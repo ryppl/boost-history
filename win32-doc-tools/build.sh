@@ -1,18 +1,18 @@
 #!/bin/sh -e
 
 ICONV=iconv-1.9.2.win32
-LIBXML=libxml2-2.7.3.win32
-LIBXSLT=libxslt-1.1.24.win32
+LIBXML=libxml2-2.7.6.win32
+LIBXSLT=libxslt-1.1.26.win32
 ZLIB=zlib-1.2.3.win32
-DOCBOOK_XSL=docbook-xsl-1.74.3
+DOCBOOK_XSL=docbook-xsl-1.75.2
 DOCBOOK_DTD_VER=4.2
 
-OUTPUT_NAME=win32-doc-tools-0.1
+OUTPUT_NAME=win32-doc-tools-0.1.1
 FILES=$(pwd)/files
 TMPDIR=$(pwd)/tmp
 DESTDIR=$(pwd)
 
-SOURCEFORGE_MIRROR=http://dl.sourceforge.net
+SOURCEFORGE_DOWNLOAD=http://sourceforge.net/projects/docbook/files/
 
 ################################################################################
 # Download files, and check for quickbook
@@ -20,13 +20,13 @@ SOURCEFORGE_MIRROR=http://dl.sourceforge.net
 # Could just use 'wget -nc'....
 
 function download {
-	FILENAME=$(basename $1)
+	FILENAME=$2
 
 	if test -f $FILES/$FILENAME; then
 		echo "Using existing $FILENAME"
 	else
 		echo "Downloading $FILENAME"
-		curl -o $FILES/$FILENAME $1
+		curl -L -o $FILES/$FILENAME $1
 	fi
 }
 
@@ -35,12 +35,12 @@ if test ! -f $FILES/quickbook.exe; then
 	exit 1
 fi
 
-download http://www.zlatkovic.com/pub/libxml/$ICONV.zip
-download http://www.zlatkovic.com/pub/libxml/$LIBXSLT.zip
-download http://www.zlatkovic.com/pub/libxml/$LIBXML.zip
-download http://www.zlatkovic.com/pub/libxml/$ZLIB.zip
-download $SOURCEFORGE_MIRROR/sourceforge/docbook/$DOCBOOK_XSL.zip
-download http://www.oasis-open.org/docbook/xml/$DOCBOOK_DTD_VER/docbook-xml-$DOCBOOK_DTD_VER.zip
+download http://www.zlatkovic.com/pub/libxml/$ICONV.zip $ICONV.zip
+download http://www.zlatkovic.com/pub/libxml/$LIBXSLT.zip $LIBXSLT.zip
+download http://www.zlatkovic.com/pub/libxml/$LIBXML.zip $LIBXML.zip
+download http://www.zlatkovic.com/pub/libxml/$ZLIB.zip $ZLIB.zip
+download $SOURCEFORGE_DOWNLOAD/docbook-xsl/$DOCBOOK_XSL_VERSION/$DOCBOOK_XSL.zip/download $DOCBOOK_XSL.zip
+download http://www.oasis-open.org/docbook/xml/$DOCBOOK_DTD_VER/docbook-xml-$DOCBOOK_DTD_VER.zip docbook-xml-$DOCBOOK_DTD_VER.zip
 
 ################################################################################
 
