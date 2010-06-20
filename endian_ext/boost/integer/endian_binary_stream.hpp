@@ -40,6 +40,18 @@ namespace boost
   {
      template< class T > struct is_endian { static const bool value = false; };
 
+     #if 1
+     template<typename E, 
+        typename T, 
+        std::size_t N,
+        BOOST_SCOPED_ENUM(alignment) A> 
+     struct is_endian<endian_pack<E,T,N,A> > { static const bool value = true; };
+     template<typename E, 
+        typename T, 
+        std::size_t N,
+        BOOST_SCOPED_ENUM(alignment) A> 
+     struct is_endian<endian<E,T,N,A> > { static const bool value = true; };
+     #else
      template<> struct is_endian<big8_t> { static const bool value = true; };
      template<> struct is_endian<big16_t> { static const bool value = true; };
      template<> struct is_endian<big24_t> { static const bool value = true; };
@@ -76,25 +88,6 @@ namespace boost
      template<> struct is_endian<ulittle56_t> { static const bool value = true; };
      template<> struct is_endian<ulittle64_t> { static const bool value = true; };
 
-     #if 0
-     template<> struct is_endian<native8_t> { static const bool value = true; };
-     template<> struct is_endian<native16_t> { static const bool value = true; };
-     template<> struct is_endian<native24_t> { static const bool value = true; };
-     template<> struct is_endian<native32_t> { static const bool value = true; };
-     template<> struct is_endian<native40_t> { static const bool value = true; };
-     template<> struct is_endian<native48_t> { static const bool value = true; };
-     template<> struct is_endian<native56_t> { static const bool value = true; };
-     template<> struct is_endian<native64_t> { static const bool value = true; };
-
-     template<> struct is_endian<unative8_t> { static const bool value = true; };
-     template<> struct is_endian<unative16_t> { static const bool value = true; };
-     template<> struct is_endian<unative24_t> { static const bool value = true; };
-     template<> struct is_endian<unative32_t> { static const bool value = true; };
-     template<> struct is_endian<unative40_t> { static const bool value = true; };
-     template<> struct is_endian<unative48_t> { static const bool value = true; };
-     template<> struct is_endian<unative56_t> { static const bool value = true; };
-     template<> struct is_endian<unative64_t> { static const bool value = true; };
-    #endif
  # if defined(BOOST_HAS_INT16_T)
      template<> struct is_endian<aligned_big16_t> { static const bool value = true; };
      template<> struct is_endian<aligned_ubig16_t> { static const bool value = true; };
@@ -115,12 +108,14 @@ namespace boost
      template<> struct is_endian<aligned_little64_t> { static const bool value = true; };
      template<> struct is_endian<aligned_ulittle64_t> { static const bool value = true; };
 # endif
-
+    #endif
+     
      template < class Endian >
        inline typename boost::enable_if< is_endian<Endian>, std::ostream & >::type
          operator<=( std::ostream & os, const Endian & e )
      {
-       return os.write( reinterpret_cast<const char*>(&e), sizeof(e) );
+       //~ return os.write( reinterpret_cast<const char*>(&e), sizeof(e) );
+       return os.write( e.data(), sizeof(e) );
      }
 
      template < class Endian >

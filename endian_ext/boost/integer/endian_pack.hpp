@@ -21,6 +21,7 @@
 //  Change the definition of endian_pack using types instead of enum endianness done by Vicente J. Botet Escriba.
 
 // TODO: When a compiler supporting constexpr becomes available, try possible uses.
+#define BOOST_ENDIAN_ALLOWS_UDT
 
 #ifndef BOOST_INTEGER_ENDIAN_PACK_HPP
 #define BOOST_INTEGER_ENDIAN_PACK_HPP
@@ -34,7 +35,6 @@
 #endif
 
 #include <boost/config.hpp>
-#include <boost/detail/endian.hpp>
 #include <boost/type_traits/is_signed.hpp>
 #include <boost/integer_traits.hpp>
 #include <boost/cstdint.hpp>
@@ -42,8 +42,9 @@
 #include <boost/detail/scoped_enum_emulation.hpp>
 //~ #include <iosfwd>
 #include <climits>
+#include <algorithm>
 
-# include <boost/endian/endian.hpp>
+# include <boost/endian/endianness.hpp>
 
 # if CHAR_BIT != 8
 #   error Platforms with CHAR_BIT != 8 are not supported
@@ -148,6 +149,36 @@ namespace boost
         (static_cast<char*>(bytes), value);
     }
 
+    ///////////////////////
+    template<std::size_t L> inline
+    void unrolled_reverse_copy(char* dst, const char* src) {
+      *dst = *src;
+      unrolled_reverse_copy<L-1>(dst+1, src-1);
+    } // unrolled_reverse_copy
+
+    template<> inline void unrolled_reverse_copy<1>(char* dst, const char* src)
+      { *dst = *src; }
+
+    template<> inline void unrolled_reverse_copy<0>(char*, const char*) { }
+
+    template<std::size_t L, bool>
+    struct reverse_copy_helper {
+      static void copy(char* dst, const char* src)
+        { std::reverse_copy(src, src+L, dst); }
+    };
+
+    template<std::size_t L>
+    struct reverse_copy_helper<L, true> {
+      static void copy(char* dst, const char* src)
+        { unrolled_reverse_copy<L>(dst, src+(L-1)); }
+    };
+
+    template<std::size_t L> inline
+    void reverse_copy(void* dst, const void* src) {
+      reverse_copy_helper< L, (L<=16) >::copy(static_cast<char*>(dst),
+                                              static_cast<const char*>(src));
+    }
+    
   } // namespace detail
 
   namespace integer
@@ -178,10 +209,15 @@ namespace boost
     {
         BOOST_STATIC_ASSERT( (n_bits/8)*8 == n_bits );
       public:
+        typedef big_endian endian_type;
         typedef T value_type;
+        static const std::size_t width = n_bits;
+        static const BOOST_SCOPED_ENUM(alignment) alignment_value = alignment::unaligned;
 #     ifndef BOOST_ENDIAN_NO_CTORS
         endian_pack() BOOST_ENDIAN_DEFAULT_CONSTRUCT
-        explicit endian_pack(T val)
+        template <typename T2>
+        explicit endian_pack(T2 val)
+        //~ explicit endian_pack(T val)
         { 
 #       ifdef BOOST_ENDIAN_LOG
           if ( endian_log )
@@ -199,7 +235,8 @@ namespace boost
 #       endif
           return detail::load_big_endian<T, n_bits/8>(m_value);
         }
-      private:
+        const char* data() const  { return m_value; }        
+    private:
   	    char m_value[n_bits/8];
     };
 
@@ -209,7 +246,10 @@ namespace boost
     {
         BOOST_STATIC_ASSERT( (n_bits/8)*8 == n_bits );
       public:
+        typedef little_endian endian_type;
         typedef T value_type;
+        static const std::size_t width = n_bits;
+        static const BOOST_SCOPED_ENUM(alignment) alignment_value = alignment::unaligned;
 #     ifndef BOOST_ENDIAN_NO_CTORS
         endian_pack() BOOST_ENDIAN_DEFAULT_CONSTRUCT
         explicit endian_pack(T val)
@@ -230,6 +270,7 @@ namespace boost
 #       endif
           return detail::load_little_endian<T, n_bits/8>(m_value);
         }
+        const char* data() const  { return m_value; }
       private:
   	    char m_value[n_bits/8];
     };
@@ -238,6 +279,60 @@ namespace boost
     //  Specializations that mimic built-in integer types.
     //  These typically have the same alignment as the underlying types.
 
+#if defined(BOOST_ENDIAN_ALLOWS_UDT)
+    //  aligned endian specialization
+    template <typename E, typename T, std::size_t n_bits>
+    class endian_pack< E, T, n_bits, alignment::aligned  >
+    {
+        BOOST_STATIC_ASSERT( (n_bits/8)*8 == n_bits );
+        BOOST_STATIC_ASSERT( sizeof(T) == n_bits/8 );
+      public:
+        typedef E endian_type;
+        typedef T value_type;
+      private:
+      void store(const value_type& v)
+        { detail::reverse_copy<sizeof(value_type)>(m_value, &v); }
+
+      void retrieve(value_type* result) const
+        { detail::reverse_copy<sizeof(value_type)>(result, m_value); }
+      public:
+        static const std::size_t width = n_bits;
+        static const BOOST_SCOPED_ENUM(alignment) alignment_value = alignment::aligned;
+#   ifndef BOOST_ENDIAN_NO_CTORS
+        endian_pack() BOOST_ENDIAN_DEFAULT_CONSTRUCT
+        explicit endian_pack(T val)    { store(val); }
+#   endif
+        endian_pack & operator=(T val) { store(val); return *this; }
+        operator T() const        { value_type rval; retrieve(&rval); return rval; }
+        //~ const char* data() const  { return reinterpret_cast<const char *>(&m_value); }
+        const char* data() const  { return m_value; }
+      private:
+  	    //~ T m_value;
+      char m_value[sizeof(value_type)];
+    };
+
+    //  aligned native endian specialization
+    template <typename T, std::size_t n_bits>
+    class endian_pack< native_endian, T, n_bits, alignment::aligned  >
+    {
+        BOOST_STATIC_ASSERT( (n_bits/8)*8 == n_bits );
+        BOOST_STATIC_ASSERT( sizeof(T) == n_bits/8 );
+      public:
+        typedef native_endian endian_type;
+        typedef T value_type;
+        static const std::size_t width = n_bits;
+        static const BOOST_SCOPED_ENUM(alignment) alignment_value = alignment::aligned;
+#   ifndef BOOST_ENDIAN_NO_CTORS
+        endian_pack() BOOST_ENDIAN_DEFAULT_CONSTRUCT
+        explicit endian_pack(T val) : m_value(val) { }
+#   endif
+        endian_pack & operator=(T val) { m_value = val; return *this; }
+        operator T() const        { return m_value; }
+        const char* data() const  { return reinterpret_cast<const char *>(&m_value); }
+      private:
+  	    T m_value;
+    };    
+#else    
     //  aligned big endian specialization
     template <typename T, std::size_t n_bits>
     class endian_pack< big_endian, T, n_bits, alignment::aligned  >
@@ -245,11 +340,14 @@ namespace boost
         BOOST_STATIC_ASSERT( (n_bits/8)*8 == n_bits );
         BOOST_STATIC_ASSERT( sizeof(T) == n_bits/8 );
       public:
+        typedef big_endian endian_type;
         typedef T value_type;
+        static const std::size_t width = n_bits;
+        static const BOOST_SCOPED_ENUM(alignment) alignment_value = alignment::aligned;
 #   ifndef BOOST_ENDIAN_NO_CTORS
         endian_pack() BOOST_ENDIAN_DEFAULT_CONSTRUCT
 #     ifdef BOOST_BIG_ENDIAN
-        endian_pack(T val) : m_value(val) { }
+        explicit endian_pack(T val) : m_value(val) { }
 #     else
         explicit endian_pack(T val)    { detail::store_big_endian<T, sizeof(T)>(&m_value, val); }
 #     endif
@@ -261,6 +359,7 @@ namespace boost
         endian_pack & operator=(T val) { detail::store_big_endian<T, sizeof(T)>(&m_value, val); return *this; }
         operator T() const        { return detail::load_big_endian<T, sizeof(T)>(&m_value); }
 #   endif  
+        const char* data() const  { return reinterpret_cast<const char *>(&m_value); }
       private:
   	    T m_value;
     };
@@ -272,11 +371,14 @@ namespace boost
         BOOST_STATIC_ASSERT( (n_bits/8)*8 == n_bits );
         BOOST_STATIC_ASSERT( sizeof(T) == n_bits/8 );
       public:
+        typedef little_endian endian_type;
         typedef T value_type;
+        static const std::size_t width = n_bits;
+        static const BOOST_SCOPED_ENUM(alignment) alignment_value = alignment::aligned;
 #   ifndef BOOST_ENDIAN_NO_CTORS
         endian_pack() BOOST_ENDIAN_DEFAULT_CONSTRUCT
 #     ifdef BOOST_LITTLE_ENDIAN
-        endian_pack(T val) : m_value(val) { }
+        explicit endian_pack(T val) : m_value(val) { }
 #     else
         explicit endian_pack(T val)    { detail::store_little_endian<T, sizeof(T)>(&m_value, val); }
 #     endif
@@ -288,9 +390,11 @@ namespace boost
         endian_pack & operator=(T val) { detail::store_little_endian<T, sizeof(T)>(&m_value, val); return *this; }
         operator T() const        { return detail::load_little_endian<T, sizeof(T)>(&m_value); }
     #endif
+        const char* data() const  { return reinterpret_cast<const char *>(&m_value); }
       private:
   	    T m_value;
     };
+#endif    
 
   //  naming convention typedefs  ------------------------------------------------------//
 
@@ -387,6 +491,17 @@ namespace boost
     typedef endian_pack< little_endian, int64_t, 64, alignment::aligned >   aligned_little64_pt;
     typedef endian_pack< little_endian, uint64_t, 64, alignment::aligned >  aligned_ulittle64_pt;
 # endif
+    
+    template<typename OSTREAM, typename E,
+        typename T, std::size_t N,
+        BOOST_SCOPED_ENUM(alignment) A> 
+      OSTREAM& 
+      operator<<(OSTREAM & os, 
+                 const endian_pack< E,T,N,A > & aval) {
+        os << T(aval);
+        return os;
+                     
+    }
     
   } // namespace integer
 } // namespace boost

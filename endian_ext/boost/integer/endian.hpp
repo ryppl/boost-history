@@ -41,6 +41,8 @@
 #include <boost/static_assert.hpp>
 #include <iosfwd>
 #include <climits>
+#include <limits>
+#include <cstddef>
 
 namespace boost
 {
@@ -61,7 +63,9 @@ namespace boost
         typedef T value_type;
 #     ifndef BOOST_ENDIAN_NO_CTORS
         endian() BOOST_ENDIAN_DEFAULT_CONSTRUCT
-        explicit endian(T val)
+        template <typename T2>
+        explicit endian(T2 val)
+        //~ explicit endian(T val)
             : pack_(val)
         { 
         }
@@ -74,6 +78,8 @@ namespace boost
         { 
           return T(pack_);
         }
+        const char* data() const  { return pack_.data(); }
+
     };
         
   //  naming convention typedefs  ------------------------------------------------------//
@@ -172,6 +178,18 @@ namespace boost
     typedef endian< little_endian, uint64_t, 64, alignment::aligned >  aligned_ulittle64_t;
 # endif
 
+    template<typename OSTREAM, typename E,
+        typename T, std::size_t N,
+        BOOST_SCOPED_ENUM(alignment) A> 
+      OSTREAM& 
+      operator<<(OSTREAM & os, 
+                 const endian< E,T,N,A > & aval) {
+        os << T(aval);
+        return os;
+                     
+    }
+
+
   } // namespace integer
 } // namespace boost
 
@@ -179,4 +197,156 @@ namespace boost
 # pragma pack(pop)
 #endif
 
+#if 0
+namespace std {
+      template <typename E, 
+        typename T, 
+        size_t N
+    > class numeric_limits<boost::integer::endian<E,T,N,boost::integer::alignment::aligned> > 
+  {
+      typedef T value_type;
+   public:
+
+      BOOST_STATIC_CONSTANT(bool, is_specialized = true);
+      static value_type min BOOST_PREVENT_MACRO_SUBSTITUTION (){ return numeric_limits<value_type>::(min)(); }
+      static value_type max BOOST_PREVENT_MACRO_SUBSTITUTION (){ return numeric_limits<value_type>::(max)(); }
+      BOOST_STATIC_CONSTANT(int, digits = numeric_limits<value_type>::digits);
+      BOOST_STATIC_CONSTANT(int, digits10 = numeric_limits<value_type>::digits10);
+      BOOST_STATIC_CONSTANT(bool, is_signed = numeric_limits<value_type>::is_signed);
+      BOOST_STATIC_CONSTANT(bool, is_integer = numeric_limits<value_type>::is_integer);
+      BOOST_STATIC_CONSTANT(bool, is_exact = numeric_limits<value_type>::is_exact);
+      BOOST_STATIC_CONSTANT(int, radix = numeric_limits<value_type>::radix);
+      static value_type epsilon() throw() { return numeric_limits<value_type>::epsilon();  };
+      static value_type round_error() throw() { return numeric_limits<value_type>::round_error(); };
+
+      BOOST_STATIC_CONSTANT(int, min_exponent = numeric_limits<value_type>::min_exponent);
+      BOOST_STATIC_CONSTANT(int, min_exponent10 = numeric_limits<value_type>::min_exponent10);
+      BOOST_STATIC_CONSTANT(int, max_exponent = numeric_limits<value_type>::max_exponent);
+      BOOST_STATIC_CONSTANT(int, max_exponent10 = numeric_limits<value_type>::max_exponent10);
+
+      BOOST_STATIC_CONSTANT(bool, has_infinity = numeric_limits<value_type>::has_infinity);
+      BOOST_STATIC_CONSTANT(bool, has_quiet_NaN = numeric_limits<value_type>::has_quiet_NaN);
+      BOOST_STATIC_CONSTANT(bool, has_signaling_NaN = numeric_limits<value_type>::has_signaling_NaN);
+      BOOST_STATIC_CONSTANT(bool, has_denorm = numeric_limits<value_type>::has_denorm);
+      BOOST_STATIC_CONSTANT(bool, has_denorm_loss = numeric_limits<value_type>::has_denorm_loss);
+      static value_type infinity() throw() { return numeric_limits<value_type>::infinity(); };
+      static value_type quiet_NaN() throw() { return numeric_limits<value_type>::quiet_NaN(); };
+      static value_type signaling_NaN() throw() { return numeric_limits<value_type>::signaling_NaN(); };
+      static value_type denorm_min() throw() { return numeric_limits<value_type>::denorm_min(); };
+
+      BOOST_STATIC_CONSTANT(bool, is_iec559 = numeric_limits<value_type>::is_iec559);
+      BOOST_STATIC_CONSTANT(bool, is_bounded = numeric_limits<value_type>::is_bounded);
+      BOOST_STATIC_CONSTANT(bool, is_modulo = numeric_limits<value_type>::is_modulo);
+
+      BOOST_STATIC_CONSTANT(bool, traps = numeric_limits<value_type>::traps);
+      BOOST_STATIC_CONSTANT(bool, tinyness_before = numeric_limits<value_type>::tinyness_before);
+      BOOST_STATIC_CONSTANT(float_round_style, round_style = numeric_limits<value_type>::round_style);
+      
+  };
+
+namespace std {
+      template <typename E, 
+        typename T, 
+        size_t N
+    > class numeric_limits<boost::integer::endian<E,T,N,boost::integer::alignment::aligned> > 
+  {
+      typedef T value_type;
+   public:
+
+      BOOST_STATIC_CONSTANT(bool, is_specialized = true);
+      static value_type min BOOST_PREVENT_MACRO_SUBSTITUTION (){ return numeric_limits<value_type>::(min)(); }
+      static value_type max BOOST_PREVENT_MACRO_SUBSTITUTION (){ return numeric_limits<value_type>::(max)(); }
+      BOOST_STATIC_CONSTANT(int, digits = numeric_limits<value_type>::digits);
+      BOOST_STATIC_CONSTANT(int, digits10 = numeric_limits<value_type>::digits10);
+      BOOST_STATIC_CONSTANT(bool, is_signed = numeric_limits<value_type>::is_signed);
+      BOOST_STATIC_CONSTANT(bool, is_integer = numeric_limits<value_type>::is_integer);
+      BOOST_STATIC_CONSTANT(bool, is_exact = numeric_limits<value_type>::is_exact);
+      BOOST_STATIC_CONSTANT(int, radix = numeric_limits<value_type>::radix);
+      static value_type epsilon() throw() { return numeric_limits<value_type>::epsilon();  };
+      static value_type round_error() throw() { return numeric_limits<value_type>::round_error(); };
+
+      BOOST_STATIC_CONSTANT(int, min_exponent = numeric_limits<value_type>::min_exponent);
+      BOOST_STATIC_CONSTANT(int, min_exponent10 = numeric_limits<value_type>::min_exponent10);
+      BOOST_STATIC_CONSTANT(int, max_exponent = numeric_limits<value_type>::max_exponent);
+      BOOST_STATIC_CONSTANT(int, max_exponent10 = numeric_limits<value_type>::max_exponent10);
+
+      BOOST_STATIC_CONSTANT(bool, has_infinity = numeric_limits<value_type>::has_infinity);
+      BOOST_STATIC_CONSTANT(bool, has_quiet_NaN = numeric_limits<value_type>::has_quiet_NaN);
+      BOOST_STATIC_CONSTANT(bool, has_signaling_NaN = numeric_limits<value_type>::has_signaling_NaN);
+      BOOST_STATIC_CONSTANT(bool, has_denorm = numeric_limits<value_type>::has_denorm);
+      BOOST_STATIC_CONSTANT(bool, has_denorm_loss = numeric_limits<value_type>::has_denorm_loss);
+      static value_type infinity() throw() { return numeric_limits<value_type>::infinity(); };
+      static value_type quiet_NaN() throw() { return numeric_limits<value_type>::quiet_NaN(); };
+      static value_type signaling_NaN() throw() { return numeric_limits<value_type>::signaling_NaN(); };
+      static value_type denorm_min() throw() { return numeric_limits<value_type>::denorm_min(); };
+
+      BOOST_STATIC_CONSTANT(bool, is_iec559 = numeric_limits<value_type>::is_iec559);
+      BOOST_STATIC_CONSTANT(bool, is_bounded = numeric_limits<value_type>::is_bounded);
+      BOOST_STATIC_CONSTANT(bool, is_modulo = numeric_limits<value_type>::is_modulo);
+
+      BOOST_STATIC_CONSTANT(bool, traps = numeric_limits<value_type>::traps);
+      BOOST_STATIC_CONSTANT(bool, tinyness_before = numeric_limits<value_type>::tinyness_before);
+      BOOST_STATIC_CONSTANT(float_round_style, round_style = numeric_limits<value_type>::round_style);
+      
+  };
+    
+
+namespace std {
+      template <typename E, 
+        typename T, 
+        size_t N
+    > class numeric_limits<boost::integer::endian<E,T,N,boost::integer::alignment::unaligned> > 
+  {
+      typedef T value_type;
+   public:
+
+      BOOST_STATIC_CONSTANT(bool, is_specialized = true);
+      static value_type min BOOST_PREVENT_MACRO_SUBSTITUTION (){ 
+          return numeric_limits<value_type>::is_signed
+            ? low_bit_mask<value_type, N>::value
+            : 0; 
+      }
+      static value_type max BOOST_PREVENT_MACRO_SUBSTITUTION (){ 
+          return numeric_limits<value_type>::is_signed
+            ?low_bit_mask<value_type, N-1>::value
+            :low_bit_mask<value_type, N>::value; 
+      }
+      BOOST_STATIC_CONSTANT(int, digits = N);
+      BOOST_STATIC_CONSTANT(int, digits10 = 2<<N);
+      BOOST_STATIC_CONSTANT(bool, is_signed = numeric_limits<value_type>::is_signed);
+      BOOST_STATIC_CONSTANT(bool, is_integer = numeric_limits<value_type>::is_integer);
+      BOOST_STATIC_CONSTANT(bool, is_exact = numeric_limits<value_type>::is_exact);
+      BOOST_STATIC_CONSTANT(int, radix = numeric_limits<value_type>::radix);
+      static value_type epsilon() throw() { return numeric_limits<value_type>::epsilon();  };
+      static value_type round_error() throw() { return numeric_limits<value_type>::round_error(); };
+
+      BOOST_STATIC_CONSTANT(int, min_exponent = numeric_limits<value_type>::min_exponent);
+      BOOST_STATIC_CONSTANT(int, min_exponent10 = numeric_limits<value_type>::min_exponent10);
+      BOOST_STATIC_CONSTANT(int, max_exponent = numeric_limits<value_type>::max_exponent);
+      BOOST_STATIC_CONSTANT(int, max_exponent10 = numeric_limits<value_type>::max_exponent10);
+
+      BOOST_STATIC_CONSTANT(bool, has_infinity = numeric_limits<value_type>::has_infinity);
+      BOOST_STATIC_CONSTANT(bool, has_quiet_NaN = numeric_limits<value_type>::has_quiet_NaN);
+      BOOST_STATIC_CONSTANT(bool, has_signaling_NaN = numeric_limits<value_type>::has_signaling_NaN);
+      BOOST_STATIC_CONSTANT(bool, has_denorm = numeric_limits<value_type>::has_denorm);
+      BOOST_STATIC_CONSTANT(bool, has_denorm_loss = numeric_limits<value_type>::has_denorm_loss);
+      static value_type infinity() throw() { return numeric_limits<value_type>::infinity(); };
+      static value_type quiet_NaN() throw() { return numeric_limits<value_type>::quiet_NaN(); };
+      static value_type signaling_NaN() throw() { return numeric_limits<value_type>::signaling_NaN(); };
+      static value_type denorm_min() throw() { return numeric_limits<value_type>::denorm_min(); };
+
+      BOOST_STATIC_CONSTANT(bool, is_iec559 = numeric_limits<value_type>::is_iec559);
+      BOOST_STATIC_CONSTANT(bool, is_bounded = numeric_limits<value_type>::is_bounded);
+      BOOST_STATIC_CONSTANT(bool, is_modulo = numeric_limits<value_type>::is_modulo);
+
+      BOOST_STATIC_CONSTANT(bool, traps = numeric_limits<value_type>::traps);
+      BOOST_STATIC_CONSTANT(bool, tinyness_before = numeric_limits<value_type>::tinyness_before);
+      BOOST_STATIC_CONSTANT(float_round_style, round_style = numeric_limits<value_type>::round_style);
+      
+  };
+    
+  
+} // namespace std
+
+#endif
 #endif // BOOST_ENDIAN_HPP

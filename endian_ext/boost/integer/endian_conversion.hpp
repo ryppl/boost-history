@@ -13,7 +13,7 @@
 #ifndef BOOST_INTEGER_ENDIAN_CONVERT_HPP
 #define BOOST_INTEGER_ENDIAN_CONVERT_HPP
 
-#include <boost/endian/endian.hpp>
+#include <boost/endian/endianness.hpp>
 #include <boost/endian/domain_map.hpp>
 #include <boost/mpl/deref.hpp>
 #include <boost/mpl/next.hpp>
