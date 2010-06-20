@@ -1,4 +1,4 @@
-//  endian_io_test.cpp  ----------------------------------------------------------------//
+//  endian_hello_world_2.cpp  ----------------------------------------------------------------//
 
 //  Copyright Beman Dawes, 2009
 
@@ -7,6 +7,7 @@
 
 //  See library home page at http://www.boost.org/libs/endian
 
+#include <boost/integer/endian_pack.hpp>
 #include <boost/integer/endian.hpp>
 #include <boost/integer/endian_binary_stream.hpp>
 #include <boost/binary_stream.hpp>
@@ -14,18 +15,19 @@
 
 using namespace boost;
 using namespace boost::integer;
+using namespace boost::endianness;
 
 int main()
 {
-    int_least32_t v = 0x31323334L;  // = ASCII { '1', '2', '3', '4' }
+    int_least32_t v = 0x313233L;  // = ASCII { '1', '2', '3'}
                                   // value chosen to work on text stream
-    big32_pt    b(v);
-    little32_pt l(v);
+    endian_pack<big, int_least32_t, 24, alignment::unaligned>    b(v);
+    endian_pack<little, int_least32_t, 24, alignment::unaligned> l(v);
 
     std::cout << "Hello, endian world!\n\n";
 
     std::cout << v << ' ' << b << ' ' << l << '\n';
-    std::cout <= v <= ' ' <= b <= ' ' <= l <= '\n';
+    std::cout <= b <= ' ' <= l <= '\n';
     return 0;
 }
 
