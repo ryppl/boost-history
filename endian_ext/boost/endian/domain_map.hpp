@@ -13,7 +13,7 @@
 #ifndef BOOST_ENDIAN_DOMAIN_MAP__HPP
 #define BOOST_ENDIAN_DOMAIN_MAP__HPP
 
-#include <boost/endian/endian.hpp>
+#include <boost/endian/endianness.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/void.hpp>
@@ -97,7 +97,7 @@ namespace endianness {
         typedef typename domain_map<Domain, T>::type type;
     };
 
-} // namespace endian
+} // namespace endianness
 
 } // namespace boost
 
