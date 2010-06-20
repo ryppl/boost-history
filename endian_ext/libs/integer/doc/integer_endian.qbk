@@ -136,12 +136,12 @@ Some people don't agree with that design choice, as they think the operation of 
 The extension proposal separates the endian aware byte-holder type from the one able to make arithmetic operations so the user will be forced to convert for one to/from the native type, and avoid unfortunate costly atithmetic operations. 
 
     struct endian_aware_structure {
-        endian_holder<big,int32_t> a;
-        endian_holder<big,int16_t> b;
+        endian_pack<big,int32_t> a;
+        endian_pack<big,int16_t> b;
     };
 
 
-Structure endian_aware_structure can not be used without converting to native types, as endian_holder don't provide other operations than conversion.
+Structure endian_aware_structure can not be used without converting to native types, as endian_pack don't provide other operations than conversion.
 
     endian_aware_structure st;
     // ...
@@ -169,7 +169,7 @@ The fact that some context need this in-place conversion doesn't mean that every
 [heading UDT endianness]
 [/=====================]
 
-It has been also arged that the boost::integer::endian class didn't accepts a UDT. This is true when the endian is unaligned, but not for aligned types.
+boost::integer::endian class didn't accept a UDT. We have updated the library so now UDT can be used for endian aligned types.
 
     struct UserMessage {
       endian_pack<little, system_clock::time_point > timestamp;
@@ -274,7 +274,7 @@ Several macros allow user control over features:
 [heading Requirements]
 [/=========================]
 
-[*Boost.Integer.Endian] depends on some Boost library. For these specific parts you must use either Boost version 1.43.0 or the version in SVN trunk (even if older version should works also). 
+[*Boost.Integer.Endian] depends on some Boost library. The library has been tested with version 1.43.0 but an older version should works also. 
 
 
 [/========================]
@@ -296,9 +296,11 @@ All functions in the library are thread-unsafe except when noted explicitly.
 Currently, [*Boost.Integer.Endian] has been tested in the following compilers/platforms:
 
 *  GCC 3.4.4 Cygwin
-*  GCC 3.4.6 Linux
+*  GCC 4.4.0 MinGw
+*  MSV9 9 EXpress Windows
+
 [/*  GCC 4.3.2 Cygwin]
-*  GCC 4.1.2 Linux
+[/*  GCC 4.1.2 Linux]
 
 [note Please send any questions, comments and bug reports to boost <at> lists <dot> boost <dot> org.]
 
@@ -410,6 +412,10 @@ On a little-endian CPU, this program outputs:
 
 [heading Binary streams]
 
+Header <boost/binary_stream.hpp> provides operators `<=` and `=>` for unformatted binary (as opposed to formatted character) stream insertion and extraction of built-in and std::string types.
+
+Header <boost/integer/endian_binary_stream.hpp> provides operators `<=` and `=>` for unformatted binary (as opposed to formatted character) stream insertion and extraction of endian types.
+
     #include <boost/integer/endian_pack.hpp>
     #include <boost/integer/endian_binary_stream.hpp>
     #include <boost/binary_stream.hpp>
@@ -500,7 +506,7 @@ The unaligned types do not cause compilers to insert padding bytes in classes an
 
 [*Comment on naming]
 
-When first exposed to endian types, programmers often fit them into a mental model based on the <cstdint> types. Using that model, it is natural to expect a 56-bit big-endian signed integer to be named `int_big56_t`. But these integer byte-hodlers are not realy integers.
+When first exposed to endian types, programmers often fit them into a mental model based on the <cstdint> types. Using that model, it is natural to expect a 56-bit big-endian signed integer to be named `int_big56_t`. But these byte-hodlers are not realy integers.
 
 That seems to lead to formation of a new mental model specific to endian byte-holder types. In that model, the endianness is the key feature, and the integer aspect is downplayed. Once that mental transition is made, a name like `big56_t` is a good reflection of the mental model.
 
@@ -562,8 +568,8 @@ quantity<> class. This UDT can be packaged on an endian holder to take care of e
 
 On a little-endian CPU, this program outputs:
 
-825373492 m 825373492 m 825373492 m
-1234 4321
+    825373492 m 825373492 m 825373492 m
+    1234 4321
 
 [heading Arrays of endian holders]
 
@@ -608,9 +614,51 @@ Up to now we have see how to work with endian aware byte holders variables. In t
     header.checksum = checksum_of(p);
 
 
-[heading endian integers]
+[/===========================]
+[section Endian unaware integers]
+[/===========================]
+
+Boost endian integers are based on the byte_holder endian_pack class template and provide in addition the same full set of C++ assignment, arithmetic, and relational operators as C++ standard integral types, with the standard semantics.
+
+One class template is provided:
+
+    template <endianness::enum_t E, typename T, std::size_t n_bytes=8*sizeof(T),
+      alignment::enum_t A = alignment::aligned>
+    class endian;
+
+Unary arithmetic operators are `+`, `-`, `~`, `!`, prefix and postfix `--` and `++`. Binary arithmetic operators are `+`, `+=`, `-`, `-=`, `*`, `*=`, `/`, `/=`, `%`, `%=`, `&`, `&=`, `|`, `|=`, `^`, `^=`, `<<`, `<<=`, `>>`, `>>=`. Binary relational operators are `==`, `!=`, `<`, `<=`, `>`, `>=`.
+
+Automatic conversion is provided to the underlying integer value type.
+
+[heading Typedefs]
 
 
+Sixty typedefs, such as big32_t, provide convenient naming conventions for common use cases:
+
+
+[table
+    [[Name]                     [Endianness]  [Sign]                    [Sizes in bits (n)]         [Alignment]]
+    [[`int_big`*n*`_t`]             [`big`]       [signed]                  [8,16,24,32,40,48,56,64]    [`unaligned`]]
+    [[`uint_big`*n*`_t`]            [`big`]       [unsigned]                [8,16,24,32,40,48,56,64]    [`unaligned`]]
+    [[`int_little`*n*`_t`]          [`little`]    [signed]                  [8,16,24,32,40,48,56,64]    [`unaligned`]]
+    [[`uint_little`*n*`_t`]         [`little`]    [unsigned]                [8,16,24,32,40,48,56,64]    [`unaligned`]]
+    [[`uint_little`*n*`_t`]         [`native`]    [signed]                  [8,16,24,32,40,48,56,64]    [`unaligned`]]
+    [[`uint_native`*n*`_t`]         [`native`]    [unsigned]                [16,32,64]                  [`aligned`]]
+    [[`aligned_int_big`*n*`_t`]     [`big`]       [signed]                  [16,32,64]                  [`aligned`]]
+    [[`aligned_uint_big`*n*`_t`]    [`big`]       [unsigned]                [16,32,64]                  [`aligned`]]
+    [[`aligned_int_little`*n*`_t`]  [`little`]       [signed]                  [16,32,64]                  [`aligned`]]
+    [[`aligned_uint_little`*n*`_t`] [`little`]       [unsigned]                [16,32,64]                  [`aligned`]]
+]
+
+
+[heading Comment on naming]
+
+When first exposed to endian types, programmers often fit them into a mental model based on the <cstdint> types. Using that model, it is natural to expect a 56-bit big-endian signed integer to be named `int_big56_t`.
+
+As experience using these types grows, the realization creeps in that they are lousy arithmetic integers - they are really byte holders that for convenience support arithmetic operations - and that for use in internal interfaces or anything more than trivial arithmetic computations it is far better to convert values of these endian types to traditional integer types.
+
+
+[endsect]
 [endsect]
 
 [/===========================]
@@ -619,6 +667,8 @@ Up to now we have see how to work with endian aware byte holders variables. In t
 
 [heading Working with third party structures]
 
+
+[heading Domain map]
 
 [heading In-place conversions]
 
@@ -682,11 +732,11 @@ Up to now we have see how to work with endian aware byte holders variables. In t
 [section:integer_endianness_hpp Header `<boost/integer/endiannes.hpp>`]
 [/==========================================================================================]
 
+Header <boost/endian/endianness.hpp> provides the endianness tags.
+
 [heading Synopsis]
 
-    namespace boost
-    {         
-
+    namespace boost {         
         namespace endianness {
             struct big;
             struct little;
@@ -714,9 +764,9 @@ Up to now we have see how to work with endian aware byte holders variables. In t
 [section:endian_big Class `big`]
 [/==========================================================================================]
 
-            struct big {
-                static const endianness value= endianness::big;
-            };
+Big endian tag.
+
+            struct big {};
 
 
 [endsect]
@@ -724,9 +774,9 @@ Up to now we have see how to work with endian aware byte holders variables. In t
 [section:endian_little Class `little`]
 [/==========================================================================================]
 
-            struct little {
-                static const endianness value= endianness::little;
-            };
+Little endian tag.
+
+            struct little {};
 
 
 [endsect]
@@ -734,24 +784,26 @@ Up to now we have see how to work with endian aware byte holders variables. In t
 [section:endian_middle Class `middle`]
 [/==========================================================================================]
 
-            struct middle {
-                static const endianness value= endianness::middle;
-            };
+Middle endian tag.
+
+            struct middle {};
 
 [endsect]
 [/==========================================================================================]
 [section:endian_mixed Class `mixed`]
 [/==========================================================================================]
 
-            struct mixed {
-                static const endianness value= endianness::mixed;
-            };
+Mixed endian tag.
+
+            struct mixed {};
 
 
 [endsect]
 [/==========================================================================================]
 [section:endian_native Class `native`]
 [/==========================================================================================]
+
+Native endian tag.
 
             typedef <platform dependent> native ;
 
@@ -764,6 +816,7 @@ Up to now we have see how to work with endian aware byte holders variables. In t
 [section:endian_domain_map_hpp Header `<boost/endian/domain_map.hpp>`]
 [/==========================================================================================]
 
+This file contains the default implementation ofr the `domaain_map` metafunction.
 
 [heading Synopsis]
 
@@ -903,63 +956,217 @@ This file contains the core class template of Boost.Integer.Endian. Provides byt
 
 [heading Synopsis]
 
+    namespace boost {
+    namespace integer {
+        BOOST_SCOPED_ENUM_START(alignment) { unaligned, aligned }; BOOST_SCOPED_ENUM_END
+
+        template <typename E,
+            typename T, 
+            std::size_t n_bits=sizeof(T)*8,
+            BOOST_SCOPED_ENUM(alignment) A = alignment::aligned
+        > class endian_pack;
+
+        // unaligned big endian_pack signed integer types
+        typedef endian_pack< endianness::big, int_least8_t, 8, alignment::unaligned >           big8_pt;
+        typedef endian_pack< endianness::big, int_least16_t, 16, alignment::unaligned >         big16_pt;
+        typedef endian_pack< endianness::big, int_least32_t, 24, alignment::unaligned >         big24_pt;
+        typedef endian_pack< endianness::big, int_least32_t, 32, alignment::unaligned >         big32_pt;
+        typedef endian_pack< endianness::big, int_least64_t, 40, alignment::unaligned >         big40_pt;
+        typedef endian_pack< endianness::big, int_least64_t, 48, alignment::unaligned >         big48_pt;
+        typedef endian_pack< endianness::big, int_least64_t, 56, alignment::unaligned >         big56_pt;
+        typedef endian_pack< endianness::big, int_least64_t, 64, alignment::unaligned >         big64_pt;
+
+        // unaligned big endian_pack unsigned integer types
+        typedef endian_pack< endianness::big, uint_least8_t, 8, alignment::unaligned >          ubig8_pt;
+        typedef endian_pack< endianness::big, uint_least16_t, 16, alignment::unaligned >        ubig16_pt;
+        typedef endian_pack< endianness::big, uint_least32_t, 24, alignment::unaligned >        ubig24_pt;
+        typedef endian_pack< endianness::big, uint_least32_t, 32, alignment::unaligned >        ubig32_pt;
+        typedef endian_pack< endianness::big, uint_least64_t, 40, alignment::unaligned >        ubig40_pt;
+        typedef endian_pack< endianness::big, uint_least64_t, 48, alignment::unaligned >        ubig48_pt;
+        typedef endian_pack< endianness::big, uint_least64_t, 56, alignment::unaligned >        ubig56_pt;
+        typedef endian_pack< endianness::big, uint_least64_t, 64, alignment::unaligned >        ubig64_pt;
+
+        // unaligned little endian_pack signed integer types
+        typedef endian_pack< endianness::little, int_least8_t, 8, alignment::unaligned >        little8_pt;
+        typedef endian_pack< endianness::little, int_least16_t, 16, alignment::unaligned >      little16_pt;
+        typedef endian_pack< endianness::little, int_least32_t, 24, alignment::unaligned >      little24_pt;
+        typedef endian_pack< endianness::little, int_least32_t, 32, alignment::unaligned >      little32_pt;
+        typedef endian_pack< endianness::little, int_least64_t, 40, alignment::unaligned >      little40_pt;
+        typedef endian_pack< endianness::little, int_least64_t, 48, alignment::unaligned >      little48_pt;
+        typedef endian_pack< endianness::little, int_least64_t, 56, alignment::unaligned >      little56_pt;
+        typedef endian_pack< endianness::little, int_least64_t, 64, alignment::unaligned >      little64_pt;
+
+        // unaligned little endian_pack unsigned integer types
+        typedef endian_pack< endianness::little, uint_least8_t, 8, alignment::unaligned >       ulittle8_pt;
+        typedef endian_pack< endianness::little, uint_least16_t, 16, alignment::unaligned >     ulittle16_pt;
+        typedef endian_pack< endianness::little, uint_least32_t, 24, alignment::unaligned >     ulittle24_pt;
+        typedef endian_pack< endianness::little, uint_least32_t, 32, alignment::unaligned >     ulittle32_pt;
+        typedef endian_pack< endianness::little, uint_least64_t, 40, alignment::unaligned >     ulittle40_pt;
+        typedef endian_pack< endianness::little, uint_least64_t, 48, alignment::unaligned >     ulittle48_pt;
+        typedef endian_pack< endianness::little, uint_least64_t, 56, alignment::unaligned >     ulittle56_pt;
+        typedef endian_pack< endianness::little, uint_least64_t, 64, alignment::unaligned >     ulittle64_pt;
+
+        // unaligned native endian_pack signed integer types
+        typedef endian_pack< endianness::native, int_least8_t, 8, alignment::unaligned >        native8_pt;
+        typedef endian_pack< endianness::native, int_least16_t, 16, alignment::unaligned >      native16_pt;
+        typedef endian_pack< endianness::native, int_least32_t, 24, alignment::unaligned >      native24_pt;
+        typedef endian_pack< endianness::native, int_least32_t, 32, alignment::unaligned >      native32_pt;
+        typedef endian_pack< endianness::native, int_least64_t, 40, alignment::unaligned >      native40_pt;
+        typedef endian_pack< endianness::native, int_least64_t, 48, alignment::unaligned >      native48_pt;
+        typedef endian_pack< endianness::native, int_least64_t, 56, alignment::unaligned >      native56_pt;
+        typedef endian_pack< endianness::native, int_least64_t, 64, alignment::unaligned >      native64_pt;
+
+        // unaligned native endian_pack unsigned integer types
+        typedef endian_pack< endianness::native, uint_least8_t, 8, alignment::unaligned >       unative8_pt;
+        typedef endian_pack< endianness::native, uint_least16_t, 16, alignment::unaligned >     unative16_pt;
+        typedef endian_pack< endianness::native, uint_least32_t, 24, alignment::unaligned >     unative24_pt;
+        typedef endian_pack< endianness::native, uint_least32_t, 32, alignment::unaligned >     unative32_pt;
+        typedef endian_pack< endianness::native, uint_least64_t, 40, alignment::unaligned >     unative40_pt;
+        typedef endian_pack< endianness::native, uint_least64_t, 48, alignment::unaligned >     unative48_pt;
+        typedef endian_pack< endianness::native, uint_least64_t, 56, alignment::unaligned >     unative56_pt;
+        typedef endian_pack< endianness::native, uint_least64_t, 64, alignment::unaligned >     unative64_pt;
+
+    #define BOOST_HAS_INT16_T
+    #define BOOST_HAS_INT32_T
+    #define BOOST_HAS_INT64_T
+      
+      //  These types only present if platform has exact size integers:
+      //     aligned big endian_pack signed integer types
+      //     aligned big endian_pack unsigned integer types
+      //     aligned little endian_pack signed integer types
+      //     aligned little endian_pack unsigned integer types
+
+      //     aligned native endian_pack typedefs are not provided because
+      //     <cstdint> types are superior for this use case
+
+    # if defined(BOOST_HAS_INT16_T)
+        typedef endian_pack< endianness::big, int16_t, 16, alignment::aligned >      aligned_big16_pt;
+        typedef endian_pack< endianness::big, uint16_t, 16, alignment::aligned >     aligned_ubig16_pt;
+        typedef endian_pack< endianness::little, int16_t, 16, alignment::aligned >   aligned_little16_pt;
+        typedef endian_pack< endianness::little, uint16_t, 16, alignment::aligned >  aligned_ulittle16_pt;
+    # endif
+
+    # if defined(BOOST_HAS_INT32_T)
+        typedef endian_pack< endianness::big, int32_t, 32, alignment::aligned >      aligned_big32_pt;
+        typedef endian_pack< endianness::big, uint32_t, 32, alignment::aligned >     aligned_ubig32_pt;
+        typedef endian_pack< endianness::little, int32_t, 32, alignment::aligned >   aligned_little32_pt;
+        typedef endian_pack< endianness::little, uint32_t, 32, alignment::aligned >  aligned_ulittle32_pt;
+    # endif
+
+    # if defined(BOOST_HAS_INT64_T)
+        typedef endian_pack< endianness::big, int64_t, 64, alignment::aligned >      aligned_big64_pt;
+        typedef endian_pack< endianness::big, uint64_t, 64, alignment::aligned >     aligned_ubig64_pt;
+        typedef endian_pack< endianness::little, int64_t, 64, alignment::aligned >   aligned_little64_pt;
+        typedef endian_pack< endianness::little, uint64_t, 64, alignment::aligned >  aligned_ulittle64_pt;
+    # endif
+
+    }
+    }
+
+[/==========================================================================================]
+[section:endian_pack Template class `endian_pack<>`]
+[/==========================================================================================]
 
 An `endian_pack` is an byte-holder with user-specified endianness, value type, size, and alignment. 
 
+        template <
+            typename E, 
+            typename T, 
+            std::size_t n_bits=8*sizeof(T),
+            alignment A = alignment::aligned>
+        class endian_pack {
+        public:
+          typedef E endian_type;
+          typedef T value_type;
+          static const std::size_t width = n_bits;
+          static const alignment alignment_value = A;
+          
+          endian_pack() = default;       // = default replaced by {} on C++03
+          explicit endian_pack(T v);
+          endian_pack & operator=(T v);
+          operator T() const;
+          const char* data() const;
+        };
+
+
+* [*Requires:] 
+
+    * `E` is one of `endianness::big` or `endianness::little`.
+    * `T` must be a POD with value semantics.
+    * `nbits` is a multiple of `8`
+    * If `A` is `alignment::aligned` then `nbits` must be equal to `8*sizeof(T)`
+
+[note if BOOST_ENDIAN_FORCE_PODNESS is defined && C++0x POD's are not
+available then these two constructors will not be present]
+
+
+[/==========================================================================================]
+[section:endian Default Contructor `endian_pack()`]
+[/==========================================================================================]
+
+    endian_pack() = default;  // C++03: endian(){}
+
+* [*Effects:] Constructs an object of type `endian<E, T, n_bits, A>`.
 
 [endsect]
 
+[/==========================================================================================]
+[section:endianT Contructor from value_type `endian_pack(T)`]
+[/==========================================================================================]
+
+    explicit endian_pack(T v);
+
+* [*Effects:] Constructs an object of type `endian_pack<E, T, n_bits, A>`.
+* [*Postcondition:] `x == v`, where `x` is the constructed object.
+
+[endsect]
+
+[/==========================================================================================]
+[section:assignment Assignment Operator from value_type `operator=(T)`]
+[/==========================================================================================]
+
+    endian & operator=(T v);
+
+* [*Postcondition:] `x == v`, where `x` is the constructed object.
+* [*Returns:] `*this`.
+
+[endsect]
+
+[/==========================================================================================]
+[section:conversion Conversion Operator `operator T()`]
+[/==========================================================================================]
+
+    operator T() const;
+
+* [*Returns:] The current value stored in `*this`, converted to `value_type`.
+
+[endsect]
+
+[/==========================================================================================]
+[section:data Member Function `data()`]
+[/==========================================================================================]
+
+          const char* data() const;
+
+* [*Returns:] The current value stored in `*this`, converted to `value_type`.
+
+[endsect]
+
+[endsect]
+
+[/==========================================================================================]
+[section:typedefs Common typedefs]
+[/==========================================================================================]
+
+[endsect]
+
+[endsect]
 [/==========================================================================================]
 [section:integer_endian_hpp Header `<boost/integer/endian.hpp>`]
 [/==========================================================================================]
 
 Header `<boost/integer/endian.hpp>`  provides integer-like byte-holder binary types with explicit control over byte order, value type, size, and alignment. Typedefs provide easy-to-use names for common configurations.
 
-Boost endian integers are based on the byte_holder endian_pack class template and provide in addition the same full set of C++ assignment, arithmetic, and relational operators as C++ standard integral types, with the standard semantics.
-
-Unary arithmetic operators are `+`, `-`, `~`, `!`, prefix and postfix `--` and `++`. Binary arithmetic operators are `+`, `+=`, `-`, `-=`, `*`, `*=`, `/`, `/=`, `%`, `%=`, `&`, `&=`, `|`, `|=`, `^`, `^=`, `<<`, `<<=`, `>>`, `>>=`. Binary relational operators are `==`, `!=`, `<`, `<=`, `>`, `>=`.
-
-Automatic conversion is provided to the underlying integer value type.
-
-[heading Typedefs]
-
-One class template is provided:
-
-    template <endianness::enum_t E, typename T, std::size_t n_bytes=8*sizeof(T),
-      alignment::enum_t A = alignment::aligned>
-    class endian;
-
-Sixty typedefs, such as big32_t, provide convenient naming conventions for common use cases:
-
-
-[table
-    [[Name]                     [Endianness]  [Sign]                    [Sizes in bits (n)]         [Alignment]]
-    [[`int_big`*n*`_t`]             [`big`]       [signed]                  [8,16,24,32,40,48,56,64]    [`unaligned`]]
-    [[`uint_big`*n*`_t`]            [`big`]       [unsigned]                [8,16,24,32,40,48,56,64]    [`unaligned`]]
-    [[`int_little`*n*`_t`]          [`little`]    [signed]                  [8,16,24,32,40,48,56,64]    [`unaligned`]]
-    [[`uint_little`*n*`_t`]         [`little`]    [unsigned]                [8,16,24,32,40,48,56,64]    [`unaligned`]]
-    [[`uint_little`*n*`_t`]         [`native`]    [signed]                  [8,16,24,32,40,48,56,64]    [`unaligned`]]
-    [[`uint_native`*n*`_t`]         [`native`]    [unsigned]                [16,32,64]                  [`aligned`]]
-    [[`aligned_int_big`*n*`_t`]     [`big`]       [signed]                  [16,32,64]                  [`aligned`]]
-    [[`aligned_uint_big`*n*`_t`]    [`big`]       [unsigned]                [16,32,64]                  [`aligned`]]
-    [[`aligned_int_little`*n*`_t`]  [`little`]       [signed]                  [16,32,64]                  [`aligned`]]
-    [[`aligned_uint_little`*n*`_t`] [`little`]       [unsigned]                [16,32,64]                  [`aligned`]]
-]
-
-The unaligned types do not cause compilers to insert padding bytes in classes and structs. This is an important characteristic that can be exploited to minimize wasted space in memory, files, and network transmissions.
-
-[warning  Code that uses aligned types is inherently non-portable because alignment requirements vary between hardware architectures and because alignment may be affected by compiler switches or pragmas. Furthermore, aligned types are only available on architectures with 16, 32, and 64-bit integer types.]
-
-[note One-byte big-endian, little-endian, and native-endian types provide identical functionality. All three names are provided to improve code readability and searchability.
-]
-
-[heading Comment on naming]
-
-When first exposed to endian types, programmers often fit them into a mental model based on the <cstdint> types. Using that model, it is natural to expect a 56-bit big-endian signed integer to be named `int_big56_t` rather than `big56_t`.
-
-As experience using these types grows, the realization creeps in that they are lousy arithmetic integers - they are really byte holders that for convenience support arithmetic operations - and that for use in internal interfaces or anything more than trivial arithmetic computations it is far better to convert values of these endian types to traditional integer types.
-
-That seems to lead to formation of a new mental model specific to endian byte-holder types. In that model, the endianness is the key feature, and the integer aspect is downplayed. Once that mental transition is made, a name like `big56_t` is a good reflection of the mental model.
 
 [heading Synopsis]
 
@@ -1124,7 +1331,7 @@ available then these two constructors will not be present]
 
     endian & operator=(T v);
 
-* [*Postcondition:] `x == v`, where `x` is the constructed object.
+* [*Postcondition:] `value_type(*this) == v`.
 * [*Returns:] `*this`.
 
 [endsect]
@@ -1158,6 +1365,13 @@ Other operators on endian objects are forwarded to the equivalent operator on `v
 [endsect]
 
 [endsect]
+
+[/==========================================================================================]
+[section:typedefs Common typedefs]
+[/==========================================================================================]
+
+[endsect]
+
 [endsect]
 
 [/==========================================================================================]
@@ -1233,6 +1447,8 @@ The user can specialize this metafunction for specific clases.
 [section:integer_endian_view_hpp Header `<boost/integer/endian_view.hpp>`]
 [/==========================================================================================]
 
+This file provides the `endian_view<>` class template as well as some factory helper functions.
+
 [heading Synopsis]
 
     namespace boost {
@@ -1244,29 +1460,89 @@ The user can specialize this metafunction for specific clases.
         template <typename E, typename T>    
         endian_view<endian_pack<E,T> > as_endian(T& v);
         template <typename T>
-        endian_view<endian_pack<native_endian, T> > as(T& v);
+        endian_view<endian_pack<endianness::native, T> > as(T& v);
         template <typename T>
-        endian_view<endian_pack<little_endian,T> > as_little(T& v);
+        endian_view<endian_pack<endianness::little,T> > as_little(T& v);
         template <typename T>
-        endian_view<endian_pack<big_endian,T> > as_big(T& v);
+        endian_view<endian_pack<endianness::big,T> > as_big(T& v);
         
 
     } // namespace integer
     } // namespace boost
 
 [/==========================================================================================]
-[section:bitfield Template class `endian_view<>`]
+[section:endian_view Template class `endian_view<>`]
 [/==========================================================================================]
 
-        template <typename Endian>
+        template <typename Endian, typename T>
         class endian_view {
         public:
-            typedef typename Endian::value_type value_type;
-            typedef Endian endian_t;
+            typedef T value_type;
+            endian_view()=delete;
             endian_view(value_type& ref);
             operator value_type() const;
             endian_view& operator=(value_type val);
+            endian_view& operator=(endian_view const& rhs);
+            template <typename Endian2 >
+            endian_view& operator=(endian_view<Endian2,T> const& rhs) {             
         };
+
+[/==========================================================================================]
+[section:endian_view Constructor `endian_view`]
+[/==========================================================================================]
+
+            endian_view(value_type& ref);
+
+* [*Effects:] Constructs an object of type `endian_view<E, T, n_bits, A>`.
+
+[endsect]
+
+[/==========================================================================================]
+[section:operator_value_type Conversion `operator value_type()`]
+[/==========================================================================================]
+
+            operator value_type() const;
+
+* [*Returns:] The converted `value_type` of the referenced type as it was seen as an endian aware type.
+
+[endsect]
+
+[/==========================================================================================]
+[section:assignement Assignement `operator =(endian_view const& )`]
+[/==========================================================================================]
+
+            endian_view& operator=(endian_view const& rhs);
+
+* [*Postcondition:] `this->ref_ == rhs.ref_`.
+* [*Returns:] `*this`.
+
+[endsect]
+
+[/==========================================================================================]
+[section:assignement2 Assignement from different endianness`operator =(endian_view<Endian2,T> const& )`]
+[/==========================================================================================]
+
+            template <typename Endian2 >
+            endian_view& operator=(endian_view<Endian2,T> const& rhs) {             
+
+* [*Postcondition:] `value_type(this->ref_) == value_type(rhs.ref_)`.
+* [*Returns:] `*this`.
+
+[endsect]
+
+
+[/==========================================================================================]
+[section:assignement_value_type Assignement from value_type `operator =(value_type)`]
+[/==========================================================================================]
+
+            endian_view& operator=(value_type val);
+
+* [*Postcondition:] `value_type(this->ref_) == v`.
+* [*Returns:] `*this`.
+
+[endsect]
+
+
 
 [endsect]
 
@@ -1708,4 +1984,3 @@ Comments and suggestions were received from Benaka Moorthi, Christopher Kohlhoff
 
 
 [endsect]
-

@@ -43,13 +43,14 @@
 <dt><span class="section"><a href="integer_endianness_hpp.html#toward_boost_integer_endian.reference.integer_endianness_hpp.endian_native">
         Class <code class="computeroutput"><span class="identifier">native</span></code></a></span></dt>
 </dl></div>
+<p>
+        Header &lt;boost/endian/endianness.hpp&gt; provides the endianness tags.
+      </p>
 <a name="toward_boost_integer_endian.reference.integer_endianness_hpp.synopsis"></a><h4>
-<a name="id4818808"></a>
+<a name="id4820298"></a>
         <a href="integer_endianness_hpp.html#toward_boost_integer_endian.reference.integer_endianness_hpp.synopsis">Synopsis</a>
       </h4>
-<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span>
-<span class="special">{</span>         
-
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>         
     <span class="keyword">namespace</span> <span class="identifier">endianness</span> <span class="special">{</span>
         <span class="keyword">struct</span> <span class="identifier">big</span><span class="special">;</span>
         <span class="keyword">struct</span> <span class="identifier">little</span><span class="special">;</span>
@@ -65,9 +66,10 @@
         Class big">
         Class <code class="computeroutput"><span class="identifier">big</span></code></a>
 </h4></div></div></div>
-<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">big</span> <span class="special">{</span>
-    <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">endianness</span> <span class="identifier">value</span><span class="special">=</span> <span class="identifier">endianness</span><span class="special">::</span><span class="identifier">big</span><span class="special">;</span>
-<span class="special">};</span>
+<p>
+          Big endian tag.
+        </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">big</span> <span class="special">{};</span>
 </pre>
 </div>
 <div class="section" lang="en">
@@ -76,9 +78,10 @@
         Class little">
         Class <code class="computeroutput"><span class="identifier">little</span></code></a>
 </h4></div></div></div>
-<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">little</span> <span class="special">{</span>
-    <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">endianness</span> <span class="identifier">value</span><span class="special">=</span> <span class="identifier">endianness</span><span class="special">::</span><span class="identifier">little</span><span class="special">;</span>
-<span class="special">};</span>
+<p>
+          Little endian tag.
+        </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">little</span> <span class="special">{};</span>
 </pre>
 </div>
 <div class="section" lang="en">
@@ -87,9 +90,10 @@
         Class middle">
         Class <code class="computeroutput"><span class="identifier">middle</span></code></a>
 </h4></div></div></div>
-<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">middle</span> <span class="special">{</span>
-    <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">endianness</span> <span class="identifier">value</span><span class="special">=</span> <span class="identifier">endianness</span><span class="special">::</span><span class="identifier">middle</span><span class="special">;</span>
-<span class="special">};</span>
+<p>
+          Middle endian tag.
+        </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">middle</span> <span class="special">{};</span>
 </pre>
 </div>
 <div class="section" lang="en">
@@ -98,9 +102,10 @@
         Class mixed">
         Class <code class="computeroutput"><span class="identifier">mixed</span></code></a>
 </h4></div></div></div>
-<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">mixed</span> <span class="special">{</span>
-    <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">endianness</span> <span class="identifier">value</span><span class="special">=</span> <span class="identifier">endianness</span><span class="special">::</span><span class="identifier">mixed</span><span class="special">;</span>
-<span class="special">};</span>
+<p>
+          Mixed endian tag.
+        </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">mixed</span> <span class="special">{};</span>
 </pre>
 </div>
 <div class="section" lang="en">
@@ -109,6 +114,9 @@
         Class native">
         Class <code class="computeroutput"><span class="identifier">native</span></code></a>
 </h4></div></div></div>
+<p>
+          Native endian tag.
+        </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">platform</span> <span class="identifier">dependent</span><span class="special">&gt;</span> <span class="identifier">native</span> <span class="special">;</span>
 </pre>
 </div>

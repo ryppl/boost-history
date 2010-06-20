@@ -138,13 +138,13 @@
         operations.
       </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">endian_aware_structure</span> <span class="special">{</span>
-    <span class="identifier">endian_holder</span><span class="special">&lt;</span><span class="identifier">big</span><span class="special">,</span><span class="identifier">int32_t</span><span class="special">&gt;</span> <span class="identifier">a</span><span class="special">;</span>
-    <span class="identifier">endian_holder</span><span class="special">&lt;</span><span class="identifier">big</span><span class="special">,</span><span class="identifier">int16_t</span><span class="special">&gt;</span> <span class="identifier">b</span><span class="special">;</span>
+    <span class="identifier">endian_pack</span><span class="special">&lt;</span><span class="identifier">big</span><span class="special">,</span><span class="identifier">int32_t</span><span class="special">&gt;</span> <span class="identifier">a</span><span class="special">;</span>
+    <span class="identifier">endian_pack</span><span class="special">&lt;</span><span class="identifier">big</span><span class="special">,</span><span class="identifier">int16_t</span><span class="special">&gt;</span> <span class="identifier">b</span><span class="special">;</span>
 <span class="special">};</span>
 </pre>
 <p>
         Structure endian_aware_structure can not be used without converting to native
-        types, as endian_holder don't provide other operations than conversion.
+        types, as endian_pack don't provide other operations than conversion.
       </p>
 <pre class="programlisting"><span class="identifier">endian_aware_structure</span> <span class="identifier">st</span><span class="special">;</span>
 <span class="comment">// ...
@@ -156,7 +156,7 @@
         applications would benefit from the safe and transparent approach.
       </p>
 <a name="toward_boost_integer_endian.overview.motivation.in_place_conversion"></a><h4>
-<a name="id4804044"></a>
+<a name="id4804045"></a>
         <a href="motivation.html#toward_boost_integer_endian.overview.motivation.in_place_conversion">In-place
         conversion</a>
       </h4>
@@ -184,8 +184,8 @@
         endianness</a>
       </h4>
 <p>
-        It has been also arged that the boost::integer::endian class didn't accepts
-        a UDT. This is true when the endian is unaligned, but not for aligned types.
+        boost::integer::endian class didn't accept a UDT. We have updated the library
+        so now UDT can be used for endian aligned types.
       </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">UserMessage</span> <span class="special">{</span>
   <span class="identifier">endian_pack</span><span class="special">&lt;</span><span class="identifier">little</span><span class="special">,</span> <span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="special">&gt;</span> <span class="identifier">timestamp</span><span class="special">;</span>
