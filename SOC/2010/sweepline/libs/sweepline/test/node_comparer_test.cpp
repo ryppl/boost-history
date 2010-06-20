@@ -1,4 +1,4 @@
-// Boost sweepline library beach_line_test.cpp file 
+// Boost sweepline library node_comparer_test.cpp file 
 
 //          Copyright Andrii Sydorchuk 2010.
 // Distributed under the Boost Software License, Version 1.0.
@@ -8,11 +8,10 @@
 //  See http://www.boost.org for updates, documentation, and revision history.
 
 #include "test_type_list.hpp"
-#include <boost/sweepline/beach_line.hpp>
-#include <boost/sweepline/event_types.hpp>
+#include <boost/sweepline/voronoi_formation.hpp>
 using namespace boost::sweepline;
 
-#define BOOST_TEST_MODULE beach_line_test
+#define BOOST_TEST_MODULE node_comparer_test
 #include <boost/test/test_case_template.hpp>
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test1, T, test_types) {
@@ -61,20 +60,43 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test2, T, test_types) {
     site_event<T> site1 = make_site_event<T>(static_cast<T>(0), static_cast<T>(0), 0);
     site_event<T> site2 = make_site_event<T>(static_cast<T>(0), static_cast<T>(2), 1);
     bline_node initial_node(site1, site2);
-    test_beach_line[initial_node] = 0;
+    test_beach_line[initial_node] = 2;
 
     site_event<T> site3 = make_site_event<T>(static_cast<T>(1), static_cast<T>(0), 2);
     bline_node node1(site1, site3);
     bline_node node2(site3, site1);
-    test_beach_line.insert(std::pair< bline_node, int>(node1, 1));
-    test_beach_line.insert(std::pair< bline_node, int>(node2, 2));
+    test_beach_line.insert(std::pair< bline_node, int>(node1, 0));
+    test_beach_line.insert(std::pair< bline_node, int>(node2, 1));
     
-    bline_it it = test_beach_line.begin();
-    BOOST_CHECK_EQUAL(it->second == 1, true);
+    int cur_value = 0;
+    for (bline_it it = test_beach_line.begin();
+         it != test_beach_line.end();
+         it++, cur_value++)
+        BOOST_CHECK_EQUAL(it->second, cur_value);
+}
 
-    ++it;
-    BOOST_CHECK_EQUAL(it->second == 2, true);
+BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test3, T, test_types) {
+    typedef beach_line_node< point_2d<T> > bline_node;
+    typedef std::map< bline_node, int, node_comparer<bline_node> >::const_iterator bline_it;
 
-    ++it;
-    BOOST_CHECK_EQUAL(it->second == 0, true);
+    std::map< bline_node, int, node_comparer<bline_node> > test_beach_line;
+
+    site_event<T> site1 = make_site_event<T>(static_cast<T>(0), static_cast<T>(1), 0);
+    site_event<T> site2 = make_site_event<T>(static_cast<T>(2), static_cast<T>(0), 1);
+    site_event<T> site3 = make_site_event<T>(static_cast<T>(2), static_cast<T>(4), 2);
+    bline_node initial_node1(site1, site2);
+    bline_node initial_node2(site2, site1);
+    test_beach_line[initial_node1] = 0;
+    test_beach_line[initial_node2] = 1;
+
+    bline_node new_node1(site1, site3);
+    bline_node new_node2(site3, site1);
+    test_beach_line[new_node1] = 2;
+    test_beach_line[new_node2] = 3;
+
+    int cur_value = 0;
+    for (bline_it it = test_beach_line.begin();
+         it != test_beach_line.end();
+         it++, cur_value++)
+        BOOST_CHECK_EQUAL(it->second, cur_value);
 }

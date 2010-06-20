@@ -77,8 +77,17 @@ namespace sweepline {
         typedef typename cell_record<Point2D> cell_record_type;
         typedef typename vertex_record<Point2D> vertex_record_type;
         typedef typename half_edge<Point2D> edge_type;
+        typedef typename std::vector<cell_record_type> cell_records;
+        typedef typename std::list<vertex_record_type> voronoi_vertices;
+        typedef typename std::list<edge_type *>::const_iterator edge_iterator;
+        typedef typename voronoi_vertices::const_iterator voronoi_vertices_iterator;
 
         voronoi_output() {}
+
+        // This preserves the validity of iterators.
+        void init(int num_sites) {
+            cell_records_.reserve(num_sites);
+        }
 
         void reset() {
             cell_records_.clear();
@@ -91,23 +100,27 @@ namespace sweepline {
         // beach line node and returns reference to the new half-edge. 
         // Second argument is new site. During this step we add two new
         // twin half-edges.
-        edge_type &insert_new_edge(const site_event_type &site1,
+        edge_type *insert_new_edge(const site_event_type &site1,
                                    const site_event_type &site2) {
             // Get indexes of sites.                                           
             int site_index1 = site1.get_site_index();
             int site_index2 = site2.get_site_index();
 
-            // Create new half-edge that belongs to the cell with second site.
+            // Create new half-edge that belongs to the cell with the first site.
+            edges_.push_back(edge_type(site_index1));
+            edge_type &edge1 = edges_.back();
+
+            // Create new half-edge that belongs to the cell with the second site.
             edges_.push_back(edge_type(site_index2));
             edge_type &edge2 = edges_.back();
+
+            // Add initial cell during first edge insertion.
+            if (cell_records_.empty())
+                cell_records_.push_back(cell_record_type(site1.get_point(), &edge1));
 
             // Second site represents new site during site event processing.
             // Add new cell to the cell records vector.
             cell_records_.push_back(cell_record_type(site2.get_point(), &edge2));
-
-            // Create new half-edge that belongs to the cell with first site.
-            edges_.push_back(edge_type(site_index1));
-            edge_type &edge1 = edges_.back();
 
             // Update pointers to cells.
             edge1.cell_record = &cell_records_[site_index1];
@@ -117,25 +130,25 @@ namespace sweepline {
             edge1.twin = &edge2;
             edge2.twin = &edge1;
 
-            return edges_.back();
+            return &edge1;
         }
 
-        edge_type &insert_new_edge(const site_event_type &site1,
+        edge_type *insert_new_edge(const site_event_type &site1,
                                    const site_event_type &site2,
                                    const site_event_type &site3,
                                    const circle_event_type &circle,
-                                   edge_type &edge12,
-                                   edge_type &edge23) {
+                                   edge_type *edge12,
+                                   edge_type *edge23) {
             // Add new voronoi vertex as voronoi circle center.
             vertex_records_.push_back(vertex_record_type(circle.get_center()));
-            vertex_record_type new_vertex = vertex_records_.back();
+            vertex_record_type &new_vertex = vertex_records_.back();
 
             // Update two input bisectors and their twins half-edges with
             // new voronoi vertex.
-            edge12.start_point = &new_vertex;
-            edge12.twin->end_point = &new_vertex;
-            edge23.end_point = &new_vertex;
-            edge23.twin->start_point = &new_vertex;
+            edge12->start_point = &new_vertex;
+            edge12->twin->end_point = &new_vertex;
+            edge23->start_point = &new_vertex;
+            edge23->twin->end_point = &new_vertex;
 
             // Add new half-edge.
             edges_.push_back(edge_type(site1.get_site_index()));
@@ -155,25 +168,36 @@ namespace sweepline {
 
             // Update voronoi prev/next pointers of all half-edges incident
             // to the new voronoi vertex.
-            edge12.prev = &new_edge1;
-            new_edge1.next = &edge12;
-            edge12.twin->next = &edge23;
-            edge23.prev = edge12.twin;
-            edge23.twin->next = &new_edge2;
-            new_edge2.prev = edge23.twin;
+            edge12->prev = &new_edge1;
+            new_edge1.next = edge12;
+            edge12->twin->next = edge23;
+            edge23->prev = edge12->twin;
+            edge23->twin->next = &new_edge2;
+            new_edge2.prev = edge23->twin;
 
             // Update voronoi vertex incident edges pointers.
-            new_vertex.incident_edges.push_back(&edge12);
-            new_vertex.incident_edges.push_back(&edge23);
-            new_vertex.incident_edges.push_back(&new_edge1);
+            new_vertex.incident_edges.push_back(edge12);
+            new_vertex.incident_edges.push_back(edge23);
+            new_vertex.incident_edges.push_back(&new_edge2);
+            return &new_edge1;
+        }
 
-            return edges_.back();
+        const cell_records &get_cell_records() const {
+            return cell_records_;
+        }
+
+        const voronoi_vertices &get_voronoi_vertices() const {
+            return vertex_records_;
         }
 
     private:
         std::vector<cell_record_type> cell_records_;
         std::list<vertex_record_type> vertex_records_;
         std::list<edge_type> edges_;
+
+        //Disallow copy constructor and operator=
+        voronoi_output(const voronoi_output&);
+        void operator=(const voronoi_output&);
     };
 
 } // sweepline

@@ -34,6 +34,8 @@ namespace sweepline {
             site_events_iterator_ = site_events_.begin();
         }
 
+        // Init event queue with sites, starting from the element with
+        // skip index. Vector of sites should be sorted.
         void init(const std::vector<Point2D> &sites, int skip) {
             site_events_.clear();
             site_events_.resize(sites.size() - skip);
@@ -50,16 +52,16 @@ namespace sweepline {
             site_events_iterator_ = site_events_.begin();
             while (!circle_events_.empty())
                 circle_events_.pop();
+            while (!deactivated_events_.empty())
+                deactivated_events_.pop();
         }
 
         bool empty() {
             if (site_events_iterator_ != site_events_.end())
                 return false;
-
             remove_not_active_events();
             if (!circle_events_.empty())
                 return false;
-
             return true;
         }
 

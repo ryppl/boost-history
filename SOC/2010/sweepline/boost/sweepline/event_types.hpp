@@ -19,8 +19,11 @@ namespace sweepline {
     template <typename T>
     struct circle_event;
 
+    template <typename T>
+    class voronoi_formation;
+
     // Point in 2D space data structure. Comparators defined in this
-    // datascturcture actually define sweepline movement direction.
+    // data structure actually define sweepline movement direction.
     template <typename T>
     struct point_2d {
     public:
@@ -44,9 +47,8 @@ namespace sweepline {
         }
 
         // This comparator actually defines sweepline movement direction.
-        // Sweepline will move in the horizontal direction:
-        // from left to right or from right to left.
         bool operator<(const point_2d &point) const {
+            // Sweepline sweeps from left to right.
             if (this->x_ != point.x_)
                 return this->x_ < point.x_;
             return this->y_ < point.y_;
@@ -90,7 +92,9 @@ namespace sweepline {
         return point_2d<T>(x,y);
     }
 
-    // Site event type. Occurs when sweepline sweeps over one of the initial sites.
+    // Site event type. 
+    // Occurs when sweepline sweeps over one of the initial sites.
+    // Contains index of a site below the other sorted sites.
     template <typename T>
     struct site_event {
     public:
@@ -158,10 +162,14 @@ namespace sweepline {
     // way voronoi diagram implementation may be used with rational arithmetic.
     // Let circle center coordinates be (x, y), squared radius be r. 
     // Bottom point of the voronoi circle will be defined as (x + sqrt(r), y).
+    // Contains reference to the second bisector node (ordered from left to
+    // right in the beach line) that creates given circle event.
     template <typename T>
     struct circle_event {
     public:
         typedef T coordinate_type;
+        typedef typename voronoi_formation<T>::beach_line_iterator
+            beach_line_iterator;
 
         circle_event() {}
 
@@ -254,8 +262,7 @@ namespace sweepline {
         int compare(const site_event<T> &s_event) const {
             if (s_event.x() < center_.x())
                 return 1;
-            T sqr_dif_x = (s_event.x() - center_.x()) *
-                          (s_event.x() - center_.x());
+            T sqr_dif_x = (s_event.x() - center_.x()) * (s_event.x() - center_.x());
             if (sqr_dif_x == sqr_radius_) {
                 if (center_.y() == s_event.y())
                     return 0;
@@ -280,25 +287,17 @@ namespace sweepline {
             return sqr_radius_;
         }
 
-        void set_bisector(const site_event<T> &left_site,
-                          const site_event<T> &right_site) {
-            bisector_left_site_ = left_site;
-            bisector_right_site_ = right_site;
+        void set_bisector(beach_line_iterator iterator) {
+            bisector_node_ = iterator;
         }
 
-        const site_event<T> &get_bisector_left_site() const {
-            return bisector_left_site_;
+        const beach_line_iterator &get_bisector() const {
+            return bisector_node_;
         }
-
-        const site_event<T> &get_bisector_right_site() const {
-            return bisector_right_site_;
-        }
-
     private:
         point_2d<T> center_;
         T sqr_radius_;
-        site_event<T> bisector_left_site_;
-        site_event<T> bisector_right_site_;
+        beach_line_iterator bisector_node_;
     };
 
     template <typename T>

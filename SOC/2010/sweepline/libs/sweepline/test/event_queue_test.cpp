@@ -8,8 +8,7 @@
 //  See http://www.boost.org for updates, documentation, and revision history.
 
 #include "test_type_list.hpp"
-#include <boost/sweepline/event_queue.hpp>
-#include <boost/sweepline/event_types.hpp>
+#include <boost/sweepline/voronoi_formation.hpp>
 using namespace boost::sweepline;
 
 #define BOOST_TEST_MODULE event_queue_test
