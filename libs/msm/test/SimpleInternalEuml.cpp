@@ -1,3 +1,13 @@
+// Copyright 2010 Christophe Henry
+// henry UNDERSCORE christophe AT hotmail DOT com
+// This is an extended version of the state machine available in the boost::mpl library
+// Distributed under the same license as the original.
+// Copyright for the original version:
+// Copyright 2005 David Abrahams and Aleksey Gurtovoy. Distributed
+// under the Boost Software License, Version 1.0. (See accompanying
+// file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
+
 #include <iostream>
 #include <boost/msm/back/state_machine.hpp>
 #include <boost/msm/front/euml/euml.hpp>
@@ -12,7 +22,7 @@ namespace msm = boost::msm;
 namespace
 {
     // A "complicated" event type that carries some data.
-	enum DiskTypeEnum
+    enum DiskTypeEnum
     {
         DISK_CD=0,
         DISK_DVD=1
@@ -40,6 +50,9 @@ namespace
     BOOST_MSM_EUML_STATE(( ++state_(entry_counter),++state_(exit_counter),attributes_ << entry_counter << exit_counter),Playing)
     BOOST_MSM_EUML_STATE(( ++state_(entry_counter),++state_(exit_counter),attributes_ << entry_counter << exit_counter),Paused)
 
+    BOOST_MSM_EUML_DECLARE_ATTRIBUTE(unsigned int,empty_internal_guard_counter)
+    BOOST_MSM_EUML_DECLARE_ATTRIBUTE(unsigned int,empty_internal_action_counter)
+
     BOOST_MSM_EUML_ACTION(internal_guard_fct)
     {
         template <class FSM,class EVT,class SourceState,class TargetState>
@@ -49,14 +62,13 @@ namespace
             return false;
         }
     };
-    BOOST_MSM_EUML_DECLARE_ATTRIBUTE(unsigned int,empty_internal_guard_counter)
-    BOOST_MSM_EUML_DECLARE_ATTRIBUTE(unsigned int,empty_internal_action_counter)
     BOOST_MSM_EUML_DECLARE_STATE((++state_(entry_counter),++state_(exit_counter),
                                   attributes_ << entry_counter << exit_counter 
                                               << empty_internal_guard_counter << empty_internal_action_counter),Empty_def)
     // derive to be able to add an internal transition table
     struct Empty_impl : public Empty_def
     {
+        Empty_impl(){}
         BOOST_MSM_EUML_DECLARE_INTERNAL_TRANSITION_TABLE((
             internal_evt [internal_guard_fct] / ++source_(empty_internal_action_counter)
             ))
@@ -148,7 +160,7 @@ namespace
 
     BOOST_AUTO_TEST_CASE( my_test )
     {     
-		player p;
+        player p;
 
         p.start(); 
         BOOST_CHECK_MESSAGE(p.get_state<Empty_impl&>().get_attribute(entry_counter) == 1,

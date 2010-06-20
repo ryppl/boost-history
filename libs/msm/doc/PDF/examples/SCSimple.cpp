@@ -1,3 +1,13 @@
+// Copyright 2010 Christophe Henry
+// henry UNDERSCORE christophe AT hotmail DOT com
+// This is an extended version of the state machine available in the boost::mpl library
+// Distributed under the same license as the original.
+// Copyright for the original version:
+// Copyright 2005 David Abrahams and Aleksey Gurtovoy. Distributed
+// under the Boost Software License, Version 1.0. (See accompanying
+// file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
+
 #include <boost/statechart/event.hpp>
 #include <boost/statechart/state_machine.hpp>
 #include <boost/statechart/simple_state.hpp>
@@ -26,8 +36,7 @@ namespace test_sc
     struct pause : sc::event< pause > {};
     struct open_close : sc::event< open_close > {};
     struct cd_detected : sc::event< cd_detected > {};
-    struct NextSong: sc::event< NextSong > {};
-    struct PreviousSong : sc::event< PreviousSong >{};
+
 
     struct Empty;
     struct Open;
@@ -41,7 +50,7 @@ namespace test_sc
         void store_cd_info(cd_detected const& cd)   {/*std::cout << "player::store_cd_info\n";*/ }
         void close_drawer(open_close const&)        { /*std::cout << "player::close_drawer\n";*/ }
         void start_playback(play const&)            { /*std::cout << "player::start_playback\n";*/ }
-        void stopped_again(stop const&)	            {/*std::cout << "player::stopped_again\n";*/}
+        void stopped_again(stop const&)             {/*std::cout << "player::stopped_again\n";*/}
         void stop_playback(stop const&)             { /*std::cout << "player::stop_playback\n";*/ }
         void pause_playback(pause const&)           { /*std::cout << "player::pause_playback\n"; */}
         void stop_and_open(open_close const&)       { /*std::cout << "player::stop_and_open\n";*/ }
@@ -80,8 +89,7 @@ namespace test_sc
             player, &player::stopped_again > > reactions;
 
     };
-    struct Song1;
-    struct Playing : sc::simple_state< Playing, player,Song1 >
+    struct Playing : sc::simple_state< Playing, player >
     {
         Playing() { /*std::cout << "entering Playing" << std::endl;*/ } // entry
         ~Playing() { /*std::cout << "leaving Playing" << std::endl;*/ } // exit
@@ -92,34 +100,6 @@ namespace test_sc
             player, &player::pause_playback >, 
             sc::transition< open_close, Open,
             player, &player::stop_and_open > > reactions;
-        void start_next_song(NextSong const&)       { /*std::cout << "Playing::start_next_song\n";*/ }
-        void start_prev_song(PreviousSong const&)       { /*std::cout << "Playing::start_prev_song\n";*/ }
-    };
-    struct Song2;
-    struct Song1  : sc::simple_state< Song1, Playing >
-    {
-        Song1() { /*std::cout << "entering Song1" << std::endl;*/ } // entry
-        ~Song1() { /*std::cout << "leaving Song1" << std::endl;*/ } // exit
-        typedef sc::transition< NextSong, Song2,
-            Playing, &Playing::start_next_song > reactions;
-    };
-    struct Song3;
-    struct Song2  : sc::simple_state< Song2, Playing >
-    {
-        Song2() { /*std::cout << "entering Song2" << std::endl;*/ } // entry
-        ~Song2() { /*std::cout << "leaving Song2" << std::endl;*/ } // exit
-        typedef mpl::list<
-            sc::transition< NextSong, Song3,
-            Playing, &Playing::start_next_song >,
-            sc::transition< PreviousSong, Song1,
-            Playing, &Playing::start_prev_song > > reactions;
-    };
-    struct Song3  : sc::simple_state< Song3, Playing >
-    {
-        Song3() { /*std::cout << "entering Song3" << std::endl;*/ } // entry
-        ~Song3() { /*std::cout << "leaving Song3" << std::endl;*/ } // exit
-        typedef sc::transition< PreviousSong, Song2,
-            Playing, &Playing::start_prev_song > reactions;
     };
     struct Paused : sc::simple_state< Paused, player >
     {
@@ -143,6 +123,7 @@ long mtime(struct timeval& tv1,struct timeval& tv2)
 }
 #endif
 
+
 int main()
 {
     test_sc::player p;
@@ -157,21 +138,12 @@ int main()
     struct timeval tv1,tv2;
     gettimeofday(&tv1,NULL);
 #endif
-
     for (int i=0;i<100;++i)
     {
         p.process_event(test_sc::open_close());
         p.process_event(test_sc::open_close()); 
         p.process_event(test_sc::cd_detected());
-        p.process_event(test_sc::play()); 
-        for (int j=0;j<100;++j)
-        {
-            p.process_event(test_sc::NextSong());
-            p.process_event(test_sc::NextSong());
-            p.process_event(test_sc::PreviousSong());
-            p.process_event(test_sc::PreviousSong());
-        }
-
+        p.process_event(test_sc::play());      
         p.process_event(test_sc::pause()); 
         // go back to Playing
         p.process_event(test_sc::end_pause()); 
