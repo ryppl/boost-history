@@ -4,14 +4,22 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 
-#include <boost/integer/details/member.hpp>
+#include <boost/integer/bitfield_tuple.hpp>
 
 using namespace boost;
 
 // this fails when the assert for the precondition within member restricting
 // it to be something other then 0 fails.
+
 struct pink;
 
+typedef bitfield_tuple<
+    storage<int>,
+    member<int,pink,0>
+> btf_type;
+
 int main() {
-    typedef member<int,pink,0>::type failure;
+    btf_type temp;
+    // temp.get<pink>();
+    return 0;
 }

@@ -4,13 +4,20 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 
-#include <boost/integer/details/member.hpp>
+#include <boost/integer/bitfield_tuple.hpp>
 
 using namespace boost;
 
 // this fails because the type in side member is to large for the return type.
 struct pink;
 
+typedef bitfield_tuple<
+    storage<int>,
+    member<int,pink,33>
+> btf_type;
+
 int main() {
-    typedef member<int, pink, 33>::type failure;
+    btf_type temp;
+    // temp.get<pink>();
+    return 0;
 }
