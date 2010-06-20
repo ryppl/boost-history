@@ -22,6 +22,8 @@
 
 #include <boost/assign/auto_size/detail/repeat.hpp>
 
+// #include <boost/assign/csv.hpp>
+
 #include <libs/assign/example/range.h>
 
 void example_range(std::ostream& os)
@@ -41,8 +43,7 @@ void example_range(std::ostream& os)
     ar_ ar5; ar5.assign( 3 );
     ar_ ar6; ar6.assign( 6 );
 
-{   
-
+{
     BOOST_AUTO(tmp1, ref_list_of(a)(b) );
     BOOST_AUTO(tmp2, ref_list_of(c)(d) );
     BOOST_AUTO(tmp3, ref_list_of(e)(f) );
@@ -69,7 +70,6 @@ void example_range(std::ostream& os)
         ar1 && ar2 && ar3,
         std::ostream_iterator<val_>(os," ")
     ); os << ')' << std::endl;
-
 
 }
 {
@@ -141,6 +141,13 @@ void example_range(std::ostream& os)
     BOOST_ASSERT( a == 2 );
     tmp[2] = 3;
     BOOST_ASSERT( a == 3 );
+}
+{
+    int a = 1, b = 2 ,c = 3;
+    std::vector<int> vec = list_of(a).csv(b,c);
+    BOOST_ASSERT( vec[0] == 1 );    
+    BOOST_ASSERT( vec[1] == 2 );    
+    BOOST_ASSERT( vec[2] == 3 );    
 }
 {
     int a = 4;

@@ -11,8 +11,6 @@ int main (int argc, char * const argv[]) {
 //    test_speed(std::cout);
     example_range(std::cout);
 
-    example_range(std::cout);
-
     using namespace boost::assign::detail::auto_size;
 
     void (*fp)();
