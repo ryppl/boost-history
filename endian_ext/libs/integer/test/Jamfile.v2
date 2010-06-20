@@ -35,5 +35,8 @@ project
        :
          [ run ../example/endian_example.cpp ]
          [ run ../example/endian_hello_world.cpp ]
+         [ run ../example/endian_hello_world_1.cpp ]
+         [ run ../example/endian_hello_world_2.cpp ]
+         [ run ../example/endian_quantity.cpp ]
          [ run ../example/packet_example.cpp ]
       ;
