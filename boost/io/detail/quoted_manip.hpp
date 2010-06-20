@@ -57,6 +57,9 @@ namespace boost
 
         quoted_proxy(String s_, Char escape_, Char delim_)
           : string(s_), escape(escape_), delim(delim_) {}
+      private:
+        // String may be a const type, so disable the assignment operator
+        quoted_proxy& operator=(const quoted_proxy&);  // = deleted
       };
 
       //  abstract away difference between proxies with const or non-const basic_strings
@@ -66,8 +69,10 @@ namespace boost
         std::basic_string<Char, Traits, Alloc> const & string, Char escape, Char delim)
       {
         os << delim;
-        std::basic_string<Char, Traits, Alloc>::const_iterator end_it = string.end();
-        for (std::basic_string<Char, Traits, Alloc>::const_iterator it = string.begin();
+        typename std::basic_string<Char, Traits, Alloc>::const_iterator
+          end_it = string.end();
+        for (typename std::basic_string<Char, Traits, Alloc>::const_iterator
+          it = string.begin();
           it != end_it;
           ++it )
         {
