@@ -135,12 +135,12 @@ struct get_state_action_tag_type
 template <class T,class EVT,class FSM,class SourceState,class TargetState>
 struct get_result_type 
 {
-	typedef typename T::template transition_action_result<EVT,FSM,SourceState,TargetState>::type type;
+    typedef typename T::template transition_action_result<EVT,FSM,SourceState,TargetState>::type type;
 };
 template <class T,class Event,class FSM,class STATE>
 struct get_result_type2 
 {
-	typedef typename T::template state_action_result<Event,FSM,STATE>::type type;
+    typedef typename T::template state_action_result<Event,FSM,STATE>::type type;
 };
 template<class SEQ>
 struct get_sequence
@@ -294,14 +294,17 @@ struct euml_config: proto::extends<typename proto::terminal<config_tag>::type, C
 struct No_Exception : euml_config<No_Exception>
 {
     typedef int no_exception_thrown;
+    No_Exception(){}
 };
 struct No_Msg_Queue : euml_config<No_Msg_Queue>
 {
     typedef int no_message_queue;
+    No_Msg_Queue(){}
 };
 struct Deferred_Events : euml_config<Deferred_Events>
 {
     typedef int activate_deferred_events;
+    Deferred_Events(){}
 };
 No_Exception const no_exception;
 No_Msg_Queue const no_msg_queue;
@@ -316,7 +319,7 @@ struct make_invalid_type
 template <class ROW>
 struct make_vector_one_row 
 {
-	typedef boost::mpl::vector<ROW> type;
+    typedef boost::mpl::vector<ROW> type;
 };
 template <class T>
 T make_T(T t) {return t;}
@@ -328,6 +331,7 @@ struct make_vector_no_row
 
 struct NoAction : euml_action<NoAction>
 {
+    NoAction(){}
     // return value if used inside a state action (entry/exit)
     template <class Event,class FSM,class STATE >
     struct state_action_result
@@ -369,33 +373,34 @@ struct GetSource_ : euml_action<GetSource_<Index> >
     };
     typedef ::boost::mpl::set<action_tag> tag_type;
 
-	template <class EVT,class FSM,class SourceState,class TargetState>
-	typename transition_action_result<EVT,FSM,SourceState,TargetState>::type 
-		operator()(EVT const& ,FSM& ,SourceState& src,TargetState&)const
-	{
+    template <class EVT,class FSM,class SourceState,class TargetState>
+    typename transition_action_result<EVT,FSM,SourceState,TargetState>::type 
+        operator()(EVT const& ,FSM& ,SourceState& src,TargetState&)const
+    {
         return src.get_attribute(Index());
-	}
+    }
 };
 template<>
 struct GetSource_<void> : euml_action<GetSource_<void> >
 {
-	template <class EVT,class FSM,class SourceState,class TargetState>
-	struct transition_action_result 
-	{
-		typedef SourceState& type;
-	};
-	typedef ::boost::mpl::set<action_tag> tag_type;
+    template <class EVT,class FSM,class SourceState,class TargetState>
+    struct transition_action_result 
+    {
+        typedef SourceState& type;
+    };
+    typedef ::boost::mpl::set<action_tag> tag_type;
 
-	template <class EVT,class FSM,class SourceState,class TargetState>
-	typename transition_action_result<EVT,FSM,SourceState,TargetState>::type 
-	 operator()(EVT const& , FSM&,SourceState& src,TargetState& )const
-	{
+    template <class EVT,class FSM,class SourceState,class TargetState>
+    typename transition_action_result<EVT,FSM,SourceState,TargetState>::type 
+     operator()(EVT const& , FSM&,SourceState& src,TargetState& )const
+    {
         return src;
-	}
+    }
 };
 struct get_source_tag {};
 struct GetSource_Helper: proto::extends< proto::terminal<get_source_tag>::type, GetSource_Helper, sm_domain>
 {
+    GetSource_Helper(){}
     template <class Arg1,class Arg2,class Arg3,class Arg4,class Arg5 
 #ifdef BOOST_MSVC 
  ,class Arg6 
@@ -419,33 +424,34 @@ struct GetTarget_ : euml_action<GetTarget_<Index> >
     };
     typedef ::boost::mpl::set<action_tag> tag_type;
 
-	template <class EVT,class FSM,class SourceState,class TargetState>
-	typename transition_action_result<EVT,FSM,SourceState,TargetState>::type 
-		operator()(EVT const& ,FSM& ,SourceState& ,TargetState& tgt)const
-	{
+    template <class EVT,class FSM,class SourceState,class TargetState>
+    typename transition_action_result<EVT,FSM,SourceState,TargetState>::type 
+        operator()(EVT const& ,FSM& ,SourceState& ,TargetState& tgt)const
+    {
         return tgt.get_attribute(Index());
-	}
+    }
 };
 template<>
 struct GetTarget_<void> : euml_action<GetTarget_<void> >
 {
-	template <class EVT,class FSM,class SourceState,class TargetState>
-	struct transition_action_result 
-	{
-		typedef TargetState& type;
-	};
-	typedef ::boost::mpl::set<action_tag> tag_type;
+    template <class EVT,class FSM,class SourceState,class TargetState>
+    struct transition_action_result 
+    {
+        typedef TargetState& type;
+    };
+    typedef ::boost::mpl::set<action_tag> tag_type;
 
-	template <class EVT,class FSM,class SourceState,class TargetState>
-	typename transition_action_result<EVT,FSM,SourceState,TargetState>::type 
-	 operator()(EVT const& , FSM&,SourceState& ,TargetState& tgt)const
-	{
+    template <class EVT,class FSM,class SourceState,class TargetState>
+    typename transition_action_result<EVT,FSM,SourceState,TargetState>::type 
+     operator()(EVT const& , FSM&,SourceState& ,TargetState& tgt)const
+    {
         return tgt;
-	}
+    }
 };
 struct get_target_tag {};
 struct GetTarget_Helper: proto::extends< proto::terminal<get_target_tag>::type, GetTarget_Helper, sm_domain>
 {
+    GetTarget_Helper(){}
     template <class Arg1,class Arg2,class Arg3,class Arg4,class Arg5 
 #ifdef BOOST_MSVC 
  ,class Arg6 
@@ -472,32 +478,33 @@ struct GetState_ : euml_action<GetState_<Index> >
     template <class Event,class FSM,class STATE>
     typename state_action_result<Event,FSM,STATE>::type
         operator()(Event const&,FSM& ,STATE& state )
-	{
+    {
         return state.get_attribute(Index());
-	}
+    }
 };
 template<>
 struct GetState_<void> : euml_action<GetState_<void> >
 {
     using euml_action<GetState_ >::operator=;
 
-	template <class Event,class FSM,class STATE >
-	struct state_action_result 
-	{
-		typedef STATE& type;
-	};
-	typedef ::boost::mpl::set<state_action_tag> tag_type;
+    template <class Event,class FSM,class STATE >
+    struct state_action_result 
+    {
+        typedef STATE& type;
+    };
+    typedef ::boost::mpl::set<state_action_tag> tag_type;
 
-	template <class Event,class FSM,class STATE>
+    template <class Event,class FSM,class STATE>
     typename state_action_result<Event,FSM,STATE>::type
      operator()(Event const&,FSM& ,STATE& state )
-	{
+    {
         return state;
-	}
+    }
 };
 struct get_state_tag {};
 struct GetState_Helper: proto::extends< proto::terminal<get_state_tag>::type, GetState_Helper, sm_domain>
 {
+    GetState_Helper(){}
     template <class Arg1,class Arg2,class Arg3,class Arg4,class Arg5 
 #ifdef BOOST_MSVC 
  ,class Arg6 
@@ -529,50 +536,51 @@ struct GetEvent_ : euml_action<GetEvent_<Index> >
     };
     typedef ::boost::mpl::set<state_action_tag,action_tag> tag_type;
 
-	template <class Event,class FSM,class STATE>
-	typename state_action_result<Event,FSM,STATE>::type
-		operator()(Event const& evt,FSM& ,STATE& )
-	{
-		return evt.get_attribute(Index());
-	}
-	template <class EVT,class FSM,class SourceState,class TargetState>
-	typename transition_action_result<EVT,FSM,SourceState,TargetState>::type 
-		operator()(EVT const& evt ,FSM& ,SourceState& ,TargetState&)const
-	{
+    template <class Event,class FSM,class STATE>
+    typename state_action_result<Event,FSM,STATE>::type
+        operator()(Event const& evt,FSM& ,STATE& )
+    {
         return evt.get_attribute(Index());
-	}
+    }
+    template <class EVT,class FSM,class SourceState,class TargetState>
+    typename transition_action_result<EVT,FSM,SourceState,TargetState>::type 
+        operator()(EVT const& evt ,FSM& ,SourceState& ,TargetState&)const
+    {
+        return evt.get_attribute(Index());
+    }
 };
 template <>
 struct GetEvent_<void> : euml_action<GetEvent_<void> >
 {
-	template <class Event,class FSM,class STATE >
-	struct state_action_result 
-	{
-		typedef Event const& type;
-	};
-	template <class EVT,class FSM,class SourceState,class TargetState>
-	struct transition_action_result 
-	{
-		typedef EVT const& type;
-	};
+    template <class Event,class FSM,class STATE >
+    struct state_action_result 
+    {
+        typedef Event const& type;
+    };
+    template <class EVT,class FSM,class SourceState,class TargetState>
+    struct transition_action_result 
+    {
+        typedef EVT const& type;
+    };
     typedef ::boost::mpl::set<state_action_tag,action_tag> tag_type;
 
-	template <class Event,class FSM,class STATE>
-	typename state_action_result<Event,FSM,STATE>::type
-		operator()(Event const& evt,FSM& ,STATE& )
-	{
-		return evt;
-	}
-	template <class EVT,class FSM,class SourceState,class TargetState>
-	typename transition_action_result<EVT,FSM,SourceState,TargetState>::type 
-		operator()(EVT const& evt ,FSM& ,SourceState& ,TargetState&)const
-	{
-		return evt;
-	}
+    template <class Event,class FSM,class STATE>
+    typename state_action_result<Event,FSM,STATE>::type
+        operator()(Event const& evt,FSM& ,STATE& )
+    {
+        return evt;
+    }
+    template <class EVT,class FSM,class SourceState,class TargetState>
+    typename transition_action_result<EVT,FSM,SourceState,TargetState>::type 
+        operator()(EVT const& evt ,FSM& ,SourceState& ,TargetState&)const
+    {
+        return evt;
+    }
 };
 struct get_event_tag {};
 struct GetEvent_Helper: proto::extends< proto::terminal<get_event_tag>::type, GetEvent_Helper, sm_domain>
 {
+    GetEvent_Helper(){}
     template <class Arg1,class Arg2,class Arg3,class Arg4,class Arg5 
 #ifdef BOOST_MSVC 
  ,class Arg6 
@@ -608,12 +616,12 @@ struct GetFsm_ : euml_action<GetFsm_<Index> >
     {
         return fsm.get_attribute(Index());
     }
-	template <class EVT,class FSM,class SourceState,class TargetState>
-	typename transition_action_result<EVT,FSM,SourceState,TargetState>::type 
-		operator()(EVT const& ,FSM& fsm,SourceState& ,TargetState&)const
-	{
+    template <class EVT,class FSM,class SourceState,class TargetState>
+    typename transition_action_result<EVT,FSM,SourceState,TargetState>::type 
+        operator()(EVT const& ,FSM& fsm,SourceState& ,TargetState&)const
+    {
         return fsm.get_attribute(Index());
-	}
+    }
 };
 template<>
 struct GetFsm_<void> : euml_action<GetFsm_<void> >
@@ -648,6 +656,7 @@ struct GetFsm_<void> : euml_action<GetFsm_<void> >
 struct get_fsm_tag {};
 struct GetFsm_Helper: proto::extends< proto::terminal<get_fsm_tag>::type, GetFsm_Helper, sm_domain>
 {
+    GetFsm_Helper(){}
     template <class Arg1,class Arg2,class Arg3,class Arg4,class Arg5 
 #ifdef BOOST_MSVC 
  ,class Arg6 
@@ -719,6 +728,7 @@ struct SubState_ <StateName,void>
 struct substate_tag {};
 struct SubState_Helper: proto::extends< proto::terminal<substate_tag>::type, SubState_Helper, sm_domain>
 {
+    SubState_Helper(){}
     using proto::extends< proto::terminal<substate_tag>::type, SubState_Helper, sm_domain>::operator=;
     template <class Arg1,class Arg2,class Arg3,class Arg4,class Arg5 
 #ifdef BOOST_MSVC 
@@ -739,7 +749,7 @@ struct GetAttribute_  : euml_action<GetAttribute_<Target, Index> >
     template <class Event,class FSM,class STATE >
     struct state_action_result 
     {
-		typedef typename 
+        typedef typename 
             ::boost::fusion::result_of::at_key<
             typename get_attributes_type<
                     typename ::boost::remove_reference<
@@ -749,7 +759,7 @@ struct GetAttribute_  : euml_action<GetAttribute_<Target, Index> >
     template <class EVT,class FSM,class SourceState,class TargetState>
     struct transition_action_result 
     {
-		typedef typename 
+        typedef typename 
             ::boost::fusion::result_of::at_key<
             typename get_attributes_type<
                     typename ::boost::remove_reference<
@@ -760,19 +770,19 @@ struct GetAttribute_  : euml_action<GetAttribute_<Target, Index> >
     typedef ::boost::mpl::set<state_action_tag,action_tag> tag_type;
 
     template <class EVT,class FSM,class SourceState,class TargetState>
-	typename ::boost::enable_if<
-		typename ::boost::mpl::has_key<
-			typename Target::tag_type,action_tag>::type,
-			typename transition_action_result<EVT,FSM,SourceState,TargetState>::type >::type 
+    typename ::boost::enable_if<
+        typename ::boost::mpl::has_key<
+            typename Target::tag_type,action_tag>::type,
+            typename transition_action_result<EVT,FSM,SourceState,TargetState>::type >::type 
      operator()(EVT const& evt, FSM& fsm,SourceState& src,TargetState& tgt)const
     {
         return (Target()(evt,fsm,src,tgt)).get_attribute(Index());
     }
     template <class Event,class FSM,class STATE>
-	typename ::boost::enable_if<
-		typename ::boost::mpl::has_key<
-			typename Target::tag_type,state_action_tag>::type,
-			typename state_action_result<Event,FSM,STATE>::type >::type 
+    typename ::boost::enable_if<
+        typename ::boost::mpl::has_key<
+            typename Target::tag_type,state_action_tag>::type,
+            typename state_action_result<Event,FSM,STATE>::type >::type 
      operator()(Event const& evt,FSM& fsm,STATE& state )const
     {
         return (Target()(evt,fsm,state)).get_attribute(Index());
@@ -784,6 +794,7 @@ struct get_attribute_tag
 };
 struct GetAttribute_Helper: proto::extends< proto::terminal<get_attribute_tag>::type, GetAttribute_Helper, sm_domain>
 {
+    GetAttribute_Helper(){}
     template <class Arg1,class Arg2,class Arg3,class Arg4,class Arg5 
 #ifdef BOOST_MSVC 
  ,class Arg6 
@@ -800,117 +811,117 @@ template <class Index>
 struct Source_ : euml_action<Source_<Index> >
 {
     using euml_action<Source_<Index> >::operator=;
-	template <class EVT,class FSM,class SourceState,class TargetState>
-	struct transition_action_result 
-	{
-		typedef typename 
-			::boost::fusion::result_of::at_key<typename SourceState::attributes_type,
-			                                   Index >::type type;
-	};
-	typedef ::boost::mpl::set<action_tag> tag_type;
+    template <class EVT,class FSM,class SourceState,class TargetState>
+    struct transition_action_result 
+    {
+        typedef typename 
+            ::boost::fusion::result_of::at_key<typename SourceState::attributes_type,
+                                               Index >::type type;
+    };
+    typedef ::boost::mpl::set<action_tag> tag_type;
 
-	template <class EVT,class FSM,class SourceState,class TargetState>
-	typename transition_action_result<EVT,FSM,SourceState,TargetState>::type 
-		operator()(EVT const& , FSM&,SourceState& src,TargetState& )const
-	{
+    template <class EVT,class FSM,class SourceState,class TargetState>
+    typename transition_action_result<EVT,FSM,SourceState,TargetState>::type 
+        operator()(EVT const& , FSM&,SourceState& src,TargetState& )const
+    {
         return src.get_attribute(Index());
-	}
+    }
 };
 template <class Index>
 struct Target_ : euml_action<Target_<Index> >
 {
     using euml_action<Target_<Index> >::operator=;
-	template <class EVT,class FSM,class SourceState,class TargetState>
-	struct transition_action_result 
-	{
-		typedef typename 
-			::boost::fusion::result_of::at_key<typename TargetState::attributes_type,
-			                                   Index >::type type;
-	};
-	typedef ::boost::mpl::set<action_tag> tag_type;
+    template <class EVT,class FSM,class SourceState,class TargetState>
+    struct transition_action_result 
+    {
+        typedef typename 
+            ::boost::fusion::result_of::at_key<typename TargetState::attributes_type,
+                                               Index >::type type;
+    };
+    typedef ::boost::mpl::set<action_tag> tag_type;
 
-	template <class EVT,class FSM,class SourceState,class TargetState>
-	typename transition_action_result<EVT,FSM,SourceState,TargetState>::type 
-		operator()(EVT const& ,FSM& ,SourceState& ,TargetState& tgt)const
-	{
+    template <class EVT,class FSM,class SourceState,class TargetState>
+    typename transition_action_result<EVT,FSM,SourceState,TargetState>::type 
+        operator()(EVT const& ,FSM& ,SourceState& ,TargetState& tgt)const
+    {
         return tgt.get_attribute(Index());
-	}
+    }
 };
 template <class Index>
 struct State_ : euml_action<State_<Index> >
 {
     using euml_action<State_<Index> >::operator=;
 
-	template <class Event,class FSM,class STATE >
-	struct state_action_result 
-	{
-		typedef typename 
-			::boost::fusion::result_of::at_key<typename STATE::attributes_type,
-			                                   Index >::type type;
-	};
-	typedef ::boost::mpl::set<state_action_tag> tag_type;
+    template <class Event,class FSM,class STATE >
+    struct state_action_result 
+    {
+        typedef typename 
+            ::boost::fusion::result_of::at_key<typename STATE::attributes_type,
+                                               Index >::type type;
+    };
+    typedef ::boost::mpl::set<state_action_tag> tag_type;
 
-	template <class Event,class FSM,class STATE>
-	typename state_action_result<Event,FSM,STATE>::type
-		operator()(Event const&,FSM& ,STATE& state )
-	{
+    template <class Event,class FSM,class STATE>
+    typename state_action_result<Event,FSM,STATE>::type
+        operator()(Event const&,FSM& ,STATE& state )
+    {
         return state.get_attribute(Index());
-	}
+    }
 };
 template <class Index>
 struct Event_ : euml_action<Event_<Index> >
 {
     using euml_action<Event_<Index> >::operator=;
 
-	template <class Event,class FSM,class STATE >
-	struct state_action_result 
-	{
-		typedef typename ::boost::add_const<
-			typename ::boost::fusion::result_of::at_key<typename Event::attributes_type,
+    template <class Event,class FSM,class STATE >
+    struct state_action_result 
+    {
+        typedef typename ::boost::add_const<
+            typename ::boost::fusion::result_of::at_key<typename Event::attributes_type,
                                                         Index >::type>::type type;
-	};
-	template <class EVT,class FSM,class SourceState,class TargetState>
-	struct transition_action_result 
-	{
-		typedef typename ::boost::add_const<
+    };
+    template <class EVT,class FSM,class SourceState,class TargetState>
+    struct transition_action_result 
+    {
+        typedef typename ::boost::add_const<
             typename ::boost::fusion::result_of::at_key<typename EVT::attributes_type,
                                                         Index >::type>::type type;
-	};
+    };
     typedef ::boost::mpl::set<state_action_tag,action_tag> tag_type;
 
-	template <class Event,class FSM,class STATE>
-	typename state_action_result<Event,FSM,STATE>::type
-		operator()(Event const& evt,FSM& ,STATE& )
-	{
-		return evt.get_attribute(Index());
-	}
-	template <class EVT,class FSM,class SourceState,class TargetState>
-	typename transition_action_result<EVT,FSM,SourceState,TargetState>::type 
-		operator()(EVT const& evt ,FSM& ,SourceState& ,TargetState&)const
-	{
-		return evt.get_attribute(Index());
-	}
+    template <class Event,class FSM,class STATE>
+    typename state_action_result<Event,FSM,STATE>::type
+        operator()(Event const& evt,FSM& ,STATE& )
+    {
+        return evt.get_attribute(Index());
+    }
+    template <class EVT,class FSM,class SourceState,class TargetState>
+    typename transition_action_result<EVT,FSM,SourceState,TargetState>::type 
+        operator()(EVT const& evt ,FSM& ,SourceState& ,TargetState&)const
+    {
+        return evt.get_attribute(Index());
+    }
 };
 template <class StateType,class Index>
 struct State_Attribute_ : euml_action<State_Attribute_<StateType,Index> >
 {
     using euml_action<State_Attribute_<StateType,Index> >::operator=;
 
-	template <class Event,class FSM,class STATE >
-	struct state_action_result 
-	{
-		typedef typename 
-			::boost::fusion::result_of::at_key<typename StateType::attributes_type,
-			                                   Index >::type type;
-	};
+    template <class Event,class FSM,class STATE >
+    struct state_action_result 
+    {
+        typedef typename 
+            ::boost::fusion::result_of::at_key<typename StateType::attributes_type,
+                                               Index >::type type;
+    };
     typedef ::boost::mpl::set<state_action_tag> tag_type;
 
-	template <class Event,class FSM,class STATE>
-	typename state_action_result<Event,FSM,STATE>::type
-		operator()(Event const&,FSM& fsm,STATE& )
-	{
+    template <class Event,class FSM,class STATE>
+    typename state_action_result<Event,FSM,STATE>::type
+        operator()(Event const&,FSM& fsm,STATE& )
+    {
         return fsm.template get_state<StateType&>().get_attribute(Index());
-	}
+    }
 };
 
 template <class Index>
@@ -951,6 +962,7 @@ struct Fsm_ : euml_action<Fsm_<Index> >
 struct True_ : euml::euml_action<True_>
 {
     using euml_action<True_>::operator=;
+    True_(){}
 
     template <class Event,class FSM,class STATE >
     struct state_action_result 
@@ -974,12 +986,13 @@ struct True_ : euml::euml_action<True_>
     {
         return true;
     }
-};	
+};
 True_ const true_;
 
 struct False_ : euml::euml_action<False_>
 {
     using euml_action<False_>::operator=;
+    False_(){}
 
     template <class Event,class FSM,class STATE >
     struct state_action_result 
@@ -1314,6 +1327,7 @@ struct Process_ <ToProcessEvt,Param1,Param2,Param3,void>
 struct process_tag {};
 struct Process_Helper: proto::extends< proto::terminal<process_tag>::type, Process_Helper, sm_domain>
 {
+    Process_Helper(){}
     using proto::extends< proto::terminal<process_tag>::type, Process_Helper, sm_domain>::operator=;
     template <class Arg1,class Arg2,class Arg3,class Arg4,class Arg5 
 #ifdef BOOST_MSVC 
@@ -1451,6 +1465,7 @@ struct Process2_ <ToProcessEvt,Value,Param1,Param2,void>
 struct process2_tag {};
 struct Process2_Helper : proto::extends< proto::terminal<process2_tag>::type, Process2_Helper, sm_domain>
 {
+    Process2_Helper(){}
     using proto::extends< proto::terminal<process2_tag>::type, Process2_Helper, sm_domain>::operator=;
     template <class Arg1,class Arg2,class Arg3,class Arg4,class Arg5 
 #ifdef BOOST_MSVC 
@@ -1534,6 +1549,7 @@ struct get_flag_tag
 };
 struct Get_Flag_Helper: proto::extends< proto::terminal<get_flag_tag>::type, Get_Flag_Helper, sm_domain>
 {
+    Get_Flag_Helper(){}
     template <class Arg1,class Arg2,class Arg3,class Arg4,class Arg5 
 #ifdef BOOST_MSVC 
  ,class Arg6 
@@ -1559,6 +1575,7 @@ struct DeferEvent_ : euml_action< DeferEvent_ >
 struct defer_event_tag {};
 struct Defer_Helper : proto::extends< proto::terminal<defer_event_tag>::type, Defer_Helper, sm_domain>
 {
+    Defer_Helper(){}
     using proto::extends< proto::terminal<defer_event_tag>::type, Defer_Helper, sm_domain>::operator=;
     template <class Arg1,class Arg2,class Arg3,class Arg4,class Arg5 
 #ifdef BOOST_MSVC 
@@ -1575,6 +1592,7 @@ Defer_Helper const defer_;
 struct explicit_tag {};
 struct Explicit_Helper : proto::extends< proto::terminal<explicit_tag>::type, Explicit_Helper, sm_domain>
 {
+    Explicit_Helper(){}
     using proto::extends< proto::terminal<explicit_tag>::type, Explicit_Helper, sm_domain>::operator=;
     template <class Arg1,class Arg2,class Arg3,class Arg4,class Arg5 
 #ifdef BOOST_MSVC 
@@ -1591,6 +1609,7 @@ Explicit_Helper const explicit_;
 struct entry_pt_tag {};
 struct Entry_Pt_Helper : proto::extends< proto::terminal<entry_pt_tag>::type, Entry_Pt_Helper, sm_domain>
 {
+    Entry_Pt_Helper(){}
     using proto::extends< proto::terminal<entry_pt_tag>::type, Entry_Pt_Helper, sm_domain>::operator=;
     template <class Arg1,class Arg2,class Arg3,class Arg4,class Arg5 
 #ifdef BOOST_MSVC 
@@ -1607,6 +1626,7 @@ Entry_Pt_Helper const entry_pt_;
 struct exit_pt_tag {};
 struct Exit_Pt_Helper : proto::extends< proto::terminal<exit_pt_tag>::type, Exit_Pt_Helper, sm_domain>
 {
+    Exit_Pt_Helper(){}
     using proto::extends< proto::terminal<exit_pt_tag>::type, Exit_Pt_Helper, sm_domain>::operator=;
     template <class Arg1,class Arg2,class Arg3,class Arg4,class Arg5 
 #ifdef BOOST_MSVC 
@@ -1786,7 +1806,8 @@ Exit_Pt_Helper const exit_pt_;
         ,Param4()(evt,fsm,state),Param5()(evt,fsm,state),Param6()(evt,fsm,state));} };                  \
         struct function_name ## tag{};                                                                  \
         struct functor ## Helper : proto::extends< proto::terminal< function_name ## tag >::type,       \
-        functor ## Helper , sm_domain> { template <class Arg1,class Arg2,class Arg3,class Arg4,class Arg5,class Arg6> \
+        functor ## Helper , sm_domain> { functor ## Helper(){}                                          \
+        template <class Arg1,class Arg2,class Arg3,class Arg4,class Arg5,class Arg6>                    \
         struct In {typedef functor <Arg1,Arg2,Arg3,Arg4,Arg5,Arg6> type;}; };                           \
         functor ## Helper const function_name ;
 
@@ -1936,7 +1957,8 @@ Exit_Pt_Helper const exit_pt_;
         ,Param4()(evt,fsm,state),Param5()(evt,fsm,state),Param6()(evt,fsm,state));} };                  \
         struct function_name ## tag{};                                                                  \
         struct functor ## Helper : proto::extends< proto::terminal< function_name ## tag >::type,       \
-        functor ## Helper , sm_domain> { template <class Arg1,class Arg2,class Arg3,class Arg4,class Arg5,class Arg6> \
+        functor ## Helper , sm_domain> { functor ## Helper(){}                                          \
+        template <class Arg1,class Arg2,class Arg3,class Arg4,class Arg5,class Arg6>                    \
         struct In {typedef functor <Arg1,Arg2,Arg3,Arg4,Arg5,Arg6> type;}; };                           \
         functor ## Helper const function_name ;
 
@@ -2065,8 +2087,9 @@ Exit_Pt_Helper const exit_pt_;
         ,Param4()(evt,fsm,state),Param5()(evt,fsm,state));} };                                          \
         struct function_name ## tag{};                                                                  \
         struct functor ## Helper : proto::extends< proto::terminal< function_name ## tag >::type,       \
-        functor ## Helper , sm_domain> { template <class Arg1,class Arg2,class Arg3,class Arg4,class Arg5> \
-        struct In {typedef functor <Arg1,Arg2,Arg3,Arg4,Arg5> type;}; };                           		\
+        functor ## Helper , sm_domain> { functor ## Helper(){}                                          \
+        template <class Arg1,class Arg2,class Arg3,class Arg4,class Arg5>                               \
+        struct In {typedef functor <Arg1,Arg2,Arg3,Arg4,Arg5> type;}; };                                \
         functor ## Helper const function_name ;
 
 #define BOOST_MSM_EUML_METHOD(functor,function,function_name,result_trans,result_state)                 \
@@ -2190,8 +2213,9 @@ Exit_Pt_Helper const exit_pt_;
         ,Param4()(evt,fsm,state),Param5()(evt,fsm,state));} };                                          \
         struct function_name ## tag{};                                                                  \
         struct functor ## Helper : proto::extends< proto::terminal< function_name ## tag >::type,       \
-        functor ## Helper , sm_domain> { template <class Arg1,class Arg2,class Arg3,class Arg4,class Arg5> \
-        struct In {typedef functor <Arg1,Arg2,Arg3,Arg4,Arg5> type;}; };                           		\
+        functor ## Helper , sm_domain> { functor ## Helper(){}                                          \
+        template <class Arg1,class Arg2,class Arg3,class Arg4,class Arg5>                               \
+        struct In {typedef functor <Arg1,Arg2,Arg3,Arg4,Arg5> type;}; };                                \
         functor ## Helper const function_name ;
 
 #endif
@@ -2235,6 +2259,7 @@ Exit_Pt_Helper const exit_pt_;
     struct instance_name ## _impl;                                                              \
     struct instance_name ## _helper :  msm::front::euml::euml_action<instance_name ## _impl>    \
     {                                                                                           \
+        instance_name ## _helper(){}                                                            \
         typedef instance_name ## _impl action_name;                                             \
     };                                                                                          \
     instance_name ## _helper instance_name;                                                     \
@@ -2243,6 +2268,7 @@ Exit_Pt_Helper const exit_pt_;
 
 #define BOOST_MSM_EUML_EVENT(instance_name)                                                     \
     struct instance_name ## _helper : msm::front::euml::euml_event<instance_name ## _helper>{   \
+    instance_name ## _helper(){}                                                                \
     instance_name ## _helper const& operator()(){return *this;} };                              \
     instance_name ## _helper instance_name;
 
@@ -2408,12 +2434,14 @@ Exit_Pt_Helper const exit_pt_;
 
 #define BOOST_MSM_EUML_TRANSITION_TABLE(expr,instance_name)                                     \
     struct instance_name ## _helper :                                                           \
-    public BOOST_TYPEOF(BOOST_MSM_EUML_BUILD_STT_HELPER BOOST_MSM_EUML_BUILD_STT_HELPER2(expr)){} ;    \
+    public BOOST_TYPEOF(BOOST_MSM_EUML_BUILD_STT_HELPER BOOST_MSM_EUML_BUILD_STT_HELPER2(expr)) \
+    {instance_name ## _helper(){}} ;                                                            \
     instance_name ## _helper const instance_name;
 
-#define BOOST_MSM_EUML_INTERNAL_TRANSITION_TABLE(expr,instance_name)                                                        \
-    struct instance_name ## _helper :                                                                                       \
-    public BOOST_TYPEOF(BOOST_MSM_EUML_BUILD_INTERNAL_STT_HELPER BOOST_MSM_EUML_BUILD_STT_HELPER2(expr)){} ; \
+#define BOOST_MSM_EUML_INTERNAL_TRANSITION_TABLE(expr,instance_name)                                        \
+    struct instance_name ## _helper :                                                                       \
+    public BOOST_TYPEOF(BOOST_MSM_EUML_BUILD_INTERNAL_STT_HELPER BOOST_MSM_EUML_BUILD_STT_HELPER2(expr))    \
+    {instance_name ## _helper(){}} ;                                                                        \
     instance_name ## _helper const instance_name;
 
 #endif

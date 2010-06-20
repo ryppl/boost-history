@@ -39,13 +39,14 @@ namespace boost { namespace msm { namespace front { namespace euml
 template<class StateNameTag,
          class EntryFunctor=NoAction, 
          class ExitFunctor=NoAction,
-		 class Attributes= ::boost::fusion::vector<>,
+         class Attributes= ::boost::fusion::vector<>,
          class Flags = ::boost::mpl::vector0<>,
          class Defer = ::boost::mpl::vector0<>,
          class BASE = ::boost::msm::front::default_base_state>
 struct func_state :  public ::boost::msm::front::detail::state_base<BASE,Attributes>, 
                      euml_state<func_state<StateNameTag,EntryFunctor,ExitFunctor,Attributes,Flags,Defer,BASE> >
 {
+    func_state(){}
     // grammar testing
     BOOST_MPL_ASSERT_NOT(( boost::is_same<EntryFunctor,invalid_type> ));
     BOOST_MPL_ASSERT_NOT(( boost::is_same<ExitFunctor,invalid_type> ));
@@ -56,16 +57,16 @@ struct func_state :  public ::boost::msm::front::detail::state_base<BASE,Attribu
     // deferred events
     typedef Defer       deferred_events;
 
-	template <class Event,class FSM>
-	void on_entry(Event const& evt,FSM& fsm)
-	{
-		EntryFunctor()(evt,fsm,*this);
-	}
-	template <class Event,class FSM>
-	void on_exit(Event const& evt,FSM& fsm)
-	{
-		ExitFunctor()(evt,fsm,*this);
-	}
+    template <class Event,class FSM>
+    void on_entry(Event const& evt,FSM& fsm)
+    {
+        EntryFunctor()(evt,fsm,*this);
+    }
+    template <class Event,class FSM>
+    void on_exit(Event const& evt,FSM& fsm)
+    {
+        ExitFunctor()(evt,fsm,*this);
+    }
 };
 
 // provides the typedefs and interface. Concrete states derive from it.
@@ -73,13 +74,14 @@ template<class StateNameTag,
          int ZoneIndex=-1,
          class EntryFunctor=NoAction, 
          class ExitFunctor=NoAction,
-		 class Attributes= ::boost::fusion::vector<>,
+         class Attributes= ::boost::fusion::vector<>,
          class Flags = ::boost::mpl::vector0<>,
          class Defer = ::boost::mpl::vector0<>,
          class BASE = default_base_state>
 struct entry_func_state :  public ::boost::msm::front::detail::state_base<BASE,Attributes>, 
                            euml_state<entry_func_state<StateNameTag,ZoneIndex,EntryFunctor,ExitFunctor,Attributes,Flags,Defer,BASE> >
 {
+    entry_func_state(){}
     // grammar testing
     BOOST_MPL_ASSERT_NOT(( boost::is_same<EntryFunctor,invalid_type> ));
     BOOST_MPL_ASSERT_NOT(( boost::is_same<ExitFunctor,invalid_type> ));
@@ -95,23 +97,23 @@ struct entry_func_state :  public ::boost::msm::front::detail::state_base<BASE,A
     // deferred events
     typedef Defer       deferred_events;
 
-	template <class Event,class FSM>
-	void on_entry(Event const& evt,FSM& fsm)
-	{
-		EntryFunctor()(evt,fsm,*this);
-	}
-	template <class Event,class FSM>
-	void on_exit(Event const& evt,FSM& fsm)
-	{
-		ExitFunctor()(evt,fsm,*this);
-	}
+    template <class Event,class FSM>
+    void on_entry(Event const& evt,FSM& fsm)
+    {
+        EntryFunctor()(evt,fsm,*this);
+    }
+    template <class Event,class FSM>
+    void on_exit(Event const& evt,FSM& fsm)
+    {
+        ExitFunctor()(evt,fsm,*this);
+    }
 };
 // provides the typedefs and interface. Concrete states derive from it.
 template<class StateNameTag,
          int ZoneIndex=-1,
          class EntryFunctor=NoAction, 
          class ExitFunctor=NoAction,
-		 class Attributes= ::boost::fusion::vector<>,
+         class Attributes= ::boost::fusion::vector<>,
          class Flags = ::boost::mpl::vector0<>,
          class Defer = ::boost::mpl::vector0<>,
          class BASE = default_base_state>
@@ -120,6 +122,7 @@ struct explicit_entry_func_state :  public ::boost::msm::front::detail::state_ba
                                     euml_state<explicit_entry_func_state<StateNameTag,
                                         ZoneIndex,EntryFunctor,ExitFunctor,Attributes,Flags,Defer,BASE> >
 {
+    explicit_entry_func_state(){}
     // grammar testing
     BOOST_MPL_ASSERT_NOT(( boost::is_same<EntryFunctor,invalid_type> ));
     BOOST_MPL_ASSERT_NOT(( boost::is_same<ExitFunctor,invalid_type> ));
@@ -130,16 +133,16 @@ struct explicit_entry_func_state :  public ::boost::msm::front::detail::state_ba
     // deferred events
     typedef Defer       deferred_events;
 
-	template <class Event,class FSM>
-	void on_entry(Event const& evt,FSM& fsm)
-	{
-		EntryFunctor()(evt,fsm,*this);
-	}
-	template <class Event,class FSM>
-	void on_exit(Event const& evt,FSM& fsm)
-	{
-		ExitFunctor()(evt,fsm,*this);
-	}
+    template <class Event,class FSM>
+    void on_entry(Event const& evt,FSM& fsm)
+    {
+        EntryFunctor()(evt,fsm,*this);
+    }
+    template <class Event,class FSM>
+    void on_exit(Event const& evt,FSM& fsm)
+    {
+        ExitFunctor()(evt,fsm,*this);
+    }
 };
 
 // provides the typedefs and interface. Concrete states derive from it.
@@ -147,13 +150,14 @@ template<class StateNameTag,
          class Event,
          class EntryFunctor=NoAction, 
          class ExitFunctor=NoAction,
-		 class Attributes= ::boost::fusion::vector<>,
+         class Attributes= ::boost::fusion::vector<>,
          class Flags = ::boost::mpl::vector0<>,
          class Defer = ::boost::mpl::vector0<>,
          class BASE = default_base_state>
 struct exit_func_state :   public ::boost::msm::front::detail::state_base<BASE,Attributes>, 
                            euml_state<exit_func_state<StateNameTag,Event,EntryFunctor,ExitFunctor,Attributes,Flags,Defer,BASE> >
 {
+    exit_func_state(){}
     // grammar testing
     BOOST_MPL_ASSERT_NOT(( boost::is_same<EntryFunctor,invalid_type> ));
     BOOST_MPL_ASSERT_NOT(( boost::is_same<ExitFunctor,invalid_type> ));
@@ -169,16 +173,16 @@ struct exit_func_state :   public ::boost::msm::front::detail::state_base<BASE,A
     // deferred events
     typedef Defer       deferred_events;
 
-	template <class Evt,class FSM>
-	void on_entry(Evt const& evt,FSM& fsm)
-	{
-		EntryFunctor()(evt,fsm,*this);
-	}
-	template <class Evt,class FSM>
-	void on_exit(Evt const& evt,FSM& fsm)
-	{
-		ExitFunctor()(evt,fsm,*this);
-	}
+    template <class Evt,class FSM>
+    void on_entry(Evt const& evt,FSM& fsm)
+    {
+        EntryFunctor()(evt,fsm,*this);
+    }
+    template <class Evt,class FSM>
+    void on_exit(Evt const& evt,FSM& fsm)
+    {
+        ExitFunctor()(evt,fsm,*this);
+    }
 };
 
 struct BuildActions;
@@ -194,273 +198,273 @@ struct BuildActionSequence
                     proto::comma<BuildActions,BuildActions >,
                     ActionSequence_<boost::mpl::push_back<
                         make_vector_one_row<BuildActions(proto::_left)>(),
-						BuildActions(proto::_right)>()>()                
-		>,
+                        BuildActions(proto::_right)>()>()                
+        >,
         proto::when <
                     proto::comma<BuildActionSequence,BuildActions >,
                     ActionSequence_<boost::mpl::push_back<
                         get_sequence<BuildActionSequence(proto::_left) >(),
-						BuildActions(proto::_right) >() >()                
-		>
+                        BuildActions(proto::_right) >() >()                
+        >
    >
 {};
 
 struct BuildActionsCases
 {
-	// The primary template matches nothing:
-	template<typename Tag>
-	struct case_
-		: proto::not_<proto::_>
-	{};
+    // The primary template matches nothing:
+    template<typename Tag>
+    struct case_
+        : proto::not_<proto::_>
+    {};
 };
 
 template<>
 struct BuildActionsCases::case_<proto::tag::pre_inc>
-	: proto::when<
+    : proto::when<
             proto::pre_inc<BuildActions >,
             Pre_inc_< BuildActions(proto::_child)>()               
-				>
+                >
 {};
 template<>
 struct BuildActionsCases::case_<proto::tag::pre_dec>
-	: proto::when<
+    : proto::when<
             proto::pre_dec<BuildActions >,
             Pre_dec_< BuildActions(proto::_child)>()               
-				>
+                >
 {};
 template<>
 struct BuildActionsCases::case_<proto::tag::post_inc>
-	: proto::when<
+    : proto::when<
             proto::post_inc<BuildActions >,
             Post_inc_< BuildActions(proto::_child)>()               
-				>
+                >
 {};
 template<>
 struct BuildActionsCases::case_<proto::tag::post_dec>
-	: proto::when<
+    : proto::when<
             proto::post_dec<BuildActions >,
             Post_dec_< BuildActions(proto::_child)>()               
-				>
+                >
 {};
 template<>
 struct BuildActionsCases::case_<proto::tag::dereference>
-	: proto::when<
+    : proto::when<
             proto::dereference<BuildActions >,
             Deref_< BuildActions(proto::_child)>()               
-				>
+                >
 {};
 template<>
 struct BuildActionsCases::case_<proto::tag::plus>
-	: proto::when<
+    : proto::when<
             proto::plus<BuildActions,BuildActions >,
             Plus_<BuildActions(proto::_left),BuildActions(proto::_right)>()               
-				>
+                >
 {};
 template<>
 struct BuildActionsCases::case_<proto::tag::minus>
-	: proto::when<
+    : proto::when<
             proto::minus<BuildActions,BuildActions >,
             Minus_<BuildActions(proto::_left),BuildActions(proto::_right)>()               
-				>
+                >
 {};
 template<>
 struct BuildActionsCases::case_<proto::tag::multiplies>
-	: proto::when<
+    : proto::when<
             proto::multiplies<BuildActions,BuildActions >,
             Multiplies_<BuildActions(proto::_left),BuildActions(proto::_right)>()               
-				>
+                >
 {};
 template<>
 struct BuildActionsCases::case_<proto::tag::divides>
-	: proto::when<
+    : proto::when<
             proto::divides<BuildActions,BuildActions >,
             Divides_<BuildActions(proto::_left),BuildActions(proto::_right)>()               
-				>
+                >
 {};
 template<>
 struct BuildActionsCases::case_<proto::tag::modulus>
-	: proto::when<
+    : proto::when<
             proto::modulus<BuildActions,BuildActions >,
             Modulus_<BuildActions(proto::_left),BuildActions(proto::_right)>()               
-				>
+                >
 {};
 template<>
 struct BuildActionsCases::case_<proto::tag::bitwise_and>
-	: proto::when<
+    : proto::when<
             proto::bitwise_and<BuildActions,BuildActions >,
             Bitwise_And_<BuildActions(proto::_left),BuildActions(proto::_right)>()               
-				>
+                >
 {};
 template<>
 struct BuildActionsCases::case_<proto::tag::bitwise_or>
-	: proto::when<
+    : proto::when<
             proto::bitwise_or<BuildActions,BuildActions >,
             Bitwise_Or_<BuildActions(proto::_left),BuildActions(proto::_right)>()               
-				>
+                >
 {};
 template<>
 struct BuildActionsCases::case_<proto::tag::bitwise_xor>
-	: proto::when<
+    : proto::when<
             proto::bitwise_xor<BuildActions,BuildActions >,
             Bitwise_Xor_<BuildActions(proto::_left),BuildActions(proto::_right)>()               
-				>
+                >
 {};
 
 template<>
 struct BuildActionsCases::case_<proto::tag::plus_assign>
-	: proto::when<
+    : proto::when<
             proto::plus_assign<BuildActions,BuildActions >,
             Plus_Assign_< BuildActions(proto::_left),BuildActions(proto::_right)>()
-				>
+                >
 {};
 template<>
 struct BuildActionsCases::case_<proto::tag::minus_assign>
-	: proto::when<
+    : proto::when<
             proto::minus_assign<BuildActions,BuildActions >,
             Minus_Assign_<BuildActions(proto::_left),BuildActions(proto::_right)>()
-				>
+                >
 {};
 template<>
 struct BuildActionsCases::case_<proto::tag::multiplies_assign>
-	: proto::when<
+    : proto::when<
             proto::multiplies_assign<BuildActions,BuildActions >,
             Multiplies_Assign_< BuildActions(proto::_left),BuildActions(proto::_right)>()
-				>
+                >
 {};
 template<>
 struct BuildActionsCases::case_<proto::tag::divides_assign>
-	: proto::when<
+    : proto::when<
             proto::divides_assign<BuildActions,BuildActions >,
             Divides_Assign_< BuildActions(proto::_left),BuildActions(proto::_right)>()
-				>
+                >
 {};
 template<>
 struct BuildActionsCases::case_<proto::tag::modulus_assign>
-	: proto::when<
+    : proto::when<
             proto::modulus_assign<BuildActions,BuildActions >,
             Modulus_Assign_< BuildActions(proto::_left),BuildActions(proto::_right)>()
-				>
+                >
 {};
 template<>
 struct BuildActionsCases::case_<proto::tag::shift_left_assign>
-	: proto::when<
+    : proto::when<
             proto::shift_left_assign<BuildActions,BuildActions >,
             ShiftLeft_Assign_< BuildActions(proto::_left),BuildActions(proto::_right)>()
-				>
+                >
 {};
 template<>
 struct BuildActionsCases::case_<proto::tag::shift_right_assign>
-	: proto::when<
+    : proto::when<
             proto::shift_right_assign<BuildActions,BuildActions >,
             ShiftRight_Assign_< BuildActions(proto::_left),BuildActions(proto::_right)>()
-				>
+                >
 {};
 template<>
 struct BuildActionsCases::case_<proto::tag::shift_left>
-	: proto::when<
+    : proto::when<
             proto::shift_left<BuildActions,BuildActions >,
             ShiftLeft_< BuildActions(proto::_left),BuildActions(proto::_right)>()
-				>
+                >
 {};
 template<>
 struct BuildActionsCases::case_<proto::tag::shift_right>
-	: proto::when<
+    : proto::when<
             proto::shift_right<BuildActions,BuildActions >,
             ShiftRight_< BuildActions(proto::_left),BuildActions(proto::_right)>()
-				>
+                >
 {};
 template<>
 struct BuildActionsCases::case_<proto::tag::assign>
-	: proto::when<
+    : proto::when<
             proto::assign<BuildActions,BuildActions >,
             Assign_< BuildActions(proto::_left),BuildActions(proto::_right)>()
-				>
+                >
 {};
 template<>
 struct BuildActionsCases::case_<proto::tag::subscript>
-	: proto::when<
+    : proto::when<
             proto::subscript<BuildActions,BuildActions >,
             Subscript_< BuildActions(proto::_left),BuildActions(proto::_right)>()
-				>
+                >
 {};
 template<>
 struct BuildActionsCases::case_<proto::tag::unary_plus>
-	: proto::when<
+    : proto::when<
             proto::unary_plus<BuildActions >,
             Unary_Plus_< BuildActions(proto::_child)>()
-				>
+                >
 {};
 template<>
 struct BuildActionsCases::case_<proto::tag::negate>
-	: proto::when<
+    : proto::when<
             proto::negate<BuildActions >,
             Unary_Minus_< BuildActions(proto::_child)>()
-				>
+                >
 {};
 
 template<>
 struct BuildActionsCases::case_<proto::tag::function>
     : proto::or_<
             proto::when<
-			    proto::function<proto::terminal<if_tag>,BuildGuards,BuildActionSequence,BuildActionSequence >,
+                proto::function<proto::terminal<if_tag>,BuildGuards,BuildActionSequence,BuildActionSequence >,
                 If_Else_<BuildGuards(proto::_child_c<1>),
-					     BuildActionSequence(proto::_child_c<2>),
-					     BuildActionSequence(proto::_child_c<3>) >()
-				    >,
+                         BuildActionSequence(proto::_child_c<2>),
+                         BuildActionSequence(proto::_child_c<3>) >()
+                    >,
             proto::when<
-			    proto::function<proto::terminal<if_then_tag>,BuildGuards,BuildActionSequence >,
+                proto::function<proto::terminal<if_then_tag>,BuildGuards,BuildActionSequence >,
                 If_Then_<BuildGuards(proto::_child_c<1>),
-					     BuildActionSequence(proto::_child_c<2>)>()
-				    >,
-			proto::when<
-					proto::function<proto::terminal<while_do_tag>,BuildGuards,BuildActionSequence >,
-                    While_Do_<BuildGuards(proto::_child_c<1>),
-							 BuildActionSequence(proto::_child_c<2>) >()
-				    >,
-			proto::when<
-					proto::function<proto::terminal<do_while_tag>,BuildGuards,BuildActionSequence >,
-                    Do_While_<BuildGuards(proto::_child_c<1>),
-							 BuildActionSequence(proto::_child_c<2>) >()
-					>,
+                         BuildActionSequence(proto::_child_c<2>)>()
+                    >,
             proto::when<
-			    proto::function<proto::terminal<for_loop_tag>,
+                    proto::function<proto::terminal<while_do_tag>,BuildGuards,BuildActionSequence >,
+                    While_Do_<BuildGuards(proto::_child_c<1>),
+                             BuildActionSequence(proto::_child_c<2>) >()
+                    >,
+            proto::when<
+                    proto::function<proto::terminal<do_while_tag>,BuildGuards,BuildActionSequence >,
+                    Do_While_<BuildGuards(proto::_child_c<1>),
+                             BuildActionSequence(proto::_child_c<2>) >()
+                    >,
+            proto::when<
+                proto::function<proto::terminal<for_loop_tag>,
                                 BuildActionSequence,BuildGuards,BuildActionSequence,BuildActionSequence>,
                 For_Loop_<BuildActionSequence(proto::_child_c<1>),
-					     BuildGuards(proto::_child_c<2>),
-					     BuildActionSequence(proto::_child_c<3>),
+                         BuildGuards(proto::_child_c<2>),
+                         BuildActionSequence(proto::_child_c<3>),
                          BuildActionSequence(proto::_child_c<4>) >()
-				    >,
+                    >,
          proto::or_<
             proto::when<
                     proto::function<proto::terminal<proto::_>,BuildActions >,
                     get_fct<proto::_child_c<0>,BuildActions(proto::_child_c<1>) >()
-					>,
+                    >,
             proto::when<
                     proto::function<proto::terminal<proto::_> >,
                     get_fct<proto::_child_c<0> >()
-					>,
+                    >,
             proto::when<
                     proto::function<proto::terminal<proto::_>,BuildActions,BuildActions >,
                     get_fct<proto::_child_c<0>,BuildActions(proto::_child_c<1>),BuildActions(proto::_child_c<2>) >()
-					>,
+                    >,
             proto::when<
                     proto::function<proto::terminal<proto::_>,BuildActions,BuildActions,BuildActions >,
                     get_fct<proto::_child_c<0>,BuildActions(proto::_child_c<1>)
                                               ,BuildActions(proto::_child_c<2>),BuildActions(proto::_child_c<3>) >()
-					>,
+                    >,
             proto::when<
                     proto::function<proto::terminal<proto::_>,BuildActions,BuildActions,BuildActions,BuildActions >,
                     get_fct<proto::_child_c<0>
                             ,BuildActions(proto::_child_c<1>),BuildActions(proto::_child_c<2>)
                             ,BuildActions(proto::_child_c<3>),BuildActions(proto::_child_c<4>) >()
-					>,
+                    >,
             proto::when<
                     proto::function<proto::terminal<proto::_>,BuildActions,BuildActions,BuildActions,BuildActions,BuildActions >,
                     get_fct<proto::_child_c<0>
                             ,BuildActions(proto::_child_c<1>),BuildActions(proto::_child_c<2>)
                             ,BuildActions(proto::_child_c<3>),BuildActions(proto::_child_c<4>)
                             ,BuildActions(proto::_child_c<5>) >()
-					>
+                    >
 #ifdef BOOST_MSVC
             ,proto::when<
                     proto::function<proto::terminal<proto::_>,BuildActions,BuildActions,BuildActions,BuildActions,BuildActions,BuildActions >,
@@ -468,7 +472,7 @@ struct BuildActionsCases::case_<proto::tag::function>
                             ,BuildActions(proto::_child_c<1>),BuildActions(proto::_child_c<2>)
                             ,BuildActions(proto::_child_c<3>),BuildActions(proto::_child_c<4>)
                             ,BuildActions(proto::_child_c<5>),BuildActions(proto::_child_c<6>) >()
-					>
+                    >
 #endif
                  >
     >
@@ -496,19 +500,20 @@ struct BuildActionsCases::case_<proto::tag::terminal>
         proto::when<
                 proto::terminal<proto::_>,
                 get_fct<proto::_ >()
-				>
+                >
     >
 {};
 struct BuildActions
-	: proto::switch_<BuildActionsCases>
+    : proto::switch_<BuildActionsCases>
 {};
 
 // attributes building
 #define BOOST_MSM_EUML_DECLARE_ATTRIBUTE(attr_type,attr_name)                                           \
 struct attr_name ## _                                                                                   \
     : proto::extends< proto::terminal<msm::front::action_tag>::type, attr_name ## _, sm_domain>         \
-    {typedef  attr_name ## _ action_name;                                                       \
+    {typedef  attr_name ## _ action_name;                                                               \
         typedef ::boost::fusion::pair<attr_name ## _,attr_type> attribute_type;                         \
+        attr_name ## _ (){}                                                                             \
     };                                                                                                  \
 attr_name ## _ const attr_name;
 
@@ -677,8 +682,8 @@ BASE
 >
 build_state(Expr1 const& ,Expr2 const& , Attr const&, Configure const&, BASE )
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
     typedef typename boost::result_of<BuildAttributes(Attr)>::type attributes_type;
     typedef typename boost::result_of<BuildFlags(Configure)>::type flags_type;
     typedef typename boost::result_of<BuildDeferred(Configure)>::type deferred_type;
@@ -703,12 +708,12 @@ typename boost::result_of<BuildDeferred(Configure)>::type
 >
 build_state(Expr1 const& ,Expr2 const& ,Attr const&, Configure const&)
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
     typedef typename boost::result_of<BuildAttributes(Attr)>::type attributes_type;
     typedef typename boost::result_of<BuildFlags(Configure)>::type flags_type;
     typedef typename boost::result_of<BuildDeferred(Configure)>::type deferred_type;
-	return func_state<StateNameTag,entry_action,exit_action,attributes_type,flags_type,deferred_type>();
+    return func_state<StateNameTag,entry_action,exit_action,attributes_type,flags_type,deferred_type>();
 }
 
 template <class StateNameTag,class Expr1,class Expr2,class Attr>
@@ -727,10 +732,10 @@ typename boost::result_of<BuildAttributes(Attr)>::type
 >
 build_state(Expr1 const& ,Expr2 const& ,Attr const&)
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
     typedef typename boost::result_of<BuildAttributes(Attr)>::type attributes_type;
-	return func_state<StateNameTag,entry_action,exit_action,attributes_type>();
+    return func_state<StateNameTag,entry_action,exit_action,attributes_type>();
 }
 
 template <class StateNameTag,class Expr1,class Expr2>
@@ -748,9 +753,9 @@ typename ::boost::mpl::eval_if<
 >
 build_state(Expr1 const& ,Expr2 const& )
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
-	return func_state<StateNameTag,entry_action,exit_action>();
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
+    return func_state<StateNameTag,entry_action,exit_action>();
 }
 
 template <class StateNameTag,class Expr1>
@@ -765,8 +770,8 @@ NoAction
 >
 build_state(Expr1 const& )
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	return func_state<StateNameTag,entry_action,NoAction>();
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    return func_state<StateNameTag,entry_action,NoAction>();
 }
 template<class StateNameTag>
 inline
@@ -777,7 +782,7 @@ NoAction
 >
 build_state()
 {
-	return func_state<StateNameTag,NoAction,NoAction>();
+    return func_state<StateNameTag,NoAction,NoAction>();
 }
 
 // provides the typedefs and interface. Concrete states derive from it.
@@ -797,6 +802,7 @@ struct func_state_machine :  public ::boost::msm::front::detail::state_base<BASE
                              euml_state<func_state_machine<StateNameTag,STT,Init,EntryFunctor,ExitFunctor,Attributes,Flags,
                                                         Defer,NoTransitionFunctor,OnExceptionFunctor,BASE> >
 {
+    func_state_machine(){}
     // grammar testing
     BOOST_MPL_ASSERT_NOT(( boost::is_same<EntryFunctor,invalid_type> ));
     BOOST_MPL_ASSERT_NOT(( boost::is_same<ExitFunctor,invalid_type> ));
@@ -810,7 +816,7 @@ struct func_state_machine :  public ::boost::msm::front::detail::state_base<BASE
     // deferred events
     typedef Defer                        deferred_events;
     // customization (message queue, exceptions)
-	typedef Configuration                configuration;
+    typedef Configuration                configuration;
 
 
     typedef BASE                         BaseAllStates;
@@ -1065,8 +1071,8 @@ BASE
 build_sm(STT ,Init , Expr1 const& ,Expr2 const& ,Attr const& , Configure const&, Expr3 const&, Expr4 const& , BASE )
 {
     typedef typename boost::result_of<BuildInit(Init)>::type init_type;
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
     typedef typename boost::result_of<BuildFlags(Configure)>::type flags_type;
     typedef typename boost::result_of<BuildDeferred(Configure)>::type deferred_type;
     typedef typename boost::result_of<BuildConfigure(Configure)>::type config_type;
@@ -1105,8 +1111,8 @@ BASE
 >
 build_terminate_state(Expr1 const& ,Expr2 const& , Attr const&, Configure const&, BASE )
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
     typedef typename ::boost::mpl::push_back<
         typename boost::result_of<BuildFlags(Configure)>::type,
         ::boost::msm::TerminateFlag >::type flags_type;
@@ -1134,8 +1140,8 @@ typename boost::result_of<BuildDeferred(Configure)>::type
 >
 build_terminate_state(Expr1 const& ,Expr2 const& ,Attr const&, Configure const&)
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
     typedef typename ::boost::mpl::push_back<
         typename boost::result_of<BuildFlags(Configure)>::type,
         ::boost::msm::TerminateFlag >::type flags_type;
@@ -1162,10 +1168,10 @@ typename boost::result_of<BuildAttributes(Attr)>::type,
 >
 build_terminate_state(Expr1 const& ,Expr2 const& ,Attr const&)
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
     typedef typename boost::result_of<BuildAttributes(Attr)>::type attributes_type;
-	return func_state<StateNameTag,entry_action,exit_action,attributes_type, ::boost::mpl::vector< ::boost::msm::TerminateFlag> >();
+    return func_state<StateNameTag,entry_action,exit_action,attributes_type, ::boost::mpl::vector< ::boost::msm::TerminateFlag> >();
 }
 
 template <class StateNameTag,class Expr1,class Expr2>
@@ -1185,9 +1191,9 @@ typename ::boost::mpl::eval_if<
 >
 build_terminate_state(Expr1 const& ,Expr2 const& )
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
-	return func_state<StateNameTag,entry_action,exit_action,
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
+    return func_state<StateNameTag,entry_action,exit_action,
                       ::boost::fusion::vector<>, ::boost::mpl::vector< ::boost::msm::TerminateFlag> >();
 }
 
@@ -1205,8 +1211,8 @@ NoAction,
 >
 build_terminate_state(Expr1 const& )
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	return func_state<StateNameTag,entry_action,NoAction,::boost::fusion::vector<>,::boost::mpl::vector<boost::msm::TerminateFlag> >();
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    return func_state<StateNameTag,entry_action,NoAction,::boost::fusion::vector<>,::boost::mpl::vector<boost::msm::TerminateFlag> >();
 }
 template<class StateNameTag>
 inline
@@ -1245,8 +1251,8 @@ BASE
 >
 build_interrupt_state(EndInterruptEvent const&,Expr1 const& ,Expr2 const& , Attr const&, Configure const&, BASE )
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
     typedef typename boost::result_of<BuildAttributes(Attr)>::type attributes_type;
     typedef typename ::boost::mpl::push_back<
                 typename ::boost::mpl::push_back< 
@@ -1280,8 +1286,8 @@ typename boost::result_of<BuildDeferred(Configure)>::type
 >
 build_interrupt_state(EndInterruptEvent const&,Expr1 const& ,Expr2 const& ,Attr const&, Configure const&)
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
     typedef typename boost::result_of<BuildAttributes(Attr)>::type attributes_type;
 
     typedef typename ::boost::mpl::push_back<
@@ -1292,7 +1298,7 @@ build_interrupt_state(EndInterruptEvent const&,Expr1 const& ,Expr2 const& ,Attr 
     >::type flags_type;
     typedef typename boost::result_of<BuildDeferred(Configure)>::type deferred_type;
 
-	return func_state<StateNameTag,entry_action,exit_action,attributes_type,flags_type,deferred_type>();
+    return func_state<StateNameTag,entry_action,exit_action,attributes_type,flags_type,deferred_type>();
 }
 
 template <class StateNameTag,class Expr1,class Expr2,class Attr,class EndInterruptEvent>
@@ -1312,10 +1318,10 @@ typename boost::result_of<BuildAttributes(Attr)>::type,
 >
 build_interrupt_state(EndInterruptEvent const&,Expr1 const& ,Expr2 const& ,Attr const&)
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
     typedef typename boost::result_of<BuildAttributes(Attr)>::type attributes_type;
-	return func_state<StateNameTag,entry_action,exit_action,attributes_type, 
+    return func_state<StateNameTag,entry_action,exit_action,attributes_type, 
                      ::boost::mpl::vector< boost::msm::InterruptedFlag, boost::msm::EndInterruptFlag<EndInterruptEvent> > >();
 }
 
@@ -1336,9 +1342,9 @@ typename ::boost::mpl::eval_if<
 >
 build_interrupt_state(EndInterruptEvent const&,Expr1 const& ,Expr2 const& )
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
-	return func_state<StateNameTag,entry_action,exit_action,
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
+    return func_state<StateNameTag,entry_action,exit_action,
                       ::boost::fusion::vector<>, 
                       ::boost::mpl::vector< boost::msm::InterruptedFlag, boost::msm::EndInterruptFlag<EndInterruptEvent> > >();
 }
@@ -1357,8 +1363,8 @@ NoAction,
 >
 build_interrupt_state(EndInterruptEvent const&, Expr1 const&)
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	return func_state<StateNameTag,entry_action,NoAction, ::boost::fusion::vector<>,
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    return func_state<StateNameTag,entry_action,NoAction, ::boost::fusion::vector<>,
                      ::boost::mpl::vector<boost::msm::InterruptedFlag, boost::msm::EndInterruptFlag<EndInterruptEvent> > >();
 }
 
@@ -1397,8 +1403,8 @@ BASE
 >
 build_entry_state(Expr1 const& ,Expr2 const& , Attr const&, Configure const&, BASE )
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
     typedef typename boost::result_of<BuildFlags(Configure)>::type flags_type;
     typedef typename boost::result_of<BuildDeferred(Configure)>::type deferred_type;
     typedef typename boost::result_of<BuildAttributes(Attr)>::type attributes_type;
@@ -1424,8 +1430,8 @@ typename boost::result_of<BuildDeferred(Configure)>::type
 >
 build_entry_state(Expr1 const& ,Expr2 const& ,Attr const&, Configure const&)
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
     typedef typename boost::result_of<BuildFlags(Configure)>::type flags_type;
     typedef typename boost::result_of<BuildDeferred(Configure)>::type deferred_type;
     typedef typename boost::result_of<BuildAttributes(Attr)>::type attributes_type;
@@ -1449,10 +1455,10 @@ typename boost::result_of<BuildAttributes(Attr)>::type
 >
 build_entry_state(Expr1 const& ,Expr2 const& ,Attr const&)
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
     typedef typename boost::result_of<BuildAttributes(Attr)>::type attributes_type;
-	return entry_func_state<StateNameTag,ZoneIndex,entry_action,exit_action,attributes_type>();
+    return entry_func_state<StateNameTag,ZoneIndex,entry_action,exit_action,attributes_type>();
 }
 
 template <class StateNameTag,int ZoneIndex,class Expr1,class Expr2>
@@ -1471,9 +1477,9 @@ typename ::boost::mpl::eval_if<
 >
 build_entry_state(Expr1 const& ,Expr2 const& )
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
-	return entry_func_state<StateNameTag,ZoneIndex,entry_action,exit_action>();
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
+    return entry_func_state<StateNameTag,ZoneIndex,entry_action,exit_action>();
 }
 
 template <class StateNameTag,int ZoneIndex,class Expr1>
@@ -1489,8 +1495,8 @@ NoAction
 >
 build_entry_state(Expr1 const& )
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	return entry_func_state<StateNameTag,ZoneIndex,entry_action,NoAction>();
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    return entry_func_state<StateNameTag,ZoneIndex,entry_action,NoAction>();
 }
 
 template <class StateNameTag,int ZoneIndex>
@@ -1503,7 +1509,7 @@ NoAction
 >
 build_entry_state()
 {
-	return entry_func_state<StateNameTag,ZoneIndex,NoAction,NoAction>();
+    return entry_func_state<StateNameTag,ZoneIndex,NoAction,NoAction>();
 }
 
 template <class StateNameTag,class Event,class Expr1,class Expr2,class Attr,class Configure,class BASE>
@@ -1526,8 +1532,8 @@ BASE
 >
 build_exit_state(Event const&,Expr1 const& ,Expr2 const& , Attr const&, Configure const&, BASE )
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
     typedef typename boost::result_of<BuildFlags(Configure)>::type flags_type;
     typedef typename boost::result_of<BuildDeferred(Configure)>::type deferred_type;
     typedef typename boost::result_of<BuildAttributes(Attr)>::type attributes_type;
@@ -1553,8 +1559,8 @@ typename boost::result_of<BuildDeferred(Configure)>::type
 >
 build_exit_state(Event const&,Expr1 const& ,Expr2 const& ,Attr const&, Configure const&)
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
     typedef typename boost::result_of<BuildFlags(Configure)>::type flags_type;
     typedef typename boost::result_of<BuildDeferred(Configure)>::type deferred_type;
     typedef typename boost::result_of<BuildAttributes(Attr)>::type attributes_type;
@@ -1578,10 +1584,10 @@ typename boost::result_of<BuildAttributes(Attr)>::type
 >
 build_exit_state(Event const&,Expr1 const& ,Expr2 const& ,Attr const&)
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
     typedef typename boost::result_of<BuildAttributes(Attr)>::type attributes_type;
-	return exit_func_state<StateNameTag,Event,entry_action,exit_action,attributes_type>();
+    return exit_func_state<StateNameTag,Event,entry_action,exit_action,attributes_type>();
 }
 
 template <class StateNameTag,class Event,class Expr1,class Expr2>
@@ -1600,9 +1606,9 @@ typename ::boost::mpl::eval_if<
 >
 build_exit_state(Event const&,Expr1 const& ,Expr2 const& )
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
-	return exit_func_state<StateNameTag,Event,entry_action,exit_action>();
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
+    return exit_func_state<StateNameTag,Event,entry_action,exit_action>();
 }
 
 template <class StateNameTag,class Event,class Expr1>
@@ -1618,8 +1624,8 @@ NoAction
 >
 build_exit_state(Event const&, Expr1 const& )
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	return exit_func_state<StateNameTag,Event,entry_action,NoAction>();
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    return exit_func_state<StateNameTag,Event,entry_action,NoAction>();
 }
 
 template <class StateNameTag,class Event>
@@ -1632,7 +1638,7 @@ NoAction
 >
 build_exit_state(Event const&)
 {
-	return exit_func_state<StateNameTag,Event,NoAction,NoAction>();
+    return exit_func_state<StateNameTag,Event,NoAction,NoAction>();
 }
 
 template <class StateNameTag,int ZoneIndex,class Expr1,class Expr2,class Attr,class Configure,class BASE>
@@ -1655,8 +1661,8 @@ BASE
 >
 build_explicit_entry_state(Expr1 const& ,Expr2 const& , Attr const&, Configure const&, BASE )
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
     typedef typename boost::result_of<BuildFlags(Configure)>::type flags_type;
     typedef typename boost::result_of<BuildDeferred(Configure)>::type deferred_type;
     typedef typename boost::result_of<BuildAttributes(Attr)>::type attributes_type;
@@ -1682,8 +1688,8 @@ typename boost::result_of<BuildDeferred(Configure)>::type
 >
 build_explicit_entry_state(Expr1 const& ,Expr2 const& ,Attr const&, Configure const&)
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
     typedef typename boost::result_of<BuildFlags(Configure)>::type flags_type;
     typedef typename boost::result_of<BuildDeferred(Configure)>::type deferred_type;
     typedef typename boost::result_of<BuildAttributes(Attr)>::type attributes_type;
@@ -1707,10 +1713,10 @@ typename boost::result_of<BuildAttributes(Attr)>::type
 >
 build_explicit_entry_state(Expr1 const& ,Expr2 const& ,Attr const&)
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
     typedef typename boost::result_of<BuildAttributes(Attr)>::type attributes_type;
-	return explicit_entry_func_state<StateNameTag,ZoneIndex,entry_action,exit_action,attributes_type>();
+    return explicit_entry_func_state<StateNameTag,ZoneIndex,entry_action,exit_action,attributes_type>();
 }
 
 template <class StateNameTag,int ZoneIndex,class Expr1,class Expr2>
@@ -1729,9 +1735,9 @@ typename ::boost::mpl::eval_if<
 >
 build_explicit_entry_state(Expr1 const& ,Expr2 const& )
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
-	return explicit_entry_func_state<StateNameTag,ZoneIndex,entry_action,exit_action>();
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    typedef typename boost::result_of<BuildActionSequence(Expr2)>::type exit_action;
+    return explicit_entry_func_state<StateNameTag,ZoneIndex,entry_action,exit_action>();
 }
 
 template <class StateNameTag,int ZoneIndex,class Expr1>
@@ -1747,8 +1753,8 @@ NoAction
 >
 build_explicit_entry_state(Expr1 const& )
 {
-	typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
-	return explicit_entry_func_state<StateNameTag,ZoneIndex,entry_action,NoAction>();
+    typedef typename boost::result_of<BuildActionSequence(Expr1)>::type entry_action;
+    return explicit_entry_func_state<StateNameTag,ZoneIndex,entry_action,NoAction>();
 }
 
 template <class StateNameTag,int ZoneIndex>
@@ -1761,7 +1767,7 @@ NoAction
 >
 build_explicit_entry_state()
 {
-	return explicit_entry_func_state<StateNameTag,ZoneIndex,NoAction,NoAction>();
+    return explicit_entry_func_state<StateNameTag,ZoneIndex,NoAction,NoAction>();
 }
 
 
