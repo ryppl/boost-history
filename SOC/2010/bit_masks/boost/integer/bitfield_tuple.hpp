@@ -82,22 +82,25 @@ namespace boost {
  *  storage template signature
  *  template <typename StorageType> storage;
  *
+
+Note: reference first example to talk about member because this gets confusing.
+
  *  Members 
- *  Unlike storage the order of member types the order in which they are  
- *  specified and the order in which they are stored within the bitfield_tuple.
- *  The template parameters for member are the same as specifying a regular 
- *  bitfield in C or C++, so, the first parameter is the type, second is the 
- *  name of that variable in this case its a tag class or something of that 
+ *  Unlike the storage type the member types are stored in the bitfield_tuple
+ *  the same way as they are specified in the template parameters. The template
+ *  parameters for member are the same as specifying a regular bitfield in C
+ *  or C++, so, the first parameter is the type, second is the name of that 
+ *  variable in this case its a tag class or something of that 
  *  nature  and third is the width of the bitfield in bits. For example,
  *
  *  member<bool, bool_one,1>
  *
  *  specifies that the type stored within 1 bit is of type bool and is 
- *  accessible from within a bitfield_tuple by using the supplied name bool_one 
- *  or the index at which it was specified relative to the number of other 
- *  members specified ahead of it and not counting the storage type. This means 
- *  that the fields specified are accessible by either an unsigned integral 
- *  constant or by the name provided in side the member template.
+ *  accessible from within the bitfield_tuple by using the supplied name, 
+ *  bool_one is this case, or by the index which it was specified in the 
+ *  template parameters excluding the storage type parameter. This means that 
+ *  the members are accessible by either an unsigned integral constant or by
+ *  the name provided in side the member template.
  *
  *
  *
@@ -266,8 +269,8 @@ namespace boost {
  *  size
  *  at_key
  *  tag_of
- *  and all intrinsic functions which are available because of their 
- *  implementation.
+ *  and all intrinsic functions which are available because of the 
+ *  implementation of the above functions.
  *
  *
  *  bitfield_tuple fusion iterator support for functions and meta functions.
