@@ -23,21 +23,6 @@ void test_get_data(T const& x, int value) {
 
 
 int main() {
-    // lets make some errors : )
-    // bitfield_tuple < storage<int>, member<int,red,6> > temp;
-    // test suite for the storage
-    {
-        typedef storage<int> storage_t;
-        BOOST_MPL_ASSERT(( is_same<storage_t::storage_type, int> ));
-    }
-
-    // testing member type
-    {
-        typedef member<int, blue, 6 > member_test_1;
-        BOOST_ASSERT(( is_same<member_test_1::return_type, int>::value ));
-        BOOST_ASSERT(( is_same<member_test_1::name_type, blue>::value ));
-        BOOST_ASSERT(( member_test_1::field_width == 6 ));
-    }
     // testing bitfield_element
     {
         // bitfield_element
@@ -52,6 +37,7 @@ int main() {
     }
 
     // bitfield_tuple runtime tests.
+    // additional tests preformed in the bft_testing folder.
     {
         // default constructor.
         typedef bitfield_tuple< storage<int>, member<int,red,3> > bft1;
