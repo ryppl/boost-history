@@ -7,9 +7,6 @@
 #ifndef BOOST_BIT_MASKS_TAGGED_HPP
 #define BOOST_BIT_MASKS_TAGGED_HPP
 
-#include <memory>
-#include <boost/mpl/void.hpp>
-
 namespace boost {
 
 
@@ -17,11 +14,7 @@ namespace boost {
  *  around within the template parameters of a bitfield_tuple.
  */
 template < typename StorageType>
-struct storage {
-    typedef StorageType storage_type;
-    typedef storage<StorageType>  type;
-
-};
+struct storage;
 
 } // end boost
 

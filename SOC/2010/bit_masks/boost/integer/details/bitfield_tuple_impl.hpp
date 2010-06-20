@@ -28,7 +28,7 @@
 namespace boost { namespace details {
 
 // The following preprocessor MACRO only used for writing clarity, it's only 
-// used twice and then undef'ed before the end of this file.
+// used once and then undef'ed before the end of this file.
 #define BOOST_BFT_ARG_PROCESSING      \
         details::bft_arg_parse_impl<\
             T0, \
@@ -91,9 +91,7 @@ template <  typename T0,
             typename T8,
             typename T9
 >
-struct bitfield_tuple_base
-    : BOOST_BFT_ARG_PROCESSING
-{
+struct bitfield_tuple_base {
 
     
     typedef typename BOOST_BFT_ARG_PROCESSING   processed_args;
@@ -101,7 +99,7 @@ struct bitfield_tuple_base
     // extracting te Arguments from processed_args relating to 
     // the storage policy. Also preforming static assertios 
     // where they can be done.
-    typedef typename processed_args::storage_policy     storage_policy;
+    typedef typename processed_args::storage_policy     storage_type;
     typedef typename processed_args::field_vector       field_vector;
     typedef typename processed_args::offset             offset;
 
@@ -109,13 +107,10 @@ struct bitfield_tuple_base
     //      A storage policy must be supplied.
     BOOST_STATIC_ASSERT((
         !is_same<
-            storage_policy,
+            storage_type,
             typename mpl::void_
         >::value
     ));
-
-    typedef typename storage_policy::storage_type   storage_type;
-
 
 
     // Precondition: storage_type must not be an array type.

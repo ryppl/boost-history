@@ -75,11 +75,11 @@ struct bft_arg_parse_impl <
     // make sure that the storage type is not specifed twice
     BOOST_STATIC_ASSERT(( is_same<StoragePolicy,mpl::void_>::value ));
 
-    typedef typename storage<
+    typedef storage<
         StorageType
-    >::type                 param;
+    >                       param;
     typedef FieldVector     field_vector;
-    typedef param           storage_policy;
+    typedef StorageType     storage_policy;
     typedef Offset          offset;
 
     typedef bft_arg_parse_impl<param,storage_policy,field_vector,offset> type;
@@ -98,7 +98,9 @@ struct bft_arg_parse_impl <
 /** Specilization for member.
  *  Documented and enforced preconditions
  *      1. The user must not supply the same name for more then 1 parameter
- *      (This may result in additional overhead during compile time ).
+ *          (This may result in additional overhead during compile time ).
+ *      2. The Fieldwidth of a field must not be 0.
+ *      3. The Fieldwidth must not exceed the bit_width of the ReturnType.
  */
 template <  typename StoragePolicy,
             typename FieldVector,
@@ -117,7 +119,9 @@ struct bft_arg_parse_impl <
     FieldVector,
     Offset >
 {
-
+    BOOST_STATIC_ASSERT(( FieldWidth != 0 ));
+    BOOST_STATIC_ASSERT(( FieldWidth <= bit_width<ReturnType>::value ));
+    // make sure that the name doesn't already exist.
     BOOST_STATIC_ASSERT((
         is_same<
             typename mpl::find_if<
@@ -134,7 +138,7 @@ struct bft_arg_parse_impl <
     ));
 
 
-    typedef typename member< ReturnType, NameType, FieldWidth >::type param;
+    typedef member< ReturnType, NameType, FieldWidth > param;
 
     typedef StoragePolicy   storage_policy;
     typedef typename mpl::push_back<
