@@ -30,15 +30,8 @@ boostbook standalone
   :  
     distexplorer
   :
- 
-	# Path for links to Boost:
-	<xsl:param>boost.root=../../../../../../../../trunk
-	# Path for libraries index:
-	<xsl:param>boost.libraries=$(boost-root)/libs/libraries.htm
-	# Use the main Boost stylesheet:
-	<xsl:param>html.stylesheet=../../../../../../../../trunk/doc/html/boostbook.css
-	# Use the distexplorer local Boost stylesheet:
-	# <xsl:param>html.stylesheet=./html/boostbook.css
+    # Path for links to Boost:
+    <xsl:param>boost.root=../../../../..
 
 	# Some general style settings:
 	<xsl:param>table.footnote.number.format=1
