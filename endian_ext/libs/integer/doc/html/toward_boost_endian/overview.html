@@ -32,7 +32,13 @@
       <a href="overview.html#toward_boost_endian.overview.description">Description</a>
     </h3>
 <p>
-      <span class="bold"><strong>Boost.Integer.Endian</strong></span> provides:
+      This is an extension of the Beman's Boost.Integer.Endian able to work with
+      endian aware types, used to convert between types with different endian or
+      even to carry on with arithmetic operations, adding support ofr aligned endian
+      unaware types.
+    </p>
+<p>
+      <span class="bold"><strong>Boost.Integer.Endian.Ext</strong></span> provides:
     </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
@@ -64,14 +70,23 @@
         and of endian types.
       </li>
 <li>
-        Views of aligned integer types as endian packs or endian integers.
+        Views of aligned endian unaware integer types as endian packs or endian integers
+        so we can make endian conversion.
       </li>
 <li>
-        Generic In place conversion between different endian formats.
-      </li>
+        Generic in place conversion between different endian formats.
+        <div class="itemizedlist"><ul type="circle">
+<li>
+            Very simple interface: convert_to/from&lt;endiannes domain&gt;(),
+          </li>
+<li>
+            Support for built-in and user-defined data types view as fusion sequences.
+          </li>
+</ul></div>
+</li>
 </ul></div>
 <a name="toward_boost_endian.overview.how_to_use_this_documentation"></a><h3>
-<a name="id4765082"></a>
+<a name="id4765104"></a>
       <a href="overview.html#toward_boost_endian.overview.how_to_use_this_documentation">How
       to Use This Documentation</a>
     </h3>

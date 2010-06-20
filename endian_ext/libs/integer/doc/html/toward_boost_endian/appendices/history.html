@@ -30,14 +30,60 @@
       History"> Appendix A:
       History</a>
 </h3></div></div></div>
-<div class="toc"><dl><dt><span class="section"><a href="history.html#toward_boost_endian.appendices.history.__version_0_1_0__june_11__2010____split_of_boost_endian_"><span class="bold"><strong>Version 0.1.0, June 11, 2010</strong></span> <span class="emphasis"><em>Split of Boost.Endian</em></span></a></span></dt></dl></div>
+<div class="toc"><dl><dt><span class="section"><a href="history.html#toward_boost_endian.appendices.history.__version_0_1_0__june_15__2010____split_of_boost_endian_"><span class="bold"><strong>Version 0.1.0, June 15, 2010</strong></span> <span class="emphasis"><em>Split of Boost.Endian</em></span></a></span></dt></dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="toward_boost_endian.appendices.history.__version_0_1_0__june_11__2010____split_of_boost_endian_"></a><a href="history.html#toward_boost_endian.appendices.history.__version_0_1_0__june_11__2010____split_of_boost_endian_" title="Version 0.1.0, June 11, 2010 Split of Boost.Endian"><span class="bold"><strong>Version 0.1.0, June 11, 2010</strong></span> <span class="emphasis"><em>Split of Boost.Endian</em></span></a>
+<a name="toward_boost_endian.appendices.history.__version_0_1_0__june_15__2010____split_of_boost_endian_"></a><a href="history.html#toward_boost_endian.appendices.history.__version_0_1_0__june_15__2010____split_of_boost_endian_" title="Version 0.1.0, June 15, 2010 Split of Boost.Endian"><span class="bold"><strong>Version 0.1.0, June 15, 2010</strong></span> <span class="emphasis"><em>Split of Boost.Endian</em></span></a>
 </h4></div></div></div>
 <p>
           <span class="bold"><strong>Features:</strong></span>
         </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            Endian packs
+            <div class="itemizedlist"><ul type="circle">
+<li>
+                Big endian | little endian | native endian byte ordering.
+              </li>
+<li>
+                Signed | unsigned
+              </li>
+<li>
+                Unaligned | aligned
+              </li>
+<li>
+                1-8 byte (unaligned) | 2, 4, 8 byte (aligned)
+              </li>
+<li>
+                Choice of integer value type
+              </li>
+</ul></div>
+</li>
+<li>
+            Endian integers with the whole set of arithmetics operators based on
+            endian pack.
+          </li>
+<li>
+            Operators &lt;= and =&gt; for unformatted binary (as opposed to formatted
+            character) stream insertion and extraction of built-in, std::string types
+            and of endian types.
+          </li>
+<li>
+            Views of aligned endian unaware integer types as endian packs or endian
+            integers so we can make endian conversion.
+          </li>
+<li>
+            Generic in place conversion between different endian formats.
+            <div class="itemizedlist"><ul type="circle">
+<li>
+                Very simple interface: convert_to/from&lt;endiannes domain&gt;(),
+              </li>
+<li>
+                Support for built-in and user-defined data types view as fusion sequences.
+              </li>
+</ul></div>
+</li>
+</ul></div>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

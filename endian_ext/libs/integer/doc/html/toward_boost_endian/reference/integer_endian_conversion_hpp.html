@@ -37,16 +37,45 @@
         Non-Member Function Template <code class="computeroutput"><span class="identifier">convert_from</span><span class="special">&lt;&gt;</span></code></a></span></dt>
 <dt><span class="section"><a href="integer_endian_conversion_hpp.html#toward_boost_endian.reference.integer_endian_conversion_hpp.convert_to">
         Non-Member Function Template <code class="computeroutput"><span class="identifier">convert_to</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="integer_endian_conversion_hpp.html#toward_boost_endian.reference.integer_endian_conversion_hpp.to">
+        Class Template <code class="computeroutput"><span class="identifier">to</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="integer_endian_conversion_hpp.html#toward_boost_endian.reference.integer_endian_conversion_hpp.from">
+        Class Template <code class="computeroutput"><span class="identifier">from</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="integer_endian_conversion_hpp.html#toward_boost_endian.reference.integer_endian_conversion_hpp.is_to">
+        Class Template <code class="computeroutput"><span class="identifier">is_to</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="integer_endian_conversion_hpp.html#toward_boost_endian.reference.integer_endian_conversion_hpp.is_from">
+        Class Template <code class="computeroutput"><span class="identifier">is_from</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="integer_endian_conversion_hpp.html#toward_boost_endian.reference.integer_endian_conversion_hpp.convert">
+        Non-Member Function Template <code class="computeroutput"><span class="identifier">convert</span><span class="special">&lt;&gt;</span></code></a></span></dt>
 </dl></div>
-<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TargetDomain</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">SourceDomain</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">void</span> <span class="identifier">convert_to_from</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
+<a name="toward_boost_endian.reference.integer_endian_conversion_hpp.synopsis"></a><h4>
+<a name="id4828070"></a>
+        <a href="integer_endian_conversion_hpp.html#toward_boost_endian.reference.integer_endian_conversion_hpp.synopsis">Synopsis</a>
+      </h4>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">integer</span> <span class="special">{</span>
 
-<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">SourceDomain</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">void</span> <span class="identifier">convert_from</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TargetDomain</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">SourceDomain</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">convert_to_from</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
 
-<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TargetDomain</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">void</span> <span class="identifier">convert_to</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
-</pre>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">SourceDomain</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">convert_from</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TargetDomain</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">convert_to</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
+    
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Endian</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">to</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Endian</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">from</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Endian</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">is_to</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Endian</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">is_from</span><span class="special">;</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Endian1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Endian2</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">convert</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
+    
+
+<span class="special">}</span> <span class="comment">// namespace integer
+</span><span class="special">}</span> <span class="comment">// namespace boost
+</span></pre>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="toward_boost_endian.reference.integer_endian_conversion_hpp.convert_to_from"></a><a href="integer_endian_conversion_hpp.html#toward_boost_endian.reference.integer_endian_conversion_hpp.convert_to_from" title="
@@ -75,6 +104,64 @@
 </h4></div></div></div>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TargetDomain</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="keyword">void</span> <span class="identifier">convert_to</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_endian.reference.integer_endian_conversion_hpp.to"></a><a href="integer_endian_conversion_hpp.html#toward_boost_endian.reference.integer_endian_conversion_hpp.to" title="
+        Class Template to&lt;&gt;">
+        Class Template <code class="computeroutput"><span class="identifier">to</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Endian</span><span class="special">&gt;</span> 
+<span class="keyword">struct</span> <span class="identifier">to</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">Endian</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_endian.reference.integer_endian_conversion_hpp.from"></a><a href="integer_endian_conversion_hpp.html#toward_boost_endian.reference.integer_endian_conversion_hpp.from" title="
+        Class Template from&lt;&gt;">
+        Class Template <code class="computeroutput"><span class="identifier">from</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Endian</span><span class="special">&gt;</span> 
+<span class="keyword">struct</span> <span class="identifier">from</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">Endian</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_endian.reference.integer_endian_conversion_hpp.is_to"></a><a href="integer_endian_conversion_hpp.html#toward_boost_endian.reference.integer_endian_conversion_hpp.is_to" title="
+        Class Template is_to&lt;&gt;">
+        Class Template <code class="computeroutput"><span class="identifier">is_to</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Endian</span><span class="special">&gt;</span> 
+<span class="keyword">struct</span> <span class="identifier">is_to</span> <span class="special">:</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">false_</span> <span class="special">{};</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Endian</span><span class="special">&gt;</span> 
+<span class="keyword">struct</span> <span class="identifier">is_to</span><span class="special">&lt;</span> <span class="identifier">to</span><span class="special">&lt;</span><span class="identifier">Endian</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">:</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">true_</span> <span class="special">{};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_endian.reference.integer_endian_conversion_hpp.is_from"></a><a href="integer_endian_conversion_hpp.html#toward_boost_endian.reference.integer_endian_conversion_hpp.is_from" title="
+        Class Template is_from&lt;&gt;">
+        Class Template <code class="computeroutput"><span class="identifier">is_from</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Endian</span><span class="special">&gt;</span> 
+<span class="keyword">struct</span> <span class="identifier">is_from</span> <span class="special">:</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">false_</span> <span class="special">{};</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Endian</span><span class="special">&gt;</span> 
+<span class="keyword">struct</span> <span class="identifier">is_from</span><span class="special">&lt;</span> <span class="identifier">from</span><span class="special">&lt;</span><span class="identifier">Endian</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">:</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">true_</span> <span class="special">{};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_endian.reference.integer_endian_conversion_hpp.convert"></a><a href="integer_endian_conversion_hpp.html#toward_boost_endian.reference.integer_endian_conversion_hpp.convert" title="
+        Non-Member Function Template convert&lt;&gt;">
+        Non-Member Function Template <code class="computeroutput"><span class="identifier">convert</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TargetDomain</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">SourceDomain</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">void</span> <span class="identifier">convert</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
 </pre>
 </div>
 </div>

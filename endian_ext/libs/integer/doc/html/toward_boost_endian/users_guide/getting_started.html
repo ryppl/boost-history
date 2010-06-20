@@ -44,7 +44,7 @@
         Installing Integer.Endian</a>
 </h4></div></div></div>
 <a name="toward_boost_endian.users_guide.getting_started.install.getting_boost_integer_endian"></a><h5>
-<a name="id4803506"></a>
+<a name="id4803864"></a>
           <a href="getting_started.html#toward_boost_endian.users_guide.getting_started.install.getting_boost_integer_endian">Getting
           Boost.Integer.Endian</a>
         </h5>
@@ -58,7 +58,7 @@
           Sandbox</a>.
         </p>
 <a name="toward_boost_endian.users_guide.getting_started.install.building_boost_integer_endian"></a><h5>
-<a name="id4803558"></a>
+<a name="id4803912"></a>
           <a href="getting_started.html#toward_boost_endian.users_guide.getting_started.install.building_boost_integer_endian">Building
           Boost.Integer.Endian</a>
         </h5>
@@ -84,16 +84,16 @@
           </li>
 </ul></div>
 <a name="toward_boost_endian.users_guide.getting_started.install.requirements"></a><h5>
-<a name="id4803612"></a>
+<a name="id4803966"></a>
           <a href="getting_started.html#toward_boost_endian.users_guide.getting_started.install.requirements">Requirements</a>
         </h5>
 <p>
           <span class="bold"><strong>Boost.Integer.Endian</strong></span> depends on some Boost
-          library. For these specific parts you must use either Boost version 1.38.0
+          library. For these specific parts you must use either Boost version 1.43.0
           or the version in SVN trunk (even if older version should works also).
         </p>
 <a name="toward_boost_endian.users_guide.getting_started.install.exceptions_safety"></a><h5>
-<a name="id4803645"></a>
+<a name="id4803999"></a>
           <a href="getting_started.html#toward_boost_endian.users_guide.getting_started.install.exceptions_safety">Exceptions
           safety</a>
         </h5>
@@ -102,7 +102,7 @@
           of exception safety as long as the underlying parameters provide it.
         </p>
 <a name="toward_boost_endian.users_guide.getting_started.install.thread_safety"></a><h5>
-<a name="id4803672"></a>
+<a name="id4804026"></a>
           <a href="getting_started.html#toward_boost_endian.users_guide.getting_started.install.thread_safety">Thread
           safety</a>
         </h5>
@@ -110,7 +110,7 @@
           All functions in the library are thread-unsafe except when noted explicitly.
         </p>
 <a name="toward_boost_endian.users_guide.getting_started.install.tested_compilers"></a><h5>
-<a name="id4803698"></a>
+<a name="id4804052"></a>
           <a href="getting_started.html#toward_boost_endian.users_guide.getting_started.install.tested_compilers">Tested
           compilers</a>
         </h5>
@@ -203,7 +203,7 @@
           will no longer be relying on unspecified behavior.
         </p>
 <a name="toward_boost_endian.users_guide.getting_started.limitations_.binary_i_o_warnings_and_cautions"></a><h5>
-<a name="id4758516"></a>
+<a name="id4758861"></a>
           <a href="getting_started.html#toward_boost_endian.users_guide.getting_started.limitations_.binary_i_o_warnings_and_cautions">Binary
           I/O warnings and cautions</a>
         </h5>
@@ -213,12 +213,12 @@
 <th align="left">Warning</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-            Use only on streams opened with filemode std::ios_base::binary. Thus
-            unformatted binary I/O should not be with the standard streams (cout,
-            cin, etc.) since they are opened in text mode. Use on text streams may
-            produce incorrect results, such as insertion of unwanted characters or
-            premature end-of-file. For example, on Windows 0x0D would become 0x0D,
-            0x0A.
+            Use only on streams opened with filemode <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">ios_base</span><span class="special">::</span><span class="identifier">binary</span></code>.
+            Thus unformatted binary I/O should not be with the standard streams (<code class="computeroutput"><span class="identifier">cout</span></code>, <code class="computeroutput"><span class="identifier">cin</span></code>,
+            etc.) since they are opened in text mode. Use on text streams may produce
+            incorrect results, such as insertion of unwanted characters or premature
+            end-of-file. For example, on Windows <code class="computeroutput"><span class="number">0x0D</span></code>
+            would become <code class="computeroutput"><span class="number">0x0D</span></code>, <code class="computeroutput"><span class="number">0x0A</span></code>.
           </p></td></tr>
 </table></div>
 <div class="warning"><table border="0" summary="Warning">

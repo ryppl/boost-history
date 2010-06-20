@@ -43,6 +43,10 @@
 <dt><span class="section"><a href="integer_endian_view_hpp.html#toward_boost_endian.reference.integer_endian_view_hpp.as_big">
         Non-Member Function Template <code class="computeroutput"><span class="identifier">as_big</span><span class="special">&lt;&gt;</span></code></a></span></dt>
 </dl></div>
+<a name="toward_boost_endian.reference.integer_endian_view_hpp.synopsis"></a><h4>
+<a name="id4826617"></a>
+        <a href="integer_endian_view_hpp.html#toward_boost_endian.reference.integer_endian_view_hpp.synopsis">Synopsis</a>
+      </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
 <span class="keyword">namespace</span> <span class="identifier">integer</span> <span class="special">{</span>
 
@@ -97,10 +101,6 @@
 </h4></div></div></div>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="identifier">endian_view</span><span class="special">&lt;</span><span class="identifier">endian</span><span class="special">&lt;</span><span class="identifier">endian</span><span class="special">::</span><span class="identifier">native</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">as</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">v</span><span class="special">);</span>
-<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="identifier">endian_view</span><span class="special">&lt;</span><span class="identifier">endian</span><span class="special">&lt;</span><span class="identifier">endian</span><span class="special">::</span><span class="identifier">little</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">as_little</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">v</span><span class="special">);</span>
-<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="identifier">endian_view</span><span class="special">&lt;</span><span class="identifier">endian</span><span class="special">&lt;</span><span class="identifier">endian</span><span class="special">::</span><span class="identifier">big</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">as_big</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">v</span><span class="special">);</span>
 </pre>
 </div>
 <div class="section" lang="en">
@@ -111,8 +111,6 @@
 </h4></div></div></div>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="identifier">endian_view</span><span class="special">&lt;</span><span class="identifier">endian</span><span class="special">&lt;</span><span class="identifier">endian</span><span class="special">::</span><span class="identifier">little</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">as_little</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">v</span><span class="special">);</span>
-<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="identifier">endian_view</span><span class="special">&lt;</span><span class="identifier">endian</span><span class="special">&lt;</span><span class="identifier">endian</span><span class="special">::</span><span class="identifier">big</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">as_big</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">v</span><span class="special">);</span>
 </pre>
 </div>
 <div class="section" lang="en">

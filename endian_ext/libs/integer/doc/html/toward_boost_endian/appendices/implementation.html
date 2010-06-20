@@ -32,7 +32,7 @@
       C: Implementation Notes</a>
 </h3></div></div></div>
 <a name="toward_boost_endian.appendices.implementation.faq"></a><h4>
-<a name="id4823599"></a>
+<a name="id4831418"></a>
         <a href="implementation.html#toward_boost_endian.appendices.implementation.faq">FAQ</a>
       </h4>
 <div class="itemizedlist"><ul type="disc">
@@ -77,16 +77,17 @@
         </li>
 <li>
 <span class="bold"><strong>What are the implications endian types not being
-          POD's of C++03?</strong></span> They can't be used in unions. In theory, compilers
-          aren't required to align or lay out storage in portable ways, although
-          this problem has never been observed in a real compiler.
+          POD's with C++03 compilers?</strong></span> They can't be used in unions. Also,
+          compilers aren't required to align or lay out storage in portable ways,
+          although this potential problem hasn't prevented use of Boost.Endian with
+          real compilers.
         </li>
 <li>
 <span class="bold"><strong>Which is better, big-endian or little-endian?</strong></span>
           Big-endian tends to be a bit more of an industry standard, but little-endian
           may be preferred for applications that run primarily on x86 (Intel/AMD)
-          and other little-endian CPU's. The Wikipedia article gives more pros and
-          cons.
+          and other little-endian CPU's. The <a href="http://en.wikipedia.org/wiki/Endian" target="_top">Wikipedia</a>
+          article gives more pros and cons.
         </li>
 <li>
 <span class="bold"><strong>What good is native endianness?</strong></span> It provides

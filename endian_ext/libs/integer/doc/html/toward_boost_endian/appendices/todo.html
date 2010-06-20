@@ -30,15 +30,32 @@
       plans</a>
 </h3></div></div></div>
 <a name="toward_boost_endian.appendices.todo.tasks_to_do_before_review"></a><h4>
-<a name="id4824996"></a>
+<a name="id4832864"></a>
         <a href="todo.html#toward_boost_endian.appendices.todo.tasks_to_do_before_review">Tasks
         to do before review</a>
       </h4>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          Support for 'pure' endian conversion for endian unaware UDT.
+        </li>
+<li>
+          Support for 'in place' endian conversion for ranges of endian unaware types.
+        </li>
+<li>
+          endian iterator, which will iterate across a range endian converting values
+          as necessary. It works with any type supporting the convert_to/from functions.
+        </li>
+</ul></div>
 <a name="toward_boost_endian.appendices.todo.for_later_releases"></a><h4>
-<a name="id4825018"></a>
+<a name="id4832906"></a>
         <a href="todo.html#toward_boost_endian.appendices.todo.for_later_releases">For
         later releases</a>
       </h4>
+<div class="itemizedlist"><ul type="disc"><li>
+          The library doesn't take advantage of special instructions on architectures
+          which natively support endian conversion. This functionality could, however,
+          be part of future releases.
+        </li></ul></div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
