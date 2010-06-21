@@ -13,7 +13,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/find_if.hpp>
 #include <boost/integer/details/bft/name_lookup.hpp>
-
+#include <boost/integer/details/bit_flag.hpp>
 
 namespace boost { namespace details {
 
@@ -155,6 +155,68 @@ struct bft_arg_parse_impl <
         mpl::plus<
             Offset,
             mpl::size_t<FieldWidth>
+        >::value
+    >                                   offset;
+
+    typedef bft_arg_parse_impl<param,storage_policy,field_vector,offset> type;
+
+    template <typename NextParam>
+    struct process {
+        typedef bft_arg_parse_impl<
+            NextParam,
+            storage_policy,
+            field_vector,
+            offset
+        > type;
+    };
+};
+
+/* Specialization for flag. */
+template <  typename StoragePolicy,
+            typename FieldVector,
+            typename NameType,
+            typename Offset
+>
+struct bft_arg_parse_impl <
+    flag <NameType>,
+    StoragePolicy,
+    FieldVector,
+    Offset >
+{
+    // make sure that the name doesn't already exist.
+    BOOST_STATIC_ASSERT((
+        is_same<
+            typename mpl::find_if<
+                FieldVector,
+                details::match_name<
+                    typename mpl::_1,
+                    NameType
+                >
+            >::type,
+            typename mpl::end<
+                FieldVector
+            >::type
+        >::value            
+    ));
+
+
+    typedef flag< NameType > param;
+
+    typedef StoragePolicy   storage_policy;
+    typedef typename mpl::push_back<
+        FieldVector,
+        bitfield_element<
+            bool,
+            NameType,
+            Offset,
+            mpl::size_t<1>
+        >
+    >::type field_vector;
+
+    typedef mpl::size_t< 
+        mpl::plus<
+            Offset,
+            mpl::size_t<1>
         >::value
     >                                   offset;
 
