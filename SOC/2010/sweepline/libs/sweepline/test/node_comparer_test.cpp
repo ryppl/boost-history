@@ -8,7 +8,7 @@
 //  See http://www.boost.org for updates, documentation, and revision history.
 
 #include "test_type_list.hpp"
-#include <boost/sweepline/detail/voronoi_formation.hpp>
+#include "boost/sweepline/detail/voronoi_formation.hpp"
 using namespace boost::sweepline::detail;
 
 #define BOOST_TEST_MODULE node_comparer_test

@@ -97,15 +97,17 @@ namespace sweepline {
                     process_site_event(*site_events_iterator_);
                     site_events_iterator_++;
                 } else if (site_events_iterator_ == site_events_.end()) {
-                    process_circle_event(circle_events_.top());
+                    circle_event<T> c_event = circle_events_.top();
                     circle_events_.pop();
+                    process_circle_event(c_event);
                 } else {
                     if (circle_events_.top().compare(*site_events_iterator_) >= 0) {
                         process_site_event(*site_events_iterator_);
                         site_events_iterator_++;
                     } else {
-                        process_circle_event(circle_events_.top());
+                        circle_event<T> c_event = circle_events_.top();
                         circle_events_.pop();
+                        process_circle_event(c_event);
                     }
                 }
             }
@@ -208,17 +210,16 @@ namespace sweepline {
                                       new_node_it);
             } else {
                 site_arc = it->first.get_left_site();
-
-                // Insert new arc into the sweepline.
-                beach_line_iterator new_node_it = insert_new_arc(site_arc, site_event);
-
                 const site_event_type &site2 = it->first.get_left_site();
                 const site_event_type &site3 = it->first.get_right_site();
                 it--;
-                const site_event_type &site1 = it->first.get_right_site();
-
+                const site_event_type &site1 = it->first.get_left_site();
+                
                 // Remove candidate circle from the event queue.
                 deactivate_circle_event(site1, site2, site3);
+
+                // Insert new arc into the sweepline.
+                beach_line_iterator new_node_it = insert_new_arc(site_arc, site_event);
 
                 // Add candidate circles to the event queue.
                 new_node_it--;
@@ -226,7 +227,7 @@ namespace sweepline {
                 new_node_it++;
                 new_node_it++;
                 activate_circle_event(site_event, site2, site3, new_node_it);
-            }               
+            }
         }
 
         // Doesn't use special comparison function as it works fine only for
@@ -258,8 +259,9 @@ namespace sweepline {
             // (B, C) bisector and change (A, B) bisector to the (A, C). That's
             // why we use const_cast there and take all the responsibility that
             // map data structure keeps correct ordering.
-            const_cast<Key &>(it_first->first).set_right_site(it_last->first.get_right_site());
-            edge_type *edge = output_.insert_new_edge(site1, site2, site3, circle_event, bisector1.edge, bisector2.edge);
+            const_cast<Key &>(it_first->first).set_right_site(site3);
+            edge_type *edge = output_.insert_new_edge(site1, site2, site3, circle_event,
+                                                      bisector1.edge, bisector2.edge);
             const_cast<Value &>(it_first->second).change_edge(edge);
             beach_line_.erase(it_last);
             it_last = it_first;
@@ -269,13 +271,8 @@ namespace sweepline {
             if (it_first != beach_line_.begin()) {
                 it_first--;
                 const site_event_type &site_l1 = it_first->first.get_left_site();
-                deactivate_circle_event(site_l1, site1, site3);
-                if (it_first != beach_line_.begin()) {
-                    it_first--;
-                    const site_event_type &site_l2 = it_first->first.get_left_site();
-                    it_first++;
-                    activate_circle_event(site_l2, site_l1, site1, it_first);
-                }
+                deactivate_circle_event(site_l1, site1, site2);
+                activate_circle_event(site_l1, site1, site3, it_last);
             }
 
             // Check the new triplets formed by the neighboring arcs
@@ -283,13 +280,10 @@ namespace sweepline {
             it_last++;
             if (it_last != beach_line_.end()) {
                 const site_event_type &site_r1 = it_last->first.get_right_site();
-                deactivate_circle_event(site1, site3, site_r1);
-                it_last++;
-                if (it_last != beach_line_.end()) {
-                    const site_event_type &site_r2 = it_last->first.get_right_site();
-                    activate_circle_event(site3, site_r1, site_r2, it_last);
-                }
-            }            
+                deactivate_circle_event(site2, site3, site_r1);
+                activate_circle_event(site1, site3, site_r1, it_last);
+            }
+
         }
 
         // Insert new arc below site arc into the beach line.
@@ -330,6 +324,7 @@ namespace sweepline {
                                          (c_y-site1.y())*(c_y-site1.y());
             // Create new circle event;
             c_event = make_circle_event(c_x, c_y, sqr_radius);
+            c_event.set_sites(site1, site2, site3);
             return true;
         }
 

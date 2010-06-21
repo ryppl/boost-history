@@ -8,7 +8,7 @@
 //  See http://www.boost.org for updates, documentation, and revision history.
 
 #include "test_type_list.hpp"
-#include <boost/sweepline/detail/voronoi_formation.hpp>
+#include "boost/sweepline/detail/voronoi_formation.hpp"
 using namespace boost::sweepline::detail;
 
 #define BOOST_TEST_MODULE event_queue_test
@@ -41,17 +41,24 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(event_queue_test1, T, test_types) {
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(event_queue_test2, T, test_types) {
     circle_events_queue< point_2d<T> > event_q;
+    site_event<T> temp_site = make_site_event(static_cast<T>(0),
+                                              static_cast<T>(0),
+                                              0);
 
     for (int i = 0; i < 10; i++) {
         T x = static_cast<T>(10-i);
         T y = static_cast<T>(10-i);
-        event_q.push(make_circle_event(x, y, static_cast<T>(0)));
+        circle_event<T> &c = make_circle_event(x, y, static_cast<T>(0));
+        c.set_sites(temp_site, temp_site, temp_site);
+        event_q.push(c);
     }
 
     for (int i = 0; i < 5; i++) {
         T x = static_cast<T>(10-2*i-1);
         T y = static_cast<T>(10-2*i-1);
-        event_q.deactivate_event(make_circle_event(x, y, static_cast<T>(0)));   
+        circle_event<T> &c = make_circle_event(x, y, static_cast<T>(0));
+        c.set_sites(temp_site, temp_site, temp_site);
+        event_q.deactivate_event(c);   
     }
 
     for (int i = 0; i < 5; i++) {

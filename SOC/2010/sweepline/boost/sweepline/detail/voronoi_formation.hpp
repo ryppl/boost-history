@@ -7,19 +7,629 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
-#include <map>
-#include <vector>
-
-#include "event_queue.hpp"
-#include "event_types.hpp"
-#include "voronoi_output.hpp"
-
 #ifndef BOOST_SWEEPLINE_VORONOI_FORMATION
 #define BOOST_SWEEPLINE_VORONOI_FORMATION
 
+#include <list>
+#include <map>
+#include <queue>
+#include <vector>
+
 namespace boost {
 namespace sweepline {
+namespace detail {
 
+    ///////////////////////////////////////////////////////////////////////////
+    // VORONOI EVENT TYPES ////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    template <typename T>
+    struct site_event;
+    
+    template <typename T>
+    struct circle_event;
+
+    template <typename Point2D>
+    struct beach_line_node;
+
+    template <typename Point2D>
+    struct beach_line_node_data;
+
+    template <typename BeachLineNode>
+    struct node_comparer;
+
+    // Point in 2D space data structure. Comparators defined in this
+    // data structure actually define sweepline movement direction.
+    template <typename T>
+    struct point_2d {
+    public:
+        typedef T coordinate_type;
+        typedef site_event<T> site_event_type;
+        typedef circle_event<T> circle_event_type;
+
+        point_2d() {}
+
+        point_2d(T x, T y) {
+            x_ = x;
+            y_ = y;
+        }
+
+        bool operator==(const point_2d &point) const {
+            return (this->x_ == point.x()) && (this->y_ == point.y());
+        }
+
+        bool operator!=(const point_2d &point) const {
+            return (this->x_ != point.x()) || (this->y_ != point.y());
+        }
+
+        // This comparator actually defines sweepline movement direction.
+        bool operator<(const point_2d &point) const {
+            // Sweepline sweeps from left to right.
+            if (this->x_ != point.x_)
+                return this->x_ < point.x_;
+            return this->y_ < point.y_;
+        }
+
+        bool operator<=(const point_2d &point) const {
+            return !(point < (*this));
+        }
+
+        bool operator>(const point_2d &point) const {
+            return point < (*this);
+        }
+
+        bool operator>=(const point_2d &point) const {
+            return !((*this) < point);
+        }
+
+        coordinate_type x() const {
+            return this->x_;
+        }
+
+        coordinate_type y() const {
+            return this->y_;
+        }
+
+        void x(coordinate_type x) {
+            x_ = x;
+        }
+
+        void y(coordinate_type y) {
+            y_ = y;
+        }
+
+    private:
+        coordinate_type x_;
+        coordinate_type y_;
+    };
+
+    template <typename T>
+    point_2d<T> make_point_2d(T x, T y) {
+        return point_2d<T>(x,y);
+    }
+
+    // Site event type. 
+    // Occurs when sweepline sweeps over one of the initial sites.
+    // Contains index of a site below the other sorted sites.
+    template <typename T>
+    struct site_event {
+    public:
+        typedef T coordinate_type;
+
+        site_event() {}
+        
+        site_event(T x, T y, int index) : point_(x, y), site_index_(index) {}
+
+        bool operator==(const site_event &s_event) const {
+            return point_ == s_event.get_point();
+        }
+
+        bool operator!=(const site_event &s_event) const {
+            return point_ != s_event.get_point();
+        }
+
+        bool operator<(const site_event &s_event) const {
+            return point_ < s_event.get_point();
+        }
+
+        bool operator<=(const site_event &s_event) const {
+            return point_ <= s_event.get_point();
+        }
+
+        bool operator>(const site_event &s_event) const {
+            return point_ > s_event.get_point();
+        }
+
+        bool operator>=(const site_event &s_event) const {
+            return point_ >= s_event.get_point();
+        }
+
+        coordinate_type x() const {
+            return point_.x();
+        }
+
+        coordinate_type y() const {
+            return point_.y();
+        }
+
+        const point_2d<T> &get_point() const {
+            return point_;
+        }
+
+        int get_site_index() const {
+            return site_index_;
+        }
+
+    private:
+        point_2d<T> point_;
+        int site_index_;
+    };
+
+    template <typename T>
+    site_event<T> make_site_event(T x, T y, int index) {
+        return site_event<T>(x, y, index);
+    }
+
+    // Circle event type. Occurs when sweepline sweeps over the bottom point of
+    // the voronoi circle (with center at the bisectors intersection point).
+    // Circle event contains circle center and squared radius (to avoid sqrt
+    // computation). To compare bottom points of two different voronoi circles
+    // we don't compute exact radius and use special arithmetic for that. This 
+    // way voronoi diagram implementation may be used with rational arithmetic.
+    // Let circle center coordinates be (x, y), squared radius be r. 
+    // Bottom point of the voronoi circle will be defined as (x + sqrt(r), y).
+    // Contains reference to the second bisector node (ordered from left to
+    // right in the beach line) that creates given circle event.
+    template <typename T>
+    struct circle_event {
+    public:
+        typedef T coordinate_type;
+        typedef typename beach_line_node< point_2d<T> > Key;
+        typedef typename beach_line_node_data< point_2d<T> > Value;
+        typedef typename node_comparer<Key> NodeComparer;
+        typedef typename std::map< Key, Value, NodeComparer >::const_iterator beach_line_iterator;
+
+        circle_event() {}
+
+        circle_event(T c_x, T c_y, T sqr_r) :
+        center_(c_x, c_y), sqr_radius_(sqr_r) {}
+
+        bool equals(const circle_event &c_event) const {
+            return center_.x() == c_event.x() && center_.y() == c_event.y() &&
+                   sqr_radius_ == c_event.get_sqr_radius() &&
+                   sites_[0] == c_event.sites_[0] &&
+                   sites_[1] == c_event.sites_[1] &&
+                   sites_[2] == c_event.sites_[2];
+        }
+
+        bool operator==(const circle_event &c_event) const {
+            if (sites_[0] != c_event.sites_[0] ||
+                sites_[1] != c_event.sites_[1] ||
+                sites_[2] != c_event.sites_[2])
+                return false;
+
+            if (center_.y() != c_event.y())
+                return false;
+
+            T sqr_dif_x = (center_.x() - c_event.x()) *
+                          (center_.x() - c_event.x());
+            T sum_r_sqr = sqr_radius_ + c_event.get_sqr_radius();
+            T value_left = (sum_r_sqr - sqr_dif_x) * (sum_r_sqr - sqr_dif_x);
+            T value_right = static_cast<T>(4) * sqr_radius_ *
+                            c_event.get_sqr_radius();
+
+            return value_left == value_right;
+        }
+
+        bool operator!=(const circle_event &c_event) const {
+            return !((*this) == c_event);
+        }
+
+        bool operator<(const circle_event &c_event) const {
+            T x1 = center_.x();
+            T y1 = center_.y();
+            T sqr_r1 = sqr_radius_;
+            T x2 = c_event.x();
+            T y2 = c_event.y();
+            T sqr_r2 = c_event.get_sqr_radius();
+
+            T sqr_dif_x = (x1 - x2) * (x1 - x2);
+            T sum_r_sqr = sqr_r1 + sqr_r2;
+            T value_left = (sum_r_sqr - sqr_dif_x) * (sum_r_sqr - sqr_dif_x);
+            T value_right = static_cast<T>(4) * sqr_r1 * sqr_r2;
+            
+            if (x1 > x2) {
+                if (sqr_r2 <= sqr_r1)
+                    return false;
+                
+                if (sqr_dif_x > sum_r_sqr)
+                    return false;
+
+                if (value_left != value_right)
+                    return value_left > value_right;
+                
+                if (y1 != y2)
+                    return y1 < y2;
+
+                if (sites_[0] != c_event.sites_[0])
+                    return sites_[0] < c_event.sites_[0];
+
+                if (sites_[1] != c_event.sites_[1])
+                    return sites_[1] < c_event.sites_[1];
+
+                return sites_[2] < c_event.sites_[2];
+            }
+            else if (x1 < x2) {
+                if (sqr_r1 <= sqr_r2)
+                    return true;
+
+                if (sqr_dif_x > sum_r_sqr)
+                    return true;
+
+                if (value_left != value_right)
+                    return value_left < value_right;
+
+                if (y1 != y2)
+                    return y1 < y2;
+                
+                if (sites_[0] != c_event.sites_[0])
+                    return sites_[0] < c_event.sites_[0];
+
+                if (sites_[1] != c_event.sites_[1])
+                    return sites_[1] < c_event.sites_[1];
+
+                return sites_[2] < c_event.sites_[2];
+            }
+            else {
+                if (sqr_r1 != sqr_r2)
+                    return sqr_r1 < sqr_r2;
+
+                if (y1 != y2)
+                    return y1 < y2;
+
+                if (sites_[0] != c_event.sites_[0])
+                    return sites_[0] < c_event.sites_[0];
+
+                if (sites_[1] != c_event.sites_[1])
+                    return sites_[1] < c_event.sites_[1];
+
+                return sites_[2] < c_event.sites_[2];
+            }
+        }
+
+        bool operator<=(const circle_event &c_event) const {
+            return !(c_event < (*this));
+        }
+
+        bool operator>(const circle_event &c_event) const {
+            return c_event < (*this);
+        }
+
+        bool operator>=(const circle_event &c_event) const {
+            return !((*this) < c_event);
+        }
+
+        // Compares bottom voronoi circle point with site event point.
+        // If circle point is less then site point return -1.
+        // If circle point is equal to site point return 0.
+        // If circle point is greater then site point return 1.
+        int compare(const site_event<T> &s_event) const {
+            if (s_event.x() < center_.x())
+                return 1;
+            T sqr_dif_x = (s_event.x() - center_.x()) * (s_event.x() - center_.x());
+            if (sqr_dif_x == sqr_radius_) {
+                if (center_.y() == s_event.y())
+                    return 0;
+                return (center_.y() < s_event.y()) ? -1 : 1;
+            }
+            return (sqr_dif_x < sqr_radius_) ? 1 : -1;
+        }
+
+        coordinate_type x() const {
+            return center_.x();
+        }
+
+        coordinate_type y() const {
+            return center_.y();
+        }
+
+        const point_2d<T> &get_center() const {
+            return center_;
+        }
+
+        const T &get_sqr_radius() const {
+            return sqr_radius_;
+        }
+
+        void set_bisector(beach_line_iterator iterator) {
+            bisector_node_ = iterator;
+        }
+
+        void set_sites(const site_event<T> site1,
+                       const site_event<T> site2,
+                       const site_event<T> site3) {
+            sites_[0] = site1;
+            sites_[1] = site2;
+            sites_[2] = site3;
+        }
+
+        const beach_line_iterator &get_bisector() const {
+            return bisector_node_;
+        }
+
+        const site_event<T>* get_sites() {
+            return sites;
+        }
+
+    private:
+        point_2d<T> center_;
+        T sqr_radius_;
+        beach_line_iterator bisector_node_;
+        site_event<T> sites_[3];
+    };
+
+    template <typename T>
+    circle_event<T> make_circle_event(T center_x, T center_y, T sqr_radius) {
+        return circle_event<T>(center_x, center_y, sqr_radius);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // VORONOI OUTPUT TYPES ///////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+    
+    template <typename Point2D>
+    struct half_edge;
+
+    // Cell record data structure. Represents voronoi cell.
+    // Contains site point and pointer to any incident half-edge.
+    template <typename Point2D>
+    struct cell_record {
+        half_edge<Point2D> *incident_edge;
+        Point2D site_point;
+
+        cell_record(Point2D site, half_edge<Point2D>* edge) : incident_edge(edge), site_point(site) {}
+    };
+
+    // Voronoi vertex data structure. Represents voronoi vertex.
+    // Contains vertex coordinates and pointers to all incident half-edges.
+    template <typename Point2D>
+    struct vertex_record {
+        std::list< half_edge<Point2D>* > incident_edges;
+        Point2D vertex;
+
+        vertex_record(Point2D vertex) : vertex(vertex) {}
+    };
+
+    // Half-edge data structure. Represents voronoi edge.
+    // Contains: 1) pointer to cell records;
+    //           2) pointers to start/end vertices of half-edge;
+    //           3) pointers to previous/next half-edges(CCW);
+    //           4) pointer to twin half-edge.
+    template <typename Point2D>
+    struct half_edge {
+        typedef typename cell_record<Point2D> cell_record_type;
+        typedef typename vertex_record<Point2D> vertex_record_type;
+        typedef typename half_edge<Point2D> half_edge_type;
+
+        cell_record_type *cell_record;
+        vertex_record_type *start_point;
+        vertex_record_type *end_point;
+        half_edge_type *prev;
+        half_edge_type *next;
+        half_edge_type *twin;
+
+        half_edge(int site_index) :
+            cell_record(NULL),
+            start_point(NULL),
+            end_point(NULL),
+            prev(NULL),
+            next(NULL),
+            twin(NULL) {}
+    };
+
+    // Voronoi output data structure based on the half-edges.
+    // Contains vector of voronoi cells, doubly linked list of
+    // voronoi vertices and voronoi edges.
+    template <typename Point2D>
+    class voronoi_output {
+    public:
+        typedef typename Point2D::site_event_type site_event_type;
+        typedef typename Point2D::circle_event_type circle_event_type;
+        typedef typename cell_record<Point2D> cell_record_type;
+        typedef typename vertex_record<Point2D> vertex_record_type;
+        typedef typename half_edge<Point2D> edge_type;
+        typedef typename std::vector<cell_record_type> cell_records;
+        typedef typename std::list<vertex_record_type> voronoi_vertices;
+        typedef typename std::list<edge_type *>::const_iterator edge_iterator;
+        typedef typename voronoi_vertices::const_iterator voronoi_vertices_iterator;
+
+        voronoi_output() {}
+
+        // This preserves the validity of iterators.
+        void init(int num_sites) {
+            cell_records_.reserve(num_sites);
+        }
+
+        void reset() {
+            cell_records_.clear();
+            vertex_records_.clear();
+            edges_.clear();
+        }
+
+        // Inserts new half-edge into the output data structure during site
+        // event processing. Takes as input left and right sites of the new
+        // beach line node and returns reference to the new half-edge. 
+        // Second argument is new site. During this step we add two new
+        // twin half-edges.
+        edge_type *insert_new_edge(const site_event_type &site1,
+                                   const site_event_type &site2) {
+            // Get indexes of sites.                                           
+            int site_index1 = site1.get_site_index();
+            int site_index2 = site2.get_site_index();
+
+            // Create new half-edge that belongs to the cell with the first site.
+            edges_.push_back(edge_type(site_index1));
+            edge_type &edge1 = edges_.back();
+
+            // Create new half-edge that belongs to the cell with the second site.
+            edges_.push_back(edge_type(site_index2));
+            edge_type &edge2 = edges_.back();
+
+            // Add initial cell during first edge insertion.
+            if (cell_records_.empty())
+                cell_records_.push_back(cell_record_type(site1.get_point(), &edge1));
+
+            // Second site represents new site during site event processing.
+            // Add new cell to the cell records vector.
+            cell_records_.push_back(cell_record_type(site2.get_point(), &edge2));
+
+            // Update pointers to cells.
+            edge1.cell_record = &cell_records_[site_index1];
+            edge2.cell_record = &cell_records_[site_index2];
+
+            // Update twin pointers.
+            edge1.twin = &edge2;
+            edge2.twin = &edge1;
+
+            return &edge1;
+        }
+
+        edge_type *insert_new_edge(const site_event_type &site1,
+                                   const site_event_type &site2,
+                                   const site_event_type &site3,
+                                   const circle_event_type &circle,
+                                   edge_type *edge12,
+                                   edge_type *edge23) {
+            // Add new voronoi vertex as voronoi circle center.
+            vertex_records_.push_back(vertex_record_type(circle.get_center()));
+            vertex_record_type &new_vertex = vertex_records_.back();
+
+            // Update two input bisectors and their twins half-edges with
+            // new voronoi vertex.
+            edge12->start_point = &new_vertex;
+            edge12->twin->end_point = &new_vertex;
+            edge23->start_point = &new_vertex;
+            edge23->twin->end_point = &new_vertex;
+
+            // Add new half-edge.
+            edges_.push_back(edge_type(site1.get_site_index()));
+            edge_type &new_edge1 = edges_.back();
+            new_edge1.cell_record = &cell_records_[site1.get_site_index()];
+            new_edge1.end_point = &new_vertex;
+
+            // Add new half-edge.
+            edges_.push_back(edge_type(site3.get_site_index()));
+            edge_type &new_edge2 = edges_.back();
+            new_edge2.cell_record = &cell_records_[site3.get_site_index()];
+            new_edge2.start_point = &new_vertex;
+
+            // Update twin pointers of the new half-edges.
+            new_edge1.twin = &new_edge2;
+            new_edge2.twin = &new_edge1;
+
+            // Update voronoi prev/next pointers of all half-edges incident
+            // to the new voronoi vertex.
+            edge12->prev = &new_edge1;
+            new_edge1.next = edge12;
+            edge12->twin->next = edge23;
+            edge23->prev = edge12->twin;
+            edge23->twin->next = &new_edge2;
+            new_edge2.prev = edge23->twin;
+
+            // Update voronoi vertex incident edges pointers.
+            new_vertex.incident_edges.push_back(edge12);
+            new_vertex.incident_edges.push_back(edge23);
+            new_vertex.incident_edges.push_back(&new_edge2);
+            return &new_edge1;
+        }
+
+        const cell_records &get_cell_records() const {
+            return cell_records_;
+        }
+
+        const voronoi_vertices &get_voronoi_vertices() const {
+            return vertex_records_;
+        }
+
+    private:
+        std::vector<cell_record_type> cell_records_;
+        std::list<vertex_record_type> vertex_records_;
+        std::list<edge_type> edges_;
+
+        //Disallow copy constructor and operator=
+        voronoi_output(const voronoi_output&);
+        void operator=(const voronoi_output&);
+    };
+
+    ///////////////////////////////////////////////////////////////////////////
+    // VORONOI CIRCLE EVENTS QUEUE ////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+    
+    // Event queue data structure, processes circle events.
+    template <typename Point2D>
+    class circle_events_queue {
+    public:
+        typedef typename Point2D::coordinate_type coordinate_type;
+        typedef typename Point2D::circle_event_type circle_event_type;
+
+        circle_events_queue() {}
+
+        void reset() {
+            while (!circle_events_.empty())
+                circle_events_.pop();
+            while (!deactivated_events_.empty())
+                deactivated_events_.pop();
+        }
+
+        bool empty() {
+            remove_not_active_events();
+            if (!circle_events_.empty())
+                return false;
+            return true;
+        }
+
+        circle_event_type top() {
+            remove_not_active_events();
+            return circle_events_.top();
+        }
+
+        void pop() {
+            circle_events_.pop();
+        }
+
+        void push(const circle_event_type &c_event) {
+            circle_events_.push(c_event);
+        }
+
+        void deactivate_event(const circle_event_type &c_event) {
+            deactivated_events_.push(c_event);
+        }
+
+    private:
+        void remove_not_active_events() {
+            while (!circle_events_.empty() && !deactivated_events_.empty() &&
+                   circle_events_.top().equals(deactivated_events_.top())) {
+                circle_events_.pop();
+                deactivated_events_.pop();
+            }
+        }
+
+        std::priority_queue< circle_event_type,
+                             std::vector<circle_event_type>,
+                             std::greater<circle_event_type> > circle_events_;
+        std::priority_queue< circle_event_type,
+                             std::vector<circle_event_type>,
+                             std::greater<circle_event_type> > deactivated_events_;
+
+        //Disallow copy constructor and operator=
+        circle_events_queue(const circle_events_queue&);
+        void operator=(const circle_events_queue&);
+    };
+
+    /////////////////////////////////////////////////////////////////////////////
+    // VORONOI BEACH LINE TYPES /////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////
+    
     // Represents bisector made by two arcs that correspond to the left and
     // right sites. Arc is defined as curve with points equidistant from the
     // site and from the sweepline.
@@ -166,351 +776,9 @@ namespace sweepline {
                 return !node2.less(node1.get_new_site());
         }
     };
-
-    // Voronoi diagram formation. Sweepline sweeps from left to right.
-    template <typename T>
-    class voronoi_formation {
-    public:
-        typedef typename point_2d<T> Point2D;
-        typedef typename Point2D::coordinate_type coordinate_type;
-        typedef typename Point2D::site_event_type site_event_type;
-        typedef typename Point2D::circle_event_type circle_event_type;
-
-        typedef typename voronoi_output<Point2D> Output;
-        typedef typename Output::edge_type edge_type;
-        typedef typename Output::edge_iterator edge_iterator;
-        typedef typename Output::cell_records cell_records;
-        typedef typename Output::voronoi_vertices voronoi_vertices;
-        typedef typename voronoi_vertices::const_iterator voronoi_vertices_iterator;
-
-        typedef typename event_queue<Point2D> EventQueue;
-        typedef typename beach_line_node<Point2D> Key;
-        typedef typename beach_line_node_data<Point2D> Value;
-        typedef typename node_comparer<Key> NodeComparer;
-        typedef typename std::map< Key, Value, NodeComparer > BeachLine;
-        typedef typename BeachLine::const_iterator beach_line_iterator;
-
-        // Functor to process events from the event queue.
-        struct event_processor {
-            event_processor() : beach_line_(NULL) {} 
-
-            void operator()(const site_event_type &site_event) {
-                beach_line_->process_site_event(site_event);
-            }
-
-            void operator()(const circle_event_type &circle_event) {
-                beach_line_->process_circle_event(circle_event);
-            }
-
-            voronoi_formation *beach_line_;
-        };
-
-        voronoi_formation() : event_processor_() {}
-
-        // Init beach line before sweepline run.
-        // In case of a few first sites situated on the same
-        // vertical line, we init beach line with all of them.
-        // In other case just use the first two sites for the initialization.
-        void init(std::vector<Point2D> &sites) {
-            output_.init(sites.size());
-
-            // Init beach_line pointer in the event_processor data sturcture.
-            // This is done here to avoid compiler warning in the constructor.
-            event_processor_.beach_line_ = this;
-            
-            // Sort all sites.
-            std::sort(sites.begin(), sites.end());
-            int skip = 0;
-
-            if (sites.size() == 1) {
-                skip = 1;
-            } else {
-                std::vector<Point2D>::const_iterator it = sites.begin();
-                while(it != sites.end() && it->x() == sites.begin()->x()) {
-                    it++;
-                    skip++;
-                }
-
-                if (skip == 1) {
-                    // Init beach line with two sites.
-                    init_beach_line(*sites.begin(), *it);
-
-                    // Skip the second point also.
-                    skip++;
-                } else {
-                    // Init beach line with sites situated on the same vertical line.
-                    init_beach_line(sites.begin(), it);
-                }
-            }
-            // Init event queue with the rest of the sites.
-            event_queue_.init(sites, skip);
-        }
-
-        void reset() {
-            event_queue_.reset();
-            beach_line_.clear();
-            output_.clear();
-        }
-
-        void run_sweepline() {
-            // Algorithm stops when there are no events in the queue.
-            while (!event_queue_.empty()) {
-                event_queue_.process_top_event(event_processor_);
-                event_queue_.pop();
-            }
-        }
-
-        // Uses special comparison function for the lower bound and insertion
-        // operations.
-        void process_site_event(const site_event_type &site_event) {
-            // Find the node in the binary search tree with left arc
-            // lying above the new site point.
-            Key new_key(site_event);
-            beach_line_iterator it = beach_line_.lower_bound(new_key);
-
-            site_event_type site_arc;
-            if (it == beach_line_.end()) {
-                it--;
-                site_arc = it->first.get_right_site();
-
-                // Insert new arc into the sweepline.
-                beach_line_iterator new_node_it = insert_new_arc(site_arc, site_event);
-                new_node_it--;
-
-                // Add candidate circle to the event queue.
-                activate_circle_event(it->first.get_left_site(),
-                                      it->first.get_right_site(),
-                                      site_event,
-                                      new_node_it);
-            } else if (it == beach_line_.begin()) {
-                site_arc = it->first.get_left_site();
-
-                // Insert new arc into the sweepline.
-                beach_line_iterator new_node_it = insert_new_arc(site_arc, site_event);
-                new_node_it++;
-
-                // Add candidate circle to the event queue.
-                activate_circle_event(site_event,
-                                      it->first.get_left_site(),
-                                      it->first.get_right_site(),
-                                      new_node_it);
-            } else {
-                site_arc = it->first.get_left_site();
-
-                // Insert new arc into the sweepline.
-                beach_line_iterator new_node_it = insert_new_arc(site_arc, site_event);
-
-                const site_event_type &site2 = it->first.get_left_site();
-                const site_event_type &site3 = it->first.get_right_site();
-                it--;
-                const site_event_type &site1 = it->first.get_right_site();
-
-                // Remove candidate circle from the event queue.
-                deactivate_circle_event(site1, site2, site3);
-
-                // Add candidate circles to the event queue.
-                new_node_it--;
-                activate_circle_event(site1, site2, site_event, new_node_it);
-                new_node_it++;
-                new_node_it++;
-                activate_circle_event(site_event, site2, site3, new_node_it);
-            }               
-        }
-
-        // Doesn't use special comparison function as it works fine only for
-        // the site events processing.
-        void process_circle_event(const circle_event_type &circle_event) {
-            // Retrieve the second bisector node that corresponds to the given
-            // circle event.
-            beach_line_iterator it_first = circle_event.get_bisector();
-            beach_line_iterator it_last = it_first;
-
-            // Get the second and the third sites that create given circle event.
-            site_event_type site2 = it_first->first.get_left_site();
-            site_event_type site3 = it_first->first.get_right_site();
-
-            // Get second bisector;
-            Value bisector2 = it_first->second;
-            
-            // Get first bisector;
-            it_first--;
-            Value bisector1 = it_first->second;
-            
-            // Get the first site that creates given circle event.
-            site_event_type site1 = it_first->first.get_left_site();
-
-            // Let circle event sites be A, B, C, two bisectors that define
-            // circle event be (A, B), (B, C). During circle event processing
-            // we remove (A, B), (B, C) and insert (A, C). As beach line nodes 
-            // comparer doesn't work fine for the circle events. We only remove
-            // (B, C) bisector and change (A, B) bisector to the (A, C). That's
-            // why we use const_cast there and take all the responsibility that
-            // map data structure keeps correct ordering.
-            const_cast<Key &>(it_first->first).set_right_site(it_last->first.get_right_site());
-            edge_type *edge = output_.insert_new_edge(site1, site2, site3, circle_event, bisector1.edge, bisector2.edge);
-            const_cast<Value &>(it_first->second).change_edge(edge);
-            beach_line_.erase(it_last);
-            it_last = it_first;
-
-            // Check the new triplets formed by the neighboring arcs
-            // for potential circle events. Check left.
-            if (it_first != beach_line_.begin()) {
-                it_first--;
-                const site_event_type &site_l1 = it_first->first.get_left_site();
-                deactivate_circle_event(site_l1, site1, site2);
-                if (it_first != beach_line_.begin()) {
-                    it_first--;
-                    const site_event_type &site_l2 = it_first->first.get_left_site();
-                    it_first++;
-                    activate_circle_event(site_l2, site_l1, site1, it_first);
-                }
-            }
-
-            // Check the new triplets formed by the neighboring arcs
-            // for potential circle events. Check right.
-            it_last++;
-            if (it_last != beach_line_.end()) {
-                const site_event_type &site_r1 = it_last->first.get_right_site();
-                deactivate_circle_event(site2, site3, site_r1);
-                it_last++;
-                if (it_last != beach_line_.end()) {
-                    it_last++;
-                    const site_event_type &site_r2 = it_last->first.get_right_site();
-                    activate_circle_event(site3, site_r1, site_r2, it_last);
-                }
-            }            
-        }
-
-        const cell_records &get_cell_records() const {
-            return output_.get_cell_records();
-        }
-
-        const voronoi_vertices &get_voronoi_vertices() const {
-            return output_.get_voronoi_vertices();
-        }
-
-    protected:
-        void init_beach_line(typename std::vector<Point2D>::const_iterator it_begin,
-                             typename std::vector<Point2D>::const_iterator it_end) {
-             typename std::vector<Point2D>::const_iterator it_first = it_begin;
-             typename std::vector<Point2D>::const_iterator it_second = it_begin;
-             it_second++;
-             int cur_site = 0;
-             while (it_second != it_end) {
-                 site_event_type site1 = make_site_event<coordinate_type>(
-                     it_first->x(), it_first->y(), cur_site);
-                 site_event_type site2 = make_site_event<coordinate_type>(
-                     it_second->x(), it_second->y(), cur_site+1);
-
-                 // Create new beach line node.
-                 Key new_node(site1, site2);
-                 
-                 // Update output.
-                 edge_type *edge = output_.insert_new_edge(site1, site2);
-
-                 // Insert new node into the binary search tree.
-                 beach_line_.insert(std::pair<Key, Value>(new_node, Value(edge)));
-                 
-                 // Update iterators.
-                 it_first++;
-                 it_second++;
-                 cur_site++;
-             }
-        }
-
-        void init_beach_line(const Point2D &first_point,
-                             const Point2D &second_point) {
-            site_event_type site1 = make_site_event<coordinate_type>(
-                first_point.x(), first_point.y(), 0);
-            site_event_type site2 = make_site_event<coordinate_type>(
-                second_point.x(), second_point.y(), 1);
-
-            // Create two new beach line nodes.
-            Key new_left_node(site1, site2);
-            Key new_right_node(site2, site1);
-
-            // Update output.
-            edge_type *edge = output_.insert_new_edge(site1, site2);
-
-            // Insert two new nodes into the binary search tree.
-            beach_line_.insert(std::pair<Key, Value>(new_left_node, Value(edge)));
-            beach_line_.insert(std::pair<Key, Value>(new_right_node, Value(edge->twin)));
-        }
-
-        // Insert new arc below site arc into the beach line.
-        beach_line_iterator insert_new_arc(const site_event_type &site_arc,
-                                           const site_event_type &site_event) {
-            // Create two new nodes.
-            Key new_left_node(site_arc, site_event);
-            Key new_right_node(site_event, site_arc);
-            int site_index1 = site_arc.get_site_index();
-            int site_index2 = site_event.get_site_index();
-            
-            // Insert two new nodes into the binary search tree.
-            // Update output.
-            edge_type *edge = output_.insert_new_edge(site_arc, site_event);
-            beach_line_.insert(std::pair<Key, Value>(new_left_node, Value(edge)));
-            return beach_line_.insert(std::pair<Key, Value>(new_right_node, Value(edge->twin))).first;
-        }
-
-        // Create circle event from the given three points.
-        bool create_circle_event(const site_event_type &site1,
-                                 const site_event_type &site2,
-                                 const site_event_type &site3,
-                                 circle_event_type &c_event) const {
-            coordinate_type a = (site1.x() - site2.x()) * (site2.y() - site3.y()) -
-                                (site1.y() - site2.y()) * (site2.x() - site3.x());
-            // Check if bisectors intersect.
-            if (a >= static_cast<coordinate_type>(0))
-                return false;
-            coordinate_type b1 = (site1.x() - site2.x()) * (site1.x() + site2.x())+
-                                 (site1.y() - site2.y()) * (site1.y() + site2.y());
-            coordinate_type b2 = (site2.x() - site3.x()) * (site2.x() + site3.x())+
-                                 (site2.y() - site3.y()) * (site2.y() + site3.y());
-            coordinate_type c_x = (b1*(site2.y() - site3.y()) - b2*(site1.y() - site2.y())) / a *
-                                  static_cast<coordinate_type>(0.5);
-            coordinate_type c_y = (b2*(site1.x() - site2.x()) - b1*(site2.x() - site3.x())) / a *
-                                   static_cast<coordinate_type>(0.5);
-            coordinate_type sqr_radius = (c_x-site1.x())*(c_x-site1.x()) +
-                                         (c_y-site1.y())*(c_y-site1.y());
-            // Create new circle event;
-            c_event = make_circle_event(c_x, c_y, sqr_radius);
-            return true;
-        }
-
-        // Add new circle event to the event queue.
-        void activate_circle_event(const site_event_type &site1,
-                                   const site_event_type &site2,
-                                   const site_event_type &site3,
-                                   beach_line_iterator bisector_node) {
-            circle_event_type c_event;
-            if (create_circle_event(site1, site2, site3, c_event)) {
-                c_event.set_bisector(bisector_node);
-                event_queue_.push(c_event);
-            }
-        }
-
-        // Remove circle event from the event queue.
-        void deactivate_circle_event(const site_event_type &point1,
-                                     const site_event_type &point2,
-                                     const site_event_type &point3) {
-            circle_event_type c_event;
-            if (create_circle_event(point1, point2, point3, c_event))
-                event_queue_.deactivate_event(c_event);
-        }
-
-    private:
-        EventQueue event_queue_;
-        event_processor event_processor_;
-        BeachLine beach_line_;
-        Output output_;
-
-        //Disallow copy constructor and operator=
-        voronoi_formation(const voronoi_formation&);
-        void operator=(const voronoi_formation&);
-    };
-
+  
 } // sweepline
 } // boost
+} // detail
 
 #endif
