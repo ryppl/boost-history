@@ -18,6 +18,8 @@
 namespace boost
 {
 	
+/*** Static metafunctions ***/
+	
 // Sets the bit `pos' in data
 template <typename T, T data, unsigned char pos>
 struct set_bit
@@ -44,7 +46,7 @@ template <typename T, T data, unsigned char pos>
 struct test_bit
 {
 	BOOST_STATIC_CONSTANT(bool, value = ((data >> pos) & T(1)) != T(0));
-}; // test_bit	
+}; // test_bit
 	
 } // boost
 
