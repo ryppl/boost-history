@@ -10,6 +10,15 @@
 #ifndef BOOST_CLEAR_LEAST_BIT_SET
 #define BOOST_CLEAR_LEAST_BIT_SET
 
+/*
+ *	Clears last 1 bit in `value'.
+ *	For example:
+ *
+ *	int value = 0xFA; // 0000 0000 1111 1010
+ *  int x = clear_least_bit_set(value); 
+ *	So x will be 0xF8 (0000 0000 1111 1000)
+ */
+
 namespace boost {
 
 template <typename T>

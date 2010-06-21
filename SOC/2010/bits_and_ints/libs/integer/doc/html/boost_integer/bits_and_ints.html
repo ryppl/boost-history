@@ -32,6 +32,13 @@
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bit_reversal"> Bit Reversal</a></span></dt>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.same_sign"> Same Sign</a></span></dt>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.sign"> Sign function</a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bit_iterleaving">Bit Iterleaving</a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.population_count__count_bits_set_">Population
+      Count (count bits set)</a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.clear_least_bit_set">Clear
+      Least Bit Set</a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.count_trailing_zeros">Count
+      Trailing Zeros</a></span></dt>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils"> Binary Utilities</a></span></dt>
 </dl></div>
 <div class="section" title="Overview">
@@ -629,8 +636,8 @@
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.sign.examples">Examples</a></span></dt>
 </dl></div>
 <p>
-        The <code class="computeroutput"><span class="identifier">sign</span></code> function check the
-        signal of integrals.
+        The <code class="computeroutput"><span class="identifier">sign</span></code> function checks
+        the sign of integrals.
       </p>
 <div class="section" title="Non-Member Function sign">
 <div class="titlepage"><div><div><h4 class="title">
@@ -767,6 +774,163 @@
 <p>
         </p>
 </div>
+</div>
+<div class="section" title="Bit Iterleaving">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_integer.bits_and_ints.bit_iterleaving"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bit_iterleaving" title="Bit Iterleaving">Bit Iterleaving</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bit_iterleaving.synopsis">Synopsis</a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bit_iterleaving.examples">Examples</a></span></dt>
+</dl></div>
+<p>
+        Interleaved bits (aka Morton numbers) <a href="http://en.wikipedia.org/wiki/Morton_number_(number_theory)" target="_top">http://en.wikipedia.org/wiki/Morton_number_(number_theory)</a>
+        are useful for linearizing 2D integer coordinates, so x and y are combined
+        into a single number that can be compared easily and has the property that
+        a number is usually close to another if their x and y values are close. These
+        functions are defined in the header <a href="../../../../../boost/integer/interleave.hpp" target="_top">&lt;boost/integer/interleave.hpp&gt;</a>.
+      </p>
+<div class="section" title="Synopsis">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_integer.bits_and_ints.bit_iterleaving.synopsis"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bit_iterleaving.synopsis" title="Synopsis">Synopsis</a>
+</h4></div></div></div>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="identifier">T2</span> <span class="identifier">interleave</span><span class="special">(</span><span class="identifier">T1</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">T1</span> <span class="identifier">y</span><span class="special">);</span>
+
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">,</span> <span class="identifier">T1</span><span class="special">&gt;</span> <span class="identifier">uninterleave</span><span class="special">(</span><span class="identifier">T2</span> <span class="identifier">number</span><span class="special">);</span>
+</pre>
+<p>
+        </p>
+</div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+<span class="bold"><strong>Remarks: </strong></span><code class="computeroutput"><span class="identifier">T1</span></code>
+          and <code class="computeroutput"><span class="identifier">T2</span></code> must be integral
+          types. Additionally, <code class="computeroutput"><span class="identifier">T1</span></code>
+          must have 8, 16 or 32 bits and <code class="computeroutput"><span class="identifier">T2</span></code>
+          must have 16, 32 or 64 bits. For these functions <code class="computeroutput"><span class="identifier">T2</span></code>
+          have the double of bits wich <code class="computeroutput"><span class="identifier">T1</span></code>
+          have.
+        </li></ul></div>
+<p>
+        <span class="bold"><strong>Returns: </strong></span> <code class="computeroutput"><span class="identifier">interleave</span></code>
+        function returns <code class="computeroutput"><span class="identifier">x</span></code> and <code class="computeroutput"><span class="identifier">y</span></code> interleaved. <code class="computeroutput"><span class="identifier">x</span></code>
+        will be in the even bits and <code class="computeroutput"><span class="identifier">y</span></code>
+        will be on odd positions, so the return type have the double of bits than
+        the paramter's type.
+      </p>
+<p>
+        <code class="computeroutput"><span class="identifier">uninterleave</span></code> returns an pair
+        where in the member <code class="computeroutput"><span class="identifier">first</span></code>
+        will be the integral represented in the even positions of <code class="computeroutput"><span class="identifier">number</span></code>
+        and in the <code class="computeroutput"><span class="identifier">second</span></code> member
+        will be the integral represented in the odd positions of <code class="computeroutput"><span class="identifier">number</span></code>.
+      </p>
+<div class="section" title="Examples">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_integer.bits_and_ints.bit_iterleaving.examples"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bit_iterleaving.examples" title="Examples">Examples</a>
+</h4></div></div></div>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">interleave</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">utility</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">std</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+	<span class="identifier">uint_t</span><span class="special">&lt;</span><span class="number">64</span><span class="special">&gt;::</span><span class="identifier">exact</span> <span class="identifier">inter</span> <span class="special">=</span> <span class="identifier">interleave</span><span class="special">&lt;</span><span class="number">32</span><span class="special">&gt;(</span><span class="number">0x10</span><span class="special">,</span> <span class="number">0x0e</span><span class="special">);</span>
+	
+	<span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"interleaved number: "</span><span class="special">;</span>
+	<span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">hex</span> <span class="special">&lt;&lt;</span> <span class="identifier">inter</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
+
+	<span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">uint8_t</span><span class="special">,</span> <span class="identifier">uint8_t</span><span class="special">&gt;</span> <span class="identifier">uninter</span> <span class="special">=</span> <span class="identifier">uninterleave</span><span class="special">&lt;</span><span class="number">16</span><span class="special">&gt;(</span><span class="identifier">inter</span><span class="special">);</span>
+	
+	<span class="identifier">uint8_t</span> <span class="identifier">a</span> <span class="special">=</span> <span class="identifier">uninter</span><span class="special">.</span><span class="identifier">first</span><span class="special">,</span> <span class="identifier">b</span> <span class="special">=</span> <span class="identifier">uninter</span><span class="special">.</span><span class="identifier">second</span><span class="special">;</span>
+
+	<span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"uninterleaved number: "</span><span class="special">;</span>
+	<span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">hex</span> <span class="special">&lt;&lt;</span> <span class="keyword">unsigned</span><span class="special">(</span><span class="identifier">a</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="string">" "</span> <span class="special">&lt;&lt;</span> <span class="keyword">unsigned</span><span class="special">(</span><span class="identifier">b</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span> 
+<span class="special">}</span>
+</pre>
+<p>
+        </p>
+</div>
+</div>
+<div class="section" title="Population Count (count bits set)">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_integer.bits_and_ints.population_count__count_bits_set_"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.population_count__count_bits_set_" title="Population Count (count bits set)">Population
+      Count (count bits set)</a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.population_count__count_bits_set_.synopsis">Synopsis</a></span></dt></dl></div>
+<p>
+        Population Count (pop count) is the number of active bits in an integral.
+        The <code class="computeroutput"><span class="identifier">pop_count</span><span class="special">()</span></code>
+        function is defined under the header <a href="../../../../../boost/integer/pop_count.hpp" target="_top">&lt;boost/integer/pop_count.hpp&gt;</a>.
+      </p>
+<div class="section" title="Synopsis">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_integer.bits_and_ints.population_count__count_bits_set_.synopsis"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.population_count__count_bits_set_.synopsis" title="Synopsis">Synopsis</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">pop_count</span><span class="special">(</span><span class="identifier">uintmax_t</span> <span class="identifier">value</span><span class="special">);</span>
+</pre>
+</div>
+<p>
+        <span class="bold"><strong>Returns: </strong></span> The number of bits set in <code class="computeroutput"><span class="identifier">value</span></code>.
+      </p>
+</div>
+<div class="section" title="Clear Least Bit Set">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_integer.bits_and_ints.clear_least_bit_set"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.clear_least_bit_set" title="Clear Least Bit Set">Clear
+      Least Bit Set</a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.clear_least_bit_set.synopsis">Synopsis</a></span></dt></dl></div>
+<p>
+        Clears least significant 1 bit in an integral. The <code class="computeroutput"><span class="identifier">clear_least_bit_set</span><span class="special">()</span></code> function is defined on <a href="../../../../../boost/integer/clear_least_bit_set.hpp" target="_top">&lt;boost/integer/clear_least_bit_set.hpp&gt;</a>.
+      </p>
+<div class="section" title="Synopsis">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_integer.bits_and_ints.clear_least_bit_set.synopsis"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.clear_least_bit_set.synopsis" title="Synopsis">Synopsis</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="identifier">T</span> <span class="identifier">clear_least_bit_set</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">value</span><span class="special">);</span>
+</pre>
+</div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+<span class="bold"><strong>Remarks: </strong></span><code class="computeroutput"><span class="identifier">T</span></code>
+          must be an integral type.
+        </li>
+<li class="listitem">
+<span class="bold"><strong>Returns: </strong></span><code class="computeroutput"><span class="identifier">value</span></code>
+          with it's least significant active bit disactivated.
+        </li>
+</ul></div>
+</div>
+<div class="section" title="Count Trailing Zeros">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_integer.bits_and_ints.count_trailing_zeros"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.count_trailing_zeros" title="Count Trailing Zeros">Count
+      Trailing Zeros</a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.count_trailing_zeros.synopsis">Synopsis</a></span></dt></dl></div>
+<p>
+        The <code class="computeroutput"><span class="identifier">count_trailing_zeros</span><span class="special">()</span></code> function counts the number of consecutive
+        0's from the least significant bit of an integral value. This function is
+        defined on <a href="../../../../../boost/integer/count_trailing_zeros.hpp" target="_top">&lt;boost/integer/count_trailing_zeros.hpp&gt;</a>
+      </p>
+<div class="section" title="Synopsis">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_integer.bits_and_ints.count_trailing_zeros.synopsis"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.count_trailing_zeros.synopsis" title="Synopsis">Synopsis</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">count_trailing_zeros</span><span class="special">(</span><span class="identifier">uintmax_t</span> <span class="identifier">value</span><span class="special">);</span>
+</pre>
+</div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+<span class="bold"><strong>Returns: </strong></span> The number of consecutive zeros
+          from the least significant bit.
+        </li></ul></div>
 </div>
 <div class="section" title="Binary Utilities">
 <div class="titlepage"><div><div><h3 class="title">

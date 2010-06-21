@@ -115,7 +115,7 @@ interleave(typename uint_t<Bits>::exact x, typename uint_t<Bits>::exact y)
 template <int Bits>
 inline typename enable_if_c<Bits == 16 || Bits == 32 || Bits == 64, 
 	std::pair<typename uint_t<Bits/2>::exact, typename uint_t<Bits/2>::exact> >::type 
-uninterleave(const typename uint_t<Bits>::exact& number)
+uninterleave(typename uint_t<Bits>::exact number)
 {
 	typename uint_t<Bits/2>::exact a, b;
 	
