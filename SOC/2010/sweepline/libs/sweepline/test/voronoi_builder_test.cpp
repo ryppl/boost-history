@@ -1,4 +1,4 @@
-// Boost sweepline library voronoi_formation_test.cpp file 
+// Boost sweepline library voronoi_builder_test.cpp file 
 
 //          Copyright Andrii Sydorchuk 2010.
 // Distributed under the Boost Software License, Version 1.0.
@@ -8,19 +8,19 @@
 //  See http://www.boost.org for updates, documentation, and revision history.
 
 #include "test_type_list.hpp"
-#include <boost/sweepline/voronoi_formation.hpp>
+#include <boost/sweepline/voronoi_builder.hpp>
 using namespace boost::sweepline;
 
-#define BOOST_TEST_MODULE voronoi_formation_test
+#define BOOST_TEST_MODULE voronoi_builder_test
 #include <boost/test/test_case_template.hpp>
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(beach_line_test1, T, test_types) {
-    typedef typename voronoi_formation<T>::edge_type edge_type;
-    typedef typename voronoi_formation<T>::edge_iterator edge_iterator;
-    typedef typename voronoi_formation<T>::voronoi_vertices_iterator
+BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test1, T, test_types) {
+    typedef typename voronoi_builder<T>::edge_type edge_type;
+    typedef typename voronoi_builder<T>::edge_iterator edge_iterator;
+    typedef typename voronoi_builder<T>::voronoi_vertices_iterator
         voronoi_vertices_iterator;
 
-    voronoi_formation<T> test_beach_line;
+    voronoi_builder<T> test_beach_line;
     point_2d<T> point1 = make_point_2d<T>(0, 0);
     point_2d<T> point2 = make_point_2d<T>(0, 4);
     point_2d<T> point3 = make_point_2d<T>(2, 1);
@@ -76,13 +76,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(beach_line_test1, T, test_types) {
 
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(beach_line_test2, T, test_types) {
-    typedef typename voronoi_formation<T>::edge_type edge_type;
-    typedef typename voronoi_formation<T>::edge_iterator edge_iterator;
-    typedef typename voronoi_formation<T>::voronoi_vertices_iterator
+BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test2, T, test_types) {
+    typedef typename voronoi_builder<T>::edge_type edge_type;
+    typedef typename voronoi_builder<T>::edge_iterator edge_iterator;
+    typedef typename voronoi_builder<T>::voronoi_vertices_iterator
         voronoi_vertices_iterator;
 
-    voronoi_formation<T> test_beach_line;
+    voronoi_builder<T> test_beach_line;
     point_2d<T> point1 = make_point_2d<T>(0, 1);
     point_2d<T> point2 = make_point_2d<T>(2, 0);
     point_2d<T> point3 = make_point_2d<T>(2, 4);
@@ -135,4 +135,28 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(beach_line_test2, T, test_types) {
     BOOST_CHECK_EQUAL(edge1_2->next == edge2_1, true);
     BOOST_CHECK_EQUAL(edge2_2->next == edge3_1, true);
     BOOST_CHECK_EQUAL(edge3_2->next == edge1_1, true);
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test3, T, test_types) {
+    typedef typename voronoi_builder<T>::edge_type edge_type;
+    typedef typename voronoi_builder<T>::edge_iterator edge_iterator;
+    typedef typename voronoi_builder<T>::voronoi_vertices_iterator
+        voronoi_vertices_iterator;
+
+    voronoi_builder<T> test_beach_line;
+    point_2d<T> point1 = make_point_2d<T>(0, 0);
+    point_2d<T> point2 = make_point_2d<T>(0, 1);
+    point_2d<T> point3 = make_point_2d<T>(1, 0);
+    point_2d<T> point4 = make_point_2d<T>(1, 1);
+
+    std::vector< point_2d<T> > points;
+    points.push_back(point1);
+    points.push_back(point2);
+    points.push_back(point3);
+    points.push_back(point4);
+    
+    test_beach_line.init(points);
+    test_beach_line.run_sweepline();
+    BOOST_CHECK_EQUAL(test_beach_line.get_cell_records().size(), 4);
+    BOOST_CHECK_EQUAL(test_beach_line.get_voronoi_vertices().size(), 1);
 }

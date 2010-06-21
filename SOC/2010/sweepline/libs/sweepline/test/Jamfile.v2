@@ -15,5 +15,5 @@ test-suite "sweepline"
         [ run event_queue_test.cpp :  :  : <link>static ]
         [ run event_types_test.cpp :  :  : <link>static ]
 	[ run node_comparer_test.cpp :  :  : <link>static ]
-	[ run voronoi_formation_test.cpp :  :  : <link>static ]
+	[ run voronoi_builder_test.cpp :  :  : <link>static ]
     ;

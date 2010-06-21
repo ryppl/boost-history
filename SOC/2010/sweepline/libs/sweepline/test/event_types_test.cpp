@@ -8,8 +8,8 @@
 //  See http://www.boost.org for updates, documentation, and revision history.
 
 #include "test_type_list.hpp"
-#include <boost/sweepline/voronoi_formation.hpp>
-using namespace boost::sweepline;
+#include <boost/sweepline/detail/voronoi_formation.hpp>
+using namespace boost::sweepline::detail;
 
 #define BOOST_TEST_MODULE event_types_test
 #include <boost/test/test_case_template.hpp>
