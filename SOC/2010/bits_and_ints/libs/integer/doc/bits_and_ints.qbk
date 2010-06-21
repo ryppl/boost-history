@@ -1,0 +1,508 @@
+[section:bits_and_ints Bits and Ints]
+
+[section Overview]
+The intent of this library is to extend Boost.Integer with fast integer algorithms and utilities. This library can be included via	[@../../../../boost/integer/bits_and_ints.hpp <boost/integer/bits_and_ints.hpp>].
+[endsect]
+
+[section:sign_extend Sign Extending]
+
+Sign extension is automatic for built-in types, such as chars and ints. But suppose you have a signed two's complement number, x, that is stored 
+using only b bits. Moreover, suppose you want to convert x to an int, which has more than b bits. A simple copy will work if x is positive, but if
+negative, the sign must be extended. For example, if we have only 4 bits to store a number, then -3 is represented as 1101 in binary. If we have
+8 bits, then -3 is 11111101. The most-significant bit of the 4-bit representation is replicated sinistrally to fill in the destination when we
+convert to a representation with more bits; this is sign extending. More about sign extending on [@http://en.wikipedia.org/wiki/Sign_extension]
+
+[section Non-Member Function Template `sign_extend`]
+The run-time version can be included via [@../../../../boost/integer/sign_extend.hpp <boost/integer/sign_extend.hpp>].
+
+	template <typename Type>
+	Type sign_extend(Type data, std::size_t bits);
+
+*[*Requires: ] `bits` must be smaller than the size (in bits) of `Type`.
+	
+*[*Remarks: ] `Type` must be an integral type. If this constraint is not met, this function do not participate in overload resolution.
+   
+*[*Parameters:]
+
+[table
+	[[Parameter][Description]]
+	[[`data`][ The data to be extended. ]]
+	[[`bits`][ The amount of bits in wich data is represented. ]]
+]
+
+*[*Returns: ] `data` sign-extended to `sizeof(Type)` bytes.
+
+*[*Throws:] none.
+
+[endsect]
+
+[section Template Class `static_sign_extend<>`]
+The compile-time version can be included via [@../../../../boost/integer/static_sign_extend.hpp <boost/integer/static_sign_extend.hpp>].
+The result will be in `value` member.
+
+	template<typename Type, Type data, std::size_t Bits>
+	struct static_sign_extend 
+	{
+		static const Type value = ``['implementation-defined]``; 
+	};
+	
+
+*[*Requires: ] `Bits` must be smaller than the size, in bits, of `Type`.
+	
+*[*Remarks: ] `Type` must be an integral type. If this constraint is not met, this metafunction do not participate in overload resolution.
+
+*[*Template Parameters:]
+
+[table
+	[[Parameter][Description]]
+	[[`Type`][ The data type. ]]
+	[[`data`][ The data to be extended. ]]
+	[[`Bits`][ The amount of bits in wich data is represented. ]]
+]
+[endsect]
+
+[section Examples]
+*[*Run-time version]
+``	
+#include <boost/integer/sign_extend.hpp>
+#include <iostream>
+
+int main()
+{
+	// data is represented in 24-bits
+	int data = 0xFFFFFF; // -1 in 24-bits
+
+	int result = boost::sign_extend(data, 24);
+
+	std::cout << result << std::endl; // -1
+}
+``
+
+*[*Compile-time version]
+``	
+#include <boost/integer/static_sign_extend.hpp>
+#include <iostream>
+
+int main()
+{
+	// 0xFFFFF is -1 in 20-bits
+	int result = boost::static_sign_extend<int, 0xFFFFF, 20>::value;
+
+	std::cout << result << std::endl; // -1
+}
+``
+	
+[endsect]
+
+[endsect]
+
+[section:bit_reversal Bit Reversal]
+The bit reversal functions reverts the bits of integral types.
+
+[section Non-Member Function `bit_reversal`]
+The run-time version can be included via [@../../../../boost/integer/bit_reversal.hpp <boost/integer/bit_reversal.hpp>].
+
+	template <typename T>
+	inline T bit_reversal(T data);
+   
+*[*Parameters:]
+
+[table
+	[[Parameter][Description]]
+	[[`data`][ The data to be reversed. The type of data *must* be an integral type and it's size *must* be 8, 16, 32 or 64-bits, otherwise, bit_reversal(data) will result in an error. ]]
+]
+	
+*[*Remarks: ] `T` must be an integral type. If this constraint is not met, this function do not participate in overload resolution.
+
+*[*Returns: ] `data` with its bits reversed.
+
+[endsect]
+
+[section Template Class `static_bit_reversal<>`]
+The compile-time version can be included via [@../../../../boost/integer/static_bit_reversal.hpp <boost/integer/static_bit_reversal.hpp>].
+The result will be in `value` member.
+	
+	template <typename T, T data>
+	struct static_bit_reversal { 
+		static const T value = ``['implementation-defined]``; 
+	};
+
+*[*Template Parameters]
+
+[table
+	[[Parameter][Description]]
+	[[`T`][ The data type. ]]
+	[[`data`][ The data to be reversed. ]]
+]
+[endsect]
+
+*[*Remarks: ] `T` must be an integral type. If this constraint is not met, this metafunction do not participate in overload resolution.
+
+[section Examples]
+*[*Run-time version]
+``
+#include <boost/integer/bit_reversal.hpp>
+#include <iostream>
+
+int main()
+{
+	// data = 0101 0101
+	uint8_t data = 0x55;
+
+	uint8_t result = boost::bit_reversal(data);
+
+	// will print 0xaa (1010 1010)
+	std::cout << std::hex << result << std::endl; // -1
+}
+``
+	
+*[*Compile-time version]
+``	
+#include <boost/integer/static_bit_reversal.hpp>
+#include <iostream>
+
+int main()
+{
+	// 0x30A5 == 0011 0000 1010 0101
+	uint16_t result = boost::static_sign_extend<uint16_t, 0x30A5>::value;
+
+	// will print 0x5A0B
+	std::cout << std::hex << result << std::endl;
+}
+``
+	
+[endsect]
+[endsect]
+
+[section:same_sign Same Sign]
+These functions check if wheter the sign of two integers are equal.
+
+[section Non-Member Function `same_sign`]
+The run-time version can be included via [@../../../../boost/integer/same_sign.hpp <boost/integer/same_sign.hpp>]. 
+For valid types T, the function `bit_reversal` will be:
+
+	template <typename T>
+	inline bool same_sign(T first, T second);
+   
+*[*Parameters:]
+
+[table
+	[[Parameter][Description]]
+	[[`first`, `second`][ The two integral values to be compared. The type of data *must* be an integral type. `first` and `second` must have the same type. ]]
+]
+
+*[*Returns: ] `false` if the signs of first and second are different or `true` if the signs are equal
+
+*[*Remarks: ] `T` must be an integral type. If this constraint is not met, this function do not participate in overload resolution.
+
+[endsect]
+
+[section Template Class `static_same_sign<>`]
+The compile-time version can be included via [@../../../../boost/integer/same_sign.hpp <boost/integer/same_sign.hpp>].
+The result will be in `value` member.
+	
+	template <typename T, T first, T second>
+	struct static_same_sign
+	{
+		static const bool value = ``['implementation-defined]``;
+	};
+
+*[*Template Parameters:]
+
+[table
+	[[Parameter][Description]]
+	[[`T`][ The data type. ]]
+	[[`first`, `second`][ The two integral values to be compared. ]]
+]
+
+*[*Remarks: ] `T` must be an integral type. If this constraint is not met, this class do not participate in overload resolution.
+
+[endsect]
+
+[section Examples]
+*[*Run-time version:]
+``
+#include <boost/integer/same_sign.hpp>
+#include <iostream>
+
+int main()
+{
+	int first = -1, second = -2, third = 1;
+	
+	bool result = boost::same_sign(first, second);
+	std::cout << result << std::endl; // true
+	
+	result = boost::same_sign(first, third);
+	std::cout << result << std::endl; // false
+}
+``	
+*[*Compile-time version:]
+
+``
+#include <boost/integer/same_sign.hpp>
+#include <iostream>
+
+int main()
+{
+	bool result = boost::static_same_sign<int, 2, 10>::value;
+	std::cout << result << std::endl; //true
+	
+	result = boost::static_same_sign<int, 10, -2>::value;
+	std::cout << result << std::endl; // false
+}
+``
+
+[endsect]
+[endsect]
+
+[section:sign Sign function]
+The `sign` function checks the sign of integrals.
+
+[section Non-Member Function `sign`]
+The run-time version can be included via [@../../../../boost/integer/sign.hpp <boost/integer/sign.hpp>]. 
+
+	template <typename T>
+	int sign(T data);
+   
+*[*Parameters:]
+
+[table
+	[[Parameter][Description]]
+	[[`data`][ The data to be checked. The type of data *must* be an integral otherwise, sign(data) will result in an error. ]]
+]
+
+*[*Returns:]
+
+[table
+	[[Value][Description]]
+	[[`-1`][ `data` is negative. ]]
+	[[`0`][ `data` is equal to zero. ]]
+	[[`1`][ `data` is positive. ]]
+]
+
+*[*Remarks: ] `T` must be an integral type. If this constraint is not met, this function do not participate in overload resolution.
+
+[endsect]
+
+[section Examples]
+*[*Run-time version:]
+
+``
+#include <boost/integer/sign.hpp>
+#include <iostream>
+
+int main()
+{
+	int first = -100, second = 340, third = 0;
+	
+	int result = boost::sign(first);
+	std::cout << result << std::endl; // -1
+	
+	result = boost::sign(second);
+	std::cout << result << std::endl; // 1
+	
+	result = boost::sign(third);
+	std::cout << result << std::endl; // 0
+}
+``
+	
+[endsect]
+[endsect]
+
+[section Bit Iterleaving]
+Interleaved bits (aka Morton numbers) [@http://en.wikipedia.org/wiki/Morton_number_(number_theory)] are useful for linearizing 2D integer coordinates, 
+so x and y are combined into a single number that can be compared easily and has the property 
+that a number is usually close to another if their x and y values are close.
+These functions are defined in the header [@../../../../boost/integer/interleave.hpp <boost/integer/interleave.hpp>].
+
+[section Synopsis]
+``
+T2 interleave(T1 x, T1 y);
+
+std::pair<T1, T1> uninterleave(T2 number);
+``
+[endsect]
+
+
+*[*Remarks: ] `T1` and `T2` must be integral types. Additionally, `T1` must have 8, 16 or 32 bits and `T2` must have
+16, 32 or 64 bits. For these functions `T2` have the double of bits wich `T1` have.
+
+[*Returns: ] `interleave` function returns `x` and `y` interleaved. `x` will be in the even bits and `y` will be on odd positions, so the return type have the double of bits than the paramter's type. 
+
+`uninterleave` returns an pair where in the member `first` will be the integral represented in the even positions of `number` and in the `second`
+member will be the integral represented in the odd positions of `number`.
+
+[section Examples]
+
+``
+#include <boost/integer/interleave.hpp>
+#include <utility>
+#include <iostream>
+
+using namespace std;
+using namespace boost;
+
+int main()
+{
+	uint_t<64>::exact inter = interleave<32>(0x10, 0x0e);
+	
+	cout << "interleaved number: ";
+	cout << hex << inter << endl;
+
+	pair<uint8_t, uint8_t> uninter = uninterleave<16>(inter);
+	
+	uint8_t a = uninter.first, b = uninter.second;
+
+	cout << "uninterleaved number: ";
+	cout << hex << unsigned(a) << " " << unsigned(b) << endl; 
+}
+``
+
+[endsect]
+[endsect]
+
+[section Population Count (count bits set)]
+Population Count (pop count) is the number of active bits in an integral. The `pop_count()` function is defined
+under the header [@../../../../boost/integer/pop_count.hpp <boost/integer/pop_count.hpp>].
+
+[section Synopsis]
+
+	int pop_count(uintmax_t value);
+
+[endsect]
+
+[*Returns: ] The number of bits set in `value`.
+
+[endsect]
+
+[section Clear Least Bit Set]
+Clears least significant 1 bit in an integral. The `clear_least_bit_set()` function is defined on [@../../../../boost/integer/clear_least_bit_set.hpp <boost/integer/clear_least_bit_set.hpp>].
+
+[section Synopsis]
+
+	T clear_least_bit_set(T value);
+
+[endsect]
+
+*[*Remarks: ] `T` must be an integral type.
+
+*[*Returns: ] `value` with it's least significant active bit disactivated.
+
+[endsect]
+
+[section Count Trailing Zeros]
+The `count_trailing_zeros()` function counts the number of consecutive 0's from the least significant bit of an integral value.
+This function is defined on [@../../../../boost/integer/count_trailing_zeros.hpp <boost/integer/count_trailing_zeros.hpp>]
+
+[section Synopsis]
+	
+	int count_trailing_zeros(uintmax_t value);
+	
+[endsect]
+
+*[*Returns: ] The number of consecutive zeros from the least significant bit.
+
+[endsect]
+
+[section:bin_utils Binary Utilities]
+The header [@../../../../boost/integer/bin_utils.hpp <boost/integer/bin_utils.hpp>] cotains some metafunctions to handle binary data.
+All the metafunctions have an member varible named `value` where will be the result.
+
+[section Synopsis]
+
+	namespace boost
+	{
+		
+	// Sets the bit `pos' in data
+	template <typename T, T data, unsigned char pos>
+	struct set_bit
+	{
+		static const T value = ``['implementation-defined]``; 
+	}; // set_bit
+		
+
+	// Clear the bit `pos' in data
+	template <typename T, T data, unsigned char pos>
+	struct clear_bit
+	{
+		static const T value = ``['implementation-defined]``; 
+	}; // clear_bit
+
+	// If the bit `pos' is 1 then it will be 0 if not the bit will be 1
+	template <typename T, T data, unsigned char pos>
+	struct flip_bit
+	{
+		static const T value = ``['implementation-defined]``; 
+	}; // flip_bit
+
+	// Test if the bit in `pos' positon is set or not
+	template <typename T, T data, unsigned char pos>
+	struct test_bit
+	{
+		static const bool value = ``['implementation-defined]``; 
+	}; // test_bit	
+		
+	} // boost
+
+[endsect]
+
+[section Template Class `set_bit<>`]
+Sets the bit `pos` active in `data`.
+
+*[*Requires: ] `pos` must be smaller than the size (in bits) of `Type`.
+	
+*[*Remarks: ] `T` must be an integral type. If this constraint is not met, this metafunction do not participate in overload resolution.
+
+*[*Example:]
+
+	// `new_value' becomes 101
+	int new_value = set_bit<int, 100, 0>::value;
+
+[endsect]
+	
+[section Template Class `clear_bit<>`]
+Sets the bit `pos` inactive in `data`.
+
+
+*[*Requires: ] `pos` must be smaller than the size (in bits) of `Type`.
+	
+*[*Remarks: ] `T` must be an integral type. If this constraint is not met, this metafunction do not participate in overload resolution.
+
+*[*Example:]
+
+	// `new_value' becomes 1
+	int new_value = set_bit<int, 3, 2>::value;
+
+[endsect]
+
+[section Template Class `test_bit<>`]
+Test if the bit `pos` in `data` is active or not.
+
+
+*[*Requires: ] `pos` must be smaller than the size (in bits) of `Type`.
+	
+*[*Remarks: ] `T` must be an integral type. If this constraint is not met, this metafunction do not participate in overload resolution.
+
+*[*Example:]
+
+	// `is_set' becomes true
+	bool is_set = test_bit<int, 3982, 11>::value;
+
+[endsect]
+
+[section Template Class `flip_bit<>`]
+Invert the value of the bit `pos` in `data`
+
+*[*Requires: ] `pos` must be smaller than the size (in bits) of `Type`.
+	
+*[*Remarks: ] `T` must be an integral type. If this constraint is not met, this metafunction do not participate in overload resolution.
+
+*[*Example:]
+
+	// `new_value' becomes 14
+	bool new_value = flip_bit<int, 10, 2>::value;
+
+[endsect]
+[endsect]
+
+[endsect]
