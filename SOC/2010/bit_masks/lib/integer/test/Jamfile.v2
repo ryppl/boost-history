@@ -41,5 +41,6 @@ test-suite integer
         [ compile bft_testing/compile_pass/fusion_includes.cpp ]
         [ run bft_testing/fusion_iterator_testing.cpp ]
         [ run bft_testing/fusion_integration_testing.cpp ]
+        [ run bft_testing/flag_test.cpp ]
     ;
 
