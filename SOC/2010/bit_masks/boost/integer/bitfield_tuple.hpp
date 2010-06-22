@@ -452,22 +452,11 @@ public:
         const_bitfield_ref();
     };
 
-    /** Fusion Friends.
-     *  These are templates which are friended by bitfield_tuple.
-     */
-    //@{
-    // friend struct ::boost::fusion::extension::at_impl<bitfield_tuple_tag>;
-    // friend struct ::boost::fusion::extension::begin_impl<bitfield_tuple_tag>;
-    // friend struct ::boost::fusion::extension::end_impl<bitfield_tuple_tag>;
-    // template<typename T,std::size_t N>
-    // friend struct ::boost::bitfield_tuple_iterator;
-    //@}
-
     /** Value constructor.
      *  This sets the initial value of the internal data to x.
      *  Also functions as the default constructor.
      */
-    bitfield_tuple(storage_type x = 0)
+    explicit bitfield_tuple(storage_type x = 0)
         :_data(x)
     { }
 
