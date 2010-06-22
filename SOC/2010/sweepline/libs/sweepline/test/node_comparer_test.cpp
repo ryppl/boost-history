@@ -20,43 +20,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test1, T, test_types) {
 
     std::map< bline_node, int, node_comparer<bline_node> > test_beach_line;
 
-    bline_node initial_node(
-        make_site_event<T>(static_cast<T>(0), static_cast<T>(0), 0),
-        make_site_event<T>(static_cast<T>(0), static_cast<T>(2), 1));
-    test_beach_line[initial_node] = 0;
-    BOOST_CHECK_EQUAL(test_beach_line.size(), 1);
-    
-    bline_node new_node1(make_site_event<T>(static_cast<T>(1), static_cast<T>(0), 2));
-    bline_node new_node2(make_site_event<T>(static_cast<T>(1), static_cast<T>(1), 3));
-    bline_node new_node3(make_site_event<T>(static_cast<T>(1), static_cast<T>(2), 4));
-    bline_node new_node4(make_site_event<T>(static_cast<T>(1), static_cast<T>(1.000001), 5));
-    bline_node new_node5(make_site_event<T>(static_cast<T>(1), static_cast<T>(0.999999), 6));
-    
-    bline_it it = test_beach_line.lower_bound(new_node1);
-    BOOST_CHECK_EQUAL(it == test_beach_line.begin(), true);
-
-    it = test_beach_line.lower_bound(new_node2);
-    BOOST_CHECK_EQUAL(it == test_beach_line.begin(), true);
-
-    it = test_beach_line.lower_bound(new_node3);
-    BOOST_CHECK_EQUAL(it == test_beach_line.end(), true);
-
-    it = test_beach_line.lower_bound(new_node4);
-    BOOST_CHECK_EQUAL(it == test_beach_line.end(), true);
-
-    it = test_beach_line.lower_bound(new_node5);
-    BOOST_CHECK_EQUAL(it == test_beach_line.begin(), true);
-
-    it = test_beach_line.lower_bound(initial_node);
-    BOOST_CHECK_EQUAL(it == test_beach_line.begin(), true);
-}
-
-BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test2, T, test_types) {
-    typedef beach_line_node< point_2d<T> > bline_node;
-    typedef std::map< bline_node, int, node_comparer<bline_node> >::const_iterator bline_it;
-
-    std::map< bline_node, int, node_comparer<bline_node> > test_beach_line;
-
     site_event<T> site1 = make_site_event<T>(static_cast<T>(0), static_cast<T>(0), 0);
     site_event<T> site2 = make_site_event<T>(static_cast<T>(0), static_cast<T>(2), 1);
     bline_node initial_node(site1, site2);
@@ -75,7 +38,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test2, T, test_types) {
         BOOST_CHECK_EQUAL(it->second, cur_value);
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test3, T, test_types) {
+BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test2, T, test_types) {
     typedef beach_line_node< point_2d<T> > bline_node;
     typedef std::map< bline_node, int, node_comparer<bline_node> >::const_iterator bline_it;
 
@@ -99,4 +62,193 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test3, T, test_types) {
          it != test_beach_line.end();
          it++, cur_value++)
         BOOST_CHECK_EQUAL(it->second, cur_value);
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test3, T, test_types) {
+    typedef beach_line_node< point_2d<T> > bline_node;
+    node_comparer<bline_node> node_comparer_test;
+
+    bline_node initial_node(
+        make_site_event<T>(static_cast<T>(1), static_cast<T>(0), 0),
+        make_site_event<T>(static_cast<T>(0), static_cast<T>(2), 1));
+    
+    bline_node new_node1(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(-10), 2));
+    bline_node new_node2(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(-0.5), 3));
+    bline_node new_node3(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(0), 4));
+    bline_node new_node4(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(0.5), 4));
+    bline_node new_node5(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(1.0), 4));
+    bline_node new_node6(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(3.0), 4));
+    bline_node new_node7(make_site_event<T>(static_cast<T>(2.0), static_cast<T>(1.0), 4));
+
+
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node1), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node2), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node3), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node4), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node5), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node6), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node7), false);
+
+
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node1, initial_node), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node2, initial_node), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node3, initial_node), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node4, initial_node), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node5, initial_node), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node6, initial_node), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node7, initial_node), true);
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test4, T, test_types) {
+    typedef beach_line_node< point_2d<T> > bline_node;
+    node_comparer<bline_node> node_comparer_test;
+
+    bline_node initial_node(
+        make_site_event<T>(static_cast<T>(0), static_cast<T>(1), 0),
+        make_site_event<T>(static_cast<T>(1), static_cast<T>(0), 1));
+    
+    bline_node new_node1(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(-3), 2));
+    bline_node new_node2(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(-1.8), 3));
+    bline_node new_node3(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(-1.7), 4));
+    bline_node new_node4(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(0.0), 4));
+    bline_node new_node5(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(1.0), 4));
+    bline_node new_node6(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(3.0), 4));
+    bline_node new_node7(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(10.0), 4));
+
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node1), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node2), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node3), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node4), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node5), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node6), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node7), true);
+
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node1, initial_node), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node2, initial_node), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node3, initial_node), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node4, initial_node), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node5, initial_node), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node6, initial_node), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node7, initial_node), false);
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test5, T, test_types) {
+    typedef beach_line_node< point_2d<T> > bline_node;
+    node_comparer<bline_node> node_comparer_test;
+
+    bline_node initial_node(
+        make_site_event<T>(static_cast<T>(0), static_cast<T>(0), 0),
+        make_site_event<T>(static_cast<T>(1), static_cast<T>(2), 1));
+    
+    bline_node new_node1(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(-10), 2));
+    bline_node new_node2(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(0), 3));
+    bline_node new_node3(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(1.05), 4));
+    bline_node new_node4(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(1.1), 4));
+    bline_node new_node5(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(2), 4));
+    bline_node new_node6(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(5), 4));
+    bline_node new_node7(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(20), 4));
+
+
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node1), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node2), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node3), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node4), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node5), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node6), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node7), true);
+
+
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node1, initial_node), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node2, initial_node), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node3, initial_node), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node4, initial_node), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node5, initial_node), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node6, initial_node), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node7, initial_node), false);
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test6, T, test_types) {
+    typedef beach_line_node< point_2d<T> > bline_node;
+    node_comparer<bline_node> node_comparer_test;
+
+    bline_node initial_node(
+        make_site_event<T>(static_cast<T>(1), static_cast<T>(1), 0),
+        make_site_event<T>(static_cast<T>(0), static_cast<T>(0), 1));
+    
+    bline_node new_node1(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(-3), 2));
+    bline_node new_node2(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(-1.75), 3));
+    bline_node new_node3(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(0.0), 4));
+    bline_node new_node4(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(0.28), 4));
+    bline_node new_node5(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(2.7), 4));
+    bline_node new_node6(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(2.8), 4));
+    bline_node new_node7(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(5.0), 4));
+
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node1), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node2), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node3), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node4), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node5), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node6), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node7), true);
+
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node1, initial_node), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node2, initial_node), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node3, initial_node), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node4, initial_node), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node5, initial_node), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node6, initial_node), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node7, initial_node), false);
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test7, T, test_types) {
+    typedef beach_line_node< point_2d<T> > bline_node;
+    node_comparer<bline_node> node_comparer_test;
+
+    bline_node initial_node(
+        make_site_event<T>(static_cast<T>(0), static_cast<T>(0), 0),
+        make_site_event<T>(static_cast<T>(0), static_cast<T>(2), 1));
+    
+    bline_node new_node1(make_site_event<T>(static_cast<T>(1), static_cast<T>(0), 2));
+    bline_node new_node2(make_site_event<T>(static_cast<T>(1), static_cast<T>(1), 3));
+    bline_node new_node3(make_site_event<T>(static_cast<T>(1), static_cast<T>(2), 4));
+    bline_node new_node4(make_site_event<T>(static_cast<T>(1), static_cast<T>(1.000001), 5));
+    bline_node new_node5(make_site_event<T>(static_cast<T>(1), static_cast<T>(0.999999), 6));
+    
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node1), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node2), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node3), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node4), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node5), false);
+
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node1, initial_node), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node2, initial_node), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node3, initial_node), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node4, initial_node), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node5, initial_node), true);
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test8, T, test_types) {
+    typedef beach_line_node< point_2d<T> > bline_node;
+    node_comparer<bline_node> node_comparer_test;
+
+    bline_node initial_node(
+        make_site_event<T>(static_cast<T>(0), static_cast<T>(0), 0),
+        make_site_event<T>(static_cast<T>(1), static_cast<T>(1), 1));
+    
+    bline_node new_node1(make_site_event<T>(static_cast<T>(1), static_cast<T>(0), 2));
+    bline_node new_node2(make_site_event<T>(static_cast<T>(1), static_cast<T>(1), 1));
+    bline_node new_node3(make_site_event<T>(static_cast<T>(1), static_cast<T>(2), 3));
+    bline_node new_node4(
+        make_site_event<T>(static_cast<T>(1), static_cast<T>(1), 1),
+        make_site_event<T>(static_cast<T>(0), static_cast<T>(0), 0));
+    
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node1), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node2), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node3), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node4), true);
+
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node1, initial_node), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node2, initial_node), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node3, initial_node), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node4, initial_node), false);
 }

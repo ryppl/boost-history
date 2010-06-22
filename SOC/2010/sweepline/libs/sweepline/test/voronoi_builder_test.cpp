@@ -162,8 +162,50 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test3, T, test_types) {
     BOOST_CHECK_EQUAL(test_beach_line.get_voronoi_vertices().size(), 2);
 }
 
-// Sites: {(x, y) | x = 0 .. 9, y = 0 .. 9}.
+// Sites: {(x, y) | x = 0 .. 3, y = 0 .. 3}.
 BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test4, T, test_types) {
+    typedef typename voronoi_builder<T>::edge_type edge_type;
+    typedef typename voronoi_builder<T>::edge_iterator edge_iterator;
+    typedef typename voronoi_builder<T>::voronoi_vertices_iterator
+        voronoi_vertices_iterator;
+
+    voronoi_builder<T> test_beach_line;
+    std::vector< point_2d<T> > points;
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+            points.push_back(make_point_2d<T>(static_cast<T>(i),
+                                              static_cast<T>(j)));
+    
+    test_beach_line.init(points);
+    test_beach_line.run_sweepline();
+}
+
+// Generate 10 random sites 1000 times.
+BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test4_1, T, test_types) {
+    typedef typename voronoi_builder<T>::edge_type edge_type;
+    typedef typename voronoi_builder<T>::edge_iterator edge_iterator;
+    typedef typename voronoi_builder<T>::voronoi_vertices_iterator
+        voronoi_vertices_iterator;
+
+    srand(static_cast<unsigned int>(time(NULL)));
+    voronoi_builder<T> test_beach_line;
+    std::vector< point_2d<T> > points;
+    for (int i = 0; i < 1000; i++) {
+        points.clear();
+        for (int j = 0; j < 10; j++)
+            points.push_back(make_point_2d<T>(static_cast<T>(rand() % 100),
+                                              static_cast<T>(rand() % 100)));
+        test_beach_line.init(points);
+        test_beach_line.run_sweepline();
+        test_beach_line.reset();
+    }
+    
+    test_beach_line.init(points);
+    test_beach_line.run_sweepline();
+}
+
+// Sites: {(x, y) | x = 0 .. 9, y = 0 .. 9}.
+BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test5, T, test_types) {
     typedef typename voronoi_builder<T>::edge_type edge_type;
     typedef typename voronoi_builder<T>::edge_iterator edge_iterator;
     typedef typename voronoi_builder<T>::voronoi_vertices_iterator
@@ -180,8 +222,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test4, T, test_types) {
     test_beach_line.run_sweepline();
 }
 
-// Generate 100 random sites.
-BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test4_1, T, test_types) {
+// Generate 100 random sites 100 times.
+BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test5_1, T, test_types) {
     typedef typename voronoi_builder<T>::edge_type edge_type;
     typedef typename voronoi_builder<T>::edge_iterator edge_iterator;
     typedef typename voronoi_builder<T>::voronoi_vertices_iterator
@@ -190,16 +232,22 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test4_1, T, test_types) {
     srand(static_cast<unsigned int>(time(NULL)));
     voronoi_builder<T> test_beach_line;
     std::vector< point_2d<T> > points;
-    for (int i = 0; i < 100; i++)
-        points.push_back(make_point_2d<T>(static_cast<T>(rand() % 100),
-                                          static_cast<T>(rand() % 100)));
+    for (int i = 0; i < 100; i++) {
+        points.clear();
+        for (int j = 0; j < 100; j++)
+            points.push_back(make_point_2d<T>(static_cast<T>(rand() % 100),
+                                              static_cast<T>(rand() % 100)));
+        test_beach_line.init(points);
+        test_beach_line.run_sweepline();
+        test_beach_line.reset();
+    }
     
     test_beach_line.init(points);
     test_beach_line.run_sweepline();
 }
 
 // Sites: {(x, y) | x = 0 .. 33, y = 0 .. 33}.
-BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test5, T, test_types) {
+BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test6, T, test_types) {
     typedef typename voronoi_builder<T>::edge_type edge_type;
     typedef typename voronoi_builder<T>::edge_iterator edge_iterator;
     typedef typename voronoi_builder<T>::voronoi_vertices_iterator
@@ -216,8 +264,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test5, T, test_types) {
     test_beach_line.run_sweepline();
 }
 
-// Generate 1000 random sites.
-BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test5_1, T, test_types) {
+// Generate 1000 random sites 10 times.
+BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test6_1, T, test_types) {
     typedef typename voronoi_builder<T>::edge_type edge_type;
     typedef typename voronoi_builder<T>::edge_iterator edge_iterator;
     typedef typename voronoi_builder<T>::voronoi_vertices_iterator
@@ -226,16 +274,22 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test5_1, T, test_types) {
     srand(static_cast<unsigned int>(time(NULL)));
     voronoi_builder<T> test_beach_line;
     std::vector< point_2d<T> > points;
-    for (int i = 0; i < 1000; i++)
-        points.push_back(make_point_2d<T>(static_cast<T>(rand() % 100),
-                                          static_cast<T>(rand() % 100)));
+    for (int i = 0; i < 10; i++) {
+        points.clear();
+        for (int j = 0; j < 1000; j++)
+            points.push_back(make_point_2d<T>(static_cast<T>(rand() % 100),
+                                              static_cast<T>(rand() % 100)));
+        test_beach_line.init(points);
+        test_beach_line.run_sweepline();
+        test_beach_line.reset();
+    }
     
     test_beach_line.init(points);
     test_beach_line.run_sweepline();
 }
 
 // Sites: {(x, y) | x = 0 .. 100, y = 0 .. 100}.
-BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test6, T, test_types) {
+BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test7, T, test_types) {
     typedef typename voronoi_builder<T>::edge_type edge_type;
     typedef typename voronoi_builder<T>::edge_iterator edge_iterator;
     typedef typename voronoi_builder<T>::voronoi_vertices_iterator
@@ -253,7 +307,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test6, T, test_types) {
 }
 
 // Generate 10000 random sites.
-BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test6_1, T, test_types) {
+BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test7_1, T, test_types) {
     typedef typename voronoi_builder<T>::edge_type edge_type;
     typedef typename voronoi_builder<T>::edge_iterator edge_iterator;
     typedef typename voronoi_builder<T>::voronoi_vertices_iterator
@@ -271,7 +325,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test6_1, T, test_types) {
 }
 
 //// Sites: {(x, y) | x = 0 .. 333, y = 0 .. 333}.
-//BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test7, T, test_types) {
+//BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test8, T, test_types) {
 //    typedef typename voronoi_builder<T>::edge_type edge_type;
 //    typedef typename voronoi_builder<T>::edge_iterator edge_iterator;
 //    typedef typename voronoi_builder<T>::voronoi_vertices_iterator
@@ -280,8 +334,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test6_1, T, test_types) {
 //    srand(static_cast<unsigned int>(time(NULL)));
 //    voronoi_builder<T> test_beach_line;
 //    std::vector< point_2d<T> > points;
-//    for (int i = 0; i < 333; i++)
-//        for (int j = 0; j < 333; j++)
+//    for (int i = 0; i < 270; i++)
+//        for (int j = 0; j < 270; j++)
 //            points.push_back(make_point_2d<T>(static_cast<T>(rand() % 1000),
 //                                              static_cast<T>(rand() % 1000)));
 //    

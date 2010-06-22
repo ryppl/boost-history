@@ -194,9 +194,25 @@ namespace detail {
         circle_event(T c_x, T c_y, T sqr_r) :
         center_(c_x, c_y), sqr_radius_(sqr_r) {}
 
+        circle_event(const circle_event& c_event) {
+            center_ = c_event.center_;
+            sqr_radius_ = c_event.sqr_radius_;
+            bisector_node_ = c_event.bisector_node_;
+            for (int i = 0; i < 3; i++)
+                sites_[i] = c_event.sites_[i];
+        }
+
+        void operator=(const circle_event& c_event) {
+            center_ = c_event.center_;
+            sqr_radius_ = c_event.sqr_radius_;
+            bisector_node_ = c_event.bisector_node_;
+            for (int i = 0; i < 3; i++)
+                sites_[i] = c_event.sites_[i];
+        }
+
         bool equals(const circle_event &c_event) const {
             return center_.x() == c_event.x() && center_.y() == c_event.y() &&
-                   sqr_radius_ == c_event.get_sqr_radius() &&
+                   sqr_radius_ == c_event.sqr_radius_ &&
                    sites_[0] == c_event.sites_[0] &&
                    sites_[1] == c_event.sites_[1] &&
                    sites_[2] == c_event.sites_[2];
@@ -213,10 +229,10 @@ namespace detail {
 
             T sqr_dif_x = (center_.x() - c_event.x()) *
                           (center_.x() - c_event.x());
-            T sum_r_sqr = sqr_radius_ + c_event.get_sqr_radius();
+            T sum_r_sqr = sqr_radius_ + c_event.sqr_radius_;
             T value_left = (sum_r_sqr - sqr_dif_x) * (sum_r_sqr - sqr_dif_x);
             T value_right = static_cast<T>(4) * sqr_radius_ *
-                            c_event.get_sqr_radius();
+                            c_event.sqr_radius_;
 
             return value_left == value_right;
         }
@@ -357,8 +373,8 @@ namespace detail {
             return bisector_node_;
         }
 
-        const site_event<T>* get_sites() {
-            return sites;
+        const site_event<T>* get_sites() const {
+            return sites_;
         }
 
     private:
@@ -588,7 +604,7 @@ namespace detail {
             return true;
         }
 
-        circle_event_type top() {
+        const circle_event_type &top() {
             remove_not_active_events();
             return circle_events_.top();
         }
@@ -752,8 +768,44 @@ namespace detail {
             coordinate_type node1_line = node1.get_sweepline_coord();
             coordinate_type node2_line = node2.get_sweepline_coord();
 
-            // Both nodes are situated on the same vertical line.
-            if (node1_line == node2_line) {
+            if (node1_line < node2_line) {
+                coordinate_type left_site_x = node1.get_left_site().x();
+                coordinate_type left_site_y = node1.get_left_site().y();
+                coordinate_type right_site_x = node1.get_right_site().x();
+                coordinate_type right_site_y = node1.get_right_site().y();
+                coordinate_type new_node_y = node2.get_new_site().y();
+                if (left_site_x > right_site_x) {
+                    if (new_node_y <= left_site_y)
+                        return false;
+                    return node1.less(node2.get_new_site());
+                } else if (left_site_x < right_site_x) {
+                    if (new_node_y >= right_site_y)
+                        return true;
+                    return node1.less(node2.get_new_site());
+                } else {
+                    return left_site_y + right_site_y <
+                        static_cast<coordinate_type>(2.0) * new_node_y;
+                }
+            } else if (node1_line > node2_line) {
+                coordinate_type left_site_x = node2.get_left_site().x();
+                coordinate_type left_site_y = node2.get_left_site().y();
+                coordinate_type right_site_x = node2.get_right_site().x();
+                coordinate_type right_site_y = node2.get_right_site().y();
+                coordinate_type new_node_y = node1.get_new_site().y();
+                if (left_site_x > right_site_x) {
+                    if (new_node_y <= left_site_y)
+                        return true;
+                    return !node2.less(node1.get_new_site());
+                } else if (left_site_x < right_site_x) {
+                    if (new_node_y >= right_site_y)
+                        return false;
+                    return !node2.less(node1.get_new_site());
+                } else {
+                    return !(left_site_y + right_site_y <
+                        static_cast<coordinate_type>(2.0) * new_node_y);
+                }
+            } else {
+                // Both nodes are situated on the same vertical line.
                 // Let A be the new site event point, and B the site that
                 // creates arc above A. In this case two new nodes are being
                 // inserted: (A,B) and (B,A). As intersection points for the
@@ -770,10 +822,6 @@ namespace detail {
                 // Just compare coordinates of the sites situated on the sweepline.
                 return node1.get_new_site().y() < node2.get_new_site().y();
             }
-            else if (node1_line < node2_line)
-                return node1.less(node2.get_new_site());
-            else
-                return !node2.less(node1.get_new_site());
         }
     };
   

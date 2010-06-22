@@ -82,11 +82,11 @@ namespace sweepline {
         }
 
         void reset() {
-            site_events_.clear();
-            site_events_iterator_ = site_events_.begin();
+            output_.reset();
             circle_events_.reset();
             beach_line_.clear();
-            output_.clear();
+            site_events_.clear();
+            site_events_iterator_ = site_events_.begin();
         }
 
         void run_sweepline() {
