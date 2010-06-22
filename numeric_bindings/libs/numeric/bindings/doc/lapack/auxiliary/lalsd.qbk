@@ -54,7 +54,7 @@ the code path will be generated.
 
 
 [heading Definition]
-Defined in header [headerref boost/numeric/bindings/lapack/driver/lalsd.hpp].
+Defined in header [headerref boost/numeric/bindings/lapack/auxiliary/lalsd.hpp].
 
 
 [heading Parameters or Requirements on Types]
@@ -75,7 +75,7 @@ Defined in header [headerref boost/numeric/bindings/lapack/driver/lalsd.hpp].
 
 [heading Example]
 ``
-#include <boost/numeric/bindings/lapack/driver/lalsd.hpp>
+#include <boost/numeric/bindings/lapack/auxiliary/lalsd.hpp>
 using namespace boost::numeric::bindings;
 
 lapack::lalsd( x, y, z );
