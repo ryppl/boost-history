@@ -510,15 +510,6 @@ public:
     }
 
 
-    private:
-    storage_type const& get_storage() const {
-        return _data;
-    }
-
-    storage_type& get_storage() {
-        return _data;
-    }
-    public:
 
     /** Internal storage accessors
      *  Returns a reference of the internally stored type. This provides the
