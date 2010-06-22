@@ -4,8 +4,8 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 
-#ifndef BOOST_BITFIELD_TUPLE_bft_arg_parse_implHPP
-#define BOOST_BITFIELD_TUPLE_bft_arg_parse_implHPP
+#ifndef BOOST_BITFIELD_TUPLE_BFT_ARG_PARSE_IMPL_HPP
+#define BOOST_BITFIELD_TUPLE_BFT_ARG_PARSE_IMPL_HPP
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/void.hpp>
 #include <boost/mpl/push_back.hpp>
@@ -14,6 +14,7 @@
 #include <boost/mpl/find_if.hpp>
 #include <boost/integer/details/bft/name_lookup.hpp>
 #include <boost/integer/details/bit_flag.hpp>
+#include <boost/integer/details/filler.hpp>
 
 namespace boost { namespace details {
 
@@ -232,6 +233,38 @@ struct bft_arg_parse_impl <
         > type;
     };
 };
+/* Specialization for filler. */
+template <  std::size_t PaddingBits,
+            typename StoragePolicy,
+            typename FieldVector,
+            typename Offset
+>
+struct bft_arg_parse_impl <
+    filler<
+        PaddingBits
+    >,
+    StoragePolicy,
+    FieldVector,
+    Offset >
+{
+    typedef filler<PaddingBits> param;
+    typedef FieldVector     field_vector;
+    typedef StoragePolicy   storage_policy;
+    typedef mpl::size_t<PaddingBits + Offset::value > offset;
+
+    typedef bft_arg_parse_impl<param,storage_policy,field_vector,offset> type;
+
+    template <typename NextParam>
+    struct process {
+        typedef bft_arg_parse_impl<
+            NextParam,
+            storage_policy,
+            field_vector,
+            offset
+        > type;
+    };
+};
+
 
 
 
