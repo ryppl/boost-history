@@ -22,7 +22,7 @@ struct begin_impl< bitfield_tuple_tag > {
     struct apply {
         typedef bitfield_tuple_iterator<BitfieldTuple,0> type;
         static type call(BitfieldTuple& bft) {
-            return type( bft);
+            return type(bft);
         }
     };
 };

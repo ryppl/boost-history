@@ -70,12 +70,12 @@ struct bitfield_tuple_iterator
 
         // const dereference operation.
         static type call(Iter const& iter) {
-            return type( iter._data.data() );
+            return type( iter._data.get_storage() );
         }
 
         // non-const dereference operation.
         static type call(Iter& iter) {
-            return type( iter._data.data() );
+            return type( iter._data.get_storage() );
         }
     };
 
@@ -154,12 +154,12 @@ struct bitfield_tuple_iterator
 
         // const dereference operation.
         static type call(Iter const& iter) {
-            return type( iter._data.data() );
+            return type( iter._data.get_storage() );
         }
 
         // non-const dereference operation.
         static type call(Iter& iter) {
-            return type( iter._data.data() );
+            return type( iter._data.get_storage() );
         }
     };
 

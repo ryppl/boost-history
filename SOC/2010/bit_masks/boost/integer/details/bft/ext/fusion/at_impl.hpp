@@ -30,7 +30,7 @@ struct at_impl< bitfield_tuple_tag > {
             >                             type;
         // non-const at function.
         static type call(BitfieldTuple& bft) {
-            return type( bft.data() );
+            return bft.get<N>();
         }
     };
 };

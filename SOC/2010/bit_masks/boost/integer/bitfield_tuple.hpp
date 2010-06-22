@@ -17,8 +17,7 @@
 #include <boost/mpl/less.hpp>
 #include <boost/mpl/size.hpp>
 #include <string>
-#include <boost/integer/details/bft/ext/bitfield_tuple_fusion_includes.hpp>
-#include <boost/integer/details/fusion_ext_includes.hpp>
+
 
 namespace boost {
 
@@ -456,6 +455,16 @@ public:
         const_bit_ref();
     };
 
+    /** Fusion Friends.
+     *  These are templates which are friended by bitfield_tuple.
+     */
+    //@{
+    // friend struct ::boost::fusion::extension::at_impl<bitfield_tuple_tag>;
+    // friend struct ::boost::fusion::extension::begin_impl<bitfield_tuple_tag>;
+    // friend struct ::boost::fusion::extension::end_impl<bitfield_tuple_tag>;
+    // template<typename T,std::size_t N>
+    // friend struct ::boost::bitfield_tuple_iterator;
+    //@}
 
     /** Value constructor.
      *  This sets the initial value of the internal data to x.
@@ -500,18 +509,27 @@ public:
         _data = x._data;
     }
 
+
+    private:
+    storage_type const& get_storage() const {
+        return _data;
+    }
+
+    storage_type& get_storage() {
+        return _data;
+    }
+    public:
+
     /** Internal storage accessors
      *  Returns a reference of the internally stored type. This provides the
      *  ability for the fusion sequence extension to work correctly.
-     *  TODO Remove this at a later time if I can figure out how to make get
-     *  callable from within the fusion functions.
      */
     //@{
-    storage_type const& data( ) const {
+    storage_type const data( ) const {
          return _data;
     }
 
-    storage_type& data( ) {
+    storage_type data( ) {
          return _data;
     }
     //@}
@@ -691,6 +709,7 @@ private:
 
 } // end boost
 
-
+#include <boost/integer/details/bft/ext/bitfield_tuple_fusion_includes.hpp>
+#include <boost/integer/details/fusion_ext_includes.hpp>
 
 #endif
