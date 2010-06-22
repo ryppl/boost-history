@@ -242,11 +242,8 @@ Note: reference first example to talk about member because this gets confusing.
  *
  *  5) The user must specify a storage type.
  *  
- *  6) The storage type must be a POD type.
- *  
- *  7) The storage type can not be an array.
  *
- *  8) The total width of the sum of all bit fields must not exceed the bit 
+ *  6) The total width of the sum of all bit fields must not exceed the bit 
  *      width of the storage type.
  *
  *

@@ -65,11 +65,6 @@ namespace boost { namespace details {
  *          deduce the ammount of storage space, and set the storage policy to
  *          that.
  *
- *  2) The storage type must be a POD type.
- *      (This may be changed to possibly allow for array types of PODs.)
- *      Enforced, This may be best suited to being part of the unpacking
- *          of the arguments so that it can be caught earlier then inside the 
- *          base class.
  *
  *  3) The bitfields specified must not exceed the bitwidth of the storage type.
  *      Enforced. Not going any where, but may be redefined or altered based
@@ -113,13 +108,7 @@ struct bitfield_tuple_base {
     ));
 
 
-    // Precondition: storage_type must not be an array type.
-    // I always forget if the is_pod will match array types like int [3] or not.
-    BOOST_STATIC_ASSERT(( !is_array<storage_type>::value ));
 
-    // precondition: the storage type must be a pod type (for now).
-    // NOTE: this may become a documented requirement only.
-    BOOST_STATIC_ASSERT(( is_pod<storage_type>::value ));
 
     // Precondition: the offet at the end of everything must be the
     // the same as or less then the bit_width of the storage type.
