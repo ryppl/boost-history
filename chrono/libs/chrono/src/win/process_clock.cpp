@@ -36,6 +36,7 @@ namespace boost
       if ( ::GetProcessTimes( ::GetCurrentProcess(), &creation, &exit,
              &system_time, &user_time ) )
       {
+        ec.clear();
         times_.user   = duration(
           ((static_cast<time_point::rep>(user_time.dwHighDateTime) << 32)
             | user_time.dwLowDateTime) * 100 );

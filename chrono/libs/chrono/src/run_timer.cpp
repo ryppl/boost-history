@@ -136,6 +136,7 @@ namespace boost
 
       process_times times;
       elapsed( times, ec );
+      if (ec) return;
 
       if ( &ec == &system::throws )
       {
@@ -146,13 +147,14 @@ namespace boost
         try
         {
           show_time( times, m_format.c_str(), m_places, m_os );
-          ec = system::error_code();
+          ec.clear();
         }
 
         catch (...) // eat any exceptions
         {
           assert( 0 && "error reporting not fully implemented yet" );
-          //ec = error_code( EIO, errno_ecat );
+          ec.assign(system::errc::success, system::generic_category);
+            //ec = error_code( EIO, errno_ecat );
         }
       }
     }

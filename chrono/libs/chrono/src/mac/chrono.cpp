@@ -77,8 +77,9 @@ monotonic_simplified()
 
 static
 monotonic_clock::rep
-monotonic_simplifie_ec(system::error_code & ec)
+monotonic_simplified_ec(system::error_code & ec)
 {
+    ec.clear();
     return mach_absolute_time();
 }
 
@@ -117,6 +118,7 @@ monotonic_full_ec(system::error_code & ec)
       ec.assign( errno, system::system_category );
       return monotonic_clock::rep();
     }
+    ec.clear();
     return static_cast<monotonic_clock::rep>(mach_absolute_time() * factor);
 }
 
@@ -171,8 +173,9 @@ monotonic_clock::now(system::error_code & ec)
     static FP_ec fp = init_monotonic_clock(err);
     if( err != 0  ) {
         ec.assign( err, system::system_category );
-	return time_point();
+        return time_point();
     }
+    ec.clear();
     return time_point(duration(fp(ec)));
 }
 

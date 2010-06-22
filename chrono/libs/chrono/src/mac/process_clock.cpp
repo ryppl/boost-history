@@ -60,7 +60,7 @@ namespace boost
       {
         assert( 0 && "error handling not implemented yet" );
 
-        ec = system::error_code( errno, system::system_category );
+        ec.assign( errno, system::system_category );
         times_.real = times_.system = times_.user = nanoseconds(-1);
       }
       else
@@ -73,11 +73,12 @@ namespace boost
           times_.real *= tick_factor();
           times_.user *= tick_factor();
           times_.system *= tick_factor();
+          ec.clear();
         }
         else
         {
-        assert( 0 && "error handling not implemented yet" );
-          ec = system::error_code( errno, system::system_category );
+          assert( 0 && "error handling not implemented yet" );
+          ec.assign( errno, system::system_category );
           times_.real = times_.user = times_.system = nanoseconds(-1);
         }
       }
