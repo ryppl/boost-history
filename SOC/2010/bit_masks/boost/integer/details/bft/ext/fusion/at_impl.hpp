@@ -22,7 +22,7 @@ struct at_impl< bitfield_tuple_tag > {
     template <typename BitfieldTuple, typename N>
     struct apply {
         typedef typename BitfieldTuple::
-            template bit_ref<
+            template bitfield_ref<
                 typename mpl::at<
                     typename BitfieldTuple::members,
                     N

@@ -122,12 +122,12 @@ Note: reference first example to talk about member because this gets confusing.
  *
  *
  *  bitfield_tuple internal Class templates
- *      bit_ref           - Template is a reference type which takes one
+ *      bitfield_ref           - Template is a reference type which takes one
  *                          parameter which is expected to be of type 
  *                          bitfield_element and creates a proxy reference type
  *                          to the element specified by the bitfield_element.
  *
- *      bit_ref interface
+ *      bitfield_ref interface
  *          public typedefs
  *              return_type - The type which is to be returned from a specified
  *                            bitfield.
@@ -137,20 +137,20 @@ Note: reference first example to talk about member because this gets confusing.
  *                              as endianness within the internal storage type.
  *
  *          constructors
- *              bit_ref( bit_ref<MaskInfo> const&);
- *              bit_ref( storage_type& ref);
+ *              bitfield_ref( bitfield_ref<MaskInfo> const&);
+ *              bitfield_ref( storage_type& ref);
  *          private constructors
- *              bit_ref();
+ *              bitfield_ref();
  *
  *          functions
  *              operator return_type() // implicit conversion operator
- *              bit_ref<MaskInfo> const& operator=(return_type const& rhs);
+ *              bitfield_ref<MaskInfo> const& operator=(return_type const& rhs);
  *
  *
- *      const_bit_ref   - Similar to the bit_ref class template how ever this
+ *      const_bitfield_ref   - Similar to the bitfield_ref class template how ever this
  *                        is a const representation a reference.
- *          The only difference between const_bit_ref and bit_ref is that
- *          const_bit_ref does not define an assignment operator.
+ *          The only difference between const_bitfield_ref and bitfield_ref is that
+ *          const_bitfield_ref does not define an assignment operator.
  *
  *
  *  bitfield_tuple constructors
@@ -201,19 +201,19 @@ Note: reference first example to talk about member because this gets confusing.
  *          - returns a reference to the data inside of the bitfield_tuple.
  *          
  *  get function
- *      - The get function returns a bit_ref or const_bit_ref which is 
+ *      - The get function returns a bitfield_ref or const_bitfield_ref which is 
  *      convertible to the type specified in the first template parameter of the
  *      member type, that corresponds to the bit field being accessed. For
  *      example, using example_type from the first example, if the get function
  *      is called in the following manner, temp.get<bool_one>(), the return type
- *      for get in this case is a bit_ref type thats convertible to bool and 
+ *      for get in this case is a bitfield_ref type thats convertible to bool and 
  *      information retrieving data or storing data in the correct bitfield.
  *
- *      bit_ref<typename> get<typenam>(); // access by name.
- *      const_bit_ref<typename> get<typenam>() const; // access by name.
+ *      bitfield_ref<typename> get<typenam>(); // access by name.
+ *      const_bitfield_ref<typename> get<typenam>() const; // access by name.
  *
- *      bit_ref<typename> get<size_t>(); // access by index.
- *      const_bit_ref<typename> get<size_t>() const; // access by index.
+ *      bitfield_ref<typename> get<size_t>(); // access by index.
+ *      const_bitfield_ref<typename> get<size_t>() const; // access by index.
  *
  *
  *  All get functions provide constant time run time access to the bitfield to
@@ -310,7 +310,7 @@ Note: reference first example to talk about member because this gets confusing.
  *  6) For second draft I would like to restructure the way the parsed 
  *      arguments are stored. Change from bitfield_elements to a pair
  *      the first item being the key/name the second item being a bitfield.
- *      Instead of returning a bit_ref class return a bitfield class. 
+ *      Instead of returning a bitfield_ref class return a bitfield class. 
  *      this may be slightly more difficult then needed, because I need to store 
  *      both a const and non const version of a bitfield. But even I don't do 
  *      that I would like to change the way the reference class works.
@@ -345,9 +345,9 @@ public:
      *  This serves as the go between things within this class.
      */
     template <typename MaskInfo>
-    struct bit_ref {
+    struct bitfield_ref {
     private:
-        typedef bit_ref<MaskInfo>                               _self;
+        typedef bitfield_ref<MaskInfo>                               _self;
         typedef typename make_unsigned<
             storage_type
         >::type                                           unsigned_storage_type;
@@ -367,7 +367,7 @@ public:
 
 
         /** Reference constructor. */
-        bit_ref(storage_type& ref)
+        bitfield_ref(storage_type& ref)
             :_ref( *reinterpret_cast<unsigned_storage_type*>(&ref) )
         { }
 
@@ -375,7 +375,7 @@ public:
         /** copy constructor.
          *  This is because references are copy constructible.
          */
-        bit_ref( bit_ref<MaskInfo> const& x)
+        bitfield_ref( bitfield_ref<MaskInfo> const& x)
            :_ref( x._ref )
         { }
         
@@ -400,7 +400,7 @@ public:
         bitfield_type _ref;
 
         // not default constructible because this is a reference type
-        bit_ref();
+        bitfield_ref();
     };
 
     /** Const reference type.
@@ -408,9 +408,9 @@ public:
      *  can be removed from the reference type. 
      */
     template <typename MaskInfo>
-    struct const_bit_ref {
+    struct const_bitfield_ref {
     private:
-        typedef bit_ref<MaskInfo>                               _self;
+        typedef bitfield_ref<MaskInfo>                               _self;
         typedef typename make_unsigned<
             storage_type
         >::type const                                     unsigned_storage_type;
@@ -429,14 +429,14 @@ public:
 
 
         /** Reference constructor. */
-        const_bit_ref(storage_type const& ref)
+        const_bitfield_ref(storage_type const& ref)
             :_ref( *reinterpret_cast<unsigned_storage_type*>(&ref) )
         { }
 
         /** copy constructor.
          *  This is because references are copy constructible.
          */
-        const_bit_ref( bit_ref<MaskInfo> const& x)
+        const_bitfield_ref( bitfield_ref<MaskInfo> const& x)
             :_ref( x.ref )
         { }
         
@@ -452,7 +452,7 @@ public:
         bitfield_type _ref;
 
         // not default constructible because this is a reference type
-        const_bit_ref();
+        const_bitfield_ref();
     };
 
     /** Fusion Friends.
@@ -479,19 +479,6 @@ public:
         :_data( x.data() )
     { }
 
-    /** "Identical members" copy constructor.
-     *  Basically this is used to get the data within a structure whose 
-     *  bitfields are the same (in the same order) but the storage is 
-     *  specified in a different place within the template arguments.
-     *
-     *  XXX 
-     *      TODO: The signature of this will need to change possibly to
-     *      use enable_if or some form of internal dispatching.
-     *  XXX
-     */
-    template <typename T>  bitfield_tuple(T const& x);
-
-     // TODO: look into the creation of a member wise constructor.
 
 
     /** Assignment from an integer
@@ -568,7 +555,7 @@ public:
                 members
             >::type
         >,
-        bit_ref<
+        bitfield_ref<
             typename mpl::deref<
                 typename mpl::find_if<
                     members,
@@ -581,7 +568,7 @@ public:
         >
     >::type
     get() {
-         typedef bit_ref< 
+         typedef bitfield_ref< 
             typename mpl::deref<
                 typename mpl::find_if<
                     members,
@@ -610,7 +597,7 @@ public:
                 members
             >::type
         >,
-        const_bit_ref<
+        const_bitfield_ref<
             typename mpl::deref<
                 typename mpl::find_if<
                     members,
@@ -623,7 +610,7 @@ public:
         > 
     >::type const
     get() const {
-         typedef const_bit_ref< 
+         typedef const_bitfield_ref< 
             typename mpl::deref<
                 typename mpl::find_if<
                     members,
@@ -647,7 +634,7 @@ public:
                 members
             >
         >,
-        bit_ref<
+        bitfield_ref<
             typename mpl::at_c<
                 members,
                 Index
@@ -655,7 +642,7 @@ public:
         >
     >::type
     get() {
-        typedef bit_ref<
+        typedef bitfield_ref<
             typename mpl::at_c<
                 members,
                 Index
@@ -674,7 +661,7 @@ public:
                     members
                 >
             >,
-            const_bit_ref<
+            const_bitfield_ref<
                 typename mpl::at_c<
                     members,
                     Index
@@ -682,7 +669,7 @@ public:
             >
     >::type
     get() const {
-        typedef const_bit_ref<
+        typedef const_bitfield_ref<
             typename mpl::at_c<
                 members,
                 Index

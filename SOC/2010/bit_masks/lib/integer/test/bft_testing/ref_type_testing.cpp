@@ -39,7 +39,7 @@ int main() {
 
     // simple test entery and retreval.
     {
-    typedef bft::bit_ref<element_1> ref_type_1;
+    typedef bft::bitfield_ref<element_1> ref_type_1;
 
     ref_type_1 test_1( data_storage );
 
@@ -53,8 +53,8 @@ int main() {
     // slightly more complex.
     // multiple fields which arn't next to one another.
     {
-        typedef bft::bit_ref<element_2> ref_type_1;
-        typedef bft::bit_ref<element_4> ref_type_2;
+        typedef bft::bitfield_ref<element_2> ref_type_1;
+        typedef bft::bitfield_ref<element_4> ref_type_2;
 
         // constructing reference types.
         ref_type_1 ref_1(data_storage);
@@ -71,10 +71,10 @@ int main() {
     // case the integer storage type is completely filled with fields.
     {
         // create fake reference type to test..
-        typedef bft::bit_ref<element_2> ref_type_1;
-        typedef bft::bit_ref<element_3> ref_type_2;
-        typedef bft::bit_ref<element_4> ref_type_3;
-        typedef bft::bit_ref<element_5> ref_type_4;
+        typedef bft::bitfield_ref<element_2> ref_type_1;
+        typedef bft::bitfield_ref<element_3> ref_type_2;
+        typedef bft::bitfield_ref<element_4> ref_type_3;
+        typedef bft::bitfield_ref<element_5> ref_type_4;
         //
         ref_type_1 ref_1(data_storage);
         ref_type_2 ref_2(data_storage);

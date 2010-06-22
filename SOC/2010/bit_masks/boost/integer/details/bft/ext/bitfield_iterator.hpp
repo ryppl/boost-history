@@ -54,7 +54,7 @@ struct bitfield_tuple_iterator
     /** Fusion Extension: value_of */
     template<typename Iter>
     struct value_of {
-        typedef typename Iter::bitfield_tuple_type::template bit_ref<
+        typedef typename Iter::bitfield_tuple_type::template bitfield_ref<
             typename mpl::at<
                 typename Iter::bitfield_tuple_type::members,
                 typename Iter::index
