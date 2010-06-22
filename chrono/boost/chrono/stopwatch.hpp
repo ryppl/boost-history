@@ -83,6 +83,7 @@ namespace boost
                 running_=true;
                 return start_;
             } else {
+                ec.clear();
                 return time_point();
             }
         }
@@ -97,6 +98,7 @@ namespace boost
                 running_=false;
                 return frozen;
             } else {
+                ec.clear();
                 return duration::zero();
             }
         }
@@ -128,6 +130,7 @@ namespace boost
                     suspended_=true;
                     return partial_;
                 } else {
+                    ec.clear();
                     return duration::zero();
                 }
             } else {
@@ -142,6 +145,7 @@ namespace boost
                 suspended_=false;
                 return start_;
             } else {
+                ec.clear();
                 return time_point();
             }
         }
@@ -163,6 +167,7 @@ namespace boost
             start_ = time_point();
             level_=0;
             running_=false;
+            ec.clear();
         }
 
         typedef stopwatch_runner<stopwatch<Clock> > scoped_run;

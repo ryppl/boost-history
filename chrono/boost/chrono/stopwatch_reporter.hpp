@@ -147,21 +147,9 @@ namespace boost { namespace chrono  {
     void basic_stopwatch_reporter<Stopwatch, Formatter>::report( system::error_code & ec ) {
         chrono::scoped_suspend<typename Stopwatch::clock> _(ec);
         m_reported = true;
-        if ( m_format.empty() ) m_format = Formatter::default_format();
+        //~ if ( m_format.empty() ) m_format = Formatter::default_format();
 
-        //typename Stopwatch::duration d = this->elapsed( ec );
-        if ( &ec == &system::throws ) {
-            Formatter::show_time( *this, m_format.c_str(), m_places, m_os, ec);
-        } else {// non-throwing
-            try {
-                Formatter::show_time( *this, m_format.c_str(), m_places, m_os, ec );
-                ec = system::error_code();
-            } catch (...) { // eat any exceptions
-                assert( 0 && "error reporting not fully implemented yet" );
-                //ec = error_code( EIO, errno_ecat );
-            }
-        }
-
+        Formatter::show_time( *this, m_format.c_str(), m_places, m_os, ec);
     }
 
 

@@ -11,7 +11,7 @@
 #define BOOST_CHRONO_SUSPENDIBLE_CLOCK_HPP
 
 #include <boost/chrono/chrono.hpp>
-#include <boost/chrono/scoped_suspend.hpp>
+//~ #include <boost/chrono/scoped_suspend.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/thread/tss.hpp>
 #include <memory>
@@ -44,6 +44,7 @@ namespace boost { namespace chrono {
             {}
             duration suspended(system::error_code & ec = system::throws) {
                 if (!suspended_) {
+                    ec.clear();
                     return suspended_duration_;                   
                 } else {
                     time_point tmp;
@@ -62,6 +63,7 @@ namespace boost { namespace chrono {
                     suspended_time_ = tmp;
                     suspended_=true;
                 } else {
+                    ec.clear();
                     ++suspend_level_;
                 }
             }
@@ -72,31 +74,34 @@ namespace boost { namespace chrono {
                     if (ec) return;
                     suspended_duration_ += tmp - suspended_time_;
                     suspended_=false;
-                }
+                } else {
+                    ec.clear();
+                }                    
             }
 
         };
         static thread_specific_context* instance(system::error_code & ec) {
             thread_specific_context* ptr= ptr_.get();
             if (ptr==0) {
-                if (ec == system::throws) {
+                if (&ec == &system::throws) {
                     std::auto_ptr<thread_specific_context> ptr2(new thread_specific_context());
                     ptr_.reset(ptr2.get());
                     ptr = ptr2.release();
                 } else {
                     ptr=(new(std::nothrow) thread_specific_context());
                     if (ptr==0) {
-                        //ec=...
+                        ec.assign( system::errc::resource_unavailable_try_again, system::generic_category );
                         return 0;
                     }
                     try {
                         ptr_.reset(ptr);
                     } catch (...) {
-                        //ec=...
+                        ec.assign( system::errc::resource_unavailable_try_again, system::generic_category );
                         return 0;
                     }
                 }
             }
+            ec.clear();
             return ptr;
         }
 
@@ -149,7 +154,7 @@ namespace boost { namespace chrono {
             }
         private:
             thread_specific_context* ptr_;
-            scoped_suspend(); // = delete;
+            //~ scoped_suspend(); // = delete;
             scoped_suspend(const scoped_suspend&); // = delete;
             scoped_suspend& operator=(const scoped_suspend&); // = delete;
         };
@@ -168,7 +173,7 @@ namespace boost { namespace chrono {
     public:
         scoped_suspend(system::error_code & ec = system::throws) : suspendible_clock<Clock>::scoped_suspend(ec) {}
     private:
-        scoped_suspend(); // = delete;
+        //~ scoped_suspend(); // = delete;
         scoped_suspend(const scoped_suspend&); // = delete;
         scoped_suspend& operator=(const scoped_suspend&); // = delete;
     };

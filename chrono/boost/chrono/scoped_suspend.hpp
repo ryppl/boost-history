@@ -22,10 +22,12 @@ namespace boost { namespace chrono {
     template <class Clock>
     class scoped_suspend {
     public:
-        scoped_suspend(system::error_code & ec = system::throws) {}
+        scoped_suspend(system::error_code & ec = system::throws) {
+            ec.clear();
+        }
         ~scoped_suspend() {}
     private:
-        scoped_suspend(); // = delete;
+        //~ scoped_suspend(); // = delete;
         scoped_suspend(const scoped_suspend&); // = delete;
         scoped_suspend& operator=(const scoped_suspend&); // = delete;
     };
