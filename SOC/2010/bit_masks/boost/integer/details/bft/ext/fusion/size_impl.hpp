@@ -27,7 +27,7 @@ struct size_impl< bitfield_tuple_tag > {
         >::type type;
 
         // non-const at function.
-        static type call(BitfieldTuple& bft) {
+        static type call(BitfieldTuple&) {
             return type();
         }
     };
