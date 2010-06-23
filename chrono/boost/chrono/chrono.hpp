@@ -518,7 +518,9 @@ namespace chrono {
         rep rep_;
     public:
 
-        BOOST_CHRONO_CONSTEXPR duration() { } // = default;
+        BOOST_CHRONO_CONSTEXPR duration() : 
+        //~ rep_(duration_values<rep>::zero())
+        { } // = default;
         template <class Rep2>
         BOOST_CHRONO_CONSTEXPR explicit duration(const Rep2& r,
             typename boost::enable_if_c
@@ -535,7 +537,7 @@ namespace chrono {
         duration(const duration& rhs) : rep_(rhs.rep_) {} // = default;
         duration& operator=(const duration& rhs) // = default;
         {
-            if (rhs != *this) rep_= rhs.rep_;
+            if (&rhs != this) rep_= rhs.rep_;
             return *this;
         }
 
