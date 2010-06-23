@@ -19,5 +19,12 @@
 #include <boost/integer/static_bit_reversal.hpp>
 #include <boost/integer/sign.hpp>
 #include <boost/integer/same_sign.hpp>
+#include <boost/integer/pop_count.hpp>
+#include <boost/integer/interleave.hpp>
+#include <boost/integer/count_trailing_zeros.hpp>
+#include <boost/integer/clear_least_bit_set.hpp>
+#include <boost/integer/swap.hpp>
+#include <boost/integer/safe_avg.hpp>
+#include <boost/integer/round_power_2.hpp>
 
 #endif
