@@ -6,15 +6,20 @@
 
 #include <boost/integer/bitfield_tuple.hpp>
 #include <boost/assert.hpp>
-
+#include <typeinfo>
+#include <iostream>
 
 using namespace boost;
+using namespace std;
 
-template <typename T0,BOOST_MAKE_BFT_TEMPLATE_PARAMS()>
-struct ham_bone { };
+template <BOOST_MAKE_BFT_TEMPLATE_PARAMS()>
+struct ham_bone {
+    virtual void foo() { }
+};
 
 int main() {
-
+    ham_bone<int,int,int,int,int,int,int,int,int,int> temp;
+    cout << typeid( &temp ).name() << endl;
     return 0;
 }
 
