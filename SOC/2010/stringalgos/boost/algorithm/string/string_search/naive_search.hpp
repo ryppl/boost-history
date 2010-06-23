@@ -8,6 +8,7 @@ namespace boost
 {
 	namespace algorithm
 	{
+        //! \todo Copyable
 
 		struct naive_search
 		{
@@ -18,19 +19,20 @@ namespace boost
 			public:
 				typedef ForwardIterator1T substring_iterator_type;
 				typedef ForwardIterator2T string_iterator_type;
+                typedef typename boost::iterator_range<substring_iterator_type> substring_range_type;
+                typedef typename boost::iterator_range<string_iterator_type> string_range_type;
 				typedef Comparator comparator_type;
 				typedef Allocator allocator_type;
-				typedef typename Allocator::value_type allocator_value_type;
 			protected:
                 //construct the algorithm given iterator ranges for the substring and the string
-				algorithm (typename boost::call_traits<Comparator>::param_type comparator,
-					typename boost::call_traits<Allocator>::param_type allocator,
-					typename boost::call_traits<typename boost::iterator_range<substring_iterator_type> >::param_type substring,
-					typename boost::call_traits<typename boost::iterator_range<string_iterator_type> >::param_type string)
+				algorithm (typename boost::call_traits<comparator_type>::param_type comparator,
+					typename boost::call_traits<allocator_type>::param_type allocator,
+					typename boost::call_traits<substring_range_type>::param_type substring,
+					typename boost::call_traits<string_range_type>::param_type string)
 					: comparator_(comparator), allocator_(allocator), substring_(substring), string_(string) { }
 
 
-				boost::iterator_range<string_iterator_type> find(string_iterator_type start)
+				string_range_type find(string_iterator_type start)
 				{
 					for (;
 						start != boost::end(string_); ++start)
@@ -47,6 +49,8 @@ namespace boost
 					}
 					return boost::iterator_range<string_iterator_type>(boost::end(string_),boost::end(string_));
 				}
+                //! It is guaranteed that each of these two functions will get called at least once before find()
+                //! is used.
                 //No precomputation to be done on the substring
                 inline void on_substring_change()
                 {

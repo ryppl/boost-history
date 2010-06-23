@@ -34,6 +34,12 @@ test-suite algorithm/string
             :
             : find
         ]
+	   [ run
+			finder_test.cpp
+		  : :
+		    :
+			: finder
+		]
       [ run
             split_test.cpp
           : :
