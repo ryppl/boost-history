@@ -313,25 +313,15 @@ Note: reference first example to talk about member because this gets confusing.
  *      both a const and non const version of a bitfield. But even I don't do 
  *      that I would like to change the way the reference class works.
  */
-template <  typename T0,
-            typename T1 = mpl::void_,
-            typename T2 = mpl::void_,
-            typename T3 = mpl::void_,
-            typename T4 = mpl::void_,
-            typename T5 = mpl::void_,
-            typename T6 = mpl::void_,
-            typename T7 = mpl::void_,
-            typename T8 = mpl::void_,
-            typename T9 = mpl::void_
->
+template <  BOOST_MAKE_BFT_TEMPLATE_PARAMS() >
 struct bitfield_tuple
     : protected details::bitfield_tuple_base<
-        T0,T1,T2,T3,T4,T5,T6,T7,T8,T9
+        BOOST_BFT_PARAMETER_LIST()
     >
 {
 private:
-    typedef details::bitfield_tuple_base<T0,T1,T2,T3,T4,T5,T6,T7,T8,T9> _base;
-    typedef bitfield_tuple<T0,T1,T2,T3,T4,T5,T6,T7,T8,T9>  _self;
+    typedef details::bitfield_tuple_base<BOOST_BFT_PARAMETER_LIST()> _base;
+    typedef bitfield_tuple<BOOST_BFT_PARAMETER_LIST()>  _self;
 
 public:
     typedef typename _base::field_vector            members;

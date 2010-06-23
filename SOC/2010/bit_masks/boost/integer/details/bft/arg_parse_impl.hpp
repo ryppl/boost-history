@@ -233,6 +233,7 @@ struct bft_arg_parse_impl <
         > type;
     };
 };
+
 /* Specialization for filler. */
 template <  std::size_t PaddingBits,
             typename StoragePolicy,

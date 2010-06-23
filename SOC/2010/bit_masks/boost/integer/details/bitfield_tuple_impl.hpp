@@ -35,26 +35,13 @@ namespace boost { namespace details {
             mpl::void_,\
             mpl::vector<>,\
             mpl::size_t<0u>\
-        >::\
-        template process<T1 >::type::\
-        template process<T2>::type::\
-        template process<T3>::type::\
-        template process<T4>::type::\
-        template process<T5>::type::\
-        template process<T6>::type::\
-        template process<T7>::type::\
-        template process<T8>::type::\
-        template process<T9>::type 
+        >\
+        BOOST_BFT_UNPACK_PARAMS()
 
 /** bitfield_tuple base class
- *  This class is responsible for preforming static assertions on some 
+ *  The bitfield_tuple_base class is responsible for preforming static assertions on some 
  *  preconditions and dealing with the parsed arguments. This is the base class 
- *  for bitfield_tuple. This class is responsible for, among other things, 
- *  the allocation policy for the bitfield_tuple. The default uses stack 
- *  type storage_type (for additional information reguarding the 
- *  stack_allocation_policy please see its header file (
- *  boost/integer/details/bft/stack_allocation_policy.hpp).
- *
+ *  for bitfield_tuple.
  *
  *
  *  Base Class preconditions.
@@ -69,23 +56,8 @@ namespace boost { namespace details {
  *  3) The bitfields specified must not exceed the bitwidth of the storage type.
  *      Enforced. Not going any where, but may be redefined or altered based
  *          on if I allow the supplied storage type to be an array.
- *
- *
- *
- *
- *
  */
-template <  typename T0,
-            typename T1,
-            typename T2,
-            typename T3,
-            typename T4,
-            typename T5,
-            typename T6,
-            typename T7,
-            typename T8,
-            typename T9
->
+template <  BOOST_BFT_BASE_TEMPLATE_PARAMS() >
 struct bitfield_tuple_base {
 
     

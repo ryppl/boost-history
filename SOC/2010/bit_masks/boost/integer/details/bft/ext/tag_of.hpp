@@ -15,10 +15,8 @@ namespace boost { namespace fusion {
     namespace traits {
 
     /** bit_T_group specilization. */
-    template <  typename T0, typename T1, typename T2, typename T3,
-                typename T4, typename T5, typename T6, typename T7,
-                typename T8, typename T9 >
-    struct tag_of< boost::bitfield_tuple<T0,T1,T2,T3,T4,T5,T6,T7,T8,T9> >{
+    template <  BOOST_BFT_TEMPLATE_ARGS_NO_DEFAULTS()>
+    struct tag_of< ::boost::bitfield_tuple< BOOST_BFT_SPECILIZATION_PARAM_LIST() > >{
         typedef bitfield_tuple_tag type;
     };
 
