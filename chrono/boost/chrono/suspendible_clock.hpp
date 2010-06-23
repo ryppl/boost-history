@@ -11,7 +11,7 @@
 #define BOOST_CHRONO_SUSPENDIBLE_CLOCK_HPP
 
 #include <boost/chrono/chrono.hpp>
-//~ #include <boost/chrono/scoped_suspend.hpp>
+#include <boost/chrono/scoped_suspend.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/thread/tss.hpp>
 #include <memory>
