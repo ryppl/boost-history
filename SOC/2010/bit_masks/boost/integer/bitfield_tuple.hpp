@@ -346,7 +346,7 @@ public:
          *  storage_type.
          */
         typedef typename integer::bitfield<
-            unsigned_storage_type,
+            storage_type,
             MaskInfo::offset::value,
             MaskInfo::offset::value + MaskInfo::field_width::value - 1,
             return_type
@@ -354,8 +354,8 @@ public:
 
 
         /** Reference constructor. */
-        bitfield_ref(storage_type& ref)
-            :_ref( *reinterpret_cast<unsigned_storage_type*>(&ref) )
+        explicit bitfield_ref(storage_type& ref)
+            :_ref( ref )
         { }
 
 
@@ -398,17 +398,14 @@ public:
     struct const_bitfield_ref {
     private:
         typedef bitfield_ref<MaskInfo>                               _self;
-        typedef typename make_unsigned<
-            storage_type
-        >::type const                                     unsigned_storage_type;
     public:
-        typedef typename MaskInfo::return_type             return_type;       
+        typedef typename MaskInfo::return_type             return_type;   
 
         /** Internals bitfield type for extracting individual fields from 
          *  within the storage_type.
          */
         typedef typename integer::bitfield<
-            unsigned_storage_type,
+            const storage_type,
             MaskInfo::offset::value,
             MaskInfo::offset::value + MaskInfo::field_width::value - 1,
             return_type
@@ -416,15 +413,15 @@ public:
 
 
         /** Reference constructor. */
-        const_bitfield_ref(storage_type const& ref)
-            :_ref( *reinterpret_cast<unsigned_storage_type*>(&ref) )
+        explicit const_bitfield_ref(storage_type const& ref)
+            :_ref( ref ) 
         { }
 
         /** copy constructor.
          *  This is because references are copy constructible.
          */
         const_bitfield_ref( bitfield_ref<MaskInfo> const& x)
-            :_ref( x.ref )
+            :_ref( x.ref)
         { }
         
         /** Implicit conversion operator 
@@ -454,8 +451,6 @@ public:
     bitfield_tuple(_self const& x)
         :_data( x.data() )
     { }
-
-
 
     /** Assignment from an integer
      *  Allows for the user to assign a type which they wish for this type to

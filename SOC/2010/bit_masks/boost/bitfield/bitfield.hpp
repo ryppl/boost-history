@@ -73,6 +73,10 @@ namespace boost { namespace integer {
     #endif
 
     namespace detail {
+        // allows the user to make an explicit call to the copy constructor when
+        // the types that are convertible conflict with one another.
+        struct foce_copy { };
+
         template <bool is_signed, typename value_type
                 , typename storage_type, unsigned int WIDTH, unsigned int SIGN_MASK>
         struct bitfield_complete_signed;
