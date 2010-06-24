@@ -15,7 +15,7 @@
  *  and returning the correct reference type which will allow for only one
  *  reference type class within bitfield_tuple.
  */
-namespace boost { namespace detials {
+namespace boost { namespace details {
 
 
 
@@ -84,7 +84,7 @@ struct find_by_element_index {
  *  correct qualifiers. This will take most or all of the guess work out of
  *  creating reference types when needed.
  */
-template <typename BitfieldTuple, typename Name, typename CVQualifiers>
+template <typename BitfieldTuple, typename Name, typename CQualifier>
 struct make_reference_type_by_name {
 
     typedef typename find_by_element_name<BitfieldTuple,Name>::type bft_element;
@@ -94,22 +94,61 @@ struct make_reference_type_by_name {
     // correctly.
     
     typedef typename mpl::if_<
-        typename is_const<CVQualifiers>::type,
+        typename is_const<CQualifier>::type,
         typename add_const<bft_element>::type,
         bft_element
     >::type                                 bft_element_c_qualifier_applied;
 
-    typedef typename mpl::if_<
-        typename is_volatile<CVQualifiers>::type,
-        typename add_volatile<bft_element_c_qualifier_applied>::type,
-        bft_element_c_qualifier_applied
-    >::type                                 bft_element_v_qualifier_applied;
 
-    // typedef 
-    // volatile 
+    typedef typename BitfieldTuple::template bitfield_reference<
+        bft_element_c_qualifier_applied
+    >                                                               type;
 };
 
 
+template <typename BitfieldTuple, typename Name>
+struct disable_if_reference_type_by_name {
+    // search for the name,
+    typedef typename mpl::find_if<
+        typename BitfieldTuple::members,
+        details::match_name<
+            mpl::_1,
+            Name
+        >
+    >::type                             element_iter;
+
+    // get the end iterator from members.
+    typedef typename mpl::end<
+        typename BitfieldTuple::members
+    >::type                             member_end;
+
+    // create the reference type what will be returned if
+    // disable_if is enabled.
+    typedef typename BitfieldTuple::template bitfield_reference<
+            typename mpl::if_<
+                is_const<BitfieldTuple>,
+                typename add_const<
+                    typename mpl::deref<
+                        element_iter
+                    >::type
+                >::type,
+                typename mpl::deref<
+                    element_iter
+                >::type
+            >::type
+        >                               reference_type;
+
+    // make disable_if statement.
+    typedef typename disable_if<
+        is_same <
+            element_iter,
+            member_end
+        >,
+        reference_type
+    >::type                             type;
+
+
+};
 
 }} // end boost::details
 

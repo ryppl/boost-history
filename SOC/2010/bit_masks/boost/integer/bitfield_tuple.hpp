@@ -339,18 +339,54 @@ public:
     private:
         typedef bitfield_reference<BitfieldElement>     _self;
     public:
+        typedef typename BitfieldElement::return_type   return_type;
+        typedef typename mpl::if_<
+            is_const< BitfieldElement >,
+            const storage_type,
+            storage_type
+        >::type                                         storage_t;
             
-        /*typedef typename integer::bitfield<
-            storage_type,
-            MaskInfo::offset::value,
-            MaskInfo::offset::value + MaskInfo::field_width::value - 1,
+        // typedef typename Bitfield 
+        typedef integer::bitfield<
+            storage_t,
+            BitfieldElement::offset::value,
+            BitfieldElement::offset::value
+              +
+            BitfieldElement::field_width::value - 1,
             return_type
         >                                               field_type;
 
+        /** Reference constructor. */
+        explicit bitfield_reference(storage_t& field)
+            :field_( field )
+        { }
+
+
+        /** copy constructor.
+         *  This is because references are copy constructible.
+         */
+        bitfield_reference( _self const& x)
+           :field_( x.field_ )
+        { }
+        
+        /** Implicit conversion operator 
+         *  Returns the value retrieved from the mask.
+         */
+        inline operator return_type() const {
+            return field_.get();
+        }
+
+        /** Assignment Of return_type into reference.
+         *  This allows values to be assigned to the get function, as part of 
+         *  the tuple like interface.
+         */
+        _self const& operator=(return_type const& rhs) {
+            field_.set( rhs );
+            return *this;
+        }
 
     private:
         field_type field_;
-    */
     };
 
     
