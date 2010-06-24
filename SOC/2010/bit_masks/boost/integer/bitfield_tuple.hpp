@@ -327,7 +327,6 @@ public:
     typedef typename _base::field_vector            members;
     typedef typename _base::storage_type            storage_type;
     typedef typename _base::offset                  bits_used;
-
     
     /** Proxy type returned by get functions.
      *  This serves as the go between things within this class.

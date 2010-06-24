@@ -11,10 +11,15 @@
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/plus.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/mpl/arithmetic.hpp>
 #include <boost/mpl/find_if.hpp>
+
 #include <boost/integer/details/bft/name_lookup.hpp>
 #include <boost/integer/details/bit_flag.hpp>
 #include <boost/integer/details/filler.hpp>
+#include <boost/integer/details/align.hpp>
+
+
 
 namespace boost { namespace details {
 
@@ -266,6 +271,64 @@ struct bft_arg_parse_impl <
     };
 };
 
+
+
+/* Specialization for filler. */
+template <  std::size_t AlignTo,
+            typename StoragePolicy,
+            typename FieldVector,
+            typename Offset
+>
+struct bft_arg_parse_impl <
+    bit_align<
+        AlignTo
+    >,
+    StoragePolicy,
+    FieldVector,
+    Offset >
+{
+    typedef bit_align<AlignTo> param;
+    typedef FieldVector     field_vector;
+    typedef StoragePolicy   storage_policy;
+
+
+    // computing the position of the next bit which is aligned
+    // to the current value of AlignTo.
+    
+    // if the modulus result is 0 then we are aligned to the current position.
+    // If its not then we actually have to adjust the position and move to the 
+    // next bit position which is aligned to to AlignTo's value
+
+    typedef mpl::size_t<AlignTo> align_to;
+    typedef typename mpl::modulus<
+        Offset,
+        align_to
+    >::type                 mod_result;
+
+    typedef typename mpl::if_c< mod_result::value == 0, // then
+        Offset,
+        // else
+        typename mpl::plus<
+            Offset,
+            typename mpl::minus<
+                align_to,
+                mod_result
+            >::type            
+        >::type
+    >::type                             offset;
+
+    typedef bft_arg_parse_impl<param,storage_policy,field_vector,offset> type;
+
+    template <typename NextParam>
+    struct process {
+        typedef bft_arg_parse_impl<
+            NextParam,
+            storage_policy,
+            field_vector,
+            offset
+        > type;
+    };
+};
 
 
 
