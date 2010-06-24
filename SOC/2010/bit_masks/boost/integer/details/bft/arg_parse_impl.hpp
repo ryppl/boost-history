@@ -14,10 +14,12 @@
 #include <boost/mpl/arithmetic.hpp>
 #include <boost/mpl/find_if.hpp>
 
+#include <boost/integer/details/bft/storage.hpp>
+#include <boost/integer/details/bft/member.hpp>
 #include <boost/integer/details/bft/name_lookup.hpp>
-#include <boost/integer/details/bit_flag.hpp>
-#include <boost/integer/details/filler.hpp>
-#include <boost/integer/details/align.hpp>
+#include <boost/integer/details/bft/flag.hpp>
+#include <boost/integer/details/bft/filler.hpp>
+#include <boost/integer/details/bft/align.hpp>
 
 
 

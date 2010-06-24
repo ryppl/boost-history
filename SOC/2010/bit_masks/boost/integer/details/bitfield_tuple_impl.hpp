@@ -7,10 +7,7 @@
 #ifndef BOOST_BITFIELD_TUPLE_IMPL_HPP
 #define BOOST_BITFIELD_TUPLE_IMPL_HPP
 
-
 // Integer Includes.
-#include <boost/integer/details/storage.hpp>
-#include <boost/integer/details/member.hpp>
 #include <boost/integer/bits_mask.hpp>
 #include <boost/integer/bit_width.hpp>
 
