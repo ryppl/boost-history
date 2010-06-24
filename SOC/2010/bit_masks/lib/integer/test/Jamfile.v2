@@ -44,5 +44,7 @@ test-suite integer
         [ run bft_testing/template_expansion_marco_test.cpp ]
         [ run bft_testing/variadic_sequence_testing.cpp ]
         [ run bft_testing/align_test.cpp ]
+        [ run bft_testing/reference_builder_test.cpp ]
+
     ;
 

@@ -17,6 +17,7 @@
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/less.hpp>
 #include <boost/mpl/size.hpp>
+#include <boost/integer/details/bft/reference_builder.hpp>
 #include <boost/integer/details/bft/ext/bitfield_tuple_fusion_includes.hpp>
 #include <boost/integer/details/fusion_ext_includes.hpp>
 
@@ -327,6 +328,31 @@ public:
     typedef typename _base::field_vector            members;
     typedef typename _base::storage_type            storage_type;
     typedef typename _base::offset                  bits_used;
+
+
+    /** Second revision of the proxy reference type this one deal better 
+     *  with const qualifiers and reduce the number of reference types from
+     *  two to one.
+     */
+    template <typename BitfieldElement>
+    struct bitfield_reference {
+    private:
+        typedef bitfield_reference<BitfieldElement>     _self;
+    public:
+            
+        /*typedef typename integer::bitfield<
+            storage_type,
+            MaskInfo::offset::value,
+            MaskInfo::offset::value + MaskInfo::field_width::value - 1,
+            return_type
+        >                                               field_type;
+
+
+    private:
+        field_type field_;
+    */
+    };
+
     
     /** Proxy type returned by get functions.
      *  This serves as the go between things within this class.
@@ -335,9 +361,6 @@ public:
     struct bitfield_ref {
     private:
         typedef bitfield_ref<MaskInfo>                               _self;
-        typedef typename make_unsigned<
-            storage_type
-        >::type                                           unsigned_storage_type;
     public:
         typedef typename MaskInfo::return_type                  return_type;
 
@@ -363,7 +386,7 @@ public:
          *  This is because references are copy constructible.
          */
         bitfield_ref( bitfield_ref<MaskInfo> const& x)
-           :_ref( x._ref )
+           :_ref( x._ref)
         { }
         
         /** Implicit conversion operator 
@@ -503,7 +526,7 @@ public:
                     members
                 >::type
             >
-        >::type       type;
+        >::type         type;
     };
 
     /** Get function interfaces.
