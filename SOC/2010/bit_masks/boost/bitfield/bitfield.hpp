@@ -159,7 +159,7 @@ namespace boost { namespace integer {
     private:
 
         // the storage type must be unsigned
-        BOOST_STATIC_ASSERT( std::numeric_limits<storage_type>::is_signed==false );
+        // BOOST_STATIC_ASSERT( std::numeric_limits<storage_type>::is_signed==false );
         // first and last index must be on the range corresponding to the storage_type
         BOOST_STATIC_ASSERT( F < 8*sizeof(storage_type) );
         BOOST_STATIC_ASSERT( L < 8*sizeof(storage_type) );
