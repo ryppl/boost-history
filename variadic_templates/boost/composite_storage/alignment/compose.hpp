@@ -1,6 +1,14 @@
 //compile-time composition of alignments
 #ifndef BOOST_COMPOSITE_STORAGE_ALIGNMENT_COMPOSE_HPP_INCLUDED
 #define BOOST_COMPOSITE_STORAGE_ALIGNMENT_COMPOSE_HPP_INCLUDED
+//  (C) Copyright Larry Evans 2010.
+//
+//  Permission to copy, use, modify, sell and distribute this software
+//  is granted provided this copyright notice appears in all copies.
+//  This software is provided "as is" without express or implied
+//  warranty, and with no claim as to its suitability for any purpose.
+//
+//====================================================================
 
 #ifdef COMPOSE_ALIGNMENTS_WITH_LCM
   #include <boost/math/common_factor_ct.hpp>
