@@ -122,7 +122,7 @@ struct disable_if_reference_type_by_name {
         typename BitfieldTuple::members
     >::type                             member_end;
 
-    // create the reference type what will be returned if
+    // create the bitfield_reference type that will be returned if
     // disable_if is enabled.
     typedef typename BitfieldTuple::template bitfield_reference<
             typename mpl::if_<
@@ -146,8 +146,6 @@ struct disable_if_reference_type_by_name {
         >,
         reference_type
     >::type                             type;
-
-
 };
 
 }} // end boost::details

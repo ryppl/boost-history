@@ -30,10 +30,20 @@ int main() {
         typedef details::disable_if_reference_type_by_name<
             const test_tuple_1,
             salmon
-        >::type                 ref_t;
-        std::size_t  store_house = 0 ;
-        ref_t ref(store_house);
+        >::type                 ref_t_1;
+        std::size_t  store_house = 0;
+
+        typedef details::disable_if_reference_type_by_name<
+            test_tuple_1,
+            salmon
+        >::type                 ref_t_2;
+        ref_t_2 non_const_ref(store_house);
+        non_const_ref = 3;
+        ref_t_1 const_ref(store_house);
+        BOOST_ASSERT(( const_ref == 3));
     }
+    
+
 
     return 0;
 }
