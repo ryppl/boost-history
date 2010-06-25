@@ -148,6 +148,105 @@ struct disable_if_reference_type_by_name {
     >::type                             type;
 };
 
+
+template <typename BitfieldTuple, std::size_t Index>
+struct enable_if_reference_type_by_index {
+    // check to make sure index is valid
+    typedef typename mpl::less<
+        mpl::size_t<
+            Index
+        >,
+        mpl::size<
+            typename BitfieldTuple::members
+        >
+    >                   is_valid_index;
+
+    // get the bitfield_element from members.
+    typedef typename mpl::at_c<
+        typename BitfieldTuple::members,
+        Index
+    >::type                     bft_element_t;
+
+    // create the reference type
+    typedef typename BitfieldTuple::template bitfield_reference<
+        typename mpl::if_<
+            is_const<BitfieldTuple>,
+            typename add_const<bft_element_t>::type,
+            bft_element_t
+        >::type
+    >                   reference_type;
+
+    // return the reference type if its valid.
+    typedef typename enable_if<
+        is_valid_index,
+        reference_type
+    >::type                 type;
+};
+
+
+template <typename BitfieldTuple, typename Name>
+struct get_reference_type_by_name {
+    // search for the name,
+    typedef typename mpl::find_if<
+        typename BitfieldTuple::members,
+        details::match_name<
+            mpl::_1,
+            Name
+        >
+    >::type                             element_iter;
+
+    // get the end iterator from members.
+    typedef typename mpl::end<
+        typename BitfieldTuple::members
+    >::type                             member_end;
+
+    // create the bitfield_reference type that will be returned if
+    // disable_if is enabled.
+    typedef typename BitfieldTuple::template bitfield_reference<
+            typename mpl::if_<
+                is_const<BitfieldTuple>,
+                typename add_const<
+                    typename mpl::deref<
+                        element_iter
+                    >::type
+                >::type,
+                typename mpl::deref<
+                    element_iter
+                >::type
+            >::type
+        >                               type;
+
+};
+
+template <typename BitfieldTuple, std::size_t Index>
+struct get_reference_type_by_index {
+    // check to make sure index is valid
+    typedef typename mpl::less<
+        mpl::size_t<
+            Index
+        >,
+        mpl::size<
+            typename BitfieldTuple::members
+        >
+    >                   is_valid_index;
+
+    // get the bitfield_element from members.
+    typedef typename mpl::at_c<
+        typename BitfieldTuple::members,
+        Index
+    >::type                     bft_element_t;
+
+    // create the reference type
+    typedef typename BitfieldTuple::template bitfield_reference<
+        typename mpl::if_<
+            is_const<BitfieldTuple>,
+            typename add_const<bft_element_t>::type,
+            bft_element_t
+        >::type
+    >                           type;
+};
+
+
 }} // end boost::details
 
 #endif

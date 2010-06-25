@@ -389,115 +389,6 @@ public:
         field_type field_;
     };
 
-    
-    /** Proxy type returned by get functions.
-     *  This serves as the go between things within this class.
-     */
-    template <typename MaskInfo>
-    struct bitfield_ref {
-    private:
-        typedef bitfield_ref<MaskInfo>                               _self;
-    public:
-        typedef typename MaskInfo::return_type                  return_type;
-
-        /** Internals.
-         *  bitfield type for extracting individual fields from within the
-         *  storage_type.
-         */
-        typedef typename integer::bitfield<
-            storage_type,
-            MaskInfo::offset::value,
-            MaskInfo::offset::value + MaskInfo::field_width::value - 1,
-            return_type
-        >                                                       bitfield_type;
-
-
-        /** Reference constructor. */
-        explicit bitfield_ref(storage_type& ref)
-            :_ref( ref )
-        { }
-
-
-        /** copy constructor.
-         *  This is because references are copy constructible.
-         */
-        bitfield_ref( bitfield_ref<MaskInfo> const& x)
-           :_ref( x._ref)
-        { }
-        
-        /** Implicit conversion operator 
-         *  Returns the value retrieved from the mask.
-         */
-        operator return_type() const {
-            return static_cast< return_type >( _ref.get() );
-        }
-
-        /** Assignment Of return_type into reference.
-         *  This allows values to be assigned to the get function, as part of 
-         *  the tuple like interface.
-         */
-        _self const& operator=(return_type const& rhs) {
-            _ref.set( rhs );
-            return *this;
-        }
-        
-    private:
-        // storage reference.
-        bitfield_type _ref;
-
-        // not default constructible because this is a reference type
-        bitfield_ref();
-    };
-
-    /** Const reference type.
-     *  This class is used when the storage type is const so that mutability 
-     *  can be removed from the reference type. 
-     */
-    template <typename MaskInfo>
-    struct const_bitfield_ref {
-    private:
-        typedef bitfield_ref<MaskInfo>                               _self;
-    public:
-        typedef typename MaskInfo::return_type             return_type;   
-
-        /** Internals bitfield type for extracting individual fields from 
-         *  within the storage_type.
-         */
-        typedef typename integer::bitfield<
-            const storage_type,
-            MaskInfo::offset::value,
-            MaskInfo::offset::value + MaskInfo::field_width::value - 1,
-            return_type
-        >                                                   bitfield_type;
-
-
-        /** Reference constructor. */
-        explicit const_bitfield_ref(storage_type const& ref)
-            :_ref( ref ) 
-        { }
-
-        /** copy constructor.
-         *  This is because references are copy constructible.
-         */
-        const_bitfield_ref( bitfield_ref<MaskInfo> const& x)
-            :_ref( x.ref)
-        { }
-        
-        /** Implicit conversion operator 
-         *  Returns the value of the bit mask.
-         */
-        operator return_type() const {
-            return  _ref.get();
-        }
-       
-    private:
-        // storage reference.
-        bitfield_type _ref;
-
-        // not default constructible because this is a reference type
-        const_bitfield_ref();
-    };
-
     /** Value constructor.
      *  This sets the initial value of the internal data to x.
      *  Also functions as the default constructor.
@@ -542,29 +433,6 @@ public:
     }
     //@}
 
-
-    /** Meta-member-function
-     *  searches within member for a bft_element with name_type the same as Name
-     *  and returns mpl::true_ if it found it and mpl::false_ if not.
-     */
-    template <typename Name>
-    struct name_exists {
-        typedef typename mpl::not_<
-            is_same <
-                typename ::boost::mpl::find_if<
-                    members,
-                    details::match_name<
-                        mpl::_1,
-                        Name
-                    >
-                >::type,
-                typename mpl::end<
-                    members
-                >::type
-            >
-        >::type         type;
-    };
-
     /** Get function interfaces.
      *  These provide access into the tuple via "reference".
      *  If an invalid index or name is provided then then the user will cause
@@ -572,139 +440,52 @@ public:
      */
     //@{
     template <typename Name>
-    inline typename disable_if<
-        is_same <
-            typename mpl::find_if<
-                members,
-                details::match_name<
-                    mpl::_1,
-                    Name
-                >
-            >::type,
-            typename mpl::end<
-                members
-            >::type
-        >,
-        bitfield_ref<
-            typename mpl::deref<
-                typename mpl::find_if<
-                    members,
-                    details::match_name<
-                        mpl::_1,
-                        Name
-                    >
-                >::type
-            >::type
-        >
-    >::type
+    inline typename details::disable_if_reference_type_by_name<_self,Name>::type
     get() {
-         typedef bitfield_ref< 
-            typename mpl::deref<
-                typename mpl::find_if<
-                    members,
-                     details::match_name<
-                        mpl::_1,
-                        Name
-                    >
-                >::type
-            >::type 
-        >                                   reference_info;
+        typedef typename details::disable_if_reference_type_by_name<
+            _self,
+            Name
+        >::type reference_info;
         return reference_info( _data );
     }
 
 
     template <typename Name>
-    inline typename disable_if<
-        is_same <
-            typename mpl::find_if<
-                members,
-                details::match_name<
-                    mpl::_1,
-                    Name
-                >
-            >::type,
-            typename mpl::end<
-                members
-            >::type
-        >,
-        const_bitfield_ref<
-            typename mpl::deref<
-                typename mpl::find_if<
-                    members,
-                    details::match_name<
-                        mpl::_1,
-                        Name
-                    >
-                >::type
-            >::type
-        > 
-    >::type const
+    inline typename details::disable_if_reference_type_by_name<
+        const _self,
+        Name
+    >::type
     get() const {
-         typedef const_bitfield_ref< 
-            typename mpl::deref<
-                typename mpl::find_if<
-                    members,
-                     details::match_name<
-                        mpl::_1,
-                        Name
-                    >
-                >::type
-            >::type 
-        > const                             reference_info;
+        typedef typename details::disable_if_reference_type_by_name<
+            const _self,
+            Name
+        >::type         reference_info;
         return reference_info( _data );
     }
 
     template <std::size_t Index>
-    inline typename enable_if< 
-        typename mpl::less<
-            mpl::size_t<
-                Index
-            >,
-            mpl::size<
-                members
-            >
-        >,
-        bitfield_ref<
-            typename mpl::at_c<
-                members,
-                Index
-            >::type
-        >
+    inline typename details::enable_if_reference_type_by_index<
+        _self,
+        Index
     >::type
     get() {
-        typedef bitfield_ref<
-            typename mpl::at_c<
-                members,
-                Index
-            >::type
-        >                         reference_info;
+        typedef typename details::enable_if_reference_type_by_index<
+            _self,
+            Index
+        >::type             reference_info;
         return reference_info(_data);
     }
 
     template <std::size_t Index>
-    inline typename enable_if< 
-            typename mpl::less<
-                mpl::size_t<
-                    Index
-                >,
-                mpl::size<
-                    members
-                >
-            >,
-            const_bitfield_ref<
-                typename mpl::at_c<
-                    members,
-                    Index
-                >::type
-            >
+    inline typename details::enable_if_reference_type_by_index<
+        const _self,
+        Index
     >::type
     get() const {
-        typedef const_bitfield_ref<
-            typename mpl::at_c<
-                members,
-                Index
-            >::type
-        > const                         reference_info;
+        typedef typename details::enable_if_reference_type_by_index<
+            const _self,
+            Index
+        >::type                  reference_info;
         return reference_info( _data );
     }
     //@}

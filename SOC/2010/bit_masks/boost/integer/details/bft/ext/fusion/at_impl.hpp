@@ -21,13 +21,11 @@ struct at_impl< bitfield_tuple_tag > {
 
     template <typename BitfieldTuple, typename N>
     struct apply {
-        typedef typename BitfieldTuple::
-            template bitfield_ref<
-                typename mpl::at<
-                    typename BitfieldTuple::members,
-                    N
-                >::type
-            >                             type;
+        typedef typename details::get_reference_type_by_index<
+            BitfieldTuple,
+            N::value
+        >::type                            type;
+
         // non-const at function.
         static type call(BitfieldTuple& bft) {
             return type( bft.template get<N::value>() );
