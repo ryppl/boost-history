@@ -1,6 +1,13 @@
 //operators for calculating the layout of all_of_aligned composite.
 #ifndef BOOST_COMPOSITE_STORAGE_LAYOUT_OPERATORS_ALL_OF_ALIGNED_HPP_INCLUDED
 #define BOOST_COMPOSITE_STORAGE_LAYOUT_OPERATORS_ALL_OF_ALIGNED_HPP_INCLUDED
+//  (C) Copyright Larry Evans 2010.
+//
+//  Permission to copy, use, modify, sell and distribute this software
+//  is granted provided this copyright notice appears in all copies.
+//  This software is provided "as is" without express or implied
+//  warranty, and with no claim as to its suitability for any purpose.
+//
 #include <boost/composite_storage/layout/operators_fwd.hpp>
 #include <boost/composite_storage/tags.hpp>
 #include <boost/composite_storage/layout/layout_of.hpp>

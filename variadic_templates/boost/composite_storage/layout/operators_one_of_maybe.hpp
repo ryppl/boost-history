@@ -1,6 +1,13 @@
 //operators for calculating the layout of one_of_maybe composite.
 #ifndef BOOST_COMPOSITE_STORAGE_DETAIL_LAYOUT_OPERATORS_ONE_OF_MAYBE_HPP_INCLUDED
 #define BOOST_COMPOSITE_STORAGE_DETAIL_LAYOUT_OPERATORS_ONE_OF_MAYBE_HPP_INCLUDED
+//  (C) Copyright Larry Evans 2010.
+//
+//  Permission to copy, use, modify, sell and distribute this software
+//  is granted provided this copyright notice appears in all copies.
+//  This software is provided "as is" without express or implied
+//  warranty, and with no claim as to its suitability for any purpose.
+//
 #include <boost/composite_storage/layout/operators_fwd.hpp>
 #include <boost/composite_storage/tags.hpp>
 #include <boost/composite_storage/layout/layout_of.hpp>

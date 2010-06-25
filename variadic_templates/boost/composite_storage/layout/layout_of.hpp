@@ -1,6 +1,13 @@
 //layout data for individual components of a composite.
 #ifndef BOOST_COMPOSITE_STORAGE_LAYOUT_OF_HPP_INCLUDED
 #define BOOST_COMPOSITE_STORAGE_LAYOUT_OF_HPP_INCLUDED
+//  (C) Copyright Larry Evans 2010.
+//
+//  Permission to copy, use, modify, sell and distribute this software
+//  is granted provided this copyright notice appears in all copies.
+//  This software is provided "as is" without express or implied
+//  warranty, and with no claim as to its suitability for any purpose.
+//
 #include <boost/composite_storage/buffers/char_buf.hpp>
 
 namespace boost
