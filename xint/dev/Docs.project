@@ -38,6 +38,7 @@
     <File Name="../libs/xint/doc/dox/threadsafe.dox"/>
     <File Name="../libs/xint/doc/dox/fixedlength.dox"/>
     <File Name="../../../../xint/libs/xint/doc/dox/r_whynotx.dox"/>
+    <File Name="../libs/xint/doc/dox/no_exceptions.dox"/>
   </VirtualDirectory>
   <VirtualDirectory Name="Project">
     <File Name="../libs/xint/doc/dox/Doxyfile"/>
@@ -85,4 +86,5 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
   </Settings>
+  <Dependencies Name="All"/>
 </CodeLite_Project>

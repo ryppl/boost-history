@@ -61,47 +61,48 @@
 <a name="l00043"></a>00043 BOOST_XINT_RAWINT <a class="code" href="namespaceboost_1_1xint.html#a9c1648ef679123bb2bf77681ffdfa815" title="Get the result of ne % m, keeping the intermediate results (relatively) small.">powmod</a>(<span class="keyword">const</span> BOOST_XINT_RAWINT n, <span class="keyword">const</span> BOOST_XINT_RAWINT e,
 <a name="l00044"></a>00044     <span class="keyword">const</span> BOOST_XINT_RAWINT m, <span class="keywordtype">bool</span> no_montgomery = <span class="keyword">false</span>)
 <a name="l00045"></a>00045 {
-<a name="l00046"></a>00046     <span class="keywordflow">if</span> (m.is_zero() || m.negative) <span class="keywordflow">throw</span> exceptions::invalid_modulus();
-<a name="l00047"></a>00047     <span class="keywordflow">if</span> (e.is_zero()) <span class="keywordflow">return</span> 1;
-<a name="l00048"></a>00048 
-<a name="l00049"></a>00049     <span class="keywordtype">bool</span> neg = (n.negative &amp;&amp; e.is_odd());
-<a name="l00050"></a>00050 
-<a name="l00051"></a>00051     <span class="comment">// Montgomery&#39;s method is often noticeably faster, but only works if the</span>
-<a name="l00052"></a>00052     <span class="comment">// m is odd.</span>
-<a name="l00053"></a>00053     <span class="keywordflow">if</span> (m.is_odd() &amp;&amp; !no_montgomery) {
-<a name="l00054"></a>00054         <span class="keywordflow">return</span> montgomeryPowerMod(n.abs() % m, e.abs(), m);
-<a name="l00055"></a>00055     } <span class="keywordflow">else</span> {
-<a name="l00056"></a>00056         BOOST_XINT_RAWINT answer(1), p(n.abs());
-<a name="l00057"></a>00057 
-<a name="l00058"></a>00058         std::size_t lastBitCount = 0;
-<a name="l00059"></a>00059         detail::digit_t ee(e[e.length - 1]);
-<a name="l00060"></a>00060         <span class="keywordflow">while</span> (ee != 0) { ee &gt;&gt;= 1; ++lastBitCount; }
-<a name="l00061"></a>00061 
-<a name="l00062"></a>00062         <span class="keywordflow">for</span> (std::size_t eIndex = 0; eIndex &lt; e.length; ++eIndex) {
-<a name="l00063"></a>00063             detail::digit_t ee(e[eIndex]);
-<a name="l00064"></a>00064 
-<a name="l00065"></a>00065             <span class="keywordtype">int</span> bitCount(<span class="keywordtype">int</span>(eIndex == e.length - 1 ? lastBitCount :
-<a name="l00066"></a>00066                 detail::bits_per_digit));
-<a name="l00067"></a>00067             <span class="keywordflow">while</span> (bitCount-- &gt; 0) {
-<a name="l00068"></a>00068                 <span class="keywordflow">if</span> (ee &amp; 0x01) answer = <a class="code" href="namespaceboost_1_1xint.html#aca6917c25cdd7cac7c3eda4684567625" title="Get the modular product of two integers.">mulmod</a>(answer, p, m);
-<a name="l00069"></a>00069                 p = <a class="code" href="namespaceboost_1_1xint.html#aa41f48c60b257cb321fe89fe0b65b6c3" title="Get the modular product of squaring an integer.">sqrmod</a>(p, m);
-<a name="l00070"></a>00070                 ee &gt;&gt;= 1;
-<a name="l00071"></a>00071             }
-<a name="l00072"></a>00072         }
-<a name="l00073"></a>00073         answer.negative = neg;
-<a name="l00074"></a>00074         answer.trim();
-<a name="l00075"></a>00075 
-<a name="l00076"></a>00076         <span class="keywordflow">return</span> answer;
-<a name="l00077"></a>00077     }
-<a name="l00078"></a>00078 }
-<a name="l00079"></a>00079 
-<a name="l00080"></a>00080 } <span class="comment">// namespace detail</span>
-<a name="l00081"></a>00081 } <span class="comment">// namespace xint</span>
-<a name="l00082"></a>00082 } <span class="comment">// namespace boost</span>
-<a name="l00084"></a>00084 <span class="comment"></span>
-<a name="l00085"></a>00085 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_MODULAR_HPP</span>
+<a name="l00046"></a>00046     <span class="keywordflow">if</span> (m.is_zero() || m.negative) exception_handler&lt;&gt;::call(__FILE__, __LINE__,
+<a name="l00047"></a>00047         exceptions::invalid_modulus());
+<a name="l00048"></a>00048     <span class="keywordflow">if</span> (e.is_zero()) <span class="keywordflow">return</span> 1;
+<a name="l00049"></a>00049 
+<a name="l00050"></a>00050     <span class="keywordtype">bool</span> neg = (n.negative &amp;&amp; e.is_odd());
+<a name="l00051"></a>00051 
+<a name="l00052"></a>00052     <span class="comment">// Montgomery&#39;s method is often noticeably faster, but only works if the</span>
+<a name="l00053"></a>00053     <span class="comment">// m is odd.</span>
+<a name="l00054"></a>00054     <span class="keywordflow">if</span> (m.is_odd() &amp;&amp; !no_montgomery) {
+<a name="l00055"></a>00055         <span class="keywordflow">return</span> montgomeryPowerMod(n.abs() % m, e.abs(), m);
+<a name="l00056"></a>00056     } <span class="keywordflow">else</span> {
+<a name="l00057"></a>00057         BOOST_XINT_RAWINT answer(1), p(n.abs());
+<a name="l00058"></a>00058 
+<a name="l00059"></a>00059         std::size_t lastBitCount = 0;
+<a name="l00060"></a>00060         detail::digit_t ee(e[e.length - 1]);
+<a name="l00061"></a>00061         <span class="keywordflow">while</span> (ee != 0) { ee &gt;&gt;= 1; ++lastBitCount; }
+<a name="l00062"></a>00062 
+<a name="l00063"></a>00063         <span class="keywordflow">for</span> (std::size_t eIndex = 0; eIndex &lt; e.length; ++eIndex) {
+<a name="l00064"></a>00064             detail::digit_t ee(e[eIndex]);
+<a name="l00065"></a>00065 
+<a name="l00066"></a>00066             <span class="keywordtype">int</span> bitCount(<span class="keywordtype">int</span>(eIndex == e.length - 1 ? lastBitCount :
+<a name="l00067"></a>00067                 detail::bits_per_digit));
+<a name="l00068"></a>00068             <span class="keywordflow">while</span> (bitCount-- &gt; 0) {
+<a name="l00069"></a>00069                 <span class="keywordflow">if</span> (ee &amp; 0x01) answer = <a class="code" href="namespaceboost_1_1xint.html#aca6917c25cdd7cac7c3eda4684567625" title="Get the modular product of two integers.">mulmod</a>(answer, p, m);
+<a name="l00070"></a>00070                 p = <a class="code" href="namespaceboost_1_1xint.html#aa41f48c60b257cb321fe89fe0b65b6c3" title="Get the modular product of squaring an integer.">sqrmod</a>(p, m);
+<a name="l00071"></a>00071                 ee &gt;&gt;= 1;
+<a name="l00072"></a>00072             }
+<a name="l00073"></a>00073         }
+<a name="l00074"></a>00074         answer.negative = neg;
+<a name="l00075"></a>00075         answer.trim();
+<a name="l00076"></a>00076 
+<a name="l00077"></a>00077         <span class="keywordflow">return</span> answer;
+<a name="l00078"></a>00078     }
+<a name="l00079"></a>00079 }
+<a name="l00080"></a>00080 
+<a name="l00081"></a>00081 } <span class="comment">// namespace detail</span>
+<a name="l00082"></a>00082 } <span class="comment">// namespace xint</span>
+<a name="l00083"></a>00083 } <span class="comment">// namespace boost</span>
+<a name="l00085"></a>00085 <span class="comment"></span>
+<a name="l00086"></a>00086 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_MODULAR_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 18 20:03:13 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 25 12:04:28 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

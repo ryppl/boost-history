@@ -82,8 +82,9 @@ int isProbablePrimeBaseB(const BOOST_XINT_RAWINT n, const BOOST_XINT_RAWINT b,
 BOOST_XINT_RAWINT_TPL
 int is_prime(const BOOST_XINT_RAWINT n, callback_t callback) {
     BOOST_XINT_RAWINT tmp(2);
-    if (n < tmp) throw exceptions::invalid_argument("xint::is_prime cannot "
-        "test numbers below 2");
+    if (n < tmp) exception_handler<>::call(__FILE__, __LINE__,
+        exceptions::invalid_argument("xint::is_prime cannot test numbers below "
+        "2"));
 
     // First we trial-divide it by the primes below 2000
     static const std::vector<int> low_primes(sieveOfEratosthenes(2000));
@@ -117,8 +118,9 @@ template <typename GenType>
 BOOST_XINT_RAWINT BOOST_XINT_RAWINT::random_prime(GenType& gen, std::size_t
     size_in_bits, callback_t callback)
 {
-    if (size_in_bits < 2) throw exceptions::invalid_argument("cannot create "
-        "prime numbers smaller than two bits");
+    if (size_in_bits < 2) exception_handler<>::call(__FILE__, __LINE__,
+        exceptions::invalid_argument("cannot create prime numbers smaller than "
+        "two bits"));
 
     // Call the callback for the first time
     if (callback && !callback()) return 0;

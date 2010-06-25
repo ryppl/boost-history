@@ -23,6 +23,18 @@
 // Leave this commented out to use it as a header-only library.
 //#define BOOST_XINT_COMPILED_LIB
 
+#ifdef BOOST_XINT_NO_EXCEPTIONS
+    #define BOOST_XINT_TRY if (1)
+    #define BOOST_XINT_CATCH_BADALLOC else if (0)
+    #define BOOST_XINT_CATCH else
+    #define BOOST_XINT_CATCH_E else
+#else
+    #define BOOST_XINT_TRY try
+    #define BOOST_XINT_CATCH_BADALLOC catch (std::bad_alloc&)
+    #define BOOST_XINT_CATCH catch (std::exception&)
+    #define BOOST_XINT_CATCH_E catch (std::exception& e)
+#endif
+
 #include "../exceptions.hpp"
 #include "../random.hpp"
 

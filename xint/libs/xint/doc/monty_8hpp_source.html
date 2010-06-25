@@ -200,8 +200,8 @@
 <a name="l00191"></a>00191     <span class="keyword">const</span> TUTable&lt;&gt; &amp;tuTable(TUTable&lt;&gt;::get());
 <a name="l00192"></a>00192 
 <a name="l00193"></a>00193     <span class="keywordflow">if</span> (e.is_zero()) <span class="keywordflow">return</span> 1;
-<a name="l00194"></a>00194     <span class="keywordflow">if</span> (n.is_even()) <span class="keywordflow">throw</span> exceptions::invalid_modulus(<span class="stringliteral">&quot;montgomeryPowerMod &quot;</span>
-<a name="l00195"></a>00195         <span class="stringliteral">&quot;requires an odd modulus&quot;</span>);
+<a name="l00194"></a>00194     <span class="keywordflow">if</span> (n.is_even()) exception_handler&lt;&gt;::call(__FILE__, __LINE__, exceptions::
+<a name="l00195"></a>00195         invalid_modulus(<span class="stringliteral">&quot;montgomeryPowerMod requires an odd modulus&quot;</span>));
 <a name="l00196"></a>00196 
 <a name="l00197"></a>00197     <span class="comment">// Precalculate some values</span>
 <a name="l00198"></a>00198     <span class="keyword">const</span> std::size_t k(mostEfficientK(e));
@@ -264,7 +264,7 @@
 <a name="l00256"></a>00256 <span class="comment"></span>
 <a name="l00257"></a>00257 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_MONTY_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 18 20:03:13 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 25 12:04:28 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

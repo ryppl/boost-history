@@ -101,9 +101,9 @@ inline std::basic_istream<charT,traits>& operator>>(std::basic_istream<charT,
         } else break;
     }
 
-    try {
+    BOOST_XINT_TRY {
         n.from_string(s, base);
-    } catch (std::exception&) {
+    } BOOST_XINT_CATCH {
         // Catch invalid strings
         in.setstate(std::ios::failbit);
     }

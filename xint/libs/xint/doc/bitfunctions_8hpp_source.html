@@ -94,27 +94,28 @@
 <a name="l00076"></a>00076 BOOST_XINT_RAWINT_TPL
 <a name="l00077"></a>00077 BOOST_XINT_RAWINT BOOST_XINT_RAWINT::operator~()<span class="keyword"> const </span>{
 <a name="l00078"></a>00078     <span class="keywordflow">if</span> (Bits == 0) {
-<a name="l00079"></a>00079         <span class="keywordflow">throw</span> exceptions::too_big(<span class="stringliteral">&quot;operator~ on unlimited integers results in &quot;</span>
-<a name="l00080"></a>00080             <span class="stringliteral">&quot;an infinitely long number.&quot;</span>);
-<a name="l00081"></a>00081     } <span class="keywordflow">else</span> {
-<a name="l00082"></a>00082         BOOST_XINT_RAWINT r;
-<a name="l00083"></a>00083         <span class="keyword">const</span> digit_t *s = digits(), *se = s + length;
-<a name="l00084"></a>00084         digit_t *t = r.digits(r.max_length(), realloc::extend), *te = t +
-<a name="l00085"></a>00085             r.max_length();
-<a name="l00086"></a>00086         <span class="keywordflow">while</span> (s != se) *t++ = ~(*s++);
-<a name="l00087"></a>00087         <span class="keywordflow">while</span> (t != te) *t++ = ~0;
-<a name="l00088"></a>00088         r.trim();
-<a name="l00089"></a>00089         <span class="keywordflow">return</span> r;
-<a name="l00090"></a>00090     }
-<a name="l00091"></a>00091 }
-<a name="l00092"></a>00092 
-<a name="l00093"></a>00093 } <span class="comment">// namespace detail</span>
-<a name="l00094"></a>00094 } <span class="comment">// namespace xint</span>
-<a name="l00095"></a>00095 } <span class="comment">// namespace boost</span>
-<a name="l00097"></a>00097 <span class="comment"></span>
-<a name="l00098"></a>00098 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_BITFUNCTIONS_HPP</span>
+<a name="l00079"></a>00079         exception_handler&lt;&gt;::call(__FILE__, __LINE__,
+<a name="l00080"></a>00080             exceptions::too_big(<span class="stringliteral">&quot;operator~ on unlimited integers results in &quot;</span>
+<a name="l00081"></a>00081             <span class="stringliteral">&quot;an infinitely long number.&quot;</span>));
+<a name="l00082"></a>00082     } <span class="keywordflow">else</span> {
+<a name="l00083"></a>00083         BOOST_XINT_RAWINT r;
+<a name="l00084"></a>00084         <span class="keyword">const</span> digit_t *s = digits(), *se = s + length;
+<a name="l00085"></a>00085         digit_t *t = r.digits(r.max_length(), realloc::extend), *te = t +
+<a name="l00086"></a>00086             r.max_length();
+<a name="l00087"></a>00087         <span class="keywordflow">while</span> (s != se) *t++ = ~(*s++);
+<a name="l00088"></a>00088         <span class="keywordflow">while</span> (t != te) *t++ = ~0;
+<a name="l00089"></a>00089         r.trim();
+<a name="l00090"></a>00090         <span class="keywordflow">return</span> r;
+<a name="l00091"></a>00091     }
+<a name="l00092"></a>00092 }
+<a name="l00093"></a>00093 
+<a name="l00094"></a>00094 } <span class="comment">// namespace detail</span>
+<a name="l00095"></a>00095 } <span class="comment">// namespace xint</span>
+<a name="l00096"></a>00096 } <span class="comment">// namespace boost</span>
+<a name="l00098"></a>00098 <span class="comment"></span>
+<a name="l00099"></a>00099 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_BITFUNCTIONS_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 18 20:03:13 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 25 12:04:28 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

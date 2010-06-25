@@ -40,81 +40,86 @@
 <a name="l00019"></a>00019 <span class="preprocessor"></span><span class="preprocessor">#define BOOST_INCLUDED_XINT_EXCEPTIONS_HPP</span>
 <a name="l00020"></a>00020 <span class="preprocessor"></span>
 <a name="l00021"></a>00021 <span class="preprocessor">#include &lt;stdexcept&gt;</span>
-<a name="l00022"></a>00022 
-<a name="l00023"></a>00023 <span class="keyword">namespace </span>boost {
-<a name="l00024"></a>00024 <span class="keyword">namespace </span>xint {
-<a name="l00025"></a>00025 
-<a name="l00027"></a><a class="code" href="namespaceboost_1_1xint_1_1exceptions.html">00027</a> <span class="keyword">namespace </span>exceptions {
-<a name="l00028"></a>00028 
-<a name="l00032"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html">00032</a> <span class="keyword">class </span><a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html">invalid_argument</a>: <span class="keyword">public</span> std::<a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html">invalid_argument</a> {
-<a name="l00033"></a>00033     <span class="keyword">public</span>:
-<a name="l00034"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html#a8ba3e56172de34c772b287ce8e325f32">00034</a>     <a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html#a8ba3e56172de34c772b287ce8e325f32">invalid_argument</a>(<span class="keyword">const</span> std::string&amp; what=<span class="stringliteral">&quot;invalid argument&quot;</span>):
-<a name="l00035"></a>00035         std::<a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html">invalid_argument</a>(what) { }
-<a name="l00036"></a>00036 };
-<a name="l00037"></a>00037 
-<a name="l00041"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__base.html">00041</a> <span class="keyword">class </span><a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__base.html">invalid_base</a>: <span class="keyword">public</span> std::<a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html">invalid_argument</a> {
-<a name="l00042"></a>00042     <span class="keyword">public</span>:
-<a name="l00043"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__base.html#a4647071020547bd103ee885bec7edffa">00043</a>     <a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__base.html#a4647071020547bd103ee885bec7edffa">invalid_base</a>(<span class="keyword">const</span> std::string&amp; what=<span class="stringliteral">&quot;invalid base&quot;</span>): <a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html">invalid_argument</a>(what)
-<a name="l00044"></a>00044         { }
-<a name="l00045"></a>00045 };
-<a name="l00046"></a>00046 
-<a name="l00050"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__digit.html">00050</a> <span class="keyword">class </span><a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__digit.html">invalid_digit</a>: <span class="keyword">public</span> std::range_error {
-<a name="l00051"></a>00051     <span class="keyword">public</span>:
-<a name="l00052"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__digit.html#abcdf43b30c3910dde89e406ca802eacc">00052</a>     <a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__digit.html#abcdf43b30c3910dde89e406ca802eacc">invalid_digit</a>(<span class="keyword">const</span> std::string&amp; what=<span class="stringliteral">&quot;invalid digit&quot;</span>): range_error(what)
-<a name="l00053"></a>00053         { }
-<a name="l00054"></a>00054 };
-<a name="l00055"></a>00055 
-<a name="l00059"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__modulus.html">00059</a> <span class="keyword">class </span><a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__modulus.html">invalid_modulus</a>: <span class="keyword">public</span> std::<a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html">invalid_argument</a> {
-<a name="l00060"></a>00060     <span class="keyword">public</span>:
-<a name="l00061"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__modulus.html#a16c06e28a7f483b0ca2fb5906d53278d">00061</a>     <a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__modulus.html#a16c06e28a7f483b0ca2fb5906d53278d">invalid_modulus</a>(<span class="keyword">const</span> std::string&amp; what=<span class="stringliteral">&quot;invalid modulus&quot;</span>):
-<a name="l00062"></a>00062         <a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html">invalid_argument</a>(what) { }
-<a name="l00063"></a>00063 };
-<a name="l00064"></a>00064 
-<a name="l00068"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1divide__by__zero.html">00068</a> <span class="keyword">class </span><a class="code" href="classboost_1_1xint_1_1exceptions_1_1divide__by__zero.html">divide_by_zero</a>: <span class="keyword">public</span> std::<a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html">invalid_argument</a> {
-<a name="l00069"></a>00069     <span class="keyword">public</span>:
-<a name="l00070"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1divide__by__zero.html#aaff4d720e4a134315acde919ff06e640">00070</a>     <a class="code" href="classboost_1_1xint_1_1exceptions_1_1divide__by__zero.html#aaff4d720e4a134315acde919ff06e640">divide_by_zero</a>(<span class="keyword">const</span> std::string&amp; what=<span class="stringliteral">&quot;divide by zero error&quot;</span>):
-<a name="l00071"></a>00071         <a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html">invalid_argument</a>(what) { }
-<a name="l00072"></a>00072 };
-<a name="l00073"></a>00073 
-<a name="l00077"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1cannot__represent.html">00077</a> <span class="keyword">class </span><a class="code" href="classboost_1_1xint_1_1exceptions_1_1cannot__represent.html">cannot_represent</a>: <span class="keyword">public</span> std::<a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html">invalid_argument</a> {
-<a name="l00078"></a>00078     <span class="keyword">public</span>:
-<a name="l00079"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1cannot__represent.html#a0968d8ac61c24529816bcaf69d155b75">00079</a>     <a class="code" href="classboost_1_1xint_1_1exceptions_1_1cannot__represent.html#a0968d8ac61c24529816bcaf69d155b75">cannot_represent</a>(<span class="keyword">const</span> std::string&amp; what=
-<a name="l00080"></a>00080         <span class="stringliteral">&quot;cannot represent the requested value&quot;</span>): <a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html">invalid_argument</a>(what) { }
-<a name="l00081"></a>00081 };
-<a name="l00082"></a>00082 
-<a name="l00086"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1too__big.html">00086</a> <span class="keyword">class </span><a class="code" href="classboost_1_1xint_1_1exceptions_1_1too__big.html">too_big</a>: <span class="keyword">public</span> std::range_error {
-<a name="l00087"></a>00087     <span class="keyword">public</span>:
-<a name="l00088"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1too__big.html#a111e2c1a759054d80afcd5fa4af2995c">00088</a>     <a class="code" href="classboost_1_1xint_1_1exceptions_1_1too__big.html#a111e2c1a759054d80afcd5fa4af2995c">too_big</a>(<span class="keyword">const</span> std::string&amp; what=
-<a name="l00089"></a>00089         <span class="stringliteral">&quot;value out of range for requested conversion&quot;</span>): range_error(what) { }
-<a name="l00090"></a>00090 };
-<a name="l00091"></a>00091 
-<a name="l00099"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1not__a__number.html">00099</a> <span class="keyword">class </span><a class="code" href="classboost_1_1xint_1_1exceptions_1_1not__a__number.html">not_a_number</a>: <span class="keyword">public</span> std::runtime_error {
-<a name="l00100"></a>00100     <span class="keyword">public</span>:
-<a name="l00101"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1not__a__number.html#aa47b024550fd673bd497e0875443c67f">00101</a>     <a class="code" href="classboost_1_1xint_1_1exceptions_1_1not__a__number.html#aa47b024550fd673bd497e0875443c67f">not_a_number</a>(<span class="keyword">const</span> std::string&amp; what=<span class="stringliteral">&quot;attempted to use a Not-a-Number&quot;</span>):
-<a name="l00102"></a>00102         runtime_error(what) { }
-<a name="l00103"></a>00103 };
-<a name="l00104"></a>00104 
-<a name="l00114"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1no__strong__random.html">00114</a> <span class="keyword">class </span><a class="code" href="classboost_1_1xint_1_1exceptions_1_1no__strong__random.html">no_strong_random</a>: <span class="keyword">public</span> std::runtime_error {
-<a name="l00115"></a>00115     <span class="keyword">public</span>:
-<a name="l00116"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1no__strong__random.html#ab225c7d5d10a03eac6d5e9c784135675">00116</a>     <a class="code" href="classboost_1_1xint_1_1exceptions_1_1no__strong__random.html#ab225c7d5d10a03eac6d5e9c784135675">no_strong_random</a>(<span class="keyword">const</span> std::string&amp; what=
-<a name="l00117"></a>00117         <span class="stringliteral">&quot;system does not have a strong random generator&quot;</span>):
-<a name="l00118"></a>00118         runtime_error(what) { }
-<a name="l00119"></a>00119 };
-<a name="l00120"></a>00120 
-<a name="l00127"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1overflow__error.html">00127</a> <span class="keyword">class </span><a class="code" href="classboost_1_1xint_1_1exceptions_1_1overflow__error.html">overflow_error</a>: <span class="keyword">public</span> std::<a class="code" href="classboost_1_1xint_1_1exceptions_1_1overflow__error.html">overflow_error</a> {
+<a name="l00022"></a>00022 <span class="preprocessor">#include &quot;<a class="code" href="basic__types__and__includes_8hpp.html" title="Contains the most basic types, constants, and includes.">detail/basic_types_and_includes.hpp</a>&quot;</span>
+<a name="l00023"></a>00023 
+<a name="l00024"></a>00024 <span class="keyword">namespace </span>boost {
+<a name="l00025"></a>00025 <span class="keyword">namespace </span>xint {
+<a name="l00026"></a>00026 
+<a name="l00039"></a><a class="code" href="namespaceboost_1_1xint.html#ac2b936b22084368c66e62f8181c08241">00039</a> <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="namespaceboost_1_1xint.html#ac2b936b22084368c66e62f8181c08241" title="Sets or resets the global exception handler for the library.">on_exception</a>(<a class="code" href="namespaceboost_1_1xint.html#a28995bf7780dba52b4150cf1911c0c4c" title="The function type for on_exception.">on_exception_t</a> fn = <a class="code" href="namespaceboost_1_1xint.html#a28995bf7780dba52b4150cf1911c0c4c" title="The function type for on_exception.">on_exception_t</a>()) {
+<a name="l00040"></a>00040     detail::exception_handler&lt;&gt;::fn = fn;
+<a name="l00041"></a>00041 }
+<a name="l00042"></a>00042 
+<a name="l00044"></a><a class="code" href="namespaceboost_1_1xint_1_1exceptions.html">00044</a> <span class="keyword">namespace </span>exceptions {
+<a name="l00045"></a>00045 
+<a name="l00049"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html">00049</a> <span class="keyword">class </span><a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html">invalid_argument</a>: <span class="keyword">public</span> std::<a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html">invalid_argument</a> {
+<a name="l00050"></a>00050     <span class="keyword">public</span>:
+<a name="l00051"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html#a8ba3e56172de34c772b287ce8e325f32">00051</a>     <a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html#a8ba3e56172de34c772b287ce8e325f32">invalid_argument</a>(<span class="keyword">const</span> std::string&amp; what=<span class="stringliteral">&quot;invalid argument&quot;</span>):
+<a name="l00052"></a>00052         std::<a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html">invalid_argument</a>(what) { }
+<a name="l00053"></a>00053 };
+<a name="l00054"></a>00054 
+<a name="l00058"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__base.html">00058</a> <span class="keyword">class </span><a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__base.html">invalid_base</a>: <span class="keyword">public</span> std::<a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html">invalid_argument</a> {
+<a name="l00059"></a>00059     <span class="keyword">public</span>:
+<a name="l00060"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__base.html#a4647071020547bd103ee885bec7edffa">00060</a>     <a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__base.html#a4647071020547bd103ee885bec7edffa">invalid_base</a>(<span class="keyword">const</span> std::string&amp; what=<span class="stringliteral">&quot;invalid base&quot;</span>): <a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html">invalid_argument</a>(what)
+<a name="l00061"></a>00061         { }
+<a name="l00062"></a>00062 };
+<a name="l00063"></a>00063 
+<a name="l00067"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__digit.html">00067</a> <span class="keyword">class </span><a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__digit.html">invalid_digit</a>: <span class="keyword">public</span> std::range_error {
+<a name="l00068"></a>00068     <span class="keyword">public</span>:
+<a name="l00069"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__digit.html#abcdf43b30c3910dde89e406ca802eacc">00069</a>     <a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__digit.html#abcdf43b30c3910dde89e406ca802eacc">invalid_digit</a>(<span class="keyword">const</span> std::string&amp; what=<span class="stringliteral">&quot;invalid digit&quot;</span>): range_error(what)
+<a name="l00070"></a>00070         { }
+<a name="l00071"></a>00071 };
+<a name="l00072"></a>00072 
+<a name="l00076"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__modulus.html">00076</a> <span class="keyword">class </span><a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__modulus.html">invalid_modulus</a>: <span class="keyword">public</span> std::<a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html">invalid_argument</a> {
+<a name="l00077"></a>00077     <span class="keyword">public</span>:
+<a name="l00078"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__modulus.html#a16c06e28a7f483b0ca2fb5906d53278d">00078</a>     <a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__modulus.html#a16c06e28a7f483b0ca2fb5906d53278d">invalid_modulus</a>(<span class="keyword">const</span> std::string&amp; what=<span class="stringliteral">&quot;invalid modulus&quot;</span>):
+<a name="l00079"></a>00079         <a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html">invalid_argument</a>(what) { }
+<a name="l00080"></a>00080 };
+<a name="l00081"></a>00081 
+<a name="l00085"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1divide__by__zero.html">00085</a> <span class="keyword">class </span><a class="code" href="classboost_1_1xint_1_1exceptions_1_1divide__by__zero.html">divide_by_zero</a>: <span class="keyword">public</span> std::<a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html">invalid_argument</a> {
+<a name="l00086"></a>00086     <span class="keyword">public</span>:
+<a name="l00087"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1divide__by__zero.html#aaff4d720e4a134315acde919ff06e640">00087</a>     <a class="code" href="classboost_1_1xint_1_1exceptions_1_1divide__by__zero.html#aaff4d720e4a134315acde919ff06e640">divide_by_zero</a>(<span class="keyword">const</span> std::string&amp; what=<span class="stringliteral">&quot;divide by zero error&quot;</span>):
+<a name="l00088"></a>00088         <a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html">invalid_argument</a>(what) { }
+<a name="l00089"></a>00089 };
+<a name="l00090"></a>00090 
+<a name="l00094"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1cannot__represent.html">00094</a> <span class="keyword">class </span><a class="code" href="classboost_1_1xint_1_1exceptions_1_1cannot__represent.html">cannot_represent</a>: <span class="keyword">public</span> std::<a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html">invalid_argument</a> {
+<a name="l00095"></a>00095     <span class="keyword">public</span>:
+<a name="l00096"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1cannot__represent.html#a0968d8ac61c24529816bcaf69d155b75">00096</a>     <a class="code" href="classboost_1_1xint_1_1exceptions_1_1cannot__represent.html#a0968d8ac61c24529816bcaf69d155b75">cannot_represent</a>(<span class="keyword">const</span> std::string&amp; what=
+<a name="l00097"></a>00097         <span class="stringliteral">&quot;cannot represent the requested value&quot;</span>): <a class="code" href="classboost_1_1xint_1_1exceptions_1_1invalid__argument.html">invalid_argument</a>(what) { }
+<a name="l00098"></a>00098 };
+<a name="l00099"></a>00099 
+<a name="l00103"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1too__big.html">00103</a> <span class="keyword">class </span><a class="code" href="classboost_1_1xint_1_1exceptions_1_1too__big.html">too_big</a>: <span class="keyword">public</span> std::range_error {
+<a name="l00104"></a>00104     <span class="keyword">public</span>:
+<a name="l00105"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1too__big.html#a111e2c1a759054d80afcd5fa4af2995c">00105</a>     <a class="code" href="classboost_1_1xint_1_1exceptions_1_1too__big.html#a111e2c1a759054d80afcd5fa4af2995c">too_big</a>(<span class="keyword">const</span> std::string&amp; what=
+<a name="l00106"></a>00106         <span class="stringliteral">&quot;value out of range for requested conversion&quot;</span>): range_error(what) { }
+<a name="l00107"></a>00107 };
+<a name="l00108"></a>00108 
+<a name="l00112"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1not__a__number.html">00112</a> <span class="keyword">class </span><a class="code" href="classboost_1_1xint_1_1exceptions_1_1not__a__number.html">not_a_number</a>: <span class="keyword">public</span> std::runtime_error {
+<a name="l00113"></a>00113     <span class="keyword">public</span>:
+<a name="l00114"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1not__a__number.html#aa47b024550fd673bd497e0875443c67f">00114</a>     <a class="code" href="classboost_1_1xint_1_1exceptions_1_1not__a__number.html#aa47b024550fd673bd497e0875443c67f">not_a_number</a>(<span class="keyword">const</span> std::string&amp; what=<span class="stringliteral">&quot;attempted to use a Not-a-Number&quot;</span>):
+<a name="l00115"></a>00115         runtime_error(what) { }
+<a name="l00116"></a>00116 };
+<a name="l00117"></a>00117 
+<a name="l00127"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1no__strong__random.html">00127</a> <span class="keyword">class </span><a class="code" href="classboost_1_1xint_1_1exceptions_1_1no__strong__random.html">no_strong_random</a>: <span class="keyword">public</span> std::runtime_error {
 <a name="l00128"></a>00128     <span class="keyword">public</span>:
-<a name="l00129"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1overflow__error.html#a767d8fbe5816d77fa0aadf9481d0bd5a">00129</a>     <a class="code" href="classboost_1_1xint_1_1exceptions_1_1overflow__error.html#a767d8fbe5816d77fa0aadf9481d0bd5a">overflow_error</a>(<span class="keyword">const</span> std::string&amp; what=
-<a name="l00130"></a>00130         <span class="stringliteral">&quot;overflow error: can&#39;t obtain enough memory to represent the requested number&quot;</span>):
-<a name="l00131"></a>00131         std::<a class="code" href="classboost_1_1xint_1_1exceptions_1_1overflow__error.html">overflow_error</a>(what) { }
+<a name="l00129"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1no__strong__random.html#ab225c7d5d10a03eac6d5e9c784135675">00129</a>     <a class="code" href="classboost_1_1xint_1_1exceptions_1_1no__strong__random.html#ab225c7d5d10a03eac6d5e9c784135675">no_strong_random</a>(<span class="keyword">const</span> std::string&amp; what=
+<a name="l00130"></a>00130         <span class="stringliteral">&quot;system does not have a strong random generator&quot;</span>):
+<a name="l00131"></a>00131         runtime_error(what) { }
 <a name="l00132"></a>00132 };
 <a name="l00133"></a>00133 
-<a name="l00134"></a>00134 } <span class="comment">// namespace exception</span>
-<a name="l00135"></a>00135 } <span class="comment">// namespace xint</span>
-<a name="l00136"></a>00136 } <span class="comment">// namespace boost</span>
-<a name="l00137"></a>00137 
-<a name="l00138"></a>00138 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_EXCEPTIONS_HPP</span>
+<a name="l00140"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1overflow__error.html">00140</a> <span class="keyword">class </span><a class="code" href="classboost_1_1xint_1_1exceptions_1_1overflow__error.html">overflow_error</a>: <span class="keyword">public</span> std::<a class="code" href="classboost_1_1xint_1_1exceptions_1_1overflow__error.html">overflow_error</a> {
+<a name="l00141"></a>00141     <span class="keyword">public</span>:
+<a name="l00142"></a><a class="code" href="classboost_1_1xint_1_1exceptions_1_1overflow__error.html#a767d8fbe5816d77fa0aadf9481d0bd5a">00142</a>     <a class="code" href="classboost_1_1xint_1_1exceptions_1_1overflow__error.html#a767d8fbe5816d77fa0aadf9481d0bd5a">overflow_error</a>(<span class="keyword">const</span> std::string&amp; what=
+<a name="l00143"></a>00143         <span class="stringliteral">&quot;overflow error: can&#39;t obtain enough memory to represent the requested number&quot;</span>):
+<a name="l00144"></a>00144         std::<a class="code" href="classboost_1_1xint_1_1exceptions_1_1overflow__error.html">overflow_error</a>(what) { }
+<a name="l00145"></a>00145 };
+<a name="l00146"></a>00146 
+<a name="l00147"></a>00147 } <span class="comment">// namespace exception</span>
+<a name="l00148"></a>00148 } <span class="comment">// namespace xint</span>
+<a name="l00149"></a>00149 } <span class="comment">// namespace boost</span>
+<a name="l00150"></a>00150 
+<a name="l00151"></a>00151 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_EXCEPTIONS_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 18 20:03:13 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 25 12:04:28 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

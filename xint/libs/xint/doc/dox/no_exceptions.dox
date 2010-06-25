@@ -1,0 +1,20 @@
+/*! \page exception_handler The \c on_exception Function And \c -fno-exceptions Support
+
+This library includes support for GCC's \c -fno-exceptions option. When a
+program is compiled with \c -fno-exceptions, it cannot use \c try, \c throw, or
+\c catch statements, and any error will result in a call to \c abort() unless
+otherwise dealt with. To activate this support, define the preprocessor macro \c
+BOOST_XINT_NO_EXCEPTIONS before including any Boost.XInt header.
+
+To give your program a chance to at least record any error, and optionally
+recover from it using the \c setjmp/longjmp functions, the library includes an
+\ref boost::xint::on_exception "on_exception" function. You call this function,
+passing in a function that you want called whenever there is a problem. The
+library will call that function and (if it returns) throw the exception as
+normal. (If BOOST_XINT_NO_EXCEPTIONS is used, it will call \c abort() after
+calling your function instead.)
+
+Note that while \c setjmp/longjmp may allow you to recover from errors, it will
+often result in memory leaks since no destructors or other cleanup code is
+allowed to run.
+*/

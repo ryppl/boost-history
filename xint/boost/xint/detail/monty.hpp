@@ -191,8 +191,8 @@ BOOST_XINT_RAWINT montgomeryPowerMod(const BOOST_XINT_RAWINT a, const
     const TUTable<> &tuTable(TUTable<>::get());
 
     if (e.is_zero()) return 1;
-    if (n.is_even()) throw exceptions::invalid_modulus("montgomeryPowerMod "
-        "requires an odd modulus");
+    if (n.is_even()) exception_handler<>::call(__FILE__, __LINE__, exceptions::
+        invalid_modulus("montgomeryPowerMod requires an odd modulus"));
 
     // Precalculate some values
     const std::size_t k(mostEfficientK(e));

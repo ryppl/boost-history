@@ -61,6 +61,10 @@ char &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href=
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This makes it easier to tell when an item is measured in bits.  <a href="#ae9f6d103df04ad19a841ed3f8b94a764"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">typedef boost::function&lt; bool()&gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a48deb76c9c428a4b3a50177b1b0cb547">boost::xint::callback_t</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A callback function takes no parameters and returns a bool.  <a href="#a48deb76c9c428a4b3a50177b1b0cb547"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">typedef boost::function&lt; void(const <br class="typebreak"/>
+char *file, std::size_t line, <br class="typebreak"/>
+const std::exception &amp;e)&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a28995bf7780dba52b4150cf1911c0c4c">boost::xint::on_exception_t</a> )</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The function type for <a class="el" href="namespaceboost_1_1xint.html#ac2b936b22084368c66e62f8181c08241">on_exception</a>.  <a href="#a28995bf7780dba52b4150cf1911c0c4c"></a><br/></td></tr>
 <tr><td colspan="2"><h2>Variables</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">const std::size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a6e2c55f95b91dfcb7586599faca34cb2">boost::xint::autobase</a> = (std::numeric_limits&lt;size_t&gt;::max)()</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A value that can be used for the 'base' parameter of the string-to-integer constructor functions.  <a href="#a6e2c55f95b91dfcb7586599faca34cb2"></a><br/></td></tr>
@@ -179,7 +183,7 @@ char &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href=
 </div>
 </div>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 18 20:03:13 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 25 12:04:29 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

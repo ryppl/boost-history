@@ -29,8 +29,9 @@ namespace detail {
 BOOST_XINT_RAWINT_TPL
 BOOST_XINT_RAWINT square_root(BOOST_XINT_RAWINT n) {
     if (n.is_zero()) return 0;
-    if (n.negative) throw exceptions::cannot_represent("cannot represent "
-        "imaginary values (tried to take square_root of negative number)");
+    if (n.negative) exception_handler<>::call(__FILE__, __LINE__,
+        exceptions::cannot_represent("cannot represent imaginary values (tried "
+        "to take square_root of negative number)"));
 
     // A naive implementation using pure integers can result in an endless loop,
     // cycling between two numbers that are approximately correct (try

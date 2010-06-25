@@ -43,7 +43,8 @@ BOOST_XINT_RAWINT_TPL
 BOOST_XINT_RAWINT powmod(const BOOST_XINT_RAWINT n, const BOOST_XINT_RAWINT e,
     const BOOST_XINT_RAWINT m, bool no_montgomery = false)
 {
-    if (m.is_zero() || m.negative) throw exceptions::invalid_modulus();
+    if (m.is_zero() || m.negative) exception_handler<>::call(__FILE__, __LINE__,
+        exceptions::invalid_modulus());
     if (e.is_zero()) return 1;
 
     bool neg = (n.negative && e.is_odd());

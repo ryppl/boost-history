@@ -72,6 +72,22 @@
 namespace boost {
 namespace xint {
 
+/*! \brief The function type for \ref boost::xint::on_exception "on_exception".
+
+\param file The source code file that the exception originated from, as reported
+by the __FILE__ macro.
+\param line The line (in that file) where the exception originated, as reported
+by the __LINE__ macro.
+\param e The exception that was thrown.
+
+\returns If this function returns, the exception will be thrown as normal, or
+(if BOOST_XINT_NO_EXCEPTIONS is used) \c abort() will be called.
+
+\see \ref exception_handler
+*/
+typedef boost::function<void (const char *file, std::size_t line, const
+    std::exception& e)> on_exception_t;
+
 //! \brief A callback function takes no parameters and returns a bool.
 typedef boost::function<bool ()> callback_t;
 
@@ -130,6 +146,24 @@ typedef boost::uintmax_t doubledigit_t;
 */
 typedef boost::uint_t<std::numeric_limits<doubledigit_t>::digits / 2>::fast
     digit_t;
+
+//! \brief Used to hold the optional user-defined exception function
+template <typename T = void>
+struct exception_handler {
+    template <typename E>
+    static void call(const char *file, std::size_t line, const E& e) {
+        #ifdef BOOST_XINT_NO_EXCEPTIONS
+            if (fn) fn(file, line, e);
+            abort();
+        #else
+            if (fn) fn(file, line, e);
+            throw e;
+        #endif
+    }
+
+    static on_exception_t fn;
+};
+template <typename T> on_exception_t exception_handler<T>::fn;
 
 //! \name Some constants used by the library.
 //!@{

@@ -35,7 +35,8 @@ template <typename charT, bitsize_t Bits, bool Secure, class Alloc>
 std::basic_string<charT> to_string(const BOOST_XINT_RAWINT n, std::size_t base =
     10, bool uppercase = false)
 {
-    if (base < 2 || base > 36) throw exceptions::invalid_base();
+    if (base < 2 || base > 36) exception_handler<>::call(__FILE__, __LINE__,
+        exceptions::invalid_base());
 
     std::basic_ostringstream<charT> out;
     if (n.is_zero()) {
@@ -120,8 +121,10 @@ void BOOST_XINT_RAWINT::from_string(const charT *str, const charT*& endptr,
         } else base = 10;
     }
 
-    if (base < 2 || base > 36) throw exceptions::invalid_base();
-    if (*c == 0) throw exceptions::invalid_digit("No valid digits");
+    if (base < 2 || base > 36) exception_handler<>::call(__FILE__, __LINE__,
+        exceptions::invalid_base());
+    if (*c == 0) exception_handler<>::call(__FILE__, __LINE__,
+        exceptions::invalid_digit("No valid digits"));
 
     std::basic_string<charT> tstr;
     if (negate) tstr.push_back('-');
@@ -160,8 +163,10 @@ void BOOST_XINT_RAWINT::from_string(const charT *str, std::size_t base) {
         } else base = 10;
     }
 
-    if (base < 2 || base > 36) throw exceptions::invalid_base();
-    if (*c == 0) throw exceptions::invalid_digit("No valid digits");
+    if (base < 2 || base > 36) exception_handler<>::call(__FILE__, __LINE__,
+        exceptions::invalid_base());
+    if (*c == 0) exception_handler<>::call(__FILE__, __LINE__,
+        exceptions::invalid_digit("No valid digits"));
 
     // ATTN: for when there's nothing more pressing to do
     // This function could use the same efficiency improvements that to_string
@@ -176,12 +181,13 @@ void BOOST_XINT_RAWINT::from_string(const charT *str, std::size_t base) {
         if (*c >= '0' && *c <= '9') digit.set(*c - '0');
         else if (*c >= 'A' && *c <= 'Z') digit.set(*c - 'A' + 10);
         else if (*c >= 'a' && *c <= 'z') digit.set(*c - 'a' + 10);
-        else
-            throw exceptions::invalid_digit("encountered non-alphanumeric "
-                "character in string");
+        else exception_handler<>::call(__FILE__, __LINE__,
+            exceptions::invalid_digit("encountered non-alphanumeric character "
+            "in string"));
 
-        if (digit >= shift) throw exceptions::invalid_digit("encountered digit "
-            "greater than base allows");
+        if (digit >= shift) exception_handler<>::call(__FILE__, __LINE__,
+            exceptions::invalid_digit("encountered digit greater than base "
+            "allows"));
 
         *this *= shift;
         *this += digit;
@@ -202,9 +208,10 @@ void BOOST_XINT_RAWINT::from_string(const std::basic_string<charT, traitsT,
 
 BOOST_XINT_RAWINT_TPL
 xint::binary_t to_binary(const BOOST_XINT_RAWINT n, std::size_t bits = 0) {
-    if (bits > std::size_t(std::numeric_limits<unsigned char>::digits)) throw
+    if (bits > std::size_t(std::numeric_limits<unsigned char>::digits))
+        exception_handler<>::call(__FILE__, __LINE__,
         exceptions::invalid_argument("can't fit that many bits into an "
-        "unsigned character on this system");
+        "unsigned character on this system"));
     if (bits == 0) bits = std::numeric_limits<unsigned char>::digits;
 
     bitqueue_t bitqueue;
@@ -220,9 +227,10 @@ xint::binary_t to_binary(const BOOST_XINT_RAWINT n, std::size_t bits = 0) {
 
 BOOST_XINT_RAWINT_TPL
 void BOOST_XINT_RAWINT::from_binary(xint::binary_t b, std::size_t bits) {
-    if (bits > std::size_t(std::numeric_limits<unsigned char>::digits)) throw
+    if (bits > std::size_t(std::numeric_limits<unsigned char>::digits))
+        exception_handler<>::call(__FILE__, __LINE__,
         exceptions::invalid_argument("can't fit that many bits into an "
-        "unsigned character on this system");
+        "unsigned character on this system"));
     if (bits == 0) bits = std::numeric_limits<unsigned char>::digits;
 
     bitqueue_t bitqueue;
@@ -245,8 +253,8 @@ T to(const BOOST_XINT_RAWINT n, typename boost::enable_if<boost::is_integral<T>
 
     static const BOOST_XINT_RAWINT tmin((numeric_limits<T>::min)());
     static const BOOST_XINT_RAWINT tmax((numeric_limits<T>::max)());
-    if (n < tmin || n > tmax) throw exceptions::too_big("value out of range "
-		"for requested conversion");
+    if (n < tmin || n > tmax) exception_handler<>::call(__FILE__, __LINE__,
+        exceptions::too_big("value out of range for requested conversion"));
 
     T rval = 0, shift = T(digit_overflowbit);
     for (std::size_t x = 0; x < n.length; ++x) {

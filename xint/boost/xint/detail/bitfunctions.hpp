@@ -76,8 +76,9 @@ size_t highestbit(const BOOST_XINT_RAWINT n, std::size_t valueIfZero) {
 BOOST_XINT_RAWINT_TPL
 BOOST_XINT_RAWINT BOOST_XINT_RAWINT::operator~() const {
     if (Bits == 0) {
-        throw exceptions::too_big("operator~ on unlimited integers results in "
-            "an infinitely long number.");
+        exception_handler<>::call(__FILE__, __LINE__,
+            exceptions::too_big("operator~ on unlimited integers results in "
+            "an infinitely long number."));
     } else {
         BOOST_XINT_RAWINT r;
         const digit_t *s = digits(), *se = s + length;

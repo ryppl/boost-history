@@ -102,19 +102,23 @@ magnitude_t *allocator_t<Bits, Secure, Alloc>::alloc(std::size_t size, bool
     const std::size_t count = size - minimum_digits + magnitude_datasize;
 
     digit_t *storage = 0;
-    try {
+    BOOST_XINT_TRY {
         storage = allocator.allocate(count);
         if (readonly) return new(storage) magnitude_t(size, readonly, 0);
         else return new(storage) magnitude_t(size, readonly);
-    } catch (std::bad_alloc&) {
-        throw exceptions::overflow_error("Out of memory allocating integer");
-    } catch (std::exception&) {
+    } BOOST_XINT_CATCH_BADALLOC {
+        exception_handler<>::call(__FILE__, __LINE__,
+            exceptions::overflow_error("Out of memory allocating integer"));
+    } BOOST_XINT_CATCH_E {
         // To make it exception-safe, we've got to ensure that the allocated
         // data is properly disposed of if there's an exception, before passing
         // the exception on.
         if (storage) allocator.deallocate(storage, size);
-        throw;
+        exception_handler<>::call(__FILE__, __LINE__, e);
     }
+
+    // It will never get here, but the compilers can't tell that.
+    return 0;
 }
 
 template <bitsize_t Bits, bool Secure, class Alloc>

@@ -73,4 +73,6 @@
   <VirtualDirectory Name="src">
     <File Name="../libs/xint/example/fibonacci.cpp"/>
   </VirtualDirectory>
+  <Dependencies Name="Debug"/>
+  <Dependencies Name="Release"/>
 </CodeLite_Project>

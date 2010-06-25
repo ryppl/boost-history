@@ -109,7 +109,8 @@ void lcm(BOOST_XINT_RAWINT& target, const BOOST_XINT_RAWINT num1, const
 //! Defined as b, where n*b corresponds to 1 (mod m)
 BOOST_XINT_RAWINT_TPL
 BOOST_XINT_RAWINT invmod(const BOOST_XINT_RAWINT n, const BOOST_XINT_RAWINT m) {
-    if (m.is_zero() || m.negative) throw exceptions::invalid_modulus();
+    if (m.is_zero() || m.negative) exception_handler<>::call(__FILE__, __LINE__,
+        exceptions::invalid_modulus());
 
     if (n.is_zero()) {
         return 0;

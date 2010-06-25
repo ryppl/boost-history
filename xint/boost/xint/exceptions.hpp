@@ -12,16 +12,33 @@
 */
 
 /*! \file
-    \brief The exception namespace.
+    \brief The exception namespace, and exception-related functions.
 */
 
 #ifndef BOOST_INCLUDED_XINT_EXCEPTIONS_HPP
 #define BOOST_INCLUDED_XINT_EXCEPTIONS_HPP
 
 #include <stdexcept>
+#include "detail/basic_types_and_includes.hpp"
 
 namespace boost {
 namespace xint {
+
+/*! \brief Sets or resets the global exception handler for the library.
+
+\param fn The function to set as the exception handler, of type \ref
+on_exception_t. If not specified, removes any previous exception handler.
+
+\note
+This function, and the underlying exception handler system, is \e not
+thread-safe. It is your responsibility to ensure that no other threads are using
+the library while calling this function.
+
+\see \ref exception_handler
+*/
+inline void on_exception(on_exception_t fn = on_exception_t()) {
+    detail::exception_handler<>::fn = fn;
+}
 
 //! \brief Every exception the library throws is from this namespace.
 namespace exceptions {
@@ -91,10 +108,6 @@ class too_big: public std::range_error {
 
 /*!
     Derived from \c std::runtime_error.
-
-    \remarks
-    Most library functions will throw a not_a_number exception if you try to use
-    a \ref nan "Not-a-Number value" in them.
 */
 class not_a_number: public std::runtime_error {
     public:

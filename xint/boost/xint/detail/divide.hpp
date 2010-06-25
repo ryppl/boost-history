@@ -145,7 +145,8 @@ void divide(BOOST_XINT_RAWINT& qtarget, BOOST_XINT_RAWINT& rtarget, const
 {
     int sign1 = (d1.is_zero() ? 0 : d1.negative ? -1 : 1);
     int sign2 = (d2.is_zero() ? 0 : d2.negative ? -1 : 1);
-    if (sign2 == 0) throw exceptions::divide_by_zero();
+    if (sign2 == 0) exception_handler<>::call(__FILE__, __LINE__,
+        exceptions::divide_by_zero());
 
     int comp = compare(d1, d2, true);
     if (comp < 0) {

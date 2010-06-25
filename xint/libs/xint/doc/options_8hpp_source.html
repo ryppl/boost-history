@@ -264,20 +264,20 @@
 <a name="l00354"></a>00354         <span class="keywordflow">if</span> (Nothrow) {
 <a name="l00355"></a>00355             <span class="keywordflow">if</span> (integer_t_data&lt;BOOST_XINT_APARAMS&gt;::data.is_nan())
 <a name="l00356"></a>00356                 <span class="keywordflow">return</span> detail::get_nan&lt;T&gt;();
-<a name="l00357"></a>00357             <span class="keywordflow">try</span> {
+<a name="l00357"></a>00357             <a class="code" href="internals_8hpp.html#a693c4f473d303c632864f6084c394f03">BOOST_XINT_TRY</a> {
 <a name="l00358"></a>00358                 T r(~integer_t_data&lt;BOOST_XINT_APARAMS&gt;::data);
 <a name="l00359"></a>00359                 <span class="keywordflow">if</span> (Threadsafe == <span class="keyword">true</span>) r._make_unique();
 <a name="l00360"></a>00360                 <span class="keywordflow">if</span> (!Signed) r.data.negative = <span class="keyword">false</span>;
-<a name="l00361"></a>00361                 <span class="keywordflow">else</span> r.data.negative = ~r.data.negative;
+<a name="l00361"></a>00361                 <span class="keywordflow">else</span> r.data.negative = !r.data.negative;
 <a name="l00362"></a>00362                 <span class="keywordflow">return</span> <a class="code" href="basic__types__and__includes_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(r);
-<a name="l00363"></a>00363             } <span class="keywordflow">catch</span> (std::exception&amp;) {
+<a name="l00363"></a>00363             } <a class="code" href="internals_8hpp.html#a5117d87820df153f9c26dd5ff8ac318a">BOOST_XINT_CATCH</a> {
 <a name="l00364"></a>00364                 <span class="keywordflow">return</span> detail::get_nan&lt;T&gt;();
 <a name="l00365"></a>00365             }
 <a name="l00366"></a>00366         } <span class="keywordflow">else</span> {
 <a name="l00367"></a>00367             T r(~integer_t_data&lt;BOOST_XINT_APARAMS&gt;::data);
 <a name="l00368"></a>00368             <span class="keywordflow">if</span> (Threadsafe == <span class="keyword">true</span>) r._make_unique();
 <a name="l00369"></a>00369             <span class="keywordflow">if</span> (!Signed) r.data.negative = <span class="keyword">false</span>;
-<a name="l00370"></a>00370             <span class="keywordflow">else</span> r.data.negative = ~r.data.negative;
+<a name="l00370"></a>00370             <span class="keywordflow">else</span> r.data.negative = !r.data.negative;
 <a name="l00371"></a>00371             <span class="keywordflow">return</span> <a class="code" href="basic__types__and__includes_8hpp.html#a73c3b02410381da656b7cb59c7ba9314">BOOST_XINT_MOVE</a>(r);
 <a name="l00372"></a>00372         }
 <a name="l00373"></a>00373     }
@@ -337,44 +337,45 @@
 <a name="l00428"></a>00428         <span class="keywordflow">if</span> (integer_t_data&lt;BOOST_XINT_APARAMS&gt;::NothrowType::value) {
 <a name="l00429"></a>00429             integer_t_data&lt;BOOST_XINT_APARAMS&gt;::_data().make_nan();
 <a name="l00430"></a>00430         } <span class="keywordflow">else</span> {
-<a name="l00431"></a>00431             <span class="keywordflow">throw</span> exceptions::cannot_represent(<span class="stringliteral">&quot;unsigned negative value&quot;</span>);
-<a name="l00432"></a>00432         }
-<a name="l00433"></a>00433     }
-<a name="l00434"></a>00434 };
-<a name="l00435"></a>00435 
-<a name="l00436"></a>00436 <span class="keyword">template</span> &lt;BOOST_XINT_CLASS_APARAMS&gt;
-<a name="l00437"></a>00437 <span class="keyword">class </span>unsigned_negative_functions&lt;p_force_zero, <a class="code" href="options_8hpp.html#aa350afa46bc87068c0cefb1925130b6c">BOOST_XINT_APARAMS</a>&gt;: <span class="keyword">virtual</span>
-<a name="l00438"></a>00438     <span class="keyword">public</span> integer_t_data&lt;BOOST_XINT_APARAMS&gt;
-<a name="l00439"></a>00439 {
-<a name="l00440"></a>00440     <span class="keyword">public</span>:
-<a name="l00441"></a>00441     <span class="keywordtype">void</span> _fix_negative_unsigned() {
-<a name="l00442"></a>00442         <span class="keyword">typename</span> integer_t_data&lt;BOOST_XINT_APARAMS&gt;::datatype&amp;
-<a name="l00443"></a>00443             data(integer_t_data&lt;BOOST_XINT_APARAMS&gt;::_data());
-<a name="l00444"></a>00444         data.set(0);
-<a name="l00445"></a>00445     }
-<a name="l00446"></a>00446 };
-<a name="l00447"></a>00447 
-<a name="l00448"></a>00448 <span class="keyword">template</span> &lt;BOOST_XINT_CLASS_APARAMS&gt;
-<a name="l00449"></a>00449 <span class="keyword">class </span>unsigned_negative_functions&lt;p_force_absolute, <a class="code" href="options_8hpp.html#aa350afa46bc87068c0cefb1925130b6c">BOOST_XINT_APARAMS</a>&gt;: <span class="keyword">virtual</span>
-<a name="l00450"></a>00450     <span class="keyword">public</span> integer_t_data&lt;BOOST_XINT_APARAMS&gt;
-<a name="l00451"></a>00451 {
-<a name="l00452"></a>00452     <span class="keyword">public</span>:
-<a name="l00453"></a>00453     <span class="keywordtype">void</span> _fix_negative_unsigned() {
-<a name="l00454"></a>00454         <span class="keyword">typename</span> integer_t_data&lt;BOOST_XINT_APARAMS&gt;::datatype&amp;
-<a name="l00455"></a>00455             data(integer_t_data&lt;BOOST_XINT_APARAMS&gt;::_data());
-<a name="l00456"></a>00456         data.negative = <span class="keyword">false</span>;
-<a name="l00457"></a>00457     }
-<a name="l00458"></a>00458 };
-<a name="l00459"></a>00459 
-<a name="l00460"></a>00460 <span class="preprocessor">#endif // BOOST_XINT_DOXYGEN_IGNORE</span>
-<a name="l00461"></a>00461 <span class="preprocessor"></span>
-<a name="l00462"></a>00462 } <span class="comment">// namespace detail</span>
-<a name="l00463"></a>00463 } <span class="comment">// namespace xint</span>
-<a name="l00464"></a>00464 } <span class="comment">// namespace boost</span>
-<a name="l00465"></a>00465 
-<a name="l00466"></a>00466 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_INTEGER_OPTIONS_HPP</span>
+<a name="l00431"></a>00431             exception_handler&lt;&gt;::call(__FILE__, __LINE__,
+<a name="l00432"></a>00432                 exceptions::cannot_represent(<span class="stringliteral">&quot;unsigned negative value&quot;</span>));
+<a name="l00433"></a>00433         }
+<a name="l00434"></a>00434     }
+<a name="l00435"></a>00435 };
+<a name="l00436"></a>00436 
+<a name="l00437"></a>00437 <span class="keyword">template</span> &lt;BOOST_XINT_CLASS_APARAMS&gt;
+<a name="l00438"></a>00438 <span class="keyword">class </span>unsigned_negative_functions&lt;p_force_zero, <a class="code" href="options_8hpp.html#aa350afa46bc87068c0cefb1925130b6c">BOOST_XINT_APARAMS</a>&gt;: <span class="keyword">virtual</span>
+<a name="l00439"></a>00439     <span class="keyword">public</span> integer_t_data&lt;BOOST_XINT_APARAMS&gt;
+<a name="l00440"></a>00440 {
+<a name="l00441"></a>00441     <span class="keyword">public</span>:
+<a name="l00442"></a>00442     <span class="keywordtype">void</span> _fix_negative_unsigned() {
+<a name="l00443"></a>00443         <span class="keyword">typename</span> integer_t_data&lt;BOOST_XINT_APARAMS&gt;::datatype&amp;
+<a name="l00444"></a>00444             data(integer_t_data&lt;BOOST_XINT_APARAMS&gt;::_data());
+<a name="l00445"></a>00445         data.set(0);
+<a name="l00446"></a>00446     }
+<a name="l00447"></a>00447 };
+<a name="l00448"></a>00448 
+<a name="l00449"></a>00449 <span class="keyword">template</span> &lt;BOOST_XINT_CLASS_APARAMS&gt;
+<a name="l00450"></a>00450 <span class="keyword">class </span>unsigned_negative_functions&lt;p_force_absolute, <a class="code" href="options_8hpp.html#aa350afa46bc87068c0cefb1925130b6c">BOOST_XINT_APARAMS</a>&gt;: <span class="keyword">virtual</span>
+<a name="l00451"></a>00451     <span class="keyword">public</span> integer_t_data&lt;BOOST_XINT_APARAMS&gt;
+<a name="l00452"></a>00452 {
+<a name="l00453"></a>00453     <span class="keyword">public</span>:
+<a name="l00454"></a>00454     <span class="keywordtype">void</span> _fix_negative_unsigned() {
+<a name="l00455"></a>00455         <span class="keyword">typename</span> integer_t_data&lt;BOOST_XINT_APARAMS&gt;::datatype&amp;
+<a name="l00456"></a>00456             data(integer_t_data&lt;BOOST_XINT_APARAMS&gt;::_data());
+<a name="l00457"></a>00457         data.negative = <span class="keyword">false</span>;
+<a name="l00458"></a>00458     }
+<a name="l00459"></a>00459 };
+<a name="l00460"></a>00460 
+<a name="l00461"></a>00461 <span class="preprocessor">#endif // BOOST_XINT_DOXYGEN_IGNORE</span>
+<a name="l00462"></a>00462 <span class="preprocessor"></span>
+<a name="l00463"></a>00463 } <span class="comment">// namespace detail</span>
+<a name="l00464"></a>00464 } <span class="comment">// namespace xint</span>
+<a name="l00465"></a>00465 } <span class="comment">// namespace boost</span>
+<a name="l00466"></a>00466 
+<a name="l00467"></a>00467 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_INTEGER_OPTIONS_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 18 20:03:13 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 25 12:04:28 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

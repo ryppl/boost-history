@@ -67,10 +67,16 @@ char &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href=
 <tr><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a><br class="typebreak"/>
 &lt; <a class="el" href="structboost_1_1xint_1_1options_1_1nothrow.html">options::nothrow</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#adb761045d90aee163058a57489b51df2">nothrow_integer</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The default arbitrary-length nothrow_integer type.  <a href="#adb761045d90aee163058a57489b51df2"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">typedef boost::function&lt; void(const <br class="typebreak"/>
+char *file, std::size_t line, <br class="typebreak"/>
+const std::exception &amp;e)&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#a28995bf7780dba52b4150cf1911c0c4c">on_exception_t</a> )</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The function type for <a class="el" href="namespaceboost_1_1xint.html#ac2b936b22084368c66e62f8181c08241">on_exception</a>.  <a href="#a28995bf7780dba52b4150cf1911c0c4c"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">typedef <br class="typebreak"/>
 detail::strong_random_generator_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ac38b0aafb375c80ff42b5488a52d9e8f">strong_random_generator</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A convenience class for cryptographically-secure random numbers.  <a href="#ac38b0aafb375c80ff42b5488a52d9e8f"></a><br/></td></tr>
 <tr><td colspan="2"><h2>Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ac2b936b22084368c66e62f8181c08241">on_exception</a> (<a class="el" href="namespaceboost_1_1xint.html#a28995bf7780dba52b4150cf1911c0c4c">on_exception_t</a> fn=<a class="el" href="namespaceboost_1_1xint.html#a28995bf7780dba52b4150cf1911c0c4c">on_exception_t</a>())</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets or resets the global exception handler for the library.  <a href="#ac2b936b22084368c66e62f8181c08241"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;... &gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceboost_1_1xint.html#ab4aafdf3645cbad0cb3af54fdec4caff">swap</a> (<a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; &amp;left, <a class="el" href="classboost_1_1xint_1_1integer__t.html">integer_t</a>&lt; ... &gt; &amp;right)</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Mathematical primitives</div></td></tr>
@@ -252,7 +258,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 
 <p>The format for the binary representations of integers. </p>
 
-<p>Definition at line <a class="el" href="basic__types__and__includes_8hpp_source.html#l00082">82</a> of file <a class="el" href="basic__types__and__includes_8hpp_source.html">basic_types_and_includes.hpp</a>.</p>
+<p>Definition at line <a class="el" href="basic__types__and__includes_8hpp_source.html#l00098">98</a> of file <a class="el" href="basic__types__and__includes_8hpp_source.html">basic_types_and_includes.hpp</a>.</p>
 
 </div>
 </div>
@@ -269,7 +275,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 
 <p>This makes it easier to tell when an item is measured in bits. </p>
 
-<p>Definition at line <a class="el" href="basic__types__and__includes_8hpp_source.html#l00089">89</a> of file <a class="el" href="basic__types__and__includes_8hpp_source.html">basic_types_and_includes.hpp</a>.</p>
+<p>Definition at line <a class="el" href="basic__types__and__includes_8hpp_source.html#l00105">105</a> of file <a class="el" href="basic__types__and__includes_8hpp_source.html">basic_types_and_includes.hpp</a>.</p>
 
 </div>
 </div>
@@ -286,7 +292,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 
 <p>A callback function takes no parameters and returns a bool. </p>
 
-<p>Definition at line <a class="el" href="basic__types__and__includes_8hpp_source.html#l00076">76</a> of file <a class="el" href="basic__types__and__includes_8hpp_source.html">basic_types_and_includes.hpp</a>.</p>
+<p>Definition at line <a class="el" href="basic__types__and__includes_8hpp_source.html#l00092">92</a> of file <a class="el" href="basic__types__and__includes_8hpp_source.html">basic_types_and_includes.hpp</a>.</p>
 
 </div>
 </div>
@@ -304,7 +310,7 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 <p>The default arbitrary-length integer type. </p>
 <p>This uses the default parameters for the <a class="el" href="classboost_1_1xint_1_1integer__t.html" title="The integer_t class template.">integer_t</a> template. </p>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02520">2520</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02521">2521</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -322,7 +328,34 @@ traits &gt; &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a cla
 <p>The default arbitrary-length nothrow_integer type. </p>
 <p>This uses the default parameters for the <a class="el" href="classboost_1_1xint_1_1integer__t.html" title="The integer_t class template.">integer_t</a> template, other than the <code>nothrow</code> one. </p>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02527">2527</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02528">2528</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a28995bf7780dba52b4150cf1911c0c4c"></a><!-- doxytag: member="boost::xint::on_exception_t" ref="a28995bf7780dba52b4150cf1911c0c4c" args=")" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef boost::function&lt;void (const char *file, std::size_t line, const std::exception&amp; e) <a class="el" href="namespaceboost_1_1xint.html#a28995bf7780dba52b4150cf1911c0c4c">boost::xint::on_exception_t</a>)</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>The function type for <a class="el" href="namespaceboost_1_1xint.html#ac2b936b22084368c66e62f8181c08241">on_exception</a>. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>file</em>&nbsp;</td><td>The source code file that the exception originated from, as reported by the __FILE__ macro. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>line</em>&nbsp;</td><td>The line (in that file) where the exception originated, as reported by the __LINE__ macro. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>e</em>&nbsp;</td><td>The exception that was thrown.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>If this function returns, the exception will be thrown as normal, or (if BOOST_XINT_NO_EXCEPTIONS is used) <code>abort()</code> will be called.</dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="exception__handler.html">The <code>on_exception</code> Function And <code>-fno-exceptions</code> Support</a> </dd></dl>
+
+<p>Definition at line <a class="el" href="basic__types__and__includes_8hpp_source.html#l00089">89</a> of file <a class="el" href="basic__types__and__includes_8hpp_source.html">basic_types_and_includes.hpp</a>.</p>
 
 </div>
 </div>
@@ -379,7 +412,7 @@ template&lt;... &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>If <code>n</code> is zero or positive, returns <code>n</code>. Otherwise returns <code>-n</code>. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01215">1215</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01216">1216</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -423,7 +456,7 @@ template&lt;... &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Nothing. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01605">1605</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01606">1606</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -473,7 +506,7 @@ template&lt;... &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>-1 if <code>n1</code> &lt; <code>n2</code>; zero if <code>n1</code> == <code>n2</code>, or 1 if <code>n1</code> &gt; <code>n2</code>. The nothrow version returns 2 instead of throwing. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02312">2312</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02313">2313</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -517,7 +550,7 @@ template&lt;... &gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The absolute difference between the parameters.</dd></dl>
 <p>This function is especially useful when using unsigned types, because it's faster than doing a comparison to see which integer is larger before doing a subtraction. </p>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01297">1297</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01298">1298</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -573,7 +606,7 @@ operator%(integer_t, integer_t) </dd>
 <dd>
 <a class="el" href="classboost_1_1xint_1_1integer__t.html#a2144da90955b26120f5cfc724a24b8fc">integer_t::operator%=</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01253">1253</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01254">1254</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -616,7 +649,7 @@ template&lt;... &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The greatest common denominator of the two integers, which will always be a positive number. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02242">2242</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02243">2243</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -660,7 +693,7 @@ template&lt;... &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd><code>true</code> if the specified bit is set (has a value of one), <code>false</code> if it is clear. The nothrow version returns <code>false</code> instead of throwing. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01558">1558</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01559">1559</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -704,7 +737,7 @@ template&lt;... &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The zero-based index of the highest one-bit in the integer, or <code>return_if_zero</code> if the integer contains no set bits. The nothrow version returns <code>return_if_zero</code> instead of throwing. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01662">1662</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01663">1663</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -754,7 +787,7 @@ template&lt;... &gt; </div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01824">1824</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01825">1825</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -806,7 +839,7 @@ template&lt;... &gt; </div>
 <dl class="remark"><dt><b>Remarks:</b></dt><dd>This function uses the Rabin-Miller probabilistic primality test. There is an infinitesimally small chance that it will think that a composite number is actually prime, but that is so small that it can be ignored for most practical purposes. If even that chance is too much, you can run this function over the number several times, it will use different randomly-selected "witness" numbers each time.</dd></dl>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="primes.html">Generating Prime Numbers</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01878">1878</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01879">1879</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -849,7 +882,7 @@ template&lt;... &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The least common multiple of the two integers. If either integer is zero, then the return value will be zero, by convention; in all other cases, the return value will be a positive number. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02276">2276</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02277">2277</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -885,7 +918,7 @@ template&lt;... &gt; </div>
 <dl class="remark"><dt><b>Remarks:</b></dt><dd>pow2(log2(n)-1) will give you an integer with the highest set bit of <code>n</code>, assuming that <code>n</code> is non-zero.</dd></dl>
 <dl class="user"><dt><b></b></dt><dd>Similar to the <a class="el" href="namespaceboost_1_1xint.html#adee99f516c2480b2381f6c9b1a2abc6e" title="Obtains the index of the highest bit in an integer with a value of one.">highestbit</a> function. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02344">2344</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02345">2345</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -929,7 +962,7 @@ template&lt;... &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The zero-based index of the lowest one-bit in the integer, or <code>return_if_zero</code> if the integer contains no set bits. The nothrow version returns <code>return_if_zero</code> instead of throwing. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01633">1633</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01634">1634</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -980,7 +1013,37 @@ template&lt;... &gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The result of <code>n</code> * <code>by</code> % <code>modulus</code>.</dd></dl>
 <dl class="remark"><dt><b>Remarks:</b></dt><dd>This is purely a convenience function, to make it easier to write self-documenting code. It does not provide any additional efficiency over writing out the calculation. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01703">1703</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01704">1704</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac2b936b22084368c66e62f8181c08241"></a><!-- doxytag: member="boost::xint::on_exception" ref="ac2b936b22084368c66e62f8181c08241" args="(on_exception_t fn=on_exception_t())" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost::xint::on_exception </td>
+          <td>(</td>
+          <td class="paramtype">on_exception_t&nbsp;</td>
+          <td class="paramname"> <em>fn</em> = <code>on_exception_t()</code></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets or resets the global exception handler for the library. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>fn</em>&nbsp;</td><td>The function to set as the exception handler, of type <a class="el" href="namespaceboost_1_1xint.html#a28995bf7780dba52b4150cf1911c0c4c">on_exception_t</a>. If not specified, removes any previous exception handler.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="note"><dt><b>Note:</b></dt><dd>This function, and the underlying exception handler system, is <em>not</em> thread-safe. It is your responsibility to ensure that no other threads are using the library while calling this function.</dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="exception__handler.html">The <code>on_exception</code> Function And <code>-fno-exceptions</code> Support</a> </dd></dl>
+
+<p>Definition at line <a class="el" href="exceptions_8hpp_source.html#l00039">39</a> of file <a class="el" href="exceptions_8hpp_source.html">exceptions.hpp</a>.</p>
 
 </div>
 </div>
@@ -1011,7 +1074,7 @@ template&lt;... &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01976">1976</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01977">1977</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1055,7 +1118,7 @@ template&lt;... &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The remainder after dividing <code>n1</code> by <code>n2</code>. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02126">2126</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02127">2127</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1098,7 +1161,7 @@ template&lt;... &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>A positive integer with all bits that are set in both parameters turned on. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02154">2154</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02155">2155</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1142,7 +1205,7 @@ template&lt;... &gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The product of the parameters.</dd></dl>
 <dl class="remark"><dt><b>Remarks:</b></dt><dd>Automatically uses the more-efficient squaring algorithm if it can trivially detect that the two parameters are copies of the same number. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02069">2069</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02070">2070</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1185,7 +1248,7 @@ template&lt;... &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The sum of the parameters. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02007">2007</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02008">2008</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1228,7 +1291,7 @@ template&lt;... &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The difference between the parameters. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02034">2034</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02035">2035</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1277,7 +1340,7 @@ template&lt;... &gt; </div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02098">2098</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02099">2099</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1308,7 +1371,7 @@ template&lt;... &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01901">1901</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01902">1902</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1339,7 +1402,7 @@ template&lt;typename charT , typename traits , ... &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02469">2469</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02470">2470</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1370,7 +1433,7 @@ template&lt;... &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01931">1931</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01932">1932</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1401,7 +1464,7 @@ template&lt;... &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01961">1961</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01962">1962</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1432,7 +1495,7 @@ template&lt;... &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01916">1916</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01917">1917</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1463,7 +1526,7 @@ template&lt;... &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01946">1946</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01947">1947</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1494,7 +1557,7 @@ template&lt;typename charT , typename traits , ... &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02478">2478</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02479">2479</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1537,7 +1600,7 @@ template&lt;... &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>A positive integer with all bits that are set in either parameter, but not both, turned on. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02210">2210</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02211">2211</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1580,7 +1643,7 @@ template&lt;... &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>A positive integer with all bits that are set in either parameter turned on. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02182">2182</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02183">2183</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1623,7 +1686,7 @@ template&lt;... &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd><code>n</code> to the power of <code>e</code>. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01353">1353</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01354">1354</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1689,7 +1752,7 @@ template&lt;... &gt; </div>
 <dl class="remark"><dt><b>Remarks:</b></dt><dd>Because this function keeps the intermediate results small, it is far faster and uses far less memory than a naive implementation.</dd></dl>
 <dl class="user"><dt><b></b></dt><dd>In addition, this function will use the Montgomery Reduction internally, if the modulus is an odd number (and if <code>no_monty</code> isn't set), which is almost always faster than the non-Montgomery method. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01787">1787</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01788">1788</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1733,7 +1796,7 @@ template&lt;... &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Nothing. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01581">1581</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01582">1582</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1778,7 +1841,7 @@ template&lt;... &gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The result of <code>square(n)</code> % <code>modulus</code>.</dd></dl>
 <dl class="remark"><dt><b>Remarks:</b></dt><dd>This is purely a convenience function, to make it easier to write self-documenting code. It does not provide any additional efficiency over writing out the calculation. </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01742">1742</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01743">1743</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1813,7 +1876,7 @@ template&lt;... &gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd><code>n</code> times <code>n</code>.</dd></dl>
 <p>The repetitive nature of the input (multiplying a number by itself) allows this function to use a more-efficient algorithm than standard multiplication. </p>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01326">1326</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01327">1327</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1853,7 +1916,7 @@ template&lt;... &gt; </div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01389">1389</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01390">1390</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1884,7 +1947,7 @@ template&lt;... &gt; </div>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02510">2510</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l02511">2511</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1928,7 +1991,7 @@ template&lt;typename T , ... &gt; </div>
 </dl>
 <p>This function provides the most efficient means of converting to a built-in integral type. The nothrow version returns T(0) instead of throwing. </p>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01429">1429</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01430">1430</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -1981,7 +2044,7 @@ template&lt;... &gt; </div>
 <dl class="remark"><dt><b>Remarks:</b></dt><dd>A binary representation is sometimes desirable for persistent storage or transmission, as it is more space-efficient than a string representation.</dd></dl>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="classboost_1_1xint_1_1integer__t.html#a864a599e2de326e6e339ffc820fd849e" title="Converts a portable binary representation of a number into an integer.">integer_t::integer_t(xint::binary_t, bitsize_t bits)</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01528">1528</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01529">1529</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -2020,7 +2083,7 @@ template&lt;... &gt; </div>
 
 <p>A shorthand function that calls <a class="el" href="namespaceboost_1_1xint.html#a12e9d9268bae5d099227af78c1dea758">to_stringtype&lt;char&gt;</a>. </p>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01484">1484</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01485">1485</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -2084,7 +2147,7 @@ template&lt;typename charT , ... &gt; </div>
 </dl>
 <dl class="remark"><dt><b>Remarks:</b></dt><dd>This is the function that's called when you ask the library to write an integer to a stream, but it's more flexible because you can specify any base between 2 and 36. (Streams only allow base-8, base-10, or base-16.) </dd></dl>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01465">1465</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01466">1466</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -2123,7 +2186,7 @@ template&lt;... &gt; </div>
 
 <p>A shorthand function that calls <a class="el" href="namespaceboost_1_1xint.html#a12e9d9268bae5d099227af78c1dea758">to_stringtype&lt;wchar_t&gt;</a>. </p>
 
-<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01494">1494</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
+<p>Definition at line <a class="el" href="integer_8hpp_source.html#l01495">1495</a> of file <a class="el" href="integer_8hpp_source.html">integer.hpp</a>.</p>
 
 </div>
 </div>
@@ -2141,7 +2204,7 @@ template&lt;... &gt; </div>
 
 <p>A value that can be used for the 'base' parameter of the string-to-integer constructor functions. </p>
 
-<p>Definition at line <a class="el" href="basic__types__and__includes_8hpp_source.html#l00086">86</a> of file <a class="el" href="basic__types__and__includes_8hpp_source.html">basic_types_and_includes.hpp</a>.</p>
+<p>Definition at line <a class="el" href="basic__types__and__includes_8hpp_source.html#l00102">102</a> of file <a class="el" href="basic__types__and__includes_8hpp_source.html">basic_types_and_includes.hpp</a>.</p>
 
 </div>
 </div>
@@ -2158,12 +2221,12 @@ template&lt;... &gt; </div>
 
 <p>An empty callback_t, used as a default parameter for some functions. </p>
 
-<p>Definition at line <a class="el" href="basic__types__and__includes_8hpp_source.html#l00079">79</a> of file <a class="el" href="basic__types__and__includes_8hpp_source.html">basic_types_and_includes.hpp</a>.</p>
+<p>Definition at line <a class="el" href="basic__types__and__includes_8hpp_source.html#l00095">95</a> of file <a class="el" href="basic__types__and__includes_8hpp_source.html">basic_types_and_includes.hpp</a>.</p>
 
 </div>
 </div>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 18 20:03:13 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 25 12:04:29 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

@@ -243,13 +243,13 @@ integer_t<BOOST_XINT_APARAMS>::integer_t(const integer_t<BOOST_XINT_APARAMS>& b,
     bool force_thread_safety)
 {
     if (Nothrow) {
-        try {
+        BOOST_XINT_TRY {
             data = b.data;
             if (!data.is_nan()) {
                 if (force_thread_safety && Threadsafe == false)
                     data.make_unique();
             }
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             data.make_nan();
         }
     } else {
@@ -263,7 +263,7 @@ template<BOOST_XINT_CLASS_APARAMS>
 template <typename charT>
 integer_t<BOOST_XINT_APARAMS>::integer_t(const charT *str, std::size_t base) {
     if (Nothrow) {
-        try {
+        BOOST_XINT_TRY {
             const std::basic_string<charT>& tnan = detail::nan_text<charT>();
             if (str[0] == tnan[0] && std::basic_string<charT>(str) == tnan) {
                 data.make_nan();
@@ -271,7 +271,7 @@ integer_t<BOOST_XINT_APARAMS>::integer_t(const charT *str, std::size_t base) {
                 data.from_string(str, base);
                 if (!Signed && data.negative) _fix_negative_unsigned();
             }
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             data.make_nan();
         }
     } else {
@@ -314,7 +314,7 @@ integer_t<BOOST_XINT_APARAMS>::integer_t(const charT *str, const charT*& endptr,
     std::size_t base)
 {
     if (Nothrow) {
-        try {
+        BOOST_XINT_TRY {
             const std::basic_string<charT>& tnan = detail::nan_text<charT>();
             if (str[0] == tnan[0]) {
                 std::basic_string<charT> s(str);
@@ -326,7 +326,7 @@ integer_t<BOOST_XINT_APARAMS>::integer_t(const charT *str, const charT*& endptr,
             }
             data.from_string(str, endptr, base);
             if (!Signed && data.negative) _fix_negative_unsigned();
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             data.make_nan();
         }
     } else {
@@ -365,13 +365,13 @@ integer_t<BOOST_XINT_APARAMS>::integer_t(const std::basic_string<charT, traitsT,
     allocT>& str, std::size_t base)
 {
     if (Nothrow) {
-        try {
+        BOOST_XINT_TRY {
             if (str == detail::nan_text<charT>()) data.make_nan();
             else {
                 data.from_string(str, base);
                 if (!Signed && data.negative) _fix_negative_unsigned();
             }
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             data.make_nan();
         }
     } else {
@@ -405,9 +405,9 @@ template<BOOST_XINT_CLASS_APARAMS>
 integer_t<BOOST_XINT_APARAMS>::integer_t(const xint::binary_t b, bitsize_t bits)
 {
     if (Nothrow) {
-        try {
+        BOOST_XINT_TRY {
             data.from_binary(b, bits);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             data.make_nan();
         }
     } else {
@@ -433,7 +433,7 @@ integer_t<BOOST_XINT_APARAMS>::integer_t(const integer_t<BOOST_XINT_BPARAMS>& b,
     bool force_thread_safety)
 {
     if (Nothrow) {
-        try {
+        BOOST_XINT_TRY {
             if (b.is_nan()) {
                 data.make_nan();
             } else {
@@ -444,11 +444,12 @@ integer_t<BOOST_XINT_APARAMS>::integer_t(const integer_t<BOOST_XINT_BPARAMS>& b,
                     if (!Signed && data.negative) _fix_negative_unsigned();
                 }
             }
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             data.make_nan();
         }
     } else {
-        if (b._data().is_nan()) throw exceptions::not_a_number();
+        if (b._data().is_nan()) detail::exception_handler<>::call(__FILE__,
+            __LINE__, exceptions::not_a_number());
         data = b._data();
         if (force_thread_safety && Threadsafe == false) data.make_unique();
         if (!Signed && data.negative) _fix_negative_unsigned();
@@ -472,12 +473,12 @@ template <typename Type> integer_t<BOOST_XINT_APARAMS>::integer_t(const Type n,
     typename boost::enable_if<boost::is_integral<Type> >::type*)
 {
     if (Nothrow) {
-        try {
+        BOOST_XINT_TRY {
             if (std::numeric_limits<Type>::is_signed) {
                 data.set_signed(n);
                 if (!Signed && data.negative) _fix_negative_unsigned();
             } else data.set_unsigned(n);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             data.make_nan();
         }
     } else {
@@ -495,10 +496,10 @@ integer_t<BOOST_XINT_APARAMS>& integer_t<BOOST_XINT_APARAMS>::
     if (Nothrow) {
         if (c._data().is_nan()) data.make_nan();
         else {
-            try {
+            BOOST_XINT_TRY {
                 data = c.data;
                 if (Threadsafe == true) data.make_unique();
-            } catch (std::exception&) {
+            } BOOST_XINT_CATCH {
                 data.make_nan();
             }
         }
@@ -523,8 +524,8 @@ number.
 Also note that, although this changes the bit-pattern the same way as with the
 built-in types, the \e value will not be the same for signed numbers, because
 this library does not store negative numbers in twos complement format. In
-other words, if \c n is a built-in signed type and \c m is a signed integer_t,
-then <code>~n != ~m</code>.
+other words, if \c n is a built-in signed type and \c m is a signed integer_t
+with the same value, then <code>~n != ~m</code>.
 */
 template<BOOST_XINT_CLASS_APARAMS>
 integer_t<BOOST_XINT_APARAMS> integer_t<BOOST_XINT_APARAMS>::operator~() const;
@@ -540,13 +541,13 @@ template<BOOST_XINT_CLASS_APARAMS>
 integer_t<BOOST_XINT_APARAMS> integer_t<BOOST_XINT_APARAMS>::operator-() const {
     if (Nothrow) {
         if (is_nan()) return *this;
-        try {
+        BOOST_XINT_TRY {
             integer_t<BOOST_XINT_APARAMS> r(*this);
             if (Threadsafe == true) r._make_unique();
             r.data = -r.data;
             if (!Signed && r.data.negative) r._fix_negative_unsigned();
             return BOOST_XINT_MOVE(r);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
         }
     } else {
@@ -566,10 +567,10 @@ integer_t<BOOST_XINT_APARAMS>& integer_t<BOOST_XINT_APARAMS>::operator+=(const
     if (Nothrow) {
         if (b.is_nan()) data.make_nan();
         if (!is_nan()) {
-            try {
+            BOOST_XINT_TRY {
                 data += b.data;
                 if (Threadsafe == true) data.make_unique();
-            } catch (std::exception&) {
+            } BOOST_XINT_CATCH {
                 data.make_nan();
             }
         }
@@ -588,11 +589,11 @@ integer_t<BOOST_XINT_APARAMS>& integer_t<BOOST_XINT_APARAMS>::operator-=(const
     if (Nothrow) {
         if (b.is_nan()) data.make_nan();
         if (!is_nan()) {
-            try {
+            BOOST_XINT_TRY {
                 data -= b.data;
                 if (Threadsafe == true) data.make_unique();
                 if (!Signed && data.negative) _fix_negative_unsigned();
-            } catch (std::exception&) {
+            } BOOST_XINT_CATCH {
                 data.make_nan();
             }
         }
@@ -612,10 +613,10 @@ integer_t<BOOST_XINT_APARAMS>& integer_t<BOOST_XINT_APARAMS>::operator*=(const
     if (Nothrow) {
         if (b.is_nan()) data.make_nan();
         if (!is_nan()) {
-            try {
+            BOOST_XINT_TRY {
                 data *= b.data;
                 if (Threadsafe == true) data.make_unique();
-            } catch (std::exception&) {
+            } BOOST_XINT_CATCH {
                 data.make_nan();
             }
         }
@@ -634,10 +635,10 @@ integer_t<BOOST_XINT_APARAMS>& integer_t<BOOST_XINT_APARAMS>::operator/=(const
     if (Nothrow) {
         if (b.is_nan()) data.make_nan();
         if (!is_nan()) {
-            try {
+            BOOST_XINT_TRY {
                 data /= b.data;
                 if (Threadsafe == true) data.make_unique();
-            } catch (std::exception&) {
+            } BOOST_XINT_CATCH {
                 data.make_nan();
             }
         }
@@ -656,10 +657,10 @@ integer_t<BOOST_XINT_APARAMS>& integer_t<BOOST_XINT_APARAMS>::operator%=(const
     if (Nothrow) {
         if (b.is_nan()) data.make_nan();
         if (!is_nan()) {
-            try {
+            BOOST_XINT_TRY {
                 data %= b.data;
                 if (Threadsafe == true) data.make_unique();
-            } catch (std::exception&) {
+            } BOOST_XINT_CATCH {
                 data.make_nan();
             }
         }
@@ -678,10 +679,10 @@ template<BOOST_XINT_CLASS_APARAMS>
 integer_t<BOOST_XINT_APARAMS>& integer_t<BOOST_XINT_APARAMS>::operator++() {
     if (Nothrow) {
         if (!is_nan()) {
-            try {
+            BOOST_XINT_TRY {
                 ++data;
                 if (Threadsafe == true) data.make_unique();
-            } catch (std::exception&) {
+            } BOOST_XINT_CATCH {
                 data.make_nan();
             }
         }
@@ -700,11 +701,11 @@ template<BOOST_XINT_CLASS_APARAMS>
 integer_t<BOOST_XINT_APARAMS>& integer_t<BOOST_XINT_APARAMS>::operator--() {
     if (Nothrow) {
         if (!is_nan()) {
-            try {
+            BOOST_XINT_TRY {
                 --data;
                 if (Threadsafe == true) data.make_unique();
                 if (!Signed && data.negative) _fix_negative_unsigned();
-            } catch (std::exception&) {
+            } BOOST_XINT_CATCH {
                 data.make_nan();
             }
         }
@@ -727,11 +728,11 @@ template<BOOST_XINT_CLASS_APARAMS>
 integer_t<BOOST_XINT_APARAMS> integer_t<BOOST_XINT_APARAMS>::operator++(int) {
     if (Nothrow) {
         if (is_nan()) return *this;
-        try {
+        BOOST_XINT_TRY {
             integer_t<BOOST_XINT_APARAMS> r(data++);
             if (Threadsafe == true) { r._make_unique(); data.make_unique(); }
             return BOOST_XINT_MOVE(r);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             data.make_nan();
         }
     } else {
@@ -752,12 +753,12 @@ template<BOOST_XINT_CLASS_APARAMS>
 integer_t<BOOST_XINT_APARAMS> integer_t<BOOST_XINT_APARAMS>::operator--(int) {
     if (Nothrow) {
         if (is_nan()) return *this;
-        try {
+        BOOST_XINT_TRY {
             integer_t<BOOST_XINT_APARAMS> r(data--);
             if (Threadsafe == true) { r._make_unique(); data.make_unique(); }
             if (!Signed && data.negative) _fix_negative_unsigned();
             return BOOST_XINT_MOVE(r);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             data.make_nan();
         }
     } else {
@@ -776,10 +777,10 @@ integer_t<BOOST_XINT_APARAMS>& integer_t<BOOST_XINT_APARAMS>::operator&=(const
     if (Nothrow) {
         if (n.is_nan()) data.make_nan();
         if (!is_nan()) {
-            try {
+            BOOST_XINT_TRY {
                 data &= n.data;
                 if (Threadsafe == true) data.make_unique();
-            } catch (std::exception&) {
+            } BOOST_XINT_CATCH {
                 data.make_nan();
             }
         }
@@ -798,10 +799,10 @@ integer_t<BOOST_XINT_APARAMS>& integer_t<BOOST_XINT_APARAMS>::operator|=(const
     if (Nothrow) {
         if (n.is_nan()) data.make_nan();
         if (!is_nan()) {
-            try {
+            BOOST_XINT_TRY {
                 data |= n.data;
                 if (Threadsafe == true) data.make_unique();
-            } catch (std::exception&) {
+            } BOOST_XINT_CATCH {
                 data.make_nan();
             }
         }
@@ -820,10 +821,10 @@ integer_t<BOOST_XINT_APARAMS>& integer_t<BOOST_XINT_APARAMS>::operator^=(const
     if (Nothrow) {
         if (n.is_nan()) data.make_nan();
         if (!is_nan()) {
-            try {
+            BOOST_XINT_TRY {
                 data ^= n.data;
                 if (Threadsafe == true) data.make_unique();
-            } catch (std::exception&) {
+            } BOOST_XINT_CATCH {
                 data.make_nan();
             }
         }
@@ -847,11 +848,11 @@ integer_t<BOOST_XINT_APARAMS>
 integer_t<BOOST_XINT_APARAMS>::operator<<(bitsize_t shift) const {
     if (Nothrow) {
         if (is_nan()) return *this;
-        try {
+        BOOST_XINT_TRY {
             integer_t<BOOST_XINT_APARAMS> r(data << shift);
             if (Threadsafe == true) r._make_unique();
             return BOOST_XINT_MOVE(r);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
         }
     } else {
@@ -874,11 +875,11 @@ integer_t<BOOST_XINT_APARAMS>
 integer_t<BOOST_XINT_APARAMS>::operator>>(bitsize_t shift) const {
     if (Nothrow) {
         if (is_nan()) return *this;
-        try {
+        BOOST_XINT_TRY {
             integer_t<BOOST_XINT_APARAMS> r(data >> shift);
             if (Threadsafe == true) r._make_unique();
             return BOOST_XINT_MOVE(r);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
         }
     } else {
@@ -894,10 +895,10 @@ integer_t<BOOST_XINT_APARAMS>&
 integer_t<BOOST_XINT_APARAMS>::operator<<=(bitsize_t shift) {
     if (Nothrow) {
         if (!is_nan()) {
-            try {
+            BOOST_XINT_TRY {
                 data <<= shift;
                 if (Threadsafe == true) data.make_unique();
-            } catch (std::exception&) {
+            } BOOST_XINT_CATCH {
                 data.make_nan();
             }
         }
@@ -914,10 +915,10 @@ integer_t<BOOST_XINT_APARAMS>&
 integer_t<BOOST_XINT_APARAMS>::operator>>=(bitsize_t shift) {
     if (Nothrow) {
         if (!is_nan()) {
-            try {
+            BOOST_XINT_TRY {
                 data >>= shift;
                 if (Threadsafe == true) data.make_unique();
-            } catch (std::exception&) {
+            } BOOST_XINT_CATCH {
                 data.make_nan();
             }
         }
@@ -993,9 +994,9 @@ template<BOOST_XINT_CLASS_APARAMS>
 int integer_t<BOOST_XINT_APARAMS>::sign(bool signed_zero) const {
     if (Nothrow) {
         if (is_nan()) return 0;
-        try {
+        BOOST_XINT_TRY {
             return data.sign(signed_zero);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return 0;
         }
     } else {
@@ -1014,9 +1015,9 @@ template<BOOST_XINT_CLASS_APARAMS>
 size_t integer_t<BOOST_XINT_APARAMS>::hex_digits() const {
     if (Nothrow) {
         if (is_nan()) return 0;
-        try {
+        BOOST_XINT_TRY {
             return data.hex_digits();
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return 0;
         }
     } else {
@@ -1042,12 +1043,12 @@ integer_t<BOOST_XINT_APARAMS> integer_t<BOOST_XINT_APARAMS>::pow2(std::size_t
     exponent)
 {
     if (Nothrow) {
-        try {
+        BOOST_XINT_TRY {
             integer_t<BOOST_XINT_APARAMS> r;
             detail::pow2(r.data, exponent);
             if (Threadsafe == true) r._make_unique();
             return BOOST_XINT_MOVE(r);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
         }
     } else {
@@ -1075,12 +1076,12 @@ template<BOOST_XINT_CLASS_APARAMS>
 integer_t<BOOST_XINT_APARAMS>
 integer_t<BOOST_XINT_APARAMS>::factorial(std::size_t n) {
     if (Nothrow) {
-        try {
+        BOOST_XINT_TRY {
             integer_t<BOOST_XINT_APARAMS> r;
             detail::factorial(r.data, n);
             if (Threadsafe == true) r._make_unique();
             return BOOST_XINT_MOVE(r);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
         }
     } else {
@@ -1140,10 +1141,10 @@ integer_t<BOOST_XINT_APARAMS>integer_t<BOOST_XINT_APARAMS>::random_by_size(Type&
 {
     if (!Signed) can_be_negative = false;
     if (Nothrow) {
-        try {
+        BOOST_XINT_TRY {
             return integer_t<BOOST_XINT_APARAMS>(datatype::random_by_size(gen,
                 size_in_bits, high_bit_on, low_bit_on, can_be_negative));
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
         }
     } else {
@@ -1185,10 +1186,10 @@ integer_t<BOOST_XINT_APARAMS> integer_t<BOOST_XINT_APARAMS>::random_prime(Type&
     gen, bitsize_t size_in_bits, callback_t callback)
 {
     if (Nothrow) {
-        try {
+        BOOST_XINT_TRY {
             return integer_t<BOOST_XINT_APARAMS>(datatype::random_prime(gen,
                 size_in_bits, callback));
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
         }
     } else {
@@ -1219,12 +1220,12 @@ integer_t<BOOST_XINT_APARAMS> abs(const integer_t<BOOST_XINT_APARAMS> n) {
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n.is_nan())
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
-        try {
+        BOOST_XINT_TRY {
             integer_t<BOOST_XINT_APARAMS> r(n._data().abs());
             if (integer_t<BOOST_XINT_APARAMS>::Threadsafe == true)
                 r._make_unique();
             return BOOST_XINT_MOVE(r);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
         }
     } else {
@@ -1262,14 +1263,14 @@ typename integer_t<BOOST_XINT_APARAMS>::divide_t divide(const
             integer_t<BOOST_XINT_APARAMS>::divide_t(detail::get_nan<
                 integer_t<BOOST_XINT_APARAMS> >(), detail::get_nan<
                 integer_t<BOOST_XINT_APARAMS> >());
-        try {
+        BOOST_XINT_TRY {
             typename integer_t<BOOST_XINT_APARAMS>::datatype::divide_t rr =
                 detail::divide(dividend._data(), divisor._data());
             typename integer_t<BOOST_XINT_APARAMS>::divide_t
                 r(integer_t<BOOST_XINT_APARAMS>(rr.quotient),
                 integer_t<BOOST_XINT_APARAMS>(rr.remainder));
             return BOOST_XINT_MOVE(r);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return typename integer_t<BOOST_XINT_APARAMS>::divide_t(
                 detail::get_nan<integer_t<BOOST_XINT_APARAMS> >(),
                 detail::get_nan<integer_t<BOOST_XINT_APARAMS> >());
@@ -1329,12 +1330,12 @@ template<BOOST_XINT_CLASS_APARAMS>
 integer_t<BOOST_XINT_APARAMS> square(const integer_t<BOOST_XINT_APARAMS> n) {
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n.is_nan()) return n;
-        try {
+        BOOST_XINT_TRY {
             integer_t<BOOST_XINT_APARAMS> r(detail::square(n._data()));
             if (integer_t<BOOST_XINT_APARAMS>::Threadsafe == true)
                 r._make_unique();
             return BOOST_XINT_MOVE(r);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
         }
     } else {
@@ -1359,13 +1360,13 @@ integer_t<BOOST_XINT_APARAMS> pow(const integer_t<BOOST_XINT_APARAMS> n, const
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n.is_nan() || e.is_nan())
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
-        try {
+        BOOST_XINT_TRY {
             integer_t<BOOST_XINT_APARAMS> r;
             pow(r._data(), n._data(), e._data());
             if (integer_t<BOOST_XINT_APARAMS>::Threadsafe == true)
                 r._make_unique();
             return BOOST_XINT_MOVE(r);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
         }
     } else {
@@ -1393,12 +1394,12 @@ integer_t<BOOST_XINT_APARAMS> square_root(const integer_t<BOOST_XINT_APARAMS> n)
 {
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n.is_nan()) return n;
-        try {
+        BOOST_XINT_TRY {
             integer_t<BOOST_XINT_APARAMS> r(square_root(n._data()));
             if (integer_t<BOOST_XINT_APARAMS>::Threadsafe == true)
                 r._make_unique();
             return BOOST_XINT_MOVE(r);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
         }
     } else {
@@ -1432,9 +1433,9 @@ template <typename T, BOOST_XINT_CLASS_APARAMS>
 T to(const integer_t<BOOST_XINT_APARAMS> n) {
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n.is_nan()) return T(0);
-        try {
+        BOOST_XINT_TRY {
             return to<T>(n._data());
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return T(0);
         }
     } else {
@@ -1470,9 +1471,9 @@ std::basic_string<charT> to_stringtype(const integer_t<BOOST_XINT_APARAMS> n,
 {
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n.is_nan()) return detail::nan_text<charT>();
-        try {
+        BOOST_XINT_TRY {
             return detail::to_string<charT>(n._data(), base, uppercase);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return std::basic_string<charT>();
         }
     } else {
@@ -1533,9 +1534,9 @@ xint::binary_t to_binary(const integer_t<BOOST_XINT_APARAMS> n, bitsize_t bits =
 {
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n.is_nan()) return xint::binary_t();
-        try {
+        BOOST_XINT_TRY {
             return to_binary(n._data(), bits);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return xint::binary_t();
         }
     } else {
@@ -1561,9 +1562,9 @@ template<BOOST_XINT_CLASS_APARAMS>
 bool getbit(const integer_t<BOOST_XINT_APARAMS> n, bitsize_t bit) {
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n.is_nan()) return false;
-        try {
+        BOOST_XINT_TRY {
             return getbit(n._data(), bit);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return false;
         }
     } else {
@@ -1584,9 +1585,9 @@ template<BOOST_XINT_CLASS_APARAMS>
 void setbit(integer_t<BOOST_XINT_APARAMS>& n, bitsize_t bit) {
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (!n.is_nan()) {
-            try {
+            BOOST_XINT_TRY {
                 setbit(n._data(), bit);
-            } catch (std::exception&) {
+            } BOOST_XINT_CATCH {
                 // Do nothing.
             }
         }
@@ -1608,9 +1609,9 @@ template<BOOST_XINT_CLASS_APARAMS>
 void clearbit(integer_t<BOOST_XINT_APARAMS>& n, bitsize_t bit) {
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (!n.is_nan()) {
-            try {
+            BOOST_XINT_TRY {
                 clearbit(n._data(), bit);
-            } catch (std::exception&) {
+            } BOOST_XINT_CATCH {
                 // Do nothing.
             }
         }
@@ -1638,9 +1639,9 @@ bitsize_t lowestbit(const integer_t<BOOST_XINT_APARAMS> n, bitsize_t
 {
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n.is_nan()) return return_if_zero;
-        try {
+        BOOST_XINT_TRY {
             return lowestbit(n._data(), return_if_zero);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return return_if_zero;
         }
     } else {
@@ -1667,9 +1668,9 @@ bitsize_t highestbit(const integer_t<BOOST_XINT_APARAMS> n, bitsize_t
 {
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n.is_nan()) return return_if_zero;
-        try {
+        BOOST_XINT_TRY {
             return highestbit(n._data(), return_if_zero);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return return_if_zero;
         }
     } else {
@@ -1710,13 +1711,13 @@ integer_t<BOOST_XINT_APARAMS> mulmod(const integer_t<BOOST_XINT_APARAMS> n,
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n.is_nan() || by.is_nan() || modulus.is_nan()) return
             detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
-        try {
+        BOOST_XINT_TRY {
             integer_t<BOOST_XINT_APARAMS> r(mulmod(n._data(), by._data(),
                 modulus._data()));
             if (integer_t<BOOST_XINT_APARAMS>::Threadsafe == true)
                 r._make_unique();
             return BOOST_XINT_MOVE(r);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
         }
     } else {
@@ -1747,13 +1748,13 @@ integer_t<BOOST_XINT_APARAMS> sqrmod(const integer_t<BOOST_XINT_APARAMS> n,
 {
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n.is_nan()) return n;
-        try {
+        BOOST_XINT_TRY {
             integer_t<BOOST_XINT_APARAMS> r = sqrmod(n._data(),
                 modulus._data());
             if (integer_t<BOOST_XINT_APARAMS>::Threadsafe == true)
                 r._make_unique();
             return BOOST_XINT_MOVE(r);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
         }
     } else {
@@ -1794,13 +1795,13 @@ integer_t<BOOST_XINT_APARAMS> powmod(const integer_t<BOOST_XINT_APARAMS> n,
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n.is_nan() || exponent.is_nan() || modulus.is_nan()) return
             detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
-        try {
+        BOOST_XINT_TRY {
             integer_t<BOOST_XINT_APARAMS> r(powmod(n._data(), exponent._data(),
                 modulus._data(), no_monty));
             if (integer_t<BOOST_XINT_APARAMS>::Threadsafe == true)
                 r._make_unique();
             return BOOST_XINT_MOVE(r);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
         }
     } else {
@@ -1830,12 +1831,12 @@ integer_t<BOOST_XINT_APARAMS> invmod(const integer_t<BOOST_XINT_APARAMS> n,
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n.is_nan() || modulus.is_nan()) return
             detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
-        try {
+        BOOST_XINT_TRY {
             integer_t<BOOST_XINT_APARAMS> r(invmod(n._data(), modulus._data()));
             if (integer_t<BOOST_XINT_APARAMS>::Threadsafe == true)
                 r._make_unique();
             return BOOST_XINT_MOVE(r);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
         }
     } else {
@@ -1883,9 +1884,9 @@ int is_prime(const integer_t<BOOST_XINT_APARAMS> n, callback_t callback =
 {
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n.is_nan()) return -2;
-        try {
+        BOOST_XINT_TRY {
             return is_prime(n._data(), callback);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return -2;
         }
     } else {
@@ -1906,9 +1907,9 @@ template<BOOST_XINT_CLASS_APARAMS> bool operator<(const
 {
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n1.is_nan() || n2.is_nan()) return false;
-        try {
+        BOOST_XINT_TRY {
             return operator<(n1._data(), n2._data());
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return false;
         }
     } else {
@@ -1921,9 +1922,9 @@ template<BOOST_XINT_CLASS_APARAMS> bool operator>(const
 {
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n1.is_nan() || n2.is_nan()) return false;
-        try {
+        BOOST_XINT_TRY {
             return operator>(n1._data(), n2._data());
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return false;
         }
     } else {
@@ -1936,9 +1937,9 @@ template<BOOST_XINT_CLASS_APARAMS> bool operator<=(const
 {
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n1.is_nan() || n2.is_nan()) return false;
-        try {
+        BOOST_XINT_TRY {
             return operator<=(n1._data(), n2._data());
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return false;
         }
     } else {
@@ -1951,9 +1952,9 @@ template<BOOST_XINT_CLASS_APARAMS> bool operator>=(const
 {
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n1.is_nan() || n2.is_nan()) return false;
-        try {
+        BOOST_XINT_TRY {
             return operator>=(n1._data(), n2._data());
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return false;
         }
     } else {
@@ -1966,9 +1967,9 @@ template<BOOST_XINT_CLASS_APARAMS> bool operator==(const
 {
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n1.is_nan() || n2.is_nan()) return false;
-        try {
+        BOOST_XINT_TRY {
             return operator==(n1._data(), n2._data());
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return false;
         }
     } else {
@@ -1981,9 +1982,9 @@ template<BOOST_XINT_CLASS_APARAMS> bool operator!=(const
 {
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n1.is_nan() || n2.is_nan()) return false;
-        try {
+        BOOST_XINT_TRY {
             return operator!=(n1._data(), n2._data());
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return false;
         }
     } else {
@@ -2013,10 +2014,10 @@ integer_t<BOOST_XINT_APARAMS> operator+(const integer_t<BOOST_XINT_APARAMS> n1,
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n1.is_nan() || n2.is_nan())
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
-        try {
+        BOOST_XINT_TRY {
             integer_t<BOOST_XINT_APARAMS> r(n1._data() + n2._data());
             return BOOST_XINT_MOVE(r);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
         }
     } else {
@@ -2040,12 +2041,12 @@ integer_t<BOOST_XINT_APARAMS> operator-(const integer_t<BOOST_XINT_APARAMS> n1,
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n1.is_nan() || n2.is_nan())
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
-        try {
+        BOOST_XINT_TRY {
             integer_t<BOOST_XINT_APARAMS> r(n1._data() - n2._data());
             if (!integer_t<BOOST_XINT_APARAMS>::Signed && r._data().negative)
                 r._fix_negative_unsigned();
             return BOOST_XINT_MOVE(r);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
         }
     } else {
@@ -2075,10 +2076,10 @@ integer_t<BOOST_XINT_APARAMS> operator*(const integer_t<BOOST_XINT_APARAMS> n1,
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n1.is_nan() || n2.is_nan())
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
-        try {
+        BOOST_XINT_TRY {
             integer_t<BOOST_XINT_APARAMS> r(n1._data() * n2._data());
             return BOOST_XINT_MOVE(r);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
         }
     } else {
@@ -2104,10 +2105,10 @@ integer_t<BOOST_XINT_APARAMS> operator/(const integer_t<BOOST_XINT_APARAMS>
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (dividend.is_nan() || divisor.is_nan()) return
             detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
-        try {
+        BOOST_XINT_TRY {
             integer_t<BOOST_XINT_APARAMS> r(dividend._data() / divisor._data());
             return BOOST_XINT_MOVE(r);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
         }
     } else {
@@ -2132,10 +2133,10 @@ integer_t<BOOST_XINT_APARAMS> operator%(const integer_t<BOOST_XINT_APARAMS> n1,
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n1.is_nan() || n2.is_nan())
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
-        try {
+        BOOST_XINT_TRY {
             integer_t<BOOST_XINT_APARAMS> r(n1._data() % n2._data());
             return BOOST_XINT_MOVE(r);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
         }
     } else {
@@ -2160,10 +2161,10 @@ integer_t<BOOST_XINT_APARAMS> operator&(const integer_t<BOOST_XINT_APARAMS> n1,
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n1.is_nan() || n2.is_nan())
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
-        try {
+        BOOST_XINT_TRY {
             integer_t<BOOST_XINT_APARAMS> r(n1._data() & n2._data());
             return BOOST_XINT_MOVE(r);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
         }
     } else {
@@ -2188,10 +2189,10 @@ integer_t<BOOST_XINT_APARAMS> operator|(const integer_t<BOOST_XINT_APARAMS> n1,
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n1.is_nan() || n2.is_nan())
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
-        try {
+        BOOST_XINT_TRY {
             integer_t<BOOST_XINT_APARAMS> r(n1._data() | n2._data());
             return BOOST_XINT_MOVE(r);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
         }
     } else {
@@ -2216,10 +2217,10 @@ integer_t<BOOST_XINT_APARAMS> operator^(const integer_t<BOOST_XINT_APARAMS> n1,
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n1.is_nan() || n2.is_nan())
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
-        try {
+        BOOST_XINT_TRY {
             integer_t<BOOST_XINT_APARAMS> r(n1._data() ^ n2._data());
             return BOOST_XINT_MOVE(r);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
         }
     } else {
@@ -2248,13 +2249,13 @@ integer_t<BOOST_XINT_APARAMS> gcd(const integer_t<BOOST_XINT_APARAMS> num1,
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (num1.is_nan() || num2.is_nan()) return
             detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
-        try {
+        BOOST_XINT_TRY {
             integer_t<BOOST_XINT_APARAMS> r;
             gcd(r._data(), num1._data(), num2._data());
             if (integer_t<BOOST_XINT_APARAMS>::Threadsafe == true)
                 r._make_unique();
             return BOOST_XINT_MOVE(r);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
         }
     } else {
@@ -2282,13 +2283,13 @@ integer_t<BOOST_XINT_APARAMS> lcm(const integer_t<BOOST_XINT_APARAMS> num1,
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (num1.is_nan() || num2.is_nan()) return
             detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
-        try {
+        BOOST_XINT_TRY {
             integer_t<BOOST_XINT_APARAMS> r;
             lcm(r._data(), num1._data(), num2._data());
             if (integer_t<BOOST_XINT_APARAMS>::Threadsafe == true)
                 r._make_unique();
             return BOOST_XINT_MOVE(r);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >();
         }
     } else {
@@ -2317,9 +2318,9 @@ int compare(const integer_t<BOOST_XINT_APARAMS> n1, const
 {
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n1.is_nan() || n2.is_nan()) return 2;
-        try {
+        BOOST_XINT_TRY {
             return compare(n1._data(), n2._data(), ignoresign);
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return 2;
         }
     } else {
@@ -2347,9 +2348,9 @@ template<BOOST_XINT_CLASS_APARAMS>
 size_t log2(const integer_t<BOOST_XINT_APARAMS> n) {
     if (integer_t<BOOST_XINT_APARAMS>::Nothrow) {
         if (n.is_nan()) return 0;
-        try {
+        BOOST_XINT_TRY {
             return log2(n._data());
-        } catch (std::exception&) {
+        } BOOST_XINT_CATCH {
             return 0;
         }
     } else {
@@ -2363,9 +2364,9 @@ size_t log2(const integer_t<BOOST_XINT_APARAMS> n) {
     template <BOOST_XINT_CLASS_APARAMS, typename N> \
     rtype op(const integer_t<BOOST_XINT_APARAMS> n1, const N n2) { \
         if (integer_t<BOOST_XINT_APARAMS>::Nothrow) { \
-            try { \
+            BOOST_XINT_TRY { \
                 return op(n1, integer_t<BOOST_XINT_APARAMS>(n2)); \
-            } catch (std::exception&) { \
+            } BOOST_XINT_CATCH { \
                 return rtype(0); \
             } \
         } else { \
@@ -2376,9 +2377,9 @@ size_t log2(const integer_t<BOOST_XINT_APARAMS> n) {
     template <typename N, BOOST_XINT_CLASS_APARAMS> \
     rtype op(const N n1, const integer_t<BOOST_XINT_APARAMS> n2) { \
         if (integer_t<BOOST_XINT_APARAMS>::Nothrow) { \
-            try { \
+            BOOST_XINT_TRY { \
                 return op(integer_t<BOOST_XINT_APARAMS>(n1), n2); \
-            } catch (std::exception&) { \
+            } BOOST_XINT_CATCH { \
                 return rtype(0); \
             } \
         } else { \
@@ -2401,7 +2402,7 @@ BOOST_XINT_ANY_COMPARE(int, compare)
         const N n2) \
     { \
         if (integer_t<BOOST_XINT_APARAMS>::Nothrow) { \
-            try { \
+            BOOST_XINT_TRY { \
                 integer_t<BOOST_XINT_APARAMS> r(op(n1, \
                     integer_t<BOOST_XINT_APARAMS>(n2))); \
                 if (integer_t<BOOST_XINT_APARAMS>::Threadsafe == true) \
@@ -2409,7 +2410,7 @@ BOOST_XINT_ANY_COMPARE(int, compare)
                 if (!integer_t<BOOST_XINT_APARAMS>::Signed && \
                     r._data().negative) r._fix_negative_unsigned(); \
                 return BOOST_XINT_MOVE(r); \
-            } catch (std::exception&) { \
+            } BOOST_XINT_CATCH { \
                 return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >(); \
             } \
         } else { \
@@ -2428,7 +2429,7 @@ BOOST_XINT_ANY_COMPARE(int, compare)
         integer_t<BOOST_XINT_APARAMS> n2) \
     { \
         if (integer_t<BOOST_XINT_APARAMS>::Nothrow) { \
-            try { \
+            BOOST_XINT_TRY { \
                 integer_t<BOOST_XINT_APARAMS> \
                     r(op(integer_t<BOOST_XINT_APARAMS>(n1), n2)); \
                 if (integer_t<BOOST_XINT_APARAMS>::Threadsafe == true) \
@@ -2436,7 +2437,7 @@ BOOST_XINT_ANY_COMPARE(int, compare)
                 if (!integer_t<BOOST_XINT_APARAMS>::Signed && \
                     r._data().negative) r._fix_negative_unsigned(); \
                 return BOOST_XINT_MOVE(r); \
-            } catch (std::exception&) { \
+            } BOOST_XINT_CATCH { \
                 return detail::get_nan<integer_t<BOOST_XINT_APARAMS> >(); \
             } \
         } else { \

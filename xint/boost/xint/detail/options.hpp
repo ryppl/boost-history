@@ -96,7 +96,7 @@ template <bitsize_t Bits> struct fixedlength: public fixedlength_base, public
     boost::mpl::integral_c<bitsize_t, Bits> { };
 //!@}
 
-//! \name Miscellaneous Options
+//! \name Speed vs. Thread Safety
 //!@{
 /*! \brief Ensures that the integer_t objects can be safely used by multiple
            threads.
@@ -354,13 +354,13 @@ class fixed_functions: virtual public integer_t_data<BOOST_XINT_APARAMS> {
         if (Nothrow) {
             if (integer_t_data<BOOST_XINT_APARAMS>::data.is_nan())
                 return detail::get_nan<T>();
-            try {
+            BOOST_XINT_TRY {
                 T r(~integer_t_data<BOOST_XINT_APARAMS>::data);
                 if (Threadsafe == true) r._make_unique();
                 if (!Signed) r.data.negative = false;
                 else r.data.negative = !r.data.negative;
                 return BOOST_XINT_MOVE(r);
-            } catch (std::exception&) {
+            } BOOST_XINT_CATCH {
                 return detail::get_nan<T>();
             }
         } else {
@@ -428,7 +428,8 @@ class unsigned_negative_functions<p_throw_exception, BOOST_XINT_APARAMS>:
         if (integer_t_data<BOOST_XINT_APARAMS>::NothrowType::value) {
             integer_t_data<BOOST_XINT_APARAMS>::_data().make_nan();
         } else {
-            throw exceptions::cannot_represent("unsigned negative value");
+            exception_handler<>::call(__FILE__, __LINE__,
+                exceptions::cannot_represent("unsigned negative value"));
         }
     }
 };

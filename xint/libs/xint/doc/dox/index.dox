@@ -60,6 +60,7 @@ Detailed Usage Information:
 - \subpage zero
 - \subpage primes (with example code)
 - \subpage exceptions (with example code)
+- \subpage exception_handler
 - \subpage random
 - \subpage threadsafe
 

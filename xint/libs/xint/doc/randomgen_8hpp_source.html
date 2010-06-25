@@ -66,99 +66,102 @@
 <a name="l00049"></a>00049                 <span class="stringliteral">&quot;SystemFunction036&quot;</span>));
 <a name="l00050"></a>00050             <span class="keywordflow">if</span> (fn == 0) {
 <a name="l00051"></a>00051                 destroy();
-<a name="l00052"></a>00052                 <span class="keywordflow">throw</span> exceptions::no_strong_random();
-<a name="l00053"></a>00053             }
-<a name="l00054"></a>00054         }
-<a name="l00055"></a>00055 
-<a name="l00056"></a>00056         ~impl_t() { destroy(); }
-<a name="l00057"></a>00057 
-<a name="l00058"></a>00058         result_type operator()() {
-<a name="l00059"></a>00059             result_type r=0;
-<a name="l00060"></a>00060             <span class="keywordflow">if</span> (!fn(&amp;r, <span class="keyword">sizeof</span>(result_type)))
-<a name="l00061"></a>00061                 <span class="keywordflow">throw</span> exceptions::no_strong_random(<span class="stringliteral">&quot;RtlGenRandom failed&quot;</span>);
-<a name="l00062"></a>00062             <span class="keywordflow">return</span> r;
-<a name="l00063"></a>00063         }
-<a name="l00064"></a>00064 
-<a name="l00065"></a>00065         <span class="keywordtype">void</span> destroy() { <span class="keywordflow">if</span> (dll) FreeLibrary(dll); }
+<a name="l00052"></a>00052                 exception_handler&lt;&gt;::call(__FILE__, __LINE__,
+<a name="l00053"></a>00053                     exceptions::no_strong_random());
+<a name="l00054"></a>00054             }
+<a name="l00055"></a>00055         }
+<a name="l00056"></a>00056 
+<a name="l00057"></a>00057         ~impl_t() { destroy(); }
+<a name="l00058"></a>00058 
+<a name="l00059"></a>00059         result_type operator()() {
+<a name="l00060"></a>00060             result_type r=0;
+<a name="l00061"></a>00061             <span class="keywordflow">if</span> (!fn(&amp;r, <span class="keyword">sizeof</span>(result_type)))
+<a name="l00062"></a>00062                 exception_handler&lt;&gt;::call(__FILE__, __LINE__,
+<a name="l00063"></a>00063                 exceptions::no_strong_random(<span class="stringliteral">&quot;RtlGenRandom failed&quot;</span>));
+<a name="l00064"></a>00064             <span class="keywordflow">return</span> r;
+<a name="l00065"></a>00065         }
 <a name="l00066"></a>00066 
-<a name="l00067"></a>00067         HMODULE dll;
-<a name="l00068"></a>00068         RtlGenRandomFn fn;
-<a name="l00069"></a>00069     };
-<a name="l00070"></a>00070 
-<a name="l00071"></a>00071     <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00072"></a>00072     BOOST_XINT_INLINE <span class="keywordtype">double</span> strong_random_generator_t&lt;T&gt;::entropy()<span class="keyword"> const</span>
-<a name="l00073"></a>00073 <span class="keyword">        </span>{ <span class="keywordflow">return</span> 32; }
-<a name="l00074"></a>00074 <span class="preprocessor">#else</span>
-<a name="l00075"></a>00075 <span class="preprocessor"></span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00076"></a>00076     <span class="keyword">struct </span>strong_random_generator_t&lt;T&gt;::impl_t {
-<a name="l00077"></a>00077         <span class="keyword">typedef</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> result_type;
-<a name="l00078"></a>00078 
-<a name="l00079"></a>00079         impl_t(): rng(<span class="stringliteral">&quot;/dev/urandom&quot;</span>, std::ios::binary) {
-<a name="l00080"></a>00080             <span class="comment">// This should be supported under most non-Windows systems. Note</span>
-<a name="l00081"></a>00081             <span class="comment">// that we&#39;re using /dev/urandom, not /dev/random -- /dev/random is</span>
-<a name="l00082"></a>00082             <span class="comment">// more secure, but it can be VERY slow.</span>
-<a name="l00083"></a>00083             <span class="keywordflow">if</span> (!rng) <span class="keywordflow">throw</span> exceptions::no_strong_random();
-<a name="l00084"></a>00084         }
-<a name="l00085"></a>00085 
-<a name="l00086"></a>00086         result_type operator()() {
-<a name="l00087"></a>00087             <span class="keywordtype">int</span> r=rng.get();
-<a name="l00088"></a>00088             <span class="keywordflow">if</span> (r==EOF) <span class="keywordflow">throw</span> exceptions::no_strong_random(<span class="stringliteral">&quot;/dev/urandom &quot;</span>
-<a name="l00089"></a>00089                 <span class="stringliteral">&quot;returned EOF&quot;</span>);
-<a name="l00090"></a>00090             <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>result_type<span class="keyword">&gt;</span>(r);
-<a name="l00091"></a>00091         }
-<a name="l00092"></a>00092 
-<a name="l00093"></a>00093         std::ifstream rng;
-<a name="l00094"></a>00094     };
+<a name="l00067"></a>00067         <span class="keywordtype">void</span> destroy() { <span class="keywordflow">if</span> (dll) FreeLibrary(dll); }
+<a name="l00068"></a>00068 
+<a name="l00069"></a>00069         HMODULE dll;
+<a name="l00070"></a>00070         RtlGenRandomFn fn;
+<a name="l00071"></a>00071     };
+<a name="l00072"></a>00072 
+<a name="l00073"></a>00073     <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00074"></a>00074     BOOST_XINT_INLINE <span class="keywordtype">double</span> strong_random_generator_t&lt;T&gt;::entropy()<span class="keyword"> const</span>
+<a name="l00075"></a>00075 <span class="keyword">        </span>{ <span class="keywordflow">return</span> 32; }
+<a name="l00076"></a>00076 <span class="preprocessor">#else</span>
+<a name="l00077"></a>00077 <span class="preprocessor"></span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00078"></a>00078     <span class="keyword">struct </span>strong_random_generator_t&lt;T&gt;::impl_t {
+<a name="l00079"></a>00079         <span class="keyword">typedef</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> result_type;
+<a name="l00080"></a>00080 
+<a name="l00081"></a>00081         impl_t(): rng(<span class="stringliteral">&quot;/dev/urandom&quot;</span>, std::ios::binary) {
+<a name="l00082"></a>00082             <span class="comment">// This should be supported under most non-Windows systems. Note</span>
+<a name="l00083"></a>00083             <span class="comment">// that we&#39;re using /dev/urandom, not /dev/random -- /dev/random is</span>
+<a name="l00084"></a>00084             <span class="comment">// more secure, but it can be VERY slow.</span>
+<a name="l00085"></a>00085             <span class="keywordflow">if</span> (!rng) exception_handler&lt;&gt;::call(__FILE__, __LINE__,
+<a name="l00086"></a>00086                 exceptions::no_strong_random());
+<a name="l00087"></a>00087         }
+<a name="l00088"></a>00088 
+<a name="l00089"></a>00089         result_type operator()() {
+<a name="l00090"></a>00090             <span class="keywordtype">int</span> r=rng.get();
+<a name="l00091"></a>00091             <span class="keywordflow">if</span> (r==EOF) exception_handler&lt;&gt;::call(__FILE__, __LINE__,
+<a name="l00092"></a>00092                 exceptions::no_strong_random(<span class="stringliteral">&quot;/dev/urandom returned EOF&quot;</span>));
+<a name="l00093"></a>00093             <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>result_type<span class="keyword">&gt;</span>(r);
+<a name="l00094"></a>00094         }
 <a name="l00095"></a>00095 
-<a name="l00096"></a>00096     <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00097"></a>00097     BOOST_XINT_INLINE <span class="keywordtype">double</span> strong_random_generator_t&lt;T&gt;::entropy()<span class="keyword"> const</span>
-<a name="l00098"></a>00098 <span class="keyword">        </span>{ <span class="keywordflow">return</span> 8; }
-<a name="l00099"></a>00099 <span class="preprocessor">#endif</span>
-<a name="l00100"></a>00100 <span class="preprocessor"></span>
-<a name="l00101"></a>00101 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00102"></a>00102 <span class="keyword">const</span> <span class="keywordtype">bool</span> strong_random_generator_t&lt;T&gt;::has_fixed_range = <span class="keyword">true</span>;
-<a name="l00103"></a>00103 
+<a name="l00096"></a>00096         std::ifstream rng;
+<a name="l00097"></a>00097     };
+<a name="l00098"></a>00098 
+<a name="l00099"></a>00099     <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00100"></a>00100     BOOST_XINT_INLINE <span class="keywordtype">double</span> strong_random_generator_t&lt;T&gt;::entropy()<span class="keyword"> const</span>
+<a name="l00101"></a>00101 <span class="keyword">        </span>{ <span class="keywordflow">return</span> 8; }
+<a name="l00102"></a>00102 <span class="preprocessor">#endif</span>
+<a name="l00103"></a>00103 <span class="preprocessor"></span>
 <a name="l00104"></a>00104 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00105"></a>00105 <span class="keyword">const</span> <span class="keyword">typename</span> strong_random_generator_t&lt;T&gt;::result_type
-<a name="l00106"></a>00106     strong_random_generator_t&lt;T&gt;::min_value =
-<a name="l00107"></a>00107     (std::numeric_limits&lt;<span class="keyword">typename</span>
-<a name="l00108"></a>00108     strong_random_generator_t&lt;T&gt;::impl_t::result_type&gt;::min)();
-<a name="l00109"></a>00109 
-<a name="l00110"></a>00110 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00111"></a>00111 <span class="keyword">const</span> <span class="keyword">typename</span> strong_random_generator_t&lt;T&gt;::result_type
-<a name="l00112"></a>00112     strong_random_generator_t&lt;T&gt;::max_value =
-<a name="l00113"></a>00113     (std::numeric_limits&lt;<span class="keyword">typename</span>
-<a name="l00114"></a>00114     strong_random_generator_t&lt;T&gt;::impl_t::result_type&gt;::max)();
-<a name="l00115"></a>00115 
-<a name="l00116"></a>00116 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00117"></a>00117 BOOST_XINT_INLINE strong_random_generator_t&lt;T&gt;::strong_random_generator_t():
-<a name="l00118"></a>00118     impl(new impl_t) { }
-<a name="l00119"></a>00119 
-<a name="l00120"></a>00120 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00121"></a>00121 BOOST_XINT_INLINE strong_random_generator_t&lt;T&gt;::~strong_random_generator_t() {
-<a name="l00122"></a>00122     <span class="keyword">delete</span> impl; }
-<a name="l00123"></a>00123 
-<a name="l00124"></a>00124 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00125"></a>00125 BOOST_XINT_INLINE <span class="keyword">typename</span> strong_random_generator_t&lt;T&gt;::result_type
-<a name="l00126"></a>00126     strong_random_generator_t&lt;T&gt;::operator()() { <span class="keywordflow">return</span> (*impl)(); }
-<a name="l00127"></a>00127 
-<a name="l00128"></a>00128 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00129"></a>00129 BOOST_XINT_INLINE <span class="keyword">typename</span> strong_random_generator_t&lt;T&gt;::result_type
-<a name="l00130"></a>00130     strong_random_generator_t&lt;T&gt;::min BOOST_PREVENT_MACRO_SUBSTITUTION ()<span class="keyword"> const</span>
-<a name="l00131"></a>00131 <span class="keyword">    </span>{ <span class="keywordflow">return</span> min_value; }
-<a name="l00132"></a>00132 
-<a name="l00133"></a>00133 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00134"></a>00134 BOOST_XINT_INLINE <span class="keyword">typename</span> strong_random_generator_t&lt;T&gt;::result_type
-<a name="l00135"></a>00135     strong_random_generator_t&lt;T&gt;::max BOOST_PREVENT_MACRO_SUBSTITUTION ()<span class="keyword"> const</span>
-<a name="l00136"></a>00136 <span class="keyword">    </span>{ <span class="keywordflow">return</span> max_value; }
-<a name="l00137"></a>00137 
-<a name="l00138"></a>00138 } <span class="comment">// namespace detail</span>
-<a name="l00139"></a>00139 } <span class="comment">// namespace xint</span>
-<a name="l00140"></a>00140 } <span class="comment">// namespace boost</span>
-<a name="l00142"></a>00142 <span class="comment"></span>
-<a name="l00143"></a>00143 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_RANDOMGEN_HPP</span>
+<a name="l00105"></a>00105 <span class="keyword">const</span> <span class="keywordtype">bool</span> strong_random_generator_t&lt;T&gt;::has_fixed_range = <span class="keyword">true</span>;
+<a name="l00106"></a>00106 
+<a name="l00107"></a>00107 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00108"></a>00108 <span class="keyword">const</span> <span class="keyword">typename</span> strong_random_generator_t&lt;T&gt;::result_type
+<a name="l00109"></a>00109     strong_random_generator_t&lt;T&gt;::min_value =
+<a name="l00110"></a>00110     (std::numeric_limits&lt;<span class="keyword">typename</span>
+<a name="l00111"></a>00111     strong_random_generator_t&lt;T&gt;::impl_t::result_type&gt;::min)();
+<a name="l00112"></a>00112 
+<a name="l00113"></a>00113 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00114"></a>00114 <span class="keyword">const</span> <span class="keyword">typename</span> strong_random_generator_t&lt;T&gt;::result_type
+<a name="l00115"></a>00115     strong_random_generator_t&lt;T&gt;::max_value =
+<a name="l00116"></a>00116     (std::numeric_limits&lt;<span class="keyword">typename</span>
+<a name="l00117"></a>00117     strong_random_generator_t&lt;T&gt;::impl_t::result_type&gt;::max)();
+<a name="l00118"></a>00118 
+<a name="l00119"></a>00119 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00120"></a>00120 BOOST_XINT_INLINE strong_random_generator_t&lt;T&gt;::strong_random_generator_t():
+<a name="l00121"></a>00121     impl(new impl_t) { }
+<a name="l00122"></a>00122 
+<a name="l00123"></a>00123 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00124"></a>00124 BOOST_XINT_INLINE strong_random_generator_t&lt;T&gt;::~strong_random_generator_t() {
+<a name="l00125"></a>00125     <span class="keyword">delete</span> impl; }
+<a name="l00126"></a>00126 
+<a name="l00127"></a>00127 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00128"></a>00128 BOOST_XINT_INLINE <span class="keyword">typename</span> strong_random_generator_t&lt;T&gt;::result_type
+<a name="l00129"></a>00129     strong_random_generator_t&lt;T&gt;::operator()() { <span class="keywordflow">return</span> (*impl)(); }
+<a name="l00130"></a>00130 
+<a name="l00131"></a>00131 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00132"></a>00132 BOOST_XINT_INLINE <span class="keyword">typename</span> strong_random_generator_t&lt;T&gt;::result_type
+<a name="l00133"></a>00133     strong_random_generator_t&lt;T&gt;::min BOOST_PREVENT_MACRO_SUBSTITUTION ()<span class="keyword"> const</span>
+<a name="l00134"></a>00134 <span class="keyword">    </span>{ <span class="keywordflow">return</span> min_value; }
+<a name="l00135"></a>00135 
+<a name="l00136"></a>00136 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00137"></a>00137 BOOST_XINT_INLINE <span class="keyword">typename</span> strong_random_generator_t&lt;T&gt;::result_type
+<a name="l00138"></a>00138     strong_random_generator_t&lt;T&gt;::max BOOST_PREVENT_MACRO_SUBSTITUTION ()<span class="keyword"> const</span>
+<a name="l00139"></a>00139 <span class="keyword">    </span>{ <span class="keywordflow">return</span> max_value; }
+<a name="l00140"></a>00140 
+<a name="l00141"></a>00141 } <span class="comment">// namespace detail</span>
+<a name="l00142"></a>00142 } <span class="comment">// namespace xint</span>
+<a name="l00143"></a>00143 } <span class="comment">// namespace boost</span>
+<a name="l00145"></a>00145 <span class="comment"></span>
+<a name="l00146"></a>00146 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_RANDOMGEN_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 18 20:03:13 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 25 12:04:28 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

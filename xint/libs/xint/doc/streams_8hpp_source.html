@@ -119,9 +119,9 @@
 <a name="l00101"></a>00101         } <span class="keywordflow">else</span> <span class="keywordflow">break</span>;
 <a name="l00102"></a>00102     }
 <a name="l00103"></a>00103 
-<a name="l00104"></a>00104     <span class="keywordflow">try</span> {
+<a name="l00104"></a>00104     <a class="code" href="internals_8hpp.html#a693c4f473d303c632864f6084c394f03">BOOST_XINT_TRY</a> {
 <a name="l00105"></a>00105         n.from_string(s, base);
-<a name="l00106"></a>00106     } <span class="keywordflow">catch</span> (std::exception&amp;) {
+<a name="l00106"></a>00106     } <a class="code" href="internals_8hpp.html#a5117d87820df153f9c26dd5ff8ac318a">BOOST_XINT_CATCH</a> {
 <a name="l00107"></a>00107         <span class="comment">// Catch invalid strings</span>
 <a name="l00108"></a>00108         in.setstate(std::ios::failbit);
 <a name="l00109"></a>00109     }
@@ -135,7 +135,7 @@
 <a name="l00118"></a>00118 
 <a name="l00119"></a>00119 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_RAW_STREAMS_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 18 20:03:13 2010 for The Extended Integer (XInt) Library by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 25 12:04:28 2010 for The Extended Integer (XInt) Library by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>
