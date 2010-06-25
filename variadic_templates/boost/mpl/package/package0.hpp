@@ -235,7 +235,6 @@ namespace mpl
             type;
             
         };
-        
           template
           < typename... Args
           >

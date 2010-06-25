@@ -28,8 +28,8 @@
 #include <boost/mpl/list/aux_/list0.hpp>
 //|
 //!@nv-mpl_diff
-//!  The non-variadic mpl did not the above
-//!  #include of aux_/list0.hpp.
+//!  The non-variadic mpl did not have
+//!  the above #include of aux_/list0.hpp.
 //!  It also had a declaration of list0.
 //!  This declaration has been moved to
 //!  the aux_/list0.hpp file and renamed

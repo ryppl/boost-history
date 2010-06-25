@@ -82,7 +82,7 @@ vector0
      *  and boost/mpl/vector/aux_/push_front.hpp.
      *
      *  There's really not much special about the
-     *  value chosen.  It would be most any value.
+     *  value chosen.  It could be most any value.
      *  However, if push_front is called enough times,
      *  the resulting type, B, could have an underflow
      *  in B::index_ due to lower bound on long values.

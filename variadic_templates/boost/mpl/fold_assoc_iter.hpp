@@ -91,7 +91,7 @@ fold_assoc_iter
 : fold_assoc_iter
   < assoc_left
   , OpStateIter_State
-  , typename apply
+  , typename apply2
     < OpStateIter_State
     , State0
     , IterNow
@@ -116,7 +116,7 @@ fold_assoc_iter
   , IterNow
   , IterEnd
   >
-: apply
+: apply2
   < OpIterState_State
   , IterNow
   , typename fold_assoc_iter
