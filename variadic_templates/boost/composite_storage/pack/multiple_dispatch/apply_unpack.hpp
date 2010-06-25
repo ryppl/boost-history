@@ -11,12 +11,8 @@
 
 #include <boost/mpl/package_range_c.hpp>
 #include <boost/type_traits/remove_cv.hpp>
-//#define USE_IS_CALLABLE_WITH_ARGS
-#ifdef USE_IS_CALLABLE_WITH_ARGS
-#include <boost/function_types/is_callable_with_args.hpp>
-#else
 #include <boost/function_types/can_be_called.hpp>
-#endif //#ifdef USE_IS_CALLABLE_WITH_ARGS
+
 namespace boost
 {
 namespace composite_storage
@@ -84,11 +80,7 @@ apply_ftor_check_args
    */
 {
         typedef
-    #ifdef USE_IS_CALLABLE_WITH_ARGS
-      typename function_types::is_callable_with_args<Functor(Args const&...)>::type
-    #else
       typename function_types::can_be_called<Functor(Args const&...)>::type
-    #endif
     is_ftor_args_callable;
     return apply_ftor_callable_args
       ( is_ftor_args_callable()
