@@ -10,33 +10,26 @@
 //#include <boost/composite_storage/pack/container_all_of_aligned.hpp>
 #include <boost/composite_storage/pack/container_one_of_maybe.hpp>
 
-#include <boost/iostreams/utility/indent_ostream.hpp>
-#include <string>
+#include <boost/iostreams/utility/indent_scoped_ostreambuf.hpp>
 #include <iostream>
+#include <string>
+static std::ostream& ind_out=std::cout;
 
 #include "../../utility/curried_offset.hpp"
 
 #include <boost/assert.hpp>
 
-    typedef
-  ::boost::iostreams::indent_ostream<>
-ind_ostream
-;
-    static
-  ind_ostream
-ind_out(std::cout)
-;
 struct trace_scope
 {
     trace_scope(std::string const& a_where)
     : my_where(a_where)
     {
         ind_out<<"[[[ENTERING:"<<my_where<<"\n";
-        ++ind_out;
+        ind_out<<indent_buf_in;
     }
     ~trace_scope(void)
     {
-        --ind_out;
+        ind_out<<indent_buf_out;
         ind_out<<"]]]EXITING:"<<my_where<<"\n";
     }
  private:
@@ -572,6 +565,7 @@ void test(void)
 
 int main(void)
 {
+    boost::iostreams::indent_scoped_ostreambuf<char> indent_outbuf(std::cout,4);
     boost::composite_storage::leaf_test::test();
     return 0;
 }    
