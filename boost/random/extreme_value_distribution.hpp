@@ -1,4 +1,4 @@
-/* boost random/weibull_distribution.hpp header file
+/* boost random/extreme_value_distribution.hpp header file
  *
  * Copyright Steven Watanabe 2010
  * Distributed under the Boost Software License, Version 1.0. (See
@@ -10,8 +10,8 @@
  * $Id$
  */
 
-#ifndef BOOST_RANDOM_WEIBULL_DISTRIBUTION_HPP
-#define BOOST_RANDOM_WEIBULL_DISTRIBUTION_HPP
+#ifndef BOOST_RANDOM_EXTREME_VALUE_DISTRIBUTION_HPP
+#define BOOST_RANDOM_EXTREME_VALUE_DISTRIBUTION_HPP
 
 #include <boost/config/no_tr1/cmath.hpp>
 #include <iosfwd>
@@ -25,26 +25,26 @@ namespace boost {
 namespace random {
 
 /**
- * The Weibull distribution is a real valued distribution with two
- * parameters a and b, producing values >= 0.
+ * The extreme value distribution is a real valued distribution with two
+ * parameters a and b.
  *
- * It has \f$\displaystyle p(x) = \frac{a}{b}\left(\frac{x}{b}\right)^{a-1}e^{-\left(\frac{x}{b}\right)^a}\f$.
+ * It has \f$\displaystyle p(x) = \frac{1}{b}e^{\frac{a-x}{b} - e^\frac{a-x}{b}}\f$.
  */
 template<class RealType = double>
-class weibull_distribution {
+class extreme_value_distribution {
 public:
     typedef RealType result_type;
     typedef RealType input_type;
 
     class param_type {
     public:
-        typedef weibull_distribution distribution_type;
+        typedef extreme_value_distribution distribution_type;
 
         /**
          * Constructs a @c param_type from the "a" and "b" parameters
          * of the distribution.
          *
-         * Requires: a > 0 && b > 0
+         * Requires: b > 0
          */
         explicit param_type(RealType a_arg = 1.0, RealType b_arg = 1.0)
           : _a(a_arg), _b(b_arg)
@@ -76,38 +76,37 @@ public:
     };
 
     /**
-     * Constructs a @c weibull_distribution from its "a" and "b" parameters.
+     * Constructs an @c extreme_value_distribution from its "a" and "b" parameters.
      *
-     * Requires: a > 0 && b > 0
+     * Requires: b > 0
      */
-    explicit weibull_distribution(RealType a_arg = 1.0, RealType b_arg = 1.0)
+    explicit extreme_value_distribution(RealType a_arg = 1.0, RealType b_arg = 1.0)
       : _a(a_arg), _b(b_arg)
     {}
-    /** Constructs a @c weilbull_distribution from its parameters. */
-    explicit weibull_distribution(const param_type& parm)
+    /** Constructs an @c extreme_value_distribution from its parameters. */
+    explicit extreme_value_distribution(const param_type& parm)
       : _a(parm.a()), _b(parm.b())
     {}
 
     /**
      * Returns a random variate distributed according to the
-     * @c weibull_distribution.
+     * @c extreme_value_distribution.
      */
     template<class URNG>
     RealType operator()(URNG& urng) const
     {
-        using std::pow;
         using std::log;
-        return _b*pow(-log(1 - uniform_01<RealType>()(urng)), 1/_a);
+        return _a - log(-log(uniform_01<RealType>()(urng))) * _b;
     }
 
     /**
-     * Returns a random variate distributed accordint to the Weibull
-     * distribution with parameters specified by @c parm.
+     * Returns a random variate distributed accordint to the extreme
+     * value distribution with parameters specified by @c param.
      */
     template<class URNG>
     RealType operator()(URNG& urng, const param_type& parm) const
     {
-        return weibull_distribution(parm)(urng);
+        return extreme_value_distribution(parm)(urng);
     }
 
     /** Returns the "a" parameter of the distribution. */
@@ -116,7 +115,8 @@ public:
     RealType b() const { return _b; }
 
     /** Returns the smallest value that the distribution can produce. */
-    RealType min BOOST_PREVENT_MACRO_SUBSTITUTION () { return 0; }
+    RealType min BOOST_PREVENT_MACRO_SUBSTITUTION ()
+    { return -std::numeric_limits<RealType>::infinity(); }
     /** Returns the largest value that the distribution can produce. */
     RealType max BOOST_PREVENT_MACRO_SUBSTITUTION ()
     { return std::numeric_limits<RealType>::infinity(); }
@@ -130,15 +130,15 @@ public:
         _b = parm.b();
     }
 
-    /** Writes a @c weibull_distribution to a @c std::ostream. */
-    BOOST_RANDOM_DETAIL_OSTREAM_OPERATOR(os, weibull_distribution, wd)
+    /** Writes an @c extreme_value_distribution to a @c std::ostream. */
+    BOOST_RANDOM_DETAIL_OSTREAM_OPERATOR(os, extreme_value_distribution, wd)
     {
         os << wd.param();
         return os;
     }
 
-    /** Reads a @c weibull_distribution from a @c std::istream. */
-    BOOST_RANDOM_DETAIL_ISTREAM_OPERATOR(is, weibull_distribution, wd)
+    /** Reads an @c extreme_value_distribution from a @c std::istream. */
+    BOOST_RANDOM_DETAIL_ISTREAM_OPERATOR(is, extreme_value_distribution, wd)
     {
         param_type parm;
         if(is >> parm) {
@@ -148,17 +148,17 @@ public:
     }
 
     /**
-     * Returns true if the two instances of @c weibull_distribution will
+     * Returns true if the two instances of @c extreme_value_distribution will
      * return identical sequences of values given equal generators.
      */
-    BOOST_RANDOM_DETAIL_EQUALITY_OPERATOR(weibull_distribution, lhs, rhs)
+    BOOST_RANDOM_DETAIL_EQUALITY_OPERATOR(extreme_value_distribution, lhs, rhs)
     { return lhs._a == rhs._a && lhs._b == rhs._b; }
     
     /**
-     * Returns true if the two instances of @c weibull_distribution will
+     * Returns true if the two instances of @c extreme_value_distribution will
      * return different sequences of values given equal generators.
      */
-    BOOST_RANDOM_DETAIL_INEQUALITY_OPERATOR(weibull_distribution)
+    BOOST_RANDOM_DETAIL_INEQUALITY_OPERATOR(extreme_value_distribution)
 
 private:
     RealType _a;
@@ -168,4 +168,4 @@ private:
 } // namespace random
 } // namespace boost
 
-#endif // BOOST_RANDOM_WEIBULL_DISTRIBUTION_HPP
+#endif // BOOST_RANDOM_EXTREME_VALUE_DISTRIBUTION_HPP
