@@ -3,10 +3,164 @@
 [section:bft bitfield_tuple]
 
 [section:desc Description]
-Description
+This is a type which provides access to bitfields stored within integers
+or other integral types (see future work, for extensions). This is a pseudo
+variadic type. It currently only takes up to 10 parameters but I will be 
+extending that to be adjustable via macro similar to the MPL. Each of the 
+template parameters must be supplied as either a storage template or a 
+member template. For example, if one wanted to declare a bitfield_tuple
+that was the size of one byte and contained two boolean bitfields and 
+two integers they would do the following,
+``   
+#include <boost/integer/bitfield_tuple.hpp>
+#include <boost/assert.hpp>
+struct bool_one;
+struct bool_two;
+struct int_one;
+struct int_two;
+
+typedef bitfield_tuple<
+    storage<char>,
+    member<bool,bool_one,1>,
+    member<bool,bool_two,1>,
+    member<int,int_one,2>,
+    member<int,int_two,2>
+>                       example_type;
+
+int main() {
+    example_type temp;
+    temp.get<bool_one>() = false; // assigns false to the first bitfield.
+    temp.get<bool_two>() = true;  // assigns false to the second bitfield.
+    temp.get<2>()        = -1;    // assigns -1 to the first integer 
+                                  // bitfield.
+
+    BOOST_ASSERT(( temp.get<2>()  == -1 )); // this passes the assert and 
+                                            // does not exit the program
+    BOOST_ASSERT(( temp.get<int_one>()  == -1 )); // this passes the assert and 
+                                                  // does not exit the program
+}
+``
+Within the above example the template `bitfield_tuple` is specified using 
+multiple other templates which are used to describe different fields and
+the internal type in which the bitfields will reside. In the above example
+`storage<char>` means that the internal storage type used will be type
+`char`. The template member is used to specify a bitfield within the tuple.
+For instance, looking at `member<bool,bool_one,1>`, the first parameter is
+used to describe the type which the stored value will be returned as. The second
+parameter, `bool_one`, is a name type which can be used to retrieve the a 
+bitfield from with in the `bitfield_tuple`. The third and final parameter is
+the width of the a bitfield in bits, the template `member<bool,bool_one,1>` will
+have a width of one.
+
+
+The goal of a bitfield tuple is to provide a method for constructing bitfields
+which is not subject to packing restrictions of structs or classes, while
+providing an interface simlar to that of a struct or class which contains
+bitfields. For instance if a user wanted to create a struct or class which
+was similar to `example_type` in the above example they would write the 
+following,
+``
+struct foo {
+    bool bool_one:1;
+    bool bool_two:1;
+    int int_one:2;
+    int int_two:2;
+};
+``
+There is a problem with `struct foo`, it is not one which is so simple to see.
+`struct foo` has a `sizeof` 4 bytes, while `example_type` is storing its data
+within in a single byte. One can imagine the problems that arise from creating 
+a `union` of `struct foo` with a `char` type.
 [endsect]
 
-[section:explanation Interface Brief]
+[section:interface_overview Interface Overview]
+
+[section:interface_summary Overview]
+There are two main sections to the interface of a `bitfield_tuple`. The first
+part of a `bitfield_tuple`'s interface is how its specified and how those 
+specifications effect its behavior and composition. The second part of the
+interface is the runtime portion of the interface.
+
+[h4 Template Interface]
+For all but one of the types used to specify a `bitfield_tuple`'s template 
+parameters, order does matter, the one type which is not part of the implicit
+ordering of a `bitfield_tuples` composition is the `storage<>` type. For more
+information on the storage type as it relates to ordering please see
+documentation relating to the `storage` template. Basically the template
+parameters which are of type `flag` and `member` increment the `get` function
+accessor's index by 1. (meaning that if one was to construct a bitfield tuple 
+using a flag followed by a `filler`, followed by a `member`, than the index for
+the `flag` would be 0 and the index for the `member` would be 1 because `filler`
+doesn't have a value associated with it).
+
+[h4 Runtime Support Interface]
+The runtime interface of a `bitfield_tuple` is composed of the basic tuple 
+interface, that being it is default and copy constructible, and provids the
+regular `get` funtions which a tuple does. The two main difference between
+the boost.tuple and the `bitfield_tuple` are as follows: First, the 
+`bitfield_tuple` doesn't return references to its data members it has to return
+a proxy to them. Second, the bitfield_tuple provides an additional `get`
+function which uses a name or empty struct to access internal data elements (the
+`bitfield_tuple` still provides the regular `get<Index>()` by index function as
+boost.tuple).
+
+[endsect]
+
+[section:interface_preconditions Preconditions]
+The following is a list of documented and/or enforeced preconditions for
+constructing a `bitfield_tuple`. All of the preconditions will be noted as
+either being documentation only or enfocred. For documentation only
+preconditions please treat them as recomended usage of a `bitfield_tuple`, if
+you do not follow the documentation only preconditions the `bitfield_tuple` may
+not behave as you intend. All enforced preconditions if violated will result
+in compilation failure normally resulting from a static assertion or look up
+failure.
+
+
+[note The following are preconditions for using the `bitfield_tuple` template 
+and not preconditions for calling member functions, operators or constructor.
+For preconditions on functions, constructors, and operators please see each 
+function's, constructor's, or operator's individual documentation. ]
+[endsect]
+
+[section:interface_template Template Parameter Interface]
+The following are different templates which one may use to aid in the
+construction of a `bitfield_tuple`. All templates which are supplied to a
+bitfield tuple empty and essentially have no struct body to them. The template
+parameters supplied to a bitfield_tuple are essentially only used to associate
+different meanings with different groups of types and values which are later
+used to construct a bitfield_tuple.
+
+[section:filler `filler`]
+[h4 Template Signature]
+`template <std::size_t Bits> struct filler;`
+
+
+[h4 Description]
+Filler specifies empty bits to be ignored. Another good way to think about this
+is as bit padding, it adds the number of bits in padding when specified.
+[endsect]
+
+[endsect]
+
+[section:interface_reference Reference]
+Interface Reference
+[endsect]
+
+[section:interface_implementation Implementation Reference]
+Implementation Reference.
+[endsect]
+
+[endsect]
+
+[section:endianness_and_bitfield_order Endianness And Bitfield Ordering]
+
+[section:endianness Endianness]
+[endsect]
+
+[section:Bitfield_order Bitfield Storage Order]
+[endsect]
+
 [endsect]
 
 [section:tutorial Tutorials and Examples]
@@ -16,28 +170,10 @@ Description
 Use Cases
 [endsect]
 
-[section:interface_overview Interface Overview]
-
-[section:interface_summary Summary]
-Summary
-[endsect]
-
-[section:interface_template Template Parameter Options]
-Parameter Options.
-[endsect]
-
-
-[section:interface_reference Reference]
-Interface Reference
-[endsect]
-
-[endsect]
-
-
-
 [section:rationale Rationale]
 Rationale
 [endsect]
+
 
 [endsect]
 

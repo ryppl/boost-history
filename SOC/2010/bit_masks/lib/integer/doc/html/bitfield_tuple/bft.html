@@ -21,10 +21,11 @@
 </h2></div></div></div>
 <div class="toc"><dl>
 <dt><span class="section"><a href="bft.html#bitfield_tuple.bft.desc"> Description</a></span></dt>
-<dt><span class="section"><a href="bft.html#bitfield_tuple.bft.explanation"> Interface Brief</a></span></dt>
+<dt><span class="section"><a href="bft.html#bitfield_tuple.bft.interface_overview"> Interface Overview</a></span></dt>
+<dt><span class="section"><a href="bft.html#bitfield_tuple.bft.endianness_and_bitfield_order"> Endianness
+      And Bitfield Ordering</a></span></dt>
 <dt><span class="section"><a href="bft.html#bitfield_tuple.bft.tutorial"> Tutorials and Examples</a></span></dt>
 <dt><span class="section"><a href="bft.html#bitfield_tuple.bft.basic_use_cases"> Basic Use Cases</a></span></dt>
-<dt><span class="section"><a href="bft.html#bitfield_tuple.bft.interface_overview"> Interface Overview</a></span></dt>
 <dt><span class="section"><a href="bft.html#bitfield_tuple.bft.rationale"> Rationale</a></span></dt>
 </dl></div>
 <div class="section">
@@ -32,21 +33,82 @@
 <a name="bitfield_tuple.bft.desc"></a><a class="link" href="bft.html#bitfield_tuple.bft.desc" title="Description"> Description</a>
 </h3></div></div></div>
 <p>
-        Description
-      </p>
-</div>
-<div class="section"><div class="titlepage"><div><div><h3 class="title">
-<a name="bitfield_tuple.bft.explanation"></a><a class="link" href="bft.html#bitfield_tuple.bft.explanation" title="Interface Brief"> Interface Brief</a>
-</h3></div></div></div></div>
-<div class="section"><div class="titlepage"><div><div><h3 class="title">
-<a name="bitfield_tuple.bft.tutorial"></a><a class="link" href="bft.html#bitfield_tuple.bft.tutorial" title="Tutorials and Examples"> Tutorials and Examples</a>
-</h3></div></div></div></div>
-<div class="section">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="bitfield_tuple.bft.basic_use_cases"></a><a class="link" href="bft.html#bitfield_tuple.bft.basic_use_cases" title="Basic Use Cases"> Basic Use Cases</a>
-</h3></div></div></div>
+        This is a type which provides access to bitfields stored within integers
+        or other integral types (see future work, for extensions). This is a pseudo
+        variadic type. It currently only takes up to 10 parameters but I will be
+        extending that to be adjustable via macro similar to the MPL. Each of the
+        template parameters must be supplied as either a storage template or a member
+        template. For example, if one wanted to declare a bitfield_tuple that was
+        the size of one byte and contained two boolean bitfields and two integers
+        they would do the following, 
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield_tuple</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">assert</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">bool_one</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">bool_two</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">int_one</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">int_two</span><span class="special">;</span>
+
+<span class="keyword">typedef</span> <span class="identifier">bitfield_tuple</span><span class="special">&lt;</span>
+    <span class="identifier">storage</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">,</span><span class="identifier">bool_one</span><span class="special">,</span><span class="number">1</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">,</span><span class="identifier">bool_two</span><span class="special">,</span><span class="number">1</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="identifier">int_one</span><span class="special">,</span><span class="number">2</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="identifier">int_two</span><span class="special">,</span><span class="number">2</span><span class="special">&gt;</span>
+<span class="special">&gt;</span>                       <span class="identifier">example_type</span><span class="special">;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">example_type</span> <span class="identifier">temp</span><span class="special">;</span>
+    <span class="identifier">temp</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">bool_one</span><span class="special">&gt;()</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span> <span class="comment">// assigns false to the first bitfield.
+</span>    <span class="identifier">temp</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">bool_two</span><span class="special">&gt;()</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">;</span>  <span class="comment">// assigns false to the second bitfield.
+</span>    <span class="identifier">temp</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;()</span>        <span class="special">=</span> <span class="special">-</span><span class="number">1</span><span class="special">;</span>    <span class="comment">// assigns -1 to the first integer 
+</span>                                  <span class="comment">// bitfield.
+</span>
+    <span class="identifier">BOOST_ASSERT</span><span class="special">((</span> <span class="identifier">temp</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;()</span>  <span class="special">==</span> <span class="special">-</span><span class="number">1</span> <span class="special">));</span> <span class="comment">// this passes the assert and 
+</span>                                            <span class="comment">// does not exit the program
+</span>    <span class="identifier">BOOST_ASSERT</span><span class="special">((</span> <span class="identifier">temp</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">int_one</span><span class="special">&gt;()</span>  <span class="special">==</span> <span class="special">-</span><span class="number">1</span> <span class="special">));</span> <span class="comment">// this passes the assert and 
+</span>                                                  <span class="comment">// does not exit the program
+</span><span class="special">}</span>
+</pre>
 <p>
-        Use Cases
+        Within the above example the template <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+        is specified using multiple other templates which are used to describe different
+        fields and the internal type in which the bitfields will reside. In the above
+        example <code class="computeroutput"><span class="identifier">storage</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;</span></code> means
+        that the internal storage type used will be type <code class="computeroutput"><span class="keyword">char</span></code>.
+        The template member is used to specify a bitfield within the tuple. For instance,
+        looking at <code class="computeroutput"><span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">,</span><span class="identifier">bool_one</span><span class="special">,</span><span class="number">1</span><span class="special">&gt;</span></code>,
+        the first parameter is used to describe the type which the stored value will
+        be returned as. The second parameter, <code class="computeroutput"><span class="identifier">bool_one</span></code>,
+        is a name type which can be used to retrieve the a bitfield from with in
+        the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>. The third
+        and final parameter is the width of the a bitfield in bits, the template
+        <code class="computeroutput"><span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">,</span><span class="identifier">bool_one</span><span class="special">,</span><span class="number">1</span><span class="special">&gt;</span></code>
+        will have a width of one.
+      </p>
+<p>
+        The goal of a bitfield tuple is to provide a method for constructing bitfields
+        which is not subject to packing restrictions of structs or classes, while
+        providing an interface simlar to that of a struct or class which contains
+        bitfields. For instance if a user wanted to create a struct or class which
+        was similar to <code class="computeroutput"><span class="identifier">example_type</span></code>
+        in the above example they would write the following, 
+</p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">foo</span> <span class="special">{</span>
+    <span class="keyword">bool</span> <span class="identifier">bool_one</span><span class="special">:</span><span class="number">1</span><span class="special">;</span>
+    <span class="keyword">bool</span> <span class="identifier">bool_two</span><span class="special">:</span><span class="number">1</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">int_one</span><span class="special">:</span><span class="number">2</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">int_two</span><span class="special">:</span><span class="number">2</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+        There is a problem with <code class="computeroutput"><span class="keyword">struct</span> <span class="identifier">foo</span></code>, it is not one which is so simple to
+        see. <code class="computeroutput"><span class="keyword">struct</span> <span class="identifier">foo</span></code>
+        has a <code class="computeroutput"><span class="keyword">sizeof</span></code> 4 bytes, while
+        <code class="computeroutput"><span class="identifier">example_type</span></code> is storing its
+        data within in a single byte. One can imagine the problems that arise from
+        creating a <code class="computeroutput"><span class="keyword">union</span></code> of <code class="computeroutput"><span class="keyword">struct</span> <span class="identifier">foo</span></code>
+        with a <code class="computeroutput"><span class="keyword">char</span></code> type.
       </p>
 </div>
 <div class="section">
@@ -55,29 +117,136 @@
 </h3></div></div></div>
 <div class="toc"><dl>
 <dt><span class="section"><a href="bft.html#bitfield_tuple.bft.interface_overview.interface_summary">
-        Summary</a></span></dt>
+        Overview</a></span></dt>
+<dt><span class="section"><a href="bft.html#bitfield_tuple.bft.interface_overview.interface_preconditions">
+        Preconditions</a></span></dt>
 <dt><span class="section"><a href="bft.html#bitfield_tuple.bft.interface_overview.interface_template">
-        Template Parameter Options</a></span></dt>
+        Template Parameter Interface</a></span></dt>
 <dt><span class="section"><a href="bft.html#bitfield_tuple.bft.interface_overview.interface_reference">
         Reference</a></span></dt>
+<dt><span class="section"><a href="bft.html#bitfield_tuple.bft.interface_overview.interface_implementation">
+        Implementation Reference</a></span></dt>
 </dl></div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="bitfield_tuple.bft.interface_overview.interface_summary"></a><a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_summary" title="Summary">
-        Summary</a>
+<a name="bitfield_tuple.bft.interface_overview.interface_summary"></a><a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_summary" title="Overview">
+        Overview</a>
 </h4></div></div></div>
 <p>
-          Summary
+          There are two main sections to the interface of a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>.
+          The first part of a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>'s
+          interface is how its specified and how those specifications effect its
+          behavior and composition. The second part of the interface is the runtime
+          portion of the interface.
+        </p>
+<a name="bitfield_tuple.bft.interface_overview.interface_summary.template_interface"></a><h5>
+<a name="id2995915"></a>
+          <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_summary.template_interface">Template
+          Interface</a>
+        </h5>
+<p>
+          For all but one of the types used to specify a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>'s
+          template parameters, order does matter, the one type which is not part
+          of the implicit ordering of a <code class="computeroutput"><span class="identifier">bitfield_tuples</span></code>
+          composition is the <code class="computeroutput"><span class="identifier">storage</span><span class="special">&lt;&gt;</span></code> type. For more information on the
+          storage type as it relates to ordering please see documentation relating
+          to the <code class="computeroutput"><span class="identifier">storage</span></code> template.
+          Basically the template parameters which are of type <code class="computeroutput"><span class="identifier">flag</span></code>
+          and <code class="computeroutput"><span class="identifier">member</span></code> increment the
+          <code class="computeroutput"><span class="identifier">get</span></code> function accessor's
+          index by 1. (meaning that if one was to construct a bitfield tuple using
+          a flag followed by a <code class="computeroutput"><span class="identifier">filler</span></code>,
+          followed by a <code class="computeroutput"><span class="identifier">member</span></code>, than
+          the index for the <code class="computeroutput"><span class="identifier">flag</span></code>
+          would be 0 and the index for the <code class="computeroutput"><span class="identifier">member</span></code>
+          would be 1 because <code class="computeroutput"><span class="identifier">filler</span></code>
+          doesn't have a value associated with it).
+        </p>
+<a name="bitfield_tuple.bft.interface_overview.interface_summary.runtime_support_interface"></a><h5>
+<a name="id2996064"></a>
+          <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_summary.runtime_support_interface">Runtime
+          Support Interface</a>
+        </h5>
+<p>
+          The runtime interface of a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+          is composed of the basic tuple interface, that being it is default and
+          copy constructible, and provids the regular <code class="computeroutput"><span class="identifier">get</span></code>
+          funtions which a tuple does. The two main difference between the boost.tuple
+          and the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+          are as follows: First, the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+          doesn't return references to its data members it has to return a proxy
+          to them. Second, the bitfield_tuple provides an additional <code class="computeroutput"><span class="identifier">get</span></code> function which uses a name or empty
+          struct to access internal data elements (the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+          still provides the regular <code class="computeroutput"><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">Index</span><span class="special">&gt;()</span></code> by index function as boost.tuple).
         </p>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="bitfield_tuple.bft.interface_overview.interface_template"></a><a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template" title="Template Parameter Options">
-        Template Parameter Options</a>
+<a name="bitfield_tuple.bft.interface_overview.interface_preconditions"></a><a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_preconditions" title="Preconditions">
+        Preconditions</a>
 </h4></div></div></div>
 <p>
-          Parameter Options.
+          The following is a list of documented and/or enforeced preconditions for
+          constructing a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>.
+          All of the preconditions will be noted as either being documentation only
+          or enfocred. For documentation only preconditions please treat them as
+          recomended usage of a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>,
+          if you do not follow the documentation only preconditions the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code> may not behave as you
+          intend. All enforced preconditions if violated will result in compilation
+          failure normally resulting from a static assertion or look up failure.
         </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            The following are preconditions for using the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+            template and not preconditions for calling member functions, operators
+            or constructor. For preconditions on functions, constructors, and operators
+            please see each function's, constructor's, or operator's individual documentation.
+          </p></td></tr>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="bitfield_tuple.bft.interface_overview.interface_template"></a><a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template" title="Template Parameter Interface">
+        Template Parameter Interface</a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.filler">
+          <code class="computeroutput"><span class="identifier">filler</span></code></a></span></dt></dl></div>
+<p>
+          The following are different templates which one may use to aid in the construction
+          of a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>. All
+          templates which are supplied to a bitfield tuple empty and essentially
+          have no struct body to them. The template parameters supplied to a bitfield_tuple
+          are essentially only used to associate different meanings with different
+          groups of types and values which are later used to construct a bitfield_tuple.
+        </p>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="bitfield_tuple.bft.interface_overview.interface_template.filler"></a><a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.filler" title="filler">
+          <code class="computeroutput"><span class="identifier">filler</span></code></a>
+</h5></div></div></div>
+<a name="bitfield_tuple.bft.interface_overview.interface_template.filler.template_signature"></a><h5>
+<a name="id2996321"></a>
+            <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.filler.template_signature">Template
+            Signature</a>
+          </h5>
+<p>
+            <code class="computeroutput"><span class="keyword">template</span> <span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">Bits</span><span class="special">&gt;</span> <span class="keyword">struct</span>
+            <span class="identifier">filler</span><span class="special">;</span></code>
+          </p>
+<a name="bitfield_tuple.bft.interface_overview.interface_template.filler.description"></a><h5>
+<a name="id2996396"></a>
+            <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.filler.description">Description</a>
+          </h5>
+<p>
+            Filler specifies empty bits to be ignored. Another good way to think
+            about this is as bit padding, it adds the number of bits in padding when
+            specified.
+          </p>
+</div>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
@@ -88,6 +257,46 @@
           Interface Reference
         </p>
 </div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="bitfield_tuple.bft.interface_overview.interface_implementation"></a><a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_implementation" title="Implementation Reference">
+        Implementation Reference</a>
+</h4></div></div></div>
+<p>
+          Implementation Reference.
+        </p>
+</div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="bitfield_tuple.bft.endianness_and_bitfield_order"></a><a class="link" href="bft.html#bitfield_tuple.bft.endianness_and_bitfield_order" title="Endianness And Bitfield Ordering"> Endianness
+      And Bitfield Ordering</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="bft.html#bitfield_tuple.bft.endianness_and_bitfield_order.endianness">
+        Endianness</a></span></dt>
+<dt><span class="section"><a href="bft.html#bitfield_tuple.bft.endianness_and_bitfield_order.Bitfield_order">
+        Bitfield Storage Order</a></span></dt>
+</dl></div>
+<div class="section"><div class="titlepage"><div><div><h4 class="title">
+<a name="bitfield_tuple.bft.endianness_and_bitfield_order.endianness"></a><a class="link" href="bft.html#bitfield_tuple.bft.endianness_and_bitfield_order.endianness" title="Endianness">
+        Endianness</a>
+</h4></div></div></div></div>
+<div class="section"><div class="titlepage"><div><div><h4 class="title">
+<a name="bitfield_tuple.bft.endianness_and_bitfield_order.Bitfield_order"></a><a class="link" href="bft.html#bitfield_tuple.bft.endianness_and_bitfield_order.Bitfield_order" title="Bitfield Storage Order">
+        Bitfield Storage Order</a>
+</h4></div></div></div></div>
+</div>
+<div class="section"><div class="titlepage"><div><div><h3 class="title">
+<a name="bitfield_tuple.bft.tutorial"></a><a class="link" href="bft.html#bitfield_tuple.bft.tutorial" title="Tutorials and Examples"> Tutorials and Examples</a>
+</h3></div></div></div></div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="bitfield_tuple.bft.basic_use_cases"></a><a class="link" href="bft.html#bitfield_tuple.bft.basic_use_cases" title="Basic Use Cases"> Basic Use Cases</a>
+</h3></div></div></div>
+<p>
+        Use Cases
+      </p>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
