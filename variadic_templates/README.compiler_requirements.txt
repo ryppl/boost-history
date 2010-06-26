@@ -1,53 +1,16 @@
-Current versions of the g++ compiler (as of 2009-08-28, that includes
-gcc-4.5 and below) may fail to compile templates involving
-boost::mpl::integral_c.  The workaround is applying the patch for
-bug 40092 that's mentioned here:
+The tests in libs/composite_storage/sandbox/pack were compiled and run
+with:
+ 
+ftp://gcc.gnu.org/pub/gcc/snapshots/4.5-20100408/gcc-g++-4.5-20100408.tar.bz2
 
-  http://gcc.gnu.org/ml/gcc-patches/2009-08/msg01217.html
+An earlier version:
 
-If you're using Boost.Build:
+ftp://gcc.gnu.org/pub/gcc/snapshots/4.4-20090630/gcc-4.4-20090630.tar.bz2
 
-  http://www.boost.org/doc/tools/build/doc/html/bbv2/installation.html
+failed to compile one test and gave error message:
 
-to run tests, then your $HOME/user-config.jam file (where $HOME is
-your home directory) must make this patched compiler available with
-lines something like: 
+one_of_multiple_dispatch.test.cpp:371:   instantiated from here
+../../../../boost/composite_storage/pack/multiple_dispatch/replace_source_with_target_ptr.hpp:84:
+error: incompatible types in assignment of '<brace-enclosed
+initializer list>' to 'void* [2]'
 
-#{---cut here---
-
-  using gcc 
-    : 4.4_20090630_v
-    : "/home/evansl/download/gcc/4.4-20090630/install/bin/g++" 
-    : <cxxflags>-I/home/evansl/prog_dev/boost-svn/ro/sandbox-rw/variadic_templates
-      <cxxflags>-std=gnu++0x
-    ;
-    
-#}---cut here---
-
-The <cxxflags>-I... assures the variadic_templates/boost directory
-takes precedence over the boost-trunk/boost directory. Of course you
-will have to change that to your particular path.
-
-The tests can then be compiled as shown below:
-
-#{---cut here---
--*- mode: compilation; default-directory: "~/prog_dev/boost-svn/ro/sandbox-rw/variadic_templates/libs/mpl/test/" -*-
-Compilation started at Sat Aug 29 06:39:05
-
-bjam toolset=gcc-4.4_20090630_v unpack_args
-sh: icpc: not found
-docutils-dir=
-tools-dir= /usr/bin/rst2html.py
-...patience...
-...found 362 targets...
-...updating 5 targets...
-common.mkdir ../../../../../../../../bin.v2/prog_dev/boost-svn/ro/sandbox-rw/variadic_templates/libs/mpl/test/unpack_args.test
-common.mkdir ../../../../../../../../bin.v2/prog_dev/boost-svn/ro/sandbox-rw/variadic_templates/libs/mpl/test/unpack_args.test/gcc-4.4_20090630_v
-common.mkdir ../../../../../../../../bin.v2/prog_dev/boost-svn/ro/sandbox-rw/variadic_templates/libs/mpl/test/unpack_args.test/gcc-4.4_20090630_v/debug
-gcc.compile.c++ ../../../../../../../../bin.v2/prog_dev/boost-svn/ro/sandbox-rw/variadic_templates/libs/mpl/test/unpack_args.test/gcc-4.4_20090630_v/debug/unpack_args.o
-**passed** ../../../../../../../../bin.v2/prog_dev/boost-svn/ro/sandbox-rw/variadic_templates/libs/mpl/test/unpack_args.test/gcc-4.4_20090630_v/debug/unpack_args.test
-...updated 5 targets...
-
-Compilation finished at Sat Aug 29 06:39:10
-    
-#}---cut here---
