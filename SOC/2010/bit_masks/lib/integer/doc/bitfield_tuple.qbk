@@ -1,0 +1,43 @@
+[c++]
+
+[section:bft bitfield_tuple]
+
+[section:desc Description]
+Description
+[endsect]
+
+[section:explanation Interface Brief]
+[endsect]
+
+[section:tutorial Tutorials and Examples]
+[endsect]
+
+[section:basic_use_cases Basic Use Cases]
+Use Cases
+[endsect]
+
+[section:interface_overview Interface Overview]
+
+[section:interface_summary Summary]
+Summary
+[endsect]
+
+[section:interface_template Template Parameter Options]
+Parameter Options.
+[endsect]
+
+
+[section:interface_reference Reference]
+Interface Reference
+[endsect]
+
+[endsect]
+
+
+
+[section:rationale Rationale]
+Rationale
+[endsect]
+
+[endsect]
+

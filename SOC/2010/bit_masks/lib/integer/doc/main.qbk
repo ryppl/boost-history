@@ -98,6 +98,7 @@ simply treat it as though it were an integer.
 [include:high_bits_mask high_bits.qbk]
 [include:low_bits_mask low_bits.qbk]
 [include:bits_mask bits_mask.qbk]
+[include:bitfield_tuple bitfield_tuple.qbk]
 [include:rationale rationale.qbk]
 
 
