@@ -94,7 +94,7 @@
           <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span></code>, ec is a system::error_code
         </p>
 <div class="table">
-<a name="id4870154"></a><p class="title"><b>Table&#160;3.&#160;Stopwatch Requirements</b></p>
+<a name="id4902237"></a><p class="title"><b>Table&#160;4.&#160;Stopwatch Requirements</b></p>
 <table class="table" summary="Stopwatch Requirements">
 <colgroup>
 <col>
@@ -194,6 +194,14 @@
 </tbody>
 </table>
 </div>
+<p>
+          Models of <code class="computeroutput"><span class="identifier">Formatter</span></code>:
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li><a href="stopwatch_formatters.html#boost_chrono.reference.stopwatch_formatters.stopwatch_formatter_hpp.template_class__basic_stopwatch_formatter___" target="_top"><code class="computeroutput"><span class="identifier">basic_stopwatch_formatter</span></code></a></li>
+<li><a href="../../boost_chrono.reference.stopwatch_formatters.stopwatch_accumulator_formatter_hpp.template_class__basic_stopwatch_accumulator_formatter___" target="_top"><code class="computeroutput"><span class="identifier">basic_stopwatch_accumulator_formatter</span></code></a></li>
+<li><a href="../../boost_chrono.reference.stopwatch_formatters.t24_hours_formatter_hpp.template_class__basic_24_hours_formatter___" target="_top"><code class="computeroutput"><span class="identifier">basic_24_hours_formatter</span></code></a></li>
+</ul></div>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
@@ -245,9 +253,9 @@
 </h5></div></div></div>
 <p>
             class <code class="computeroutput"><span class="identifier">basic_stopwatch_reporter</span></code>
-            provides a everything a Timer provides and it adds reporting capabilities
-            that can be invoked in a single line of code. The reporting is controleed
-            by two parameters:
+            provides a everything a <code class="computeroutput"><span class="identifier">Stopwatch</span></code>
+            provides and it adds reporting capabilities that can be invoked in a
+            single line of code. The reporting is controleed by two parameters:
           </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
@@ -314,9 +322,9 @@
 </h5></div></div></div>
 <p>
             class <code class="computeroutput"><span class="identifier">stopwatch_reporter</span></code>
-            provides a everything a Timer provides and it adds reporting capabilities
-            that can be invoked in a single line of code. The reporting is controleed
-            by two parameters:
+            provides a everything a <code class="computeroutput"><span class="identifier">Stopwatch</span></code>
+            provides and it adds reporting capabilities that can be invoked in a
+            single line of code. The reporting is controleed by two parameters:
           </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
@@ -400,9 +408,9 @@
 </h5></div></div></div>
 <p>
             class <code class="computeroutput"><span class="identifier">wstopwatch_reporter</span></code>
-            provides a everything a Timer provides and it adds reporting capabilities
-            that can be invoked in a single line of code. The reporting is controleed
-            by two parameters:
+            provides a everything a <code class="computeroutput"><span class="identifier">Stopwatch</span></code>
+            provides and it adds reporting capabilities that can be invoked in a
+            single line of code. The reporting is controleed by two parameters:
           </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
@@ -623,9 +631,9 @@
 <div class="titlepage"><div><div><h5 class="title">
 <a name="boost_chrono.reference.stopwatch_reporters.stopclock_hpp._stopclock__useful_typedefs"></a><a href="stopwatch_reporters.html#boost_chrono.reference.stopwatch_reporters.stopclock_hpp._stopclock__useful_typedefs" title="stopclock useful typedefs"><code class="computeroutput"><span class="identifier">stopclock</span></code> useful typedefs</a>
 </h5></div></div></div>
-<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopclock</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span> <span class="special">&gt;</span> <span class="identifier">system_stopwatch_reporter</span><span class="special">;</span>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopclock</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span> <span class="special">&gt;</span> <span class="identifier">system_stopwatch_stopclock</span><span class="special">;</span>
 <span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span>
-<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopclock</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">monotonic_clock</span> <span class="special">&gt;</span> <span class="identifier">monotonic_stopwatch_reporter</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopclock</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">monotonic_clock</span> <span class="special">&gt;</span> <span class="identifier">monotonic_stopwatch_stopclock</span><span class="special">;</span>
 <span class="preprocessor">#endif</span>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopclock</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">high_resolution_clock</span> <span class="special">&gt;</span> <span class="identifier">high_resolution_stopclock</span><span class="special">;</span>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopclock</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">process_real_cpu_clock</span> <span class="special">&gt;</span> <span class="identifier">process_real_cpu_stopclock</span><span class="special">;</span>
@@ -688,9 +696,9 @@
 <div class="titlepage"><div><div><h5 class="title">
 <a name="boost_chrono.reference.stopwatch_reporters.stopclock_hpp._wstopclock__useful_typedefs"></a><a href="stopwatch_reporters.html#boost_chrono.reference.stopwatch_reporters.stopclock_hpp._wstopclock__useful_typedefs" title="wstopclock useful typedefs"><code class="computeroutput"><span class="identifier">wstopclock</span></code> useful typedefs</a>
 </h5></div></div></div>
-<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">wstopclock</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span> <span class="special">&gt;</span> <span class="identifier">system_stopwatch_reporter</span><span class="special">;</span>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">wstopclock</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span> <span class="special">&gt;</span> <span class="identifier">system_stopwatch_wstopclock</span><span class="special">;</span>
 <span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span>
-<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">wstopclock</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">monotonic_clock</span> <span class="special">&gt;</span> <span class="identifier">monotonic_stopwatch_reporter</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">wstopclock</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">monotonic_clock</span> <span class="special">&gt;</span> <span class="identifier">monotonic_stopwatch_wstopclock</span><span class="special">;</span>
 <span class="preprocessor">#endif</span>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">wstopclock</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">high_resolution_clock</span> <span class="special">&gt;</span> <span class="identifier">high_resolution_wstopclock</span><span class="special">;</span>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">wstopclock</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">process_real_cpu_clock</span> <span class="special">&gt;</span> <span class="identifier">process_real_cpu_wstopclock</span><span class="special">;</span>

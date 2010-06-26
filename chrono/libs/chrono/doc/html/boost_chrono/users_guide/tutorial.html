@@ -7,7 +7,7 @@
 <link rel="start" href="../../index.html" title="Boost.Chrono">
 <link rel="up" href="../users_guide.html" title=" Users'Guide">
 <link rel="prev" href="getting_started.html" title=" Getting Started">
-<link rel="next" href="ext_references.html" title=" References">
+<link rel="next" href="examples.html" title="Examples">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,113 +20,208 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="getting_started.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="ext_references.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="getting_started.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="examples.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_chrono.users_guide.tutorial"></a><a href="tutorial.html" title="Tutorial">Tutorial</a>
 </h3></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.how_to_define_a_thread_clock">How
-        to define a thread clock</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.how_can_i_prefix_each_report_with__boost_current_function__function_signature_">How
-        can I prefix each report with <code class="computeroutput"><span class="identifier">BOOST_CURRENT_FUNCTION</span></code>
-        function signature?</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.how_can_i_prefix_each_report_with____file_____line_____pattern_">How
-        can I prefix each report with <code class="computeroutput"><span class="identifier">__FILE__</span><span class="special">[</span><span class="identifier">__LINE__</span><span class="special">]</span></code> pattern?</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.can_i_use_an_stopclock_accumulator_which_is_not_static_">Can
-        I use an stopclock accumulator which is not static?</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.how_can_i_suspend_a_stopwatch_">How
-        can I suspend a stopwatch?</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.how_to_get_specific_statistics_from_stopwatches_accumulator_">How
-        to get specific statistics from stopwatches accumulator?</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.how_can_i_make_a_specific_formatter_when_the_default_do_not_satisfy_my_expectations">How
-        can I make a specific formatter when the default do not satisfy my expectations</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.common_type">Common
+        Type</a></span></dt>
+<dd><dl><dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.common_type.how_to_get_the_common_type_of_inter_type_with_explicit_conversions_">How
+          to get the common type of inter-type with explicit conversions?</a></span></dt></dl></dd>
+<dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.ratio">Ratio</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.clocks__time_point_and_duration">Clocks,
+        time_point and duration</a></span></dt>
+<dd><dl><dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.clocks__time_point_and_duration.how_to_get_the_actual_cpu_milliseconds__or_other_units___used_by_the_current_thread_between_end_and_start_">How
+          to get the actual CPU milliseconds (or other units?) used by the current
+          thread between end and start?</a></span></dt></dl></dd>
+<dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.stopwatches_and_stopclocks">Stopwatches
+        and Stopclocks</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.stopwatches_and_stopclocks.how_can_i_prefix_each_report_with__boost_current_function__function_signature_">How
+          can I prefix each report with <code class="computeroutput"><span class="identifier">BOOST_CURRENT_FUNCTION</span></code>
+          function signature?</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.stopwatches_and_stopclocks.how_can_i_prefix_each_report_with____file_____line_____pattern_">How
+          can I prefix each report with <code class="computeroutput"><span class="identifier">__FILE__</span><span class="special">[</span><span class="identifier">__LINE__</span><span class="special">]</span></code> pattern?</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.stopwatches_and_stopclocks.can_i_use_an_stopclock_accumulator_which_is_not_static_">Can
+          I use an stopclock accumulator which is not static?</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.stopwatches_and_stopclocks.how_can_i_suspend_a_stopwatch_">How
+          can I suspend a stopwatch?</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.stopwatches_and_stopclocks.how_to_get_specific_statistics_from_stopwatches_accumulator_">How
+          to get specific statistics from stopwatches accumulator?</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.formatters">Formatters</a></span></dt>
+<dd><dl><dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.formatters.how_can_i_make_a_specific_formatter_when_the_default_do_not_satisfy_my_expectations">How
+          can I make a specific formatter when the default do not satisfy my expectations</a></span></dt></dl></dd>
 </dl></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          If you have not read yet the <a href="../overview/motivation.html" target="_top">motivation
+          section</a>, please read it now.
+        </p></td></tr>
+</table></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_chrono.users_guide.tutorial.how_to_define_a_thread_clock"></a><a href="tutorial.html#boost_chrono.users_guide.tutorial.how_to_define_a_thread_clock" title="How
-        to define a thread clock">How
-        to define a thread clock</a>
+<a name="boost_chrono.users_guide.tutorial.common_type"></a><a href="tutorial.html#boost_chrono.users_guide.tutorial.common_type" title="Common
+        Type">Common
+        Type</a>
 </h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.common_type.how_to_get_the_common_type_of_inter_type_with_explicit_conversions_">How
+          to get the common type of inter-type with explicit conversions?</a></span></dt></dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.users_guide.tutorial.common_type.how_to_get_the_common_type_of_inter_type_with_explicit_conversions_"></a><a href="tutorial.html#boost_chrono.users_guide.tutorial.common_type.how_to_get_the_common_type_of_inter_type_with_explicit_conversions_" title="How
+          to get the common type of inter-type with explicit conversions?">How
+          to get the common type of inter-type with explicit conversions?</a>
+</h5></div></div></div>
 <p>
-          On posix systems for which the macro _POSIX_THREAD_CPUTIME is defined we
-          can get the time associated to a specific thread.
-        </p>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">thread_clock</span> <span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">typedef</span> <span class="identifier">nanoseconds</span>                          <span class="identifier">duration</span><span class="special">;</span>
-    <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">rep</span>                        <span class="identifier">rep</span><span class="special">;</span>
-    <span class="keyword">typedef</span> <span class="identifier">duration</span><span class="special">::</span><span class="identifier">period</span>                     <span class="identifier">period</span><span class="special">;</span>
-    <span class="keyword">typedef</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">process_real_cpu_clock</span><span class="special">&gt;</span>    <span class="identifier">time_point</span><span class="special">;</span>
-    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">is_monotonic</span> <span class="special">=</span>             <span class="keyword">true</span><span class="special">;</span>
+            The default definition of <code class="computeroutput"><span class="identifier">common_type</span></code>
+            demands the conversion be implicit. However the trait can be specialized
+            for user-defined types which want to limit their inter-type conversions
+            to explicit, and yet still want to interoperate with the <code class="computeroutput"><span class="identifier">common_type</span></code> facility.
+          </p>
+</div>
+</div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title">
+<a name="boost_chrono.users_guide.tutorial.ratio"></a><a href="tutorial.html#boost_chrono.users_guide.tutorial.ratio" title="Ratio">Ratio</a>
+</h4></div></div></div></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_chrono.users_guide.tutorial.clocks__time_point_and_duration"></a><a href="tutorial.html#boost_chrono.users_guide.tutorial.clocks__time_point_and_duration" title="Clocks,
+        time_point and duration">Clocks,
+        time_point and duration</a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.clocks__time_point_and_duration.how_to_get_the_actual_cpu_milliseconds__or_other_units___used_by_the_current_thread_between_end_and_start_">How
+          to get the actual CPU milliseconds (or other units?) used by the current
+          thread between end and start?</a></span></dt></dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.users_guide.tutorial.clocks__time_point_and_duration.how_to_get_the_actual_cpu_milliseconds__or_other_units___used_by_the_current_thread_between_end_and_start_"></a><a href="tutorial.html#boost_chrono.users_guide.tutorial.clocks__time_point_and_duration.how_to_get_the_actual_cpu_milliseconds__or_other_units___used_by_the_current_thread_between_end_and_start_" title="How
+          to get the actual CPU milliseconds (or other units?) used by the current
+          thread between end and start?">How
+          to get the actual CPU milliseconds (or other units?) used by the current
+          thread between end and start?</a>
+</h5></div></div></div>
+<p>
+            You can use <code class="computeroutput"><span class="identifier">duration_cast</span><span class="special">&lt;&gt;</span></code> to convert the <code class="computeroutput"><span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">duration</span></code> into whatever units you desire.
+            This facility will round down (truncate) if an exact conversion is not
+            possible. Ex:
+          </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">milliseconds</span> <span class="identifier">ms</span><span class="special">;</span>
+<span class="identifier">ms</span> <span class="identifier">d</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">ms</span><span class="special">&gt;(</span><span class="identifier">end</span> <span class="special">-</span> <span class="identifier">start</span><span class="special">);</span>
 
-    <span class="keyword">static</span> <span class="identifier">time_point</span> <span class="identifier">now</span><span class="special">(</span> <span class="special">)</span> <span class="special">{</span>
-        <span class="comment">// get the current thread
-</span>        <span class="identifier">pthread_t</span> <span class="identifier">pth</span><span class="special">=</span><span class="identifier">pthread_self</span><span class="special">(</span><span class="keyword">void</span><span class="special">);</span>
-        <span class="comment">// get the clock_id associated to the current thread
-</span>        <span class="identifier">clockid_t</span> <span class="identifier">clock_id</span><span class="special">;</span>
-        <span class="identifier">pthread_getcpuclockid</span><span class="special">(</span><span class="identifier">pth</span><span class="special">,</span> <span class="identifier">clock_id</span><span class="special">);</span>
-        <span class="comment">// get the timespec associated to the thread clock
-</span>        <span class="keyword">struct</span> <span class="identifier">timespec</span> <span class="identifier">ts</span><span class="special">;</span>
-        <span class="keyword">if</span> <span class="special">(</span> <span class="special">::</span><span class="identifier">clock_gettime</span><span class="special">(</span> <span class="identifier">clock_id</span><span class="special">,</span> <span class="special">&amp;</span><span class="identifier">ts</span> <span class="special">)</span> <span class="special">)</span>
-        <span class="special">{</span>
-            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">throw_exception</span><span class="special">(</span>
-            <span class="identifier">system</span><span class="special">::</span><span class="identifier">system_error</span><span class="special">(</span> <span class="identifier">errno</span><span class="special">,</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">system_category</span><span class="special">,</span> <span class="string">"chrono::thread_clock"</span> <span class="special">));</span>
-        <span class="special">}</span>
-
-        <span class="comment">// transform to nanoseconds
-</span>        <span class="keyword">return</span> <span class="identifier">time_point</span><span class="special">(</span><span class="identifier">duration</span><span class="special">(</span>
-            <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">rep</span><span class="special">&gt;(</span> <span class="identifier">ts</span><span class="special">.</span><span class="identifier">tv_sec</span> <span class="special">)</span> <span class="special">*</span> <span class="number">1000000000</span> <span class="special">+</span> <span class="identifier">ts</span><span class="special">.</span><span class="identifier">tv_nsec</span><span class="special">));</span>
-
-    <span class="special">}</span>
-    <span class="keyword">static</span> <span class="identifier">time_point</span> <span class="identifier">now</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">)</span> <span class="special">{</span>
-        <span class="comment">// get the current thread
-</span>        <span class="identifier">pthread_t</span> <span class="identifier">pth</span><span class="special">=</span><span class="identifier">pthread_self</span><span class="special">(</span><span class="keyword">void</span><span class="special">);</span>
-        <span class="comment">// get the clock_id associated to the current thread
-</span>        <span class="identifier">clockid_t</span> <span class="identifier">clock_id</span><span class="special">;</span>
-        <span class="identifier">pthread_getcpuclockid</span><span class="special">(</span><span class="identifier">pth</span><span class="special">,</span> <span class="identifier">clock_id</span><span class="special">);</span>
-        <span class="comment">// get the timespec associated to the thread clock
-</span>        <span class="keyword">struct</span> <span class="identifier">timespec</span> <span class="identifier">ts</span><span class="special">;</span>
-        <span class="keyword">if</span> <span class="special">(</span> <span class="special">::</span><span class="identifier">clock_gettime</span><span class="special">(</span> <span class="identifier">clock_id</span><span class="special">,</span> <span class="special">&amp;</span><span class="identifier">ts</span> <span class="special">)</span> <span class="special">)</span>
-        <span class="special">{</span>
-          <span class="identifier">ec</span><span class="special">.</span><span class="identifier">assign</span><span class="special">(</span> <span class="identifier">errno</span><span class="special">,</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">system_category</span> <span class="special">);</span>
-          <span class="keyword">return</span> <span class="identifier">time_point</span><span class="special">();</span>
-        <span class="special">}</span>
-        <span class="identifier">ec</span><span class="special">.</span><span class="identifier">clear</span><span class="special">();</span>
-        <span class="comment">// transform to nanoseconds
-</span>        <span class="keyword">return</span> <span class="identifier">time_point</span><span class="special">(</span><span class="identifier">duration</span><span class="special">(</span>
-            <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">rep</span><span class="special">&gt;(</span> <span class="identifier">ts</span><span class="special">.</span><span class="identifier">tv_sec</span> <span class="special">)</span> <span class="special">*</span> <span class="number">1000000000</span> <span class="special">+</span> <span class="identifier">ts</span><span class="special">.</span><span class="identifier">tv_nsec</span><span class="special">));</span>
-    <span class="special">}</span>
-<span class="special">};</span>
+<span class="comment">// d now holds the number of milliseconds from start to end.
+</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">ms</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"ms\n"</span><span class="special">;</span>
 </pre>
+<p>
+            As <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">duration</span></code> is nanoseconds, we can convert
+            to <code class="computeroutput"><span class="identifier">nanoseconds</span></code>, or some
+            integral-based duration which <code class="computeroutput"><span class="identifier">nanoseconds</span></code>
+            will always exactly convert to, then <code class="computeroutput"><span class="identifier">duration_cast</span><span class="special">&lt;&gt;</span></code> is unnecessary:
+          </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">nanoseconds</span> <span class="identifier">ns</span><span class="special">;</span>
+<span class="identifier">ns</span> <span class="identifier">d</span> <span class="special">=</span> <span class="identifier">end</span> <span class="special">-</span> <span class="identifier">start</span><span class="special">;</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">ns</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"ns\n"</span><span class="special">;</span>
+</pre>
+<p>
+            If you need seconds with a floating point representation you can also
+            eliminate the <code class="computeroutput"><span class="identifier">duration_cast</span><span class="special">&lt;&gt;</span></code>:
+          </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">sec</span><span class="special">;</span>  <span class="comment">// seconds, stored with a double
+</span><span class="identifier">sec</span> <span class="identifier">d</span> <span class="special">=</span> <span class="identifier">end</span> <span class="special">-</span> <span class="identifier">start</span><span class="special">;</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">sec</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"s\n"</span><span class="special">;</span>
+</pre>
+<p>
+            If you're not sure if you need <code class="computeroutput"><span class="identifier">duration_cast</span><span class="special">&lt;&gt;</span></code> or not, feel free to try it without.
+            If the conversion is exact, or if the destination has a floating point
+            representation, it will compile. Else it will not compile.
+          </p>
+<p>
+            If you would like to programmatically inspect <code class="computeroutput"><span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">duration</span></code>,
+            you can get the representation type with <code class="computeroutput"><span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">rep</span></code>,
+            and the tick period with <code class="computeroutput"><span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">period</span></code>
+            (which should be a type <code class="computeroutput"><span class="identifier">ratio</span></code>
+            which has nested values <code class="computeroutput"><span class="identifier">ratio</span><span class="special">::</span><span class="identifier">num</span></code>
+            and <code class="computeroutput"><span class="identifier">ratio</span><span class="special">::</span><span class="identifier">den</span></code>). The tick period of <code class="computeroutput"><span class="identifier">thread_clock</span></code> is <code class="computeroutput"><span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">period</span><span class="special">::</span><span class="identifier">num</span> <span class="special">/</span> <span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">period</span><span class="special">::</span><span class="identifier">den</span></code>
+            seconds: 1/1000000000 in this case (1 billionth of a second), stored
+            in a long long.
+          </p>
+<p>
+            If you need to use <code class="computeroutput"><span class="identifier">duration_cast</span><span class="special">&lt;&gt;</span></code>, but want to round up, instead
+            of down when the conversion is inexact, here is a handy little helper
+            function to do so. Writing it is actually a good starter project for
+            understanding chrono:
+          </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">ToDuration</span><span class="special">,</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span>
+<span class="identifier">ToDuration</span>
+<span class="identifier">round_up</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span> <span class="identifier">d</span><span class="special">)</span>
+<span class="special">{</span>
+    <span class="comment">// first round down
+</span>    <span class="identifier">ToDuration</span> <span class="identifier">result</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">ToDuration</span><span class="special">&gt;(</span><span class="identifier">d</span><span class="special">);</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">result</span> <span class="special">&lt;</span> <span class="identifier">d</span><span class="special">)</span>  <span class="comment">// comparisons are *always* exact
+</span>       <span class="special">++</span><span class="identifier">result</span><span class="special">;</span>     <span class="comment">// increment by one tick period
+</span>    <span class="keyword">return</span> <span class="identifier">result</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">milliseconds</span> <span class="identifier">ms</span><span class="special">;</span>
+<span class="identifier">ms</span> <span class="identifier">d</span> <span class="special">=</span> <span class="identifier">round_up</span><span class="special">&lt;</span><span class="identifier">ms</span><span class="special">&gt;(</span><span class="identifier">end</span> <span class="special">-</span> <span class="identifier">start</span><span class="special">);</span>
+<span class="comment">// d now holds the number of milliseconds from start to end, rounded up.
+</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">ms</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"ms\n"</span><span class="special">;</span>
+</pre>
+</div>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_chrono.users_guide.tutorial.how_can_i_prefix_each_report_with__boost_current_function__function_signature_"></a><a href="tutorial.html#boost_chrono.users_guide.tutorial.how_can_i_prefix_each_report_with__boost_current_function__function_signature_" title="How
-        can I prefix each report with BOOST_CURRENT_FUNCTION
-        function signature?">How
-        can I prefix each report with <code class="computeroutput"><span class="identifier">BOOST_CURRENT_FUNCTION</span></code>
-        function signature?</a>
+<a name="boost_chrono.users_guide.tutorial.stopwatches_and_stopclocks"></a><a href="tutorial.html#boost_chrono.users_guide.tutorial.stopwatches_and_stopclocks" title="Stopwatches
+        and Stopclocks">Stopwatches
+        and Stopclocks</a>
 </h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.stopwatches_and_stopclocks.how_can_i_prefix_each_report_with__boost_current_function__function_signature_">How
+          can I prefix each report with <code class="computeroutput"><span class="identifier">BOOST_CURRENT_FUNCTION</span></code>
+          function signature?</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.stopwatches_and_stopclocks.how_can_i_prefix_each_report_with____file_____line_____pattern_">How
+          can I prefix each report with <code class="computeroutput"><span class="identifier">__FILE__</span><span class="special">[</span><span class="identifier">__LINE__</span><span class="special">]</span></code> pattern?</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.stopwatches_and_stopclocks.can_i_use_an_stopclock_accumulator_which_is_not_static_">Can
+          I use an stopclock accumulator which is not static?</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.stopwatches_and_stopclocks.how_can_i_suspend_a_stopwatch_">How
+          can I suspend a stopwatch?</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.stopwatches_and_stopclocks.how_to_get_specific_statistics_from_stopwatches_accumulator_">How
+          to get specific statistics from stopwatches accumulator?</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.users_guide.tutorial.stopwatches_and_stopclocks.how_can_i_prefix_each_report_with__boost_current_function__function_signature_"></a><a href="tutorial.html#boost_chrono.users_guide.tutorial.stopwatches_and_stopclocks.how_can_i_prefix_each_report_with__boost_current_function__function_signature_" title="How
+          can I prefix each report with BOOST_CURRENT_FUNCTION
+          function signature?">How
+          can I prefix each report with <code class="computeroutput"><span class="identifier">BOOST_CURRENT_FUNCTION</span></code>
+          function signature?</a>
+</h5></div></div></div>
 <p>
-          You will need to give a specific format to you stopclock. You just need
-          to concatenate the your specific patter to the default_format of the formatter.
-        </p>
+            You will need to give a specific format to your stopclock. You just need
+            to concatenate your specific pattern to the default_format of the formatter.
+          </p>
 <p>
-          For example, for a stopclock_accumulator the default formatter is stopwatch_accumulator_formatter,
-          this you will need to do something like:
-        </p>
+            For example, for a stopclock_accumulator the default formatter is stopwatch_accumulator_formatter,
+            you will need to do something like:
+          </p>
 <pre class="programlisting"><span class="keyword">static</span> <span class="identifier">stopclock_accumulator</span><span class="special">&lt;&gt;</span> <span class="identifier">acc</span><span class="special">(</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="identifier">BOOST_CURRENT_FUNCTION</span><span class="special">)</span> <span class="special">+</span> <span class="string">":  "</span> 
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="identifier">BOOST_CURRENT_FUNCTION</span><span class="special">)</span> <span class="special">+</span> <span class="string">":  "</span>
         <span class="special">+</span> <span class="identifier">stopwatch_accumulator_formatter</span><span class="special">::</span><span class="identifier">default_format</span><span class="special">()</span>
 <span class="special">);</span>
 <span class="identifier">stopclock_accumulator</span><span class="special">&lt;&gt;::</span><span class="identifier">scoped_run</span> <span class="identifier">_</span><span class="special">(</span><span class="identifier">acc</span><span class="special">);</span>
 </pre>
 <p>
-          Some of you will say that this is too long to type just to get the a report.
-          You can of course define your own macro as
-        </p>
+            Some of you will say that this is too long to type just to get the a
+            report. You can of course define your own macro as
+          </p>
 <pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">REPORT_FUNCTION_ACCUMULATED_LIFETIME</span><span class="special">\</span>
     <span class="keyword">static</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopclock_accumulator</span><span class="special">&lt;&gt;</span> <span class="special">\</span>
             <span class="identifier">BOOST_JOIN</span><span class="special">(</span><span class="identifier">_accumulator_</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">)</span><span class="identifier">_</span>
@@ -138,8 +233,8 @@
         <span class="special">(</span><span class="identifier">BOOST_JOIN</span><span class="special">(</span><span class="identifier">_accumulator_</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">))</span>
 </pre>
 <p>
-          With this macro you will just have
-        </p>
+            With this macro you will just have to write
+          </p>
 <pre class="programlisting"><span class="keyword">void</span> <span class="identifier">foo</span><span class="special">()</span>
 <span class="special">{</span>
     <span class="identifier">REPORT_FUNCTION_ACCUMULATED_LIFETIME</span><span class="special">()</span> <span class="special">;</span>
@@ -149,28 +244,28 @@
 </pre>
 </div>
 <div class="section" lang="en">
-<div class="titlepage"><div><div><h4 class="title">
-<a name="boost_chrono.users_guide.tutorial.how_can_i_prefix_each_report_with____file_____line_____pattern_"></a><a href="tutorial.html#boost_chrono.users_guide.tutorial.how_can_i_prefix_each_report_with____file_____line_____pattern_" title="How
-        can I prefix each report with __FILE__[__LINE__] pattern?">How
-        can I prefix each report with <code class="computeroutput"><span class="identifier">__FILE__</span><span class="special">[</span><span class="identifier">__LINE__</span><span class="special">]</span></code> pattern?</a>
-</h4></div></div></div>
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.users_guide.tutorial.stopwatches_and_stopclocks.how_can_i_prefix_each_report_with____file_____line_____pattern_"></a><a href="tutorial.html#boost_chrono.users_guide.tutorial.stopwatches_and_stopclocks.how_can_i_prefix_each_report_with____file_____line_____pattern_" title="How
+          can I prefix each report with __FILE__[__LINE__] pattern?">How
+          can I prefix each report with <code class="computeroutput"><span class="identifier">__FILE__</span><span class="special">[</span><span class="identifier">__LINE__</span><span class="special">]</span></code> pattern?</a>
+</h5></div></div></div>
 <p>
-          When you want to prefix with the <code class="computeroutput"><span class="identifier">__FILE__</span><span class="special">[</span><span class="identifier">__LINE__</span><span class="special">]</span></code> pattern you can follow the same technique
-          as described below:
-        </p>
+            When you want to prefix with the <code class="computeroutput"><span class="identifier">__FILE__</span><span class="special">[</span><span class="identifier">__LINE__</span><span class="special">]</span></code> pattern you can follow the same technique
+            as described below:
+          </p>
 <pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">REPORT_LINE_ACCUMULATED_LIFETIME</span> <span class="special">\</span>
-    <span class="keyword">static</span> <span class="identifier">stopclock_accumulator</span><span class="special">&lt;&gt;</span> 
+    <span class="keyword">static</span> <span class="identifier">stopclock_accumulator</span><span class="special">&lt;&gt;</span>
             <span class="identifier">BOOST_JOIN</span><span class="special">(</span><span class="identifier">_accumulator_</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">)</span> <span class="special">\</span>
-            <span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="identifier">__FILE__</span><span class="special">)</span> <span class="special">+</span> <span class="string">"["</span> <span class="special">+</span> <span class="identifier">BOOST_STRINGIZE</span><span class="special">(</span><span class="identifier">__LINE__</span><span class="special">)</span> <span class="special">+</span> <span class="string">"] "</span> 
+            <span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="identifier">__FILE__</span><span class="special">)</span> <span class="special">+</span> <span class="string">"["</span> <span class="special">+</span> <span class="identifier">BOOST_STRINGIZE</span><span class="special">(</span><span class="identifier">__LINE__</span><span class="special">)</span> <span class="special">+</span> <span class="string">"] "</span>
                 <span class="special">+</span> <span class="identifier">stopwatch_accumulator_formatter</span><span class="special">::</span><span class="identifier">default_format</span><span class="special">()</span> <span class="special">\</span>
     <span class="special">);</span> <span class="special">\</span>
     <span class="identifier">stopclock_accumulator</span><span class="special">&lt;&gt;::</span><span class="identifier">scoped_run</span> <span class="special">\</span>
-            <span class="identifier">BOOST_JOIN</span><span class="special">(</span><span class="identifier">_accumulator_run_</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">)</span> 
+            <span class="identifier">BOOST_JOIN</span><span class="special">(</span><span class="identifier">_accumulator_run_</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">)</span>
             <span class="special">(</span><span class="identifier">BOOST_JOIN</span><span class="special">(</span><span class="identifier">_accumulator_</span><span class="special">,</span> <span class="identifier">__LINE__</span><span class="special">))</span>
 </pre>
 <p>
-          Now you can mix fcntion and line reports as follows
-        </p>
+            Now you can mix fcntion and line reports as follows
+          </p>
 <pre class="programlisting"><span class="keyword">void</span> <span class="identifier">foo</span><span class="special">()</span>
 <span class="special">{</span>
     <span class="identifier">REPORT_FUNCTION_ACCUMULATED_LIFETIME</span><span class="special">;</span>
@@ -184,19 +279,19 @@
 </pre>
 </div>
 <div class="section" lang="en">
-<div class="titlepage"><div><div><h4 class="title">
-<a name="boost_chrono.users_guide.tutorial.can_i_use_an_stopclock_accumulator_which_is_not_static_"></a><a href="tutorial.html#boost_chrono.users_guide.tutorial.can_i_use_an_stopclock_accumulator_which_is_not_static_" title="Can
-        I use an stopclock accumulator which is not static?">Can
-        I use an stopclock accumulator which is not static?</a>
-</h4></div></div></div>
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.users_guide.tutorial.stopwatches_and_stopclocks.can_i_use_an_stopclock_accumulator_which_is_not_static_"></a><a href="tutorial.html#boost_chrono.users_guide.tutorial.stopwatches_and_stopclocks.can_i_use_an_stopclock_accumulator_which_is_not_static_" title="Can
+          I use an stopclock accumulator which is not static?">Can
+          I use an stopclock accumulator which is not static?</a>
+</h5></div></div></div>
 <p>
-          The typical example of stopclock_accumulator is to get statistical measures
-          of the time a function takes for each one of its calls. You an also use
-          stopclock_accumulator to get statistical measures of the time a given loop
-          takes for each one of its laps.
-        </p>
+            The typical example of stopclock_accumulator is to get statistical measures
+            of the time a function takes for each one of its calls. You an also use
+            stopclock_accumulator to get statistical measures of the time a given
+            loop takes for each one of its laps.
+          </p>
 <pre class="programlisting"><span class="identifier">stopclock_accumulator</span><span class="special">&lt;&gt;</span> <span class="identifier">acc</span><span class="special">(</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="identifier">__FILE__</span><span class="special">)</span> <span class="special">+</span> <span class="string">"["</span> <span class="special">+</span> <span class="identifier">BOOST_STRINGIZE</span><span class="special">(</span><span class="identifier">__LINE__</span><span class="special">)</span> <span class="special">+</span> <span class="string">"] "</span> 
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="identifier">__FILE__</span><span class="special">)</span> <span class="special">+</span> <span class="string">"["</span> <span class="special">+</span> <span class="identifier">BOOST_STRINGIZE</span><span class="special">(</span><span class="identifier">__LINE__</span><span class="special">)</span> <span class="special">+</span> <span class="string">"] "</span>
         <span class="special">+</span> <span class="identifier">stopwatch_accumulator_formatter</span><span class="special">::</span><span class="identifier">default_format</span><span class="special">()</span>
 <span class="special">);</span>
 <span class="keyword">for</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span><span class="special">=</span><span class="number">0</span><span class="special">;</span> <span class="identifier">i</span><span class="special">&lt;</span><span class="identifier">N</span><span class="special">;</span> <span class="identifier">i</span><span class="special">++)</span> <span class="special">{</span>
@@ -206,11 +301,11 @@
 </pre>
 </div>
 <div class="section" lang="en">
-<div class="titlepage"><div><div><h4 class="title">
-<a name="boost_chrono.users_guide.tutorial.how_can_i_suspend_a_stopwatch_"></a><a href="tutorial.html#boost_chrono.users_guide.tutorial.how_can_i_suspend_a_stopwatch_" title="How
-        can I suspend a stopwatch?">How
-        can I suspend a stopwatch?</a>
-</h4></div></div></div>
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.users_guide.tutorial.stopwatches_and_stopclocks.how_can_i_suspend_a_stopwatch_"></a><a href="tutorial.html#boost_chrono.users_guide.tutorial.stopwatches_and_stopclocks.how_can_i_suspend_a_stopwatch_" title="How
+          can I suspend a stopwatch?">How
+          can I suspend a stopwatch?</a>
+</h5></div></div></div>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">stopwatch</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">cmath</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">thread</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
@@ -229,29 +324,29 @@
 </pre>
 </div>
 <div class="section" lang="en">
-<div class="titlepage"><div><div><h4 class="title">
-<a name="boost_chrono.users_guide.tutorial.how_to_get_specific_statistics_from_stopwatches_accumulator_"></a><a href="tutorial.html#boost_chrono.users_guide.tutorial.how_to_get_specific_statistics_from_stopwatches_accumulator_" title="How
-        to get specific statistics from stopwatches accumulator?">How
-        to get specific statistics from stopwatches accumulator?</a>
-</h4></div></div></div>
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.users_guide.tutorial.stopwatches_and_stopclocks.how_to_get_specific_statistics_from_stopwatches_accumulator_"></a><a href="tutorial.html#boost_chrono.users_guide.tutorial.stopwatches_and_stopclocks.how_to_get_specific_statistics_from_stopwatches_accumulator_" title="How
+          to get specific statistics from stopwatches accumulator?">How
+          to get specific statistics from stopwatches accumulator?</a>
+</h5></div></div></div>
 <p>
-          There are two use cases that coul need to change the statistics associated
-          to a stopwatches accumulator:
-        </p>
+            There are two use cases that coul need to change the statistics associated
+            to a stopwatches accumulator:
+          </p>
 <div class="orderedlist"><ol type="1">
 <li>
-            We want to reduce the default reporting and we preffer to adapt the statistics
-            to the reporting
-          </li>
+              We want to reduce the default reporting and we preffer to adapt the
+              statistics to the reporting
+            </li>
 <li>
-            We want to report other statistics of the samples
-          </li>
+              We want to report other statistics of the samples
+            </li>
 </ol></div>
 <p>
-          For the first case we just need to change the accumulator_set and the format
-          we want to get. Imagin we want to get only the count, sam and mean statistics,
-          no need to calculate the min neither the max.
-        </p>
+            For the first case we just need to change the accumulator_set and the
+            format we want to get. Imagin we want to get only the count, sam and
+            mean statistics, no need to calculate the min neither the max.
+          </p>
 <pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">accumulators</span><span class="special">;</span>
 
 <span class="keyword">typedef</span> <span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span><span class="identifier">process_real_cpu_clock</span><span class="special">,</span>
@@ -276,26 +371,33 @@
 <span class="special">}</span>
 </pre>
 <p>
-          But wat would hapend if we haven't forced the format:
-        </p>
+            But what would hapend if we haven't forced the format:
+          </p>
 <pre class="programlisting"><span class="keyword">static</span> <span class="identifier">my_stopwatch_accumulator_reporter</span> <span class="identifier">acc</span><span class="special">;</span>
 <span class="identifier">my_stopwatch_accumulator_reporter</span><span class="special">::</span><span class="identifier">scoped_run</span> <span class="identifier">_</span><span class="special">(</span><span class="identifier">acc</span><span class="special">);</span>
 </pre>
 <p>
-          Unfortunately there is no error at compile time. Fortunately, the run-time
-          execution is not undefined and will return 0 for the missing statistics.
-        </p>
+            Unfortunately there is no error at compile time. Fortunately, the run-time
+            execution is not undefined and will return 0 for the missing statistics.
+          </p>
+</div>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_chrono.users_guide.tutorial.how_can_i_make_a_specific_formatter_when_the_default_do_not_satisfy_my_expectations"></a><a href="tutorial.html#boost_chrono.users_guide.tutorial.how_can_i_make_a_specific_formatter_when_the_default_do_not_satisfy_my_expectations" title="How
-        can I make a specific formatter when the default do not satisfy my expectations">How
-        can I make a specific formatter when the default do not satisfy my expectations</a>
+<a name="boost_chrono.users_guide.tutorial.formatters"></a><a href="tutorial.html#boost_chrono.users_guide.tutorial.formatters" title="Formatters">Formatters</a>
 </h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="tutorial.html#boost_chrono.users_guide.tutorial.formatters.how_can_i_make_a_specific_formatter_when_the_default_do_not_satisfy_my_expectations">How
+          can I make a specific formatter when the default do not satisfy my expectations</a></span></dt></dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.users_guide.tutorial.formatters.how_can_i_make_a_specific_formatter_when_the_default_do_not_satisfy_my_expectations"></a><a href="tutorial.html#boost_chrono.users_guide.tutorial.formatters.how_can_i_make_a_specific_formatter_when_the_default_do_not_satisfy_my_expectations" title="How
+          can I make a specific formatter when the default do not satisfy my expectations">How
+          can I make a specific formatter when the default do not satisfy my expectations</a>
+</h5></div></div></div>
 <p>
-          Imagine then that we want to report the tag::variance(lazy). We will need
-          to include the specific accumulator file
-        </p>
+            Imagine then that we want to report the <code class="computeroutput"><span class="identifier">tag</span><span class="special">::</span><span class="identifier">variance</span><span class="special">(</span><span class="identifier">lazy</span><span class="special">)</span></code>. We will need to include the specific
+            accumulator file
+          </p>
 <pre class="programlisting"><span class="special">...</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">accumulators</span><span class="special">/</span><span class="identifier">statistics</span><span class="special">/</span><span class="identifier">variance</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="special">...</span>
@@ -311,10 +413,10 @@
 <span class="special">&gt;::</span><span class="identifier">reporter</span> <span class="identifier">my_stopwatch_accumulator_reporter</span><span class="special">;</span>
 </pre>
 <p>
-          But what happens if we add new statistics to the accumulator_set that are
-          not taken in account by the default formatter? These statistics will simply
-          be ignored. So we will need to define own own accumulator formatter.
-        </p>
+            But what happens if we add new statistics to the accumulator_set that
+            are not taken in account by the default formatter? These statistics will
+            simply be ignored. So we will need to define own own accumulator formatter.
+          </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span><span class="identifier">process_real_cpu_clock</span><span class="special">,</span>
             <span class="identifier">accumulator_set</span><span class="special">&lt;</span><span class="identifier">process_real_cpu_clock</span><span class="special">::</span><span class="identifier">rep</span><span class="special">,</span>
                 <span class="identifier">features</span><span class="special">&lt;</span>
@@ -328,9 +430,9 @@
 <span class="special">&gt;::</span><span class="identifier">reporter</span> <span class="identifier">my_stopwatch_accumulator_reporter</span><span class="special">;</span>
 </pre>
 <p>
-          Next follow the definition of a formatter taking care of count, sum, mean
-          and variance
-        </p>
+            Next follow the definition of a formatter taking care of count, sum,
+            mean and variance
+          </p>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">my_stopwatch_accumulator_formatter</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">string_type</span><span class="special">;</span>
@@ -390,6 +492,7 @@
 </pre>
 </div>
 </div>
+</div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
 <td align="right"><div class="copyright-footer">Copyright &#169; 2008 Howard Hinnant<br>Copyright &#169; 2006 , 2008 Beman Dawes<br>Copyright &#169; 2009 -2010 Vicente J. Botet Escriba<p>
@@ -400,7 +503,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="getting_started.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="ext_references.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="getting_started.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="examples.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

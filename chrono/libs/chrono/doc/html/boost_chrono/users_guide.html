@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
 <link rel="start" href="../index.html" title="Boost.Chrono">
 <link rel="up" href="../index.html" title="Boost.Chrono">
-<link rel="prev" href="overview/caveat_emptor.html" title="Caveat emptor">
+<link rel="prev" href="overview/caveat.html" title=" Caveat emptor">
 <link rel="next" href="users_guide/getting_started.html" title=" Getting Started">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -20,7 +20,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="overview/caveat_emptor.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="users_guide/getting_started.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="overview/caveat.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="users_guide/getting_started.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
@@ -36,23 +36,41 @@
 </dl></dd>
 <dt><span class="section"><a href="users_guide/tutorial.html">Tutorial</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="users_guide/tutorial.html#boost_chrono.users_guide.tutorial.how_to_define_a_thread_clock">How
-        to define a thread clock</a></span></dt>
-<dt><span class="section"><a href="users_guide/tutorial.html#boost_chrono.users_guide.tutorial.how_can_i_prefix_each_report_with__boost_current_function__function_signature_">How
-        can I prefix each report with <code class="computeroutput"><span class="identifier">BOOST_CURRENT_FUNCTION</span></code>
-        function signature?</a></span></dt>
-<dt><span class="section"><a href="users_guide/tutorial.html#boost_chrono.users_guide.tutorial.how_can_i_prefix_each_report_with____file_____line_____pattern_">How
-        can I prefix each report with <code class="computeroutput"><span class="identifier">__FILE__</span><span class="special">[</span><span class="identifier">__LINE__</span><span class="special">]</span></code> pattern?</a></span></dt>
-<dt><span class="section"><a href="users_guide/tutorial.html#boost_chrono.users_guide.tutorial.can_i_use_an_stopclock_accumulator_which_is_not_static_">Can
-        I use an stopclock accumulator which is not static?</a></span></dt>
-<dt><span class="section"><a href="users_guide/tutorial.html#boost_chrono.users_guide.tutorial.how_can_i_suspend_a_stopwatch_">How
-        can I suspend a stopwatch?</a></span></dt>
-<dt><span class="section"><a href="users_guide/tutorial.html#boost_chrono.users_guide.tutorial.how_to_get_specific_statistics_from_stopwatches_accumulator_">How
-        to get specific statistics from stopwatches accumulator?</a></span></dt>
-<dt><span class="section"><a href="users_guide/tutorial.html#boost_chrono.users_guide.tutorial.how_can_i_make_a_specific_formatter_when_the_default_do_not_satisfy_my_expectations">How
-        can I make a specific formatter when the default do not satisfy my expectations</a></span></dt>
+<dt><span class="section"><a href="users_guide/tutorial.html#boost_chrono.users_guide.tutorial.common_type">Common
+        Type</a></span></dt>
+<dt><span class="section"><a href="users_guide/tutorial.html#boost_chrono.users_guide.tutorial.ratio">Ratio</a></span></dt>
+<dt><span class="section"><a href="users_guide/tutorial.html#boost_chrono.users_guide.tutorial.clocks__time_point_and_duration">Clocks,
+        time_point and duration</a></span></dt>
+<dt><span class="section"><a href="users_guide/tutorial.html#boost_chrono.users_guide.tutorial.stopwatches_and_stopclocks">Stopwatches
+        and Stopclocks</a></span></dt>
+<dt><span class="section"><a href="users_guide/tutorial.html#boost_chrono.users_guide.tutorial.formatters">Formatters</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="users_guide/ext_references.html"> References</a></span></dt>
+<dt><span class="section"><a href="users_guide/examples.html">Examples</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="users_guide/examples.html#boost_chrono.users_guide.examples.clocks">Clocks</a></span></dt>
+<dt><span class="section"><a href="users_guide/examples.html#boost_chrono.users_guide.examples.how_you_override_the_duration_s_default_constructor">How
+        you override the duration's default constructor</a></span></dt>
+<dt><span class="section"><a href="users_guide/examples.html#boost_chrono.users_guide.examples.min_utility">min
+        utility</a></span></dt>
+<dt><span class="section"><a href="users_guide/examples.html#boost_chrono.users_guide.examples.cycle_count">Cycle
+        count</a></span></dt>
+<dt><span class="section"><a href="users_guide/examples.html#boost_chrono.users_guide.examples.xtime_conversions">xtime
+        conversions</a></span></dt>
+<dt><span class="section"><a href="users_guide/examples.html#boost_chrono.users_guide.examples.xtime_clock">xtime_clock</a></span></dt>
+<dt><span class="section"><a href="users_guide/examples.html#boost_chrono.users_guide.examples.runtime_resolution">runtime_resolution</a></span></dt>
+<dt><span class="section"><a href="users_guide/examples.html#boost_chrono.users_guide.examples.simulated_thread_interface_demonstration_program">Simulated
+        thread interface demonstration program</a></span></dt>
+<dt><span class="section"><a href="users_guide/examples.html#boost_chrono.users_guide.examples.saturating">Saturating</a></span></dt>
+<dt><span class="section"><a href="users_guide/examples.html#boost_chrono.users_guide.examples.howard_hinnant_s_original_demonstration_program">Howard
+        Hinnant's original demonstration program</a></span></dt>
+<dt><span class="section"><a href="users_guide/examples.html#boost_chrono.users_guide.examples.a_tiny_program_that_times_how_long_until_a_key_is_struck">A
+        tiny program that times how long until a key is struck</a></span></dt>
+<dt><span class="section"><a href="users_guide/examples.html#boost_chrono.users_guide.examples.stopclock_example_cpp">stopclock_example.cpp</a></span></dt>
+<dt><span class="section"><a href="users_guide/examples.html#boost_chrono.users_guide.examples.stopclock_example2_cpp">stopclock_example2.cpp</a></span></dt>
+<dt><span class="section"><a href="users_guide/examples.html#boost_chrono.users_guide.examples.time_command">time
+        command</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="users_guide/ext_references.html"> External Resources</a></span></dt>
 </dl></div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
@@ -65,7 +83,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="overview/caveat_emptor.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="users_guide/getting_started.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="overview/caveat.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="users_guide/getting_started.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

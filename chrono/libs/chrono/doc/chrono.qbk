@@ -44,41 +44,49 @@
 [heading Description]
 [/==================]
 
-The Boost Chrono library provides:
+The __Boost_Chrono__ library provides:
 
-*  The C++0x Standard Library's `common_type`.
-*  The C++0x Standard Library's compile-time rational arithmetic.
-*  The C++0x Standard Library's time utilities, including:
-    * Class template `duration`
-    * Class template `time_point`
-    * Clocks:
-        * `system_clock`
-        * `monotonic_clock`
-        * `high_resolution_clock`
-    * typeof registration for classes `duration` and `time_point`
+* One facility for representing time durations: `duration`. Examples of time durations include seconds, minutes  and nanoseconds. All of these units of time duration are united with a generic interface by the duration facility.
+* One facility for representing points in time: `time_point`. A time_point represents an epoch plus or minus a duration. This paper leaves epochs unspecified. A time_point is associated with a clock.
+* Several clocks, some of which may not be available on any given platform: `system_clock`, `monotonic_clock` and `high_resolution_clock`. A clock is a symbolic bundle of a native `time_point` and `duration`, and a function which returns a `time_point` representing ['now].
 
-* Process clocks:
-    * `process_real_CPU_clocks`, capturing real-CPU times.
-    * `process_user_CPU_clocks`, capturing user-CPU times.
-    * `process_system_CPU_clocks`, capturing system-CPU times.
-    * `process_cpu_clock`, tuple-like class capturing at once real, user-CPU, and system-CPU times.
+Additionally, a minimal amount of general purpose infrastructure is provided which will support both the interface and implementation of the clocks, time_points and durations proposed herein. It is expected that these general purpose facilities will also find utility in far ranging user applications as well.
 
-* Thread clock
+* common_type is a facility which is useful in specifying the type of the result of functions and operators which take a variety of types (e.g. "mixed mode" complex arithmetic).
+* ratio is a facility which is useful in specifying compile time rational constants. Compile time rational arithmetic is supported with protection against overflow and divide by zero. Such a facility is very handy when needing to efficiently represent 1/3 of a nanosecond, or specifying an inch in terms of meters (for example 254/10000 meters - which ratio will reduce to 127/5000 meters).
 
-* Suspendible Clock
-    * Suspendible Clock concept
-    * template class suspendible_clock<>
-    * Added scope_suspend which do suspend/resume if the Clock is a model of Suspendible Clock concept, and nothing otherwise.
+Knowing how long a program takes to execute is useful in both test and production environments. On top of the standard facilities __Boost_Chrono__ includes:
 
-* Stopwatches:
-    * `stopwatch`, capturing elapsed Clock times.
-    * `stopwatch_accumulator`, capturing cummulated elapsed Clock times.
-    * scoped helper classes allowing to pairwise start/stop operations, suspend/resume and resume/suspend a Stopwatch.
+* a Stopwatch middle layer: providing operations to start, stop, suspend or resume a `Stopwatch` to measure the elapsed time.
+    * `Stopwatch` concept
+    * Scoped helper classes allowing to pairwise start/stop operations, suspend/resume and resume/suspend a `Stopwatch`.
+    * `stopwatch`, model of `Stopwatch` capturing elapsed Clock times.
+    * `stopwatch_accumulator`, model of `Stopwatch` capturing cummulated elapsed Clock times.
 
-* Stopclocks or Stopwatch reporters:
+* a Stopclocks higher layer: provide a complete stopclock reporting package that can be invoked in a single line of code. 
     * `stopwatch_reporter`, convenient reporting of models of Stopwatch results.
     * `stopclock<Clock>` shortcut of `stopwatch_reporter<stopwatch<Clock>>`
     * Allows wide characters
+
+It is also helpful if such timing information is broken down into real (wall clock) time, CPU time spent by the user, and CPU time spent by the operating system servicing user requests. process clocks provide a thin wrapper around the operating system's process timer API. For POSIX-like systems, that's the times() function, while for Windows, it's the GetProcessTimes() function.
+
+* `process_real_CPU_clocks`, capturing real-CPU times.
+* `process_user_CPU_clocks`, capturing user-CPU times.
+* `process_system_CPU_clocks`, capturing system-CPU times.
+* `process_cpu_clock`, tuple-like class capturing at once real, user-CPU, and system-CPU times.
+
+To complete the clocks __Boost_Chrono__ provides, in platforms support them, thread clocks.
+
+
+[/
+    
+* Suspendible clock
+    * `SuspendibleClock` concept
+    * scope_suspend which do suspend/resume if the Clock is a model of SuspendibleClock concept, and nothing otherwise.
+    * template class suspendible_clock<>
+]
+
+Last, __Boost_Chrono__ include typeof registration for classes `duration` and `time_point` so you can used auto emulated on C++03 compilers.
 
 
 [/====================================]
@@ -110,7 +118,16 @@ Finally, you can mentally add the following to any code fragments in this docume
 [section Motivation]
 [/=================]
 
-See [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm [*N2661 - A Foundation to Sleep On]] which is very informative and provides motivation for key design decisions for `common_type`, `ratio` and `chrono`. The following sections are an extract from this document.
+We all deal with time every day of our lives. We've intuitively known it since birth. Thus we are all very familiar with it and believe it to be a simple matter. The modeling of time in computer programs should be similarly simple.
+
+The unfortunate truth is that this perceived simplicity is only skin deep. Fortunately however, we do not need a terribly complicated solution to meet the bulk of our needs. However, overly simplistic solutions are fraught with danger, inherent inefficiency, and lack the ability to adapt as the computer industry evolves over decades. 
+
+__Boost_Chrono__ proposes a solution that is precision neutral, with a very simple end user interface which supports multiple clocks, multiple precisions (both coarser and finer than we will ever need), separate types for points in time and time durations, efficiency, and compile time enforced safety.
+
+In addition to the clocks provided by the standard proposal, __Boost_Chrono__ provides specific process clocks and a thread clock.
+
+See [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm [*N2661 - A Foundation to Sleep On]] which is very informative and provides motivation for key design decisions for `common_type`, `ratio` and `chrono`. This documentation contains a lot of extracts from this document.
+
 
 [section Common type]
 
@@ -147,7 +164,7 @@ This is a very useful and broadly applicable utility. The `duration` and `time_p
 
 `ratio` is a general purpose utility inspired by Walter Brown allowing one to easily and safely compute rational values at compile time. The `ratio` class catches all errors (such as divide by zero and overflow) at compile time. It is used in the `duration` and `time_point` classes to efficiently create units of time. It can also be used in other "quantity" libraries (both std-defined and user-defined), or anywhere there is a rational constant which is known at compile time. The use of this utility can greatly reduce the chances of run time overflow because the `ratio` (and any ratios resulting from `ratio` arithmetic) are always reduced to lowest terms.
 
-`ratio` is a template taking two intmax_ts, with the second defaulted to 1. In addition to cop^y constructors and assignement, it only has two public members, both of which are static const intmax_t. One is the numerator of the `ratio` and the other is the denominator. The `ratio` is always normalized such that it is expressed in lowest terms, and the denominator is always positive. When the numerator is 0, the denominator is always 1.
+`ratio` is a template taking two intmax_ts, with the second defaulted to 1. In addition to copy constructors and assignement, it only has two public members, both of which are static const intmax_t. One is the numerator of the `ratio` and the other is the denominator. The `ratio` is always normalized such that it is expressed in lowest terms, and the denominator is always positive. When the numerator is 0, the denominator is always 1.
 
 [*Example:]
 
@@ -322,7 +339,7 @@ A clock is a concept which bundles 3 things:
 # A concrete `time_point` type.
 # A function called now() which returns the concrete `time_point`.
 
-__Boost_Chrono__ provides 3 concrete clocks:
+__Boost_Chrono__ provides the standard concrete clocks:
 
 # system_clock
 # monotonic_clock
@@ -412,9 +429,9 @@ The above code will delay as close as possible to half a microsecond, no matter 
 [section Stopwatches]
 
 Knowing how long a program, a function or a specific block takes to execute is useful in both test and production environments.
-__Boost_Chrono__ introduces the Stopwatch concept which captures the mechanism to measure the elapsed time.
+__Boost_Chrono__ introduces the `Stopwatch` concept which captures the mechanism to measure the elapsed time.
 A Stopwatch allows to start, stop, suspend and resume the measure of the eleapsed time.
-`stopwatch<>` is the basic model of Stopwatch allowing to make a single measure.
+`stopwatch<>` is the basic model of `Stopwatch` allowing to make a single measure.
 
 At the user level, the main use case of measuring the elapsed time is to report these measures on the display.
 `stopwatch_reporter<>` provides a run time reporting package that can be invoked in a single line of code to report the usage of a Clock.
@@ -507,28 +524,31 @@ As this is one of the expression more commonly use, the library provides a stopc
 
 [heading How reliable are these measures?]
 
-[info this section need to be reworked, the ideas are there, but ...]
+[note this section need to be reworked, the ideas are there, but ...]
 
 There are three context on which you can get unreliable measures:
 
-# the precission of your clock. If the precission of your clock is 10ms you can not be able to measure the time spent by blocks of code that takes the same order of magnitude. The library provides a hig_resolution_clock that gives you the higher resolution available on your platform. Respect to the precission, nothing to do except to take the clock with the highest resolution and measures blocks of code that will spent time having more than one order of magnitude the precission of the clock.
+* Precission of your clock. If the precission of your clock is 10ms you can not be able to measure the time spent by blocks of code that takes the same order of magnitude. The library provides a hig_resolution_clock that gives you the higher resolution available on your platform. Respect to the precission, nothing to do except to take the clock with the highest resolution and measures blocks of code that will spent time having more than one order of magnitude the precission of the clock.
 
-    #include <boost/chrono/thread_clock.hpp>
+```
+#include <boost/chrono/chrono.hpp>
     ...
-        stopclock<high_resolution_clock> _;
+    stopclock<high_resolution_clock> _;
+```
 
+* When your application is multithreaded, and you use a process clock, the time you get is the delay during which your block has been executed, in concurrency with the other threads of execution. If what you want is the time spent by this specific thread another clock is needed. The library provide a `thread_clock` that returns the time spent by the thread on platforms providing this kind of data. It can be used as follows
 
-# When your application is multithreaded, and you use a process clock, the time you get is the delay during which your block has been executed, in concurrency with the other threads of execution. If what you want is the time spent by this specific thread another clock is needed. The library provide a thread_clock that returns the time spent by the thread on platforms providing this kind of data. It can be used as follows
+```
+#include <boost/chrono/thread_clock.hpp>
+...
+#if defined(BOOST_CHRONO_HAS_THREAD_CLOCK)
+    stopclock<thread_clock> _;
+#else
+    stopclock<process_real_cpu_clock> _;
+#endif
+```
 
-    #include <boost/chrono/thread_clock.hpp>
-    ...
-    #if defined(BOOST_CHRONO_HAS_THREAD_CLOCK)
-        stopclock<thread_clock> _;
-    #else
-        stopclock<process_real_cpu_clock> _;
-    #endif
-
-# Nested stopclocks (usually nested function calls where each function contains a stopclock). When the nesting is deep enough, the cumulative overhead of all the stopclock functionality make the data unreliable except for the inner-most trace points. The question is, how much time is related to the application code we want to measure and how much to the fact we are meassuring and logging in inner blocks?
+* Nested stopclocks (usually nested function calls where each function contains a stopclock). When the nesting is deep enough, the cumulative overhead of all the stopclock functionality make the data unreliable except for the inner-most trace points. The question is, how much time is related to the application code we want to measure and how much to the fact we are meassuring and logging in inner blocks?
 
 Some measures let us think that most of the time spent by the stopclock mechanism is associated to the logging part. There are two things we can do to make the difference :
 
@@ -544,7 +564,7 @@ See the performances section for more deep details.
 [endsect]
 [endsect]
 
-[section Caveat emptor]
+[section:caveat Caveat emptor]
 
 The underlying clocks provided by operating systems are subject to many seemingly arbitrary policies and implementation irregularities. That's a polite way of saying they tend to be flakey, and each operating system or even each clock has its own cruel and unusual forms of flakiness. Don't bet the farm on their accuracy, unless you have become deeply familiar with exactly what the specific operating system is guaranteeing, which is often very little.
 
@@ -571,7 +591,7 @@ The underlying clocks provided by operating systems are subject to many seemingl
 You can get the last stable release of __Boost_Chrono__ by downloading [^chrono.zip] from the
 [@http://www.boost-consulting.com/vault/index.php?directory=System Boost Vault]
 
-You can also access the latest (unstable?) state from the [@https://svn.boost.org/svn/boost/sandbox/chrono Boost Sandbox].
+You can also access the latest (unstable?) state from the [@https://svn.boost.org/svn/boost/sandbox/chrono Boost Sandbox]. Just go to [@http://svn.boost.org/trac/boost/wiki/BoostSubversion here] and follow the instructions there for anonymous SVN access. 
 
 [/==========================================]
 [heading Where to install __Boost_Chrono__? ]
@@ -593,14 +613,11 @@ __Boost_Chrono__ is not a header only library. You need to compile it before use
 [heading Requirements]
 [/===================]
 
-[*Boost.Bitfield] depends on some Boost libraries. For these specific parts you must use either Boost version 1.39.0 or the version in SVN trunk (even if older version should works also).
+[*Boost.Chrono] depends on some Boost libraries. For these specific parts you must use either Boost version 1.39.0 or the version in SVN trunk (even if older versions should works also).
 
 In particular, __Boost_Chrono__ depends on:
 
 [variablelist
-[
-    [[@http://www.boost.org/libs/accumulator [*Boost.Accumulator]]] [for accumulator_set, and statistics features]
-]
 [
     [[@http://www.boost.org/libs/config [*Boost.Config]]] [for configuration purposes, ...]
 ]
@@ -617,10 +634,21 @@ In particular, __Boost_Chrono__ depends on:
     [[@http://www.boost.org/libs/type_traits [*Boost.TypeTraits]]] [for is_base, ...]
 ]
 [
-    [[@http://www.boost.org/libs/typeof [*Boost.Typeof]]] [for typeof, ...]
+    [[@http://www.boost.org/libs/utility [*Boost.UtiliTy/EnableIf]]] [for enable_if, ...]
+]
+]
+
+__Boost_Chrono__ depends optionaly on:
+
+[variablelist
+[
+    [[@http://www.boost.org/libs/accumulator [*Boost.Accumulator]]] [for accumulator_set, and statistics features when stopwatch_accumulator.hpp is included]
 ]
 [
-    [[@http://www.boost.org/libs/utility [*Boost.UtiliTy/EnableIf]]] [for enable_if, ...]
+    [[@http://www.boost.org/libs/thread [*Boost.Thread]]] [for thread_specific_ptr when suspendible_clock.hpp is included]
+]
+[
+    [[@http://www.boost.org/libs/typeof [*Boost.Typeof]]] [for duration and time_point registration when typeof/boost/chrono/chrono.hpp is include]
 ]
 ]
 
@@ -723,6 +751,73 @@ In other words, the program took 0.832 real-time (i.e. wall clock) seconds to ex
 
 [section Tutorial]
 
+[note If you have not read yet the [@boost_chrono/overview/motivation.html motivation section], please read it now.]
+
+[section Common Type]
+
+[section How to get the common type of inter-type with explicit conversions?]
+
+The default definition of `common_type` demands the conversion be implicit. However the trait can be specialized for user-defined types which want to limit their inter-type conversions to explicit, and yet still want to interoperate with the `common_type` facility.
+
+
+
+[endsect]
+[endsect]
+
+[section Ratio]
+[endsect]
+
+[section Clocks, time_point and duration]
+
+
+[section How to get the actual CPU milliseconds (or other units?) used by the current thread between end and start?]
+ 
+You can use `duration_cast<>` to convert the `thread_clock::duration` into whatever units you desire.  This facility will round down (truncate) if an exact conversion is not possible.  Ex:
+
+    typedef boost::chrono::milliseconds ms;
+    ms d = boost::chrono::duration_cast<ms>(end - start);
+
+    // d now holds the number of milliseconds from start to end.
+
+    std::cout << ms.count() << "ms\n";
+
+As `boost::chrono::thread_clock::duration` is nanoseconds, we can convert to `nanoseconds`, or some integral-based duration which `nanoseconds` will always exactly convert to, then `duration_cast<>` is unnecessary:
+
+    typedef boost::chrono::nanoseconds ns;
+    ns d = end - start;
+    std::cout << ns.count() << "ns\n";
+
+If you need seconds with a floating point representation you can also eliminate the `duration_cast<>`:
+
+    typedef boost::chrono::duration<double> sec;  // seconds, stored with a double
+    sec d = end - start;
+    std::cout << sec.count() << "s\n";
+
+If you're not sure if you need `duration_cast<>` or not, feel free to try it without.  If the conversion is exact, or if the destination has a floating point representation, it will compile.  Else it will not compile.
+
+If you would like to programmatically inspect `thread_clock::duration`, you can get the representation type with `thread_clock::rep`, and the tick period with `thread_clock::period` (which should be a type `ratio` which has nested values `ratio::num` and `ratio::den`).  The tick period of `thread_clock` is `thread_clock::period::num / thread_clock::period::den` seconds: 1/1000000000 in this case (1 billionth of a second), stored in a long long.
+
+If you need to use `duration_cast<>`, but want to round up, instead of down when the conversion is inexact, here is a handy little helper function to do so.  Writing it is actually a good starter project for understanding chrono:
+
+    template <class ToDuration, Rep, Period>
+    ToDuration
+    round_up(boost::chrono::duration<Rep, Period> d)
+    {
+        // first round down
+        ToDuration result = boost::chrono::duration_cast<ToDuration>(d);
+        if (result < d)  // comparisons are *always* exact
+           ++result;     // increment by one tick period
+        return result;
+    }
+
+    typedef boost::chrono::milliseconds ms;
+    ms d = round_up<ms>(end - start);
+    // d now holds the number of milliseconds from start to end, rounded up.
+    std::cout << ms.count() << "ms\n";
+
+[endsect]
+
+[/
 [section How to define a thread clock]
 
 On posix systems for which the macro _POSIX_THREAD_CPUTIME is defined we can get the time associated to a specific thread.
@@ -732,8 +827,8 @@ On posix systems for which the macro _POSIX_THREAD_CPUTIME is defined we can get
         typedef nanoseconds                          duration;
         typedef duration::rep                        rep;
         typedef duration::period                     period;
-        typedef chrono::time_point<process_real_cpu_clock>    time_point;
-        static const bool is_monotonic =             true;
+        typedef chrono::time_point<thread_clock>    time_point;
+        static const bool is_monotonic =             BOOST_CHRONO_THREAD_CLOCK_IS_MONOTONIC;
 
         static time_point now( ) {
             // get the current thread
@@ -775,12 +870,18 @@ On posix systems for which the macro _POSIX_THREAD_CPUTIME is defined we can get
     };
 
 [endsect]
+]
+
+
+[endsect]
+
+[section Stopwatches and Stopclocks]
 
 [section How can I prefix each report with `BOOST_CURRENT_FUNCTION` function signature?]
 
-You will need to give a specific format to you stopclock. You just need to concatenate the your specific patter to the default_format of the formatter.
+You will need to give a specific format to your stopclock. You just need to concatenate your specific pattern to the default_format of the formatter.
 
-For example, for a stopclock_accumulator the default formatter is stopwatch_accumulator_formatter, this you will need to do something like:
+For example, for a stopclock_accumulator the default formatter is stopwatch_accumulator_formatter, you will need to do something like:
 
     static stopclock_accumulator<> acc(
         std::string(BOOST_CURRENT_FUNCTION) + ":  "
@@ -802,7 +903,7 @@ Some of you will say that this is too long to type just to get the a report. You
             (BOOST_JOIN(_accumulator_, __LINE__))
 
 
-With this macro you will just have
+With this macro you will just have to write
 
     void foo()
     {
@@ -910,7 +1011,7 @@ For the first case we just need to change the accumulator_set and the format we 
       return 0;
     }
 
-But wat would hapend if we haven't forced the format:
+But what would hapend if we haven't forced the format:
 
       static my_stopwatch_accumulator_reporter acc;
       my_stopwatch_accumulator_reporter::scoped_run _(acc);
@@ -920,9 +1021,12 @@ Unfortunately there is no error at compile time. Fortunately, the run-time execu
 
 [endsect]
 
+[endsect]
+
+[section Formatters]
 [section How can I make a specific formatter when the default do not satisfy my expectations]
 
-Imagine then that we want to report the tag::variance(lazy). We will need to include the specific accumulator file
+Imagine then that we want to report the `tag::variance(lazy)`. We will need to include the specific accumulator file
 
     ...
     #include <boost/accumulators/statistics/variance.hpp>
@@ -1016,9 +1120,1017 @@ Next follow the definition of a formatter taking care of count, sum, mean and va
 [endsect]
 
 [endsect]
+[endsect]
+[/===============]
+[section Examples]
+[/===============]
+
+[section Clocks]
+
+[/===============]
+[section SI-units]
+[/===============]
+
+Type-safe "physics" code interoperating with boost::chrono::duration types and taking advantage of the boost::ratio infrastructure and design philosophy.
+
+length - mimics boost::chrono::duration except restricts representation to double.
+Uses boost::ratio facilities for length units conversions.
+
+    template <class Ratio>
+    class length {
+    private:
+        double len_;
+    public:
+        typedef Ratio ratio;
+        length() : len_(1) {}
+        length(const double& len) : len_(len) {}
+
+        template <class R>
+        length(const length<R>& d)
+                : len_(d.count() * boost::ratio_divide<Ratio, R>::type::den /
+                                   boost::ratio_divide<Ratio, R>::type::num) {}
+
+        double count() const {return len_;}
+
+        length& operator+=(const length& d) {len_ += d.count(); return *this;}
+        length& operator-=(const length& d) {len_ -= d.count(); return *this;}
+
+        length operator+() const {return *this;}
+        length operator-() const {return length(-len_);}
+
+        length& operator*=(double rhs) {len_ *= rhs; return *this;}
+        length& operator/=(double rhs) {len_ /= rhs; return *this;}
+    };
+
+
+Sparse sampling of length units
+
+    typedef length<boost::ratio<1> >          meter;        // set meter as "unity"
+    typedef length<boost::centi>              centimeter;   // 1/100 meter
+    typedef length<boost::kilo>               kilometer;    // 1000  meters
+    typedef length<boost::ratio<254, 10000> > inch;         // 254/10000 meters
+
+length takes ratio instead of two integral types so that definitions can be made like so:
+
+    typedef length<boost::ratio_multiply<boost::ratio<12>, inch::ratio>::type>   foot;  // 12 inchs
+    typedef length<boost::ratio_multiply<boost::ratio<5280>, foot::ratio>::type> mile;  // 5280 feet
+
+Need a floating point definition of seconds
+
+    typedef boost::chrono::duration<double> seconds;                         // unity
+
+Demo of (scientific) support for sub-nanosecond resolutions
+
+    typedef boost::chrono::duration<double,  boost::pico> picosecond;  // 10^-12 seconds
+    typedef boost::chrono::duration<double, boost::femto> femtosecond; // 10^-15 seconds
+    typedef boost::chrono::duration<double,  boost::atto> attosecond;  // 10^-18 seconds
+
+A very brief proof-of-concept for SIUnits-like library. Hard-wired to floating point seconds and meters, but accepts other units.
+
+    template <class R1, class R2>
+    class quantity
+    {
+        double q_;
+    public:
+        typedef R1 time_dim;
+        typedef R2 distance_dim;
+        quantity() : q_(1) {}
+
+        double get() const {return q_;}
+        void set(double q) {q_ = q;}
+    };
+
+    template <>
+    class quantity<boost::ratio<1>, boost::ratio<0> >
+    {
+        double q_;
+    public:
+        quantity() : q_(1) {}
+        quantity(seconds d) : q_(d.count()) {}  // note:  only User1::seconds needed here
+
+        double get() const {return q_;}
+        void set(double q) {q_ = q;}
+    };
+
+    template <>
+    class quantity<boost::ratio<0>, boost::ratio<1> >
+    {
+        double q_;
+    public:
+        quantity() : q_(1) {}
+        quantity(meter d) : q_(d.count()) {}  // note:  only User1::meter needed here
+
+        double get() const {return q_;}
+        void set(double q) {q_ = q;}
+    };
+
+    template <>
+    class quantity<boost::ratio<0>, boost::ratio<0> >
+    {
+        double q_;
+    public:
+        quantity() : q_(1) {}
+        quantity(double d) : q_(d) {}
+
+        double get() const {return q_;}
+        void set(double q) {q_ = q;}
+    };
+
+Example of SI-Units
+
+    typedef quantity<boost::ratio<0>, boost::ratio<0> >  Scalar;
+    typedef quantity<boost::ratio<1>, boost::ratio<0> >  Time;         // second
+    typedef quantity<boost::ratio<0>, boost::ratio<1> >  Distance;     // meter
+    typedef quantity<boost::ratio<-1>, boost::ratio<1> > Speed;        // meter/second
+    typedef quantity<boost::ratio<-2>, boost::ratio<1> > Acceleration; // meter/second^2
+
+Quantity arithmetics
+
+    template <class R1, class R2, class R3, class R4>
+    quantity<typename boost::ratio_subtract<R1, R3>::type, typename boost::ratio_subtract<R2, R4>::type>
+    operator/(const quantity<R1, R2>& x, const quantity<R3, R4>& y)
+    {
+        typedef quantity<typename boost::ratio_subtract<R1, R3>::type,
+                        typename boost::ratio_subtract<R2, R4>::type> R;
+        R r;
+        r.set(x.get() / y.get());
+        return r;
+    }
+
+    template <class R1, class R2, class R3, class R4>
+    quantity<typename boost::ratio_add<R1, R3>::type, typename boost::ratio_add<R2, R4>::type>
+    operator*(const quantity<R1, R2>& x, const quantity<R3, R4>& y)
+    {
+        typedef quantity<typename boost::ratio_add<R1, R3>::type,
+                        typename boost::ratio_add<R2, R4>::type> R;
+        R r;
+        r.set(x.get() * y.get());
+        return r;
+    }
+
+    template <class R1, class R2>
+    quantity<R1, R2>
+    operator+(const quantity<R1, R2>& x, const quantity<R1, R2>& y)
+    {
+        typedef quantity<R1, R2> R;
+        R r;
+        r.set(x.get() + y.get());
+        return r;
+    }
+
+    template <class R1, class R2>
+    quantity<R1, R2>
+    operator-(const quantity<R1, R2>& x, const quantity<R1, R2>& y)
+    {
+        typedef quantity<R1, R2> R;
+        R r;
+        r.set(x.get() - y.get());
+        return r;
+    }
+
+Example type-safe physics function
+
+    Distance
+    compute_distance(Speed v0, Time t, Acceleration a)
+    {
+        return v0 * t + Scalar(.5) * a * t * t;  // if a units mistake is made here it won't compile
+    }
+
+
+Exercise example type-safe physics function and show interoperation
+of custom time durations (User1::seconds) and standard time durations (boost::hours).
+Though input can be arbitrary (but type-safe) units, output is always in SI-units
+(a limitation of the simplified Units lib demoed here).
+
+    int main()
+    {
+        typedef boost::ratio<8, BOOST_INTMAX_C(0x7FFFFFFFD)> R1;
+        typedef boost::ratio<3, BOOST_INTMAX_C(0x7FFFFFFFD)> R2;
+        typedef User1::quantity<boost::ratio_subtract<boost::ratio<0>, boost::ratio<1> >::type,
+                                 boost::ratio_subtract<boost::ratio<1>, boost::ratio<0> >::type > RR;
+        typedef boost::ratio_subtract<R1, R2>::type RS;
+        std::cout << RS::num << '/' << RS::den << '\n';
+
+
+        std::cout << "*************\n";
+        std::cout << "* testUser1 *\n";
+        std::cout << "*************\n";
+        User1::Distance d( User1::mile(110) );
+        User1::Time t( boost::chrono::hours(2) );
+
+        RR r=d / t;
+        //r.set(d.get() / t.get());
+
+        User1::Speed rc= r;
+
+        User1::Speed s = d / t;
+        std::cout << "Speed = " << s.get() << " meters/sec\n";
+        User1::Acceleration a = User1::Distance( User1::foot(32.2) ) / User1::Time() / User1::Time();
+        std::cout << "Acceleration = " << a.get() << " meters/sec^2\n";
+        User1::Distance df = compute_distance(s, User1::Time( User1::seconds(0.5) ), a);
+        std::cout << "Distance = " << df.get() << " meters\n";
+        std::cout << "There are " << User1::mile::ratio::den << '/' << User1::mile::ratio::num << " miles/meter";
+        User1::meter mt = 1;
+        User1::mile mi = mt;
+        std::cout << " which is approximately " << mi.count() << '\n';
+        std::cout << "There are " << User1::mile::ratio::num << '/' << User1::mile::ratio::den << " meters/mile";
+        mi = 1;
+        mt = mi;
+        std::cout << " which is approximately " << mt.count() << '\n';
+        User1::attosecond as(1);
+        User1::seconds sec = as;
+        std::cout << "1 attosecond is " << sec.count() << " seconds\n";
+        std::cout << "sec = as;  // compiles\n";
+        sec = User1::seconds(1);
+        as = sec;
+        std::cout << "1 second is " << as.count() << " attoseconds\n";
+        std::cout << "as = sec;  // compiles\n";
+        std::cout << "\n";
+      return 0;
+    }
+
+['See the source file [@../../test/ratio_test.cpp test/ratio_test.cpp]]
+
+[endsect]
+[endsect]
+
+[/===============]
+[section How you override the duration's default constructor]
+
+Next follows how you override the duration's default constructor to do anything you want (in this case zero). All we need to do is to change the representation
+
+    namespace I_dont_like_the_default_duration_behavior {
+
+    template <class R>
+    class zero_default
+    {
+    public:
+        typedef R rep;
+
+    private:
+        rep rep_;
+    public:
+        zero_default(rep i = 0) : rep_(i) {}
+        operator rep() const {return rep_;}
+
+        zero_default& operator+=(zero_default x) {rep_ += x.rep_; return *this;}
+        zero_default& operator-=(zero_default x) {rep_ -= x.rep_; return *this;}
+        zero_default& operator*=(zero_default x) {rep_ *= x.rep_; return *this;}
+        zero_default& operator/=(zero_default x) {rep_ /= x.rep_; return *this;}
+
+        zero_default  operator+ () const {return *this;}
+        zero_default  operator- () const {return zero_default(-rep_);}
+        zero_default& operator++()       {++rep_; return *this;}
+        zero_default  operator++(int)    {return zero_default(rep_++);}
+        zero_default& operator--()       {--rep_; return *this;}
+        zero_default  operator--(int)    {return zero_default(rep_--);}
+
+        friend zero_default operator+(zero_default x, zero_default y) {return x += y;}
+        friend zero_default operator-(zero_default x, zero_default y) {return x -= y;}
+        friend zero_default operator*(zero_default x, zero_default y) {return x *= y;}
+        friend zero_default operator/(zero_default x, zero_default y) {return x /= y;}
+
+        friend bool operator==(zero_default x, zero_default y) {return x.rep_ == y.rep_;}
+        friend bool operator!=(zero_default x, zero_default y) {return !(x == y);}
+        friend bool operator< (zero_default x, zero_default y) {return x.rep_ < y.rep_;}
+        friend bool operator<=(zero_default x, zero_default y) {return !(y < x);}
+        friend bool operator> (zero_default x, zero_default y) {return y < x;}
+        friend bool operator>=(zero_default x, zero_default y) {return !(x < y);}
+    };
+
+    typedef boost::chrono::duration<zero_default<long long>, boost::nano        > nanoseconds;
+    typedef boost::chrono::duration<zero_default<long long>, boost::micro       > microseconds;
+    typedef boost::chrono::duration<zero_default<long long>, boost::milli       > milliseconds;
+    typedef boost::chrono::duration<zero_default<long long>                      > seconds;
+    typedef boost::chrono::duration<zero_default<long long>, boost::ratio<60>   > minutes;
+    typedef boost::chrono::duration<zero_default<long long>, boost::ratio<3600> > hours;
+    }
+
+Usage
+
+    using namespace I_dont_like_the_default_duration_behavior;
+
+    milliseconds ms;
+    std::cout << ms.count() << '\n';
+
+['See the source file [@../../example/i_dont_like_the_default_duration_behavior.cpp example/i_dont_like_the_default_duration_behavior.cpp]]
+
+[endsect]
+
+[/==================]
+[section min utility]
+
+Returns the earliest time_point.
+
+    template <class Clock, class Duration1, class Duration2>
+    typename boost::common_type<time_point<Clock, Duration1>,
+                         time_point<Clock, Duration2> >::type
+    min(time_point<Clock, Duration1> t1, time_point<Clock, Duration2> t2)
+    {
+        return t2 < t1 ? t2 : t1;
+    }
+
+Being able to *easily* write this function is a major feature!
+
+    BOOST_AUTO(t1, system_clock::now() + seconds(3));
+    BOOST_AUTO(t2, system_clock::now() + nanoseconds(3));
+    BOOST_AUTO(t3, (min)(t1, t2));
+
+['See the source file [@../../example/min_time_point.cpp example/min_time_point.cpp]]
+
+
+[endsect]
+
+[/==================]
+[section Cycle count]
+
+Users can easily create their own clocks, with both points in time and time durations which have a representation and precision of their own choosing. For example if there is a hardware counter which simply increments a count with each cycle of the cpu, one can very easily build clocks, time points and durations on top of that, using only a few tens of lines of code. Such systems can be used to call the time-sensitive threading API's such as sleep, wait on a condition variable, or wait for a mutex lock. The API proposed herein is not sensitive as to whether this is a 300MHz clock (with a 3 1/3 nanosecond tick period) or a 3GHz clock (with a tick period of  1/3 of a nanosecond). And the resulting code will be just as efficient as if the user wrote a special purpose clock cycle counter. 
+
+
+    #include <boost/chrono/chrono.hpp>
+    #include <boost/type_traits.hpp>
+
+    #include <iostream>
+
+    using namespace boost::chrono;
+
+
+    template <long long speed>
+    struct cycle_count
+    {
+        typedef typename boost::ratio_multiply<boost::ratio<speed>, boost::mega>::type frequency;  // Mhz
+        typedef typename boost::ratio_divide<boost::ratio<1>, frequency>::type period;
+        typedef long long rep;
+        typedef boost::chrono::duration<rep, period> duration;
+        typedef boost::chrono::time_point<cycle_count> time_point;
+
+        static time_point now()
+        {
+            static long long tick = 0;
+            // return exact cycle count
+            return time_point(duration(++tick));  // fake access to clock cycle count
+        }
+    };
+
+    template <long long speed>
+    struct approx_cycle_count
+    {
+        static const long long frequency = speed * 1000000;  // MHz
+        typedef nanoseconds duration;
+        typedef duration::rep rep;
+        typedef duration::period period;
+        static const long long nanosec_per_sec = period::den;
+        typedef boost::chrono::time_point<approx_cycle_count> time_point;
+
+        static time_point now()
+        {
+            static long long tick = 0;
+            // return cycle count as an approximate number of nanoseconds
+            // compute as if nanoseconds is only duration in the std::lib
+            return time_point(duration(++tick * nanosec_per_sec / frequency));
+        }
+    };
+
+['See the source file [@../../example/cycle_count.cpp here]]
+
+[endsect]
+
+[/==================]
+[section xtime conversions]
+
+Example round_up utility:  converts d to To, rounding up for inexact conversions
+Being able to *easily* write this function is a major feature!
+
+    #include <boost/chrono/chrono.hpp>
+    #include <boost/type_traits.hpp>
+
+    #include <iostream>
+
+    using namespace boost::chrono;
+
+    template <class To, class Rep, class Period>
+    To
+    round_up(duration<Rep, Period> d)
+    {
+        To result = duration_cast<To>(d);
+        if (result < d)
+            ++result;
+        return result;
+    }
+
+Demonstrate interaction with xtime-like facility:
+
+
+    struct xtime
+    {
+        long sec;
+        unsigned long usec;
+    };
+
+    template <class Rep, class Period>
+    xtime
+    to_xtime_truncate(duration<Rep, Period> d)
+    {
+        xtime xt;
+        xt.sec = static_cast<long>(duration_cast<seconds>(d).count());
+        xt.usec = static_cast<long>(duration_cast<microseconds>(d - seconds(xt.sec)).count());
+        return xt;
+    }
+
+    template <class Rep, class Period>
+    xtime
+    to_xtime_round_up(duration<Rep, Period> d)
+    {
+        xtime xt;
+        xt.sec = static_cast<long>(duration_cast<seconds>(d).count());
+        xt.usec = static_cast<unsigned long>(round_up<microseconds>(d - seconds(xt.sec)).count());
+        return xt;
+    }
+
+    microseconds
+    from_xtime(xtime xt)
+    {
+        return seconds(xt.sec) + microseconds(xt.usec);
+    }
+
+    void print(xtime xt)
+    {
+        std::cout << '{' << xt.sec << ',' << xt.usec << "}\n";
+    }
+
+Usage
+
+        xtime xt = to_xtime_truncate(seconds(3) + milliseconds(251));
+        print(xt);
+        milliseconds ms = duration_cast<milliseconds>(from_xtime(xt));
+        std::cout << ms.count() << " milliseconds\n";
+        xt = to_xtime_round_up(ms);
+        print(xt);
+        xt = to_xtime_truncate(seconds(3) + nanoseconds(999));
+        print(xt);
+        xt = to_xtime_round_up(seconds(3) + nanoseconds(999));
+        print(xt);
+
+
+['See the source file [@../../example/xtime.cpp here]]
+
+[endsect]
+
+[/==================]
+[section xtime_clock]
+
+This example demonstrates the use of a timeval-like struct to be used as the representation
+type for both duraiton and time_point.
+
+    class xtime {
+    private:
+        long tv_sec;
+        long tv_usec;
+
+        void fixup() {
+            if (tv_usec < 0) {
+                tv_usec += 1000000;
+                --tv_sec;
+            }
+        }
+
+    public:
+        explicit xtime(long sec, long usec) {
+            tv_sec = sec;
+            tv_usec = usec;
+            if (tv_usec < 0 || tv_usec >= 1000000) {
+                tv_sec += tv_usec / 1000000;
+                tv_usec %= 1000000;
+                fixup();
+            }
+        }
+
+        explicit xtime(long long usec) {
+            tv_usec = static_cast<long>(usec % 1000000);
+            tv_sec  = static_cast<long>(usec / 1000000);
+            fixup();
+        }
+
+        // explicit
+        operator long long() const {return static_cast<long long>(tv_sec) * 1000000 + tv_usec;}
+
+        xtime& operator += (xtime rhs) {
+            tv_sec += rhs.tv_sec;
+            tv_usec += rhs.tv_usec;
+            if (tv_usec >= 1000000) {
+                tv_usec -= 1000000;
+                ++tv_sec;
+            }
+            return *this;
+        }
+
+        xtime& operator -= (xtime rhs) {
+            tv_sec -= rhs.tv_sec;
+            tv_usec -= rhs.tv_usec;
+            fixup();
+            return *this;
+        }
+
+        xtime& operator %= (xtime rhs) {
+            long long t = tv_sec * 1000000 + tv_usec;
+            long long r = rhs.tv_sec * 1000000 + rhs.tv_usec;
+            t %= r;
+            tv_sec = static_cast<long>(t / 1000000);
+            tv_usec = static_cast<long>(t % 1000000);
+            fixup();
+            return *this;
+        }
+
+        friend xtime operator+(xtime x, xtime y) {return x += y;}
+        friend xtime operator-(xtime x, xtime y) {return x -= y;}
+        friend xtime operator%(xtime x, xtime y) {return x %= y;}
+
+        friend bool operator==(xtime x, xtime y)
+            { return (x.tv_sec == y.tv_sec && x.tv_usec == y.tv_usec); }
+
+        friend bool operator<(xtime x, xtime y) {
+            if (x.tv_sec == y.tv_sec)
+                return (x.tv_usec < y.tv_usec);
+            return (x.tv_sec < y.tv_sec);
+        }
+
+        friend bool operator!=(xtime x, xtime y) { return !(x == y); }
+        friend bool operator> (xtime x, xtime y) { return y < x; }
+        friend bool operator<=(xtime x, xtime y) { return !(y < x); }
+        friend bool operator>=(xtime x, xtime y) { return !(x < y); }
+
+        friend std::ostream& operator<<(std::ostream& os, xtime x)
+            {return os << '{' << x.tv_sec << ',' << x.tv_usec << '}';}
+    };
+
+Clock based on timeval-like struct.
+
+    class xtime_clock
+    {
+    public:
+        typedef xtime                                  rep;
+        typedef boost::micro                           period;
+        typedef boost::chrono::duration<rep, period>   duration;
+        typedef boost::chrono::time_point<xtime_clock> time_point;
+
+        static time_point now()
+        {
+        #if defined(BOOST_CHRONO_WINDOWS_API)
+            time_point t(duration(xtime(0)));
+            gettimeofday((timeval*)&t, 0);
+            return t;
+
+        #elif defined(BOOST_CHRONO_MAC_API)
+
+            time_point t(duration(xtime(0)));
+            gettimeofday((timeval*)&t, 0);
+            return t;
+
+        #elif defined(BOOST_CHRONO_POSIX_API)
+            //time_point t(0,0);
+
+            timespec ts;
+            ::clock_gettime( CLOCK_REALTIME, &ts );
+
+            xtime xt( ts.tv_sec, ts.tv_nsec/1000);
+            return time_point(duration(xt));
+
+        #endif  // POSIX
+        }
+    };
+
+Usage of xtime_clock
+
+        using namespace boost::chrono;
+        std::cout << "sizeof xtime_clock::time_point = " << sizeof(xtime_clock::time_point) << '\n';
+        std::cout << "sizeof xtime_clock::duration = " << sizeof(xtime_clock::duration) << '\n';
+        std::cout << "sizeof xtime_clock::rep = " << sizeof(xtime_clock::rep) << '\n';
+        xtime_clock::duration delay(milliseconds(5));
+        xtime_clock::time_point start = xtime_clock::now();
+        while (xtime_clock::now() - start <= delay) {}
+        xtime_clock::time_point stop = xtime_clock::now();
+        xtime_clock::duration elapsed = stop - start;
+        std::cout << "paused " << nanoseconds(elapsed).count() << " nanoseconds\n";
+
+
+['See the source file [@../../example/timeval_demo.cpp example/timeval_demo.cpp]]
+
+[endsect]
+
+[/=========================]
+[section runtime_resolution]
+
+Handle duration with resolution not known until run time
+
+    class duration
+    {
+    public:
+        typedef long long rep;
+    private:
+        rep rep_;
+
+        static const double ticks_per_nanosecond;
+
+    public:
+        typedef boost::chrono::duration<double, boost::nano> tonanosec;
+
+        duration() {} // = default;
+        explicit duration(const rep& r) : rep_(r) {}
+
+        // conversions
+        explicit duration(const tonanosec& d)
+                : rep_(static_cast<rep>(d.count() * ticks_per_nanosecond)) {}
+
+        // explicit
+           operator tonanosec() const {return tonanosec(rep_/ticks_per_nanosecond);}
+
+        // observer
+
+        rep count() const {return rep_;}
+
+        // arithmetic
+
+        duration& operator+=(const duration& d) {rep_ += d.rep_; return *this;}
+        duration& operator-=(const duration& d) {rep_ += d.rep_; return *this;}
+        duration& operator*=(rep rhs)           {rep_ *= rhs; return *this;}
+        duration& operator/=(rep rhs)           {rep_ /= rhs; return *this;}
+
+        duration  operator+() const {return *this;}
+        duration  operator-() const {return duration(-rep_);}
+        duration& operator++()      {++rep_; return *this;}
+        duration  operator++(int)   {return duration(rep_++);}
+        duration& operator--()      {--rep_; return *this;}
+        duration  operator--(int)   {return duration(rep_--);}
+
+        friend duration operator+(duration x, duration y) {return x += y;}
+        friend duration operator-(duration x, duration y) {return x -= y;}
+        friend duration operator*(duration x, rep y)      {return x *= y;}
+        friend duration operator*(rep x, duration y)      {return y *= x;}
+        friend duration operator/(duration x, rep y)      {return x /= y;}
+
+        friend bool operator==(duration x, duration y) {return x.rep_ == y.rep_;}
+        friend bool operator!=(duration x, duration y) {return !(x == y);}
+        friend bool operator< (duration x, duration y) {return x.rep_ < y.rep_;}
+        friend bool operator<=(duration x, duration y) {return !(y < x);}
+        friend bool operator> (duration x, duration y) {return y < x;}
+        friend bool operator>=(duration x, duration y) {return !(x < y);}
+    };
+
+['See the source file [@../../example/runtime_resolution.cpp here]]
+
+[endsect]
+
+[/=======================================================]
+[section Simulated thread interface demonstration program]
+
+Free sleep functions
+
+    namespace boost { namespace this_thread {
+
+    template <class Rep, class Period>
+    void sleep_for(const boost::chrono::duration<Rep, Period>& d) {
+        boost::chrono::microseconds t = boost::chrono::duration_cast<boost::chrono::microseconds>(d);
+        if (t < d)
+            ++t;
+        if (t > boost::chrono::microseconds(0))
+            std::cout << "sleep_for " << t.count() << " microseconds\n";
+    }
+
+    template <class Clock, class Duration>
+    void sleep_until(const boost::chrono::time_point<Clock, Duration>& t) {
+        using namespace boost::chrono;
+        typedef time_point<Clock, Duration> Time;
+        typedef system_clock::time_point SysTime;
+        if (t > Clock::now()) {
+            typedef typename boost::common_type<typename Time::duration,
+                                         typename SysTime::duration>::type D;
+            /* auto */ D d = t - Clock::now();
+            microseconds us = duration_cast<microseconds>(d);
+            if (us < d)
+                ++us;
+            SysTime st = system_clock::now() + us;
+            std::cout << "sleep_until    ";
+            detail::print_time(st);
+            std::cout << " which is " << (st - system_clock::now()).count() << " microseconds away\n";
+        }
+    }
+
+    }}
+
+
+timed_mutex modified fuctions
+
+    namespace boost {
+    struct timed_mutex {
+        // ...
+
+        template <class Rep, class Period>
+        bool try_lock_for(const boost::chrono::duration<Rep, Period>& d) {
+            boost::chrono::microseconds t = boost::chrono::duration_cast<boost::chrono::microseconds>(d);
+            if (t <= boost::chrono::microseconds(0))
+                return try_lock();
+            std::cout << "try_lock_for " << t.count() << " microseconds\n";
+            return true;
+        }
+
+        template <class Clock, class Duration>
+        bool try_lock_until(const boost::chrono::time_point<Clock, Duration>& t)
+        {
+            using namespace boost::chrono;
+            typedef time_point<Clock, Duration> Time;
+            typedef system_clock::time_point SysTime;
+            if (t <= Clock::now())
+                return try_lock();
+            typedef typename boost::common_type<typename Time::duration,
+              typename Clock::duration>::type D;
+            /* auto */ D d = t - Clock::now();
+            microseconds us = duration_cast<microseconds>(d);
+            SysTime st = system_clock::now() + us;
+            std::cout << "try_lock_until ";
+            detail::print_time(st);
+            std::cout << " which is " << (st - system_clock::now()).count()
+              << " microseconds away\n";
+            return true;
+        }
+    };
+    }
+
+condition_variable modified fuctions
+
+    namespace boost {
+    struct condition_variable
+    {
+        // ...
+
+        template <class Rep, class Period>
+        bool wait_for(mutex&, const boost::chrono::duration<Rep, Period>& d) {
+            boost::chrono::microseconds t = boost::chrono::duration_cast<boost::chrono::microseconds>(d);
+            std::cout << "wait_for " << t.count() << " microseconds\n";
+            return true;
+        }
+
+        template <class Clock, class Duration>
+        bool wait_until(mutex&, const boost::chrono::time_point<Clock, Duration>& t) {
+            using namespace boost::chrono;
+            typedef time_point<Clock, Duration> Time;
+            typedef system_clock::time_point SysTime;
+            if (t <= Clock::now())
+                return false;
+            typedef typename boost::common_type<typename Time::duration,
+              typename Clock::duration>::type D;
+            /* auto */ D d = t - Clock::now();
+            microseconds us = duration_cast<microseconds>(d);
+            SysTime st = system_clock::now() + us;
+             std::cout << "wait_until     ";
+            detail::print_time(st);
+            std::cout << " which is " << (st - system_clock::now()).count()
+              << " microseconds away\n";
+            return true;
+        }
+    };
+    }
+
+Usage
+
+    boost::mutex m;
+    boost::timed_mutex mut;
+    boost::condition_variable cv;
+
+    using namespace boost;
+    using namespace boost::chrono;
+
+    this_thread::sleep_for(seconds(3));
+    this_thread::sleep_for(nanoseconds(300));
+    system_clock::time_point time_limit = system_clock::now() + seconds(4) + milliseconds(500);
+    this_thread::sleep_until(time_limit);
+
+    mut.try_lock_for(milliseconds(30));
+    mut.try_lock_until(time_limit);
+
+    cv.wait_for(m, minutes(1));    // real code would put this in a loop
+    cv.wait_until(m, time_limit);  // real code would put this in a loop
+
+    // For those who prefer floating point
+    this_thread::sleep_for(duration<double>(0.25));
+    this_thread::sleep_until(system_clock::now() + duration<double>(1.5));
+
+
+['See the source file [@../../example/simulated_thread_interface_demo.cpp example/simulated_thread_interface_demo.cpp]]
+
+
+[endsect]
+
+[/================]
+[section Saturating]
+
+A "saturating" signed integral type  is developed.  This type has +/- infinity and a nan (like IEEE floating point) but otherwise obeys signed integral arithmetic. This class is subsequently used as the rep in boost::chrono::duration to demonstrate a duration class that does not silently ignore overflow.
+
+['See the source file [@../../example/satutating.cpp example/satutating.cpp]]
+
+
+[endsect]
+
+[/======================================================]
+[section Howard Hinnant's original demonstration program]
+
+['See the source file [@../../example/time2_demo.cpp example/time2_demo.cpp]]
+
+[endsect]
+
+[/===============================================================]
+[section A tiny program that times how long until a key is struck]
+
+    #include <boost/chrono/chrono.hpp>
+    #include <iostream>
+    #include <iomanip>
+
+    using namespace boost::chrono;
+
+    template< class Clock >
+    class timer
+    {
+      typename Clock::time_point start;
+    public:
+
+      timer() : start( Clock::now() ) {}
+
+      typename Clock::duration elapsed() const
+      {
+        return Clock::now() - start;
+      }
+
+      double seconds() const
+      {
+        return elapsed().count() * ((double)Clock::period::num/Clock::period::den);
+      }
+    };
+
+    int main()
+    {
+      timer<system_clock> t1;
+      timer<monotonic_clock> t2;
+      timer<high_resolution_clock> t3;
+
+      std::cout << "Strike any key: ";
+      std::cin.get();
+
+      std::cout << std::fixed << std::setprecision(9);
+      std::cout << "system_clock-----------: "
+                << t1.seconds() << " seconds\n";
+      std::cout << "monotonic_clock--------: "
+                << t2.seconds() << " seconds\n";
+      std::cout << "high_resolution_clock--: "
+                << t3.seconds() << " seconds\n";
+
+      system_clock::time_point d4 = system_clock::now();
+      system_clock::time_point d5 = system_clock::now();
+
+      std::cout << "\nsystem_clock latency-----------: " << (d5 - d4).count() << std::endl;
+
+      monotonic_clock::time_point d6 = monotonic_clock::now();
+      monotonic_clock::time_point d7 = monotonic_clock::now();
+
+      std::cout << "monotonic_clock latency--------: " << (d7 - d6).count() << std::endl;
+
+      high_resolution_clock::time_point d8 = high_resolution_clock::now();
+      high_resolution_clock::time_point d9 = high_resolution_clock::now();
+
+      std::cout << "high_resolution_clock latency--: " << (d9 - d8).count() << std::endl;
+
+      std::time_t now = system_clock::to_time_t(system_clock::now());
+
+      std::cout << "\nsystem_clock::now() reports UTC is "
+        << std::asctime(std::gmtime(&now)) << "\n";
+
+      return 0;
+    }
+
+['See the source file [@../../example/await_keystroke.cpp example/await_keystroke.cpp]]
+
+[endsect]
+
+[/============================]
+[section stopclock_example.cpp]
+
+Here is the stopclock_example.cpp program supplied with the Boost Chrono library:
+
+[/stopclock_example_cpp]
+
+When the `stopclock<> t` object is created, it starts timing. When it is destroyed at the end of the program, its destructor stops the time counting and displays timing information on cout.
+
+    #include <boost/chrono/stopclock.hpp>
+    #include <cmath>
+
+    int main()
+    {
+      boost::chrono::stopclock<> t;
+
+      for ( long i = 0; i < 10000000; ++i )
+        std::sqrt( 123.456L );  // burn some time
+
+      return 0;
+    }
+
+The output of this program run looks like this:
+
+   wall 0.42 s, user 0.41 s + system 0.00 s = total cpu 0.41 s, (96.3%)
+
+In other words, this program ran in 0.42 seconds as would be measured by a clock on the wall, the operating system charged it for 0.41 seconds of user CPU time and 0 seconds of system CPU time, the total of these two was 0.41, and that represented 96.3 percent of the wall clock time.
+
+['See the source file [@../../example/stopclock_example.cpp example/stopclock_example.cpp]]
+
+[endsect]
+
+
+[/=============================]
+[section stopclock_example2.cpp]
+
+The stopclock_example2.cpp program is the same, except that it supplies additional constructor arguments from the command line:
+
+    #include <boost/chrono/stopclock.hpp>
+    #include <cmath>
+
+    int main( int argc, char * argv[] )
+    {
+      const char * format = argc > 1 ? argv[1] : "%t cpu seconds\n";
+      int          places = argc > 2 ? std::atoi( argv[2] ) : 2;
+
+      boost::chrono::stopclock<> t( format, places );
+
+      for ( long i = 0; i < 10000000; ++i )
+        std::sqrt( 123.456L ); // burn some time
+
+      return 0;
+    }
+
+Here is the output for this program for several sets of command line arguments:
+
+    stopclock_example2
+    0.42 cpu seconds
+
+    stopclock_example2 "%w wall clock seconds\n"
+    0.41 wall clock seconds
+
+    stopclock_example2 "%w wall clock seconds\n" 6
+    0.421875 wall clock seconds
+
+    stopclock_example2 "%t total CPU seconds\n" 3
+    0.422 total CPU seconds
+
+['See the source file [@../../example/stopclock_example2.cpp example/stopclock_example2.cpp]]
+
+[endsect]
+
+[/===============================================================]
+[section time command]
+
+    #include <boost/chrono/stopclock.hpp>
+    #include <cstdlib>
+    #include <string>
+    #include <iostream>
+
+    int main( int argc, char * argv[] )
+    {
+      if ( argc == 1 )
+      {
+        std::cout << "invoke: timex [-v] command [args...]\n"
+          "  command will be executed and timings displayed\n"
+          "  -v option causes command and args to be displayed\n";
+        return 1;
+      }
+
+      std::string s;
+
+      bool verbose = false;
+      if ( argc > 1 && *argv[1] == '-' && *(argv[1]+1) == 'v' )
+      {
+        verbose = true;
+        ++argv;
+        --argc;
+      }
+
+      for ( int i = 1; i < argc; ++i )
+      {
+        if ( i > 1 ) s += ' ';
+        s += argv[i];
+      }
+
+      if ( verbose )
+        { std::cout << "command: \"" << s.c_str() << "\"\n"; }
+
+      boost::chrono::stopclock<> t;
+
+      return std::system( s.c_str() );
+    }
+
+['See the source file [@../../example/timex.cpp example/timex.cpp]]
+
+[endsect]
+
+[endsect]
 
 [/================================]
-[section:ext_references References]
+[section:ext_references External Resources]
 [/================================]
 
 [variablelist
@@ -1315,6 +2427,9 @@ This file is a redirection to `boost/chrono/chrono.hpp` including in addition re
 [section:chrono_chrono_hpp Header `<boost/chrono/chrono.hpp>`]
 [/=============================================]
 
+    #define BOOST_SYSTEM_CLOCK_DURATION
+    #define BOOST_CHRONO_HAS_CLOCK_MONOTONIC
+
     namespace boost {
       namespace chrono {
 
@@ -1444,7 +2559,7 @@ This file is a redirection to `boost/chrono/chrono.hpp` including in addition re
       }
     }
 
-[section `Clock` Requirements]
+[section:clock `Clock` Requirements]
 
 A clock represents a bundle consisting of a native `duration`, a native `time_point`, and a function `now()` to get the current `time_point`. A clock must meet the requirements in the following Table.
 
@@ -1459,6 +2574,17 @@ In this table `C1` and `C2` denote `clock` types. `t1` and `t2` are values retur
     [[`C1::is_monotonic`]        [`const bool`]  [`true` if `t1 <= t2` is always `true`, else `false`. [*Note: A `clock` that can be adjusted backwards is not monotonic]]]
     [[`C1::now()`]        [`C1::time_point`]  [Returns a `time_point` representing the current point in time.]]
 ]
+
+
+Models of Clock:
+
+* [@boost_chrono/reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.class__system_clock_ system_clock] 
+* [@boost_chrono/reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.class__monotonic_clock_ monotonic_clock]
+* [@boost_chrono/reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.class__high_resolution_clock_ high_resolution_clock]
+* [@boost_chrono/reference/other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.class__process_real_cpu_clock_ process_real_cpu_clock]
+* [@boost_chrono/reference/other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.class__process_user_cpu_clock_ process_user_cpu_clock]
+* [@boost_chrono/reference/other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.class__process_system_cpu_clock_ process_system_cpu_clock]
+* [@boost_chrono/reference/other_clocks.html#boost_chrono.reference.other_clocks.thread_clock_hpp.class__thread_clock_ thread_clock]
 
 [endsect]
 
@@ -2005,7 +3131,7 @@ A `time_point` represents a point in time with respect to a specific clock.
         static BOOST_CHRONO_CONSTEXPR time_point max();
     };
 
-Clock must meet the Clock Requirements.
+Clock must meet the [@boost_chrono/reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.class__system_clock_ Clock Requirements].
 
 Duration must be an instantiation of `duration`, compile diagnostic otherwise.
 
@@ -2197,7 +3323,7 @@ The `system_clock` class provides a means of obtaining the current wall-clock ti
         static time_point  from_time_t(std::time_t t);
     };
 
-`system_clock` satisfy the Clock Requirements. In addition:
+`system_clock` satisfy the [@boost_chrono/reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.class__system_clock_ Clock Requirements]. In addition:
 
 * `system_clock::duration::min() < system_clock::duration::zero()` is `true`.
 
@@ -2218,9 +3344,15 @@ time_t to_time_t(const time_point& t);
 [endsect]
 [endsect]
 
+[section Macro `BOOST_CHRONO_HAS_CLOCK_MONOTONIC`]
+
+Defined if the platform support monotonic clocks.
+
+[endsect]
+
 [section Class `monotonic_clock`]
 
-`monotonic_clock` satisfy the Clock Requirements.
+`monotonic_clock` satisfy the [@boost_chrono/reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.class__system_clock_ Clock Requirements].
 
 `monotonic_clock` class provides access to the system-wide monotonic clock. The current time can be obtained by calling `monotonic_clock::now()`. There is no fixed relationship between values returned by `monotonic_clock::now()`  and wall-clock time.
 
@@ -2238,11 +3370,13 @@ time_t to_time_t(const time_point& t);
         };
     #endif
 
+
+
 [endsect]
 
 [section Class `high_resolution_clock`]
 
-`high_resolution_clock` satisfy the Clock Requirements.
+`high_resolution_clock` satisfy the [@boost_chrono/reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.class__system_clock_ Clock Requirements].
 
     #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
       typedef monotonic_clock high_resolution_clock;  // as permitted by [time.clock.hires]
@@ -2255,7 +3389,7 @@ time_t to_time_t(const time_point& t);
 [endsect]
 
 [/=============================================]
-[section:chrono_typeof_hpp Header `<boost/chrono/typeof/boost/chrono/chorno.hpp>`]
+[section:chrono_typeof_hpp Header `<boost/chrono/typeof/boost/chrono/chrono.hpp>`]
 [/=============================================]
 
 Register `duration<>` and `timepoint<>` class templates to Boost.Typeof.
@@ -2282,7 +3416,7 @@ Knowing how long a program takes to execute is useful in both test and productio
 
 [section Class `process_real_cpu_clock`]
 
-`process_real_cpu_clock` satisfy the Clock Requirements.
+`process_real_cpu_clock` satisfy the [@boost_chrono/reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.class__system_clock_ Clock Requirements].
 
 `process_real_cpu_clock` class provides access to the real process wall-clock monotonic clock, i.e. the real CPU-time clock of the calling process. The process relative current time can be obtained by calling `process_real_cpu_clock::now()`.
 
@@ -2301,7 +3435,7 @@ Knowing how long a program takes to execute is useful in both test and productio
 [endsect]
 [section Class `process_user_cpu_clock`]
 
-`process_user_cpu_clock` satisfy the Clock Requirements.
+`process_user_cpu_clock` satisfy the [@boost_chrono/reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.class__system_clock_ Clock Requirements].
 
 `process_user_cpu_clock` class provides access to the user CPU-time monotonic clock of the calling process. The process relative user current time can be obtained by calling `process_user_cpu_clock::now()`.
 
@@ -2321,7 +3455,7 @@ Knowing how long a program takes to execute is useful in both test and productio
 
 [section Class `process_system_cpu_clock`]
 
-`process_system_cpu_clock` satisfy the Clock Requirements.
+`process_system_cpu_clock` satisfy the [@boost_chrono/reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.class__system_clock_ Clock Requirements].
 
 `process_system_cpu_clock` class provides access to the system CPU-time monotonic clockof the calling process. The process relative system current time can be obtained by calling `process_system_cpu_clock::now()`.
 
@@ -2343,10 +3477,9 @@ Knowing how long a program takes to execute is useful in both test and productio
 
 `process_cpu_clock` can be considered as a `tuple<process_real_cpu_clock, process_user_cpu_clock, process_system_cpu_clock>`.
 
-`process_cpu_clock` provides a thin wrapper around the operating system's process timer API. For POSIX-like systems, that's the times() function, while for Windows, it's the GetProcessTimes() function.
+`process_cpu_clock` provides a thin wrapper around the operating system's process time API. For POSIX-like systems, that's the times() function, while for Windows, it's the GetProcessTimes() function.
 
 The process relative real, user and system current time can be obtained at once by calling `process_clocks::now()`.
-
 
     class BOOST_CHRONO_DECL process_cpu_clock
     {
@@ -2411,10 +3544,59 @@ The `times` specific functions `zero()`, `max()` and `min()` uses the relative f
 
 [endsect]
 
-[/
+[/==================================================================]
+[section:thread_clock_hpp Header `<boost/chrono/thread_clock.hpp>`]
+[/==================================================================]
+
+Knowing the time a thread takes to execute is useful in both test and production environments. 
+
+    #define BOOST_CHRONO_HAS_THREAD_CLOCK
+    #define BOOST_CHRONO_THREAD_CLOCK_IS_MONOTONIC
+    namespace boost { namespace chrono {
+
+        class thread_clock;
+
+    } }
+
+[section Macro `BOOST_CHRONO_HAS_THREAD_CLOCK`]
+
+This macro is defined if the platform supports thread clocks.
+
+[endsect]
+
+[section Macro `BOOST_CHRONO_THREAD_CLOCK_IS_MONOTONIC`]
+
+This macro is defined if the platform has a thread clockIts value is true if it is monotonic and false otherwise.
+
+[endsect]
+
+[section Class `thread_clock`]
+
+`thread_clock` satisfy the [@boost_chrono/reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.class__system_clock_ Clock Requirements].
+
+`thread_clock` class provides access to the real thread wall-clock, i.e. the real CPU-time clock of the calling thread. The thread relative current time can be obtained by calling `thread_clock::now()`.
+
+        class thread_clock {
+        public:
+            typedef nanoseconds                          duration;
+            typedef duration::rep                        rep;
+            typedef duration::period                     period;
+            typedef chrono::time_point<thread_clock>    time_point;
+            static const bool is_monotonic =             BOOST_CHRONO_THREAD_CLOCK_IS_MONOTONIC;
+
+            static time_point now( system::error_code & ec = system::throws );
+        };
+
+
+[endsect]
+
+[endsect]
+
+
+
 [section:suspendible_clock_req `SuspendibleClock` requirements]
 
-A `SuspendibleClock` is a Clock that in addition support for `suspend`/`resume` operations.
+A `SuspendibleClock` is a Clock that in addition supports `suspend`/`resume` operations.
 
 A `SuspendibleClock` must meet the requirements in the following Table.
 
@@ -2455,6 +3637,11 @@ In this table `C`  denote `clock` types.
 [*Throw:] Any exception the Clock::now function can throw if `ec == system::throws`. Otherwise `ec` is set with the correspoding error code set by `Clock::now(ec)`.
 
 [endsect]
+
+Models of `SuspendibleClock`:
+
+* [@boost_chrono/reference/other_clocks.html#boost_chrono.reference.other_clocks.suspendible_clock_hpp.template_class__suspendible_clock___ `suspendible_clock<Clock>`]
+
 
 [endsect]
 
@@ -2511,7 +3698,7 @@ In this table `C`  denote `clock` types.
 
 [section Template Class `suspendible_clock<>`]
 
-Given a `Clock`, `suspendible_clock<Clock>` is a model of SuspendibleClock.
+Given a `Clock`, `suspendible_clock<Clock>` is a model of [@boost_chrono/reference/other_clocks.html#boost_chrono.reference.other_clocks.suspendible_clock_req SuspendibleClock].
 
     template < class Clock >
     class suspendible_clock {
@@ -2543,7 +3730,7 @@ Given a `Clock`, `suspendible_clock<Clock>` is a model of SuspendibleClock.
 [endsect]
 
 [endsect]
-]
+
 [endsect]
 
 
@@ -2582,7 +3769,7 @@ This file include all the stopwatches related files
 
 [endsect]
 
-[section `Stopwatch` Requirements]
+[section:stopwatch_req `Stopwatch` Requirements]
 
 A Stopwatch measure the amount of time elapsed from a particular time when activated to when it is deactivated, or the accumulation of them.
 
@@ -2659,6 +3846,11 @@ In this table `S`, `S1` and `S2` denote stopwatches types. `s` is an instance of
 
 [endsect]
 
+Models of `Stopwatch`:
+
+* [@boost_chrono/reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.template_class__stopwatch___ `stopwatch`]
+* [@boost_chrono/reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.template_class__stopwatch_accumulator___ `stopwatch_accumulator`]
+
 [endsect]
 [/==================================================]
 [section:stopwatch_hpp Header `<boost/chrono/stopwatch.hpp>`]
@@ -2693,7 +3885,7 @@ In this table `S`, `S1` and `S2` denote stopwatches types. `s` is an instance of
 
 [section Template Class `stopwatch<>`]
 
-`stopwatch<>` is a model of a `Stopwatch`.
+`stopwatch<>` is a model of a [@boost_chrono/reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req `Stopwatch`].
 
 Knowing how long a part of a program takes to execute is useful in both test and production environments.
 A `stopwatch` object measures elapsed time. It is recommended to use it with clocks that measure wall clock rather than CPU time since the intended use is performance measurement on systems where total elapsed time is more important than just process or CPU time.
@@ -2710,7 +3902,7 @@ accuracy of timing information provided the Clock, and this coudl varies a great
             explicit stopwatch( system::error_code & ec = system::throws );
             explicit stopwatch( const dont_start_t& t );
 
-            ~timer();
+            ~stopwatch();
 
             time_point start( system::error_code & ec = system::throws );
             duration stop( system::error_code & ec = system::throws );
@@ -2789,7 +3981,7 @@ accuracy of timing information provided the Clock, and this coudl varies a great
 
 [section Template Class `stopwatch_accumulator<>`]
 
-A `stopwatch_accumulator<>` is a model of a Stopwatch that allows to accumulate the time in several times instead of at once as it is the case of the class `stopwatch<>`.
+A `stopwatch_accumulator<>` is a model of a [@boost_chrono/reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req `Stopwatch`] that allows to accumulate the time in several times instead of at once as it is the case of the class `stopwatch<>`.
 
         template <class Clock> class stopwatch_accumulator {
         public:
@@ -3047,6 +4239,13 @@ In this table `F`  denote Fromaters types, `S` is a Stopwatch and `s` is an inst
     [[`F::show_time(s,f,p,os,ec)`]        [`S::time_point`]  [outputs on `os` a formatted string combining informations from the Stopwatch `s`, the format `f` and the double precission `p`.]]
 ]
 
+
+Models of `Formatter`:
+
+* [@boost_chrono/reference/stopwatch_formatters.html#boost_chrono.reference.stopwatch_formatters.stopwatch_formatter_hpp.template_class__basic_stopwatch_formatter___  `basic_stopwatch_formatter`]
+* [@boost_chrono.reference.stopwatch_formatters.stopwatch_accumulator_formatter_hpp.template_class__basic_stopwatch_accumulator_formatter___ `basic_stopwatch_accumulator_formatter`]
+* [@boost_chrono.reference.stopwatch_formatters.t24_hours_formatter_hpp.template_class__basic_24_hours_formatter___ `basic_24_hours_formatter`]
+
 [endsect]
 
 [section `Formatter` related traits]
@@ -3078,7 +4277,7 @@ The nested typedef `type` defines the default formatter used by the `stopwatch_r
 
 [section Template Class `basic_stopwatch_reporter<>`]
 
-class `basic_stopwatch_reporter` provides a everything a Timer provides and it adds reporting capabilities that can be invoked in a single line of code. The reporting is controleed by two parameters:
+class `basic_stopwatch_reporter` provides a everything a `Stopwatch` provides and it adds reporting capabilities that can be invoked in a single line of code. The reporting is controleed by two parameters:
 
 * format : The output format
 * places(precission): the number of decimal placess used.
@@ -3133,7 +4332,7 @@ The default format is given by Formatter::default_format().
 
 [section Template Class `stopwatch_reporter<>`]
 
-class `stopwatch_reporter` provides a everything a Timer provides and it adds reporting capabilities that can be invoked in a single line of code. The reporting is controleed by two parameters:
+class `stopwatch_reporter` provides a everything a `Stopwatch` provides and it adds reporting capabilities that can be invoked in a single line of code. The reporting is controleed by two parameters:
 
 * format : The output format
 * places(precission): the number of decimal placess used.
@@ -3204,7 +4403,7 @@ Usage
 
 [section Template Class `wstopwatch_reporter<>`]
 
-class `wstopwatch_reporter` provides a everything a Timer provides and it adds reporting capabilities that can be invoked in a single line of code. The reporting is controleed by two parameters:
+class `wstopwatch_reporter` provides a everything a `Stopwatch` provides and it adds reporting capabilities that can be invoked in a single line of code. The reporting is controleed by two parameters:
 
 * format : The output format
 * places(precission): the number of decimal placess used.
@@ -3394,9 +4593,9 @@ Usage
 [endsect]
 [section `stopclock` useful typedefs]
 
-        typedef boost::chrono::stopclock< boost::chrono::system_clock > system_stopwatch_reporter;
+        typedef boost::chrono::stopclock< boost::chrono::system_clock > system_stopwatch_stopclock;
         #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        typedef boost::chrono::stopclock< boost::chrono::monotonic_clock > monotonic_stopwatch_reporter;
+        typedef boost::chrono::stopclock< boost::chrono::monotonic_clock > monotonic_stopwatch_stopclock;
         #endif
         typedef boost::chrono::stopclock< boost::chrono::high_resolution_clock > high_resolution_stopclock;
         typedef boost::chrono::stopclock< boost::chrono::process_real_cpu_clock > process_real_cpu_stopclock;
@@ -3452,9 +4651,9 @@ Usage
 [endsect]
 [section `wstopclock` useful typedefs]
 
-        typedef boost::chrono::wstopclock< boost::chrono::system_clock > system_stopwatch_reporter;
+        typedef boost::chrono::wstopclock< boost::chrono::system_clock > system_stopwatch_wstopclock;
         #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        typedef boost::chrono::wstopclock< boost::chrono::monotonic_clock > monotonic_stopwatch_reporter;
+        typedef boost::chrono::wstopclock< boost::chrono::monotonic_clock > monotonic_stopwatch_wstopclock;
         #endif
         typedef boost::chrono::wstopclock< boost::chrono::high_resolution_clock > high_resolution_wstopclock;
         typedef boost::chrono::wstopclock< boost::chrono::process_real_cpu_clock > process_real_cpu_wstopclock;
@@ -4071,7 +5270,7 @@ This header has been deprecated. Use instead `<boost/chrono/process_cpu_clocks.h
 
 `process_clock` doesn't satisfy the Clock Requirements as the function now do not follows the Clock prototype.
 
-`process_clock` provides a thin wrapper around the operating system's process timer API. For POSIX-like systems, that's the times() function, while for Windows, it's the GetProcessTimes() function.
+`process_clock` provides a thin wrapper around the operating system's process time API. For POSIX-like systems, that's the times() function, while for Windows, it's the GetProcessTimes() function.
 
 The process relative real, user and system current time can be obtained at once by calling `process_clock::now()`.
 
@@ -4194,1003 +5393,6 @@ All the units are given using the suffix "s" following the System International 
 [endsect]
 
 
-[/===============]
-[section Examples]
-[/===============]
-
-[/===============]
-[section SI-units]
-[/===============]
-
-Type-safe "physics" code interoperating with boost::chrono::duration types and taking advantage of the boost::ratio infrastructure and design philosophy.
-
-length - mimics boost::chrono::duration except restricts representation to double.
-Uses boost::ratio facilities for length units conversions.
-
-    template <class Ratio>
-    class length {
-    private:
-        double len_;
-    public:
-        typedef Ratio ratio;
-        length() : len_(1) {}
-        length(const double& len) : len_(len) {}
-
-        template <class R>
-        length(const length<R>& d)
-                : len_(d.count() * boost::ratio_divide<Ratio, R>::type::den /
-                                   boost::ratio_divide<Ratio, R>::type::num) {}
-
-        double count() const {return len_;}
-
-        length& operator+=(const length& d) {len_ += d.count(); return *this;}
-        length& operator-=(const length& d) {len_ -= d.count(); return *this;}
-
-        length operator+() const {return *this;}
-        length operator-() const {return length(-len_);}
-
-        length& operator*=(double rhs) {len_ *= rhs; return *this;}
-        length& operator/=(double rhs) {len_ /= rhs; return *this;}
-    };
-
-
-Sparse sampling of length units
-
-    typedef length<boost::ratio<1> >          meter;        // set meter as "unity"
-    typedef length<boost::centi>              centimeter;   // 1/100 meter
-    typedef length<boost::kilo>               kilometer;    // 1000  meters
-    typedef length<boost::ratio<254, 10000> > inch;         // 254/10000 meters
-
-length takes ratio instead of two integral types so that definitions can be made like so:
-
-    typedef length<boost::ratio_multiply<boost::ratio<12>, inch::ratio>::type>   foot;  // 12 inchs
-    typedef length<boost::ratio_multiply<boost::ratio<5280>, foot::ratio>::type> mile;  // 5280 feet
-
-Need a floating point definition of seconds
-
-    typedef boost::chrono::duration<double> seconds;                         // unity
-
-Demo of (scientific) support for sub-nanosecond resolutions
-
-    typedef boost::chrono::duration<double,  boost::pico> picosecond;  // 10^-12 seconds
-    typedef boost::chrono::duration<double, boost::femto> femtosecond; // 10^-15 seconds
-    typedef boost::chrono::duration<double,  boost::atto> attosecond;  // 10^-18 seconds
-
-A very brief proof-of-concept for SIUnits-like library. Hard-wired to floating point seconds and meters, but accepts other units.
-
-    template <class R1, class R2>
-    class quantity
-    {
-        double q_;
-    public:
-        typedef R1 time_dim;
-        typedef R2 distance_dim;
-        quantity() : q_(1) {}
-
-        double get() const {return q_;}
-        void set(double q) {q_ = q;}
-    };
-
-    template <>
-    class quantity<boost::ratio<1>, boost::ratio<0> >
-    {
-        double q_;
-    public:
-        quantity() : q_(1) {}
-        quantity(seconds d) : q_(d.count()) {}  // note:  only User1::seconds needed here
-
-        double get() const {return q_;}
-        void set(double q) {q_ = q;}
-    };
-
-    template <>
-    class quantity<boost::ratio<0>, boost::ratio<1> >
-    {
-        double q_;
-    public:
-        quantity() : q_(1) {}
-        quantity(meter d) : q_(d.count()) {}  // note:  only User1::meter needed here
-
-        double get() const {return q_;}
-        void set(double q) {q_ = q;}
-    };
-
-    template <>
-    class quantity<boost::ratio<0>, boost::ratio<0> >
-    {
-        double q_;
-    public:
-        quantity() : q_(1) {}
-        quantity(double d) : q_(d) {}
-
-        double get() const {return q_;}
-        void set(double q) {q_ = q;}
-    };
-
-Example of SI-Units
-
-    typedef quantity<boost::ratio<0>, boost::ratio<0> >  Scalar;
-    typedef quantity<boost::ratio<1>, boost::ratio<0> >  Time;         // second
-    typedef quantity<boost::ratio<0>, boost::ratio<1> >  Distance;     // meter
-    typedef quantity<boost::ratio<-1>, boost::ratio<1> > Speed;        // meter/second
-    typedef quantity<boost::ratio<-2>, boost::ratio<1> > Acceleration; // meter/second^2
-
-Quantity arithmetics
-
-    template <class R1, class R2, class R3, class R4>
-    quantity<typename boost::ratio_subtract<R1, R3>::type, typename boost::ratio_subtract<R2, R4>::type>
-    operator/(const quantity<R1, R2>& x, const quantity<R3, R4>& y)
-    {
-        typedef quantity<typename boost::ratio_subtract<R1, R3>::type,
-                        typename boost::ratio_subtract<R2, R4>::type> R;
-        R r;
-        r.set(x.get() / y.get());
-        return r;
-    }
-
-    template <class R1, class R2, class R3, class R4>
-    quantity<typename boost::ratio_add<R1, R3>::type, typename boost::ratio_add<R2, R4>::type>
-    operator*(const quantity<R1, R2>& x, const quantity<R3, R4>& y)
-    {
-        typedef quantity<typename boost::ratio_add<R1, R3>::type,
-                        typename boost::ratio_add<R2, R4>::type> R;
-        R r;
-        r.set(x.get() * y.get());
-        return r;
-    }
-
-    template <class R1, class R2>
-    quantity<R1, R2>
-    operator+(const quantity<R1, R2>& x, const quantity<R1, R2>& y)
-    {
-        typedef quantity<R1, R2> R;
-        R r;
-        r.set(x.get() + y.get());
-        return r;
-    }
-
-    template <class R1, class R2>
-    quantity<R1, R2>
-    operator-(const quantity<R1, R2>& x, const quantity<R1, R2>& y)
-    {
-        typedef quantity<R1, R2> R;
-        R r;
-        r.set(x.get() - y.get());
-        return r;
-    }
-
-Example type-safe physics function
-
-    Distance
-    compute_distance(Speed v0, Time t, Acceleration a)
-    {
-        return v0 * t + Scalar(.5) * a * t * t;  // if a units mistake is made here it won't compile
-    }
-
-
-Exercise example type-safe physics function and show interoperation
-of custom time durations (User1::seconds) and standard time durations (boost::hours).
-Though input can be arbitrary (but type-safe) units, output is always in SI-units
-(a limitation of the simplified Units lib demoed here).
-
-    int main()
-    {
-        typedef boost::ratio<8, BOOST_INTMAX_C(0x7FFFFFFFD)> R1;
-        typedef boost::ratio<3, BOOST_INTMAX_C(0x7FFFFFFFD)> R2;
-        typedef User1::quantity<boost::ratio_subtract<boost::ratio<0>, boost::ratio<1> >::type,
-                                 boost::ratio_subtract<boost::ratio<1>, boost::ratio<0> >::type > RR;
-        typedef boost::ratio_subtract<R1, R2>::type RS;
-        std::cout << RS::num << '/' << RS::den << '\n';
-
-
-        std::cout << "*************\n";
-        std::cout << "* testUser1 *\n";
-        std::cout << "*************\n";
-        User1::Distance d( User1::mile(110) );
-        User1::Time t( boost::chrono::hours(2) );
-
-        RR r=d / t;
-        //r.set(d.get() / t.get());
-
-        User1::Speed rc= r;
-
-        User1::Speed s = d / t;
-        std::cout << "Speed = " << s.get() << " meters/sec\n";
-        User1::Acceleration a = User1::Distance( User1::foot(32.2) ) / User1::Time() / User1::Time();
-        std::cout << "Acceleration = " << a.get() << " meters/sec^2\n";
-        User1::Distance df = compute_distance(s, User1::Time( User1::seconds(0.5) ), a);
-        std::cout << "Distance = " << df.get() << " meters\n";
-        std::cout << "There are " << User1::mile::ratio::den << '/' << User1::mile::ratio::num << " miles/meter";
-        User1::meter mt = 1;
-        User1::mile mi = mt;
-        std::cout << " which is approximately " << mi.count() << '\n';
-        std::cout << "There are " << User1::mile::ratio::num << '/' << User1::mile::ratio::den << " meters/mile";
-        mi = 1;
-        mt = mi;
-        std::cout << " which is approximately " << mt.count() << '\n';
-        User1::attosecond as(1);
-        User1::seconds sec = as;
-        std::cout << "1 attosecond is " << sec.count() << " seconds\n";
-        std::cout << "sec = as;  // compiles\n";
-        sec = User1::seconds(1);
-        as = sec;
-        std::cout << "1 second is " << as.count() << " attoseconds\n";
-        std::cout << "as = sec;  // compiles\n";
-        std::cout << "\n";
-      return 0;
-    }
-
-[/ratio_test_cpp]
-
-[endsect]
-
-[/===============]
-[section How you override the duration's default constructor]
-
-Next follows how you override the duration's default constructor to do anything you want (in this case zero). All we need to do is to change the representation
-
-    namespace I_dont_like_the_default_duration_behavior {
-
-    template <class R>
-    class zero_default
-    {
-    public:
-        typedef R rep;
-
-    private:
-        rep rep_;
-    public:
-        zero_default(rep i = 0) : rep_(i) {}
-        operator rep() const {return rep_;}
-
-        zero_default& operator+=(zero_default x) {rep_ += x.rep_; return *this;}
-        zero_default& operator-=(zero_default x) {rep_ -= x.rep_; return *this;}
-        zero_default& operator*=(zero_default x) {rep_ *= x.rep_; return *this;}
-        zero_default& operator/=(zero_default x) {rep_ /= x.rep_; return *this;}
-
-        zero_default  operator+ () const {return *this;}
-        zero_default  operator- () const {return zero_default(-rep_);}
-        zero_default& operator++()       {++rep_; return *this;}
-        zero_default  operator++(int)    {return zero_default(rep_++);}
-        zero_default& operator--()       {--rep_; return *this;}
-        zero_default  operator--(int)    {return zero_default(rep_--);}
-
-        friend zero_default operator+(zero_default x, zero_default y) {return x += y;}
-        friend zero_default operator-(zero_default x, zero_default y) {return x -= y;}
-        friend zero_default operator*(zero_default x, zero_default y) {return x *= y;}
-        friend zero_default operator/(zero_default x, zero_default y) {return x /= y;}
-
-        friend bool operator==(zero_default x, zero_default y) {return x.rep_ == y.rep_;}
-        friend bool operator!=(zero_default x, zero_default y) {return !(x == y);}
-        friend bool operator< (zero_default x, zero_default y) {return x.rep_ < y.rep_;}
-        friend bool operator<=(zero_default x, zero_default y) {return !(y < x);}
-        friend bool operator> (zero_default x, zero_default y) {return y < x;}
-        friend bool operator>=(zero_default x, zero_default y) {return !(x < y);}
-    };
-
-    typedef boost::chrono::duration<zero_default<long long>, boost::nano        > nanoseconds;
-    typedef boost::chrono::duration<zero_default<long long>, boost::micro       > microseconds;
-    typedef boost::chrono::duration<zero_default<long long>, boost::milli       > milliseconds;
-    typedef boost::chrono::duration<zero_default<long long>                      > seconds;
-    typedef boost::chrono::duration<zero_default<long long>, boost::ratio<60>   > minutes;
-    typedef boost::chrono::duration<zero_default<long long>, boost::ratio<3600> > hours;
-    }
-
-Usage
-
-    using namespace I_dont_like_the_default_duration_behavior;
-
-    milliseconds ms;
-    std::cout << ms.count() << '\n';
-
-['See the file i_dont_like_the_default_duration_behavior.cpp]
-
-[endsect]
-
-[/==================]
-[section min utility]
-
-Returns the earliest time_point.
-
-    template <class Clock, class Duration1, class Duration2>
-    typename boost::common_type<time_point<Clock, Duration1>,
-                         time_point<Clock, Duration2> >::type
-    min(time_point<Clock, Duration1> t1, time_point<Clock, Duration2> t2)
-    {
-        return t2 < t1 ? t2 : t1;
-    }
-
-Being able to *easily* write this function is a major feature!
-
-    typedef time_point<system_clock,
-      boost::common_type<system_clock::duration, seconds>::type> T1;
-    typedef time_point<system_clock,
-      boost::common_type<system_clock::duration, nanoseconds>::type> T2;
-    typedef boost::common_type<T1, T2>::type T3;
-    /*auto*/ T1 t1 = system_clock::now() + seconds(3);
-    /*auto*/ T2 t2 = system_clock::now() + nanoseconds(3);
-    /*auto*/ T3 t3 = min(t1, t2);
-
-
-[endsect]
-
-[/==================]
-[section Cycle count]
-
-    #include <boost/chrono/chrono.hpp>
-    #include <boost/type_traits.hpp>
-
-    #include <iostream>
-
-    using namespace boost::chrono;
-
-
-    template <long long speed>
-    struct cycle_count
-    {
-        typedef typename boost::ratio_multiply<boost::ratio<speed>, boost::mega>::type frequency;  // Mhz
-        typedef typename boost::ratio_divide<boost::ratio<1>, frequency>::type period;
-        typedef long long rep;
-        typedef boost::chrono::duration<rep, period> duration;
-        typedef boost::chrono::time_point<cycle_count> time_point;
-
-        static time_point now()
-        {
-            static long long tick = 0;
-            // return exact cycle count
-            return time_point(duration(++tick));  // fake access to clock cycle count
-        }
-    };
-
-    template <long long speed>
-    struct approx_cycle_count
-    {
-        static const long long frequency = speed * 1000000;  // MHz
-        typedef nanoseconds duration;
-        typedef duration::rep rep;
-        typedef duration::period period;
-        static const long long nanosec_per_sec = period::den;
-        typedef boost::chrono::time_point<approx_cycle_count> time_point;
-
-        static time_point now()
-        {
-            static long long tick = 0;
-            // return cycle count as an approximate number of nanoseconds
-            // compute as if nanoseconds is only duration in the std::lib
-            return time_point(duration(++tick * nanosec_per_sec / frequency));
-        }
-    };
-
-
-['See the file libs/chrono/example/cycle_count.cpp]
-
-[endsect]
-
-[/==================]
-[section xtime conversions]
-
-Example round_up utility:  converts d to To, rounding up for inexact conversions
-Being able to *easily* write this function is a major feature!
-
-    #include <boost/chrono/chrono.hpp>
-    #include <boost/type_traits.hpp>
-
-    #include <iostream>
-
-    using namespace boost::chrono;
-
-    template <class To, class Rep, class Period>
-    To
-    round_up(duration<Rep, Period> d)
-    {
-        To result = duration_cast<To>(d);
-        if (result < d)
-            ++result;
-        return result;
-    }
-
-Demonstrate interaction with xtime-like facility:
-
-
-    struct xtime
-    {
-        long sec;
-        unsigned long usec;
-    };
-
-    template <class Rep, class Period>
-    xtime
-    to_xtime_truncate(duration<Rep, Period> d)
-    {
-        xtime xt;
-        xt.sec = static_cast<long>(duration_cast<seconds>(d).count());
-        xt.usec = static_cast<long>(duration_cast<microseconds>(d - seconds(xt.sec)).count());
-        return xt;
-    }
-
-    template <class Rep, class Period>
-    xtime
-    to_xtime_round_up(duration<Rep, Period> d)
-    {
-        xtime xt;
-        xt.sec = static_cast<long>(duration_cast<seconds>(d).count());
-        xt.usec = static_cast<unsigned long>(round_up<microseconds>(d - seconds(xt.sec)).count());
-        return xt;
-    }
-
-    microseconds
-    from_xtime(xtime xt)
-    {
-        return seconds(xt.sec) + microseconds(xt.usec);
-    }
-
-    void print(xtime xt)
-    {
-        std::cout << '{' << xt.sec << ',' << xt.usec << "}\n";
-    }
-
-Usage
-
-        xtime xt = to_xtime_truncate(seconds(3) + milliseconds(251));
-        print(xt);
-        milliseconds ms = duration_cast<milliseconds>(from_xtime(xt));
-        std::cout << ms.count() << " milliseconds\n";
-        xt = to_xtime_round_up(ms);
-        print(xt);
-        xt = to_xtime_truncate(seconds(3) + nanoseconds(999));
-        print(xt);
-        xt = to_xtime_round_up(seconds(3) + nanoseconds(999));
-        print(xt);
-
-
-[/xtime_cpp]
-
-[endsect]
-
-[/==================]
-[section xtime_clock]
-
-This example demonstrates the use of a timeval-like struct to be used as the representation
-type for both duraiton and time_point.
-
-    class xtime {
-    private:
-        long tv_sec;
-        long tv_usec;
-
-        void fixup() {
-            if (tv_usec < 0) {
-                tv_usec += 1000000;
-                --tv_sec;
-            }
-        }
-
-    public:
-        explicit xtime(long sec, long usec) {
-            tv_sec = sec;
-            tv_usec = usec;
-            if (tv_usec < 0 || tv_usec >= 1000000) {
-                tv_sec += tv_usec / 1000000;
-                tv_usec %= 1000000;
-                fixup();
-            }
-        }
-
-        explicit xtime(long long usec) {
-            tv_usec = static_cast<long>(usec % 1000000);
-            tv_sec  = static_cast<long>(usec / 1000000);
-            fixup();
-        }
-
-        // explicit
-        operator long long() const {return static_cast<long long>(tv_sec) * 1000000 + tv_usec;}
-
-        xtime& operator += (xtime rhs) {
-            tv_sec += rhs.tv_sec;
-            tv_usec += rhs.tv_usec;
-            if (tv_usec >= 1000000) {
-                tv_usec -= 1000000;
-                ++tv_sec;
-            }
-            return *this;
-        }
-
-        xtime& operator -= (xtime rhs) {
-            tv_sec -= rhs.tv_sec;
-            tv_usec -= rhs.tv_usec;
-            fixup();
-            return *this;
-        }
-
-        xtime& operator %= (xtime rhs) {
-            long long t = tv_sec * 1000000 + tv_usec;
-            long long r = rhs.tv_sec * 1000000 + rhs.tv_usec;
-            t %= r;
-            tv_sec = static_cast<long>(t / 1000000);
-            tv_usec = static_cast<long>(t % 1000000);
-            fixup();
-            return *this;
-        }
-
-        friend xtime operator+(xtime x, xtime y) {return x += y;}
-        friend xtime operator-(xtime x, xtime y) {return x -= y;}
-        friend xtime operator%(xtime x, xtime y) {return x %= y;}
-
-        friend bool operator==(xtime x, xtime y)
-            { return (x.tv_sec == y.tv_sec && x.tv_usec == y.tv_usec); }
-
-        friend bool operator<(xtime x, xtime y) {
-            if (x.tv_sec == y.tv_sec)
-                return (x.tv_usec < y.tv_usec);
-            return (x.tv_sec < y.tv_sec);
-        }
-
-        friend bool operator!=(xtime x, xtime y) { return !(x == y); }
-        friend bool operator> (xtime x, xtime y) { return y < x; }
-        friend bool operator<=(xtime x, xtime y) { return !(y < x); }
-        friend bool operator>=(xtime x, xtime y) { return !(x < y); }
-
-        friend std::ostream& operator<<(std::ostream& os, xtime x)
-            {return os << '{' << x.tv_sec << ',' << x.tv_usec << '}';}
-    };
-
-Clock based on timeval-like struct.
-
-    class xtime_clock
-    {
-    public:
-        typedef xtime                                  rep;
-        typedef boost::micro                           period;
-        typedef boost::chrono::duration<rep, period>   duration;
-        typedef boost::chrono::time_point<xtime_clock> time_point;
-
-        static time_point now()
-        {
-        #if defined(BOOST_CHRONO_WINDOWS_API)
-            time_point t(duration(xtime(0)));
-            gettimeofday((timeval*)&t, 0);
-            return t;
-
-        #elif defined(BOOST_CHRONO_MAC_API)
-
-            time_point t(duration(xtime(0)));
-            gettimeofday((timeval*)&t, 0);
-            return t;
-
-        #elif defined(BOOST_CHRONO_POSIX_API)
-            //time_point t(0,0);
-
-            timespec ts;
-            ::clock_gettime( CLOCK_REALTIME, &ts );
-
-            xtime xt( ts.tv_sec, ts.tv_nsec/1000);
-            return time_point(duration(xt));
-
-        #endif  // POSIX
-        }
-    };
-
-Usage of xtime_clock
-
-        using namespace boost::chrono;
-        std::cout << "sizeof xtime_clock::time_point = " << sizeof(xtime_clock::time_point) << '\n';
-        std::cout << "sizeof xtime_clock::duration = " << sizeof(xtime_clock::duration) << '\n';
-        std::cout << "sizeof xtime_clock::rep = " << sizeof(xtime_clock::rep) << '\n';
-        xtime_clock::duration delay(milliseconds(5));
-        xtime_clock::time_point start = xtime_clock::now();
-        while (xtime_clock::now() - start <= delay) {}
-        xtime_clock::time_point stop = xtime_clock::now();
-        xtime_clock::duration elapsed = stop - start;
-        std::cout << "paused " << nanoseconds(elapsed).count() << " nanoseconds\n";
-
-[endsect]
-
-[/=========================]
-[section runtime_resolution]
-
-Handle duration with resolution not known until run time
-
-    class duration
-    {
-    public:
-        typedef long long rep;
-    private:
-        rep rep_;
-
-        static const double ticks_per_nanosecond;
-
-    public:
-        typedef boost::chrono::duration<double, boost::nano> tonanosec;
-
-        duration() {} // = default;
-        explicit duration(const rep& r) : rep_(r) {}
-
-        // conversions
-        explicit duration(const tonanosec& d)
-                : rep_(static_cast<rep>(d.count() * ticks_per_nanosecond)) {}
-
-        // explicit
-           operator tonanosec() const {return tonanosec(rep_/ticks_per_nanosecond);}
-
-        // observer
-
-        rep count() const {return rep_;}
-
-        // arithmetic
-
-        duration& operator+=(const duration& d) {rep_ += d.rep_; return *this;}
-        duration& operator-=(const duration& d) {rep_ += d.rep_; return *this;}
-        duration& operator*=(rep rhs)           {rep_ *= rhs; return *this;}
-        duration& operator/=(rep rhs)           {rep_ /= rhs; return *this;}
-
-        duration  operator+() const {return *this;}
-        duration  operator-() const {return duration(-rep_);}
-        duration& operator++()      {++rep_; return *this;}
-        duration  operator++(int)   {return duration(rep_++);}
-        duration& operator--()      {--rep_; return *this;}
-        duration  operator--(int)   {return duration(rep_--);}
-
-        friend duration operator+(duration x, duration y) {return x += y;}
-        friend duration operator-(duration x, duration y) {return x -= y;}
-        friend duration operator*(duration x, rep y)      {return x *= y;}
-        friend duration operator*(rep x, duration y)      {return y *= x;}
-        friend duration operator/(duration x, rep y)      {return x /= y;}
-
-        friend bool operator==(duration x, duration y) {return x.rep_ == y.rep_;}
-        friend bool operator!=(duration x, duration y) {return !(x == y);}
-        friend bool operator< (duration x, duration y) {return x.rep_ < y.rep_;}
-        friend bool operator<=(duration x, duration y) {return !(y < x);}
-        friend bool operator> (duration x, duration y) {return y < x;}
-        friend bool operator>=(duration x, duration y) {return !(x < y);}
-    };
-
-
-['See the file libs/chrono/example/runtime_resolution.cpp]
-
-[endsect]
-
-[/=======================================================]
-[section Simulated thread interface demonstration program]
-
-[/simulated_thread_interface_demo_cpp]
-
-Free sleep functions
-
-    namespace boost { namespace this_thread {
-
-    template <class Rep, class Period>
-    void sleep_for(const boost::chrono::duration<Rep, Period>& d) {
-        boost::chrono::microseconds t = boost::chrono::duration_cast<boost::chrono::microseconds>(d);
-        if (t < d)
-            ++t;
-        if (t > boost::chrono::microseconds(0))
-            std::cout << "sleep_for " << t.count() << " microseconds\n";
-    }
-
-    template <class Clock, class Duration>
-    void sleep_until(const boost::chrono::time_point<Clock, Duration>& t) {
-        using namespace boost::chrono;
-        typedef time_point<Clock, Duration> Time;
-        typedef system_clock::time_point SysTime;
-        if (t > Clock::now()) {
-            typedef typename boost::common_type<typename Time::duration,
-                                         typename SysTime::duration>::type D;
-            /* auto */ D d = t - Clock::now();
-            microseconds us = duration_cast<microseconds>(d);
-            if (us < d)
-                ++us;
-            SysTime st = system_clock::now() + us;
-            std::cout << "sleep_until    ";
-            detail::print_time(st);
-            std::cout << " which is " << (st - system_clock::now()).count() << " microseconds away\n";
-        }
-    }
-
-    }}
-
-
-timed_mutex modified fuctions
-
-    namespace boost {
-    struct timed_mutex {
-        // ...
-
-        template <class Rep, class Period>
-        bool try_lock_for(const boost::chrono::duration<Rep, Period>& d) {
-            boost::chrono::microseconds t = boost::chrono::duration_cast<boost::chrono::microseconds>(d);
-            if (t <= boost::chrono::microseconds(0))
-                return try_lock();
-            std::cout << "try_lock_for " << t.count() << " microseconds\n";
-            return true;
-        }
-
-        template <class Clock, class Duration>
-        bool try_lock_until(const boost::chrono::time_point<Clock, Duration>& t)
-        {
-            using namespace boost::chrono;
-            typedef time_point<Clock, Duration> Time;
-            typedef system_clock::time_point SysTime;
-            if (t <= Clock::now())
-                return try_lock();
-            typedef typename boost::common_type<typename Time::duration,
-              typename Clock::duration>::type D;
-            /* auto */ D d = t - Clock::now();
-            microseconds us = duration_cast<microseconds>(d);
-            SysTime st = system_clock::now() + us;
-            std::cout << "try_lock_until ";
-            detail::print_time(st);
-            std::cout << " which is " << (st - system_clock::now()).count()
-              << " microseconds away\n";
-            return true;
-        }
-    };
-    }
-
-condition_variable modified fuctions
-
-    namespace boost {
-    struct condition_variable
-    {
-        // ...
-
-        template <class Rep, class Period>
-        bool wait_for(mutex&, const boost::chrono::duration<Rep, Period>& d) {
-            boost::chrono::microseconds t = boost::chrono::duration_cast<boost::chrono::microseconds>(d);
-            std::cout << "wait_for " << t.count() << " microseconds\n";
-            return true;
-        }
-
-        template <class Clock, class Duration>
-        bool wait_until(mutex&, const boost::chrono::time_point<Clock, Duration>& t) {
-            using namespace boost::chrono;
-            typedef time_point<Clock, Duration> Time;
-            typedef system_clock::time_point SysTime;
-            if (t <= Clock::now())
-                return false;
-            typedef typename boost::common_type<typename Time::duration,
-              typename Clock::duration>::type D;
-            /* auto */ D d = t - Clock::now();
-            microseconds us = duration_cast<microseconds>(d);
-            SysTime st = system_clock::now() + us;
-             std::cout << "wait_until     ";
-            detail::print_time(st);
-            std::cout << " which is " << (st - system_clock::now()).count()
-              << " microseconds away\n";
-            return true;
-        }
-    };
-    }
-
-Usage
-
-    boost::mutex m;
-    boost::timed_mutex mut;
-    boost::condition_variable cv;
-
-    using namespace boost;
-    using namespace boost::chrono;
-
-    this_thread::sleep_for(seconds(3));
-    this_thread::sleep_for(nanoseconds(300));
-    system_clock::time_point time_limit = system_clock::now() + seconds(4) + milliseconds(500);
-    this_thread::sleep_until(time_limit);
-
-    mut.try_lock_for(milliseconds(30));
-    mut.try_lock_until(time_limit);
-
-    cv.wait_for(m, minutes(1));    // real code would put this in a loop
-    cv.wait_until(m, time_limit);  // real code would put this in a loop
-
-    // For those who prefer floating point
-    this_thread::sleep_for(duration<double>(0.25));
-    this_thread::sleep_until(system_clock::now() + duration<double>(1.5));
-
-
-[/See the file libs/chrono/example/simulated_thread_interface_demo.cpp]
-
-[endsect]
-
-[/================]
-[section Saturating]
-
-A "saturating" signed integral type  is developed.  This type has +/- infinity and a nan (like IEEE floating point) but otherwise obeys signed integral arithmetic. This class is subsequently used as the rep in boost::chrono::duration to demonstrate a duration class that does not silently ignore overflow.
-
-['See the file libs/chrono/example/satutating.cpp]
-
-[endsect]
-
-[/======================================================]
-[section Howard Hinnant's original demonstration program]
-
-['See the file libs/chrono/example/time2_demo.cpp]
-
-[endsect]
-
-[/===============================================================]
-[section A tiny program that times how long until a key is struck]
-
-[/await_keystroke_cpp]
-
-    #include <boost/chrono/chrono.hpp>
-    #include <iostream>
-    #include <iomanip>
-
-    using namespace boost::chrono;
-
-    template< class Clock >
-    class timer
-    {
-      typename Clock::time_point start;
-    public:
-
-      timer() : start( Clock::now() ) {}
-
-      typename Clock::duration elapsed() const
-      {
-        return Clock::now() - start;
-      }
-
-      double seconds() const
-      {
-        return elapsed().count() * ((double)Clock::period::num/Clock::period::den);
-      }
-    };
-
-    int main()
-    {
-      timer<system_clock> t1;
-      timer<monotonic_clock> t2;
-      timer<high_resolution_clock> t3;
-
-      std::cout << "Strike any key: ";
-      std::cin.get();
-
-      std::cout << std::fixed << std::setprecision(9);
-      std::cout << "system_clock-----------: "
-                << t1.seconds() << " seconds\n";
-      std::cout << "monotonic_clock--------: "
-                << t2.seconds() << " seconds\n";
-      std::cout << "high_resolution_clock--: "
-                << t3.seconds() << " seconds\n";
-
-      system_clock::time_point d4 = system_clock::now();
-      system_clock::time_point d5 = system_clock::now();
-
-      std::cout << "\nsystem_clock latency-----------: " << (d5 - d4).count() << std::endl;
-
-      monotonic_clock::time_point d6 = monotonic_clock::now();
-      monotonic_clock::time_point d7 = monotonic_clock::now();
-
-      std::cout << "monotonic_clock latency--------: " << (d7 - d6).count() << std::endl;
-
-      high_resolution_clock::time_point d8 = high_resolution_clock::now();
-      high_resolution_clock::time_point d9 = high_resolution_clock::now();
-
-      std::cout << "high_resolution_clock latency--: " << (d9 - d8).count() << std::endl;
-
-      std::time_t now = system_clock::to_time_t(system_clock::now());
-
-      std::cout << "\nsystem_clock::now() reports UTC is "
-        << std::asctime(std::gmtime(&now)) << "\n";
-
-      return 0;
-    }
-
-[endsect]
-
-[/============================]
-[section stopclock_example.cpp]
-
-Here is the stopclock_example.cpp program supplied with the Boost Chrono library:
-
-[/stopclock_example_cpp]
-
-When the stopclock<> t object is created, it starts timing. When it is destroyed at the end of the program, its destructor stops the timer and displays timing information on cout.
-
-    #include <boost/chrono/stopclock.hpp>
-    #include <cmath>
-
-    int main()
-    {
-      boost::chrono::stopclock<> t;
-
-      for ( long i = 0; i < 10000000; ++i )
-        std::sqrt( 123.456L );  // burn some time
-
-      return 0;
-    }
-
-The output of this program run on a circa 2006 processor looks was this:
-
-   wall 0.42 s, user 0.41 s + system 0.00 s = total cpu 0.41 s, (96.3%)
-
-In other words, this program ran in 0.42 seconds as would be measured by a clock on the wall, the operating system charged it for 0.41 seconds of user CPU time and 0 seconds of system CPU time, the total of these two was 0.41, and that represented 96.3 percent of the wall clock time.
-
-[endsect]
-
-
-[/=============================]
-[section stopclock_example2.cpp]
-
-The stopclock_example2.cpp program is the same, except that it supplies additional constructor arguments from the command line:
-
-    #include <boost/chrono/stopclock.hpp>
-    #include <cmath>
-
-    int main( int argc, char * argv[] )
-    {
-      const char * format = argc > 1 ? argv[1] : "%t cpu seconds\n";
-      int          places = argc > 2 ? std::atoi( argv[2] ) : 2;
-
-      boost::chrono::stopclock<> t( format, places );
-
-      for ( long i = 0; i < 10000000; ++i )
-        std::sqrt( 123.456L ); // burn some time
-
-      return 0;
-    }
-
-Here is the output for this program for several sets of command line arguments:
-
-    stopclock_example2
-    0.42 cpu seconds
-
-    stopclock_example2 "%w wall clock seconds\n"
-    0.41 wall clock seconds
-
-    stopclock_example2 "%w wall clock seconds\n" 6
-    0.421875 wall clock seconds
-
-    stopclock_example2 "%t total CPU seconds\n" 3
-    0.422 total CPU seconds
-
-[endsect]
-
-[/===============================================================]
-[section time command]
-
-    #include <boost/chrono/stopclock.hpp>
-    #include <cstdlib>
-    #include <string>
-    #include <iostream>
-
-    int main( int argc, char * argv[] )
-    {
-      if ( argc == 1 )
-      {
-        std::cout << "invoke: timex [-v] command [args...]\n"
-          "  command will be executed and timings displayed\n"
-          "  -v option causes command and args to be displayed\n";
-        return 1;
-      }
-
-      std::string s;
-
-      bool verbose = false;
-      if ( argc > 1 && *argv[1] == '-' && *(argv[1]+1) == 'v' )
-      {
-        verbose = true;
-        ++argv;
-        --argc;
-      }
-
-      for ( int i = 1; i < argc; ++i )
-      {
-        if ( i > 1 ) s += ' ';
-        s += argv[i];
-      }
-
-      if ( verbose )
-        { std::cout << "command: \"" << s.c_str() << "\"\n"; }
-
-      boost::chrono::stopclock<> t;
-
-      return std::system( s.c_str() );
-    }
-
-[endsect]
-
-[endsect]
 [/=================]
 [section Appendices]
 [/=================]
@@ -5198,6 +5400,58 @@ Here is the output for this program for several sets of command line arguments:
 [section:history Appendix A: History]
 [/==================================]
 
+
+[section [*Version 0.4.5, June 26, 2010] ['Documentation update]]
+
+[*Documentation]
+
+* Overview rewriting
+* Added missing thread_clock reference.
+* How to implement a thread_clock tutorial removed.
+* References section renamed to External Resources.
+* Added links to source examples.
+* Added links between Models and Concepts.
+* Added macros descriptions.
+* Cleanup.
+
+[*Bug Fixes]
+
+* Valgrind fixes: Conditional jump or move depends on uninitialised value(s)
+
+
+[endsect]
+
+[section [*Version 0.4.4, February 22, 2010] [' Warning fixes]]
+
+[*Bug Fixes]
+
+* scoped_suspend warning removal
+* error_code management completed
+
+[endsect]
+
+[section [*Version 0.4.3, June 18, 2010] ['Missing file fixe]]
+
+[*Bug Fixes]
+
+* boost/thread/detail/cv_status.hpp file was not commited.
+
+[endsect]
+
+[section [*Version 0.4.2, June 18, 2010] ['Packaging fixe]]
+
+* Conversion library, used by Boost.Thread porting to Boost.Chrono was not packaged.
+
+[endsect]
+
+[section [*Version 0.4.1, June 17, 2010] ['Added thread clock implementation on Windows]]
+
+[*New Features:]
+
+* Added thread clock implementation on Windows
+* Added Boost.Thread using Boost.Chrono
+
+[endsect]
 
 [section [*Version 0.4, February 28, 2010] ['New thread clock and Suspendible clock ]]
 
@@ -5477,7 +5731,7 @@ common_type<A,B,C>::type is equivalent to common_type<common_type<A,B>::type, C>
 
 Thus, as common_type<A,B>::type is undefined,  common_type<A,B,C>::type is also undefined.
 
-[heading Why does stopwatch_reporter only display millisecond place precision when the underlying timer has nanosecond precision?]
+[heading Why does stopwatch_reporter only display millisecond place precision when the underlying Clock has nanosecond precision?]
 
 To avoid giving the impression of precision where none exists. See Caveat emptor. You can always specify additional decimal places if you want to live dangerously.
 

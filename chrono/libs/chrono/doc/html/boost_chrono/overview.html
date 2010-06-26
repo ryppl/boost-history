@@ -37,103 +37,89 @@
 <dt><span class="section"><a href="overview/motivation.html#boost_chrono.overview.motivation.time_point">Time Point</a></span></dt>
 <dt><span class="section"><a href="overview/motivation.html#boost_chrono.overview.motivation.stopwatches">Stopwatches</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="overview/caveat_emptor.html">Caveat emptor</a></span></dt>
+<dt><span class="section"><a href="overview/caveat.html"> Caveat emptor</a></span></dt>
 </dl></div>
 <a name="boost_chrono.overview.description"></a><h3>
-<a name="id4762509"></a>
+<a name="id4765019"></a>
       <a href="overview.html#boost_chrono.overview.description">Description</a>
     </h3>
 <p>
-      The Boost Chrono library provides:
+      The <span class="bold"><strong>Boost.Chrono</strong></span> library provides:
     </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-        The C++0x Standard Library's <code class="computeroutput"><span class="identifier">common_type</span></code>.
+        One facility for representing time durations: <code class="computeroutput"><span class="identifier">duration</span></code>.
+        Examples of time durations include seconds, minutes and nanoseconds. All
+        of these units of time duration are united with a generic interface by the
+        duration facility.
       </li>
 <li>
-        The C++0x Standard Library's compile-time rational arithmetic.
+        One facility for representing points in time: <code class="computeroutput"><span class="identifier">time_point</span></code>.
+        A time_point represents an epoch plus or minus a duration. This paper leaves
+        epochs unspecified. A time_point is associated with a clock.
       </li>
 <li>
-        The C++0x Standard Library's time utilities, including:
-        <div class="itemizedlist"><ul type="circle">
-<li>
-            Class template <code class="computeroutput"><span class="identifier">duration</span></code>
-</li>
-<li>
-            Class template <code class="computeroutput"><span class="identifier">time_point</span></code>
-</li>
-<li>
-            Clocks:
-            <div class="itemizedlist"><ul type="square">
-<li><code class="computeroutput"><span class="identifier">system_clock</span></code></li>
-<li><code class="computeroutput"><span class="identifier">monotonic_clock</span></code></li>
-<li><code class="computeroutput"><span class="identifier">high_resolution_clock</span></code></li>
+        Several clocks, some of which may not be available on any given platform:
+        <code class="computeroutput"><span class="identifier">system_clock</span></code>, <code class="computeroutput"><span class="identifier">monotonic_clock</span></code> and <code class="computeroutput"><span class="identifier">high_resolution_clock</span></code>.
+        A clock is a symbolic bundle of a native <code class="computeroutput"><span class="identifier">time_point</span></code>
+        and <code class="computeroutput"><span class="identifier">duration</span></code>, and a function
+        which returns a <code class="computeroutput"><span class="identifier">time_point</span></code>
+        representing <span class="emphasis"><em>now</em></span>.
+      </li>
 </ul></div>
-</li>
+<p>
+      Additionally, a minimal amount of general purpose infrastructure is provided
+      which will support both the interface and implementation of the clocks, time_points
+      and durations proposed herein. It is expected that these general purpose facilities
+      will also find utility in far ranging user applications as well.
+    </p>
+<div class="itemizedlist"><ul type="disc">
 <li>
-            typeof registration for classes <code class="computeroutput"><span class="identifier">duration</span></code>
-            and <code class="computeroutput"><span class="identifier">time_point</span></code>
-</li>
-</ul></div>
-</li>
-<li>
-        Process clocks:
-        <div class="itemizedlist"><ul type="circle">
-<li>
-<code class="computeroutput"><span class="identifier">process_real_CPU_clocks</span></code>,
-            capturing real-CPU times.
-          </li>
-<li>
-<code class="computeroutput"><span class="identifier">process_user_CPU_clocks</span></code>,
-            capturing user-CPU times.
-          </li>
-<li>
-<code class="computeroutput"><span class="identifier">process_system_CPU_clocks</span></code>,
-            capturing system-CPU times.
-          </li>
-<li>
-<code class="computeroutput"><span class="identifier">process_cpu_clock</span></code>, tuple-like
-            class capturing at once real, user-CPU, and system-CPU times.
-          </li>
-</ul></div>
-</li>
-<li>
-        Thread clock
+        common_type is a facility which is useful in specifying the type of the result
+        of functions and operators which take a variety of types (e.g. "mixed
+        mode" complex arithmetic).
       </li>
 <li>
-        Suspendible Clock
-        <div class="itemizedlist"><ul type="circle">
-<li>
-            Suspendible Clock concept
-          </li>
-<li>
-            template class suspendible_clock&lt;&gt;
-          </li>
-<li>
-            Added scope_suspend which do suspend/resume if the Clock is a model of
-            Suspendible Clock concept, and nothing otherwise.
-          </li>
+        ratio is a facility which is useful in specifying compile time rational constants.
+        Compile time rational arithmetic is supported with protection against overflow
+        and divide by zero. Such a facility is very handy when needing to efficiently
+        represent 1/3 of a nanosecond, or specifying an inch in terms of meters (for
+        example 254/10000 meters - which ratio will reduce to 127/5000 meters).
+      </li>
 </ul></div>
-</li>
+<p>
+      Knowing how long a program takes to execute is useful in both test and production
+      environments. On top of the standard facilities <span class="bold"><strong>Boost.Chrono</strong></span>
+      includes:
+    </p>
+<div class="itemizedlist"><ul type="disc">
 <li>
-        Stopwatches:
+        a Stopwatch middle layer: providing operations to start, stop, suspend or
+        resume a <code class="computeroutput"><span class="identifier">Stopwatch</span></code> to measure
+        the elapsed time.
         <div class="itemizedlist"><ul type="circle">
 <li>
-<code class="computeroutput"><span class="identifier">stopwatch</span></code>, capturing
-            elapsed Clock times.
+<code class="computeroutput"><span class="identifier">Stopwatch</span></code> concept
+          </li>
+<li>
+            Scoped helper classes allowing to pairwise start/stop operations, suspend/resume
+            and resume/suspend a <code class="computeroutput"><span class="identifier">Stopwatch</span></code>.
+          </li>
+<li>
+<code class="computeroutput"><span class="identifier">stopwatch</span></code>, model of
+            <code class="computeroutput"><span class="identifier">Stopwatch</span></code> capturing elapsed
+            Clock times.
           </li>
 <li>
 <code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code>,
-            capturing cummulated elapsed Clock times.
-          </li>
-<li>
-            scoped helper classes allowing to pairwise start/stop operations, suspend/resume
-            and resume/suspend a Stopwatch.
+            model of <code class="computeroutput"><span class="identifier">Stopwatch</span></code> capturing
+            cummulated elapsed Clock times.
           </li>
 </ul></div>
 </li>
 <li>
-        Stopclocks or Stopwatch reporters:
+        a Stopclocks higher layer: provide a complete stopclock reporting package
+        that can be invoked in a single line of code.
         <div class="itemizedlist"><ul type="circle">
 <li>
 <code class="computeroutput"><span class="identifier">stopwatch_reporter</span></code>, convenient
@@ -149,8 +135,42 @@
 </ul></div>
 </li>
 </ul></div>
+<p>
+      It is also helpful if such timing information is broken down into real (wall
+      clock) time, CPU time spent by the user, and CPU time spent by the operating
+      system servicing user requests. process clocks provide a thin wrapper around
+      the operating system's process timer API. For POSIX-like systems, that's the
+      times() function, while for Windows, it's the GetProcessTimes() function.
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<code class="computeroutput"><span class="identifier">process_real_CPU_clocks</span></code>,
+        capturing real-CPU times.
+      </li>
+<li>
+<code class="computeroutput"><span class="identifier">process_user_CPU_clocks</span></code>,
+        capturing user-CPU times.
+      </li>
+<li>
+<code class="computeroutput"><span class="identifier">process_system_CPU_clocks</span></code>,
+        capturing system-CPU times.
+      </li>
+<li>
+<code class="computeroutput"><span class="identifier">process_cpu_clock</span></code>, tuple-like
+        class capturing at once real, user-CPU, and system-CPU times.
+      </li>
+</ul></div>
+<p>
+      To complete the clocks <span class="bold"><strong>Boost.Chrono</strong></span> provides,
+      in platforms support them, thread clocks.
+    </p>
+<p>
+      Last, <span class="bold"><strong>Boost.Chrono</strong></span> include typeof registration
+      for classes <code class="computeroutput"><span class="identifier">duration</span></code> and <code class="computeroutput"><span class="identifier">time_point</span></code> so you can used auto emulated
+      on C++03 compilers.
+    </p>
 <a name="boost_chrono.overview.how_to_use_this_documentation"></a><h3>
-<a name="id4765251"></a>
+<a name="id4803618"></a>
       <a href="overview.html#boost_chrono.overview.how_to_use_this_documentation">How to
       Use This Documentation</a>
     </h3>
