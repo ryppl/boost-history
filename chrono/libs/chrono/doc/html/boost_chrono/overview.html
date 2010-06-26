@@ -48,34 +48,36 @@
     </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-        One facility for representing time durations: <code class="computeroutput"><span class="identifier">duration</span></code>.
-        Examples of time durations include seconds, minutes and nanoseconds. All
-        of these units of time duration are united with a generic interface by the
-        duration facility.
+        One facility for representing time durations: link_text. Examples of time
+        durations include <code class="computeroutput"><span class="identifier">seconds</span></code>,
+        <code class="computeroutput"><span class="identifier">minutes</span></code> and <code class="computeroutput"><span class="identifier">nanoseconds</span></code>. All of these units of time
+        duration are united with a generic interface by the link_text facility.
       </li>
 <li>
         One facility for representing points in time: <code class="computeroutput"><span class="identifier">time_point</span></code>.
-        A time_point represents an epoch plus or minus a duration. This paper leaves
-        epochs unspecified. A time_point is associated with a clock.
+        A <code class="computeroutput"><span class="identifier">time_point</span></code> represents an
+        epoch plus or minus a link_text. The library leaves epochs unspecified. A
+        <code class="computeroutput"><span class="identifier">time_point</span></code> is associated
+        with a <span class="emphasis"><em>clock</em></span>.
       </li>
 <li>
         Several clocks, some of which may not be available on any given platform:
         <code class="computeroutput"><span class="identifier">system_clock</span></code>, <code class="computeroutput"><span class="identifier">monotonic_clock</span></code> and <code class="computeroutput"><span class="identifier">high_resolution_clock</span></code>.
         A clock is a symbolic bundle of a native <code class="computeroutput"><span class="identifier">time_point</span></code>
-        and <code class="computeroutput"><span class="identifier">duration</span></code>, and a function
-        which returns a <code class="computeroutput"><span class="identifier">time_point</span></code>
+        and link_text, and a function which returns a <code class="computeroutput"><span class="identifier">time_point</span></code>
         representing <span class="emphasis"><em>now</em></span>.
       </li>
 </ul></div>
 <p>
       Additionally, a minimal amount of general purpose infrastructure is provided
-      which will support both the interface and implementation of the clocks, time_points
-      and durations proposed herein. It is expected that these general purpose facilities
-      will also find utility in far ranging user applications as well.
+      which will support both the interface and implementation of the <span class="emphasis"><em>clocks</em></span>,
+      __time<span class="underline">point</span>_s and <span class="underline">_duration</span>_s
+      proposed herein. It is expected that these general purpose facilities will
+      also find utility in far ranging user applications as well.
     </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-        common_type is a facility which is useful in specifying the type of the result
+        link_text is a facility which is useful in specifying the type of the result
         of functions and operators which take a variety of types (e.g. "mixed
         mode" complex arithmetic).
       </li>
@@ -95,24 +97,24 @@
 <div class="itemizedlist"><ul type="disc">
 <li>
         a Stopwatch middle layer: providing operations to start, stop, suspend or
-        resume a <code class="computeroutput"><span class="identifier">Stopwatch</span></code> to measure
-        the elapsed time.
+        resume a <span class="underline">_Stopwatch</span>_ to measure the
+        elapsed time.
         <div class="itemizedlist"><ul type="circle">
 <li>
-<code class="computeroutput"><span class="identifier">Stopwatch</span></code> concept
+<span class="underline">_Stopwatch</span>_ concept
           </li>
 <li>
             Scoped helper classes allowing to pairwise start/stop operations, suspend/resume
-            and resume/suspend a <code class="computeroutput"><span class="identifier">Stopwatch</span></code>.
+            and resume/suspend a <span class="underline">_Stopwatch</span>_.
           </li>
 <li>
 <code class="computeroutput"><span class="identifier">stopwatch</span></code>, model of
-            <code class="computeroutput"><span class="identifier">Stopwatch</span></code> capturing elapsed
-            Clock times.
+            <span class="underline">_Stopwatch</span>_ capturing elapsed
+            <span class="underline">_Clock</span>_ times.
           </li>
 <li>
 <code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code>,
-            model of <code class="computeroutput"><span class="identifier">Stopwatch</span></code> capturing
+            model of <span class="underline">_Stopwatch</span>_ capturing
             cummulated elapsed Clock times.
           </li>
 </ul></div>
@@ -123,7 +125,8 @@
         <div class="itemizedlist"><ul type="circle">
 <li>
 <code class="computeroutput"><span class="identifier">stopwatch_reporter</span></code>, convenient
-            reporting of models of Stopwatch results.
+            reporting of models of <span class="underline">_Stopwatch</span>_
+            results.
           </li>
 <li>
 <code class="computeroutput"><span class="identifier">stopclock</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span></code>
@@ -166,11 +169,11 @@
     </p>
 <p>
       Last, <span class="bold"><strong>Boost.Chrono</strong></span> include typeof registration
-      for classes <code class="computeroutput"><span class="identifier">duration</span></code> and <code class="computeroutput"><span class="identifier">time_point</span></code> so you can used auto emulated
-      on C++03 compilers.
+      for classes link_text and <code class="computeroutput"><span class="identifier">time_point</span></code>
+      so you can used auto emulated on C++03 compilers.
     </p>
 <a name="boost_chrono.overview.how_to_use_this_documentation"></a><h3>
-<a name="id4803618"></a>
+<a name="id4803635"></a>
       <a href="overview.html#boost_chrono.overview.how_to_use_this_documentation">How to
       Use This Documentation</a>
     </h3>

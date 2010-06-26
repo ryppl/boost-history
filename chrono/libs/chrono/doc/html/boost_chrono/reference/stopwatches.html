@@ -138,7 +138,7 @@
           is an instance of <code class="computeroutput"><span class="identifier">S</span></code>.
         </p>
 <div class="table">
-<a name="id4893436"></a><p class="title"><b>Table&#160;3.&#160;Stopwatch Requirements</b></p>
+<a name="id4893308"></a><p class="title"><b>Table&#160;3.&#160;Stopwatch Requirements</b></p>
 <table class="table" summary="Stopwatch Requirements">
 <colgroup>
 <col>
@@ -193,8 +193,7 @@
                 </td>
 <td>
                   <p>
-                    The <code class="computeroutput"><span class="identifier">duration</span></code>
-                    type of the <code class="computeroutput"><span class="identifier">clock</span></code>.
+                    The link_text type of the <code class="computeroutput"><span class="identifier">clock</span></code>.
                   </p>
                 </td>
 </tr>
@@ -468,7 +467,8 @@
             Member Function <code class="computeroutput"><span class="identifier">elapsed</span><span class="special">()</span></code></a></span></dt></dl></div>
 <p>
             <code class="computeroutput"><span class="identifier">stopwatch</span><span class="special">&lt;&gt;</span></code>
-            is a model of a <a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" target="_top"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a>.
+            is a model of a <a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
+        Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code> concept</a>.
           </p>
 <p>
             Knowing how long a part of a program takes to execute is useful in both
@@ -610,9 +610,10 @@
             Member Function <code class="computeroutput"><span class="identifier">accumulated</span><span class="special">()</span></code></a></span></dt>
 </dl></div>
 <p>
-            A <code class="computeroutput"><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;&gt;</span></code> is a model of a <a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" target="_top"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a> that allows to accumulate
-            the time in several times instead of at once as it is the case of the
-            class <code class="computeroutput"><span class="identifier">stopwatch</span><span class="special">&lt;&gt;</span></code>.
+            A <code class="computeroutput"><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;&gt;</span></code> is a model of a <a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
+        Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code> concept</a> that allows
+            to accumulate the time in several times instead of at once as it is the
+            case of the class <code class="computeroutput"><span class="identifier">stopwatch</span><span class="special">&lt;&gt;</span></code>.
           </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">stopwatch_accumulator</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
