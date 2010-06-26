@@ -18,8 +18,11 @@ namespace boost { namespace details {
  */
 template <typename BitsUsed>
 struct deduce_storage_type {
-
-    BOOST_STATIC_ASSERT(( BitsUsed::value <= 64));
+    #ifndef BOOST_NO_INT64_T
+    BOOST_STATIC_ASSERT(( BitsUsed::value <= 64 ));
+    #else
+    BOOST_STATIC_ASSERT(( BitsUsed::value <= 32 ));
+    #endif
     typedef typename mpl::if_<
         mpl::less_equal< BitsUsed, mpl::size_t<8> >,
         uint_least8_t,
