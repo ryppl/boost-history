@@ -44,14 +44,9 @@ namespace boost { namespace details {
  *
  *  Base Class preconditions.
  *
- *  1) Storage policy must not be set to mpl::void_.
- *      (this means that the user didn't specify a stroage policy.)
- *      Enforced, May be removed at a later time when the class is able to 
- *          deduce the ammount of storage space, and set the storage policy to
- *          that.
  *
  *
- *  3) The bitfields specified must not exceed the bitwidth of the storage type.
+ *  1) The bitfields specified must not exceed the bitwidth of the storage type.
  *      Enforced. Not going any where, but may be redefined or altered based
  *          on if I allow the supplied storage type to be an array.
  */
@@ -68,15 +63,6 @@ struct bitfield_tuple_base {
     typedef typename processed_args::field_vector       field_vector;
     typedef typename processed_args::offset             offset;
 
-    // Precondition:
-    //      A storage policy must be supplied.
-    /* BOOST_STATIC_ASSERT((
-        !is_same<
-            storage_type,
-            typename mpl::void_
-        >::value
-    ));
-    */
     // deducing storage type
     typedef typename mpl::if_<
         is_same<
