@@ -140,7 +140,7 @@
           portion of the interface.
         </p>
 <a name="bitfield_tuple.bft.interface_overview.interface_summary.template_interface"></a><h5>
-<a name="id2995915"></a>
+<a name="id3312740"></a>
           <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_summary.template_interface">Template
           Interface</a>
         </h5>
@@ -163,7 +163,7 @@
           doesn't have a value associated with it).
         </p>
 <a name="bitfield_tuple.bft.interface_overview.interface_summary.runtime_support_interface"></a><h5>
-<a name="id2996064"></a>
+<a name="id3312890"></a>
           <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_summary.runtime_support_interface">Runtime
           Support Interface</a>
         </h5>
@@ -213,23 +213,42 @@
 <a name="bitfield_tuple.bft.interface_overview.interface_template"></a><a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template" title="Template Parameter Interface">
         Template Parameter Interface</a>
 </h4></div></div></div>
-<div class="toc"><dl><dt><span class="section"><a href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.filler">
-          <code class="computeroutput"><span class="identifier">filler</span></code></a></span></dt></dl></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.filler">
+          <code class="computeroutput"><span class="identifier">filler</span></code></a></span></dt>
+<dt><span class="section"><a href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.flag">
+          <code class="computeroutput"><span class="identifier">flag</span></code></a></span></dt>
+<dt><span class="section"><a href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.bit_align">
+          <code class="computeroutput"><span class="identifier">bit_align</span></code></a></span></dt>
+<dt><span class="section"><a href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.member">
+          <code class="computeroutput"><span class="identifier">member</span></code></a></span></dt>
+<dt><span class="section"><a href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.storage">
+          <code class="computeroutput"><span class="identifier">storage</span></code></a></span></dt>
+</dl></div>
 <p>
           The following are different templates which one may use to aid in the construction
           of a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>. All
-          templates which are supplied to a bitfield tuple empty and essentially
-          have no struct body to them. The template parameters supplied to a bitfield_tuple
-          are essentially only used to associate different meanings with different
-          groups of types and values which are later used to construct a bitfield_tuple.
+          templates which are supplied to <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+          have no actual definition, and are simply used to associate template parameters
+          together and associate a perticular meaning with them.
         </p>
 <div class="section">
 <div class="titlepage"><div><div><h5 class="title">
 <a name="bitfield_tuple.bft.interface_overview.interface_template.filler"></a><a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.filler" title="filler">
           <code class="computeroutput"><span class="identifier">filler</span></code></a>
 </h5></div></div></div>
+<a name="bitfield_tuple.bft.interface_overview.interface_template.filler.description"></a><h5>
+<a name="id3313147"></a>
+            <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.filler.description">Description</a>
+          </h5>
+<p>
+            Filler specifies a number of empty bits to be ignored. Another good way
+            to think about this is as bit padding, it adds the number of bits in
+            padding when specified. From an implementation stand point it adds <code class="computeroutput"><span class="identifier">Bits</span></code> to the starting the next starting
+            position of the next bitfield specified in the template parameter list.
+          </p>
 <a name="bitfield_tuple.bft.interface_overview.interface_template.filler.template_signature"></a><h5>
-<a name="id2996321"></a>
+<a name="id3313186"></a>
             <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.filler.template_signature">Template
             Signature</a>
           </h5>
@@ -237,14 +256,301 @@
             <code class="computeroutput"><span class="keyword">template</span> <span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">Bits</span><span class="special">&gt;</span> <span class="keyword">struct</span>
             <span class="identifier">filler</span><span class="special">;</span></code>
           </p>
-<a name="bitfield_tuple.bft.interface_overview.interface_template.filler.description"></a><h5>
-<a name="id2996396"></a>
-            <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.filler.description">Description</a>
+<a name="bitfield_tuple.bft.interface_overview.interface_template.filler.header_file_locaton"></a><h5>
+<a name="id3313262"></a>
+            <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.filler.header_file_locaton">Header
+            file Locaton</a>
           </h5>
 <p>
-            Filler specifies empty bits to be ignored. Another good way to think
-            about this is as bit padding, it adds the number of bits in padding when
-            specified.
+            This header file is included with the &lt;boost/integer/bitfield_tuple.hpp&gt;
+            header file. 
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">details</span><span class="special">/</span><span class="identifier">bft</span><span class="special">/</span><span class="identifier">filler</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<p>
+          </p>
+<a name="bitfield_tuple.bft.interface_overview.interface_template.filler.example"></a><h5>
+<a name="id3313356"></a>
+            <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.filler.example">Example</a>
+          </h5>
+<p>
+          </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="bitfield_tuple.bft.interface_overview.interface_template.flag"></a><a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.flag" title="flag">
+          <code class="computeroutput"><span class="identifier">flag</span></code></a>
+</h5></div></div></div>
+<a name="bitfield_tuple.bft.interface_overview.interface_template.flag.description"></a><h5>
+<a name="id3313404"></a>
+            <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.flag.description">Description</a>
+          </h5>
+<p>
+            <code class="computeroutput"><span class="identifier">flag</span></code> is used to specify
+            a boolean member of width one. For example, 
+</p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">red</span><span class="special">;</span>
+
+<span class="keyword">typedef</span> <span class="identifier">bitfield_tuple</span><span class="special">&lt;</span>
+    <span class="identifier">flag</span><span class="special">&lt;</span><span class="identifier">red</span><span class="special">&gt;</span>
+<span class="special">&gt;</span>           <span class="identifier">bitfield_tuple_1</span><span class="special">;</span>
+
+
+<span class="keyword">typedef</span> <span class="identifier">btifield_tuple</span><span class="special">&lt;</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">,</span><span class="identifier">red</span><span class="special">,</span><span class="number">1</span><span class="special">&gt;</span>
+<span class="special">&gt;</span>           <span class="identifier">bitfield_tuple_2</span><span class="special">;</span>
+</pre>
+<p>
+            the types <code class="computeroutput"><span class="identifier">bitfield_tuple_1</span></code>
+            and <code class="computeroutput"><span class="identifier">bitfield_tuple_2</span></code>
+            specify the same internal structure for their data. <code class="computeroutput"><span class="identifier">flag</span><span class="special">&lt;</span><span class="identifier">red</span><span class="special">&gt;</span></code> has the same affect on a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code> as <code class="computeroutput"><span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">,</span><span class="identifier">red</span><span class="special">,</span><span class="number">1</span><span class="special">&gt;</span></code>
+            would have.
+          </p>
+<a name="bitfield_tuple.bft.interface_overview.interface_template.flag.template_signature"></a><h5>
+<a name="id3313654"></a>
+            <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.flag.template_signature">Template
+            Signature</a>
+          </h5>
+<p>
+            <code class="computeroutput"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Name</span><span class="special">&gt;</span> <span class="keyword">struct</span>
+            <span class="identifier">flag</span><span class="special">;</span></code>
+          </p>
+<a name="bitfield_tuple.bft.interface_overview.interface_template.flag.header_file_locaton"></a><h5>
+<a name="id3313721"></a>
+            <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.flag.header_file_locaton">Header
+            file Locaton</a>
+          </h5>
+<p>
+            This header file is included with the &lt;boost/integer/bitfield_tuple.hpp&gt;
+            header file. 
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">details</span><span class="special">/</span><span class="identifier">bft</span><span class="special">/</span><span class="identifier">flag</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<p>
+          </p>
+<a name="bitfield_tuple.bft.interface_overview.interface_template.flag.example"></a><h5>
+<a name="id3313815"></a>
+            <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.flag.example">Example</a>
+          </h5>
+<p>
+          </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="bitfield_tuple.bft.interface_overview.interface_template.bit_align"></a><a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.bit_align" title="bit_align">
+          <code class="computeroutput"><span class="identifier">bit_align</span></code></a>
+</h5></div></div></div>
+<a name="bitfield_tuple.bft.interface_overview.interface_template.bit_align.description"></a><h5>
+<a name="id3313864"></a>
+            <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.bit_align.description">Description</a>
+          </h5>
+<p>
+            Adjusts the next <code class="computeroutput"><span class="identifier">member</span></code>
+            or <code class="computeroutput"><span class="identifier">flag</span></code> template inside
+            of the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>'s
+            template parameter to a multiple of the <code class="computeroutput"><span class="identifier">AlignTo</span></code>
+            parameter. If the current next position is a multiple of <code class="computeroutput"><span class="identifier">AlignTo</span></code> then no adjustment will be
+            made.
+          </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+              Calling <code class="computeroutput"><span class="identifier">bit_align</span><span class="special">&lt;</span><span class="number">8</span><span class="special">&gt;</span></code>
+              more then once in a row will have the same effect as calling <code class="computeroutput"><span class="identifier">bit_align</span><span class="special">&lt;</span><span class="number">8</span><span class="special">&gt;</span></code>
+              once.
+            </p></td></tr>
+</table></div>
+<a name="bitfield_tuple.bft.interface_overview.interface_template.bit_align.template_signature"></a><h5>
+<a name="id3313990"></a>
+            <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.bit_align.template_signature">Template
+            Signature</a>
+          </h5>
+<p>
+            <code class="computeroutput"><span class="keyword">template</span> <span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">AlignTo</span><span class="special">&gt;</span> <span class="keyword">struct</span>
+            <span class="identifier">bit_align</span><span class="special">;</span></code>
+          </p>
+<a name="bitfield_tuple.bft.interface_overview.interface_template.bit_align.header_file_locaton"></a><h5>
+<a name="id3314066"></a>
+            <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.bit_align.header_file_locaton">Header
+            file Locaton</a>
+          </h5>
+<p>
+            This header file is included with the &lt;boost/integer/bitfield_tuple.hpp&gt;
+            header file. 
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">details</span><span class="special">/</span><span class="identifier">bft</span><span class="special">/</span><span class="identifier">align</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<p>
+          </p>
+<a name="bitfield_tuple.bft.interface_overview.interface_template.bit_align.example"></a><h5>
+<a name="id3314161"></a>
+            <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.bit_align.example">Example</a>
+          </h5>
+<p>
+          </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="bitfield_tuple.bft.interface_overview.interface_template.member"></a><a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.member" title="member">
+          <code class="computeroutput"><span class="identifier">member</span></code></a>
+</h5></div></div></div>
+<a name="bitfield_tuple.bft.interface_overview.interface_template.member.description"></a><h5>
+<a name="id3314208"></a>
+            <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.member.description">Description</a>
+          </h5>
+<p>
+            <code class="computeroutput"><span class="identifier">member</span></code> us used for specifying
+            different bitfields within a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>.
+          </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                    <p>
+                      template Parameter
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      Explanation
+                    </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">ReturnType</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      The type that the value is to be returnd from the get function
+                      as.You may supply a signed type for a member but please note
+                      that a singed bit will be stored within the width you specify,
+                      so if you don't need negative values you shouldn't store them.
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">NameType</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      This is a type which is associated with the bitfield which
+                      is represented by this member template. All names supplied
+                      to a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+                      can only be used one per <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>.
+                      The is enforced as a precondition.
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">Width</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      The number of bits you would like associated with the field
+                      represented by the <code class="computeroutput"><span class="identifier">member</span></code>
+                      template.
+                    </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+<a name="bitfield_tuple.bft.interface_overview.interface_template.member.template_signature"></a><h5>
+<a name="id3314405"></a>
+            <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.member.template_signature">Template
+            Signature</a>
+          </h5>
+<p>
+            <code class="computeroutput"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">ReturnType</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">NameType</span><span class="special">,</span>
+            <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">Width</span><span class="special">&gt;</span> <span class="keyword">struct</span>
+            <span class="identifier">member</span><span class="special">;</span></code>
+          </p>
+<a name="bitfield_tuple.bft.interface_overview.interface_template.member.header_file_locaton"></a><h5>
+<a name="id3314510"></a>
+            <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.member.header_file_locaton">Header
+            file Locaton</a>
+          </h5>
+<p>
+            This header file is included with the &lt;boost/integer/bitfield_tuple.hpp&gt;
+            header file. 
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">details</span><span class="special">/</span><span class="identifier">bft</span><span class="special">/</span><span class="identifier">member</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<p>
+          </p>
+<a name="bitfield_tuple.bft.interface_overview.interface_template.member.example"></a><h5>
+<a name="id3314604"></a>
+            <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.member.example">Example</a>
+          </h5>
+<p>
+          </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="bitfield_tuple.bft.interface_overview.interface_template.storage"></a><a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.storage" title="storage">
+          <code class="computeroutput"><span class="identifier">storage</span></code></a>
+</h5></div></div></div>
+<a name="bitfield_tuple.bft.interface_overview.interface_template.storage.description"></a><h5>
+<a name="id3314653"></a>
+            <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.storage.description">Description</a>
+          </h5>
+<p>
+            The <code class="computeroutput"><span class="identifier">storage</span></code> template
+            is optional (you don't have to have one in the template parameter list
+            of a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>).
+            You may use it to specify that type you would like your bitfields to
+            be stored within. If you don't specify a storage type using the <code class="computeroutput"><span class="identifier">storage</span></code> parameter a type will be selected
+            for you which can hold all of your bitfields. The deduced type will be
+            unsigned and one off the following types from within &lt;boost/cstdint.hpp&gt;,
+            uint_least8_t, uint_least16_t, uint_least32_t or if you have long long
+            support enabled, uint_least64_t. You can use boost.integer endian to
+            specify your storage type as one which is different from your current
+            machine and the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+            will store the data values in the endianness specified as well as return
+            and accept values in the endianness of your native machine.
+          </p>
+<a name="bitfield_tuple.bft.interface_overview.interface_template.storage.template_signature"></a><h5>
+<a name="id3314742"></a>
+            <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.storage.template_signature">Template
+            Signature</a>
+          </h5>
+<p>
+            <code class="computeroutput"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">StorageType</span><span class="special">&gt;</span> <span class="keyword">struct</span>
+            <span class="identifier">storage</span><span class="special">;</span></code>
+          </p>
+<a name="bitfield_tuple.bft.interface_overview.interface_template.storage.header_file_locaton"></a><h5>
+<a name="id3314808"></a>
+            <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.storage.header_file_locaton">Header
+            file Locaton</a>
+          </h5>
+<p>
+            This header file is included with the &lt;boost/integer/bitfield_tuple.hpp&gt;
+            header file. 
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">details</span><span class="special">/</span><span class="identifier">bft</span><span class="special">/</span><span class="identifier">storage</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<p>
+          </p>
+<a name="bitfield_tuple.bft.interface_overview.interface_template.storage.example"></a><h5>
+<a name="id3314902"></a>
+            <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_template.storage.example">Example</a>
+          </h5>
+<p>
           </p>
 </div>
 </div>
@@ -254,8 +560,284 @@
         Reference</a>
 </h4></div></div></div>
 <p>
-          Interface Reference
+          Regular interface documentation for a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>.
+          This include information about the public interface for the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code> type.
         </p>
+<a name="bitfield_tuple.bft.interface_overview.interface_reference.typedefs"></a><h6>
+<a name="id3314966"></a>
+          <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_reference.typedefs">Typedefs</a>
+        </h6>
+<p>
+          In the following table please note that <code class="computeroutput"><span class="identifier">N</span></code>
+          represents a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+          type.
+        </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Member
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Type
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">N</span><span class="special">::</span><span class="identifier">members</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;&gt;</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    The <code class="computeroutput"><span class="identifier">members</span></code> vector
+                    contains <code class="computeroutput"><span class="identifier">bitfield_elements</span></code>
+                    which are used to describe bitfields specified by the user. The
+                    reason that members is public is to make the deduction of return
+                    types possible. Ff one would like to store the proxy reference
+                    type from <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+                    or return a reference to that type members makes this possible.
+                    This is also used for implementing the boost.fusion extension
+                    of the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>.
+                    There are additional meta-functions which can be used for getting
+                    the return type of a get function which are covered in the implementation
+                    documentation.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">N</span><span class="special">::</span><span class="identifier">storage_type</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    integral or integral-like type
+                  </p>
+                </td>
+<td>
+                  <p>
+                    This is either the type specified by the user in the <code class="computeroutput"><span class="identifier">storage</span></code> parameter or the deducd
+                    type which is supplied by the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+                    in the event that a user does not supply a <code class="computeroutput"><span class="identifier">storage</span></code>
+                    parameter. For additional infomration on which types are used
+                    when a type is deduced, see the documentation for the <code class="computeroutput"><span class="identifier">storage</span></code> type.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">N</span><span class="special">::</span><span class="identifier">bits_used</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&lt;&gt;</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    This value is the number of bits the bitfield tuple is using.
+                    This is also the would be the starting bit of the next bitfield
+                    relative to the 0 bit of the storage type.
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+<a name="bitfield_tuple.bft.interface_overview.interface_reference.constructors"></a><h6>
+<a name="id3315307"></a>
+          <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_reference.constructors">Constructors</a>
+        </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Name
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Constructor Signature
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Exception Safty
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    Value Constructor
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">explicit</span> <span class="identifier">bitfield_tuple</span><span class="special">(</span><span class="identifier">storage_type</span>
+                    <span class="identifier">x</span> <span class="special">=</span>
+                    <span class="number">0</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    No Throw
+                  </p>
+                </td>
+<td>
+                  <p>
+                    This constructor acts as both a default constructor and allows
+                    for construction over the storage type. This constructor is one
+                    way of giving a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+                    an initial value.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    Copy Constructor
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">bitfield_tuple</span><span class="special">(</span> <span class="identifier">bitfield_tuple</span>
+                    <span class="keyword">const</span><span class="special">&amp;</span>
+                    <span class="identifier">x</span> <span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    No Throw
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Copies the value from <code class="computeroutput"><span class="identifier">x</span></code>
+                    into the current <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>.
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+<a name="bitfield_tuple.bft.interface_overview.interface_reference.operators"></a><h6>
+<a name="id3315553"></a>
+          <a class="link" href="bft.html#bitfield_tuple.bft.interface_overview.interface_reference.operators">Operators</a>
+        </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Name
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Signature
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Exception Safty
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    Value Assignment Operator
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">bitfield_tuple</span> <span class="keyword">const</span><span class="special">&amp;</span>
+                    <span class="keyword">operator</span><span class="special">=(</span>
+                    <span class="identifier">storage_type</span> <span class="keyword">const</span><span class="special">&amp;)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    No Throw
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Assigns a new value to the internal storage of the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    Copy Assignment Operator
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">bitfield_tuple</span> <span class="keyword">const</span><span class="special">&amp;</span>
+                    <span class="keyword">operator</span><span class="special">=(</span>
+                    <span class="identifier">bitfield_tuple</span> <span class="keyword">const</span><span class="special">&amp;)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    No Throw
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Assigns a new value to the internal storage of the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>.
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
@@ -263,7 +845,12 @@
         Implementation Reference</a>
 </h4></div></div></div>
 <p>
-          Implementation Reference.
+          The implementation reference includes information about different functions,
+          meta-functions and macros which are internally used to support this type.
+          There are a few items within the implementation reference which will provide
+          additional insight to the construction of a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+          as well as some more obscure tools which the user may need under very specific
+          circumstances.
         </p>
 </div>
 </div>

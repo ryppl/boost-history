@@ -125,30 +125,263 @@ function's, constructor's, or operator's individual documentation. ]
 
 [section:interface_template Template Parameter Interface]
 The following are different templates which one may use to aid in the
-construction of a `bitfield_tuple`. All templates which are supplied to a
-bitfield tuple empty and essentially have no struct body to them. The template
-parameters supplied to a bitfield_tuple are essentially only used to associate
-different meanings with different groups of types and values which are later
-used to construct a bitfield_tuple.
+construction of a `bitfield_tuple`. All templates which are supplied to
+`bitfield_tuple` have no actual definition, and are simply used to associate
+template parameters together and associate a perticular meaning with them.
 
 [section:filler `filler`]
+[h4 Description]
+Filler specifies a number of empty bits to be ignored. Another good way to think
+about this is as bit padding, it adds the number of bits in padding when
+specified. From an implementation stand point it adds `Bits` to the starting
+the next starting position of the next bitfield specified in the template
+parameter list.
+
 [h4 Template Signature]
 `template <std::size_t Bits> struct filler;`
 
+[h4 Header file Locaton]
+This header file is included with the <boost/integer/bitfield_tuple.hpp> header
+file.
+``
+#include <boost/integer/details/bft/filler.hpp>
+``
+[h4 Example]
+``
 
+``
+[endsect]
+
+
+
+[section:flag `flag`]
 [h4 Description]
-Filler specifies empty bits to be ignored. Another good way to think about this
-is as bit padding, it adds the number of bits in padding when specified.
+`flag` is used to specify a boolean member of width one. For example,
+``
+struct red;
+
+typedef bitfield_tuple<
+    flag<red>
+>           bitfield_tuple_1;
+
+
+typedef btifield_tuple<
+    member<bool,red,1>
+>           bitfield_tuple_2;
+``
+the types `bitfield_tuple_1` and `bitfield_tuple_2` specify the same internal 
+structure for their data. `flag<red>` has the same affect on a `bitfield_tuple`
+as `member<bool,red,1>` would have.
+
+
+[h4 Template Signature]
+`template <typename Name> struct flag;`
+
+[h4 Header file Locaton]
+This header file is included with the <boost/integer/bitfield_tuple.hpp> header
+file.
+``
+#include <boost/integer/details/bft/flag.hpp>
+``
+[h4 Example]
+``
+``
+[endsect]
+
+
+[section:bit_align `bit_align`]
+[h4 Description]
+Adjusts the next `member` or `flag` template inside of the `bitfield_tuple`'s
+template parameter to a multiple of the `AlignTo` parameter. If the current
+next position is a multiple of `AlignTo` then no adjustment will be made.
+
+[note Calling `bit_align<8>` more then once in a row will have the same effect
+as calling `bit_align<8>` once. ]
+
+
+[h4 Template Signature]
+`template <std::size_t AlignTo> struct bit_align;`
+
+[h4 Header file Locaton]
+This header file is included with the <boost/integer/bitfield_tuple.hpp> header
+file.
+``
+#include <boost/integer/details/bft/align.hpp>
+``
+[h4 Example]
+``
+``
+[endsect]
+
+[section:member `member`]
+[h4 Description]
+`member` us used for specifying different bitfields within a `bitfield_tuple`.
+[table
+    [[template Parameter][Explanation]]
+    [
+        [`ReturnType`]
+        [The type that the value is to be returnd from the get function as.You 
+may supply a signed type for a member but please note that a singed bit will be
+stored within the width you specify, so if you don't need negative values you
+shouldn't store them.]
+    ]
+    [
+        [`NameType`]
+        [This is a type which is associated with the bitfield which is
+represented by this member template. All names supplied to a `bitfield_tuple`
+can only be used one per `bitfield_tuple`. The is enforced as a precondition.]
+    ]
+    [
+        [`Width`]
+        [The number of bits you would like associated with the field represented
+by the `member` template.]
+    ]
+]
+
+[h4 Template Signature]
+`template <typename ReturnType, typename NameType, std::size_t Width>
+struct member;`
+
+[h4 Header file Locaton]
+This header file is included with the <boost/integer/bitfield_tuple.hpp> header
+file.
+``
+#include <boost/integer/details/bft/member.hpp>
+``
+[h4 Example]
+``
+``
+[endsect]
+
+[section:storage `storage`]
+[h4 Description]
+The `storage` template is optional (you don't have to have one in the template
+parameter list of a `bitfield_tuple`). You may use it to specify that type you 
+would like your bitfields to be stored within. If you don't specify a storage
+type using the `storage` parameter a type will be selected for you which can
+hold all of your bitfields. The deduced type will be unsigned and one off the
+following types from within <boost/cstdint.hpp>, uint_least8_t, uint_least16_t,
+uint_least32_t or if you have long long support enabled, uint_least64_t. You can
+use boost.integer endian to specify your storage type as one which is different
+from your current machine and the `bitfield_tuple` will store the data values
+in the endianness specified as well as return and accept values in the
+endianness of your native machine.
+
+[h4 Template Signature]
+`template <typename StorageType> struct storage;`
+
+[h4 Header file Locaton]
+This header file is included with the <boost/integer/bitfield_tuple.hpp> header
+file.
+``
+#include <boost/integer/details/bft/storage.hpp>
+``
+[h4 Example]
+``
+``
 [endsect]
 
 [endsect]
 
 [section:interface_reference Reference]
-Interface Reference
+Regular interface documentation for a `bitfield_tuple`. This include information
+about the public interface for the `bitfield_tuple` type.
+
+
+[h5 Typedefs]
+In the following table please note that `N` represents a `bitfield_tuple` type.
+[table
+    [
+        [Member]
+        [Type]
+        [Description]
+    ]
+    [
+        [`N::members`]
+        [`mpl::vector<>`]
+        [ The `members` vector contains `bitfield_elements` which are used to 
+describe bitfields specified by the user. The reason that members is public
+is to make the deduction of return types possible. Ff one would like to store
+the proxy reference type from `bitfield_tuple` or return a reference to that
+type members makes this possible. This is also used for implementing the
+boost.fusion extension of the `bitfield_tuple`. There are additional 
+meta-functions which can be used for getting the return type of a get function
+which are covered in the implementation documentation.]
+    ]
+    [
+        [`N::storage_type`]
+        [integral or integral-like type]
+        [ This is either the type specified by the user in the `storage`
+parameter or the deducd type which is supplied by the `bitfield_tuple` in the
+event that a user does not supply a `storage` parameter. For additional
+infomration on which types are used when a type is deduced, see the documentation
+for the `storage` type. ]
+    ]
+    [
+        [`N::bits_used`]
+        [`mpl::size_t<>`]
+        [ This value is the number of bits the bitfield tuple is using. This is
+also the would be the starting bit of the next bitfield relative to the 0 bit
+of the storage type. ]
+    ]
+
+]
+
+[h5 Constructors]
+[table
+    [
+        [Name]
+        [Constructor Signature]
+        [Exception Safty]
+        [Description]
+    ]
+    [
+        [ Value Constructor ]
+        [ `explicit bitfield_tuple(storage_type x = 0)` ]
+        [ No Throw ]
+        [ This constructor acts as both a default constructor and allows for
+construction over the storage type. This constructor is one way of giving
+a `bitfield_tuple` an initial value. ]
+    ]
+    [
+        [ Copy Constructor ]
+        [ `bitfield_tuple( bitfield_tuple const& x )` ]
+        [ No Throw ]
+        [ Copies the value from `x` into the current `bitfield_tuple`. ]
+    ]
+]
+
+[h5 Operators]
+
+[table
+    [
+        [Name]
+        [Signature]
+        [Exception Safty]
+        [Description]
+    ]
+    [
+        [Value Assignment Operator]
+        [`bitfield_tuple const& operator=( storage_type const&)`]
+        [ No Throw ]
+        [Assigns a new value to the internal storage of the `bitfield_tuple`.]
+    ]
+    [
+        [Copy Assignment Operator]
+        [`bitfield_tuple const& operator=( bitfield_tuple const&)`]
+        [ No Throw ]
+        [Assigns a new value to the internal storage of the `bitfield_tuple`.]
+    ]
+]
 [endsect]
 
 [section:interface_implementation Implementation Reference]
-Implementation Reference.
+The implementation reference includes information about different functions,
+meta-functions and macros which are internally used to support this type.
+There are a few items within the implementation reference which will provide
+additional insight to the construction of a `bitfield_tuple` as well as 
+some more obscure tools which the user may need under very specific
+circumstances.
 [endsect]
 
 [endsect]
