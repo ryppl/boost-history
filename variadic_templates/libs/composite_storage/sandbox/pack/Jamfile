@@ -1,0 +1,18 @@
+
+project libs/composite_storage/sandbox/pack
+  :
+  : default-build debug
+    <include>../../../../../../ro/switch 
+      #^for:
+      #   http://svn.boost.org/svn/boost/sandbox/switch
+    <include>../../../..
+      #^for:
+      #   boost/composite_storage/*
+      #   boost/iostreams/utility/*
+  ;
+run composite_storage.leaf.test.cpp
+  ;
+
+run one_of_multiple_dispatch.test.cpp
+  ;
+

@@ -69,45 +69,26 @@ index_numerals
 
 void test(void)
 {
-#if 0
-    std::cout<<"object_number="<<object_number<<"\n";
-    {
-            typedef
-          detail::layout_make
-          < composite_tags::one_of
-          >::push_back
-          < detail::size_alignment<>
-          , detail::size_alignment<2,9>
-          >::type
-        tp_type
-        ;
-        std::cout
-          <<"***layout_make<one_of>::push_back<<>,<2,9>>\n"
-          <<":size="<<tp_type::size_part<<"\n"
-          <<":alignment="<<tp_type::align_part<<"\n"
-        ;
-    }
-#endif    
 #if 1
     std::cout<<"object_number="<<object_number<<"\n";
     {    
             typedef
           composite_tagged
           < composite_tags::one_of
-          , index_numerals
+          , mpl::integral_c<index_numerals,index_0>
           , charvec_u<0>
           , charvec_u<1>
           >
         tagged_type
         ;
             typedef
-          tagged_type::layout_type
-        layout_type
+          tagged_type::layout_scanned
+        layout_scanned
         ;
         std::cout
           <<"***composite_tagged<one_of>:\n"
-          <<":size="<<layout_type::size_part<<"\n"
-          <<":alignment="<<layout_type::align_part<<"\n"
+          <<":size="<<layout_scanned::size_part<<"\n"
+          <<":alignment="<<layout_scanned::align_part<<"\n"
         ;
           tagged_type 
         tagged_values
@@ -146,9 +127,24 @@ void test(void)
         t1=tagged_values.project<index_1>();
         std::cout
           <<"t1="<<t1<<"\n";
+        std::cout
+          <<"assign_test:\n";
+          tagged_type
+        tagged_from
+        ;
+        tagged_values=tagged_from;
+                std::cout
+          <<"which="<<tagged_values.which()<<"\n";
+        t0=tagged_values.project<index_0>();
+        std::cout
+          <<"t0="<<t0<<"\n";
+        t1=tagged_values.project<index_1>();
+        std::cout
+          <<"t1="<<t1<<"\n";
+
     }
 #endif    
-#if 0
+#if 1
     std::cout<<"object_number="<<object_number<<"\n";
     {
         std::cout
@@ -157,13 +153,18 @@ void test(void)
           <<"sizeof(charvec_u<2>)="<<sizeof(charvec_u<2>)<<"\n"
         ;
             typedef
-          detail::layout_make
+          detail_composite_tagged::layout_operators
           < composite_tags::all_of_packed
-          >::layout0
+          >::layout0<mpl::integral_c<int,-1> >
         tp0_type
         ;
+        std::cout
+          <<"***layout_operators<all_of_packed>::layout0<integral_c<int,-1>\n"
+          <<":size="<<tp0_type::size_part<<"\n"
+          <<":index="<<tp0_type::index_part::value<<"\n"
+        ;
             typedef
-          detail::layout_make
+          detail_composite_tagged::layout_operators
           < composite_tags::all_of_packed
           >::push_back
           < tp0_type
@@ -172,13 +173,13 @@ void test(void)
         tp1_type
         ;
         std::cout
-          <<"***layout_make<all_of_packed>::push_back<tp0_type,charvec_u<0> >\n"
+          <<"***layout_operators<all_of_packed>::push_back<tp0_type,charvec_u<0> >\n"
           <<":size="<<tp1_type::size_part<<"\n"
-          <<":index="<<tp1_type::index_part<<"\n"
-          <<":offset(0)="<<tp1_type::offset(index_wrap<0>())<<"\n"
+          <<":index="<<tp1_type::index_part::value<<"\n"
+          <<":offset(0)="<<tp1_type::offset(mpl::integral_c<int,0>())<<"\n"
         ;
             typedef
-          detail::layout_make
+          detail_composite_tagged::layout_operators
           < composite_tags::all_of_packed
           >::push_back
           < tp1_type
@@ -187,13 +188,13 @@ void test(void)
         tp2_type
         ;
         std::cout
-          <<"***layout_make<all_of_packed>::push_back<tp1_type,charvec_u<1> >\n"
+          <<"***layout_operators<all_of_packed>::push_back<tp1_type,charvec_u<1> >\n"
           <<":size="<<tp2_type::size_part<<"\n"
-          <<":index="<<tp2_type::index_part<<"\n"
-          <<":offset(1)="<<tp2_type::offset(index_wrap<1>())<<"\n"
+          <<":index="<<tp2_type::index_part::value<<"\n"
+          <<":offset(1)="<<tp2_type::offset(mpl::integral_c<int,1>())<<"\n"
         ;
             typedef
-          detail::layout_make
+          detail_composite_tagged::layout_operators
           < composite_tags::all_of_packed
           >::push_back
           < tp2_type
@@ -202,13 +203,13 @@ void test(void)
         tp3_type
         ;
         std::cout
-          <<"***layout_make<all_of_packed>::push_back<tp2_type,charvec_u<2> >\n"
+          <<"***layout_operators<all_of_packed>::push_back<tp2_type,charvec_u<2> >\n"
           <<":size="<<tp3_type::size_part<<"\n"
-          <<":index="<<tp3_type::index_part<<"\n"
-          <<":offset(2)="<<tp3_type::offset(index_wrap<2>())<<"\n"
+          <<":index="<<tp3_type::index_part::value<<"\n"
+          <<":offset(2)="<<tp3_type::offset(mpl::integral_c<int,2>())<<"\n"
         ;
         std::cout
-          <<":offset(3)="<<tp3_type::offset(index_wrap<3>())<<"\n"
+          <<":offset(3)="<<tp3_type::offset(mpl::integral_c<int,3>())<<"\n"
         ;
     }
 #endif    
@@ -218,7 +219,7 @@ void test(void)
             typedef
           composite_tagged
           < composite_tags::all_of_packed
-          , index_numerals
+          , mpl::integral_c<index_numerals,index_0>
           , charvec_u<0>
           , charvec_u<1>
           , charvec_u<2>
@@ -226,19 +227,23 @@ void test(void)
         tagged_type
         ;
             typedef
-          tagged_type::layout_type
-        layout_type
+          tagged_type::layout_scanned
+        layout_scanned
+        ;
+            typedef
+          tagged_type::index_base
+        index_base
         ;
           tagged_type
         tagged_valu
         ;
         std::cout
           <<"***composite_tagged<all_of_packed>:\n"
-          <<":size="<<layout_type::size_part<<"\n"
-          <<":offset<0>="<<layout_type::offset(detail_composite_tagged::index_wrap<0>())<<"\n"
-          <<":offset<1>="<<layout_type::offset(detail_composite_tagged::index_wrap<1>())<<"\n"
-          <<":offset<2>="<<layout_type::offset(detail_composite_tagged::index_wrap<2>())<<"\n"
-          <<":offset<3>="<<layout_type::offset(detail_composite_tagged::index_wrap<3>())<<"\n"
+          <<":size="<<layout_scanned::size_part<<"\n"
+          <<":offset<0>="<<layout_scanned::offset(mpl::integral_c<index_base,index_0>())<<"\n"
+          <<":offset<1>="<<layout_scanned::offset(mpl::integral_c<index_base,index_1>())<<"\n"
+          <<":offset<2>="<<layout_scanned::offset(mpl::integral_c<index_base,index_2>())<<"\n"
+          <<":offset<3>="<<layout_scanned::offset(mpl::integral_c<index_base,index_3>())<<"\n"
         ;
         
         charvec_u<index_1> c_1;
@@ -295,7 +300,7 @@ void test(void)
             typedef
           composite_tagged
           < composite_tags::all_of_aligned
-          , index_numerals
+          , mpl::integral_c<index_numerals,index_0>
           , charvec_u<0>
           , charvec_u<1>
           , charvec_u<2>
@@ -303,19 +308,23 @@ void test(void)
         tagged_type
         ;
             typedef
-          tagged_type::layout_type
-        layout_type
+          tagged_type::layout_scanned
+        layout_scanned
+        ;
+            typedef
+          tagged_type::index_base
+        index_base
         ;
           tagged_type
         tagged_valu
         ;
         std::cout
           <<"***composite_tagged<all_of_aligned>:\n"
-          <<":size="<<layout_type::size_part<<"\n"
-          <<":offset<0>="<<layout_type::offset(detail_composite_tagged::index_wrap<0>())<<"\n"
-          <<":offset<1>="<<layout_type::offset(detail_composite_tagged::index_wrap<1>())<<"\n"
-          <<":offset<2>="<<layout_type::offset(detail_composite_tagged::index_wrap<2>())<<"\n"
-          <<":offset<3>="<<layout_type::offset(detail_composite_tagged::index_wrap<3>())<<"\n"
+          <<":size="<<layout_scanned::size_part<<"\n"
+          <<":offset<0>="<<layout_scanned::offset(mpl::integral_c<index_base,index_0>())<<"\n"
+          <<":offset<1>="<<layout_scanned::offset(mpl::integral_c<index_base,index_1>())<<"\n"
+          <<":offset<2>="<<layout_scanned::offset(mpl::integral_c<index_base,index_2>())<<"\n"
+          <<":offset<3>="<<layout_scanned::offset(mpl::integral_c<index_base,index_3>())<<"\n"
           <<":project<index_0>="<<tagged_valu.project<index_0>().v<<"\n"
           <<":project<index_1>="<<tagged_valu.project<index_1>().v<<"\n"
         ;
