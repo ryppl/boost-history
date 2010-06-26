@@ -45,6 +45,10 @@ test-suite integer
         [ run bft_testing/align_test.cpp ]
         [ run bft_testing/reference_builder_test.cpp ]
         [ run bft_testing/deduced_storage_type_test.cpp ]
-        [ run bft_testing/deduced_storage_type_long_long_test.cpp ]
+        [ run bft_testing/deduced_storage_type_long_long_test.cpp 
+            :
+            :
+            :
+            <toolset>gcc:<cxxflags>-Wno-long-long <toolset>darwin:<cxxflags>-Wno-long-long ]
     ;
 

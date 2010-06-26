@@ -64,18 +64,28 @@ struct bitfield_tuple_base {
     // extracting te Arguments from processed_args relating to 
     // the storage policy. Also preforming static assertios 
     // where they can be done.
-    typedef typename processed_args::storage_policy     storage_type;
+    typedef typename processed_args::storage_policy     processed_storage_type;
     typedef typename processed_args::field_vector       field_vector;
     typedef typename processed_args::offset             offset;
 
     // Precondition:
     //      A storage policy must be supplied.
-    BOOST_STATIC_ASSERT((
+    /* BOOST_STATIC_ASSERT((
         !is_same<
             storage_type,
             typename mpl::void_
         >::value
     ));
+    */
+    // deducing storage type
+    typedef typename mpl::if_<
+        is_same<
+            processed_storage_type,
+            mpl::void_
+        >,
+        typename details::deduce_storage_type<offset>::type,
+        processed_storage_type
+        >::type                                     storage_type;
 
 
 
@@ -93,4 +103,5 @@ struct bitfield_tuple_base {
 }} // end boost::details
 
 #undef BOOST_BFT_ARG_PROCESSING
+
 #endif

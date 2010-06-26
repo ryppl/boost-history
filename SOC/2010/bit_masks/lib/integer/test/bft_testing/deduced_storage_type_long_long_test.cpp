@@ -16,9 +16,14 @@ struct pink;
 struct blue;
 struct salmon;
 
-
+typedef bitfield_tuple<
+    flag<pink>,
+    bit_align<64>
+>       test_tuple;
 
 
 int main() {
+
+    BOOST_ASSERT(( is_same<test_tuple::storage_type,uint_least64_t>::value ));
     return 0;
 }
