@@ -21,6 +21,7 @@
 // implementation header files.
 #include <boost/integer/details/bft/bft_element.hpp>
 #include <boost/integer/details/bft/arg_parse_impl.hpp>
+#include <boost/integer/details/bft/deduce_storage.hpp>
 
 namespace boost { namespace details {
 

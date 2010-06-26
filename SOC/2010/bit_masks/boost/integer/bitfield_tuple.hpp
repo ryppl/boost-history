@@ -494,8 +494,6 @@ private:
     storage_type _data;
 };
 
-
-
 } // end boost
 
 
