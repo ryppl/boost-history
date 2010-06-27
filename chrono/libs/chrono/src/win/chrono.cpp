@@ -33,15 +33,15 @@ namespace chrono
   {
 
     LARGE_INTEGER pcount;
-    if ( nanosecs_per_tic <= 0.0L || !QueryPerformanceCounter( &pcount ) )
+    if ( (nanosecs_per_tic <= 0.0L) || (!QueryPerformanceCounter( &pcount )) )
     {
       DWORD cause = (nanosecs_per_tic <= 0.0L ? ERROR_NOT_SUPPORTED : ::GetLastError());
       boost::throw_exception(
         system::system_error( cause, system::system_category, "chrono::monotonic_clock" ));
     }
 
-    return time_point(duration(
-      static_cast<monotonic_clock::rep>(nanosecs_per_tic * pcount.QuadPart) ));
+    return monotonic_clock::time_point(monotonic_clock::duration(
+      static_cast<monotonic_clock::rep>((nanosecs_per_tic) * pcount.QuadPart) ));
   }
 
   monotonic_clock::time_point monotonic_clock::now( system::error_code & ec )
@@ -49,11 +49,11 @@ namespace chrono
     static double nanosecs_per_tic = get_nanosecs_per_tic();
 
     LARGE_INTEGER pcount;
-    if ( nanosecs_per_tic <= 0.0L || !QueryPerformanceCounter( &pcount ) )
+    if ( (nanosecs_per_tic <= 0.0L) || (!QueryPerformanceCounter( &pcount )) )
     {
-      DWORD cause = (nanosecs_per_tic <= 0.0L ? ERROR_NOT_SUPPORTED : ::GetLastError());
+      DWORD cause = ((nanosecs_per_tic <= 0.0L) ? ERROR_NOT_SUPPORTED : ::GetLastError());
       ec.assign( cause, system::system_category );
-      return time_point(duration(0));
+      return monotonic_clock::time_point(duration(0));
     }
 
     ec.clear();
@@ -65,7 +65,7 @@ namespace chrono
   {
     FILETIME ft;
     ::GetSystemTimeAsFileTime( &ft );  // never fails
-    return time_point(duration(
+    return system_clock::time_point(system_clock::duration(
       (static_cast<__int64>( ft.dwHighDateTime ) << 32) | ft.dwLowDateTime));
   }
 
@@ -82,7 +82,7 @@ namespace chrono
   {
       __int64 temp = t.time_since_epoch().count();
 
-  #   if !defined( BOOST_MSVC ) || BOOST_MSVC > 1300 // > VC++ 7.0
+  #   if (!defined( BOOST_MSVC )) || (BOOST_MSVC > 1300) // > VC++ 7.0
       temp -= 116444736000000000LL;  // delta from epoch in microseconds
   #   else
       temp -= 116444736000000000;
@@ -97,7 +97,7 @@ namespace chrono
       __int64 temp = t;
       temp *= 10000000;
 
-  #   if !defined( BOOST_MSVC ) || BOOST_MSVC > 1300 // > VC++ 7.0
+  #   if (!defined( BOOST_MSVC )) || (BOOST_MSVC > 1300) // > VC++ 7.0
       temp += 116444736000000000LL;
   #   else
       temp += 116444736000000000;

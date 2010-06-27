@@ -8,8 +8,8 @@
 
 //  See http://www.boost.org/libs/chrono for documentation.
 
-#ifndef BOOST_CHRONO_CLOCK_NAME__HPP
-#define BOOST_CHRONO_CLOCK_NAME__HPP
+#ifndef BOOST_CHRONO_CLOCK_NAME_HPP
+#define BOOST_CHRONO_CLOCK_NAME_HPP
 
 #include <boost/chrono/chrono.hpp>
 #include <boost/type_traits/is_same.hpp>
