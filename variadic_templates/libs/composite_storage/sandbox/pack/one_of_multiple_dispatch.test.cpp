@@ -18,16 +18,14 @@ struct trace_scope
         ind_out<<"]]]EXITING:"<<my_where<<"\n";
     }
  private:
-      std::string
-    my_where
-    ;    
+    std::string my_where;    
 };  
   #if 1
     #define FUNCTOR_CONSTANCY const
   #else
     #define FUNCTOR_CONSTANCY
   #endif
-//#include <boost/composite_storage/pack/one_of_multiple_dispatch.hpp>
+#define APPLY_UNPACK_DEMO_UNCHECK_ARGS
 #include <boost/composite_storage/pack/multiple_dispatch/reify_apply.hpp>
 #include <boost/composite_storage/pack/multiple_dispatch/reifier_switch.hpp>
 #include <boost/composite_storage/pack/multiple_dispatch/reifier_visitor.hpp>
@@ -43,154 +41,107 @@ namespace multiple_dispatch
 {
 namespace testing
 {
-    static
-  unsigned
-object_id
-=0
-;
-    static
-  int
-object_number
-=0
-;
-  template
-  < unsigned I
-  , typename ResultType=int
-  >
-struct host_concrete
-;
-  template
-  < typename Indices
-  , typename ResultType
-  >
-struct hosts_indices_concrete
-;  
-  template
-  < unsigned... Indices
-  , typename ResultType
-  >
-struct hosts_indices_concrete
-  < mpl::package_c<unsigned, Indices...>
-  , ResultType
-  >
+static unsigned object_id=0;
+  
+static int object_number=0;
+  
+template <unsigned I, typename ResultType=int>
+struct host_concrete;
+
+template <typename Indices, typename ResultType>
+struct hosts_indices_concrete;
+
+template <unsigned... Indices, typename ResultType>
+struct hosts_indices_concrete< mpl::package_c<unsigned, Indices...>, ResultType>
 {
     typedef mpl::package<host_concrete<Indices,ResultType>...> type;
 };
 
-  template
-  < typename ResultType=int
-  >
-struct host_abstract
-;
+template <typename ResultType=int>
+struct host_abstract;
 
 }//exit testing namespace
-  template
-  < typename ResultType
-  >
-struct hosts_concrete
-  < testing::host_abstract<ResultType>
-  >  
-: testing::hosts_indices_concrete
-  < mpl::package_range_c<unsigned, 0,3>::type
-  , ResultType
-  >
+
+template <typename ResultType>
+struct hosts_concrete<testing::host_abstract<ResultType> >  
+  : testing::hosts_indices_concrete< mpl::package_range_c<unsigned, 0,3>::type
+    , ResultType>
 {
 };
 
 namespace testing
 {
-  template
-  < typename ResultType
-  >
+template <typename ResultType >
 struct host_abstract
 {
-      unsigned const
-    my_id
-    ;
+    unsigned const my_id;
+    
     host_abstract(void)
-    : my_id(++object_id)
+      : my_id(++object_id)
     {
         ++object_number;
     }
+    
     host_abstract(host_abstract const&)
-    : my_id(++object_id)
+      : my_id(++object_id)
     {
         ++object_number;
     }
+    
     ~host_abstract(void)
     {
         --object_number;
     }
-      void
-    operator=(host_abstract const&)
+    
+    void operator=(host_abstract const&)
     {}
     
-        typedef
-      reifier_visit_abstract_seq
-      < ResultType
-      , typename hosts_concrete<host_abstract>::type
-      >
-    visitor_abstract
-    ;
-        virtual
-      ResultType 
-    accept
-      ( visitor_abstract const&
-      )const
-    =0
-    ;
+    typedef reifier_visit_abstract_seq< ResultType
+      , typename hosts_concrete<host_abstract>::type>
+    visitor_abstract;
+    
+    virtual ResultType accept( visitor_abstract const&)const=0;
 };
-  template
-  < unsigned I
-  , typename ResultType
-  >
+
+template <unsigned I, typename ResultType>
 struct host_concrete
-: host_abstract<ResultType>
+  : host_abstract<ResultType>
 {
     char v[2*(I+1)];
     unsigned tag(void)const
     {
         return I;
     }
+    
     host_concrete(void)
     {
         v[0]='a';
         v[1]='\0';
     }
-        typedef
-      typename host_abstract<ResultType>::visitor_abstract
-    visitor_abstract
-    ;
-      ResultType 
-    accept
-      ( visitor_abstract const& a_visitor
-      )const
+    
+    typedef typename host_abstract<ResultType>::visitor_abstract
+    visitor_abstract;
+    
+    ResultType accept( visitor_abstract const& a_visitor)const
     {
         return a_visitor.visit(*this);
     }
 };
 
-  template
-  < unsigned I
-  , typename ResultType
-  >
-  ind_ostream&
-operator<<
-  ( ind_ostream& sout
-  , host_concrete<I,ResultType>const& x
-  )
-  {
-      sout<<":host_concrete<"<<I<<">(my_id="<<x.my_id<<")";
-      return sout;
-  }
+template <unsigned I, typename ResultType>
+ind_ostream& operator<<( ind_ostream& sout
+  , host_concrete<I,ResultType>const& x)
+{
+    sout<<":host_concrete<"<<I<<">(my_id="<<x.my_id<<")";
+    return sout;
+}
   
-  enum
-index_numerals
-{ index_0
-, index_1
-, index_2
-, index_3
-, index_4
+enum index_numerals
+{ index_0,
+  index_1,
+  index_2,
+  index_3,
+  index_4
 };
 
 struct functor_any
@@ -204,6 +155,7 @@ struct functor_any
     {
         ind_out<<":index(last)="<<index<<"\n";
     }
+    
     template<typename Head, typename... Tail>
     static void print(unsigned index, Head const& a_head, Tail const&... a_tail)
     {
@@ -229,47 +181,39 @@ struct functor3
     
     typedef int result_type;
     
-    int operator()
-      ( void
-      )FUNCTOR_CONSTANCY
+    int operator()(void)FUNCTOR_CONSTANCY
     {
         ind_out<<"functor3:arity=0.\n";
         return 0;
     }
-    int operator()
-      ( host_concrete<0>const&a0
-      )FUNCTOR_CONSTANCY
+  #if 0
+    int operator()( host_concrete<0>const&a0)FUNCTOR_CONSTANCY
     {
         ind_out<<"functor3:arity=1:\n";
         ind_out<<":a0="<<a0<<"\n";
         return 0;
     }
-    int operator()
-      ( host_concrete<1>const&a0
-      )FUNCTOR_CONSTANCY
+    int operator()( host_concrete<1>const&a0)FUNCTOR_CONSTANCY
     {
         ind_out<<"functor3:arity=1:";
         ind_out<<":a0="<<a0<<"\n";
         return 0;
     }
-    int operator()
-      ( host_concrete<2>const&a0
-      )FUNCTOR_CONSTANCY
+    int operator()( host_concrete<2>const&a0)FUNCTOR_CONSTANCY
     {
         ind_out<<"functor3:arity=1:";
         ind_out<<":a0="<<a0<<"\n";
         return 0;
     }
-    int operator()
-      ( host_concrete<0>const&a0
-      , host_concrete<1>const&a1
-      )FUNCTOR_CONSTANCY
+    int operator()( host_concrete<0>const&a0
+      , host_concrete<1>const&a1)FUNCTOR_CONSTANCY
     {
         ind_out<<"functor3:arity=2:\n";
         ind_out<<":a0="<<a0<<"\n";
         ind_out<<":a1="<<a1<<"\n";
         return 0;
     }
+  #endif
 };
 
 void test(void)
@@ -278,22 +222,16 @@ void test(void)
     ind_out<<"object_number="<<object_number<<"\n";
     {    
         trace_scope ts("one_of_multiple_dispatch TESTS");
-            typedef
-          pack::container
-          < tags::one_of_maybe
-          , mpl::integral_c<index_numerals,index_0>
-          , host_concrete<0>
-          , host_concrete<1>
-          , host_concrete<2>
-          >
-        tagged_type
-        ;
-          unsigned const 
-        arity=3
-        ;
-          tagged_type 
-        tagged_v[arity]
-        ;
+        
+        typedef pack::container < tags::one_of_maybe
+          , mpl::integral_c<index_numerals,index_0>, host_concrete<0>
+          , host_concrete<1>, host_concrete<2> >
+        tagged_type;
+        
+        unsigned const arity=3;
+        
+        tagged_type tagged_v[arity];
+        
         ind_out<<"v before inject:\n";
         for(unsigned i=0; i<arity; ++i)
         {
@@ -307,28 +245,20 @@ void test(void)
         {
             ind_out<<"v["<<i<<"].which="<<tagged_v[i].which()<<"\n";
         }
-            typedef
+        typedef
         #if 0
           functor_any
         #else
           functor3
         #endif
-          FUNCTOR_CONSTANCY
-        functor_t;
-          functor_t
-        functor_v;
-          int 
-        result=0;
+        FUNCTOR_CONSTANCY functor_t;
+        functor_t functor_v;
+        int result=0;
+      #if 0
         ind_out<<"functor_v().result="<<result<<"\n";
         result =functor_v(tagged_v[0].project<index_0>());
         ind_out<<"functor_v(c<0>).result="<<result<<"\n";
-            typedef
-          function_types::
-        #ifdef USE_IS_CALLABLE_WITH_ARGS
-          is_callable_with_args
-        #else
-          can_be_called
-        #endif
+        typedef function_types::can_be_called
           < functor_t
             ( host_concrete<0>
             , host_concrete<1>
@@ -339,34 +269,37 @@ void test(void)
           <<"callable<functor_t(u<0>,u<1> >::type::value="
           <<is_functor_args_callable::type::value
           <<"\n";
+      #endif
       #if 1
-          #define REIFIER_VISITOR
-        #ifdef REIFIER_ViSITOR
+        //#define REIFIER_VISITOR
+        #ifdef REIFIER_VISITOR
         ind_out<<"***  defined(REIFIER_VISITOR)\n";
         #else
         ind_out<<"*** !defined(REIFIER_VISITOR)\n";
         #endif
-        result
-          = pack::multiple_dispatch::reify_apply
+        result = pack::multiple_dispatch::reify_apply
           #ifdef REIFIER_VISITOR
             < pack::multiple_dispatch::reifier_visitor
           #else
             < pack::multiple_dispatch::reifier_switch
           #endif
-            >
-            ( functor_v
+            >( functor_v
           #ifdef REIFIER_VISITOR
             , static_cast<host_abstract<>const&>(host_concrete<0>())
             , static_cast<host_abstract<>const&>(host_concrete<1>())
           #else
             , tagged_v[0]
-            , tagged_v[1]
+            //, tagged_v[1]
           #endif
-          #define FUNCTOR_INVALID_ARGS
-          #if defined(FUNCTOR_INVALID_ARGS) && !defined(REIFIER_VISITOR)
+          //#define FUNCTOR_INVALID_ARGS
+          #if defined(FUNCTOR_INVALID_ARGS)
             //This should fail compilation with error message
             //something about invalid args.
-            , tagged_v[0]
+            #ifdef REIFIER_VISITOR
+              , static_cast<host_abstract<>const&>(host_concrete<0>())
+            #else        
+              , tagged_v[0]
+            #endif
           #endif
             );
       #ifdef FUNCTOR_INVALID_ARGS
