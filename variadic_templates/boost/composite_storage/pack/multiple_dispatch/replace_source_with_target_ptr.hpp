@@ -146,7 +146,8 @@ ptrs_target_source
           typedef
         void_ptr_array
         < mpl::package
-          < ArgsSource...>
+          < ArgsSource...
+          >
         >
       super_type
       ;
@@ -166,9 +167,41 @@ ptrs_target_source
           ( a_self
           )
         {}
-   private:
+   private:     
       ptrs_target_source(void)
-        ;
+        {}
+  };
+  template
+  <
+  >
+  struct 
+ptrs_target_source
+  < mpl::package
+    <
+    >
+  >
+  /**@brief
+   *  Initial value of a ptrs_target_source, i.e.
+   *  before any conversion of ArgsSource pointers
+   *  to Target pointers.
+   */
+  : void_ptr_array
+    < mpl::package
+      <
+      >
+    >
+  {  
+          typedef
+        void_ptr_array
+        < mpl::package
+          <
+          >
+        >
+      super_type
+      ;
+      
+      ptrs_target_source(void)
+        {}
   };
 
   template
@@ -184,7 +217,7 @@ mk_ptrs_source
   (   ArgsSource&... 
     a_args
   )
-  /**Ebrief
+  /**@brief
    *  Convenience function to create an 
    *  "initial" ptrs_target_source, i.e.
    *  one that contains no Target pointers.
@@ -199,6 +232,30 @@ mk_ptrs_source
      result_args
        ( a_args...
        )
+       ;
+     return result_args;
+  }   
+
+  ptrs_target_source
+  < mpl::package
+    < //No target pointers.
+    >
+  >
+mk_ptrs_source
+  ( void
+  )
+  /**@brief
+   *  Convenience function to create an 
+   *  "initial" ptrs_target_source, i.e.
+   *  one that contains no Target pointers.
+   */
+  {
+       ptrs_target_source
+       < mpl::package
+         <
+         >
+       >
+     result_args
        ;
      return result_args;
   }   

@@ -113,7 +113,7 @@ struct apply_unpack
       )
     {
         return 
-        #if 1
+        #ifndef APPLY_UNPACK_DEMO_UNCHECK_ARGS
           apply_ftor_check_args
           ( a_functor
           , a_args.template project<Indices>()...
