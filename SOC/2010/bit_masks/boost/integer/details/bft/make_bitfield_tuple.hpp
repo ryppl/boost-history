@@ -4,8 +4,8 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 
-#ifndef BOOST_MEMBER_FIELD_HPP
-#define BOOST_MEMBER_FIELD_HPP
+#ifndef BOOST_BFT_MAKE_BFT_HPP
+#define BOOST_BFT_MAKE_BFT_HPP
 #include <cstddef>
 
 
@@ -22,7 +22,7 @@ namespace boost {
  *  Compile time initilization of a bitfield tuple. This creates a bitfield
  *  with an initial value of that is specified on compile time.
  */
-template <
+
 
 } // end boost
 
