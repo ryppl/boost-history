@@ -49,5 +49,6 @@ test-suite integer
             :
             :
             <toolset>gcc:<cxxflags>-Wno-long-long <toolset>darwin:<cxxflags>-Wno-long-long ]
+        [ run bft_testing/make_bft_testing.cpp ]
     ;
 
