@@ -10,12 +10,12 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_CHRONO__HPP
-#define BOOST_CHRONO__HPP
+#ifndef BOOST_CHRONO_HPP
+#define BOOST_CHRONO_HPP
 
 //-----------------------------------------------------------------------------
 #include <boost/chrono/chrono.hpp>
 #include <boost/chrono/typeof/boost/chrono/chrono.hpp>
 //-----------------------------------------------------------------------------
 
-#endif // BOOST_CHRONO__HPP
+#endif // BOOST_CHRONO_HPP

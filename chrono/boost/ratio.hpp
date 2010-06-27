@@ -39,11 +39,11 @@ time2_demo contained this comment:
 #include <boost/integer_traits.hpp>
 
 #ifndef BOOST_RATIO_USES_MPL_ASSERT
-#define BOOST_RATIO_OVERFLOW_IN_LL_ADD "overflow in ll_add"
-#define BOOST_RATIO_OVERFLOW_IN_LL_ADD "overflow in ll_add"
-#define BOOST_RATIO_OVERFLOW_IN_LL_SUB "overflow in ll_sub"
-#define BOOST_RATIO_OVERFLOW_IN_LL_MUL "overflow in ll_mul"
-#define BOOST_RATIO_OVERFLOW_IN_LL_DIV "overflow in ll_div"
+#define BOOST_RATIO_OVERFLOW_IN_ADD "overflow in ratio add"
+#define BOOST_RATIO_OVERFLOW_IN_ADD "overflow in ratio add"
+#define BOOST_RATIO_OVERFLOW_IN_SUB "overflow in ratio sub"
+#define BOOST_RATIO_OVERFLOW_IN_MUL "overflow in ratio mul"
+#define BOOST_RATIO_OVERFLOW_IN_DIV "overflow in ratio div"
 #define BOOST_RATIO_RATIO_NUMERATOR_IS_OUT_OF_RANGE "ratio numerator is out of range"
 #define BOOST_RATIO_RATIO_DIVIDE_BY_0 "ratio divide by 0"
 #define BOOST_RATIO_RATIO_DENOMINATOR_IS_OUT_OF_RANGE "ratio denominator is out of range"
@@ -62,7 +62,7 @@ time2_demo contained this comment:
 #elif defined(BOOST_RATIO_USES_ARRAY_ASSERT)
 #define BOOST_RATIO_CONCAT(A,B) A##B
 #define BOOST_RATIO_NAME(A,B) BOOST_RATIO_CONCAT(A,B)
-#define BOOST_RATIO_STATIC_ASSERT(CND, MSG, TYPES) static char BOOST_RATIO_NAME(__boost_chrono_test_,__LINE__)[CND];
+#define BOOST_RATIO_STATIC_ASSERT(CND, MSG, TYPES) static char BOOST_RATIO_NAME(boost_ratio_test_,__LINE__)[CND];
 #else
 #define BOOST_RATIO_STATIC_ASSERT(CND, MSG, TYPES)
 #endif
@@ -172,7 +172,7 @@ namespace detail
       static const boost::intmax_t max = boost::integer_traits<boost::intmax_t>::const_max;
       #endif
 
-      BOOST_RATIO_STATIC_ASSERT(X <= max - Y , BOOST_RATIO_OVERFLOW_IN_LL_ADD, ());
+      BOOST_RATIO_STATIC_ASSERT(X <= max - Y , BOOST_RATIO_OVERFLOW_IN_ADD, ());
   public:
       static const boost::intmax_t value = X + Y;
   };
@@ -196,7 +196,7 @@ namespace detail
       static const boost::intmax_t max = boost::integer_traits<boost::intmax_t>::const_max;
       #endif
 
-      BOOST_RATIO_STATIC_ASSERT(min - Y <= X, BOOST_RATIO_OVERFLOW_IN_LL_ADD, ());
+      BOOST_RATIO_STATIC_ASSERT(min - Y <= X, BOOST_RATIO_OVERFLOW_IN_ADD, ());
   public:
       static const boost::intmax_t value = X + Y;
   };
@@ -216,7 +216,7 @@ namespace detail
       static const boost::intmax_t max = boost::integer_traits<boost::intmax_t>::const_max;
       #endif
 
-      BOOST_RATIO_STATIC_ASSERT(min + Y <= X, BOOST_RATIO_OVERFLOW_IN_LL_SUB, ());
+      BOOST_RATIO_STATIC_ASSERT(min + Y <= X, BOOST_RATIO_OVERFLOW_IN_SUB, ());
   public:
       static const boost::intmax_t value = X - Y;
   };
@@ -240,7 +240,7 @@ namespace detail
       static const boost::intmax_t max = boost::integer_traits<boost::intmax_t>::const_max;
       #endif
 
-      BOOST_RATIO_STATIC_ASSERT(X <= max + Y, BOOST_RATIO_OVERFLOW_IN_LL_SUB, ());
+      BOOST_RATIO_STATIC_ASSERT(X <= max + Y, BOOST_RATIO_OVERFLOW_IN_SUB, ());
   public:
       static const boost::intmax_t value = X - Y;
   };
@@ -261,9 +261,9 @@ namespace detail
       static const boost::intmax_t a_x = static_abs<X>::value;
       static const boost::intmax_t a_y = static_abs<Y>::value;
 
-      BOOST_RATIO_STATIC_ASSERT(X != nan, BOOST_RATIO_OVERFLOW_IN_LL_MUL, ());
-      BOOST_RATIO_STATIC_ASSERT(Y != nan, BOOST_RATIO_OVERFLOW_IN_LL_MUL, ());
-      BOOST_RATIO_STATIC_ASSERT(a_x <= max / a_y, BOOST_RATIO_OVERFLOW_IN_LL_MUL, ());
+      BOOST_RATIO_STATIC_ASSERT(X != nan, BOOST_RATIO_OVERFLOW_IN_MUL, ());
+      BOOST_RATIO_STATIC_ASSERT(Y != nan, BOOST_RATIO_OVERFLOW_IN_MUL, ());
+      BOOST_RATIO_STATIC_ASSERT(a_x <= max / a_y, BOOST_RATIO_OVERFLOW_IN_MUL, ());
   public:
       static const boost::intmax_t value = X * Y;
   };
@@ -302,9 +302,9 @@ namespace detail
       static const boost::intmax_t max = boost::integer_traits<boost::intmax_t>::const_max;
       #endif
 
-      BOOST_RATIO_STATIC_ASSERT(X != nan, BOOST_RATIO_OVERFLOW_IN_LL_DIV, ());
-      BOOST_RATIO_STATIC_ASSERT(Y != nan, BOOST_RATIO_OVERFLOW_IN_LL_DIV, ());
-      BOOST_RATIO_STATIC_ASSERT(Y != 0, BOOST_RATIO_OVERFLOW_IN_LL_DIV, ());
+      BOOST_RATIO_STATIC_ASSERT(X != nan, BOOST_RATIO_OVERFLOW_IN_DIV, ());
+      BOOST_RATIO_STATIC_ASSERT(Y != nan, BOOST_RATIO_OVERFLOW_IN_DIV, ());
+      BOOST_RATIO_STATIC_ASSERT(Y != 0, BOOST_RATIO_RATIO_DIVIDE_BY_0, ());
   public:
       static const boost::intmax_t value = X / Y;
   };
@@ -328,9 +328,9 @@ namespace detail
 template <boost::intmax_t N, boost::intmax_t D>
 class ratio
 {
-      BOOST_RATIO_STATIC_ASSERT(boost::detail::static_abs<N>::value >= 0, BOOST_RATIO_RATIO_NUMERATOR_IS_OUT_OF_RANGE, ());
-      BOOST_RATIO_STATIC_ASSERT(boost::detail::static_abs<D>::value > 0, BOOST_RATIO_RATIO_DENOMINATOR_IS_OUT_OF_RANGE, ());
-      BOOST_RATIO_STATIC_ASSERT(D != 0, BOOST_RATIO_RATIO_DIVIDE_BY_0 , ());
+    BOOST_RATIO_STATIC_ASSERT(boost::detail::static_abs<N>::value >= 0, BOOST_RATIO_RATIO_NUMERATOR_IS_OUT_OF_RANGE, ());
+    BOOST_RATIO_STATIC_ASSERT(boost::detail::static_abs<D>::value > 0, BOOST_RATIO_RATIO_DENOMINATOR_IS_OUT_OF_RANGE, ());
+    BOOST_RATIO_STATIC_ASSERT(D != 0, BOOST_RATIO_RATIO_DIVIDE_BY_0 , ());
     static const boost::intmax_t m_na = boost::detail::static_abs<N>::value;
     static const boost::intmax_t m_da = boost::detail::static_abs<D>::value;
     static const boost::intmax_t m_s = boost::detail::static_sign<N>::value

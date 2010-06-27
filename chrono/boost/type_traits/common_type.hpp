@@ -24,15 +24,27 @@
 #endif
 
 //----------------------------------------------------------------------------//
-#if !defined(BOOST_NO_STATIC_ASSERT)
-#define BOOST_COMMON_TYPE_STATIC_ASSERT(CND,MSG) \
-        static_assert(CND, MSG)
+#ifndef BOOST_NO_STATIC_ASSERT
+#define BOOST_COMMON_TYPE_STATIC_ASSERT(CND, MSG, TYPES) static_assert(CND,MSG)
+#elif defined(BOOST_COMMON_TYPE_USES_STATIC_ASSERT)
+#include <boost/static_assert.hpp>
+#define BOOST_COMMON_TYPE_STATIC_ASSERT(CND, MSG, TYPES) BOOST_STATIC_ASSERT(CND)
+#elif defined(BOOST_COMMON_TYPE_USES_MPL_ASSERT)
+#include <boost/mpl/assert.hpp>
+#include <boost/mpl/bool.hpp>
+#define BOOST_COMMON_TYPE_STATIC_ASSERT(CND, MSG, TYPES)                                 \
+    BOOST_MPL_ASSERT_MSG(boost::mpl::bool_< (CND) >::type::value, MSG, TYPES)
+#elif defined(BOOST_COMMON_TYPE_USES_ARRAY_ASSERT)
+#define BOOST_COMMON_TYPE_CONCAT(A,B) A##B
+#define BOOST_COMMON_TYPE_NAME(A,B) BOOST_COMMON_TYPE_CONCAT(A,B)
+#define BOOST_COMMON_TYPE_STATIC_ASSERT(CND, MSG, TYPES) static char BOOST_COMMON_TYPE_NAME(boost_common_type_test_,__LINE__)[CND];
 #else
-#include <boost/static_assert.hpp>   // boost wonders never cease!
-#define BOOST_COMMON_TYPE_STATIC_ASSERT(CND,MSG) \
-        BOOST_STATIC_ASSERT(CND)
-#endif    
+#define BOOST_COMMON_TYPE_STATIC_ASSERT(CND, MSG, TYPES)
+#endif
 
+#if !defined(BOOST_COMMON_TYPE_USES_MPL_ASSERT)
+#define BOOST_COMMON_TYPE_MUST_BE_A_COMPLE_TYPE "must be complete type"
+#endif
 
 //----------------------------------------------------------------------------//
 //                                                                            //
@@ -68,7 +80,7 @@ namespace boost {
 
 #endif    
     {
-        BOOST_COMMON_TYPE_STATIC_ASSERT(sizeof(T) > 0, "must be complete type");
+        BOOST_COMMON_TYPE_STATIC_ASSERT(sizeof(T) > 0, "must be complete type",(T));
     public:
         typedef T type;
     };
@@ -83,8 +95,8 @@ namespace boost {
     struct common_type<T, U, void>
 #endif    
     {
-        BOOST_COMMON_TYPE_STATIC_ASSERT(sizeof(T) > 0, "must be complete type");
-        BOOST_COMMON_TYPE_STATIC_ASSERT(sizeof(U) > 0, "must be complete type");
+        BOOST_COMMON_TYPE_STATIC_ASSERT(sizeof(T) > 0, "must be complete type",(T));
+        BOOST_COMMON_TYPE_STATIC_ASSERT(sizeof(U) > 0, "must be complete type",(T));
         static bool m_f();  // workaround gcc bug; not required by std
 #if !defined(BOOST_NO_RVALUE_REFERENCES) \
     && !defined(BOOST_NO_DECLTYPE)

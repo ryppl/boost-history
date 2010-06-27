@@ -10,11 +10,11 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_STOPWATCHES__HPP
-#define BOOST_STOPWATCHES__HPP
+#ifndef BOOST_STOPWATCHES_HPP
+#define BOOST_STOPWATCHES_HPP
 
 //-----------------------------------------------------------------------------
 #include <boost/chrono/stopwatches.hpp>
 //-----------------------------------------------------------------------------
 
-#endif // BOOST_STOPWATCHES__HPP
+#endif // BOOST_STOPWATCHES_HPP
