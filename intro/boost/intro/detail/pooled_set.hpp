@@ -28,7 +28,6 @@ class pooled_set{
         node,
         intrusive::base_hook<hook>
     > set_type;
-
 public:
     typedef T key_type;
     typedef key_type value_type;
@@ -40,7 +39,6 @@ public:
     typedef value_type const *const_pointer;
     typedef immutable_iterator<pointer> iterator;
     typedef immutable_iterator<const_pointer> const_iterator;
-
     iterator begin(){
         if(empty()) return end();
         else return iterator(&*set.begin());
@@ -56,7 +54,7 @@ public:
         typename set_type::insert_commit_data commit_data;
         std::pair<typename set_type::iterator,bool> ret=
             this->set.insert_check(x,
-            node::less<Compare>(Compare()),commit_data);
+            typename node::template less<Compare>(Compare()),commit_data);
         if(ret.second){
             ret.first=this->set.insert_commit(*this->node_pool.new_(in_place(x)),commit_data);
             return std::make_pair(&ret.first->key,true);
@@ -65,13 +63,13 @@ public:
     size_type size() const{ return set.size(); }
     template<class Key,class KeyValueCompare>
     iterator find(Key const &key,KeyValueCompare compare){
-        typename set_type::iterator it=this->set.find(key,node::less<KeyValueCompare>(compare));
+        typename set_type::iterator it=this->set.find(key,typename node::template less<KeyValueCompare>(compare));
         if(it == this->set.end()) return iterator(0); //TODO use real iterator
         else return iterator(&it->key);
     }
     template<class Key,class KeyValueCompare>
     const_iterator find(Key const &key,KeyValueCompare compare) const{
-        typename set_type::const_iterator it=this->set.find(key,hash,node::less<KeyValueCompare>(compare));
+        typename set_type::const_iterator it=this->set.find(key,typename node::template less<KeyValueCompare>(compare));
         if(it == this->set.end()) return const_iterator(0);
         else return const_iterator(&it->key);
     }
@@ -84,12 +82,12 @@ private:
         template<class Base>
         struct less{
             explicit less(Base const &base) : base(base){}
-            template<class T>
-            bool operator()(T const &o1,node const &o2) const{
+            template<class K>
+            bool operator()(K const &o1,node const &o2) const{
                 return base(o1,o2.key);
             }
-            template<class T>
-            bool operator()(node const &o1,T const &o2) const{
+            template<class K>
+            bool operator()(node const &o1,K const &o2) const{
                 return base(o1.key,o2);
             }
         private:
@@ -97,6 +95,7 @@ private:
         };
         value_type key;
     };
+
     expo_pool<node,InitialCapacity,2> node_pool;
     set_type set;
 };

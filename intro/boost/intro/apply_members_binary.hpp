@@ -3,8 +3,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_INTRO_APPLY_BINARY_HPP
-#define BOOST_INTRO_APPLY_BINARY_HPP
+#ifndef BOOST_INTRO_APPLY_MEMBERS_BINARY_HPP
+#define BOOST_INTRO_APPLY_MEMBERS_BINARY_HPP
 
 #include <boost/intro/introspect.hpp>
 #include <boost/type_traits/remove_const.hpp>
@@ -21,7 +21,7 @@ struct binary_applier;
 }
 
 template<class F,class T,class T2>
-void apply_binary(F const &f,T &t,T2 &t2){
+void apply_members_binary(F const &f,T &t,T2 &t2){
     T const &t2const=t2; (void)t2const;//T and T2 must only differ in const-ness
     T2 const &t1const=t; (void)t1const;
     intro::for_each_local<T>(detail::binary_applier<F,T,T2>(f,t,t2));
@@ -31,17 +31,17 @@ void apply_binary(F const &f,T &t,T2 &t2){
 namespace detail{
 
 template<class F,class Class,class Class2,class T,T Class::*Ptr,class Semantics>
-void apply_binary(F const &f,Class &c,Class2 &c2,
+void apply_members_binary(F const &f,Class &c,Class2 &c2,
                      member_t<typename remove_const<Class>::type,T,Ptr,Semantics>){
     f(c.*Ptr,c2.*Ptr,Semantics());
 }
 
 template<class F,class Class,class Class2,class Base>
-void apply_binary(F const &f,Class &c,Class2 &c2,base_class<Base>){
+void apply_members_binary(F const &f,Class &c,Class2 &c2,base_class<Base>){
     typename mpl::if_<is_const<Class>,Base const,Base>::type &base=c;
     typename mpl::if_<is_const<Class2>,Base const,Base>::type &base2=c2;
-    using intro::apply_binary;
-    apply_binary(f,base,base2); //recurse into base classes
+    using intro::apply_members_binary;
+    apply_members_binary(f,base,base2); //recurse into base classes
 }
 
 template<class F,class T,class T2>
@@ -50,7 +50,7 @@ struct binary_applier{
     typedef void result_type;
     template<class Local>
     void operator()(Local local) const{
-        apply_binary(f,t,t2,local);
+        apply_members_binary(f,t,t2,local);
     }
     binary_applier<complement<F>,T,T2> operator~() const{
         return binary_applier<complement<F>,T,T2>(complement<F>(f),t,t2);

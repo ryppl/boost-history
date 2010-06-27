@@ -32,8 +32,8 @@ public:
     typedef typename Set::size_type size_type;
     typedef typename Set::difference_type difference_type;
 
-    set_insert_view(Set &set,const_reference element,key_equal const &eq=key_equal())
-        : eq(eq),set(set),element(element){}
+    set_insert_view(Set &set,const_reference element,key_equal const &eq_=key_equal())
+        : eq(eq_),set(set),element(element){}
 
     bool empty() const{ return false; }
     size_type size() const{ return set.size() + 1; }

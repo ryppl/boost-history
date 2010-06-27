@@ -21,6 +21,7 @@
 #include <boost/fusion/include/mpl.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <typeinfo>
 
 
 namespace boost{
@@ -194,7 +195,7 @@ void for_each(F const &f,mpl::true_ complement){
     std::type_info const *last_local=0;
     try{
         introspect( //ADL
-            apply_mapping<apply_catcher<F,T> >(apply_catcher<F,T>(f,last_local)),
+            apply_mapping<apply_catcher<F,T>,T>(apply_catcher<F,T>(f,last_local)),
             type<typename remove_const<T>::type>()
         ); 
     }catch(...){

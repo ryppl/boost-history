@@ -10,6 +10,7 @@
 #include <boost/type_traits/is_pod.hpp>
 #include <iterator>
 #include <algorithm>
+#include <cstring>
 
 namespace boost{
 namespace intro{

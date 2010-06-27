@@ -33,8 +33,8 @@ public:
     typedef typename Map::size_type size_type;
     typedef typename Map::difference_type difference_type;
 
-    map_insert_view(Map &map,const_reference element,key_equal const &eq=key_equal())
-        : eq(eq),map(map),element(element){}
+    map_insert_view(Map &map,const_reference element,key_equal const &eq_=key_equal())
+        : eq(eq_),map(map),element(element){}
 
     bool empty() const{ return false; }
     size_type size() const{ return map.size() + 1; }

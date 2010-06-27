@@ -62,7 +62,7 @@ public:
         typename set_type::insert_commit_data commit_data;
         std::pair<typename set_type::iterator,bool> ret=
             this->set.insert_check(x,Hash(),
-            node::equal_to<Equal>(Equal()),commit_data);
+            typename node::template equal_to<Equal>(Equal()),commit_data);
         if(ret.second){
             ret.first=this->set.insert_commit(*this->node_pool.new_(in_place(x)),commit_data);
             this->buckets.rehash(this->set);
@@ -73,18 +73,18 @@ public:
     //exception at the moment, shortly before the entire map
     //is destroyed
     size_type erase(const_reference x){
-        return this->set.erase(x,Hash(),node::equal_to<Equal>(Equal()));
+        return this->set.erase(x,Hash(),typename node::template equal_to<Equal>(Equal()));
     }
     size_type size() const{ return set.size(); }
     template<class Key,class KeyHasher,class KeyValueEqual>
     iterator find(Key const &key,KeyHasher hash,KeyValueEqual equal){
-        typename set_type::iterator it=this->set.find(key,hash,node::equal_to<KeyValueEqual>(equal));
+        typename set_type::iterator it=this->set.find(key,hash,typename node::template equal_to<KeyValueEqual>(equal));
         if(it == this->set.end()) return iterator(0); //TODO use real iterator
         else return iterator(&it->key);
     }
     template<class Key,class KeyHasher,class KeyValueEqual>
     const_iterator find(Key const &key,KeyHasher hash,KeyValueEqual equal) const{
-        typename set_type::const_iterator it=this->set.find(key,hash,node::equal_to<KeyValueEqual>(equal));
+        typename set_type::const_iterator it=this->set.find(key,hash,typename node::template equal_to<KeyValueEqual>(equal));
         if(it == this->set.end()) return const_iterator(0);
         else return const_iterator(&it->key);
     }
@@ -100,12 +100,12 @@ private:
         template<class Base>
         struct equal_to{
             explicit equal_to(Base const &base) : base(base){}
-            template<class T>
-            bool operator()(T const &o1,node const &o2) const{
+            template<class K>
+            bool operator()(K const &o1,node const &o2) const{
                 return base(o1,o2.key);
             }
-            template<class T>
-            bool operator()(node const &o1,T const &o2) const{
+            template<class K>
+            bool operator()(node const &o1,K const &o2) const{
                 return base(o1.key,o2);
             }
         private:

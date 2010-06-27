@@ -6,7 +6,7 @@
 #ifndef BOOST_INTRO_MOVE_HPP
 #define BOOST_INTRO_MOVE_HPP
 
-#include <boost/intro/apply_binary.hpp>
+#include <boost/intro/apply_members_binary.hpp>
 #include <boost/intro/reset_shared.hpp>
 #include <boost/intro/detail/map_insert_view.hpp>
 #include <boost/intro/detail/pooled_unordered_map.hpp>
@@ -40,18 +40,10 @@ public:
     void register_object(T *,T *){}
 };
 
+class undo_mover;
+
 template<class Data>
 class mover{
-    struct undo{
-        undo() : mover_(data){}
-        template<class T,class Semantics>
-        void operator()(T &src,T &dest,Semantics) const{
-            mover_(dest,src,Semantics());
-        }
-    private:
-        null_move_data data;
-        mover<null_move_data> mover_;
-    };
 public:
     explicit mover(Data &data) : data(data){}
     template<class T,class Semantics>
@@ -64,9 +56,9 @@ public:
     void operator()(reference<T> &src,reference<T> &dest,Semantics) const{
         this->insert_shared(src,dest,typename mpl::has_key<typename Semantics::set,shared>::type());
         new (&dest) reference<T>(src.get());
-        src.~reference();
+        src.~reference<T>();
     }
-    undo operator ~() const{ return undo(); }
+    undo_mover operator ~() const;
 private:
     template<class T>
     void insert_shared(T &src,T &dest,mpl::true_ shared) const{
@@ -76,7 +68,6 @@ private:
     void insert_shared(T &src,T &dest,mpl::false_ shared) const{}
     template<class T,class Semantics>
     void operator()(T &src,T &dest,Semantics,mpl::true_ iscl) const{
-        using intro::move;
         move(data,src,dest,Semantics());
     }
     template<class T,class Semantics>
@@ -87,6 +78,35 @@ private:
     Data &data;
 };
 
+class undo_mover{
+public:
+    undo_mover() : mover_(data){}
+    template<class T,class Semantics>
+    void operator()(T &src,T &dest,Semantics) const{
+        mover_(dest,src,Semantics());
+    }
+private:
+    null_move_data data;
+    mover<null_move_data> mover_;
+};
+
+template<class Data>
+undo_mover mover<Data>::operator~() const{ return undo_mover(); }
+
+}
+
+template<class Data,class T,class Semantics>
+void move(Data &data,T &src,T &dest,Semantics){
+    apply_members_binary(detail::mover<Data>(data),src,dest);
+}
+
+template<class Data,class T>
+void move(Data &data,T &src,T &dest){
+    move(data,src,dest,typename default_semantics<T>::type());
+}
+
+namespace detail{
+
 template<class T,class Semantics>
 void move(T &src,T &dest,Semantics,mpl::true_ shared){
     typedef detail::optional_map<detail::pooled_unordered_map<void *,void *,4> > omap_type;
@@ -95,7 +115,7 @@ void move(T &src,T &dest,Semantics,mpl::true_ shared){
     using intro::move;
     move(data,src,dest);
     try{
-        typedef detail::map_insert_view<oset_type> map_type;
+        typedef detail::map_insert_view<omap_type> map_type;
         map_type map(omap,std::make_pair(&src,&dest));
         reset_shared_data<map_type> resdata(map);
         reset_shared(resdata,dest);
@@ -125,15 +145,6 @@ void move(T &src,T &dest,Semantics,mpl::false_ shared){
 
 }
 
-template<class Data,class T,class Semantics>
-void move(Data &data,T &src,T &dest,Semantics){
-    apply_binary(detail::mover<Data>(data),src,dest);
-}
-
-template<class Data,class T>
-void move(Data &data,T &src,T &dest){
-    move(data,src,dest,typename default_semantics<T>::type());
-}
 
 template<class T,class Semantics>
 void move(T &src,T &dest,Semantics){

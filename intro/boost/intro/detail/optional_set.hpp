@@ -40,9 +40,9 @@ public:
         return *set;
     }
     iterator begin(){ return set ? set->begin() : empty_set.begin(); }
-    const_iterator begin() const{ return set ? set->begin() : empty_set.begin(); }
+    const_iterator begin() const{ if(set) return set->begin(); else return empty_set.begin(); }
     iterator end(){ return set ? set->end() : empty_set.end(); }
-    const_iterator end() const{ return set ? set->end() : empty_set.end(); }
+    const_iterator end() const{ if(set) return set->end(); else return empty_set.end(); }
     bool empty() const{ return !set || set->empty(); }
     size_type size() const{ return set ? set->size() : 0; }
     size_type max_size() const{ return empty_set.max_size(); }
@@ -66,13 +66,13 @@ public:
     }
     void clear(){ if(set) set->clear(); }
     iterator find(const_reference x){ return set ? set->find(x) : empty_set.end(); }
-    const_iterator find(const_reference x) const{ return set ? set->find(x) : empty_set.end(); }
+    const_iterator find(const_reference x) const{ if(set) return set->find(x); else return empty_set.end(); }
     size_type count(const_reference x) const{ return set ? set->count(x) : 0; }
     std::pair<iterator,iterator> equal_range(const_reference x){
         return set ? set->equal_range(x) : std::make_pair(empty_set.end(),empty_set.end());
     }
     std::pair<const_iterator,const_iterator> equal_range(const_reference x) const{
-        return set ? set->equal_range(x) : std::make_pair(empty_set.end(),empty_set.end());
+        if(set) return set->equal_range(x); else return std::make_pair(empty_set.end(),empty_set.end());
     }
 private:
     optional<Set> set;

@@ -6,7 +6,7 @@
 #ifndef BOOST_INTRO_APPLY_RECURSIVE_HPP
 #define BOOST_INTRO_APPLY_RECURSIVE_HPP
 
-#include <boost/intro/apply.hpp>
+#include <boost/intro/apply_members.hpp>
 #include <boost/intro/dispatch_polymorphic.hpp>
 #include <boost/intro/detail/pooled_unordered_set.hpp>
 #include <boost/intro/detail/optional_set.hpp>
@@ -51,6 +51,37 @@ private:
 
 }
 
+namespace detail{
+
+template<class,class>
+struct recursive_member_applier;
+
+template<class F,class Data,class T,class Semantics>
+void apply_member_recursive(F const &f,Data &data,T &t,Semantics,mpl::false_ poly,mpl::false_ shared_){
+    f(t,Semantics()); //TODO sollte das bei undo-en nach apply_recursive passieren?
+    apply_recursive(f,data,t,Semantics());
+}
+
+template<class F,class Data,class T,class Semantics>
+void apply_member_recursive(F const &f,Data &data,T &t,Semantics,mpl::false_ poly,mpl::true_ shared_){
+    if(data.register_applied_object(t))
+        detail::apply_member_recursive(f,data,t,Semantics(),poly,mpl::false_());
+}
+template<class F,class Data,class T,class Semantics,bool Shared>
+void apply_member_recursive(F const &f,Data &data,T &t,Semantics,mpl::true_ poly,mpl::bool_<Shared>){
+    dispatch_polymorphic(
+        boost::bind(
+            detail::recursive_member_applier<F,Data>(f,data),
+            _1,
+            Semantics(),
+            mpl::false_(),
+            mpl::bool_<Shared>()
+        ),t);
+}
+
+
+}
+
 template<class F,class Data,class T,class Semantics>
 void apply_member_recursive(F const &f,Data &data,T &t,Semantics){
     detail::apply_member_recursive(f,data,t,Semantics(),
@@ -59,28 +90,6 @@ void apply_member_recursive(F const &f,Data &data,T &t,Semantics){
 }
 
 namespace detail{
-
-template<class F,class Data,class T,class Semantics,bool Shared>
-void apply_member_recursive(F const &f,Data &data,T &t,Semantics,mpl::true_ poly,mpl::bool_<Shared>){
-    dispatch_polymorphic(
-        bind(
-            detail::recursive_member_applier<F,Data>(f,data),
-            _1,
-            Semantics(),
-            mpl::false_(),
-            mpl::bool_<Shared>()
-        ),t);
-}    
-template<class F,class Data,class T,class Semantics>
-void apply_member_recursive(F const &f,Data &data,T &t,Semantics,mpl::false_ poly,mpl::true_ shared_){
-    if(data.register_applied_object(t))
-        detail::apply_member_recursive(f,data,t,Semantics(),poly,mpl::false_());
-}
-template<class F,class Data,class T,class Semantics>
-void apply_member_recursive(F const &f,Data &data,T &t,Semantics,mpl::false_ poly,mpl::false_ shared_){
-    f(t,Semantics()); //TODO sollte das bei undo-en nach apply_recursive passieren?
-    apply_recursive(f,data,t,Semantics());
-}
 
 template<class F,class Data>
 struct recursive_member_applier{
@@ -110,8 +119,8 @@ struct has_complement_operator<recursive_member_applier<F,Data> >
 
 template<class F,class Data,class T>
 void apply_recursive_class(F const &f,Data &data,T &t,mpl::true_ is_class_){
-    using intro::apply;
-    apply(detail::recursive_member_applier<F,Data>(f,data),t);
+    using intro::apply_members;
+    apply_members(detail::recursive_member_applier<F,Data>(f,data),t);
 }
 
 template<class F,class Data,class T>

@@ -5,6 +5,8 @@
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/intro/detail/indent_streambuf.hpp>
+#include <boost/intro/serialize.hpp>
+#include <boost/intro/apply_recursive.hpp>
 #include <ostream>
 
 namespace boost{

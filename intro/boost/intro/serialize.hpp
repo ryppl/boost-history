@@ -1,7 +1,7 @@
 #ifndef BOOST_INTRO_SERIALIZE_HPP
 #define BOOST_INTRO_SERIALIZE_HPP
 
-#include <boost/intro/apply.hpp>
+#include <boost/intro/apply_members.hpp>
 #include <boost/intro/dispatch_polymorphic.hpp>
 #include <boost/intro/detail/pooled_unordered_map.hpp>
 #include <boost/intro/detail/optional_map.hpp>
@@ -34,19 +34,17 @@ private:
 };
 
 
-template<class Archive,class Data,class T,class Semantics>
-void serialize_member(Archive &ar,Data &data,T const &t,Semantics){
-    detail::serialize_member(ar,data,t,Semantics(),
-        typename mpl::has_key<typename Semantics::set,polymorphic>::type(),
-        typename mpl::has_key<typename Semantics::set,shared>::type());
-}
 
 namespace detail{
+
+template<class,class>
+struct member_serializer;
+
 
 template<class Archive,class Data,class T,class Semantics,bool Shared>
 void serialize_member(Archive &ar,Data &data,T const &t,Semantics,mpl::true_ poly,mpl::bool_<Shared>){
     dispatch_polymorphic(
-        bind(
+        boost::bind(
             detail::member_serializer<Archive,Data>(ar,data),
             _1,
             Semantics(),
@@ -55,6 +53,11 @@ void serialize_member(Archive &ar,Data &data,T const &t,Semantics,mpl::true_ pol
         ),t);
 }
 template<class Archive,class Data,class T,class Semantics>
+void serialize_member(Archive &ar,Data &data,T const &t,Semantics,mpl::false_ poly,mpl::false_ shared_){
+    serialize(ar,data,t,Semantics());
+}
+
+template<class Archive,class Data,class T,class Semantics>
 void serialize_member(Archive &ar,Data &data,T const &t,Semantics,mpl::false_ poly,mpl::true_ shared_){
     std::pair<unsigned int,bool> ret=data.register_object(t);
     ar << ret.first;
@@ -62,10 +65,17 @@ void serialize_member(Archive &ar,Data &data,T const &t,Semantics,mpl::false_ po
         detail::serialize_member(ar,data,t,Semantics(),poly,mpl::false_());
     }
 }
-template<class Archive,class Data,class T,class Semantics>
-void serialize_member(Archive &ar,Data &data,T const &t,Semantics,mpl::false_ poly,mpl::false_ shared_){
-    serialize(ar,data,t,Semantics());
+
 }
+
+template<class Archive,class Data,class T,class Semantics>
+void serialize_member(Archive &ar,Data &data,T const &t,Semantics){
+    detail::serialize_member(ar,data,t,Semantics(),
+        typename mpl::has_key<typename Semantics::set,polymorphic>::type(),
+        typename mpl::has_key<typename Semantics::set,shared>::type());
+}
+
+namespace detail{
 
 
 template<class Archive,class Data>
@@ -80,7 +90,7 @@ struct member_serializer{
     template<class T,class Semantics,bool Shared>
     void operator()(T const &t,Semantics,mpl::false_ poly,mpl::bool_<Shared> sha) const{
         //called by polymorphic dispatch
-        std::pair<unsigned int,bool> ret=data.register_type<T>();
+        std::pair<unsigned int,bool> ret=data.template register_type<T>();
         ar << ret.first;
         if(ret.second){
             char const *name=typeid(T).name();
@@ -97,8 +107,8 @@ private:
 
 template<class Archive,class Data,class T>
 void serialize_class(Archive &ar,Data &data,T const &t,mpl::true_ is_class_){
-    using intro::apply;
-    apply(detail::member_serializer<Archive,Data>(ar,data),t);
+    using intro::apply_members;
+    apply_members(detail::member_serializer<Archive,Data>(ar,data),t);
 }
 
 template<class Archive,class Data,class T>
@@ -122,6 +132,16 @@ void serialize(Archive &ar,Data &data,reference<T> const &t,Semantics){
     intro::serialize_member(ar,data,t.get(),typename Semantics::indir_semantics());
 }
 
+}
+
+
+template<class Archive,class Data,class T,class Semantics>
+void serialize(Archive &ar,Data &data,T const &t,Semantics){
+    detail::serialize_class(ar,data,t,typename is_class<T>::type());
+}
+
+namespace detail{
+
 struct type_info_less{
     bool operator()(std::type_info const *t1,std::type_info const *t2) const{
 #ifdef BOOST_MSVC
@@ -134,6 +154,7 @@ struct type_info_less{
 #endif
     }
 };
+
 
 template<class Archive,class T,class Semantics>
 void serialize(Archive &ar,T const &t,Semantics,mpl::false_ shared){
@@ -158,11 +179,7 @@ void serialize(Archive &ar,T const &t,Semantics,mpl::true_ shared){
     serialize(ar,data,t,Semantics());
 }
 
-}
 
-template<class Archive,class Data,class T,class Semantics>
-void serialize(Archive &ar,Data &data,T const &t,Semantics){
-    detail::serialize_class(ar,data,t,typename is_class<T>::type());
 }
 
 

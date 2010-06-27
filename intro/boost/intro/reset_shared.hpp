@@ -20,9 +20,6 @@ public:
     template<class T>
     T *translate(T *t) const{
         typename Map::const_iterator it=map.find(t);
-        std::cerr << "translation for " << t << ": ";
-        if(it == map.end()) std::cerr << "not found\n";
-        else std::cerr << it->second << std::endl;
         if(it == map.end()) return t;
         else return static_cast<T *>(it->second);
     }
@@ -48,13 +45,13 @@ struct shared_resetter{
     template<class T,class Semantics>
     void operator()(reference<T> &t,Semantics) const{
         T &tmp=this->get(t.get(),Semantics());
-        t.~reference();
+        t.~reference<T>();
         new (&t) reference<T>(tmp);
     }
     template<class T,class Semantics>
     void operator()(reference<T> const &t,Semantics) const{
         T &tmp=this->get(t.get(),Semantics());
-        t.~reference();
+        t.~reference<T>();
         new (&t) reference<T>(tmp);
     }
     //TODO operator~
@@ -80,7 +77,7 @@ private:
     T &get(T &t,mpl::true_ poly,mpl::true_ shared) const{
         //TODO optimization: the same object is dispatched shortly
         //thereafter by apply_recursive
-        return dispatch_polymorphic(bind(getter<T>(),cref(*this),_1),t);
+        return dispatch_polymorphic(boost::bind(getter<T>(),cref(*this),_1),t);
     }
     template<class T,bool Poly>
     T &get(T &t,mpl::bool_<Poly>,mpl::false_ shared) const{

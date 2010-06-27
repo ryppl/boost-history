@@ -39,6 +39,10 @@ void print(T const &t,std::ostream &out,Transformation const &,mpl::true_ ptrori
     out << t;
 }
 
+template<class,class>
+class printer;
+
+
 template<class T,class Transformation>
 void print(T const &t,std::ostream &out,Transformation const &transform,mpl::false_ ptrorint){
     out << '{' << std::endl;
@@ -48,11 +52,20 @@ void print(T const &t,std::ostream &out,Transformation const &transform,mpl::fal
     out << '}';
 }
 
+}
+
+template<class T,class Transformation>
+void print(T const &t,std::ostream &out,Transformation const &transform){
+    detail::print(t,out,transform,mpl::bool_<is_pointer<T>::type::value || is_arithmetic<T>::type::value>());
+}
 
 template<class T,class Transformation>
 void print(reference<T> const &t,std::ostream &out,Transformation const &transform){
     print(&t.get(),out,transform);
 }
+
+namespace detail{
+
 
 template<class T>
 char const *typeid_name(){
@@ -99,14 +112,8 @@ private:
     Transformation transform;
 };
 
-
-
 }
 
-template<class T,class Transformation>
-void print(T const &t,std::ostream &out,Transformation const &transform){
-    detail::print(t,out,transform,mpl::bool_<is_pointer<T>::type::value || is_arithmetic<T>::type::value>());
-}
 
 class print_transformation{
 public:

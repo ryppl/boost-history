@@ -41,9 +41,9 @@ public:
         return *map;
     }
     iterator begin(){ return map ? map->begin() : empty_map.begin(); }
-    const_iterator begin() const{ return map ? map->begin() : empty_map.begin(); }
+    const_iterator begin() const{ if(map) return map->begin(); else return empty_map.begin(); }
     iterator end(){ return map ? map->end() : empty_map.end(); }
-    const_iterator end() const{ return map ? map->end() : empty_map.end(); }
+    const_iterator end() const{ if(map) return map->end(); else return empty_map.end(); }
     bool empty() const{ return !map || map->empty(); }
     size_type size() const{ return map ? map->size() : 0; }
     size_type max_size() const{ return empty_map.max_size(); }
@@ -68,13 +68,13 @@ public:
     }
     void clear(){ if(map) map->clear(); }
     iterator find(key_type const &x){ return map ? map->find(x) : empty_map.end(); }
-    const_iterator find(key_type const &x) const{ return map ? map->find(x) : empty_map.end(); }
+    const_iterator find(key_type const &x) const{ if(map) return map->find(x); else return empty_map.end(); }
     size_type count(key_type const &x) const{ return map ? map->count(x) : 0; }
     std::pair<iterator,iterator> equal_range(key_type const &x){
         return map ? map->equal_range(x) : std::make_pair(empty_map.end(),empty_map.end());
     }
     std::pair<const_iterator,const_iterator> equal_range(key_type const &x) const{
-        return map ? map->equal_range(x) : std::make_pair(empty_map.end(),empty_map.end());
+        if(map) return map->equal_range(x); else return std::make_pair(empty_map.end(),empty_map.end());
     }
 private:
     optional<Map> map;

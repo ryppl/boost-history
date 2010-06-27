@@ -26,7 +26,7 @@ protected:
 
 class memory_oarchive
     : public detail::memory_oarchive_base
-    , public char_oarchive<vector_back_insert_iterator<detail::memory_oarchive_base::buffer_type> >{
+    , public char_oarchive<vector_back_insert_iterator<detail::auto_buffer<char,256> > >{
     typedef vector_back_insert_iterator<buffer_type> iterator_type;
     typedef char_oarchive<iterator_type> archive_type;
 public:

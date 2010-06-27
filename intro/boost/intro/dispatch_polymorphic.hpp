@@ -14,7 +14,6 @@
 #include <boost/intro/introspect.hpp>
 #include <boost/type_traits/is_polymorphic.hpp>
 #include <boost/assert.hpp>
-#include <boost/bind.hpp>
 
 
 namespace boost{
@@ -23,33 +22,6 @@ namespace intro{
 struct unregistered_class : std::exception{};
 
 namespace detail{
-
-template<class Algo,class Base,class Derived>
-struct register_class{
-    virtual void instantiate(){
-        reg.instantiate();
-    }
-    struct reg_type{
-        reg_type(){
-            //std::cerr << typeid(Base).name() << " is base of " << typeid(Derived).name() << " for " << typeid(Algo).name() << std::endl << std::endl;
-            this->reg(typename is_const<Base>::type());
-        }
-        void reg(mpl::true_){
-            polymorphic_dispatcher<Algo,Base>::register_derived<Derived const>();
-        }
-        void reg(mpl::false_){
-            polymorphic_dispatcher<Algo,Base>::register_derived<Derived>();
-        }
-        virtual void instantiate(){}
-    };
-    static reg_type reg;
-    typedef void type;
-};
-
-
-template<class Algo,class Base,class Derived>
-typename register_class<Algo,Base,Derived>::reg_type
-register_class<Algo,Base,Derived>::reg;
 
 struct adl_tag{};
 template<class Algo,class Base>
@@ -136,7 +108,41 @@ typename F::result_type dispatch_polymorphic(F const &f,T &t){
     return polymorphic_dispatcher<F,T>::dispatch(f,t);
 }
 
+namespace detail{
 
+template<void (*)()> struct instantiate_function{};
+
+template<class Algo,class Base,class Derived>
+struct register_class{
+#ifdef BOOST_MSVC 
+    virtual void instantiate(){ reg.instantiate(); }
+#else
+    static void instantiate(){ reg.instantiate(); }
+    typedef instantiate_function<&register_class::instantiate> _;
+#endif
+    struct reg_type{
+        reg_type(){
+            //std::cerr << typeid(Base).name() << " is base of " << typeid(Derived).name() << " for " << typeid(Algo).name() << std::endl << std::endl;
+            this->reg(typename is_const<Base>::type());
+        }
+        void reg(mpl::true_){
+            polymorphic_dispatcher<Algo,Base>::template register_derived<Derived const>();
+        }
+        void reg(mpl::false_){
+            polymorphic_dispatcher<Algo,Base>::template register_derived<Derived>();
+        }
+        void instantiate(){}
+    };
+    static reg_type reg;
+    typedef void type;
+};
+
+
+template<class Algo,class Base,class Derived>
+typename register_class<Algo,Base,Derived>::reg_type
+register_class<Algo,Base,Derived>::reg;
+
+}
 }
 }
 

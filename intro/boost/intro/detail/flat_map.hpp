@@ -9,6 +9,7 @@
 #include <vector>
 #include <utility>
 #include <algorithm>
+#include <functional>
 
 namespace boost{
 namespace intro{
