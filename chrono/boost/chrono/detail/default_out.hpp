@@ -7,8 +7,8 @@
 
 //  See http://www.boost.org/libs/system for documentation.
 
-#ifndef BOOST_CHRONO_DETAIL_DEFAULT_OUT__HPP
-#define BOOST_CHRONO_DETAIL_DEFAULT_OUT__HPP
+#ifndef BOOST_CHRONO_DETAIL_DEFAULT_OUT_HPP
+#define BOOST_CHRONO_DETAIL_DEFAULT_OUT_HPP
 
 #include <boost/chrono/config.hpp>
 #include <iostream>

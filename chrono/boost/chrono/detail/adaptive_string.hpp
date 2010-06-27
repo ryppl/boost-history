@@ -7,8 +7,8 @@
 
 //  See http://www.boost.org/libs/system for documentation.
 
-#ifndef BOOST_CHRONO_DETAIL_ADAPTIVE_STRING__HPP
-#define BOOST_CHRONO_DETAIL_ADAPTIVE_STRING__HPP
+#ifndef BOOST_CHRONO_DETAIL_ADAPTIVE_STRING_HPP
+#define BOOST_CHRONO_DETAIL_ADAPTIVE_STRING_HPP
 
 #include <string>
 

@@ -7,8 +7,8 @@
 
 //  See http://www.boost.org/libs/system for documentation.
 
-#ifndef BOOST_CHRONO_STOPCLOCK_ACCUMULATOR__HPP
-#define BOOST_CHRONO_STOPCLOCK_ACCUMULATOR__HPP
+#ifndef BOOST_CHRONO_STOPCLOCK_ACCUMULATOR_HPP
+#define BOOST_CHRONO_STOPCLOCK_ACCUMULATOR_HPP
 
 #include <boost/chrono/config.hpp>
 #include <boost/chrono/detail/static_assert.hpp>

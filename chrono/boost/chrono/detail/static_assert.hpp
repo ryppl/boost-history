@@ -6,8 +6,8 @@
 //  See http://www.boost.org/LICENSE_1_0.txt
 
 
-#ifndef BOOST_CHRONO_DETAIL_STATIC_ASSERT__HPP
-#define BOOST_CHRONO_DETAIL_STATIC_ASSERT__HPP
+#ifndef BOOST_CHRONO_DETAIL_STATIC_ASSERT_HPP
+#define BOOST_CHRONO_DETAIL_STATIC_ASSERT_HPP
 
 #include <boost/chrono/config.hpp>
 
@@ -22,9 +22,9 @@
 #define BOOST_CHRONO_STATIC_ASSERT(CND, MSG, TYPES)                                 \
     BOOST_MPL_ASSERT_MSG(boost::mpl::bool_< (CND) >::type::value, MSG, TYPES)
 #elif defined(BOOST_CHRONO_USES_ARRAY_ASSERT)
-#define BOOST_CHRONO_STATIC_ASSERT(CND, MSG, TYPES) static char BOOST_JOIN(__boost_chrono_test_,__LINE__)[CND];
+#define BOOST_CHRONO_STATIC_ASSERT(CND, MSG, TYPES) static char BOOST_JOIN(boost_chrono_test_,__LINE__)[CND];
 #else
 #define BOOST_CHRONO_STATIC_ASSERT(CND, MSG, TYPES)
 #endif
 
-#endif // BOOST_CHRONO_DETAIL_STATIC_ASSERT__HPP
+#endif // BOOST_CHRONO_DETAIL_STATIC_ASSERT_HPP

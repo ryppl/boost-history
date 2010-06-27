@@ -10,8 +10,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_CHRONO_STOPWATCHES__HPP
-#define BOOST_CHRONO_STOPWATCHES__HPP
+#ifndef BOOST_CHRONO_STOPWATCHES_HPP
+#define BOOST_CHRONO_STOPWATCHES_HPP
 
 //-----------------------------------------------------------------------------
 #include <boost/chrono/t24_hours.hpp>
@@ -29,4 +29,4 @@
 #include <boost/chrono/time_formatter.hpp>
 //-----------------------------------------------------------------------------
 
-#endif // BOOST_CHRONO_STOPWATCHES__HPP
+#endif // BOOST_CHRONO_STOPWATCHES_HPP

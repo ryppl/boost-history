@@ -11,8 +11,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_CHRONO_TYPEOF_RATIO__HPP
-#define BOOST_CHRONO_TYPEOF_RATIO__HPP
+#ifndef BOOST_CHRONO_TYPEOF_RATIO_HPP
+#define BOOST_CHRONO_TYPEOF_RATIO_HPP
 
 #include <boost/ratio.hpp>
 #define BOOST_TYPEOF_SILENT

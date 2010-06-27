@@ -56,8 +56,8 @@ TODO:
 
 */
 
-#ifndef BOOST_CHRONO_CHRONO__HPP
-#define BOOST_CHRONO_CHRONO__HPP
+#ifndef BOOST_CHRONO_CHRONO_HPP
+#define BOOST_CHRONO_CHRONO_HPP
 
 #include <boost/chrono/config.hpp>
 #include <boost/chrono/detail/static_assert.hpp>
@@ -1096,4 +1096,4 @@ template <class Clock, class Duration>
 
 #include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 
-#endif // BOOST_CHRONO_HPP
+#endif // BOOST_CHRONO_CHRONO_HPP

@@ -11,8 +11,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_CHRONO_TYPEOF_CHRONO__HPP
-#define BOOST_CHRONO_TYPEOF_CHRONO__HPP
+#ifndef BOOST_CHRONO_TYPEOF_CHRONO_HPP
+#define BOOST_CHRONO_TYPEOF_CHRONO_HPP
 
 #include <boost/chrono/chrono.hpp>
 #define BOOST_TYPEOF_SILENT
