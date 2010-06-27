@@ -33,6 +33,10 @@ struct integral_mask
 {
     typedef integral_mask<T,Value> type;
 
+    BOOST_STATIC_CONSTANT(unsigned int, offset = 0);
+
+    BOOST_STATIC_CONSTANT(unsigned int, width  = 8*sizeof(T));
+
     operator T() const {
         return type::value;
     }

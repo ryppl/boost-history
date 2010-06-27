@@ -25,6 +25,8 @@ struct high_bits_mask
 {    
     typedef high_bits_mask<T,Width>  type;
 
+    BOOST_STATIC_CONSTANT(unsigned int, offset = 0);
+
     BOOST_STATIC_CONSTANT(unsigned int, width  = Width);
 };
 

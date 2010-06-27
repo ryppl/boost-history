@@ -24,6 +24,8 @@ struct low_bits_mask
 {    
     typedef low_bits_mask<T,Width> type;
 
+    BOOST_STATIC_CONSTANT(unsigned int, offset = (8*sizeof(T))-Width);
+
     BOOST_STATIC_CONSTANT(unsigned int, width  = Width);    
 };
 
