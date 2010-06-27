@@ -42,7 +42,6 @@
 #       else
 #           error "BOOST_BFT_PARAM_COUNT of value greater then 50 not supported."
 #       endif
-#       
 #   else
 #       if BOOST_BFT_PARAM_COUNT <= BOOST_MPL_LIMIT_VECTOR_SIZE
 #       else
@@ -58,6 +57,9 @@
 /** Creates variadic tempalte behavior by creating parameters up to
  *  BOOST_BFT_PARAM_COUNT in the fasion of typename TN = mpl::void_, ... 
  *  where N is the Nth parameter in the parameter list.
+ *
+ *  Creates the following pattern
+ *      typename T0 = mpl::void_, ... typename TN = mpl::void_
  */
 #define BOOST_MAKE_BFT_TEMPLATE_PARAMS() \
             BOOST_PP_ENUM(  BOOST_BFT_PARAM_COUNT,\
@@ -79,6 +81,8 @@
 
 /** Defines code for the unpacking and parsing of template parameters.
  *  This is used within the bft_base_impl.
+ *  Creates the following pattern
+ *      ::template process<T1>::type ... ::template process<TN>::type
  */
 #define BOOST_BFT_UNPACK_PARAMS() \
         BOOST_PP_REPEAT_FROM_TO( \
@@ -98,26 +102,38 @@
 /** This is used for making a list of all of the template parameters and that 
  *  list of comma seperated parameters is then used to name the template within
  *  itself or to pass all of the template arguments at once.
+ *
+ *  Creates the following pattern
+ *     T0, ... TN
  */
 #define BOOST_BFT_PARAMETER_LIST() \
             BOOST_PP_ENUM(  BOOST_BFT_PARAM_COUNT,\
                             BOOST_BFT_PARAM_LIST, \
                             T )
 
-/** Creates the template parameters for the bft_base_class. */
+/** Creates the template parameters for the bft base or impl class.
+ *  Creates the following pattern
+ *      typename T0, ... typename TN
+ */
 #define BOOST_BFT_BASE_TEMPLATE_PARAMS() \
     BOOST_PP_ENUM(  BOOST_BFT_PARAM_COUNT,\
                     BOOST_BFT_PARAM_LIST, \
                     typename T )
 
-/** Used for creating template parameter for*/
+/** Used for creating template parameters for specilization.
+ *  Creates the following pattern
+ *      typename T0, ... typename TN
+ */
 #define BOOST_BFT_TEMPLATE_ARGS_NO_DEFAULTS() \
     BOOST_PP_ENUM(  BOOST_BFT_PARAM_COUNT,\
                     BOOST_BFT_PARAM_LIST, \
                     typename T )
 
 
-/** Used for specilizing over the bitfield_tuple sequence. */
+/** Used for specilizing over the bitfield_tuple sequence.
+ *  Creates the following pattern
+ *      T0, ... TN
+ */
 #define BOOST_BFT_SPECILIZATION_PARAM_LIST() \
                 BOOST_BFT_PARAMETER_LIST()
 #endif
