@@ -424,11 +424,7 @@ public:
      *  ability for the fusion sequence extension to work correctly.
      */
     //@{
-    storage_type const data( ) const {
-         return _data;
-    }
-
-    storage_type data( ) {
+    storage_type data( ) const {
          return _data;
     }
     //@}
