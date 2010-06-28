@@ -29,15 +29,20 @@ typedef ublas::symmetric_adaptor<cm_t, ublas::lower> lcsymm_t;
 typedef ublas::symmetric_adaptor<rm_t, ublas::upper> ursymm_t; 
 typedef ublas::symmetric_adaptor<rm_t, ublas::lower> lrsymm_t; 
 
-int main() {
+int main (int argc, char **argv) {
+  size_t n = 0;
+  if (argc > 1) {
+    n = atoi(argv [1]);
+  }
 
 #ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
   
   cout << endl; 
 
-  size_t n; 
-  cout << "n -> "; 
-  cin >> n;
+  if (n <= 0) {
+    cout << "n -> ";
+    cin >> n;
+  }
   cout << endl; 
 
   cm_t uc (n, n);
