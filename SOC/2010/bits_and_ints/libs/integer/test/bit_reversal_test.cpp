@@ -7,18 +7,19 @@
 
 #include <boost/detail/lightweight_test.hpp>
 
-#include <boost/cstdlib.hpp>              // for boost::exit_success
+#include <boost/cstdlib.hpp>
 #include <boost/integer/bits_and_ints.hpp> 
+#include <boost/mpl/integral_c.hpp>
 
-#include <iostream>  // for std::cout (std::endl indirectly)
-
+#include <iostream>  
 
 // Macros to compact code
 #define BIT_REVERSAL_TEST(n, m) \
 	BOOST_TEST(::boost::bit_reversal(n) == m)
 
 #define STATIC_BIT_REVERSAL_TEST(t, n, m) \
-	BOOST_TEST((::boost::static_bit_reversal<t, n>::value == m))
+	BOOST_TEST((::boost::static_bit_reversal<t, n>::value == m)); \
+	BOOST_TEST((::boost::mpl::bit_reversal< ::boost::mpl::integral_c<t, n> >::value == m))
 
 
 // Main testing function

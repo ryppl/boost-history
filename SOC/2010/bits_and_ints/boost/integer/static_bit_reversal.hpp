@@ -13,6 +13,7 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/integer/detail/static_bit_reversal.hpp>
+#include <boost/mpl/integral_c.hpp>
 
 /* 
  *	Reverses the bits in data in compile-time
@@ -27,13 +28,34 @@ namespace boost
 
 //	If T is an integral type, static_bit_reversal<T, data>::value will
 //		be `data' with the bits reversed
-template <typename T, T data, class Enable = typename enable_if<is_integral<T> >::type>
-struct static_bit_reversal { 
-	BOOST_STATIC_CONSTANT(T, value = 
-		(integer_detail::static_bit_reversal_impl<T, data, sizeof(T) * 8>::value)
-	);
-};
+template <typename T, T data, class Enable = typename enable_if< is_integral<T> >::type>
+struct static_bit_reversal : mpl::integral_c<T,
+	integer_detail::static_bit_reversal_impl<
+		T, 
+		data, 
+		sizeof(T) * 8
+	>::value
+>
+{}; // struct static_bit_reversal<>
+	
+namespace mpl {
 
-} // boost
+/*
+ * Boost MPL compatible metafunctions
+ */
+	
+template <typename IC>
+struct bit_reversal : integral_c<typename IC::value_type,
+	integer_detail::static_bit_reversal_impl<
+		typename IC::value_type, 
+		IC::value, sizeof(typename IC::value_type) * 8
+	>::value
+>
+{}; // struct bit_reversal
+
+
+} // namespace mpl
+
+} // namespace boost
 
 #endif	
