@@ -12,6 +12,7 @@
 #include <boost/mpl/package_range_c.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/function_types/can_be_called.hpp>
+#include <exception>
 
 namespace boost
 {
@@ -49,6 +50,17 @@ apply_ftor_callable_args
 {
     return ftor(args...);
 };
+
+  template<typename FunctorArgs>
+struct bad_functor_args
+  : public std::exception
+{
+    virtual const char * what() const throw()
+    {
+        return "boost::composite_storage::pack::multiple_dispatch::bad_functor_args: "
+               "Functor not defined for Args.";
+    }
+};    
   template
   < typename Functor
   , typename... Args
@@ -60,7 +72,7 @@ apply_ftor_callable_args
   , Args const&... args
   )
 {
-    std::cout<<"!!!ftor cannot be called with given args.\n";
+    throw bad_functor_args<Functor(Args const&...)>();
     return typename functor_result_type<Functor>::type();
 };
 
