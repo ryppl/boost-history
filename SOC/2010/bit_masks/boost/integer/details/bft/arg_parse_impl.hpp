@@ -190,56 +190,13 @@ struct bft_arg_parse_impl <
     StoragePolicy,
     FieldVector,
     Offset >
-{
-    // make sure that the name doesn't already exist.
-    BOOST_STATIC_ASSERT((
-        is_same<
-            typename mpl::find_if<
-                FieldVector,
-                details::match_name<
-                    typename mpl::_1,
-                    NameType
-                >
-            >::type,
-            typename mpl::end<
-                FieldVector
-            >::type
-        >::value            
-    ));
-
-
-    typedef flag< NameType > param;
-
-    typedef StoragePolicy   storage_policy;
-    typedef typename mpl::push_back<
+    :bft_arg_parse_impl <
+        member<bool,NameType,1>,
+        StoragePolicy,
         FieldVector,
-        bitfield_element<
-            bool,
-            NameType,
-            Offset,
-            mpl::size_t<1>
-        >
-    >::type field_vector;
-
-    typedef mpl::size_t< 
-        mpl::plus<
-            Offset,
-            mpl::size_t<1>
-        >::value
-    >                                   offset;
-
-    typedef bft_arg_parse_impl<param,storage_policy,field_vector,offset> type;
-
-    template <typename NextParam>
-    struct process {
-        typedef bft_arg_parse_impl<
-            NextParam,
-            storage_policy,
-            field_vector,
-            offset
-        > type;
-    };
-};
+        Offset
+    >
+{ };
 
 /* Specialization for filler. */
 template <  std::size_t PaddingBits,

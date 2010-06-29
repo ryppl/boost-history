@@ -8,88 +8,23 @@
 #define BOOST_BFT_MAKE_BFT_HPP
 #include <cstddef>
 #include <boost/mpl/bitwise.hpp>
+#include <iostream>
+
 
 namespace boost { namespace details {
 
-/** maks a bitfield out of the NewValue which is aligned to the 0 bit of the 
- *  return type specified in BitfieldElement.
+/** Used to generate a function parameter for the create function used
+ *  with make_bitfield_tuple
  */
-template <  typename NewValue,
-            typename BitfieldElement,
-            typename NewValueIsSigned
->
-struct bitfield_from_value;
-
-/** Specilization: signed types */
-template <typename NewValue,typename BitfieldElement>
-struct bitfield_from_value <NewValue, BitfieldElement, mpl::true_> {
-    // step one is to get the sign bit and then shift it to the correct
-    // position within an integral constant so that I can work
-    // with it directly and encode it into a bitfield.
-    typedef typename mpl::bitand_<
-        NewValue,
-        typename high_bits_mask<
-            typename BitfieldElement::return_type,
-            1
-        >::type
-    >::type                         sign_bit;
-/*
-    typedef typename mpl::bitand_<
-        typename BitfieldElement::return_type,
-        BitfieldElement::field_width::value -1
-    >::type                         value_bits;
-    
-    typedef typename mpl::right_shift<
-        sign_bit,
-        typename mpl::minus<
-            typename 
-        >::type
-*/
+template <typename T>
+struct bft_create_param_fix_return_type {
+    typedef typename T::return_type type;
 };
 
-/** Specilization: unsigned types */
-template <typename NewValue,typename BitfieldElement>
-struct bitfield_from_value <NewValue, BitfieldElement, mpl::false_> {
-    // this bit wise ands the value of the field out of the value.
-    typedef typename mpl::bitand_<
-        NewValue,
-        typename low_bits_mask<
-            typename BitfieldElement::return_type,
-            BitfieldElement::field_width::value
-        >::type
-    >::type                     bitfield_value;
-
+template <>
+struct bft_create_param_fix_return_type< mpl::void_ > {
+    typedef mpl::void_*  type;
 };
-
-/** Complex operation operation for storing data into an integral value that 
- *  as a bitfield on compile time. This meta-function is used to help
- *  store data into a bitfield_data structure and then encodit into the storage
- *  type of a data a bitfield_tuple, which can be used to construct it.
- *
- *  Currently only supporting native endianness.
- */
-template <  typename Storage,
-            typename NewValue,
-            typename BitfieldElem
->
-struct set_bitfield_in_value {
-
-    // preform correct encoding of the type, basically what I'm doing is
-    // masking off the value for a type and then if its signed i get the 
-    // sign byte the store that within storage using bitwise or operation.
-
-    typedef typename is_signed<
-        typename NewValue::value_type
-    >::type                             value_is_signed;
-
-    typedef typename bit_width<
-        typename NewValue::value_type
-    >::type                             size_of_return_type_in_bits;
-
-
-    
-};
-
 
 template <typename BitfieldTuple, std::size_t Index>
 struct get_create_parameter {
@@ -100,37 +35,76 @@ struct get_create_parameter {
                 typename BitfieldTuple::members
             >::type
         >::type,
-        typename mpl::at_c<
-            typename BitfieldTuple::members,
-            Index
-        >::type::return_type,
+        typename bft_create_param_fix_return_type<
+            typename mpl::at_c<
+                typename BitfieldTuple::members,
+                Index
+            >::type
+        >::type,
         mpl::void_*
-    >::type         type;
+    >::type                     type;
 };
+
+/** This is a function which is used to assign a value into a bitfield_tuple
+ *  as well as remove the actual mpl::void_* from the parameter list through
+ *  specialization.
+ */
+template <std::size_t Index, typename BitfieldTuple, typename ParameterType>
+inline void assign_parameter_to_bft(BitfieldTuple& bft, ParameterType value) {
+    bft.template get<Index>() = value;
+}
+
+template <std::size_t Index, typename BitfieldTuple>
+inline void assign_parameter_to_bft(BitfieldTuple&, mpl::void_*) { }
 
 } // end details
 
-/** There are 2 types of functions used for creating bitfields.
- *  The first is a static implementation where by the initial value of
- *  the data is set at compile time. The second is a runtime create bitfield
- *  where by the values are set at runtime.
+/** I really don't like having to do this but it really is the Only way
+ *  its possible (by using macros thats is)
+ *  This is used to create parameters for the static call function
+ *  inside of make_bitfield_tuple.
  */
+#define BOOST_MAKE_BITFIELD_TUPLE_SINGLE_PARAMETER(z, n, data ) \
+    typename details::get_create_parameter<BitfieldTuple, n>::type \
+    parameter ## n = 0
 
 
-/** Static create bitfield.
- *  Compile time initilization of a bitfield tuple. This creates a bitfield
- *  with an initial value of that is specified on compile time.
- *  This will be a TODO at a later time because its complicated and I want to
- *  finish the other one first.
+/** This macro is used for creating the list of parameters inside of the
+ *  make_bitfield_tuple's create function.
+ *  Creates the following pattern
+ *  From 0 to n
+ *      typename details::get_create_parameter<BitfieldTuple, 0>::type \
+ *    parameter0 = 0, ... 
+ *      typename details::get_create_parameter<BitfieldTuple, n>::type \
+ *    parametern = 0 
  */
-template <typename T> struct static_make_bitfield_tuple;
+#define BOOST_MAKE_BITFIELD_TUPLE_CREATE_FUNCTION_PARAMETERS() \
+    BOOST_PP_ENUM(  BOOST_BFT_PARAM_COUNT,\
+                    BOOST_MAKE_BITFIELD_TUPLE_SINGLE_PARAMETER, \
+                    BOOST_BFT_NOTHING )
 
-#define ham
-/** Function signature for make_bitfield_tuple.
- *      way lay this for a bit because I have a better ideas
- */
-// template <typename BitfieldTuple>
-// BitfieldTuple make_bitfield_tuple( );
+
+#define BOOST_MAKE_BITFIELD_TUPLE_ASSIGN_PARAMETER_TO_BFT_CALL(z,n,data)\
+    details::assign_parameter_to_bft<n>(bft, parameter##n);
+
+#define BOOST_MAKE_BITFIELD_TUPLE_CREATE_FUNCTION_PARSE_ARGUMENTS() \
+    BOOST_PP_REPEAT_FROM_TO( \
+        0,\
+        BOOST_BFT_PARAM_COUNT, \
+        BOOST_MAKE_BITFIELD_TUPLE_ASSIGN_PARAMETER_TO_BFT_CALL,\
+        BOOST_BFT_NOTHING )
+
+
+
+#define CALL_DISPLAY_FUNCTION(z,n,data)\
+    details::get_types_name< typename details::get_create_parameter<BitfieldTuple, n>::type >::print();
+
+#define MAKE_PARAM_DISPLAY() \
+    BOOST_PP_REPEAT_FROM_TO( \
+        0,\
+        BOOST_BFT_PARAM_COUNT, \
+        CALL_DISPLAY_FUNCTION,\
+        BOOST_BFT_NOTHING )
 
 
 
@@ -142,8 +116,16 @@ template <typename T> struct static_make_bitfield_tuple;
  */
 template <typename BitfieldTuple>
 struct make_bitfield_tuple {
-
-    static BitfieldTuple create(  );
+    /** the reason the name of the macro is so large is because the number of 
+     *  parameters this function could possibly hold is as many as fifty.
+     */
+    static BitfieldTuple create( 
+        BOOST_MAKE_BITFIELD_TUPLE_CREATE_FUNCTION_PARAMETERS()
+    ) {
+        BitfieldTuple bft;
+        BOOST_MAKE_BITFIELD_TUPLE_CREATE_FUNCTION_PARSE_ARGUMENTS();
+        return bft;
+    }
 };
 
 } // end boost
