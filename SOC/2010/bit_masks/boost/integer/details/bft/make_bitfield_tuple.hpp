@@ -114,19 +114,17 @@ inline void assign_parameter_to_bft(BitfieldTuple&, mpl::void_*) { }
  *      This will need a macro in order to create the appearance of variadic
  *  behavior, although some of that will be taken care of by default values.
  */
+/** the reason the name of the macro is so large is because the number of 
+ *  parameters this function could possibly hold is as many as fifty.
+ */
 template <typename BitfieldTuple>
-struct make_bitfield_tuple {
-    /** the reason the name of the macro is so large is because the number of 
-     *  parameters this function could possibly hold is as many as fifty.
-     */
-    static BitfieldTuple create( 
-        BOOST_MAKE_BITFIELD_TUPLE_CREATE_FUNCTION_PARAMETERS()
-    ) {
-        BitfieldTuple bft;
-        BOOST_MAKE_BITFIELD_TUPLE_CREATE_FUNCTION_PARSE_ARGUMENTS();
-        return bft;
-    }
-};
+BitfieldTuple make_bitfield_tuple(
+    BOOST_MAKE_BITFIELD_TUPLE_CREATE_FUNCTION_PARAMETERS())
+{
+    BitfieldTuple bft;
+    BOOST_MAKE_BITFIELD_TUPLE_CREATE_FUNCTION_PARSE_ARGUMENTS();
+    return bft;
+}
 
 } // end boost
 

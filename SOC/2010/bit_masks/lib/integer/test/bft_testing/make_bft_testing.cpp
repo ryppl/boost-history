@@ -44,7 +44,7 @@ int main() {
     }
     {
        
-        test_tuple bft = make_bitfield_tuple<test_tuple>::create(1,2,4,true);
+        test_tuple bft = make_bitfield_tuple<test_tuple>(1,2,4,true);
         BOOST_ASSERT(( bft.get<red>() == 1 ));
         BOOST_ASSERT(( bft.get<green>() == 2 ));
         BOOST_ASSERT(( bft.get<salmon>() == 4 ));
