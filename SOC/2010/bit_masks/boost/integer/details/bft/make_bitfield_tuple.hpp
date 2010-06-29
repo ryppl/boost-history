@@ -95,19 +95,6 @@ inline void assign_parameter_to_bft(BitfieldTuple&, mpl::void_*) { }
         BOOST_BFT_NOTHING )
 
 
-
-#define CALL_DISPLAY_FUNCTION(z,n,data)\
-    details::get_types_name< typename details::get_create_parameter<BitfieldTuple, n>::type >::print();
-
-#define MAKE_PARAM_DISPLAY() \
-    BOOST_PP_REPEAT_FROM_TO( \
-        0,\
-        BOOST_BFT_PARAM_COUNT, \
-        CALL_DISPLAY_FUNCTION,\
-        BOOST_BFT_NOTHING )
-
-
-
 /** This can be used so that I can deduce the correct types for the arguments of
  *  the function at compile time and make the function callible at run time
  *  and make that function type safe.
@@ -115,7 +102,8 @@ inline void assign_parameter_to_bft(BitfieldTuple&, mpl::void_*) { }
  *  behavior, although some of that will be taken care of by default values.
  */
 /** the reason the name of the macro is so large is because the number of 
- *  parameters this function could possibly hold is as many as fifty.
+ *  parameters this function could possibly hold is as many as fifty. So
+ *  I felt that the name should reflect that.
  */
 template <typename BitfieldTuple>
 BitfieldTuple make_bitfield_tuple(
