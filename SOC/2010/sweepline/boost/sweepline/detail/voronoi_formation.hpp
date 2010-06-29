@@ -500,11 +500,7 @@ namespace detail {
     struct beach_line_node_data {
         Edge *edge;
 
-        beach_line_node_data(Edge *new_edge) : edge(new_edge) {}
-
-        void change_edge(Edge *new_edge) {
-            edge = new_edge;
-        }
+        explicit beach_line_node_data(Edge *new_edge) : edge(new_edge) {}
     };
 
     template <typename BeachLineNode>

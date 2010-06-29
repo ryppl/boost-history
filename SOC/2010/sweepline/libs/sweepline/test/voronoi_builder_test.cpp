@@ -38,6 +38,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test1, T, test_types) {
     test_beach_line.init(points);
     test_beach_line.run_sweepline();
     const voronoi_output< point_2d<T> > &test_output = test_beach_line.get_output();
+    BOOST_CHECK_EQUAL(test_output.check(), true);
 
     BOOST_CHECK_EQUAL(static_cast<int>(test_output.get_cell_records().size()), 3);
     BOOST_CHECK_EQUAL(static_cast<int>(test_output.get_voronoi_vertices().size()), 1);
@@ -104,6 +105,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test2, T, test_types) {
     test_beach_line.init(points);
     test_beach_line.run_sweepline();
     const voronoi_output< point_2d<T> > &test_output = test_beach_line.get_output();
+    BOOST_CHECK_EQUAL(test_output.check(), true);
 
     BOOST_CHECK_EQUAL(static_cast<int>(test_output.get_cell_records().size()), 3);
     BOOST_CHECK_EQUAL(static_cast<int>(test_output.get_voronoi_vertices().size()), 1);
@@ -166,6 +168,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test3, T, test_types) {
     test_beach_line.init(points);
     test_beach_line.run_sweepline();
     const voronoi_output< point_2d<T> > &test_output = test_beach_line.get_output();
+    BOOST_CHECK_EQUAL(test_output.check(), true);
 
     BOOST_CHECK_EQUAL(static_cast<T>(test_output.get_cell_records().size()), 4);
     BOOST_CHECK_EQUAL(static_cast<T>(test_output.get_voronoi_vertices().size()), 1);
@@ -239,6 +242,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test4, T, test_types) {
     test_beach_line.init(points);
     test_beach_line.run_sweepline();
     const voronoi_output< point_2d<T> > &test_output = test_beach_line.get_output();
+    BOOST_CHECK_EQUAL(test_output.check(), true);
 
     BOOST_CHECK_EQUAL(test_output.get_num_voronoi_cells(), 9);
     BOOST_CHECK_EQUAL(test_output.get_num_voronoi_vertices(), 4);
@@ -262,6 +266,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test4_1, T, test_types) {
     
     test_beach_line.init(points);
     test_beach_line.run_sweepline();
+    BOOST_CHECK_EQUAL(test_beach_line.get_output().check(), true);
 }
 
 // Sites: {(x, y) | x = 0 .. 9, y = 0 .. 9}.
@@ -276,6 +281,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test5, T, test_types) {
     test_beach_line.init(points);
     test_beach_line.run_sweepline();
     const voronoi_output< point_2d<T> > &test_output = test_beach_line.get_output();
+    BOOST_CHECK_EQUAL(test_output.check(), true);
 
     BOOST_CHECK_EQUAL(test_output.get_num_voronoi_cells(), 100);
     BOOST_CHECK_EQUAL(test_output.get_num_voronoi_vertices(), 81);
@@ -299,6 +305,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test5_1, T, test_types) {
     
     test_beach_line.init(points);
     test_beach_line.run_sweepline();
+    BOOST_CHECK_EQUAL(test_beach_line.get_output().check(), true);
 }
 
 // Sites: {(x, y) | x = 0 .. 33, y = 0 .. 33}.
@@ -313,6 +320,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test6, T, test_types) {
     test_beach_line.init(points);
     test_beach_line.run_sweepline();
     const voronoi_output< point_2d<T> > &test_output = test_beach_line.get_output();
+    BOOST_CHECK_EQUAL(test_output.check(), true);
 
     BOOST_CHECK_EQUAL(test_output.get_num_voronoi_cells(), 1089);
     BOOST_CHECK_EQUAL(test_output.get_num_voronoi_vertices(), 1024);
@@ -336,6 +344,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test6_1, T, test_types) {
     
     test_beach_line.init(points);
     test_beach_line.run_sweepline();
+    BOOST_CHECK_EQUAL(test_beach_line.get_output().check(), true);
 }
 
 // Sites: {(x, y) | x = 0 .. 100, y = 0 .. 100}.
@@ -350,6 +359,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test7, T, test_types) {
     test_beach_line.init(points);
     test_beach_line.run_sweepline();
     const voronoi_output< point_2d<T> > &test_output = test_beach_line.get_output();
+    BOOST_CHECK_EQUAL(test_output.check(), true);
 
     BOOST_CHECK_EQUAL(test_output.get_num_voronoi_cells(), 10000);
     BOOST_CHECK_EQUAL(test_output.get_num_voronoi_vertices(), 9801);
@@ -367,6 +377,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test7_1, T, test_types) {
     
     test_beach_line.init(points);
     test_beach_line.run_sweepline();
+    BOOST_CHECK_EQUAL(test_beach_line.get_output().check(), true);
 }
 
 // Sites: {(x, y) | x = 0 .. 333, y = 0 .. 333}.
@@ -381,6 +392,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(voronoi_builder_test8, T, test_types) {
     test_beach_line.init(points);
     test_beach_line.run_sweepline();
     const voronoi_output< point_2d<T> > &test_output = test_beach_line.get_output();
+    BOOST_CHECK_EQUAL(test_output.check(), true);
 
     BOOST_CHECK_EQUAL(test_output.get_num_voronoi_cells(), 110889);
     BOOST_CHECK_EQUAL(test_output.get_num_voronoi_vertices(), 110224);

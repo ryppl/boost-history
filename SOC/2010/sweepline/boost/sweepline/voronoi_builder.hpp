@@ -255,7 +255,7 @@ namespace sweepline {
             const_cast<Key &>(it_first->first).set_right_site(site3);
             edge_type *edge = output_.insert_new_edge(site1, site2, site3, circle_event,
                                                       bisector1.edge, bisector2.edge);
-            it_first->second.change_edge(edge);
+            it_first->second.edge = edge;
             beach_line_.erase(it_last);
             it_last = it_first;
 
