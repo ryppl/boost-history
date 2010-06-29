@@ -27,7 +27,21 @@ typedef bitfield_tuple<
 
 
 int main() {
-    
+    {
+        using namespace ::boost::details;
+        BOOST_MPL_ASSERT((
+            is_same<
+                get_create_parameter<test_tuple,0>::type,
+                char
+            >
+        ));
+        BOOST_MPL_ASSERT((
+            is_same<
+                get_create_parameter<test_tuple,2>::type,
+                int
+            >
+        ));
+    }
     return 0;
 }
 

@@ -136,4 +136,23 @@
  */
 #define BOOST_BFT_SPECILIZATION_PARAM_LIST() \
                 BOOST_BFT_PARAMETER_LIST()
+
+
+
+/** Represents the pattern to be used for creating the make_bitfield functions
+ *  parameters.
+ */
+#define BOOST__PATTERN_INT_TN_EQUALS_ZERO(z, n, data) \
+    int t ## n = 0
+
+
+/** This macro is used for generating integer argumnets with default values of 
+ *  0. It is used with the make_bitfield_tuple function.
+ *  Creates the following patter
+ *      int t0 = 0, ... int tn = 0
+ */
+#define BOOST_MAKE_BITFIELD_TUPLE_FUNCION_PARAMETERS() \
+    
+    
+
 #endif
