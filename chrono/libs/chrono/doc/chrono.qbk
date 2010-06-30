@@ -4443,15 +4443,20 @@ The nested typedef `type` defines the default formatter used by the `stopwatch_r
 [/==================================================]
 
     namespace boost { namespace chrono  {
-        template <class Stopwatch>
-        struct basic_stopwatch_reporter_default_formatter;
+        template <class Stopwatch, class Formatter>
+        class basic_stopwatch_reporter;
+
         template <class Stopwatch>
         struct stopwatch_reporter_default_formatter;
-        template <class Stopwatch>
-        struct wstopwatch_reporter_default_formatter;
 
         template <class Stopwatch, class Formatter=typename stopwatch_reporter_default_formatter<Stopwatch>::type>
         class stopwatch_reporter;
+        
+        template <class Stopwatch>
+        struct wstopwatch_reporter_default_formatter;
+
+        template <class Stopwatch, class Formatter=typename wstopwatch_reporter_default_formatter<Stopwatch>::type>
+        class wstopwatch_reporter;
     }}
 
 [section:basic_stopwatch_reporter Template Class `basic_stopwatch_reporter<>`]
@@ -4683,7 +4688,7 @@ Usage
 
 [section:basic_stopclock Template Class `basic_stopclock<>`]
 
-`basic_stopclock<Clock>` template class is a shortcut of `basic_stopwatch_reporter<stopwatch<Clock>>`
+`basic_stopclock<Clock,Formatter>` template class is a shortcut of `basic_stopwatch_reporter<stopwatch<Clock,Formatter>>`
 
     template< class Clock, class Formatter>
     class basic_stopclock : public basic_stopwatch_reporter<stopwatch<Clock>, Formatter> {
@@ -4727,7 +4732,7 @@ Usage
 
 [section:stopclock Template Class `stopclock<>`]
 
-`stopclock<Clock>` template class is a shortcut of `stopwatch_reporter<stopwatch<Clock>>` with a specific default formatter.
+`stopclock<Clock>` template class is a shortcut of `basic_stopclock<Clock, typename stopwatch_reporter_default_formatter<stopwatch<Clock>>::type>` with a specific default formatter.
 
     template
         < class Clock=process_cpu_clock
@@ -4785,7 +4790,7 @@ Usage
 
 [section:wstopclock Template Class `wstopclock<>`]
 
-`wstopclock<Clock>` template class is a shortcut of `stopwatch_reporter<stopwatch<Clock>>` with a specific default formatter.
+`wstopclock<Clock>` template class is a shortcut of `basic_wstopclock<Clock, typename stopwatch_reporter_default_formatter<stopwatch<Clock>>::type>` with a specific default formatter.
 
     template
         < class Clock=process_cpu_clock
@@ -4877,7 +4882,7 @@ Usage
 
 [section:basic_stopclock_accumulator Template Class `basic_stopclock_accumulator<>`]
 
-`basic_stopclock_accumulator<Clock>` template class is a shortcut of `stopwatch_reporter<stopwatch<Clock>>`
+`basic_stopclock_accumulator<Clock>` template class is a shortcut of `basic_stopwatch_reporter<stopwatch_accumulator<Clock>, typename stopwatch_reporter_default_formatter<stopwatch_accumulator<Clock>>::type>`
 
     template
         < class Clock=high_resolution_clock
@@ -4970,9 +4975,9 @@ Usage
 [endsect]
 [section:stopclock_accumulator_typedefs `stopclock_accumulator` useful typedefs]
 
-        typedef boost::chrono::stopclock_accumulator< boost::chrono::system_clock > system_stopwatch_reporter;
+        typedef boost::chrono::stopclock_accumulator< boost::chrono::system_clock > system_stopclock_accumulator;
         #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        typedef boost::chrono::stopclock_accumulator< boost::chrono::monotonic_clock > monotonic_stopwatch_reporter;
+        typedef boost::chrono::stopclock_accumulator< boost::chrono::monotonic_clock > monotonic_stopclock_accumulator;
         #endif
         typedef boost::chrono::stopclock_accumulator< boost::chrono::high_resolution_clock > high_resolution_stopclock_accumulator;
         typedef boost::chrono::stopclock_accumulator< boost::chrono::process_real_cpu_clock > process_real_cpu_stopclock_accumulator;
@@ -5028,9 +5033,9 @@ Usage
 [endsect]
 [section:wstopclock_accumulator_typedefs `wstopclock_accumulator` useful typedefs]
 
-        typedef boost::chrono::wstopclock_accumulator< boost::chrono::system_clock > system_stopwatch_reporter;
+        typedef boost::chrono::wstopclock_accumulator< boost::chrono::system_clock > system_wstopclock_accumulator;
         #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        typedef boost::chrono::wstopclock_accumulator< boost::chrono::monotonic_clock > monotonic_stopwatch_reporter;
+        typedef boost::chrono::wstopclock_accumulator< boost::chrono::monotonic_clock > monotonic_wstopclock_accumulator;
         #endif
         typedef boost::chrono::wstopclock_accumulator< boost::chrono::high_resolution_clock > high_resolution_wstopclock_accumulator;
         typedef boost::chrono::wstopclock_accumulator< boost::chrono::process_real_cpu_clock > process_real_cpu_wstopclock_accumulator;
@@ -5069,6 +5074,9 @@ A typical ussage of this class is
 
       return 0;
     }
+
+
+[heading Synopsis]
 
     template < class Clock=process_cpu_clock
         , class Formatter=typename stopwatch_reporter_default_formatter<stopwatch<Clock>>::type

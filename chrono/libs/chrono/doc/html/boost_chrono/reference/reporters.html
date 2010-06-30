@@ -236,15 +236,20 @@
           Template Class <code class="computeroutput"><span class="identifier">wstopwatch_reporter</span><span class="special">&lt;&gt;</span></code></a></span></dt>
 </dl></div>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">chrono</span>  <span class="special">{</span>
-    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Stopwatch</span><span class="special">&gt;</span>
-    <span class="keyword">struct</span> <span class="identifier">basic_stopwatch_reporter_default_formatter</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Stopwatch</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Formatter</span><span class="special">&gt;</span>
+    <span class="keyword">class</span> <span class="identifier">basic_stopwatch_reporter</span><span class="special">;</span>
+
     <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Stopwatch</span><span class="special">&gt;</span>
     <span class="keyword">struct</span> <span class="identifier">stopwatch_reporter_default_formatter</span><span class="special">;</span>
-    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Stopwatch</span><span class="special">&gt;</span>
-    <span class="keyword">struct</span> <span class="identifier">wstopwatch_reporter_default_formatter</span><span class="special">;</span>
 
     <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Stopwatch</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Formatter</span><span class="special">=</span><span class="keyword">typename</span> <span class="identifier">stopwatch_reporter_default_formatter</span><span class="special">&lt;</span><span class="identifier">Stopwatch</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">&gt;</span>
     <span class="keyword">class</span> <span class="identifier">stopwatch_reporter</span><span class="special">;</span>
+    
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Stopwatch</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">wstopwatch_reporter_default_formatter</span><span class="special">;</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Stopwatch</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Formatter</span><span class="special">=</span><span class="keyword">typename</span> <span class="identifier">wstopwatch_reporter_default_formatter</span><span class="special">&lt;</span><span class="identifier">Stopwatch</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">&gt;</span>
+    <span class="keyword">class</span> <span class="identifier">wstopwatch_reporter</span><span class="special">;</span>
 <span class="special">}}</span>
 </pre>
 <div class="section" lang="en">
@@ -538,8 +543,8 @@
           Template Class <code class="computeroutput"><span class="identifier">basic_stopclock</span><span class="special">&lt;&gt;</span></code></a>
 </h5></div></div></div>
 <p>
-            <code class="computeroutput"><span class="identifier">basic_stopclock</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span></code>
-            template class is a shortcut of <code class="computeroutput"><span class="identifier">basic_stopwatch_reporter</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;&gt;</span></code>
+            <code class="computeroutput"><span class="identifier">basic_stopclock</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span><span class="identifier">Formatter</span><span class="special">&gt;</span></code>
+            template class is a shortcut of <code class="computeroutput"><span class="identifier">basic_stopwatch_reporter</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span><span class="identifier">Formatter</span><span class="special">&gt;&gt;</span></code>
           </p>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Formatter</span><span class="special">&gt;</span>
 <span class="keyword">class</span> <span class="identifier">basic_stopclock</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">basic_stopwatch_reporter</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;,</span> <span class="identifier">Formatter</span><span class="special">&gt;</span> <span class="special">{</span>
@@ -588,7 +593,7 @@
 </h5></div></div></div>
 <p>
             <code class="computeroutput"><span class="identifier">stopclock</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span></code>
-            template class is a shortcut of <code class="computeroutput"><span class="identifier">stopwatch_reporter</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;&gt;</span></code> with a specific default formatter.
+            template class is a shortcut of <code class="computeroutput"><span class="identifier">basic_stopclock</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">stopwatch_reporter_default_formatter</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;&gt;::</span><span class="identifier">type</span><span class="special">&gt;</span></code> with a specific default formatter.
           </p>
 <pre class="programlisting"><span class="keyword">template</span>
     <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">=</span><span class="identifier">process_cpu_clock</span>
@@ -655,7 +660,7 @@
 </h5></div></div></div>
 <p>
             <code class="computeroutput"><span class="identifier">wstopclock</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span></code>
-            template class is a shortcut of <code class="computeroutput"><span class="identifier">stopwatch_reporter</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;&gt;</span></code> with a specific default formatter.
+            template class is a shortcut of <code class="computeroutput"><span class="identifier">basic_wstopclock</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">stopwatch_reporter_default_formatter</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;&gt;::</span><span class="identifier">type</span><span class="special">&gt;</span></code> with a specific default formatter.
           </p>
 <pre class="programlisting"><span class="keyword">template</span>
     <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">=</span><span class="identifier">process_cpu_clock</span>
@@ -770,7 +775,8 @@
 </h5></div></div></div>
 <p>
             <code class="computeroutput"><span class="identifier">basic_stopclock_accumulator</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span></code> template class is a shortcut of
-            <code class="computeroutput"><span class="identifier">stopwatch_reporter</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;&gt;</span></code>
+            <code class="computeroutput"><span class="identifier">basic_stopwatch_reporter</span><span class="special">&lt;</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;,</span> <span class="keyword">typename</span>
+            <span class="identifier">stopwatch_reporter_default_formatter</span><span class="special">&lt;</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;&gt;::</span><span class="identifier">type</span><span class="special">&gt;</span></code>
           </p>
 <pre class="programlisting"><span class="keyword">template</span>
     <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">=</span><span class="identifier">high_resolution_clock</span>
@@ -875,9 +881,9 @@
           <code class="computeroutput"><span class="identifier">stopclock_accumulator</span></code> useful
           typedefs</a>
 </h5></div></div></div>
-<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopclock_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span> <span class="special">&gt;</span> <span class="identifier">system_stopwatch_reporter</span><span class="special">;</span>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopclock_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span> <span class="special">&gt;</span> <span class="identifier">system_stopclock_accumulator</span><span class="special">;</span>
 <span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span>
-<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopclock_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">monotonic_clock</span> <span class="special">&gt;</span> <span class="identifier">monotonic_stopwatch_reporter</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopclock_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">monotonic_clock</span> <span class="special">&gt;</span> <span class="identifier">monotonic_stopclock_accumulator</span><span class="special">;</span>
 <span class="preprocessor">#endif</span>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopclock_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">high_resolution_clock</span> <span class="special">&gt;</span> <span class="identifier">high_resolution_stopclock_accumulator</span><span class="special">;</span>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopclock_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">process_real_cpu_clock</span> <span class="special">&gt;</span> <span class="identifier">process_real_cpu_stopclock_accumulator</span><span class="special">;</span>
@@ -946,9 +952,9 @@
           <code class="computeroutput"><span class="identifier">wstopclock_accumulator</span></code>
           useful typedefs</a>
 </h5></div></div></div>
-<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">wstopclock_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span> <span class="special">&gt;</span> <span class="identifier">system_stopwatch_reporter</span><span class="special">;</span>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">wstopclock_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span> <span class="special">&gt;</span> <span class="identifier">system_wstopclock_accumulator</span><span class="special">;</span>
 <span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span>
-<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">wstopclock_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">monotonic_clock</span> <span class="special">&gt;</span> <span class="identifier">monotonic_stopwatch_reporter</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">wstopclock_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">monotonic_clock</span> <span class="special">&gt;</span> <span class="identifier">monotonic_wstopclock_accumulator</span><span class="special">;</span>
 <span class="preprocessor">#endif</span>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">wstopclock_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">high_resolution_clock</span> <span class="special">&gt;</span> <span class="identifier">high_resolution_wstopclock_accumulator</span><span class="special">;</span>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">wstopclock_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">process_real_cpu_clock</span> <span class="special">&gt;</span> <span class="identifier">process_real_cpu_wstopclock_accumulator</span><span class="special">;</span>
@@ -1000,8 +1006,12 @@
 </span>
   <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">}</span>
-
-<span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">=</span><span class="identifier">process_cpu_clock</span>
+</pre>
+<a name="boost_chrono.reference.reporters.scoped_stopclock_hpp.scoped_stopclock.synopsis"></a><h6>
+<a name="id4924649"></a>
+            <a href="reporters.html#boost_chrono.reference.reporters.scoped_stopclock_hpp.scoped_stopclock.synopsis">Synopsis</a>
+          </h6>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">=</span><span class="identifier">process_cpu_clock</span>
     <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Formatter</span><span class="special">=</span><span class="keyword">typename</span> <span class="identifier">stopwatch_reporter_default_formatter</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;&gt;::</span><span class="identifier">type</span>
 <span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">scoped_stopclock</span>
     <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">stopwatch_reporter</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;,</span> <span class="identifier">Formatter</span><span class="special">&gt;</span> <span class="special">{</span>
