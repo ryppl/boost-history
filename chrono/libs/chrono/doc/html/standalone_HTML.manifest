@@ -11,9 +11,9 @@ boost_chrono/reference.html
 boost_chrono/reference/cpp0x.html
 boost_chrono/reference/other_clocks.html
 boost_chrono/reference/stopwatches.html
-boost_chrono/reference/stopwatch_reporters.html
-boost_chrono/reference/stopwatch_formatters.html
-boost_chrono/reference/deprecated_headers.html
+boost_chrono/reference/reporters.html
+boost_chrono/reference/formatters.html
+boost_chrono/reference/deprecated.html
 boost_chrono/appendices.html
 boost_chrono/appendices/history.html
 boost_chrono/appendices/rationale.html
