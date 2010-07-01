@@ -29,7 +29,8 @@ namespace boost
 namespace mpl {
 
 /*
- * Boost MPL compatible metafunctions
+ *	Boost MPL compatible metafunctions
+ *	IC is a mpl::integral_c<> type
  */
 
 template <typename IC>

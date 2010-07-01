@@ -12,9 +12,10 @@
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_integral.hpp>
+#include <boost/mpl/integral_c.hpp>
 
 /* 
- *	Extend `data' represented in `Bits' bits to sizeof(Type) * 8
+ *	Extend `data' represented in `Bits' bits to sizeof(T) * 8
  *		in compile-time.
  *
  *	For example if binary representation of `data' in 4 bits is:
@@ -31,18 +32,29 @@
 
 namespace boost 
 {
+	
+namespace mpl {
+
+/*
+ *	Boost MPL compatible metafunction
+ *	IC is a mpl::integral_c<> type
+ */
+
+template <typename IC, std::size_t Bits>
+struct sign_extend : integral_c<typename IC::value_type,
+	(((IC::value & ((typename IC::value_type(1) << Bits) - 1)) 
+	^ (typename IC::value_type(1) << (Bits - 1))) 
+	- (typename IC::value_type(1) << (Bits - 1)))
+>
+{};
+
+}
 
 // Compile-time version of sign_extend
-template<typename Type, Type data, std::size_t Bits, 
-	class Enable = typename enable_if<is_integral<Type> >::type>
-struct static_sign_extend 
-{
-private:
-    BOOST_STATIC_CONSTANT(Type, shift = (Type(1) << (Bits - 1)));
-	BOOST_STATIC_CONSTANT(Type, mask = ((Type(1) << Bits) - 1));
-public:
-	BOOST_STATIC_CONSTANT(Type, value = ((data & mask) ^ shift) - shift); 
-}; // boost::static_sign_extend
+template<typename T, T data, std::size_t Bits, 
+	class Enable = typename enable_if< is_integral<T> >::type>
+struct static_sign_extend : mpl::sign_extend<mpl::integral_c<T, data>, Bits>
+{}; // boost::static_sign_extend
 
 } // boost
 
