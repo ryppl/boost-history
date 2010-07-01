@@ -1,4 +1,4 @@
-[article Boost.Integer Bits Masks Extension
+[library Boost.Integer Bits Masks Extension
     [quickbook 1.5]
     [copyright 2010 Brian Bartman]
     [purpose Bit Mask Selection]
