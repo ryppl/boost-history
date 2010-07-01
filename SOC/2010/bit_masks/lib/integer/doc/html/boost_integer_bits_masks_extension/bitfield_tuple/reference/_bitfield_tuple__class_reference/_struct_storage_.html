@@ -15,9 +15,58 @@
 <div class="spirit-nav">
 <a accesskey="p" href="_struct_bit_align_.html"><img src="../../../..//home/brian/gsoc/boost-trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../_bitfield_tuple__class_reference.html"><img src="../../../..//home/brian/gsoc/boost-trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../..//home/brian/gsoc/boost-trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../function_reference.html"><img src="../../../..//home/brian/gsoc/boost-trunk/doc/html/images/next.png" alt="Next"></a>
 </div>
-<div class="section"><div class="titlepage"><div><div><h5 class="title">
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
 <a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_storage_"></a><a class="link" href="_struct_storage_.html" title="struct storage"><code class="computeroutput"><span class="keyword">struct</span> <span class="identifier">storage</span></code></a>
-</h5></div></div></div></div>
+</h5></div></div></div>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_storage_.description"></a><h5>
+<a name="id3296482"></a>
+            <a class="link" href="_struct_storage_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_storage_.description">Description</a>
+          </h5>
+<p>
+            The <code class="computeroutput"><span class="identifier">storage</span></code> template
+            is optional (you don't have to have one in the template parameter list
+            of a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>).
+            You may use it to specify that type you would like your bitfields to
+            be stored within. If you don't specify a storage type using the <code class="computeroutput"><span class="identifier">storage</span></code> parameter a type will be selected
+            for you which can hold all of your bitfields. The deduced type will be
+            unsigned and one off the following types from within &lt;boost/cstdint.hpp&gt;,
+            uint_least8_t, uint_least16_t, uint_least32_t or if you have long long
+            support enabled, uint_least64_t. You can use boost.integer endian to
+            specify your storage type as one which is different from your current
+            machine and the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+            will store the data values in the endianness specified as well as return
+            and accept values in the endianness of your native machine.
+          </p>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_storage_.template_signature"></a><h5>
+<a name="id3296574"></a>
+            <a class="link" href="_struct_storage_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_storage_.template_signature">Template
+            Signature</a>
+          </h5>
+<p>
+            <code class="computeroutput"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">StorageType</span><span class="special">&gt;</span> <span class="keyword">struct</span>
+            <span class="identifier">storage</span><span class="special">;</span></code>
+          </p>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_storage_.header_file_locaton"></a><h5>
+<a name="id3296644"></a>
+            <a class="link" href="_struct_storage_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_storage_.header_file_locaton">Header
+            file Locaton</a>
+          </h5>
+<p>
+            This header file is included with the &lt;boost/integer/bitfield_tuple.hpp&gt;
+            header file. 
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">details</span><span class="special">/</span><span class="identifier">bft</span><span class="special">/</span><span class="identifier">storage</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<p>
+          </p>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_storage_.example"></a><h5>
+<a name="id3296742"></a>
+            <a class="link" href="_struct_storage_.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__class_reference._struct_storage_.example">Example</a>
+          </h5>
+<p>
+          </p>
+</div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
 <td align="right"><div class="copyright-footer">Copyright &#169; 2010 Brian Bartman<p>

@@ -5,4 +5,41 @@ Distributed under the Boost Software License, Version 1.0. (See accompanying
 file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
 [section `struct member`]
+[h4 Description]
+`member` us used for specifying different bitfields within a `bitfield_tuple`.
+[table
+    [[template Parameter][Explanation]]
+    [
+        [`ReturnType`]
+        [The type that the value is to be returnd from the get function as.You 
+may supply a signed type for a member but please note that a singed bit will be
+stored within the width you specify, so if you don't need negative values you
+shouldn't store them.]
+    ]
+    [
+        [`NameType`]
+        [This is a type which is associated with the bitfield which is
+represented by this member template. All names supplied to a `bitfield_tuple`
+can only be used one per `bitfield_tuple`. The is enforced as a precondition.]
+    ]
+    [
+        [`Width`]
+        [The number of bits you would like associated with the field represented
+by the `member` template.]
+    ]
+]
+
+[h4 Template Signature]
+`template <typename ReturnType, typename NameType, std::size_t Width>
+struct member;`
+
+[h4 Header file Locaton]
+This header file is included with the <boost/integer/bitfield_tuple.hpp> header
+file.
+``
+#include <boost/integer/details/bft/member.hpp>
+``
+[h4 Example]
+``
+``
 [endsect]

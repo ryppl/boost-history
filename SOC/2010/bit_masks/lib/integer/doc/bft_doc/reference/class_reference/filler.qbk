@@ -5,4 +5,23 @@ Distributed under the Boost Software License, Version 1.0. (See accompanying
 file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
 [section `struct filler`]
+[h4 Description]
+Filler specifies a number of empty bits to be ignored. Another good way to think
+about this is as bit padding, it adds the number of bits in padding when
+specified. From an implementation stand point it adds `Bits` to the starting
+the next starting position of the next bitfield specified in the template
+parameter list.
+
+[h4 Template Signature]
+`template <std::size_t Bits> struct filler;`
+
+[h4 Header file Locaton]
+This header file is included with the <boost/integer/bitfield_tuple.hpp> header
+file.
+``
+#include <boost/integer/details/bft/filler.hpp>
+``
+[h4 Example]
+``
+``
 [endsect]

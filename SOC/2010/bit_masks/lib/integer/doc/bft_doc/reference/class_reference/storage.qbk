@@ -5,4 +5,29 @@ Distributed under the Boost Software License, Version 1.0. (See accompanying
 file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
 [section `struct storage`]
+[h4 Description]
+The `storage` template is optional (you don't have to have one in the template
+parameter list of a `bitfield_tuple`). You may use it to specify that type you 
+would like your bitfields to be stored within. If you don't specify a storage
+type using the `storage` parameter a type will be selected for you which can
+hold all of your bitfields. The deduced type will be unsigned and one off the
+following types from within <boost/cstdint.hpp>, uint_least8_t, uint_least16_t,
+uint_least32_t or if you have long long support enabled, uint_least64_t. You can
+use boost.integer endian to specify your storage type as one which is different
+from your current machine and the `bitfield_tuple` will store the data values
+in the endianness specified as well as return and accept values in the
+endianness of your native machine.
+
+[h4 Template Signature]
+`template <typename StorageType> struct storage;`
+
+[h4 Header file Locaton]
+This header file is included with the <boost/integer/bitfield_tuple.hpp> header
+file.
+``
+#include <boost/integer/details/bft/storage.hpp>
+``
+[h4 Example]
+``
+``
 [endsect]
