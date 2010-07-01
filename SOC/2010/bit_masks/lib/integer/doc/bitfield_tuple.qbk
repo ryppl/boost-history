@@ -1,3 +1,10 @@
+[/
+Copyright (c) 2010 Brian Bartman
+
+Distributed under the Boost Software License, Version 1.0. (See accompanying
+file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+]
+
 [c++]
 [/ I like to devide the documentation as the Boost.Proto library does, with the following sections:
 Overview (What the library provides?)
@@ -18,7 +25,7 @@ Reference
     Classes (list of links of classes)
     Functions (list of links of free functions)
     Files
-Apendices
+Appendices
     History
     Design Rationalle (if needed)
     Implementation Notes (if needed)
@@ -28,11 +35,10 @@ Apendices
 
 [section bitfield_tuple]
 
-[section Overview]
-[endsect]
-
-[section Motivation]
-[endsect]
+[include bft_doc/overview.qbk]
+[include bft_doc/users_guide.qbk]
+[include bft_doc/reference.qbk]
+[include bft_doc/appendices.qbk]
 
 [endsect]
 

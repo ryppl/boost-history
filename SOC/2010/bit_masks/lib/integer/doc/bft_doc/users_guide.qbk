@@ -1,0 +1,15 @@
+[/
+Copyright (c) 2010 Brian Bartman
+
+Distributed under the Boost Software License, Version 1.0. (See accompanying
+file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[section Users Guide]
+[include users_guide/users_guide.qbk]
+[include users_guide/getting_started.qbk]
+[include users_guide/tutorial.qbk]
+[include users_guide/examples.qbk]
+[include users_guide/external_resources.qbk]
+[include users_guide/glossary.qbk]
+[endsect]

@@ -17,21 +17,20 @@ boostbook standalone
         # Use graphics not text for navigation:
         <xsl:param>navig.graphics=1
         # How far down we chunk nested sections, basically all of them:
-        <xsl:param>chunk.section.depth=1
+        <xsl:param>chunk.section.depth=10
         # Don't put the first section on the same page as the TOC:
-        <xsl:param>chunk.first.sections=0
+        <xsl:param>chunk.first.sections=1
         # How far down sections get TOC's
-        <xsl:param>toc.section.depth=1
+        <xsl:param>toc.section.depth=10
         # Max depth in each TOC:
-        <xsl:param>toc.max.depth=1
-        # How far down we go with TOC's
-        <xsl:param>generate.section.toc.level=4
+        <xsl:param>toc.max.depth=4
         # Path for links to Boost:
-        <xsl:param>boost.root=../../../..
+        <xsl:param>boost.root=$(BOOST_ROOT)
         # Path for libraries index:
-        <xsl:param>boost.libraries=../../../../libs/libraries.htm
-        # Use the main Boost stylesheet:
-        <xsl:param>html.stylesheet=../../../../doc/html/boostbook.css
+        # Set the path to the boost-root so we find our graphics:
+        #<xsl:param>boost.root=$(BOOST_ROOT)
+        # location of the main index file so our links work:
+        #<xsl:param>boost.libraries=$(BOOST_ROOT)/libs/libraries.htm
         
         # PDF Options:
         # TOC Generation: this is needed for FOP-0.9 and later:
