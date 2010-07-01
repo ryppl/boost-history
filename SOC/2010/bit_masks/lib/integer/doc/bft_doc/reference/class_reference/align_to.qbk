@@ -4,5 +4,26 @@ Copyright (c) 2010 Brian Bartman
 Distributed under the Boost Software License, Version 1.0. (See accompanying
 file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
-[section `struct align_to`]
+[section `struct bit_align`]
+[h4 Description]
+Adjusts the next `member` or `flag` template inside of the `bitfield_tuple`'s
+template parameter to a multiple of the `AlignTo` parameter. If the current
+next position is a multiple of `AlignTo` then no adjustment will be made.
+
+[note Calling `bit_align<8>` more then once in a row will have the same effect
+as calling `bit_align<8>` once. ]
+
+
+[h4 Template Signature]
+`template <std::size_t AlignTo> struct bit_align;`
+
+[h4 Header file Locaton]
+This header file is included with the <boost/integer/bitfield_tuple.hpp> header
+file.
+``
+#include <boost/integer/details/bft/align.hpp>
+``
+[h4 Example]
+``
+``
 [endsect]

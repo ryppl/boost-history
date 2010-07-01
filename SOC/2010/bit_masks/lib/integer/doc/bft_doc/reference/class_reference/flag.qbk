@@ -5,4 +5,35 @@ Distributed under the Boost Software License, Version 1.0. (See accompanying
 file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
 [section `struct flag`]
+[h4 Description]
+`flag` is used to specify a boolean member of width one. For example,
+``
+struct red;
+
+typedef bitfield_tuple<
+    flag<red>
+>           bitfield_tuple_1;
+
+
+typedef btifield_tuple<
+    member<bool,red,1>
+>           bitfield_tuple_2;
+``
+the types `bitfield_tuple_1` and `bitfield_tuple_2` specify the same internal 
+structure for their data. `flag<red>` has the same affect on a `bitfield_tuple`
+as `member<bool,red,1>` would have.
+
+
+[h4 Template Signature]
+`template <typename Name> struct flag;`
+
+[h4 Header file Locaton]
+This header file is included with the <boost/integer/bitfield_tuple.hpp> header
+file.
+``
+#include <boost/integer/details/bft/flag.hpp>
+``
+[h4 Example]
+``
+``
 [endsect]
