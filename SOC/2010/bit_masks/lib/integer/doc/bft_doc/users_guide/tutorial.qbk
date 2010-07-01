@@ -4,3 +4,7 @@ Copyright (c) 2010 Brian Bartman
 Distributed under the Boost Software License, Version 1.0. (See accompanying
 file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
+[section Tutorial]
+In this section I will walk you through step by step process about how to
+create a `bitfield_tuple` and all of the different functionalities it provides.
+[endsect]

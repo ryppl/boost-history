@@ -4,3 +4,13 @@ Copyright (c) 2010 Brian Bartman
 Distributed under the Boost Software License, Version 1.0. (See accompanying
 file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
+[section Dependencies]
+This section covers both dependencies which are from within boost as well
+as the requirements for how to enable different extensions of the
+`bitfield_tuple`. Some of the extensions include adjustment of variadic template
+parameters, and adjust meant for long long support.
+
+TODO:
+Add list of dependencies from within boost here!
+
+[endsect]

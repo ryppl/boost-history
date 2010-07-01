@@ -4,3 +4,8 @@ Copyright (c) 2010 Brian Bartman
 Distributed under the Boost Software License, Version 1.0. (See accompanying
 file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
+[section Installation]
+There is no need to install or link against bitfield_tuple. It is a
+header only component. For additional dependencies of bitfield_tuple please
+see the Dependencies section of the documentation.
+[endsect]
