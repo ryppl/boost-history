@@ -172,10 +172,11 @@
 <p>
           This facility also includes convenience typedefs for the SI prefixes <code class="computeroutput"><span class="identifier">atto</span></code> through <code class="computeroutput"><span class="identifier">exa</span></code>
           corresponding to their internationally recognized definitions (in terms
-          of <code class="computeroutput"><span class="identifier">ratio</span></code>). This is a tremendous
-          syntactic convenience. It will prevent errors in specifying constants as
-          one no longer has to double count the number of zeros when trying to write
-          million or billion.
+          of <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
+          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a>). This is a tremendous syntactic
+          convenience. It will prevent errors in specifying constants as one no longer
+          has to double count the number of zeros when trying to write million or
+          billion.
         </p>
 <p>
           <span class="bold"><strong>Example:</strong></span>
@@ -282,7 +283,7 @@
           needs only 23 bits to cover that range.
         </p>
 <a name="boost_chrono.overview.motivation.duration.so_what_exactly_is_a___link_linkend__boost_chrono_reference_cpp0x_chrono_chrono_hpp_duration___code__phrase_role__identifier__duration__phrase___code___link__and_how_do_i_use_one_"></a><h5>
-<a name="id4813230"></a>
+<a name="id4813237"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.so_what_exactly_is_a___link_linkend__boost_chrono_reference_cpp0x_chrono_chrono_hpp_duration___code__phrase_role__identifier__duration__phrase___code___link__and_how_do_i_use_one_">So
           What Exactly is a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> and How Do I Use One?</a>
@@ -345,9 +346,9 @@
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> library (unified with
           templates instead of inheritance).
         </p>
-<a name="boost_chrono.overview.motivation.duration.what_happens_if_i_assign__code__phrase_role__identifier__m3__phrase___phrase_role__special_____phrase___phrase_role__identifier__us3__phrase___code__to___code__phrase_role__identifier__minutes__phrase___code__instead_of__code__phrase_role__identifier__microseconds__phrase___code__"></a><h5>
-<a name="id4813946"></a>
-          <a href="motivation.html#boost_chrono.overview.motivation.duration.what_happens_if_i_assign__code__phrase_role__identifier__m3__phrase___phrase_role__special_____phrase___phrase_role__identifier__us3__phrase___code__to___code__phrase_role__identifier__minutes__phrase___code__instead_of__code__phrase_role__identifier__microseconds__phrase___code__">What
+<a name="boost_chrono.overview.motivation.duration.what_happens_if_i_assign__code__phrase_role__identifier__m3__phrase___phrase_role__special_____phrase___phrase_role__identifier__us3__phrase___code__to__code__phrase_role__identifier__minutes__phrase___code__instead_of__code__phrase_role__identifier__microseconds__phrase___code__"></a><h5>
+<a name="id4813952"></a>
+          <a href="motivation.html#boost_chrono.overview.motivation.duration.what_happens_if_i_assign__code__phrase_role__identifier__m3__phrase___phrase_role__special_____phrase___phrase_role__identifier__us3__phrase___code__to__code__phrase_role__identifier__minutes__phrase___code__instead_of__code__phrase_role__identifier__microseconds__phrase___code__">What
           happens if I assign <code class="computeroutput"><span class="identifier">m3</span> <span class="special">+</span> <span class="identifier">us3</span></code>
           to <code class="computeroutput"><span class="identifier">minutes</span></code> instead of
           <code class="computeroutput"><span class="identifier">microseconds</span></code>?</a>
@@ -363,28 +364,31 @@
           ignored. This is similar to the problem of assigning a double to an <code class="computeroutput"><span class="keyword">int</span></code>: the fractional part gets silently discarded.
         </p>
 <a name="boost_chrono.overview.motivation.duration.but_what_if_the_truncation_behavior_is_what_i_want_to_do_"></a><h5>
-<a name="id4814115"></a>
+<a name="id4814121"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.but_what_if_the_truncation_behavior_is_what_i_want_to_do_">But
           what if the truncation behavior is what I want to do?</a>
         </h5>
 <p>
-          There is a <code class="computeroutput"><span class="identifier">duration_cast</span></code>
-          facility to explicitly ask for this behavior:
+          There is a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_cast" title="
+          Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a> facility to explicitly
+          ask for this behavior:
         </p>
 <pre class="programlisting"><span class="identifier">minutes</span> <span class="identifier">m4</span> <span class="special">=</span> <span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">minutes</span><span class="special">&gt;(</span><span class="identifier">m3</span> <span class="special">+</span> <span class="identifier">us3</span><span class="special">);</span>  <span class="comment">// m4.count() == 5
 </span></pre>
 <p>
           In general, one can perform <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> arithmetic at will. If
-          <code class="computeroutput"><span class="identifier">duration_cast</span></code> isn't used,
-          and it compiles, the arithmetic is exact. Any place one wants to override
-          this exact arithmetic behavior, duration_cast can be used to explicitly
-          specify that desire. The <code class="computeroutput"><span class="identifier">duration_cast</span></code>
-          has the same efficiency as the implicit conversion, and will even be exact
-          as often as it can.
+          <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_cast" title="
+          Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a> isn't used, and
+          it compiles, the arithmetic is exact. Any place one wants to override this
+          exact arithmetic behavior, <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_cast" title="
+          Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a> can be used to explicitly
+          specify that desire. The <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_cast" title="
+          Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a> has the same efficiency
+          as the implicit conversion, and will even be exact as often as it can.
         </p>
 <a name="boost_chrono.overview.motivation.duration.i_m_trafficking_in_floating_point___link_linkend__boost_chrono_reference_cpp0x_chrono_chrono_hpp_duration___code__phrase_role__identifier__duration__phrase___code_s__link___i_don_t_want_to_deal_with_writing__code__phrase_role__identifier__duration_cast__phrase___code__all_over_the_place__i_m_content_with_the_precision_of_my_floating_point_representation"></a><h5>
-<a name="id4814258"></a>
+<a name="id4814295"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.i_m_trafficking_in_floating_point___link_linkend__boost_chrono_reference_cpp0x_chrono_chrono_hpp_duration___code__phrase_role__identifier__duration__phrase___code_s__link___i_don_t_want_to_deal_with_writing__code__phrase_role__identifier__duration_cast__phrase___code__all_over_the_place__i_m_content_with_the_precision_of_my_floating_point_representation">I'm
           trafficking in floating point <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code>s</a>. I don't want to deal
@@ -400,7 +404,7 @@
 <span class="identifier">dminutes</span> <span class="identifier">dm4</span> <span class="special">=</span> <span class="identifier">m3</span> <span class="special">+</span> <span class="identifier">us3</span><span class="special">;</span>  <span class="comment">// dm4.count() == 5.000000083333333
 </span></pre>
 <a name="boost_chrono.overview.motivation.duration.how_expensive_is_all_of_this_"></a><h5>
-<a name="id4814430"></a>
+<a name="id4814468"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.how_expensive_is_all_of_this_">How
           expensive is all of this?</a>
         </h5>
@@ -414,7 +418,7 @@
           ignored in converting the run time values of the tick counts.
         </p>
 <a name="boost_chrono.overview.motivation.duration.how_complicated_is_it_to_build_a_function_taking_a___link_linkend__boost_chrono_reference_cpp0x_chrono_chrono_hpp_duration___code__phrase_role__identifier__duration__phrase___code___link__parameter_"></a><h5>
-<a name="id4814486"></a>
+<a name="id4814525"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.how_complicated_is_it_to_build_a_function_taking_a___link_linkend__boost_chrono_reference_cpp0x_chrono_chrono_hpp_duration___code__phrase_role__identifier__duration__phrase___code___link__parameter_">How
           complicated is it to build a function taking a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> parameter?</a>
@@ -662,7 +666,7 @@
           the epochs associated with each clock is known.
         </p>
 <a name="boost_chrono.overview.motivation.time_point.so_what_exactly_is_a___link_linkend__boost_chrono_reference_cpp0x_chrono_chrono_hpp_time_point___code__phrase_role__identifier__time_point__phrase___code___link__and_how_do_i_use_one_"></a><h5>
-<a name="id4816490"></a>
+<a name="id4816529"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.time_point.so_what_exactly_is_a___link_linkend__boost_chrono_reference_cpp0x_chrono_chrono_hpp_time_point___code__phrase_role__identifier__time_point__phrase___code___link__and_how_do_i_use_one_">So
           What Exactly is a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> and How Do I Use One?</a>
@@ -755,8 +759,9 @@
 </pre>
 <p>
           The above code will delay as close as possible to half a microsecond, no
-          matter what the precision of monotonic_clock is. The more precise <code class="computeroutput"><span class="identifier">monotonic_clock</span></code> becomes, the more accurate
-          will be the delay to 500 nanoseconds.
+          matter what the precision of monotonic_clock is. The more precise <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.monotonic_clock" title="
+          Class monotonic_clock"><code class="computeroutput"><span class="identifier">monotonic_clock</span></code></a> becomes, the more
+          accurate will be the delay to 500 nanoseconds.
         </p>
 </div>
 <div class="section" lang="en">
@@ -766,12 +771,13 @@
 <p>
           Knowing how long a program, a function or a specific block takes to execute
           is useful in both test and production environments. <span class="bold"><strong>Boost.Chrono</strong></span>
-          introduces the <code class="computeroutput"><span class="identifier">Stopwatch</span></code>
-          concept which captures the mechanism to measure the elapsed time. A Stopwatch
-          allows to start, stop, suspend and resume the measure of the eleapsed time.
-          <code class="computeroutput"><span class="identifier">stopwatch</span><span class="special">&lt;&gt;</span></code>
-          is the basic model of <code class="computeroutput"><span class="identifier">Stopwatch</span></code>
-          allowing to make a single measure.
+          introduces the <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
+        Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a> concept which captures
+          the mechanism to measure the elapsed time. A Stopwatch allows to start,
+          stop, suspend and resume the measure of the eleapsed time. <code class="computeroutput"><span class="identifier">stopwatch</span><span class="special">&lt;&gt;</span></code>
+          is the basic model of <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
+        Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a> allowing to make a single
+          measure.
         </p>
 <p>
           At the user level, the main use case of measuring the elapsed time is to
@@ -803,7 +809,7 @@
 <span class="number">0.017</span><span class="identifier">s</span>
 </pre>
 <a name="boost_chrono.overview.motivation.stopwatches.stopwatches_accumulation_and_statistics"></a><h5>
-<a name="id4817722"></a>
+<a name="id4817777"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.stopwatches.stopwatches_accumulation_and_statistics">Stopwatches
           accumulation and statistics</a>
         </h5>
@@ -841,7 +847,7 @@
 <pre class="programlisting"><span class="number">3</span> <span class="identifier">times</span><span class="special">,</span> <span class="identifier">sum</span><span class="special">=</span><span class="number">0.034</span><span class="identifier">s</span><span class="special">,</span> <span class="identifier">min</span><span class="special">=</span><span class="number">0.006</span><span class="identifier">s</span><span class="special">,</span> <span class="identifier">max</span><span class="special">=</span><span class="number">0.017</span><span class="identifier">s</span><span class="special">,</span> <span class="identifier">mean</span><span class="special">=</span><span class="number">0.011</span><span class="identifier">s</span>
 </pre>
 <a name="boost_chrono.overview.motivation.stopwatches.wall_clock_versus_system_and_user_time"></a><h5>
-<a name="id4818254"></a>
+<a name="id4818309"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.stopwatches.wall_clock_versus_system_and_user_time">Wall
           clock versus system and user time</a>
         </h5>
@@ -897,7 +903,7 @@
 </span><span class="special">}</span>
 </pre>
 <a name="boost_chrono.overview.motivation.stopwatches.how_reliable_are_these_measures_"></a><h5>
-<a name="id4818642"></a>
+<a name="id4818696"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.stopwatches.how_reliable_are_these_measures_">How
           reliable are these measures?</a>
         </h5>
@@ -936,9 +942,10 @@
             the time you get is the delay during which your block has been executed,
             in concurrency with the other threads of execution. If what you want
             is the time spent by this specific thread another clock is needed. The
-            library provide a <code class="computeroutput"><span class="identifier">thread_clock</span></code>
-            that returns the time spent by the thread on platforms providing this
-            kind of data. It can be used as follows
+            library provide a <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock" title="
+          Class thread_clock"><code class="computeroutput"><span class="identifier">thread_clock</span></code></a> that returns the
+            time spent by the thread on platforms providing this kind of data. It
+            can be used as follows
           </li></ul></div>
 <p>
           
@@ -979,10 +986,11 @@
             between the application time and the intrinsec stopclock time. When the
             precission of the clock is enough, we can suspend the counting of the
             Clock while we are spending time reporting the measures, and resume it
-            once the work is done. The library provide a Clock wrapper suspendible_clock
-            that make the resulting clock suspendible. The stopwatch_reporter is
-            able to detect if the CLock is Suspendible and then suspend/resume the
-            clock while doing the report.
+            once the work is done. The library provide a Clock wrapper <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.suspendible_clock_hpp.suspendible_clock" title="
+          Template Class suspendible_clock&lt;&gt;"><code class="computeroutput"><span class="identifier">suspendible_clock</span></code></a> that make
+            the resulting clock suspendible. The stopwatch_reporter is able to detect
+            if the CLock is Suspendible and then suspend/resume the clock while doing
+            the report.
           </li>
 </ul></div>
 <pre class="programlisting"><span class="identifier">stopclock</span><span class="special">&lt;</span><span class="identifier">suspendible_clock</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">_</span><span class="special">;</span>

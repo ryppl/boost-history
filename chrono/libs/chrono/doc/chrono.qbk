@@ -62,6 +62,10 @@
 [template high_resolution_clock_link[link_text] [link boost_chrono.reference.cpp0x.chrono_chrono_hpp.high_resolution_clock [link_text]]]
 [def __high_resolution_clock__ [high_resolution_clock_link `high_resolution_clock`]]
 
+[def __duration_cast__ [link boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_cast `duration_cast`]]
+
+
+
 [/==================]
 [/template minutes_link[link_text] [link boost_chrono.reference.cpp0x.chrono_chrono_hpp.minutes [link_text]]]
 [template minutes_link[link_text] [link_text]]
@@ -89,6 +93,13 @@
 [def __stopwatch_req__ [stopwatch_concept_link `Stopwatch` requirements]]
 [def __Stopwatch__ [stopwatch_concept_link `Stopwatch`]]
 
+
+[def __stopwatch__ [link boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch `stopwatch`]]
+
+[def __stopwatch_accumulator__ [link boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator `stopwatch_accumulator`]]
+
+[def __stopwatch_reporter__ [link boost_chrono.reference.reporters.stopwatch_reporter_hpp.stopwatch_reporter `stopwatch_reporter`]]
+
 [/==================]
 [template formatter_concept_link[link_text] [link boost_chrono.reference.reporters.formatter_req [link_text]]]
 [def __formatter_concept__ [formatter_concept_link `Formatter` concept]]
@@ -96,10 +107,19 @@
 [def __formatter_req__ [formatter_concept_link `Formatter` requirements]]
 [def __Formatter__ [formatter_concept_link `Formatter`]]
 
-[def __stopwatch__ [link boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch `stopwatch`]]
+[def __stopclock__ [link boost_chrono.reference.reporters.stopclock_hpp.stopclock `stopclock`]]
+[def __stopclock_clock__ [link boost_chrono.reference.reporters.stopclock_hpp.stopclock `stopclock<Clock>`]]
 
+[def __scoped_stopclock__ [link boost_chrono.reference.reporters.scoped_stopclock_hpp.scoped_stopclock `scoped_stopclock`]]
 
+[def __process_real_cpu_clock__ [link boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_real_cpu_clock `process_real_cpu_clock`]]
 
+[def __process_system_cpu_clock__ [link boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_system_cpu_clock `process_system_cpu_clock`]]
+
+[def __process_user_cpu_clock__ [link boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_user_cpu_clock `process_user_cpu_clock`]]
+
+[def __thread_clock__ [link boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock `thread_clock`]]
+[def __suspendible_clock__ [link boost_chrono.reference.other_clocks.suspendible_clock_hpp.suspendible_clock `suspendible_clock`]]
 
 
 [warning Chrono is not part of the Boost libraries.]
@@ -132,18 +152,18 @@ Knowing how long a program takes to execute is useful in both test and productio
     * __Stopwatch__ concept
     * Scoped helper classes allowing to pairwise start/stop operations, suspend/resume and resume/suspend a __Stopwatch__.
     * __stopwatch__, model of __Stopwatch__ capturing elapsed __Clock__ times.
-    * `stopwatch_accumulator`, model of __Stopwatch__ capturing cummulated elapsed Clock times.
+    * __stopwatch_accumulator__, model of __Stopwatch__ capturing cummulated elapsed Clock times.
 
 * a Stopclocks higher layer: provide a complete stopclock reporting package that can be invoked in a single line of code.
-    * `stopwatch_reporter`, convenient reporting of models of __Stopwatch__ results.
-    * `stopclock<Clock>` shortcut of `stopwatch_reporter<stopwatch<Clock>>`
+    * __stopwatch_reporter__, convenient reporting of models of __Stopwatch__ results.
+    * __stopclock_clock__ shortcut of `stopwatch_reporter<stopwatch<Clock>>`
     * Allows wide characters
 
 It is also helpful if such timing information is broken down into real (wall clock) time, CPU time spent by the user, and CPU time spent by the operating system servicing user requests. process clocks provide a thin wrapper around the operating system's process timer API. For POSIX-like systems, that's the times() function, while for Windows, it's the GetProcessTimes() function.
 
-* `process_real_CPU_clocks`, capturing real-CPU times.
-* `process_user_CPU_clocks`, capturing user-CPU times.
-* `process_system_CPU_clocks`, capturing system-CPU times.
+* __process_real_CPU_clock__, capturing real-CPU times.
+* __process_user_CPU_clock__, capturing user-CPU times.
+* __process_system_CPU_clock__, capturing system-CPU times.
 * `process_cpu_clock`, tuple-like class capturing at once real, user-CPU, and system-CPU times.
 
 To complete the clocks __Boost_Chrono__ provides, in platforms support them, thread clocks.
@@ -154,7 +174,7 @@ To complete the clocks __Boost_Chrono__ provides, in platforms support them, thr
 * Suspendible clock
     * __SuspendibleClock__ concept
     * scope_suspend which do suspend/resume if the __Clock__ is a model of __SuspendibleClock__ concept, and nothing otherwise.
-    * template class `suspendible_clock<>`
+    * template class __suspendible_clock__
 ]
 
 Last, __Boost_Chrono__ include typeof registration for classes __duration__ and __time_point__ so you can used auto emulated on C++03 compilers.
@@ -243,7 +263,7 @@ __ratio__ is a template taking two intmax_ts, with the second defaulted to 1. In
     typedef ratio<25, 15> also_five_thirds;  // also_five_thirds::num == 5, also_five_thirds::den == 3
     typedef ratio_divide<five_thirds, also_five_thirds>::type one;  // one::num == 1, one::den == 1
 
-This facility also includes convenience typedefs for the SI prefixes `atto` through `exa` corresponding to their internationally recognized definitions (in terms of `ratio`). This is a tremendous syntactic convenience. It will prevent errors in specifying constants as one no longer has to double count the number of zeros when trying to write million or billion.
+This facility also includes convenience typedefs for the SI prefixes `atto` through `exa` corresponding to their internationally recognized definitions (in terms of __ratio__). This is a tremendous syntactic convenience. It will prevent errors in specifying constants as one no longer has to double count the number of zeros when trying to write million or billion.
 
 [*Example:]
 
@@ -310,7 +330,7 @@ If you need to access the tick count within a __duration__, there is a member `c
 
 These __duration_s__ have very simple, very predictable, and very observable behavior. After all, this is really nothing but the time tested interface of Jeff's boost time __duration__ library (unified with templates instead of inheritance).
 
-[heading What happens if I assign `m3 + us3` to __minutes__ instead of `microseconds`?]
+[heading What happens if I assign `m3 + us3` to `minutes` instead of `microseconds`?]
 
     minutes m4 = m3 + us3;
 
@@ -318,11 +338,11 @@ It won't compile. The rationale is that implicit truncation error should not be 
 
 [heading But what if the truncation behavior is what I want to do?]
 
-There is a `duration_cast` facility to explicitly ask for this behavior:
+There is a __duration_cast__ facility to explicitly ask for this behavior:
 
     minutes m4 = duration_cast<minutes>(m3 + us3);  // m4.count() == 5
 
-In general, one can perform __duration__ arithmetic at will. If `duration_cast` isn't used, and it compiles, the arithmetic is exact. Any place one wants to override this exact arithmetic behavior, duration_cast can be used to explicitly specify that desire. The `duration_cast` has the same efficiency as the implicit conversion, and will even be exact as often as it can.
+In general, one can perform __duration__ arithmetic at will. If __duration_cast__ isn't used, and it compiles, the arithmetic is exact. Any place one wants to override this exact arithmetic behavior, __duration_cast__ can be used to explicitly specify that desire. The __duration_cast__ has the same efficiency as the implicit conversion, and will even be exact as often as it can.
 
 [heading I'm trafficking in floating point __duration_s__. I don't want to deal with writing `duration_cast` all over the place. I'm content with the precision of my floating point representation]
 
@@ -492,7 +512,7 @@ A delay loop example:
     while (monotonic_clock::now() < go)
         ;
 
-The above code will delay as close as possible to half a microsecond, no matter what the precision of monotonic_clock is. The more precise `monotonic_clock` becomes, the more accurate will be the delay to 500 nanoseconds.
+The above code will delay as close as possible to half a microsecond, no matter what the precision of monotonic_clock is. The more precise __monotonic_clock__ becomes, the more accurate will be the delay to 500 nanoseconds.
 
 [endsect]
 
@@ -500,9 +520,9 @@ The above code will delay as close as possible to half a microsecond, no matter 
 [section Stopwatches]
 
 Knowing how long a program, a function or a specific block takes to execute is useful in both test and production environments.
-__Boost_Chrono__ introduces the `Stopwatch` concept which captures the mechanism to measure the elapsed time.
+__Boost_Chrono__ introduces the __Stopwatch__ concept which captures the mechanism to measure the elapsed time.
 A Stopwatch allows to start, stop, suspend and resume the measure of the eleapsed time.
-`stopwatch<>` is the basic model of `Stopwatch` allowing to make a single measure.
+`stopwatch<>` is the basic model of __Stopwatch__ allowing to make a single measure.
 
 At the user level, the main use case of measuring the elapsed time is to report these measures on the display.
 `stopwatch_reporter<>` provides a run time reporting package that can be invoked in a single line of code to report the usage of a Clock.
@@ -607,7 +627,7 @@ There are three context on which you can get unreliable measures:
     stopclock<high_resolution_clock> _;
 ``
 
-* When your application is multithreaded, and you use a process clock, the time you get is the delay during which your block has been executed, in concurrency with the other threads of execution. If what you want is the time spent by this specific thread another clock is needed. The library provide a `thread_clock` that returns the time spent by the thread on platforms providing this kind of data. It can be used as follows
+* When your application is multithreaded, and you use a process clock, the time you get is the delay during which your block has been executed, in concurrency with the other threads of execution. If what you want is the time spent by this specific thread another clock is needed. The library provide a __thread_clock__ that returns the time spent by the thread on platforms providing this kind of data. It can be used as follows
 
 ``
 #include <boost/chrono/thread_clock.hpp>
@@ -625,7 +645,7 @@ Some measures let us think that most of the time spent by the stopclock mechanis
 
 * Avoid expensive operations as logging while doing the measures. Note that reporting in itself is not too expensive as far as we don't need to flush the buffer. This can be achieved either using a stopclock accumulator, 'i.e. don't report until all the measures have been compiled and then report some statistics or using an asynchronous stream.
 
-* Introduce some cheap mechanism that allows us to make the difference between the application time and the intrinsec stopclock time. When the precission of the clock is enough, we can suspend the counting of the Clock while we are spending time reporting the measures, and resume it once the work is done. The library provide a Clock wrapper suspendible_clock that make the resulting clock suspendible. The stopwatch_reporter is able to detect if the CLock is Suspendible and then suspend/resume the clock while doing the report.
+* Introduce some cheap mechanism that allows us to make the difference between the application time and the intrinsec stopclock time. When the precission of the clock is enough, we can suspend the counting of the Clock while we are spending time reporting the measures, and resume it once the work is done. The library provide a Clock wrapper __suspendible_clock__ that make the resulting clock suspendible. The stopwatch_reporter is able to detect if the CLock is Suspendible and then suspend/resume the clock while doing the report.
 
     stopclock<suspendible_clock<Clock> > _;
 
@@ -843,7 +863,7 @@ The default definition of __common_type__ demands the conversion be implicit. Ho
 
 [section How to get the actual CPU milliseconds (or other units?) used by the current thread between end and start?]
 
-You can use `duration_cast<>` to convert the `thread_clock::duration` into whatever units you desire.  This facility will round down (truncate) if an exact conversion is not possible.  Ex:
+You can use __duration_cast__<> to convert the `thread_clock::duration` into whatever units you desire.  This facility will round down (truncate) if an exact conversion is not possible.  Ex:
 
     typedef boost::chrono::milliseconds ms;
     ms d = boost::chrono::duration_cast<ms>(end - start);
@@ -852,23 +872,23 @@ You can use `duration_cast<>` to convert the `thread_clock::duration` into whate
 
     std::cout << ms.count() << "ms\n";
 
-As `boost::chrono::thread_clock::duration` is nanoseconds, we can convert to __nanoseconds__, or some integral-based duration which __nanoseconds__ will always exactly convert to, then `duration_cast<>` is unnecessary:
+As `boost::chrono::thread_clock::duration` is nanoseconds, we can convert to __nanoseconds__, or some integral-based duration which __nanoseconds__ will always exactly convert to, then __duration_cast__<> is unnecessary:
 
     typedef boost::chrono::nanoseconds ns;
     ns d = end - start;
     std::cout << ns.count() << "ns\n";
 
-If you need seconds with a floating point representation you can also eliminate the `duration_cast<>`:
+If you need seconds with a floating point representation you can also eliminate the __duration_cast_<>:
 
     typedef boost::chrono::duration<double> sec;  // seconds, stored with a double
     sec d = end - start;
     std::cout << sec.count() << "s\n";
 
-If you're not sure if you need `duration_cast<>` or not, feel free to try it without.  If the conversion is exact, or if the destination has a floating point representation, it will compile.  Else it will not compile.
+If you're not sure if you need __duration_cast__<> or not, feel free to try it without.  If the conversion is exact, or if the destination has a floating point representation, it will compile.  Else it will not compile.
 
-If you would like to programmatically inspect `thread_clock::duration`, you can get the representation type with `thread_clock::rep`, and the tick period with `thread_clock::period` (which should be a type __ratio__ which has nested values `ratio::num` and `ratio::den`).  The tick period of `thread_clock` is `thread_clock::period::num / thread_clock::period::den` seconds: 1/1000000000 in this case (1 billionth of a second), stored in a long long.
+If you would like to programmatically inspect `thread_clock::duration`, you can get the representation type with `thread_clock::rep`, and the tick period with `thread_clock::period` (which should be a type __ratio__ which has nested values `ratio::num` and `ratio::den`).  The tick period of __thread_clock__ is `thread_clock::period::num / thread_clock::period::den` seconds: 1/1000000000 in this case (1 billionth of a second), stored in a long long.
 
-If you need to use `duration_cast<>`, but want to round up, instead of down when the conversion is inexact, here is a handy little helper function to do so.  Writing it is actually a good starter project for understanding chrono:
+If you need to use __duration_cast__<>, but want to round up, instead of down when the conversion is inexact, here is a handy little helper function to do so.  Writing it is actually a good starter project for understanding chrono:
 
     template <class ToDuration, Rep, Period>
     ToDuration
@@ -3527,9 +3547,9 @@ Defined if the platform support monotonic clocks.
 
 [section:monotonic_clock Class `monotonic_clock`]
 
-`monotonic_clock` satisfy the __clock_req__.
+__monotonic_clock__ satisfy the __clock_req__.
 
-`monotonic_clock` class provides access to the system-wide monotonic clock. The current time can be obtained by calling `monotonic_clock::now()`. There is no fixed relationship between values returned by `monotonic_clock::now()`  and wall-clock time.
+__monotonic_clock__ class provides access to the system-wide monotonic clock. The current time can be obtained by calling `monotonic_clock::now()`. There is no fixed relationship between values returned by `monotonic_clock::now()`  and wall-clock time.
 
     #ifdef BOOST_HAS_CLOCK_MONOTONIC
         class BOOST_CHRONO_DECL monotonic_clock {
@@ -3572,7 +3592,7 @@ Register `duration<>` and `timepoint<>` class templates to Boost.Typeof.
 [endsect]
 [endsect]
 
-[section Other clocks]
+[section:other_clocks Other clocks]
 
 [/==================================================================]
 [section:process_cpu_clocks_hpp Header `<boost/chrono/process_cpu_clocks.hpp>`]
@@ -3591,9 +3611,9 @@ Knowing how long a program takes to execute is useful in both test and productio
 
 [section:process_real_cpu_clock Class `process_real_cpu_clock`]
 
-`process_real_cpu_clock` satisfy the __clock_req__.
+__process_real_cpu_clock__ satisfy the __clock_req__.
 
-`process_real_cpu_clock` class provides access to the real process wall-clock monotonic clock, i.e. the real CPU-time clock of the calling process. The process relative current time can be obtained by calling `process_real_cpu_clock::now()`.
+__process_real_cpu_clock__ class provides access to the real process wall-clock monotonic clock, i.e. the real CPU-time clock of the calling process. The process relative current time can be obtained by calling `process_real_cpu_clock::now()`.
 
         class process_real_cpu_clock {
         public:
@@ -3610,9 +3630,9 @@ Knowing how long a program takes to execute is useful in both test and productio
 [endsect]
 [section:process_user_cpu_clock Class `process_user_cpu_clock`]
 
-`process_user_cpu_clock` satisfy the __clock_req__.
+__process_user_cpu_clock__ satisfy the __clock_req__.
 
-`process_user_cpu_clock` class provides access to the user CPU-time monotonic clock of the calling process. The process relative user current time can be obtained by calling `process_user_cpu_clock::now()`.
+__process_user_cpu_clock__ class provides access to the user CPU-time monotonic clock of the calling process. The process relative user current time can be obtained by calling `process_user_cpu_clock::now()`.
 
         class process_user_cpu_clock {
         public:
@@ -3630,9 +3650,9 @@ Knowing how long a program takes to execute is useful in both test and productio
 
 [section:process_system_cpu_clock Class `process_system_cpu_clock`]
 
-`process_system_cpu_clock` satisfy the __clock_req__.
+__process_system_cpu_clock__ satisfy the __clock_req__.
 
-`process_system_cpu_clock` class provides access to the system CPU-time monotonic clockof the calling process. The process relative system current time can be obtained by calling `process_system_cpu_clock::now()`.
+__process_system_cpu_clock__ class provides access to the system CPU-time monotonic clockof the calling process. The process relative system current time can be obtained by calling `process_system_cpu_clock::now()`.
 
         class process_system_cpu_clock {
         public:
@@ -3747,9 +3767,9 @@ This macro is defined if the platform has a thread clockIts value is true if it 
 
 [section:thread_clock Class `thread_clock`]
 
-`thread_clock` satisfy the __clock_req__.
+__thread_clock__ satisfy the __clock_req__.
 
-`thread_clock` class provides access to the real thread wall-clock, i.e. the real CPU-time clock of the calling thread. The thread relative current time can be obtained by calling `thread_clock::now()`.
+__thread_clock__ class provides access to the real thread wall-clock, i.e. the real CPU-time clock of the calling thread. The thread relative current time can be obtained by calling `thread_clock::now()`.
 
         class thread_clock {
         public:
@@ -3815,7 +3835,7 @@ In this table `C`  denote `clock` types.
 
 Models of `SuspendibleClock`:
 
-* [@boost_chrono/reference/other_clocks.html#boost_chrono.reference.other_clocks.suspendible_clock_hpp.template_class__suspendible_clock___ `suspendible_clock<Clock>`]
+* __suspendible_clock__]
 
 
 [endsect]
@@ -3873,7 +3893,7 @@ Models of `SuspendibleClock`:
 
 [section:suspendible_clock Template Class `suspendible_clock<>`]
 
-Given a `Clock`, `suspendible_clock<Clock>` is a model of [@boost_chrono/reference/other_clocks.html#boost_chrono.reference.other_clocks.suspendible_clock_req SuspendibleClock].
+Given a __Clock__, __suspendible_clock__ <__Clock__> is a model of __SuspendibleClock__.
 
     template < class Clock >
     class suspendible_clock {
@@ -4024,7 +4044,7 @@ In this table `S`, `S1` and `S2` denote stopwatches types. `s` is an instance of
 Models of `Stopwatch`:
 
 * __stopwatch__
-* [@boost_chrono/reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.template_class__stopwatch_accumulator___ `stopwatch_accumulator`]
+* __stopwatch_accumulator__
 
 [endsect]
 [/==================================================]
@@ -4277,7 +4297,7 @@ A `stopwatch_accumulator<>` is a model of a __stopwatch_concept__ that allows to
 
 [endsect]
 
-[section:stopwatch_accumulator_typedefs `stopwatch_accumulator` useful typedefs]
+[section:stopwatch_accumulator_typedefs __stopwatch_accumulator__ useful typedefs]
 
     typedef boost::chrono::stopwatch_accumulator< boost::chrono::system_clock > system_stopwatch_accumulator;
 #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
@@ -4430,7 +4450,7 @@ Models of `Formatter`:
             typedef <see below> type;
         };
 
-The nested typedef `type` defines the default formatter used by the `stopwatch_reporter` class when the `Formatter` parameter is not explicit.
+The nested typedef `type` defines the default formatter used by the __stopwatch_reporter__ class when the `Formatter` parameter is not explicit.
 
 [endsect]
 
@@ -4512,7 +4532,7 @@ The default format is given by Formatter::default_format().
 
 [section:stopwatch_reporter Template Class `stopwatch_reporter<>`]
 
-class `stopwatch_reporter` provides a everything a `Stopwatch` provides and it adds reporting capabilities that can be invoked in a single line of code. The reporting is controleed by two parameters:
+class __stopwatch_reporter__ provides a everything a `Stopwatch` provides and it adds reporting capabilities that can be invoked in a single line of code. The reporting is controleed by two parameters:
 
 * format : The output format
 * places(precission): the number of decimal placess used.
@@ -5631,7 +5651,7 @@ All the units are given using the suffix "s" following the System International 
 
 [*New Features:]
 
-* Added `thread_clock` implementation on Windows.
+* Added __thread_clock__ implementation on Windows.
 * Added *Boost.Thread* using *Boost.Chrono*.
 
 [endsect]
@@ -5640,10 +5660,10 @@ All the units are given using the suffix "s" following the System International 
 
 [*New Features:]
 
-* __SuspendibleClock__ concept + template class `suspendible_clock<>`.
+* __SuspendibleClock__ concept + template class _suspendible_clock__.
 * Added `scope_suspend` which do `suspend`/`resume` if the __Clock__ is a model of __SuspendibleClock__ concept, and nothing otherwise.
-* `thread_clock` support on platforms providing it natively.
-* Added support for wide character for `stopwatch_reporter`, `stopclock`, and `stopclock_accumulator`.
+* __thread_clock__ support on platforms providing it natively.
+* Added support for wide character for __stopwatch_reporter__, `stopclock`, and `stopclock_accumulator`.
 * `digital_time` renamed `t24_hours`.
 
 [*Perf]
@@ -5698,16 +5718,16 @@ by
 * Added `digital_time` (looking for a better name)
 * Added new __Stopwatch__ concept measuring elapsed time between different points in time associated to the operations `start`, `stop`, `suspend` and `resume`.
 * Added __stopwatch__ is a model __Stopwatch__ measuring the elapsed time between the `start` and the `stop` operations.
-* Added `stopwatch_accumulator` is a model __Stopwatch__ allowing to accumulate several time samples and gives the average, ...
+* Added __stopwatch_accumulator__ is a model __Stopwatch__ allowing to accumulate several time samples and gives the average, ...
 * Added scoped helper classes allowing to pairwise `start`/`stop` operations, `suspend`/`resume` and `resume`/`suspend` a __Stopwatch__.
 * Added new stopwatch __Formatter__ concept
     * Added stopwatch formatter "%ds\\n"
     * Added stopwatch accumulator formatter "%c times, sum=%ss, min=%ms, max=%Ms, mean=%as\\n"
     * Added time formatter "real %rs, cpu %cs (%p%), user %us, system %ss\\n"
     * Added digital_time formatter "%d days(s) %h:%m:%s.%n\\n"
-* `stopwatch_reporter` is a convenient generic class reporting elapsed time for the Stopwatch concept.
+* __stopwatch_reporter__ is a convenient generic class reporting elapsed time for the Stopwatch concept.
 * Added `stopclock<Clock>` shortcut `stopwatch_reporter<stopwatch<Clock>>`
-* Added `scoped_stopclock` which
+* Added __scoped_stopclock__ which trace at the constuctor and destructor.
 * Added `typeof` registration for classes __duration__ and __time_point__
 
 * The old classes `process_times`, `process_clock`, `process_timer`, `timer` and `run_timer` are deprecated as the preceding additions are more generic. However for backward compatibility they preserved until inclusion of the library in Boost. Next follows the equivalences:
@@ -5756,7 +5776,7 @@ More updated documentation.
 
 * Added __ratio__ construction and assignment from an equivalent __ratio__ ([@http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#1281 [*LWG 1281. CopyConstruction and Assignment between ratios having the same normalized form]])
 * Added nested __ratio__ typedef type ([@http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#1281 [*LWG 1281. CopyConstruction and Assignment between ratios having the same normalized form]])
-* Added `BOOST_CHRONO_HAS_CLOCK_MONOTONIC` macro to state if `monotonic_clock` is provided on this platform.
+* Added `BOOST_CHRONO_HAS_CLOCK_MONOTONIC` macro to state if __monotonic_clock__ is provided on this platform.
 * Added __duration__ `operator%` ([@http://home.roadrunner.com/~hinnant/issue_review/lwg-defects.html#934 [*LGW 934. duration is missing operator%]])
 * Added BOOST_CHRONO_CONSTEXPR when constexpr should be used.
 * Complete __duration__ `operator*` and `operator/`.
@@ -5795,7 +5815,7 @@ More updated documentation.
     * Class template __time_point__
     * Clocks:
         * `system_clock`
-        * `monotonic_clock`
+        * __monotonic_clock__
         * `high_resolution_clock`
 
 * Class template timer, with typedefs:
@@ -5964,7 +5984,7 @@ Much thanks to Andrei Alexandrescu, Walter Brown, Peter Dimov, Jeff Garland, Ter
 
 Beman Dawes added the `timer<>`, `process_clock`, `process_timer`, `run_timer` classes which are now deprecated and replaced by the __stopwatch__, `process_cpu_clock` and `stopclock` classes.
 
-Thanks to Adrew Chinoff for its multiple suggestion on `stopwatch_accumulator`, and helping me to polish the documentation.
+Thanks to Adrew Chinoff for its multiple suggestion on __stopwatch_accumulator__, and helping me to polish the documentation.
 
 Thanks to Tom Tan for reporting some compiler issues with MSVC V10 beta and MinGW-gcc-4.4.0 and for the many suggestion he did concerning the new __stopwatch__, `process_cpu_clock`and `stopclock` classes and a deep help with wide characters implementation.
 

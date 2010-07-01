@@ -111,7 +111,9 @@
           thread between end and start?</a>
 </h5></div></div></div>
 <p>
-            You can use <code class="computeroutput"><span class="identifier">duration_cast</span><span class="special">&lt;&gt;</span></code> to convert the <code class="computeroutput"><span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">duration</span></code> into whatever units you desire.
+            You can use <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_cast" title="
+          Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a>&lt;&gt; to convert
+            the <code class="computeroutput"><span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">duration</span></code> into whatever units you desire.
             This facility will round down (truncate) if an exact conversion is not
             possible. Ex:
           </p>
@@ -126,7 +128,8 @@
             As <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">duration</span></code> is nanoseconds, we can convert
             to <code class="computeroutput"><span class="identifier">nanoseconds</span></code>, or some
             integral-based duration which <code class="computeroutput"><span class="identifier">nanoseconds</span></code>
-            will always exactly convert to, then <code class="computeroutput"><span class="identifier">duration_cast</span><span class="special">&lt;&gt;</span></code> is unnecessary:
+            will always exactly convert to, then <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_cast" title="
+          Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a>&lt;&gt; is unnecessary:
           </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">nanoseconds</span> <span class="identifier">ns</span><span class="special">;</span>
 <span class="identifier">ns</span> <span class="identifier">d</span> <span class="special">=</span> <span class="identifier">end</span> <span class="special">-</span> <span class="identifier">start</span><span class="special">;</span>
@@ -134,16 +137,18 @@
 </pre>
 <p>
             If you need seconds with a floating point representation you can also
-            eliminate the <code class="computeroutput"><span class="identifier">duration_cast</span><span class="special">&lt;&gt;</span></code>:
+            eliminate the __duration<span class="underline">cast</span>&lt;&gt;:
           </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">sec</span><span class="special">;</span>  <span class="comment">// seconds, stored with a double
 </span><span class="identifier">sec</span> <span class="identifier">d</span> <span class="special">=</span> <span class="identifier">end</span> <span class="special">-</span> <span class="identifier">start</span><span class="special">;</span>
 <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">sec</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"s\n"</span><span class="special">;</span>
 </pre>
 <p>
-            If you're not sure if you need <code class="computeroutput"><span class="identifier">duration_cast</span><span class="special">&lt;&gt;</span></code> or not, feel free to try it without.
-            If the conversion is exact, or if the destination has a floating point
-            representation, it will compile. Else it will not compile.
+            If you're not sure if you need <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_cast" title="
+          Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a>&lt;&gt; or not,
+            feel free to try it without. If the conversion is exact, or if the destination
+            has a floating point representation, it will compile. Else it will not
+            compile.
           </p>
 <p>
             If you would like to programmatically inspect <code class="computeroutput"><span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">duration</span></code>,
@@ -152,15 +157,16 @@
             (which should be a type <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
           Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> which has nested values
             <code class="computeroutput"><span class="identifier">ratio</span><span class="special">::</span><span class="identifier">num</span></code> and <code class="computeroutput"><span class="identifier">ratio</span><span class="special">::</span><span class="identifier">den</span></code>).
-            The tick period of <code class="computeroutput"><span class="identifier">thread_clock</span></code>
-            is <code class="computeroutput"><span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">period</span><span class="special">::</span><span class="identifier">num</span> <span class="special">/</span> <span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">period</span><span class="special">::</span><span class="identifier">den</span></code> seconds: 1/1000000000 in this case
+            The tick period of <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock" title="
+          Class thread_clock"><code class="computeroutput"><span class="identifier">thread_clock</span></code></a> is <code class="computeroutput"><span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">period</span><span class="special">::</span><span class="identifier">num</span> <span class="special">/</span> <span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">period</span><span class="special">::</span><span class="identifier">den</span></code> seconds: 1/1000000000 in this case
             (1 billionth of a second), stored in a long long.
           </p>
 <p>
-            If you need to use <code class="computeroutput"><span class="identifier">duration_cast</span><span class="special">&lt;&gt;</span></code>, but want to round up, instead
-            of down when the conversion is inexact, here is a handy little helper
-            function to do so. Writing it is actually a good starter project for
-            understanding chrono:
+            If you need to use <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_cast" title="
+          Non-Member function duration_cast(duration)"><code class="computeroutput"><span class="identifier">duration_cast</span></code></a>&lt;&gt;, but want
+            to round up, instead of down when the conversion is inexact, here is
+            a handy little helper function to do so. Writing it is actually a good
+            starter project for understanding chrono:
           </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">ToDuration</span><span class="special">,</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span>
 <span class="identifier">ToDuration</span>

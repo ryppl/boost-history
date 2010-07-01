@@ -8,7 +8,7 @@
 <link rel="start" href="../../index.html" title="Boost.Chrono">
 <link rel="up" href="../reference.html" title=" Reference ">
 <link rel="prev" href="../reference.html" title=" Reference ">
-<link rel="next" href="other_clocks.html" title="Other clocks">
+<link rel="next" href="other_clocks.html" title=" Other clocks">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -970,18 +970,14 @@
           Class monotonic_clock"><code class="computeroutput"><span class="identifier">monotonic_clock</span></code></a></li>
 <li><a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.high_resolution_clock" title="
           Class high_resolution_clock"><code class="computeroutput"><span class="identifier">high_resolution_clock</span></code></a></li>
-<li>
-              __process_real_cpu<span class="underline">clock</span>_
-            </li>
-<li>
-              __process_user_cpu<span class="underline">clock</span>_
-            </li>
-<li>
-              __process_system_cpu<span class="underline">clock</span>_
-            </li>
-<li>
-              __thread<span class="underline">clock</span>_
-            </li>
+<li><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_real_cpu_clock" title="
+          Class process_real_cpu_clock"><code class="computeroutput"><span class="identifier">process_real_cpu_clock</span></code></a></li>
+<li><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_user_cpu_clock" title="
+          Class process_user_cpu_clock"><code class="computeroutput"><span class="identifier">process_user_cpu_clock</span></code></a></li>
+<li><a href="other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_system_cpu_clock" title="
+          Class process_system_cpu_clock"><code class="computeroutput"><span class="identifier">process_system_cpu_clock</span></code></a></li>
+<li><a href="other_clocks.html#boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock" title="
+          Class thread_clock"><code class="computeroutput"><span class="identifier">thread_clock</span></code></a></li>
 </ul></div>
 </div>
 <div class="section" lang="en">
@@ -2504,14 +2500,16 @@
           Class <code class="computeroutput"><span class="identifier">monotonic_clock</span></code></a>
 </h5></div></div></div>
 <p>
-            <code class="computeroutput"><span class="identifier">monotonic_clock</span></code> satisfy
-            the <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.clock" title="
+            <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.monotonic_clock" title="
+          Class monotonic_clock"><code class="computeroutput"><span class="identifier">monotonic_clock</span></code></a> satisfy the
+            <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.clock" title="
           Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code> requirements</a>.
           </p>
 <p>
-            <code class="computeroutput"><span class="identifier">monotonic_clock</span></code> class
-            provides access to the system-wide monotonic clock. The current time
-            can be obtained by calling <code class="computeroutput"><span class="identifier">monotonic_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span></code>. There is no fixed relationship between
+            <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.monotonic_clock" title="
+          Class monotonic_clock"><code class="computeroutput"><span class="identifier">monotonic_clock</span></code></a> class provides
+            access to the system-wide monotonic clock. The current time can be obtained
+            by calling <code class="computeroutput"><span class="identifier">monotonic_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span></code>. There is no fixed relationship between
             values returned by <code class="computeroutput"><span class="identifier">monotonic_clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span></code> and wall-clock time.
           </p>
 <pre class="programlisting"><span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_HAS_CLOCK_MONOTONIC</span>

@@ -146,7 +146,8 @@
         </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-            Added <code class="computeroutput"><span class="identifier">thread_clock</span></code> implementation
+            Added <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock" title="
+          Class thread_clock"><code class="computeroutput"><span class="identifier">thread_clock</span></code></a> implementation
             on Windows.
           </li>
 <li>
@@ -166,7 +167,7 @@
 <div class="itemizedlist"><ul type="disc">
 <li>
 <span class="underline">_SuspendibleClock</span>_ concept + template
-            class <code class="computeroutput"><span class="identifier">suspendible_clock</span><span class="special">&lt;&gt;</span></code>.
+            class _suspendible<span class="underline">clock</span>_.
           </li>
 <li>
             Added <code class="computeroutput"><span class="identifier">scope_suspend</span></code> which
@@ -174,12 +175,13 @@
           Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code></a> is a model of <span class="underline">_SuspendibleClock</span>_ concept, and nothing otherwise.
           </li>
 <li>
-<code class="computeroutput"><span class="identifier">thread_clock</span></code> support
-            on platforms providing it natively.
+<a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock" title="
+          Class thread_clock"><code class="computeroutput"><span class="identifier">thread_clock</span></code></a> support on platforms
+            providing it natively.
           </li>
 <li>
-            Added support for wide character for <code class="computeroutput"><span class="identifier">stopwatch_reporter</span></code>,
-            <code class="computeroutput"><span class="identifier">stopclock</span></code>, and <code class="computeroutput"><span class="identifier">stopclock_accumulator</span></code>.
+            Added support for wide character for <a href="../reference/reporters.html#boost_chrono.reference.reporters.stopwatch_reporter_hpp.stopwatch_reporter" title="
+          Template Class stopwatch_reporter&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_reporter</span></code></a>, <code class="computeroutput"><span class="identifier">stopclock</span></code>, and <code class="computeroutput"><span class="identifier">stopclock_accumulator</span></code>.
           </li>
 <li>
 <code class="computeroutput"><span class="identifier">digital_time</span></code> renamed
@@ -297,8 +299,9 @@
             and the <code class="computeroutput"><span class="identifier">stop</span></code> operations.
           </li>
 <li>
-            Added <code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code>
-            is a model <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
+            Added <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator" title="
+          Template Class stopwatch_accumulator&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code></a> is a model
+            <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
         Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a> allowing to accumulate
             several time samples and gives the average, ...
           </li>
@@ -328,16 +331,18 @@
 </ul></div>
 </li>
 <li>
-<code class="computeroutput"><span class="identifier">stopwatch_reporter</span></code> is
-            a convenient generic class reporting elapsed time for the Stopwatch concept.
+<a href="../reference/reporters.html#boost_chrono.reference.reporters.stopwatch_reporter_hpp.stopwatch_reporter" title="
+          Template Class stopwatch_reporter&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_reporter</span></code></a> is a convenient
+            generic class reporting elapsed time for the Stopwatch concept.
           </li>
 <li>
             Added <code class="computeroutput"><span class="identifier">stopclock</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span></code>
             shortcut <code class="computeroutput"><span class="identifier">stopwatch_reporter</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;&gt;</span></code>
 </li>
 <li>
-            Added <code class="computeroutput"><span class="identifier">scoped_stopclock</span></code>
-            which
+            Added <a href="../reference/reporters.html#boost_chrono.reference.reporters.scoped_stopclock_hpp.scoped_stopclock" title="
+          Template Class scoped_stopclock&lt;&gt;"><code class="computeroutput"><span class="identifier">scoped_stopclock</span></code></a> which trace
+            at the constuctor and destructor.
           </li>
 <li>
             Added <code class="computeroutput"><span class="identifier">typeof</span></code> registration
@@ -469,8 +474,9 @@
           </li>
 <li>
             Added <code class="computeroutput"><span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span></code>
-            macro to state if <code class="computeroutput"><span class="identifier">monotonic_clock</span></code>
-            is provided on this platform.
+            macro to state if <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.monotonic_clock" title="
+          Class monotonic_clock"><code class="computeroutput"><span class="identifier">monotonic_clock</span></code></a> is provided
+            on this platform.
           </li>
 <li>
             Added <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
@@ -582,7 +588,8 @@
                 Clocks:
                 <div class="itemizedlist"><ul type="square">
 <li><code class="computeroutput"><span class="identifier">system_clock</span></code></li>
-<li><code class="computeroutput"><span class="identifier">monotonic_clock</span></code></li>
+<li><a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.monotonic_clock" title="
+          Class monotonic_clock"><code class="computeroutput"><span class="identifier">monotonic_clock</span></code></a></li>
 <li><code class="computeroutput"><span class="identifier">high_resolution_clock</span></code></li>
 </ul></div>
 </li>
