@@ -1,0 +1,76 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Motivation</title>
+<link rel="stylesheet" href="../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../../index.html" title="Chapter&#160;1.&#160;Boost.Integer Bits Masks Extension">
+<link rel="up" href="../overview.html" title="overview">
+<link rel="prev" href="description.html" title="Description">
+<link rel="next" href="../users_guide.html" title="Users Guide">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="description.html"><img src="../../..//home/brian/gsoc/boost-trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../..//home/brian/gsoc/boost-trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../..//home/brian/gsoc/boost-trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../users_guide.html"><img src="../../..//home/brian/gsoc/boost-trunk/doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.overview.motivation"></a><a class="link" href="motivation.html" title="Motivation">Motivation</a>
+</h4></div></div></div>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">bitfield_tuple</span><span class="special">&lt;</span>
+    <span class="identifier">storage</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">,</span><span class="identifier">bool_one</span><span class="special">,</span><span class="number">1</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">,</span><span class="identifier">bool_two</span><span class="special">,</span><span class="number">1</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="identifier">int_one</span><span class="special">,</span><span class="number">2</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="identifier">int_two</span><span class="special">,</span><span class="number">2</span><span class="special">&gt;</span>
+<span class="special">&gt;</span>                       <span class="identifier">example_type</span><span class="special">;</span>
+</pre>
+<p>
+        </p>
+<p>
+          The goal of a bitfield tuple is to provide a method for constructing bitfields
+          which is not subject to packing restrictions of structs or classes, while
+          providing an interface simlar to that of a struct or class. For instance,
+          if a user wanted to create a struct or class which was similar to <code class="computeroutput"><span class="identifier">example_type</span></code> in the above example they
+          would write the following,
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">foo</span> <span class="special">{</span>
+    <span class="keyword">bool</span> <span class="identifier">bool_one</span><span class="special">:</span><span class="number">1</span><span class="special">;</span>
+    <span class="keyword">bool</span> <span class="identifier">bool_two</span><span class="special">:</span><span class="number">1</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">int_one</span><span class="special">:</span><span class="number">2</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">int_two</span><span class="special">:</span><span class="number">2</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+          There is a problem with <code class="computeroutput"><span class="keyword">struct</span> <span class="identifier">foo</span></code>, it is not one which is so simple
+          to see. <code class="computeroutput"><span class="keyword">struct</span> <span class="identifier">foo</span></code>
+          has a <code class="computeroutput"><span class="keyword">sizeof</span></code> 4 bytes, while
+          <code class="computeroutput"><span class="identifier">example_type</span></code> is storing
+          its data within in a single byte. One can imagine the problems that arise
+          from creating a <code class="computeroutput"><span class="keyword">union</span></code> of
+          <code class="computeroutput"><span class="keyword">struct</span> <span class="identifier">foo</span></code>
+          with a <code class="computeroutput"><span class="keyword">char</span></code> type.
+        </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2010 Brian Bartman<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="description.html"><img src="../../..//home/brian/gsoc/boost-trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../..//home/brian/gsoc/boost-trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../..//home/brian/gsoc/boost-trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../users_guide.html"><img src="../../..//home/brian/gsoc/boost-trunk/doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
