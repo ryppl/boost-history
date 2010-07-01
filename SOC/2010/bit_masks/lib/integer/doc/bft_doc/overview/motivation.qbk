@@ -4,3 +4,34 @@ Copyright (c) 2010 Brian Bartman
 Distributed under the Boost Software License, Version 1.0. (See accompanying
 file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
+[section Motivation]
+
+``
+typedef bitfield_tuple<
+    storage<char>,
+    member<bool,bool_one,1>,
+    member<bool,bool_two,1>,
+    member<int,int_one,2>,
+    member<int,int_two,2>
+>                       example_type;
+``
+
+The goal of a bitfield tuple is to provide a method for constructing bitfields
+which is not subject to packing restrictions of structs or classes, while
+providing an interface simlar to that of a struct or class. For instance,
+ if a user wanted to create a struct or class which was similar to 
+`example_type` in the above example they would write the following,
+
+``
+struct foo {
+    bool bool_one:1;
+    bool bool_two:1;
+    int int_one:2;
+    int int_two:2;
+};
+``
+There is a problem with `struct foo`, it is not one which is so simple to see.
+`struct foo` has a `sizeof` 4 bytes, while `example_type` is storing its data
+within in a single byte. One can imagine the problems that arise from creating 
+a `union` of `struct foo` with a `char` type.
+[endsect]

@@ -5,4 +5,53 @@ Distributed under the Boost Software License, Version 1.0. (See accompanying
 file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
 [section Description]
+This is a type which provides access to bitfields stored within integers
+or other integral types (see future work, for extensions). This is a pseudo
+variadic type. It currently only takes up to 10 parameters but I will be 
+extending that to be adjustable via macro similar to the MPL. Each of the 
+template parameters must be supplied as either a storage template or a 
+member template. For example, if one wanted to declare a bitfield_tuple
+that was the size of one byte and contained two boolean bitfields and 
+two integers they would do the following,
+``   
+#include <boost/integer/bitfield_tuple.hpp>
+#include <boost/assert.hpp>
+struct bool_one;
+struct bool_two;
+struct int_one;
+struct int_two;
+
+typedef bitfield_tuple<
+    storage<char>,
+    member<bool,bool_one,1>,
+    member<bool,bool_two,1>,
+    member<int,int_one,2>,
+    member<int,int_two,2>
+>                       example_type;
+
+int main() {
+    example_type temp;
+    temp.get<bool_one>() = false; // assigns false to the first bitfield.
+    temp.get<bool_two>() = true;  // assigns false to the second bitfield.
+    temp.get<2>()        = -1;    // assigns -1 to the first integer 
+                                  // bitfield.
+
+    BOOST_ASSERT(( temp.get<2>()  == -1 )); // this passes the assert and 
+                                            // does not exit the program
+    BOOST_ASSERT(( temp.get<int_one>()  == -1 )); // this passes the assert and 
+                                                  // does not exit the program
+}
+``
+Within the above example the template `bitfield_tuple` is specified using 
+multiple other templates which are used to describe different fields and
+the internal type in which the bitfields will reside. In the above example
+`storage<char>` means that the internal storage type used will be type
+`char`. The template member is used to specify a bitfield within the tuple.
+For instance, looking at `member<bool,bool_one,1>`, the first parameter is
+used to describe the type which the stored value will be returned as. The second
+parameter, `bool_one`, is a name type which can be used to retrieve the a 
+bitfield from with in the `bitfield_tuple`. The third and final parameter is
+the width of the a bitfield in bits, the template `member<bool,bool_one,1>` will
+have a width of one.
+
 [endsect]
