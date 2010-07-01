@@ -149,11 +149,12 @@
             If you would like to programmatically inspect <code class="computeroutput"><span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">duration</span></code>,
             you can get the representation type with <code class="computeroutput"><span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">rep</span></code>,
             and the tick period with <code class="computeroutput"><span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">period</span></code>
-            (which should be a type <code class="computeroutput"><span class="identifier">ratio</span></code>
-            which has nested values <code class="computeroutput"><span class="identifier">ratio</span><span class="special">::</span><span class="identifier">num</span></code>
-            and <code class="computeroutput"><span class="identifier">ratio</span><span class="special">::</span><span class="identifier">den</span></code>). The tick period of <code class="computeroutput"><span class="identifier">thread_clock</span></code> is <code class="computeroutput"><span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">period</span><span class="special">::</span><span class="identifier">num</span> <span class="special">/</span> <span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">period</span><span class="special">::</span><span class="identifier">den</span></code>
-            seconds: 1/1000000000 in this case (1 billionth of a second), stored
-            in a long long.
+            (which should be a type <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
+          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> which has nested values
+            <code class="computeroutput"><span class="identifier">ratio</span><span class="special">::</span><span class="identifier">num</span></code> and <code class="computeroutput"><span class="identifier">ratio</span><span class="special">::</span><span class="identifier">den</span></code>).
+            The tick period of <code class="computeroutput"><span class="identifier">thread_clock</span></code>
+            is <code class="computeroutput"><span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">period</span><span class="special">::</span><span class="identifier">num</span> <span class="special">/</span> <span class="identifier">thread_clock</span><span class="special">::</span><span class="identifier">period</span><span class="special">::</span><span class="identifier">den</span></code> seconds: 1/1000000000 in this case
+            (1 billionth of a second), stored in a long long.
           </p>
 <p>
             If you need to use <code class="computeroutput"><span class="identifier">duration_cast</span><span class="special">&lt;&gt;</span></code>, but want to round up, instead

@@ -62,9 +62,9 @@
 <p>
         See <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm" target="_top"><span class="bold"><strong>N2661 - A Foundation to Sleep On</strong></span></a> which is
         very informative and provides motivation for key design decisions for <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.common_type_hpp.common_type" title="
-          Class Template 'common_type&lt;&gt;'"><code class="computeroutput"><span class="identifier">common_type</span></code></a>, <code class="computeroutput"><span class="identifier">ratio</span></code>
-        and <code class="computeroutput"><span class="identifier">chrono</span></code>. This documentation
-        contains a lot of extracts from this document.
+          Class Template 'common_type&lt;&gt;'"><code class="computeroutput"><span class="identifier">common_type</span></code></a>, <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
+          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> and <code class="computeroutput"><span class="identifier">chrono</span></code>.
+        This documentation contains a lot of extracts from this document.
       </p>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
@@ -132,29 +132,35 @@
 <a name="boost_chrono.overview.motivation.ratio"></a><a href="motivation.html#boost_chrono.overview.motivation.ratio" title="Ratio">Ratio</a>
 </h4></div></div></div>
 <p>
-          <code class="computeroutput"><span class="identifier">ratio</span></code> is a general purpose
-          utility inspired by Walter Brown allowing one to easily and safely compute
-          rational values at compile time. The <code class="computeroutput"><span class="identifier">ratio</span></code>
-          class catches all errors (such as divide by zero and overflow) at compile
-          time. It is used in the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+          <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
+          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> is a general purpose utility
+          inspired by Walter Brown allowing one to easily and safely compute rational
+          values at compile time. The <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
+          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> class catches all errors
+          (such as divide by zero and overflow) at compile time. It is used in the
+          <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> and <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> classes to efficiently
           create units of time. It can also be used in other "quantity"
           libraries (both std-defined and user-defined), or anywhere there is a rational
           constant which is known at compile time. The use of this utility can greatly
-          reduce the chances of run time overflow because the <code class="computeroutput"><span class="identifier">ratio</span></code>
-          (and any ratios resulting from <code class="computeroutput"><span class="identifier">ratio</span></code>
-          arithmetic) are always reduced to lowest terms.
+          reduce the chances of run time overflow because the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
+          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> (and any ratios resulting
+          from <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
+          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> arithmetic) are always reduced
+          to lowest terms.
         </p>
 <p>
-          <code class="computeroutput"><span class="identifier">ratio</span></code> is a template taking
-          two intmax_ts, with the second defaulted to 1. In addition to copy constructors
+          <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
+          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> is a template taking two
+          intmax_ts, with the second defaulted to 1. In addition to copy constructors
           and assignement, it only has two public members, both of which are static
-          const intmax_t. One is the numerator of the <code class="computeroutput"><span class="identifier">ratio</span></code>
-          and the other is the denominator. The <code class="computeroutput"><span class="identifier">ratio</span></code>
-          is always normalized such that it is expressed in lowest terms, and the
-          denominator is always positive. When the numerator is 0, the denominator
-          is always 1.
+          const intmax_t. One is the numerator of the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
+          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> and the other is the denominator.
+          The <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
+          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> is always normalized such
+          that it is expressed in lowest terms, and the denominator is always positive.
+          When the numerator is 0, the denominator is always 1.
         </p>
 <p>
           <span class="bold"><strong>Example:</strong></span>
@@ -244,14 +250,15 @@
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> interface, user code
           can very easily create <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code>s</a> with any precision they
-          desire. The <code class="computeroutput"><span class="identifier">ratio</span></code> utility
-          is used to specify the precision, so as long as the precision can be expressed
-          by a rational constant with respect to seconds, this framework can exactly
-          represent it (one third of a second is no problem, and neither is one third
-          of a <code class="computeroutput"><span class="identifier">femto</span></code> second). All
-          of this utility and flexibility comes at no cost just by making use of
-          the no-run-time-overhead <code class="computeroutput"><span class="identifier">ratio</span></code>
-          facility.
+          desire. The <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
+          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> utility is used to specify
+          the precision, so as long as the precision can be expressed by a rational
+          constant with respect to seconds, this framework can exactly represent
+          it (one third of a second is no problem, and neither is one third of a
+          <code class="computeroutput"><span class="identifier">femto</span></code> second). All of this
+          utility and flexibility comes at no cost just by making use of the no-run-time-overhead
+          <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
+          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> facility.
         </p>
 <p>
           In Boost.DateTime, <code class="computeroutput"><span class="identifier">hours</span></code>
@@ -275,7 +282,7 @@
           needs only 23 bits to cover that range.
         </p>
 <a name="boost_chrono.overview.motivation.duration.so_what_exactly_is_a___link_linkend__boost_chrono_reference_cpp0x_chrono_chrono_hpp_duration___code__phrase_role__identifier__duration__phrase___code___link__and_how_do_i_use_one_"></a><h5>
-<a name="id4760075"></a>
+<a name="id4813230"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.so_what_exactly_is_a___link_linkend__boost_chrono_reference_cpp0x_chrono_chrono_hpp_duration___code__phrase_role__identifier__duration__phrase___code___link__and_how_do_i_use_one_">So
           What Exactly is a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> and How Do I Use One?</a>
@@ -293,8 +300,9 @@
           data member stored in a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>. If the representation
           is floating point, it can store fractions of a tick to the precision of
-          the representation. The tick period is represented by a <code class="computeroutput"><span class="identifier">ratio</span></code>
-          and is encoded into the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+          the representation. The tick period is represented by a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
+          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> and is encoded into the
+          <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>'s type, instead of stored.
           The tick period only has an impact on the behavior of the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> when a conversion between
@@ -338,7 +346,7 @@
           templates instead of inheritance).
         </p>
 <a name="boost_chrono.overview.motivation.duration.what_happens_if_i_assign__code__phrase_role__identifier__m3__phrase___phrase_role__special_____phrase___phrase_role__identifier__us3__phrase___code__to___code__phrase_role__identifier__minutes__phrase___code__instead_of__code__phrase_role__identifier__microseconds__phrase___code__"></a><h5>
-<a name="id4813827"></a>
+<a name="id4813946"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.what_happens_if_i_assign__code__phrase_role__identifier__m3__phrase___phrase_role__special_____phrase___phrase_role__identifier__us3__phrase___code__to___code__phrase_role__identifier__minutes__phrase___code__instead_of__code__phrase_role__identifier__microseconds__phrase___code__">What
           happens if I assign <code class="computeroutput"><span class="identifier">m3</span> <span class="special">+</span> <span class="identifier">us3</span></code>
           to <code class="computeroutput"><span class="identifier">minutes</span></code> instead of
@@ -355,7 +363,7 @@
           ignored. This is similar to the problem of assigning a double to an <code class="computeroutput"><span class="keyword">int</span></code>: the fractional part gets silently discarded.
         </p>
 <a name="boost_chrono.overview.motivation.duration.but_what_if_the_truncation_behavior_is_what_i_want_to_do_"></a><h5>
-<a name="id4813996"></a>
+<a name="id4814115"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.but_what_if_the_truncation_behavior_is_what_i_want_to_do_">But
           what if the truncation behavior is what I want to do?</a>
         </h5>
@@ -376,7 +384,7 @@
           as often as it can.
         </p>
 <a name="boost_chrono.overview.motivation.duration.i_m_trafficking_in_floating_point___link_linkend__boost_chrono_reference_cpp0x_chrono_chrono_hpp_duration___code__phrase_role__identifier__duration__phrase___code_s__link___i_don_t_want_to_deal_with_writing__code__phrase_role__identifier__duration_cast__phrase___code__all_over_the_place__i_m_content_with_the_precision_of_my_floating_point_representation"></a><h5>
-<a name="id4814139"></a>
+<a name="id4814258"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.i_m_trafficking_in_floating_point___link_linkend__boost_chrono_reference_cpp0x_chrono_chrono_hpp_duration___code__phrase_role__identifier__duration__phrase___code_s__link___i_don_t_want_to_deal_with_writing__code__phrase_role__identifier__duration_cast__phrase___code__all_over_the_place__i_m_content_with_the_precision_of_my_floating_point_representation">I'm
           trafficking in floating point <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code>s</a>. I don't want to deal
@@ -392,21 +400,21 @@
 <span class="identifier">dminutes</span> <span class="identifier">dm4</span> <span class="special">=</span> <span class="identifier">m3</span> <span class="special">+</span> <span class="identifier">us3</span><span class="special">;</span>  <span class="comment">// dm4.count() == 5.000000083333333
 </span></pre>
 <a name="boost_chrono.overview.motivation.duration.how_expensive_is_all_of_this_"></a><h5>
-<a name="id4814458"></a>
+<a name="id4814430"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.how_expensive_is_all_of_this_">How
           expensive is all of this?</a>
         </h5>
 <p>
           If you were writing these conversions by hand, you could not make it more
-          efficient. The use of <code class="computeroutput"><span class="identifier">ratio</span></code>
-          ensures that all conversion constants are simplified as much as possible
-          at compile time. This usually results in the numerator or denominator of
-          the conversion factor simplifying to <code class="computeroutput"><span class="number">1</span></code>,
-          and being subsequently ignored in converting the run time values of the
-          tick counts.
+          efficient. The use of <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
+          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> ensures that all conversion
+          constants are simplified as much as possible at compile time. This usually
+          results in the numerator or denominator of the conversion factor simplifying
+          to <code class="computeroutput"><span class="number">1</span></code>, and being subsequently
+          ignored in converting the run time values of the tick counts.
         </p>
 <a name="boost_chrono.overview.motivation.duration.how_complicated_is_it_to_build_a_function_taking_a___link_linkend__boost_chrono_reference_cpp0x_chrono_chrono_hpp_duration___code__phrase_role__identifier__duration__phrase___code___link__parameter_"></a><h5>
-<a name="id4814510"></a>
+<a name="id4814486"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.duration.how_complicated_is_it_to_build_a_function_taking_a___link_linkend__boost_chrono_reference_cpp0x_chrono_chrono_hpp_duration___code__phrase_role__identifier__duration__phrase___code___link__parameter_">How
           complicated is it to build a function taking a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> parameter?</a>
@@ -654,7 +662,7 @@
           the epochs associated with each clock is known.
         </p>
 <a name="boost_chrono.overview.motivation.time_point.so_what_exactly_is_a___link_linkend__boost_chrono_reference_cpp0x_chrono_chrono_hpp_time_point___code__phrase_role__identifier__time_point__phrase___code___link__and_how_do_i_use_one_"></a><h5>
-<a name="id4816513"></a>
+<a name="id4816490"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.time_point.so_what_exactly_is_a___link_linkend__boost_chrono_reference_cpp0x_chrono_chrono_hpp_time_point___code__phrase_role__identifier__time_point__phrase___code___link__and_how_do_i_use_one_">So
           What Exactly is a <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> and How Do I Use One?</a>
@@ -795,7 +803,7 @@
 <span class="number">0.017</span><span class="identifier">s</span>
 </pre>
 <a name="boost_chrono.overview.motivation.stopwatches.stopwatches_accumulation_and_statistics"></a><h5>
-<a name="id4817746"></a>
+<a name="id4817722"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.stopwatches.stopwatches_accumulation_and_statistics">Stopwatches
           accumulation and statistics</a>
         </h5>
@@ -803,8 +811,9 @@
           The preceding stopwatch manage only with a measure. It is also interesting
           to have an statisitical view of these times, for example the sum, min,
           max and mean. <code class="computeroutput"><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;&gt;</span></code> associates an accumulator with
-          a stopwatch, so we are able to retrieve any statistical feature Boost.Accumulator
-          provides.
+          a <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch" title="
+          Template Class stopwatch&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch</span></code></a>, so we are able to retrieve
+          any statistical feature Boost.Accumulator provides.
         </p>
 <p>
           For example
@@ -832,7 +841,7 @@
 <pre class="programlisting"><span class="number">3</span> <span class="identifier">times</span><span class="special">,</span> <span class="identifier">sum</span><span class="special">=</span><span class="number">0.034</span><span class="identifier">s</span><span class="special">,</span> <span class="identifier">min</span><span class="special">=</span><span class="number">0.006</span><span class="identifier">s</span><span class="special">,</span> <span class="identifier">max</span><span class="special">=</span><span class="number">0.017</span><span class="identifier">s</span><span class="special">,</span> <span class="identifier">mean</span><span class="special">=</span><span class="number">0.011</span><span class="identifier">s</span>
 </pre>
 <a name="boost_chrono.overview.motivation.stopwatches.wall_clock_versus_system_and_user_time"></a><h5>
-<a name="id4818263"></a>
+<a name="id4818254"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.stopwatches.wall_clock_versus_system_and_user_time">Wall
           clock versus system and user time</a>
         </h5>
@@ -888,7 +897,7 @@
 </span><span class="special">}</span>
 </pre>
 <a name="boost_chrono.overview.motivation.stopwatches.how_reliable_are_these_measures_"></a><h5>
-<a name="id4818651"></a>
+<a name="id4818642"></a>
           <a href="motivation.html#boost_chrono.overview.motivation.stopwatches.how_reliable_are_these_measures_">How
           reliable are these measures?</a>
         </h5>

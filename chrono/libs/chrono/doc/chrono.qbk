@@ -26,62 +26,40 @@
 [/==================]
 [def __Boost_Chrono__ [*Boost.Chrono]]
 
+
+[def __ratio__ [link boost_chrono.reference.cpp0x.ratio_hpp.ratio `ratio`]]
+
+[/==================]
+[template common_type_link[link_text] [link boost_chrono.reference.cpp0x.common_type_hpp.common_type [link_text]]]
+[def __common_type__ [common_type_link `common_type`]]
+
 [/==================]
 [template clock_concept_link[link_text] [link boost_chrono.reference.cpp0x.chrono_chrono_hpp.clock [link_text]]]
-[/template clock_concept_link[link_text] [link_text]]
 [def __clock_concept__ [clock_concept_link `Clock` concept]]
 [def __clock_concept_type__ [clock_concept_link `Clock`]]
 [def __clock_req__ [clock_concept_link `Clock` requirements]]
 [def __Clock__ [clock_concept_link `Clock`]]
 
-[/==================]
-[template stopwatch_concept_link[link_text] [link boost_chrono.reference.stopwatches.stopwatch_req [link_text]]]
-[/template stopwatch_concept_link[link_text] [link_text]]
-[def __stopwatch_concept__ [stopwatch_concept_link `Stopwatch` concept]]
-[def __stopwatch_concept_type__ [stopwatch_concept_link `Stopwatch`]]
-[def __stopwatch_req__ [stopwatch_concept_link `Stopwatch` requirements]]
-[def __Stopwatch__ [stopwatch_concept_link `Stopwatch`]]
-
-[/==================]
-[template formatter_concept_link[link_text] [link boost_chrono.reference.formatters.formatter_req [link_text]]]
-[/template formatter_concept_link[link_text] [link_text]]
-[def __formatter_concept__ [formatter_concept_link `Formatter` concept]]
-[def __formatter_concept_type__ [formatter_concept_link `Formatter`]]
-[def __formatter_req__ [formatter_concept_link `Formatter` requirements]]
-[def __Formatter__ [formatter_concept_link `Formatter`]]
-
-[/==================]
 
 [template duration_link[link_text] [link boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration [link_text]]]
-[/template duration_link[link_text] [link_text]]
 [def __duration__ [duration_link `duration`]]
 [def __duration_s__ [duration_link `duration`s]]
 
 [/==================]
-[template common_type_link[link_text] [link boost_chrono.reference.cpp0x.common_type_hpp.common_type [link_text]]]
-[/template common_type_link[link_text] [link_text]]
-[def __common_type__ [common_type_link `common_type`]]
-
-
-[/==================]
 [template time_point_link[link_text] [link boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point [link_text]]]
-[/template time_point_link[link_text] [link_text]]
 [def __time_point__ [time_point_link `time_point`]]
 [def __time_point_s__ [time_point_link `time_point`s]]
 
 [/==================]
 [template system_clock_link[link_text] [link boost_chrono.reference.cpp0x.chrono_chrono_hpp.system_clock [link_text]]]
-[/template system_clock_link[link_text] [link_text]]
 [def __system_clock__ [system_clock_link `system_clock`]]
 
 [/==================]
 [template monotonic_clock_link[link_text] [link boost_chrono.reference.cpp0x.chrono_chrono_hpp.monotonic_clock [link_text]]]
-[/template monotonic_clock_link[link_text] [link_text]]
 [def __monotonic_clock__ [monotonic_clock_link `monotonic_clock`]]
 
 [/==================]
 [template high_resolution_clock_link[link_text] [link boost_chrono.reference.cpp0x.chrono_chrono_hpp.high_resolution_clock [link_text]]]
-[/template high_resolution_clock_link[link_text] [link_text]]
 [def __high_resolution_clock__ [high_resolution_clock_link `high_resolution_clock`]]
 
 [/==================]
@@ -99,21 +77,39 @@
 [template seconds_link[link_text] [link_text]]
 [def __seconds__ [seconds_link `seconds`]]
 
+[/==================]
+[def __treat_as_floating_point__ [link boost_chrono.reference.cpp0x.chrono_chrono_hpp.traits.treat_as_floating_point `treat_as_floating_point`]]
+[def __duration_values__ [link boost_chrono.reference.cpp0x.chrono_chrono_hpp.traits.duration_values `duration_values`]]
 
-[/
-[section Preface]
 
-[:[".]]
-[:[*['-- ]]]
+[/==================]
+[template stopwatch_concept_link[link_text] [link boost_chrono.reference.stopwatches.stopwatch_req [link_text]]]
+[def __stopwatch_concept__ [stopwatch_concept_link `Stopwatch` concept]]
+[def __stopwatch_concept_type__ [stopwatch_concept_link `Stopwatch`]]
+[def __stopwatch_req__ [stopwatch_concept_link `Stopwatch` requirements]]
+[def __Stopwatch__ [stopwatch_concept_link `Stopwatch`]]
 
-[endsect]
-/]
+[/==================]
+[template formatter_concept_link[link_text] [link boost_chrono.reference.reporters.formatter_req [link_text]]]
+[def __formatter_concept__ [formatter_concept_link `Formatter` concept]]
+[def __formatter_concept_type__ [formatter_concept_link `Formatter`]]
+[def __formatter_req__ [formatter_concept_link `Formatter` requirements]]
+[def __Formatter__ [formatter_concept_link `Formatter`]]
+
+[def __stopwatch__ [link boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch `stopwatch`]]
+
+
+
+
 
 [warning Chrono is not part of the Boost libraries.]
 
 [/===============]
 [section Overview]
 [/===============]
+
+[:["What is time, then? If nobody asks me, I know; if I have to explain it to someone who has asked me, I do not know.]]
+[:[*['-- Augustine ]]]
 
 [/==================]
 [heading Description]
@@ -128,14 +124,14 @@ The __Boost_Chrono__ library provides:
 Additionally, a minimal amount of general purpose infrastructure is provided which will support both the interface and implementation of the /clocks/, __time_point_s__ and __duration_s__ proposed herein. It is expected that these general purpose facilities will also find utility in far ranging user applications as well.
 
 * __common_type__ is a facility which is useful in specifying the type of the result of functions and operators which take a variety of types (e.g. "mixed mode" complex arithmetic).
-* ratio is a facility which is useful in specifying compile time rational constants. Compile time rational arithmetic is supported with protection against overflow and divide by zero. Such a facility is very handy when needing to efficiently represent 1/3 of a nanosecond, or specifying an inch in terms of meters (for example 254/10000 meters - which ratio will reduce to 127/5000 meters).
+* __ratio__ is a facility which is useful in specifying compile time rational constants. Compile time rational arithmetic is supported with protection against overflow and divide by zero. Such a facility is very handy when needing to efficiently represent 1/3 of a nanosecond, or specifying an inch in terms of meters (for example 254/10000 meters - which __ratio__ will reduce to 127/5000 meters).
 
 Knowing how long a program takes to execute is useful in both test and production environments. On top of the standard facilities __Boost_Chrono__ includes:
 
 * a Stopwatch middle layer: providing operations to start, stop, suspend or resume a __Stopwatch__ to measure the elapsed time.
     * __Stopwatch__ concept
     * Scoped helper classes allowing to pairwise start/stop operations, suspend/resume and resume/suspend a __Stopwatch__.
-    * `stopwatch`, model of __Stopwatch__ capturing elapsed __Clock__ times.
+    * __stopwatch__, model of __Stopwatch__ capturing elapsed __Clock__ times.
     * `stopwatch_accumulator`, model of __Stopwatch__ capturing cummulated elapsed Clock times.
 
 * a Stopclocks higher layer: provide a complete stopclock reporting package that can be invoked in a single line of code.
@@ -201,7 +197,7 @@ __Boost_Chrono__ proposes a solution that is precision neutral, with a very simp
 
 In addition to the clocks provided by the standard proposal, __Boost_Chrono__ provides specific process clocks and a thread clock.
 
-See [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm [*N2661 - A Foundation to Sleep On]] which is very informative and provides motivation for key design decisions for __common_type__, `ratio` and `chrono`. This documentation contains a lot of extracts from this document.
+See [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2661.htm [*N2661 - A Foundation to Sleep On]] which is very informative and provides motivation for key design decisions for __common_type__, __ratio__ and `chrono`. This documentation contains a lot of extracts from this document.
 
 
 [section Common type]
@@ -237,9 +233,9 @@ This is a very useful and broadly applicable utility. The __duration__ and __tim
 
 [section Ratio]
 
-`ratio` is a general purpose utility inspired by Walter Brown allowing one to easily and safely compute rational values at compile time. The `ratio` class catches all errors (such as divide by zero and overflow) at compile time. It is used in the __duration__ and __time_point__ classes to efficiently create units of time. It can also be used in other "quantity" libraries (both std-defined and user-defined), or anywhere there is a rational constant which is known at compile time. The use of this utility can greatly reduce the chances of run time overflow because the `ratio` (and any ratios resulting from `ratio` arithmetic) are always reduced to lowest terms.
+__ratio__ is a general purpose utility inspired by Walter Brown allowing one to easily and safely compute rational values at compile time. The __ratio__ class catches all errors (such as divide by zero and overflow) at compile time. It is used in the __duration__ and __time_point__ classes to efficiently create units of time. It can also be used in other "quantity" libraries (both std-defined and user-defined), or anywhere there is a rational constant which is known at compile time. The use of this utility can greatly reduce the chances of run time overflow because the __ratio__ (and any ratios resulting from __ratio__ arithmetic) are always reduced to lowest terms.
 
-`ratio` is a template taking two intmax_ts, with the second defaulted to 1. In addition to copy constructors and assignement, it only has two public members, both of which are static const intmax_t. One is the numerator of the `ratio` and the other is the denominator. The `ratio` is always normalized such that it is expressed in lowest terms, and the denominator is always positive. When the numerator is 0, the denominator is always 1.
+__ratio__ is a template taking two intmax_ts, with the second defaulted to 1. In addition to copy constructors and assignement, it only has two public members, both of which are static const intmax_t. One is the numerator of the __ratio__ and the other is the denominator. The __ratio__ is always normalized such that it is expressed in lowest terms, and the denominator is always positive. When the numerator is 0, the denominator is always 1.
 
 [*Example:]
 
@@ -278,7 +274,7 @@ In Boost.DateTime, these units are united via inheritance. __Boost_Chrono__ inst
 
 The most immediate positive impact is that the library can immediately generate any unit, any precision it needs. This is sometimes necessary when doing comparisons or arithmetic between __duration_s__ of differing precision, assuming one wants the comparison and arithmetic to be exactly correct.
 
-A secondary benefit is that by publishing the class template __duration__ interface, user code can very easily create __duration_s__ with any precision they desire. The `ratio` utility is used to specify the precision, so as long as the precision can be expressed by a rational constant with respect to seconds, this framework can exactly represent it (one third of a second is no problem, and neither is one third of a `femto` second). All of this utility and flexibility comes at no cost just by making use of the no-run-time-overhead `ratio` facility.
+A secondary benefit is that by publishing the class template __duration__ interface, user code can very easily create __duration_s__ with any precision they desire. The __ratio__ utility is used to specify the precision, so as long as the precision can be expressed by a rational constant with respect to seconds, this framework can exactly represent it (one third of a second is no problem, and neither is one third of a `femto` second). All of this utility and flexibility comes at no cost just by making use of the no-run-time-overhead __ratio__ facility.
 
 In Boost.DateTime, `hours` does not have the same representation as __nanoseconds__. The former is usually represented with a `long` whereas a `long long` is required for the latter. The reason for this is simply range. You don't need many hours to cover an extremely large range of time. But this isn't true of nanoseconds. Being able to reduce the sizeof overhead for some units when possible, can be a significant performance advantage.
 
@@ -290,7 +286,7 @@ A __duration__ has a representation and a tick period (precision).
 
     template <class Rep, class Period = ratio<1> > class duration;
 
-The representation is simply any arithmetic type, or an emulation of such a type. The representation stores a count of ticks. This count is the only data member stored in a __duration__. If the representation is floating point, it can store fractions of a tick to the precision of the representation. The tick period is represented by a `ratio` and is encoded into the __duration__'s type, instead of stored. The tick period only has an impact on the behavior of the __duration__ when a conversion between different __duration__'s is attempted. The tick period is completely ignored when simply doing arithmetic among like __duration_s__.
+The representation is simply any arithmetic type, or an emulation of such a type. The representation stores a count of ticks. This count is the only data member stored in a __duration__. If the representation is floating point, it can store fractions of a tick to the precision of the representation. The tick period is represented by a __ratio__ and is encoded into the __duration__'s type, instead of stored. The tick period only has an impact on the behavior of the __duration__ when a conversion between different __duration__'s is attempted. The tick period is completely ignored when simply doing arithmetic among like __duration_s__.
 
 [*Example:]
 
@@ -337,7 +333,7 @@ Not a problem. When the destination of a conversion has floating point represent
 
 [heading How expensive is all of this?]
 
-If you were writing these conversions by hand, you could not make it more efficient. The use of `ratio` ensures that all conversion constants are simplified as much as possible at compile time. This usually results in the numerator or denominator of the conversion factor simplifying to `1`, and being subsequently ignored in converting the run time values of the tick counts.
+If you were writing these conversions by hand, you could not make it more efficient. The use of __ratio__ ensures that all conversion constants are simplified as much as possible at compile time. This usually results in the numerator or denominator of the conversion factor simplifying to `1`, and being subsequently ignored in converting the run time values of the tick counts.
 
 [heading How complicated is it to build a function taking a __duration__ parameter?]
 
@@ -536,7 +532,7 @@ Will produce the following output
 
 [heading Stopwatches accumulation and statistics]
 
-The preceding stopwatch manage only with a measure. It is also interesting to have an statisitical view of these times, for example the sum, min, max and mean. `stopwatch_accumulator<>` associates an accumulator with a stopwatch, so we are able to retrieve any statistical feature Boost.Accumulator provides.
+The preceding stopwatch manage only with a measure. It is also interesting to have an statisitical view of these times, for example the sum, min, max and mean. `stopwatch_accumulator<>` associates an accumulator with a __stopwatch__, so we are able to retrieve any statistical feature Boost.Accumulator provides.
 
 For example
 
@@ -870,7 +866,7 @@ If you need seconds with a floating point representation you can also eliminate 
 
 If you're not sure if you need `duration_cast<>` or not, feel free to try it without.  If the conversion is exact, or if the destination has a floating point representation, it will compile.  Else it will not compile.
 
-If you would like to programmatically inspect `thread_clock::duration`, you can get the representation type with `thread_clock::rep`, and the tick period with `thread_clock::period` (which should be a type `ratio` which has nested values `ratio::num` and `ratio::den`).  The tick period of `thread_clock` is `thread_clock::period::num / thread_clock::period::den` seconds: 1/1000000000 in this case (1 billionth of a second), stored in a long long.
+If you would like to programmatically inspect `thread_clock::duration`, you can get the representation type with `thread_clock::rep`, and the tick period with `thread_clock::period` (which should be a type __ratio__ which has nested values `ratio::num` and `ratio::den`).  The tick period of `thread_clock` is `thread_clock::period::num / thread_clock::period::den` seconds: 1/1000000000 in this case (1 billionth of a second), stored in a long long.
 
 If you need to use `duration_cast<>`, but want to round up, instead of down when the conversion is inexact, here is a handy little helper function to do so.  Writing it is actually a good starter project for understanding chrono:
 
@@ -2325,7 +2321,7 @@ All parameter types must be complete. This trait is permitted to be specialized 
 [section:ratio_hpp Header `<boost/ratio.hpp>`]
 [/===========================================]
 
-`ratio` is a facility which is useful in specifying compile time rational constants. Compile time rational arithmetic is supported with protection against overflow and divide by zero. Such a facility is very handy when needing to efficiently represent  1/3 of a nanosecond, or specifying an inch in terms of meters (for example 254/10000 meters - which `ratio` will reduce to 127/5000 meters).
+__ratio__ is a facility which is useful in specifying compile time rational constants. Compile time rational arithmetic is supported with protection against overflow and divide by zero. Such a facility is very handy when needing to efficiently represent  1/3 of a nanosecond, or specifying an inch in terms of meters (for example 254/10000 meters - which __ratio__ will reduce to 127/5000 meters).
 
     #define BOOST_RATIO_USES_STATIC_ASSERT
     #define BOOST_RATIO_USES_MPL_ASSERT
@@ -2431,7 +2427,7 @@ Depending on the static assertion used system you will have an hint of the faili
             operator=(const ratio<_N2, _D2>&) {return *this;}
         };
 
-A diagnostic will be emitted if `ratio` is instantiated with `D == 0`, or if the absolute value of `N` or `D` can not be represented. [*Note:] These rules ensure that infinite ratios are avoided and that for any negative input, there exists a representable value of its absolute value which is positive. In a two's complement representation, this excludes the most negative value.
+A diagnostic will be emitted if __ratio__ is instantiated with `D == 0`, or if the absolute value of `N` or `D` can not be represented. [*Note:] These rules ensure that infinite ratios are avoided and that for any negative input, there exists a representable value of its absolute value which is positive. In a two's complement representation, this excludes the most negative value.
 
 Let `gcd` denote the greatest common divisor of `N`'s absolute value and of `D`'s absolute value.
 
@@ -2441,21 +2437,21 @@ Let `gcd` denote the greatest common divisor of `N`'s absolute value and of `D`'
 
 The nested typedef `type` denotes the normalized form of this ratio type. It should be used when the template parameters doesn't give a normalized form.
 
-Two `ratio` classes `ratio<N1,D1>` and `ratio<N2,D2>` have the same normalized form if `ratio<N1,D1>::type` is the same type as `ratio<N2,D2>::type`
+Two __ratio__ classes `ratio<N1,D1>` and `ratio<N2,D2>` have the same normalized form if `ratio<N1,D1>::type` is the same type as `ratio<N2,D2>::type`
 
 [section Construction and assignment]
 
     template <intmax_t N2, intmax_t D2>
       ratio(const ratio<N2, D2>& r);
 
-[*Effects:] Constructs a `ratio` object.
+[*Effects:] Constructs a __ratio__ object.
 
 [*Remarks:] This constructor will not participate in overload resolution unless `r` has the same normalized form as `*this`.
 
     template <intmax_t N2, intmax_t D2>
       ratio& operator=(const ratio<N2, D2>& r);
 
-[*Effects:] Assigns a `ratio` object.
+[*Effects:] Assigns a __ratio__ object.
 
 [*Returns:] *this.
 
@@ -2467,9 +2463,9 @@ Two `ratio` classes `ratio<N1,D1>` and `ratio<N2,D2>` have the same normalized f
 [endsect]
 
 
-[section:ratio_arithmetic `ratio` arithmetic]
+[section:ratio_arithmetic __ratio__ arithmetic]
 
-For each of the class templates in this clause, each template parameter refers to a `ratio`. If the implementation is unable to form the indicated `ratio` due to overflow, a diagnostic will be issued.
+For each of the class templates in this clause, each template parameter refers to a `ratio`. If the implementation is unable to form the indicated __ratio__ due to overflow, a diagnostic will be issued.
 
         template <class R1, class R2> struct ratio_add {
            typedef [/see below] type;
@@ -2497,7 +2493,7 @@ The nested typedef `type` is a synonym for `ratio<R1::num * R2::den, R2::num * R
 
 [endsect]
 
-[section:ratio_comparison `ratio` comparison]
+[section:ratio_comparison __ratio__ comparison]
 
         template <class R1, class R2>  struct ratio_equal
             : public boost::integral_constant<bool, [/see below] > {};
@@ -2561,7 +2557,7 @@ Four of the typedefs in the recomendation which can be conditionally supported a
 [section:chrono_hpp Header `<boost/chrono.hpp>`]
 [/=============================================]
 
-This file is a redirection to `boost/chrono/chrono.hpp` including in addition registration for `duration<>` and `timepoint<>` class templates to Boost.Typeof.
+This file is a redirection to `boost/chrono/chrono.hpp` including in addition registration for __duration__ and __timepoint__ class templates to Boost.Typeof.
 
 
     #include <boost/chrono/chrono.hpp>
@@ -2757,23 +2753,23 @@ In this table `C1` and `C2` denote `clock` types. `t1` and `t2` are values retur
 
 Models of Clock:
 
-* [@boost_chrono/reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.class__system_clock_ system_clock]
-* [@boost_chrono/reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.class__monotonic_clock_ monotonic_clock]
-* [@boost_chrono/reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.class__high_resolution_clock_ high_resolution_clock]
-* [@boost_chrono/reference/other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.class__process_real_cpu_clock_ process_real_cpu_clock]
-* [@boost_chrono/reference/other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.class__process_user_cpu_clock_ process_user_cpu_clock]
-* [@boost_chrono/reference/other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.class__process_system_cpu_clock_ process_system_cpu_clock]
-* [@boost_chrono/reference/other_clocks.html#boost_chrono.reference.other_clocks.thread_clock_hpp.class__thread_clock_ thread_clock]
+* __system_clock__
+* __monotonic_clock__
+* __high_resolution_clock__
+* __process_real_cpu_clock__
+* __process_user_cpu_clock__
+* __process_system_cpu_clock__
+* __thread_clock__
 
 [endsect]
 
-[section Time-related traits]
+[section:traits Time-related traits]
 [section:treat_as_floating_point Metafunction `treat_as_floating_point<>`]
 
     template <class Rep> struct treat_as_floating_point
         : boost::is_floating_point<Rep> {};
 
-The __duration__ template uses the `treat_as_floating_point` trait to help determine if a __duration__ with one tick period can be converted to another __duration__ with a different tick period. If `treat_as_floating_point<Rep>::value` is `true`, then `Rep` is a floating point type and implicit conversions are allowed among __duration_s__. Otherwise, the implicit convertibility depends on the tick periods of the __duration_s__. If `Rep` is a class type which emulates a floating point type, the author of `Rep` can specialize `treat_as_floating_point` so that __duration__ will treat this `Rep` as if it were a floating point type. Otherwise `Rep` is assumed to be an integral type, or a class emulating an integral type.
+The __duration__ template uses the __treat_as_floating_point__ trait to help determine if a __duration__ with one tick period can be converted to another __duration__ with a different tick period. If `treat_as_floating_point<Rep>::value` is `true`, then `Rep` is a floating point type and implicit conversions are allowed among __duration_s__. Otherwise, the implicit convertibility depends on the tick periods of the __duration_s__. If `Rep` is a class type which emulates a floating point type, the author of `Rep` can specialize __treat_as_floating_point__ so that __duration__ will treat this `Rep` as if it were a floating point type. Otherwise `Rep` is assumed to be an integral type, or a class emulating an integral type.
 
 
 [endsect]
@@ -2788,7 +2784,7 @@ The __duration__ template uses the `treat_as_floating_point` trait to help deter
         static BOOST_CHRONO_CONSTEXPR  Rep min();
     };
 
-The __duration__ template uses the `duration_values` trait to construct special values of the __duration_s__ representation (`Rep`). This is done because the representation might be a class type with behavior which requires some other implementation to return these special values. In that case, the author of that class type should specialize `duration_values` to return the indicated values.
+The __duration__ template uses the __duration_values__ trait to construct special values of the __duration_s__ representation (`Rep`). This is done because the representation might be a class type with behavior which requires some other implementation to return these special values. In that case, the author of that class type should specialize `duration_values` to return the indicated values.
 
 [section:zero Static member Function `zero()`]
 
@@ -2828,7 +2824,7 @@ The __duration__ template uses the `duration_values` trait to construct special 
         typedef chrono::duration<typename common_type<Rep1, Rep2>::type, see below> type;
     };
 
-The period of the __duration__ indicated by this specialization of __common_type__ is the greatest common divisor of `Period1` and `Period2`. This can be computed by forming a `ratio` of the greatest common divisor of `Period1::num` and `Period2::num`, and the least common multiple of `Period1::den` and `Period2::den`.
+The period of the __duration__ indicated by this specialization of __common_type__ is the greatest common divisor of `Period1` and `Period2`. This can be computed by forming a __ratio__ of the greatest common divisor of `Period1::num` and `Period2::num`, and the least common multiple of `Period1::den` and `Period2::den`.
 
 [*Note:] The typedef type is the __duration__ with the largest tick period possible where both __duration__ arguments will convert to it without requiring a division operation. The representation of this type is intended to be able to hold any value resulting from this conversion, with the possible exception of round-off error when floating point __duration_s__ are involved (but not truncation error).
 
@@ -2907,19 +2903,19 @@ A __duration__ measures time between two points in time (__time_point__). A __du
 
     }}
 
-Rep must be an arithmetic type, or a class emulating an arithmetic type, compile diagnostic otherwise. If __duration__ is instantiated with the type of `Rep` being a __duration__, compile diagnostic is issued.
+`Rep` must be an arithmetic type, or a class emulating an arithmetic type, compile diagnostic otherwise. If __duration__ is instantiated with the type of `Rep` being a __duration__, compile diagnostic is issued.
 
-Period must be an instantiation of `ratio`, compile diagnostic otherwise.
+`Period` must be an instantiation of `ratio`, compile diagnostic otherwise.
 
-Period::num must be positive, compile diagnostic otherwise.
+`Period::num` must be positive, compile diagnostic otherwise.
 
 Examples:
 
-    duration<long, ratio<60> > holds a count of minutes using a long.
+* `duration<long, ratio<60> >` holds a count of minutes using a long.
 
-    duration<long long, milli> holds a count of milliseconds using a long long.
+* `duration<long long, milli>` holds a count of milliseconds using a long long.
 
-    duration<double, ratio<1, 30> > holds a count using a double with a tick period of 1/30 second (a tick frequency of 30 Hz).
+* `duration<double, ratio<1, 30> >` holds a count using a double with a tick period of 1/30 second (a tick frequency of 30 Hz).
 
 The following members of __duration__ do not throw an exception unless the indicated operations on the representations throw an exception.
 
@@ -2933,7 +2929,7 @@ The following members of __duration__ do not throw an exception unless the indic
 * `treat_as_floating_point<rep>::value` is `true`, or
 * `!treat_as_floating_point<rep>::value && !treat_as_floating_point<Rep2>::value` is `true`.
 
-If these constraints are not met, this constructor shall not participate in overload resolution. [*Note:] This requirement prevents construction of an integral-based __duration__ with a floating point representation. Such a construction could easily lead to confusion about the value of the __duration__.
+If these constraints are not met, this constructor will not participate in overload resolution. [*Note:] This requirement prevents construction of an integral-based __duration__ with a floating point representation. Such a construction could easily lead to confusion about the value of the __duration__.
 
 [*Example:]
 
@@ -2950,7 +2946,7 @@ If these constraints are not met, this constructor shall not participate in over
     template <class Rep2, class Period2>
     BOOST_CHRONO_CONSTEXPR duration(const duration<Rep2, Period2>& d);
 
-[*Remarks:] `treat_as_floating_point<rep>::value`, or `ratio_divide<Period2, period>::type::den == 1`, else this constructor shall not participate in overload resolution. [*note] This requirement prevents implicit truncation error when converting between integral-based __duration_s__. Such a construction could easily lead to confusion about the value of the __duration__.
+[*Remarks:] `treat_as_floating_point<rep>::value`, or `ratio_divide<Period2, period>::type::den == 1`, else this constructor will not participate in overload resolution. [*note] This requirement prevents implicit truncation error when converting between integral-based __duration_s__. Such a construction could easily lead to confusion about the value of the __duration__.
 
 [*Example:]
 
@@ -3173,7 +3169,7 @@ If these constraints are not met, this constructor shall not participate in over
   duration<typename common_type<Rep1, Rep2>::type, Period>
   operator%(const duration<Rep1, Period>& d, const Rep2& s);
 
-[*Remarks] This function will not participate in overload resolution unless Rep2 shall be implicitly convertible to CR(Rep1, Rep2) and Rep2 shall not be an instantiation of duration.
+[*Remarks] This function will not participate in overload resolution unless Rep2 must be implicitly convertible to CR(Rep1, Rep2) and Rep2 must not be an instantiation of duration.
 
 [*Returns:] duration<CR(Rep1,Rep2), Period>(d) %= s.
 [endsect]
@@ -3249,7 +3245,7 @@ If these constraints are not met, this constructor shall not participate in over
 
 [*Requires:] This function will not participate in overload resolution unless `ToDuration` is an instantiation of __duration__.
 
-[*Returns:] Forms `CF` which is a `ratio` resulting from `ratio_divide<Period, typename ToDuration::period>::type`. Let `CR` be the __common_type__ of `ToDuration::rep`, `Rep`, and `intmax_t`.
+[*Returns:] Forms `CF` which is a __ratio__ resulting from `ratio_divide<Period, typename ToDuration::period>::type`. Let `CR` be the __common_type__ of `ToDuration::rep`, `Rep`, and `intmax_t`.
 
 * If `CF::num == 1` and `CF::den == 1`, then returns `ToDuration(static_cast<typename ToDuration::rep>(d.count())) `
 * else if `CF::num != 1` and `CF::den == 1`, then returns
@@ -3914,7 +3910,7 @@ Given a `Clock`, `suspendible_clock<Clock>` is a model of [@boost_chrono/referen
 
 
 [/==================================================]
-[section Stopwatches]
+[section:stopwatches Stopwatches]
 [/==================================================]
 [/=============================================]
 [section:stopwatches_hpp Header `<boost/stopwatches.hpp>`]
@@ -4027,7 +4023,7 @@ In this table `S`, `S1` and `S2` denote stopwatches types. `s` is an instance of
 
 Models of `Stopwatch`:
 
-* [@boost_chrono/reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.template_class__stopwatch___ `stopwatch`]
+* __stopwatch__
 * [@boost_chrono/reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.template_class__stopwatch_accumulator___ `stopwatch_accumulator`]
 
 [endsect]
@@ -4067,7 +4063,7 @@ Models of `Stopwatch`:
 `stopwatch<>` is a model of a __stopwatch_concept__.
 
 Knowing how long a part of a program takes to execute is useful in both test and production environments.
-A `stopwatch` object measures elapsed time. It is recommended to use it with clocks that measure wall clock rather than CPU time since the intended use is performance measurement on systems where total elapsed time is more important than just process or CPU time.
+A __stopwatch__ object measures elapsed time. It is recommended to use it with clocks that measure wall clock rather than CPU time since the intended use is performance measurement on systems where total elapsed time is more important than just process or CPU time.
 
 The maximum measurable elapsed time depends on the Clock parameter. The accuracy of timings depends on the
 accuracy of timing information provided the Clock, and this coudl varies a great deal from one clock to another.
@@ -4113,7 +4109,7 @@ accuracy of timing information provided the Clock, and this coudl varies a great
 
 [endsect]
 
-[section:stopwatch_typedefs `stopwatch` useful typedefs]
+[section:stopwatch_typedefs __stopwatch__ useful typedefs]
 
         typedef boost::chrono::stopwatch< boost::chrono::system_clock > system_stopwatch;
         #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
@@ -5603,7 +5599,7 @@ All the units are given using the suffix "s" following the System International 
 
 [*Bug Fixes]
 
-* Valgrind fixes: Conditional jump or move depends on uninitialised value(s)
+* Valgrind fixes: "Conditional jump or move depends on uninitialised value(s)"
 
 
 [endsect]
@@ -5612,8 +5608,8 @@ All the units are given using the suffix "s" following the System International 
 
 [*Bug Fixes]
 
-* scoped_suspend warning removal
-* error_code management completed
+* `scoped_suspend` warning removal
+* `error_code` management completed
 
 [endsect]
 
@@ -5627,7 +5623,7 @@ All the units are given using the suffix "s" following the System International 
 
 [section [*Version 0.4.2, June 18, 2010] ['Packaging fixe]]
 
-* Conversion library, used by Boost.Thread porting to Boost.Chrono was not packaged.
+* Boost.Conversion library, used by Boost.Thread porting to Boost.Chrono was not packaged.
 
 [endsect]
 
@@ -5635,8 +5631,8 @@ All the units are given using the suffix "s" following the System International 
 
 [*New Features:]
 
-* Added thread clock implementation on Windows
-* Added Boost.Thread using Boost.Chrono
+* Added `thread_clock` implementation on Windows.
+* Added *Boost.Thread* using *Boost.Chrono*.
 
 [endsect]
 
@@ -5644,11 +5640,11 @@ All the units are given using the suffix "s" following the System International 
 
 [*New Features:]
 
-* Suspendible Clock concept + template class suspendible_clock<>
-* Added scope_suspend which do suspend/resume if the Clock is a model of Suspendible Clock concept, and nothing otherwise.
-* thread_clock support on platforms providing it natively.
-* Added support for wide character for stopwatch_reporter, stopclock, and stopclock_accumulator.
-* digital_time renamed t24_hours
+* __SuspendibleClock__ concept + template class `suspendible_clock<>`.
+* Added `scope_suspend` which do `suspend`/`resume` if the __Clock__ is a model of __SuspendibleClock__ concept, and nothing otherwise.
+* `thread_clock` support on platforms providing it natively.
+* Added support for wide character for `stopwatch_reporter`, `stopclock`, and `stopclock_accumulator`.
+* `digital_time` renamed `t24_hours`.
 
 [*Perf]
 
@@ -5675,13 +5671,13 @@ by
 [section [*Version 0.3.2, January 25, 2010] ['New frequency, lifetime and percentage stopwatch_accumulator features]]
 [*Features:]
 
-* Added overloading for operator/(Integer/Duration)
-* Added frequency, lifetime and percentage to the default stopwatch_accumulator_formatter
+* Added overloading for `operator/(Integer/Duration)`
+* Added frequency, lifetime and percentage to the default `stopwatch_accumulator_formatter`.
 
 [*Bug Fixes]
-* Specific formatters didn't work completly
-* Replace duration(0) by duration::zero() on template classes.
-* suspend doesn't works: partial_ not initialized neither taken in account by the elapsed function.
+* Specific formatters didn't work completly.
+* Replace `duration(0)` by `duration::zero()` on template classes.
+* `suspend` doesn't works: `partial_` not initialized neither taken in account by the elapsed function.
 
 [endsect]
 
@@ -5689,7 +5685,7 @@ by
 [*Features:]
 
 * Support for wide characters on formatters and stopclocks
-* added chrono.hpp and stopwatches.hpp at the boost level
+* added `chrono.hpp` and `stopwatches.hpp` at the boost level
 
 
 [endsect]
@@ -5699,29 +5695,29 @@ by
 
 * Added independent process cpu clocks for real, user, system process CPU time
 * Added global process cpu clock for real, user, system process CPU time
-* Added digital_time (looking for a better name)
-* Added new *Stopwatch* concept measuring elapsed time between different points in time associated to the operations start, stop, suspend and resume.
-* Added stopwatch is a model Stopwatch measuring the elapsed time between the start and the stop operations.
-* Added stopwatch_accumulator is a model Stopwatch allowing to accumulate several time samples and give the average, ...
-* Added scoped helper classes allowing to pairwise start/stop operations, suspend/resume and resume/suspend a Stopwatch.
-* Added new stopwatch *Formatter* concept
+* Added `digital_time` (looking for a better name)
+* Added new __Stopwatch__ concept measuring elapsed time between different points in time associated to the operations `start`, `stop`, `suspend` and `resume`.
+* Added __stopwatch__ is a model __Stopwatch__ measuring the elapsed time between the `start` and the `stop` operations.
+* Added `stopwatch_accumulator` is a model __Stopwatch__ allowing to accumulate several time samples and gives the average, ...
+* Added scoped helper classes allowing to pairwise `start`/`stop` operations, `suspend`/`resume` and `resume`/`suspend` a __Stopwatch__.
+* Added new stopwatch __Formatter__ concept
     * Added stopwatch formatter "%ds\\n"
     * Added stopwatch accumulator formatter "%c times, sum=%ss, min=%ms, max=%Ms, mean=%as\\n"
     * Added time formatter "real %rs, cpu %cs (%p%), user %us, system %ss\\n"
     * Added digital_time formatter "%d days(s) %h:%m:%s.%n\\n"
-* stopwatch_reporter is a convenient generic class reporting elapsed time for the Stopwatch concept.
-* Added stopclock<Clock> shortcut stopwatch_reporter<stopwatch<Clcok>>
-* Added scoped_stopclock which
-* Added typeof registration for classes __duration__ and __time_point__
+* `stopwatch_reporter` is a convenient generic class reporting elapsed time for the Stopwatch concept.
+* Added `stopclock<Clock>` shortcut `stopwatch_reporter<stopwatch<Clock>>`
+* Added `scoped_stopclock` which
+* Added `typeof` registration for classes __duration__ and __time_point__
 
-* The old classes process_times, process_clock, process_timer, timer and run_timer are deprecated as the preceding additions are more generic. However for backward compatibility they preserved until inclusion of the library in Boost. Next follows the equivalences:
-    * timer<> ~ stopwatch<>
-    * process_timer ~ stopwatch<process_cpu_clock>
-    * run_timer ~ stopclock<>
+* The old classes `process_times`, `process_clock`, `process_timer`, `timer` and `run_timer` are deprecated as the preceding additions are more generic. However for backward compatibility they preserved until inclusion of the library in Boost. Next follows the equivalences:
+    * `timer<>` ~ `stopwatch<>`
+    * `process_timer` ~ `stopwatch<process_cpu_clock>`
+    * `run_timer` ~ `stopclock<>`
 
 [*Bug Fixes]
 
-* Try to correct warning C4251: 'boost::chrono::run_timer::m_format' : class 'std::basic_string<_Elem,_Traits,_Ax>' needs to have dll-interface to be used by clients of class 'boost::chrono::run_timer', by don't including inlines functions using the std::string m_format.
+* Try to correct warning "C4251: 'boost::chrono::run_timer::m_format' : class 'std::basic_string<_Elem,_Traits,_Ax>' needs to have dll-interface to be used by clients of class 'boost::chrono::run_timer'", by don't including inlines functions using the std::string `m_format`.
 
 [endsect]
 
@@ -5729,23 +5725,23 @@ by
 
 [*Bug Fixes]
 
-* Replace INTMAX_C by BOOST_INTMAX_C until boost/cstdint;hpp ensures INTMAX_C is always defined.
-* Define BOOST_CHRONO_HAS_CLOCK_MONOTONIC when BOOST_CHRONO_WINDOWS_API
+* Replace `INTMAX_C` by `BOOST_INTMAX_C` until `boost/cstdint.hpp` ensures `INTMAX_C` is always defined.
+* Define `BOOST_CHRONO_HAS_CLOCK_MONOTONIC` when `BOOST_CHRONO_WINDOWS_API`
 * Commenting invalid operator declarations
-* Take care of Boost min/max recommendations
-* complete qualification when defining nested typedef duration on clocks to avoid the following compile error:
+* Take care of Boost `min`/`max` recommendations
+* Complete qualification when defining nested typedef duration on clocks to avoid the following compile error:
 
     ./boost/chrono/chrono.hpp:945: error: declaration of 'typedef class boost::chrono::duration<long long int, boost::ratio<1ll, 10000000ll> > boost::chrono::system_clock::duration'
     ./boost/chrono/chrono.hpp:458: error: changes meaning of 'duration' from 'class boost::chrono::duration<long long int, boost::ratio<1ll, 10000000ll> >'
 
 * cleanup of simulated...
-* warning removal on posix/process_clock.cpp
-* disable VC++ foolishness
-* Update Jamfiles to manage with dll
-* removal of conversion warning in test_duration
-* manage with MSVC reporting a warning instead of an error when there is an integral constant overflow
-* Use STATIC_ASSERT specific macro to solve the compile failing issue
-* Qualify with boost::detail boost::chrono::detail to avoid ambiguities with MSVC
+* warning removal on `posix/process_clock.cpp`.
+* disable VC++ foolishness.
+* Update Jamfiles to manage with dll.
+* removal of conversion warning in test_duration.
+* manage with MSVC reporting a warning instead of an error when there is an integral constant overflow.
+* Use `STATIC_ASSERT` specific macro to solve the compile failing issue.
+* Qualify with `boost::detail` `boost::chrono::detail` to avoid ambiguities with MSVC.
 
 
 [*Documentation:]
@@ -5758,22 +5754,22 @@ More updated documentation.
 
 [*Features:]
 
-* Added ratio construction and assignment from an equivalent ratio ([@http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#1281 [*LWG 1281. CopyConstruction and Assignment between ratios having the same normalized form]])
-* Added nested ratio typedef type ([@http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#1281 [*LWG 1281. CopyConstruction and Assignment between ratios having the same normalized form]])
-* Added BOOST_CHRONO_HAS_CLOCK_MONOTONIC macro to state if monotonic_clock is provided on this platform.
-* Added duration operator% ([@http://home.roadrunner.com/~hinnant/issue_review/lwg-defects.html#934 [*LGW 934. duration is missing operator%]])
-* Added BOOST_CHRONO_CONSTEXPR when constexpr should be used
-* Complete duration operator* and operator/
+* Added __ratio__ construction and assignment from an equivalent __ratio__ ([@http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#1281 [*LWG 1281. CopyConstruction and Assignment between ratios having the same normalized form]])
+* Added nested __ratio__ typedef type ([@http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#1281 [*LWG 1281. CopyConstruction and Assignment between ratios having the same normalized form]])
+* Added `BOOST_CHRONO_HAS_CLOCK_MONOTONIC` macro to state if `monotonic_clock` is provided on this platform.
+* Added __duration__ `operator%` ([@http://home.roadrunner.com/~hinnant/issue_review/lwg-defects.html#934 [*LGW 934. duration is missing operator%]])
+* Added BOOST_CHRONO_CONSTEXPR when constexpr should be used.
+* Complete __duration__ `operator*` and `operator/`.
 
 
 [*Implementation:]
 
-* Use INTMAC_C to name intmax_t constants instead of LL.
-* Separate chrono.cpp on # files win/chrono.cpp, mac/chrono.cpp and posix/chrono.cpp to make easier the maintenance on different platforms.
-* Separate process_clock.cpp on # files win/process_clock.cpp, mac/process_clock.cpp and posix/process_clock.cpp to make easir the maintenace on different platforms.
-* Added the error_code prototype for monotonic_clock::now for mac/chrono.cpp
-* Fully implement mac/chrono.cpp with error handling.
-* Take care on POSIX systems when CLOCK_MONOTONIC is not defined.
+* Use `INTMAC_C` to name `intmax_t` constants instead of `LL`.
+* Separate `chrono.cpp` on # files `win/chrono.cpp`, `mac/chrono.cpp` and `posix/chrono.cpp` to make easier the maintenance on different platforms.
+* Separate `process_clock.cpp` on # files `win/process_clock.cpp`, `mac/process_clock.cpp` and `posix/process_clock.cpp` to make easier the maintenace on different platforms.
+* Added the `error_code` prototype for `monotonic_clock::now` for `mac/chrono.cpp`.
+* Fully implement `mac/chrono.cpp` with error handling.
+* Take care on POSIX systems when `CLOCK_MONOTONIC` is not defined.
 
 [*Documentation:]
 
@@ -5781,10 +5777,10 @@ More updated documentation.
 
 [*Bug Fixes]
 
-* operator/ was ambiguous: Disambiguate duration operator/
-* CLOCK_MONOTONIC is not defined with cygwin/gcc 3.4: Disable code when BOOST_CHRONO_HAS_CLOCK_MONOTONIC is not defined.
-* result of metafunctions ratio_multiply and ratio_divide were not normalized ratios: Use of the nested ratio typedef type on ratio arithmetic operations.
-* Copy constructor from similar duration masked the defaulted operations: Added duration defaulted implementations
+* `operator/` was ambiguous: Disambiguate duration `operator/`.
+* `CLOCK_MONOTONIC` is not defined with cygwin/gcc 3.4: Disable code when `BOOST_CHRONO_HAS_CLOCK_MONOTONIC` is not defined.
+* result of metafunctions `ratio_multiply` and `ratio_divide` were not normalized ratios: Use of the nested __ratio__ typedef type on __ratio__ arithmetic operations.
+* Copy constructor from similar __duration__ masked the defaulted operations: Added duration defaulted implementations
 
 
 [endsect]
@@ -5966,11 +5962,11 @@ time2_demo contained this comment:
 
 Much thanks to Andrei Alexandrescu, Walter Brown, Peter Dimov, Jeff Garland, Terry Golubiewski, Daniel Krugler, Anthony Williams.
 
-Beman Dawes added the `timer<>`, `process_clock`, `process_timer`, `run_timer` classes which are now deprecated and replaced by the `stopwatch`, `process_cpu_clock` and `stopclock` classes.
+Beman Dawes added the `timer<>`, `process_clock`, `process_timer`, `run_timer` classes which are now deprecated and replaced by the __stopwatch__, `process_cpu_clock` and `stopclock` classes.
 
 Thanks to Adrew Chinoff for its multiple suggestion on `stopwatch_accumulator`, and helping me to polish the documentation.
 
-Thanks to Tom Tan for reporting some compiler issues with MSVC V10 beta and MinGW-gcc-4.4.0 and for the many suggestion he did concerning the new `stopwatch`, `process_cpu_clock`and `stopclock` classes and a deep help with wide characters implementation.
+Thanks to Tom Tan for reporting some compiler issues with MSVC V10 beta and MinGW-gcc-4.4.0 and for the many suggestion he did concerning the new __stopwatch__, `process_cpu_clock`and `stopclock` classes and a deep help with wide characters implementation.
 
 Thanks to Ronald Bock for reporting Valgind issues and for the many suggestion he did concerning the documentation.
 

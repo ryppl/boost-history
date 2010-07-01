@@ -89,7 +89,8 @@
           <span class="bold"><strong>Bug Fixes</strong></span>
         </p>
 <div class="itemizedlist"><ul type="disc"><li>
-            Valgrind fixes: Conditional jump or move depends on uninitialised value(s)
+            Valgrind fixes: "Conditional jump or move depends on uninitialised
+            value(s)"
           </li></ul></div>
 </div>
 <div class="section" lang="en">
@@ -103,10 +104,12 @@
         </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-            scoped_suspend warning removal
+<code class="computeroutput"><span class="identifier">scoped_suspend</span></code> warning
+            removal
           </li>
 <li>
-            error_code management completed
+<code class="computeroutput"><span class="identifier">error_code</span></code> management
+            completed
           </li>
 </ul></div>
 </div>
@@ -128,8 +131,8 @@
 <a name="boost_chrono.appendices.history.__version_0_4_2__june_18__2010____packaging_fixe_"></a><a href="history.html#boost_chrono.appendices.history.__version_0_4_2__june_18__2010____packaging_fixe_" title="Version 0.4.2, June 18, 2010 Packaging fixe"><span class="bold"><strong>Version 0.4.2, June 18, 2010</strong></span> <span class="emphasis"><em>Packaging fixe</em></span></a>
 </h4></div></div></div>
 <div class="itemizedlist"><ul type="disc"><li>
-            Conversion library, used by Boost.Thread porting to Boost.Chrono was
-            not packaged.
+            Boost.Conversion library, used by Boost.Thread porting to Boost.Chrono
+            was not packaged.
           </li></ul></div>
 </div>
 <div class="section" lang="en">
@@ -143,10 +146,11 @@
         </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-            Added thread clock implementation on Windows
+            Added <code class="computeroutput"><span class="identifier">thread_clock</span></code> implementation
+            on Windows.
           </li>
 <li>
-            Added Boost.Thread using Boost.Chrono
+            Added <span class="bold"><strong>Boost.Thread</strong></span> using <span class="bold"><strong>Boost.Chrono</strong></span>.
           </li>
 </ul></div>
 </div>
@@ -161,21 +165,25 @@
         </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-            Suspendible Clock concept + template class suspendible_clock&lt;&gt;
+<span class="underline">_SuspendibleClock</span>_ concept + template
+            class <code class="computeroutput"><span class="identifier">suspendible_clock</span><span class="special">&lt;&gt;</span></code>.
           </li>
 <li>
-            Added scope_suspend which do suspend/resume if the Clock is a model of
-            Suspendible Clock concept, and nothing otherwise.
+            Added <code class="computeroutput"><span class="identifier">scope_suspend</span></code> which
+            do <code class="computeroutput"><span class="identifier">suspend</span></code>/<code class="computeroutput"><span class="identifier">resume</span></code> if the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.clock" title="
+          Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code></a> is a model of <span class="underline">_SuspendibleClock</span>_ concept, and nothing otherwise.
           </li>
 <li>
-            thread_clock support on platforms providing it natively.
+<code class="computeroutput"><span class="identifier">thread_clock</span></code> support
+            on platforms providing it natively.
           </li>
 <li>
-            Added support for wide character for stopwatch_reporter, stopclock, and
-            stopclock_accumulator.
+            Added support for wide character for <code class="computeroutput"><span class="identifier">stopwatch_reporter</span></code>,
+            <code class="computeroutput"><span class="identifier">stopclock</span></code>, and <code class="computeroutput"><span class="identifier">stopclock_accumulator</span></code>.
           </li>
 <li>
-            digital_time renamed t24_hours
+<code class="computeroutput"><span class="identifier">digital_time</span></code> renamed
+            <code class="computeroutput"><span class="identifier">t24_hours</span></code>.
           </li>
 </ul></div>
 <p>
@@ -219,17 +227,19 @@
         </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-            Added overloading for operator/(Integer/Duration)
-          </li>
+            Added overloading for <code class="computeroutput"><span class="keyword">operator</span><span class="special">/(</span><span class="identifier">Integer</span><span class="special">/</span><span class="identifier">Duration</span><span class="special">)</span></code>
+</li>
 <li>
-            Added frequency, lifetime and percentage to the default stopwatch_accumulator_formatter
+            Added frequency, lifetime and percentage to the default <code class="computeroutput"><span class="identifier">stopwatch_accumulator_formatter</span></code>.
           </li>
 </ul></div>
 <p>
           <span class="bold"><strong>Bug Fixes</strong></span> * Specific formatters didn't
-          work completly * Replace duration(0) by duration::zero() on template classes.
-          * suspend doesn't works: partial_ not initialized neither taken in account
-          by the elapsed function.
+          work completly. * Replace <code class="computeroutput"><span class="identifier">duration</span><span class="special">(</span><span class="number">0</span><span class="special">)</span></code>
+          by <code class="computeroutput"><span class="identifier">duration</span><span class="special">::</span><span class="identifier">zero</span><span class="special">()</span></code>
+          on template classes. * <code class="computeroutput"><span class="identifier">suspend</span></code>
+          doesn't works: <code class="computeroutput"><span class="identifier">partial_</span></code>
+          not initialized neither taken in account by the elapsed function.
         </p>
 </div>
 <div class="section" lang="en">
@@ -246,7 +256,8 @@
             Support for wide characters on formatters and stopclocks
           </li>
 <li>
-            added chrono.hpp and stopwatches.hpp at the boost level
+            added <code class="computeroutput"><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">hpp</span></code> and <code class="computeroutput"><span class="identifier">stopwatches</span><span class="special">.</span><span class="identifier">hpp</span></code>
+            at the boost level
           </li>
 </ul></div>
 </div>
@@ -268,27 +279,37 @@
             Added global process cpu clock for real, user, system process CPU time
           </li>
 <li>
-            Added digital_time (looking for a better name)
+            Added <code class="computeroutput"><span class="identifier">digital_time</span></code> (looking
+            for a better name)
           </li>
 <li>
-            Added new <span class="bold"><strong>Stopwatch</strong></span> concept measuring
+            Added new <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
+        Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a> concept measuring
             elapsed time between different points in time associated to the operations
-            start, stop, suspend and resume.
+            <code class="computeroutput"><span class="identifier">start</span></code>, <code class="computeroutput"><span class="identifier">stop</span></code>, <code class="computeroutput"><span class="identifier">suspend</span></code>
+            and <code class="computeroutput"><span class="identifier">resume</span></code>.
           </li>
 <li>
-            Added stopwatch is a model Stopwatch measuring the elapsed time between
-            the start and the stop operations.
+            Added <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch" title="
+          Template Class stopwatch&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch</span></code></a> is a model <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
+        Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a> measuring the elapsed
+            time between the <code class="computeroutput"><span class="identifier">start</span></code>
+            and the <code class="computeroutput"><span class="identifier">stop</span></code> operations.
           </li>
 <li>
-            Added stopwatch_accumulator is a model Stopwatch allowing to accumulate
-            several time samples and give the average, ...
+            Added <code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code>
+            is a model <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
+        Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a> allowing to accumulate
+            several time samples and gives the average, ...
           </li>
 <li>
-            Added scoped helper classes allowing to pairwise start/stop operations,
-            suspend/resume and resume/suspend a Stopwatch.
+            Added scoped helper classes allowing to pairwise <code class="computeroutput"><span class="identifier">start</span></code><span class="emphasis"><em>`stop`
+            operations, `suspend`</em></span><code class="computeroutput"><span class="identifier">resume</span></code>
+            and <code class="computeroutput"><span class="identifier">resume</span></code>/<code class="computeroutput"><span class="identifier">suspend</span></code> a <a href="../reference/stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
+        Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code></a>.
           </li>
 <li>
-            Added new stopwatch <span class="bold"><strong>Formatter</strong></span> concept
+            Added new stopwatch <a href="../reference/reporters.html#boost_chrono.reference.reporters.formatter_req" title=" Formatter Requirements"><code class="computeroutput"><span class="identifier">Formatter</span></code></a> concept
             <div class="itemizedlist"><ul type="circle">
 <li>
                 Added stopwatch formatter "%ds\n"
@@ -307,35 +328,42 @@
 </ul></div>
 </li>
 <li>
-            stopwatch_reporter is a convenient generic class reporting elapsed time
-            for the Stopwatch concept.
+<code class="computeroutput"><span class="identifier">stopwatch_reporter</span></code> is
+            a convenient generic class reporting elapsed time for the Stopwatch concept.
           </li>
 <li>
-            Added stopclock&lt;Clock&gt; shortcut stopwatch_reporter&lt;stopwatch&lt;Clcok&gt;&gt;
+            Added <code class="computeroutput"><span class="identifier">stopclock</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span></code>
+            shortcut <code class="computeroutput"><span class="identifier">stopwatch_reporter</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;&gt;</span></code>
+</li>
+<li>
+            Added <code class="computeroutput"><span class="identifier">scoped_stopclock</span></code>
+            which
           </li>
 <li>
-            Added scoped_stopclock which
-          </li>
-<li>
-            Added typeof registration for classes <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+            Added <code class="computeroutput"><span class="identifier">typeof</span></code> registration
+            for classes <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> and <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a>
 </li>
 <li>
-            The old classes process_times, process_clock, process_timer, timer and
-            run_timer are deprecated as the preceding additions are more generic.
-            However for backward compatibility they preserved until inclusion of
-            the library in Boost. Next follows the equivalences:
+            The old classes <code class="computeroutput"><span class="identifier">process_times</span></code>,
+            <code class="computeroutput"><span class="identifier">process_clock</span></code>, <code class="computeroutput"><span class="identifier">process_timer</span></code>, <code class="computeroutput"><span class="identifier">timer</span></code>
+            and <code class="computeroutput"><span class="identifier">run_timer</span></code> are deprecated
+            as the preceding additions are more generic. However for backward compatibility
+            they preserved until inclusion of the library in Boost. Next follows
+            the equivalences:
             <div class="itemizedlist"><ul type="circle">
 <li>
-                timer&lt;&gt; ~ stopwatch&lt;&gt;
-              </li>
+<code class="computeroutput"><span class="identifier">timer</span><span class="special">&lt;&gt;</span></code>
+                ~ <code class="computeroutput"><span class="identifier">stopwatch</span><span class="special">&lt;&gt;</span></code>
+</li>
 <li>
-                process_timer ~ stopwatch&lt;process_cpu_clock&gt;
-              </li>
+<code class="computeroutput"><span class="identifier">process_timer</span></code> ~
+                <code class="computeroutput"><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">process_cpu_clock</span><span class="special">&gt;</span></code>
+</li>
 <li>
-                run_timer ~ stopclock&lt;&gt;
-              </li>
+<code class="computeroutput"><span class="identifier">run_timer</span></code> ~ <code class="computeroutput"><span class="identifier">stopclock</span><span class="special">&lt;&gt;</span></code>
+</li>
 </ul></div>
 </li>
 </ul></div>
@@ -343,10 +371,10 @@
           <span class="bold"><strong>Bug Fixes</strong></span>
         </p>
 <div class="itemizedlist"><ul type="disc"><li>
-            Try to correct warning C4251: 'boost::chrono::run_timer::m_format' :
-            class 'std::basic_string&lt;_Elem,_Traits,_Ax&gt;' needs to have dll-interface
-            to be used by clients of class 'boost::chrono::run_timer', by don't including
-            inlines functions using the std::string m_format.
+            Try to correct warning "C4251: 'boost::chrono::run_timer::m_format'
+            : class 'std::basic_string&lt;_Elem,_Traits,_Ax&gt;' needs to have dll-interface
+            to be used by clients of class 'boost::chrono::run_timer'", by don't
+            including inlines functions using the std::string <code class="computeroutput"><span class="identifier">m_format</span></code>.
           </li></ul></div>
 </div>
 <div class="section" lang="en">
@@ -358,20 +386,23 @@
         </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-            Replace INTMAX_C by BOOST_INTMAX_C until boost/cstdint;hpp ensures INTMAX_C
+            Replace <code class="computeroutput"><span class="identifier">INTMAX_C</span></code> by
+            <code class="computeroutput"><span class="identifier">BOOST_INTMAX_C</span></code> until
+            <code class="computeroutput"><span class="identifier">boost</span><span class="special">/</span><span class="identifier">cstdint</span><span class="special">.</span><span class="identifier">hpp</span></code> ensures <code class="computeroutput"><span class="identifier">INTMAX_C</span></code>
             is always defined.
           </li>
 <li>
-            Define BOOST_CHRONO_HAS_CLOCK_MONOTONIC when BOOST_CHRONO_WINDOWS_API
-          </li>
+            Define <code class="computeroutput"><span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span></code>
+            when <code class="computeroutput"><span class="identifier">BOOST_CHRONO_WINDOWS_API</span></code>
+</li>
 <li>
             Commenting invalid operator declarations
           </li>
 <li>
-            Take care of Boost min/max recommendations
+            Take care of Boost <code class="computeroutput"><span class="identifier">min</span></code>/<code class="computeroutput"><span class="identifier">max</span></code> recommendations
           </li>
 <li>
-            complete qualification when defining nested typedef duration on clocks
+            Complete qualification when defining nested typedef duration on clocks
             to avoid the following compile error:
           </li>
 </ul></div>
@@ -383,27 +414,28 @@
             cleanup of simulated...
           </li>
 <li>
-            warning removal on posix/process_clock.cpp
+            warning removal on <code class="computeroutput"><span class="identifier">posix</span><span class="special">/</span><span class="identifier">process_clock</span><span class="special">.</span><span class="identifier">cpp</span></code>.
           </li>
 <li>
-            disable VC++ foolishness
+            disable VC++ foolishness.
           </li>
 <li>
-            Update Jamfiles to manage with dll
+            Update Jamfiles to manage with dll.
           </li>
 <li>
-            removal of conversion warning in test_duration
+            removal of conversion warning in test_duration.
           </li>
 <li>
             manage with MSVC reporting a warning instead of an error when there is
-            an integral constant overflow
+            an integral constant overflow.
           </li>
 <li>
-            Use STATIC_ASSERT specific macro to solve the compile failing issue
+            Use <code class="computeroutput"><span class="identifier">STATIC_ASSERT</span></code> specific
+            macro to solve the compile failing issue.
           </li>
 <li>
-            Qualify with boost::detail boost::chrono::detail to avoid ambiguities
-            with MSVC
+            Qualify with <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">detail</span></code><code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">detail</span></code>
+            to avoid ambiguities with MSVC.
           </li>
 </ul></div>
 <p>
@@ -424,25 +456,32 @@
         </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-            Added ratio construction and assignment from an equivalent ratio (<a href="http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#1281" target="_top"><span class="bold"><strong>LWG 1281. CopyConstruction and Assignment between ratios
+            Added <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
+          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> construction and assignment
+            from an equivalent <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
+          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> (<a href="http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#1281" target="_top"><span class="bold"><strong>LWG 1281. CopyConstruction and Assignment between ratios
             having the same normalized form</strong></span></a>)
           </li>
 <li>
-            Added nested ratio typedef type (<a href="http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#1281" target="_top"><span class="bold"><strong>LWG 1281. CopyConstruction and Assignment between ratios
+            Added nested <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
+          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> typedef type (<a href="http://home.roadrunner.com/~hinnant/issue_review/lwg-active.html#1281" target="_top"><span class="bold"><strong>LWG 1281. CopyConstruction and Assignment between ratios
             having the same normalized form</strong></span></a>)
           </li>
 <li>
-            Added BOOST_CHRONO_HAS_CLOCK_MONOTONIC macro to state if monotonic_clock
+            Added <code class="computeroutput"><span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span></code>
+            macro to state if <code class="computeroutput"><span class="identifier">monotonic_clock</span></code>
             is provided on this platform.
           </li>
 <li>
-            Added duration operator% (<a href="http://home.roadrunner.com/~hinnant/issue_review/lwg-defects.html#934" target="_top"><span class="bold"><strong>LGW 934. duration is missing operator%</strong></span></a>)
+            Added <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><code class="computeroutput"><span class="keyword">operator</span><span class="special">%</span></code> (<a href="http://home.roadrunner.com/~hinnant/issue_review/lwg-defects.html#934" target="_top"><span class="bold"><strong>LGW 934. duration is missing operator%</strong></span></a>)
           </li>
 <li>
-            Added BOOST_CHRONO_CONSTEXPR when constexpr should be used
+            Added BOOST_CHRONO_CONSTEXPR when constexpr should be used.
           </li>
 <li>
-            Complete duration operator* and operator/
+            Complete <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a><code class="computeroutput"><span class="keyword">operator</span><span class="special">*</span></code> and <code class="computeroutput"><span class="keyword">operator</span><span class="special">/</span></code>.
           </li>
 </ul></div>
 <p>
@@ -450,25 +489,32 @@
         </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-            Use INTMAC_C to name intmax_t constants instead of LL.
+            Use <code class="computeroutput"><span class="identifier">INTMAC_C</span></code> to name
+            <code class="computeroutput"><span class="identifier">intmax_t</span></code> constants instead
+            of <code class="computeroutput"><span class="identifier">LL</span></code>.
           </li>
 <li>
-            Separate chrono.cpp on # files win/chrono.cpp, mac/chrono.cpp and posix/chrono.cpp
+            Separate <code class="computeroutput"><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">cpp</span></code> on # files <code class="computeroutput"><span class="identifier">win</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">cpp</span></code>,
+            <code class="computeroutput"><span class="identifier">mac</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">cpp</span></code> and <code class="computeroutput"><span class="identifier">posix</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">cpp</span></code>
             to make easier the maintenance on different platforms.
           </li>
 <li>
-            Separate process_clock.cpp on # files win/process_clock.cpp, mac/process_clock.cpp
-            and posix/process_clock.cpp to make easir the maintenace on different
-            platforms.
+            Separate <code class="computeroutput"><span class="identifier">process_clock</span><span class="special">.</span><span class="identifier">cpp</span></code>
+            on # files <code class="computeroutput"><span class="identifier">win</span><span class="special">/</span><span class="identifier">process_clock</span><span class="special">.</span><span class="identifier">cpp</span></code>, <code class="computeroutput"><span class="identifier">mac</span><span class="special">/</span><span class="identifier">process_clock</span><span class="special">.</span><span class="identifier">cpp</span></code>
+            and <code class="computeroutput"><span class="identifier">posix</span><span class="special">/</span><span class="identifier">process_clock</span><span class="special">.</span><span class="identifier">cpp</span></code> to make easier the maintenace on
+            different platforms.
           </li>
 <li>
-            Added the error_code prototype for monotonic_clock::now for mac/chrono.cpp
+            Added the <code class="computeroutput"><span class="identifier">error_code</span></code>
+            prototype for <code class="computeroutput"><span class="identifier">monotonic_clock</span><span class="special">::</span><span class="identifier">now</span></code>
+            for <code class="computeroutput"><span class="identifier">mac</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">cpp</span></code>.
           </li>
 <li>
-            Fully implement mac/chrono.cpp with error handling.
+            Fully implement <code class="computeroutput"><span class="identifier">mac</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">cpp</span></code> with error handling.
           </li>
 <li>
-            Take care on POSIX systems when CLOCK_MONOTONIC is not defined.
+            Take care on POSIX systems when <code class="computeroutput"><span class="identifier">CLOCK_MONOTONIC</span></code>
+            is not defined.
           </li>
 </ul></div>
 <p>
@@ -482,19 +528,25 @@
         </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-            operator/ was ambiguous: Disambiguate duration operator/
+<code class="computeroutput"><span class="keyword">operator</span><span class="special">/</span></code>
+            was ambiguous: Disambiguate duration <code class="computeroutput"><span class="keyword">operator</span><span class="special">/</span></code>.
           </li>
 <li>
-            CLOCK_MONOTONIC is not defined with cygwin/gcc 3.4: Disable code when
-            BOOST_CHRONO_HAS_CLOCK_MONOTONIC is not defined.
+<code class="computeroutput"><span class="identifier">CLOCK_MONOTONIC</span></code> is not
+            defined with cygwin/gcc 3.4: Disable code when <code class="computeroutput"><span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span></code>
+            is not defined.
           </li>
 <li>
-            result of metafunctions ratio_multiply and ratio_divide were not normalized
-            ratios: Use of the nested ratio typedef type on ratio arithmetic operations.
+            result of metafunctions <code class="computeroutput"><span class="identifier">ratio_multiply</span></code>
+            and <code class="computeroutput"><span class="identifier">ratio_divide</span></code> were
+            not normalized ratios: Use of the nested <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
+          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> typedef type on <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
+          Template ratio&lt;&gt;"><code class="computeroutput"><span class="identifier">ratio</span></code></a> arithmetic operations.
           </li>
 <li>
-            Copy constructor from similar duration masked the defaulted operations:
-            Added duration defaulted implementations
+            Copy constructor from similar <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+          Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> masked the defaulted
+            operations: Added duration defaulted implementations
           </li>
 </ul></div>
 </div>
