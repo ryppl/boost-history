@@ -34,7 +34,237 @@ function which uses a name or empty struct to access internal data elements (the
 `bitfield_tuple` still provides the regular `get<Index>()` by index function as
 boost.tuple).
 
-The following table lists all constructors, destructors, template members and
-member functions.
+[h5 Include Files]
 
+Header file:
+``
+#include <boost/bitfield_tuple.hpp>
+``
+Forward declaration file:
+``
+#include <boost/bitfield_tuple_fwd.hpp>
+``
+
+[h5 Template Signature]
+``
+tempate <typename... Args> struct bitfield_tuple;
+``
+For additional information on creating specilizations over the 
+`bitfield_tuple`'s implementation documentation reguarding macros.
+
+[h5 types]
+`N` is used to represent a `bitfield_tuple`.
+
+[table
+    [
+        [Type]
+        [Description]
+    ]
+    [
+        [`N::members`]
+        [ This is an boost.mpl sequence, specifically `mpl::vector`. `members`
+holds the information about the different member within the bitfield_tuple. The
+only reason this is part of the public interface is so that the fusion sequence
+can be made to work correctly. One should never have to use the `members` type
+directly, however, if you must the elements contained within are of type
+`bitfeild_element` mentioned more in the implementation section.]
+    ]
+    [
+        [`N::storage_type`]
+        [ The integral type being used to store bitfields within the 
+`bitfield_tuple`. For more information about how this type is either deduced or
+supplied see the `struct storage` section of the class reference documentation.]
+    ]
+    [
+        [`N::bits_used`]
+        [ The number of bits offset by the fields supplied by the user. Bits
+used is of type `mpl::size_t<M>` where `M` is the sum of the bits use by all
+bitfields and filler bits within the `bitfield_tuple`. This is also the index of
+of the first bit of the next bitfield that would be added into the 
+`bitfield_tuple`. ]
+    ]
+]
+
+[h5 Template Members]
+The `bitfield_reference` type is responsible for acting as the proxy reference
+type into the storage of a `bitfield_tuple`, This works similar to the proxy 
+reference type supplied by `std::vector<bool>` specilization. 
+
+[note If one wishes to work with the reference direcrly please not that the
+`const`'ness of the `BitfieldElement` template parameter is used to specify if
+reference type is a const or non const type. This is due to construction of the
+structure which is repsonsible to extracting or storing data within each
+bitfield.]
+
+[note The `bitfieldElement` type is also used to specify the bitfield to 
+retrieve and store data within.]
+
+[table
+    [
+        [Name]
+        [Signature]
+        [Description]
+    ]
+    [
+        [`bitfield_reference`]
+        [`N::template <typename BitfieldElement> bitfield_reference;`]
+        [ This is the proxy reference type use to create a fake reference to
+a bitfield within the bitfield_tuple.]
+    ]
+]
+
+[h5 `bitfield_reference` Internal Types]
+`ref` refers to a `bitfield_reference` type
+[table
+    [
+        [Type]
+        [Description]
+    ]
+    [
+        [`ref::return_type`]
+        [The return type specified by the user, via either a member or flag
+parameter.]
+    ]
+    [
+        [`ref::storage_t`]
+        [The storage type with the same `const` ness as the `BitfieldElement` 
+template parameter.]
+    ]
+    [
+        [`ref::field_type`]
+        [ The `boost::integer::bitfield` that relates to the data you are
+storing within the integral value. This is the type which does the actual 
+retrieval and storage of data into and from the `bitfield_tuple`. ]
+    ]
+]
+
+[h5 bitfield_reference constructors]
+[table
+    [
+        [Name]
+        [Constructor Signature]
+        [Exception Safty]
+        [Description]
+    ]
+    [
+        [Reference Constructor]
+        [ `explicit bitfield_reference(storage_t& field)`]
+        [ TBD ]
+        [ Just like a reference the bitfield_reference is constrctible over the
+type it references. ]
+    ]
+    [
+        [Copy Constructor]
+        [ `bitfield_reference( bitfield_reference const& x)`]
+        [ TBD ]
+        [ Copy makes a copy of the reference inside of `x`. ]
+    ]
+]
+
+[h5 bitfield_reference operators]
+[table
+    [
+        [Name]
+        [Signature]
+        [Exception Safty]
+        [Description]
+    ]
+    [
+        [Implicit Conversion Operator]
+        [ `inline operator return_type() const`]
+        [ TBD ]
+        [ Allows the `bitfield_reference` type to be treated as though it is the
+`return_type`. ]
+    ]
+    [
+        [Assignment Operator]
+        [ `bitfield_reference const& operator=(return_type const& rhs)`]
+        [ TBD ]
+        [ takes the value `rhs` and stores its value in the corrosponding 
+bitfield in the storage of the `bitfield_tuple`.]
+    ]
+]
+
+
+
+
+[h5 Constructors]
+[table
+    [
+        [Name]
+        [Constructor Signature]
+        [Exception Safty]
+        [Description]
+    ]
+    [
+        [ Value Constructor ]
+        [ `explicit bitfield_tuple(storage_type x = 0)` ]
+        [ No Throw ]
+        [ This constructor acts as both a default constructor and allows for
+construction over the storage type. This constructor is one way of giving
+a `bitfield_tuple` an initial value. ]
+    ]
+    [
+        [ Copy Constructor ]
+        [ `bitfield_tuple( bitfield_tuple const& x )` ]
+        [ No Throw ]
+        [ Copies the value from `x` into the current `bitfield_tuple`. ]
+    ]
+]
+
+[h5 Operators]
+[table
+    [
+        [Name]
+        [Signature]
+        [Exception Safty]
+        [Description]
+    ]
+    [
+        [Value Assignment Operator]
+        [`bitfield_tuple const& operator=( storage_type const&)`]
+        [ No Throw ]
+        [Assigns a new value to the internal storage of the `bitfield_tuple`.]
+    ]
+    [
+        [Copy Assignment Operator]
+        [`bitfield_tuple const& operator=( bitfield_tuple const&)`]
+        [ No Throw ]
+        [Assigns a new value to the internal storage of the `bitfield_tuple`.]
+    ]
+]
+
+[h5 Member functions]
+[note All of the `bitfield_reference` types returned by the `get` functions 
+listed below are deduced at compile time so they are ommited for clarity. ]
+
+[table 
+    [
+        [Signature]
+        [Description]
+    ]
+    [
+        [`storage_type data( ) const`]
+        [This returns a copy of the internal storage from within a bitfield
+tuple.]
+    ]
+    [
+        [ `template <typename Name>` [~ `bitfield_reference` type] `get()`]
+        [ Returns a reference type corrisponding to the field stored with `Name`
+specified in the template parameters.]
+    ]
+    [
+        [ `template <typename Name>` [~ `bitfield_reference` type] `get() const`]
+        [ Const version of the above function. ]
+    ]
+    [
+        [ `template <std::size_t Index>` [~ `bitfield_reference` type] `get()`]
+        [ This is the same as the boost.tuple get function. The only difference
+is that it returns a proxy reference type.]
+    ]
+    [
+        [ `template <std::size_t Index>` [~ `bitfield_reference` type] `get() const`]
+        [ Const version of the above function.]
+    ]
+]
 [endsect]
