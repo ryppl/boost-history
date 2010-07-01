@@ -1,0 +1,40 @@
+[/
+Copyright (c) 2010 Brian Bartman
+
+Distributed under the Boost Software License, Version 1.0. (See accompanying
+file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+]
+[section `bitfield_tuple` and `bitfield_reference`]
+[h4 `bitfield_tuple` interface]
+There are two main sections to the interface of a `bitfield_tuple`. The first
+part of a `bitfield_tuple`'s interface is how its specified and how those 
+specifications effect its behavior and composition. The second part of the
+interface is the runtime portion of the interface.
+
+[h4 Template Interface]
+For all but one of the types used to specify a `bitfield_tuple`'s template 
+parameters, order does matter, the one type which is not part of the implicit
+ordering of a `bitfield_tuples` composition is the `storage<>` type. For more
+information on the storage type as it relates to ordering please see
+documentation relating to the `storage` template. Basically the template
+parameters which are of type `flag` and `member` increment the `get` function
+accessor's index by 1. (meaning that if one was to construct a bitfield tuple 
+using a flag followed by a `filler`, followed by a `member`, than the index for
+the `flag` would be 0 and the index for the `member` would be 1 because `filler`
+doesn't have a value associated with it).
+
+[h4 Runtime Support Interface]
+The runtime interface of a `bitfield_tuple` is composed of the basic tuple 
+interface, that being it is default and copy constructible, and provids the
+regular `get` funtions which a tuple does. The two main difference between
+the boost.tuple and the `bitfield_tuple` are as follows: First, the 
+`bitfield_tuple` doesn't return references to its data members it has to return
+a proxy to them. Second, the bitfield_tuple provides an additional `get`
+function which uses a name or empty struct to access internal data elements (the
+`bitfield_tuple` still provides the regular `get<Index>()` by index function as
+boost.tuple).
+
+The following table lists all constructors, destructors, template members and
+member functions.
+
+[endsect]
