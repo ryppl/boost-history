@@ -41,7 +41,7 @@ boost::reverse_range<
 >
 reversed(const Range& range)
 {
-    return boost::make_reversed_range(range);
+    return boost::adaptors::reverse(range);
 }
 
 } // namespace detail

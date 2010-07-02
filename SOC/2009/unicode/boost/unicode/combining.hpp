@@ -6,6 +6,8 @@
 #include <boost/cuchar.hpp>
 #include <algorithm>
 
+#include <boost/range/adaptor/reversed.hpp>
+
 #include <boost/throw_exception.hpp>
 #include <stdexcept>
 #ifndef BOOST_NO_STD_LOCALE
@@ -124,7 +126,7 @@ struct combine_sorter
             reverse_iterator<In>,
             Out
         > p = combine_sort_impl(
-            make_reversed_range(
+            boost::adaptors::reverse(
                 *boost::prior(
                     make_consumer_iterator(begin, end, end, combiner())
                 )

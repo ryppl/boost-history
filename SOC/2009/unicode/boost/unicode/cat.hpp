@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <boost/utility.hpp>
 
-#include <boost/iterator/join_iterator.hpp>
+#include <boost/range/join.hpp>
 
 #include <boost/range/algorithm/copy.hpp>
 #include <boost/tuple/tuple.hpp>
@@ -120,7 +120,7 @@ OutputIterator BOOST_PP_CAT(BOOST_PP_SEQ_ELEM(0, seq), _concat)(const Range1& ra
     t = cat_limits(range1, range2); \
      \
     out = copy(t.get<0>(), out); \
-    out = pipe(joined_n(t.get<1>(), t.get<2>()), make_piped_pipe(utf_decoder(), BOOST_PP_SEQ_ELEM(1, seq)(BOOST_PP_ENUM_PARAMS(n, t))), utf_encoded_out<typename range_value<const Range1>::type>(out)).base(); \
+    out = pipe(boost::join(t.get<1>(), t.get<2>()), make_piped_pipe(utf_decoder(), BOOST_PP_SEQ_ELEM(1, seq)(BOOST_PP_ENUM_PARAMS(n, t))), utf_encoded_out<typename range_value<const Range1>::type>(out)).base(); \
     return copy(t.get<3>(), out); \
 }
 
@@ -142,29 +142,25 @@ BOOST_PP_REPEAT(BOOST_PP_INC(n), BOOST_UNICODE_COMPOSE_CONCATED_DEF_A, (name)(pi
 /** INTERNAL ONLY */
 #define BOOST_UNICODE_COMPOSE_CONCATED_DEF_A(z, n, seq) \
 template<typename Range1, typename Range2 BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, typename T)> \
-iterator_range< \
-    join_iterator< \
-        tuple< \
-            iterator_range<typename range_iterator<const Range1>::type>, \
-            iterator_range< \
-                pipe_iterator< \
-                    join_iterator< \
-                        tuple< \
-                            iterator_range<typename range_iterator<const Range1>::type>, \
-                            iterator_range<typename range_iterator<const Range2>::type> \
-                        > \
-                    >, \
-                    piped_pipe< \
-                        utf_decoder, \
-                        multi_pipe< \
-                            BOOST_PP_SEQ_ELEM(1, seq), \
-                            utf_encoder<typename range_value<const Range1>::type> \
-                        > \
+joined_range< \
+    sub_range<const Range1>, \
+    joined_range< \
+        iterator_range< \
+            pipe_iterator< \
+                joined_range< \
+                    sub_range<const Range1>, \
+                    sub_range<const Range2> \
+                >, \
+                piped_pipe< \
+                    utf_decoder, \
+                    multi_pipe< \
+                        BOOST_PP_SEQ_ELEM(1, seq), \
+                        utf_encoder<typename range_value<const Range1>::type> \
                     > \
                 > \
-            >, \
-            iterator_range<typename range_iterator<const Range2>::type> \
-        > \
+            > \
+        >, \
+        sub_range<const Range2> \
     > \
 > BOOST_PP_CAT(BOOST_PP_SEQ_ELEM(0, seq), _concated)(const Range1& range1, const Range2& range2 BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_BINARY_PARAMS(n, const T, & t)) \
 { \
@@ -176,10 +172,10 @@ iterator_range< \
     > \
     t = cat_limits(range1, range2); \
      \
-    return joined_n( \
+    return boost::join( \
         t.get<0>(), \
-        piped( \
-            joined_n(t.get<1>(), t.get<2>()), \
+        boost::join(piped( \
+            boost::join(t.get<1>(), t.get<2>()), \
             make_piped_pipe( \
                 utf_decoder(), \
                 make_multi_pipe( \
@@ -189,7 +185,7 @@ iterator_range< \
             ) \
         ), \
         t.get<3>() \
-    ); \
+    )); \
 }
 
 /** INTERNAL ONLY */

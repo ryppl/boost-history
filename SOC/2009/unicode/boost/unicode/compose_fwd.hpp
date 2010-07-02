@@ -65,7 +65,7 @@ struct decomposer
             reverse_iterator<In>,
             Out
         > p = decompose_impl(
-            make_reversed_range(
+            boost::adaptors::reverse(
                 *boost::prior(
                     make_consumer_iterator(begin, end, end, combiner())
                 )
