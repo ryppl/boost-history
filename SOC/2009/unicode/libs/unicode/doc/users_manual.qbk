@@ -258,13 +258,13 @@ to prevent duplication of data.
 
 [section The concepts behind this library]
 
-Two concepts are of utmost importance within this library, the [conceptref Consumer]
+Two concepts are of utmost importance within this library, the [conceptref Segmenter]
 concept, which is used for segmentation of text, and, more importantly,
-the [conceptref Pipe] concept, which is used for conversion, including
+the [conceptref Converter] concept, which is used for conversion, including
 transcoding and normalization.
 
-[heading Consumer]
-A model of the [conceptref Consumer] concept is a class that takes an
+[heading Segmenter]
+A model of the [conceptref Segmenter] concept is a class that takes an
 input range, specified as two iterators, and consumes it left-to-right
 or right-to-left, that is to say it returns an iterator with the new
 begin in the case of left-to-right consuming, and the new end in the case
@@ -275,9 +275,9 @@ should restore the original position. Indeed, both primitives need to
 be provided in a symmetric way in order to implement bidirectional
 iteration.
 
-Here is an example of a consumer that consumes one element in a range
+Here is an example of a segmenter that consumes one element in a range
 of integers:
-``struct element_consumer
+``struct element_segmenter
 {
     typedef int input_type;
 
@@ -294,16 +294,16 @@ of integers:
     }
 };``
 
-A model of the [conceptref Consumer] concept may then be used to segment
-a range. The [classref boost::consumer_iterator], eventually invoked
-by [funcref boost::consumed], can be used to exploit that concept to
+A model of the [conceptref Segmenter] concept may then be used to segment
+a range. The [classref boost::segment_iterator], eventually invoked
+by [funcref boost::segmented], can be used to exploit that concept to
 turn a range into a range of subranges.
 
 With the above example, the range would be converted into a range of
 subranges, each subrange being exactly one element.
 
-[heading Pipe]
-A model of the [conceptref Pipe] concept is a class that takes an input
+[heading Converter]
+A model of the [conceptref Converter] concept is a class that takes an input
 range, specified as two iterators, consumes it left-to-right
 or right-to-left, writes some elements to an output iterator, and returns
 the new begin in the case of left-to-right consuming or the new end
@@ -314,13 +314,13 @@ In terms of semantics, not only does the consuming need to be symmetric,
 but the output shall also be the same for a given consumed subrange,
 whatever the consuming direction.
 Furthermore, the output shall always be ordered left-to-right, even when
-applying the pipe right-to-left.
+applying the convert right-to-left.
 
-Here is an example of a pipe that converts two adjacent numbers into the
+Here is an example of a convert that converts two adjacent numbers into the
 two numbers reversed, in a range of integers that must have an
 even number of elements; indeed, for the two operations to be symmetric
 here, there is not really another way.
-``struct reverse2_pipe
+``struct reverse2_convert
 {
     typedef int input_type;
     typedef int output_type;
@@ -350,24 +350,24 @@ here, there is not really another way.
     }
 };``
 
-A model of the [conceptref Pipe] concept may then be used to perform
+A model of the [conceptref Converter] concept may then be used to perform
 a many-to-many conversion on a whole range, be it eagerly (by calling
-repeatly the pipe) or lazily (be evaluating it step by step as an
+repeatly the convert) or lazily (be evaluating it step by step as an
 iterator adapter is advanced).
 
-The [funcref boost::pipe] function provides the former, while the
-[funcref boost::piped] function which returns a range in terms of
-[classref boost::pipe_iterator] provides the latter.
+The [funcref boost::convert] function provides the former, while the
+[funcref boost::converted] function which returns a range in terms of
+[classref boost::convert_iterator] provides the latter.
 
-With the above example, a piped range [1, 2, 3, 4] would be converted
+With the above example, a convertd range [1, 2, 3, 4] would be converted
 to [2, 1, 4, 3].
 
-[heading OneManyPipe]
+[heading OneManyConverter]
 
-Additionally, there is a refinement of the [conceptref Pipe] concept named
-[conceptref OneManyPipe], where one element is converted to many.
+Additionally, there is a refinement of the [conceptref Converter] concept named
+[conceptref OneManyConverter], where one element is converted to many.
 
-This allows avoiding the consuming altogether so that the pipe can be
+This allows avoiding the consuming altogether so that the convert can be
 defined as a single function that takes a value, an output iterator,
 and returns it.
 
@@ -384,21 +384,21 @@ grapheme clusters, words, etc.).
 
 [heading Conversion]
 Conversions can be applied in a variety of means, all generated from using
-the [conceptref Pipe] concept that performs one step of the conversion:
+the [conceptref Converter] concept that performs one step of the conversion:
 
 * Eager evaluation, with simply
-loops the =Pipe= until the whole input range has been treated.
+loops the =Converter= until the whole input range has been treated.
 * Lazy evaluation, where a new range is returned that wraps the input range
 and converts step-by-step as the range is advanced. The resulting range is
-however read-only. It is implemented in terms of [classref boost::pipe_iterator].
+however read-only. It is implemented in terms of [classref boost::convert_iterator].
 * Lazy output evaluation, where an output iterator is returned that wraps the output
-and converts every pushed element with a [conceptref OneManyPipe]. It is implemented in terms
-of [classref boost::pipe_output_iterator].
+and converts every pushed element with a [conceptref OneManyConverter]. It is implemented in terms
+of [classref boost::convert_output_iterator].
 
 The naming scheme of the utilities within the library reflect this; here is
 for example what is provided to convert UTF-32 to UTF-8:
 
-* [classref boost::unicode::u8_encoder] is a model of the =OneManyPipe= concept.
+* [classref boost::unicode::u8_encoder] is a model of the =OneManyConverter= concept.
 * [funcref boost::unicode::u8_encode] is an eager encoding algorithm.
 * [funcref boost::unicode::u8_encoded] returns a range adapter that does on-the-fly encoding.
 * [funcref boost::unicode::u8_encoded_out] returns an output iterator adapter that will encode its elements before forwarding them to the wrapped output iterator.
@@ -408,18 +408,18 @@ to UTF-32 is called a "decoding".
 This is because code points is what the library mainly deals with, and UTF-32 is a sequence of code points.]
 
 [heading Segmentation]
-Segmentations are expressed in terms of the [conceptref Consumer] concept, which is inherently
-very similar to the [conceptref Pipe] concept except it doesn't perform any kind of transformation,
+Segmentations are expressed in terms of the [conceptref Segmenter] concept, which is inherently
+very similar to the [conceptref Converter] concept except it doesn't perform any kind of transformation,
 it just reads part of the input.
-As a matter of fact, a =Pipe= can be converted to =Consumer= using [classref boost::pipe_consumer].
+As a matter of fact, a =Converter= can be converted to =Segmenter= using [classref boost::converter_segmenter].
 
-Segmentation may be done either by using the appropriate =Consumer= directly, or by using the
-[classref boost::consumer_iterator] template to adapt the range into a
+Segmentation may be done either by using the appropriate =Segmenter= directly, or by using the
+[classref boost::segment_iterator] template to adapt the range into a
 read-only range of subranges.
 
 Additionally, the [conceptref BoundaryChecker] concept may prove useful to tell whether
-a segment starts at a given position; a =Consumer= may also be defined
-in terms of it using [classref boost::boundary_consumer].
+a segment starts at a given position; a =Segmenter= may also be defined
+in terms of it using [classref boost::boundary_segmenter].
 
 The naming scheme is as follows:
 
@@ -462,7 +462,7 @@ but does not include Hangul syllable decompositions since those can be easily
 procedurally generated, allowing space to be saved.
 
 The library provides [classref boost::unicode::hangul_decomposer], a
-[conceptref OneManyPipe] to decompose Hangul syllables.
+[conceptref OneManyConverter] to decompose Hangul syllables.
 
 There are several types of decompositions, which are exposed by
 [funcref boost::unicode::ucd::get_decomposition_type], most importantly
@@ -471,7 +471,7 @@ decompositions and the canonical decompositions from the UCD, while the
 compatibility decomposition is obtained by applying the Hangul decompositions
 and all decompositions from the UCD.
 
-[classref boost::unicode::decomposer], model of [conceptref Pipe]
+[classref boost::unicode::decomposer], model of [conceptref Converter]
 allows to perform any decomposition that matches a certain mask, recursively,
 including Hangul ones (which are treated as canonical decompositions),
 and canonically orders combining sequences as well.
@@ -489,7 +489,7 @@ implementation, a lexicographically sorted array) of all canonical
 compositions from their fully decomposed and canonically ordered form to
 identity composable sequences and apply the compositions.
 
-[classref boost::unicode::composer] is a [conceptref Pipe] that uses that
+[classref boost::unicode::composer] is a [conceptref Converter] that uses that
 tree as well as the Hangul compositions.
 
 [heading Normalization]
@@ -531,9 +531,9 @@ as well.
 
 Different approaches to do that are possible:
 
-* [conceptref Pipe]- or [conceptref Consumer]-based, you may simply run classic search algorithms, such as
+* [conceptref Converter]- or [conceptref Segmenter]-based, you may simply run classic search algorithms, such as
 the ones from Boost.StringAlgo, with ranges of the appropriate elements -- those elements being able
-to be ranges themselves (subranges returned by [classref boost::consumer_iterator] are =EqualityComparable=).
+to be ranges themselves (subranges returned by [classref boost::segment_iterator] are =EqualityComparable=).
 * [conceptref BoundaryChecker]-based, the classic algorithms are run, then false positives
 that don't lie on the right boundaries are discarded. This has the advantage of reducing conversion and
 iteration overhead in certain situations.
@@ -716,8 +716,8 @@ range abstractions are more flexible and easier to deal with, and that
 there are also quite more efficient.
 
 
-[heading Pipe concept]
-Centralizing conversion into a single [conceptref Pipe] model allows
+[heading Converter concept]
+Centralizing conversion into a single [conceptref Converter] model allows
 eager and lazy variants of evaluation to be possible for any conversion
 facility.
 
@@ -739,11 +739,11 @@ would be useful as a lot of the functions do not have a specified return
 type.
 
 [heading Non-checked UTF conversion]
-The library only provides UTF conversion pipes that do extensive checking
+The library only provides UTF conversion converts that do extensive checking
 that the input is correct and that the end is not unexpectedly met.
 
 These could be avoided when it is known that the input is valid, and
-thus performance be increased. [classref boost::pipe_iterator] could as
+thus performance be increased. [classref boost::convert_iterator] could as
 well avoid storing the =begin= and =end= iterator in such cases.
 
 [heading Fast Normalization]

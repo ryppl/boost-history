@@ -12,7 +12,7 @@
 
 #include <boost/unicode/surrogates.hpp>
 
-#include <boost/iterator/pipe_iterator.hpp>
+#include <boost/iterator/convert_iterator.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/bool.hpp>
@@ -76,9 +76,9 @@ inline void invalid_utf_sequence(Iterator begin, Iterator end)
 
 } // namespace detail
 
-/** Model of \c \xmlonly<conceptname>OneManyPipe</conceptname>\endxmlonly
+/** Model of \c \xmlonly<conceptname>OneManyConverter</conceptname>\endxmlonly
  * that converts a code point to a sequence of UTF-16 code units. */
-struct u16_encoder : one_many_pipe<u16_encoder>
+struct u16_encoder : one_many_converter<u16_encoder>
 {
     typedef char32 input_type;
 	typedef char16 output_type;
@@ -119,7 +119,7 @@ struct u16_encoder : one_many_pipe<u16_encoder>
 	}
 };
 
-/** Model of \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly that
+/** Model of \c \xmlonly<conceptname>Converter</conceptname>\endxmlonly that
  * converts a sequence of UTF-16 code units into a single code point. */
 struct u16_decoder
 {
@@ -215,9 +215,9 @@ struct u16_boundary
     }
 };
 
-/** Model of \c \xmlonly<conceptname>OneManyPipe</conceptname>\endxmlonly
+/** Model of \c \xmlonly<conceptname>OneManyConverter</conceptname>\endxmlonly
  * that converts a code point to a sequence of UTF-8 code units. */
-struct u8_encoder : one_many_pipe<u8_encoder>
+struct u8_encoder : one_many_converter<u8_encoder>
 {
     typedef char32 input_type;
 	typedef char output_type;
@@ -257,7 +257,7 @@ struct u8_encoder : one_many_pipe<u8_encoder>
 	}
 };
 
-/** Model of \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly that
+/** Model of \c \xmlonly<conceptname>Converter</conceptname>\endxmlonly that
  * converts a sequence of UTF-8 code units into a single code point. */
 struct u8_decoder
 {
@@ -439,7 +439,7 @@ namespace detail
         detail::is_u32<ValueType>
     >::type>
     {
-        typedef cast_pipe<char32> type;
+        typedef cast_converter<char32> type;
     };
     
     template<typename ValueType>
@@ -460,7 +460,7 @@ namespace detail
 
 } // namespace detail
 
-/** Model of \c \xmlonly<conceptname>OneManyPipe</conceptname>\endxmlonly,
+/** Model of \c \xmlonly<conceptname>OneManyConverter</conceptname>\endxmlonly,
  * either behaves like \c u16_encoder, \c u8_encoder or nothing
  * depending on the targeted element type \c ValueType. */
 template<typename ValueType>
@@ -468,7 +468,7 @@ struct utf_encoder : detail::select_encoder<ValueType>::type
 {
 };
 
-/** Model of \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly,
+/** Model of \c \xmlonly<conceptname>Converter</conceptname>\endxmlonly,
  * either behaves like \c u16_decoder, a \c u8_decoder or nothing depending on the
  * value type of the input range. */
 struct utf_decoder
@@ -491,7 +491,7 @@ private:
         >
     >::type>
     {
-        typedef cast_pipe<char32> type;
+        typedef cast_converter<char32> type;
     };
     
     template<typename Iterator>
@@ -587,9 +587,9 @@ private:
 #endif
 };
 
-/** Model of \c \xmlonly<conceptname>OneManyPipe</conceptname>\endxmlonly
+/** Model of \c \xmlonly<conceptname>OneManyConverter</conceptname>\endxmlonly
  * that converts from UTF-32 to ISO-8859-1 alias latin-1. */
-typedef boost::detail::unspecified< cast_pipe<char> >::type latin1_encoder;
+typedef boost::detail::unspecified< cast_converter<char> >::type latin1_encoder;
 
 } // namespace unicode
 

@@ -2,7 +2,7 @@
 #define BOOST_UNICODE_COMBINING_HPP
 
 #include <boost/config.hpp>
-#include <boost/iterator/consumer_iterator.hpp>
+#include <boost/iterator/segment_iterator.hpp>
 #include <boost/cuchar.hpp>
 #include <algorithm>
 
@@ -78,8 +78,8 @@ namespace detail
 
 } // namespace detail
 
-/** Model of \c \xmlonly<conceptname>Consumer</conceptname>\endxmlonly
- * that consumes combining character sequences. */
+/** Model of \c \xmlonly<conceptname>Segmenter</conceptname>\endxmlonly
+ * that segments combining character sequences. */
 struct combiner
 {
     typedef char32 input_type;
@@ -114,7 +114,7 @@ struct combine_sorter
     std::pair<In, Out> ltr(In begin, In end, Out out)
     {
         return combine_sort_impl(
-            *make_consumer_iterator(begin, end, begin, combiner()),
+            *make_segment_iterator(begin, end, begin, combiner()),
             out
         );
     }
@@ -128,7 +128,7 @@ struct combine_sorter
         > p = combine_sort_impl(
             boost::adaptors::reverse(
                 *boost::prior(
-                    make_consumer_iterator(begin, end, end, combiner())
+                    make_segment_iterator(begin, end, end, combiner())
                 )
             ),
             out
@@ -181,26 +181,26 @@ private:
  * each subrange being a combining character sequence. */
 template<typename Range>
 iterator_range<
-    consumer_iterator<typename range_iterator<Range>::type, combiner>
+    segment_iterator<typename range_iterator<Range>::type, combiner>
 >
 combine_bounded(Range&& range);
 #else
 template<typename Range>
 iterator_range<
-    consumer_iterator<typename range_iterator<const Range>::type, combiner>
+    segment_iterator<typename range_iterator<const Range>::type, combiner>
 >
 combine_bounded(const Range& range)
 {
-    return consumed(range, combiner());
+    return segmented(range, combiner());
 }
 
 template<typename Range>
 iterator_range<
-    consumer_iterator<typename range_iterator<Range>::type, combiner>
+    segment_iterator<typename range_iterator<Range>::type, combiner>
 >
 combine_bounded(Range& range)
 {
-    return consumed(range, combiner());
+    return segmented(range, combiner());
 }
 #endif
     

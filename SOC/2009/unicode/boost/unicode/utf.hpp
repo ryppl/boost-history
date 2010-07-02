@@ -2,10 +2,10 @@
 #define BOOST_UNICODE_UTF_HPP
 
 #include <boost/unicode/utf_codecs.hpp>
-#include <boost/iterator/pipe_iterator.hpp>
-#include <boost/iterator/consumer_iterator.hpp>
+#include <boost/iterator/convert_iterator.hpp>
+#include <boost/iterator/segment_iterator.hpp>
 
-#include <boost/unicode/pipe_def.hpp>
+#include <boost/unicode/converter_def.hpp>
 #include <boost/detail/unspecified.hpp>
 
 namespace boost
@@ -33,29 +33,29 @@ BOOST_UNICODE_PIPE_DEF(Name##_decode, 0)                               \
                                                                        \
 template<typename Range>                                               \
 iterator_range<typename boost::detail::unspecified<                    \
-    consumer_iterator<                                                 \
+    segment_iterator<                                                  \
         typename range_iterator<const Range>::type,                    \
-        pipe_consumer<unicode::Name##_decoder>                         \
+        converter_segmenter<unicode::Name##_decoder>                   \
     >                                                                  \
 >::type> Name##_bounded(const Range& range)                            \
 {                                                                      \
-    return consumed(                                                   \
+    return segmented(                                                  \
         range,                                                         \
-        make_pipe_consumer(unicode::Name##_decoder())                  \
+        make_converter_segmenter(unicode::Name##_decoder())            \
     );                                                                 \
 }                                                                      \
                                                                        \
 template<typename Range>                                               \
 iterator_range<typename boost::detail::unspecified<                    \
-    consumer_iterator<                                                 \
+    segment_iterator<                                                  \
         typename range_iterator<Range>::type,                          \
-        pipe_consumer<unicode::Name##_decoder>                         \
+        converter_segmenter<unicode::Name##_decoder>                   \
     >                                                                  \
 >::type> Name##_bounded(Range& range)                                  \
 {                                                                      \
-    return consumed(                                                   \
+    return segmented(                                                  \
         range,                                                         \
-        make_pipe_consumer(unicode::Name##_decoder())                  \
+        make_converter_segmenter(unicode::Name##_decoder())            \
     );                                                                 \
 }                                                                      
 #endif
@@ -71,7 +71,7 @@ BOOST_UNICODE_DECODER_DEF(utf)
 template<typename ValueType, typename Range, typename OutputIterator>
 OutputIterator utf_encode(const Range& range, OutputIterator out)
 {
-    return pipe(range, utf_encoder<ValueType>(), out);
+    return convert(range, utf_encoder<ValueType>(), out);
 }
 
 #ifdef BOOST_UNICODE_DOXYGEN_INVOKED
@@ -80,36 +80,36 @@ detail::unspecified<void> utf_encoded(Range&& range);
 #else
 template<typename ValueType, typename Range>
 iterator_range<
-    pipe_iterator<
+    convert_iterator<
         typename range_iterator<const Range>::type,
         utf_encoder<ValueType>
     >
 > utf_encoded(const Range& range)
 {
-    return piped(range, utf_encoder<ValueType>());
+    return converted(range, utf_encoder<ValueType>());
 }
 
 template<typename ValueType, typename Range>
 iterator_range<
-    pipe_iterator<
+    convert_iterator<
         typename range_iterator<Range>::type,
         utf_encoder<ValueType>
     >
 > utf_encoded(Range& range)
 {
-    return piped(range, utf_encoder<ValueType>());
+    return converted(range, utf_encoder<ValueType>());
 }
 #endif
 
 template<typename ValueType, typename OutputIterator>
 typename boost::detail::unspecified<
-    pipe_output_iterator<
+    convert_output_iterator<
         OutputIterator,
         utf_encoder<ValueType>
     >
 >::type utf_encoded_out(OutputIterator out)
 {
-    return piped_output(out, utf_encoder<ValueType>());
+    return converted_output(out, utf_encoder<ValueType>());
 }
 
 BOOST_UNICODE_ENCODER_DEF(latin1);

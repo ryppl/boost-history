@@ -53,7 +53,7 @@ BOOST_CHECK_MESSAGE( \
 )
 
 /* Checking in both directions allows to make sure the right-to-left
- * part of the pipe also works */
+ * part of the convert also works */
 #define CHECK_BI_EQUALS(range1, range2) \
 do { \
     using detail::reversed; \

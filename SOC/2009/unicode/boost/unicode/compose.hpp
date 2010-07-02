@@ -2,7 +2,7 @@
 #define BOOST_UNICODE_COMPOSE_HPP
 
 #include <boost/unicode/compose_fwd.hpp>
-#include <boost/unicode/pipe_def.hpp>
+#include <boost/unicode/converter_def.hpp>
 
 namespace boost
 {

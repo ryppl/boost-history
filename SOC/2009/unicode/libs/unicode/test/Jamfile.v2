@@ -20,8 +20,8 @@ project
     ;
 
 test-suite iterator :
-    [ run iterator/test_pipe.cpp ]
-    [ run iterator/test_consumer.cpp ]
+    [ run iterator/test_convert.cpp ]
+    [ run iterator/test_segment.cpp ]
 ;
 
 test-suite unicode :

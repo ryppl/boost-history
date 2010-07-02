@@ -33,8 +33,8 @@ as well as it's version in terms of graphemes
     char search[] = "foo";
     BOOST_AUTO(search_bounded, unicode::utf_grapheme_bounded(boost::as_literal(search)));
     
-//` We perform the search using the ranges of graphemes, i.e. the [conceptref Consumer]-based approach:
-    BOOST_AUTO(range_consumer, boost::algorithm::find_first(foo_bounded, search_bounded));
+//` We perform the search using the ranges of graphemes, i.e. the [conceptref Segmenter]-based approach:
+    BOOST_AUTO(range_segmenter, boost::algorithm::find_first(foo_bounded, search_bounded));
     
 //` We perform the search using the original range, but using an adapted Boost.StringAlgo Finder with the relevant [conceptref BoundaryChecker]:
     BOOST_AUTO(finder,
@@ -46,8 +46,8 @@ as well as it's version in terms of graphemes
     boost::iterator_range<char*> range_boundary = boost::algorithm::find(foo, finder);
     
 //` We now display the resulting matches, which should both be pointing to the second occurrence, with their positions within the original UTF-8 string:
-    std::cout << "[" << std::distance(boost::begin(foo), range_consumer.begin().base()) << ", " << std::distance(boost::begin(foo), range_consumer.end().base()) << "] ";
-    std::cout << range_consumer << std::endl;
+    std::cout << "[" << std::distance(boost::begin(foo), range_segmenter.begin().base()) << ", " << std::distance(boost::begin(foo), range_segmenter.end().base()) << "] ";
+    std::cout << range_segmenter << std::endl;
     
     std::cout << "[" << std::distance(boost::begin(foo), range_boundary.begin()) << ", " << std::distance(boost::begin(foo), range_boundary.end()) << "] ";
     std::cout << range_boundary << std::endl;

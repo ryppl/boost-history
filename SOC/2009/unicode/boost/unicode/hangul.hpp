@@ -7,7 +7,7 @@
 
 #include <boost/cuchar.hpp>
 #include <boost/mpl/int.hpp>
-#include <boost/iterator/pipe_iterator.hpp>
+#include <boost/iterator/convert_iterator.hpp>
 
 namespace boost
 {
@@ -27,11 +27,11 @@ namespace detail
     static const char32 SCount = LCount * NCount; // 11172
 }
 
-/** \c \xmlonly<conceptname>OneManyPipe</conceptname>\endxmlonly that
+/** \c \xmlonly<conceptname>OneManyConverter</conceptname>\endxmlonly that
  * transforms a single Hangul syllable (LV or LVT) into its decomposed
  * form since those decompositions are not part of the UCD.
  * Other code points are left unchanged. */
-struct hangul_decomposer : one_many_pipe<hangul_decomposer>
+struct hangul_decomposer : one_many_converter<hangul_decomposer>
 {
     typedef char32 input_type;
     typedef char32 output_type;
@@ -77,7 +77,7 @@ struct hangul_decomposer : one_many_pipe<hangul_decomposer>
     
 };
 
-/** \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly that
+/** \c \xmlonly<conceptname>Converter</conceptname>\endxmlonly that
  * transforms <L, V>, <L, V, T> and <LV, T> Hangul code points sequences into the
  * LV and LVT Hangul syllables, since those compositions are not part
  * of the UCD.

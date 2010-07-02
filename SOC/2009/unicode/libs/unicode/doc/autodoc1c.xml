@@ -2,9 +2,9 @@
 <library-reference xmlns:xi="http://www.w3.org/2001/XInclude" id="iterator_range_reference">
 <title>Iterator/Range reference</title>
 
-<xi:include href="concepts/Pipe.xml"/>
-<xi:include href="concepts/OneManyPipe.xml"/>
-<xi:include href="concepts/Consumer.xml"/>
+<xi:include href="concepts/Converter.xml"/>
+<xi:include href="concepts/OneManyConverter.xml"/>
+<xi:include href="concepts/Segmenter.xml"/>
 <xi:include href="concepts/BoundaryChecker.xml"/>
 
 <xi:include href="autodoc1.xml" xpointer="xpointer(/library-reference/header)"/>

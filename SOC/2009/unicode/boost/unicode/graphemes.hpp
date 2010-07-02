@@ -5,7 +5,7 @@
 #include <boost/utility.hpp>
 #include <boost/detail/unspecified.hpp>
 
-#include <boost/iterator/consumer_iterator.hpp>
+#include <boost/iterator/segment_iterator.hpp>
 
 #include <boost/unicode/utf_codecs.hpp>
 
@@ -45,26 +45,26 @@ detail::unspecified<void> grapheme_bounded(Range&& range);
 #else
 template<typename Range>
 iterator_range<typename boost::detail::unspecified<
-    consumer_iterator<
+    segment_iterator<
         typename range_iterator<const Range>::type,
-        boundary_consumer<unicode::grapheme_boundary>
+        boundary_segmenter<unicode::grapheme_boundary>
     >
 >::type>
 grapheme_bounded(const Range& range)
 {
-    return consumed(range, make_boundary_consumer(unicode::grapheme_boundary()));
+    return segmented(range, make_boundary_segmenter(unicode::grapheme_boundary()));
 }
 
 template<typename Range>
 iterator_range<typename boost::detail::unspecified<
-    consumer_iterator<
+    segment_iterator<
         typename range_iterator<Range>::type,
-        boundary_consumer<unicode::grapheme_boundary>
+        boundary_segmenter<unicode::grapheme_boundary>
     >
 >::type>
 grapheme_bounded(Range& range)
 {
-    return consumed(range, make_boundary_consumer(unicode::grapheme_boundary()));
+    return segmented(range, make_boundary_segmenter(unicode::grapheme_boundary()));
 }
 #endif
 
@@ -87,42 +87,42 @@ typedef multi_boundary<                                                \
 #define BOOST_UNICODE_GRAPHEME_BOUNDED_DEF(Name)                       \
 template<typename Range>                                               \
 iterator_range<typename boost::detail::unspecified<                    \
-    consumer_iterator<                                                 \
+    segment_iterator<                                                  \
         typename range_iterator<const Range>::type,                    \
-        piped_consumer<                                                \
+        converted_segmenter<                                           \
             unicode::Name##_decoder,                                   \
-            boundary_consumer<unicode::grapheme_boundary>              \
+            boundary_segmenter<unicode::grapheme_boundary>             \
         >                                                              \
     >                                                                  \
 >::type>                                                               \
 Name##_grapheme_bounded(const Range& range)                            \
 {                                                                      \
-    return consumed(                                                   \
+    return segmented(                                                  \
         range,                                                         \
-        make_piped_consumer(                                           \
+        make_converted_segmenter(                                      \
             unicode::Name##_decoder(),                                 \
-            make_boundary_consumer(unicode::grapheme_boundary())       \
+            make_boundary_segmenter(unicode::grapheme_boundary())      \
         )                                                              \
     );                                                                 \
 }                                                                      \
                                                                        \
 template<typename Range>                                               \
 iterator_range<typename boost::detail::unspecified<                    \
-    consumer_iterator<                                                 \
+    segment_iterator<                                                  \
         typename range_iterator<Range>::type,                          \
-        piped_consumer<                                                \
+        converted_segmenter<                                           \
             unicode::Name##_decoder,                                   \
-            boundary_consumer<unicode::grapheme_boundary>              \
+            boundary_segmenter<unicode::grapheme_boundary>             \
         >                                                              \
     >                                                                  \
 >::type>                                                               \
 Name##_grapheme_bounded(Range& range)                                  \
 {                                                                      \
-    return consumed(                                                   \
+    return segmented(                                                  \
         range,                                                         \
-        make_piped_consumer(                                           \
+        make_converted_segmenter(                                      \
             unicode::Name##_decoder(),                                 \
-            make_boundary_consumer(unicode::grapheme_boundary())       \
+            make_boundary_segmenter(unicode::grapheme_boundary())      \
         )                                                              \
     );                                                                 \
 }                                                                      \

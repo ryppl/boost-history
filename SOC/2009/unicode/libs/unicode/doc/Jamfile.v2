@@ -44,7 +44,7 @@ boostbook quickbook
 
 doxygen autodoc1
     :
-        [ path.glob-tree ../../../boost/iterator : pipe_*.hpp consumer_*.hpp join_*.hpp  any_*.hpp : .svn detail ]
+        [ path.glob-tree ../../../boost/iterator : convert*.hpp segment*.hpp any_*.hpp : .svn detail ]
         [ path.glob-tree ../../../boost/range : any_*.hpp : .svn detail ]
         
 	:

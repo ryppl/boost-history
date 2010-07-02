@@ -11,7 +11,7 @@
 #include <vector>
 
 #include <boost/detail/unspecified.hpp>
-#include <boost/iterator/pipe_iterator.hpp>
+#include <boost/iterator/convert_iterator.hpp>
 
 #include <boost/range/adaptor/reversed.hpp>
 
@@ -29,7 +29,7 @@ namespace unicode
 #undef BOOST_UNICODE_OPTION
 #endif
 
-/** Model of \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly
+/** Model of \c \xmlonly<conceptname>Converter</conceptname>\endxmlonly
  * that decomposes a combining character sequence, i.e. it transforms a combining
  * character sequence into its canonically ordered decomposed equivalent.
  * It applies UCD decompositions that match \c mask recursively as well as the Hangul decompositions
@@ -51,7 +51,7 @@ struct decomposer
     std::pair<In, Out> ltr(In begin, In end, Out out)
     {
         return decompose_impl(
-            *make_consumer_iterator(begin, end, begin, combiner()),
+            *make_segment_iterator(begin, end, begin, combiner()),
             out
         );
     }
@@ -67,7 +67,7 @@ struct decomposer
         > p = decompose_impl(
             boost::adaptors::reverse(
                 *boost::prior(
-                    make_consumer_iterator(begin, end, end, combiner())
+                    make_segment_iterator(begin, end, end, combiner())
                 )
             ),
             out
@@ -237,7 +237,7 @@ namespace detail
     };
 }
 
-/** Model of \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly
+/** Model of \c \xmlonly<conceptname>Converter</conceptname>\endxmlonly
  * that composes a sequence of code points, i.e. it converts a sequence
  * of code points into a single code point.
  * It applies UCD canonical compositions as well as the Hangul
@@ -347,10 +347,10 @@ struct composer
     }
 };
 
-/** Model of \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly
+/** Model of \c \xmlonly<conceptname>Converter</conceptname>\endxmlonly
  * that decomposes using a mask and then recomposes canonically a
  * sequence of code points. */
-typedef boost::detail::unspecified< multi_pipe<decomposer, composer> >::type normalizer;
+typedef boost::detail::unspecified< multi_converter<decomposer, composer> >::type normalizer;
 
 } // namespace unicode
 } // namespace boost
