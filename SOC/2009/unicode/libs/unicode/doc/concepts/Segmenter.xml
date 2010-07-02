@@ -1,0 +1,108 @@
+<?xml version="1.0" ?>
+<concept name="Segmenter" category="utility">
+  <!--
+  Copyright 2009 Mathias Gaunard
+
+  Distributed under the Boost
+  Software License, Version 1.0. (See accompanying
+  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+  -->
+  <param name="Segmenter" role="model of Segmenter" />
+  <param name="In" role="model of Bidirectional Iterator with elements convertible to input_type" />
+
+  <models-sentence>
+    The type <arg num="1" /> must be a model of <self/>.
+  </models-sentence>
+
+  <description>
+    <para>
+      A Segmenter is a type grouping two functions that read a certain number of
+      elements off a range, hence making it a facility to segment a range.
+    </para>
+  </description>
+  
+  <notation variables="c">
+    <sample-value>
+        <type name="Segmenter" />
+    </sample-value>
+  </notation>
+  
+  <notation variables="begin end">
+    <sample-value>
+      <type name="In" />
+    </sample-value>
+  </notation>
+
+  <associated-type name="input_type">
+    <get-member-type name="input_type">
+    <type name="Segmenter" />
+    </get-member-type>
+    <description>
+      <simpara>The type of elements the segmenters segments.</simpara>
+    </description>
+  </associated-type>
+  
+  <valid-expression name="Construction">
+    <construct template-parameters="">
+      <type name="Segmenter"/>
+    </construct>
+    <return-type><require-same-type testable="yes"><type name="Segmenter"/></require-same-type></return-type>
+    <semantics>Construct an instance of the type with default parameters.</semantics>
+  </valid-expression>
+
+  <valid-expression name="Left to right">
+    <apply-method name="ltr">
+      <sample-value>
+        <type name="Segmenter" />
+      </sample-value>
+      <sample-value>
+        <type name="In" />
+      </sample-value>
+      <sample-value>
+        <type name="In" />
+      </sample-value>
+    </apply-method>
+    <return-type>
+      <require-same-type testable="yes">
+        <type name="In"/>
+      </require-same-type>
+    </return-type>
+    <semantics>
+    Reads part of the [<code>begin</code>, <code>end</code>[ range left to right,
+    and returns the new begin iterator.
+    </semantics>
+    <precondition><code>begin != end</code></precondition>
+  </valid-expression>
+  
+  <valid-expression name="Right to left">
+    <apply-method name="rtl">
+      <sample-value>
+        <type name="Segmenter" />
+      </sample-value>
+      <sample-value>
+        <type name="In" />
+      </sample-value>
+      <sample-value>
+        <type name="In" />
+      </sample-value>
+    </apply-method>
+    <return-type>
+      <require-same-type testable="yes">
+        <type name="In"/>
+      </require-same-type>
+    </return-type>
+    <semantics>
+    Reads part of the [<code>begin</code>, <code>end</code>[ range right to left,
+    and returns the new past-the-end iterator.
+    </semantics>
+    <precondition><code>begin != end</code></precondition>
+  </valid-expression>  
+
+  <example-model>
+    <apply-template name="boost::boundary_segmenter">
+        <type name="BoundaryChecker"/>
+    </apply-template>
+    <type name="boost::unicode::combiner" />
+  </example-model>
+
+</concept>

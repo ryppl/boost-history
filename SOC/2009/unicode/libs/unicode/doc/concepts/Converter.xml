@@ -1,0 +1,143 @@
+<?xml version="1.0" ?>
+<concept name="Converter" category="utility">
+  <!--
+  Copyright 2009 Mathias Gaunard
+
+  Distributed under the Boost
+  Software License, Version 1.0. (See accompanying
+  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+  -->
+  <param name="Converter" role="model of Converter" />
+  <param name="In" role="model of Bidirectional Iterator with elements convertible to input_type" />
+  <param name="Out" role="model of OutputIterator&lt;output_type&gt;" />
+
+  <models-sentence>
+    The type <arg num="1" /> must be a model of <self/>.
+  </models-sentence>
+
+  <description>
+    <para>
+      A Converter is a type grouping two functions that read a certain number of elements off a range
+      and write another number of elements on another one, hence making it a
+      many-to-many conversion facility.
+    </para>
+  </description>
+  
+  <notation variables="p">
+    <sample-value>
+        <type name="Converter" />
+    </sample-value>
+  </notation>
+  
+  <notation variables="begin end">
+    <sample-value>
+      <type name="In" />
+    </sample-value>
+  </notation>
+
+  <notation variables="out">
+    <sample-value>
+      <type name="Out" />
+    </sample-value>
+  </notation>
+  
+  <associated-type name="input_type">
+    <get-member-type name="input_type">
+    <type name="Converter" />
+    </get-member-type>
+    <description>
+      <simpara>The type of elements the converter converts from.</simpara>
+    </description>
+  </associated-type>
+
+  <associated-type name="output_type">
+    <get-member-type name="output_type">
+    <type name="Converter" />
+    </get-member-type>
+    <description>
+      <simpara>The type of elements the converter converts into.</simpara>
+    </description>
+  </associated-type>
+
+  <associated-type name="max_output">  
+    <get-member-type name="max_output">
+    <type name="Converter" />
+    </get-member-type>
+    <description>
+      <simpara>Optional MPL integral constant that states how many
+    elements may be added to <code>out</code> at maximum in an <code>ltr</code>
+    or <code>rtl</code> call.</simpara>
+    </description>
+  </associated-type>
+
+  <valid-expression name="Construction">
+    <construct template-parameters="">
+      <type name="Converter"/>
+    </construct>
+    <return-type><require-same-type testable="yes"><type name="Converter"/></require-same-type></return-type>
+    <semantics>Construct an instance of the type with default parameters.</semantics>
+  </valid-expression>
+
+  <valid-expression name="Left to right">
+    <apply-method name="ltr">
+      <sample-value>
+        <type name="Converter" />
+      </sample-value>
+      <sample-value>
+        <type name="In" />
+      </sample-value>
+      <sample-value>
+        <type name="In" />
+      </sample-value>
+      <sample-value>
+        <type name="Out" />
+      </sample-value>
+    </apply-method>
+    <return-type>
+      <require-same-type testable="yes">
+        <type name="std::pair&lt;In, Out&gt;"/>
+      </require-same-type>
+    </return-type>
+    <semantics>
+    Reads part of the [<code>begin</code>, <code>end</code>[ range left to right,
+    writes some elements of type <code>output_type</code> to <code>out</code>, and returns a pair
+    indicating the new begin iterator and the past-the-end output iterator.
+    </semantics>
+    <precondition><code>begin != end</code></precondition>
+  </valid-expression>
+  
+  <valid-expression name="Right to left">
+    <apply-method name="rtl">
+      <sample-value>
+        <type name="Converter" />
+      </sample-value>
+      <sample-value>
+        <type name="In" />
+      </sample-value>
+      <sample-value>
+        <type name="In" />
+      </sample-value>
+      <sample-value>
+        <type name="Out" />
+      </sample-value>
+    </apply-method>
+    <return-type>
+      <require-same-type testable="yes">
+        <type name="std::pair&lt;In, Out&gt;"/>
+      </require-same-type>
+    </return-type>
+    <semantics>
+    Reads part of the [<code>begin</code>, <code>end</code>[ range right to left,
+    writes some elements of type <code>output_type</code> to <code>out</code>, and returns a pair
+    indicating the new past-the-end iterator and the past-the-end output iterator.
+    </semantics>
+    <precondition><code>begin != end</code></precondition>
+  </valid-expression>  
+
+  <example-model>
+    <type name="boost::unicode::u8_decoder" />
+    <type name="boost::unicode::u16_decoder" />
+    <type name="boost::unicode::hangul_composer" />
+  </example-model>
+
+</concept>
