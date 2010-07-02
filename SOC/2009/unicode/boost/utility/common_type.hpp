@@ -2,6 +2,8 @@
 #define BOOST_UTILITY_COMMON_TYPE_HPP
 
 #include <boost/mpl/if.hpp>
+#include <boost/mpl/and.hpp>
+#include <boost/mpl/or.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/front.hpp>
 #include <boost/type_traits.hpp>
