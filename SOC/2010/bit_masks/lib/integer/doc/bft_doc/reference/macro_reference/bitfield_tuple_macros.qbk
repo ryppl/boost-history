@@ -1,0 +1,33 @@
+[/
+Copyright (c) 2010 Brian Bartman
+
+Distributed under the Boost Software License, Version 1.0. (See accompanying
+file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+]
+[section Parameter Adjustment macros]
+[h5 Template Parameter Control]
+The `BOOST_BFT_PARAM_COUNT` macro is used for controlling the max number of
+template parameters that are able to be used by the `bitfield_tuple` and the
+function templates and class templates relating to it. The 
+`BOOST_BFT_PARAM_COUNT` macro if definded sets the upper limit of the
+`bitfield_tuple`'s template parameter's to a higher number. The max 
+`BOOST_BFT_PARAM_COUNT` can be set to is 50 and the default is 10. The side effect
+of setting `BOOST_BFT_PARAM_COUNT` can be that the `BOOST_MPL_LIMIT_VECTOR_SIZE`
+vector is set to a size which is larger or equal to the value of
+`BOOST_BFT_PARAM_COUNT`. If one wishes to set the value of both
+`BOOST_BFT_PARAM_COUNT` and `BOOST_MPL_LIMIT_VECTOR_SIZE` both must be set before
+the `bitfield_tuple` header file is included. Don't include <boost/mpl/vector.hpp>
+before the bitfield_tuple header file if you you intend to set the
+`BOOST_BFT_PARAM_COUNT`.
+
+
+
+Example of setting the parameter count to 11.
+``
+#define BOOST_BFT_PARAM_COUNT 11
+#include <boost/integer/bitfield_tuple.hpp>
+``
+
+[endsect]
+[section Code Generation Macros]
+[endsect]

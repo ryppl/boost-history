@@ -7,6 +7,7 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 [section Reference]
 [include reference/concepts.qbk]
 [include reference/class_reference.qbk]
+[include reference/macro_reference.qbk]
 [include reference/function_reference.qbk]
 [include reference/metafunction_reference.qbk]
 [include reference/files.qbk]

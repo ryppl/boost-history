@@ -21,81 +21,135 @@ exactly what they are getting when the include the bitfield_tuple header file.]
 
 [h5 Standard Library Includes]
 * <cstddef> - Included for `std::size_t`.
+    * Included by boost.integer.bitfield 
+        * <cassert>
+        * <limits>
+        * <netinet/in.h> <- Need to do implact analysis and remove this header
+from the includes before final draft.
 
 [h5 Boost Library Includes]
 * boost.Preprocessor
     * <boost/preprocessor/repetition/enum.hpp>
-    * <boost/preprocessor/arithmetic/add.hpp>
     * <boost/preprocessor/repetition/repeat_from_to.hpp>
 
+
+[note The `mpl::vector` is a limiting factor of the `bitfield_tuple` for more
+information on how to deal with limitations of the `bitfield_tuple` and its
+dependencies please see the class reference documentation for `bitfield_tuple`
+and `bitfield_reference` regarding Preconditions.]
+
+
+* boost.MPL
+    * <boost/mpl/vector.hpp>
+    * <boost/mpl/not.hpp>
+    * <boost/mpl/deref.hpp>
+    * <boost/mpl/at.hpp>
+    * <boost/mpl/less.hpp>
+    * <boost/mpl/size.hpp>
+    * <boost/mpl/int.hpp>
+    * <boost/mpl/assert.hpp>
+    * <boost/mpl/if.hpp>
+    * <boost/mpl/minus.hpp>
+    * <boost/mpl/size_t.hpp>
+    * <boost/mpl/void.hpp>
+
+* boost.Type Traits
+    * <boost/type_traits.hpp> <- Need to figure out which parts of type_traits 
+are being used and make sure that I only include those.
+    * <boost/type_traits/is_const.hpp>
+
+
+* boost.Static Assert
+    * <boost/static_assert.hpp>
+
+
+* boost.Enable If
+    * <boost/utility/enable_if.hpp>
+
+
+* boost.Fusion
+    * <boost/fusion/sequence/intrinsic.hpp>
+    * <boost/fusion/support/is_sequence.hpp>
+    * <boost/fusion/support/is_view.hpp>
+    * <boost/fusion/support/tag_of_fwd.hpp>
+    * <boost/fusion/iterator/iterator_facade.hpp>
+    * <boost/fusion/iterator/value_of.hpp>
+    * <boost/fusion/iterator/deref.hpp>
+    * <boost/fusion/iterator/next.hpp>
+    * <boost/fusion/iterator/prior.hpp>
+    * <boost/fusion/iterator/distance.hpp>
+    * <boost/fusion/iterator/key_of.hpp>
+    * <boost/fusion/iterator/value_of_data.hpp>
+    * <boost/fusion/iterator/deref_data.hpp>
+
+
+[h4 Bitfield Tuple Specific Headers]
+
+* <boost/integer/details/bft/template_expansion_macros.hpp>
+    * Includes macros for tempate parameter generation and defining macros
+which can be used for specilization over a bitfield_tuple type.
+* <boost/integer/details/bitfield_tuple_impl.hpp>
+    * Base class for a `bitfield_tuple` that is responsible for enforcing
+some of the preconditions related to the `bitfield_tuples` template parameters.
+* <boost/integer/details/bft/bft_element.hpp>
+    * Element used for storing information about the `bitfield_tuple`'s 
+bitfields.
+* <boost/integer/details/bft/arg_parse_impl.hpp>
+    * A structure and its specializations which are responsible for the paring
+of template parameters into `bitfield_element`s which are then stored in an
+mpl sequence.
+* <boost/integer/details/bft/deduce_storage.hpp>
+    * Functionality for deducing the storage type for a bitfield tuple if one
+isn't supplied.
+* <boost/integer/details/bft/name_lookup.hpp>
+    * predicate used with `mpl::find_if` for locating items within the mpl
+sequence with the name tag specified by the user.
+* <boost/integer/details/bft/reference_builder.hpp>
+    * used to aid with the construction of the `bitfield_reference` template of
+a bitfield, from a `bitfield_tuple`.
+* <boost/integer/bitfield_tuple_fwd.hpp>
+    * forward declaration of the `bitfield_tuple`.
+* <boost/integer/details/fusion_ext_includes.hpp>
+    * Includes all of the headers necessary for creating the boost.fusion
+extension of the `bitfield_tuple`.
+* <boost/integer/details/bft/ext/bitfield_tuple_fusion_includes.hpp>
+    * Include all header files from the related to the bitfield
+tuple which compose the fusion extension interface of a `bitfield_tuple`.
+* <boost/integer/details/bft/make_bitfield_tuple.hpp>
+    * contains macros and functions used for creating the `make_bitfield_tuple`
+funciton template.
+
+
+[h5 Bitfield Tuple Fusion Extension]
+* header files which compose the boost.Fusion interface extension of a
+`bitfield_tuple`.
+    * <boost/integer/bft/ext/tag_of.hpp>
+    * <boost/integer/bft/ext/bitfield_iterator.hpp>
+    * <boost/integer/bft/ext/fusion/is_sequence_impl.hpp>
+    * <boost/integer/bft/ext/fusion/is_view_impl.hpp>
+    * <boost/integer/bft/ext/fusion/category_of_impl.hpp>
+    * <boost/integer/bft/ext/fusion/at_impl.hpp>
+    * <boost/integer/bft/ext/fusion/begin_impl.hpp>
+    * <boost/integer/bft/ext/fusion/size_impl.hpp>
+    * <boost/integer/bft/ext/fusion/end_impl.hpp>
+
+
+[h5 Boost Vault Includes]
+* <boost/bitfield/bitfield.hpp>
+    * Does the storage and retrieval of data to and from the bitfield_tuples
+internal storage.
+
+
+
+[h5 Boost.integer Bit Mask Includes]
+* <boost/integer/bits_mask.hpp>
+* <boost/integer/bit_width.hpp>
+
 [/
-#include <boost/integer/details/bft/template_expansion_macros.hpp>
-
-#include <boost/integer/details/bitfield_tuple_impl.hpp>
-    #include <boost/integer/bits_mask.hpp>
-    #include <boost/integer/bit_width.hpp>
-
-    #include <boost/type_traits.hpp>
-    #include <boost/static_assert.hpp>
-    #include <boost/integer/details/bft/bft_element.hpp>
-    #include <boost/integer/details/bft/arg_parse_impl.hpp>
-    #include <boost/integer/details/bft/deduce_storage.hpp>
 
 
-#include <boost/bitfield/bitfield.hpp>
-    #include <cstddef>
-    #include <boost/static_assert.hpp>
 
-    #include <cassert>
-    #include <limits>
-    #include <netinet/in.h>
-#include <boost/integer/details/bft/name_lookup.hpp>
 
-#include <boost/mpl/not.hpp>
-#include <boost/utility/enable_if.hpp>
-#include <boost/mpl/deref.hpp>
-#include <boost/type_traits.hpp>
-#include <boost/mpl/at.hpp>
-#include <boost/mpl/less.hpp>
-#include <boost/mpl/size.hpp>
 
-#include <boost/integer/details/bft/reference_builder.hpp>
-#include <boost/integer/details/bft/ext/bitfield_tuple_fusion_includes.hpp>
-    #include <boost/fusion/sequence/intrinsic.hpp>
-    #include <boost/fusion/support/is_sequence.hpp>
-    #include <boost/fusion/support/is_view.hpp>
-
-    #include <boost/integer/bft/ext/tag_of.hpp>
-        #include <boost/integer/bitfield_tuple_fwd.hpp>
-        #include <boost/fusion/support/tag_of_fwd.hpp>
-    #include <boost/integer/bft/ext/bitfield_iterator.hpp>
-        #include <cstddef>
-        #include <boost/mpl/int.hpp>
-        #include <boost/mpl/assert.hpp>
-        #include <boost/mpl/if.hpp>
-        #include <boost/mpl/minus.hpp>
-        #include <boost/mpl/size_t.hpp>
-        #include <boost/type_traits/is_const.hpp>
-        #include <boost/fusion/iterator/iterator_facade.hpp>
-        #include <boost/mpl/void.hpp>
-    #include <boost/integer/bft/ext/fusion/is_sequence_impl.hpp>
-    #include <boost/integer/bft/ext/fusion/is_view_impl.hpp>
-    #include <boost/integer/bft/ext/fusion/category_of_impl.hpp>
-    #include <boost/integer/bft/ext/fusion/at_impl.hpp>
-        #include <boost/mpl/at.hpp>
-    #include <boost/integer/bft/ext/fusion/begin_impl.hpp>
-    #include <boost/integer/bft/ext/fusion/size_impl.hpp>
-    #include <boost/integer/bft/ext/fusion/end_impl.hpp>
-
-#include <boost/integer/details/fusion_ext_includes.hpp>
-    #include <boost/fusion/iterator/value_of.hpp>
-    #include <boost/fusion/iterator/deref.hpp>
-    #include <boost/fusion/iterator/next.hpp>
-    #include <boost/fusion/iterator/prior.hpp>
-    #include <boost/fusion/iterator/distance.hpp>
-    #include <boost/fusion/iterator/key_of.hpp>
-    #include <boost/fusion/iterator/value_of_data.hpp>
-    #include <boost/fusion/iterator/deref_data.hpp>
-#include <boost/integer/details/bft/make_bitfield_tuple.hpp>
 ]
 [endsect]

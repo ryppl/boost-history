@@ -45,15 +45,30 @@
             </p></td></tr>
 </table></div>
 <a name="boost_integer_bits_masks_extension.bitfield_tuple.users_guide.getting_started.dependencies.standard_library_includes"></a><h6>
-<a name="id3046664"></a>
+<a name="id3358506"></a>
             <a class="link" href="dependencies.html#boost_integer_bits_masks_extension.bitfield_tuple.users_guide.getting_started.dependencies.standard_library_includes">Standard
             Library Includes</a>
           </h6>
 <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
               &lt;cstddef&gt; - Included for <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span></code>.
-            </li></ul></div>
+              <div class="itemizedlist"><ul class="itemizedlist" type="circle"><li class="listitem">
+                  Included by boost.integer.bitfield
+                  <div class="itemizedlist"><ul class="itemizedlist" type="square">
+<li class="listitem">
+                      &lt;cassert&gt;
+                    </li>
+<li class="listitem">
+                      &lt;limits&gt;
+                    </li>
+<li class="listitem">
+                      &lt;netinet/in.h&gt; &lt;- Need to do implact analysis and
+                      remove this header from the includes before final draft.
+                    </li>
+</ul></div>
+</li></ul></div>
+</li></ul></div>
 <a name="boost_integer_bits_masks_extension.bitfield_tuple.users_guide.getting_started.dependencies.boost_library_includes"></a><h6>
-<a name="id3046716"></a>
+<a name="id3358593"></a>
             <a class="link" href="dependencies.html#boost_integer_bits_masks_extension.bitfield_tuple.users_guide.getting_started.dependencies.boost_library_includes">Boost
             Library Includes</a>
           </h6>
@@ -64,13 +79,286 @@
                   &lt;boost/preprocessor/repetition/enum.hpp&gt;
                 </li>
 <li class="listitem">
-                  &lt;boost/preprocessor/arithmetic/add.hpp&gt;
-                </li>
-<li class="listitem">
                   &lt;boost/preprocessor/repetition/repeat_from_to.hpp&gt;
                 </li>
 </ul></div>
 </li></ul></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../..//home/brian/gsoc/boost-trunk/doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+              The <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">vector</span></code> is a limiting factor of the
+              <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code> for
+              more information on how to deal with limitations of the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code> and its dependencies
+              please see the class reference documentation for <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+              and <code class="computeroutput"><span class="identifier">bitfield_reference</span></code>
+              regarding Preconditions.
+            </p></td></tr>
+</table></div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+              boost.MPL
+              <div class="itemizedlist"><ul class="itemizedlist" type="circle">
+<li class="listitem">
+                  &lt;boost/mpl/vector.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/mpl/not.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/mpl/deref.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/mpl/at.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/mpl/less.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/mpl/size.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/mpl/int.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/mpl/assert.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/mpl/if.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/mpl/minus.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/mpl/size_t.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/mpl/void.hpp&gt;
+                </li>
+</ul></div>
+</li>
+<li class="listitem">
+              boost.Type Traits
+              <div class="itemizedlist"><ul class="itemizedlist" type="circle">
+<li class="listitem">
+                  &lt;boost/type_traits.hpp&gt; &lt;- Need to figure out which parts
+                  of type_traits are being used and make sure that I only include
+                  those.
+                </li>
+<li class="listitem">
+                  &lt;boost/type_traits/is_const.hpp&gt;
+                </li>
+</ul></div>
+</li>
+<li class="listitem">
+              boost.Static Assert
+              <div class="itemizedlist"><ul class="itemizedlist" type="circle"><li class="listitem">
+                  &lt;boost/static_assert.hpp&gt;
+                </li></ul></div>
+</li>
+<li class="listitem">
+              boost.Enable If
+              <div class="itemizedlist"><ul class="itemizedlist" type="circle"><li class="listitem">
+                  &lt;boost/utility/enable_if.hpp&gt;
+                </li></ul></div>
+</li>
+<li class="listitem">
+              boost.Fusion
+              <div class="itemizedlist"><ul class="itemizedlist" type="circle">
+<li class="listitem">
+                  &lt;boost/fusion/sequence/intrinsic.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/fusion/support/is_sequence.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/fusion/support/is_view.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/fusion/support/tag_of_fwd.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/fusion/iterator/iterator_facade.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/fusion/iterator/value_of.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/fusion/iterator/deref.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/fusion/iterator/next.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/fusion/iterator/prior.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/fusion/iterator/distance.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/fusion/iterator/key_of.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/fusion/iterator/value_of_data.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/fusion/iterator/deref_data.hpp&gt;
+                </li>
+</ul></div>
+</li>
+</ul></div>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.users_guide.getting_started.dependencies.bitfield_tuple_specific_headers"></a><h5>
+<a name="id3358906"></a>
+            <a class="link" href="dependencies.html#boost_integer_bits_masks_extension.bitfield_tuple.users_guide.getting_started.dependencies.bitfield_tuple_specific_headers">Bitfield
+            Tuple Specific Headers</a>
+          </h5>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+              &lt;boost/integer/details/bft/template_expansion_macros.hpp&gt;
+              <div class="itemizedlist"><ul class="itemizedlist" type="circle"><li class="listitem">
+                  Includes macros for tempate parameter generation and defining macros
+                  which can be used for specilization over a bitfield_tuple type.
+                </li></ul></div>
+</li>
+<li class="listitem">
+              &lt;boost/integer/details/bitfield_tuple_impl.hpp&gt;
+              <div class="itemizedlist"><ul class="itemizedlist" type="circle"><li class="listitem">
+                  Base class for a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+                  that is responsible for enforcing some of the preconditions related
+                  to the <code class="computeroutput"><span class="identifier">bitfield_tuples</span></code>
+                  template parameters.
+                </li></ul></div>
+</li>
+<li class="listitem">
+              &lt;boost/integer/details/bft/bft_element.hpp&gt;
+              <div class="itemizedlist"><ul class="itemizedlist" type="circle"><li class="listitem">
+                  Element used for storing information about the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>'s
+                  bitfields.
+                </li></ul></div>
+</li>
+<li class="listitem">
+              &lt;boost/integer/details/bft/arg_parse_impl.hpp&gt;
+              <div class="itemizedlist"><ul class="itemizedlist" type="circle"><li class="listitem">
+                  A structure and its specializations which are responsible for the
+                  paring of template parameters into <code class="computeroutput"><span class="identifier">bitfield_element</span></code>s
+                  which are then stored in an mpl sequence.
+                </li></ul></div>
+</li>
+<li class="listitem">
+              &lt;boost/integer/details/bft/deduce_storage.hpp&gt;
+              <div class="itemizedlist"><ul class="itemizedlist" type="circle"><li class="listitem">
+                  Functionality for deducing the storage type for a bitfield tuple
+                  if one isn't supplied.
+                </li></ul></div>
+</li>
+<li class="listitem">
+              &lt;boost/integer/details/bft/name_lookup.hpp&gt;
+              <div class="itemizedlist"><ul class="itemizedlist" type="circle"><li class="listitem">
+                  predicate used with <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">find_if</span></code>
+                  for locating items within the mpl sequence with the name tag specified
+                  by the user.
+                </li></ul></div>
+</li>
+<li class="listitem">
+              &lt;boost/integer/details/bft/reference_builder.hpp&gt;
+              <div class="itemizedlist"><ul class="itemizedlist" type="circle"><li class="listitem">
+                  used to aid with the construction of the <code class="computeroutput"><span class="identifier">bitfield_reference</span></code>
+                  template of a bitfield, from a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>.
+                </li></ul></div>
+</li>
+<li class="listitem">
+              &lt;boost/integer/bitfield_tuple_fwd.hpp&gt;
+              <div class="itemizedlist"><ul class="itemizedlist" type="circle"><li class="listitem">
+                  forward declaration of the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>.
+                </li></ul></div>
+</li>
+<li class="listitem">
+              &lt;boost/integer/details/fusion_ext_includes.hpp&gt;
+              <div class="itemizedlist"><ul class="itemizedlist" type="circle"><li class="listitem">
+                  Includes all of the headers necessary for creating the boost.fusion
+                  extension of the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>.
+                </li></ul></div>
+</li>
+<li class="listitem">
+              &lt;boost/integer/details/bft/ext/bitfield_tuple_fusion_includes.hpp&gt;
+              <div class="itemizedlist"><ul class="itemizedlist" type="circle"><li class="listitem">
+                  Include all header files from the related to the bitfield tuple
+                  which compose the fusion extension interface of a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>.
+                </li></ul></div>
+</li>
+<li class="listitem">
+              &lt;boost/integer/details/bft/make_bitfield_tuple.hpp&gt;
+              <div class="itemizedlist"><ul class="itemizedlist" type="circle"><li class="listitem">
+                  contains macros and functions used for creating the <code class="computeroutput"><span class="identifier">make_bitfield_tuple</span></code> funciton
+                  template.
+                </li></ul></div>
+</li>
+</ul></div>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.users_guide.getting_started.dependencies.bitfield_tuple_fusion_extension"></a><h6>
+<a name="id3359205"></a>
+            <a class="link" href="dependencies.html#boost_integer_bits_masks_extension.bitfield_tuple.users_guide.getting_started.dependencies.bitfield_tuple_fusion_extension">Bitfield
+            Tuple Fusion Extension</a>
+          </h6>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+              header files which compose the boost.Fusion interface extension of
+              a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>.
+              <div class="itemizedlist"><ul class="itemizedlist" type="circle">
+<li class="listitem">
+                  &lt;boost/integer/bft/ext/tag_of.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/integer/bft/ext/bitfield_iterator.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/integer/bft/ext/fusion/is_sequence_impl.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/integer/bft/ext/fusion/is_view_impl.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/integer/bft/ext/fusion/category_of_impl.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/integer/bft/ext/fusion/at_impl.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/integer/bft/ext/fusion/begin_impl.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/integer/bft/ext/fusion/size_impl.hpp&gt;
+                </li>
+<li class="listitem">
+                  &lt;boost/integer/bft/ext/fusion/end_impl.hpp&gt;
+                </li>
+</ul></div>
+</li></ul></div>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.users_guide.getting_started.dependencies.boost_vault_includes"></a><h6>
+<a name="id3359307"></a>
+            <a class="link" href="dependencies.html#boost_integer_bits_masks_extension.bitfield_tuple.users_guide.getting_started.dependencies.boost_vault_includes">Boost
+            Vault Includes</a>
+          </h6>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+              &lt;boost/bitfield/bitfield.hpp&gt;
+              <div class="itemizedlist"><ul class="itemizedlist" type="circle"><li class="listitem">
+                  Does the storage and retrieval of data to and from the bitfield_tuples
+                  internal storage.
+                </li></ul></div>
+</li></ul></div>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.users_guide.getting_started.dependencies.boost_integer_bit_mask_includes"></a><h6>
+<a name="id3359346"></a>
+            <a class="link" href="dependencies.html#boost_integer_bits_masks_extension.bitfield_tuple.users_guide.getting_started.dependencies.boost_integer_bit_mask_includes">Boost.integer
+            Bit Mask Includes</a>
+          </h6>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+              &lt;boost/integer/bits_mask.hpp&gt;
+            </li>
+<li class="listitem">
+              &lt;boost/integer/bit_width.hpp&gt;
+            </li>
+</ul></div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>

@@ -1,0 +1,67 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Parameter Adjustment macros</title>
+<link rel="stylesheet" href="../../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../../../index.html" title="Chapter&#160;1.&#160;Boost.Integer Bits Masks Extension">
+<link rel="up" href="../_bitfield_tuple__macro_reference.html" title="bitfield_tuple Macro Reference">
+<link rel="prev" href="../_bitfield_tuple__macro_reference.html" title="bitfield_tuple Macro Reference">
+<link rel="next" href="code_generation_macros.html" title="Code Generation Macros">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../_bitfield_tuple__macro_reference.html"><img src="../../../..//home/brian/gsoc/boost-trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../_bitfield_tuple__macro_reference.html"><img src="../../../..//home/brian/gsoc/boost-trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../..//home/brian/gsoc/boost-trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="code_generation_macros.html"><img src="../../../..//home/brian/gsoc/boost-trunk/doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__macro_reference.parameter_adjustment_macros"></a><a class="link" href="parameter_adjustment_macros.html" title="Parameter Adjustment macros">Parameter
+          Adjustment macros</a>
+</h5></div></div></div>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__macro_reference.parameter_adjustment_macros.template_parameter_control"></a><h6>
+<a name="id3365279"></a>
+            <a class="link" href="parameter_adjustment_macros.html#boost_integer_bits_masks_extension.bitfield_tuple.reference._bitfield_tuple__macro_reference.parameter_adjustment_macros.template_parameter_control">Template
+            Parameter Control</a>
+          </h6>
+<p>
+            The <code class="computeroutput"><span class="identifier">BOOST_BFT_PARAM_COUNT</span></code>
+            macro is used for controlling the max number of template parameters that
+            are able to be used by the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+            and the function templates and class templates relating to it. The <code class="computeroutput"><span class="identifier">BOOST_BFT_PARAM_COUNT</span></code> macro if definded
+            sets the upper limit of the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>'s
+            template parameter's to a higher number. The max <code class="computeroutput"><span class="identifier">BOOST_BFT_PARAM_COUNT</span></code>
+            can be set to is 50 and the default is 10. The side effect of setting
+            <code class="computeroutput"><span class="identifier">BOOST_BFT_PARAM_COUNT</span></code>
+            can be that the <code class="computeroutput"><span class="identifier">BOOST_MPL_LIMIT_VECTOR_SIZE</span></code>
+            vector is set to a size which is larger or equal to the value of <code class="computeroutput"><span class="identifier">BOOST_BFT_PARAM_COUNT</span></code>. If one wishes
+            to set the value of both <code class="computeroutput"><span class="identifier">BOOST_BFT_PARAM_COUNT</span></code>
+            and <code class="computeroutput"><span class="identifier">BOOST_MPL_LIMIT_VECTOR_SIZE</span></code>
+            both must be set before the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+            header file is included. Don't include &lt;boost/mpl/vector.hpp&gt; before
+            the bitfield_tuple header file if you you intend to set the <code class="computeroutput"><span class="identifier">BOOST_BFT_PARAM_COUNT</span></code>.
+          </p>
+<p>
+            Example of setting the parameter count to 11. 
+</p>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_BFT_PARAM_COUNT</span> <span class="number">11</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield_tuple</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<p>
+          </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2010 Brian Bartman<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../_bitfield_tuple__macro_reference.html"><img src="../../../..//home/brian/gsoc/boost-trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../_bitfield_tuple__macro_reference.html"><img src="../../../..//home/brian/gsoc/boost-trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../..//home/brian/gsoc/boost-trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="code_generation_macros.html"><img src="../../../..//home/brian/gsoc/boost-trunk/doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
