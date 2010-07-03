@@ -1,0 +1,46 @@
+[/
+Copyright (c) 2010 Brian Bartman
+
+Distributed under the Boost Software License, Version 1.0. (See accompanying
+file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+]
+[h5 Boost.Fusion Sequence Extension]
+The type modeled by the boost.fusion iterator is of the following category:
+``
+struct bft_category
+  : boost::fusion::random_access_traversal_tag,
+    boost::fusion::associative_tag
+{ };
+``
+
+
+List of supported funtions on `bitfield_tuple`
+
+
+
+* begin
+* end 
+* is_sequence
+* is_view
+* category_of
+* at
+* size
+* at_key
+* tag_of
+* All intrinsic functions which are available because of the 
+implementation of the above functions.
+
+List of functions supported by `bitfield_tuple_iterator`:
+
+
+
+* deref
+* value_of
+* next
+* prior
+* distance
+* key_of
+* value_at_data
+* deref_data
+* advance
+* Additional intrinsic functions are available for use with this iterator. 
