@@ -8,3 +8,5 @@
 
 import os ;
 constant BOOST_ROOT : [ os.environ BOOST_ROOT ] ;
+
+build-project libs/unicode/test ;
