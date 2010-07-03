@@ -31,7 +31,8 @@ boostbook standalone
         #<xsl:param>boost.root=$(BOOST_ROOT)
         # location of the main index file so our links work:
         #<xsl:param>boost.libraries=$(BOOST_ROOT)/libs/libraries.htm
-        
+        <xsl:param>html.stylesheet=boostbook.css
+
         # PDF Options:
         # TOC Generation: this is needed for FOP-0.9 and later:
         <xsl:param>fop1.extensions=0

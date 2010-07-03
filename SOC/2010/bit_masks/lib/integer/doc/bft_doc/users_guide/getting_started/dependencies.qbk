@@ -11,14 +11,30 @@ as the requirements for how to enable different extensions of the
 parameters, and adjust meant for long long support.
 
 
+The following is a list of all dependencies which are included with the
+`bitfield_tuple` header file ( `<boost/integer/bitfield_tuple.hpp>` ).
+
+[note The following header files are included along with the `bitfield_tuple` header
+and are not need to be included by the user to use `bitfield_tuple`. This
+documentation exists for impact analysis and so that the user knows 
+exactly what they are getting when the include the bitfield_tuple header file.]
+
+[h5 Standard Library Includes]
+* <cstddef> - Included for `std::size_t`.
+
+[h5 Boost Library Includes]
+* boost.Preprocessor
+    * <boost/preprocessor/repetition/enum.hpp>
+    * <boost/preprocessor/arithmetic/add.hpp>
+    * <boost/preprocessor/repetition/repeat_from_to.hpp>
+
+[/
 #include <boost/integer/details/bft/template_expansion_macros.hpp>
-    #include <boost/preprocessor/repetition/enum.hpp>
-    #include <boost/preprocessor/arithmetic/add.hpp>
-    #include <boost/preprocessor/repetition/repeat_from_to.hpp>
+
 #include <boost/integer/details/bitfield_tuple_impl.hpp>
     #include <boost/integer/bits_mask.hpp>
     #include <boost/integer/bit_width.hpp>
-    #include <cstddef>
+
     #include <boost/type_traits.hpp>
     #include <boost/static_assert.hpp>
     #include <boost/integer/details/bft/bft_element.hpp>
@@ -81,5 +97,5 @@ parameters, and adjust meant for long long support.
     #include <boost/fusion/iterator/value_of_data.hpp>
     #include <boost/fusion/iterator/deref_data.hpp>
 #include <boost/integer/details/bft/make_bitfield_tuple.hpp>
-
+]
 [endsect]
