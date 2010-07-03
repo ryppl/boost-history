@@ -6,8 +6,8 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_GEOMETRY_ALGORITHMS_OVERLAY_COPY_SEGMENT_POINT_HPP
-#define BOOST_GEOMETRY_ALGORITHMS_OVERLAY_COPY_SEGMENT_POINT_HPP
+#ifndef BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_COPY_SEGMENT_POINT_HPP
+#define BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_COPY_SEGMENT_POINT_HPP
 
 
 #include <boost/range.hpp>
@@ -15,11 +15,7 @@
 #include <boost/geometry/core/ring_type.hpp>
 #include <boost/geometry/core/exterior_ring.hpp>
 #include <boost/geometry/core/interior_rings.hpp>
-
 #include <boost/geometry/geometries/concepts/check.hpp>
-
-#include <boost/geometry/iterators/ever_circling_iterator.hpp>
-
 #include <boost/geometry/iterators/range_type.hpp>
 
 
@@ -272,4 +268,4 @@ inline bool copy_segment_points(Geometry1 const& geometry1, Geometry2 const& geo
 
 }} // namespace boost::geometry
 
-#endif // BOOST_GEOMETRY_ALGORITHMS_OVERLAY_COPY_SEGMENT_POINT_HPP
+#endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_COPY_SEGMENT_POINT_HPP
