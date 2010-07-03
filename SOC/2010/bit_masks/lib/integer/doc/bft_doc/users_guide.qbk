@@ -9,7 +9,7 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 [include users_guide/getting_started.qbk]
 [include users_guide/tutorial.qbk]
-[include users_guide/examples.qbk]
+[/ include users_guide/examples.qbk]
 [include users_guide/external_resources.qbk]
 [include users_guide/glossary.qbk]
 [endsect]

@@ -7,13 +7,13 @@
 <link rel="home" href="../../../index.html" title="Chapter&#160;1.&#160;Boost.Integer Bits Masks Extension">
 <link rel="up" href="../users_guide.html" title="Users Guide">
 <link rel="prev" href="getting_started/testing.html" title="Testing">
-<link rel="next" href="example.html" title="Example">
+<link rel="next" href="external_resources.html" title="External Resources">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="getting_started/testing.html"><img src="../../..//home/brian/gsoc/boost-trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../..//home/brian/gsoc/boost-trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../..//home/brian/gsoc/boost-trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="example.html"><img src="../../..//home/brian/gsoc/boost-trunk/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="getting_started/testing.html"><img src="../../..//home/brian/gsoc/boost-trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../..//home/brian/gsoc/boost-trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../..//home/brian/gsoc/boost-trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="external_resources.html"><img src="../../..//home/brian/gsoc/boost-trunk/doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
@@ -23,6 +23,258 @@
           In this section I will walk you through step by step process about how
           to create a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
           and all of the different functionalities it provides.
+        </p>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.users_guide.tutorial.part_1__the_basics"></a><h6>
+<a name="id3259740"></a>
+          <a class="link" href="tutorial.html#boost_integer_bits_masks_extension.bitfield_tuple.users_guide.tutorial.part_1__the_basics">Part
+          1: The Basics</a>
+        </h6>
+<p>
+          The <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code> template
+          is included into your project including the following header: 
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield_tuple</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<p>
+          After the file is included you're ready to begin creating a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>. Here is a <code class="computeroutput"><span class="keyword">struct</span></code> that, contains bitfields, that is
+          going to be used to model an instance of the bitfield tuple after. 
+</p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">foo</span> <span class="special">{</span>
+    <span class="keyword">bool</span> <span class="identifier">flag_1</span><span class="special">:</span><span class="number">1</span><span class="special">;</span>
+    <span class="keyword">bool</span> <span class="identifier">flag_2</span><span class="special">:</span><span class="number">1</span><span class="special">;</span>
+    <span class="keyword">int</span>  <span class="identifier">int_1</span><span class="special">:</span><span class="number">2</span><span class="special">;</span>
+    <span class="keyword">int</span>  <span class="identifier">int_2</span><span class="special">:</span><span class="number">2</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+          In the next example a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+          type is made to model <code class="computeroutput"><span class="keyword">struct</span> <span class="identifier">foo</span></code>'s behavior but reduce its storage
+          from 4 bytes to one. 
+</p>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
+<span class="comment">// names used to mimic the names in struct foo.
+</span><span class="keyword">struct</span> <span class="identifier">flag_1</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">flag_2</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">int_1</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">int_2</span><span class="special">;</span>
+
+
+<span class="keyword">typedef</span> <span class="identifier">bitfield_tuple</span><span class="special">&lt;</span>
+    <span class="identifier">storage</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">,</span><span class="identifier">flag_1</span><span class="special">,</span><span class="number">1</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">,</span> <span class="identifier">flag_2</span><span class="special">,</span><span class="number">1</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">int_1</span><span class="special">,</span><span class="number">2</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">int_2</span><span class="special">,</span><span class="number">2</span><span class="special">&gt;</span>
+<span class="special">&gt;</span>                       <span class="identifier">bitfield_tuple_foo</span><span class="special">;</span>
+</pre>
+<p>
+          The above example may look a little confusing at first but when broken
+          down it's made to be as simple as possible. <code class="computeroutput"><span class="identifier">storage</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;</span></code> specifies to the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+          template that the type which is going to be used for storage is a <code class="computeroutput"><span class="keyword">char</span></code> type(this can be any integral type).
+          The <code class="computeroutput"><span class="identifier">member</span></code> templates read
+          just like the bitfields within <code class="computeroutput"><span class="keyword">struct</span>
+          <span class="identifier">foo</span></code>, so type, name, width in
+          bits. <code class="computeroutput"><span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">int_1</span><span class="special">,</span><span class="number">2</span><span class="special">&gt;</span></code>
+          specifies a bitfield which is of type <code class="computeroutput"><span class="keyword">int</span></code>,
+          has the name <code class="computeroutput"><span class="identifier">int_1</span></code>, and
+          a width of 2 bits.
+        </p>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.users_guide.tutorial.part_2__using_the_tuple"></a><h5>
+<a name="id3260390"></a>
+          <a class="link" href="tutorial.html#boost_integer_bits_masks_extension.bitfield_tuple.users_guide.tutorial.part_2__using_the_tuple">Part
+          2: Using the tuple</a>
+        </h5>
+<p>
+          Here is an example of the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+          accessor function. <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+          uses the similar accessor function as boost.tuple, there are two main differences
+          between the accessor funciton's for <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+          and boost.tuple. The first difference is that <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+          doesn't return a real reference, it instead returns a proxy to the bitfeild
+          that it represents. Second, the names specified in the above example are
+          not just for show, they are actually used to name the type within the a
+          bitfield_tuple and can be used to access them in the same fashion as the
+          index relative get function.
+        </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../..//home/brian/gsoc/boost-trunk/doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            <code class="computeroutput"><span class="identifier">get</span></code> index accessor function.
+            The index for accessing member of <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+            is relative to the number of <code class="computeroutput"><span class="identifier">members</span></code>
+            specified inside of the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>'s
+            template parameters. Other types supplied to the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+            and not counted for the index. For instance, in the above example the
+            type <code class="computeroutput"><span class="identifier">storage</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;</span></code>
+            does not effect the index of any of the members after it.
+          </p></td></tr>
+</table></div>
+<p>
+          The following example shows the two different ways that the <code class="computeroutput"><span class="identifier">get</span></code> member funciton can be used to retrieve
+          data from within a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+          by either using a name or an index. 
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield_tuple</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
+<span class="comment">// names used to mimic the names in struct foo.
+</span><span class="keyword">struct</span> <span class="identifier">flag_1</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">flag_2</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">int_1</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">int_2</span><span class="special">;</span>
+
+
+<span class="keyword">typedef</span> <span class="identifier">bitfield_tuple</span><span class="special">&lt;</span>
+    <span class="identifier">storage</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">,</span><span class="identifier">flag_1</span><span class="special">,</span><span class="number">1</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">,</span> <span class="identifier">flag_2</span><span class="special">,</span><span class="number">1</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">int_1</span><span class="special">,</span><span class="number">2</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">int_2</span><span class="special">,</span><span class="number">2</span><span class="special">&gt;</span>
+<span class="special">&gt;</span>                       <span class="identifier">bitfield_tuple_foo</span><span class="special">;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">bitfield_tuple_foo</span> <span class="identifier">foo</span><span class="special">;</span>
+    <span class="identifier">foo</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">flag_1</span><span class="special">&gt;()</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">;</span> <span class="comment">// returns the proxy to the boolean member at flag_1
+</span>    <span class="keyword">if</span><span class="special">(</span><span class="identifier">foo</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;()</span> <span class="special">){</span> <span class="comment">// get&lt;0&gt;() gets the member at index 0 which is the same as flag_1
+</span>        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"flag_1 is true"</span><span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+<p>
+        </p>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.users_guide.tutorial.part_3__slightly_more_advanced"></a><h6>
+<a name="id3261094"></a>
+          <a class="link" href="tutorial.html#boost_integer_bits_masks_extension.bitfield_tuple.users_guide.tutorial.part_3__slightly_more_advanced">Part
+          3: Slightly More Advanced</a>
+        </h6>
+<p>
+          There are ways to simplify the <code class="computeroutput"><span class="identifier">bitfield_tuple_foo</span></code>'s
+          template declaration. This part of the tutorial covers the additional functionalities
+          provided by the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+          which can be used to simplify the creation of more complex <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>.
+        </p>
+<p>
+          The different templates that can be used within a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>'s
+          template decalaration.
+        </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Signature
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Brief Description
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">filler</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&gt;</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Padding in bits that can be used to seperate bitfield.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">bit_align</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&gt;</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Sets the offset of the first bit of the next bitfield supplied
+                    to a multiple of the integer supplied.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">flag</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">&gt;</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Makes a single bit width boolean <code class="computeroutput"><span class="identifier">member</span></code>
+                    with a name supplied to as the parameter.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">,</span>
+                    <span class="keyword">typename</span><span class="special">,</span>
+                    <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&gt;</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Used for specifying a member where the first parameter is the
+                    type being stored, the second is the name and the third is the
+                    width in bits.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">storage</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">&gt;</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    The type specified in this parameter is used as the storage.
+                    This parameter is optional and it doesn't matter where in the
+                    template you put it.
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+<div class="tip"><table border="0" summary="Tip">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="../../..//home/brian/gsoc/boost-trunk/doc/html/images/tip.png"></td>
+<th align="left">Tip</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Read the documentation under the class reference section for additional
+            information about the templates used to create the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+            type.
+          </p></td></tr>
+</table></div>
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.users_guide.tutorial.part_4__fusion_sequence_extension"></a><h6>
+<a name="id3261473"></a>
+          <a class="link" href="tutorial.html#boost_integer_bits_masks_extension.bitfield_tuple.users_guide.tutorial.part_4__fusion_sequence_extension">Part
+          4: Fusion Sequence extension</a>
+        </h6>
+<p>
+          The <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code> is a
+          boost.fusion sequence. It supports the all of the functionality that is
+          supported by a random access container and an associtve sequence. The
+          <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code> internally
+          stores its fields as an associative array. This allows the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code> to provide both index
+          based as well as named <code class="computeroutput"><span class="identifier">get</span></code>
+          functions. For full documentataion of how to use boost.fusion see the boost.fusion
+          documentation. For the boost.fusion features supported by the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code> see the fusion extension
+          documentation located in the reference section of the documentation.
         </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
@@ -35,7 +287,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="getting_started/testing.html"><img src="../../..//home/brian/gsoc/boost-trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../..//home/brian/gsoc/boost-trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../..//home/brian/gsoc/boost-trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="example.html"><img src="../../..//home/brian/gsoc/boost-trunk/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="getting_started/testing.html"><img src="../../..//home/brian/gsoc/boost-trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../..//home/brian/gsoc/boost-trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../..//home/brian/gsoc/boost-trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="external_resources.html"><img src="../../..//home/brian/gsoc/boost-trunk/doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

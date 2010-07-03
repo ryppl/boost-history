@@ -136,8 +136,4 @@
 #define BOOST_BFT_SPECILIZATION_PARAM_LIST() \
                 BOOST_BFT_PARAMETER_LIST()
 
-
-
-    
-
 #endif

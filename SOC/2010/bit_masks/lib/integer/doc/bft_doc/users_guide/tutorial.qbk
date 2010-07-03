@@ -7,4 +7,153 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 [section Tutorial]
 In this section I will walk you through step by step process about how to
 create a `bitfield_tuple` and all of the different functionalities it provides.
+
+
+[h5 Part 1: The Basics]
+The `bitfield_tuple` template is included into your project including the
+following header:
+``
+#include <boost/integer/bitfield_tuple.hpp>
+``
+After the file is included you're ready to begin creating a `bitfield_tuple`.
+Here is a `struct` that, contains bitfields, that is going to be used to 
+model an instance of the bitfield tuple after.
+``
+struct foo {
+    bool flag_1:1;
+    bool flag_2:1;
+    int  int_1:2;
+    int  int_2:2;
+};
+``
+In the next example a `bitfield_tuple` type is made to model `struct foo`'s behavior
+but reduce its storage from 4 bytes to one.
+``
+using namespace boost;
+// names used to mimic the names in struct foo.
+struct flag_1;
+struct flag_2;
+struct int_1;
+struct int_2;
+
+
+typedef bitfield_tuple<
+    storage<char>,
+    member<bool,flag_1,1>,
+    member<bool, flag_2,1>,
+    member<int, int_1,2>,
+    member<int, int_2,2>
+>                       bitfield_tuple_foo;
+``
+The above example may look a little confusing at first but when broken down it's
+made to be as simple as possible. `storage<char>` specifies to the
+`bitfield_tuple` template that the type which is going to be used for storage is
+a `char` type(this can be any integral type). The `member` templates read just
+like the bitfields within `struct foo`, so type, name, width in bits.
+`member<int, int_1,2>` specifies a bitfield which is of type `int`, has the name
+`int_1`, and a width of 2 bits. 
+
+[h4 Part 2: Using the tuple]
+
+Here is an example of the `bitfield_tuple` accessor function. `bitfield_tuple`
+uses the similar accessor function as boost.tuple, there are two main differences
+between the accessor funciton's for `bitfield_tuple` and boost.tuple. The first 
+difference is that `bitfield_tuple` doesn't return a real reference, it instead
+returns a proxy to the bitfeild that it represents. Second, the names specified
+in the above example are not just for show, they are actually used to name the
+type within the a bitfield_tuple and can be used to access them in the same
+fashion as the index relative get function.
+
+[note `get` index accessor function. The index for accessing member of
+`bitfield_tuple` is relative to the number of `members` specified inside of the
+`bitfield_tuple`'s template parameters. Other types supplied to the
+`bitfield_tuple` and not counted for the index. For instance, in the above
+example the type `storage<char>` does not effect the index of any of the members
+after it. ]
+
+
+The following example shows the two different ways that the `get` member
+funciton can be used to retrieve data from within a `bitfield_tuple` by either
+using a name or an index.
+``
+#include <boost/integer/bitfield_tuple.hpp>
+#include <iostream>
+
+using namespace boost;
+// names used to mimic the names in struct foo.
+struct flag_1;
+struct flag_2;
+struct int_1;
+struct int_2;
+
+
+typedef bitfield_tuple<
+    storage<char>,
+    member<bool,flag_1,1>,
+    member<bool, flag_2,1>,
+    member<int, int_1,2>,
+    member<int, int_2,2>
+>                       bitfield_tuple_foo;
+
+int main() {
+    bitfield_tuple_foo foo;
+    foo.get<flag_1>() = true; // returns the proxy to the boolean member at flag_1
+    if(foo.get<0>() ){ // get<0>() gets the member at index 0 which is the same as flag_1
+        std::cout << "flag_1 is true"<< std::endl;
+    }
+}
+``
+
+[h5 Part 3: Slightly More Advanced]
+There are ways to simplify the `bitfield_tuple_foo`'s template declaration. 
+This part of the tutorial covers the additional functionalities provided by the
+`bitfield_tuple` which can be used to simplify the creation of more complex
+`bitfield_tuple`.
+
+
+
+The different templates that can be used within a `bitfield_tuple`'s template
+decalaration.
+[table 
+    [
+        [Signature][Brief Description]
+    ]
+    [
+        [`filler<std::size_t>`][ Padding in bits that can be used to seperate bitfield.]
+    ]
+    [
+        [`bit_align<std::size_t>`][ Sets the offset of the first bit of the next
+bitfield supplied to a multiple of the integer supplied. ]
+    ]
+    [
+        [`flag<typename>`][ Makes a single bit width boolean `member` with a name
+supplied to as the parameter. ]
+    ]
+    [
+        [`member<typename, typename, std::size_t>`][ Used for specifying a
+member where the first parameter is the type being stored, the second is the name
+and the third is the width in bits.]
+    ]
+    [
+        [`storage<typename>`][ The type specified in this parameter is used as
+the storage. This parameter is optional and it doesn't matter where in the template
+you put it.]
+    ]
+]
+[tip Read the documentation under the class reference section for additional
+information about the templates used to create the `bitfield_tuple` type.]
+
+
+[h5 Part 4: Fusion Sequence extension]
+The `bitfield_tuple` is a boost.fusion sequence. It supports the all of the
+functionality that is supported by a random access container and an associtve
+sequence. The `bitfield_tuple` internally stores its fields as an associative
+array. This allows the `bitfield_tuple` to provide both index based as well as
+named `get` functions. For full documentataion of how to use boost.fusion see
+the boost.fusion documentation. For the boost.fusion features supported by 
+the `bitfield_tuple` see the fusion extension documentation located in the
+reference section of the documentation.
+
+
+
 [endsect]
