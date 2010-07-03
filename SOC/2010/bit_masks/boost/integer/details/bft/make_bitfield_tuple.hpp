@@ -7,8 +7,6 @@
 #ifndef BOOST_BFT_MAKE_BFT_HPP
 #define BOOST_BFT_MAKE_BFT_HPP
 #include <cstddef>
-#include <boost/mpl/bitwise.hpp>
-#include <iostream>
 
 
 namespace boost { namespace details {

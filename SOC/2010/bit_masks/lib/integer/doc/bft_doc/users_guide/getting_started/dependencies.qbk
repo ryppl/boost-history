@@ -10,7 +10,76 @@ as the requirements for how to enable different extensions of the
 `bitfield_tuple`. Some of the extensions include adjustment of variadic template
 parameters, and adjust meant for long long support.
 
-TODO:
-Add list of dependencies from within boost here!
+
+#include <boost/integer/details/bft/template_expansion_macros.hpp>
+    #include <boost/preprocessor/repetition/enum.hpp>
+    #include <boost/preprocessor/arithmetic/add.hpp>
+    #include <boost/preprocessor/repetition/repeat_from_to.hpp>
+#include <boost/integer/details/bitfield_tuple_impl.hpp>
+    #include <boost/integer/bits_mask.hpp>
+    #include <boost/integer/bit_width.hpp>
+    #include <cstddef>
+    #include <boost/type_traits.hpp>
+    #include <boost/static_assert.hpp>
+    #include <boost/integer/details/bft/bft_element.hpp>
+    #include <boost/integer/details/bft/arg_parse_impl.hpp>
+    #include <boost/integer/details/bft/deduce_storage.hpp>
+
+
+#include <boost/bitfield/bitfield.hpp>
+    #include <cstddef>
+    #include <boost/static_assert.hpp>
+
+    #include <cassert>
+    #include <limits>
+    #include <netinet/in.h>
+#include <boost/integer/details/bft/name_lookup.hpp>
+
+#include <boost/mpl/not.hpp>
+#include <boost/utility/enable_if.hpp>
+#include <boost/mpl/deref.hpp>
+#include <boost/type_traits.hpp>
+#include <boost/mpl/at.hpp>
+#include <boost/mpl/less.hpp>
+#include <boost/mpl/size.hpp>
+
+#include <boost/integer/details/bft/reference_builder.hpp>
+#include <boost/integer/details/bft/ext/bitfield_tuple_fusion_includes.hpp>
+    #include <boost/fusion/sequence/intrinsic.hpp>
+    #include <boost/fusion/support/is_sequence.hpp>
+    #include <boost/fusion/support/is_view.hpp>
+
+    #include <boost/integer/bft/ext/tag_of.hpp>
+        #include <boost/integer/bitfield_tuple_fwd.hpp>
+        #include <boost/fusion/support/tag_of_fwd.hpp>
+    #include <boost/integer/bft/ext/bitfield_iterator.hpp>
+        #include <cstddef>
+        #include <boost/mpl/int.hpp>
+        #include <boost/mpl/assert.hpp>
+        #include <boost/mpl/if.hpp>
+        #include <boost/mpl/minus.hpp>
+        #include <boost/mpl/size_t.hpp>
+        #include <boost/type_traits/is_const.hpp>
+        #include <boost/fusion/iterator/iterator_facade.hpp>
+        #include <boost/mpl/void.hpp>
+    #include <boost/integer/bft/ext/fusion/is_sequence_impl.hpp>
+    #include <boost/integer/bft/ext/fusion/is_view_impl.hpp>
+    #include <boost/integer/bft/ext/fusion/category_of_impl.hpp>
+    #include <boost/integer/bft/ext/fusion/at_impl.hpp>
+        #include <boost/mpl/at.hpp>
+    #include <boost/integer/bft/ext/fusion/begin_impl.hpp>
+    #include <boost/integer/bft/ext/fusion/size_impl.hpp>
+    #include <boost/integer/bft/ext/fusion/end_impl.hpp>
+
+#include <boost/integer/details/fusion_ext_includes.hpp>
+    #include <boost/fusion/iterator/value_of.hpp>
+    #include <boost/fusion/iterator/deref.hpp>
+    #include <boost/fusion/iterator/next.hpp>
+    #include <boost/fusion/iterator/prior.hpp>
+    #include <boost/fusion/iterator/distance.hpp>
+    #include <boost/fusion/iterator/key_of.hpp>
+    #include <boost/fusion/iterator/value_of_data.hpp>
+    #include <boost/fusion/iterator/deref_data.hpp>
+#include <boost/integer/details/bft/make_bitfield_tuple.hpp>
 
 [endsect]
