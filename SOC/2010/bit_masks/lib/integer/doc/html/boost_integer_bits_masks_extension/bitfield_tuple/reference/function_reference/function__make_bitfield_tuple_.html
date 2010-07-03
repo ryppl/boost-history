@@ -1,0 +1,104 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Function make_bitfield_tuple</title>
+<link rel="stylesheet" href="../../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../../../index.html" title="Chapter&#160;1.&#160;Boost.Integer Bits Masks Extension">
+<link rel="up" href="../function_reference.html" title="Function Reference">
+<link rel="prev" href="../function_reference.html" title="Function Reference">
+<link rel="next" href="../meta_function_reference.html" title="Meta-Function Reference">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../function_reference.html"><img src="../../../..//home/brian/gsoc/boost-trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../function_reference.html"><img src="../../../..//home/brian/gsoc/boost-trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../..//home/brian/gsoc/boost-trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../meta_function_reference.html"><img src="../../../..//home/brian/gsoc/boost-trunk/doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_integer_bits_masks_extension.bitfield_tuple.reference.function_reference.function__make_bitfield_tuple_"></a><a class="link" href="function__make_bitfield_tuple_.html" title="Function make_bitfield_tuple">Function
+          <code class="computeroutput"><span class="identifier">make_bitfield_tuple</span></code></a>
+</h5></div></div></div>
+<p>
+            The <code class="computeroutput"><span class="identifier">make_bitfield_tuple</span></code>
+            function is included with the bitfield_tuple header. <code class="computeroutput"><span class="identifier">make_bitfield_tuple</span></code>
+            like <code class="computeroutput"><span class="identifier">make_tuple</span></code> takes
+            a variadic number of parameters. However, differing from the <code class="computeroutput"><span class="identifier">make_tuple</span></code>, <code class="computeroutput"><span class="identifier">make_bitfield_tuple</span></code>
+            requires one to specify the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+            the wish to create.
+          </p>
+<p>
+            Function signature for <code class="computeroutput"><span class="identifier">make_bitfield_tuple</span></code>:
+          </p>
+<p>
+            <code class="computeroutput"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">BitfieldTuple</span><span class="special">&gt;</span> <span class="identifier">BitfieldTuple</span>
+            <span class="identifier">make_bitfield_tuple</span><span class="special">(</span></code>
+            <em class="replaceable"><code>Implementation Defined</code></em><code class="computeroutput"> <span class="special">);</span></code>
+          </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../..//home/brian/gsoc/boost-trunk/doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+              <em class="replaceable"><code>Implementation defined</code></em> in the function signature
+              leaves a lot to be desired, however the function is variadic in nature
+              and can take upto as many parameters as <code class="computeroutput"><span class="identifier">BOOST_BFT_PARAM_COUNT</span></code>.
+              If the number of parameters supplied to the function is greater the
+              the number of members within the supplied <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+              type those parameters will be ignored.
+            </p></td></tr>
+</table></div>
+<p>
+            Here is an example for using the <code class="computeroutput"><span class="identifier">make_bitfield_tuple</span></code>
+            function to create a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>.
+          </p>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield_tuple</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
+
+<span class="keyword">struct</span> <span class="identifier">red</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">green</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">pink</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">blue</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">salmon</span><span class="special">;</span>
+
+<span class="keyword">typedef</span> <span class="identifier">bitfield_tuple</span><span class="special">&lt;</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">,</span><span class="identifier">red</span><span class="special">,</span><span class="number">4</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">char</span><span class="special">,</span> <span class="identifier">green</span><span class="special">,</span><span class="number">5</span><span class="special">&gt;,</span>
+    <span class="identifier">storage</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&gt;,</span>
+    <span class="identifier">filler</span><span class="special">&lt;</span><span class="number">3</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">salmon</span><span class="special">,</span> <span class="number">16</span><span class="special">&gt;,</span>
+    <span class="identifier">flag</span><span class="special">&lt;</span><span class="identifier">blue</span><span class="special">&gt;</span>
+<span class="special">&gt;</span>                                       <span class="identifier">test_tuple</span><span class="special">;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">(){</span>
+    <span class="identifier">test_tuple</span> <span class="identifier">bft</span> <span class="special">=</span> <span class="identifier">make_bitfield_tuple</span><span class="special">&lt;</span><span class="identifier">test_tuple</span><span class="special">&gt;(</span><span class="number">1</span><span class="special">,</span><span class="number">2</span><span class="special">,</span><span class="number">4</span><span class="special">,</span><span class="keyword">true</span><span class="special">);</span>
+
+
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2010 Brian Bartman<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../function_reference.html"><img src="../../../..//home/brian/gsoc/boost-trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../function_reference.html"><img src="../../../..//home/brian/gsoc/boost-trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../..//home/brian/gsoc/boost-trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../meta_function_reference.html"><img src="../../../..//home/brian/gsoc/boost-trunk/doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

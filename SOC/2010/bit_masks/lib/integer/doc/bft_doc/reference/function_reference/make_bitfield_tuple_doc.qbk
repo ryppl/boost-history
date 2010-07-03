@@ -1,0 +1,63 @@
+[/
+Copyright (c) 2010 Brian Bartman
+
+Distributed under the Boost Software License, Version 1.0. (See accompanying
+file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[section Function `make_bitfield_tuple`]
+The `make_bitfield_tuple` function is included with the bitfield_tuple header. 
+`make_bitfield_tuple` like `make_tuple` takes a variadic number of parameters. 
+However, differing from the `make_tuple`, `make_bitfield_tuple` requires one to
+specify the `bitfield_tuple` the wish to create.
+
+
+
+Function signature for `make_bitfield_tuple`:
+
+`template <typename BitfieldTuple>
+BitfieldTuple make_bitfield_tuple(` [~Implementation Defined]` );`
+
+
+[note [~Implementation defined] in the function signature leaves a lot to be
+desired, however the function is variadic in nature and can take upto as many
+parameters as `BOOST_BFT_PARAM_COUNT`. If the number of parameters supplied to
+the function is greater the the number of members within the supplied
+`bitfield_tuple` type those parameters will be ignored.]
+
+
+Here is an example for using the `make_bitfield_tuple` function to create a
+`bitfield_tuple`.
+
+``
+#include <boost/integer/bitfield_tuple.hpp>
+
+
+
+using namespace boost;
+
+struct red;
+struct green;
+struct pink;
+struct blue;
+struct salmon;
+
+typedef bitfield_tuple<
+    member<char,red,4>,
+    member<unsigned char, green,5>,
+    storage<std::size_t>,
+    filler<3>,
+    member<int, salmon, 16>,
+    flag<blue>
+>                                       test_tuple;
+
+int main(){
+    test_tuple bft = make_bitfield_tuple<test_tuple>(1,2,4,true);
+
+
+    return 0;
+}
+``
+
+
+[endsect]
