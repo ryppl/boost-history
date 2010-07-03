@@ -35,37 +35,43 @@ Macros used for generating template parameters for use in specilization
 and generating template parameters. The `N` value in the below sequences below
 represent the value of `BOOST_BFT_PARAM_COUNT`.
 
-[table
-    [
-        [Name]
-        [Pattern]
-        [Usage]
-    ]
+
+
+[/
     [
         [`BOOST_MAKE_BFT_TEMPLATE_PARAMS()`]
         [`typename T0 = mpl::void_, ... typename TN = mpl::void_`]
-        [ Internal use only. Used for creating the template parameter for the
+        [ *Internal use only*. Used for creating the template parameter for the
 `bitfield_tuple`.]
     ]
     [
         [`BOOST_BFT_UNPACK_PARAMS()`]
         [`::template process<T1>::type ... ::template process<TN>::type`]
-        [ Internal use only. Used for parsing the template parameters from a
+        [ *Internal use only*. Used for parsing the template parameters from a
 `bitfield_tuple`. ]
     ]
     [
         [`BOOST_BFT_PARAMETER_LIST()`]
         [`T0, ... TN`]
-        [ Internal use only. This is used to create a bitfield tuple base type
+        [ *Internal use only*. This is used to create a bitfield tuple base type
 so that the number of parameters that gets passed to that is then the same
 as would be passed into the class. ]
     ]
     [
         [`BOOST_BFT_BASE_TEMPLATE_PARAMS()`]
         [`typename T0, ... typename TN`]
-        [ Internal use only. This macro generages the template parameters for
+        [ *Internal use only*. This macro generages the template parameters for
 the base class of the bitfield_tuple. ]
     ]
+]
+
+[table
+    [
+        [Name]
+        [Pattern]
+        [Usage]
+    ]
+
     [
         [`BOOST_BFT_TEMPLATE_ARGS_NO_DEFAULTS()`]
         [`typename T0, ... typename TN`]
@@ -83,7 +89,7 @@ create template parameters which are then supplied to the template of a
 ]
 
 Here is example useage of the macros that can be used to specilize a class
-template over the `btifield_tuple` type.
+template over the `bitfield_tuple` type.
 
 ``
 #include <boost/integer/bitfield_tuple.hpp>
@@ -96,7 +102,6 @@ template<BOOST_BFT_TEMPLATE_ARGS_NO_DEFAULTS()>
 struct foo< boost::bitfield_tuple< BOOST_BFT_SPECILIZATION_PARAM_LIST() > >
 {
 };
-struct
 
 ``
 
