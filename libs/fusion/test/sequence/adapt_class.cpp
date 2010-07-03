@@ -11,6 +11,7 @@
 #include <boost/fusion/sequence/intrinsic/empty.hpp>
 #include <boost/fusion/sequence/intrinsic/front.hpp>
 #include <boost/fusion/sequence/intrinsic/back.hpp>
+#include <boost/fusion/sequence/intrinsic/value_at.hpp>
 #include <boost/fusion/sequence/io/out.hpp>
 #include <boost/fusion/container/vector/vector.hpp>
 #include <boost/fusion/container/list/list.hpp>
@@ -22,7 +23,10 @@
 #include <boost/fusion/sequence/comparison/less_equal.hpp>
 #include <boost/fusion/sequence/comparison/greater.hpp>
 #include <boost/fusion/sequence/comparison/greater_equal.hpp>
+#include <boost/fusion/mpl.hpp>
 #include <boost/fusion/support/is_view.hpp>
+#include <boost/mpl/front.hpp>
+#include <boost/mpl/is_sequence.hpp>
 #include <boost/mpl/assert.hpp>
 #include <iostream>
 #include <string>
@@ -34,7 +38,7 @@ namespace ns
     public:
     
         point() : x(0), y(0) {}
-        point(int x, int y) : x(x), y(y) {}
+        point(int in_x, int in_y) : x(in_x), y(in_y) {}
             
         int get_x() const { return x; }
         int get_y() const { return y; }
@@ -102,15 +106,22 @@ main()
     {
         // conversion from ns::point to vector
         ns::point p(5, 3);
-        fusion::vector<int, short> v(p);
+        fusion::vector<int, long> v(p);
         v = p;
     }
 
     {
         // conversion from ns::point to list
         ns::point p(5, 3);
-        fusion::list<int, short> l(p);
+        fusion::list<int, long> l(p);
         l = p;
+    }
+
+    {
+        BOOST_MPL_ASSERT((mpl::is_sequence<ns::point>));
+        BOOST_MPL_ASSERT((boost::is_same<
+            fusion::result_of::value_at_c<ns::point,0>::type
+          , mpl::front<ns::point>::type>));
     }
 
     return boost::report_errors();
