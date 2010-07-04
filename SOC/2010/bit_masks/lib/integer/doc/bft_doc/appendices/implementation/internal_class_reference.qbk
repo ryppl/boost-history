@@ -165,11 +165,15 @@ or store data into a member of the `bitfield_tuple` inside of
 `make_bitfield_tuple`.
 ..`make_bitfield_tuple`
 ..make_bitfield_tuple.hpp ]
-
-
 [endsect]
+
+
 [section Class Templates]
+
+
 [endsect]
+
+
 [section Function Templates]
 [endsect]
 
