@@ -13,447 +13,1075 @@
 <table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../internal_documentation.html"><img src="../../../../..//home/brian/boost/boost-trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../internal_documentation.html"><img src="../../../../..//home/brian/boost/boost-trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../../index.html"><img src="../../../../..//home/brian/boost/boost-trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="class_templates.html"><img src="../../../../..//home/brian/boost/boost-trunk/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../internal_documentation.html"><img src="../../../../..//home/brian/gsoc/boost-trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../internal_documentation.html"><img src="../../../../..//home/brian/gsoc/boost-trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../../index.html"><img src="../../../../..//home/brian/gsoc/boost-trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="class_templates.html"><img src="../../../../..//home/brian/gsoc/boost-trunk/doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h6 class="title">
 <a name="boost_integer_bits_masks_extension.bitfield_tuple.appendices.implementation_details.internal_documentation.macros"></a><a class="link" href="macros.html" title="Macros">Macros</a>
 </h6></div></div></div>
+<p>
+              </p>
 <div class="informaltable"><table class="table">
 <colgroup>
-<col>
-<col>
-<col>
 <col>
 <col>
 </colgroup>
 <thead><tr>
 <th>
-                      <p>
-                        Macro
-                      </p>
-                    </th>
+                        <p>
+                          <span class="bold"><strong>Macro</strong></span>:
+                        </p>
+                      </th>
 <th>
-                      <p>
-                        Makes Pattern
-                      </p>
-                    </th>
-<th>
-                      <p>
-                        Description
-                      </p>
-                    </th>
-<th>
-                      <p>
-                        Used Where
-                      </p>
-                    </th>
-<th>
-                      <p>
-                        Header File
-                      </p>
-                    </th>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">BOOST_MAKE_BFT_TEMPLATE_PARAMS</span><span class="special">()</span></code>
+                        </p>
+                      </th>
 </tr></thead>
 <tbody>
 <tr>
 <td>
-                      <p>
-                        <code class="computeroutput"><span class="identifier">BOOST_MAKE_BFT_TEMPLATE_PARAMS</span><span class="special">()</span></code>
-                      </p>
-                    </td>
+                        <p>
+                          <span class="bold"><strong>Pattern</strong></span>:
+                        </p>
+                      </td>
 <td>
-                      <p>
-                        <code class="computeroutput"><span class="keyword">typename</span> <span class="identifier">T</span></code>##<code class="computeroutput"><span class="number">0</span> <span class="special">=</span>
-                        <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">void_</span><span class="special">,</span>
-                        <span class="special">...</span> <span class="keyword">typename</span>
-                        <span class="identifier">T</span></code>##<code class="computeroutput"><span class="identifier">N</span> <span class="special">=</span>
-                        <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">void_</span></code>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <span class="bold"><strong>Internal Use Only.</strong></span> Used
-                        for making template parameters for the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
-                        struct.
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>'s
-                        template parameters
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        template_expansion_macros.hpp
-                      </p>
-                    </td>
+                        <p>
+                          <code class="computeroutput"><span class="keyword">typename</span> <span class="identifier">T</span></code>##<code class="computeroutput"><span class="number">0</span>
+                          <span class="special">=</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">void_</span><span class="special">,</span></code> ... <code class="computeroutput"><span class="keyword">typename</span>
+                          <span class="identifier">T</span></code>##<code class="computeroutput"><span class="identifier">N</span> <span class="special">=</span>
+                          <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">void_</span></code>
+                        </p>
+                      </td>
 </tr>
 <tr>
 <td>
-                      <p>
-                        <code class="computeroutput"><span class="identifier">BOOST_BFT_MAKE_PARAMS</span><span class="special">(</span><span class="identifier">Z</span><span class="special">,</span> <span class="identifier">N</span><span class="special">,</span> <span class="identifier">DATA</span><span class="special">)</span></code>
-                      </p>
-                    </td>
+                        <p>
+                          <span class="bold"><strong>Description</strong></span>:
+                        </p>
+                      </td>
 <td>
-                      <p>
-                        <code class="computeroutput"><span class="keyword">typename</span> <span class="identifier">T</span></code>##<code class="computeroutput"><span class="identifier">N</span> <span class="special">=</span>
-                        <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">void_</span></code>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <span class="bold"><strong>Internal Use Only.</strong></span> Used
-                        in the implementation of <code class="computeroutput"><span class="identifier">BOOST_MAKE_BFT_TEMPLATE_PARAMS</span><span class="special">()</span></code>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <code class="computeroutput"><span class="identifier">BOOST_MAKE_BFT_TEMPLATE_PARAMS</span><span class="special">()</span></code>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        template_expansion_macros.hpp
-                      </p>
-                    </td>
+                        <p>
+                          <span class="bold"><strong>Internal Use Only.</strong></span> Used
+                          for making template parameters for the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+                          struct.
+                        </p>
+                      </td>
 </tr>
 <tr>
 <td>
-                      <p>
-                        BOOST_BFT_UNPACK_PARAMS()
-                      </p>
-                    </td>
+                        <p>
+                          <span class="bold"><strong>Where its used</strong></span>:
+                        </p>
+                      </td>
 <td>
-                      <p>
-                        <code class="computeroutput"><span class="special">::</span><span class="keyword">template</span>
-                        <span class="identifier">process</span><span class="special">&lt;</span><span class="identifier">T</span></code>##<code class="computeroutput"><span class="number">1</span><span class="special">&gt;::</span><span class="identifier">type</span>
-                        <span class="special">...</span> <span class="special">::</span><span class="keyword">template</span> <span class="identifier">process</span><span class="special">&lt;</span><span class="identifier">T</span></code>##<code class="computeroutput"><span class="identifier">N</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <span class="bold"><strong>Internal Use Only.</strong></span> This
-                        is used for processing all of the template parameters by
-                        "rebinding" the bft_arg_parse_impl using its process
-                        template member.
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <code class="computeroutput"><span class="identifier">bitfield_tuple_base</span></code>
-                        with macro <code class="computeroutput"><span class="identifier">BOOST_BFT_ARG_PROCESSING</span></code>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        template_expansion_macros.hpp
-                      </p>
-                    </td>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>'s
+                          template parameters
+                        </p>
+                      </td>
 </tr>
 <tr>
 <td>
-                      <p>
-                        <code class="computeroutput"><span class="identifier">BOOST_BFT_UNPACK_CALL</span><span class="special">(</span><span class="identifier">Z</span><span class="special">,</span> <span class="identifier">N</span><span class="special">,</span> <span class="identifier">DATA</span><span class="special">)</span></code>
-                      </p>
-                    </td>
+                        <p>
+                          <span class="bold"><strong>Header Defined in</strong></span>:
+                        </p>
+                      </td>
 <td>
-                      <p>
-                        <code class="computeroutput"><span class="special">::</span><span class="keyword">template</span>
-                        <span class="identifier">process</span><span class="special">&lt;</span><span class="identifier">T</span></code>##<code class="computeroutput"><span class="identifier">N</span>
-                        <span class="special">&gt;::</span><span class="identifier">type</span></code>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <span class="bold"><strong>Internal Use Only.</strong></span> Used
-                        to create pattern for the <code class="computeroutput"><span class="identifier">BOOST_BFT_UNPACK_PARAMS</span><span class="special">()</span></code> macro.
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <code class="computeroutput"><span class="identifier">BOOST_BFT_UNPACK_PARAMS</span><span class="special">()</span></code>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        template_expansion_macros.hpp
-                      </p>
-                    </td>
-</tr>
-<tr>
-<td>
-                      <p>
-                        BOOST_BFT_ARG_PROCESSING
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <code class="computeroutput"><span class="identifier">details</span><span class="special">::</span><span class="identifier">bft_arg_parse_impl</span><span class="special">&lt;</span><span class="identifier">T0</span><span class="special">,</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">void_</span><span class="special">,</span>
-                        <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;&gt;,</span>
-                        <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&lt;</span><span class="number">0u</span><span class="special">&gt;</span>
-                        <span class="special">&gt;</span> <span class="identifier">BOOST_BFT_UNPACK_PARAMS</span><span class="special">()</span></code>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <span class="bold"><strong>Internal Use Only.</strong></span> This
-                        is used for processing the template arguments by passing
-                        each of the arguments into the bft_arg_parse_impl.
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <code class="computeroutput"><span class="identifier">bitfield_tuple_base</span></code>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        bitfield_tuple_impl.hpp
-                      </p>
-                    </td>
-</tr>
-<tr>
-<td>
-                      <p>
-                        <code class="computeroutput"><span class="identifier">BOOST_BFT_PARAM_LIST</span><span class="special">(</span><span class="identifier">Z</span><span class="special">,</span><span class="identifier">N</span><span class="special">,</span><span class="identifier">DATA</span><span class="special">)</span></code>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <code class="computeroutput"><span class="identifier">DATA</span></code>##<code class="computeroutput"><span class="identifier">N</span></code>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <span class="bold"><strong>Internal Use Only.</strong></span> Helps
-                        produce the sequence T0, ... TN, both with and with out typename
-                        before it.
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <code class="computeroutput"><span class="identifier">BOOST_BFT_PARAMETER_LIST</span><span class="special">()</span></code>, <code class="computeroutput"><span class="identifier">BOOST_BFT_BASE_TEMPLATE_PARAMS</span><span class="special">()</span></code> and <code class="computeroutput"><span class="identifier">BOOST_BFT_TEMPLATE_ARGS_NO_DEFAULTS</span><span class="special">()</span></code>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        template_expansion_macros.hpp
-                      </p>
-                    </td>
-</tr>
-<tr>
-<td>
-                      <p>
-                        <code class="computeroutput"><span class="identifier">BOOST_BFT_PARAMETER_LIST</span><span class="special">()</span></code>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <code class="computeroutput"><span class="identifier">T</span></code>##<code class="computeroutput"><span class="number">0</span><span class="special">,</span>
-                        <span class="special">...</span> <span class="identifier">T</span></code>##<code class="computeroutput"><span class="identifier">N</span></code>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <span class="bold"><strong>Internal Use Only.</strong></span> used
-                        to help generate type names and maintain the variadic behavior
-                        of <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
-                        and other internal types typenames.
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
-                        for the creation of <code class="computeroutput"><span class="keyword">typedef</span></code>s
-                        for <code class="computeroutput"><span class="identifier">_base</span></code>
-                        and <code class="computeroutput"><span class="identifier">_self</span></code>.
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        template_expansion_macros.hpp
-                      </p>
-                    </td>
-</tr>
-<tr>
-<td>
-                      <p>
-                        <code class="computeroutput"><span class="identifier">BOOST_BFT_BASE_TEMPLATE_PARAMS</span><span class="special">()</span></code>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <code class="computeroutput"><span class="keyword">typename</span> <span class="identifier">T</span></code>##<code class="computeroutput"><span class="number">0</span><span class="special">,</span>
-                        <span class="special">...</span> <span class="keyword">typename</span>
-                        <span class="identifier">T</span></code>##<code class="computeroutput"><span class="identifier">N</span></code>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <span class="bold"><strong>Internal Use Only.</strong></span> Macro
-                        is used for generating template parameters for the <code class="computeroutput"><span class="identifier">bitfield_tuple_base</span></code>.
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <code class="computeroutput"><span class="identifier">bitfield_tuple_base</span></code>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        template_expansion_macros.hpp
-                      </p>
-                    </td>
-</tr>
-<tr>
-<td>
-                      <p>
-                        <code class="computeroutput"><span class="identifier">BOOST_BFT_TEMPLATE_ARGS_NO_DEFAULTS</span><span class="special">()</span></code>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <code class="computeroutput"><span class="keyword">typename</span> <span class="identifier">T</span></code>##<code class="computeroutput"><span class="number">0</span><span class="special">,</span>
-                        <span class="special">...</span> <span class="keyword">typename</span>
-                        <span class="identifier">T</span></code>##<code class="computeroutput"><span class="identifier">N</span></code>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <span class="bold"><strong>Part of interface.</strong></span> Helps
-                        the the creation of template parameters for use in partial
-                        specilization of class templates.
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        Not used within library.
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        template_expansion_macros.hpp
-                      </p>
-                    </td>
-</tr>
-<tr>
-<td>
-                      <p>
-                        <code class="computeroutput"><span class="identifier">BOOST_BFT_SPECILIZATION_PARAM_LIST</span><span class="special">()</span></code>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <code class="computeroutput"><span class="identifier">T</span></code>##<code class="computeroutput"><span class="number">0</span><span class="special">,</span>
-                        <span class="special">...</span> <span class="identifier">T</span></code>##<code class="computeroutput"><span class="identifier">N</span></code>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <span class="bold"><strong>Part of interface.</strong></span> Helps
-                        aid in the creation of class template specialization.
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        Not used within library.
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        template_expansion_macros.hpp
-                      </p>
-                    </td>
-</tr>
-<tr>
-<td>
-                      <p>
-                        <code class="computeroutput"><span class="identifier">BOOST_MAKE_BITFIELD_TUPLE_SINGLE_PARAMETER</span><span class="special">(</span><span class="identifier">z</span><span class="special">,</span> <span class="identifier">n</span><span class="special">,</span> <span class="identifier">data</span>
-                        <span class="special">)</span></code>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <code class="computeroutput"><span class="keyword">typename</span> <span class="identifier">details</span><span class="special">::</span><span class="identifier">get_create_parameter</span><span class="special">&lt;</span><span class="identifier">BitfieldTuple</span><span class="special">,</span> <span class="identifier">n</span><span class="special">&gt;::</span><span class="identifier">type</span>
-                        <span class="special">\</span> <span class="identifier">parameter</span></code>##<code class="computeroutput"><span class="identifier">n</span> <span class="special">=</span>
-                        <span class="number">0</span></code>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <span class="bold"><strong>Internal Use Only.</strong></span> Helps
-                        create a deduced parameter for the <code class="computeroutput"><span class="identifier">make_bitfield_tuple</span></code>
-                        function.
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <code class="computeroutput"><span class="identifier">BOOST_MAKE_BITFIELD_TUPLE_CREATE_FUNCTION_PARAMETERS</span><span class="special">()</span></code>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        make_bitfield_tuple.hpp
-                      </p>
-                    </td>
-</tr>
-<tr>
-<td>
-                      <p>
-                        <code class="computeroutput"><span class="identifier">BOOST_MAKE_BITFIELD_TUPLE_CREATE_FUNCTION_PARAMETERS</span><span class="special">()</span></code>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <code class="computeroutput"><span class="keyword">typename</span> <span class="identifier">details</span><span class="special">::</span><span class="identifier">get_create_parameter</span><span class="special">&lt;</span><span class="identifier">BitfieldTuple</span><span class="special">,</span> <span class="number">0</span><span class="special">&gt;::</span><span class="identifier">type</span>
-                        <span class="identifier">parameter</span></code>##<code class="computeroutput"><span class="number">0</span> <span class="special">=</span>
-                        <span class="number">0</span><span class="special">,</span>
-                        <span class="special">...</span> <span class="keyword">typename</span>
-                        <span class="identifier">details</span><span class="special">::</span><span class="identifier">get_create_parameter</span><span class="special">&lt;</span><span class="identifier">BitfieldTuple</span><span class="special">,</span>
-                        <span class="identifier">n</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">parameter</span></code>##<code class="computeroutput"><span class="identifier">n</span> <span class="special">=</span>
-                        <span class="number">0</span></code>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <span class="bold"><strong>Internal Use Only.</strong></span>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                      </p>
-                    </td>
-</tr>
-<tr>
-<td>
-                      <p>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                        <span class="bold"><strong>Internal Use Only.</strong></span>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                      </p>
-                    </td>
-<td>
-                      <p>
-                      </p>
-                    </td>
+                        <p>
+                          template_expansion_macros.hpp
+                        </p>
+                      </td>
 </tr>
 </tbody>
 </table></div>
+<p>
+            </p>
+<p>
+              </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                        <p>
+                          <span class="bold"><strong>Macro</strong></span>:
+                        </p>
+                      </th>
+<th>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">BOOST_BFT_MAKE_PARAMS</span><span class="special">(</span><span class="identifier">Z</span><span class="special">,</span> <span class="identifier">N</span><span class="special">,</span> <span class="identifier">DATA</span><span class="special">)</span></code>
+                        </p>
+                      </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Pattern</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <code class="computeroutput"><span class="keyword">typename</span> <span class="identifier">T</span></code>##<code class="computeroutput"><span class="identifier">N</span>
+                          <span class="special">=</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">void_</span></code>
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Description</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <span class="bold"><strong>Internal Use Only.</strong></span> Used
+                          in the implementation of <code class="computeroutput"><span class="identifier">BOOST_MAKE_BFT_TEMPLATE_PARAMS</span><span class="special">()</span></code>
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Where its used</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">BOOST_MAKE_BFT_TEMPLATE_PARAMS</span><span class="special">()</span></code>
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Header Defined in</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          template_expansion_macros.hpp
+                        </p>
+                      </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+            </p>
+<p>
+              </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                        <p>
+                          <span class="bold"><strong>Macro</strong></span>:
+                        </p>
+                      </th>
+<th>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">BOOST_BFT_UNPACK_PARAMS</span><span class="special">()</span></code>
+                        </p>
+                      </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Pattern</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <code class="computeroutput"><span class="special">::</span><span class="keyword">template</span>
+                          <span class="identifier">process</span><span class="special">&lt;</span><span class="identifier">T</span></code>##<code class="computeroutput"><span class="number">1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+                          ... <code class="computeroutput"><span class="special">::</span><span class="keyword">template</span>
+                          <span class="identifier">process</span><span class="special">&lt;</span><span class="identifier">T</span></code>##<code class="computeroutput"><span class="identifier">N</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Description</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <span class="bold"><strong>Internal Use Only.</strong></span> This
+                          is used for processing all of the template parameters by
+                          "rebinding" the bft_arg_parse_impl using its
+                          process template member.
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Where its used</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">bitfield_tuple_base</span></code>
+                          with macro <code class="computeroutput"><span class="identifier">BOOST_BFT_ARG_PROCESSING</span></code>
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Header Defined in</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          template_expansion_macros.hpp
+                        </p>
+                      </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+            </p>
+<p>
+              </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                        <p>
+                          <span class="bold"><strong>Macro</strong></span>:
+                        </p>
+                      </th>
+<th>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">BOOST_BFT_UNPACK_CALL</span><span class="special">(</span><span class="identifier">Z</span><span class="special">,</span> <span class="identifier">N</span><span class="special">,</span> <span class="identifier">DATA</span><span class="special">)</span></code>
+                        </p>
+                      </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Pattern</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <code class="computeroutput"><span class="special">::</span><span class="keyword">template</span>
+                          <span class="identifier">process</span><span class="special">&lt;</span><span class="identifier">T</span></code>##<code class="computeroutput"><span class="identifier">N</span>
+                          <span class="special">&gt;::</span><span class="identifier">type</span></code>
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Description</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <span class="bold"><strong>Internal Use Only.</strong></span> Used
+                          to create pattern for the <code class="computeroutput"><span class="identifier">BOOST_BFT_UNPACK_PARAMS</span><span class="special">()</span></code> macro.
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Where its used</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">BOOST_BFT_UNPACK_PARAMS</span><span class="special">()</span></code>
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Header Defined in</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          template_expansion_macros.hpp
+                        </p>
+                      </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+            </p>
+<p>
+              </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                        <p>
+                          <span class="bold"><strong>Macro</strong></span>:
+                        </p>
+                      </th>
+<th>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">BOOST_BFT_ARG_PROCESSING</span></code>
+                        </p>
+                      </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Pattern</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">details</span><span class="special">::</span><span class="identifier">bft_arg_parse_impl</span><span class="special">&lt;</span><span class="identifier">T0</span><span class="special">,</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">void_</span><span class="special">,</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;&gt;,</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&lt;</span><span class="number">0u</span><span class="special">&gt;</span> <span class="special">&gt;</span>
+                          <span class="identifier">BOOST_BFT_UNPACK_PARAMS</span><span class="special">()</span></code>
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Description</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <span class="bold"><strong>Internal Use Only.</strong></span> This
+                          is used for processing the template arguments by passing
+                          each of the arguments into the bft_arg_parse_impl.
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Where its used</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">bitfield_tuple_base</span></code>
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Header Defined in</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          bitfield_tuple_impl.hpp
+                        </p>
+                      </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+            </p>
+<p>
+              </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                        <p>
+                          <span class="bold"><strong>Macro</strong></span>:
+                        </p>
+                      </th>
+<th>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">BOOST_BFT_PARAM_LIST</span><span class="special">(</span><span class="identifier">Z</span><span class="special">,</span><span class="identifier">N</span><span class="special">,</span><span class="identifier">DATA</span><span class="special">)</span></code>
+                        </p>
+                      </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Pattern</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">DATA</span></code>##<code class="computeroutput"><span class="identifier">N</span></code>
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Description</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <span class="bold"><strong>Internal Use Only.</strong></span> Helps
+                          produce the sequence T0, ... TN, both with and with out
+                          typename before it.
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Where its used</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">BOOST_BFT_PARAMETER_LIST</span><span class="special">()</span></code>, <code class="computeroutput"><span class="identifier">BOOST_BFT_BASE_TEMPLATE_PARAMS</span><span class="special">()</span></code> and <code class="computeroutput"><span class="identifier">BOOST_BFT_TEMPLATE_ARGS_NO_DEFAULTS</span><span class="special">()</span></code>
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Header Defined in</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          template_expansion_macros.hpp
+                        </p>
+                      </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+            </p>
+<p>
+              </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                        <p>
+                          <span class="bold"><strong>Macro</strong></span>:
+                        </p>
+                      </th>
+<th>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">BOOST_BFT_PARAMETER_LIST</span><span class="special">()</span></code>
+                        </p>
+                      </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Pattern</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">T</span></code>##<code class="computeroutput"><span class="number">0</span><span class="special">,</span></code>
+                          ... <code class="computeroutput"><span class="identifier">T</span></code>##<code class="computeroutput"><span class="identifier">N</span></code>
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Description</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <span class="bold"><strong>Internal Use Only.</strong></span> used
+                          to help generate type names and maintain the variadic behavior
+                          of <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+                          and other internal types typenames.
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Where its used</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+                          for the creation of <code class="computeroutput"><span class="keyword">typedef</span></code>s
+                          for <code class="computeroutput"><span class="identifier">_base</span></code>
+                          and <code class="computeroutput"><span class="identifier">_self</span></code>.
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Header Defined in</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          template_expansion_macros.hpp
+                        </p>
+                      </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+            </p>
+<p>
+              </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                        <p>
+                          <span class="bold"><strong>Macro</strong></span>:
+                        </p>
+                      </th>
+<th>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">BOOST_BFT_BASE_TEMPLATE_PARAMS</span><span class="special">()</span></code>
+                        </p>
+                      </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Pattern</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <code class="computeroutput"><span class="keyword">typename</span> <span class="identifier">T</span></code>##<code class="computeroutput"><span class="number">0</span><span class="special">,</span></code> ... <code class="computeroutput"><span class="keyword">typename</span>
+                          <span class="identifier">T</span></code>##<code class="computeroutput"><span class="identifier">N</span></code>
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Description</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <span class="bold"><strong>Internal Use Only.</strong></span> Macro
+                          is used for generating template parameters for the <code class="computeroutput"><span class="identifier">bitfield_tuple_base</span></code>.
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Where its used</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">bitfield_tuple_base</span></code>
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Header Defined in</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          template_expansion_macros.hpp
+                        </p>
+                      </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+            </p>
+<p>
+              </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                        <p>
+                          <span class="bold"><strong>Macro</strong></span>:
+                        </p>
+                      </th>
+<th>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">BOOST_BFT_TEMPLATE_ARGS_NO_DEFAULTS</span><span class="special">()</span></code>
+                        </p>
+                      </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Pattern</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <code class="computeroutput"><span class="keyword">typename</span> <span class="identifier">T</span></code>##<code class="computeroutput"><span class="number">0</span><span class="special">,</span></code> ... <code class="computeroutput"><span class="keyword">typename</span>
+                          <span class="identifier">T</span></code>##<code class="computeroutput"><span class="identifier">N</span></code>
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Description</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <span class="bold"><strong>Part of interface.</strong></span> Helps
+                          the the creation of template parameters for use in partial
+                          specilization of class templates.
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Where its used</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          Not used within library.
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Header Defined in</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          template_expansion_macros.hpp
+                        </p>
+                      </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+            </p>
+<p>
+              </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                        <p>
+                          <span class="bold"><strong>Macro</strong></span>:
+                        </p>
+                      </th>
+<th>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">BOOST_BFT_SPECILIZATION_PARAM_LIST</span><span class="special">()</span></code>
+                        </p>
+                      </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Pattern</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">T</span></code>##<code class="computeroutput"><span class="number">0</span><span class="special">,</span></code>
+                          ... <code class="computeroutput"><span class="identifier">T</span></code>##<code class="computeroutput"><span class="identifier">N</span></code>
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Description</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <span class="bold"><strong>Part of interface.</strong></span> Helps
+                          aid in the creation of class template specialization.
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Where its used</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          Not used within library.
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Header Defined in</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          template_expansion_macros.hpp
+                        </p>
+                      </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+            </p>
+<p>
+              </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                        <p>
+                          <span class="bold"><strong>Macro</strong></span>:
+                        </p>
+                      </th>
+<th>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">BOOST_MAKE_BITFIELD_TUPLE_SINGLE_PARAMETER</span><span class="special">(</span><span class="identifier">z</span><span class="special">,</span> <span class="identifier">n</span><span class="special">,</span> <span class="identifier">data</span>
+                          <span class="special">)</span></code>
+                        </p>
+                      </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Pattern</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <code class="computeroutput"><span class="keyword">typename</span> <span class="identifier">details</span><span class="special">::</span><span class="identifier">get_create_parameter</span><span class="special">&lt;</span><span class="identifier">BitfieldTuple</span><span class="special">,</span> <span class="identifier">n</span><span class="special">&gt;::</span><span class="identifier">type</span>
+                          <span class="identifier">parameter</span></code>##<code class="computeroutput"><span class="identifier">n</span> <span class="special">=</span>
+                          <span class="number">0</span></code>
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Description</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <span class="bold"><strong>Internal Use Only.</strong></span> Helps
+                          create a deduced parameter for the <code class="computeroutput"><span class="identifier">make_bitfield_tuple</span></code>
+                          function.
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Where its used</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">BOOST_MAKE_BITFIELD_TUPLE_CREATE_FUNCTION_PARAMETERS</span><span class="special">()</span></code>
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Header Defined in</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          make_bitfield_tuple.hpp
+                        </p>
+                      </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+            </p>
+<p>
+              </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                        <p>
+                          <span class="bold"><strong>Macro</strong></span>:
+                        </p>
+                      </th>
+<th>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">BOOST_MAKE_BITFIELD_TUPLE_CREATE_FUNCTION_PARAMETERS</span><span class="special">()</span></code>
+                        </p>
+                      </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Pattern</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <code class="computeroutput"><span class="keyword">typename</span> <span class="identifier">details</span><span class="special">::</span><span class="identifier">get_create_parameter</span><span class="special">&lt;</span><span class="identifier">BitfieldTuple</span><span class="special">,</span> <span class="number">0</span><span class="special">&gt;::</span><span class="identifier">type</span>
+                          <span class="identifier">parameter</span></code>##<code class="computeroutput"><span class="number">0</span> <span class="special">=</span>
+                          <span class="number">0</span><span class="special">,</span>
+                          </code>...<code class="computeroutput"> <span class="keyword">typename</span>
+                          <span class="identifier">details</span><span class="special">::</span><span class="identifier">get_create_parameter</span><span class="special">&lt;</span><span class="identifier">BitfieldTuple</span><span class="special">,</span> <span class="identifier">n</span><span class="special">&gt;::</span><span class="identifier">type</span>
+                          <span class="identifier">parameter</span></code>##<code class="computeroutput"><span class="identifier">n</span> <span class="special">=</span>
+                          <span class="number">0</span></code>
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Description</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <span class="bold"><strong>Internal Use only.</strong></span> This
+                          macro is used to create function parameters for the <code class="computeroutput"><span class="identifier">make_bitfield_tuple</span></code> function.
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Where its used</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">make_bitfield_tuple</span></code>
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Header Defined in</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          make_bitfield_tuple.hpp
+                        </p>
+                      </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+            </p>
+<p>
+              </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                        <p>
+                          <span class="bold"><strong>Macro</strong></span>:
+                        </p>
+                      </th>
+<th>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">BOOST_MAKE_BITFIELD_TUPLE_ASSIGN_PARAMETER_TO_BFT_CALL</span><span class="special">(</span><span class="identifier">z</span><span class="special">,</span><span class="identifier">n</span><span class="special">,</span><span class="identifier">data</span><span class="special">)</span></code>
+                        </p>
+                      </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Pattern</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">details</span><span class="special">::</span><span class="identifier">assign_parameter_to_bft</span><span class="special">&lt;</span><span class="identifier">n</span><span class="special">&gt;(</span><span class="identifier">bft</span><span class="special">,</span> <span class="identifier">parameter</span></code>##<code class="computeroutput"><span class="identifier">n</span><span class="special">);</span></code>
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Description</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <span class="bold"><strong>Internal Use Only</strong></span> Represents
+                          a function call that is generated by the <code class="computeroutput"><span class="identifier">BOOST_MAKE_BITFIELD_TUPLE_CREATE_FUNCTION_PARSE_ARGUMENTS</span><span class="special">()</span></code> macro for each parameter
+                          of <code class="computeroutput"><span class="identifier">make_bitfield_tuple</span></code>.
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Where its used</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">make_bitfield_tuple</span></code>
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Header Defined in</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          make_bitfield_tuple.hpp
+                        </p>
+                      </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+            </p>
+<p>
+              </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                        <p>
+                          <span class="bold"><strong>Macro</strong></span>:
+                        </p>
+                      </th>
+<th>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">BOOST_MAKE_BITFIELD_TUPLE_CREATE_FUNCTION_PARSE_ARGUMENTS</span><span class="special">()</span></code>
+                        </p>
+                      </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Pattern</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">details</span><span class="special">::</span><span class="identifier">assign_parameter_to_bft</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;(</span><span class="identifier">bft</span><span class="special">,</span> <span class="identifier">parameter</span></code>##<code class="computeroutput"><span class="number">0</span><span class="special">);</span></code>
+                          ... <code class="computeroutput"><span class="identifier">details</span><span class="special">::</span><span class="identifier">assign_parameter_to_bft</span><span class="special">&lt;</span><span class="identifier">n</span><span class="special">&gt;(</span><span class="identifier">bft</span><span class="special">,</span> <span class="identifier">parameter</span></code>##<code class="computeroutput"><span class="identifier">n</span><span class="special">);</span></code>
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Description</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <span class="bold"><strong>Internal Use Only.</strong></span> Generates
+                          function calls which are either no-op's or store data into
+                          a member of the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+                          inside of <code class="computeroutput"><span class="identifier">make_bitfield_tuple</span></code>.
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Where its used</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          <code class="computeroutput"><span class="identifier">make_bitfield_tuple</span></code>
+                        </p>
+                      </td>
+</tr>
+<tr>
+<td>
+                        <p>
+                          <span class="bold"><strong>Header Defined in</strong></span>:
+                        </p>
+                      </td>
+<td>
+                        <p>
+                          make_bitfield_tuple.hpp
+                        </p>
+                      </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+            </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
@@ -465,7 +1093,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../internal_documentation.html"><img src="../../../../..//home/brian/boost/boost-trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../internal_documentation.html"><img src="../../../../..//home/brian/boost/boost-trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../../index.html"><img src="../../../../..//home/brian/boost/boost-trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="class_templates.html"><img src="../../../../..//home/brian/boost/boost-trunk/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../internal_documentation.html"><img src="../../../../..//home/brian/gsoc/boost-trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../internal_documentation.html"><img src="../../../../..//home/brian/gsoc/boost-trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../../index.html"><img src="../../../../..//home/brian/gsoc/boost-trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="class_templates.html"><img src="../../../../..//home/brian/gsoc/boost-trunk/doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

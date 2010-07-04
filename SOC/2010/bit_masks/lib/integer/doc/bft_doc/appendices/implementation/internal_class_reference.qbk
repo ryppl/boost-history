@@ -7,123 +7,165 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 [section Internal documentation]
 [section Macros]
+[template internal_documentation [__NAME __PATTERN __DESC __USED_WHERE __HEADER]
+Macro: [__NAME]
+Pattern: [__PATTERN]
+Description: [__DESC]
+Where its used: [__USED_WHERE]
+Header defined in: [__HEADER]
+]
+
+[template internal_bft_macro_doc[param_Name param_pattern param_desc param_used param_header ]
 [table
     [
-        [Macro]
-        [Makes Pattern]
-        [Description]
-        [Used Where]
-        [Header File]
+        [[*Macro]:]
+        [[param_Name]]
     ]
     [
-        [`BOOST_MAKE_BFT_TEMPLATE_PARAMS()`]
-        [`typename T`\#\#`0 = mpl::void_, ... typename T`\#\#`N = mpl::void_`]
-        [ *Internal Use Only.* Used for making template parameters for the
-`bitfield_tuple` struct.]
-        [ `bitfield_tuple`'s template parameters ]
-        [ template_expansion_macros.hpp ]
+        [[*Pattern]:]
+        [[param_pattern]]
     ]
     [
-        [`BOOST_BFT_MAKE_PARAMS(Z, N, DATA)`]
-        [`typename T`\#\#`N = mpl::void_`]
-        [*Internal Use Only.* Used in the implementation of
-`BOOST_MAKE_BFT_TEMPLATE_PARAMS()`]
-        [ `BOOST_MAKE_BFT_TEMPLATE_PARAMS()` ]
-        [ template_expansion_macros.hpp ]
+        [[*Description]:]
+        [[param_desc]]
     ]
     [
-        [BOOST_BFT_UNPACK_PARAMS()]
-        [`::template process<T`\#\#`1>::type ... ::template process<T`\#\#`N>::type`]
-        [*Internal Use Only.* This is used for processing all of the template
-parameters by "rebinding" the bft_arg_parse_impl using its process template
-member.]
-        [`bitfield_tuple_base` with macro `BOOST_BFT_ARG_PROCESSING`]
-        [ template_expansion_macros.hpp ]
+        [[*Where its used]:]
+        [[param_used]]
     ]
     [
-        [`BOOST_BFT_UNPACK_CALL(Z, N, DATA)`]
-        [`::template process<T`\#\#`N >::type`]
-        [*Internal Use Only.* Used to create pattern for the
-`BOOST_BFT_UNPACK_PARAMS()` macro.]
-        [`BOOST_BFT_UNPACK_PARAMS()`]
-        [ template_expansion_macros.hpp ]
-    ]
-    [
-        [BOOST_BFT_ARG_PROCESSING]
-        [`details::bft_arg_parse_impl<T0,mpl::void_, mpl::vector<>, mpl::size_t<0u> > BOOST_BFT_UNPACK_PARAMS()`]
-        [*Internal Use Only.* This is used for processing the template arguments
-by passing each of the arguments into the bft_arg_parse_impl.]
-        [`bitfield_tuple_base`]
-        [ bitfield_tuple_impl.hpp ]
-    ]
-    [
-        [`BOOST_BFT_PARAM_LIST(Z,N,DATA)`]
-        [`DATA`\#\#`N`]
-        [*Internal Use Only.* Helps produce the sequence T0, ... TN, both with
-and with out typename before it.]
-        [`BOOST_BFT_PARAMETER_LIST()`, `BOOST_BFT_BASE_TEMPLATE_PARAMS()` and
-`BOOST_BFT_TEMPLATE_ARGS_NO_DEFAULTS()`]
-        [ template_expansion_macros.hpp ]
-    ]
-    [
-        [`BOOST_BFT_PARAMETER_LIST()`]
-        [`T`\#\#`0, ... T`\#\#`N`]
-        [*Internal Use Only.* used to help generate type names and maintain the
-variadic behavior of `bitfield_tuple` and other internal types typenames.]
-        [`bitfield_tuple` for the creation of `typedef`s for `_base` and
-`_self`.]
-        [ template_expansion_macros.hpp ]
-    ]
-    [
-        [`BOOST_BFT_BASE_TEMPLATE_PARAMS()`]
-        [`typename T`\#\#`0, ... typename T`\#\#`N`]
-        [*Internal Use Only.* Macro is used for generating template parameters
-for the `bitfield_tuple_base`.]
-        [`bitfield_tuple_base` ]
-        [ template_expansion_macros.hpp ]
-    ]
-    [
-        [`BOOST_BFT_TEMPLATE_ARGS_NO_DEFAULTS()`]
-        [`typename T`\#\#`0, ... typename T`\#\#`N`]
-        [*Part of interface.* Helps the the creation of template
-parameters for use in partial specilization of class templates.]
-        [ Not used within library. ]
-        [ template_expansion_macros.hpp ]
-    ]
-    [
-        [`BOOST_BFT_SPECILIZATION_PARAM_LIST()`]
-        [`T`\#\#`0, ... T`\#\#`N`]
-        [*Part of interface.* Helps aid in the creation of class template
-specialization. ]
-        [ Not used within library. ]
-        [ template_expansion_macros.hpp ]
-    ]
-    [
-        [`BOOST_MAKE_BITFIELD_TUPLE_SINGLE_PARAMETER(z, n, data )`]
-        [    `typename details::get_create_parameter<BitfieldTuple, n>::type \
-    parameter`\#\#`n = 0`]
-        [*Internal Use Only.* Helps create a deduced parameter for the
-`make_bitfield_tuple` function.]
-        [`BOOST_MAKE_BITFIELD_TUPLE_CREATE_FUNCTION_PARAMETERS()`]
-        [ make_bitfield_tuple.hpp ]
-    ]
-    [
-        [`BOOST_MAKE_BITFIELD_TUPLE_CREATE_FUNCTION_PARAMETERS()`]
-        [`typename details::get_create_parameter<BitfieldTuple, 0>::type
-parameter`\#\#`0 = 0, ... typename details::get_create_parameter<BitfieldTuple, n>::type
-parameter`\#\#`n = 0`]
-        [*Internal Use Only.* ]
-        []
-        []
-    ]
-    [
-        []
-        []
-        [*Internal Use Only.* ]
-        []
-        []
+        [[*Header Defined in]:]
+        [[param_header]]
     ]
 ]
+]
+
+[internal_bft_macro_doc
+`BOOST_MAKE_BFT_TEMPLATE_PARAMS()`
+..`typename T`\#\#`0 = mpl::void_,` \.\.\. `typename T`\#\#`N = mpl::void_`
+..[*Internal Use Only.] Used for making template parameters for the
+`bitfield_tuple` struct.
+..`bitfield_tuple`'s template parameters
+..template_expansion_macros.hpp ]
+
+
+[internal_bft_macro_doc
+`BOOST_BFT_MAKE_PARAMS(Z, N, DATA)`
+..`typename T`\#\#`N = mpl::void_`
+..[*Internal Use Only.] Used in the implementation of
+`BOOST_MAKE_BFT_TEMPLATE_PARAMS()`
+..`BOOST_MAKE_BFT_TEMPLATE_PARAMS()`
+..template_expansion_macros.hpp ]
+
+
+[internal_bft_macro_doc
+`BOOST_BFT_UNPACK_PARAMS()`
+..`::template process<T`\#\#`1>::type` \.\.\. `::template process<T`\#\#`N>::type`
+..[*Internal Use Only.] This is used for processing all of the template
+parameters by "rebinding" the bft_arg_parse_impl using its process template
+member.
+..`bitfield_tuple_base` with macro `BOOST_BFT_ARG_PROCESSING`
+..template_expansion_macros.hpp ]
+
+[internal_bft_macro_doc
+`BOOST_BFT_UNPACK_CALL(Z, N, DATA)`
+..`::template process<T`\#\#`N >::type`
+..[*Internal Use Only.] Used to create pattern for the
+`BOOST_BFT_UNPACK_PARAMS()` macro.
+..`BOOST_BFT_UNPACK_PARAMS()`
+..template_expansion_macros.hpp ]
+
+[internal_bft_macro_doc
+`BOOST_BFT_ARG_PROCESSING`
+..`details::bft_arg_parse_impl<T0,mpl::void_, mpl::vector<>, mpl::size_t<0u> > BOOST_BFT_UNPACK_PARAMS()`
+..*Internal Use Only.* This is used for processing the template arguments
+by passing each of the arguments into the bft_arg_parse_impl.
+..`bitfield_tuple_base`
+..bitfield_tuple_impl.hpp ]
+
+
+[internal_bft_macro_doc
+`BOOST_BFT_PARAM_LIST(Z,N,DATA)`
+..`DATA`\#\#`N`
+..*Internal Use Only.* Helps produce the sequence T0, \.\.\. TN, both with
+and with out typename before it.
+..`BOOST_BFT_PARAMETER_LIST()`, `BOOST_BFT_BASE_TEMPLATE_PARAMS()` and
+`BOOST_BFT_TEMPLATE_ARGS_NO_DEFAULTS()`
+..template_expansion_macros.hpp ]
+
+
+[internal_bft_macro_doc
+`BOOST_BFT_PARAMETER_LIST()`
+..`T`\#\#`0,` \.\.\. `T`\#\#`N`
+..*Internal Use Only.* used to help generate type names and maintain the
+variadic behavior of `bitfield_tuple` and other internal types typenames.
+..`bitfield_tuple` for the creation of `typedef`s for `_base` and
+`_self`.
+..template_expansion_macros.hpp ]
+
+
+[internal_bft_macro_doc
+`BOOST_BFT_BASE_TEMPLATE_PARAMS()`
+..`typename T`\#\#`0,` \.\.\. `typename T`\#\#`N`
+..*Internal Use Only.* Macro is used for generating template parameters
+for the `bitfield_tuple_base`.
+..`bitfield_tuple_base`
+..template_expansion_macros.hpp ]
+
+[internal_bft_macro_doc
+`BOOST_BFT_TEMPLATE_ARGS_NO_DEFAULTS()`
+..`typename T`\#\#`0,` \.\.\. `typename T`\#\#`N`
+..*Part of interface.* Helps the the creation of template
+parameters for use in partial specilization of class templates.
+..Not used within library.
+..template_expansion_macros.hpp ]
+
+[internal_bft_macro_doc
+`BOOST_BFT_SPECILIZATION_PARAM_LIST()`
+..`T`\#\#`0,` \.\.\. `T`\#\#`N`
+..*Part of interface.* Helps aid in the creation of class template
+specialization.
+..Not used within library.
+..template_expansion_macros.hpp ]
+
+[internal_bft_macro_doc
+`BOOST_MAKE_BITFIELD_TUPLE_SINGLE_PARAMETER(z, n, data )`
+..`typename details::get_create_parameter<BitfieldTuple, n>::type parameter`\#\#`n = 0`
+..*Internal Use Only.* Helps create a deduced parameter for the
+`make_bitfield_tuple` function.
+..`BOOST_MAKE_BITFIELD_TUPLE_CREATE_FUNCTION_PARAMETERS()`
+..make_bitfield_tuple.hpp ]
+
+[internal_bft_macro_doc
+`BOOST_MAKE_BITFIELD_TUPLE_CREATE_FUNCTION_PARAMETERS()`
+..`typename details::get_create_parameter<BitfieldTuple, 0>::type parameter`\#\#`0 = 0,
+`\.\.\.`
+typename details::get_create_parameter<BitfieldTuple, n>::type parameter`\#\#`n = 0`
+..*Internal Use only.* This macro is used to create function parameters
+for the `make_bitfield_tuple` function.
+..`make_bitfield_tuple`
+..make_bitfield_tuple.hpp ]
+
+[internal_bft_macro_doc
+`BOOST_MAKE_BITFIELD_TUPLE_ASSIGN_PARAMETER_TO_BFT_CALL(z,n,data)`
+..`details::assign_parameter_to_bft<n>(bft, parameter`\#\#`n);`
+..*Internal Use Only* Represents a function call that is generated by the
+`BOOST_MAKE_BITFIELD_TUPLE_CREATE_FUNCTION_PARSE_ARGUMENTS()` macro for each
+parameter of `make_bitfield_tuple`.
+..`make_bitfield_tuple`
+..make_bitfield_tuple.hpp ]
+
+[internal_bft_macro_doc
+`BOOST_MAKE_BITFIELD_TUPLE_CREATE_FUNCTION_PARSE_ARGUMENTS()`
+..`details::assign_parameter_to_bft<0>(bft, parameter`\#\#`0);`
+\.\.\.
+`details::assign_parameter_to_bft<n>(bft, parameter`\#\#`n);`
+..*Internal Use Only.* Generates function calls which are either no-op's
+or store data into a member of the `bitfield_tuple` inside of
+`make_bitfield_tuple`.
+..`make_bitfield_tuple`
+..make_bitfield_tuple.hpp ]
+
 
 [endsect]
 [section Class Templates]
