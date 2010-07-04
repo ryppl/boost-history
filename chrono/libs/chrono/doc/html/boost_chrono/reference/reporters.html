@@ -520,7 +520,8 @@
     <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Formatter</span> <span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">wstopclock</span><span class="special">;</span>
 
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">above</span><span class="special">&gt;</span> <span class="identifier">system_stopclock</span><span class="special">;</span>
-    <span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span>
+    <span class="preprocessor">#ifdef</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.BOOST_CHRONO_HAS_CLOCK_MONOTONIC" title="
+          Macro BOOST_CHRONO_HAS_CLOCK_MONOTONIC"><code class="computeroutput"><span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span></code></a>
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">above</span><span class="special">&gt;</span> <span class="identifier">monotonic_stopclock</span><span class="special">;</span>
     <span class="preprocessor">#endif</span>
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">above</span><span class="special">&gt;</span> <span class="identifier">high_resolution_stopclock</span><span class="special">;</span>
@@ -529,7 +530,8 @@
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">above</span><span class="special">&gt;</span> <span class="identifier">process_system_cpu_stopclock</span><span class="special">;</span>
 
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">above</span><span class="special">&gt;</span> <span class="identifier">system_wstopclock</span><span class="special">;</span>
-    <span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span>
+    <span class="preprocessor">#ifdef</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.BOOST_CHRONO_HAS_CLOCK_MONOTONIC" title="
+          Macro BOOST_CHRONO_HAS_CLOCK_MONOTONIC"><code class="computeroutput"><span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span></code></a>
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">above</span><span class="special">&gt;</span> <span class="identifier">monotonic_wstopclock</span><span class="special">;</span>
     <span class="preprocessor">#endif</span>
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">above</span><span class="special">&gt;</span> <span class="identifier">high_resolution_wstopclock</span><span class="special">;</span>
@@ -645,7 +647,8 @@
           <code class="computeroutput"><span class="identifier">stopclock</span></code> useful typedefs</a>
 </h5></div></div></div>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopclock</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span> <span class="special">&gt;</span> <span class="identifier">system_stopwatch_stopclock</span><span class="special">;</span>
-<span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span>
+<span class="preprocessor">#ifdef</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.BOOST_CHRONO_HAS_CLOCK_MONOTONIC" title="
+          Macro BOOST_CHRONO_HAS_CLOCK_MONOTONIC"><code class="computeroutput"><span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span></code></a>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopclock</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">monotonic_clock</span> <span class="special">&gt;</span> <span class="identifier">monotonic_stopwatch_stopclock</span><span class="special">;</span>
 <span class="preprocessor">#endif</span>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopclock</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">high_resolution_clock</span> <span class="special">&gt;</span> <span class="identifier">high_resolution_stopclock</span><span class="special">;</span>
@@ -712,7 +715,8 @@
           <code class="computeroutput"><span class="identifier">wstopclock</span></code> useful typedefs</a>
 </h5></div></div></div>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">wstopclock</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span> <span class="special">&gt;</span> <span class="identifier">system_stopwatch_wstopclock</span><span class="special">;</span>
-<span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span>
+<span class="preprocessor">#ifdef</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.BOOST_CHRONO_HAS_CLOCK_MONOTONIC" title="
+          Macro BOOST_CHRONO_HAS_CLOCK_MONOTONIC"><code class="computeroutput"><span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span></code></a>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">wstopclock</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">monotonic_clock</span> <span class="special">&gt;</span> <span class="identifier">monotonic_stopwatch_wstopclock</span><span class="special">;</span>
 <span class="preprocessor">#endif</span>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">wstopclock</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">high_resolution_clock</span> <span class="special">&gt;</span> <span class="identifier">high_resolution_wstopclock</span><span class="special">;</span>
@@ -751,7 +755,8 @@
     <span class="keyword">class</span> <span class="identifier">wstopclock_accumulator</span><span class="special">;</span>
 
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">above</span><span class="special">&gt;</span> <span class="identifier">system_stopclock_accumulator</span><span class="special">;</span>
-    <span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span>
+    <span class="preprocessor">#ifdef</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.BOOST_CHRONO_HAS_CLOCK_MONOTONIC" title="
+          Macro BOOST_CHRONO_HAS_CLOCK_MONOTONIC"><code class="computeroutput"><span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span></code></a>
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">above</span><span class="special">&gt;</span> <span class="identifier">monotonic_stopclock_accumulator</span><span class="special">;</span>
     <span class="preprocessor">#endif</span>
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">above</span><span class="special">&gt;</span> <span class="identifier">high_resolution_stopclock_accumulator</span><span class="special">;</span>
@@ -760,7 +765,8 @@
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">above</span><span class="special">&gt;</span> <span class="identifier">process_system_cpu_stopclock_accumulator</span><span class="special">;</span>
 
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">above</span><span class="special">&gt;</span> <span class="identifier">system_wstopclock_accumulator</span><span class="special">;</span>
-    <span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span>
+    <span class="preprocessor">#ifdef</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.BOOST_CHRONO_HAS_CLOCK_MONOTONIC" title="
+          Macro BOOST_CHRONO_HAS_CLOCK_MONOTONIC"><code class="computeroutput"><span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span></code></a>
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">above</span><span class="special">&gt;</span> <span class="identifier">monotonic_wstopclock_accumulator</span><span class="special">;</span>
     <span class="preprocessor">#endif</span>
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">above</span><span class="special">&gt;</span> <span class="identifier">high_resolution_wstopclock_accumulator</span><span class="special">;</span>
@@ -884,7 +890,8 @@
           typedefs</a>
 </h5></div></div></div>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopclock_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span> <span class="special">&gt;</span> <span class="identifier">system_stopclock_accumulator</span><span class="special">;</span>
-<span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span>
+<span class="preprocessor">#ifdef</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.BOOST_CHRONO_HAS_CLOCK_MONOTONIC" title="
+          Macro BOOST_CHRONO_HAS_CLOCK_MONOTONIC"><code class="computeroutput"><span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span></code></a>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopclock_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">monotonic_clock</span> <span class="special">&gt;</span> <span class="identifier">monotonic_stopclock_accumulator</span><span class="special">;</span>
 <span class="preprocessor">#endif</span>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopclock_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">high_resolution_clock</span> <span class="special">&gt;</span> <span class="identifier">high_resolution_stopclock_accumulator</span><span class="special">;</span>
@@ -955,7 +962,8 @@
           useful typedefs</a>
 </h5></div></div></div>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">wstopclock_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span> <span class="special">&gt;</span> <span class="identifier">system_wstopclock_accumulator</span><span class="special">;</span>
-<span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span>
+<span class="preprocessor">#ifdef</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.BOOST_CHRONO_HAS_CLOCK_MONOTONIC" title="
+          Macro BOOST_CHRONO_HAS_CLOCK_MONOTONIC"><code class="computeroutput"><span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span></code></a>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">wstopclock_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">monotonic_clock</span> <span class="special">&gt;</span> <span class="identifier">monotonic_wstopclock_accumulator</span><span class="special">;</span>
 <span class="preprocessor">#endif</span>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">wstopclock_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">high_resolution_clock</span> <span class="special">&gt;</span> <span class="identifier">high_resolution_wstopclock_accumulator</span><span class="special">;</span>
@@ -1010,7 +1018,7 @@
 <span class="special">}</span>
 </pre>
 <a name="boost_chrono.reference.reporters.scoped_stopclock_hpp.scoped_stopclock.synopsis"></a><h6>
-<a name="id4924967"></a>
+<a name="id4929292"></a>
             <a href="reporters.html#boost_chrono.reference.reporters.scoped_stopclock_hpp.scoped_stopclock.synopsis">Synopsis</a>
           </h6>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">=</span><span class="identifier">process_cpu_clock</span>

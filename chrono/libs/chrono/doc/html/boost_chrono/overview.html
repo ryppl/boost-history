@@ -26,19 +26,7 @@
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="boost_chrono.overview"></a><a href="overview.html" title="Overview">Overview</a>
 </h2></div></div></div>
-<div class="toc"><dl>
-<dt><span class="section"><a href="overview/motivation.html">Motivation</a></span></dt>
-<dd><dl>
-<dt><span class="section"><a href="overview/motivation.html#boost_chrono.overview.motivation.common_type">Common
-        type</a></span></dt>
-<dt><span class="section"><a href="overview/motivation.html#boost_chrono.overview.motivation.ratio">Ratio</a></span></dt>
-<dt><span class="section"><a href="overview/motivation.html#boost_chrono.overview.motivation.duration">Duration</a></span></dt>
-<dt><span class="section"><a href="overview/motivation.html#boost_chrono.overview.motivation.clocks">Clocks</a></span></dt>
-<dt><span class="section"><a href="overview/motivation.html#boost_chrono.overview.motivation.time_point">Time Point</a></span></dt>
-<dt><span class="section"><a href="overview/motivation.html#boost_chrono.overview.motivation.stopwatches">Stopwatches</a></span></dt>
-</dl></dd>
-<dt><span class="section"><a href="overview/caveat.html"> Caveat emptor</a></span></dt>
-</dl></div>
+<div class="toc"><dl><dt><span class="section"><a href="overview/motivation.html">Motivation</a></span></dt></dl></div>
 <div class="blockquote"><blockquote class="blockquote">
 <p>
         </p>
@@ -69,9 +57,11 @@
 <li>
         One facility for representing time durations: <a href="reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a>. Examples of time durations
-        include <code class="computeroutput"><span class="identifier">seconds</span></code>, <code class="computeroutput"><span class="identifier">minutes</span></code> and <code class="computeroutput"><span class="identifier">nanoseconds</span></code>.
-        All of these units of time duration are united with a generic interface by
-        the <a href="reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
+        include <a href="reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_typedefs" title="
+          duration typedefs"><code class="computeroutput"><span class="identifier">seconds</span></code></a>, <a href="reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_typedefs" title="
+          duration typedefs"><code class="computeroutput"><span class="identifier">minutes</span></code></a> and <a href="reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration_typedefs" title="
+          duration typedefs"><code class="computeroutput"><span class="identifier">nanoseconds</span></code></a>. All of these units
+        of time duration are united with a generic interface by the <a href="reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.duration" title="
           Class template duration&lt;&gt;"><code class="computeroutput"><span class="identifier">duration</span></code></a> facility.
       </li>
 <li>
@@ -109,7 +99,7 @@
 <div class="itemizedlist"><ul type="disc">
 <li>
 <a href="reference/cpp0x.html#boost_chrono.reference.cpp0x.common_type_hpp.common_type" title="
-          Class Template 'common_type&lt;&gt;'"><code class="computeroutput"><span class="identifier">common_type</span></code></a> is a facility which
+          Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a> is a facility which
         is useful in specifying the type of the result of functions and operators
         which take a variety of types (e.g. "mixed mode" complex arithmetic).
       </li>
@@ -191,15 +181,18 @@
     </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-        __process_real_CPU<span class="underline">clock</span>_, capturing
+<a href="reference/other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_real_cpu_clock" title="
+          Class process_real_cpu_clock"><code class="computeroutput"><span class="identifier">process_real_cpu_clock</span></code></a>, capturing
         real-CPU times.
       </li>
 <li>
-        __process_user_CPU<span class="underline">clock</span>_, capturing
+<a href="reference/other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_user_cpu_clock" title="
+          Class process_user_cpu_clock"><code class="computeroutput"><span class="identifier">process_user_cpu_clock</span></code></a>, capturing
         user-CPU times.
       </li>
 <li>
-        __process_system_CPU<span class="underline">clock</span>_, capturing
+<a href="reference/other_clocks.html#boost_chrono.reference.other_clocks.process_cpu_clocks_hpp.process_system_cpu_clock" title="
+          Class process_system_cpu_clock"><code class="computeroutput"><span class="identifier">process_system_cpu_clock</span></code></a>, capturing
         system-CPU times.
       </li>
 <li>
@@ -209,7 +202,7 @@
 </ul></div>
 <p>
       To complete the clocks <span class="bold"><strong>Boost.Chrono</strong></span> provides,
-      in platforms support them, thread clocks.
+      in platforms having the needed support, thread clocks.
     </p>
 <p>
       Last, <span class="bold"><strong>Boost.Chrono</strong></span> include typeof registration
@@ -219,7 +212,7 @@
       on C++03 compilers.
     </p>
 <a name="boost_chrono.overview.how_to_use_this_documentation"></a><h3>
-<a name="id4803946"></a>
+<a name="id4804262"></a>
       <a href="overview.html#boost_chrono.overview.how_to_use_this_documentation">How to
       Use This Documentation</a>
     </h3>

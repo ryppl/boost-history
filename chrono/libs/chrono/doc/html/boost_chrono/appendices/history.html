@@ -166,13 +166,16 @@
         </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-<span class="underline">_SuspendibleClock</span>_ concept + template
+<a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.suspendible_clock_req" title="
+        SuspendibleClock requirements"><code class="computeroutput"><span class="identifier">SuspendibleClock</span></code></a> concept + template
             class _suspendible<span class="underline">clock</span>_.
           </li>
 <li>
             Added <code class="computeroutput"><span class="identifier">scope_suspend</span></code> which
             do <code class="computeroutput"><span class="identifier">suspend</span></code>/<code class="computeroutput"><span class="identifier">resume</span></code> if the <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.clock" title="
-          Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code></a> is a model of <span class="underline">_SuspendibleClock</span>_ concept, and nothing otherwise.
+          Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code></a> is a model of <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.suspendible_clock_req" title="
+        SuspendibleClock requirements"><code class="computeroutput"><span class="identifier">SuspendibleClock</span></code></a> concept, and
+            nothing otherwise.
           </li>
 <li>
 <a href="../reference/other_clocks.html#boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock" title="
@@ -397,7 +400,7 @@
             is always defined.
           </li>
 <li>
-            Define <code class="computeroutput"><span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span></code>
+            Define __BOOST_CHRONO_HAS_CLOCK<span class="underline">MONOTONIC</span>_
             when <code class="computeroutput"><span class="identifier">BOOST_CHRONO_WINDOWS_API</span></code>
 </li>
 <li>
@@ -411,8 +414,8 @@
             to avoid the following compile error:
           </li>
 </ul></div>
-<pre class="programlisting"><span class="special">./</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">:</span><span class="number">945</span><span class="special">:</span> <span class="identifier">error</span><span class="special">:</span> <span class="identifier">declaration</span> <span class="identifier">of</span> <span class="char">'typedef class boost::chrono::duration&lt;long long int, boost::ratio&lt;1ll, 10000000ll&gt; &gt; boost::chrono::system_clock::duration'</span>
-<span class="special">./</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">:</span><span class="number">458</span><span class="special">:</span> <span class="identifier">error</span><span class="special">:</span> <span class="identifier">changes</span> <span class="identifier">meaning</span> <span class="identifier">of</span> <span class="char">'duration'</span> <span class="identifier">from</span> <span class="char">'class boost::chrono::duration&lt;long long int, boost::ratio&lt;1ll, 10000000ll&gt; &gt;'</span>
+<pre class="programlisting"><span class="special">./</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">:</span><span class="number">945</span><span class="special">:</span> <span class="identifier">error</span><span class="special">:</span> <span class="identifier">declaration</span> <span class="identifier">of</span> <span class="char">'typedef class boost::chrono::duration&lt;long long int, boost::__ratio__&lt;1ll, 10000000ll&gt; &gt; boost::chrono::system_clock::duration'</span>
+<span class="special">./</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">:</span><span class="number">458</span><span class="special">:</span> <span class="identifier">error</span><span class="special">:</span> <span class="identifier">changes</span> <span class="identifier">meaning</span> <span class="identifier">of</span> <span class="char">'duration'</span> <span class="identifier">from</span> <span class="char">'class boost::chrono::duration&lt;long long int, boost::__ratio__&lt;1ll, 10000000ll&gt; &gt;'</span>
 </pre>
 <div class="itemizedlist"><ul type="disc">
 <li>
@@ -473,7 +476,7 @@
             having the same normalized form</strong></span></a>)
           </li>
 <li>
-            Added <code class="computeroutput"><span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span></code>
+            Added __BOOST_CHRONO_HAS_CLOCK<span class="underline">MONOTONIC</span>_
             macro to state if <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.monotonic_clock" title="
           Class monotonic_clock"><code class="computeroutput"><span class="identifier">monotonic_clock</span></code></a> is provided
             on this platform.
@@ -539,8 +542,7 @@
           </li>
 <li>
 <code class="computeroutput"><span class="identifier">CLOCK_MONOTONIC</span></code> is not
-            defined with cygwin/gcc 3.4: Disable code when <code class="computeroutput"><span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span></code>
-            is not defined.
+            defined with cygwin/gcc 3.4: Disable code when __BOOST_CHRONO_HAS_CLOCK<span class="underline">MONOTONIC</span>_ is not defined.
           </li>
 <li>
             result of metafunctions <code class="computeroutput"><span class="identifier">ratio_multiply</span></code>
@@ -568,7 +570,7 @@
 <div class="itemizedlist"><ul type="disc">
 <li>
             The C++0x Standard Library's <a href="../reference/cpp0x.html#boost_chrono.reference.cpp0x.common_type_hpp.common_type" title="
-          Class Template 'common_type&lt;&gt;'"><code class="computeroutput"><span class="identifier">common_type</span></code></a>.
+          Class Template common_type&lt;&gt;"><code class="computeroutput"><span class="identifier">common_type</span></code></a>.
           </li>
 <li>
             The C++0x Standard Library's compile-time rational arithmetic.

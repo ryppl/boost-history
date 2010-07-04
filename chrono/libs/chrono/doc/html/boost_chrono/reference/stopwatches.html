@@ -51,8 +51,7 @@
 <dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch">
           Template Class <code class="computeroutput"><span class="identifier">stopwatch</span><span class="special">&lt;&gt;</span></code></a></span></dt>
 <dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch_typedefs">
-          <a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch" title="
-          Template Class stopwatch&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch</span></code></a> useful typedefs</a></span></dt>
+          <code class="computeroutput"><span class="identifier">stopwatch</span></code> useful typedefs</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp">
         Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">stopwatch_accumulator</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
@@ -60,8 +59,8 @@
 <dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator">
           Template Class <code class="computeroutput"><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;&gt;</span></code></a></span></dt>
 <dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator_typedefs">
-          <a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator" title="
-          Template Class stopwatch_accumulator&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code></a> useful typedefs</a></span></dt>
+          <code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code> useful
+          typedefs</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_scoped_hpp">
         Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">stopwatch_scoped</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
@@ -438,8 +437,7 @@
 <dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch">
           Template Class <code class="computeroutput"><span class="identifier">stopwatch</span><span class="special">&lt;&gt;</span></code></a></span></dt>
 <dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch_typedefs">
-          <a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch" title="
-          Template Class stopwatch&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch</span></code></a> useful typedefs</a></span></dt>
+          <code class="computeroutput"><span class="identifier">stopwatch</span></code> useful typedefs</a></span></dt>
 </dl></div>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">chrono</span>  <span class="special">{</span>
     <span class="keyword">struct</span> <span class="identifier">dont_start_t</span><span class="special">;</span>
@@ -458,7 +456,7 @@
     <span class="special">};</span>
 
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">above</span><span class="special">&gt;</span> <span class="identifier">system_stopwatch</span><span class="special">;</span>
-    <span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span>
+    <span class="preprocessor">#ifdef</span> <span class="identifier">__</span>
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">above</span><span class="special">&gt;</span> <span class="identifier">monotonic_stopwatch</span><span class="special">;</span>
     <span class="preprocessor">#endif</span>
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">above</span><span class="special">&gt;</span> <span class="identifier">high_resolution_stopwatch</span><span class="special">;</span>
@@ -546,11 +544,11 @@
 <div class="titlepage"><div><div><h5 class="title">
 <a name="boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch_typedefs"></a><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch_typedefs" title="
           stopwatch useful typedefs">
-          <a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch" title="
-          Template Class stopwatch&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch</span></code></a> useful typedefs</a>
+          <code class="computeroutput"><span class="identifier">stopwatch</span></code> useful typedefs</a>
 </h5></div></div></div>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span> <span class="special">&gt;</span> <span class="identifier">system_stopwatch</span><span class="special">;</span>
-<span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span>
+<span class="preprocessor">#ifdef</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.BOOST_CHRONO_HAS_CLOCK_MONOTONIC" title="
+          Macro BOOST_CHRONO_HAS_CLOCK_MONOTONIC"><code class="computeroutput"><span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span></code></a>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">monotonic_clock</span> <span class="special">&gt;</span> <span class="identifier">monotonic_stopwatch</span><span class="special">;</span>
 <span class="preprocessor">#endif</span>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">high_resolution_clock</span> <span class="special">&gt;</span> <span class="identifier">high_resolution_stopwatch</span><span class="special">;</span>
@@ -571,8 +569,8 @@
 <dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator">
           Template Class <code class="computeroutput"><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;&gt;</span></code></a></span></dt>
 <dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator_typedefs">
-          <a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator" title="
-          Template Class stopwatch_accumulator&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code></a> useful typedefs</a></span></dt>
+          <code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code> useful
+          typedefs</a></span></dt>
 </dl></div>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">chrono</span>  <span class="special">{</span>
     <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Accumulator</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">stopwatch_accumulator</span><span class="special">;</span>
@@ -588,7 +586,8 @@
     <span class="special">};</span>
 
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">below</span><span class="special">&gt;</span> <span class="identifier">system_stopwatch_accumulator</span><span class="special">;</span>
-<span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span>
+<span class="preprocessor">#ifdef</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.BOOST_CHRONO_HAS_CLOCK_MONOTONIC" title="
+          Macro BOOST_CHRONO_HAS_CLOCK_MONOTONIC"><code class="computeroutput"><span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span></code></a>
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">below</span><span class="special">&gt;</span> <span class="identifier">monotonic_stopwatch_accumulator</span><span class="special">;</span>
 <span class="preprocessor">#endif</span>
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">below</span><span class="special">&gt;</span> <span class="identifier">high_resolution_stopwatch_accumulator</span><span class="special">;</span>
@@ -629,7 +628,8 @@
             A <code class="computeroutput"><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;&gt;</span></code> is a model of a <a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
         Stopwatch Requirements"><code class="computeroutput"><span class="identifier">Stopwatch</span></code> concept</a> that allows
             to accumulate the time in several times instead of at once as it is the
-            case of the class <code class="computeroutput"><span class="identifier">stopwatch</span><span class="special">&lt;&gt;</span></code>.
+            case of the class <a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch" title="
+          Template Class stopwatch&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch</span></code></a><code class="computeroutput"><span class="special">&lt;&gt;</span></code>.
           </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">stopwatch_accumulator</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
@@ -816,20 +816,19 @@
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h5 class="title">
 <a name="boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator_typedefs"></a><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator_typedefs" title="
-          stopwatch_accumulator useful typedefs">
-          <a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator" title="
-          Template Class stopwatch_accumulator&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code></a> useful typedefs</a>
+          stopwatch_accumulator useful
+          typedefs">
+          <code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code> useful
+          typedefs</a>
 </h5></div></div></div>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span> <span class="special">&gt;</span> <span class="identifier">system_stopwatch_accumulator</span><span class="special">;</span>
-</pre>
-<p>
-            typedef boost::chrono::stopwatch_accumulator&lt; boost::chrono::system_clock
-            &gt; system_stopwatch_accumulator; #ifdef BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-            typedef boost::chrono::stopwatch_accumulator&lt; boost::chrono::monotonic_clock
-            &gt; monotonic_stopwatch_accumulator; #endif typedef boost::chrono::stopwatch_accumulator&lt;
-            boost::chrono::high_resolution_clock &gt; high_resolution_stopwatch_accumulator;
-          </p>
-<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">process_real_cpu_clock</span> <span class="special">&gt;</span> <span class="identifier">process_real_cpu_stopwatch_accumulator</span><span class="special">;</span>
+<span class="preprocessor">#ifdef</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.BOOST_CHRONO_HAS_CLOCK_MONOTONIC" title="
+          Macro BOOST_CHRONO_HAS_CLOCK_MONOTONIC"><code class="computeroutput"><span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span></code></a>
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">monotonic_clock</span> <span class="special">&gt;</span> <span class="identifier">monotonic_stopwatch_accumulator</span><span class="special">;</span>
+<span class="preprocessor">#endif</span>
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">high_resolution_clock</span> <span class="special">&gt;</span> <span class="identifier">high_resolution_stopwatch_accumulator</span><span class="special">;</span>
+
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">process_real_cpu_clock</span> <span class="special">&gt;</span> <span class="identifier">process_real_cpu_stopwatch_accumulator</span><span class="special">;</span>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">process_user_cpu_clock</span> <span class="special">&gt;</span> <span class="identifier">process_user_cpu_stopwatch_accumulator</span><span class="special">;</span>
 <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">process_system_cpu_clock</span> <span class="special">&gt;</span> <span class="identifier">process_system_cpu_stopwatch_accumulator</span><span class="special">;</span>
 </pre>
