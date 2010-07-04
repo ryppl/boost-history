@@ -50,6 +50,11 @@ namespace boost { namespace spirit { namespace traits
         }
     };
 
+    template <typename T, int N>
+    struct container_iterator<fusion::extension::class_member_proxy<T, N> >
+      : container_iterator<typename fusion::extension::class_member_proxy<T, N>::type>
+    {};
+
     ///////////////////////////////////////////////////////////////////////////
     template <typename T, int N, typename Val>
     struct assign_to_attribute_from_value<
@@ -69,9 +74,9 @@ namespace boost { namespace spirit { namespace traits
     {};
 
     ///////////////////////////////////////////////////////////////////////////
-    template <typename T, int N, typename Attribute>
+    template <typename T, int N, typename Attribute, typename Domain>
     struct transform_attribute<
-        fusion::extension::class_member_proxy<T, N>, Attribute
+        fusion::extension::class_member_proxy<T, N>, Attribute, Domain
       , typename disable_if<
             is_reference<typename fusion::extension::class_member_proxy<T, N>::lvalue> 
         >::type>
@@ -95,9 +100,9 @@ namespace boost { namespace spirit { namespace traits
         }
     };
 
-    template <typename T, int N, typename Attribute>
+    template <typename T, int N, typename Attribute, typename Domain>
     struct transform_attribute<
-        fusion::extension::class_member_proxy<T, N>, Attribute
+        fusion::extension::class_member_proxy<T, N>, Attribute, Domain
       , typename enable_if<
             is_reference<typename fusion::extension::class_member_proxy<T, N>::lvalue> 
         >::type>

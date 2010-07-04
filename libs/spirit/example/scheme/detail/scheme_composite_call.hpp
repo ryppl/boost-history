@@ -17,7 +17,7 @@
 
 #define BOOST_PP_ITERATION_PARAMS_1                                             \
     (3, (3, BOOST_PP_DEC(SCHEME_COMPOSITE_LIMIT),                               \
-    "libs/spirit/example/scheme/detail/scheme_function_composer_call.hpp"))
+    "libs/spirit/example/scheme/detail/scheme_composite_call.hpp"))
 #include BOOST_PP_ITERATE()
 
 #undef SCHEME_PUSH_ELEMENT
@@ -34,7 +34,7 @@
 #define N BOOST_PP_ITERATION()
 
     template <BOOST_PP_ENUM_PARAMS(N, typename A)>
-    actor operator()(BOOST_PP_ENUM_BINARY_PARAMS(N, A, const& _)) const
+    function operator()(BOOST_PP_ENUM_BINARY_PARAMS(N, A, const& _)) const
     {
         actor_list elements;
         BOOST_PP_REPEAT(N, SCHEME_PUSH_ELEMENT, _);

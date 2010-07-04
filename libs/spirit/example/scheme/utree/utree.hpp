@@ -17,7 +17,7 @@
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/ref.hpp>
-#include "detail/utree_detail1.hpp"
+#include <utree/detail/utree_detail1.hpp>
 
 #if defined(BOOST_MSVC)
 # pragma warning(push)
@@ -254,7 +254,10 @@ namespace scheme
         bool empty() const;
         std::size_t size() const;
 
-        int which() const;
+        utree_type::info which() const;
+
+        template <typename T>
+        T as() const;
 
         utree& deref();
         utree const& deref() const;
@@ -266,17 +269,15 @@ namespace scheme
         template <typename UTreeX, typename UTreeY>
         friend struct detail::visit_impl;
         friend struct detail::index_impl;
-        friend struct ulist;
-        template <typename T> friend struct detail::get_impl;
+
+        template <typename T>
+        friend struct detail::get_impl;
 
         type::info get_type() const;
         void set_type(type::info t);
         void ensure_list_type();
         void free();
         void copy(utree const& other);
-
-        struct construct_list {};
-        utree(construct_list);
 
         union
         {
@@ -294,6 +295,6 @@ namespace scheme
 # pragma warning(pop)
 #endif
 
-#include "detail/utree_detail2.hpp"
+#include <utree/detail/utree_detail2.hpp>
 
 #endif
