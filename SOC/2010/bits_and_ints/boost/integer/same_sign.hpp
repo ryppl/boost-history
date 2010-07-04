@@ -9,8 +9,6 @@
 
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <boost/integer/bit_utils.hpp>
-#include <limits>
 
 namespace boost
 {
@@ -19,6 +17,9 @@ namespace boost
  *	same_sign(first, second) returns:
  *		- false: if the signs of first and second are different
  *		- true: if the signs are equal
+ *	
+ *	Note that 0 is not considered a positive nor negative integral, so
+ *			same_sign(0, 1) is *false*.
  */
 	
 template <typename T>
@@ -31,21 +32,5 @@ same_sign(T first, T second)
 	
 	return !temp;
 }
-
-/*
- *	Compile-time version of same_sign
- *
- *	static_same_sign<type, FIRST, SECOND>::value will be:
- *		- false: if the signs of FIRST and SECOND are different
- *		- true: if the signs are equal
- */
-template <typename T, T first, T second, class Enable = typename enable_if<is_integral<T> >::type>
-struct static_same_sign
-{
-private:
-	static const int temp = (first ^ second) >> ((sizeof(T) * 8) - 1);
-public:
-	BOOST_STATIC_CONSTANT(bool, value = !(temp & 1));
-};
 	
 }
