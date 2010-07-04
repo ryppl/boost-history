@@ -5,8 +5,8 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_GEOMETRY_ALGORITHMS_OVERLAY_ASSEMBLE_HPP
-#define BOOST_GEOMETRY_ALGORITHMS_OVERLAY_ASSEMBLE_HPP
+#ifndef BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_ASSEMBLE_HPP
+#define BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_ASSEMBLE_HPP
 
 
 #include <deque>
@@ -24,9 +24,9 @@
 #include <boost/geometry/algorithms/detail/overlay/ring_properties.hpp>
 
 
-#include <boost/geometry/algorithms/overlay/get_turns.hpp>
-#include <boost/geometry/algorithms/overlay/enrich_intersection_points.hpp>
-#include <boost/geometry/algorithms/overlay/traverse.hpp>
+#include <boost/geometry/algorithms/detail/overlay/get_turns.hpp>
+#include <boost/geometry/algorithms/detail/overlay/enrich_intersection_points.hpp>
+#include <boost/geometry/algorithms/detail/overlay/traverse.hpp>
 
 
 #include <boost/geometry/algorithms/convert.hpp>
@@ -448,7 +448,8 @@ std::cout << item1.ring_id << " area: " << item1.area << std::endl;
             {
                 item_type& item2 = *it2;
                 if (geometry::within(item2.point, item1.box)
-                    && std::abs(item2.area) < std::abs(item1.area)
+                    && geometry::math::abs(item2.area)
+                            < geometry::math::abs(item1.area)
                     && contains(item1, item2, geometry1, geometry2, collection)
                     )
                 {
@@ -837,4 +838,4 @@ std::cout << "traverse" << std::endl;
 
 }} // namespace boost::geometry
 
-#endif // BOOST_GEOMETRY_ALGORITHMS_OVERLAY_ASSEMBLE_HPP
+#endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_ASSEMBLE_HPP
