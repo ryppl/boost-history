@@ -4,6 +4,7 @@ This example shows the possible ways to convert between UTF
 encodings, by converting a UTF-x range into UTF-8 and printing it.
 */
 #include <boost/unicode/utf.hpp>
+#include <boost/range/as_literal.hpp>
 #include <boost/foreach.hpp>
 #include <vector>
 #include <string>
@@ -14,7 +15,8 @@ namespace unicode = boost::unicode;
 
 int main()
 {
-    wchar_t foo[] = L"hello \u00E9 world";
+    // we use boost::as_literal in order not to have the trailing null character
+    boost::iterator_range<const wchar_t*> foo = boost::as_literal(L"hello \u00E9 world");
     std::vector<boost::char32> bar;
     std::string baz;
 

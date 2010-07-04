@@ -1,115 +1,37 @@
 #ifndef BOOST_ITERATOR_PIPE_ITERATOR_FWD_HPP
 #define BOOST_ITERATOR_PIPE_ITERATOR_FWD_HPP
 
-#include <boost/utility/enable_if.hpp>
-#include <boost/mpl/has_xxx.hpp>
-
 #include <boost/iterator/iterator_facade.hpp>
-#include <vector>
+#include <boost/iterator/detail/convert_output_storage.hpp>
 
-#include <boost/iterator/pipe_concept.hpp>
+#include <boost/compressed_pair.hpp>
 
 namespace boost
 {
 
-namespace detail
-{
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(max_output)
-
-    template<typename P, typename Enable = void>
-    struct pipe_output_storage;
-
-    template<typename P>
-    struct pipe_output_storage<P, typename ::boost::disable_if< has_max_output<P> >::type>
-    {
-        BOOST_CONCEPT_ASSERT((PipeConcept<P>));
-private:
-        typedef std::vector<typename P::output_type> Values;
-public:
-        typedef std::back_insert_iterator<Values> output_iterator;
-        
-        const typename P::output_type& operator[](size_t i) const
-        {
-            return values[i];
-        }
-        
-        size_t last_index() const
-        {
-            return values.size() - 1;
-        }
-        
-        output_iterator out()
-        {
-            values.clear();
-            return std::back_inserter(values);
-        }
-        
-        void update(output_iterator)
-        {
-        }
-        
-    private:
-        Values values;
-    };
-    
-    template<typename P>
-    struct pipe_output_storage<P, typename boost::enable_if< has_max_output<P> >::type>
-    {
-        BOOST_CONCEPT_ASSERT((PipeConcept<P>));
-private:
-        typedef typename P::output_type Value;
-public:
-        typedef Value* output_iterator;
-        
-        const Value& operator[](size_t i) const
-        {
-            return values[i];
-        }
-        
-        size_t last_index() const
-        {
-            return last;
-        }
-        
-        output_iterator out()
-        {
-            return values;
-        }
-        
-        void update(output_iterator u)
-        {
-            last = u - values - 1;
-        }
-        
-    private:
-        Value values[P::max_output::value];
-        size_t last;
-    };
-}
-
 /** Iterator adapter that wraps a range to make it appear like a converted
  * one, by converting it step-by-step as it is advanced. */ 
-template<typename It, typename Pipe>
-struct pipe_iterator
+template<typename It, typename Converter>
+struct convert_iterator
 	: iterator_facade<
-		pipe_iterator<It, Pipe>,
-		typename Pipe::output_type,
+		convert_iterator<It, Converter>,
+		typename Converter::output_type,
 		std::bidirectional_iterator_tag,
-		const typename Pipe::output_type
+		const typename Converter::output_type
 	>
 {
     BOOST_CONCEPT_ASSERT((InputIterator<It>));
-    BOOST_CONCEPT_ASSERT((PipeConcept<Pipe>));
+    BOOST_CONCEPT_ASSERT((ConverterConcept<Converter>));
     
-    BOOST_CONCEPT_ASSERT((Convertible<typename InputIterator<It>::value_type, typename Pipe::input_type>));
+    BOOST_CONCEPT_ASSERT((Convertible<typename InputIterator<It>::value_type, typename Converter::input_type>));
     
-    pipe_iterator() {} // singular
+    convert_iterator() {} // singular
     
-	pipe_iterator(It begin_, It end_, It pos_, Pipe p_) : pos(pos_), begin(begin_), end(end_), index(0), p(p_)
+	convert_iterator(It begin_, It end_, It pos_, Converter p_) : pos(pos_), begin(begin_), end(end_), index(0), p(p_)
 	{
 		if(pos != end)
         {
-            std::pair<It, typename detail::pipe_output_storage<Pipe>::output_iterator> pair =
+            std::pair<It, typename detail::convert_output_storage<Converter>::output_iterator> pair =
                 p.ltr(pos, end, values.out());
             next_pos = pair.first;
             values.update(pair.second);
@@ -124,7 +46,7 @@ struct pipe_iterator
 	}
 
 private:
-	typedef typename Pipe::output_type T;
+	typedef typename Converter::output_type T;
 	friend class boost::iterator_core_access;
 
 	T dereference() const
@@ -143,7 +65,7 @@ private:
 			pos = next_pos;	
 			if(pos != end)
             {
-                std::pair<It, typename detail::pipe_output_storage<Pipe>::output_iterator> pair =
+                std::pair<It, typename detail::convert_output_storage<Converter>::output_iterator> pair =
 				    p.ltr(pos, end, values.out());
                 next_pos = pair.first;
                 values.update(pair.second);
@@ -164,7 +86,7 @@ private:
 		{
 			next_pos = pos;	
             
-            std::pair<It, typename detail::pipe_output_storage<Pipe>::output_iterator> pair =
+            std::pair<It, typename detail::convert_output_storage<Converter>::output_iterator> pair =
                 p.rtl(begin, pos, values.out());
             pos = pair.first;
             values.update(pair.second);
@@ -173,7 +95,7 @@ private:
 		}
 	}
 	
-	bool equal(const pipe_iterator& other) const
+	bool equal(const convert_iterator& other) const
 	{
 		return pos == other.pos && index == other.index;
 	}
@@ -185,70 +107,77 @@ private:
 	It end;
 	size_t index;
 	
-	Pipe p;
+	Converter p;
 	
-	detail::pipe_output_storage<Pipe> values;
+	detail::convert_output_storage<Converter> values;
 };
 
 /** Output Iterator adapter that wraps an output iterator to make one
  * that will convert its output before pushing it to the wrapped iterator. */
-template<typename OutputIterator, typename OneManyPipe>
-struct pipe_output_iterator
+template<typename OutputIterator, typename OneManyConverter>
+struct convert_output_iterator : private boost::compressed_pair<OutputIterator, OneManyConverter>
 {
-    BOOST_CONCEPT_ASSERT((OutputIteratorConcept<OutputIterator, typename OneManyPipe::output_type>));
-    BOOST_CONCEPT_ASSERT((OneManyPipeConcept<OneManyPipe>));
+    BOOST_CONCEPT_ASSERT((OutputIteratorConcept<OutputIterator, typename OneManyConverter::output_type>));
+    BOOST_CONCEPT_ASSERT((OneManyConverterConcept<OneManyConverter>));
     
     typedef void                                                difference_type;
     typedef void                                                value_type;
-    typedef pipe_output_iterator<OutputIterator, OneManyPipe>*  pointer;
-    typedef pipe_output_iterator<OutputIterator, OneManyPipe>&  reference;
+    typedef convert_output_iterator<OutputIterator, OneManyConverter>*  pointer;
+    typedef convert_output_iterator<OutputIterator, OneManyConverter>&  reference;
     typedef std::output_iterator_tag                            iterator_category;
 
-    pipe_output_iterator() {} // singular
+    convert_output_iterator() {} // singular
     
-	pipe_output_iterator(OutputIterator pos_, OneManyPipe p_) : pos(pos_), p(p_)
+	convert_output_iterator(OutputIterator pos_, OneManyConverter p_)
+        : boost::compressed_pair<OutputIterator, OneManyConverter>(pos_, p_)
 	{
 	}
 	
 	OutputIterator base() const
 	{
-		return pos;
+		return get_out();
 	}
 	
-	const pipe_output_iterator& operator*() const
+	const convert_output_iterator& operator*() const
 	{
 		return *this;
 	}
 	
-	pipe_output_iterator& operator++()
+	convert_output_iterator& operator++()
 	{
 		return *this;
 	}
 	
-	pipe_output_iterator& operator++(int)
+	convert_output_iterator& operator++(int)
 	{
 		return *this;
 	}
 	
-    template<typename T>
-	void operator=(T val) const
+	void operator=(const typename OneManyConverter::input_type& val) const
 	{
-		pos = p(val, pos);
+		get_out() = get_conv()(val, get_out());
 	}
     
-    bool operator==(const pipe_output_iterator& other) const
+    bool operator==(const convert_output_iterator& other) const
     {
-        return pos == other.pos;
+        return get_out() == other.get_out();
     }
     
-    bool operator!=(const pipe_output_iterator& other) const
+    bool operator!=(const convert_output_iterator& other) const
     {
-        return pos != other.pos;
+        return get_out() != other.get_out();
     }
 	
-private:	
-	mutable OutputIterator pos;
-	mutable OneManyPipe p;
+private:
+    OutputIterator& get_out() const
+    {
+        return const_cast<convert_output_iterator&>(*this).first();
+    }
+    
+    OneManyConverter& get_conv() const
+    {
+        return const_cast<convert_output_iterator&>(*this).second();
+    }
 };
 
 } // namespace boost
