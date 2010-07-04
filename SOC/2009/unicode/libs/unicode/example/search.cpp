@@ -27,11 +27,11 @@ We define the string we're going to search into, "foo<combining circumflex accen
 as well as it's version in terms of graphemes
 */
     char foo[] = "foo\xcc\x82" "foo";
-    BOOST_AUTO(foo_bounded, unicode::utf_grapheme_bounded(boost::as_literal(foo)));
+    BOOST_AUTO(foo_bounded, unicode::adaptors::utf_grapheme_segment(boost::as_literal(foo)));
     
 //` We do the same thing for the string we're going to look for, "foo"
     char search[] = "foo";
-    BOOST_AUTO(search_bounded, unicode::utf_grapheme_bounded(boost::as_literal(search)));
+    BOOST_AUTO(search_bounded, unicode::adaptors::utf_grapheme_segment(boost::as_literal(search)));
     
 //` We perform the search using the ranges of graphemes, i.e. the [conceptref Segmenter]-based approach:
     BOOST_AUTO(range_segmenter, boost::algorithm::find_first(foo_bounded, search_bounded));

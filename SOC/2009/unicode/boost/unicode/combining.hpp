@@ -176,33 +176,7 @@ private:
     }
 };
 
-#ifdef BOOST_UNICODE_DOXYGEN_INVOKED
-/** Turns a range of code points into a range of subranges of code points,
- * each subrange being a combining character sequence. */
-template<typename Range>
-iterator_range<
-    segment_iterator<typename range_iterator<Range>::type, combiner>
->
-combine_bounded(Range&& range);
-#else
-template<typename Range>
-iterator_range<
-    segment_iterator<typename range_iterator<const Range>::type, combiner>
->
-combine_bounded(const Range& range)
-{
-    return segmented(range, combiner());
-}
-
-template<typename Range>
-iterator_range<
-    segment_iterator<typename range_iterator<Range>::type, combiner>
->
-combine_bounded(Range& range)
-{
-    return segmented(range, combiner());
-}
-#endif
+BOOST_SEGMENTER_DEF(combiner, combine)
     
 } // namespace unicode
 } // namespace boost

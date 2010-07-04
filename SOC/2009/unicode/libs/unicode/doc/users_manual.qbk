@@ -296,7 +296,7 @@ of integers:
 
 A model of the [conceptref Segmenter] concept may then be used to segment
 a range. The [classref boost::segment_iterator], eventually invoked
-by [funcref boost::segmented], can be used to exploit that concept to
+by [funcref boost::adaptors::segment], can be used to exploit that concept to
 turn a range into a range of subranges.
 
 With the above example, the range would be converted into a range of
@@ -356,7 +356,7 @@ repeatly the convert) or lazily (be evaluating it step by step as an
 iterator adapter is advanced).
 
 The [funcref boost::convert] function provides the former, while the
-[funcref boost::converted] function which returns a range in terms of
+[funcref boost::adaptors::convert] function which returns a range in terms of
 [classref boost::convert_iterator] provides the latter.
 
 With the above example, a convertd range [1, 2, 3, 4] would be converted
@@ -400,8 +400,8 @@ for example what is provided to convert UTF-32 to UTF-8:
 
 * [classref boost::unicode::u8_encoder] is a model of the =OneManyConverter= concept.
 * [funcref boost::unicode::u8_encode] is an eager encoding algorithm.
-* [funcref boost::unicode::u8_encoded] returns a range adapter that does on-the-fly encoding.
-* [funcref boost::unicode::u8_encoded_out] returns an output iterator adapter that will encode its elements before forwarding them to the wrapped output iterator.
+* [funcref boost::unicode::adaptors::u8_encode] returns a range adapter that does on-the-fly encoding.
+* [funcref boost::unicode::adaptors::u8_encode_output] returns an output iterator adapter that will encode its elements before forwarding them to the wrapped output iterator.
 
 [note The library considers a conversion from UTF-32 an "encoding", while a conversion
 to UTF-32 is called a "decoding".
@@ -425,9 +425,9 @@ The naming scheme is as follows:
 
 * [classref boost::unicode::u8_boundary] is a =BoundaryChecker= that tells whether a position is the start of a code point in a range of UTF-8 code units.
 * [classref boost::unicode::grapheme_boundary] is a =BoundaryChecker= that tells whether a position is the start of a grapheme cluster in a range of code points.
-* [funcref boost::unicode::u8_bounded] adapts its input range in UTF-8 into a range of ranges of code units, each range being a code point.
-* [funcref boost::unicode::grapheme_bounded] adapts its input range in UTF-32 into a range of ranges of code points, each range being a grapheme cluster.
-* [funcref boost::unicode::u8_grapheme_bounded] adapts its input range in UTF-8 into a range of code units, each range being a grapheme cluster.
+* [funcref boost::unicode::adaptors::u8_segment] adapts its input range in UTF-8 into a range of ranges of code units, each range being a code point.
+* [funcref boost::unicode::adaptors::grapheme_segment] adapts its input range in UTF-32 into a range of ranges of code points, each range being a grapheme cluster.
+* [funcref boost::unicode::adaptors::u8_grapheme_segment] adapts its input range in UTF-8 into a range of code units, each range being a grapheme cluster.
 
 [heading UTF type deduction with SFINAE]
 Everytime there are two versions for a function or class, one for UTF-8 and
@@ -512,15 +512,15 @@ concatenation that maintain the input normalization.
 
 Note concatenation with Normalization Form D is slightly more efficient as it only
 requires canonical sorting of the combining character sequence placed at
-the intersection.
+the intersection, while Normalization Form C requires the sequence be renormalized.
 
 See:
 
 * [funcref boost::unicode::cat_limits] to partition into the different sub ranges.
 * [funcref boost::unicode::composed_concat], eager version with input in Normalization Form C.
-* [funcref boost::unicode::composed_concated], lazy version with input in Normalization Form C.
+* [funcref boost::unicode::adaptors::composed_concat], lazy version with input in Normalization Form C.
 * [funcref boost::unicode::decomposed_concat], eager version with input in Normalization Form D.
-* [funcref boost::unicode::decomposed_concated], lazy version with input in Normalization Form D.
+* [funcref boost::unicode::adaptors::decomposed_concat], lazy version with input in Normalization Form D.
 
 [endsect] [/Normalization]
 

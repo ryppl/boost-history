@@ -34,16 +34,6 @@ std::string to_string(const Range& range)
     
     return ss.str();
 }
-
-template<typename Range>
-boost::reverse_range<
-    const Range
->
-reversed(const Range& range)
-{
-    return boost::adaptors::reverse(range);
-}
-
 } // namespace detail
 
 #define CHECK_EQUALS(range1, range2) \
@@ -56,11 +46,10 @@ BOOST_CHECK_MESSAGE( \
  * part of the convert also works */
 #define CHECK_BI_EQUALS(range1, range2) \
 do { \
-    using detail::reversed; \
     CHECK_EQUALS(range1, range2); \
     CHECK_EQUALS( \
-        reversed(range1), \
-        reversed(range2) \
+        boost::adaptors::reverse(range1), \
+        boost::adaptors::reverse(range2) \
     ); \
 } while(0)
 

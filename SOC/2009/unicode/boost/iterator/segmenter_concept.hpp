@@ -7,13 +7,13 @@
 namespace boost
 {
 
-/** Concept checking class for the \c Consumer concept */    
+/** Concept checking class for the \c \xmlonly<conceptname>Segmenter</conceptname>\endxmlonly concept */    
 template<typename X>
-struct ConsumerConcept : DefaultConstructible<X>, CopyConstructible<X>
+struct SegmenterConcept : DefaultConstructible<X>, CopyConstructible<X>
 {
     typedef typename X::input_type input_type;
     
-    BOOST_CONCEPT_USAGE(ConsumerConcept)
+    BOOST_CONCEPT_USAGE(SegmenterConcept)
     {
         X c;
         begin = c.ltr(begin, end);
@@ -27,7 +27,7 @@ private:
     in_type end;
 };
 
-/** Concept checking class for the \c BoundaryChecker concept */
+/** Concept checking class for the \c \xmlonly<conceptname>BoundaryChecker</conceptname>\endxmlonly concept */
 template<typename X>
 struct BoundaryCheckerConcept : DefaultConstructible<X>, CopyConstructible<X>
 {

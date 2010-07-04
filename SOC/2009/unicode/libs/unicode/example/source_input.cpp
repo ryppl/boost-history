@@ -61,8 +61,8 @@ int main()
 Wide strings are either UTF-16 or UTF-32, we convert them to UTF-32
 then back to UTF-8:
 */
-    std::cout << unicode::u8_encoded(unicode::utf_decoded(utfx_1)) << std::endl;
-    std::cout << unicode::u8_encoded(unicode::utf_decoded(utfx_2)) << std::endl;
+    std::cout << unicode::adaptors::u8_encode(unicode::adaptors::utf_decode(utfx_1)) << std::endl;
+    std::cout << unicode::adaptors::u8_encode(unicode::adaptors::utf_decode(utfx_2)) << std::endl;
 
 /*`
 Compile-time UTF-8 strings just need to be converted to runtime ones:

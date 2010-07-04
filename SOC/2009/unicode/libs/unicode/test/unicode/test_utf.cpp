@@ -13,9 +13,9 @@ using boost::char16;
 
 #define CHECK_UTF(name, range1, range2) \
 do { \
-    using unicode::u##name##_encoded; using unicode::u##name##_decoded; \
-    CHECK_BI_EQUALS(u##name##_encoded(range1), range2); \
-    CHECK_BI_EQUALS(range1, u##name##_decoded(range2)); \
+    using unicode::adaptors::u##name##_encode; using unicode::adaptors::u##name##_decode; \
+    CHECK_BI_EQUALS(u##name##_encode(range1), range2); \
+    CHECK_BI_EQUALS(range1, u##name##_decode(range2)); \
 } while(0)
 
 BOOST_AUTO_TEST_CASE( basic )

@@ -9,18 +9,18 @@
 namespace boost
 {
 
-/** Concept checking class for the \c Pipe concept */    
+/** Concept checking class for the \c \xmlonly<conceptname>Converter</conceptname>\endxmlonly concept */    
 template<typename X>
-struct PipeConcept : DefaultConstructible<X>, CopyConstructible<X>
+struct ConverterConcept : DefaultConstructible<X>, CopyConstructible<X>
 {
     typedef typename X::input_type input_type;
     typedef typename X::output_type output_type;
     
-    BOOST_CONCEPT_USAGE(PipeConcept)
+    BOOST_CONCEPT_USAGE(ConverterConcept)
     {
-        X pipe;
-        p = pipe.ltr(begin, end, out);
-        p = pipe.rtl(begin, end, out);
+        X convert;
+        p = convert.ltr(begin, end, out);
+        p = convert.rtl(begin, end, out);
     }
     
 private:
@@ -33,21 +33,21 @@ private:
     std::pair<in_type, out_type> p;
 };
 
-/** Concept checking class for the \c OneManyPipe concept */
+/** Concept checking class for the \c \xmlonly<conceptname>OneManyConverter</conceptname>\endxmlonly concept */
 template<typename X>
-struct OneManyPipeConcept : PipeConcept<X>
+struct OneManyConverterConcept : ConverterConcept<X>
 {
     
-    BOOST_CONCEPT_USAGE(OneManyPipeConcept)
+    BOOST_CONCEPT_USAGE(OneManyConverterConcept)
     {
-        X pipe;
-        out = pipe(in, out);
+        X convert;
+        out = convert(in, out);
     }
     
 private:
-    typedef output_iterator_archetype<typename PipeConcept<X>::output_type> out_type;
+    typedef output_iterator_archetype<typename ConverterConcept<X>::output_type> out_type;
     
-    typename PipeConcept<X>::input_type in;
+    typename ConverterConcept<X>::input_type in;
     out_type out;
 };
 

@@ -4,6 +4,7 @@
 #include <boost/unicode/ucd/properties.hpp>
 #include <boost/utility.hpp>
 #include <boost/detail/unspecified.hpp>
+#include <boost/unicode/detail/cat.hpp>
 
 #include <boost/iterator/segment_iterator.hpp>
 
@@ -37,105 +38,28 @@ struct grapheme_boundary
     }
 };
 
-#ifdef BOOST_UNICODE_DOXYGEN_INVOKED
-/** Adapts the range of code points \c range into a range of ranges of code points,
- * each subrange being a grapheme cluster. */
-template<typename Range>
-detail::unspecified<void> grapheme_bounded(Range&& range);
-#else
-template<typename Range>
-iterator_range<typename boost::detail::unspecified<
-    segment_iterator<
-        typename range_iterator<const Range>::type,
-        boundary_segmenter<unicode::grapheme_boundary>
-    >
->::type>
-grapheme_bounded(const Range& range)
-{
-    return segmented(range, make_boundary_segmenter(unicode::grapheme_boundary()));
-}
+typedef boost::detail::unspecified<
+    boost::boundary_segmenter<grapheme_boundary>
+>::type grapheme_segmenter;
+BOOST_SEGMENTER_DEF(boost::unicode::grapheme_segmenter, grapheme_segment)
 
-template<typename Range>
-iterator_range<typename boost::detail::unspecified<
-    segment_iterator<
-        typename range_iterator<Range>::type,
-        boundary_segmenter<unicode::grapheme_boundary>
-    >
->::type>
-grapheme_bounded(Range& range)
-{
-    return segmented(range, make_boundary_segmenter(unicode::grapheme_boundary()));
-}
-#endif
-
-#ifdef BOOST_UNICODE_DOXYGEN_INVOKED
 /** INTERNAL ONLY */
-#define BOOST_UNICODE_GRAPHEME_BOUNDED_DEF(Name)                       \
-/** Adapts the range of Name units \c range into a range of ranges of
-Name units, each subrange being a grapheme cluster. */                 \
-template<typename Range>                                               \
-detail::unspecified<void> Name##_grapheme_bounded(Range&& range);      \
-                                                                       \
-/** Model of \c \xmlonly<conceptname>BoundaryChecker</conceptname>\endxmlonly
-that tells whether a position lies on a grapheme cluster boundary
-within a range of Name units. */                                       \
-typedef multi_boundary<                                                \
-    Name##_boundary, Name##_decoder,                                   \
-    grapheme_boundary                                                  \
-> Name##_grapheme_boundary;            
-#else
-#define BOOST_UNICODE_GRAPHEME_BOUNDED_DEF(Name)                       \
-template<typename Range>                                               \
-iterator_range<typename boost::detail::unspecified<                    \
-    segment_iterator<                                                  \
-        typename range_iterator<const Range>::type,                    \
-        converted_segmenter<                                           \
-            unicode::Name##_decoder,                                   \
-            boundary_segmenter<unicode::grapheme_boundary>             \
-        >                                                              \
+#define BOOST_UNICODE_GRAPHEME_DEF(codec)                              \
+typedef boost::detail::unspecified<                                    \
+    boost::multi_boundary<                                             \
+        codec##_boundary,                                              \
+        codec##_decoder,                                               \
+        grapheme_boundary                                              \
     >                                                                  \
->::type>                                                               \
-Name##_grapheme_bounded(const Range& range)                            \
-{                                                                      \
-    return segmented(                                                  \
-        range,                                                         \
-        make_converted_segmenter(                                      \
-            unicode::Name##_decoder(),                                 \
-            make_boundary_segmenter(unicode::grapheme_boundary())      \
-        )                                                              \
-    );                                                                 \
-}                                                                      \
-                                                                       \
-template<typename Range>                                               \
-iterator_range<typename boost::detail::unspecified<                    \
-    segment_iterator<                                                  \
-        typename range_iterator<Range>::type,                          \
-        converted_segmenter<                                           \
-            unicode::Name##_decoder,                                   \
-            boundary_segmenter<unicode::grapheme_boundary>             \
-        >                                                              \
-    >                                                                  \
->::type>                                                               \
-Name##_grapheme_bounded(Range& range)                                  \
-{                                                                      \
-    return segmented(                                                  \
-        range,                                                         \
-        make_converted_segmenter(                                      \
-            unicode::Name##_decoder(),                                 \
-            make_boundary_segmenter(unicode::grapheme_boundary())      \
-        )                                                              \
-    );                                                                 \
-}                                                                      \
-                                                                       \
-typedef multi_boundary<                                                \
-    Name##_boundary, Name##_decoder,                                   \
-    grapheme_boundary                                                  \
-> Name##_grapheme_boundary;                                            
-#endif
+>::type codec##_grapheme_boundary;                                     \
+typedef boost::detail::unspecified<                                    \
+    boost::boundary_segmenter<codec##_grapheme_boundary>               \
+>::type codec##_grapheme_segmenter;                                    \
+BOOST_SEGMENTER_DEF(BOOST_UNICODE_CAT(boost::unicode, codec##_grapheme_segmenter), codec##_grapheme_segment)
 
-BOOST_UNICODE_GRAPHEME_BOUNDED_DEF(u16)
-BOOST_UNICODE_GRAPHEME_BOUNDED_DEF(u8)
-BOOST_UNICODE_GRAPHEME_BOUNDED_DEF(utf)
+BOOST_UNICODE_GRAPHEME_DEF(u8)
+BOOST_UNICODE_GRAPHEME_DEF(u16)
+BOOST_UNICODE_GRAPHEME_DEF(utf)
 
 } // unicode
 } // boost

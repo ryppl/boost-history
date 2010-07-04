@@ -12,11 +12,10 @@ namespace unicode = boost::unicode;
 using boost::assign::list_of; 
 using boost::char32;
 
-#define CHECK_COMP(range1, range2) \
-do { \
-    using unicode::decomposed; using unicode::composed; \
-    CHECK_BI_EQUALS(decomposed(range1), range2); \
-    CHECK_BI_EQUALS(range1, composed(range2)); \
+#define CHECK_COMP(range1, range2)                                     \
+do {                                                                   \
+    CHECK_BI_EQUALS(unicode::adaptors::decompose(range1), range2);     \
+    CHECK_BI_EQUALS(range1, unicode::adaptors::compose(range2));       \
 } while(0)
 
 BOOST_AUTO_TEST_CASE( decomposition )
@@ -29,7 +28,7 @@ BOOST_AUTO_TEST_CASE( decomposition )
     
     // Canonical reordering test
     CHECK_BI_EQUALS(
-        unicode::decomposed(list_of<char32>(0x1e17)(0x330)),
+        unicode::adaptors::decompose(list_of<char32>(0x1e17)(0x330)),
         list_of<char32>(0x65)(0x330)(0x304)(0x301)
     );
     
@@ -40,7 +39,7 @@ BOOST_AUTO_TEST_CASE( decomposition )
     );
     
     CHECK_BI_EQUALS(
-        unicode::decomposed(list_of<char32>(0xA8), UINT_MAX),
+        unicode::adaptors::decompose(list_of<char32>(0xA8), UINT_MAX),
         list_of<char32>(0x20)(0x308)
     );
 }
@@ -64,7 +63,7 @@ BOOST_AUTO_TEST_CASE( normalization )
 {
     // Canonical reordering
     CHECK_BI_EQUALS(
-        unicode::normalized(list_of<char32>(0x1e17)(0x330)),
+        unicode::adaptors::normalize(list_of<char32>(0x1e17)(0x330)),
         list_of<char32>(0x1e1b)(0x304)(0x301)
     );
 }

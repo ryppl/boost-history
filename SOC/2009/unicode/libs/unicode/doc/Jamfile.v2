@@ -21,12 +21,18 @@ project
         <doxygen:param>EXTRACT_ALL=YES
         <doxygen:param>"PREDEFINED=BOOST_UNICODE_DOXYGEN_INVOKED \\
                                    \"BOOST_UNICODE_DECL= \" \\
-                                   \"BOOST_CONCEPT_REQUIRES(a,b)=/** Requires: a */ b \""
+                                   \"BOOST_CONCEPT_REQUIRES(a,b)=/** Requires: a */ b \" \\
+                                   \BOOST_UNICODE_UCD_BIG"
         <doxygen:param>HIDE_UNDOC_MEMBERS=NO
         <doxygen:param>EXTRACT_PRIVATE=NO
         <doxygen:param>ENABLE_PREPROCESSING=YES
         <doxygen:param>MACRO_EXPANSION=YES
-#        <doxygen:param>EXPAND_ONLY_PREDEF=YES
+        <doxygen:param>EXPAND_ONLY_PREDEF=YES
+        <doxygen:param>"EXPAND_AS_DEFINED=BOOST_UNICODE_ENCODER_DEF BOOST_UNICODE_DECODER_DEF \\
+                        BOOST_ONEMANYCONVERTER_DEF BOOST_CONVERTER_DEF BOOST_SEGMENTER_DEF \\
+                        BOOST_UNICODE_GRAPHEME_DEF BOOST_UNICODE_GET_PROPERTY_DEF \\
+                        BOOST_UNICODE_FWD_2 BOOST_UNICODE_CAT_LIMITS_FWD BOOST_UNICODE_CAT \\
+                        BOOST_UNICODE_COMPOSE_CONCAT_DEF BOOST_UNICODE_COMPOSE_CONCATED_DEF BOOST_UNICODE_COMPOSE_CAT_DEF"
         <doxygen:param>SEARCH_INCLUDES=YES
         <doxygen:param>"INCLUDE_PATH=$(BOOST_ROOT) \\
                                      ../../../"

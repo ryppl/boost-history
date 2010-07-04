@@ -33,22 +33,22 @@ int main()
     
 //` Decoding eager, stream iterator lazily encoded:
     unicode::utf_decode(foo,
-        unicode::u8_encoded_out(
+        unicode::adaptors::u8_encode_output(
             std::ostream_iterator<char>(std::cout)
         )
     );
     std::cout << std::endl;
 
 //` Decoding is lazy, encoding is eager, using one buffer:
-    unicode::u8_encode(unicode::utf_decoded(foo), std::back_inserter(baz));
+    unicode::u8_encode(unicode::adaptors::utf_decode(foo), std::back_inserter(baz));
     std::cout << baz << std::endl;
     
 //` Decoding is lazy, encoding is eager, using stream iterators:
-    unicode::u8_encode(unicode::utf_decoded(foo), std::ostream_iterator<char>(std::cout));
+    unicode::u8_encode(unicode::adaptors::utf_decode(foo), std::ostream_iterator<char>(std::cout));
     std::cout << std::endl;
 
 //` Fully lazy (recommended unless you need to store the result in a specific container):
-   std::cout << unicode::u8_encoded(unicode::utf_decoded(foo)) << std::endl;
+   std::cout << unicode::adaptors::u8_encode(unicode::adaptors::utf_decode(foo)) << std::endl;
     
 }
 //]
