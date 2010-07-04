@@ -16,7 +16,9 @@ namespace scheme
     // line_pos_iterator: a lighweight line position iterator. This iterator
     // adapter only stores the current line number, nothing else. Unlike
     // spirit classic's position_iterator, it does not store the column
-    // number and does not need an end iterator.
+    // number and does not need an end iterator. The current column can be
+    // computed, if needed. Some line oriented utilities are provided
+    // including computation of the current column.
     ///////////////////////////////////////////////////////////////////////////
     template <typename Iterator>
     class line_pos_iterator
@@ -30,12 +32,12 @@ namespace scheme
     public:
 
         line_pos_iterator()
-          : line_pos_iterator::iterator_adaptor_()
-            line(0), prev(0) {}
+          : line_pos_iterator::iterator_adaptor_(),
+            line(1), prev(0) {}
 
         explicit line_pos_iterator(Iterator base)
-          : node_iter::iterator_adaptor_(base)
-            line(0), prev(0) {}
+          : line_pos_iterator::iterator_adaptor_(base),
+            line(1), prev(0) {}
 
         std::size_t position() const
         {
@@ -47,7 +49,8 @@ namespace scheme
         friend class boost::iterator_core_access;
         void increment()
         {
-            typename Iterator::reference ref = *(this->base());
+            typename std::iterator_traits<Iterator>::reference
+                ref = *(this->base());
             switch (ref)
             {
                 case '\r':
@@ -62,15 +65,29 @@ namespace scheme
                     break;
             }
             prev = ref;
+            ++this->base_reference();
         }
 
         std::size_t line;
-        typename Iterator::value_type prev;
+        typename std::iterator_traits<Iterator>::value_type prev;
     };
 
     ///////////////////////////////////////////////////////////////////////////
     // Utilities
     ///////////////////////////////////////////////////////////////////////////
+
+    // Get the line position. Returns -1 if Iterator is not a line_pos_iterator.
+    template <typename Iterator>
+    inline int get_line(Iterator i)
+    {
+        return -1;
+    }
+
+    template <typename Iterator>
+    inline int get_line(line_pos_iterator<Iterator> i)
+    {
+        return i.position();
+    }
 
     // Get an iterator to the beginning of the line. Applicable to any
     // iterator.
@@ -94,7 +111,7 @@ namespace scheme
     // Get the iterator range containing the current line. Applicable to
     // any iterator.
     template <typename Iterator>
-    inline iterator_range<Iterator>
+    inline boost::iterator_range<Iterator>
     get_current_line(
         Iterator lower_bound, Iterator current, Iterator upper_bound)
     {
@@ -102,7 +119,29 @@ namespace scheme
         Iterator last = get_line_start(current, upper_bound);
         if (last == current)
             last = upper_bound;
-        return iterator_range<Iterator>(first, last);
+        return boost::iterator_range<Iterator>(first, last);
+    }
+
+    // Get the current column. Applicable to any iterator.
+    template <typename Iterator>
+    inline std::size_t
+    get_column(
+        Iterator lower_bound, Iterator current, int tabs = 4)
+    {
+        std::size_t column = 1;
+        Iterator first = get_line_start(lower_bound, current);
+        for (Iterator i = first; i != current; ++i)
+        {
+            switch (*i)
+            {
+                case '\t':
+                    column += tabs - (column - 1) % tabs;
+                    break;
+                default:
+                    ++column;
+            }
+        }
+        return column;
     }
 }
 

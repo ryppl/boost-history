@@ -9,7 +9,8 @@
 
 #include <boost/spirit/home/support/info.hpp>
 #include <boost/spirit/include/phoenix_core.hpp>
-#include <boost/function.hpp>
+#include <support/line_pos_iterator.hpp>
+#include <string>
 #include <iostream>
 
 namespace scheme { namespace input
@@ -17,46 +18,27 @@ namespace scheme { namespace input
     template <typename Iterator>
     struct error_handler
     {
-        typedef
-            boost::function<
-                void(
-                    Iterator, Iterator, Iterator,
-                    boost::spirit::info const&
-                )>
-        errorf_type;
-
-        errorf_type errorf;
-        error_handler(errorf_type errorf)
-          : errorf(errorf) {}
-
         template <typename, typename, typename, typename>
         struct result { typedef void type; };
+
+        std::string source_file;
+        error_handler(std::string const& source_file = "")
+          : source_file(source_file) {}
 
         void operator()(
             Iterator first, Iterator last,
             Iterator err_pos, boost::spirit::info const& what) const
         {
-            if (!errorf.empty())
-            {
-                // "Overridden"
-                errorf(first, last, err_pos, what);
-            }
-            else
-            {
-                // Default handler
-                Iterator eol = err_pos;
-                while (eol != last && *eol != '\n' && *eol != '\r')
-                    ++eol;
+            Iterator eol = err_pos;
+            int line = get_line(err_pos);
 
-                std::cerr
-                    << "Error! Expecting "
-                    << what
-                    << " here: \""
-                    << std::string(err_pos, eol)
-                    << "\""
-                    << std::endl
-                ;
-            }
+            if (source_file != "")
+                std::cerr << source_file;
+
+            if (line != -1)
+                std::cerr << '(' << line << ')';
+
+            std::cerr << " : Error! Expecting "  << what << std::endl;
         }
     };
 }}
