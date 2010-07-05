@@ -18,6 +18,7 @@
 #include <boost/integer/bit_reversal.hpp>
 #include <boost/integer/static_bit_reversal.hpp>
 #include <boost/integer/sign.hpp>
+#include <boost/integer/static_sign.hpp>
 #include <boost/integer/same_sign.hpp>
 #include <boost/integer/static_same_sign.hpp>
 #include <boost/integer/pop_count.hpp>
@@ -27,5 +28,9 @@
 #include <boost/integer/swap.hpp>
 #include <boost/integer/safe_avg.hpp>
 #include <boost/integer/round_power_2.hpp>
+#include <boost/integer/is_integral_constant.hpp>
+#include <boost/integer/static_abs.hpp>
+#include <boost/integer/static_gcd.hpp>
+#include <boost/integer/static_lcm.hpp>
 
 #endif

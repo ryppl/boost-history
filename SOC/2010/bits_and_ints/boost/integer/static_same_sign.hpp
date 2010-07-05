@@ -7,6 +7,9 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history. 
 
+#ifndef BOOST_STATIC_SAME_SIGN_INCLUDED
+#define BOOST_STATIC_SAME_SIGN_INCLUDED
+
 #include <boost/mpl/integral_c.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/type_traits/is_integral.hpp>
@@ -50,3 +53,5 @@ struct static_same_sign : mpl::same_sign< mpl::integral_c<T, first>, mpl::integr
 {};
 
 }
+
+#endif

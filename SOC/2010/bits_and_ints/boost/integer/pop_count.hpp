@@ -11,6 +11,7 @@
 #define BOOST_POP_COUNT_INCLUDED
 
 #include <boost/cstdint.hpp>
+#include <boost/integer/detail/pop_count.hpp>
 
 /*
  *	Population count (pop_count) counts the number of 1-bits in an
@@ -27,23 +28,15 @@
 namespace boost {
 
 int pop_count(uintmax_t value)
-{
-	static const uintmax_t mask[6] = {
+{	
+	using integer_detail::pop_count_mask;
+	value = (value & pop_count_mask[0]) + ((value >> 1) & pop_count_mask[0]);
+	value = (value & pop_count_mask[1]) + ((value >> 2) & pop_count_mask[1]);
+	value = (value & pop_count_mask[2]) + ((value >> 4) & pop_count_mask[2]);
+	value = (value & pop_count_mask[3]) + ((value >> 8) & pop_count_mask[3]);
+	value = (value & pop_count_mask[4]) + ((value >> 16) & pop_count_mask[4]);
 #ifndef BOOST_NO_INT64_T
-		0x5555555555555555, 0x3333333333333333, 0x0F0F0F0F0F0F0F0F, 
-			0x00FF00FF00FF00FF, 0x0000FFFF0000FFFF, 0x00000000FFFFFFFF
-#else
-		0x55555555, 0x33333333, 0x0F0F0F0F, 0x00FF00FF, 0x0000FFFF, 0x0
-#endif
-	};
-	
-	value = (value & mask[0]) + ((value >> 1) & mask[0]);
-	value = (value & mask[1]) + ((value >> 2) & mask[1]);
-	value = (value & mask[2]) + ((value >> 4) & mask[2]);
-	value = (value & mask[3]) + ((value >> 8) & mask[3]);
-	value = (value & mask[4]) + ((value >> 16) & mask[4]);
-#ifndef BOOST_NO_INT64_T
-	value = (value & mask[5]) + ((value >> 32) & mask[5]);
+	value = (value & pop_count_mask[5]) + ((value >> 32) & pop_count_mask[5]);
 #endif
 	
 	return int(value);
