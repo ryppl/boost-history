@@ -217,8 +217,8 @@ namespace detail
         bool operator()(const ucd::unichar_compose_data_entry& lft, const ucd::unichar_compose_data_entry& rgt) const
         {
             return std::lexicographical_compare(
-                lft.decomp+1, lft.decomp+1+std::min(lft.decomp[0], rgt.decomp[0]),
-                rgt.decomp+1, rgt.decomp+1+std::min(lft.decomp[0], rgt.decomp[0])
+                lft.decomp+1, lft.decomp+1+std::min BOOST_PREVENT_MACRO_SUBSTITUTION (lft.decomp[0], rgt.decomp[0]),
+                rgt.decomp+1, rgt.decomp+1+std::min BOOST_PREVENT_MACRO_SUBSTITUTION (lft.decomp[0], rgt.decomp[0])
             );
         }
         

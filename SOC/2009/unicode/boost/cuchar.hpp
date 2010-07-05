@@ -1,6 +1,7 @@
 #ifndef BOOST_CUCHAR_HPP
 #define BOOST_CUCHAR_HPP
 
+#include <boost/config.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/detail/unspecified.hpp>
 
