@@ -97,7 +97,33 @@ public:
  *
  * A child process will not be able to use its streams.
  */
-typedef stream close; 
+
+#if defined(BOOST_POSIX_API)
+#elif defined(BOOST_WINDOWS_API)
+//This class does not works. The handles must be closed directly
+//in startup_info.hStdxxxxx, for example: CloseHandle(startup_info.hStdInput)
+class close : public stream
+{
+public:
+	close()
+	{
+		child_end_ = INVALID_HANDLE_VALUE;
+		CloseHandle(child_end_);
+	}
+
+	native_type get_child_end() 
+    { 
+        return child_end_; 
+    } 
+	native_type get_parent_end()
+	{
+		return INVALID_HANDLE_VALUE;
+	}
+	
+private: 
+    native_type child_end_; 
+};
+#endif
 
 /**
  * Stream behavior to make a child process inherit streams.
@@ -319,7 +345,20 @@ public:
         if (child_end_ == -1) 
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("open(2) failed"); 
 #elif defined(BOOST_WINDOWS_API) 
-        child_end_ = ::CreateFileA("NUL", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL); 
+
+		if(stream == input_stream)
+		{
+			child_end_ = ::CreateFileA("NUL", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL); 
+		}
+
+		else if(stream == output_stream)
+		{
+			child_end_ = ::CreateFileA("NUL", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL); 
+		}
+		
+		else 
+			BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("Unknown st3ream type."); 
+
         if (child_end_ == INVALID_HANDLE_VALUE)
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreateFile() failed"); 
 #endif 
