@@ -20,58 +20,183 @@
 <a name="boost_integer_bits_masks_extension.bitfield_tuple.overview.description"></a><a class="link" href="description.html" title="Description">Description</a>
 </h4></div></div></div>
 <p>
-          This is a type which provides access to bitfields stored within integers
-          or other integral types (see future work, for extensions). This is a pseudo
-          variadic type. It currently only takes up to 10 parameters but I will be
-          extending that to be adjustable via macro similar to the MPL. Each of the
-          template parameters must be supplied as either a storage template or a
-          member template. For example, if one wanted to declare a bitfield_tuple
-          that was the size of one byte and contained two boolean bitfields and two
-          integers they would do the following, 
+          A <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code> is a type
+          that provides access to bitfields stored within integral or integral like
+          types. The interface of this type is similar to that of a tuple, with slight
+          variations on the template parameters and <code class="computeroutput"><span class="identifier">get</span></code>
+          function, while still providing similar functionality to the boost.tuple.
+          A piratical example for using a <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+          could be for storing colors. 
 </p>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield_tuple</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">assert</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">bool_one</span><span class="special">;</span>
-<span class="keyword">struct</span> <span class="identifier">bool_two</span><span class="special">;</span>
-<span class="keyword">struct</span> <span class="identifier">int_one</span><span class="special">;</span>
-<span class="keyword">struct</span> <span class="identifier">int_two</span><span class="special">;</span>
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">red</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">green</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">blue</span><span class="special">;</span>
+
 
 <span class="keyword">typedef</span> <span class="identifier">bitfield_tuple</span><span class="special">&lt;</span>
-    <span class="identifier">storage</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;,</span>
-    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">,</span><span class="identifier">bool_one</span><span class="special">,</span><span class="number">1</span><span class="special">&gt;,</span>
-    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">,</span><span class="identifier">bool_two</span><span class="special">,</span><span class="number">1</span><span class="special">&gt;,</span>
-    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="identifier">int_one</span><span class="special">,</span><span class="number">2</span><span class="special">&gt;,</span>
-    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="identifier">int_two</span><span class="special">,</span><span class="number">2</span><span class="special">&gt;</span>
-<span class="special">&gt;</span>                       <span class="identifier">example_type</span><span class="special">;</span>
-
-<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-    <span class="identifier">example_type</span> <span class="identifier">temp</span><span class="special">;</span>
-    <span class="identifier">temp</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">bool_one</span><span class="special">&gt;()</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span> <span class="comment">// assigns false to the first bitfield.
-</span>    <span class="identifier">temp</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">bool_two</span><span class="special">&gt;()</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">;</span>  <span class="comment">// assigns false to the second bitfield.
-</span>    <span class="identifier">temp</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;()</span>        <span class="special">=</span> <span class="special">-</span><span class="number">1</span><span class="special">;</span>    <span class="comment">// assigns -1 to the first integer 
-</span>                                  <span class="comment">// bitfield.
-</span>
-    <span class="identifier">BOOST_ASSERT</span><span class="special">((</span> <span class="identifier">temp</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;()</span>  <span class="special">==</span> <span class="special">-</span><span class="number">1</span> <span class="special">));</span> <span class="comment">// this passes the assert and 
-</span>                                            <span class="comment">// does not exit the program
-</span>    <span class="identifier">BOOST_ASSERT</span><span class="special">((</span> <span class="identifier">temp</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">int_one</span><span class="special">&gt;()</span>  <span class="special">==</span> <span class="special">-</span><span class="number">1</span> <span class="special">));</span> <span class="comment">// this passes the assert and 
-</span>                                                  <span class="comment">// does not exit the program
-</span><span class="special">}</span>
+    <span class="identifier">storage</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">short</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">char</span><span class="special">,</span> <span class="identifier">red</span><span class="special">,</span><span class="number">5</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">char</span><span class="special">,</span> <span class="identifier">green</span><span class="special">,</span> <span class="number">6</span><span class="special">&gt;,</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">char</span><span class="special">,</span> <span class="identifier">blue</span><span class="special">,</span> <span class="number">5</span><span class="special">&gt;</span>
+<span class="special">&gt;</span>                       <span class="identifier">rgb565_t</span> <span class="special">;</span>
 </pre>
 <p>
-          Within the above example the template <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
-          is specified using multiple other templates which are used to describe
-          different fields and the internal type in which the bitfields will reside.
-          In the above example <code class="computeroutput"><span class="identifier">storage</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;</span></code> means that the internal storage type
-          used will be type <code class="computeroutput"><span class="keyword">char</span></code>. The
-          template member is used to specify a bitfield within the tuple. For instance,
-          looking at <code class="computeroutput"><span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">,</span><span class="identifier">bool_one</span><span class="special">,</span><span class="number">1</span><span class="special">&gt;</span></code>,
-          the first parameter is used to describe the type which the stored value
-          will be returned as. The second parameter, <code class="computeroutput"><span class="identifier">bool_one</span></code>,
-          is a name type which can be used to retrieve the a bitfield from with in
-          the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>. The
-          third and final parameter is the width of the a bitfield in bits, the template
-          <code class="computeroutput"><span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">,</span><span class="identifier">bool_one</span><span class="special">,</span><span class="number">1</span><span class="special">&gt;</span></code>
-          will have a width of one.
+          To use the storage of bitfield_tuple for retrieving and storing data, all
+          that needs to be done is to call <code class="computeroutput"><span class="identifier">get</span></code>,
+          just like a Boost.Tuple. Each of the named parameters do something slightly
+          different, in the above example <code class="computeroutput"><span class="identifier">storage</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">short</span><span class="special">&gt;</span></code>
+          is used to specify that the type to be used for storing the bitfields within
+          is going to be an unsigned short. The <code class="computeroutput"><span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span> <span class="identifier">red</span><span class="special">,</span> <span class="number">5</span><span class="special">&gt;</span></code>
+          member is used to specify a bitfield within the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>.
+          Here is how <code class="computeroutput"><span class="identifier">member</span></code> works,
+          and relates directly back to regular reconizable C++.
+        </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+                  </p>
+                </th>
+<th>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">classic</span> <span class="identifier">Struct</span>
+                    <span class="identifier">Example</span></code>
+                  </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">bitfield_tuple</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
+
+<span class="keyword">struct</span> <span class="identifier">red</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">green</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">blue</span><span class="special">;</span>
+
+<span class="keyword">typedef</span> <span class="identifier">bitfield_tuple</span><span class="special">&lt;</span>
+    <span class="special">...</span>
+    <span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">char</span><span class="special">,</span> <span class="identifier">red</span><span class="special">,</span><span class="number">5</span><span class="special">&gt;,</span>
+    <span class="special">...</span>
+<span class="special">&gt;</span> <span class="identifier">rgb656_t</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">struct</span> <span class="identifier">rgb656_t</span> <span class="special">{</span>
+    <span class="special">...</span>
+    <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="identifier">red</span><span class="special">:</span><span class="number">5</span><span class="special">;</span>
+    <span class="special">...</span>
+<span class="special">};</span>
+</pre>
+<p>
+                  </p>
+                </td>
+</tr></tbody>
+</table></div>
+<p>
+          Observing the above example <code class="computeroutput"><span class="identifier">member</span><span class="special">&lt;</span><span class="keyword">unsigned</span> <span class="keyword">char</span><span class="special">,</span> <span class="identifier">red</span><span class="special">,</span><span class="number">5</span><span class="special">&gt;,</span></code>
+          and <code class="computeroutput"><span class="keyword">unsigned</span> <span class="keyword">char</span>
+          <span class="identifier">red</span><span class="special">:</span><span class="number">5</span><span class="special">;</span></code> are specified
+          in almost the exact same way. First parameter in <code class="computeroutput"><span class="identifier">member</span></code>
+          relates directly to the <code class="computeroutput"><span class="keyword">unsigned</span>
+          <span class="keyword">char</span></code> type used in the bitfield
+          <code class="computeroutput"><span class="identifier">red</span></code> in the struct above.
+          The second parameter of member <code class="computeroutput"><span class="identifier">red</span></code>
+          which is in the above using a bitfield is a type, and the the struct rgb656_t
+          it's the name of the variable. The second parameter for member is also
+          a name for the bitfield it corresponds to and can be used with the get
+          function to retrieve the bitfield its being associated with. The third
+          parameter is the width of the bitfield in bits just as it is specified
+          using <code class="computeroutput"><span class="special">:</span><span class="number">5</span></code>
+          in the above example. Accessing of bitfields can be done either by index
+          or by name. If one chooses to retrieve a bitfield by index, the index value
+          is based on the other member which are specified before it. The following
+          is an example of how to use both an index accessor and the name accessor,
+          the two examples do the exact same thing.
+        </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Access By Name
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Access By Index
+                  </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">rgb565_t</span> <span class="identifier">rgb565</span><span class="special">;</span>
+
+    <span class="identifier">rgb565</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">red</span><span class="special">&gt;()</span> <span class="special">=</span> <span class="number">31</span><span class="special">;</span>
+    <span class="identifier">rgb565</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">green</span><span class="special">&gt;()</span> <span class="special">=</span> <span class="number">15</span><span class="special">;</span>
+    <span class="identifier">rgb565</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">blue</span><span class="special">&gt;()</span> <span class="special">=</span> <span class="number">12</span><span class="special">;</span>
+
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">rgb565_t</span> <span class="identifier">rgb565</span><span class="special">;</span>
+
+    <span class="identifier">rgb565</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;()</span> <span class="special">=</span> <span class="number">31</span><span class="special">;</span>
+    <span class="identifier">rgb565</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="number">1</span><span class="special">&gt;()</span> <span class="special">=</span> <span class="number">15</span><span class="special">;</span>
+    <span class="identifier">rgb565</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;()</span> <span class="special">=</span> <span class="number">12</span><span class="special">;</span>
+
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+                  </p>
+                </td>
+</tr></tbody>
+</table></div>
+<p>
+          The <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code> get
+          functions return proxies to the bitfield they represent. Using a proxy
+          provides a way for the user to access the bitfields directly without the
+          hassle of doing the masking themselves.
+        </p>
+<p>
+          One might be wondering just what is the benefit of doing all of this extra
+          work for something that seems much easier to do using conventional means?
+          Well the <code class="computeroutput"><span class="identifier">bitfield_tuple</span></code>
+          is used to abstract the storage and retrieval of data into and out of and
+          integral type, and by doing so allows for the storage and retrieval of
+          types with different endianness.
         </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

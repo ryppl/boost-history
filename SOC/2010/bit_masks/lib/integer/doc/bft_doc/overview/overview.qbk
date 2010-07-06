@@ -5,14 +5,137 @@ Distributed under the Boost Software License, Version 1.0. (See accompanying
 file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
 [section Description]
-This is a type which provides access to bitfields stored within integers
-or other integral types (see future work, for extensions). This is a pseudo
-variadic type. It currently only takes up to 10 parameters but I will be 
-extending that to be adjustable via macro similar to the MPL. Each of the 
-template parameters must be supplied as either a storage template or a 
-member template. For example, if one wanted to declare a bitfield_tuple
-that was the size of one byte and contained two boolean bitfields and 
-two integers they would do the following,
+A `bitfield_tuple` is a type that provides access to bitfields stored within
+integral or integral like types. The interface of this type is similar to that
+of a tuple, with slight variations on the template parameters and `get`
+function, while still providing similar functionality to the boost.tuple.
+A piratical example for using a `bitfield_tuple` could be for storing colors.
+``
+#include <boost/integer/bitfield_tuple.hpp>
+
+using namespace boost;
+struct red;
+struct green;
+struct blue;
+
+
+typedef bitfield_tuple<
+    storage<unsigned short>,
+    member<unsigned char, red,5>,
+    member<unsigned char, green, 6>,
+    member<unsigned char, blue, 5>
+>                       rgb565_t ;
+``
+To use the storage of bitfield_tuple for retrieving and storing data,
+all that needs to be done is to call `get`, just like a Boost.Tuple. Each of the
+named parameters do something slightly different, in the above example
+`storage<unsigned short>` is used to specify that the type to be used for
+storing the bitfields within is going to be an unsigned short. The
+`member<unsigned int, red, 5>` member is used to specify a bitfield within the
+`bitfield_tuple`. Here is how `member` works, and relates directly back to
+regular reconizable C++.
+[table
+    [
+        [`bitfield_tuple`]
+        [`classic Struct Example`]
+    ]
+    [
+        [
+``
+#include <boost/integer/bitfield_tuple.hpp>
+
+using namespace boost;
+
+struct red;
+struct green;
+struct blue;
+
+typedef bitfield_tuple<
+    ...
+    member<unsigned char, red,5>,
+    ...
+> rgb656_t
+``
+        ]
+        [
+``
+struct rgb656_t {
+    ...
+    unsigned char red:5;
+    ...
+};
+``
+        ]
+    ]
+]
+
+Observing the above example `member<unsigned char, red,5>,` and
+`unsigned char red:5;` are specified in almost the exact same way. First
+parameter in `member` relates directly to the `unsigned char` type used in the
+bitfield `red` in the struct above. The second parameter of member `red` which is
+in the above using a bitfield is a type, and the the struct rgb656_t it's the
+name of the variable. The second parameter for member is also a name for the
+bitfield it corresponds to and can be used with the get function to retrieve
+the bitfield its being associated with. The third parameter is the width of the
+bitfield in bits just as it is specified using `:5` in the above example.
+Accessing of bitfields can be done either by index or by name. If one chooses to
+retrieve a bitfield by index, the index value is based on the other member which
+are specified before it. The following is an example of how to use both an index
+accessor and the name accessor, the two examples do the exact same thing.
+
+
+[table
+    [
+        [Access By Name]
+        [Access By Index]
+    ]
+    [
+        [
+``
+int main() {
+    rgb565_t rgb565;
+
+    rgb565.get<red>() = 31;
+    rgb565.get<green>() = 15;
+    rgb565.get<blue>() = 12;
+
+    return 0;
+}
+``
+        ]
+        [
+``
+int main() {
+    rgb565_t rgb565;
+
+    rgb565.get<0>() = 31;
+    rgb565.get<1>() = 15;
+    rgb565.get<2>() = 12;
+
+    return 0;
+}
+``
+        ]
+    ]
+]
+
+
+The `bitfield_tuple` get functions return proxies to the bitfield they represent.
+Using a proxy provides a way for the user to access the bitfields directly
+without the hassle of doing the masking themselves. 
+
+
+One might be wondering just what is the benefit of doing all of this extra work
+for something that seems much easier to do using conventional means? Well the
+`bitfield_tuple` is used to abstract the storage and retrieval of data into and
+out of an integral type, by doing so allows for the storage and retrieval
+of types with different endianness.
+
+[/
+
+For example, if one wanted to declare
+a bitfield_tuple that was the size of one byte and contained two boolean
+bitfields and two integers they would do the following,
 ``   
 #include <boost/integer/bitfield_tuple.hpp>
 #include <boost/assert.hpp>
@@ -53,5 +176,5 @@ parameter, `bool_one`, is a name type which can be used to retrieve the a
 bitfield from with in the `bitfield_tuple`. The third and final parameter is
 the width of the a bitfield in bits, the template `member<bool,bool_one,1>` will
 have a width of one.
-
+]
 [endsect]
