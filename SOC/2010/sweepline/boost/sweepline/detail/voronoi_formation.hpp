@@ -120,7 +120,7 @@ namespace detail {
     public:
         typedef typename Point2D::coordinate_type coordinate_type;
         typedef beach_line_node<Point2D> Key;
-        typedef beach_line_node_data<typename Point2D::Edge> Value;
+        typedef beach_line_node_data<Point2D> Value;
         typedef node_comparer<Key> NodeComparer;
         typedef typename std::map< Key, Value, NodeComparer >::iterator beach_line_iterator;
 
@@ -401,9 +401,9 @@ namespace detail {
         void operator=(const circle_events_queue&);
     };
 
-    /////////////////////////////////////////////////////////////////////////////
-    // VORONOI BEACH LINE TYPES /////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+    // VORONOI BEACH LINE TYPES ///////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
     
     // Represents bisector made by two arcs that correspond to the left and
     // right sites. Arc is defined as curve with points equidistant from the
@@ -494,13 +494,16 @@ namespace detail {
         site_event_type right_site_;
     };
 
+    template <typename Point2D>
+    struct half_edge;
+
     // Represents edge data sturcture (bisector segment), which is
     // associated with beach line node key in the binary search tree.
-    template <typename Edge>
+    template <typename Point2D>
     struct beach_line_node_data {
-        Edge *edge;
+        half_edge<Point2D> *edge;
 
-        explicit beach_line_node_data(Edge *new_edge) : edge(new_edge) {}
+        explicit beach_line_node_data(half_edge<Point2D> *new_edge) : edge(new_edge) {}
     };
 
     template <typename BeachLineNode>
@@ -575,6 +578,678 @@ namespace detail {
                 return node1.get_new_site().y() < node2.get_new_site().y();
             }
         }
+    };
+
+    ///////////////////////////////////////////////////////////////////////////
+    // VORONOI OUTPUT /////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////    
+    // Voronoi record data structure. May represent voronoi cell or
+    // voronoi vertex. Contains pointer to any incident edge, point
+    // coordinates and number of incident edges.
+    template <typename Point2D>
+    struct voronoi_record {
+        half_edge<Point2D> *incident_edge;
+        Point2D voronoi_point;
+        int num_incident_edges;
+        typename std::list< voronoi_record<Point2D> >::iterator voronoi_record_it;
+
+        voronoi_record(const Point2D &point, half_edge<Point2D>* edge) :
+            incident_edge(edge),
+            voronoi_point(point),
+            num_incident_edges(0) {}
+    };
+
+    // Half-edge data structure. Represents voronoi edge.
+    // Contains: 1) pointer to cell records;
+    //           2) pointers to start/end vertices of half-edge;
+    //           3) pointers to previous/next half-edges(CCW);
+    //           4) pointers to previous/next half-edges rotated
+    //              around start point;
+    //           5) pointer to twin half-edge;
+    //           6) pointer to clipped edge during clipping.
+    template <typename Point2D>
+    struct half_edge {
+        typedef voronoi_record<Point2D> voronoi_record_type;
+        typedef half_edge<Point2D> half_edge_type;
+        typedef half_edge_clipped<Point2D> half_edge_clipped_type;
+
+        voronoi_record_type *cell;
+        voronoi_record_type *start_point;
+        voronoi_record_type *end_point;
+        half_edge_type *prev;
+        half_edge_type *next;
+        half_edge_type *rot_prev;
+        half_edge_type *rot_next;
+        half_edge_type *twin;
+        half_edge_clipped_type *clipped_edge;
+
+        half_edge() :
+            cell(NULL),
+            start_point(NULL),
+            end_point(NULL),
+            prev(NULL),
+            next(NULL),
+            rot_prev(NULL),
+            rot_next(NULL),
+            twin(NULL),
+            clipped_edge(NULL) {}
+    };
+
+    // Voronoi output data structure based on the half-edges.
+    // Contains vector of voronoi cells, doubly linked list of
+    // voronoi vertices and voronoi edges.
+    template <typename Point2D>
+    class voronoi_output {
+    public:
+        typedef typename Point2D::coordinate_type coordinate_type;
+        typedef typename detail::site_event<Point2D> site_event_type;
+        typedef typename detail::circle_event<Point2D> circle_event_type;
+
+        typedef voronoi_record<Point2D> voronoi_record_type;
+        typedef voronoi_record_clipped<Point2D> clipped_voronoi_record_type;
+        typedef half_edge<Point2D> edge_type;
+        typedef half_edge_clipped<Point2D> clipped_edge_type;
+
+        typedef std::list<voronoi_record_type> voronoi_records_type;
+        typedef std::list<edge_type> voronoi_edges_type;
+        typedef typename voronoi_records_type::iterator voronoi_iterator_type;
+        typedef typename voronoi_records_type::const_iterator voronoi_const_iterator_type;
+
+        enum kEdgeType {
+            SEGMENT = 0,
+            RAY = 1,
+            LINE = 2,
+        };
+
+        voronoi_output() {
+            num_cell_records_ = 0;
+            num_edges_ = 0;
+            num_vertex_records_ = 0;
+        }
+
+        void init(int num_sites) {
+            cell_iterators_.reserve(num_sites);
+            num_cell_records_ = 0;
+            num_edges_ = 0;
+            num_vertex_records_ = 0;
+        }
+
+        void reset() {
+            cell_iterators_.clear();
+            cell_records_.clear();
+            vertex_records_.clear();
+            edges_.clear();
+
+            num_cell_records_ = 0;
+            num_edges_ = 0;
+            num_vertex_records_ = 0;
+        }
+
+        // Inserts new half-edge into the output data structure during site
+        // event processing. Takes as input left and right sites of the new
+        // beach line node and returns pointer to the new half-edge. 
+        edge_type *insert_new_edge(const site_event_type &site1,
+                                   const site_event_type &site2) {
+            // Update counters.
+            num_cell_records_++;
+            num_edges_++;
+
+            // Get indices of sites.           
+            int site_index1 = site1.get_site_index();
+            int site_index2 = site2.get_site_index();
+
+            // Create new half-edge that belongs to the first site.
+            edges_.push_back(edge_type());
+            edge_type &edge1 = edges_.back();
+
+            // Create new half-edge that belongs to the second site.
+            edges_.push_back(edge_type());
+            edge_type &edge2 = edges_.back();
+
+            // Add initial cell during first edge insertion.
+            if (cell_records_.empty()) {
+                cell_iterators_.push_back(cell_records_.insert(
+                    cell_records_.end(), voronoi_record_type(site1.get_point(), &edge1)));
+                cell_records_.back().num_incident_edges++;
+                num_cell_records_++;
+                voronoi_rect_ = BRect<Point2D>(site1.get_point(), site1.get_point());
+            }
+
+            // Update bounding rectangle.
+            voronoi_rect_.update(site2.get_point());
+
+            // Second site represents new site during site event processing.
+            // Add new cell to the cell records vector.
+            cell_iterators_.push_back(cell_records_.insert(
+                cell_records_.end(), voronoi_record_type(site2.get_point(), &edge2)));
+            cell_records_.back().num_incident_edges++;
+            
+            // Update pointers to cells.
+            edge1.cell = &(*cell_iterators_[site_index1]);
+            edge2.cell = &(*cell_iterators_[site_index2]);
+
+            // Update twin pointers.
+            edge1.twin = &edge2;
+            edge2.twin = &edge1;
+
+            return &edge1;
+        }
+
+        edge_type *insert_new_edge(const site_event_type &site1,
+                                   const site_event_type &site2,
+                                   const site_event_type &site3,
+                                   const circle_event_type &circle,
+                                   edge_type *edge12,
+                                   edge_type *edge23) {
+            // Update counters.
+            num_vertex_records_++;
+            num_edges_++;
+
+            // Update bounding rectangle.
+            voronoi_rect_.update(circle.get_center());
+
+            // Add new voronoi vertex with point at center of the circle.
+            vertex_records_.push_back(voronoi_record_type(circle.get_center(), edge12));
+            voronoi_record_type &new_vertex = vertex_records_.back();
+            new_vertex.num_incident_edges = 3;
+            new_vertex.voronoi_record_it = vertex_records_.end();
+            new_vertex.voronoi_record_it--;
+
+            // Update two input bisectors and their twin half-edges with
+            // new voronoi vertex.
+            edge12->start_point = &new_vertex;
+            edge12->twin->end_point = &new_vertex;
+            edge23->start_point = &new_vertex;
+            edge23->twin->end_point = &new_vertex;
+
+            // Add new half-edge.
+            edges_.push_back(edge_type());
+            edge_type &new_edge1 = edges_.back();
+            new_edge1.cell = &(*cell_iterators_[site1.get_site_index()]);
+            new_edge1.cell->num_incident_edges++;
+            new_edge1.end_point = &new_vertex;
+
+            // Add new half-edge.
+            edges_.push_back(edge_type());
+            edge_type &new_edge2 = edges_.back();
+            new_edge2.cell = &(*cell_iterators_[site3.get_site_index()]);
+            new_edge2.cell->num_incident_edges++;
+            new_edge2.start_point = &new_vertex;
+
+            // Update twin pointers of the new half-edges.
+            new_edge1.twin = &new_edge2;
+            new_edge2.twin = &new_edge1;
+
+            // Update voronoi prev/next pointers of all half-edges incident
+            // to the new voronoi vertex.
+            edge12->prev = &new_edge1;
+            new_edge1.next = edge12;
+            edge12->twin->next = edge23;
+            edge23->prev = edge12->twin;
+            edge23->twin->next = &new_edge2;
+            new_edge2.prev = edge23->twin;
+
+            // Update voronoi vertices incident edges pointers.
+            edge12->rot_next = &new_edge2;
+            new_edge2.rot_prev = edge12;
+            edge23->rot_next = edge12;
+            edge12->rot_prev = edge23;
+            new_edge2.rot_next = edge23;
+            edge23->rot_prev = &new_edge2;
+
+            return &new_edge1;
+        }
+
+        const voronoi_records_type &get_cell_records() const {
+            return cell_records_;
+        }
+
+        const voronoi_records_type &get_voronoi_vertices() const {
+            return vertex_records_;
+        }
+
+        const voronoi_edges_type &get_voronoi_edges() const {
+            return edges_;
+        }
+
+        int get_num_voronoi_cells() const {
+            return num_cell_records_;
+        }
+
+        int get_num_voronoi_vertices() const {
+            return num_vertex_records_;
+        }
+
+        int get_num_voronoi_edges() const {
+            return num_edges_;
+        }
+
+        const BRect<Point2D> &get_bounding_rectangle() const {
+            return voronoi_rect_;
+        }
+
+        void simplify() {
+            typename std::list<edge_type>::iterator edge_it1;
+            typename std::list<edge_type>::iterator edge_it = edges_.begin();
+
+            // Iterate over all edges and remove degeneracies.
+            while (edge_it != edges_.end()) {
+                edge_it1 = edge_it;
+                edge_it++;
+                edge_it++;
+
+                if (edge_it1->start_point && edge_it1->end_point &&
+                    edge_it1->start_point->voronoi_point ==
+                    edge_it1->end_point->voronoi_point) {
+                    // Decrease number of cell incident edges.
+                    edge_it1->cell->num_incident_edges--;
+                    edge_it1->twin->cell->num_incident_edges--;
+
+                    // To guarantee N*lon(N) time we merge vertex with
+                    // less incident edges to the one with more.
+                    if (edge_it1->start_point->num_incident_edges >=
+                        edge_it1->end_point->num_incident_edges)
+                            simplify_edge(&(*edge_it1));
+                    else
+                        simplify_edge(&(*edge_it1->twin));
+
+                    // Remove zero length edges.
+                    edges_.erase(edge_it1, edge_it);
+
+                    // Update counters.
+                    num_vertex_records_--;
+                    num_edges_--;
+                }
+            }
+
+            // Make some post processing.
+            for (voronoi_iterator_type cell_it = cell_records_.begin();
+                cell_it != cell_records_.end(); cell_it++) {
+                // Move to the previous edge while it is possible in the CW direction.
+                edge_type *cur_edge = cell_it->incident_edge;
+                while (cur_edge->prev != NULL) {
+                    cur_edge = cur_edge->prev;
+
+                    // Terminate if this is not a boundary cell.
+                    if (cur_edge == cell_it->incident_edge)
+                        break;
+                }
+
+                // Rewind incident edge pointer to the leftmost edge for the boundary cells.
+                cell_it->incident_edge = cur_edge;
+
+                // Set up prev/next half-edge pointers for ray edges.
+                if (cur_edge->prev == NULL) {
+                    edge_type *last_edge = cell_it->incident_edge;
+                    while (last_edge->next != NULL)
+                        last_edge = last_edge->next;
+                    last_edge->next = cur_edge;
+                    cur_edge->prev = last_edge;
+                }
+            }
+            
+        }
+
+        void clip(voronoi_output_clipped<Point2D> &clipped_output) const {
+            coordinate_type x_len = (voronoi_rect_.x_max - voronoi_rect_.x_min);
+            coordinate_type y_len = (voronoi_rect_.y_max - voronoi_rect_.y_min);
+            coordinate_type x_mid = (voronoi_rect_.x_max + voronoi_rect_.x_min) /
+                static_cast<coordinate_type>(2);
+            coordinate_type y_mid = (voronoi_rect_.y_max + voronoi_rect_.y_min) /
+                static_cast<coordinate_type>(2);
+
+            coordinate_type offset = x_len;
+            if (offset < y_len)
+                offset = y_len;
+            offset *= static_cast<coordinate_type>(0.55);
+            BRect<Point2D> new_brect(x_mid - offset, y_mid - offset,
+                                     x_mid + offset, y_mid + offset);
+            clip(new_brect, clipped_output);
+        }
+
+        void clip(const BRect<Point2D> &brect,
+                  voronoi_output_clipped<Point2D> &clipped_output) const {
+            if (!brect.valid())
+                return;
+            clipped_output.reset();
+            clipped_output.set_bounding_rectangle(brect);
+
+            // Iterate over all voronoi vertices.
+            for (voronoi_const_iterator_type vertex_it = vertex_records_.begin();
+                 vertex_it != vertex_records_.end(); vertex_it++) {
+                edge_type *cur_edge = vertex_it->incident_edge;
+                const Point2D &cur_vertex_point = vertex_it->voronoi_point;
+
+                // Check if bounding rectangle of clipped output contains current voronoi vertex.
+                if (brect.contains(cur_vertex_point)) {
+                    // Add current voronoi vertex to clipped output.
+                    clipped_voronoi_record_type &new_vertex =
+                        clipped_output.add_vertex(cur_vertex_point);
+                    new_vertex.num_incident_edges = vertex_it->num_incident_edges;
+                    clipped_edge_type *rot_prev_edge = NULL;
+
+                    // Process all half-edges incident to the current voronoi vertex.
+                    do {
+                        // Add new edge to the clipped output.
+                        clipped_edge_type &new_edge = clipped_output.add_edge();
+                        new_edge.start_point = &new_vertex;
+                        cur_edge->clipped_edge = &new_edge;
+ 
+                        // Ray edges with no start point don't correspond to any voronoi vertex.
+                        // That's why ray edges are processed during their twin edge processing.
+                        if (cur_edge->end_point == NULL) {
+                            // Add new twin edge.
+                            clipped_edge_type &new_twin_edge = clipped_output.add_edge();
+                            cur_edge->twin->clipped_edge = &new_twin_edge;
+                            
+                            // Add boundary vertex.
+                            std::vector<Point2D> intersections;
+                            const Point2D &site1 = cur_edge->cell->voronoi_point;
+                            const Point2D &site2 = cur_edge->twin->cell->voronoi_point;
+                            Point2D direction(site1.y() - site2.y(), site2.x() - site1.x());
+                            find_intersections(cur_vertex_point, direction, RAY, brect, intersections);
+                            clipped_voronoi_record_type &boundary_vertex = 
+                                clipped_output.add_boundary_vertex(intersections[0]);
+                            boundary_vertex.incident_edge = &new_twin_edge;
+                            boundary_vertex.num_incident_edges = 1;
+
+                            // Update new twin edge pointers.
+                            new_twin_edge.start_point = &boundary_vertex;
+                            new_twin_edge.rot_next = &new_twin_edge;
+                            new_twin_edge.rot_prev = &new_twin_edge;
+                        }
+
+                        // Update twin and end point pointers.
+                        clipped_edge_type *twin = cur_edge->twin->clipped_edge;
+                        if (twin != NULL) {
+                            new_edge.twin = twin;
+                            twin->twin = &new_edge;
+                            new_edge.end_point = twin->start_point;
+                            twin->end_point = new_edge.start_point;
+                        }
+
+                        // Update rotation prev/next pointers.
+                        if (rot_prev_edge != NULL) {
+                            new_edge.rot_prev = rot_prev_edge;
+                            rot_prev_edge->rot_next = &new_edge;
+                        }
+
+                        rot_prev_edge = &new_edge;
+                        cur_edge = cur_edge->rot_next;
+                    } while(cur_edge != vertex_it->incident_edge);
+                    
+                    // Update rotation prev/next pointers.
+                    cur_edge->clipped_edge->rot_prev = rot_prev_edge;
+                    rot_prev_edge->rot_next = cur_edge->clipped_edge;
+                    new_vertex.incident_edge = cur_edge->clipped_edge;
+                } else {
+                    do {
+                        std::vector<Point2D> intersections;
+                        Point2D direction;
+                        kEdgeType etype;
+                        if (cur_edge->end_point != NULL) {
+                            const Point2D &end_point = cur_edge->end_point->voronoi_point;
+                            direction = make_point_2d<coordinate_type> (
+                                end_point.x() - cur_vertex_point.x(),
+                                end_point.y() - cur_vertex_point.y());
+                            etype = SEGMENT;
+                        } else {
+                            const Point2D &site1 = cur_edge->cell->voronoi_point;
+                            const Point2D &site2 = cur_edge->twin->cell->voronoi_point;
+                            direction = make_point_2d<coordinate_type> (
+                                site1.y() - site2.y(), site2.x() - site1.x());
+                            etype = RAY;
+                        }
+
+                        // Find all intersections of the current
+                        // edge with bounding box of the clipped output.
+                        find_intersections(cur_vertex_point, direction, etype, brect, intersections);
+
+                        // Process edge if there are any intersections.
+                        if (!intersections.empty()) {
+                            // Add new vertex to the clipped output.
+                            clipped_voronoi_record_type &new_vertex = 
+                                clipped_output.add_boundary_vertex(intersections[0]);
+                            new_vertex.num_incident_edges = 1;
+    
+                            // Add new edge to the clipped output.
+                            clipped_edge_type &new_edge = clipped_output.add_edge();
+                            new_edge.start_point = &new_vertex;
+                            cur_edge->clipped_edge = &new_edge;
+
+                            // Process twin ray edge with no start point.
+                            if (cur_edge->end_point == NULL && intersections.size() == 2) {
+                                clipped_edge_type &new_twin_edge = clipped_output.add_edge();
+                                cur_edge->twin->clipped_edge = &new_twin_edge;
+
+                                clipped_voronoi_record_type &boundary_vertex =
+                                    clipped_output.add_boundary_vertex(intersections[1]);
+                                boundary_vertex.incident_edge = &new_twin_edge;
+                                boundary_vertex.num_incident_edges = 1;
+
+                                new_twin_edge.start_point = &boundary_vertex;
+                                new_twin_edge.rot_next = &new_twin_edge;
+                                new_twin_edge.rot_prev = &new_twin_edge;
+                            }   
+
+                            // Update twin and end point pointers.
+                            clipped_edge_type *twin = cur_edge->twin->clipped_edge;
+                            if (twin != NULL) {
+                                new_edge.twin = twin;
+                                twin->twin = &new_edge;
+                                new_edge.end_point = twin->start_point;
+                                twin->end_point = new_edge.start_point;
+                            }
+
+                            // Update rotation prev/next pointers.
+                            new_edge.rot_next = &new_edge;
+                            new_edge.rot_prev = &new_edge;
+
+                            new_vertex.incident_edge = cur_edge->clipped_edge;
+                        }
+                        cur_edge = cur_edge->rot_next;
+                    } while (cur_edge != vertex_it->incident_edge);
+                }
+            }
+
+            // Iterate over all voronoi cells.
+            for (voronoi_const_iterator_type cell_it = cell_records_.begin();
+                 cell_it != cell_records_.end(); cell_it++) {
+                // Add new cell to the clipped output.
+                clipped_voronoi_record_type &new_cell =
+                    clipped_output.add_cell(cell_it->voronoi_point);
+                edge_type *cur_edge = cell_it->incident_edge;
+                clipped_edge_type *prev = NULL;
+
+                // Update cell, next/prev pointers.
+                do {
+                    clipped_edge_type *new_edge = cur_edge->clipped_edge;
+                    if (new_edge) {
+                        if (prev) {
+                            new_edge->prev = prev;
+                            prev->next = new_edge;
+                        }
+                        new_edge->cell = &new_cell;
+                        if (new_cell.incident_edge == NULL)
+                            new_cell.incident_edge = cur_edge->clipped_edge;
+                        new_cell.num_incident_edges++;
+                        prev = new_edge;
+                        cur_edge->clipped_edge = NULL;
+                    }
+                    cur_edge = cur_edge->next;
+                } while(cur_edge != cell_it->incident_edge);
+
+                if (new_cell.incident_edge == NULL)
+                    clipped_output.pop_cell();
+                else {
+                    // Update prev/next pointers.
+                    prev->next = new_cell.incident_edge;
+                    new_cell.incident_edge->prev = prev;
+                }
+            }
+        }
+
+        // Find edge(segment, ray, line) rectangle intersetion points.
+        void find_intersections(const Point2D &origin, const Point2D &direction,
+            kEdgeType edge_type, const BRect<Point2D> &brect,
+            std::vector<Point2D> &intersections) const {
+            // Do intersection test.
+            if (!test_intersection(origin, direction, brect))
+                return;
+
+            // Intersection parameters:
+            // origin + fT[i] * direction = intersections point, i = 0 .. 1.
+            bool fT0_used = false;
+            bool fT1_used = false;
+            coordinate_type fT0 = static_cast<coordinate_type>(0);
+            coordinate_type fT1 = static_cast<coordinate_type>(0);
+
+            // Half lengths of sides of a bounding rectangle.
+            coordinate_type half = static_cast<coordinate_type>(0.5);
+            coordinate_type x_len = (brect.x_max - brect.x_min) * half;
+            coordinate_type y_len = (brect.y_max - brect.y_min) * half;
+
+            // Find intersections with lines going through sides of a bounding recntagle.
+            clip(+direction.x(), -origin.x() - x_len, fT0_used, fT1_used, fT0, fT1);
+            clip(-direction.x(), +origin.x() - x_len, fT0_used, fT1_used, fT0, fT1);
+            clip(+direction.y(), -origin.y() - y_len, fT0_used, fT1_used, fT0, fT1);
+            clip(-direction.y(), +origin.y() - y_len, fT0_used, fT1_used, fT0, fT1);
+
+            if (fT0_used && check_extent(fT0, edge_type))
+                intersections.push_back(make_point_2d(origin.x() + fT0_used * direction.x(),
+                                                      origin.y() + fT0_used * direction.y()));
+            if (fT1_used && check_extent(fT1, edge_type))
+                intersections.push_back(make_point_2d(origin.x() + fT1_used * direction.x(),
+                                                      origin.y() + fT1_used * direction.y()));
+        }
+
+    private:
+        // Simplify degenerate edge.
+        void simplify_edge(edge_type *edge) {
+            voronoi_record_type *vertex1 = edge->start_point;
+            voronoi_record_type *vertex2 = edge->end_point;
+
+            // Update number of incident edges.
+            vertex1->num_incident_edges += vertex2->num_incident_edges - 2;
+
+            // Update second vertex incident edges start and end points.
+            edge_type *updated_edge = edge->twin->rot_next;
+            while (updated_edge != edge->twin) {
+                updated_edge->start_point = vertex1;
+                updated_edge->twin->end_point = vertex1;
+                updated_edge = updated_edge->rot_next;
+            }
+
+            edge_type *edge1 = edge;
+            edge_type *edge2 = edge->twin;
+
+            edge_type *edge1_rot_prev = edge1->rot_prev;
+            edge_type *edge1_rot_next = edge1->rot_next;
+
+            edge_type *edge2_rot_prev = edge2->rot_prev;
+            edge_type *edge2_rot_next = edge2->rot_next;
+
+            // Update prev and next pointers of incident edges.
+            edge1_rot_next->twin->next = edge2_rot_prev;
+            edge2_rot_prev->prev = edge1_rot_next->twin;
+            edge1_rot_prev->prev = edge2_rot_next->twin;
+            edge2_rot_next->twin->next = edge1_rot_prev;
+
+            // Update rotation prev and next pointers of incident edges.
+            edge1_rot_prev->rot_next = edge2_rot_next;
+            edge2_rot_next->rot_prev = edge1_rot_prev;
+            edge1_rot_next->rot_prev = edge2_rot_prev;
+            edge2_rot_prev->rot_next = edge1_rot_next;
+
+            // Change incident edge pointer of a vertex if it correspongs to the
+            // degenerate edge.
+            if (vertex1->incident_edge == edge)
+                vertex1->incident_edge = edge->rot_prev;
+
+            // Remove second vertex from the vertex records list.
+            vertex_records_.erase(vertex2->voronoi_record_it);
+        }
+
+        bool check_extent(coordinate_type extent, kEdgeType etype) const {
+            switch (etype) {
+                case SEGMENT: return extent >= static_cast<coordinate_type>(0) &&
+                                     extent <= static_cast<coordinate_type>(1);
+                case RAY: return extent >= static_cast<coordinate_type>(0);
+                case LINE: return true;
+            }
+            return true;
+        }
+
+        coordinate_type magnitude(coordinate_type value) const {
+            if (value >= static_cast<coordinate_type>(0))
+                return value;
+            return -value;
+        }
+
+        // Check line rectangle intersection.
+        bool test_intersection(const Point2D &origin, const Point2D &direction,
+            const BRect<Point2D> &brect) const {
+            coordinate_type half = static_cast<coordinate_type>(0.5);
+
+            // Find rectangle center.
+            coordinate_type center_x = (brect.x_min + brect.x_max) * half;
+            coordinate_type center_y = (brect.y_min + brect.y_max) * half;
+
+            // Find rectangle half-diagonal vector.
+            coordinate_type len_x = brect.x_max - center_x;
+            coordinate_type len_y = brect.y_max - center_y;
+
+            // Find distance between origin and center of rectangle.
+            coordinate_type diff_x = origin.x() - center_x;
+            coordinate_type diff_y = origin.y() - center_y;
+            
+            // Find direction perpendicular to the current.
+            coordinate_type perp_x = direction.y();
+            coordinate_type perp_y = -direction.x();
+
+            // Compare projections of distances.
+            coordinate_type lexpr = magnitude(perp_x * diff_x + perp_y * diff_y);
+            coordinate_type rexpr = magnitude(perp_x * len_x) + magnitude(perp_y * len_y);
+
+            return lexpr <= rexpr;
+        }
+
+        bool clip(coordinate_type denom, coordinate_type numer, bool &fT0_used, bool &fT1_used,
+            coordinate_type &fT0, coordinate_type fT1) const {
+            if (denom > static_cast<coordinate_type>(0)) {
+                if (fT1_used && numer > denom * fT1)
+                    return false;
+                if (!fT0_used || numer > denom * fT0) {
+                    fT0_used = true;
+                    fT0 = numer / denom;
+                }
+                return true;
+            } else if (denom < static_cast<coordinate_type>(0)) {
+                if (fT0_used && numer > denom * fT0)
+                    return false;
+                if (!fT1_used || numer > denom * fT1) {
+                    fT1_used = true;
+                    fT1 = numer / denom;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        std::vector<voronoi_iterator_type> cell_iterators_;
+        voronoi_records_type cell_records_;
+        voronoi_records_type vertex_records_;
+        std::list<edge_type> edges_;
+
+        int num_cell_records_;
+        int num_vertex_records_;
+        int num_edges_;
+
+        BRect<Point2D> voronoi_rect_;
+
+        // Disallow copy constructor and operator=
+        voronoi_output(const voronoi_output&);
+        void operator=(const voronoi_output&);
     };
   
 } // sweepline

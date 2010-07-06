@@ -10,7 +10,7 @@
 #include <cmath>
 
 #include "test_type_list.hpp"
-#include "boost/sweepline/voronoi_output.hpp"
+#include "boost/sweepline/voronoi_sweepline.hpp"
 using namespace boost::sweepline;
 
 #define BOOST_TEST_MODULE event_queue_test

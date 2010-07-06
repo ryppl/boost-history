@@ -7,12 +7,10 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
-#include <algorithm>
-
-#include "voronoi_output.hpp"
-
 #ifndef BOOST_SWEEPLINE_VORONOI_BUILDER
 #define BOOST_SWEEPLINE_VORONOI_BUILDER
+
+#include <algorithm>
 
 namespace boost {
 namespace sweepline {
@@ -23,7 +21,7 @@ namespace sweepline {
     public:
         typedef point_2d<T> Point2D;
         typedef typename Point2D::coordinate_type coordinate_type;
-        typedef voronoi_output<Point2D> Output;
+        typedef detail::voronoi_output<Point2D> Output;
         typedef typename Output::edge_type edge_type;
 
         voronoi_builder() {
@@ -107,8 +105,16 @@ namespace sweepline {
             output_.simplify();
         }
 
-        const Output &get_output() const {
-            return output_;
+        const BRect<Point2D> &get_bounding_rectangle() const {
+            return output_.get_bounding_rectangle();
+        }
+
+        void clip(voronoi_output_clipped<Point2D> &clipped_output) {
+            output_.clip(clipped_output);
+        }
+
+        void clip(const BRect<Point2D> &brect, voronoi_output_clipped<Point2D> &clipped_output) {
+            output_.clip(brect, clipped_output);
         }
 
     protected:
@@ -118,7 +124,7 @@ namespace sweepline {
 
         typedef typename detail::circle_events_queue<Point2D> CircleEventsQueue;
         typedef typename detail::beach_line_node<Point2D> Key;
-        typedef typename detail::beach_line_node_data<edge_type> Value;
+        typedef typename detail::beach_line_node_data<Point2D> Value;
         typedef typename detail::node_comparer<Key> NodeComparer;
         typedef std::map< Key, Value, NodeComparer > BeachLine;
         typedef typename std::map< Key, Value, NodeComparer >::iterator beach_line_iterator;
@@ -307,9 +313,9 @@ namespace sweepline {
             // Check if bisectors intersect.
             if (a >= static_cast<coordinate_type>(0))
                 return false;
-            coordinate_type b1 = (site1.x() - site2.x()) * (site1.x() + site2.x())+
+            coordinate_type b1 = (site1.x() - site2.x()) * (site1.x() + site2.x()) +
                                  (site1.y() - site2.y()) * (site1.y() + site2.y());
-            coordinate_type b2 = (site2.x() - site3.x()) * (site2.x() + site3.x())+
+            coordinate_type b2 = (site2.x() - site3.x()) * (site2.x() + site3.x()) +
                                  (site2.y() - site3.y()) * (site2.y() + site3.y());
             coordinate_type c_x = (b1*(site2.y() - site3.y()) - b2*(site1.y() - site2.y())) / a *
                                   static_cast<coordinate_type>(0.5);

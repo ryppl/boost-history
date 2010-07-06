@@ -8,7 +8,7 @@
 //  See http://www.boost.org for updates, documentation, and revision history.
 
 #include "test_type_list.hpp"
-#include "boost/sweepline/voronoi_output.hpp"
+#include "boost/sweepline/voronoi_sweepline.hpp"
 using namespace boost::sweepline;
 using namespace boost::sweepline::detail;
 

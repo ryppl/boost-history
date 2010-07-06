@@ -1,4 +1,4 @@
-// Boost sweepline library test_type_list.hpp file 
+// Boost sweepline/voronoi_sweepline.hpp header file 
 
 //          Copyright Andrii Sydorchuk 2010.
 // Distributed under the Boost Software License, Version 1.0.
@@ -7,11 +7,13 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
-#ifndef BOOST_SWEEPLINE_TEST_TYPE_LIST
-#define BOOST_SWEEPLINE_TEST_TYPE_LIST
+#ifndef BOOST_SWEEPLINE_VORONOI_SWEEPLINE
+#define BOOST_SWEEPLINE_VORONOI_SWEEPLINE
 
-#include <boost/mpl/list.hpp>
+#include "voronoi_output.hpp"
 
-typedef boost::mpl::list<double, long double> test_types;
+#include "detail/voronoi_formation.hpp"
+
+#include "voronoi_builder.hpp"
 
 #endif
