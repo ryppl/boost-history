@@ -5,5 +5,15 @@ Distributed under the Boost Software License, Version 1.0. (See accompanying
 file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
 [section Glossary]
-TODO:Figure out what to put here.
+
+* Bit Field Related Resourses
+    * [@http://en.wikipedia.org/wiki/Bit_field Wikipedia Bit Field] - Wikipedia
+article on bit fields.
+    * [@http://msdn.microsoft.com/en-us/library/ewwyfdbe%28VS.71%29.aspx
+Microsoft Bit Field] - MSDN article on bit fields.
+    * [@http://publications.gbdirect.co.uk/c_book/chapter6/bitfields.html 
+C - Book: Bitfields] - Chapter on bit fields from a book on C.
+    * [@http://publib.boulder.ibm.com/infocenter/macxhelp/v6v81/index.jsp?topic=/com.ibm.vacpp6m.doc/language/ref/clrc03defbitf.htm
+IBM Bit Field Documentation] - Documentation page on the IBM about bit fields.
+
 [endsect]
