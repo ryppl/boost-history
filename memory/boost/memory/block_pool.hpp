@@ -77,6 +77,7 @@ private:
 
 	int m_nFree;
 	const int m_nFreeLimit;
+	size_t m_cbAllocSize;
 
 private:
 	block_alloc(const block_alloc&);
@@ -84,9 +85,11 @@ private:
 
 public:
 	block_alloc(int cbFreeLimit = INT_MAX)
-		: m_freeList(NULL), m_nFree(0),
-		  m_nFreeLimit(cbFreeLimit / m_cbBlock)
+		: m_nFree(1), m_nFreeLimit(cbFreeLimit / m_cbBlock)
 	{
+		m_freeList = (Block*)AllocT::allocate(m_cbBlock);
+		m_freeList->next = NULL;
+		m_cbAllocSize = AllocT::alloc_size(m_freeList);
 	}
 	~block_alloc()
 	{
@@ -120,7 +123,7 @@ public:
 
 	void BOOST_MEMORY_CALL deallocate(void* p)
 	{
-		if (m_nFree >= m_nFreeLimit) {
+		if (AllocT::alloc_size(p) > m_cbAllocSize || m_nFree >= m_nFreeLimit) {
 			AllocT::deallocate(p);
 		}
 		else {
