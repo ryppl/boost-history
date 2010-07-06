@@ -64,6 +64,9 @@ please use the table of contents above.
 ]
 
 [endsect]
+[section Bit Masks]
+[section Overview]
+[endsect]
 
 [section:bit_mask_purpose Purpose]
 The purpose of this library extension to the boost.integer library is to make
@@ -105,6 +108,7 @@ simply treat it as though it were an integer.
 [include:high_bits_mask high_bits.qbk]
 [include:low_bits_mask low_bits.qbk]
 [include:bits_mask bits_mask.qbk]
+[endsect]
 [include:bitfield_tuple bitfield_tuple.qbk]
 [include:rationale rationale.qbk]
 
