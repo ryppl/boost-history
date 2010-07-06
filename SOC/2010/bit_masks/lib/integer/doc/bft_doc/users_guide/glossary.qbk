@@ -15,5 +15,10 @@ Microsoft Bit Field] - MSDN article on bit fields.
 C - Book: Bitfields] - Chapter on bit fields from a book on C.
     * [@http://publib.boulder.ibm.com/infocenter/macxhelp/v6v81/index.jsp?topic=/com.ibm.vacpp6m.doc/language/ref/clrc03defbitf.htm
 IBM Bit Field Documentation] - Documentation page on the IBM about bit fields.
+* Data Structure Packing Resourses.
+    * [@http://en.wikipedia.org/wiki/Data_structure_alignment
+Wikipedia Data Struture Alignment] - Data Structure Alignment article from
+Wikipedia. This relates directly to packing of data structures.
+
 
 [endsect]
