@@ -192,6 +192,9 @@ public:
     struct bit_reference {
         explicit bit_reference(pointer& x);
         bit_reference(bit_reference<Index> const& x);
+        operator bool() const;
+        bit_reference<Index> const& operator=(bool rhs);
+
     private:
         bit_reference();
         pointer& _ref;

@@ -106,7 +106,7 @@ public:
      *  This sets the initial value of the internal data to x.
      *  Also functions as the default constructor.
      */
-    explicit bitfield_tuple(storage_type x = 0)
+    explicit bitfield_tuple(storage_type x = storage_type())
         :_data(x)
     { }
 
