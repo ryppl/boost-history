@@ -1,0 +1,13 @@
+
+
+# Import the os module so we can read the environment.
+import os ;
+
+# Normally, you wouldn't need to reference BOOST_ROOT. It's explicitly defined
+# in the Jamroot file in the Boost trunk. Since we're not in that source tree
+# we need to configure it.
+path-constant BOOST_ROOT : [ os.environ BOOST_ROOT ] ;
+
+# We'll define this for convenience. This is the root of your project.
+path-constant SOC_ROOT : . ;
+
