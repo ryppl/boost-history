@@ -225,16 +225,16 @@ namespace boost { namespace integer {
         static const std::size_t STS        = 8*sizeof(storage_type);
         static const std::size_t LASTD      = STS-LAST-1;
         static const std::size_t WIDTH      = LAST - FIRST + 1;     //!< Width in bits of the bitfield
-
+/*
         static const storage_type VAL_MASK;
         static const storage_type FIELD_MASK;
         static const storage_type SIGN_MASK;
+*/
 
-/*
         static const storage_type VAL_MASK   = storage_type((1 << WIDTH) - 1);    //!< Mask applied against assigned values
         static const storage_type FIELD_MASK = storage_type(VAL_MASK << LASTD); //!< Mask of the field's bit positions
         static const storage_type SIGN_MASK  = storage_type(~VAL_MASK);            //!< Sign mask applied against assigned 
-*/
+
 /*
         static const storage_type VAL_MASK   = (1 << WIDTH) - 1;    //!< Mask applied against assigned values
         static const storage_type FIELD_MASK = (VAL_MASK << LASTD); //!< Mask of the field's bit positions
@@ -358,7 +358,7 @@ namespace boost { namespace integer {
         r.set(v);
         return is;
     }
-
+/*
 template <
     typename STORAGE_TYPE,
     std::size_t F,
@@ -369,7 +369,7 @@ template <
 bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::storage_type bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::VAL_MASK =
     bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::storage_type(
     (1 << bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::WIDTH) - 1);
-/*
+
 template <
     typename STORAGE_TYPE,
     std::size_t F,

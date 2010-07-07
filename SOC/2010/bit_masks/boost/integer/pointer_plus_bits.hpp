@@ -10,7 +10,7 @@
 #include <cstddef>
 #include <boost/mpl/if.hpp>
 #include <boost/integer/bits_mask.hpp>
-
+#include <boost/utility/enable_if.hpp>
 
 namespace boost { namespace details { namespace ppb {
 template <typename T>
@@ -146,6 +146,7 @@ public:
 
 
     // preincrement.
+    // TODO:make this not work if value_type is not divisible by a dword.
     _self& operator++() {
         this->set_pointer(++get_address());
         return *this;
@@ -160,6 +161,7 @@ public:
     }
 
     // pre decrement
+    // TODO:make this not work if value_type is not divisible by a dword.
     _self& operator--() {
         this->set_pointer(--get_address());
         return *this;
@@ -176,7 +178,7 @@ public:
 
 
     // TODO: Revisit this later or send something to the ML about how the
-    // equality operator works.
+    // equality operator should work.
     bool operator==(_self rhs) const {
         return get_address() == rhs.get_address();
     }
@@ -185,20 +187,55 @@ public:
         return get_address() != rhs.get_address();
     }
 
+    bool operator<(_self rhs) const;
+    bool operator<=(_self rhs) const;
+    bool operator>(_self rhs) const;
+    bool operator>=(_self rhs) const;
+
+    bool operator<(pointer rhs) const;
+    bool operator<=(pointer rhs) const;
+    bool operator>(pointer rhs) const;
+    bool operator>=(pointer rhs) const;
+
+
+
 
     // TODO: MAKE A PROXY REFERENCE TYPE FOR THE GET FUNCTION. for getting
     // single bits from the stuffed bits this will be trivial.
     template <std::size_t Index>
     struct bit_reference {
-        explicit bit_reference(pointer& x);
+        typedef bits_mask<mask_type, Index>     mask;
         bit_reference(bit_reference<Index> const& x);
         operator bool() const;
         bit_reference<Index> const& operator=(bool rhs);
-
+        bit_reference<Index> const& operator=(bit_reference<Index> const& x);
+        void flip();
+        bool operator~() const;
+        ~bit_reference();
     private:
+        friend class pointer_plus_bits;
         bit_reference();
         pointer& _ref;
     };
+
+    template <std::size_t Index>
+    typename enable_if_c<
+        (Index < stuffed_bits),
+        bit_reference<Index>
+    >::type
+    get() {
+        return  bit_reference<Index>()._ref = _data;
+    }
+
+    template <std::size_t Index>
+    typename enable_if_c<
+        (Index < stuffed_bits),
+        bit_reference<Index>
+    >::type
+    get() const {
+        return  bit_reference<Index>()._ref = _data;
+    }
+
 
 private:
     pointer _data;
