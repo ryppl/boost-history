@@ -50,7 +50,11 @@ test-suite integer
             :
             <toolset>gcc:<cxxflags>-Wno-long-long <toolset>darwin:<cxxflags>-Wno-long-long ]
         [ run bft_testing/make_bft_testing.cpp ]
-        #[ run bft_testing/boost_endian_integration_test.cpp ]
+        [ run bft_testing/boost_endian_integration_test.cpp
+            :
+            :
+            :
+            <toolset>gcc:<cxxflags>-Wno-long-long <toolset>darwin:<cxxflags>-Wno-long-long ]
         [ run ppb_testing/pointer_plus_bits_test.cpp ]
 
 
