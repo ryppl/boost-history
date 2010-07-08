@@ -25,7 +25,12 @@ as `member<bool,red,1>` would have.
 
 
 [h4 Template Signature]
-`template <typename Name> struct flag;`
+``
+namespace boost { namespace bitfields {
+template <typename Name> struct flag;
+}} // end boost::bitfields
+``
+
 
 [h4 Header file Locaton]
 This header file is included with the <boost/integer/bitfield_tuple.hpp> header

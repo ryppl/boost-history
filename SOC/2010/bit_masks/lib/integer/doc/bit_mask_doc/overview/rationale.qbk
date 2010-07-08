@@ -9,9 +9,14 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 The motivation for the creation of a structure for creating bit masks on compile
 time. Bit masks are usually create using hexadecimal characters or by using
 macros. In either case the readability of the clarity of the bit masks are
-obscured and often the mask it self is not readible. This extension will also 
-allow the users to work with endianness at an abstract level.
+obscured and often the mask it self is not readible.
 
+[\
+
+TODO need to actually do this before adding it to the documentation.
+This extension will also allow the users to work with endianness at an
+abstract level. 
+]
 [/
 The motivation and rationale behind the creation a bit masking library stems
 from the following example:

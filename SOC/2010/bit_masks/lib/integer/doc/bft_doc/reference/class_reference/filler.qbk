@@ -13,7 +13,11 @@ the next starting position of the next bitfield specified in the template
 parameter list.
 
 [h4 Template Signature]
-`template <std::size_t Bits> struct filler;`
+``
+namespace boost { namespace bitfields {
+template <std::size_t Bits> struct filler;
+}} // end boost::bitfields
+``
 
 [h4 Header file Locaton]
 This header file is included with the <boost/integer/bitfield_tuple.hpp> header

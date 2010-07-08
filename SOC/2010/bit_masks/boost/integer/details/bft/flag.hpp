@@ -10,9 +10,7 @@
 
 
 namespace boost {
-
-
-
+namespace bitfields {
 /** Allows the user to simplify the creation of a bool member by simply 
  *  requiring that they specify a name and assuming that if the flag is used
  *  that the underlying type's width is going to be 1.
@@ -22,6 +20,6 @@ struct flag;
 
 
 
-} // end boost
+}} // end boost::bitfields
 
 #endif

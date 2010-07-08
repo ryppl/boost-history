@@ -15,7 +15,12 @@ as calling `bit_align<8>` once. ]
 
 
 [h4 Template Signature]
-`template <std::size_t AlignTo> struct bit_align;`
+``
+namespace boost { namespace bitfields {
+template <std::size_t AlignTo> struct bit_align;
+}} // end boost::bitfields
+``
+
 
 [h4 Header file Locaton]
 This header file is included with the <boost/integer/bitfield_tuple.hpp> header

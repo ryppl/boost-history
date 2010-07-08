@@ -19,7 +19,14 @@ in the endianness specified as well as return and accept values in the
 endianness of your native machine.
 
 [h4 Template Signature]
-`template <typename StorageType> struct storage;`
+``
+namespace boost { namespace bitfields {
+template <typename StorageType> struct storage;
+}} // end boost::bitfields
+``
+
+
+
 
 [h4 Header file Locaton]
 This header file is included with the <boost/integer/bitfield_tuple.hpp> header

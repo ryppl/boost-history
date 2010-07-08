@@ -30,8 +30,13 @@ by the `member` template.]
 ]
 
 [h4 Template Signature]
-`template <typename ReturnType, typename NameType, std::size_t Width>
-struct member;`
+``
+namespace boost { namespace bitfields {
+template <typename ReturnType, typename NameType, std::size_t Width>
+struct member;
+}} // end boost::bitfields
+``
+
 
 [h4 Header file Locaton]
 This header file is included with the <boost/integer/bitfield_tuple.hpp> header

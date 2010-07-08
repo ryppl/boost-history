@@ -75,7 +75,7 @@ template <  typename StorageType,
             typename Offset
 >
 struct bft_arg_parse_impl <
-    storage<StorageType>,
+    bitfields::storage<StorageType>,
     StoragePolicy,
     FieldVector,
     Offset >
@@ -83,7 +83,7 @@ struct bft_arg_parse_impl <
     // make sure that the storage type is not specifed twice
     BOOST_STATIC_ASSERT(( is_same<StoragePolicy,mpl::void_>::value ));
 
-    typedef storage<
+    typedef bitfields::storage<
         StorageType
     >                       param;
     typedef FieldVector     field_vector;
@@ -118,7 +118,7 @@ template <  typename StoragePolicy,
             typename Offset
 >
 struct bft_arg_parse_impl <
-    member <
+    bitfields::member <
         ReturnType,
         NameType,
         FieldWidth
@@ -146,7 +146,7 @@ struct bft_arg_parse_impl <
     ));
 
 
-    typedef member< ReturnType, NameType, FieldWidth > param;
+    typedef bitfields::member< ReturnType, NameType, FieldWidth > param;
 
     typedef StoragePolicy   storage_policy;
     typedef typename mpl::push_back<
@@ -186,12 +186,12 @@ template <  typename StoragePolicy,
             typename Offset
 >
 struct bft_arg_parse_impl <
-    flag <NameType>,
+    bitfields::flag <NameType>,
     StoragePolicy,
     FieldVector,
     Offset >
     :bft_arg_parse_impl <
-        member<bool,NameType,1>,
+        bitfields::member<bool,NameType,1>,
         StoragePolicy,
         FieldVector,
         Offset
@@ -205,14 +205,14 @@ template <  std::size_t PaddingBits,
             typename Offset
 >
 struct bft_arg_parse_impl <
-    filler<
+    bitfields::filler<
         PaddingBits
     >,
     StoragePolicy,
     FieldVector,
     Offset >
 {
-    typedef filler<PaddingBits> param;
+    typedef bitfields::filler<PaddingBits> param;
     typedef FieldVector     field_vector;
     typedef StoragePolicy   storage_policy;
     typedef mpl::size_t<PaddingBits + Offset::value > offset;
@@ -239,14 +239,14 @@ template <  std::size_t AlignTo,
             typename Offset
 >
 struct bft_arg_parse_impl <
-    bit_align<
+    bitfields::bit_align<
         AlignTo
     >,
     StoragePolicy,
     FieldVector,
     Offset >
 {
-    typedef bit_align<AlignTo> param;
+    typedef bitfields::bit_align<AlignTo> param;
     typedef FieldVector     field_vector;
     typedef StoragePolicy   storage_policy;
 

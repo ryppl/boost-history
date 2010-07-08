@@ -10,13 +10,12 @@
 
 namespace boost {
 
-
+namespace bitfields {
 /** Allows the alignment to be set to the next bit which has the same alignment
  *  as the as AlignTo specifies relative to the current offset in bits.
  */
 template <std::size_t AlignTo>
 struct bit_align;
-
-} // end boost
+}} // end boost::bitfields
 
 #endif

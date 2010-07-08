@@ -9,13 +9,13 @@
 #include <cstddef>
 
 namespace boost {
-
+namespace bitfields {
 /** Template is used to specify a size or ammound of bits which is 
  *  not to be used but instead to be filled with padding or unused bits.
  */
 template < std::size_t N>
 struct filler;
 
-} // end boost
+}} // end boost::bitfields
 
 #endif

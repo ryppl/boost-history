@@ -8,7 +8,7 @@
 #define BOOST_BIT_MASKS_TAGGED_HPP
 
 namespace boost {
-
+namespace bitfields {
 
 /** Storage type used for moving the type to be used for interenal storage 
  *  around within the template parameters of a bitfield_tuple.
@@ -16,6 +16,6 @@ namespace boost {
 template < typename StorageType>
 struct storage;
 
-} // end boost
+}} // end boost::bitfields
 
 #endif

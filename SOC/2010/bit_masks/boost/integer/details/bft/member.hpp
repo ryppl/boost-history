@@ -14,8 +14,7 @@
 
 
 namespace boost {
-
-
+namespace bitfields {
 
 /** The purpose of the member struct is to provide a simple way of passing
  *  parameters into a bitfield_tuple or bit_mask_tuple. The use of this is
@@ -26,8 +25,6 @@ namespace boost {
 template <typename ReturnType, typename Name, std::size_t FieldWidth>
 struct member;
 
-
-
-} // end boost
+}} // end boost::bitfields
 
 #endif

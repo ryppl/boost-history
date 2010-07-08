@@ -30,6 +30,7 @@ In the next example a `bitfield_tuple` type is made to model `struct foo`'s beha
 but reduce its storage from 4 bytes to one.
 ``
 using namespace boost;
+using namespace boost::bitfields;
 // names used to mimic the names in struct foo.
 struct flag_1;
 struct flag_2;
@@ -80,6 +81,8 @@ using a name or an index.
 #include <iostream>
 
 using namespace boost;
+using namespace boost::bitfields;
+
 // names used to mimic the names in struct foo.
 struct flag_1;
 struct flag_2;
