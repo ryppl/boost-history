@@ -24,6 +24,96 @@ struct get_mask_type {
 
 }} // end detials::ppb
 
+
+/**
+template <typename T, std::size_t ExtraBits = 2 >
+class pointer_plus_bits {
+    typedef pointer_plus_bits<T,ExtraBits> _self;
+public:
+    typedef T                   value_type;
+    typedef value_type*         pointer;
+    typedef value_type const*   const_pointer;
+    typedef value_type&         reference;
+    typedef value_type const&   const_reference;
+    BOOST_STATIC_CONSTANT(std::size_t, stuffed_bits = ExtraBits);
+    typedef std::ptrdiff_t      difference_type;
+    typedef typename details::ppb::get_mask_type<
+        value_type
+    >::type                     mask_type;
+    typedef high_bits_mask<
+        mask_type,
+        bit_width<mask_type>::value - stuffed_bits
+    >                           ptr_mask;
+    typedef low_bits_mask<
+        mask_type,
+        stuffed_bits
+    >                           stuffed_bits_mask;
+
+    explicit pointer_plus_bits(pointer x);
+    pointer_plus_bits(_self const& x);
+    pointer_plus_bits ( );
+    pointer get_address () const;
+    mask_type get_stuffed_bits () const;
+    void set_pointer(pointer x);
+    _self const& operator=(_self const& rhs);
+    _self const& operator=(pointer rhs);
+    reference operator*() const;
+    pointer operator->() const;
+
+    difference_type operator-(_self rhs);
+    pointer operator+(uintmax_t rhs);
+    _self const& operator+=(intmax_t rhs);
+    _self const& operator-=(intmax_t rhs);
+    _self& operator++();
+    _self operator++(int);
+    _self& operator--();
+    _self operator--(int);
+    bool operator==(_self rhs) const;
+    bool operator!=(_self rhs) const;
+    bool operator<(_self rhs) const;
+    bool operator<=(_self rhs) const;
+    bool operator>(_self rhs) const;
+    bool operator>=(_self rhs) const;
+    bool operator<(pointer rhs) const;
+    bool operator<=(pointer rhs) const;
+    bool operator>(pointer rhs) const;
+    bool operator>=(pointer rhs) const;
+    template <std::size_t Index>
+    struct bit_reference {
+        typedef bits_mask<mask_type, Index>     mask;
+        bit_reference(bit_reference<Index> const& x);
+        operator bool() const;
+        bit_reference<Index> const& operator=(bool rhs);
+        bit_reference<Index> const& operator=(bit_reference<Index> const& x);
+        void flip();
+        bool operator~() const;
+        ~bit_reference ();
+    private:
+        friend class pointer_plus_bits;
+        bit_reference ();
+        pointer& _ref;
+    };
+
+    template <std::size_t Index>
+    typename enable_if_c<
+        (Index < stuffed_bits),
+        bit_reference<Index>
+    >::type
+    get ();
+
+    template <std::size_t Index>
+    typename enable_if_c<
+        (Index < stuffed_bits),
+        bit_reference<Index>
+    >::type
+    get() const;
+
+
+private:
+    pointer _data;
+};
+*/
+
 template <typename T, std::size_t ExtraBits = 2 >
 class pointer_plus_bits {
     typedef pointer_plus_bits<T,ExtraBits> _self;
