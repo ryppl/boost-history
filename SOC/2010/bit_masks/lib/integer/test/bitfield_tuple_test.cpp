@@ -10,6 +10,7 @@
 #include <boost/mpl/end.hpp>
 #include <boost/mpl/begin.hpp>
 
+using namespace boost::bitfields;
 void ignore(...) {}
 
 struct red { };

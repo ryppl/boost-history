@@ -7,7 +7,7 @@
 #include <boost/integer/bitfield_tuple.hpp>
 
 using namespace boost;
-
+using namespace boost::bitfields;
 // this fails because the type in side member is to large for the return type.
 struct pink;
 

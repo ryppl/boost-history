@@ -7,7 +7,7 @@
 #include <boost/integer/bitfield_tuple.hpp>
 
 using namespace boost;
-
+using namespace boost::bitfields;
 // this fails when the assert for the precondition within member restricting
 // it to be something other then 0 fails.
 

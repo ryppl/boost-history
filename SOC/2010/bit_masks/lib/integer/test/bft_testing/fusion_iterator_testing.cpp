@@ -10,6 +10,7 @@
 #include <boost/integer/details/fusion_ext_includes.hpp>
 
 using namespace boost;
+using namespace boost::bitfields;
 
 struct red;
 struct green;

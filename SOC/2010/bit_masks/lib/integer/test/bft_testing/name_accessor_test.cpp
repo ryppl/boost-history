@@ -9,6 +9,8 @@
 #include <boost/integer/details/bft/name_lookup.hpp>
 
 using namespace boost;
+using namespace boost::bitfields;
+
 struct red;
 struct green;
 struct pink;

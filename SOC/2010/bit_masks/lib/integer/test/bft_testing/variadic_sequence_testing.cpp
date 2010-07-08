@@ -10,6 +10,7 @@
 
 
 using namespace boost;
+using namespace boost::bitfields;
 
 struct red;
 struct green;

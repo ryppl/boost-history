@@ -7,6 +7,7 @@
 #include <boost/integer/bitfield_tuple.hpp>
 
 using namespace boost;
+using namespace boost::bitfields;
 
 // Testing to see if the include paths work correctly.
 #include <boost/integer/details/bft/ext/bitfield_tuple_fusion_includes.hpp>

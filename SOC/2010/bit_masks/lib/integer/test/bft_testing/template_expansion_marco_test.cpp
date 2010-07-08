@@ -11,6 +11,7 @@
 #include <iostream>
 
 using namespace boost;
+using namespace boost::bitfields;
 using namespace std;
 
 template <BOOST_MAKE_BFT_TEMPLATE_PARAMS()>

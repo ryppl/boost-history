@@ -7,7 +7,7 @@
 #include <boost/integer/bitfield_tuple.hpp>
 
 using namespace boost;
-
+using namespace boost::bitfields;
 struct red { };
 // Fails because storage is specified twice.
 typedef bitfield_tuple<storage<int>, storage<unsigned int>, member<int,red,3> > bft;

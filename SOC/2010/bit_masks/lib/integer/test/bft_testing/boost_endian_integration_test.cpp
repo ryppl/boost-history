@@ -16,13 +16,17 @@ struct green;
 struct blue;
 using namespace boost;
 using namespace boost::integer;
+using namespace boost::bitfields;
+
+
+
 
 typedef bitfield_tuple<
     storage< big32_t >,
     member<unsigned char, red, 5>,
     member<unsigned char, green, 6>,
     member<unsigned char, blue, 5>
->       rgb565_t;
+>                               rgb565_t;
 
 int main() {
     {

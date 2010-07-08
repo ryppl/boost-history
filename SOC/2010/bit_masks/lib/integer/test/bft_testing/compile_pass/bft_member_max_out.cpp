@@ -7,6 +7,8 @@
 #include <boost/integer/bitfield_tuple.hpp>
 
 using namespace boost;
+using namespace boost::bitfields;
+
 struct red { };
 struct pink;
 // this needs to pass because its a basic declaration and I should asume people

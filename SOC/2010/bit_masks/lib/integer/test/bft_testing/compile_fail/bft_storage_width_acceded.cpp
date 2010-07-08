@@ -7,6 +7,7 @@
 #include <boost/integer/bitfield_tuple.hpp>
 
 using namespace boost;
+using namespace boost::bitfields;
 struct red { };
 
 // Fails because the members exced the number of bits inside of
