@@ -8,9 +8,6 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 [section Bit Masks]
 [include bit_mask_doc/overview.qbk]
 
-[section:bit_mask_purpose Purpose]
-[endsect]
-
 [include:integral_mask integral_mask.qbk]
 [include:high_bits_mask high_bits.qbk]
 [include:low_bits_mask low_bits.qbk]
