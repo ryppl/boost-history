@@ -110,7 +110,16 @@ the standard stream buffer returned by <CODE>sout.rdbuf()</CODE>.
     HREF='../guide/modes.html#output'>output</A>&gt;</A> 
     whose sink is the standard stream buffer saved in step 1, and
     which indents each output line sent to that standard stream buffer
-    by a user-modifiable number of spaces. 
+    by a user-modifiable number of spaces. The user modifications of
+    the number of spaces is done using the following functions:
+    <OL>
+      <LI><A HREF='../functions/indent_buf_in.html'>indent_buf_in</A>
+      for increasing the number of spaces indented, i.e. indenting inward.
+      </LI>
+      <LI><A HREF='../functions/indent_buf_out.html'>indent_buf_out</A>
+      for decreasing the number of spaces indented, i.e. indenting outward.
+      </LI>
+    </OL>
 </LI>
 </OL>
 </P>
