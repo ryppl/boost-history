@@ -35,7 +35,7 @@ template <typename IC>
 struct is_integral_constant : and_<
 		and_< has_tag<IC>, is_same<typename IC::tag, integral_c_tag> >,
 		and_< has_value_type<IC>, is_integral<typename IC::value_type> >,
-		//has_value<IC>,
+		has_value<IC>,
 		has_type<IC>,
 		true_
 	>

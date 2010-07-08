@@ -12,10 +12,9 @@
 #define BOOST_STATIC_LCM_INCLUDED
 
 #include <boost/utility/enable_if.hpp>
-#include <boost/integer/is_integral_constant.hpp>
-#include <boost/mpl/and.hpp>
-#include <boost/mpl/integral_c.hpp>
 #include <boost/math/common_factor_ct.hpp>
+#include <boost/integer/static_abs.hpp>
+#include <boost/integer/is_integral_constant.hpp>
 
 namespace boost {
 
@@ -36,8 +35,8 @@ template <typename ICT1, typename ICT2
 >
 struct lcm : integral_c<uintmax_t,
 	math::static_lcm<
-		abs<ICT1>::value,
-		abs<ICT2>::value
+		mpl::abs<ICT1>::value,
+		mpl::abs<ICT2>::value
 	>::value
 > 
 {};

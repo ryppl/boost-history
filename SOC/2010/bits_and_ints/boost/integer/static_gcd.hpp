@@ -11,12 +11,11 @@
 #ifndef BOOST_STATIC_GCD_INCLUDED
 #define BOOST_STATIC_GCD_INCLUDED
 
+#include <boost/mpl/and.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/math/common_factor_ct.hpp>
 #include <boost/integer/static_abs.hpp>
 #include <boost/integer/is_integral_constant.hpp>
-#include <boost/mpl/and.hpp>
-#include <boost/mpl/integral_c.hpp>
-#include <boost/math/common_factor_ct.hpp>
 
 namespace boost {
 	

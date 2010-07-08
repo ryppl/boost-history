@@ -6,7 +6,7 @@
 //  http://www.boost.org/LICENSE_1_0.txt
 
 #include <boost/detail/lightweight_test.hpp>
-#include <boost/integer/static_gcd.hpp>
+#include <boost/integer/static_lcm.hpp>
 #include <boost/mpl/integral_c.hpp>
 
 #include <iostream>  
@@ -31,14 +31,14 @@ int main(int, char* [])
 	typedef integral_c<int, 30> thirty;
 	typedef integral_c<int, 49> fortynine;
 	
-	BOOST_TEST((static_lcm<one, one>::value) ==  1);
-    BOOST_TEST((static_lcm<zero, zero>::value) ==  0);
-    BOOST_TEST((static_lcm<six, zero>::value) ==  0);
-    BOOST_TEST((static_lcm<zero, seven>::value) ==  0);
-    BOOST_TEST((static_lcm<eighteen, thirty>::value) == 90);
-    BOOST_TEST((static_lcm<three, seven>::value) == 21);
-    BOOST_TEST((static_lcm<eight, nine>::value) == 72);
-    BOOST_TEST((static_lcm<seven, fortynine>::value) == 49);
+	BOOST_TEST((lcm<one, one>::value) ==  1);
+    BOOST_TEST((lcm<zero, zero>::value) ==  0);
+    BOOST_TEST((lcm<six, zero>::value) ==  0);
+    BOOST_TEST((lcm<zero, seven>::value) ==  0);
+    BOOST_TEST((lcm<eighteen, thirty>::value) == 90);
+    BOOST_TEST((lcm<three, seven>::value) == 21);
+    BOOST_TEST((lcm<eight, nine>::value) == 72);
+    BOOST_TEST((lcm<seven, fortynine>::value) == 49);
 	
 	return boost::report_errors();
 }
