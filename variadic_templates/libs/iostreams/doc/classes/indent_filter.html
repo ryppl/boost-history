@@ -1,0 +1,199 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>Class Template indent_filter</TITLE>
+    <LINK REL="stylesheet" HREF="../../../../boost.css">
+    <LINK REL="stylesheet" HREF="../theme/iostreams.css">
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+    <H1 CLASS="title">Class Template <CODE>indent_filter</CODE></H1>
+    <HR CLASS="banner">
+
+<!-- End Banner -->
+
+<DL class="page-index">
+  <DT><A href="#description">Description</A></DT>
+  <DT><A href="#headers">Headers</A></DT>
+  <DT><A href="#installation">Installation</A></DT>
+  <DT><A href="#reference">Reference</A></DT>
+</DL>
+
+<HR>
+
+<A NAME="description"></A>
+<H2>Description</H2>
+
+<P>
+    The class template <CODE>indent_filter</CODE> is
+    an <A HREF='../concepts/output_filter.html'>OutputFilter</A> which
+    indents each output line by a user-modifiable number of spaces.
+</P>
+
+<A NAME="headers"></A>
+<H2>Headers</H2>
+
+<DL class="page-index">
+  <DT><A CLASS="header" HREF="../../../../boost/iostreams/filter/indent.hpp"><CODE>&lt;boost/iostreams/filter/indent.hpp&gt;</CODE></A></DT>
+</DL>
+
+<A NAME="installation"></A>
+<H2>Installation</H2>
+
+<P>
+    Only the header file is needed.
+</P>
+
+<A NAME="reference"></A>
+<H2>Reference</H2>
+
+<H4>Synopsis</H4>
+
+<PRE CLASS="broken_ie"><SPAN CLASS="keyword">namespace</SPAN> boost { <SPAN CLASS="keyword">namespace</SPAN> iostreams {
+
+<SPAN CLASS="preprocessor">#include</SPAN> <A CLASS="header" HREF="../../../../boost/iostreams/concepts.hpp" TARGET="_top"><SPAN CLASS="literal">&lt;boost/iostreams/concepts.hpp&gt;</SPAN></A>
+<SPAN CLASS="preprocessor">#include</SPAN> <A CLASS="header" HREF="../../../../boost/iostreams/operations.hpp" TARGET="_top"><SPAN CLASS="literal">&lt;boost/iostreams/operations.hpp&gt;</SPAN></A>
+
+<SPAN CLASS="keyword">template</SPAN>&lt; <SPAN CLASS="keyword">typename</SPAN> <A HREF="#template_params"
+                                                                                   CLASS="documented">Ch</A> &gt;
+<SPAN CLASS="keyword">class</SPAN> <A HREF="#template_params"
+                                      CLASS="documented">indent_filter</A> 
+: <SPAN CLASS="keyword">public</SPAN> <A CLASS="documented" HREF="filter.html">filter</A>&lt; <A CLASS="documented" HREF="../guide/modes.html#output">output</A>, Ch&gt;
+{   
+<SPAN CLASS="keyword">public:</SPAN>
+
+    <SPAN CLASS="keyword">static int const</SPAN> <A CLASS="documented" HREF="#width_default">width_default</A>=2
+      ;
+    <SPAN CLASS="keyword">explicit</SPAN> <A CLASS="documented" HREF="#constructor_int">indent_filter</A>
+      ( <SPAN CLASS="keyword">int</SPAN> width=<A CLASS="documented" HREF="#width_default">width_default</A>
+      );
+    <SPAN CLASS="keyword">int</SPAN> <A CLASS="documented" HREF="#indentation">indentation</A>() <SPAN CLASS="keyword">const</SPAN>
+      ;
+    <SPAN CLASS="keyword">int</SPAN> <A CLASS="documented" HREF="#width">width</A>() <SPAN CLASS="keyword">const</SPAN>
+      ;
+    <SPAN CLASS="keyword">void</SPAN> <A CLASS="documented" HREF="#indent_by">indent_by</A>
+      ( <SPAN CLASS="keyword">int</SPAN> amount
+      )
+      ;
+    <SPAN CLASS="keyword">void</SPAN> <A CLASS="documented" HREF="#indent_out">indent_out</A>()
+      ;
+    <SPAN CLASS="keyword">void</SPAN> <A CLASS="documented" HREF="#indent_in">indent_in</A>()
+      ;
+};
+
+
+} } // End namespace boost::io</PRE>
+
+<A NAME="template_params"></A>
+<H4>Template parameters</H4>
+
+<TABLE STYLE="margin-left:2em" BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+        <TD VALIGN="top"><I>Ch</I></TD><TD WIDTH="2em" VALIGN="top">-</TD>
+        <TD>The character type</TD>
+    </TR>
+</TABLE>
+
+<A NAME="width_default"></A>
+<H4><CODE>static int const indent_filter::width_default</CODE></H4>
+
+<P>
+The default value for return from <A CLASS="documented" HREF="#width">width()</A>.
+</P>
+
+<A NAME="constructor_int"></A>
+<H4><CODE>indent_filter::indent_filter</CODE></H4>
+<PRE CLASS="broken_ie"><B>indent_filter</B>
+  ( <SPAN CLASS="keyword">int</SPAN> width=width_default
+  )
+</PRE>
+    
+<P>Constructs a <CODE>indent_filter</CODE> with given width.
+The
+parameters have the following interpretations
+:</P>
+
+<TABLE STYLE="margin-left:2em" BORDER=0 CELLPADDING=2>
+<TR>
+    <TR>
+    
+        <TD VALIGN="top"><I>width</I></TD><TD WIDTH="2em"
+        VALIGN="top">-</TD> <TD>The amount by which indentation is
+        changed in calls to <A CLASS="documented"
+        HREF="#indent_in">indent_in</A>() and <A CLASS="documented"
+        HREF="#indent_out">indent_out</A>().  If this amount is &lt;
+        <SPAN CLASS="numeric_literal">0</SPAN>, then it's reset to
+        <SPAN CLASS="numeric_literal">0</SPAN>.
+        
+        </TD>
+    </TR>
+</TABLE>
+
+</P>
+
+<A NAME="indentation"></A>
+<H4><CODE>int indent_filter::indentation()const</CODE></H4>
+
+<P>
+The current indentation.  IOW, each output line is prefixed with
+indentation() spaces.
+</P>
+
+<A NAME="width"></A>
+<H4><CODE>int indent_filter::width()const</CODE></H4>
+
+<P>
+The absolute amount by which indentation is changed in calls to
+<A CLASS="documented"
+        HREF="#indent_in">indent_in</A>() and <A CLASS="documented"
+        HREF="#indent_out">indent_out</A>()
+.
+</P>
+
+<A NAME="indent_by"></A>
+<H4><CODE>indent_filter::indent_by</CODE></H4>
+<PRE CLASS="broken_ie"><B>indent_by</B>
+  ( <SPAN CLASS="keyword">int</SPAN> amount
+  )
+</PRE>
+    
+<P>Changes the 
+<A CLASS="documented" HREF="#indentation">indentation</A> 
+by the given <CODE>amount</CODE>.  If resulting indentation is &lt; <SPAN CLASS="numeric_literal">0</SPAN>,
+resets it to <SPAN CLASS="numeric_literal">0</SPAN>.
+</P>
+
+<A NAME="indent_in"></A>
+<H4><CODE>void indent_filter::indent_in()</CODE></H4>
+
+<P>
+Calls <A CLASS="documented" HREF="#indent_by">indent_by</A>
+with argument, <A CLASS="documented" HREF="#width">+width()</A>
+</P>
+
+<A NAME="indent_out"></A>
+<H4><CODE>void indent_filter::indent_out()</CODE></H4>
+
+<P>
+Calls <A CLASS="documented" HREF="#indent_by">indent_by</A>
+with argument, <A CLASS="documented" HREF="#width">-width()</A>
+</P>
+
+<!-- Begin Footer -->
+
+<HR>
+<P CLASS="copyright">Revised 12 Jan 2010</P>
+
+<P CLASS="copyright">&copy; Copyright 2010
+<br>Larry Evans
+</P>
+<P CLASS="copyright"> 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF="http://www.boost.org/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+<!-- End Footer -->
+
+</BODY>

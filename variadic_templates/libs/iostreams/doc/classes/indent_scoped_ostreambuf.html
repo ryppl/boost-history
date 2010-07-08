@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>Class Template indent_ostream</TITLE>
+    <LINK REL="stylesheet" HREF="../../../../boost.css">
+    <LINK REL="stylesheet" HREF="../theme/iostreams.css">
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+    <H1 CLASS="title">Class Template <CODE>indent_scoped_ostreambuf</CODE></H1>
+    <HR CLASS="banner">
+
+<!-- End Banner -->
+
+<DL class="page-index">
+  <DT><A href="#description">Description</A></DT>
+  <DT><A href="#headers">Headers</A></DT>
+  <DT><A href="#installation">Installation</A></DT>
+  <DT><A href="#reference">Reference</A></DT>
+</DL>
+
+<HR>
+
+<A NAME="description"></A>
+<H2>Description</H2>
+
+<P> The class template <CODE>indent_scoped_ostreambuf</CODE>
+    temporarily replaces the std::basic_stream_buf of a
+    std::basic_ostream with a 
+    <A HREF='filtering_streambuf.html'>filtering_streambuf&lt;<A
+    HREF='../guide/modes.html#output'>output</A>&gt;</A> 
+    which indents
+    each output line by a user-modifiable number of spaces.
+</P>
+
+<A NAME="headers"></A>
+<H2>Headers</H2>
+
+<DL class="page-index">
+  <DT><A CLASS="header" HREF="../../../../boost/iostreams/utility/indent_scoped_ostreambuf.hpp"><CODE>&lt;boost/iostreams/utility/indent_scoped_ostreambuf.hpp&gt;</CODE></A></DT>
+</DL>
+
+<A NAME="installation"></A>
+<H2>Installation</H2>
+
+<P>
+    Only the header file is needed.
+</P>
+
+<A NAME="reference"></A>
+<H2>Reference</H2>
+
+<H4>Synopsis</H4>
+
+<PRE CLASS="broken_ie"><SPAN CLASS="keyword">namespace</SPAN> boost { <SPAN CLASS="keyword">namespace</SPAN> iostreams {
+
+<SPAN CLASS="preprocessor">#include</SPAN> <A CLASS="header" HREF="../../../../boost/iostreams/filter/indent.hpp" TARGET="_top"><SPAN CLASS="literal">&lt;boost/iostreams/filter/indent.hpp&gt;</SPAN></A>
+<SPAN CLASS="preprocessor">#include</SPAN> <A CLASS="header" HREF="../../../../boost/iostreams/filtering_streambuf.hpp" TARGET="_top"><SPAN CLASS="literal">&lt;boost/iostreams/filtering_streambuf.hpp&gt;</SPAN></A>
+
+<SPAN CLASS="keyword">template</SPAN>&lt; <SPAN CLASS="keyword">typename</SPAN> <A HREF="#template_params" CLASS="documented">Ch</A>=char&gt;
+<SPAN CLASS="keyword">class</SPAN> <A HREF="#template_params"
+                                      CLASS="documented">indent_scoped_ostreambuf</A> 
+{   
+<SPAN CLASS="keyword">public:</SPAN>
+
+    <A CLASS="documented" HREF="#constructor_ostrm_int">indent_scoped_ostreambuf</A>
+      ( std::basic_ostream&lt;Ch&gt;&amp; sout
+      , <SPAN CLASS="keyword">int</SPAN> width=<A CLASS="documented" HREF="indent_filter.html#width_default">indent_filter&lt;Ch&gt;::width_default</A>
+      );
+    <A CLASS="documented" HREF="#destructor">~indent_scoped_ostreambuf</A>
+      ( void
+      );
+};
+
+
+} } // End namespace boost::io</PRE>
+
+<A NAME="template_params"></A>
+<H4>Template parameters</H4>
+
+<TABLE STYLE="margin-left:2em" BORDER=0 CELLPADDING=2>
+    <TR>
+        <TD VALIGN="top"><I>Ch</I></TD><TD WIDTH="2em" VALIGN="top">-</TD>
+        <TD>The character type</TD>
+    </TR>
+    <TR>
+        <TD VALIGN="top"><I>Tr</I></TD><TD WIDTH="2em" VALIGN="top">-</TD>
+        <TD>The traits type</TD>
+    </TR>
+</TABLE>
+
+<A NAME="constructor_ostrm_int"></A>
+<H4><CODE>indent_scoped_ostreambuf::indent_scoped_ostreambuf</CODE></H4>
+<PRE CLASS="broken_ie"><B>indent_scoped_ostreambuf</B>
+  ( std::basic_ostream&lt;Ch&gt;&amp; <A NAME="ctor_arg_sout" CLASS="documented">sout</A>
+  , <SPAN CLASS="keyword">int</SPAN> <A NAME="ctor_arg_width" CLASS="documented">width</A>=<A CLASS="documented" HREF="indent_filter.html#width_default">indent_filter&lt;Ch&gt;::width_default</A>
+  )
+</PRE>
+    
+<P>Constructs a <CODE>indent_scoped_ostreambuf</CODE> by following these steps:
+<OL>
+<LI><A NAME="constructor_save_rdbuf"></A>Saves, in a member variable,
+the standard stream buffer returned by <CODE>sout.rdbuf()</CODE>.
+</LI>
+<LI><A NAME="constructor_replace_rdbuf"></A>Calls
+<CODE>sout.rdbuf(indent_buf)</CODE>, where <CODE>indent_buf</CODE> is a
+    <A HREF='filtering_streambuf.html'>filtering_streambuf&lt;<A
+    HREF='../guide/modes.html#output'>output</A>&gt;</A> 
+    whose sink is the standard stream buffer saved in step 1, and
+    which indents each output line sent to that standard stream buffer
+    by a user-modifiable number of spaces. 
+</LI>
+</OL>
+</P>
+
+<A NAME="destructor"></A>
+<H4><CODE>indent_scoped_ostreambuf::~indent_scoped_ostreambuf</CODE></H4>
+<PRE CLASS="broken_ie"><B>indent_scoped_ostreambuf</B>
+  ( void
+  )
+</PRE>
+    
+<P>Restores to the <A HREF='#ctor_arg_sout'>sout</A> argument passed
+to the constructor, the standard
+stream buffer saved in <A HREF='#constructor_save_rdbuf'>step 1</A> of
+constructor.
+</P>
+
+<!-- Begin Footer -->
+
+<HR>
+<P CLASS="copyright">Revised 12 Jan 2010</P>
+
+<P CLASS="copyright">&copy; Copyright 2010
+<br>Larry Evans
+</P>
+<P CLASS="copyright"> 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF="http://www.boost.org/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+<!-- End Footer -->
+
+</BODY>
