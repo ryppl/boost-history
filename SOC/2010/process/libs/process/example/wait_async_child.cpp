@@ -10,9 +10,8 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#include <boost/all/process.hpp> 
+#include <boost/process/all.hpp> 
 #include <boost/asio.hpp> 
-#include <boost/bind.hpp> 
 #include <iostream> 
 
 using namespace boost::process; 
@@ -20,19 +19,19 @@ using namespace boost::asio;
 
 io_service ioservice; 
 
-void end_wait(const boost::system::error_code &ec); 
+void end_wait(const boost::system::error_code &ec, int exit_code); 
 
 int main() 
 { 
     std::string exe = find_executable_in_path("hostname"); 
     child c = create_child(exe); 
-    status &s = p.status(ioservice); 
-    s.async_wait(boost::bind(&end_wait, placeholders::error)); 
+    status s(ioservice); 
+    s.async_wait(c.get_id(), end_wait);
     ioservice.run(); 
 } 
 
-void end_wait(const boost::system::error_code &ec) 
+void end_wait(const boost::system::error_code &ec, int exit_code) 
 { 
     if (!ec) 
-        std::cout << "process exited" << std::endl; 
+        std::cout << "exit code: " << exit_code << std::endl; 
 } 

@@ -108,7 +108,6 @@ public:
         HANDLE h = ::OpenProcess(PROCESS_TERMINATE, FALSE, id_);
         if (h == NULL)
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("OpenProcess() failed"); 
-
         if (!::TerminateProcess(h, EXIT_FAILURE))
         {
             ::CloseHandle(h);
@@ -122,47 +121,40 @@ public:
     /**
      * Blocks and waits for the child process to terminate.
      *
-     * Returns a status object that represents the child process'
-     * finalization condition. The child process object ceases to be
+     * Returns an exit code. The child process object ceases to be
      * valid after this call.
      *
      * \remark Blocking remarks: This call blocks if the child
      *         process has not finalized execution and waits until
      *         it terminates.
      */
-    status wait()
+    int wait()
     {
 #if defined(BOOST_POSIX_API)
         int s;
         if (::waitpid(get_id(), &s, 0) == -1)
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("waitpid(2) failed"); 
-        return status(s);
+        return s;
 #elif defined(BOOST_WINDOWS_API)
-        // TODO 
-        // Boris: Where do we get the process handle from? It should be possible to fetch it 
-        //        as we do have the process ID saved in the member variable id_. I guess 
-        //        there must be a Windows API function to get a process handle from a process ID? 
-        if (::WaitForSingleObject(process_handle_.get(), INFINITE) == WAIT_FAILED)
-        {
-            // TODO 
-            // Boris: What should happen if WaitForSingleObject() fails? Under what 
-            //        conditions can it fail? 
-            // std::cout << "Last error:" << GetLastError() << std::endl;
-            // std::cout << "Criado com ID " << process_handle_.get() << std::endl;
-        }
-        DWORD code;
-        if (!::GetExitCodeProcess(process_handle_.get(), &code))
+        HANDLE h = ::OpenProcess(SYNCHRONIZE, FALSE, id_); 
+        if (h == NULL) 
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("OpenProcess() failed"); 
+        if (::WaitForSingleObject(h, INFINITE) == WAIT_FAILED) 
+        { 
+            ::CloseHandle(h); 
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("WaitForSingleObject() failed"); 
+        } 
+        DWORD exit_code; 
+        if (!::GetExitCodeProcess(h, &exit_code)) 
+        { 
+            ::CloseHandle(h); 
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("GetExitCodeProcess() failed"); 
-        return status(code);
+        } 
+        if (!::CloseHandle(h)) 
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CloseHandle() failed"); 
+        return exit_code; 
 #endif
     }
-
-#if defined(BOOST_WINDOWS_API)
-    /**
-     * Process handle owned by RAII object.
-     */
-    boost::shared_ptr<void> process_handle_;
-#endif
 
 private:
     /**
