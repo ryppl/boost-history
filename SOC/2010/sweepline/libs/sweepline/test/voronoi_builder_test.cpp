@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(triangle_test1, T, test_types) {
                       bounding_rectangle.x_max == static_cast<T>(2) &&
                       bounding_rectangle.y_max == static_cast<T>(4), true);
 
-    BOOST_CHECK_EQUAL(static_cast<int>(test_output.get_cell_records().size()), 3);
+    BOOST_CHECK_EQUAL(static_cast<int>(test_output.get_voronoi_cells().size()), 3);
     BOOST_CHECK_EQUAL(static_cast<int>(test_output.get_voronoi_vertices().size()), 4);
 
     voronoi_const_iterator_type it = test_output.get_voronoi_vertices().begin();
@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(triangle_test2, T, test_types) {
     test_beach_line.clip(test_output);
     BOOST_CHECK_EQUAL(test_output.check(), true);
 
-    BOOST_CHECK_EQUAL(static_cast<int>(test_output.get_cell_records().size()), 3);
+    BOOST_CHECK_EQUAL(static_cast<int>(test_output.get_voronoi_cells().size()), 3);
     BOOST_CHECK_EQUAL(static_cast<int>(test_output.get_voronoi_vertices().size()), 4);
 
     voronoi_const_iterator_type it = test_output.get_voronoi_vertices().begin();
@@ -166,7 +166,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(square_test3, T, test_types) {
     test_beach_line.clip(test_output);
     BOOST_CHECK_EQUAL(test_output.check(), true);
 
-    BOOST_CHECK_EQUAL(static_cast<T>(test_output.get_cell_records().size()), 4);
+    BOOST_CHECK_EQUAL(static_cast<T>(test_output.get_voronoi_cells().size()), 4);
     BOOST_CHECK_EQUAL(static_cast<T>(test_output.get_voronoi_vertices().size()), 5);
     BOOST_CHECK_EQUAL(test_output.get_num_voronoi_cells(), 4);
     BOOST_CHECK_EQUAL(test_output.get_num_voronoi_vertices(), 1);

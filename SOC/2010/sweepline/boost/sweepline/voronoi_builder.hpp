@@ -34,6 +34,8 @@ namespace sweepline {
         // vertical line, we init beach line with all of them.
         // In other case just use the first two sites for the initialization.
         void init(std::vector<Point2D> &sites) {
+            reset();
+
             // Sort all sites.
             sort(sites.begin(), sites.end());
 

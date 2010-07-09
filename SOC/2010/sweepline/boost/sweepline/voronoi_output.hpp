@@ -90,6 +90,7 @@ namespace sweepline {
     // Bounding rectangle data structure.
     template <typename Point2D>
     struct BRect {
+    public:
         typedef typename Point2D::coordinate_type coordinate_type;
 
         coordinate_type x_min;
@@ -100,25 +101,25 @@ namespace sweepline {
         BRect() {}
 
         BRect(const Point2D &p1, const Point2D &p2) {
-            x_min = std::min(p1.x(), p2.x());
-            y_min = std::min(p1.y(), p2.y());
-            x_max = std::max(p1.x(), p2.x());
-            y_max = std::max(p1.y(), p2.y());
+            x_min = (std::min)(p1.x(), p2.x());
+            y_min = (std::min)(p1.y(), p2.y());
+            x_max = (std::max)(p1.x(), p2.x());
+            y_max = (std::max)(p1.y(), p2.y());
         }
 
         BRect(coordinate_type x_mn, coordinate_type y_mn,
               coordinate_type x_mx, coordinate_type y_mx) {
-             x_min = std::min(x_mn, x_mx);
-             y_min = std::min(y_mn, y_mx);
-             x_max = std::max(x_mn, x_mx);
-             y_max = std::max(y_mn, y_mx);
+             x_min = (std::min)(x_mn, x_mx);
+             y_min = (std::min)(y_mn, y_mx);
+             x_max = (std::max)(x_mn, x_mx);
+             y_max = (std::max)(y_mn, y_mx);
         }
 
         void update(const Point2D &p) {
-            x_min = std::min(x_min, p.x());
-            y_min = std::min(y_min, p.y());
-            x_max = std::max(x_max, p.x());
-            y_max = std::max(y_max, p.y());
+            x_min = (std::min)(x_min, p.x());
+            y_min = (std::min)(y_min, p.y());
+            x_max = (std::max)(x_max, p.x());
+            y_max = (std::max)(y_max, p.y());
         }
 
         bool contains(const Point2D &p) const {
@@ -187,9 +188,11 @@ namespace sweepline {
         typedef voronoi_record_clipped<Point2D> voronoi_record_type;
         typedef half_edge_clipped<Point2D> edge_type;
         typedef std::list<voronoi_record_type> voronoi_records_type;
-        typedef std::list<edge_type> voronoi_edges_type;
         typedef typename voronoi_records_type::iterator voronoi_iterator_type;
         typedef typename voronoi_records_type::const_iterator voronoi_const_iterator_type;
+        typedef std::list<edge_type> voronoi_edges_type;
+        typedef typename voronoi_edges_type::iterator edges_iterator_type;
+        typedef typename voronoi_edges_type::const_iterator edges_const_iterator_type;
 
         voronoi_output_clipped() {
             num_cell_records_ = 0;
@@ -243,7 +246,7 @@ namespace sweepline {
             num_cell_records_--;
         }
 
-        const voronoi_records_type &get_cell_records() const {
+        const voronoi_records_type &get_voronoi_cells() const {
             return cell_records_;
         }
 

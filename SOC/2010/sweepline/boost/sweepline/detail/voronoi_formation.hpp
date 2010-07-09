@@ -457,7 +457,7 @@ namespace detail {
 
         // Returns x coordinate of the rightmost site.
         coordinate_type get_sweepline_coord() const {
-            return std::max(left_site_.x(), right_site_.x());
+            return (std::max)(left_site_.x(), right_site_.x());
         }
 
         // Returns the rightmost site.
@@ -1093,8 +1093,30 @@ namespace detail {
         void find_intersections(const Point2D &origin, const Point2D &direction,
             kEdgeType edge_type, const BRect<Point2D> &brect,
             std::vector<Point2D> &intersections) const {
-            // Do intersection test.
-            if (!test_intersection(origin, direction, brect))
+            coordinate_type half = static_cast<coordinate_type>(0.5);
+
+            // Find rectangle center.
+            coordinate_type center_x = (brect.x_min + brect.x_max) * half;
+            coordinate_type center_y = (brect.y_min + brect.y_max) * half;
+
+            // Find rectangle half-diagonal vector.
+            coordinate_type len_x = brect.x_max - center_x;
+            coordinate_type len_y = brect.y_max - center_y;
+            
+            // Find distance between origin and center of rectangle.
+            coordinate_type diff_x = origin.x() - center_x;
+            coordinate_type diff_y = origin.y() - center_y;
+            
+            // Find direction perpendicular to the current.
+            coordinate_type perp_x = direction.y();
+            coordinate_type perp_y = -direction.x();
+
+            // Compare projections of distances.
+            coordinate_type lexpr = magnitude(perp_x * diff_x + perp_y * diff_y);
+            coordinate_type rexpr = magnitude(perp_x * len_x) + magnitude(perp_y * len_y);
+
+            // Intersection check.
+            if (lexpr > rexpr)
                 return;
 
             // Intersection parameters:
@@ -1104,23 +1126,18 @@ namespace detail {
             coordinate_type fT0 = static_cast<coordinate_type>(0);
             coordinate_type fT1 = static_cast<coordinate_type>(0);
 
-            // Half lengths of sides of a bounding rectangle.
-            coordinate_type half = static_cast<coordinate_type>(0.5);
-            coordinate_type x_len = (brect.x_max - brect.x_min) * half;
-            coordinate_type y_len = (brect.y_max - brect.y_min) * half;
-
-            // Find intersections with lines going through sides of a bounding recntagle.
-            clip(+direction.x(), -origin.x() - x_len, fT0_used, fT1_used, fT0, fT1);
-            clip(-direction.x(), +origin.x() - x_len, fT0_used, fT1_used, fT0, fT1);
-            clip(+direction.y(), -origin.y() - y_len, fT0_used, fT1_used, fT0, fT1);
-            clip(-direction.y(), +origin.y() - y_len, fT0_used, fT1_used, fT0, fT1);
+            // Find intersections with lines going through sides of a bounding rectangle.
+            clip(+direction.x(), -diff_x - len_x, fT0_used, fT1_used, fT0, fT1);
+            clip(-direction.x(), +diff_x - len_x, fT0_used, fT1_used, fT0, fT1);
+            clip(+direction.y(), -diff_y - len_y, fT0_used, fT1_used, fT0, fT1);
+            clip(-direction.y(), +diff_y - len_y, fT0_used, fT1_used, fT0, fT1);
 
             if (fT0_used && check_extent(fT0, edge_type))
-                intersections.push_back(make_point_2d(origin.x() + fT0_used * direction.x(),
-                                                      origin.y() + fT0_used * direction.y()));
+                intersections.push_back(make_point_2d(origin.x() + fT0 * direction.x(),
+                                                      origin.y() + fT0 * direction.y()));
             if (fT1_used && check_extent(fT1, edge_type))
-                intersections.push_back(make_point_2d(origin.x() + fT1_used * direction.x(),
-                                                      origin.y() + fT1_used * direction.y()));
+                intersections.push_back(make_point_2d(origin.x() + fT1 * direction.x(),
+                                                      origin.y() + fT1 * direction.y()));
         }
 
     private:
@@ -1186,36 +1203,8 @@ namespace detail {
             return -value;
         }
 
-        // Check line rectangle intersection.
-        bool test_intersection(const Point2D &origin, const Point2D &direction,
-            const BRect<Point2D> &brect) const {
-            coordinate_type half = static_cast<coordinate_type>(0.5);
-
-            // Find rectangle center.
-            coordinate_type center_x = (brect.x_min + brect.x_max) * half;
-            coordinate_type center_y = (brect.y_min + brect.y_max) * half;
-
-            // Find rectangle half-diagonal vector.
-            coordinate_type len_x = brect.x_max - center_x;
-            coordinate_type len_y = brect.y_max - center_y;
-
-            // Find distance between origin and center of rectangle.
-            coordinate_type diff_x = origin.x() - center_x;
-            coordinate_type diff_y = origin.y() - center_y;
-            
-            // Find direction perpendicular to the current.
-            coordinate_type perp_x = direction.y();
-            coordinate_type perp_y = -direction.x();
-
-            // Compare projections of distances.
-            coordinate_type lexpr = magnitude(perp_x * diff_x + perp_y * diff_y);
-            coordinate_type rexpr = magnitude(perp_x * len_x) + magnitude(perp_y * len_y);
-
-            return lexpr <= rexpr;
-        }
-
         bool clip(coordinate_type denom, coordinate_type numer, bool &fT0_used, bool &fT1_used,
-            coordinate_type &fT0, coordinate_type fT1) const {
+            coordinate_type &fT0, coordinate_type &fT1) const {
             if (denom > static_cast<coordinate_type>(0)) {
                 if (fT1_used && numer > denom * fT1)
                     return false;
