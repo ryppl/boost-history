@@ -12,6 +12,10 @@
 #include <scheme/compiler.hpp>
 #include <utree/io.hpp>
 #include <boost/spirit/include/qi.hpp>
+
+#include <iostream>
+#include <fstream>
+#include <strstream>
 #include <map>
 
 #include "../../../../test/qi/test.hpp"
@@ -27,7 +31,7 @@ namespace scheme { namespace qi
     namespace spirit = boost::spirit;
 
     typedef qi::rule<char const*> skipper_type;
-    typedef qi::rule<char const*, utree(), skipper_type> rule_type;
+    typedef qi::rule<char const*, skipper_type> rule_type;
 
     ///////////////////////////////////////////////////////////////////////////
     // All rule are stored here. Rules are held in the utree by its id;
@@ -43,11 +47,19 @@ namespace scheme { namespace qi
         {
         };
 
-        template <typename Expr>
-        int new_rule(Expr const& expr)
+        int new_rule()
         {
-            rules[index] = expr;
+            rules[index];
             return index++;
+        }
+
+        template <typename Expr>
+        void define_rule(int id, Expr const& expr)
+        {
+            rules[id] = expr;
+            std::stringstream str;
+            str << qi::what(expr);
+            rules[id].name(str.str());
         }
 
         Rule const& operator[](int id) const
@@ -92,7 +104,9 @@ namespace scheme { namespace qi
     inline primitive_parser_composite
     make_primitive_parser_composite(Fragments& fragments, Expr const& expr)
     {
-        return primitive_parser_composite(fragments.new_rule(expr));
+        int id = fragments.new_rule();
+        fragments.define_rule(id, expr);
+        return primitive_parser_composite(id);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -101,22 +115,23 @@ namespace scheme { namespace qi
     template <typename Fragments>
     struct char_function : actor<char_function<Fragments> >
     {
-        Fragments& fragments;
+        mutable int id;
         function a;
         function b;
+        Fragments& fragments;
         char_function(
             Fragments& fragments, function const& a, function const& b)
-          : a(a), b(b), fragments(fragments)
+          : id(-1), a(a), b(b), fragments(fragments)
         {
         }
 
-        utree eval() const
+        void define() const
         {
             // char_
-            return fragments.new_rule(qi::char_);
+            fragments.define_rule(id, qi::char_);
         }
 
-        utree eval(utree const& a) const
+        void define(utree const& a) const
         {
             // $$$ use exceptions here $$$.
             BOOST_ASSERT(a.which() == utree_type::string_type);
@@ -125,17 +140,17 @@ namespace scheme { namespace qi
             if (a_.size() == 1)
             {
                 // char_('x')
-                return fragments.new_rule(qi::char_(a_[0]));
+                fragments.define_rule(id, qi::char_(a_[0]));
             }
             else
             {
                 // char_("some-regex")
-                return fragments.new_rule(
+                fragments.define_rule(id,
                     qi::char_(std::string(a_.begin(), a_.end())));
             }
         }
 
-        utree eval(utree const& a, utree const& b) const
+        void define(utree const& a, utree const& b) const
         {
             // $$$ use exceptions here $$$.
             BOOST_ASSERT(a.which() == utree_type::string_type);
@@ -148,17 +163,23 @@ namespace scheme { namespace qi
             BOOST_ASSERT(b_.size() == 1);
 
             // char_('x', 'y')
-            return fragments.new_rule(qi::char_(a_[0], b_[0]));
+            fragments.define_rule(id, qi::char_(a_[0], b_[0]));
         }
 
         utree eval(scope const& env) const
         {
+            if (id != -1)
+                return id;
+            id = fragments.new_rule();
+
             if (a.empty())
-                return eval();
+                define();
             else if (b.empty())
-                return eval(a(env));
+                define(a(env));
             else
-                return eval(a(env), b(env));
+                define(a(env), b(env));
+
+            return id;
         }
     };
 
@@ -188,22 +209,27 @@ namespace scheme { namespace qi
     template <typename Fragments>
     struct kleene_function : actor<kleene_function<Fragments> >
     {
-        Fragments& fragments;
+        mutable int id;
         function a;
+        Fragments& fragments;
         kleene_function(
             Fragments& fragments, function const& a)
-          : a(a), fragments(fragments)
+          : id(-1), a(a), fragments(fragments)
         {
         }
 
-        utree eval(utree const& a) const
+        void define(utree const& a) const
         {
-            return fragments.new_rule(*fragments[a]); // *a
+            fragments.define_rule(id, *fragments[a]); // *a
         }
 
         utree eval(scope const& env) const
         {
-            return eval(a(env));
+            if (id != -1)
+                return id;
+            id = fragments.new_rule();
+            define(a(env));
+            return id;
         }
     };
 
@@ -228,24 +254,29 @@ namespace scheme { namespace qi
     template <typename Fragments>
     struct difference_function : actor<difference_function<Fragments> >
     {
-        Fragments& fragments;
+        mutable int id;
         function a;
         function b;
+        Fragments& fragments;
         difference_function(
             Fragments& fragments, function const& a, function const& b)
-          : a(a), b(b), fragments(fragments)
+          : id(-1), a(a), b(b), fragments(fragments)
         {
         }
 
-        utree eval(utree const& a, utree const& b) const
+        void define(utree const& a, utree const& b) const
         {
-            return fragments.new_rule(
+            fragments.define_rule(id,
                 fragments[a] - fragments[b]); // a - b
         }
 
         utree eval(scope const& env) const
         {
-            return eval(a(env), b(env));
+            if (id != -1)
+                return id;
+            id = fragments.new_rule();
+            define(a(env), b(env));
+            return id;
         }
     };
 
@@ -274,48 +305,53 @@ namespace scheme { namespace qi
     template <typename Fragments>
     struct sequence_function : actor<sequence_function<Fragments> >
     {
-        Fragments& fragments;
+        mutable int id;
         actor_list elements;
+        Fragments& fragments;
         sequence_function(
             Fragments& fragments, actor_list const& elements)
-          : elements(elements), fragments(fragments)
+          : id(-1), elements(elements), fragments(fragments)
         {
         }
 
-        utree eval(utree const& a, utree const& b) const
+        void define(utree const& a, utree const& b) const
         {
             // a >> b
-            return fragments.new_rule(
+            fragments.define_rule(id,
                 fragments[a] >> fragments[b]);
         }
 
-        utree eval(utree const& a, utree const& b, utree const& c) const
+        void define(utree const& a, utree const& b, utree const& c) const
         {
             // a >> b >> c
-            return fragments.new_rule(
+            fragments.define_rule(id,
                 fragments[a] >> fragments[b] >> fragments[c]);
         }
 
-        utree eval(utree const& a, utree const& b, utree const& c,
+        void define(utree const& a, utree const& b, utree const& c,
             utree const& d) const
         {
             // a >> b >> c >> d
-            return fragments.new_rule(
+            fragments.define_rule(id,
                 fragments[a] >> fragments[b] >> fragments[c] >>
                 fragments[d]);
         }
 
-        utree eval(utree const& a, utree const& b, utree const& c,
+        void define(utree const& a, utree const& b, utree const& c,
             utree const& d, utree const& e) const
         {
             // a >> b >> c >> d >> e
-            return fragments.new_rule(
+            fragments.define_rule(id,
                 fragments[a] >> fragments[b] >> fragments[c] >>
                 fragments[d] >> fragments[e]);
         }
 
         utree eval(scope const& env) const
         {
+            if (id != -1)
+                return id;
+            id = fragments.new_rule();
+
             actor_list::const_iterator i = elements.begin();
             switch (elements.size())
             {
@@ -323,14 +359,16 @@ namespace scheme { namespace qi
                 {
                     function const& a = *i++;
                     function const& b = *i;
-                    return eval(a(env), b(env));
+                    define(a(env), b(env));
+                    break;
                 }
                 case 3:
                 {
                     function const& a = *i++;
                     function const& b = *i++;
                     function const& c = *i;
-                    return eval(a(env), b(env), c(env));
+                    define(a(env), b(env), c(env));
+                    break;
                 }
                 case 4:
                 {
@@ -338,7 +376,8 @@ namespace scheme { namespace qi
                     function const& b = *i++;
                     function const& c = *i++;
                     function const& d = *i;
-                    return eval(a(env), b(env), c(env), d(env));
+                    define(a(env), b(env), c(env), d(env));
+                    break;
                 }
                 case 5:
                 {
@@ -347,12 +386,13 @@ namespace scheme { namespace qi
                     function const& c = *i++;
                     function const& d = *i++;
                     function const& e = *i;
-                    return eval(a(env), b(env), c(env), d(env), e(env));
+                    define(a(env), b(env), c(env), d(env), e(env));
+                    break;
                 }
 
                 // $$$ Use Boost PP using SCHEME_QI_COMPILER_LIMIT $$$
             }
-            return utree();
+            return id;
         }
     };
 
@@ -367,6 +407,118 @@ namespace scheme { namespace qi
         function compose(actor_list const& elements) const
         {
             typedef sequence_function<Fragments> function_type;
+            return function(function_type(fragments, elements));
+        }
+    };
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Handles the compilation of alternatives a | b
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename Fragments>
+    struct alternative_function : actor<alternative_function<Fragments> >
+    {
+        mutable int id;
+        actor_list elements;
+        Fragments& fragments;
+        alternative_function(
+            Fragments& fragments, actor_list const& elements)
+          : id(-1), elements(elements), fragments(fragments)
+        {
+        }
+
+        void define(utree const& a, utree const& b) const
+        {
+            // a | b
+            fragments.define_rule(id,
+                fragments[a] | fragments[b]);
+        }
+
+        void define(utree const& a, utree const& b, utree const& c) const
+        {
+            // a | b | c
+            fragments.define_rule(id,
+                fragments[a] | fragments[b] | fragments[c]);
+        }
+
+        void define(utree const& a, utree const& b, utree const& c,
+            utree const& d) const
+        {
+            // a | b | c | d
+            fragments.define_rule(id,
+                fragments[a] | fragments[b] | fragments[c] |
+                fragments[d]);
+        }
+
+        void define(utree const& a, utree const& b, utree const& c,
+            utree const& d, utree const& e) const
+        {
+            // a | b | c | d | e
+            fragments.define_rule(id,
+                fragments[a] | fragments[b] | fragments[c] |
+                fragments[d] | fragments[e]);
+        }
+
+        utree eval(scope const& env) const
+        {
+            if (id != -1)
+                return id;
+            id = fragments.new_rule();
+
+            actor_list::const_iterator i = elements.begin();
+            switch (elements.size())
+            {
+                case 2:
+                {
+                    function const& a = *i++;
+                    function const& b = *i;
+                    define(a(env), b(env));
+                    break;
+                }
+                case 3:
+                {
+                    function const& a = *i++;
+                    function const& b = *i++;
+                    function const& c = *i;
+                    define(a(env), b(env), c(env));
+                    break;
+                }
+                case 4:
+                {
+                    function const& a = *i++;
+                    function const& b = *i++;
+                    function const& c = *i++;
+                    function const& d = *i;
+                    define(a(env), b(env), c(env), d(env));
+                    break;
+                }
+                case 5:
+                {
+                    function const& a = *i++;
+                    function const& b = *i++;
+                    function const& c = *i++;
+                    function const& d = *i++;
+                    function const& e = *i;
+                    define(a(env), b(env), c(env), d(env), e(env));
+                    break;
+                }
+
+                // $$$ Use Boost PP using SCHEME_QI_COMPILER_LIMIT $$$
+            }
+            return id;
+        }
+    };
+
+    template <typename Fragments>
+    struct alternative_composite
+      : composite<alternative_composite<Fragments> >
+    {
+        Fragments& fragments;
+        alternative_composite(Fragments& fragments)
+          : fragments(fragments) {}
+
+        function compose(actor_list const& elements) const
+        {
+            typedef alternative_function<Fragments> function_type;
             return function(function_type(fragments, elements));
         }
     };
@@ -399,6 +551,9 @@ namespace scheme { namespace qi
 
         env.define("qi:>>",
             sequence_composite<Fragments>(fragments), 2, false);
+
+        env.define("qi:|",
+            alternative_composite<Fragments>(fragments), 2, false);
     }
 }}
 
@@ -449,7 +604,49 @@ int main()
     }
 
     {
-        //~ utree src =
+        char const* filename = filename = "calc.scm";
+        std::ifstream in(filename, std::ios_base::in);
+
+        BOOST_TEST(in);
+
+        // Ignore the BOM marking the beginning of a UTF-8 file in Windows
+        char c = in.peek();
+        if (c == '\xef')
+        {
+            char s[3];
+            in >> s[0] >> s[1] >> s[2];
+            s[3] = '\0';
+            BOOST_TEST(s != std::string("\xef\xbb\xbf"));
+        }
+
+        interpreter parser(in, filename, &env);
+        rule_type calc = fragments[parser["expression"]()].alias();
+        std::string str;
+
+        while (std::getline(std::cin, str))
+        {
+            if (str.empty() || str[0] == 'q' || str[0] == 'Q')
+                break;
+
+            char const* iter = str.c_str();
+            char const* end = iter + strlen(iter);
+            bool r = phrase_parse(iter, end, calc, space);
+
+            if (r && iter == end)
+            {
+                std::cout << "-------------------------\n";
+                std::cout << "Parsing succeeded\n";
+                std::cout << "-------------------------\n";
+            }
+            else
+            {
+                std::string rest(iter, end);
+                std::cout << "-------------------------\n";
+                std::cout << "Parsing failed\n";
+                std::cout << "stopped at: \": " << rest << "\"\n";
+                std::cout << "-------------------------\n";
+            }
+        }
 
     }
 
