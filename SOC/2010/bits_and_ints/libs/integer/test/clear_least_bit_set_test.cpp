@@ -20,7 +20,7 @@ BOOST_TEST(((::boost::mpl::clear_least_bit_set< ::boost::mpl::integral_c<int, x>
 // Main testing function
 int main(int, char* [])
 {    
-	std::cout << "Doing tests on pop_count functions." << std::endl;
+	std::cout << "Doing tests on clear_least_bit_set functions." << std::endl;
 	
 	CLEAR_LEAST_BIT_SET_TEST(0x0, 0);
 	CLEAR_LEAST_BIT_SET_TEST(0x1, 0);

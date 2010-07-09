@@ -20,7 +20,7 @@ BOOST_TEST(((::boost::mpl::count_trailing_zeros< ::boost::mpl::integral_c<uintma
 // Main testing function
 int main(int, char* [])
 {    
-	std::cout << "Doing tests on pop_count functions." << std::endl;
+	std::cout << "Doing tests on count_trailing_zeros functions." << std::endl;
 	
 	COUNT_ZEROS_TEST(0xF00000000, 32);
 	COUNT_ZEROS_TEST(0x1, 0);
