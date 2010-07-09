@@ -18,8 +18,7 @@
 #include <boost/type_traits/is_unsigned.hpp>
 #include <boost/type_traits/make_unsigned.hpp>
 
-namespace boost
-{
+namespace boost {
 
 /*
  *	This header defines mpl::abs<> and static_abs<> metafunctions.

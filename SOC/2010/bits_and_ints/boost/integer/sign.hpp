@@ -15,8 +15,7 @@
 #include <iostream>
 #include <limits>
 
-namespace boost
-{
+namespace boost {
 
 /*
  * sign(data) returns:

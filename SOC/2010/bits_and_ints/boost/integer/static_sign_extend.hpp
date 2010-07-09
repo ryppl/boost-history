@@ -30,8 +30,7 @@
  *	Wich is -6 in 32-bit 2-complement.
  */
 
-namespace boost 
-{
+namespace boost {
 	
 namespace mpl {
 

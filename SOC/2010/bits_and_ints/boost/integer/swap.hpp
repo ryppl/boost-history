@@ -7,15 +7,14 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history. 
 
-/*
- *	This function swaps the values of x and y without a temporary variable.
- */
-
 #ifndef BOOST_SWAP_INCLUDED
 #define BOOST_SWAP_INCLUDED
 
-namespace boost
-{
+namespace boost {	
+	
+/*
+ *	This function swaps the values of x and y without a temporary variable.
+ */
 
 template <typename T>
 inline void swap(T& x, T& y)

@@ -31,7 +31,7 @@ int count_trailing_zeros(uintmax_t value)
 {
 	return pop_count(~value & (value - 1));
 } // count_trailing_zeros
-	
+
 } // boost
 
 #endif

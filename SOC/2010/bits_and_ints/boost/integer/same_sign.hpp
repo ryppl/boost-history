@@ -10,8 +10,7 @@
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/utility/enable_if.hpp>
 
-namespace boost
-{
+namespace boost {
 
 /*
  *	same_sign(first, second) returns:

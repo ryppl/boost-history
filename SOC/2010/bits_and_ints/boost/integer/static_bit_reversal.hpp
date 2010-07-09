@@ -23,8 +23,7 @@
  *		11110000010101010000000000000000
  */
 
-namespace boost 
-{
+namespace boost {
 	
 namespace mpl {
 
@@ -50,4 +49,4 @@ struct static_bit_reversal : mpl::bit_reversal< mpl::integral_c<T, data> >
 
 } // namespace boost
 
-#endif	
+#endif

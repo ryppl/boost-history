@@ -36,8 +36,7 @@
  *	y.second ==  b == 10
  */
 
-namespace boost 
-{
+namespace boost {
 	
 /*
  *	Interleave two unsigned integrals of 8, 16 or 32 bits and returns
@@ -54,7 +53,8 @@ interleave(typename uint_t<Bits>::exact x, typename uint_t<Bits>::exact y)
 		{0x5555, 0x3333, 0x0F0F, 0xFFFF, 0xFFFF},
 		{0x55555555, 0x33333333, 0x0F0F0F0F, 0x00FF00FF, 0xFFFFFFFF},
 #ifndef BOOST_NO_INT64_T
-		{0x5555555555555555, 0x3333333333333333, 0x0F0F0F0F0F0F0F0F, 0x00FF00FF00FF00FF, 0x0000FFFF0000FFF }
+		{0x5555555555555555LLU, 0x3333333333333333LLU, 0x0F0F0F0F0F0F0F0FLLU, 
+			0x00FF00FF00FF00FFLLU, 0x0000FFFF0000FFFLLU }
 #else
 		{0x0, 0x0, 0x0, 0x0, 0x0}
 #endif
@@ -128,4 +128,5 @@ uninterleave(typename uint_t<Bits>::exact number)
 } // uninterleave
 
 } // boost
+
 #endif

@@ -7,19 +7,19 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history. 
 
+#ifndef BOOST_SAFE_AVG_INCLUDED
+#define BOOST_SAFE_AVG_INCLUDED
+
+namespace boost {
+	
 /*
  *	Given two integer values x and y, the (floor of the) average normally
- *		would be computed by (x+y)/2; unfortunately, 
+ *		would be computed by (x+y)/2 unfortunately, 
  *		this can yield incorrect results due to overflow.
  *	
  *	`safe_avg(x, y)' ensures that no overflow will happen even if (x+y) 
  *		overflows the range of T.
  */
-
-#ifndef BOOST_SAFE_AVG_INCLUDED
-#define BOOST_SAFE_AVG_INCLUDED
-
-namespace boost {
 
 template <typename T>
 inline T safe_avg(T x, T y)
