@@ -279,7 +279,7 @@ int main() {
         >::type                     step_four;
         printf("Step 4: %0x\n", step_four::value );
 
-        BOOST_TEST(false);
+        // BOOST_TEST(false);
 
     }
     {
