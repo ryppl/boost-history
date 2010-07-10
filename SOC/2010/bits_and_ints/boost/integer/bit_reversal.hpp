@@ -25,8 +25,7 @@ namespace boost {
  */
 
 template <typename T>
-inline typename enable_if_c<is_integral<T>::type::value 
-	&& (sizeof(T) == 1 || sizeof(T) == 2 || sizeof(T) == 4 || sizeof(T) == 8), T>::type
+inline typename enable_if_c<is_integral<T>::type::value, T>::type
 bit_reversal(T data)
 {
 	
@@ -35,8 +34,8 @@ bit_reversal(T data)
 		{0x5555, 0x3333, 0x0F0F, 0xFFFF, 0xFFFF},
 		{0x55555555, 0x33333333, 0x0F0F0F0F, 0x00FF00FF, 0xFFFFFFFF},
 #ifndef BOOST_HAS_NO_INT64_T
-		{0x5555555555555555LLU, 0x3333333333333333LLU, 0x0F0F0F0F0F0F0F0FLLU,
-			0x00FF00FF00FF00FFLLU, 0x0000FFFF0000FFFFLLU}
+		{0x5555555555555555ULL, 0x3333333333333333ULL, 0x0F0F0F0F0F0F0F0FULL,
+			0x00FF00FF00FF00FFULL, 0x0000FFFF0000FFFFULL}
 #else
 		{0x0, 0x0, 0x0, 0x0, 0x0}
 #endif

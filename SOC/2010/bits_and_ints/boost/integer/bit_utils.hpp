@@ -71,7 +71,7 @@ struct flip_bit : mpl::integral_c<typename IC::value_type,
 {};
 
 template <typename IC, unsigned char pos>
-struct test_bit : mpl::bool_<((IC::value >> pos) & typename IC::value_type(1))>
+struct test_bit : mpl::bool_<((IC::value >> pos) & (typename IC::value_type)(1))>
 {};
 
 } // mpl
