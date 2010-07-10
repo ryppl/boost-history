@@ -3,51 +3,53 @@
 
 #include <boost/range/iterator_range.hpp>
 #include <boost/call_traits.hpp>
+#include <boost/mpl/void.hpp>
+#include <boost/range/begin.hpp>
+#include <boost/range/end.hpp>
 
 namespace boost
 {
 	namespace algorithm
 	{
         //! \todo Copyable
-
 		struct naive_search
 		{
+            typedef boost::mpl::void_ default_allocator_type;
 
-			template <class ForwardIterator1T,class ForwardIterator2T,class Comparator,class Allocator = std::allocator<char> >
-            struct algorithm : boost::noncopyable
+			template <class Finder, class Iterator1T, class Iterator2T, class ComparatorT, class AllocatorT>
+            struct algorithm
 			{
-			public:
-				typedef ForwardIterator1T substring_iterator_type;
-				typedef ForwardIterator2T string_iterator_type;
-                typedef typename boost::iterator_range<substring_iterator_type> substring_range_type;
-                typedef typename boost::iterator_range<string_iterator_type> string_range_type;
-				typedef Comparator comparator_type;
-				typedef Allocator allocator_type;
 			protected:
-                //construct the algorithm given iterator ranges for the substring and the string
-				algorithm (typename boost::call_traits<comparator_type>::param_type comparator,
-					typename boost::call_traits<allocator_type>::param_type allocator,
-					typename boost::call_traits<substring_range_type>::param_type substring,
-					typename boost::call_traits<string_range_type>::param_type string)
-					: comparator_(comparator), allocator_(allocator), substring_(substring), string_(string) { }
+                algorithm () { }
 
 
-				string_range_type find(string_iterator_type start)
+				typename boost::iterator_range<Iterator2T> find(Iterator2T start)
 				{
+                    typedef typename Finder::string_iterator_type string_iterator_type;
+                    typedef typename Finder::substring_iterator_type substring_iterator_type;
+                    typedef typename Finder::substring_range_type substring_range_type;
+                    typedef typename Finder::string_range_type string_range_type;
+                    typedef typename Finder::comparator_type comparator_type;
+                    string_range_type const &str = static_cast<Finder*>(this)->get_string_range();
+                    substring_range_type const &substr = static_cast<Finder*>(this)->get_substring_range();
+                    comparator_type comparator = static_cast<Finder*>(this)->get_comparator();
+
 					for (;
-						start != boost::end(string_); ++start)
+						start != boost::end(str); ++start)
 					{
 						string_iterator_type str_iter(start);
 						substring_iterator_type substr_iter;
-						for (substr_iter = boost::begin(substring_);
-							substr_iter != boost::end(substring_) && str_iter != boost::end(string_); ++substr_iter, ++str_iter)
+						for (substr_iter = boost::begin(substr);
+							substr_iter != boost::end(substr) && str_iter != boost::end(str);
+                            ++substr_iter, ++str_iter)
 						{
-							if (!comparator_(*str_iter, *substr_iter)) break;
+							if (!comparator(*str_iter, *substr_iter)) break;
 						}
-						if (substr_iter == boost::end(substring_))
+						if (substr_iter == boost::end(substr))
 							return boost::iterator_range<string_iterator_type>(start, str_iter);
 					}
-					return boost::iterator_range<string_iterator_type>(boost::end(string_),boost::end(string_));
+					return boost::iterator_range<string_iterator_type>(
+                        boost::end(str),boost::end(str));
 				}
                 //! It is guaranteed that each of these two functions will get called at least once before find()
                 //! is used.
@@ -59,11 +61,6 @@ namespace boost
                 inline void on_string_change()
                 {
                 }
-			private:
-				typename boost::call_traits<comparator_type>::param_type comparator_;
-				typename boost::call_traits<allocator_type>::param_type allocator_;
-				typename boost::call_traits<typename boost::iterator_range<substring_iterator_type> >::param_type substring_;
-				typename boost::call_traits<typename boost::iterator_range<string_iterator_type> >::param_type string_;
 			};
 
 		};

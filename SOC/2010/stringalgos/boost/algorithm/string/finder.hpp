@@ -54,6 +54,36 @@ namespace boost { namespace detail {
                 typename boost::remove_cv<typename boost::remove_pointer<T>::type>::type,
                 U>
         > {};
+    template <class Range1T, class Range2T, class ComparatorT, class AllocatorT>
+    struct finder_typedefs
+    {
+        //! The type of the substring
+        typedef Range1T substring_type;
+        //! The type of the string
+        typedef Range2T string_type;
+        //! The type of the comparator
+        typedef ComparatorT comparator_type;
+        //! The type of the allocator
+        typedef AllocatorT allocator_type;
+        //! The type of the substring's iterator
+        typedef typename boost::range_const_iterator<substring_type>::type
+            substring_iterator_type;
+        //! The type of the string's iterator
+        typedef typename boost::range_const_iterator<string_type>::type
+            string_iterator_type;
+        //! The character type of the substring
+        typedef typename boost::iterator_value<substring_iterator_type>::type
+            substring_char_type;
+        //! The character type of the string
+        typedef typename boost::iterator_value<string_iterator_type>::type
+            string_char_type;
+        typedef typename boost::iterator_range<substring_iterator_type>
+            substring_range_type;
+        typedef typename boost::iterator_range<string_iterator_type>
+            string_range_type;
+        typedef typename boost::iterator_difference<string_iterator_type>::type
+            string_difference_type;
+    };
 } // namespace detail
 } // namespace boost
 
@@ -82,17 +112,20 @@ namespace boost { namespace algorithm {
                 in the event that additional computation on the data has to be stored.
          */
         template <
-            typename Sequence1T, typename Sequence2T,
+            class Sequence1T, class Sequence2T,
             class Algorithm,
             typename Comparator = ::boost::algorithm::is_equal,
-            class Allocator = 
-                typename Algorithm::algorithm<Sequence1T,Sequence2T,Comparator>::allocator_type,
+            class Allocator = typename Algorithm::default_allocator_type,
             template <class,class,class,class> class AdditionalBehavior = boost::algorithm::finder_no_additional_behavior
         >
-        class finder_t : private Algorithm::algorithm<typename boost::range_const_iterator<Sequence1T>::type,
+        class finder_t : private Algorithm::algorithm</*typename boost::range_const_iterator<Sequence1T>::type,
                         typename boost::range_const_iterator<Sequence2T>::type,
-                        /*typename std::iterator_traits<Sequence2T>::iterator_type,*/Comparator,Allocator>,
-                        private AdditionalBehavior<Sequence1T,Sequence2T,Algorithm,Comparator>
+                        Comparator,Allocator*/
+                typename finder_t<Sequence1T, Sequence2T, Algorithm, Comparator, Allocator, AdditionalBehavior>,
+                typename boost::range_const_iterator<Sequence1T>::type,
+                typename boost::range_const_iterator<Sequence2T>::type,
+                Comparator, Allocator>,
+            private AdditionalBehavior<Sequence1T,Sequence2T,Algorithm,Comparator>
         {
             //! \todo: Maybe write a String concept?
             //! \todo: Currently, there's a SGI Sequence Concept implemented by Boost.ConceptCheck,
@@ -118,8 +151,10 @@ namespace boost { namespace algorithm {
             //! The character type of the string
             typedef typename boost::iterator_value<string_iterator_type>::type string_char_type;
             //! The type of the algorithm
-            typedef typename Algorithm::algorithm<substring_iterator_type,
-                    string_iterator_type,comparator_type,allocator_type> algorithm_type;
+            typedef typename Algorithm::algorithm<finder_t,
+                substring_iterator_type,
+                string_iterator_type,
+                Comparator, Allocator> algorithm_type;
             typedef typename boost::iterator_range<substring_iterator_type> substring_range_type;
             typedef typename boost::iterator_range<string_iterator_type> string_range_type;
             typedef typename boost::iterator_difference<string_iterator_type>::type string_difference_type;
@@ -148,8 +183,9 @@ namespace boost { namespace algorithm {
                 substring_optional_copy_(), substring_range_(substring?*substring:substring_optional_copy_),
                 string_optional_copy_(), string_range_(string?*string:string_optional_copy_),
                 start_offset_(boost::begin(string_range_)),
-                algorithm_type(comparator_,allocator_,substring_range_,string_range_)
-            { on_substring_change(); on_string_change(); }
+                algorithm_type(),
+                substring_has_changed_(true), string_has_changed_(true)
+            { }
 
             //! \overload
             template <class Range2T>
@@ -160,10 +196,11 @@ namespace boost { namespace algorithm {
                 substring_optional_copy_(), substring_range_(substring?*substring:substring_optional_copy_),
                 string_optional_copy_(), string_range_(),
                 start_offset_(),
-                algorithm_type(comparator_,allocator_,substring_range_,string_range_)
+                algorithm_type(),
+                substring_has_changed_(true), string_has_changed_(true)
             {
-                set_string(string); // automatically calls on_string_change()
-                on_substring_change();
+                set_string(string);
+                //on_substring_change();
             }
 
             //! \overload
@@ -175,10 +212,11 @@ namespace boost { namespace algorithm {
                 substring_optional_copy_(), substring_range_(),
                 string_optional_copy_(), string_range_(string?boost::as_literal(*string):string_optional_copy_),
                 start_offset_(boost::begin(string_range_)),
-                algorithm_type(comparator_,allocator_,substring_range_,string_range_)
+                algorithm_type(),
+                substring_has_changed_(true), string_has_changed_(true)
             {
                 set_substring(substring);
-                on_string_change();
+                //on_string_change();
             }
 
             //! \overload
@@ -191,7 +229,8 @@ namespace boost { namespace algorithm {
                 substring_optional_copy_(), substring_range_(),
                 string_optional_copy_(), string_range_(),
                 start_offset_(),
-                algorithm_type(comparator_,allocator_,substring_range_,string_range_)
+                algorithm_type(),
+                substring_has_changed_(true), string_has_changed_(true)
             {
                 set_substring(substring);
                 set_string(string);
@@ -208,8 +247,9 @@ namespace boost { namespace algorithm {
                 substring_optional_copy_(std::move(substring)), string_optional_copy_(),
                 substring_range_(substring_optional_copy_), string_range_(string?*string:string_optional_copy_),
                 start_offset_(boost::begin(string_range_)),
-                algorithm_type(comparator_,allocator_,substring_range_,string_range_)
-            { on_substring_change(); on_string_change(); }
+                algorithm_type(),
+                substring_has_changed_(true), string_has_changed_(true)
+            { /*on_substring_change(); on_string_change();*/ }
 
             //! \overload
             template <class Range2T>
@@ -222,8 +262,9 @@ namespace boost { namespace algorithm {
                 substring_optional_copy_(std::move(substring)), substring_range_(substring_optional_copy_),
                 string_optional_copy_(), string_range_(),
                 start_offset_(),
-                algorithm_type(comparator_,allocator_,substring_range_,string_range_)
-            { set_string(string); on_substring_change(); }
+                algorithm_type(),
+                substring_has_changed_(true), string_has_changed_(true)
+            { set_string(string); /*on_substring_change();*/ }
 
             //! \overload
             finder_t (
@@ -234,8 +275,9 @@ namespace boost { namespace algorithm {
                 substring_optional_copy_(std::move(substring)), string_optional_copy_(std::move(string)),
                 substring_range_(substring_optional_copy_), string_range_(string_optional_copy_),
                 start_offset_(boost::begin(string_range_)),
-                algorithm_type(comparator_,allocator_,substring_range_,string_range_)
-            { on_substring_change(); on_string_change(); }
+                algorithm_type(),
+                substring_has_changed_(true), string_has_changed_(true)
+            { /*on_substring_change(); on_string_change();*/ }
 
             //! \overload
             finder_t (const Sequence1T *const substring,
@@ -245,8 +287,9 @@ namespace boost { namespace algorithm {
                 substring_optional_copy_(), string_optional_copy_(std::move(string)),
                 substring_range_(substring?*substring:substring_optional_copy_), string_range_(string_optional_copy_),
                 start_offset_(boost::begin(string_range_)),
-                algorithm_type(comparator_,allocator_,substring_range_,string_range_)
-            { on_substring_change(); on_string_change(); }
+                algorithm_type(),
+                substring_has_changed_(true), string_has_changed_(true)
+            { /*on_substring_change(); on_string_change();*/ }
             
             //! \overload
             template <class Range1T>
@@ -258,8 +301,9 @@ namespace boost { namespace algorithm {
                 substring_optional_copy_(), substring_range_(),
                 string_optional_copy_(std::move(string)), string_range_(string_optional_copy_),
                 start_offset_(boost::begin(string_range_)),
-                algorithm_type(comparator_,allocator_,substring_range_,string_range_)
-            { set_substring(substring); on_string_change(); }
+                algorithm_type(),
+                substring_has_changed_(true), string_has_changed_(true)
+            { set_substring(substring); /*on_string_change();*/ }
 
 #           endif
 
@@ -279,8 +323,15 @@ namespace boost { namespace algorithm {
             typename string_range_type get_string_range() const
             { return string_range_; }
 
+            typename boost::call_traits<Comparator>::reference get_comparator()
+            { return comparator_; }
+
+            typename boost::call_traits<Comparator>::const_reference get_comparator() const
+            { return comparator_;  }
+
             //! \todo: any reason why stdlib get_allocator()s return value types?
-            
+
+           
             //! Gets a reference to the current allocator
             typename boost::call_traits<Allocator>::reference get_allocator()
             { return allocator_; }
@@ -298,7 +349,8 @@ namespace boost { namespace algorithm {
              */
             template <typename RangeT>
             void set_substring(RangeT const &substring,
-                typename boost::disable_if<typename ::boost::detail::is_pointer_to<RangeT,Sequence1T> >::type* = 0)
+                typename boost::disable_if<
+                    typename ::boost::detail::is_pointer_to<RangeT,Sequence1T> >::type* = 0)
             {
                 boost::iterator_range<typename boost::range_const_iterator<RangeT>::type> substring_range = 
                     boost::as_literal(substring);
@@ -307,8 +359,7 @@ namespace boost { namespace algorithm {
                 substring_optional_copy_.insert(substring_optional_copy_.end(),
                     boost::begin(substring_range), boost::end(substring_range));
                 substring_range_ = substring_optional_copy_;
-                find_reset();
-                on_substring_change();
+                substring_has_changed_ = true;
             }
             
             void set_substring (Sequence1T const *const substring = 0)
@@ -318,8 +369,7 @@ namespace boost { namespace algorithm {
                     substring_range_ = *substring;
                 else
                     substring_range_ = substring_optional_copy_;
-                find_reset();
-                on_substring_change();
+                substring_has_changed_ = true;
             }
 
 #           ifdef BOOST_HAS_RVALUE_REFS
@@ -328,8 +378,7 @@ namespace boost { namespace algorithm {
             {
                 substring_optional_copy_ = std::move(substring);
                 substring_range_ = substring_optional_copy_;
-                find_reset();
-                on_substring_change();
+                substring_has_changed_ = true;
             }
 #           endif
 
@@ -349,8 +398,7 @@ namespace boost { namespace algorithm {
                 string_optional_copy_.insert(string_optional_copy_.end(),
                     boost::begin(string_range), boost::end(string_range));
                 string_range_ = string_optional_copy_;
-                find_reset();
-                on_string_change();
+                string_has_changed_ = true;
             }
             
             void set_string (Sequence2T const *const string = 0)
@@ -360,8 +408,7 @@ namespace boost { namespace algorithm {
                     string_range_ = *string;
                 else
                     string_range_ = string_optional_copy_;
-                find_reset();
-                on_string_change();
+                string_has_changed_ = true;
             }
 
 #           ifdef BOOST_HAS_RVALUE_REFS
@@ -370,8 +417,7 @@ namespace boost { namespace algorithm {
             {
                 string_optional_copy_ = std::move(string);
                 string_range_ = string_optional_copy_;
-                find_reset();
-                on_string_change();
+                string_has_changed_ = true;
             }
 #           endif
 
@@ -383,9 +429,9 @@ namespace boost { namespace algorithm {
             */
             void refresh()
             {
+                find_reset();
                 on_substring_change(); //! \todo should only be called if the substring is a pointer
                 on_string_change(); //! \todo should only be called if the string is a pointer
-                find_reset();
             }
 
             //! \todo doc et al
@@ -426,6 +472,7 @@ namespace boost { namespace algorithm {
                 \note This is semantically equivalent to \c find_reset(); match=find_next();
              */
 
+
             //!\todo Must return a range of const iterators, otherwise one could modify
             //!         the range's contents, range which may actually
             //!         be data of our private member
@@ -445,6 +492,11 @@ namespace boost { namespace algorithm {
 
             string_range_type find_next()
             {
+                apply_changes();
+                if (start_offset_ == boost::end(string_range_))
+                    return boost::iterator_range<string_iterator_type>(
+                        start_offset_, start_offset_
+                    );
                 string_range_type ret =
                     algorithm_type::find(start_offset_);
                 if (boost::begin(ret) == boost::end(string_range_))
@@ -462,6 +514,16 @@ namespace boost { namespace algorithm {
 
             string_difference_type find_next_index()
             {
+                apply_changes();
+                
+                //empty substring
+                if (boost::begin(substring_range_) == boost::end(substring_range_))
+                {
+                    if (start_offset_ == boost::end(string_range_))
+                        return static_cast<string_difference_type>(-1);
+                    return std::distance(boost::begin(string_range_),start_offset_++);
+                }
+
                 string_range_type const &match = find_next();
                 if (boost::begin(match) == boost::end(string_range_))
                     return static_cast<string_difference_type>(-1);
@@ -477,6 +539,20 @@ namespace boost { namespace algorithm {
             //const_iterator begin() const { }
             //const_iterator end() const { }
         private:
+            inline void apply_changes()
+            {
+                if (substring_has_changed_ || string_has_changed_) {
+                    find_reset();
+                    if (substring_has_changed_) {
+                        on_substring_change();
+                        substring_has_changed_ = false;
+                    }
+                    if (string_has_changed_) {
+                        on_string_change();
+                        string_has_changed_ = false;
+                    }
+                }
+            }
             //detail::make_properly_copyable<substring_range_type> substring_optional_copy_;
             //detail::make_properly_copyable<string_range_type> string_optional_copy_;
             /*typename std::basic_string<substring_char_type, std::char_traits<substring_char_type>, allocator_type>
@@ -488,14 +564,52 @@ namespace boost { namespace algorithm {
             comparator_type comparator_;
             allocator_type allocator_;
             
-            //! \todo Somehow fix this HUGE issue. This makes us able to
+            //! \TODO make it so that pointers are stored here when appropriate (or must be 0 otherwise)
+            //!         these will be used when refresh_substring()/refresh_string() are called
+            //!         and are used to update substring_range_ and string_range_ via begin()+end()
+            //!         then those functions will update the ranges of the algorithm and call
+            //!         on_substring_change()/on_string_change().
+            //! \TODO think if it wouldn't be better if the algorithms could somehow use pointers to ranges or some stuff like that.
+
+            Sequence1T *substring_pointer_;
+            Sequence2T *string_pointer_;
+            
+            //! \todo Somehow fix this. This makes us able to
             //!       only store ranges of type substring_iterator_type, and not of std::basic_string.
             substring_range_type substring_range_;
             string_range_type string_range_;
             string_iterator_type start_offset_;
+            bool substring_has_changed_, string_has_changed_;
         };
 
         template <class,class,class,class> struct finder_no_additional_behavior { };
+
+        /*
+        template <class Range1T, class Range2T, class Algorithm,
+            class Comparator = ::boost::algorithm_is_equal,
+            class Allocator = 
+                typename Algorithm::algorithm<
+                    typename boost::range_const_iterator<Range1T>::type,
+                    typename boost::range_const_iterator<Range2T>::type,
+                    Comparator>::allocator_type
+        >
+        class simplified_finder_t :
+            public boost::algorithm::detail::finder_typedefs<Range1T,Range2T,ComparatorT,AllocatorT>,
+            private Algorithm::algorithm<
+                typename boost::range_const_iterator<Sequence1T>::type,
+                typename boost::range_const_iterator<Sequence2T>::type,
+                Comparator,Allocator>
+        {
+            //! \todo Add concept assertions here.
+
+        public:
+            simplified_finder_t(Range1T const *const substr = 0, Range2T const *const str = 0)
+                : substr_(substr), str_(str), algorithm() { }
+        private:
+            Range1T const *const substr_;
+            Range2T const *const str_;
+        };
+        */
 
 //  Finder generators ------------------------------------------//
         
@@ -728,8 +842,7 @@ namespace boost { namespace algorithm {
     using algorithm::range_finder;
 
 
-    //! \TODO: add all new finder types to ::boost after they have been coded
-    //! \TODO: extend from finder_t to create simpler first_finder_t etc.
+    //! \TODO: any other finder types?
     using algorithm::finder_t;
 
 } // namespace boost

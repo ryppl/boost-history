@@ -109,6 +109,7 @@ namespace boost {
             const std::locale& Loc=std::locale())
         {
             return ::boost::algorithm::find(Input, ::boost::algorithm::first_finder(Search,is_iequal(Loc)));
+            //return ::boost::algorithm::find(Input, ::boost::algorithm::finder_t<
         }
 
 //  find_last  -----------------------------------------------//
