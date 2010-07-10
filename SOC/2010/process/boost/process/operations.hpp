@@ -33,6 +33,7 @@
 #   include <boost/process/detail/win32_helpers.hpp>
 #   include <boost/algorithm/string/predicate.hpp>
 #   include <windows.h>
+#   include <boost/process/status.hpp>
 #else
 #   error "Unsupported platform."
 #endif
@@ -40,7 +41,6 @@
 #include <boost/process/child.hpp>
 #include <boost/process/context.hpp>
 #include <boost/process/stream_behavior.hpp>
-#include <boost/process/status.hpp>
 #include <boost/process/detail/file_handle.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/algorithm/string/predicate.hpp>
@@ -179,92 +179,53 @@ inline child create_child(const std::string &executable, Arguments args, context
     args.insert(args.begin(), p_name);
 
 #if defined(BOOST_POSIX_API)
-    child::id_type pid = ::fork();
+    child::id_type pid;
+    pid = ::fork();
 
     if (pid == -1)
         BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("fork(2) failed"); 
 
     if (pid == 0) 
-    { 
-#if defined(F_MAXFD) 
-        int maxdescs = ::fcntl(-1, F_MAXFD, 0); 
-        if (maxdescs == -1) 
-            maxdescs = ::sysconf(_SC_OPEN_MAX); 
-#else 
-        int maxdescs = ::sysconf(_SC_OPEN_MAX); 
-#endif 
-        if (maxdescs == -1) 
-            maxdescs = 1024; 
-        try 
-        { 
-            boost::scoped_array<bool> closeflags(new bool[maxdescs]); 
-            for (int i = 0; i < maxdescs; ++i) 
-                closeflags[i] = true; 
-
-            // setup_input(infoin, closeflags.get(), maxdescs); 
-            // setup_output(infoout, closeflags.get(), maxdescs); 
-
-            int stdin_fd = ctx.stdin_behavior->get_child_end();
-            if (stdin_fd != -1 && stdin_fd < maxdescs)
-                closeflags[stdin_fd] = false;
-
-            int stdout_fd = ctx.stdout_behavior->get_child_end();
-            if (stdout_fd != -1 && stdout_fd < maxdescs)
-                closeflags[stdout_fd] = false;
-
-            int stderr_fd = ctx.stderr_behavior->get_child_end();
-            if (stderr_fd != -1 && stderr_fd < maxdescs)
-                closeflags[stderr_fd] = false;
-
-            for (int i = 0; i < maxdescs; ++i) 
-            { 
-                if (closeflags[i]) 
-                    ::close(i); 
-            } 
-
-            // setup(); 
-        } 
-        catch (const boost::system::system_error &e) 
-        { 
-            ::write(STDERR_FILENO, e.what(), std::strlen(e.what())); 
-            ::write(STDERR_FILENO, "\n", 1); 
-            std::exit(EXIT_FAILURE); 
-        } 
+    {
+        dup2(ctx.stdin_behavior->get_child_end(),STDIN_FILENO);
+        dup2(ctx.stdout_behavior->get_child_end(),STDOUT_FILENO);
+        dup2(ctx.stderr_behavior->get_child_end(),STDERR_FILENO);
 
         std::pair<std::size_t, char**> argcv = detail::collection_to_posix_argv(args);
         char **envp = detail::environment_to_envp(ctx.environment);
         ::execve(executable.c_str(), argcv.second, envp);
 
-        boost::system::system_error e(boost::system::error_code(errno, boost::system::get_system_category()), BOOST_PROCESS_SOURCE_LOCATION "execve(2) failed"); 
-
         for (std::size_t i = 0; i < argcv.first; ++i) 
             delete[] argcv.second[i]; 
         delete[] argcv.second; 
 
-        for (std::size_t i = 0; i < env.size(); ++i) 
+        for (std::size_t i = 0; i < sizeof(envp); ++i) 
             delete[] envp[i]; 
         delete[] envp; 
 
-        ::write(STDERR_FILENO, e.what(), std::strlen(e.what())); 
-        ::write(STDERR_FILENO, "\n", 1); 
-        // TODO: Use return values which is less likely used by the
-        // program which should have been started.
+        BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("execve() failed"); 
         std::exit(EXIT_FAILURE); 
-    } 
 
-    BOOST_ASSERT(pid > 0);
+    }
+    else
+    {
+        BOOST_ASSERT(pid > 0);
 
-    if (ctx.stdin_behavior->get_child_end() != -1)
-        ::close(ctx.stdin_behavior->get_child_end());
-    if (ctx.stdout_behavior->get_child_end() != -1)
-        ::close(ctx.stdout_behavior->get_child_end());
-    if (ctx.stderr_behavior->get_child_end() != -1)
-        ::close(ctx.stderr_behavior->get_child_end());
+        //Is this really necessary?
+        if(ctx.stdin_behavior->get_child_end() != -1)
+            ::close(ctx.stdin_behavior->get_child_end());
+        if(ctx.stdout_behavior->get_child_end() != -1)
+            ::close(ctx.stdout_behavior->get_child_end());
+        if(ctx.stderr_behavior->get_child_end() != -1)
+            ::close(ctx.stderr_behavior->get_child_end());
 
-    return child(pid, 
-        detail::file_handle(ctx.stdin_behavior->get_parent_end()), 
-        detail::file_handle(ctx.stdout_behavior->get_parent_end()), 
-        detail::file_handle(ctx.stderr_behavior->get_parent_end())); 
+        return child(pid,
+        detail::file_handle(ctx.stdin_behavior->get_parent_end()),
+        detail::file_handle(ctx.stdout_behavior->get_parent_end()),
+        detail::file_handle(ctx.stderr_behavior->get_parent_end()));
+    }
+
+
 #elif defined(BOOST_WINDOWS_API)
     STARTUPINFOA startup_info;
     ::ZeroMemory(&startup_info, sizeof(startup_info));

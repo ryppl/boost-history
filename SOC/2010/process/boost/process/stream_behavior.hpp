@@ -115,6 +115,9 @@ public:
         if (!::DuplicateHandle(::GetCurrentProcess(), child_end_, ::GetCurrentProcess(), &child_end_, 0, TRUE, DUPLICATE_SAME_ACCESS)) 
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("DuplicateHandle() failed"); 
 #endif 
+#if defined(BOOST_POSIX_API)
+        //Do nothing since is the default.
+#endif
     } 
 
     static boost::shared_ptr<inherit> def(native_type child_end) 

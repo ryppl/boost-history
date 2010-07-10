@@ -23,6 +23,7 @@
 
 #if defined(BOOST_POSIX_API)
 #   include <cerrno>
+#   include <sys/wait.h>
 #   include <signal.h>
 #elif defined(BOOST_WINDOWS_API)
 #   include <cstdlib>

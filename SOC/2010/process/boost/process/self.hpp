@@ -75,9 +75,9 @@ public:
      * Returns the current process' environment variables. Modifying the
      * returned object has no effect on the current environment.
      */
-    static environment get_environment()
+    static environment_t get_environment()
     {
-        environment e;
+        environment_t e;
 
 #if defined(BOOST_POSIX_API)
 #   if defined(__APPLE__)
@@ -90,7 +90,7 @@ public:
         {
             std::string s = *env;
             std::string::size_type pos = s.find('=');
-            e.insert(boost::process::environment::value_type(s.substr(0, pos), s.substr(pos + 1)));
+            e.insert(boost::process::environment_t::value_type(s.substr(0, pos), s.substr(pos + 1)));
             ++env;
         }
 #elif defined(BOOST_WINDOWS_API)
@@ -108,7 +108,7 @@ public:
             {
                 std::string s = env;
                 std::string::size_type pos = s.find('=');
-                e.insert(boost::process::environment::value_type(s.substr(0, pos), s.substr(pos + 1)));
+                e.insert(boost::process::environment_t::value_type(s.substr(0, pos), s.substr(pos + 1)));
                 env += s.size() + 1;
             }
         }

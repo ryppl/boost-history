@@ -19,28 +19,22 @@
 #ifndef BOOST_PROCESS_STATUS_HPP
 #define BOOST_PROCESS_STATUS_HPP
 
+#if defined(BOOST_WINDOWS_API)
 #include <boost/process/config.hpp>
-
-#if defined(BOOST_POSIX_API)
-#   include <sys/wait.h>
-#elif defined(BOOST_WINDOWS_API)
-#else
-#   error "Unsupported platform."
-#endif
-
-#include <boost/assert.hpp>
+#include <boost/process/detail/basic_status.hpp>
+#include <boost/process/detail/basic_status_service.hpp>
 
 namespace boost {
 namespace process {
 
-class process;
+typedef detail::basic_status<detail::basic_status_service<> > status;
 
-/**
- * Status returned by a finalized %child process.
- *
- * This class represents the %status returned by a child process after it
- * has terminated. 
- */
+}
+}
+#endif
+#if defined(BOOST_POSIX_API)
+
+//Old status implementation
 class status
 {
     friend class process;
@@ -51,16 +45,7 @@ public:
      */
     bool exited() const
     {
-#if defined(BOOST_POSIX_API)
         return WIFEXITED(flags_);
-#elif defined(BOOST_WINDOWS_API)
-        // TODO 
-        // Felipe: Is that really right?
-        // Boris: Not sure in the moment. I think we have to check the 
-        //        sample programs to see if there is a use case where 
-        //        this is not true? 
-        return true;
-#endif
     }
 
     /**
@@ -70,15 +55,12 @@ public:
      *
      * \pre exited() is true.
      */
+
     int exit_code() const
     {
         BOOST_ASSERT(exited());
 
-#if defined(BOOST_POSIX_API)
         return WEXITSTATUS(flags_);
-#elif defined(BOOST_WINDOWS_API)
-        return flags_;
-#endif
     }
 
 protected:
@@ -93,17 +75,12 @@ protected:
      *        Windows system it contains the exit code only.
      */
     status(int flags)
-        : flags_(flags) 
-    {
-    }
+        : flags_(flags) {}
 
     /**
      * OS-specific codification of exit status.
      */
     int flags_;
 };
-
-}
-}
-
+#endif
 #endif

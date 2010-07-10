@@ -45,12 +45,12 @@ namespace detail {
  *         the environment's content. Each array entry is a
  *         NULL-terminated string of the form var=value.
  */
-inline char **environment_to_envp(const environment &env)
+inline char **environment_to_envp(const environment_t &env)
 {
     char **envp = new char*[env.size() + 1]; 
 
-    environment::size_type i = 0; 
-    for (environment::const_iterator it = env.begin(); it != env.end(); ++it) 
+    environment_t::size_type i = 0; 
+    for (environment_t::const_iterator it = env.begin(); it != env.end(); ++it) 
     { 
         std::string s = it->first + "=" + it->second; 
         envp[i] = new char[s.size() + 1]; 

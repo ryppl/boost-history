@@ -38,7 +38,7 @@ struct context
     boost::shared_ptr<behavior::stream> stderr_behavior;
     std::string process_name;
     std::string work_dir;
-    environment environment;
+    environment_t environment;
 
     /** 
      * Constructs a process context. 
@@ -46,11 +46,11 @@ struct context
      * Sets behavior of standard streams (inherit), current work directory 
      * and environment variables. 
      */ 
-    context() 
+    context()
 #if defined(BOOST_POSIX_API) 
-        : stdin_behavior(behavior::inherit::def(behavior::inherit(STDIN_FILENO))), 
-        stdout_behavior(behavior::inherit::def(behavior::inherit(STDOUT_FILENO))), 
-        stderr_behavior(behavior::inherit::def(behavior::inherit(STDERR_FILENO))), 
+        : stdin_behavior(behavior::inherit::def(STDIN_FILENO)), 
+        stdout_behavior(behavior::inherit::def(STDOUT_FILENO)), 
+        stderr_behavior(behavior::inherit::def(STDERR_FILENO)), 
 #elif defined(BOOST_WINDOWS_API) 
         : stdin_behavior(behavior::inherit::def(::GetStdHandle(STD_INPUT_HANDLE))), 
         stdout_behavior(behavior::inherit::def(::GetStdHandle(STD_OUTPUT_HANDLE))), 
