@@ -8,7 +8,6 @@
 #define BOOST_BITS_MASK_HPP
 #include <boost/integer/high_bits_mask.hpp>
 #include <boost/integer/low_bits_mask.hpp>
-#include <boost/type_traits.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/integer/bit_width.hpp>
 
