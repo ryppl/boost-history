@@ -22,10 +22,6 @@
 #include <boost/process/config.hpp>
 
 #if defined(BOOST_POSIX_API)
-#   include <boost/process/pipe.hpp>
-#   include <boost/process/detail/posix_helpers.hpp>
-#   include <map>
-#   include <unistd.h>
 #elif defined(BOOST_WINDOWS_API)
 #   include <windows.h>
 #else

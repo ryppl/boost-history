@@ -11,7 +11,6 @@
 //
 
 #include <boost/process/all.hpp> 
-#include <boost/make_shared.hpp> 
 #include <boost/assign/list_of.hpp> 
 #include <vector> 
 #include <string> 

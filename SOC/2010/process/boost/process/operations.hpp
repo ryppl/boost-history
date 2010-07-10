@@ -33,7 +33,6 @@
 #   include <boost/process/detail/win32_helpers.hpp>
 #   include <boost/algorithm/string/predicate.hpp>
 #   include <windows.h>
-#   include <boost/process/status.hpp>
 #else
 #   error "Unsupported platform."
 #endif
@@ -179,13 +178,10 @@ inline child create_child(const std::string &executable, Arguments args, context
     args.insert(args.begin(), p_name);
 
 #if defined(BOOST_POSIX_API)
-    child::id_type pid;
-    pid = ::fork();
-
+    pid_t pid = ::fork();
     if (pid == -1)
-        BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("fork(2) failed"); 
-
-    if (pid == 0) 
+        BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("fork(2) failed");
+    else if (pid == 0)
     {
 #if defined(F_MAXFD)
         int maxdescs = ::fcntl(-1, F_MAXFD, 0);
@@ -229,44 +225,43 @@ inline child create_child(const std::string &executable, Arguments args, context
         {
             ::write(STDERR_FILENO, e.what(), std::strlen(e.what()));
             ::write(STDERR_FILENO, "\n", 1);
-            std::exit(EXIT_FAILURE);
+            std::exit(127);
         }
 
         std::pair<std::size_t, char**> argcv = detail::collection_to_posix_argv(args);
         char **envp = detail::environment_to_envp(ctx.environment);
+
         ::execve(executable.c_str(), argcv.second, envp);
 
         for (std::size_t i = 0; i < argcv.first; ++i) 
             delete[] argcv.second[i]; 
         delete[] argcv.second; 
 
-        for (std::size_t i = 0; i < sizeof(envp); ++i) 
+        for (std::size_t i = 0; i < ctx.environment.size(); ++i) 
             delete[] envp[i]; 
         delete[] envp; 
 
-        BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("execve() failed"); 
-        std::exit(EXIT_FAILURE); 
-
+        boost::system::system_error e(boost::system::error_code(errno, boost::system::get_system_category()), BOOST_PROCESS_SOURCE_LOCATION "execve(2) failed");
+        ::write(STDERR_FILENO, e.what(), std::strlen(e.what()));
+        ::write(STDERR_FILENO, "\n", 1);
+        std::exit(127);
     }
     else
     {
         BOOST_ASSERT(pid > 0);
 
-        //Is this really necessary?
-        if(ctx.stdin_behavior->get_child_end() != -1)
+        if (ctx.stdin_behavior->get_child_end() != -1)
             ::close(ctx.stdin_behavior->get_child_end());
-        if(ctx.stdout_behavior->get_child_end() != -1)
+        if (ctx.stdout_behavior->get_child_end() != -1)
             ::close(ctx.stdout_behavior->get_child_end());
-        if(ctx.stderr_behavior->get_child_end() != -1)
+        if (ctx.stderr_behavior->get_child_end() != -1)
             ::close(ctx.stderr_behavior->get_child_end());
 
         return child(pid,
-        detail::file_handle(ctx.stdin_behavior->get_parent_end()),
-        detail::file_handle(ctx.stdout_behavior->get_parent_end()),
-        detail::file_handle(ctx.stderr_behavior->get_parent_end()));
+            detail::file_handle(ctx.stdin_behavior->get_parent_end()),
+            detail::file_handle(ctx.stdout_behavior->get_parent_end()),
+            detail::file_handle(ctx.stderr_behavior->get_parent_end()));
     }
-
-
 #elif defined(BOOST_WINDOWS_API)
     STARTUPINFOA startup_info;
     ::ZeroMemory(&startup_info, sizeof(startup_info));

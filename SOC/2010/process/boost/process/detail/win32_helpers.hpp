@@ -22,6 +22,7 @@
 #define BOOST_PROCESS_WIN32_HELPERS_HPP
 
 #include <boost/process/config.hpp>
+#include <boost/process/environment.hpp>
 #include <boost/shared_array.hpp>
 #include <string>
 #include <vector>
