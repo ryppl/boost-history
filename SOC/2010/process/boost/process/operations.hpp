@@ -187,9 +187,50 @@ inline child create_child(const std::string &executable, Arguments args, context
 
     if (pid == 0) 
     {
-        dup2(ctx.stdin_behavior->get_child_end(),STDIN_FILENO);
-        dup2(ctx.stdout_behavior->get_child_end(),STDOUT_FILENO);
-        dup2(ctx.stderr_behavior->get_child_end(),STDERR_FILENO);
+#if defined(F_MAXFD)
+        int maxdescs = ::fcntl(-1, F_MAXFD, 0);
+        if (maxdescs == -1)
+            maxdescs = ::sysconf(_SC_OPEN_MAX);
+#else
+        int maxdescs = ::sysconf(_SC_OPEN_MAX);
+#endif
+        if (maxdescs == -1)
+            maxdescs = 1024;
+        try
+        {
+            boost::scoped_array<bool> closeflags(new bool[maxdescs]);
+            for (int i = 0; i < maxdescs; ++i)
+                closeflags[i] = true;
+
+            // setup_input(infoin, closeflags.get(), maxdescs);
+            // setup_output(infoout, closeflags.get(), maxdescs);
+
+            int stdin_fd = ctx.stdin_behavior->get_child_end();
+            if (stdin_fd != -1 && stdin_fd < maxdescs)
+                closeflags[stdin_fd] = false;
+
+            int stdout_fd = ctx.stdout_behavior->get_child_end();
+            if (stdout_fd != -1 && stdout_fd < maxdescs)
+                closeflags[stdout_fd] = false;
+
+            int stderr_fd = ctx.stderr_behavior->get_child_end();
+            if (stderr_fd != -1 && stderr_fd < maxdescs)
+                closeflags[stderr_fd] = false;
+
+            for (int i = 0; i < maxdescs; ++i)
+            {
+                if (closeflags[i])
+                    ::close(i);
+            }
+
+            // setup();
+        }
+        catch (const boost::system::system_error &e)
+        {
+            ::write(STDERR_FILENO, e.what(), std::strlen(e.what()));
+            ::write(STDERR_FILENO, "\n", 1);
+            std::exit(EXIT_FAILURE);
+        }
 
         std::pair<std::size_t, char**> argcv = detail::collection_to_posix_argv(args);
         char **envp = detail::environment_to_envp(ctx.environment);
