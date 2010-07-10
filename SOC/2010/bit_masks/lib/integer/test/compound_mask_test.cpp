@@ -17,7 +17,7 @@ int main() {
 
         typedef compound_mask< combo_mask, bits_mask<int, 3, 5> > combo_mask2;
         BOOST_ASSERT(( combo_mask2() == (combo_mask() | bits_mask<int, 3, 5>() ) ));
-        BOOST_ASSERT(( combo_mask2() > 0 )) ;
+        BOOST_ASSERT(( combo_mask2() != 0 )) ;
         
         typedef compound_mask<
                     combo_mask2,
