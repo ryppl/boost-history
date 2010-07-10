@@ -4,17 +4,17 @@
 
 import testing ;
 
-project : requirements <warnings>all <toolset>gcc:<cxxflags>-Wextra ;
+project : requirements <warnings>all <toolset>darwin:<cxxflags>-Wextra <toolset>darwin:<cxxflags>-Wno-long-long <toolset>gcc:<cxxflags>-Wextra <toolset>gcc:<cxxflags>-Wno-long-long ;
 
 test-suite integer
-    : 
-        [ run cstdint_test.cpp : : : <toolset>gcc:<cxxflags>-Wno-long-long <toolset>darwin:<cxxflags>-Wno-long-long ]
-        [ run cstdint_test2.cpp : : : <toolset>gcc:<cxxflags>-Wno-long-long <toolset>darwin:<cxxflags>-Wno-long-long ]
-        [ run integer_traits_test.cpp ]
-        [ run integer_test.cpp : : : <toolset>gcc:<cxxflags>-Wno-long-long <toolset>darwin:<cxxflags>-Wno-long-long <toolset>sun:<cxxflags>"-Qoption ccfe -tmpldepth=128" ]
-        [ run integer_mask_test.cpp ]
-        [ run static_log2_test.cpp ]
-        [ run static_min_max_test.cpp ]
+	:
+		[ run cstdint_test.cpp : : : <toolset>gcc:<cxxflags>-Wno-long-long <toolset>darwin:<cxxflags>-Wno-long-long ]
+		[ run cstdint_test2.cpp : : : <toolset>gcc:<cxxflags>-Wno-long-long <toolset>darwin:<cxxflags>-Wno-long-long ]
+		[ run integer_traits_test.cpp ]
+		[ run integer_test.cpp : : : <toolset>gcc:<cxxflags>-Wno-long-long <toolset>darwin:<cxxflags>-Wno-long-long <toolset>sun:<cxxflags>"-Qoption ccfe -tmpldepth=128" ]
+		[ run integer_mask_test.cpp ]
+		[ run static_log2_test.cpp ]
+		[ run static_min_max_test.cpp ]
 		[ run sign_extend_test.cpp ]
 		[ run bit_reversal_test.cpp ]
 		[ run sign_test.cpp ]
@@ -25,11 +25,12 @@ test-suite integer
 		[ run count_trailing_zeros_test.cpp ]
 		[ run clear_least_bit_set_test.cpp ]
 		[ run safe_avg_test.cpp ]
-        [ compile cstdint_include_test.cpp ]
-        [ compile integer_traits_include_test.cpp ]
-        [ compile integer_include_test.cpp ]
-        [ compile integer_mask_include_test.cpp ]
-        [ compile static_log2_include_test.cpp ]
-        [ compile static_min_max_include_test.cpp ]
-        [ compile integer_fwd_include_test.cpp ]
-    ;
+		[ run isign_test.cpp ]
+		[ compile cstdint_include_test.cpp ]
+		[ compile integer_traits_include_test.cpp ]
+		[ compile integer_include_test.cpp ]
+		[ compile integer_mask_include_test.cpp ]
+		[ compile static_log2_include_test.cpp ]
+		[ compile static_min_max_include_test.cpp ]
+		[ compile integer_fwd_include_test.cpp ]
+	;

@@ -26,21 +26,30 @@ namespace boost {
 
 namespace mpl {
 
+//~ template <typename IC>
+//~ struct is_integral_constant : false_ {};
+
+    
+//~ namespace detail {
 BOOST_MPL_HAS_XXX_TRAIT_DEF(tag)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
-BOOST_MPL_HAS_XXX_TRAIT_DEF(value)
+//~ BOOST_MPL_HAS_XXX_TRAIT_DEF(value)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(type)
-
+//~ }
 template <typename IC>
 struct is_integral_constant : and_<
 		and_< has_tag<IC>, is_same<typename IC::tag, integral_c_tag> >,
 		and_< has_value_type<IC>, is_integral<typename IC::value_type> >,
-		//has_value<IC>,
-		has_type<IC>,
-		true_
+		//detail_has_value<IC>,
+		has_type<IC>
 	>
 {};
 
+    
+    
+template <typename T, T value>
+struct is_integral_constant<integral_c<T,value> > : true_ {};
+    
 }
 
 

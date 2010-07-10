@@ -16,7 +16,8 @@
 /*
  *	Some utilities to handle integers.
  */
-namespace boost {
+namespace boost
+{
 	
 template <typename T>
 inline T set_bit(T data, unsigned char pos)

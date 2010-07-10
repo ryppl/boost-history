@@ -60,20 +60,20 @@ int main(int, char* [])
 
 #ifndef BOOST_NO_INT64_T
 	
-	STATIC_SIGN_TEST(int64_t, -10000000000, -1);
-	STATIC_SIGN_TEST(int64_t, -20000000000, -1);
+	STATIC_SIGN_TEST(int64_t, -10000000000LL, -1);
+	STATIC_SIGN_TEST(int64_t, -20000000000LL, -1);
 	STATIC_SIGN_TEST(int64_t, -1, -1);
 	STATIC_SIGN_TEST(int64_t, 1, 1);
-	STATIC_SIGN_TEST(int64_t, 10000000000, 1);
-	STATIC_SIGN_TEST(int64_t, 12312300000, 1);
+	STATIC_SIGN_TEST(int64_t, 10000000000LL, 1);
+	STATIC_SIGN_TEST(int64_t, 12312300000LL, 1);
 	STATIC_SIGN_TEST(int64_t, 0, 0);	
 	
 	// 64-bit tests
-	for (int64_t i = -10000002000; i != -10000000000; ++i) {
+	for (int64_t i = -10000002000LL; i != -10000000000LL; ++i) {
 		SIGN_TEST(i, -1);
 	}
 	
-	for (int64_t i = 11000000000; i != 11000002000; ++i) {
+	for (int64_t i = 11000000000LL; i != 11000002000LL; ++i) {
 		SIGN_TEST(i, 1);
 	}
 	
