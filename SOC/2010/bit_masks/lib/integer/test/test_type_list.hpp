@@ -20,6 +20,7 @@
 
 
 // boost includes
+#include <boost/config.hpp>
 #include <boost/assert.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <boost/cstdint.hpp>
@@ -51,7 +52,9 @@ typedef boost::mpl::list<
 typedef boost::mpl::list<
                             // char16_t,
                             // char32_t,
+#ifndef BOOST_NO_CWCHAR
                             wchar_t,
+#endif
                             std::ptrdiff_t,
                             std::size_t//,
                             // std::max_align_t,

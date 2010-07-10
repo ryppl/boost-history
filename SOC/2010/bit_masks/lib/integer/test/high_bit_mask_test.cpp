@@ -56,11 +56,6 @@ struct type_tester {
     void operator()(U) {
         test_function<U>();
     }
-    void operator() (wchar_t)
-    {
-        using namespace std;
-        cout << "can't use wchar_t" << endl;
-    }
 };
 
 
