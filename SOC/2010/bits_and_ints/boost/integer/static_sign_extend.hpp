@@ -41,7 +41,7 @@ namespace mpl {
 
 template <typename IC, std::size_t Bits>
 struct sign_extend : integral_c<typename IC::value_type,
-	(((IC::value & ((typename IC::value_type(1) << Bits) - 1)) 
+	(((IC::value & (((typename IC::value_type(1)) << Bits) - 1)) 
 	^ (typename IC::value_type(1) << (Bits - 1))) 
 	- (typename IC::value_type(1) << (Bits - 1)))
 >

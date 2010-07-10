@@ -6,6 +6,7 @@
 //  http://www.boost.org/LICENSE_1_0.txt
 
 #include <boost/detail/lightweight_test.hpp>
+#include <boost/cstdint.hpp>
 #include <boost/integer/bits_and_ints.hpp> 
 #include <iostream> 
 
@@ -21,6 +22,7 @@ BOOST_TEST((::boost::static_sign<t, v>::value == e))
 // Main testing function
 int main(int, char* [])
 {    
+	using namespace boost;
 	std::cout << "Doing tests on sign functions." << std::endl;
 	
 	// Signed tests
@@ -36,7 +38,7 @@ int main(int, char* [])
 	
 	// Unsigned tests
 	SIGN_TEST(unsigned(-1), 1);
-	for (unsigned i = -1000; i != 40000; ++i) SIGN_TEST(i, (i != 0));
+	for (unsigned i = 1; i != 40000; ++i) SIGN_TEST(i, 1);
 	
 	SIGN_TEST(unsigned(0), 0);
 	

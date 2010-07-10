@@ -5,16 +5,16 @@
 //  accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt
 
+#include <iostream>
+#include <boost/cstdint.hpp>
+#include <boost/mpl/integral_c.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <boost/integer/pop_count.hpp>
-#include <boost/integer/static_pop_count.hpp>
-#include <boost/mpl/integral_c.hpp>
-
-#include <iostream> 
+#include <boost/integer/static_pop_count.hpp> 
 
 #define POP_COUNT_TEST(x, y) \
 BOOST_TEST((::boost::pop_count(x) == y)); \
-BOOST_TEST(((::boost::mpl::pop_count< ::boost::mpl::integral_c<uintmax_t, x> >::value) == y))
+BOOST_TEST(((::boost::mpl::pop_count< ::boost::mpl::integral_c<::boost::uintmax_t, x> >::value) == y))
 
 
 // Main testing function

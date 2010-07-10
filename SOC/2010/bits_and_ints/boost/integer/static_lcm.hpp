@@ -11,6 +11,7 @@
 #ifndef BOOST_STATIC_LCM_INCLUDED
 #define BOOST_STATIC_LCM_INCLUDED
 
+#include <boost/cstdint.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/math/common_factor_ct.hpp>
 #include <boost/integer/static_abs.hpp>

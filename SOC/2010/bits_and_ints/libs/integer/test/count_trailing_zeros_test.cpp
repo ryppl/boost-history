@@ -5,16 +5,16 @@
 //  accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt
 
+#include <iostream>
+#include <boost/cstdint.hpp>
+#include <boost/mpl/integral_c.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <boost/integer/count_trailing_zeros.hpp>
 #include <boost/integer/static_count_trailing_zeros.hpp>
-#include <boost/mpl/integral_c.hpp>
-
-#include <iostream> 
 
 #define COUNT_ZEROS_TEST(x, y) \
 BOOST_TEST((::boost::count_trailing_zeros(x) == y)); \
-BOOST_TEST(((::boost::mpl::count_trailing_zeros< ::boost::mpl::integral_c<uintmax_t, x> >::value) == y))
+BOOST_TEST(((::boost::mpl::count_trailing_zeros< ::boost::mpl::integral_c<::boost::uintmax_t, x> >::value) == y))
 
 
 // Main testing function

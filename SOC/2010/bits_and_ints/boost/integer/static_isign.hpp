@@ -37,8 +37,8 @@ template <typename IC1, typename IC2,
 	>::type
 >
 struct isign : integral_c<typename IC1::value_type, 
-	((IC1::value ^ ((IC1::value ^ IC2::value) >> sizeof(typename IC1::value_type) * 8 - 1))
-		- ((IC1::value ^ IC2::value) >> sizeof(typename IC1::value_type) * 8 - 1))
+	((IC1::value ^ ((IC1::value ^ IC2::value) >> (sizeof(typename IC1::value_type) * 8 - 1)))
+		- ((IC1::value ^ IC2::value) >> (sizeof(typename IC1::value_type) * 8 - 1)))
 >
 {};
 

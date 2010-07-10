@@ -5,17 +5,16 @@
 //  accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt
 
-#include <boost/detail/lightweight_test.hpp>
-
+#include <iostream>
 #include <boost/cstdlib.hpp>
-#include <boost/integer/bits_and_ints.hpp> 
+#include <boost/cstdint.hpp>
 #include <boost/mpl/integral_c.hpp>
-
-#include <iostream>  
+#include <boost/detail/lightweight_test.hpp>
+#include <boost/integer/bits_and_ints.hpp>  
 
 // Macros to compact code
 #define BIT_REVERSAL_TEST(n, m) \
-	BOOST_TEST(::boost::bit_reversal(n) == m)
+	BOOST_TEST((::boost::bit_reversal(n) == m))
 
 #define STATIC_BIT_REVERSAL_TEST(t, n, m) \
 	BOOST_TEST((::boost::static_bit_reversal<t, n>::value == m)); \
@@ -24,7 +23,8 @@
 
 // Main testing function
 int main(int, char* [])
-{    
+{   
+	using namespace boost;
 	std::cout << "Doing tests on bit_reversal." << std::endl;
 	
 	

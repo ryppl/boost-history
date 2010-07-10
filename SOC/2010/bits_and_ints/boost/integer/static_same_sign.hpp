@@ -14,6 +14,7 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/integer/static_sign.hpp>
 
 namespace boost {
 
@@ -35,9 +36,8 @@ namespace mpl {
  *		IC1 and IC2 types must be mpl::integral_c<> types.
  */
 template <typename IC1, typename IC2>
-struct same_sign : bool_<((!IC1::value && !IC2::value) 
-	|| (IC1::value < 0 && IC2::value < 0) 
-	|| (IC2::value > 0 && IC2::value > 0))
+struct same_sign : bool_<
+	sign<IC1>::value == sign<IC2>::value
 >
 {};
 	

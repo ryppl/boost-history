@@ -5,20 +5,16 @@
 //  accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt
 
-
+#include <iostream>
+#include <boost/cstdlib.hpp>
+#include <boost/cstdint.hpp>
 #include <boost/detail/lightweight_test.hpp>
-
-#include <boost/cstdlib.hpp>				// for boost::exit_success
-#include <boost/integer/bits_and_ints.hpp>  // for boost::sign_extend and boost::static_sign_extend
-
-#include <iostream>  // for std::cout (std::endl indirectly)
-
+#include <boost/integer/bits_and_ints.hpp> 
 
 // Macros to compact code
 #define SIGN_EXTEND_TEST(d, b, e) \
 	BOOST_TEST(::boost::sign_extend(d, b) == e); \
-	BOOST_TEST((::boost::static_sign_extend<intmax_t, d, b>::value) == e)
-
+	BOOST_TEST((::boost::static_sign_extend<::boost::int64_t, d, b>::value) == e)
 
 // Main testing function
 int main(int, char* [])
@@ -64,10 +60,10 @@ int main(int, char* [])
 	
 #ifndef BOOST_NO_INT64_T
 	SIGN_EXTEND_TEST(0x7FFFFFFFFFLL, 39, -0x1LL);
-	SIGN_EXTEND_TEST(0x1000000000000000LL, 63, 0x1000000000000000LL);
-	SIGN_EXTEND_TEST(0x7FFFFFFFFFFFFFFFLL, 63, -0x1LL);
+	//SIGN_EXTEND_TEST(0x100000000000LL, 63, 0x100000000000LL);
+	//SIGN_EXTEND_TEST(0x7FFFFFFFFFFFFFFFLL, 63, -0x1LL);
 #endif
-	
+
 	return boost::report_errors();
 }
 

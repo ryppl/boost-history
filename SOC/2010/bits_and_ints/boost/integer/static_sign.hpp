@@ -36,7 +36,7 @@ struct sign :
 		typename make_signed<
 			typename IC::value_type
 		>::type,
-		(IC::value  == 0 ? 0 : (IC::value  < 0 ? -1 : 1))
+		(IC::value == 0 ? 0 : (IC::value > 0 ? 1 : -1))
 	>
 {};
 

@@ -30,7 +30,7 @@ namespace mpl {
 
 template <typename IC, class Enable = typename enable_if< is_integral_constant<IC> >::type>
 struct abs : mpl::integral_c<typename make_unsigned<typename IC::value_type>::type,
-	(IC::value < 0 ? -IC::value : IC::value)
+	((IC::value) < 0 ? (-IC::value) : (IC::value))
 >
 {};
 

@@ -79,7 +79,6 @@ uint8_t floor_to_power_2(uint8_t value)
 	value = value | (value >> 1);
 	value = value | (value >> 2);
 	value = value | (value >> 4);
-	value = value | (value >> 8);
 	
 	return value - (value >> 1);
 }

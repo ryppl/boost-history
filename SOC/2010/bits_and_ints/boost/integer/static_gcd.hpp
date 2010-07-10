@@ -12,6 +12,7 @@
 #define BOOST_STATIC_GCD_INCLUDED
 
 #include <boost/mpl/and.hpp>
+#include <boost/cstdint.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/math/common_factor_ct.hpp>
 #include <boost/integer/static_abs.hpp>
