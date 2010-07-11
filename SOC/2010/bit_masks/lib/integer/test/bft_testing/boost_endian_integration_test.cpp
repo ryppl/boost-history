@@ -102,7 +102,7 @@ typedef integral_constant <std::size_t, CHAR_BIT> char_bit;
  *  
  *  
  */
-namespace details {
+namespace detail {
 
 template <
     std::size_t ByteIndex,
@@ -211,7 +211,7 @@ struct set_endianness {
         native_tag,
         ConvertTo
     >::type                     endianness_tag;
-    typedef typename details::convertion_helper<
+    typedef typename detail::convertion_helper<
         IntegralConstantType,
         endianness_tag
     >::type         type;
@@ -248,14 +248,14 @@ int main() {
         printf("%0x\n",0xdeadbeef);
         printf("%0x\n", converted_type::value );
 
-        typedef boost::bitfields::endian::details::calculate_out_integral_c<
+        typedef boost::bitfields::endian::detail::calculate_out_integral_c<
             0,
             beefy,
             start_of_the_end
         >::type                     step_one;
         printf("Step 1: %0x\n", step_one::value );
 
-        typedef boost::bitfields::endian::details::calculate_out_integral_c<
+        typedef boost::bitfields::endian::detail::calculate_out_integral_c<
             1,
             beefy,
             step_one
@@ -264,7 +264,7 @@ int main() {
 
 
 
-        typedef boost::bitfields::endian::details::calculate_out_integral_c<
+        typedef boost::bitfields::endian::detail::calculate_out_integral_c<
             2,
             beefy,
             step_two
@@ -272,7 +272,7 @@ int main() {
         printf("Step 3: %0x\n", step_three::value );
 
 
-        typedef boost::bitfields::endian::details::calculate_out_integral_c<
+        typedef boost::bitfields::endian::detail::calculate_out_integral_c<
             3,
             beefy,
             step_three
