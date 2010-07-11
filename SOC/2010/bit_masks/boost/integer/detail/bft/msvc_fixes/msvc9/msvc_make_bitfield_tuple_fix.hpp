@@ -81,34 +81,17 @@ struct msvc9_make_bft_fix {
         BOOST_BFT_NOTHING )
 
 
-#define BOOST_MAKE_BFT_FUNCTION(Z, N, DATA)                                   \
+#define BOOST_MAKE_BFT_FUNCTION(N)                                            \
     template <typename BitfieldTuple, BOOST_MAKE_BFT_TEMPLATE_PARAMETERS(N)>  \
     BitfieldTuple make_bitfield_tuple(BOOST_MAKE_BFT_FUNCTION_PARAMETERS(N)){ \
         BitfieldTuple bft;                                                    \
         BOOST_MAKE_BFT_GENERATE_ASSIGNMENT_CALLS(N);                          \
         return bft;                                                           \
     }
-
-#define BOOST_MAKE_BFT_FUNCTION_OVERLOADS() \
-    BOOST_PP_REPEAT_FROM_TO( \
-        1,\
-        BOOST_BFT_PARAM_COUNT, \
-        BOOST_MAKE_BFT_ASSIGN_FUNCTION_CALL,\
-        BOOST_BFT_NOTHING )
-
-
-
-
-
 }}
 
-/* template <typename BitfieldTuple,BOOST_MAKE_BFT_TEMPLATE_PARAMETERS(0)>
-BitfieldTuple make_bitfield_tuple(BOOST_MAKE_BFT_FUNCTION_PARAMETERS(0)) {
-    BitfieldTuple bft;
-    BOOST_MAKE_BFT_GENERATE_ASSIGNMENT_CALLS(9)
-    return bft;
-}
-*/
+BOOST_MAKE_BFT_FUNCTION(1);
+
 template <typename BitfieldTuple,BOOST_MAKE_BFT_TEMPLATE_PARAMETERS(2)>
 BitfieldTuple make_bitfield_tuple(BOOST_MAKE_BFT_FUNCTION_PARAMETERS(2)) {
     BitfieldTuple bft;
