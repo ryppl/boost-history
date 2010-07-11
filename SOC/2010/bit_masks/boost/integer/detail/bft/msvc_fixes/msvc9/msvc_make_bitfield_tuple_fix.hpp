@@ -96,6 +96,11 @@ struct msvc9_make_bft_fix {
         BOOST_MAKE_BFT_ASSIGN_FUNCTION_CALL,\
         BOOST_BFT_NOTHING )
 
+
+
+
+
+}}
 template <
     typename BitfieldTuple,
     typename T0,
@@ -134,10 +139,5 @@ BitfieldTuple make_bitfield_tuple(
     detail::assign_parameter_to_bft<9>(bft, param9);
     return bft;
 }
-
-
-
-}}
-// BOOST_MAKE_BFT_FUNCTION_OVERLOADS()
 } // end boost::detail::msvc_fixes
 #endif
