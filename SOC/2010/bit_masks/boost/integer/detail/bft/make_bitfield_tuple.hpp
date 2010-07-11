@@ -117,6 +117,9 @@ inline void assign_parameter_to_bft(BitfieldTuple& bft, ParameterType value) {
 template <std::size_t Index, typename BitfieldTuple>
 inline void assign_parameter_to_bft(BitfieldTuple&, mpl::void_*) { }
 
+template <std::size_t Index, typename BitfieldTuple>
+inline void assign_parameter_to_bft(BitfieldTuple&, void*) { }
+
 } // end detail
 
 

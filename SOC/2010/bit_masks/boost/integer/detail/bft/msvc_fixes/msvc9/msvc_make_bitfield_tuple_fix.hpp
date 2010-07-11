@@ -6,6 +6,10 @@
 #ifndef BOOST_BFT_MSVC9_MAKE_BFT_FIX_HPP
 #define BOOST_BFT_MSVC9_MAKE_BFT_FIX_HPP
 
+#include <boost/preprocessor/repetition.hpp>
+#include <boost/preprocessor/arithmetic/sub.hpp>
+#include <boost/preprocessor/punctuation/comma_if.hpp>
+
 namespace boost { namespace detail { namespace msvc_fixes {
 /** Used for fixing an inadequacy in MSVC9 which causes my make_bitfield_tuple
  *  function template parameters not to be instantiated unless they are
@@ -95,19 +99,48 @@ struct msvc9_make_bft_fix {
         BOOST_MAKE_BFT_ASSIGN_FUNCTION_CALL,\
         BOOST_BFT_NOTHING )
 
-
-
-/*
-template <typename BitfieldTuple, BOOST_MAKE_BFT_TEMPLATE_PARAMETERS()>
-BitfieldTuple make_bitfield_tuple(BOOST_MAKE_BFT_FUNCTION_PARAMETERS()) {
+template <
+    typename BitfieldTuple,
+    typename T0,
+    typename T1,
+    typename T2,
+    typename T3,
+    typename T4,
+    typename T5,
+    typename T6,
+    typename T7,
+    typename T8,
+    typename T9
+>
+BitfieldTuple make_bitfield_tuple(
+    T0 param0 = (void*)0,
+    T1 param1 = (void*)0,
+    T2 param2 = (void*)0,
+    T3 param3 = (void*)0,
+    T4 param4 = (void*)0,
+    T5 param5 = (void*)0,
+    T6 param6 = (void*)0,
+    T7 param7 = (void*)0,
+    T8 param8 = (void*)0,
+    T9 param9 = (void*)0)
+{
     BitfieldTuple bft;
-    BOOST_MAKE_BFT_GENERATE_ASSIGNMENT_CALLS();
+    detail::assign_parameter_to_bft<0>(bft, param0);
+    detail::assign_parameter_to_bft<1>(bft, param1);
+    detail::assign_parameter_to_bft<2>(bft, param2);
+    detail::assign_parameter_to_bft<3>(bft, param3);
+    detail::assign_parameter_to_bft<4>(bft, param4);
+    detail::assign_parameter_to_bft<5>(bft, param5);
+    detail::assign_parameter_to_bft<6>(bft, param6);
+    detail::assign_parameter_to_bft<7>(bft, param7);
+    detail::assign_parameter_to_bft<8>(bft, param8);
+    detail::assign_parameter_to_bft<9>(bft, param9);
     return bft;
 }
-*/
+
 
 
 }}
-BOOST_MAKE_BFT_FUNCTION_OVERLOADS()
+// BOOST_MAKE_BFT_FUNCTION_OVERLOADS()
 } // end boost::detail::msvc_fixes
 #endif
