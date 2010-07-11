@@ -52,7 +52,7 @@ typedef boost::mpl::list<
 typedef boost::mpl::list<
                             // char16_t,
                             // char32_t,
-#ifndef BOOST_NO_CWCHAR
+#ifndef BOOST_NO_INTRINSIC_WCHAR_T
                             wchar_t,
 #endif
                             std::ptrdiff_t,
