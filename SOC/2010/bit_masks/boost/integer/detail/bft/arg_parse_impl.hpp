@@ -14,14 +14,14 @@
 #include <boost/mpl/arithmetic.hpp>
 #include <boost/mpl/find_if.hpp>
 
-#include <boost/integer/detail/bft/storage.hpp>
-#include <boost/integer/detail/bft/member.hpp>
+
+#include <boost/integer/bitfield_tuple/storage.hpp>
+#include <boost/integer/bitfield_tuple/member.hpp>
+#include <boost/integer/bitfield_tuple/flag.hpp>
+#include <boost/integer/bitfield_tuple/filler.hpp>
+#include <boost/integer/bitfield_tuple/align.hpp>
+
 #include <boost/integer/detail/bft/name_lookup.hpp>
-#include <boost/integer/detail/bft/flag.hpp>
-#include <boost/integer/detail/bft/filler.hpp>
-#include <boost/integer/detail/bft/align.hpp>
-
-
 
 namespace boost { namespace detail {
 

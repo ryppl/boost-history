@@ -7,7 +7,7 @@
 #ifndef BOOST_BITFIELD_TUPLE_HPP
 #define BOOST_BITFIELD_TUPLE_HPP
 #include <boost/integer/detail/bft/template_expansion_macros.hpp>
-#include <boost/integer/detail/bitfield_tuple_impl.hpp>
+#include <boost/integer/detail/bft/bitfield_tuple_impl.hpp>
 #include <boost/bitfield/bitfield.hpp>
 #include <boost/integer/detail/bft/name_lookup.hpp>
 #include <boost/mpl/not.hpp>
