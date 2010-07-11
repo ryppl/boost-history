@@ -14,6 +14,7 @@
 // the library is being built (possibly exporting rather than importing code)
 #define BOOST_CHRONO_SOURCE
 
+#include <boost/version.hpp>
 #include <boost/chrono/process_times.hpp>
 #include <boost/system/system_error.hpp>
 #include <boost/io/ios_state.hpp>
@@ -153,7 +154,11 @@ namespace boost
         catch (...) // eat any exceptions
         {
           assert( 0 && "error reporting not fully implemented yet" );
+#if (BOOST_VERSION / 100 % 1000) < 44
           ec.assign(system::errc::success, system::generic_category);
+#else
+          ec.assign(system::errc::success, system::generic_category());
+#endif          
             //ec = error_code( EIO, errno_ecat );
         }
       }

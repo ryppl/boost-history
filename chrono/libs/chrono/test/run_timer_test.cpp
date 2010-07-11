@@ -183,7 +183,7 @@ namespace
     std::cout << "process_timer_test..." << std::flush;
 
     boost::chrono::process_timer t;
-    double res; // avoids optimization 
+    double res=0; // avoids optimization 
     for (long i = 0; i < 10000000L; ++i)
     {
       res+=std::sqrt( static_cast<double>(i) ); // avoids optimization 

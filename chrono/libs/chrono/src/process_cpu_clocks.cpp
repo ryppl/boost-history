@@ -14,6 +14,7 @@
 #define BOOST_CHRONO_SOURCE
 
 #include <boost/chrono/config.hpp>
+#include <boost/version.hpp>
 #include <boost/chrono/process_cpu_clocks.hpp>
 #include <boost/chrono/process_times.hpp>
 #include <cassert>

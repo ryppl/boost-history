@@ -48,7 +48,11 @@ namespace boost
       else
       {
         //~ assert( 0 && "error handling not implemented yet" );
+#if (BOOST_VERSION / 100 % 1000) < 44
         ec.assign( ::GetLastError(), system::system_category );
+#else
+        ec.assign( ::GetLastError(), system::system_category() );
+#endif          
         return thread_clock::time_point(duration(0));
       }
 
@@ -79,7 +83,11 @@ namespace boost
       {
         DWORD cause = ::GetLastError();
         boost::throw_exception(
+#if (BOOST_VERSION / 100 % 1000) < 44
             system::system_error( ::GetLastError(), system::system_category, "chrono::monotonic_clock" ));
+#else
+            system::system_error( ::GetLastError(), system::system_category(), "chrono::monotonic_clock" ));
+#endif          
       }
 
     }

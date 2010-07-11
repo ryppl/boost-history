@@ -104,7 +104,11 @@ monotonic_full()
     static const double factor = compute_monotonic_factor(err);
     if (err != 0)
       boost::throw_exception(
+#if (BOOST_VERSION / 100 % 1000) < 44
         system::system_error( err, system::system_category, "chrono::monotonic_clock" ));
+#else
+        system::system_error( err, system::system_category(), "chrono::monotonic_clock" ));
+#endif          
     return static_cast<monotonic_clock::rep>(mach_absolute_time() * factor);
 }
 
@@ -115,7 +119,11 @@ monotonic_full_ec(system::error_code & ec)
     static kern_return_t err;
     static const double factor = compute_monotonic_factor(err);
     if (err != 0) {
+#if (BOOST_VERSION / 100 % 1000) < 44
       ec.assign( errno, system::system_category );
+#else
+      ec.assign( errno, system::system_category() );
+#endif          
       return monotonic_clock::rep();
     }
     ec.clear();
@@ -162,7 +170,11 @@ monotonic_clock::now()
     static kern_return_t err;
     static FP fp = init_monotonic_clock(err);
     if( err != 0  ) 	boost::throw_exception(
+#if (BOOST_VERSION / 100 % 1000) < 44
         system::system_error( err, system::system_category, "chrono::monotonic_clock" ));
+#else
+        system::system_error( err, system::system_category(), "chrono::monotonic_clock" ));
+#endif          
     return time_point(duration(fp()));
 }
 
@@ -172,7 +184,11 @@ monotonic_clock::now(system::error_code & ec)
     static kern_return_t err;
     static FP_ec fp = init_monotonic_clock(err);
     if( err != 0  ) {
+#if (BOOST_VERSION / 100 % 1000) < 44
         ec.assign( err, system::system_category );
+#else
+        ec.assign( err, system::system_category() );
+#endif          
         return time_point();
     }
     ec.clear();

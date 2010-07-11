@@ -10,6 +10,7 @@
 // the library is being built (possibly exporting rather than importing code)
 #define BOOST_CHRONO_SOURCE
 
+#include <boost/version.hpp>
 #include <boost/chrono/chrono.hpp>
 #include <boost/system/system_error.hpp>
 #include <boost/throw_exception.hpp>

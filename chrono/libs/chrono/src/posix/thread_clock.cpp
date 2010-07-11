@@ -34,7 +34,11 @@ namespace boost { namespace chrono {
         if ( ::clock_gettime( clock_id, &ts ) )
         {
             boost::throw_exception(
+#if (BOOST_VERSION / 100 % 1000) < 44
             system::system_error( errno, system::system_category, "chrono::thread_clock" ));
+#else
+            system::system_error( errno, system::system_category(), "chrono::thread_clock" ));
+#endif          
         }
 
         // transform to nanoseconds
@@ -52,7 +56,11 @@ namespace boost { namespace chrono {
         struct timespec ts;
         if ( ::clock_gettime( clock_id, &ts ) )
         {
+#if (BOOST_VERSION / 100 % 1000) < 44
           ec.assign( errno, system::system_category );
+#else
+          ec.assign( errno, system::system_category() );
+#endif          
           return time_point();
         }
         ec.clear();

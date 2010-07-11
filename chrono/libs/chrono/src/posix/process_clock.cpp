@@ -51,7 +51,11 @@ namespace boost { namespace chrono {
         if ( c == clock_t(-1) ) // error
         {
             assert( 0 && "error handling not implemented yet" );
+#if (BOOST_VERSION / 100 % 1000) < 44
             ec.assign( errno, system::system_category );
+#else
+            ec.assign( errno, system::system_category() );
+#endif          
             times_.real = times_.system = times_.user = nanoseconds(-1);
         }
         else
@@ -68,7 +72,11 @@ namespace boost { namespace chrono {
             else
             {
                 assert( 0 && "error handling not implemented yet" );
+#if (BOOST_VERSION / 100 % 1000) < 44
                 ec.assign( errno, system::system_category );
+#else
+                ec.assign( errno, system::system_category() );
+#endif          
                 times_.real = times_.user = times_.system = nanoseconds(-1);
             }
         }

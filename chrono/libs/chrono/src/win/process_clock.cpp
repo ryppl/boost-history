@@ -48,7 +48,11 @@ namespace boost
       else
       {
         //~ assert( 0 && "error handling not implemented yet" );
+#if (BOOST_VERSION / 100 % 1000) < 44
         ec.assign( ::GetLastError(), system::system_category );
+#else
+        ec.assign( ::GetLastError(), system::system_category() );
+#endif          
         times_.real = times_.system = times_.user = nanoseconds(-1);
       }
 

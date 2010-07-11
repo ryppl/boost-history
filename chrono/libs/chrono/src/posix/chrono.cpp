@@ -24,7 +24,11 @@ namespace chrono
     if ( ::clock_gettime( CLOCK_REALTIME, &ts ) )
     {
       boost::throw_exception(
+#if (BOOST_VERSION / 100 % 1000) < 44
         system::system_error( errno, system::system_category, "chrono::system_clock" ));
+#else
+        system::system_error( errno, system::system_category(), "chrono::system_clock" ));
+#endif          
     }
 
     return time_point(duration(
@@ -36,7 +40,11 @@ namespace chrono
     timespec ts;
     if ( ::clock_gettime( CLOCK_REALTIME, &ts ) )
     {
+#if (BOOST_VERSION / 100 % 1000) < 44
       ec.assign( errno, system::system_category );
+#else
+      ec.assign( errno, system::system_category() );
+#endif          
       return time_point();
     }
 
@@ -63,7 +71,11 @@ namespace chrono
     if ( ::clock_gettime( CLOCK_MONOTONIC, &ts ) )
     {
       boost::throw_exception(
+#if (BOOST_VERSION / 100 % 1000) < 44
         system::system_error( errno, system::system_category, "chrono::monotonic_clock" ));
+#else
+        system::system_error( errno, system::system_category(), "chrono::monotonic_clock" ));
+#endif          
     }
 
     return time_point(duration(
@@ -75,7 +87,11 @@ namespace chrono
     timespec ts;
     if ( ::clock_gettime( CLOCK_MONOTONIC, &ts ) )
     {
+#if (BOOST_VERSION / 100 % 1000) < 44
       ec.assign( errno, system::system_category );
+#else
+      ec.assign( errno, system::system_category() );
+#endif          
       return time_point();
     }
 
