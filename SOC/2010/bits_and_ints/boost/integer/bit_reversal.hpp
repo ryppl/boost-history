@@ -25,7 +25,8 @@ namespace boost {
  */
 
 template <typename T>
-inline typename enable_if_c<is_integral<T>::type::value, T>::type
+inline typename enable_if_c<is_integral<T>::value 
+	&& (sizeof(T) == 1 || sizeof(T) == 2 || sizeof(T) == 4 || sizeof(T) == 8), T>::type
 bit_reversal(T data)
 {
 	
