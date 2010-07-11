@@ -19,16 +19,16 @@
 #include <boost/static_assert.hpp>
 
 // implementation header files.
-#include <boost/integer/details/bft/bft_element.hpp>
-#include <boost/integer/details/bft/arg_parse_impl.hpp>
-#include <boost/integer/details/bft/deduce_storage.hpp>
+#include <boost/integer/detail/bft/bft_element.hpp>
+#include <boost/integer/detail/bft/arg_parse_impl.hpp>
+#include <boost/integer/detail/bft/deduce_storage.hpp>
 
-namespace boost { namespace details {
+namespace boost { namespace detail {
 
 // The following preprocessor MACRO only used for writing clarity, it's only 
 // used once and then undef'ed before the end of this file.
 #define BOOST_BFT_ARG_PROCESSING      \
-        details::bft_arg_parse_impl<\
+        detail::bft_arg_parse_impl<\
             T0, \
             mpl::void_,\
             mpl::vector<>,\
@@ -69,7 +69,7 @@ struct bitfield_tuple_base {
             processed_storage_type,
             mpl::void_
         >,
-        typename details::deduce_storage_type<offset>::type,
+        typename detail::deduce_storage_type<offset>::type,
         processed_storage_type
         >::type                                     storage_type;
 
@@ -86,7 +86,7 @@ struct bitfield_tuple_base {
 
 };
 
-}} // end boost::details
+}} // end boost::detail
 
 #undef BOOST_BFT_ARG_PROCESSING
 

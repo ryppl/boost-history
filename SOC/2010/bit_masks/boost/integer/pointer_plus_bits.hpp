@@ -12,7 +12,7 @@
 #include <boost/integer/bits_mask.hpp>
 #include <boost/utility/enable_if.hpp>
 
-namespace boost { namespace details { namespace ppb {
+namespace boost { namespace detail { namespace ppb {
 template <typename T>
 struct get_mask_type {
     typedef typename mpl::if_c<
@@ -37,7 +37,7 @@ public:
     typedef value_type const&   const_reference;
     BOOST_STATIC_CONSTANT(std::size_t, stuffed_bits = ExtraBits);
     typedef std::ptrdiff_t      difference_type;
-    typedef typename details::ppb::get_mask_type<
+    typedef typename detail::ppb::get_mask_type<
         value_type
     >::type                     mask_type;
     typedef high_bits_mask<
@@ -140,7 +140,7 @@ public:
 
     // they integral type the same size as a pointer.
     // for 32 bit and 64 bit only. As of right now.
-    typedef typename details::ppb::get_mask_type<
+    typedef typename detail::ppb::get_mask_type<
         value_type
     >::type                     mask_type;
 

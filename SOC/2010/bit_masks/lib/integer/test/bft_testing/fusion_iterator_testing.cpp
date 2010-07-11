@@ -7,7 +7,7 @@
 #include <boost/integer/bitfield_tuple.hpp>
 #include <boost/assert.hpp>
 #include <boost/mpl/assert.hpp>
-#include <boost/integer/details/fusion_ext_includes.hpp>
+#include <boost/integer/detail/fusion_ext_includes.hpp>
 
 using namespace boost;
 using namespace boost::bitfields;

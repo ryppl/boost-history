@@ -22,7 +22,7 @@
 
 
 
-namespace boost { namespace details {
+namespace boost { namespace detail {
 
 typedef mpl::void_ unused_parameter;
 
@@ -93,7 +93,7 @@ struct bit_mask_group_impl_< tagged<Value, Name>, TypeVector, NamedTypeMap>
     };
 };
 
-} } // end details
+} } // end detail
 #if 0
 
 namespace boost { namespace fusion { namespace extension {
@@ -102,7 +102,7 @@ namespace boost { namespace fusion { namespace extension {
 
 
 template <>
-struct value_at_impl< boost::details::bit_mask_group_iterator_tag > {
+struct value_at_impl< boost::detail::bit_mask_group_iterator_tag > {
     template<typename Iterator>
     struct apply;
 
@@ -115,7 +115,7 @@ struct value_at_impl< boost::details::bit_mask_group_iterator_tag > {
 
 
 template<>
-struct deref_impl<boost::details::bit_mask_group_iterator_tag >
+struct deref_impl<boost::detail::bit_mask_group_iterator_tag >
 {
     template<typename Iterator>
     struct apply;
@@ -134,7 +134,7 @@ struct deref_impl<boost::details::bit_mask_group_iterator_tag >
 
 
 template<>
-struct next_impl< boost::details::bit_mask_group_iterator_tag > {
+struct next_impl< boost::detail::bit_mask_group_iterator_tag > {
 
     template<typename Iterator>
     struct apply {
@@ -154,7 +154,7 @@ struct next_impl< boost::details::bit_mask_group_iterator_tag > {
 
 
 template <>
-struct prior_impl< boost::details::bit_mask_group_iterator_tag > {
+struct prior_impl< boost::detail::bit_mask_group_iterator_tag > {
     template <typename Iterator>
     struct apply {
         typedef typename Iterator::mask_group  mask_group;
@@ -173,7 +173,7 @@ struct prior_impl< boost::details::bit_mask_group_iterator_tag > {
 
 
 template <>
-struct advance_impl< boost::details::bit_mask_group_iterator_tag > {
+struct advance_impl< boost::detail::bit_mask_group_iterator_tag > {
 
     template <typename Iterator, typename N>
     struct apply {
@@ -194,7 +194,7 @@ struct advance_impl< boost::details::bit_mask_group_iterator_tag > {
 
 
 template <>
-struct distance_impl< boost::details::bit_mask_group_iterator_tag > {
+struct distance_impl< boost::detail::bit_mask_group_iterator_tag > {
     template <typename First, typename Last>
     struct apply
         : mpl::minus< typename Last::index, typename First::index>
@@ -217,7 +217,7 @@ struct distance_impl< boost::details::bit_mask_group_iterator_tag > {
 
 
 template <>
-struct equal_to_impl< boost::details::bit_mask_group_iterator_tag > {
+struct equal_to_impl< boost::detail::bit_mask_group_iterator_tag > {
     template <typename I1, typename I2>
     struct apply             
         : is_same<
@@ -229,7 +229,7 @@ struct equal_to_impl< boost::details::bit_mask_group_iterator_tag > {
 
 
 template<>
-struct at_key_impl< boost::details::bit_mask_group_tag > {
+struct at_key_impl< boost::detail::bit_mask_group_tag > {
 
     template<typename MaskGroup, typename Key>
     struct apply {

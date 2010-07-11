@@ -14,16 +14,16 @@
 #include <boost/mpl/arithmetic.hpp>
 #include <boost/mpl/find_if.hpp>
 
-#include <boost/integer/details/bft/storage.hpp>
-#include <boost/integer/details/bft/member.hpp>
-#include <boost/integer/details/bft/name_lookup.hpp>
-#include <boost/integer/details/bft/flag.hpp>
-#include <boost/integer/details/bft/filler.hpp>
-#include <boost/integer/details/bft/align.hpp>
+#include <boost/integer/detail/bft/storage.hpp>
+#include <boost/integer/detail/bft/member.hpp>
+#include <boost/integer/detail/bft/name_lookup.hpp>
+#include <boost/integer/detail/bft/flag.hpp>
+#include <boost/integer/detail/bft/filler.hpp>
+#include <boost/integer/detail/bft/align.hpp>
 
 
 
-namespace boost { namespace details {
+namespace boost { namespace detail {
 
 
 
@@ -134,7 +134,7 @@ struct bft_arg_parse_impl <
         is_same<
             typename mpl::find_if<
                 FieldVector,
-                details::match_name<
+                detail::match_name<
                     typename mpl::_1,
                     NameType
                 >
@@ -291,6 +291,6 @@ struct bft_arg_parse_impl <
 
 
 
-}} // end boost::details
+}} // end boost::detail
 
 #endif

@@ -6,7 +6,7 @@
 
 #include <boost/integer/bitfield_tuple.hpp>
 #include <boost/assert.hpp>
-#include <boost/integer/details/bft/name_lookup.hpp>
+
 
 using namespace boost;
 using namespace boost::bitfields;
@@ -19,7 +19,7 @@ struct salmon;
 
 
     typedef mpl::vector<
-        details::bitfield_element<
+        detail::bitfield_element<
             int,
             red,
             mpl::size_t<0>,
@@ -34,7 +34,7 @@ int main() {
     // for looking up while useing the get<> function in side bitfield_tuple.
     typedef mpl::find_if<
         test_vect,
-        details::match_name<
+        detail::match_name<
             mpl::_1,
             red
         >

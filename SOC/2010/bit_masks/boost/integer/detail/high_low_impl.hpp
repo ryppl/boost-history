@@ -9,7 +9,7 @@
 #include <boost/static_assert.hpp>
 #include <boost/integer/bit_width.hpp>
 
-namespace boost { namespace details {
+namespace boost { namespace detail {
 
 /** Preconditions for low_bits metafunction.
  *  Precondition: 
@@ -30,6 +30,6 @@ struct high_bits_preconditions {
 };
 
 
-} } // namespace boost::details
+} } // namespace boost::detail
 
 #endif

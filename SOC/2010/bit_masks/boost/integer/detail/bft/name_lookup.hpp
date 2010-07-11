@@ -5,11 +5,11 @@
 
 #ifndef BOOST_BITFIELD_TUPLE_NAME_LOCATER_HPP
 #define BOOST_BITFIELD_TUPLE_NAME_LOCATER_HPP
-#include <boost/integer/details/bft/bft_element.hpp>
+#include <boost/integer/detail/bft/bft_element.hpp>
 #include <boost/mpl/find_if.hpp>
 #include <boost/type_traits.hpp>
 
-namespace boost { namespace details {
+namespace boost { namespace detail {
 
 
 /** This is a lambda expression which is passed to find_if 
@@ -22,6 +22,6 @@ struct match_name
 { };
 
 
-}} // end boost::details
+}} // end boost::detail
 
 #endif

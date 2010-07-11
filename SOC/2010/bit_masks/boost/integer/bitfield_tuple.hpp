@@ -6,10 +6,10 @@
 
 #ifndef BOOST_BITFIELD_TUPLE_HPP
 #define BOOST_BITFIELD_TUPLE_HPP
-#include <boost/integer/details/bft/template_expansion_macros.hpp>
-#include <boost/integer/details/bitfield_tuple_impl.hpp>
+#include <boost/integer/detail/bft/template_expansion_macros.hpp>
+#include <boost/integer/detail/bitfield_tuple_impl.hpp>
 #include <boost/bitfield/bitfield.hpp>
-#include <boost/integer/details/bft/name_lookup.hpp>
+#include <boost/integer/detail/bft/name_lookup.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/deref.hpp>
@@ -17,10 +17,10 @@
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/less.hpp>
 #include <boost/mpl/size.hpp>
-#include <boost/integer/details/bft/reference_builder.hpp>
-#include <boost/integer/details/bft/ext/bitfield_tuple_fusion_includes.hpp>
-#include <boost/integer/details/fusion_ext_includes.hpp>
-#include <boost/integer/details/bft/make_bitfield_tuple.hpp>
+#include <boost/integer/detail/bft/reference_builder.hpp>
+#include <boost/integer/detail/bft/ext/bitfield_tuple_fusion_includes.hpp>
+#include <boost/integer/detail/fusion_ext_includes.hpp>
+#include <boost/integer/detail/bft/make_bitfield_tuple.hpp>
 
 
 
@@ -29,12 +29,12 @@ namespace boost {
 
 template <  BOOST_MAKE_BFT_TEMPLATE_PARAMS() >
 struct bitfield_tuple
-    : protected details::bitfield_tuple_base<
+    : protected detail::bitfield_tuple_base<
         BOOST_BFT_PARAMETER_LIST()
     >
 {
 private:
-    typedef details::bitfield_tuple_base<BOOST_BFT_PARAMETER_LIST()> _base;
+    typedef detail::bitfield_tuple_base<BOOST_BFT_PARAMETER_LIST()> _base;
     typedef bitfield_tuple<BOOST_BFT_PARAMETER_LIST()>  _self;
 
 public:
@@ -149,9 +149,9 @@ public:
      */
     //@{
     template <typename Name>
-    inline typename details::disable_if_reference_type_by_name<_self,Name>::type
+    inline typename detail::disable_if_reference_type_by_name<_self,Name>::type
     get() {
-        typedef typename details::disable_if_reference_type_by_name<
+        typedef typename detail::disable_if_reference_type_by_name<
             _self,
             Name
         >::type reference_info;
@@ -160,12 +160,12 @@ public:
 
 
     template <typename Name>
-    inline typename details::disable_if_reference_type_by_name<
+    inline typename detail::disable_if_reference_type_by_name<
         const _self,
         Name
     >::type
     get() const {
-        typedef typename details::disable_if_reference_type_by_name<
+        typedef typename detail::disable_if_reference_type_by_name<
             const _self,
             Name
         >::type         reference_info;
@@ -173,12 +173,12 @@ public:
     }
 
     template <std::size_t Index>
-    inline typename details::enable_if_reference_type_by_index<
+    inline typename detail::enable_if_reference_type_by_index<
         _self,
         Index
     >::type
     get() {
-        typedef typename details::enable_if_reference_type_by_index<
+        typedef typename detail::enable_if_reference_type_by_index<
             _self,
             Index
         >::type             reference_info;
@@ -186,12 +186,12 @@ public:
     }
 
     template <std::size_t Index>
-    inline typename details::enable_if_reference_type_by_index<
+    inline typename detail::enable_if_reference_type_by_index<
         const _self,
         Index
     >::type
     get() const {
-        typedef typename details::enable_if_reference_type_by_index<
+        typedef typename detail::enable_if_reference_type_by_index<
             const _self,
             Index
         >::type                  reference_info;

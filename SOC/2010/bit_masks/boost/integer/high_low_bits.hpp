@@ -8,8 +8,8 @@
 #ifndef BOOST_HIGH_LOW_BIT_HPP
 #define BOOST_HIGH_LOW_BIT_HPP
 
-#include <boost/type_traits.hpp>
-#include <boost/integer/details/high_low_impl.hpp>
+// #include <boost/type_traits.hpp>
+#include <boost/integer/detail/high_low_impl.hpp>
 #include <boost/integer/integral_mask.hpp>
 
 #include <boost/integer/high_bits_mask.hpp>

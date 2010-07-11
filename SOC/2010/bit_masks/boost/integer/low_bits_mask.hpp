@@ -9,7 +9,7 @@
 #define BOOST_LOW_BITS_MASK_HPP
 
 // #include <boost/type_traits.hpp>
-#include <boost/integer/details/high_low_impl.hpp>
+#include <boost/integer/detail/high_low_impl.hpp>
 #include <boost/integer/integral_mask.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/make_unsigned.hpp>
@@ -22,7 +22,7 @@ namespace boost {
  */
 template <typename T, unsigned int Width>
 struct low_bits_mask
-    :details::low_bits_preconditions<T,Width>,
+    :detail::low_bits_preconditions<T,Width>,
     integral_mask<T, ~(~ (typename make_unsigned<T>::type(0)) << Width) >
 {    
     typedef low_bits_mask<T,Width> type;

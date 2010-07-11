@@ -6,7 +6,7 @@
 #ifndef BOOST_BITFIELD_TUPLE_BFT_ELEMENT_HPP
 #define BOOST_BITFIELD_TUPLE_BFT_ELEMENT_HPP
 
-namespace boost { namespace details {
+namespace boost { namespace detail {
 
 /** This is the type which sits inside the mpl vector type.
  *  This has all information for constructing a bitfield.
@@ -25,6 +25,6 @@ struct bitfield_element {
 };
 
 
-}} // end boost::details
+}} // end boost::detail
 
 #endif

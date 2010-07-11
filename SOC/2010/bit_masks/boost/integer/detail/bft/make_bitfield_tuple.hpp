@@ -10,7 +10,7 @@
 #include <cstddef>
 
 
-namespace boost { namespace details {
+namespace boost { namespace detail {
 #ifdef BOOST_MSVC
     
 template <typename T>
@@ -97,7 +97,7 @@ inline void assign_parameter_to_bft(BitfieldTuple& bft, ParameterType value) {
 template <std::size_t Index, typename BitfieldTuple>
 inline void assign_parameter_to_bft(BitfieldTuple&, mpl::void_*) { }
 
-} // end details
+} // end detail
 
 /** I really don't like having to do this but it really is the Only way
  *  its possible (by using macros thats is)
@@ -105,7 +105,7 @@ inline void assign_parameter_to_bft(BitfieldTuple&, mpl::void_*) { }
  *  inside of make_bitfield_tuple.
  */
 #define BOOST_MAKE_BITFIELD_TUPLE_SINGLE_PARAMETER(z, n, data ) \
-    typename details::get_create_parameter<BitfieldTuple, n>::type \
+    typename detail::get_create_parameter<BitfieldTuple, n>::type \
     parameter ## n = 0
 
 
@@ -113,9 +113,9 @@ inline void assign_parameter_to_bft(BitfieldTuple&, mpl::void_*) { }
  *  make_bitfield_tuple's create function.
  *  Creates the following pattern
  *  From 0 to n
- *      typename details::get_create_parameter<BitfieldTuple, 0>::type \
+ *      typename detail::get_create_parameter<BitfieldTuple, 0>::type \
  *    parameter0 = 0, ... 
- *      typename details::get_create_parameter<BitfieldTuple, n>::type \
+ *      typename detail::get_create_parameter<BitfieldTuple, n>::type \
  *    parametern = 0 
  */
 #define BOOST_MAKE_BITFIELD_TUPLE_CREATE_FUNCTION_PARAMETERS() \
@@ -125,7 +125,7 @@ inline void assign_parameter_to_bft(BitfieldTuple&, mpl::void_*) { }
 
 
 #define BOOST_MAKE_BITFIELD_TUPLE_ASSIGN_PARAMETER_TO_BFT_CALL(z,n,data)\
-    details::assign_parameter_to_bft<n>(bft, parameter##n);
+    detail::assign_parameter_to_bft<n>(bft, parameter##n);
 
 #define BOOST_MAKE_BITFIELD_TUPLE_CREATE_FUNCTION_PARSE_ARGUMENTS() \
     BOOST_PP_REPEAT_FROM_TO( \

@@ -15,7 +15,7 @@
  *  and returning the correct reference type which will allow for only one
  *  reference type class within bitfield_tuple.
  */
-namespace boost { namespace details {
+namespace boost { namespace detail {
 
 
 
@@ -28,7 +28,7 @@ struct name_exists {
         is_same <
             typename ::boost::mpl::find_if<
                 typename BitfieldTuple::members,
-                details::match_name<
+                detail::match_name<
                     mpl::_1,
                     Name
                 >
@@ -49,7 +49,7 @@ struct find_by_element_name {
     typedef typename mpl::deref<
         typename mpl::find_if<
             typename BitfieldTuple::members,
-            details::match_name<
+            detail::match_name<
                 mpl::_1,
                 Name
             >
@@ -111,7 +111,7 @@ struct disable_if_reference_type_by_name {
     // search for the name,
     typedef typename mpl::find_if<
         typename BitfieldTuple::members,
-        details::match_name<
+        detail::match_name<
             mpl::_1,
             Name
         >
@@ -189,7 +189,7 @@ struct get_reference_type_by_name {
     // search for the name,
     typedef typename mpl::find_if<
         typename BitfieldTuple::members,
-        details::match_name<
+        detail::match_name<
             mpl::_1,
             Name
         >
@@ -247,6 +247,6 @@ struct get_reference_type_by_index {
 };
 
 
-}} // end boost::details
+}} // end boost::detail
 
 #endif

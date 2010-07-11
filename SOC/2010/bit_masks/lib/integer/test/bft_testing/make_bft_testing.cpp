@@ -30,7 +30,7 @@ typedef bitfield_tuple<
 int main() {
     {
 #ifdef BOOST_MSVC
-        using namespace ::boost::details;
+        using namespace ::boost::detail;
         // Checking to make sure that the indexs work correctly.
         BOOST_MPL_ASSERT(( get_create_parameter<test_tuple,0>::is_valid_index ));
         BOOST_MPL_ASSERT(( get_create_parameter<test_tuple,1>::is_valid_index ));
@@ -60,7 +60,7 @@ int main() {
     }
     {
 #if 1
-        using namespace ::boost::details;
+        using namespace ::boost::detail;
         BOOST_MPL_ASSERT((
             is_same<
                 get_create_parameter<test_tuple,0>::type,

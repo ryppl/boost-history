@@ -7,7 +7,7 @@
 #include <boost/integer/bitfield_tuple.hpp>
 #include <boost/assert.hpp>
 #include <boost/mpl/assert.hpp>
-#include <boost/integer/details/fusion_ext_includes.hpp>
+#include <boost/integer/detail/fusion_ext_includes.hpp>
 
 using namespace boost;
 using namespace boost::bitfields;
@@ -94,26 +94,6 @@ int main() {
         BOOST_ASSERT(( temp.get<salmon>() == 4));
         BOOST_ASSERT(( fusion::at_key<green>(  temp ) == 0));
     }
-
-    /*
-    bmg_t bmg;
-
-    BOOST_ASSERT(( (*begin(bmg)) == bmg.get<0>() ));
-    BOOST_ASSERT(( *next(begin(bmg)) == bmg.get<1>() ));
-    BOOST_ASSERT(( *advance_c<2>(begin(bmg)) == bmg.get<2>() ));
-    BOOST_ASSERT(( prior(next(begin(bmg))) == begin(bmg) ));
-    BOOST_ASSERT(( *prior(end(bmg)) == bmg.get<5>() ));
-    BOOST_ASSERT(( at_c<2>(bmg) == bmg.get<2>() ));
-    BOOST_ASSERT(( size(bmg) == 6));
-    BOOST_ASSERT(( distance(begin(bmg), end(bmg)) == 6 ));
-
-    BOOST_MPL_ASSERT((
-        is_same<
-            traits::category_of<bmg_t>::type,
-            random_access_traversal_tag
-        >
-    ));
-*/
 }
 
 

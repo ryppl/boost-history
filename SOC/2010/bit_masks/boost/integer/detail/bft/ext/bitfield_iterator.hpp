@@ -17,7 +17,7 @@
 
 namespace boost { 
 
-namespace details {
+namespace detail {
 struct bft_category
   : boost::fusion::random_access_traversal_tag,
     boost::fusion::associative_tag
@@ -33,7 +33,7 @@ template <typename BitfieldTuple, std::size_t Pos>
 struct bitfield_tuple_iterator
     : fusion::iterator_facade<
         bitfield_tuple_iterator<BitfieldTuple, Pos>,
-        details::bft_category
+        detail::bft_category
     >
 {
     /** Constructor over a bitfield tuple. */
@@ -54,7 +54,7 @@ struct bitfield_tuple_iterator
     /** Fusion Extension: value_of */
     template<typename Iter>
     struct value_of {
-        typedef typename details::get_reference_type_by_index<
+        typedef typename detail::get_reference_type_by_index<
             BitfieldTuple,
             Iter::index::value
         >::type type;

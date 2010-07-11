@@ -12,7 +12,7 @@ namespace boost {
  */
 template<typename MaskGroup, unsigned int Pos> struct bit_mask_group_iterator;
 
-namespace details {
+namespace detail {
 /** bit_mask_group's Sequence tag.
  *  Used for dispatching to overloads.
  */
@@ -21,7 +21,7 @@ struct bit_mask_group_tag { };
 /** bit_mask_group's iterator tag. */
 struct bit_mask_group_iterator_tag { };
 
-} // end details
+} // end detail
 
 
 namespace fusion { namespace extension {

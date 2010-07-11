@@ -9,8 +9,8 @@
 
 #include <boost/integer/bit_mask_group_fwd.hpp>
 #include <boost/integer/compound_mask.hpp>
-#include <boost/integer/details/bit_mask_group_impl.hpp>
-#include <boost/integer/details/tagged.hpp>
+#include <boost/integer/detail/bit_mask_group_impl.hpp>
+#include <boost/integer/detail/tagged.hpp>
 
 
 namespace boost {
@@ -23,15 +23,15 @@ namespace boost {
  */
 
 template <  typename Mask0,
-            typename Mask1  = details::unused_parameter,
-            typename Mask2  = details::unused_parameter,
-            typename Mask3  = details::unused_parameter,
-            typename Mask4  = details::unused_parameter,
-            typename Mask5  = details::unused_parameter,
-            typename Mask6  = details::unused_parameter,
-            typename Mask7  = details::unused_parameter,
-            typename Mask8  = details::unused_parameter,
-            typename Mask9  = details::unused_parameter
+            typename Mask1  = detail::unused_parameter,
+            typename Mask2  = detail::unused_parameter,
+            typename Mask3  = detail::unused_parameter,
+            typename Mask4  = detail::unused_parameter,
+            typename Mask5  = detail::unused_parameter,
+            typename Mask6  = detail::unused_parameter,
+            typename Mask7  = detail::unused_parameter,
+            typename Mask8  = detail::unused_parameter,
+            typename Mask9  = detail::unused_parameter
         >
 struct bit_mask_group {
 
@@ -40,7 +40,7 @@ struct bit_mask_group {
      *  creating psudo variadic behavior. (i.e. this will get more parameters 
      *  via value specific by another macro).
      */
-    typedef typename details::bit_mask_group_impl_<
+    typedef typename detail::bit_mask_group_impl_<
         Mask0,
             mpl::vector<>,
             mpl::map<>
@@ -118,6 +118,6 @@ struct bit_mask_group {
 
 } // end boost
 
-#include <boost/integer/details/bit_mask_group_fusion_ext/fusion_includes.hpp>
+#include <boost/integer/detail/bit_mask_group_fusion_ext/fusion_includes.hpp>
 
 #endif
