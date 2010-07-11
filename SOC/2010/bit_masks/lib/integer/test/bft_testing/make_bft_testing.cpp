@@ -27,8 +27,8 @@ typedef bitfield_tuple<
 >                                       test_tuple;
 #ifdef BOOST_MSVC
 
-// template <typename BitfieldTuple>
-// BitfieldTuple 
+template <typename BitfieldTuple>
+BitfieldTuple make_bitfield_tuple(...);
 
 #endif
 
