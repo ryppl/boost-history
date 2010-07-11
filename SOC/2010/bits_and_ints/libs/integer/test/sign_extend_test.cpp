@@ -14,7 +14,7 @@
 // Macros to compact code
 #define SIGN_EXTEND_TEST(d, b, e) \
 	BOOST_TEST(::boost::sign_extend(d, b) == e); \
-	BOOST_TEST((::boost::static_sign_extend<::boost::int64_t, d, b>::value) == e)
+	BOOST_TEST((::boost::static_sign_extend< ::boost::int64_t, d, b>::value) == e)
 
 // Main testing function
 int main(int, char* [])

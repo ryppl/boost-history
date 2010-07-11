@@ -14,7 +14,7 @@
 
 #define POP_COUNT_TEST(x, y) \
 BOOST_TEST((::boost::pop_count(x) == y)); \
-BOOST_TEST(((::boost::mpl::pop_count< ::boost::mpl::integral_c<::boost::uintmax_t, x> >::value) == y))
+BOOST_TEST(((::boost::mpl::pop_count< ::boost::mpl::integral_c< ::boost::uintmax_t, x> >::value) == y))
 
 
 // Main testing function
