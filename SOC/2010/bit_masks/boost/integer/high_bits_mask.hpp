@@ -22,8 +22,6 @@ namespace boost {
 
 #ifdef BOOST_MSVC
     
-#pragma warning( push )
-#pragma warning( disable : 4307 )
 namespace detail {
     template<typename T, unsigned int Width>
     struct evaluate_for_msvc_08 {
@@ -33,7 +31,7 @@ namespace detail {
         typedef integral_constant<T, val>       type;
     };
 }
-#pragma warning( pop )
+
 
 #endif
 
