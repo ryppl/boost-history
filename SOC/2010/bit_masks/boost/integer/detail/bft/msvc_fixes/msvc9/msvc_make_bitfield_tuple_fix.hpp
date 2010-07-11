@@ -101,43 +101,77 @@ struct msvc9_make_bft_fix {
 
 
 }}
-template <
-    typename BitfieldTuple,
-    typename T0,
-    typename T1,
-    typename T2,
-    typename T3,
-    typename T4,
-    typename T5,
-    typename T6,
-    typename T7,
-    typename T8,
-    typename T9
->
-BitfieldTuple make_bitfield_tuple(
-    T0 param0 = (void*)0,
-    T1 param1 = (void*)0,
-    T2 param2 = (void*)0,
-    T3 param3 = (void*)0,
-    T4 param4 = (void*)0,
-    T5 param5 = (void*)0,
-    T6 param6 = (void*)0,
-    T7 param7 = (void*)0,
-    T8 param8 = (void*)0,
-    T9 param9 = (void*)0)
-{
+
+template <typename BitfieldTuple,BOOST_MAKE_BFT_TEMPLATE_PARAMETERS(0)>
+BitfieldTuple make_bitfield_tuple(BOOST_MAKE_BFT_FUNCTION_PARAMETERS(0)) {
     BitfieldTuple bft;
-    detail::assign_parameter_to_bft<0>(bft, param0);
-    detail::assign_parameter_to_bft<1>(bft, param1);
-    detail::assign_parameter_to_bft<2>(bft, param2);
-    detail::assign_parameter_to_bft<3>(bft, param3);
-    detail::assign_parameter_to_bft<4>(bft, param4);
-    detail::assign_parameter_to_bft<5>(bft, param5);
-    detail::assign_parameter_to_bft<6>(bft, param6);
-    detail::assign_parameter_to_bft<7>(bft, param7);
-    detail::assign_parameter_to_bft<8>(bft, param8);
-    detail::assign_parameter_to_bft<9>(bft, param9);
+    BOOST_MAKE_BFT_GENERATE_ASSIGNMENT_CALLS(9)
     return bft;
 }
+
+template <typename BitfieldTuple,BOOST_MAKE_BFT_TEMPLATE_PARAMETERS(2)>
+BitfieldTuple make_bitfield_tuple(BOOST_MAKE_BFT_FUNCTION_PARAMETERS(2)) {
+    BitfieldTuple bft;
+    BOOST_MAKE_BFT_GENERATE_ASSIGNMENT_CALLS(2);
+    return bft;
+}
+
+template <typename BitfieldTuple,BOOST_MAKE_BFT_TEMPLATE_PARAMETERS(3)>
+BitfieldTuple make_bitfield_tuple(BOOST_MAKE_BFT_FUNCTION_PARAMETERS(3)) {
+    BitfieldTuple bft;
+    BOOST_MAKE_BFT_GENERATE_ASSIGNMENT_CALLS(3);
+    return bft;
+}
+
+template <typename BitfieldTuple,BOOST_MAKE_BFT_TEMPLATE_PARAMETERS(4)>
+BitfieldTuple make_bitfield_tuple(BOOST_MAKE_BFT_FUNCTION_PARAMETERS(4)) {
+    BitfieldTuple bft;
+    BOOST_MAKE_BFT_GENERATE_ASSIGNMENT_CALLS(4)
+    return bft;
+}
+
+template <typename BitfieldTuple,BOOST_MAKE_BFT_TEMPLATE_PARAMETERS(5)>
+BitfieldTuple make_bitfield_tuple(BOOST_MAKE_BFT_FUNCTION_PARAMETERS(5)) {
+    BitfieldTuple bft;
+    BOOST_MAKE_BFT_GENERATE_ASSIGNMENT_CALLS(5);
+    return bft;
+}
+
+template <typename BitfieldTuple,BOOST_MAKE_BFT_TEMPLATE_PARAMETERS(6)>
+BitfieldTuple make_bitfield_tuple(BOOST_MAKE_BFT_FUNCTION_PARAMETERS(6)) {
+    BitfieldTuple bft;
+    BOOST_MAKE_BFT_GENERATE_ASSIGNMENT_CALLS(6);
+    return bft;
+}
+
+template <typename BitfieldTuple,BOOST_MAKE_BFT_TEMPLATE_PARAMETERS(7)>
+BitfieldTuple make_bitfield_tuple(BOOST_MAKE_BFT_FUNCTION_PARAMETERS(7)) {
+    BitfieldTuple bft;
+    BOOST_MAKE_BFT_GENERATE_ASSIGNMENT_CALLS(7);
+    return bft;
+}
+
+template <typename BitfieldTuple,BOOST_MAKE_BFT_TEMPLATE_PARAMETERS(8)>
+BitfieldTuple make_bitfield_tuple(BOOST_MAKE_BFT_FUNCTION_PARAMETERS(8)) {
+    BitfieldTuple bft;
+    BOOST_MAKE_BFT_GENERATE_ASSIGNMENT_CALLS(8);
+    return bft;
+}
+template <typename BitfieldTuple,BOOST_MAKE_BFT_TEMPLATE_PARAMETERS(9)>
+BitfieldTuple make_bitfield_tuple(BOOST_MAKE_BFT_FUNCTION_PARAMETERS(9)) {
+    BitfieldTuple bft;
+    BOOST_MAKE_BFT_GENERATE_ASSIGNMENT_CALLS(9);
+    return bft;
+}
+
+template <typename BitfieldTuple,BOOST_MAKE_BFT_TEMPLATE_PARAMETERS(10)>
+BitfieldTuple make_bitfield_tuple(BOOST_MAKE_BFT_FUNCTION_PARAMETERS(10)) {
+    BitfieldTuple bft;
+    BOOST_MAKE_BFT_GENERATE_ASSIGNMENT_CALLS(10)
+    return bft;
+}
+
+
+
 } // end boost::detail::msvc_fixes
 #endif
