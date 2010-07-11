@@ -12,14 +12,17 @@ namespace boost { namespace detail { namespace msvc_fixes {
  *  typedef'ed peior to the function declaration.
  */
 #define BOOST_MAKE_BFT_HELPER_TYPEDEF(Z, N, DATA) \
-    typedef get_create_parameter<BitfieldTuple,N>::is_valid_index fixer_type ## N;
+    typedef typename get_create_parameter<\
+        BitfieldTuple,N>::is_valid_index fixer_type ## N;
 
 /** Defines typedefs which prevent the MSVC9 compiler from failing where it 
  *  shouldn't
  *  Creates the following pattern
- *      typedef get_create_parameter<BitfieldTuple,0>::is_valid_index fixer_type0;
+ *      typedef typename get_create_parameter<
+ *          BitfieldTuple,0>::is_valid_index    fixer_type0;
  *        ...
- *      typedef get_create_parameter<BitfieldTuple,N>::is_valid_index fixer_typeN;
+ *      typedef typename get_create_parameter<
+ *          BitfieldTuple,N>::is_valid_index    fixer_typeN;
  */
 #define BOOST_MAKE_BFT_COMPENSATE_FOR_MSVC() \
         BOOST_PP_REPEAT_FROM_TO( \
