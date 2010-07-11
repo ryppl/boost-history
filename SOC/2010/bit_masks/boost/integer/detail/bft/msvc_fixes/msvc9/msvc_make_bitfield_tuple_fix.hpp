@@ -6,9 +6,6 @@
 #ifndef BOOST_BFT_MSVC9_MAKE_BFT_FIX_HPP
 #define BOOST_BFT_MSVC9_MAKE_BFT_FIX_HPP
 
-#include <boost/preprocessor/repetition.hpp>
-#include <boost/preprocessor/arithmetic/sub.hpp>
-#include <boost/preprocessor/punctuation/comma_if.hpp>
 
 namespace boost { namespace detail { namespace msvc_fixes {
 /** Used for fixing an inadequacy in MSVC9 which causes my make_bitfield_tuple
