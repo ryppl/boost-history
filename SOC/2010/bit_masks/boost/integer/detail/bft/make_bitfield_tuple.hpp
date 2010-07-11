@@ -47,7 +47,7 @@ struct get_create_parameter {
     typedef typename bft_create_param_fix_return_type<element_type>::type type;
 };
 
-typedef ::boost::bitfield_tuple<> fixer_tuple;
+typedef ::boost::bitfield_tuple< bitfield::storage<int> > fixer_tuple;
 
 /** Used for fixing an inadequacy in MSVC9 which causes my make_bitfield_tuple
  *  function template parameters not to be instantiated unless they are
