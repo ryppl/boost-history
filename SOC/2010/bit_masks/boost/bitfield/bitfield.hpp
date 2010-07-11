@@ -18,7 +18,7 @@
 
 #include <cassert>
 #include <limits>
-#include <netinet/in.h>
+
 
 namespace boost { namespace integer {
     

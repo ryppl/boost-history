@@ -6,11 +6,50 @@
 
 #ifndef BOOST_BFT_MAKE_BFT_HPP
 #define BOOST_BFT_MAKE_BFT_HPP
+#include <boost/config.hpp>
 #include <cstddef>
 
 
 namespace boost { namespace details {
+#ifdef BOOST_MSVC
+    
+template <typename T>
+struct bft_create_param_fix_return_type {
+    typedef T type;
+};
 
+template <typename ReturnType, typename NameType, typename Offset, typename Width>
+struct bft_create_param_fix_return_type< bitfield_element<ReturnType,NameType,Offset,Width> >{
+    typedef ReturnType type;
+};
+
+
+
+template <typename BitfieldTuple, std::size_t Index>
+struct get_create_parameter {
+    // check for valid Index.
+    typedef typename mpl::less<
+        mpl::size_t<Index>,
+        typename mpl::size<
+            typename BitfieldTuple::members
+        >::type
+    >::type                 is_valid_index;
+    
+    typedef typename mpl::if_<
+        is_valid_index,
+        typename mpl::at_c<
+            typename BitfieldTuple::members,
+            Index
+        >::type,
+        mpl::void_*
+    >::type                 element_type;
+
+    typedef typename bft_create_param_fix_return_type<element_type>::type type;
+};
+
+
+
+#else
 /** Used to generate a function parameter for the create function used
  *  with make_bitfield_tuple
  */
@@ -23,6 +62,7 @@ template <>
 struct bft_create_param_fix_return_type< mpl::void_ > {
     typedef mpl::void_*  type;
 };
+
 
 template <typename BitfieldTuple, std::size_t Index>
 struct get_create_parameter {
@@ -42,6 +82,8 @@ struct get_create_parameter {
         mpl::void_*
     >::type                     type;
 };
+
+#endif
 
 /** This is a function which is used to assign a value into a bitfield_tuple
  *  as well as remove the actual mpl::void_* from the parameter list through
