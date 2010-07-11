@@ -25,7 +25,12 @@ typedef bitfield_tuple<
     member<int, salmon, 16>,
     flag<blue>
 >                                       test_tuple;
+#ifdef BOOST_MSVC
 
+// template <typename BitfieldTuple>
+// BitfieldTuple 
+
+#endif
 
 int main() {
     {

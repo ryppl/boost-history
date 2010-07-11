@@ -11,6 +11,7 @@
 
 
 namespace boost { namespace detail {
+
 #ifdef BOOST_MSVC
     
 template <typename T>
@@ -102,6 +103,8 @@ struct get_create_parameter {
 
 #endif
 
+
+#ifndef BOOST_MSVC 
 /** This is a function which is used to assign a value into a bitfield_tuple
  *  as well as remove the actual mpl::void_* from the parameter list through
  *  specialization.
@@ -170,6 +173,7 @@ BitfieldTuple make_bitfield_tuple(
     BOOST_MAKE_BITFIELD_TUPLE_CREATE_FUNCTION_PARSE_ARGUMENTS();
     return bft;
 }
+#endif
 
 } // end boost
 
