@@ -10,6 +10,7 @@
 #ifndef BOOST_CHRONO_SUSPENDIBLE_CLOCK_HPP
 #define BOOST_CHRONO_SUSPENDIBLE_CLOCK_HPP
 
+#include <boost/version.hpp>
 #include <boost/chrono/chrono.hpp>
 #include <boost/chrono/scoped_suspend.hpp>
 #include <boost/system/error_code.hpp>
@@ -90,13 +91,21 @@ namespace boost { namespace chrono {
                 } else {
                     ptr=(new(std::nothrow) thread_specific_context());
                     if (ptr==0) {
+#if (BOOST_VERSION / 100 % 1000) < 44
                         ec.assign( system::errc::resource_unavailable_try_again, system::generic_category );
+#else
+                        ec.assign( system::errc::resource_unavailable_try_again, system::generic_category() );
+#endif          
                         return 0;
                     }
                     try {
                         ptr_.reset(ptr);
                     } catch (...) {
+#if (BOOST_VERSION / 100 % 1000) < 44
                         ec.assign( system::errc::resource_unavailable_try_again, system::generic_category );
+#else
+                        ec.assign( system::errc::resource_unavailable_try_again, system::generic_category() );
+#endif          
                         return 0;
                     }
                 }

@@ -466,7 +466,7 @@ namespace chrono {
   template <class Rep>
   struct duration_values
   {
-      static BOOST_CHRONO_CONSTEXPR Rep m_min_imp(boost::false_type) {return -max();}
+      static BOOST_CHRONO_CONSTEXPR Rep m_min_imp(boost::false_type) {return -max BOOST_PREVENT_MACRO_SUBSTITUTION ();}
       static BOOST_CHRONO_CONSTEXPR Rep m_min_imp(boost::true_type)  {return zero();}
   public:
       static BOOST_CHRONO_CONSTEXPR Rep zero() {return Rep(0);}

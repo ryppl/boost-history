@@ -98,7 +98,8 @@ namespace boost { namespace chrono  {
                         break;
                     case 'a':
                         os << ((accumulators::count(acc)>0)
-                                ? boost::chrono::duration<double>(duration_t(typename duration_t::rep(accumulators::mean(acc)))).count()
+                                //? boost::chrono::duration<double>(duration_t(typename duration_t::rep(accumulators::mean(acc)))).count()
+                                ? boost::chrono::duration<double>(duration_t(accumulators::sum(acc))).count() / accumulators::count(acc)
                                 : 0);
                         break;
                     case 'c':
