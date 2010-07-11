@@ -21,7 +21,7 @@
 #include <boost/integer/detail/bft/ext/bitfield_tuple_fusion_includes.hpp>
 #include <boost/integer/detail/fusion_ext_includes.hpp>
 #include <boost/integer/detail/bft/make_bitfield_tuple.hpp>
-
+#include <boost/integer/detail/bft/msvc_fixes/msvc_fix_includes.hpp>
 
 
 namespace boost {
@@ -32,6 +32,11 @@ struct bitfield_tuple
     : protected detail::bitfield_tuple_base<
         BOOST_BFT_PARAMETER_LIST()
     >
+#ifdef BOOST_MSVC
+    , boost::detail::msvc_fixes::msvc9_make_bft_fix<
+        bitfield_tuple<BOOST_BFT_PARAMETER_LIST()>
+    >
+#endif
 {
 private:
     typedef detail::bitfield_tuple_base<BOOST_BFT_PARAMETER_LIST()> _base;

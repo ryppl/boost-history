@@ -6,8 +6,7 @@
 #ifndef BOOST_BFT_MSVC9_MAKE_BFT_FIX_HPP
 #define BOOST_BFT_MSVC9_MAKE_BFT_FIX_HPP
 
-typedef ::boost::bitfield_tuple< bitfield::storage<int> > fixer_tuple;
-
+namespace boost { namespace detail { namespace msvc_fixes {
 /** Used for fixing an inadequacy in MSVC9 which causes my make_bitfield_tuple
  *  function template parameters not to be instantiated unless they are
  *  typedef'ed peior to the function declaration.
@@ -34,4 +33,5 @@ struct msvc9_make_bft_fix {
     BOOST_MAKE_BFT_COMPENSATE_FOR_MSVC()
 };
 
+}}} // end boost::detail::msvc_fixes
 #endif
