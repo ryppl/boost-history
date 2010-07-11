@@ -104,7 +104,7 @@ struct get_create_parameter {
 #endif
 
 
-#ifndef BOOST_MSVC 
+
 /** This is a function which is used to assign a value into a bitfield_tuple
  *  as well as remove the actual mpl::void_* from the parameter list through
  *  specialization.
@@ -119,6 +119,8 @@ inline void assign_parameter_to_bft(BitfieldTuple&, mpl::void_*) { }
 
 } // end detail
 
+
+#ifndef BOOST_MSVC
 /** I really don't like having to do this but it really is the Only way
  *  its possible (by using macros thats is)
  *  This is used to create parameters for the static call function
@@ -165,6 +167,7 @@ inline void assign_parameter_to_bft(BitfieldTuple&, mpl::void_*) { }
  *  parameters this function could possibly hold is as many as fifty. So
  *  I felt that the name should reflect that.
  */
+
 template <typename BitfieldTuple>
 BitfieldTuple make_bitfield_tuple(
     BOOST_MAKE_BITFIELD_TUPLE_CREATE_FUNCTION_PARAMETERS())

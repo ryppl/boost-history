@@ -32,11 +32,6 @@ struct bitfield_tuple
     : protected detail::bitfield_tuple_base<
         BOOST_BFT_PARAMETER_LIST()
     >
-#ifdef BOOST_MSVC
-    , boost::detail::msvc_fixes::msvc9_make_bft_fix<
-        bitfield_tuple<BOOST_BFT_PARAMETER_LIST()>
-    >
-#endif
 {
 private:
     typedef detail::bitfield_tuple_base<BOOST_BFT_PARAMETER_LIST()> _base;
