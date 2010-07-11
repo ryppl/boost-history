@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2009 Christopher Schmidt
 
@@ -9,6 +9,9 @@
 #ifndef BOOST_FUSION_ALGORITHM_TRANSFORMATION_ERASE_KEY_HPP
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_ERASE_KEY_HPP
 
+#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
+#   include <boost/fusion/sequence/intrinsic/has_key.hpp>
+#endif
 #include <boost/fusion/algorithm/query/find_key.hpp>
 #include <boost/fusion/algorithm/transformation/erase.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
@@ -51,7 +54,7 @@ namespace boost { namespace fusion
             {
                 return fusion::erase(
                     static_cast<Seq>(seq),
-                    fusion::find_key<Key>(seq));
+                    fusion::find_key<Key>(static_cast<Seq>(seq)));
             }
 
             static type
@@ -83,7 +86,7 @@ namespace boost { namespace fusion
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template<typename Key, typename Seq>
     inline BOOST_FUSION_EXPLICIT_TEMPLATE_NON_CONST_ARG_OVERLOAD(
-            result_of::erase_key<,Seq,&, Key>)
+        result_of::erase_key<,Seq,&, Key>)
     erase_key(Seq& seq)
     {
         return result_of::erase_key<Seq&, Key>::call(seq);

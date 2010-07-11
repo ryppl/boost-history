@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2007 Dan Marsden
 
@@ -47,7 +47,7 @@ struct add_ints_only
 
     template <typename State, typename T>
     State
-    operator()(State const& state, T const& x) const
+    operator()(State const& state, T const&) const
     {
         return state;
     }

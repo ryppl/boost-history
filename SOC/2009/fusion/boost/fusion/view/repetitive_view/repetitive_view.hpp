@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2007 Tobias Schwinger
     Copyright (c) 2009 Christopher Schmidt
 
@@ -52,10 +52,11 @@ namespace boost { namespace fusion
     {
         BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
-        BOOST_FUSION_MPL_ASSERT((mpl::or_<
-                            mpl:not_<result_of::empty<Seq> >
-                          , mpl::not_<Size>
-                        >));
+        BOOST_FUSION_MPL_ASSERT((
+            mpl::or_<
+                mpl::not_<result_of::empty<Seq> >
+              , mpl::not_<Size>
+            >));
 
         typedef detail::view_storage<Seq> storage_type;
         typedef typename storage_type::type seq_type;
@@ -95,9 +96,10 @@ namespace boost { namespace fusion
         operator=(BOOST_FUSION_R_ELSE_CLREF(OtherView) other_view)
         {
             BOOST_FUSION_TAG_CHECK(OtherView,repetitive_view_tag);
-            BOOST_FUSION_MPL_ASSERT((mpl::equal_to<
+            BOOST_FUSION_MPL_ASSERT((
+                mpl::equal_to<
                     size
-                  , detail::remove_reference<OtherView>::type::size
+                  , typename detail::remove_reference<OtherView>::type::size
                 >));
 
             seq=BOOST_FUSION_FORWARD(OtherView,other_view).seq;
@@ -118,16 +120,17 @@ namespace boost { namespace fusion
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
-            BOOST_FUSION_MPL_ASSERT((mpl::or_<
-                                mpl:not_<result_of::empty<Seq> >
-                              , mpl::not_<Size>
-                            >));
+            BOOST_FUSION_MPL_ASSERT((
+                mpl::or_<
+                    mpl::not_<result_of::empty<Seq> >
+                  , mpl::not_<Size>
+                >));
 
             typedef
                 repetitive_view<typename traits::deduce<Seq>::type, Size>
             type;
         };
-    };
+    }
 
     template<typename Size, typename Seq>
     inline typename

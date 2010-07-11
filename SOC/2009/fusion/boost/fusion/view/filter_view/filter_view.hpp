@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2009-2010 Christopher Schmidt
 
@@ -96,9 +96,12 @@ namespace boost { namespace fusion
         operator=(BOOST_FUSION_R_ELSE_CLREF(OtherView) other_view)
         {
             BOOST_FUSION_TAG_CHECK(OtherView,filter_view_tag);
-            BOOST_FUSION_MPL_ASSERT((is_same<
+            BOOST_FUSION_MPL_ASSERT((
+                is_same<
                     pred_type
-                  , detail::remove_reference<OtherView>::type::pred_type
+                  , typename detail::remove_reference<
+                        OtherView
+                    >::type::pred_type
                 >));
 
             seq=BOOST_FUSION_FORWARD(OtherView,other_view).seq;

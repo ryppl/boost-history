@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -42,7 +42,11 @@ namespace random_access_impl
     >
     {
         static Result
-        call(F f, SeqRef seq)
+        call(F f, SeqRef
+#if BOOST_FUSION_N
+                        seq
+#endif
+            )
         {
 #ifndef BOOST_FUSION_RETURN_VOID
             return
@@ -172,7 +176,11 @@ namespace forward_impl
     >
     {
         static Result
-        call(F f, SeqRef seq)
+        call(F f, SeqRef
+#if BOOST_FUSION_N
+                        seq
+#endif
+                        )
         {
             BOOST_FUSION_DEFINE_ITS()
 

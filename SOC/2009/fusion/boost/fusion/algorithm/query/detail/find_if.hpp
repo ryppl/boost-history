@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2007 Dan Marsden
     Copyright (c) 2009 Christopher Schmidt
@@ -176,10 +176,9 @@ namespace boost { namespace fusion
             static type
             call(It const& it)
             {
-                return
-                    fusion::advance<
-                        typename result_of::distance<It, type>::type
-                    >(it);
+                return fusion::advance<
+                    typename result_of::distance<It, type>::type
+                >(it);
             }
         };
 
@@ -192,7 +191,7 @@ namespace boost { namespace fusion
             call(BOOST_FUSION_R_ELSE_LREF(Seq) seq)
             {
                 return static_find_if<Begin, End, Pred>::call(
-                        fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)));
+                    fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)));
             }
         };
     }

@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2001-2007 Joel de Guzman
     Copyright (c) 2005-2006 Dan Marsden
     Copyright (c) 2009-2010 Christopher Schmidt
@@ -20,7 +20,7 @@ namespace boost { namespace fusion
     struct fusion_sequence_tag;
 
     struct assoc_struct_category
-      : bidirectional_traversal_tag, associative_tag
+      : random_access_traversal_tag, associative_tag
     {};
 
     namespace extension

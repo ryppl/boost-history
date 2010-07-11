@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2006-2007 Tobias Schwinger
     Copyright (c) 2009-2010 Christopher Schmidt
 
@@ -18,7 +18,7 @@
 #   include <boost/fusion/support/internal/template.hpp>
 #   include <boost/preprocessor/iterate.hpp>
 #endif
-#include <boost/preprocessor/empty.hpp>
+#include <boost/preprocessor/expr_if.hpp>
 #include <boost/type_traits/add_const.hpp>
 
 namespace boost { namespace fusion
@@ -75,14 +75,14 @@ namespace boost { namespace fusion
 #   endif
 #endif
 
-#define BOOST_FUSION_CTOR_SPECIALIZATION(MODIFIER,_)\
+#define BOOST_FUSION_UNFUSED_CTOR(MODIFIER,_)\
         unfused(unfused MODIFIER adapter)\
           : f(static_cast<unfused MODIFIER>(adapter).f)\
         {}
 
-        BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_CTOR_SPECIALIZATION,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_UNFUSED_CTOR,_)
 
-#undef BOOST_FUSION_CTOR_SPECIALIZATION
+#undef BOOST_FUSION_UNFUSED_CTOR
 
         template<typename OtherF>
         unfused&
@@ -122,8 +122,8 @@ namespace boost { namespace fusion
             return f(fusion::vector_tie(BOOST_FUSION_FORWARD(Args,args)...));\
         }
 
-        BOOST_FUSION_CALL_OPERATOR(F,BOOST_PP_EMPTY());
-        BOOST_FUSION_CALL_OPERATOR(typename add_const<F>::type,const);
+        BOOST_FUSION_CALL_OPERATOR(F,BOOST_PP_EMPTY())
+        BOOST_FUSION_CALL_OPERATOR(typename add_const<F>::type,const)
 
 #   undef BOOST_FUSION_CALL_OPERATOR
 #endif

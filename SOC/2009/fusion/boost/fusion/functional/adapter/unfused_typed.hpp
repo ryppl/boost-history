@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2006-2007 Tobias Schwinger
     Copyright (c) 2009-2010 Christopher Schmidt
 
@@ -107,14 +107,14 @@ namespace boost { namespace fusion
 #   endif
 #endif
 
-#define BOOST_FUSION_CTOR_SPECIALIZATION(MODIFIER,_)\
+#define BOOST_FUSION_UNFUSED_TYPED_CTOR(MODIFIER,_)\
         unfused_typed(unfused_typed MODIFIER adapter)\
           : f(static_cast<unfused_typed MODIFIER>(adapter).f)\
         {}
 
-        BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_CTOR_SPECIALIZATION,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_UNFUSED_TYPED_CTOR,_)
 
-#undef BOOST_FUSION_CTOR_SPECIALIZATION
+#undef BOOST_FUSION_UNFUSED_TYPED_CTOR
 
         template<typename OtherF>
         unfused_typed&
@@ -148,8 +148,8 @@ namespace boost { namespace fusion
                 TransformSeq(std::forward<Args>(args)...)));\
         }
 
-        BOOST_FUSION_CALL_OPERATOR(F,BOOST_PP_EMPTY());
-        BOOST_FUSION_CALL_OPERATOR(typename add_const<F>::type,const);
+        BOOST_FUSION_CALL_OPERATOR(F,BOOST_PP_EMPTY())
+        BOOST_FUSION_CALL_OPERATOR(typename add_const<F>::type,const)
 
 #   undef BOOST_FUSION_CALL_OPERATOR
 #endif

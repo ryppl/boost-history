@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2009 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
@@ -10,7 +10,9 @@
 
 #include <boost/config.hpp>
 
-#if (defined(BOOST_NO_VARIADIC_TEMPLATES) || !defined(BOOST_FUSION_CPP0X_NO_DEPRECEATED)) && !defined(FUSION_MAX_ZIP_SEQUENCES)
+#if (defined(BOOST_NO_VARIADIC_TEMPLATES) ||\
+    !defined(BOOST_FUSION_CPP0X_NO_DEPRECEATED)) &&\
+    !defined(FUSION_MAX_ZIP_SEQUENCES)
 #   define FUSION_MAX_ZIP_SEQUENCES 10
 #endif
 

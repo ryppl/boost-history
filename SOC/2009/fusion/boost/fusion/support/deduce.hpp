@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2007 Tobias Schwinger
     Copyright (c) 2009-2010 Christopher Schmidt
 
@@ -108,24 +108,24 @@ namespace boost { namespace fusion
             typedef T MODIFIER2(MODIFIER3 type)[N];\
         };
 
-        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(BOOST_PP_EMPTY(),const,&);
-        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(const,const,&);
-        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(volatile,volatile,&);
+        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(BOOST_PP_EMPTY(),const,&)
+        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(const,const,&)
+        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(volatile,volatile,&)
         BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(
-            const volatile,const volatile,&);
+            const volatile,const volatile,&)
 
-        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION((&),BOOST_PP_EMPTY(),&);
-        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(const(&),const,&);
-        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(volatile(&),volatile,&);
+        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION((&),BOOST_PP_EMPTY(),&)
+        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(const(&),const,&)
+        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(volatile(&),volatile,&)
         BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(
-            const volatile(&),const volatile,&);
+            const volatile(&),const volatile,&)
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
-        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION((&&),BOOST_PP_EMPTY(),&&);
-        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(const(&&),const,&&);
-        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(volatile(&&),volatile,&&);
+        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION((&&),BOOST_PP_EMPTY(),&&)
+        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(const(&&),const,&&)
+        BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(volatile(&&),volatile,&&)
         BOOST_FUSION_DEDUCE_ARRAY_SPECIALIZATION(
-            const volatile(&&),const volatile,&&);
+            const volatile(&&),const volatile,&&)
 #endif
     }
 

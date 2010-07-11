@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2007 Dan Marsden
     Copyright (c) 2009 Christopher Schmidt
@@ -35,6 +35,10 @@ namespace boost { namespace fusion
             }
 
             F f;
+
+        private:
+            count_if_helper&
+            operator=(count_if_helper const&);
         };
     }
 

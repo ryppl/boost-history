@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2005 Eric Niebler
     Copyright (c) 2007 Dan Marsden
@@ -36,6 +36,10 @@ namespace boost { namespace fusion
             }
 
             F f;
+
+        private:
+            any_helper&
+            operator=(any_helper const&);
         };
     }
 

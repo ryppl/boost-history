@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2009-2010 Christopher Schmidt
 
@@ -184,11 +184,11 @@ namespace boost { namespace fusion
 
     BOOST_FUSION_TRANSFORM_BINARY(
             BOOST_FUSION_R_ELSE_CLREF(BOOST_PP_EMPTY()),
-            BOOST_FUSION_R_ELSE_CLREF(BOOST_PP_EMPTY()));
+            BOOST_FUSION_R_ELSE_CLREF(BOOST_PP_EMPTY()))
 #ifdef BOOST_NO_RVALUE_REFERENCES
-    BOOST_FUSION_TRANSFORM_BINARY(&,const&);
-    BOOST_FUSION_TRANSFORM_BINARY(const&,&);
-    BOOST_FUSION_TRANSFORM_BINARY(&,&);
+    BOOST_FUSION_TRANSFORM_BINARY(&,const&)
+    BOOST_FUSION_TRANSFORM_BINARY(const&,&)
+    BOOST_FUSION_TRANSFORM_BINARY(&,&)
 #endif
 
 #undef BOOST_FUSION_TRANSFORM_BINARY

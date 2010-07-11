@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2005 Joel de Guzman
     Copyright (c) 2005 Eric Niebler
     Copyright (c) 2009-2010 Christopher Schmidt
@@ -67,8 +67,13 @@ namespace boost { namespace fusion
         nil()
         {}
 
-        nil(const nil&)
+#define BOOST_FUSION_NIL_CTOR(MODIFIER,_)\
+        nil(nil MODIFIER)\
         {}
+
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_NIL_CTOR,_);
+
+#undef BOOST_FUSION_CONS_CTOR
 
         template<typename SeqAssign>
         nil(BOOST_FUSION_R_ELSE_CLREF(SeqAssign))
@@ -120,7 +125,7 @@ namespace boost { namespace fusion
           , cdr()
         {}
 
-        //cschmidt: iterators so we do not have to deal with the cv-ness
+        //cschmidt: use iterators so we do not have to deal with the cv-ness
         //of cons_.car/cons_.cdr explicitly
 #define BOOST_FUSION_CONS_CTOR(MODIFIER,_)\
         cons(cons MODIFIER cons_)\
@@ -205,7 +210,7 @@ namespace boost { namespace fusion
           , cdr(detail::assign_by_deref(),
                   fusion::next(fusion::begin(BOOST_FUSION_FORWARD(Seq,seq))))
         {
-            BOOST_FUSION_MPL_ASSERT_NOT((
+            BOOST_FUSION_MPL_ASSERT((
                     mpl::equal_to<size,result_of::size<Seq> >));
         }
 
@@ -216,11 +221,11 @@ namespace boost { namespace fusion
           , cdr(detail::assign_by_deref(),\
                   fusion::next(fusion::begin(seq_assign.get())))\
         {\
-            BOOST_FUSION_MPL_ASSERT_NOT((\
+            BOOST_FUSION_MPL_ASSERT((\
                 mpl::equal_to<size,result_of::size<SeqRef> >));\
         }
 
-        BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_CONS_ASSIGN_CTOR,_);
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_CONS_ASSIGN_CTOR,_)
 
 #undef BOOST_FUSION_CONS_ASSIGN_CTOR
 

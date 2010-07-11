@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2009 Christopher Schmidt
 
@@ -40,10 +40,11 @@ namespace boost { namespace fusion
 
     template<typename Seq>
     inline typename result_of::clear<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type
-    clear(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
+    clear(BOOST_FUSION_R_ELSE_CLREF(Seq))
     {
-        return typename
-            result_of::clear<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type();
+        return typename result_of::clear<
+            BOOST_FUSION_R_ELSE_CLREF(Seq)
+        >::type();
     }
 }}
 

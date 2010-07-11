@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -15,6 +15,12 @@
 #include <boost/static_assert.hpp>
 #include <iostream>
 
+#ifdef BOOST_MSVC
+#   pragma warning(push)
+    //'class' : multiple copy constructors specified
+#   pragma warning(disable:4521)
+#endif
+
 namespace ns
 {
     struct x_member;
@@ -28,6 +34,10 @@ BOOST_FUSION_DEFINE_ASSOC_STRUCT(
     (int, x, ns::x_member)
     (int, y, ns::y_member)
 )
+
+#ifdef BOOST_MSVC
+#   pragma warning(pop)
+#endif
 
 int
 main()

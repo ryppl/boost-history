@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -121,9 +121,12 @@ namespace boost { namespace fusion
         };
 
         template<typename OtherSeqRef>
-        basic_iterator(basic_iterator<Tag,Category,OtherSeqRef,I> const& it)
-          : seq(it.seq)
-        {}
+        basic_iterator(
+            basic_iterator<Tag,Category,OtherSeqRef,I> const& other_it)
+          : seq(other_it.seq)
+        {
+            BOOST_FUSION_MPL_ASSERT((is_convertible<OtherSeqRef, SeqRef>));
+        }
 
         basic_iterator(seq_ptr_type seq)
           : seq(seq)
@@ -131,9 +134,11 @@ namespace boost { namespace fusion
 
         template<typename OtherSeqRef>
         basic_iterator&
-        operator=(basic_iterator<Tag,Category,OtherSeqRef,I> const& it)
+        operator=(basic_iterator<Tag,Category,OtherSeqRef,I> const& other_it)
         {
-            seq=it.seq;
+            BOOST_FUSION_MPL_ASSERT((is_convertible<OtherSeqRef, SeqRef>));
+
+            seq=other_it.seq;
             return *this;
         }
 

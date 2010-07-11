@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2006 Dan Marsden
     Copyright (c) 2010 Christopher Schmidt
@@ -7,7 +7,7 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-/*=============================================================================
+/*==============================================================================
     An implementation of a std::pair like triple<T0, T1, T2>
     We use fusion::sequence_facade and fusion::iterator_facade
     to make our triple a fully conforming Boost.Fusion random

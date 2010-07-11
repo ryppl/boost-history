@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
@@ -10,6 +10,7 @@
 #include <boost/fusion/sequence/comparison/equal_to.hpp>
 #include <boost/fusion/container/generation/make_vector.hpp>
 #include <boost/fusion/algorithm/transformation/clear.hpp>
+#include <boost/fusion/adapted/mpl.hpp>
 #include <boost/mpl/vector_c.hpp>
 
 int

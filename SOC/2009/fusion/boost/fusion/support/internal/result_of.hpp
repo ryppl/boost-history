@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -71,7 +71,7 @@ namespace boost { namespace fusion { namespace detail
     };
 
 #ifdef BOOST_NO_DECLTYPE
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(result_type);
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(result_type)
 
     template<typename F>
     struct get_result_type

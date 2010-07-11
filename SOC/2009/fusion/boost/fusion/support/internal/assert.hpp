@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2009 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -78,32 +78,76 @@ namespace boost { namespace fusion { namespace detail
                 " - assert expression: " BOOST_PP_STRINGIZE(PRED))
 #   endif
 #else
-#   define BOOST_FUSION_MPL_ASSERT(PRED)
-#   define BOOST_FUSION_MPL_ASSERT_NOT(PRED)
-#   define BOOST_FUSION_STATIC_ASSERT(PRED)
-#   define BOOST_FUSION_MPL_ASSERT_MSG(PRED,MESSAGE)
-#   define BOOST_FUSION_MPL_ASSERT_NOT_MSG(PRED,MESSAGE)
-#   define BOOST_FUSION_STATIC_ASSERT_MSG(PRED,MESSAGE)
+#   define BOOST_FUSION_MPL_ASSERT(PRED) (void)(0)
+#   define BOOST_FUSION_MPL_ASSERT_NOT(PRED) (void)(0)
+#   define BOOST_FUSION_STATIC_ASSERT(PRED) (void)(0)
+#   define BOOST_FUSION_MPL_ASSERT_MSG(PRED,MESSAGE) (void)(0)
+#   define BOOST_FUSION_MPL_ASSERT_NOT_MSG(PRED,MESSAGE) (void)(0)
+#   define BOOST_FUSION_STATIC_ASSERT_MSG(PRED,MESSAGE) (void)(0)
 #endif
 
-#define BOOST_FUSION_INDEX_CHECK(INDEX,MAX)\
-    BOOST_FUSION_STATIC_ASSERT_MSG(\
-        (INDEX) >= 0 && (INDEX) < (MAX),\
-        "Index (" BOOST_PP_STRINGIZE(INDEX) ") out of range " \
-        "( [0..." BOOST_PP_STRINGIZE(MAX) ") )" \
+#define BOOST_FUSION_INDEX_CHECK(INDEX,MAX)                                     \
+    BOOST_FUSION_STATIC_ASSERT_MSG(                                             \
+        (INDEX) >= 0 &&                                                         \
+            static_cast<unsigned int>(INDEX) < static_cast<unsigned int>(MAX),  \
+        "Index (" BOOST_PP_STRINGIZE(INDEX) ") out of range "                   \
+            "( [0..." BOOST_PP_STRINGIZE(MAX) ") )"                             \
     )
-#define BOOST_FUSION_TAG_CHECK(TYPE,TAG)\
-    BOOST_FUSION_MPL_ASSERT((is_same<typename traits::tag_of<TYPE>::type,TAG>))
+#define BOOST_FUSION_TAG_CHECK(TYPE,TAG)                                        \
+    BOOST_FUSION_MPL_ASSERT((is_same<typename traits::tag_of<TYPE>::type,TAG>));
 
 #ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
-#   include <boost/fusion/sequence.hpp>
-#   include <boost/fusion/iterator.hpp>
-#   include <boost/fusion/support.hpp>
+#   include <boost/fusion/support/tag_of_fwd.hpp>
 #   include <boost/mpl/and.hpp>
 #   include <boost/mpl/or.hpp>
 #   include <boost/mpl/not.hpp>
 #   include <boost/mpl/equal_to.hpp>
+#   include <boost/type_traits/is_convertible.hpp>
 #   include <boost/type_traits/is_same.hpp>
+
+namespace boost { namespace fusion
+{
+    namespace traits
+    {
+        template<typename T>
+        struct is_sequence;
+
+        template<typename T>
+        struct is_view;
+
+        template<typename T>
+        struct is_iterator;
+
+        template<typename T>
+        struct is_associative;
+
+        template<typename T>
+        struct is_forward;
+
+        template<typename T>
+        struct is_bidirectional;
+
+        template<typename T>
+        struct is_random_access;
+    }
+
+    namespace result_of
+    {
+        template<typename Seq>
+        struct size;
+
+        template<typename Seq>
+        struct empty;
+    }
+}}
+
+#   include <boost/fusion/support/tag_of.hpp>
+#   include <boost/fusion/support/category_of.hpp>
+#   include <boost/fusion/support/is_iterator.hpp>
+#   include <boost/fusion/support/is_sequence.hpp>
+#   include <boost/fusion/support/is_view.hpp>
+#   include <boost/fusion/sequence/intrinsic/size.hpp>
+#   include <boost/fusion/sequence/intrinsic/empty.hpp>
 #endif
 
 #endif

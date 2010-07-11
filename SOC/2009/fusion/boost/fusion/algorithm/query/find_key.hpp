@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2009 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -42,8 +42,8 @@ namespace boost { namespace fusion
         result_of::find_key<BOOST_FUSION_R_ELSE_CLREF(Seq), T>::type const
     find_key(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
-        return
-            result_of::find_key<BOOST_FUSION_R_ELSE_CLREF(Seq), T>::call(seq);
+        return result_of::find_key<BOOST_FUSION_R_ELSE_CLREF(Seq), T>::call(
+            BOOST_FUSION_FORWARD(Seq,seq));
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES

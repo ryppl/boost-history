@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2009 Christopher Schmidt
 
@@ -137,6 +137,13 @@ namespace boost { namespace fusion
 
 #undef BOOST_FUSION_SINGLE_VIEW_ASSIGN_CTOR
 
+        single_view&
+        operator=(single_view const& other_view)
+        {
+            val=other_view.val;
+            return *this;
+        }
+
         template<typename OtherT>
         single_view&
         operator=(BOOST_FUSION_R_ELSE_CLREF(OtherT) val)
@@ -170,7 +177,7 @@ namespace boost { namespace fusion
         {
             typedef single_view<typename traits::deduce<T>::type> type;
         };
-    };
+    }
 
     template<typename T>
     inline typename

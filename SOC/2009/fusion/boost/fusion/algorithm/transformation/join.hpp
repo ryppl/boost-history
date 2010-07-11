@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2006 Dan Marsden
     Copyright (c) 2009 Christopher Schmidt
@@ -52,11 +52,11 @@ namespace boost { namespace fusion {
 
     BOOST_FUSION_JOIN(
             BOOST_FUSION_R_ELSE_CLREF(BOOST_PP_EMPTY()),
-            BOOST_FUSION_R_ELSE_CLREF(BOOST_PP_EMPTY()));
+            BOOST_FUSION_R_ELSE_CLREF(BOOST_PP_EMPTY()))
 #ifdef BOOST_NO_RVALUE_REFERENCES
-    BOOST_FUSION_JOIN(&,const&);
-    BOOST_FUSION_JOIN(const&,&);
-    BOOST_FUSION_JOIN(&,&);
+    BOOST_FUSION_JOIN(&,const&)
+    BOOST_FUSION_JOIN(const&,&)
+    BOOST_FUSION_JOIN(&,&)
 #endif
 
 #undef BOOST_FUSION_JOIN

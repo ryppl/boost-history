@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2007 Dan Marsden
     Copyright (c) 2009-2010 Christopher Schmidt
@@ -120,7 +120,7 @@ namespace boost { namespace fusion { namespace detail
         template<typename It0, typename F>
         static BOOST_FUSION_CONSTEXPR
         bool
-        call(It0 const& it0, BOOST_FUSION_RREF_ELSE_OBJ(F) f)
+        call(It0 const&, BOOST_FUSION_RREF_ELSE_OBJ(F))
         {
             return true;
         }

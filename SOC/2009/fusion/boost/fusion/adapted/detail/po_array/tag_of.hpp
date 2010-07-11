@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
@@ -38,13 +38,13 @@ namespace boost
             };
 #endif
 
-        BOOST_FUSION_ARRAY_TAG_OF_SPECIALIZATION(T[N]);
-        BOOST_FUSION_ARRAY_TAG_OF_SPECIALIZATION(T const[N]);
-        BOOST_FUSION_ARRAY_TAG_OF_SPECIALIZATION(T(&)[N]);
-        BOOST_FUSION_ARRAY_TAG_OF_SPECIALIZATION(T const(&)[N]);
+        BOOST_FUSION_ARRAY_TAG_OF_SPECIALIZATION(T[N])
+        BOOST_FUSION_ARRAY_TAG_OF_SPECIALIZATION(T const[N])
+        BOOST_FUSION_ARRAY_TAG_OF_SPECIALIZATION(T(&)[N])
+        BOOST_FUSION_ARRAY_TAG_OF_SPECIALIZATION(T const(&)[N])
 #ifndef BOOST_NO_RVALUE_REFERENCES
-        BOOST_FUSION_ARRAY_TAG_OF_SPECIALIZATION(T(&&)[N]);
-        BOOST_FUSION_ARRAY_TAG_OF_SPECIALIZATION(T const(&&)[N]);
+        BOOST_FUSION_ARRAY_TAG_OF_SPECIALIZATION(T(&&)[N])
+        BOOST_FUSION_ARRAY_TAG_OF_SPECIALIZATION(T const(&&)[N])
 #endif
 
 #undef BOOST_FUSION_ARRAY_TAG_OF_SPECIALIZATION

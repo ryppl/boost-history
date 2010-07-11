@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2006 Dan Marsden
     Copyright (c) 2009-2010 Christopher Schmidt
@@ -75,11 +75,11 @@ namespace boost { namespace fusion
           : boost::result_of<
                 F(
 #ifdef BOOST_NO_RVALUE_REFERENCES
-                typename add_lref<typename add_const<State>::type>::type
+                typename add_lref<typename add_const<State>::type>::type,
 #else
-                State&&
+                State&&,
 #endif
-              , BOOST_FUSION_FOLD_IMPL_INVOKE_IT_META_TRANSFORM(It))
+                BOOST_FUSION_FOLD_IMPL_INVOKE_IT_META_TRANSFORM(It))
             >
         {};
 
@@ -210,7 +210,7 @@ namespace boost { namespace fusion
                 It0 const&,
                 BOOST_FUSION_RREF_ELSE_OBJ(F))
             {
-                return state;
+                return static_cast<Result>(state);
             }
         };
 
@@ -220,32 +220,34 @@ namespace boost { namespace fusion
             typedef typename
                 BOOST_PP_CAT(BOOST_FUSION_FOLD_NAME, _rvalue_state)<
                     StateRef
-                  , It0
+                  , It0 const&
                   , F
                 >::type
             rest1;
             typedef typename
-                result_of::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<It0>::type
+                result_of::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<
+                    It0 const&
+                >::type
             it1;
             typedef typename
                 BOOST_PP_CAT(BOOST_FUSION_FOLD_NAME, _rvalue_state)<
                     rest1
-                  , it1
+                  , it1&
                   , F
                 >::type
             rest2;
             typedef typename
-                result_of::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<it1>::type
+                result_of::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<it1&>::type
             it2;
             typedef typename
                 BOOST_PP_CAT(BOOST_FUSION_FOLD_NAME, _rvalue_state)<
                     rest2
-                  , it2
+                  , it2&
                   , F
                 >::type
             rest3;
             typedef typename
-                result_of::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<it2>::type
+                result_of::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<it2&>::type
             it3;
 
             typedef typename
@@ -253,11 +255,11 @@ namespace boost { namespace fusion
                     typename BOOST_PP_CAT(
                         BOOST_FUSION_FOLD_NAME, _rvalue_state)<
                         rest3
-                      , it3
+                      , it3&
                       , F
                     >::type
                   , typename result_of::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<
-                        it3
+                        it3&
                     >::type
                   , F
                   , N-4
@@ -276,12 +278,14 @@ namespace boost { namespace fusion
             typedef typename
                 BOOST_PP_CAT(BOOST_FUSION_FOLD_NAME, _rvalue_state)<
                     StateRef
-                  , It0
+                  , It0 const&
                   , F
                 >::type
             rest1;
             typedef typename
-                result_of::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<It0>::type
+                result_of::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<
+                    It0 const&
+                >::type
             it1;
 
             typedef typename
@@ -289,12 +293,14 @@ namespace boost { namespace fusion
                     typename BOOST_PP_CAT(
                         BOOST_FUSION_FOLD_NAME, _rvalue_state)<
                         rest1
-                      , it1
+                      , it1&
                       , F
                     >::type
-                  , typename result_of::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<
-                        it1
-                    >::type
+                  , BOOST_FUSION_R_ELSE_CLREF(
+                        typename result_of::
+                            BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<
+                            it1&
+                        >::type)
                   , F
                 >::type
             type;
@@ -310,12 +316,13 @@ namespace boost { namespace fusion
           : BOOST_PP_CAT(BOOST_FUSION_FOLD_NAME, _rvalue_state)<
                 typename BOOST_PP_CAT(BOOST_FUSION_FOLD_NAME, _rvalue_state)<
                     StateRef
-                  , It0
+                  , It0 const&
                   , F
                 >::type
-              , typename result_of::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<
-                    It0
-                >::type
+              , BOOST_FUSION_R_ELSE_CLREF(
+                    typename result_of::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<
+                        It0 const&
+                    >::type)
               , F
             >
         {};
@@ -329,7 +336,7 @@ namespace boost { namespace fusion
         >
           : BOOST_PP_CAT(BOOST_FUSION_FOLD_NAME, _rvalue_state)<
                 StateRef
-              , It0
+              , It0 const&
               , F
             >
         {};
@@ -355,11 +362,12 @@ namespace boost { namespace fusion
                     typename boost::result_of<
                         f(
                             StateRef,
-                            BOOST_FUSION_FOLD_IMPL_INVOKE_IT_META_TRANSFORM(It0)
+                            BOOST_FUSION_FOLD_IMPL_INVOKE_IT_META_TRANSFORM(
+                                It0 const&)
                         )
                     >::type
                   , typename result_of::BOOST_FUSION_FOLD_IMPL_NEXT_IT_FUNCTION<
-                        It0
+                        It0 const&
                     >::type
                   , f
                   , SeqSize-1
@@ -432,7 +440,11 @@ namespace boost { namespace fusion
             >
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
+#ifdef BOOST_FUSION_REVERSE_FOLD
+            BOOST_FUSION_MPL_ASSERT((traits::is_bidirectional<Seq>));
+#else
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+#endif
         };
     }
 

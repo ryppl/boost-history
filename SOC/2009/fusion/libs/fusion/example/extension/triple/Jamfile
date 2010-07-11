@@ -11,10 +11,18 @@
 # bring in rules for testing
 import testing ;
 
-{
-    test-suite example_triple :
-
-    [ run triple.cpp :  :  :  : ]
+project
+    : requirements
+        <define>BOOST_FUSION_ENABLE_STATIC_ASSERTS
+        <warnings>all
+        <toolset>gcc:<cxxflags>-Wno-long-long
     ;
-}
+    
+{
+    test-suite triple : ;
 
+    for local test-file in [ glob *.cpp ]
+    {
+        run $(test-file) :  :  :  : ;
+    }
+}

@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2009 Hartmut Kaiser
     Copyright (c) 2009 Christopher Schmidt
 
@@ -34,7 +34,7 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(It it)
             {
-                return type(it.seq,0);
+                return type(*it.seq,0);
             }
         };
     };

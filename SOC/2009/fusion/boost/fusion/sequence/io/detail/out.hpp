@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 1999-2003 Jaakko Jarvi
     Copyright (c) 1999-2003 Jeremiah Willcock
     Copyright (c) 2001-2006 Joel de Guzman
@@ -36,18 +36,16 @@ namespace boost { namespace fusion { namespace detail
 
         template<typename OS>
         static void
-        print(OS& os, char const* delim, mpl::true_)
-        {
-        }
+        print(OS&, char const*, mpl::true_)
+        {}
     };
 
     struct print_sequence_loop
     {
         template<typename OS, typename Begin, typename End>
         static void
-        call(OS& os, Begin const&, End const&, mpl::true_)
-        {
-        }
+        call(OS&, Begin const&, End const&, mpl::true_)
+        {}
 
         template<typename OS, typename Begin, typename End>
         static void

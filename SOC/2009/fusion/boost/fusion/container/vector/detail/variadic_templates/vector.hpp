@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -457,7 +457,7 @@ namespace boost { namespace fusion
                 sizeof...(Elements)==result_of::size<SeqRef>::value));\
         }
 
-        BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_VECTOR_ASSIGN_CTOR,_);
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_VECTOR_ASSIGN_CTOR,_)
 
 #undef BOOST_FUSION_VECTOR_ASSIGN_CTOR
 

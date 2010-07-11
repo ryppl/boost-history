@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2009 Christopher Schmidt
 
@@ -12,7 +12,6 @@
 #include <boost/fusion/support/tag_of.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
-
 #include <boost/type_traits/is_base_of.hpp>
 
 namespace boost { namespace fusion

@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 1999-2003 Jaakko Jarvi
     Copyright (c) 1999-2003 Jeremiah Willcock
     Copyright (c) 2001-2006 Joel de Guzman
@@ -37,18 +37,16 @@ namespace boost { namespace fusion { namespace detail
 
         template<typename IS>
         static void
-        read(IS& is, char const* delim, mpl::true_)
-        {
-        }
+        read(IS&, char const*, mpl::true_)
+        {}
     };
 
     struct read_sequence_loop
     {
         template<typename IS, typename Begin, typename End>
         static void
-        call(IS& is, Begin const&, End const&, mpl::true_)
-        {
-        }
+        call(IS&, Begin const&, End const&, mpl::true_)
+        {}
 
         template<typename IS, typename Begin, typename End>
         static void

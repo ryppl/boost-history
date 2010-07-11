@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2009 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -31,15 +31,12 @@ namespace boost
 
         namespace detail
         {
-            BOOST_MPL_HAS_XXX_TRAIT_DEF(category);
+            BOOST_MPL_HAS_XXX_TRAIT_DEF(category)
 
             template<typename T, typename Category>
             struct category_is
               : mpl::equal_to<typename T::category, Category>
             {};
-
-            template<typename T, typename Enable>
-            struct tag_of_fallback;
 
             template<typename T>
             struct tag_of_fallback<

@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2009 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -78,6 +78,13 @@ namespace boost { namespace fusion { namespace detail
                   typename traits::is_view<T>::type()))
         {}
 #endif
+
+        view_storage&
+        operator=(view_storage const& other_storage)
+        {
+            t=other_storage.t;
+            return *this;
+        }
 
         template<typename OtherViewStorage>
         view_storage&

@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2007 Tobias Schwinger
 
     Use modification and distribution are subject to the Boost Software 

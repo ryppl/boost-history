@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2009 Christopher Schmidt
 
@@ -22,7 +22,7 @@ namespace boost { namespace fusion
 
     namespace detail
     {
-        BOOST_MPL_HAS_XXX_TRAIT_DEF(fusion_tag);
+        BOOST_MPL_HAS_XXX_TRAIT_DEF(fusion_tag)
 
         template<typename IdentityT>
         struct get_fusion_tag

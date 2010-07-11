@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2006 Dan Marsden
     Copyright (c) 2009-2010 Christopher Schmidt
@@ -10,6 +10,9 @@
 #ifndef BOOST_FUSION_SEQUENCE_INTRINSIC_AT_KEY_HPP
 #define BOOST_FUSION_SEQUENCE_INTRINSIC_AT_KEY_HPP
 
+#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
+#   include <boost/fusion/sequence/intrinsic/has_key.hpp>
+#endif
 #include <boost/fusion/iterator/deref_data.hpp>
 #include <boost/fusion/algorithm/query/find_key.hpp>
 #include <boost/fusion/support/internal/ref.hpp>

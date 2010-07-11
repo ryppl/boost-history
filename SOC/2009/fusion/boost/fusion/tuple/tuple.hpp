@@ -1,6 +1,6 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2005 Joel de Guzman
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -72,7 +72,7 @@ namespace boost { namespace fusion
     inline typename result_of::at_c<BOOST_FUSION_R_ELSE_CLREF(Tuple), N>::type
     get(BOOST_FUSION_R_ELSE_CLREF(Tuple) tuple)
     {
-        return at_c<N>(tuple);
+        return fusion::at_c<N>(tuple);
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
@@ -81,7 +81,7 @@ namespace boost { namespace fusion
             result_of::at_c<,Tuple,&, N>)
     get(Tuple& tuple)
     {
-        return at_c<N>(tuple);
+        return fusion::at_c<N>(tuple);
     }
 #endif
 

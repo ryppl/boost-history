@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -12,6 +12,6 @@
 
 #include <boost/fusion/algorithm/iteration/detail/fold.hpp>
 
-#undef BOOST_FUSION_REVERSE_FOLD
+#undef BOOST_FUSION_ITER_FOLD
 
 #endif

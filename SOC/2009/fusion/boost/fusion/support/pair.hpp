@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2005 Joel de Guzman
     Copyright (c) 2006 Tobias Schwinger
     Copyright (c) 2009-2010 Christopher Schmidt
@@ -82,13 +82,27 @@ namespace boost { namespace fusion
         {}
 #endif
 
-        template<typename Second2>
-        pair& operator=(pair<First, Second2>
-            BOOST_FUSION_R_ELSE_CLREF(BOOST_PP_EMPTY()) rhs)
+        pair&
+        operator=(pair const& other_pair)
         {
-            second = rhs.second;
+            second = other_pair.second;
             return *this;
         }
+
+#define BOOST_FUSION_PAIR_ASSIGN_OP(MODIFIER,_)\
+        template<class OtherSecond>\
+        pair&\
+        operator=(pair<First,OtherSecond> MODIFIER other_pair)\
+        {\
+            second=static_cast<pair<First,OtherSecond> MODIFIER>(\
+                other_pair).second;\
+            return *this;\
+        }
+
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(
+            BOOST_FUSION_PAIR_ASSIGN_OP,_)
+
+#undef BOOST_FUSION_PAIR_ASSIGN_OP
 
         second_type second;
     };

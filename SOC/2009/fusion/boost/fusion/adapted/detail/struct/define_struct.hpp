@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -85,8 +85,8 @@
     self_type&                                                                  \
     operator=(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)                               \
     {                                                                           \
-        BOOST_FUSION_STATIC_ASSERT((                                            \
-            BOOST_PP_SEQ_SIZE(ATTRIBUTES_SEQ)==result_of::size<Seq>::value));   \
+        BOOST_FUSION_STATIC_ASSERT((BOOST_PP_SEQ_SIZE(ATTRIBUTES_SEQ)==         \
+            boost::fusion::result_of::size<Seq>::value));                       \
                                                                                 \
         typedef typename                                                        \
             boost::fusion::result_of::begin<                                    \
@@ -133,7 +133,7 @@
     {                                                                           \
         BOOST_FUSION_STATIC_ASSERT((                                            \
             BOOST_PP_SEQ_SIZE(BOOST_PP_TUPLE_ELEM(3, 1, DATA))==                \
-                result_of::size<SeqRef>::value));\
+                boost::fusion::result_of::size<SeqRef>::value));\
     }
 
 #define BOOST_FUSION_DEFINE_STRUCT_SEQ_CTOR_DISABLER(                           \
@@ -194,8 +194,8 @@
             ),                                                                  \
             ATTRIBUTES_SEQ)                                                     \
     {                                                                           \
-        BOOST_FUSION_STATIC_ASSERT((                                            \
-            BOOST_PP_SEQ_SIZE(ATTRIBUTES_SEQ)==result_of::size<SeqRef>::value));\
+        BOOST_FUSION_STATIC_ASSERT((BOOST_PP_SEQ_SIZE(ATTRIBUTES_SEQ)==         \
+            boost::fusion::result_of::size<Seq>::value));                       \
     }                                                                           \
                                                                                 \
     BOOST_FUSION_ALL_CTOR_COMBINATIONS(                                         \

@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
@@ -19,6 +19,7 @@
 #include <boost/fusion/adapted/mpl.hpp>
 #include <boost/fusion/support/pair.hpp>
 #include <boost/fusion/mpl.hpp>
+#include <boost/mpl/transform.hpp>
 #include <boost/mpl/front.hpp>
 #include <boost/mpl/back.hpp>
 #include <boost/mpl/int.hpp>
@@ -65,12 +66,15 @@ struct sum
             >
           , int
         >
-    {};
+    {
+        BOOST_MPL_ASSERT((typename fusion::detail::is_lrref<State>::type));
+        BOOST_MPL_ASSERT((typename fusion::detail::is_lrref<T>::type));
+    };
 
 #ifdef BOOST_FUSION_TEST_ITER_FOLD
     template<typename State, typename It>
-    typename result<sum const&(State,It)>::type
-    operator()(State state, It const& it)const
+    typename result<sum const&(State const&,It const&)>::type
+    operator()(State const& state, It const& it)const
     {
         static const int n=State::first_type::value;
         return fusion::make_pair<mpl::int_<n+1> >(
@@ -78,8 +82,8 @@ struct sum
     }
 #else
     template<typename State>
-    typename result<sum const&(State, int)>::type
-    operator()(State state, int e)const
+    typename result<sum const&(State const&, int const&)>::type
+    operator()(State const& state, int const& e)const
     {
         static const int n=State::first_type::value;
         return fusion::make_pair<mpl::int_<n+1> >(state.second+e*n);
@@ -95,6 +99,9 @@ struct meta_sum
     template<typename Self, typename State, typename T>
     struct result<Self(State,T)>
     {
+        BOOST_MPL_ASSERT((typename fusion::detail::is_lrref<State>::type));
+        BOOST_MPL_ASSERT((typename fusion::detail::is_lrref<T>::type));
+
         typedef typename fusion::detail::remove_reference<State>::type state;
         static const int n=mpl::front<state>::type::value;
 
@@ -117,8 +124,8 @@ struct meta_sum
     };
 
     template<typename State, typename T>
-    typename result<meta_sum const&(State,T)>::type
-    operator()(State, T)const;
+    typename result<meta_sum const&(State const&,T const&)>::type
+    operator()(State const&, T const&)const;
 };
 
 struct fold_test_n
@@ -176,7 +183,7 @@ struct fold_test_n
 #else
                 mpl::vector<mpl::int_<1>, mpl::int_<0> >&
 #endif
-            result_type;
+            identity_result_type;
 
             BOOST_MPL_ASSERT((
                 boost::is_same<
@@ -187,7 +194,7 @@ struct fold_test_n
                     >::type
                   , typename mpl::if_c<
                         !n
-                      , result_type
+                      , identity_result_type
                       , mpl::vector<mpl::int_<n+1>, mpl::int_<squares_sum> >
                     >::type
                 >));

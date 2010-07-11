@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2009 Christopher Schmidt
 
@@ -10,13 +10,12 @@
 #include <boost/fusion/support/tag_of_fwd.hpp>
 
 #include <boost/mpl/tag.hpp>
-#ifdef BOOST_FUSION_ADAPTED_STD_TUPLE
-#   ifdef BOOST_NO_0X_HDR_TUPLE
-#       include <boost/preprocessor/enum.hpp>
+#if defined(BOOST_FUSION_ADAPTED_STD_TUPLE) &&\
+    (defined(BOOST_NO_0X_HDR_TUPLE) || defined(BOOST_NO_VARIADIC_TEMPLATES))
+#   include <boost/preprocessor/enum_params.hpp>
 
-#       ifndef BOOST_FUSION_STD_TR1_TUPLE_UPPER_LIMIT
-#           define BOOST_FUSION_STD_TR1_TUPLE_UPPER_LIMIT 10
-#       endif
+#   ifndef BOOST_FUSION_STD_TUPLE_UPPER_LIMIT
+#       define BOOST_FUSION_STD_TUPLE_UPPER_LIMIT 10
 #   endif
 #endif
 
@@ -34,7 +33,7 @@ namespace boost
         namespace traits
         {
 #ifdef BOOST_FUSION_ADAPTED_STD_TUPLE
-#   ifndef BOOST_NO_0X_HDR_TUPLE
+#   ifndef BOOST_FUSION_STD_TUPLE_UPPER_LIMIT
 #       define BOOST_FUSION_TUPLE_TAG_OF_SPECIALIZATION(MODIFIER,_)\
             template<typename... Types>\
             struct tag_of<std::tuple<Types...> MODIFIER>\
@@ -43,12 +42,12 @@ namespace boost
             };
 #   else
 #       define BOOST_FUSION_TUPLE_TAG_OF_SPECIALIZATION(MODIFIER,_)\
-            template<\
-                BOOST_PP_ENUM(BOOST_FUSION_STD_TR1_TUPLE_UPPER_LIMIT,typename T)\
+            template<BOOST_PP_ENUM_PARAMS(\
+                BOOST_FUSION_STD_TUPLE_UPPER_LIMIT,typename T)\
             >\
             struct tag_of<\
                 std::tr1::tuple<\
-                    BOOST_PP_ENUM(BOOST_FUSION_STD_TR1_TUPLE_UPPER_LIMIT,T)\
+                    BOOST_PP_ENUM_PARAMS(BOOST_FUSION_STD_TUPLE_UPPER_LIMIT,T)\
                 > MODIFIER\
             >\
             {\
@@ -109,7 +108,7 @@ namespace boost
 #endif
 
         BOOST_FUSION_ALL_CV_REF_NON_REF_COMBINATIONS(
-                BOOST_FUSION_TUPLE_TAG_OF_SPECIALIZATION,_)
+            BOOST_FUSION_TUPLE_TAG_OF_SPECIALIZATION, _)
 
 #undef BOOST_FUSION_TUPLE_TAG_OF_SPECIALIZATION
         }
@@ -121,7 +120,7 @@ namespace boost
         struct sequence_tag;
 
 #ifdef BOOST_FUSION_ADAPTED_STD_TUPLE
-#   ifndef BOOST_NO_0X_HDR_TUPLE
+#   ifndef BOOST_FUSION_STD_TUPLE_UPPER_LIMIT
         template<typename... Types>
         struct sequence_tag<std::tuple<Types...> >
         {
@@ -135,11 +134,11 @@ namespace boost
         };
 #   else
         template<
-            BOOST_PP_ENUM(BOOST_FUSION_STD_TR1_TUPLE_UPPER_LIMIT,typename T)
+            BOOST_PP_ENUM_PARAMS(BOOST_FUSION_STD_TUPLE_UPPER_LIMIT,typename T)
         >
         struct sequence_tag<
             std::tr1::tuple<
-                BOOST_PP_ENUM(BOOST_FUSION_STD_TR1_TUPLE_UPPER_LIMIT,T)
+                BOOST_PP_ENUM_PARAMS(BOOST_FUSION_STD_TUPLE_UPPER_LIMIT,T)
             >
         >
         {
@@ -147,11 +146,11 @@ namespace boost
         };
 
         template<
-            BOOST_PP_ENUM(BOOST_FUSION_STD_TR1_TUPLE_UPPER_LIMIT,typename T)
+            BOOST_PP_ENUM_PARAMS(BOOST_FUSION_STD_TUPLE_UPPER_LIMIT,typename T)
         >
         struct sequence_tag<
             std::tr1::tuple<
-                BOOST_PP_ENUM(BOOST_FUSION_STD_TR1_TUPLE_UPPER_LIMIT,T)
+                BOOST_PP_ENUM_PARAMS(BOOST_FUSION_STD_TUPLE_UPPER_LIMIT,T)
             > const
         >
         {

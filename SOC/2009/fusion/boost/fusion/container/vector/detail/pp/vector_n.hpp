@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2009-2010 Christopher Schmidt
 
@@ -142,7 +142,7 @@ namespace boost { namespace fusion
 #   else
 #       define BOOST_FUSION_VECTOR_CTOR(MODIFIER,_)\
         BOOST_PP_CAT(vector, BOOST_FUSION_N)(\
-            BOOST_PP_CAT(vector, BOOST_FUSION_N) MODIFIER vec)\
+            BOOST_PP_CAT(vector, BOOST_FUSION_N) MODIFIER)\
         {}
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_VECTOR_CTOR,_)
@@ -220,7 +220,7 @@ namespace boost { namespace fusion
         }
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(
-            BOOST_FUSION_VECTOR_SEQ_ASSIGN_CTOR,_);
+            BOOST_FUSION_VECTOR_SEQ_ASSIGN_CTOR,_)
 
 #       undef BOOST_FUSION_VECTOR_SEQ_ASSIGN_CTOR
 #       undef BOOST_FUSION_MEMBER_INIT
@@ -228,15 +228,15 @@ namespace boost { namespace fusion
 #       define BOOST_FUSION_VECTOR_ASSIGN_CTOR(MODIFIER,_)\
         template<typename SeqRef>\
         BOOST_PP_CAT(vector,BOOST_FUSION_N)(\
-            detail::sequence_assign_type<SeqRef> MODIFIER seq_assign)\
+            detail::sequence_assign_type<SeqRef> MODIFIER)\
         {\
             BOOST_FUSION_MPL_ASSERT((result_of::empty<SeqRef>));\
         }
 
-        BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_VECTOR_ASSIGN_CTOR,_);
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_VECTOR_ASSIGN_CTOR,_)
 
         template<typename Seq>
-        BOOST_PP_CAT(vector,BOOST_FUSION_N)(Seq const& seq)
+        BOOST_PP_CAT(vector,BOOST_FUSION_N)(Seq const&)
         {
             BOOST_FUSION_MPL_ASSERT((result_of::empty<Seq const&>));
         }
@@ -246,7 +246,11 @@ namespace boost { namespace fusion
 
         template<typename Seq>
         BOOST_PP_CAT(vector, BOOST_FUSION_N)&
-        operator=(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
+        operator=(BOOST_FUSION_R_ELSE_CLREF(Seq)
+#   if BOOST_FUSION_N
+                        seq
+#   endif
+                        )
         {
             BOOST_FUSION_MPL_ASSERT((
                 mpl::equal_to<size,result_of::size<Seq> >));
@@ -255,7 +259,7 @@ namespace boost { namespace fusion
             typedef typename
                 result_of::begin<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type
             It0;
-            It0 it0 = fusion::begin(seq);
+            It0 it0 = fusion::begin(BOOST_FUSION_FORWARD(Seq,seq));
 
             m0=fusion::deref(it0);
 

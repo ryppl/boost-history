@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2009 Christopher Schmidt
 
@@ -37,7 +37,7 @@ namespace boost { namespace fusion { namespace detail
         template<typename T1, typename T2>
         static BOOST_FUSION_CONSTEXPR
         bool
-        call(BOOST_FUSION_R_ELSE_CLREF(T1) x, BOOST_FUSION_R_ELSE_CLREF(T2) y)
+        call(BOOST_FUSION_R_ELSE_CLREF(T1), BOOST_FUSION_R_ELSE_CLREF(T2))
         {
             return false;
         }
@@ -76,6 +76,10 @@ namespace boost { namespace fusion { namespace detail
         }
 
         x_type x;
+
+    private:
+        count_helper&
+        operator=(count_helper const&);
     };
 }}}
 

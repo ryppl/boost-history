@@ -1,6 +1,6 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2009 Hartmut Kaiser
-    Copyright (c) 2009 Christopher Schmidt
+    Copyright (c) 2009-2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -27,38 +27,28 @@ namespace boost { namespace fusion
         typedef nview_iterator_tag fusion_tag;
         typedef random_access_traversal_tag category;
 
-        template<typename OtherIt>
-        nview_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
-          : seq(BOOST_FUSION_FORWARD(OtherIt,it).seq)
-        {
-            BOOST_FUSION_TAG_CHECK(OtherIt,nview_iterator_tag);
-            BOOST_FUSION_MPL_ASSERT((
-                is_same<
-                    Pos
-                  , detail::remove_reference<OtherIt>::type::pos_type
-                >));
-        }
-
         nview_iterator(SeqRef seq,int)
-          : seq(seq)
+          : seq(&seq)
         {}
 
-        template<typename OtherIt>
-        nview_iterator&
-        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
+        template<typename OtherSeqRef>
+        nview_iterator(nview_iterator<OtherSeqRef, Pos> const& other_it)
+          : seq(other_it.seq)
         {
-            BOOST_FUSION_TAG_CHECK(OtherIt,nview_iterator_tag);
-            BOOST_FUSION_MPL_ASSERT((
-                is_same<
-                    Pos
-                  , detail::remove_reference<OtherIt>::type::pos_type
-                >));
+            BOOST_FUSION_MPL_ASSERT((is_convertible<OtherSeqRef, SeqRef>));
+        }
 
-            seq=BOOST_FUSION_FORWARD(OtherIt,it).seq;
+        template<typename OtherSeqRef>
+        nview_iterator&
+        operator=(nview_iterator<OtherSeqRef, Pos> const& other_it)
+        {
+            BOOST_FUSION_MPL_ASSERT((is_convertible<OtherSeqRef, SeqRef>));
+
+            seq=other_it.seq;
             return *this;
         }
 
-        SeqRef seq;
+        typename detail::remove_reference<SeqRef>::type* seq;
     };
 
 }}

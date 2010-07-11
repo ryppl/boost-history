@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2001-2009 Joel de Guzman
     Copyright (c) 2005-2006 Dan Marsden
     Copyright (c) 2010 Christopher Schmidt
@@ -57,7 +57,14 @@
             return *this;                                                       \
         }                                                                       \
                                                                                 \
-        operator lvalue()                                                       \
+        class_member_proxy&                                                     \
+        operator=(class_member_proxy const& val)                                \
+        {                                                                       \
+            BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 3, ATTRIBUTE);            \
+            return *this;                                                       \
+        }                                                                       \
+                                                                                \
+        operator lvalue() const                                                 \
         {                                                                       \
             return BOOST_PP_TUPLE_ELEM(ATTRIBUTE_TUPEL_SIZE, 2, ATTRIBUTE);     \
         }                                                                       \

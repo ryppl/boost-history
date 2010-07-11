@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2009 Hartmut Kaiser
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
@@ -27,7 +27,7 @@ BOOST_FUSION_ADAPT_STRUCT(
     (int, int_)
     (std::string, string_)
     (double, double_)
-);
+)
 
 namespace fusion = boost::fusion;
 

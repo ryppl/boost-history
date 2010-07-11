@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2001 Doug Gregor
     Copyright (c) 1999-2003 Jaakko Jarvi
     Copyright (c) 2001-2006 Joel de Guzman
@@ -19,7 +19,7 @@ namespace boost { namespace fusion
         {
             template<typename T>
             swallow_assign const&
-            operator=(const T&) const
+            operator=(T const&) const
             {
                 return *this;
             }

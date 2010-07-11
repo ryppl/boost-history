@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2006-2007 Tobias Schwinger
     Copyright (c) 2009-2010 Christopher Schmidt
 
@@ -11,8 +11,10 @@
 
 #include <boost/fusion/functional/invocation/invoke_procedure.hpp>
 
-#define BOOST_FUSION_ADAPTER_POSTFIX _procedure
+#define BOOST_FUSION_INVOCATION_METHOD invoke_procedure
+#define BOOST_FUSION_ADAPTER_NAME fused_procedure
 #include <boost/fusion/functional/adapter/detail/fused_impl.hpp>
 #undef BOOST_FUSION_ADAPTER_NAME
+#undef BOOST_FUSION_INVOCATION_METHOD
 
 #endif

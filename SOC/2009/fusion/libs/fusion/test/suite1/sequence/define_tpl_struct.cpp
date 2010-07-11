@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2010 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -17,6 +17,12 @@
 #include <iostream>
 #include <string>
 
+#ifdef BOOST_MSVC
+#   pragma warning(push)
+    //'class' : multiple copy constructors specified
+#   pragma warning(disable:4521)
+#endif
+
 BOOST_FUSION_DEFINE_TPL_STRUCT(
     (X)(Y),
     (ns),
@@ -24,6 +30,10 @@ BOOST_FUSION_DEFINE_TPL_STRUCT(
     (X, x)
     (Y, y)
 )
+
+#ifdef BOOST_MSVC
+#   pragma warning(pop)
+#endif
 
 BOOST_FUSION_DEFINE_TPL_STRUCT((M), BOOST_PP_EMPTY(), s, (M, m))
 

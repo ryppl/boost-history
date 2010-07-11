@@ -1,4 +1,4 @@
-/*=============================================================================
+/*==============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2009-2010 Christopher Schmidt
 
@@ -43,7 +43,7 @@ namespace boost { namespace fusion
 
     template<typename Begin, typename End>
     inline typename result_of::distance<Begin const&, End const&>::type
-    distance(Begin const& a, End const& b)
+    distance(Begin const&, End const&)
     {
         return typename result_of::distance<Begin const&, End const&>::type();
     }
