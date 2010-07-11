@@ -46,8 +46,8 @@ struct clear_least_bit_set : integral_c<typename IC::value_type, (IC::value & (I
 /*
  *	Requires T to be an integral type
  */
-template <typename T, T value>
-struct static_clear_least_bit_set : mpl::clear_least_bit_set< mpl::integral_c<T, value> >
+template <typename T, T Value>
+struct static_clear_least_bit_set : mpl::clear_least_bit_set< mpl::integral_c<T, Value> >
 {};
 
 }

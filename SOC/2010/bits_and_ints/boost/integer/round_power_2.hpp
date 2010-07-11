@@ -12,21 +12,20 @@
 #define BOOST_POWER_2_ROUND
 
 /*
- *	The functions declared in this file an integra rounds up or down to
- *		the next power of 2.
+ *	The functions declared in this file rounds up or down an integral to the next power of 2.
  *
- *	The functions `ceil_to_power_2()' rounds up and the functions
- *		`floor_to_power_2()' rounds down.
+ *	The functions `ceil_pow2()' rounds up and the functions
+ *		`floor_pow2()' rounds down.
  *
  *	Usage:
  *	
- *	T x = ceil_to_power_2(y);  // rounds down
- *  T z = floor_to_power_2(w); // rounds up
+ *	T x = ceil_pow2(y);  // rounds down
+ *  T z = floor_pow2(w); // rounds up
  */
 
 namespace boost {
 	
-uint8_t ceil_to_power_2(uint8_t value)
+uint8_t ceil_pow2(uint8_t value)
 {
 	value = value - 1;
 	value = value | (value >> 1);
@@ -36,7 +35,7 @@ uint8_t ceil_to_power_2(uint8_t value)
 	return value + 1;
 }
 
-uint16_t ceil_to_power_2(uint16_t value)
+uint16_t ceil_pow2(uint16_t value)
 {
 	value = value - 1;
 	value = value | (value >> 1);
@@ -47,7 +46,7 @@ uint16_t ceil_to_power_2(uint16_t value)
 	return value + 1;
 }
 	
-uint32_t ceil_to_power_2(uint32_t value)
+uint32_t ceil_pow2(uint32_t value)
 {
 	value = value - 1;
 	value = value | (value >> 1);
@@ -60,7 +59,7 @@ uint32_t ceil_to_power_2(uint32_t value)
 }
 
 #ifndef BOOST_HAS_INT64_T
-uint64_t ceil_to_power_2(uint64_t value)
+uint64_t ceil_pow2(uint64_t value)
 {
 	value = value - 1;
 	value = value | (value >> 1);
@@ -74,7 +73,7 @@ uint64_t ceil_to_power_2(uint64_t value)
 }
 #endif
 	
-uint8_t floor_to_power_2(uint8_t value)
+uint8_t floor_pow2(uint8_t value)
 {
 	value = value | (value >> 1);
 	value = value | (value >> 2);
@@ -83,7 +82,7 @@ uint8_t floor_to_power_2(uint8_t value)
 	return value - (value >> 1);
 }
 	
-uint16_t floor_to_power_2(uint16_t value)
+uint16_t floor_pow2(uint16_t value)
 {
 	value = value | (value >> 1);
 	value = value | (value >> 2);
@@ -93,7 +92,7 @@ uint16_t floor_to_power_2(uint16_t value)
 	return value - (value >> 1);
 }
 	
-uint32_t floor_to_power_2(uint32_t value)
+uint32_t floor_pow2(uint32_t value)
 {
 	value = value | (value >> 1);
 	value = value | (value >> 2);
@@ -105,7 +104,7 @@ uint32_t floor_to_power_2(uint32_t value)
 }
 
 #ifndef BOOST_HAS_INT64_T
-uint64_t floor_to_power_2(uint64_t value)
+uint64_t floor_pow2(uint64_t value)
 {
 	value = value | (value >> 1);
 	value = value | (value >> 2);

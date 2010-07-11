@@ -22,8 +22,8 @@ namespace boost {
 
 /*
  *	This header defines mpl::abs<> and static_abs<> metafunctions.
- *	The mpl::abs<> version returns the absolute value of an mpl::integral_c<>
- *		and the static_abs version returns the absolute value from an integral value.
+ *	The mpl::abs<> version returns the absolute value of a mpl::integral_c<>
+ *		and the static_abs<> version returns the absolute value from an integral value.
  */
 
 namespace mpl {
@@ -36,8 +36,8 @@ struct abs : mpl::integral_c<typename make_unsigned<typename IC::value_type>::ty
 
 }
 
-template <typename T, T data, class Enable = typename enable_if< is_integral<T> >::type >
-struct static_abs : mpl::abs< mpl::integral_c<T, data> >
+template <typename T, T Value, class Enable = typename enable_if< is_integral<T> >::type >
+struct static_abs : mpl::abs< mpl::integral_c<T, Value> >
 {};
 
 } // boost

@@ -21,7 +21,7 @@ namespace boost {
 
 /*
  *	This header defines mpl::lcm<> metafunction wich calculates the 
- *		least common multiplier from two given mpl::integral_c<> ICT1 and ICT2.
+ *		least common multiple from two given mpl::integral_c<> ICT1 and ICT2.
  */
 	
 namespace mpl {

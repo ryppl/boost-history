@@ -30,6 +30,10 @@
  *	Wich is -6 in 32-bit 2-complement.
  */
 
+#ifdef BOOST_MSVC
+#pragma warning ( disable : 4307 )
+#endif
+
 namespace boost {
 	
 namespace mpl {

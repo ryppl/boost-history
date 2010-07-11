@@ -39,6 +39,17 @@
       Least Bit Set</a></span></dt>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.count_trailing_zeros">Count
       Trailing Zeros</a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.safe_average">Safe Average</a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.round_to_power_of_2_functions">Round
+      to Power of 2 functions</a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.transfer_of_sign__isign__functions_">Transfer
+      of Sign (isign) functions </a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.absolute_value_in_compile_time_">Absolute
+      Value in Compile-Time </a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.mpl_least_common_multiple_">MPL
+      Least Common Multiple </a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.mpl_greatest_common_divisor_">MPL
+      Greatest Common Divisor </a></span></dt>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils"> Binary Utilities</a></span></dt>
 </dl></div>
 <div class="section" title="Overview">
@@ -633,6 +644,8 @@
 <div class="toc"><dl>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.sign.non_member_function__sign_">Non-Member
         Function <code class="computeroutput"><span class="identifier">sign</span></code></a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.sign.static_functions__mpl__sign__and__static_sign_">Static
+        Functions <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">sign</span></code> and <code class="computeroutput"><span class="identifier">static_sign</span></code></a></span></dt>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.sign.examples">Examples</a></span></dt>
 </dl></div>
 <p>
@@ -744,6 +757,84 @@
 <span class="bold"><strong>Remarks: </strong></span><code class="computeroutput"><span class="identifier">T</span></code>
             must be an integral type. If this constraint is not met, this function
             do not participate in overload resolution.
+          </li></ul></div>
+</div>
+<div class="section" title="Static Functions mpl::sign and static_sign">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_integer.bits_and_ints.sign.static_functions__mpl__sign__and__static_sign_"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.sign.static_functions__mpl__sign__and__static_sign_" title="Static Functions mpl::sign and static_sign">Static
+        Functions <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">sign</span></code> and <code class="computeroutput"><span class="identifier">static_sign</span></code></a>
+</h4></div></div></div>
+<p>
+          The compile-time versions can be included via <a href="../../../../../boost/integer/static_sign.hpp" target="_top">&lt;boost/integer/static_sign.hpp&gt;</a>.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">IC</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">sign</span> <span class="special">{</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> <span class="special">};</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">template</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">Value</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">static_same_sign</span> <span class="special">{</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> <span class="special">};</span>
+</pre>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Parameter
+                </p>
+                </th>
+<th>
+                <p>
+                  Description
+                </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">IC</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  A <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">integral_c</span><span class="special">&lt;&gt;</span></code>
+                  type.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">T</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  The value type. Must be an integral type.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">Value</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  The value to be checked.
+                </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+<span class="bold"><strong>Requires: </strong></span><code class="computeroutput"><span class="identifier">T</span></code>
+            to be an integral type and <code class="computeroutput"><span class="identifier">IC</span></code>
+            to be an <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">integral_c</span><span class="special">&lt;&gt;</span></code>
+            type.
           </li></ul></div>
 </div>
 <div class="section" title="Examples">
@@ -876,11 +967,25 @@
 <a name="boost_integer.bits_and_ints.population_count__count_bits_set_.synopsis"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.population_count__count_bits_set_.synopsis" title="Synopsis">Synopsis</a>
 </h4></div></div></div>
 <pre class="programlisting"><span class="keyword">int</span> <span class="identifier">pop_count</span><span class="special">(</span><span class="identifier">uintmax_t</span> <span class="identifier">value</span><span class="special">);</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="identifier">uintmax_t</span> <span class="identifier">Value</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">static_pop_count</span> <span class="special">{</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> <span class="special">};</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">IC</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">pop_count</span> <span class="special">{</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> <span class="special">};</span>
 </pre>
 </div>
-<p>
-        <span class="bold"><strong>Returns: </strong></span> The number of bits set in <code class="computeroutput"><span class="identifier">value</span></code>.
-      </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+<span class="bold"><strong>Requires: </strong></span><code class="computeroutput"><span class="identifier">IC</span></code>
+          must be an <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">integral_c</span><span class="special">&lt;&gt;</span></code>
+          type.
+        </li>
+<li class="listitem">
+<span class="bold"><strong>Returns: </strong></span> The number of bits set in <code class="computeroutput"><span class="identifier">value</span></code>. For the compile-time versions,
+          the result will be on member <code class="computeroutput"><span class="identifier">value</span></code>.
+        </li>
+</ul></div>
 </div>
 <div class="section" title="Clear Least Bit Set">
 <div class="titlepage"><div><div><h3 class="title">
@@ -895,13 +1000,22 @@
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_integer.bits_and_ints.clear_least_bit_set.synopsis"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.clear_least_bit_set.synopsis" title="Synopsis">Synopsis</a>
 </h4></div></div></div>
-<pre class="programlisting"><span class="identifier">T</span> <span class="identifier">clear_least_bit_set</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">value</span><span class="special">);</span>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="identifier">T</span> <span class="identifier">clear_least_bit_set</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">value</span><span class="special">);</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">IC</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">clear_least_bit_set</span> <span class="special">{</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">typename</span> <span class="identifier">IC</span><span class="special">::</span><span class="identifier">value_type</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> <span class="special">};</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">Value</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">static_clear_least_bit_set</span> <span class="special">{</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">T</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> <span class="special">};</span>
 </pre>
 </div>
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
-<span class="bold"><strong>Remarks: </strong></span><code class="computeroutput"><span class="identifier">T</span></code>
-          must be an integral type.
+<span class="bold"><strong>Requires: </strong></span><code class="computeroutput"><span class="identifier">T</span></code>
+          must be an integral type. <code class="computeroutput"><span class="identifier">IC</span></code>
+          must be an <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">integral_c</span><span class="special">&lt;&gt;</span></code>
+          type.
         </li>
 <li class="listitem">
 <span class="bold"><strong>Returns: </strong></span><code class="computeroutput"><span class="identifier">value</span></code>
@@ -916,21 +1030,293 @@
 </h3></div></div></div>
 <div class="toc"><dl><dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.count_trailing_zeros.synopsis">Synopsis</a></span></dt></dl></div>
 <p>
-        The <code class="computeroutput"><span class="identifier">count_trailing_zeros</span><span class="special">()</span></code> function counts the number of consecutive
-        0's from the least significant bit of an integral value. This function is
-        defined on <a href="../../../../../boost/integer/count_trailing_zeros.hpp" target="_top">&lt;boost/integer/count_trailing_zeros.hpp&gt;</a>
+        The <code class="computeroutput"><span class="identifier">count_trailing_zeros</span></code>
+        function and metafunctions counts the number of consecutive 0's from the
+        least significant bit of an integral value. The runtime function is defined
+        on <a href="../../../../../boost/integer/count_trailing_zeros.hpp" target="_top">&lt;boost/integer/count_trailing_zeros.hpp&gt;</a>
+        and the compile-time metafunctions are defined on <a href="../../../../../boost/integer/static_count_trailing_zeros.hpp" target="_top">&lt;boost/integer/static_count_trailing_zeros.hpp&gt;</a>
       </p>
 <div class="section" title="Synopsis">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_integer.bits_and_ints.count_trailing_zeros.synopsis"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.count_trailing_zeros.synopsis" title="Synopsis">Synopsis</a>
 </h4></div></div></div>
 <pre class="programlisting"><span class="keyword">int</span> <span class="identifier">count_trailing_zeros</span><span class="special">(</span><span class="identifier">uintmax_t</span> <span class="identifier">value</span><span class="special">);</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">IC</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">count_trailing_zeros</span> <span class="special">{</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> <span class="special">};</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="identifier">uintmax_t</span> <span class="identifier">Value</span><span class="special">&gt;</span> 
+<span class="keyword">struct</span> <span class="identifier">static_count_trailing_zeros</span> <span class="special">{</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> <span class="special">};</span>
 </pre>
 </div>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
-<span class="bold"><strong>Returns: </strong></span> The number of consecutive zeros
-          from the least significant bit.
-        </li></ul></div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+<span class="bold"><strong>Requires: </strong></span> For the <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">count_trailing_zeros</span><span class="special">&lt;&gt;</span></code> version, <code class="computeroutput"><span class="identifier">IC</span></code>
+          must be an mpl::integral_c&lt;&gt; type.
+        </li>
+<li class="listitem">
+<span class="bold"><strong>Returns: </strong></span> For the runtime version, the
+          number of consecutive zeros from the least significant bit. In the compile-time
+          versions, the number of consecutive zeros in the <code class="computeroutput"><span class="identifier">value</span></code>
+          static member.
+        </li>
+</ul></div>
+</div>
+<div class="section" title="Safe Average">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_integer.bits_and_ints.safe_average"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.safe_average" title="Safe Average">Safe Average</a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.safe_average.synopsis">Synopsis</a></span></dt></dl></div>
+<p>
+        Given two integer values x and y, the (floor of the) average normally would
+        be computed by <code class="computeroutput"><span class="special">(</span><span class="identifier">x</span><span class="special">+</span><span class="identifier">y</span><span class="special">)/</span><span class="number">2</span></code> unfortunately, this can yield incorrect results
+        due to overflow. Safe average ensures that no overflow will happen even if
+        <code class="computeroutput"><span class="special">(</span><span class="identifier">x</span><span class="special">+</span><span class="identifier">y</span><span class="special">)</span></code>
+        overflows the range of T. The runtime version is defined on <a href="../../../../../boost/integer/safe_avg.hpp" target="_top">&lt;boost/integer/safe_avg.hpp&gt;</a>
+        and the compile-time metafunctions are defined on <a href="../../../../../boost/integer/static_safe_avg.hpp" target="_top">&lt;boost/integer/static_safe_avg.hpp&gt;</a>
+      </p>
+<div class="section" title="Synopsis">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_integer.bits_and_ints.safe_average.synopsis"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.safe_average.synopsis" title="Synopsis">Synopsis</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="identifier">T</span> <span class="identifier">safe_avg</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">y</span><span class="special">);</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">ICT1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">ICT2</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">safe_avg</span> <span class="special">{</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> <span class="special">};</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">Value1</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">Value2</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">static_safe_avg</span> <span class="special">{</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> <span class="special">};</span>
+</pre>
+</div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+<span class="bold"><strong>Requires: </strong></span> For the <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">safe_avg</span><span class="special">&lt;&gt;</span></code> version, both <code class="computeroutput"><span class="identifier">ICT1</span></code>
+          and <code class="computeroutput"><span class="identifier">ICT2</span></code> must be mpl::integral_c&lt;&gt;
+          types. For the <code class="computeroutput"><span class="identifier">static_safe_avg</span><span class="special">&lt;&gt;</span></code> and the runtime version, <code class="computeroutput"><span class="identifier">T</span></code> must be an integral type.
+        </li>
+<li class="listitem">
+<span class="bold"><strong>Returns: </strong></span> The average of the sum between
+          two integrals rounded down. Overflow is ensured to not happen.
+        </li>
+</ul></div>
+</div>
+<div class="section" title="Round to Power of 2 functions">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_integer.bits_and_ints.round_to_power_of_2_functions"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.round_to_power_of_2_functions" title="Round to Power of 2 functions">Round
+      to Power of 2 functions</a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.round_to_power_of_2_functions.synopsis">Synopsis</a></span></dt></dl></div>
+<p>
+        This function rounds up and down integral values to the next power of 2.
+        The <code class="computeroutput"><span class="identifier">ceil_pow2</span></code> function rounds
+        up and <code class="computeroutput"><span class="identifier">floor_pow2</span></code> function
+        rounds down. These functions are defined on <a href="../../../../../boost/integer/round_power_2.hpp" target="_top">&lt;boost/integer/round_power_2.hpp&gt;</a>
+      </p>
+<div class="section" title="Synopsis">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_integer.bits_and_ints.round_to_power_of_2_functions.synopsis"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.round_to_power_of_2_functions.synopsis" title="Synopsis">Synopsis</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="identifier">T</span> <span class="identifier">ceil_pow2</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">value</span><span class="special">);</span>
+<span class="identifier">T</span> <span class="identifier">floor_pow2</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">value</span><span class="special">);</span>
+</pre>
+</div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+<span class="bold"><strong>Requires: </strong></span><code class="computeroutput"><span class="identifier">T</span></code>
+          must be convertible to <code class="computeroutput"><span class="identifier">uint8_t</span></code>
+          or <code class="computeroutput"><span class="identifier">uint16_t</span></code> or <code class="computeroutput"><span class="identifier">uint32_t</span></code> or <code class="computeroutput"><span class="identifier">uint64_t</span></code>.
+        </li>
+<li class="listitem">
+<span class="bold"><strong>Returns: </strong></span><div class="itemizedlist"><ul class="itemizedlist" type="circle">
+<li class="listitem">
+<code class="computeroutput"><span class="identifier">ceil_pow2</span><span class="special">()</span></code>
+              returns <code class="computeroutput"><span class="identifier">value</span></code> rounded
+              <span class="bold"><strong>up</strong></span> to the lesser power of two greater
+              than or equal to `value.
+            </li>
+<li class="listitem">
+<code class="computeroutput"><span class="identifier">floor_pow2</span><span class="special">()</span></code>
+              returns <code class="computeroutput"><span class="identifier">value</span></code> rounded
+              <span class="bold"><strong>down</strong></span> to the greater power of two lesser
+              or equal <code class="computeroutput"><span class="identifier">value</span></code>.
+            </li>
+</ul></div>
+</li>
+</ul></div>
+</div>
+<div class="section" title="Transfer of Sign (isign) functions">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_integer.bits_and_ints.transfer_of_sign__isign__functions_"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.transfer_of_sign__isign__functions_" title="Transfer of Sign (isign) functions">Transfer
+      of Sign (isign) functions </a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.transfer_of_sign__isign__functions_.synopsis">Synopsis</a></span></dt></dl></div>
+<p>
+        isign or transfer of sign function is defined by: 
+</p>
+<pre class="programlisting"><span class="identifier">isign</span><span class="special">(</span><span class="identifier">x</span><span class="special">,</span> <span class="identifier">y</span><span class="special">)</span> <span class="special">=</span>
+	<span class="identifier">abs</span><span class="special">(</span><span class="identifier">x</span><span class="special">),</span> <span class="keyword">if</span> <span class="identifier">y</span> <span class="identifier">is</span> <span class="identifier">greater</span> <span class="identifier">than</span> <span class="keyword">or</span> <span class="identifier">equal</span> <span class="number">0</span><span class="special">,</span>
+<span class="special">-</span><span class="identifier">abs</span><span class="special">(</span><span class="identifier">x</span><span class="special">),</span> <span class="keyword">if</span> <span class="identifier">y</span> <span class="identifier">is</span> <span class="identifier">less</span> <span class="identifier">than</span> <span class="number">0</span>
+</pre>
+<p>
+      </p>
+<p>
+        The runtime functions are defined on <a href="../../../../../boost/integer/isign.hpp" target="_top">&lt;boost/integer/isign.hpp&gt;</a>
+        and the static metafunctions are defined on <a href="../../../../../boost/integer/static_isign.hpp" target="_top">&lt;boost/integer/static_isign.hpp&gt;</a>
+      </p>
+<div class="section" title="Synopsis">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_integer.bits_and_ints.transfer_of_sign__isign__functions_.synopsis"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.transfer_of_sign__isign__functions_.synopsis" title="Synopsis">Synopsis</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="identifier">T</span> <span class="identifier">isign</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">y</span><span class="special">);</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">Value1</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">Value2</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">static_isign</span> <span class="special">{</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">T</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> <span class="special">};</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">IC1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">IC2</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">isign</span> <span class="special">{</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">typename</span> <span class="identifier">IC1</span><span class="special">::</span><span class="identifier">value_type</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> <span class="special">};</span>
+</pre>
+</div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+<span class="bold"><strong>Requires: </strong></span><code class="computeroutput"><span class="identifier">T</span></code>
+          must be an integral type. Both <code class="computeroutput"><span class="identifier">IC1</span></code>
+          and <code class="computeroutput"><span class="identifier">IC2</span></code> must be <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">integral_c</span><span class="special">&lt;&gt;</span></code>
+          types.
+        </li>
+<li class="listitem">
+<span class="bold"><strong>Returns: </strong></span><div class="itemizedlist"><ul class="itemizedlist" type="circle">
+<li class="listitem">
+              Runtime version: returns <code class="computeroutput"><span class="identifier">abs</span><span class="special">(</span><span class="identifier">x</span><span class="special">)</span></code> if <code class="computeroutput"><span class="identifier">y</span></code>
+              is greater than or equal 0 and <code class="computeroutput"><span class="special">-</span><span class="identifier">abs</span><span class="special">(</span><span class="identifier">x</span><span class="special">)</span></code>
+              if <code class="computeroutput"><span class="identifier">y</span></code> is negative.
+            </li>
+<li class="listitem">
+              MPL version: the member <code class="computeroutput"><span class="identifier">value</span></code>
+              will be <code class="computeroutput"><span class="identifier">abs</span><span class="special">(</span><span class="identifier">IC1</span><span class="special">::</span><span class="identifier">value</span><span class="special">)</span></code>
+              if <code class="computeroutput"><span class="identifier">IC2</span></code> holds an value
+              greater than or equal 0, or <code class="computeroutput"><span class="special">-</span><span class="identifier">abs</span><span class="special">(</span><span class="identifier">IC1</span><span class="special">::</span><span class="identifier">value</span><span class="special">)</span></code>
+              if <code class="computeroutput"><span class="identifier">IC2</span></code> holds a negative
+              value.
+            </li>
+<li class="listitem">
+<code class="computeroutput"><span class="identifier">static_isign</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">Value1</span><span class="special">,</span>
+              <span class="identifier">Value2</span><span class="special">&gt;::</span><span class="identifier">value</span></code> will be <code class="computeroutput"><span class="identifier">abs</span><span class="special">(</span><span class="identifier">Value1</span><span class="special">)</span></code> if Value2 is greater than or equal
+              0, or <code class="computeroutput"><span class="special">-</span><span class="identifier">abs</span><span class="special">(</span><span class="identifier">Value1</span><span class="special">)</span></code> if Value2 is negative.
+            </li>
+</ul></div>
+</li>
+</ul></div>
+</div>
+<div class="section" title="Absolute Value in Compile-Time">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_integer.bits_and_ints.absolute_value_in_compile_time_"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.absolute_value_in_compile_time_" title="Absolute Value in Compile-Time">Absolute
+      Value in Compile-Time </a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.absolute_value_in_compile_time_.synopsis">Synopsis</a></span></dt></dl></div>
+<p>
+        The static metafunctions defined on <a href="../../../../../boost/integer/static_abs.hpp" target="_top">&lt;boost/integer/static_abs.hpp&gt;</a>
+        calculates the absolute value of integral constants.
+      </p>
+<p>
+        <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">abs</span><span class="special">&lt;&gt;</span></code>
+        version returns the absolute value of a <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">integral_c</span><span class="special">&lt;&gt;</span></code> and the <code class="computeroutput"><span class="identifier">static_abs</span><span class="special">&lt;&gt;</span></code> version returns the absolute value
+        from an integral value.
+      </p>
+<div class="section" title="Synopsis">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_integer.bits_and_ints.absolute_value_in_compile_time_.synopsis"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.absolute_value_in_compile_time_.synopsis" title="Synopsis">Synopsis</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">IC</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">abs</span> <span class="special">{</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">typename</span> <span class="identifier">IC</span><span class="special">::</span><span class="identifier">value_type</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> <span class="special">};</span> 
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">Value</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">static_abs</span> <span class="special">{</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">T</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> <span class="special">};</span> 
+</pre>
+</div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+<span class="bold"><strong>Requires: </strong></span><code class="computeroutput"><span class="identifier">T</span></code>
+          must be an integral type. <code class="computeroutput"><span class="identifier">IC</span></code>
+          a <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">integral_c</span><span class="special">&lt;&gt;</span></code>
+          type.
+        </li>
+<li class="listitem">
+<span class="bold"><strong>Results: </strong></span> The member <code class="computeroutput"><span class="identifier">value</span>
+          </code> in <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">abs</span><span class="special">&lt;&gt;</span></code>
+          will be the absolute value of <code class="computeroutput"><span class="identifier">IC</span><span class="special">::</span><span class="identifier">value</span></code>.
+          In <code class="computeroutput"><span class="identifier">static_abs</span><span class="special">&lt;&gt;</span></code>,
+          <code class="computeroutput"><span class="identifier">value</span></code> will be the absolute
+          value of <code class="computeroutput"><span class="identifier">Value</span></code>.
+        </li>
+</ul></div>
+</div>
+<div class="section" title="MPL Least Common Multiple">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_integer.bits_and_ints.mpl_least_common_multiple_"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.mpl_least_common_multiple_" title="MPL Least Common Multiple">MPL
+      Least Common Multiple </a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.mpl_least_common_multiple_.synopsis">Synopsis</a></span></dt></dl></div>
+<p>
+        This header defines mpl::lcm&lt;&gt; metafunction wich calculates the least
+        common multiple from two given <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">integral_c</span><span class="special">&lt;&gt;</span></code>.
+      </p>
+<p>
+        This static metafunction is defined on <a href="../../../../../boost/integer/static_lcm.hpp" target="_top">&lt;boost/integer/static_lcm.hpp&gt;</a>.
+      </p>
+<div class="section" title="Synopsis">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_integer.bits_and_ints.mpl_least_common_multiple_.synopsis"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.mpl_least_common_multiple_.synopsis" title="Synopsis">Synopsis</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">ICT1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">ICT2</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">lcm</span> <span class="special">{</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">uintmax_t</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> <span class="special">};</span> 
+</pre>
+</div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+<span class="bold"><strong>Requires: </strong></span><code class="computeroutput"><span class="identifier">ICT1</span></code>
+          and <code class="computeroutput"><span class="identifier">ICT2</span></code> must be <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">integral_c</span><span class="special">&lt;&gt;</span></code>
+          types.
+        </li>
+<li class="listitem">
+<span class="bold"><strong>Results: </strong></span> The member <code class="computeroutput"><span class="identifier">value</span>
+          </code> will be the least common multiple from <code class="computeroutput"><span class="identifier">IC1</span></code>
+          and <code class="computeroutput"><span class="identifier">IC2</span></code>.
+        </li>
+</ul></div>
+</div>
+<div class="section" title="MPL Greatest Common Divisor">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_integer.bits_and_ints.mpl_greatest_common_divisor_"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.mpl_greatest_common_divisor_" title="MPL Greatest Common Divisor">MPL
+      Greatest Common Divisor </a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.mpl_greatest_common_divisor_.synopsis">Synopsis</a></span></dt></dl></div>
+<p>
+        The header file <a href="../../../../../boost/integer/static_gcd.hpp" target="_top">&lt;boost/integer/static_gcd.hpp&gt;</a>
+        defines <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">gcd</span><span class="special">&lt;&gt;</span></code>
+        metafunction wich calculates the greatest common divisor of two given <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">integral_c</span><span class="special">&lt;&gt;</span></code>.
+      </p>
+<div class="section" title="Synopsis">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_integer.bits_and_ints.mpl_greatest_common_divisor_.synopsis"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.mpl_greatest_common_divisor_.synopsis" title="Synopsis">Synopsis</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">ICT1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">ICT2</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">gcd</span> <span class="special">{</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">uintmax_t</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> <span class="special">};</span> 
+</pre>
+</div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+<span class="bold"><strong>Requires: </strong></span><code class="computeroutput"><span class="identifier">ICT1</span></code>
+          and <code class="computeroutput"><span class="identifier">ICT2</span></code> must be <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">integral_c</span><span class="special">&lt;&gt;</span></code>
+          types.
+        </li>
+<li class="listitem">
+<span class="bold"><strong>Results: </strong></span> The member <code class="computeroutput"><span class="identifier">value</span>
+          </code> will be the greatest commom divisor from <code class="computeroutput"><span class="identifier">IC1</span></code>
+          and <code class="computeroutput"><span class="identifier">IC2</span></code>.
+        </li>
+</ul></div>
 </div>
 <div class="section" title="Binary Utilities">
 <div class="titlepage"><div><div><h3 class="title">
@@ -938,14 +1324,17 @@
 </h3></div></div></div>
 <div class="toc"><dl>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.synopsis">Synopsis</a></span></dt>
-<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__set_bit___">Template
-        Class <code class="computeroutput"><span class="identifier">set_bit</span><span class="special">&lt;&gt;</span></code></a></span></dt>
-<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__clear_bit___">Template
-        Class <code class="computeroutput"><span class="identifier">clear_bit</span><span class="special">&lt;&gt;</span></code></a></span></dt>
-<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__test_bit___">Template
-        Class <code class="computeroutput"><span class="identifier">test_bit</span><span class="special">&lt;&gt;</span></code></a></span></dt>
-<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__flip_bit___">Template
-        Class <code class="computeroutput"><span class="identifier">flip_bit</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__static_set_bit____and__mpl__set_bit_">Template
+        Class <code class="computeroutput"><span class="identifier">static_set_bit</span><span class="special">&lt;&gt;</span></code>
+        and <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">set_bit</span></code></a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__mpl__clear_bit____and__static_clear_bit___">Template
+        Class <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">clear_bit</span><span class="special">&lt;&gt;</span></code>
+        and <code class="computeroutput"><span class="identifier">static_clear_bit</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__mpl__test_bit__and__static_test_bit___">Template
+        Class <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">test_bit</span></code> and <code class="computeroutput"><span class="identifier">static_test_bit</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__mpl__flip_bit____and__static_flip_bit___">Template
+        Class <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">flip_bit</span><span class="special">&lt;&gt;</span></code>
+        and <code class="computeroutput"><span class="identifier">static_flip_bit</span><span class="special">&lt;&gt;</span></code></a></span></dt>
 </dl></div>
 <p>
         The header <a href="../../../../../boost/integer/bin_utils.hpp" target="_top">&lt;boost/integer/bin_utils.hpp&gt;</a>
@@ -962,65 +1351,81 @@
 	
 <span class="comment">// Sets the bit `pos' in data
 </span><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">data</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="identifier">pos</span><span class="special">&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">set_bit</span>
-<span class="special">{</span>
-	<span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">T</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> 
-<span class="special">};</span> <span class="comment">// set_bit
-</span>	
-
+<span class="keyword">struct</span> <span class="identifier">static_set_bit</span> <span class="special">{</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">T</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> <span class="special">};</span>
+	
 <span class="comment">// Clear the bit `pos' in data
 </span><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">data</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="identifier">pos</span><span class="special">&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">clear_bit</span>
-<span class="special">{</span>
-	<span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">T</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> 
-<span class="special">};</span> <span class="comment">// clear_bit
-</span>
+<span class="keyword">struct</span> <span class="identifier">static_clear_bit</span> <span class="special">{</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">T</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> <span class="special">};</span>
+
 <span class="comment">// If the bit `pos' is 1 then it will be 0 if not the bit will be 1
 </span><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">data</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="identifier">pos</span><span class="special">&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">flip_bit</span>
-<span class="special">{</span>
-	<span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">T</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> 
-<span class="special">};</span> <span class="comment">// flip_bit
-</span>
+<span class="keyword">struct</span> <span class="identifier">static_flip_bit</span><span class="special">{</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">T</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> <span class="special">};</span>
+
 <span class="comment">// Test if the bit in `pos' positon is set or not
 </span><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">data</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="identifier">pos</span><span class="special">&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">test_bit</span>
-<span class="special">{</span>
-	<span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> 
-<span class="special">};</span> <span class="comment">// test_bit	
+<span class="keyword">struct</span> <span class="identifier">static_test_bit</span> <span class="special">{</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> <span class="special">};</span>
+
+<span class="keyword">namespace</span> <span class="identifier">mpl</span> <span class="special">{</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">IC</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="identifier">pos</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">set_bit</span> <span class="special">{</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">typename</span> <span class="identifier">IC</span><span class="special">::</span><span class="identifier">value_type</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> <span class="special">};</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">IC</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="identifier">pos</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">clear_bit</span> <span class="special">{</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">typename</span> <span class="identifier">IC</span><span class="special">::</span><span class="identifier">value_type</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> <span class="special">};</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">IC</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="identifier">pos</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">flip_bit</span><span class="special">{</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">typename</span> <span class="identifier">IC</span><span class="special">::</span><span class="identifier">value_type</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> <span class="special">};</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">IC</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="identifier">pos</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">test_bit</span> <span class="special">{</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> <span class="special">};</span>
+
+<span class="special">}</span> <span class="comment">// mpl
 </span>	
 <span class="special">}</span> <span class="comment">// boost
 </span></pre>
 </div>
-<div class="section" title="Template Class set_bit&lt;&gt;">
+<div class="section" title="Template Class static_set_bit&lt;&gt; and mpl::set_bit">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_integer.bits_and_ints.bin_utils.template_class__set_bit___"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__set_bit___" title="Template Class set_bit&lt;&gt;">Template
-        Class <code class="computeroutput"><span class="identifier">set_bit</span><span class="special">&lt;&gt;</span></code></a>
+<a name="boost_integer.bits_and_ints.bin_utils.template_class__static_set_bit____and__mpl__set_bit_"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__static_set_bit____and__mpl__set_bit_" title="Template Class static_set_bit&lt;&gt; and mpl::set_bit">Template
+        Class <code class="computeroutput"><span class="identifier">static_set_bit</span><span class="special">&lt;&gt;</span></code>
+        and <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">set_bit</span></code></a>
 </h4></div></div></div>
 <p>
           Sets the bit <code class="computeroutput"><span class="identifier">pos</span></code> active
-          in <code class="computeroutput"><span class="identifier">data</span></code>.
+          in <code class="computeroutput"><span class="identifier">value</span></code>.
         </p>
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
 <span class="bold"><strong>Requires: </strong></span><code class="computeroutput"><span class="identifier">pos</span></code>
-            must be smaller than the size (in bits) of <code class="computeroutput"><span class="identifier">Type</span></code>.
+            must be smaller than the size (in bits) of <code class="computeroutput"><span class="identifier">Type</span></code>
+            for <code class="computeroutput"><span class="identifier">static_set_bit</span><span class="special">&lt;&gt;</span></code>
+            and smaller than IC::value_type for <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">static_set_bit</span><span class="special">&lt;&gt;</span></code>.
           </li>
 <li class="listitem">
-<span class="bold"><strong>Remarks: </strong></span><code class="computeroutput"><span class="identifier">T</span></code>
-            must be an integral type. If this constraint is not met, this metafunction
-            do not participate in overload resolution.
-          </li>
+<span class="bold"><strong>Remarks: </strong></span><div class="itemizedlist"><ul class="itemizedlist" type="circle">
+<li class="listitem">
+<code class="computeroutput"><span class="identifier">T</span></code> must be an integral
+                type. If this constraint is not met, <code class="computeroutput"><span class="identifier">static_set_bit</span><span class="special">&lt;&gt;</span></code> do not participate in overload
+                resolution.
+              </li>
+<li class="listitem">
+<code class="computeroutput"><span class="identifier">IC</span></code> must be a <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">integral_c</span><span class="special">&lt;&gt;</span></code>
+                type. If this constraint is not met, <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">set_bit</span><span class="special">&lt;&gt;</span></code> metafunction do not participate
+                in overload resolution.
+              </li>
+</ul></div>
+</li>
 <li class="listitem"><span class="bold"><strong>Example:</strong></span></li>
 </ul></div>
 <pre class="programlisting"><span class="comment">// `new_value' becomes 101
 </span><span class="keyword">int</span> <span class="identifier">new_value</span> <span class="special">=</span> <span class="identifier">set_bit</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="number">100</span><span class="special">,</span> <span class="number">0</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">;</span>
 </pre>
 </div>
-<div class="section" title="Template Class clear_bit&lt;&gt;">
+<div class="section" title="Template Class mpl::clear_bit&lt;&gt; and static_clear_bit&lt;&gt;">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_integer.bits_and_ints.bin_utils.template_class__clear_bit___"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__clear_bit___" title="Template Class clear_bit&lt;&gt;">Template
-        Class <code class="computeroutput"><span class="identifier">clear_bit</span><span class="special">&lt;&gt;</span></code></a>
+<a name="boost_integer.bits_and_ints.bin_utils.template_class__mpl__clear_bit____and__static_clear_bit___"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__mpl__clear_bit____and__static_clear_bit___" title="Template Class mpl::clear_bit&lt;&gt; and static_clear_bit&lt;&gt;">Template
+        Class <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">clear_bit</span><span class="special">&lt;&gt;</span></code>
+        and <code class="computeroutput"><span class="identifier">static_clear_bit</span><span class="special">&lt;&gt;</span></code></a>
 </h4></div></div></div>
 <p>
           Sets the bit <code class="computeroutput"><span class="identifier">pos</span></code> inactive
@@ -1029,23 +1434,34 @@
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
 <span class="bold"><strong>Requires: </strong></span><code class="computeroutput"><span class="identifier">pos</span></code>
-            must be smaller than the size (in bits) of <code class="computeroutput"><span class="identifier">Type</span></code>.
+            must be smaller than the size (in bits) of <code class="computeroutput"><span class="identifier">Type</span></code>
+            for <code class="computeroutput"><span class="identifier">static_clear_bit</span><span class="special">&lt;&gt;</span></code> and smaller than IC::value_type
+            for <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">static_clear_bit</span><span class="special">&lt;&gt;</span></code>.
           </li>
 <li class="listitem">
-<span class="bold"><strong>Remarks: </strong></span><code class="computeroutput"><span class="identifier">T</span></code>
-            must be an integral type. If this constraint is not met, this metafunction
-            do not participate in overload resolution.
-          </li>
+<span class="bold"><strong>Remarks: </strong></span><div class="itemizedlist"><ul class="itemizedlist" type="circle">
+<li class="listitem">
+<code class="computeroutput"><span class="identifier">T</span></code> must be an integral
+                type. If this constraint is not met, <code class="computeroutput"><span class="identifier">static_clear_bit</span><span class="special">&lt;&gt;</span></code> do not participate in overload
+                resolution.
+              </li>
+<li class="listitem">
+<code class="computeroutput"><span class="identifier">IC</span></code> must be a <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">integral_c</span><span class="special">&lt;&gt;</span></code>
+                type. If this constraint is not met, <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">clear_bit</span><span class="special">&lt;&gt;</span></code> metafunction do not participate
+                in overload resolution.
+              </li>
+</ul></div>
+</li>
 <li class="listitem"><span class="bold"><strong>Example:</strong></span></li>
 </ul></div>
 <pre class="programlisting"><span class="comment">// `new_value' becomes 1
 </span><span class="keyword">int</span> <span class="identifier">new_value</span> <span class="special">=</span> <span class="identifier">set_bit</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="number">3</span><span class="special">,</span> <span class="number">2</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">;</span>
 </pre>
 </div>
-<div class="section" title="Template Class test_bit&lt;&gt;">
+<div class="section" title="Template Class mpl::test_bit and static_test_bit&lt;&gt;">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_integer.bits_and_ints.bin_utils.template_class__test_bit___"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__test_bit___" title="Template Class test_bit&lt;&gt;">Template
-        Class <code class="computeroutput"><span class="identifier">test_bit</span><span class="special">&lt;&gt;</span></code></a>
+<a name="boost_integer.bits_and_ints.bin_utils.template_class__mpl__test_bit__and__static_test_bit___"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__mpl__test_bit__and__static_test_bit___" title="Template Class mpl::test_bit and static_test_bit&lt;&gt;">Template
+        Class <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">test_bit</span></code> and <code class="computeroutput"><span class="identifier">static_test_bit</span><span class="special">&lt;&gt;</span></code></a>
 </h4></div></div></div>
 <p>
           Test if the bit <code class="computeroutput"><span class="identifier">pos</span></code> in
@@ -1054,23 +1470,35 @@
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
 <span class="bold"><strong>Requires: </strong></span><code class="computeroutput"><span class="identifier">pos</span></code>
-            must be smaller than the size (in bits) of <code class="computeroutput"><span class="identifier">Type</span></code>.
+            must be smaller than the size (in bits) of <code class="computeroutput"><span class="identifier">Type</span></code>
+            for <code class="computeroutput"><span class="identifier">static_test_bit</span><span class="special">&lt;&gt;</span></code>
+            and smaller than IC::value_type for <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">static_test_bit</span><span class="special">&lt;&gt;</span></code>.
           </li>
 <li class="listitem">
-<span class="bold"><strong>Remarks: </strong></span><code class="computeroutput"><span class="identifier">T</span></code>
-            must be an integral type. If this constraint is not met, this metafunction
-            do not participate in overload resolution.
-          </li>
+<span class="bold"><strong>Remarks: </strong></span><div class="itemizedlist"><ul class="itemizedlist" type="circle">
+<li class="listitem">
+<code class="computeroutput"><span class="identifier">T</span></code> must be an integral
+                type. If this constraint is not met, <code class="computeroutput"><span class="identifier">static_test_bit</span><span class="special">&lt;&gt;</span></code> do not participate in overload
+                resolution.
+              </li>
+<li class="listitem">
+<code class="computeroutput"><span class="identifier">IC</span></code> must be a <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">integral_c</span><span class="special">&lt;&gt;</span></code>
+                type. If this constraint is not met, <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">test_bit</span><span class="special">&lt;&gt;</span></code> metafunction do not participate
+                in overload resolution.
+              </li>
+</ul></div>
+</li>
 <li class="listitem"><span class="bold"><strong>Example:</strong></span></li>
 </ul></div>
 <pre class="programlisting"><span class="comment">// `is_set' becomes true
 </span><span class="keyword">bool</span> <span class="identifier">is_set</span> <span class="special">=</span> <span class="identifier">test_bit</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="number">3982</span><span class="special">,</span> <span class="number">11</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">;</span>
 </pre>
 </div>
-<div class="section" title="Template Class flip_bit&lt;&gt;">
+<div class="section" title="Template Class mpl::flip_bit&lt;&gt; and static_flip_bit&lt;&gt;">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_integer.bits_and_ints.bin_utils.template_class__flip_bit___"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__flip_bit___" title="Template Class flip_bit&lt;&gt;">Template
-        Class <code class="computeroutput"><span class="identifier">flip_bit</span><span class="special">&lt;&gt;</span></code></a>
+<a name="boost_integer.bits_and_ints.bin_utils.template_class__mpl__flip_bit____and__static_flip_bit___"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__mpl__flip_bit____and__static_flip_bit___" title="Template Class mpl::flip_bit&lt;&gt; and static_flip_bit&lt;&gt;">Template
+        Class <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">flip_bit</span><span class="special">&lt;&gt;</span></code>
+        and <code class="computeroutput"><span class="identifier">static_flip_bit</span><span class="special">&lt;&gt;</span></code></a>
 </h4></div></div></div>
 <p>
           Invert the value of the bit <code class="computeroutput"><span class="identifier">pos</span></code>
@@ -1079,13 +1507,24 @@
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
 <span class="bold"><strong>Requires: </strong></span><code class="computeroutput"><span class="identifier">pos</span></code>
-            must be smaller than the size (in bits) of <code class="computeroutput"><span class="identifier">Type</span></code>.
+            must be smaller than the size (in bits) of <code class="computeroutput"><span class="identifier">Type</span></code>
+            for <code class="computeroutput"><span class="identifier">static_flip_bit</span><span class="special">&lt;&gt;</span></code>
+            and smaller than IC::value_type for <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">static_flip_bit</span><span class="special">&lt;&gt;</span></code>.
           </li>
 <li class="listitem">
-<span class="bold"><strong>Remarks: </strong></span><code class="computeroutput"><span class="identifier">T</span></code>
-            must be an integral type. If this constraint is not met, this metafunction
-            do not participate in overload resolution.
-          </li>
+<span class="bold"><strong>Remarks: </strong></span><div class="itemizedlist"><ul class="itemizedlist" type="circle">
+<li class="listitem">
+<code class="computeroutput"><span class="identifier">T</span></code> must be an integral
+                type. If this constraint is not met, <code class="computeroutput"><span class="identifier">static_flip_bit</span><span class="special">&lt;&gt;</span></code> do not participate in overload
+                resolution.
+              </li>
+<li class="listitem">
+<code class="computeroutput"><span class="identifier">IC</span></code> must be a <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">integral_c</span><span class="special">&lt;&gt;</span></code>
+                type. If this constraint is not met, <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">flip_bit</span><span class="special">&lt;&gt;</span></code> metafunction do not participate
+                in overload resolution.
+              </li>
+</ul></div>
+</li>
 <li class="listitem"><span class="bold"><strong>Example:</strong></span></li>
 </ul></div>
 <pre class="programlisting"><span class="comment">// `new_value' becomes 14

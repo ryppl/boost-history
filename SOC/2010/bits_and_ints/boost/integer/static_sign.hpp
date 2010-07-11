@@ -42,12 +42,12 @@ struct sign :
 
 }
 
-template <typename T, T data
+template <typename T, T Value
     , class Enable = typename enable_if<
         is_integral<T> 
     >::type
 >
-struct static_sign : mpl::sign<mpl::integral_c< T, data> >
+struct static_sign : mpl::sign<mpl::integral_c<T, Value> >
 {};
 
 } // boost

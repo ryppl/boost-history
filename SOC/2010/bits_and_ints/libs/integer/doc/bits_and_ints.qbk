@@ -284,6 +284,26 @@ The run-time version can be included via [@../../../../boost/integer/sign.hpp <b
 
 [endsect]
 
+[section Static Functions `mpl::sign` and `static_sign`]
+The compile-time versions can be included via [@../../../../boost/integer/static_sign.hpp <boost/integer/static_sign.hpp>]. 
+
+	template <typename IC>
+	struct mpl::sign { static const int value = ``['implementation-defined]``; };
+	
+	template <template T, T Value>
+	struct static_same_sign { static const int value = ``['implementation-defined]``; };
+	
+[table
+	[[Parameter][Description]]
+	[[`IC`][ A `mpl::integral_c<>` type. ]]
+	[[`T`][ The value type. Must be an integral type. ]]
+	[[`Value`][ The value to be checked. ]]
+]
+
+*[*Requires: ] `T` to be an integral type and `IC` to be an `mpl::integral_c<>` type.
+
+[endsect]
+
 [section Examples]
 *[*Run-time version:]
 
@@ -368,10 +388,17 @@ under the header [@../../../../boost/integer/pop_count.hpp <boost/integer/pop_co
 [section Synopsis]
 
 	int pop_count(uintmax_t value);
+	
+	template <uintmax_t Value>
+	struct static_pop_count { static const int value = ``['implementation-defined]``; };
+	
+	template <typename IC>
+	struct pop_count { static const int value = ``['implementation-defined]``; };
 
 [endsect]
 
-[*Returns: ] The number of bits set in `value`.
+*[*Requires: ] `IC` must be an `mpl::integral_c<>` type.
+*[*Returns: ] The number of bits set in `value`. For the compile-time versions, the result will be on member `value`.
 
 [endsect]
 
@@ -380,27 +407,187 @@ Clears least significant 1 bit in an integral. The `clear_least_bit_set()` funct
 
 [section Synopsis]
 
+	template <typename T>
 	T clear_least_bit_set(T value);
+	
+	template <typename IC>
+	struct mpl::clear_least_bit_set { static const typename IC::value_type value = ``['implementation-defined]``; };
+	
+	template <typename T, T Value>
+	struct static_clear_least_bit_set { static const T value = ``['implementation-defined]``; };
 
 [endsect]
 
-*[*Remarks: ] `T` must be an integral type.
+*[*Requires: ] `T` must be an integral type. `IC` must be an `mpl::integral_c<>` type. 
 
 *[*Returns: ] `value` with it's least significant active bit disactivated.
 
 [endsect]
 
 [section Count Trailing Zeros]
-The `count_trailing_zeros()` function counts the number of consecutive 0's from the least significant bit of an integral value.
-This function is defined on [@../../../../boost/integer/count_trailing_zeros.hpp <boost/integer/count_trailing_zeros.hpp>]
+The `count_trailing_zeros` function and metafunctions counts the number of consecutive 0's from the least significant bit of an integral value.
+The runtime function is defined on [@../../../../boost/integer/count_trailing_zeros.hpp <boost/integer/count_trailing_zeros.hpp>] and
+the compile-time metafunctions are defined on [@../../../../boost/integer/static_count_trailing_zeros.hpp <boost/integer/static_count_trailing_zeros.hpp>]
 
 [section Synopsis]
 	
 	int count_trailing_zeros(uintmax_t value);
 	
+	template <typename IC>
+	struct mpl::count_trailing_zeros { static const int value = ``['implementation-defined]``; };
+	
+	template <uintmax_t Value> 
+	struct static_count_trailing_zeros { static const int value = ``['implementation-defined]``; };
+	
 [endsect]
 
-*[*Returns: ] The number of consecutive zeros from the least significant bit.
+*[*Requires: ] For the `mpl::count_trailing_zeros<>` version, `IC` must be an mpl::integral_c<> type. 
+*[*Returns: ] For the runtime version, the number of consecutive zeros from the least significant bit. 
+In the compile-time versions, the number of consecutive zeros in the `value` static member.
+
+[endsect]
+
+[section Safe Average]
+Given two integer values x and y, the (floor of the) average normally would be computed by `(x+y)/2` unfortunately, 
+this can yield incorrect results due to overflow. Safe average ensures that no overflow will happen even if `(x+y)` 
+overflows the range of T. 
+The runtime version is defined on [@../../../../boost/integer/safe_avg.hpp <boost/integer/safe_avg.hpp>] and
+the compile-time metafunctions are defined on [@../../../../boost/integer/static_safe_avg.hpp <boost/integer/static_safe_avg.hpp>]
+
+[section Synopsis]
+	
+	template <typename T>
+	T safe_avg(T x, T y);
+	
+	template <typename ICT1, typename ICT2>
+	struct mpl::safe_avg { static const int value = ``['implementation-defined]``; };
+	
+	template <typename T, T Value1, T Value2>
+	struct static_safe_avg { static const int value = ``['implementation-defined]``; };
+	
+[endsect]
+
+*[*Requires: ] For the `mpl::safe_avg<>` version, both `ICT1` and `ICT2` must be mpl::integral_c<> types.
+For the `static_safe_avg<>` and the runtime version, `T` must be an integral type.
+
+*[*Returns: ] The average of the sum between two integrals rounded down. Overflow is ensured to not happen.
+
+[endsect]
+
+[section Round to Power of 2 functions]
+This function rounds up and down integral values to the next power of 2.
+The `ceil_pow2` function rounds up and `floor_pow2` function rounds down.
+These functions are defined on [@../../../../boost/integer/round_power_2.hpp <boost/integer/round_power_2.hpp>]
+
+[section Synopsis]
+
+	T ceil_pow2(T value);
+	T floor_pow2(T value);
+	
+[endsect]
+
+*[*Requires: ] `T` must be convertible to `uint8_t` or  `uint16_t` or `uint32_t` or `uint64_t`.
+
+*[*Returns: ] 
+	* `ceil_pow2()` returns `value` rounded [*up] to the lesser power of two greater than or equal to `value. 
+	
+	* `floor_pow2()` returns `value` rounded [*down] to the greater power of two lesser or equal `value`.
+
+[endsect]
+
+[section Transfer of Sign (isign) functions ]
+isign or transfer of sign function is defined by:
+``
+ 	isign(x, y) =
+ 		abs(x), if y is greater than or equal 0,
+		-abs(x), if y is less than 0
+``
+
+The runtime functions are defined on [@../../../../boost/integer/isign.hpp <boost/integer/isign.hpp>] and the
+static metafunctions are defined on [@../../../../boost/integer/static_isign.hpp <boost/integer/static_isign.hpp>]
+
+[section Synopsis]
+
+	template <typename T>
+	T isign(T x, T y);
+	
+	template <typename T, T Value1, T Value2>
+	struct static_isign { static const T value = ``['implementation-defined]``; };
+	
+	template <typename IC1, typename IC2>
+	struct mpl::isign { static const typename IC1::value_type value = ``['implementation-defined]``; };
+	
+[endsect]
+
+*[*Requires: ] `T` must be an integral type. Both `IC1` and `IC2` must be `mpl::integral_c<>` types.
+*[*Returns: ] 
+	* Runtime version: returns `abs(x)` if `y` is greater than or equal 0 and `-abs(x)` if `y` is negative. 
+	
+	* MPL version: the member `value` will be `abs(IC1::value)` if `IC2` holds an value greater than or 
+	equal 0, or `-abs(IC1::value)` if `IC2` holds a negative value.
+
+	* `static_isign<T, Value1, Value2>::value` will be `abs(Value1)` if Value2 is greater than or equal 0, or 
+	`-abs(Value1)` if Value2 is negative.
+
+[endsect]
+
+[section Absolute Value in Compile-Time ]
+The static metafunctions defined on [@../../../../boost/integer/static_abs.hpp <boost/integer/static_abs.hpp>] 
+calculates the absolute value of integral constants.
+
+`mpl::abs<>` version returns the absolute value of a `mpl::integral_c<>`
+and the `static_abs<>` version returns the absolute value from an integral value.
+
+[section Synopsis]
+
+	template <typename IC>
+	struct mpl::abs { static const typename IC::value_type value = ``['implementation-defined]``; }; 
+	
+	template <typename T, T Value>
+	struct static_abs { static const T value = ``['implementation-defined]``; }; 
+	
+[endsect]
+
+*[*Requires: ] `T` must be an integral type. `IC` a `mpl::integral_c<>` type.
+
+*[*Results: ] The member `value ` in `mpl::abs<>` will be the absolute value of `IC::value`.
+In `static_abs<>`, `value` will be the absolute value of `Value`.
+
+[endsect]
+
+[section MPL Least Common Multiple ]
+This header defines mpl::lcm<> metafunction wich calculates the 
+ least common multiple from two given `mpl::integral_c<>`.
+ 
+This static metafunction is defined on [@../../../../boost/integer/static_lcm.hpp <boost/integer/static_lcm.hpp>].
+
+[section Synopsis]
+
+	template <typename ICT1, typename ICT2>
+	struct mpl::lcm { static const uintmax_t value = ``['implementation-defined]``; }; 
+	
+[endsect]
+
+*[*Requires: ] `ICT1` and `ICT2` must be `mpl::integral_c<>` types.
+
+*[*Results: ] The member `value ` will be the least common multiple from `IC1` and `IC2`.
+
+[endsect]
+
+[section MPL Greatest Common Divisor ]
+The header file [@../../../../boost/integer/static_gcd.hpp <boost/integer/static_gcd.hpp>] defines `mpl::gcd<>` 
+metafunction wich calculates the greatest common divisor of two given `mpl::integral_c<>`.
+
+[section Synopsis]
+
+	template <typename ICT1, typename ICT2>
+	struct mpl::gcd { static const uintmax_t value = ``['implementation-defined]``; }; 
+	
+[endsect]
+
+*[*Requires: ] `ICT1` and `ICT2` must be `mpl::integral_c<>` types.
+
+*[*Results: ] The member `value ` will be the greatest commom divisor from `IC1` and `IC2`.
 
 [endsect]
 
@@ -415,43 +602,50 @@ All the metafunctions have an member varible named `value` where will be the res
 		
 	// Sets the bit `pos' in data
 	template <typename T, T data, unsigned char pos>
-	struct set_bit
-	{
-		static const T value = ``['implementation-defined]``; 
-	}; // set_bit
+	struct static_set_bit { static const T value = ``['implementation-defined]``; };
 		
-
 	// Clear the bit `pos' in data
 	template <typename T, T data, unsigned char pos>
-	struct clear_bit
-	{
-		static const T value = ``['implementation-defined]``; 
-	}; // clear_bit
+	struct static_clear_bit { static const T value = ``['implementation-defined]``; };
 
 	// If the bit `pos' is 1 then it will be 0 if not the bit will be 1
 	template <typename T, T data, unsigned char pos>
-	struct flip_bit
-	{
-		static const T value = ``['implementation-defined]``; 
-	}; // flip_bit
+	struct static_flip_bit{ static const T value = ``['implementation-defined]``; };
 
 	// Test if the bit in `pos' positon is set or not
 	template <typename T, T data, unsigned char pos>
-	struct test_bit
-	{
-		static const bool value = ``['implementation-defined]``; 
-	}; // test_bit	
+	struct static_test_bit { static const bool value = ``['implementation-defined]``; };
+	
+	namespace mpl {
+
+	template <typename IC, unsigned char pos>
+	struct set_bit { static const typename IC::value_type value = ``['implementation-defined]``; };
+
+	template <typename IC, unsigned char pos>
+	struct clear_bit { static const typename IC::value_type value = ``['implementation-defined]``; };
+
+	template <typename IC, unsigned char pos>
+	struct flip_bit{ static const typename IC::value_type value = ``['implementation-defined]``; };
+
+	template <typename IC, unsigned char pos>
+	struct test_bit { static const bool value = ``['implementation-defined]``; };
+	
+	} // mpl
 		
 	} // boost
 
 [endsect]
 
-[section Template Class `set_bit<>`]
-Sets the bit `pos` active in `data`.
+[section Template Class `static_set_bit<>` and `mpl::set_bit`]
+Sets the bit `pos` active in `value`.
 
-*[*Requires: ] `pos` must be smaller than the size (in bits) of `Type`.
+*[*Requires: ] `pos` must be smaller than the size (in bits) of `Type` for `static_set_bit<>` and smaller than IC::value_type
+	for `mpl::static_set_bit<>`.
 	
-*[*Remarks: ] `T` must be an integral type. If this constraint is not met, this metafunction do not participate in overload resolution.
+*[*Remarks: ] 
+	* `T` must be an integral type. If this constraint is not met, `static_set_bit<>` do not participate in overload resolution.
+	
+	* `IC` must be a `mpl::integral_c<>` type. If this constraint is not met, `mpl::set_bit<>` metafunction do not participate in overload resolution.
 
 *[*Example:]
 
@@ -460,13 +654,17 @@ Sets the bit `pos` active in `data`.
 
 [endsect]
 	
-[section Template Class `clear_bit<>`]
+[section Template Class `mpl::clear_bit<>` and `static_clear_bit<>`]
 Sets the bit `pos` inactive in `data`.
 
 
-*[*Requires: ] `pos` must be smaller than the size (in bits) of `Type`.
+*[*Requires: ] `pos` must be smaller than the size (in bits) of `Type` for `static_clear_bit<>` and smaller than IC::value_type
+	for `mpl::static_clear_bit<>`.
 	
-*[*Remarks: ] `T` must be an integral type. If this constraint is not met, this metafunction do not participate in overload resolution.
+*[*Remarks: ]
+	* `T` must be an integral type. If this constraint is not met, `static_clear_bit<>` do not participate in overload resolution.
+	
+	* `IC` must be a `mpl::integral_c<>` type. If this constraint is not met, `mpl::clear_bit<>` metafunction do not participate in overload resolution.
 
 *[*Example:]
 
@@ -475,13 +673,17 @@ Sets the bit `pos` inactive in `data`.
 
 [endsect]
 
-[section Template Class `test_bit<>`]
+[section Template Class `mpl::test_bit` and `static_test_bit<>`]
 Test if the bit `pos` in `data` is active or not.
 
 
-*[*Requires: ] `pos` must be smaller than the size (in bits) of `Type`.
+*[*Requires: ] `pos` must be smaller than the size (in bits) of `Type` for `static_test_bit<>` and smaller than IC::value_type
+	for `mpl::static_test_bit<>`.
 	
-*[*Remarks: ] `T` must be an integral type. If this constraint is not met, this metafunction do not participate in overload resolution.
+*[*Remarks: ] 
+	* `T` must be an integral type. If this constraint is not met, `static_test_bit<>` do not participate in overload resolution.
+	
+	* `IC` must be a `mpl::integral_c<>` type. If this constraint is not met, `mpl::test_bit<>` metafunction do not participate in overload resolution.
 
 *[*Example:]
 
@@ -490,12 +692,16 @@ Test if the bit `pos` in `data` is active or not.
 
 [endsect]
 
-[section Template Class `flip_bit<>`]
+[section Template Class `mpl::flip_bit<>` and `static_flip_bit<>`]
 Invert the value of the bit `pos` in `data`
 
-*[*Requires: ] `pos` must be smaller than the size (in bits) of `Type`.
+*[*Requires: ] `pos` must be smaller than the size (in bits) of `Type` for `static_flip_bit<>` and smaller than IC::value_type
+	for `mpl::static_flip_bit<>`.
 	
-*[*Remarks: ] `T` must be an integral type. If this constraint is not met, this metafunction do not participate in overload resolution.
+*[*Remarks: ]
+	* `T` must be an integral type. If this constraint is not met, `static_flip_bit<>` do not participate in overload resolution.
+	
+	* `IC` must be a `mpl::integral_c<>` type. If this constraint is not met, `mpl::flip_bit<>` metafunction do not participate in overload resolution.
 
 *[*Example:]
 
