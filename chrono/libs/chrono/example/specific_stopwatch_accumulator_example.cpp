@@ -47,7 +47,7 @@ using namespace boost::accumulators;
                         os << boost::chrono::duration<double>(duration_t(sum(acc))).count();
                         break;
                     case 'a':
-                        os << boost::chrono::duration<double>(duration_t(typename duration_t::rep(mean(acc)))).count();
+                        os << count(acc)>0?boost::chrono::duration<double>(duration_t(typename duration_t::rep(sum(acc)))).count()/count(acc):0;
                         break;
                     case 'c':
                         os << count(acc);

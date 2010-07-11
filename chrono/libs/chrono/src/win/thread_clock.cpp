@@ -81,7 +81,6 @@ namespace boost
       }
       else
       {
-        DWORD cause = ::GetLastError();
         boost::throw_exception(
 #if (BOOST_VERSION / 100 % 1000) < 44
             system::system_error( ::GetLastError(), system::system_category, "chrono::monotonic_clock" ));
