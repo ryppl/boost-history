@@ -16,20 +16,24 @@
 #include <boost/mpl/bitwise.hpp>
 #include <boost/mpl/size_t.hpp>
 
+
+
 namespace boost {
 
 #ifdef BOOST_MSVC
     
-
+#pragma warning( push )
+#pragma warning( disable : 4307 )
 namespace detail {
     template<typename T, unsigned int Width>
     struct evaluate_for_msvc_08 {
         typedef typename make_unsigned<T>::type unsigned_type;
-        BOOST_STATIC_CONSTANT(T, val = (~(mpl::shift_right< mpl::size_t< ~(T(0)) >, mpl::size_t<Width> >::type::value) ));
+        BOOST_STATIC_CONSTANT(T, val = (~(mpl::shift_right< mpl::size_t< ~(T(0))
+             >, mpl::size_t<Width> >::type::value) ));
         typedef integral_constant<T, val>       type;
     };
 }
-// integral_mask<T, ~ mpl::size_t<(mpl::shift_left< mpl::size_t< ~(T(0)) >, mpl::size_t<Width> >::type::value )>::value >
+#pragma warning( pop )
 
 #endif
 
