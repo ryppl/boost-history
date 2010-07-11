@@ -47,9 +47,49 @@ struct get_create_parameter {
     typedef typename bft_create_param_fix_return_type<element_type>::type type;
 };
 
+typedef ::boost::bitfield_tuple<> fixer_tuple;
 
+/** Used for fixing an inadequacy in MSVC9 which causes my make_bitfield_tuple
+ *  function template parameters not to be instantiated unless they are
+ *  typedef'ed peior to the function declaration.
+ */
+#define BOOST_MAKE_BFT_HELPER_TYPEDEF(Z, N, DATA) \
+    typedef get_create_parameter<fixer_tuple,N>::is_valid_index fixer_type ## N;
+
+/** Defines typedefs which prevent the MSVC9 compiler from failing where it 
+ *  shouldn't
+ *  Creates the following pattern
+ *      typedef 
+ */
+#define BOOST_MAKE_BFT_COMPENSATE_FOR_MSVC() \
+        BOOST_PP_REPEAT_FROM_TO( \
+            0,\
+            BOOST_BFT_PARAM_COUNT, \
+            BOOST_MAKE_BFT_HELPER_TYPEDEF,\
+            BOOST_BFT_NOTHING )
+
+BOOST_MAKE_BFT_COMPENSATE_FOR_MSVC()
+
+// get_create_parameter<test_tuple,0>::is_valid_index
+/*
+BOOST_MPL_ASSERT(( get_create_parameter<test_tuple,1>::is_valid_index ));
+BOOST_MPL_ASSERT(( get_create_parameter<test_tuple,2>::is_valid_index ));
+BOOST_MPL_ASSERT(( get_create_parameter<test_tuple,3>::is_valid_index ));
+BOOST_MPL_ASSERT_NOT(( get_create_parameter<test_tuple,4>::is_valid_index ));
+BOOST_MPL_ASSERT_NOT(( get_create_parameter<test_tuple,5>::is_valid_index ));
+BOOST_MPL_ASSERT_NOT(( get_create_parameter<test_tuple,6>::is_valid_index ));
+BOOST_MPL_ASSERT_NOT(( get_create_parameter<test_tuple,7>::is_valid_index ));
+BOOST_MPL_ASSERT_NOT(( get_create_parameter<test_tuple,8>::is_valid_index ));
+BOOST_MPL_ASSERT_NOT(( get_create_parameter<test_tuple,9>::is_valid_index ));
+BOOST_MPL_ASSERT_NOT(( get_create_parameter<test_tuple,10>::is_valid_index ));
+BOOST_MPL_ASSERT_NOT(( get_create_parameter<test_tuple,11>::is_valid_index ));
+BOOST_MPL_ASSERT_NOT(( get_create_parameter<test_tuple,12>::is_valid_index ));
+BOOST_MPL_ASSERT_NOT(( get_create_parameter<test_tuple,13>::is_valid_index ));
+BOOST_MPL_ASSERT_NOT(( get_create_parameter<test_tuple,14>::is_valid_index ));
+*/
 
 #else
+
 /** Used to generate a function parameter for the create function used
  *  with make_bitfield_tuple
  */
