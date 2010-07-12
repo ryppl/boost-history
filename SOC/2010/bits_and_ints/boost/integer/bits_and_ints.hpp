@@ -22,15 +22,20 @@
 #include <boost/integer/same_sign.hpp>
 #include <boost/integer/static_same_sign.hpp>
 #include <boost/integer/pop_count.hpp>
+#include <boost/integer/static_pop_count.hpp>
 #include <boost/integer/interleave.hpp>
 #include <boost/integer/count_trailing_zeros.hpp>
+#include <boost/integer/static_count_trailing_zeros.hpp>
 #include <boost/integer/clear_least_bit_set.hpp>
+#include <boost/integer/static_clear_least_bit_set.hpp>
 #include <boost/integer/swap.hpp>
 #include <boost/integer/safe_avg.hpp>
-#include <boost/integer/round_power_2.hpp>
+#include <boost/integer/static_safe_avg.hpp>
+#include <boost/integer/round_pow2.hpp>
+#include <boost/integer/isign.hpp>
+#include <boost/integer/static_isign.hpp>
 #include <boost/integer/is_integral_constant.hpp>
 #include <boost/integer/static_abs.hpp>
 #include <boost/integer/static_gcd.hpp>
 #include <boost/integer/static_lcm.hpp>
-
 #endif

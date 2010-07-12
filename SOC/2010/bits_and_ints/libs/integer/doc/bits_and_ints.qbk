@@ -475,9 +475,9 @@ For the `static_safe_avg<>` and the runtime version, `T` must be an integral typ
 [endsect]
 
 [section Round to Power of 2 functions]
-This function rounds up and down integral values to the next power of 2.
+This function rounds up and down positive integral values to the next power of 2.
 The `ceil_pow2` function rounds up and `floor_pow2` function rounds down.
-These functions are defined on [@../../../../boost/integer/round_power_2.hpp <boost/integer/round_power_2.hpp>]
+These functions are defined on [@../../../../boost/integer/round_pow2.hpp <boost/integer/round_pow2.hpp>]
 
 [section Synopsis]
 
@@ -486,7 +486,8 @@ These functions are defined on [@../../../../boost/integer/round_power_2.hpp <bo
 	
 [endsect]
 
-*[*Requires: ] `T` must be convertible to `uint8_t` or  `uint16_t` or `uint32_t` or `uint64_t`.
+*[*Requires: ] `T` must be an integral type and `value` must be positive. If `value` is negative, the result is
+undefined.
 
 *[*Returns: ] 
 	* `ceil_pow2()` returns `value` rounded [*up] to the lesser power of two greater than or equal to `value. 
@@ -591,14 +592,16 @@ metafunction wich calculates the greatest common divisor of two given `mpl::inte
 
 [endsect]
 
-[section:bin_utils Binary Utilities]
-The header [@../../../../boost/integer/bin_utils.hpp <boost/integer/bin_utils.hpp>] cotains some metafunctions to handle binary data.
+[section:bit_utils Binary Utilities]
+The header [@../../../../boost/integer/bit_utils.hpp <boost/integer/bit_utils.hpp>] cotains some metafunctions to handle binary data.
 All the metafunctions have an member varible named `value` where will be the result.
 
 [section Synopsis]
 
 	namespace boost
 	{
+	
+	// Compile-time version
 		
 	// Sets the bit `pos' in data
 	template <typename T, T data, unsigned char pos>
@@ -631,6 +634,19 @@ All the metafunctions have an member varible named `value` where will be the res
 	struct test_bit { static const bool value = ``['implementation-defined]``; };
 	
 	} // mpl
+	
+	// Runtime version
+	template <typename T>
+	inline T set_bit(T data, unsigned char pos);
+
+	template <typename T>
+	inline T clear_bit(T data, unsigned char pos);
+
+	template <typename T>
+	inline T flip_bit(T data, unsigned char pos);
+		
+	template <typename T>
+	inline bool test_bit(T data, unsigned char pos);
 		
 	} // boost
 
@@ -709,6 +725,13 @@ Invert the value of the bit `pos` in `data`
 	bool new_value = flip_bit<int, 10, 2>::value;
 
 [endsect]
+
+[section Runtime version]
+
+For all runtime functions, all remarks and requirement are equals to the `static_`-prefixed version.
+
+[endsect]
+
 [endsect]
 
 [endsect]

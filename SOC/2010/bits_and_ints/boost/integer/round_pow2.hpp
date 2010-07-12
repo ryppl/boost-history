@@ -1,4 +1,4 @@
-//  Boost integer/round_power_2.hpp header file  ------------------------------//
+//  Boost integer/round_pow2.hpp header file  ------------------------------//
 
 //  (C) Copyright Murilo Adriano Vasconcelos 2010.
 //  Distributed under the Boost Software License, Version 1.0. (See
@@ -11,8 +11,11 @@
 #ifndef BOOST_POWER_2_ROUND
 #define BOOST_POWER_2_ROUND
 
+#include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/is_integral.hpp>
+
 /*
- *	The functions declared in this file rounds up or down an integral to the next power of 2.
+ *	The functions declared in this file rounds up or down an positive integral to the next power of 2.
  *
  *	The functions `ceil_pow2()' rounds up and the functions
  *		`floor_pow2()' rounds down.
@@ -21,11 +24,15 @@
  *	
  *	T x = ceil_pow2(y);  // rounds down
  *  T z = floor_pow2(w); // rounds up
+ *
+ *	Note: for negative integrals, the result is undefined
  */
 
 namespace boost {
 	
-uint8_t ceil_pow2(uint8_t value)
+template <typename T>
+typename enable_if_c<is_integral<T>::value && sizeof(T) == 1, T>::type
+ceil_pow2(T value)
 {
 	value = value - 1;
 	value = value | (value >> 1);
@@ -35,7 +42,9 @@ uint8_t ceil_pow2(uint8_t value)
 	return value + 1;
 }
 
-uint16_t ceil_pow2(uint16_t value)
+template <typename T>
+typename enable_if_c<is_integral<T>::value && sizeof(T) == 2, T>::type 
+ceil_pow2(T value)
 {
 	value = value - 1;
 	value = value | (value >> 1);
@@ -46,7 +55,9 @@ uint16_t ceil_pow2(uint16_t value)
 	return value + 1;
 }
 	
-uint32_t ceil_pow2(uint32_t value)
+template <typename T>
+typename enable_if_c<is_integral<T>::value && sizeof(T) == 4, T>::type
+ceil_pow2(T value)
 {
 	value = value - 1;
 	value = value | (value >> 1);
@@ -59,7 +70,9 @@ uint32_t ceil_pow2(uint32_t value)
 }
 
 #ifndef BOOST_HAS_INT64_T
-uint64_t ceil_pow2(uint64_t value)
+template <typename T>
+typename enable_if_c<is_integral<T>::value && sizeof(T) == 8, T>::type
+ceil_pow2(T value)
 {
 	value = value - 1;
 	value = value | (value >> 1);
@@ -73,7 +86,9 @@ uint64_t ceil_pow2(uint64_t value)
 }
 #endif
 	
-uint8_t floor_pow2(uint8_t value)
+template <typename T>
+typename enable_if_c<is_integral<T>::value && sizeof(T) == 1, T>::type
+floor_pow2(T value)
 {
 	value = value | (value >> 1);
 	value = value | (value >> 2);
@@ -82,7 +97,9 @@ uint8_t floor_pow2(uint8_t value)
 	return value - (value >> 1);
 }
 	
-uint16_t floor_pow2(uint16_t value)
+template <typename T>
+typename enable_if_c<is_integral<T>::value && sizeof(T) == 2, T>::type
+floor_pow2(T value)
 {
 	value = value | (value >> 1);
 	value = value | (value >> 2);
@@ -92,7 +109,9 @@ uint16_t floor_pow2(uint16_t value)
 	return value - (value >> 1);
 }
 	
-uint32_t floor_pow2(uint32_t value)
+template <typename T>
+typename enable_if_c<is_integral<T>::value && sizeof(T) == 4, T>::type
+floor_pow2(T value)
 {
 	value = value | (value >> 1);
 	value = value | (value >> 2);
@@ -104,7 +123,9 @@ uint32_t floor_pow2(uint32_t value)
 }
 
 #ifndef BOOST_HAS_INT64_T
-uint64_t floor_pow2(uint64_t value)
+template <typename T>
+typename enable_if_c<is_integral<T>::value && sizeof(T) == 8, T>::type
+floor_pow2(T value)
 {
 	value = value | (value >> 1);
 	value = value | (value >> 2);

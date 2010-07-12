@@ -50,7 +50,7 @@
       Least Common Multiple </a></span></dt>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.mpl_greatest_common_divisor_">MPL
       Greatest Common Divisor </a></span></dt>
-<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils"> Binary Utilities</a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bit_utils"> Binary Utilities</a></span></dt>
 </dl></div>
 <div class="section" title="Overview">
 <div class="titlepage"><div><div><h3 class="title">
@@ -1108,10 +1108,10 @@
 </h3></div></div></div>
 <div class="toc"><dl><dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.round_to_power_of_2_functions.synopsis">Synopsis</a></span></dt></dl></div>
 <p>
-        This function rounds up and down integral values to the next power of 2.
-        The <code class="computeroutput"><span class="identifier">ceil_pow2</span></code> function rounds
-        up and <code class="computeroutput"><span class="identifier">floor_pow2</span></code> function
-        rounds down. These functions are defined on <a href="../../../../../boost/integer/round_power_2.hpp" target="_top">&lt;boost/integer/round_power_2.hpp&gt;</a>
+        This function rounds up and down positive integral values to the next power
+        of 2. The <code class="computeroutput"><span class="identifier">ceil_pow2</span></code> function
+        rounds up and <code class="computeroutput"><span class="identifier">floor_pow2</span></code>
+        function rounds down. These functions are defined on <a href="../../../../../boost/integer/round_pow2.hpp" target="_top">&lt;boost/integer/round_pow2.hpp&gt;</a>
       </p>
 <div class="section" title="Synopsis">
 <div class="titlepage"><div><div><h4 class="title">
@@ -1124,8 +1124,9 @@
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
 <span class="bold"><strong>Requires: </strong></span><code class="computeroutput"><span class="identifier">T</span></code>
-          must be convertible to <code class="computeroutput"><span class="identifier">uint8_t</span></code>
-          or <code class="computeroutput"><span class="identifier">uint16_t</span></code> or <code class="computeroutput"><span class="identifier">uint32_t</span></code> or <code class="computeroutput"><span class="identifier">uint64_t</span></code>.
+          must be an integral type and <code class="computeroutput"><span class="identifier">value</span></code>
+          must be positive. If <code class="computeroutput"><span class="identifier">value</span></code>
+          is negative, the result is undefined.
         </li>
 <li class="listitem">
 <span class="bold"><strong>Returns: </strong></span><div class="itemizedlist"><ul class="itemizedlist" type="circle">
@@ -1320,35 +1321,39 @@
 </div>
 <div class="section" title="Binary Utilities">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_integer.bits_and_ints.bin_utils"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils" title="Binary Utilities"> Binary Utilities</a>
+<a name="boost_integer.bits_and_ints.bit_utils"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bit_utils" title="Binary Utilities"> Binary Utilities</a>
 </h3></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.synopsis">Synopsis</a></span></dt>
-<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__static_set_bit____and__mpl__set_bit_">Template
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bit_utils.synopsis">Synopsis</a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bit_utils.template_class__static_set_bit____and__mpl__set_bit_">Template
         Class <code class="computeroutput"><span class="identifier">static_set_bit</span><span class="special">&lt;&gt;</span></code>
         and <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">set_bit</span></code></a></span></dt>
-<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__mpl__clear_bit____and__static_clear_bit___">Template
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bit_utils.template_class__mpl__clear_bit____and__static_clear_bit___">Template
         Class <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">clear_bit</span><span class="special">&lt;&gt;</span></code>
         and <code class="computeroutput"><span class="identifier">static_clear_bit</span><span class="special">&lt;&gt;</span></code></a></span></dt>
-<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__mpl__test_bit__and__static_test_bit___">Template
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bit_utils.template_class__mpl__test_bit__and__static_test_bit___">Template
         Class <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">test_bit</span></code> and <code class="computeroutput"><span class="identifier">static_test_bit</span><span class="special">&lt;&gt;</span></code></a></span></dt>
-<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__mpl__flip_bit____and__static_flip_bit___">Template
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bit_utils.template_class__mpl__flip_bit____and__static_flip_bit___">Template
         Class <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">flip_bit</span><span class="special">&lt;&gt;</span></code>
         and <code class="computeroutput"><span class="identifier">static_flip_bit</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bit_utils.runtime_version">Runtime
+        version</a></span></dt>
 </dl></div>
 <p>
-        The header <a href="../../../../../boost/integer/bin_utils.hpp" target="_top">&lt;boost/integer/bin_utils.hpp&gt;</a>
+        The header <a href="../../../../../boost/integer/bit_utils.hpp" target="_top">&lt;boost/integer/bit_utils.hpp&gt;</a>
         cotains some metafunctions to handle binary data. All the metafunctions have
         an member varible named <code class="computeroutput"><span class="identifier">value</span></code>
         where will be the result.
       </p>
 <div class="section" title="Synopsis">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_integer.bits_and_ints.bin_utils.synopsis"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.synopsis" title="Synopsis">Synopsis</a>
+<a name="boost_integer.bits_and_ints.bit_utils.synopsis"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bit_utils.synopsis" title="Synopsis">Synopsis</a>
 </h4></div></div></div>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span>
 <span class="special">{</span>
-	
+
+<span class="comment">// Compile-time version
+</span>	
 <span class="comment">// Sets the bit `pos' in data
 </span><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">data</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="identifier">pos</span><span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">static_set_bit</span> <span class="special">{</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">T</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> <span class="special">};</span>
@@ -1380,13 +1385,26 @@
 <span class="keyword">struct</span> <span class="identifier">test_bit</span> <span class="special">{</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span> <span class="special">=</span> <span class="emphasis"><em>implementation-defined</em></span><span class="special">;</span> <span class="special">};</span>
 
 <span class="special">}</span> <span class="comment">// mpl
-</span>	
+</span>
+<span class="comment">// Runtime verion
+</span><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">inline</span> <span class="identifier">T</span> <span class="identifier">set_bit</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">data</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="identifier">pos</span><span class="special">);</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">inline</span> <span class="identifier">T</span> <span class="identifier">clear_bit</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">data</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="identifier">pos</span><span class="special">);</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">inline</span> <span class="identifier">T</span> <span class="identifier">flip_bit</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">data</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="identifier">pos</span><span class="special">);</span>
+	
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">inline</span> <span class="keyword">bool</span> <span class="identifier">test_bit</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">data</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="identifier">pos</span><span class="special">);</span>
+	
 <span class="special">}</span> <span class="comment">// boost
 </span></pre>
 </div>
 <div class="section" title="Template Class static_set_bit&lt;&gt; and mpl::set_bit">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_integer.bits_and_ints.bin_utils.template_class__static_set_bit____and__mpl__set_bit_"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__static_set_bit____and__mpl__set_bit_" title="Template Class static_set_bit&lt;&gt; and mpl::set_bit">Template
+<a name="boost_integer.bits_and_ints.bit_utils.template_class__static_set_bit____and__mpl__set_bit_"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bit_utils.template_class__static_set_bit____and__mpl__set_bit_" title="Template Class static_set_bit&lt;&gt; and mpl::set_bit">Template
         Class <code class="computeroutput"><span class="identifier">static_set_bit</span><span class="special">&lt;&gt;</span></code>
         and <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">set_bit</span></code></a>
 </h4></div></div></div>
@@ -1423,7 +1441,7 @@
 </div>
 <div class="section" title="Template Class mpl::clear_bit&lt;&gt; and static_clear_bit&lt;&gt;">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_integer.bits_and_ints.bin_utils.template_class__mpl__clear_bit____and__static_clear_bit___"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__mpl__clear_bit____and__static_clear_bit___" title="Template Class mpl::clear_bit&lt;&gt; and static_clear_bit&lt;&gt;">Template
+<a name="boost_integer.bits_and_ints.bit_utils.template_class__mpl__clear_bit____and__static_clear_bit___"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bit_utils.template_class__mpl__clear_bit____and__static_clear_bit___" title="Template Class mpl::clear_bit&lt;&gt; and static_clear_bit&lt;&gt;">Template
         Class <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">clear_bit</span><span class="special">&lt;&gt;</span></code>
         and <code class="computeroutput"><span class="identifier">static_clear_bit</span><span class="special">&lt;&gt;</span></code></a>
 </h4></div></div></div>
@@ -1460,7 +1478,7 @@
 </div>
 <div class="section" title="Template Class mpl::test_bit and static_test_bit&lt;&gt;">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_integer.bits_and_ints.bin_utils.template_class__mpl__test_bit__and__static_test_bit___"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__mpl__test_bit__and__static_test_bit___" title="Template Class mpl::test_bit and static_test_bit&lt;&gt;">Template
+<a name="boost_integer.bits_and_ints.bit_utils.template_class__mpl__test_bit__and__static_test_bit___"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bit_utils.template_class__mpl__test_bit__and__static_test_bit___" title="Template Class mpl::test_bit and static_test_bit&lt;&gt;">Template
         Class <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">test_bit</span></code> and <code class="computeroutput"><span class="identifier">static_test_bit</span><span class="special">&lt;&gt;</span></code></a>
 </h4></div></div></div>
 <p>
@@ -1496,7 +1514,7 @@
 </div>
 <div class="section" title="Template Class mpl::flip_bit&lt;&gt; and static_flip_bit&lt;&gt;">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_integer.bits_and_ints.bin_utils.template_class__mpl__flip_bit____and__static_flip_bit___"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bin_utils.template_class__mpl__flip_bit____and__static_flip_bit___" title="Template Class mpl::flip_bit&lt;&gt; and static_flip_bit&lt;&gt;">Template
+<a name="boost_integer.bits_and_ints.bit_utils.template_class__mpl__flip_bit____and__static_flip_bit___"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bit_utils.template_class__mpl__flip_bit____and__static_flip_bit___" title="Template Class mpl::flip_bit&lt;&gt; and static_flip_bit&lt;&gt;">Template
         Class <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">flip_bit</span><span class="special">&lt;&gt;</span></code>
         and <code class="computeroutput"><span class="identifier">static_flip_bit</span><span class="special">&lt;&gt;</span></code></a>
 </h4></div></div></div>
@@ -1530,6 +1548,16 @@
 <pre class="programlisting"><span class="comment">// `new_value' becomes 14
 </span><span class="keyword">bool</span> <span class="identifier">new_value</span> <span class="special">=</span> <span class="identifier">flip_bit</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="number">10</span><span class="special">,</span> <span class="number">2</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">;</span>
 </pre>
+</div>
+<div class="section" title="Runtime version">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_integer.bits_and_ints.bit_utils.runtime_version"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bit_utils.runtime_version" title="Runtime version">Runtime
+        version</a>
+</h4></div></div></div>
+<p>
+          For all runtime functions, all remarks and requirement are equals to the
+          <code class="computeroutput"><span class="identifier">static_</span></code>-prefixed version.
+        </p>
 </div>
 </div>
 </div>
