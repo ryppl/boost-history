@@ -51,7 +51,7 @@ project
 
     alias filewriteperf
     :
-        [ run ../perf/filewrite.cpp :  :  : <library>/boost//date_time <library>/boost//system <link>static ]
+        [ run ../perf/filewrite.cpp :  :  : <library>/boost//filesystem <library>/boost//date_time <library>/boost//system <link>static ]
     ;
 	
     alias all
