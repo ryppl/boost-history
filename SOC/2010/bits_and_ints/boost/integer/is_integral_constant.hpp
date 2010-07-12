@@ -21,7 +21,7 @@
 namespace boost {
 
 /*
- *	is_integral_constant<T> checks if T is or not an integral_constant
+ *	is_integral_constant<T> verifies if T is or not an integral_constant
  */
 
 namespace mpl {

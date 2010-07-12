@@ -592,6 +592,41 @@ metafunction wich calculates the greatest common divisor of two given `mpl::inte
 
 [endsect]
 
+[section Swap without a temporary ]
+The header file [@../../../../boost/integer/swap.hpp <boost/integer/swap.hpp>] defines `swap` 
+function wich swaps 2 integral values without using a temporary variable.
+
+[section Synopsis]
+
+	template <typename T>
+	inline void swap(T& x, T& y);
+	
+[endsect]
+
+*[*Requires: ] `T` must be an integral type.
+
+*[*Returns: ] Nothing. `x` will have the value of `y` and `y` will have the `x` value.
+
+[endsect]
+
+[section MPL `is_integral_constant<>` metafunction ]
+The header file [@../../../../boost/integer/is_integral_constant.hpp <boost/integer/is_integral_constant.hpp>] defines 
+`is_integral_constant<>` static metafunction wich verifies if an given template parameter is or not a `mpl::integral_c<>`.
+
+[section Synopsis]
+
+	template <typename IC>
+	struct is_integral_constant { ``['implementation-defined]`` };
+	
+[endsect]
+
+*[*Results: ] 
+	* If `IC` is a `mpl::integral_c<>` type, `is_integral_constant<IC>` will inherit from `mpl::true_`
+	* If `IC` is not a `mpl::integral_c<>` type, `is_integral_constant<IC>` will inherit from `mpl::false_`
+
+[endsect]
+
+
 [section:bit_utils Binary Utilities]
 The header [@../../../../boost/integer/bit_utils.hpp <boost/integer/bit_utils.hpp>] cotains some metafunctions to handle binary data.
 All the metafunctions have an member varible named `value` where will be the result.

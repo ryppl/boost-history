@@ -50,6 +50,11 @@
       Least Common Multiple </a></span></dt>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.mpl_greatest_common_divisor_">MPL
       Greatest Common Divisor </a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.swap_without_a_temporary_">Swap
+      without a temporary </a></span></dt>
+<dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.mpl__is_integral_constant____metafunction_">MPL
+      <code class="computeroutput"><span class="identifier">is_integral_constant</span><span class="special">&lt;&gt;</span></code>
+      metafunction </a></span></dt>
 <dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.bit_utils"> Binary Utilities</a></span></dt>
 </dl></div>
 <div class="section" title="Overview">
@@ -1319,6 +1324,70 @@
         </li>
 </ul></div>
 </div>
+<div class="section" title="Swap without a temporary">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_integer.bits_and_ints.swap_without_a_temporary_"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.swap_without_a_temporary_" title="Swap without a temporary">Swap
+      without a temporary </a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.swap_without_a_temporary_.synopsis">Synopsis</a></span></dt></dl></div>
+<p>
+        The header file <a href="../../../../../boost/integer/swap.hpp" target="_top">&lt;boost/integer/swap.hpp&gt;</a>
+        defines <code class="computeroutput"><span class="identifier">swap</span></code> function wich
+        swaps 2 integral values without using a temporary variable.
+      </p>
+<div class="section" title="Synopsis">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_integer.bits_and_ints.swap_without_a_temporary_.synopsis"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.swap_without_a_temporary_.synopsis" title="Synopsis">Synopsis</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">inline</span> <span class="keyword">void</span> <span class="identifier">swap</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">y</span><span class="special">);</span>
+</pre>
+</div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+<span class="bold"><strong>Requires: </strong></span><code class="computeroutput"><span class="identifier">T</span></code>
+          must be an integral type.
+        </li>
+<li class="listitem">
+<span class="bold"><strong>Returns: </strong></span> Nothing. <code class="computeroutput"><span class="identifier">x</span></code>
+          will have the value of <code class="computeroutput"><span class="identifier">y</span></code>
+          and <code class="computeroutput"><span class="identifier">y</span></code> will have the <code class="computeroutput"><span class="identifier">x</span></code> value.
+        </li>
+</ul></div>
+</div>
+<div class="section" title="MPL is_integral_constant&lt;&gt; metafunction">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_integer.bits_and_ints.mpl__is_integral_constant____metafunction_"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.mpl__is_integral_constant____metafunction_" title="MPL is_integral_constant&lt;&gt; metafunction">MPL
+      <code class="computeroutput"><span class="identifier">is_integral_constant</span><span class="special">&lt;&gt;</span></code>
+      metafunction </a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="bits_and_ints.html#boost_integer.bits_and_ints.mpl__is_integral_constant____metafunction_.synopsis">Synopsis</a></span></dt></dl></div>
+<p>
+        The header file <a href="../../../../../boost/integer/is_integral_constant.hpp" target="_top">&lt;boost/integer/is_integral_constant.hpp&gt;</a>
+        defines <code class="computeroutput"><span class="identifier">is_integral_constant</span><span class="special">&lt;&gt;</span></code> static metafunction wich verifies
+        if an given template parameter is or not a <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">integral_c</span><span class="special">&lt;&gt;</span></code>.
+      </p>
+<div class="section" title="Synopsis">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_integer.bits_and_ints.mpl__is_integral_constant____metafunction_.synopsis"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.mpl__is_integral_constant____metafunction_.synopsis" title="Synopsis">Synopsis</a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">IC</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">is_integral_constant</span> <span class="special">{</span> <span class="emphasis"><em>implementation-defined</em></span> <span class="special">};</span>
+</pre>
+</div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+<span class="bold"><strong>Results: </strong></span><div class="itemizedlist"><ul class="itemizedlist" type="circle">
+<li class="listitem">
+              If <code class="computeroutput"><span class="identifier">IC</span></code> is a <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">integral_c</span><span class="special">&lt;&gt;</span></code>
+              type, <code class="computeroutput"><span class="identifier">is_integral_constant</span><span class="special">&lt;</span><span class="identifier">IC</span><span class="special">&gt;</span></code> will inherit from <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">true_</span></code>
+</li>
+<li class="listitem">
+              If <code class="computeroutput"><span class="identifier">IC</span></code> is not a <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">integral_c</span><span class="special">&lt;&gt;</span></code>
+              type, <code class="computeroutput"><span class="identifier">is_integral_constant</span><span class="special">&lt;</span><span class="identifier">IC</span><span class="special">&gt;</span></code> will inherit from <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">false_</span></code>
+</li>
+</ul></div>
+</li></ul></div>
+</div>
 <div class="section" title="Binary Utilities">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_integer.bits_and_ints.bit_utils"></a><a class="link" href="bits_and_ints.html#boost_integer.bits_and_ints.bit_utils" title="Binary Utilities"> Binary Utilities</a>
@@ -1386,7 +1455,7 @@
 
 <span class="special">}</span> <span class="comment">// mpl
 </span>
-<span class="comment">// Runtime verion
+<span class="comment">// Runtime version
 </span><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="keyword">inline</span> <span class="identifier">T</span> <span class="identifier">set_bit</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">data</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="identifier">pos</span><span class="special">);</span>
 
