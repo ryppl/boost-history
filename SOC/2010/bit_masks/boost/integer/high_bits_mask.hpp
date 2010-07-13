@@ -31,13 +31,19 @@ namespace boost {
 #ifdef BOOST_MSVC
 #pragma warning(push)
 #pragma warning(disable : 4309)
-#pragma warning(disable : 4305)
+// #pragma warning(disable : 4305)
 namespace detail {
     template<typename T, unsigned int Width>
     struct evaluate_for_msvc_08 {
         typedef typename make_unsigned<T>::type unsigned_type;
-        BOOST_STATIC_CONSTANT(T, val = (~(mpl::shift_right< mpl::size_t< ~(T(0))
-             >, mpl::size_t<Width> >::type::value) ));
+        BOOST_STATIC_CONSTANT(T, val = (~(mpl::shift_right<
+            integral_constant<
+                unsigned_type,
+                ~(T(0))
+            >,
+            mpl::size_t<Width>
+        >::type::value)
+        ));
         typedef integral_constant<T, val>       type;
     };
 }
