@@ -214,3 +214,4 @@ private:
 #ifdef BOOST_MSVC
 #pragma warning(pop)
 #endif
+#endif
