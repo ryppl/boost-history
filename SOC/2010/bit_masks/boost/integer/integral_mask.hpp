@@ -8,18 +8,7 @@
 
 #ifndef BOOST_INTEGRAL_MASK_HPP
 #define BOOST_INTEGRAL_MASK_HPP
-#include <boost/config.hpp>
-#ifdef BOOST_MSVC
-#pragma warning(push)
-#pragma warning(disable : 4307)
-#pragma warning(disable : 4309)
-#endif
-
 #include <boost/type_traits/integral_constant.hpp>
-
-#ifdef BOOST_MSVC
-#pragma warning(pop)
-#endif
 #include <boost/static_assert.hpp>
 #include <boost/integer/bit_width.hpp>
 #include <limits>

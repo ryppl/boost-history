@@ -6,8 +6,16 @@
 
 #ifndef BOOST_INTEGRAL_BIT_WIDTH_HPP
 #define BOOST_INTEGRAL_BIT_WIDTH_HPP
-#include <boost/type_traits.hpp>
-
+#include <boost/config.hpp>
+#ifdef BOOST_MSVC
+#pragma warning(push)
+#pragma warning(disable : 4307)
+#pragma warning(disable : 4309)
+#endif
+#include <boost/type_traits/integral_constant.hpp>
+#ifdef BOOST_MSVC
+#pragma warning(pop)
+#endif
 
 
 namespace boost {
