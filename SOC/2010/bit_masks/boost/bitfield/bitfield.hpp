@@ -12,19 +12,13 @@
 
 #ifndef BOOST_INTEGER_BITFIELD__HPP
 #define BOOST_INTEGER_BITFIELD__HPP
-#include <boost/config.hpp>
-#ifdef BOOST_MSVC
-#pragma warning(push)
-#pragma warning(disable : 4512 )
-#pragma warning(disable : 4800 )
-#endif
 
 #include <cstddef>
 #include <boost/static_assert.hpp>
 
 #include <cassert>
 #include <limits>
-
+//#include <netinet/in.h>
 
 namespace boost { namespace integer {
     
@@ -78,18 +72,18 @@ namespace boost { namespace integer {
     };
     #endif
 
+#if 1
     namespace detail {
         // allows the user to make an explicit call to the copy constructor when
         // the types that are convertible conflict with one another.
         struct foce_copy { };
-
         template <bool is_signed, typename value_type
-                , typename storage_type, unsigned int WIDTH, unsigned int SIGN_MASK>
+                , typename storage_type, unsigned int WIDTH>
         struct bitfield_complete_signed;
 
-        template <typename value_type, typename storage_type, unsigned int WIDTH, unsigned int SIGN_MASK>
-        struct bitfield_complete_signed<true, value_type, storage_type, WIDTH, SIGN_MASK> {
-            static value_type convert(storage_type val) {
+        template <typename value_type, typename storage_type, unsigned int WIDTH>
+        struct bitfield_complete_signed<true, value_type, storage_type, WIDTH> {
+            static value_type convert(storage_type val, storage_type SIGN_MASK) {
                 if( (val>>(WIDTH-1))!=0) {
                     return static_cast<value_type>(val | SIGN_MASK);
                 } else {
@@ -98,13 +92,20 @@ namespace boost { namespace integer {
             }
         };
 
-        template <typename value_type, typename storage_type, unsigned int WIDTH, unsigned int SIGN_MASK>
-        struct bitfield_complete_signed<false, value_type, storage_type, WIDTH, SIGN_MASK> {
-            static value_type convert(storage_type val) {
+        template <typename value_type, typename storage_type, unsigned int WIDTH>
+        struct bitfield_complete_signed<false, value_type, storage_type, WIDTH> {
+            static value_type convert(storage_type val, storage_type) {
                 return static_cast<value_type>(val);
             }
         };
+        template <typename storage_type, unsigned int WIDTH>
+        struct bitfield_complete_signed<false, bool, storage_type, WIDTH> {
+            static bool convert(storage_type val, storage_type) {
+                return val!=0;
+            }
+        };
     }
+#endif        
     
     //------------------------------------------------------------------------------
     /*!
@@ -178,22 +179,22 @@ namespace boost { namespace integer {
         BOOST_STATIC_ASSERT( (L - F + 1) <= 8*sizeof(value_type) );
 
         static storage_type value_to_storage(value_type val) {
-            storage_type res =val;
-            return ((res & VAL_MASK) << LASTD);
+            storage_type res =storage_type(val);
+            return storage_type((res & VAL_MASK) << LASTD);
         }
 
         static value_type storage_to_value(storage_type field) {
-            storage_type val = (field & FIELD_MASK) >> LASTD;
-            return detail::bitfield_complete_signed<std::numeric_limits<value_type>::is_signed, value_type, storage_type, WIDTH, SIGN_MASK>::convert(val);
+            storage_type val = storage_type((field & FIELD_MASK) >> LASTD);
+            return detail::bitfield_complete_signed<std::numeric_limits<value_type>::is_signed, value_type, storage_type, WIDTH>::convert(val,SIGN_MASK);
         }
 
         void set_bit(std::size_t index, bool state) {
-            field_ &= ~value_to_storage(1<<index);
-            if (state) field_ |= value_to_storage(1<<index);
+            *field_ &= ~value_to_storage(1<<index);
+            if (state) *field_ |= value_to_storage(1<<index);
         }
 
         bool get_bit(std::size_t index) {
-            return (field_ & value_to_storage(1<<index)) != 0;
+            return (*field_ & value_to_storage(1<<index)) != 0;
         }
 
         template <typename BITFIELD>
@@ -231,17 +232,17 @@ namespace boost { namespace integer {
         static const std::size_t STS        = 8*sizeof(storage_type);
         static const std::size_t LASTD      = STS-LAST-1;
         static const std::size_t WIDTH      = LAST - FIRST + 1;     //!< Width in bits of the bitfield
-/*
+
         static const storage_type VAL_MASK;
         static const storage_type FIELD_MASK;
         static const storage_type SIGN_MASK;
-*/
+
+/*
 
         static const storage_type VAL_MASK   = storage_type((1 << WIDTH) - 1);    //!< Mask applied against assigned values
         static const storage_type FIELD_MASK = storage_type(VAL_MASK << LASTD); //!< Mask of the field's bit positions
         static const storage_type SIGN_MASK  = storage_type(~VAL_MASK);            //!< Sign mask applied against assigned 
 
-/*
         static const storage_type VAL_MASK   = (1 << WIDTH) - 1;    //!< Mask applied against assigned values
         static const storage_type FIELD_MASK = (VAL_MASK << LASTD); //!< Mask of the field's bit positions
         static const storage_type SIGN_MASK  = ~VAL_MASK;            //!< Sign mask applied against assigned values
@@ -254,40 +255,40 @@ namespace boost { namespace integer {
             static const storage_type value = ((storage_type(V) & VAL_MASK) << LASTD);
         };            
         //! explicit constructor from a reference
-        explicit bitfield(storage_type& field) : field_(field) {
+        explicit bitfield(storage_type& field) : field_(&field) {
         }
 
         //! setter from a value type
         void set(value_type val) {
-            field_ = (field_ & ~FIELD_MASK) | value_to_storage(val);
+            *field_ = (*field_ & ~FIELD_MASK) | value_to_storage(val);
         }
         //! Assignment from a value type
         bitfield& operator=(value_type val) {
-            field_ = (field_ & ~FIELD_MASK) | value_to_storage(val);
+            *field_ = (*field_ & ~FIELD_MASK) | value_to_storage(val);
             return *this;
         }
 
         //! Returns the bitfield value.
         operator value_type() const {
-            return storage_to_value(field_);
+            return storage_to_value(*field_);
         }
 
         value_type get() const {
-   	        return storage_to_value(field_);
+   	        return storage_to_value(*field_);
         }
 
         //! Returns the negative of the bitfield value.
         // this must be modified on the case of signed value_type
-        value_type operator~() const {return storage_to_value(~field_);}
+        value_type operator~() const {return storage_to_value(~*field_);}
 
         #if 0
         bit_reference_type operator[](std::size_t index) {
-            return bit_reference_type(field_, value_to_storage(1 <<  index));
+            return bit_reference_type(*field_, value_to_storage(1 <<  index));
         }
 
         bit_const_reference_type operator[](std::size_t index) const {
             assert(index < WIDTH);
-            return bit_const_reference_type(field_, value_to_storage(1 <<  index));
+            return bit_const_reference_type(*field_, value_to_storage(1 <<  index));
         }
         #else
         bit_reference_type operator[](std::size_t index) {
@@ -302,7 +303,7 @@ namespace boost { namespace integer {
 
         //! Returns the current bitfield value as bit flags.
         /*! The returned bit flags can be ORed with other bit flags. */
-        storage_type flags() const {return field_ & FIELD_MASK;}
+        storage_type flags() const {return *field_ & FIELD_MASK;}
 
         //! Returns the given bitfield value as bit flags.
         /*! The returned bit flags can be ORed with other bit flags. */
@@ -314,6 +315,11 @@ namespace boost { namespace integer {
         static storage_type val_mask() {return VAL_MASK;}
         static storage_type field_mask()  {return FIELD_MASK;}
 
+        bitfield& operator=(bitfield const& rhs) {
+            if (this == &rhs) return;
+            field_ = rhs.field_;
+        }
+        
         //! Arithmetic-assign operators
         bitfield& operator++() {*this += 1; return *this;}
         value_type operator++(int) {value_type ret(*this); ++*this; return ret;}
@@ -336,7 +342,7 @@ namespace boost { namespace integer {
         bitfield& operator^=(value_type rhs) {*this = value_type(*this) ^ rhs; return *this;}
 
     private:
-        storage_type& field_;
+        storage_type* field_;
     };
 
 
@@ -364,7 +370,7 @@ namespace boost { namespace integer {
         r.set(v);
         return is;
     }
-/*
+
 template <
     typename STORAGE_TYPE,
     std::size_t F,
@@ -372,8 +378,8 @@ template <
     typename VALUE_TYPE,
     typename REFERENCE_TYPE
 >
-bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::storage_type bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::VAL_MASK =
-    bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::storage_type(
+const typename bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::storage_type bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::VAL_MASK =
+    typename bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::storage_type(
     (1 << bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::WIDTH) - 1);
 
 template <
@@ -383,12 +389,13 @@ template <
     typename VALUE_TYPE,
     typename REFERENCE_TYPE
 >
-bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::storage_type bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::FIELD_MASK =
+const typename bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::storage_type bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::FIELD_MASK =
     typename bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::storage_type(
-        bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::VAL_MASK
+        ((1 << bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::WIDTH) - 1)
           <<
         bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::LASTD
     );
+        //bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::VAL_MASK
 
 template <
     typename STORAGE_TYPE,
@@ -397,13 +404,13 @@ template <
     typename VALUE_TYPE,
     typename REFERENCE_TYPE
 >
-bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::storage_type bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::SIGN_MASK =
-    typename bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::storage_type(~bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::VAL_MASK);
-*/
-}}
+const typename bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::storage_type bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::SIGN_MASK =
+    typename bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::storage_type(~
+    //bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::VAL_MASK
+            ((1 << bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::WIDTH) - 1)
 
-#ifdef BOOST_MSVC
-#pragma warning(pop)
-#endif
+    );
+
+}}
 #endif
 

@@ -9,7 +9,11 @@ project
     : requirements
         <warnings>all
         <toolset>gcc:<cxxflags>-Wextra
+        <toolset>gcc:<cxxflags>-Wno-long-long
+        <toolset>darwin:<cxxflags>-Wextra 
+        <toolset>darwin:<cxxflags>-Wno-long-long 
     ;
+
 
 test-suite integer
     : 
@@ -44,17 +48,9 @@ test-suite integer
         [ run bft_testing/align_test.cpp ]
         [ run bft_testing/reference_builder_test.cpp ]
         [ run bft_testing/deduced_storage_type_test.cpp ]
-        [ run bft_testing/deduced_storage_type_long_long_test.cpp 
-            :
-            :
-            :
-            <toolset>gcc:<cxxflags>-Wno-long-long <toolset>darwin:<cxxflags>-Wno-long-long ]
+        [ run bft_testing/deduced_storage_type_long_long_test.cpp ]
         [ run bft_testing/make_bft_testing.cpp ]
-        [ run bft_testing/boost_endian_integration_test.cpp
-            :
-            :
-            :
-            <toolset>gcc:<cxxflags>-Wno-long-long <toolset>darwin:<cxxflags>-Wno-long-long ]
+        [ run bft_testing/boost_endian_integration_test.cpp ]
         [ run ppb_testing/pointer_plus_bits_test.cpp ]
 
 
