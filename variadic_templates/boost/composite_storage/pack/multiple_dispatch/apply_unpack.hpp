@@ -114,10 +114,14 @@ namespace multiple_dispatch
             apply_ftor_check_args( a_functor
               , a_args.template project<Indices>()...);
           #else
-            //This branch of #if...#endif can cause compile errors
+            //This branch of #if...#endif may cause compile errors
             //about "no match for for call to 'SomeFunCall'"
             //where SomdFunCall is some function name and
             //parameter type list.
+            //
+            //To avoid these errors, derive Functor from
+            //functor_bad_args.
+            //
             a_functor( a_args.template project<Indices>()...);
           #endif
       }
