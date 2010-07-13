@@ -47,7 +47,7 @@ namespace detail {
     // long long specialization
     template<unsigned int Width>
     struct evaluate_for_msvc_08<long long, Width> {
-        BOOST_STATIC_CONSTANT(T, val = (~(mpl::shift_right<
+        BOOST_STATIC_CONSTANT(long long, val = (~(mpl::shift_right<
             integral_constant< long long,~( unsigned long long(0) )>,
             mpl::size_t<Width>
         >::type::value)
@@ -57,7 +57,7 @@ namespace detail {
     // unsigned long long specialization
     template<unsigned int Width>
     struct evaluate_for_msvc_08<unsigned long long, Width> {
-        BOOST_STATIC_CONSTANT(T, val = (~(mpl::shift_right<
+        BOOST_STATIC_CONSTANT(unsigned long long, val = (~(mpl::shift_right<
             integral_constant< unsigned long long, ~( unsigned long long(0) )>,
             mpl::size_t<Width>
         >::type::value)
