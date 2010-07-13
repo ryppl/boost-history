@@ -8,12 +8,6 @@
 #ifndef BOOST_HIGH_BITS_MASK_HPP
 #define BOOST_HIGH_BITS_MASK_HPP
 
-#include <boost/config.hpp>
-#include <boost/integer/detail/high_low_impl.hpp>
-#include <boost/integer/integral_mask.hpp>
-#include <boost/type_traits/integral_constant.hpp>
-#include <boost/type_traits/make_unsigned.hpp>
-
 #ifdef BOOST_MSVC
 #   if BOOST_MSVC == 1500
 #       pragma warning(push)
@@ -21,13 +15,23 @@
 #   endif
 #endif
 
+
+#include <boost/config.hpp>
+#include <boost/integer/detail/high_low_impl.hpp>
+#include <boost/integer/integral_mask.hpp>
+#include <boost/type_traits/integral_constant.hpp>
+#include <boost/type_traits/make_unsigned.hpp>
+
+
+
 #include <boost/mpl/bitwise.hpp>
+#include <boost/mpl/size_t.hpp>
 
 #if BOOST_MSVC
 #pragma warning(pop)
 #endif
 
-#include <boost/mpl/size_t.hpp>
+
 
 
 
