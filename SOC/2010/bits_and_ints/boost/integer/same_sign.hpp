@@ -7,8 +7,8 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history. 
 
+#include <boost/static_assert.hpp>
 #include <boost/type_traits/is_integral.hpp>
-#include <boost/utility/enable_if.hpp>
 
 namespace boost {
 
@@ -22,9 +22,10 @@ namespace boost {
  */
 	
 template <typename T>
-inline typename enable_if<is_integral<T>, bool>::type
-same_sign(T first, T second)
+bool same_sign(T first, T second)
 {
+	BOOST_STATIC_ASSERT((is_integral<T>::value));
+	
 	T temp = first ^ second;
 	temp = temp >> ((sizeof(T) * 8) - 1);
 	temp = temp & T(1);

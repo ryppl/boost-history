@@ -10,9 +10,10 @@
 #ifndef BOOST_STATIC_SIGN_EXTEND_INCLUDED
 #define BOOST_STATIC_SIGN_EXTEND_INCLUDED
 
-#include <boost/utility/enable_if.hpp>
-#include <boost/type_traits/is_integral.hpp>
+#include <boost/static_assert.hpp>
 #include <boost/mpl/integral_c.hpp>
+#include <boost/type_traits/is_integral.hpp>
+#include <boost/integer/is_integral_constant.hpp>
 
 /* 
  *	Extend `data' represented in `Bits' bits to sizeof(T) * 8
@@ -49,15 +50,20 @@ struct sign_extend : integral_c<typename IC::value_type,
 	^ (typename IC::value_type(1) << (Bits - 1))) 
 	- (typename IC::value_type(1) << (Bits - 1)))
 >
-{};
+{
+	BOOST_STATIC_ASSERT((is_integral_constant<IC>::value));
+	BOOST_STATIC_ASSERT((Bits > 0 && Bits < (sizeof(typename IC::value_type) * 8)));
+};
 
 }
 
 // Compile-time version of sign_extend
-template<typename T, T data, std::size_t Bits, 
-	class Enable = typename enable_if< is_integral<T> >::type>
+template<typename T, T data, std::size_t Bits>
 struct static_sign_extend : mpl::sign_extend<mpl::integral_c<T, data>, Bits>
-{}; // boost::static_sign_extend
+{
+	BOOST_STATIC_ASSERT((is_integral<T>::value));
+	BOOST_STATIC_ASSERT((Bits > 0 && Bits < (sizeof(T) * 8)));
+}; // boost::static_sign_extend
 
 } // boost
 

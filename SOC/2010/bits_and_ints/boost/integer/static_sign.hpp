@@ -11,12 +11,13 @@
 #ifndef BOOST_STATIC_SIGN_INCLUDED
 #define BOOST_STATIC_SIGN_INCLUDED
 
-#include <boost/utility/enable_if.hpp>
-#include <boost/integer/is_integral_constant.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/static_assert.hpp>
 #include <boost/mpl/integral_c.hpp>
+#include <boost/type_traits/is_integral.hpp>
 #include <boost/type_traits/is_unsigned.hpp>
 #include <boost/type_traits/make_signed.hpp>
+#include <boost/integer/is_integral_constant.hpp>
 
 namespace boost {
 
@@ -26,11 +27,7 @@ namespace boost {
 	
 namespace mpl {
 
-template <typename IC
-	, class Enable = typename enable_if<
-		is_integral_constant<IC> 
-	>::type
->
+template <typename IC>
 struct sign : 
 	integral_c<
 		typename make_signed<
@@ -38,17 +35,17 @@ struct sign :
 		>::type,
 		(IC::value == 0 ? 0 : (IC::value > 0 ? 1 : -1))
 	>
-{};
+{
+	BOOST_STATIC_ASSERT((is_integral_constant<IC>::value));
+};
 
 }
 
-template <typename T, T Value
-    , class Enable = typename enable_if<
-        is_integral<T> 
-    >::type
->
+template <typename T, T Value>
 struct static_sign : mpl::sign<mpl::integral_c<T, Value> >
-{};
+{
+	BOOST_STATIC_ASSERT((is_integral<T>::value));
+};
 
 } // boost
 

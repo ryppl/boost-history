@@ -10,8 +10,9 @@
 #ifndef BOOST_STATIC_CLEAR_LEAST_BIT_SET
 #define BOOST_STATIC_CLEAR_LEAST_BIT_SET
 
+#include <boost/static_assert.hpp>
 #include <boost/mpl/integral_c.hpp>
-#include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/is_integral.hpp>
 #include <boost/integer/is_integral_constant.hpp>
 
 /*
@@ -36,10 +37,12 @@ namespace mpl {
 /*
  *	Requires IC to be a mpl::integral_c<> type
  */
-template <typename IC, 
-	class Enable = typename enable_if< is_integral_constant<IC> >::type>
-struct clear_least_bit_set : integral_c<typename IC::value_type, (IC::value & (IC::value - 1))>
-{};
+template <typename IC>
+struct clear_least_bit_set : 
+	integral_c<typename IC::value_type, (IC::value & (IC::value - 1))>
+{
+	BOOST_STATIC_ASSERT((is_integral_constant<IC>::value));
+};
 	
 }
 
@@ -47,8 +50,11 @@ struct clear_least_bit_set : integral_c<typename IC::value_type, (IC::value & (I
  *	Requires T to be an integral type
  */
 template <typename T, T Value>
-struct static_clear_least_bit_set : mpl::clear_least_bit_set< mpl::integral_c<T, Value> >
-{};
+struct static_clear_least_bit_set : 
+	mpl::clear_least_bit_set< mpl::integral_c<T, Value> >
+{
+	BOOST_STATIC_ASSERT((is_integral<T>::value));
+};
 
 }
 

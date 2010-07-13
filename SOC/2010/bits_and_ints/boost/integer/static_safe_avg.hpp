@@ -10,9 +10,8 @@
 #ifndef BOOST_STATIC_SAFE_AVG_INCLUDED
 #define BOOST_STATIC_SAFE_AVG_INCLUDED
 
-#include <boost/mpl/and.hpp>
+#include <boost/static_assert.hpp>
 #include <boost/mpl/integral_c.hpp>
-#include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/integer/is_integral_constant.hpp>
 
@@ -29,29 +28,26 @@ namespace boost {
 	
 namespace mpl {
 
-template <typename IC1, typename IC2, 
-	class Enable = typename enable_if< 
-		and_< 
-			is_integral_constant<IC1>, 
-			is_integral_constant<IC2> 
-		> 
-	>::type
->
+template <typename IC1, typename IC2>
 struct safe_avg : integral_c<
 	typename IC1::value_type, 
 	((IC1::value & IC2::value) + ((IC1::value ^ IC2::value) >> 1))
 >
-{};
+{
+	BOOST_STATIC_ASSERT((is_integral_constant<IC1>::value));
+	BOOST_STATIC_ASSERT((is_integral_constant<IC2>::value));
+};
 
 }
 
-template <typename T, T Value1, T Value2, 
-	class Enable = typename enable_if< is_integral<T> >::type>
+template <typename T, T Value1, T Value2>
 struct static_safe_avg : mpl::safe_avg< 
 	mpl::integral_c<T, Value1>, 
 	mpl::integral_c<T, Value2> 
 >
-{};
+{
+	BOOST_STATIC_ASSERT((is_integral<T>::value));
+};
 
 } // boost
 

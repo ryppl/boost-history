@@ -10,10 +10,10 @@
 #ifndef BOOST_STATIC_SAME_SIGN_INCLUDED
 #define BOOST_STATIC_SAME_SIGN_INCLUDED
 
-#include <boost/mpl/integral_c.hpp>
 #include <boost/mpl/bool.hpp>
+#include <boost/mpl/integral_c.hpp>
+#include <boost/static_assert.hpp>
 #include <boost/type_traits/is_integral.hpp>
-#include <boost/utility/enable_if.hpp>
 #include <boost/integer/static_sign.hpp>
 
 namespace boost {
@@ -39,7 +39,10 @@ template <typename IC1, typename IC2>
 struct same_sign : bool_<
 	sign<IC1>::value == sign<IC2>::value
 >
-{};
+{
+	BOOST_STATIC_ASSERT((is_integral_constant<IC1>::value));
+	BOOST_STATIC_ASSERT((is_integral_constant<IC2>::value));
+};
 	
 }
 
@@ -48,9 +51,11 @@ struct same_sign : bool_<
  *		- false: if the signs of FIRST and SECOND are different
  *		- true: if the signs are equal
  */
-template <typename T, T first, T second, class Enable = typename enable_if<is_integral<T> >::type>
+template <typename T, T first, T second>
 struct static_same_sign : mpl::same_sign< mpl::integral_c<T, first>, mpl::integral_c<T, second> >
-{};
+{
+	BOOST_STATIC_ASSERT((is_integral<T>::value));
+};
 
 }
 

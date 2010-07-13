@@ -11,8 +11,8 @@
 #define BOOST_STATIC_COUNT_TRAILING_ZEROS_INCLUDED
 
 #include <boost/cstdint.hpp>
+#include <boost/static_assert.hpp>
 #include <boost/mpl/integral_c.hpp>
-#include <boost/utility/enable_if.hpp>
 #include <boost/integer/static_pop_count.hpp>
 #include <boost/integer/is_integral_constant.hpp>
 
@@ -39,10 +39,11 @@ namespace mpl {
 /*
  *	MPL integral_c<> compatible version
  */
-template <typename IC, 
-	class Enable = typename enable_if< is_integral_constant<IC> >::type>
+template <typename IC>
 struct count_trailing_zeros : pop_count< integral_c<uintmax_t, ~IC::value & (IC::value - 1)> > 
-{};
+{
+	BOOST_STATIC_ASSERT((is_integral_constant<IC>::value));
+};
 
 }
 

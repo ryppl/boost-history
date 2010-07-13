@@ -10,9 +10,9 @@
 #ifndef BOOST_STATIC_POP_COUNT
 #define BOOST_STATIC_POP_COUNT
 
-#include <boost/mpl/integral_c.hpp>
 #include <boost/config/suffix.hpp>
-#include <boost/utility/enable_if.hpp>
+#include <boost/static_assert.hpp>
+#include <boost/mpl/integral_c.hpp>
 #include <boost/integer/is_integral_constant.hpp>
 
 namespace boost {
@@ -59,9 +59,11 @@ public:
 	
 namespace mpl {
 	
-template <typename IC, class Enable = typename enable_if< is_integral_constant<IC> >::type>
+template <typename IC>
 struct pop_count : integral_c<int, static_pop_count<IC::value>::value>
-{};
+{
+	BOOST_STATIC_ASSERT((is_integral_constant<IC>::value));
+};
 	
 }
 	
