@@ -5,8 +5,8 @@
 
 #ifndef BOOST_BFT_MSVC9_MAKE_BFT_FIX_HPP
 #define BOOST_BFT_MSVC9_MAKE_BFT_FIX_HPP
-#pragma warning(push)
-#pragma warning(disable : 4244)
+
+
 namespace boost { namespace detail { namespace msvc_fixes {
 
 /** Used to help generate psudo variadic template paramerer apperance.
@@ -73,5 +73,6 @@ BOOST_MAKE_BFT_OVERLOADS();
 
 } // end boost::detail::msvc_fixes
 
-#pragma warning(pop)
+
+
 #endif

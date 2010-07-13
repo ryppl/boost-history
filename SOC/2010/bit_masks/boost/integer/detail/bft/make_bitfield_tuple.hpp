@@ -105,6 +105,10 @@ struct get_create_parameter {
 
 
 
+#ifdef BOOST_MSVC
+#pragma warning(push)
+#pragma warning(disable : 4244)
+#endif
 /** This is a function which is used to assign a value into a bitfield_tuple
  *  as well as remove the actual mpl::void_* from the parameter list through
  *  specialization.
@@ -119,6 +123,10 @@ inline void assign_parameter_to_bft(BitfieldTuple&, mpl::void_*) { }
 
 template <std::size_t Index, typename BitfieldTuple>
 inline void assign_parameter_to_bft(BitfieldTuple&, void*) { }
+
+#if BOOST_MSVC
+#pragma warning(pop)
+#endif
 
 } // end detail
 
