@@ -26,11 +26,18 @@ void test_function() {
     cout << "Starting test. Test Type = " << typeid(T).name() << endl;
     // making sure that the value type is transfered correctly.
     BOOST_TEST((is_same< typename high_bits_mask<T, 3>::value_type, T >::value));
-    
+#ifdef BOOST_MSVC
+#pragma warning(push)
+#pragma warning(disable: 3127)
+#endif
     if(!is_same<char,T>::value ) {
+#ifdef BOOST_MSVC
+#pragma warning(pop)
+#endif
         cout << "Mask Value: " << hex << boost::high_bits_mask<T,1>::value << endl;
         cout << "Test Value: " << hex << static_cast<T>( ~(~(typename make_unsigned<T>::type(0)) >> 1)) << endl;
     }
+
     BOOST_TEST(( boost::high_bits_mask<T,1>::value ==
         static_cast<T>( ~(~(typename make_unsigned<T>::type(0)) >> 1)) ));
     BOOST_TEST(( boost::high_bits_mask<T,2>::value == 
