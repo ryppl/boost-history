@@ -7,8 +7,6 @@
 
 #ifndef BOOST_LOW_BITS_MASK_HPP
 #define BOOST_LOW_BITS_MASK_HPP
-
-// #include <boost/type_traits.hpp>
 #include <boost/integer/detail/high_low_impl.hpp>
 #include <boost/integer/integral_mask.hpp>
 #include <boost/type_traits/integral_constant.hpp>

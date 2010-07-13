@@ -12,6 +12,11 @@
 
 #ifndef BOOST_INTEGER_BITFIELD__HPP
 #define BOOST_INTEGER_BITFIELD__HPP
+#include <boost/config.hpp>
+#ifdef BOOST_MSVC
+#pragma warning(push)
+#pragma warning(disable : 3512 )
+#endif
 
 #include <cstddef>
 #include <boost/static_assert.hpp>
@@ -85,9 +90,9 @@ namespace boost { namespace integer {
         struct bitfield_complete_signed<true, value_type, storage_type, WIDTH, SIGN_MASK> {
             static value_type convert(storage_type val) {
                 if( (val>>(WIDTH-1))!=0) {
-                    return (val | SIGN_MASK);
+                    return static_cast<value_type>(val | SIGN_MASK);
                 } else {
-                    return val;
+                    return static_cast<value_type>(val);
                 }
             }
         };
@@ -95,7 +100,7 @@ namespace boost { namespace integer {
         template <typename value_type, typename storage_type, unsigned int WIDTH, unsigned int SIGN_MASK>
         struct bitfield_complete_signed<false, value_type, storage_type, WIDTH, SIGN_MASK> {
             static value_type convert(storage_type val) {
-                return val;
+                return static_cast<value_type>(val);
             }
         };
     }
@@ -395,5 +400,9 @@ bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::storage_type bitfield<STOR
     typename bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::storage_type(~bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::VAL_MASK);
 */
 }}
+
+#ifdef BOOST_MSVC
+#pragma warning(pop)
+#endif
 #endif
 
