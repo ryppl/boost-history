@@ -36,7 +36,7 @@ namespace detail {
     template<typename T, unsigned int Width>
     struct evaluate_for_msvc_08 {
         typedef typename make_unsigned<T>::type unsigned_type;
-        BOOST_STATIC_CONSTANT(T, val = (~(mpl::shift_right<
+        BOOST_STATIC_CONSTANT(T, val = static_cast<T>(~(mpl::shift_right<
             integral_constant<
                 unsigned_type,
                 ~( unsigned_type(0) )
