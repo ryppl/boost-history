@@ -13,14 +13,8 @@
 
 
 #include <boost/config.hpp>
-#ifdef BOOST_MSVC
-#pragma warning(disable : 4307)
 #include <boost/mpl/bitwise.hpp>
 #include <boost/mpl/size_t.hpp>
-#else
-#include <boost/mpl/bitwise.hpp>
-#include <boost/mpl/size_t.hpp>
-#endif
 #include <boost/integer/detail/high_low_impl.hpp>
 #include <boost/integer/integral_mask.hpp>
 #include <boost/type_traits/integral_constant.hpp>
