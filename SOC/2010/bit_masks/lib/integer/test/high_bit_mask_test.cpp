@@ -28,7 +28,7 @@ void test_function() {
     BOOST_TEST((is_same< typename high_bits_mask<T, 3>::value_type, T >::value));
 #ifdef BOOST_MSVC
 #pragma warning(push)
-#pragma warning(disable: 3127)
+#pragma warning(disable: 4127)
 #endif
     if(!is_same<char,T>::value ) {
 #ifdef BOOST_MSVC
