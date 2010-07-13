@@ -88,10 +88,11 @@ namespace sweepline {
     ///////////////////////////////////////////////////////////////////////////
 
     // Bounding rectangle data structure.
-    template <typename Point2D>
+    template <typename T>
     struct BRect {
     public:
-        typedef typename Point2D::coordinate_type coordinate_type;
+        typedef T coordinate_type;
+        typedef point_2d<T> Point2D;
 
         coordinate_type x_min;
         coordinate_type y_min;
@@ -131,19 +132,22 @@ namespace sweepline {
         }
     };
 
-    template <typename Point2D>
+    template <typename T>
     struct half_edge_clipped;
 
     // Voronoi record data structure. May represent voronoi cell or
     // voronoi vertex. Contains pointer to any incident edge, point
     // coordinates and number of incident edges.
-    template <typename Point2D>
+    template <typename T>
     struct voronoi_record_clipped {
-        half_edge_clipped<Point2D> *incident_edge;
+        typedef T coordinate_type;
+        typedef point_2d<T> Point2D;
+
+        half_edge_clipped<coordinate_type> *incident_edge;
         Point2D voronoi_point;
         int num_incident_edges;
 
-        voronoi_record_clipped(const Point2D &point, half_edge_clipped<Point2D>* edge) :
+        voronoi_record_clipped(const Point2D &point, half_edge_clipped<coordinate_type>* edge) :
             incident_edge(edge),
             voronoi_point(point),
             num_incident_edges(0) {}
@@ -156,10 +160,12 @@ namespace sweepline {
     //           4) pointers to previous/next half-edges rotated
     //              around start point;
     //           5) pointer to twin half-edge.
-    template <typename Point2D>
+    template <typename T>
     struct half_edge_clipped {
-        typedef voronoi_record_clipped<Point2D> voronoi_record_type;
-        typedef half_edge_clipped<Point2D> half_edge_type;
+        typedef T coordinate_type;
+        typedef point_2d<T> Point2D;
+        typedef voronoi_record_clipped<coordinate_type> voronoi_record_type;
+        typedef half_edge_clipped<coordinate_type> half_edge_type;
 
         voronoi_record_type *cell;
         voronoi_record_type *start_point;
@@ -181,15 +187,16 @@ namespace sweepline {
             twin(NULL) {}
     };
 
-    template <typename Point2D>
+    template <typename T>
     class voronoi_output_clipped {
     public:
-        typedef typename Point2D::coordinate_type coordinate_type;
-        typedef voronoi_record_clipped<Point2D> voronoi_record_type;
-        typedef half_edge_clipped<Point2D> edge_type;
+        typedef T coordinate_type;
+        typedef point_2d<T> Point2D;
+        typedef voronoi_record_clipped<coordinate_type> voronoi_record_type;
         typedef std::list<voronoi_record_type> voronoi_records_type;
         typedef typename voronoi_records_type::iterator voronoi_iterator_type;
         typedef typename voronoi_records_type::const_iterator voronoi_const_iterator_type;
+        typedef half_edge_clipped<coordinate_type> edge_type;
         typedef std::list<edge_type> voronoi_edges_type;
         typedef typename voronoi_edges_type::iterator edges_iterator_type;
         typedef typename voronoi_edges_type::const_iterator edges_const_iterator_type;
@@ -210,11 +217,11 @@ namespace sweepline {
             num_edges_ = 0;
         }
 
-        void set_bounding_rectangle(const BRect<Point2D> &brect) {
+        void set_bounding_rectangle(const BRect<coordinate_type> &brect) {
             brect_ = brect;
         }
 
-        const BRect<Point2D> &get_bounding_rectangle() {
+        const BRect<coordinate_type> &get_bounding_rectangle() {
             return brect_;
         }
 
@@ -290,23 +297,24 @@ namespace sweepline {
             voronoi_const_iterator_type cell_it;
             for (cell_it = cell_records_.begin(); cell_it != cell_records_.end(); cell_it++) {
                 const edge_type *edge = cell_it->incident_edge;
-                do {
-                    if (edge->next->prev != edge)
-                        return false;
-                    if (edge->cell != &(*cell_it))
-                        return false;
-                    if (edge->start_point != NULL &&
-                        edge->end_point != NULL &&
-                        edge->end_point == edge->next->start_point &&
-                        edge->next->end_point != NULL) {
-                        const Point2D &vertex1 = edge->start_point->voronoi_point;
-                        const Point2D &vertex2 = edge->end_point->voronoi_point;
-                        const Point2D &vertex3 = edge->next->end_point->voronoi_point;
-                        if (check_orientation(vertex1, vertex2, vertex3) != LEFT_ORIENTATION)
+                if (edge)
+                    do {
+                        if (edge->next->prev != edge)
                             return false;
-                    }
-                    edge = edge->next;
-                } while(edge != cell_it->incident_edge);
+                        if (edge->cell != &(*cell_it))
+                            return false;
+                        if (edge->start_point != NULL &&
+                            edge->end_point != NULL &&
+                            edge->end_point == edge->next->start_point &&
+                            edge->next->end_point != NULL) {
+                            const Point2D &vertex1 = edge->start_point->voronoi_point;
+                            const Point2D &vertex2 = edge->end_point->voronoi_point;
+                            const Point2D &vertex3 = edge->next->end_point->voronoi_point;
+                            if (check_orientation(vertex1, vertex2, vertex3) != LEFT_ORIENTATION)
+                                return false;
+                        }
+                        edge = edge->next;
+                    } while(edge != cell_it->incident_edge);
             }
             return true;
         }
@@ -410,7 +418,7 @@ namespace sweepline {
         enum kOrientation {
             LEFT_ORIENTATION = 1,
             RIGHT_ORIENTATION = -1,
-            COLINEAR = 0,
+            collinear = 0,
         };
 
         int check_orientation(const Point2D &point1,
@@ -422,7 +430,7 @@ namespace sweepline {
                 return LEFT_ORIENTATION;
             else if (a < b)
                 return RIGHT_ORIENTATION;
-            return COLINEAR;
+            return collinear;
         }
 
         voronoi_records_type cell_records_;
@@ -433,7 +441,7 @@ namespace sweepline {
         int num_vertex_records_;
         int num_edges_;
 
-        BRect<Point2D> brect_;
+        BRect<coordinate_type> brect_;
 
         // Disallow copy constructor and operator=
         voronoi_output_clipped(const voronoi_output_clipped&);

@@ -1,4 +1,4 @@
-// Boost sweepline library visualizer_main.cpp file
+// Boost sweepline library voronoi_visualizer.cpp file
 
 //          Copyright Andrii Sydorchuk 2010.
 // Distributed under the Boost Software License, Version 1.0.
@@ -105,18 +105,19 @@ private:
         glMatrixMode(GL_MODELVIEW);
     }
 
-    typedef boost::sweepline::point_2d<double> Point2D;
-    typedef boost::sweepline::voronoi_output_clipped<Point2D>::voronoi_records_type
+    typedef double coordinate_type;
+    typedef boost::sweepline::point_2d<coordinate_type> Point2D;
+    typedef boost::sweepline::voronoi_output_clipped<coordinate_type>::voronoi_records_type
         voronoi_records_type;
-    typedef boost::sweepline::voronoi_output_clipped<Point2D>::voronoi_edges_type
+    typedef boost::sweepline::voronoi_output_clipped<coordinate_type>::voronoi_edges_type
         voronoi_edges_type;
-    typedef boost::sweepline::voronoi_output_clipped<Point2D>::voronoi_const_iterator_type
+    typedef boost::sweepline::voronoi_output_clipped<coordinate_type>::voronoi_const_iterator_type
         voronoi_const_iterator_type;
-    typedef boost::sweepline::voronoi_output_clipped<Point2D>::edges_const_iterator_type
+    typedef boost::sweepline::voronoi_output_clipped<coordinate_type>::edges_const_iterator_type
         edges_const_iterator_type;
-    boost::sweepline::voronoi_builder<double> voronoi_builder_;
-    boost::sweepline::BRect<Point2D> brect_;
-    boost::sweepline::voronoi_output_clipped<Point2D> voronoi_output_;
+    boost::sweepline::voronoi_builder<coordinate_type> voronoi_builder_;
+    boost::sweepline::BRect<coordinate_type> brect_;
+    boost::sweepline::voronoi_output_clipped<coordinate_type> voronoi_output_;
 };
 
 class MainWindow : public QWidget {

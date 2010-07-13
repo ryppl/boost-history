@@ -22,9 +22,7 @@ using namespace boost::sweepline;
                       TOP.y() == static_cast<T>(Y), true)
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(event_queue_test1, T, test_types) {
-    typedef point_2d<T> Point2D;
-
-    detail::circle_events_queue< point_2d<T> > event_q;
+    detail::circle_events_queue<T> event_q;
     BOOST_CHECK_EQUAL(event_q.empty(), true);
     
     event_q.reset();
@@ -32,7 +30,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(event_queue_test1, T, test_types) {
     for (int i = 0; i < 10; i++) {
         T x = static_cast<T>(-i);
         T y = static_cast<T>(10-i);
-        event_q.push(detail::make_circle_event<Point2D>(x, y, static_cast<T>(100)));
+        event_q.push(detail::make_circle_event<T>(x, y, static_cast<T>(100)));
     }
 
     for (int i = 0; i < 10; i++) {
@@ -44,19 +42,16 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(event_queue_test1, T, test_types) {
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(event_queue_test2, T, test_types) {
-    typedef point_2d<T> Point2D;
-    typedef detail::circle_event<Point2D> circle_event_type;
+    typedef detail::circle_event<T> circle_event_type;
 
-    detail::circle_events_queue< point_2d<T> > event_q;
-    detail::site_event<Point2D> temp_site = 
-        detail::make_site_event<Point2D>(static_cast<T>(0),
-                                         static_cast<T>(0),
-                                         0);
+    detail::circle_events_queue<T> event_q;
+    detail::site_event<T> temp_site =  
+        detail::make_site_event<T>(static_cast<T>(0), static_cast<T>(0), 0);
 
     for (int i = 0; i < 10; i++) {
         T x = static_cast<T>(10-i);
         T y = static_cast<T>(10-i);
-        circle_event_type c = detail::make_circle_event<Point2D>(x, y, static_cast<T>(0));
+        circle_event_type c = detail::make_circle_event<T>(x, y, static_cast<T>(0));
         c.set_sites(temp_site, temp_site, temp_site);
         event_q.push(c);
     }
@@ -64,7 +59,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(event_queue_test2, T, test_types) {
     for (int i = 0; i < 5; i++) {
         T x = static_cast<T>(10-2*i-1);
         T y = static_cast<T>(10-2*i-1);
-        circle_event_type c = detail::make_circle_event<Point2D>(x, y, static_cast<T>(0));
+        circle_event_type c = detail::make_circle_event<T>(x, y, static_cast<T>(0));
         c.set_sites(temp_site, temp_site, temp_site);
         event_q.deactivate_event(c);   
     }

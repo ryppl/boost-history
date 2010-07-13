@@ -19,9 +19,9 @@ namespace sweepline {
     template <typename T>
     class voronoi_builder {
     public:
+        typedef T coordinate_type;
         typedef point_2d<T> Point2D;
-        typedef typename Point2D::coordinate_type coordinate_type;
-        typedef detail::voronoi_output<Point2D> Output;
+        typedef detail::voronoi_output<coordinate_type> Output;
         typedef typename Output::edge_type edge_type;
 
         voronoi_builder() {
@@ -57,6 +57,7 @@ namespace sweepline {
             
             int skip = 0;
             if (site_events_.size() == 1) {
+                output_.process_single_site(site_events_[0]);
                 skip = 1;
                 site_events_iterator_++;
             } else {
@@ -74,7 +75,7 @@ namespace sweepline {
                     site_events_iterator_++;
                 } else {
                     // Init beach line with sites situated on the same vertical line.
-                    init_beach_line_colinear_sites();
+                    init_beach_line_collinear_sites();
                 }
             }
         }
@@ -107,26 +108,27 @@ namespace sweepline {
             output_.simplify();
         }
 
-        const BRect<Point2D> &get_bounding_rectangle() const {
+        const BRect<coordinate_type> &get_bounding_rectangle() const {
             return output_.get_bounding_rectangle();
         }
 
-        void clip(voronoi_output_clipped<Point2D> &clipped_output) {
+        void clip(voronoi_output_clipped<coordinate_type> &clipped_output) {
             output_.clip(clipped_output);
         }
 
-        void clip(const BRect<Point2D> &brect, voronoi_output_clipped<Point2D> &clipped_output) {
+        void clip(const BRect<coordinate_type> &brect,
+            voronoi_output_clipped<coordinate_type> &clipped_output) {
             output_.clip(brect, clipped_output);
         }
 
     protected:
-        typedef typename detail::site_event<Point2D> site_event_type;
-        typedef typename detail::circle_event<Point2D> circle_event_type;
+        typedef typename detail::site_event<coordinate_type> site_event_type;
+        typedef typename detail::circle_event<coordinate_type> circle_event_type;
         typedef typename std::vector<site_event_type>::const_iterator site_events_iterator;
 
-        typedef typename detail::circle_events_queue<Point2D> CircleEventsQueue;
-        typedef typename detail::beach_line_node<Point2D> Key;
-        typedef typename detail::beach_line_node_data<Point2D> Value;
+        typedef typename detail::circle_events_queue<coordinate_type> CircleEventsQueue;
+        typedef typename detail::beach_line_node<coordinate_type> Key;
+        typedef typename detail::half_edge<coordinate_type>* Value;
         typedef typename detail::node_comparer<Key> NodeComparer;
         typedef std::map< Key, Value, NodeComparer > BeachLine;
         typedef typename std::map< Key, Value, NodeComparer >::iterator beach_line_iterator;
@@ -148,7 +150,7 @@ namespace sweepline {
             beach_line_.insert(std::pair<Key, Value>(new_right_node, Value(edge->twin)));
         }
 
-        void init_beach_line_colinear_sites() {
+        void init_beach_line_collinear_sites() {
              site_events_iterator it_first = site_events_.begin();
              site_events_iterator it_second = site_events_.begin();
              it_second++;
@@ -262,8 +264,8 @@ namespace sweepline {
             // map data structure keeps correct ordering.
             const_cast<Key &>(it_first->first).set_right_site(site3);
             edge_type *edge = output_.insert_new_edge(site1, site2, site3, circle_event,
-                                                      bisector1.edge, bisector2.edge);
-            it_first->second.edge = edge;
+                                                      bisector1, bisector2);
+            it_first->second = edge;
             beach_line_.erase(it_last);
             it_last = it_first;
 
@@ -326,7 +328,7 @@ namespace sweepline {
             coordinate_type sqr_radius = (c_x-site1.x())*(c_x-site1.x()) +
                                          (c_y-site1.y())*(c_y-site1.y());
             // Create new circle event;
-            c_event = detail::make_circle_event<Point2D>(c_x, c_y, sqr_radius);
+            c_event = detail::make_circle_event<coordinate_type>(c_x, c_y, sqr_radius);
             c_event.set_sites(site1, site2, site3);
             return true;
         }
