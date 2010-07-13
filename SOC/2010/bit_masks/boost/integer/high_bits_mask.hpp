@@ -9,10 +9,8 @@
 #define BOOST_HIGH_BITS_MASK_HPP
 
 #ifdef BOOST_MSVC
-#   if BOOST_MSVC == 1500
-#       pragma warning(push)
-#       pragma warning(disable : 4307)
-#   endif
+#pragma warning(push)
+#pragma warning(disable : 4307)
 #endif
 
 
