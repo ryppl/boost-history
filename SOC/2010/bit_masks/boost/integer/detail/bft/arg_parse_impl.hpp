@@ -13,6 +13,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/arithmetic.hpp>
 #include <boost/mpl/find_if.hpp>
+#include <boost/mpl/placeholders.hpp>
 
 
 #include <boost/integer/bitfield_tuple/storage.hpp>
@@ -135,7 +136,7 @@ struct bft_arg_parse_impl <
             typename mpl::find_if<
                 FieldVector,
                 detail::match_name<
-                    typename mpl::_1,
+                    mpl::_1,
                     NameType
                 >
             >::type,
