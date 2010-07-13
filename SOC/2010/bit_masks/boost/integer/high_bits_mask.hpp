@@ -33,19 +33,38 @@ namespace boost {
 #pragma warning(disable : 4309)
 // #pragma warning(disable : 4305)
 namespace detail {
+
     template<typename T, unsigned int Width>
     struct evaluate_for_msvc_08 {
         typedef typename make_unsigned<T>::type unsigned_type;
-        BOOST_STATIC_CONSTANT(T, val = static_cast<T>(~(mpl::shift_right<
-            integral_constant<
-                unsigned_type,
-                ~( unsigned_type(0) )
-            >,
+        BOOST_STATIC_CONSTANT(T, val = (~(mpl::shift_right<
+            mpl::size_t<~( T(0) )>,
             mpl::size_t<Width>
         >::type::value)
         ));
         typedef integral_constant<T, val>       type;
     };
+    // long long specialization
+    template<unsigned int Width>
+    struct evaluate_for_msvc_08<long long, Width> {
+        BOOST_STATIC_CONSTANT(T, val = (~(mpl::shift_right<
+            integral_constant< long long,~( unsigned long long(0) )>,
+            mpl::size_t<Width>
+        >::type::value)
+        ));
+        typedef integral_constant<long long, val>       type;
+    };
+    // unsigned long long specialization
+    template<unsigned int Width>
+    struct evaluate_for_msvc_08<unsigned long long, Width> {
+        BOOST_STATIC_CONSTANT(T, val = (~(mpl::shift_right<
+            integral_constant< unsigned long long, ~( unsigned long long(0) )>,
+            mpl::size_t<Width>
+        >::type::value)
+        ));
+        typedef integral_constant<unsigned long long, val>       type;
+    };
+
 }
 
 #pragma warning(pop)
