@@ -14,11 +14,6 @@
 #include <boost/integer/integral_mask.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/make_unsigned.hpp>
-#include <limits>
-
-
-
-
 
 
 namespace boost {
@@ -37,7 +32,7 @@ namespace detail {
             mpl::size_t<Width>
         >::type::value))
           &
-        std::numeric_limits<unsigned_type>::max
+        ~( unsigned_type(0) ) 
         );
         typedef integral_constant<T, val>       type;
     };
