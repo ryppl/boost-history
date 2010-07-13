@@ -31,7 +31,7 @@ namespace boost {
 #ifdef BOOST_MSVC
 #pragma warning(push)
 #pragma warning(disable : 4309)
-
+#pragma warning(disable : 4305)
 namespace detail {
     template<typename T, unsigned int Width>
     struct evaluate_for_msvc_08 {
