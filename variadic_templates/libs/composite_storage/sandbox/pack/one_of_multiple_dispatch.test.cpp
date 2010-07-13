@@ -25,7 +25,7 @@ struct trace_scope
   #else
     #define FUNCTOR_CONSTANCY
   #endif
-#define APPLY_UNPACK_DEMO_UNCHECK_ARGS
+#define APPLY_UNPACK_USER_CHECKED_ARGS
 #include <boost/composite_storage/pack/multiple_dispatch/reify_apply.hpp>
 #include <boost/composite_storage/pack/multiple_dispatch/reifier_switch.hpp>
 #include <boost/composite_storage/pack/multiple_dispatch/reifier_visitor.hpp>
@@ -175,11 +175,26 @@ struct functor_any
 }; 
 
 struct functor3
+#ifdef APPLY_UNPACK_USER_CHECKED_ARGS
+: functor_bad_args
+  < functor3
+  , int
+  >
+#endif
 {
+        typedef
+      functor_bad_args
+      < functor3
+      , int
+      >
+    super_type;
+    
+    using super_type::operator();
+    
     functor3(void)
     {}
     
-    typedef int result_type;
+    typedef typename super_type::result_type result_type;
     
     int operator()(void)FUNCTOR_CONSTANCY
     {
