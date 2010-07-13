@@ -6,6 +6,12 @@
 
 #ifndef BOOST_BITFIELD_TUPLE_HPP
 #define BOOST_BITFIELD_TUPLE_HPP
+#include <boost/config.hpp>
+#ifdef BOOST_MSVC
+#pragma warning(push)
+#pragma warning(disable : 4512 )
+#endif
+
 #include <boost/integer/detail/bft/template_expansion_macros.hpp>
 #include <boost/integer/detail/bft/bitfield_tuple_impl.hpp>
 #include <boost/bitfield/bitfield.hpp>
@@ -205,6 +211,6 @@ private:
 
 } // end boost
 
-
-
+#ifdef BOOST_MSVC
+#pragma warning(pop)
 #endif
