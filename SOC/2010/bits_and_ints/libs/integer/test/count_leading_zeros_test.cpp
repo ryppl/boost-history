@@ -7,7 +7,6 @@
 
 #include <boost/detail/lightweight_test.hpp>
 #include <boost/integer/count_leading_zeros.hpp>
-#include <boost/mpl/integral_c.hpp>
 #include <boost/cstdint.hpp>
 #include <iostream>
 
@@ -18,7 +17,7 @@ BOOST_TEST((::boost::count_leading_zeros(x) == y))
 int main(int, char* [])
 {    
 	using namespace boost;
-	std::cout << "Doing tests on safe_avg functions." << std::endl;
+	std::cout << "Doing tests on count leading zeros function." << std::endl;
 	
 	CLZ_TEST(uint8_t(0xFF), 0);
 	CLZ_TEST(uint8_t(0x7F), 1);

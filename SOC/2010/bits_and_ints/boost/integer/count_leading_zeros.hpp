@@ -60,7 +60,7 @@ count_leading_zeros(T value)
 	value = value | (value >> 4);
 	value = value | (value >> 8);
 	value = value | (value >> 16);
-	
+
 	return pop_count(T(~value));
 }
 
@@ -73,7 +73,7 @@ count_leading_zeros(T value)
 	value = value | (value >> 4);
 	value = value | (value >> 8);
 	value = value | (value >> 16);
-	value = value | (value >> 16);
+	value = value | (value >> 32);
 	
 	return pop_count(T(~value));
 }
