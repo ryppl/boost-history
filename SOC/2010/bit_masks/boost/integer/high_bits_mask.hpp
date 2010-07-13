@@ -8,10 +8,8 @@
 #ifndef BOOST_HIGH_BITS_MASK_HPP
 #define BOOST_HIGH_BITS_MASK_HPP
 
-#ifdef BOOST_MSVC
-#pragma warning(push)
-#pragma warning(disable : 4307)
-#endif
+
+
 
 
 #include <boost/config.hpp>
@@ -19,15 +17,17 @@
 #include <boost/integer/integral_mask.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/make_unsigned.hpp>
-
-
-
+#ifdef BOOST_MSVC
+#pragma warning(push)
+#pragma warning(disable : 4307)
 #include <boost/mpl/bitwise.hpp>
 #include <boost/mpl/size_t.hpp>
-
-#if BOOST_MSVC
 #pragma warning(pop)
+#else
+#include <boost/mpl/bitwise.hpp>
+#include <boost/mpl/size_t.hpp>
 #endif
+
 
 
 
