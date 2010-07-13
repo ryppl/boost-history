@@ -116,11 +116,17 @@ namespace multiple_dispatch
           #else
             //This branch of #if...#endif may cause compile errors
             //about "no match for for call to 'SomeFunCall'"
-            //where SomdFunCall is some function name and
+            //where SomeFunCall is some function name and
             //parameter type list.
             //
             //To avoid these errors, derive Functor from
-            //functor_bad_args.
+            //functor_bad_args *and* put a using declaration
+            //in functor:
+            //
+            //   using super_type::operator();
+            //
+            //where super_type is typedef'ed to the functor_bad_args
+            //super type of Functor.
             //
             a_functor( a_args.template project<Indices>()...);
           #endif
