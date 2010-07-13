@@ -37,9 +37,8 @@ namespace detail {
     struct evaluate_for_msvc_08 {
         typedef typename make_unsigned<T>::type unsigned_type;
         BOOST_STATIC_CONSTANT(T, val = (~(mpl::shift_right<
-            mpl::size_t<
-                unsigned_type,
-                ~(T(0))
+            integral_constant<
+                ~( unsigned_type(0) )
             >,
             mpl::size_t<Width>
         >::type::value)
