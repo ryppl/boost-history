@@ -32,7 +32,7 @@ namespace detail {
     template<typename T, unsigned int Width>
     struct evaluate_for_msvc_08 {
         typedef typename make_unsigned<T>::type unsigned_type;
-        BOOST_STATIC_CONSTANT(unsigned_type, val = std::numeric_limits<unsigned_type>::value & (~(mpl::shift_right<
+        BOOST_STATIC_CONSTANT(unsigned_type, val = std::numeric_limits<unsigned_type>::max & (~(mpl::shift_right<
             mpl::size_t<~( T(0) )>,
             mpl::size_t<Width>
         >::type::value)
