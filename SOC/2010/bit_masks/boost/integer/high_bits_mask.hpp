@@ -38,6 +38,7 @@ namespace detail {
         typedef typename make_unsigned<T>::type unsigned_type;
         BOOST_STATIC_CONSTANT(T, val = (~(mpl::shift_right<
             integral_constant<
+                unsigned_type,
                 ~( unsigned_type(0) )
             >,
             mpl::size_t<Width>
