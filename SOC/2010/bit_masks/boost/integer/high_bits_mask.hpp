@@ -30,7 +30,7 @@ namespace detail {
         BOOST_STATIC_CONSTANT(unsigned_type, val = (~( unsigned_type(0)))
               &
             (~(mpl::shift_right<
-                mpl::size_t<~( T(0) )>,
+                mpl::size_t<static_cast<unsigned int>(~(T(0)))>,
                 mpl::size_t<Width>
             >::type::value))
         );
