@@ -26,6 +26,7 @@ test-suite integer
 		[ run clear_least_bit_set_test.cpp ]
 		[ run safe_avg_test.cpp ]
 		[ run isign_test.cpp ]
+		[ run count_leading_zeros_test.cpp ]
 		[ compile cstdint_include_test.cpp ]
 		[ compile integer_traits_include_test.cpp ]
 		[ compile integer_include_test.cpp ]
