@@ -13,7 +13,7 @@
 namespace boost { namespace detail {
 
 #ifdef BOOST_MSVC
-    
+   
 template <typename T>
 struct bft_create_param_fix_return_type {
     typedef T type;
@@ -179,6 +179,7 @@ BitfieldTuple make_bitfield_tuple(
     BOOST_MAKE_BITFIELD_TUPLE_CREATE_FUNCTION_PARSE_ARGUMENTS();
     return bft;
 }
+
 #endif
 
 } // end boost

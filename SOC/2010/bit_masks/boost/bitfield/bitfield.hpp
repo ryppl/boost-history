@@ -16,6 +16,7 @@
 #ifdef BOOST_MSVC
 #pragma warning(push)
 #pragma warning(disable : 4512 )
+#pragma warning(disable : 4800 )
 #endif
 
 #include <cstddef>
