@@ -15,7 +15,7 @@
 #include <boost/config.hpp>
 #ifdef BOOST_MSVC
 #pragma warning(push)
-#pragma warning(disable : 3512 )
+#pragma warning(disable : 4512 )
 #endif
 
 #include <cstddef>
