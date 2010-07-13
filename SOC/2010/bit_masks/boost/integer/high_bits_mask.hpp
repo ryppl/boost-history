@@ -14,11 +14,9 @@
 
 #include <boost/config.hpp>
 #ifdef BOOST_MSVC
-#pragma warning(push)
 #pragma warning(disable : 4307)
 #include <boost/mpl/bitwise.hpp>
 #include <boost/mpl/size_t.hpp>
-#pragma warning(pop)
 #else
 #include <boost/mpl/bitwise.hpp>
 #include <boost/mpl/size_t.hpp>
