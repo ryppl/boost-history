@@ -7,11 +7,6 @@
 
 #ifndef BOOST_HIGH_BITS_MASK_HPP
 #define BOOST_HIGH_BITS_MASK_HPP
-
-
-
-
-
 #include <boost/config.hpp>
 #include <boost/mpl/bitwise.hpp>
 #include <boost/mpl/size_t.hpp>
@@ -19,7 +14,7 @@
 #include <boost/integer/integral_mask.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/make_unsigned.hpp>
-
+#include <limits>
 
 
 
@@ -37,12 +32,10 @@ namespace detail {
     template<typename T, unsigned int Width>
     struct evaluate_for_msvc_08 {
         typedef typename make_unsigned<T>::type unsigned_type;
-        BOOST_STATIC_CONSTANT(unsigned_type, val = static_cast<unsigned_type>(
-            ~(mpl::shift_right<
-                mpl::size_t<~( T(0) )>,
-                mpl::size_t<Width>
-            >::type::value)
-            )
+        BOOST_STATIC_CONSTANT(unsigned_type, val = std::numeric_limits<unsigned_type>::value & (~(mpl::shift_right<
+            mpl::size_t<~( T(0) )>,
+            mpl::size_t<Width>
+        >::type::value)
         ));
         typedef integral_constant<T, val>       type;
     };
