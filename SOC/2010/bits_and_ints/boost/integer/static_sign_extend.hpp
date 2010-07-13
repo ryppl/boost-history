@@ -58,8 +58,8 @@ struct sign_extend : integral_c<typename IC::value_type,
 }
 
 // Compile-time version of sign_extend
-template<typename T, T data, std::size_t Bits>
-struct static_sign_extend : mpl::sign_extend<mpl::integral_c<T, data>, Bits>
+template<typename T, T Value, std::size_t Bits>
+struct static_sign_extend : mpl::sign_extend<mpl::integral_c<T, Value>, Bits>
 {
 	BOOST_STATIC_ASSERT((is_integral<T>::value));
 	BOOST_STATIC_ASSERT((Bits > 0 && Bits < (sizeof(T) * 8)));

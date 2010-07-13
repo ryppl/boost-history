@@ -15,13 +15,11 @@ convert to a representation with more bits; this is sign extending. More about s
 [section Non-Member Function Template `sign_extend`]
 The run-time version can be included via [@../../../../boost/integer/sign_extend.hpp <boost/integer/sign_extend.hpp>].
 
-	template <typename Type>
-	Type sign_extend(Type data, std::size_t bits);
+	template <typename T>
+	Type sign_extend(T data, std::size_t bits);
 
-*[*Requires: ] `bits` must be smaller than the size (in bits) of `Type`.
-	
-*[*Remarks: ] `Type` must be an integral type. If this constraint is not met, this function do not participate in overload resolution.
-   
+*[*Requires: ] `bits` must be smaller than the size, in bits, of `T` and `T` must be an integral type.
+
 *[*Parameters:]
 
 [table
@@ -30,9 +28,7 @@ The run-time version can be included via [@../../../../boost/integer/sign_extend
 	[[`bits`][ The amount of bits in wich data is represented. ]]
 ]
 
-*[*Returns: ] `data` sign-extended to `sizeof(Type)` bytes.
-
-*[*Throws:] none.
+*[*Returns: ] `data` sign-extended to `sizeof(T)` bytes.
 
 [endsect]
 
@@ -40,25 +36,46 @@ The run-time version can be included via [@../../../../boost/integer/sign_extend
 The compile-time version can be included via [@../../../../boost/integer/static_sign_extend.hpp <boost/integer/static_sign_extend.hpp>].
 The result will be in `value` member.
 
-	template<typename Type, Type data, std::size_t Bits>
+	template<typename T, T Value, std::size_t Bits>
 	struct static_sign_extend 
 	{
-		static const Type value = ``['implementation-defined]``; 
+		static const T value = ``['implementation-defined]``; 
 	};
 	
 
-*[*Requires: ] `Bits` must be smaller than the size, in bits, of `Type`.
-	
-*[*Remarks: ] `Type` must be an integral type. If this constraint is not met, this metafunction do not participate in overload resolution.
+*[*Requires: ] `Bits` must be smaller than the size, in bits, of `T` and `T` must be an integral type.
 
 *[*Template Parameters:]
 
 [table
 	[[Parameter][Description]]
-	[[`Type`][ The data type. ]]
-	[[`data`][ The data to be extended. ]]
+	[[`T`][ The data type. ]]
+	[[`Value`][ The data to be extended. ]]
 	[[`Bits`][ The amount of bits in wich data is represented. ]]
 ]
+[endsect]
+
+[section Template Class `mpl::sign_extend<>`]
+The MPL version can be included via [@../../../../boost/integer/static_sign_extend.hpp <boost/integer/static_sign_extend.hpp>].
+The result will be in `value` member.
+
+	template<typename IC, std::size_t Bits>
+	struct mpl::sign_extend 
+	{
+		static const T value = ``['implementation-defined]``; 
+	};
+	
+
+*[*Requires: ] `IC` must a `mpl::integral_c<>` type. `Bits` must be smaller than the size in bits of `IC::value_type`.
+
+*[*Template Parameters:]
+
+[table
+	[[Parameter][Description]]
+	[[`IC`][ A `mpl::integral_c<>` type. ]]
+	[[`Bits`][ The amount of bits in wich data is represented. ]]
+]
+
 [endsect]
 
 [section Examples]
@@ -112,7 +129,7 @@ The run-time version can be included via [@../../../../boost/integer/bit_reversa
 	[[`data`][ The data to be reversed. The type of data *must* be an integral type and it's size *must* be 8, 16, 32 or 64-bits, otherwise, bit_reversal(data) will result in an error. ]]
 ]
 	
-*[*Remarks: ] `T` must be an integral type. If this constraint is not met, this function do not participate in overload resolution.
+*[*Requires: ] `T` must be an integral type.
 
 *[*Returns: ] `data` with its bits reversed.
 
@@ -122,7 +139,7 @@ The run-time version can be included via [@../../../../boost/integer/bit_reversa
 The compile-time version can be included via [@../../../../boost/integer/static_bit_reversal.hpp <boost/integer/static_bit_reversal.hpp>].
 The result will be in `value` member.
 	
-	template <typename T, T data>
+	template <typename T, T Value>
 	struct static_bit_reversal { 
 		static const T value = ``['implementation-defined]``; 
 	};
@@ -132,11 +149,32 @@ The result will be in `value` member.
 [table
 	[[Parameter][Description]]
 	[[`T`][ The data type. ]]
-	[[`data`][ The data to be reversed. ]]
+	[[`Value`][ The data to be reversed. ]]
 ]
+
+*[*Requires: ] `T` must be an integral type.
+
 [endsect]
 
-*[*Remarks: ] `T` must be an integral type. If this constraint is not met, this metafunction do not participate in overload resolution.
+[section Template Class `mpl::bit_reversal<>`]
+The MPL version can be included via [@../../../../boost/integer/static_bit_reversal.hpp <boost/integer/static_bit_reversal.hpp>].
+The result will be in `value` member.
+	
+	template <typename IC>
+	struct mpl::bit_reversal { 
+		static const T value = ``['implementation-defined]``; 
+	};
+
+*[*Template Parameters]
+
+[table
+	[[Parameter][Description]]
+	[[`IC`][ A `mpl::integral_c<>` type wich holds an integral constant to be reversed. ]]
+]
+
+*[*Requires: ] `IC` must be an `mpl::integral_c<>` type.
+
+[endsect]
 
 [section Examples]
 *[*Run-time version]
@@ -193,15 +231,15 @@ For valid types T, the function `bit_reversal` will be:
 
 *[*Returns: ] `false` if the signs of first and second are different or `true` if the signs are equal
 
-*[*Remarks: ] `T` must be an integral type. If this constraint is not met, this function do not participate in overload resolution.
+*[*Remarks: ] `T` must be an integral type.
 
 [endsect]
 
 [section Template Class `static_same_sign<>`]
-The compile-time version can be included via [@../../../../boost/integer/same_sign.hpp <boost/integer/same_sign.hpp>].
+The compile-time version can be included via [@../../../../boost/integer/static_same_sign.hpp <boost/integer/static_same_sign.hpp>].
 The result will be in `value` member.
 	
-	template <typename T, T first, T second>
+	template <typename T, T Value1, T Value2>
 	struct static_same_sign
 	{
 		static const bool value = ``['implementation-defined]``;
@@ -212,10 +250,31 @@ The result will be in `value` member.
 [table
 	[[Parameter][Description]]
 	[[`T`][ The data type. ]]
-	[[`first`, `second`][ The two integral values to be compared. ]]
+	[[`Value1`, `Value2`][ The two integral values to be compared. ]]
 ]
 
-*[*Remarks: ] `T` must be an integral type. If this constraint is not met, this class do not participate in overload resolution.
+*[*Requires: ] `T` must be an integral type.
+
+[endsect]
+
+[section Template Class `mpl::same_sign<>`]
+The MPL version can be included via [@../../../../boost/integer/static_same_sign.hpp <boost/integer/static_same_sign.hpp>].
+The result will be in `value` member.
+	
+	template <typename IC1, typename IC2>
+	struct mpl::same_sign
+	{
+		static const bool value = ``['implementation-defined]``;
+	};
+
+*[*Template Parameters:]
+
+[table
+	[[Parameter][Description]]
+	[[`IC1`, `IC2`][ The two `mpl::integral_c<>` to be compared. ]]
+]
+
+*[*Requires: ] `IC1` and `IC2` must be `mpl::integral_c<>` types.
 
 [endsect]
 
@@ -280,7 +339,7 @@ The run-time version can be included via [@../../../../boost/integer/sign.hpp <b
 	[[`1`][ `data` is positive. ]]
 ]
 
-*[*Remarks: ] `T` must be an integral type. If this constraint is not met, this function do not participate in overload resolution.
+*[*Requires: ] `T` must be an integral type.
 
 [endsect]
 
@@ -344,12 +403,12 @@ std::pair<T1, T1> uninterleave(T2 number);
 [endsect]
 
 
-*[*Remarks: ] `T1` and `T2` must be integral types. Additionally, `T1` must have 8, 16 or 32 bits and `T2` must have
+*[*Requires: ] `T1` and `T2` must be integral types. Additionally, `T1` must have 8, 16 or 32 bits and `T2` must have
 16, 32 or 64 bits. For these functions `T2` have the double of bits wich `T1` have.
 
 [*Returns: ] `interleave` function returns `x` and `y` interleaved. `x` will be in the even bits and `y` will be on odd positions, so the return type have the double of bits than the paramter's type. 
 
-`uninterleave` returns an pair where in the member `first` will be the integral represented in the even positions of `number` and in the `second`
+`uninterleave` returns an `std::pair<>` where in the member `first` will be the integral represented in the even positions of `number` and in the `second`
 member will be the integral represented in the odd positions of `number`.
 
 [section Examples]
@@ -694,9 +753,9 @@ Sets the bit `pos` active in `value`.
 	for `mpl::static_set_bit<>`.
 	
 *[*Remarks: ] 
-	* `T` must be an integral type. If this constraint is not met, `static_set_bit<>` do not participate in overload resolution.
+	* `T` must be an integral type.
 	
-	* `IC` must be a `mpl::integral_c<>` type. If this constraint is not met, `mpl::set_bit<>` metafunction do not participate in overload resolution.
+	* `IC` must be a `mpl::integral_c<>` type.
 
 *[*Example:]
 
@@ -713,10 +772,10 @@ Sets the bit `pos` inactive in `data`.
 	for `mpl::static_clear_bit<>`.
 	
 *[*Remarks: ]
-	* `T` must be an integral type. If this constraint is not met, `static_clear_bit<>` do not participate in overload resolution.
+	* `T` must be an integral type.
+		
+	* `IC` must be a `mpl::integral_c<>` type. 
 	
-	* `IC` must be a `mpl::integral_c<>` type. If this constraint is not met, `mpl::clear_bit<>` metafunction do not participate in overload resolution.
-
 *[*Example:]
 
 	// `new_value' becomes 1
@@ -732,10 +791,10 @@ Test if the bit `pos` in `data` is active or not.
 	for `mpl::static_test_bit<>`.
 	
 *[*Remarks: ] 
-	* `T` must be an integral type. If this constraint is not met, `static_test_bit<>` do not participate in overload resolution.
+	* `T` must be an integral type. 
 	
-	* `IC` must be a `mpl::integral_c<>` type. If this constraint is not met, `mpl::test_bit<>` metafunction do not participate in overload resolution.
-
+	* `IC` must be a `mpl::integral_c<>` type.
+	
 *[*Example:]
 
 	// `is_set' becomes true
@@ -750,9 +809,9 @@ Invert the value of the bit `pos` in `data`
 	for `mpl::static_flip_bit<>`.
 	
 *[*Remarks: ]
-	* `T` must be an integral type. If this constraint is not met, `static_flip_bit<>` do not participate in overload resolution.
+	* `T` must be an integral type.
 	
-	* `IC` must be a `mpl::integral_c<>` type. If this constraint is not met, `mpl::flip_bit<>` metafunction do not participate in overload resolution.
+	* `IC` must be a `mpl::integral_c<>` type. 
 
 *[*Example:]
 
@@ -766,7 +825,6 @@ Invert the value of the bit `pos` in `data`
 For all runtime functions, all remarks and requirement are equals to the `static_`-prefixed version.
 
 [endsect]
-
 [endsect]
 
 [endsect]

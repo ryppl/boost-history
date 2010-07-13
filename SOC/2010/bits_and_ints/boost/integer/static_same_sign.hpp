@@ -51,8 +51,8 @@ struct same_sign : bool_<
  *		- false: if the signs of FIRST and SECOND are different
  *		- true: if the signs are equal
  */
-template <typename T, T first, T second>
-struct static_same_sign : mpl::same_sign< mpl::integral_c<T, first>, mpl::integral_c<T, second> >
+template <typename T, T Value1, T Value2>
+struct static_same_sign : mpl::same_sign< mpl::integral_c<T, Value1>, mpl::integral_c<T, Value2> >
 {
 	BOOST_STATIC_ASSERT((is_integral<T>::value));
 };

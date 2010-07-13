@@ -10,19 +10,20 @@
 #ifndef BOOST_SIGN_EXTEND_INCLUDED
 #define BOOST_SIGN_EXTEND_INCLUDED
 
+#include <boost/assert.hpp>
 #include <boost/type_traits/is_integral.hpp>
-#include <boost/utility/enable_if.hpp>
 
 namespace boost {
 
 //	Extend data represented in `bits' bits to 
 //		sizeof(Type) * 8 bits
-template <typename Type>
-inline typename enable_if<is_integral<Type>, Type>::type
-sign_extend(Type data, std::size_t bits)
+template <typename T>
+T sign_extend(T data, std::size_t bits)
 {
-	data = data & ((Type(1) << bits) - 1);
-	Type const mask = (Type(1) << (bits - 1));
+	BOOST_ASSERT((bits < sizeof(T) * 8));
+	
+	data = data & ((T(1) << bits) - 1);
+	T const mask = (T(1) << (bits - 1));
 	return (data ^ mask) - mask;
 }
 	
