@@ -35,7 +35,7 @@ namespace detail {
         BOOST_STATIC_CONSTANT(unsigned_type, val = std::numeric_limits<unsigned_type>::max & (~(mpl::shift_right<
             mpl::size_t<~( T(0) )>,
             mpl::size_t<Width>
-        >::type::value)
+        >::type::value))
         ));
         typedef integral_constant<T, val>       type;
     };
