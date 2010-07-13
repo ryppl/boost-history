@@ -13,7 +13,20 @@
 #include <boost/integer/integral_mask.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/make_unsigned.hpp>
+
+#ifdef BOOST_MSVC
+#   if BOOST_MSVC == 1500
+#       pragma warning(push)
+#       pragma warning(disable : 4307)
+#   endif
+#endif
+
 #include <boost/mpl/bitwise.hpp>
+
+#if BOOST_MSVC
+#pragma warning(pop)
+#endif
+
 #include <boost/mpl/size_t.hpp>
 
 
