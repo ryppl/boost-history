@@ -29,7 +29,9 @@
 namespace boost {
 
 #ifdef BOOST_MSVC
-    
+#pragma warning(push)
+#pragma warning(disable : 4309)
+
 namespace detail {
     template<typename T, unsigned int Width>
     struct evaluate_for_msvc_08 {
@@ -40,7 +42,7 @@ namespace detail {
     };
 }
 
-
+#pragma warning(pop)
 #endif
 
 /** Creates a mask of the supplied width in side type T, from the lower portion 
