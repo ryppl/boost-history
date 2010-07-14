@@ -11,8 +11,7 @@
 #include <iostream>
 
 #define CLZ_TEST(x, y) \
-BOOST_TEST((::boost::count_leading_zeros(x) == y)); \
-std::cout << "era pra dar " << y << " deu: " << ::boost::count_leading_zeros(x) << std::endl
+BOOST_TEST((::boost::count_leading_zeros(x) == y))
 
 // Main testing function
 int main(int, char* [])
