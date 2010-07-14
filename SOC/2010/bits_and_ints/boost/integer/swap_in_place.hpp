@@ -7,8 +7,8 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history. 
 
-#ifndef BOOST_SWAP_INCLUDED
-#define BOOST_SWAP_INCLUDED
+#ifndef BOOST_SWAP_IN_PLACE_INCLUDED
+#define BOOST_SWAP_IN_PLACE_INCLUDED
 
 namespace boost {	
 	
@@ -17,7 +17,7 @@ namespace boost {
  */
 
 template <typename T>
-inline void swap(T& x, T& y)
+inline void swap_in_place(T& x, T& y)
 {
 	x ^= y;
 	y ^= x;
