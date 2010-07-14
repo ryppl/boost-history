@@ -4,6 +4,604 @@
 The intent of this library is to extend Boost.Integer with fast integer algorithms and utilities. This library can be included via	[@../../../../boost/integer/bits_and_ints.hpp <boost/integer/bits_and_ints.hpp>].
 [endsect]
 
+[section Absolute Value in Compile-Time ]
+The static metafunctions defined on [@../../../../boost/integer/static_abs.hpp <boost/integer/static_abs.hpp>] 
+calculates the absolute value of integral constants.
+
+`mpl::abs<>` version returns the absolute value of a `mpl::integral_c<>`
+and the `static_abs<>` version returns the absolute value from an integral value.
+
+[section Synopsis]
+
+	template <typename IC>
+	struct mpl::abs : mpl::integral_c<``['implementation-defined]``,``['implementation-defined]``> {}; 
+	
+	template <typename T, T Value>
+	struct static_abs : mpl::abs< mpl::integral_c<T, Value> > {}; 
+	
+[endsect]
+
+*[*Requires: ] `T` must be an integral type. `IC` a `mpl::integral_c<>` type.
+
+*[*Results: ] The member `value ` in `mpl::abs<>` will be the absolute value of `IC::value`.
+In `static_abs<>`, `value` will be the absolute value of `Value`.
+
+[endsect]
+
+[section:bit_utils Binary Utilities]
+The header [@../../../../boost/integer/bit_utils.hpp <boost/integer/bit_utils.hpp>] cotains some metafunctions to handle binary data.
+All the metafunctions have an member varible named `value` where will be the result.
+
+[section Synopsis]
+
+	namespace boost
+	{
+	
+	namespace mpl {
+
+	template <typename IC, unsigned char pos>
+	struct set_bit : integral_c<typename IC::value_type, ``['implementation-defined]``> {};
+
+	template <typename IC, unsigned char pos>
+	struct clear_bit : integral_c<typename IC::value_type, ``['implementation-defined]``> {};
+
+	template <typename IC, unsigned char pos>
+	struct flip_bit : integral_c<typename IC::value_type, ``['implementation-defined]``> {};
+
+	template <typename IC, unsigned char pos>
+	struct test_bit : bool_<``['implementation-defined]``> {};
+	
+	} // mpl
+	
+	// Compile-time version
+		
+	// Sets the bit `pos' in data
+	template <typename T, T data, unsigned char pos>
+	struct static_set_bit : mpl::set_bit<mpl::integral_c<T, data>, pos> {};
+		
+	// Clear the bit `pos' in data
+	template <typename T, T data, unsigned char pos>
+	struct static_clear_bit : mpl::clear_bit<mpl::integral_c<T, data>, pos> {};
+
+	// If the bit `pos' is 1 then it will be 0 if not the bit will be 1
+	template <typename T, T data, unsigned char pos>
+	struct static_flip_bit : mpl::flip_bit<mpl::integral_c<T, data>, pos> {};
+
+	// Test if the bit in `pos' positon is set or not
+	template <typename T, T data, unsigned char pos>
+	struct static_test_bit : mpl::test_bit<mpl::integral_c<T, data>, pos> {};
+
+	// Runtime version
+	template <typename T>
+	inline T set_bit(T data, unsigned char pos);
+
+	template <typename T>
+	inline T clear_bit(T data, unsigned char pos);
+
+	template <typename T>
+	inline T flip_bit(T data, unsigned char pos);
+		
+	template <typename T>
+	inline bool test_bit(T data, unsigned char pos);
+		
+	} // boost
+
+[endsect]
+
+[section Template Class `static_set_bit<>` and `mpl::set_bit`]
+Sets the bit `pos` active in `value`.
+
+*[*Requires: ] `pos` must be smaller than the size (in bits) of `Type` for `static_set_bit<>` and smaller than IC::value_type
+	for `mpl::static_set_bit<>`.
+	
+*[*Remarks: ] 
+	* `T` must be an integral type.
+	
+	* `IC` must be a `mpl::integral_c<>` type.
+
+*[*Example:]
+
+	BOOST_STATIC_ASSERT((set_bit<int, 100, 0>::value == 101));
+
+[endsect]
+	
+[section Template Class `mpl::clear_bit<>` and `static_clear_bit<>`]
+Sets the bit `pos` inactive in `data`.
+
+
+*[*Requires: ] `pos` must be smaller than the size (in bits) of `Type` for `static_clear_bit<>` and smaller than IC::value_type
+	for `mpl::static_clear_bit<>`.
+	
+*[*Remarks: ]
+	* `T` must be an integral type.
+		
+	* `IC` must be a `mpl::integral_c<>` type. 
+	
+*[*Example:]
+
+	BOOST_STATIC_ASSERT((clear_bit<int, 3, 1>::value == 1));
+
+[endsect]
+
+[section Template Class `mpl::test_bit` and `static_test_bit<>`]
+Test if the bit `pos` in `data` is active or not.
+
+
+*[*Requires: ] `pos` must be smaller than the size (in bits) of `Type` for `static_test_bit<>` and smaller than IC::value_type
+	for `mpl::static_test_bit<>`.
+	
+*[*Remarks: ] 
+	* `T` must be an integral type. 
+	
+	* `IC` must be a `mpl::integral_c<>` type.
+	
+*[*Example:]
+
+	BOOST_STATIC_ASSERT((test_bit<int, 3982, 11>::value == true));
+
+[endsect]
+
+[section Template Class `mpl::flip_bit<>` and `static_flip_bit<>`]
+Invert the value of the bit `pos` in `data`
+
+*[*Requires: ] `pos` must be smaller than the size (in bits) of `Type` for `static_flip_bit<>` and smaller than IC::value_type
+	for `mpl::static_flip_bit<>`.
+	
+*[*Remarks: ]
+	* `T` must be an integral type.
+	
+	* `IC` must be a `mpl::integral_c<>` type. 
+
+*[*Example:]
+
+	BOOST_STATIC_ASSERT((flip_bit<int, 10, 2>::value == 14));
+
+[endsect]
+
+[section Runtime version]
+
+For all runtime functions, all remarks and requirement are equals to the `static_`-prefixed version.
+
+[endsect]
+[endsect]
+
+[section Bit Iterleaving]
+Interleaved bits (aka Morton numbers) [@http://en.wikipedia.org/wiki/Morton_number_(number_theory)] are useful for linearizing 2D integer coordinates, 
+so x and y are combined into a single number that can be compared easily and has the property 
+that a number is usually close to another if their x and y values are close.
+These functions are defined in the header [@../../../../boost/integer/interleave.hpp <boost/integer/interleave.hpp>].
+
+[section Synopsis]
+``
+T2 interleave(T1 x, T1 y);
+
+std::pair<T1, T1> uninterleave(T2 number);
+``
+[endsect]
+
+
+*[*Requires: ] `T1` and `T2` must be integral types. Additionally, `T1` must have 8, 16 or 32 bits and `T2` must have
+16, 32 or 64 bits. For these functions `T2` have the double of bits wich `T1` have.
+
+[*Returns: ] `interleave` function returns `x` and `y` interleaved. `x` will be in the even bits and `y` will be on odd positions, so the return type have the double of bits than the paramter's type. 
+
+`uninterleave` returns an `std::pair<>` where in the member `first` will be the integral represented in the even positions of `number` and in the `second`
+member will be the integral represented in the odd positions of `number`.
+
+[section Examples]
+
+``
+#include <boost/integer/interleave.hpp>
+#include <utility>
+#include <iostream>
+
+using namespace std;
+using namespace boost;
+
+int main()
+{
+	uint_t<64>::exact inter = interleave<32>(0x10, 0x0e);
+	
+	cout << "interleaved number: ";
+	cout << hex << inter << endl;
+
+	pair<uint8_t, uint8_t> uninter = uninterleave<16>(inter);
+	
+	uint8_t a = uninter.first, b = uninter.second;
+
+	cout << "uninterleaved number: ";
+	cout << hex << unsigned(a) << " " << unsigned(b) << endl; 
+}
+``
+
+[endsect]
+[endsect]
+
+[section:bit_reversal Bit Reversal]
+The bit reversal functions reverts the bits of integral types.
+
+[section Non-Member Function `bit_reversal`]
+The run-time version can be included via [@../../../../boost/integer/bit_reversal.hpp <boost/integer/bit_reversal.hpp>].
+
+	template <typename T>
+	inline T bit_reversal(T data);
+   
+*[*Parameters:]
+
+[table
+	[[Parameter][Description]]
+	[[`data`][ The data to be reversed. The type of data *must* be an integral type and it's size *must* be 8, 16, 32 or 64-bits, otherwise, bit_reversal(data) will result in an error. ]]
+]
+	
+*[*Requires: ] `T` must be an integral type.
+
+*[*Returns: ] `data` with its bits reversed.
+
+[endsect]
+
+[section Template Class `static_bit_reversal<>`]
+The compile-time version can be included via [@../../../../boost/integer/static_bit_reversal.hpp <boost/integer/static_bit_reversal.hpp>].
+The result will be in `value` member.
+	
+	template <typename T, T Value>
+	struct static_bit_reversal { 
+		static const T value = ``['implementation-defined]``; 
+	};
+
+*[*Template Parameters]
+
+[table
+	[[Parameter][Description]]
+	[[`T`][ The data type. ]]
+	[[`Value`][ The data to be reversed. ]]
+]
+
+*[*Requires: ] `T` must be an integral type.
+
+[endsect]
+
+[section Template Class `mpl::bit_reversal<>`]
+The MPL version can be included via [@../../../../boost/integer/static_bit_reversal.hpp <boost/integer/static_bit_reversal.hpp>].
+The result will be in `value` member.
+	
+	template <typename IC>
+	struct mpl::bit_reversal { 
+		static const T value = ``['implementation-defined]``; 
+	};
+
+*[*Template Parameters]
+
+[table
+	[[Parameter][Description]]
+	[[`IC`][ A `mpl::integral_c<>` type wich holds an integral constant to be reversed. ]]
+]
+
+*[*Requires: ] `IC` must be an `mpl::integral_c<>` type.
+
+[endsect]
+
+[section Examples]
+*[*Run-time version]
+``
+#include <boost/integer/bit_reversal.hpp>
+#include <iostream>
+
+int main()
+{
+	// data = 0101 0101
+	uint8_t data = 0x55;
+
+	uint8_t result = boost::bit_reversal(data);
+
+	// will print 0xaa (1010 1010)
+	std::cout << std::hex << result << std::endl; // -1
+}
+``
+	
+*[*Compile-time version]
+``	
+#include <boost/integer/static_bit_reversal.hpp>
+#include <iostream>
+
+int main()
+{
+	// 0x30A5 == 0011 0000 1010 0101
+	uint16_t result = boost::static_sign_extend<uint16_t, 0x30A5>::value;
+
+	// will print 0x5A0B
+	std::cout << std::hex << result << std::endl;
+}
+``
+	
+[endsect]
+[endsect]
+
+[section Clear Least Bit Set]
+Clears least significant 1 bit in an integral. The `clear_least_bit_set()` function is defined on [@../../../../boost/integer/clear_least_bit_set.hpp <boost/integer/clear_least_bit_set.hpp>].
+
+[section Synopsis]
+
+	template <typename T>
+	T clear_least_bit_set(T value);
+	
+	template <typename IC>
+	struct mpl::clear_least_bit_set { static const typename IC::value_type value = ``['implementation-defined]``; };
+	
+	template <typename T, T Value>
+	struct static_clear_least_bit_set { static const T value = ``['implementation-defined]``; };
+
+[endsect]
+
+*[*Requires: ] `T` must be an integral type. `IC` must be an `mpl::integral_c<>` type. 
+
+*[*Returns: ] `value` with it's least significant active bit disactivated.
+
+[endsect]
+
+[section Count Leading Zeros]
+The `count_trailing_zeros` function counts the number of consecutive 0's from the most significant bit of an integral value.
+The function is defined on [@../../../../boost/integer/count_leading_zeros.hpp <boost/integer/count_leading_zeros.hpp>].
+
+[section Synopsis]
+	
+	inline int count_leading_zeros(uintmax_t value);
+	
+[endsect]
+
+*[*Remarks: ] If `value` is 0, the result is undefined.
+*[*Returns: ] For the runtime version, the number of consecutive zeros from the least significant bit.
+
+[endsect]
+
+[section Count Trailing Zeros]
+The `count_trailing_zeros` function and metafunctions counts the number of consecutive 0's from the least significant bit of an integral value.
+The runtime function is defined on [@../../../../boost/integer/count_trailing_zeros.hpp <boost/integer/count_trailing_zeros.hpp>] and
+the compile-time metafunctions are defined on [@../../../../boost/integer/static_count_trailing_zeros.hpp <boost/integer/static_count_trailing_zeros.hpp>]
+
+[section Synopsis]
+	
+	int count_trailing_zeros(uintmax_t value);
+	
+	template <typename IC>
+	struct mpl::count_trailing_zeros { static const int value = ``['implementation-defined]``; };
+	
+	template <uintmax_t Value> 
+	struct static_count_trailing_zeros { static const int value = ``['implementation-defined]``; };
+	
+[endsect]
+
+*[*Remarks: ] If `value` is 0, the result is undefined.
+*[*Requires: ] For the `mpl::count_trailing_zeros<>` version, `IC` must be an mpl::integral_c<> type. 
+*[*Returns: ] For the runtime version, the number of consecutive zeros from the least significant bit. 
+In the compile-time versions, the number of consecutive zeros in the `value` static member.
+
+[endsect]
+
+[section Greatest Common Divisor ]
+The header file [@../../../../boost/integer/static_gcd.hpp <boost/integer/static_gcd.hpp>] defines `mpl::gcd<>` 
+metafunction wich calculates the greatest common divisor of two given `mpl::integral_c<>`.
+
+[section Synopsis]
+
+	template <typename ICT1, typename ICT2>
+	struct mpl::gcd { static const uintmax_t value = ``['implementation-defined]``; }; 
+	
+[endsect]
+
+*[*Requires: ] `ICT1` and `ICT2` must be `mpl::integral_c<>` types.
+
+*[*Results: ] The member `value ` will be the greatest commom divisor from `IC1` and `IC2`.
+
+[endsect]
+
+[section `is_integral_constant<>` metafunction ]
+The header file [@../../../../boost/integer/is_integral_constant.hpp <boost/integer/is_integral_constant.hpp>] defines 
+`is_integral_constant<>` static metafunction wich verifies if an given template parameter is or not a `mpl::integral_c<>`.
+
+[section Synopsis]
+
+	template <typename IC>
+	struct is_integral_constant { ``['implementation-defined]`` };
+	
+[endsect]
+
+*[*Results: ] 
+	* If `IC` is a `mpl::integral_c<>` type, `is_integral_constant<IC>` will inherit from `mpl::true_`
+	* If `IC` is not a `mpl::integral_c<>` type, `is_integral_constant<IC>` will inherit from `mpl::false_`
+
+[endsect]
+
+[section Least Common Multiple ]
+This header defines mpl::lcm<> metafunction wich calculates the 
+ least common multiple from two given `mpl::integral_c<>`.
+ 
+This static metafunction is defined on [@../../../../boost/integer/static_lcm.hpp <boost/integer/static_lcm.hpp>].
+
+[section Synopsis]
+
+	template <typename ICT1, typename ICT2>
+	struct mpl::lcm { static const uintmax_t value = ``['implementation-defined]``; }; 
+	
+[endsect]
+
+*[*Requires: ] `ICT1` and `ICT2` must be `mpl::integral_c<>` types.
+
+*[*Results: ] The member `value ` will be the least common multiple from `IC1` and `IC2`.
+
+[endsect]
+
+[section Population Count (count bits set)]
+Population Count (pop count) is the number of active bits in an integral. The `pop_count()` function is defined
+under the header [@../../../../boost/integer/pop_count.hpp <boost/integer/pop_count.hpp>].
+
+[section Synopsis]
+
+	int pop_count(uintmax_t value);
+	
+	template <uintmax_t Value>
+	struct static_pop_count { static const int value = ``['implementation-defined]``; };
+	
+	template <typename IC>
+	struct pop_count { static const int value = ``['implementation-defined]``; };
+
+[endsect]
+
+*[*Requires: ] `IC` must be an `mpl::integral_c<>` type.
+*[*Returns: ] The number of bits set in `value`. For the compile-time versions, the result will be on member `value`.
+
+[endsect]
+
+[section Round to Power of 2 functions]
+This function rounds up and down positive integral values to the next power of 2.
+The `ceil_pow2` function rounds up and `floor_pow2` function rounds down.
+These functions are defined on [@../../../../boost/integer/round_pow2.hpp <boost/integer/round_pow2.hpp>]
+
+[section Synopsis]
+
+	T ceil_pow2(T value);
+	T floor_pow2(T value);
+	
+[endsect]
+
+*[*Requires: ] `T` must be an integral type and `value` must be positive. If `value` is negative, the result is
+undefined.
+
+*[*Returns: ] 
+	* `ceil_pow2()` returns `value` rounded [*up] to the lesser power of two greater than or equal to `value. 
+	
+	* `floor_pow2()` returns `value` rounded [*down] to the greater power of two lesser or equal `value`.
+
+[endsect]
+
+[section Safe Average]
+Given two integer values x and y, the (floor of the) average normally would be computed by `(x+y)/2` unfortunately, 
+this can yield incorrect results due to overflow. Safe average ensures that no overflow will happen even if `(x+y)` 
+overflows the range of T. 
+The runtime version is defined on [@../../../../boost/integer/safe_avg.hpp <boost/integer/safe_avg.hpp>] and
+the compile-time metafunctions are defined on [@../../../../boost/integer/static_safe_avg.hpp <boost/integer/static_safe_avg.hpp>]
+
+[section Synopsis]
+	
+	template <typename T>
+	T safe_avg(T x, T y);
+	
+	template <typename ICT1, typename ICT2>
+	struct mpl::safe_avg { static const int value = ``['implementation-defined]``; };
+	
+	template <typename T, T Value1, T Value2>
+	struct static_safe_avg { static const int value = ``['implementation-defined]``; };
+	
+[endsect]
+
+*[*Requires: ] For the `mpl::safe_avg<>` version, both `ICT1` and `ICT2` must be mpl::integral_c<> types.
+For the `static_safe_avg<>` and the runtime version, `T` must be an integral type.
+
+*[*Returns: ] The average of the sum between two integrals rounded down. Overflow is ensured to not happen.
+
+[endsect]
+
+[section:same_sign Same Sign]
+These functions check if wheter the sign of two integers are equal.
+
+[section Non-Member Function `same_sign`]
+The run-time version can be included via [@../../../../boost/integer/same_sign.hpp <boost/integer/same_sign.hpp>]. 
+For valid types T, the function `bit_reversal` will be:
+
+	template <typename T>
+	inline bool same_sign(T first, T second);
+   
+*[*Parameters:]
+
+[table
+	[[Parameter][Description]]
+	[[`first`, `second`][ The two integral values to be compared. The type of data *must* be an integral type. `first` and `second` must have the same type. ]]
+]
+
+*[*Returns: ] `false` if the signs of first and second are different or `true` if the signs are equal
+
+*[*Remarks: ] `T` must be an integral type.
+
+[endsect]
+
+[section Template Class `static_same_sign<>`]
+The compile-time version can be included via [@../../../../boost/integer/static_same_sign.hpp <boost/integer/static_same_sign.hpp>].
+The result will be in `value` member.
+	
+	template <typename T, T Value1, T Value2>
+	struct static_same_sign
+	{
+		static const bool value = ``['implementation-defined]``;
+	};
+
+*[*Template Parameters:]
+
+[table
+	[[Parameter][Description]]
+	[[`T`][ The data type. ]]
+	[[`Value1`, `Value2`][ The two integral values to be compared. ]]
+]
+
+*[*Requires: ] `T` must be an integral type.
+
+[endsect]
+
+[section Template Class `mpl::same_sign<>`]
+The MPL version can be included via [@../../../../boost/integer/static_same_sign.hpp <boost/integer/static_same_sign.hpp>].
+The result will be in `value` member.
+	
+	template <typename IC1, typename IC2>
+	struct mpl::same_sign
+	{
+		static const bool value = ``['implementation-defined]``;
+	};
+
+*[*Template Parameters:]
+
+[table
+	[[Parameter][Description]]
+	[[`IC1`, `IC2`][ The two `mpl::integral_c<>` to be compared. ]]
+]
+
+*[*Requires: ] `IC1` and `IC2` must be `mpl::integral_c<>` types.
+
+[endsect]
+
+[section Examples]
+*[*Run-time version:]
+``
+#include <boost/integer/same_sign.hpp>
+#include <iostream>
+
+int main()
+{
+	int first = -1, second = -2, third = 1;
+	
+	bool result = boost::same_sign(first, second);
+	std::cout << result << std::endl; // true
+	
+	result = boost::same_sign(first, third);
+	std::cout << result << std::endl; // false
+}
+``	
+*[*Compile-time version:]
+
+``
+#include <boost/integer/same_sign.hpp>
+#include <iostream>
+
+int main()
+{
+	bool result = boost::static_same_sign<int, 2, 10>::value;
+	std::cout << result << std::endl; //true
+	
+	result = boost::static_same_sign<int, 10, -2>::value;
+	std::cout << result << std::endl; // false
+}
+``
+
+[endsect]
+[endsect]
+
 [section:sign_extend Sign Extending]
 
 Sign extension is automatic for built-in types, such as chars and ints. But suppose you have a signed two's complement number, x, that is stored 
@@ -110,211 +708,9 @@ int main()
 ``
 	
 [endsect]
-
 [endsect]
 
-[section:bit_reversal Bit Reversal]
-The bit reversal functions reverts the bits of integral types.
-
-[section Non-Member Function `bit_reversal`]
-The run-time version can be included via [@../../../../boost/integer/bit_reversal.hpp <boost/integer/bit_reversal.hpp>].
-
-	template <typename T>
-	inline T bit_reversal(T data);
-   
-*[*Parameters:]
-
-[table
-	[[Parameter][Description]]
-	[[`data`][ The data to be reversed. The type of data *must* be an integral type and it's size *must* be 8, 16, 32 or 64-bits, otherwise, bit_reversal(data) will result in an error. ]]
-]
-	
-*[*Requires: ] `T` must be an integral type.
-
-*[*Returns: ] `data` with its bits reversed.
-
-[endsect]
-
-[section Template Class `static_bit_reversal<>`]
-The compile-time version can be included via [@../../../../boost/integer/static_bit_reversal.hpp <boost/integer/static_bit_reversal.hpp>].
-The result will be in `value` member.
-	
-	template <typename T, T Value>
-	struct static_bit_reversal { 
-		static const T value = ``['implementation-defined]``; 
-	};
-
-*[*Template Parameters]
-
-[table
-	[[Parameter][Description]]
-	[[`T`][ The data type. ]]
-	[[`Value`][ The data to be reversed. ]]
-]
-
-*[*Requires: ] `T` must be an integral type.
-
-[endsect]
-
-[section Template Class `mpl::bit_reversal<>`]
-The MPL version can be included via [@../../../../boost/integer/static_bit_reversal.hpp <boost/integer/static_bit_reversal.hpp>].
-The result will be in `value` member.
-	
-	template <typename IC>
-	struct mpl::bit_reversal { 
-		static const T value = ``['implementation-defined]``; 
-	};
-
-*[*Template Parameters]
-
-[table
-	[[Parameter][Description]]
-	[[`IC`][ A `mpl::integral_c<>` type wich holds an integral constant to be reversed. ]]
-]
-
-*[*Requires: ] `IC` must be an `mpl::integral_c<>` type.
-
-[endsect]
-
-[section Examples]
-*[*Run-time version]
-``
-#include <boost/integer/bit_reversal.hpp>
-#include <iostream>
-
-int main()
-{
-	// data = 0101 0101
-	uint8_t data = 0x55;
-
-	uint8_t result = boost::bit_reversal(data);
-
-	// will print 0xaa (1010 1010)
-	std::cout << std::hex << result << std::endl; // -1
-}
-``
-	
-*[*Compile-time version]
-``	
-#include <boost/integer/static_bit_reversal.hpp>
-#include <iostream>
-
-int main()
-{
-	// 0x30A5 == 0011 0000 1010 0101
-	uint16_t result = boost::static_sign_extend<uint16_t, 0x30A5>::value;
-
-	// will print 0x5A0B
-	std::cout << std::hex << result << std::endl;
-}
-``
-	
-[endsect]
-[endsect]
-
-[section:same_sign Same Sign]
-These functions check if wheter the sign of two integers are equal.
-
-[section Non-Member Function `same_sign`]
-The run-time version can be included via [@../../../../boost/integer/same_sign.hpp <boost/integer/same_sign.hpp>]. 
-For valid types T, the function `bit_reversal` will be:
-
-	template <typename T>
-	inline bool same_sign(T first, T second);
-   
-*[*Parameters:]
-
-[table
-	[[Parameter][Description]]
-	[[`first`, `second`][ The two integral values to be compared. The type of data *must* be an integral type. `first` and `second` must have the same type. ]]
-]
-
-*[*Returns: ] `false` if the signs of first and second are different or `true` if the signs are equal
-
-*[*Remarks: ] `T` must be an integral type.
-
-[endsect]
-
-[section Template Class `static_same_sign<>`]
-The compile-time version can be included via [@../../../../boost/integer/static_same_sign.hpp <boost/integer/static_same_sign.hpp>].
-The result will be in `value` member.
-	
-	template <typename T, T Value1, T Value2>
-	struct static_same_sign
-	{
-		static const bool value = ``['implementation-defined]``;
-	};
-
-*[*Template Parameters:]
-
-[table
-	[[Parameter][Description]]
-	[[`T`][ The data type. ]]
-	[[`Value1`, `Value2`][ The two integral values to be compared. ]]
-]
-
-*[*Requires: ] `T` must be an integral type.
-
-[endsect]
-
-[section Template Class `mpl::same_sign<>`]
-The MPL version can be included via [@../../../../boost/integer/static_same_sign.hpp <boost/integer/static_same_sign.hpp>].
-The result will be in `value` member.
-	
-	template <typename IC1, typename IC2>
-	struct mpl::same_sign
-	{
-		static const bool value = ``['implementation-defined]``;
-	};
-
-*[*Template Parameters:]
-
-[table
-	[[Parameter][Description]]
-	[[`IC1`, `IC2`][ The two `mpl::integral_c<>` to be compared. ]]
-]
-
-*[*Requires: ] `IC1` and `IC2` must be `mpl::integral_c<>` types.
-
-[endsect]
-
-[section Examples]
-*[*Run-time version:]
-``
-#include <boost/integer/same_sign.hpp>
-#include <iostream>
-
-int main()
-{
-	int first = -1, second = -2, third = 1;
-	
-	bool result = boost::same_sign(first, second);
-	std::cout << result << std::endl; // true
-	
-	result = boost::same_sign(first, third);
-	std::cout << result << std::endl; // false
-}
-``	
-*[*Compile-time version:]
-
-``
-#include <boost/integer/same_sign.hpp>
-#include <iostream>
-
-int main()
-{
-	bool result = boost::static_same_sign<int, 2, 10>::value;
-	std::cout << result << std::endl; //true
-	
-	result = boost::static_same_sign<int, 10, -2>::value;
-	std::cout << result << std::endl; // false
-}
-``
-
-[endsect]
-[endsect]
-
-[section:sign Sign function]
+[section:sign Sign section]
 The `sign` function checks the sign of integrals.
 
 [section Non-Member Function `sign`]
@@ -388,170 +784,20 @@ int main()
 [endsect]
 [endsect]
 
-[section Bit Iterleaving]
-Interleaved bits (aka Morton numbers) [@http://en.wikipedia.org/wiki/Morton_number_(number_theory)] are useful for linearizing 2D integer coordinates, 
-so x and y are combined into a single number that can be compared easily and has the property 
-that a number is usually close to another if their x and y values are close.
-These functions are defined in the header [@../../../../boost/integer/interleave.hpp <boost/integer/interleave.hpp>].
-
-[section Synopsis]
-``
-T2 interleave(T1 x, T1 y);
-
-std::pair<T1, T1> uninterleave(T2 number);
-``
-[endsect]
-
-
-*[*Requires: ] `T1` and `T2` must be integral types. Additionally, `T1` must have 8, 16 or 32 bits and `T2` must have
-16, 32 or 64 bits. For these functions `T2` have the double of bits wich `T1` have.
-
-[*Returns: ] `interleave` function returns `x` and `y` interleaved. `x` will be in the even bits and `y` will be on odd positions, so the return type have the double of bits than the paramter's type. 
-
-`uninterleave` returns an `std::pair<>` where in the member `first` will be the integral represented in the even positions of `number` and in the `second`
-member will be the integral represented in the odd positions of `number`.
-
-[section Examples]
-
-``
-#include <boost/integer/interleave.hpp>
-#include <utility>
-#include <iostream>
-
-using namespace std;
-using namespace boost;
-
-int main()
-{
-	uint_t<64>::exact inter = interleave<32>(0x10, 0x0e);
-	
-	cout << "interleaved number: ";
-	cout << hex << inter << endl;
-
-	pair<uint8_t, uint8_t> uninter = uninterleave<16>(inter);
-	
-	uint8_t a = uninter.first, b = uninter.second;
-
-	cout << "uninterleaved number: ";
-	cout << hex << unsigned(a) << " " << unsigned(b) << endl; 
-}
-``
-
-[endsect]
-[endsect]
-
-[section Population Count (count bits set)]
-Population Count (pop count) is the number of active bits in an integral. The `pop_count()` function is defined
-under the header [@../../../../boost/integer/pop_count.hpp <boost/integer/pop_count.hpp>].
-
-[section Synopsis]
-
-	int pop_count(uintmax_t value);
-	
-	template <uintmax_t Value>
-	struct static_pop_count { static const int value = ``['implementation-defined]``; };
-	
-	template <typename IC>
-	struct pop_count { static const int value = ``['implementation-defined]``; };
-
-[endsect]
-
-*[*Requires: ] `IC` must be an `mpl::integral_c<>` type.
-*[*Returns: ] The number of bits set in `value`. For the compile-time versions, the result will be on member `value`.
-
-[endsect]
-
-[section Clear Least Bit Set]
-Clears least significant 1 bit in an integral. The `clear_least_bit_set()` function is defined on [@../../../../boost/integer/clear_least_bit_set.hpp <boost/integer/clear_least_bit_set.hpp>].
+[section Swap without a temporary (in-place) ]
+The header file [@../../../../boost/integer/swap.hpp <boost/integer/swap.hpp>] defines `swap` 
+function wich swaps 2 integral values without using a temporary variable.
 
 [section Synopsis]
 
 	template <typename T>
-	T clear_least_bit_set(T value);
-	
-	template <typename IC>
-	struct mpl::clear_least_bit_set { static const typename IC::value_type value = ``['implementation-defined]``; };
-	
-	template <typename T, T Value>
-	struct static_clear_least_bit_set { static const T value = ``['implementation-defined]``; };
-
-[endsect]
-
-*[*Requires: ] `T` must be an integral type. `IC` must be an `mpl::integral_c<>` type. 
-
-*[*Returns: ] `value` with it's least significant active bit disactivated.
-
-[endsect]
-
-[section Count Trailing Zeros]
-The `count_trailing_zeros` function and metafunctions counts the number of consecutive 0's from the least significant bit of an integral value.
-The runtime function is defined on [@../../../../boost/integer/count_trailing_zeros.hpp <boost/integer/count_trailing_zeros.hpp>] and
-the compile-time metafunctions are defined on [@../../../../boost/integer/static_count_trailing_zeros.hpp <boost/integer/static_count_trailing_zeros.hpp>]
-
-[section Synopsis]
-	
-	int count_trailing_zeros(uintmax_t value);
-	
-	template <typename IC>
-	struct mpl::count_trailing_zeros { static const int value = ``['implementation-defined]``; };
-	
-	template <uintmax_t Value> 
-	struct static_count_trailing_zeros { static const int value = ``['implementation-defined]``; };
+	inline void swap(T& x, T& y);
 	
 [endsect]
 
-*[*Requires: ] For the `mpl::count_trailing_zeros<>` version, `IC` must be an mpl::integral_c<> type. 
-*[*Returns: ] For the runtime version, the number of consecutive zeros from the least significant bit. 
-In the compile-time versions, the number of consecutive zeros in the `value` static member.
+*[*Requires: ] `T` must be an integral type.
 
-[endsect]
-
-[section Safe Average]
-Given two integer values x and y, the (floor of the) average normally would be computed by `(x+y)/2` unfortunately, 
-this can yield incorrect results due to overflow. Safe average ensures that no overflow will happen even if `(x+y)` 
-overflows the range of T. 
-The runtime version is defined on [@../../../../boost/integer/safe_avg.hpp <boost/integer/safe_avg.hpp>] and
-the compile-time metafunctions are defined on [@../../../../boost/integer/static_safe_avg.hpp <boost/integer/static_safe_avg.hpp>]
-
-[section Synopsis]
-	
-	template <typename T>
-	T safe_avg(T x, T y);
-	
-	template <typename ICT1, typename ICT2>
-	struct mpl::safe_avg { static const int value = ``['implementation-defined]``; };
-	
-	template <typename T, T Value1, T Value2>
-	struct static_safe_avg { static const int value = ``['implementation-defined]``; };
-	
-[endsect]
-
-*[*Requires: ] For the `mpl::safe_avg<>` version, both `ICT1` and `ICT2` must be mpl::integral_c<> types.
-For the `static_safe_avg<>` and the runtime version, `T` must be an integral type.
-
-*[*Returns: ] The average of the sum between two integrals rounded down. Overflow is ensured to not happen.
-
-[endsect]
-
-[section Round to Power of 2 functions]
-This function rounds up and down positive integral values to the next power of 2.
-The `ceil_pow2` function rounds up and `floor_pow2` function rounds down.
-These functions are defined on [@../../../../boost/integer/round_pow2.hpp <boost/integer/round_pow2.hpp>]
-
-[section Synopsis]
-
-	T ceil_pow2(T value);
-	T floor_pow2(T value);
-	
-[endsect]
-
-*[*Requires: ] `T` must be an integral type and `value` must be positive. If `value` is negative, the result is
-undefined.
-
-*[*Returns: ] 
-	* `ceil_pow2()` returns `value` rounded [*up] to the lesser power of two greater than or equal to `value. 
-	
-	* `floor_pow2()` returns `value` rounded [*down] to the greater power of two lesser or equal `value`.
+*[*Returns: ] Nothing. `x` will have the value of `y` and `y` will have the `x` value.
 
 [endsect]
 
@@ -589,242 +835,6 @@ static metafunctions are defined on [@../../../../boost/integer/static_isign.hpp
 	* `static_isign<T, Value1, Value2>::value` will be `abs(Value1)` if Value2 is greater than or equal 0, or 
 	`-abs(Value1)` if Value2 is negative.
 
-[endsect]
-
-[section Absolute Value in Compile-Time ]
-The static metafunctions defined on [@../../../../boost/integer/static_abs.hpp <boost/integer/static_abs.hpp>] 
-calculates the absolute value of integral constants.
-
-`mpl::abs<>` version returns the absolute value of a `mpl::integral_c<>`
-and the `static_abs<>` version returns the absolute value from an integral value.
-
-[section Synopsis]
-
-	template <typename IC>
-	struct mpl::abs { static const typename IC::value_type value = ``['implementation-defined]``; }; 
-	
-	template <typename T, T Value>
-	struct static_abs { static const T value = ``['implementation-defined]``; }; 
-	
-[endsect]
-
-*[*Requires: ] `T` must be an integral type. `IC` a `mpl::integral_c<>` type.
-
-*[*Results: ] The member `value ` in `mpl::abs<>` will be the absolute value of `IC::value`.
-In `static_abs<>`, `value` will be the absolute value of `Value`.
-
-[endsect]
-
-[section MPL Least Common Multiple ]
-This header defines mpl::lcm<> metafunction wich calculates the 
- least common multiple from two given `mpl::integral_c<>`.
- 
-This static metafunction is defined on [@../../../../boost/integer/static_lcm.hpp <boost/integer/static_lcm.hpp>].
-
-[section Synopsis]
-
-	template <typename ICT1, typename ICT2>
-	struct mpl::lcm { static const uintmax_t value = ``['implementation-defined]``; }; 
-	
-[endsect]
-
-*[*Requires: ] `ICT1` and `ICT2` must be `mpl::integral_c<>` types.
-
-*[*Results: ] The member `value ` will be the least common multiple from `IC1` and `IC2`.
-
-[endsect]
-
-[section MPL Greatest Common Divisor ]
-The header file [@../../../../boost/integer/static_gcd.hpp <boost/integer/static_gcd.hpp>] defines `mpl::gcd<>` 
-metafunction wich calculates the greatest common divisor of two given `mpl::integral_c<>`.
-
-[section Synopsis]
-
-	template <typename ICT1, typename ICT2>
-	struct mpl::gcd { static const uintmax_t value = ``['implementation-defined]``; }; 
-	
-[endsect]
-
-*[*Requires: ] `ICT1` and `ICT2` must be `mpl::integral_c<>` types.
-
-*[*Results: ] The member `value ` will be the greatest commom divisor from `IC1` and `IC2`.
-
-[endsect]
-
-[section Swap without a temporary ]
-The header file [@../../../../boost/integer/swap.hpp <boost/integer/swap.hpp>] defines `swap` 
-function wich swaps 2 integral values without using a temporary variable.
-
-[section Synopsis]
-
-	template <typename T>
-	inline void swap(T& x, T& y);
-	
-[endsect]
-
-*[*Requires: ] `T` must be an integral type.
-
-*[*Returns: ] Nothing. `x` will have the value of `y` and `y` will have the `x` value.
-
-[endsect]
-
-[section MPL `is_integral_constant<>` metafunction ]
-The header file [@../../../../boost/integer/is_integral_constant.hpp <boost/integer/is_integral_constant.hpp>] defines 
-`is_integral_constant<>` static metafunction wich verifies if an given template parameter is or not a `mpl::integral_c<>`.
-
-[section Synopsis]
-
-	template <typename IC>
-	struct is_integral_constant { ``['implementation-defined]`` };
-	
-[endsect]
-
-*[*Results: ] 
-	* If `IC` is a `mpl::integral_c<>` type, `is_integral_constant<IC>` will inherit from `mpl::true_`
-	* If `IC` is not a `mpl::integral_c<>` type, `is_integral_constant<IC>` will inherit from `mpl::false_`
-
-[endsect]
-
-
-[section:bit_utils Binary Utilities]
-The header [@../../../../boost/integer/bit_utils.hpp <boost/integer/bit_utils.hpp>] cotains some metafunctions to handle binary data.
-All the metafunctions have an member varible named `value` where will be the result.
-
-[section Synopsis]
-
-	namespace boost
-	{
-	
-	// Compile-time version
-		
-	// Sets the bit `pos' in data
-	template <typename T, T data, unsigned char pos>
-	struct static_set_bit { static const T value = ``['implementation-defined]``; };
-		
-	// Clear the bit `pos' in data
-	template <typename T, T data, unsigned char pos>
-	struct static_clear_bit { static const T value = ``['implementation-defined]``; };
-
-	// If the bit `pos' is 1 then it will be 0 if not the bit will be 1
-	template <typename T, T data, unsigned char pos>
-	struct static_flip_bit{ static const T value = ``['implementation-defined]``; };
-
-	// Test if the bit in `pos' positon is set or not
-	template <typename T, T data, unsigned char pos>
-	struct static_test_bit { static const bool value = ``['implementation-defined]``; };
-	
-	namespace mpl {
-
-	template <typename IC, unsigned char pos>
-	struct set_bit { static const typename IC::value_type value = ``['implementation-defined]``; };
-
-	template <typename IC, unsigned char pos>
-	struct clear_bit { static const typename IC::value_type value = ``['implementation-defined]``; };
-
-	template <typename IC, unsigned char pos>
-	struct flip_bit{ static const typename IC::value_type value = ``['implementation-defined]``; };
-
-	template <typename IC, unsigned char pos>
-	struct test_bit { static const bool value = ``['implementation-defined]``; };
-	
-	} // mpl
-	
-	// Runtime version
-	template <typename T>
-	inline T set_bit(T data, unsigned char pos);
-
-	template <typename T>
-	inline T clear_bit(T data, unsigned char pos);
-
-	template <typename T>
-	inline T flip_bit(T data, unsigned char pos);
-		
-	template <typename T>
-	inline bool test_bit(T data, unsigned char pos);
-		
-	} // boost
-
-[endsect]
-
-[section Template Class `static_set_bit<>` and `mpl::set_bit`]
-Sets the bit `pos` active in `value`.
-
-*[*Requires: ] `pos` must be smaller than the size (in bits) of `Type` for `static_set_bit<>` and smaller than IC::value_type
-	for `mpl::static_set_bit<>`.
-	
-*[*Remarks: ] 
-	* `T` must be an integral type.
-	
-	* `IC` must be a `mpl::integral_c<>` type.
-
-*[*Example:]
-
-	// `new_value' becomes 101
-	int new_value = set_bit<int, 100, 0>::value;
-
-[endsect]
-	
-[section Template Class `mpl::clear_bit<>` and `static_clear_bit<>`]
-Sets the bit `pos` inactive in `data`.
-
-
-*[*Requires: ] `pos` must be smaller than the size (in bits) of `Type` for `static_clear_bit<>` and smaller than IC::value_type
-	for `mpl::static_clear_bit<>`.
-	
-*[*Remarks: ]
-	* `T` must be an integral type.
-		
-	* `IC` must be a `mpl::integral_c<>` type. 
-	
-*[*Example:]
-
-	// `new_value' becomes 1
-	int new_value = set_bit<int, 3, 2>::value;
-
-[endsect]
-
-[section Template Class `mpl::test_bit` and `static_test_bit<>`]
-Test if the bit `pos` in `data` is active or not.
-
-
-*[*Requires: ] `pos` must be smaller than the size (in bits) of `Type` for `static_test_bit<>` and smaller than IC::value_type
-	for `mpl::static_test_bit<>`.
-	
-*[*Remarks: ] 
-	* `T` must be an integral type. 
-	
-	* `IC` must be a `mpl::integral_c<>` type.
-	
-*[*Example:]
-
-	// `is_set' becomes true
-	bool is_set = test_bit<int, 3982, 11>::value;
-
-[endsect]
-
-[section Template Class `mpl::flip_bit<>` and `static_flip_bit<>`]
-Invert the value of the bit `pos` in `data`
-
-*[*Requires: ] `pos` must be smaller than the size (in bits) of `Type` for `static_flip_bit<>` and smaller than IC::value_type
-	for `mpl::static_flip_bit<>`.
-	
-*[*Remarks: ]
-	* `T` must be an integral type.
-	
-	* `IC` must be a `mpl::integral_c<>` type. 
-
-*[*Example:]
-
-	// `new_value' becomes 14
-	bool new_value = flip_bit<int, 10, 2>::value;
-
-[endsect]
-
-[section Runtime version]
-
-For all runtime functions, all remarks and requirement are equals to the `static_`-prefixed version.
-
-[endsect]
 [endsect]
 
 [endsect]
