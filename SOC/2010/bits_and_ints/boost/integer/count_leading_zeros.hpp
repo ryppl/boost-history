@@ -32,11 +32,22 @@ namespace boost {
 template <typename T>
 inline int count_leading_zeros(T value)
 {
-#ifndef BOOST_HAS_NO_INT64_T
-	return __builtin_clzll(value) - (64 - (sizeof(T) << 3));
-#else
 	return __builtin_clz(value) - (32 - (sizeof(T) << 3));
-#endif
+}
+
+inline int count_leading_zeros(unsigned int value)
+{
+	return __builtin_clz(value);
+}
+	
+inline int count_leading_zeros(unsigned long int value)
+{
+	return __builtin_clzl(value);
+}
+
+inline int count_leading_zeros(unsigned long long int value)
+{
+	return __builtin_clzll(value);
 }
 
 #else

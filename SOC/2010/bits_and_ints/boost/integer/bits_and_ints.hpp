@@ -28,7 +28,7 @@
 #include <boost/integer/static_count_trailing_zeros.hpp>
 #include <boost/integer/clear_least_bit_set.hpp>
 #include <boost/integer/static_clear_least_bit_set.hpp>
-#include <boost/integer/swap.hpp>
+#include <boost/integer/swap_in_place.hpp>
 #include <boost/integer/safe_avg.hpp>
 #include <boost/integer/static_safe_avg.hpp>
 #include <boost/integer/round_pow2.hpp>
@@ -38,4 +38,6 @@
 #include <boost/integer/static_abs.hpp>
 #include <boost/integer/static_gcd.hpp>
 #include <boost/integer/static_lcm.hpp>
+#include <boost/integer/count_leading_zeros.hpp>
+#include <boost/integer/ilog2.hpp>
 #endif

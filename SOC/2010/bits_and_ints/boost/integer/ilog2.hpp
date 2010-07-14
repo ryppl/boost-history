@@ -20,7 +20,7 @@ namespace boost {
  *	This function returns the integer value of 
  *		logarithm in base 2 of an unsigned integral `value`
  *
- *	If `value` is equal to 0, the value returned is -1
+ *	If `value` is equal to 0, the value returned is undefined
  *
  *	`value` must be unsigned.
  */

@@ -20,7 +20,6 @@ int main(int, char* [])
 	using namespace boost;
 	std::cout << "Doing tests on ilog2 function." << std::endl;
 	
-	ILOG2_TEST((unsigned)0, -1);
 	ILOG2_TEST((unsigned)100, 6);
 	ILOG2_TEST((unsigned)265, 8);
 	ILOG2_TEST((unsigned)158741, 17);
