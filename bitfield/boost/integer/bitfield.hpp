@@ -1,9 +1,9 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Emile Cormier 2006. 
-// (C) Copyright Vicente J. Botet Escriba 2008-2009. 
-// Distributed under the Boost Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// (C) Copyright Emile Cormier 2006.
+// (C) Copyright Vicente J. Botet Escriba 2008-2009.
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/integer for documentation.
@@ -21,7 +21,7 @@
 //#include <netinet/in.h>
 
 namespace boost { namespace integer {
-    
+
     template <typename T>
     struct bitfield_value_type {
         typedef T type;
@@ -84,9 +84,9 @@ namespace boost { namespace integer {
         struct bitfield_complete_signed<true, value_type, storage_type, WIDTH> {
             static value_type convert(storage_type val, storage_type SIGN_MASK) {
                 if( (val>>(WIDTH-1))!=0) {
-                    return (val | SIGN_MASK);
+                    return static_cast<value_type>(val | SIGN_MASK);
                 } else {
-                    return val;
+                    return static_cast<value_type>(val);
                 }
             }
         };
@@ -94,11 +94,17 @@ namespace boost { namespace integer {
         template <typename value_type, typename storage_type, unsigned int WIDTH>
         struct bitfield_complete_signed<false, value_type, storage_type, WIDTH> {
             static value_type convert(storage_type val, storage_type) {
-                return val;
+                return static_cast<value_type>(val);
+            }
+        };
+        template <typename storage_type, unsigned int WIDTH>
+        struct bitfield_complete_signed<false, bool, storage_type, WIDTH> {
+            static bool convert(storage_type val, storage_type) {
+                return val!=0;
             }
         };
     }
-    
+
     //------------------------------------------------------------------------------
     /*!
         Used to easily manipulate groups of bits the same way as does C bitfields,
@@ -133,8 +139,8 @@ namespace boost { namespace integer {
         \param STORAGE_TYPE    Unsigned integer type of the word occupied by the bitfield
         \param F    Position of the first bit (0 is the least significant bit)
         \param L    Position of the last bit (0 is the least significant bit)
-        \param VALUE_TYPE    Value type of the bitfield itself 
-        \param REFERENCE_TYPE    Reference type of the word occupied by the bitfield 
+        \param VALUE_TYPE    Value type of the bitfield itself
+        \param REFERENCE_TYPE    Reference type of the word occupied by the bitfield
     */
 
 
@@ -154,9 +160,9 @@ namespace boost { namespace integer {
     public:
         //! storage type of the bitfield support
         typedef STORAGE_TYPE storage_type;
-        //! Value type of the bitfield itself 
+        //! Value type of the bitfield itself
         typedef VALUE_TYPE value_type;
-        //! Reference type of the bitfield itself 
+        //! Reference type of the bitfield itself
         typedef REFERENCE_TYPE reference_type;
 
     private:
@@ -211,7 +217,7 @@ namespace boost { namespace integer {
         typedef bitfield_bit_proxy<this_type> bit_reference_type;
         typedef bitfield_bit_proxy<const this_type> bit_const_reference_type;
 
-        
+
         //! private because a reference is nedeed
         bitfield();
 
@@ -235,7 +241,7 @@ namespace boost { namespace integer {
         template <VALUE_TYPE V>
         struct static_value_to_storage {
             static const storage_type value = ((storage_type(V) & VAL_MASK) << LASTD);
-        };            
+        };
         //! explicit constructor from a reference
         explicit bitfield(storage_type& field) : field_(field) {
         }
@@ -296,6 +302,11 @@ namespace boost { namespace integer {
         static std::size_t width() {return WIDTH;}
         static storage_type val_mask() {return VAL_MASK;}
         static storage_type field_mask()  {return FIELD_MASK;}
+
+        bitfield& operator=(bitfield const& rhs) {
+            if (this == &rhs) return;
+            field_ = rhs.field_;
+        }
 
         //! Arithmetic-assign operators
         bitfield& operator++() {*this += 1; return *this;}
