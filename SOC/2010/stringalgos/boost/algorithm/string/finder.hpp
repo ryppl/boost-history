@@ -45,66 +45,116 @@
     for finders provided in this library.
 */
 
-//! \todo Move this to an appropriate header in detail/
-namespace boost { namespace detail {
-    template <class T, class U> struct is_pointer_to :
-        boost::mpl::and_<
-            typename boost::is_pointer<T>,
-            typename boost::is_same<
-                typename boost::remove_cv<typename boost::remove_pointer<T>::type>::type,
-                U>
-        > {};
-    template <class Range1T, class Range2T, class ComparatorT, class AllocatorT>
-    struct finder_typedefs
-    {
-        //! The type of the substring
-        typedef Range1T substring_type;
-        //! The type of the string
-        typedef Range2T string_type;
-        //! The type of the comparator
-        typedef ComparatorT comparator_type;
-        //! The type of the allocator
-        typedef AllocatorT allocator_type;
-        //! The type of the substring's iterator
-        typedef typename boost::range_const_iterator<substring_type>::type
-            substring_iterator_type;
-        //! The type of the string's iterator
-        typedef typename boost::range_const_iterator<string_type>::type
-            string_iterator_type;
-        //! The character type of the substring
-        typedef typename boost::iterator_value<substring_iterator_type>::type
-            substring_char_type;
-        //! The character type of the string
-        typedef typename boost::iterator_value<string_iterator_type>::type
-            string_char_type;
-        typedef typename boost::iterator_range<substring_iterator_type>
-            substring_range_type;
-        typedef typename boost::iterator_range<string_iterator_type>
-            string_range_type;
-        typedef typename boost::iterator_difference<string_iterator_type>::type
-            string_difference_type;
-    };
-} // namespace detail
-} // namespace boost
-
 namespace boost { namespace algorithm {
 
 
 //  Finder types ---------------------------------------------//
 
-        template <class,class,class,class> struct finder_no_additional_behavior;
-        template <class,class,class,class> class finder_profiling_behavior;
-        template <class,class,class,class> class finder_functor_first_finder;
-        template <class,class,class,class> class finder_functor_last_finder;
+        template <class,class,class,class,class,class> struct finder_no_additional_behavior;
+        template <class,class,class,class,class,class> class finder_profiling_behavior;
+        template <class,class,class,class,class,class> class finder_functor_first_finder;
+        template <class,class,class,class,class,class> class finder_functor_last_finder;
+        template <class,class,class,class,class,class> class finder_functor_nth_finder;
 
-        //! \todo copyable finder types?
+
+        template <class Range1T, class Range2T, class AlgorithmT,
+            class ComparatorT = ::boost::algorithm_is_equal,
+            class AllocatorT = typename AlgorithmT::default_allocator_type,
+            template <class,class,class,class,class,class> class AdditionalBehaviorT =
+                boost::algorithm::finder_no_additional_behavior
+        >
+        class simplified_finder_t :
+            public boost::algorithm::detail::finder_typedefs<Range1T,Range2T,ComparatorT,AllocatorT>,
+            private AlgorithmT::algorithm<
+                simplified_finder_t<Range1T, Range2T, AlgorithmT, ComparatorT, AllocatorT, AdditionalBehaviorT>,
+                typename boost::range_const_iterator<Range1T>::type,
+                typename boost::range_const_iterator<Range2T>::type,
+                ComparatorT,AllocatorT>
+        {
+            //! \todo Add concept assertions here.
+
+        public:
+            simplified_finder_t(Range1T const &substr, Range2T const &str,
+                ComparatorT comparator = ComparatorT(), AllocatorT allocator = AllocatorT())
+                : substring_range_(substr), string_range_(str),
+                comparator_(comparator), allocator_(allocator),
+                substring_has_changed_(true), string_has_changed_(true),
+                algorithm()
+            { }
+
+            void set_substring (Range1T const &substr)
+            { substring_range_ = substr; substring_has_changed_ = true; }
+
+            void set_string (Range2T const &str)
+            { string_range_ = str; string_has_changed_ = true; }
+
+            void find_reset ()
+            { start_offset_ = boost::begin(string_range_); }
+            
+            string_range_type find_first ()
+            {
+                find_reset();
+                return find_next();
+            }
+
+            string_range_type find_next()
+            {
+                apply_changes();
+                if (start_offset_ == boost::end(string_range_))
+                    return string_range_type(start_offset_, start_offset_);
+                string_range_type ret =
+                    algorithm_type::find(start_offset_);
+                if (boost::begin(ret) == boost::end(string_range_))
+                {
+                    start_offset_ = boost::end(string_range_);
+                    return ret;
+                }
+                else
+                {
+                    start_offset_ = boost::begin(ret);
+                    ++start_offset_;
+                    return ret;
+                }
+            }
+
+            substring_range_type get_substring_range() const { return substring_range_; }
+            string_range_type get_string_range() const { return string_range_; }
+            
+            typename boost::call_traits<comparator_type>::reference get_comparator()
+            { return comparator_; }
+
+            typename boost::call_traits<comparator_type>::const_reference get_comparator() const
+            { return comparator_;  }
+       
+            //! Gets a reference to the current allocator
+            typename boost::call_traits<allocator_type>::reference get_allocator()
+            { return allocator_; }
+            
+            /*!
+                \overload
+            */
+            typename boost::call_traits<allocator_type>::const_reference get_allocator() const
+            { return allocator_; }
+
+        private:
+            substring_range_type substring_range_;
+            string_range_type string_range_;
+            bool substring_has_changed_, string_has_changed_;
+
+            comparator_type comparator_;
+            allocator_type allocator_;
+
+            string_iterator_type start_offset_;
+        };
+
+        //! \todo copyable finder types
 
         //! A generic finder type
         /*!
             Allows simple use of various string searching algorithms.
             \tparam Sequence1T The type of the substring
             \tparam Sequence2T The type of the string
-            \tparam Algorithm An algorithm policy class
+            \tparam Algorithm An algorithm class
                 which will be used for performing the searches. \see string_search.hpp
             \tparam Comparator Optional template parameter passed to the algorithm.
                 Used for comparing individual characters for equality.
@@ -116,7 +166,8 @@ namespace boost { namespace algorithm {
             class Algorithm,
             typename Comparator = ::boost::algorithm::is_equal,
             class Allocator = typename Algorithm::default_allocator_type,
-            template <class,class,class,class> class AdditionalBehavior = boost::algorithm::finder_no_additional_behavior
+            template <class,class,class,class,class,class> class AdditionalBehavior =
+                boost::algorithm::finder_no_additional_behavior
         >
         class finder_t : private Algorithm::algorithm</*typename boost::range_const_iterator<Sequence1T>::type,
                         typename boost::range_const_iterator<Sequence2T>::type,
@@ -125,7 +176,9 @@ namespace boost { namespace algorithm {
                 typename boost::range_const_iterator<Sequence1T>::type,
                 typename boost::range_const_iterator<Sequence2T>::type,
                 Comparator, Allocator>,
-            private AdditionalBehavior<Sequence1T,Sequence2T,Algorithm,Comparator>
+            private AdditionalBehavior<
+                typename finder_t<Sequence1T, Sequence2T, Algorithm, Comparator, Allocator, AdditionalBehavior>,
+                Sequence1T,Sequence2T,Algorithm,Comparator,Allocator>
         {
             //! \todo: Maybe write a String concept?
             //! \todo: Currently, there's a SGI Sequence Concept implemented by Boost.ConceptCheck,
@@ -191,7 +244,7 @@ namespace boost { namespace algorithm {
             template <class Range2T>
             finder_t (const Sequence1T *const substring, const Range2T &string,
                 Comparator comparator = Comparator(), Allocator allocator = Allocator(),
-                typename boost::disable_if<typename ::boost::detail::is_pointer_to<Range2T,Sequence2T> >::type* = 0)
+                typename boost::disable_if<typename ::boost::algorithm::detail::is_pointer_to<Range2T,Sequence2T> >::type* = 0)
                 : comparator_(comparator), allocator_(allocator),
                 substring_optional_copy_(), substring_range_(substring?*substring:substring_optional_copy_),
                 string_optional_copy_(), string_range_(),
@@ -207,7 +260,7 @@ namespace boost { namespace algorithm {
             template <class Range1T>
             explicit finder_t (const Range1T &substring, const Sequence2T *const string = 0,
                 Comparator comparator = Comparator(), Allocator allocator = Allocator(),
-                typename boost::disable_if<typename ::boost::detail::is_pointer_to<Range1T,Sequence1T> >::type* = 0)
+                typename boost::disable_if<typename ::boost::algorithm::detail::is_pointer_to<Range1T,Sequence1T> >::type* = 0)
                 : comparator_(comparator), allocator_(allocator),
                 substring_optional_copy_(), substring_range_(),
                 string_optional_copy_(), string_range_(string?boost::as_literal(*string):string_optional_copy_),
@@ -223,8 +276,8 @@ namespace boost { namespace algorithm {
             template <class Range1T, class Range2T>
             finder_t (const Range1T &substring, const Range2T &string,
                 Comparator comparator = Comparator(), Allocator allocator = Allocator(),
-                typename boost::disable_if<boost::mpl::or_<typename ::boost::detail::is_pointer_to<Range1T,Sequence1T>,
-                        typename ::boost::detail::is_pointer_to<Range2T,Sequence2T> > >::type* = 0) 
+                typename boost::disable_if<boost::mpl::or_<typename ::boost::algorithm::detail::is_pointer_to<Range1T,Sequence1T>,
+                        typename ::boost::algorithm::detail::is_pointer_to<Range2T,Sequence2T> > >::type* = 0) 
                 : comparator_(comparator), allocator_(allocator),
                 substring_optional_copy_(), substring_range_(),
                 string_optional_copy_(), string_range_(),
@@ -257,7 +310,7 @@ namespace boost { namespace algorithm {
                 Sequence1T const &&substring,
                 const Range2T &string,
                 Comparator comparator = Comparator(), Allocator allocator = Allocator(),
-                typename boost::disable_if<typename ::boost::detail::is_pointer_to<Range2T,Sequence2T> >::type* = 0) 
+                typename boost::disable_if<typename ::boost::algorithm::detail::is_pointer_to<Range2T,Sequence2T> >::type* = 0) 
                 : comparator_(comparator), allocator_(allocator),
                 substring_optional_copy_(std::move(substring)), substring_range_(substring_optional_copy_),
                 string_optional_copy_(), string_range_(),
@@ -296,7 +349,7 @@ namespace boost { namespace algorithm {
             finder_t (const Range1T &substring,
                 Sequence2T const &&string,
                 Comparator comparator = Comparator(), Allocator allocator = Allocator(),
-                typename boost::disable_if<typename ::boost::detail::is_pointer_to<Range1T,Sequence1T> >::type* = 0) 
+                typename boost::disable_if<typename ::boost::algorithm::detail::is_pointer_to<Range1T,Sequence1T> >::type* = 0) 
                 : comparator_(comparator), allocator_(allocator),
                 substring_optional_copy_(), substring_range_(),
                 string_optional_copy_(std::move(string)), string_range_(string_optional_copy_),
@@ -350,7 +403,7 @@ namespace boost { namespace algorithm {
             template <typename RangeT>
             void set_substring(RangeT const &substring,
                 typename boost::disable_if<
-                    typename ::boost::detail::is_pointer_to<RangeT,Sequence1T> >::type* = 0)
+                    typename ::boost::algorithm::detail::is_pointer_to<RangeT,Sequence1T> >::type* = 0)
             {
                 boost::iterator_range<typename boost::range_const_iterator<RangeT>::type> substring_range = 
                     boost::as_literal(substring);
@@ -389,7 +442,7 @@ namespace boost { namespace algorithm {
              */
             template <typename RangeT>
             void set_string(RangeT const &string,
-                typename boost::disable_if<typename ::boost::detail::is_pointer_to<RangeT,Sequence2T> >::type* = 0)
+                typename boost::disable_if<typename ::boost::algorithm::detail::is_pointer_to<RangeT,Sequence2T> >::type* = 0)
             {
                 boost::iterator_range<typename boost::range_const_iterator<RangeT>::type> string_range = 
                     boost::as_literal(string);
@@ -420,32 +473,6 @@ namespace boost { namespace algorithm {
                 string_has_changed_ = true;
             }
 #           endif
-
-            //! Notify the finder that the pointees have changed
-            /*! If the substring or the string have been passed as pointers, the finder
-                cannot know when the pointees have changed. Therefore, this function
-                must be called before any call to find().
-                \todo Give it more thought
-            */
-            void refresh()
-            {
-                find_reset();
-                on_substring_change(); //! \todo should only be called if the substring is a pointer
-                on_string_change(); //! \todo should only be called if the string is a pointer
-            }
-
-            //! \todo doc et al
-            void refresh_substring()
-            {
-                on_substring_change();
-                find_reset();
-            }
-            
-            void refresh_string()
-            {
-                on_string_change();
-                find_reset();
-            }
 
             //! \todo Change the object's substring or just use a temporary one?
             //! \todo Maybe this shouldn't be a part of finder_t, but a part of a certain AdditionalBehaviorT
@@ -553,63 +580,19 @@ namespace boost { namespace algorithm {
                     }
                 }
             }
-            //detail::make_properly_copyable<substring_range_type> substring_optional_copy_;
-            //detail::make_properly_copyable<string_range_type> string_optional_copy_;
-            /*typename std::basic_string<substring_char_type, std::char_traits<substring_char_type>, allocator_type>
-                substring_optional_copy_;*/
+
             substring_type substring_optional_copy_;
             string_type string_optional_copy_;
-            /*typename std::basic_string<string_char_type, std::char_traits<string_char_type>, allocator_type>
-                string_optional_copy_;*/
             comparator_type comparator_;
             allocator_type allocator_;
-            
-            //! \TODO make it so that pointers are stored here when appropriate (or must be 0 otherwise)
-            //!         these will be used when refresh_substring()/refresh_string() are called
-            //!         and are used to update substring_range_ and string_range_ via begin()+end()
-            //!         then those functions will update the ranges of the algorithm and call
-            //!         on_substring_change()/on_string_change().
-            //! \TODO think if it wouldn't be better if the algorithms could somehow use pointers to ranges or some stuff like that.
-
-            Sequence1T *substring_pointer_;
-            Sequence2T *string_pointer_;
-            
-            //! \todo Somehow fix this. This makes us able to
-            //!       only store ranges of type substring_iterator_type, and not of std::basic_string.
             substring_range_type substring_range_;
             string_range_type string_range_;
             string_iterator_type start_offset_;
             bool substring_has_changed_, string_has_changed_;
         };
 
-        template <class,class,class,class> struct finder_no_additional_behavior { };
+        template <class,class,class,class,class,class> struct finder_no_additional_behavior { };
 
-        /*
-        template <class Range1T, class Range2T, class Algorithm,
-            class Comparator = ::boost::algorithm_is_equal,
-            class Allocator = 
-                typename Algorithm::algorithm<
-                    typename boost::range_const_iterator<Range1T>::type,
-                    typename boost::range_const_iterator<Range2T>::type,
-                    Comparator>::allocator_type
-        >
-        class simplified_finder_t :
-            public boost::algorithm::detail::finder_typedefs<Range1T,Range2T,ComparatorT,AllocatorT>,
-            private Algorithm::algorithm<
-                typename boost::range_const_iterator<Sequence1T>::type,
-                typename boost::range_const_iterator<Sequence2T>::type,
-                Comparator,Allocator>
-        {
-            //! \todo Add concept assertions here.
-
-        public:
-            simplified_finder_t(Range1T const *const substr = 0, Range2T const *const str = 0)
-                : substr_(substr), str_(str), algorithm() { }
-        private:
-            Range1T const *const substr_;
-            Range2T const *const str_;
-        };
-        */
 
 //  Finder generators ------------------------------------------//
         

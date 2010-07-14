@@ -7,12 +7,14 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
+
 #include <boost/algorithm/string/find.hpp>
 #include <boost/algorithm/string/finder.hpp>
 #include <boost/algorithm/string/string_search/naive_search.hpp>
 #include <boost/algorithm/string/string_search/rabin_karp.hpp>
 #include <boost/algorithm/string/string_search/knuth_morris_pratt.hpp>
 #include <boost/algorithm/string/string_search/boyer_moore.hpp>
+#include <boost/algorithm/string/string_search/suffix_array.hpp>
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/config.hpp>
 
@@ -22,6 +24,11 @@
 #include <iterator>
 #include <sstream>
 #include <list>
+
+
+#if !defined(BOOST_HAS_RVALUE_REFS) && !defined(BOOST_NO_RVALUE_REFS)
+#define BOOST_HAS_RVALUE_REFS
+#endif
 
 //#define BOOST_TEST_ALTERNATIVE_INIT_API
 //#define BOOST_TEST_DYN_LINK
@@ -186,7 +193,6 @@ BOOST_TEST_CASE_TEMPLATE_FUNCTION(test_finders, Algorithm)
 
     //!\todo fix
 #   ifdef BOOST_HAS_RVALUE_REFS
-    BOOST_CHECK(false);
     f_t f6( (Sequence1T(s1)), &S1); // rvalue, ptr
     BOOST_CHECK(boost::equal(f6.get_substring_range(),s1));
     BOOST_CHECK(superficial_range_equal(f6.get_string_range(),S1));
@@ -584,13 +590,22 @@ BOOST_TEST_CASE_TEMPLATE_FUNCTION(test_finders, Algorithm)
 
 boost::unit_test::test_suite* init_unit_test_suite( int argc, char* argv[] )
 {
-    // Note: we should test with other allocators and comparators
+
+    /*!\todo test with other allocators and comparators
+    \todo test with different iterator types, depending on what each algorithm supports
+    \todo test matches of empty substring in nonempty string (should return empty range but iterators with proper offset)
+    \todo test the nonmatch of nonempty substring in empty string
+    \todo test the unique match of empty substring in empty string
+    \todo test more strings with consecutive substring matches
+    */
+
     typedef boost::mpl::list<
         boost::algorithm::naive_search,
         boost::algorithm::rabin_karp32,
-        boost::algorithm::knuth_morris_pratt/*,
+        boost::algorithm::rabin_karp64,
+        boost::algorithm::knuth_morris_pratt,
         boost::algorithm::boyer_moore,
-        boost::algorithm::suffix_array*/
+        boost::algorithm::suffix_array_search
     > algorithm_list;
     boost::unit_test::framework::master_test_suite().add(
         BOOST_TEST_CASE_TEMPLATE(test_finders, algorithm_list)

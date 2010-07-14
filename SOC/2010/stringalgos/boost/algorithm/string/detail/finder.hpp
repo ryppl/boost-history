@@ -21,9 +21,49 @@
 #include <boost/range/empty.hpp>
 #include <boost/range/as_literal.hpp>
 
-namespace boost {
-    namespace algorithm {
-        namespace detail {
+#include <boost/iterator/iterator_traits.hpp>
+
+#include <boost/mpl/and.hpp>
+#include <boost/type_traits/remove_cv.hpp>
+
+namespace boost { namespace algorithm { namespace detail {
+    template <class T, class U> struct is_pointer_to :
+        boost::mpl::and_<
+            typename boost::is_pointer<T>,
+            typename boost::is_same<
+                typename boost::remove_cv<typename boost::remove_pointer<T>::type>::type,
+                U>
+        > {};
+    template <class Range1T, class Range2T, class ComparatorT, class AllocatorT>
+    struct finder_typedefs
+    {
+        //! The type of the substring
+        typedef Range1T substring_type;
+        //! The type of the string
+        typedef Range2T string_type;
+        //! The type of the comparator
+        typedef ComparatorT comparator_type;
+        //! The type of the allocator
+        typedef AllocatorT allocator_type;
+        //! The type of the substring's iterator
+        typedef typename boost::range_const_iterator<substring_type>::type
+            substring_iterator_type;
+        //! The type of the string's iterator
+        typedef typename boost::range_const_iterator<string_type>::type
+            string_iterator_type;
+        //! The character type of the substring
+        typedef typename boost::iterator_value<substring_iterator_type>::type
+            substring_char_type;
+        //! The character type of the string
+        typedef typename boost::iterator_value<string_iterator_type>::type
+            string_char_type;
+        typedef typename boost::iterator_range<substring_iterator_type>
+            substring_range_type;
+        typedef typename boost::iterator_range<string_iterator_type>
+            string_range_type;
+        typedef typename boost::iterator_difference<string_iterator_type>::type
+            string_difference_type;
+    };
 
 
 //  find first functor -----------------------------------------------//

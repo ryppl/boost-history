@@ -9,6 +9,8 @@
 #include <boost/range/iterator.hpp>
 #include <boost/call_traits.hpp>
 #include <iterator>
+#include <boost/range/begin.hpp>
+#include <boost/range/end.hpp>
 
 namespace boost { namespace algorithm { namespace detail {
 

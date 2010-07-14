@@ -3,6 +3,8 @@
 
 #include <iterator>
 #include <boost/range/iterator_range.hpp>
+#include <boost/range/begin.hpp>
+#include <boost/range/end.hpp>
 #include <vector>
 #include <allocators>
 
@@ -80,6 +82,8 @@ namespace boost { namespace algorithm {
                 substring_range_type const &substr = static_cast<Finder*>(this)->get_substring_range();
                 comparator_type const &comp = static_cast<Finder*>(this)->get_comparator();
 
+                //!\todo clear the container first
+                failure_func.clear();
                 failure_func.reserve(boost::end(substr) - boost::begin(substr));
                 std::size_t idx, q, substr_size = boost::end(substr) - boost::begin(substr);
                 failure_func.push_back(0); failure_func.push_back(0);
@@ -106,5 +110,7 @@ namespace boost { namespace algorithm {
         };
     };
 } }
+
+namespace boost { using boost::algorithm::knuth_morris_pratt; }
 
 #endif

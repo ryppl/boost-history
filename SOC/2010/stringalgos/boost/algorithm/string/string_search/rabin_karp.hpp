@@ -9,6 +9,8 @@
 #include <boost/mpl/void.hpp>
 #include <cstdlib>
 #include <boost/static_assert.hpp>
+#include <boost/range/begin.hpp>
+#include <boost/range/end.hpp>
 
 
 #include <boost/algorithm/string/string_search/detail/rabin_karp.hpp>
@@ -42,59 +44,22 @@ namespace boost { namespace algorithm {
 		protected:
             //construct the algorithm given iterator ranges for the substring and the string
             algorithm () {
+                //!\todo add more assertions here
                 BOOST_STATIC_ASSERT(
                     sizeof(boost::iterator_value<Iterator1T>::type)*2 <= sizeof(HashType)
                 );
             }
-            /*string_range_type find(string_iterator_type start)
-            {
-                if (start == boost::begin(string) && string_computed_start_offset_) on_string_change();
-
-            }
-
-            void on_substring_change()
-            {
-                first_substring_hash_ = static_cast<HashType>(0);
-                second_substring_hash_ = static_cast<HashType>(0);
-                substring_size_ = 0;
-                for (substring_iterator_type it = boost::begin(substring_); it != boost::end(substring_); ++it)
-                {
-                    substring_size_++;
-                    first_substring_hash_  = (first_substring_hash_*FirstBase + *it) % FirstModulo;
-                    second_substring_hash_ = (second_substring_hash_*SecondBase + *it) % SecondModulo;
-                }
-                if (string_computed_start_offset_ > 0) on_string_change();
-            }
-
-            void on_string_change()
-            {
-                first_string_hash_ = static_cast<HashType>(0);
-                second_string_hash_ = static_cast<HashType>(0);
-                string_computed_start_offset_ = 0;
-                string_computed_end_offset_ = 0;
-                for (string_iterator_type it = boost::begin(string_);
-                    it != boost::end(string_) && string_computed_end_offset_ < substring_size; ++it)
-                {
-                    ++string_computed_end_offset_;
-                    first_string_hash_ = (first_string_hash_ * FirstBase + *it) % FirstModulo;
-                    second_string_hash_ = (second_string_hash_ * SecondBase + *it) % SecondModulo;
-                }
-
-                //string_computed_upto = 
-            }*/
-
-
-			
+	
         };
     };
 
-    //1/3732152659 odds of collision. used with char
+    //1/3732152659 odds of collision. useful with char
     typedef rabin_karp_algorithm<boost::uint32_t,257,64433,277,57923> rabin_karp32;
-    //1/(N*M) odds of collision. used with wchar_t
-    typedef rabin_karp_algorithm<boost::uint64_t,1,2,3,4> rabin_karp64;
+    //1/150167080229379589 odds of collision. useful with wchar_t
+    typedef rabin_karp_algorithm<boost::uint64_t,337515847,373587883,255150899,401959183> rabin_karp64;
 
-} // namespace algorithm
-} // namespace boost
+} } // namespace algorithm, namespace boost
 
+namespace boost { using boost::algorithm::rabin_karp32; using boost::algorithm::rabin_karp64; }
 
 #endif
