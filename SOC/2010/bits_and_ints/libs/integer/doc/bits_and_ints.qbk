@@ -1,7 +1,9 @@
 [section:bits_and_ints Bits and Ints]
 
 [section Overview]
-The intent of this library is to extend Boost.Integer with fast integer algorithms and utilities. This library can be included via	[@../../../../boost/integer/bits_and_ints.hpp <boost/integer/bits_and_ints.hpp>].
+The intent of this library is to extend Boost.Integer with fast integer algorithms and utilities. 
+The motivation for this library is to provide integer algorithms and utilities optimized by doing binary manipulations so that it uses less CPU cycles, memory access and conditional branches. This library contains some classical integer algorithms such as population count, reversing bits, sign extension and bit interleaving.
+This library can be included via	[@../../../../boost/integer/bits_and_ints.hpp <boost/integer/bits_and_ints.hpp>].
 [endsect]
 
 [section Absolute Value in Compile-Time ]
@@ -377,6 +379,23 @@ metafunction wich calculates the greatest common divisor of two given `mpl::inte
 *[*Requires: ] `ICT1` and `ICT2` must be `mpl::integral_c<>` types.
 
 *[*Results: ] The member `value ` will be the greatest commom divisor from `IC1` and `IC2`.
+
+[endsect]
+
+[section Integer Logarithm Base 2 (ilog2 function) ]
+The header file [@../../../../boost/integer/ilog2.hpp <boost/integer/ilog2.hpp>] defines `ilog2` 
+function wich calculates the logarithm in base two of a given integral value.
+
+[section Synopsis]
+
+	template <typename T>
+	inline T ilog2(T value);
+	
+[endsect]
+
+*[*Remarks: ] If `value` is 0, the result is [*undefined].
+*[*Requires: ] `T` to be an integral type.
+*[*Returns: ] The integer logarithm in base 2 of `value` rounded down.
 
 [endsect]
 
