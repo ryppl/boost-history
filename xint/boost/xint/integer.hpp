@@ -1100,8 +1100,7 @@ integer_t<BOOST_XINT_APARAMS>::factorial(std::size_t n) {
 \returns A Not-a-Number value of the specified type.
 
 \note
-This function only exists on types whose \c nothrow template parameter is \c
-true.
+This function only exists on types with the \c nothrow template parameter.
 
 \see \ref nan
 */

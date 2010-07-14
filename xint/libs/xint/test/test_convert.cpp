@@ -45,7 +45,8 @@ BOOST_AUTO_TEST_CASE(test_string_conversions) {
     detail::digit_t mask = (detail::doubledigit_t(0x0F) <<
         (detail::bits_per_digit - 4));
     BOOST_REQUIRE_GT(n._get_length(), size_t(1));
-    BOOST_REQUIRE_EQUAL(n._get_digit(n._get_length()-1) & mask, 0);
+    BOOST_REQUIRE_EQUAL(n._get_digit(n._get_length()-1) & mask,
+        detail::digit_t(0));
 
     for (int base = 2; base <= 36; ++base) {
         std::string s = to_string(n, base);

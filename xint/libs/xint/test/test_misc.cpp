@@ -32,11 +32,13 @@ typedef integer_t<fixedlength<32> > integer32;
 
 BOOST_AUTO_TEST_CASE(test_log2) {
     // Check the detail::log2 template functions, unsigned and signed
-    unsigned int u = (1 << (std::numeric_limits<unsigned int>::digits - 1));
-    BOOST_CHECK_EQUAL(detail::log2(u), std::numeric_limits<unsigned
-        int>::digits);
+    unsigned int u = (static_cast<unsigned int>(1) <<
+        (std::numeric_limits<unsigned int>::digits - 1));
+    BOOST_CHECK_EQUAL(detail::log2(u), static_cast<std::size_t>(
+        std::numeric_limits<unsigned int>::digits));
     int s = (1 << (std::numeric_limits<int>::digits - 1));
-    BOOST_CHECK_EQUAL(detail::log2(s), std::numeric_limits<int>::digits);
+    BOOST_CHECK_EQUAL(detail::log2(s), static_cast<std::size_t>(
+        std::numeric_limits<int>::digits));
 
     // Check the log2 function for the integer class
     integer n(0x87654321);
@@ -111,9 +113,9 @@ BOOST_AUTO_TEST_CASE(test_numeric_limits) {
 BOOST_AUTO_TEST_CASE(test_random_by_size) {
     default_random_generator gen;
     integer n = integer::random_by_size(gen, 512, true);
-    BOOST_CHECK_EQUAL(log2(n), 512);
+    BOOST_CHECK_EQUAL(log2(n), static_cast<std::size_t>(512));
     n = integer::random_by_size(gen, 512, true, true);
-    BOOST_CHECK_EQUAL(log2(n), 512);
+    BOOST_CHECK_EQUAL(log2(n), static_cast<std::size_t>(512));
 }
 
 BOOST_AUTO_TEST_CASE(test_unsigned_negative_policies) {

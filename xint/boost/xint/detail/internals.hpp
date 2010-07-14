@@ -20,9 +20,6 @@
 #ifndef BOOST_INCLUDED_XINT_INTERNALS_HPP
 #define BOOST_INCLUDED_XINT_INTERNALS_HPP
 
-// Leave this commented out to use it as a header-only library.
-//#define BOOST_XINT_COMPILED_LIB
-
 #ifdef BOOST_XINT_NO_EXCEPTIONS
     #define BOOST_XINT_TRY if (1)
     #define BOOST_XINT_CATCH_BADALLOC else if (0)

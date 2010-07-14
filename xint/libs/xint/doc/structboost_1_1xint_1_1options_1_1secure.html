@@ -34,15 +34,16 @@
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>Zeros memory before deallocating. </p>
-<p>If used, the library zeros out all memory before deallocating it, for maximum security. The default is not to do so, for maximum speed. </p>
+<p>If used, the library zeros out all memory before deallocating it, for maximum security. The default is not to do so, for maximum speed.</p>
+<dl class="note"><dt><b>Note:</b></dt><dd>This provides only one half of a truly secure solution. Depending on how your operating system handles virtual memory, numbers may be paged out to disk at any time. To ensure maximum security, combine it with an allocator that prevents its memory from being paged to disk under any circumstances. </dd></dl>
 
-<p>Definition at line <a class="el" href="options_8hpp_source.html#l00137">137</a> of file <a class="el" href="options_8hpp_source.html">options.hpp</a>.</p>
+<p>Definition at line <a class="el" href="options_8hpp_source.html#l00143">143</a> of file <a class="el" href="options_8hpp_source.html">options.hpp</a>.</p>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>detail/<a class="el" href="options_8hpp_source.html">options.hpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 25 12:04:29 2010 for The Extended Integer (XInt) Library by&nbsp;
-<a href="http://www.doxygen.org/index.html">
-<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
-</body>
-</html>
+<hr>
+<p><i>&copy; Copyright Chad Nelson, 2010. Distributed under the Boost Software
+License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+<a href=http://www.boost.org/LICENSE_1_0.txt>http://www.boost.org/LICENSE_1_0.txt</a>)
+</i></p>

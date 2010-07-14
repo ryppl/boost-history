@@ -256,12 +256,14 @@ T to(const BOOST_XINT_RAWINT n, typename boost::enable_if<boost::is_integral<T>
     if (n < tmin || n > tmax) exception_handler<>::call(__FILE__, __LINE__,
         exceptions::too_big("value out of range for requested conversion"));
 
-    T rval = 0, shift = T(digit_overflowbit);
+    // Workaround for MSVC8's C4309 warning, "truncation of constant value"
+    doubledigit_t shift_tmp = digit_overflowbit;
+    T rval = 0, shift = T(shift_tmp);
     for (std::size_t x = 0; x < n.length; ++x) {
         if (sizeof(T) > sizeof(digit_t)) rval *= shift;
         rval += static_cast<T>(n[n.length - x - 1]);
     }
-    if (n.negative) rval *= -1;
+    if (n.negative) rval *= static_cast<T>(-1);
     return rval;
 }
 

@@ -85,7 +85,7 @@ BOOST_XINT_RAWINT BOOST_XINT_RAWINT::operator~() const {
         digit_t *t = r.digits(r.max_length(), realloc::extend), *te = t +
             r.max_length();
         while (s != se) *t++ = ~(*s++);
-        while (t != te) *t++ = ~0;
+        while (t != te) *t++ = ~digit_t(0);
         r.trim();
         return r;
     }

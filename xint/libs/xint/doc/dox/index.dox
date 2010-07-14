@@ -54,6 +54,11 @@ might find it.
 
 More information on how to use it can be found on the pages listed below.
 
+Stand-Alone Examples:
+- \subpage ex_simplest
+- \subpage ex_fibonacci
+- \subpage ex_rsa
+
 Detailed Usage Information:
 - \subpage fixedlength_type
 - \subpage nan
@@ -72,9 +77,6 @@ Library Information:
 - \subpage rationale
 - \subpage acknowledgements
 - \subpage history
-
-Stand-Alone Examples:
-- \subpage ex_fibonacci
 */
 
 // TODO: Add if/when accepted

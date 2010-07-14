@@ -51,10 +51,13 @@ BOOST_AUTO_TEST_CASE(test_misc_fns_called_with_nan) {
     nothrow_integer n(nothrow_integer::nan());
     BOOST_CHECK_EQUAL(n.is_odd(), false);
     BOOST_CHECK_EQUAL(n.is_even(), false);
-    BOOST_CHECK_EQUAL(n.hex_digits(), 0);
+    BOOST_CHECK_EQUAL(n.hex_digits(), static_cast<std::size_t>(0));
     BOOST_CHECK_EQUAL(n.sign(), 0);
-    BOOST_CHECK_EQUAL(lowestbit(n, 12), 12); // 12 is just an arbitrary number
-    BOOST_CHECK_EQUAL(highestbit(n, 12), 12);
+    
+    // 12 is just an arbitrary number
+    BOOST_CHECK_EQUAL(lowestbit(n, 12), static_cast<std::size_t>(12));
+    BOOST_CHECK_EQUAL(highestbit(n, 12), static_cast<std::size_t>(12));
+    
     BOOST_CHECK_EQUAL(compare(n, 12), 2);
     BOOST_CHECK_EQUAL(compare(12, n), 2);
 }

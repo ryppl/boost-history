@@ -45,9 +45,29 @@
       <File Name="../boost/xint/detail/streams.hpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
+  <VirtualDirectory Name="test">
+    <File Name="../libs/xint/test/test_add.cpp"/>
+    <File Name="../libs/xint/test/test_bit_manipulations.cpp"/>
+    <File Name="../libs/xint/test/test_compare.cpp"/>
+    <File Name="../libs/xint/test/test_convert.cpp"/>
+    <File Name="../libs/xint/test/test_divide.cpp"/>
+    <File Name="../libs/xint/test/test_fixed.cpp"/>
+    <File Name="../libs/xint/test/test_main.cpp"/>
+    <File Name="../libs/xint/test/test_misc.cpp"/>
+    <File Name="../libs/xint/test/test_modular.cpp"/>
+    <File Name="../libs/xint/test/test_monty.cpp"/>
+    <File Name="../libs/xint/test/test_multiply.cpp"/>
+    <File Name="../libs/xint/test/test_nothrow.cpp"/>
+    <File Name="../libs/xint/test/test_powers.cpp"/>
+    <File Name="../libs/xint/test/test_streams.cpp"/>
+  </VirtualDirectory>
+  <Dependencies Name="Debug"/>
+  <Dependencies Name="Debug, Header Only"/>
+  <Dependencies Name="Release"/>
+  <Dependencies Name="Release, Header Only"/>
   <Settings Type="Executable">
     <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-g;-Wall" Required="yes" PreCompiledHeader="/home/chad/projects/xint/boost/xint/integer.hpp">
+      <Compiler Options="-g;-pedantic;-Wall" Required="yes" PreCompiledHeader="/home/chad/projects/xint/boost/xint/integer.hpp">
         <IncludePath Value="."/>
         <Preprocessor Value="BOOST_XINT_SINGLE_TEST_PROGRAM"/>
         <Preprocessor Value="BOOST_TEST_DYN_LINK"/>
@@ -180,24 +200,4 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
   </Settings>
-  <VirtualDirectory Name="test">
-    <File Name="../libs/xint/test/test_add.cpp"/>
-    <File Name="../libs/xint/test/test_bit_manipulations.cpp"/>
-    <File Name="../libs/xint/test/test_compare.cpp"/>
-    <File Name="../libs/xint/test/test_convert.cpp"/>
-    <File Name="../libs/xint/test/test_divide.cpp"/>
-    <File Name="../libs/xint/test/test_fixed.cpp"/>
-    <File Name="../libs/xint/test/test_main.cpp"/>
-    <File Name="../libs/xint/test/test_misc.cpp"/>
-    <File Name="../libs/xint/test/test_modular.cpp"/>
-    <File Name="../libs/xint/test/test_monty.cpp"/>
-    <File Name="../libs/xint/test/test_multiply.cpp"/>
-    <File Name="../libs/xint/test/test_nothrow.cpp"/>
-    <File Name="../libs/xint/test/test_powers.cpp"/>
-    <File Name="../libs/xint/test/test_streams.cpp"/>
-  </VirtualDirectory>
-  <Dependencies Name="Debug"/>
-  <Dependencies Name="Debug, Header Only"/>
-  <Dependencies Name="Release"/>
-  <Dependencies Name="Release, Header Only"/>
 </CodeLite_Project>

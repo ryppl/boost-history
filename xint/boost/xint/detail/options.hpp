@@ -50,7 +50,7 @@ enum negative_policy {
     p_modulus,
     p_throw_exception, // or return Not-a-Number for nothrow types
     p_force_zero,
-    p_force_absolute,
+    p_force_absolute
 };
 } // namespace detail
 #endif // BOOST_XINT_DOXYGEN_IGNORE
@@ -133,6 +133,12 @@ struct copy_on_write: public threadsafe_base, public boost::mpl::bool_<false>{};
 
 If used, the library zeros out all memory before deallocating it, for maximum
 security. The default is not to do so, for maximum speed.
+
+\note
+This provides only one half of a truly secure solution. Depending on how your
+operating system handles virtual memory, numbers may be paged out to disk at any
+time. To ensure maximum security, combine it with an allocator that prevents its
+memory from being paged to disk under any circumstances.
 */
 struct secure: public secure_base, public boost::mpl::bool_<true> { };
 

@@ -150,8 +150,8 @@ BOOST_AUTO_TEST_CASE(test_bitwise_operations) {
     ne = n; ne ^= m; BOOST_CHECK_EQUAL(ne, xored);
     ne = n; ne &= m; BOOST_CHECK_EQUAL(ne, anded);
 
-    BOOST_CHECK_EQUAL(lowestbit(n, 0), 4);
-    BOOST_CHECK_EQUAL(highestbit(n, 0), 117);
+    BOOST_CHECK_EQUAL(lowestbit(n, 0), bitsize_t(4));
+    BOOST_CHECK_EQUAL(highestbit(n, 0), bitsize_t(117));
 
     typedef integer_t<fixedlength<12> > integer12;
     integer12 nn(0xABC), mm(0x123);

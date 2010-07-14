@@ -1,0 +1,13 @@
+/*! \page ex_rsa RSA Encryption
+
+Here is an RSA encryption example. It uses unsigned, fixed-length integers with
+the "secure" option.
+
+Please note that this example, while fairly complete, is minimal. It does not
+include signing or verification of signatures, and does nothing to prevent a
+known attack method (the "low encryption exponent" attack).
+
+You can find this example as the file \c rsa.cpp in the \c example directory.
+
+\include rsa.cpp
+*/

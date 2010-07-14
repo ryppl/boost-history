@@ -43,8 +43,8 @@ namespace detail {
         static const bool has_fixed_range;
         static const result_type min_value;
         static const result_type max_value;
-        result_type min() const;
-        result_type max() const;
+        result_type min BOOST_PREVENT_MACRO_SUBSTITUTION () const;
+        result_type max BOOST_PREVENT_MACRO_SUBSTITUTION () const;
         double entropy() const;
 
         private:

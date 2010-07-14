@@ -34,12 +34,12 @@
 #include <string>
 #include <vector>
 #include <queue>
-#include <limits>
 #include <cstddef> // for std::size_t
 #include <cassert>
 #include <sstream>
 #include <fstream>
 #include <ctime>
+#include <boost/limits.hpp>
 #include <boost/integer.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/function.hpp>
@@ -196,6 +196,8 @@ struct magnitude_t {
         copy_count(0), readonly(ro), max_length(max_len) { }
     magnitude_t(std::size_t max_len, bool ro, digit_t init): copy_count(0),
         readonly(ro), max_length(max_len) { digits[0] = init; }
+    magnitude_t& operator=(const magnitude_t&) { throw std::logic_error(
+        "Can't use operator= on magnitude_t"); } // Here to satisfy MSVC
     std::size_t copies() const { return copy_count; }
 
     void inc() { ++copy_count; }

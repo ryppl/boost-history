@@ -39,6 +39,8 @@
     <File Name="../libs/xint/doc/dox/fixedlength.dox"/>
     <File Name="../../../../xint/libs/xint/doc/dox/r_whynotx.dox"/>
     <File Name="../libs/xint/doc/dox/no_exceptions.dox"/>
+    <File Name="../libs/xint/doc/dox/ex_simplest.dox"/>
+    <File Name="../libs/xint/doc/dox/footer.html"/>
   </VirtualDirectory>
   <VirtualDirectory Name="Project">
     <File Name="../libs/xint/doc/dox/Doxyfile"/>

@@ -274,23 +274,25 @@
 <a name="l00256"></a>00256     <span class="keywordflow">if</span> (n &lt; tmin || n &gt; tmax) exception_handler&lt;&gt;::call(__FILE__, __LINE__,
 <a name="l00257"></a>00257         exceptions::too_big(<span class="stringliteral">&quot;value out of range for requested conversion&quot;</span>));
 <a name="l00258"></a>00258 
-<a name="l00259"></a>00259     T rval = 0, shift = T(digit_overflowbit);
-<a name="l00260"></a>00260     <span class="keywordflow">for</span> (std::size_t x = 0; x &lt; n.length; ++x) {
-<a name="l00261"></a>00261         <span class="keywordflow">if</span> (<span class="keyword">sizeof</span>(T) &gt; <span class="keyword">sizeof</span>(digit_t)) rval *= shift;
-<a name="l00262"></a>00262         rval += <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(n[n.length - x - 1]);
-<a name="l00263"></a>00263     }
-<a name="l00264"></a>00264     <span class="keywordflow">if</span> (n.negative) rval *= -1;
-<a name="l00265"></a>00265     <span class="keywordflow">return</span> rval;
-<a name="l00266"></a>00266 }
-<a name="l00267"></a>00267 
-<a name="l00268"></a>00268 } <span class="comment">// namespace detail</span>
-<a name="l00269"></a>00269 } <span class="comment">// namespace xint</span>
-<a name="l00270"></a>00270 } <span class="comment">// namespace boost</span>
-<a name="l00272"></a>00272 <span class="comment"></span>
-<a name="l00273"></a>00273 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_CONVERT_HPP</span>
+<a name="l00259"></a>00259     <span class="comment">// Workaround for MSVC8&#39;s C4309 warning, &quot;truncation of constant value&quot;</span>
+<a name="l00260"></a>00260     doubledigit_t shift_tmp = digit_overflowbit;
+<a name="l00261"></a>00261     T rval = 0, shift = T(shift_tmp);
+<a name="l00262"></a>00262     <span class="keywordflow">for</span> (std::size_t x = 0; x &lt; n.length; ++x) {
+<a name="l00263"></a>00263         <span class="keywordflow">if</span> (<span class="keyword">sizeof</span>(T) &gt; <span class="keyword">sizeof</span>(digit_t)) rval *= shift;
+<a name="l00264"></a>00264         rval += <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(n[n.length - x - 1]);
+<a name="l00265"></a>00265     }
+<a name="l00266"></a>00266     <span class="keywordflow">if</span> (n.negative) rval *= <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(-1);
+<a name="l00267"></a>00267     <span class="keywordflow">return</span> rval;
+<a name="l00268"></a>00268 }
+<a name="l00269"></a>00269 
+<a name="l00270"></a>00270 } <span class="comment">// namespace detail</span>
+<a name="l00271"></a>00271 } <span class="comment">// namespace xint</span>
+<a name="l00272"></a>00272 } <span class="comment">// namespace boost</span>
+<a name="l00274"></a>00274 <span class="comment"></span>
+<a name="l00275"></a>00275 <span class="preprocessor">#endif // BOOST_INCLUDED_XINT_CONVERT_HPP</span>
 </pre></div></div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Fri Jun 25 12:04:28 2010 for The Extended Integer (XInt) Library by&nbsp;
-<a href="http://www.doxygen.org/index.html">
-<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
-</body>
-</html>
+<hr>
+<p><i>&copy; Copyright Chad Nelson, 2010. Distributed under the Boost Software
+License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+<a href=http://www.boost.org/LICENSE_1_0.txt>http://www.boost.org/LICENSE_1_0.txt</a>)
+</i></p>
