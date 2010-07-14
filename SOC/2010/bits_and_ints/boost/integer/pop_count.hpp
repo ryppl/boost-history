@@ -27,7 +27,20 @@
 
 namespace boost {
 
-int pop_count(uintmax_t value)
+#ifdef __GNUC__
+
+inline int pop_count(uintmax_t value)
+{
+#ifndef BOOST_NO_INT64_T
+	return __builtin_popcountll(value);
+#else
+	return __builtin_popcount(value);
+#endif
+}
+	
+#else
+
+inline int pop_count(uintmax_t value)
 {	
 	using integer_detail::pop_count_mask;
 	value = (value & pop_count_mask[0]) + ((value >> 1) & pop_count_mask[0]);
@@ -40,8 +53,10 @@ int pop_count(uintmax_t value)
 #endif
 	
 	return int(value);
-} // pop_count
+}
 
+#endif // __GNUC__
+	
 } // boost
 
 #endif

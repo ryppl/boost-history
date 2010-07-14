@@ -27,6 +27,19 @@
  */
 
 namespace boost {
+#ifdef __GNUC__
+
+template <typename T>
+inline int count_leading_zeros(T value)
+{
+#ifndef BOOST_HAS_NO_INT64_T
+	return __builtin_clzll(value) - (64 - (sizeof(T) << 3));
+#else
+	return __builtin_clz(value) - (32 - (sizeof(T) << 3));
+#endif
+}
+
+#else
 
 template <typename T>
 typename enable_if_c<sizeof(T) == 1, int>::type
@@ -77,7 +90,9 @@ count_leading_zeros(T value)
 	
 	return pop_count(T(~value));
 }
-	
+
+#endif
+
 } // boost
 
 #endif

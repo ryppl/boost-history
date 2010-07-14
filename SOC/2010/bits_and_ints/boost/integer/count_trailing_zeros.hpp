@@ -27,10 +27,25 @@
 
 namespace boost {
 
-int count_trailing_zeros(uintmax_t value)
+#ifdef __GNUC__
+
+inline int count_trailing_zeros(uintmax_t value)
+{
+#ifndef BOOST_HAS_NO_INT64_T
+	return __builtin_ctzll(value); 
+#else
+	return __builtin_ctz(value);
+#endif
+}
+
+#else
+
+inline int count_trailing_zeros(uintmax_t value)
 {
 	return pop_count(~value & (value - 1));
-} // count_trailing_zeros
+}
+
+#endif // __GNUC__	
 	
 } // boost
 
