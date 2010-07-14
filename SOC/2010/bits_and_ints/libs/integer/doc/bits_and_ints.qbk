@@ -154,7 +154,7 @@ Invert the value of the bit `pos` in `data`
 
 *[*Example:]
 
-	BOOST_STATIC_ASSERT((flip_bit<int, 10, 2>::value == 14));
+	BOOST_STATIC_ASSERT((flip_bit<int, 10, 2>::value == 14	));
 
 [endsect]
 
@@ -239,14 +239,30 @@ The run-time version can be included via [@../../../../boost/integer/bit_reversa
 
 [endsect]
 
+[section Template Class `mpl::bit_reversal<>`]
+The MPL version can be included via [@../../../../boost/integer/static_bit_reversal.hpp <boost/integer/static_bit_reversal.hpp>].
+The result will be in `value` member.
+	
+	template <typename IC>
+	struct mpl::bit_reversal : mpl::integral_c<typename IC::value_type, ``['implementation-defined]``> {};
+
+*[*Template Parameters]
+
+[table
+	[[Parameter][Description]]
+	[[`IC`][ A `mpl::integral_c<>` type wich holds an integral constant to be reversed. ]]
+]
+
+*[*Requires: ] `IC` must be an `mpl::integral_c<>` type.
+
+[endsect]
+
 [section Template Class `static_bit_reversal<>`]
 The compile-time version can be included via [@../../../../boost/integer/static_bit_reversal.hpp <boost/integer/static_bit_reversal.hpp>].
 The result will be in `value` member.
 	
 	template <typename T, T Value>
-	struct static_bit_reversal { 
-		static const T value = ``['implementation-defined]``; 
-	};
+	struct static_bit_reversal : mpl::bit_reversal< mpl::integral_c<T, Value> > {};
 
 *[*Template Parameters]
 
@@ -260,26 +276,6 @@ The result will be in `value` member.
 
 [endsect]
 
-[section Template Class `mpl::bit_reversal<>`]
-The MPL version can be included via [@../../../../boost/integer/static_bit_reversal.hpp <boost/integer/static_bit_reversal.hpp>].
-The result will be in `value` member.
-	
-	template <typename IC>
-	struct mpl::bit_reversal { 
-		static const T value = ``['implementation-defined]``; 
-	};
-
-*[*Template Parameters]
-
-[table
-	[[Parameter][Description]]
-	[[`IC`][ A `mpl::integral_c<>` type wich holds an integral constant to be reversed. ]]
-]
-
-*[*Requires: ] `IC` must be an `mpl::integral_c<>` type.
-
-[endsect]
-
 [section Examples]
 *[*Run-time version]
 ``
@@ -288,13 +284,7 @@ The result will be in `value` member.
 
 int main()
 {
-	// data = 0101 0101
-	uint8_t data = 0x55;
-
-	uint8_t result = boost::bit_reversal(data);
-
-	// will print 0xaa (1010 1010)
-	std::cout << std::hex << result << std::endl; // -1
+	BOOST_ASSERT((boost::bit_reversal(0x55) == 0xAA));
 }
 ``
 	
@@ -304,12 +294,8 @@ int main()
 #include <iostream>
 
 int main()
-{
-	// 0x30A5 == 0011 0000 1010 0101
-	uint16_t result = boost::static_sign_extend<uint16_t, 0x30A5>::value;
-
-	// will print 0x5A0B
-	std::cout << std::hex << result << std::endl;
+{	
+	BOOST_STATIC_ASSERT((boost::static_bit_reversal<uint16_t, 0x30A5>::value == 0xA50C));
 }
 ``
 	
@@ -325,10 +311,10 @@ Clears least significant 1 bit in an integral. The `clear_least_bit_set()` funct
 	T clear_least_bit_set(T value);
 	
 	template <typename IC>
-	struct mpl::clear_least_bit_set { static const typename IC::value_type value = ``['implementation-defined]``; };
+	struct mpl::clear_least_bit_set mpl::integral_c<typename IC::value_type, ``['implementation-defined]``> {};
 	
 	template <typename T, T Value>
-	struct static_clear_least_bit_set { static const T value = ``['implementation-defined]``; };
+	struct static_clear_least_bit_set : mpl::clear_least_bit_set< mpl::integral_c<T, Value> > {};
 
 [endsect]
 
@@ -363,10 +349,10 @@ the compile-time metafunctions are defined on [@../../../../boost/integer/static
 	int count_trailing_zeros(uintmax_t value);
 	
 	template <typename IC>
-	struct mpl::count_trailing_zeros { static const int value = ``['implementation-defined]``; };
+	struct mpl::count_trailing_zeros : mpl::integral_c<typename IC::value_type, ``['implementation-defined]``> {};
 	
 	template <uintmax_t Value> 
-	struct static_count_trailing_zeros { static const int value = ``['implementation-defined]``; };
+	struct static_count_trailing_zeros : mpl::count_trailing_zeros< mpl::integral_c<uintmax_t, Value> > {};
 	
 [endsect]
 
@@ -384,7 +370,7 @@ metafunction wich calculates the greatest common divisor of two given `mpl::inte
 [section Synopsis]
 
 	template <typename ICT1, typename ICT2>
-	struct mpl::gcd { static const uintmax_t value = ``['implementation-defined]``; }; 
+	struct mpl::gcd : mpl::integral_c<typename ICT1::value_type, ``['implementation-defined]``> {}; 
 	
 [endsect]
 
@@ -401,7 +387,7 @@ The header file [@../../../../boost/integer/is_integral_constant.hpp <boost/inte
 [section Synopsis]
 
 	template <typename IC>
-	struct is_integral_constant { ``['implementation-defined]`` };
+	struct is_integral_constant : and_<``['implementation-defined]``> {};
 	
 [endsect]
 
@@ -420,7 +406,7 @@ This static metafunction is defined on [@../../../../boost/integer/static_lcm.hp
 [section Synopsis]
 
 	template <typename ICT1, typename ICT2>
-	struct mpl::lcm { static const uintmax_t value = ``['implementation-defined]``; }; 
+	struct mpl::lcm : integral_c<typename ICT1::value_type, ``['implementation-defined]``> {}; 
 	
 [endsect]
 
@@ -442,7 +428,7 @@ under the header [@../../../../boost/integer/pop_count.hpp <boost/integer/pop_co
 	struct static_pop_count { static const int value = ``['implementation-defined]``; };
 	
 	template <typename IC>
-	struct pop_count { static const int value = ``['implementation-defined]``; };
+	struct mpl::pop_count : mpl::integral_c<typename IC::value_type, static_pop_count<IC::value>::value> {};
 
 [endsect]
 
@@ -486,10 +472,10 @@ the compile-time metafunctions are defined on [@../../../../boost/integer/static
 	T safe_avg(T x, T y);
 	
 	template <typename ICT1, typename ICT2>
-	struct mpl::safe_avg { static const int value = ``['implementation-defined]``; };
+	struct mpl::safe_avg : mpl::integral_c<typename ICT1::value_type, ``['implementation-defined]``> {};
 	
 	template <typename T, T Value1, T Value2>
-	struct static_safe_avg { static const int value = ``['implementation-defined]``; };
+	struct static_safe_avg : mpl::safe_avg< T, mpl::integral_c<T, Value1>, mpl::integral_c<T, Value1> > {};
 	
 [endsect]
 
@@ -523,15 +509,30 @@ For valid types T, the function `bit_reversal` will be:
 
 [endsect]
 
+[section Template Class `mpl::same_sign<>`]
+The MPL version can be included via [@../../../../boost/integer/static_same_sign.hpp <boost/integer/static_same_sign.hpp>].
+The result will be in `value` member.
+	
+	template <typename IC1, typename IC2>
+	struct mpl::same_sign : mpl::bool_<``['implementation-defined]``> {};
+
+*[*Template Parameters:]
+
+[table
+	[[Parameter][Description]]
+	[[`IC1`, `IC2`][ The two `mpl::integral_c<>` to be compared. ]]
+]
+
+*[*Requires: ] `IC1` and `IC2` must be `mpl::integral_c<>` types.
+
+[endsect]
+
 [section Template Class `static_same_sign<>`]
 The compile-time version can be included via [@../../../../boost/integer/static_same_sign.hpp <boost/integer/static_same_sign.hpp>].
 The result will be in `value` member.
 	
 	template <typename T, T Value1, T Value2>
-	struct static_same_sign
-	{
-		static const bool value = ``['implementation-defined]``;
-	};
+	struct static_same_sign : mpl::same_sign< mpl::integral_c<T, Value1>, mpl::integral_c<T, Value2> > {};
 
 *[*Template Parameters:]
 
@@ -545,27 +546,6 @@ The result will be in `value` member.
 
 [endsect]
 
-[section Template Class `mpl::same_sign<>`]
-The MPL version can be included via [@../../../../boost/integer/static_same_sign.hpp <boost/integer/static_same_sign.hpp>].
-The result will be in `value` member.
-	
-	template <typename IC1, typename IC2>
-	struct mpl::same_sign
-	{
-		static const bool value = ``['implementation-defined]``;
-	};
-
-*[*Template Parameters:]
-
-[table
-	[[Parameter][Description]]
-	[[`IC1`, `IC2`][ The two `mpl::integral_c<>` to be compared. ]]
-]
-
-*[*Requires: ] `IC1` and `IC2` must be `mpl::integral_c<>` types.
-
-[endsect]
-
 [section Examples]
 *[*Run-time version:]
 ``
@@ -576,11 +556,9 @@ int main()
 {
 	int first = -1, second = -2, third = 1;
 	
-	bool result = boost::same_sign(first, second);
-	std::cout << result << std::endl; // true
-	
-	result = boost::same_sign(first, third);
-	std::cout << result << std::endl; // false
+	BOOST_ASSERT((boost::same_sign(first, second) == true));
+	BOOST_ASSERT((boost::same_sign(first, third) == false));
+	BOOST_ASSERT((boost::same_sign(0, 1) == false));
 }
 ``	
 *[*Compile-time version:]
@@ -591,11 +569,9 @@ int main()
 
 int main()
 {
-	bool result = boost::static_same_sign<int, 2, 10>::value;
-	std::cout << result << std::endl; //true
-	
-	result = boost::static_same_sign<int, 10, -2>::value;
-	std::cout << result << std::endl; // false
+	BOOST_STATIC_ASSERT((boost::static_same_sign<int, 2, 10>::value));
+	BOOST_STATIC_ASSERT((!boost::static_same_sign<int, 10, -2>::value));
+	BOOST_STATIC_ASSERT((!boost::static_same_sign<int, 1, 0>::value));
 }
 ``
 
@@ -630,38 +606,12 @@ The run-time version can be included via [@../../../../boost/integer/sign_extend
 
 [endsect]
 
-[section Template Class `static_sign_extend<>`]
-The compile-time version can be included via [@../../../../boost/integer/static_sign_extend.hpp <boost/integer/static_sign_extend.hpp>].
-The result will be in `value` member.
-
-	template<typename T, T Value, std::size_t Bits>
-	struct static_sign_extend 
-	{
-		static const T value = ``['implementation-defined]``; 
-	};
-	
-
-*[*Requires: ] `Bits` must be smaller than the size, in bits, of `T` and `T` must be an integral type.
-
-*[*Template Parameters:]
-
-[table
-	[[Parameter][Description]]
-	[[`T`][ The data type. ]]
-	[[`Value`][ The data to be extended. ]]
-	[[`Bits`][ The amount of bits in wich data is represented. ]]
-]
-[endsect]
-
 [section Template Class `mpl::sign_extend<>`]
 The MPL version can be included via [@../../../../boost/integer/static_sign_extend.hpp <boost/integer/static_sign_extend.hpp>].
 The result will be in `value` member.
 
 	template<typename IC, std::size_t Bits>
-	struct mpl::sign_extend 
-	{
-		static const T value = ``['implementation-defined]``; 
-	};
+	struct mpl::sign_extend : mpl::integral_c<typename IC::value_type, ``['implementation-defined]``> {};
 	
 
 *[*Requires: ] `IC` must a `mpl::integral_c<>` type. `Bits` must be smaller than the size in bits of `IC::value_type`.
@@ -676,6 +626,26 @@ The result will be in `value` member.
 
 [endsect]
 
+[section Template Class `static_sign_extend<>`]
+The compile-time version can be included via [@../../../../boost/integer/static_sign_extend.hpp <boost/integer/static_sign_extend.hpp>].
+The result will be in `value` member.
+
+	template<typename T, T Value, std::size_t Bits>
+	struct static_sign_extend : mpl::sign_extend< mpl::integral_c<T, Value>, Bits> {};
+	
+
+*[*Requires: ] `Bits` must be smaller than the size, in bits, of `T` and `T` must be an integral type.
+
+*[*Template Parameters:]
+
+[table
+	[[Parameter][Description]]
+	[[`T`][ The data type. ]]
+	[[`Value`][ The data to be extended. ]]
+	[[`Bits`][ The amount of bits in wich data is represented. ]]
+]
+[endsect]
+
 [section Examples]
 *[*Run-time version]
 ``	
@@ -687,9 +657,7 @@ int main()
 	// data is represented in 24-bits
 	int data = 0xFFFFFF; // -1 in 24-bits
 
-	int result = boost::sign_extend(data, 24);
-
-	std::cout << result << std::endl; // -1
+	BOOST_ASSERT((boost::sign_extend(data, 24) == -1));
 }
 ``
 
@@ -701,9 +669,7 @@ int main()
 int main()
 {
 	// 0xFFFFF is -1 in 20-bits
-	int result = boost::static_sign_extend<int, 0xFFFFF, 20>::value;
-
-	std::cout << result << std::endl; // -1
+	BOOST_STATIC_ASSERT((boost::static_sign_extend<int, 0xFFFFF, 20>::value == -1));
 }
 ``
 	
@@ -743,10 +709,10 @@ The run-time version can be included via [@../../../../boost/integer/sign.hpp <b
 The compile-time versions can be included via [@../../../../boost/integer/static_sign.hpp <boost/integer/static_sign.hpp>]. 
 
 	template <typename IC>
-	struct mpl::sign { static const int value = ``['implementation-defined]``; };
+	struct mpl::sign : mpl::integral_c<int, ``['implementation-defined]``> {};
 	
 	template <template T, T Value>
-	struct static_same_sign { static const int value = ``['implementation-defined]``; };
+	struct static_same_sign : mpl::sign< mpl::integral_c<T, Value> > {};
 	
 [table
 	[[Parameter][Description]]
@@ -770,14 +736,11 @@ int main()
 {
 	int first = -100, second = 340, third = 0;
 	
-	int result = boost::sign(first);
-	std::cout << result << std::endl; // -1
+	BOOST_ASSERT((boost::sign(first) == -1));
 	
-	result = boost::sign(second);
-	std::cout << result << std::endl; // 1
+	BOOST_ASSERT((boost::sign(second) == 1));
 	
-	result = boost::sign(third);
-	std::cout << result << std::endl; // 0
+	BOOST_ASSERT((boost::sign(third) == 0));
 }
 ``
 	
@@ -785,13 +748,13 @@ int main()
 [endsect]
 
 [section Swap without a temporary (in-place) ]
-The header file [@../../../../boost/integer/swap.hpp <boost/integer/swap.hpp>] defines `swap` 
+The header file [@../../../../boost/integer/swap_in_place.hpp <boost/integer/swap_in_place.hpp>] defines `swap_in_place` 
 function wich swaps 2 integral values without using a temporary variable.
 
 [section Synopsis]
 
 	template <typename T>
-	inline void swap(T& x, T& y);
+	inline void swap_in_place(T& x, T& y);
 	
 [endsect]
 
@@ -817,11 +780,11 @@ static metafunctions are defined on [@../../../../boost/integer/static_isign.hpp
 	template <typename T>
 	T isign(T x, T y);
 	
-	template <typename T, T Value1, T Value2>
-	struct static_isign { static const T value = ``['implementation-defined]``; };
-	
 	template <typename IC1, typename IC2>
-	struct mpl::isign { static const typename IC1::value_type value = ``['implementation-defined]``; };
+	struct mpl::isign mpl::integral_c<typename IC1::value_type, ``['implementation-defined]``> {};
+	
+	template <typename T, T Value1, T Value2>
+	struct static_isign : mpl::isign< mpl::integral_c<T, Value1>, mpl::integral_c<T, Value2> > {};
 	
 [endsect]
 
