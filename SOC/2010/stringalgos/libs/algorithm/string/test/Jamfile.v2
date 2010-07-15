@@ -65,5 +65,11 @@ test-suite algorithm/string
             :   
             : regex
         ]
+      [ run 
+            find_format_test.cpp
+          : :
+            :   
+            : find_format
+        ]
     ;
 
