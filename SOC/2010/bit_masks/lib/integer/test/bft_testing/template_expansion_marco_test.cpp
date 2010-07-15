@@ -12,7 +12,7 @@
 
 using namespace boost;
 using namespace boost::bitfields;
-using namespace std;
+//~ using namespace std;
 
 template <BOOST_MAKE_BFT_TEMPLATE_PARAMS()>
 struct ham_bone {
@@ -21,7 +21,7 @@ struct ham_bone {
 
 int main() {
     ham_bone<int,int,int,int,int,int,int,int,int,int> temp;
-    cout << typeid( &temp ).name() << endl;
+    std::cout << typeid( &temp ).name() << std::endl;
     return 0;
 }
 

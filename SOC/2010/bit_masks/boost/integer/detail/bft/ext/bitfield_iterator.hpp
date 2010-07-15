@@ -36,6 +36,10 @@ struct bitfield_tuple_iterator
         detail::bft_category
     >
 {
+
+private:
+    bitfield_tuple_iterator& operator=(bitfield_tuple_iterator const&);
+public:
     /** Constructor over a bitfield tuple. */
     bitfield_tuple_iterator(BitfieldTuple& bft)
         : _data(bft) { }

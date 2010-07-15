@@ -27,7 +27,9 @@
 #include <boost/integer/detail/bft/ext/bitfield_tuple_fusion_includes.hpp>
 #include <boost/integer/detail/fusion_ext_includes.hpp>
 #include <boost/integer/detail/bft/make_bitfield_tuple.hpp>
-#include <boost/integer/detail/bft/msvc_fixes/msvc_fix_includes.hpp>
+
+// TODO: re evaluate if this is needed or not.
+// #include <boost/integer/detail/bft/msvc_fixes/msvc_fix_includes.hpp>
 
 
 namespace boost {
