@@ -13,13 +13,16 @@ int main ()
 
 //Example 1: KMP
 
-	typedef boost::finder_t<std::wstring, std::wstring, boost::knuth_morris_pratt> finder;
+	//typedef boost::finder_t<std::wstring, std::wstring, boost::knuth_morris_pratt> finder;
+    //OR
+    typedef boost::wknuth_morris_pratt_finder finder;
 	finder f;
 	
 	f.set_string(L"The world is mine"); // set the string to search for: "The world is mine"
 	f.set_substring(L"mine"); // set the pattern to search for: "mine" 
     std::wstring::difference_type match = f.find_first_index(); // searches pattern "mine" in text
-                                                               // "The world is mine" 
+                                                                // "The world is mine"
+                                                                // returns an index
     if (match != static_cast<std::string::difference_type>(-1))
         std::wcout << L"Found a match at position " << match << std::endl;
 
@@ -62,6 +65,12 @@ int main ()
 
     boost::to_upper(f2.find_first()); // finds consectetur in the internal copy
                                       // then makes it uppercase
+    
+    // Changes have occured in the internal copy of the string from the outside, the finder
+    // has no way of knowing. Call refresh() in order for the finder to perform any computation
+    // required on the modified string
+    f2.refresh();
+
     //turns all occurences of letter e into uppercase
     f2.set_substring(L"e");
     for (finder2::string_range_type range = f2.find_first();
@@ -73,7 +82,26 @@ int main ()
     //display the internal copy of the text
     boost::copy(f2.get_string_range(), std::ostream_iterator<wchar_t,wchar_t>(std::wcout));
     std::wcout << std::endl;
-    
+
+// Example 3: Using finder_t with boyer_moore
+    boost::wboyer_moore_finder f3;
+
+    std::wstring apple(L"apple");
+    f3.set_substring(&apple); // you need to guarantee on the lifetime of apple to do this
+
+    std::wstring coolsaying(
+        L"If you have an apple and I have an apple and we exchange these apples then you "
+        L"and I will still each have one apple. But if you have an idea and I have an "
+        L"idea and we exchange these ideas, then each of us will have two ideas."
+    );
+    f3.set_string(&coolsaying); // you need to guarantee on the lifetime of coolsaying to do this
+
+    boost::to_upper(f3.find_first()); // turn the first occurence of apple uppercase
+                                      // modifications occur directly in coolsaying, since no copy
+                                      // was made
+    std::wcout << coolsaying << std::endl;
+
+
     std::cin.get();
-	return 0;
+    return 0;
 }

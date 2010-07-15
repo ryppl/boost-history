@@ -211,6 +211,13 @@ namespace boost { namespace algorithm {
     };
 } }
 
-namespace boost { using boost::algorithm::suffix_array_search; }
+namespace boost
+{
+    using boost::algorithm::suffix_array_search;
+    typedef boost::algorithm::finder_t<std::string, std::string,
+        boost::algorithm::suffix_array_search> suffix_array_finder;
+    typedef boost::algorithm::finder_t<std::wstring, std::wstring,
+        boost::algorithm::suffix_array_search> wsuffix_array_finder;
+}
 
 #endif

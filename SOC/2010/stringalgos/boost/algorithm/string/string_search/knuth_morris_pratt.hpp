@@ -5,6 +5,8 @@
 #include <boost/range/iterator_range.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
+#include <boost/algorithm/string/finder.hpp>
+#include <string>
 #include <vector>
 #include <allocators>
 
@@ -111,6 +113,13 @@ namespace boost { namespace algorithm {
     };
 } }
 
-namespace boost { using boost::algorithm::knuth_morris_pratt; }
+namespace boost
+{
+    using boost::algorithm::knuth_morris_pratt;
+    typedef boost::algorithm::finder_t<std::string, std::string,
+        boost::algorithm::knuth_morris_pratt> knuth_morris_pratt_finder;
+    typedef boost::algorithm::finder_t<std::wstring, std::wstring,
+        boost::algorithm::knuth_morris_pratt> wknuth_morris_pratt_finder;
+}
 
 #endif

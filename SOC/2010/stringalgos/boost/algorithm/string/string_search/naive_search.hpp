@@ -6,6 +6,8 @@
 #include <boost/mpl/void.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
+#include <string>
+#include <boost/algorithm/string/finder.hpp>
 
 namespace boost { namespace algorithm {
     //! \todo Copyable
@@ -64,6 +66,13 @@ namespace boost { namespace algorithm {
 		
 } }
 	
-namespace boost { using boost::algorithm::naive_search; }
+namespace boost
+{
+    using boost::algorithm::naive_search;
+    typedef boost::algorithm::finder_t<std::string, std::string,
+        boost::algorithm::naive_search> naive_search_finder;
+    typedef boost::algorithm::finder_t<std::wstring, std::wstring,
+        boost::algorithm::naive_search> wnaive_search_finder;
+}
 
 #endif

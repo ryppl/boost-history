@@ -68,25 +68,26 @@ namespace boost { namespace algorithm {
             private AlgorithmT::algorithm<
                 simplified_finder_t<Range1T, Range2T, AlgorithmT, ComparatorT, AllocatorT, AdditionalBehaviorT>,
                 typename boost::range_const_iterator<Range1T>::type,
-                typename boost::range_const_iterator<Range2T>::type,
+                typename boost::range_iterator<Range2T>::type,
                 ComparatorT,AllocatorT>
         {
             //! \todo Add concept assertions here.
 
         public:
-            simplified_finder_t(Range1T const &substr, Range2T const &str,
+            simplified_finder_t(Range1T const *const substr, Range2T *str,
                 ComparatorT comparator = ComparatorT(), AllocatorT allocator = AllocatorT())
-                : substring_range_(substr), string_range_(str),
+                : substring_range_(boost::as_literal(*substr)),
+                string_range_(boost::as_literal(*str)),
                 comparator_(comparator), allocator_(allocator),
                 substring_has_changed_(true), string_has_changed_(true),
                 algorithm()
             { }
 
-            void set_substring (Range1T const &substr)
-            { substring_range_ = substr; substring_has_changed_ = true; }
+            void set_substring (Range1T const *substr)
+            { substring_range_ = boost::as_literal(*substr); substring_has_changed_ = true; }
 
-            void set_string (Range2T const &str)
-            { string_range_ = str; string_has_changed_ = true; }
+            void set_string (Range2T *str)
+            { string_range_ = boost::as_literal(*str); string_has_changed_ = true; }
 
             void find_reset ()
             { start_offset_ = boost::begin(string_range_); }
@@ -95,6 +96,12 @@ namespace boost { namespace algorithm {
             {
                 find_reset();
                 return find_next();
+            }
+
+            void refresh()
+            {
+                string_has_changed_ = true;
+                find_reset();
             }
 
             string_range_type find_next()
@@ -169,9 +176,8 @@ namespace boost { namespace algorithm {
             template <class,class,class,class,class,class> class AdditionalBehavior =
                 boost::algorithm::finder_no_additional_behavior
         >
-        class finder_t : private Algorithm::algorithm</*typename boost::range_const_iterator<Sequence1T>::type,
-                        typename boost::range_const_iterator<Sequence2T>::type,
-                        Comparator,Allocator*/
+        class finder_t :
+            private Algorithm::algorithm<
                 typename finder_t<Sequence1T, Sequence2T, Algorithm, Comparator, Allocator, AdditionalBehavior>,
                 typename boost::range_const_iterator<Sequence1T>::type,
                 typename boost::range_iterator<Sequence2T>::type,
@@ -500,6 +506,11 @@ namespace boost { namespace algorithm {
                 \note This is semantically equivalent to \c find_reset(); match=find_next();
              */
 
+            void refresh()
+            {
+                string_has_changed_ = true;
+                find_reset();
+            }
 
             //!\todo Must return a range of const iterators, otherwise one could modify
             //!         the range's contents, range which may actually

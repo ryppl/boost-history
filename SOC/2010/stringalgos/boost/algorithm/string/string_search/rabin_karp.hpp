@@ -11,14 +11,17 @@
 #include <boost/static_assert.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
+#include <string>
+#include <boost/algorithm/string/finder.hpp>
 
 
 #include <boost/algorithm/string/string_search/detail/rabin_karp.hpp>
 
 namespace boost { namespace algorithm {
 
-    //! \todo Find this in boost?
-    //struct void_type {};
+    //!\todo document the fact that it's approximate, how to make it deterministic
+    //      the limited comparators
+    //!\todo Make it work with case insensitive. Find a way to allow providing locales.
 
     //Note: this only works with comparator ==
     //! \todo Implement a version that works with Input iterators?
@@ -60,6 +63,20 @@ namespace boost { namespace algorithm {
 
 } } // namespace algorithm, namespace boost
 
-namespace boost { using boost::algorithm::rabin_karp32; using boost::algorithm::rabin_karp64; }
+namespace boost
+{
+    using boost::algorithm::rabin_karp32;
+    using boost::algorithm::rabin_karp64;
+    
+    typedef boost::algorithm::finder_t<std::string, std::string,
+        boost::algorithm::rabin_karp32> rabin_karp32_finder;
+    typedef boost::algorithm::finder_t<std::wstring, std::wstring,
+        boost::algorithm::rabin_karp32> wrabin_karp32_finder;
+
+    typedef boost::algorithm::finder_t<std::string, std::string,
+        boost::algorithm::rabin_karp64> rabin_karp64_finder;
+    typedef boost::algorithm::finder_t<std::wstring, std::wstring,
+        boost::algorithm::rabin_karp64> wrabin_karp64_finder;
+}
 
 #endif

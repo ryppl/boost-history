@@ -14,6 +14,8 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/static_assert.hpp>
 #include <map>
+#include <string>
+#include <boost/algorithm/string/finder.hpp>
 
 namespace boost { namespace algorithm {
     struct boyer_moore
@@ -165,6 +167,13 @@ namespace boost { namespace algorithm {
     };
 } }
 
-namespace boost { using boost::algorithm::boyer_moore; }
+namespace boost
+{
+    using boost::algorithm::boyer_moore;
+    typedef boost::algorithm::finder_t<std::string, std::string,
+        boost::algorithm::boyer_moore> boyer_moore_finder;
+    typedef boost::algorithm::finder_t<std::wstring, std::wstring,
+        boost::algorithm::boyer_moore> wboyer_moore_finder;
+}
 
 #endif
