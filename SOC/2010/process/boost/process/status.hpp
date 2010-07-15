@@ -30,3 +30,5 @@ typedef detail::basic_status<detail::basic_status_service<> > status;
 
 }
 }
+
+#endif

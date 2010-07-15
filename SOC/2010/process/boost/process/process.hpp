@@ -137,15 +137,19 @@ public:
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("waitpid(2) failed"); 
         return s;
 #elif defined(BOOST_WINDOWS_API)
-        HANDLE h = ::OpenProcess(SYNCHRONIZE, FALSE, id_); 
+
+        HANDLE h = ::OpenProcess(PROCESS_QUERY_INFORMATION |SYNCHRONIZE    , FALSE, id_); 
         if (h == NULL) 
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("OpenProcess() failed"); 
+
         if (::WaitForSingleObject(h, INFINITE) == WAIT_FAILED) 
         { 
             ::CloseHandle(h); 
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("WaitForSingleObject() failed"); 
         } 
+
         DWORD exit_code; 
+
         if (!::GetExitCodeProcess(h, &exit_code)) 
         { 
             ::CloseHandle(h); 

@@ -144,6 +144,7 @@ public:
 
     pipe(stream_type stream) 
     { 
+		
         native_type natives[2]; 
 #if defined(BOOST_POSIX_API) 
         if (::pipe(natives) == -1) 
@@ -153,7 +154,7 @@ public:
         ZeroMemory(&sa, sizeof(sa));
         sa.nLength = sizeof(sa);
         sa.lpSecurityDescriptor = NULL;
-        sa.bInheritHandle = TRUE;
+        //sa.bInheritHandle = TRUE;
         if (!::CreatePipe(&natives[0], &natives[1], &sa, 0)) 
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreatePipe() failed"); 
 #endif 
@@ -163,6 +164,7 @@ public:
         if (!::SetHandleInformation(child_end_, HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT)) 
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("SetHandleInformation() failed"); 
 #endif 
+
     } 
 
     static boost::shared_ptr<pipe> def(stream_type stream) 
