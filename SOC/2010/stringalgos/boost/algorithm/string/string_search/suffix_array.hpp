@@ -13,6 +13,9 @@ namespace boost { namespace algorithm {
     struct suffix_array_search
     {
         typedef std::allocator<std::size_t> default_allocator_type;
+
+        //! \TODO this currently only works for boost::algorithm::is_equal as comparator because we don't yet have a template
+        //!         parameter for LessThanComparator. Maybe we should pass two comparators, give it some thought.
         template <class Finder,class RandomAccessIterator1T,
             class RandomAccessIterator2T,class Comparator,class Allocator>
         class algorithm
@@ -40,6 +43,8 @@ namespace boost { namespace algorithm {
             {
                 substring_range_type const &substr = static_cast<Finder*>(this)->get_substring_range();
                 string_range_type const &str = static_cast<Finder*>(this)->get_string_range();
+                comparator_type const &comp = static_cast<Finder*>(this)->get_comparator();
+
                 std::size_t start_offset = start - boost::begin(str),
                     substr_size = boost::end(substr) - boost::begin(substr),
                     str_size = boost::end(str) - boost::begin(str);
@@ -57,6 +62,8 @@ namespace boost { namespace algorithm {
                 if (lastsuffix_end > str_size) lastsuffix_end = str_size;
                 //the substring is smaller than the smallest lexicographic suffix, therefore no matches
                 //if (std::lexicographical_compare(substr.begin(), substr.end(),str.begin()+pos[0],str.begin()+firstsuffix_end))
+                
+                //! \TODO Is this really correct? Just because it starts before other suffix it does not mean there are no matches
                 if (suffix_less(substr, str, 0) ||
                     std::lexicographical_compare(str.begin()+pos_.back(),str.begin()+lastsuffix_end,substr.begin(),substr.end())
                     )

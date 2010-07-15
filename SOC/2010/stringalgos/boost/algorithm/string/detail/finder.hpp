@@ -49,7 +49,7 @@ namespace boost { namespace algorithm { namespace detail {
         typedef typename boost::range_const_iterator<substring_type>::type
             substring_iterator_type;
         //! The type of the string's iterator
-        typedef typename boost::range_const_iterator<string_type>::type
+        typedef typename boost::range_iterator<string_type>::type
             string_iterator_type;
         //! The character type of the substring
         typedef typename boost::iterator_value<substring_iterator_type>::type

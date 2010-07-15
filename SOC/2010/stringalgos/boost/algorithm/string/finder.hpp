@@ -136,7 +136,7 @@ namespace boost { namespace algorithm {
             typename boost::call_traits<allocator_type>::const_reference get_allocator() const
             { return allocator_; }
 
-        private:
+        protected:
             substring_range_type substring_range_;
             string_range_type string_range_;
             bool substring_has_changed_, string_has_changed_;
@@ -174,7 +174,7 @@ namespace boost { namespace algorithm {
                         Comparator,Allocator*/
                 typename finder_t<Sequence1T, Sequence2T, Algorithm, Comparator, Allocator, AdditionalBehavior>,
                 typename boost::range_const_iterator<Sequence1T>::type,
-                typename boost::range_const_iterator<Sequence2T>::type,
+                typename boost::range_iterator<Sequence2T>::type,
                 Comparator, Allocator>,
             private AdditionalBehavior<
                 typename finder_t<Sequence1T, Sequence2T, Algorithm, Comparator, Allocator, AdditionalBehavior>,
@@ -198,7 +198,7 @@ namespace boost { namespace algorithm {
             //! The type of the substring's iterator
             typedef typename boost::range_const_iterator<Sequence1T>::type substring_iterator_type;
             //! The type of the string's iterator
-            typedef typename boost::range_const_iterator<Sequence2T>::type string_iterator_type;
+            typedef typename boost::range_iterator<Sequence2T>::type string_iterator_type;
             //! The character type of the substring
             typedef typename boost::iterator_value<substring_iterator_type>::type substring_char_type;
             //! The character type of the string
@@ -230,7 +230,7 @@ namespace boost { namespace algorithm {
                 \note If a rvalue reference is passed as the string or substring, and your compiler supports rvalue
                     references, then a move is performed as opposed to a copy.
              */
-            explicit finder_t (const Sequence1T *const substring = 0, const Sequence2T *const string = 0,
+            explicit finder_t (const Sequence1T *const substring = 0, Sequence2T *const string = 0,
                 Comparator comparator = Comparator(), Allocator allocator = Allocator()) 
                 : comparator_(comparator), allocator_(allocator),
                 substring_optional_copy_(), substring_range_(substring?*substring:substring_optional_copy_),
@@ -258,7 +258,7 @@ namespace boost { namespace algorithm {
 
             //! \overload
             template <class Range1T>
-            explicit finder_t (const Range1T &substring, const Sequence2T *const string = 0,
+            explicit finder_t (const Range1T &substring, Sequence2T *const string = 0,
                 Comparator comparator = Comparator(), Allocator allocator = Allocator(),
                 typename boost::disable_if<typename ::boost::algorithm::detail::is_pointer_to<Range1T,Sequence1T> >::type* = 0)
                 : comparator_(comparator), allocator_(allocator),
@@ -294,7 +294,7 @@ namespace boost { namespace algorithm {
             template <class Range2T>
             explicit finder_t (
                 Sequence1T const &&substring,
-                const Sequence2T *const string = 0,
+                Sequence2T *const string = 0,
                 Comparator comparator = Comparator(), Allocator allocator = Allocator()) 
                 : comparator_(comparator), allocator_(allocator),
                 substring_optional_copy_(std::move(substring)), string_optional_copy_(),
@@ -322,7 +322,7 @@ namespace boost { namespace algorithm {
             //! \overload
             finder_t (
                 Sequence1T const &&substring,
-                Sequence2T const &&string,
+                Sequence2T &&string,
                 Comparator comparator = Comparator(), Allocator allocator = Allocator()) 
                 : comparator_(comparator), allocator_(allocator),
                 substring_optional_copy_(std::move(substring)), string_optional_copy_(std::move(string)),
@@ -334,7 +334,7 @@ namespace boost { namespace algorithm {
 
             //! \overload
             finder_t (const Sequence1T *const substring,
-                Sequence2T const &&string,
+                Sequence2T &&string,
                 Comparator comparator = Comparator(), Allocator allocator = Allocator()) 
                 : comparator_(comparator), allocator_(allocator),
                 substring_optional_copy_(), string_optional_copy_(std::move(string)),
@@ -347,7 +347,7 @@ namespace boost { namespace algorithm {
             //! \overload
             template <class Range1T>
             finder_t (const Range1T &substring,
-                Sequence2T const &&string,
+                Sequence2T &&string,
                 Comparator comparator = Comparator(), Allocator allocator = Allocator(),
                 typename boost::disable_if<typename ::boost::algorithm::detail::is_pointer_to<Range1T,Sequence1T> >::type* = 0) 
                 : comparator_(comparator), allocator_(allocator),
@@ -454,7 +454,7 @@ namespace boost { namespace algorithm {
                 string_has_changed_ = true;
             }
             
-            void set_string (Sequence2T const *const string = 0)
+            void set_string (Sequence2T *const string = 0)
             {
                 string_optional_copy_.clear();
                 if (string)
@@ -466,7 +466,7 @@ namespace boost { namespace algorithm {
 
 #           ifdef BOOST_HAS_RVALUE_REFS
             void set_string (
-                Sequence2T const &&string)
+                Sequence2T &&string)
             {
                 string_optional_copy_ = std::move(string);
                 string_range_ = string_optional_copy_;
@@ -482,10 +482,11 @@ namespace boost { namespace algorithm {
                     with the previous Finder concept
                 \todo This should probably only exist to classes that derive from finder_t (such as first_finder_t etc.)
              */
-            template <class IteratorT>
-            boost::iterator_range<IteratorT> operator()(IteratorT const &substring_start, IteratorT const &substring_end)
+            string_range_type operator()(string_iterator_type const &string_start,
+                string_iterator_type const &string_end)
             {
-                
+                set_string( boost::make_iterator_range(string_start, string_end) );
+                return find_first();
             }
             
             //! Performs a search using the chosen algorithm.
