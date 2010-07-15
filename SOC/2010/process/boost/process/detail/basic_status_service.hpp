@@ -49,25 +49,35 @@ class basic_status_service
     : public boost::asio::detail::service_base<StatusImplementation>
 {
 public:
+
+
+    typedef boost::shared_ptr<StatusImplementation> implementation_type;
+
     explicit basic_status_service(boost::asio::io_service &io_service)
         : boost::asio::detail::service_base<StatusImplementation>(io_service),
         run_(true),
         work_thread_(&basic_status_service<StatusImplementation>::work_thread, this)
     {
+#if defined(BOOST_WINDOWS_API)
         handles_.push_back(::CreateEvent(NULL, FALSE, FALSE, NULL));
         if (handles_[0] == NULL)
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreateEvent() failed");
+#endif
     }
 
     ~basic_status_service()
     {
         stop_work_thread();
         work_thread_.join();
+#if defined(BOOST_WINDOWS_API)
         if (!::CloseHandle(handles_[0]))
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CloseHandle() failed");
+#elif defined(BOOST_POSIX_API)
+        if (::close(handles_[0]) == -1)
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("close() failed");
+#endif
     }
 
-    typedef boost::shared_ptr<StatusImplementation> implementation_type;
 
     void construct(implementation_type &impl)
     {
@@ -97,10 +107,13 @@ public:
     template <typename Handler>
     void async_wait(implementation_type &impl, pid_type pid, Handler handler)
     {
+#if defined(BOOST_WINDOWS_API)
         HANDLE handle = ::OpenProcess(SYNCHRONIZE | PROCESS_QUERY_INFORMATION, FALSE, pid);
         if (handle == NULL)
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("OpenProcess() failed");
-
+#elif defined(BOOST_POSIX_API)
+        behavior::stream::native_type handle = pid;
+#endif
         boost::unique_lock<boost::mutex> lock(work_thread_mutex_);
         interrupt_work_thread();
         work_thread_cond_.wait(work_thread_mutex_);
@@ -111,6 +124,7 @@ public:
         work_thread_cond_.notify_all();
     }
 
+
 private:
     void shutdown_service()
     {
@@ -120,6 +134,7 @@ private:
     {
         while (running())
         {
+#if defined(BOOST_WINDOWS_API)
             DWORD res = ::WaitForMultipleObjects(handles_.size(), &handles_[0], FALSE, INFINITE);
             if (res == WAIT_FAILED)
                 BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("WaitForMultipleObjects() failed");
@@ -146,6 +161,9 @@ private:
                 if (handles_.size() == 1)
                     work_.reset();
             }
+#elif defined(BOOST_POSIX_API)
+            //linux here
+#endif
         }
     }
 
@@ -160,8 +178,12 @@ private:
     {
         // By signaling the event in the first slot WaitForMultipleObjects() will return.
         // The work thread won't do anything except checking if it should continue to run.
+#if defined(BOOST_WINDOWS_API)
         if (!::SetEvent(handles_[0]))
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("SetEvent() failed");
+#elif defined(BOOST_POSIX_API)
+            //linux here
+#endif
     }
 
     void stop_work_thread()
@@ -178,7 +200,10 @@ private:
     boost::condition_variable_any work_thread_cond_;
     bool run_;
     boost::thread work_thread_;
-    std::vector<HANDLE> handles_;
+    std::vector<behavior::stream::native_type> handles_;
+
+
+
 };
 
 }
