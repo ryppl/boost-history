@@ -6,8 +6,8 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef BOOST_NUMERIC_BINDINGS_TRAITS_FORTRAN_H
-#define BOOST_NUMERIC_BINDINGS_TRAITS_FORTRAN_H
+#ifndef BOOST_NUMERIC_BINDINGS_DETAIL_CONFIG_FORTRAN_HPP
+#define BOOST_NUMERIC_BINDINGS_DETAIL_CONFIG_FORTRAN_HPP
 
 #if defined(BIND_FORTRAN_LOWERCASE_UNDERSCORE) || defined(BIND_FORTRAN_LOWERCASE)
 // Allow manual override of the defaults, e.g. if you want to use a fortran
@@ -43,9 +43,23 @@
 //#define BIND_FORTRAN_NO_F2C_RETURN_CONVENTIONS
 
 // As long as f2c return conventions are the common case,
-// we turn them on unless requested otherwise
+// we turn them on unless requested otherwise.
 #ifndef BIND_FORTRAN_NO_F2C_RETURN_CONVENTIONS
 #define BIND_FORTRAN_F2C_RETURN_CONVENTIONS
+#endif
+
+
+// "g77" or "gfortran" or mkl_intel_lp64
+//#undef BIND_FORTRAN_INTEGER_8
+// clapack or "gfortran -fdefault-integer-8" or mkl_intel_ilp64
+//#define BIND_FORTRAN_INTEGER_8
+
+// Most fortran compilers use fortran_int_t := int by default, so we follow
+// this default, even so f2c (=clapack) uses "typedef long int integer;"
+#ifndef BIND_FORTRAN_INTEGER_8
+    typedef int fortran_int_t;
+#else
+    typedef std::ptrdiff_t fortran_int_t;
 #endif
 
 #endif // BOOST_NUMERIC_BINDINGS_TRAITS_FORTRAN_H
