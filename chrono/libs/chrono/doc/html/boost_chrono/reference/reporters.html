@@ -83,21 +83,20 @@
           from a Stopwatch and the format and the double precission.
         </p>
 <p>
-          A Stopwatch must meet the requirements in the following Table.
+          A Formatter must meet the requirements in the following Table.
         </p>
 <p>
           In this table <code class="computeroutput"><span class="identifier">F</span></code> denote
-          Fromaters types, <code class="computeroutput"><span class="identifier">S</span></code> is a
-          Stopwatch and <code class="computeroutput"><span class="identifier">s</span></code> is an instance
-          of <code class="computeroutput"><span class="identifier">S</span></code>, <code class="computeroutput"><span class="identifier">f</span></code>
-          is <code class="computeroutput"><span class="keyword">const</span> <span class="keyword">char</span>
-          <span class="special">*</span></code> , <code class="computeroutput"><span class="identifier">p</span></code>
-          is and int, and <code class="computeroutput"><span class="identifier">os</span></code> is a
-          <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span></code>, ec is a system::error_code
+          a Formatter type, <code class="computeroutput"><span class="identifier">S</span></code> is
+          a Stopwatch and <code class="computeroutput"><span class="identifier">s</span></code> is an
+          instance of <code class="computeroutput"><span class="identifier">S</span></code>, <code class="computeroutput"><span class="identifier">f</span></code> is <code class="computeroutput"><span class="keyword">const</span>
+          <span class="keyword">char</span> <span class="special">*</span></code>
+          , <code class="computeroutput"><span class="identifier">p</span></code> is and int, and <code class="computeroutput"><span class="identifier">os</span></code> is a <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span></code>,
+          ec is a system::error_code
         </p>
 <div class="table">
-<a name="boost_chrono.reference.reporters.formatter_req.stopwatch_requirements"></a><p class="title"><b>Table&#160;4.&#160;Stopwatch Requirements</b></p>
-<table class="table" summary="Stopwatch Requirements">
+<a name="boost_chrono.reference.reporters.formatter_req.formatter_requirements"></a><p class="title"><b>Table&#160;4.&#160;Formatter Requirements</b></p>
+<table class="table" summary="Formatter Requirements">
 <colgroup>
 <col>
 <col>
@@ -200,9 +199,12 @@
           Models of <code class="computeroutput"><span class="identifier">Formatter</span></code>:
         </p>
 <div class="itemizedlist"><ul type="disc">
-<li><a href="stopwatch_formatters.html#boost_chrono.reference.stopwatch_formatters.stopwatch_formatter_hpp.template_class__basic_stopwatch_formatter___" target="_top"><code class="computeroutput"><span class="identifier">basic_stopwatch_formatter</span></code></a></li>
-<li><a href="../../boost_chrono.reference.stopwatch_formatters.stopwatch_accumulator_formatter_hpp.template_class__basic_stopwatch_accumulator_formatter___" target="_top"><code class="computeroutput"><span class="identifier">basic_stopwatch_accumulator_formatter</span></code></a></li>
-<li><a href="../../boost_chrono.reference.stopwatch_formatters.t24_hours_formatter_hpp.template_class__basic_24_hours_formatter___" target="_top"><code class="computeroutput"><span class="identifier">basic_24_hours_formatter</span></code></a></li>
+<li><a href="formatters.html#boost_chrono.reference.formatters.stopwatch_formatter_hpp.basic_stopwatch_formatter" title="
+          Template Class basic_stopwatch_formatter&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_accumulator_formatter</span></code></a></li>
+<li><a href="formatters.html#boost_chrono.reference.formatters.stopwatch_accumulator_formatter_hpp.basic_stopwatch_accumulator_formatter" title="
+          Template Class basic_stopwatch_accumulator_formatter&lt;&gt;"><code class="computeroutput"><span class="identifier">stopwatch_accumulator_formatter</span></code></a></li>
+<li><a href="formatters.html#boost_chrono.reference.formatters.t24_hours_formatter_hpp.basic_24_hours_formatter" title="
+          Template Class basic_24_hours_formatter&lt;&gt;"><code class="computeroutput"><span class="identifier">basic_24_hours_formatter</span></code></a></li>
 </ul></div>
 </div>
 <div class="section" lang="en">
@@ -1018,7 +1020,7 @@
 <span class="special">}</span>
 </pre>
 <a name="boost_chrono.reference.reporters.scoped_stopclock_hpp.scoped_stopclock.synopsis"></a><h6>
-<a name="id4929940"></a>
+<a name="id4930555"></a>
             <a href="reporters.html#boost_chrono.reference.reporters.scoped_stopclock_hpp.scoped_stopclock.synopsis">Synopsis</a>
           </h6>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">=</span><span class="identifier">process_cpu_clock</span>

@@ -33,20 +33,38 @@
           Template Class <code class="computeroutput"><span class="identifier">basic_stopwatch_formatter</span><span class="special">&lt;&gt;</span></code></a></span></dt></dl></dd>
 <dt><span class="section"><a href="formatters.html#boost_chrono.reference.formatters.stopwatch_accumulator_formatter_hpp">
         Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">stopwatch_accumulator_formatter</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
-<dd><dl><dt><span class="section"><a href="formatters.html#boost_chrono.reference.formatters.stopwatch_accumulator_formatter_hpp.basic_stopwatch_accumulator_formatter">
-          Template Class <code class="computeroutput"><span class="identifier">basic_stopwatch_accumulator_formatter</span><span class="special">&lt;&gt;</span></code></a></span></dt></dl></dd>
+<dd><dl>
+<dt><span class="section"><a href="formatters.html#boost_chrono.reference.formatters.stopwatch_accumulator_formatter_hpp.basic_stopwatch_accumulator_formatter">
+          Template Class <code class="computeroutput"><span class="identifier">basic_stopwatch_accumulator_formatter</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="formatters.html#boost_chrono.reference.formatters.stopwatch_accumulator_formatter_hpp.typedefs">
+          <code class="computeroutput"><span class="identifier">basic_stopwatch_accumulator_formatter</span></code>
+          useful typedefs</a></span></dt>
+</dl></dd>
 <dt><span class="section"><a href="formatters.html#boost_chrono.reference.formatters.time_formatter_hpp">
         Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">time_formatter</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
-<dd><dl><dt><span class="section"><a href="formatters.html#boost_chrono.reference.formatters.time_formatter_hpp.basic_time_formatter">
-          Template Class <code class="computeroutput"><span class="identifier">basic_time_formatter</span><span class="special">&lt;&gt;</span></code></a></span></dt></dl></dd>
+<dd><dl>
+<dt><span class="section"><a href="formatters.html#boost_chrono.reference.formatters.time_formatter_hpp.basic_time_formatter">
+          Template Class <code class="computeroutput"><span class="identifier">basic_time_formatter</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="formatters.html#boost_chrono.reference.formatters.time_formatter_hpp.typedefs">
+          <code class="computeroutput"><span class="identifier">basic_time_formatter</span></code> useful
+          typedefs</a></span></dt>
+<dt><span class="section"><a href="formatters.html#boost_chrono.reference.formatters.time_formatter_hpp.spec">
+          <code class="computeroutput"><span class="identifier">stopwatch_reporter_default_formatter</span></code>
+          Specialization</a></span></dt>
+</dl></dd>
 <dt><span class="section"><a href="formatters.html#boost_chrono.reference.formatters.t24_hours_hpp"> Header
         <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">t24_hours</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
 <dd><dl><dt><span class="section"><a href="formatters.html#boost_chrono.reference.formatters.t24_hours_hpp.t24_hours">
           Class <code class="computeroutput"><span class="identifier">t24_hours</span></code></a></span></dt></dl></dd>
 <dt><span class="section"><a href="formatters.html#boost_chrono.reference.formatters.t24_hours_formatter_hpp">
         Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">t24_hours_formatter</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
-<dd><dl><dt><span class="section"><a href="formatters.html#boost_chrono.reference.formatters.t24_hours_formatter_hpp.basic_24_hours_formatter">
-          Template Class <code class="computeroutput"><span class="identifier">basic_24_hours_formatter</span><span class="special">&lt;&gt;</span></code></a></span></dt></dl></dd>
+<dd><dl>
+<dt><span class="section"><a href="formatters.html#boost_chrono.reference.formatters.t24_hours_formatter_hpp.basic_24_hours_formatter">
+          Template Class <code class="computeroutput"><span class="identifier">basic_24_hours_formatter</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="formatters.html#boost_chrono.reference.formatters.t24_hours_formatter_hpp.typedefs">
+          <code class="computeroutput"><span class="identifier">basic_24_hours_formatter</span></code>
+          useful typedefs</a></span></dt>
+</dl></dd>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
@@ -76,7 +94,7 @@
 </h5></div></div></div>
 <p>
             <code class="computeroutput"><span class="identifier">stopwatch_formatter</span></code> is
-            a model of <code class="computeroutput"><span class="identifier">Formatter</span></code>.
+            a model of <a href="reporters.html#boost_chrono.reference.reporters.formatter_req" title=" Formatter Requirements"><code class="computeroutput"><span class="identifier">Formatter</span></code></a>.
           </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span>
     <span class="keyword">typename</span> <span class="identifier">CharT</span><span class="special">=</span><span class="keyword">char</span><span class="special">,</span>
@@ -118,16 +136,21 @@
         Header &lt;boost/chrono/stopwatch_accumulator_formatter.hpp&gt;">
         Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">stopwatch_accumulator_formatter</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
 </h4></div></div></div>
-<div class="toc"><dl><dt><span class="section"><a href="formatters.html#boost_chrono.reference.formatters.stopwatch_accumulator_formatter_hpp.basic_stopwatch_accumulator_formatter">
-          Template Class <code class="computeroutput"><span class="identifier">basic_stopwatch_accumulator_formatter</span><span class="special">&lt;&gt;</span></code></a></span></dt></dl></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="formatters.html#boost_chrono.reference.formatters.stopwatch_accumulator_formatter_hpp.basic_stopwatch_accumulator_formatter">
+          Template Class <code class="computeroutput"><span class="identifier">basic_stopwatch_accumulator_formatter</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="formatters.html#boost_chrono.reference.formatters.stopwatch_accumulator_formatter_hpp.typedefs">
+          <code class="computeroutput"><span class="identifier">basic_stopwatch_accumulator_formatter</span></code>
+          useful typedefs</a></span></dt>
+</dl></div>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">chrono</span>  <span class="special">{</span>
     <span class="keyword">template</span> <span class="special">&lt;</span>
         <span class="keyword">typename</span> <span class="identifier">CharT</span><span class="special">=</span><span class="keyword">char</span><span class="special">,</span>
         <span class="keyword">typename</span> <span class="identifier">Traits</span><span class="special">=</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">char_traits</span><span class="special">&lt;</span><span class="identifier">CharT</span><span class="special">&gt;,</span>
         <span class="keyword">class</span> <span class="identifier">Alloc</span><span class="special">=</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">allocator</span><span class="special">&lt;</span><span class="identifier">CharT</span><span class="special">&gt;</span>
     <span class="special">&gt;</span> <span class="identifier">basic_stopwatch_accumulator_formatter</span><span class="special">;</span>
-    <span class="keyword">typedef</span> <span class="identifier">basic_stopwatch_formatter</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;</span> <span class="identifier">stopwatch_formatter</span><span class="special">;</span>
-    <span class="keyword">typedef</span> <span class="identifier">basic_stopwatch_formatter</span><span class="special">&lt;</span><span class="keyword">wchar_t</span><span class="special">&gt;</span> <span class="identifier">wstopwatch_formatter</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">basic_stopwatch_accumulator_formatter</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;</span> <span class="identifier">stopwatch_accumulator_formatter</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">basic_stopwatch_accumulator_formatter</span><span class="special">&lt;</span><span class="keyword">wchar_t</span><span class="special">&gt;</span> <span class="identifier">wstopwatch_accumulator_formatter</span><span class="special">;</span>
 <span class="special">}}</span>
 </pre>
 <div class="section" lang="en">
@@ -137,8 +160,8 @@
           Template Class <code class="computeroutput"><span class="identifier">basic_stopwatch_accumulator_formatter</span><span class="special">&lt;&gt;</span></code></a>
 </h5></div></div></div>
 <p>
-            <code class="computeroutput"><span class="identifier">stopwatch_accumulator_formatter</span></code>
-            is a model of <code class="computeroutput"><span class="identifier">Formatter</span></code>
+            <code class="computeroutput"><span class="identifier">basic_stopwatch_accumulator_formatter</span></code>
+            is a model of <a href="reporters.html#boost_chrono.reference.reporters.formatter_req" title=" Formatter Requirements"><code class="computeroutput"><span class="identifier">Formatter</span></code></a>
           </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span>
     <span class="keyword">typename</span> <span class="identifier">CharT</span><span class="special">=</span><span class="keyword">char</span><span class="special">,</span>
@@ -205,6 +228,18 @@
             d'Unites Std.
           </p>
 </div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.reference.formatters.stopwatch_accumulator_formatter_hpp.typedefs"></a><a href="formatters.html#boost_chrono.reference.formatters.stopwatch_accumulator_formatter_hpp.typedefs" title="
+          basic_stopwatch_accumulator_formatter
+          useful typedefs">
+          <code class="computeroutput"><span class="identifier">basic_stopwatch_accumulator_formatter</span></code>
+          useful typedefs</a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">basic_stopwatch_accumulator_formatter</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;</span> <span class="identifier">stopwatch_accumulator_formatter</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">basic_stopwatch_accumulator_formatter</span><span class="special">&lt;</span><span class="keyword">wchar_t</span><span class="special">&gt;</span> <span class="identifier">wstopwatch_accumulator_formatter</span><span class="special">;</span>
+</pre>
+</div>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
@@ -212,8 +247,16 @@
         Header &lt;boost/chrono/time_formatter.hpp&gt;">
         Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">time_formatter</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
 </h4></div></div></div>
-<div class="toc"><dl><dt><span class="section"><a href="formatters.html#boost_chrono.reference.formatters.time_formatter_hpp.basic_time_formatter">
-          Template Class <code class="computeroutput"><span class="identifier">basic_time_formatter</span><span class="special">&lt;&gt;</span></code></a></span></dt></dl></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="formatters.html#boost_chrono.reference.formatters.time_formatter_hpp.basic_time_formatter">
+          Template Class <code class="computeroutput"><span class="identifier">basic_time_formatter</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="formatters.html#boost_chrono.reference.formatters.time_formatter_hpp.typedefs">
+          <code class="computeroutput"><span class="identifier">basic_time_formatter</span></code> useful
+          typedefs</a></span></dt>
+<dt><span class="section"><a href="formatters.html#boost_chrono.reference.formatters.time_formatter_hpp.spec">
+          <code class="computeroutput"><span class="identifier">stopwatch_reporter_default_formatter</span></code>
+          Specialization</a></span></dt>
+</dl></div>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">chrono</span> <span class="special">{</span>
 
     <span class="keyword">template</span> <span class="special">&lt;</span>
@@ -239,6 +282,10 @@
           Template Class basic_time_formatter&lt;&gt;">
           Template Class <code class="computeroutput"><span class="identifier">basic_time_formatter</span><span class="special">&lt;&gt;</span></code></a>
 </h5></div></div></div>
+<p>
+            <code class="computeroutput"><span class="identifier">basic_time_formatter</span></code>
+            is a model of <a href="reporters.html#boost_chrono.reference.reporters.formatter_req" title=" Formatter Requirements"><code class="computeroutput"><span class="identifier">Formatter</span></code></a>.
+          </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">CharT</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Alloc</span><span class="special">&gt;</span>
 <span class="keyword">class</span> <span class="identifier">basic_time_formatter</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
@@ -289,6 +336,32 @@
             System International d'Unites Std.
           </p>
 </div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.reference.formatters.time_formatter_hpp.typedefs"></a><a href="formatters.html#boost_chrono.reference.formatters.time_formatter_hpp.typedefs" title="
+          basic_time_formatter useful
+          typedefs">
+          <code class="computeroutput"><span class="identifier">basic_time_formatter</span></code> useful
+          typedefs</a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">basic_time_formatter</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;</span> <span class="identifier">time_formatter</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">basic_time_formatter</span><span class="special">&lt;</span><span class="keyword">wchar_t</span><span class="special">&gt;</span> <span class="identifier">wtime_formatter</span><span class="special">;</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.reference.formatters.time_formatter_hpp.spec"></a><a href="formatters.html#boost_chrono.reference.formatters.time_formatter_hpp.spec" title="
+          stopwatch_reporter_default_formatter
+          Specialization">
+          <code class="computeroutput"><span class="identifier">stopwatch_reporter_default_formatter</span></code>
+          Specialization</a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">stopwatch_reporter_default_formatter</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">process_cpu_clock</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">time_formatter</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
@@ -308,6 +381,12 @@
           Class t24_hours">
           Class <code class="computeroutput"><span class="identifier">t24_hours</span></code></a>
 </h5></div></div></div>
+<p>
+            <code class="computeroutput"><span class="identifier">t24_hours</span></code> helper class
+            decompose a duration in days, hours, minutes, seconds and nanoseconds.
+            It can be used through its static functions or creating an instance and
+            using its fields.
+          </p>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">t24_hours</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">int_least32_t</span><span class="special">,</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.ratio_hpp.ratio" title=" Class
@@ -316,6 +395,21 @@
     <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">minutes</span> <span class="identifier">minutes</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">seconds</span> <span class="identifier">seconds</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">nanoseconds</span> <span class="identifier">nanoseconds</span><span class="special">;</span>
+    
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">&gt;</span>
+    <span class="keyword">static</span> <span class="identifier">days</span> <span class="identifier">get_days</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;&amp;</span> <span class="identifier">d</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">&gt;</span>
+    <span class="keyword">static</span> <span class="identifier">hours</span> <span class="identifier">get_hours</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;&amp;</span> <span class="identifier">d</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">&gt;</span>
+    <span class="keyword">static</span> <span class="identifier">minutes</span> <span class="identifier">get_minutes</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;&amp;</span> <span class="identifier">d</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">&gt;</span>
+    <span class="keyword">static</span> <span class="identifier">seconds</span> <span class="identifier">get_seconds</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;&amp;</span> <span class="identifier">d</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">&gt;</span>
+    <span class="keyword">static</span> <span class="identifier">nanoseconds</span> <span class="identifier">get_nanoseconds</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;&amp;</span> <span class="identifier">d</span><span class="special">);</span>
 
     <span class="identifier">days</span> <span class="identifier">days_</span><span class="special">;</span>
     <span class="identifier">hours</span> <span class="identifier">hours_</span><span class="special">;</span>
@@ -335,8 +429,13 @@
         Header &lt;boost/chrono/t24_hours_formatter.hpp&gt;">
         Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">t24_hours_formatter</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
 </h4></div></div></div>
-<div class="toc"><dl><dt><span class="section"><a href="formatters.html#boost_chrono.reference.formatters.t24_hours_formatter_hpp.basic_24_hours_formatter">
-          Template Class <code class="computeroutput"><span class="identifier">basic_24_hours_formatter</span><span class="special">&lt;&gt;</span></code></a></span></dt></dl></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="formatters.html#boost_chrono.reference.formatters.t24_hours_formatter_hpp.basic_24_hours_formatter">
+          Template Class <code class="computeroutput"><span class="identifier">basic_24_hours_formatter</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="formatters.html#boost_chrono.reference.formatters.t24_hours_formatter_hpp.typedefs">
+          <code class="computeroutput"><span class="identifier">basic_24_hours_formatter</span></code>
+          useful typedefs</a></span></dt>
+</dl></div>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">chrono</span> <span class="special">{</span>
 
     <span class="keyword">template</span> <span class="special">&lt;</span>
@@ -357,6 +456,10 @@
           Template Class basic_24_hours_formatter&lt;&gt;">
           Template Class <code class="computeroutput"><span class="identifier">basic_24_hours_formatter</span><span class="special">&lt;&gt;</span></code></a>
 </h5></div></div></div>
+<p>
+            <code class="computeroutput"><span class="identifier">basic_24_hours_formatter</span></code>
+            is a model of <a href="reporters.html#boost_chrono.reference.reporters.formatter_req" title=" Formatter Requirements"><code class="computeroutput"><span class="identifier">Formatter</span></code></a>.
+          </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">CharT</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Alloc</span><span class="special">&gt;</span>
 <span class="keyword">class</span> <span class="identifier">basic_24_hours_formatter</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
@@ -398,6 +501,18 @@
               : nanoseconds
             </li>
 </ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.reference.formatters.t24_hours_formatter_hpp.typedefs"></a><a href="formatters.html#boost_chrono.reference.formatters.t24_hours_formatter_hpp.typedefs" title="
+          basic_24_hours_formatter
+          useful typedefs">
+          <code class="computeroutput"><span class="identifier">basic_24_hours_formatter</span></code>
+          useful typedefs</a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">basic_24_hours_formatter</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;</span> <span class="identifier">t24_hours_formatter</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">basic_24_hours_formatter</span><span class="special">&lt;</span><span class="keyword">wchar_t</span><span class="special">&gt;</span> <span class="identifier">wt24_hours_formatter</span><span class="special">;</span>
+</pre>
 </div>
 </div>
 </div>

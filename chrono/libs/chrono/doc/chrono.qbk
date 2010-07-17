@@ -169,6 +169,7 @@
 
 [def __stopwatch_accumulator__ [link boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator `stopwatch_accumulator`]]
 
+
 [def __stopwatch_reporter__ [link boost_chrono.reference.reporters.stopwatch_reporter_hpp.stopwatch_reporter `stopwatch_reporter`]]
 
 [def __stopclock_accumulator__ [link boost_chrono.reference.reporters.stopclock_accumulator_hpp.stopclock_accumulator `stopclock_accumulator`]]
@@ -194,6 +195,13 @@
 [def __thread_clock__ [link boost_chrono.reference.other_clocks.thread_clock_hpp.thread_clock `thread_clock`]]
 [def __suspendible_clock__ [link boost_chrono.reference.other_clocks.suspendible_clock_hpp.suspendible_clock `suspendible_clock`]]
 
+[def __stopwatch_accumulator_formatter__ [link boost_chrono.reference.formatters.stopwatch_accumulator_formatter_hpp.basic_stopwatch_accumulator_formatter `stopwatch_accumulator_formatter`]]
+
+[def __basic_stopwatch_formatter__ [link boost_chrono.reference.formatters.stopwatch_formatter_hpp.basic_stopwatch_formatter `stopwatch_accumulator_formatter`]]
+
+[def __basic_stopwatch_accumulator_formatter__ [link boost_chrono.reference.formatters.stopwatch_accumulator_formatter_hpp.basic_stopwatch_accumulator_formatter `stopwatch_accumulator_formatter`]]
+
+[def __basic_24_hours_formatter__ [link boost_chrono.reference.formatters.t24_hours_formatter_hpp.basic_24_hours_formatter `basic_24_hours_formatter`]]
 
 
 
@@ -1169,7 +1177,7 @@ Now you can mix fcntion and line reports as follows
 
 [section Can I use an stopclock accumulator which is not static?]
 
-The typical example of stopclock_accumulator is to get statistical measures of the time a function takes for each one of its calls. You an also use __stopclock_accumulator__ to get statistical measures of the time a given loop takes for each one of its laps.
+The typical example of stopclock_accumulator is to get statistical measures of the time a function takes for each one of its calls. You can also use __stopclock_accumulator__ to get statistical measures of the time a given loop takes for each one of its laps.
 
         __stopclock_accumulator__<> acc(
             std::string(__FILE__) + "[" + BOOST_STRINGIZE(__LINE__) + "] "
@@ -3928,7 +3936,7 @@ __thread_clock__ class provides access to the real thread wall-clock, i.e. the r
 
 
 
-[section:suspendible_clock_req `SuspendibleClock` requirements]
+[section:suspendible_clock_req `SuspendibleClock` Requirements]
 
 A `SuspendibleClock` is a Clock that in addition supports `suspend`/`resume` operations.
 
@@ -4105,7 +4113,7 @@ This file include all the stopwatches related files
 
 [section:stopwatch_req `Stopwatch` Requirements]
 
-A Stopwatch measure the amount of time elapsed from a particular time when activated to when it is deactivated, or the accumulation of them.
+A Stopwatch measure the amount of time elapsed from a start point in time to the stop point time or the accumulation of them.
 
 A Stopwatch must meet the requirements in the following Table.
 
@@ -4113,14 +4121,18 @@ In this table `S`, `S1` and `S2` denote stopwatches types. `s` is an instance of
 
 [table Stopwatch Requirements
     [[expression]        [return type]  [operational semantics]]
-    [[`S::clock`]        [A model of the Clock concept.]  [The clock associated to this Stopwatch.]]
+    [[`S::clock`]        [A model of __Clock__.]  [The clock associated to this Stopwatch.]]
     [[`S::duration`]        [`S::clock::duration`]  [The __duration__ type of the `clock`.]]
     [[`S::time_point`]        [`S::clock::time_point`]  [The __time_point__ type of the `clock`.]]
+    [[`S::scoped_run`]        [`stopwatch_runner<stopwatch<Clock> >`]  [RAI which `start`/`stop` the `stopwatch`.]]
+    [[`S::scoped_suspend`]        [`stopwatch_suspender<stopwatch<Clock> >`]  [RAI which `suspend`/`resume` the `stopwatch`.]]
+    [[`S::scoped_resume`]        [`stopwatch_resumer<stopwatch<Clock> >`]  [RAI which `resume`/`suspend` the `stopwatch`.]]
+    [[`S::reporter`]        [`stopwatch_reporter<stopwatch<Clock> >`]  [RAI which reports the elapsed time on destruction.]]
     [[`s.start()`]        [`S::time_point`]  [starts a Stopwatch.]]
     [[`s.restart()`]        [`std::pair<S::duration,S::time_point>`]  [restarts a Stopwatch.]]
     [[`s.stop()`]        [`S::duration`]  [stops a Stopwatch.]]
-    [[`s.resume()`]        [`S::time_point`]  [starts a Stopwatch.]]
-    [[`s.suspend()`]        [`S::duration`]  [stops a Stopwatch.]]
+    [[`s.resume()`]        [`S::time_point`]  [resule a Stopwatch.]]
+    [[`s.suspend()`]        [`S::duration`]  [suspends a Stopwatch.]]
     [[`s.elapsed()`]        [`S::duration`]  [the elapsed time while the Stopwatch was running.]]
 ]
 
@@ -4172,11 +4184,11 @@ In this table `S`, `S1` and `S2` denote stopwatches types. `s` is an instance of
 
     time_point restart( system::error_code & ec = system::throws );
 
-[*Effect:] Stop/Start the stopwatch.
+[*Effect:] `stop`/`start` the stopwatch.
 
 [*Returns:] the starting time point.
 
-[*Throw:] Any exception the Clock::now function can throw.
+[*Throw:] Any exception the `Clock::now()` function can throw.
 
 [endsect]
 
@@ -4216,6 +4228,13 @@ Models of `Stopwatch`:
         typedef <see above> process_user_cpu_stopwatch;
         typedef <see above> process_system_cpu_stopwatch;
     }}
+
+[section:dont_start_t Class `dont_start_t`]
+
+        struct dont_start_t;
+        static const dont_start_t dont_start;
+
+[endsect]
 
 [section:stopwatch Template Class `stopwatch<>`]
 
@@ -4456,9 +4475,9 @@ A `stopwatch_accumulator<>` is a model of a __stopwatch_concept__ that allows to
 [/==================================================]
 
     namespace boost { namespace chrono  {
-        template <class Clock> class stopwatch_runner;
-        template <class Clock> class stopwatch_suspender;
-        template <class Clock> class stopwatch_resumer;
+        template <class Stopwatch> class stopwatch_runner;
+        template <class Stopwatch> class stopwatch_suspender;
+        template <class Stopwatch> class stopwatch_resumer;
     }}
 
 Boost.Chrono provides some helper classes ensuring pairwised operations (start/stop, suspend/resume, resule/suspend).
@@ -4561,11 +4580,11 @@ Usage
 
 A Formatter outputs on a given ostream a formatted string combining informations from a Stopwatch and the format and the double precission.
 
-A Stopwatch must meet the requirements in the following Table.
+A Formatter must meet the requirements in the following Table.
 
-In this table `F`  denote Fromaters types, `S` is a Stopwatch and `s` is an instance of `S`, `f` is `const char *` , `p` is and int, and `os` is a `std::ostream`, ec is a system::error_code
+In this table `F`  denote a Formatter type, `S` is a Stopwatch and `s` is an instance of `S`, `f` is `const char *` , `p` is and int, and `os` is a `std::ostream`, ec is a system::error_code
 
-[table Stopwatch Requirements
+[table Formatter Requirements
     [[expression]        [return type]  [operational semantics]]
     [[`F::default_os()`]        [std::otream&]  [The output stream.]]
     [[`F::default_places()`]        [`std::size_t`]  [The precission when displaying a double.]]
@@ -4576,9 +4595,9 @@ In this table `F`  denote Fromaters types, `S` is a Stopwatch and `s` is an inst
 
 Models of `Formatter`:
 
-* [@boost_chrono/reference/stopwatch_formatters.html#boost_chrono.reference.stopwatch_formatters.stopwatch_formatter_hpp.template_class__basic_stopwatch_formatter___  `basic_stopwatch_formatter`]
-* [@boost_chrono.reference.stopwatch_formatters.stopwatch_accumulator_formatter_hpp.template_class__basic_stopwatch_accumulator_formatter___ `basic_stopwatch_accumulator_formatter`]
-* [@boost_chrono.reference.stopwatch_formatters.t24_hours_formatter_hpp.template_class__basic_24_hours_formatter___ `basic_24_hours_formatter`]
+* __basic_stopwatch_formatter__
+* __basic_stopwatch_accumulator_formatter__
+* __basic_24_hours_formatter__
 
 [endsect]
 
@@ -5307,7 +5326,7 @@ A typical ussage of this class is
 
 [section:basic_stopwatch_formatter Template Class `basic_stopwatch_formatter<>`]
 
-`stopwatch_formatter` is a model of `Formatter`.
+`stopwatch_formatter` is a model of __Formatter__.
 
     template <
         typename CharT=char,
@@ -5348,13 +5367,13 @@ The time is given using the suffix "s" following the System International d'Unit
             typename Traits=std::char_traits<CharT>,
             class Alloc=std::allocator<CharT>
         > basic_stopwatch_accumulator_formatter;
-        typedef basic_stopwatch_formatter<char> stopwatch_formatter;
-        typedef basic_stopwatch_formatter<wchar_t> wstopwatch_formatter;
+        typedef basic_stopwatch_accumulator_formatter<char> stopwatch_accumulator_formatter;
+        typedef basic_stopwatch_accumulator_formatter<wchar_t> wstopwatch_accumulator_formatter;
     }}
 
 [section:basic_stopwatch_accumulator_formatter Template Class `basic_stopwatch_accumulator_formatter<>`]
 
-`stopwatch_accumulator_formatter` is a model of `Formatter`
+`basic_stopwatch_accumulator_formatter` is a model of __Formatter__
 
     template <
         typename CharT=char,
@@ -5390,12 +5409,17 @@ The time is given using the suffix "s", the frequency is given using the suffix 
 
 [endsect]
 
-[endsect]
+[section:typedefs `basic_stopwatch_accumulator_formatter` useful typedefs]
 
+        typedef basic_stopwatch_accumulator_formatter<char> stopwatch_accumulator_formatter;
+        typedef basic_stopwatch_accumulator_formatter<wchar_t> wstopwatch_accumulator_formatter;
+
+
+[endsect]
+[endsect]
 [/==================================================================]
 [section:time_formatter_hpp Header `<boost/chrono/time_formatter.hpp>`]
 [/==================================================================]
-
 
     namespace boost { namespace chrono {
 
@@ -5417,6 +5441,8 @@ The time is given using the suffix "s", the frequency is given using the suffix 
     } }
 
 [section:basic_time_formatter Template Class `basic_time_formatter<>`]
+
+`basic_time_formatter` is a model of __Formatter__.
 
     template <typename CharT, typename Traits, class Alloc>
     class basic_time_formatter {
@@ -5448,6 +5474,23 @@ All the units are given using the suffix "s" following the System International 
 
 [endsect]
 
+[section:typedefs `basic_time_formatter` useful typedefs]
+
+        typedef basic_time_formatter<char> time_formatter;
+        typedef basic_time_formatter<wchar_t> wtime_formatter;
+
+[endsect]
+
+[section:spec `stopwatch_reporter_default_formatter` Specialization]
+
+        template <>
+        struct stopwatch_reporter_default_formatter<stopwatch<process_cpu_clock> > {
+            typedef time_formatter type;
+        };
+
+[endsect]
+
+
 [endsect]
 
 [/==================================================]
@@ -5460,6 +5503,8 @@ All the units are given using the suffix "s" following the System International 
 
 [section:t24_hours Class `t24_hours`]
 
+`t24_hours` helper class decompose a duration in days, hours, minutes, seconds and nanoseconds. It can be used through its static functions or creating an instance and using its fields.
+
     class t24_hours {
     public:
         typedef boost::chrono::duration<boost::int_least32_t, __ratio__<24*3600> > days;
@@ -5467,6 +5512,21 @@ All the units are given using the suffix "s" following the System International 
         typedef boost::chrono::minutes minutes;
         typedef boost::chrono::seconds seconds;
         typedef boost::chrono::nanoseconds nanoseconds;
+        
+        template <class Rep, class Period>
+        static days get_days(const boost::chrono::duration<Rep, Period>& d);
+
+        template <class Rep, class Period>
+        static hours get_hours(const boost::chrono::duration<Rep, Period>& d);
+
+        template <class Rep, class Period>
+        static minutes get_minutes(const boost::chrono::duration<Rep, Period>& d);
+
+        template <class Rep, class Period>
+        static seconds get_seconds(const boost::chrono::duration<Rep, Period>& d);
+
+        template <class Rep, class Period>
+        static nanoseconds get_nanoseconds(const boost::chrono::duration<Rep, Period>& d);
 
         days days_;
         hours hours_;
@@ -5502,6 +5562,8 @@ All the units are given using the suffix "s" following the System International 
 
 [section:basic_24_hours_formatter Template Class `basic_24_hours_formatter<>`]
 
+`basic_24_hours_formatter` is a model of __Formatter__.
+
     template <typename CharT, typename Traits, class Alloc>
     class basic_24_hours_formatter {
     public:
@@ -5524,6 +5586,13 @@ The default format is "%d days(s) %h:%m:%s.%n\\n", where
 * `%m` : minutes
 * `%s` : seconds
 * `%n` : nanoseconds
+
+[endsect]
+
+[section:typedefs `basic_24_hours_formatter` useful typedefs]
+
+        typedef basic_24_hours_formatter<char> t24_hours_formatter;
+        typedef basic_24_hours_formatter<wchar_t> wt24_hours_formatter;
 
 [endsect]
 

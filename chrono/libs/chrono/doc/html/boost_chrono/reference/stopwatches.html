@@ -48,6 +48,8 @@
 <dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp">
         Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">stopwatch</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
 <dd><dl>
+<dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.dont_start_t">
+          Class <code class="computeroutput"><span class="identifier">dont_start_t</span></code></a></span></dt>
 <dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch">
           Template Class <code class="computeroutput"><span class="identifier">stopwatch</span><span class="special">&lt;&gt;</span></code></a></span></dt>
 <dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch_typedefs">
@@ -128,8 +130,8 @@
           Member Function <code class="computeroutput"><span class="identifier">restart</span><span class="special">()</span></code></a></span></dt>
 </dl></div>
 <p>
-          A Stopwatch measure the amount of time elapsed from a particular time when
-          activated to when it is deactivated, or the accumulation of them.
+          A Stopwatch measure the amount of time elapsed from a start point in time
+          to the stop point time or the accumulation of them.
         </p>
 <p>
           A Stopwatch must meet the requirements in the following Table.
@@ -173,7 +175,8 @@
                 </td>
 <td>
                   <p>
-                    A model of the Clock concept.
+                    A model of <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.clock" title="
+          Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code></a>.
                   </p>
                 </td>
 <td>
@@ -217,6 +220,74 @@
                     The <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.time_point" title="
           Class template time_point&lt;&gt;"><code class="computeroutput"><span class="identifier">time_point</span></code></a> type of the
                     <code class="computeroutput"><span class="identifier">clock</span></code>.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">S</span><span class="special">::</span><span class="identifier">scoped_run</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">stopwatch_runner</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span> <span class="special">&gt;</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    RAI which <code class="computeroutput"><span class="identifier">start</span></code>/<code class="computeroutput"><span class="identifier">stop</span></code> the <code class="computeroutput"><span class="identifier">stopwatch</span></code>.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">S</span><span class="special">::</span><span class="identifier">scoped_suspend</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">stopwatch_suspender</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span> <span class="special">&gt;</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    RAI which <code class="computeroutput"><span class="identifier">suspend</span></code>/<code class="computeroutput"><span class="identifier">resume</span></code> the <code class="computeroutput"><span class="identifier">stopwatch</span></code>.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">S</span><span class="special">::</span><span class="identifier">scoped_resume</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">stopwatch_resumer</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span> <span class="special">&gt;</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    RAI which <code class="computeroutput"><span class="identifier">resume</span></code>/<code class="computeroutput"><span class="identifier">suspend</span></code> the <code class="computeroutput"><span class="identifier">stopwatch</span></code>.
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">S</span><span class="special">::</span><span class="identifier">reporter</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">stopwatch_reporter</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span> <span class="special">&gt;</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    RAI which reports the elapsed time on destruction.
                   </p>
                 </td>
 </tr>
@@ -284,7 +355,7 @@
                 </td>
 <td>
                   <p>
-                    starts a Stopwatch.
+                    resule a Stopwatch.
                   </p>
                 </td>
 </tr>
@@ -301,7 +372,7 @@
                 </td>
 <td>
                   <p>
-                    stops a Stopwatch.
+                    suspends a Stopwatch.
                   </p>
                 </td>
 </tr>
@@ -407,13 +478,13 @@
 <pre class="programlisting"><span class="identifier">time_point</span> <span class="identifier">restart</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
 </pre>
 <p>
-            <span class="bold"><strong>Effect:</strong></span> Stop/Start the stopwatch.
+            <span class="bold"><strong>Effect:</strong></span> <code class="computeroutput"><span class="identifier">stop</span></code>/<code class="computeroutput"><span class="identifier">start</span></code> the stopwatch.
           </p>
 <p>
             <span class="bold"><strong>Returns:</strong></span> the starting time point.
           </p>
 <p>
-            <span class="bold"><strong>Throw:</strong></span> Any exception the Clock::now
+            <span class="bold"><strong>Throw:</strong></span> Any exception the <code class="computeroutput"><span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span></code>
             function can throw.
           </p>
 </div>
@@ -434,6 +505,8 @@
         Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">stopwatch</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
 </h4></div></div></div>
 <div class="toc"><dl>
+<dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.dont_start_t">
+          Class <code class="computeroutput"><span class="identifier">dont_start_t</span></code></a></span></dt>
 <dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch">
           Template Class <code class="computeroutput"><span class="identifier">stopwatch</span><span class="special">&lt;&gt;</span></code></a></span></dt>
 <dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch_typedefs">
@@ -465,6 +538,16 @@
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">above</span><span class="special">&gt;</span> <span class="identifier">process_system_cpu_stopwatch</span><span class="special">;</span>
 <span class="special">}}</span>
 </pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.reference.stopwatches.stopwatch_hpp.dont_start_t"></a><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.dont_start_t" title="
+          Class dont_start_t">
+          Class <code class="computeroutput"><span class="identifier">dont_start_t</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">dont_start_t</span><span class="special">;</span>
+<span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">dont_start_t</span> <span class="identifier">dont_start</span><span class="special">;</span>
+</pre>
+</div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h5 class="title">
 <a name="boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch"></a><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch" title="
@@ -849,9 +932,9 @@
           Template Class <code class="computeroutput"><span class="identifier">stopwatch_resumer</span><span class="special">&lt;&gt;</span></code></a></span></dt>
 </dl></div>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">chrono</span>  <span class="special">{</span>
-    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">stopwatch_runner</span><span class="special">;</span>
-    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">stopwatch_suspender</span><span class="special">;</span>
-    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">stopwatch_resumer</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Stopwatch</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">stopwatch_runner</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Stopwatch</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">stopwatch_suspender</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Stopwatch</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">stopwatch_resumer</span><span class="special">;</span>
 <span class="special">}}</span>
 </pre>
 <p>
