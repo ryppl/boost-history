@@ -1,35 +1,8 @@
-$TEMPLATE[ungbr.all.min_size_work.args]
-M,N
-$TEMPLATE[ungbr.all.min_size_work]
-return std::max< $INTEGER_TYPE >( 1, std::min< $INTEGER_TYPE >( m, n ) );
-$TEMPLATE[ungql.all.min_size_work.args]
-N
-$TEMPLATE[ungql.all.min_size_work]
-return std::max< $INTEGER_TYPE >( 1, n );
-$TEMPLATE[ungqr.all.M.trait_of]
-A
-$TEMPLATE[ungqr.all.N.trait_of]
-A
-$TEMPLATE[ungqr.all.K.trait]
-size,TAU
-$TEMPLATE[ungqr.all.min_size_work.args]
-N
-$TEMPLATE[ungqr.all.min_size_work]
-return std::max< $INTEGER_TYPE >( 1, n );
-$TEMPLATE[unglq.all.min_size_work.args]
-M
-$TEMPLATE[unglq.all.min_size_work]
-return std::max< $INTEGER_TYPE >( 1, m );
-$TEMPLATE[ungrq.all.min_size_work.args]
-M
-$TEMPLATE[ungrq.all.min_size_work]
-return std::max< $INTEGER_TYPE >( 1, m );
-$TEMPLATE[ungtr.all.min_size_work.args]
-SIDE,M,N
-$TEMPLATE[ungtr.includes]
-#include <boost/numeric/bindings/detail/if_left.hpp>
-$TEMPLATE[ungtr.all.min_size_work]
-return std::max< $INTEGER_TYPE >( 1, bindings::detail::if_left( side, n, m ) );
+$TEMPLATE[unmbr.all.fixme]
+Declaring NQ as extra variables leads to a key error in the generator,
+so the init below is pretty useless right now. It only shows how it could work in theory.
+$TEMPLATE[unmbr.all.NQ.init]
+$INTEGER_TYPE nq = bindings::detail::if_left( side, bindings::size_row(c), bindings::size_column(c) );
 $TEMPLATE[unmbr.all.min_size_work.args]
 SIDE,M,N
 $TEMPLATE[unmbr.includes]
