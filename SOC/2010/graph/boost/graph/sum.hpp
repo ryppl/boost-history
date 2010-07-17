@@ -24,12 +24,17 @@ namespace boost {
     typedef typename graph_traits<MutableGraph>::vertex_descriptor OutVertex;
     typedef typename globalVertexMapping::global_id_type id_type;
 
+    detail::vertex_copier<VertexListGraph, MutableGraph>
+      copy_vertex1 = detail::make_vertex_copier(g1, g_out), copy_vertex2 = detail::make_vertex_copier(g2, g_out);
+    detail::edge_copier<VertexListGraph, MutableGraph>
+      copy_edge1 = detail::make_edge_copier(g1, g_out), copy_edge2 = detail::make_edge_copier(g2, g_out);
+
 
     typename graph_traits < VertexListGraph >::vertex_iterator vi, vi_end;
     // copy vertices from g1
     for (tie(vi, vi_end) = vertices(g1); vi != vi_end; ++vi) {
       OutVertex new_v = add_vertex(g_out);
-      //      copy_vertex(*vi, new_v); // -> should copy vertex properties here
+      copy_vertex1(*vi, new_v);
       std::pair < typename globalVertexMapping::global_id_type, bool > id = m.get_id(g1, *vi);
       assert (id.second == true);
       m.associate(g_out, new_v, id.first);
@@ -39,7 +44,7 @@ namespace boost {
       std::pair < InVertex, bool > v = m.find_vertex( g2, *vi, g1 ); // search for vi in g1
       if (v.second == false) { // vi is not in g1
         OutVertex new_v = add_vertex(g_out);
-        //      copy_vertex(*vi, new_v); // -> should copy vertex properties here
+        copy_vertex2(*vi, new_v);
         std::pair < id_type, bool > id = m.get_id(g2, *vi);
         assert (id.second == true);
         m.associate(g_out, new_v, id.first);
@@ -57,7 +62,7 @@ namespace boost {
       typename graph_traits<MutableGraph>::edge_descriptor new_e;
       bool inserted;
       boost::tie(new_e, inserted) = add_edge(out_s.first, out_t.first, g_out);
-      //        copy_edge(*ei, new_e); // -> should copy vertex properties here
+      copy_edge1(*ei, new_e);
     }
     // copy edges from g2
     for (tie(ei, ei_end) = edges(g2); ei != ei_end; ++ei) {
@@ -69,7 +74,7 @@ namespace boost {
       typename graph_traits<MutableGraph>::edge_descriptor new_e;
       bool inserted;
       boost::tie(new_e, inserted) = add_edge(out_s.first, out_t.first, g_out);
-      //        copy_edge(*ei, new_e); // -> should copy vertex properties here
+      copy_edge2(*ei, new_e);
     }
   }
 

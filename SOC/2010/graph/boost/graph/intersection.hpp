@@ -24,13 +24,16 @@ namespace boost {
     typedef typename graph_traits<VertexListGraph>::vertex_descriptor InVertex;
     typedef typename graph_traits<MutableGraph>::vertex_descriptor OutVertex;
 
+    detail::vertex_copier<VertexListGraph, MutableGraph> copy_vertex = detail::make_vertex_copier(g1, g_out);
+    detail::edge_copier<VertexListGraph, MutableGraph> copy_edge = detail::make_edge_copier(g1, g_out);
+
     // copy vertices from (g1 intersection g2)
     typename graph_traits < VertexListGraph >::vertex_iterator vi, vi_end;
     for (tie(vi, vi_end) = vertices(g1); vi != vi_end; ++vi) {
       std::pair < InVertex, bool > v = m.find_vertex( g1, *vi, g2 ); // search for vi in g2
       if (v.second == true) { // vi is also in g2
         OutVertex new_v = add_vertex(g_out);
-        //      copy_vertex(*vi, new_v); // -> should copy vertex properties here
+        copy_vertex(*vi, new_v);
         std::pair < typename globalVertexMapping::global_id_type, bool > id = m.get_id(g1, *vi);
         assert (id.second == true);
         m.associate(g_out, new_v, id.first);
@@ -52,7 +55,7 @@ namespace boost {
         typename graph_traits<MutableGraph>::edge_descriptor new_e;
         bool inserted;
         boost::tie(new_e, inserted) = add_edge(out_s.first, out_t.first, g_out);
-        //        copy_edge(*ei, new_e); // -> should copy vertex properties here
+        copy_edge(*ei, new_e);
       }
     }
   }

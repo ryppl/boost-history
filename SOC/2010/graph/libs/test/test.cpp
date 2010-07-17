@@ -192,11 +192,13 @@ int main(int,char*[])
   add_edge(w, *vertices(h2).first, h2);
   get(vertex_name, h2)[z] = 'z';
 
+  cout << "graph h1:" << endl;
   prt(h1);
+  cout << "graph h2:" << endl;
   prt(h2);
 
   Graph h_du;
-  cout << "Disjoint union:" << endl;
+  cout << "Disjoint union: (h1 union h2)" << endl;
   disjoint_union(h1, h2, h_du);
   prt(h_du);
   // is there any way to clear h_du and use the same variable for all?
@@ -215,24 +217,23 @@ int main(int,char*[])
   for (tie(vi, vi_end) = vertices(h2); vi != vi_end; vi++)
     globalId.associate(h2, *vi, *vi);
 
+  cout << "Global id:" << endl;
   globalId.show_associations();
 
   // in this example (graph sum), it creates some parallel edges (e.g., a --> x appears twice)
   // because x and y are the considered as the same
   Graph h_s;
-  cout << "Graph sum:" << endl;
+  cout << "Graph sum: (h1 + h2)" << endl;
   graph_sum(h1, h2, globalId, h_s);
   prt(h_s);
 
-
   Graph h_i;
-  cout << "Graph intersection:" << endl;
+  cout << "Graph intersection: (h1 intersection h2)" << endl;
   intersection(h1, h2, globalId, h_i);
   prt(h_i);
 
-
   Graph h_diff;
-  cout << "Graph difference:" << endl;
+  cout << "Graph difference: (h1 - h2)" << endl;
   difference(h1, h2, globalId, h_diff);
   prt(h_diff);
 
