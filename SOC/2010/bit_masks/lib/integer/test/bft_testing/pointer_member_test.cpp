@@ -6,7 +6,6 @@
 #include <boost/integer/bitfield_tuple.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <boost/type_traits/is_same.hpp>
-
 int main() {
     return 0;
 }

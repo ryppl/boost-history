@@ -13,13 +13,19 @@
 namespace boost {
 namespace bitfields {
 
-/** The purpose of the member struct is to provide a simple way of passing
- *  parameters into a bitfield_tuple or bit_mask_tuple. The use of this is
- *  specifically to associate a group of parameters to gather within a type
- *  and make it easier for the data structure to figure out what to do with
- *  those parameter.
+/** ReturnType in this case is the type that is having a pointer made to it.
+ *      so putting int* will make the structure return int** to you because 
+ *      that wound indecate pointer to a pointer.
+ *  Name - same as member and flag.
+ *  Mask - This is the mask that returns the pointer itself and tells
+ *      the user which parts of the pointer are to be stored/retrieved for
+ *      stroage.
  */
-template <typename ReturnType, typename Name, std::size_t FieldWidth = 2>
+template <
+    typename ReturnType,
+    typename Name,
+    typename Mask
+>
 struct pointer;
 
 }} // end boost::bitfields

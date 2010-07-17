@@ -5,6 +5,8 @@
 
 #ifndef BOOST_BITFIELD_TUPLE_BFT_ELEMENT_HPP
 #define BOOST_BITFIELD_TUPLE_BFT_ELEMENT_HPP
+#include <boost/mpl/void.hpp>
+
 
 namespace boost { namespace detail {
 
@@ -14,7 +16,9 @@ namespace boost { namespace detail {
 template <  typename ReturnType,
             typename NameType, 
             typename Offset,
-            typename FieldWidth
+            typename FieldWidth,
+            typename Mask = mpl::void_,
+            typename Policy = mpl::void_
 >
 struct bitfield_element {
     typedef ReturnType  return_type;
@@ -22,6 +26,8 @@ struct bitfield_element {
     typedef Offset      offset;
     typedef FieldWidth  field_width;
     typedef bitfield_element<return_type, name_type, offset, field_width> type;
+    typedef Mask        mask;
+    typedef Policy      policy;
 };
 
 

@@ -4,7 +4,7 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/integer/bitfield_tuple.hpp>
-#include "test_type_list.hpp"
+#include "../test_type_list.hpp"
 #include <boost/mpl/front.hpp>
 #include <boost/mpl/find_if.hpp>
 #include <boost/mpl/end.hpp>

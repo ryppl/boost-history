@@ -52,6 +52,7 @@ test-suite integer
         [ run bft_testing/make_bft_testing.cpp ]
         [ run bft_testing/boost_endian_integration_test.cpp ]
         [ run bft_testing/custom_member_test.cpp ]
+        [ run bft_testing/pointer_member_test.cpp ]
         [ run ppb_testing/pointer_plus_bits_test.cpp ]
 
 
