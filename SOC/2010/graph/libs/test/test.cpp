@@ -2,10 +2,10 @@
 #include <utility>                   // for std::pair
 #include <algorithm>                 // for std::for_each
 
-#include <boost/graph/graph_traits.hpp>
 #include <boost/graph/adjacency_list.hpp>
-#include <boost/graph/transpose_graph.hpp>
 #include <boost/graph/graph_utility.hpp>
+
+#include <boost/graph/global_vertex_mapping.hpp>
 
 #include <boost/graph/union.hpp>
 #include <boost/graph/sum.hpp>
@@ -174,19 +174,23 @@ int main(int,char*[])
 {
   Graph h1 = create_graph(5,1);
   Graph h2 = create_graph(5,2);
+  graph_traits < Graph >::vertex_descriptor w, z;
+
   to_source(h1, 5, 'x');
   to_sink(h1, 5, 'x');
 
   to_sink(h2, 5, 'y');
   // x and y are the "same"
 
-  add_edge(0, 6, h1); // vertex 6 (w) is only in h1
-  add_edge(6, 0, h1);
-  get(vertex_name, h1)[6] = 'w';
+  w = add_vertex(h1); // vertex 6 (w) is only in h1
+  add_edge(*vertices(h1).first, w, h1);
+  add_edge(w, *vertices(h1).first, h1);
+  get(vertex_name, h1)[w] = 'w';
 
-  add_edge(7, 0, h2); // vertex 7 (z) is only in h2
-  add_edge(0, 7, h2);
-  get(vertex_name, h2)[7] = 'z';
+  z = add_vertex(h2); // vertex 6 (w) is only in h1
+  add_edge(*vertices(h2).first, w, h2);
+  add_edge(w, *vertices(h2).first, h2);
+  get(vertex_name, h2)[z] = 'z';
 
   prt(h1);
   prt(h2);
@@ -197,32 +201,40 @@ int main(int,char*[])
   prt(h_du);
   // is there any way to clear h_du and use the same variable for all?
 
+  GlobalVertexMapping < Graph, graph_traits<Graph>::vertex_descriptor, string > globalId(*vertices(h1).second, -2);
+
+  globalId.add_graph(h1,"h1");
+  globalId.add_graph(h2,"h2");
+
+  globalId.associate(h1, w, 20);
+  globalId.associate(h2, z, 40);
+
+  graph_traits < Graph >::vertex_iterator vi, vi_end;
+  for (tie(vi, vi_end) = vertices(h1); vi != vi_end; vi++)
+    globalId.associate(h1, *vi, *vi);
+  for (tie(vi, vi_end) = vertices(h2); vi != vi_end; vi++)
+    globalId.associate(h2, *vi, *vi);
+
+  globalId.show_associations();
 
   // in this example (graph sum), it creates some parallel edges (e.g., a --> x appears twice)
   // because x and y are the considered as the same
   Graph h_s;
   cout << "Graph sum:" << endl;
-  graph_sum(h1, h2, h_s);
+  graph_sum(h1, h2, globalId, h_s);
   prt(h_s);
 
 
   Graph h_i;
   cout << "Graph intersection:" << endl;
-  intersection(h1, h2, h_i);
+  intersection(h1, h2, globalId, h_i);
   prt(h_i);
 
 
   Graph h_diff;
   cout << "Graph difference:" << endl;
-  difference(h1, h2, h_diff);
+  difference(h1, h2, globalId, h_diff);
   prt(h_diff);
-
-  // Not working
-//  Graph h_j;
-//  cout << "Graph join:" << endl;
-//  graph_join(h1, h2, h_j);
-//  prt(h_j);
-
 
   return 0;
 }

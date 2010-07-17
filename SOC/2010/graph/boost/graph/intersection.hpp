@@ -12,26 +12,49 @@
 #ifndef BOOST_GRAPH_INTERSECTION_HPP
 #define BOOST_GRAPH_INTERSECTION_HPP
 
-#include <boost/config.hpp>
-#include <vector>
+#include <utility>
+#include <boost/graph/global_vertex_mapping.hpp>
 #include <boost/graph/graph_traits.hpp>
-#include <boost/property_map/property_map.hpp>
-#include <boost/type_traits/conversion_traits.hpp>
 
 namespace boost {
 
-  template <class VertexListGraph, class MutableGraph> 
-  void intersection(const VertexListGraph& G1, const VertexListGraph& G2, MutableGraph& G)
+  template <class VertexListGraph, class MutableGraph, class globalVertexMapping> 
+  void intersection(const VertexListGraph& g1, const VertexListGraph& g2, globalVertexMapping m, MutableGraph& g_out)
   {
-    typename graph_traits < MutableGraph >::edge_iterator ei, ei_end;
-    typename property_map < MutableGraph, vertex_name_t >::type name_map_G = get(vertex_name, G);
-    //    typename property_map < VertexListGraph, vertex_name_t >::type name_map_G1 = get(vertex_name, G1);
+    typedef typename graph_traits<VertexListGraph>::vertex_descriptor InVertex;
+    typedef typename graph_traits<MutableGraph>::vertex_descriptor OutVertex;
 
+    // copy vertices from (g1 intersection g2)
+    typename graph_traits < VertexListGraph >::vertex_iterator vi, vi_end;
+    for (tie(vi, vi_end) = vertices(g1); vi != vi_end; ++vi) {
+      std::pair < InVertex, bool > v = m.find_vertex( g1, *vi, g2 ); // search for vi in g2
+      if (v.second == true) { // vi is also in g2
+        OutVertex new_v = add_vertex(g_out);
+        //      copy_vertex(*vi, new_v); // -> should copy vertex properties here
+        std::pair < typename globalVertexMapping::global_id_type, bool > id = m.get_id(g1, *vi);
+        assert (id.second == true);
+        m.associate(g_out, new_v, id.first);
+      }
+    }
 
-    for (tie(ei, ei_end) = edges(G1); ei != ei_end; ++ei)
-      if (edge(source(*ei, G1), target(*ei, G1), G2).second == true)
-        add_edge(source(*ei, G1), target(*ei, G1), G);
+    // copy edges from (g1 intersection g2)
+    typename graph_traits < VertexListGraph >::edge_iterator ei, ei_end;
+    for (tie(ei, ei_end) = edges(g1); ei != ei_end; ++ei) {
+      std::pair < InVertex,  bool > g2_s, g2_t;
+      std::pair < OutVertex, bool > out_s, out_t;
+      g2_s  = m.find_vertex( g1, source(*ei, g1), g2 );
+      g2_t  = m.find_vertex( g1, target(*ei, g1), g2 );
+      out_s = m.find_vertex( g1, source(*ei, g1), g_out );
+      out_t = m.find_vertex( g1, target(*ei, g1), g_out );
 
+      if ( (g2_s.second && g2_t.second && edge(g2_s.first, g2_t.first, g2).second) ) {
+        assert(out_s.second == true && out_t.second == true);
+        typename graph_traits<MutableGraph>::edge_descriptor new_e;
+        bool inserted;
+        boost::tie(new_e, inserted) = add_edge(out_s.first, out_t.first, g_out);
+        //        copy_edge(*ei, new_e); // -> should copy vertex properties here
+      }
+    }
   }
 
 } // namespace boost

@@ -12,11 +12,8 @@
 #ifndef BOOST_GRAPH_JOIN_HPP
 #define BOOST_GRAPH_JOIN_HPP
 
-#include <boost/config.hpp>
-#include <vector>
 #include <boost/graph/graph_traits.hpp>
-#include <boost/property_map/property_map.hpp>
-#include <boost/type_traits/conversion_traits.hpp>
+#include <boost/graph/copy.hpp>
 
 namespace boost {
 

@@ -3,8 +3,8 @@
 import testing ;
 
 # If you really want to see the values of the path constants...
-# ECHO $(BOOST_ROOT) ;
-# ECHO $(SOC_ROOT) ;
+ECHO $(BOOST_ROOT) ;
+ECHO $(SOC_ROOT) ;
 
 # Declaring a project causes targets within this module to inherit the
 # properties of the target. Here, we're adding to the include paths. Note that
@@ -21,4 +21,5 @@ project libs/graph/test
 test-suite graph_test
   :
     [ run test.cpp ]
+    [ run globalid.cpp ]
   ;
