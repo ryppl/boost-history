@@ -223,17 +223,17 @@ namespace boost
           if ( endian_log )
             std::clog << "big, unaligned, " << n_bits << "-bits, construct(" << val << ")\n";
 #       endif
-          detail::store_big_endian<T, n_bits/8>(m_value, val);
+          boost::detail::store_big_endian<T, n_bits/8>(m_value, val);
         }
 #     endif
-        endian_pack & operator=(T val) { detail::store_big_endian<T, n_bits/8>(m_value, val); return *this; }
+        endian_pack & operator=(T val) { boost::detail::store_big_endian<T, n_bits/8>(m_value, val); return *this; }
         operator T() const
         { 
 #       ifdef BOOST_ENDIAN_LOG
           if ( endian_log )
-            std::clog << "big, unaligned, " << n_bits << "-bits, convert(" << detail::load_big_endian<T, n_bits/8>(m_value) << ")\n";
+            std::clog << "big, unaligned, " << n_bits << "-bits, convert(" << boost::detail::load_big_endian<T, n_bits/8>(m_value) << ")\n";
 #       endif
-          return detail::load_big_endian<T, n_bits/8>(m_value);
+          return boost::detail::load_big_endian<T, n_bits/8>(m_value);
         }
         const char* data() const  { return m_value; }        
     private:
@@ -258,7 +258,7 @@ namespace boost
           if ( endian_log )
             std::clog << "little, unaligned, " << n_bits << "-bits, construct(" << val << ")\n";
 #       endif
-          detail::store_little_endian<T, n_bits/8>(m_value, val);
+          boost::detail::store_little_endian<T, n_bits/8>(m_value, val);
         }
 #     endif
         endian_pack & operator=(T val) { detail::store_little_endian<T, n_bits/8>(m_value, val); return *this; }
@@ -266,9 +266,9 @@ namespace boost
         { 
 #       ifdef BOOST_ENDIAN_LOG
           if ( endian_log )
-            std::clog << "little, unaligned, " << n_bits << "-bits, convert(" << detail::load_little_endian<T, n_bits/8>(m_value) << ")\n";
+            std::clog << "little, unaligned, " << n_bits << "-bits, convert(" << boost::detail::load_little_endian<T, n_bits/8>(m_value) << ")\n";
 #       endif
-          return detail::load_little_endian<T, n_bits/8>(m_value);
+          return boost::detail::load_little_endian<T, n_bits/8>(m_value);
         }
         const char* data() const  { return m_value; }
       private:
@@ -349,15 +349,15 @@ namespace boost
 #     ifdef BOOST_BIG_ENDIAN
         explicit endian_pack(T val) : m_value(val) { }
 #     else
-        explicit endian_pack(T val)    { detail::store_big_endian<T, sizeof(T)>(&m_value, val); }
+        explicit endian_pack(T val)    { boost::detail::store_big_endian<T, sizeof(T)>(&m_value, val); }
 #     endif
 #   endif
 #   ifdef BOOST_BIG_ENDIAN  
         endian_pack & operator=(T val) { m_value = val); return *this; }
         operator T() const        { return m_value; }
 #   else  
-        endian_pack & operator=(T val) { detail::store_big_endian<T, sizeof(T)>(&m_value, val); return *this; }
-        operator T() const        { return detail::load_big_endian<T, sizeof(T)>(&m_value); }
+        endian_pack & operator=(T val) { boost::detail::store_big_endian<T, sizeof(T)>(&m_value, val); return *this; }
+        operator T() const        { return boost::detail::load_big_endian<T, sizeof(T)>(&m_value); }
 #   endif  
         const char* data() const  { return reinterpret_cast<const char *>(&m_value); }
       private:
@@ -380,15 +380,15 @@ namespace boost
 #     ifdef BOOST_LITTLE_ENDIAN
         explicit endian_pack(T val) : m_value(val) { }
 #     else
-        explicit endian_pack(T val)    { detail::store_little_endian<T, sizeof(T)>(&m_value, val); }
+        explicit endian_pack(T val)    { boost::detail::store_little_endian<T, sizeof(T)>(&m_value, val); }
 #     endif
 #   endif
 #   ifdef BOOST_LITTLE_ENDIAN
         endian_pack & operator=(T val) { m_value = val; return *this; }
         operator T() const        { return m_value; }
     #else
-        endian_pack & operator=(T val) { detail::store_little_endian<T, sizeof(T)>(&m_value, val); return *this; }
-        operator T() const        { return detail::load_little_endian<T, sizeof(T)>(&m_value); }
+        endian_pack & operator=(T val) { boost::detail::store_little_endian<T, sizeof(T)>(&m_value, val); return *this; }
+        operator T() const        { return boost::detail::load_little_endian<T, sizeof(T)>(&m_value); }
     #endif
         const char* data() const  { return reinterpret_cast<const char *>(&m_value); }
       private:
