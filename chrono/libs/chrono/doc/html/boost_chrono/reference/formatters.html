@@ -111,7 +111,8 @@
     <span class="keyword">static</span> <span class="keyword">int</span> <span class="identifier">default_places</span><span class="special">();</span>
 
     <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Stopwatch</span> <span class="special">&gt;</span>
-    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">show_time</span><span class="special">(</span> <span class="identifier">Stopwatch</span> <span class="special">&amp;</span> <span class="identifier">stopwatch_</span><span class="special">,</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">format</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">places</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span> <span class="special">&amp;</span> <span class="identifier">os</span><span class="special">,</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span><span class="special">);</span>
+    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">show_time</span><span class="special">(</span> <span class="identifier">Stopwatch</span> <span class="special">&amp;</span> <span class="identifier">stopwatch_</span><span class="special">,</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">format</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">places</span><span class="special">,</span> 
+                           <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span> <span class="special">&amp;</span> <span class="identifier">os</span><span class="special">,</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span><span class="special">);</span>
 <span class="special">};</span>
 </pre>
 <p>
@@ -177,7 +178,8 @@
     <span class="keyword">static</span> <span class="keyword">int</span> <span class="identifier">default_places</span><span class="special">();</span>
 
     <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Stopwatch</span> <span class="special">&gt;</span>
-    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">show_time</span><span class="special">(</span> <span class="identifier">Stopwatch</span> <span class="special">&amp;</span> <span class="identifier">stopwatch_</span><span class="special">,</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">format</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">places</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span> <span class="special">&amp;</span> <span class="identifier">os</span><span class="special">,</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span><span class="special">);</span>
+    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">show_time</span><span class="special">(</span> <span class="identifier">Stopwatch</span> <span class="special">&amp;</span> <span class="identifier">stopwatch_</span><span class="special">,</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">format</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">places</span><span class="special">,</span> 
+                           <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span> <span class="special">&amp;</span> <span class="identifier">os</span><span class="special">,</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span><span class="special">);</span>
 <span class="special">};</span>
 </pre>
 <p>
@@ -236,8 +238,14 @@
           <code class="computeroutput"><span class="identifier">basic_stopwatch_accumulator_formatter</span></code>
           useful typedefs</a>
 </h5></div></div></div>
-<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">basic_stopwatch_accumulator_formatter</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;</span> <span class="identifier">stopwatch_accumulator_formatter</span><span class="special">;</span>
-<span class="keyword">typedef</span> <span class="identifier">basic_stopwatch_accumulator_formatter</span><span class="special">&lt;</span><span class="keyword">wchar_t</span><span class="special">&gt;</span> <span class="identifier">wstopwatch_accumulator_formatter</span><span class="special">;</span>
+<p>
+            The library provides basic_stopwatch_accumulator_formatter shortcuts
+            for char and wchar_t.
+          </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">basic_stopwatch_accumulator_formatter</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;</span> 
+    <span class="identifier">stopwatch_accumulator_formatter</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">basic_stopwatch_accumulator_formatter</span><span class="special">&lt;</span><span class="keyword">wchar_t</span><span class="special">&gt;</span> 
+    <span class="identifier">wstopwatch_accumulator_formatter</span><span class="special">;</span>
 </pre>
 </div>
 </div>
@@ -344,6 +352,9 @@
           <code class="computeroutput"><span class="identifier">basic_time_formatter</span></code> useful
           typedefs</a>
 </h5></div></div></div>
+<p>
+            The library provides basic_time_formatter shortcuts for char and wchar_t.
+          </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">basic_time_formatter</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;</span> <span class="identifier">time_formatter</span><span class="special">;</span>
 <span class="keyword">typedef</span> <span class="identifier">basic_time_formatter</span><span class="special">&lt;</span><span class="keyword">wchar_t</span><span class="special">&gt;</span> <span class="identifier">wtime_formatter</span><span class="special">;</span>
 </pre>
@@ -510,6 +521,10 @@
           <code class="computeroutput"><span class="identifier">basic_24_hours_formatter</span></code>
           useful typedefs</a>
 </h5></div></div></div>
+<p>
+            The library provides basic_24_hours_formatter shortcuts for char and
+            wchar_t.
+          </p>
 <pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">basic_24_hours_formatter</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;</span> <span class="identifier">t24_hours_formatter</span><span class="special">;</span>
 <span class="keyword">typedef</span> <span class="identifier">basic_24_hours_formatter</span><span class="special">&lt;</span><span class="keyword">wchar_t</span><span class="special">&gt;</span> <span class="identifier">wt24_hours_formatter</span><span class="special">;</span>
 </pre>

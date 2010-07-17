@@ -52,6 +52,9 @@
           Class <code class="computeroutput"><span class="identifier">dont_start_t</span></code></a></span></dt>
 <dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch">
           Template Class <code class="computeroutput"><span class="identifier">stopwatch</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.spec">
+          <code class="computeroutput"><span class="identifier">stopwatch_reporter_default_formatter</span></code>
+          Specialization</a></span></dt>
 <dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch_typedefs">
           <code class="computeroutput"><span class="identifier">stopwatch</span></code> useful typedefs</a></span></dt>
 </dl></dd>
@@ -60,6 +63,9 @@
 <dd><dl>
 <dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator">
           Template Class <code class="computeroutput"><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.spec">
+          <code class="computeroutput"><span class="identifier">stopwatch_reporter_default_formatter</span></code>
+          Specialization</a></span></dt>
 <dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator_typedefs">
           <code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code> useful
           typedefs</a></span></dt>
@@ -131,13 +137,12 @@
 </dl></div>
 <p>
           A Stopwatch measure the amount of time elapsed from a start point in time
-          to the stop point time or the accumulation of them.
+          to the stop point time or the accumulation of them. Stopwatches can in
+          addition be restarted, suspended and resumed.
         </p>
 <p>
-          A Stopwatch must meet the requirements in the following Table.
-        </p>
-<p>
-          In this table <code class="computeroutput"><span class="identifier">S</span></code>, <code class="computeroutput"><span class="identifier">S1</span></code> and <code class="computeroutput"><span class="identifier">S2</span></code>
+          A Stopwatch must meet the requirements in the following table. In this
+          table <code class="computeroutput"><span class="identifier">S</span></code>, <code class="computeroutput"><span class="identifier">S1</span></code> and <code class="computeroutput"><span class="identifier">S2</span></code>
           denote stopwatches types. <code class="computeroutput"><span class="identifier">s</span></code>
           is an instance of <code class="computeroutput"><span class="identifier">S</span></code>.
         </p>
@@ -355,7 +360,7 @@
                 </td>
 <td>
                   <p>
-                    resule a Stopwatch.
+                    resume a Stopwatch.
                   </p>
                 </td>
 </tr>
@@ -411,8 +416,7 @@
             <span class="bold"><strong>Returns:</strong></span> the starting time point.
           </p>
 <p>
-            <span class="bold"><strong>Throw:</strong></span> Any exception the Clock::now
-            function can throw.
+            <span class="bold"><strong>Throw:</strong></span> Any exception the <code class="computeroutput"><span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span></code> function can throw when <code class="computeroutput"><span class="identifier">ec</span></code> is <code class="computeroutput"><span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span></code>
           </p>
 </div>
 <div class="section" lang="en">
@@ -430,8 +434,7 @@
             <span class="bold"><strong>Returns:</strong></span> The cummulated elapsed time.
           </p>
 <p>
-            <span class="bold"><strong>Throw:</strong></span> Any exception the Clock::now
-            function can throw.
+            <span class="bold"><strong>Throw:</strong></span> Any exception the <code class="computeroutput"><span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span></code> function can throw when <code class="computeroutput"><span class="identifier">ec</span></code> is <code class="computeroutput"><span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span></code>
           </p>
 </div>
 <div class="section" lang="en">
@@ -446,8 +449,7 @@
             <span class="bold"><strong>Effect:</strong></span> Suspends the stopwatch.
           </p>
 <p>
-            <span class="bold"><strong>Throw:</strong></span> Any exception the Clock::now
-            function can throw.
+            <span class="bold"><strong>Throw:</strong></span> Any exception the <code class="computeroutput"><span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span></code> function can throw when <code class="computeroutput"><span class="identifier">ec</span></code> is <code class="computeroutput"><span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span></code>
           </p>
 </div>
 <div class="section" lang="en">
@@ -484,8 +486,7 @@
             <span class="bold"><strong>Returns:</strong></span> the starting time point.
           </p>
 <p>
-            <span class="bold"><strong>Throw:</strong></span> Any exception the <code class="computeroutput"><span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span><span class="special">()</span></code>
-            function can throw.
+            <span class="bold"><strong>Throw:</strong></span> Any exception the <code class="computeroutput"><span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span></code> function can throw when <code class="computeroutput"><span class="identifier">ec</span></code> is <code class="computeroutput"><span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span></code>
           </p>
 </div>
 <p>
@@ -509,6 +510,9 @@
           Class <code class="computeroutput"><span class="identifier">dont_start_t</span></code></a></span></dt>
 <dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch">
           Template Class <code class="computeroutput"><span class="identifier">stopwatch</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.spec">
+          <code class="computeroutput"><span class="identifier">stopwatch_reporter_default_formatter</span></code>
+          Specialization</a></span></dt>
 <dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch_typedefs">
           <code class="computeroutput"><span class="identifier">stopwatch</span></code> useful typedefs</a></span></dt>
 </dl></div>
@@ -529,7 +533,8 @@
     <span class="special">};</span>
 
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">above</span><span class="special">&gt;</span> <span class="identifier">system_stopwatch</span><span class="special">;</span>
-    <span class="preprocessor">#ifdef</span> <span class="identifier">__</span>
+    <span class="preprocessor">#ifdef</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.BOOST_CHRONO_HAS_CLOCK_MONOTONIC" title="
+          Macro BOOST_CHRONO_HAS_CLOCK_MONOTONIC"><code class="computeroutput"><span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span></code></a>
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">above</span><span class="special">&gt;</span> <span class="identifier">monotonic_stopwatch</span><span class="special">;</span>
     <span class="preprocessor">#endif</span>
     <span class="keyword">typedef</span> <span class="special">&lt;</span><span class="identifier">see</span> <span class="identifier">above</span><span class="special">&gt;</span> <span class="identifier">high_resolution_stopwatch</span><span class="special">;</span>
@@ -544,6 +549,10 @@
           Class dont_start_t">
           Class <code class="computeroutput"><span class="identifier">dont_start_t</span></code></a>
 </h5></div></div></div>
+<p>
+            Structure used to don't start a <code class="computeroutput"><span class="identifier">stopwatch</span></code>
+            at construction time.
+          </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">dont_start_t</span><span class="special">;</span>
 <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">dont_start_t</span> <span class="identifier">dont_start</span><span class="special">;</span>
 </pre>
@@ -554,8 +563,16 @@
           Template Class stopwatch&lt;&gt;">
           Template Class <code class="computeroutput"><span class="identifier">stopwatch</span><span class="special">&lt;&gt;</span></code></a>
 </h5></div></div></div>
-<div class="toc"><dl><dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch.stopwatch_elapsed">
-            Member Function <code class="computeroutput"><span class="identifier">elapsed</span><span class="special">()</span></code></a></span></dt></dl></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch.c1">
+            Constructor <code class="computeroutput"><span class="identifier">stopwatch</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span>
+            <span class="special">&amp;)</span></code></a></span></dt>
+<dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch.c2">
+            Constructor <code class="computeroutput"><span class="identifier">stopwatch</span><span class="special">(</span> <span class="identifier">dont_start_t</span>
+            <span class="special">&amp;)</span></code></a></span></dt>
+<dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch.stopwatch_elapsed">
+            Member Function <code class="computeroutput"><span class="identifier">elapsed</span><span class="special">()</span></code></a></span></dt>
+</dl></div>
 <p>
             <code class="computeroutput"><span class="identifier">stopwatch</span><span class="special">&lt;&gt;</span></code>
             is a model of a <a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_req" title="
@@ -604,6 +621,42 @@
 </pre>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h6 class="title">
+<a name="boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch.c1"></a><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch.c1" title="
+            Constructor stopwatch( system::error_code
+            &amp;)">
+            Constructor <code class="computeroutput"><span class="identifier">stopwatch</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span>
+            <span class="special">&amp;)</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">explicit</span> <span class="identifier">stopwatch</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
+</pre>
+<p>
+              <span class="bold"><strong>Effect:</strong></span> constructs and starts the
+              stopwatch.
+            </p>
+<p>
+              <span class="bold"><strong>Throw:</strong></span> Any exception the <code class="computeroutput"><span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span></code> function can throw when <code class="computeroutput"><span class="identifier">ec</span></code> is <code class="computeroutput"><span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span></code>
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch.c2"></a><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch.c2" title="
+            Constructor stopwatch( dont_start_t
+            &amp;)">
+            Constructor <code class="computeroutput"><span class="identifier">stopwatch</span><span class="special">(</span> <span class="identifier">dont_start_t</span>
+            <span class="special">&amp;)</span></code></a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="keyword">explicit</span> <span class="identifier">stopwatch</span><span class="special">(</span> <span class="keyword">const</span> <span class="identifier">dont_start_t</span><span class="special">&amp;</span> <span class="identifier">t</span> <span class="special">);</span>
+</pre>
+<p>
+              <span class="bold"><strong>Effect:</strong></span> constructs the stopwatch without
+              starting it.
+            </p>
+<p>
+              <span class="bold"><strong>Throw:</strong></span> Nothing.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
 <a name="boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch.stopwatch_elapsed"></a><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.stopwatch.stopwatch_elapsed" title="
             Member Function elapsed()">
             Member Function <code class="computeroutput"><span class="identifier">elapsed</span><span class="special">()</span></code></a>
@@ -615,13 +668,38 @@
               last call to start.
             </p>
 <p>
-              <span class="bold"><strong>Throw:</strong></span> Nothing.
-            </p>
-<p>
-              <span class="bold"><strong>Note:</strong></span> the system::error_code &amp;
-              parameter is here to conform to the Stopwatch concept.
+              <span class="bold"><strong>Throw:</strong></span> Any exception the <code class="computeroutput"><span class="identifier">Clock</span><span class="special">::</span><span class="identifier">now</span></code> function can throw when <code class="computeroutput"><span class="identifier">ec</span></code> is <code class="computeroutput"><span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span></code>
             </p>
 </div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.reference.stopwatches.stopwatch_hpp.spec"></a><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_hpp.spec" title="
+          stopwatch_reporter_default_formatter
+          Specialization">
+          <code class="computeroutput"><span class="identifier">stopwatch_reporter_default_formatter</span></code>
+          Specialization</a>
+</h5></div></div></div>
+<p>
+            The <code class="computeroutput"><span class="identifier">stopwatch_reporter_default_formatter</span></code>
+            of a <code class="computeroutput"><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span></code>
+            is a <code class="computeroutput"><span class="identifier">stopwatch_formatter</span></code>.
+          </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">stopwatch_reporter_default_formatter</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">stopwatch_formatter</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+            The <code class="computeroutput"><span class="identifier">wstopwatch_reporter_default_formatter</span></code>
+            of a <code class="computeroutput"><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span></code>
+            is a <code class="computeroutput"><span class="identifier">wstopwatch_formatter</span></code>.
+          </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">wstopwatch_reporter_default_formatter</span><span class="special">&lt;</span><span class="identifier">stopwatch</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">wstopwatch_formatter</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h5 class="title">
@@ -629,16 +707,26 @@
           stopwatch useful typedefs">
           <code class="computeroutput"><span class="identifier">stopwatch</span></code> useful typedefs</a>
 </h5></div></div></div>
-<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span> <span class="special">&gt;</span> <span class="identifier">system_stopwatch</span><span class="special">;</span>
+<p>
+            The library provides stopwatch short cuts for all the models of <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.clock" title="
+          Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code></a>, replacing clock by stopwatch.
+          </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span> <span class="special">&gt;</span> 
+    <span class="identifier">system_stopwatch</span><span class="special">;</span>
 <span class="preprocessor">#ifdef</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.BOOST_CHRONO_HAS_CLOCK_MONOTONIC" title="
           Macro BOOST_CHRONO_HAS_CLOCK_MONOTONIC"><code class="computeroutput"><span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span></code></a>
-<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">monotonic_clock</span> <span class="special">&gt;</span> <span class="identifier">monotonic_stopwatch</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">monotonic_clock</span> <span class="special">&gt;</span> 
+    <span class="identifier">monotonic_stopwatch</span><span class="special">;</span>
 <span class="preprocessor">#endif</span>
-<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">high_resolution_clock</span> <span class="special">&gt;</span> <span class="identifier">high_resolution_stopwatch</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">high_resolution_clock</span> <span class="special">&gt;</span> 
+    <span class="identifier">high_resolution_stopwatch</span><span class="special">;</span>
 
-<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">process_real_cpu_clock</span> <span class="special">&gt;</span> <span class="identifier">process_real_cpu_stopwatch</span><span class="special">;</span>
-<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">process_user_cpu_clock</span> <span class="special">&gt;</span> <span class="identifier">process_user_cpu_stopwatch</span><span class="special">;</span>
-<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">process_system_cpu_clock</span> <span class="special">&gt;</span> <span class="identifier">process_system_cpu_stopwatch</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">process_real_cpu_clock</span> <span class="special">&gt;</span> 
+    <span class="identifier">process_real_cpu_stopwatch</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">process_user_cpu_clock</span> <span class="special">&gt;</span> 
+    <span class="identifier">process_user_cpu_stopwatch</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">process_system_cpu_clock</span> <span class="special">&gt;</span> 
+    <span class="identifier">process_system_cpu_stopwatch</span><span class="special">;</span>
 </pre>
 </div>
 </div>
@@ -651,6 +739,9 @@
 <div class="toc"><dl>
 <dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator">
           Template Class <code class="computeroutput"><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.spec">
+          <code class="computeroutput"><span class="identifier">stopwatch_reporter_default_formatter</span></code>
+          Specialization</a></span></dt>
 <dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator_typedefs">
           <code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code> useful
           typedefs</a></span></dt>
@@ -690,16 +781,6 @@
 <div class="toc"><dl>
 <dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator.stopwatch_accumulator_c">
             Constructor <code class="computeroutput"><span class="identifier">stopwatch_accumulator</span><span class="special">()</span></code></a></span></dt>
-<dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator.stopwatch_accumulator_start">
-            Member Function <code class="computeroutput"><span class="identifier">start</span><span class="special">()</span></code></a></span></dt>
-<dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator.stopwatch_accumulator_stop">
-            Member Function <code class="computeroutput"><span class="identifier">stop</span><span class="special">()</span></code></a></span></dt>
-<dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator.stopwatch_accumulator_suspend">
-            Member Function <code class="computeroutput"><span class="identifier">suspend</span><span class="special">()</span></code></a></span></dt>
-<dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator.stopwatch_accumulator_resume">
-            Member Function <code class="computeroutput"><span class="identifier">resume</span><span class="special">()</span></code></a></span></dt>
-<dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator.stopwatch_accumulator_restart">
-            Member Function <code class="computeroutput"><span class="identifier">restart</span><span class="special">()</span></code></a></span></dt>
 <dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator.stopwatch_accumulator_reset">
             Member Function <code class="computeroutput"><span class="identifier">reset</span><span class="special">()</span></code></a></span></dt>
 <dt><span class="section"><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator.stopwatch_accumulator_elapsed">
@@ -756,101 +837,6 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h6 class="title">
-<a name="boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator.stopwatch_accumulator_start"></a><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator.stopwatch_accumulator_start" title="
-            Member Function start()">
-            Member Function <code class="computeroutput"><span class="identifier">start</span><span class="special">()</span></code></a>
-</h6></div></div></div>
-<pre class="programlisting"><span class="identifier">time_point</span> <span class="identifier">start</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
-</pre>
-<p>
-              <span class="bold"><strong>Effect:</strong></span> Starts running the stopwatch.
-            </p>
-<p>
-              <span class="bold"><strong>Returns:</strong></span> the starting time point.
-            </p>
-<p>
-              <span class="bold"><strong>Throw:</strong></span> Any exception the Clock::now
-              function can throw.
-            </p>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h6 class="title">
-<a name="boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator.stopwatch_accumulator_stop"></a><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator.stopwatch_accumulator_stop" title="
-            Member Function stop()">
-            Member Function <code class="computeroutput"><span class="identifier">stop</span><span class="special">()</span></code></a>
-</h6></div></div></div>
-<pre class="programlisting"><span class="identifier">duration</span> <span class="identifier">stop</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
-</pre>
-<p>
-              <span class="bold"><strong>Effect:</strong></span> Stops running the stopwatch.
-              Accumulates the elapsed time since the last start-like operation +
-              the partial accumulated by resume/suspend operation.
-            </p>
-<p>
-              <span class="bold"><strong>Returns:</strong></span> The cummulated elapsed time.
-            </p>
-<p>
-              <span class="bold"><strong>Throw:</strong></span> Any exception the Clock::now
-              function can throw.
-            </p>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h6 class="title">
-<a name="boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator.stopwatch_accumulator_suspend"></a><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator.stopwatch_accumulator_suspend" title="
-            Member Function suspend()">
-            Member Function <code class="computeroutput"><span class="identifier">suspend</span><span class="special">()</span></code></a>
-</h6></div></div></div>
-<pre class="programlisting"><span class="identifier">duration</span> <span class="identifier">suspend</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
-</pre>
-<p>
-              <span class="bold"><strong>Effect:</strong></span> Suspends the stopwatch. Accumulates
-              the elapsed time since the last start-like operation on a partial duration.
-            </p>
-<p>
-              <span class="bold"><strong>Throw:</strong></span> Any exception the Clock::now
-              function can throw.
-            </p>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h6 class="title">
-<a name="boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator.stopwatch_accumulator_resume"></a><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator.stopwatch_accumulator_resume" title="
-            Member Function resume()">
-            Member Function <code class="computeroutput"><span class="identifier">resume</span><span class="special">()</span></code></a>
-</h6></div></div></div>
-<pre class="programlisting"><span class="identifier">time_point</span> <span class="identifier">resume</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
-</pre>
-<p>
-              <span class="bold"><strong>Effect:</strong></span> Resumes the stopwatch.
-            </p>
-<p>
-              <span class="bold"><strong>Returns:</strong></span> the starting time point.
-            </p>
-<p>
-              <span class="bold"><strong>Throw:</strong></span> Any exception the Clock::now
-              function can throw.
-            </p>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h6 class="title">
-<a name="boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator.stopwatch_accumulator_restart"></a><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator.stopwatch_accumulator_restart" title="
-            Member Function restart()">
-            Member Function <code class="computeroutput"><span class="identifier">restart</span><span class="special">()</span></code></a>
-</h6></div></div></div>
-<pre class="programlisting"><span class="identifier">time_point</span> <span class="identifier">restart</span><span class="special">(</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">error_code</span> <span class="special">&amp;</span> <span class="identifier">ec</span> <span class="special">=</span> <span class="identifier">system</span><span class="special">::</span><span class="identifier">throws</span> <span class="special">);</span>
-</pre>
-<p>
-              <span class="bold"><strong>Effect:</strong></span> Stop/Start the stopwatch.
-            </p>
-<p>
-              <span class="bold"><strong>Returns:</strong></span> the starting time point.
-            </p>
-<p>
-              <span class="bold"><strong>Throw:</strong></span> Any exception the Clock::now
-              function can throw.
-            </p>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h6 class="title">
 <a name="boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator.stopwatch_accumulator_reset"></a><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator.stopwatch_accumulator_reset" title="
             Member Function reset()">
             Member Function <code class="computeroutput"><span class="identifier">reset</span><span class="special">()</span></code></a>
@@ -898,22 +884,60 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h5 class="title">
+<a name="boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.spec"></a><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.spec" title="
+          stopwatch_reporter_default_formatter
+          Specialization">
+          <code class="computeroutput"><span class="identifier">stopwatch_reporter_default_formatter</span></code>
+          Specialization</a>
+</h5></div></div></div>
+<p>
+            The <code class="computeroutput"><span class="identifier">stopwatch_reporter_default_formatter</span></code>
+            of a <code class="computeroutput"><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span></code> is a <code class="computeroutput"><span class="identifier">stopwatch_accumulator_formatter</span></code>.
+          </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Accumulator</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">stopwatch_reporter_default_formatter</span><span class="special">&lt;</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Accumulator</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">stopwatch_accumulator_formatter</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+            The <code class="computeroutput"><span class="identifier">wstopwatch_reporter_default_formatter</span></code>
+            of a <code class="computeroutput"><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">&gt;</span></code> is a <code class="computeroutput"><span class="identifier">wstopwatch_accumulator_formatter</span></code>.
+          </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Accumulator</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">wstopwatch_reporter_default_formatter</span><span class="special">&lt;</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Accumulator</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">wstopwatch_accumulator_formatter</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
 <a name="boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator_typedefs"></a><a href="stopwatches.html#boost_chrono.reference.stopwatches.stopwatch_accumulator_hpp.stopwatch_accumulator_typedefs" title="
           stopwatch_accumulator useful
           typedefs">
           <code class="computeroutput"><span class="identifier">stopwatch_accumulator</span></code> useful
           typedefs</a>
 </h5></div></div></div>
-<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span> <span class="special">&gt;</span> <span class="identifier">system_stopwatch_accumulator</span><span class="special">;</span>
+<p>
+            The library provides stopwatch_accumulator shortcuts for all the models
+            of <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.clock" title="
+          Clock Requirements"><code class="computeroutput"><span class="identifier">Clock</span></code></a>, replacing clock by stopwatch_accumulator.
+          </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span> <span class="special">&gt;</span> 
+    <span class="identifier">system_stopwatch_accumulator</span><span class="special">;</span>
 <span class="preprocessor">#ifdef</span> <a href="cpp0x.html#boost_chrono.reference.cpp0x.chrono_chrono_hpp.BOOST_CHRONO_HAS_CLOCK_MONOTONIC" title="
           Macro BOOST_CHRONO_HAS_CLOCK_MONOTONIC"><code class="computeroutput"><span class="identifier">BOOST_CHRONO_HAS_CLOCK_MONOTONIC</span></code></a>
-<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">monotonic_clock</span> <span class="special">&gt;</span> <span class="identifier">monotonic_stopwatch_accumulator</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">monotonic_clock</span> <span class="special">&gt;</span> 
+    <span class="identifier">monotonic_stopwatch_accumulator</span><span class="special">;</span>
 <span class="preprocessor">#endif</span>
-<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">high_resolution_clock</span> <span class="special">&gt;</span> <span class="identifier">high_resolution_stopwatch_accumulator</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">high_resolution_clock</span> <span class="special">&gt;</span> 
+    <span class="identifier">high_resolution_stopwatch_accumulator</span><span class="special">;</span>
 
-<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">process_real_cpu_clock</span> <span class="special">&gt;</span> <span class="identifier">process_real_cpu_stopwatch_accumulator</span><span class="special">;</span>
-<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">process_user_cpu_clock</span> <span class="special">&gt;</span> <span class="identifier">process_user_cpu_stopwatch_accumulator</span><span class="special">;</span>
-<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">process_system_cpu_clock</span> <span class="special">&gt;</span> <span class="identifier">process_system_cpu_stopwatch_accumulator</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">process_real_cpu_clock</span> <span class="special">&gt;</span>   
+    <span class="identifier">process_real_cpu_stopwatch_accumulator</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">process_user_cpu_clock</span> <span class="special">&gt;</span> 
+    <span class="identifier">process_user_cpu_stopwatch_accumulator</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">stopwatch_accumulator</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">process_system_cpu_clock</span> <span class="special">&gt;</span> 
+    <span class="identifier">process_system_cpu_stopwatch_accumulator</span><span class="special">;</span>
 </pre>
 </div>
 </div>

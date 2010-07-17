@@ -148,6 +148,9 @@
 [/==================]
 [def __treat_as_floating_point__ [link boost_chrono.reference.cpp0x.chrono_chrono_hpp.traits.treat_as_floating_point `treat_as_floating_point`]]
 [def __duration_values__ [link boost_chrono.reference.cpp0x.chrono_chrono_hpp.traits.duration_values `duration_values`]]
+[def __zero__ [link boost_chrono.reference.cpp0x.chrono_chrono_hpp.traits.duration_values.zero `zero`]]
+[def __max__ [link boost_chrono.reference.cpp0x.chrono_chrono_hpp.traits.duration_values.max `max`]]
+[def __min__ [link boost_chrono.reference.cpp0x.chrono_chrono_hpp.traits.duration_values.min `min`]]
 
 
 [/==================]
@@ -628,16 +631,24 @@ __ratio__ is a template taking two intmax_ts, with the second defaulted to 1. In
 
 [*Example:]
 
-    typedef __ratio__<5, 3>   five_thirds;       // five_thirds::num == 5, five_thirds::den == 3
-    typedef __ratio__<25, 15> also_five_thirds;  // also_five_thirds::num == 5, also_five_thirds::den == 3
-    typedef ratio_divide<five_thirds, also_five_thirds>::type one;  // one::num == 1, one::den == 1
+    typedef __ratio__<5, 3>   five_thirds;       
+    // five_thirds::num == 5, five_thirds::den == 3
+    
+    typedef __ratio__<25, 15> also_five_thirds;  
+    // also_five_thirds::num == 5, also_five_thirds::den == 3
+    
+    typedef ratio_divide<five_thirds, also_five_thirds>::type one;  
+    // one::num == 1, one::den == 1
 
 This facility also includes convenience typedefs for the SI prefixes __atto through __exa corresponding to their internationally recognized definitions (in terms of __ratio__). This is a tremendous syntactic convenience. It will prevent errors in specifying constants as one no longer has to double count the number of zeros when trying to write million or billion.
 
 [*Example:]
 
-    typedef ratio_multiply<__ratio__<5>, giga>::type _5giga;  // _5giga::num == 5000000000, _5giga::den == 1
-    typedef ratio_multiply<__ratio__<5>, nano>::type _5nano;  // _5nano::num == 1, _5nano::den == 200000000
+    typedef ratio_multiply<__ratio__<5>, giga>::type _5giga;  
+    // _5giga::num == 5000000000, _5giga::den == 1
+    
+    typedef ratio_multiply<__ratio__<5>, nano>::type _5nano;  
+    // _5nano::num == 1, _5nano::den == 200000000
 
 [endsect]
 
@@ -1510,7 +1521,8 @@ Example of SI-Units
 Quantity arithmetics
 
     template <class R1, class R2, class R3, class R4>
-    quantity<typename boost::ratio_subtract<R1, R3>::type, typename boost::ratio_subtract<R2, R4>::type>
+    quantity<typename boost::ratio_subtract<R1, R3>::type, 
+             typename boost::ratio_subtract<R2, R4>::type>
     operator/(const quantity<R1, R2>& x, const quantity<R3, R4>& y)
     {
         typedef quantity<typename boost::ratio_subtract<R1, R3>::type,
@@ -1521,7 +1533,8 @@ Quantity arithmetics
     }
 
     template <class R1, class R2, class R3, class R4>
-    quantity<typename boost::ratio_add<R1, R3>::type, typename boost::ratio_add<R2, R4>::type>
+    quantity<typename boost::ratio_add<R1, R3>::type, 
+             typename boost::ratio_add<R2, R4>::type>
     operator*(const quantity<R1, R2>& x, const quantity<R3, R4>& y)
     {
         typedef quantity<typename boost::ratio_add<R1, R3>::type,
@@ -1592,11 +1605,13 @@ Though input can be arbitrary (but type-safe) units, output is always in SI-unit
         std::cout << "Acceleration = " << a.get() << " meters/sec^2\n";
         User1::Distance df = compute_distance(s, User1::Time( User1::seconds(0.5) ), a);
         std::cout << "Distance = " << df.get() << " meters\n";
-        std::cout << "There are " << User1::mile::ratio::den << '/' << User1::mile::ratio::num << " miles/meter";
+        std::cout << "There are " 
+            << User1::mile::ratio::den << '/' << User1::mile::ratio::num << " miles/meter";
         User1::meter mt = 1;
         User1::mile mi = mt;
         std::cout << " which is approximately " << mi.count() << '\n';
-        std::cout << "There are " << User1::mile::ratio::num << '/' << User1::mile::ratio::den << " meters/mile";
+        std::cout << "There are " 
+            << User1::mile::ratio::num << '/' << User1::mile::ratio::den << " meters/mile";
         mi = 1;
         mt = mi;
         std::cout << " which is approximately " << mt.count() << '\n';
@@ -1775,7 +1790,8 @@ Users can easily create their own clocks, with both points in time and time dura
     template <long long speed>
     struct cycle_count
     {
-        typedef typename boost::__ratio_multiply__<boost::__ratio__<speed>, boost::__mega>::type frequency;  // Mhz
+        typedef typename boost::__ratio_multiply__<boost::__ratio__<speed>, boost::__mega>::type 
+            frequency;  // Mhz
         typedef typename boost::__ratio_divide__<boost::__ratio__<1>, frequency>::type period;
         typedef long long rep;
         typedef boost::chrono::__duration__<rep, period> duration;
@@ -2540,22 +2556,22 @@ __ratio__ is a facility which is useful in specifying compile time rational cons
         template <class R1, class R2> struct __ratio_greater_equal;
 
         // convenience SI typedefs
-        typedef __ratio__<1LL, 1000000000000000000LL> __atto;
-        typedef __ratio__<1LL,    1000000000000000LL> __femto;
-        typedef __ratio__<1LL,       1000000000000LL> __pico;
-        typedef __ratio__<1LL,          1000000000LL> __nano;
-        typedef __ratio__<1LL,             1000000LL> __micro;
-        typedef __ratio__<1LL,                1000LL> __milli;
-        typedef __ratio__<1LL,                 100LL> __centi;
-        typedef __ratio__<1LL,                  10LL> __deci;
-        typedef __ratio__<                 10LL, 1LL> __deca;
-        typedef __ratio__<                100LL, 1LL> __hecto;
-        typedef __ratio__<               1000LL, 1LL> __kilo;
-        typedef __ratio__<            1000000LL, 1LL> __mega;
-        typedef __ratio__<         1000000000LL, 1LL> __giga;
-        typedef __ratio__<      1000000000000LL, 1LL> __tera;
-        typedef __ratio__<   1000000000000000LL, 1LL> __peta;
-        typedef __ratio__<1000000000000000000LL, 1LL> __exa;
+        typedef ratio<1LL, 1000000000000000000LL> __atto;
+        typedef ratio<1LL,    1000000000000000LL> __femto;
+        typedef ratio<1LL,       1000000000000LL> __pico;
+        typedef ratio<1LL,          1000000000LL> __nano;
+        typedef ratio<1LL,             1000000LL> __micro;
+        typedef ratio<1LL,                1000LL> __milli;
+        typedef ratio<1LL,                 100LL> __centi;
+        typedef ratio<1LL,                  10LL> __deci;
+        typedef ratio<                 10LL, 1LL> __deca;
+        typedef ratio<                100LL, 1LL> __hecto;
+        typedef ratio<               1000LL, 1LL> __kilo;
+        typedef ratio<            1000000LL, 1LL> __mega;
+        typedef ratio<         1000000000LL, 1LL> __giga;
+        typedef ratio<      1000000000000LL, 1LL> __tera;
+        typedef ratio<   1000000000000000LL, 1LL> __peta;
+        typedef ratio<1000000000000000000LL, 1LL> __exa;
     }
 
 
@@ -2589,15 +2605,15 @@ Depending on the static assertion used system you will have an hint of the faili
         public:
             static const boost::intmax_t num;
             static const boost::intmax_t den;
-            typedef __ratio__<num, den> type;
+            typedef ratio<num, den> type;
 
             ratio() = default;
 
             template <intmax_t _N2, intmax_t _D2>
-            ratio(const __ratio__<_N2, _D2>&);
+            ratio(const ratio<_N2, _D2>&);
 
             template <intmax_t _N2, intmax_t _D2>
-            __ratio__& operator=(const __ratio__<_N2, _D2>&) {return *this;}
+            ratio& operator=(const ratio<_N2, _D2>&) {return *this;}
         };
 
 A diagnostic will be emitted if __ratio__ is instantiated with `D == 0`, or if the absolute value of `N` or `D` can not be represented. [*Note:] These rules ensure that infinite ratios are avoided and that for any negative input, there exists a representable value of its absolute value which is positive. In a two's complement representation, this excludes the most negative value.
@@ -2612,7 +2628,7 @@ The nested typedef `type` denotes the normalized form of this __ratio__ type. It
 
 Two __ratio__ classes `__ratio__<N1,D1>` and `__ratio__<N2,D2>` have the same normalized form if `__ratio__<N1,D1>::type` is the same type as `__ratio__<N2,D2>::type`
 
-[section Construction and assignment]
+[section:ca Construction and assignment]
 
     template <intmax_t N2, intmax_t D2>
       ratio(const __ratio__<N2, D2>& r);
@@ -2730,7 +2746,7 @@ Four of the typedefs in the recomendation which can be conditionally supported a
 [section:chrono_hpp Header `<boost/chrono.hpp>`]
 [/=============================================]
 
-This file is a redirection to `boost/chrono/chrono.hpp` including in addition registration for __duration__ and __timepoint__ class templates to Boost.Typeof.
+This file is a redirection to `boost/chrono/chrono.hpp` including in addition registration for __duration__ and __time_point__ class templates to Boost.Typeof.
 
 
     #include <boost/chrono/chrono.hpp>
@@ -2773,48 +2789,48 @@ This file is a redirection to `boost/chrono/chrono.hpp` including in addition re
 
         // duration arithmetic
         template <class Rep1, class Period1, class Rep2, class Period2>
-        typename __common_type__<__duration__<Rep1, Period1>, __duration__<Rep2, Period2> >::type
-        operator+(const __duration__<Rep1, Period1>& lhs, const __duration__<Rep2, Period2>& rhs);
+        typename common_type<duration<Rep1, Period1>, duration<Rep2, Period2> >::type
+        operator+(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
 
         template <class Rep1, class Period1, class Rep2, class Period2>
-        typename __common_type__<__duration__<Rep1, Period1>, __duration__<Rep2, Period2> >::type
-        operator-(const __duration__<Rep1, Period1>& lhs, const __duration__<Rep2, Period2>& rhs);
+        typename common_type<duration<Rep1, Period1>, duration<Rep2, Period2> >::type
+        operator-(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
 
         template <class Rep1, class Period, class Rep2>
-        __duration__<typename __common_type__<Rep1, Rep2>::type, Period>
-        operator*(const __duration__<Rep1, Period>& d, const Rep2& s);
+        duration<typename common_type<Rep1, Rep2>::type, Period>
+        operator*(const duration<Rep1, Period>& d, const Rep2& s);
 
         template <class Rep1, class Period, class Rep2>
-        __duration__<typename __common_type__<Rep1, Rep2>::type, Period>
-        operator*(const Rep1& s, const __duration__<Rep2, Period>& d);
+        duration<typename common_type<Rep1, Rep2>::type, Period>
+        operator*(const Rep1& s, const duration<Rep2, Period>& d);
 
         template <class Rep1, class Period, class Rep2>
-        __duration__<typename __common_type__<Rep1, Rep2>::type, Period>
-        operator/(const __duration__<Rep1, Period>& d, const Rep2& s);
+        duration<typename common_type<Rep1, Rep2>::type, Period>
+        operator/(const duration<Rep1, Period>& d, const Rep2& s);
 
         template <class Rep1, class Period1, class Rep2, class Period2>
-        typename __common_type__<Rep1, Rep2>::type
-        operator/(const __duration__<Rep1, Period1>& lhs, const __duration__<Rep2, Period2>& rhs);
+        typename common_type<Rep1, Rep2>::type
+        operator/(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
 
         template <class Rep1, class Rep2, class Period>
-        double operator/(const Rep1& s, const __duration__<Rep2, Period>& d);
+        double operator/(const Rep1& s, const duration<Rep2, Period>& d);
 
         // duration comparisons
         template <class Rep1, class Period1, class Rep2, class Period2>
-        bool operator==(const __duration__<Rep1, Period1>& lhs, const __duration__<Rep2, Period2>& rhs);
+        bool operator==(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
 
         template <class Rep1, class Period1, class Rep2, class Period2>
-        bool operator!=(const __duration__<Rep1, Period1>& lhs, const __duration__<Rep2, Period2>& rhs);
+        bool operator!=(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
 
         template <class Rep1, class Period1, class Rep2, class Period2>
-        bool operator< (const __duration__<Rep1, Period1>& lhs, const __duration__<Rep2, Period2>& rhs);
+        bool operator< (const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
         template <class Rep1, class Period1, class Rep2, class Period2>
-        bool operator<=(const __duration__<Rep1, Period1>& lhs, const __duration__<Rep2, Period2>& rhs);
+        bool operator<=(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
 
         template <class Rep1, class Period1, class Rep2, class Period2>
-        bool operator> (const __duration__<Rep1, Period1>& lhs, const __duration__<Rep2, Period2>& rhs);
+        bool operator> (const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
         template <class Rep1, class Period1, class Rep2, class Period2>
-        bool operator>=(const __duration__<Rep1, Period1>& lhs, const __duration__<Rep2, Period2>& rhs);
+        bool operator>=(const duration<Rep1, Period1>& lhs, const duration<Rep2, Period2>& rhs);
 
         // duration_cast
 
@@ -2822,54 +2838,54 @@ This file is a redirection to `boost/chrono/chrono.hpp` including in addition re
         ToDuration __duration_cast__(const __duration__<Rep, Period>& d);
 
         // convenience typedefs
-        typedef __duration__<boost::int_least64_t, nano> __nanoseconds__;    // at least 64 bits needed
-        typedef __duration__<boost::int_least64_t, micro> __microseconds__;  // at least 55 bits needed
-        typedef __duration__<boost::int_least64_t, milli> __milliseconds__;  // at least 45 bits needed
-        typedef __duration__<boost::int_least64_t> __seconds__;              // at least 35 bits needed
-        typedef __duration__<boost::int_least32_t, __ratio__< 60> > __minutes__; // at least 29 bits needed
-        typedef __duration__<boost::int_least32_t, __ratio__<3600> > __hours__;  // at least 23 bits needed
+        typedef duration<boost::int_least64_t, nano> __nanoseconds__;    // at least 64 bits needed
+        typedef duration<boost::int_least64_t, micro> __microseconds__;  // at least 55 bits needed
+        typedef duration<boost::int_least64_t, milli> __milliseconds__;  // at least 45 bits needed
+        typedef duration<boost::int_least64_t> __seconds__;              // at least 35 bits needed
+        typedef duration<boost::int_least32_t, ratio< 60> > __minutes__; // at least 29 bits needed
+        typedef duration<boost::int_least32_t, ratio<3600> > __hours__;  // at least 23 bits needed
 
         // time_point arithmetic
         template <class Clock, class Duration1, class Rep2, class Period2>
-        __time_point__<Clock, typename __common_type__<Duration1, __duration__<Rep2, Period2> >::type>
-        operator+(const __time_point__<Clock, Duration1>& lhs, const __duration__<Rep2, Period2>& rhs);
+        time_point<Clock, typename common_type<Duration1, duration<Rep2, Period2> >::type>
+        operator+(const time_point<Clock, Duration1>& lhs, const duration<Rep2, Period2>& rhs);
 
         template <class Rep1, class Period1, class Clock, class Duration2>
-        __time_point__<Clock, typename __common_type__<__duration__<Rep1, Period1>, Duration2>::type>
-        operator+(const __duration__<Rep1, Period1>& lhs, const __time_point__<Clock, Duration2>& rhs);
+        time_point<Clock, typename common_type<duration<Rep1, Period1>, Duration2>::type>
+        operator+(const duration<Rep1, Period1>& lhs, const time_point<Clock, Duration2>& rhs);
 
         template <class Clock, class Duration1, class Rep2, class Period2>
-        __time_point__<Clock, typename __common_type__<Duration1, __duration__<Rep2, Period2> >::type>
-        operator-(const __time_point__<Clock, Duration1>& lhs, const __duration__<Rep2, Period2>& rhs);
+        time_point<Clock, typename common_type<Duration1, duration<Rep2, Period2> >::type>
+        operator-(const time_point<Clock, Duration1>& lhs, const duration<Rep2, Period2>& rhs);
 
         template <class Clock, class Duration1, class Duration2>
-        typename __common_type__<Duration1, Duration2>::type
-        operator-(const __time_point__<Clock, Duration1>& lhs, const __time_point__<Clock,
+        typename common_type<Duration1, Duration2>::type
+        operator-(const time_point<Clock, Duration1>& lhs, const time_point<Clock,
                 Duration2>& rhs);
 
         // time_point comparisons
         template <class Clock, class Duration1, class Duration2>
-        bool operator==(const __time_point__<Clock, Duration1>& lhs, const __time_point__<Clock,
-                      Duration2>& rhs);
+        bool operator==(const time_point<Clock, Duration1>& lhs, 
+                        const time_point<Clock, Duration2>& rhs);
         template <class Clock, class Duration1, class Duration2>
-        bool operator!=(const __time_point__<Clock, Duration1>& lhs, const __time_point__<Clock,
-                      Duration2>& rhs);
+        bool operator!=(const time_point<Clock, Duration1>& lhs, 
+                        const time_point<Clock, Duration2>& rhs);
         template <class Clock, class Duration1, class Duration2>
-        bool operator< (const __time_point__<Clock, Duration1>& lhs, const __time_point__<Clock,
-                      Duration2>& rhs);
+        bool operator< (const time_point<Clock, Duration1>& lhs, 
+                        const time_point<Clock, Duration2>& rhs);
         template <class Clock, class Duration1, class Duration2>
-        bool operator<=(const __time_point__<Clock, Duration1>& lhs, const __time_point__<Clock,
-                      Duration2>& rhs);
+        bool operator<=(const time_point<Clock, Duration1>& lhs, 
+                        const time_point<Clock, Duration2>& rhs);
         template <class Clock, class Duration1, class Duration2>
-        bool operator> (const __time_point__<Clock, Duration1>& lhs, const __time_point__<Clock,
-                      Duration2>& rhs);
+        bool operator> (const time_point<Clock, Duration1>& lhs, 
+                        const time_point<Clock, Duration2>& rhs);
         template <class Clock, class Duration1, class Duration2>
-        bool operator>=(const __time_point__<Clock, Duration1>& lhs, const __time_point__<Clock,
-                      Duration2>& rhs);
+        bool operator>=(const time_point<Clock, Duration1>& lhs, 
+                        const time_point<Clock, Duration2>& rhs);
 
         // time_point_cast
         template <class ToDuration, class Clock, class Duration>
-        __time_point__<Clock, ToDuration> __time_point_cast__(const __time_point__<Clock, Duration>& t);
+        time_point<Clock, ToDuration> time_point_cast(const time_point<Clock, Duration>& t);
 
         // Clocks
         class __system_clock__;
@@ -2917,7 +2933,7 @@ In this table `C1` and `C2` denote `clock` types. `t1` and `t2` are values retur
     [[`C1::period`]        [`ratio`]  [The tick period of the clock in seconds.]]
     [[`C1::duration`]        [`chrono::duration<C1::rep, C1::period>`]  [The native __duration__ type of the `clock`.]]
     [[`C1::time_point`]        [`chrono::time_point<C1> or chrono::time_point<C2, C1::duration>`]  [The native __time_point__ type of the `clock`. Different clocks are permitted to share a __time_point__ definition if it is valid to compare their time_points by comparing their respective __duration_s__. `C1` and `C2` must refer to the same epoch.]]
-    [[`C1::is_monotonic`]        [`const bool`]  [`true` if `t1 <= t2` is always `true`, else `false`. [*Note: A `clock` that can be adjusted backwards is not monotonic]]]
+    [[`C1::is_monotonic`]        [`const bool`]  [`true` if `t1 <= t2` is always `true`, else `false`. *Note*: A `clock` that can be adjusted backwards is not monotonic]]
     [[`C1::now()`]        [`C1::time_point`]  [Returns a __time_point__ representing the current point in time.]]
 ]
 
@@ -2950,9 +2966,9 @@ The __duration__ template uses the __treat_as_floating_point__ trait to help det
     struct duration_values
     {
     public:
-        static BOOST_CHRONO_CONSTEXPR  Rep zero();
-        static BOOST_CHRONO_CONSTEXPR  Rep max();
-        static BOOST_CHRONO_CONSTEXPR  Rep min();
+        static BOOST_CHRONO_CONSTEXPR  Rep __zero__();
+        static BOOST_CHRONO_CONSTEXPR  Rep __max__();
+        static BOOST_CHRONO_CONSTEXPR  Rep __min__();
     };
 
 The __duration__ template uses the __duration_values__ trait to construct special values of the __duration_s__ representation (`Rep`). This is done because the representation might be a class type with behavior which requires some other implementation to return these special values. In that case, the author of that class type should specialize __duration_values__ to return the indicated values.
@@ -3336,7 +3352,8 @@ If these constraints are not met, this constructor will not participate in overl
 
   template <class Rep1, class Period1, class Rep2, class Period2>
   typename __common_type__<__duration__<Rep1, Period1>, __duration__<Rep2, Period2> >::type
-  operator%(const __duration__<Rep1, Period1>& lhs, const __duration__<Rep2, Period2>& rhs);
+  operator%(const __duration__<Rep1, Period1>& lhs, 
+            const __duration__<Rep2, Period2>& rhs);
 
 [*Remarks] This function will not participate in overload resolution unless
 
@@ -3350,7 +3367,8 @@ If these constraints are not met, this constructor will not participate in overl
 [section:duration_operator_eq_1 Non-Member function `operator==(duration,duration)`]
 
     template <class Rep1, class Period1, class Rep2, class Period2>
-    bool operator==(const __duration__<Rep1, Period1>& lhs, const __duration__<Rep2, Period2>& rhs);
+    bool operator==(const __duration__<Rep1, Period1>& lhs, 
+                    const __duration__<Rep2, Period2>& rhs);
 
 [*Returns:] Let `CD` represent the __common_type__ of the two __duration__ arguments. Returns `CD(lhs).count() == CD(rhs).count()`
 
@@ -3358,7 +3376,8 @@ If these constraints are not met, this constructor will not participate in overl
 [section:duration_operator_neq_1 Non-Member function `operator!=(duration,duration)`]
 
     template <class Rep1, class Period1, class Rep2, class Period2>
-    bool operator!=(const __duration__<Rep1, Period1>& lhs, const __duration__<Rep2, Period2>& rhs);
+    bool operator!=(const __duration__<Rep1, Period1>& lhs, 
+                    const __duration__<Rep2, Period2>& rhs);
 
 [*Returns:] `!(lhs == rhs)`.
 
@@ -3366,7 +3385,8 @@ If these constraints are not met, this constructor will not participate in overl
 [section:duration_operator_lt_1 Non-Member function `operator<(duration,duration)`]
 
     template <class Rep1, class Period1, class Rep2, class Period2>
-    bool operator< (const __duration__<Rep1, Period1>& lhs, const __duration__<Rep2, Period2>& rhs);
+    bool operator< (const __duration__<Rep1, Period1>& lhs, 
+                    const __duration__<Rep2, Period2>& rhs);
 
 [*Returns:] Let `CD` represent the __common_type__ of the two __duration__ arguments. Returns `CD(lhs).count() < CD(rhs).count()`
 
@@ -3374,7 +3394,8 @@ If these constraints are not met, this constructor will not participate in overl
 [section:duration_operator_leq_1 Non-Member function `operator<=(duration,duration)`]
 
     template <class Rep1, class Period1, class Rep2, class Period2>
-    bool operator<=(const __duration__<Rep1, Period1>& lhs, const __duration__<Rep2, Period2>& rhs);
+    bool operator<=(const __duration__<Rep1, Period1>& lhs, 
+                    const __duration__<Rep2, Period2>& rhs);
 
 [*Returns:] `!(rhs < lhs)`.
 
@@ -3382,7 +3403,8 @@ If these constraints are not met, this constructor will not participate in overl
 [section:duration_operator_gt_1 Non-Member function `operator>(duration,duration)`]
 
     template <class Rep1, class Period1, class Rep2, class Period2>
-    bool operator> (const __duration__<Rep1, Period1>& lhs, const __duration__<Rep2, Period2>& rhs);
+    bool operator> (const __duration__<Rep1, Period1>& lhs, 
+                    const __duration__<Rep2, Period2>& rhs);
 
 [*Returns:] `rhs < lhs`.
 
@@ -3390,7 +3412,8 @@ If these constraints are not met, this constructor will not participate in overl
 [section:duration_operator_gteq_1 Non-Member function `operator>=(duration,duration)`]
 
     template <class Rep1, class Period1, class Rep2, class Period2>
-    bool operator>=(const __duration__<Rep1, Period1>& lhs, const __duration__<Rep2, Period2>& rhs);
+    bool operator>=(const __duration__<Rep1, Period1>& lhs, 
+                    const __duration__<Rep2, Period2>& rhs);
 
 [*Returns:] `!(lhs < rhs)`.
 
@@ -3537,7 +3560,8 @@ Duration must be an instantiation of __duration__, compile diagnostic otherwise.
 
     template <class Clock, class Duration1, class Rep2, class Period2>
     __time_point__<Clock, typename __common_type__<Duration1, duration<Rep2, Period2> >::type>
-    operator+(const __time_point__<Clock, Duration1>& lhs, const duration<Rep2, Period2>& rhs);
+    operator+(const __time_point__<Clock, Duration1>& lhs, 
+              const duration<Rep2, Period2>& rhs);
 
 [*Returns:] `CT(lhs) += rhs` where `CT` is the type of the return value.
 
@@ -3546,7 +3570,8 @@ Duration must be an instantiation of __duration__, compile diagnostic otherwise.
 
     template <class Rep1, class Period1, class Clock, class Duration2>
     __time_point__<Clock, typename __common_type__<duration<Rep1, Period1>, Duration2>::type>
-    operator+(const duration<Rep1, Period1>& lhs, const __time_point__<Clock, Duration2>& rhs);
+    operator+(const duration<Rep1, Period1>& lhs, 
+              const __time_point__<Clock, Duration2>& rhs);
 
 [*Returns:] `rhs + lhs`.
 
@@ -3555,7 +3580,8 @@ Duration must be an instantiation of __duration__, compile diagnostic otherwise.
 
     template <class Clock, class Duration1, class Rep2, class Period2>
     __time_point__<Clock, typename __common_type__<Duration1, duration<Rep2, Period2> >::type>
-    operator-(const __time_point__<Clock, Duration1>& lhs, const duration<Rep2, Period2>& rhs);
+    operator-(const __time_point__<Clock, Duration1>& lhs, 
+              const duration<Rep2, Period2>& rhs);
 
 [*Returns:] `lhs + (-rhs)`.
 
@@ -3564,7 +3590,8 @@ Duration must be an instantiation of __duration__, compile diagnostic otherwise.
 
     template <class Clock, class Duration1, class Duration2>
     typename __common_type__<Duration1, Duration2>::type
-    operator-(const __time_point__<Clock, Duration1>& lhs, const __time_point__<Clock, Duration2>& rhs);
+    operator-(const __time_point__<Clock, Duration1>& lhs, 
+              const __time_point__<Clock, Duration2>& rhs);
 
 [*Returns:] `lhs.time_since_epoch() - rhs.time_since_epoch()`.
 
@@ -3575,7 +3602,8 @@ Duration must be an instantiation of __duration__, compile diagnostic otherwise.
 [section:time_point_operator_eq Non-Member function `operator==(time_point,time_point)`]
 
     template <class Clock, class Duration1, class Duration2>
-    bool operator==(const __time_point__<Clock, Duration1>& lhs, const __time_point__<Clock, Duration2>& rhs);
+    bool operator==(const __time_point__<Clock, Duration1>& lhs, 
+                    const __time_point__<Clock, Duration2>& rhs);
 
 [*Returns:] `lhs.time_since_epoch() == rhs.time_since_epoch()`.
 
@@ -3583,7 +3611,8 @@ Duration must be an instantiation of __duration__, compile diagnostic otherwise.
 [section:time_point_operator_neq Non-Member function `operator!=(time_point,time_point)`]
 
 template <class Clock, class Duration1, class Duration2>
-   bool operator!=(const __time_point__<Clock, Duration1>& lhs, const __time_point__<Clock, Duration2>& rhs);
+   bool operator!=(const __time_point__<Clock, Duration1>& lhs, 
+                   const __time_point__<Clock, Duration2>& rhs);
 
 [*Returns:] `!(lhs == rhs)`.
 
@@ -3591,7 +3620,8 @@ template <class Clock, class Duration1, class Duration2>
 [section:time_point_operator_lt Non-Member function `operator<(time_point,time_point)`]
 
     template <class Clock, class Duration1, class Duration2>
-    bool operator< (const __time_point__<Clock, Duration1>& lhs, const __time_point__<Clock, Duration2>& rhs);
+    bool operator< (const __time_point__<Clock, Duration1>& lhs, 
+                    const __time_point__<Clock, Duration2>& rhs);
 
 [*Returns:] lhs.time_since_epoch() < rhs.time_since_epoch().
 
@@ -3599,7 +3629,8 @@ template <class Clock, class Duration1, class Duration2>
 [section:time_point_operator_leq Non-Member function `operator<=(time_point,time_point)`]
 
     template <class Clock, class Duration1, class Duration2>
-    bool operator<=(const __time_point__<Clock, Duration1>& lhs, const __time_point__<Clock, Duration2>& rhs);
+    bool operator<=(const __time_point__<Clock, Duration1>& lhs, 
+                    const __time_point__<Clock, Duration2>& rhs);
 
 [*Returns:] `!(rhs < lhs)`.
 
@@ -3607,7 +3638,8 @@ template <class Clock, class Duration1, class Duration2>
 [section:time_point_operator_gt Non-Member function `operator>(time_point,time_point)`]
 
 template <class Clock, class Duration1, class Duration2>
-   bool operator> (const __time_point__<Clock, Duration1>& lhs, const __time_point__<Clock, Duration2>& rhs);
+   bool operator>(const __time_point__<Clock, Duration1>& lhs, 
+                  const __time_point__<Clock, Duration2>& rhs);
 
 [*Returns:] `rhs < lhs`.
 
@@ -3615,7 +3647,8 @@ template <class Clock, class Duration1, class Duration2>
 [section:time_point_operator_geq Non-Member function `operator>=(time_point,time_point)`]
 
     template <class Clock, class Duration1, class Duration2>
-    bool operator>=(const __time_point__<Clock, Duration1>& lhs, const __time_point__<Clock, Duration2>& rhs);
+    bool operator>=(const __time_point__<Clock, Duration1>& lhs, 
+                    const __time_point__<Clock, Duration2>& rhs);
 
 [*Returns:] `!(lhs < rhs)`.
 
@@ -4113,11 +4146,9 @@ This file include all the stopwatches related files
 
 [section:stopwatch_req `Stopwatch` Requirements]
 
-A Stopwatch measure the amount of time elapsed from a start point in time to the stop point time or the accumulation of them.
+A Stopwatch measure the amount of time elapsed from a start point in time to the stop point time or the accumulation of them. Stopwatches can in addition be restarted, suspended and resumed.
 
-A Stopwatch must meet the requirements in the following Table.
-
-In this table `S`, `S1` and `S2` denote stopwatches types. `s` is an instance of `S`.
+A Stopwatch must meet the requirements in the following table. In this table `S`, `S1` and `S2` denote stopwatches types. `s` is an instance of `S`.
 
 [table Stopwatch Requirements
     [[expression]        [return type]  [operational semantics]]
@@ -4131,7 +4162,7 @@ In this table `S`, `S1` and `S2` denote stopwatches types. `s` is an instance of
     [[`s.start()`]        [`S::time_point`]  [starts a Stopwatch.]]
     [[`s.restart()`]        [`std::pair<S::duration,S::time_point>`]  [restarts a Stopwatch.]]
     [[`s.stop()`]        [`S::duration`]  [stops a Stopwatch.]]
-    [[`s.resume()`]        [`S::time_point`]  [resule a Stopwatch.]]
+    [[`s.resume()`]        [`S::time_point`]  [resume a Stopwatch.]]
     [[`s.suspend()`]        [`S::duration`]  [suspends a Stopwatch.]]
     [[`s.elapsed()`]        [`S::duration`]  [the elapsed time while the Stopwatch was running.]]
 ]
@@ -4145,7 +4176,7 @@ In this table `S`, `S1` and `S2` denote stopwatches types. `s` is an instance of
 
 [*Returns:] the starting time point.
 
-[*Throw:] Any exception the Clock::now function can throw.
+[*Throw:] Any exception the `Clock::now` function can throw when `ec` is `system::throws`
 
 [endsect]
 [section:stopwatch_stop Member Function `stop()`]
@@ -4156,7 +4187,7 @@ In this table `S`, `S1` and `S2` denote stopwatches types. `s` is an instance of
 
 [*Returns:] The cummulated elapsed time.
 
-[*Throw:] Any exception the Clock::now function can throw.
+[*Throw:] Any exception the `Clock::now` function can throw when `ec` is `system::throws`
 
 [endsect]
 [section:stopwatch_suspend Member Function `suspend()`]
@@ -4165,7 +4196,7 @@ In this table `S`, `S1` and `S2` denote stopwatches types. `s` is an instance of
 
 [*Effect:] Suspends the stopwatch.
 
-[*Throw:] Any exception the Clock::now function can throw.
+[*Throw:] Any exception the `Clock::now` function can throw when `ec` is `system::throws`
 
 [endsect]
 [section:stopwatch_resume Member Function `resume()`]
@@ -4188,7 +4219,7 @@ In this table `S`, `S1` and `S2` denote stopwatches types. `s` is an instance of
 
 [*Returns:] the starting time point.
 
-[*Throw:] Any exception the `Clock::now()` function can throw.
+[*Throw:] Any exception the `Clock::now` function can throw when `ec` is `system::throws`
 
 [endsect]
 
@@ -4220,7 +4251,7 @@ Models of `Stopwatch`:
         };
 
         typedef <see above> system_stopwatch;
-        #ifdef __
+        #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
         typedef <see above> monotonic_stopwatch;
         #endif
         typedef <see above> high_resolution_stopwatch;
@@ -4230,6 +4261,8 @@ Models of `Stopwatch`:
     }}
 
 [section:dont_start_t Class `dont_start_t`]
+
+Structure used to don't start a `stopwatch` at construction time.
 
         struct dont_start_t;
         static const dont_start_t dont_start;
@@ -4273,31 +4306,76 @@ accuracy of timing information provided the Clock, and this coudl varies a great
 
         };
 
+[section:c1 Constructor `stopwatch( system::error_code &)`]
+
+            explicit stopwatch( system::error_code & ec = system::throws );
+
+[*Effect:] constructs and starts the stopwatch.
+
+[*Throw:] Any exception the `Clock::now` function can throw when `ec` is `system::throws`
+
+[endsect]
+
+[section:c2 Constructor `stopwatch( dont_start_t &)`]
+
+            explicit stopwatch( const dont_start_t& t );
+
+[*Effect:] constructs the stopwatch without starting it.
+
+[*Throw:] Nothing.
+
+[endsect]
+
+
 [section:stopwatch_elapsed Member Function `elapsed()`]
 
             duration elapsed(system::error_code & ec = system::throws) const;
 
 [*Returns:] the elapsed time from the last call to start.
 
-[*Throw:] Nothing.
-
-[*Note:] the system::error_code & parameter is here to conform to the Stopwatch concept.
+[*Throw:] Any exception the `Clock::now` function can throw when `ec` is `system::throws`
 
 [endsect]
+
+[endsect]
+
+[section:spec `stopwatch_reporter_default_formatter` Specialization]
+
+The `stopwatch_reporter_default_formatter` of a `stopwatch<Clock>` is a `stopwatch_formatter`.
+
+        template <class Clock>
+        struct stopwatch_reporter_default_formatter<stopwatch<Clock> > {
+            typedef stopwatch_formatter type;
+        };
+
+The `wstopwatch_reporter_default_formatter` of a `stopwatch<Clock>` is a `wstopwatch_formatter`.
+
+        template <class Clock>
+        struct wstopwatch_reporter_default_formatter<stopwatch<Clock> > {
+            typedef wstopwatch_formatter type;
+        };
 
 [endsect]
 
 [section:stopwatch_typedefs `stopwatch` useful typedefs]
 
-        typedef boost::chrono::stopwatch< boost::chrono::system_clock > system_stopwatch;
-        #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        typedef boost::chrono::stopwatch< boost::chrono::monotonic_clock > monotonic_stopwatch;
-        #endif
-        typedef boost::chrono::stopwatch< boost::chrono::high_resolution_clock > high_resolution_stopwatch;
+The library provides stopwatch short cuts for all the models of __Clock__, replacing clock by stopwatch.
 
-        typedef boost::chrono::stopwatch< boost::chrono::process_real_cpu_clock > process_real_cpu_stopwatch;
-        typedef boost::chrono::stopwatch< boost::chrono::process_user_cpu_clock > process_user_cpu_stopwatch;
-        typedef boost::chrono::stopwatch< boost::chrono::process_system_cpu_clock > process_system_cpu_stopwatch;
+        typedef boost::chrono::stopwatch< boost::chrono::system_clock > 
+            system_stopwatch;
+        #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
+        typedef boost::chrono::stopwatch< boost::chrono::monotonic_clock > 
+            monotonic_stopwatch;
+        #endif
+        typedef boost::chrono::stopwatch< boost::chrono::high_resolution_clock > 
+            high_resolution_stopwatch;
+
+        typedef boost::chrono::stopwatch< boost::chrono::process_real_cpu_clock > 
+            process_real_cpu_stopwatch;
+        typedef boost::chrono::stopwatch< boost::chrono::process_user_cpu_clock > 
+            process_user_cpu_stopwatch;
+        typedef boost::chrono::stopwatch< boost::chrono::process_system_cpu_clock > 
+            process_system_cpu_stopwatch;
 
 [endsect]
 [endsect]
@@ -4370,60 +4448,6 @@ A `stopwatch_accumulator<>` is a model of a __stopwatch_concept__ that allows to
 [*Effect:] Initialize the elapsed duration and the times counter to 0.
 
 [endsect]
-[section:stopwatch_accumulator_start Member Function `start()`]
-
-    time_point start( system::error_code & ec = system::throws );
-
-[*Effect:] Starts running the stopwatch.
-
-[*Returns:] the starting time point.
-
-[*Throw:] Any exception the Clock::now function can throw.
-
-[endsect]
-[section:stopwatch_accumulator_stop Member Function `stop()`]
-
-    duration stop( system::error_code & ec = system::throws );
-
-[*Effect:] Stops running the stopwatch. Accumulates the elapsed time since the last start-like operation + the partial accumulated by resume/suspend operation.
-
-[*Returns:] The cummulated elapsed time.
-
-[*Throw:] Any exception the Clock::now function can throw.
-
-[endsect]
-[section:stopwatch_accumulator_suspend Member Function `suspend()`]
-
-    duration suspend( system::error_code & ec = system::throws );
-
-[*Effect:] Suspends the stopwatch. Accumulates the elapsed time since the last start-like operation on a partial duration.
-
-[*Throw:] Any exception the Clock::now function can throw.
-
-[endsect]
-[section:stopwatch_accumulator_resume Member Function `resume()`]
-
-    time_point resume( system::error_code & ec = system::throws );
-
-[*Effect:] Resumes the stopwatch.
-
-[*Returns:] the starting time point.
-
-[*Throw:] Any exception the Clock::now function can throw.
-
-[endsect]
-
-[section:stopwatch_accumulator_restart Member Function `restart()`]
-
-    time_point restart( system::error_code & ec = system::throws );
-
-[*Effect:] Stop/Start the stopwatch.
-
-[*Returns:] the starting time point.
-
-[*Throw:] Any exception the Clock::now function can throw.
-
-[endsect]
 [section:stopwatch_accumulator_reset Member Function `reset()`]
 
     void reset( );
@@ -4455,17 +4479,44 @@ A `stopwatch_accumulator<>` is a model of a __stopwatch_concept__ that allows to
 
 [endsect]
 
+[section:spec `stopwatch_reporter_default_formatter` Specialization]
+
+The `stopwatch_reporter_default_formatter` of a `stopwatch_accumulator<Clock>` is a `stopwatch_accumulator_formatter`.
+
+        template <class Clock, class Accumulator>
+        struct stopwatch_reporter_default_formatter<stopwatch_accumulator<Clock, Accumulator> > {
+            typedef stopwatch_accumulator_formatter type;
+        };
+
+The `wstopwatch_reporter_default_formatter` of a `stopwatch_accumulator<Clock>` is a `wstopwatch_accumulator_formatter`.
+
+        template <class Clock, class Accumulator>
+        struct wstopwatch_reporter_default_formatter<stopwatch_accumulator<Clock, Accumulator> > {
+            typedef wstopwatch_accumulator_formatter type;
+        };
+
+[endsect]
+
+
 [section:stopwatch_accumulator_typedefs `stopwatch_accumulator` useful typedefs]
 
-    typedef boost::chrono::stopwatch_accumulator< boost::chrono::system_clock > system_stopwatch_accumulator;
-    #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-    typedef boost::chrono::stopwatch_accumulator< boost::chrono::monotonic_clock > monotonic_stopwatch_accumulator;
-    #endif
-    typedef boost::chrono::stopwatch_accumulator< boost::chrono::high_resolution_clock > high_resolution_stopwatch_accumulator;
+The library provides stopwatch_accumulator shortcuts for all the models of __Clock__, replacing clock by stopwatch_accumulator.
 
-    typedef boost::chrono::stopwatch_accumulator< boost::chrono::process_real_cpu_clock > process_real_cpu_stopwatch_accumulator;
-    typedef boost::chrono::stopwatch_accumulator< boost::chrono::process_user_cpu_clock > process_user_cpu_stopwatch_accumulator;
-    typedef boost::chrono::stopwatch_accumulator< boost::chrono::process_system_cpu_clock > process_system_cpu_stopwatch_accumulator;
+    typedef boost::chrono::stopwatch_accumulator< boost::chrono::system_clock > 
+        system_stopwatch_accumulator;
+    #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
+    typedef boost::chrono::stopwatch_accumulator< boost::chrono::monotonic_clock > 
+        monotonic_stopwatch_accumulator;
+    #endif
+    typedef boost::chrono::stopwatch_accumulator< boost::chrono::high_resolution_clock > 
+        high_resolution_stopwatch_accumulator;
+
+    typedef boost::chrono::stopwatch_accumulator< boost::chrono::process_real_cpu_clock >   
+        process_real_cpu_stopwatch_accumulator;
+    typedef boost::chrono::stopwatch_accumulator< boost::chrono::process_user_cpu_clock > 
+        process_user_cpu_stopwatch_accumulator;
+    typedef boost::chrono::stopwatch_accumulator< boost::chrono::process_system_cpu_clock > 
+        process_system_cpu_stopwatch_accumulator;
 
 [endsect]
 [endsect]
@@ -4623,13 +4674,15 @@ The nested typedef `type` defines the default formatter used by the __stopwatch_
         template <class Stopwatch>
         struct stopwatch_reporter_default_formatter;
 
-        template <class Stopwatch, class Formatter=typename stopwatch_reporter_default_formatter<Stopwatch>::type>
+        template <class Stopwatch, 
+                  class Formatter=typename stopwatch_reporter_default_formatter<Stopwatch>::type>
         class stopwatch_reporter;
         
         template <class Stopwatch>
         struct wstopwatch_reporter_default_formatter;
 
-        template <class Stopwatch, class Formatter=typename wstopwatch_reporter_default_formatter<Stopwatch>::type>
+        template <class Stopwatch, 
+                  class Formatter=typename wstopwatch_reporter_default_formatter<Stopwatch>::type>
         class wstopwatch_reporter;
     }}
 
@@ -4951,14 +5004,22 @@ Usage
 [endsect]
 [section:stopclock_typedefs `stopclock` useful typedefs]
 
-        typedef boost::chrono::stopclock< boost::chrono::system_clock > system_stopwatch_stopclock;
+The library provides stopclock shortcuts for all the models of __Clock__, replacing clock by stopclock.
+
+        typedef boost::chrono::stopclock< boost::chrono::system_clock > 
+            system_stopwatch_stopclock;
         #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        typedef boost::chrono::stopclock< boost::chrono::monotonic_clock > monotonic_stopwatch_stopclock;
+        typedef boost::chrono::stopclock< boost::chrono::monotonic_clock > 
+            monotonic_stopwatch_stopclock;
         #endif
-        typedef boost::chrono::stopclock< boost::chrono::high_resolution_clock > high_resolution_stopclock;
-        typedef boost::chrono::stopclock< boost::chrono::process_real_cpu_clock > process_real_cpu_stopclock;
-        typedef boost::chrono::stopclock< boost::chrono::process_user_cpu_clock > process_user_cpu_stopclock;
-        typedef boost::chrono::stopclock< boost::chrono::process_system_cpu_clock > process_system_cpu_stopclock;
+        typedef boost::chrono::stopclock< boost::chrono::high_resolution_clock > 
+            high_resolution_stopclock;
+        typedef boost::chrono::stopclock< boost::chrono::process_real_cpu_clock > 
+            process_real_cpu_stopclock;
+        typedef boost::chrono::stopclock< boost::chrono::process_user_cpu_clock > 
+            process_user_cpu_stopclock;
+        typedef boost::chrono::stopclock< boost::chrono::process_system_cpu_clock > 
+            process_system_cpu_stopclock;
 
 [endsect]
 
@@ -5009,14 +5070,22 @@ Usage
 [endsect]
 [section:wstopclock_typedefs `wstopclock` useful typedefs]
 
-        typedef boost::chrono::wstopclock< boost::chrono::system_clock > system_stopwatch_wstopclock;
+The library provides wstopclock shortcuts for all the models of __Clock__, replacing clock by wstopclock.
+
+        typedef boost::chrono::wstopclock< boost::chrono::system_clock > 
+            system_wstopclock;
         #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        typedef boost::chrono::wstopclock< boost::chrono::monotonic_clock > monotonic_stopwatch_wstopclock;
+        typedef boost::chrono::wstopclock< boost::chrono::monotonic_clock > 
+            monotonic_wstopclock;
         #endif
-        typedef boost::chrono::wstopclock< boost::chrono::high_resolution_clock > high_resolution_wstopclock;
-        typedef boost::chrono::wstopclock< boost::chrono::process_real_cpu_clock > process_real_cpu_wstopclock;
-        typedef boost::chrono::wstopclock< boost::chrono::process_user_cpu_clock > process_user_cpu_wstopclock;
-        typedef boost::chrono::wstopclock< boost::chrono::process_system_cpu_clock > process_system_cpu_wstopclock;
+        typedef boost::chrono::wstopclock< boost::chrono::high_resolution_clock > 
+            high_resolution_wstopclock;
+        typedef boost::chrono::wstopclock< boost::chrono::process_real_cpu_clock > 
+            process_real_cpu_wstopclock;
+        typedef boost::chrono::wstopclock< boost::chrono::process_user_cpu_clock > 
+            process_user_cpu_wstopclock;
+        typedef boost::chrono::wstopclock< boost::chrono::process_system_cpu_clock > 
+            process_system_cpu_wstopclock;
 
 [endsect]
 
@@ -5060,7 +5129,8 @@ Usage
 
     template
         < class Clock=high_resolution_clock
-        , class Formatter=typename stopwatch_reporter_default_formatter<stopwatch_accumulator<Clock>>::type
+        , class Formatter=
+            typename stopwatch_reporter_default_formatter<stopwatch_accumulator<Clock>>::type
     > class basic_stopclock_accumulator
         : public basic_stopwatch_reporter<stopwatch_accumulator<Clock>, Formatter> {
     public:
@@ -5107,7 +5177,8 @@ Usage
 
     template
         < class Clock=high_resolution_clock
-        , class Formatter=typename stopwatch_reporter_default_formatter<stopwatch_accumulator<Clock>>::type
+        , class Formatter=
+            typename stopwatch_reporter_default_formatter<stopwatch_accumulator<Clock>>::type
     > class stopclock_accumulator
         : public basic_stopclock_accumulator<Clock, Formatter> {
     public:
@@ -5149,14 +5220,23 @@ Usage
 [endsect]
 [section:stopclock_accumulator_typedefs `stopclock_accumulator` useful typedefs]
 
-        typedef boost::chrono::stopclock_accumulator< boost::chrono::system_clock > system_stopclock_accumulator;
+The library provides stopclock_accumulator shortcuts for all the models of __Clock__, replacing clock by stopclock_accumulator.
+
+
+        typedef boost::chrono::stopclock_accumulator< boost::chrono::system_clock > 
+            system_stopclock_accumulator;
         #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        typedef boost::chrono::stopclock_accumulator< boost::chrono::monotonic_clock > monotonic_stopclock_accumulator;
+        typedef boost::chrono::stopclock_accumulator< boost::chrono::monotonic_clock > 
+            monotonic_stopclock_accumulator;
         #endif
-        typedef boost::chrono::stopclock_accumulator< boost::chrono::high_resolution_clock > high_resolution_stopclock_accumulator;
-        typedef boost::chrono::stopclock_accumulator< boost::chrono::process_real_cpu_clock > process_real_cpu_stopclock_accumulator;
-        typedef boost::chrono::stopclock_accumulator< boost::chrono::process_user_cpu_clock > process_user_cpu_stopclock_accumulator;
-        typedef boost::chrono::stopclock_accumulator< boost::chrono::process_system_cpu_clock > process_system_cpu_stopclock_accumulator;
+        typedef boost::chrono::stopclock_accumulator< boost::chrono::high_resolution_clock > 
+            high_resolution_stopclock_accumulator;
+        typedef boost::chrono::stopclock_accumulator< boost::chrono::process_real_cpu_clock > 
+            process_real_cpu_stopclock_accumulator;
+        typedef boost::chrono::stopclock_accumulator< boost::chrono::process_user_cpu_clock > 
+            process_user_cpu_stopclock_accumulator;
+        typedef boost::chrono::stopclock_accumulator< boost::chrono::process_system_cpu_clock > 
+            process_system_cpu_stopclock_accumulator;
 
 [endsect]
 [section:wstopclock_accumulator Template Class `wstopclock_accumulator<>`]
@@ -5165,7 +5245,8 @@ Usage
 
     template
         < class Clock=high_resolution_clock
-        , class Formatter=typename stopwatch_reporter_default_formatter<stopwatch_accumulator<Clock>>::type
+        , class Formatter=
+            typename stopwatch_reporter_default_formatter<stopwatch_accumulator<Clock>>::type
     > class wstopclock_accumulator
         : public basic_wstopclock_accumulator<Clock, Formatter> {
     public:
@@ -5207,14 +5288,22 @@ Usage
 [endsect]
 [section:wstopclock_accumulator_typedefs `wstopclock_accumulator` useful typedefs]
 
-        typedef boost::chrono::wstopclock_accumulator< boost::chrono::system_clock > system_wstopclock_accumulator;
+The library provides wstopclock_accumulator shortcuts for all the models of __Clock__, replacing clock by wstopclock_accumulator.
+
+        typedef boost::chrono::wstopclock_accumulator< boost::chrono::system_clock > 
+            system_wstopclock_accumulator;
         #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        typedef boost::chrono::wstopclock_accumulator< boost::chrono::monotonic_clock > monotonic_wstopclock_accumulator;
+        typedef boost::chrono::wstopclock_accumulator< boost::chrono::monotonic_clock > 
+            monotonic_wstopclock_accumulator;
         #endif
-        typedef boost::chrono::wstopclock_accumulator< boost::chrono::high_resolution_clock > high_resolution_wstopclock_accumulator;
-        typedef boost::chrono::wstopclock_accumulator< boost::chrono::process_real_cpu_clock > process_real_cpu_wstopclock_accumulator;
-        typedef boost::chrono::wstopclock_accumulator< boost::chrono::process_user_cpu_clock > process_user_cpu_wstopclock_accumulator;
-        typedef boost::chrono::wstopclock_accumulator< boost::chrono::process_system_cpu_clock > process_system_cpu_wstopclock_accumulator;
+        typedef boost::chrono::wstopclock_accumulator< boost::chrono::high_resolution_clock > 
+            high_resolution_wstopclock_accumulator;
+        typedef boost::chrono::wstopclock_accumulator< boost::chrono::process_real_cpu_clock > 
+            process_real_cpu_wstopclock_accumulator;
+        typedef boost::chrono::wstopclock_accumulator< boost::chrono::process_user_cpu_clock > 
+            process_user_cpu_wstopclock_accumulator;
+        typedef boost::chrono::wstopclock_accumulator< boost::chrono::process_system_cpu_clock > 
+            process_system_cpu_wstopclock_accumulator;
 
 [endsect]
 [endsect]
@@ -5343,7 +5432,8 @@ A typical ussage of this class is
         static int default_places();
 
         template < class Stopwatch >
-        static void show_time( Stopwatch & stopwatch_, const char * format, int places, std::ostream & os, system::error_code & ec);
+        static void show_time( Stopwatch & stopwatch_, const char * format, int places, 
+                               std::ostream & os, system::error_code & ec);
     };
 
 The default places is given by default_places and is 3.
@@ -5389,7 +5479,8 @@ The time is given using the suffix "s" following the System International d'Unit
         static int default_places();
 
         template <class Stopwatch >
-        static void show_time( Stopwatch & stopwatch_, const char * format, int places, std::ostream & os, system::error_code & ec);
+        static void show_time( Stopwatch & stopwatch_, const char * format, int places, 
+                               std::ostream & os, system::error_code & ec);
     };
 
 The default places is given by default_places and is 3.
@@ -5411,8 +5502,12 @@ The time is given using the suffix "s", the frequency is given using the suffix 
 
 [section:typedefs `basic_stopwatch_accumulator_formatter` useful typedefs]
 
-        typedef basic_stopwatch_accumulator_formatter<char> stopwatch_accumulator_formatter;
-        typedef basic_stopwatch_accumulator_formatter<wchar_t> wstopwatch_accumulator_formatter;
+The library provides basic_stopwatch_accumulator_formatter shortcuts for char and wchar_t.
+
+        typedef basic_stopwatch_accumulator_formatter<char> 
+            stopwatch_accumulator_formatter;
+        typedef basic_stopwatch_accumulator_formatter<wchar_t> 
+            wstopwatch_accumulator_formatter;
 
 
 [endsect]
@@ -5475,6 +5570,8 @@ All the units are given using the suffix "s" following the System International 
 [endsect]
 
 [section:typedefs `basic_time_formatter` useful typedefs]
+
+The library provides basic_time_formatter shortcuts for char and wchar_t.
 
         typedef basic_time_formatter<char> time_formatter;
         typedef basic_time_formatter<wchar_t> wtime_formatter;
@@ -5591,6 +5688,8 @@ The default format is "%d days(s) %h:%m:%s.%n\\n", where
 
 [section:typedefs `basic_24_hours_formatter` useful typedefs]
 
+The library provides basic_24_hours_formatter shortcuts for char and wchar_t.
+
         typedef basic_24_hours_formatter<char> t24_hours_formatter;
         typedef basic_24_hours_formatter<wchar_t> wt24_hours_formatter;
 
@@ -5647,11 +5746,14 @@ accuracy of timing information provided the Clock, and this coudl varies a great
 
 [section:timer_typedefs `timer` useful typedefs]
 
-        typedef boost::chrono::timer< boost::chrono::system_clock > system_timer;
+        typedef boost::chrono::timer< boost::chrono::system_clock > 
+            system_timer;
         #ifdef __BOOST_CHRONO_HAS_CLOCK_MONOTONIC
-        typedef boost::chrono::timer< boost::chrono::monotonic_clock > monotonic_timer;
+        typedef boost::chrono::timer< boost::chrono::monotonic_clock > 
+            monotonic_timer;
         #endif
-        typedef boost::chrono::timer< boost::chrono::high_resolution_clock > high_resolution_timer;
+        typedef boost::chrono::timer< boost::chrono::high_resolution_clock > 
+            high_resolution_timer;
 
 [/
         typedef boost::chrono::timer< boost::chrono::process_real_cpu_clock > process_real_cpu_timer;
@@ -6316,6 +6418,10 @@ You can also run a specific suite of test by doing
     [[7]    [min/max macros intrussion] [Take care of Boost min/max recommendations]                  [Closed]]
     [[8]    [declaration of 'typedef class boost::chrono::duration<..> changes meaning of 'duration'] [complete qualification when defining nested typedef duration on clocks to avoid the following compile error:]                  [Closed]]
     [[9]    [VC++ warnings] [disable VC++ foolishness]                  [Closed]]
+]    
+[table
+    [[Ticket]             [Description]          [Resolution] [State]]
+    
     [[10]    [conversion warning in test_duration] [removal of conversion warning in test_duration]                  [Closed]]
     [[11]    [MSVC reports a warning instead of an error when there is an integral constant overflow] [manage with MSVC reporting a warning instead of an error when there is an integral constant overflow]                  [Closed]]
     [[12]    [ambiguities with MSVC when using detail:: namespace] [Qualify with boost::detail boost::chrono::detail ]                  [Closed]]
@@ -6326,7 +6432,10 @@ You can also run a specific suite of test by doing
     [[17]    [suspend doesn't works: bad use of system::error_code & ec] [replace by system::error_code ec]                  [Closed]]
     [[18]    [warnings on mingw-gcc.4.4:
 
-..\..\../boost/chrono/chrono.hpp: In copy constructor 'boost::chrono::time_point<boost::chrono::process_cpu_clock, boost::chrono::duration<boost::chrono::process_cpu_clock::times, boost::ratio<1ll, 1000000000ll> > >::time_point(const boost::chrono::time_point<boost::chrono::process_cpu_clock, boost::chrono::duration<boost::chrono::process_cpu_clock::times, boost::ratio<1ll, 1000000000ll> > >&)':
+..\..\../boost/chrono/chrono.hpp: In copy constructor 'boost::chrono::time_point<boost::chrono::process_cpu_clock,
+boost::chrono::duration<boost::chrono::process_cpu_clock::times, boost::ratio<1ll, 1000000000ll> > 
+>::time_point(const boost::chrono::time_point<boost::chrono::process_cpu_clock,
+boost::chrono::duration<boost::chrono::process_cpu_clock::times, boost::ratio<1ll, 1000000000ll> > >&)':
 ..\..\../boost/chrono/chrono.hpp:816: warning: suggest parentheses around '&&' within '||'
 ..\..\../boost/chrono/chrono.hpp:816: warning: suggest parentheses around '&&' within '||'
 
