@@ -35,7 +35,7 @@ test-suite integer
         [ compile-fail bft_testing/compile_fail/set_storage_more_then_once.cpp ]
         [ compile-fail bft_testing/compile_fail/one_name_two_members.cpp ]
         [ compile bft_testing/compile_pass/bft_member_max_out.cpp ]
-        [ run bitfield_tuple_test.cpp ]
+        [ run bft_testing/bitfield_tuple_test.cpp ]
         [ run bft_testing/name_accessor_test.cpp ]
         [ run bft_testing/get_interface_test.cpp ]
         [ run bft_testing/compile_pass/fusion_includes.cpp ]
@@ -51,6 +51,7 @@ test-suite integer
         [ run bft_testing/deduced_storage_type_long_long_test.cpp ]
         [ run bft_testing/make_bft_testing.cpp ]
         [ run bft_testing/boost_endian_integration_test.cpp ]
+        [ run bft_testing/custom_member_test.cpp ]
         [ run ppb_testing/pointer_plus_bits_test.cpp ]
 
 
