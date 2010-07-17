@@ -99,4 +99,9 @@ inline std::pair<std::size_t, char**> collection_to_posix_argv(const Arguments &
 }
 }
 
+void posix_remap(int native_handle, int new_handle)
+{
+    if (::dup2(new_handle, native_handle) == -1)
+        BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("dup2() failed"); 
+}
 #endif

@@ -198,9 +198,6 @@ inline child create_child(const std::string &executable, Arguments args, context
             for (int i = 0; i < maxdescs; ++i)
                 closeflags[i] = true;
 
-            // setup_input(infoin, closeflags.get(), maxdescs);
-            // setup_output(infoout, closeflags.get(), maxdescs);
-
             int stdin_fd = ctx.stdin_behavior->get_child_end();
             if (stdin_fd != -1 && stdin_fd < maxdescs)
                 closeflags[stdin_fd] = false;
@@ -219,7 +216,13 @@ inline child create_child(const std::string &executable, Arguments args, context
                     ::close(i);
             }
 
-            // setup();
+            if(closeflags[stdin_fd] == false)
+                posix_remap(STDIN_FILENO, stdin_fd);
+            if(closeflags[stdout_fd] == false)
+                posix_remap(STDOUT_FILENO, stdout_fd);
+            if(closeflags[stderr_fd] == false)
+                posix_remap(STDERR_FILENO, stderr_fd);
+
         }
         catch (const boost::system::system_error &e)
         {

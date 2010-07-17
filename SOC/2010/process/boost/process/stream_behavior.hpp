@@ -111,21 +111,21 @@ public:
     inherit(native_type child_end) 
     : child_end_(child_end) 
     { 
-#if defined(BOOST_WINDOWS_API) 
-        if (!::DuplicateHandle(::GetCurrentProcess(), child_end_, ::GetCurrentProcess(), &child_end_, 0, TRUE, DUPLICATE_SAME_ACCESS)) 
-            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("DuplicateHandle() failed"); 
+#if defined(BOOST_WINDOWS_API)
+        if (!::DuplicateHandle(::GetCurrentProcess(), child_end_, ::GetCurrentProcess(), &child_end_, 0, TRUE, DUPLICATE_SAME_ACCESS))
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("DuplicateHandle() failed");
 #endif 
-    } 
+    }
 
-    static boost::shared_ptr<inherit> def(native_type child_end) 
-    { 
-        return boost::make_shared<inherit>(inherit(child_end)); 
-    } 
+    static boost::shared_ptr<inherit> def(native_type child_end)
+    {
+        return boost::make_shared<inherit>(inherit(child_end));
+    }
 
     native_type get_child_end() 
-    { 
-        return child_end_; 
-    } 
+    {
+        return child_end_;
+    }
 
 private: 
     native_type child_end_; 
@@ -142,9 +142,8 @@ class pipe : public stream
 public: 
     enum stream_type { input_stream, output_stream }; 
 
-    pipe(stream_type stream) 
+    pipe(stream_type stream)
     { 
-		
         native_type natives[2]; 
 #if defined(BOOST_POSIX_API) 
         if (::pipe(natives) == -1) 
