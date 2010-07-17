@@ -7,10 +7,7 @@
 #ifndef BOOST_MEMBER_FIELD_HPP
 #define BOOST_MEMBER_FIELD_HPP
 #include <cstddef>
-#include <boost/type_traits.hpp>
-#include <boost/static_assert.hpp>
-#include <boost/mpl/size_t.hpp>
-#include <boost/integer/bit_width.hpp>
+
 
 
 namespace boost {
