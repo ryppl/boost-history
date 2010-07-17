@@ -6,8 +6,8 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_GEOMETRY_ALGORITHMS_OVERLAY_COPY_SEGMENTS_HPP
-#define BOOST_GEOMETRY_ALGORITHMS_OVERLAY_COPY_SEGMENTS_HPP
+#ifndef BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_COPY_SEGMENTS_HPP
+#define BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_COPY_SEGMENTS_HPP
 
 
 #include <vector>
@@ -76,10 +76,7 @@ struct copy_segments_ring
                 << geometry::get<0>(*it) << ", " << geometry::get<1>(*it) << ")"
                 << std::endl;
 #endif
-            typename geometry::point_type<RangeOut>::type p;
-            geometry::copy_coordinates(*it, p);
-            //current_output.push_back(p);
-            *(std::back_inserter(current_output)++) = p;
+            geometry::append(current_output, *it);
         }
     }
 };
@@ -223,4 +220,4 @@ inline void copy_segments(Geometry const& geometry,
 
 }} // namespace boost::geometry
 
-#endif // BOOST_GEOMETRY_ALGORITHMS_OVERLAY_COPY_SEGMENTS_HPP
+#endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_COPY_SEGMENTS_HPP

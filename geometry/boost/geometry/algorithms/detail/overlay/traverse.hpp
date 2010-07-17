@@ -5,8 +5,8 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_GEOMETRY_ALGORITHMS_OVERLAY_TRAVERSE_HPP
-#define BOOST_GEOMETRY_ALGORITHMS_OVERLAY_TRAVERSE_HPP
+#ifndef BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_TRAVERSE_HPP
+#define BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_TRAVERSE_HPP
 
 
 #include <cstddef>
@@ -14,7 +14,7 @@
 #include <boost/range.hpp>
 
 #include <boost/geometry/algorithms/detail/overlay/turn_info.hpp>
-#include <boost/geometry/algorithms/overlay/copy_segments.hpp>
+#include <boost/geometry/algorithms/detail/overlay/copy_segments.hpp>
 #include <boost/geometry/core/access.hpp>
 #include <boost/geometry/core/coordinate_dimension.hpp>
 #include <boost/geometry/geometries/concepts/check.hpp>
@@ -123,7 +123,8 @@ inline void assign_next_ip(G1 const& g1, G2 const& g2,
         ip = boost::begin(turns) + info.enriched.next_ip_index;
         seg_id = info.seg_id;
     }
-    *(std::back_inserter(current_output)++) = ip->point;
+
+    geometry::append(current_output, ip->point);
 }
 
 
@@ -300,7 +301,7 @@ inline void traverse(Geometry1 const& geometry1,
                         set_visited_for_contine(*it, *iit);
 
                         typename boost::range_value<Rings>::type current_output;
-                        *(std::back_inserter(current_output)++) = it->point;
+                        geometry::append(current_output, it->point);
 
                         turn_iterator current = it;
                         turn_operation_iterator_type current_iit = iit;
@@ -408,4 +409,4 @@ inline void traverse(Geometry1 const& geometry1,
 }} // namespace boost::geometry
 
 
-#endif // BOOST_GEOMETRY_ALGORITHMS_OVERLAY_TRAVERSE_HPP
+#endif // BOOST_GEOMETRY_ALGORITHMS_DETAIL_OVERLAY_TRAVERSE_HPP
