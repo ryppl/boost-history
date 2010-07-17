@@ -4,8 +4,8 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 
-#ifndef BOOST_MEMBER_FIELD_HPP
-#define BOOST_MEMBER_FIELD_HPP
+#ifndef BOOST_CUSTOM_FIELD_HPP
+#define BOOST_CUSTOM_FIELD_HPP
 #include <cstddef>
 
 

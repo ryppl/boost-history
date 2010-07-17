@@ -25,9 +25,17 @@ struct bitfield_element {
     typedef NameType    name_type;
     typedef Offset      offset;
     typedef FieldWidth  field_width;
-    typedef bitfield_element<return_type, name_type, offset, field_width> type;
+
     typedef Mask        mask;
     typedef Policy      policy;
+    typedef bitfield_element<
+        return_type,
+        name_type,
+        offset,
+        field_width,
+        mask,
+        policy
+    >                   type;
 };
 
 

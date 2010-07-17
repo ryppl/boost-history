@@ -21,6 +21,8 @@
 #include <boost/integer/bitfield_tuple/flag.hpp>
 #include <boost/integer/bitfield_tuple/filler.hpp>
 #include <boost/integer/bitfield_tuple/align.hpp>
+#include <boost/integer/bitfield_tuple/custom.hpp>
+#include <boost/integer/bitfield_tuple/pointer.hpp>
 
 #include <boost/integer/detail/bft/name_lookup.hpp>
 
@@ -233,7 +235,7 @@ struct bft_arg_parse_impl <
 
 
 
-/* Specialization for filler. */
+/* Specialization for bit_align. */
 template <  std::size_t AlignTo,
             typename StoragePolicy,
             typename FieldVector,
@@ -290,6 +292,117 @@ struct bft_arg_parse_impl <
     };
 };
 
+
+
+
+
+/** Specialization for custom. */
+template <  typename ReturnType,
+            typename Name,
+            typename Mask,
+            typename Policy,
+            typename StoragePolicy,
+            typename FieldVector,
+            typename Offset
+>
+struct bft_arg_parse_impl <
+    bitfields::custom<ReturnType,Name,Mask,Policy>,
+    StoragePolicy,
+    FieldVector,
+    Offset >
+{
+    /*
+    TODO: This needs to be better defined!
+    typedef bitfields::custom<ReturnType,Name,Mask,Policy>  param;
+    typedef typename mpl::push_back<
+        FieldVector,
+        bitfield_element<
+            ReturnType,
+            NameType,
+            Offset,
+            mpl::size_t<FieldWidth>
+        >
+    >::type                 field_vector;
+
+    typedef StoragePolicy   storage_policy;
+
+
+
+    // typedef offset;
+
+    typedef bft_arg_parse_impl<param,storage_policy,field_vector,offset> type;
+
+    template <typename NextParam>
+    struct process {
+        typedef bft_arg_parse_impl<
+            NextParam,
+            storage_policy,
+            field_vector,
+            offset
+        > type;
+    };
+    */
+};
+
+
+/** Specialization for pointer. */
+template <  typename ReturnType,
+            typename Name,
+            typename Mask,
+            typename StoragePolicy,
+            typename FieldVector,
+            typename Offset
+>
+struct bft_arg_parse_impl <
+    bitfields::pointer<ReturnType,Name,Mask>,
+    StoragePolicy,
+    FieldVector,
+    Offset >
+{
+    /*
+    typedef bitfields::bit_align<AlignTo> param;
+    typedef FieldVector     field_vector;
+    typedef StoragePolicy   storage_policy;
+
+
+    // computing the position of the next bit which is aligned
+    // to the current value of AlignTo.
+    
+    // if the modulus result is 0 then we are aligned to the current position.
+    // If its not then we actually have to adjust the position and move to the 
+    // next bit position which is aligned to to AlignTo's value
+
+    typedef mpl::size_t<AlignTo> align_to;
+    typedef typename mpl::modulus<
+        Offset,
+        align_to
+    >::type                 mod_result;
+
+    typedef typename mpl::if_c< mod_result::value == 0, // then
+        Offset,
+        // else
+        typename mpl::plus<
+            Offset,
+            typename mpl::minus<
+                align_to,
+                mod_result
+            >::type            
+        >::type
+    >::type                             offset;
+
+    typedef bft_arg_parse_impl<param,storage_policy,field_vector,offset> type;
+
+    template <typename NextParam>
+    struct process {
+        typedef bft_arg_parse_impl<
+            NextParam,
+            storage_policy,
+            field_vector,
+            offset
+        > type;
+    };
+    */
+};
 
 
 }} // end boost::detail
