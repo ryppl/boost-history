@@ -26,7 +26,7 @@ namespace boost { namespace fusion
     {};
 
     //cschmidt: to ensure full compatibility between fusion and mpl iterators,
-    //the tags should inheritate the corresponding mpl tags.
+    //the tags should inherit the corresponding mpl tags.
     //Fusion tags may be used as template arguments for iterator base classes
     //(e.g. fusion::iterator_facade), therefore emulate the mpl tags
     //(3.4.2/2 !).
@@ -67,7 +67,7 @@ namespace boost { namespace fusion
     {
         typedef mpl::random_access_iterator_tag::tag tag;
         typedef mpl::random_access_iterator_tag::value_type value_type;
-        typedef bidirectional_traversal_tag type;
+        typedef random_access_traversal_tag type;
         BOOST_STATIC_CONSTANT(
                   value_type,
                   value=mpl::random_access_iterator_tag::value);

@@ -118,13 +118,11 @@ namespace boost { namespace fusion { namespace detail
         }
 
         typedef typename remove_reference<T>::type non_ref_t;
-        mutable typename
-            mpl::if_<
-                traits::is_view<T>
-              , typename remove_const<non_ref_t>::type
-              , non_ref_t*
-            >::type
-        t;
+        mutable typename mpl::if_<
+            traits::is_view<T>
+          , typename remove_const<non_ref_t>::type
+          , non_ref_t*
+        >::type t;
     };
 }}}
 

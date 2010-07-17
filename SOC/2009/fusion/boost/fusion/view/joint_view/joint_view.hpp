@@ -22,7 +22,6 @@
 #include <boost/mpl/plus.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/inherit.hpp>
-#include <boost/mpl/identity.hpp>
 #include <boost/mpl/and.hpp>
 
 #include <boost/fusion/view/joint_view/detail/joint_view_fwd.hpp>
@@ -63,7 +62,7 @@ namespace boost { namespace fusion
                   , traits::is_associative<seq2_type>
                 >
               , mpl::inherit2<forward_traversal_tag,associative_tag>
-              , mpl::identity<forward_traversal_tag>
+              , forward_traversal_tag
             >::type
         category;
         typedef joint_view_tag fusion_tag;

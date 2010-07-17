@@ -159,7 +159,7 @@ namespace boost { namespace fusion
             mpl::eval_if<
                 result_of::size<Seqs>
               , detail::min_size<real_seqs>
-              , mpl::identity<mpl::int_<0> >
+              , mpl::int_<0>
             >::type
         size;
 

@@ -28,7 +28,6 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/inherit.hpp>
-#include <boost/mpl/identity.hpp>
 #include <boost/mpl/bool.hpp>
 #ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
 #   include <boost/mpl/equal_to.hpp>
@@ -96,7 +95,7 @@ namespace boost { namespace fusion
             mpl::eval_if<
                 is_associative
               , mpl::inherit2<strictest_traversal,associative_tag>
-              , mpl::identity<strictest_traversal>
+              , strictest_traversal
             >::type
         category;
         typedef typename result_of::size<seq1_type>::type size;
@@ -160,7 +159,7 @@ namespace boost { namespace fusion
         typedef typename
             mpl::eval_if<
                 traits::is_random_access<seq_type>
-              , mpl::identity<random_access_traversal_tag>
+              , random_access_traversal_tag
               , mpl::if_<
                     traits::is_bidirectional<seq_type>
                   , bidirectional_traversal_tag
@@ -174,7 +173,7 @@ namespace boost { namespace fusion
             mpl::eval_if<
                 is_associative
               , mpl::inherit2<seq_category,associative_tag>
-              , mpl::identity<seq_category>
+              , seq_category
             >::type
         category;
         typedef typename result_of::size<seq_type>::type size;

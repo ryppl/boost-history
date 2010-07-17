@@ -78,12 +78,12 @@ namespace boost { namespace fusion { namespace detail
                 " - assert expression: " BOOST_PP_STRINGIZE(PRED))
 #   endif
 #else
-#   define BOOST_FUSION_MPL_ASSERT(PRED) (void)(0)
-#   define BOOST_FUSION_MPL_ASSERT_NOT(PRED) (void)(0)
-#   define BOOST_FUSION_STATIC_ASSERT(PRED) (void)(0)
-#   define BOOST_FUSION_MPL_ASSERT_MSG(PRED,MESSAGE) (void)(0)
-#   define BOOST_FUSION_MPL_ASSERT_NOT_MSG(PRED,MESSAGE) (void)(0)
-#   define BOOST_FUSION_STATIC_ASSERT_MSG(PRED,MESSAGE) (void)(0)
+#   define BOOST_FUSION_MPL_ASSERT(PRED) enum {}
+#   define BOOST_FUSION_MPL_ASSERT_NOT(PRED) enum {}
+#   define BOOST_FUSION_STATIC_ASSERT(PRED) enum {}
+#   define BOOST_FUSION_MPL_ASSERT_MSG(PRED,MESSAGE) enum {}
+#   define BOOST_FUSION_MPL_ASSERT_NOT_MSG(PRED,MESSAGE) enum {}
+#   define BOOST_FUSION_STATIC_ASSERT_MSG(PRED,MESSAGE) enum {}
 #endif
 
 #define BOOST_FUSION_INDEX_CHECK(INDEX,MAX)                                     \
@@ -94,7 +94,7 @@ namespace boost { namespace fusion { namespace detail
             "( [0..." BOOST_PP_STRINGIZE(MAX) ") )"                             \
     )
 #define BOOST_FUSION_TAG_CHECK(TYPE,TAG)                                        \
-    BOOST_FUSION_MPL_ASSERT((is_same<typename traits::tag_of<TYPE>::type,TAG>));
+    BOOST_FUSION_MPL_ASSERT((is_same<typename traits::tag_of<TYPE>::type,TAG>))
 
 #ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
 #   include <boost/fusion/support/tag_of_fwd.hpp>

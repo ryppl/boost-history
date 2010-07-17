@@ -27,7 +27,7 @@ namespace boost { namespace fusion
         typedef typename
             mpl::eval_if<
                 traits::is_random_access<it_type>
-              , mpl::identity<random_access_traversal_tag>
+              , random_access_traversal_tag
               , mpl::if_<
                     traits::is_bidirectional<it_type>
                   , bidirectional_traversal_tag
@@ -42,7 +42,7 @@ namespace boost { namespace fusion
             mpl::eval_if<
                 is_associative
               , mpl::inherit2<it_category,associative_tag>
-              , mpl::identity<it_category>
+              , it_category
             >::type
         category;
 
@@ -100,7 +100,7 @@ namespace boost { namespace fusion
             mpl::eval_if<
                 is_associative
               , mpl::inherit2<strictest_traversal,associative_tag>
-              , mpl::identity<strictest_traversal>
+              , strictest_traversal
             >::type
         category;
 
