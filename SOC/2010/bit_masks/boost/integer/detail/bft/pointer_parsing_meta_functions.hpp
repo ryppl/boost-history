@@ -112,8 +112,6 @@ struct ctz_helper<Mask,IndexingMask,ZeroCount,false> {
     typedef mpl::size_t<ZeroCount - 1 >  type;
 };
 
-
-
 } // end ptr_detail
 
 template <typename Mask>
@@ -126,6 +124,11 @@ template <typename Mask>
 struct count_trailing_zeros {
     typedef typename ptr_detail::ctz_helper<Mask>::type type;
 };
+
+
+
+
+
 }}} // end boost::detail::pointer_member
 
 #endif

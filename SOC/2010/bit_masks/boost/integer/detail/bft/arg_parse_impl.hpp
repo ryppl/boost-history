@@ -14,6 +14,8 @@
 #include <boost/mpl/arithmetic.hpp>
 #include <boost/mpl/find_if.hpp>
 #include <boost/mpl/placeholders.hpp>
+#include <boost/mpl/comparison.hpp>
+#include <boost/type_traits/add_pointer.hpp>
 
 
 #include <boost/integer/bitfield_tuple/storage.hpp>
@@ -26,6 +28,8 @@
 
 #include <boost/integer/detail/bft/name_lookup.hpp>
 #include <boost/integer/detail/bft/pointer_parsing_meta_functions.hpp>
+#include <boost/integer/detail/bft/pointer_packing_policy.hpp>
+
 
 namespace boost { namespace detail {
 
@@ -388,38 +392,79 @@ struct bft_arg_parse_impl <
      *  to the first 1 within the mask provided.
      */
 
+    typedef typename pointer_member::count_leading_zeros<
+        Mask>::type    front_storage_space;
+
+    typedef typename pointer_member::count_trailing_zeros<
+        Mask>::type   back_storage_space;
     
-
-    /*
-    typedef bitfields::bit_align<AlignTo> param;
-    typedef FieldVector     field_vector;
-    typedef StoragePolicy   storage_policy;
-
-
-    // computing the position of the next bit which is aligned
-    // to the current value of AlignTo.
-    
-    // if the modulus result is 0 then we are aligned to the current position.
-    // If its not then we actually have to adjust the position and move to the 
-    // next bit position which is aligned to to AlignTo's value
-
-    typedef mpl::size_t<AlignTo> align_to;
-    typedef typename mpl::modulus<
-        Offset,
-        align_to
-    >::type                 mod_result;
-
-    typedef typename mpl::if_c< mod_result::value == 0, // then
-        Offset,
-        // else
+    typedef typename mpl::minus<
+        mpl::size_t< bit_width< void* >::value>,
         typename mpl::plus<
-            Offset,
-            typename mpl::minus<
-                align_to,
-                mod_result
-            >::type            
+            front_storage_space,
+            back_storage_space
         >::type
-    >::type                             offset;
+    >::type                             size_of_storage;
+/*
+Info to know about the curret state of parsing.
+    1) Is the curret front_storage_space zero?
+        This means that there are no leading zeros.
+    2) Is the rear storage space zero.
+        there is no trailing zeros.
+    3) number of bits being stored for the pointer.
+        calculated as the number of bits in the mask -
+        (back_storage_space + front_storage_space)
+        
+*/
+
+
+    // Logic for determining how to actually store the pointer.
+    typedef typename mpl::if_c<front_storage_space::value == 0,
+    mpl::false_,mpl::true_>::type                  uses_front_storage;
+
+    typedef typename mpl::if_c<back_storage_space::value == 0,
+    mpl::false_,mpl::true_>::type                  uses_back_storage;
+
+    // getting starting position of pointer for storage inside of 
+    // bitfield_tuples storage.
+    typedef typename mpl::if_<
+        uses_front_storage,
+        typename mpl::if_<
+            typename mpl::less<
+                front_storage_space,
+                Offset
+            >::type,
+            // the pointer has been pushed because the user has added leading 
+            // members to the bitfield_tuple greater then the number of bits
+            // the mask allows for them to store directly directly within the
+            // pointer. This may need to be a precondition that causes failure.
+
+            // TODO: REMOVE THIS LATER ITS ONLY HERE FOR THE MOMENT TO CAUSE
+            // FAILURE because I don't know how I should implement this part
+            // just yet and thinking about it is hurting my head.
+            mpl::size_t<sizeof(mpl::void_)>::type,
+            typename mpl::minus<front_storage_space, Offset>::type
+        >::type,
+        Offset
+    >::type                                 data_offset;
+
+    // calculating next offset/width for the next field.
+    typedef typename mpl::plus<size_of_storage, data_offset>::type offset;
+ 
+    typedef bitfields::pointer< ReturnType, Name, Mask > param;
+
+    typedef StoragePolicy   storage_policy;
+    typedef typename mpl::push_back<
+        FieldVector,
+        bitfield_element<
+            ReturnType,
+            Name,
+            data_offset,
+            size_of_storage,
+            Mask,
+            pointer_packing_policy<ReturnType>
+        >
+    >::type field_vector;
 
     typedef bft_arg_parse_impl<param,storage_policy,field_vector,offset> type;
 
@@ -431,8 +476,7 @@ struct bft_arg_parse_impl <
             field_vector,
             offset
         > type;
-    };
-    */
+    };  
 };
 
 
