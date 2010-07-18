@@ -58,18 +58,21 @@ inline void invalid_code_point(char32 val)
 	throw_exception(e);
 }
 
-template<typename Iterator>
+template<int UnitSize, typename Iterator>
 inline void invalid_utf_sequence(Iterator begin, Iterator end)
 {
+    typedef typename std::iterator_traits<Iterator>::value_type ValueType;
+    typedef typename boost::make_unsigned<ValueType>::type UnsignedType;
+    
 #ifndef BOOST_NO_STD_LOCALE
 	std::stringstream ss;
-	ss << "Invalid UTF sequence " << std::showbase << std::hex;
+	ss << "Invalid UTF-" << UnitSize << " sequence " << std::showbase << std::hex;
 	for(Iterator it = begin; it != end; ++it)
-		ss << *it << " ";
-	ss << "encountered while trying to decode UTF-32 sequence";
+		ss << (boost::uint_least32_t)(UnsignedType)*it << " ";
+	ss << "encountered while trying to convert to UTF-32";
 	std::out_of_range e(ss.str());
 #else
-	std::out_of_range e("Invalid UTF sequence encountered while trying to decode UTF-32 sequence");
+	std::out_of_range e("Invalid UTF sequence encountered while trying to convert to UTF-32");
 #endif
 	boost::throw_exception(e);
 }
@@ -129,21 +132,20 @@ struct u16_decoder
 	
     /** Throws \c std::out_of_range if [<tt>begin</tt>, <tt>end</tt>[ is not a valid UTF-16 range. */
 	template<typename In, typename Out>
-	std::pair<In, Out>
-	ltr(In begin, In end, Out out)
+	Out ltr(In& begin, In end, Out out)
 	{
 		BOOST_ASSERT(begin != end);
 		
-		In it = begin;
-		char32 value = *it;
+		In b = begin;
+		char32 value = *begin;
 		
 		if(unicode::is_high_surrogate(value))
 		{
             // precondition; next value must be a low-surrogate:
-			if(++it == end)
-				detail::invalid_utf_sequence(begin, end);
+			if(++begin == end)
+				detail::invalid_utf_sequence<16>(b, end);
 			
-         	char16 lo = *it;
+         	char16 lo = *begin;
          	if(!unicode::is_low_surrogate(lo))
             	detail::invalid_code_point(lo);
 				
@@ -154,28 +156,27 @@ struct u16_decoder
 			detail::invalid_code_point(static_cast<char16>(value));
 		
 		*out++ = value;
-		return std::make_pair(++it, out);
+        ++begin;
+        return out;
 	}
 	
     /** Throws \c std::out_of_range if [<tt>begin</tt>, <tt>end</tt>[ is not a valid UTF-16 range. */
 	template<typename In, typename Out>
-	std::pair<In, Out>
-	rtl(In begin, In end, Out out)
+    Out rtl(In begin, In& end, Out out)
 	{
 		BOOST_ASSERT(begin != end);
         BOOST_ASSERT(!is_surrogate(*begin) || is_high_surrogate(*begin));
-		
-		In it = --end;
-		char32 value = *it;
+	
+        In e = end;
+		char32 value = *--end;
 		
 		if(unicode::is_low_surrogate(value))
 		{
             // precondition; next value must have be a high-surrogate:
-			if(it == begin)
-				detail::invalid_utf_sequence(begin, end);
-			--it;
+			if(end == begin)
+				detail::invalid_utf_sequence<16>(begin, e);
         
-			char16 hi = *it;
+			char16 hi = *--end;
          	if(!unicode::is_high_surrogate(hi))
             	detail::invalid_code_point(hi);
 			
@@ -186,7 +187,7 @@ struct u16_decoder
 			detail::invalid_code_point(static_cast<char16>(value));
 			
 		*out++ = value;
-		return std::make_pair(it, out);
+		return out;
 	}
 	
 private:
@@ -270,114 +271,112 @@ private:
     void check(bool test, In begin, In end)
     {
         if(!test)
-            detail::invalid_utf_sequence(begin, end);
+            detail::invalid_utf_sequence<8>(begin, end);
     }
 
 public:	
     /** Throws \c std::out_of_range if [<tt>begin</tt>, <tt>end</tt>[ is not a valid UTF-8 range. */
 	template<typename In, typename Out>
-	std::pair<In, Out>
-	ltr(In begin, In end, Out out)
+	Out ltr(In& begin, In end, Out out)
 	{
 		BOOST_ASSERT(begin != end);
-		In p = begin;
+        In b = begin;
         
-        unsigned char b0 = *(p++);
+        unsigned char b0 = *(begin++);
         if((b0 & 0x80) == 0)
         {
             char32 r = b0;
             *out++ = r;
-            return std::make_pair(p, out);
+            return out;
         }
         
-        check(p != end, begin, end);
-        unsigned char b1 = *(p++);
-        check((b1 & 0xc0) == 0x80, begin, end);
+        check(begin != end, b, end);
+        unsigned char b1 = *(begin++);
+        check((b1 & 0xc0) == 0x80, b, end);
         if((b0 & 0xe0) == 0xc0)
         {
             char32 r = (b1 & 0x3f) | ((b0 & 0x1f) << 6);
-            check(r >= 0x80, begin, end);
+            check(r >= 0x80, b, end);
             *out++ = r;
-            return std::make_pair(p, out);
+            return out;
         }
         
-        check(p != end, begin, end);
-        unsigned char b2 = *(p++);
-        check((b2 & 0xc0) == 0x80, begin, end);
+        check(begin != end, b, end);
+        unsigned char b2 = *(begin++);
+        check((b2 & 0xc0) == 0x80, b, end);
         if((b0 & 0xf0) == 0xe0)
         {
             char32 r = (b2 & 0x3f) | ((b1 & 0x3f) << 6) | ((b0 & 0x0f) << 12);
-            check(r >= 0x800, begin, end);
+            check(r >= 0x800, b, end);
             *out++ = r;
-            return std::make_pair(p, out);
+            return out;
         }
         
-        check(p != end, begin, end);
-        unsigned char b3 = *(p++);
-        check((b3 & 0xc0) == 0x80, begin, end);
+        check(begin != end, b, end);
+        unsigned char b3 = *(begin++);
+        check((b3 & 0xc0) == 0x80, b, end);
         if((b0 & 0xf8) == 0xf0)
         {
             char32 r = (b3 & 0x3f) | ((b2 & 0x3f) << 6) | ((b1 & 0x3f) << 12) | ((b0 & 0x07) << 18);
-            check(r >= 0x10000, begin, end);
+            check(r >= 0x10000, b, end);
             *out++ = r;
-            return std::make_pair(p, out);
+            return out;
         }
         
-        detail::invalid_utf_sequence(begin, end);
-        return std::make_pair(p, out);
+        detail::invalid_utf_sequence<8>(b, end);
+        return out;
 	}
 
     /** Throws \c std::out_of_range if [<tt>begin</tt>, <tt>end</tt>[ is not a valid UTF-8 range. */	
 	template<typename In, typename Out>
-	std::pair<In, Out>
-	rtl(In begin, In end, Out out)
+	Out rtl(In begin, In& end, Out out)
 	{
 		BOOST_ASSERT(begin != end);
-		In p = end;
+		In e = end;
         
-		unsigned char b0 = *(--p);
+		unsigned char b0 = *(--end);
         if((b0 & 0x80) == 0)
         {
             char32 r = b0;
             *out++ = r;
-            return std::make_pair(p, out);
+            return out;
         }
         
-        check((b0 & 0xc0) == 0x80, begin, end);
-        check(p != begin, begin, end);
-        unsigned char b1 = *(--p);
+        check((b0 & 0xc0) == 0x80, begin, e);
+        check(end != begin, begin, e);
+        unsigned char b1 = *(--end);
         if((b1 & 0xe0) == 0xc0)
         {
             char32 r = (b0 & 0x3f) | ((b1 & 0x1f) << 6);
-            check(r >= 0x80, begin, end);
+            check(r >= 0x80, begin, e);
             *out++ = r;
-            return std::make_pair(p, out);
+            return out;
         }
         
         check((b1 & 0xc0) == 0x80, begin, end);
-        check(p != begin, begin, end);
-        unsigned char b2 = *(--p);
+        check(end != begin, begin, e);
+        unsigned char b2 = *(--end);
         if((b2 & 0xf0) == 0xe0)
         {
             char32 r = (b0 & 0x3f) | ((b1 & 0x3f) << 6) | ((b2 & 0x0f) << 12);
-            check(r >= 0x800, begin, end);
+            check(r >= 0x800, begin, e);
             *out++ = r;
-            return std::make_pair(p, out);
+            return out;
         }
         
-        check((b2 & 0xc0) == 0x80, begin, end);
-        check(p != begin, begin, end);
-        unsigned char b3 = *(--p);
+        check((b2 & 0xc0) == 0x80, begin, e);
+        check(end != begin, begin, e);
+        unsigned char b3 = *(--end);
         if((b3 & 0xf8) == 0xf0)
         {
             char32 r = (b0 & 0x3f) | ((b1 & 0x3f) << 6) | ((b2 & 0x3f) << 12) | ((b3 & 0x07) << 18);
-            check(r >= 0x10000, begin, end);
+            check(r >= 0x10000, begin, e);
             *out++ = r;
-            return std::make_pair(p, out);
+            return out;
         }
         
-        detail::invalid_utf_sequence(begin, end);
-        return std::make_pair(p, out);
+        detail::invalid_utf_sequence<8>(begin, e);
+        return out;
 	}
 };
 
@@ -518,15 +517,13 @@ private:
 
 public:
     template<typename In, typename Out>
-    std::pair<In, Out>
-	ltr(In begin, In end, Out out)
+    Out ltr(In& begin, In end, Out out)
     {
         return typename decoder<In>::type().ltr(begin, end, out);
     }
     
     template<typename In, typename Out>
-    std::pair<In, Out>
-	rtl(In begin, In end, Out out)
+    Out rtl(In begin, In& end, Out out)
     {
         return typename decoder<In>::type().rtl(begin, end, out);
     }
@@ -590,7 +587,7 @@ private:
 
 /** Model of \c \xmlonly<conceptname>Converter</conceptname>\endxmlonly
  * that converts from UTF-X to UTF-Y, X being detected from the value type
- * of the input range, Y being specified by the ValueType parameter */
+ * of the input range, Y being specified by the ValueType parameter. */
 template<typename ValueType>
 struct utf_transcoder : boost::converted_converter<
     boost::unicode::utf_decoder,

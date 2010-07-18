@@ -64,17 +64,29 @@ cat_limits(cv1 Range1 ref1 range1, cv2 Range2 ref2 range2)             \
             utf_decoder                                                \
         > decoded1 = adaptors::utf_decode(range1);                     \
                                                                        \
-        typename range_iterator<cv1 Range1>::type                      \
-        new_end = combiner().rtl(                                      \
-            boost::begin(decoded1),                                    \
-            boost::end(decoded1)                                       \
-        ).base();                                                      \
+        convert_iterator<                                              \
+            typename range_iterator<cv1 Range1>::type,                 \
+            utf_decoder                                                \
+        > end = boost::end(decoded1);                                  \
                                                                        \
-        typename range_iterator<cv2 Range2>::type                      \
-        new_begin = combiner().ltr(                                    \
-            boost::begin(decoded2),                                    \
+        convert_iterator<                                              \
+            typename range_iterator<cv2 Range2>::type,                 \
+            utf_decoder                                                \
+        > begin = boost::begin(decoded2);                              \
+                                                                       \
+        combiner().rtl(                                                \
+            boost::begin(decoded1),                                    \
+            end                                                        \
+        );                                                             \
+        typename range_iterator<cv1 Range1>::type                      \
+        new_end = end.base();                                          \
+                                                                       \
+        combiner().ltr(                                                \
+            begin,                                                     \
             boost::end(decoded2)                                       \
-        ).base();                                                      \
+        );                                                             \
+        typename range_iterator<cv2 Range2>::type                      \
+        new_begin = begin.base();                                      \
                                                                        \
         return make_tuple(                                             \
             make_iterator_range(boost::begin(range1), new_end),        \

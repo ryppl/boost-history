@@ -16,8 +16,8 @@ struct SegmenterConcept : DefaultConstructible<X>, CopyConstructible<X>
     BOOST_CONCEPT_USAGE(SegmenterConcept)
     {
         X c;
-        begin = c.ltr(begin, end);
-        end = c.rtl(begin, end);
+        c.ltr(begin, end);
+        c.rtl(begin, end);
     }
     
 private:

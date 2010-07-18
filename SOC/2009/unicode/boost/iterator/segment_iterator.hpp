@@ -5,7 +5,7 @@
 
 #include <boost/concept/requires.hpp>
 #include <boost/range/concepts.hpp>
-#include <boost/iterator/converter_concept.hpp>
+#include <boost/iterator/convert_iterator.hpp>
 
 #include <boost/iterator/segment_iterator_fwd.hpp>
 
@@ -33,15 +33,15 @@ struct converter_segmenter : private Converter
     }
     
     template<typename In>
-    In ltr(In begin, In end)
+    void ltr(In& begin, In end)
     {
-        return Converter::ltr(begin, end, dummy_output_iterator()).first;
+        Converter::ltr(begin, end, dummy_output_iterator());
     }
     
     template<typename In>
-    In rtl(In begin, In end)
+    void rtl(In begin, In& end)
     {
-        return Converter::rtl(begin, end, dummy_output_iterator()).first;
+        Converter::rtl(begin, end, dummy_output_iterator());
     }
 };
 
@@ -71,25 +71,21 @@ struct boundary_segmenter : private BoundaryChecker
     }
     
     template<typename In>
-    In ltr(In begin, In end)
+    void ltr(In& begin, In end)
     {
-        In pos = begin;
+        In b = begin;
         do
-            ++pos;
-        while(pos != end && !BoundaryChecker::operator()(begin, end, pos));
-        
-        return pos;
+            ++begin;
+        while(begin != end && !BoundaryChecker::operator()(b, end, begin));
     }
     
     template<typename In>
-    In rtl(In begin, In end)
+    void rtl(In begin, In& end)
     {
-        In pos = end;
+        In e = end;
         do
-            --pos;
-        while(pos != end && !BoundaryChecker::operator()(begin, end, pos));
-        
-        return pos;
+            --end;
+        while(end != begin && !BoundaryChecker::operator()(begin, e, end));
     }
 };
 
@@ -178,21 +174,23 @@ struct converted_segmenter
     }
     
     template<typename In>
-    In ltr(In begin, In end)
+    void ltr(In& begin, In end)
     {
-        return c.ltr(
-            make_convert_iterator(begin, end, begin, p),
-            make_convert_iterator(begin, end, end, p)
-        ).base();
+        convert_iterator<In, Converter> b = make_convert_iterator(begin, end, begin, p);
+        convert_iterator<In, Converter> e = make_convert_iterator(begin, end, end, p);
+        
+        c.ltr(b, e);
+        begin = b.base();
     }
     
     template<typename In>
-    In rtl(In begin, In end)
+    void rtl(In begin, In& end)
     {
-        return c.rtl(
-            make_convert_iterator(begin, end, begin, p),
-            make_convert_iterator(begin, end, end, p)
-        ).base();
+        convert_iterator<In, Converter> b = make_convert_iterator(begin, end, begin, p);
+        convert_iterator<In, Converter> e = make_convert_iterator(begin, end, end, p);
+        
+        c.rtl(b, e);
+        end = e.base();
     }
     
 private:
@@ -222,6 +220,7 @@ BOOST_CONCEPT_REQUIRES(
 	return segment_iterator<It, Segmenter>(begin, end, pos, c);
 }
 
+/** Range wrapper around \c boost::segment_iterator */
 template<typename Range, typename Segmenter>
 struct segmented_range : boost::iterator_range<
     boost::segment_iterator<
@@ -230,11 +229,13 @@ struct segmented_range : boost::iterator_range<
     >
 >
 {
+private:
     typedef boost::segment_iterator<
         typename boost::range_iterator<Range>::type,
         Segmenter
     > Iterator;
     
+public:    
     segmented_range(Iterator begin, Iterator end) : boost::iterator_range<Iterator>(begin, end)
     {
     }

@@ -48,39 +48,40 @@ struct decomposer
     /** Throws \c std::out_of_range if [<tt>begin</tt>, <tt>end</tt>[ is not stream-safe.
      * \post \c out is in Normalization Form D and is stream-safe. */
     template<typename In, typename Out>
-    std::pair<In, Out> ltr(In begin, In end, Out out)
+    Out ltr(In& begin, In end, Out out)
     {
-        return decompose_impl(
-            *make_segment_iterator(begin, end, begin, combiner()),
-            out
-        );
+        boost::iterator_range<
+            In
+        > sequence = *boost::make_segment_iterator(begin, end, begin, combiner());
+        
+        out = decompose_impl(sequence, out);
+        begin = boost::end(sequence);
+        return out;
     }
     
     /** Throws \c std::out_of_range if [<tt>begin</tt>, <tt>end</tt>[ is not stream-safe.
      * \post \c out is in Normalization Form D and is stream-safe. */
     template<typename In, typename Out>
-    std::pair<In, Out> rtl(In begin, In end, Out out)
+    Out rtl(In begin, In& end, Out out)
     {   
-        std::pair<
-            reverse_iterator<In>,
-            Out
-        > p = decompose_impl(
-            boost::adaptors::reverse(
-                *boost::prior(
-                    make_segment_iterator(begin, end, end, combiner())
-                )
-            ),
-            out
+        boost::reverse_range<
+            const boost::iterator_range<In>
+        > sequence = boost::adaptors::reverse(
+            *boost::prior(
+                boost::make_segment_iterator(begin, end, end, combiner())
+            )
         );
         
-        return std::make_pair(p.first.base(), p.second);
+        out = decompose_impl(sequence, out);
+        end = boost::end(sequence).base();
+        return out;
     }
     
 private:
     template<typename Range, typename Out>
-    std::pair<typename range_iterator<const Range>::type, Out> decompose_impl(const Range& range, Out out)
+    Out decompose_impl(const Range& range, Out out)
     {
-        return std::make_pair(boost::end(range), decompose_impl(boost::begin(range), boost::end(range), out));
+        return decompose_impl(boost::begin(range), boost::end(range), out);
     }
     
     template<typename In, typename Out>
@@ -252,7 +253,7 @@ struct composer
     /** \pre [<tt>begin</tt>, <tt>end</tt>[ is in Normalization Form D.
      *  \post \c out is in Normalization Form C. */
     template<typename In, typename Out>
-    std::pair<In, Out> ltr(In begin, In end, Out out)
+    Out ltr(In& begin, In end, Out out)
     {
         const ucd::unichar_compose_data_entry* table_begin = ucd::__uni_compose_entry;
         const ucd::unichar_compose_data_entry* table_end = table_begin + ucd::__uni_compose_entry_size;
@@ -280,7 +281,8 @@ struct composer
             else if( (sz == 1 || pos == end) && offset == (r.begin()->decomp[0]-1)) // a complete match was found
             {
                 *out++ = r.begin()->ch;
-                return std::make_pair(pos, out);
+                begin = pos;
+                return out;
             }
             else if(pos == end) // some possible matches but none complete
             {
@@ -297,7 +299,7 @@ struct composer
     /** \pre [<tt>begin</tt>, <tt>end</tt>[ is in Normalization Form D.
      *  \post \c out is in Normalization Form C. */
     template<typename In, typename Out>
-    std::pair<In, Out> rtl(In begin, In end, Out out)
+    Out rtl(In begin, In& end, Out out)
     {
         const ucd::unichar_compose_data_entry* table_begin = ucd::__uni_compose_entry;
         const ucd::unichar_compose_data_entry* table_end = table_begin + ucd::__uni_compose_entry_size;
@@ -321,7 +323,8 @@ struct composer
             if(r.size() == 1 && offset == (r.front()->decomp[0]-1))
             {
                 *out++ = r.front()->ch;
-                return std::make_pair(pos, out);
+                end = pos;
+                return out;
             }
             else if(r.size() == 0 || pos == begin)
             {

@@ -31,10 +31,8 @@ struct convert_iterator
 	{
 		if(pos != end)
         {
-            std::pair<It, typename detail::convert_output_storage<Converter>::output_iterator> pair =
-                p.ltr(pos, end, values.out());
-            next_pos = pair.first;
-            values.update(pair.second);
+            next_pos = pos;
+            values.update(p.ltr(next_pos, end, values.out()));
         }
 	}
 	
@@ -65,10 +63,7 @@ private:
 			pos = next_pos;	
 			if(pos != end)
             {
-                std::pair<It, typename detail::convert_output_storage<Converter>::output_iterator> pair =
-				    p.ltr(pos, end, values.out());
-                next_pos = pair.first;
-                values.update(pair.second);
+                values.update(p.ltr(next_pos, end, values.out()));
             }
 			index = 0;
 		}
@@ -85,11 +80,7 @@ private:
 		else
 		{
 			next_pos = pos;	
-            
-            std::pair<It, typename detail::convert_output_storage<Converter>::output_iterator> pair =
-                p.rtl(begin, pos, values.out());
-            pos = pair.first;
-            values.update(pair.second);
+            values.update(p.rtl(begin, pos, values.out()));
             
 			index = values.last_index();
 		}

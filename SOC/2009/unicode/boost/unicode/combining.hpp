@@ -50,11 +50,14 @@ namespace detail
     template<typename Iterator>
     void not_stream_safe(Iterator begin, Iterator end)
     {
+        typedef typename std::iterator_traits<Iterator>::value_type ValueType;
+        typedef typename boost::make_unsigned<ValueType>::type UnsignedType;
+        
 #ifndef BOOST_NO_STD_LOCALE
         std::stringstream ss;
         ss << "Invalid Unicode stream-safe combining character sequence " << std::showbase << std::hex;
         for(Iterator it = begin; it != end; ++it)
-            ss << *it << " ";
+            ss << (boost::uint_least32_t)(UnsignedType)*it << " ";
         ss << "encountered while trying to decompose UTF-32 sequence";
         std::out_of_range e(ss.str());
 #else
@@ -86,21 +89,19 @@ struct combiner
     typedef char32 output_type;
     
     template<typename Iterator>
-    Iterator ltr(Iterator begin, Iterator end)
+    void ltr(Iterator& begin, Iterator end)
     {
         do
         {
             ++begin;
         }
         while(begin != end && ucd::get_combining_class(*begin) != 0);
-        return begin;
     }
     
     template<typename Iterator>
-    Iterator rtl(Iterator begin, Iterator end)
+    void rtl(Iterator begin, Iterator& end)
     {
         while(end != begin && ucd::get_combining_class(*--end) != 0);
-        return end;
     }
 };
 
@@ -111,37 +112,38 @@ struct combine_sorter
     typedef combining_max max_output;
     
     template<typename In, typename Out>
-    std::pair<In, Out> ltr(In begin, In end, Out out)
+    Out ltr(In& begin, In end, Out out)
     {
-        return combine_sort_impl(
-            *make_segment_iterator(begin, end, begin, combiner()),
-            out
-        );
+        boost::iterator_range<
+            In
+        > sequence = *boost::make_segment_iterator(begin, end, begin, combiner());
+        
+        out = combine_sort_impl(sequence, out);
+        begin = boost::end(sequence);
+        return out;
     }
     
     template<typename In, typename Out>
-    std::pair<In, Out> rtl(In begin, In end, Out out)
+    Out rtl(In begin, In& end, Out out)
     {
-        std::pair<
-            reverse_iterator<In>,
-            Out
-        > p = combine_sort_impl(
-            boost::adaptors::reverse(
-                *boost::prior(
-                    make_segment_iterator(begin, end, end, combiner())
-                )
-            ),
-            out
+        boost::reverse_range<
+            const boost::iterator_range<In>
+        > sequence = boost::adaptors::reverse(
+            *boost::prior(
+                boost::make_segment_iterator(begin, end, end, combiner())
+            )
         );
         
-        return std::make_pair(p.first.base(), p.second);
+        out = combine_sort_impl(sequence, out);
+        end = boost::end(sequence).base();
+        return out;
     }
     
 private:
     template<typename Range, typename Out>
-    std::pair<typename range_iterator<const Range>::type, Out> combine_sort_impl(const Range& range, Out out)
+    Out combine_sort_impl(const Range& range, Out out)
     {
-        return std::make_pair(boost::end(range), combine_sort_impl(boost::begin(range), boost::end(range), out));
+        return combine_sort_impl(boost::begin(range), boost::end(range), out);
     }
 
     template<typename In, typename Out>

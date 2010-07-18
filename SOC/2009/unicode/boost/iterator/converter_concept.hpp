@@ -19,8 +19,8 @@ struct ConverterConcept : DefaultConstructible<X>, CopyConstructible<X>
     BOOST_CONCEPT_USAGE(ConverterConcept)
     {
         X convert;
-        p = convert.ltr(begin, end, out);
-        p = convert.rtl(begin, end, out);
+        out = convert.ltr(begin, end, out);
+        out = convert.rtl(begin, end, out);
     }
     
 private:
@@ -30,7 +30,6 @@ private:
     in_type begin;
     in_type end;
     out_type out;
-    std::pair<in_type, out_type> p;
 };
 
 /** Concept checking class for the \c \xmlonly<conceptname>OneManyConverter</conceptname>\endxmlonly concept */

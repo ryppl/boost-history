@@ -89,7 +89,7 @@ struct hangul_composer
     typedef mpl::int_<1> max_output;
     
     template<typename In, typename Out>
-    std::pair<In, Out> ltr(In begin, In end, Out out)
+    Out ltr(In& begin, In end, Out out)
     {
         char32 ch = *begin++;
         
@@ -102,7 +102,7 @@ struct hangul_composer
                 if(begin == end)
                 {
                     *out++ = combine_l_v(ch, v);
-                    return std::make_pair(begin, out);
+                    return out;
                 }
 
                 char32 t = *begin;
@@ -110,11 +110,11 @@ struct hangul_composer
                 {
                     ++begin;
                     *out++ = combine_lv_t(combine_l_v(ch, v), t);
-                    return std::make_pair(begin, out);
+                    return out;
                 }
                 
                 *out++ = combine_l_v(ch, v);
-                return std::make_pair(begin, out);
+                return out;
             }
         }
         else if(is_lv(ch) && begin != end)
@@ -124,16 +124,16 @@ struct hangul_composer
             {
                 ++begin;
                 *out++ = combine_lv_t(ch, t);
-                return std::make_pair(begin, out);
+                return out;
             }
         }
 
         *out++ = ch;
-        return std::make_pair(begin, out);
+        return out;
     }
     
     template<typename In, typename Out>
-    std::pair<In, Out> rtl(In begin, In end, Out out)
+    Out rtl(In begin, In& end, Out out)
     {
         char32 ch = *--end;
         
@@ -146,14 +146,14 @@ struct hangul_composer
                 if(is_l(l))
                 {
                     *out++ = combine_lv_t(combine_l_v(l, v), ch);
-                    return std::make_pair(end, out);
+                    return out;
                 }
                 ++end;
             }
             else if(is_lv(v))
             {
                 *out++ = combine_lv_t(v, ch);
-                return std::make_pair(end, out);
+                return out;
             }
             ++end;
         }
@@ -163,13 +163,13 @@ struct hangul_composer
             if(is_l(l))
             {
                 *out++ = combine_l_v(l, ch);
-                return std::make_pair(end, out);
+                return out;
             }
             ++end;
         }
 
         *out++ = ch;
-        return std::make_pair(end, out);
+        return out;
     }
     
 private:

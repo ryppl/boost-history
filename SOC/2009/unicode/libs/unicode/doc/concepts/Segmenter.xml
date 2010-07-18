@@ -27,9 +27,15 @@
     </sample-value>
   </notation>
   
-  <notation variables="begin end">
+  <notation variables="pos">
     <sample-value>
       <type name="In" />
+    </sample-value>
+  </notation>
+  
+  <notation variables="next">
+    <sample-value>
+      <type name="In&amp;" />
     </sample-value>
   </notation>
 
@@ -56,7 +62,7 @@
         <type name="Segmenter" />
       </sample-value>
       <sample-value>
-        <type name="In" />
+        <type name="In&amp;" />
       </sample-value>
       <sample-value>
         <type name="In" />
@@ -64,14 +70,14 @@
     </apply-method>
     <return-type>
       <require-same-type testable="yes">
-        <type name="In"/>
+        <type name="void"/>
       </require-same-type>
     </return-type>
     <semantics>
-    Reads part of the [<code>begin</code>, <code>end</code>[ range left to right,
-    and returns the new begin iterator.
+    Reads part of the [<code>next</code>, <code>pos</code>[ range left to right,
+    modifying <code>next</code> as it advances.
     </semantics>
-    <precondition><code>begin != end</code></precondition>
+    <precondition><code>next != pos</code></precondition>
   </valid-expression>
   
   <valid-expression name="Right to left">
@@ -83,19 +89,19 @@
         <type name="In" />
       </sample-value>
       <sample-value>
-        <type name="In" />
+        <type name="In&amp;" />
       </sample-value>
     </apply-method>
     <return-type>
       <require-same-type testable="yes">
-        <type name="In"/>
+        <type name="void"/>
       </require-same-type>
     </return-type>
     <semantics>
-    Reads part of the [<code>begin</code>, <code>end</code>[ range right to left,
-    and returns the new past-the-end iterator.
+    Reads part of the [<code>pos</code>, <code>next</code>[ range right to left,
+    modifying <code>next</code> as it advances.
     </semantics>
-    <precondition><code>begin != end</code></precondition>
+    <precondition><code>pos != next</code></precondition>
   </valid-expression>  
 
   <example-model>

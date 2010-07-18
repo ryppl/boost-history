@@ -72,10 +72,8 @@ protected:
         
         try
         {
-            std::pair<const extern_type*, intern_type*> p = p2.ltr(from_next, from_end, st.pending_data);
-            from_next = p.first;
+            st.pending_size = p2.ltr(from_next, from_end, st.pending_data) - st.pending_data;
             *to_next++ = st.pending_data[0];
-            st.pending_size = p.second - st.pending_data;
             std::copy(st.pending_data + 1, st.pending_data + st.pending_size, st.pending_data);
             st.pending_size--;
         }
@@ -117,9 +115,7 @@ protected:
         {
             try
             {
-                std::pair<iterator, extern_type*> p = p1.ltr(from_next2, from_end2, to_next);
-                from_next2 = p.first;
-                to_next = p.second;
+                to_next = p1.ltr(from_next2, from_end2, to_next);
             }
             catch(...)
             {
@@ -169,9 +165,7 @@ protected:
         {
             try
             {
-                std::pair<const intern_type*, extern_type*> p = p1.ltr(from_next, from_end, to_next);
-                from_next = p.first;
-                to_next = p.second;
+                to_next = p1.ltr(from_next, from_end, to_next);
             }
             catch(...)
             {
@@ -200,8 +194,7 @@ protected:
         {
             try
             {
-                std::pair<const extern_type*, dummy_output_iterator> p = p2.ltr(from_next, from_end, dummy_output_iterator());
-                from_next = p.first;
+                p2.ltr(from_next, from_end, dummy_output_iterator());
             }
             catch(...)
             {

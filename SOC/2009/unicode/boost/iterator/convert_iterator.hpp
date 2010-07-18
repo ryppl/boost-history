@@ -2,12 +2,10 @@
 #define BOOST_ITERATOR_PIPE_ITERATOR_HPP
 
 #include <boost/assert.hpp>
-#include <utility>
 
 #include <boost/range.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/times.hpp>
-#include <boost/tuple/tuple.hpp>
 
 #include <boost/concept/requires.hpp>
 #include <boost/range/concepts.hpp>
@@ -29,23 +27,21 @@ template<typename OneManyConverter>
 struct one_many_converter
 {
 	template<typename In, typename Out>
-	std::pair<In, Out>
-	ltr(In begin, In end, Out out)
+	Out
+	ltr(In& begin, In end, Out out)
 	{
 		BOOST_ASSERT(begin != end);
 		
-		out = static_cast<OneManyConverter&>(*this)(*begin, out);
-		return std::make_pair(++begin, out);
+		return static_cast<OneManyConverter&>(*this)(*begin++, out);
 	}
 	
 	template<typename In, typename Out>
-	std::pair<In, Out>
-	rtl(In begin, In end, Out out)
+	Out
+	rtl(In begin, In& end, Out out)
 	{
 		BOOST_ASSERT(begin != end);
 		
-		out = static_cast<OneManyConverter&>(*this)(*--end, out);
-		return std::make_pair(end, out);
+		return static_cast<OneManyConverter&>(*this)(*--end, out);
 	}
 };
 
@@ -87,22 +83,20 @@ struct multi_converter
                 typename P2::output_type
             >
         >,
-        std::pair<In, Out>
+        Out
     >::type
-    ltr(In begin, In end, Out out)
+    ltr(In& begin, In end, Out out)
     {
         Out b = out;
-        
-        std::pair<In, Out> pair = p1.ltr(begin, end, out);
-        Out e = pair.second;
+        Out e = p1.ltr(begin, end, out);
         
         do
         {
-            tie(b, out) = p2.ltr(b, e, out);
+            out = p2.ltr(b, e, out);
         }
         while(b != e);
         
-        return std::make_pair(pair.first, out);
+        return out;
     }
     
     template<typename In, typename Out>
@@ -117,23 +111,21 @@ struct multi_converter
                 typename P2::output_type
             >
         >,
-        std::pair<In, Out>
+        Out
     >::type
-    ltr(In begin, In end, Out out)
+    ltr(In& begin, In end, Out out)
     {
         typename P1::output_type buf[max_output::value];
         typename P1::output_type* b = buf;
-        
-        std::pair<In, typename P1::output_type*> pair = p1.ltr(begin, end, buf);
-        typename P1::output_type* e = pair.second;
+        typename P1::output_type* e = p1.ltr(begin, end, buf);
         
         do
         {
-            tie(b, out) = p2.ltr(b, e, out);
+            out = p2.ltr(b, e, out);
         }
         while(b != e);
         
-        return std::make_pair(pair.first, out);
+        return out;
     }
     
     template<typename In, typename Out>
@@ -148,21 +140,19 @@ struct multi_converter
                 typename P2::output_type
             >
         >,
-        std::pair<In, Out>
-    >::type rtl(In begin, In end, Out out)
+        Out
+    >::type rtl(In begin, In& end, Out out)
     {
-        Out b = out;
-        
-        std::pair<In, Out> pair = p1.rtl(begin, end, out);
-        Out e = pair.second;
+        Out b = out;        
+        Out e = p1.rtl(begin, end, out);
         
         do
         {
-            tie(b, out) = p2.ltr(b, e, out);
+            out = p2.ltr(b, e, out);
         }
         while(b != e);
         
-        return std::make_pair(pair.first, out);
+        return out;
     }
     
     template<typename In, typename Out>
@@ -177,22 +167,20 @@ struct multi_converter
                 typename P2::output_type
             >
         >,
-        std::pair<In, Out>
-    >::type rtl(In begin, In end, Out out)
+        Out
+    >::type rtl(In begin, In& end, Out out)
     {
         typename P1::output_type buf[max_output::value];
         typename P1::output_type* b = buf;
-        
-        std::pair<In, typename P1::output_type*> pair = p1.rtl(begin, end, buf);
-        typename P1::output_type* e = pair.second;
+        typename P1::output_type* e = p1.rtl(begin, end, buf);
         
         do
         {
-            tie(b, out) = p2.ltr(b, e, out);
+            out = p2.ltr(b, e, out);
         }
         while(b != e);
         
-        return std::make_pair(pair.first, out);
+        return out;
     }
     
 private:
@@ -231,32 +219,25 @@ struct converted_converter : P2
     converted_converter(P1 p1_, P2 p2_ = P2()) : P2(p2_), p1(p1_) {}
     
     template<typename In, typename Out>
-    std::pair<In, Out> ltr(In begin, In end, Out out)
+    Out ltr(In& begin, In end, Out out)
     {
-        std::pair<
-            convert_iterator<In, P1>,
-            Out
-        > pair = P2::ltr(
-            make_convert_iterator(begin, end, begin, p1),
-            make_convert_iterator(begin, end, end, p1),
-            out
-        );
+        convert_iterator<In, P1> b = make_convert_iterator(begin, end, begin, p1);
+        convert_iterator<In, P1> e = make_convert_iterator(begin, end, end, p1);
         
-        return std::make_pair(pair.first.base(), pair.second);
+        out = P2::ltr(b, e, out);
+        begin = b.base();
+        return out;
     }
     
     template<typename In, typename Out>
-    std::pair<In, Out> rtl(In begin, In end, Out out)
+    Out rtl(In begin, In& end, Out out)
     {
-        std::pair<
-            convert_iterator<In, P1>,
-            Out
-        > pair = P2::rtl(
-            make_convert_iterator(begin, end, begin, p1),
-            make_convert_iterator(begin, end, end, p1),
-            out
-        );
-        return std::make_pair(pair.first.base(), pair.second);
+        convert_iterator<In, P1> b = make_convert_iterator(begin, end, begin, p1);
+        convert_iterator<In, P1> e = make_convert_iterator(begin, end, end, p1);
+        
+        out = P2::rtl(b, e, out);
+        end = b.base();
+        return out;
     }
     
 private:
@@ -304,6 +285,7 @@ BOOST_CONCEPT_REQUIRES(
 	return convert_iterator<It, Converter>(begin, end, pos, p);
 }
 
+/** Range wrapper around \c boost::convert_iterator */
 template<typename Range, typename Converter>
 struct converted_range : boost::iterator_range<
     boost::convert_iterator<
@@ -337,11 +319,7 @@ BOOST_CONCEPT_REQUIRES(
     Iterator end = boost::end(range);
     
     while(begin != end)
-    {
-        std::pair<Iterator, OutputIterator> p = convert.ltr(begin, end, out);
-        begin = p.first;
-        out = p.second;
-    }
+        out = convert.ltr(begin, end, out);
     
     return out;
 }

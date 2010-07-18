@@ -4,32 +4,35 @@
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/range.hpp>
 
-#include <boost/iterator/consumer_concept.hpp>
+#include <boost/iterator/segmenter_concept.hpp>
 
 namespace boost
 {
 
 /** Iterator adapter that wraps a range to make it appear like a range
- * of subranges, each subrange being a step of a \c Consumer invocation. */    
-template<typename It, typename Consumer>
-struct consumer_iterator
+ * of subranges, each subrange being a step of a \c Segmenter invocation. */    
+template<typename It, typename Segmenter>
+struct segment_iterator
 	: iterator_facade<
-		consumer_iterator<It, Consumer>,
+		segment_iterator<It, Segmenter>,
 		iterator_range<It>,
 		std::bidirectional_iterator_tag,
 		const iterator_range<It>
 	>
 {
     BOOST_CONCEPT_ASSERT((InputIterator<It>));
-    BOOST_CONCEPT_ASSERT((ConsumerConcept<Consumer>));
-    BOOST_CONCEPT_ASSERT((Convertible<typename InputIterator<It>::value_type, typename Consumer::input_type>));
+    BOOST_CONCEPT_ASSERT((SegmenterConcept<Segmenter>));
+    BOOST_CONCEPT_ASSERT((Convertible<typename InputIterator<It>::value_type, typename Segmenter::input_type>));
     
-    consumer_iterator() {} // singular
+    segment_iterator() {} // singular
     
-	consumer_iterator(It begin_, It end_, It pos_, Consumer c_) : pos(pos_), begin(begin_), end(end_), p(c_)
+	segment_iterator(It begin_, It end_, It pos_, Segmenter c_) : pos(pos_), begin(begin_), end(end_), p(c_)
 	{
 		if(pos != end)
-            next_pos = p.ltr(pos, end);
+        {
+            next_pos = pos;
+            p.ltr(next_pos, end);
+        }
 	}
 	
 	It base() const
@@ -51,7 +54,7 @@ private:
 	{
         pos = next_pos;	
 		if(pos != end)
-            next_pos = p.ltr(pos, end);
+            p.ltr(next_pos, end);
 	}
 	
 	void decrement()
@@ -59,11 +62,10 @@ private:
         BOOST_CONCEPT_ASSERT((BidirectionalIterator<It>));
         
         next_pos = pos;	
-            
-        pos = p.rtl(begin, pos);
+        p.rtl(begin, pos);
 	}
 	
-	bool equal(const consumer_iterator& other) const
+	bool equal(const segment_iterator& other) const
 	{
 		return pos == other.pos;
 	}
@@ -74,7 +76,7 @@ private:
 	It begin;
 	It end;
 	
-	Consumer p;
+	Segmenter p;
 };
 
 } // namespace boost
