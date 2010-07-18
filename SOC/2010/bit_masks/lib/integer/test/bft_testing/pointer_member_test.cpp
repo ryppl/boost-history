@@ -6,27 +6,45 @@
 #include <boost/integer/bitfield_tuple.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include <iostream>
-
 using namespace boost;
 using namespace boost::bitfields;
+
 struct rd;
+struct b1;
+struct b2;
 
 typedef bitfield_tuple< pointer<int, rd> > test_type_1;
+typedef bitfield_tuple< pointer<int, rd>, flag<b1>, flag<b2> > test_type_2;
 // typedef bitfield_tuple< member<int*,rd, bit_width<int*>::value - 2> > test_type_2;
 
 int main() {
     {
     test_type_1 t1;
     int i=0;
-    // std::cout << sizeof(&i) << std::endl;
-    // BOOST_TEST(false);
+
     t1.get<rd>() = &i;
     BOOST_TEST(*t1.get<rd>() == 0);
+    i = 5;
+    BOOST_TEST(*t1.get<rd>() == 5);
     }
 
-    // testing member<int*,rd, width of pointer-2>
+    // double boolean test.
     {
+    test_type_2 t2;
+    int i=0;
+    t2.get<rd>() = &i;
+    BOOST_TEST(*t2.get<rd>() == 0);
+    i = 5;
+    BOOST_TEST(*t2.get<rd>() == 5);
+    BOOST_TEST(t2.get<b1>() == false );
+    BOOST_TEST(t2.get<b2>() == false );
+    t2.get<b1>() = true;
+    t2.get<b2>() = true;
+
+    BOOST_TEST(*t2.get<rd>() == 5);
+    BOOST_TEST(t2.get<b1>() );
+    BOOST_TEST(t2.get<b2>() );
+    
     }
     return boost::report_errors();
 }
