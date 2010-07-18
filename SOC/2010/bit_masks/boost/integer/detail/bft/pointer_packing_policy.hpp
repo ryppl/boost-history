@@ -9,9 +9,33 @@
 
 namespace boost { namespace detail {
 
-template <typename T>
+namespace bit_shift {
+struct right;
+struct left;
+struct none;
+}
+
+template <
+    typename Mask,
+    typename ValueType,
+    typename Offset,
+    typename Width,
+    typename IsAligned,
+    typename DirectionShifted
+>
 struct pointer_packing_policy {
-    
+
+    typedef Offset              offset;
+    typedef Width               width;
+    typedef ValueType           value_type;
+    typedef IsAligned           is_aligned;
+    typedef DirectionShifted    shift_direction;
+    template <typename StorageType>
+    struct apply {
+        typedef StorageType         storage_type;
+
+        // static value_type get(storage_type const& )
+    };
 
 };
 

@@ -449,7 +449,7 @@ Info to know about the curret state of parsing.
     >::type                                 data_offset;
 
     // calculating next offset/width for the next field.
-    typedef typename mpl::plus<size_of_storage, data_offset>::type offset;
+    typedef typename mpl::plus< size_of_storage, data_offset >::type offset;
  
     typedef bitfields::pointer< ReturnType, Name, Mask > param;
 
@@ -462,9 +462,16 @@ Info to know about the curret state of parsing.
             data_offset,
             size_of_storage,
             Mask,
-            pointer_packing_policy<ReturnType>
+            pointer_packing_policy<
+                Mask,
+                ReturnType*,
+                offset,
+                size_of_storage, 
+                mpl::true_,
+                bit_shift::none
+            >
         >
-    >::type field_vector;
+    >::type                     field_vector;
 
     typedef bft_arg_parse_impl<param,storage_policy,field_vector,offset> type;
 
