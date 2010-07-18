@@ -408,7 +408,7 @@ namespace adaptors                                                     \
       adapter that wraps the range \c range and converts it
       step-by-step as the range is advanced. */                        \
     template<typename Range, typename... T>                            \
-    boost::segmented_range<                                            \
+    boost::converted_range<                                            \
         Range,                                                         \
         converter_name                                                 \
     >                                                                  \

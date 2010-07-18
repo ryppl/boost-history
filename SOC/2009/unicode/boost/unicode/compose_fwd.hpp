@@ -145,7 +145,7 @@ private:
     >::type
     decompose_impl(In begin, In end, Out out)
     {
-        char32* out_pos = out;
+        Out out_pos = out;
         
         bool to_sort = false;
         
@@ -224,12 +224,12 @@ namespace detail
         
         bool operator()(const ucd::unichar_compose_data_entry& lft, In rgt) const
         {   
-            return lft.decomp[0] > offset && lft.decomp[1+offset] < *rgt;
+            return lft.decomp[0] > offset && lft.decomp[1+offset] < boost::char32(*rgt);
         }
         
         bool operator()(In lft, const ucd::unichar_compose_data_entry& rgt) const
         {
-            return rgt.decomp[0] > offset && *lft < rgt.decomp[1+offset];
+            return rgt.decomp[0] > offset && boost::char32(*lft) < rgt.decomp[1+offset];
         }
         
     private:

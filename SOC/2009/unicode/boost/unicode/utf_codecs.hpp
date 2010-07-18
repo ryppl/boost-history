@@ -139,7 +139,7 @@ struct u16_decoder
 		
 		if(unicode::is_high_surrogate(value))
 		{
-            // precondition; next value must have be a low-surrogate:
+            // precondition; next value must be a low-surrogate:
 			if(++it == end)
 				detail::invalid_utf_sequence(begin, end);
 			
@@ -466,6 +466,7 @@ namespace detail
 template<typename ValueType>
 struct utf_encoder : detail::select_encoder<ValueType>::type
 {
+    typedef ValueType output_type;
 };
 
 /** Model of \c \xmlonly<conceptname>Converter</conceptname>\endxmlonly,
@@ -585,6 +586,17 @@ private:
         return u8_boundary()(begin, end, pos);
     }
 #endif
+};
+
+/** Model of \c \xmlonly<conceptname>Converter</conceptname>\endxmlonly
+ * that converts from UTF-X to UTF-Y, X being detected from the value type
+ * of the input range, Y being specified by the ValueType parameter */
+template<typename ValueType>
+struct utf_transcoder : boost::converted_converter<
+    boost::unicode::utf_decoder,
+    boost::unicode::utf_encoder<ValueType>
+>
+{
 };
 
 /** Model of \c \xmlonly<conceptname>OneManyConverter</conceptname>\endxmlonly
