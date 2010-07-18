@@ -12,10 +12,10 @@
 
 #ifndef BOOST_INTEGER_BITFIELD__HPP
 #define BOOST_INTEGER_BITFIELD__HPP
-
+#include <boost/integer/detail/bft/pointer_parsing_meta_functions.hpp>
 #include <cstddef>
 #include <boost/static_assert.hpp>
-
+#include <boost/mpl/void.hpp>
 #include <cassert>
 #include <limits>
 //#include <netinet/in.h>
@@ -28,7 +28,7 @@ namespace boost { namespace integer {
     };
 
     //-----------------------------------------------------------------------------
-    template <class, std::size_t, std::size_t, class, class> class bitfield;
+    // template <class, std::size_t, std::size_t, class, class> class bitfield;
 
     #if 0
     template <class R, class V>
@@ -156,9 +156,17 @@ namespace boost { namespace integer {
 
     template <typename STORAGE_TYPE, std::size_t F, std::size_t L
         , typename VALUE_TYPE=typename bitfield_value_type<STORAGE_TYPE>::type
-        , typename REFERENCE_TYPE=VALUE_TYPE&>
-    class bitfield {
-        typedef bitfield<STORAGE_TYPE, F, L, VALUE_TYPE, REFERENCE_TYPE> this_type;
+        , typename REFERENCE_TYPE=VALUE_TYPE&, typename PACKAGE_INFO = mpl::void_ >
+    class bitfield;
+
+    template <
+        typename STORAGE_TYPE,
+        std::size_t F,
+        std::size_t L,
+        typename VALUE_TYPE,
+        typename REFERENCE_TYPE>
+    class bitfield <STORAGE_TYPE, F,L,VALUE_TYPE, REFERENCE_TYPE,mpl::void_ >{
+        typedef bitfield<STORAGE_TYPE, F, L, VALUE_TYPE, REFERENCE_TYPE,mpl::void_> this_type;
     public:
         //! storage type of the bitfield support
         typedef STORAGE_TYPE storage_type;
@@ -410,6 +418,60 @@ const typename bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::storage_typ
             ((1 << bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::WIDTH) - 1)
 
     );
+
+
+template <
+    typename STORAGE_TYPE,
+    std::size_t F,
+    std::size_t L,
+    typename VALUE_TYPE,
+    typename REFERENCE_TYPE,
+    typename MASK,
+    typename POLICY
+>
+class bitfield <
+    STORAGE_TYPE,
+    F,
+    L,
+    VALUE_TYPE,
+    REFERENCE_TYPE,
+    ::boost::detail::pointer_member::pointer_member_info<MASK,POLICY> >
+{
+    typedef bitfield <
+        STORAGE_TYPE,
+        F,
+        L,
+        VALUE_TYPE,
+        REFERENCE_TYPE,
+        ::boost::detail::pointer_member::pointer_member_info<MASK,POLICY>
+    >       _self;
+public:
+
+    typedef STORAGE_TYPE    storage_type;
+    typedef VALUE_TYPE      value_type;
+    typedef REFERENCE_TYPE  reference_type;
+
+    typedef MASK get_mask;
+    typedef integral_constant< typename MASK::value_type, ~MASK::value > set_mask;
+    typedef POLICY  field_policy;
+
+    /** constructor over the storage type. */
+    explicit bitfield(storage_type& field) :_field(field) { }
+
+    /** Copy Constructor. TODO: figure out if i need this or not. */
+    bitfield(_self const& x) :_field( x._field ) { }
+
+    /** Set function. */
+    void set( value_type x) {
+        _field = (_field & set_mask::value) | (typename get_mask::value_type(x) & get_mask::value);
+    }
+
+    value_type get() const {
+        return value_type(_field & get_mask::value);
+    }
+private:
+    storage_type& _field;
+};
 
 }}
 #endif

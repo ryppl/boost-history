@@ -6,6 +6,7 @@
 
 #ifndef BOOST_BITFIELD_TUPLE_HPP
 #define BOOST_BITFIELD_TUPLE_HPP
+
 #include <boost/config.hpp>
 #ifdef BOOST_MSVC
 #pragma warning(push)
@@ -23,6 +24,7 @@
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/less.hpp>
 #include <boost/mpl/size.hpp>
+#include <boost/type_traits/add_reference.hpp>
 #include <boost/integer/detail/bft/reference_builder.hpp>
 #include <boost/integer/detail/bft/ext/bitfield_tuple_fusion_includes.hpp>
 #include <boost/integer/detail/fusion_ext_includes.hpp>
@@ -74,7 +76,19 @@ public:
             BitfieldElement::offset::value
               +
             BitfieldElement::field_width::value - 1,
-            return_type
+            return_type,
+            typename add_reference<return_type>::type,
+            typename mpl::if_<
+                is_same<
+                    typename BitfieldElement::mask,
+                    mpl::void_
+                >,
+                mpl::void_,
+                detail::pointer_member::pointer_member_info<
+                    typename BitfieldElement::mask,
+                    typename BitfieldElement::policy
+                >
+            >::type
         >                                               field_type;
 
         /** Reference constructor. */
@@ -101,7 +115,7 @@ public:
          *  This allows values to be assigned to the get function, as part of 
          *  the tuple like interface.
          */
-        _self const& operator=(return_type const& rhs) {
+        _self const& operator=(return_type rhs) {
             field_.set( rhs );
             return *this;
         }

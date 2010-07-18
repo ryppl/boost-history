@@ -457,7 +457,7 @@ Info to know about the curret state of parsing.
     typedef typename mpl::push_back<
         FieldVector,
         bitfield_element<
-            ReturnType,
+            ReturnType*,
             Name,
             data_offset,
             size_of_storage,

@@ -137,7 +137,11 @@ struct count_trailing_zeros {
 };
 
 
-
+template <typename Mask, typename Policy>
+struct pointer_member_info {
+    typedef Mask mask;
+    typedef Policy policy;
+};
 
 
 }}} // end boost::detail::pointer_member
