@@ -29,7 +29,7 @@ class indent_filter
 
     typedef filter< output, Ch> super_type;
     typedef Ch char_type;
-    static int const width_default=4;
+    static int const width_default=2;
     
     template<typename Sink>
     bool put(Sink& dest, char_type c)

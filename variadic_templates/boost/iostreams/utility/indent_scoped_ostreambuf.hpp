@@ -10,38 +10,25 @@
 
 namespace boost { namespace iostreams {
 
-template<typename Ch>
-struct select_scoped_ostreambuf
-;
-template<>
-struct select_scoped_ostreambuf<char>
-{
-    typedef filtering_ostreambuf type;
-};
-template<>
-struct select_scoped_ostreambuf<wchar_t>
-{
-    typedef filtering_wostreambuf type;
-};
-
 //
 // Template name: indent_scoped_ostreambuf.
 // Description: Temporarily replaces the ostreambuf of ostream 
 //   passed to CTOR. DTOR restores original ostreambuf.
 // Template paramters:
 //      Ch - The charactertype.
+//      Tr - The character traits type.
 //
-template<typename Ch=char>
+template<typename Ch=char, typename Tr=std::char_traits<Ch> >
 class indent_scoped_ostreambuf 
 {
  public:
-    typedef std::basic_streambuf<Ch> std_buf_type;
-    typedef std::basic_ostream<Ch> std_ostrm_type;
-    typedef typename select_scoped_ostreambuf<Ch>::type filt_buf_type;
+    typedef std::basic_streambuf<Ch,Tr> std_buf_type;
+    typedef std::basic_ostream<Ch,Tr> std_ostrm_type;
+    typedef filtering_streambuf<output,Ch,Tr> filt_buf_type;
     
     indent_scoped_ostreambuf
     ( std_ostrm_type& a_ostrm
-    , int width=2
+    , int width=indent_filter<Ch>::width_default
     )
       : my_old_buf(a_ostrm.rdbuf())
       , my_strm(a_ostrm)
@@ -66,7 +53,7 @@ class indent_scoped_ostreambuf
       
       push_filt_strmbuf
       ( std_buf_type& a_buf
-      , int width=2
+      , int width=indent_filter<Ch>::width_default
       )
       {
           filt_type my_filter(width);
@@ -95,11 +82,11 @@ class indent_scoped_ostreambuf
 // Function name: indent_buf
 // Descrption:: Indents the buffer of ostream argument, if possible.
 //
-template<class charT, class traits>
-inline std::basic_ostream<charT, traits>&
-indent_buf_in(std::basic_ostream<charT, traits>& os)
+template<class Ch, class Tr>
+inline std::basic_ostream<Ch, Tr>&
+indent_buf_in(std::basic_ostream<Ch, Tr>& os)
 {
-    typedef boost::iostreams::indent_scoped_ostreambuf<charT> filt_scoped_type;
+    typedef boost::iostreams::indent_scoped_ostreambuf<Ch,Tr> filt_scoped_type;
     typedef typename filt_scoped_type::push_filt_strmbuf filt_strmbuf_type;
     filt_strmbuf_type*buf_ptr = dynamic_cast<filt_strmbuf_type*>(os.rdbuf());
     if (buf_ptr) {
@@ -113,11 +100,11 @@ indent_buf_in(std::basic_ostream<charT, traits>& os)
 // Function name: undent_buf
 // Descrption:: Indents outwardly the buffer of ostream argument, if possible.
 //
-template<class charT, class traits>
-inline std::basic_ostream<charT, traits>&
-indent_buf_out(std::basic_ostream<charT, traits>& os)
+template<class Ch, class Tr>
+inline std::basic_ostream<Ch, Tr>&
+indent_buf_out(std::basic_ostream<Ch, Tr>& os)
 {
-    typedef boost::iostreams::indent_scoped_ostreambuf<charT> filt_scoped_type;
+    typedef boost::iostreams::indent_scoped_ostreambuf<Ch,Tr> filt_scoped_type;
     typedef typename filt_scoped_type::push_filt_strmbuf filt_strmbuf_type;
     filt_strmbuf_type*buf_ptr = dynamic_cast<filt_strmbuf_type*>(os.rdbuf());
     if (buf_ptr) {

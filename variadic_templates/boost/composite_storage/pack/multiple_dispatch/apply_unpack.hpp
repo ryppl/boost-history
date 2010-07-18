@@ -53,9 +53,15 @@ namespace multiple_dispatch
       typedef ResultType result_type;
       
       template<typename... Args>
-      result_type operator()(Args&... args)FUNCTOR_CONSTANCY throw()
+      result_type operator()(Args&... args) throw()
       {
           throw bad_functor_args<Functor(Args&...)>();
+          return result_type();
+      }
+      template<typename... Args>
+      result_type operator()(Args&... args)const throw()
+      {
+          throw bad_functor_args<Functor const(Args&...)>();
           return result_type();
       }
   }; 
