@@ -453,6 +453,20 @@ Info to know about the curret state of parsing.
  
     typedef bitfields::pointer< ReturnType, Name, Mask > param;
 
+    // if the offset is greater then then number of storage bits
+    // the this pointer is not going to be aligned within storage.
+    typedef typename mpl::if_<
+        mpl::greater<Offset, front_storage_space>,
+        mpl::false_,
+        mpl::true_
+    >::type                     is_aligned;
+
+    //
+    typedef typename mpl::if_<is_aligned,
+        bit_shift::none,
+        bit_shift::right< mpl::minus<Offset, front_storage_space>::type::value >
+    >::type                     alignment_shift;
+
     typedef StoragePolicy   storage_policy;
     typedef typename mpl::push_back<
         FieldVector,
@@ -467,8 +481,8 @@ Info to know about the curret state of parsing.
                 ReturnType*,
                 offset,
                 size_of_storage, 
-                mpl::true_,
-                bit_shift::none
+                is_aligned,
+                alignment_shift
             >
         >
     >::type                     field_vector;

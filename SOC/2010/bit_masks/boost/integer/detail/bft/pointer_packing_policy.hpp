@@ -6,14 +6,15 @@
 
 #ifndef BOOST_BITFIELD_TUPLE_POINTER_PACKING_POLICY_HPP
 #define BOOST_BITFIELD_TUPLE_POINTER_PACKING_POLICY_HPP
+#include <cstddef>
 
-namespace boost { namespace detail {
+namespace boost { namespace detail { namespace bit_shift {
 
-namespace bit_shift {
-struct right;
-struct left;
+template <std::size_t Shift> struct right;
+template <std::size_t Shift> struct left;
 struct none;
-}
+
+} // end bit_shift
 
 template <
     typename Mask,
