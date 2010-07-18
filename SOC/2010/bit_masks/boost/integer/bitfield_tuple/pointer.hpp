@@ -7,7 +7,9 @@
 #ifndef BOOST_POINTER_MEMBER_FIELD_HPP
 #define BOOST_POINTER_MEMBER_FIELD_HPP
 #include <cstddef>
-
+#include <boost/integer/detail/bft/pointer_parsing_meta_functions.hpp>
+#include <boost/integer/high_bits_mask.hpp>
+#include <boost/integer/bit_width.hpp>
 
 
 namespace boost {
@@ -24,7 +26,10 @@ namespace bitfields {
 template <
     typename ReturnType,
     typename Name,
-    typename Mask
+    typename Mask = high_bits_mask<
+        typename ::boost::detail::pointer_member::get_mask_type<ReturnType>::type,
+        bit_width< typename ::boost::detail::pointer_member::get_mask_type<ReturnType>::type >::value - 2
+    >
 >
 struct pointer;
 

@@ -6,6 +6,14 @@
 #include <boost/integer/bitfield_tuple.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <boost/type_traits/is_same.hpp>
+using namespace boost;
+using namespace boost::bitfields;
+struct rd;
+
+typedef bitfield_tuple<pointer<int, rd> > test_type;
+
 int main() {
+    test_type t;
+    
     return 0;
 }

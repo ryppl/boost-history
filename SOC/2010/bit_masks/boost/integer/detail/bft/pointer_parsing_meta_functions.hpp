@@ -7,15 +7,26 @@
 #ifndef BOOST_BITFIELD_TUPLE_POINTER_PARSING_HELPERS_HPP
 #define BOOST_BITFIELD_TUPLE_POINTER_PARSING_HELPERS_HPP
 
+#include <boost/cstdint.hpp>
 #include <boost/integer/bits_mask.hpp>
 #include <cstddef>
 #include <boost/mpl/size_t.hpp>
 #include <boost/type_traits/make_unsigned.hpp>
+#include <boost/mpl/if.hpp>
 
 /** This file contains metafunctions which are used to do complex operations
  *  on the Mask provided by the user.
  */
 namespace boost { namespace detail { namespace pointer_member {
+
+template <typename T>
+struct get_mask_type {
+    typedef typename mpl::if_c<
+        bit_width<std::size_t>::value < bit_width<T*>::value,
+        uint64_t,
+        uint32_t
+    >::type                 type;
+};
 
 
 
