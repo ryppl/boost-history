@@ -14,9 +14,9 @@
 #include <boost/mpl/has_xxx.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/integral_c.hpp>
-#include <boost/type_traits/integral_constant.hpp>
-#include <boost/type_traits/is_integral.hpp>
 #include <boost/type_traits/is_same.hpp>
+#include <boost/type_traits/is_integral.hpp>
+#include <boost/type_traits/is_unsigned.hpp>
 
 namespace boost {
 
@@ -28,23 +28,26 @@ namespace mpl {
 
 //~ template <typename IC>
 //~ struct is_integral_constant : false_ {};
-
     
-//~ namespace detail {
 BOOST_MPL_HAS_XXX_TRAIT_DEF(tag)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
-//~ BOOST_MPL_HAS_XXX_TRAIT_DEF(value)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(type)
-//~ }
+
 template <typename IC>
 struct is_integral_constant : and_<
 		and_< has_tag<IC>, is_same<typename IC::tag, integral_c_tag> >,
 		and_< has_value_type<IC>, is_integral<typename IC::value_type> >,
-		//detail_has_value<IC>,
 		has_type<IC>
 	>
 {};
 
+template <typename IC>
+struct is_unsigned_constant : and_<
+	is_integral_constant<IC>,
+	is_unsigned<typename IC::value_type>
+>
+{};
+	
     
     
 template <typename T, T value>
