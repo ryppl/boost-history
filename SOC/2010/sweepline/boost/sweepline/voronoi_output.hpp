@@ -14,9 +14,11 @@
 #include <map>
 #include <vector>
 
+//#pragma warning( disable : 4800 )
+//#include "gmpxx.h"
+
 namespace boost {
 namespace sweepline {
-
     template <typename T>
     struct point_2d {
     public:

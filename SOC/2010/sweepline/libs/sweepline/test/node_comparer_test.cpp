@@ -80,13 +80,12 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test3, T, test_types) {
         make_site_event<T>(static_cast<T>(1), static_cast<T>(0), 0),
         make_site_event<T>(static_cast<T>(0), static_cast<T>(2), 1));
     
-    bline_node new_node1(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(-10), 2));
-    bline_node new_node2(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(-0.5), 3));
-    bline_node new_node3(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(0), 4));
-    bline_node new_node4(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(0.5), 4));
-    bline_node new_node5(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(1.0), 4));
-    bline_node new_node6(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(3.0), 4));
-    bline_node new_node7(make_site_event<T>(static_cast<T>(2.0), static_cast<T>(1.0), 4));
+    bline_node new_node1(make_site_event<T>(static_cast<T>(2), static_cast<T>(-10), 2));
+    bline_node new_node2(make_site_event<T>(static_cast<T>(2), static_cast<T>(-1), 3));
+    bline_node new_node3(make_site_event<T>(static_cast<T>(2), static_cast<T>(0), 4));
+    bline_node new_node4(make_site_event<T>(static_cast<T>(2), static_cast<T>(1), 4));
+    bline_node new_node5(make_site_event<T>(static_cast<T>(2), static_cast<T>(2), 4));
+    bline_node new_node6(make_site_event<T>(static_cast<T>(2), static_cast<T>(3), 4));
 
 
     BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node1), false);
@@ -95,7 +94,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test3, T, test_types) {
     BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node4), false);
     BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node5), true);
     BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node6), true);
-    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node7), false);
 
 
     BOOST_CHECK_EQUAL(node_comparer_test(new_node1, initial_node), true);
@@ -104,7 +102,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test3, T, test_types) {
     BOOST_CHECK_EQUAL(node_comparer_test(new_node4, initial_node), true);
     BOOST_CHECK_EQUAL(node_comparer_test(new_node5, initial_node), false);
     BOOST_CHECK_EQUAL(node_comparer_test(new_node6, initial_node), false);
-    BOOST_CHECK_EQUAL(node_comparer_test(new_node7, initial_node), true);
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test4, T, test_types) {
@@ -116,16 +113,16 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test4, T, test_types) {
         make_site_event<T>(static_cast<T>(0), static_cast<T>(1), 0),
         make_site_event<T>(static_cast<T>(1), static_cast<T>(0), 1));
     
-    bline_node new_node1(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(-3), 2));
-    bline_node new_node2(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(-1.8), 3));
-    bline_node new_node3(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(-1.7), 4));
-    bline_node new_node4(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(0.0), 4));
-    bline_node new_node5(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(1.0), 4));
-    bline_node new_node6(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(3.0), 4));
-    bline_node new_node7(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(10.0), 4));
+    bline_node new_node1(make_site_event<T>(static_cast<T>(2), static_cast<T>(-3), 2));
+    bline_node new_node2(make_site_event<T>(static_cast<T>(2), static_cast<T>(-2), 3));
+    bline_node new_node3(make_site_event<T>(static_cast<T>(2), static_cast<T>(-1), 4));
+    bline_node new_node4(make_site_event<T>(static_cast<T>(2), static_cast<T>(0), 4));
+    bline_node new_node5(make_site_event<T>(static_cast<T>(2), static_cast<T>(1), 4));
+    bline_node new_node6(make_site_event<T>(static_cast<T>(2), static_cast<T>(3), 4));
+    bline_node new_node7(make_site_event<T>(static_cast<T>(2), static_cast<T>(10), 4));
 
     BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node1), false);
-    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node2), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node2), true);
     BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node3), true);
     BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node4), true);
     BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node5), true);
@@ -133,7 +130,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test4, T, test_types) {
     BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node7), true);
 
     BOOST_CHECK_EQUAL(node_comparer_test(new_node1, initial_node), true);
-    BOOST_CHECK_EQUAL(node_comparer_test(new_node2, initial_node), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node2, initial_node), false);
     BOOST_CHECK_EQUAL(node_comparer_test(new_node3, initial_node), false);
     BOOST_CHECK_EQUAL(node_comparer_test(new_node4, initial_node), false);
     BOOST_CHECK_EQUAL(node_comparer_test(new_node5, initial_node), false);
@@ -150,31 +147,28 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test5, T, test_types) {
         make_site_event<T>(static_cast<T>(0), static_cast<T>(0), 0),
         make_site_event<T>(static_cast<T>(1), static_cast<T>(2), 1));
     
-    bline_node new_node1(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(-10), 2));
-    bline_node new_node2(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(0), 3));
-    bline_node new_node3(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(1.05), 4));
-    bline_node new_node4(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(1.1), 4));
-    bline_node new_node5(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(2), 4));
-    bline_node new_node6(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(5), 4));
-    bline_node new_node7(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(20), 4));
+    bline_node new_node1(make_site_event<T>(static_cast<T>(2), static_cast<T>(-10), 2));
+    bline_node new_node2(make_site_event<T>(static_cast<T>(2), static_cast<T>(0), 3));
+    bline_node new_node3(make_site_event<T>(static_cast<T>(2), static_cast<T>(1), 4));
+    bline_node new_node4(make_site_event<T>(static_cast<T>(2), static_cast<T>(2), 4));
+    bline_node new_node5(make_site_event<T>(static_cast<T>(2), static_cast<T>(5), 4));
+    bline_node new_node6(make_site_event<T>(static_cast<T>(2), static_cast<T>(20), 4));
 
 
     BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node1), false);
     BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node2), false);
-    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node3), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node3), true);
     BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node4), true);
     BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node5), true);
     BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node6), true);
-    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node7), true);
 
 
     BOOST_CHECK_EQUAL(node_comparer_test(new_node1, initial_node), true);
     BOOST_CHECK_EQUAL(node_comparer_test(new_node2, initial_node), true);
-    BOOST_CHECK_EQUAL(node_comparer_test(new_node3, initial_node), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node3, initial_node), false);
     BOOST_CHECK_EQUAL(node_comparer_test(new_node4, initial_node), false);
     BOOST_CHECK_EQUAL(node_comparer_test(new_node5, initial_node), false);
     BOOST_CHECK_EQUAL(node_comparer_test(new_node6, initial_node), false);
-    BOOST_CHECK_EQUAL(node_comparer_test(new_node7, initial_node), false);
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test6, T, test_types) {
@@ -186,20 +180,20 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test6, T, test_types) {
         make_site_event<T>(static_cast<T>(1), static_cast<T>(1), 0),
         make_site_event<T>(static_cast<T>(0), static_cast<T>(0), 1));
     
-    bline_node new_node1(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(-3), 2));
-    bline_node new_node2(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(-1.75), 3));
-    bline_node new_node3(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(0.0), 4));
-    bline_node new_node4(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(0.28), 4));
-    bline_node new_node5(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(2.7), 4));
-    bline_node new_node6(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(2.8), 4));
-    bline_node new_node7(make_site_event<T>(static_cast<T>(1.5), static_cast<T>(5.0), 4));
+    bline_node new_node1(make_site_event<T>(static_cast<T>(2), static_cast<T>(-3), 2));
+    bline_node new_node2(make_site_event<T>(static_cast<T>(2), static_cast<T>(-2), 3));
+    bline_node new_node3(make_site_event<T>(static_cast<T>(2), static_cast<T>(0), 4));
+    bline_node new_node4(make_site_event<T>(static_cast<T>(2), static_cast<T>(1), 4));
+    bline_node new_node5(make_site_event<T>(static_cast<T>(2), static_cast<T>(2), 4));
+    bline_node new_node6(make_site_event<T>(static_cast<T>(2), static_cast<T>(3), 4));
+    bline_node new_node7(make_site_event<T>(static_cast<T>(2), static_cast<T>(5), 4));
 
     BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node1), false);
     BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node2), false);
     BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node3), false);
     BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node4), false);
     BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node5), false);
-    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node6), true);
+    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node6), false);
     BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node7), true);
 
     BOOST_CHECK_EQUAL(node_comparer_test(new_node1, initial_node), true);
@@ -207,7 +201,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test6, T, test_types) {
     BOOST_CHECK_EQUAL(node_comparer_test(new_node3, initial_node), true);
     BOOST_CHECK_EQUAL(node_comparer_test(new_node4, initial_node), true);
     BOOST_CHECK_EQUAL(node_comparer_test(new_node5, initial_node), true);
-    BOOST_CHECK_EQUAL(node_comparer_test(new_node6, initial_node), false);
+    BOOST_CHECK_EQUAL(node_comparer_test(new_node6, initial_node), true);
     BOOST_CHECK_EQUAL(node_comparer_test(new_node7, initial_node), false);
 }
 
@@ -223,20 +217,14 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test7, T, test_types) {
     bline_node new_node1(make_site_event<T>(static_cast<T>(1), static_cast<T>(0), 2));
     bline_node new_node2(make_site_event<T>(static_cast<T>(1), static_cast<T>(1), 3));
     bline_node new_node3(make_site_event<T>(static_cast<T>(1), static_cast<T>(2), 4));
-    bline_node new_node4(make_site_event<T>(static_cast<T>(1), static_cast<T>(1.000001), 5));
-    bline_node new_node5(make_site_event<T>(static_cast<T>(1), static_cast<T>(0.999999), 6));
     
     BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node1), false);
     BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node2), false);
     BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node3), true);
-    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node4), true);
-    BOOST_CHECK_EQUAL(node_comparer_test(initial_node, new_node5), false);
 
     BOOST_CHECK_EQUAL(node_comparer_test(new_node1, initial_node), true);
     BOOST_CHECK_EQUAL(node_comparer_test(new_node2, initial_node), true);
     BOOST_CHECK_EQUAL(node_comparer_test(new_node3, initial_node), false);
-    BOOST_CHECK_EQUAL(node_comparer_test(new_node4, initial_node), false);
-    BOOST_CHECK_EQUAL(node_comparer_test(new_node5, initial_node), true);
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(node_comparer_test8, T, test_types) {

@@ -20,9 +20,10 @@ namespace sweepline {
     class voronoi_builder {
     public:
         typedef T coordinate_type;
-        typedef point_2d<T> Point2D;
+        typedef point_2d<coordinate_type> Point2D;
         typedef detail::voronoi_output<coordinate_type> Output;
         typedef typename Output::edge_type edge_type;
+        typedef voronoi_output_clipped<coordinate_type> ClippedOutput;
 
         voronoi_builder() {
             // Set sites iterator.
@@ -44,7 +45,9 @@ namespace sweepline {
             int sz = sites.size();
             for (int i = 0; i < sz; i++) {
                 if (!i || sites[i] != sites[i-1]) {
-                    site_events_.push_back(detail::make_site_event(sites[i], site_event_index));
+                    site_events_.push_back(detail::make_site_event(
+                        static_cast<coordinate_type>(sites[i].x()),
+                        static_cast<coordinate_type>(sites[i].y()), site_event_index));
                     site_event_index++;
                 }
             }
@@ -97,7 +100,7 @@ namespace sweepline {
                 else if (site_events_iterator_ == site_events_.end())
                     process_circle_event();
                 else {
-                    if (circle_events_.top().compare(*site_events_iterator_) >= 0)
+                    if (circle_events_.top().compare(*site_events_iterator_) > 0)
                         process_site_event();
                     else
                         process_circle_event();
@@ -112,12 +115,11 @@ namespace sweepline {
             return output_.get_bounding_rectangle();
         }
 
-        void clip(voronoi_output_clipped<coordinate_type> &clipped_output) {
+        void clip(ClippedOutput &clipped_output) {
             output_.clip(clipped_output);
         }
 
-        void clip(const BRect<coordinate_type> &brect,
-            voronoi_output_clipped<coordinate_type> &clipped_output) {
+        void clip(const BRect<coordinate_type> &brect, ClippedOutput &clipped_output) {
             output_.clip(brect, clipped_output);
         }
 
@@ -128,7 +130,7 @@ namespace sweepline {
 
         typedef typename detail::circle_events_queue<coordinate_type> CircleEventsQueue;
         typedef typename detail::beach_line_node<coordinate_type> Key;
-        typedef typename detail::half_edge<coordinate_type>* Value;
+        typedef typename detail::beach_line_node_data<coordinate_type> Value;
         typedef typename detail::node_comparer<Key> NodeComparer;
         typedef std::map< Key, Value, NodeComparer > BeachLine;
         typedef typename std::map< Key, Value, NodeComparer >::iterator beach_line_iterator;
@@ -213,11 +215,12 @@ namespace sweepline {
                 site_arc = it->first.get_left_site();
                 const site_event_type &site2 = it->first.get_left_site();
                 const site_event_type &site3 = it->first.get_right_site();
+
+                // Remove candidate circle from the event queue.
+                it->second.deactivate_circle_event();
                 it--;
                 const site_event_type &site1 = it->first.get_left_site();
-                
-                // Remove candidate circle from the event queue.
-                deactivate_circle_event(site1, site2, site3);
+
 
                 // Insert new arc into the sweepline.
                 beach_line_iterator new_node_it = insert_new_arc(site_arc, site_event);
@@ -246,11 +249,11 @@ namespace sweepline {
             site_event_type site3 = it_first->first.get_right_site();
 
             // Get second bisector;
-            Value bisector2 = it_first->second;
+            edge_type *bisector2 = it_first->second.edge;
             
             // Get first bisector;
             it_first--;
-            Value bisector1 = it_first->second;
+            edge_type *bisector1 = it_first->second.edge;
             
             // Get the first site that creates given circle event.
             site_event_type site1 = it_first->first.get_left_site();
@@ -263,9 +266,8 @@ namespace sweepline {
             // why we use const_cast there and take all the responsibility that
             // map data structure keeps correct ordering.
             const_cast<Key &>(it_first->first).set_right_site(site3);
-            edge_type *edge = output_.insert_new_edge(site1, site2, site3, circle_event,
-                                                      bisector1, bisector2);
-            it_first->second = edge;
+            it_first->second.edge = output_.insert_new_edge(site1, site2, site3, circle_event,
+                                                            bisector1, bisector2);
             beach_line_.erase(it_last);
             it_last = it_first;
 
@@ -276,9 +278,9 @@ namespace sweepline {
             // Check the new triplets formed by the neighboring arcs
             // for potential circle events. Check left.
             if (it_first != beach_line_.begin()) {
+                it_first->second.deactivate_circle_event();
                 it_first--;
                 const site_event_type &site_l1 = it_first->first.get_left_site();
-                deactivate_circle_event(site_l1, site1, site2);
                 activate_circle_event(site_l1, site1, site3, it_last);
             }
 
@@ -286,8 +288,8 @@ namespace sweepline {
             // for potential circle events. Check right.
             it_last++;
             if (it_last != beach_line_.end()) {
+                it_last->second.deactivate_circle_event();
                 const site_event_type &site_r1 = it_last->first.get_right_site();
-                deactivate_circle_event(site2, site3, site_r1);
                 activate_circle_event(site1, site3, site_r1, it_last);
             }
 
@@ -312,24 +314,68 @@ namespace sweepline {
                                  const site_event_type &site2,
                                  const site_event_type &site3,
                                  circle_event_type &c_event) const {
-            coordinate_type a = (site1.x() - site2.x()) * (site2.y() - site3.y()) -
-                                (site1.y() - site2.y()) * (site2.x() - site3.x());
+            //mpz_class dif_x1, dif_x2, dif_y1, dif_y2, a;
+            //dif_x1 = static_cast<int>(site1.x() - site2.x());
+            //dif_x2 = static_cast<int>(site2.x() - site3.x());
+            //dif_y1 = static_cast<int>(site1.y() - site2.y());
+            //dif_y2 = static_cast<int>(site2.y() - site3.y());
+            //a = (dif_x1 * dif_y2 - dif_y1 * dif_x2) * 2;
+            //
+            //// Check if bisectors intersect.
+            //if (a >= 0)
+            //    return false;
+
+            //mpz_class sum_x1, sum_x2, sum_y1, sum_y2, b1, b2;
+            //sum_x1 = static_cast<int>(site1.x() + site2.x());
+            //sum_x2 = static_cast<int>(site2.x() + site3.x());
+            //sum_y1 = static_cast<int>(site1.y() + site2.y());
+            //sum_y2 = static_cast<int>(site2.y() + site3.y());
+            //b1 = dif_x1 * sum_x1 + dif_y1 * sum_y1;
+            //b2 = dif_x2 * sum_x2 + dif_y2 * sum_y2;
+
+            //mpq_class c_x(b1 * dif_y2 - b2 * dif_y1, a);
+            //c_x.canonicalize();
+            //mpq_class c_y(b2 * dif_x1 - b1 * dif_x2, a);
+            //c_y.canonicalize();
+            //mpq_class temp_x(c_x - site1.x());
+            //mpq_class temp_y(c_y - site1.y());
+            //mpq_class sqr_radius(temp_x * temp_x + temp_y * temp_y);
+
+            //// Create new circle event;
+            //c_event = detail::make_circle_event<coordinate_type>(c_x.get_d(),
+            //                                                     c_y.get_d(),
+            //                                                     sqr_radius.get_d());
+            //c_event.set_sites(site1.get_site_index(),
+            //                  site2.get_site_index(),
+            //                  site3.get_site_index());
+            //return true;
+
+            long long a = (static_cast<long long>(site1.x() - site2.x()) *
+                           static_cast<long long>(site2.y() - site3.y()) -
+                           static_cast<long long>(site1.y() - site2.y()) *
+                           static_cast<long long>(site2.x() - site3.x())) << 1;
+            
             // Check if bisectors intersect.
-            if (a >= static_cast<coordinate_type>(0))
+            if (a >= 0)
                 return false;
-            coordinate_type b1 = (site1.x() - site2.x()) * (site1.x() + site2.x()) +
-                                 (site1.y() - site2.y()) * (site1.y() + site2.y());
-            coordinate_type b2 = (site2.x() - site3.x()) * (site2.x() + site3.x()) +
-                                 (site2.y() - site3.y()) * (site2.y() + site3.y());
-            coordinate_type c_x = (b1*(site2.y() - site3.y()) - b2*(site1.y() - site2.y())) / a *
-                                  static_cast<coordinate_type>(0.5);
-            coordinate_type c_y = (b2*(site1.x() - site2.x()) - b1*(site2.x() - site3.x())) / a *
-                                   static_cast<coordinate_type>(0.5);
+            long long b1 = static_cast<long long>(site1.x() - site2.x()) *
+                           static_cast<long long>(site1.x() + site2.x()) +
+                           static_cast<long long>(site1.y() - site2.y()) *
+                           static_cast<long long>(site1.y() + site2.y());
+            long long b2 = static_cast<long long>(site2.x() - site3.x()) *
+                           static_cast<long long>(site2.x() + site3.x()) +
+                           static_cast<long long>(site2.y() - site3.y()) *
+                           static_cast<long long>(site2.y() + site3.y());
+            coordinate_type c_x = (static_cast<coordinate_type>(b1)*(site2.y() - site3.y()) -
+                                   static_cast<coordinate_type>(b2)*(site1.y() - site2.y())) / a;
+            coordinate_type c_y = (static_cast<coordinate_type>(b2)*(site1.x() - site2.x()) - 
+                                   static_cast<coordinate_type>(b1)*(site2.x() - site3.x())) / a;
             coordinate_type sqr_radius = (c_x-site1.x())*(c_x-site1.x()) +
                                          (c_y-site1.y())*(c_y-site1.y());
-            // Create new circle event;
             c_event = detail::make_circle_event<coordinate_type>(c_x, c_y, sqr_radius);
-            c_event.set_sites(site1, site2, site3);
+            c_event.set_sites(site1.get_site_index(),
+                              site2.get_site_index(),
+                              site3.get_site_index());
             return true;
         }
 
@@ -341,17 +387,8 @@ namespace sweepline {
             circle_event_type c_event;
             if (create_circle_event(site1, site2, site3, c_event)) {
                 c_event.set_bisector(bisector_node);
-                circle_events_.push(c_event);
+                bisector_node->second.activate_circle_event(circle_events_.push(c_event));
             }
-        }
-
-        // Remove circle event from the event queue.
-        void deactivate_circle_event(const site_event_type &point1,
-                                     const site_event_type &point2,
-                                     const site_event_type &point3) {
-            circle_event_type c_event;
-            if (create_circle_event(point1, point2, point3, c_event))
-                circle_events_.deactivate_event(c_event);
         }
 
     private:

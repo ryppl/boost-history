@@ -34,7 +34,7 @@ public:
         QTextStream in_stream(&data);
         int num_sites;
         in_stream >> num_sites;
-        double x, y;
+        coordinate_type x, y;
         for (int i = 0; i < num_sites; i++) {
             in_stream >> x >> y;
             sites.push_back(boost::sweepline::make_point_2d(x, y));
@@ -125,7 +125,7 @@ class MainWindow : public QWidget {
 public:
     MainWindow() {
         glWidget_ = new GLWidget();
-        file_dir_ = QDir(QDir::currentPath(), tr("*.pts"));
+        file_dir_ = QDir(QDir::currentPath(), tr("*.txt"));
         
         QHBoxLayout *centralLayout = new QHBoxLayout;
         centralLayout->addWidget(glWidget_);

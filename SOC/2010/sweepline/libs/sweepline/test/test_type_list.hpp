@@ -12,6 +12,6 @@
 
 #include <boost/mpl/list.hpp>
 
-typedef boost::mpl::list<double, long double> test_types;
+typedef boost::mpl::list<double> test_types;
 
 #endif

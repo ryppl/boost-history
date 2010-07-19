@@ -52,16 +52,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(event_queue_test2, T, test_types) {
         T x = static_cast<T>(10-i);
         T y = static_cast<T>(10-i);
         circle_event_type c = detail::make_circle_event<T>(x, y, static_cast<T>(0));
-        c.set_sites(temp_site, temp_site, temp_site);
-        event_q.push(c);
-    }
-
-    for (int i = 0; i < 5; i++) {
-        T x = static_cast<T>(10-2*i-1);
-        T y = static_cast<T>(10-2*i-1);
-        circle_event_type c = detail::make_circle_event<T>(x, y, static_cast<T>(0));
-        c.set_sites(temp_site, temp_site, temp_site);
-        event_q.deactivate_event(c);   
+        if (i&1) {
+            event_q.push(c)->deactivate();
+        } else
+            event_q.push(c);
     }
 
     for (int i = 0; i < 5; i++) {

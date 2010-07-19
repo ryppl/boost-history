@@ -27,7 +27,7 @@ namespace detail {
     struct beach_line_node;
 
     template <typename T>
-    struct half_edge;
+    struct beach_line_node_data;
 
     template <typename BeachLineNode>
     struct node_comparer;
@@ -120,22 +120,23 @@ namespace detail {
         typedef T coordinate_type;
         typedef point_2d<T> Point2D;
         typedef beach_line_node<coordinate_type> Key;
-        typedef half_edge<coordinate_type>* Value;
+        typedef beach_line_node_data<coordinate_type> Value;
         typedef node_comparer<Key> NodeComparer;
         typedef typename std::map< Key, Value, NodeComparer >::iterator beach_line_iterator;
 
-        circle_event() {}
+        circle_event() : is_active_(true) {}
 
         circle_event(coordinate_type c_x, coordinate_type c_y, coordinate_type sqr_r) :
-            center_(c_x, c_y), sqr_radius_(sqr_r) {}
+            center_(c_x, c_y), sqr_radius_(sqr_r), is_active_(true) {}
 
         circle_event(const Point2D &center, coordinate_type sqr_r) :
-            center_(center), sqr_radius_(sqr_r) {}
+            center_(center), sqr_radius_(sqr_r), is_active_(true) {}
 
         circle_event(const circle_event& c_event) {
             center_ = c_event.center_;
             sqr_radius_ = c_event.sqr_radius_;
             bisector_node_ = c_event.bisector_node_;
+            is_active_ = c_event.is_active_;
             for (int i = 0; i < 3; i++)
                 sites_[i] = c_event.sites_[i];
         }
@@ -144,6 +145,7 @@ namespace detail {
             center_ = c_event.center_;
             sqr_radius_ = c_event.sqr_radius_;
             bisector_node_ = c_event.bisector_node_;
+            is_active_ = c_event.is_active_;
             for (int i = 0; i < 3; i++)
                 sites_[i] = c_event.sites_[i];
         }
@@ -157,20 +159,22 @@ namespace detail {
         }
 
         bool operator==(const circle_event &c_event) const {
-            if (sites_[0] != c_event.sites_[0] ||
-                sites_[1] != c_event.sites_[1] ||
-                sites_[2] != c_event.sites_[2])
-                return false;
-
             if (center_.y() != c_event.y())
                 return false;
 
-            coordinate_type sqr_dif_x = (center_.x() - c_event.x()) *
-                                        (center_.x() - c_event.x());
-            coordinate_type sum_r_sqr = sqr_radius_ + c_event.sqr_radius_;
+            if (center_.x() > c_event.x() && sqr_radius_ > c_event.get_sqr_radius() ||
+                center_.x() < c_event.x() && sqr_radius_ < c_event.get_sqr_radius())
+                return false;
+
+            coordinate_type sqr_dif_x = (center_.x() - c_event.x()) * (center_.x() - c_event.x());
+            coordinate_type sum_r_sqr = sqr_radius_ + c_event.get_sqr_radius();
+            
+            if (sqr_dif_x > sum_r_sqr)
+                return false;
+
             coordinate_type value_left = (sum_r_sqr - sqr_dif_x) * (sum_r_sqr - sqr_dif_x);
             coordinate_type value_right = static_cast<coordinate_type>(4) * sqr_radius_ *
-                            c_event.sqr_radius_;
+                                          c_event.get_sqr_radius();
 
             return value_left == value_right;
         }
@@ -299,27 +303,31 @@ namespace detail {
             bisector_node_ = iterator;
         }
 
-        void set_sites(const site_event<coordinate_type> &site1,
-                       const site_event<coordinate_type> &site2,
-                       const site_event<coordinate_type> &site3) {
+        void set_sites(int site1, int site2, int site3) {
             sites_[0] = site1;
             sites_[1] = site2;
             sites_[2] = site3;
+        }
+
+        void deactivate() {
+            is_active_ = false;
         }
 
         const beach_line_iterator &get_bisector() const {
             return bisector_node_;
         }
 
-        const site_event<coordinate_type>* get_sites() const {
-            return sites_;
+        bool is_active() const {
+            return is_active_;
         }
+
 
     private:
         Point2D center_;
         coordinate_type sqr_radius_;
         beach_line_iterator bisector_node_;
-        site_event<coordinate_type> sites_[3];
+        int sites_[3];
+        bool is_active_;
     };
 
     template <typename T>
@@ -343,55 +351,55 @@ namespace detail {
         typedef T coordinate_type;
         typedef point_2d<T> Point2D;
         typedef circle_event<T> circle_event_type;
+        typedef typename std::list<circle_event_type>::iterator circle_event_type_it;
 
         circle_events_queue() {}
 
         void reset() {
             while (!circle_events_.empty())
                 circle_events_.pop();
-            while (!deactivated_events_.empty())
-                deactivated_events_.pop();
+            circle_events_list_.clear();
         }
 
         bool empty() {
             remove_not_active_events();
-            if (!circle_events_.empty())
-                return false;
-            return true;
+            return circle_events_.empty();
         }
 
         const circle_event_type &top() {
             remove_not_active_events();
-            return circle_events_.top();
+            return (*circle_events_.top());
         }
 
         void pop() {
+            circle_event_type_it temp_it = circle_events_.top();
             circle_events_.pop();
+            circle_events_list_.erase(temp_it);
         }
 
-        void push(const circle_event_type &c_event) {
-            circle_events_.push(c_event);
-        }
-
-        void deactivate_event(const circle_event_type &c_event) {
-            deactivated_events_.push(c_event);
+        circle_event_type_it push(const circle_event_type &c_event) {
+            circle_events_list_.push_front(c_event);
+            circle_events_.push(circle_events_list_.begin());
+            return circle_events_list_.begin();
         }
 
     private:
-        void remove_not_active_events() {
-            while (!circle_events_.empty() && !deactivated_events_.empty() &&
-                   circle_events_.top().equals(deactivated_events_.top())) {
-                circle_events_.pop();
-                deactivated_events_.pop();
+        struct comparison {
+            bool operator() (const circle_event_type_it &node1,
+                             const circle_event_type_it &node2) const {
+                return (*node1) > (*node2);
             }
+        };
+
+        void remove_not_active_events() {
+            while (!circle_events_.empty() && !circle_events_.top()->is_active())
+                pop();
         }
 
-        std::priority_queue< circle_event_type,
-                             std::vector<circle_event_type>,
-                             std::greater<circle_event_type> > circle_events_;
-        std::priority_queue< circle_event_type,
-                             std::vector<circle_event_type>,
-                             std::greater<circle_event_type> > deactivated_events_;
+        std::priority_queue< circle_event_type_it,
+                             std::vector<circle_event_type_it>,
+                             comparison > circle_events_;
+        std::list<circle_event_type> circle_events_list_;
 
         //Disallow copy constructor and operator=
         circle_events_queue(const circle_events_queue&);
@@ -453,11 +461,6 @@ namespace detail {
             right_site_ = site;
         }
 
-        // Returns x coordinate of the rightmost site.
-        coordinate_type get_sweepline_coord() const {
-            return (std::max)(left_site_.x(), right_site_.x());
-        }
-
         // Returns the rightmost site.
         const site_event_type& get_new_site() const {
             if (left_site_.x() > right_site_.x())
@@ -475,21 +478,66 @@ namespace detail {
         // x2(y) = ((y - y2)^2 + x2^2 - x0^2) / (2*(x2 - x0)).
         // Horizontal line going throught site (x*, y*) intersects second arc
         // at first if x2(y*) > x1(y*) or:
-        // (x2-x0)*(x1-x0)*(x1-x2) + (x2-x0)*(y*-y1)^2 < (x1-x0)*(y*-y2)^2
+        // (x2-x0)*(x1-x0)*(x1-x2) + (x2-x0)*(y*-y1)^2 < (x1-x0)*(y*-y2)^2.
         bool less(const site_event_type &new_site) const {
-            coordinate_type sweepline_coord = new_site.x();
-            coordinate_type new_node_coord = new_site.y();
-            coordinate_type a1 = left_site_.x() - sweepline_coord;
-            coordinate_type a2 = right_site_.x() - sweepline_coord;
-            coordinate_type b1 = new_node_coord - left_site_.y();
-            coordinate_type b2 = new_node_coord - right_site_.y();
-            coordinate_type c = left_site_.x() - right_site_.x();
-            return a1 * a2 * c + a2 * b1 * b1 < a1 * b2 * b2;
+            long long a1 = static_cast<long long>(new_site.x() - left_site_.x());
+            long long a2 = static_cast<long long>(new_site.x() - right_site_.x());
+            long long b1 = static_cast<long long>(new_site.y() - left_site_.y());
+            long long b2 = static_cast<long long>(new_site.y() - right_site_.y());
+            long long c = static_cast<long long>(left_site_.x() - right_site_.x());
+            long long l_expr = a2 * c + b2 * b2;
+            long long r_expr = b1 * b1;
+            if (l_expr < 0 && r_expr > 0)
+                return true;
+            if (l_expr > 0 && r_expr < 0)
+                return false;
+            long long l_expr_div = l_expr / a2;
+            long long r_expr_div = r_expr / a1;
+            if (l_expr_div != r_expr_div)
+                return l_expr_div < r_expr_div;
+            long long l_expr_mod = l_expr % a2;
+            long long r_expr_mod = r_expr % a1;
+            return l_expr_mod < r_expr_mod;
+            
+            /*mpz_class a1, a2, b1, b2, c, left_expr, right_expr;
+            a1 = static_cast<int>(new_site.x() - left_site.x());
+            a2 = static_cast<int>(new_site.x() - right_site.x());
+            b1 = static_cast<int>(new_site.y() - left_site.y());
+            b2 = static_cast<int>(new_site.y() - right_site.y());
+            c = static_cast<int>(left_site.x() - right_site.x());
+            return a1 * a2 * c + a1 * b2 * b2 < a2 * b1 * b1;*/
         }
 
     private:
         site_event_type left_site_;
         site_event_type right_site_;
+    };
+
+    template <typename T>
+    struct half_edge;
+
+    // Represents edge data sturcture (bisector segment), which is
+    // associated with beach line node key in the binary search tree.
+    template <typename T>
+    struct beach_line_node_data {
+        half_edge<T> *edge;
+        typename circle_events_queue<T>::circle_event_type_it circle_event_it;
+        bool contains_circle_event;
+
+        explicit beach_line_node_data(half_edge<T> *new_edge) :
+            edge(new_edge),
+            contains_circle_event(false) {}
+
+        void activate_circle_event(typename circle_events_queue<T>::circle_event_type_it it) {
+            circle_event_it = it;
+            contains_circle_event = true;
+        }
+
+        void deactivate_circle_event() {
+            if (contains_circle_event)
+                circle_event_it->deactivate();
+            contains_circle_event = false;
+        }
     };
 
     template <typename BeachLineNode>
@@ -506,8 +554,8 @@ namespace detail {
         bool operator() (const BeachLineNode &node1,
                          const BeachLineNode &node2) const {
             // Get x coordinate of the righmost site from both nodes.
-            coordinate_type node1_line = node1.get_sweepline_coord();
-            coordinate_type node2_line = node2.get_sweepline_coord();
+            coordinate_type node1_line = node1.get_new_site().x();
+            coordinate_type node2_line = node2.get_new_site().x();
 
             if (node1_line < node2_line) {
                 coordinate_type left_site_x = node1.get_left_site().x();
@@ -632,6 +680,7 @@ namespace detail {
     template <typename T>
     class voronoi_output {
     public:
+
         typedef T coordinate_type;
         typedef point_2d<T> Point2D;
         typedef typename detail::site_event<coordinate_type> site_event_type;
