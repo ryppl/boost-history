@@ -443,7 +443,7 @@ class bitfield <
         L,
         VALUE_TYPE,
         REFERENCE_TYPE,
-        ::boost::detail::pointer_member::pointer_member_info<MASK,POLICY>
+        ::boost::detail::pointer_member::pointer_member_info< MASK, POLICY >
     >       _self;
 public:
 
@@ -452,7 +452,7 @@ public:
     typedef REFERENCE_TYPE  reference_type;
 
     typedef MASK get_mask;
-    typedef integral_constant< typename MASK::value_type, ~MASK::value > set_mask;
+
     typedef POLICY  field_policy;
 
     /** constructor over the storage type. */
@@ -463,11 +463,11 @@ public:
 
     /** Set function. */
     void set( value_type x) {
-        _field = (_field & set_mask::value) | (typename get_mask::value_type(x) & get_mask::value);
+        _field = field_policy::template apply<storage_type>::set(_field, x);
     }
 
     value_type get() const {
-        return value_type(_field & get_mask::value);
+        return field_policy::template apply<storage_type>::get(_field);
     }
 private:
     storage_type& _field;
