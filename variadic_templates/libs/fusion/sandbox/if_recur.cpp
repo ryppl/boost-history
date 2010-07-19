@@ -181,7 +181,6 @@ namespace example
             this->operator()(next(a_now));
         }
         
-        IterEnd const my_end;
     };
     
       template
