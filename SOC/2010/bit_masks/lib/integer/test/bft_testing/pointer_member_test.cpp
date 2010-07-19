@@ -15,7 +15,31 @@ struct b2;
 
 typedef bitfield_tuple< pointer<int, rd> > test_type_1;
 typedef bitfield_tuple< pointer<int, rd>, flag<b1>, flag<b2> > test_type_2;
-// typedef bitfield_tuple< member<int*,rd, bit_width<int*>::value - 2> > test_type_2;
+// this is first half long long
+typedef bitfield_tuple<
+    storage<long long>,
+    pointer<int, rd>,
+    flag<b1>,
+    flag<b2>
+>                   test_type_3;
+
+// This is second half long long
+// note this only works on 32 bit systems Need to remove this from the test
+// in the event that its being test on a 64 bit architecture
+typedef bitfield_tuple<
+    storage<long long>,
+    member<int, short, 32>,
+    pointer<int, rd>,
+    flag<b1>,
+    flag<b2>
+>                   test_type_4;
+typedef bitfield_tuple<
+    storage<unsigned long long>,
+    member<int, short, 32>,
+    pointer<int, rd>,
+    flag<b1>,
+    flag<b2>
+>                   test_type_5;
 
 int main() {
     {
@@ -45,6 +69,30 @@ int main() {
     BOOST_TEST(t2.get<b1>() );
     BOOST_TEST(t2.get<b2>() );
     
+    }
+    // NOTE this test may fail on 64 bit machines but I need to test it
+    // either way.
+    {
+        test_type_3 t3;
+        int i = 30;
+        t3.get<rd>() = &i;
+        BOOST_TEST(*t3.get<rd>() == 30 );
+    }
+
+    // this test will also fail on 64 bit machines.
+    {
+        test_type_4 t4;
+        int i = 70;
+        t4.get<rd>() = &i;
+        BOOST_TEST( *t4.get<rd>() == 70 );
+    }
+
+    // this test will also fail on 64 bit machines.
+    {
+        test_type_5 t5;
+        int i = 70;
+        t5.get<rd>() = &i;
+        BOOST_TEST( *t5.get<rd>() == 70 );
     }
     return boost::report_errors();
 }

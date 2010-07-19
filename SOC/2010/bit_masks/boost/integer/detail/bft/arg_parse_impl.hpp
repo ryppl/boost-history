@@ -15,6 +15,7 @@
 #include <boost/mpl/find_if.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/comparison.hpp>
+#include <boost/mpl/logical.hpp>
 #include <boost/type_traits/add_pointer.hpp>
 
 
@@ -392,6 +393,10 @@ struct bft_arg_parse_impl <
      *  to the first 1 within the mask provided.
      */
 
+    // PRECONDTION: type of mask::value_type must be the same size as a pointer.
+    BOOST_STATIC_ASSERT(( sizeof(typename Mask::value_type) == sizeof(void*) ));
+
+
     typedef typename pointer_member::count_leading_zeros<
         Mask>::type    front_storage_space;
 
@@ -416,7 +421,7 @@ Info to know about the curret state of parsing.
         (back_storage_space + front_storage_space)
         
 */
-
+    
 
     // Logic for determining how to actually store the pointer.
     typedef typename mpl::if_c<front_storage_space::value == 0,
@@ -456,8 +461,23 @@ Info to know about the curret state of parsing.
     // if the offset is greater then then number of storage bits
     // the this pointer is not going to be aligned within storage.
     typedef typename mpl::if_<
-        mpl::greater<Offset, front_storage_space>,
-        mpl::false_,
+        mpl::greater<
+            Offset,
+            front_storage_space
+        >,
+        typename mpl::if_<
+            mpl::and_<
+                mpl::not_<
+                    uses_front_storage
+                >,
+                integral_constant<
+                    bool,
+                    (Offset::value == 32)
+                >
+            >,
+            mpl::true_,
+            mpl::false_
+        >::type,
         mpl::true_
     >::type                     is_aligned;
 
