@@ -37,7 +37,7 @@ ilog2(T value, const Policy& pol)
 	if (value == 0) {
 		return math::policies::raise_indeterminate_result_error(
 			"boost::ilog2(%1%)",
-			"ilog2 is indeterminate for value 0, retunrning -1",
+			"ilog2 is indeterminate for value %1%, retunrning -1",
 			0, -1, pol
 		);
 	}
