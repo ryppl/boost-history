@@ -30,53 +30,43 @@ namespace boost {
 #ifdef __GNUC__
 
 template <typename T>
-inline int unchecked_count_leading_zeros(T value)
-{
-	return __builtin_clz(value) - (32 - (sizeof(T) << 3));
-}
-	
-template <typename T>
 inline int count_leading_zeros(T value)
 {
-	return (value != 0) ?
-		__builtin_clz(value) - (32 - (sizeof(T) << 3)) : -1;
+	if (value == 0) {
+		return sizeof(T) << 3;
+	}
+	
+	return __builtin_clz(value) - (32 - (sizeof(T) << 3));
 }
 
-inline int unchecked_count_leading_zeros(unsigned int value)
-{
-	return (value != 0) ? 
-		__builtin_clz(value) : -1;
-}
-	
 inline int count_leading_zeros(unsigned int value)
 {
+	if (value == 0) {
+		return sizeof(unsigned int) << 3;
+	}
+	
 	return __builtin_clz(value);
 }
-	
-inline int unchecked_count_leading_zeros(unsigned long int value)
-{
-	return __builtin_clzl(value);
-}
-	
+
 inline int count_leading_zeros(unsigned long int value)
 {
-	return (value != 0) ? 
-		__builtin_clzl(value) : -1;
+	if (value == 0) {
+		return sizeof(unsigned long int) << 3;
+	}
+	
+	return __builtin_clzl(value);
 }
 
 #ifndef BOOST_HAS_NO_INT64_T
-inline int unchecked_count_leading_zeros(unsigned long long int value)
-{
+inline int count_leading_zeros(unsigned long long int value)
+{	
+	if (value == 0) {
+		return sizeof(unsigned long long int) << 3;
+	}
+	
 	return __builtin_clzll(value);
 }
-	
-	
-inline int count_leading_zeros(unsigned long long int value)
-{
-	return (value != 0) ?
-		__builtin_clzll(value) : -1; 
-}
-#endif
+#endif	
 
 #else
 
