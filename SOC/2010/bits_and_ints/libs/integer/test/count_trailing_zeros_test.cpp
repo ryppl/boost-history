@@ -13,7 +13,7 @@
 #include <boost/integer/static_count_trailing_zeros.hpp>
 
 #define COUNT_ZEROS_TEST(x, y) \
-BOOST_TEST((::boost::count_trailing_zeros(x) == y)); \
+BOOST_TEST((::boost::count_trailing_zeros(unsigned(x)) == y)); \
 BOOST_TEST(((::boost::mpl::count_trailing_zeros< ::boost::mpl::integral_c< ::boost::uintmax_t, x> >::value) == y))
 
 

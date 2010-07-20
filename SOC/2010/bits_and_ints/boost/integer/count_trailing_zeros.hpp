@@ -10,8 +10,10 @@
 #ifndef BOOST_COUNT_TRAILING_ZEROS_INCLUDED
 #define BOOST_COUNT_TRAILING_ZEROS_INCLUDED
 
-#include <boost/integer/pop_count.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/is_unsigned.hpp>
+#include <boost/integer/pop_count.hpp>
 
 /*
  *	count_trailing_zeros counts the number of consecutive 0's 
@@ -28,15 +30,47 @@
 namespace boost {
 
 #ifdef __GNUC__
-
-inline int count_trailing_zeros(uintmax_t value)
+	
+template <typename T>
+inline typename enable_if<is_unsigned<T>, int>::type
+count_trailing_zeros(T value)
 {
-#ifndef BOOST_HAS_NO_INT64_T
-	return __builtin_ctzll(value); 
-#else
-	return __builtin_ctz(value);
-#endif
+	if (value == 0) {
+		return sizeof(T) << 3;
+	}
+	
+	return __builtin_ctz(unsigned(value));
 }
+
+inline int count_trailing_zeros(unsigned int value)
+{
+	if (value == 0) { 
+		return sizeof(unsigned int) << 3;
+	}
+	
+	return __builtin_ctz(value);
+}
+	
+inline int count_trailing_zeros(unsigned long int value)
+{
+	if (value == 0) { 
+		return sizeof(unsigned long int) << 3;
+	}
+	
+	return __builtin_ctzl(value);
+}
+
+#ifndef BOOST_HAS_NO_INT64_T
+inline int count_trailing_zeros(unsigned long long int value)
+{
+	if (value == 0) { 
+		return sizeof(unsigned long long int) << 3;
+	}
+	
+	return __builtin_ctzll(value);
+}
+#endif
+	
 
 #else
 
