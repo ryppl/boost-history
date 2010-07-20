@@ -506,8 +506,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(random_test1, T, test_types) {
         points.clear();
         for (int j = 0; j < 10; j++)
             points.push_back(make_point_2d<coordinate_type>(
-                static_cast<coordinate_type>(rand() % 10),
-                static_cast<coordinate_type>(rand() % 10)));
+                static_cast<coordinate_type>(rand() % 5 - 5),
+                static_cast<coordinate_type>(rand() % 5 - 5)));
         test_beach_line.init(points);
         test_beach_line.run_sweepline();
         test_beach_line.clip(test_output);
@@ -527,8 +527,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(random_test2, T, test_types) {
         points.clear();
         for (int j = 0; j < 100; j++)
             points.push_back(make_point_2d<coordinate_type>(
-                static_cast<coordinate_type>(rand() % 100),
-                static_cast<coordinate_type>(rand() % 100)));
+                static_cast<coordinate_type>(rand() % 50 - 50),
+                static_cast<coordinate_type>(rand() % 50 - 50)));
         test_beach_line.init(points);
         test_beach_line.run_sweepline();
         test_beach_line.clip(test_output);
@@ -548,8 +548,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(random_test3, T, test_types) {
         points.clear();
         for (int j = 0; j < 1000; j++)
         points.push_back(make_point_2d<coordinate_type>(
-            static_cast<coordinate_type>(rand() % 100),
-            static_cast<coordinate_type>(rand() % 100)));
+            static_cast<coordinate_type>(rand() % 50 - 50),
+            static_cast<coordinate_type>(rand() % 50 - 50)));
         test_beach_line.init(points);
         test_beach_line.run_sweepline();
         test_beach_line.clip(test_output);
@@ -569,8 +569,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(random_test4, T, test_types) {
         points.clear();
         for (int j = 0; j < 10000; j++)
         points.push_back(make_point_2d<coordinate_type>(\
-            static_cast<coordinate_type>(rand() % 1000),
-            static_cast<coordinate_type>(rand() % 1000)));
+            static_cast<coordinate_type>(rand() % 500 - 500),
+            static_cast<coordinate_type>(rand() % 500 - 500)));
         test_beach_line.init(points);
         test_beach_line.run_sweepline();
         test_beach_line.clip(test_output);
@@ -590,8 +590,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(random_test5, T, test_types) {
         points.clear();
         for (int j = 0; j < 100000; j++)
         points.push_back(make_point_2d<coordinate_type>(
-            static_cast<coordinate_type>(rand() % 1000),
-            static_cast<coordinate_type>(rand() % 1000)));
+            static_cast<coordinate_type>(rand() % 500 - 500),
+            static_cast<coordinate_type>(rand() % 500 - 500)));
         test_beach_line.init(points);
         test_beach_line.run_sweepline();
         test_beach_line.clip(test_output);
@@ -611,8 +611,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(random_test6, T, test_types) {
         points.clear();
         for (int j = 0; j < 1000000; j++)
         points.push_back(make_point_2d<coordinate_type>(
-            static_cast<coordinate_type>(rand() % 1000),
-            static_cast<coordinate_type>(rand() % 1000)));
+            static_cast<coordinate_type>(rand() % 5000 - 5000),
+            static_cast<coordinate_type>(rand() % 5000 - 5000)));
         test_beach_line.init(points);
         test_beach_line.run_sweepline();
         test_beach_line.clip(test_output);

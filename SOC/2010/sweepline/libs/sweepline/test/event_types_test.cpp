@@ -91,7 +91,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(circle_event_test1, T, test_types) {
     bool arr3[] = { true, false, true, false, false, true };
     EVENT_TYPES_CHECK_COMPARISON(circle1, circle2, arr3);
 
-
     circle2 = make_circle_event<T>(static_cast<T>(0), static_cast<T>(2), static_cast<T>(4));
     circle2.set_sites(0, 0, 0);
     bool arr4[] = { false, true, false, true, false, true };

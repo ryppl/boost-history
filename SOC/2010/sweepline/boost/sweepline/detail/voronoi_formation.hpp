@@ -15,6 +15,10 @@
 #include <queue>
 #include <vector>
 
+#define INT_PREDICATE_COMPUTE_DIFFERENCE(a, b, res, sign) \
+        if (a >= b) { res = static_cast<ull>(a - b); sign = true; } \
+        else { res = static_cast<ull>(b - a); sign = false; }
+
 namespace boost {
 namespace sweepline {
 namespace detail {
@@ -478,27 +482,56 @@ namespace detail {
         // x2(y) = ((y - y2)^2 + x2^2 - x0^2) / (2*(x2 - x0)).
         // Horizontal line going throught site (x*, y*) intersects second arc
         // at first if x2(y*) > x1(y*) or:
-        // (x2-x0)*(x1-x0)*(x1-x2) + (x2-x0)*(y*-y1)^2 < (x1-x0)*(y*-y2)^2.
+        // (x0-x2)*(x0-x1)*(x1-x2) + (x0-x2)*(y*-y1)^2 < (x0-x1)*(y*-y2)^2.
         bool less(const site_event_type &new_site) const {
-            long long a1 = static_cast<long long>(new_site.x() - left_site_.x());
-            long long a2 = static_cast<long long>(new_site.x() - right_site_.x());
-            long long b1 = static_cast<long long>(new_site.y() - left_site_.y());
-            long long b2 = static_cast<long long>(new_site.y() - right_site_.y());
-            long long c = static_cast<long long>(left_site_.x() - right_site_.x());
-            long long l_expr = a2 * c + b2 * b2;
-            long long r_expr = b1 * b1;
-            if (l_expr < 0 && r_expr > 0)
+            typedef long long ll;
+            typedef unsigned long long ull;
+            ull a1, a2, b1, b2, b1_sqr, b2_sqr, l_expr, r_expr;
+            bool l_expr_plus, r_expr_plus;
+
+            // a1 and a2 are greater than zero.
+            a1 = static_cast<ull>(static_cast<ll>(new_site.x()) -
+                                  static_cast<ll>(left_site_.x()));
+            a2 = static_cast<ull>(static_cast<ll>(new_site.x()) -
+                                  static_cast<ll>(right_site_.x()));
+
+            // We don't need to know signs of b1 and b2, because we use their squared values.
+            INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(new_site.y()),
+                                             static_cast<ll>(left_site_.y()),
+                                             b1, l_expr_plus);
+            INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(new_site.y()),
+                                             static_cast<ll>(right_site_.y()),
+                                             b2, l_expr_plus);
+            b1_sqr = b1 * b1;
+            b2_sqr = b2 * b2;
+            ull b1_sqr_mod = b1_sqr % a1;
+            ull b2_sqr_mod = b2_sqr % a2;
+
+            // Compute left expression.
+            INT_PREDICATE_COMPUTE_DIFFERENCE(static_cast<ll>(left_site_.x()),
+                                             static_cast<ll>(right_site_.x()),
+                                             l_expr, l_expr_plus);            
+            if (b2_sqr_mod * a1 < b1_sqr_mod * a2) {
+                if (!l_expr_plus)
+                    l_expr++;
+                else if (l_expr != 0)
+                    l_expr--;
+                else {
+                    l_expr++;
+                    l_expr_plus = false;
+                }
+            }
+
+            // Compute right expression.
+            INT_PREDICATE_COMPUTE_DIFFERENCE(b1_sqr / a1, b2_sqr / a2, r_expr, r_expr_plus);   
+            if (!l_expr_plus && r_expr_plus)
                 return true;
-            if (l_expr > 0 && r_expr < 0)
+            if (l_expr_plus && !r_expr_plus)
                 return false;
-            long long l_expr_div = l_expr / a2;
-            long long r_expr_div = r_expr / a1;
-            if (l_expr_div != r_expr_div)
-                return l_expr_div < r_expr_div;
-            long long l_expr_mod = l_expr % a2;
-            long long r_expr_mod = r_expr % a1;
-            return l_expr_mod < r_expr_mod;
-            
+            if (l_expr_plus && r_expr_plus)
+                return l_expr < r_expr;
+            return l_expr > r_expr;
+
             /*mpz_class a1, a2, b1, b2, c, left_expr, right_expr;
             a1 = static_cast<int>(new_site.x() - left_site.x());
             a2 = static_cast<int>(new_site.x() - right_site.x());
