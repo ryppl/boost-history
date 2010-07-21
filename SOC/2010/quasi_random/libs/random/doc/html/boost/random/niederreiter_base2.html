@@ -31,36 +31,36 @@
   <span class="keyword">typedef</span> <span class="identifier">IntType</span> <a name="boost.random.niederreiter_base2.result_type"></a><span class="identifier">result_type</span><span class="special">;</span>
 
   <span class="comment">// <a class="link" href="niederreiter_base2.html#boost.random.niederreiter_base2construct-copy-destruct">construct/copy/destruct</a></span>
-  <a class="link" href="niederreiter_base2.html#id364691-bb"><span class="identifier">niederreiter_base2</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
-  <a class="link" href="niederreiter_base2.html#id364698-bb"><span class="identifier">niederreiter_base2</span></a><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="niederreiter_base2.html#id297419-bb"><span class="identifier">niederreiter_base2</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="niederreiter_base2.html#id297427-bb"><span class="identifier">niederreiter_base2</span></a><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">)</span><span class="special">;</span>
 
-  <span class="comment">// <a class="link" href="niederreiter_base2.html#id364563-bb">public static functions</a></span>
-  <span class="keyword">static</span> <span class="identifier">result_type</span> <a class="link" href="niederreiter_base2.html#id364566-bb"><span class="identifier">min</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
-  <span class="keyword">static</span> <span class="identifier">result_type</span> <a class="link" href="niederreiter_base2.html#id364580-bb"><span class="identifier">max</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
-  <span class="keyword">static</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <a class="link" href="niederreiter_base2.html#id364593-bb"><span class="identifier">dimension</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <span class="comment">// <a class="link" href="niederreiter_base2.html#id297292-bb">public static functions</a></span>
+  <span class="keyword">static</span> <span class="identifier">result_type</span> <a class="link" href="niederreiter_base2.html#id297295-bb"><span class="identifier">min</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">static</span> <span class="identifier">result_type</span> <a class="link" href="niederreiter_base2.html#id297308-bb"><span class="identifier">max</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">static</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <a class="link" href="niederreiter_base2.html#id297321-bb"><span class="identifier">dimension</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
 
-  <span class="comment">// <a class="link" href="niederreiter_base2.html#id364605-bb">public member functions</a></span>
-  <span class="keyword">void</span> <a class="link" href="niederreiter_base2.html#id364608-bb"><span class="identifier">seed</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
-  <span class="keyword">void</span> <a class="link" href="niederreiter_base2.html#id364624-bb"><span class="identifier">seed</span></a><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">)</span><span class="special">;</span>
-  <span class="identifier">result_type</span> <a class="link" href="niederreiter_base2.html#id364650-bb"><span class="keyword">operator</span><span class="special">(</span><span class="special">)</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
-  <span class="keyword">void</span> <a class="link" href="niederreiter_base2.html#id364667-bb"><span class="identifier">discard</span></a><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">)</span><span class="special">;</span>
+  <span class="comment">// <a class="link" href="niederreiter_base2.html#id297334-bb">public member functions</a></span>
+  <span class="keyword">void</span> <a class="link" href="niederreiter_base2.html#id297337-bb"><span class="identifier">seed</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">void</span> <a class="link" href="niederreiter_base2.html#id297353-bb"><span class="identifier">seed</span></a><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">)</span><span class="special">;</span>
+  <span class="identifier">result_type</span> <a class="link" href="niederreiter_base2.html#id297379-bb"><span class="keyword">operator</span><span class="special">(</span><span class="special">)</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">void</span> <a class="link" href="niederreiter_base2.html#id297395-bb"><span class="identifier">discard</span></a><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">)</span><span class="special">;</span>
 
-  <span class="comment">// <a class="link" href="niederreiter_base2.html#id364711-bb">friend functions</a></span>
+  <span class="comment">// <a class="link" href="niederreiter_base2.html#id297439-bb">friend functions</a></span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> CharT<span class="special">,</span> <span class="keyword">typename</span> Traits<span class="special">&gt;</span> 
     <span class="keyword">friend</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_ostream</span><span class="special">&lt;</span> <span class="identifier">CharT</span><span class="special">,</span> <span class="identifier">Traits</span> <span class="special">&gt;</span> <span class="special">&amp;</span> 
-    <a class="link" href="niederreiter_base2.html#id364714-bb"><span class="keyword">operator</span><span class="special">&lt;&lt;</span></a><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_ostream</span><span class="special">&lt;</span> <span class="identifier">CharT</span><span class="special">,</span> <span class="identifier">Traits</span> <span class="special">&gt;</span> <span class="special">&amp;</span><span class="special">,</span> 
+    <a class="link" href="niederreiter_base2.html#id297442-bb"><span class="keyword">operator</span><span class="special">&lt;&lt;</span></a><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_ostream</span><span class="special">&lt;</span> <span class="identifier">CharT</span><span class="special">,</span> <span class="identifier">Traits</span> <span class="special">&gt;</span> <span class="special">&amp;</span><span class="special">,</span> 
                <span class="keyword">const</span> <a class="link" href="niederreiter_base2.html" title="Class template niederreiter_base2">niederreiter_base2</a> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> CharT<span class="special">,</span> <span class="keyword">typename</span> Traits<span class="special">&gt;</span> 
     <span class="keyword">friend</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_istream</span><span class="special">&lt;</span> <span class="identifier">CharT</span><span class="special">,</span> <span class="identifier">Traits</span> <span class="special">&gt;</span> <span class="special">&amp;</span> 
-    <a class="link" href="niederreiter_base2.html#id364754-bb"><span class="keyword">operator</span><span class="special">&gt;&gt;</span></a><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_istream</span><span class="special">&lt;</span> <span class="identifier">CharT</span><span class="special">,</span> <span class="identifier">Traits</span> <span class="special">&gt;</span> <span class="special">&amp;</span><span class="special">,</span> 
+    <a class="link" href="niederreiter_base2.html#id297482-bb"><span class="keyword">operator</span><span class="special">&gt;&gt;</span></a><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_istream</span><span class="special">&lt;</span> <span class="identifier">CharT</span><span class="special">,</span> <span class="identifier">Traits</span> <span class="special">&gt;</span> <span class="special">&amp;</span><span class="special">,</span> 
                <span class="keyword">const</span> <a class="link" href="niederreiter_base2.html" title="Class template niederreiter_base2">niederreiter_base2</a> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
-  <span class="keyword">friend</span> <span class="keyword">bool</span> <a class="link" href="niederreiter_base2.html#id364793-bb"><span class="keyword">operator</span><span class="special">==</span></a><span class="special">(</span><span class="keyword">const</span> <a class="link" href="niederreiter_base2.html" title="Class template niederreiter_base2">niederreiter_base2</a> <span class="special">&amp;</span><span class="special">,</span> 
+  <span class="keyword">friend</span> <span class="keyword">bool</span> <a class="link" href="niederreiter_base2.html#id297522-bb"><span class="keyword">operator</span><span class="special">==</span></a><span class="special">(</span><span class="keyword">const</span> <a class="link" href="niederreiter_base2.html" title="Class template niederreiter_base2">niederreiter_base2</a> <span class="special">&amp;</span><span class="special">,</span> 
                          <span class="keyword">const</span> <a class="link" href="niederreiter_base2.html" title="Class template niederreiter_base2">niederreiter_base2</a> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
-  <span class="keyword">friend</span> <span class="keyword">bool</span> <a class="link" href="niederreiter_base2.html#id364820-bb"><span class="keyword">operator</span><span class="special">!=</span></a><span class="special">(</span><span class="keyword">const</span> <a class="link" href="niederreiter_base2.html" title="Class template niederreiter_base2">niederreiter_base2</a> <span class="special">&amp;</span><span class="special">,</span> 
+  <span class="keyword">friend</span> <span class="keyword">bool</span> <a class="link" href="niederreiter_base2.html#id297549-bb"><span class="keyword">operator</span><span class="special">!=</span></a><span class="special">(</span><span class="keyword">const</span> <a class="link" href="niederreiter_base2.html" title="Class template niederreiter_base2">niederreiter_base2</a> <span class="special">&amp;</span><span class="special">,</span> 
                          <span class="keyword">const</span> <a class="link" href="niederreiter_base2.html" title="Class template niederreiter_base2">niederreiter_base2</a> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
 <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1" lang="en">
-<a name="id646413"></a><h2>Description</h2>
+<a name="id719332"></a><h2>Description</h2>
 <p>class template niederreiter_base2 implements a quasi-random number generator as described in  </p>
 <div class="blockquote"><blockquote class="blockquote"><p>  Bratley, Fox, Niederreiter, ACM Trans. Model. Comp. Sim. 2, 195 (1992).  </p></blockquote></div>
 <p> </p>
@@ -68,54 +68,54 @@
 In the following documentation <code class="computeroutput">X</code> denotes the concrete class of the template niederreiter_base2 returning objects of type <code class="computeroutput">IntType</code>, u and v are the values of <code class="computeroutput">X</code>.</p>
 <p>Some member functions may throw exceptions of type std::overflow_error. This happens when the quasi-random domain is exhausted and the generator cannot produce any more values. The length of the low discrepancy sequence is given by <span class="inlinemediaobject"><img src="../../images/form_0.png"></span>, where digits = std::numeric_limits&lt;IntType&gt;::digits. </p>
 <div class="refsect2" lang="en">
-<a name="id646466"></a><h3>
+<a name="id719385"></a><h3>
 <a name="boost.random.niederreiter_base2construct-copy-destruct"></a><code class="computeroutput">niederreiter_base2</code> 
         public
        construct/copy/destruct</h3>
 <div class="orderedlist"><ol type="1">
 <li>
-<pre class="literallayout"><a name="id364691-bb"></a><span class="identifier">niederreiter_base2</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
+<pre class="literallayout"><a name="id297419-bb"></a><span class="identifier">niederreiter_base2</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
 <p>Effects: Constructs the default Niederreiter base 2 quasi-random number generator.</p>
 <p>Throws: nothing. </p>
 </li>
 <li>
-<pre class="literallayout"><a name="id364698-bb"></a><span class="identifier">niederreiter_base2</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> init<span class="special">)</span><span class="special">;</span></pre>
+<pre class="literallayout"><a name="id297427-bb"></a><span class="identifier">niederreiter_base2</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> init<span class="special">)</span><span class="special">;</span></pre>
 <p>Effects: Constructs the Niederreiter base 2 quasi-random number generator, equivalent to X u; u.seed(init).</p>
 <p>Throws: overflow_error. </p>
 </li>
 </ol></div>
 </div>
 <div class="refsect2" lang="en">
-<a name="id646559"></a><h3>
-<a name="id364563-bb"></a><code class="computeroutput">niederreiter_base2</code> public static functions</h3>
+<a name="id719478"></a><h3>
+<a name="id297292-bb"></a><code class="computeroutput">niederreiter_base2</code> public static functions</h3>
 <div class="orderedlist"><ol type="1">
 <li>
-<pre class="literallayout"><span class="keyword">static</span> <span class="identifier">result_type</span> <a name="id364566-bb"></a><span class="identifier">min</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
+<pre class="literallayout"><span class="keyword">static</span> <span class="identifier">result_type</span> <a name="id297295-bb"></a><span class="identifier">min</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
 <p>Returns: Tight lower bound on the set of values returned by operator().</p>
 <p>Throws: nothing. </p>
 </li>
 <li>
-<pre class="literallayout"><span class="keyword">static</span> <span class="identifier">result_type</span> <a name="id364580-bb"></a><span class="identifier">max</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
+<pre class="literallayout"><span class="keyword">static</span> <span class="identifier">result_type</span> <a name="id297308-bb"></a><span class="identifier">max</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
 <p>Returns: Tight upper bound on the set of values returned by operator().</p>
 <p>Throws: nothing. </p>
 </li>
 <li>
-<pre class="literallayout"><span class="keyword">static</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <a name="id364593-bb"></a><span class="identifier">dimension</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
+<pre class="literallayout"><span class="keyword">static</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <a name="id297321-bb"></a><span class="identifier">dimension</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
 <p>Returns: The dimension of of the quasi-random domain.</p>
 <p>Throws: nothing. </p>
 </li>
 </ol></div>
 </div>
 <div class="refsect2" lang="en">
-<a name="id646708"></a><h3>
-<a name="id364605-bb"></a><code class="computeroutput">niederreiter_base2</code> public member functions</h3>
+<a name="id719628"></a><h3>
+<a name="id297334-bb"></a><code class="computeroutput">niederreiter_base2</code> public member functions</h3>
 <div class="orderedlist"><ol type="1">
 <li>
-<pre class="literallayout"><span class="keyword">void</span> <a name="id364608-bb"></a><span class="identifier">seed</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>Throws: nothing. <p>Requirements: *this is mutable.</p>
+<pre class="literallayout"><span class="keyword">void</span> <a name="id297337-bb"></a><span class="identifier">seed</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>Throws: nothing. <p>Requirements: *this is mutable.</p>
 <p>Effects: Resets the quasi-random number generator state to the one given by the default construction. Equivalent to u.seed(0). </p>
 </li>
 <li>
-<pre class="literallayout"><span class="keyword">void</span> <a name="id364624-bb"></a><span class="identifier">seed</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> init<span class="special">)</span><span class="special">;</span></pre>Throws: overflow_error. <p>Requirements: *this is mutable.</p>
+<pre class="literallayout"><span class="keyword">void</span> <a name="id297353-bb"></a><span class="identifier">seed</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> init<span class="special">)</span><span class="special">;</span></pre>Throws: overflow_error. <p>Requirements: *this is mutable.</p>
 <p>Effects: Effectively sets the quasi-random number generator state to the init-th vector in the s-dimensional quasi-random domain, where s == X::dimension(). </p>
 <pre class="programlisting">     X u, v;
      for(int i = 0; i &lt; N; ++i)
@@ -127,13 +127,13 @@ In the following documentation <code class="computeroutput">X</code> denotes the
 <p> </p>
 </li>
 <li>
-<pre class="literallayout"><span class="identifier">result_type</span> <a name="id364650-bb"></a><span class="keyword">operator</span><span class="special">(</span><span class="special">)</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
+<pre class="literallayout"><span class="identifier">result_type</span> <a name="id297379-bb"></a><span class="keyword">operator</span><span class="special">(</span><span class="special">)</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
 <p>Requirements: *this is mutable.</p>
 <p>Returns: Returns a successive element of an s-dimensional (s = X::dimension()) vector at each invocation. When all elements are exhausted, X::operator() begins anew with the starting element of a subsequent s-dimensional vector.</p>
 <p>Throws: overflow_error. </p>
 </li>
 <li>
-<pre class="literallayout"><span class="keyword">void</span> <a name="id364667-bb"></a><span class="identifier">discard</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> z<span class="special">)</span><span class="special">;</span></pre>
+<pre class="literallayout"><span class="keyword">void</span> <a name="id297395-bb"></a><span class="identifier">discard</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> z<span class="special">)</span><span class="special">;</span></pre>
 <p>Requirements: *this is mutable.</p>
 <p>Effects: Advances *this state as if z consecutive X::operator() invocations were executed. </p>
 <pre class="programlisting">     X u = v;
@@ -147,24 +147,24 @@ In the following documentation <code class="computeroutput">X</code> denotes the
 </ol></div>
 </div>
 <div class="refsect2" lang="en">
-<a name="id646930"></a><h3>
-<a name="id364711-bb"></a><code class="computeroutput">niederreiter_base2</code> friend functions</h3>
+<a name="id719850"></a><h3>
+<a name="id297439-bb"></a><code class="computeroutput">niederreiter_base2</code> friend functions</h3>
 <div class="orderedlist"><ol type="1">
 <li>
 <pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> CharT<span class="special">,</span> <span class="keyword">typename</span> Traits<span class="special">&gt;</span> 
   <span class="keyword">friend</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_ostream</span><span class="special">&lt;</span> <span class="identifier">CharT</span><span class="special">,</span> <span class="identifier">Traits</span> <span class="special">&gt;</span> <span class="special">&amp;</span> 
-  <a name="id364714-bb"></a><span class="keyword">operator</span><span class="special">&lt;&lt;</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_ostream</span><span class="special">&lt;</span> <span class="identifier">CharT</span><span class="special">,</span> <span class="identifier">Traits</span> <span class="special">&gt;</span> <span class="special">&amp;</span> os<span class="special">,</span> 
+  <a name="id297442-bb"></a><span class="keyword">operator</span><span class="special">&lt;&lt;</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_ostream</span><span class="special">&lt;</span> <span class="identifier">CharT</span><span class="special">,</span> <span class="identifier">Traits</span> <span class="special">&gt;</span> <span class="special">&amp;</span> os<span class="special">,</span> 
              <span class="keyword">const</span> <a class="link" href="niederreiter_base2.html" title="Class template niederreiter_base2">niederreiter_base2</a> <span class="special">&amp;</span> f<span class="special">)</span><span class="special">;</span></pre>Writes a <code class="computeroutput">niederreiter_base2</code> to a <code class="computeroutput">std::ostream</code>. </li>
 <li>
 <pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> CharT<span class="special">,</span> <span class="keyword">typename</span> Traits<span class="special">&gt;</span> 
   <span class="keyword">friend</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_istream</span><span class="special">&lt;</span> <span class="identifier">CharT</span><span class="special">,</span> <span class="identifier">Traits</span> <span class="special">&gt;</span> <span class="special">&amp;</span> 
-  <a name="id364754-bb"></a><span class="keyword">operator</span><span class="special">&gt;&gt;</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_istream</span><span class="special">&lt;</span> <span class="identifier">CharT</span><span class="special">,</span> <span class="identifier">Traits</span> <span class="special">&gt;</span> <span class="special">&amp;</span> is<span class="special">,</span> 
+  <a name="id297482-bb"></a><span class="keyword">operator</span><span class="special">&gt;&gt;</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_istream</span><span class="special">&lt;</span> <span class="identifier">CharT</span><span class="special">,</span> <span class="identifier">Traits</span> <span class="special">&gt;</span> <span class="special">&amp;</span> is<span class="special">,</span> 
              <span class="keyword">const</span> <a class="link" href="niederreiter_base2.html" title="Class template niederreiter_base2">niederreiter_base2</a> <span class="special">&amp;</span> f<span class="special">)</span><span class="special">;</span></pre>Reads a <code class="computeroutput">niederreiter_base2</code> from a <code class="computeroutput">std::istream</code>. </li>
 <li>
-<pre class="literallayout"><span class="keyword">friend</span> <span class="keyword">bool</span> <a name="id364793-bb"></a><span class="keyword">operator</span><span class="special">==</span><span class="special">(</span><span class="keyword">const</span> <a class="link" href="niederreiter_base2.html" title="Class template niederreiter_base2">niederreiter_base2</a> <span class="special">&amp;</span> x<span class="special">,</span> 
+<pre class="literallayout"><span class="keyword">friend</span> <span class="keyword">bool</span> <a name="id297522-bb"></a><span class="keyword">operator</span><span class="special">==</span><span class="special">(</span><span class="keyword">const</span> <a class="link" href="niederreiter_base2.html" title="Class template niederreiter_base2">niederreiter_base2</a> <span class="special">&amp;</span> x<span class="special">,</span> 
                        <span class="keyword">const</span> <a class="link" href="niederreiter_base2.html" title="Class template niederreiter_base2">niederreiter_base2</a> <span class="special">&amp;</span> y<span class="special">)</span><span class="special">;</span></pre>Returns true if the two generators will produce identical sequences. </li>
 <li>
-<pre class="literallayout"><span class="keyword">friend</span> <span class="keyword">bool</span> <a name="id364820-bb"></a><span class="keyword">operator</span><span class="special">!=</span><span class="special">(</span><span class="keyword">const</span> <a class="link" href="niederreiter_base2.html" title="Class template niederreiter_base2">niederreiter_base2</a> <span class="special">&amp;</span> lhs<span class="special">,</span> 
+<pre class="literallayout"><span class="keyword">friend</span> <span class="keyword">bool</span> <a name="id297549-bb"></a><span class="keyword">operator</span><span class="special">!=</span><span class="special">(</span><span class="keyword">const</span> <a class="link" href="niederreiter_base2.html" title="Class template niederreiter_base2">niederreiter_base2</a> <span class="special">&amp;</span> lhs<span class="special">,</span> 
                        <span class="keyword">const</span> <a class="link" href="niederreiter_base2.html" title="Class template niederreiter_base2">niederreiter_base2</a> <span class="special">&amp;</span> rhs<span class="special">)</span><span class="special">;</span></pre>Returns true if the two generators will produce different sequences,. </li>
 </ol></div>
 </div>
