@@ -12,7 +12,7 @@
 
 #ifndef BOOST_INTEGER_BITFIELD__HPP
 #define BOOST_INTEGER_BITFIELD__HPP
-#include <boost/integer/detail/bft/pointer_parsing_meta_functions.hpp>
+
 #include <cstddef>
 #include <boost/static_assert.hpp>
 #include <boost/mpl/void.hpp>
@@ -418,61 +418,6 @@ const typename bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::storage_typ
             ((1 << bitfield<STORAGE_TYPE,F,L,VALUE_TYPE,REFERENCE_TYPE>::WIDTH) - 1)
 
     );
-
-
-template <
-    typename STORAGE_TYPE,
-    std::size_t F,
-    std::size_t L,
-    typename VALUE_TYPE,
-    typename REFERENCE_TYPE,
-    typename MASK,
-    typename POLICY
->
-class bitfield <
-    STORAGE_TYPE,
-    F,
-    L,
-    VALUE_TYPE,
-    REFERENCE_TYPE,
-    ::boost::detail::pointer_member::pointer_member_info<MASK,POLICY> >
-{
-    typedef bitfield <
-        STORAGE_TYPE,
-        F,
-        L,
-        VALUE_TYPE,
-        REFERENCE_TYPE,
-        ::boost::detail::pointer_member::pointer_member_info< MASK, POLICY >
-    >       _self;
-public:
-
-    typedef STORAGE_TYPE    storage_type;
-    typedef VALUE_TYPE      value_type;
-    typedef REFERENCE_TYPE  reference_type;
-
-    typedef MASK get_mask;
-
-    typedef POLICY  field_policy;
-
-    /** constructor over the storage type. */
-    explicit bitfield(storage_type& field) :_field(field) { }
-
-    /** Copy Constructor. TODO: figure out if i need this or not. */
-    bitfield(_self const& x) :_field( x._field ) { }
-
-    /** Set function. */
-    void set( value_type x) {
-        _field = field_policy::template apply<storage_type>::set(_field, x);
-    }
-
-    value_type get() const {
-        return field_policy::template apply<storage_type>::get(_field);
-    }
-private:
-    storage_type& _field;
-};
-
 }}
 #endif
 

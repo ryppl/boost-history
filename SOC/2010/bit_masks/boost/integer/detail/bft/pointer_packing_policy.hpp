@@ -211,12 +211,7 @@ struct pointer_packing_policy<
             ValueType,
             StorageType,
             sizeof(StorageType) == sizeof(typename mask::value_type)
-        > {
-#if 0
-
-
-#endif
-    };
+        > { };
 };
 
 

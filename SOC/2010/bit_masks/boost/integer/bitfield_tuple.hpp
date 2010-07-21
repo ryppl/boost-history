@@ -69,8 +69,9 @@ public:
             const storage_type,
             storage_type
         >::type                                         storage_t;
-            
-        // typedef typename Bitfield 
+
+        // gets the policy used for storing and retrieveing data for this
+        // particular field.
         typedef typename detail::select_packing_policy<
             storage_t,
             typename BitfieldElement::offset,
@@ -78,27 +79,7 @@ public:
             return_type,
             typename BitfieldElement::policy
         >::type         field_type;
-/* integer::bitfield<
-            storage_t,
-            BitfieldElement::offset::value,
-            BitfieldElement::offset::value
-              +
-            BitfieldElement::field_width::value - 1,
-            return_type,
-            typename add_reference<return_type>::type,
-            typename mpl::if_<
-                is_same<
-                    typename BitfieldElement::mask,
-                    mpl::void_
-                >,
-                mpl::void_,
-                detail::pointer_member::pointer_member_info<
-                    typename BitfieldElement::mask,
-                    typename BitfieldElement::policy
-                >
-            >::type
-        >                                               field_type;
-*/
+
 
         /** Reference constructor. */
         explicit bitfield_reference(storage_t& field)

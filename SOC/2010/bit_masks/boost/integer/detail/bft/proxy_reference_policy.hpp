@@ -7,6 +7,7 @@
 #ifndef BOOST_BITFIELD_TUPLE_PROXY_REFERENCE_POLICY_HPP
 #define BOOST_BITFIELD_TUPLE_PROXY_REFERENCE_POLICY_HPP
 #include <boost/type_traits/is_same.hpp>
+#include <boost/bitfield/bitfield_orignal.hpp>
 #include <boost/type_traits/is_pod.hpp>
 #include <boost/mpl/void.hpp>
 #include <boost/mpl/logical.hpp>
@@ -14,6 +15,11 @@
 
 namespace boost { namespace detail {
 
+/** Wraps up a policy so that it has a similar interface to that of bitfield.
+ *  which basically means that since the policy itself only has static functions
+ *  this is the thing of which copies are made and is also responsible for the
+ *  keeping of a reference to the original data.
+ */
 template <
     typename StorageType,
     typename Policy
@@ -60,7 +66,11 @@ struct select_packing_policy {
         >,
         typename mpl::if_<
             is_pod<StorageType>,
-                ::boost::integer::bitfield<
+                // this needs to be something else other then bitfield 
+                // I believe that this should be the orignal version
+                // of bitfield because that will optimize better then
+                // the newer version.
+                ::boost::integer::bitfield_policy<
                     StorageType,
                     Offset::value,
                     Offset::value
@@ -68,6 +78,7 @@ struct select_packing_policy {
                     Width::value - 1,
                     ValueType
                 >,
+
                 ::boost::integer::bitfield<
                     StorageType,
                     Offset::value,
