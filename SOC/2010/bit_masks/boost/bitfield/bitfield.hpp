@@ -156,7 +156,7 @@ namespace boost { namespace integer {
 
     template <typename STORAGE_TYPE, std::size_t F, std::size_t L
         , typename VALUE_TYPE=typename bitfield_value_type<STORAGE_TYPE>::type
-        , typename REFERENCE_TYPE=VALUE_TYPE&, typename PACKAGE_INFO = mpl::void_ >
+        , typename REFERENCE_TYPE=VALUE_TYPE&>
     class bitfield;
 
     template <
@@ -165,8 +165,8 @@ namespace boost { namespace integer {
         std::size_t L,
         typename VALUE_TYPE,
         typename REFERENCE_TYPE>
-    class bitfield <STORAGE_TYPE, F,L,VALUE_TYPE, REFERENCE_TYPE,mpl::void_ >{
-        typedef bitfield<STORAGE_TYPE, F, L, VALUE_TYPE, REFERENCE_TYPE,mpl::void_> this_type;
+    class bitfield {
+        typedef bitfield<STORAGE_TYPE, F, L, VALUE_TYPE, REFERENCE_TYPE> this_type;
     public:
         //! storage type of the bitfield support
         typedef STORAGE_TYPE storage_type;
