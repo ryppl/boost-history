@@ -22,7 +22,7 @@ namespace boost { namespace detail { namespace pointer_member {
 template <typename T>
 struct get_mask_type {
     typedef typename mpl::if_c<
-        bit_width<std::size_t>::value < bit_width<T*>::value,
+        (4 < sizeof(T*)),
         uint64_t,
         uint32_t
     >::type                 type;
