@@ -200,29 +200,33 @@ inline child create_child(const std::string &executable, Arguments args, context
 
             int stdin_fd = ctx.stdin_behavior->get_child_end();
             if (stdin_fd != -1 && stdin_fd < maxdescs)
-                closeflags[stdin_fd] = false;
+            {
+                if (::dup2(stdin_fd, STDIN_FILENO) == -1)
+                    BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("dup2() failed");
+                closeflags[STDIN_FILENO] = false;
+            }
 
             int stdout_fd = ctx.stdout_behavior->get_child_end();
             if (stdout_fd != -1 && stdout_fd < maxdescs)
-                closeflags[stdout_fd] = false;
+            {
+                if (::dup2(stdout_fd, STDOUT_FILENO) == -1)
+                    BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("dup2() failed");
+                closeflags[STDOUT_FILENO] = false;
+            }
 
             int stderr_fd = ctx.stderr_behavior->get_child_end();
             if (stderr_fd != -1 && stderr_fd < maxdescs)
-                closeflags[stderr_fd] = false;
+            {
+                if (::dup2(stderr_fd, STDERR_FILENO) == -1)
+                    BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("dup2() failed");
+                closeflags[STDERR_FILENO] = false;
+            }
 
             for (int i = 0; i < maxdescs; ++i)
             {
                 if (closeflags[i])
                     ::close(i);
             }
-
-            if(closeflags[stdin_fd] == false)
-                posix_remap(STDIN_FILENO, stdin_fd);
-            if(closeflags[stdout_fd] == false)
-                posix_remap(STDOUT_FILENO, stdout_fd);
-            if(closeflags[stderr_fd] == false)
-                posix_remap(STDERR_FILENO, stderr_fd);
-
         }
         catch (const boost::system::system_error &e)
         {

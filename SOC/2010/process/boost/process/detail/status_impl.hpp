@@ -22,11 +22,11 @@
 #include <boost/process/config.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/ptr_container/ptr_unordered_map.hpp>
-#include <boost/bind.hpp>
-#include <boost/process/stream_behavior.hpp>
 #include <algorithm>
 
 #if defined(BOOST_POSIX_API)
+#   include <sys/types.h>
+#   include <sys/wait.h>
 #elif defined(BOOST_WINDOWS_API)
 #   include <windows.h>
 #else
@@ -37,13 +37,15 @@ namespace boost {
 namespace process {
 namespace detail {
 
+#elif defined(BOOST_POSIX_API)
+typedef pid_t phandle;
+#elif defined(BOOST_WINDOWS_API)
+typedef HANDLE phandle;
+#endif
+
 struct operation
 {
-    #if defined(BOOST_WINDOWS_API)
-    virtual void operator()(DWORD exit_code)
-    #elif defined BOOST_POSIX_API
-    virtual void operator()(unsigned int exit_code)
-    #endif
+    virtual void operator()(int exit_code)
     {
     }
 };
@@ -57,11 +59,7 @@ public:
     {
     }
 
-    #if defined(BOOST_WINDOWS_API)
-    void operator()(DWORD exit_code)
-    #elif defined BOOST_POSIX_API
-    void operator()(unsigned int exit_code)
-    #endif
+    void operator()(int exit_code)
     {
         handler_(boost::system::error_code(), exit_code);
     }
@@ -73,33 +71,72 @@ private:
 class status_impl
 {
 public:
-    template <typename Handler>
-    void async_wait(behavior::stream::native_type handle, Handler handler)
+    int wait(pid_type pid, boost::system::error_code ec)
     {
-        ops_.insert(handle, new wrapped_handler<Handler>(handler));
+#if defined(BOOST_POSIX_API)
+        pid_t p;
+        int status;
+        do
+        {
+            p = waitpid(pid, &status, 0);
+        } while (p == -1 && errno == EINTR);
+        if (p == -1)
+        {
+            ec = boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), BOOST_PROCESS_SOURCE_LOCATION "waitpid(2) failed");
+            return -1;
+        }
+        return status;
+#elif defined(BOOST_WINDOWS_API)
+        HANDLE h = OpenProcess(PROCESS_QUERY_INFORMATION | SYNCHRONIZE, FALSE, pid);
+        if (h == NULL)
+        {
+            ec = boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), BOOST_PROCESS_SOURCE_LOCATION "OpenProcess() failed");
+            return -1;
+        }
+
+        if (WaitForSingleObject(h, INFINITE) == WAIT_FAILED)
+        {
+            CloseHandle(h);
+            ec = boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), BOOST_PROCESS_SOURCE_LOCATION "WaitForSingleObject() failed");
+            return -1;
+        }
+
+        DWORD exit_code;
+        if (!GetExitCodeProcess(h, &exit_code))
+        {
+            CloseHandle(h);
+            ec = boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), BOOST_PROCESS_SOURCE_LOCATION "GetExitCodeProcess() failed");
+            return -1;
+        }
+        if (!CloseHandle(h))
+        {
+            ec = boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), BOOST_PROCESS_SOURCE_LOCATION "CloseHandle() failed");
+            return -1;
+        }
+        return exit_code;
+#endif
     }
 
-    #if defined(BOOST_WINDOWS_API)
-    void complete(behavior::stream::native_type handle, DWORD exit_code)
-    #elif defined(BOOST_POSIX_API)
-    void complete(behavior::stream::native_type handle, unsigned int exit_code)
-    #endif
+    template <typename Handler>
+    void async_wait(phandle ph, Handler handler)
     {
-        boost::iterator_range<operations_type::iterator> r = ops_.equal_range(handle);
+        ops_.insert(ph, new wrapped_handler<Handler>(handler));
+    }
+
+    void complete(phandle ph, int exit_code)
+    {
+        boost::iterator_range<operations_type::iterator> r = ops_.equal_range(ph);
         for (operations_type::iterator it = r.begin(); it != r.end(); ++it)
             (*it->second)(exit_code);
         ops_.erase(r.begin(), r.end());
-        #if defined(BOOST_WINDOWS_API)
-        if (!::CloseHandle(handle))
+#if defined(BOOST_WINDOWS_API)
+        if (!CloseHandle(ph))
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CloseHandle() failed");
-        #elif defined(BOOST_POSIX_API)
-        if (::close(handle) == -1)
-            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("close() failed");
-        #endif
+#endif
     }
 
 private:
-    typedef boost::ptr_unordered_multimap<behavior::stream::native_type, operation> operations_type;
+    typedef boost::ptr_unordered_multimap<phandle, operation> operations_type;
     operations_type ops_;
 };
 

@@ -20,7 +20,6 @@ int main()
 { 
     std::string exe = find_executable_in_path("hostname"); 
     child c = create_child(exe); 
-    status s = c.wait(); 
-    if (s.exited()) 
-        std::cout << s.exit_code() << std::endl; 
+    int exit_code = c.wait(); 
+    std::cout << exit_code << std::endl; 
 } 

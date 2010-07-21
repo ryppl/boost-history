@@ -19,7 +19,10 @@ using namespace boost::process;
 int main() 
 { 
     std::string exe = find_executable_in_path("hostname"); 
-    child c = create_child(exe); 
+    context ctx; 
+    ctx.stdout_behavior = behavior::pipe::def(behavior::pipe::stream_type::output_stream); 
+    child c = create_child(exe,ctx); 
     pistream &is = c.get_stdout(); 
     std::cout << is.rdbuf(); 
+    c.wait();
 } 
