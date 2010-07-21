@@ -23,7 +23,7 @@ typedef bitfield_tuple<
     flag<b2>
 >                   test_type_3;
 
-
+#if( _LP64 != 1)
 // This is second half long long
 // note this only works on 32 bit systems Need to remove this from the test
 // in the event that its being test on a 64 bit architecture
@@ -42,7 +42,7 @@ typedef bitfield_tuple<
     flag<b1>,
     flag<b2>
 >                   test_type_5;
-
+#endif
 int main() {
     {
     test_type_1 t1;
@@ -74,6 +74,7 @@ int main() {
     }
     // NOTE this test may fail on 64 bit machines but I need to test it
     // either way.
+#if( _LP64 != 1)
     if(sizeof(void*) == 4) {
         
         test_type_3 t3;
@@ -97,5 +98,6 @@ int main() {
         t5.get<rd>() = &i;
         BOOST_TEST( *t5.get<rd>() == 70 );
     }
+#endif
     return boost::report_errors();
 }
