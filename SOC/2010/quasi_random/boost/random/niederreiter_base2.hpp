@@ -431,31 +431,26 @@ public:
 
 } // namespace random
 
-//It would have been nice to do something like this, but it seems that doxygen
-//simply won't show those typedefs, so we spell them out by hand.
+/** @cond */
+template<std::size_t Dimension>
+struct niederreiter_base2_generator
+{
+  typedef random::niederreiter_base2<boost::uint32_t, Dimension, 1, 2*((boost::uint32_t)1 << 31)> type;
+};
+/** @endcond */
 
-/*
-#define BOOST_NIEDERREITER_BASE2_TYPEDEF(z, N, text) \
-typedef random::niederreiter_base2<uint32_t, N, 1, 2*((uint32_t)1 << 31)> niederreiter_base2_##N##d; \
-//
-
-BOOST_PP_REPEAT_FROM_TO(1, 21, BOOST_NIEDERREITER_BASE2_TYPEDEF, unused)
-
-#undef BOOST_NIEDERREITER_BASE2_TYPEDEF
-*/
-
-typedef random::niederreiter_base2<uint32_t, 1, 1, 2*((uint32_t)1 << 31)> niederreiter_base2_1d;
-typedef random::niederreiter_base2<uint32_t, 2, 1, 2*((uint32_t)1 << 31)> niederreiter_base2_2d;
-typedef random::niederreiter_base2<uint32_t, 3, 1, 2*((uint32_t)1 << 31)> niederreiter_base2_3d;
-typedef random::niederreiter_base2<uint32_t, 4, 1, 2*((uint32_t)1 << 31)> niederreiter_base2_4d;
-typedef random::niederreiter_base2<uint32_t, 5, 1, 2*((uint32_t)1 << 31)> niederreiter_base2_5d;
-typedef random::niederreiter_base2<uint32_t, 6, 1, 2*((uint32_t)1 << 31)> niederreiter_base2_6d;
-typedef random::niederreiter_base2<uint32_t, 7, 1, 2*((uint32_t)1 << 31)> niederreiter_base2_7d;
-typedef random::niederreiter_base2<uint32_t, 8, 1, 2*((uint32_t)1 << 31)> niederreiter_base2_8d;
-typedef random::niederreiter_base2<uint32_t, 9, 1, 2*((uint32_t)1 << 31)> niederreiter_base2_9d;
-typedef random::niederreiter_base2<uint32_t, 10, 1, 2*((uint32_t)1 << 31)> niederreiter_base2_10d;
-typedef random::niederreiter_base2<uint32_t, 11, 1, 2*((uint32_t)1 << 31)> niederreiter_base2_11d;
-typedef random::niederreiter_base2<uint32_t, 12, 1, 2*((uint32_t)1 << 31)> niederreiter_base2_12d;
+typedef niederreiter_base2_generator< 1 >::type niederreiter_base2_1d;
+typedef niederreiter_base2_generator< 2 >::type niederreiter_base2_2d;
+typedef niederreiter_base2_generator< 3 >::type niederreiter_base2_3d;
+typedef niederreiter_base2_generator< 4 >::type niederreiter_base2_4d;
+typedef niederreiter_base2_generator< 5 >::type niederreiter_base2_5d;
+typedef niederreiter_base2_generator< 6 >::type niederreiter_base2_6d;
+typedef niederreiter_base2_generator< 7 >::type niederreiter_base2_7d;
+typedef niederreiter_base2_generator< 8 >::type niederreiter_base2_8d;
+typedef niederreiter_base2_generator< 9 >::type niederreiter_base2_9d;
+typedef niederreiter_base2_generator< 10 >::type niederreiter_base2_10d;
+typedef niederreiter_base2_generator< 11 >::type niederreiter_base2_11d;
+typedef niederreiter_base2_generator< 12 >::type niederreiter_base2_12d;
 
 } // namespace boost
 

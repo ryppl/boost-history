@@ -400,31 +400,26 @@ public:
 
 } // namespace random
 
-//It would have been nice to do something like this, but it seems that doxygen
-//simply won't show those typedefs, so we spell them out by hand.
+/** @cond */
+template<std::size_t Dimension>
+struct sobol_generator
+{
+  typedef random::sobol<uint32_t, Dimension, 1, (uint32_t)1 << 31> type;
+};
+/** @endcond */
 
-/*
-#define BOOST_SOBOL_TYPEDEF(z, N, text) \
-typedef random::sobol<uint32_t, N, 1, (uint32_t)1 << 31> sobol_##N##d; \
-//
-
-BOOST_PP_REPEAT_FROM_TO(1, 21, BOOST_SOBOL_TYPEDEF, unused)
-
-#undef BOOST_SOBOL_TYPEDEF
-*/
-
-typedef random::sobol<uint32_t, 1, 1, (uint32_t)1 << 31> sobol_1d;
-typedef random::sobol<uint32_t, 2, 1, (uint32_t)1 << 31> sobol_2d;
-typedef random::sobol<uint32_t, 3, 1, (uint32_t)1 << 31> sobol_3d;
-typedef random::sobol<uint32_t, 4, 1, (uint32_t)1 << 31> sobol_4d;
-typedef random::sobol<uint32_t, 5, 1, (uint32_t)1 << 31> sobol_5d;
-typedef random::sobol<uint32_t, 6, 1, (uint32_t)1 << 31> sobol_6d;
-typedef random::sobol<uint32_t, 7, 1, (uint32_t)1 << 31> sobol_7d;
-typedef random::sobol<uint32_t, 8, 1, (uint32_t)1 << 31> sobol_8d;
-typedef random::sobol<uint32_t, 9, 1, (uint32_t)1 << 31> sobol_9d;
-typedef random::sobol<uint32_t, 10, 1, (uint32_t)1 << 31> sobol_10d;
-typedef random::sobol<uint32_t, 11, 1, (uint32_t)1 << 31> sobol_11d;
-typedef random::sobol<uint32_t, 12, 1, (uint32_t)1 << 31> sobol_12d;
+typedef sobol_generator< 1 >::type sobol_1d;
+typedef sobol_generator< 2 >::type sobol_2d;
+typedef sobol_generator< 3 >::type sobol_3d;
+typedef sobol_generator< 4 >::type sobol_4d;
+typedef sobol_generator< 5 >::type sobol_5d;
+typedef sobol_generator< 6 >::type sobol_6d;
+typedef sobol_generator< 7 >::type sobol_7d;
+typedef sobol_generator< 8 >::type sobol_8d;
+typedef sobol_generator< 9 >::type sobol_9d;
+typedef sobol_generator< 10 >::type sobol_10d;
+typedef sobol_generator< 11 >::type sobol_11d;
+typedef sobol_generator< 12 >::type sobol_12d;
 
 } // namespace boost
 

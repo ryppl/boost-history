@@ -3,10 +3,13 @@
 // Boost Software License, Version 1.0. (See accompanying
 // file LICENSE-1.0 or http://www.boost.org/LICENSE-1.0)
 
-#include "qrng_typedefs.hpp"
+#include "identity_distribution.hpp"
+
+#include <boost/random/niederreiter_base2.hpp>
+#include <boost/random/sobol.hpp>
+#include <boost/random/faure.hpp>
 
 #include <gsl/gsl_qrng.h>
-
 
 #include <boost/random/uniform_real.hpp>
 
@@ -89,14 +92,14 @@ bool test_qrng(const std::size_t D)
 template<int D>
 void test_sobol()
 {
-  typedef typename sobol_generator<D>::type sobol_t;
+  typedef typename boost::sobol_generator<D>::type sobol_t;
   BOOST_CHECK( (test_qrng<gsl_sobol, sobol_t>(D)) );
 }
 
 template<int D>
 void test_niederreiter_base2()
 {
-  typedef typename niederreiter_base2_generator<D>::type nb2_t;
+  typedef typename boost::niederreiter_base2_generator<D>::type nb2_t;
   BOOST_CHECK( (test_qrng<gsl_niederreiter_base2, nb2_t>(D)) );
 }
 
@@ -119,4 +122,3 @@ BOOST_AUTO_TEST_CASE( validate_niederreiter_base2 )
 
 #undef UNIT_TEST_QRNG_VALIDATE_NIEDERREITER_BASE2
 }
-

@@ -358,31 +358,27 @@ private:
 
 } // namespace random
 
-//It would have been nice to do something like this, but it seems that doxygen
-//simply won't show those typedefs, so we spell them out by hand.
 
-/*
-#define BOOST_FAURE_TYPEDEF(z, N, text) \
-typedef random::faure<double, N> faure_##N##d; \
-//
+/** @cond */
+template<std::size_t Dimension, typename T = double>
+struct faure_generator
+{
+  typedef boost::random::faure<T, Dimension> type;
+};
+/** @endcond */
 
-BOOST_PP_REPEAT_FROM_TO(1, 229, BOOST_FAURE_TYPEDEF, unused)
-
-#undef BOOST_FAURE_TYPEDEF
-*/
-
-typedef random::faure<double, 1> faure_1d;
-typedef random::faure<double, 2> faure_2d;
-typedef random::faure<double, 3> faure_3d;
-typedef random::faure<double, 4> faure_4d;
-typedef random::faure<double, 5> faure_5d;
-typedef random::faure<double, 6> faure_6d;
-typedef random::faure<double, 7> faure_7d;
-typedef random::faure<double, 8> faure_8d;
-typedef random::faure<double, 9> faure_9d;
-typedef random::faure<double, 10> faure_10d;
-typedef random::faure<double, 11> faure_11d;
-typedef random::faure<double, 12> faure_12d;
+typedef faure_generator< 1 >::type faure_1d;
+typedef faure_generator< 2 >::type faure_2d;
+typedef faure_generator< 3 >::type faure_3d;
+typedef faure_generator< 4 >::type faure_4d;
+typedef faure_generator< 5 >::type faure_5d;
+typedef faure_generator< 6 >::type faure_6d;
+typedef faure_generator< 7 >::type faure_7d;
+typedef faure_generator< 8 >::type faure_8d;
+typedef faure_generator< 9 >::type faure_9d;
+typedef faure_generator< 10 >::type faure_10d;
+typedef faure_generator< 11 >::type faure_11d;
+typedef faure_generator< 12 >::type faure_12d;
 
 } // namespace boost
 
