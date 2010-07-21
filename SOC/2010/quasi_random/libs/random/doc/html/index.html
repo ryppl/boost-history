@@ -1,0 +1,155 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Chapter&#160;1.&#160;Boost.Random Quasi-random number generators extension</title>
+<link rel="stylesheet" href="boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Chapter&#160;1.&#160;Boost.Random Quasi-random number generators extension">
+<link rel="next" href="boost_random_quasi_random_number_generators_extension/HeaderSummary.html" title="Header File Summary">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="boost_random_quasi_random_number_generators_extension/HeaderSummary.html"><img src="images/next.png" alt="Next"></a></div>
+<div class="chapter" lang="en">
+<div class="titlepage"><div>
+<div><h2 class="title">
+<a name="boost_random_quasi_random_number_generators_extension"></a>Chapter&#160;1.&#160;Boost.Random Quasi-random number generators extension</h2></div>
+<div><div class="author"><h3 class="author">
+<span class="firstname">Justinas</span> <span class="surname">Daugmaudis</span>
+</h3></div></div>
+<div><p class="copyright">Copyright &#169; 2010 Justinas Vygintas Daugmaudis</p></div>
+<div><div class="legalnotice">
+<a name="id633781"></a><p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></div>
+</div></div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl>
+<dt><span class="section"><a href="index.html#boost_random_quasi_random_number_generators_extension.quasi_random_number_generator">Quasi-Random
+    Number Generator</a></span></dt>
+<dt><span class="section"><a href="boost_random_quasi_random_number_generators_extension/HeaderSummary.html">
+    Header File Summary</a></span></dt>
+<dt><span class="section"><a href="boost_random_quasi_random_number_generators_extension/reference.html">Reference</a></span></dt>
+<dd><dl><dt><span class="section"><a href="boost_random_quasi_random_number_generators_extension/reference.html#headers">Headers</a></span></dt></dl></dd>
+</dl>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_random_quasi_random_number_generators_extension.quasi_random_number_generator"></a><a class="link" href="index.html#boost_random_quasi_random_number_generators_extension.quasi_random_number_generator" title="Quasi-Random Number Generator">Quasi-Random
+    Number Generator</a>
+</h2></div></div></div>
+<p>
+      A quasi-random number generator is a __PseudoRandomNumberGenerator which provides
+      a deterministic sequence of quasi-random numbers, based on some algorithm and
+      internal state. <code class="computeroutput"><a class="link" href="boost/random/niederreiter_base2.html" title="Class template niederreiter_base2">Niederreiter
+      Base 2</a></code> generator is an example of such a [qrng quasi-random number
+      generator]. The "quasi" modifier is used to denote more clearly that
+      the values produced by such a generator are neither random nor pseudo-random,
+      but they form a low discrepancy sequence. The intuitive idea is that a low
+      discrepancy sequence is more evenly distributed than a pseudo random sequence
+      would be. For example, if we generate a low discrepancy sequence of 2D points
+      on a square, this square would be covered more evenly, and the number of points
+      falling to any part of the square would be proportional to the number of points
+      in the whole square. Such sequences share some properties of random variables
+      and in certain applications such as the quasi-Monte Carlo method their lower
+      discrepancy is an important advantage.
+    </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        Quasi-random sequences are known to give efficient numerical integration
+        rules in many Bayesian statistical problems where the posterior distribution
+        can be transformed into periodic functions on the n-dimensional hypercube.
+      </p></td></tr>
+</table></div>
+<p>
+      Harold Niederreiter gives an extensive overview on random number generation
+      and quasi-Monte Carlo methods in his book "Random number generation and
+      quasi-Monte Carlo methods, Society for Industrial and Applied Mathematics,
+      1992".
+    </p>
+<p>
+      In addition to the __PseudoRandomNumberGenerator requirements, a quasi-random
+      number generator has some additional requirements. In the following table,
+      <code class="computeroutput"><span class="identifier">X</span></code> denotes a quasi-random number
+      generator class, and <code class="computeroutput"><span class="identifier">v</span></code> is a
+      const value of <code class="computeroutput"><span class="identifier">X</span></code>.
+    </p>
+<div class="table">
+<a name="boost_random_quasi_random_number_generators_extension.quasi_random_number_generator.quasirandomnumbergenerator_requirements"></a><p class="title"><b>Table&#160;1.1.&#160;QuasiRandomNumberGenerator requirements</b></p>
+<div class="table-contents"><table class="table" summary="QuasiRandomNumberGenerator requirements">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                expression
+              </p>
+            </th>
+<th>
+              <p>
+                return type
+              </p>
+            </th>
+<th>
+              <p>
+                pre/post-condition
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">X</span><span class="special">::</span><span class="identifier">dimension</span><span class="special">()</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                std::size_t
+              </p>
+            </td>
+<td>
+              <p>
+                the dimension of quasi-random domain. It must be no less than 1.
+                The return value of this function shall not change during the lifetime
+                of the object.
+              </p>
+            </td>
+</tr></tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        The <code class="computeroutput"><span class="keyword">operator</span><span class="special">()</span></code>
+        returns a successive element of an n-dimensional (n = <code class="computeroutput"><span class="identifier">X</span><span class="special">::</span><span class="identifier">dimension</span></code>)
+        vector at each invocation. When all elements are exhausted, <code class="computeroutput"><span class="keyword">operator</span><span class="special">()</span></code>
+        begins anew with the starting element of a subsequent n-dimensional vector.
+      </p></td></tr>
+</table></div>
+<p>
+      The class __niederreiter_base2 is a model for a quasi-random number generator.
+    </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"><p><small>Last revised: July 21, 2010 at 19:13:43 GMT</small></p></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="boost_random_quasi_random_number_generators_extension/HeaderSummary.html"><img src="images/next.png" alt="Next"></a></div>
+</body>
+</html>

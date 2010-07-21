@@ -1,0 +1,116 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Reference</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Chapter&#160;1.&#160;Boost.Random Quasi-random number generators extension">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.Random Quasi-random number generators extension">
+<link rel="prev" href="HeaderSummary.html" title="Header File Summary">
+<link rel="next" href="../boost/random/faure.html" title="Class template faure">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr><td valign="top"></td></tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="HeaderSummary.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="../boost/random/faure.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_random_quasi_random_number_generators_extension.reference"></a><a class="link" href="reference.html" title="Reference">Reference</a>
+</h2></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="reference.html#headers">Headers</a></span></dt></dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="headers"></a>Headers</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="reference.html#header.boost.random.faure_hpp">Header &lt;boost/random/faure.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.random.niederreiter_base2_hpp">Header &lt;boost/random/niederreiter_base2.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.random.sobol_hpp">Header &lt;boost/random/sobol.hpp&gt;</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.random.faure_hpp"></a>Header &lt;<a href="../../../../../boost/random/faure.hpp" target="_top">boost/random/faure.hpp</a>&gt;</h4></div></div></div>
+<p>Describes the quasi-random number generator class template faure. </p>
+<pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+  <span class="keyword">typedef</span> <span class="identifier">faure_generator</span><span class="special">&lt;</span> <span class="number">1</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.faure_1d"></a><span class="identifier">faure_1d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">faure_generator</span><span class="special">&lt;</span> <span class="number">2</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.faure_2d"></a><span class="identifier">faure_2d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">faure_generator</span><span class="special">&lt;</span> <span class="number">3</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.faure_3d"></a><span class="identifier">faure_3d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">faure_generator</span><span class="special">&lt;</span> <span class="number">4</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.faure_4d"></a><span class="identifier">faure_4d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">faure_generator</span><span class="special">&lt;</span> <span class="number">5</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.faure_5d"></a><span class="identifier">faure_5d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">faure_generator</span><span class="special">&lt;</span> <span class="number">6</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.faure_6d"></a><span class="identifier">faure_6d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">faure_generator</span><span class="special">&lt;</span> <span class="number">7</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.faure_7d"></a><span class="identifier">faure_7d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">faure_generator</span><span class="special">&lt;</span> <span class="number">8</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.faure_8d"></a><span class="identifier">faure_8d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">faure_generator</span><span class="special">&lt;</span> <span class="number">9</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.faure_9d"></a><span class="identifier">faure_9d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">faure_generator</span><span class="special">&lt;</span> <span class="number">10</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.faure_10d"></a><span class="identifier">faure_10d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">faure_generator</span><span class="special">&lt;</span> <span class="number">11</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.faure_11d"></a><span class="identifier">faure_11d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">faure_generator</span><span class="special">&lt;</span> <span class="number">12</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.faure_12d"></a><span class="identifier">faure_12d</span><span class="special">;</span>
+  <span class="keyword">namespace</span> <span class="identifier">random</span> <span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> RealType<span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> Dimension<span class="special">&gt;</span> <span class="keyword">class</span> <a class="link" href="../boost/random/faure.html" title="Class template faure">faure</a><span class="special">;</span>
+  <span class="special">}</span>
+<span class="special">}</span></pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.random.niederreiter_base2_hpp"></a>Header &lt;<a href="../../../../../boost/random/niederreiter_base2.hpp" target="_top">boost/random/niederreiter_base2.hpp</a>&gt;</h4></div></div></div>
+<p>Describes the quasi-random number generator class template niederreiter_base2.</p>
+<p><span class="bold"><strong>Note:</strong></span> it is especially useful in conjunction with class template uniform_real. </p>
+<pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+  <span class="keyword">typedef</span> <span class="identifier">niederreiter_base2_generator</span><span class="special">&lt;</span> <span class="number">1</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.niederreiter_base2_1d"></a><span class="identifier">niederreiter_base2_1d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">niederreiter_base2_generator</span><span class="special">&lt;</span> <span class="number">2</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.niederreiter_base2_2d"></a><span class="identifier">niederreiter_base2_2d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">niederreiter_base2_generator</span><span class="special">&lt;</span> <span class="number">3</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.niederreiter_base2_3d"></a><span class="identifier">niederreiter_base2_3d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">niederreiter_base2_generator</span><span class="special">&lt;</span> <span class="number">4</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.niederreiter_base2_4d"></a><span class="identifier">niederreiter_base2_4d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">niederreiter_base2_generator</span><span class="special">&lt;</span> <span class="number">5</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.niederreiter_base2_5d"></a><span class="identifier">niederreiter_base2_5d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">niederreiter_base2_generator</span><span class="special">&lt;</span> <span class="number">6</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.niederreiter_base2_6d"></a><span class="identifier">niederreiter_base2_6d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">niederreiter_base2_generator</span><span class="special">&lt;</span> <span class="number">7</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.niederreiter_base2_7d"></a><span class="identifier">niederreiter_base2_7d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">niederreiter_base2_generator</span><span class="special">&lt;</span> <span class="number">8</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.niederreiter_base2_8d"></a><span class="identifier">niederreiter_base2_8d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">niederreiter_base2_generator</span><span class="special">&lt;</span> <span class="number">9</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.niederreiter_base2_9d"></a><span class="identifier">niederreiter_base2_9d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">niederreiter_base2_generator</span><span class="special">&lt;</span> <span class="number">10</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.niederreiter_base2_10d"></a><span class="identifier">niederreiter_base2_10d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">niederreiter_base2_generator</span><span class="special">&lt;</span> <span class="number">11</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.niederreiter_base2_11d"></a><span class="identifier">niederreiter_base2_11d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">niederreiter_base2_generator</span><span class="special">&lt;</span> <span class="number">12</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.niederreiter_base2_12d"></a><span class="identifier">niederreiter_base2_12d</span><span class="special">;</span>
+  <span class="keyword">namespace</span> <span class="identifier">random</span> <span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> IntType<span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> Dimension<span class="special">,</span> <span class="identifier">IntType</span> c<span class="special">,</span> <span class="identifier">IntType</span> m<span class="special">&gt;</span> 
+      <span class="keyword">class</span> <a class="link" href="../boost/random/niederreiter_base2.html" title="Class template niederreiter_base2">niederreiter_base2</a><span class="special">;</span>
+  <span class="special">}</span>
+<span class="special">}</span></pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.random.sobol_hpp"></a>Header &lt;<a href="../../../../../boost/random/sobol.hpp" target="_top">boost/random/sobol.hpp</a>&gt;</h4></div></div></div>
+<p>Describes the quasi-random number generator class template sobol.</p>
+<p><span class="bold"><strong>Note:</strong></span> it is especially useful in conjunction with class template uniform_real. </p>
+<pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+  <span class="keyword">typedef</span> <span class="identifier">sobol_generator</span><span class="special">&lt;</span> <span class="number">1</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.sobol_1d"></a><span class="identifier">sobol_1d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">sobol_generator</span><span class="special">&lt;</span> <span class="number">2</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.sobol_2d"></a><span class="identifier">sobol_2d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">sobol_generator</span><span class="special">&lt;</span> <span class="number">3</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.sobol_3d"></a><span class="identifier">sobol_3d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">sobol_generator</span><span class="special">&lt;</span> <span class="number">4</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.sobol_4d"></a><span class="identifier">sobol_4d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">sobol_generator</span><span class="special">&lt;</span> <span class="number">5</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.sobol_5d"></a><span class="identifier">sobol_5d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">sobol_generator</span><span class="special">&lt;</span> <span class="number">6</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.sobol_6d"></a><span class="identifier">sobol_6d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">sobol_generator</span><span class="special">&lt;</span> <span class="number">7</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.sobol_7d"></a><span class="identifier">sobol_7d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">sobol_generator</span><span class="special">&lt;</span> <span class="number">8</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.sobol_8d"></a><span class="identifier">sobol_8d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">sobol_generator</span><span class="special">&lt;</span> <span class="number">9</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.sobol_9d"></a><span class="identifier">sobol_9d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">sobol_generator</span><span class="special">&lt;</span> <span class="number">10</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.sobol_10d"></a><span class="identifier">sobol_10d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">sobol_generator</span><span class="special">&lt;</span> <span class="number">11</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.sobol_11d"></a><span class="identifier">sobol_11d</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">sobol_generator</span><span class="special">&lt;</span> <span class="number">12</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <a name="boost.sobol_12d"></a><span class="identifier">sobol_12d</span><span class="special">;</span>
+  <span class="keyword">namespace</span> <span class="identifier">random</span> <span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> IntType<span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> Dimension<span class="special">,</span> <span class="identifier">IntType</span> c<span class="special">,</span> <span class="identifier">IntType</span> m<span class="special">&gt;</span> 
+      <span class="keyword">class</span> <a class="link" href="../boost/random/sobol.html" title="Class template sobol">sobol</a><span class="special">;</span>
+  <span class="special">}</span>
+<span class="special">}</span></pre>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2010 Justinas Vygintas Daugmaudis<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="HeaderSummary.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="../boost/random/faure.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
