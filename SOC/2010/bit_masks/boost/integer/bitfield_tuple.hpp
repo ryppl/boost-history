@@ -29,6 +29,7 @@
 #include <boost/integer/detail/bft/ext/bitfield_tuple_fusion_includes.hpp>
 #include <boost/integer/detail/fusion_ext_includes.hpp>
 #include <boost/integer/detail/bft/make_bitfield_tuple.hpp>
+#include <boost/integer/detail/bft/proxy_reference_policy.hpp>
 
 // TODO: re evaluate if this is needed or not.
 // #include <boost/integer/detail/bft/msvc_fixes/msvc_fix_includes.hpp>
@@ -70,7 +71,14 @@ public:
         >::type                                         storage_t;
             
         // typedef typename Bitfield 
-        typedef integer::bitfield<
+        typedef typename detail::select_packing_policy<
+            storage_t,
+            typename BitfieldElement::offset,
+            typename BitfieldElement::field_width,
+            return_type,
+            typename BitfieldElement::policy
+        >::type         field_type;
+/* integer::bitfield<
             storage_t,
             BitfieldElement::offset::value,
             BitfieldElement::offset::value
@@ -90,6 +98,7 @@ public:
                 >
             >::type
         >                                               field_type;
+*/
 
         /** Reference constructor. */
         explicit bitfield_reference(storage_t& field)
