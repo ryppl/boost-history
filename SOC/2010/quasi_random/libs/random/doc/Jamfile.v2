@@ -1,0 +1,69 @@
+# Jamfile.v2
+#
+# Copyright (c) 2009
+# Steven Watanabe
+# Copyright (C) 2010
+# Justinas Vygintas Daugmaudis
+#
+# Distributed under the Boost Software License, Version 1.0. (See
+# accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+using quickbook ;
+using doxygen ;
+import boostbook ;
+import regex ;
+import os ;
+import path ;
+
+doxygen_files =
+    faure
+    niederreiter_base2
+    sobol
+;
+
+path-constant here : . ;
+
+doxygen reference :
+    $(here)/../../../boost/random/$(doxygen_files).hpp
+  :
+    <doxygen:param>EXPAND_ONLY_PREDEF=YES
+    <doxygen:param>"ALIASES= \\
+        xmlnote=\"@xmlonly <note><para> @endxmlonly\" \\
+        endxmlnote=\"@xmlonly </para></note> @endxmlonly\" \\
+        blockquote=\"@xmlonly <blockquote><para> @endxmlonly\" \\
+        endblockquote=\"@xmlonly </para></blockquote> @endxmlonly\" \\
+        boost=\"$(BOOST_ROOT)\" \\
+        niederreiter_base2=\"@xmlonly <classname alt=\\\"boost::random::niederreiter_base2\\\">niederreiter_base2</classname> @endxmlonly\" \\
+	sobol=\"@xmlonly <classname alt=\\\"boost::random::sobol\\\">sobol</classname> @endxmlonly\" \\
+	faure=\"@xmlonly <classname alt=\\\"boost::random::faure\\\">faure</classname> @endxmlonly\""
+    <doxygen:param>HIDE_UNDOC_MEMBERS=NO
+    <doxygen:param>QUIET=YES
+    <doxygen:param>WARN_IF_UNDOCUMENTED=NO
+    <doxygen:param>EXTRACT_PRIVATE=NO
+    <doxygen:param>ENABLE_PREPROCESSING=YES
+    <doxygen:param>MACRO_EXPANSION=YES
+    <doxygen:param>SEARCH_INCLUDES=NO
+    # Expand macros and clean up a bunch of ugly names
+    <doxygen:param>"PREDEFINED= \\
+        \"BOOST_RANDOM_DOXYGEN=1\" \\
+        \"BOOST_PREVENT_MACRO_SUBSTITUTION=\" \\
+        \"BOOST_STATIC_ASSERT(x)=\" \\
+        \"BOOST_STATIC_CONSTANT(type,value)=static const type value\" \\
+        \"BOOST_RANDOM_DETAIL_OSTREAM_OPERATOR(os,T,t)=template<class CharT, class Traits> friend std::basic_ostream<CharT,Traits>& operator<<(std::basic_ostream<CharT,Traits>& os, const T& t)\" \\
+        \"BOOST_RANDOM_DETAIL_ISTREAM_OPERATOR(is,T,t)=template<class CharT, class Traits> friend std::basic_istream<CharT,Traits>& operator>>(std::basic_istream<CharT,Traits>& is, const T& t)\" \\
+        \"BOOST_RANDOM_DETAIL_EQUALITY_OPERATOR(T,lhs,rhs)=friend bool operator==(const T& lhs, const T& rhs)\" \\
+        \"BOOST_RANDOM_DETAIL_INEQUALITY_OPERATOR(T)=friend bool operator!=(const T& lhs, const T& rhs) { return !(lhs == rhs); }\""
+    <reftitle>"Headers"
+    <doxygen:xml-imagedir>images/random
+;
+
+xml quasi_random : main.qbk : <dependency>reference ;
+
+boostbook standalone :
+    quasi_random
+  :
+    <implicit-dependency>reference
+    <xsl:param>boost.root=../../../..
+    <xsl:param>chunk.section.depth=2
+;
