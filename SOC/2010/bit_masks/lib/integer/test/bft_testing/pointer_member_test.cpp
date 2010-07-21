@@ -23,6 +23,7 @@ typedef bitfield_tuple<
     flag<b2>
 >                   test_type_3;
 
+
 // This is second half long long
 // note this only works on 32 bit systems Need to remove this from the test
 // in the event that its being test on a 64 bit architecture
@@ -33,6 +34,7 @@ typedef bitfield_tuple<
     flag<b1>,
     flag<b2>
 >                   test_type_4;
+
 typedef bitfield_tuple<
     storage<unsigned long long>,
     member<int, short, 32>,
@@ -72,7 +74,8 @@ int main() {
     }
     // NOTE this test may fail on 64 bit machines but I need to test it
     // either way.
-    {
+    if(sizeof(void*) == 4) {
+        
         test_type_3 t3;
         int i = 30;
         t3.get<rd>() = &i;
@@ -80,7 +83,7 @@ int main() {
     }
 
     // this test will also fail on 64 bit machines.
-    {
+    if(sizeof(void*) == 4) {
         test_type_4 t4;
         int i = 70;
         t4.get<rd>() = &i;
@@ -88,7 +91,7 @@ int main() {
     }
 
     // this test will also fail on 64 bit machines.
-    {
+    if(sizeof(void*) == 4) {
         test_type_5 t5;
         int i = 70;
         t5.get<rd>() = &i;
