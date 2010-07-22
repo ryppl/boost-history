@@ -17,7 +17,7 @@ template <  typename ReturnType,
             typename NameType, 
             typename Offset,
             typename FieldWidth,
-            typename Mask = mpl::void_,
+            typename Mask   = mpl::void_,
             typename Policy = mpl::void_
 >
 struct bitfield_element {

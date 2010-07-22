@@ -1,3 +1,269 @@
+List of TODO's throughout the bitfield_tuple
+
+1) template_expansion_macros.hpp
+    a) TODO: Refactor the macro's which are availible for use external to the
+    data structure then undef all of the rest before the end of the data
+    structure.
+
+    // Internally used Macro's
+    #undef BOOST_MAKE_BFT_TEMPLATE_PARAMS
+    #undef BOOST_BFT_MAKE_PARAMS
+    #undef BOOST_BFT_UNPACK_CALL
+    #undef BOOST_BFT_UNPACK_PARAMS
+    #undef BOOST_BFT_BASE_TEMPLATE_PARAMS
+    #undef BOOST_BFT_PARAMETER_LIST
+    #undef BOOST_BFT_PARAM_LIST
+
+    // externally Available Macros
+    BOOST_BFT_TEMPLATE_ARGS_NO_DEFAULTS
+    BOOST_BFT_SPECILIZATION_PARAM_LIST
+
+    Main issue is that the externally Available macros are implemented in terms
+    of internal macros and undef'ing the internal macros could then cause trouble
+    when the macros which are part of the interface are used outside of
+    bitfield_tuple's implementation.
+    
+    b) MAYBE: Rename some of the internal use only macros so they don't
+    get confused with macros for external use.
+
+2) reference_builder.hpp
+    a) TODO: Move the following meta-functions into the boost namespace
+    and create some documentation on how they are used/when they are useful.
+        I   )   template <typename BitfieldTuple, typename Name>
+                struct name_exists;
+
+        II  )   template <typename BitfieldTuple, typename Name>
+                struct find_by_element_name;
+
+        III )   template <typename BitfieldTuple, std::size_t Index>
+                struct find_by_element_index;
+
+        IV  )   template <typename BitfieldTuple, typename Name>
+                struct get_reference_type_by_name;
+                a) Rename to get_proxy_type_by_name.
+                b) create documentation for this meta function.
+
+        V   )   template <typename BitfieldTuple, std::size_t Index>
+                struct get_reference_type_by_index;
+                a) Rename to get_proxy_type_by_index.
+                b) Create documentation for this meta function.
+
+    b) TODO: Consider the removal of the following meta-function if it isn't
+    used ad it doesn't seem like it is. It does however have some documentation.
+
+        I   )   template <
+                    typename BitfieldTuple,
+                    typename Name,
+                    typename CQualifier
+                >
+                struct make_reference_type_by_name;
+
+3) proxy_reference_policy.hpp
+    a)  Create the custom member.
+    b)  Create documentation for how to create your own policy.
+    c)  This may need additional documentation however it looks good currently.
+
+4)  pointer_parsing_meta_functions.hpp
+    a)  think of a better name for this file.
+    b)  template <typename Mask, typename Policy>
+        struct pointer_member_info;
+        I   )   Do impact analysis for the removal of this structure.
+                I don't believe its used or needed any more.
+
+    c)  template <typename T>
+        struct get_mask_type;
+        I   )   This type needs a new name something like uintptr_t or 
+                something simple like that.
+        II  )   This "could" be removed IF there is an unsigned integral type 
+                which is always the same size as a pointer. There may be
+                however I don't know where or what it is currently.
+        III )   Consider making this also do short or 16 bit pointers.
+        IV  )   Why is this a template? I should fix this as a pointer to one
+                type is always the same size as another.
+
+    d)  Create additional tests for count leading and trailing zero
+        meta-functions.
+
+5)  pointer_packing_policy.hpp
+    a)  Adjust the alignment check to check alignment against the 0 bit in stead
+        of based on the offset.
+    b)  Change the following specialization so that this isn't needed
+        basically this requires a shift from the pointer, when there shouldn't
+        be.
+        I   )   template <
+                    typename Mask,
+                    typename Offset,
+                    typename ValueType,
+                    typename StorageType
+                >
+                struct apply_impl_no_shift <
+                    Mask,
+                    Offset,
+                    ValueType,
+                    StorageType,
+                    false
+                >;
+    c)  Finish the pointer specialization so that fewer specialization are
+        needed there should be aligned and unaligned and that really should
+        be all. Unless there there is some issue.
+
+6)  name_lookup.hpp
+    a)  everything is fine here.
+
+7)  make_bitfield_tuple.hpp
+    a)  Everything here has already been fixed.
+
+8)  bitfield_tuple_impl.hpp
+    a) Everything looks OK here.
+
+9)  bft_element.hpp
+    a) change name to bitfield_element.hpp - eventually.
+
+10) arg_parse_impl.hpp
+    a)  Finish the pointer parsing stuff.
+        I   )   This includes the pointer shifting stuff as well.
+        II  )   Remove the fake static assertion which deals with
+                shifted pointers and actually implement something that works!
+
+    b)  Implement the specialization for custom members.
+        I   )   This could be more of a pain, however it seems quite simple
+                after implementing the pointer stuff.
+
+    c)  Add compile-failure test for the mask type not being the same size as 
+        a pointer.
+
+11) folder: msvc_fixes/
+    a) Remove this folder and remove the include from within bitfield_tuple.
+
+12) bitfield_iterator.hpp - Fusion Extension
+    A)   Add OR remove const functions because fusion may be a non const only
+        thing. Other option is to make a const iterator but that could be more
+        complex then I'm willing to deal with at the moment.
+ 
+13) Things to add to public/user documentation:
+    a)  Make note of the issue with retrieving a proxy reference type in a 
+        const scope and how to deal with it if they wish to create their own 
+        proxy reference type OR if they wish to actually return the proxy
+        reference type.
+
+14) bitfield_tuple.hpp
+    a)  Consider renaming disable_if_reference_type_by_name
+          to
+        disable_if_proxy_ref_type_by_name
+        or something like that.
+    This would only be for clarification measures as this type doesn't use
+    real reference types.
+
+
+Test file review
+1)  variadic_sequence_testing.cpp
+
+    a)  Replicate this test all the way up to 50 at intervals of 10.
+    b)  Switch to using <boost/detail/lightweight_test.hpp> framework.
+    c)  Add test to test the limit of the bitfield_tuple so that I can be
+        assured that the limit is working correctly.
+    d)  remove testing from the end of file name.
+
+2)  to_string_testing.cpp
+    a) Remove this its not part of bitfield_tuple any more.
+
+3)  template_expansion_marco_test.cpp
+    a)  Make this an actual test to make sure that everything is correctly
+        getting expanded.
+    b)  Find a better way to test this.
+    c)  remove test from name.
+    d)  Change to using the <boost/detail/lightweight_test.hpp> framework.
+
+4)  reference_builder_test.cpp
+    a)  remove test from name.
+    b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
+    c)  test the rest of the reference builder functions
+        I   )   Name exists
+        II  )   find_by_element_name
+        III )   find_by_element_index
+        IV  )   make_reference_type_by_name <-- Maybe, if its actually being used.
+        V   )   enable_if_reference_type_by_index
+        VI  )   get_reference_type_by_name
+        VII )   get_reference_type_by_index
+
+5)  pointer_parsing_meta_function_test.cpp
+    a)  Remove test from name.
+    c)  Other then name this is pretty complete.
+
+6)  pointer_member_test.cpp
+    a)  remove test from name.
+    b)  This test is incomplete because the implementation isn't completed yet.
+    c)  I need a macro which will tell me if the test is 32 bit or 64 bit
+        Currently the _LP64 should only work for GCC however I need a more
+        universal one.
+
+7)  name_accessor_test.cpp
+    a)  remove test from name.
+    b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
+
+8)  make_bft_testing.cpp
+    a)  remove test from name.
+    b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
+    c)  
+
+9)  make_bft_testing.cpp
+    a)  remove test from name.
+    b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
+    c)  This may need additional test to make sure that the macros are correctly
+        generating the code for the correct number of valid parameters.
+
+10) get_interface_test.cpp
+    a)  remove test from name.
+    b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
+    c)  Need to do more const interface testing.
+
+11) fusion_iterator_testing.cpp
+    a)  remove testing from name.
+    b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
+    c)  Not sure just how I should test the iterator. This may be good as it
+        however that doesn't mean that it should just stay as is. Look into
+        other fusion iterator tests.
+
+12) fusion_integration_testing.cpp
+    a)  remove testing from name.
+    b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
+
+13) flag_test.cpp
+    a)  remove test from name.
+    b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
+
+14) filler_test.cpp
+    a)  remove test from name.
+    b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
+
+15) deduced_storage_type_test.cpp
+    a)  remove test from name.
+    b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
+
+16) deduced_storage_type_long_long_test.cpp
+    a)  remove test from name.
+    b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
+    c)  Maybe merge this with the other storage type.
+
+17) custom_member_test.cpp
+    a)  remove test from name.
+    b)  Implement before testing this.
+
+18) bitfield_tuple_test.hpp
+    a)  remove test from name.
+    b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
+    c)  remove previous dependency on test_list_type.hpp
+
+19) align_test.cpp
+    a)  remove test from name.
+    b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
+
+
+
+TO BE ADDED TO TESTS SECTION
+Test files which need to be created and have tests placed in them!
+
+
 This is used for keeping track of different ideas about different possible
 interfaces or implementation of bit masks.
 

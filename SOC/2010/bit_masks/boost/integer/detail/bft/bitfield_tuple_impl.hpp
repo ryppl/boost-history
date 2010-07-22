@@ -41,10 +41,7 @@ namespace boost { namespace detail {
  *  preconditions and dealing with the parsed arguments. This is the base class 
  *  for bitfield_tuple.
  *
- *
  *  Base Class preconditions.
- *
- *
  *
  *  1) The bitfields specified must not exceed the bitwidth of the storage type.
  *      Enforced. Not going any where, but may be redefined or altered based
@@ -71,10 +68,7 @@ struct bitfield_tuple_base {
         >,
         typename detail::deduce_storage_type<offset>::type,
         processed_storage_type
-        >::type                                     storage_type;
-
-
-
+    >::type                                             storage_type;
 
     // Precondition: the offet at the end of everything must be the
     // the same as or less then the bit_width of the storage type.

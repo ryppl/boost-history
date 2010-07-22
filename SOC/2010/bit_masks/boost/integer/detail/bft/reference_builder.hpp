@@ -37,7 +37,7 @@ struct name_exists {
                 typename BitfieldTuple::members
             >::type
         >
-    >::type       type;
+    >::type                     type;
 };
 
 /** Returns an element by which has a given name. */
@@ -54,7 +54,7 @@ struct find_by_element_name {
                 Name
             >
         >::type
-    >::type             type;
+    >::type                 type;
 };
 
 /** Returns an element from members within bitfield_tuple

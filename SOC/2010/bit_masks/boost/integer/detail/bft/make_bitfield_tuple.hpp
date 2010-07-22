@@ -43,9 +43,20 @@ namespace boost { namespace detail {
                     BOOST_MAKE_BFT_FUNCTION_PARAM, \
                     BOOST_BFT_NOTHING )
 
+/** Helps create functions to assign values into the bitfield tuple.
+ *  Generates Pattern
+ *  detail::assign_parameter_to_bft<n>(bft, parameter##n);
+ */
 #define BOOST_MAKE_BFT_ASSIGN_FUNCTION_CALL(z,n,data)\
     detail::assign_parameter_to_bft<n>(bft, parameter##n);
 
+
+/** Helps create a sequence of functions to assign values into the
+ *  bitfield_tuple.
+ *  Generates Pattern
+ *  detail::assign_parameter_to_bft<0>(bft, parameter0); ...
+ *      detail::assign_parameter_to_bft<TO>(bft, parameter## TO);
+ */
 #define BOOST_MAKE_BFT_GENERATE_ASSIGNMENT_CALLS( TO ) \
     BOOST_PP_REPEAT_FROM_TO( \
         0,\
@@ -54,7 +65,16 @@ namespace boost { namespace detail {
         BOOST_BFT_NOTHING )
 
 
-#define BOOST_MAKE_BFT_FUNCTION(z, N, data)                                     \
+/** Helps create a make bitfield_tuple function for the bitfield_tuple.
+ *  Generates Pattern
+ *  template <typename BitfieldTuple, BOOST_MAKE_BFT_TEMPLATE_PARAMETERS(N)>
+ *  BitfieldTuple make_bitfield_tuple(BOOST_MAKE_BFT_FUNCTION_PARAMETERS(N)) {
+ *      BitfieldTuple bft;
+ *      BOOST_MAKE_BFT_GENERATE_ASSIGNMENT_CALLS(N);
+ *      return bft;
+ *   }
+ */
+#define BOOST_MAKE_BFT_FUNCTION(z, N, data)                                   \
     template <typename BitfieldTuple, BOOST_MAKE_BFT_TEMPLATE_PARAMETERS(N)>  \
     BitfieldTuple make_bitfield_tuple(BOOST_MAKE_BFT_FUNCTION_PARAMETERS(N)){ \
         BitfieldTuple bft;                                                    \
@@ -62,6 +82,23 @@ namespace boost { namespace detail {
         return bft;                                                           \
     }
 
+/** Helps create a make a sequence of make_bitfield_tuple functons for the
+ *  bitfield_tuple.
+ *  Generates Pattern
+ *  template <typename BitfieldTuple, BOOST_MAKE_BFT_TEMPLATE_PARAMETERS(0)>
+ *  BitfieldTuple make_bitfield_tuple(BOOST_MAKE_BFT_FUNCTION_PARAMETERS(0)) {
+ *      BitfieldTuple bft;
+ *      BOOST_MAKE_BFT_GENERATE_ASSIGNMENT_CALLS(0);
+ *      return bft;
+ *   }
+ *      ...
+ *  template <typename BitfieldTuple, BOOST_MAKE_BFT_TEMPLATE_PARAMETERS(N)>
+ *  BitfieldTuple make_bitfield_tuple(BOOST_MAKE_BFT_FUNCTION_PARAMETERS(N)) {
+ *      BitfieldTuple bft;
+ *      BOOST_MAKE_BFT_GENERATE_ASSIGNMENT_CALLS(N);
+ *      return bft;
+ *   }
+ */
 #define BOOST_MAKE_BFT_OVERLOADS() \
     BOOST_PP_REPEAT_FROM_TO( \
         1,\
@@ -69,10 +106,13 @@ namespace boost { namespace detail {
         BOOST_MAKE_BFT_FUNCTION,\
         BOOST_BFT_NOTHING )
 
+
+
 #ifdef BOOST_MSVC
 #pragma warning(push)
 #pragma warning(disable : 4244)
 #endif
+
 /** This is a function which is used to assign a value into a bitfield_tuple
  *  as well as remove the actual mpl::void_* from the parameter list through
  *  specialization.
@@ -84,9 +124,6 @@ inline void assign_parameter_to_bft(BitfieldTuple& bft, ParameterType value) {
 
 template <std::size_t Index, typename BitfieldTuple>
 inline void assign_parameter_to_bft(BitfieldTuple&, mpl::void_*) { }
-
-template <std::size_t Index, typename BitfieldTuple>
-inline void assign_parameter_to_bft(BitfieldTuple&, void*) { }
 
 #if BOOST_MSVC
 #pragma warning(pop)
@@ -96,190 +133,14 @@ inline void assign_parameter_to_bft(BitfieldTuple&, void*) { }
 
 BOOST_MAKE_BFT_OVERLOADS()
 
-} // end boost::detail::msvc_fixes
-
-
-#if 0
-namespace boost { namespace detail {
-
-#ifdef BOOST_MSVC
-   
-template <typename T>
-struct bft_create_param_fix_return_type {
-    typedef T type;
-};
-
-template <typename ReturnType, typename NameType, typename Offset, typename Width>
-struct bft_create_param_fix_return_type< bitfield_element<ReturnType,NameType,Offset,Width> >{
-    typedef ReturnType type;
-};
-
-
-
-template <typename BitfieldTuple, std::size_t Index>
-struct get_create_parameter {
-    // check for valid Index.
-    typedef typename mpl::less<
-        mpl::size_t<Index>,
-        typename mpl::size<
-            typename BitfieldTuple::members
-        >::type
-    >::type                 is_valid_index;
-    
-    typedef typename mpl::if_<
-        is_valid_index,
-        typename mpl::at_c<
-            typename BitfieldTuple::members,
-            Index
-        >::type,
-        mpl::void_*
-    >::type                 element_type;
-
-    typedef typename bft_create_param_fix_return_type<element_type>::type type;
-};
-
-// get_create_parameter<test_tuple,0>::is_valid_index
-/*
-BOOST_MPL_ASSERT(( get_create_parameter<test_tuple,1>::is_valid_index ));
-BOOST_MPL_ASSERT(( get_create_parameter<test_tuple,2>::is_valid_index ));
-BOOST_MPL_ASSERT(( get_create_parameter<test_tuple,3>::is_valid_index ));
-BOOST_MPL_ASSERT_NOT(( get_create_parameter<test_tuple,4>::is_valid_index ));
-BOOST_MPL_ASSERT_NOT(( get_create_parameter<test_tuple,5>::is_valid_index ));
-BOOST_MPL_ASSERT_NOT(( get_create_parameter<test_tuple,6>::is_valid_index ));
-BOOST_MPL_ASSERT_NOT(( get_create_parameter<test_tuple,7>::is_valid_index ));
-BOOST_MPL_ASSERT_NOT(( get_create_parameter<test_tuple,8>::is_valid_index ));
-BOOST_MPL_ASSERT_NOT(( get_create_parameter<test_tuple,9>::is_valid_index ));
-BOOST_MPL_ASSERT_NOT(( get_create_parameter<test_tuple,10>::is_valid_index ));
-BOOST_MPL_ASSERT_NOT(( get_create_parameter<test_tuple,11>::is_valid_index ));
-BOOST_MPL_ASSERT_NOT(( get_create_parameter<test_tuple,12>::is_valid_index ));
-BOOST_MPL_ASSERT_NOT(( get_create_parameter<test_tuple,13>::is_valid_index ));
-BOOST_MPL_ASSERT_NOT(( get_create_parameter<test_tuple,14>::is_valid_index ));
-*/
-
-#else
-
-/** Used to generate a function parameter for the create function used
- *  with make_bitfield_tuple
- */
-template <typename T>
-struct bft_create_param_fix_return_type {
-    typedef typename T::return_type type;
-};
-
-template <>
-struct bft_create_param_fix_return_type< mpl::void_ > {
-    typedef mpl::void_*  type;
-};
-
-
-template <typename BitfieldTuple, std::size_t Index>
-struct get_create_parameter {
-    typedef typename mpl::if_<
-        typename mpl::less<
-            mpl::size_t<Index>,
-            typename mpl::size<
-                typename BitfieldTuple::members
-            >::type
-        >::type,
-        typename bft_create_param_fix_return_type<
-            typename mpl::at_c<
-                typename BitfieldTuple::members,
-                Index
-            >::type
-        >::type,
-        mpl::void_*
-    >::type                     type;
-};
-
-#endif
-
-
-
-#ifdef BOOST_MSVC
-#pragma warning(push)
-#pragma warning(disable : 4244)
-#endif
-/** This is a function which is used to assign a value into a bitfield_tuple
- *  as well as remove the actual mpl::void_* from the parameter list through
- *  specialization.
- */
-template <std::size_t Index, typename BitfieldTuple, typename ParameterType>
-inline void assign_parameter_to_bft(BitfieldTuple& bft, ParameterType value) {
-    bft.template get<Index>() = value;
-}
-
-template <std::size_t Index, typename BitfieldTuple>
-inline void assign_parameter_to_bft(BitfieldTuple&, mpl::void_*) { }
-
-template <std::size_t Index, typename BitfieldTuple>
-inline void assign_parameter_to_bft(BitfieldTuple&, void*) { }
-
-#if BOOST_MSVC
-#pragma warning(pop)
-#endif
-
-} // end detail
-
-
-#ifndef BOOST_MSVC
-/** I really don't like having to do this but it really is the Only way
- *  its possible (by using macros thats is)
- *  This is used to create parameters for the static call function
- *  inside of make_bitfield_tuple.
- */
-#define BOOST_MAKE_BITFIELD_TUPLE_SINGLE_PARAMETER(z, n, data ) \
-    typename detail::get_create_parameter<BitfieldTuple, n>::type \
-    parameter ## n = 0
-
-
-/** This macro is used for creating the list of parameters inside of the
- *  make_bitfield_tuple's create function.
- *  Creates the following pattern
- *  From 0 to n
- *      typename detail::get_create_parameter<BitfieldTuple, 0>::type \
- *    parameter0 = 0, ... 
- *      typename detail::get_create_parameter<BitfieldTuple, n>::type \
- *    parametern = 0 
- */
-#define BOOST_MAKE_BITFIELD_TUPLE_CREATE_FUNCTION_PARAMETERS() \
-    BOOST_PP_ENUM(  BOOST_BFT_PARAM_COUNT,\
-                    BOOST_MAKE_BITFIELD_TUPLE_SINGLE_PARAMETER, \
-                    BOOST_BFT_NOTHING )
-
-
-#define BOOST_MAKE_BITFIELD_TUPLE_ASSIGN_PARAMETER_TO_BFT_CALL(z,n,data)\
-    detail::assign_parameter_to_bft<n>(bft, parameter##n);
-
-#define BOOST_MAKE_BITFIELD_TUPLE_CREATE_FUNCTION_PARSE_ARGUMENTS() \
-    BOOST_PP_REPEAT_FROM_TO( \
-        0,\
-        BOOST_BFT_PARAM_COUNT, \
-        BOOST_MAKE_BITFIELD_TUPLE_ASSIGN_PARAMETER_TO_BFT_CALL,\
-        BOOST_BFT_NOTHING )
-
-
-/** This can be used so that I can deduce the correct types for the arguments of
- *  the function at compile time and make the function callible at run time
- *  and make that function type safe.
- *      This will need a macro in order to create the appearance of variadic
- *  behavior, although some of that will be taken care of by default values.
- */
-/** the reason the name of the macro is so large is because the number of 
- *  parameters this function could possibly hold is as many as fifty. So
- *  I felt that the name should reflect that.
- */
-
-template <typename BitfieldTuple>
-BitfieldTuple make_bitfield_tuple(
-    BOOST_MAKE_BITFIELD_TUPLE_CREATE_FUNCTION_PARAMETERS())
-{
-    BitfieldTuple bft;
-    BOOST_MAKE_BITFIELD_TUPLE_CREATE_FUNCTION_PARSE_ARGUMENTS();
-    return bft;
-}
-
-#endif
-
 } // end boost
+#undef BOOST_MAKE_BFT_PARAM
+#undef BOOST_MAKE_BFT_TEMPLATE_PARAMETERS
+#undef BOOST_MAKE_BFT_FUNCTION_PARAM
+#undef BOOST_MAKE_BFT_ASSIGN_FUNCTION_CALL
+#undef BOOST_MAKE_BFT_GENERATE_ASSIGNMENT_CALLS
+#undef BOOST_MAKE_BFT_FUNCTION
+#undef BOOST_MAKE_BFT_OVERLOADS
+
 #endif
-#endif
+

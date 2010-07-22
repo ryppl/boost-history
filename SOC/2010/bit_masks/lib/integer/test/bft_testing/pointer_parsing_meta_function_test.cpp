@@ -16,20 +16,24 @@ int main() {
     {
         // Testing to make sure that if there is a bit at the first position
         // that 0 is correctly returned.
-        typedef count_leading_zeros< boost::bits_mask<unsigned int, 31> >::type test_t1;
+        typedef count_leading_zeros< boost::bits_mask<
+            unsigned int, 31> >::type test_t1;
         BOOST_TEST((test_t1::value == 0 ));
 
         // testing to make sure that the test passes if the last bit is 1.
-        typedef count_leading_zeros<boost::bits_mask<unsigned int,0> >::type test_t2;
+        typedef count_leading_zeros<boost::bits_mask<
+            unsigned int,0> >::type test_t2;
         BOOST_TEST( test_t2::value == 31 );
     }
 
     // count trailing zeros test.
     {
-        typedef count_trailing_zeros<boost::bits_mask<unsigned int,31> >::type test_1;
+        typedef count_trailing_zeros<boost::bits_mask<
+            unsigned int,31> >::type test_1;
         BOOST_TEST( test_1::value == 31 );
 
-        typedef count_trailing_zeros<boost::bits_mask<unsigned int,0> >::type test_2;
+        typedef count_trailing_zeros<boost::bits_mask<
+            unsigned int,0> >::type test_2;
         BOOST_TEST( test_2::value == 0 );
     }
     return boost::report_errors();

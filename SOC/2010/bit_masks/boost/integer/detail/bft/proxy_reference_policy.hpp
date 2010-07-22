@@ -45,6 +45,8 @@ private:
     storage_type& _field;
 };
 
+
+
 /** This is the policy which is going to be used for calculating the correct
  *  policy for retrieving the data from inside of teh bitfield_tuple
  *  this is instead of the bitfield being the policy.
@@ -66,10 +68,6 @@ struct select_packing_policy {
         >,
         typename mpl::if_<
             is_pod<StorageType>,
-                // this needs to be something else other then bitfield 
-                // I believe that this should be the orignal version
-                // of bitfield because that will optimize better then
-                // the newer version.
                 ::boost::integer::bitfield_policy<
                     StorageType,
                     Offset::value,

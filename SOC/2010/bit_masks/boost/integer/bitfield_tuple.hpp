@@ -31,8 +31,6 @@
 #include <boost/integer/detail/bft/make_bitfield_tuple.hpp>
 #include <boost/integer/detail/bft/proxy_reference_policy.hpp>
 
-// TODO: re evaluate if this is needed or not.
-// #include <boost/integer/detail/bft/msvc_fixes/msvc_fix_includes.hpp>
 
 
 namespace boost {

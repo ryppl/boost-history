@@ -16,9 +16,6 @@ struct pink;
 struct blue;
 struct salmon;
 
-
-
-
 int main() {
 
     // test case where alignment set the next bit to 32.

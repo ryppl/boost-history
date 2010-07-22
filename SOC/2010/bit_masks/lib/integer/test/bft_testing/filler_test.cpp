@@ -29,7 +29,9 @@ typedef bitfield_tuple<
 
 int main() {
     
-    int temp = mpl::at_c<test_tuple::members, 2>::type::offset::value - (mpl::at_c<test_tuple::members, 1>::type::offset::value +
+    int temp = mpl::at_c<test_tuple::members, 2>::type::offset::value -
+        (mpl::at_c<test_tuple::members, 1>::type::offset::value
+          +
         mpl::at_c<test_tuple::members, 1>::type::field_width::value);
     
     BOOST_ASSERT(( temp == 3 ));

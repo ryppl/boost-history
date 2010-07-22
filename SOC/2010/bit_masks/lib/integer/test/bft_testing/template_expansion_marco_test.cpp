@@ -12,12 +12,9 @@
 
 using namespace boost;
 using namespace boost::bitfields;
-//~ using namespace std;
 
 template <BOOST_MAKE_BFT_TEMPLATE_PARAMS()>
-struct ham_bone {
-    virtual void foo() { }
-};
+struct ham_bone { };
 
 int main() {
     ham_bone<int,int,int,int,int,int,int,int,int,int> temp;
