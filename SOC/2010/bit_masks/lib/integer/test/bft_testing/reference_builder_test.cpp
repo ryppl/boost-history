@@ -28,13 +28,13 @@ typedef bitfield_tuple<
 
 int main() {
     {
-        typedef detail::disable_if_reference_type_by_name<
+        typedef detail::disable_if_proxy_reference_type_by_name<
             const test_tuple_1,
             salmon
         >::type                 ref_t_1;
         std::size_t  store_house = 0;
 
-        typedef detail::disable_if_reference_type_by_name<
+        typedef detail::disable_if_proxy_reference_type_by_name<
             test_tuple_1,
             salmon
         >::type                 ref_t_2;

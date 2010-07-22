@@ -160,9 +160,9 @@ public:
      */
     //@{
     template <typename Name>
-    inline typename detail::disable_if_reference_type_by_name<_self,Name>::type
+    inline typename detail::disable_if_proxy_reference_type_by_name<_self,Name>::type
     get() {
-        typedef typename detail::disable_if_reference_type_by_name<
+        typedef typename detail::disable_if_proxy_reference_type_by_name<
             _self,
             Name
         >::type reference_info;
@@ -171,12 +171,12 @@ public:
 
 
     template <typename Name>
-    inline typename detail::disable_if_reference_type_by_name<
+    inline typename detail::disable_if_proxy_reference_type_by_name<
         const _self,
         Name
     >::type
     get() const {
-        typedef typename detail::disable_if_reference_type_by_name<
+        typedef typename detail::disable_if_proxy_reference_type_by_name<
             const _self,
             Name
         >::type         reference_info;
@@ -184,12 +184,12 @@ public:
     }
 
     template <std::size_t Index>
-    inline typename detail::enable_if_reference_type_by_index<
+    inline typename detail::enable_if_proxy_reference_type_by_index<
         _self,
         Index
     >::type
     get() {
-        typedef typename detail::enable_if_reference_type_by_index<
+        typedef typename detail::enable_if_proxy_reference_type_by_index<
             _self,
             Index
         >::type             reference_info;
@@ -197,12 +197,12 @@ public:
     }
 
     template <std::size_t Index>
-    inline typename detail::enable_if_reference_type_by_index<
+    inline typename detail::enable_if_proxy_reference_type_by_index<
         const _self,
         Index
     >::type
     get() const {
-        typedef typename detail::enable_if_reference_type_by_index<
+        typedef typename detail::enable_if_proxy_reference_type_by_index<
             const _self,
             Index
         >::type                  reference_info;

@@ -18,7 +18,7 @@
 namespace boost { namespace detail {
 
 template <typename BitfieldTuple, typename Name>
-struct disable_if_reference_type_by_name {
+struct disable_if_proxy_reference_type_by_name {
     // search for the name,
     typedef typename mpl::find_if<
         typename BitfieldTuple::members,
@@ -61,7 +61,7 @@ struct disable_if_reference_type_by_name {
 
 
 template <typename BitfieldTuple, std::size_t Index>
-struct enable_if_reference_type_by_index {
+struct enable_if_proxy_reference_type_by_index {
     // check to make sure index is valid
     typedef typename mpl::less<
         mpl::size_t<
