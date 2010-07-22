@@ -106,6 +106,13 @@ namespace mpl
      *      package_c<Value,Start,Start+1,Start+2,...,Finish-1>
      *    else:
      *      package_c<Value,Finish-1,...,Start+2,Start+1,Start>
+     *
+     **@acknowledgement:
+     *  This is a generalization of the make_indexes from 
+     *  the bind implementation section of
+     *
+     *    http://osl.iu.edu/~dgregor/cpp/variadic-templates.pdf 
+     *
      */
     : eval_if_c
       < Start == Finish
