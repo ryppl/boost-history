@@ -58,7 +58,7 @@ public:
     /** Fusion Extension: value_of */
     template<typename Iter>
     struct value_of {
-        typedef typename detail::get_reference_type_by_index<
+        typedef typename boost::get_proxy_reference_type_by_index<
             BitfieldTuple,
             Iter::index::value
         >::type type;

@@ -28,7 +28,7 @@
 #include <boost/integer/bitfield_tuple/pointer.hpp>
 
 #include <boost/integer/detail/bft/name_lookup.hpp>
-#include <boost/integer/detail/bft/pointer_parsing_meta_functions.hpp>
+#include <boost/integer/detail/bft/arg_parsing_meta_functions.hpp>
 #include <boost/integer/detail/bft/pointer_packing_policy.hpp>
 
 

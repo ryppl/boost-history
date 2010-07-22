@@ -4,21 +4,69 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 
-#ifndef BOOST_BITFIELD_TUPLE_REFERENCE_BUILDER_HPP
-#define BOOST_BITFIELD_TUPLE_REFERENCE_BUILDER_HPP
-#include <boost/static_assert.hpp>
+#ifndef BOOST_BFT_INTERFACE_META_FUNCITONS_HPP
+#define BOOST_BFT_INTERFACE_META_FUNCITONS_HPP
 
+namespace boost {
 
-
-/** The meta functions contained within this file are meant to aid in the 
- *  locating the correct value within member and deducing the correct constness
- *  and returning the correct reference type which will allow for only one
- *  reference type class within bitfield_tuple.
+/** Checks to see if a name exists.
+ *  returns mpl::true_ or mpl::false_
  */
-namespace boost { namespace detail {
+template <typename BitfieldTuple, typename Name>
+struct name_exists {
+    typedef typename mpl::not_<
+        is_same <
+            typename ::boost::mpl::find_if<
+                typename BitfieldTuple::members,
+                detail::match_name<
+                    mpl::_1,
+                    Name
+                >
+            >::type,
+            typename mpl::end<
+                typename BitfieldTuple::members
+            >::type
+        >
+    >::type                     type;
+};
+
+/** Returns an element by which has a given name. */
+template <typename BitfieldTuple, typename Name>
+struct find_by_element_name {
+
+    BOOST_STATIC_ASSERT(( name_exists<BitfieldTuple,Name>::type::value ));
+
+    typedef typename mpl::deref<
+        typename mpl::find_if<
+            typename BitfieldTuple::members,
+            detail::match_name<
+                mpl::_1,
+                Name
+            >
+        >::type
+    >::type                 type;
+};
+
+/** Returns an element from members within bitfield_tuple
+ *  at a given index.
+ */
+template <typename BitfieldTuple, std::size_t Index>
+struct find_by_element_index {
+
+    BOOST_STATIC_ASSERT((
+        mpl::size<typename BitfieldTuple::members>::value
+            >
+        Index
+    ));
+
+    typedef typename mpl::at_c<
+        typename BitfieldTuple::members,
+        Index
+    >::type             type;
+};
 
 template <typename BitfieldTuple, typename Name>
-struct disable_if_reference_type_by_name {
+struct get_proxy_reference_type_by_name {
     // search for the name,
     typedef typename mpl::find_if<
         typename BitfieldTuple::members,
@@ -47,21 +95,12 @@ struct disable_if_reference_type_by_name {
                     element_iter
                 >::type
             >::type
-        >                               reference_type;
+        >                               type;
 
-    // make disable_if statement.
-    typedef typename disable_if<
-        is_same <
-            element_iter,
-            member_end
-        >,
-        reference_type
-    >::type                             type;
 };
 
-
 template <typename BitfieldTuple, std::size_t Index>
-struct enable_if_reference_type_by_index {
+struct get_proxy_reference_type_by_index {
     // check to make sure index is valid
     typedef typename mpl::less<
         mpl::size_t<
@@ -85,19 +124,9 @@ struct enable_if_reference_type_by_index {
             typename add_const<bft_element_t>::type,
             bft_element_t
         >::type
-    >                   reference_type;
-
-    // return the reference type if its valid.
-    typedef typename enable_if<
-        is_valid_index,
-        reference_type
-    >::type                 type;
+    >                           type;
 };
 
-
-
-
-
-}} // end boost::detail
+} // end boost
 
 #endif

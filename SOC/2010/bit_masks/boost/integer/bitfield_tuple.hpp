@@ -26,6 +26,7 @@
 #include <boost/mpl/size.hpp>
 #include <boost/type_traits/add_reference.hpp>
 #include <boost/integer/detail/bft/reference_builder.hpp>
+#include <boost/integer/bitfield_tuple/interface_metafunctions.hpp>
 #include <boost/integer/detail/bft/ext/bitfield_tuple_fusion_includes.hpp>
 #include <boost/integer/detail/fusion_ext_includes.hpp>
 #include <boost/integer/detail/bft/make_bitfield_tuple.hpp>

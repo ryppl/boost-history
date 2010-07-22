@@ -7,7 +7,7 @@
 #ifndef BOOST_POINTER_MEMBER_FIELD_HPP
 #define BOOST_POINTER_MEMBER_FIELD_HPP
 #include <cstddef>
-#include <boost/integer/detail/bft/pointer_parsing_meta_functions.hpp>
+#include <boost/integer/detail/bft/arg_parsing_meta_functions.hpp>
 #include <boost/integer/high_bits_mask.hpp>
 #include <boost/integer/bit_width.hpp>
 
