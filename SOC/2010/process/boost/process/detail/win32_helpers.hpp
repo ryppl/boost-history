@@ -53,22 +53,21 @@ inline boost::shared_array<char> environment_to_win32_strings(environment_t &env
     if (env.empty())
     {
         envp.reset(new char[2]);
-        ::ZeroMemory(envp.get(), 2);
+        ZeroMemory(envp.get(), 2);
     }
     else
     {
         std::string s;
         for (environment_t::const_iterator it = env.begin(); it != env.end(); ++it)
         {
-            s += (*it).first + "=" + (*it).second;
+            s += it->first + "=" + it->second;
             s.push_back(0);
         }
-
         envp.reset(new char[s.size() + 1]);
 #if defined(__CYGWIN__) || defined(_SCL_SECURE_NO_DEPRECATE)
-        ::memcpy(envp.get(), s.c_str(), s.size() + 1);
+        memcpy(envp.get(), s.c_str(), s.size() + 1);
 #else
-        ::memcpy_s(envp.get(), s.size() + 1, s.c_str(), s.size() + 1);
+        memcpy_s(envp.get(), s.size() + 1, s.c_str(), s.size() + 1);
 #endif
     }
 
@@ -118,9 +117,9 @@ inline boost::shared_array<char> collection_to_win32_cmdline(const Arguments &ar
     cmdline.get()[0] = '\0';
     for (arguments_t::size_type i = 0; i < args.size(); ++i)
 #if defined(__CYGWIN__) || defined(_SCL_SECURE_NO_DEPRECATE)
-        ::strncat(cmdline.get(), args2[i].c_str(), args2[i].size());
+        strncat(cmdline.get(), args2[i].c_str(), args2[i].size());
 #else
-        ::strcat_s(cmdline.get(), size, args2[i].c_str());
+        strcat_s(cmdline.get(), size, args2[i].c_str());
 #endif
 
     return cmdline;

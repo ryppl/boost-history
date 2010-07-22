@@ -178,17 +178,17 @@ inline child create_child(const std::string &executable, Arguments args, context
     args.insert(args.begin(), p_name);
 
 #if defined(BOOST_POSIX_API)
-    pid_t pid = ::fork();
+    pid_t pid = fork();
     if (pid == -1)
         BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("fork(2) failed");
     else if (pid == 0)
     {
 #if defined(F_MAXFD)
-        int maxdescs = ::fcntl(-1, F_MAXFD, 0);
+        int maxdescs = fcntl(-1, F_MAXFD, 0);
         if (maxdescs == -1)
-            maxdescs = ::sysconf(_SC_OPEN_MAX);
+            maxdescs = sysconf(_SC_OPEN_MAX);
 #else
-        int maxdescs = ::sysconf(_SC_OPEN_MAX);
+        int maxdescs = sysconf(_SC_OPEN_MAX);
 #endif
         if (maxdescs == -1)
             maxdescs = 1024;
@@ -201,7 +201,7 @@ inline child create_child(const std::string &executable, Arguments args, context
             int stdin_fd = ctx.stdin_behavior->get_child_end();
             if (stdin_fd != -1 && stdin_fd < maxdescs)
             {
-                if (::dup2(stdin_fd, STDIN_FILENO) == -1)
+                if (dup2(stdin_fd, STDIN_FILENO) == -1)
                     BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("dup2() failed");
                 closeflags[STDIN_FILENO] = false;
             }
@@ -209,7 +209,7 @@ inline child create_child(const std::string &executable, Arguments args, context
             int stdout_fd = ctx.stdout_behavior->get_child_end();
             if (stdout_fd != -1 && stdout_fd < maxdescs)
             {
-                if (::dup2(stdout_fd, STDOUT_FILENO) == -1)
+                if (dup2(stdout_fd, STDOUT_FILENO) == -1)
                     BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("dup2() failed");
                 closeflags[STDOUT_FILENO] = false;
             }
@@ -217,7 +217,7 @@ inline child create_child(const std::string &executable, Arguments args, context
             int stderr_fd = ctx.stderr_behavior->get_child_end();
             if (stderr_fd != -1 && stderr_fd < maxdescs)
             {
-                if (::dup2(stderr_fd, STDERR_FILENO) == -1)
+                if (dup2(stderr_fd, STDERR_FILENO) == -1)
                     BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("dup2() failed");
                 closeflags[STDERR_FILENO] = false;
             }
@@ -225,32 +225,32 @@ inline child create_child(const std::string &executable, Arguments args, context
             for (int i = 0; i < maxdescs; ++i)
             {
                 if (closeflags[i])
-                    ::close(i);
+                    close(i);
             }
         }
         catch (const boost::system::system_error &e)
         {
-            ::write(STDERR_FILENO, e.what(), std::strlen(e.what()));
-            ::write(STDERR_FILENO, "\n", 1);
+            write(STDERR_FILENO, e.what(), std::strlen(e.what()));
+            write(STDERR_FILENO, "\n", 1);
             std::exit(127);
         }
 
-        std::pair<std::size_t, char**> argcv = detail::collection_to_posix_argv(args);
-        char **envp = detail::environment_to_envp(ctx.environment);
+        std::pair<std::size_t, char**> argv = detail::collection_to_argv(args);
+        std::pair<std::size_t, char**> envp = detail::environment_to_envp(ctx.environment);
 
-        ::execve(executable.c_str(), argcv.second, envp);
+        execve(executable.c_str(), argv.second, envp.second);
 
-        for (std::size_t i = 0; i < argcv.first; ++i) 
-            delete[] argcv.second[i]; 
-        delete[] argcv.second; 
+        for (std::size_t i = 0; i < argv.first; ++i)
+            delete[] argv.second[i];
+        delete[] argv.second;
 
-        for (std::size_t i = 0; i < ctx.environment.size(); ++i) 
-            delete[] envp[i]; 
-        delete[] envp; 
+        for (std::size_t i = 0; i < envp.first; ++i)
+            delete[] envp.second[i];
+        delete[] envp.second;
 
         boost::system::system_error e(boost::system::error_code(errno, boost::system::get_system_category()), BOOST_PROCESS_SOURCE_LOCATION "execve(2) failed");
-        ::write(STDERR_FILENO, e.what(), std::strlen(e.what()));
-        ::write(STDERR_FILENO, "\n", 1);
+        write(STDERR_FILENO, e.what(), std::strlen(e.what()));
+        write(STDERR_FILENO, "\n", 1);
         std::exit(127);
     }
     else
@@ -271,7 +271,7 @@ inline child create_child(const std::string &executable, Arguments args, context
     }
 #elif defined(BOOST_WINDOWS_API)
     STARTUPINFOA startup_info;
-    ::ZeroMemory(&startup_info, sizeof(startup_info));
+    ZeroMemory(&startup_info, sizeof(startup_info));
     startup_info.cb = sizeof(startup_info);
     startup_info.dwFlags |= STARTF_USESTDHANDLES;
     startup_info.hStdInput = ctx.stdin_behavior->get_child_end();
@@ -279,7 +279,7 @@ inline child create_child(const std::string &executable, Arguments args, context
     startup_info.hStdError = ctx.stderr_behavior->get_child_end();
 
     PROCESS_INFORMATION pi;
-    ::ZeroMemory(&pi, sizeof(pi));
+    ZeroMemory(&pi, sizeof(pi));
 
     boost::shared_array<char> cmdline = detail::collection_to_win32_cmdline(args);
 
@@ -291,10 +291,10 @@ inline child create_child(const std::string &executable, Arguments args, context
 
     boost::shared_array<char> envstrs = detail::environment_to_win32_strings(ctx.environment);
 
-    if (::CreateProcessA(exe.get(), cmdline.get(), NULL, NULL, TRUE, 0, envstrs.get(), workdir.get(), &startup_info, &pi) == 0)
+    if (CreateProcessA(exe.get(), cmdline.get(), NULL, NULL, TRUE, 0, envstrs.get(), workdir.get(), &startup_info, &pi) == 0)
         BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreateProcess() failed"); 
 
-    if (!::CloseHandle(pi.hThread))
+    if (!CloseHandle(pi.hThread))
         BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CloseHandle() failed"); 
 
     return child(pi.dwProcessId, 

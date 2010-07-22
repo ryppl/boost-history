@@ -37,7 +37,7 @@ namespace boost {
 namespace process {
 namespace detail {
 
-#elif defined(BOOST_POSIX_API)
+#if defined(BOOST_POSIX_API)
 typedef pid_t phandle;
 #elif defined(BOOST_WINDOWS_API)
 typedef HANDLE phandle;
@@ -82,7 +82,8 @@ public:
         } while (p == -1 && errno == EINTR);
         if (p == -1)
         {
-            ec = boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), BOOST_PROCESS_SOURCE_LOCATION "waitpid(2) failed");
+            ec = boost::system::error_code(errno,
+                    boost::system::get_system_category());
             return -1;
         }
         return status;
@@ -90,14 +91,16 @@ public:
         HANDLE h = OpenProcess(PROCESS_QUERY_INFORMATION | SYNCHRONIZE, FALSE, pid);
         if (h == NULL)
         {
-            ec = boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), BOOST_PROCESS_SOURCE_LOCATION "OpenProcess() failed");
+            ec = boost::system::error_code(GetLastError(),
+                    boost::system::get_system_category());
             return -1;
         }
 
         if (WaitForSingleObject(h, INFINITE) == WAIT_FAILED)
         {
             CloseHandle(h);
-            ec = boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), BOOST_PROCESS_SOURCE_LOCATION "WaitForSingleObject() failed");
+            ec = boost::system::error_code(GetLastError(),
+                    boost::system::get_system_category());
             return -1;
         }
 
@@ -105,12 +108,14 @@ public:
         if (!GetExitCodeProcess(h, &exit_code))
         {
             CloseHandle(h);
-            ec = boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), BOOST_PROCESS_SOURCE_LOCATION "GetExitCodeProcess() failed");
+            ec = boost::system::error_code(GetLastError(),
+                    boost::system::get_system_category());
             return -1;
         }
         if (!CloseHandle(h))
         {
-            ec = boost::system::system_error(boost::system::error_code(errno, boost::system::get_system_category()), BOOST_PROCESS_SOURCE_LOCATION "CloseHandle() failed");
+            ec = boost::system::error_code(GetLastError(),
+                    boost::system::get_system_category());
             return -1;
         }
         return exit_code;

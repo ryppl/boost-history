@@ -41,14 +41,18 @@ namespace detail {
  * NULL-terminated string of the form var=value; these must also be
  * released by the caller.
  *
- * \return A dynamically allocated char** array that represents
- *         the environment's content. Each array entry is a
- *         NULL-terminated string of the form var=value.
+ * \return The first argument of the pair is an integer that indicates
+ *         how many strings are stored in the second argument. The
+ *         second argument is a NULL-terminated, dynamically allocated
+ *         array of dynamically allocated strings representing the
+ *         enviroment's content. Each array entry is a NULL-terminated
+ *         string of the form var=value. The caller is responsible of 
+ *         freeing them.
  */
-inline char **environment_to_envp(const environment_t &env)
+inline std::pair<std::size_t, char**> environment_to_envp(const environment_t &env)
 {
-    char **envp = new char*[env.size() + 1]; 
-
+    std::size_t nargs = env.size();
+    char **envp = new char*[nargs + 1]; 
     environment_t::size_type i = 0; 
     for (environment_t::const_iterator it = env.begin(); it != env.end(); ++it) 
     { 
@@ -58,8 +62,7 @@ inline char **environment_to_envp(const environment_t &env)
         ++i; 
     } 
     envp[i] = 0; 
-
-    return envp; 
+    return std::pair<std::size_t, char**>(nargs, envp);
 }
 
 /**
@@ -77,11 +80,9 @@ inline char **environment_to_envp(const environment_t &env)
  *         to the executable. The caller is responsible of freeing them.
  */
 template <class Arguments>
-inline std::pair<std::size_t, char**> collection_to_posix_argv(const Arguments &args)
+inline std::pair<std::size_t, char**> collection_to_argv(const Arguments &args)
 {
     std::size_t nargs = args.size();
-    BOOST_ASSERT(nargs >= 0);
-
     char **argv = new char*[nargs + 1];
     typename Arguments::size_type i = 0;
     for (typename Arguments::const_iterator it = args.begin(); it != args.end(); ++it)
@@ -91,7 +92,6 @@ inline std::pair<std::size_t, char**> collection_to_posix_argv(const Arguments &
         ++i;
     }
     argv[nargs] = 0;
-
     return std::pair<std::size_t, char**>(nargs, argv);
 }
 

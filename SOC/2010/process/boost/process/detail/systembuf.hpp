@@ -121,11 +121,11 @@ protected:
 
         bool ok;
 #if defined(BOOST_POSIX_API)
-        ssize_t cnt = ::read(handle_, read_buf_.get(), bufsize_);
+        ssize_t cnt = read(handle_, read_buf_.get(), bufsize_);
         ok = (cnt != -1 && cnt != 0);
 #elif defined(BOOST_WINDOWS_API)
         DWORD cnt;
-        BOOL res = ::ReadFile(handle_, read_buf_.get(), bufsize_, &cnt, NULL);
+        BOOL res = ReadFile(handle_, read_buf_.get(), bufsize_, &cnt, NULL);
         ok = (res && cnt > 0);
 #endif
 
@@ -186,7 +186,7 @@ protected:
         ssize_t cnt = pptr() - pbase();
         bool ok;
 
-        ok = (::write(handle_, pbase(), cnt) == cnt);
+        ok = (write(handle_, pbase(), cnt) == cnt);
         if (ok)
             pbump(-cnt);
         return ok ? 0 : -1;
@@ -197,7 +197,7 @@ protected:
         long cnt = pptr() - pbase();
         bool ok;
         DWORD rcnt;
-        BOOL res = ::WriteFile(handle_, pbase(), cnt, &rcnt, NULL);
+        BOOL res = WriteFile(handle_, pbase(), cnt, &rcnt, NULL);
 
         ok = (res && static_cast<long>(rcnt) == cnt);
         if (ok)
