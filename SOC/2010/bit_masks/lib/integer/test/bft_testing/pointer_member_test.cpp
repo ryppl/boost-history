@@ -74,9 +74,7 @@ typedef bitfield_tuple<
                 detail::ptr_mask_type
             >::value - 4
         >
-    >,
-    flag<b1>,
-    flag<b2>
+    >
 >                   test_type_7;
 int main() {
     {
