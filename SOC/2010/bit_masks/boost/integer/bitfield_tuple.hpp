@@ -160,7 +160,10 @@ public:
      */
     //@{
     template <typename Name>
-    inline typename detail::disable_if_proxy_reference_type_by_name<_self,Name>::type
+    inline typename detail::disable_if_proxy_reference_type_by_name<
+        _self,
+        Name
+    >::type
     get() {
         typedef typename detail::disable_if_proxy_reference_type_by_name<
             _self,
