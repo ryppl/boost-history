@@ -17,18 +17,14 @@
 /** This file contains metafunctions which are used to do complex operations
  *  on the Mask provided by the user.
  */
-namespace boost { namespace detail { namespace pointer_member {
+namespace boost { namespace detail {
 
-template <typename T>
-struct get_mask_type {
-    typedef typename mpl::if_c<
-        (4 < sizeof(T*)),
-        uint64_t,
-        uint32_t
-    >::type                 type;
-};
+/** This is an integral type which is the same size as a pointer on a 32 or 64
+ *  bit system
+ */ 
+typedef mpl::if_c<(4<sizeof(void*)),uint64_t,uint32_t>::type ptr_mask_type;
 
-
+namespace pointer_member {
 
 // this is ugly but I would like it for organizational purposes.
 namespace ptr_detail {
@@ -135,14 +131,6 @@ template <typename Mask>
 struct count_trailing_zeros {
     typedef typename ptr_detail::ctz_helper<Mask>::type type;
 };
-
-
-template <typename Mask, typename Policy>
-struct pointer_member_info {
-    typedef Mask mask;
-    typedef Policy policy;
-};
-
 
 }}} // end boost::detail::pointer_member
 

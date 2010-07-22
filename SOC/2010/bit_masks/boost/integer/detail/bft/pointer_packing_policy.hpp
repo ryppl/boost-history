@@ -29,14 +29,14 @@ template <
     typename StorageType,
     bool
 >
-struct apply_impl_no_shift;
+struct apply_impl;
 
 
 /** Specialization where for the storage type and the size of the mask being
  *  the same.
  */
 template <typename Mask, typename Offset, typename ValueType, typename StorageType>
-struct apply_impl_no_shift < Mask, Offset, ValueType, StorageType, true > {
+struct apply_impl < Mask, Offset, ValueType, StorageType, true > {
 
     typedef Mask        get_mask;
     typedef integral_constant<
@@ -65,10 +65,11 @@ struct apply_impl_no_shift < Mask, Offset, ValueType, StorageType, true > {
  *  then the type of the mask.
  */
 template <typename Mask, typename Offset, typename ValueType, typename StorageType>
-struct apply_impl_no_shift < Mask, Offset, ValueType, StorageType, false > {
+struct apply_impl < Mask, Offset, ValueType, StorageType, false > {
     typedef ValueType   value_type;
     typedef StorageType storage_type;
     typedef Mask        mask;
+
     // this is going to be for computers with integral types LARGER then 
     // the size of their pointer type.
     typedef mpl::size_t<
@@ -88,7 +89,7 @@ struct apply_impl_no_shift < Mask, Offset, ValueType, StorageType, false > {
         ~get_mask::value
     >                               set_mask;
 
-    static value_type get(storage_type storage ) {
+    static value_type get(storage_type storage) {
         return value_type((storage & get_mask::value) >> shift_amount::value) ;
     }
 
@@ -109,7 +110,7 @@ struct apply_impl_no_shift < Mask, Offset, ValueType, StorageType, false > {
  *  of steps as a 32 bit pointer which is stored within int sized type.
  */
 template <typename Mask, typename ValueType>
-struct apply_impl_no_shift < Mask, mpl::size_t<32>, ValueType, long long, false > {
+struct apply_impl < Mask, mpl::size_t<32>, ValueType, long long, false > {
 
     typedef integral_constant<unsigned long long, Mask::value> get_mask;
     typedef integral_constant<
@@ -139,7 +140,7 @@ struct apply_impl_no_shift < Mask, mpl::size_t<32>, ValueType, long long, false 
  *  of steps as a 32 bit pointer which is stored within int sized type.
  */
 template <typename Mask, typename ValueType>
-struct apply_impl_no_shift <
+struct apply_impl <
     Mask,
     mpl::size_t<32>,
     ValueType,
@@ -154,7 +155,7 @@ struct apply_impl_no_shift <
     typedef ValueType           value_type;
     typedef unsigned long long  storage_type;
 
-    static value_type get(storage_type storage ) {
+    static value_type get(storage_type storage) {
         return value_type(storage & get_mask::value);
     }
 
@@ -166,6 +167,109 @@ struct apply_impl_no_shift <
         );
     }
 };
+
+template <
+    typename Mask,
+    typename Offset,
+    typename ValueType,
+    typename StorageType,
+    typename MaskShift,
+    bool
+>
+struct apply_shift_impl {
+    typedef Mask        mask;
+    typedef Offset      offset;
+    typedef ValueType   value_type;
+    typedef StorageType storage_type;
+    typedef MaskShift   mask_shift_amount;
+
+    typedef typename mpl::shift_right<
+        mask,
+        mask_shift_amount
+    >::type                             get_mask;
+
+    typedef integral_constant<
+        typename get_mask::value_type,
+        ~get_mask::value
+    >                                   set_mask;
+         
+    static value_type get(storage_type storage) {
+        return value_type(
+            (storage & get_mask::value)
+              <<
+            mask_shift_amount::value
+        );
+    }
+
+    static storage_type set(storage_type storage, value_type ptr) {
+        return storage_type(
+            ((typename get_mask::value_type(ptr) & get_mask::value)
+                  >>
+            mask_shift_amount::value)
+              |
+            (set_mask::value & storage)
+        );
+    }
+};
+
+template <
+    typename Mask,
+    typename Offset,
+    typename ValueType,
+    typename StorageType,
+    typename MaskShift
+>
+struct apply_shift_impl<Mask,Offset,ValueType,StorageType,MaskShift,false>{
+    typedef Mask        mask;
+    typedef Offset      offset;
+    typedef ValueType   value_type;
+    typedef StorageType storage_type;
+    typedef MaskShift   mask_shift_amount;
+
+    // calculating shift for correctly aligning mask
+    // with storage type.
+    typedef typename mpl::minus<
+        typename mpl::minus<
+            bit_width<storage_type>,
+            mask_shift_amount
+        >::type,
+        bit_width<
+            typename mask::value_type
+        >
+    >::type                     correction_shift_amount;
+
+    typedef typename mpl::shift_left<
+        integral_constant<storage_type, storage_type(mask::value)>,
+        correction_shift_amount
+    >::type                     get_mask;
+
+    typedef integral_constant<
+        typename get_mask::value_type, 
+        typename get_mask::value_type(~get_mask::value)
+    >                           set_mask;
+
+    static value_type get(storage_type storage ) {
+        return value_type(
+            (storage & get_mask::value)
+              >>
+            correction_shift_amount::value
+        );
+    }
+
+    static storage_type set(storage_type storage, value_type ptr) {
+        
+        return storage_type(
+            (storage_type(typename mask::value_type(ptr))
+              <<
+            correction_shift_amount::value)
+              |
+            (set_mask::value & storage)
+        );
+    }
+
+
+};
+
 
 } // end policy_detail
 
@@ -198,14 +302,12 @@ struct pointer_packing_policy<
     mpl::true_,
     bit_shift::none
 > {
-
-
     typedef Mask                mask;
     typedef ValueType           value_type;
 
     template <typename StorageType>
     struct apply
-        :policy_detail::apply_impl_no_shift<
+        :policy_detail::apply_impl<
             Mask,
             Offset,
             ValueType,
@@ -215,9 +317,7 @@ struct pointer_packing_policy<
 };
 
 
-
-
-/** Specilization for when the pointer is shifted left. */
+/** Specilization for when the pointer is shifted right. */
 template <
     typename Mask,
     typename ValueType,
@@ -232,25 +332,20 @@ struct pointer_packing_policy<
     Width,
     mpl::false_,
     bit_shift::right<ShiftAmount>
->
-{
+> {
     typedef Mask                mask;
-    typedef Offset              offset;
-    typedef Width               width;
     typedef ValueType           value_type;
-
+    
     template <typename StorageType>
-    struct apply {
-        typedef StorageType         storage_type;
-
-        static value_type get(storage_type storage ) {
-            return value_type();
-        }
-
-        static storage_type set(storage_type storage, value_type ptr) {
-            return storage_type();
-        }
-    };
+    struct apply
+        :policy_detail::apply_shift_impl<
+            Mask,
+            Offset,
+            ValueType,
+            StorageType,
+            mpl::size_t<ShiftAmount>,
+            sizeof(StorageType) == sizeof(typename Mask::value_type)
+        > { };
 
 };
 

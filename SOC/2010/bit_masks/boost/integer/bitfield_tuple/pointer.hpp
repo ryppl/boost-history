@@ -27,8 +27,8 @@ template <
     typename ReturnType,
     typename Name,
     typename Mask = high_bits_mask<
-        typename ::boost::detail::pointer_member::get_mask_type<ReturnType>::type,
-        bit_width< typename ::boost::detail::pointer_member::get_mask_type<ReturnType>::type >::value - 2
+        typename ::boost::detail::ptr_mask_type,
+        bit_width< typename ::boost::detail::ptr_mask_type >::value - 2
     >
 >
 struct pointer;

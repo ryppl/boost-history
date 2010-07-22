@@ -13,30 +13,16 @@ List of TODO's throughout the bitfield_tuple
     b)  Create documentation for how to create your own policy.
     c)  This may need additional documentation however it looks good currently.
 
+
 4)  pointer_parsing_meta_functions.hpp
-    a)  think of a better name for this file.
-    b)  template <typename Mask, typename Policy>
-        struct pointer_member_info;
-        I   )   Do impact analysis for the removal of this structure.
-                I don't believe its used or needed any more.
+    a) typedef mpl::if_c<(4<sizeof(void*)),uint64_t,uint32_t>::type ptr_mask_type
+        I   )   Add support for 16 bit systems. Eventually.
 
-    c)  template <typename T>
-        struct get_mask_type;
-        I   )   This type needs a new name something like uintptr_t or 
-                something simple like that.
-        II  )   This "could" be removed IF there is an unsigned integral type 
-                which is always the same size as a pointer. There may be
-                however I don't know where or what it is currently.
-        III )   Consider making this also do short or 16 bit pointers.
-        IV  )   Why is this a template? I should fix this as a pointer to one
-                type is always the same size as another.
-
-    d)  Create additional tests for count leading and trailing zero
-        meta-functions.
 
 5)  pointer_packing_policy.hpp
     a)  Adjust the alignment check to check alignment against the 0 bit in stead
         of based on the offset.
+
     b)  Change the following specialization so that this isn't needed
         basically this requires a shift from the pointer, when there shouldn't
         be.
@@ -58,16 +44,13 @@ List of TODO's throughout the bitfield_tuple
         be all. Unless there there is some issue.
 
 6)  name_lookup.hpp
-    a)  everything is fine here.
-
 7)  make_bitfield_tuple.hpp
-    a)  Everything here has already been fixed.
-
 8)  bitfield_tuple_impl.hpp
-    a) Everything looks OK here.
+
 
 9)  bft_element.hpp
     a) change name to bitfield_element.hpp - eventually.
+
 
 10) arg_parse_impl.hpp
     a)  Finish the pointer parsing stuff.
@@ -217,6 +200,7 @@ Test file review
 --------------------------------------------------------------------------------
 1)  !DONE! Add interface test for the interface macros. !DONE!
 2)  interface meta-function test suite.
+3)  Create additional tests for count leading and trailing zero meta-functions.
 
 --------------------------------------------------------------------------------
 

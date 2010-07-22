@@ -430,32 +430,38 @@ Info to know about the curret state of parsing.
     typedef typename mpl::if_c<back_storage_space::value == 0,
     mpl::false_,mpl::true_>::type                  uses_back_storage;
 
-    // getting starting position of pointer for storage inside of 
-    // bitfield_tuples storage.
+    // calculating mask offset, data offset and the offset for the next field.
+    typedef typename mpl::if_<
+        uses_front_storage,
+        // calculate offset
+        typename mpl::if_<
+            mpl::less_equal<
+                Offset,
+                front_storage_space
+            >,
+            mpl::size_t<0>,
+            mpl::minus<Offset, front_storage_space>
+        >::type,
+        Offset
+    >::type                             mask_offset;
+
+
+    // calculating the offset of the value bits inside of the masks.
     typedef typename mpl::if_<
         uses_front_storage,
         typename mpl::if_<
-            typename mpl::less<
-                front_storage_space,
-                Offset
-            >::type,
-            // the pointer has been pushed because the user has added leading 
-            // members to the bitfield_tuple greater then the number of bits
-            // the mask allows for them to store directly directly within the
-            // pointer. This may need to be a precondition that causes failure.
-
-            // TODO: REMOVE THIS LATER ITS ONLY HERE FOR THE MOMENT TO CAUSE
-            // FAILURE because I don't know how I should implement this part
-            // just yet and thinking about it is hurting my head.
-            mpl::size_t<sizeof(mpl::void_)>::type,
-            typename mpl::minus<front_storage_space, Offset>::type
+            mpl::less_equal<
+                Offset,
+                front_storage_space
+            >,
+            front_storage_space,
+            typename mpl::minus<Offset, front_storage_space>::type
         >::type,
         Offset
-    >::type                                 data_offset;
+    >::type                             data_offset;
 
-    // calculating next offset/width for the next field.
-    typedef typename mpl::plus< size_of_storage, data_offset >::type offset;
- 
+    typedef typename mpl::plus< Offset, size_of_storage>::type offset;
+
     typedef bitfields::pointer< ReturnType, Name, Mask > param;
 
     // if the offset is greater then then number of storage bits
@@ -484,7 +490,7 @@ Info to know about the curret state of parsing.
     //
     typedef typename mpl::if_<is_aligned,
         bit_shift::none,
-        bit_shift::right< mpl::minus<Offset, front_storage_space>::type::value >
+        bit_shift::right< mpl::minus<Offset,front_storage_space>::type::value>
     >::type                     alignment_shift;
 
     typedef StoragePolicy   storage_policy;
