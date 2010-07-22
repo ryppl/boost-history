@@ -215,7 +215,16 @@ private:
 
 } // end boost
 
+
 #ifdef BOOST_MSVC
 #pragma warning(pop)
 #endif
+#undef BOOST_MAKE_BFT_TEMPLATE_PARAMS
+#undef BOOST_BFT_MAKE_PARAMS
+#undef BOOST_BFT_UNPACK_CALL
+#undef BOOST_BFT_UNPACK_PARAMS
+#undef BOOST_BFT_BASE_TEMPLATE_PARAMS
+#undef BOOST_BFT_PARAMETER_LIST
+#undef BOOST_BFT_PARAM_LIST
+
 #endif

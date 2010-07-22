@@ -13,7 +13,7 @@
 using namespace boost;
 using namespace boost::bitfields;
 
-template <BOOST_MAKE_BFT_TEMPLATE_PARAMS()>
+template <BOOST_BFT_TEMPLATE_ARGS_NO_DEFAULTS()>
 struct ham_bone { };
 
 int main() {

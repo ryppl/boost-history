@@ -6,7 +6,7 @@
 
 #include <boost/preprocessor/repetition/enum.hpp>
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
-
+#include <boost/integer/bitfield_tuple/interface_macros.hpp>
 
 #ifndef BOOST_BITFIELD_TUPLE_TEMPLATE_EXPANSION_MACROS_HPP
 #define BOOST_BITFIELD_TUPLE_TEMPLATE_EXPANSION_MACROS_HPP
@@ -106,9 +106,9 @@
  *     T0, ... TN
  */
 #define BOOST_BFT_PARAMETER_LIST() \
-            BOOST_PP_ENUM(  BOOST_BFT_PARAM_COUNT,\
-                            BOOST_BFT_PARAM_LIST, \
-                            T )
+    BOOST_PP_ENUM(  BOOST_BFT_PARAM_COUNT,\
+                    BOOST_BFT_PARAM_LIST, \
+                    T )
 
 /** Creates the template parameters for the bft base or impl class.
  *  Creates the following pattern
@@ -119,21 +119,7 @@
                     BOOST_BFT_PARAM_LIST, \
                     typename T )
 
-/** Used for creating template parameters for specilization.
- *  Creates the following pattern
- *      typename T0, ... typename TN
- */
-#define BOOST_BFT_TEMPLATE_ARGS_NO_DEFAULTS() \
-    BOOST_PP_ENUM(  BOOST_BFT_PARAM_COUNT,\
-                    BOOST_BFT_PARAM_LIST, \
-                    typename T )
 
 
-/** Used for specilizing over the bitfield_tuple sequence.
- *  Creates the following pattern
- *      T0, ... TN
- */
-#define BOOST_BFT_SPECILIZATION_PARAM_LIST() \
-                BOOST_BFT_PARAMETER_LIST()
 
 #endif

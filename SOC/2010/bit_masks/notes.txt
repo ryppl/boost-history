@@ -1,30 +1,9 @@
 List of TODO's throughout the bitfield_tuple
 
 1) template_expansion_macros.hpp
-    a) TODO: Refactor the macro's which are availible for use external to the
-    data structure then undef all of the rest before the end of the data
-    structure.
-
-    // Internally used Macro's
-    #undef BOOST_MAKE_BFT_TEMPLATE_PARAMS
-    #undef BOOST_BFT_MAKE_PARAMS
-    #undef BOOST_BFT_UNPACK_CALL
-    #undef BOOST_BFT_UNPACK_PARAMS
-    #undef BOOST_BFT_BASE_TEMPLATE_PARAMS
-    #undef BOOST_BFT_PARAMETER_LIST
-    #undef BOOST_BFT_PARAM_LIST
-
-    // externally Available Macros
-    BOOST_BFT_TEMPLATE_ARGS_NO_DEFAULTS
-    BOOST_BFT_SPECILIZATION_PARAM_LIST
-
-    Main issue is that the externally Available macros are implemented in terms
-    of internal macros and undef'ing the internal macros could then cause trouble
-    when the macros which are part of the interface are used outside of
-    bitfield_tuple's implementation.
-    
     b) MAYBE: Rename some of the internal use only macros so they don't
     get confused with macros for external use.
+
 
 2) reference_builder.hpp
     a) TODO: Move the following meta-functions into the boost namespace
@@ -260,10 +239,13 @@ Test file review
 
 
 
-TO BE ADDED TO TESTS SECTION
-Test files which need to be created and have tests placed in them!
+                        TO BE ADDED TO TESTS SECTION
+    Test which need to be created as a result of modifications or additions!
+--------------------------------------------------------------------------------
+1)  Add interface test for the interface macros.
 
 
+--------------------------------------------------------------------------------
 This is used for keeping track of different ideas about different possible
 interfaces or implementation of bit masks.
 
