@@ -14,6 +14,7 @@
 #include <boost/pool/pool.hpp>
 #include <boost/shared_array.hpp>
 #include <boost/random/uniform_real.hpp>
+#include <boost/utility/result_of.hpp>
 
 // The time required to compute the star discrepancy of a sequence of points
 // in a multidimensional unit cube is prohibitive and the best known upper
@@ -413,8 +414,8 @@ public:
   typedef std::pair<T, T>   bounds_t;
 
   // Initialize point table
-  template<typename QRNG, typename Distribution>
-  star_discrepancy(QRNG& q, Distribution d, std::size_t dimension, std::size_t n, T eps)
+  template<typename Engine, typename Distribution>
+  star_discrepancy(Engine& eng, Distribution d, std::size_t dimension, std::size_t n, T eps)
     : dim(dimension) // for non-QRNGs q.dimension() is malformed
     , n_elem(n)
     , epsilon(eps)
@@ -423,7 +424,7 @@ public:
     // All points must be bounded by the unit hypercube.
     for(std::size_t i = 0; i != dim * n_elem; ++i)
     {
-      T value = d(q);
+      T value = d(eng);
       if( value < T(0) || value > T(1) )
         boost::throw_exception( std::invalid_argument("d_star") );
       points[i] = value;
@@ -654,33 +655,33 @@ d_star(T (&pt)[N][Dimension], T epsilon)
 }
 
 // Accepts a pseudo-random number generator
-template<typename PRNG, typename Distribution>
+template<typename Engine, typename Distribution>
 inline typename detail::star_discrepancy<
-  typename Distribution::result_type
+  typename boost::result_of<Distribution(Engine)>::type
 >::bounds_t
-d_star(PRNG& p, Distribution d, std::size_t dimension,
-    std::size_t n, typename Distribution::result_type epsilon)
+d_star(Engine& eng, Distribution d, std::size_t dimension, std::size_t n,
+    typename boost::result_of<Distribution(Engine)>::type epsilon)
 {
-  typedef typename Distribution::result_type value_t;
-  detail::star_discrepancy<value_t> discr(p, d, dimension, n, epsilon);
+  typedef typename boost::result_of<Distribution(Engine)>::type value_t;
+  detail::star_discrepancy<value_t> discr(eng, d, dimension, n, epsilon);
   return discr.compute();
 }
 
 // Accepts a quasi-random number generator and distribution
-template<typename QRNG, typename Distribution>
+template<typename QEngine, typename Distribution>
 inline typename detail::star_discrepancy<
-  typename Distribution::result_type
+  typename boost::result_of<Distribution(QEngine)>::type
 >::bounds_t
-d_star(QRNG& q, Distribution d,
-    std::size_t n, typename Distribution::result_type epsilon)
+d_star(QEngine& q, Distribution d, std::size_t n,
+    typename boost::result_of<Distribution(QEngine)>::type epsilon)
 {
   return d_star(q, d, q.dimension(), n, epsilon);
 }
 
 // Accepts a quasi-random number generator; distribution is uniform_real<T>
-template<typename QRNG, typename T>
+template<typename QEngine, typename T>
 inline typename detail::star_discrepancy<T>::bounds_t
-d_star(QRNG& q, std::size_t n, T epsilon)
+d_star(QEngine& q, std::size_t n, T epsilon)
 {
   return d_star(q, boost::uniform_real<T>(), n, epsilon);
 }

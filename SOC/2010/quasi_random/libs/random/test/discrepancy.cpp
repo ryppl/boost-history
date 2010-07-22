@@ -4,13 +4,16 @@
 // file LICENSE-1.0 or http://www.boost.org/LICENSE-1.0)
 
 #include "d_star.hpp"
-#include "identity_distribution.hpp"
 
 #include <boost/random/niederreiter_base2.hpp>
 #include <boost/random/sobol.hpp>
 #include <boost/random/faure.hpp>
 
 #include <boost/random/mersenne_twister.hpp>
+
+#include <boost/random/detail/identity_distribution.hpp>
+
+#include <boost/utility/result_of.hpp>
 
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
@@ -64,23 +67,25 @@ BOOST_AUTO_TEST_CASE( test_halton_discrepancy )
 
   std::pair<double, double> bounds = d_star(halton_seq, 0.01);
 
-  BOOST_REQUIRE_CLOSE_FRACTION(bounds.first, 0.2666670000, 0.0001);
-  BOOST_REQUIRE_CLOSE_FRACTION(bounds.second, 0.2724280122, 0.0001);
+  BOOST_REQUIRE_CLOSE(bounds.first, 0.2666670000, 0.0001);
+  BOOST_REQUIRE_CLOSE(bounds.second, 0.2724280122, 0.0001);
 }
 
 
-template<typename QRNG, typename Distribution, typename Bounds>
+template<typename QEngine, typename Distribution, typename Bounds>
 inline void check_discrepancy(const char* name,
     Distribution d,
-    std::size_t n_vectors, typename Distribution::result_type eps,
+    std::size_t n_vectors,
+    typename boost::result_of<Distribution(QEngine)>::type epsilon,
     Bounds mersenne_twister_discrepancy)
 {
-  QRNG q; // default-construct
+  QEngine q; // default-construct
 
   BOOST_TEST_MESSAGE( "Testing " << name << "[" << q.dimension() << "]" );
 
-  Bounds qrng_discrepancy = d_star(q, d, n_vectors, eps);
-  BOOST_CHECK( qrng_discrepancy < mersenne_twister_discrepancy );
+  Bounds qrng_discrepancy = d_star(q, d, n_vectors, epsilon);
+  BOOST_CHECK_LT( qrng_discrepancy.first, mersenne_twister_discrepancy.first );
+  BOOST_CHECK_LE( qrng_discrepancy.second, mersenne_twister_discrepancy.second );
 }
 
 template<std::size_t D>
@@ -118,7 +123,7 @@ inline void compare_qrng_discrepancy(std::size_t n_vectors, double eps)
   // Compare the discrepancy of quasi-random number generators against the Mersenne twister discrepancy
   UNIT_TEST_CHECK_QRNG_DISCREPANCY(niederreiter_base2_t, u);
   UNIT_TEST_CHECK_QRNG_DISCREPANCY(sobol_t, u);
-  UNIT_TEST_CHECK_QRNG_DISCREPANCY(faure_t, identity_distribution<value_t>());
+  UNIT_TEST_CHECK_QRNG_DISCREPANCY(faure_t, boost::random::detail::identity_distribution());
 
 #undef UNIT_TEST_CHECK_QRNG_DISCREPANCY
 }
@@ -146,11 +151,11 @@ BOOST_AUTO_TEST_CASE( test_qrng_discrepancy )
   compare_qrng_discrepancy<5>(  100,    0.06  );
   compare_qrng_discrepancy<6>(   60,    0.08  );
   compare_qrng_discrepancy<7>(   60,    0.15  );
-  compare_qrng_discrepancy<8>(   60,    0.4   );
+  compare_qrng_discrepancy<8>(  100,    0.4   );
   compare_qrng_discrepancy<9> (  60,    0.5   );
   compare_qrng_discrepancy<10>(  80,    0.3   ); // mersenne twister has good discrepancy from dim 10. :-)
   compare_qrng_discrepancy<11>(  500,   0.4   );
-  compare_qrng_discrepancy<12>(  50,    0.5   );
+  compare_qrng_discrepancy<12>(  500,   0.5   );
 
   // etc.
 }
@@ -172,8 +177,8 @@ inline void check_niederreiter_base_2_discrepancy(std::size_t n_vectors, double 
   niederreiter_base2_t q;
   std::pair<double, double> bounds = d_star(q, n_vectors, eps);
 
-  BOOST_CHECK( bounds.first <= expected_discrepancy );
-  BOOST_CHECK( expected_discrepancy <= bounds.second );
+  BOOST_CHECK_LE( bounds.first, expected_discrepancy );
+  BOOST_CHECK_LE( expected_discrepancy, bounds.second );
 }
 
 BOOST_AUTO_TEST_CASE( test_niederreiter_base_2_discrepancy )
