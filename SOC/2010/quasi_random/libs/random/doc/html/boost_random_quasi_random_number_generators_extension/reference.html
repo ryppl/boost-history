@@ -80,47 +80,23 @@
 <p>Describes the quasi-random number generator class template sobol.</p>
 <p><span class="bold"><strong>Note:</strong></span> it is especially useful in conjunction with class template uniform_real. </p>
 <pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>typedef</strong></span> sobol_generator&lt; 1 &gt;::type <a name="boost.sobol_1d"></a>sobol_1d;
+  <span class="bold"><strong>typedef</strong></span> sobol_generator&lt; 2 &gt;::type <a name="boost.sobol_2d"></a>sobol_2d;
+  <span class="bold"><strong>typedef</strong></span> sobol_generator&lt; 3 &gt;::type <a name="boost.sobol_3d"></a>sobol_3d;
+  <span class="bold"><strong>typedef</strong></span> sobol_generator&lt; 4 &gt;::type <a name="boost.sobol_4d"></a>sobol_4d;
+  <span class="bold"><strong>typedef</strong></span> sobol_generator&lt; 5 &gt;::type <a name="boost.sobol_5d"></a>sobol_5d;
+  <span class="bold"><strong>typedef</strong></span> sobol_generator&lt; 6 &gt;::type <a name="boost.sobol_6d"></a>sobol_6d;
+  <span class="bold"><strong>typedef</strong></span> sobol_generator&lt; 7 &gt;::type <a name="boost.sobol_7d"></a>sobol_7d;
+  <span class="bold"><strong>typedef</strong></span> sobol_generator&lt; 8 &gt;::type <a name="boost.sobol_8d"></a>sobol_8d;
+  <span class="bold"><strong>typedef</strong></span> sobol_generator&lt; 9 &gt;::type <a name="boost.sobol_9d"></a>sobol_9d;
+  <span class="bold"><strong>typedef</strong></span> sobol_generator&lt; 10 &gt;::type <a name="boost.sobol_10d"></a>sobol_10d;
+  <span class="bold"><strong>typedef</strong></span> sobol_generator&lt; 11 &gt;::type <a name="boost.sobol_11d"></a>sobol_11d;
+  <span class="bold"><strong>typedef</strong></span> sobol_generator&lt; 12 &gt;::type <a name="boost.sobol_12d"></a>sobol_12d;
   <span class="bold"><strong>namespace</strong></span> random {
-    <span class="type">result_type</span> <a class="link" href="../boost/random/min.html" title="Function min">min</a>();
-    <span class="type">result_type</span> <a class="link" href="../boost/random/max.html" title="Function max">max</a>();
-    <span class="type">std::size_t</span> <a class="link" href="../boost/random/dimension.html" title="Function dimension">dimension</a>();
-    <span class="type"></span> <a class="link" href="../boost/random/sobol_id2425237.html" title="Function sobol">sobol</a>();
-    <span class="type"></span> <a class="link" href="../boost/random/sobol_id2425248.html" title="Function sobol">sobol</a>(std::size_t);
-    <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="../boost/random/seed_id2425265.html" title="Function seed">seed</a>();
-    <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="../boost/random/seed_id2425282.html" title="Function seed">seed</a>(std::size_t);
-    <span class="type">result_type</span> <a class="link" href="../boost/random/operator__.html" title="Function operator()"><span class="bold"><strong>operator</strong></span>()</a>();
-    <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="../boost/random/discard.html" title="Function discard">discard</a>(std::size_t);
-
-    <span class="emphasis"><em>// Writes a <code class="computeroutput">sobol</code> to a <code class="computeroutput">std::ostream</code>. </em></span>
-    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> CharT, <span class="bold"><strong>typename</strong></span> Traits&gt; 
-      <span class="type"><span class="bold"><strong>friend</strong></span> std::basic_ostream&lt; CharT, Traits &gt; &amp;</span> 
-      <a name="boost.random.operator_id2425357"></a><span class="bold"><strong>operator</strong></span>&lt;&lt;(std::basic_ostream&lt; CharT, Traits &gt; &amp; os, <span class="bold"><strong>const</strong></span> sobol &amp; f);
-
-    <span class="emphasis"><em>// Reads a <code class="computeroutput">niederreiter_base2</code> from a <code class="computeroutput">std::istream</code>. </em></span>
-    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> CharT, <span class="bold"><strong>typename</strong></span> Traits&gt; 
-      <span class="type"><span class="bold"><strong>friend</strong></span> std::basic_istream&lt; CharT, Traits &gt; &amp;</span> 
-      <a name="boost.random.operator_id2425393"></a><span class="bold"><strong>operator</strong></span>&gt;&gt;(std::basic_istream&lt; CharT, Traits &gt; &amp; is, sobol &amp; f);
-
-    <span class="emphasis"><em>// Returns true if the two generators will produce identical sequences. </em></span>
-    <span class="type"><span class="bold"><strong>friend</strong></span> <span class="bold"><strong>bool</strong></span></span> <a name="boost.random.operator=="></a><span class="bold"><strong>operator</strong></span>==(<span class="bold"><strong>const</strong></span> sobol &amp; x, <span class="bold"><strong>const</strong></span> sobol &amp; y);
-
-    <span class="emphasis"><em>// Returns true if the two generators will produce different sequences,. </em></span>
-    <span class="type"><span class="bold"><strong>friend</strong></span> <span class="bold"><strong>bool</strong></span></span> <a name="boost.random.operator!="></a><span class="bold"><strong>operator</strong></span>!=(<span class="bold"><strong>const</strong></span> sobol &amp; lhs, <span class="bold"><strong>const</strong></span> sobol &amp; rhs);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> IntType, std::size_t Dimension, IntType c, IntType m&gt; 
+      <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/random/sobol.html" title="Class template sobol">sobol</a>;
   }
-}
-
-<span class="bold"><strong>typedef</strong></span> sobol_generator&lt; 1 &gt;::type <a name="sobol_1d"></a>sobol_1d;
-<span class="bold"><strong>typedef</strong></span> sobol_generator&lt; 2 &gt;::type <a name="sobol_2d"></a>sobol_2d;
-<span class="bold"><strong>typedef</strong></span> sobol_generator&lt; 3 &gt;::type <a name="sobol_3d"></a>sobol_3d;
-<span class="bold"><strong>typedef</strong></span> sobol_generator&lt; 4 &gt;::type <a name="sobol_4d"></a>sobol_4d;
-<span class="bold"><strong>typedef</strong></span> sobol_generator&lt; 5 &gt;::type <a name="sobol_5d"></a>sobol_5d;
-<span class="bold"><strong>typedef</strong></span> sobol_generator&lt; 6 &gt;::type <a name="sobol_6d"></a>sobol_6d;
-<span class="bold"><strong>typedef</strong></span> sobol_generator&lt; 7 &gt;::type <a name="sobol_7d"></a>sobol_7d;
-<span class="bold"><strong>typedef</strong></span> sobol_generator&lt; 8 &gt;::type <a name="sobol_8d"></a>sobol_8d;
-<span class="bold"><strong>typedef</strong></span> sobol_generator&lt; 9 &gt;::type <a name="sobol_9d"></a>sobol_9d;
-<span class="bold"><strong>typedef</strong></span> sobol_generator&lt; 10 &gt;::type <a name="sobol_10d"></a>sobol_10d;
-<span class="bold"><strong>typedef</strong></span> sobol_generator&lt; 11 &gt;::type <a name="sobol_11d"></a>sobol_11d;
-<span class="bold"><strong>typedef</strong></span> sobol_generator&lt; 12 &gt;::type <a name="sobol_12d"></a>sobol_12d;</pre>
+}</pre>
 </div>
 </div>
 </div>

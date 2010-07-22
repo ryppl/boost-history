@@ -30,32 +30,32 @@
   <span class="bold"><strong>typedef</strong></span> IntType <a name="boost.random.sobol.result_type"></a>result_type;
 
   <span class="emphasis"><em>// <a class="link" href="sobol.html#boost.random.sobolconstruct-copy-destruct">construct/copy/destruct</a></em></span>
-  <a class="link" href="sobol.html#id2620099-bb">sobol</a>();
-  <a class="link" href="sobol.html#id2620107-bb">sobol</a>(std::size_t);
+  <a class="link" href="sobol.html#id2829644-bb">sobol</a>();
+  <a class="link" href="sobol.html#id2829652-bb">sobol</a>(std::size_t);
 
-  <span class="emphasis"><em>// <a class="link" href="sobol.html#id2619944-bb">public static functions</a></em></span>
-  <span class="type"><span class="bold"><strong>static</strong></span> result_type</span> <a class="link" href="sobol.html#id2619948-bb">min</a>() ;
-  <span class="type"><span class="bold"><strong>static</strong></span> result_type</span> <a class="link" href="sobol.html#id2619964-bb">max</a>() ;
-  <span class="type"><span class="bold"><strong>static</strong></span> std::size_t</span> <a class="link" href="sobol.html#id2619980-bb">dimension</a>() ;
+  <span class="emphasis"><em>// <a class="link" href="sobol.html#id2829489-bb">public static functions</a></em></span>
+  <span class="type"><span class="bold"><strong>static</strong></span> result_type</span> <a class="link" href="sobol.html#id2829493-bb">min</a>() ;
+  <span class="type"><span class="bold"><strong>static</strong></span> result_type</span> <a class="link" href="sobol.html#id2829509-bb">max</a>() ;
+  <span class="type"><span class="bold"><strong>static</strong></span> std::size_t</span> <a class="link" href="sobol.html#id2829525-bb">dimension</a>() ;
 
-  <span class="emphasis"><em>// <a class="link" href="sobol.html#id2619995-bb">public member functions</a></em></span>
-  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="sobol.html#id2619999-bb">seed</a>() ;
-  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="sobol.html#id2620019-bb">seed</a>(std::size_t) ;
-  <span class="type">result_type</span> <a class="link" href="sobol.html#id2620051-bb"><span class="bold"><strong>operator</strong></span>()</a>() ;
-  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="sobol.html#id2620071-bb">discard</a>(std::size_t) ;
+  <span class="emphasis"><em>// <a class="link" href="sobol.html#id2829540-bb">public member functions</a></em></span>
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="sobol.html#id2829544-bb">seed</a>() ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="sobol.html#id2829564-bb">seed</a>(std::size_t) ;
+  <span class="type">result_type</span> <a class="link" href="sobol.html#id2829596-bb"><span class="bold"><strong>operator</strong></span>()</a>() ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="sobol.html#id2829616-bb">discard</a>(std::size_t) ;
 
-  <span class="emphasis"><em>// <a class="link" href="sobol.html#id2620121-bb">friend functions</a></em></span>
+  <span class="emphasis"><em>// <a class="link" href="sobol.html#id2829666-bb">friend functions</a></em></span>
   <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> CharT, <span class="bold"><strong>typename</strong></span> Traits&gt; 
     <span class="type"><span class="bold"><strong>friend</strong></span> std::basic_ostream&lt; CharT, Traits &gt; &amp;</span> 
-    <a class="link" href="sobol.html#id2620124-bb"><span class="bold"><strong>operator</strong></span>&lt;&lt;</a>(std::basic_ostream&lt; CharT, Traits &gt; &amp;, <span class="bold"><strong>const</strong></span> <a class="link" href="sobol.html" title="Class template sobol">sobol</a> &amp;) ;
+    <a class="link" href="sobol.html#id2829669-bb"><span class="bold"><strong>operator</strong></span>&lt;&lt;</a>(std::basic_ostream&lt; CharT, Traits &gt; &amp;, <span class="bold"><strong>const</strong></span> <a class="link" href="sobol.html" title="Class template sobol">sobol</a> &amp;) ;
   <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> CharT, <span class="bold"><strong>typename</strong></span> Traits&gt; 
     <span class="type"><span class="bold"><strong>friend</strong></span> std::basic_istream&lt; CharT, Traits &gt; &amp;</span> 
-    <a class="link" href="sobol.html#id2620166-bb"><span class="bold"><strong>operator</strong></span>&gt;&gt;</a>(std::basic_istream&lt; CharT, Traits &gt; &amp;, <a class="link" href="sobol.html" title="Class template sobol">sobol</a> &amp;) ;
-  <span class="type"><span class="bold"><strong>friend</strong></span> <span class="bold"><strong>bool</strong></span></span> <a class="link" href="sobol.html#id2620206-bb"><span class="bold"><strong>operator</strong></span>==</a>(<span class="bold"><strong>const</strong></span> <a class="link" href="sobol.html" title="Class template sobol">sobol</a> &amp;, <span class="bold"><strong>const</strong></span> <a class="link" href="sobol.html" title="Class template sobol">sobol</a> &amp;) ;
-  <span class="type"><span class="bold"><strong>friend</strong></span> <span class="bold"><strong>bool</strong></span></span> <a class="link" href="sobol.html#id2620233-bb"><span class="bold"><strong>operator</strong></span>!=</a>(<span class="bold"><strong>const</strong></span> <a class="link" href="sobol.html" title="Class template sobol">sobol</a> &amp;, <span class="bold"><strong>const</strong></span> <a class="link" href="sobol.html" title="Class template sobol">sobol</a> &amp;) ;
+    <a class="link" href="sobol.html#id2829710-bb"><span class="bold"><strong>operator</strong></span>&gt;&gt;</a>(std::basic_istream&lt; CharT, Traits &gt; &amp;, <a class="link" href="sobol.html" title="Class template sobol">sobol</a> &amp;) ;
+  <span class="type"><span class="bold"><strong>friend</strong></span> <span class="bold"><strong>bool</strong></span></span> <a class="link" href="sobol.html#id2829751-bb"><span class="bold"><strong>operator</strong></span>==</a>(<span class="bold"><strong>const</strong></span> <a class="link" href="sobol.html" title="Class template sobol">sobol</a> &amp;, <span class="bold"><strong>const</strong></span> <a class="link" href="sobol.html" title="Class template sobol">sobol</a> &amp;) ;
+  <span class="type"><span class="bold"><strong>friend</strong></span> <span class="bold"><strong>bool</strong></span></span> <a class="link" href="sobol.html#id2829778-bb"><span class="bold"><strong>operator</strong></span>!=</a>(<span class="bold"><strong>const</strong></span> <a class="link" href="sobol.html" title="Class template sobol">sobol</a> &amp;, <span class="bold"><strong>const</strong></span> <a class="link" href="sobol.html" title="Class template sobol">sobol</a> &amp;) ;
 };</pre></div>
 <div class="refsect1" lang="en">
-<a name="id2639508"></a><h2>Description</h2>
+<a name="id3037519"></a><h2>Description</h2>
 <p>class template sobol implements a quasi-random number generator as described in  </p>
 <div class="blockquote"><blockquote class="blockquote"><p>  [Bratley+Fox, TOMS 14, 88 (1988)] and [Antonov+Saleev, USSR Comput. Maths. Math. Phys. 19, 252 (1980)]  </p></blockquote></div>
 <p> </p>
@@ -63,43 +63,43 @@
 In the following documentation <code class="computeroutput">X</code> denotes the concrete class of the template sobol returning objects of type <code class="computeroutput">IntType</code>, u and v are the values of <code class="computeroutput">X</code>.</p>
 <p>Some member functions may throw exceptions of type <code class="computeroutput">std::overflow_error</code>. This happens when the quasi-random domain is exhausted and the generator cannot produce any more values. The length of the low discrepancy sequence is given by <span class="inlinemediaobject"><img src="../../images/random/form_1.png"></span>, where digits = std::numeric_limits&lt;IntType&gt;::digits. </p>
 <div class="refsect2" lang="en">
-<a name="id2639573"></a><h3>
+<a name="id3037584"></a><h3>
 <a name="boost.random.sobolconstruct-copy-destruct"></a><code class="computeroutput">sobol</code> 
         public
        construct/copy/destruct</h3>
 <div class="orderedlist"><ol type="1">
 <li>
-<pre class="literallayout"><a name="id2620099-bb"></a>sobol();</pre>
+<pre class="literallayout"><a name="id2829644-bb"></a>sobol();</pre>
 <p>Effects: Constructs the default Sobol quasi-random number generator.</p>
 <p>Throws: nothing. </p>
 </li>
 <li>
-<pre class="literallayout"><a name="id2620107-bb"></a>sobol(std::size_t init);</pre>
+<pre class="literallayout"><a name="id2829652-bb"></a>sobol(std::size_t init);</pre>
 <p>Effects: Constructs the Sobol quasi-random number generator, equivalent to X u; u.seed(init).</p>
 <p>Throws: overflow_error. </p>
 </li>
 </ol></div>
 </div>
 <div class="refsect2" lang="en">
-<a name="id2639626"></a><h3>
-<a name="id2619944-bb"></a><code class="computeroutput">sobol</code> public static functions</h3>
+<a name="id3037638"></a><h3>
+<a name="id2829489-bb"></a><code class="computeroutput">sobol</code> public static functions</h3>
 <div class="orderedlist"><ol type="1">
 <li>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>static</strong></span> result_type</span> <a name="id2619948-bb"></a>min() ;</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>static</strong></span> result_type</span> <a name="id2829493-bb"></a>min() ;</pre>
 <p>Returns: Tight lower bound on the set of values returned by operator().</p>
 <p>Throws: nothing. </p>
 <p>
  </p>
 </li>
 <li>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>static</strong></span> result_type</span> <a name="id2619964-bb"></a>max() ;</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>static</strong></span> result_type</span> <a name="id2829509-bb"></a>max() ;</pre>
 <p>Returns: Tight upper bound on the set of values returned by operator().</p>
 <p>Throws: nothing. </p>
 <p>
  </p>
 </li>
 <li>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>static</strong></span> std::size_t</span> <a name="id2619980-bb"></a>dimension() ;</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>static</strong></span> std::size_t</span> <a name="id2829525-bb"></a>dimension() ;</pre>
 <p>Returns: The dimension of of the quasi-random domain.</p>
 <p>Throws: nothing. </p>
 <p>
@@ -108,11 +108,11 @@ In the following documentation <code class="computeroutput">X</code> denotes the
 </ol></div>
 </div>
 <div class="refsect2" lang="en">
-<a name="id2639721"></a><h3>
-<a name="id2619995-bb"></a><code class="computeroutput">sobol</code> public member functions</h3>
+<a name="id3037732"></a><h3>
+<a name="id2829540-bb"></a><code class="computeroutput">sobol</code> public member functions</h3>
 <div class="orderedlist"><ol type="1">
 <li>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2619999-bb"></a>seed() ;</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2829544-bb"></a>seed() ;</pre>
 <p>Throws: nothing. </p>
 <p>Requirements: *this is mutable.</p>
 <p>Effects: Resets the quasi-random number generator state to the one given by the default construction. Equivalent to u.seed(0). </p>
@@ -120,7 +120,7 @@ In the following documentation <code class="computeroutput">X</code> denotes the
  </p>
 </li>
 <li>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2620019-bb"></a>seed(std::size_t init) ;</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2829564-bb"></a>seed(std::size_t init) ;</pre>
 <p>Throws: overflow_error. </p>
 <p>Requirements: *this is mutable.</p>
 <p>Effects: Effectively sets the quasi-random number generator state to the init-th vector in the s-dimensional quasi-random domain, where s == X::dimension(). </p>
@@ -136,13 +136,13 @@ In the following documentation <code class="computeroutput">X</code> denotes the
  </p>
 </li>
 <li>
-<pre class="literallayout"><span class="type">result_type</span> <a name="id2620051-bb"></a><span class="bold"><strong>operator</strong></span>()() ;</pre>
+<pre class="literallayout"><span class="type">result_type</span> <a name="id2829596-bb"></a><span class="bold"><strong>operator</strong></span>()() ;</pre>
 <p>Requirements: *this is mutable.</p>
 <p>Returns: Returns a successive element of an s-dimensional (s = X::dimension()) vector at each invocation. When all elements are exhausted, X::operator() begins anew with the starting element of a subsequent s-dimensional vector.</p>
 <p>Throws: overflow_error. </p>
 </li>
 <li>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2620071-bb"></a>discard(std::size_t z) ;</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2829616-bb"></a>discard(std::size_t z) ;</pre>
 <p>Requirements: *this is mutable.</p>
 <p>Effects: Advances *this state as if z consecutive X::operator() invocations were executed. </p>
 <pre class="programlisting">     X u = v;
@@ -158,21 +158,21 @@ In the following documentation <code class="computeroutput">X</code> denotes the
 </ol></div>
 </div>
 <div class="refsect2" lang="en">
-<a name="id2639871"></a><h3>
-<a name="id2620121-bb"></a><code class="computeroutput">sobol</code> friend functions</h3>
+<a name="id3037882"></a><h3>
+<a name="id2829666-bb"></a><code class="computeroutput">sobol</code> friend functions</h3>
 <div class="orderedlist"><ol type="1">
 <li>
 <pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> CharT, <span class="bold"><strong>typename</strong></span> Traits&gt; 
   <span class="type"><span class="bold"><strong>friend</strong></span> std::basic_ostream&lt; CharT, Traits &gt; &amp;</span> 
-  <a name="id2620124-bb"></a><span class="bold"><strong>operator</strong></span>&lt;&lt;(std::basic_ostream&lt; CharT, Traits &gt; &amp; os, <span class="bold"><strong>const</strong></span> <a class="link" href="sobol.html" title="Class template sobol">sobol</a> &amp; f) ;</pre>Writes a <code class="computeroutput">sobol</code> to a <code class="computeroutput">std::ostream</code>. </li>
+  <a name="id2829669-bb"></a><span class="bold"><strong>operator</strong></span>&lt;&lt;(std::basic_ostream&lt; CharT, Traits &gt; &amp; os, <span class="bold"><strong>const</strong></span> <a class="link" href="sobol.html" title="Class template sobol">sobol</a> &amp; f) ;</pre>Writes a <code class="computeroutput">sobol</code> to a <code class="computeroutput">std::ostream</code>. </li>
 <li>
 <pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> CharT, <span class="bold"><strong>typename</strong></span> Traits&gt; 
   <span class="type"><span class="bold"><strong>friend</strong></span> std::basic_istream&lt; CharT, Traits &gt; &amp;</span> 
-  <a name="id2620166-bb"></a><span class="bold"><strong>operator</strong></span>&gt;&gt;(std::basic_istream&lt; CharT, Traits &gt; &amp; is, <a class="link" href="sobol.html" title="Class template sobol">sobol</a> &amp; f) ;</pre>Reads a <code class="computeroutput">niederreiter_base2</code> from a <code class="computeroutput">std::istream</code>. </li>
+  <a name="id2829710-bb"></a><span class="bold"><strong>operator</strong></span>&gt;&gt;(std::basic_istream&lt; CharT, Traits &gt; &amp; is, <a class="link" href="sobol.html" title="Class template sobol">sobol</a> &amp; f) ;</pre>Reads a <code class="computeroutput">niederreiter_base2</code> from a <code class="computeroutput">std::istream</code>. </li>
 <li>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>friend</strong></span> <span class="bold"><strong>bool</strong></span></span> <a name="id2620206-bb"></a><span class="bold"><strong>operator</strong></span>==(<span class="bold"><strong>const</strong></span> <a class="link" href="sobol.html" title="Class template sobol">sobol</a> &amp; x, <span class="bold"><strong>const</strong></span> <a class="link" href="sobol.html" title="Class template sobol">sobol</a> &amp; y) ;</pre>Returns true if the two generators will produce identical sequences. </li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>friend</strong></span> <span class="bold"><strong>bool</strong></span></span> <a name="id2829751-bb"></a><span class="bold"><strong>operator</strong></span>==(<span class="bold"><strong>const</strong></span> <a class="link" href="sobol.html" title="Class template sobol">sobol</a> &amp; x, <span class="bold"><strong>const</strong></span> <a class="link" href="sobol.html" title="Class template sobol">sobol</a> &amp; y) ;</pre>Returns true if the two generators will produce identical sequences. </li>
 <li>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>friend</strong></span> <span class="bold"><strong>bool</strong></span></span> <a name="id2620233-bb"></a><span class="bold"><strong>operator</strong></span>!=(<span class="bold"><strong>const</strong></span> <a class="link" href="sobol.html" title="Class template sobol">sobol</a> &amp; lhs, <span class="bold"><strong>const</strong></span> <a class="link" href="sobol.html" title="Class template sobol">sobol</a> &amp; rhs) ;</pre>Returns true if the two generators will produce different sequences,. </li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>friend</strong></span> <span class="bold"><strong>bool</strong></span></span> <a name="id2829778-bb"></a><span class="bold"><strong>operator</strong></span>!=(<span class="bold"><strong>const</strong></span> <a class="link" href="sobol.html" title="Class template sobol">sobol</a> &amp; lhs, <span class="bold"><strong>const</strong></span> <a class="link" href="sobol.html" title="Class template sobol">sobol</a> &amp; rhs) ;</pre>Returns true if the two generators will produce different sequences,. </li>
 </ol></div>
 </div>
 </div>

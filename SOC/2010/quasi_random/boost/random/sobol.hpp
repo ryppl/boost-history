@@ -30,7 +30,6 @@
 namespace boost {
 namespace random {
 
-/// @cond
 namespace detail {
 
 namespace sbl {
@@ -40,13 +39,14 @@ namespace sbl {
 template<std::size_t D>
 struct primitive_polynomial;
 
+/// @cond
 #define BOOST_SOBOL_PRIM_POLY(D, V) \
   template<> \
    struct primitive_polynomial<D> { \
      static const int value = V; \
      static const int degree = ::boost::static_log2<V>::value; \
    } \
-/**/
+/// @endcond
 
 BOOST_SOBOL_PRIM_POLY(0, 1);
 BOOST_SOBOL_PRIM_POLY(1, 3);
@@ -293,8 +293,6 @@ private:
 };
 
 } // namespace detail
-/// @endcond
-
 
 //!class template sobol implements a quasi-random number generator as described in
 //! \blockquote
