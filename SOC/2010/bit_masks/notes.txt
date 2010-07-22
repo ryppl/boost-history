@@ -20,25 +20,7 @@ List of TODO's throughout the bitfield_tuple
 
 
 5)  pointer_packing_policy.hpp
-    a)  Adjust the alignment check to check alignment against the 0 bit in stead
-        of based on the offset.
-
-    b)  Change the following specialization so that this isn't needed
-        basically this requires a shift from the pointer, when there shouldn't
-        be.
-        I   )   template <
-                    typename Mask,
-                    typename Offset,
-                    typename ValueType,
-                    typename StorageType
-                >
-                struct apply_impl_no_shift <
-                    Mask,
-                    Offset,
-                    ValueType,
-                    StorageType,
-                    false
-                >;
+ 
     c)  Finish the pointer specialization so that fewer specialization are
         needed there should be aligned and unaligned and that really should
         be all. Unless there there is some issue.
