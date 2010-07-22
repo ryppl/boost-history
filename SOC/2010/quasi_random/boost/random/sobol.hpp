@@ -14,9 +14,8 @@
 #include <boost/random/detail/operators.hpp>
 
 #include <limits>
-#include <boost/integer/static_log2.hpp>
-
 #include <boost/cstdint.hpp>
+#include <boost/integer/static_log2.hpp>
 
 #include <boost/static_assert.hpp>
 
@@ -31,8 +30,9 @@
 namespace boost {
 namespace random {
 
-/** @cond */
+/// @cond
 namespace detail {
+
 namespace sbl {
 
 // Primitive polynomials in binary encoding
@@ -293,7 +293,8 @@ private:
 };
 
 } // namespace detail
-/** @endcond */
+/// @endcond
+
 
 //!class template sobol implements a quasi-random number generator as described in
 //! \blockquote

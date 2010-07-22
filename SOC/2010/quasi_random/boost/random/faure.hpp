@@ -30,7 +30,7 @@
 namespace boost {
 namespace random {
 
-/** @cond */
+/// @cond
 namespace detail {
 namespace fr {
 
@@ -226,7 +226,7 @@ private:
 };
 
 }} // namespace detail::fr
-/** @endcond */
+/// @endcond
 
 //!class template faure implements a quasi-random number generator as described in
 //! \blockquote
@@ -250,7 +250,7 @@ private:
 //!In the following documentation @c X denotes the concrete class of the template
 //!faure returning objects of type @c RealType, u and v are the values of @c X.
 //!
-//!Some member functions may throw exceptions of type @c std::bad_alloc.
+//!Some member functions may throw exceptions of type @c std::bad_alloc and @c std::overflow_error.
 template<typename RealType, std::size_t Dimension>
 class faure : public detail::qrng_base<
                        faure<RealType, Dimension>,

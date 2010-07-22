@@ -31,25 +31,32 @@
   <span class="bold"><strong>typedef</strong></span> RealType <a name="boost.random.faure.result_type"></a>result_type;
 
   <span class="emphasis"><em>// <a class="link" href="faure.html#boost.random.faureconstruct-copy-destruct">construct/copy/destruct</a></em></span>
-  <a class="link" href="faure.html#id2721811-bb">faure</a>();
-  <a class="link" href="faure.html#id2721819-bb">faure</a>(std::size_t);
+  <a class="link" href="faure.html#id2422170-bb">faure</a>();
+  <a class="link" href="faure.html#id2422178-bb">faure</a>(std::size_t);
 
-  <span class="emphasis"><em>// <a class="link" href="faure.html#id2722145-bb">public static functions</a></em></span>
-  <span class="type"><span class="bold"><strong>static</strong></span> result_type min</span> <a class="link" href="faure.html#id2722148-bb">BOOST_PREVENT_MACRO_SUBSTITUTION</a>() ;
-  <span class="type"><span class="bold"><strong>static</strong></span> result_type max</span> <a class="link" href="faure.html#id2722164-bb">BOOST_PREVENT_MACRO_SUBSTITUTION</a>() ;
-  <span class="type"><span class="bold"><strong>static</strong></span> std::size_t</span> <a class="link" href="faure.html#id2722182-bb">dimension</a>() ;
+  <span class="emphasis"><em>// <a class="link" href="faure.html#id2422457-bb">friend functions</a></em></span>
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> CharT, <span class="bold"><strong>typename</strong></span> Traits&gt; 
+    <span class="type"><span class="bold"><strong>friend</strong></span> std::basic_ostream&lt; CharT, Traits &gt; &amp;</span> 
+    <a class="link" href="faure.html#id2422460-bb"><span class="bold"><strong>operator</strong></span>&lt;&lt;</a>(std::basic_ostream&lt; CharT, Traits &gt; &amp;, <span class="bold"><strong>const</strong></span> <a class="link" href="faure.html" title="Class template faure">faure</a> &amp;) ;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> CharT, <span class="bold"><strong>typename</strong></span> Traits&gt; 
+    <span class="type"><span class="bold"><strong>friend</strong></span> std::basic_istream&lt; CharT, Traits &gt; &amp;</span> 
+    <a class="link" href="faure.html#id2422501-bb"><span class="bold"><strong>operator</strong></span>&gt;&gt;</a>(std::basic_istream&lt; CharT, Traits &gt; &amp;, <a class="link" href="faure.html" title="Class template faure">faure</a> &amp;) ;
+  <span class="type"><span class="bold"><strong>friend</strong></span> <span class="bold"><strong>bool</strong></span></span> <a class="link" href="faure.html#id2421966-bb"><span class="bold"><strong>operator</strong></span>==</a>(<span class="bold"><strong>const</strong></span> <a class="link" href="faure.html" title="Class template faure">faure</a> &amp;, <span class="bold"><strong>const</strong></span> <a class="link" href="faure.html" title="Class template faure">faure</a> &amp;) ;
+  <span class="type"><span class="bold"><strong>friend</strong></span> <span class="bold"><strong>bool</strong></span></span> <a class="link" href="faure.html#id2421992-bb"><span class="bold"><strong>operator</strong></span>!=</a>(<span class="bold"><strong>const</strong></span> <a class="link" href="faure.html" title="Class template faure">faure</a> &amp;, <span class="bold"><strong>const</strong></span> <a class="link" href="faure.html" title="Class template faure">faure</a> &amp;) ;
 
-  <span class="emphasis"><em>// <a class="link" href="faure.html#id2722197-bb">public member functions</a></em></span>
-  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="faure.html#id2722201-bb">seed</a>() ;
-  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="faure.html#id2722219-bb">seed</a>(std::size_t) ;
-  <span class="type">result_type</span> <a class="link" href="faure.html#id2721673-bb"><span class="bold"><strong>operator</strong></span>()</a>() ;
-  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="faure.html#id2721693-bb">discard</a>(std::size_t) ;
-  <span class="type"></span> <a class="link" href="faure.html#id2721722-bb">BOOST_RANDOM_DETAIL_OSTREAM_OPERATOR</a>(os, <a class="link" href="faure.html" title="Class template faure">faure</a>, f) ;
-  <span class="type"></span> <a class="link" href="faure.html#id2721753-bb">BOOST_RANDOM_DETAIL_ISTREAM_OPERATOR</a>(is, <a class="link" href="faure.html" title="Class template faure">faure</a>, f) ;
-  <span class="type"></span> <a class="link" href="faure.html#id2721785-bb">BOOST_RANDOM_DETAIL_EQUALITY_OPERATOR</a>(<a class="link" href="faure.html" title="Class template faure">faure</a>, x, y) ;
+  <span class="emphasis"><em>// <a class="link" href="faure.html#id2422020-bb">public static functions</a></em></span>
+  <span class="type"><span class="bold"><strong>static</strong></span> result_type</span> <a class="link" href="faure.html#id2422023-bb">min</a>() ;
+  <span class="type"><span class="bold"><strong>static</strong></span> result_type</span> <a class="link" href="faure.html#id2422039-bb">max</a>() ;
+  <span class="type"><span class="bold"><strong>static</strong></span> std::size_t</span> <a class="link" href="faure.html#id2422055-bb">dimension</a>() ;
+
+  <span class="emphasis"><em>// <a class="link" href="faure.html#id2422071-bb">public member functions</a></em></span>
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="faure.html#id2422074-bb">seed</a>() ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="faure.html#id2422092-bb">seed</a>(std::size_t) ;
+  <span class="type">result_type</span> <a class="link" href="faure.html#id2422122-bb"><span class="bold"><strong>operator</strong></span>()</a>() ;
+  <span class="type"><span class="bold"><strong>void</strong></span></span> <a class="link" href="faure.html#id2422141-bb">discard</a>(std::size_t) ;
 };</pre></div>
 <div class="refsect1" lang="en">
-<a name="id3097217"></a><h2>Description</h2>
+<a name="id2688431"></a><h2>Description</h2>
 <p>class template faure implements a quasi-random number generator as described in  </p>
 <div class="blockquote"><blockquote class="blockquote"><p>  Henri Faure, Discrepance de suites associees a un systeme de numeration (en dimension s), Acta Arithmetica, Volume 41, 1982, pages 337-351.  </p></blockquote></div>
 <p>   </p>
@@ -57,45 +64,63 @@
 <p> </p>
 <p>
 In the following documentation <code class="computeroutput">X</code> denotes the concrete class of the template faure returning objects of type <code class="computeroutput">RealType</code>, u and v are the values of <code class="computeroutput">X</code>.</p>
-<p>Some member functions may throw exceptions of type <code class="computeroutput">std::bad_alloc</code>. </p>
+<p>Some member functions may throw exceptions of type <code class="computeroutput">std::bad_alloc</code> and <code class="computeroutput">std::overflow_error</code>. </p>
 <div class="refsect2" lang="en">
-<a name="id3097268"></a><h3>
+<a name="id2688486"></a><h3>
 <a name="boost.random.faureconstruct-copy-destruct"></a><code class="computeroutput">faure</code> 
         public
        construct/copy/destruct</h3>
 <div class="orderedlist"><ol type="1">
 <li>
-<pre class="literallayout"><a name="id2721811-bb"></a>faure();</pre>
+<pre class="literallayout"><a name="id2422170-bb"></a>faure();</pre>
 <p>Effects: Constructs the default Faure quasi-random number generator.</p>
 <p>Throws: bad_alloc. </p>
 </li>
 <li>
-<pre class="literallayout"><a name="id2721819-bb"></a>faure(std::size_t init);</pre>
+<pre class="literallayout"><a name="id2422178-bb"></a>faure(std::size_t init);</pre>
 <p>Effects: Constructs the Faure quasi-random number generator, equivalent to X u; u.seed(init).</p>
 <p>Throws: bad_alloc. </p>
 </li>
 </ol></div>
 </div>
 <div class="refsect2" lang="en">
-<a name="id3097324"></a><h3>
-<a name="id2722145-bb"></a><code class="computeroutput">faure</code> public static functions</h3>
+<a name="id2688542"></a><h3>
+<a name="id2422457-bb"></a><code class="computeroutput">faure</code> friend functions</h3>
 <div class="orderedlist"><ol type="1">
 <li>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>static</strong></span> result_type min</span> <a name="id2722148-bb"></a>BOOST_PREVENT_MACRO_SUBSTITUTION() ;</pre>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> CharT, <span class="bold"><strong>typename</strong></span> Traits&gt; 
+  <span class="type"><span class="bold"><strong>friend</strong></span> std::basic_ostream&lt; CharT, Traits &gt; &amp;</span> 
+  <a name="id2422460-bb"></a><span class="bold"><strong>operator</strong></span>&lt;&lt;(std::basic_ostream&lt; CharT, Traits &gt; &amp; os, <span class="bold"><strong>const</strong></span> <a class="link" href="faure.html" title="Class template faure">faure</a> &amp; f) ;</pre>Writes a <code class="computeroutput">faure</code> to a <code class="computeroutput">std::ostream</code>. </li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> CharT, <span class="bold"><strong>typename</strong></span> Traits&gt; 
+  <span class="type"><span class="bold"><strong>friend</strong></span> std::basic_istream&lt; CharT, Traits &gt; &amp;</span> 
+  <a name="id2422501-bb"></a><span class="bold"><strong>operator</strong></span>&gt;&gt;(std::basic_istream&lt; CharT, Traits &gt; &amp; is, <a class="link" href="faure.html" title="Class template faure">faure</a> &amp; f) ;</pre>Reads a <code class="computeroutput">faure</code> from a <code class="computeroutput">std::istream</code>. </li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>friend</strong></span> <span class="bold"><strong>bool</strong></span></span> <a name="id2421966-bb"></a><span class="bold"><strong>operator</strong></span>==(<span class="bold"><strong>const</strong></span> <a class="link" href="faure.html" title="Class template faure">faure</a> &amp; x, <span class="bold"><strong>const</strong></span> <a class="link" href="faure.html" title="Class template faure">faure</a> &amp; y) ;</pre>Returns true if the two generators will produce identical sequences. </li>
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>friend</strong></span> <span class="bold"><strong>bool</strong></span></span> <a name="id2421992-bb"></a><span class="bold"><strong>operator</strong></span>!=(<span class="bold"><strong>const</strong></span> <a class="link" href="faure.html" title="Class template faure">faure</a> &amp; lhs, <span class="bold"><strong>const</strong></span> <a class="link" href="faure.html" title="Class template faure">faure</a> &amp; rhs) ;</pre>Returns true if the two generators will produce different sequences,. </li>
+</ol></div>
+</div>
+<div class="refsect2" lang="en">
+<a name="id2688775"></a><h3>
+<a name="id2422020-bb"></a><code class="computeroutput">faure</code> public static functions</h3>
+<div class="orderedlist"><ol type="1">
+<li>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>static</strong></span> result_type</span> <a name="id2422023-bb"></a>min() ;</pre>
 <p>Returns: Tight lower bound on the set of values returned by operator().</p>
 <p>Throws: nothing. </p>
 <p>
  </p>
 </li>
 <li>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>static</strong></span> result_type max</span> <a name="id2722164-bb"></a>BOOST_PREVENT_MACRO_SUBSTITUTION() ;</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>static</strong></span> result_type</span> <a name="id2422039-bb"></a>max() ;</pre>
 <p>Returns: Tight upper bound on the set of values returned by operator().</p>
 <p>Throws: nothing. </p>
 <p>
  </p>
 </li>
 <li>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>static</strong></span> std::size_t</span> <a name="id2722182-bb"></a>dimension() ;</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>static</strong></span> std::size_t</span> <a name="id2422055-bb"></a>dimension() ;</pre>
 <p>Returns: The dimension of of the quasi-random domain.</p>
 <p>Throws: nothing. </p>
 <p>
@@ -104,18 +129,18 @@ In the following documentation <code class="computeroutput">X</code> denotes the
 </ol></div>
 </div>
 <div class="refsect2" lang="en">
-<a name="id3097418"></a><h3>
-<a name="id2722197-bb"></a><code class="computeroutput">faure</code> public member functions</h3>
+<a name="id2688869"></a><h3>
+<a name="id2422071-bb"></a><code class="computeroutput">faure</code> public member functions</h3>
 <div class="orderedlist"><ol type="1">
 <li>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2722201-bb"></a>seed() ;</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2422074-bb"></a>seed() ;</pre>
 <p>Requirements: *this is mutable.</p>
 <p>Effects: Resets the quasi-random number generator state to the one given by the default construction. Equivalent to u.seed(0). </p>
 <p>
  Throws: bad_alloc. </p>
 </li>
 <li>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2722219-bb"></a>seed(std::size_t init) ;</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2422092-bb"></a>seed(std::size_t init) ;</pre>
 <p>Requirements: *this is mutable.</p>
 <p>Effects: Effectively sets the quasi-random number generator state to the init-th vector in the s-dimensional quasi-random domain, where s == X::dimension(). </p>
 <pre class="programlisting">     X u, v;
@@ -130,13 +155,13 @@ In the following documentation <code class="computeroutput">X</code> denotes the
  Throws: bad_alloc. </p>
 </li>
 <li>
-<pre class="literallayout"><span class="type">result_type</span> <a name="id2721673-bb"></a><span class="bold"><strong>operator</strong></span>()() ;</pre>
+<pre class="literallayout"><span class="type">result_type</span> <a name="id2422122-bb"></a><span class="bold"><strong>operator</strong></span>()() ;</pre>
 <p>Requirements: *this is mutable.</p>
 <p>Returns: Returns a successive element of an s-dimensional (s = X::dimension()) vector at each invocation. When all elements are exhausted, X::operator() begins anew with the starting element of a subsequent s-dimensional vector.</p>
 <p>Throws: bad_alloc. </p>
 </li>
 <li>
-<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2721693-bb"></a>discard(std::size_t z) ;</pre>
+<pre class="literallayout"><span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id2422141-bb"></a>discard(std::size_t z) ;</pre>
 <p>Requirements: *this is mutable.</p>
 <p>Effects: Advances *this state as if z consecutive X::operator() invocations were executed. </p>
 <pre class="programlisting">     X u = v;
@@ -149,12 +174,6 @@ In the following documentation <code class="computeroutput">X</code> denotes the
 <p>
  Throws: bad_alloc. </p>
 </li>
-<li>
-<pre class="literallayout"><span class="type"></span> <a name="id2721722-bb"></a>BOOST_RANDOM_DETAIL_OSTREAM_OPERATOR(os, <a class="link" href="faure.html" title="Class template faure">faure</a>, f) ;</pre>Writes a <code class="computeroutput">faure</code> to a <code class="computeroutput">std::ostream</code>. </li>
-<li>
-<pre class="literallayout"><span class="type"></span> <a name="id2721753-bb"></a>BOOST_RANDOM_DETAIL_ISTREAM_OPERATOR(is, <a class="link" href="faure.html" title="Class template faure">faure</a>, f) ;</pre>Reads a <code class="computeroutput">faure</code> from a <code class="computeroutput">std::istream</code>. </li>
-<li>
-<pre class="literallayout"><span class="type"></span> <a name="id2721785-bb"></a>BOOST_RANDOM_DETAIL_EQUALITY_OPERATOR(<a class="link" href="faure.html" title="Class template faure">faure</a>, x, y) ;</pre>Returns true if the two generators will produce identical sequences. </li>
 </ol></div>
 </div>
 </div>
