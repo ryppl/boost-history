@@ -54,22 +54,22 @@ BOOST_AUTO_TEST_CASE(test_envp)
     env.insert(bp::environment_t::value_type("VAR2", "value2")); 
     env.insert(bp::environment_t::value_type("VAR3", "value3")); 
 
-    char **ep = bpd::environment_to_envp(env); 
+    std::pair<std::size_t, char**> ep = bpd::environment_to_envp(env); 
 
-    BOOST_REQUIRE(ep[0] != NULL); 
-    BOOST_REQUIRE_EQUAL(std::string(ep[0]), "VAR1=value1"); 
-    delete[] ep[0]; 
+    BOOST_REQUIRE(ep.second[0] != NULL); 
+    BOOST_REQUIRE_EQUAL(std::string(ep.second[0]), "VAR1=value1"); 
+    delete[] ep.second[0]; 
 
-    BOOST_REQUIRE(ep[1] != NULL); 
-    BOOST_REQUIRE_EQUAL(std::string(ep[1]), "VAR2=value2"); 
-    delete[] ep[1]; 
+    BOOST_REQUIRE(ep.second[1] != NULL); 
+    BOOST_REQUIRE_EQUAL(std::string(ep.second[1]), "VAR2=value2"); 
+    delete[] ep.second[1]; 
 
-    BOOST_REQUIRE(ep[2] != NULL); 
-    BOOST_REQUIRE_EQUAL(std::string(ep[2]), "VAR3=value3"); 
-    delete[] ep[2]; 
+    BOOST_REQUIRE(ep.second[2] != NULL); 
+    BOOST_REQUIRE_EQUAL(std::string(ep.second[2]), "VAR3=value3"); 
+    delete[] ep.second[2]; 
 
-    BOOST_REQUIRE(ep[3] == NULL); 
-    delete[] ep; 
+    BOOST_REQUIRE(ep.second[3] == NULL); 
+    delete[] ep.second; 
 } 
 
 BOOST_AUTO_TEST_CASE(test_envp_unsorted) 
@@ -78,18 +78,18 @@ BOOST_AUTO_TEST_CASE(test_envp_unsorted)
     env.insert(bp::environment_t::value_type("VAR2", "value2")); 
     env.insert(bp::environment_t::value_type("VAR1", "value1")); 
 
-    char **ep = bpd::environment_to_envp(env); 
+    std::pair<std::size_t, char**> ep = bpd::environment_to_envp(env); 
 
-    BOOST_REQUIRE(ep[0] != NULL); 
-    BOOST_REQUIRE_EQUAL(std::string(ep[0]), "VAR1=value1"); 
-    delete[] ep[0]; 
+    BOOST_REQUIRE(ep.second[0] != NULL); 
+    BOOST_REQUIRE_EQUAL(std::string(ep.second[0]), "VAR1=value1"); 
+    delete[] ep.second[0]; 
 
-    BOOST_REQUIRE(ep[1] != NULL); 
-    BOOST_REQUIRE_EQUAL(std::string(ep[1]), "VAR2=value2"); 
-    delete[] ep[1]; 
+    BOOST_REQUIRE(ep.second[1] != NULL); 
+    BOOST_REQUIRE_EQUAL(std::string(ep.second[1]), "VAR2=value2"); 
+    delete[] ep.second[1]; 
 
-    BOOST_REQUIRE(ep[2] == NULL); 
-    delete[] ep; 
+    BOOST_REQUIRE(ep.second[2] == NULL); 
+    delete[] ep.second; 
 } 
 #endif 
 

@@ -17,7 +17,9 @@ explicit butf ;
 alias bfs : /boost//filesystem : : : <link>shared:<source>/boost//system ; 
 explicit bfs ; 
 
-project : requirements <target-os>windows:<define>WIN32_LEAN_AND_MEAN ; 
+project : requirements 
+    <target-os>windows:<define>WIN32_LEAN_AND_MEAN 
+    <target-os>linux:<linkflags>-lpthread ; 
 
 exe helpers : util/helpers.cpp bfs ; 
 explicit helpers ; 
