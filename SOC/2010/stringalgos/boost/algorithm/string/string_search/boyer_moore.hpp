@@ -2,7 +2,7 @@
 #define BOOST_ALGORITHM_BOYER_MOORE_HPP
 
 #include <iterator>
-#include <allocators>
+#include <memory>
 #include <utility>
 #include <vector>
 #include <boost/range/begin.hpp>
@@ -10,24 +10,30 @@
 #include <boost/range/adaptor/reversed.hpp>
 #include <boost/range/algorithm/for_each.hpp>
 #include <boost/range/distance.hpp>
+#include <boost/range/category.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/static_assert.hpp>
 #include <map>
 #include <string>
 #include <boost/algorithm/string/finder.hpp>
+#include <boost/algorithm/string/detail/finder.hpp>
+
+#include <boost/unordered_map.hpp>
+#include <boost/functional/hash.hpp>
 
 namespace boost { namespace algorithm {
     struct boyer_moore
     {
-        typedef std::allocator<std::size_t> default_allocator_type;
 
-        template <class Finder, class ForwardIterator1T,class ForwardIterator2T,
-            class Comparator,class Allocator>
+        template <class Finder, class RandomAccessRange1T,class RandomAccessRange2T,
+            class ComparatorT,class AllocatorT>
         class algorithm
+            : public boost::algorithm::detail::finder_typedefs<
+                RandomAccessRange1T,RandomAccessRange2T,ComparatorT,AllocatorT>
         {
         public:
-            typedef ForwardIterator1T substring_iterator_type;
+            /*typedef ForwardIterator1T substring_iterator_type;
 	        typedef ForwardIterator2T string_iterator_type;
             typedef typename
                 std::iterator_traits<substring_iterator_type>::value_type substring_char_type;
@@ -35,7 +41,8 @@ namespace boost { namespace algorithm {
             typedef typename boost::iterator_range<substring_iterator_type> substring_range_type;
             typedef typename boost::iterator_range<string_iterator_type> string_range_type;
             typedef Comparator comparator_type;
-            typedef Allocator allocator_type;
+            typedef Allocator allocator_type;*/
+            std::string get_algorithm_name () const { return "Boyer-Moore"; }
         protected:
             algorithm () {
                 BOOST_STATIC_ASSERT((boost::is_same<substring_char_type,string_char_type>::value));
@@ -43,13 +50,13 @@ namespace boost { namespace algorithm {
 
             string_range_type find(string_iterator_type start)
             {
-                return find(start, std::iterator_traits<ForwardIterator2T>::iterator_category());
+                return find(start, string_iterator_category());
             }
 
             //Compute the two tables
             void on_substring_change()
             {
-                on_substring_change(std::iterator_traits<ForwardIterator1T>::iterator_category());
+                on_substring_change(substring_iterator_category());
             }
             //No precomputation to be done on the string
             inline void on_string_change()
@@ -131,16 +138,11 @@ namespace boost { namespace algorithm {
                             str_idx += substr_size_ - substr_idx;
                             substr_idx = substr_size_ - 1;
                         }
-                        else if (iter->second > substr_idx)
-                        {
-                            str_idx += iter->second;
-                            substr_idx = substr_size_ - 1;
-                            //str_idx += iter->second - substr_idx + substr_size_ - 1 - substr_idx;
-                            //substr_idx = substr_size_ - 1;
-                            //substr_idx = substr_size_ - 1 - iter->second;
-                            //str_idx += substr_size_ - 1 - substr_idx;
-                            //substr_idx = substr_size_ - 1;
-                        }
+                        //else if (iter->second > substr_idx)
+                        //{
+                        //    str_idx += iter->second;
+                        //    substr_idx = substr_size_ - 1;
+                        //}
                         else
                         {
                             assert(substr_size_ >= substr_idx);
@@ -153,13 +155,15 @@ namespace boost { namespace algorithm {
             }
 
             //!\todo Get a better data structure here (hash table?)
-            //!\todo Find a better way for custom allocators here
-            typedef typename std::map<substring_char_type, std::size_t,
-                std::less<substring_char_type>,
-                typename std::allocator<std::pair<const substring_char_type, std::size_t> >
+            //Maybe optimize for sizeof(substring_char_type)==1?
+            typedef typename boost::unordered_map<substring_char_type, std::size_t,
+                boost::hash<substring_char_type>, ComparatorT,
+                typename AllocatorT::template
+                    rebind<substring_char_type>::other
             > table1_type;
-
             table1_type table1;
+            
+            //std::vector<std::pair<substring_char_type, std::size_t> > table1;
 
             std::size_t substr_size_;
 

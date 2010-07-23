@@ -20,6 +20,7 @@
 #include <boost/range/end.hpp>
 #include <boost/range/empty.hpp>
 #include <boost/range/as_literal.hpp>
+#include <boost/range/category.hpp>
 
 #include <boost/iterator/iterator_traits.hpp>
 
@@ -63,6 +64,9 @@ namespace boost { namespace algorithm { namespace detail {
             string_range_type;
         typedef typename boost::iterator_difference<string_iterator_type>::type
             string_difference_type;
+    protected:
+        typedef typename boost::range_category<substring_type>::type substring_iterator_category;
+        typedef typename boost::range_category<string_type>::type string_iterator_category;
     };
 
 

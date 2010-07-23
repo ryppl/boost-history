@@ -8,38 +8,44 @@
 #include <boost/algorithm/string/finder.hpp>
 #include <string>
 #include <vector>
-#include <allocators>
+#include <memory>
+#include <boost/algorithm/string/detail/finder.hpp>
 
 namespace boost { namespace algorithm {
     struct knuth_morris_pratt
     {
-        typedef std::allocator<std::size_t> default_allocator_type;
-        template <class Finder,class RandomAccessIterator1T,
-            class RandomAccessIterator2T,class Comparator,class Allocator>
+
+        template <class Finder,class RandomAccessRange1T,
+            class RandomAccessRange2T,class ComparatorT,class AllocatorT>
         class algorithm
+            : public boost::algorithm::detail::finder_typedefs<
+                RandomAccessRange1T,RandomAccessRange2T,ComparatorT,AllocatorT>
         {
         public:
-            typedef RandomAccessIterator1T substring_iterator_type;
+            /*typedef RandomAccessIterator1T substring_iterator_type;
             typedef RandomAccessIterator2T string_iterator_type;
             typedef boost::iterator_range<RandomAccessIterator1T> substring_range_type;
             typedef boost::iterator_range<RandomAccessIterator2T> string_range_type;
-            typedef Comparator comparator_type;
+            typedef Comparator comparator_type;*/
+            std::string get_algorithm_name () const { return "Knuth-Morris-Pratt"; }
         protected:
             string_range_type find(string_iterator_type start)
             {
-                return find(start, std::iterator_traits<RandomAccessIterator2T>::iterator_category());
+                return find(start, string_iterator_category());
             }
 
             void on_substring_change()
             {
-                on_substring_change(std::iterator_traits<RandomAccessIterator1T>::iterator_category());
+                on_substring_change(substring_iterator_category());
             }
 
             void on_string_change()
             {
             }
         private:
-            std::vector<std::size_t, Allocator> failure_func;
+
+            std::vector<std::size_t,
+                typename AllocatorT::template rebind<std::size_t>::other > failure_func;
 
             string_range_type find(string_iterator_type start, std::random_access_iterator_tag)
             {

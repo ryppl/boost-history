@@ -67,9 +67,9 @@ int main ()
                                       // then makes it uppercase
     
     // Changes have occured in the internal copy of the string from the outside, the finder
-    // has no way of knowing. Call refresh() in order for the finder to perform any computation
-    // required on the modified string
-    f2.refresh();
+    // has no way of knowing. Call use_internal_string() in order for the finder to
+    // obtain a new range from its internal string
+    f2.use_internal_string();
 
     //turns all occurences of letter e into uppercase
     f2.set_substring(L"e");
@@ -79,7 +79,8 @@ int main ()
         boost::to_upper(range);
     }
 
-    //display the internal copy of the text
+    //display the internal copy of the text, after updating the internal range
+    f2.use_internal_string();
     boost::copy(f2.get_string_range(), std::ostream_iterator<wchar_t,wchar_t>(std::wcout));
     std::wcout << std::endl;
 

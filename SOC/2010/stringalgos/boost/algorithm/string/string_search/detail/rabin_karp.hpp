@@ -4,13 +4,26 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/type_traits/make_unsigned.hpp>
+#include <boost/mpl/void.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/range/iterator.hpp>
+#include <boost/range/category.hpp>
 #include <boost/call_traits.hpp>
 #include <iterator>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
+#include <cassert>
+#include <limits>
+
+//!\todo add proper overflow assertions here. also try to find if these aren't already in boost
+#define BOOST_ALGORITHM_DETAIL_ASSERTED_ADD(a, b, T) \
+    assert((boost::uintmax_t)(a)+(boost::uintmax_t)(b) <= std::numeric_limits<T>::max()),((a)+(b))
+#define BOOST_ALGORITHM_DETAIL_ASSERTED_SUBSTRACT(a, b, T) \
+    assert((boost::uintmax_t)(a)-(boost::uintmax_t)(b) <= std::numeric_limits<T>::max()),((a)-(b))
+#define BOOST_ALGORITHM_DETAIL_ASSERTED_MULTIPLY(a, b, T) \
+    assert((boost::uintmax_t)(a)*(boost::uintmax_t)(b) <= std::numeric_limits<T>::max()),((a)*(b))
+
 
 namespace boost { namespace algorithm { namespace detail {
 
@@ -34,69 +47,74 @@ namespace boost { namespace algorithm { namespace detail {
         return ret;
     }
 
-    template <class Finder, class ForwardIterator1T,class ForwardIterator2T, class HashType,
+    template <class Finder, class Range1T,class Range2T, class HashType,
         HashType FirstBase, HashType FirstModulo,
         HashType SecondBase, HashType SecondModulo, class Enable = void>
     class rabin_karp_algorithm;
 
     // Implementation of Rabin Karp for text supporting Input Iterators
-    template <class Finder, class ForwardIterator1T,class ForwardIterator2T, class HashType,
+    template <class Finder, class Range1T,class Range2T, class HashType,
         HashType FirstBase, HashType FirstModulo,
         HashType SecondBase, HashType SecondModulo>
     class rabin_karp_algorithm<Finder,
-        ForwardIterator1T, ForwardIterator2T, HashType,
+        Range1T, Range2T, HashType,
         FirstBase, FirstModulo, SecondBase, SecondModulo,
         typename boost::enable_if<
             typename boost::mpl::and_<
                 typename boost::is_base_of<std::input_iterator_tag,
-                    typename std::iterator_traits<ForwardIterator2T>::iterator_category>,
+                    typename boost::range_category<Range2T>::type>,
                 typename boost::mpl::not_<typename boost::is_base_of<std::forward_iterator_tag,
-                    typename std::iterator_traits<ForwardIterator2T>::iterator_category> >
+                    typename boost::range_category<Range2T>::type> >
             >
         >::type
     >
     ;
 
     // Implementation of Rabin Karp for text supporting Forward Iterators
-    template <class Finder, class ForwardIterator1T,class ForwardIterator2T, class HashType,
+    template <class Finder, class Range1T,class ForwardRange2T, class HashType,
         HashType FirstBase, HashType FirstModulo,
         HashType SecondBase, HashType SecondModulo>
     class rabin_karp_algorithm<Finder,
-        ForwardIterator1T, ForwardIterator2T, HashType,
+        Range1T, ForwardRange2T, HashType,
         FirstBase, FirstModulo, SecondBase, SecondModulo,
         typename boost::enable_if<
             typename boost::mpl::and_<
                 typename boost::is_base_of<std::forward_iterator_tag,
-                    typename std::iterator_traits<ForwardIterator2T>::iterator_category>,
+                    typename boost::range_category<ForwardRange2T>::type>,
                 typename boost::mpl::not_<typename boost::is_base_of<std::random_access_iterator_tag,
-                    typename std::iterator_traits<ForwardIterator2T>::iterator_category> >
+                    typename boost::range_category<ForwardRange2T>::type> >
             >
         >::type
     >
     ;
 
     //Implementation of Rabin Karp for text supporting Random Access Iterators
-    template <class Finder, class ForwardIterator1T,class ForwardIterator2T, class HashType,
+    template <class Finder, class Range1T,class RandomAccessRange2T, class HashType,
         HashType FirstBase, HashType FirstModulo,
         HashType SecondBase, HashType SecondModulo>
     class rabin_karp_algorithm<
-        Finder, ForwardIterator1T, ForwardIterator2T, HashType,
+        Finder, Range1T, RandomAccessRange2T, HashType,
         FirstBase, FirstModulo, SecondBase, SecondModulo,
         typename boost::enable_if<
             typename boost::is_base_of<
                 std::random_access_iterator_tag,
-                typename std::iterator_traits<ForwardIterator2T>::iterator_category
+                typename boost::range_category<RandomAccessRange2T>::type
             >
         >::type
     >
+    //!\todo this generates possibly invalid allocator_type typedefs, although this is internally not relevant
+    //!     because rabin_karp doesn't need an allocator. however, this may be nasty externally
+    //!     possibly fix, although it's minor.
+    : public boost::algorithm::detail::finder_typedefs<
+        Range1T,RandomAccessRange2T,boost::algorithm::is_equal,std::allocator<std::size_t> >
     {
     public:
-        typedef ForwardIterator1T substring_iterator_type;
-	    typedef ForwardIterator2T string_iterator_type;
+        /*typedef ForwardRange1T substring_iterator_type;
+	    typedef ForwardRange2T string_iterator_type;
         typedef typename std::iterator_traits<substring_iterator_type>::value_type substring_char_type;
         typedef typename std::iterator_traits<string_iterator_type>::value_type string_char_type;
         typedef typename boost::iterator_range<substring_iterator_type> substring_range_type;
-        typedef typename boost::iterator_range<string_iterator_type> string_range_type;
+        typedef typename boost::iterator_range<string_iterator_type> string_range_type;*/
     protected:
 
         rabin_karp_algorithm() :
@@ -106,7 +124,7 @@ namespace boost { namespace algorithm { namespace detail {
                  first_inverse_(0), second_inverse_(0), string_size_(0), substring_size_(0), string_computed_upto_(0)
              { }
 
-        //!\todo this the right name?
+        //!\todo this the right name? the right way to do it?
         template <class T>
         inline HashType integer_promotion(T i)
         { return static_cast<HashType>(static_cast<boost::make_unsigned<T>::type>(i)); }
@@ -120,7 +138,7 @@ namespace boost { namespace algorithm { namespace detail {
             std::size_t old_substring_size = substring_size_;
 
             substring_size_ = 0;
-            for (ForwardIterator1T it = boost::begin(substr);
+            for (substring_iterator_type it = boost::begin(substr);
                 it != boost::end(substr); ++it, ++substring_size_)
             {
                 first = (first * FirstBase + integer_promotion(*it) ) % FirstModulo;
@@ -147,7 +165,7 @@ namespace boost { namespace algorithm { namespace detail {
 
             HashType first = static_cast<HashType>(0), second = static_cast<HashType>(0);
             std::size_t computed = 0;
-            for (ForwardIterator2T it = boost::begin(str);
+            for (string_iterator_type it = boost::begin(str);
                 it != boost::end(str) && computed < substring_size_;
                 ++it, ++computed)
             {
@@ -229,7 +247,9 @@ namespace boost { namespace algorithm { namespace detail {
             return boost::make_tuple(first, second);
         }*/
 
-        inline void roll_string_hash()
+        //!\todo compatible force inline? __attribute__((force_inline)) in GCC
+        //inline void roll_string_hash()
+        __forceinline void roll_string_hash()
         {
             string_range_type const &str = static_cast<Finder*>(this)->get_string_range();
 
@@ -242,15 +262,28 @@ namespace boost { namespace algorithm { namespace detail {
                     boost::begin(str)[string_computed_upto_]
             ));
             
-            first_string_hash_current_ = mod(
+            /*first_string_hash_current_ = mod(
                     mod(FirstBase * first_string_hash_current_ + add,FirstModulo) +
                     mod(first_inverse_ * remove,FirstModulo),
+                FirstModulo);*/
+
+            //In order to not overflow: (M1-1)*b1 + X + (M1-1)*X <= MAX(HashType)
+            first_string_hash_current_ = mod(
+                    FirstBase * first_string_hash_current_ + add +
+                    first_inverse_ * remove,
                 FirstModulo);
 
-            second_string_hash_current_ = mod(
+            /*second_string_hash_current_ = mod(
                 mod(SecondBase * second_string_hash_current_ + add,SecondModulo) +
                 mod(second_inverse_ * remove,SecondModulo),
                 SecondModulo);
+                */
+            //In order to not overflow: (M2-1)*b2 + X + (M2-1)*X <= MAX(HashType)
+            second_string_hash_current_ = mod(
+                SecondBase * second_string_hash_current_ + add +
+                second_inverse_ * remove,
+                SecondModulo);
+
             ++string_computed_upto_;
         }
 

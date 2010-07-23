@@ -12,10 +12,13 @@
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 #include <string>
+#include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/finder.hpp>
-
-
+#include <boost/algorithm/string/detail/finder.hpp>
 #include <boost/algorithm/string/string_search/detail/rabin_karp.hpp>
+#include <cassert>
+#include <limits>
+#include <boost/type_traits/is_same.hpp>
 
 namespace boost { namespace algorithm {
 
@@ -33,31 +36,51 @@ namespace boost { namespace algorithm {
         HashType SecondBase, HashType SecondModulo>
     struct rabin_karp_algorithm
     {
-        typedef boost::mpl::void_ default_allocator_type;
 
-        template <class Finder, class Iterator1T, class Iterator2T, class ComparatorT, class AllocatorT>
+        template <class Finder, class Range1T, class Range2T, class ComparatorT, class AllocatorT>
         class algorithm;
 
-        template <class Finder, class Iterator1T, class Iterator2T, class AllocatorT>
-        class algorithm<Finder, Iterator1T, Iterator2T, boost::algorithm::is_equal, AllocatorT>
+        template <class Finder, class Range1T, class Range2T, class AllocatorT>
+        class algorithm<Finder, Range1T, Range2T, boost::algorithm::is_equal, AllocatorT>
             : public ::boost::algorithm::detail::rabin_karp_algorithm<Finder,
-                Iterator1T, Iterator2T, HashType,
-                FirstBase, FirstModulo, SecondBase, SecondModulo>
+                Range1T, Range2T, HashType, FirstBase, FirstModulo, SecondBase, SecondModulo>
         {
+        public:
+            std::string get_algorithm_name () const
+            { return "Rabin-Karp (" + boost::lexical_cast<std::string>(sizeof(HashType)) + ")"; }
 		protected:
             //construct the algorithm given iterator ranges for the substring and the string
             algorithm () {
                 //!\todo add more assertions here
-                BOOST_STATIC_ASSERT(
-                    sizeof(boost::iterator_value<Iterator1T>::type)*2 <= sizeof(HashType)
-                );
+                BOOST_STATIC_ASSERT((
+                    sizeof(boost::range_value<Range1T>::type)*2 <= sizeof(HashType)
+                ));
+                BOOST_STATIC_ASSERT(( boost::is_same<substring_char_type,string_char_type>::value ));
+                assert_overflow(FirstBase, FirstModulo);
+                assert_overflow(SecondBase, SecondModulo);
             }
-	
+        private:
+            inline void assert_overflow(HashType B, HashType M)
+            {
+                //!\todo fix this
+                //char_range_size = CHAR_MAX-CHAR_MIN+1
+                /*static const boost::uintmax_t char_range_size =
+                    BOOST_ALGORITHM_DETAIL_ASSERTED_ADD(BOOST_ALGORITHM_DETAIL_ASSERTED_SUBSTRACT(
+                    (boost::uintmax_t)std::numeric_limits<substring_char_type>::max(),
+                    (boost::uintmax_t)std::numeric_limits<substring_char_type>::min(), HashType
+                    ), 1, HashType);
+                //(M-1)*b + X + (M1-1)*X <= MAX(HashType)
+                BOOST_ALGORITHM_DETAIL_ASSERTED_ADD(
+                    BOOST_ALGORITHM_DETAIL_ASSERTED_ADD(
+                        BOOST_ALGORITHM_DETAIL_ASSERTED_MULTIPLY(M-1, B, HashType), char_range_size, HashType),
+                    BOOST_ALGORITHM_DETAIL_ASSERTED_MULTIPLY(M-1,char_range_size, HashType), HashType );*/
+            }
         };
     };
 
     //1/3732152659 odds of collision. useful with char
-    typedef rabin_karp_algorithm<boost::uint32_t,257,64433,277,57923> rabin_karp32;
+    //!\todo replace with old one
+    typedef rabin_karp_algorithm<boost::uint_fast32_t,257,64433,277,57923> rabin_karp32;
     //1/150167080229379589 odds of collision. useful with wchar_t
     typedef rabin_karp_algorithm<boost::uint64_t,337515847,373587883,255150899,401959183> rabin_karp64;
 

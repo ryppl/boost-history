@@ -244,7 +244,7 @@ BOOST_TEST_CASE_TEMPLATE_FUNCTION(test_finders, Algorithm)
 #   endif
     
     ////////////////////////////////////////////////////
-    //Testing correctness of various input data on the algorithm and refresh()
+    //Testing correctness of various input data on the algorithm
     ////////////////////////////////////////////////////
     //f2.set_substring(
 
@@ -607,6 +607,7 @@ boost::unit_test::test_suite* init_unit_test_suite( int argc, char* argv[] )
         boost::algorithm::boyer_moore,
         boost::algorithm::suffix_array_search
     > algorithm_list;
+
     boost::unit_test::framework::master_test_suite().add(
         BOOST_TEST_CASE_TEMPLATE(test_finders, algorithm_list)
     );

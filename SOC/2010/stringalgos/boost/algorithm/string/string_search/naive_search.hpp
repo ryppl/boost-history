@@ -8,27 +8,31 @@
 #include <boost/range/end.hpp>
 #include <string>
 #include <boost/algorithm/string/finder.hpp>
+#include <boost/algorithm/string/detail/finder.hpp>
 
 namespace boost { namespace algorithm {
     //! \todo Copyable
 	struct naive_search
 	{
-        typedef boost::mpl::void_ default_allocator_type;
 
-		template <class Finder, class Iterator1T, class Iterator2T, class ComparatorT, class AllocatorT>
+		template <class Finder, class ForwardRange1T, class ForwardRange2T, class ComparatorT, class AllocatorT>
         struct algorithm
+            : public boost::algorithm::detail::finder_typedefs<
+                ForwardRange1T,ForwardRange2T,ComparatorT,AllocatorT>
 		{
+        public:
+            std::string get_algorithm_name () const { return "Naive search"; }
 		protected:
             algorithm () { }
 
 
-			typename boost::iterator_range<Iterator2T> find(Iterator2T start)
+			string_range_type find(string_iterator_type start)
 			{
-                typedef typename Finder::string_iterator_type string_iterator_type;
+                /*typedef typename Finder::string_iterator_type string_iterator_type;
                 typedef typename Finder::substring_iterator_type substring_iterator_type;
                 typedef typename Finder::substring_range_type substring_range_type;
                 typedef typename Finder::string_range_type string_range_type;
-                typedef typename Finder::comparator_type comparator_type;
+                typedef typename Finder::comparator_type comparator_type;*/
                 string_range_type const &str = static_cast<Finder*>(this)->get_string_range();
                 substring_range_type const &substr = static_cast<Finder*>(this)->get_substring_range();
                 comparator_type comparator = static_cast<Finder*>(this)->get_comparator();
