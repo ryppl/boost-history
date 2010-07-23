@@ -103,9 +103,9 @@ struct ctz_helper<Mask,IndexingMask,ZeroCount,true>
             IndexingMask::offset + 1
         >,
         ZeroCount + 1,
-        ((IndexingMask::value & Mask::value) == 0)
-          &&
-        (IndexingMask::offset < bit_width< typename Mask::value_type >::value)
+       bool(((IndexingMask::value & Mask::value) == 0)
+         &&
+       bool(mpl::less< mpl::size_t< IndexingMask::offset > , mpl::size_t< bit_width< typename Mask::value_type >::value > >::type::value ))
     >
 { };
 
