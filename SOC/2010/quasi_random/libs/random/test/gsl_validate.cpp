@@ -89,7 +89,7 @@ void test_niederreiter_base2()
 }
 
 
-BOOST_AUTO_TEST_CASE( validate_sobol )
+BOOST_AUTO_TEST_CASE( gsl_validate_sobol )
 {
 #define UNIT_TEST_QRNG_VALIDATE_SOBOL(z, N, text) test_sobol<N>();
 
@@ -98,7 +98,7 @@ BOOST_AUTO_TEST_CASE( validate_sobol )
 #undef UNIT_TEST_QRNG_VALIDATE_SOBOL
 }
 
-BOOST_AUTO_TEST_CASE( validate_niederreiter_base2 )
+BOOST_AUTO_TEST_CASE( gsl_validate_niederreiter_base2 )
 {
 #define UNIT_TEST_QRNG_VALIDATE_NIEDERREITER_BASE2(z, N, text) test_niederreiter_base2<N>();
 
