@@ -14,7 +14,6 @@
 #include <boost/pool/pool.hpp>
 #include <boost/shared_array.hpp>
 #include <boost/random/uniform_real.hpp>
-#include <boost/utility/result_of.hpp>
 
 // The time required to compute the star discrepancy of a sequence of points
 // in a multidimensional unit cube is prohibitive and the best known upper
@@ -123,7 +122,7 @@ private:
 };
 
 
-// An s-dimensional table of values that are stored consecutively in the
+// An table of values that are stored consecutively in the
 // memory area pointed by the given pointer.
 // The table is strictly read-only.
 template<typename T>
@@ -657,12 +656,12 @@ d_star(T (&pt)[N][Dimension], T epsilon)
 // Accepts a pseudo-random number generator
 template<typename Engine, typename Distribution>
 inline typename detail::star_discrepancy<
-  typename boost::result_of<Distribution(Engine)>::type
+  typename Distribution::result_type
 >::bounds_t
 d_star(Engine& eng, Distribution d, std::size_t dimension, std::size_t n,
-    typename boost::result_of<Distribution(Engine)>::type epsilon)
+    typename Distribution::result_type epsilon)
 {
-  typedef typename boost::result_of<Distribution(Engine)>::type value_t;
+  typedef typename Distribution::result_type value_t;
   detail::star_discrepancy<value_t> discr(eng, d, dimension, n, epsilon);
   return discr.compute();
 }
@@ -670,10 +669,10 @@ d_star(Engine& eng, Distribution d, std::size_t dimension, std::size_t n,
 // Accepts a quasi-random number generator and distribution
 template<typename QEngine, typename Distribution>
 inline typename detail::star_discrepancy<
-  typename boost::result_of<Distribution(QEngine)>::type
+  typename Distribution::result_type
 >::bounds_t
 d_star(QEngine& q, Distribution d, std::size_t n,
-    typename boost::result_of<Distribution(QEngine)>::type epsilon)
+    typename Distribution::result_type epsilon)
 {
   return d_star(q, d, q.dimension(), n, epsilon);
 }

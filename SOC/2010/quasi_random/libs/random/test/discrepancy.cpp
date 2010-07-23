@@ -11,10 +11,6 @@
 
 #include <boost/random/mersenne_twister.hpp>
 
-#include <boost/random/detail/identity_distribution.hpp>
-
-#include <boost/utility/result_of.hpp>
-
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
 #include <boost/test/unit_test_log.hpp>
@@ -72,18 +68,16 @@ BOOST_AUTO_TEST_CASE( test_halton_discrepancy )
 }
 
 
-template<typename QEngine, typename Distribution, typename Bounds>
+template<typename QEngine, typename Bounds, typename T>
 inline void check_discrepancy(const char* name,
-    Distribution d,
-    std::size_t n_vectors,
-    typename boost::result_of<Distribution(QEngine)>::type epsilon,
+    std::size_t n_vectors, T epsilon,
     Bounds mersenne_twister_discrepancy)
 {
   QEngine q; // default-construct
 
   BOOST_TEST_MESSAGE( "Testing " << name << "[" << q.dimension() << "]" );
 
-  Bounds qrng_discrepancy = d_star(q, d, n_vectors, epsilon);
+  Bounds qrng_discrepancy = d_star(q, n_vectors, epsilon);
   BOOST_CHECK_LT( qrng_discrepancy.first, mersenne_twister_discrepancy.first );
   BOOST_CHECK_LE( qrng_discrepancy.second, mersenne_twister_discrepancy.second );
 }
@@ -105,25 +99,24 @@ inline void compare_qrng_discrepancy(std::size_t n_vectors, double eps)
   BOOST_REQUIRE( eps > 0 && eps < 1 );
   BOOST_TEST_MESSAGE( "Starting tests in dimension " << D << " with sample size " << n_vectors << ", epsilon=" << eps );
 
-  boost::uniform_real<value_t> u;
-
   // Compute the discrepancy of the Mersenne twister pseudo-random number generator
   bounds_t mt_discrepancy;
   {
     boost::mt19937 mt;
+    boost::uniform_real<value_t> u;
 
     BOOST_TEST_MESSAGE( "Computing discrepancy bounds for mt19937[" << D << "]" );
     mt_discrepancy = d_star(mt, u, D, n_vectors, eps);
   }
 
-#define UNIT_TEST_CHECK_QRNG_DISCREPANCY(N, U) \
-  check_discrepancy<N>(#N, U, n_vectors, eps, mt_discrepancy); \
+#define UNIT_TEST_CHECK_QRNG_DISCREPANCY(N) \
+  check_discrepancy<N>(#N, n_vectors, eps, mt_discrepancy); \
 /**/
 
   // Compare the discrepancy of quasi-random number generators against the Mersenne twister discrepancy
-  UNIT_TEST_CHECK_QRNG_DISCREPANCY(niederreiter_base2_t, u);
-  UNIT_TEST_CHECK_QRNG_DISCREPANCY(sobol_t, u);
-  UNIT_TEST_CHECK_QRNG_DISCREPANCY(faure_t, boost::random::detail::identity_distribution());
+  UNIT_TEST_CHECK_QRNG_DISCREPANCY(niederreiter_base2_t);
+  UNIT_TEST_CHECK_QRNG_DISCREPANCY(sobol_t);
+  UNIT_TEST_CHECK_QRNG_DISCREPANCY(faure_t);
 
 #undef UNIT_TEST_CHECK_QRNG_DISCREPANCY
 }
@@ -151,9 +144,9 @@ BOOST_AUTO_TEST_CASE( test_qrng_discrepancy )
   compare_qrng_discrepancy<5>(  100,    0.06  );
   compare_qrng_discrepancy<6>(   60,    0.08  );
   compare_qrng_discrepancy<7>(   60,    0.15  );
-  compare_qrng_discrepancy<8>(  100,    0.4   );
+  compare_qrng_discrepancy<8>(  3000,    0.3   );
   compare_qrng_discrepancy<9> (  60,    0.5   );
-  compare_qrng_discrepancy<10>(  80,    0.3   ); // mersenne twister has good discrepancy from dim 10. :-)
+  compare_qrng_discrepancy<10>(  80,    0.3   );
   compare_qrng_discrepancy<11>(  500,   0.4   );
   compare_qrng_discrepancy<12>(  500,   0.5   );
 

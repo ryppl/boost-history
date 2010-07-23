@@ -3,9 +3,8 @@
 // Boost Software License, Version 1.0. (See accompanying
 // file LICENSE-1.0 or http://www.boost.org/LICENSE-1.0)
 
-
-#include <boost/random/sobol.hpp>
 #include <boost/random/niederreiter_base2.hpp>
+#include <boost/random/sobol.hpp>
 #include <boost/random/faure.hpp>
 
 #include <boost/random/uniform_real.hpp>
@@ -17,7 +16,7 @@
 using namespace boost::gil;
 
 // Models a Unary Function
-template <typename Qrng, typename Distribution, typename P>   // Models PixelValueConcept
+template <typename QEngine, typename P>   // Models PixelValueConcept
 struct pixelnoise_fn {
   typedef point2<ptrdiff_t>    point_t;
 
@@ -33,7 +32,7 @@ struct pixelnoise_fn {
   point_t                       _img_size;
   std::vector<point_t>          _random_points;
 
-  static const int MAX_ITER=6000;        // max number of iterations
+  static const int MAX_ITER=20000;        // max number of iterations
 
   pixelnoise_fn() {}
   pixelnoise_fn(const point_t& sz, const value_type& in_color) : _pnt_color(in_color), _img_size(sz) { gen_random(); }
@@ -47,28 +46,17 @@ struct pixelnoise_fn {
 private:
   void gen_random()
   {
-    Qrng gen;
-    Distribution d;
+    QEngine gen;
+    boost::uniform_real<> d;
     for( int i = 0; i < MAX_ITER; ++i )
       _random_points.push_back( point_t( _img_size.x * d(gen), _img_size.y * d(gen) ) );
   }
 };
 
-// To be used in place of uniform_real, where scaling is not necessary
-template<typename T = double>
-struct identity_distribution
-{
-  typedef T result_type;
-  template<typename QRNG>
-  result_type operator()(QRNG& q) const
-  { return q(); }
-};
-
-
-template<typename Qrng, typename Distribution>
+template<typename QEngine>
 void output_image(const char* img_name)
 {
-  typedef pixelnoise_fn<Qrng, Distribution, rgb8_pixel_t> deref_t;
+  typedef pixelnoise_fn<QEngine, rgb8_pixel_t> deref_t;
   typedef typename deref_t::point_t  point_t;
   typedef virtual_2d_locator<deref_t,false> locator_t;
   typedef image_view<locator_t> my_virt_view_t;
@@ -83,8 +71,8 @@ void output_image(const char* img_name)
 
 int main()
 {
-  output_image<boost::sobol_4d, boost::uniform_real<> >("out-sobol.png");
-  output_image<boost::niederreiter_base2_4d, boost::uniform_real<> >("out-niederreiter_base2.png");
-  output_image<boost::faure_4d, identity_distribution<> >("out-faure.png");
+  output_image<boost::sobol_2d>("out-sobol.png");
+  output_image<boost::niederreiter_base2_2d>("out-niederreiter_base2.png");
+  output_image<boost::faure_2d>("out-faure.png");
   return 0;
 }

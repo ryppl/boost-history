@@ -3,8 +3,6 @@
 // Boost Software License, Version 1.0. (See accompanying
 // file LICENSE-1.0 or http://www.boost.org/LICENSE-1.0)
 
-#include "identity_distribution.hpp"
-
 #include <boost/random/niederreiter_base2.hpp>
 #include <boost/random/sobol.hpp>
 #include <boost/random/faure.hpp>
