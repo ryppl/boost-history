@@ -53,6 +53,11 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 // and a few lines of adapter code.
 #include <boost/itl/ptime.hpp> 
 
+// Prior to other includes for interval containers we define ...
+#define ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+// ... so all interval containers will use rightopen_intervals that
+// has static interval borders.
+
 #include <boost/itl/interval_map.hpp>
 
 using namespace std;
@@ -81,21 +86,21 @@ void boost_party()
 
     party.add( // add and element
       make_pair( 
-        interval<ptime>::rightopen(
+        rightopen_interval<ptime>(
           time_from_string("2008-05-20 19:30"), 
           time_from_string("2008-05-20 23:00")), 
         mary_harry));
 
     party += // element addition can also be done via operator +=
       make_pair( 
-        interval<ptime>::rightopen(
+        rightopen_interval<ptime>(
           time_from_string("2008-05-20 20:10"), 
           time_from_string("2008-05-21 00:00")), 
         diana_susan);
 
     party +=
       make_pair( 
-        interval<ptime>::rightopen(
+        rightopen_interval<ptime>(
           time_from_string("2008-05-20 22:15"), 
           time_from_string("2008-05-21 00:30")), 
         peter);
@@ -105,11 +110,10 @@ void boost_party()
     cout << "----- History of party guests -------------------------\n";
     while(it != party.end())
     {
-        interval<ptime> when = it->first;
+        rightopen_interval<ptime> when = it->first;
         // Who is at the party within the time interval 'when' ?
         GuestSetT who = (*it++).second;
-        cout << "[" << when.first() << " - " << when.upper() << ")"
-             << ": " << who << endl;
+		cout << when << ": " << who << endl;
     }
 
 }
@@ -128,11 +132,11 @@ int main()
 >> Interval Template Library: Sample boost_party.cpp <<
 -------------------------------------------------------
 ----- History of party guests -------------------------
-[2008-May-20 19:30:00 - 2008-May-20 20:10:00): Harry Mary
-[2008-May-20 20:10:00 - 2008-May-20 22:15:00): Diana Harry Mary Susan
-[2008-May-20 22:15:00 - 2008-May-20 23:00:00): Diana Harry Mary Peter Susan
-[2008-May-20 23:00:00 - 2008-May-21 00:00:00): Diana Peter Susan
-[2008-May-21 00:00:00 - 2008-May-21 00:30:00): Peter
+[2008-May-20 19:30:00, 2008-May-20 20:10:00): Harry Mary
+[2008-May-20 20:10:00, 2008-May-20 22:15:00): Diana Harry Mary Susan
+[2008-May-20 22:15:00, 2008-May-20 23:00:00): Diana Harry Mary Peter Susan
+[2008-May-20 23:00:00, 2008-May-21 00:00:00): Diana Peter Susan
+[2008-May-21 00:00:00, 2008-May-21 00:30:00): Peter
 -----------------------------------------------------------------------------*/
 //]
 

@@ -10,6 +10,12 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 +-----------------------------------------------------------------------------*/
 #include <stdio.h>
 #include <iostream>
+
+// Prior to other includes for interval containers we define ...
+#define ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+// ... so all interval containers will use rightopen_intervals that
+// has static interval borders.
+
 #include <boost/itl/type_traits/to_string.hpp>
 #include "../toytime.h"
 
@@ -121,7 +127,7 @@ public:
     // The domain type of intervals used by HospitalEpisodes is (toy)Time
     typedef Time ItvDomTD;
     // Type of the intervals used by HospitalEpisodes
-    typedef boost::itl::interval<Time> IntervalTD;
+    typedef rightopen_interval<Time> IntervalTD;
 
 public:
     // Construct an episode from interval and value
@@ -158,7 +164,7 @@ class DiagnosisEpisode : public HospitalEpisodes
 {
 public:
     DiagnosisEpisode(Time begin, Time end, const std::string& val)
-        : HospitalEpisodes(boost::itl::interval<Time>::rightopen(begin,end),val){}
+        : HospitalEpisodes(rightopen_interval<Time>(begin,end),val){}
 
     HospitalTypeDomain::DomainET type()const { return HospitalTypeDomain::diagnosis; }
 };
@@ -168,7 +174,7 @@ class WardEpisode : public HospitalEpisodes
 {
 public:
     WardEpisode(Time begin, Time end, const std::string& val)
-        : HospitalEpisodes(boost::itl::interval<Time>::rightopen(begin,end),val){}
+        : HospitalEpisodes(rightopen_interval<Time>(begin,end),val){}
 
     HospitalTypeDomain::DomainET type()const { return HospitalTypeDomain::ward; }
 };
@@ -213,10 +219,10 @@ void medical_file()
     HospitalProductHistory::iterator it = history.begin();
     while(it != history.end())
     {
-        interval<Time> when = (*it).first;
+        rightopen_interval<Time> when = (*it).first;
         HospitalEventTD what = (*it).second;
 
-        cout << when.as_string() << ": " << what.as_string() << endl;
+        cout << when << ": " << what.as_string() << endl;
         ++it;
     }
 }

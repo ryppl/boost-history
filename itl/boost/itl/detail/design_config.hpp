@@ -1,6 +1,6 @@
 /*-----------------------------------------------------------------------------+
 Author: Joachim Faulhaber
-Copyright (c) 2009-2009: Joachim Faulhaber
+Copyright (c) 2009-2010: Joachim Faulhaber
 +------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
@@ -15,7 +15,18 @@ by setting defines in this file.
 #ifndef  BOOST_ITL_DESIGN_CONFIG_HPP_JOFA_090214
 #define  BOOST_ITL_DESIGN_CONFIG_HPP_JOFA_090214
 
-//#define ITL_NEW_INTERVAL_IMPL
+// For an interim period, it will be possible to swith between the old and new 
+// implementation for intervals.
+#define ITL_NEW_INTERVAL_IMPL //JODO remove for the final release.
+
+// If this macro is defined, rightopen_interval with static interval borders
+// will be used as default for all interval containers. 
+// ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS should be defined in the application
+// before other includes from the ITL
+//#define ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+// If ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS is NOT defined, ITL uses intervals
+// with dynamic borders as default.
+
 
 //------------------------------------------------------------------------------
 // Auxiliary macros for denoting template signatures.
@@ -99,10 +110,10 @@ by setting defines in this file.
 
 
 //------------------------------------------------------------------------------
-//#define ITL_INTERVAL_DEFAULT itl::rightopen_interval
-//#define ITL_INTERVAL_DEFAULT itl::continuous_interval
+//CL #define ITL_INTERVAL_DEFAULT itl::rightopen_interval
+//CL #define ITL_INTERVAL_DEFAULT itl::continuous_interval
 
-#ifdef NEW_INTERVAL_IMPL
+#ifdef ITL_NEW_INTERVAL_IMPL
 #   define ITL_INTERVAL_DEFAULT itl::interval_type_of
 #else
 #   define ITL_INTERVAL_DEFAULT boost::itl::interval
@@ -110,9 +121,11 @@ by setting defines in this file.
 
 //------------------------------------------------------------------------------
 //JODO find proper solution here
-#ifdef NEW_INTERVAL_IMPL
-#   define ITL_discrt_INTERVAL_DEF itl::discrete_interval
-#   define ITL_contin_INTERVAL_DEF itl::continuous_interval
+#ifdef ITL_NEW_INTERVAL_IMPL
+//#   define ITL_discrt_INTERVAL_DEF itl::discrete_interval
+//#   define ITL_contin_INTERVAL_DEF itl::continuous_interval
+#   define ITL_discrt_INTERVAL_DEF itl::rightopen_interval
+#   define ITL_contin_INTERVAL_DEF itl::rightopen_interval
 #else
 #   define ITL_discrt_INTERVAL_DEF itl::interval
 #   define ITL_contin_INTERVAL_DEF itl::interval

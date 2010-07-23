@@ -254,7 +254,7 @@ template<class DomainT, ITL_COMPARE Compare, ITL_INTERVAL(ITL_COMPARE)  Interval
 typename interval_set<DomainT,Compare,Interval,Alloc>::iterator 
     interval_set<DomainT,Compare,Interval,Alloc>::add_(iterator prior_, const value_type& addend)
 {
-    if(itl::is_empty(addend)) 
+	if(boost::itl::is_empty(addend)) 
         return prior_;
 
     iterator insertion = this->_set.insert(prior_, addend);

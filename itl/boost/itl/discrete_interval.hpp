@@ -9,6 +9,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #define BOOST_ITL_DISCRETE_INTERVAL_HPP_JOFA_100403
 
 #include <boost/static_assert.hpp> 
+#include <boost/itl/type_traits/succ_pred.hpp>
 #include <boost/itl/type_traits/value_size.hpp>
 #include <boost/itl/type_traits/type_to_string.hpp>
 #include <boost/itl/type_traits/is_continuous.hpp>
@@ -51,7 +52,7 @@ public:
     {
         BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
         BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
-        BOOST_STATIC_ASSERT((itl::is_continuous<DomainT>::value)); //JODO
+        //JODO BOOST_STATIC_ASSERT((itl::is_continuous<DomainT>::value)); //JODO
     }
 
     /** Interval from <tt>low</tt> to <tt>up</tt> with bounds <tt>bounds</tt> */
@@ -62,20 +63,27 @@ public:
     {
         BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
         BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
-        JODO BOOST_STATIC_ASSERT((!itl::is_continuous<DomainT>::value));
+        //JODO BOOST_STATIC_ASSERT((!itl::is_continuous<DomainT>::value));
     }
 
     domain_type     lower()const { return _lwb; }
     domain_type     upper()const { return _upb; }
     interval_bounds bounds()const{ return _bounds; }
 
-    domain_type first()const{ return _lwb; }
+    domain_type first()const
+	{ 
+		return _bounds.left().bits()==2 ? _lwb : succ(_lwb);
+	}
 
     DomainT last()const
     {
-        BOOST_STATIC_ASSERT((!itl::is_continuous<DomainT>::value));
-        return pred(_upb);
+		return _bounds.right().bits()==1 ? _upb : pred(_upb);
     }
+
+	static discrete_interval open     (const DomainT& lo, const DomainT& up){ return discrete_interval(lo, up, interval_bounds::open());      }
+	static discrete_interval rightopen(const DomainT& lo, const DomainT& up){ return discrete_interval(lo, up, interval_bounds::right_open());}
+	static discrete_interval leftopen (const DomainT& lo, const DomainT& up){ return discrete_interval(lo, up, interval_bounds::left_open()); }
+	static discrete_interval closed   (const DomainT& lo, const DomainT& up){ return discrete_interval(lo, up, interval_bounds::closed());    }
 
 private:
     domain_type     _lwb;

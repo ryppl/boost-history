@@ -403,6 +403,20 @@ namespace boost{namespace itl
         }
     };
 
+    template <class NumericT, ITL_COMPARE Compare> 
+    struct Calibrater<itl::list< rightopen_interval<NumericT,Compare> >, RandomGentor>
+    {
+        static void apply(RandomGentor< itl::list< rightopen_interval<NumericT,Compare> > >& gentor) 
+        {
+            gentor.setRangeOfSampleSize(GentorProfileSgl::it()->range_ContainerSize());
+            ItvGentorT<NumericT, rightopen_interval<NumericT,Compare> >* itvGentor  
+                = new ItvGentorT<NumericT, rightopen_interval<NumericT,Compare> >;
+            itvGentor->setRange(GentorProfileSgl_numeric_range<NumericT>::get());
+            itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
+            gentor.setDomainGentor(itvGentor);
+        }
+    };
+
     template <class NumericT> 
     struct Calibrater<itl::list<NumericT>, RandomGentor>
     {

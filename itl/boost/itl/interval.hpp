@@ -548,20 +548,20 @@ struct discrete_interval_
     static typename IntervalT::size_type 
         cardinality(const IntervalT& x) 
     { 
-        return x.empty()? itl::neutron<typename IntervalT::size_type>::value() 
-                        : static_cast<typename IntervalT::size_type>(succ(x.last() - x.first()));
+        return itl::is_empty(x)? itl::neutron<typename IntervalT::size_type>::value() 
+                        : static_cast<typename IntervalT::size_type>(succ(last(x) - first(x)));
     }
 
     static typename IntervalT::difference_type length(const IntervalT& x) 
     {
-        return x.empty() ? itl::neutron<typename IntervalT::difference_type>::value() 
-                         : static_cast<typename IntervalT::difference_type>(succ(x.last() - x.first())); 
+        return itl::is_empty(x) ? itl::neutron<typename IntervalT::difference_type>::value() 
+                         : static_cast<typename IntervalT::difference_type>(succ(last(x) - first(x))); 
     }
 
     static typename IntervalT::difference_type 
         distance(const IntervalT& x1, const IntervalT& x2)
     {
-        if(x1.empty() || x2.empty())
+        if(itl::is_empty(x1) || itl::is_empty(x2))
             return itl::neutron<typename IntervalT::difference_type>::value();
         else if(IntervalT::domain_less(x1.last(), x2.first()))
             return static_cast<typename IntervalT::difference_type>(pred(x2.first() - x1.last()));

@@ -380,7 +380,7 @@ typename interval_bitset<DomainT,BitSetT,Compare,Interval,Alloc>::size_type
 {
     size_type cardinality = 0;
     ITL_const_FORALL(typename interval_bitmap_type, it_, _map)
-        cardinality += (it_->second.cardinality() * it_->first.cardinality());
+		cardinality += (it_->second.cardinality() * itl::cardinality(it_->first));
     return cardinality; 
 }
 

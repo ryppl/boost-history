@@ -30,6 +30,32 @@ template <class Type> struct has_asymmetric_bounds
     BOOST_STATIC_CONSTANT(bool, value = false); 
 };
 
+template <class Type> struct is_static_rightopen
+{ 
+    typedef is_static_rightopen<Type> type;
+    BOOST_STATIC_CONSTANT(bool, value = false); 
+};
+
+template <class Type> struct is_static_leftopen
+{ 
+    typedef is_static_leftopen<Type> type;
+    BOOST_STATIC_CONSTANT(bool, value = false); 
+};
+
+template <class Type> struct is_static_open
+{ 
+    typedef is_static_leftopen<Type> type;
+    BOOST_STATIC_CONSTANT(bool, value = false); 
+};
+
+template <class Type> struct is_static_closed
+{ 
+    typedef is_static_leftopen<Type> type;
+    BOOST_STATIC_CONSTANT(bool, value = false); 
+};
+
+
+
 }} // namespace boost itl
 
 #endif

@@ -124,7 +124,7 @@ private:
         next_bit();
         if(_on_bit == past)
         {   // The current bitset passed the end
-            if(_reptator < pred(_saltator->first.length()))
+			if(_reptator < pred(itl::length(_saltator->first)))
             {
                 ++_reptator; 
                 _on_bit = ante;
@@ -156,7 +156,7 @@ private:
                 --_saltator;
                 // NOW: decrement insecure, because _saltator can (finally) be 
                 // begin here. increment and dereference are secure.
-                _reptator = _saltator->first.length();
+				_reptator = itl::length(_saltator->first);
                 --_reptator;
                 _on_bit = past;
             }
@@ -204,7 +204,7 @@ private:
         if(_on_bit == beyond)
         {
             --_saltator;
-            _reptator = _saltator->first.length();
+			_reptator = itl::length(_saltator->first);
             --_reptator;
             _on_bit   = Proceed::last_bit(_saltator->second.word());
         }
@@ -461,7 +461,7 @@ struct proceed<IteratorT,true>
     { return forward<word_type,digits>::prev_bit(value, cur_pos); }
 
     static difference_type inter_value(difference_type reptator, const interval_type inter_val)
-    { return inter_val.first() + reptator; }
+    { return first(inter_val) + reptator; }
 
     static difference_type inter_base(const iterator& iter)
     { return neutron<difference_type>::value(); }
@@ -498,7 +498,7 @@ struct proceed<IteratorT,false>
     { return forward<word_type,digits>::next_bit(value, cur_pos); }
 
     static difference_type inter_value(difference_type reptator, const interval_type inter_val)
-    { return inter_val.last() - reptator; }
+    { return last(inter_val) - reptator; }
 };
 
 #ifdef BOOST_MSVC

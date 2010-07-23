@@ -17,6 +17,14 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 //[example_interval_container
 #include <iostream>
 
+// Prior to other includes for interval containers we define ...
+#define ITL_USE_STATIC_INTERVAL_BORDER_DEFAULTS
+// ... so all interval containers will use rightopen_intervals that
+// has static interval borders.
+
+
+#include <boost/itl/interval_bounds.hpp> //JODO static bounded intervals should be independend of interval_bounds
+#include <boost/itl/rightopen_interval.hpp>
 #include <boost/itl/interval_set.hpp>
 #include <boost/itl/separate_interval_set.hpp>
 #include <boost/itl/split_interval_set.hpp>
@@ -28,10 +36,10 @@ using namespace boost::itl;
 
 void interval_container_basics()
 {
-    interval<Time> night_and_day = interval<Time>::rightopen(Time(monday,   20,00), Time(tuesday,  20,00));
-    interval<Time> day_and_night = interval<Time>::rightopen(Time(tuesday,   7,00), Time(wednesday, 7,00));
-    interval<Time> next_morning  = interval<Time>::rightopen(Time(wednesday, 7,00), Time(wednesday,10,00));
-    interval<Time> next_evening  = interval<Time>::rightopen(Time(wednesday,18,00), Time(wednesday,21,00));
+    rightopen_interval<Time> night_and_day = rightopen_interval<Time>(Time(monday,   20,00), Time(tuesday,  20,00));
+    rightopen_interval<Time> day_and_night = rightopen_interval<Time>(Time(tuesday,   7,00), Time(wednesday, 7,00));
+    rightopen_interval<Time> next_morning  = rightopen_interval<Time>(Time(wednesday, 7,00), Time(wednesday,10,00));
+    rightopen_interval<Time> next_evening  = rightopen_interval<Time>(Time(wednesday,18,00), Time(wednesday,21,00));
 
     // An interval set of type interval_set joins intervals that that overlap or touch each other.
     interval_set<Time> joinedTimes;

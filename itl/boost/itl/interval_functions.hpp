@@ -9,7 +9,9 @@ Copyright (c) 2007-2010: Joachim Faulhaber
 #define BOOST_ITL_INTERVAL_FUNCTIONS_HPP_JOFA_100323
 
 #include <boost/utility/enable_if.hpp>
+#include <boost/mpl/and.hpp>
 #include <boost/itl/detail/design_config.hpp>
+#include <boost/itl/type_traits/is_discrete.hpp>
 #include <boost/itl/type_traits/is_asymmetric_interval.hpp>
 #include <boost/itl/type_traits/is_universal_interval.hpp>
 #include <boost/itl/type_traits/is_discrete_interval.hpp>
@@ -90,11 +92,12 @@ struct construct_interval<boost::itl::continuous_interval<DomainT,Compare> >
 
 
 //- construct(3) ---------------------------------------------------------------
+
 template<class IntervalT>
 typename boost::enable_if<is_asymmetric_interval<IntervalT>, IntervalT>::type
 construct(const typename IntervalT::domain_type& low, //JODO Parameter passing DomainP
           const typename IntervalT::domain_type& up,
-          itl::bound_type bounds)
+          interval_bounds bounds = interval_bounds::right_open())
 {
     return IntervalT(low, up);
 }
@@ -103,7 +106,7 @@ template<class IntervalT>
 typename boost::enable_if<is_universal_interval<IntervalT>, IntervalT>::type
 construct(const typename IntervalT::domain_type& low,
           const typename IntervalT::domain_type& up,
-          interval_bounds bounds)
+          interval_bounds bounds = interval_bounds::right_open())
 {
     return construct_interval<IntervalT>::apply(low, up, bounds);
 }
@@ -112,7 +115,7 @@ template<class IntervalT>
 typename boost::enable_if<is_discrete_interval<IntervalT>, IntervalT>::type
 construct(const typename IntervalT::domain_type& low,
           const typename IntervalT::domain_type& up,
-          interval_bounds bounds)
+		  interval_bounds bounds = interval_bounds::right_open() )
 {
     return construct_interval<IntervalT>::apply(low, up, bounds);
 }
@@ -121,7 +124,7 @@ template<class IntervalT>
 typename boost::enable_if<is_continuous_interval<IntervalT>, IntervalT>::type
 construct(const typename IntervalT::domain_type& low,
           const typename IntervalT::domain_type& up,
-          interval_bounds bounds)
+          interval_bounds bounds = interval_bounds::right_open())
 {
     return construct_interval<IntervalT>::apply(low, up, bounds);
 }
@@ -148,6 +151,48 @@ construct(const typename IntervalT::bounded_domain_type& low,
 //= Selection
 //==============================================================================
 
+//- first ----------------------------------------------------------------------
+template<class IntervalT>
+inline typename 
+    boost::enable_if<is_static_rightopen<IntervalT>, 
+                     typename IntervalT::domain_type>::type
+first(const IntervalT& object)
+{ 
+	return object.lower();
+}
+
+template<class IntervalT>
+inline typename 
+    boost::enable_if<is_discrete_interval<IntervalT>, 
+                     typename IntervalT::domain_type>::type
+first(const IntervalT& object)
+{ 
+	return is_left_closed(object.bounds()) ? 
+		object.lower() : succ(object.lower());
+}
+
+//- last -----------------------------------------------------------------------
+template<class IntervalT>
+inline typename 
+boost::enable_if<mpl::and_<is_static_rightopen<IntervalT>,
+                           is_discrete<typename IntervalT::domain_type> >,
+                 typename IntervalT::domain_type>::type
+last(const IntervalT& object)
+{ 
+	return pred(object.upper());
+}
+
+template<class IntervalT>
+inline typename 
+    boost::enable_if<is_discrete_interval<IntervalT>, 
+                     typename IntervalT::domain_type>::type
+last(const IntervalT& object)
+{ 
+	return is_right_closed(object.bounds()) ? object.upper() : pred(object.upper());
+}
+
+
+//------------------------------------------------------------------------------
 template<class IntervalT>
 typename boost::enable_if<has_dynamic_bounds<IntervalT>, 
                           typename IntervalT::bounded_domain_type>::type
@@ -208,7 +253,7 @@ template<class IntervalT>
 typename boost::enable_if<is_discrete_interval<IntervalT>, bool>::type
 is_empty(const IntervalT& object)
 { 
-    return IntervalT::domain_less(object.last(), object.first()); 
+    return IntervalT::domain_less(last(object), first(object)); 
 }
 
 template<class IntervalT>
@@ -269,7 +314,7 @@ template<class IntervalT>
 typename boost::enable_if<is_discrete_interval<IntervalT>, bool>::type
 exclusive_less(const IntervalT& left, const IntervalT& right)
 { 
-    return IntervalT::domain_less(left.last(), right.first()); 
+    return IntervalT::domain_less(last(left), first(right)); 
 }
 
 template<class IntervalT>
@@ -300,7 +345,7 @@ template<class IntervalT>
 typename boost::enable_if<is_discrete_interval<IntervalT>, bool>::type
 lower_less(const IntervalT& left, const IntervalT& right)
 {
-    return IntervalT::domain_less(left.first(), right.first());
+    return IntervalT::domain_less(first(left), first(right));
 }
     
 template<class IntervalT>
@@ -333,7 +378,7 @@ template<class IntervalT>
 typename boost::enable_if<is_discrete_interval<IntervalT>, bool>::type
 upper_less(const IntervalT& left, const IntervalT& right)
 {
-    return IntervalT::domain_less(left.last(), right.last());
+    return IntervalT::domain_less(last(left), last(right));
 }
     
 template<class IntervalT>
@@ -402,7 +447,7 @@ template<class IntervalT>
 typename boost::enable_if<is_discrete_interval<IntervalT>, bool>::type
 lower_equal(const IntervalT& left, const IntervalT& right)
 {
-    return IntervalT::domain_equal(left.first(), right.first());
+    return IntervalT::domain_equal(first(left), first(right));
 }
 
 template<class IntervalT>
@@ -433,7 +478,7 @@ template<class IntervalT>
 typename boost::enable_if<is_discrete_interval<IntervalT>, bool>::type
 upper_equal(const IntervalT& left, const IntervalT& right)
 {
-    return IntervalT::domain_equal(left.last(), right.last());
+    return IntervalT::domain_equal(last(left), last(right));
 }
 
 template<class IntervalT>
@@ -502,7 +547,7 @@ template<class IntervalT>
 typename boost::enable_if<is_discrete_interval<IntervalT>, bool>::type
 touches(const IntervalT& left, const IntervalT& right)
 {
-    return IntervalT::domain_equal(succ(left.last()), right.first());
+    return IntervalT::domain_equal(succ(last(left)), first(right));
 }
 
 template<class IntervalT>
@@ -518,10 +563,11 @@ touches(const IntervalT& left, const IntervalT& right)
 //= Size
 //==============================================================================
 //- cardinality ----------------------------------------------------------------
+
 template<class IntervalT>
 typename boost::enable_if<is_continuous_interval<IntervalT>, 
     typename IntervalT::size_type>::type
-cardinality(IntervalT object)
+cardinality(const IntervalT& object)
 {
     typedef typename IntervalT::size_type SizeT;
     if(itl::is_empty(object))
@@ -533,13 +579,79 @@ cardinality(IntervalT object)
         return infinity<SizeT>::value();
 }
 
+template<class IntervalT>
+typename boost::enable_if<is_discrete_interval<IntervalT>, 
+    typename IntervalT::size_type>::type
+cardinality(const IntervalT& object)
+{
+	return (last(object) + itl::unon<IntervalT::size_type>::value()) - first(object);
+}
+
+
+template<class IntervalT>
+typename boost::enable_if<is_continuous_asymmetric<IntervalT>, 
+    typename IntervalT::size_type>::type
+cardinality(const IntervalT& object)
+{
+    typedef typename IntervalT::size_type SizeT;
+    if(itl::is_empty(object))
+        return itl::neutron<SizeT>::value();
+    else 
+        return infinity<SizeT>::value();
+}
+
+template<class IntervalT>
+typename boost::enable_if<is_discrete_asymmetric<IntervalT>, 
+    typename IntervalT::size_type>::type
+cardinality(const IntervalT& object)
+{
+	return (last(object) + itl::unon<IntervalT::size_type>::value()) - first(object);
+}
+
+
+
+
+
 //- size -----------------------------------------------------------------------
 template<class IntervalT>
-typename boost::enable_if<is_continuous_interval<IntervalT>, 
-    typename IntervalT::size_type>::type
-size(IntervalT object)
+inline typename IntervalT::size_type size(const IntervalT& object)
 {
     return cardinality(object);
+}
+
+//- length ---------------------------------------------------------------------
+template<class IntervalT>
+typename boost::enable_if<is_continuous_interval<IntervalT>, 
+    typename IntervalT::difference_type>::type
+length(const IntervalT& object)
+{
+	return object.upper() - object.lower();
+}
+
+template<class IntervalT>
+inline typename boost::enable_if<is_discrete_interval<IntervalT>, 
+    typename IntervalT::difference_type>::type
+length(const IntervalT& object)
+{
+	return    (last(object) + itl::unon<IntervalT::difference_type>::value()) 
+            -  first(object);
+}
+
+template<class IntervalT>
+typename boost::enable_if<is_continuous_asymmetric<IntervalT>, 
+    typename IntervalT::difference_type>::type
+length(const IntervalT& object)
+{
+	return object.upper() - object.lower();
+}
+
+template<class IntervalT>
+inline typename boost::enable_if<is_discrete_asymmetric<IntervalT>, 
+    typename IntervalT::difference_type>::type
+length(const IntervalT& object)
+{
+	return    (last(object) + itl::unon<IntervalT::difference_type>::value()) 
+            -  first(object);
 }
 
 //==============================================================================

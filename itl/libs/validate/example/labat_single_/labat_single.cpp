@@ -12,6 +12,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 
 #include <boost/itl/ptime.hpp>
 
+#include <boost/itl/rightopen_interval.hpp>
 #include <boost/itl/set.hpp>
 #include <boost/itl/map.hpp>
 #include <boost/itl/detail/interval_morphism.hpp>
@@ -70,10 +71,22 @@ void test_LawValidater()
     //    <interval_map<int,int,partial_enricher>, itl::inplace_plus, itl::inplace_minus> TestLawT;
     //LawValidater<TestLawT, RandomGentor> test_law;
 
-    typedef InplaceCommutativity<itl::set<double> > TestLawT;
+    //typedef InplaceCommutativity<itl::set<double> > TestLawT;
+    //LawValidater<TestLawT> test_law;
+
+
+	
+	typedef FunctionEquality
+	<
+		itl::list<std::pair<rightopen_interval<double,std::less>,int> >, //SourceT, 
+		split_interval_map<double,int,partial_absorber>,                 //TargetT, 
+		base_insertion, 
+		hint_insertion
+	>
+	TestLawT;
     LawValidater<TestLawT> test_law;
 
-    
+
     //-----------------------------------------------------------------------------
     int test_count = 10000;
     ptime start, stop;

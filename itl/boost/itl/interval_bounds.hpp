@@ -9,6 +9,7 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 #define BOOST_ITL_INTERVAL_BOUNDS_HPP_JOFA_100330
 
 #include <boost/utility/enable_if.hpp>
+#include <boost/itl/detail/design_config.hpp>
 #include <boost/itl/type_traits/has_dynamic_bounds.hpp>
 
 namespace boost{namespace itl
@@ -114,11 +115,17 @@ inline interval_bounds right_subtract_bounds(interval_bounds x1, interval_bounds
 inline bool is_complementary(interval_bounds x1)
 { return x1 == interval_bounds::right_open() || x1 == interval_bounds::left_open(); }
 
+inline bool is_left_closed(interval_bounds bounds)
+{ return bounds.left().bits()==2; }
+
+inline bool is_right_closed(interval_bounds bounds)
+{ return bounds.right().bits()==1; }
+
 inline std::string left_bracket(interval_bounds bounds)
-{ return bounds.left().bits()==2 ? "[" : "("; }
+{ return is_left_closed(bounds) ? "[" : "("; }
 
 inline std::string right_bracket(interval_bounds bounds)
-{ return bounds.right().bits()==1 ? "]" : ")"; }
+{ return is_right_closed(bounds) ? "]" : ")"; }
 
 template<class CharType, class CharTraits>
 std::basic_ostream<CharType, CharTraits>& operator <<

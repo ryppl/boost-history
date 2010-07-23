@@ -29,6 +29,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 // and a few lines of adapter code.
 #include <boost/itl/gregorian.hpp> 
 
+#include <boost/itl/discrete_interval.hpp>
 #include <boost/itl/interval_map.hpp>
 
 using namespace std;
@@ -38,7 +39,7 @@ using namespace boost::itl;
 
 // Function weekends returns the interval_set of weekends that are contained in
 // the date interval 'scope'
-interval_set<date> weekends(const interval<date>& scope)
+interval_set<date> weekends(const discrete_interval<date>& scope)
 {
     interval_set<date> weekends;
 
@@ -49,7 +50,7 @@ interval_set<date> weekends(const interval<date>& scope)
     week_iterator week_iter(cur_weekend_sat);
 
     for(; week_iter <= scope.last(); ++week_iter)
-        weekends += interval<date>::rightopen(*week_iter, *week_iter + days(2));
+        weekends += discrete_interval<date>::rightopen(*week_iter, *week_iter + days(2));
 
     weekends &= scope; // cut off the surplus
 
@@ -66,7 +67,7 @@ void man_power()
     date someday = from_string("2008-08-01");
     date thenday = someday + months(3);
 
-    interval<date> scope = interval<date>::rightopen(someday, thenday);
+    discrete_interval<date> scope = discrete_interval<date>::rightopen(someday, thenday);
 
     // ------------------------------------------------------------------------
     // (1) In a first step, the regular working times are computed for the
@@ -79,8 +80,8 @@ void man_power()
     worktime -= from_string("2008-10-03"); //German reunification ;)
 
     // company holidays (fictitious ;)
-    worktime -= interval<date>::closed(from_string("2008-08-18"), 
-                                       from_string("2008-08-22"));
+    worktime -= discrete_interval<date>::closed(from_string("2008-08-18"), 
+                                                from_string("2008-08-22"));
 
     //-------------------------------------------------------------------------
     // (2) Now we calculate the individual work times for some employees
@@ -98,10 +99,12 @@ void man_power()
     claudias_working_hours &= worktime;
 
     // Yet, in addition Claudia has her own absence times like
-    interval<date> claudias_seminar (from_string("2008-09-16"), 
-                                     from_string("2008-09-24"));
-    interval<date> claudias_vacation(from_string("2008-08-01"), 
-                                     from_string("2008-08-14"));
+    discrete_interval<date> claudias_seminar (from_string("2008-09-16"), 
+                                              from_string("2008-09-24"),
+                                              interval_bounds::closed());
+    discrete_interval<date> claudias_vacation(from_string("2008-08-01"), 
+                                              from_string("2008-08-14"),
+                                              interval_bounds::closed());
 
     interval_set<date> claudias_absence_times(claudias_seminar);
     claudias_absence_times += claudias_vacation;
@@ -121,8 +124,10 @@ void man_power()
     bodos_working_hours &= worktime;
 
     // Bodos additional absence times
-    interval<date> bodos_flu(from_string("2008-09-19"), from_string("2008-09-29"));
-    interval<date> bodos_vacation(from_string("2008-08-15"), from_string("2008-09-03"));
+    discrete_interval<date>      bodos_flu(from_string("2008-09-19"), from_string("2008-09-29"), 
+		                                   interval_bounds::closed());
+    discrete_interval<date> bodos_vacation(from_string("2008-08-15"), from_string("2008-09-03"), 
+		                                   interval_bounds::closed());
 
     interval_set<date> bodos_absence_times(bodos_flu);
     bodos_absence_times += bodos_vacation;

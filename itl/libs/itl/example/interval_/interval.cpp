@@ -22,7 +22,8 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <iostream>
 #include <string>
 #include <math.h>
-#include <boost/itl/interval.hpp>
+#include <boost/itl/discrete_interval.hpp>
+#include <boost/itl/continuous_interval.hpp>
 #include "../toytime.hpp"
 
 using namespace std;
@@ -33,34 +34,41 @@ int main()
     cout << ">> Interval Template Library: Sample interval.cpp <<\n";
     cout << "----------------------------------------------------\n";
 
-    interval<int>    int_interval  = interval<int>::closed(3,7);
-    interval<double> sqrt_interval = interval<double>::rightopen(1/sqrt(2.0), sqrt(2.0));
-    interval<string> city_interval = interval<string>::leftopen("Barcelona", "Boston");
-    interval<Time>   time_interval = interval<Time>::open(Time(monday,8,30), Time(monday,17,20));
+    discrete_interval<int>      int_interval  
+		= construct<discrete_interval<int> >(3, 7, interval_bounds::closed());
+    continuous_interval<double> sqrt_interval 
+		= construct<continuous_interval<double> >(1/sqrt(2.0), sqrt(2.0));
+												 //interval_bounds::right_open() is default
+    continuous_interval<string> city_interval 
+		= construct<continuous_interval<string> >("Barcelona", "Boston", interval_bounds::left_open());
 
-    cout << "Interval<int>: "    << int_interval  << endl;
-    cout << "Interval<double>: " << sqrt_interval << " does " 
-                                 << string(sqrt_interval.contains(sqrt(2.0))?"":"NOT") 
-                                 << " contain sqrt(2)" << endl;
-    cout << "Interval<string>: " << city_interval << " does "  
-                                 << string(city_interval.contains("Barcelona")?"":"NOT") 
-                                 << " contain 'Barcelona'" << endl;
-    cout << "Interval<string>: " << city_interval << " does "  
-                                 << string(city_interval.contains("Berlin")?"":"NOT") 
-                                 << " contain 'Berlin'" << endl;
-    cout << "Interval<Time>: "   << time_interval << endl;
+    discrete_interval<Time>     time_interval 
+		= construct<discrete_interval<Time> >(Time(monday,8,30), Time(monday,17,20), 
+											  interval_bounds::open());
 
-    return 0;
+    cout << "  discrete_interval<int>:    " << int_interval  << endl;
+    cout << "continuous_interval<double>: " << sqrt_interval << " does " 
+                                            << string(contains(sqrt_interval, sqrt(2.0))?"":"NOT") 
+                                            << " contain sqrt(2)" << endl;
+    cout << "continuous_interval<string>: " << city_interval << " does "  
+                                            << string(contains(city_interval,"Barcelona")?"":"NOT") 
+                                            << " contain 'Barcelona'" << endl;
+    cout << "continuous_interval<string>: " << city_interval << " does "  
+                                            << string(contains(city_interval, "Berlin")?"":"NOT") 
+                                            << " contain 'Berlin'" << endl;
+    cout << "  discrete_interval<Time>:   " << time_interval << endl;
+
+	return 0;
 }
 
 // Program output:
 
-// >> Interval Template Library: Sample interval.cpp <<
-// ---------------------------------------------------
-// Interval<int>: [3,7]
-// Interval<double>: [0.707107,1.41421) does NOT contain sqrt(2)
-// Interval<string>: (Barcelona,Boston] does NOT contain 'Barcelona'
-// Interval<string>: (Barcelona,Boston] does  contain 'Berlin'
-// Interval<Time>: (mon:08:30,mon:17:20)
+//>> Interval Template Library: Sample interval.cpp <<
+//----------------------------------------------------
+//  discrete_interval<int>:    [3,7]
+//continuous_interval<double>: [0.707107,1.41421) does NOT contain sqrt(2)
+//continuous_interval<string>: (Barcelona,Boston] does NOT contain 'Barcelona'
+//continuous_interval<string>: (Barcelona,Boston] does  contain 'Berlin'
+//  discrete_interval<Time>:   (mon:08:30,mon:17:20)
 //]
 

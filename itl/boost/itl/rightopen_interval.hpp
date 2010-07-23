@@ -10,6 +10,11 @@ Copyright (c) 2010-2010: Joachim Faulhaber
 
 #include <boost/itl/type_traits/value_size.hpp>
 #include <boost/itl/type_traits/type_to_string.hpp>
+#include <boost/itl/interval_bounds.hpp> //JODO CL rightopen_interval ought to be independent on this, 
+                                         //but interval_function.hpp depends partially. So we might try to minimize
+                                         //dependencies here. There's also that point on generation.
+                                         //Two partitions of interval_functions
+                                         //  (dependen on i_b ( independent on i_b ))
 #include <boost/itl/detail/base_interval.hpp>
 #include <boost/itl/interval_functions.hpp>
 
@@ -58,6 +63,7 @@ public:
     domain_type lower()const{ return _lwb; }
     domain_type upper()const{ return _upb; }
 
+	/*CL
     domain_type first()const{ return _lwb; }
 
     DomainT last()const
@@ -65,6 +71,7 @@ public:
         BOOST_STATIC_ASSERT((!itl::is_continuous<DomainT>::value));
         return pred(_upb);
     }
+	*/
 
 private:
     domain_type _lwb;
@@ -77,7 +84,7 @@ std::basic_ostream<CharType, CharTraits>& operator <<
   (std::basic_ostream<CharType, CharTraits> &stream, 
    rightopen_interval<DomainT,Compare> const& object)
 {
-    if(itl::is_empty(object))
+	if(boost::itl::is_empty(object))
         return stream << "[)";
     else
         return stream << "[" << object.lower() << "," << object.upper()<< ")";
@@ -105,6 +112,13 @@ template <class DomainT, ITL_COMPARE Compare>
 struct has_asymmetric_bounds<rightopen_interval<DomainT,Compare> >
 {
     typedef has_asymmetric_bounds<rightopen_interval<DomainT,Compare> > type;
+    BOOST_STATIC_CONSTANT(bool, value = true);
+};
+
+template <class DomainT, ITL_COMPARE Compare> 
+struct is_static_rightopen<rightopen_interval<DomainT,Compare> >
+{
+    typedef is_static_rightopen<rightopen_interval<DomainT,Compare> > type;
     BOOST_STATIC_CONSTANT(bool, value = true);
 };
 

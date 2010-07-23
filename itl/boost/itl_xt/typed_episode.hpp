@@ -30,7 +30,8 @@ DEALINGS IN THE SOFTWARE.
 #ifndef BOOST_ITL_TYPED_EPISODE_HPP_HPP_JOFA_011015
 #define BOOST_ITL_TYPED_EPISODE_HPP_HPP_JOFA_011015
 
-#include <boost/itl/interval.hpp>
+//JODO #include <boost/itl/interval.hpp>
+#include <boost/itl/rightopen_interval.hpp>
 #include <boost/itl_xt/ordered_type.hpp>
 
 namespace boost{namespace itl
@@ -53,7 +54,8 @@ public:
     virtual ~episode_interface(){}
 
     /// das Intervall der Episode
-    virtual itl::interval<TimeT> interval()const=0;
+    //virtual itl::interval<TimeT> interval()const=0; //JODO make IntervalT a template param
+    virtual rightopen_interval<TimeT> interval()const=0;
 };
 
 /// typed_episode is an episode that can be ordered wrt. it's type

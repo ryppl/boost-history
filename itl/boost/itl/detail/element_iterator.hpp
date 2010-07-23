@@ -199,13 +199,13 @@ struct segment_adapter
 
     static domain_type     first (const SegmentIteratorT& leaper){ return leaper->first(); } 
     static domain_type     last  (const SegmentIteratorT& leaper){ return leaper->last();  } 
-    static domain_difference_type length(const SegmentIteratorT& leaper){ return leaper->length();}
+	static domain_difference_type length(const SegmentIteratorT& leaper){ return itl::length(*leaper);}
 
     static transit_type transient_element(domain_type& inter_pos, const SegmentIteratorT& leaper, 
                                           const domain_difference_type& sneaker)
     { 
-        inter_pos = is_reverse<SegmentIteratorT>::value ? leaper->last()  - sneaker
-                                                        : leaper->first() + sneaker;
+		inter_pos = is_reverse<SegmentIteratorT>::value ? itl::last(*leaper)  - sneaker
+			                                            : itl::first(*leaper) + sneaker;
         return inter_pos; 
     }
 };
@@ -223,13 +223,13 @@ struct segment_adapter<SegmentIteratorT, std::pair<ITL_INTERVAL_TYPE(Interval,Do
 
     static domain_type     first (const SegmentIteratorT& leaper){ return leaper->first.first(); } 
     static domain_type     last  (const SegmentIteratorT& leaper){ return leaper->first.last();  } 
-    static domain_difference_type length(const SegmentIteratorT& leaper){ return leaper->first.length();}
+	static domain_difference_type length(const SegmentIteratorT& leaper){ return itl::length(leaper->first);}
 
     static transit_type transient_element(domain_type& inter_pos, const SegmentIteratorT& leaper,
                                           const domain_difference_type& sneaker)
     {
-        inter_pos = is_reverse<SegmentIteratorT>::value ? leaper->first.last()  - sneaker
-                                                        : leaper->first.first() + sneaker;
+		inter_pos = is_reverse<SegmentIteratorT>::value ? itl::last(leaper->first)  - sneaker
+			                                            : itl::first(leaper->first) + sneaker;
         return transit_type(inter_pos, leaper->second); 
     }
 };
