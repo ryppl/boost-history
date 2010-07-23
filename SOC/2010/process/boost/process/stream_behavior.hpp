@@ -58,7 +58,7 @@ public:
      *
      * On POSIX systems it is defined as int, on Windows systems as HANDLE.
      */
-#if defined(BOOST_POSIX_API)
+#if defined(BOOST_PROCESS_DOXYGEN)
     typedef NativeStreamType stream_end_type;
 #elif defined(BOOST_POSIX_API)
     typedef int stream_end_type;
@@ -156,7 +156,7 @@ public:
     {
         stream_end_type ends[2];
 #if defined(BOOST_POSIX_API)
-        if (pipe(ends) == -1)
+        if (::pipe(ends) == -1)
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("pipe(2) failed");
 #elif defined(BOOST_WINDOWS_API)
         SECURITY_ATTRIBUTES sa;

@@ -94,7 +94,7 @@ public:
     void destroy(implementation_type &impl)
     {
         boost::unique_lock<boost::mutex> lock(work_thread_mutex_);
-        std::vector<implementation_type>::iterator it = std::find(impls_.begin(), impls_.end(), impl);
+        typename ::std::vector<implementation_type>::iterator it = std::find(impls_.begin(), impls_.end(), impl);
         if (it != impls_.end())
             impls_.erase(it);
         impl.reset();
@@ -143,7 +143,7 @@ private:
         {
 #if defined(BOOST_POSIX_API)
             int status;
-            pid_t pid = wait(&status);
+            pid_t pid = ::wait(&status);
             if (pid == -1)
             {
                 if (errno != EINTR)
@@ -157,7 +157,7 @@ private:
             else
             {
                 boost::unique_lock<boost::mutex> lock(work_thread_mutex_);
-                for (std::vector<implementation_type>::iterator it = impls_.begin(); it != impls_.end(); ++it)
+                for (typename std::vector<implementation_type>::iterator it = impls_.begin(); it != impls_.end(); ++it)
                     (*it)->complete(pid, status);
                 if (--pids_ == 0)
                     work_.reset();
@@ -198,6 +198,7 @@ private:
 #if defined(BOOST_POSIX_API)
         // By creating a child process which immediately exits we interrupt wait().
         interrupt_pid_ = create_child("/usr/sh").get_id();
+
 #elif defined(BOOST_WINDOWS_API)
         // By signaling the event in the first slot WaitForMultipleObjects() will return.
         // The work thread won't do anything except checking if it should continue to run.
