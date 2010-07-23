@@ -94,7 +94,8 @@ public:
     void destroy(implementation_type &impl)
     {
         boost::unique_lock<boost::mutex> lock(work_thread_mutex_);
-        typename ::std::vector<implementation_type>::iterator it = std::find(impls_.begin(), impls_.end(), impl);
+        typename std::vector<implementation_type>::iterator it =
+            std::find(impls_.begin(), impls_.end(), impl);
         if (it != impls_.end())
             impls_.erase(it);
         impl.reset();
@@ -157,13 +158,15 @@ private:
             else
             {
                 boost::unique_lock<boost::mutex> lock(work_thread_mutex_);
-                for (typename std::vector<implementation_type>::iterator it = impls_.begin(); it != impls_.end(); ++it)
+                for (typename std::vector<implementation_type>::iterator it =
+                    impls_.begin(); it != impls_.end(); ++it)
                     (*it)->complete(pid, status);
                 if (--pids_ == 0)
                     work_.reset();
             }
 #elif defined(BOOST_WINDOWS_API)
-            DWORD res = WaitForMultipleObjects(handles_.size(), &handles_[0], FALSE, INFINITE);
+            DWORD res = WaitForMultipleObjects(handles_.size(), &handles_[0],
+                FALSE, INFINITE);
             if (res == WAIT_FAILED)
                 BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("WaitForMultipleObjects() failed");
             else if (res - WAIT_OBJECT_0 == 0)
@@ -181,7 +184,8 @@ private:
                 if (!GetExitCodeProcess(handle, &exit_code))
                     BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("GetExitCodeProcess() failed");
                 boost::unique_lock<boost::mutex> lock(work_thread_mutex_);
-                for (std::vector<implementation_type>::iterator it = impls_.begin(); it != impls_.end(); ++it)
+                for (std::vector<implementation_type>::iterator it =
+                    impls_.begin(); it != impls_.end(); ++it)
                     (*it)->complete(handle, exit_code);
                 std::vector<HANDLE>::iterator it = handles_.begin();
                 std::advance(it, res - WAIT_OBJECT_0);
@@ -196,12 +200,13 @@ private:
     void interrupt_work_thread()
     {
 #if defined(BOOST_POSIX_API)
-        // By creating a child process which immediately exits we interrupt wait().
+        // By creating a child process which immediately exits
+        // we interrupt wait().
         interrupt_pid_ = create_child("/usr/sh").get_id();
-
 #elif defined(BOOST_WINDOWS_API)
-        // By signaling the event in the first slot WaitForMultipleObjects() will return.
-        // The work thread won't do anything except checking if it should continue to run.
+        // By signaling the event in the first slot WaitForMultipleObjects()
+        // will return. The work thread won't do anything except checking if
+        // it should continue to run.
         if (!SetEvent(handles_[0]))
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("SetEvent() failed");
 #endif

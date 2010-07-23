@@ -100,17 +100,4 @@ inline std::pair<std::size_t, char**> collection_to_argv(const Arguments &args)
 }
 }
 
-/*
- * posix_remap helper function
- *
- * Given a native and other handle, it changes the native for the other.
- * It simply uses dup2 POSIX function and trow an error when needed.
- *
- */
-
-void posix_remap(int native_handle, int new_handle)
-{
-    if (::dup2(new_handle, native_handle) == -1)
-        BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("dup2() failed"); 
-}
 #endif

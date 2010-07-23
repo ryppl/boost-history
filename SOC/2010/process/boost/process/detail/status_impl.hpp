@@ -75,7 +75,7 @@ private:
 class status_impl
 {
 public:
-    int wait(pid_type pid, boost::system::system_error ec)
+    int wait(pid_type pid, boost::system::error_code &ec)
     {
 #if defined(BOOST_POSIX_API)
         pid_t p;
