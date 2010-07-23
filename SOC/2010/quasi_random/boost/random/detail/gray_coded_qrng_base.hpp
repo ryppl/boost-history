@@ -90,18 +90,11 @@ protected:
     }
   }
 
-  void compute_current_vector(const char *msg)
-  {
-    update_state(this->seq_count, msg);
-  }
-
 private:
 
   void compute_next_vector()
   {
-    update_state(LatticeT::next(this->seq_count),
-        "compute_next_vector");
-    this->seq_count++;
+    update_state(this->seq_count++, "compute_next_vector");
   }
 
   void update_state(std::size_t cnt, const char *msg)

@@ -286,8 +286,6 @@ struct sobol_lattice
     return bits[i][j];
   }
 
-  static std::size_t next(std::size_t seq) { return ++seq; }
-
 private:
   IntType bits[bit_count][Dimension];
 };
@@ -351,7 +349,6 @@ public:
   void seed()
   {
     base_t::reset_state();
-    base_t::compute_current_vector("sobol::seed");
   }
 
   /** @copydoc boost::random::niederreiter_base2::seed(std::size_t) */

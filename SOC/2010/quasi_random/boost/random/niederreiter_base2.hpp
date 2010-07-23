@@ -287,8 +287,6 @@ struct niederreiter_base2_lattice
     return bits[i][j];
   }
 
-  static std::size_t next(std::size_t seq) { return seq++; }
-
 private:
   IntType bits[bit_count][Dimension];
 };

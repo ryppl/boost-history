@@ -30,22 +30,6 @@
 // These tests compare our results with values produced by qrngs in
 // GNU Scientific Library.
 
-// GSL adaptors
-
-struct gsl_niederreiter_base2
-{
-  static const gsl_qrng_type * type() {
-    return ::gsl_qrng_niederreiter_2;
-  }
-};
-
-struct gsl_sobol
-{
-  static const gsl_qrng_type * type() {
-    return ::gsl_qrng_sobol;
-  }
-};
-
 struct gsl_deleter
 {
   void operator()(gsl_qrng *q) const
@@ -56,30 +40,30 @@ struct gsl_deleter
 };
 
 // Test routine
-template<typename GSL, typename QRNG>
-bool test_qrng(const std::size_t D)
+template<std::size_t D, typename QEngine>
+bool test_qrng(const gsl_qrng_type* qrng_type, QEngine& eng)
 {
-  QRNG test;
-
   const int validating_sequence_lenght = 10000;
 
-  boost::shared_ptr<gsl_qrng> q(gsl_qrng_alloc(GSL::type(), D), gsl_deleter());
+  BOOST_REQUIRE_EQUAL( eng.dimension(), D ); // paranoid check
+
+  boost::shared_ptr<gsl_qrng> q(gsl_qrng_alloc(qrng_type, D), gsl_deleter());
   // RAII, to ensure that no memory leaks occur
   BOOST_REQUIRE( q.get() != 0 );
 
   double val[D];
-  boost::uniform_real<double> rnd;
+  boost::uniform_real<double> dist;
 
   for( int i = 0; i < validating_sequence_lenght; ++i )
   {
     gsl_qrng_get(q.get(), val);
     for( std::size_t j = 0; j != D; ++j )
     {
-      double n = rnd(test);
+      double n = dist(eng);
 
       // We want to check that quasi-random number generator values differ no
       // more than 0.0001% of their value.
-      BOOST_REQUIRE_CLOSE_FRACTION(val[j], n, 0.0001);
+      BOOST_REQUIRE_CLOSE(val[j], n, 0.0001);
     }
   }
 
@@ -87,18 +71,21 @@ bool test_qrng(const std::size_t D)
 }
 
 
-template<int D>
+template<std::size_t D>
 void test_sobol()
 {
   typedef typename boost::sobol_generator<D>::type sobol_t;
-  BOOST_CHECK( (test_qrng<gsl_sobol, sobol_t>(D)) );
+  sobol_t eng;
+  eng.discard(D); // GSL shifts sequence by 1
+  BOOST_CHECK( (test_qrng<D>(::gsl_qrng_sobol, eng)) );
 }
 
-template<int D>
+template<std::size_t D>
 void test_niederreiter_base2()
 {
-  typedef typename boost::niederreiter_base2_generator<D>::type nb2_t;
-  BOOST_CHECK( (test_qrng<gsl_niederreiter_base2, nb2_t>(D)) );
+  typedef typename boost::niederreiter_base2_generator<D>::type niederreiter_base2_t;
+  niederreiter_base2_t eng;
+  BOOST_CHECK( (test_qrng<D>(::gsl_qrng_niederreiter_2, eng)) );
 }
 
 
