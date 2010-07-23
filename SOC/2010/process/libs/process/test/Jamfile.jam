@@ -23,4 +23,12 @@ exe helpers : util/helpers.cpp bfs ;
 explicit helpers ; 
 
 using testing ; 
+
+run environment.cpp butf bfs ; 
+run self.cpp butf bfs ; 
+
 run arguments.cpp butf bfs : : helpers : <dependency>helpers ; 
+run child.cpp butf bfs : : helpers : <dependency>helpers ; 
+run executable.cpp butf bfs : : helpers : <dependency>helpers ; 
+run process.cpp butf bfs : : helpers : <dependency>helpers ; 
+run status.cpp butf bfs : : helpers : <dependency>helpers ; 

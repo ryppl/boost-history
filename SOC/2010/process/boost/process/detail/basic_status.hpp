@@ -3,7 +3,8 @@
 // ~~~~~~~~~~~~~
 //
 // Copyright (c) 2006, 2007 Julio M. Merino Vidal
-// Copyright (c) 2008, 2009 Boris Schaeling
+// Copyright (c) 2008 Ilya Sokolov, Boris Schaeling
+// Copyright (c) 2009 Boris Schaeling
 // Copyright (c) 2010 Felipe Tanus, Boris Schaeling
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -27,6 +28,12 @@ namespace boost {
 namespace process {
 namespace detail {
 
+/**
+ * The basic_status class to wait for processes to exit.
+ *
+ * The basic_status class is a Boost.Asio I/O object and supports synchronous
+ * and asynchronous wait operations. It must be instantiated with a Service.
+ */
 template <typename Service>
 class basic_status
     : public boost::asio::basic_io_object<Service>
@@ -37,11 +44,17 @@ public:
     {
     }
 
+    /**
+     * Waits synchronously for a process to exit.
+     */
     int wait(pid_type pid)
     {
         return this->service.wait(this->implementation, pid);
     }
 
+    /**
+     * Waits asynchronously for a process to exit.
+     */
     template <typename Handler>
     void async_wait(pid_type pid, Handler handler)
     {

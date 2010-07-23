@@ -3,7 +3,8 @@
 // ~~~~~~~~~~~~~
 //
 // Copyright (c) 2006, 2007 Julio M. Merino Vidal
-// Copyright (c) 2008, 2009 Boris Schaeling
+// Copyright (c) 2008 Ilya Sokolov, Boris Schaeling
+// Copyright (c) 2009 Boris Schaeling
 // Copyright (c) 2010 Felipe Tanus, Boris Schaeling
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -29,12 +30,12 @@
 #endif
 
 #include <boost/process/process.hpp>
+#include <boost/process/pid_type.hpp>
 #include <boost/process/pistream.hpp>
 #include <boost/process/postream.hpp>
 #include <boost/process/detail/file_handle.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/assert.hpp>
-#include <vector>
 
 namespace boost {
 namespace process {
@@ -54,16 +55,10 @@ public:
      * data streams. They needn't be valid but their availability must
      * match the redirections configured by the launcher that spawned this
      * process.
-     *
-     * The \a fhprocess handle represents a handle to the child process.
-     * It is only used on Windows as the implementation of wait() needs a
-     * process handle.
      */
-    child(id_type id, detail::file_handle fhstdin, detail::file_handle fhstdout, detail::file_handle fhstderr, detail::file_handle fhprocess = detail::file_handle())
+    child(pid_type id, detail::file_handle fhstdin,
+        detail::file_handle fhstdout, detail::file_handle fhstderr)
         : process(id)
-#if defined(BOOST_WINDOWS_API) 
-        , process_handle_(fhprocess.release(), ::CloseHandle) 
-#endif 
     {
         if (fhstdin.valid())
             stdin_.reset(new postream(fhstdin));
@@ -139,23 +134,7 @@ private:
      * data stream.
      */
     boost::shared_ptr<pistream> stderr_;
-
-#if defined(BOOST_WINDOWS_API) 
-    /** 
-     * Process handle owned by RAII object. 
-     */ 
-    boost::shared_ptr<void> process_handle_; 
-#endif 
-
 };
-
-/**
- * Collection of child objects.
- *
- * This convenience type represents a collection of child objects backed
- * by a vector.
- */
-typedef std::vector<child> children;
 
 }
 }

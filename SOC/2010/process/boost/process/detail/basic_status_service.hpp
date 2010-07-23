@@ -3,7 +3,8 @@
 // ~~~~~~~~~~~~~
 //
 // Copyright (c) 2006, 2007 Julio M. Merino Vidal
-// Copyright (c) 2008, 2009 Boris Schaeling
+// Copyright (c) 2008 Ilya Sokolov, Boris Schaeling
+// Copyright (c) 2009 Boris Schaeling
 // Copyright (c) 2010 Felipe Tanus, Boris Schaeling
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -46,6 +47,10 @@ namespace boost {
 namespace process {
 namespace detail {
 
+/**
+ * The basic_status_service class provides the service to wait for processes
+ * synchronously and asynchronously.
+ */
 template <typename StatusImplementation = status_impl>
 class basic_status_service
     : public boost::asio::detail::service_base<StatusImplementation>

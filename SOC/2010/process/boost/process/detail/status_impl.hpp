@@ -3,7 +3,8 @@
 // ~~~~~~~~~~~~~
 //
 // Copyright (c) 2006, 2007 Julio M. Merino Vidal
-// Copyright (c) 2008, 2009 Boris Schaeling
+// Copyright (c) 2008 Ilya Sokolov, Boris Schaeling
+// Copyright (c) 2009 Boris Schaeling
 // Copyright (c) 2010 Felipe Tanus, Boris Schaeling
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -68,6 +69,9 @@ private:
     Handler handler_;
 };
 
+/**
+ * The status_impl class saves internal data of every status I/O object.
+ */
 class status_impl
 {
 public:

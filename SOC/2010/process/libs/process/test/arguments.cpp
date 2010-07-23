@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_CASE(test_collection_to_posix_argv)
 #endif 
 
 #if defined(BOOST_WINDOWS_API) 
-BOOST_AUTO_TEST_CASE(test_collection_to_win32_cmdline) 
+BOOST_AUTO_TEST_CASE(test_collection_to_windows_cmdline) 
 { 
     std::vector<std::string> args; 
     args.push_back("program"); 
@@ -115,7 +115,7 @@ BOOST_AUTO_TEST_CASE(test_collection_to_win32_cmdline)
     args.push_back("arg2"); 
     args.push_back("arg3"); 
 
-    boost::shared_array<char> cmdline = bpd::collection_to_win32_cmdline(args); 
+    boost::shared_array<char> cmdline = bpd::collection_to_windows_cmdline(args); 
     BOOST_REQUIRE(std::strcmp(cmdline.get(), "program arg1 arg2 arg3") == 0); 
 } 
 #endif 

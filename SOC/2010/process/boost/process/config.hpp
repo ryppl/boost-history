@@ -3,8 +3,8 @@
 // ~~~~~~~~~~~~~
 //
 // Copyright (c) 2006, 2007 Julio M. Merino Vidal
-// Copyright (c) 2008 Ilya Sokolov
-// Copyright (c) 2008, 2009 Boris Schaeling
+// Copyright (c) 2008 Ilya Sokolov, Boris Schaeling
+// Copyright (c) 2009 Boris Schaeling
 // Copyright (c) 2010 Felipe Tanus, Boris Schaeling
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -27,8 +27,10 @@
 #include <boost/system/system_error.hpp>
 #include <boost/throw_exception.hpp>
 
-#if defined(BOOST_WINDOWS_API)
-#   include <windows.h> 
+#if defined(BOOST_POSIX_API)
+#   include <errno.h>
+#elif defined(BOOST_WINDOWS_API)
+#   include <windows.h>
 #endif 
 
 #if defined(BOOST_POSIX_API) || defined(BOOST_PROCESS_DOXYGEN)
@@ -38,9 +40,10 @@
  * value which specifies the system's maximal supported path length.
  * By default it is set to 259. You should set the macro to PATH_MAX
  * which should be defined in limits.h provided by your operating system
- * if you experience problems when instantiating a context. The
- * constructor of context tries to find out the maximal supported path 
- * length but uses BOOST_PROCESS_POSIX_PATH_MAX if it fails.
+ * if you experience problems when calling boost::process::self::get_work_dir().
+ * This function tries to find out the maximal supported path length but uses
+ * BOOST_PROCESS_POSIX_PATH_MAX if it fails. Please note that the function is
+ * also called when you instantiate a context.
  */
 #       define BOOST_PROCESS_POSIX_PATH_MAX 259
 #   endif
@@ -52,7 +55,7 @@
 #if defined(BOOST_POSIX_API)
 #   define BOOST_PROCESS_LAST_ERROR errno
 #elif defined(BOOST_WINDOWS_API)
-#   define BOOST_PROCESS_LAST_ERROR ::GetLastError()
+#   define BOOST_PROCESS_LAST_ERROR GetLastError()
 #endif
 
 #define BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR(what) \

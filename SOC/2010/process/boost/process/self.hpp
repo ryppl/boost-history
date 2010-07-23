@@ -3,7 +3,8 @@
 // ~~~~~~~~~~~~~
 //
 // Copyright (c) 2006, 2007 Julio M. Merino Vidal
-// Copyright (c) 2008, 2009 Boris Schaeling
+// Copyright (c) 2008 Ilya Sokolov, Boris Schaeling
+// Copyright (c) 2009 Boris Schaeling
 // Copyright (c) 2010 Felipe Tanus, Boris Schaeling
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -22,9 +23,9 @@
 #include <boost/process/config.hpp>
 
 #if defined(BOOST_POSIX_API)
-#   include <boost/scoped_array.hpp> 
-#   include <cerrno> 
-#   include <unistd.h> 
+#   include <boost/scoped_array.hpp>
+#   include <errno.h>
+#   include <unistd.h>
 #   if defined(__APPLE__)
 #       include <crt_externs.h>
 #   endif
@@ -36,11 +37,9 @@
 
 #include <boost/process/process.hpp>
 #include <boost/process/environment.hpp>
-#include <boost/system/system_error.hpp>
-#include <boost/throw_exception.hpp>
 #include <boost/noncopyable.hpp>
+#include <boost/assert.hpp>
 #include <string>
-#include <iostream>
 
 #if defined(BOOST_POSIX_API)
 extern "C"
@@ -55,7 +54,7 @@ namespace process {
 /**
  * The self class provides access to the process itself.
  */
-class self : public process, boost::noncopyable
+class self : public process, public boost::noncopyable
 {
 public:
     /**
@@ -72,7 +71,7 @@ public:
     /**
      * Returns the current environment.
      *
-     * Returns the current process' environment variables. Modifying the
+     * Returns the current process environment variables. Modifying the
      * returned object has no effect on the current environment.
      */
     static environment_t get_environment()
@@ -83,14 +82,15 @@ public:
 #   if defined(__APPLE__)
         char **env = *_NSGetEnviron();
 #   else
-        char **env = ::environ;
+        char **env = environ;
 #   endif
 
         while (*env)
         {
             std::string s = *env;
             std::string::size_type pos = s.find('=');
-            e.insert(boost::process::environment_t::value_type(s.substr(0, pos), s.substr(pos + 1)));
+            e.insert(environment_t::value_type(s.substr(0, pos),
+                s.substr(pos + 1)));
             ++env;
         }
 #elif defined(BOOST_WINDOWS_API)
@@ -98,7 +98,7 @@ public:
 #   undef GetEnvironmentStrings
 #   endif
 
-        char *ms_environ = ::GetEnvironmentStrings();
+        char *ms_environ = GetEnvironmentStrings();
         if (!ms_environ)
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("GetEnvironmentStrings() failed");
         try
@@ -108,16 +108,17 @@ public:
             {
                 std::string s = env;
                 std::string::size_type pos = s.find('=');
-                e.insert(boost::process::environment_t::value_type(s.substr(0, pos), s.substr(pos + 1)));
+                e.insert(environment_t::value_type(s.substr(0, pos),
+                    s.substr(pos + 1)));
                 env += s.size() + 1;
             }
         }
         catch (...)
         {
-            ::FreeEnvironmentStringsA(ms_environ);
+            FreeEnvironmentStringsA(ms_environ);
             throw;
         }
-        ::FreeEnvironmentStringsA(ms_environ);
+        FreeEnvironmentStringsA(ms_environ);
 #endif
 
         return e;
@@ -127,25 +128,25 @@ public:
     {
 #if defined(BOOST_POSIX_API) 
         errno = 0;
-        long size = ::pathconf(".", _PC_PATH_MAX);
+        long size = pathconf(".", _PC_PATH_MAX);
         if (size == -1 && errno)
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("pathconf(2) failed");
-        else if (size == -1) 
-            size = BOOST_PROCESS_POSIX_PATH_MAX; 
-        BOOST_ASSERT(size > 0); 
-        boost::scoped_array<char> cwd(new char[size]); 
-        if (!::getcwd(cwd.get(), size)) 
+        else if (size == -1)
+            size = BOOST_PROCESS_POSIX_PATH_MAX;
+        BOOST_ASSERT(size > 0);
+        boost::scoped_array<char> cwd(new char[size]);
+        if (!getcwd(cwd.get(), size))
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("getcwd(2) failed");
-        BOOST_ASSERT(cwd[0] != '\0'); 
-        return cwd.get(); 
-#elif defined(BOOST_WINDOWS_API) 
-        BOOST_ASSERT(MAX_PATH > 0); 
-        char cwd[MAX_PATH]; 
-        if (!::GetCurrentDirectoryA(sizeof(cwd), cwd)) 
+        BOOST_ASSERT(cwd[0] != '\0');
+        return cwd.get();
+#elif defined(BOOST_WINDOWS_API)
+        BOOST_ASSERT(MAX_PATH > 0);
+        char cwd[MAX_PATH];
+        if (!GetCurrentDirectoryA(sizeof(cwd), cwd))
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("GetCurrentDirectory() failed");
-        BOOST_ASSERT(cwd[0] != '\0'); 
-        return cwd; 
-#endif 
+        BOOST_ASSERT(cwd[0] != '\0');
+        return cwd;
+#endif
     }
 
 private:
@@ -156,9 +157,9 @@ private:
      */
     self() :
 #if defined(BOOST_POSIX_API)
-        process(::getpid())
+        process(getpid())
 #elif defined(BOOST_WINDOWS_API)
-        process(::GetCurrentProcessId())
+        process(GetCurrentProcessId())
 #endif
     {
     }

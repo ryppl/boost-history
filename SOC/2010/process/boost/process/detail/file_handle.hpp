@@ -3,7 +3,8 @@
 // ~~~~~~~~~~~~~
 //
 // Copyright (c) 2006, 2007 Julio M. Merino Vidal
-// Copyright (c) 2008, 2009 Boris Schaeling
+// Copyright (c) 2008 Ilya Sokolov, Boris Schaeling
+// Copyright (c) 2009 Boris Schaeling
 // Copyright (c) 2010 Felipe Tanus, Boris Schaeling
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -13,8 +14,7 @@
 /**
  * \file boost/process/detail/file_handle.hpp
  *
- * Includes the declaration of the file_handle class. This file is for
- * internal usage only and must not be included by the library user.
+ * Includes the declaration of the file_handle class.
  */
 
 #ifndef BOOST_PROCESS_DETAIL_FILE_HANDLE_HPP

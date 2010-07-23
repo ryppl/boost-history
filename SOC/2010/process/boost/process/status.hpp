@@ -3,7 +3,8 @@
 // ~~~~~~~~~~~~~
 //
 // Copyright (c) 2006, 2007 Julio M. Merino Vidal
-// Copyright (c) 2008, 2009 Boris Schaeling
+// Copyright (c) 2008 Ilya Sokolov, Boris Schaeling
+// Copyright (c) 2009 Boris Schaeling
 // Copyright (c) 2010 Felipe Tanus, Boris Schaeling
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -26,6 +27,12 @@
 namespace boost {
 namespace process {
 
+/**
+ * The status class to wait for processes to exit.
+ *
+ * The status class is a Boost.Asio I/O object and supports synchronous
+ * and asynchronous wait operations.
+ */
 typedef detail::basic_status<detail::basic_status_service<> > status;
 
 }

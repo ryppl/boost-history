@@ -3,7 +3,8 @@
 // ~~~~~~~~~~~~~
 //
 // Copyright (c) 2006, 2007 Julio M. Merino Vidal
-// Copyright (c) 2008, 2009 Boris Schaeling
+// Copyright (c) 2008 Ilya Sokolov, Boris Schaeling
+// Copyright (c) 2009 Boris Schaeling
 // Copyright (c) 2010 Felipe Tanus, Boris Schaeling
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -23,15 +24,16 @@
 
 #if defined(BOOST_POSIX_API)
 #   include <boost/process/detail/posix_helpers.hpp>
+#   include <utility>
+#   include <cstddef>
 #   include <stdlib.h>
 #   include <unistd.h>
 #   if defined(__CYGWIN__)
-#       include <boost/scoped_array.hpp>
 #       include <sys/cygwin.h>
 #   endif
 #elif defined(BOOST_WINDOWS_API)
-#   include <boost/process/detail/win32_helpers.hpp>
-#   include <boost/algorithm/string/predicate.hpp>
+#   include <boost/process/detail/windows_helpers.hpp>
+#   include <boost/shared_array.hpp>
 #   include <windows.h>
 #else
 #   error "Unsupported platform."
@@ -39,7 +41,6 @@
 
 #include <boost/process/child.hpp>
 #include <boost/process/context.hpp>
-#include <boost/process/stream_behavior.hpp>
 #include <boost/process/detail/file_handle.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/algorithm/string/predicate.hpp>
@@ -49,8 +50,6 @@
 #include <boost/assert.hpp>
 #include <string>
 #include <vector>
-#include <stdexcept>
-#include <cstddef>
 
 namespace boost {
 namespace process {
@@ -79,20 +78,22 @@ inline std::string find_executable_in_path(const std::string &file, std::string 
 #if defined(BOOST_POSIX_API)
     if (path.empty())
     {
-        const char *envpath = ::getenv("PATH");
+        const char *envpath = getenv("PATH");
         if (!envpath)
-            boost::throw_exception(boost::filesystem::filesystem_error("boost::process::find_executable_in_path: retrieving PATH failed", file, boost::system::errc::make_error_code(boost::system::errc::no_such_file_or_directory)));
-
+            boost::throw_exception(boost::filesystem::filesystem_error(
+                BOOST_PROCESS_SOURCE_LOCATION "file not found", file,
+                boost::system::errc::make_error_code(
+                boost::system::errc::no_such_file_or_directory)));
         path = envpath;
     }
     BOOST_ASSERT(!path.empty());
 
 #if defined(__CYGWIN__)
-    if (!::cygwin_posix_path_list_p(path.c_str()))
+    if (!cygwin_posix_path_list_p(path.c_str()))
     {
-        int size = ::cygwin_win32_to_posix_path_list_buf_size(path.c_str());
+        int size = cygwin_win32_to_posix_path_list_buf_size(path.c_str());
         boost::scoped_array<char> cygpath(new char[size]);
-        ::cygwin_win32_to_posix_path_list(path.c_str(), cygpath.get());
+        cygwin_win32_to_posix_path_list(path.c_str(), cygpath.get());
         path = cygpath.get();
     }
 #endif
@@ -101,9 +102,11 @@ inline std::string find_executable_in_path(const std::string &file, std::string 
     do
     {
         pos2 = path.find(':', pos1);
-        std::string dir = (pos2 != std::string::npos) ? path.substr(pos1, pos2 - pos1) : path.substr(pos1); 
-        std::string f = dir + (boost::algorithm::ends_with(dir, "/") ? "" : "/") + file;
-        if (!::access(f.c_str(), X_OK))
+        std::string dir = (pos2 != std::string::npos) ?
+            path.substr(pos1, pos2 - pos1) : path.substr(pos1);
+        std::string f = dir +
+            (boost::algorithm::ends_with(dir, "/") ? "" : "/") + file;
+        if (!access(f.c_str(), X_OK))
             result = f;
         pos1 = pos2 + 1;
     } while (pos2 != std::string::npos && result.empty());
@@ -114,7 +117,8 @@ inline std::string find_executable_in_path(const std::string &file, std::string 
     {
         char buf[MAX_PATH];
         char *dummy;
-        DWORD size = ::SearchPathA(path.empty() ? NULL : path.c_str(), file.c_str(), *ext, MAX_PATH, buf, &dummy);
+        DWORD size = SearchPathA(path.empty() ? NULL : path.c_str(),
+            file.c_str(), *ext, MAX_PATH, buf, &dummy);
         BOOST_ASSERT(size < MAX_PATH);
         if (size > 0)
         {
@@ -126,7 +130,10 @@ inline std::string find_executable_in_path(const std::string &file, std::string 
 #endif
 
     if (result.empty())
-        boost::throw_exception(boost::filesystem::filesystem_error(BOOST_PROCESS_SOURCE_LOCATION "file not found", file, boost::system::errc::make_error_code(boost::system::errc::no_such_file_or_directory)));
+        boost::throw_exception(boost::filesystem::filesystem_error(
+            BOOST_PROCESS_SOURCE_LOCATION "file not found", file,
+            boost::system::errc::make_error_code(
+            boost::system::errc::no_such_file_or_directory)));
 
     return result;
 }
@@ -151,7 +158,9 @@ inline std::string executable_to_progname(const std::string &exe)
         begin = slash + 1;
 
 #if defined(BOOST_WINDOWS_API)
-    if (exe.size() > 4 && (boost::algorithm::iends_with(exe, ".exe") || boost::algorithm::iends_with(exe, ".com") || boost::algorithm::iends_with(exe, ".bat"))) 
+    if (exe.size() > 4 && (boost::algorithm::iends_with(exe, ".exe") ||
+        boost::algorithm::iends_with(exe, ".com") ||
+        boost::algorithm::iends_with(exe, ".bat"))) 
         end = exe.size() - 4;
 #endif
 
@@ -162,8 +171,7 @@ inline std::string executable_to_progname(const std::string &exe)
  * Starts a new child process.
  *
  * Launches a new process based on the binary image specified by the
- * executable, the set of arguments to be passed to it and several
- * parameters that describe the execution context.
+ * executable, the set of arguments passed to it and the execution context.
  *
  * \remark Blocking remarks: This function may block if the device
  * holding the executable blocks when loading the image. This might
@@ -171,10 +179,11 @@ inline std::string executable_to_progname(const std::string &exe)
  *
  * \return A handle to the new child process.
  */
-template <class Arguments>
-inline child create_child(const std::string &executable, Arguments args, context ctx = context())
+template <typename Arguments, typename Context>
+inline child create_child(const std::string &executable, Arguments args, Context ctx)
 {
-    std::string p_name = ctx.process_name.empty() ? executable : ctx.process_name;
+    std::string p_name = ctx.process_name.empty() ?
+        executable_to_progname(executable) : ctx.process_name;
     args.insert(args.begin(), p_name);
 
 #if defined(BOOST_POSIX_API)
@@ -199,7 +208,7 @@ inline child create_child(const std::string &executable, Arguments args, context
                 closeflags[i] = true;
 
             int stdin_fd = ctx.stdin_behavior->get_child_end();
-            if (stdin_fd != -1 && stdin_fd < maxdescs)
+            if (stdin_fd != -1)
             {
                 if (dup2(stdin_fd, STDIN_FILENO) == -1)
                     BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("dup2() failed");
@@ -207,7 +216,7 @@ inline child create_child(const std::string &executable, Arguments args, context
             }
 
             int stdout_fd = ctx.stdout_behavior->get_child_end();
-            if (stdout_fd != -1 && stdout_fd < maxdescs)
+            if (stdout_fd != -1)
             {
                 if (dup2(stdout_fd, STDOUT_FILENO) == -1)
                     BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("dup2() failed");
@@ -215,7 +224,7 @@ inline child create_child(const std::string &executable, Arguments args, context
             }
 
             int stderr_fd = ctx.stderr_behavior->get_child_end();
-            if (stderr_fd != -1 && stderr_fd < maxdescs)
+            if (stderr_fd != -1)
             {
                 if (dup2(stderr_fd, STDERR_FILENO) == -1)
                     BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("dup2() failed");
@@ -227,6 +236,8 @@ inline child create_child(const std::string &executable, Arguments args, context
                 if (closeflags[i])
                     close(i);
             }
+
+            ctx.setup();
         }
         catch (const boost::system::system_error &e)
         {
@@ -235,8 +246,10 @@ inline child create_child(const std::string &executable, Arguments args, context
             std::exit(127);
         }
 
-        std::pair<std::size_t, char**> argv = detail::collection_to_argv(args);
-        std::pair<std::size_t, char**> envp = detail::environment_to_envp(ctx.environment);
+        std::pair<std::size_t, char**> argv =
+            detail::collection_to_argv(args);
+        std::pair<std::size_t, char**> envp =
+            detail::environment_to_envp(ctx.environment);
 
         execve(executable.c_str(), argv.second, envp.second);
 
@@ -248,7 +261,9 @@ inline child create_child(const std::string &executable, Arguments args, context
             delete[] envp.second[i];
         delete[] envp.second;
 
-        boost::system::system_error e(boost::system::error_code(errno, boost::system::get_system_category()), BOOST_PROCESS_SOURCE_LOCATION "execve(2) failed");
+        boost::system::system_error e(boost::system::error_code(errno,
+            boost::system::get_system_category()),
+            BOOST_PROCESS_SOURCE_LOCATION "execve(2) failed");
         write(STDERR_FILENO, e.what(), std::strlen(e.what()));
         write(STDERR_FILENO, "\n", 1);
         std::exit(127);
@@ -258,11 +273,11 @@ inline child create_child(const std::string &executable, Arguments args, context
         BOOST_ASSERT(pid > 0);
 
         if (ctx.stdin_behavior->get_child_end() != -1)
-            ::close(ctx.stdin_behavior->get_child_end());
+            close(ctx.stdin_behavior->get_child_end());
         if (ctx.stdout_behavior->get_child_end() != -1)
-            ::close(ctx.stdout_behavior->get_child_end());
+            close(ctx.stdout_behavior->get_child_end());
         if (ctx.stderr_behavior->get_child_end() != -1)
-            ::close(ctx.stderr_behavior->get_child_end());
+            close(ctx.stderr_behavior->get_child_end());
 
         return child(pid,
             detail::file_handle(ctx.stdin_behavior->get_parent_end()),
@@ -278,36 +293,73 @@ inline child create_child(const std::string &executable, Arguments args, context
     startup_info.hStdOutput = ctx.stdout_behavior->get_child_end();
     startup_info.hStdError = ctx.stderr_behavior->get_child_end();
 
+    ctx.setup(startup_info);
+
     PROCESS_INFORMATION pi;
     ZeroMemory(&pi, sizeof(pi));
 
-    boost::shared_array<char> cmdline = detail::collection_to_win32_cmdline(args);
+    boost::shared_array<char> cmdline =
+        detail::collection_to_windows_cmdline(args);
 
     boost::scoped_array<char> exe(new char[executable.size() + 1]);
-    ::strcpy_s(exe.get(), executable.size() + 1, executable.c_str());
+    strcpy_s(exe.get(), executable.size() + 1, executable.c_str());
 
     boost::scoped_array<char> workdir(new char[ctx.work_dir.size() + 1]);
-    ::strcpy_s(workdir.get(), ctx.work_dir.size() + 1, ctx.work_dir.c_str());
+    strcpy_s(workdir.get(), ctx.work_dir.size() + 1, ctx.work_dir.c_str());
 
-    boost::shared_array<char> envstrs = detail::environment_to_win32_strings(ctx.environment);
+    boost::shared_array<char> envstrs =
+        detail::environment_to_windows_strings(ctx.environment);
 
-    if (CreateProcessA(exe.get(), cmdline.get(), NULL, NULL, TRUE, 0, envstrs.get(), workdir.get(), &startup_info, &pi) == 0)
-        BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreateProcess() failed"); 
+    if (CreateProcessA(exe.get(), cmdline.get(), NULL, NULL, TRUE, 0,
+        envstrs.get(), workdir.get(), &startup_info, &pi) == 0)
+        BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreateProcess() failed");
+
+    if (!CloseHandle(pi.hProcess))
+        BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CloseHandle() failed");
 
     if (!CloseHandle(pi.hThread))
-        BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CloseHandle() failed"); 
+        BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CloseHandle() failed");
 
-    return child(pi.dwProcessId, 
-        detail::file_handle(ctx.stdin_behavior->get_parent_end()), 
-        detail::file_handle(ctx.stdout_behavior->get_parent_end()), 
-        detail::file_handle(ctx.stderr_behavior->get_parent_end()), 
-        detail::file_handle(pi.hProcess)); 
-#endif 
+    return child(pi.dwProcessId,
+        detail::file_handle(ctx.stdin_behavior->get_parent_end()),
+        detail::file_handle(ctx.stdout_behavior->get_parent_end()),
+        detail::file_handle(ctx.stderr_behavior->get_parent_end()));
+#endif
 }
 
-inline child create_child(const std::string &executable, context ctx = context())
+/**
+ * Starts a new child process.
+ *
+ * Launches a new process based on the binary image specified by the
+ * executable.
+ *
+ * \remark Blocking remarks: This function may block if the device
+ * holding the executable blocks when loading the image. This might
+ * happen if, e.g., the binary is being loaded from a network share.
+ *
+ * \return A handle to the new child process.
+ */
+inline child create_child(const std::string &executable)
 {
-    return create_child(executable, std::vector<std::string>(), ctx); 
+    return create_child(executable, std::vector<std::string>(), context());
+}
+
+/**
+ * Starts a new child process.
+ *
+ * Launches a new process based on the binary image specified by the
+ * executable and the set of arguments passed to it.
+ *
+ * \remark Blocking remarks: This function may block if the device
+ * holding the executable blocks when loading the image. This might
+ * happen if, e.g., the binary is being loaded from a network share.
+ *
+ * \return A handle to the new child process.
+ */
+template <typename Arguments>
+inline child create_child(const std::string &executable, Arguments args)
+{
+    return create_child(executable, args, context());
 }
 
 }

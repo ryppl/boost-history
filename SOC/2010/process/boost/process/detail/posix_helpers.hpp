@@ -3,7 +3,8 @@
 // ~~~~~~~~~~~~~
 //
 // Copyright (c) 2006, 2007 Julio M. Merino Vidal
-// Copyright (c) 2008, 2009 Boris Schaeling
+// Copyright (c) 2008 Ilya Sokolov, Boris Schaeling
+// Copyright (c) 2009 Boris Schaeling
 // Copyright (c) 2010 Felipe Tanus, Boris Schaeling
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -11,11 +12,9 @@
 //
 
 /**
- * \file boost/process/detail/posix_helper.hpp
+ * \file boost/process/detail/posix_helpers.hpp
  *
- * Includes the declaration of helper functions for the operations in a POSIX
- * system.
- *
+ * Includes the declaration of helper functions for POSIX systems.
  */
 
 #ifndef BOOST_PROCESS_POSIX_HELPERS_HPP
@@ -41,12 +40,14 @@ namespace detail {
  * NULL-terminated string of the form var=value; these must also be
  * released by the caller.
  *
+ * This operation is only available on POSIX systems.
+ *
  * \return The first argument of the pair is an integer that indicates
  *         how many strings are stored in the second argument. The
  *         second argument is a NULL-terminated, dynamically allocated
  *         array of dynamically allocated strings representing the
  *         enviroment's content. Each array entry is a NULL-terminated
- *         string of the form var=value. The caller is responsible of 
+ *         string of the form var=value. The caller is responsible for
  *         freeing them.
  */
 inline std::pair<std::size_t, char**> environment_to_envp(const environment_t &env)
@@ -77,7 +78,7 @@ inline std::pair<std::size_t, char**> environment_to_envp(const environment_t &e
  *         how many strings are stored in the second argument. The
  *         second argument is a NULL-terminated, dynamically allocated
  *         array of dynamically allocated strings holding the arguments
- *         to the executable. The caller is responsible of freeing them.
+ *         to the executable. The caller is responsible for freeing them.
  */
 template <class Arguments>
 inline std::pair<std::size_t, char**> collection_to_argv(const Arguments &args)

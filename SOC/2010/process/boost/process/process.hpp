@@ -3,7 +3,8 @@
 // ~~~~~~~~~~~~~
 //
 // Copyright (c) 2006, 2007 Julio M. Merino Vidal
-// Copyright (c) 2008, 2009 Boris Schaeling
+// Copyright (c) 2008 Ilya Sokolov, Boris Schaeling
+// Copyright (c) 2009 Boris Schaeling
 // Copyright (c) 2010 Felipe Tanus, Boris Schaeling
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -22,9 +23,11 @@
 #include <boost/process/config.hpp>
 
 #if defined(BOOST_POSIX_API)
-#   include <cerrno>
-#   include <sys/wait.h>
+#   include <unistd.h>
+#   include <sys/types.h>
 #   include <signal.h>
+
+#   include <sys/wait.h>
 #elif defined(BOOST_WINDOWS_API)
 #   include <cstdlib>
 #   include <windows.h>
@@ -32,54 +35,32 @@
 #   error "Unsupported platform." 
 #endif
 
-#include <boost/process/status.hpp>
-#include <boost/system/system_error.hpp>
-#include <boost/throw_exception.hpp>
-#include <boost/shared_ptr.hpp>
+#include <boost/process/pid_type.hpp>
 
 namespace boost {
 namespace process {
 
 /**
- * The process class provides access to an unrelated process (a process 
- * which is neither a child process nor a parent process nor self). 
+ * Process class to represent any running process.
  */
 class process
 {
 public:
-#if defined(BOOST_PROCESS_DOXYGEN)
-    /**
-     * Opaque name for the native process' identifier type.
-     *
-     * Each operating system identifies processes using a specific type.
-     * The \a id_type type is used to transparently refer to a process
-     * regardless of the operating system in which this class is used.
-     *
-     * This type is guaranteed to be an integral type on all supported
-     * platforms.
-     */
-    typedef NativeProcessId id_type;
-#elif defined(BOOST_POSIX_API)
-    typedef pid_t id_type;
-#elif defined(BOOST_WINDOWS_API)
-    typedef DWORD id_type;
-#endif
-
     /**
      * Constructs a new process object.
      *
      * Creates a new process object that represents a running process
      * within the system.
      */
-    process(id_type id)
+    process(pid_type id)
         : id_(id)
     {
     }
 
     /**
-     * Returns the process' identifier.
+     * Returns the process identifier.
      */
-    id_type get_id() const
+    pid_type get_id() const
     {
         return id_;
     }
@@ -103,19 +84,19 @@ public:
     void terminate(bool force = false) const
     {
 #if defined(BOOST_POSIX_API)
-        if (::kill(id_, force ? SIGKILL : SIGTERM) == -1)
-            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("kill(2) failed"); 
+        if (kill(id_, force ? SIGKILL : SIGTERM) == -1)
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("kill(2) failed");
 #elif defined(BOOST_WINDOWS_API)
-        HANDLE h = ::OpenProcess(PROCESS_TERMINATE, FALSE, id_);
+        HANDLE h = OpenProcess(PROCESS_TERMINATE, FALSE, id_);
         if (h == NULL)
-            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("OpenProcess() failed"); 
-        if (!::TerminateProcess(h, EXIT_FAILURE))
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("OpenProcess() failed");
+        if (!TerminateProcess(h, EXIT_FAILURE))
         {
-            ::CloseHandle(h);
-            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("TerminateProcess() failed"); 
+            CloseHandle(h);
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("TerminateProcess() failed");
         }
-        if (!::CloseHandle(h))
-            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CloseHandle() failed"); 
+        if (!CloseHandle(h))
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CloseHandle() failed");
 #endif
     }
 
@@ -129,41 +110,44 @@ public:
      *         process has not finalized execution and waits until
      *         it terminates.
      */
-    int wait()
+    int wait() const
     {
 #if defined(BOOST_POSIX_API)
-        int s;
-        if (::waitpid(get_id(), &s, 0) == -1)
-            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("waitpid(2) failed"); 
-        return s;
+        pid_t p;
+        int status;
+        do
+        {
+            p = waitpid(id_, &status, 0);
+        } while (p == -1 && errno == EINTR);
+        if (p == -1)
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("waitpid(2) failed");
+        return status;
 #elif defined(BOOST_WINDOWS_API)
-        HANDLE h = ::OpenProcess(PROCESS_QUERY_INFORMATION | SYNCHRONIZE, FALSE, id_); 
+        HANDLE h = OpenProcess(PROCESS_QUERY_INFORMATION | SYNCHRONIZE, FALSE, id_); 
         if (h == NULL) 
-            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("OpenProcess() failed"); 
-
-        if (::WaitForSingleObject(h, INFINITE) == WAIT_FAILED) 
-        { 
-            ::CloseHandle(h); 
-            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("WaitForSingleObject() failed"); 
-        } 
-
-        DWORD exit_code; 
-        if (!::GetExitCodeProcess(h, &exit_code)) 
-        { 
-            ::CloseHandle(h); 
-            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("GetExitCodeProcess() failed"); 
-        } 
-        if (!::CloseHandle(h)) 
-            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CloseHandle() failed"); 
-        return exit_code; 
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("OpenProcess() failed");
+        if (WaitForSingleObject(h, INFINITE) == WAIT_FAILED)
+        {
+            CloseHandle(h);
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("WaitForSingleObject() failed");
+        }
+        DWORD exit_code;
+        if (!GetExitCodeProcess(h, &exit_code))
+        {
+            CloseHandle(h);
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("GetExitCodeProcess() failed");
+        }
+        if (!CloseHandle(h))
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CloseHandle() failed");
+        return exit_code;
 #endif
     }
 
 private:
     /**
-     * The process' identifier.
+     * The process identifier.
      */
-    id_type id_;
+    pid_type id_;
 };
 
 }

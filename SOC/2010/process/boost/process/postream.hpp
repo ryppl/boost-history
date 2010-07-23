@@ -3,7 +3,8 @@
 // ~~~~~~~~~~~~~
 //
 // Copyright (c) 2006, 2007 Julio M. Merino Vidal
-// Copyright (c) 2008, 2009 Boris Schaeling
+// Copyright (c) 2008 Ilya Sokolov, Boris Schaeling
+// Copyright (c) 2009 Boris Schaeling
 // Copyright (c) 2010 Felipe Tanus, Boris Schaeling
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -46,13 +47,13 @@ namespace process {
  * the caller explicitly close the communication channel.
  *
  * \remark Blocking remarks: Functions that write data to this
- *     stream can block if the associated file handle blocks during
- *     the write. As this class is used to communicate with child
- *     processes through anonymous pipes, the most typical blocking
- *     condition happens when the child is not processing the data
- *     in the pipe's system buffer. When this happens, the buffer
- *     eventually fills up and the system blocks until the reader
- *     consumes some data, leaving some new room.
+ *         stream can block if the associated file handle blocks during
+ *         the write. As this class is used to communicate with child
+ *         processes through anonymous pipes, the most typical blocking
+ *         condition happens when the child is not processing the data
+ *         in the pipe's system buffer. When this happens, the buffer
+ *         eventually fills up and the system blocks until the reader
+ *         consumes some data, leaving some new room.
  */
 class postream : public std::ostream, public boost::noncopyable
 {

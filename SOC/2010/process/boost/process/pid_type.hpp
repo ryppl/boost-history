@@ -3,7 +3,8 @@
 // ~~~~~~~~~~~~~
 //
 // Copyright (c) 2006, 2007 Julio M. Merino Vidal
-// Copyright (c) 2008, 2009 Boris Schaeling
+// Copyright (c) 2008 Ilya Sokolov, Boris Schaeling
+// Copyright (c) 2009 Boris Schaeling
 // Copyright (c) 2010 Felipe Tanus, Boris Schaeling
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -31,6 +32,17 @@ namespace boost {
 namespace process {
 
 #if defined(BOOST_PROCESS_DOXYGEN)
+/**
+ * Opaque name for the process identifier type.
+ *
+ * Each operating system identifies processes using a specific type.
+ * The \a pid_type type is used to transparently refer to a process
+ * regardless of the operating system in which this class is used.
+ *
+ * This type is guaranteed to be an integral type on all supported
+ * platforms. On POSIX systems it is defined as pid_t, on Windows systems as
+ * DWORD.
+ */
 typedef NativeProcessId pid_type;
 #elif defined(BOOST_POSIX_API)
 typedef pid_t pid_type;
