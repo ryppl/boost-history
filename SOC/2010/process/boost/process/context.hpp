@@ -118,7 +118,7 @@ struct context
     {
     }
 #elif defined(BOOST_WINDOWS_API)
-    void setup(STARTUPINFO &sainfo)
+    void setup(STARTUPINFOA &sainfo)
     {
     }
 #endif

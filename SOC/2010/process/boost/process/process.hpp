@@ -26,13 +26,13 @@
 #   include <unistd.h>
 #   include <sys/types.h>
 #   include <signal.h>
-
 #   include <sys/wait.h>
 #elif defined(BOOST_WINDOWS_API)
+#   include <boost/shared_ptr.hpp>
 #   include <cstdlib>
 #   include <windows.h>
 #else
-#   error "Unsupported platform." 
+#   error "Unsupported platform."
 #endif
 
 #include <boost/process/pid_type.hpp>
@@ -51,11 +51,40 @@ public:
      *
      * Creates a new process object that represents a running process
      * within the system.
+     *
+     * On Windows the process is opened and a handle saved. This is required
+     * to avoid the operating system removing process resources when the
+     * process exits. The handle is closed when the process instance (and all
+     * of its copies) is destroyed.
      */
     process(pid_type id)
         : id_(id)
+#if defined(BOOST_WINDOWS_API)
+        , handle_(OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, id), CloseHandle)
+#endif
+    {
+#if defined(BOOST_WINDOWS_API)
+        if (handle_ == NULL)
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("OpenProcess() failed");
+#endif
+    }
+
+#if defined(BOOST_WINDOWS_API)
+    /**
+     * Constructs a new process object.
+     *
+     * Creates a new process object that represents a running process
+     * within the system.
+     *
+     * This operation is only available on Windows systems. The handle is
+     * closed when the process instance (and all of its copies) is destroyed.
+     */
+    process(HANDLE handle)
+        : id_(GetProcessId(handle)),
+        handle_(handle, CloseHandle)
     {
     }
+#endif
 
     /**
      * Returns the process identifier.
@@ -148,6 +177,17 @@ private:
      * The process identifier.
      */
     pid_type id_;
+
+#if defined(BOOST_WINDOWS_API)
+    /**
+     * The process handle.
+     *
+     * The process handle is saved in a shared pointer to guarantee that it
+     * is closed when not needed anymore. The handle guarantees that Windows
+     * does not remove process resources when a process exits.
+     */
+    boost::shared_ptr<void> handle_;
+#endif
 };
 
 }

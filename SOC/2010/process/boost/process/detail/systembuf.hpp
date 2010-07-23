@@ -154,7 +154,7 @@ protected:
      * \returns traits_type::eof() if a write error occurrs. Otherwise
      *          returns traits_type::not_eof(c).
      */
-    int_type overflow(int c)
+    virtual int_type overflow(int c)
     {
         BOOST_ASSERT(pptr() >= epptr());
 
@@ -180,31 +180,24 @@ protected:
      *
      * \returns 0 on success, -1 if an error occurred.
      */
-#if defined(BOOST_POSIX_API)
     virtual int sync()
     {
+#if defined(BOOST_POSIX_API)
         ssize_t cnt = pptr() - pbase();
-        bool ok;
-
-        ok = (write(handle_, pbase(), cnt) == cnt);
+        bool ok = (write(handle_, pbase(), cnt) == cnt);
         if (ok)
             pbump(-cnt);
         return ok ? 0 : -1;
-    }
 #elif defined(BOOST_WINDOWS_API)
-    virtual int sync()
-    {
         long cnt = pptr() - pbase();
-        bool ok;
         DWORD rcnt;
         BOOL res = WriteFile(handle_, pbase(), cnt, &rcnt, NULL);
-
-        ok = (res && static_cast<long>(rcnt) == cnt);
+        bool ok = (res && static_cast<long>(rcnt) == cnt);
         if (ok)
             pbump(-cnt);
         return ok ? 0 : -1;
-    }
 #endif
+    }
 
 private:
     /**

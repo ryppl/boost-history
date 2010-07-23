@@ -68,6 +68,32 @@ public:
             stderr_.reset(new pistream(fhstderr));
     }
 
+#if defined(BOOST_WINDOWS_API)
+    /**
+     * Creates a new child object that represents the just spawned child
+     * process \a id.
+     *
+     * The \a fhstdin, \a fhstdout and \a fhstderr file handles represent
+     * the parent's handles used to communicate with the corresponding
+     * data streams. They needn't be valid but their availability must
+     * match the redirections configured by the launcher that spawned this
+     * process.
+     *
+     * This operation is only available on Windows systems.
+     */
+    child(HANDLE handle, detail::file_handle fhstdin,
+        detail::file_handle fhstdout, detail::file_handle fhstderr)
+        : process(handle)
+    {
+        if (fhstdin.valid())
+            stdin_.reset(new postream(fhstdin));
+        if (fhstdout.valid())
+            stdout_.reset(new pistream(fhstdout));
+        if (fhstderr.valid())
+            stderr_.reset(new pistream(fhstderr));
+    }
+#endif
+
     /**
      * Gets a reference to the child's standard input stream.
      *

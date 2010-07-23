@@ -314,13 +314,10 @@ inline child create_child(const std::string &executable, Arguments args, Context
         envstrs.get(), workdir.get(), &startup_info, &pi) == 0)
         BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreateProcess() failed");
 
-    if (!CloseHandle(pi.hProcess))
-        BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CloseHandle() failed");
-
     if (!CloseHandle(pi.hThread))
         BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CloseHandle() failed");
 
-    return child(pi.dwProcessId,
+    return child(pi.hProcess,
         detail::file_handle(ctx.stdin_behavior->get_parent_end()),
         detail::file_handle(ctx.stdout_behavior->get_parent_end()),
         detail::file_handle(ctx.stderr_behavior->get_parent_end()));

@@ -61,21 +61,13 @@ void test_close_stdin()
     std::vector<std::string> args; 
     args.push_back("is-closed-stdin"); 
 
-    int s1 = Launcher()(args, Context(), bpb::close::def(), 
+    int s = Launcher()(args, Context(), bpb::close::def(), 
                         bpb::close::def(), bpb::close::def()).wait(); 
 #if defined(BOOST_POSIX_API) 
-    BOOST_REQUIRE(WIFEXITED(s1)); 
-    BOOST_CHECK_EQUAL(WEXITSTATUS(s1), EXIT_SUCCESS); 
+    BOOST_REQUIRE(WIFEXITED(s)); 
+    BOOST_CHECK_EQUAL(WEXITSTATUS(s), EXIT_SUCCESS); 
 #elif defined(BOOST_WINDOWS_API) 
-    BOOST_CHECK_EQUAL(s1, EXIT_SUCCESS); 
-#endif 
-
-    int s2 = Launcher()(args, Context(), bpb::pipe::def(bpb::pipe::input_stream)).wait(); 
-#if defined(BOOST_POSIX_API) 
-    BOOST_REQUIRE(WIFEXITED(s2)); 
-    BOOST_CHECK_EQUAL(WEXITSTATUS(s2), EXIT_FAILURE); 
-#elif defined(BOOST_WINDOWS_API) 
-    BOOST_CHECK_EQUAL(s2, EXIT_FAILURE); 
+    BOOST_CHECK_EQUAL(s, EXIT_SUCCESS); 
 #endif 
 } 
 
