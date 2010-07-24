@@ -314,8 +314,9 @@ inline child create_child(const std::string &executable, Arguments args, Context
         envstrs.get(), workdir.get(), &startup_info, &pi) == 0)
         BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreateProcess() failed");
 
-    if (!CloseHandle(pi.hThread))
-        BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CloseHandle() failed");
+    // Don't throw an exception if CloseHandle() fails as we would
+    // leak the process handle in pi.hProcess.
+    CloseHandle(pi.hThread);
 
     return child(pi.hProcess,
         detail::file_handle(ctx.stdin_behavior->get_parent_end()),
