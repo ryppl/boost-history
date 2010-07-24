@@ -85,7 +85,7 @@ struct context
      * The default behavior of standard streams is to inherit them. The current
      * work directory is also the work directory of the child process. The child
      * process also inherits all environment variables.
-     */ 
+     */
     context()
 #if defined(BOOST_POSIX_API)
         : stdin_behavior(behavior::inherit::def(STDIN_FILENO)),

@@ -318,6 +318,13 @@ inline child create_child(const std::string &executable, Arguments args, Context
     // leak the process handle in pi.hProcess.
     CloseHandle(pi.hThread);
 
+    if (ctx.stdin_behavior->get_child_end() != INVALID_HANDLE_VALUE)
+        CloseHandle(ctx.stdin_behavior->get_child_end());
+    if (ctx.stdout_behavior->get_child_end() != INVALID_HANDLE_VALUE)
+        CloseHandle(ctx.stdout_behavior->get_child_end());
+    if (ctx.stderr_behavior->get_child_end() != INVALID_HANDLE_VALUE)
+        CloseHandle(ctx.stderr_behavior->get_child_end());
+
     return child(pi.hProcess,
         detail::file_handle(ctx.stdin_behavior->get_parent_end()),
         detail::file_handle(ctx.stdout_behavior->get_parent_end()),
