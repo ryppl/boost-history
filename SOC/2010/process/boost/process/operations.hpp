@@ -29,10 +29,12 @@
 #   include <stdlib.h>
 #   include <unistd.h>
 #   if defined(__CYGWIN__)
+#       include <boost/scoped_array.hpp>
 #       include <sys/cygwin.h>
 #   endif
 #elif defined(BOOST_WINDOWS_API)
 #   include <boost/process/detail/windows_helpers.hpp>
+#   include <boost/scoped_array.hpp>
 #   include <boost/shared_array.hpp>
 #   include <windows.h>
 #else
@@ -46,7 +48,6 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/system/system_error.hpp>
 #include <boost/throw_exception.hpp>
-#include <boost/scoped_array.hpp>
 #include <boost/assert.hpp>
 #include <string>
 #include <vector>
@@ -187,86 +188,75 @@ inline child create_child(const std::string &executable, Arguments args, Context
     args.insert(args.begin(), p_name);
 
 #if defined(BOOST_POSIX_API)
+    // Between fork() and execve() only async-signal-safe functions
+    // must be called if multithreaded applications should be supported.
+    // That's why the following code is executed before fork() is called.
+#if defined(F_MAXFD)
+    int maxdescs = fcntl(-1, F_MAXFD, 0);
+    if (maxdescs == -1)
+        maxdescs = sysconf(_SC_OPEN_MAX);
+#else
+    int maxdescs = sysconf(_SC_OPEN_MAX);
+#endif
+    if (maxdescs == -1)
+        maxdescs = 1024;
+    std::vector<bool> closeflags(maxdescs, true);
+    std::pair<std::size_t, char**> argv = detail::collection_to_argv(args);
+    std::pair<std::size_t, char**> envp =
+        detail::environment_to_envp(ctx.environment);
+
     pid_t pid = fork();
     if (pid == -1)
         BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("fork(2) failed");
     else if (pid == 0)
     {
-#if defined(F_MAXFD)
-        int maxdescs = fcntl(-1, F_MAXFD, 0);
-        if (maxdescs == -1)
-            maxdescs = sysconf(_SC_OPEN_MAX);
-#else
-        int maxdescs = sysconf(_SC_OPEN_MAX);
-#endif
-        if (maxdescs == -1)
-            maxdescs = 1024;
-        try
+        int stdin_fd = ctx.stdin_behavior->get_child_end();
+        if (stdin_fd != -1)
         {
-            boost::scoped_array<bool> closeflags(new bool[maxdescs]);
-            for (int i = 0; i < maxdescs; ++i)
-                closeflags[i] = true;
-
-            int stdin_fd = ctx.stdin_behavior->get_child_end();
-            if (stdin_fd != -1)
+            if (dup2(stdin_fd, STDIN_FILENO) == -1)
             {
-                if (dup2(stdin_fd, STDIN_FILENO) == -1)
-                    BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("dup2() failed");
-                closeflags[STDIN_FILENO] = false;
+                write(STDERR_FILENO, "dup2() failed\n", 14);
+                _exit(127);
             }
-
-            int stdout_fd = ctx.stdout_behavior->get_child_end();
-            if (stdout_fd != -1)
-            {
-                if (dup2(stdout_fd, STDOUT_FILENO) == -1)
-                    BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("dup2() failed");
-                closeflags[STDOUT_FILENO] = false;
-            }
-
-            int stderr_fd = ctx.stderr_behavior->get_child_end();
-            if (stderr_fd != -1)
-            {
-                if (dup2(stderr_fd, STDERR_FILENO) == -1)
-                    BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("dup2() failed");
-                closeflags[STDERR_FILENO] = false;
-            }
-
-            for (int i = 0; i < maxdescs; ++i)
-            {
-                if (closeflags[i])
-                    close(i);
-            }
-
-            ctx.setup();
-        }
-        catch (const boost::system::system_error &e)
-        {
-            write(STDERR_FILENO, e.what(), std::strlen(e.what()));
-            write(STDERR_FILENO, "\n", 1);
-            std::exit(127);
+            closeflags[STDIN_FILENO] = false;
         }
 
-        std::pair<std::size_t, char**> argv =
-            detail::collection_to_argv(args);
-        std::pair<std::size_t, char**> envp =
-            detail::environment_to_envp(ctx.environment);
+        int stdout_fd = ctx.stdout_behavior->get_child_end();
+        if (stdout_fd != -1)
+        {
+            if (dup2(stdout_fd, STDOUT_FILENO) == -1)
+            {
+                write(STDERR_FILENO, "dup2() failed\n", 14);
+                _exit(127);
+            }
+            closeflags[STDOUT_FILENO] = false;
+        }
+
+        int stderr_fd = ctx.stderr_behavior->get_child_end();
+        if (stderr_fd != -1)
+        {
+            if (dup2(stderr_fd, STDERR_FILENO) == -1)
+            {
+                write(STDERR_FILENO, "dup2() failed\n", 14);
+                _exit(127);
+            }
+            closeflags[STDERR_FILENO] = false;
+        }
+
+        for (int i = 0; i < maxdescs; ++i)
+        {
+            if (closeflags[i])
+                close(i);
+        }
+
+        ctx.setup();
 
         execve(executable.c_str(), argv.second, envp.second);
 
-        for (std::size_t i = 0; i < argv.first; ++i)
-            delete[] argv.second[i];
-        delete[] argv.second;
-
-        for (std::size_t i = 0; i < envp.first; ++i)
-            delete[] envp.second[i];
-        delete[] envp.second;
-
-        boost::system::system_error e(boost::system::error_code(errno,
-            boost::system::get_system_category()),
-            BOOST_PROCESS_SOURCE_LOCATION "execve(2) failed");
-        write(STDERR_FILENO, e.what(), std::strlen(e.what()));
-        write(STDERR_FILENO, "\n", 1);
-        std::exit(127);
+        // Actually we should delete argv and envp data. As we must not
+        // call any non-async-signal-safe functions though we simply exit.
+        write(STDERR_FILENO, "execve() failed\n", 16);
+        _exit(127);
     }
     else
     {

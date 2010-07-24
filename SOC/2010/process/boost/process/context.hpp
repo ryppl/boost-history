@@ -109,10 +109,12 @@ struct context
      * child processes. You override setup() in a user-defined context class
      * which should be derived from this class.
      *
-     * On POSIX platforms setup() is called in the child process. On Windows
-     * platforms setup() is called in the parent process. Furthermore a
-     * reference to a STARTUPINFO structure is passed as a parameter on Windows
-     * platforms.
+     * On POSIX platforms setup() is called in the child process. That's why in
+     * a multithreaded application only async-signal-safe functions must be
+     * called in setup().
+     *
+     * On Windows platforms setup() is called in the parent process. A
+     * reference to a STARTUPINFOA structure is passed as parameter.
      */
     void setup()
     {
