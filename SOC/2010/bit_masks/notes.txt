@@ -50,12 +50,6 @@ List of TODO's throughout the bitfield_tuple
  
 
 14) bitfield_tuple.hpp
-    a)  Consider renaming disable_if_reference_type_by_name
-          to
-        disable_if_proxy_ref_type_by_name
-        or something like that.
-    This would only be for clarification measures as this type doesn't use
-    real reference types.
 
 
 Test file review

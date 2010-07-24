@@ -410,88 +410,11 @@ struct bft_arg_parse_impl <
             back_storage_space
         >::type
     >::type                             size_of_storage;
-/*
-Info to know about the curret state of parsing.
-    1) Is the curret front_storage_space zero?
-        This means that there are no leading zeros.
-    2) Is the rear storage space zero.
-        there is no trailing zeros.
-    3) number of bits being stored for the pointer.
-        calculated as the number of bits in the mask -
-        (back_storage_space + front_storage_space)
-        
-*/
-    
 
-    // Logic for determining how to actually store the pointer.
-    typedef typename mpl::if_c<front_storage_space::value == 0,
-    mpl::false_,mpl::true_>::type                  uses_front_storage;
-
-    typedef typename mpl::if_c<back_storage_space::value == 0,
-    mpl::false_,mpl::true_>::type                  uses_back_storage;
-
-    // calculating mask offset, data offset and the offset for the next field.
-    typedef typename mpl::if_<
-        uses_front_storage,
-        // calculate offset
-        typename mpl::if_<
-            mpl::less_equal<
-                Offset,
-                front_storage_space
-            >,
-            mpl::size_t<0>,
-            mpl::minus<Offset, front_storage_space>
-        >::type,
-        Offset
-    >::type                             mask_offset;
-
-
-    // calculating the offset of the value bits inside of the masks.
-    typedef typename mpl::if_<
-        uses_front_storage,
-        typename mpl::if_<
-            mpl::less_equal<
-                Offset,
-                front_storage_space
-            >,
-            front_storage_space,
-            typename mpl::minus<Offset, front_storage_space>::type
-        >::type,
-        Offset
-    >::type                             data_offset;
 
     typedef typename mpl::plus< Offset, size_of_storage>::type offset;
 
     typedef bitfields::pointer< ReturnType, Name, Mask > param;
-
-    // if the offset is greater then then number of storage bits
-    // the this pointer is not going to be aligned within storage.
-    typedef typename mpl::if_<
-        mpl::greater<
-            Offset,
-            front_storage_space
-        >,
-        typename mpl::if_<
-            mpl::and_<
-                mpl::not_<
-                    uses_front_storage
-                >,
-                integral_constant<
-                    bool,
-                    (Offset::value == 32)
-                >
-            >,
-            mpl::true_,
-            mpl::false_
-        >::type,
-        mpl::true_
-    >::type                     is_aligned;
-
-    //
-    typedef typename mpl::if_<is_aligned,
-        bit_shift::none,
-        bit_shift::right< mpl::minus<Offset,front_storage_space>::type::value>
-    >::type                     alignment_shift;
 
     typedef StoragePolicy   storage_policy;
     typedef typename mpl::push_back<
@@ -499,16 +422,14 @@ Info to know about the curret state of parsing.
         bitfield_element<
             ReturnType*,
             Name,
-            data_offset,
+            Offset,
             size_of_storage,
             Mask,
             pointer_packing_policy<
                 Mask,
                 ReturnType*,
-                offset,
-                size_of_storage, 
-                is_aligned,
-                alignment_shift
+                Offset,
+                size_of_storage
             >
         >
     >::type                     field_vector;
