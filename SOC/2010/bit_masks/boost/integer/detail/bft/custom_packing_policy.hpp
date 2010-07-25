@@ -6,13 +6,9 @@
 
 #ifndef BOOST_BITFIELD_TUPLE_CUSTOM_PACKING_POLICY_HPP
 #define BOOST_BITFIELD_TUPLE_CUSTOM_PACKING_POLICY_HPP
-#include <cstddef>
-#include <boost/type_traits/is_same.hpp>
-#include <boost/type_traits/make_unsigned.hpp>
-#include <boost/integer/detail/bft/mask_shift_indicators.hpp>
+#include <boost/integer/detail/bft/policy_creation_detail.hpp>
 
-namespace boost { namespace detial {
-
+namespace boost { namespace detail {
 
 template <
     typename Mask,
@@ -25,11 +21,15 @@ struct custom_packing_policy {
     typedef ValueType           value_type;
     
     template <typename StorageType>
-    struct apply {
-        typedef StorageType     storage_type;
-        static value_type get(storage_type storage);
-        static storage_type set(storage_type storage, value_type ptr);
-    };
+    struct apply
+        : policy_detail::deduce_policy<
+            Mask,
+            ValueType,
+            Offset,
+            Width,
+            StorageType
+        >::type
+    { };
 };
 
 }} // end boost::detail

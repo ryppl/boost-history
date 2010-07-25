@@ -10,25 +10,12 @@
 using namespace boost;
 using namespace boost::bitfields;
 
-template <
-    typename Mask,
-    typename ValueType,
-    typename Offset,
-    typename Width
-> 
-struct custom_packing_policy {
-    typedef Mask                mask;
-    typedef ValueType           value_type;
-    
-    template <typename StorageType>
-    struct apply {
-        typedef StorageType     storage_type;
-        static value_type get(storage_type storage);
-        static storage_type set(storage_type storage, value_type ptr);
-    };
-};
-
 struct cust;
+struct i1;
+struct i2;
+
+struct b1;
+struct b2;
 
 int main() {
     {
@@ -36,12 +23,23 @@ int main() {
             custom<
                 unsigned int,
                 cust,
-                bits_mask<unsigned int, 3, 20>,
-                custom_packing_policy
+                bits_mask<unsigned int, 8,16>
             >
         >                       custom_t1;
 
         custom_t1 t1;
+        unsigned int i = 0x00ffff00;
+        t1.get<cust>() = i;
+        BOOST_TEST(t1.get<cust>() == i);
+    }
+    {
+        typedef bitfield_tuple<
+            custom<
+                unsigned int,
+                cust,
+                bits_mask<unsigned int, 8,16>
+            >
+        >                       custom_t1;
     }
     return 0;
 }

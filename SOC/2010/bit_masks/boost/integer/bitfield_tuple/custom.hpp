@@ -7,6 +7,7 @@
 #ifndef BOOST_CUSTOM_FIELD_HPP
 #define BOOST_CUSTOM_FIELD_HPP
 #include <cstddef>
+#include <boost/integer/detail/bft/custom_packing_policy.hpp>
 
 namespace boost { namespace bitfields {
 
@@ -24,7 +25,7 @@ template <
         typename,
         typename,
         typename
-    > class Policy
+    > class Policy = detail::custom_packing_policy
 >
 struct custom;
 

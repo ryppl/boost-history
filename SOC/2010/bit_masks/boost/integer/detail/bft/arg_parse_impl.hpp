@@ -32,9 +32,8 @@
 #include <boost/integer/detail/bft/pointer_packing_policy.hpp>
 
 
+
 namespace boost { namespace detail {
-
-
 
 /** This is the empty which prevents the user from supply things which are
  *  not enclosed within either a member template or a storage template.
