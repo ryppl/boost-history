@@ -116,10 +116,22 @@ int h_query_env(int argc, char *argv[])
 #if defined(BOOST_WINDOWS_API) 
     char buf[1024]; 
     DWORD res = GetEnvironmentVariableA(argv[1], buf, sizeof(buf)); 
-    std::cout << (res ? buf : "undefined") << std::endl; 
+    if (res == 0) 
+        std::cout << "undefined" << std::endl; 
+    else 
+    { 
+        std::cout << "defined" << std::endl; 
+        std::cout << "'" << buf << "'" << std::endl; 
+    } 
 #else 
     const char *value = getenv(argv[1]); 
-    std::cout << (value ? value : "undefined") << std::endl; 
+    if (value == NULL) 
+        std::cout << "undefined" << std::endl; 
+    else 
+    { 
+        std::cout << "defined" << std::endl; 
+        std::cout << "'" << value << "'" << std::endl; 
+    } 
 #endif 
 
     return EXIT_SUCCESS; 

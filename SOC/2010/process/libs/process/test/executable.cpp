@@ -3,8 +3,9 @@
 // ~~~~~~~~~~~~~ 
 // 
 // Copyright (c) 2006, 2007 Julio M. Merino Vidal 
-// Copyright (c) 2008, 2009 Boris Schaeling
-// Copyright (c) 2010 Felipe Tanus, Boris Schaeling
+// Copyright (c) 2008 Ilya Sokolov, Boris Schaeling 
+// Copyright (c) 2009 Boris Schaeling 
+// Copyright (c) 2010 Felipe Tanus, Boris Schaeling 
 // 
 // Distributed under the Boost Software License, Version 1.0. (See accompanying 
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt) 
@@ -14,13 +15,7 @@
 
 #if defined(BOOST_POSIX_API) 
 #   include <stdlib.h> 
-#   if defined(__CYGWIN__) 
-#       undef BOOST_POSIX_API 
-#       define BOOST_CYGWIN_PATH 
-#   endif 
 #elif defined(BOOST_WINDOWS_API) 
-#   include <boost/shared_array.hpp> 
-#   include <cstring> 
 #   include <windows.h> 
 #else 
 #   error "Unsupported platform." 
@@ -30,7 +25,6 @@
 #include "util/boost.hpp" 
 #include "util/use_helpers.hpp" 
 #include <string> 
-#include <stdexcept> 
 
 BOOST_AUTO_TEST_CASE(test_find_default) 
 { 
@@ -39,7 +33,7 @@ BOOST_AUTO_TEST_CASE(test_find_default)
     std::string helpersname = bfs::path(get_helpers_path()).leaf(); 
 
     BOOST_CHECK_THROW(bp::find_executable_in_path(helpersname), 
-        boost::filesystem::filesystem_error); 
+        bfs::filesystem_error); 
 } 
 
 BOOST_AUTO_TEST_CASE(test_find_env) 
@@ -72,11 +66,11 @@ BOOST_AUTO_TEST_CASE(test_find_env)
             helpersdir.c_str()) != 0); 
         bfs::path found = bp::find_executable_in_path(helpersname); 
         BOOST_CHECK(bfs::equivalent(orig, found)); 
-        BOOST_REQUIRE(SetEnvironmentVariable("PATH", oldpath) != 0); 
+        BOOST_REQUIRE(SetEnvironmentVariableA("PATH", oldpath) != 0); 
     } 
     catch (...) 
     { 
-        BOOST_REQUIRE(SetEnvironmentVariable("PATH", oldpath) != 0); 
+        BOOST_REQUIRE(SetEnvironmentVariableA("PATH", oldpath) != 0); 
     } 
 #endif 
 } 

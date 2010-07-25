@@ -183,6 +183,12 @@ inline std::string executable_to_progname(const std::string &exe)
 template <typename Arguments, typename Context>
 inline child create_child(const std::string &executable, Arguments args, Context ctx)
 {
+#if !defined(NDEBUG)
+    BOOST_ASSERT(ctx.stdin_behavior.get());
+    BOOST_ASSERT(ctx.stdout_behavior.get());
+    BOOST_ASSERT(ctx.stderr_behavior.get());
+#endif
+
     std::string p_name = ctx.process_name.empty() ?
         executable_to_progname(executable) : ctx.process_name;
     args.insert(args.begin(), p_name);
@@ -269,10 +275,17 @@ inline child create_child(const std::string &executable, Arguments args, Context
         if (ctx.stderr_behavior->get_child_end() != -1)
             close(ctx.stderr_behavior->get_child_end());
 
-        return child(pid,
-            detail::file_handle(ctx.stdin_behavior->get_parent_end()),
-            detail::file_handle(ctx.stdout_behavior->get_parent_end()),
-            detail::file_handle(ctx.stderr_behavior->get_parent_end()));
+        detail::file_handle fhin(ctx.stdin_behavior->get_parent_end());
+        detail::file_handle fhout(ctx.stdout_behavior->get_parent_end());
+        detail::file_handle fherr(ctx.stderr_behavior->get_parent_end());
+
+#if !defined(NDEBUG)
+        ctx.stdin_behavior.reset();
+        ctx.stdout_behavior.reset();
+        ctx.stderr_behavior.reset();
+#endif
+
+        return child(pid, fhin, fhout, fherr);
     }
 #elif defined(BOOST_WINDOWS_API)
     STARTUPINFOA startup_info;
@@ -315,10 +328,17 @@ inline child create_child(const std::string &executable, Arguments args, Context
     if (ctx.stderr_behavior->get_child_end() != INVALID_HANDLE_VALUE)
         CloseHandle(ctx.stderr_behavior->get_child_end());
 
-    return child(pi.hProcess,
-        detail::file_handle(ctx.stdin_behavior->get_parent_end()),
-        detail::file_handle(ctx.stdout_behavior->get_parent_end()),
-        detail::file_handle(ctx.stderr_behavior->get_parent_end()));
+    detail::file_handle fhin(ctx.stdin_behavior->get_parent_end());
+    detail::file_handle fhout(ctx.stdout_behavior->get_parent_end());
+    detail::file_handle fherr(ctx.stderr_behavior->get_parent_end());
+
+#if !defined(NDEBUG)
+    ctx.stdin_behavior.reset();
+    ctx.stdout_behavior.reset();
+    ctx.stderr_behavior.reset();
+#endif
+
+    return child(pi.hProcess, fhin, fhout, fherr);
 #endif
 }
 

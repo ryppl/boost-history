@@ -3,39 +3,45 @@
 // ~~~~~~~~~~~~~ 
 // 
 // Copyright (c) 2006, 2007 Julio M. Merino Vidal 
-// Copyright (c) 2008, 2009 Boris Schaeling
-// Copyright (c) 2010 Felipe Tanus, Boris Schaeling
+// Copyright (c) 2008 Ilya Sokolov, Boris Schaeling 
+// Copyright (c) 2009 Boris Schaeling 
+// Copyright (c) 2010 Felipe Tanus, Boris Schaeling 
 // 
 // Distributed under the Boost Software License, Version 1.0. (See accompanying 
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt) 
 // 
 
-#include "process.hpp" 
-#include <boost/mpl/list.hpp> 
-#include <boost/mpl/pair.hpp> 
+#include <boost/process/config.hpp> 
 
-namespace { 
+#if defined(BOOST_POSIX_API) 
+#   include <sys/wait.h> 
+#elif defined(BOOST_WINDOWS_API) 
+#   include <cstdlib> 
+#else 
+#   error "Unsupported platform." 
+#endif 
 
-class launcher 
+#define BOOST_TEST_MAIN 
+#include "util/boost.hpp" 
+#include "util/use_helpers.hpp" 
+#include <string> 
+#include <vector> 
+
+BOOST_AUTO_TEST_CASE(test_terminate) 
 { 
-public: 
-    bp::process operator()(bp::pid_type id) const 
-    { 
-        return bp::process(id); 
-    } 
-}; 
+    std::vector<std::string> args; 
+    args.push_back("loop"); 
 
-} 
+    bp::context ctx; 
+    bp::child c = bp::create_child(get_helpers_path(), args, ctx); 
 
-namespace mpl = boost::mpl; 
+    c.terminate(); 
 
-typedef mpl::list< 
-    mpl::pair<bp::process, launcher> 
-> test_types; 
-
-BOOST_AUTO_TEST_CASE_TEMPLATE(process_test_case, T, test_types) 
-{ 
-    using namespace process_test; 
-    test_getters<T::first, T::second>(); 
-    test_terminate<T::first, T::second>(); 
+    int status = c.wait(); 
+#if defined(BOOST_POSIX_API) 
+    BOOST_REQUIRE(!WIFEXITED(status)); 
+    BOOST_REQUIRE(WIFSIGNALED(status)); 
+#elif defined(BOOST_WINDOWS_API) 
+    BOOST_CHECK_EQUAL(status, EXIT_FAILURE); 
+#endif 
 } 

@@ -3,8 +3,9 @@
 // ~~~~~~~~~~~~~ 
 // 
 // Copyright (c) 2006, 2007 Julio M. Merino Vidal 
-// Copyright (c) 2008, 2009 Boris Schaeling
-// Copyright (c) 2010 Felipe Tanus, Boris Schaeling
+// Copyright (c) 2008 Ilya Sokolov, Boris Schaeling 
+// Copyright (c) 2009 Boris Schaeling 
+// Copyright (c) 2010 Felipe Tanus, Boris Schaeling 
 // 
 // Distributed under the Boost Software License, Version 1.0. (See accompanying 
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt) 
@@ -35,7 +36,7 @@ BOOST_AUTO_TEST_CASE(test_current)
 #if defined(BOOST_POSIX_API) 
     BOOST_REQUIRE(setenv("THIS_SHOULD_BE_DEFINED", "some-value", 1) == 0); 
 #elif defined(BOOST_WINDOWS_API) 
-    BOOST_REQUIRE(SetEnvironmentVariable("THIS_SHOULD_BE_DEFINED", 
+    BOOST_REQUIRE(SetEnvironmentVariableA("THIS_SHOULD_BE_DEFINED", 
         "some-value") != 0); 
 #endif 
 

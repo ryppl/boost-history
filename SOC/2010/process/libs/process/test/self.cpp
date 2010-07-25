@@ -3,8 +3,9 @@
 // ~~~~~~~~~~~~~ 
 // 
 // Copyright (c) 2006, 2007 Julio M. Merino Vidal 
-// Copyright (c) 2008, 2009 Boris Schaeling
-// Copyright (c) 2010 Felipe Tanus, Boris Schaeling
+// Copyright (c) 2008 Ilya Sokolov, Boris Schaeling 
+// Copyright (c) 2009 Boris Schaeling 
+// Copyright (c) 2010 Felipe Tanus, Boris Schaeling 
 // 
 // Distributed under the Boost Software License, Version 1.0. (See accompanying 
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt) 
@@ -24,15 +25,6 @@
 #define BOOST_TEST_MAIN 
 #include "util/boost.hpp" 
 #include "util/use_helpers.hpp" 
-
-class launcher 
-{ 
-public: 
-    bp::self &operator()(bp::pid_type id) 
-    { 
-        return bp::self::get_instance(); 
-    } 
-}; 
 
 BOOST_AUTO_TEST_CASE(test_id) 
 { 
@@ -55,7 +47,8 @@ BOOST_AUTO_TEST_CASE(test_get_environment)
 #if defined(BOOST_POSIX_API) 
     BOOST_REQUIRE(setenv("THIS_SHOULD_BE_DEFINED", "some-value", 1) == 0); 
 #elif defined(BOOST_WINDOWS_API) 
-    BOOST_REQUIRE(SetEnvironmentVariableA("THIS_SHOULD_BE_DEFINED", "some-value") != 0); 
+    BOOST_REQUIRE(SetEnvironmentVariableA("THIS_SHOULD_BE_DEFINED", 
+        "some-value") != 0); 
 #endif 
 
     bp::environment_t env2 = p.get_environment(); 
