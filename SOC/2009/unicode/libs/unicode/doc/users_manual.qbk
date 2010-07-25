@@ -850,11 +850,6 @@ are provided as well.
 
 [section Appendix C: Future Work]
 
-[heading Type deduction]
-A type deduction, similar to that of Boost.Fusion =result_of= namespace,
-would be useful as a lot of the functions do not have a specified return
-type.
-
 [heading Non-checked UTF conversion]
 The library only provides UTF conversion converts that do extensive checking
 that the input is correct and that the end is not unexpectedly met.
@@ -867,10 +862,6 @@ well avoid storing the =begin= and =end= iterator in such cases.
 The Unicode standard provides a quick-check scheme to tell whether a string
 is in a normalized form, which could be used to avoid expensive decomposition
 and recomposition.
-
-[heading Forwarding]
-Certain functions that take ranges and return them adapted do not perform
-correct forwarding, and return an adapted const range instead.
 
 [heading Unicode String type]
 Future versions of the library could provide a string type that maintains

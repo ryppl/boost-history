@@ -19,7 +19,7 @@ typedef boost::converter_codecvt_facet<
     wchar_t,
     boost::unicode::utf_boundary,
     boost::unicode::utf_transcoder<char>,
-    boost::unicode::utf_boundary, // wrong, we want utf_combine_boundary
+    boost::unicode::utf_combine_boundary,
     boost::multi_converter<
         boost::converted_converter<boost::unicode::utf_decoder, boost::unicode::normalizer>,
         boost::unicode::utf_encoder<wchar_t>

@@ -4,6 +4,7 @@
 #include <boost/config.hpp>
 #include <boost/iterator/segment_iterator.hpp>
 #include <boost/cuchar.hpp>
+#include <boost/unicode/utf.hpp>
 #include <algorithm>
 
 #include <boost/range/adaptor/reversed.hpp>
@@ -81,29 +82,40 @@ namespace detail
 
 } // namespace detail
 
-/** Model of \c \xmlonly<conceptname>Segmenter</conceptname>\endxmlonly
- * that segments combining character sequences. */
-struct combiner
+struct combine_boundary
 {
     typedef char32 input_type;
-    typedef char32 output_type;
     
     template<typename Iterator>
-    void ltr(Iterator& begin, Iterator end)
+    bool operator()(Iterator begin, Iterator end, Iterator pos)
     {
-        do
-        {
-            ++begin;
-        }
-        while(begin != end && ucd::get_combining_class(*begin) != 0);
-    }
-    
-    template<typename Iterator>
-    void rtl(Iterator begin, Iterator& end)
-    {
-        while(end != begin && ucd::get_combining_class(*--end) != 0);
+        return ucd::get_combining_class(*pos) == 0;
     }
 };
+
+/** Model of \c \xmlonly<conceptname>Segmenter</conceptname>\endxmlonly
+ * that segments combining character sequences. */
+typedef boost::detail::unspecified<
+    boost::boundary_segmenter<combine_boundary>
+>::type combiner;
+
+/** INTERNAL ONLY */
+#define BOOST_UNICODE_COMBINE_DEF(codec)                               \
+typedef boost::detail::unspecified<                                    \
+    boost::multi_boundary<                                             \
+        codec##_boundary,                                              \
+        codec##_decoder,                                               \
+        combine_boundary                                               \
+    >                                                                  \
+>::type codec##_combine_boundary;                                      \
+typedef boost::detail::unspecified<                                    \
+    boost::boundary_segmenter<codec##_combine_boundary>                \
+>::type codec##_combiner;                                              \
+BOOST_SEGMENTER_DEF(BOOST_UNICODE_CAT(boost::unicode, codec##_combiner), codec##_combine_segment)
+
+BOOST_UNICODE_COMBINE_DEF(u8)
+BOOST_UNICODE_COMBINE_DEF(u16)
+BOOST_UNICODE_COMBINE_DEF(utf)
 
 struct combine_sorter
 {
@@ -179,6 +191,7 @@ private:
 };
 
 BOOST_SEGMENTER_DEF(combiner, combine)
+BOOST_SEGMENTER_DEF(combine_sorter, combine_sort)
     
 } // namespace unicode
 } // namespace boost

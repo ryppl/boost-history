@@ -51,42 +51,24 @@ tuple<                                                                 \
 >                                                                      \
 cat_limits(cv1 Range1 ref1 range1, cv2 Range2 ref2 range2)             \
 {                                                                      \
-    converted_range<                                                   \
-        cv2 Range2,                                                    \
-        utf_decoder                                                    \
-    > decoded2 = adaptors::utf_decode(range2);                         \
-                                                                       \
-    if(!empty(decoded2)                                                \
-    && ucd::get_combining_class(*begin(decoded2)) != 0)                \
+    if(!empty(range2)                                                  \
+    && ucd::get_combining_class(*begin(range2)) != 0)                  \
     {                                                                  \
-        converted_range<                                               \
-            cv1 Range1,                                                \
-            utf_decoder                                                \
-        > decoded1 = adaptors::utf_decode(range1);                     \
+        typename range_iterator<cv1 Range1>::type                      \
+        new_end = boost::end(range1);                                  \
                                                                        \
-        convert_iterator<                                              \
-            typename range_iterator<cv1 Range1>::type,                 \
-            utf_decoder                                                \
-        > end = boost::end(decoded1);                                  \
-                                                                       \
-        convert_iterator<                                              \
-            typename range_iterator<cv2 Range2>::type,                 \
-            utf_decoder                                                \
-        > begin = boost::begin(decoded2);                              \
+        typename range_iterator<cv2 Range2>::type                      \
+        new_begin = boost::begin(range2);                              \
                                                                        \
         combiner().rtl(                                                \
-            boost::begin(decoded1),                                    \
-            end                                                        \
+            boost::begin(range1),                                      \
+            new_end                                                    \
         );                                                             \
-        typename range_iterator<cv1 Range1>::type                      \
-        new_end = end.base();                                          \
                                                                        \
         combiner().ltr(                                                \
-            begin,                                                     \
-            boost::end(decoded2)                                       \
+            new_begin,                                                 \
+            boost::end(range2)                                         \
         );                                                             \
-        typename range_iterator<cv2 Range2>::type                      \
-        new_begin = begin.base();                                      \
                                                                        \
         return make_tuple(                                             \
             make_iterator_range(boost::begin(range1), new_end),        \
@@ -108,9 +90,9 @@ BOOST_UNICODE_FWD_2(BOOST_UNICODE_CAT_LIMITS_FWD)
 #ifdef BOOST_UNICODE_DOXYGEN_INVOKED
 /** INTERNAL ONLY */
 #define BOOST_UNICODE_COMPOSE_CONCAT_DEF(name, nf, convert, n)         \
-/** Concatenates two ranges of UTF code units and puts the result in \c out.
+/** Concatenates two ranges of code points and puts the result in \c out.
    Throws \c std::out_of_range if the input or resulting strings are not stream-safe.
-   \pre \c Range1 and \c Range2 are in Normalized Form nf, have the same value type and are non-empty.
+   \pre \c Range1 and \c Range2 are in Normalized Form nf and are non-empty.
    \post \c out is in Normalized Form nf and is stream-safe. */        \
 template<typename Range1, typename Range2, typename OutputIterator, typename... T> \
 OutputIterator name##_concat(const Range1& range1, const Range2& range2, OutputIterator out, const T&... args);
@@ -131,7 +113,7 @@ OutputIterator BOOST_PP_CAT(BOOST_PP_SEQ_ELEM(0, seq), _concat)(const Range1& ra
     t = cat_limits(range1, range2); \
      \
     out = copy(t.get<0>(), out); \
-    out = convert(boost::join(t.get<1>(), t.get<2>()), make_converted_converter(utf_decoder(), BOOST_PP_SEQ_ELEM(1, seq)(BOOST_PP_ENUM_PARAMS(n, t))), adaptors::utf_encode_output<typename range_value<const Range1>::type>(out)).base(); \
+    out = convert(boost::join(t.get<1>(), t.get<2>()), BOOST_PP_SEQ_ELEM(1, seq)(BOOST_PP_ENUM_PARAMS(n, t)), out); \
     return copy(t.get<3>(), out); \
 }
 #endif
@@ -139,61 +121,79 @@ OutputIterator BOOST_PP_CAT(BOOST_PP_SEQ_ELEM(0, seq), _concat)(const Range1& ra
 #ifdef BOOST_UNICODE_DOXYGEN_INVOKED
 /** INTERNAL ONLY */
 #define BOOST_UNICODE_COMPOSE_CONCATED_DEF(name, nf, convert, n)       \
-/** Concatenates two ranges of UTF code units and returns the result as a lazily
+/** Concatenates two ranges of code points and returns the result as a lazily
    evaluated range.
    Throws \c std::out_of_range if the input or resulting strings are not stream-safe.
-   \pre \c Range1 and \c Range2 are in Normalized Form nf, have the same value type and are non-empty.
+   \pre \c Range1 and \c Range2 are in Normalized Form nf and are non-empty.
    \return Lazy stream-safe range in Normalized Form nf. */            \
 template<typename Range1, typename Range2, typename... T> \
-detail::unspecified<void> name##_concat(const Range1& range1, const Range2& range2, const T&... args);
+typename result_of::name##_concat<Range1, Range2>::type name##_concat(Range1&& range1, Range2&& range2, const T&... args);
 #else
-#define BOOST_UNICODE_COMPOSE_CONCATED_DEF(name, nf, convert, n) \
+#define BOOST_UNICODE_COMPOSE_CONCATED_DEF(name, nf, convert, n)       \
+namespace result_of                                                    \
+{                                                                      \
+    template<typename Range1, typename Range2>                         \
+    struct name##_concat                                               \
+    {                                                                  \
+        typedef                                                        \
+        joined_range<                                                  \
+                sub_range<Range1>,                                     \
+                joined_range<                                          \
+                    converted_range<                                   \
+                        joined_range<                                  \
+                            sub_range<Range1>,                         \
+                            sub_range<Range2>                          \
+                        >,                                             \
+                        convert                                        \
+                    >,                                                 \
+                    sub_range<Range2>                                  \
+                >                                                      \
+        > type;                                                        \
+    };                                                                 \
+}                                                                      \
 BOOST_PP_REPEAT(BOOST_PP_INC(n), BOOST_UNICODE_COMPOSE_CONCATED_DEF_A, (name)(convert))
 
 #define BOOST_UNICODE_COMPOSE_CONCATED_DEF_A(z, n, seq) \
 template<typename Range1, typename Range2 BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, typename T)> \
-joined_range< \
-    sub_range<const Range1>, \
-    joined_range< \
-        converted_range< \
-            joined_range< \
-                sub_range<const Range1>, \
-                sub_range<const Range2> \
-            >, \
-            converted_converter< \
-                utf_decoder, \
-                multi_converter< \
-                    BOOST_PP_SEQ_ELEM(1, seq), \
-                    utf_encoder<typename range_value<const Range1>::type> \
-                > \
-            > \
-        >, \
-        sub_range<const Range2> \
-    > \
-> BOOST_PP_CAT(BOOST_PP_SEQ_ELEM(0, seq), _concat)(const Range1& range1, const Range2& range2 BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_BINARY_PARAMS(n, const T, & t)) \
+typename result_of::BOOST_PP_CAT(BOOST_PP_SEQ_ELEM(0, seq), _concat)<Range1, Range2>::type \
+BOOST_PP_CAT(BOOST_PP_SEQ_ELEM(0, seq), _concat)(Range1& range1, Range2& range2 BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_BINARY_PARAMS(n, const T, & t)) \
 { \
     tuple< \
-        sub_range<const Range1>, \
-        sub_range<const Range1>, \
-        sub_range<const Range2>, \
-        sub_range<const Range2> \
+        sub_range<Range1>, \
+        sub_range<Range1>, \
+        sub_range<Range2>, \
+        sub_range<Range2> \
     > \
     t = cat_limits(range1, range2); \
      \
     return boost::join( \
         t.get<0>(), \
-        boost::join(boost::adaptors::convert( \
-            boost::join(t.get<1>(), t.get<2>()), \
-            make_converted_converter( \
-                utf_decoder(), \
-                make_multi_converter( \
-                    BOOST_PP_SEQ_ELEM(1, seq)(BOOST_PP_ENUM_PARAMS(n, t)), \
-                    utf_encoder<typename range_value<const Range1>::type>() \
-                ) \
-            ) \
-        ), \
-        t.get<3>() \
-    )); \
+        boost::join( \
+            boost::adaptors::convert( \
+                boost::join(t.get<1>(), t.get<2>()), \
+                BOOST_PP_SEQ_ELEM(1, seq)(BOOST_PP_ENUM_PARAMS(n, t)) \
+            ), \
+            t.get<3>() \
+        ) \
+    ); \
+} \
+template<typename Range1, typename Range2 BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, typename T)> \
+typename result_of::BOOST_PP_CAT(BOOST_PP_SEQ_ELEM(0, seq), _concat)<const Range1, const Range2>::type \
+BOOST_PP_CAT(BOOST_PP_SEQ_ELEM(0, seq), _concat)(const Range1& range1, const Range2& range2 BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_BINARY_PARAMS(n, const T, & t)) \
+{ \
+    return BOOST_PP_CAT(BOOST_PP_SEQ_ELEM(0, seq), _concat)(range1, range2 BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, t)); \
+} \
+template<typename Range1, typename Range2 BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, typename T)> \
+typename result_of::BOOST_PP_CAT(BOOST_PP_SEQ_ELEM(0, seq), _concat)<const Range1, Range2>::type \
+BOOST_PP_CAT(BOOST_PP_SEQ_ELEM(0, seq), _concat)(const Range1& range1, Range2& range2 BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_BINARY_PARAMS(n, const T, & t)) \
+{ \
+    return BOOST_PP_CAT(BOOST_PP_SEQ_ELEM(0, seq), _concat)(range1, range2 BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, t)); \
+} \
+template<typename Range1, typename Range2 BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, typename T)> \
+typename result_of::BOOST_PP_CAT(BOOST_PP_SEQ_ELEM(0, seq), _concat)<Range1, const Range2>::type \
+BOOST_PP_CAT(BOOST_PP_SEQ_ELEM(0, seq), _concat)(Range1& range1, const Range2& range2 BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_BINARY_PARAMS(n, const T, & t)) \
+{ \
+    return BOOST_PP_CAT(BOOST_PP_SEQ_ELEM(0, seq), _concat)(range1, range2 BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, t)); \
 }
 #endif
 
