@@ -152,7 +152,7 @@ Test file review
 20) fails_on_64_bit.cpp
     a) Move the contents into boost_endian_integration_test.cpp
 
-21) Remove the ppb_testing folder.
+21) Remove the ppb_testing folder and tests from the jam file.
 
                         TO BE ADDED TO TESTS SECTION
     Test which need to be created as a result of modifications or additions!
@@ -160,8 +160,10 @@ Test file review
 1)  !DONE! Add interface test for the interface macros. !DONE!
 2)  interface meta-function test suite.
 3)  Create additional tests for count leading and trailing zero meta-functions.
-4)  Create Compile failure test for pointer member mask being 0.
-5)  Create compile Failure test for custom member mask being 0.
+4)  Create compile failure test for pointer member mask being 0.
+5)  Create compile failure test for pointer member mask not being same size as
+    pointer.
+6)  Create compile Failure test for custom member mask being 0.
 
 --------------------------------------------------------------------------------
 
