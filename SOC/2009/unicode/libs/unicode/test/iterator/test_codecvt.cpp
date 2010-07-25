@@ -1,3 +1,9 @@
+//[ test_codecvt
+/*`
+This test/example builds a codecvt facet that transcodes from
+wide chars (UTF-16 or UTF-32) to UTF-8 on the way out, and that
+does the opposite on the way in, but normalizes the string as well.
+*/
 #define BOOST_TEST_MODULE Codecvt
 #include <boost/test/included/unit_test.hpp>
 
@@ -11,7 +17,9 @@
 
 typedef boost::converter_codecvt_facet<
     wchar_t,
+    boost::unicode::utf_boundary,
     boost::unicode::utf_transcoder<char>,
+    boost::unicode::utf_boundary, // wrong, we want utf_combine_boundary
     boost::multi_converter<
         boost::converted_converter<boost::unicode::utf_decoder, boost::unicode::normalizer>,
         boost::unicode::utf_encoder<wchar_t>
@@ -20,7 +28,9 @@ typedef boost::converter_codecvt_facet<
 
 typedef boost::converter_codecvt_facet<
     wchar_t,
+    boost::unicode::utf_boundary,
     boost::unicode::utf_transcoder<char>,
+    boost::unicode::utf_boundary,
     boost::unicode::utf_transcoder<wchar_t>
 > utf_u8_codecvt;
 
@@ -38,7 +48,7 @@ BOOST_AUTO_TEST_CASE( codecvt )
     std::locale old_locale;
     std::locale utf8_locale(old_locale, new utf_u8_codecvt());
 
-    // Set a New global locale
+    // Set a new global locale
     //std::locale::global(utf8_locale);
 
     // Send the UTF-X data out, converting to UTF-8
@@ -62,3 +72,4 @@ BOOST_AUTO_TEST_CASE( codecvt )
         BOOST_CHECK_EQUAL(i, (size_t)boost::size(data_normalized));
     }
 }
+//]

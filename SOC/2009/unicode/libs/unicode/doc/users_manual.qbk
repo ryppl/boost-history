@@ -34,8 +34,8 @@
 This library aims at providing the foundation tools to accurately represent and deal with natural text in C++ in a portable
 and robust manner, so as to allow internationalized applications, by implementing parts of the __unicode_std__.
 
-This library is environment-independent and deliberately chooses not to relate to the standard C++ locale facilities
-as well as the standard string facilities, judged ill-suited to Unicode.
+This library is environment-independent and deliberately chooses not to rely to the standard C++ locale facilities
+as well as the standard string facilities, judged ill-suited for Unicode. It does, however provide tools that can be used with them.
 
 The current version is locale-agnostic, but a subsystem for tailored locale behaviour may be added in the future.
 
@@ -106,7 +106,7 @@ explained below.
 
 [variablelist Unicode terms:
     [[Code unit] [the unit in terms of which the string of text is encoded in, in one of the Unicode transformation formats.]]
-    [[Code point] [the unit, made of potentially several code units, in which Unicode defines most of it non-encoding-specific operations.]]
+    [[Code point] [a numerical value, encoded as potentially several code units, that is part of the Unicode code space, i.e. the set of all characters it maps and maintains.]]
     [[Combining character sequence] [a sequence of code points that is the unit for the Unicode composition and decomposition processes]]
     [[Grapheme cluster] [a cluster of code points that form a grapheme.]]
 ]
@@ -226,11 +226,53 @@ implement facilities not provided by the library core.
 [endsect]
 [endsect]
 
-[section Linking the library]
+[section Overview]
+
+[section Components]
+Part of this library is header-only, while part requires to link against a library.
+
+The library provides the following header-only components:
+
+* the type char16 and char32, suitable for encoding UTF-16 and UTF-32 respectively,
+* a comprehensive converter and segmenter framework, which allows among others to convert a range as it is iterated or to convert a file stream using a codecvt facet,
+* converters between the various UTF encodings and the locale character sets,
+* compile-time unicode strings and compile-time UTF converters,
+* converters that compose or decompose Hangul characters.
+
+The following features are available by linking against the library:
+
+* a Unicode character database, which, for each Unicode code point, provides many properties,
+* converters for decomposition, composition, and normalization,
+* functions to concatenate normalized ranges,
+* segmenters for graphemes.
+
+This library defines the concepts of [conceptref Converter] and [conceptref Segmenter], which are mechanisms to arbitrarily convert or segment ranges of data, expressed as pairs of iterators.
+The Converter and Segmenters framework allows to perform these either eaglery
+[endsect] [/ Scope]
+
+[section Organization]
+
+[caution The organization of headers may change in the future in order to
+improve compile times.]
+
+[variablelist Main headers
+    [[[headerref boost/cuchar.hpp]] [Primitive types for UTF code units.]]
+    [[[headerref boost/unicode/utf.hpp]] [Conversion between UTF encodings.]]
+    [[[headerref boost/unicode/static_utf.hpp]] [Compile-time conversion between UTF encodings.]]
+    [[[headerref boost/unicode/graphemes.hpp]] [Functions to iterate and identify graphemes.]]
+    [[[headerref boost/unicode/compose.hpp]] [Functions to compose, decompose and normalize unicode strings.]]
+    [[[headerref boost/unicode/cat.hpp]] [Functions to concatenate normalized strings while maintaining a normalized form.]]
+    [[[headerref boost/unicode/search.hpp]] [Utility to adapt Boost.StringAlgo finders to discard matches that lie on certain boundaries.]]
+    [[[headerref boost/unicode/ucd/properties.hpp]] [Access to the properties attached with a code point in the Unicode Character Database.]]
+]
+
+[endsect] [/ Organization]
+
+[section Linking]
 
 As has been stated in [link unicode.introduction_to_unicode.character_properties Introduction to Unicode], several Unicode algorithms require the usage of a large
-database of information which, as of the preview 3 of this library, is 600 KB on x86. Note the database does not contain everything one might need at this
-stage of the development of the library.
+database of information which, as of the preview 4 of this library, is 600 KB on x86. Note that at the current stage of development, the database does not contain
+everything one might need to deal with Unicode text, so it may grow in the future.
 
 Features that can avoid dependency on that database do so; so it is not required for UTF conversions for example, that are purely header-only.
 
@@ -239,24 +281,25 @@ Features that can avoid dependency on that database do so; so it is not required
 The Unicode Character Database can be generated using a parser present in the source distribution of this library to analyze
 [@http://www.unicode.org/Public/ the data provided by Unicode.org].
 
-Note however that the parser itself needs to be updated to be made aware of new proprieties; otherwise those properties will fallback to the default value
-and the parser will issue a warning.
+Note however that the parser itself needs to be updated to be made aware of new proprieties values; otherwise those properties
+will fallback to the default value for that property and the parser will issue a warning.
 
 [heading Binary compatibility]
 
-This library does not provide any kind of binary compatibility of the UCD so that applications compiled with version X of the library may actually
-link to version Y of the libray, with Y >= X, partially due to performance considerations.
-
-This may change in the future once proper benchmarking has been done.
+The UCD is fully backward compile, and unknown property values returned by the linked library will automatically be converted to
+the default value for that property. This is consistent with how new values are introduced in the standard.
 
 [heading Alternate databases]
 
-Future versions of this library may provide alternate implementations of this database as a thin layer over a database provided by another library or environment
-to prevent duplication of data.
+Future versions of this library may provide alternate implementations of this database as a thin layer over a database provided by
+another library or environment to prevent duplication of data. All this should be entirely binary compatible, and using one database
+or another should just be a drop-in replacement of a shared object.
 
-[endsect]
+[endsect] [/ Linking]
+[endsect] [/ Overview]
 
-[section The concepts behind this library]
+[section Converters and Segmenters]
+[section Concepts]
 
 Two concepts are of utmost importance within this library, the [conceptref Segmenter]
 concept, which is used for segmentation of text, and, more importantly,
@@ -293,12 +336,37 @@ of integers:
 };``
 
 A model of the [conceptref Segmenter] concept may then be used to segment
-a range. The [classref boost::segmented_range], returned by
-by [funcref boost::adaptors::segment], can be used to exploit that concept to
-turn a range into a range of subranges.
+a range, either by calling manually, or by using [funcref boost::adaptors::segment],
+which returns a [classref boost::segmented_range] that adapts the range into
+a range of subranges.
 
-With the above example, the range would be converted into a range of
-subranges, each subrange being exactly one element.
+With the above example, there would be as many subranges as elements, and
+each subrange would be one element.
+
+[heading BoundaryChecker]
+A model of the [conceptref BoundaryChecker] concept is a function object
+that takes three iterators, the begin, the end, and a position, and that
+returns whether the position lies on a particular boundary.
+
+Here is an example of a boundary checker that tells whether a position
+is at the end of an increasing sequence of numbers.
+``struct increasing_boundary
+{
+    typedef int input_type;
+    
+    template<typename In>
+    bool operator()(In begin, In end, In pos)
+    {
+        return *boost::prior(pos) > *pos;
+    }
+};``
+
+A model of the [conceptref BoundaryChecker] concept may then be used to test
+if a position is the right boundary to apply a converter, such as needed by
+codecvt facets, or to define a [conceptref Segmenter] using [classref boost::boundary_segmenter].
+
+With the above eample, a segmenter created from this boundary checker
+applied to the sequence \[1, 4, 8, 2, 2, 1, 7, 4\] would result in \[ \[1, 4, 8\], \[2, 2\], \[1, 7\], \[4\] ]. 
 
 [heading Converter]
 A model of the [conceptref Converter] concept is a class that takes an input
@@ -327,7 +395,7 @@ here, there is not really another way.
     {
         int i = *begin++;
         if(begin == end)
-            throw std::out_of_range();
+            throw std::out_of_range("unexpected end");
             
         *out++ = *begin++;
         *out++ = i;
@@ -339,7 +407,7 @@ here, there is not really another way.
     {
         *out++ = *--end;
         if(end == begin)
-            throw std::out_of_range();
+            throw std::out_of_range("unexpected begin");
             
         *out++ = *--end;
         return out;
@@ -367,16 +435,9 @@ This allows avoiding managing iterator advancement; the converter can be
 defined as a single function that takes a value, an output iterator,
 and returns it.
 
-[endsect]
+[endsect] [/ Concepts]
 
-[section Overview]
-
-[section Range operations]
-
-This library provides two kinds of operations on bidirectional ranges:
-conversion (e.g. converting a range in UTF-8 to a range in UTF-32) and
-segmentation (i.e. demarcating sections of a range, like code points,
-grapheme clusters, words, etc.).
+[section Converting and segmenting]
 
 [heading Conversion]
 Conversions can be applied in a variety of means, all generated from using
@@ -390,18 +451,6 @@ however read-only. It is implemented in terms of [classref boost::converted_rang
 * Lazy output evaluation, where an output iterator is returned that wraps the output
 and converts every pushed element with a [conceptref OneManyConverter]. It is implemented in terms
 of [classref boost::convert_output_iterator].
-
-The naming scheme of the utilities within the library reflect this; here is
-for example what is provided to convert UTF-32 to UTF-8:
-
-* [classref boost::unicode::u8_encoder] is a model of the =OneManyConverter= concept.
-* [funcref boost::unicode::u8_encode] is an eager encoding algorithm.
-* [funcref boost::unicode::adaptors::u8_encode] returns a range adapter that does on-the-fly encoding.
-* [funcref boost::unicode::adaptors::u8_encode_output] returns an output iterator adapter that will encode its elements before forwarding them to the wrapped output iterator.
-
-[note The library considers a conversion from UTF-32 an "encoding", while a conversion
-to UTF-32 is called a "decoding".
-This is because code points is what the library mainly deals with, and UTF-32 is a sequence of code points.]
 
 [heading Segmentation]
 Segmentations are expressed in terms of the [conceptref Segmenter] concept, which is inherently
@@ -417,6 +466,80 @@ Additionally, the [conceptref BoundaryChecker] concept may prove useful to tell 
 a segment starts at a given position; a =Segmenter= may also be defined
 in terms of it using [classref boost::boundary_segmenter].
 
+[endsect]
+
+[section Combining converters]
+While it is possible to apply a converter after another, be it with [funcref boost::convert] or by using [classref boost::converted_range],
+it is not generally possible to define a converter that is the combination of two others.
+
+Indeed, a [conceptref Converter] defines a *step* of a conversion, so it becomes difficult to define what the step of a combined conversion
+is if the two steps it tries to combine are mismatched or overlap.
+
+There are therefore two limited ways to define a converter that is the combination of two others:
+
+* [classref boost::multi_converter] applies a step of the first converter, then applies the second converter step by step on its output until
+it is completely consumed. It only works as expected if the second converter expects less input than the first one outputs in a step.
+It doesn't work, for example, to apply a [classref boost::unicode::normalizer] after a [classref boost::unicode::utf_decoder], because each
+step of the normalizer will only be run on a codepoint, but works to normalize then encode.
+* [classref boost::converted_converter] applies a step of the second converter, passing it input that has been adapted with [classref boost::converted_range].
+Unfortunately, since it needs to advance the original input iterator, this cannot work unless the the first converter only ever outputs 1 element.
+As a result it works fine to decode then normalize, but not the other way around.
+
+[heading Stability by concatenation]
+For some converters, applying the converter on a range of data then on another, and concatenating the results is not the same as
+applying the converter once on the concatenated data.
+In particular, the Unicode decomposition and composition processes are not stable by concatenation.
+
+Such converters will not work properly when used as the first parameter to [classref boost::multi_converter], and their existence is part of the
+rationale for converters not to emit special "partial" states indicating they're lacking input.
+
+[endsect]
+
+[section Codecvt facets]
+A codecvt facet is a facility of the standard C++ locales subsystem, that can describe a left-to-right two-way conversion between two encodings
+of data.
+
+Standard file streams are imbued with a locale, and make use of the codecvt facet attached to said locale to perform conversion
+between the data they receive and give to the stream user, the so-called "internal" format, and the underlying "external" format of the file,
+as is manipulated by the underlying, =char=-based, filebuf.
+Unfortunately, it appears it is only possible to use this mechanism with codecvt facets that have =char= as external and either
+=char= or =wchar_t= as internal, but C++0x may improve the situation.
+
+To use [classref boost::converter_codecvt_facet], which allows to build a codecvt facet from converters, you will need two [conceptref Converter]s, one for each direction, as well as two [conceptref BoundaryChecker]s.
+Indeed, as codecvt facets are passed arbitrary input buffers, there needs to be a way to tell what is the right boundaries to apply the steps on.
+An alternative would be to try to apply a step and try again if there was an error due to incomplete data. This is however not sufficient for
+converters that are not stable by concatenation.
+
+[import ../test/iterator/test_codecvt.cpp]
+[test_codecvt]
+
+[endsect]
+
+[endsect] [/ Converters and Segmenters]
+
+[section User's Guide]
+
+[section UTF converters and segmenters]
+
+This library provides two kinds of operations on bidirectional ranges:
+conversion (e.g. converting a range in UTF-8 to a range in UTF-32) and
+segmentation (i.e. demarcating sections of a range, like code points,
+grapheme clusters, words, etc.).
+
+[heading Conversion]
+The naming scheme of the utilities are as follows, here is an example
+what is provided to convert UTF-32 to UTF-8:
+
+* [classref boost::unicode::u8_encoder] is a model of the =OneManyConverter= concept.
+* [funcref boost::unicode::u8_encode] is an eager encoding algorithm.
+* [funcref boost::unicode::adaptors::u8_encode] returns a range adapter that does on-the-fly encoding.
+* [funcref boost::unicode::adaptors::u8_encode_output] returns an output iterator adapter that will encode its elements before forwarding them to the wrapped output iterator.
+
+[note The library considers a conversion from UTF-32 an "encoding", while a conversion
+to UTF-32 is called a "decoding".
+This is because code points is what the library mainly deals with, and UTF-32 is a sequence of code points.]
+
+[heading Segmentation]
 The naming scheme is as follows:
 
 * [classref boost::unicode::u8_boundary] is a =BoundaryChecker= that tells whether a position is the start of a code point in a range of UTF-8 code units.
@@ -440,7 +563,7 @@ depending on the =value_type= of the input ranges passed to =ltr= and =rtl=.
 
 [tip Not only UTF-8 and UTF-16 are recognized by UTF type deduction, UTF-32 is as well.]
 
-[endsect] [/Range operations]
+[endsect] [/UTF converters and segmenters]
 
 [section Composition and Normalization]
 
@@ -541,26 +664,6 @@ to compare equal.]
 
 [endsect] [/String searching]
 
-[endsect] [/Overview]
-
-[section User's Guide]
-[section Organization]
-
-[caution The organization of headers may change in the future in order to
-improve compile times.]
-
-[variablelist Main headers
-    [[[headerref boost/cuchar.hpp]] [Primitive types for UTF code units.]]
-    [[[headerref boost/unicode/utf.hpp]] [Conversion between UTF encodings.]]
-    [[[headerref boost/unicode/static_utf.hpp]] [Compile-time conversion between UTF encodings.]]
-    [[[headerref boost/unicode/graphemes.hpp]] [Functions to iterate and identify graphemes.]]
-    [[[headerref boost/unicode/compose.hpp]] [Functions to compose, decompose and normalize unicode strings.]]
-    [[[headerref boost/unicode/cat.hpp]] [Functions to concatenate normalized strings while maintaining a normalized form.]]
-    [[[headerref boost/unicode/search.hpp]] [Utility to adapt Boost.StringAlgo finders to discard matches that lie on certain boundaries.]]
-    [[[headerref boost/unicode/ucd/properties.hpp]] [Access to the properties attached with a code point in the Unicode Character Database.]]
-]
-
-[endsect] [/Organization]
 [endsect] [/User's Guide]
 
 [section Examples]
@@ -651,7 +754,10 @@ We can then infer certain guidelines to write Unicode data within
 C++ source files in a portable way while taking a few reasonable
 assumptions.
 
-[heading Portability guidelines]
+[heading Legacy guidelines]
+
+The following guidelines ensure everything will go welll, regardless of
+compiler or environment setup:
 
 * Source file encoding: use UTF-8 without a Byte Order Mark or use
 ASCII. This ensures most compilers will run in an encoding-agnostic mode
@@ -672,12 +778,27 @@ such as =\x= treat the data you're inputting as UTF-32 code units,
 but don't input anything higher than =0xD800=. Use heavily both =\u= and
 =\U=.
 
+[heading Modern guidelines]
+With C++0x introducing UTF-8, UTF-16, and UTF-32 literals, it becomes
+clear the way to go is to rely on the compiler to convert from the source
+character set to whatever encoding the strings should be in.
+Indeed, the compiler will convert from the source character set to UTF-8
+for UTF-8 literals, UTF-16 for UTF-16 literals, UTF-32 for UTF-32 literals,
+the narrow execution character set for narrow literals, and the wide execution
+character set for wide literals.
+
+Assuming you can reliably ensure that all compilers recognize the same
+source character set, you can make full usage of all literal types freely.
+However, for UTF-8 source files, MSVC requires a BOM, while GCC requires it to not be
+present. If you can accomodate this in your environment, then definitely go
+for this solution, which is simpler and more powerful.
+
 [heading Compile-time strings]
 
 Option one is to use =boost::mpl::string= as a UTF-8 compile-time
 string. Its support for multi-char character literals allows it to not
 be too verbose, and it can be coupled with [classref boost::unicode::string_cp]
-to insert Unicode code points in stead of the Unicode escape sequences.
+to insert Unicode code points instead of the Unicode escape sequences.
 Any non-ASCII character shall be put as its own character literal. Note
 multi-char character literals require =int= to be at least 32 bits
 however.

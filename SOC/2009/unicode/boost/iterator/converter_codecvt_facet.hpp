@@ -4,7 +4,8 @@
 #include <locale>
 #include <cstddef>
 
-#include <boost/iterator/convert_iterator.hpp>
+#include <boost/iterator/converter_concept.hpp>
+#include <boost/iterator/segmenter_concept.hpp>
 #include <boost/iterator/dummy_output_iterator.hpp>
 
 #include <algorithm>
@@ -15,22 +16,28 @@
 
 namespace boost
 {
-    
-template<typename InternT, typename P1, typename P2>
+
+/** Builds a codecvt facet from two \xmlonly<conceptname>Converter</conceptname>s\endxmlonly
+ * and two \xmlonly<conceptname>BoundaryChecker</conceptname>s\endxmlonly.
+ * When writing to a file, \c P1 is applied for segments of data on which \c B1 is true at the beginning and at the end.
+ * When reading a file, \c P2 is applied for segments of data on which \c B2 is true at the beginning and at the end. */
+template<typename InternT, typename B1, typename P1, typename B2, typename P2>
 struct converter_codecvt_facet : std::codecvt<InternT, typename P1::output_type, std::mbstate_t>  
 {
     typedef InternT intern_type;
     typedef typename P1::output_type extern_type;
     typedef std::mbstate_t state_type;
     
+    BOOST_CONCEPT_ASSERT((BoundaryCheckerConcept<B1>));
     BOOST_CONCEPT_ASSERT((ConverterConcept<P1>));
+    BOOST_CONCEPT_ASSERT((BoundaryCheckerConcept<B2>));
     BOOST_CONCEPT_ASSERT((ConverterConcept<P2>));
     
     BOOST_CONCEPT_ASSERT((Convertible<InternT, typename P1::input_type>));
     BOOST_CONCEPT_ASSERT((Convertible<typename P2::output_type, InternT>));
     
-    explicit converter_codecvt_facet(const P1& p1_ = P1(), const P2& p2_ = P2(), std::size_t refs = 0)
-        : std::codecvt<intern_type, extern_type, state_type>(refs), p1(p1_), p2(p2_)
+    explicit converter_codecvt_facet(const B1& b1_ = B1(), const P1& p1_ = P1(), const B2& b2_ = B2(), const P2& p2_ = P2(), std::size_t refs = 0)
+        : std::codecvt<intern_type, extern_type, state_type>(refs), b1(b1_), p1(p1_), b2(b2_), p2(p2_)
     {
     }
     
@@ -42,7 +49,10 @@ private:
     };
     mutable std::map<state_type*, state_t> states;
     
+    mutable B1 b1;
     mutable P1 p1;
+    
+    mutable B2 b2;
     mutable P2 p2;
     
 protected:

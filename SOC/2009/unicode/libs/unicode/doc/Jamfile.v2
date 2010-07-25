@@ -54,7 +54,7 @@ doxygen autodoc1
         [ path.glob-tree ../../../boost/range : any_*.hpp : .svn detail ]
         
 	:
-        <xsl:param>boost.doxygen.reftitle="Iterator/Range reference"
+        <xsl:param>boost.doxygen.reftitle="Converters and Segmenters reference"
 	;
     
 doxygen autodoc2
