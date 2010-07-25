@@ -306,7 +306,7 @@ struct bft_arg_parse_impl <
 template <  typename ReturnType,
             typename Name,
             typename Mask,
-            typename Policy,
+            template<typename,typename,typename,typename> class Policy,
             typename StoragePolicy,
             typename FieldVector,
             typename Offset
@@ -339,10 +339,10 @@ struct bft_arg_parse_impl <
             front_storage_space,
             back_storage_space
         >::type
-    >::type                             size_of_storage;
+    >::type                             size_of_value_mask;
 
 
-    typedef typename mpl::plus< Offset, size_of_storage>::type offset;
+    typedef typename mpl::plus< Offset, size_of_value_mask>::type offset;
 
     typedef bitfields::custom< ReturnType, Name, Mask, Policy > param;
 
@@ -350,12 +350,17 @@ struct bft_arg_parse_impl <
     typedef typename mpl::push_back<
         FieldVector,
         bitfield_element<
-            ReturnType*,
+            ReturnType,
             Name,
             Offset,
-            size_of_storage,
+            size_of_value_mask,
             Mask,
-            Policy
+            Policy<
+                Mask,
+                ReturnType,
+                Offset,
+                size_of_value_mask
+            >
         >
     >::type                             field_vector;
 
@@ -406,10 +411,10 @@ struct bft_arg_parse_impl <
             front_storage_space,
             back_storage_space
         >::type
-    >::type                             size_of_storage;
+    >::type                             size_of_value_mask;
 
 
-    typedef typename mpl::plus< Offset, size_of_storage>::type offset;
+    typedef typename mpl::plus< Offset, size_of_value_mask>::type offset;
 
     typedef bitfields::pointer< ReturnType, Name, Mask > param;
 
@@ -420,13 +425,13 @@ struct bft_arg_parse_impl <
             ReturnType*,
             Name,
             Offset,
-            size_of_storage,
+            size_of_value_mask,
             Mask,
             pointer_packing_policy<
                 Mask,
                 ReturnType*,
                 Offset,
-                size_of_storage
+                size_of_value_mask
             >
         >
     >::type                     field_vector;

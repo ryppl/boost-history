@@ -9,14 +9,9 @@
 #include <cstddef>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/make_unsigned.hpp>
+#include <boost/integer/detail/bft/mask_shift_indicators.hpp>
 
-namespace boost { namespace detail { namespace bit_shift {
-
-template <std::size_t Shift> struct right;
-template <std::size_t Shift> struct left;
-struct none;
-
-} // end bit_shift
+namespace boost { namespace detail {
 
 // detial's relating to the set and get functions.
 namespace policy_detail {

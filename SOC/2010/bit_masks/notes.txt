@@ -41,6 +41,7 @@ List of TODO's throughout the bitfield_tuple
  
 
 14) bitfield_tuple.hpp
+15) Remove old pointer plus bits stuff
 
 
 Test file review
@@ -148,7 +149,10 @@ Test file review
     a)  remove test from name.
     b)  Change to using the <boost/detail/lightweight_test.hpp> framework.
 
+20) fails_on_64_bit.cpp
+    a) Move the contents into boost_endian_integration_test.cpp
 
+21) Remove the ppb_testing folder.
 
                         TO BE ADDED TO TESTS SECTION
     Test which need to be created as a result of modifications or additions!
