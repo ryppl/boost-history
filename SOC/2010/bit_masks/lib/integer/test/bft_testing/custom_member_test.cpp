@@ -7,6 +7,12 @@
 #include <boost/detail/lightweight_test.hpp>
 #include <boost/type_traits/is_same.hpp>
 
+using namespace boost;
+using namespace boost::bitfields;
+
+struct cust;
+
+
 int main() {
     return 0;
 }

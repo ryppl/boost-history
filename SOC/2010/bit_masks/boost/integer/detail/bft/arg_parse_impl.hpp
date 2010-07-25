@@ -312,29 +312,52 @@ template <  typename ReturnType,
             typename Offset
 >
 struct bft_arg_parse_impl <
-    bitfields::custom<ReturnType,Name,Mask,Policy>,
+    bitfields::custom<
+        ReturnType,
+        Name,
+        Mask,
+        Policy
+    >,
     StoragePolicy,
     FieldVector,
     Offset >
 {
-    /*
-    TODO: This needs to be better defined!
-    typedef bitfields::custom<ReturnType,Name,Mask,Policy>  param;
+    // PRECONDITION: Value bits of the mask Can't be 0.
+    BOOST_STATIC_ASSERT(( Mask::value != 0 ));
+
+    typedef typename pointer_member::count_leading_zeros<
+        Mask
+    >::type                             front_storage_space;
+
+    typedef typename pointer_member::count_trailing_zeros<
+        Mask
+    >::type                             back_storage_space;
+    
+    typedef typename mpl::minus<
+        mpl::size_t< bit_width< void* >::value>,
+        typename mpl::plus<
+            front_storage_space,
+            back_storage_space
+        >::type
+    >::type                             size_of_storage;
+
+
+    typedef typename mpl::plus< Offset, size_of_storage>::type offset;
+
+    typedef bitfields::custom< ReturnType, Name, Mask, Policy > param;
+
+    typedef StoragePolicy               storage_policy;
     typedef typename mpl::push_back<
         FieldVector,
         bitfield_element<
-            ReturnType,
-            NameType,
+            ReturnType*,
+            Name,
             Offset,
-            mpl::size_t<FieldWidth>
+            size_of_storage,
+            Mask,
+            Policy
         >
-    >::type                 field_vector;
-
-    typedef StoragePolicy   storage_policy;
-
-
-
-    // typedef offset;
+    >::type                             field_vector;
 
     typedef bft_arg_parse_impl<param,storage_policy,field_vector,offset> type;
 
@@ -346,8 +369,7 @@ struct bft_arg_parse_impl <
             field_vector,
             offset
         > type;
-    };
-    */
+    };  
 };
 
 
@@ -365,33 +387,8 @@ struct bft_arg_parse_impl <
     FieldVector,
     Offset >
 {
-    /** What must be calculated writen out so I can see it better.
-     *
-     *  1.) Make sure that the mask for the pointer isn't 0.
-     *      A.) if it is that means that NOTHING is being stored in the pointer
-     *      and everything else can be ignroed (Not sure if this should be a
-     *      PRECONDITION that causes a static_assertion or not).
-     *      B.) Make sure the mask is the same size as a pointer.
-     *      If it is NOT the same size as a pointer, then cause a static 
-     *      assertion.
-     *
-     *  2.) Determin the offset into the mask.
-     *      A.) What is mean by this is that I need know which bits wihtin the
-     *      mask that have value are respected as such and the ones which don't
-     *      are able to be used for extra storage.
-     *      B.) Summary: Look for leading zeros and look for trailing zeros.
-     *      Those are the places which values can be stored within.
-     *      C.) PRECONDITION: The offset must be less then or equal to the number
-     *      of leading 0's within the value of the pointer.
-     *      D.) Behavior in the case that there are leading zeros wihtin the
-     *      mask and the offset is not the same as the amound of leading zeros
-     *      within the mask. The zeros are treated as filler and the pointer is
-     *      always stored relative to the mask provided.
-     *      
-     *
-     *  3.) The offset of the storage location of the pointer shall be relative
-     *  to the first 1 within the mask provided.
-     */
+    // PRECONDITION: Value bits of the mask Can't be 0.
+    BOOST_STATIC_ASSERT(( Mask::value != 0 ));
 
     // PRECONDTION: type of mask::value_type must be the same size as a pointer.
     BOOST_STATIC_ASSERT(( sizeof(typename Mask::value_type) == sizeof(void*) ));
