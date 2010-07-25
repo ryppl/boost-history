@@ -5,14 +5,14 @@
 //  accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt
 
+#include <limits>
 #include <boost/detail/lightweight_test.hpp>
 #include <boost/integer/ilog2.hpp>
 #include <boost/cstdint.hpp>
 #include <iostream>
 
 #define ILOG2_TEST(x, y) \
-BOOST_TEST((::boost::ilog2(x) == y)); \
-std::cout << "deu " << ::boost::ilog2(x) << " era pra ser " << y << std::endl
+BOOST_TEST((::boost::ilog2(x) == y))
 
 // Main testing function
 int main(int, char* [])
@@ -20,6 +20,11 @@ int main(int, char* [])
 	using namespace boost;
 	std::cout << "Doing tests on ilog2 function." << std::endl;
 	
+	ILOG2_TEST((unsigned)0, -1);
+	ILOG2_TEST((unsigned)1, 0);
+	ILOG2_TEST((unsigned)0xFFFFFFFF, 31);
+	ILOG2_TEST((unsigned)0xF0000000, 31);
+	ILOG2_TEST((unsigned)0x80000000, 31);
 	ILOG2_TEST((unsigned)100, 6);
 	ILOG2_TEST((unsigned)265, 8);
 	ILOG2_TEST((unsigned)158741, 17);

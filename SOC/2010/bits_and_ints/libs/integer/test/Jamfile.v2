@@ -29,6 +29,7 @@ test-suite integer
 		[ run count_leading_zeros_test.cpp ]
 		[ run ilog2_test.cpp ]
 		[ run inc_rev_test.cpp ]
+		[ run isqrt_test.cpp ]
 		[ compile cstdint_include_test.cpp ]
 		[ compile integer_traits_include_test.cpp ]
 		[ compile integer_include_test.cpp ]
