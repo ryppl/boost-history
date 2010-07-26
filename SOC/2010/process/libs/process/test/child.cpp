@@ -210,7 +210,7 @@ public:
 #if defined(BOOST_POSIX_API) 
         child_end_ = dup(stream_end); 
         if (child_end_ == -1) 
-            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("dup() failed"); 
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("dup(2) failed"); 
 #elif defined(BOOST_WINDOWS_API) 
         if (!DuplicateHandle(GetCurrentProcess(), stream_end, 
             GetCurrentProcess(), &child_end_, 0, TRUE, DUPLICATE_SAME_ACCESS)) 
@@ -427,9 +427,9 @@ BOOST_AUTO_TEST_CASE(test_set_environment_var)
     BOOST_CHECK_EQUAL(p.second, "'some-value'"); 
 
 #if defined(BOOST_POSIX_API) 
-    context ctx2; 
+    bp::context ctx2; 
     ctx2.environment.insert(bp::environment_t::value_type("TO_BE_SET", "")); 
-    std::pair<bool, std::string> p2 = get_var_value(ctx, "TO_BE_SET"); 
+    std::pair<bool, std::string> p2 = get_var_value(ctx2, "TO_BE_SET"); 
     BOOST_CHECK(p2.first); 
     BOOST_CHECK_EQUAL(p2.second, "''"); 
 #endif 

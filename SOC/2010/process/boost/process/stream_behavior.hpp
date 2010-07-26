@@ -119,9 +119,13 @@ class inherit : public stream
 {
 public:
     inherit(stream_end_type child_end)
-    : child_end_(child_end) 
-    { 
-#if defined(BOOST_WINDOWS_API)
+    : child_end_(child_end)
+    {
+#if defined(BOOST_POSIX_API)
+        child_end_ = dup(child_end);
+        if (child_end_ == -1)
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("dup(2) failed");
+#elif defined(BOOST_WINDOWS_API)
         if (!DuplicateHandle(GetCurrentProcess(), child_end_,
             GetCurrentProcess(), &child_end_, 0, TRUE, DUPLICATE_SAME_ACCESS))
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("DuplicateHandle() failed");
@@ -170,8 +174,10 @@ public:
         child_end_ = ends[(stream == input_stream) ? 0 : 1];
         parent_end_ = ends[(stream == input_stream) ? 1 : 0];
 #if defined(BOOST_WINDOWS_API)
-        if (!SetHandleInformation(child_end_, HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT))
-            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("SetHandleInformation() failed");
+        if (!SetHandleInformation(child_end_, HANDLE_FLAG_INHERIT,
+            HANDLE_FLAG_INHERIT))
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR(
+                "SetHandleInformation() failed");
 #endif
     }
 

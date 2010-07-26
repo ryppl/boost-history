@@ -255,6 +255,12 @@ inline child create_child(const std::string &executable, Arguments args, Context
                 close(i);
         }
 
+        if (chdir(ctx.work_dir.c_str()) == -1)
+        {
+            write(STDERR_FILENO, "chdir() failed\n", 15);
+            _exit(127);
+        }
+
         ctx.setup();
 
         execve(executable.c_str(), argv.second, envp.second);

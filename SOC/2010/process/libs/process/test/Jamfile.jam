@@ -11,9 +11,6 @@
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt) 
 # 
 
-alias butf : /boost//unit_test_framework ; 
-explicit butf ; 
-
 alias bfs : /boost//filesystem : : : <link>shared:<source>/boost//system ; 
 explicit bfs ; 
 
@@ -26,11 +23,11 @@ explicit helpers ;
 
 using testing ; 
 
-run environment.cpp butf bfs ; 
-run self.cpp butf bfs ; 
+run environment.cpp bfs ; 
+run self.cpp bfs ; 
 
-run arguments.cpp butf bfs : : helpers : <dependency>helpers ; 
-run child.cpp butf bfs : : helpers : <dependency>helpers ; 
-run executable.cpp butf bfs : : helpers : <dependency>helpers ; 
-run process.cpp butf bfs : : helpers : <dependency>helpers ; 
-run status.cpp butf bfs : : helpers : <dependency>helpers ; 
+run arguments.cpp bfs : : helpers : <dependency>helpers ; 
+run child.cpp bfs : : helpers : <dependency>helpers ; 
+run executable.cpp bfs : : helpers : <dependency>helpers ; 
+run process.cpp bfs : : helpers : <dependency>helpers ; 
+run status.cpp bfs : : helpers : <dependency>helpers ; 
