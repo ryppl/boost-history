@@ -23,6 +23,7 @@
 #include <boost/process/child.hpp>
 #include <boost/process/context.hpp>
 #include <boost/process/environment.hpp>
+#include <boost/process/handle.hpp>
 #include <boost/process/operations.hpp>
 #include <boost/process/pid_type.hpp>
 #include <boost/process/pipe.hpp>

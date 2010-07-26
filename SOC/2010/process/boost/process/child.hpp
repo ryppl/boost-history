@@ -33,7 +33,7 @@
 #include <boost/process/pid_type.hpp>
 #include <boost/process/pistream.hpp>
 #include <boost/process/postream.hpp>
-#include <boost/process/detail/file_handle.hpp>
+#include <boost/process/handle.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/assert.hpp>
 
@@ -56,16 +56,15 @@ public:
      * match the redirections configured by the launcher that spawned this
      * process.
      */
-    child(pid_type id, detail::file_handle fhstdin,
-        detail::file_handle fhstdout, detail::file_handle fhstderr)
+    child(pid_type id, handle hstdin, handle hstdout, handle hstderr)
         : process(id)
     {
-        if (fhstdin.valid())
-            stdin_.reset(new postream(fhstdin));
-        if (fhstdout.valid())
-            stdout_.reset(new pistream(fhstdout));
-        if (fhstderr.valid())
-            stderr_.reset(new pistream(fhstderr));
+        if (hstdin.valid())
+            stdin_.reset(new postream(hstdin));
+        if (hstdout.valid())
+            stdout_.reset(new pistream(hstdout));
+        if (hstderr.valid())
+            stderr_.reset(new pistream(hstderr));
     }
 
 #if defined(BOOST_WINDOWS_API)
@@ -81,16 +80,15 @@ public:
      *
      * This operation is only available on Windows systems.
      */
-    child(HANDLE handle, detail::file_handle fhstdin,
-        detail::file_handle fhstdout, detail::file_handle fhstderr)
-        : process(handle)
+    child(handle hprocess, handle hstdin, handle hstdout, handle hstderr)
+        : process(hprocess)
     {
-        if (fhstdin.valid())
-            stdin_.reset(new postream(fhstdin));
-        if (fhstdout.valid())
-            stdout_.reset(new pistream(fhstdout));
-        if (fhstderr.valid())
-            stderr_.reset(new pistream(fhstderr));
+        if (hstdin.valid())
+            stdin_.reset(new postream(hstdin));
+        if (hstdout.valid())
+            stdout_.reset(new pistream(hstdout));
+        if (hstderr.valid())
+            stderr_.reset(new pistream(hstderr));
     }
 #endif
 

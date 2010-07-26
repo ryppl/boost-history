@@ -205,31 +205,33 @@ BOOST_AUTO_TEST_CASE(test_output_error)
 class redirect_to : public bpb::stream 
 { 
 public: 
-    redirect_to(stream_end_type stream_end) 
+    redirect_to(bp::handle child_end) 
     { 
 #if defined(BOOST_POSIX_API) 
-        child_end_ = dup(stream_end); 
-        if (child_end_ == -1) 
+        child_end_ = dup(child_end.native()); 
+        if (!child_end_.valid()) 
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("dup(2) failed"); 
 #elif defined(BOOST_WINDOWS_API) 
-        if (!DuplicateHandle(GetCurrentProcess(), stream_end, 
-            GetCurrentProcess(), &child_end_, 0, TRUE, DUPLICATE_SAME_ACCESS)) 
+        HANDLE h;
+        if (!DuplicateHandle(GetCurrentProcess(), child_end.native(), 
+            GetCurrentProcess(), &h, 0, TRUE, DUPLICATE_SAME_ACCESS)) 
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("DuplicateHandle() failed"); 
+        child_end_ = h; 
 #endif 
     } 
 
-    static boost::shared_ptr<redirect_to> def(stream_end_type stream_end) 
+    static boost::shared_ptr<redirect_to> def(bp::handle stream_end) 
     { 
         return boost::make_shared<redirect_to>(redirect_to(stream_end)); 
     } 
 
-    stream_end_type get_child_end() 
+    bp::handle get_child_end() 
     { 
         return child_end_; 
     } 
 
 private: 
-    stream_end_type child_end_; 
+    bp::handle child_end_; 
 }; 
 
 BOOST_AUTO_TEST_CASE(test_redirect_err_to_out) 

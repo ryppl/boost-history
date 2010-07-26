@@ -43,7 +43,7 @@
 
 #include <boost/process/child.hpp>
 #include <boost/process/context.hpp>
-#include <boost/process/detail/file_handle.hpp>
+#include <boost/process/handle.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/system/system_error.hpp>
@@ -66,7 +66,8 @@ namespace process {
  * \throw boost::filesystem::filesystem_error If the file cannot be found
  *        in the path.
  */
-inline std::string find_executable_in_path(const std::string &file, std::string path = "")
+inline std::string find_executable_in_path(const std::string &file,
+    std::string path = "")
 {
 #if defined(BOOST_POSIX_API)
     BOOST_ASSERT(file.find('/') == std::string::npos);
@@ -181,7 +182,8 @@ inline std::string executable_to_progname(const std::string &exe)
  * \return A handle to the new child process.
  */
 template <typename Arguments, typename Context>
-inline child create_child(const std::string &executable, Arguments args, Context ctx)
+inline child create_child(const std::string &executable, Arguments args,
+    Context ctx)
 {
 #if !defined(NDEBUG)
     BOOST_ASSERT(ctx.stdin_behavior.get());
@@ -216,10 +218,10 @@ inline child create_child(const std::string &executable, Arguments args, Context
         BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("fork(2) failed");
     else if (pid == 0)
     {
-        int stdin_fd = ctx.stdin_behavior->get_child_end();
-        if (stdin_fd != -1)
+        handle hstdin = ctx.stdin_behavior->get_child_end();
+        if (hstdin.valid())
         {
-            if (dup2(stdin_fd, STDIN_FILENO) == -1)
+            if (dup2(hstdin.native(), STDIN_FILENO) == -1)
             {
                 write(STDERR_FILENO, "dup2() failed\n", 14);
                 _exit(127);
@@ -227,10 +229,10 @@ inline child create_child(const std::string &executable, Arguments args, Context
             closeflags[STDIN_FILENO] = false;
         }
 
-        int stdout_fd = ctx.stdout_behavior->get_child_end();
-        if (stdout_fd != -1)
+        handle hstdout = ctx.stdout_behavior->get_child_end();
+        if (hstdout.valid())
         {
-            if (dup2(stdout_fd, STDOUT_FILENO) == -1)
+            if (dup2(hstdout.native(), STDOUT_FILENO) == -1)
             {
                 write(STDERR_FILENO, "dup2() failed\n", 14);
                 _exit(127);
@@ -238,10 +240,10 @@ inline child create_child(const std::string &executable, Arguments args, Context
             closeflags[STDOUT_FILENO] = false;
         }
 
-        int stderr_fd = ctx.stderr_behavior->get_child_end();
-        if (stderr_fd != -1)
+        handle hstderr = ctx.stderr_behavior->get_child_end();
+        if (hstderr.valid())
         {
-            if (dup2(stderr_fd, STDERR_FILENO) == -1)
+            if (dup2(hstderr.native(), STDERR_FILENO) == -1)
             {
                 write(STDERR_FILENO, "dup2() failed\n", 14);
                 _exit(127);
@@ -274,33 +276,23 @@ inline child create_child(const std::string &executable, Arguments args, Context
     {
         BOOST_ASSERT(pid > 0);
 
-        if (ctx.stdin_behavior->get_child_end() != -1)
-            close(ctx.stdin_behavior->get_child_end());
-        if (ctx.stdout_behavior->get_child_end() != -1)
-            close(ctx.stdout_behavior->get_child_end());
-        if (ctx.stderr_behavior->get_child_end() != -1)
-            close(ctx.stderr_behavior->get_child_end());
+        ctx.stdin_behavior->get_child_end().close();
+        ctx.stdout_behavior->get_child_end().close();
+        ctx.stderr_behavior->get_child_end().close();
 
-        detail::file_handle fhin(ctx.stdin_behavior->get_parent_end());
-        detail::file_handle fhout(ctx.stdout_behavior->get_parent_end());
-        detail::file_handle fherr(ctx.stderr_behavior->get_parent_end());
-
-#if !defined(NDEBUG)
-        ctx.stdin_behavior.reset();
-        ctx.stdout_behavior.reset();
-        ctx.stderr_behavior.reset();
-#endif
-
-        return child(pid, fhin, fhout, fherr);
+        return child(pid,
+            ctx.stdin_behavior->get_parent_end(),
+            ctx.stdout_behavior->get_parent_end(),
+            ctx.stderr_behavior->get_parent_end());
     }
 #elif defined(BOOST_WINDOWS_API)
     STARTUPINFOA startup_info;
     ZeroMemory(&startup_info, sizeof(startup_info));
     startup_info.cb = sizeof(startup_info);
     startup_info.dwFlags |= STARTF_USESTDHANDLES;
-    startup_info.hStdInput = ctx.stdin_behavior->get_child_end();
-    startup_info.hStdOutput = ctx.stdout_behavior->get_child_end();
-    startup_info.hStdError = ctx.stderr_behavior->get_child_end();
+    startup_info.hStdInput = ctx.stdin_behavior->get_child_end().native();
+    startup_info.hStdOutput = ctx.stdout_behavior->get_child_end().native();
+    startup_info.hStdError = ctx.stderr_behavior->get_child_end().native();
 
     ctx.setup(startup_info);
 
@@ -323,28 +315,19 @@ inline child create_child(const std::string &executable, Arguments args, Context
         envstrs.get(), workdir.get(), &startup_info, &pi) == 0)
         BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreateProcess() failed");
 
-    // Don't throw an exception if CloseHandle() fails as we would
-    // leak the process handle in pi.hProcess.
-    CloseHandle(pi.hThread);
+    ctx.stdin_behavior->get_child_end().close();
+    ctx.stdout_behavior->get_child_end().close();
+    ctx.stderr_behavior->get_child_end().close();
 
-    if (ctx.stdin_behavior->get_child_end() != INVALID_HANDLE_VALUE)
-        CloseHandle(ctx.stdin_behavior->get_child_end());
-    if (ctx.stdout_behavior->get_child_end() != INVALID_HANDLE_VALUE)
-        CloseHandle(ctx.stdout_behavior->get_child_end());
-    if (ctx.stderr_behavior->get_child_end() != INVALID_HANDLE_VALUE)
-        CloseHandle(ctx.stderr_behavior->get_child_end());
+    handle hprocess(pi.hProcess);
 
-    detail::file_handle fhin(ctx.stdin_behavior->get_parent_end());
-    detail::file_handle fhout(ctx.stdout_behavior->get_parent_end());
-    detail::file_handle fherr(ctx.stderr_behavior->get_parent_end());
+    if (CloseHandle(pi.hThread) == 0)
+        BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CloseHandle() failed");
 
-#if !defined(NDEBUG)
-    ctx.stdin_behavior.reset();
-    ctx.stdout_behavior.reset();
-    ctx.stderr_behavior.reset();
-#endif
-
-    return child(pi.hProcess, fhin, fhout, fherr);
+    return child(hprocess,
+        ctx.stdin_behavior->get_parent_end(),
+        ctx.stdout_behavior->get_parent_end(),
+        ctx.stderr_behavior->get_parent_end());
 #endif
 }
 

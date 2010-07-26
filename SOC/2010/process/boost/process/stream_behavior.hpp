@@ -28,13 +28,18 @@
 #   include <fcntl.h>
 #   include <unistd.h>
 #elif defined(BOOST_WINDOWS_API)
-#   include <boost/lexical_cast.hpp>
-#   include <string>
 #   include <windows.h>
 #endif
 
+#include <boost/process/handle.hpp>
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/random_generator.hpp>
+#include <boost/uuid/uuid_io.hpp>
+#include <boost/lexical_cast.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
+#include <string>
+#include <algorithm>
 
 namespace boost {
 namespace process {
@@ -50,23 +55,6 @@ class stream
 {
 public:
     /**
-     * Opaque identifier for a stream's end.
-     *
-     * Each operating system identifies streams' ends using a specific type.
-     * The \a stream_end_type type is used to transparently refer to a stream's
-     * end regardless of the operating system in which this class is used.
-     *
-     * On POSIX systems it is defined as int, on Windows systems as HANDLE.
-     */
-#if defined(BOOST_PROCESS_DOXYGEN)
-    typedef NativeStreamType stream_end_type;
-#elif defined(BOOST_POSIX_API)
-    typedef int stream_end_type;
-#elif defined(BOOST_WINDOWS_API)
-    typedef HANDLE stream_end_type;
-#endif
-
-    /**
      * Factory function to create a stream behavior object.
      *
      * Returns a shared pointer to the stream behavior object as this is
@@ -81,25 +69,17 @@ public:
     /**
      * Returns the child's end of the stream.
      */
-    virtual stream_end_type get_child_end()
+    virtual handle get_child_end()
     {
-#if defined(BOOST_POSIX_API)
-        return -1;
-#elif defined(BOOST_WINDOWS_API)
-        return INVALID_HANDLE_VALUE;
-#endif
+        return handle();
     }
 
     /**
      * Returns the parent's end of the stream.
      */
-    virtual stream_end_type get_parent_end()
+    virtual handle get_parent_end()
     {
-#if defined(BOOST_POSIX_API)
-        return -1;
-#elif defined(BOOST_WINDOWS_API)
-        return INVALID_HANDLE_VALUE;
-#endif
+        return handle();
     }
 };
 
@@ -118,32 +98,33 @@ typedef stream close;
 class inherit : public stream
 {
 public:
-    inherit(stream_end_type child_end)
-    : child_end_(child_end)
+    inherit(handle::native_type child_end)
     {
 #if defined(BOOST_POSIX_API)
         child_end_ = dup(child_end);
-        if (child_end_ == -1)
+        if (!child_end_.valid())
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("dup(2) failed");
 #elif defined(BOOST_WINDOWS_API)
-        if (!DuplicateHandle(GetCurrentProcess(), child_end_,
-            GetCurrentProcess(), &child_end_, 0, TRUE, DUPLICATE_SAME_ACCESS))
+        HANDLE h;
+        if (!DuplicateHandle(GetCurrentProcess(), child_end,
+            GetCurrentProcess(), &h, 0, TRUE, DUPLICATE_SAME_ACCESS))
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("DuplicateHandle() failed");
+        child_end_ = h;
 #endif
     }
 
-    static boost::shared_ptr<inherit> def(stream_end_type child_end)
+    static boost::shared_ptr<inherit> def(handle::native_type child_end)
     {
         return boost::make_shared<inherit>(inherit(child_end));
     }
 
-    stream_end_type get_child_end()
+    handle get_child_end()
     {
         return child_end_;
     }
 
 private:
-    stream_end_type child_end_;
+    handle child_end_;
 };
 
 /**
@@ -158,7 +139,7 @@ public:
 
     pipe(stream_type stream)
     {
-        stream_end_type ends[2];
+        handle::native_type ends[2];
 #if defined(BOOST_POSIX_API)
         if (::pipe(ends) == -1)
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("pipe(2) failed");
@@ -174,7 +155,7 @@ public:
         child_end_ = ends[(stream == input_stream) ? 0 : 1];
         parent_end_ = ends[(stream == input_stream) ? 1 : 0];
 #if defined(BOOST_WINDOWS_API)
-        if (!SetHandleInformation(child_end_, HANDLE_FLAG_INHERIT,
+        if (!SetHandleInformation(child_end_.native(), HANDLE_FLAG_INHERIT,
             HANDLE_FLAG_INHERIT))
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR(
                 "SetHandleInformation() failed");
@@ -186,19 +167,19 @@ public:
         return boost::make_shared<pipe>(pipe(stream));
     }
 
-    stream_end_type get_child_end()
+    handle get_child_end()
     {
         return child_end_;
     }
 
-    stream_end_type get_parent_end()
+    handle get_parent_end()
     {
         return parent_end_;
     }
 
 private:
-    stream_end_type child_end_;
-    stream_end_type parent_end_;
+    handle child_end_;
+    handle parent_end_;
 };
 
 /**
@@ -213,54 +194,55 @@ class named_pipe : public stream
 public:
     enum stream_type { input_stream, output_stream };
 
-    named_pipe(stream_type stream, std::string name = "")
+    named_pipe(stream_type stream, std::string *name = 0)
     {
-        stream_end_type ends[2];
 #if defined(BOOST_POSIX_API)
-        if (name.empty())
-            // TODO: Generate unique filename.
-            name = "/tmp/fifo.1";
-
-        // TODO: Use RAII to close HANDLEs if an exception is thrown.
-        if (mkfifo(name.c_str(), S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) == -1)
-            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("mkfifo(3) failed");
-        if (stream == input_stream)
-        {
-            child_end_ = open(name.c_str(), O_RDONLY);
-            if (child_end_ == -1)
-                BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("open(2) failed");
-            parent_end_ = open(name.c_str(), O_WRONLY);
-            if (parent_end_ == -1)
-                BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("open(2) failed");
-        }
+        std::string s;
+        if (name && !name->empty())
+            s = *name;
         else
         {
-            child_end_ = open(name.c_str(), O_WRONLY);
-            if (child_end_ == -1)
-                BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("open(2) failed");
-            parent_end_ = open(name.c_str(), O_RDONLY);
-            if (parent_end_ == -1)
-                BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("open(2) failed");
-        }
-#elif defined(BOOST_WINDOWS_API)
-        if (name.empty())
-        {
-            // TODO: Make this thread-safe (create unique filename differently).
-            static unsigned int nextid = 0;
-            name = "\\\\.\\pipe\\boost_process_" + boost::lexical_cast<std::string>(::GetCurrentProcessId()) + "_" + boost::lexical_cast<std::string>(nextid++);
+            boost::uuids::random_generator gen;
+            boost::uuids::uuid u = gen();
+            s = "/tmp/boost_process_" + boost::lexical_cast<std::string>(u);
+            if (name)
+                *name = s;
         }
 
-        // TODO: Use RAII to close HANDLEs if an exception is thrown.
+        if (mkfifo(s.c_str(), S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) == -1)
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("mkfifo(3) failed");
+        child_end_ = open(s.c_str(), O_RDONLY);
+        if (!child_end_.valid())
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("open(2) failed");
+        parent_end_ = open(s.c_str(), O_WRONLY);
+        if (!parent_end_.valid())
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("open(2) failed");
+#elif defined(BOOST_WINDOWS_API)
+        std::string s;
+        if (name && !name->empty())
+            s = *name;
+        else
+        {
+            boost::uuids::random_generator gen;
+            boost::uuids::uuid u = gen();
+            s = "\\\\.\\pipe\\boost_process_" +
+                boost::lexical_cast<std::string>(u);
+            if (name)
+                *name = s;
+        }
+
         SECURITY_ATTRIBUTES sa;
         ZeroMemory(&sa, sizeof(sa));
         sa.nLength = sizeof(sa);
         sa.lpSecurityDescriptor = NULL;
         sa.bInheritHandle = TRUE;
-        ends[0] = CreateNamedPipeA(name.c_str(), PIPE_ACCESS_INBOUND | FILE_FLAG_OVERLAPPED, 0, 1, 8192, 8192, 0, &sa);
-        if (ends[0] == INVALID_HANDLE_VALUE)
+        child_end_ = CreateNamedPipeA(s.c_str(), PIPE_ACCESS_INBOUND |
+            FILE_FLAG_OVERLAPPED, 0, 1, 8192, 8192, 0, &sa);
+        if (!child_end_.valid())
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreateNamedPipe() failed");
-        ends[1] = ::CreateFileA(name.c_str(), GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_FLAG_OVERLAPPED, NULL);
-        if (ends[1] == INVALID_HANDLE_VALUE)
+        parent_end_ = CreateFileA(s.c_str(), GENERIC_WRITE, 0, NULL,
+            OPEN_EXISTING, FILE_FLAG_OVERLAPPED, NULL);
+        if (!parent_end_.valid())
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreateFile() failed");
 
         OVERLAPPED overlapped;
@@ -268,30 +250,35 @@ public:
         overlapped.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
         if (!overlapped.hEvent)
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreateEvent() failed");
-        BOOL b = ConnectNamedPipe(ends[0], &overlapped);
+        BOOL b = ConnectNamedPipe(child_end_.native(), &overlapped);
         if (!b)
         {
             if (GetLastError() == ERROR_IO_PENDING)
             {
-                if (WaitForSingleObject(overlapped.hEvent, INFINITE) == WAIT_FAILED)
+                if (WaitForSingleObject(overlapped.hEvent, INFINITE) ==
+                    WAIT_FAILED)
                 {
                     CloseHandle(overlapped.hEvent);
-                    BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("WaitForSingleObject() failed");
+                    BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR(
+                        "WaitForSingleObject() failed");
                 }
             }
             else if (GetLastError() != ERROR_PIPE_CONNECTED)
             {
                 CloseHandle(overlapped.hEvent);
-                BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("ConnectNamedPipe() failed");
+                BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR(
+                    "ConnectNamedPipe() failed");
             }
         }
         CloseHandle(overlapped.hEvent);
 #endif
-        child_end_ = ends[(stream == input_stream) ? 0 : 1];
-        parent_end_ = ends[(stream == input_stream) ? 1 : 0];
+        if (stream == output_stream)
+            std::swap(child_end_, parent_end_);
 #if defined(BOOST_WINDOWS_API)
-        if (!SetHandleInformation(child_end_, HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT))
-            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("SetHandleInformation() failed");
+        if (!SetHandleInformation(child_end_.native(), HANDLE_FLAG_INHERIT,
+            HANDLE_FLAG_INHERIT))
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR(
+                "SetHandleInformation() failed");
 #endif
     }
 
@@ -300,19 +287,19 @@ public:
         return boost::make_shared<named_pipe>(named_pipe(stream));
     }
 
-    stream_end_type get_child_end()
+    handle get_child_end()
     {
         return child_end_;
     }
 
-    stream_end_type get_parent_end()
+    handle get_parent_end()
     {
         return parent_end_;
     }
 
 private:
-    stream_end_type child_end_;
-    stream_end_type parent_end_;
+    handle child_end_;
+    handle parent_end_;
 };
 
 /**
@@ -329,14 +316,16 @@ public:
     dummy(stream_type stream)
     {
 #if defined(BOOST_POSIX_API)
-        std::string filename = (stream == input_stream) ? "/dev/zero" : "/dev/null";
+        std::string filename = (stream == input_stream) ? "/dev/zero" :
+            "/dev/null";
         child_end_ = open(filename.c_str(), O_RDONLY);
-        if (child_end_ == -1)
+        if (!child_end_.valid())
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("open(2) failed");
 #elif defined(BOOST_WINDOWS_API)
         DWORD access = (stream == input_stream) ? GENERIC_READ : GENERIC_WRITE;
-        child_end_ = CreateFileA("NUL", access, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-        if (child_end_ == INVALID_HANDLE_VALUE)
+        child_end_ = CreateFileA("NUL", access, 0, NULL, OPEN_EXISTING,
+            FILE_ATTRIBUTE_NORMAL, NULL);
+        if (!child_end_.valid())
             BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("CreateFile() failed");
 #endif
     }
@@ -346,13 +335,13 @@ public:
         return boost::make_shared<dummy>(dummy(stream));
     }
 
-    stream_end_type get_child_end()
+    handle get_child_end()
     {
         return child_end_;
     }
 
 private:
-    stream_end_type child_end_;
+    handle child_end_;
 };
 
 }

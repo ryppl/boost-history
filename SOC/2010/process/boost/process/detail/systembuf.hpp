@@ -45,11 +45,11 @@ class postream;
 namespace detail {
 
 /**
- * std::streambuf implementation for system file handles.
+ * std::streambuf implementation for handles.
  *
- * systembuf provides a std::streambuf implementation for system file
- * handles. Contrarywise to file_handle, this class does \b not take
- * ownership of the native file handle; this should be taken care of
+ * systembuf provides a std::streambuf implementation for handles.
+ * Contrarywise to the handle class, this class does \b not take
+ * ownership of the native handle; this should be taken care of
  * somewhere else.
  *
  * This class follows the expected semantics of a std::streambuf object.
@@ -73,10 +73,10 @@ public:
 #endif
 
     /**
-     * Constructs a new systembuf for the given file handle.
+     * Constructs a new systembuf for the given handle.
      *
      * This constructor creates a new systembuf object that reads or
-     * writes data from/to the \a h native file handle. This handle
+     * writes data from/to the \a h native handle. This handle
      * is \b not owned by the created systembuf object; the code
      * should take care of it externally.
      *
@@ -103,7 +103,7 @@ public:
 
 protected:
     /**
-     * Reads new data from the native file handle.
+     * Reads new data from the native handle.
      *
      * This operation is called by input methods when there is no more
      * data in the input buffer. The function fills the buffer with new
@@ -174,9 +174,8 @@ protected:
      * Flushes the output buffer to disk.
      *
      * Synchronizes the systembuf buffers with the contents of the file
-     * associated to this object through the native file handle. The
-     * output buffer is flushed to disk and cleared to leave new room
-     * for more data.
+     * associated to this object through the native handle. The output buffer
+     * is flushed to disk and cleared to leave new room for more data.
      *
      * \returns 0 on success, -1 if an error occurred.
      */
@@ -201,7 +200,7 @@ protected:
 
 private:
     /**
-     * Native file handle used by the systembuf object.
+     * Native handle used by the systembuf object.
      */
     handle_type handle_;
 

@@ -20,7 +20,7 @@
 #ifndef BOOST_PROCESS_POSTREAM_HPP
 #define BOOST_PROCESS_POSTREAM_HPP
 
-#include <boost/process/detail/file_handle.hpp>
+#include <boost/process/handle.hpp>
 #include <boost/process/detail/systembuf.hpp>
 #include <boost/noncopyable.hpp>
 #include <ostream>
@@ -38,16 +38,15 @@ namespace process {
  * input one, but from the parent's point of view it is an output one;
  * hence the confusing postream name.
  *
- * postream objects cannot be copied because they own the file handle
- * they use to communicate with the child and because they buffer data
- * that flows through the communication channel.
+ * postream objects cannot be copied because they buffer data that flows
+ * through the communication channel.
  *
  * A postream object behaves as a std::ostream stream in all senses.
  * The class is only provided because it must provide a method to let
  * the caller explicitly close the communication channel.
  *
  * \remark Blocking remarks: Functions that write data to this
- *         stream can block if the associated file handle blocks during
+ *         stream can block if the associated handle blocks during
  *         the write. As this class is used to communicate with child
  *         processes through anonymous pipes, the most typical blocking
  *         condition happens when the child is not processing the data
@@ -60,38 +59,35 @@ class postream : public std::ostream, public boost::noncopyable
 public:
     /**
      * Creates a new process' input stream.
-     *
-     * Given a file handle, this constructor creates a new postream
-     * object that owns the given file handle \a fh. Ownership of
-     * \a fh is transferred to the created postream object.
-     *
-     * \pre \a fh is valid.
-     * \post \a fh is invalid.
-     * \post The new postream object owns \a fh.
      */
-    explicit postream(detail::file_handle &fh)
+    explicit postream(boost::process::handle &h)
         : std::ostream(0),
-          handle_(fh),
-          systembuf_(handle_.get())
+          handle_(h),
+          systembuf_(handle_.native())
     {
         rdbuf(&systembuf_);
     }
 
     /**
-     * Returns the file handle managed by this stream.
-     *
-     * The file handle must not be copied. Copying invalidates
-     * the source file handle making the postream unusable.
+     * Returns the handle managed by this stream.
      */
-    detail::file_handle &native()
+    const boost::process::handle &handle() const
     {
         return handle_;
     }
 
     /**
-     * Closes the file handle managed by this stream.
+     * Returns the handle managed by this stream.
+     */
+    boost::process::handle &handle()
+    {
+        return handle_;
+    }
+
+    /**
+     * Closes the handle managed by this stream.
      *
-     * Explicitly closes the file handle managed by this stream. This
+     * Explicitly closes the handle managed by this stream. This
      * function can be used by the user to tell the child process there
      * is no more data to send.
      */
@@ -103,9 +99,9 @@ public:
 
 private:
     /**
-     * The file handle managed by this stream.
+     * The handle managed by this stream.
      */
-    detail::file_handle handle_;
+    boost::process::handle handle_;
 
     /**
      * The systembuf object used to manage this stream's data.

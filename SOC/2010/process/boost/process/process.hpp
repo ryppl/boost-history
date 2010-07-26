@@ -28,6 +28,7 @@
 #   include <signal.h>
 #   include <sys/wait.h>
 #elif defined(BOOST_WINDOWS_API)
+#   include <boost/process/handle.hpp>
 #   include <boost/shared_ptr.hpp>
 #   include <cstdlib>
 #   include <windows.h>
@@ -60,13 +61,9 @@ public:
     process(pid_type id)
         : id_(id)
 #if defined(BOOST_WINDOWS_API)
-        , handle_(OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, id), CloseHandle)
+        , handle_(open_process(id))
 #endif
     {
-#if defined(BOOST_WINDOWS_API)
-        if (handle_ == NULL)
-            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("OpenProcess() failed");
-#endif
     }
 
 #if defined(BOOST_WINDOWS_API)
@@ -79,9 +76,9 @@ public:
      * This operation is only available on Windows systems. The handle is
      * closed when the process instance (and all of its copies) is destroyed.
      */
-    process(HANDLE handle)
-        : id_(GetProcessId(handle)),
-        handle_(handle, CloseHandle)
+    process(handle h)
+        : id_(GetProcessId(h.native())),
+        handle_(h)
     {
     }
 #endif
@@ -180,13 +177,24 @@ private:
 
 #if defined(BOOST_WINDOWS_API)
     /**
-     * The process handle.
+     * Opens a process and returns a handle.
      *
-     * The process handle is saved in a shared pointer to guarantee that it
-     * is closed when not needed anymore. The handle guarantees that Windows
-     * does not remove process resources when a process exits.
+     * OpenProcess() returns NULL and not INVALID_HANDLE_VALUE on failure.
+     * That's why the return value is manually checked in this helper function
+     * instead of simply passing it to the constructor of the handle class.
      */
-    boost::shared_ptr<void> handle_;
+    HANDLE open_process(pid_type id)
+    {
+        HANDLE h = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, id);
+        if (h == NULL)
+            BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("OpenProcess() failed");
+        return h;
+    }
+
+    /**
+     * The process handle.
+     */
+    handle handle_;
 #endif
 };
 
