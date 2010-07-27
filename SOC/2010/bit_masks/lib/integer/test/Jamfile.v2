@@ -55,7 +55,6 @@ test-suite integer
         [ run bft_testing/pointer_member_test.cpp ]
         [ run bft_testing/pointer_parsing_meta_function_test.cpp ]
         [ run bft_testing/fails_on_64_bit.cpp ]
-        [ run ppb_testing/pointer_plus_bits_test.cpp ]
 
 
     ;
