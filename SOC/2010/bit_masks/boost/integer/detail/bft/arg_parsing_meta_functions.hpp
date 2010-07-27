@@ -20,9 +20,17 @@
 namespace boost { namespace bitfields { namespace detail {
 
 /** This is an integral type which is the same size as a pointer on a 32 or 64
- *  bit system
+ *  bit system.
  */ 
-typedef mpl::if_c<(4<sizeof(void*)),uint64_t,uint32_t>::type ptr_mask_type;
+typedef mpl::if_c<
+    ( 2 == sizeof(void*)),
+    uint16_t,
+    mpl::if_c<
+        ( 4 == sizeof(void*)),
+        uint32_t,
+        uint64_t
+    >::type
+>::type                             ptr_mask_type;
 
 namespace pointer_member {
 
@@ -103,9 +111,13 @@ struct ctz_helper<Mask,IndexingMask,ZeroCount,true>
             IndexingMask::offset + 1
         >,
         ZeroCount + 1,
-       bool(((IndexingMask::value & Mask::value) == 0)
-         &&
-       bool(mpl::less< mpl::size_t< IndexingMask::offset > , mpl::size_t< bit_width< typename Mask::value_type >::value > >::type::value ))
+        bool(((IndexingMask::value & Mask::value) == 0)
+          &&
+        bool(mpl::less<
+            mpl::size_t< IndexingMask::offset >,
+            mpl::size_t<
+            bit_width< typename Mask::value_type >::value >
+        >::type::value ))
     >
 { };
 

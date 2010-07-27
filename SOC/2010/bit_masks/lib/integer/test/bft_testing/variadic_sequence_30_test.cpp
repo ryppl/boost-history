@@ -4,7 +4,7 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 
-#define BOOST_BFT_PARAM_COUNT 11
+#define BOOST_BFT_PARAM_COUNT 30
 #include <boost/integer/bitfield_tuple.hpp>
 #include <boost/detail/lightweight_test.hpp>
 
@@ -26,7 +26,6 @@ typedef bitfield_tuple<
     flag<blue>
 >                                       test_tuple;
 
-
 int main() {
     test_tuple temp;
 
@@ -34,5 +33,3 @@ int main() {
     BOOST_TEST(( temp.get<blue>() == false ));
     return boost::report_errors();
 }
-
-
