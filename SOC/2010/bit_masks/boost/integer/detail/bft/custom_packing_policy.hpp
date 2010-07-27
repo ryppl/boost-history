@@ -8,7 +8,7 @@
 #define BOOST_BITFIELD_TUPLE_CUSTOM_PACKING_POLICY_HPP
 #include <boost/integer/detail/bft/policy_creation_detail.hpp>
 
-namespace boost { namespace detail {
+namespace boost { namespace bitfields{ namespace detail {
 
 template <
     typename Mask,
@@ -32,6 +32,6 @@ struct custom_packing_policy {
     { };
 };
 
-}} // end boost::detail
+}}} // end boost::detail
 
 #endif

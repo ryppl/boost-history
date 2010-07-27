@@ -12,7 +12,7 @@
 #include <boost/integer/detail/bft/arg_parsing_meta_functions.hpp>
 #include <boost/integer/detail/bft/mask_shift_indicators.hpp>
 
-namespace boost { namespace detail {
+namespace boost { namespace bitfields{ namespace detail {
 
 // detial's relating to the set and get functions.
 namespace policy_detail {
@@ -187,6 +187,6 @@ struct deduce_policy {
     typedef apply_impl<Mask,ValueType,StorageType,mask_shift>   type;
 };
 
-}}} // end policy_detail
+}}}} // end boost::bitfields::detail::policy_detail
 
 #endif

@@ -9,18 +9,22 @@
 #include <boost/integer/bitfield_tuple/interface_metafunctions.hpp>
 #include <cstddef>
 
-namespace boost {
-namespace bitfields {
+namespace boost { namespace bitfields {
 
-
-template<std::size_t Index, typename BitfieldTuple>
+template<typename BitfieldTuple, std::size_t Index>
 struct element {
-    typedef typename get_proxy_reference_type_by_index< BitfieldTuple, Index >::type type;
+    typedef typename get_proxy_reference_type_by_index<
+        BitfieldTuple,
+        Index
+    >::type type;
 };
 
-template<typename Name, typename BitfieldTuple>
+template<typename BitfieldTuple, typename Name>
 struct element_n {
-    typedef typename get_proxy_reference_type_by_name< BitfieldTuple, Name >::type type;
+    typedef typename get_proxy_reference_type_by_name<
+        BitfieldTuple,
+        Name
+    >::type type;
 };
 
 }} // end boost::bitfields

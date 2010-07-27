@@ -33,7 +33,7 @@
 
 
 
-namespace boost { namespace detail {
+namespace boost { namespace bitfields{ namespace detail {
 
 /** This is the empty which prevents the user from supply things which are
  *  not enclosed within either a member template or a storage template.
@@ -449,6 +449,6 @@ struct bft_arg_parse_impl <
 };
 
 
-}} // end boost::detail
+}}} // end boost::bitfields::detail
 
 #endif

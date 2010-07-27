@@ -34,8 +34,7 @@
 #include <boost/integer/bitfield_tuple/get_free_function.hpp>
 
 
-namespace boost {
-
+namespace boost { namespace bitfields {
 
 template <  BOOST_MAKE_BFT_TEMPLATE_PARAMS() >
 struct bitfield_tuple
@@ -217,7 +216,7 @@ private:
     storage_type _data;
 };
 
-} // end boost
+}} // end boost::bitfields
 
 
 #ifdef BOOST_MSVC

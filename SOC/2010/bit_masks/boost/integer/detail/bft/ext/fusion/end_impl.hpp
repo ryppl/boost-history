@@ -22,7 +22,7 @@ struct end_impl< bitfield_tuple_tag > {
 
     template <typename BitfieldTuple>
     struct apply {
-        typedef bitfield_tuple_iterator<
+        typedef bitfields::bitfield_tuple_iterator<
             BitfieldTuple,
             mpl::size<
                 typename BitfieldTuple::members

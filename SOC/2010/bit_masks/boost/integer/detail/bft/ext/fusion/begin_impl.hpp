@@ -20,7 +20,7 @@ template<>
 struct begin_impl< bitfield_tuple_tag > {
     template<typename BitfieldTuple>
     struct apply {
-        typedef bitfield_tuple_iterator<BitfieldTuple,0> type;
+        typedef bitfields::bitfield_tuple_iterator<BitfieldTuple,0> type;
         static type call(BitfieldTuple& bft) {
             return type(bft);
         }

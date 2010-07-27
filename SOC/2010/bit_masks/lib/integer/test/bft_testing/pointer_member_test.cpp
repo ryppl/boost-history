@@ -28,7 +28,7 @@ int main() {
         BOOST_TEST((
             is_same<
                 test_type_1::storage_type,
-                detail::ptr_mask_type
+                bitfields::detail::ptr_mask_type
             >::value
         ));
 
@@ -52,7 +52,7 @@ int main() {
         BOOST_TEST((
             is_same<
                 test_type_2::storage_type,
-                detail::ptr_mask_type
+                bitfields::detail::ptr_mask_type
             >::value
         ));
 
@@ -180,10 +180,10 @@ int main() {
             member<unsigned int,i1,2>,
             pointer<int, rd,
                 bits_mask<
-                    detail::ptr_mask_type,
+                    bitfields::detail::ptr_mask_type,
                     2,
                     bit_width<
-                        detail::ptr_mask_type
+                        bitfields::detail::ptr_mask_type
                     >::value - 4
                 >
             >,
@@ -202,8 +202,8 @@ int main() {
         int i = 70;
         
         // getting first 2 btis of pointer.
-        detail::ptr_mask_type ptr = high_bits_mask<
-            detail::ptr_mask_type,2>::value & detail::ptr_mask_type(&i);
+        bitfields::detail::ptr_mask_type ptr = high_bits_mask<
+            bitfields::detail::ptr_mask_type,2>::value & bitfields::detail::ptr_mask_type(&i);
 
         std::cout<< "value of &i: " << std::hex << &i << std::endl;
         std::cout<< "2 bits of &i: " << std::hex << ptr << std::endl;
@@ -218,8 +218,8 @@ int main() {
         std::cout<< "Value of temp_ptr: " << std::hex << temp_ptr << std::endl;
 
         // rebuilding pointer.
-        detail::ptr_mask_type temp_int = detail::ptr_mask_type(temp_ptr); 
-        temp_int |= detail::ptr_mask_type( ptr );
+        bitfields::detail::ptr_mask_type temp_int = bitfields::detail::ptr_mask_type(temp_ptr); 
+        temp_int |= bitfields::detail::ptr_mask_type( ptr );
         temp_ptr = my_intptr_t(temp_int);
 
 
@@ -239,10 +239,10 @@ int main() {
             member<unsigned int,i1,3>,
             pointer<int, rd,
                 bits_mask<
-                    detail::ptr_mask_type,
+                    bitfields::detail::ptr_mask_type,
                     2,
                     bit_width<
-                        detail::ptr_mask_type
+                        bitfields::detail::ptr_mask_type
                     >::value - 4
                 >
             >,
@@ -259,8 +259,8 @@ int main() {
         int i = 70;
         
         // getting first 2 bits of pointer.
-        detail::ptr_mask_type ptr = high_bits_mask<
-            detail::ptr_mask_type,2>::value & detail::ptr_mask_type(&i);
+        bitfields::detail::ptr_mask_type ptr = high_bits_mask<
+            bitfields::detail::ptr_mask_type,2>::value & bitfields::detail::ptr_mask_type(&i);
 
         std::cout<< "value of &i: " << std::hex << &i << std::endl;
         std::cout<< "2 bits of &i: " << std::hex << ptr << std::endl;
@@ -272,8 +272,8 @@ int main() {
 
         std::cout<< "Value of temp_ptr: " << std::hex << temp_ptr << std::endl;
 
-        detail::ptr_mask_type temp_int = detail::ptr_mask_type(temp_ptr); 
-        temp_int |= detail::ptr_mask_type( ptr );
+        bitfields::detail::ptr_mask_type temp_int = bitfields::detail::ptr_mask_type(temp_ptr); 
+        temp_int |= bitfields::detail::ptr_mask_type( ptr );
         temp_ptr = my_intptr_t(temp_int);
 
         std::cout<< "Value of temp_int: " << std::hex<< temp_int << std::endl;
@@ -289,10 +289,10 @@ int main() {
     typedef bitfield_tuple<
         pointer<int, rd,
             bits_mask<
-                detail::ptr_mask_type,
+                bitfields::detail::ptr_mask_type,
                 2,
                 bit_width<
-                    detail::ptr_mask_type
+                    bitfields::detail::ptr_mask_type
                 >::value - 4
             >
         >,
@@ -301,7 +301,7 @@ int main() {
         BOOST_TEST((
             is_same<
                 test_type_8::storage_type,
-                detail::ptr_mask_type
+                bitfields::detail::ptr_mask_type
             >::value
         ));
 
@@ -309,8 +309,8 @@ int main() {
         int i = 70;
         
         // getting first 2 bits of pointer.
-        detail::ptr_mask_type ptr = high_bits_mask<
-            detail::ptr_mask_type,2>::value & detail::ptr_mask_type(&i);
+        bitfields::detail::ptr_mask_type ptr = high_bits_mask<
+            bitfields::detail::ptr_mask_type,2>::value & bitfields::detail::ptr_mask_type(&i);
 
         std::cout<< "value of &i: " << std::hex << &i << std::endl;
         std::cout<< "2 bits of &i: " << std::hex << ptr << std::endl;
@@ -322,8 +322,8 @@ int main() {
 
         std::cout<< "Value of temp_ptr: " << std::hex << temp_ptr << std::endl;
 
-        detail::ptr_mask_type temp_int = detail::ptr_mask_type(temp_ptr); 
-        temp_int |= detail::ptr_mask_type( ptr );
+        bitfields::detail::ptr_mask_type temp_int = bitfields::detail::ptr_mask_type(temp_ptr); 
+        temp_int |= bitfields::detail::ptr_mask_type( ptr );
         temp_ptr = my_intptr_t(temp_int);
 
         std::cout<< "Value of temp_int: " << std::hex<< temp_int << std::endl;

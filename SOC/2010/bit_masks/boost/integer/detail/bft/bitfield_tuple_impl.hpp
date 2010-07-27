@@ -22,7 +22,7 @@
 #include <boost/integer/detail/bft/arg_parse_impl.hpp>
 #include <boost/integer/detail/bft/deduce_storage.hpp>
 
-namespace boost { namespace detail {
+namespace boost { namespace bitfields{ namespace detail {
 
 // The following preprocessor MACRO only used for writing clarity, it's only 
 // used once and then undef'ed before the end of this file.
@@ -79,7 +79,7 @@ struct bitfield_tuple_base {
 
 };
 
-}} // end boost::detail
+}}} // end boost::detail
 
 #undef BOOST_BFT_ARG_PROCESSING
 

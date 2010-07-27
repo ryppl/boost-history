@@ -9,7 +9,7 @@
 
 #include <iomanip>
 #include <iostream>
-using namespace ::boost::detail::pointer_member;
+using namespace ::boost::bitfields::detail::pointer_member;
 
 int main() {
     // count leading zeros metafunction test.

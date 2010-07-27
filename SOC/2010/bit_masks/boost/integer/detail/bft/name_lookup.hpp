@@ -9,7 +9,7 @@
 #include <boost/mpl/find_if.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-namespace boost { namespace detail {
+namespace boost { namespace bitfields{ namespace detail {
 
 
 /** This is a lambda expression which is passed to find_if 
@@ -22,6 +22,6 @@ struct match_name
 { };
 
 
-}} // end boost::detail
+}}} // end boost::bitfields::detail
 
 #endif

@@ -9,7 +9,7 @@
 #include <boost/config.hpp>
 #include <cstddef>
 
-namespace boost { namespace detail {
+namespace boost { namespace bitfields{ namespace detail {
 
 /** Used to help generate psudo variadic template paramerer apperance.
  *  This make the typename T##N = mpl::void_ pattern.
@@ -133,7 +133,7 @@ inline void assign_parameter_to_bft(BitfieldTuple&, mpl::void_*) { }
 
 BOOST_MAKE_BFT_OVERLOADS()
 
-} // end boost
+}} // end boost::bitfields
 #undef BOOST_MAKE_BFT_PARAM
 #undef BOOST_MAKE_BFT_TEMPLATE_PARAMETERS
 #undef BOOST_MAKE_BFT_FUNCTION_PARAM

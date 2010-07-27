@@ -21,7 +21,7 @@ struct at_impl< bitfield_tuple_tag > {
 
     template <typename BitfieldTuple, typename N>
     struct apply {
-        typedef typename ::boost::get_proxy_reference_type_by_index<
+        typedef typename ::boost::bitfields::get_proxy_reference_type_by_index<
             BitfieldTuple,
             N::value
         >::type                            type;

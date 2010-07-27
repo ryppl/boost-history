@@ -17,7 +17,7 @@
 /** This file contains metafunctions which are used to do complex operations
  *  on the Mask provided by the user.
  */
-namespace boost { namespace detail {
+namespace boost { namespace bitfields { namespace detail {
 
 /** This is an integral type which is the same size as a pointer on a 32 or 64
  *  bit system
@@ -132,6 +132,6 @@ struct count_trailing_zeros {
     typedef typename ptr_detail::ctz_helper<Mask>::type type;
 };
 
-}}} // end boost::detail::pointer_member
+}}}} // end boost::bitfields::detail::pointer_member
 
 #endif

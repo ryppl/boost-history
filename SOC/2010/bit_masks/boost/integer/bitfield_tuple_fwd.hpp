@@ -6,12 +6,14 @@
 
 #ifndef BOOST_BITFIELD_TUPLE_FWD_HPP
 #define BOOST_BITFIELD_TUPLE_FWD_HPP
+#include <boost/integer/bitfield_tuple/interface_macros.hpp>
 
-namespace boost {
+
+namespace boost { namespace bitfields {
 
 template < BOOST_BFT_TEMPLATE_ARGS_NO_DEFAULTS() >
 struct bitfield_tuple;
 
-}// end boost
+}} // end boost::bitfields
 
 #endif

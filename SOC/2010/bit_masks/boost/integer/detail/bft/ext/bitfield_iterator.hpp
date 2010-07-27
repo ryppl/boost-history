@@ -15,8 +15,7 @@
 #include <boost/fusion/iterator/iterator_facade.hpp>
 #include <boost/mpl/void.hpp>
 
-namespace boost { 
-
+namespace boost { namespace bitfields{ 
 namespace detail {
 struct bft_category
   : boost::fusion::random_access_traversal_tag,
@@ -58,7 +57,7 @@ public:
     /** Fusion Extension: value_of */
     template<typename Iter>
     struct value_of {
-        typedef typename boost::get_proxy_reference_type_by_index<
+        typedef typename get_proxy_reference_type_by_index<
             BitfieldTuple,
             Iter::index::value
         >::type type;
@@ -177,7 +176,7 @@ public:
 
 };
 
-} // end boost::fusion
+}} // end boost::bitfields
 
 
 #endif

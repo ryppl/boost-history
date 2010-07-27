@@ -19,7 +19,7 @@ struct salmon;
 
 
     typedef mpl::vector<
-        detail::bitfield_element<
+        bitfields::detail::bitfield_element<
             int,
             red,
             mpl::size_t<0>,
@@ -34,7 +34,7 @@ int main() {
     // for looking up while useing the get<> function in side bitfield_tuple.
     typedef mpl::find_if<
         test_vect,
-        detail::match_name<
+        bitfields::detail::match_name<
             mpl::_1,
             red
         >

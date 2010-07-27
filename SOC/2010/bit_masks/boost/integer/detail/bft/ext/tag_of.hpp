@@ -16,7 +16,7 @@ namespace traits {
 
 /** bit_T_group specilization. */
 template <  BOOST_BFT_TEMPLATE_ARGS_NO_DEFAULTS()>
-struct tag_of< ::boost::bitfield_tuple< BOOST_BFT_SPECILIZATION_PARAM_LIST() > >{
+struct tag_of< ::boost::bitfields::bitfield_tuple< BOOST_BFT_SPECILIZATION_PARAM_LIST() > >{
     typedef bitfield_tuple_tag type;
 };
 

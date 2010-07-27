@@ -8,7 +8,7 @@
 #include <boost/mpl/void.hpp>
 
 
-namespace boost { namespace detail {
+namespace boost { namespace bitfields { namespace detail {
 
 /** This is the type which sits inside the mpl vector type.
  *  This has all information for constructing a bitfield.
@@ -39,6 +39,6 @@ struct bitfield_element {
 };
 
 
-}} // end boost::detail
+}}} // end boost::detail
 
 #endif

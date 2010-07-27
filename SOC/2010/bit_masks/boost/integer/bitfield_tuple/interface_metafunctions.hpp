@@ -7,7 +7,7 @@
 #ifndef BOOST_BFT_INTERFACE_META_FUNCITONS_HPP
 #define BOOST_BFT_INTERFACE_META_FUNCITONS_HPP
 
-namespace boost {
+namespace boost { namespace bitfields {
 
 /** Checks to see if a name exists.
  *  returns mpl::true_ or mpl::false_
@@ -127,6 +127,6 @@ struct get_proxy_reference_type_by_index {
     >                           type;
 };
 
-} // end boost
+}} // end boost::bitfields
 
 #endif

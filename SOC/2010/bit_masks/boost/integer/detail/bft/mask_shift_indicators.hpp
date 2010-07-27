@@ -7,12 +7,12 @@
 #define BOOST_BITFIELD_TUPLE_MASK_SHIFT_INDICATORS_HPP
 #include <cstddef>
 
-namespace boost { namespace detail { namespace bit_shift {
+namespace boost { namespace bitfields{ namespace detail { namespace bit_shift {
 
 template <std::size_t Shift> struct right;
 template <std::size_t Shift> struct left;
 struct none;
 
-}}} // end boost::detail::bit_shift
+}}}} // end boost::bitfields::detail::bit_shift
 
 #endif

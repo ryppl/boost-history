@@ -13,7 +13,7 @@
 #include <boost/mpl/logical.hpp>
 #include <boost/mpl/if.hpp>
 
-namespace boost { namespace detail {
+namespace boost { namespace bitfields{ namespace detail {
 
 /** Wraps up a policy so that it has a similar interface to that of bitfield.
  *  which basically means that since the policy itself only has static functions
@@ -25,12 +25,17 @@ template <
     typename Policy
 >
 struct policy_wrapper {
+    typedef policy_wrapper<StorageType,Policy>  _self;
     typedef StorageType                         storage_type;
     typedef Policy                              field_policy;
     typedef typename field_policy::value_type   value_type;
 
-    policy_wrapper(storage_type& storage)
+    explicit policy_wrapper(storage_type& storage)
         :_field( storage )
+    { }
+
+    policy_wrapper(_self const& pol_wraper)
+        :_field( pol_wraper._field )
     { }
 
     void set(value_type rhs) {
@@ -91,6 +96,6 @@ struct select_packing_policy {
 };
 
 
-}} // end boost::detial
+}}} // end boost::bitfields::detail
 
 #endif

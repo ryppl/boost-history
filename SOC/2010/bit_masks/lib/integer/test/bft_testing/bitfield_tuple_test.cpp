@@ -27,7 +27,7 @@ int main() {
     // testing bitfield_element
     {
         // bitfield_element
-        typedef detail::bitfield_element<
+        typedef bitfields::detail::bitfield_element<
             int, red, mpl::size_t<5>, mpl::size_t<4>
         > bft_element_test_1;
         BOOST_ASSERT(( is_same<bft_element_test_1::return_type, int>::value ));

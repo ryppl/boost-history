@@ -11,7 +11,7 @@
 #include <boost/static_assert.hpp>
 #include <boost/config.hpp>
 
-namespace boost { namespace detail {
+namespace boost { namespace bitfields{ namespace detail {
 
 /** Meta functions used for deducing the type of storage that should be used if
  *  the user doesn't supply a storage type to a bitfield_tuple.
@@ -42,6 +42,6 @@ struct deduce_storage_type {
     >::type         type;
 };
 
-}} // end boost::detail
+}}} // end boost::detail
 
 #endif

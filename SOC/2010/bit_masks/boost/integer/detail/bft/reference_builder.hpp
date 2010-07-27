@@ -15,7 +15,7 @@
  *  and returning the correct reference type which will allow for only one
  *  reference type class within bitfield_tuple.
  */
-namespace boost { namespace detail {
+namespace boost { namespace bitfields{ namespace detail {
 
 template <typename BitfieldTuple, typename Name>
 struct disable_if_proxy_reference_type_by_name {
@@ -98,6 +98,6 @@ struct enable_if_proxy_reference_type_by_index {
 
 
 
-}} // end boost::detail
+}}} // end boost::bitfields::detail
 
 #endif
