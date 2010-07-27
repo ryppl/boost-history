@@ -11,9 +11,9 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source: /home/evansl/prog_dev/boost-svn/ro/boost-vrtmp/boost/mpl/RCS/iter_fold_if.hpp,v $
-// $Date: 2009/04/08 16:19:50 $
-// $Revision: 1.6 $
+// $Source: /home/evansl/prog_dev/boost-svn/ro/sandbox/rw/variadic_templates/boost/mpl/RCS/iter_fold_if.hpp,v $
+// $Date: 2010/07/20 13:35:49 $
+// $Revision: 1.7 $
 
 //ChangeLog:
 //  2009-02-04:1026
@@ -45,7 +45,8 @@ http://www.boost.org/libs/mpl/doc/refmanual/iter-fold.html
 //      2) apply1 was replaced with variadic template apply.
 
 #include <boost/mpl/begin_end.hpp>
-#include <boost/mpl/logical.hpp>
+#include <boost/mpl/not.hpp>
+#include <boost/mpl/and.hpp>
 #include <boost/mpl/always.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/if.hpp>
