@@ -3,15 +3,13 @@ TODO From Email Responses
 
 1) create element metafunction for returning the return type of a field.
 2) Create a get free function which takes a bitfield_tuple.
-3) Change bit_align to align.
-4) Change filler to padding.
+
+
 
 5) Documentation for align -
-"Ensures the offset of the next bit field is divisible by the supplied value."
+    "Ensures the offset of the next bit field is divisible by the supplied value."
 
 -> 6) consider renaming member to field or bitfield
-7) Move bitfield_tuple into namespace bitfields.
-
 --------------------------------------------------------------------------------
 List of TODO's throughout the bitfield_tuple
 
