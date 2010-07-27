@@ -24,7 +24,7 @@ int main() {
             member<char,red,4>,
             member<unsigned char, green,5>,
             storage<std::size_t>,
-            filler<3>,
+            padding<3>,
             member<int, salmon, 16>,
             flag<blue>,
             bitfields::align<32>

@@ -22,7 +22,7 @@
 #include <boost/integer/bitfield_tuple/storage.hpp>
 #include <boost/integer/bitfield_tuple/member.hpp>
 #include <boost/integer/bitfield_tuple/flag.hpp>
-#include <boost/integer/bitfield_tuple/filler.hpp>
+#include <boost/integer/bitfield_tuple/padding.hpp>
 #include <boost/integer/bitfield_tuple/align.hpp>
 #include <boost/integer/bitfield_tuple/custom.hpp>
 #include <boost/integer/bitfield_tuple/pointer.hpp>
@@ -206,21 +206,21 @@ struct bft_arg_parse_impl <
     >
 { };
 
-/* Specialization for filler. */
+/* Specialization for padding. */
 template <  std::size_t PaddingBits,
             typename StoragePolicy,
             typename FieldVector,
             typename Offset
 >
 struct bft_arg_parse_impl <
-    bitfields::filler<
+    bitfields::padding<
         PaddingBits
     >,
     StoragePolicy,
     FieldVector,
     Offset >
 {
-    typedef bitfields::filler<PaddingBits> param;
+    typedef bitfields::padding<PaddingBits> param;
     typedef FieldVector     field_vector;
     typedef StoragePolicy   storage_policy;
     typedef mpl::size_t<PaddingBits + Offset::value > offset;
