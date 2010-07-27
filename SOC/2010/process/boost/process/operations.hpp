@@ -366,6 +366,47 @@ inline child create_child(const std::string &executable, Arguments args)
     return create_child(executable, args, context());
 }
 
+/**
+ * Starts a shell-based command.
+ *
+ * Executes the given command through the default system shell. The
+ * command is subject to pattern expansion, redirection and pipelining.
+ * The shell is launched as described by the parameters in the context.
+ *
+ * This function behaves similarly to the system(3) system call. In a
+ * POSIX system, the command is fed to /bin/sh whereas under a Windows
+ * system, it is fed to cmd.exe. It is difficult to write portable
+ * commands as the first parameter, but this function comes in handy in
+ * multiple situations.
+ *
+ * \remark Blocking remarks: This function may block if the device
+ * holding the executable blocks when loading the image. This might
+ * happen if, e.g., the binary is being loaded from a network share.
+ *
+ * \return A handle to the new child process.
+ */
+template <typename Context>
+inline child create_shell(const std::string &command, Context ctx)
+{
+#if defined(BOOST_POSIX_API)
+    std::string executable = "/bin/sh";
+    std::vector<std::string> args;
+    args.push_back("-c");
+    args.push_back(command);
+#elif defined(BOOST_WINDOWS_API)
+    char sysdir[MAX_PATH];
+    UINT size = GetSystemDirectoryA(sysdir, sizeof(sysdir));
+    if (!size)
+        BOOST_PROCESS_THROW_LAST_SYSTEM_ERROR("GetSystemDirectory() failed");
+    std::string executable = std::string(sysdir) +
+        (sysdir[size - 1] != '\\' ? "\\cmd.exe" : "cmd.exe");
+    std::vector<std::string> args;
+    args.push_back("/c");
+    args.push_back(command);
+#endif
+    return create_child(executable, args, ctx);
+}
+
 }
 }
 
