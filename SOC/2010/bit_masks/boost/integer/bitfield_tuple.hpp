@@ -30,7 +30,8 @@
 #include <boost/integer/detail/fusion_ext_includes.hpp>
 #include <boost/integer/detail/bft/make_bitfield_tuple.hpp>
 #include <boost/integer/detail/bft/proxy_reference_policy.hpp>
-
+#include <boost/integer/bitfield_tuple/element.hpp>
+#include <boost/integer/bitfield_tuple/get_free_function.hpp>
 
 
 namespace boost {
