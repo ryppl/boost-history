@@ -18,7 +18,7 @@
 #include <boost/static_assert.hpp>
 
 // implementation header files.
-#include <boost/integer/detail/bft/bft_element.hpp>
+#include <boost/integer/detail/bft/bitfield_element.hpp>
 #include <boost/integer/detail/bft/arg_parse_impl.hpp>
 #include <boost/integer/detail/bft/deduce_storage.hpp>
 
